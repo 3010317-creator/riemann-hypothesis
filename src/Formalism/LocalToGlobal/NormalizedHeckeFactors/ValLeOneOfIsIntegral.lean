@@ -1,7 +1,8 @@
 module
 
 public import Formalism.LocalToGlobal.NormalizedHeckeFactors.RhoDefs
-public import Formalism.SharpRestriction.LevelLetterCocycles.ExistsInertiaCharpolyFactorOfTameType
+public import Formalism.LocalToGlobal.NormalizedHeckeFactors.NormalizedHeckeData
+public import Mathlib.RingTheory.DedekindDomain.Factorization
 
 @[expose] public section
 
@@ -142,12 +143,6 @@ variable {E Ω L : Type} [Field E] [Field Ω] [Algebra E Ω] [Field L]
 variable {K : Type} [Field K] [TopologicalSpace K] {a b : ℕ}
 
 end transfer
-
-section gal
-
-variable (D : D7) (T : NormalizedHeckeDataPlaceholder D)
-
-end gal
 
 theorem placesOver_finite (E : Type) [Field E] [NumberField E] (p : ℕ) (hp : p ≠ 0) : (placesOver E p).Finite := by
   have h0 : Ideal.span {((p : ℕ) : 𝓞 E)} ≠ 0 := by

@@ -1,9 +1,60 @@
 module
 
-public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsZeroCoordNeZero
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsCongrIffTraceFormsIsometricCm
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsQuaternaryOfCoordinates
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsUnitValuedTernaryLtOne
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsZeroFiveOfValuation
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasseNormTheoremQuadraticExtension
-public import Formalism.HermitianLattices.HermitianLatticesProofs.UnimodUnramUnique
+import Development.AbelianVarietyTheory.Proofs.HermitianTraceForms.ExistsOrthogonalBasisDotProductApplyEq
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -78,9 +129,9 @@ theorem exists_represent_of_five (h2 : (2 : K) ≠ 0)
   rw [Fintype.sum_option, Fintype.sum_sum_type] at hw0
   have hw1 := congrArg (algebraMap K L) hw0
   have hw2 : algebraMap K L (w none) ≠ 0 := (map_ne_zero _).2 hw
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [a, Option.elim, Sum.elim_inl, Sum.elim_inr, map_add (f := _), map_mul, map_neg, map_pow, map_sum,
-    hγ', hκ', hd, map_zero] at hw1
+
+  simp only [a, Option.elim, Sum.elim_inl, Sum.elim_inr, map_add (f := _), map_mul, map_neg, map_pow, map_sum,
+  hγ', hκ', hd, map_zero] at hw1
   have hs : ∀ s : K, c (algebraMap K L s) = algebraMap K L s := fun s => (hF _).2 ⟨s, rfl⟩
   refine ⟨fun i => (algebraMap K L (w (some (Sum.inl i))) +
     algebraMap K L (w (some (Sum.inr i))) * θ) / algebraMap K L (w none), ?_⟩
@@ -266,8 +317,8 @@ theorem isotropic_five_of_localField (K : Type*) [Field K] [ValuativeRel K] [Top
       exact (IsLocalRing.residue_eq_zero_iff _).2 ((hmax _).2 ((hlt1 _).1 h))
     · have hmem : (∑ i, ∑ j, r i j * y i * y j) ∈ 𝓂[K] := by
         rw [← IsLocalRing.residue_eq_zero_iff, ← hx]
-        set_option synthInstance.maxHeartbeats 100000 in
-          simp only [map_sum, map_mul, hy]
+
+        simp only [map_sum, map_mul, hy]
       rw [hlt1]
       simpa [r] using (hmax _).1 hmem
 
@@ -337,45 +388,10 @@ theorem congr_of_local (hG : ∀ a b, cc (G a b) = G b a) (hG' : ∀ a b, cc (G'
       CongrOver (v.adicCompletion (maximalRealSubfield E)) G G')
     (hs : ∀ τ : E →+* ℂ, ∃ Q : Matrix (Fin r) (Fin r) ℂ, Q.det ≠ 0 ∧
       G'.map τ = Qᵀ * G.map τ * Q.map conj) :
-    ∃ P : Matrix (Fin r) (Fin r) E, P.det ≠ 0 ∧ G' = Pᵀ * G * P.map cc := by
-  refine landherr_of_hasseNormSt GlobalTheory.QNorm.hasseNormSt E r G G' hG hG' hd hd' hs ?_
-  have hm : G.det / G'.det ∈ maximalRealSubfield E := by
-    rw [← IsCMField.complexConj_eq_self_iff, map_div₀]
-    exact congrArg₂ (· / ·) (GlobalTheory.Published.cc_det_of_herm hG) (GlobalTheory.Published.cc_det_of_herm hG')
-  let a : maximalRealSubfield E := ⟨_, hm⟩
-  obtain ⟨θ, h0, hθ⟩ := GlobalTheory.Published.exists_cc_eq_neg E
-  obtain ⟨b, hb0, hb1⟩ := GlobalTheory.Published.exists_basis_one_imaginary h0 hθ
-  obtain ⟨d, hdθ⟩ := GlobalTheory.Published.exists_sq_real hθ
-  have hd0 : d ≠ 0 := fun h => mul_ne_zero h0 h0 (hdθ.symm.trans (congrArg Subtype.val h))
-  have ha0 : a ≠ 0 := fun h => div_ne_zero hd hd' (congrArg Subtype.val h)
-  obtain ⟨x, y, hxy⟩ := GlobalTheory.QNorm.hasseNormSt (maximalRealSubfield E) d a hd0 ha0
-    (fun ρ => by
-      let τ := ComplexEmbedding.lift E (Complex.ofRealHom.comp ρ)
-      have h1 : τ (a : E) = (Complex.ofRealHom.comp ρ) a :=
-        ComplexEmbedding.lift_algebraMap_apply E _ a
-      have h2 : 0 < (τ (a : E)).re := GlobalTheory.Published.Landherr.re_det_div_pos hd τ (hs τ)
-      rw [h1] at h2
-      exact ⟨√(ρ a), 0, by rw [Real.sq_sqrt (le_of_lt (by simpa using h2))]; ring⟩)
-    (fun v => by
-      obtain ⟨z, hz⟩ := (hf v).det_norm hd'
-      let B := Algebra.TensorProduct.basis (v.adicCompletion (maximalRealSubfield E)) b
-      have hzB : z = B.repr z 0 ⊗ₜ[maximalRealSubfield E] (1 : E) +
-          B.repr z 1 ⊗ₜ[maximalRealSubfield E] θ := by
-        conv_lhs => rw [← B.sum_repr z, Fin.sum_univ_two]
-        simp only [B, Algebra.TensorProduct.basis_apply, hb0, hb1, TensorProduct.smul_tmul',
-          smul_eq_mul, mul_one]
-      refine ⟨B.repr z 0, B.repr z 1, ?_⟩
-      rw [← GlobalTheory.Published.norm_tmul_add_tmul _ h0 hθ hdθ, ← hzB]
-      refine (algebraMap _
-        (v.adicCompletion (maximalRealSubfield E) ⊗[maximalRealSubfield E] E)).injective ?_
-      rw [GlobalTheory.Published.algebraMap_norm_tensor, ← hz, ← IsScalarTower.algebraMap_apply]
-      exact Algebra.TensorProduct.algebraMap_apply' a)
-  refine ⟨x + y * θ, ?_⟩
-  have h1 := congrArg (Subtype.val : maximalRealSubfield E → E) hxy
-  have h2 : IsCMField.complexConj E θ = -θ := hθ
-  simp [a, hdθ] at h1
-  simp only [cc, map_add (f := _), map_mul, IsCMField.complexConj_apply_eq_self, h2, h1]
-  ring
+    ∃ P : Matrix (Fin r) (Fin r) E, P.det ≠ 0 ∧ G' = Pᵀ * G * P.map cc :=
+  GlobalTheory.SelfDualGenus.congr_of_local_norm
+    (landherr_of_hasseNormSt GlobalTheory.QNorm.hasseNormSt) GlobalTheory.QNorm.hasseNormSt
+    hG hG' hd hd' hs fun v => (hf v).det_norm hd'
 
 end Global
 

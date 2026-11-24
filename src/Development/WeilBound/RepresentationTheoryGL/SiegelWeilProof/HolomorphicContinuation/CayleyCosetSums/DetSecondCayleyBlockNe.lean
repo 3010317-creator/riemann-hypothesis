@@ -1,6 +1,55 @@
 module
 
-public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.LoweringDerivativeVacuum
+public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.MultiplicityOneTestOperatorsAlt
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+public import Mathlib.Analysis.Complex.RemovableSingularity
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Mathlib.Analysis.Calculus.DSlope
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.AnalyticDeterminants.SecondCayleyBlockMulConjTransposeEq
 
 @[expose] public section
 
@@ -17,94 +66,7 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 variable {n : ℕ}
 
-private theorem JJ_sq_eq_neg_one : JJ n * JJ n = -1 := by
-  rw [JJ, fromBlocks_multiply, ← fromBlocks_one, fromBlocks_neg]
-  simp
-
-private theorem inG_mul_JJ_mul_conjTranspose_eq_JJ {x : M2 n} (hx : InG x) : x * JJ n * xᴴ = JJ n := by
-  have hJ := (JJ_sq_eq_neg_one (n := n))
-  have hx' : xᴴ * JJ n * x = JJ n := hx
-  have h1 : (-(JJ n * xᴴ * JJ n)) * x = 1 := by
-    calc (-(JJ n * xᴴ * JJ n)) * x = -(JJ n * (xᴴ * JJ n * x)) := by
-          simp only [Matrix.neg_mul, Matrix.mul_assoc]
-      _ = 1 := by rw [hx', hJ, neg_neg]
-  have h2 : x * (-(JJ n * xᴴ * JJ n)) = 1 := mul_eq_one_comm.mp h1
-  calc x * JJ n * xᴴ = x * (-(JJ n * xᴴ * JJ n)) * JJ n := by
-        simp only [Matrix.mul_neg, Matrix.neg_mul, Matrix.mul_assoc, hJ, Matrix.mul_one, neg_neg]
-    _ = JJ n := by rw [h2, Matrix.one_mul]
-
-private theorem toBlocks₂_relations_of_inG {x : M2 n} (hx : InG x) :
-    toBlocks₂₁ x * (toBlocks₂₂ x)ᴴ = toBlocks₂₂ x * (toBlocks₂₁ x)ᴴ ∧
-    toBlocks₂₁ x * (toBlocks₁₂ x)ᴴ - toBlocks₂₂ x * (toBlocks₁₁ x)ᴴ = -1 := by
-  have e := inG_mul_JJ_mul_conjTranspose_eq_JJ hx
-  rw [← fromBlocks_toBlocks x] at e
-  simp only [JJ, fromBlocks_conjTranspose, fromBlocks_multiply, fromBlocks_inj,
-    toBlocks_fromBlocks₁₁, toBlocks_fromBlocks₁₂, toBlocks_fromBlocks₂₁, toBlocks_fromBlocks₂₂] at e
-  simp at e
-  refine ⟨?_, ?_⟩
-  · have h := e.2.2.2
-    rw [neg_add_eq_sub, sub_eq_zero] at h
-    exact h
-  · have h := e.2.2.1
-    rwa [neg_add_eq_sub] at h
-
-private theorem det_smul_toBlocks₂₁_add_toBlocks₂₂_ne_zero {x : M2 n} (hx : InG x) (t : ℂ) (ht : t ≠ star t) :
-    (t • toBlocks₂₁ x + toBlocks₂₂ x).det ≠ 0 := by
-  intro h0
-  obtain ⟨v, hv, hvM⟩ := exists_vecMul_eq_zero_iff.mpr h0
-  obtain ⟨hC, hA⟩ := toBlocks₂_relations_of_inG hx
-  rw [Matrix.vecMul_add, Matrix.vecMul_smul] at hvM
-  have hβ : v ᵥ* toBlocks₂₂ x = -t • (v ᵥ* toBlocks₂₁ x) := by
-    rw [neg_smul, ← sub_eq_zero, sub_neg_eq_add, add_comm]
-    exact hvM
-  have key : (v ᵥ* toBlocks₂₁ x) ⬝ᵥ star (v ᵥ* toBlocks₂₂ x)
-      = (v ᵥ* toBlocks₂₂ x) ⬝ᵥ star (v ᵥ* toBlocks₂₁ x) := by
-    have h := congrArg (fun M => (v ᵥ* M) ⬝ᵥ star v) hC
-    have e1 : (v ᵥ* (toBlocks₂₁ x * (toBlocks₂₂ x)ᴴ)) ⬝ᵥ star v
-        = (v ᵥ* toBlocks₂₁ x) ⬝ᵥ star (v ᵥ* toBlocks₂₂ x) := by
-      rw [← vecMul_vecMul, ← dotProduct_mulVec, star_vecMul]
-    have e2 : (v ᵥ* (toBlocks₂₂ x * (toBlocks₂₁ x)ᴴ)) ⬝ᵥ star v
-        = (v ᵥ* toBlocks₂₂ x) ⬝ᵥ star (v ᵥ* toBlocks₂₁ x) := by
-      rw [← vecMul_vecMul, ← dotProduct_mulVec, star_vecMul]
-    rw [← e1, ← e2]
-    exact h
-  rw [hβ, star_smul, dotProduct_smul, smul_dotProduct, smul_eq_mul, smul_eq_mul] at key
-  have hs : (v ᵥ* toBlocks₂₁ x) ⬝ᵥ star (v ᵥ* toBlocks₂₁ x) = 0 := by
-    have h3 : (t - star t) * ((v ᵥ* toBlocks₂₁ x) ⬝ᵥ star (v ᵥ* toBlocks₂₁ x)) = 0 := by
-      rw [star_neg] at key
-      linear_combination key
-    rcases mul_eq_zero.mp h3 with h4 | h4
-    · exact absurd (sub_eq_zero.mp h4) ht
-    · exact h4
-  have hα : v ᵥ* toBlocks₂₁ x = 0 := by
-    open scoped ComplexOrder in exact dotProduct_self_star_eq_zero.mp hs
-  have hβ0 : v ᵥ* toBlocks₂₂ x = 0 := by rw [hβ, hα, smul_zero]
-  have h5 := congrArg (fun M => v ᵥ* M) hA
-  simp only [Matrix.vecMul_sub, ← vecMul_vecMul, hα, hβ0, zero_vecMul, sub_self, vecMul_neg,
-    vecMul_one] at h5
-  exact hv (neg_eq_zero.mp h5.symm)
-
-theorem det_second_cayley_block_ne {x : M2 n} (hx : InG x) : (u2 x).det ≠ 0 := by
-  have h := det_smul_toBlocks₂₁_add_toBlocks₂₂_ne_zero hx (-Complex.I) (by
-    rw [star_neg, Complex.star_def, Complex.conj_I, neg_neg]
-    intro h
-    have := congrArg Complex.im h
-    norm_num at this)
-  rw [neg_smul] at h
-  exact h
-
 theorem inG_of_inK {g : M2 n} (h : InK g) : InG g := h.1
-
-private theorem det_ne_zero_of_inG' {x : M2 n} (hx : InG x) : x.det ≠ 0 := by
-  have hJ : JJ n * JJ n = -1 := by
-    rw [JJ, fromBlocks_multiply, ← fromBlocks_one, fromBlocks_neg]
-    simp
-  have hx' : xᴴ * JJ n * x = JJ n := hx
-  have h1 : (-(JJ n * xᴴ * JJ n)) * x = 1 := by
-    calc (-(JJ n * xᴴ * JJ n)) * x = -(JJ n * (xᴴ * JJ n * x)) := by
-          simp only [Matrix.neg_mul, Matrix.mul_assoc]
-      _ = 1 := by rw [hx', hJ, neg_neg]
-  exact (Matrix.isUnit_det_of_left_inverse h1).ne_zero
 
 theorem continuous_rhoP {Kg : Type} [TopologicalSpace Kg] (ι : Kg → M2 n) (hι : Continuous ι)
     (hK : ∀ k, InG (ι k)) (m : ℕ) (e : ℤ) (Y : Matrix (Fin n) (Fin n) ℂ) : Continuous (rhoP ι m e Y) := by
@@ -118,28 +80,22 @@ theorem continuous_rhoP {Kg : Type} [TopologicalSpace Kg] (ι : Kg → M2 n) (h�
   have hu2 : Continuous fun k => u2 (ι k) := by
     unfold u2
     fun_prop
-  have hI : Complex.I ≠ star Complex.I := by
-    rw [Complex.star_def, Complex.conj_I]
-    intro h
-    have := congrArg Complex.im h
-    norm_num at this
-  have hd1 : ∀ k, (u1 (ι k)).det ≠ 0 := fun k => det_smul_toBlocks₂₁_add_toBlocks₂₂_ne_zero (hK k) Complex.I hI
   have hinv : Continuous fun k => (u2 (ι k))⁻¹ := by
     rw [continuous_iff_continuousAt]
     intro k
     refine (continuousAt_matrix_inv _ ?_).comp hu2.continuousAt
     rw [Ring.inverse_eq_inv']
-    exact continuousAt_inv₀ (det_second_cayley_block_ne (hK k))
+    exact continuousAt_inv₀ (_root_.PositivityTheory.Rg.Sw.LVs.det_second_cayley_block_ne_zero (hK k))
   have hdet : Continuous fun k => (ι k).det := hι.matrix_det
   unfold rhoP fz
   simp only [neg_zero, Complex.cpow_zero, mul_one]
   refine Continuous.star (Continuous.mul (Continuous.mul (hdet.zpow₀ e ?_) ?_)
     (Continuous.matrix_trace ((hinv.matrix_mul continuous_const).matrix_mul hu1)))
-  · exact fun k => Or.inl (det_ne_zero_of_inG' (hK k))
-  · exact (hu1.matrix_det).zpow₀ _ (fun k => Or.inl (hd1 k))
+  · exact fun k => Or.inl (LVs.isUnit_det_of_inG' (hK k)).ne_zero
+  · exact (hu1.matrix_det).zpow₀ _ fun k => Or.inl (LVs.det_first_cayley_block_ne_zero (hK k))
 
 theorem one_upper_left_block : (1 : M2 n).toBlocks₁₁ = 1 := by ext i j; simp [toBlocks₁₁, Matrix.one_apply]
-theorem one_lower_left_block : (1 : M2 n).toBlocks₂₁ = 0 := by ext i j; simp [toBlocks₂₁, Matrix.one_apply]
+theorem one_lower_left_block : (1 : M2 n).toBlocks₂₁ = 0 := by ext i j; simp [toBlocks₂₁]
 theorem one_lower_right_block : (1 : M2 n).toBlocks₂₂ = 1 := by ext i j; simp [toBlocks₂₂, Matrix.one_apply]
 
 theorem fz_one (m : ℕ) (e : ℤ) (z : ℂ) : fz m e z (1 : M2 n) = 1 := by
@@ -194,7 +150,7 @@ theorem asmLT : AsmLT := by
     · have hg : HasDerivAt (fun z : ℂ => K0 * β ^ (-z)) (K0 * (β ^ (-(0 : ℂ)) * Complex.log β * (-1))) 0 :=
         (((hasDerivAt_id' (0 : ℂ)).neg).const_cpow (Or.inl hβ)).const_mul K0
       have h := ((hc 0).hasDerivAt.mul hg).deriv
-      simp only [hd0, hc0, zero_mul, mul_zero, add_zero] at h
+      simp only [hd0, hc0, zero_mul, add_zero] at h
       exact h
   refine ⟨1, fun _ => rhoP ι m e Qᴴ, fun _ => ψ, fun _ => a, fun _ => b, dslope c 0, fun _ _ => 1,
     fun _ => continuous_rhoP ι hι hK m e _, fun _ => hψ, fun _ => ⟨ha, hb⟩, ?_, ?_,
@@ -216,6 +172,6 @@ end PositivityTheory.Rg.Sw.HSt.LoweringDerivative
 
 namespace PositivityTheory.Rg.Sw.HSt
 
-theorem asmLT : AsmLT := LoweringDerivative.asmLT
+alias asmLT := _root_.PositivityTheory.Rg.Sw.HSt.LoweringDerivative.asmLT
 
 end PositivityTheory.Rg.Sw.HSt

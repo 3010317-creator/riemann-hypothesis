@@ -1,8 +1,8 @@
 module
 
-public import Mathlib
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.EventuallyInFrameDomain
-public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals.Example
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.IsMultiHomogChartMonomial
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRedC
 
 @[expose] public section
 
@@ -89,12 +89,6 @@ end ToTwin
 section OfTwin
 
 end OfTwin
-
-namespace Example
-
-open Line
-
-end Example
 
 end HermMetric
 

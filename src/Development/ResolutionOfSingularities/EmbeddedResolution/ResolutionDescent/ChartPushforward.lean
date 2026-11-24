@@ -1,14 +1,46 @@
 module
 
-public import Mathlib
-public import Development.ResolutionOfSingularities.Foundations.Blowup.BlowupExistence
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.BlowupSequenceRelations
-public import Development.ResolutionOfSingularities.Foundations.Blowup.StrictTransform
+public import Development.ResolutionOfSingularities.EmbeddedResolution.StrongResolution.StrictTransformTower
 public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.ClosedEmbedding.StrictTransformClosedImmersion
 public import Development.ResolutionOfSingularities.EmbeddedResolution.StrongResolution.DetachedLocus
-public import Development.ResolutionOfSingularities.EmbeddedResolution.StrongResolution.EmbeddedBlowupSequence
-public import Development.ResolutionOfSingularities.EmbeddedResolution.StrongResolution.StrictTransformTower
-public import Development.ResolutionOfSingularities.EmbeddedResolution.StrongResolution.EmbeddedStrictTransform
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -39,7 +71,7 @@ structure ChartPushforward (S S' : EmbeddedBlowupSequence k Y pY) where
       levelMap (i + 1) hi ≫ S'.blowdown i = S.blowdown i ≫ levelMap i hi.le
   ambientCenter_eq :
     ∀ (i : ℕ) (hi : i < S'.length),
-      S'.ambientCenter i = imageIdealSheaf (levelMap i hi.le) (S.ambientCenter i)
+      S'.ambientCenter i = _root_.FunctorialResolution.Blowup.schemeImageIdeal (levelMap i hi.le) (S.ambientCenter i)
   ker_levelMap_succ :
     ∀ (i : ℕ) (hi : i < S'.length),
       (levelMap (i + 1) hi).ker =
@@ -85,7 +117,7 @@ theorem blowdown_comm_of_isPushforwardBlowupSeq
 theorem ambientCenter_eq_imageIdealSheaf_of_isPushforwardBlowupSeq
     (h : IsPushforwardBlowupSeq f S.ambientSeq S'.ambientSeq) (i : ℕ) (hi : i < S'.length) :
     S'.ambientCenter i =
-      imageIdealSheaf (h.2.choose i (hi.le.trans_eq h.1.symm)) (S.ambientCenter i) :=
+      _root_.FunctorialResolution.Blowup.schemeImageIdeal (h.2.choose i (hi.le.trans_eq h.1.symm)) (S.ambientCenter i) :=
   h.2.choose_spec.2.2.2.1 i (hi.trans_eq h.1.symm)
 
 theorem ker_succ_eq_strictTransform_of_isPushforwardBlowupSeq
@@ -216,41 +248,16 @@ theorem strictTransformIso_zero_hom_comp_strictTransformZeroIso_hom (P : ChartPu
           rw [P.emb_ambientMap]
   exact (cancel_mono S'.emb).mp key
 
-private theorem range_subset_range_of_ker_le {U V W : Scheme.{u}} (f : U ⟶ W) (g : V ⟶ W)
-    [AlgebraicGeometry.IsClosedImmersion f] [AlgebraicGeometry.IsClosedImmersion g]
-    (hle : Scheme.Hom.ker g ≤ Scheme.Hom.ker f) :
-    Set.range ⇑f ⊆ Set.range ⇑g := by
-  obtain ⟨e, he⟩ : ∃ e : U ⟶ V, e ≫ g = f :=
-    ⟨AlgebraicGeometry.IsClosedImmersion.lift g f hle, by rw [IsClosedImmersion.lift_fac]⟩
-  rintro y ⟨x, rfl⟩
-  refine ⟨e.base x, ?_⟩
-  have hx : ⇑(e ≫ g) x = ⇑f x := by rw [he]
-  exact hx
-
-private theorem support_ker_eq_range {U W : Scheme.{u}} (h : U ⟶ W)
-    [AlgebraicGeometry.IsClosedImmersion h] :
-    ((Scheme.Hom.ker h).support : Set ↥W) = Set.range ⇑h := by
-  have hker : Scheme.Hom.ker ((Scheme.Hom.ker h).subschemeι) = Scheme.Hom.ker h :=
-    Scheme.IdealSheafData.ker_subschemeι _
-  have h1 : Set.range ⇑((Scheme.Hom.ker h).subschemeι)
-      = ((Scheme.Hom.ker h).support : Set ↥W) :=
-    Scheme.IdealSheafData.range_subschemeι _
-  rw [← h1]
-  exact Set.Subset.antisymm (range_subset_range_of_ker_le _ h (le_of_eq hker.symm))
-    (range_subset_range_of_ker_le h _ (le_of_eq hker))
-
 theorem support_ambientCenter_eq_image (P : ChartPushforward S S') (i : ℕ) (hi : i < S'.length) :
     ((S'.ambientCenter i).support : Set ↥(S'.schemeAt i)) =
       ⇑(P.levelMap i hi.le) '' ((S.ambientCenter i).support : Set ↥(S.schemeAt i)) := by
-  have hJ := P.ambientCenter_eq i hi
-  rw [imageIdealSheaf_eq_ker] at hJ
-  have hI : ((S.ambientCenter i).support : Set ↥(S.schemeAt i))
-      = Set.range ⇑((S.ambientCenter i).subschemeι) := by
-    have h2 := support_ker_eq_range ((S.ambientCenter i).subschemeι)
-    rwa [Scheme.IdealSheafData.ker_subschemeι] at h2
-  have hcomp : ⇑((S.ambientCenter i).subschemeι ≫ P.levelMap i hi.le)
-      = ⇑(P.levelMap i hi.le) ∘ ⇑((S.ambientCenter i).subschemeι) := rfl
-  rw [hJ, support_ker_eq_range, hI, hcomp, Set.range_comp]
+  have hJ : S'.ambientCenter i = (S.ambientCenter i).map (P.levelMap i hi.le) := by
+    rw [P.ambientCenter_eq i hi, imageIdealSheaf_eq_ker, ← map_eq_ker_subschemeι_comp]
+  have hcl : IsClosed
+      (⇑(P.levelMap i hi.le) '' ((S.ambientCenter i).support : Set ↥(S.schemeAt i))) :=
+    (Scheme.Hom.isClosedEmbedding (P.levelMap i hi.le)).isClosedMap _
+      (S.ambientCenter i).support.isClosed
+  rw [hJ, Scheme.IdealSheafData.support_map, TopologicalSpace.Closeds.coe_closure, hcl.closure_eq]
 
 end
 

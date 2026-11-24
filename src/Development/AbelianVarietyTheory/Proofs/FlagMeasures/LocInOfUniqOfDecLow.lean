@@ -1,22 +1,181 @@
 module
 
-public import Mathlib
+public import Mathlib.Analysis.CStarAlgebra.Matrix
+public import Formalism.HermitianCurvature.StatementB
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BetaSesquilinearity
 public import Formalism.HermitianCurvature.BesselNonvanishingReduction
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DegVand
-public import Formalism.LocalRingCardinality.DataTies
-public import Formalism.FormalDegreeBessel.FinalG
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselOneOfUniq
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OpnFrobCompare
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
+public import Formalism.SharpRestriction.CuspSpanNormBounds.NormalizedLocalScale
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Formalism.FormalDegreeBessel.StatementWR
+import Formalism.SharpRestriction.CuspSpanNormBounds.Point
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Lemma
+import Formalism.FormalDegreeBessel.FinalG
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.BitVec
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UpperOff
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Development.AbelianVarietyTheory.Definitions.Foundations.EnvOfMat, Development.AbelianVarietyTheory.Proofs.FoundationProofs.OpnFrobCompare, Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocInOfUniqOfDecLow
+
+-- ===== clump member: Development.AbelianVarietyTheory.Definitions.Foundations.EnvOfMat =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Definitions.Foundations.EnvOfMat", "h": "module\n\npublic import Mathlib.Analysis.CStarAlgebra.Matrix\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.FormalDegreeBessel.StatementWR\nimport Formalism.SharpRestriction.CuspSpanNormBounds.Point\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open Matrix MeasureTheory
+open scoped ContDiff
+
+noncomputable section
+
+namespace GlobalTheory.SOrb
+
+open Formalism.QuantumDeterminants Formalism.MainNotions.S
+
+def opn {m : ℕ} (g : Matrix (Fin m) (Fin m) ℂ) : ℝ :=
+  ‖(Matrix.toEuclideanCLM (n := Fin m) (𝕜 := ℂ) g : EuclideanSpace ℂ (Fin m) →L[ℂ] EuclideanSpace ℂ (Fin m))‖
+
+
+variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℂ V]
+
+end GlobalTheory.SOrb
+end -- clump:auto
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Definitions.Foundations.EnvOfMat =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.FoundationProofs.OpnFrobCompare =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FoundationProofs.OpnFrobCompare", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Foundations.EnvOfMat\npublic import Formalism.HermitianCurvature.StatementB\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.BetaSesquilinearity\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.LinearAlgebra.Matrix.FiniteDimensional\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.SharpRestriction.CuspSpanNormBounds.Point\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open Matrix
+
+noncomputable section
+
+namespace GlobalTheory.SOrb.CCBridge
+
+open Formalism.REAL Formalism.QuantumDeterminants Formalism.MainNotions.S Formalism.FourierDecayAlt.B Formalism.FourierDecayAlt.P.BetaSesquilinearity
+
+lemma lin_bound {𝕜 L M : Type*} [RCLike 𝕜] [NormedAddCommGroup L] [NormedSpace 𝕜 L] [FiniteDimensional 𝕜 L]
+    [NormedAddCommGroup M] [NormedSpace 𝕜 M] (u : L →ₗ[𝕜] M) : ∃ C : ℝ, 0 ≤ C ∧ ∀ x, ‖u x‖ ≤ C * ‖x‖ :=
+  ⟨‖LinearMap.toContinuousLinearMap u‖, norm_nonneg _, (LinearMap.toContinuousLinearMap u).le_opNorm⟩
+
+def opEquiv (n : ℕ) :
+    Matrix (Fin n) (Fin n) ℂ ≃ₗ[ℂ] (EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) :=
+  (Matrix.toEuclideanCLM (n := Fin n) (𝕜 := ℂ)).toAlgEquiv.toLinearEquiv
+
+lemma opn_eq {n : ℕ} (g : Matrix (Fin n) (Fin n) ℂ) : opn g = ‖opEquiv n g‖ := rfl
+
+section Frob
+
+attribute [local instance] Matrix.frobeniusSeminormedAddCommGroup Matrix.frobeniusNormedAddCommGroup
+  Matrix.frobeniusNormedSpace
+
+lemma opn_frob_compare (n : ℕ) :
+    ∃ K : ℝ, 0 < K ∧ ∀ g : Matrix (Fin n) (Fin n) ℂ, opn g ≤ K * ‖g‖ ∧ ‖g‖ ≤ K * opn g := by
+  obtain ⟨a, ha, h3⟩ := lin_bound (opEquiv n).toLinearMap
+  obtain ⟨b, hb, h4⟩ := lin_bound (opEquiv n).symm.toLinearMap
+  refine ⟨1 + a + b, by positivity, fun g => ?_⟩
+  have h3 : ‖opEquiv n g‖ ≤ a * ‖g‖ := h3 g
+  have h4 : ‖(opEquiv n).symm (opEquiv n g)‖ ≤ b * ‖opEquiv n g‖ := h4 (opEquiv n g)
+  rw [LinearEquiv.symm_apply_apply] at h4
+  rw [opn_eq]
+  have := norm_nonneg g
+  have := norm_nonneg (opEquiv n g)
+  constructor <;> nlinarith
+
+lemma opn_gN_compare (k r : ℕ) : ∃ K : ℝ, 0 < K ∧ ∀ g : Mat k r, opn g ≤ K * gN g ∧ gN g ≤ K * opn g := by
+  obtain ⟨K, hK, h⟩ := opn_frob_compare (2 * r + k + 1)
+  exact ⟨K, hK, fun g => by rw [gN_eq_frob]; exact h g⟩
+
+end Frob
+
+lemma rpow_compare {K : ℝ} (hK : 0 < K) (A : ℝ) {x y : ℝ} (hx : 0 < x) (hy : 0 < y) (h1 : x ≤ K * y)
+    (h2 : y ≤ K * x) : x ^ A ≤ K ^ |A| * y ^ A := by
+  rcases le_total 0 A with hA | hA
+  · rw [abs_of_nonneg hA, ← Real.mul_rpow hK.le hy.le]
+    exact Real.rpow_le_rpow hx.le h1 hA
+  · have h3 : y / K ≤ x := by rw [div_le_iff₀ hK]; linarith
+    have := Real.rpow_le_rpow_of_nonpos (by positivity) h3 hA
+    rw [Real.div_rpow hy.le hK.le] at this
+    rw [abs_of_nonpos hA, Real.rpow_neg hK.le]
+    calc x ^ A ≤ y ^ A / K ^ A := this
+      _ = _ := by ring
+
+attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
+
+variable {k r : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
+
+end GlobalTheory.SOrb.CCBridge
+
+namespace GlobalTheory.SOrb
+
+open Formalism.QuantumDeterminants Formalism.FourierDecayAlt.B Formalism.FourierDecayAlt.P.BetaSesquilinearity GlobalTheory.SOrb.CCBridge
+
+end GlobalTheory.SOrb
+end -- clump:auto
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FoundationProofs.OpnFrobCompare =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocInOfUniqOfDecLow =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocInOfUniqOfDecLow", "h": "module\n\npublic import Formalism.HermitianCurvature.BesselNonvanishingReduction\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.NormalizedLocalScale\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OpnFrobCompare\nimport Formalism.FormalDegreeBessel.FinalG\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.BetaSesquilinearity\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.BitVec\nimport Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UpperOff\n\n"}
+section -- clump:auto
 @[expose] public section
 
 open MeasureTheory Matrix Formalism.BasicNotions Formalism.QuantumDeterminants Formalism.MainNotions.S GlobalTheory.SgInf GlobalTheory.Amp
 open scoped InnerProductSpace ENNReal
 
 namespace GlobalTheory.Amp.LocalInputs
-
-theorem hpk_det (k r : ℕ) : IsUnit (Hpk k r).det :=
-  Matrix.isUnit_det_of_right_inverse (hpkFacts k r).2.1
 
 theorem urep_of_ds {k r : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     {ε : Fin (2 * r + k + 1) → Bool} {lam : Fin (2 * r + k + 1) → ℝ} {σ : Mat k r → (H →L[ℂ] H)}
@@ -47,7 +206,7 @@ theorem urep_of_ds {k r : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProductSp
     simp only [Function.comp, back]
 
 theorem opn_pos {k r : ℕ} {g : Mat k r} (hg : g ∈ GG k r) : 0 < opn g := by
-  have hu := ((uHGroup _ _ (hpk_det k r)).2.2 g hg).1
+  have hu := ((uHGroup _ _ (Formalism.FourierDecayAlt.P.BetaSesquilinearity.Hdet k r)).2.2 g hg).1
   have h := opn_mul_le g⁻¹ g
   rw [nonsing_inv_mul _ hu, opn_one] at h
   rcases (opn_nonneg g).lt_or_eq with h0 | h0
@@ -58,7 +217,7 @@ theorem coef_translate {k r : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProdu
     {σ : Mat k r → (H →L[ℂ] H)} (hσ : IsURepOn (GG k r) σ) {a b g : Mat k r} (ha : a ∈ GG k r)
     (hb : b ∈ GG k r) (hg : g ∈ GG k r) (u v : H) :
     coef σ (σ a u) (σ b v) g = coef σ u v (b⁻¹ * g * a) := by
-  obtain ⟨-, hmul, hinv⟩ := uHGroup _ _ (hpk_det k r)
+  obtain ⟨-, hmul, hinv⟩ := uHGroup _ _ (Formalism.FourierDecayAlt.P.BetaSesquilinearity.Hdet k r)
   have hx : b⁻¹ * g * a ∈ GG k r := hmul _ (hmul _ (hinv b hb).2 _ hg) _ ha
   have e : g * a = b * (b⁻¹ * g * a) := by
     rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, mul_nonsing_inv _ (hinv b hb).1, Matrix.one_mul]
@@ -74,7 +233,7 @@ theorem coef_translate {k r : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProdu
 theorem decay_span {k r : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     {σ : Mat k r → (H →L[ℂ] H)} {V : Set H} {a : ℝ} (ha : 0 ≤ a) (hσ : IsURepOn (GG k r) σ) (hV : Decay σ V a) :
     Decay σ (Submodule.span ℂ {v | ∃ g ∈ GG k r, ∃ u ∈ V, v = σ g u} : Submodule ℂ H) a := by
-  obtain ⟨-, hmul, hinv⟩ := uHGroup _ _ (hpk_det k r)
+  obtain ⟨-, hmul, hinv⟩ := uHGroup _ _ (Formalism.FourierDecayAlt.P.BetaSesquilinearity.Hdet k r)
   intro u hu v hv
   refine Submodule.span_induction₂ (p := fun u v _ _ => ∃ C : ℝ, ∀ g ∈ GG k r, ‖coef σ u v g‖ ≤ C * opn g ^ (-a))
     ?_ ?_ ?_ ?_ ?_ ?_ ?_ hu hv
@@ -209,3 +368,6 @@ theorem decay_low (hD : Formalism.FourierDecayAlt.ThreeDimData.DecLow) {k r : �
     _ ≤ _ := by rw [mul_assoc]; exact mul_le_mul_of_nonneg_left h2 (abs_nonneg _)
 
 end GlobalTheory.Amp.LocalInputs
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocInOfUniqOfDecLow =====

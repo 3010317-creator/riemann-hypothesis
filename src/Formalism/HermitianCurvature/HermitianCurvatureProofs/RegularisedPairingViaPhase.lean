@@ -1,11 +1,65 @@
 module
 
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ChainRuleSecondOrder.HasDerivAtDOf
 public import Formalism.HermitianCurvature.StatementB
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.IntegralZeroFrequencyInvariant
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.AdjointnessPolynomiallyBounded
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
 public import Formalism.FormalDegreeBessel.FormalDegreeRatio.UnitaryWeylNormalHolds
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.IntegralZeroFrequencyInvariant
 public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.CartanInvolutionConjTransposeMul
 public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.ComplexifiedDerivativeCommutator
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.Normed.Algebra.MatrixExponential
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Formalism.SharedLemmas.HpkSq
 
 @[expose] public section
 
@@ -331,14 +385,10 @@ theorem _root_.Formalism.FourierDecayAlt.P.phase_function_bound : Formalism.Four
     have h0 := hF.2 [] [] (by simp) (by simp) (by simp) g hg
     first
     | exact h0
-    | simpa [dLR] using h0
-    | simpa [dLR, Rw] using h0
   have hb' : ∀ g ∈ GV k r, gN g ^ A * ‖F' g‖ ≤ c' := fun g hg => by
     have h0 := hF'.2 [] [] (by simp) (by simp) (by simp) g hg
     first
     | exact h0
-    | simpa [dLR] using h0
-    | simpa [dLR, Rw] using h0
   have h1G : (1 : Mat k r) ∈ GV k r := by
     show (1 : Mat k r)ᴴ * Hpk k r * 1 = Hpk k r
     simp
@@ -439,70 +489,12 @@ private theorem hpk_apply_of_not_mid_index {k r : ℕ} (i b : Fin (2 * r + k + 1
     simp only [Hpk, if_neg e1, if_neg e2, if_neg e3]
 
 private theorem hpk_mul_self' {k r : ℕ} : Hpk k r * Hpk k r = 1 := by
-  ext i j
-  rw [Matrix.mul_apply, Matrix.one_apply]
-  have hi1 := i.isLt
-  by_cases hi : r ≤ i.val ∧ i.val ≤ r + k
-  · rw [Finset.sum_eq_single i]
-    · rw [hpk_apply_of_mid_index i i hi, hpk_apply_of_mid_index i j hi, if_pos rfl]
-      by_cases hij : i = j
-      · subst hij
-        rw [if_pos rfl, if_pos rfl]
-        split_ifs <;> norm_num
-      · rw [if_neg (Ne.symm hij), if_neg hij, mul_zero]
-    · intro b _ hb
-      rw [hpk_apply_of_mid_index i b hi, if_neg hb, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
-  · have hn : 2 * r + k - i.val < 2 * r + k + 1 := by omega
-    have hσ : ¬(r ≤ (⟨2 * r + k - i.val, hn⟩ : Fin (2 * r + k + 1)).val ∧
-        (⟨2 * r + k - i.val, hn⟩ : Fin (2 * r + k + 1)).val ≤ r + k) := by
-      show ¬(r ≤ 2 * r + k - i.val ∧ 2 * r + k - i.val ≤ r + k)
-      omega
-    have hσσ : 2 * r + k - (⟨2 * r + k - i.val, hn⟩ : Fin (2 * r + k + 1)).val = i.val := by
-      show 2 * r + k - (2 * r + k - i.val) = i.val
-      omega
-    rw [Finset.sum_eq_single ⟨2 * r + k - i.val, hn⟩]
-    · rw [hpk_apply_of_not_mid_index i _ hi, hpk_apply_of_not_mid_index _ j hσ, if_pos rfl, one_mul, hσσ]
-      by_cases hij : i = j
-      · subst hij
-        simp
-      · rw [if_neg hij, if_neg (fun h => hij (Fin.ext h.symm))]
-    · intro b _ hb
-      have hb' : ¬ b.val = 2 * r + k - i.val := fun h => hb (Fin.ext h)
-      rw [hpk_apply_of_not_mid_index i b hi, if_neg hb', zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+  first
+  | exact _root_.Formalism.SharedLemmas.upq_hpk_mul_self
+  | (apply _root_.Formalism.SharedLemmas.upq_hpk_mul_self <;> assumption)
 
 theorem exp_mem {X : Mat k r} (hX : inLie k r X) (t : ℝ) : NormedSpace.exp ((t : ℂ) • X) ∈ GV k r := by
-  have hH : Hpk k r * Hpk k r = 1 := hpk_mul_self'
-  have hdet : (Hpk k r).det * (Hpk k r).det = 1 := by rw [← Matrix.det_mul, hH, Matrix.det_one]
-  have hu : IsUnit (Hpk k r) := by
-    first
-    | exact (Matrix.isUnit_iff_isUnit_det _).2 (Matrix.isUnit_det_of_right_inverse hH)
-    | exact (Matrix.isUnit_iff_isUnit_det _).2 (isUnit_of_mul_eq_one _ _ hdet)
-    | exact (Matrix.isUnit_iff_isUnit_det _).2 (IsUnit.of_mul_eq_one _ hdet)
-    | exact (Matrix.isUnit_iff_isUnit_det _).2 (isUnit_iff_ne_zero.2 (left_ne_zero_of_mul_eq_one hdet))
-  have hinv : (Hpk k r)⁻¹ = Hpk k r := Matrix.inv_eq_left_inv hH
-  have e : Xᴴ * Hpk k r = -(Hpk k r * X) := eq_neg_of_add_eq_zero_left hX
-  have hXh : Xᴴ = Hpk k r * (-X) * (Hpk k r)⁻¹ := by
-    rw [hinv]
-    calc Xᴴ = Xᴴ * Hpk k r * Hpk k r := by rw [Matrix.mul_assoc, hH, Matrix.mul_one]
-      _ = Hpk k r * (-X) * Hpk k r := by rw [e, Matrix.mul_neg]
-  have hs : ((t : ℂ) • X)ᴴ = Hpk k r * ((t : ℂ) • -X) * (Hpk k r)⁻¹ := by
-    rw [Matrix.conjTranspose_smul, hXh, Matrix.mul_smul, Matrix.smul_mul]
-    congr 1
-    exact Complex.conj_ofReal t
-  have hE : (NormedSpace.exp ((t : ℂ) • X))ᴴ = NormedSpace.exp (((t : ℂ) • X)ᴴ) := by
-    first
-    | exact (Matrix.exp_conjTranspose _).symm
-    | exact Matrix.exp_conjTranspose _
-  have hEE : NormedSpace.exp ((t : ℂ) • -X) * NormedSpace.exp ((t : ℂ) • X) = 1 := by
-    rw [smul_neg, ← Matrix.exp_add_of_commute _ _ ((Commute.refl ((t : ℂ) • X)).neg_left), neg_add_cancel,
-      NormedSpace.exp_zero]
-  show (NormedSpace.exp ((t : ℂ) • X))ᴴ * Hpk k r * NormedSpace.exp ((t : ℂ) • X) = Hpk k r
-  rw [hE, hs, Matrix.exp_conj _ _ hu, hinv, Matrix.mul_assoc (Hpk k r * _) (Hpk k r), hH, Matrix.mul_one,
-    Matrix.mul_assoc, hEE, Matrix.mul_one]
+  apply PI.ComplexConjugateDerivative.exp_mem_GV <;> assumption
 
 theorem exp_add' (X : Mat k r) (s t : ℝ) :
     NormedSpace.exp (((s + t : ℝ) : ℂ) • X) = NormedSpace.exp ((s : ℂ) • X) * NormedSpace.exp ((t : ℂ) • X) := by

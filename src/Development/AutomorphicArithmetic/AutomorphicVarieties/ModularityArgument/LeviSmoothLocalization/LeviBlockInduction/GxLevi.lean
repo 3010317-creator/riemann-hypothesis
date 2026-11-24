@@ -1,6 +1,7 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LeviSmoothLocalization.LeviBlockInduction.GxMulti
+public import GroundTheory.AutomorphicForms.GL2.GJFELevi
 
 @[expose] public section
 
@@ -10,7 +11,6 @@ open MeasureTheory Measure GroundTheory GroundTheory.Automorphic GroundTheory.Au
 open GroundTheory.Automorphic.GodementJacquet
 open scoped NNReal ENNReal Classical ValuativeRel
 
-attribute [-instance] Formalism.DoubleCosetMeasures.instMeasGL
 
 namespace UpperTheory.V.Z.ImaginaryQuadraticEtaCharacter
 

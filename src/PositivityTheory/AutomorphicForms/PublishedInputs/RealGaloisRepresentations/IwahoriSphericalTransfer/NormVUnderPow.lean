@@ -1,13 +1,11 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.Brauer
 public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.FinrankAdjoinSqrtNegOne
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.RealTransport.RealTransport
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.LocIsotypic
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Langlands
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.BcDefs
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.FrobeniusPowerCompatibility
-public import Development.AbelianVarietyTheory.BlockTheory.AdelicCMFields.UnitaryHeckeCharacterIdele
+import Formalism.SharpRestriction.GrowthBounds.MonomialOrderSegments.BrData
+import Mathlib.RingTheory.Ideal.Norm.RelNorm
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValSubLtIff
 
 @[expose] public section
 
@@ -19,12 +17,7 @@ namespace GlobalTheory.AttResTower
 
 theorem normV_under_pow {K K' : Type} [Field K] [NumberField K] [Field K'] [NumberField K'] [Algebra K K']
     (w : HeightOneSpectrum (𝓞 K')) : normV w = normV (w.under (𝓞 K)) ^ w.asIdeal.inertiaDeg (𝓞 K) := by
-  have : w.asIdeal.LiesOver (w.under (𝓞 K)).asIdeal := ⟨rfl⟩
-  have := w.isMaximal
-  have := (w.under (𝓞 K)).isMaximal
-  simp only [normV, ← Submodule.cardQuot_apply, ← Ideal.absNorm_apply]
-  rw [← Ideal.absNorm_relNorm (𝓞 K) (𝓞 K') w.asIdeal,
-    Ideal.relNorm_eq_pow_of_isMaximal w.asIdeal (w.under (𝓞 K)).asIdeal, map_pow]
+  apply _root_.GlobalTheory.DelEps.WeilRes.normV_eq_pow
 
 theorem two_le_normV {K : Type} [Field K] [NumberField K] (v : HeightOneSpectrum (𝓞 K)) : 2 ≤ normV v := by
   simp only [normV, ← Submodule.cardQuot_apply, ← Ideal.absNorm_apply]
@@ -44,8 +37,6 @@ theorem under_under {F K M : Type} [Field F] [NumberField F] [Field K] [NumberFi
   ext x
   first
   | exact (IsScalarTower.algebraMap_eq (𝓞 F) (𝓞 K) (𝓞 M)).symm ▸ rfl
-  | (apply RingOfIntegers.coe_injective; simp only [RingHom.comp_apply, RingOfIntegers.algebraMap_coe]; exact (IsScalarTower.algebraMap_apply F K M (x : F)).symm)
-  | (apply RingOfIntegers.ext; simp [IsScalarTower.algebraMap_apply F K M])
 
 end GlobalTheory.AttResTower
 
@@ -67,4 +58,4 @@ theorem GlobalTheory.AttResTower.attRes_comp_res : ∀ (F Ω : Type) [Field F] [
   rw [Multiset.map_map] at h3
   rw [hff]
   convert h3 using 2
-  simp [Function.comp_def, pow_mul]
+  simp [pow_mul]

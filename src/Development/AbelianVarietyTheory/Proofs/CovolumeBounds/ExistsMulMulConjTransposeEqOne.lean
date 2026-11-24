@@ -1,6 +1,62 @@
 module
 
-public import Mathlib
+public import Mathlib.CategoryTheory.Category.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Mathlib.LinearAlgebra.UnitaryGroup
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+public import Mathlib.LinearAlgebra.Matrix.Hermitian
 
 @[expose] public section
 
@@ -89,18 +145,14 @@ private theorem range_quotHom (hs : ∃ a : K, star a ≠ a) :
       Units.val_mk0]
     rw [div_eq_iff h2, h]
 
-private theorem card_ker_mul_card_range {G H : Type*} [Group G] [Group H] (f : G →* H) :
-    Nat.card f.ker * Nat.card f.range = Nat.card G := by
-  rw [← Subgroup.index_ker, Subgroup.card_mul_index]
-
 private theorem range_normHom [Finite K] (hs : ∃ a : K, star a ≠ a) :
     (normHom K).range = (quotHom K).ker := by
   apply Subgroup.eq_of_le_of_card_ge
   · rintro _ ⟨z, rfl⟩
     rw [mem_ker_quotHom]
     simp [normHom, mul_comm]
-  · have h1 := card_ker_mul_card_range (normHom K)
-    have h2 := card_ker_mul_card_range (quotHom K)
+  · have h1 := Subgroup.card_ker_mul_card_range (normHom K)
+    have h2 := Subgroup.card_ker_mul_card_range (quotHom K)
     rw [range_quotHom hs, ← h1, mul_comm] at h2
     exact (Nat.eq_of_mul_eq_mul_left Nat.card_pos h2).le
 
@@ -128,7 +180,7 @@ theorem two_le_of_card_eq_sq {K : Type*} [Field K] [Finite K] {q : ℕ} (hq : Na
 
 theorem card_norm_eq_one [Finite K] {q : ℕ} (hq : Nat.card K = q ^ 2) (hs : ∃ a : K, star a ≠ a) :
     Nat.card {u : K // u * star u = 1} = q + 1 := by
-  have h2 := card_ker_mul_card_range (quotHom K)
+  have h2 := Subgroup.card_ker_mul_card_range (quotHom K)
   rw [range_quotHom hs, Nat.card_units, hq] at h2
   have e1 : Nat.card (quotHom K).ker = q - 1 := by
     rw [← card_selfAdjoint hq hs, ← Nat.card_units]
@@ -271,18 +323,18 @@ theorem IsOrthonormal.linearIndependent {ι : Type*} [DecidableEq ι] {s : ι �
   rw [linearIndependent_iff']
   intro t g hg i hi
   have := congrArg (fun v => h v (s i)) hg
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, hs _ i, smul_eq_mul,
-    mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', hi, if_true, map_zero,
-    LinearMap.zero_apply] at this
+
+  simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, hs _ i, smul_eq_mul,
+  mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', hi, if_true, map_zero,
+  LinearMap.zero_apply] at this
   exact this
 
 theorem IsOrthonormal.apply_eq_sum {ι : Type*} [Fintype ι] [DecidableEq ι] {b : Basis ι K V}
     (hb : IsOrthonormal h b) (x y : V) : h x y = ∑ i, b.repr x i * star (b.repr y i) := by
   conv_lhs => rw [← b.sum_repr x, ← b.sum_repr y]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smul, LinearMap.map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply,
-    hb _ _, smul_eq_mul, mul_ite, mul_one, mul_zero, starRingEnd_apply]
+
+  simp only [map_sum, map_smul, LinearMap.map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply,
+  hb _ _, smul_eq_mul, mul_ite, mul_one, mul_zero, starRingEnd_apply]
   refine Finset.sum_congr rfl fun i _ => ?_
   simp [mul_comm]
 
@@ -527,7 +579,7 @@ theorem card_specialUnitaryGroup_mul [Finite K] {q : ℕ} (hq : Nat.card K = q ^
     · change (Matrix.diagonal (Function.update 1 i (u : K))).det = u
       rw [Matrix.det_diagonal, Finset.prod_update_of_mem (Finset.mem_univ i)]
       simp
-  rw [← card_ker_mul_card_range d, hd, Subgroup.card_top, ← card_norm_eq_one hq hs]
+  rw [← Subgroup.card_ker_mul_card_range d, hd, Subgroup.card_top, ← card_norm_eq_one hq hs]
   congr 1
   · refine Nat.card_congr (Equiv.ofBijective (fun A => ⟨⟨A.1, A.2.1⟩, Subtype.ext A.2.2⟩) ⟨?_, ?_⟩)
     · intro A B h
@@ -588,7 +640,7 @@ theorem card_specialLinearGroup_mul (ι : Type*) [Fintype ι] [DecidableEq ι] [
       rw [Matrix.det_diagonal, Finset.prod_update_of_mem (Finset.mem_univ i)]
       simp
     exact ⟨Matrix.GeneralLinearGroup.mkOfDetNeZero _ (this.trans_ne u.ne_zero), Units.ext this⟩
-  rw [← card_ker_mul_card_range (Matrix.GeneralLinearGroup.det : GL ι F →* Fˣ), hd,
+  rw [← Subgroup.card_ker_mul_card_range (Matrix.GeneralLinearGroup.det : GL ι F →* Fˣ), hd,
     Subgroup.card_top, Nat.card_units]
   congr 1
   refine Nat.card_congr (Equiv.ofBijective

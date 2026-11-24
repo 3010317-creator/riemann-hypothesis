@@ -1,17 +1,12 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.Brauer
 public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.FinrankAdjoinSqrtNegOne
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.RealTransport.RealTransport
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.LocIsotypic
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Langlands
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.BcDefs
 
 @[expose] public section
 
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N
 open GlobalTheory.CuspRep GlobalTheory.WeilDeligne GlobalTheory.Pst GlobalTheory.LocLanglands GlobalTheory.HeckeGal GlobalTheory.LocGL GlobalTheory.GalOfCusp UpperTheory.V UpperTheory.V.Af UpperTheory.V.Published UpperTheory.V.Af.Bc GlobalTheory.RealGal
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace GlobalTheory.RealGal.SignChar
 
@@ -38,7 +33,7 @@ theorem index_fix [IsAlgClosure F Ω] (Q : QCM F Ω) :
 open Classical in
 noncomputable def sign [IsAlgClosure F Ω] (Q : QCM F Ω) : G F Ω →* ℤˣ where
   toFun σ := if σ ∈ Q.K.fixingSubgroup then 1 else -1
-  map_one' := by simp [Subgroup.one_mem]
+  map_one' := by simp
   map_mul' a b := by
     have h := Subgroup.mul_mem_iff_of_index_two (index_fix Q).1 (a := a) (b := b)
     by_cases ha : a ∈ Q.K.fixingSubgroup <;> by_cases hb : b ∈ Q.K.fixingSubgroup

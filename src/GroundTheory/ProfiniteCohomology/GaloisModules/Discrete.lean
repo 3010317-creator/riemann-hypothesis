@@ -1,8 +1,12 @@
 module
 
-public import Mathlib
 public import GroundTheory.ProfiniteCohomology.DiscreteModules
 public import GroundTheory.ProfiniteCohomology.GaloisModules.CoeGalRootsOfUnityHomApply
+public import Mathlib.FieldTheory.KrullTopology
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Connected.Separation
+public import Mathlib.Topology.Algebra.OpenSubgroup
 
 @[expose] public section
 
@@ -17,12 +21,6 @@ variable {K : Type*} {L : Type u} [Field K] [Field L] [Algebra K L]
 section Topology
 
 variable (K L)
-
-theorem galois_compactSpace [IsGalois K L] : CompactSpace Gal(L/K) :=
-  inferInstance
-
-theorem galois_t2Space [Algebra.IsIntegral K L] : T2Space Gal(L/K) :=
-  inferInstance
 
 theorem galois_isProfinite [IsGalois K L] :
     CompactSpace Gal(L/K) ∧ T2Space Gal(L/K) ∧ TotallyDisconnectedSpace Gal(L/K) :=

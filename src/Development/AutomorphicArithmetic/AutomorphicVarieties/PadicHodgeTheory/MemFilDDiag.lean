@@ -1,6 +1,47 @@
 module
 
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.MemGKBot
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.FiniteCohomology
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -29,18 +70,16 @@ theorem tm_tmul {B : Type} [AddCommGroup B] [Module ℚ_[l] B] (f : V →ₗ[A] 
 variable (φ : G →* GQ l) {ρ : Representation A G V} {ρ' : Representation A G V'} (f : V →ₗ[A] V')
 
 theorem tm_actC (g : G) (hf : ∀ x, f (ρ g x) = ρ' g (f x)) (y : V ⊗[ℚ_[l]] Bcr l) :
-    tm l _ f (actC φ ρ g y) = actC φ ρ' g (tm l _ f y) := by
-  induction y using TensorProduct.induction_on with
-  | zero => simp only [map_zero]
-  | tmul v b => exact congrArg (· ⊗ₜ _) (hf v)
-  | add x y hx hy => simp only [map_add (f := _), hx, hy]
+    tm l _ f (actC φ ρ g y) = actC φ ρ' g (tm l _ f y) :=
+  LinearMap.congr_fun (AlgebraTensorModule.ext (R := ℚ_[l]) (A := A)
+    (g := (tm l (Bcr l) f).comp (actC φ ρ g)) (h := (actC φ ρ' g).comp (tm l (Bcr l) f))
+    fun v _ => congrArg (· ⊗ₜ _) (hf v)) y
 
 theorem tm_actD (g : G) (hf : ∀ x, f (ρ g x) = ρ' g (f x)) (y : V ⊗[ℚ_[l]] Bdr l) :
-    tm l _ f (actD φ ρ g y) = actD φ ρ' g (tm l _ f y) := by
-  induction y using TensorProduct.induction_on with
-  | zero => simp only [map_zero]
-  | tmul v b => exact congrArg (· ⊗ₜ _) (hf v)
-  | add x y hx hy => simp only [map_add (f := _), hx, hy]
+    tm l _ f (actD φ ρ g y) = actD φ ρ' g (tm l _ f y) :=
+  LinearMap.congr_fun (AlgebraTensorModule.ext (R := ℚ_[l]) (A := A)
+    (g := (tm l (Bdr l) f).comp (actD φ ρ g)) (h := (actD φ ρ' g).comp (tm l (Bdr l) f))
+    fun v _ => congrArg (· ⊗ₜ _) (hf v)) y
 
 theorem tm_Dcr (hf : ∀ g x, f (ρ g x) = ρ' g (f x)) {y : V ⊗[ℚ_[l]] Bcr l} (hy : y ∈ Dcr φ ρ) :
     tm l _ f y ∈ Dcr φ ρ' := by
@@ -70,25 +109,21 @@ theorem tm_FilD (hf : ∀ g x, f (ρ g x) = ρ' g (f x)) {i : ℤ} {y : V ⊗[�
 
 theorem tm_smulC (K : FinExt l) (c : A ⊗[ℚ_[l]] ↥(K0 K)) (y : V ⊗[ℚ_[l]] Bcr l) :
     tm l _ f (smulC V K c y) = smulC V' K c (tm l _ f y) := by
-  induction c using TensorProduct.induction_on with
-  | zero => simp only [map_zero, LinearMap.zero_apply]
-  | add x y hx hy => simp only [map_add (f := _), LinearMap.add_apply, hx, hy]
-  | tmul a k =>
-    induction y using TensorProduct.induction_on with
-    | zero => simp only [map_zero]
-    | tmul v b => exact congrArg (· ⊗ₜ _) (f.map_smul a v)
-    | add x y hx hy => simp only [map_add (f := _), hx, hy]
+  refine TensorProduct.inductionOn c (fun a k => ?_) fun x z hx hz => by
+    simp only [map_add (f := _), LinearMap.add_apply, hx, hz]
+  exact LinearMap.congr_fun (TensorProduct.ext'
+    (g := ((tm l (Bcr l) f).restrictScalars ℚ_[l]).comp (smulC V K (a ⊗ₜ k)))
+    (h := (smulC V' K (a ⊗ₜ k)).comp ((tm l (Bcr l) f).restrictScalars ℚ_[l]))
+    fun v _ => congrArg (· ⊗ₜ _) (f.map_smul a v)) y
 
 theorem tm_smulD (K : FinExt l) (c : A ⊗[ℚ_[l]] ↥K.1) (y : V ⊗[ℚ_[l]] Bdr l) :
     tm l _ f (smulD V K c y) = smulD V' K c (tm l _ f y) := by
-  induction c using TensorProduct.induction_on with
-  | zero => simp only [map_zero, LinearMap.zero_apply]
-  | add x y hx hy => simp only [map_add (f := _), LinearMap.add_apply, hx, hy]
-  | tmul a k =>
-    induction y using TensorProduct.induction_on with
-    | zero => simp only [map_zero]
-    | tmul v b => exact congrArg (· ⊗ₜ _) (f.map_smul a v)
-    | add x y hx hy => simp only [map_add (f := _), hx, hy]
+  refine TensorProduct.inductionOn c (fun a k => ?_) fun x z hx hz => by
+    simp only [map_add (f := _), LinearMap.add_apply, hx, hz]
+  exact LinearMap.congr_fun (TensorProduct.ext'
+    (g := ((tm l (Bdr l) f).restrictScalars ℚ_[l]).comp (smulD V K (a ⊗ₜ k)))
+    (h := (smulD V' K (a ⊗ₜ k)).comp ((tm l (Bdr l) f).restrictScalars ℚ_[l]))
+    fun v _ => congrArg (· ⊗ₜ _) (f.map_smul a v)) y
 
 theorem smulC_one (K : FinExt l) (a : A) (y : V ⊗[ℚ_[l]] Bcr l) :
     smulC V K (a ⊗ₜ[ℚ_[l]] (1 : ↥(K0 K))) y = a • y := by
@@ -122,10 +157,10 @@ theorem pr_inc (a b : Fin n) (x : A ⊗[ℚ_[l]] B) : pr l B a (inc l B b x) = i
   | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]; split_ifs <;> simp
 
 theorem sum_inc_pr (y : (Fin n → A) ⊗[ℚ_[l]] B) : ∑ a, inc l B a (pr l B a y) = y := by
-  induction y using TensorProduct.induction_on with
-  | zero => simp
-  | tmul v c => simp [tm_tmul, ← sum_tmul, Finset.univ_sum_single]
-  | add x y hx hy => simp only [map_add (f := _), Finset.sum_add_distrib, hx, hy]
+  have h := LinearMap.congr_fun (AlgebraTensorModule.ext (R := ℚ_[l]) (A := A)
+    (g := ∑ a, inc l B a ∘ₗ pr l B a) (h := LinearMap.id) fun _ _ => by
+      simp [LinearMap.sum_apply, tm_tmul, ← sum_tmul, Finset.univ_sum_single]) y
+  simpa only [LinearMap.sum_apply, LinearMap.comp_apply, LinearMap.id_apply] using h
 
 variable {ρ : G →* GL (Fin n) A} {κ : Fin n → G →* Aˣ}
   (hρ : ∀ g, (ρ g : Matrix (Fin n) (Fin n) A) = Matrix.diagonal fun a => (κ a g : A))
@@ -211,8 +246,8 @@ theorem crys_diag {L : FinExt l} (h : K.1 ≤ L.1) (hN : ((GK L).subgroupOf (GK 
   have key : ∀ (c : Fin n → A ⊗[ℚ_[l]] ↥(K0 L)) b,
       pr l _ b (∑ a, smulC (Fin n → A) L (c a) (inc l _ a (x a))) = smulC A L (c b) (x b) := by
     intro c b
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, ← tm_smulC, pr_inc, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+
+    simp only [map_sum, ← tm_smulC, pr_inc, Finset.sum_ite_eq, Finset.mem_univ, if_true]
   refine ⟨hN, hC, fun a => inc l _ a (x a), fun a => tm_Dcr _ _ (fun g => single_diag hρ a (incl h g)) (hx a),
     fun y hy => ?_, fun γ _ M hM => ?_⟩
   · choose c hc hcu using fun a => hB a _ (tm_Dcr _ _ (fun g => proj_diag hρ a (incl h g)) hy)

@@ -1,6 +1,9 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.CasimirCoefficients.PsiExistsStatement
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.TypeStar
 
 @[expose] public section
 
@@ -47,11 +50,6 @@ instance (ε : Fin n → Bool) : LocallyCompactSpace (KG ε) := (isClosed_KG ε)
 -- Keep the instance name stable across builds of the downstream Haar modules.
 instance instMeasurableSpaceSubtypeUnitsMatrixFinComplexMemSubgroupUJKG
     (ε : Fin n → Bool) : MeasurableSpace (KG ε) := borel _
-
--- Older stub interfaces refer to the name generated from their source path.
-abbrev «instMeasurableSpaceSubtypeUnitsMatrixFinComplexMemSubgroupUJKG_.leanwrap»
-    (ε : Fin n → Bool) : MeasurableSpace (KG ε) :=
-  instMeasurableSpaceSubtypeUnitsMatrixFinComplexMemSubgroupUJKG ε
 
 instance (ε : Fin n → Bool) : BorelSpace (KG ε) := ⟨rfl⟩
 

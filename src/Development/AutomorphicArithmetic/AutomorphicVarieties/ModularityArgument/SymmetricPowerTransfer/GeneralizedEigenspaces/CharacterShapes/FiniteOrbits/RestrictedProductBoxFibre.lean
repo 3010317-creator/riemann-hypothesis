@@ -1,6 +1,42 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.GeneralizedEigenspaces.CharacterShapes.UnitaryThreeTestFunctionHeckeRelations
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -8,8 +44,6 @@ noncomputable section
 
 open NumberField IsDedekindDomain ValuativeRel GlobalTheory.PRep GlobalTheory.SmGL UpperTheory.V.Hi UpperTheory.V.AlgebraTools
 open UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Loc UpperTheory.V.Z.Sym.Glob UpperTheory.V.Z.Sym.Sig UpperTheory.V.Z.Sym.So
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace UpperTheory.V.Z.Sym.So
 
@@ -49,9 +83,6 @@ private theorem out_mem_doubleCoset_and_out_inv_mul_mem_doubleCoset {A : Type} [
   refine ⟨mul_mem_doubleCoset_of_mem_doubleCoset_of_mem h1 c.2, ?_⟩
   rw [mul_inv_rev, mul_assoc]
   exact mul_mem_doubleCoset_of_mem_of_mem_doubleCoset h2 (inv_mem c.2)
-
-private theorem quotientGroup_coe_out_eq_self {A : Type} [Group A] (W : Subgroup A) (y : A ⧸ W) :
-    ((Quotient.out y : A) : A ⧸ W) = y := Quotient.out_eq y
 
 theorem UpperTheory.V.Z.Sym.So.uFBox :
     UpperTheory.V.Z.Sym.So.UFBox := by
@@ -117,10 +148,10 @@ theorem UpperTheory.V.Z.Sym.So.uFBox :
       simp only [smulMk]
       rw [hc, QuotientGroup.eq]
       convert (hB _).1 c.2 v.1 using 1
-      simp only [map_mul, Subgroup.coe_mk]
+      simp only [map_mul]
       group
     · rintro _ ⟨u1, rfl⟩ _ ⟨u2, rfl⟩ h12
-      refine (quotientGroup_coe_out_eq_self _ _).symm.trans ((QuotientGroup.eq.2 ?_).trans (quotientGroup_coe_out_eq_self _ _))
+      refine (QuotientGroup.out_eq' _).symm.trans ((QuotientGroup.eq.2 ?_).trans (QuotientGroup.out_eq' _))
       rw [hB]
       intro v
       rw [map_mul, map_inv]
@@ -151,7 +182,7 @@ theorem UpperTheory.V.Z.Sym.So.uFBox :
          fun v hv => by rw [map_mul, map_inv, hw, if_neg hv, inv_one, one_mul]; exact hgN v hv⟩
       refine ⟨(w : G ⧸ P.box U), out_mem_doubleCoset_and_out_inv_mul_mem_doubleCoset hw1 hw2, ?_⟩
       rintro y ⟨hy1, hy2⟩
-      refine (quotientGroup_coe_out_eq_self _ _).symm.trans (QuotientGroup.eq.2 ?_)
+      refine (QuotientGroup.out_eq' _).symm.trans (QuotientGroup.eq.2 ?_)
       rw [hB]
       intro v
       rw [map_mul, map_inv]

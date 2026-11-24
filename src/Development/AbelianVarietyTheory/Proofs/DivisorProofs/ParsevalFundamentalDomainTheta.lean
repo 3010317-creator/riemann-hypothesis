@@ -1,10 +1,56 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingInl
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ImportsBis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemRatPairIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemRatVecIff
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+import Formalism.LocalRingCardinality.DataHost
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+import Formalism.LocalRingCardinality.DataTheta
+import Formalism.LocalToGlobal.BesselHermitianTheta.NoncompactGapAtLeastRange
+import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.WeilBound.ThetaLifts.LeviDeterminants.GrowSplit
 
 @[expose] public section
 
@@ -24,12 +70,9 @@ open scoped Classical
 
 theorem continuous_infToMixed (F : Type) [Field F] [NumberField F] :
     Continuous (InfiniteAdeleRing.ringEquiv_mixedSpace F) := by
-  change Continuous fun x : InfiniteAdeleRing F =>
-    ((fun (v : {w : InfinitePlace F // w.IsReal}) => InfinitePlace.Completion.extensionEmbeddingOfIsReal v.2 (x v)),
-     (fun (v : {w : InfinitePlace F // w.IsComplex}) => InfinitePlace.Completion.extensionEmbedding v.1 (x v)))
-  refine Continuous.prodMk (continuous_pi fun v => ?_) (continuous_pi fun v => ?_)
-  · exact (InfinitePlace.Completion.isometry_extensionEmbeddingOfIsReal v.2).continuous.comp (continuous_apply _)
-  · exact (InfinitePlace.Completion.isometry_extensionEmbedding v.1).continuous.comp (continuous_apply _)
+  first
+  | exact _root_.PositivityTheory.ThKF0.Split.continuous_toMixed
+  | (apply _root_.PositivityTheory.ThKF0.Split.continuous_toMixed <;> assumption)
 
 theorem adele_nontrivial (F : Type) [Field F] [NumberField F] : Nontrivial (AdeleRing (𝓞 F) F) :=
   inferInstanceAs (Nontrivial (InfiniteAdeleRing F × FiniteAdeleRing (𝓞 F) F))

@@ -1,8 +1,49 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.Admissible
+public import Formalism.HermitianCurvature.WeylElementCommutesLevelOne
 public import Formalism.HermitianCurvature.HeisenbergConjugationMeasurePreserving
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -126,9 +167,6 @@ theorem circle_subgroup : B2.IsClosedSubgroup (aT k r '' Metric.sphere (0 : ℂ)
   · rintro _ ⟨a, ha, rfl⟩
     exact aT_unit (ne_zero_of_mem_unit_sphere ⟨a, ha⟩)
 
-theorem conj_cont (a : B.Mat k r) : Continuous (conjM a : Mt k r → Mt k r) :=
-  (continuous_const.matrix_mul (continuous_id (X := B.Mat k r))).matrix_mul continuous_const
-
 theorem conj_conj (a b : B.Mat k r) : (conjM a : Mt k r → Mt k r) ∘ conjM b = conjM (a * b) := by
   funext x
   show (a * (b * Matrix.of x * b⁻¹) * a⁻¹ : B.Mat k r) = a * b * Matrix.of x * (a * b)⁻¹
@@ -147,11 +185,11 @@ theorem haar_map_conj (μ : Measure (Mt k r)) (hμ : B.IsHaarOn (Nset k r) μ) (
       ?_ hμ _ ⟨_, hu, rfl⟩
     rintro _ ⟨a, ha, rfl⟩ u hu
     exact conj_mem (ne_zero_of_mem_unit_sphere ⟨a, ha⟩) hu
-  rw [e, ← conj_conj, ← Measure.map_map (conj_cont _).measurable (conj_cont _).measurable, h1]
+  rw [e, ← conj_conj, ← Measure.map_map (Formalism.FourierDecayAlt.P.B2x2.conjM_cont _).measurable (Formalism.FourierDecayAlt.P.B2x2.conjM_cont _).measurable, h1]
   exact Formalism.FourierDecayAlt.Final.dilation_jacobian_formula k r μ hμ _ hp
 
 theorem muN_map_conj : ∀ (k r : ℕ) (α : ℂ), α ≠ 0 →
     (D.muN k r).map (conjM (aT k r α)) = ENNReal.ofReal ((‖α‖ ^ B.kap k r)⁻¹) • D.muN k r :=
-  fun k r α h => haar_map_conj _ (Formalism.FourierDecayAlt.Final.d_muNHaar k r) α h
+  fun k r α h => haar_map_conj _ (_root_.Formalism.FourierDecayAlt.P.nilpotent_measure_is_haar k r) α h
 
 end GlobalTheory.ThA.TorusJac

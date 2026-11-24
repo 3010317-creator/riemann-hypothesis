@@ -1,11 +1,46 @@
 module
 
-public import Mathlib
 public import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.BlowupSequenceRelations
 public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.AffineSpaceCoordinates
 public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.StrictNormalCrossings
-public import Development.ResolutionOfSingularities.Foundations.BlowupUniversalProperty
-public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionOfSingularities
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -76,16 +111,6 @@ def IsCompatibleWithEtaleCovers (R : AffineResolutionRule.{u}) : Prop :=
     φ ≫ pY = pW → (∀ y : ↥Y, ∃ w : ↥W, φ.base w = y) →
     IsStrictPullbackBlowupSeq φ (R k W pW) (R k Y pY)
 
-def IsCompatibleWithFieldBaseChange (R : AffineResolutionRule.{u}) : Prop :=
-  ∀ (k : Type u) [Field k] [CharZero k] (Y : Scheme.{u})
-    (p : Y ⟶ Spec (CommRingCat.of k)) [AlgebraicGeometry.LocallyOfFiniteType p]
-    [AlgebraicGeometry.QuasiCompact p] [AlgebraicGeometry.IsReduced Y]
-    [AlgebraicGeometry.IsAffine Y] (K : Type u) [Field K] [CharZero K] [Algebra k K]
-    [AlgebraicGeometry.IsReduced (baseChange p K)]
-    [AlgebraicGeometry.IsAffine (baseChange p K)],
-    IsStrictPullbackBlowupSeq (baseChangeProjection p K)
-      (R K (baseChange p K) (baseChangeToSpec p K)) (R k Y p)
-
 def IsInducedByAffineRule (R : AffineResolutionRule.{u}) (k : Type u) [Field k] [CharZero k] (Y : Scheme.{u})
     (p : Y ⟶ Spec (CommRingCat.of k)) (B : SequenceOfBlowups Y) : Prop :=
   ∀ (W : Scheme.{u}) (q : W ⟶ Spec (CommRingCat.of k))
@@ -100,14 +125,5 @@ def ExistsGluedBlowupSequence (R : AffineResolutionRule.{u}) : Prop :=
     (p : Y ⟶ Spec (CommRingCat.of k)) [AlgebraicGeometry.LocallyOfFiniteType p]
     [AlgebraicGeometry.QuasiCompact p] [AlgebraicGeometry.IsReduced Y],
     ∃ B : SequenceOfBlowups Y, (∀ i, i < B.length → B.center i ≠ ⊤) ∧ IsInducedByAffineRule R k Y p B
-
-def InducedRuleCompatibleWithFieldExtension (R : AffineResolutionRule.{u}) : Prop :=
-  IsCompatibleWithOpenImmersions R → IsCompatibleWithFieldBaseChange R →
-  ∀ F : ResolutionRule.{u},
-    (∀ (k : Type u) [Field k] [CharZero k] (X : Scheme.{u})
-      (f : X ⟶ Spec (CommRingCat.of k)) [AlgebraicGeometry.LocallyOfFiniteType f]
-      [AlgebraicGeometry.QuasiCompact f] [AlgebraicGeometry.IsReduced X],
-      IsInducedByAffineRule R k X f (F k X f)) →
-    IsCompatibleWithFieldExtension F
 
 end FunctorialResolution.EmbeddedResolution

@@ -1,10 +1,49 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.NearSplit
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.SymplecticGSp4.EntryMem
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.PublishedTheorems.FerreroWashington
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.SymplecticGSp4.EiiUnit
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.SymplecticGSp4.GeAlgTop
+import Development.AutomorphicArithmetic.AutomorphicVarieties.SymplecticGSp4.LMemMax
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -86,21 +125,13 @@ private theorem bp_eq (X : M4 R) : bp X = ee * X * ee + (1 - ee) * X * (1 - ee) 
   simp only [Matrix.add_apply, Matrix.sub_apply, Matrix.mul_apply, Fin.sum_univ_four, bp_apply]
   fin_cases i <;> fin_cases j <;> simp [ee, lamW, Matrix.one_apply]
 
-private theorem up_diag {X Y : M4 R} (hX : IsUp X) (hY : IsUp Y) (i : Fin 4) : (X * Y) i i = X i i * Y i i := by
+private theorem up_diag {X Y : M4 R} (hX : X.BlockTriangular id) (hY : Y.BlockTriangular id)
+    (i : Fin 4) : (X * Y) i i = X i i * Y i i := by
   rw [Matrix.mul_apply]
   refine Finset.sum_eq_single i (fun k _ hk => ?_) (by simp)
   rcases lt_or_gt_of_ne hk with h | h
-  · rw [hX i k h, zero_mul]
-  · rw [hY k i h, mul_zero]
-
-private theorem up_mul {X Y : M4 R} (hX : IsUp X) (hY : IsUp Y) : IsUp (X * Y) := fun i j h => by
-  rw [Matrix.mul_apply]
-  refine Finset.sum_eq_zero fun k _ => ?_
-  rcases lt_or_ge k i with h' | h'
-  · rw [hX i k h', zero_mul]
-  · rw [hY k j (h.trans_le h'), mul_zero]
-
-private theorem up_one : IsUp (1 : M4 R) := fun _ _ h => Matrix.one_apply_ne h.ne'
+  · rw [hX h, zero_mul]
+  · rw [hY h, mul_zero]
 
 private theorem flag_bp {u v X : M4 R} (h1 : v * u = 1) (he : IsUp (v * ee * u)) (hX : IsUp (v * X * u)) :
     IsUp (v * bp X * u) ∧ ∀ i, (v * bp X * u) i i = (v * X * u) i i := by
@@ -109,18 +140,19 @@ private theorem flag_bp {u v X : M4 R} (h1 : v * u = 1) (he : IsUp (v * ee * u))
     calc v * (A * B) * u = v * A * (u * v) * B * u := by rw [h2]; noncomm_ring
       _ = _ := by noncomm_ring
   have hf : v * (1 - ee) * u = 1 - v * ee * u := by rw [mul_sub, sub_mul, mul_one, h1]
-  have hF : IsUp (1 - v * ee * u) := fun i j h => by rw [Matrix.sub_apply, up_one i j h, he i j h, sub_zero]
+  have he' : (v * ee * u).BlockTriangular id := fun _ _ h => he _ _ h
+  have hX' : (v * X * u).BlockTriangular id := fun _ _ h => hX _ _ h
+  have hF : (1 - v * ee * u).BlockTriangular id := Matrix.blockTriangular_one.sub he'
   have e : v * bp X * u = (v * ee * u) * (v * X * u) * (v * ee * u) +
       (1 - v * ee * u) * (v * X * u) * (1 - v * ee * u) := by
     rw [bp_eq, mul_add, add_mul, k, k, k, k, hf]
   rw [e]
-  refine ⟨fun i j h => ?_, fun i => ?_⟩
-  · rw [Matrix.add_apply, up_mul (up_mul he hX) he i j h, up_mul (up_mul hF hX) hF i j h, add_zero]
-  · have id := up_diag he he i
-    rw [← k, ee_mul] at id
-    rw [Matrix.add_apply, up_diag (up_mul he hX) he, up_diag (up_mul hF hX) hF, up_diag he hX, up_diag hF hX,
-      Matrix.sub_apply, Matrix.one_apply_eq]
-    linear_combination (-2 * (v * X * u) i i) * id
+  refine ⟨fun _ _ h => (((he'.mul hX').mul he').add ((hF.mul hX').mul hF)) h, fun i => ?_⟩
+  have id := up_diag he' he' i
+  rw [← k, ee_mul] at id
+  rw [Matrix.add_apply, up_diag (he'.mul hX') he', up_diag (hF.mul hX') hF,
+    up_diag he' hX', up_diag hF hX', Matrix.sub_apply, Matrix.one_apply_eq]
+  linear_combination (-2 * (v * X * u) i i) * id
 
 private theorem ee_mem (A : Subalgebra R (M4 R)) (X : M4 R) (hX : X ∈ A) (hb : IsBlock X)
     (hu : IsUnit ((X 0 0 * X 0 0 + X 0 2 * X 2 0 - (X 1 1 + X 3 3) * X 0 0 + (X 1 1 * X 3 3 - X 1 3 * X 3 1)) *
@@ -132,7 +164,7 @@ private theorem ee_mem (A : Subalgebra R (M4 R)) (X : M4 R) (hX : X ∈ A) (hb :
     obtain ⟨v, hv⟩ := hu.exists_left_inv
     convert A.smul_mem (A.sub_mem (A.smul_mem hY (y0 + y3)) (A.mul_mem hY hY)) v using 1
     ext i j
-    fin_cases i <;> fin_cases j <;> simp [ee, Matrix.mul_apply, Fin.sum_univ_four] <;>
+    fin_cases i <;> fin_cases j <;> simp [ee] <;>
       first | linear_combination -hv | ring
   have b01 := hb 0 1 (by decide)
   have b03 := hb 0 3 (by decide)
@@ -149,20 +181,18 @@ private theorem ee_mem (A : Subalgebra R (M4 R)) (X : M4 R) (hX : X ∈ A) (hb :
   fin_cases i <;> fin_cases j <;>
     simp [Matrix.mul_apply, Fin.sum_univ_four, b01, b03, b10, b12, b21, b23, b30, b32] <;> ring
 
-private def stab {u v : M4 R} (h1 : v * u = 1) : Subalgebra R (M4 R) where
-  carrier := {X | IsUp (v * X * u)}
-  mul_mem' {A B} hA hB := by
-    have h2 : u * v = 1 := mul_eq_one_comm.1 h1
-    have : v * (A * B) * u = (v * A * u) * (v * B * u) := by
-      calc v * (A * B) * u = v * A * (u * v) * B * u := by rw [h2]; noncomm_ring
-        _ = _ := by noncomm_ring
-    show IsUp _
-    rw [this]
-    exact up_mul hA hB
-  add_mem' {A B} hA hB i j h := by
-    rw [mul_add, add_mul, Matrix.add_apply, hA i j h, hB i j h, add_zero]
-  algebraMap_mem' a i j h := by
-    rw [Algebra.algebraMap_eq_smul_one, mul_smul_comm, smul_mul_assoc, mul_one, h1, Matrix.smul_apply, up_one i j h, smul_zero]
+private def stab {u v : M4 R} (h1 : v * u = 1) : Subalgebra R (M4 R) :=
+  (Matrix.blockTriangularSubalgebra R R (id : Fin 4 → Fin 4)).comap
+    { toFun X := v * X * u
+      map_one' := by rw [mul_one, h1]
+      map_mul' A B := by
+        have h2 : u * v = 1 := mul_eq_one_comm.1 h1
+        calc v * (A * B) * u = v * A * (u * v) * B * u := by rw [h2]; noncomm_ring
+          _ = _ := by noncomm_ring
+      map_zero' := by simp
+      map_add' A B := by rw [mul_add, add_mul]
+      commutes' a := by
+        rw [Algebra.algebraMap_eq_smul_one, mul_smul_comm, smul_mul_assoc, mul_one, h1] }
 
 private theorem ee_up [IsLocalRing R] {u v X : M4 R} (h1 : v * u = 1) (hX : IsUp (v * X * u)) (hb : IsBlock X)
     (ho : ∀ i j, i ≠ j → residue R (X i j) = 0) (hd : ∀ i j, lamW i ≠ lamW j → residue R (X i i) ≠ residue R (X j j)) :
@@ -270,8 +300,8 @@ theorem UpperTheory.V.Ws.blockPart :
       fun g i j h => ?_
     · ext a b
       have := congrArg 𝔞.toK (congrFun (congrFun (hm g) a) b)
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [Matrix.mul_apply, adj_apply, map_sum, map_mul, map_zsmul, Matrix.smul_apply, smul_eq_mul, Matrix.one_apply] at this ⊢
+
+      simp only [Matrix.mul_apply, adj_apply, map_sum, map_mul, map_zsmul, Matrix.smul_apply, smul_eq_mul, Matrix.one_apply] at this ⊢
       rw [apply_ite 𝔞.toK, map_one, map_zero] at this
       exact this
     · obtain ⟨g, hg⟩ := h02

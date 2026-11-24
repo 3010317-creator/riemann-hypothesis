@@ -1,11 +1,53 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPairRankZeroOfCurveCoordNorm
-public import Formalism.PairingDivisors.StatementH
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RationalPointsIntegralPointsMembership
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPointStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CardFiniteSubgroupGLIntDvd
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPoint
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RationalPointsIntegralPointsMembership
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -18,13 +60,10 @@ section General
 
 variable {E : Type} [Field E] [NumberField E] {N : ℕ}
 
-theorem loc_int : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 E) ℤ⁰) E :=
-  IsIntegralClosure.isLocalization ℤ ℚ E (𝓞 E)
-
 theorem exists_int_smul_mem (L : Submodule (𝓞 E) (Fin N → E))
     (hs : Submodule.span E (L : Set (Fin N → E)) = ⊤) (x : Fin N → E) :
     ∃ n : ℤ, n ≠ 0 ∧ n • x ∈ L := by
-  haveI := loc_int (E := E)
+  haveI := NumberField.RingOfIntegers.instIsLocalizationAlgebraMapSubmonoidIntNonZeroDivisors E
   obtain ⟨t, ht⟩ := multiple_mem_span_of_mem_localization_span
     (Algebra.algebraMapSubmonoid (𝓞 E) ℤ⁰) E (L : Set (Fin N → E)) x (hs ▸ Submodule.mem_top)
   obtain ⟨t, n, hn, rfl⟩ := t
@@ -34,7 +73,7 @@ theorem exists_int_smul_mem (L : Submodule (𝓞 E) (Fin N → E))
 
 theorem exists_int_denominator (L : Submodule (𝓞 E) (Fin N → E)) (hf : L.FG) :
     ∃ n : ℤ, n ≠ 0 ∧ ∀ x ∈ L, ∀ i, IsIntegral ℤ ((n : E) * x i) := by
-  haveI := loc_int (E := E)
+  haveI := NumberField.RingOfIntegers.instIsLocalizationAlgebraMapSubmonoidIntNonZeroDivisors E
   obtain ⟨s, rfl⟩ := hf
   obtain ⟨⟨t, n, hn, rfl⟩, ht⟩ := IsLocalization.exist_integer_multiples_of_finite
     (Algebra.algebraMapSubmonoid (𝓞 E) ℤ⁰) (fun p : s × Fin N => (p.1 : Fin N → E) p.2)
@@ -57,9 +96,9 @@ theorem norm_entry_le (c : E → E) (hc : ∀ (φ : E →+* ℂ) x, φ (c x) = s
     (γ : Matrix (Fin N) (Fin N) E) (h : γ * (γ.map c).transpose = 1) (φ : E →+* ℂ) (i j : Fin N) :
     ‖φ (γ i j)‖ ≤ 1 := by
   have h1 := congrArg φ (congrFun (congrFun h i) i)
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, map_sum, map_mul, hc,
-    Matrix.one_apply_eq, map_one, Complex.mul_conj'] at h1
+
+  simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, map_sum, map_mul, hc,
+  Matrix.one_apply_eq, map_one, Complex.mul_conj'] at h1
   have h2 : ∑ k, ‖φ (γ i k)‖ ^ 2 = 1 := by exact_mod_cast h1
   have h3 : ‖φ (γ i j)‖ ^ 2 ≤ 1 := by
     rw [← h2]
@@ -156,7 +195,7 @@ theorem finrank_host (D : D7) : Module.finrank ℚ D.host.E = 2 * fF D := by
 theorem gam_ne_zero_dvd_invariant : ∀ (D : D7) (N : ℕ) (J : Subgroup (GA D N)), J ≤ intG D N → ∀ g, gam D J g ≠ 0 ∧ gam D J g ∣ 8 ^ (2 * fF D * N) * (2 * (2 * fF D * N)).factorial ∧ ∀ γ ∈ ratG D N, ∀ j ∈ J, gam D J (γ * g * j) = gam D J g := by
   intro D N J hJ g
   obtain ⟨hrat, -, -, huni, hinc⟩ := GlobalTheory.NormSum.mem_ratG_intG D N
-  obtain ⟨Lt, hSD, -, hEq, hmv, -⟩ := GlobalTheory.T.Lt_eq_iff_inv_mul_mem_intG_and_transport D N
+  obtain ⟨Lt, hSD, -, hEq, hmv, -⟩ := _root_.GlobalTheory.NormSum.exists_lattice_of_adelic_point D N
   let H : Subgroup (GA D N) := ratG D N ⊓ J.comap (MulAut.conj g⁻¹).toMonoidHom
   have hH : ∀ x, x ∈ H ↔ x ∈ ratG D N ∧ g⁻¹ * x * g ∈ J := by
     intro x; simp [H]

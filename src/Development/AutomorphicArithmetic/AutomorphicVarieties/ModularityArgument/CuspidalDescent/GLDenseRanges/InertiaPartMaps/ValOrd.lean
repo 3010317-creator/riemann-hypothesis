@@ -1,10 +1,58 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CuspidalDescent.GLDenseRanges.KirCusp
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.IndexNeZero
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCuspSpaceBot
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIwasawaDecompositionUpperUnitriangularInte
+import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.IndexNeZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.AdicCompletion.Noetherian
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsCuspSpaceBot
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivOfRangeEq
+import Development.DiscreteGroups.GlobalIrreducibility.LConvCut
 
 @[expose] public section
 
@@ -51,16 +99,16 @@ private theorem avg (ρ : Representation ℂ G W) (A B : Subgroup G) (hfin : B.r
       rw [QuotientGroup.out_eq']
       conv_rhs => rw [← QuotientGroup.out_eq' q]
       rfl
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finset.smul_sum]
+
+    rw [map_sum, Finset.smul_sum]
     simp only [hρ a ha, e]
     exact Equiv.sum_comp (MulAction.toPerm (⟨a, ha⟩ : A)) (fun q : A ⧸ C => χ a • F q.out)
   · have hq : ∀ q : A ⧸ C, l (F q.out) = l w := by
       intro q
       simp only [F, map_smul, smul_eq_mul, hl _ q.out.2]
       rw [← mul_assoc, inv_mul_cancel₀ (h0 _ q.out.2), one_mul]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     simp only [hq, Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
     congr 1
     simp [Subgroup.relIndex, Subgroup.index, Nat.card_eq_fintype_card, C]
@@ -70,11 +118,6 @@ end Avg
 section Loc
 
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] {n : ℕ}
-
-open GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil GlobalTheory.LocGL GlobalTheory.Whittaker GlobalTheory.LocLanglands GlobalTheory.GamMul DiscreteGroups.sglob.LConv in
-private theorem iwasawa (g : GL (Fin n) k) :
-    ∃ u ∈ unipB k (Fin n), ∃ d : Fin n → kˣ, ∃ κ ∈ KO k (Fin n), g = u * diagT k (Fin n) d * κ :=
-  exists_unipB_mul_diagT_mul_KO k n g
 
 private theorem val_ord' (x : kˣ) : valuation k (x : k) = uniformizer k ^ ord k x := by
   have h := val_div_ord x
@@ -255,34 +298,6 @@ private theorem isoNe_lemma {k : Type} [Field k] {n : ℕ} (ψ : AddChar k Circl
         rw [hb.1 m j hjm, mul_zero]
   rw [Finset.sum_congr rfl key, Finset.sum_add_distrib, AddChar.map_add_eq_mul, Circle.coe_mul]
 
-private theorem isoNe_lemma_2 {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    {n : ℕ} (d : Fin n → kˣ) (c : ℕ) (hc : ∀ i j : Fin n, 1 ≤ (c : ℤ) + ord k (d j) - ord k (d i))
-    {h : GL (Fin n) k} (hh : Bd (c : ℤ) h) :
-    Bd ((1 : ℕ) : ℤ) (diagT k (Fin n) d⁻¹ * h * (diagT k (Fin n) d⁻¹)⁻¹) := by
-  intro i j
-  have hu : uniformizer k ≠ 0 := unif_pos.ne'
-  have key : ((diagT k (Fin n) d⁻¹ * h * (diagT k (Fin n) d⁻¹)⁻¹ : GL (Fin n) k) - 1 : Matrix (Fin n) (Fin n) k) i j =
-      ((d i : k))⁻¹ * ((h : Matrix (Fin n) (Fin n) k) - 1) i j * (d j : k) := by
-    rw [Matrix.sub_apply, conj_apply, Matrix.sub_apply]
-    simp only [Pi.inv_apply, inv_inv, Units.val_inv_eq_inv_val]
-    by_cases hij : i = j
-    · subst hij
-      rw [Matrix.one_apply_eq]
-      have := (d i).ne_zero
-      field_simp
-    · rw [Matrix.one_apply_ne hij]
-      ring
-  rw [key, map_mul, map_mul, map_inv₀, val_ord', val_ord', ← _root_.zpow_neg]
-  calc uniformizer k ^ (-ord k (d i)) * valuation k (((h : Matrix (Fin n) (Fin n) k) - 1) i j) * uniformizer k ^ ord k (d j)
-      ≤ uniformizer k ^ (-ord k (d i)) * uniformizer k ^ (c : ℤ) * uniformizer k ^ ord k (d j) := by
-        gcongr
-        exact hh i j
-    _ = uniformizer k ^ ((c : ℤ) + ord k (d j) - ord k (d i)) := by
-        rw [← zpow_add₀ hu, ← zpow_add₀ hu]
-        congr 1
-        ring
-    _ ≤ _ := zpow_le (by push_cast; linarith [hc i j])
-
 theorem isoNe : IsoNe := by
   unfold IsoNe
   intro k _ _ _ _ n W _ _ τ _ ψ t l hψ ht hK hfix
@@ -301,7 +316,7 @@ theorem isoNe : IsoNe := by
     by_contra hcon
     push_neg at hcon
     exact hw0ne (hnd w0 fun p _ => hcon p)
-  obtain ⟨u, hu, d, κ, hκ, rfl⟩ := iwasawa p
+  obtain ⟨u, hu, d, κ, hκ, rfl⟩ := exists_unipB_mul_diagT_mul_KO k n p
   set D := diagT k (Fin n) d with hD
   have hw1 := hconj κ hκ w0 hw0
   set w1 := τ κ w0 with hw1def
@@ -336,16 +351,12 @@ theorem isoNe : IsoNe := by
   let Bg : Subgroup (GL (Fin n) k) := (Kc k n 1).comap (MulAut.conj D⁻¹).toMonoidHom
   have hDinv : D⁻¹ = diagT k (Fin n) d⁻¹ := (map_inv _ d).symm
   have hBmem : ∀ g, g ∈ Bg ↔ D⁻¹ * g * D⁻¹⁻¹ ∈ Kc k n 1 := fun g => Iff.rfl
-  have hle : Kc k n (2 * M + 1) ≤ Bg := by
-    intro g hg
-    rw [hBmem, mem_Kc]
-    obtain ⟨hg1, hg2⟩ := mem_Kc.1 hg
-    rw [hDinv]
-    refine ⟨isoNe_lemma_2 d _ hc hg1, ?_⟩
-    have e : (diagT k (Fin n) d⁻¹ * g * (diagT k (Fin n) d⁻¹)⁻¹)⁻¹ =
-        diagT k (Fin n) d⁻¹ * g⁻¹ * (diagT k (Fin n) d⁻¹)⁻¹ := by group
-    rw [e]
-    exact isoNe_lemma_2 d _ hc hg2
+  have hval : ∀ i, valuation k ((d⁻¹ i : kˣ) : k) = uniformizer k ^ (-ord k (d i)) := fun i => by
+    rw [Pi.inv_apply, Units.val_inv_eq_inv_val, map_inv₀, val_ord', _root_.zpow_neg]
+  have hle : Kc k n (2 * M + 1) ≤ Bg := fun g hg => by
+    rw [hBmem, hDinv, mem_Kc]
+    exact conj_Kc (S := ⊤) trivial (mem_Kc.1 hg) d⁻¹ (fun i => -ord k (d i)) hval
+      fun i j => Or.inr (by rw [Nat.cast_one]; linarith [hc i j])
   have hfin1 : Bg.relIndex (Kc k n 1) ≠ 0 :=
     ne_zero_of_dvd_ne_zero (Kc_index (2 * M + 1) (Kc_le 1)) (Subgroup.relIndex_dvd_of_le_left _ hle)
   have hw2 : ∀ b ∈ Bg, τ b (τ D w1) = τ D w1 := by
@@ -358,10 +369,8 @@ theorem isoNe : IsoNe := by
     obtain ⟨x, hxu, hxK, s, hsK, y, hy, rfl⟩ := iwahori ha
     have hyc : D⁻¹ * y * D⁻¹⁻¹ ∈ Kc k n 1 := by
       rw [hDinv]
-      have hN := conj_Nm (t := d⁻¹) (a := fun i => -ord k (d i)) ?_ (c := 0) (c' := 0) ?_ hy
+      have hN := conj_Nm (t := d⁻¹) (a := fun i => -ord k (d i)) hval (c := 0) (c' := 0) ?_ hy
       · exact (Subgroup.mem_inf.1 hN).2
-      · intro i
-        rw [Pi.inv_apply, Units.val_inv_eq_inv_val, map_inv₀, val_ord', _root_.zpow_neg]
       · intro i j hji
         have h' : ord k (d i) ≤ ord k (d j) := hdom hji.le
         push_cast

@@ -1,10 +1,52 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenPtSubset
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoMulInvOf
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.DecayZero
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicRapidDecayOfMemAdelicSchwartzSpace
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsSummableMajorantRationalVectorsLocallyUnif
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+public import Mathlib.Analysis.Calculus.SmoothSeries
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousAtPlace
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenPtSubset
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLagrModelOfIsLin
+public import Development.WeilBound.ThetaLifts.LeviDeterminants.GrowSplit
 
 @[expose] public section
 
@@ -74,14 +116,9 @@ theorem schA_majorant {κ : Type} [Fintype κ] (hF : IsTotallyReal F)
   rwa [e] at h
 
 theorem continuous_ofMixed : Continuous (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm := by
-  refine continuous_pi fun v => ?_
-  rcases v.isReal_or_isComplex with hv | hv
-  · rw [(InfinitePlace.Completion.isometry_extensionEmbeddingOfIsReal hv).isEmbedding.continuous_iff]
-    exact ((continuous_apply _).comp continuous_fst).congr fun y =>
-      (congrFun (congrArg Prod.fst ((InfiniteAdeleRing.ringEquiv_mixedSpace F).apply_symm_apply y)) ⟨v, hv⟩).symm
-  · rw [(InfinitePlace.Completion.isometry_extensionEmbedding v).isEmbedding.continuous_iff]
-    exact ((continuous_apply _).comp continuous_snd).congr fun y =>
-      (congrFun (congrArg Prod.snd ((InfiniteAdeleRing.ringEquiv_mixedSpace F).apply_symm_apply y)) ⟨v, hv⟩).symm
+  first
+  | exact _root_.PositivityTheory.ThKF0.Split.continuous_ofMixed
+  | (apply _root_.PositivityTheory.ThKF0.Split.continuous_ofMixed <;> assumption)
 
 theorem continuous_realAd : Continuous (realAd F) :=
   Continuous.prodMk (continuous_ofMixed.comp (continuous_algebraMap ℝ _)) continuous_const
@@ -100,7 +137,6 @@ theorem schr_smul_add {R : Type} [CommRing R] [Invertible (2 : R)] (ψ : AddChar
   simp only [Prod.fst_add, Prod.snd_add, Prod.smul_fst, Prod.smul_snd, add_dotProduct, dotProduct_add, smul_dotProduct, dotProduct_smul, smul_eq_mul]
   first
     | linear_combination (a * b * (v.1 ⬝ᵥ v.2)) * invOf_mul_self (2 : R)
-    | linear_combination (-(a * b * (v.1 ⬝ᵥ v.2))) * invOf_mul_self (2 : R)
 
 variable [Invertible (2 : AF F)] {κ : Type} [Fintype κ]
 

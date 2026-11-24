@@ -1,6 +1,49 @@
 module
 
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.LocalHermitianForms.NormOneIsCoboundaryUnramifiedQuadratic
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.Wcount
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.LocalHermitianForms.EvenVal
 
 @[expose] public section
 
@@ -16,10 +59,6 @@ private theorem out_mk_smul {T Y : Type} [Group T] [MulAction T Y] (y : Y) :
     ∃ t : T, (Quotient.mk (MulAction.orbitRel T Y) y).out = t • y := by
   obtain ⟨t, ht⟩ := MulAction.orbitRel_apply.mp (Quotient.mk_out (s := MulAction.orbitRel T Y) y)
   exact ⟨t, ht.symm⟩
-
-private theorem mk_smul_eq {T Y : Type} [Group T] [MulAction T Y] (t : T) (y : Y) :
-    Quotient.mk (MulAction.orbitRel T Y) (t • y) = Quotient.mk (MulAction.orbitRel T Y) y := by
-  exact Quotient.sound (MulAction.orbitRel_apply.mpr (MulAction.mem_orbit y t))
 
 private theorem wcount_sub {T Y : Type} [Group T] [MulAction T Y] (C : Subgroup T) (k : Y → ℂ) :
     wcount C k = ∑ᶠ o : {o : MulAction.orbitRel.Quotient T Y | k o.out ≠ 0},
@@ -82,7 +121,7 @@ theorem UpperTheory.V.Z.Sym.Loc.wTrans :
       exact hR t _ _ (pick_R o2)
     have h3 : t • o2.1.out = o1.1.out := (hex' _ (pick_k o1)).unique h2 (pick_R o1)
     apply Subtype.ext
-    rw [← Quotient.out_eq o1.1, ← Quotient.out_eq o2.1, ← h3, mk_smul_eq]
+    rw [← Quotient.out_eq o1.1, ← Quotient.out_eq o2.1, ← h3, MulAction.orbitRel.Quotient.quotient_smul_eq]
   · rintro ⟨o', ho'⟩
     obtain ⟨z, hz, -⟩ := hex' o'.out ho'
     have hkz : k z ≠ 0 := by
@@ -102,7 +141,7 @@ theorem UpperTheory.V.Z.Sym.Loc.wTrans :
     have h2 : pick ⟨_, hmem⟩ = s • o'.out := (hex _ hmem).unique (pick_R ⟨_, hmem⟩) h1
     apply Subtype.ext
     show Quotient.mk _ (pick ⟨_, hmem⟩) = o'
-    rw [h2, mk_smul_eq, Quotient.out_eq]
+    rw [h2, MulAction.orbitRel.Quotient.quotient_smul_eq, Quotient.out_eq]
   · intro o
     obtain ⟨t, ht⟩ := out_mk_smul (T := T) (pick o)
     show _ = ((MulAction.stabilizer T (Quotient.mk (MulAction.orbitRel T Y') (pick o)).out).relIndex C : ℂ) *

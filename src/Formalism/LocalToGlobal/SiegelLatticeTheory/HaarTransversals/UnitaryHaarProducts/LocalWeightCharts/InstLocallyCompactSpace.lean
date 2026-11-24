@@ -1,7 +1,9 @@
 module
 
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SettingBlocks
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.HCReprodM
+import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LocalWeightCharts.ColOfLeftInv
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+import Mathlib.Tactic.Lemma
+public import Formalism.SharedLemmas.HpkSq
 
 @[expose] public section
 
@@ -235,11 +237,9 @@ theorem sgn_mul_self (i : Fin (2 * r + k + 1)) : sgn k r i * sgn k r i = 1 := by
   split_ifs <;> norm_num
 
 theorem hpk_sq : Hpk k r * Hpk k r = 1 := by
-  ext i j
-  rw [hpk_mul_apply, hpk_row, tau_tau, sgn_tau, Matrix.one_apply]
-  by_cases h : j = i
-  · rw [if_pos h, if_pos h.symm, sgn_mul_self]
-  · rw [if_neg h, if_neg (Ne.symm h), mul_zero]
+  first
+  | exact _root_.Formalism.SharedLemmas.upq_hpk_mul_self
+  | (apply _root_.Formalism.SharedLemmas.upq_hpk_mul_self <;> assumption)
 
 theorem isUnit_of_uh {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : IsUnit g.det := by
   apply Matrix.isUnit_det_of_left_inverse (B := Hpk k r * gᴴ * Hpk k r)
@@ -303,47 +303,10 @@ theorem col_one : col k r (1 : Mx k r) := by
   rw [Matrix.one_apply]
 
 theorem col_mul {g h : Mx k r} (hg : col k r g) (hh : col k r h) : col k r (g * h) := by
-  intro i j hj hi
-  rw [Matrix.mul_apply, Finset.sum_eq_single j]
-  · rw [hh j j hj (by omega), if_pos rfl, mul_one]
-    exact hg i j hj hi
-  · intro m _ hmj
-    by_cases hm : j.val ≤ m.val ∨ r ≤ m.val
-    · rw [hh m j hj hm, if_neg hmj, mul_zero]
-    · push Not at hm
-      have hne : i ≠ m := by
-        intro e
-        subst e
-        omega
-      rw [hg i m (by omega) (by omega), if_neg hne, zero_mul]
-  · intro hj'
-    exact absurd (Finset.mem_univ j) hj'
+  apply WlocSk.UnitaryGroupBasics.col_mul <;> assumption
 
 theorem col_of_left_inv {g g' : Mx k r} (hg : col k r g) (hm : g' * g = 1) : col k r g' := by
-  have key : ∀ n : ℕ, ∀ i j : Fin (2 * r + k + 1), j.val < n → j.val ≤ r + k →
-      (j.val ≤ i.val ∨ r ≤ i.val) → g' i j = if i = j then 1 else 0 := by
-    intro n
-    induction n with
-    | zero => intro i j h; omega
-    | succ n ih =>
-      intro i j hjn hj hi
-      have e := congrFun (congrFun hm i) j
-      rw [Matrix.mul_apply, Finset.sum_eq_single j] at e
-      · rw [hg j j hj (by omega), if_pos rfl, mul_one] at e
-        rw [e, Matrix.one_apply]
-      · intro m _ hmj
-        by_cases hmc : j.val ≤ m.val ∨ r ≤ m.val
-        · rw [hg m j hj hmc, if_neg hmj, mul_zero]
-        · push Not at hmc
-          have hne : i ≠ m := by
-            intro e
-            subst e
-            omega
-          rw [ih i m (by omega) (by omega) (by omega), if_neg hne, zero_mul]
-      · intro hj'
-        exact absurd (Finset.mem_univ j) hj'
-  intro i j hj hi
-  exact key (j.val + 1) i j (by omega) hj hi
+  apply WlocSk.UnitaryGroupBasics.col_of_left_inv <;> assumption
 
 theorem n_closed : IsClosed (Nset k r : Set (Mx k r)) := by
   have he : ∀ i j : Fin (2 * r + k + 1), Continuous fun g : Mx k r => g i j := fun i j =>

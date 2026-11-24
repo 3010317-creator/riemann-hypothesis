@@ -1,15 +1,14 @@
 module
 
-public import Mathlib
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.StGoodChartDim
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.StConeVanishingHomog
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.StConeSliceIdeal
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.StChartDehomogPrime
-public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PSegreChartDim
-public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PGoodChartZeroSet
-public import GroundTheory.HeightsAndTheta.Heights.ChowForms.PChartHomogenise
 public import GroundTheory.HeightsAndTheta.Heights.ChowForms.PChartDehomog
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.KleimanNefness.AlgDim
+public import GroundTheory.HeightsAndTheta.Heights.ChowForms.PChartHomogenise
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PGoodChartZeroSet
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PSegreChartDim
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.KleimanNefness.AlgDim
 
 @[expose] public section
 
@@ -56,9 +55,7 @@ theorem projChartSet_eq (P : Ideal (MRing ι)) {m e : ℕ} (σ : Fin m ≃ ((k :
   · rintro ⟨⟨z, hz, rfl⟩, h1⟩
     exact ⟨z, hz, (hl z).symm.trans h1, rfl⟩
 
-theorem linForm_single' {m : ℕ} (a : Fin m) : linForm (Pi.single a (1 : ℂ)) = X a := by
-  classical
-  simp [linForm, Pi.single_apply]
+alias linForm_single' := _root_.GroundTheory.Heights₂.Heights.linForm_single
 
 
 omit [∀ k, Fintype (ι k)] in
@@ -78,7 +75,7 @@ theorem linForm_sub_one_not_mem {m : ℕ} {V : Ideal (MvPolynomial (Fin m) ℂ)}
   have h0 := hV _ h 0
   rw [homogeneousComponent_zero] at h0
   have hc : AddMonoidAlgebra.coeff (linForm t - 1) 0 = -1 := by
-    simp [linForm, coeff_sum, coeff_C_mul, coeff_X]
+    simp [linForm, coeff_C_mul, coeff_X]
   rw [hc] at h0
   exact hne (Ideal.eq_top_of_isUnit_mem _ h0 (by simp))
 
@@ -96,21 +93,8 @@ theorem le_of_homog_le_sup {m : ℕ} {V W : Ideal (MvPolynomial (Fin m) ℂ)} {t
   exact Ideal.sum_mem _ fun d _ => ChartDehomog.proof ℂ m W t _ d hW hWh ht
     (homogeneousComponent_isHomogeneous d f) (hle (hV f hf d))
 
-theorem eq_of_add_one_eq {x : WithBot ℕ∞} {e : ℕ} (h : x + 1 = (e : WithBot ℕ∞) + 1) : x = e := by
-  induction x using WithBot.recBotCoe with
-  | bot =>
-    rw [WithBot.bot_add, ← Nat.cast_succ] at h
-    exact absurd h (WithBot.bot_ne_natCast _)
-  | coe x =>
-    induction x using ENat.recTopCoe with
-    | top =>
-      have h' : ((⊤ + 1 : ℕ∞) : WithBot ℕ∞) = ((e + 1 : ℕ∞) : WithBot ℕ∞) := by exact_mod_cast h
-      rw [WithBot.coe_inj, top_add] at h'
-      exact absurd h' (by exact_mod_cast (ENat.top_ne_natCast (e + 1)))
-    | coe x =>
-      have h' : ((x + 1 : ℕ) : WithBot ℕ∞) = ((e + 1 : ℕ) : WithBot ℕ∞) := by exact_mod_cast h
-      have h'' : x + 1 = e + 1 := by exact_mod_cast h'
-      exact_mod_cast (show x = e by omega)
+theorem eq_of_add_one_eq {x : WithBot ℕ∞} {e : ℕ} (h : x + 1 = (e : WithBot ℕ∞) + 1) : x = e :=
+  ENat.WithBot.add_one_cancel.mp h
 
 end GoodChartDim
 
@@ -169,9 +153,9 @@ theorem GoodChartDim.proof (h₁ : ConeVanishingHomog.Statement) (h₂ : ConeSli
     rw [hVQ₀, Ideal.minimalPrimes_eq_subsingleton_self]
     rfl
 
-  have d₁ := ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.KH.dimPIT ℂ (Fin m) V J (linForm t - 1) hV.isPrime
+  have d₁ := _root_.ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.KH.KrullDimensionPrincipalIdeal.dimPIT' ℂ (Fin m) V J (linForm t - 1) hV.isPrime
     (linForm_sub_one_not_mem hV.isHomog hV.isPrime.ne_top t) hJmin
-  have d₂ := ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.KH.dimPIT ℂ (Fin m) V Q₀ (linForm u - 1) hV.isPrime
+  have d₂ := _root_.ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.KH.KrullDimensionPrincipalIdeal.dimPIT' ℂ (Fin m) V Q₀ (linForm u - 1) hV.isPrime
     (linForm_sub_one_not_mem hV.isHomog hV.isPrime.ne_top u) hQ₀min
   rw [← d₂, hdimQ₀] at d₁
   exact eq_of_add_one_eq d₁

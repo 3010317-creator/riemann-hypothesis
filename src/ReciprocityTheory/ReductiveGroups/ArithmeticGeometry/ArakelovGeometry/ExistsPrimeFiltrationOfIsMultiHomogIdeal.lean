@@ -1,6 +1,9 @@
 module
 
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.DoubleBlock
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.IsIntersectionFamily
+public import Mathlib.RingTheory.GradedAlgebra.Radical
+import Mathlib.RingTheory.RegularLocalRing.Defs
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.EqSumMultihomogeneousComponents
 
 @[expose] public section
 
@@ -28,11 +31,11 @@ theorem weight_lexW (e : K ≃ Fin n) (m : (Σ k, ι k) →₀ ℕ) :
   show (∑ p, m p • (Pi.single (e p.1) 1 : Fin n → ℕ)) = fun j => ∑ i, m ⟨e.symm j, i⟩
   funext j
   rw [Finset.sum_apply, Fintype.sum_sigma, Finset.sum_eq_single (e.symm j)]
-  · simp [Pi.single_apply]
+  · simp
   · intro k _ hk
     refine Finset.sum_eq_zero fun i _ => ?_
     have hjk : j ≠ e k := fun h => hk (by rw [h, Equiv.symm_apply_apply])
-    simp [Pi.single_apply, hjk]
+    simp [hjk]
   · simp
 
 theorem isMultiHomog_iff_lex (e : K ≃ Fin n) (f : MRing ι) (a : K → ℕ) :
@@ -152,7 +155,7 @@ theorem exists_colon_prime (J : Ideal (MRing ι)) (hJ : IsMultiHomogIdeal J) (hJ
     rw [← mul_assoc, mul_comm y x]
     exact hxy
 
-theorem isMultiHomogIdeal_sup_span {J : Ideal (MRing ι)} (hJ : IsMultiHomogIdeal J) {f : MRing ι}
+theorem isMultiHomogIdeal_sup_span_via_span_union {J : Ideal (MRing ι)} (hJ : IsMultiHomogIdeal J) {f : MRing ι}
     {c : K → ℕ} (hf : IsMultiHomog f c) : IsMultiHomogIdeal (J ⊔ Ideal.span {f}) := by
   obtain ⟨S, hS, rfl⟩ := hJ
   refine ⟨S ∪ {f}, ?_, (Ideal.span_union _ _).symm⟩

@@ -1,7 +1,51 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.SameKindIsometric
+public import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
 
 @[expose] public section
 
@@ -27,30 +71,16 @@ theorem ipL_comm (X Y : Matrix (Fin n) (Fin n) ℂ) : ipL Y X = ipL X Y := by
     rw [conjTranspose_mul, conjTranspose_conjTranspose]
   rw [hswap, trace_conjTranspose, Complex.star_def, Complex.conj_re]
 
-private theorem Jm_sq_lemma : Jm ε * Jm ε = 1 := by
-  rw [Jm, diagonal_mul_diagonal, ← diagonal_one]
-  congr 1
-  funext a
-  by_cases ha : ε a <;> simp [ha]
-
-private theorem Jm_conjTransposeFlagMeasures' : (Jm ε)ᴴ = Jm ε := by
-  rw [Jm, diagonal_conjTranspose]
-  congr 1
-  funext a
-  by_cases ha : ε a <;> simp [ha]
-
-private theorem Jm_mul_Jm_mulFlagMeasures (M : Matrix (Fin n) (Fin n) ℂ) : Jm ε * (Jm ε * M) = M := by
-  rw [← Matrix.mul_assoc, Jm_sq_lemma, Matrix.one_mul]
-
 theorem inv_eq_neg_of_inG {Y : Matrix (Fin n) (Fin n) ℂ} (h : inG ε Y) : Jm ε * Yᴴ * Jm ε = -Y := by
   have h0 : Yᴴ * Jm ε + Jm ε * Y = 0 := h
   have h1 : Yᴴ * Jm ε = -(Jm ε * Y) := eq_neg_of_add_eq_zero_left h0
-  rw [Matrix.mul_assoc, h1, Matrix.mul_neg, Jm_mul_Jm_mulFlagMeasures]
+  rw [Matrix.mul_assoc, h1, Matrix.mul_neg, ← Matrix.mul_assoc, Jm_mul_self, Matrix.one_mul]
 
 theorem inG_sub_inv (X : Matrix (Fin n) (Fin n) ℂ) : inG ε (X - Jm ε * Xᴴ * Jm ε) := by
   show (X - Jm ε * Xᴴ * Jm ε)ᴴ * Jm ε + Jm ε * (X - Jm ε * Xᴴ * Jm ε) = 0
-  simp only [conjTranspose_sub, conjTranspose_mul, conjTranspose_conjTranspose, Jm_conjTransposeFlagMeasures',
-    Matrix.sub_mul, Matrix.mul_sub, Matrix.mul_assoc, Jm_sq_lemma, Jm_mul_Jm_mulFlagMeasures, Matrix.mul_one]
+  simp only [conjTranspose_sub, conjTranspose_mul, conjTranspose_conjTranspose, Jm_conjTranspose,
+    Matrix.sub_mul, Matrix.mul_sub, Matrix.mul_assoc, Jm_mul_self, Matrix.mul_one]
+  rw [← Matrix.mul_assoc (Jm ε) (Jm ε), Jm_mul_self, Matrix.one_mul]
   abel
 
 theorem ipL_inv {Y : Matrix (Fin n) (Fin n) ℂ} (h : inG ε Y) (X : Matrix (Fin n) (Fin n) ℂ) :
@@ -59,9 +89,9 @@ theorem ipL_inv {Y : Matrix (Fin n) (Fin n) ℂ} (h : inG ε Y) (X : Matrix (Fin
   have h1 : Jm ε * Y = -(Yᴴ * Jm ε) := eq_neg_of_add_eq_zero_right h0
 
   have hY : Jm ε * Y * Jm ε = -Yᴴ := by
-    rw [h1, Matrix.neg_mul, Matrix.mul_assoc, Jm_sq_lemma, Matrix.mul_one]
+    rw [h1, Matrix.neg_mul, Matrix.mul_assoc, Jm_mul_self, Matrix.mul_one]
   have hstar : (Jm ε * Xᴴ * Jm ε)ᴴ = Jm ε * X * Jm ε := by
-    simp only [conjTranspose_mul, conjTranspose_conjTranspose, Jm_conjTransposeFlagMeasures', Matrix.mul_assoc]
+    simp only [conjTranspose_mul, conjTranspose_conjTranspose, Jm_conjTranspose, Matrix.mul_assoc]
   have htr : (Y * (Jm ε * X * Jm ε)).trace = -(X * Yᴴ).trace :=
     calc (Y * (Jm ε * X * Jm ε)).trace = ((Y * (Jm ε * X)) * Jm ε).trace := by
           simp only [Matrix.mul_assoc]
@@ -83,9 +113,10 @@ theorem add_inv_eq (g : UJ ε) :
   have key : Jm ε * (uMat g)ᴴ * Jm ε * uMat g = 1 := by
     calc Jm ε * (uMat g)ᴴ * Jm ε * uMat g = Jm ε * ((uMat g)ᴴ * Jm ε * uMat g) := by
           simp only [Matrix.mul_assoc]
-      _ = 1 := by rw [hg, Jm_sq_lemma]
+      _ = 1 := by rw [hg, Jm_mul_self]
   have e : Jm ε * (uMat g - 1)ᴴ * Jm ε = Jm ε * (uMat g)ᴴ * Jm ε - 1 := by
-    rw [conjTranspose_sub, conjTranspose_one, Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one, Jm_sq_lemma]
+    rw [conjTranspose_sub, conjTranspose_one, Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one,
+      Jm_mul_self]
   rw [e, Matrix.sub_mul, Matrix.mul_sub, key, Matrix.mul_one, Matrix.one_mul]
   abel
 
@@ -108,8 +139,8 @@ theorem eq_sum_of_mem_span
   refine Finset.sum_congr rfl fun i _ => ?_
   congr 1
 
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [map_sum, ipL_apply, hE]
+
+  simp [map_sum, ipL_apply, hE]
 
 theorem ipL_eq_zero_of_mem
     (hE : ∀ i k, ((E i * (E k)ᴴ).trace).re = if i = k then 1 else 0) (hG : ∀ i, inG ε (E i))

@@ -1,7 +1,55 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.GermComp1ZeroPointLeft
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HasSubstEv
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.ChartChgPfTP
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -22,22 +70,10 @@ def evP {m n : ℕ} (b : Fin m → Pt R n d) (a : Pt R m d) : Pt R n d := fun i 
 theorem ev_zero {m n : ℕ} {a : Fin m → Pt R n d} (ha : ZZ a) : ev a (0 : PS R m d) = 0 :=
   ReciprocityTheory.ChartRestriction.G.TB.ChartChgPfTP.ev_zero' ha
 
-private theorem ev_sub_lemma {m n : ℕ} {a : Fin m → Pt R n d} (ha : ZZ a) :
-    MvPowerSeries.HasSubst (fun p : Fin m × Fin d => a p.1 p.2) :=
-  MvPowerSeries.hasSubst_of_constantCoeff_zero (fun p => ha p.1 p.2)
-
-private theorem ev_sub_lemma_2 {σ : Type} (g : MvPowerSeries σ R) (hg : constantCoeff g = 0) :
-    (1 : ℕ∞) ≤ g.order := by
-  refine le_order fun e he => ?_
-  have h0 : e.degree = 0 := by
-    norm_cast at he
-    omega
-  rw [(Finsupp.degree_eq_zero_iff e).mp h0, coeff_zero_eq_constantCoeff_apply, hg]
-
 theorem cc_ev {m n : ℕ} {a : Fin m → Pt R n d} (ha : ZZ a) (f : PS R m d) :
     constantCoeff (ev a f) = constantCoeff f := by
   have h0 : constantCoeff (ev a (f - C (constantCoeff f))) = 0 :=
-    constantCoeff_subst_eq_zero (ev_sub_lemma ha) (fun p => ha p.1 p.2) (by simp)
+    constantCoeff_subst_eq_zero (hasSubst_ev a ha) (fun p => ha p.1 p.2) (by simp)
   have e : ev a f = ev a (C (constantCoeff f)) + ev a (f - C (constantCoeff f)) := by
     rw [← ev_add a ha, add_sub_cancel]
   rw [e, map_add (f := _), h0, ev_C, constantCoeff_C, add_zero]
@@ -98,8 +134,9 @@ theorem germCompOne_assoc_of_constantCoeff_zero {n : ℕ} (φ : Pt R 1 d) {ψ : 
 
 theorem germComp1_zero_of_noConstantCoeff {n : ℕ} {φ : Pt R 1 d} (hφ : Z φ) : comp1 φ (0 : Pt R n d) = 0 := by
   funext i
-  have hs := ev_sub_lemma (cechDeRhamTotalCocyclesOne (Z_zero (R := R) (n := n) (d := d)))
-  have h1 : (1 : ℕ∞) ≤ (φ i).order := ev_sub_lemma_2 _ (hφ i)
+  have hs := hasSubst_ev ![(0 : Pt R n d)]
+    (cechDeRhamTotalCocyclesOne (Z_zero (R := R) (n := n) (d := d)))
+  have h1 : (1 : ℕ∞) ≤ (φ i).order := one_le_order_iff_constCoeff_eq_zero.mpr (hφ i)
   have h2 : (⊤ : ℕ∞) ≤ (ev ![(0 : Pt R n d)] (φ i)).order := by
     refine le_trans ?_ (le_order_subst hs (φ i))
     have ht : (⨅ p : Fin 1 × Fin d, (![(0 : Pt R n d)] p.1 p.2).order) = ⊤ := by
@@ -116,7 +153,7 @@ theorem coeff_add_single {σ : Type} (D : σ →₀ ℕ) (t : σ) (h : D t = 0) 
   rw [coeff_pderiv, h]; simp
 
 private theorem cc_d_ev_lemma {m n : ℕ} {a : Fin m → Pt R n d} (ha : ZZ a) (g : PS R m d) :
-    ev a g = substAlgHom (ev_sub_lemma ha) g := by
+    ev a g = substAlgHom (hasSubst_ev a ha) g := by
   rw [substAlgHom_apply]
   rfl
 
@@ -144,12 +181,12 @@ private theorem cc_d_ev_lemma_3 {m n : ℕ} {a : Fin m → Pt R n d} (ha : ZZ a)
   intro e he
   apply coeff_of_lt_order
   have h1 : (1 : ℕ∞) ≤ ⨅ p : Fin m × Fin d, (a p.1 p.2).order :=
-    le_iInf fun p => ev_sub_lemma_2 _ (ha p.1 p.2)
+    le_iInf fun p => one_le_order_iff_constCoeff_eq_zero.mpr (ha p.1 p.2)
   have h2 : (K : ℕ∞) ≤ g.order := le_order fun x hx => hg x (by exact_mod_cast hx)
   calc (e.degree : ℕ∞) < K := by exact_mod_cast he
     _ = 1 * K := (one_mul _).symm
     _ ≤ (⨅ p : Fin m × Fin d, (a p.1 p.2).order) * g.order := mul_le_mul' h1 h2
-    _ ≤ (ev a g).order := le_order_subst (ev_sub_lemma ha) g
+    _ ≤ (ev a g).order := le_order_subst (hasSubst_ev a ha) g
 
 private theorem cc_d_ev_lemma_4 {m n : ℕ} {a : Fin m → Pt R n d} (ha : ZZ a) (t : Fin n × Fin d)
     (f : PS R m d) :
@@ -165,8 +202,8 @@ private theorem cc_d_ev_lemma_4 {m n : ℕ} {a : Fin m → Pt R n d} (ha : ZZ a)
     simp [map_add (f := _), Finsupp.degree_single]
   have hR : coeff e (∑ p : Fin m × Fin d,
       ev a (pderiv p (f - (P : PS R m d))) * pderiv t (a p.1 p.2)) = 0 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_eq_zero fun p _ => ?_
     rw [coeff_mul]
     refine Finset.sum_eq_zero fun x hx => ?_
@@ -190,8 +227,8 @@ private theorem cc_d_ev_lemma_4 {m n : ℕ} {a : Fin m → Pt R n d} (ha : ZZ a)
 theorem cc_d_ev {m n : ℕ} {a : Fin m → Pt R n d} (ha : ZZ a) (t : Fin n × Fin d) (f : PS R m d) :
     constantCoeff (pderiv t (ev a f)) =
       ∑ p : Fin m × Fin d, constantCoeff (pderiv p f) * constantCoeff (pderiv t (a p.1 p.2)) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [cc_d_ev_lemma_4 ha t f, map_sum]
+
+  rw [cc_d_ev_lemma_4 ha t f, map_sum]
   refine Finset.sum_congr rfl fun p _ => ?_
   rw [map_mul, cc_ev ha]
 
@@ -201,8 +238,8 @@ theorem cc_dd_ev {m n : ℕ} {a : Fin m → Pt R n d} (ha : ZZ a) (s t : Fin n �
       ∑ p : Fin m × Fin d, (∑ q : Fin m × Fin d, constantCoeff (pderiv q (pderiv p f)) *
         constantCoeff (pderiv s (a q.1 q.2))) * constantCoeff (pderiv t (a p.1 p.2)) := by
   have hchain := cc_d_ev_lemma_4 ha t f
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hchain, map_sum, map_sum]
+
+  rw [hchain, map_sum, map_sum]
   refine Finset.sum_congr rfl fun p _ => ?_
   rw [Derivation.leibniz, smul_eq_mul, smul_eq_mul, map_add (f := _), map_mul, map_mul, cc_ev ha, hf, zero_mul, zero_add,
     cc_d_ev ha, mul_comm]

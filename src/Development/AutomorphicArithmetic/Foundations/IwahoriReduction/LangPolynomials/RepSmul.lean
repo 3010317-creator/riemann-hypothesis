@@ -2,6 +2,45 @@ module
 
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.FixedIntegersIsUnitOfNotMemPrimeSpan
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.WdVal
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -84,8 +123,8 @@ private theorem rs_cg {l : ℕ} [Fact l.Prime] {c : Coef l} (β : Bas c) (he : �
       _ = ∑ i, β.val i * algebraMap ℤ_[l] (PadicAlgCl l) (∑ k, β.mat b i k * (x k : ℤ_[l])) := by
           rw [Finset.sum_comm]
           refine Finset.sum_congr rfl fun i _ => ?_
-          set_option synthInstance.maxHeartbeats 100000 in
-            rw [map_sum, Finset.mul_sum]
+
+          rw [map_sum, Finset.mul_sum]
           refine Finset.sum_congr rfl fun k _ => ?_
           rw [map_mul, map_natCast]
           ring
@@ -109,20 +148,6 @@ private theorem rs_cg {l : ℕ} [Fact l.Prime] {c : Coef l} (β : Bas c) (he : �
     calc _ ≤ ‖(l : PadicAlgCl l) ^ n‖ * 1 := mul_le_mul_of_nonneg_left (rs_sum_le _ he _) (norm_nonneg _)
       _ = _ := mul_one _
 
-private theorem rs_unit {Ω : Type} [Field Ω] (A : ValuationSubring Ω) {ι : Type} [Fintype ι] (u : ι → Ω)
-    (hu : ∀ i, u i ∈ A ∧ u i ≠ 0 ∧ (u i)⁻¹ ∈ A) (a : ι → ℕ) :
-    ∏ k, u k ^ a k ∈ A ∧ ∏ k, u k ^ a k ≠ 0 ∧ (∏ k, u k ^ a k)⁻¹ ∈ A := by
-  classical
-  suffices h : ∀ s : Finset ι, ∏ k ∈ s, u k ^ a k ∈ A ∧ ∏ k ∈ s, u k ^ a k ≠ 0 ∧ (∏ k ∈ s, u k ^ a k)⁻¹ ∈ A from h _
-  intro s
-  induction s using Finset.induction_on with
-  | empty => simp [A.one_mem]
-  | insert k s hk ih =>
-    rw [Finset.prod_insert hk]
-    obtain ⟨h1, h2, h3⟩ := hu k
-    refine ⟨mul_mem (pow_mem h1 _) ih.1, mul_ne_zero (pow_ne_zero _ h2) ih.2.1, ?_⟩
-    rw [mul_inv, ← inv_pow]
-    exact mul_mem (pow_mem h3 _) ih.2.2
 
 private theorem rs_kum {Ω : Type} [Field Ω] [Algebra ℚ Ω] {l : ℕ} [Fact l.Prime] {n : ℕ} {z : Ω} (hz : z ^ l ^ n = 1)
     (s : G ℚ Ω) {ι : Type} [Fintype ι] (u : ι → Ω) (x : ι → ZMod (l ^ n)) (hx : ∀ k, KumVal n z (u k) s (x k)) (a : ι → ℕ) :
@@ -168,7 +193,10 @@ theorem UpperTheory.Kd.C7.pRepSmul :
   refine ⟨P', ⟨hprim, hnm, fun i => ?_, hval, fun s hs hcyc hfix => ?_⟩, fun i => ?_⟩
   · beta_reduce
     rw [hpv i]
-    exact rs_unit A _ hunits (a i)
+    refine ⟨prod_mem fun k _ => pow_mem (hunits k).1 _,
+      Finset.prod_ne_zero_iff.2 fun k _ => pow_ne_zero _ (hunits k).2.1, ?_⟩
+    rw [← Finset.prod_inv_distrib]
+    exact prod_mem fun k _ => by rw [← inv_pow]; exact pow_mem (hunits k).2.2 _
   · obtain ⟨k, hk, hcg⟩ := hK s hs hcyc hfix
     refine ⟨fun i => ((∑ k', a i k' * (k k').val : ℕ) : ZMod (l ^ n)), fun i => ?_, ?_⟩
     · beta_reduce
@@ -176,7 +204,6 @@ theorem UpperTheory.Kd.C7.pRepSmul :
       exact rs_kum hprim.pow_eq_one s _ k hk (a i)
     · refine rs_cg β hval b n _ (fun k' => (k k').val)
         (fun i => (((∑ k', a i k' * (k k').val : ℕ) : ZMod (l ^ n))).val) hcg fun i => ?_
-      beta_reduce
       refine ⟨((∑ k', a i k' * (k k').val) / l ^ n : ℕ) + ∑ k', t i k' * ((k k').val : ℤ_[l]), ?_⟩
       have hcast : ((∑ k', a i k' * (k k').val : ℕ) : ℤ_[l])
           = ((∑ k', a i k' * (k k').val) % l ^ n : ℕ) + (l : ℤ_[l]) ^ n * ((∑ k', a i k' * (k k').val) / l ^ n : ℕ) := by
@@ -203,12 +230,12 @@ theorem UpperTheory.Kd.C7.pRepSmul :
       fun f z => RingHom.congr_fun (padicHom_ext l (f.comp (algebraMap ℤ_[l] Φ.R)) (algebraMap ℤ_[l] Φ.R)) z
     have htw : Φ.tw m (Φ.act (β.mat b) D i)
         = ∑ k, PowerSeries.C (algebraMap ℤ_[l] Φ.R (β.mat b i k)) * Φ.tw m (D k) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [Fr.tw, Fr.act, map_sum, map_mul, PowerSeries.map_C, hfixR]
+
+      simp only [Fr.tw, Fr.act, map_sum, map_mul, PowerSeries.map_C, hfixR]
     unfold LC at hLC ⊢
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [htw, hser, (rs_dl_prod Finset.univ (fun k => Φ.ser (P k)) hunit (a i)).2, map_sum, map_sum,
-      ← Finset.sum_sub_distrib]
+
+    rw [htw, hser, (rs_dl_prod Finset.univ (fun k => Φ.ser (P k)) hunit (a i)).2, map_sum, map_sum,
+    ← Finset.sum_sub_distrib]
     refine Ideal.sum_mem _ fun k _ => ?_
     have hdiff : ev Φ.R l m (PowerSeries.C (algebraMap ℤ_[l] Φ.R (β.mat b i k)))
         - ev Φ.R l m ((a i k : ℕ) : PowerSeries Φ.R) ∈ Ideal.span {(l : lev Φ.R l m) ^ n} := by

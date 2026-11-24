@@ -1,9 +1,53 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.BlockAnti
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicLeviEmbeddingHomomorphismProperties
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicStabilizerRadicalStructure
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicLeviEmbeddingHomomorphismProperties
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+public import Mathlib.Analysis.Matrix.Hermitian
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Formalism.SharedLemmas.HpkSq
 
 @[expose] public section
 
@@ -141,14 +185,9 @@ theorem sg_sq (j : Fin (k + 1)) : sg k j * sg k j = 1 := by
   unfold sg; split_ifs <;> simp
 
 theorem Hpk_sq : Hpk k r * Hpk k r = 1 := by
-  ext x y
-  rw [Matrix.mul_apply, sum3]
-  induction x using cases3 <;> induction y using cases3 <;>
-    simp [H_ee, H_ew, H_es, H_we, H_ww, H_ws, H_se, H_sw, H_ss, Matrix.one_apply,
-      eI_inj, wI_inj, esI_inj, eI_ne_wI, eI_ne_esI, wI_ne_esI, wI_ne_eI, esI_ne_eI, esI_ne_wI]
-  split_ifs with h
-  · subst h; exact sg_sq _
-  · rfl
+  first
+  | exact _root_.Formalism.SharedLemmas.upq_hpk_mul_self
+  | (apply _root_.Formalism.SharedLemmas.upq_hpk_mul_self <;> assumption)
 
 theorem Hpk_herm : (Hpk k r)ᴴ = Hpk k r := by
   ext x y
@@ -243,8 +282,8 @@ theorem exists_K (c u : Fin r → EuclideanSpace ℂ (Fin (2 * r + k + 1))) (hc 
     have h2 : inner ℂ (WithLp.toLp 2 (κ *ᵥ Pi.single i 1) : EuclideanSpace ℂ _) (WithLp.toLp 2 (κ *ᵥ Pi.single j 1)) =
         inner ℂ (WithLp.toLp 2 (Pi.single i 1) : EuclideanSpace ℂ _) (WithLp.toLp 2 (Pi.single j 1)) := by
       rw [hκ, hκ, hκi]
-    simp only [EuclideanSpace.inner_eq_star_dotProduct, WithLp.ofLp_toLp, dotProduct] at h2
-    simp only [Matrix.mul_apply, conjTranspose_apply, one_apply]
+    simp only [EuclideanSpace.inner_eq_star_dotProduct, dotProduct] at h2
+    simp only [Matrix.mul_apply, conjTranspose_apply]
     convert h2 using 1
     · refine Finset.sum_congr rfl fun m _ => ?_
       simp [mulVec_single, mul_comm]
@@ -276,7 +315,7 @@ theorem iwasawa : ∀ (k r : ℕ), ∀ g ∈ GG k r, ∃ n ∈ Nset k r, ∃ a :
   have hc : Orthonormal ℂ c := by
     rw [orthonormal_iff_ite]
     intro a b
-    simp [c, EuclideanSpace.inner_eq_star_dotProduct, bvec, Pi.single_apply, eI_inj, eq_comm, Pi.star_single]
+    simp [c, EuclideanSpace.inner_eq_star_dotProduct, bvec, Pi.single_apply, eI_inj, Pi.star_single]
   have hgw : ∀ a, Matrix.toEuclideanLin g (w a) = c a := fun a => by
     simp [w, c, Matrix.toLpLin_apply, Matrix.mul_nonsing_inv _ hgu]
   have hw : LinearIndependent ℂ w := LinearIndependent.of_comp (Matrix.toEuclideanLin g) (by
@@ -286,7 +325,7 @@ theorem iwasawa : ∀ (k r : ℕ), ∀ g ∈ GG k r, ∃ n ∈ Nset k r, ∃ a :
     simp [c, EuclideanSpace.inner_eq_star_dotProduct, bvec, Matrix.toLpLin_apply, Pi.star_single, H_ee]
   have hwi : ∀ a b, inner ℂ (w a) (Matrix.toEuclideanLin (Hpk k r) (w b)) = 0 := fun a b => by
     rw [← hci a b]
-    simp only [w, c, EuclideanSpace.inner_eq_star_dotProduct, Matrix.toLpLin_apply, WithLp.ofLp_toLp]
+    simp only [w, c, EuclideanSpace.inner_eq_star_dotProduct, Matrix.toLpLin_apply]
     rw [dotProduct_comm, star_mulVec, ← dotProduct_mulVec, mulVec_mulVec, mulVec_mulVec, hgi, dotProduct_comm]
   have hspan : ∀ a, gramSchmidtNormed ℂ w a ∈ Submodule.span ℂ (Set.range w) := fun a => by
     rw [← span_gramSchmidt, ← span_gramSchmidtNormed_range]; exact Submodule.subset_span ⟨a, rfl⟩
@@ -295,8 +334,8 @@ theorem iwasawa : ∀ (k r : ℕ), ∀ g ∈ GG k r, ∃ n ∈ Nset k r, ∃ a :
     intro a b
     obtain ⟨ca, hca⟩ := (Submodule.mem_span_range_iff_exists_fun ℂ).1 (hspan a)
     obtain ⟨cb, hcb⟩ := (Submodule.mem_span_range_iff_exists_fun ℂ).1 (hspan b)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← hca, ← hcb, map_sum, sum_inner]
+
+    rw [← hca, ← hcb, map_sum, sum_inner]
     refine Finset.sum_eq_zero fun i _ => ?_
     rw [inner_sum]
     refine Finset.sum_eq_zero fun j _ => ?_

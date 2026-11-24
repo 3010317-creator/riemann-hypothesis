@@ -1,6 +1,50 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.GlobalUnitaryForms.FibAbs
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -80,10 +124,6 @@ private theorem out_mk {H X : Type} [Group H] [MulAction H X] (x : X) :
   obtain ⟨h, hh⟩ := this
   exact ⟨h, hh.symm⟩
 
-private theorem mk_smul {H X : Type} [Group H] [MulAction H X] (h : H) (x : X) :
-    Quotient.mk (orbitRel H X) (h • x) = Quotient.mk (orbitRel H X) x :=
-  Quotient.sound (orbitRel_apply.2 ⟨h, rfl⟩)
-
 theorem UpperTheory.orbitalFiber_decomposition :
     UpperTheory.V.Z.Sym.Glob.Fib.Decomp := by
   intro H X I _ _ H₀ k Hi Yi _ _ φ e ki hn hk hT he hinj hki hke hs hu
@@ -96,7 +136,7 @@ theorem UpperTheory.orbitalFiber_decomposition :
     refine (T.finite_toSet.image (Quotient.mk (orbitRel H X))).subset fun o ho => ?_
     obtain ⟨h, s, hs, ho⟩ := hT _ ho
     refine ⟨s, hs, ?_⟩
-    rw [← mk_smul h s, ← ho]
+    rw [← MulAction.orbitRel.Quotient.quotient_smul_eq (g := h) (a := s), ← ho]
     exact Quotient.out_eq o
   · intro o ho
     have : k o.out = 0 := not_not.1 ho
@@ -129,7 +169,7 @@ theorem UpperTheory.orbitalFiber_decomposition :
     · show ki i (Quotient.mk (orbitRel (Hi i) (Yi i)) y).out ≠ 0
       rwa [ha, hki]
     · show Quotient.mk (orbitRel H X) (e i (Quotient.mk (orbitRel (Hi i) (Yi i)) y).out) = o
-      rw [ha, he, mk_smul, ← mk_smul h, ← hx]
+      rw [ha, he, MulAction.orbitRel.Quotient.quotient_smul_eq, ← MulAction.orbitRel.Quotient.quotient_smul_eq (g := h), ← hx]
       exact Quotient.out_eq o
   · intro i j p hp q hq hpq
     obtain ⟨h, hh⟩ := hex _ _ hpq.symm
@@ -140,4 +180,4 @@ theorem UpperTheory.orbitalFiber_decomposition :
     rw [← he] at hh
     have h3 := hinj i hh
     rw [← Quotient.out_eq p, ← Quotient.out_eq q, ← h3]
-    exact (mk_smul a _).symm
+    exact (MulAction.orbitRel.Quotient.quotient_smul_eq (g := a)).symm

@@ -1,8 +1,8 @@
 module
 
-public import Mathlib
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalJacobianType.ContinuousTrESymm
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.DiffProd
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalJacobianType.ContinuousTrESymm
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalUnitaryOrbits.HRSumSmulRight
 
 @[expose] public section
 
@@ -83,26 +83,7 @@ theorem alg_mem {c : Fv F v} (hc : c ∈ v.adicCompletionIntegers F) :
 
 theorem mul_mem {x y : Fv F v ⊗[F] E} (hx : x ∈ OEv (E := E) v) (hy : y ∈ OEv (E := E) v) :
     x * y ∈ OEv (E := E) v := by
-  simp only [OEv, SetLike.mem_coe] at hx hy ⊢
-  have key : ∀ a : 𝓞 E, ∀ y ∈ Submodule.span (v.adicCompletionIntegers F)
-      ((fun x : 𝓞 E => inclR (F := F) (Fv F v) (x : E)) '' Set.univ),
-      inclR (F := F) (Fv F v) (a : E) * y ∈ Submodule.span (v.adicCompletionIntegers F)
-        ((fun x : 𝓞 E => inclR (F := F) (Fv F v) (x : E)) '' Set.univ) := by
-    intro a y hy
-    induction hy using Submodule.span_induction with
-    | mem z hz =>
-      obtain ⟨b, -, rfl⟩ := hz
-      exact Submodule.subset_span ⟨a * b, Set.mem_univ _, by simp [map_mul]⟩
-    | zero => rw [mul_zero]; exact Submodule.zero_mem _
-    | add x z _ _ hx hz => rw [mul_add]; exact Submodule.add_mem _ hx hz
-    | smul c x _ hx => rw [mul_smul_comm]; exact Submodule.smul_mem _ c hx
-  induction hx using Submodule.span_induction with
-  | mem z hz =>
-    obtain ⟨a, -, rfl⟩ := hz
-    exact key a y hy
-  | zero => rw [zero_mul]; exact Submodule.zero_mem _
-  | add x z _ _ hx hz => rw [add_mul]; exact Submodule.add_mem _ hx hz
-  | smul c x _ hx => rw [smul_mul_assoc]; exact Submodule.smul_mem _ c hx
+  first | exact _root_.PI.OmLocU.oEv_mul | (apply _root_.PI.OmLocU.oEv_mul <;> assumption)
 
 theorem trace_mem {x : Fv F v ⊗[F] E} (hx : x ∈ OEv (E := E) v) :
     Algebra.trace (Fv F v) (Fv F v ⊗[F] E) x ∈ v.adicCompletionIntegers F := by
@@ -125,22 +106,31 @@ theorem trace_v (σ : E →ₐ[F] E) (hinv : ∀ y, σ (σ y) = y) (hnt : ∃ x,
     (hfin : Module.finrank F E = 2) (w : Fv F v ⊗[F] E) :
     algebraMap (Fv F v) (Fv F v ⊗[F] E) (Algebra.trace (Fv F v) (Fv F v ⊗[F] E) w) =
       w + sigR (Fv F v) σ w := by
-  induction w using TensorProduct.induction_on with
-  | zero => simp
-  | tmul c e =>
-    have ht := trace_eq_add σ hinv hnt hfin e
-    have e1 : (c ⊗ₜ[F] e : Fv F v ⊗[F] E) = c • inclR (F := F) (Fv F v) e := by
-      simp [inclR, TensorProduct.smul_tmul']
-    have e2 : sigR (Fv F v) σ (c ⊗ₜ[F] e) = c ⊗ₜ[F] σ e := by
-      simp [sigR, Algebra.TensorProduct.map_tmul]
-    rw [e2, ← TensorProduct.tmul_add, ← ht, Algebra.algebraMap_eq_smul_one (A := E) (Algebra.trace F E e),
-      ← TensorProduct.smul_tmul, e1, map_smul, PI.UnitaryGroupMassFormula.LocJacTyp.Sd.trace_inclR (v := v),
-      Algebra.TensorProduct.algebraMap_apply, Algebra.algebraMap_self, RingHom.id_apply]
-    congr 1
-    rw [smul_eq_mul, Algebra.smul_def, mul_comm]
-  | add x y hx hy =>
-    rw [map_add (f := _), map_add (f := _), hx, hy, map_add (f := _)]
-    abel
+  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
+  have h1 : ∀ e : E, algebraMap (Fv F v) (Fv F v ⊗[F] E)
+      (Algebra.trace (Fv F v) (Fv F v ⊗[F] E) ((1 : Fv F v) ⊗ₜ e)) =
+      (1 : Fv F v) ⊗ₜ e + (1 : Fv F v) ⊗ₜ σ e := by
+    intro e
+    have ht : Algebra.trace (Fv F v) (Fv F v ⊗[F] E) ((1 : Fv F v) ⊗ₜ e) =
+        algebraMap F (Fv F v) (Algebra.trace F E e) := by
+      rw [Algebra.trace_apply, Algebra.trace_apply]
+      have h : Algebra.lmul (Fv F v) (Fv F v ⊗[F] E) ((1 : Fv F v) ⊗ₜ e) =
+          (Algebra.lmul F E e).baseChange (Fv F v) := by
+        ext k
+        simp
+      rw [h, LinearMap.trace_baseChange]
+    rw [ht, ← inclR_alg v, trace_eq_add σ hinv hnt hfin e, map_add (f := _)]
+    rfl
+  have hL : (Algebra.linearMap (Fv F v) (Fv F v ⊗[F] E)) ∘ₗ
+        (Algebra.trace (Fv F v) (Fv F v ⊗[F] E)) =
+      LinearMap.id + σ.toLinearMap.baseChange (Fv F v) := by
+    ext e
+    simpa using h1 e
+  have hw := LinearMap.congr_fun hL w
+  simp only [LinearMap.comp_apply, Algebra.linearMap_apply, LinearMap.add_apply,
+    LinearMap.id_apply] at hw
+  rw [hw]
+  congr 1
 
 theorem dual_mem (σ : E →ₐ[F] E) (hinv : ∀ y, σ (σ y) = y) (hnt : ∃ x, σ x ≠ x)
     (hfin : Module.finrank F E = 2) (θ t : 𝓞 E) (ht : σ (θ : E) = (t : E)) (e : 𝓞 F)
@@ -148,63 +138,41 @@ theorem dual_mem (σ : E →ₐ[F] E) (hinv : ∀ y, σ (σ y) = y) (hnt : ∃ x
     (hz : ∀ x ∈ OEv (E := E) v,
       Algebra.trace (Fv F v) (Fv F v ⊗[F] E) (x * z) ∈ v.adicCompletionIntegers F) :
     z ∈ OEv (E := E) v := by
-  have hsub : ∀ x y : Fv F v ⊗[F] E, x ∈ OEv (E := E) v → y ∈ OEv (E := E) v →
-      x - y ∈ OEv (E := E) v := by
-    intro x y hx hy
-    simp only [OEv, SetLike.mem_coe] at hx hy ⊢
-    exact Submodule.sub_mem _ hx hy
-  have hθ := inclR_mem' (F := F) (E := E) v θ
-  have ht' := inclR_mem' (F := F) (E := E) v t
-  have hσθ : sigR (Fv F v) σ (inclR (F := F) (Fv F v) (θ : E)) = inclR (F := F) (Fv F v) (t : E) := by
-    simp [sigR, inclR, Algebra.TensorProduct.map_tmul, ht]
-  have hA := trace_v v σ hinv hnt hfin (inclR (F := F) (Fv F v) (θ : E) * z)
-  have hB := trace_v v σ hinv hnt hfin z
-  rw [RingHom.map_mul (sigR (Fv F v) σ), hσθ] at hA
-  have hδ : (inclR (F := F) (Fv F v) (θ : E) - inclR (F := F) (Fv F v) (t : E)) * z =
-      algebraMap (Fv F v) (Fv F v ⊗[F] E)
-          (Algebra.trace (Fv F v) (Fv F v ⊗[F] E) (inclR (F := F) (Fv F v) (θ : E) * z)) -
-        inclR (F := F) (Fv F v) (t : E) *
-          algebraMap (Fv F v) (Fv F v ⊗[F] E) (Algebra.trace (Fv F v) (Fv F v ⊗[F] E) z) := by
-    rw [hA, hB]
+  set A := Algebra.trace (Fv F v) (Fv F v ⊗[F] E) z with hAdef
+  set B := Algebra.trace (Fv F v) (Fv F v ⊗[F] E) (inclR (F := F) (Fv F v) (θ : E) * z) with hBdef
+  have hA : A ∈ v.adicCompletionIntegers F := by simpa using hz 1 (one_mem v)
+  have hB : B ∈ v.adicCompletionIntegers F := hz _ (inclR_mem' v θ)
+  have tA := trace_v v σ hinv hnt hfin z
+  have tB := trace_v v σ hinv hnt hfin (inclR (F := F) (Fv F v) (θ : E) * z)
+  have hsθ : sigR (Fv F v) σ (inclR (F := F) (Fv F v) (θ : E)) = inclR (F := F) (Fv F v) (t : E) := by
+    simp [sigR, inclR, ht]
+  set Δ := inclR (F := F) (Fv F v) ((θ : E) - t) with hΔ
+  have key : Δ * z = algebraMap (Fv F v) (Fv F v ⊗[F] E) B -
+      inclR (F := F) (Fv F v) (t : E) * algebraMap (Fv F v) (Fv F v ⊗[F] E) A := by
+    rw [tA, tB, map_mul, hsθ, hΔ, map_sub]
     ring
-  have hδ2 : (inclR (F := F) (Fv F v) (θ : E) - inclR (F := F) (Fv F v) (t : E)) *
-      (inclR (F := F) (Fv F v) (θ : E) - inclR (F := F) (Fv F v) (t : E)) =
-      algebraMap (Fv F v) (Fv F v ⊗[F] E) (algebraMap F (Fv F v) (e : F)) := by
-    rw [← inclR_alg (F := F) (E := E) v, ← he, sq, map_mul, map_sub]
-  have hAm : algebraMap (Fv F v) (Fv F v ⊗[F] E)
-      (Algebra.trace (Fv F v) (Fv F v ⊗[F] E) (inclR (F := F) (Fv F v) (θ : E) * z)) ∈ OEv (E := E) v :=
-    alg_mem (F := F) (E := E) v (hz _ hθ)
-  have hBm : algebraMap (Fv F v) (Fv F v ⊗[F] E) (Algebra.trace (Fv F v) (Fv F v ⊗[F] E) z) ∈
-      OEv (E := E) v := by
-    have := hz 1 (one_mem (F := F) (E := E) v)
-    rw [one_mul] at this
-    exact alg_mem (F := F) (E := E) v this
-  have hmem : algebraMap (Fv F v) (Fv F v ⊗[F] E) (algebraMap F (Fv F v) (e : F)) * z ∈ OEv (E := E) v := by
-    rw [← hδ2, mul_assoc, hδ]
-    exact mul_mem (F := F) (E := E) v (hsub _ _ hθ ht')
-      (hsub _ _ hAm (mul_mem (F := F) (E := E) v ht' hBm))
-  have hne : algebraMap F (Fv F v) (e : F) ≠ 0 := by
-    intro h0
-    apply hev
-    have h1 : (e : F) = 0 := (algebraMap F (Fv F v)).injective (by rw [h0, map_zero])
-    have h2 : e = 0 := RingOfIntegers.coe_eq_zero_iff.mp h1
-    rw [h2]
-    exact v.asIdeal.zero_mem
+  have hΔ2 : Δ * Δ = algebraMap (Fv F v) (Fv F v ⊗[F] E) (algebraMap F (Fv F v) (e : F)) := by
+    rw [hΔ, ← map_mul, ← sq, he, inclR_alg]
+  have hΔm : Δ ∈ OEv (E := E) v := by
+    have := inclR_mem' (E := E) v (θ - t)
+    simpa [hΔ] using this
+  have hmem : Δ * (algebraMap (Fv F v) (Fv F v ⊗[F] E) B -
+      inclR (F := F) (Fv F v) (t : E) * algebraMap (Fv F v) (Fv F v ⊗[F] E) A) ∈ OEv (E := E) v :=
+    mul_mem v hΔm (Submodule.sub_mem _ (alg_mem v hB)
+      (mul_mem v (inclR_mem' v t) (alg_mem v hA)))
   have hval : Valued.v (algebraMap F (Fv F v) (e : F)) = 1 := by
-    have h1 := IsDedekindDomain.HeightOneSpectrum.valuedAdicCompletion_eq_valuation' (K := F) v (e : F)
-    have h2 : IsDedekindDomain.HeightOneSpectrum.valuation F v (e : F) = 1 := by
-      rw [show (e : F) = algebraMap (𝓞 F) F e from rfl,
-        IsDedekindDomain.HeightOneSpectrum.valuation_of_algebraMap,
-        IsDedekindDomain.HeightOneSpectrum.intValuation_eq_one_iff.mpr hev]
-    rw [← h2, ← h1]
-    rfl
+    have h := HeightOneSpectrum.valuedAdicCompletion_eq_valuation' (R := 𝓞 F) v (algebraMap (𝓞 F) F e)
+    rw [HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_eq_one_iff.2 hev] at h
+    exact h
+  have he0 : algebraMap F (Fv F v) (e : F) ≠ 0 := by
+    intro h0; rw [h0, map_zero] at hval; exact zero_ne_one hval
   have hinvm : (algebraMap F (Fv F v) (e : F))⁻¹ ∈ v.adicCompletionIntegers F := by
-    rw [IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers, map_inv₀, hval, inv_one]
-  rw [← Algebra.smul_def] at hmem
-  have hz' : z = (algebraMap F (Fv F v) (e : F))⁻¹ • ((algebraMap F (Fv F v) (e : F)) • z) := by
-    rw [smul_smul, inv_mul_cancel₀ hne, one_smul]
-  rw [hz']
-  exact oev_smul' (F := F) (E := E) v hinvm hmem
+    rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_inv₀, hval, inv_one]
+  have hzeq : z = (algebraMap F (Fv F v) (e : F))⁻¹ • (Δ * (algebraMap (Fv F v) (Fv F v ⊗[F] E) B -
+      inclR (F := F) (Fv F v) (t : E) * algebraMap (Fv F v) (Fv F v ⊗[F] E) A)) := by
+    rw [← key, ← mul_assoc, hΔ2, ← Algebra.smul_def, smul_smul, inv_mul_cancel₀ he0, one_smul]
+  rw [hzeq]
+  exact oev_smul' v hinvm hmem
 
 end Gen
 

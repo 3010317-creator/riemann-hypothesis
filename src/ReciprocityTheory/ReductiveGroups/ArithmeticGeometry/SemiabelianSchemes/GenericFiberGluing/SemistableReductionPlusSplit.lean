@@ -2,10 +2,10 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.SplitTori.IsTorus
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Basic.NNReal.Defs
 
 @[expose] public section
-
-set_option autoImplicit false
 
 universe u
 

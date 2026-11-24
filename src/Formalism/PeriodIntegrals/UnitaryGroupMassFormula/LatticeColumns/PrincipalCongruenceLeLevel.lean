@@ -1,10 +1,53 @@
 module
 
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeColumns.LevelComponentsSurjective
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeColumns.LocRed
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeColumns.IdxProd
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalVolumeIndices.CompPiVLocGSame
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeColumns.IdxGroup
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalVolumeIndices.LocKMem
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeColumns.LevelComponentsSurjective
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalVolumeIndices.CstNatCastApply
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalVolumeIndices.HelpSng
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalVolumeIndices.LocIdxLift
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalVolumeIndices.LocKMem
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -93,38 +136,6 @@ theorem kgv_of_gOf (X : HidaSetting D) (p : TypX X) (y : HA (Fv X.B.I.F p.1) X.B
   refine ⟨((w⁻¹ : (p.1.adicCompletionIntegers X.B.I.F)ˣ) : p.1.adicCompletionIntegers X.B.I.F) • z,
     Submodule.smul_mem _ _ hz, ?_⟩
   rw [e, smul_smul, hw, mul_assoc, Units.mul_inv, mul_one]
-
-theorem coe_K2Hg (X : HidaSetting D) (hb : AdBridgeIso X.B.I) (hK : X.LevelSubgroupCharacter) (u : D.what₂.Word) :
-    (unitaryLevelClosureSubgroup X hb u : Set (Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u))) = Subtype.val ⁻¹' K2u X hb u := by
-  obtain ⟨h1, hmul, hinv, -, -⟩ := hK
-  have fmul : ∀ a b : X.B.I.Gf, finHA X hb (a * b) = finHA X hb a * finHA X hb b := by
-    intro a b
-    unfold finHA
-    rw [← Prod.snd_mul, ← map_mul, ← map_mul, Prod.mk_mul_mk, mul_one]
-  have finv : ∀ a : X.B.I.Gf, finHA X hb a⁻¹ = (finHA X hb a)⁻¹ := by
-    intro a
-    unfold finHA
-    rw [← Prod.snd_inv, ← map_inv, ← map_inv, Prod.inv_mk, inv_one]
-  have fone : finHA X hb 1 = 1 := by
-    unfold finHA
-    show ((splitA X.B.I.cm.sig X.B.I.J) ((toHA X.B.I hb) 1)).2 = 1
-    rw [map_one, map_one, Prod.snd_one]
-  let S : Subgroup (Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u)) :=
-    { carrier := Subtype.val ⁻¹' K2u X hb u
-      mul_mem' := by
-        rintro x y ⟨_, ⟨k1, hk1, rfl⟩, hx⟩ ⟨_, ⟨k2, hk2, rfl⟩, hy⟩
-        refine ⟨finHA X hb (k1 * k2), ⟨k1 * k2, hmul k1 hk1 k2 hk2, rfl⟩, ?_⟩
-        simp only [Subgroup.coe_mul, ← hx, ← hy, fmul]
-        group
-      one_mem' := ⟨finHA X hb 1, ⟨1, h1, rfl⟩, by simp [fone]⟩
-      inv_mem' := by
-        rintro x ⟨_, ⟨k, hk, rfl⟩, hx⟩
-        refine ⟨finHA X hb k⁻¹, ⟨k⁻¹, hinv k hk, rfl⟩, ?_⟩
-        simp only [Subgroup.coe_inv, ← hx, finv]
-        group }
-  unfold unitaryLevelClosureSubgroup
-  exact congrArg (fun H : Subgroup (Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u)) =>
-    (H : Set (Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u)))) (Subgroup.closure_eq S)
 
 theorem mem_conjugate_level_of_local (X : HidaSetting D) (hb : AdBridgeIso X.B.I) (hK : X.LevelSubgroupCharacter) (hL : X.LevelSubgroupNormalized)
     (u : D.what₂.Word) (z : HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J)

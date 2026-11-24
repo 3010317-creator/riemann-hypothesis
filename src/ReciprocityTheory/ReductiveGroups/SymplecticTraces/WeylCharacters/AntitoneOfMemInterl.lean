@@ -1,6 +1,8 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.SymplecticTraces.WeylCharacters.AltBranchStatement
+import Mathlib.Tactic.TypeStar
+public import Mathlib.LinearAlgebra.Matrix.Block
 
 @[expose] public section
 
@@ -138,7 +140,7 @@ theorem altBranch : AltBranchStatement := by
       (by have := hlam (Fin.castSucc_le_succ j); omega)]
     rw [hexp1, hexp2]
     congr 2
-    ring
+    ring_nf
   have hSdet : S.det = ∑ mu ∈ interl lam,
       (∏ j : Fin n, y ^ (lam j.castSucc - mu j)) * alt n (mu + delta n) (fun i => t i.castSucc) := by
     rw [← Matrix.det_transpose]

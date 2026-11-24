@@ -1,19 +1,132 @@
 module
 
-public import Mathlib
+public import Formalism.GaussValuationBounds.Statement
+public import Formalism.WindowSums.PowerSeriesRelationList
 public import Formalism.SharpRestriction.LevelLetterCocycles.CrystallineLiftingInputs
 public import Formalism.JumpKernelCokernel.LengthTheoremsWithEarlier
 public import Formalism.SharpRestriction.LevelLetterCocycles.ExistsPosConstLagrangeCondition
-public import Formalism.GaussValuationBounds.Statement
-public import Formalism.GaussValuationBounds.GaussValueContraction.TruncationExponentBounds
-public import Formalism.WindowSums.PowerSeriesRelationList
-public import Formalism.GaussValuationBounds.GaussValueContraction.PhiIterXProof
-public import Formalism.GaussValuationBounds.GaussValueContraction.GaussValueContractionProofFactBis
-public import Formalism.GaussValuationBounds.GaussValueContraction.KapBoundProof
-public import Formalism.GaussValuationBounds.GaussValueContraction.GaussMul
-public import Formalism.GaussValuationBounds.GaussValueContraction.GaussBasic
-public import Formalism.GaussValuationBounds.GaussUnit
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Formalism.TruncatedSeriesCounting.EtaDeterminantPolynomialIdentities
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Formalism.GaussValuationBounds.GaussValueContraction.GaussValueContractionProofFactBis, Formalism.SharpRestriction.LevelLetterCocycles.LevelClauseOfOpenTool
+
+-- ===== clump member: Formalism.GaussValuationBounds.GaussValueContraction.GaussValueContractionProofFactBis =====
+-- clump-header: {"m": "Formalism.GaussValuationBounds.GaussValueContraction.GaussValueContractionProofFactBis", "h": "module\n\npublic import Formalism.GaussValuationBounds.Statement\npublic import Formalism.WindowSums.PowerSeriesRelationList\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+noncomputable section
+
+namespace Formalism.NOK
+
+open Polynomial
+
+theorem padicInt_valuation_unit (ℓ : ℕ) [Fact ℓ.Prime] (u : ℤ_[ℓ]ˣ) :
+    (u : ℤ_[ℓ]).valuation = 0 := by
+  have h := PadicInt.valuation_mul (Units.ne_zero u) (Units.ne_zero u⁻¹)
+  rw [Units.mul_inv, PadicInt.valuation_one] at h
+  omega
+
+theorem cjExist_proof : CjExist := by
+  intro ℓ _ hℓ χ hχ
+  have hZ := _root_.Formalism.WindowSums.valuation_zpow_sub_one ℓ χ 1 le_rfl (fun h => absurd h hℓ) hχ
+  have hℓ0 : (ℓ : ℤ_[ℓ]) ≠ 0 := by exact_mod_cast (Fact.out : ℓ.Prime).ne_zero
+  have hdvd : ∀ j : ℤ, (ℓ : ℤ_[ℓ]) ∣ ((χ ^ (-j) : ℤ_[ℓ]ˣ) : ℤ_[ℓ]) - 1 := by
+    intro j
+    by_cases hj : j = 0
+    · subst hj
+      simp
+    · obtain ⟨hne, hv⟩ := hZ (-j) (neg_ne_zero.2 hj)
+      rw [PadicInt.unitCoeff_spec hne]
+      exact Dvd.dvd.mul_left (dvd_pow_self _ (by rw [hv]; omega)) _
+  choose d hd using hdvd
+  have hc1 : ∀ j, -(ℓ : ℤ_[ℓ]) * (-d j) = ((χ ^ (-j) : ℤ_[ℓ]ˣ) : ℤ_[ℓ]) - 1 := by
+    intro j
+    rw [hd j]
+    ring
+  have key : ∀ j j' : ℤ, j ≠ j' → -d j' - -d j ≠ 0 ∧
+      PadicInt.valuation (-d j' - -d j) = padicValInt ℓ (j' - j) := by
+    intro j j' hjj
+    have hid : χ ^ (-j) = χ ^ (-j') * χ ^ (j' - j) := by
+      rw [← zpow_add]
+      congr 1
+      ring
+    have hkey : (ℓ : ℤ_[ℓ]) ^ 1 * (-d j' - -d j) =
+        ((χ ^ (-j') : ℤ_[ℓ]ˣ) : ℤ_[ℓ]) * (((χ ^ (j' - j) : ℤ_[ℓ]ˣ) : ℤ_[ℓ]) - 1) := by
+      have e1 := hd j
+      have e2 := hd j'
+      rw [hid, Units.val_mul] at e1
+      linear_combination e2 - e1
+    obtain ⟨hne, hv⟩ := hZ (j' - j) (sub_ne_zero.2 (Ne.symm hjj))
+    have hw : -d j' - -d j ≠ 0 := by
+      intro h
+      rw [h, mul_zero] at hkey
+      exact mul_ne_zero (Units.ne_zero _) hne hkey.symm
+    refine ⟨hw, ?_⟩
+    have h1 := PadicInt.valuation_p_pow_mul 1 (-d j' - -d j) hw
+    rw [hkey, PadicInt.valuation_mul (Units.ne_zero _) hne, padicInt_valuation_unit, hv] at h1
+    omega
+  refine ⟨fun j => -d j, hc1, ?_, fun j j' h => key j' j (Ne.symm h)⟩
+  have h0 : (ℓ : ℤ_[ℓ]) * d 0 = 0 := by
+    rw [← hd 0]
+    simp
+  show -d 0 = 0
+  rw [neg_eq_zero]
+  exact (mul_eq_zero.1 h0).resolve_left hℓ0
+
+end Formalism.NOK
+end -- clump:auto
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Formalism.GaussValuationBounds.GaussValueContraction.GaussValueContractionProofFactBis =====
+
+-- ===== clump member: Formalism.SharpRestriction.LevelLetterCocycles.LevelClauseOfOpenTool =====
+-- clump-header: {"m": "Formalism.SharpRestriction.LevelLetterCocycles.LevelClauseOfOpenTool", "h": "module\n\npublic import Formalism.SharpRestriction.LevelLetterCocycles.CrystallineLiftingInputs\npublic import Formalism.GaussValuationBounds.GaussValueContraction.GaussValueContractionProofFactBis\npublic import Formalism.JumpKernelCokernel.LengthTheoremsWithEarlier\npublic import Formalism.SharpRestriction.LevelLetterCocycles.ExistsPosConstLagrangeCondition\nimport Formalism.TruncatedSeriesCounting.EtaDeterminantPolynomialIdentities\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+section -- clump:auto
 @[expose] public section
 
 noncomputable section
@@ -39,7 +152,7 @@ theorem span_pair_mono_left {a a' f x : R} (h : a' ∣ a) (hx : x ∈ Ideal.span
 theorem rem_M (l : ℕ) (hl : 1 ≤ l) (π₀ : R) (y M η c : ℕ) (hc : c + η + M ≤ l * y) :
     (π₀ * (π₀ + (l : R)) ^ (l - 1)) ^ y ∈
       Ideal.span {(l : R) ^ c, π₀ ^ M * (π₀ + (l : R)) ^ η} := by
-  have hQ := Formalism.KernelCokernelLengths.length_theorems_all_hold.2.2.2.2.2.2.2.2.2.2.1
+  have hQ := Formalism.KernelCokernelLengths.ideal_power_sum_mem
   obtain ⟨k, rfl⟩ : ∃ k, l = k + 1 := ⟨l - 1, by omega⟩
   simp only [Nat.add_sub_cancel]
   set q : R := π₀ + ((k + 1 : ℕ) : R) with hq
@@ -85,7 +198,7 @@ theorem rem_2 (l : ℕ) (hl : 1 ≤ l) (π₀ q u ε : R) (y X c : ℕ) (hy : 1 
     (hc : c + (X - 1) / l ≤ (l - 1) * y) :
     (π₀ * q ^ (l - 1) * (u * q ^ l + (l : R) * ε) ^ (l - 1)) ^ y ∈
       Ideal.span {(l : R) ^ c, π₀ * q ^ X} := by
-  have hP := Formalism.KernelCokernelLengths.length_theorems_all_hold.2.2.2.2.2.2.2.2.1
+  have hP := Formalism.KernelCokernelLengths.power_binomial_bound
   have e1 : π₀ ^ y = π₀ * π₀ ^ (y - 1) := by rw [← pow_succ']; congr 1; omega
   rw [mul_pow, mul_pow, ← pow_mul, ← pow_mul, e1]
   rcases Nat.eq_zero_or_pos X with rfl | hX
@@ -244,7 +357,7 @@ theorem kills_q (W : LocWach PD LL O v n) {T₁ T₂ : LocLat G Qp LL O} (F : La
     (i : ZMod n) (A r N : ℕ) (hN : A + r - 1 ≤ N) (ha : Formalism.MainNotions.LiftingTheory.Kills W F i (W.π₀ ^ A))
     (hb : Formalism.MainNotions.LiftingTheory.Kills W F i (Formalism.MainNotions.LiftingTheory.lp W r)) :
     Formalism.MainNotions.LiftingTheory.Kills W F i (Formalism.MainNotions.LiftingTheory.qp W ^ N) := by
-  have hQ := Formalism.KernelCokernelLengths.length_theorems_all_hold.2.2.2.2.2.2.2.2.2.2.1 (LetA O n) W.π₀ ((PD.p : ℕ) : LetA O n) A r
+  have hQ := Formalism.KernelCokernelLengths.ideal_power_sum_mem (LetA O n) W.π₀ ((PD.p : ℕ) : LetA O n) A r
   have h1 : Formalism.MainNotions.LiftingTheory.Kills W F i (Formalism.MainNotions.LiftingTheory.qp W ^ (A + r - 1)) :=
     kills_of_mem_span W F i ha hb hQ
   obtain ⟨j, rfl⟩ := Nat.exists_eq_add_of_le hN
@@ -446,6 +559,10 @@ theorem trunc_floor_one (A : Type) [CommRing A] (l : ℕ) [Fact l.Prime] (hl : 3
   have hl' : (3 : ℝ) ≤ l := by exact_mod_cast hl
   have h0 : 0 ≤ ((M : ℝ) + η) / ((l : ℝ) - 1) := div_nonneg (by positivity) (by linarith)
   rw [Nat.floor_add_one h0]
-  exact Formalism.KernelCokernelLengths.length_theorems_with_earlier.2.2.2.2.1 A l hl X u M η y hM
+  exact Formalism.ZetaNonvanishing.ZetaNonvanishingCriteria.linearFactorPowMemSpanXPow A l hl X u M η y hM
 
 end Formalism.MainNotions.CrystallineLiftingInputs
+end -- clump:auto
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Formalism.SharpRestriction.LevelLetterCocycles.LevelClauseOfOpenTool =====

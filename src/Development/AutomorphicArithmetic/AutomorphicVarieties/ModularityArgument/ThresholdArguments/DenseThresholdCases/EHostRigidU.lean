@@ -1,86 +1,91 @@
 module
 
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.DiscreteSeriesCoefficientsCuspidal
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LinkedUnramifiedChains.LogarithmicNormBounds.HostRigidU
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.AfDesc
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.AutomorphicPointGalois
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.HostNumberS
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.ThmS6CoreS
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.LitAut
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.AutomorphicFormHyp
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.AfBridge
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.EHostUnl
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LinkedUnramifiedChains.LogarithmicNormBounds.LinkedUnlEOf
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.LevelIso
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CharacterLevelBounds.ClsFacts
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CurveDVRSpecialization.RestrictionToDecompositionGroup
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.HostEx
+import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.SelmerTransport.DvrFacts
+import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.SelmerTransport.GalEmbTop
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.AutCsdIso
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.FFreeCU
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.AutUpA
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.EHostUnl
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.FFreeCU
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.BkAbove
+import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.DecEmb
+import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.CzBasic
+import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.GaussianFieldRangeEqKerQuarticChar
+import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.HostOk
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.RigDiag
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.RigEig
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.RigLoc
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.RigSub
+import GroundTheory.ProfiniteCohomology.ClassFormations.Corestriction
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Algebra.ClopenNhdofOne
+import Mathlib.Topology.Algebra.ProperAction.Basic
+import Mathlib.Topology.Compactness.Paracompact
+import Mathlib.Topology.Connected.Separation
+public import Formalism.SharedLemmas.TotDiscQuot
+public import Formalism.SharedLemmas.CocycleFiniteIndex
 
 @[expose] public section
 
-set_option maxHeartbeats 800000
-set_option synthInstance.maxHeartbeats 200000
+
+
 
 section
-attribute [-instance] UpperTheory.V.Pr.IsCD.toIsDomain UpperTheory.V.Pr.IsCD.toIsDiscreteValuationRing UpperTheory.V.Pr.IsCD.complete
-  UpperTheory.V.Pr.IsCD.fin UpperTheory.V.Pr.IsCD.isLocalHom
 section Local
 open NumberField Matrix IsLocalRing Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.GalOfCusp UpperTheory.V.HV UpperTheory.V.U3 UpperTheory.V.Alg UpperTheory.V.Aut UpperTheory.V.UnitaryThreeInertia
 private theorem totDisc_quot {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G]
     [TotallyDisconnectedSpace G] (N : Subgroup G) [N.Normal] (hN : IsClosed (N : Set G)) :
     TotallyDisconnectedSpace (G ⧸ N) := by
-  rw [totallyDisconnectedSpace_iff_connectedComponent_one]
-  refine Set.eq_singleton_iff_unique_mem.2 ⟨mem_connectedComponent, fun y hy => ?_⟩
-  obtain ⟨x, rfl⟩ := QuotientGroup.mk_surjective y
-  by_contra hx
-  have hx' : x ∉ N := fun h => hx ((QuotientGroup.eq_one_iff x).2 h)
-  have ho : IsOpen {g : G | g * x ∉ N} := hN.isOpen_compl.preimage (continuous_mul_const x)
-  obtain ⟨U, hU⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one ho (by simpa using hx')
-  let V : Subgroup (G ⧸ N) := U.toSubgroup.map (QuotientGroup.mk' N)
-  have hVo : IsOpen (V : Set (G ⧸ N)) := QuotientGroup.isOpenMap_coe _ U.isOpen'
-  have hV : IsClopen (V : Set (G ⧸ N)) := ⟨V.isClosed_of_isOpen hVo, hVo⟩
-  obtain ⟨u, hu, hux⟩ := hV.connectedComponent_subset V.one_mem hy
-  exact hU (U.toSubgroup.inv_mem hu) (QuotientGroup.eq.1 hux)
+  first
+  | exact _root_.Formalism.SharedLemmas.totDisc_quot
+  | (apply _root_.Formalism.SharedLemmas.totDisc_quot <;> assumption)
 private theorem cocycle_coboundary_of_finite_index {k G W : Type} [Field k] [CharZero k] [Group G] [AddCommGroup W] [Module k W]
     (a : G → W →ₗ[k] W) (hmul : ∀ g h w, a (g * h) w = a g (a h w)) (f : G → W)
     (hf : ∀ g h, f (g * h) = f g + a g (f h)) (H : Subgroup G) [H.FiniteIndex] (x : W)
     (hx : ∀ h ∈ H, f h = a h x - x) : ∃ y, ∀ g, f g = a g y - y := by
-  classical
-  haveI : Fintype (G ⧸ H) := Fintype.ofFinite _
-  set f' : G → W := fun g => f g - (a g x - x) with hf'
-  have hc : ∀ g h, f' (g * h) = f' g + a g (f' h) := by
-    intro g h
-    simp only [hf', hf, hmul, map_sub]
-    abel
-  have hH : ∀ g h, h ∈ H → f' (g * h) = f' g := by
-    intro g h hh
-    rw [hc]
-    have : f' h = 0 := by simp only [hf', hx h hh, sub_self]
-    rw [this, map_zero, add_zero]
-  let F : G ⧸ H → W := Quotient.lift f' (by
-    intro g g' hgg
-    have h1 : g⁻¹ * g' ∈ H := QuotientGroup.leftRel_apply.1 hgg
-    have := hH g _ h1
-    rw [mul_inv_cancel_left] at this
-    exact this.symm)
-  have hF : ∀ (g : G) (q : G ⧸ H), F (g • q) = f' g + a g (F q) := by
-    intro g q
-    induction q using QuotientGroup.induction_on with
-    | H z => exact hc g z
-  set S : W := ∑ q, F q with hS
-  have hsum : ∀ g, S = (Fintype.card (G ⧸ H) : k) • f' g + a g S := by
-    intro g
-    have e1 : ∑ q, F (g • q) = S := Equiv.sum_comp (MulAction.toPerm g) F
-    refine e1.symm.trans ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hF, Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ, ← map_sum,
-      Nat.cast_smul_eq_nsmul, ← hS]
-  have hn : (Fintype.card (G ⧸ H) : k) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
-  refine ⟨x - (Fintype.card (G ⧸ H) : k)⁻¹ • S, fun g => ?_⟩
-  have e : f' g = (Fintype.card (G ⧸ H) : k)⁻¹ • (S - a g S) := by
-    rw [eq_inv_smul_iff₀ hn, eq_sub_iff_add_eq]
-    exact (hsum g).symm
-  have e2 : f g = f' g + (a g x - x) := by simp only [hf', sub_add_cancel]
-  rw [e2, e, map_sub, map_smul, smul_sub]
-  abel
+  exact Formalism.SharedLemmas.cocycle_coboundary_of_finiteIndex_sub a hmul f hf H x hx
 private theorem rig_avg {K D V : Type} [Field K] [CharZero K] [Group D] [AddCommGroup V] [Module K V]
     (ρ : Representation K D V) (y : D → V) (hy : ∀ g h, y (g * h) = y g + ρ g (y h)) (I N : Subgroup D) [N.FiniteIndex]
     (h : ∀ s ∈ I, s ∈ N → y s = 0) : ∃ x, ∀ s ∈ I, y s = ρ s x - x := by
@@ -204,29 +209,6 @@ private theorem conj_left {G R : Type} [Group G] [CommRing R] (r : G →* GG (m 
   rw [e, SemidirectProduct.mul_left, SemidirectProduct.mul_left, SemidirectProduct.left_inl,
     SemidirectProduct.left_inl, SemidirectProduct.right_inl, sgnAct_one, SemidirectProduct.mul_right,
     SemidirectProduct.right_inl, hg, mul_one, sgnAct_one]
-open Matrix in
-private theorem matIrr_conj {G R : Type} [Group G] [CommRing R] {m : ℕ} {U : Subgroup G}
-    {a a' : G → Matrix (Fin m) (Fin m) R} (h : GL (Fin m) R)
-    (e : ∀ g ∈ U, a g = ((h⁻¹ : GL (Fin m) R) : Matrix (Fin m) (Fin m) R) * a' g * h) (H : MatIrr U a) :
-    MatIrr U a' := by
-  intro W hW
-  have hv : ∀ v : Fin m → R, (h : Matrix (Fin m) (Fin m) R) *ᵥ
-      (((h⁻¹ : GL (Fin m) R) : Matrix (Fin m) (Fin m) R) *ᵥ v) = v := fun v => by
-    rw [Matrix.mulVec_mulVec, Units.mul_inv, Matrix.one_mulVec]
-  rcases H (W.comap (Matrix.toLin' (h : Matrix (Fin m) (Fin m) R))) (fun g hg v hv' => by
-    rw [Submodule.mem_comap, Matrix.toLin'_apply] at hv' ⊢
-    rw [e g hg, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, hv]
-    exact hW g hg _ hv') with h0 | h0
-  · refine Or.inl (eq_bot_iff.2 fun v hv' => ?_)
-    have : ((h⁻¹ : GL (Fin m) R) : Matrix (Fin m) (Fin m) R) *ᵥ v ∈
-        W.comap (Matrix.toLin' (h : Matrix (Fin m) (Fin m) R)) := by
-      rwa [Submodule.mem_comap, Matrix.toLin'_apply, hv]
-    rw [h0, Submodule.mem_bot] at this
-    rw [Submodule.mem_bot, ← hv v, this, Matrix.mulVec_zero]
-  · refine Or.inr (eq_top_iff.2 fun v _ => ?_)
-    have : ((h⁻¹ : GL (Fin m) R) : Matrix (Fin m) (Fin m) R) *ᵥ v ∈
-        W.comap (Matrix.toLin' (h : Matrix (Fin m) (Fin m) R)) := h0 ▸ Submodule.mem_top
-    rwa [Submodule.mem_comap, Matrix.toLin'_apply, hv] at this
 open TensorProduct in
 private theorem h1f_equiv_of_intertwiner {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] {l : ℕ} [Fact l.Prime]
     {C V : Type} [CommRing C] [Algebra ℚ_[l] C] [AddCommGroup V] [Module C V] [Module ℚ_[l] V]
@@ -292,11 +274,6 @@ private theorem unl_iso {l : ℕ} [Fact l.Prime] {F Ω : Type} [Field F] [Number
     Th.Unl l M m r' := fun w hw => by
   obtain ⟨A, hA, κ, ⟨χ, h1, h2, h3⟩, h4⟩ := H w hw
   exact ⟨A, hA, κ, ⟨χ, h1, h2.of_iso h, h3⟩, h4⟩
-private theorem cont_hom {Γ M : Type} [Group Γ] [TopologicalSpace Γ] [ContinuousInv Γ] [Monoid M] [TopologicalSpace M]
-    (f : Γ →* Mˣ) (h : Continuous fun g => (f g : M)) : Continuous f := by
-  refine Units.continuous_iff.2 ⟨h, ?_⟩
-  simp only [← map_inv]
-  exact h.comp continuous_inv
 open Formalism.GaloisCohomology UpperTheory.V.Base in
 private theorem selmer_h1_vanishes_at_rigid_point (hH : _root_.UpperTheory.V.Af.HypothesesH') (hL : _root_.UpperTheory.V.Th.AdjointLiftingTheorem) (hU : Z.J.UnlEndLogNorm) (K : Type) [Field K] [NumberField K] [IsCMField K] (hK : IsQi K)
     (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [hl : Fact l.Prime] (c : Coef l) (N : ℕ) [NeZero N] (e : ℕ)
@@ -355,7 +332,7 @@ private theorem selmer_h1_vanishes_at_rigid_point (hH : _root_.UpperTheory.V.Af.
       exact hs) v hv
   have hunl := _root_.UpperTheory.V.Z.J.hostUnlE_alt hH hU K hK Ω l c N e ψ o₁ hd S A F hF g₁ hg r hr hTI ρ hρ
   have hρc : Continuous ρ := by
-    refine cont_hom _ ?_
+    refine _root_.UpperTheory.Reformulated.B.ContinuousHomomorphism.cont_hom _ ?_
     simp only [hρ]
     exact (hc.comp (continuous_toGS Ω _)).comp (Base.galEmbTop ℚ K Ω).1.continuous
   obtain ⟨B, _, _, t, r', hr', ht⟩ := hr
@@ -386,7 +363,7 @@ private theorem selmer_h1_vanishes_at_rigid_point (hH : _root_.UpperTheory.V.Af.
       fin_cases i <;> fin_cases j <;> simp at hij ⊢ <;> omega) (unl_iso hunl hiso)
   rw [zpow_neg_one] at hAut'
   have key := _root_.UpperTheory.V.Z.Win.Dn.rigEnd3_alt hH hL Ω l ι c N e ψ (UnitaryThreeInertia.eta4 Ω) σ g (A F.vl) _ hk hΨ hfr B _ ho
-    (fun V hV hVη => matIrr_conj (tor _ t) (fun s hs => by
+    (fun V hV hVη => _root_.UpperTheory.Reformulated.B.G5.matIrr_conj (tor _ t) (fun s hs => by
       rw [mats, GG.mat, GG.mat, hle s (hVη hs), ← Units.val_mul, ← Units.val_mul]
       congr 1
       group) (hB.opens V hV hVη)) K hK.1 (by rw [← Base.range_galEmb]; exact hrg.symm) ρ' (fun s => rfl) hAut' hfree

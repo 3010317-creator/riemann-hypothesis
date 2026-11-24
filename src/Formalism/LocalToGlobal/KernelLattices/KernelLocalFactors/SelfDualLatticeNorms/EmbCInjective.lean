@@ -2,8 +2,10 @@ module
 
 public import Formalism.LocalToGlobal.KernelLattices.KerStd
 public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.ColInst
+public import Formalism.LocalToGlobal.AlgebraicTheory.StatementEig
+import Formalism.LocalToGlobal.GlobalTheory.GL3.PStdOK
 public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.BaseEx
-public import Formalism.LocalToGlobal.GlobalTheory.GL3.PStdOK
+import Mathlib.RingTheory.PiTensorProduct
 
 @[expose] public section
 
@@ -35,8 +37,8 @@ theorem mat_mulVec (x : HomE X.E a b) (y : Sp X.E a) : (mat s x).mulVec (s.vec y
   funext i
   have h : x y = ∑ j, y j • x (Pi.single j 1) := by
     conv_lhs => rw [← Finset.univ_sum_single y]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [← map_smul]
     congr 1
@@ -45,8 +47,8 @@ theorem mat_mulVec (x : HomE X.E a b) (y : Sp X.E a) : (mat s x).mulVec (s.vec y
     · subst hk; simp
     · simp [hk]
   show ∑ j, s.iE (x (Pi.single j 1) i) * s.iE (y j) = s.iE (x y i)
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [h, Finset.sum_apply, map_sum]
+
+  rw [h, Finset.sum_apply, map_sum]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [Pi.smul_apply, smul_eq_mul, map_mul, mul_comm]
 
@@ -307,8 +309,8 @@ theorem inMul_std (hok : s.Ok) {a b : ℕ} (N : Submodule (𝓞 X.E) (Sp X.E a))
     rw [lamTie D X s cc δ B χ cD a b N N' hok]
     show s.flatV a b (ω • (((s₂ * s₁ : ℕ) : ℂ) • vecE s.σ₀ (r : X.E) β α)) ∈ TaylorLogMetric.La D (TaylorLogMetric.tor0 D cc δ) (s.lat N) (s.lat N')
     rw [flatV_vecE s hok]
-    refine AddSubgroup.subset_closure ⟨ω, (Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.SO.mem_iff B ω).1 hω, _,
-      Submodule.subset_span ⟨1, Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.SO.int_mem_inverse_half_different isIntegral_one, _, Submodule.subset_span ?_, (one_smul _ _).symm⟩, rfl⟩
+    refine AddSubgroup.subset_closure ⟨ω, (GlobalTheory.FourthRootStd.mem_iff B ω).1 hω, _,
+      Submodule.subset_span ⟨1, GlobalTheory.FourthRootStd.int_mem_inverse_half_different isIntegral_one, _, Submodule.subset_span ?_, (one_smul _ _).symm⟩, rfl⟩
     intro y hy
     rw [unitM_mulVec]
     obtain ⟨r', hr'⟩ := (s.int_iff (r : X.E)).2 ⟨r, rfl⟩

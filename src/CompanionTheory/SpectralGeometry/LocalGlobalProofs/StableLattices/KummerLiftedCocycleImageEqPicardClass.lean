@@ -1,8 +1,8 @@
 module
 
-public import Mathlib
 public import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.DiscreteSeriesCharacters.CapelliDeterminantBlockProduct
-public import Formalism.RealPlaceAnalysis.ThirdArithmeticHolds
+public import Mathlib.Algebra.MvPolynomial.PDeriv
+import Mathlib.RingTheory.PiTensorProduct
 
 @[expose] public section
 
@@ -121,14 +121,8 @@ def dd (ε : Fin n → Bool) (a b : Fin n) : Module.End ℂ (MvPolynomial (NC ε
 def yy (i : NC ε) : Module.End ℂ (MvPolynomial (NC ε) ℂ) := LinearMap.mulLeft ℂ (X i)
 
 theorem pderiv_comm' {σ : Type} (i j : σ) (f : MvPolynomial σ ℂ) :
-    pderiv i (pderiv j f) = pderiv j (pderiv i f) := by
-  classical
-  induction f using MvPolynomial.induction_on with
-  | C a => simp
-  | add p q hp hq => simp [hp, hq]
-  | mul_X p k hp =>
-    simp only [Derivation.leibniz, map_add (f := _), smul_eq_mul, hp, pderiv_X, Pi.single_apply]
-    split_ifs <;> simp <;> ring
+    pderiv i (pderiv j f) = pderiv j (pderiv i f) :=
+  _root_.MvPolynomial.pderiv_comm i j f
 
 theorem dd_comm (a b c d : Fin n) : Commute (dd ε a b) (dd ε c d) := by
   unfold dd
@@ -206,7 +200,7 @@ theorem verma : CompanionTheory.D.DSIC.Verma := by
       all_goals simp
     · simp
   · intro a b f
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [yy, LinearMap.sum_apply, map_sum]
+
+    simp [yy, LinearMap.sum_apply, map_sum]
 
 end GlobalTheory.CompanionTheory.DSVerma

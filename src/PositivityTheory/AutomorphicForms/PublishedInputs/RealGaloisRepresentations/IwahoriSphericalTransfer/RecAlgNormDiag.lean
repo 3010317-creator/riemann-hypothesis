@@ -1,13 +1,21 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.Brauer
-public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.FinrankAdjoinSqrtNegOne
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.RealTransport.RealTransport
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.LocIsotypic
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Langlands
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RecProdRecSatakeLL
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RecOfRecLiteralStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsNotCongPow
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LocalPrimeGaloisActionPeriodT
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivOfRangeEq
+import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasExponentZeroIff
+import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.TrivialOnInertiaOfUnr
+import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.BcDefs
+import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.Newform
+import Development.AutomorphicArithmetic.AutomorphicVarieties.PublishedTheorems.GelfandKazhdanReal
+import Development.AutomorphicArithmetic.IntegralCasts.IsOpenStabOfMemNhds
+import Formalism.LocalRingCardinality.SpanPowerMembership.NZTypeD
+import Formalism.LocalToGlobal.UnitaryNorms.IsUnitaryNormOf
+import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
+import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.FinrankAdjoinSqrtNegOne
+import ReciprocityTheory.NeutralLocalFields.Reciprocity
 
 @[expose] public section
 
@@ -16,8 +24,6 @@ noncomputable section
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N
 open GlobalTheory.CuspRep GlobalTheory.WeilDeligne GlobalTheory.Pst GlobalTheory.LocLanglands GlobalTheory.HeckeGal GlobalTheory.LocGL GlobalTheory.GalOfCusp UpperTheory.V UpperTheory.V.Af UpperTheory.V.Published UpperTheory.V.Af.Bc GlobalTheory.RealGal
 open Polynomial
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace GlobalTheory.SatFrobLit
 

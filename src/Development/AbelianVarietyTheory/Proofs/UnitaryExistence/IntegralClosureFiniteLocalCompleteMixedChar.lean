@@ -1,13 +1,61 @@
 module
 
-public import Mathlib
-public import Formalism.LocalToGlobal.ProjectiveLattices.BetaAtSymm
-public import Formalism.LocalToGlobal.ProjectiveLattices.OneLtAbsNormReal
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.FiniteAlgebraLocalCompletion
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsCompleteDvrFiniteSubalgebra
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingIntegralClosure
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CohenStructureFiniteOverNormalCompleteSubring
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.AdicCompletion.Noetherian
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.Algebra.CharP.Algebra
+public import Mathlib.RingTheory.DedekindDomain.IntegralClosure
 
 @[expose] public section
 
@@ -38,56 +86,13 @@ theorem _root_.GlobalTheory.finite_normalisation_of_finite_over_normal (A S : Ty
   exact Module.Finite.of_restrictScalars_finite A S _
 
 open IsLocalRing in
-private theorem isPrecomplete_of_finite_module {R M : Type*} [CommRing R] {I : Ideal R} [hR : IsPrecomplete I R]
-    [AddCommGroup M] [Module R M] [Module.Finite R M] : IsPrecomplete I M := by
-  obtain ⟨k, g, hg⟩ := Module.Finite.exists_fin (R := R) (M := M)
-  have hpow : ∀ n, (I ^ n • ⊤ : Submodule R R) = I ^ n := fun n => by
-    rw [Ideal.smul_eq_mul, Ideal.mul_top]
-  have key : ∀ n (x : M), x ∈ (I ^ n • ⊤ : Submodule R M) →
-      ∃ c : Fin k → R, (∀ j, c j ∈ I ^ n) ∧ ∑ j, c j • g j = x := by
-    intro n x hx
-    rw [← hg, Submodule.mem_ideal_smul_span_iff_exists_sum] at hx
-    obtain ⟨a, ha, rfl⟩ := hx
-    exact ⟨a, ha, by simp [Finsupp.sum_fintype]⟩
-  refine ⟨fun {f} hf => ?_⟩
-  have hd : ∀ n, f (n + 1) - f n ∈ (I ^ n • ⊤ : Submodule R M) := fun n => by
-    have := (hf (Nat.le_succ n))
-    rw [SModEq.sub_mem] at this
-    simpa using neg_mem this
-  choose c hcI hcsum using fun n => key n _ (hd n)
-  have hs : ∀ j, ∃ a : R, ∀ n, (∑ i ∈ Finset.range n, c i j) ≡ a [SMOD (I ^ n • ⊤ : Submodule R R)] := by
-    intro j
-    refine hR.prec' _ fun {m n} hmn => ?_
-    rw [SModEq.sub_mem, hpow]
-    have : ∑ i ∈ Finset.range m, c i j - ∑ i ∈ Finset.range n, c i j =
-        -∑ i ∈ Finset.Ico m n, c i j := by
-      rw [← Finset.sum_range_add_sum_Ico _ hmn]; ring
-    rw [this]
-    exact neg_mem (Ideal.sum_mem _ fun i hi =>
-      Ideal.pow_le_pow_right (Finset.mem_Ico.1 hi).1 (hcI i j))
-  choose a ha using hs
-  refine ⟨f 0 + ∑ j, a j • g j, fun n => ?_⟩
-  have hfn : f n = f 0 + ∑ j, (∑ i ∈ Finset.range n, c i j) • g j := by
-    induction n with
-    | zero => simp
-    | succ n ih =>
-      simp only [Finset.sum_range_succ, add_smul, Finset.sum_add_distrib, hcsum n]
-      rw [← add_assoc, ← ih]
-      abel
-  rw [SModEq.sub_mem, hfn, add_sub_add_left_eq_sub, ← Finset.sum_sub_distrib]
-  refine Submodule.sum_mem _ fun j _ => ?_
-  rw [← sub_smul]
-  have := (SModEq.sub_mem.1 (ha j n))
-  rw [hpow] at this
-  exact Submodule.smul_mem_smul this Submodule.mem_top
-
-open IsLocalRing in
 open Polynomial in
 private theorem isLocalRing_of_finite_domain_over_complete (S C : Type) [CommRing S] [IsLocalRing S] [IsNoetherianRing S]
     [IsAdicComplete (maximalIdeal S) S] [CommRing C] [IsDomain C] [Algebra S C]
     [Module.Finite S C] : IsLocalRing C := by
   set I : Ideal C := (maximalIdeal S).map (algebraMap S C) with hI
-  haveI : IsPrecomplete (maximalIdeal S) C := isPrecomplete_of_finite_module
+  haveI : IsPrecomplete (maximalIdeal S) C :=
+    _root_.UpperTheory.Reformulated.B.Qk17.isPrecomplete_finite_module (maximalIdeal S) C
   haveI : IsAdicComplete (maximalIdeal S) C := {}
   haveI : IsAdicComplete I C := (IsAdicComplete.map_algebraMap_iff _ _).2 inferInstance
   have hIM : ∀ M : Ideal C, M.IsMaximal → I ≤ M := by

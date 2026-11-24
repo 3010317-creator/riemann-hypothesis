@@ -1,8 +1,44 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicCases.SymplecticGSp4
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.CharacterLevelBounds.LocUnr
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CharacterLevelBounds.ClsFacts
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CharacterLevelBounds.LocUnr
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -16,21 +52,6 @@ private theorem val_dvd {Ω : Type} [Field Ω] (A : ValuationSubring Ω) {m n : 
     simpa using A.valuation_le_one (k : A)
   calc A.valuation (m : Ω) * A.valuation (k : Ω) ≤ A.valuation (m : Ω) * 1 := mul_le_mul' le_rfl hk
     _ < 1 := by rwa [mul_one]
-
-private theorem val_prod {Ω : Type} [Field Ω] (A : ValuationSubring Ω) (S : Finset ℕ)
-    (hA : A.valuation ((∏ p ∈ S, p : ℕ) : Ω) < 1) : ∃ p ∈ S, A.valuation (p : Ω) < 1 := by
-  classical
-  induction S using Finset.induction_on with
-  | empty => simp at hA
-  | insert a S ha ih =>
-    rw [Finset.prod_insert ha, Nat.cast_mul, map_mul] at hA
-    by_cases hp : A.valuation (a : Ω) < 1
-    · exact ⟨a, Finset.mem_insert_self a S, hp⟩
-    · have h1 : A.valuation (a : Ω) = 1 :=
-        le_antisymm (by simpa using A.valuation_le_one (a : A)) (not_lt.mp hp)
-      rw [h1, one_mul] at hA
-      obtain ⟨p, hpS, hp'⟩ := ih hA
-      exact ⟨p, Finset.mem_insert_of_mem hpS, hp'⟩
 
 private theorem vlen_le (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (c : Coef l)
     (N : ℕ) [NeZero N] (e : ℕ) (he : e ≠ 0) (ψ : DirichletCharacter c.O N) (S : Finset ℕ) (hS : ∀ p ∈ S, p.Prime) :
@@ -63,7 +84,12 @@ private theorem vlen_le (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
   simp only [Base.ShaU, Base.mem_locSel] at hx ⊢
   intro D hD
   rcases hD with ⟨A, hAS, rfl⟩ | ⟨A, rfl⟩
-  · obtain ⟨p, hpS, hp⟩ := val_prod A S hAS
+  · obtain ⟨p, hpS, hp⟩ : ∃ p ∈ S, A.valuation (p : Ω) < 1 := by
+      by_contra! h
+      refine hAS.ne ?_
+      rw [Nat.cast_prod, map_prod]
+      exact Finset.prod_eq_one fun p hp =>
+        le_antisymm (by simpa using A.valuation_le_one (p : A)) (h p hp)
     by_cases hdvd : p ∣ l * N
     · exact hx (Dec A) (Or.inl ⟨A, val_dvd A hdvd hp, rfl⟩)
     · have pp := hS p hpS

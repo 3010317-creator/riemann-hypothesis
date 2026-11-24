@@ -1,11 +1,57 @@
 module
 
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.ConnectionSecondOfCommute
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.ConnectionKillsSeries
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.ConnectionKillsSeries
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.GaugeBilinearTermEqNegDoubleSum
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
-
-set_option autoImplicit false
 
 noncomputable section
 
@@ -16,29 +62,19 @@ namespace ReciprocityTheory.ChartRestriction.G.TB.WickVanishing.Val
 open ReciprocityTheory.ChartRestriction.G.TB.WickVanishing.Nab
 
 
-private theorem hasSubst_lemma {σ τ k : Type} [CommRing k] [Finite σ] {a : σ → MvPowerSeries τ k}
-    (ha : ∀ s, constantCoeff (a s) = 0) : HasSubst a := by
-  first
-  | exact MvPowerSeries.hasSubst_of_constantCoeff_zero ha
-  | exact MvPowerSeries.HasSubst.of_constantCoeff_zero' ha
-  | exact ⟨fun s => by simp [ha s], fun d => Set.toFinite _⟩
-
 private theorem mvPowerSeries_subst_C {σ τ k : Type} [CommRing k] {a : σ → MvPowerSeries τ k} (hs : HasSubst a) (c : k) :
     subst a (C c : MvPowerSeries σ k) = (C c : MvPowerSeries τ k) := by
   have e : ∀ (ρ : Type), (C c : MvPowerSeries ρ k) = c • (1 : MvPowerSeries ρ k) := fun ρ => by
     first
     | rw [MvPowerSeries.smul_eq_C_mul, mul_one]
-    | simp [MvPowerSeries.smul_eq_C_mul]
   rw [e σ, e τ, ← coe_substAlgHom hs, map_smul, map_one]
 
 theorem const_subst {σ τ k : Type} [CommRing k] [Finite σ] {a : σ → MvPowerSeries τ k}
     (ha : ∀ s, constantCoeff (a s) = 0) (G : MvPowerSeries σ k) : constantCoeff (subst a G) = constantCoeff G := by
-  have hs : HasSubst a := hasSubst_lemma ha
+  have hs : HasSubst a := MvPowerSeries.hasSubst_of_constantCoeff_zero ha
   have h0 : constantCoeff (G - C (constantCoeff G)) = 0 := by simp
   have h1 : constantCoeff (subst a (G - C (constantCoeff G))) = 0 := by
     first
-    | exact constantCoeff_subst_eq_zero hs _ h0
-    | exact constantCoeff_subst_eq_zero hs h0
     | (apply constantCoeff_subst_eq_zero <;> assumption)
   have e : subst a (G - C (constantCoeff G)) = subst a G - C (constantCoeff G) := by
     rw [← coe_substAlgHom hs, map_sub, coe_substAlgHom hs, mvPowerSeries_subst_C hs]
@@ -67,12 +103,11 @@ theorem bE_const (h : PS k 2 d) (hax : ev (n := 1) ![0, pt k d 0] h = 0) : ∀ t
 
 theorem E_liftX (h : PS k 2 d) (hax : ev (n := 1) ![0, pt k d 0] h = 0) (f : PS k 1 d) :
     subst (bE k h) (liftX k f) = f := by
-  have hb : HasSubst (bE k h) := hasSubst_lemma (bE_const k h hax)
-  have hl : HasSubst (fun p : Fin 1 × Fin d => (X (Sum.inl p.2) : AA k d)) := hasSubst_lemma (fun p => by simp)
+  have hb : HasSubst (bE k h) := MvPowerSeries.hasSubst_of_constantCoeff_zero (bE_const k h hax)
+  have hl : HasSubst (fun p : Fin 1 × Fin d => (X (Sum.inl p.2) : AA k d)) := MvPowerSeries.hasSubst_of_constantCoeff_zero (fun p => by simp)
   unfold liftX
   first
   | rw [subst_comp_subst_apply hl hb]
-  | rw [subst_comp_subst_apply hb hl]
   have e : (fun p : Fin 1 × Fin d => subst (bE k h) (X (Sum.inl p.2) : AA k d)) =
       (X : Fin 1 × Fin d → PS k 1 d) := by
     funext p
@@ -84,9 +119,6 @@ theorem E_liftX (h : PS k 2 d) (hax : ev (n := 1) ![0, pt k d 0] h = 0) (f : PS 
   rw [e]
   first
   | (rw [subst_self]; rfl)
-  | exact congrFun subst_self f
-  | simp [subst_self]
-  | (rw [← map_algebraMap_eq_subst_X]; simp)
 
 section Inter
 
@@ -98,15 +130,15 @@ theorem E_nabla (B : FB R d O) (h : PS k 2 d) (hax : ev (n := 1) ![0, pt k d 0] 
   have hb : HasSubst (bE k h) := hasSubst_of_constantCoeff_zero hc
   have hfm : subst (bE k h) (fm k h u) = 0 := by
     unfold fm
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← coe_substAlgHom hb, map_sum]
+
+    rw [← coe_substAlgHom hb, map_sum]
     refine Finset.sum_eq_zero fun i _ => ?_
     rw [map_mul, map_sub, coe_substAlgHom hb, subst_X hb, E_liftX k h hax]
     simp [bE]
   change subst (bE k h) (Dx k B u G + ∑ i, liftX k (Dof (B.FK k) u (sgOf k h i)) * pderiv (R := k) (Sum.inr i) G +
     ∑ i, C ((0 : Fin d → k) i) * pderiv (R := k) (Sum.inr i) G - (C (m : k) * fm k h u) * G) = _
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← coe_substAlgHom hb, map_sub, map_add, map_add, map_mul, map_mul, coe_substAlgHom hb, hfm]
+
+  rw [← coe_substAlgHom hb, map_sub, map_add, map_add, map_mul, map_mul, coe_substAlgHom hb, hfm]
   simp only [mul_zero, zero_mul, sub_zero]
   unfold Dx
   simp only [← coe_substAlgHom hb]
@@ -121,8 +153,6 @@ theorem E_nabla (B : FB R d O) (h : PS k 2 d) (hax : ev (n := 1) ![0, pt k d 0] 
     have e : Finsupp.degree (d + Finsupp.single t 1) = Finsupp.degree d + 1 := by
       first
       | rw [map_add (f := _), Finsupp.degree_single]
-      | simp [Finsupp.degree, Finsupp.sum_add_index']
-      | (unfold Finsupp.degree; rw [Finsupp.sum_add_index' (by simp) (by simp)]; simp)
     omega
   have low_mul_lemma {τ : Type} {m n : ℕ} {f g : MvPowerSeries τ k} (hf : Low m f) (hg : Low n g) :
       Low (m + n) (f * g) := by
@@ -132,13 +162,10 @@ theorem E_nabla (B : FB R d O) (h : PS k 2 d) (hax : ev (n := 1) ![0, pt k d 0] 
     refine Finset.sum_eq_zero fun x hx => ?_
     first
     | rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
-    | simp only [Finset.HasAntidiagonal.mem_antidiagonal] at hx
-    | simp only [Finset.mem_antidiagonal] at hx
     have e : Finsupp.degree x.1 + Finsupp.degree x.2 = Finsupp.degree d := by
       rw [← hx]
       first
       | exact (map_add _ _ _).symm
-      | simp [Finsupp.degree, Finsupp.sum_add_index']
     by_cases h1 : Finsupp.degree x.1 < m
     · rw [hf _ h1, zero_mul]
     · rw [hg _ (by omega), mul_zero]
@@ -158,8 +185,6 @@ theorem E_nabla (B : FB R d O) (h : PS k 2 d) (hax : ev (n := 1) ![0, pt k d 0] 
   have finsupp_apply_le_degree' {ι : Type} (d : ι →₀ ℕ) (i : ι) : d i ≤ d.degree := by
     first
     | exact Finsupp.le_degree i d
-    | exact Finsupp.le_degree d i
-    | exact Finsupp.le_degree
   have low_subst_of_low {σ τ : Type} [Finite σ] {a : σ → MvPowerSeries τ k} (ha : ∀ s, Low 1 (a s)) {N : ℕ}
       {g : MvPowerSeries σ k} (hg : Low N g) : Low N (subst a g) := by
     classical
@@ -179,8 +204,6 @@ theorem E_nabla (B : FB R d O) (h : PS k 2 d) (hax : ev (n := 1) ![0, pt k d 0] 
         have hdeg : e.degree = ∑ s ∈ e.support, e s := by
           first
           | rfl
-          | exact Finsupp.degree_eq_sum e
-          | simp [Finsupp.degree]
         rw [hdeg]
         exact h
       exact smul_eq_zero_of_right _ (hl d (by omega))
@@ -196,8 +219,7 @@ theorem E_nabla (B : FB R d O) (h : PS k 2 d) (hax : ev (n := 1) ![0, pt k d 0] 
     next p s0 hp =>
       rw [map_mul, MvPolynomial.aeval_X, Derivation.leibniz, hp, smul_eq_mul, smul_eq_mul, Finset.mul_sum]
       simp only [Derivation.leibniz, MvPolynomial.pderiv_X, Pi.single_apply, smul_eq_mul, map_add (f := _), map_mul,
-        MvPolynomial.aeval_X, add_mul, Finset.sum_add_distrib, mul_ite, mul_one, mul_zero, map_one, map_zero,
-        ite_mul, zero_mul, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        MvPolynomial.aeval_X, add_mul, Finset.sum_add_distrib, mul_ite, mul_one, mul_zero]
       simp only [apply_ite (MvPolynomial.aeval a), map_zero, ite_mul, zero_mul, Finset.sum_ite_eq,
         Finset.mem_univ, if_true, mul_assoc]
       try ring
@@ -207,8 +229,8 @@ theorem E_nabla (B : FB R d O) (h : PS k 2 d) (hax : ev (n := 1) ![0, pt k d 0] 
   have Low_finset_sum {τ : Type} {N : ℕ} {ι : Type} (S : Finset ι) (F : ι → MvPowerSeries τ k)
       (h : ∀ i ∈ S, Low N (F i)) : Low N (∑ i ∈ S, F i) := by
     intro d hd
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     exact Finset.sum_eq_zero fun i hi => h i hi d hd
   have pderiv_subst {σ τ : Type} [Fintype σ] {a : σ → MvPowerSeries τ k} (ha : ∀ s, constantCoeff (a s) = 0)
       (f : MvPowerSeries σ k) (t : τ) :
@@ -233,7 +255,6 @@ theorem E_nabla (B : FB R d O) (h : PS k 2 d) (hax : ev (n := 1) ![0, pt k d 0] 
       have h1 := finsupp_apply_le_degree' m s
       first
       | (change m s ≤ M; omega)
-      | (simp; omega)
     ext d
     obtain ⟨p, hp⟩ := hpoly (d.degree + 1 + 1)
     have hf : f = (f - (p : MvPowerSeries σ k)) + (p : MvPowerSeries σ k) := (sub_add_cancel _ _).symm
@@ -249,8 +270,8 @@ theorem E_nabla (B : FB R d O) (h : PS k 2 d) (hax : ev (n := 1) ![0, pt k d 0] 
     rw [h1 d (by omega), h2 d (by omega)]
   simp only [pderiv_subst hc, Finset.mul_sum]
   simp only [Fintype.sum_sum_type, Finset.sum_add_distrib]
-  simp only [bE, Sum.elim_inl, Sum.elim_inr, pderiv_X, Pi.single_apply, ite_mul, mul_ite, mul_zero, mul_one, Finset.sum_ite_eq, Finset.mem_univ, if_true]
-  simp only [Prod.mk.injEq, true_and, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [bE, Sum.elim_inl, Sum.elim_inr, pderiv_X, Pi.single_apply, mul_ite, mul_zero, mul_one]
+  simp only [Prod.mk.injEq, true_and]
   simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true]
   congr 1
   rw [Finset.sum_comm]
@@ -280,10 +301,10 @@ theorem E_foldr (B : FB R d O) (h : PS k 2 d) (hax : ev (n := 1) ![0, pt k d 0] 
 theorem E_nablaPoly (B : FB R d O) (h : PS k 2 d) (hax : ev (n := 1) ![0, pt k d 0] h = 0) (m : ℕ) {ι : Type}
     [Fintype ι] (u : ι → Fin d → k) (P : MvPolynomial ι k) (G : AA k d) :
     subst (bE k h) (nablaPoly k B h m u P G) = DpolyOf (B.FK k) u P (subst (bE k h) G) := by
-  have hb : HasSubst (bE k h) := hasSubst_lemma (bE_const k h hax)
+  have hb : HasSubst (bE k h) := MvPowerSeries.hasSubst_of_constantCoeff_zero (bE_const k h hax)
   unfold nablaPoly DpolyOf DmonOf
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← coe_substAlgHom hb, map_sum]
+
+  rw [← coe_substAlgHom hb, map_sum]
   refine Finset.sum_congr rfl (fun n _ => ?_)
   rw [map_mul, coe_substAlgHom hb, mvPowerSeries_subst_C hb, E_foldr B h hax m u n]
 

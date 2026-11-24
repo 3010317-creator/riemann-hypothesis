@@ -1,16 +1,62 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsGrpPullbackOfLoc
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.ExistsArBaseAway
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.FiniteHomogeneousInf
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaConstantsLocallyOnBase
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemePullback
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsIffOfThetaLevelPullback
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsRingBaseChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaConstantsLocallyOnBase
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClass
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsRingBaseChange
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaConstantsUniqueUpToUnit
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaCosetNonvanishingOfHasThStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaPointsVanishingIdealRadicalHomogeneous
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaCosetNonvanishingOfHasTh
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelIsoUniqueOfDenseCommonFibres
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelShapePrimitivityPullbackDescentStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelIsoUniqueOfDenseCommonFibresStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaPointsVanishingIdealRadicalHomogeneous
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
 
 @[expose] public section
 
@@ -22,15 +68,9 @@ open GlobalTheory.ZM
 noncomputable section
 namespace GlobalTheory.FamRep
 
-theorem spMap_surj {R R' : Type} [CommRing R] [CommRing R'] (x : Sp R' ⟶ Sp R) : ∃ β : R →+* R', spMap β = x :=
-  ⟨(Spec.preimage x).hom, Spec.map_preimage x⟩
+alias spMap_comp_eq := _root_.GlobalTheory.ZM.ClosedCoord.spMap_comp_eq
 
-theorem spMap_comp_eq {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (h : B →+* C) :
-    spMap h ≫ spMap f = spMap (h.comp f) := by
-  rw [← Spec.map_comp]; rfl
-
-theorem spMap_inj {R R' : Type} [CommRing R] [CommRing R'] {f f' : R →+* R'} (h : spMap f = spMap f') : f = f' :=
-  congrArg CommRingCat.Hom.hom (Spec.map_injective h)
+alias spMap_inj := _root_.GlobalTheory.ZM.DenseFib.spMap_inj
 
 
 open MvPolynomial in
@@ -51,12 +91,12 @@ theorem isTM_unique (hL : Out.Laws) (hL2 : Out.Laws2) {m : ℕ} (hm : 2 ≤ m) (
     (t : TObj g (N' ^ 2) J b s) (R : Type) [CommRing R] [IsReduced R] (z : Sp R ⟶ S) (sw : Sp R ⟶ Sp o)
     (e : z ≫ s = sw) (w : TObj g (N' ^ 2) J b sw) (φ φ' : w.A.left ⟶ t.A.left) (h : IsTM w t z φ)
     (h' : IsTM w t z φ') : φ = φ' := by
-  obtain ⟨β, rfl⟩ := spMap_surj sw
+  obtain ⟨β, rfl⟩ := GlobalTheory.ZM.DenseFib.exists_spMap sw
   obtain ⟨w', hw'⟩ := tObj_pull o g _ J b _ _ s _ z t e
   obtain ⟨ψ, hψ⟩ := tMap_iff.1 hw'
   obtain ⟨χ, rfl, hχ⟩ := hψ.cancel (h.congr (Category.id_comp z).symm rfl)
   obtain ⟨χ', rfl, hχ'⟩ := hψ.cancel (h'.congr (Category.id_comp z).symm rfl)
-  rw [(GlobalTheory.T.thetaLevel_iso_unique_of_dense_common_fibres hL hL2 o g N' J b m R β w w' hm hd ho ?_).2 χ χ' hχ.1 hχ'.1 hχ.2.1 hχ'.2.1
+  rw [(_root_.GlobalTheory.TUniq.iso_unique_of_dense hL hL2 o g N' J b m R β w w' hm hd ho ?_).2 χ χ' hχ.1 hχ'.1 hχ.2.1 hχ'.2.1
     fun i => (hχ.2.2.1 i).trans (hχ'.2.2.1 i).symm]
   refine Dense.mono (fun p _ => ?_) dense_univ
   obtain ⟨u, hu⟩ := tObj_pull o g _ J b _ _ _ _ ((Sp R).fromSpecResidueField p) w rfl
@@ -71,8 +111,8 @@ theorem exists_hasTh_field (hL : Out.Laws) (hL2 : Out.Laws2) (ho : Odd N') (t : 
   have hr : Set.range y ⊆ Set.range x := by
     rintro _ ⟨q, rfl⟩
     rwa [Subsingleton.elim (α := PrimeSpectrum K) q (IsLocalRing.closedPoint K)]
-  obtain ⟨ρ, hρ⟩ := spMap_surj (IsOpenImmersion.lift x y hr)
-  have := GlobalTheory.T.hasThetaConstants_ring_baseChange hL2 o g N' J b S s t R K ρ x v hv
+  obtain ⟨ρ, hρ⟩ := GlobalTheory.ZM.DenseFib.exists_spMap (IsOpenImmersion.lift x y hr)
+  have := _root_.GlobalTheory.hasTh_baseChange hL2 o g N' J b S s t R K ρ x v hv
   rw [hρ, IsOpenImmersion.lift_fac] at this
   exact ⟨_, this⟩
 
@@ -85,12 +125,12 @@ theorem eval_eq_zero_of_fromC (hL : Out.Laws) (hL2 : Out.Laws2) {n : ℕ} (hn : 
   obtain ⟨v₀, hv₀⟩ := exists_hasTh_field hL hL2 ho t₀ K₀ (𝟙 _)
   have a1 : tx.HasTh (𝟙 _) v := (hasTh_iff_of_tmap o g N' J b _ _ t _ _ tx y K _ v h1).2 (by rwa [Category.id_comp])
   have a2 : tx.HasTh (𝟙 _) (fun a => i (v₀ a)) := (hasTh_iff_of_tmap o g N' J b _ _ t₀ _ _ tx _ K _ _ h2).2 (by
-    have := GlobalTheory.T.hasThetaConstants_ring_baseChange hL2 o g N' J b _ _ t₀ K₀ K i _ v₀ hv₀
+    have := _root_.GlobalTheory.hasTh_baseChange hL2 o g N' J b _ _ t₀ K₀ K i _ v₀ hv₀
     rwa [Category.comp_id, ← Category.id_comp (spMap i)] at this)
   have a3 : tc.HasTh (𝟙 _) (fun a => j (v₀ a)) := (hasTh_iff_of_tmap o g N' J b _ _ t₀ _ _ tc _ ℂ _ _ h3).2 (by
-    have := GlobalTheory.T.hasThetaConstants_ring_baseChange hL2 o g N' J b _ _ t₀ K₀ ℂ j _ v₀ hv₀
+    have := _root_.GlobalTheory.hasTh_baseChange hL2 o g N' J b _ _ t₀ K₀ ℂ j _ v₀ hv₀
     rwa [Category.comp_id, ← Category.id_comp (spMap j)] at this)
-  obtain ⟨c, hc⟩ := GlobalTheory.T.thetaCosetNonvanishing_of_hasTh hL hL2 o g N' J b _ _ tx n K _ _ ⊥ hn hd a2 Ideal.isPrime_bot 0
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.coset_of_hasTh hL hL2 o g N' J b _ _ tx n K _ _ ⊥ hn hd a2 Ideal.isPrime_bot 0
   obtain ⟨u, hu⟩ := hasTh_unique_unit hL hL2 o g N' J b _ _ tx K _ _ _ a2 a1
     (Ideal.eq_top_of_isUnit_mem _ (Ideal.subset_span ⟨_, rfl⟩) (Ne.isUnit (by simpa using hc)))
   obtain rfl : β = i.comp β₀ := spMap_inj (hβ.symm.trans (hi.trans (spMap_comp_eq _ _)))
@@ -120,7 +160,7 @@ theorem dense_affine {k : ℕ} {b : TBase o k} {em : o →+* ℂ} {C : TObj g k 
     rintro _ ⟨q', rfl⟩
     rw [Subsingleton.elim (α := PrimeSpectrum K) q' q, hq]
     exact ⟨p, rfl⟩
-  obtain ⟨ρ, hρ⟩ := spMap_surj (IsOpenImmersion.lift x y hr)
+  obtain ⟨ρ, hρ⟩ := GlobalTheory.ZM.DenseFib.exists_spMap (IsOpenImmersion.lift x y hr)
   have e : spMap ρ ≫ x = y := by rw [hρ, IsOpenImmersion.lift_fac]
   refine ⟨K, inferInstance, ρ, ⟨q, x.isOpenEmbedding.injective ?_⟩, by rwa [e]⟩
   rw [← Scheme.Hom.comp_apply, e, hq]
@@ -130,7 +170,7 @@ theorem inMM_of_dense (hL : Out.Laws) (hL2 : Out.Laws2) {n : ℕ} (hn : 2 ≤ n)
     {t : TObj g (N' ^ 2) J b s} (hD : Dense (fromSet em C t)) {R : Type} [CommRing R] [IsReduced R] (x : Sp R ⟶ S)
     [IsOpenImmersion x] (β : o →+* R) (hβ : x ≫ s = spMap β) (v : Ix g (N' ^ 2) → R) (hv : t.HasTh x v) :
     InMM n N' (thIdeal em C) β v := by
-  refine ⟨fun F hF => ?_, fun q hq => GlobalTheory.T.thetaCosetNonvanishing_of_hasTh hL hL2 o g N' J b S s t n R x v q hn hd hv hq⟩
+  refine ⟨fun F hF => ?_, fun q hq => _root_.GlobalTheory.coset_of_hasTh hL hL2 o g N' J b S s t n R x v q hn hd hv hq⟩
   by_contra hne
   have hb : PrimeSpectrum.basicOpen (MvPolynomial.eval₂ β v F) ≠ ⊥ := fun h =>
     hne ((PrimeSpectrum.basicOpen_eq_bot_iff _).1 h).eq_zero
@@ -138,7 +178,7 @@ theorem inMM_of_dense (hL : Out.Laws) (hL2 : Out.Laws2) {n : ℕ} (hn : 2 ≤ n)
     (PrimeSpectrum.basicOpen (MvPolynomial.eval₂ β v F)).isOpen
     ((TopologicalSpace.Opens.ne_bot_iff_nonempty _).1 hb)
   have h0 := eval_eq_zero_of_fromC hL hL2 hn hd ho hem t _ hy (ψ.comp β)
-    (by rw [Category.assoc, hβ, spMap_comp_eq]) _ (GlobalTheory.T.hasThetaConstants_ring_baseChange hL2 o g N' J b S s t R K ψ x v hv) F hF
+    (by rw [Category.assoc, hβ, spMap_comp_eq]) _ (_root_.GlobalTheory.hasTh_baseChange hL2 o g N' J b S s t R K ψ x v hv) F hF
   refine hp (show ψ (MvPolynomial.eval₂ β v F) ∈ (show PrimeSpectrum K from q).asIdeal from ?_)
   rw [MvPolynomial.eval₂_comp_left]
   exact (show MvPolynomial.eval₂ (ψ.comp β) (ψ ∘ v) F = 0 from h0) ▸ Ideal.zero_mem _
@@ -151,11 +191,11 @@ theorem tMap_affine (hL : Out.Laws) (hL2 : Out.Laws2) {m : ℕ} (hm : 2 ≤ m) (
     {t : TObj g (N' ^ 2) J b s} (hD : Dense (fromSet em C t)) {R : Type} [CommRing R] [IsReduced R] (x : Sp R ⟶ S)
     [IsOpenImmersion x] (y : Sp R ⟶ M) (hxy : y ≫ sM = x ≫ s) (v : Ix g (N' ^ 2) → R) (hv : t.HasTh x v)
     (hv' : u.HasTh y v) (w : TObj g (N' ^ 2) J b (x ≫ s)) (hw : TMap w t x) : TMap w u y := by
-  obtain ⟨β, hβ⟩ := spMap_surj (x ≫ s)
+  obtain ⟨β, hβ⟩ := GlobalTheory.ZM.DenseFib.exists_spMap (x ≫ s)
   obtain ⟨tx, htx⟩ := tObj_pull o g _ J b _ _ s _ x t hβ.symm
   obtain ⟨ux, hux⟩ := tObj_pull o g _ J b _ _ sM _ y u (hxy.trans hβ.symm)
   have key : TMap tx ux (𝟙 _) := by
-    refine (GlobalTheory.T.thetaLevel_iso_unique_of_dense_common_fibres hL hL2 o g N' J b m R β tx ux hm hd ho (Dense.mono (fun p hp => ?_) (dense_affine hD x))).1
+    refine (_root_.GlobalTheory.TUniq.iso_unique_of_dense hL hL2 o g N' J b m R β tx ux hm hd ho (Dense.mono (fun p hp => ?_) (dense_affine hD x))).1
     obtain ⟨K, _, ψ, ⟨q, rfl⟩, K₀, _, β₀, i, j, t₀, tK, tc, -, -, h1, h2, h3, hc⟩ := hp
     let a := algebraMap K (AlgebraicClosure K)
     have ez : spMap a ≫ spMap ψ = spMap (a.comp ψ) := spMap_comp_eq _ _
@@ -170,8 +210,8 @@ theorem tMap_affine (hL : Out.Laws) (hL2 : Out.Laws2) {m : ℕ} (hm : 2 ≤ m) (
     have s2 : t'.Shape Mat κ := (GlobalTheory.T.thetaLevel_shape_primitivity_pullback_descent o g _ J b Mat κ w₀ w₀ _ _ _ _ _ tK t' m2).1 s1
     have m3 : TMap t' u (spMap (a.comp ψ) ≫ y) := hu _ _ t' _ s2
       ((hasTh_iff_of_tmap o g N' J b _ _ t _ _ t' _ _ _ _ m1).2 (by
-        rw [Category.id_comp]; exact GlobalTheory.T.hasThetaConstants_ring_baseChange hL2 o g N' J b S s t R _ (a.comp ψ) x v hv))
-      (GlobalTheory.T.hasThetaConstants_ring_baseChange hL2 o g N' J b M sM u R _ (a.comp ψ) y v hv')
+        rw [Category.id_comp]; exact _root_.GlobalTheory.hasTh_baseChange hL2 o g N' J b S s t R _ (a.comp ψ) x v hv))
+      (_root_.GlobalTheory.hasTh_baseChange hL2 o g N' J b M sM u R _ (a.comp ψ) y v hv')
     have m4 : TMap u' t' (𝟙 _) := tMap_cancel ht' (by rwa [Category.id_comp])
     have m5 := tMap_comp m4 m3
     rw [Category.id_comp] at m5
@@ -194,14 +234,14 @@ theorem family_universal : Out.Laws → Out.Laws2 → ∀ (g : ℕ) (J : Type) [
   have uniq : ∀ (R : Type) [CommRing R] (y y' : Sp R ⟶ Y.MM) (v : Ix g ((n ^ j) ^ 2) → R), y ≫ Y.s = y' ≫ Y.s →
       u.HasTh y v → u.HasTh y' v → y = y' := by
     intro R _ y y' v e h h'
-    obtain ⟨β, hβ⟩ := spMap_surj (y ≫ Y.s)
+    obtain ⟨β, hβ⟩ := GlobalTheory.ZM.DenseFib.exists_spMap (y ≫ Y.s)
     exact (Y.pts R β v (Y.loc R β y v hβ.symm ((hu R y v).1 h))).unique ⟨hβ.symm, (hu R y v).1 h⟩
       ⟨e.symm.trans hβ.symm, (hu R y' v).1 h'⟩
   choose R cR x v hx hp hv using ThetaLocal.exists_hasTh hL hL2 o g _ J b S s' t ho
   have loc : ∀ p, ∃ y : Sp (R p) ⟶ Y.MM, y ≫ Y.s = x p ≫ s' ∧ u.HasTh y (v p) := fun p => by
     have := hx p
     have := hred _ _ (hx p)
-    obtain ⟨β, hβ⟩ := spMap_surj (x p ≫ s')
+    obtain ⟨β, hβ⟩ := GlobalTheory.ZM.DenseFib.exists_spMap (x p ≫ s')
     obtain ⟨y, ⟨h1, h2⟩, -⟩ := Y.pts _ β _ (inMM_of_dense hL hL2 hn.two_le hd1 ho hem.2.2 hD (x p) β hβ.symm _ (hv p))
     exact ⟨y, h1.trans hβ, (hu _ _ _).2 h2⟩
   choose y hy hy' using loc
@@ -228,8 +268,8 @@ theorem family_universal : Out.Laws → Out.Laws2 → ∀ (g : ℕ) (J : Type) [
     have : IsOpenImmersion (a ≫ x i) := by rw [e1]; exact hz
     refine ⟨_, a, a', IsOpenImmersion.of_comp a (x i), ⟨r, (x i).isOpenEmbedding.injective ?_⟩, e1.trans e2.symm, ?_⟩
     · rw [← Scheme.Hom.comp_apply, e1, hr]
-    · obtain ⟨ρ, hρ⟩ := spMap_surj (R' := T) a
-      have h := GlobalTheory.T.hasThetaConstants_ring_baseChange hL2 o g _ J b S s' t _ T ρ (x i) (v i) (hv i)
+    · obtain ⟨ρ, hρ⟩ := GlobalTheory.ZM.DenseFib.exists_spMap (B := T) a
+      have h := _root_.GlobalTheory.hasTh_baseChange hL2 o g _ J b S s' t _ T ρ (x i) (v i) (hv i)
       rw [hρ] at h
       refine uniq T _ _ _ ?_ (tr i T a _ h) (tr i' T a' _ (by rw [e2, ← e1]; exact h))
       rw [Category.assoc, Category.assoc, hy, hy, ← Category.assoc, ← Category.assoc]

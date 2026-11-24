@@ -1,12 +1,48 @@
 module
 
-public import Mathlib
-public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
-public import Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation
-public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExpStar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeffZeroEqZeroIff
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltSeparatedCompleteEpsilonRootSubOneStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltSeparatedCompleteEpsilonRootSubOne
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.Domain
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -39,8 +75,8 @@ theorem sep_complete_of_coord {R A B I : Type} [AddCommGroup R] [CommRing A] [Co
     refine ⟨x, fun m i => ?_⟩
     obtain ⟨d, hd⟩ := hy i m
     refine ⟨d, ?_⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sub, map_sum, hx i, Finset.sum_congr rfl (fun n _ => hc n i), ← map_sum j, ← map_sub j]
+
+    rw [map_sub, map_sum, hx i, Finset.sum_congr rfl (fun n _ => hc n i), ← map_sum j, ← map_sub j]
     congr 1
     have e : t ^ k * y i - ∑ n ∈ Finset.range m, t ^ (n + k) * c n i =
         t ^ k * (y i - ∑ n ∈ Finset.range m, t ^ n * c n i) := by
@@ -64,18 +100,6 @@ private theorem crd_tmul_lemma {l : ℕ} [Fact l.Prime] (LL : FinExt l)
   unfold crd
   rfl
 
-set_option maxHeartbeats 1000000 in
-private theorem crd_mul_lemma_2 {l : ℕ} [Fact l.Prime] (LL : FinExt l)
-    (i : Fin (Module.finrank ℤ_[l] ↥(OL LL))) (q : WCb l) (y : RW LL) :
-    crd (W := WCb l) (basisO LL) i (((1 : ↥(OL LL)) ⊗ₜ[ℤ_[l]] q) * y) =
-      q * crd (W := WCb l) (basisO LL) i y := by
-  induction y using TensorProduct.induction_on with
-  | zero => simp
-  | tmul o w =>
-    rw [Algebra.TensorProduct.tmul_mul_tmul, one_mul, crd_tmul_lemma, crd_tmul_lemma, mul_smul_comm]
-  | add y z hy hz =>
-    rw [mul_add, LinearMap.map_add (f := _), LinearMap.map_add (f := _), hy, hz]
-    exact (mul_add q _ _).symm
 
 private theorem expand_lemma_3 {l : ℕ} [Fact l.Prime] (LL : FinExt l) (y : RW LL) :
     ∑ k, basisO LL k ⊗ₜ[ℤ_[l]] crd (W := WCb l) (basisO LL) k y = y := by
@@ -91,8 +115,8 @@ private theorem expand_lemma_3 {l : ℕ} [Fact l.Prime] (LL : FinExt l) (y : RW 
 private theorem crd_sum_lemma_4 {l : ℕ} [Fact l.Prime] (LL : FinExt l)
     (i : Fin (Module.finrank ℤ_[l] ↥(OL LL))) (w : Fin (Module.finrank ℤ_[l] ↥(OL LL)) → WCb l) :
     crd (W := WCb l) (basisO LL) i (∑ k, basisO LL k ⊗ₜ[ℤ_[l]] w k) = w i := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [map_sum, crd_tmul_lemma, Finsupp.single_apply]
+
+  simp [map_sum, Finsupp.single_apply]
 
 private theorem wdiv_lemma_5 {l : ℕ} [Fact l.Prime] (w : WCb l) (hw : w.coeff 0 = 0) :
     ∃ v : WCb l, w = (l : WCb l) * v := by
@@ -112,88 +136,6 @@ private theorem rwdiv_lemma_6 {l : ℕ} [Fact l.Prime] (LL : FinExt l) (z : RW L
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [hv k, ← nsmul_eq_mul, ← nsmul_eq_mul, TensorProduct.tmul_smul]
 
-private theorem cc_inclW_lemma_7 {l : ℕ} [Fact l.Prime] (w : Ainf l) :
-    (inclW l w).coeff 0 = algebraMap (OCb l) (Cb l) (w.coeff 0) := by
-  unfold inclW
-  exact WittVector.map_coeff _ _ 0
-
-private theorem cc_pi_lemma_8 {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (s : ℕ) :
-    (inclW l (WittVector.teichmuller l (AI.εroot s) - 1)).coeff 0 =
-      algebraMap (OCb l) (Cb l) (AI.εroot s - 1) := by
-  rw [cc_inclW_lemma_7]
-  congr 1
-  change WittVector.constantCoeff (WittVector.teichmuller l (AI.εroot s) - 1) = _
-  rw [map_sub, map_one]
-  rfl
-
-private theorem inclR_piR_lemma_9 {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P)
-    (LL : FinExt l) (s : ℕ) :
-    piR AI LL s =
-      (1 : ↥(OL LL)) ⊗ₜ[ℤ_[l]] inclW l (WittVector.teichmuller l (AI.εroot s) - 1) := rfl
-
-private theorem inclR_tmul_lemma_10 {l : ℕ} [Fact l.Prime] (LL : FinExt l) (o : ↥(OL LL)) (w : Ainf l) :
-    (inclR LL) (o ⊗ₜ[ℤ_[l]] w) = o ⊗ₜ[ℤ_[l]] inclW l w := rfl
-
-private theorem cc_inclR_lemma_11 {l : ℕ} [Fact l.Prime] (LL : FinExt l)
-    (i : Fin (Module.finrank ℤ_[l] ↥(OL LL))) (a : ↥(OL LL) ⊗[ℤ_[l]] Ainf l) :
-    ∃ c : OCb l, (crd (W := WCb l) (basisO LL) i (inclR LL a)).coeff 0 = algebraMap (OCb l) (Cb l) c := by
-  induction a using TensorProduct.induction_on with
-  | zero => exact ⟨0, by simp⟩
-  | tmul o w =>
-    refine ⟨((basisO LL).coord i o • w).coeff 0, ?_⟩
-    rw [inclR_tmul_lemma_10, crd_tmul_lemma, ← cc_inclW_lemma_7]
-    congr 1
-    exact (map_smul (inclWA l) _ _).symm
-  | add a b ha hb =>
-    obtain ⟨c1, h1⟩ := ha
-    obtain ⟨c2, h2⟩ := hb
-    refine ⟨c1 + c2, ?_⟩
-    have e : (inclR LL) (a + b) = (inclR LL) a + (inclR LL) b := (inclR LL).toRingHom.map_add a b
-    rw [e, LinearMap.map_add (f := _), map_add (algebraMap (OCb l) (Cb l)), ← h1, ← h2]
-    exact WittVector.add_coeff_zero _ _
-
-private theorem coord_of_near_lemma_12 {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P)
-    (LL : FinExt l) (s n : ℕ) (y : RW LL) (h : NearPi AI LL s n y)
-    (i : Fin (Module.finrank ℤ_[l] ↥(OL LL))) :
-    ∃ c, crdZero LL i y = algebraMap (OCb l) (Cb l) ((AI.εroot s - 1) ^ n * c) := by
-  unfold NearPi Near at h
-  obtain ⟨a, r, rfl⟩ := h
-  obtain ⟨c, hc⟩ := cc_inclR_lemma_11 LL i a
-  refine ⟨c, ?_⟩
-  rw [map_add (f := _), ← nsmul_eq_mul, map_nsmul, nsmul_eq_mul, crdZero_apply, inclR_piR_lemma_9,
-    Algebra.TensorProduct.tmul_pow, one_pow, crd_mul_lemma_2]
-  change WittVector.constantCoeff (p := l) (R := Cb l) (_ * _) + _ = _
-  rw [map_mul, map_pow]
-  change (inclW l (WittVector.teichmuller l (AI.εroot s) - 1)).coeff 0 ^ n *
-    (crd (W := WCb l) (basisO LL) i (inclR LL a)).coeff 0 + _ = _
-  rw [cc_pi_lemma_8, hc, map_mul, map_pow]
-  simp
-
-set_option maxHeartbeats 2000000 in
-private theorem near_of_coord_lemma_13 {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P)
-    (LL : FinExt l) (s n : ℕ) (y : RW LL)
-    (h : ∀ i, ∃ c, crdZero LL i y = algebraMap (OCb l) (Cb l) ((AI.εroot s - 1) ^ n * c)) :
-    NearPi AI LL s n y := by
-  choose c hc using h
-  let a : ↥(OL LL) ⊗[ℤ_[l]] Ainf l := ∑ k, basisO LL k ⊗ₜ[ℤ_[l]] WittVector.teichmuller l (c k)
-  obtain ⟨r, hr⟩ := rwdiv_lemma_6 LL (y - piR AI LL s ^ n * (inclR LL) a) (fun i => by
-    have ha : (inclR LL) a = ∑ k, basisO LL k ⊗ₜ[ℤ_[l]] inclW l (WittVector.teichmuller l (c k)) := by
-      change (inclR LL : RA LL →+* RW LL) (∑ k, basisO LL k ⊗ₜ[ℤ_[l]] WittVector.teichmuller l (c k)) = _
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
-      exact Finset.sum_congr rfl fun k _ => rfl
-    rw [LinearMap.map_sub, inclR_piR_lemma_9, Algebra.TensorProduct.tmul_pow, one_pow, crd_mul_lemma_2, ha,
-      crd_sum_lemma_4]
-    change WittVector.constantCoeff (p := l) (R := Cb l) (_ - _) = 0
-    rw [map_sub, map_mul, map_pow]
-    change (crd (W := WCb l) (basisO LL) i y).coeff 0 -
-      (inclW l (WittVector.teichmuller l (AI.εroot s) - 1)).coeff 0 ^ n *
-        (inclW l (WittVector.teichmuller l (c i))).coeff 0 = 0
-    rw [← crdZero_apply, hc, cc_pi_lemma_8, cc_inclW_lemma_7, WittVector.teichmuller_coeff_zero, map_mul,
-      map_pow, sub_self])
-  unfold NearPi Near
-  exact ⟨a, r, sub_eq_iff_eq_add'.mp hr⟩
-
 private theorem surj_lemma_14 {l : ℕ} [Fact l.Prime] (LL : FinExt l)
     (c : Fin (Module.finrank ℤ_[l] ↥(OL LL)) → OCb l) :
     ∃ x : RW LL, ∀ i, crdZero LL i x = algebraMap (OCb l) (Cb l) (c i) := by
@@ -208,12 +150,12 @@ theorem nearPi_sep_complete (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocA
       ∃ x, ∀ m, NearPi AI LL s (m + k) (x - ∑ i ∈ Finset.range m, f i) := by
   have key := sep_complete_of_coord (fun i => crdZero LL i) (algebraMap (OCb l) (Cb l))
     (IsFractionRing.injective (OCb l) (Cb l)) (AI.εroot s - 1) (surj_lemma_14 LL)
-    (GlobalTheory.T.tilt_separated_complete_epsilonRoot_sub_one l P AI s).1 (GlobalTheory.T.tilt_separated_complete_epsilonRoot_sub_one l P AI s).2
+    (_root_.GlobalTheory.TiltComplete.tilt_separated_complete l P AI s).1 (_root_.GlobalTheory.TiltComplete.tilt_separated_complete l P AI s).2
   refine ⟨fun x hx => ?_, fun k f hf => ?_⟩
   · refine rwdiv_lemma_6 LL x fun i => ?_
     rw [← crdZero_apply]
-    exact key.1 x (fun m i => coord_of_near_lemma_12 P AI LL s m x (hx m) i) i
-  · obtain ⟨x, hx⟩ := key.2 k f (fun n i => coord_of_near_lemma_12 P AI LL s (n + k) (f n) (hf n) i)
-    exact ⟨x, fun m => near_of_coord_lemma_13 P AI LL s (m + k) _ (hx m)⟩
+    exact key.1 x (fun m i => (nearPi_iff_crd AI LL s m x).1 (hx m) i) i
+  · obtain ⟨x, hx⟩ := key.2 k f (fun n i => (nearPi_iff_crd AI LL s (n + k) (f n)).1 (hf n) i)
+    exact ⟨x, fun m => (nearPi_iff_crd AI LL s (m + k) _).2 (hx m)⟩
 
 end GlobalTheory.Decompl

@@ -1,15 +1,47 @@
 module
 
-public import Mathlib
-public import Development.ResolutionOfSingularities.Foundations.Blowup.BlowupBasic
-public import Development.ResolutionOfSingularities.Foundations.Blowup.BlowupExistence
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.BlowupSequenceBasic
 public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedOrderReduction.SequenceOfBlowupsPullback
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.BlowupSequenceData
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.Append
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.IdealBlowupSequence
-public import Development.ResolutionOfSingularities.Foundations.BlowupUniversalProperty
-public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionOfSingularities
+import Development.ResolutionOfSingularities.Foundations.Blowup.BlowupBasic
+import Development.ResolutionOfSingularities.Foundations.Schemes.IdealSheafData
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -222,7 +254,7 @@ private def IsDisjointFromCenters {X Y : Scheme.{u}} (g : Y ⟶ X) (t : BlowupSe
   ∀ i : ℕ, i < t.length → ∀ z : ↥(t.obj i), z ∈ (t.center i).support →
     ∀ y : ↥Y, g.base y ≠ (t.projectionToBase i).base z
 
-private theorem isIso_pullbackSnd_of_flat_of_disjoint {X Y : Scheme.{u}} (g : Y ⟶ X) [AlgebraicGeometry.Flat g]
+private theorem isIso_pullbackSnd_of_flat_of_disjoint {X Y : Scheme.{u}} (g : Y ⟶ X)
     (t : BlowupSequenceData X) (hmiss : IsDisjointFromCenters g t) (i : ℕ) (hi : i < t.length) (u : Y ⟶ t.obj i)
     (hu : IsPullback u (𝟙 Y) (t.projectionToBase i) g) : IsIso (pullback.snd (t.map i) u) := by
   have hB : Blowup.IsBlowupAlongIdealSheaf (t.map i) (t.center i) := t.isBlowup i hi
@@ -247,13 +279,13 @@ private theorem isIso_pullbackSnd_of_flat_of_disjoint {X Y : Scheme.{u}} (g : Y 
     · rw [Category.assoc, pullback.lift_snd, Category.comp_id, Category.id_comp]
   · rw [pullback.lift_snd]
 
-private noncomputable def liftSuccOfIsDisjointFromCenters {X Y : Scheme.{u}} (g : Y ⟶ X) [AlgebraicGeometry.Flat g]
+private noncomputable def liftSuccOfIsDisjointFromCenters {X Y : Scheme.{u}} (g : Y ⟶ X)
     (t : BlowupSequenceData X) (hmiss : IsDisjointFromCenters g t) (i : ℕ) (hi : i < t.length) (u : Y ⟶ t.obj i)
     (hu : IsPullback u (𝟙 Y) (t.projectionToBase i) g) : Y ⟶ t.obj (i + 1) :=
   letI := isIso_pullbackSnd_of_flat_of_disjoint g t hmiss i hi u hu
   inv (pullback.snd (t.map i) u) ≫ pullback.fst (t.map i) u
 
-private theorem isPullback_liftSuccOfIsDisjointFromCenters {X Y : Scheme.{u}} (g : Y ⟶ X) [AlgebraicGeometry.Flat g]
+private theorem isPullback_liftSuccOfIsDisjointFromCenters {X Y : Scheme.{u}} (g : Y ⟶ X)
     (t : BlowupSequenceData X) (hmiss : IsDisjointFromCenters g t) (i : ℕ) (hi : i < t.length) (u : Y ⟶ t.obj i)
     (hu : IsPullback u (𝟙 Y) (t.projectionToBase i) g) :
     IsPullback (liftSuccOfIsDisjointFromCenters g t hmiss i hi u hu) (𝟙 Y) (t.projectionToBase (i + 1)) g := by
@@ -279,7 +311,7 @@ private theorem isPullback_comp_isoObjZero_inv {X Y : Scheme.{u}} (g : Y ⟶ X) 
     simp [t.projectionToBase_zero]
   exact (IsPullback.of_horiz_isIso hsq).flip
 
-private noncomputable def liftOfIsDisjointFromCenters {X Y : Scheme.{u}} (g : Y ⟶ X) [AlgebraicGeometry.Flat g]
+private noncomputable def liftOfIsDisjointFromCenters {X Y : Scheme.{u}} (g : Y ⟶ X)
     (t : BlowupSequenceData X) (hmiss : IsDisjointFromCenters g t) :
     (i : ℕ) → i ≤ t.length → {u : Y ⟶ t.obj i // IsPullback u (𝟙 Y) (t.projectionToBase i) g}
   | 0, _ => ⟨g ≫ t.isoZero.inv, isPullback_comp_isoObjZero_inv g t⟩
@@ -288,7 +320,7 @@ private noncomputable def liftOfIsDisjointFromCenters {X Y : Scheme.{u}} (g : Y 
       let prev := liftOfIsDisjointFromCenters g t hmiss i hi.le
       ⟨liftSuccOfIsDisjointFromCenters g t hmiss i hi prev.1 prev.2, isPullback_liftSuccOfIsDisjointFromCenters g t hmiss i hi prev.1 prev.2⟩
 
-private noncomputable def liftToLastOfFlatOfIsDisjointFromCenters {X Y : Scheme.{u}} (g : Y ⟶ X) [AlgebraicGeometry.Flat g]
+private noncomputable def liftToLastOfFlatOfIsDisjointFromCenters {X Y : Scheme.{u}} (g : Y ⟶ X)
     (t : BlowupSequenceData X) (hmiss : IsDisjointFromCenters g t) : Y ⟶ t.obj t.length :=
   (liftOfIsDisjointFromCenters g t hmiss t.length le_rfl).1
 
@@ -299,7 +331,7 @@ private theorem schemeAt_eq_schemeAt_zero_of_length_eq_zero {Y : Scheme.{u}} (e 
   subst hj0
   exact e.toSequenceOfBlowups_schemeAt 0
 
-private noncomputable def mapToLastOfFlatOfLengthEqZero {X Y : Scheme.{u}} (g : Y ⟶ X) [AlgebraicGeometry.Flat g]
+private noncomputable def mapToLastOfFlatOfLengthEqZero {X Y : Scheme.{u}} (g : Y ⟶ X)
     (t : BlowupSequenceData X) (hmiss : IsDisjointFromCenters g t) (e : BlowupSequenceData Y) (he : e.length = 0)
     (j : ℕ) (hj : j ≤ e.toSequenceOfBlowups.length) : e.toSequenceOfBlowups.schemeAt j ⟶ t.toSequenceOfBlowups.schemeAt t.length :=
   eqToHom (schemeAt_eq_schemeAt_zero_of_length_eq_zero e he j hj) ≫ e.isoZero.hom ≫ liftToLastOfFlatOfIsDisjointFromCenters g t hmiss ≫
@@ -320,7 +352,7 @@ private theorem length_lt_length_of_lt_length_of_eq_zero {X Y : Scheme.{u}} (t :
   rw [BlowupSequenceData.toSequenceOfBlowups_length, he] at hj
   exact absurd hj (Nat.not_lt_zero j)
 
-private theorem isPullback_of_disjoint_centers {X Y : Scheme.{u}} (g : Y ⟶ X) [AlgebraicGeometry.Flat g]
+private theorem isPullback_of_disjoint_centers {X Y : Scheme.{u}} (g : Y ⟶ X)
     (t : BlowupSequenceData X) (hmiss : IsDisjointFromCenters g t) (e : BlowupSequenceData Y) (he : e.length = 0) :
     ∀ (j : ℕ) (hj : j ≤ e.toSequenceOfBlowups.length),
       IsPullback (mapToLastOfFlatOfLengthEqZero g t hmiss e he j hj) (e.toSequenceOfBlowups.projectionToBase j)
@@ -345,7 +377,7 @@ private theorem isPullback_of_disjoint_centers {X Y : Scheme.{u}} (g : Y ⟶ X) 
   rw [hmap, hs, hf]
   exact hcomp
 
-private theorem blowupMorphism_comp_of_disjoint_centers {X Y : Scheme.{u}} (g : Y ⟶ X) [AlgebraicGeometry.Flat g]
+private theorem blowupMorphism_comp_of_disjoint_centers {X Y : Scheme.{u}} (g : Y ⟶ X)
     (t : BlowupSequenceData X) (hmiss : IsDisjointFromCenters g t) (e : BlowupSequenceData Y) (he : e.length = 0) :
     ∀ (j : ℕ) (hj : j < e.toSequenceOfBlowups.length),
       e.toSequenceOfBlowups.transitionMapSucc j ≫ mapToLastOfFlatOfLengthEqZero g t hmiss e he j (le_of_lt hj) =
@@ -355,7 +387,8 @@ private theorem blowupMorphism_comp_of_disjoint_centers {X Y : Scheme.{u}} (g : 
   have hlen : e.toSequenceOfBlowups.length = 0 := e.toSequenceOfBlowups_length.trans he
   exact absurd hj (by rw [hlen]; exact Nat.not_lt_zero j)
 
-private theorem center_eq_comap_lastCenter_of_disjoint_of_flat {X Y : Scheme.{u}} (g : Y ⟶ X) [AlgebraicGeometry.Flat g]
+private theorem center_eq_comap_lastCenter_of_disjoint_of_flat
+    {X Y : Scheme.{u}} (g : Y ⟶ X)
     (t : BlowupSequenceData X) (hmiss : IsDisjointFromCenters g t) (e : BlowupSequenceData Y) (he : e.length = 0) :
     ∀ (j : ℕ) (hj : j < e.toSequenceOfBlowups.length),
       e.toSequenceOfBlowups.center j =
@@ -727,84 +760,17 @@ private theorem disjoint_centers_lastMap_of_append {X X' : Scheme.{u}} (φ : X' 
   exact (h1.symm.trans h3).trans
     ((congrArg (fun w : ↥(s.obj s.length) => (s.projectionToBase s.length).base w) hyeq).trans hp.symm)
 
-private theorem exists_lift_schemeAt_length_of_disjoint_centers {X Y : Scheme.{u}} (g : Y ⟶ X) (t : BlowupSequenceData X)
-    (hmiss : IsDisjointFromCenters g t) :
-    ∃ u : Y ⟶ t.obj t.length, IsPullback u (𝟙 Y) (t.projectionToBase t.length) g :=
-  exists_lift_of_forall_comap_eq_top g t
-    (fun i hi u hu => comap_eq_top_of_forall_support_not_mem_range g (t.projectionToBase i) (t.center i) (hmiss i hi) u hu)
-    t.length le_rfl
-
-private noncomputable def chosenLiftToLastOfIsDisjointFromCenters {X Y : Scheme.{u}} (g : Y ⟶ X) (t : BlowupSequenceData X)
-    (hmiss : IsDisjointFromCenters g t) : Y ⟶ t.obj t.length :=
-  (exists_lift_schemeAt_length_of_disjoint_centers g t hmiss).choose
-
-private theorem isPullback_chosenLiftToLastOfIsDisjointFromCenters {X Y : Scheme.{u}} (g : Y ⟶ X) (t : BlowupSequenceData X)
-    (hmiss : IsDisjointFromCenters g t) :
-    IsPullback (chosenLiftToLastOfIsDisjointFromCenters g t hmiss) (𝟙 Y) (t.projectionToBase t.length) g :=
-  (exists_lift_schemeAt_length_of_disjoint_centers g t hmiss).choose_spec
-
-private noncomputable def mapToLastOfLengthEqZero {X Y : Scheme.{u}} (g : Y ⟶ X) (t : BlowupSequenceData X)
-    (hmiss : IsDisjointFromCenters g t) (e : BlowupSequenceData Y) (he : e.length = 0)
-    (j : ℕ) (hj : j ≤ e.toSequenceOfBlowups.length) : e.toSequenceOfBlowups.schemeAt j ⟶ t.toSequenceOfBlowups.schemeAt t.length :=
-  eqToHom (schemeAt_eq_schemeAt_zero_of_length_eq_zero e he j hj) ≫ e.isoZero.hom ≫ chosenLiftToLastOfIsDisjointFromCenters g t hmiss ≫
-    eqToHom (t.toSequenceOfBlowups_schemeAt t.length).symm
-
-private theorem isPullback_mapToLastOfLengthEqZero {X Y : Scheme.{u}} (g : Y ⟶ X) (t : BlowupSequenceData X)
-    (hmiss : IsDisjointFromCenters g t) (e : BlowupSequenceData Y) (he : e.length = 0) :
-    ∀ (j : ℕ) (hj : j ≤ e.toSequenceOfBlowups.length),
-      IsPullback (mapToLastOfLengthEqZero g t hmiss e he j hj) (e.toSequenceOfBlowups.projectionToBase j)
-        (t.toSequenceOfBlowups.projectionToBase t.length) g := by
-  have hlen : e.toSequenceOfBlowups.length = 0 := e.toSequenceOfBlowups_length.trans he
-  intro j hj
-  have hj0 : j = 0 := by omega
-  subst hj0
-  have hpb : IsPullback (chosenLiftToLastOfIsDisjointFromCenters g t hmiss) (𝟙 Y) (t.projectionToBase t.length) g :=
-    isPullback_chosenLiftToLastOfIsDisjointFromCenters g t hmiss
-  have hiso : IsPullback e.isoZero.hom e.isoZero.hom (𝟙 Y) (𝟙 Y) :=
-    IsPullback.of_horiz_isIso ⟨rfl⟩
-  have hcomp := hiso.paste_horiz hpb
-  simp only [Category.id_comp] at hcomp
-  have hmap : mapToLastOfLengthEqZero g t hmiss e he 0 hj =
-      e.isoZero.hom ≫ chosenLiftToLastOfIsDisjointFromCenters g t hmiss := by
-    show 𝟙 (e.obj 0) ≫ e.isoZero.hom ≫ chosenLiftToLastOfIsDisjointFromCenters g t hmiss ≫ 𝟙 (t.obj t.length) =
-      e.isoZero.hom ≫ chosenLiftToLastOfIsDisjointFromCenters g t hmiss
-    simp
-  have hs : e.toSequenceOfBlowups.projectionToBase 0 = e.isoZero.hom :=
-    (e.toSequenceOfBlowups_projectionToBase 0).trans e.projectionToBase_zero
-  have hf : t.toSequenceOfBlowups.projectionToBase t.length = t.projectionToBase t.length := t.toSequenceOfBlowups_projectionToBase t.length
-  rw [hmap, hs, hf]
-  exact hcomp
-
-private theorem blowupMorphism_comp_mapToLastOfLengthEqZero {X Y : Scheme.{u}} (g : Y ⟶ X) (t : BlowupSequenceData X)
-    (hmiss : IsDisjointFromCenters g t) (e : BlowupSequenceData Y) (he : e.length = 0) :
-    ∀ (j : ℕ) (hj : j < e.toSequenceOfBlowups.length),
-      e.toSequenceOfBlowups.transitionMapSucc j ≫ mapToLastOfLengthEqZero g t hmiss e he j (le_of_lt hj) =
-        mapToLastOfLengthEqZero g t hmiss e he (j + 1) hj ≫
-          t.toSequenceOfBlowups.transitionMap (le_of_lt (length_lt_length_of_lt_length_of_eq_zero t e he j hj)) := by
-  intro j hj
-  have hlen : e.toSequenceOfBlowups.length = 0 := e.toSequenceOfBlowups_length.trans he
-  exact absurd hj (by rw [hlen]; exact Nat.not_lt_zero j)
-
-private theorem center_eq_comap_lastCenter_of_disjoint {X Y : Scheme.{u}} (g : Y ⟶ X) (t : BlowupSequenceData X)
-    (hmiss : IsDisjointFromCenters g t) (e : BlowupSequenceData Y) (he : e.length = 0) :
-    ∀ (j : ℕ) (hj : j < e.toSequenceOfBlowups.length),
-      e.toSequenceOfBlowups.center j =
-        (t.toSequenceOfBlowups.center t.length).comap (mapToLastOfLengthEqZero g t hmiss e he j (le_of_lt hj)) := by
-  have hlen : e.toSequenceOfBlowups.length = 0 := e.toSequenceOfBlowups_length.trans he
-  intro j hj
-  exact absurd hj (by omega)
-
 private noncomputable def ofIsDisjointFromCenters {X Y : Scheme.{u}} (g : Y ⟶ X) (t : BlowupSequenceData X)
     (hmiss : IsDisjointFromCenters g t) (e : BlowupSequenceData Y) (he : e.length = 0) :
     SequenceOfBlowupsPullback g e.toSequenceOfBlowups t.toSequenceOfBlowups where
   idx := fun _ => t.length
-  map := mapToLastOfLengthEqZero g t hmiss e he
+  map := mapToLastOfFlatOfLengthEqZero g t hmiss e he
   idx_length := length_eq_toSequenceOfBlowups_length t
   idx_lt := length_lt_toSequenceOfBlowups_length_of_lt t e he
   idx_strictMono := length_lt_length_of_lt_length_of_eq_zero t e he
-  isPullback := isPullback_mapToLastOfLengthEqZero g t hmiss e he
-  step := blowupMorphism_comp_mapToLastOfLengthEqZero g t hmiss e he
-  center_comap := center_eq_comap_lastCenter_of_disjoint g t hmiss e he
+  isPullback := isPullback_of_disjoint_centers g t hmiss e he
+  step := blowupMorphism_comp_of_disjoint_centers g t hmiss e he
+  center_comap := center_eq_comap_lastCenter_of_disjoint_of_flat g t hmiss e he
   center_ne_top := center_ne_top_of_length_eq_zero e he
   omitted := disjoint_omitted_centers_of_disjoint_centers g t hmiss e he
 

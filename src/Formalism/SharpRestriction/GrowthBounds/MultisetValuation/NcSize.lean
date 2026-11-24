@@ -1,6 +1,46 @@
 module
 
+public import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.StmtNumEOf
+public import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.NcIotaInj
 public import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.NcLgpLe
+public import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.NcTsumOdd
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -36,7 +76,6 @@ theorem nc_de (X : Formalism.MainNotions.G.Inst D L) (Y : Formalism.MainNotions.
     (h1 : 9 ≤ K.dl1) (h2 : 9 ≤ K.dl2) (hlog : 1 ≤ Real.logb (D.what₂.places.resChar w) (2 * L.sc.a))
     (hS : nc_Size D L Y u w hg t0 j) : nc_De D L X Y K u w hg t0 j := by
   have hp : 2 ≤ D.what₂.places.resChar w := hg.1.two_le
-  have hA : (1 : ℝ) ≤ 2 * L.sc.a := by have := nc_a_ge (L := L); linarith
   have hmt := (hL u w hg)
   have ht : (Y.Fl u w hg).t = D.R.t := hmt.2.1
   have hk := hT.gat_k u w hg
@@ -53,7 +92,7 @@ theorem nc_de (X : Formalism.MainNotions.G.Inst D L) (Y : Formalism.MainNotions.
     have : (D.gat u w hg).P.m + 1 + (j - 1) * (D.R.t + 1) ≤ D.R.k + D.R.m * (D.R.t + 1) := by
       rw [hk]; exact Nat.add_le_add_left (Nat.mul_le_mul_right _ (by omega)) _
     exact_mod_cast this
-  have hde := nc_de_le (D.what₂.places.resChar w) (Y.Fl u w hg).t _ _ _ j hp (2 * L.sc.a) (D.R.N D.R.m : ℝ) hA hlog
+  have hde := nc_de_le (D.what₂.places.resChar w) (Y.Fl u w hg).t _ _ _ j hp (2 * L.sc.a) (D.R.N D.R.m : ℝ) hlog
     hN1 hN0 hS.1 hS.2
   have hinj := nc_iota_inj X Y hT hL u w hg t0 ht0
   have hNv : (Formalism.MainNotions.G.Nv X (D.what₂.places.resChar w) t0 : ℝ) = ((Y.Fl u w hg).TT (Y.vOf u w hg t0)).card := by

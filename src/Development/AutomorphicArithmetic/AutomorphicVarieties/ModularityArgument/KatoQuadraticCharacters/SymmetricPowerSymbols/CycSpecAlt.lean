@@ -1,6 +1,52 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.KatoQuadraticCharacters.SymmetricPowerSymbols.SymExOf
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -18,10 +64,6 @@ private theorem ex_root (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
     exact (map_ne_zero _).2 (by exact_mod_cast hM.ne')⟩
   exact HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
 
-private theorem pow_emod_order_eq_pow_of_pow_eq_one {F : Type} [Field F] {z : F} {m : ℕ} (h : z ^ m = 1) (k : ℕ) :
-    z ^ (k % m) = z ^ k := by
-  conv_rhs => rw [← Nat.mod_add_div k m, pow_add, pow_mul, h, one_pow, mul_one]
-
 private theorem cyc_spec {M : ℕ} (hM : 0 < M) (s : Ω ≃ₐ[ℚ] Ω) : ∀ z : Ω, z ^ M = 1 → s z = z ^ (cyc M s).val := by
   obtain ⟨ζ, h⟩ := ex_root Ω hM
   haveI : NeZero M := ⟨hM.ne'⟩
@@ -31,7 +73,8 @@ private theorem cyc_spec {M : ℕ} (hM : 0 < M) (s : Ω ≃ₐ[ℚ] Ω) : ∀ z 
     refine ⟨(k : ZMod M), fun z hz => ?_⟩
     obtain ⟨i, -, hi⟩ := h.eq_pow_of_pow_eq_one hz
     have hiM : (ζ ^ i) ^ M = 1 := by rw [hi]; exact hz
-    rw [← hi, map_pow, ← hk, ZMod.val_natCast, pow_emod_order_eq_pow_of_pow_eq_one hiM, ← pow_mul, ← pow_mul, mul_comm]
+    rw [← hi, map_pow, ← hk, ZMod.val_natCast, ← pow_eq_pow_mod _ hiM, ← pow_mul, ← pow_mul,
+      mul_comm]
   unfold cyc
   exact Classical.epsilon_spec hex
 
@@ -41,7 +84,7 @@ private theorem cyc_uniq {M : ℕ} (hM : 0 < M) (s : Ω ≃ₐ[ℚ] Ω) (n : ℕ
   obtain ⟨ζ, hζ⟩ := ex_root Ω hM
   have e : ζ ^ (cyc M s).val = ζ ^ ((n : ZMod M)).val := by
     rw [← cyc_spec hM s ζ hζ.pow_eq_one, h ζ hζ.pow_eq_one, ZMod.val_natCast,
-      pow_emod_order_eq_pow_of_pow_eq_one hζ.pow_eq_one]
+      ← pow_eq_pow_mod _ hζ.pow_eq_one]
   exact ZMod.val_injective M (hζ.pow_inj (ZMod.val_lt _) (ZMod.val_lt _) e)
 
 private theorem cyc_mul {M : ℕ} (hM : 0 < M) (s t : Ω ≃ₐ[ℚ] Ω) : cyc M (s * t) = cyc M s * cyc M t := by
@@ -80,7 +123,7 @@ private theorem gr_ne {M : ℕ} (hM : 0 < M) (s : Ω ≃ₐ[ℚ] Ω) (x : Row M)
   have e0 := congrFun h0 0
   have e1 := congrFun h0 1
   simp only [gr, Pi.smul_apply, smul_eq_mul, Pi.zero_apply, Matrix.cons_val_zero,
-    Matrix.cons_val_one, Matrix.head_cons] at e0 e1
+    Matrix.cons_val_one] at e0 e1
   fin_cases i
   · simpa using e0
   · show (2 : ZMod M) * x 1 = 0
@@ -197,4 +240,4 @@ theorem UpperTheory.V.Z.Kato.Sym.rowB :
     · intro y
       refine ⟨fun i => ((y i).val : ZMod (k * M)), ?_⟩
       funext i
-      simp [dn, ZMod.natCast_zmod_val]
+      simp [dn]

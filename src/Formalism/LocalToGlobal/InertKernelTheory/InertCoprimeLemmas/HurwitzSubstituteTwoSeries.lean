@@ -1,14 +1,121 @@
 module
 
-public import Mathlib
-public import Formalism.FormalGroupLog.FormalGroupLogProofs.ChainRule
-public import Formalism.LocalToGlobal.InertKernelTheory.StatementZ
-public import Formalism.LocalToGlobal.InertKernelTheory.Adm11OfBeProp
+public import Formalism.SharpRestriction.GrowthBounds.FormalGroupSystem
 public import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.EnInParamKProd
+public import Formalism.LocalToGlobal.TorsionIntegrality.SecondCoefficientNorms.HasSecondLogDeriv
+public import Formalism.FormalGroupLog.FormalGroupLogProofs.ChainRule
 public import Formalism.FormalGroupWitt.FormalGroupWittProofs.WittTeichmullerRoot
 public import Formalism.LocalToGlobal.TorsionIntegrality.SecondCoefficientNorms.BinomialSeriesCoefficients.CoeffPowEqZeroOfCc
 public import Formalism.LocalToGlobal.TorsionIntegrality.SecondCoefficientNorms.BinomialSeriesCoefficients.DegreeLeOfMemAntidiagonal
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.RingTheory.LocalProperties.Reduced
+import Mathlib.RingTheory.WittVector.DiscreteValuationRing
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Std.Tactic.BVDecide.Normalize.Prop
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Formalism.LocalToGlobal.InertKernelTheory.StatementZ, Formalism.LocalToGlobal.InertKernelTheory.Adm11OfBeProp, Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.HurwitzSubstituteTwoSeries
+
+-- ===== clump member: Formalism.LocalToGlobal.InertKernelTheory.StatementZ =====
+-- clump-header: {"m": "Formalism.LocalToGlobal.InertKernelTheory.StatementZ", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.FormalGroupSystem\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+noncomputable section
+
+namespace Formalism.L2.KerInert
+
+open Formalism.MainNotions.G Formalism.BasicNotions Formalism.MainNotions.FormalGroupSystem Finset
+
+attribute [local instance] Formalism.MainNotions.G.GAtP.ringO Formalism.MainNotions.G.GAtP.domO Formalism.MainNotions.G.GAtP.dvrO Formalism.MainNotions.G.GAtP.fieldK
+  Formalism.MainNotions.G.GAtP.algOK
+
+def BeJetInt (p : ℕ) [Fact p.Prime] (be : MvPowerSeries (Fin 2) (K0 p)) : Prop :=
+  MvPowerSeries.constantCoeff be = 0 ∧
+    ∀ n : Fin 2 →₀ ℕ, ((∏ x ∈ n.support, (n x).factorial : ℕ) : K0 p) * MvPowerSeries.coeff n be ∈
+      Set.range (algebraMap (WW p) (K0 p))
+
+def LowAtZero : Prop :=
+  ∀ (p : ℕ) [Fact p.Prime] (X : Sys p) (Y : Pend X), BeJetInt p Y.be → ∀ v, ∀ j < X.mm, Y.LowAt j v 0
+
+def Adm11OfIntegralJets : Prop :=
+  ∀ (D : Formalism.BasicNotions.D7) (p : ℕ) [Fact p.Prime] (X : Sys p) (Y : Pend X), BeJetInt p Y.be → adm11 D X Y
+
+def BeJetOfProp : Prop :=
+  ∀ (p : ℕ) [Fact p.Prime] (be : MvPowerSeries (Fin 2) (K0 p)), BeProp p be → BeJetInt p be
+
+end Formalism.L2.KerInert
+end -- clump:auto
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Formalism.LocalToGlobal.InertKernelTheory.StatementZ =====
+
+-- ===== clump member: Formalism.LocalToGlobal.InertKernelTheory.Adm11OfBeProp =====
+-- clump-header: {"m": "Formalism.LocalToGlobal.InertKernelTheory.Adm11OfBeProp", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.FormalGroupSystem\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+noncomputable section
+
+namespace Formalism.L2.KerInert
+
+open Formalism.MainNotions.G Formalism.BasicNotions Formalism.MainNotions.FormalGroupSystem Finset
+
+attribute [local instance] Formalism.MainNotions.G.GAtP.ringO Formalism.MainNotions.G.GAtP.domO Formalism.MainNotions.G.GAtP.dvrO Formalism.MainNotions.G.GAtP.fieldK
+  Formalism.MainNotions.G.GAtP.algOK
+
+def Adm11OfBeProp : Prop :=
+  ∀ (D : Formalism.BasicNotions.D7) (p : ℕ) [Fact p.Prime] (X : Sys p) (Y : Pend X), BeProp p Y.be → adm11 D X Y
+
+end Formalism.L2.KerInert
+end -- clump:auto
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Formalism.LocalToGlobal.InertKernelTheory.Adm11OfBeProp =====
+
+-- ===== clump member: Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.HurwitzSubstituteTwoSeries =====
+-- clump-header: {"m": "Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.HurwitzSubstituteTwoSeries", "h": "module\n\npublic import Formalism.LocalToGlobal.InertKernelTheory.StatementZ\npublic import Formalism.LocalToGlobal.InertKernelTheory.Adm11OfBeProp\npublic import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.EnInParamKProd\npublic import Formalism.LocalToGlobal.TorsionIntegrality.SecondCoefficientNorms.HasSecondLogDeriv\npublic import Formalism.FormalGroupLog.FormalGroupLogProofs.ChainRule\npublic import Formalism.FormalGroupWitt.FormalGroupWittProofs.WittTeichmullerRoot\npublic import Formalism.LocalToGlobal.TorsionIntegrality.SecondCoefficientNorms.BinomialSeriesCoefficients.CoeffPowEqZeroOfCc\npublic import Formalism.LocalToGlobal.TorsionIntegrality.SecondCoefficientNorms.BinomialSeriesCoefficients.DegreeLeOfMemAntidiagonal\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.LocalProperties.Reduced\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.DiscreteValuationRing\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+section -- clump:auto
 @[expose] public section
 
 noncomputable section
@@ -73,17 +180,6 @@ theorem hur_cc {f : MvPowerSeries σ K} (hf : Hur R f) : constantCoeff f ∈ R :
   rw [fc_zero, one_mul] at e
   simpa using e
 
-private theorem sub_single_one_add_single_one_of_ne_zero (n : σ →₀ ℕ) (i : σ) (hi : n i ≠ 0) :
-    n - Finsupp.single i 1 + Finsupp.single i 1 = n := by
-  classical
-  ext k
-  by_cases hk : i = k
-  · subst hk
-    simp only [Finsupp.coe_add, Finsupp.coe_tsub, Pi.add_apply, Pi.sub_apply, Finsupp.single_eq_same]
-    omega
-  · simp only [Finsupp.coe_add, Finsupp.coe_tsub, Pi.add_apply, Pi.sub_apply, Finsupp.single_apply, if_neg hk]
-    omega
-
 private theorem hur_of_closed_under_pderiv [DecidableEq σ] (Q : MvPowerSeries σ K → Prop)
     (h0 : ∀ f, Q f → constantCoeff f ∈ R)
     (hd : ∀ f, Q f → ∀ i, ∃ a b, Q a ∧ Q b ∧ pderiv (R := K) i f = a + b) :
@@ -106,7 +202,7 @@ private theorem hur_of_closed_under_pderiv [DecidableEq σ] (Q : MvPowerSeries �
       simp only [Finsupp.coe_tsub, Pi.sub_apply, Finsupp.single_eq_same] at e
       omega
     obtain ⟨a, b, ha, hb, hab⟩ := hd f hf i
-    rw [← sub_single_one_add_single_one_of_ne_zero n i hi, ← fc_coeff_pderiv, hab, map_add (f := _), mul_add]
+    rw [← Finsupp.sub_add_single_one_cancel hi, ← fc_coeff_pderiv, hab, map_add (f := _), mul_add]
     exact R.add_mem (ih _ hlt a ha) (ih _ hlt b hb)
 
 theorem hur_of_closed [DecidableEq σ] (S : Set (MvPowerSeries σ K))
@@ -505,8 +601,8 @@ theorem hur_PhAt {X : Sys p} (Y : Pend X) (h : BeJetInt p Y.be) (j : ℕ) (v : X
   classical
   unfold Pend.PhAt
   refine ⟨hur_sum (Wr p) _ _ fun e _ => (hurwitz_substitute_two_series h _ _).1, ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   exact Finset.sum_eq_zero fun e _ => (hurwitz_substitute_two_series h _ _).2
 
 theorem hur_coordZA {X : Sys p} (Y : Pend X) (j : ℕ) (e : X.EA j ⊕ X.EA j) :
@@ -576,7 +672,7 @@ theorem hur_of_pderiv [DecidableEq σ] {f : MvPowerSeries σ K} (h0 : constantCo
       by_contra hc
       push_neg at hc
       exact hn (Finsupp.ext hc)
-    rw [← sub_single_one_add_single_one_of_ne_zero n i hi, ← fc_coeff_pderiv]
+    rw [← Finsupp.sub_add_single_one_cancel hi, ← fc_coeff_pderiv]
     exact hd i _
 
 theorem hur_natCast [DecidableEq σ] (k : ℕ) : Hur R (k : MvPowerSeries σ K) := by
@@ -712,7 +808,7 @@ theorem second_deriv_additive_first (be : MvPowerSeries (Fin 2) (K0 p)) :
     pd2 _ (constantCoeff_X_fin_three (p := p) 0) (constantCoeff_X_fin_three (p := p) 2),
     pd2 _ (constantCoeff_X_fin_three (p := p) 1) (constantCoeff_X_fin_three (p := p) 2)]
   simp only [map_add (f := _), pderiv_X_self, pderiv_X_of_ne (show (0 : Fin 3) ≠ 1 by decide),
-    pderiv_X_of_ne (show (2 : Fin 3) ≠ 1 by decide), mul_zero, add_zero, mul_one, zero_add, sub_zero]
+    pderiv_X_of_ne (show (2 : Fin 3) ≠ 1 by decide), mul_zero, add_zero, mul_one, zero_add]
   rw [pd2 _ h01 (constantCoeff_X_fin_three (p := p) 2),
     pd2 _ (constantCoeff_X_fin_three (p := p) 1) (constantCoeff_X_fin_three (p := p) 2)]
   simp [pderiv_X_self, pderiv_X_of_ne (show (1 : Fin 3) ≠ 0 by decide),
@@ -731,7 +827,7 @@ theorem second_deriv_additive_second (be : MvPowerSeries (Fin 2) (K0 p)) :
     pd2 _ (constantCoeff_X_fin_three (p := p) 0) (constantCoeff_X_fin_three (p := p) 1),
     pd2 _ (constantCoeff_X_fin_three (p := p) 0) (constantCoeff_X_fin_three (p := p) 2)]
   simp only [map_add (f := _), pderiv_X_self, pderiv_X_of_ne (show (0 : Fin 3) ≠ 2 by decide),
-    pderiv_X_of_ne (show (1 : Fin 3) ≠ 2 by decide), mul_zero, add_zero, mul_one, zero_add, sub_zero]
+    pderiv_X_of_ne (show (1 : Fin 3) ≠ 2 by decide), mul_zero, add_zero, mul_one, zero_add]
   rw [pd2 _ (constantCoeff_X_fin_three (p := p) 0) h12,
     pd2 _ (constantCoeff_X_fin_three (p := p) 0) (constantCoeff_X_fin_three (p := p) 2)]
   simp [pderiv_X_self, pderiv_X_of_ne (show (0 : Fin 3) ≠ 1 by decide),
@@ -802,7 +898,7 @@ theorem conj_dd (be : MvPowerSeries (Fin 2) (K0 p)) (a' b' : K0 p) :
     cc_subst (cc2 hX0 hw), constantCoeff_C, constantCoeff_C]
   ring
 
-theorem decomp (n : Fin 2 →₀ ℕ) (i : Fin 2) (h : n i ≠ 0) : n = (n - Finsupp.single i 1) + Finsupp.single i 1 := (sub_single_one_add_single_one_of_ne_zero n i h).symm
+theorem decomp (n : Fin 2 →₀ ℕ) (i : Fin 2) (h : n i ≠ 0) : n = (n - Finsupp.single i 1) + Finsupp.single i 1 := (Finsupp.sub_add_single_one_cancel h).symm
 
 theorem beJet_of_prop_conj (hα : ∃ α : WW p, (sigW p)^[2] α = α ∧ IsUnit (α - sigW p α))
     {be : MvPowerSeries (Fin 2) (K0 p)} (h : BeProp p be)
@@ -957,3 +1053,7 @@ theorem adm11OfBeProp : Adm11OfBeProp := by
   exact adm11OfIntegralJets D p X Y (beJet_of_prop p Y.be h)
 
 end Formalism.L2.KerInert.Jet
+end -- clump:auto
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.HurwitzSubstituteTwoSeries =====

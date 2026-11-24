@@ -1,7 +1,65 @@
 module
 
 public import Formalism.BranchSandwichDivisors.StatementL
+public import Mathlib.CategoryTheory.Category.Basic
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.DiscreteSpanOfLinIndep
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.HtImage
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.SizeIneq
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.SizeMu
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.SlopeIneqMean
 public import Formalism.HarderNarasimhan.ShiftInvariance
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -53,8 +111,6 @@ theorem ms_htQ_bot (b : Basis ι K V) (X : InfinitePlace K → Matrix ι ι ℂ)
       simp only [Submodule.bot_coe, Submodule.span_zero_singleton, Submodule.bot_orthogonal_eq_top]
       first
         | (rw [Submodule.starProjection_eq_self_iff]; exact Submodule.mem_top)
-        | simp [Submodule.starProjection_top]
-        | exact Submodule.starProjection_top_apply y
     ext x
     simp only [Submodule.mem_map, LinearMap.coe_restrictScalars, ContinuousLinearMap.coe_coe, hp]
     constructor
@@ -87,15 +143,13 @@ theorem ms_opNorm_nat [Nonempty ι] (b : Basis ι K V) (X : InfinitePlace K → 
   have h1 : (LinearMap.toMatrix b b ((n : K) • (LinearMap.id : V →ₗ[K] V))).map v.embedding
       = (n : ℂ) • (1 : Matrix ι ι ℂ) := by
     ext i j
-    by_cases h : i = j <;> simp [LinearMap.toMatrix_id, Matrix.one_apply, h]
+    by_cases h : i = j <;> simp [h]
   have hM : (X v)⁻¹ * (LinearMap.toMatrix b b ((n : K) • (LinearMap.id : V →ₗ[K] V))).map
       v.embedding * X v = (n : ℂ) • (1 : Matrix ι ι ℂ) := by
     rw [h1, Matrix.mul_smul, Matrix.mul_one, Matrix.smul_mul, Matrix.nonsing_inv_mul _ (hX v)]
   have h3 : Matrix.toEuclideanLin (1 : Matrix ι ι ℂ) = LinearMap.id := by
     first
-      | exact Matrix.toEuclideanLin_one
-      | (ext x i; simp [Matrix.toLpLin_apply])
-      | (simp [Matrix.toEuclideanLin, Matrix.toLin'_one])
+      | (ext x i; simp)
   have h4 : LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin ((n : ℂ) • (1 : Matrix ι ι ℂ)))
       = (n : ℂ) • ContinuousLinearMap.id ℂ (EuclideanSpace ℂ ι) := by
     rw [map_smul, h3, map_smul]
@@ -106,8 +160,6 @@ theorem ms_opNorm_nat [Nonempty ι] (b : Basis ι K V) (X : InfinitePlace K → 
   have hid : ‖ContinuousLinearMap.id ℂ (EuclideanSpace ℂ ι)‖ = 1 := by
     first
       | exact ContinuousLinearMap.norm_id
-      | (apply ContinuousLinearMap.norm_id_of_nontrivial_seminorm
-         exact ⟨EuclideanSpace.single i 1, by simp⟩)
   rw [hid, mul_one]
   simp
 
@@ -199,16 +251,10 @@ theorem map_slope_mu : MapMu := by
 theorem scale_sandwich_bound : ScaleSandwich := by
   intro K V ι _ _ _ _ _ _ _ _ _ _ b X hX A B n hA hA0 hn hBA hnA
   have hne : Nonempty ι := by
-    by_contra h
-    rw [not_nonempty_iff] at h
-    apply hA0
-    rw [eq_bot_iff]
-    intro x _
-    have : x = 0 := b.repr.injective (by ext i; exact (h.false i).elim)
-    exact (Submodule.mem_bot _).2 this
-  have hBfg : B.FG := by
-    have : IsNoetherian (𝓞 K) A := isNoetherian_of_fg_of_noetherian A hA
-    exact (isNoetherian_submodule.1 this) B hBA
+    obtain ⟨x, -, hx⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hA0
+    have := nontrivial_of_ne x 0 hx
+    exact b.index_nonempty
+  have hBfg : B.FG := hA.of_le hBA
   set φ : V →ₗ[K] V := (n : K) • (LinearMap.id : V →ₗ[K] V) with hφ
   have hφx : ∀ x, φ x = (n : 𝓞 K) • x := by
     intro x
@@ -271,9 +317,7 @@ theorem scale_sandwich_bound : ScaleSandwich := by
 theorem levelCompare_statement : LevelCompare := by
   intro K V ι _ _ _ _ _ _ _ _ _ _ b X hX R R' h hR hR'0 hh hle hhR
   have hR0 : R ≠ ⊥ := fun e => hR'0 (le_bot_iff.mp (e ▸ hle))
-  have hR'fg : R'.FG := by
-    have : IsNoetherian (𝓞 K) R := isNoetherian_of_fg_of_noetherian R hR
-    exact (isNoetherian_submodule.1 this) R' hle
+  have hR'fg : R'.FG := hR.of_le hle
   obtain ⟨-, h1, h2, h3, h4⟩ := scale_sandwich_bound K V ι b X hX R R' h hR hR0 hh hle hhR
   have hh' : (0 : ℝ) < h := by exact_mod_cast hh
   have hs : 0 < Real.sqrt h := Real.sqrt_pos.2 hh'

@@ -1,9 +1,48 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicArithmetic.LocalEmbeddings.ComplEquivEvW
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.UnitCharTriangle
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocPart
 public import Development.AutomorphicArithmetic.DivisorFrames.MemIntAdelesAndIdealIffSplitEmbeddings
 public import Development.AutomorphicArithmetic.DivisorFrames.UnitCharIdempotentSumEqProdUnitInd
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -13,7 +52,7 @@ open scoped TensorProduct GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorMode
 open GlobalTheory.FunObj GlobalTheory.StdFrames GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.LFun.SplitTie
 open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels (Base Spc Model Chars Rep Acts SInf At piW chrW)
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
+attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 open Classical in
 private theorem stdB_eq {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
@@ -29,12 +68,6 @@ private theorem stdB_eq {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace 
   · exact absurd ⟨h5.1, ⟨h4.1, h5.2⟩, h4.2⟩ h1
   · rfl
   · rfl
-
-private theorem cA_invol {D : D7} (z : AE D) : cA D (cA D z) = z := by
-  induction z using TensorProduct.induction_on with
-  | zero => rw [RingHom.map_zero, RingHom.map_zero]
-  | tmul a x => exact congrArg (fun y : D.host.E => a ⊗ₜ[D.host.F] y) (star_star x)
-  | add a b ha hb => rw [RingHom.map_add (f := _), RingHom.map_add (f := _), ha, hb]
 
 private theorem half_alg {R S : Type} [CommRing R] [CommRing S] (f : R →+* S) (e : R) (x : S) {m n : ℕ}
     (P : Matrix (Fin m) (Fin m) S) (G : Matrix (Fin m) (Fin m) R) (M : Matrix (Fin m) (Fin n) R)
@@ -54,7 +87,7 @@ private theorem dualCoord_half {D : D7} (ε : AE D) (A' WW : HSp D) (βA' : GL (
   refine half_alg (toEAf D) ε _ _ _ _ _ _ ?_ i j
   ext i j
   have := congrArg (cA D) (hy j i)
-  rw [RingHom.map_mul, cA_invol] at this
+  rw [RingHom.map_mul, _root_.Formalism.L2.Theta.cA_cA] at this
   exact this
 
 private theorem cball_sub {F : Type} [Field F] [NumberField F] (v : Pl F) (c : ℕ) (x : Fv F v)

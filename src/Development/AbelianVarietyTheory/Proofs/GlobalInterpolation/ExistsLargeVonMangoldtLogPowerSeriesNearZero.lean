@@ -1,11 +1,114 @@
 module
 
-public import Mathlib
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
+public import Mathlib.Analysis.Complex.CauchyIntegral
+public import Mathlib.RingTheory.Polynomial.Vieta
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.Extremal
+public import Mathlib.Algebra.Polynomial.Basic
+public import Mathlib.Algebra.Polynomial.BigOperators
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.ZerosDisc
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsBoundRight
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IteratedDerivLogDerivDirichletLViaNearbyZerosStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TuranSecondMainTheoremPowerSumsUnitCoefficientsStatement
+public import Mathlib.Data.FunLike.Fintype
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IteratedDerivLogDerivDirichletLViaNearbyZeros
+public import Mathlib.Analysis.Complex.Norm
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Mathlib.NumberTheory.DirichletCharacter.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Lemma
+import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.GL3MeanSquares.GenusMeanAsymptotics.JacobiCharacterSums.Turan2Main
+import Mathlib.NumberTheory.LSeries.Nonvanishing
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TuranSecondMainTheoremPowerSumsUnitCoefficients, Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsLargeVonMangoldtLogPowerSeriesNearZero
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TuranSecondMainTheoremPowerSumsUnitCoefficients =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TuranSecondMainTheoremPowerSumsUnitCoefficients", "h": "module\n\npublic import Mathlib.Analysis.CStarAlgebra.Classes\npublic import Mathlib.Analysis.Complex.Exponential\npublic import Mathlib.Analysis.Calculus.FDeriv.Defs\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Mathlib.NumberTheory.DirichletCharacter.Basic\nimport Formalism.GL3MeanSquares.GenusMeanAsymptotics.JacobiCharacterSums.Turan2Main\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open Complex DirichletCharacter ArithmeticFunction MeasureTheory Filter Topology
+
+namespace GlobalTheory
+theorem powerSum_second_main :
+    ∃ C : ℝ, 1 ≤ C ∧ ∀ (N M : ℕ) (z : Fin N → ℂ) (i₀ : Fin N), ∃ k : ℕ, M + 1 ≤ k ∧ k ≤ M + N ∧
+      ((N : ℝ) / (C * (M + N))) ^ N * ‖z i₀‖ ^ k ≤ ‖∑ i, z i ^ k‖ := by
+  refine ⟨1600, by norm_num, fun N M z i₀ => ?_⟩
+  have hN : 0 < N := i₀.pos
+  obtain ⟨i₁, -, hi₁⟩ := Finset.exists_max_image Finset.univ (fun i => ‖z i‖) ⟨i₀, Finset.mem_univ _⟩
+  by_cases h0 : z i₁ = 0
+  · refine ⟨M + 1, le_rfl, by omega, ?_⟩
+    have : ‖z i₀‖ = 0 := le_antisymm (by simpa [h0] using hi₁ i₀ (Finset.mem_univ _)) (norm_nonneg _)
+    rw [this, zero_pow (by omega), mul_zero]
+    exact norm_nonneg _
+  have hR : 0 < ‖z i₁‖ := norm_pos_iff.2 h0
+  obtain ⟨k, hk1, hk2, hk⟩ := Formalism.HermitianLattices.Ext.PrimesInProgressions.T2.turan2Main N M
+    (fun i => z i / z i₁) hN (fun i => by rw [norm_div, div_le_one hR]; exact hi₁ i (Finset.mem_univ _))
+    ⟨i₁, by simp [h0]⟩
+  refine ⟨k, hk1, hk2, ?_⟩
+  rw [show ∑ i, (z i / z i₁) ^ k = (∑ i, z i ^ k) / z i₁ ^ k by simp [div_pow, Finset.sum_div],
+    norm_div, norm_pow, le_div_iff₀ (by positivity)] at hk
+  refine le_trans ?_ hk
+  gcongr
+  exact hi₁ i₀ (Finset.mem_univ _)
+
+end GlobalTheory
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TuranSecondMainTheoremPowerSumsUnitCoefficients =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsLargeVonMangoldtLogPowerSeriesNearZero =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsLargeVonMangoldtLogPowerSeriesNearZero", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.ZerosDisc\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsBoundRight\npublic import Mathlib.Data.FunLike.Fintype\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IteratedDerivLogDerivDirichletLViaNearbyZeros\npublic import Mathlib.Analysis.Complex.Norm\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TuranSecondMainTheoremPowerSumsUnitCoefficients\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LSeries.Nonvanishing\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
 @[expose] public section
 
 open Complex DirichletCharacter ArithmeticFunction MeasureTheory Filter Topology GlobalTheory.Lin
@@ -75,7 +178,10 @@ theorem power_sum_large {C : ℝ} (hC : 1 ≤ C)
                     linarith
     exact_mod_cast this
   have hρ' : ρ ∈ Z.filter (fun w => ‖s - w‖ ≤ D) :=
-    Finset.mem_filter.2 ⟨hρ, hd.trans (by rw [hD]; nlinarith)⟩
+    Finset.mem_filter.2 ⟨hρ, hd.trans (by
+      rw [hD]
+      have := mul_le_mul_of_nonneg_right (show (2 : ℝ) ≤ 8 * C by linarith) hr.le
+      linarith)⟩
   have hK1 : 1 ≤ K :=
     hm.trans ((Finset.single_le_sum (fun _ _ => Nat.zero_le _) hρ').trans hcount)
   obtain ⟨j, h1, h2, h3⟩ := power_sum_mult hC hT _ m (fun w => 1 / (s - w)) K hcount ρ hρ' hm
@@ -86,7 +192,8 @@ theorem power_sum_large {C : ℝ} (hC : 1 ≤ C)
     simp only [one_div_pow, mul_one_div] at h3
     refine le_trans (pow_le_pow_left₀ (by positivity) ?_ _) h3
     rw [norm_div, norm_one, div_div]
-    exact one_div_le_one_div_of_le (by positivity) (by nlinarith)
+    exact one_div_le_one_div_of_le (by positivity)
+      (by have := mul_le_mul_of_nonneg_left hd (show 0 ≤ 2 * C by linarith); linarith)
   obtain ⟨i, rfl⟩ : ∃ i, j = i + 2 := ⟨j - 2, by omega⟩
   have h5 : ‖∑ w ∈ Z.filter (fun w => ¬ ‖s - w‖ ≤ D), (m w : ℂ) / (s - w) ^ (i + 2)‖
       ≤ 1 / 4 * (1 / (4 * C * r)) ^ (i + 2) := by
@@ -162,20 +269,25 @@ theorem norm_derSeries_zero_le (c : ℕ → ℂ) (hc : ∀ n, ‖c n‖ ≤ 1) (
     exact mul_le_of_le_one_right h2 this
 
 theorem exists_large_derSeries : ∃ A C r₀ : ℝ, 1 ≤ A ∧ 0 < C ∧ 0 < r₀ ∧ ∀ (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q) (τ r L : ℝ) (K : ℕ) (ρ : ℂ), (χ ≠ 1 ∨ 2 ≤ |τ|) → Real.log (q * (|τ| + 2)) ≤ L → 1 / L ≤ r → r ≤ r₀ → C * r * L ≤ K → LFunction χ ρ = 0 → ‖ρ - (1 + τ * I)‖ ≤ r → ∃ k : ℕ, K ≤ k ∧ k ≤ 2 * K ∧ 1 / (A * r) ^ (k + 1) ≤ ‖derSeries (fun n : ℕ => χ (n : ZMod q)) k ((1 + r : ℝ) + τ * I)‖ := by
-  obtain ⟨C₁, hC₁, H⟩ := GlobalTheory.T.iteratedDeriv_logDeriv_dirichletL_via_nearby_zeros
-  obtain ⟨T, hT1, hT⟩ := GlobalTheory.T.turan_second_main_theorem_power_sums_unit_coefficients
+  obtain ⟨C₁, hC₁, H⟩ := _root_.GlobalTheory.LogDerivHigher.main
+  obtain ⟨T, hT1, hT⟩ := _root_.GlobalTheory.powerSum_second_main
   refine ⟨8 * T, 4 * (8 * T) ^ 2 * (2 * C₁ + 2), 1 / (8 * T), by linarith, by positivity,
     by positivity, ?_⟩
   intro q _ χ τ r L K ρ hχ hL hLr hr0 hK hρ hd
   have hq : (1 : ℝ) ≤ q := by exact_mod_cast NeZero.one_le
-  have hlog : 0 < Real.log (q * (|τ| + 2)) := Real.log_pos (by nlinarith [abs_nonneg τ])
+  have hlog : 0 < Real.log (q * (|τ| + 2)) := Real.log_pos
+    (lt_of_lt_of_le (by linarith [abs_nonneg τ] : 1 < |τ| + 2) (le_mul_of_one_le_left (by positivity) hq))
   have hLp : 0 < L := hlog.trans_le hL
   have hr : 0 < r := lt_of_lt_of_le (by positivity) hLr
   have hTr : 8 * T * r ≤ 1 := by
     rw [le_div_iff₀ (by positivity)] at hr0; linarith
-  have hr8 : r ≤ 1 / 8 := by nlinarith
+  have hr8 : r ≤ 1 / 8 := by
+    have := mul_le_mul_of_nonneg_right hT1 hr.le
+    linarith
   have hrL : 1 ≤ r * L := by rwa [div_le_iff₀ hLp] at hLr
-  have hL1 : 1 ≤ L := by nlinarith
+  have hL1 : 1 ≤ L := by
+    have := mul_le_mul_of_nonneg_right hr8 hLp.le
+    linarith
   have hrL' : 1 / r ≤ L := by rw [div_le_iff₀ hr]; linarith
   set s : ℂ := ((1 + r : ℝ) : ℂ) + τ * I with hs
   have hfin := (H q χ (1 + r) τ 0 (by linarith) (by linarith)).1
@@ -205,7 +317,8 @@ theorem exists_large_derSeries : ∃ A C r₀ : ℝ, 1 ≤ A ∧ 0 < C ∧ 0 < r
     have e : S = (D - P + S) - D + P := by ring
     have := norm_add_le ((D - P + S) - D) P
     have := norm_sub_le (D - P + S) D
-    rw [e]; nlinarith
+    have : (1 + C₁) * L = L + C₁ * L := by ring
+    rw [e]; linarith
   have hD0 : ‖derSeries (fun n : ℕ => χ (n : ZMod q)) 0 s‖ ≤ 1 / r + C₁ := by
     refine (norm_derSeries_zero_le _ (fun n => χ.norm_le_one _) (1 + r) τ (by linarith)).trans ?_
     obtain ⟨hf, -, h⟩ := H 1 1 (1 + r) 0 0 (by linarith) (by linarith)
@@ -226,7 +339,7 @@ theorem exists_large_derSeries : ∃ A C r₀ : ℝ, 1 ≤ A ∧ 0 < C ∧ 0 < r
     have h4 : C₁ * Real.log (((1 : ℕ) : ℝ) * (|(0 : ℝ)| + 2)) / (1 + r) ^ 0 ≤ C₁ := by
       have := Real.log_two_lt_d9
       simp only [Nat.cast_one, abs_zero, zero_add, one_mul, pow_zero, div_one]
-      nlinarith
+      exact mul_le_of_le_one_right hC₁.le (by linarith)
     linarith
   have hB : ∑ w ∈ Z, (ord χ w : ℝ) / ‖s - w‖ ^ 2 ≤ (2 * C₁ + 2) * r * L / r ^ 2 := by
     have h1 : r * ∑ w ∈ Z, (ord χ w : ℝ) / ‖s - w‖ ^ 2 ≤ (2 * C₁ + 2) * L := by
@@ -236,9 +349,14 @@ theorem exists_large_derSeries : ∃ A C r₀ : ℝ, 1 ≤ A ∧ 0 < C ∧ 0 < r
       rw [Complex.re_sum] at h2
       rw [Finset.mul_sum]
       refine (Finset.sum_le_sum fun w hw => inv_sq_le_re _ (hre w hw)).trans (h2.trans ?_)
-      nlinarith
+      have hC1L : C₁ ≤ C₁ * L := le_mul_of_one_le_right hC₁.le hL1
+      have hring : (2 * C₁ + 2) * L = L + C₁ * L + (1 + C₁) * L := by ring
+      linarith
     rw [le_div_iff₀ (by positivity)]
-    nlinarith
+    calc (∑ w ∈ Z, (ord χ w : ℝ) / ‖s - w‖ ^ 2) * r ^ 2
+        = r * (r * ∑ w ∈ Z, (ord χ w : ℝ) / ‖s - w‖ ^ 2) := by ring
+      _ ≤ r * ((2 * C₁ + 2) * L) := mul_le_mul_of_nonneg_left h1 hr.le
+      _ = (2 * C₁ + 2) * r * L := by ring
   have hρ1 : ρ ≠ 1 := by
     rintro rfl
     rcases hχ with h | h
@@ -273,7 +391,8 @@ theorem exists_large_derSeries : ∃ A C r₀ : ℝ, 1 ≤ A ∧ 0 < C ∧ 0 < r
       mul_le_mul_of_nonneg_right (hK.trans a) (by linarith)
     have d : 0 ≤ (1 + C₁) * L := by positivity
     rw [pow_succ]
-    nlinarith
+    have := mul_le_mul_of_nonneg_right (show (128 : ℝ) ≤ 128 * T by linarith) d
+    linarith
   have h6 : 1 / (8 * T * r) ^ (k + 1) ≤ 1 / 2 * x ^ (k + 1) := by
     have e : 1 / (8 * T * r) = 1 / 2 * x := by rw [hx]; field_simp; ring
     rw [← one_div_pow, e, mul_pow]
@@ -282,3 +401,6 @@ theorem exists_large_derSeries : ∃ A C r₀ : ℝ, 1 ≤ A ∧ 0 < C ∧ 0 < r
   linarith
 
 end GlobalTheory.NearZeroDeriv
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsLargeVonMangoldtLogPowerSeriesNearZero =====

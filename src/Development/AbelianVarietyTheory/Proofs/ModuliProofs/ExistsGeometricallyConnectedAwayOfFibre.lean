@@ -1,16 +1,56 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsGaloisCover
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HeckeKer
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
+public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+public import Mathlib.Tactic.ENatToNat
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsKernelVector
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.NonemptyPerfectSectionsComplexOfSmoothProj
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverMorphismRestrictOfRelAmple
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsProperOfIsProjBy
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsKernelVector
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.BijectiveAppTopOfSmoothOfIsProperOfGeometrically
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsProperOfIsProjBy
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.TangentLinearity.ConstPullback
+import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClass
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsAbelianSchemeOfAbelianThickenings
 
 @[expose] public section
 
@@ -26,31 +66,7 @@ open GlobalTheory.AbLaw GlobalTheory.AbLaw.Seesaw ReciprocityTheory.ChartRestric
 
 theorem preconnectedSpace_of_functions (Y : Scheme.{0})
     (H : ∀ s : Γ(Y, ⊤), Y.basicOpen s = ⊥ ∨ Y.basicOpen s = ⊤) : PreconnectedSpace Y := by
-  refine ⟨fun U W hU hW hc ⟨u, _, hu⟩ ⟨w, _, hw⟩ => ?_⟩
-  by_contra hne
-  let O : Bool → Y.Opens := fun i => bif i then ⟨U, hU⟩ else ⟨W, hW⟩
-  have hd : O true ⊓ O false = ⊥ := le_bot_iff.1 fun y hy => hne ⟨y, trivial, hy⟩
-  have hcov : ⨆ i, O i = ⊤ := top_unique fun y _ => by
-    rcases hc (Set.mem_univ y) with h | h
-    · exact TopologicalSpace.Opens.mem_iSup.2 ⟨true, h⟩
-    · exact TopologicalSpace.Opens.mem_iSup.2 ⟨false, h⟩
-  obtain ⟨s, hs⟩ := TLinPf.glue O hcov (fun i => bif i then 1 else 0) (fun i j => by
-    have sub : ∀ T : Y.Opens, T = ⊥ → Subsingleton Γ(Y, T) := fun T hT => by
-      subst hT; infer_instance
-    cases i <;> cases j
-    · exact (map_zero _).trans (map_zero _).symm
-    · exact (sub _ ((inf_comm _ _).trans hd)).elim _ _
-    · exact (sub _ hd).elim _ _
-    · exact (map_one _).trans (map_one _).symm)
-  rcases H s with h | h
-  · have h₁ : u ∈ Y.basicOpen s := (mem_basicOpen_rs (le_top : O true ≤ ⊤) s hu).1 (by
-      rw [show rs Y (le_top : O true ≤ ⊤) s = 1 from hs true]
-      exact mem_of_isUnit isUnit_one hu)
-    rw [h] at h₁
-    exact h₁
-  · have h₁ := (mem_basicOpen_rs (le_top : O false ≤ ⊤) s hw).2 (h.ge (Set.mem_univ w))
-    rw [show rs Y (le_top : O false ≤ ⊤) s = 0 from hs false, Scheme.basicOpen_zero] at h₁
-    exact h₁
+  apply _root_.GlobalTheory.AlgGroup.preconnectedSpace_of_functions <;> assumption
 
 variable {X X' : Scheme.{0}}
 
@@ -59,43 +75,6 @@ def fnSec (π : X' ⟶ X) (s : Γ(X', ⊤)) : LB.Sec ((Inh.trivLB X).pull π) wh
   compat := fun i j => by
     rw [Inh.linComb_triv_g, Units.val_one, _root_.one_mul]
     exact (rs_rs _ _ s).trans (rs_rs _ _ s).symm
-
-theorem triv_pull (π : X' ⟶ X) : Triv ((Inh.trivLB X).pull π) :=
-  ⟨⟨fun _ => 1⟩, fun i j => by
-    erw [Inh.linComb_triv_g, _root_.one_mul]
-    exact (map_one _).trans (map_one _).symm⟩
-
-theorem preconnectedSpace_of_line {R F : Type} [CommRing R] [Field F]
-    {f : X ⟶ Spec (CommRingCat.of R)} (P : Perf f (Inh.trivLB X)) {g : R →+* F} {π : X' ⟶ X}
-    {f' : X' ⟶ Spec (CommRingCat.of F)} (h : IsPullback π f' f (Spec.map (CommRingCat.ofHom g)))
-    (v : Fin P.a → F) (hv : ∀ w, (P.D₀.map g).mulVec w = 0 → ∃ c : F, w = c • v) :
-    PreconnectedSpace X' := by
-  obtain ⟨E, hE⟩ := P.sec F g X' π f' h
-  have key : ∀ s : Γ(X', ⊤), ∃ c : F, ∀ i,
-      rs X' (le_top : π ⁻¹ᵁ P.W i ≤ ⊤) s = AbLaw.cst f' _ c * loc P π f' v i := fun s => by
-    obtain ⟨w, hw⟩ := E.surjective (fnSec π s)
-    obtain ⟨c, hc⟩ := hv w.1 w.2
-    refine ⟨c, fun i => ?_⟩
-    have e := hE w i
-    rw [hw] at e
-    refine ((rs_rs _ _ s).symm.trans e).trans ?_
-    rw [← loc_smul, ← hc]
-    rfl
-  obtain ⟨c₁, h₁⟩ := key 1
-  have hu : ∀ i, IsUnit (loc P π f' v i) := fun i =>
-    isUnit_of_mul_isUnit_right (by rw [← h₁ i, map_one]; exact isUnit_one)
-  refine preconnectedSpace_of_functions X' fun s => ?_
-  obtain ⟨c, hc⟩ := key s
-  by_cases h0 : c = 0
-  · refine Or.inl (le_bot_iff.1 fun y hy => ?_)
-    obtain ⟨i, hi⟩ := exists_mem P (π y)
-    have := (mem_basicOpen_rs (le_top : π ⁻¹ᵁ P.W i ≤ ⊤) s hi).2 hy
-    rwa [hc, h0, map_zero, zero_mul, Scheme.basicOpen_zero] at this
-  · refine Or.inr (top_unique fun y _ => ?_)
-    obtain ⟨i, hi⟩ := exists_mem P (π y)
-    refine (mem_basicOpen_rs (le_top : π ⁻¹ᵁ P.W i ≤ ⊤) s hi).1 ?_
-    rw [hc]
-    exact mem_of_isUnit (((IsUnit.mk0 c h0).map _).mul (hu i)) hi
 
 theorem exists_geometricallyConnected_away_of_fibre : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (Z : Scheme.{0}) (s : Z ⟶ Sp R) (K : Type) [Field K] (x : R →+* K), IsProjOver s → Smooth s → GeometricallyConnected (pullback.snd s (spMap x)) → ∃ f : R, x f ≠ 0 ∧ GeometricallyConnected (pullback.snd s (spMap (algebraMap R (Localization.Away f)))) := by
   intro R _ _ Z s K _ x hp hs hc
@@ -106,7 +85,7 @@ theorem exists_geometricallyConnected_away_of_fibre : ∀ (R : Type) [CommRing R
       (Spec.map (CommRingCat.ofHom x)) := IsPullback.of_hasPullback _ _
   have hbij := bijective_appTop_of_smooth_of_isProper_of_geometricallyConnected K _
     (pullback.snd s (spMap x)) inferInstance inferInstance hc
-  obtain ⟨v, -, hu, hline⟩ := loc_of_triv P h₀ (Inh.trivLB_isLB _) (triv_pull _)
+  obtain ⟨v, -, hu, hline⟩ := loc_of_triv P h₀ (Inh.trivLB_isLB _) (GlobalTheory.AlgGroup.triv_pull _)
   obtain ⟨x₀, -⟩ := (pullback.snd s (spMap x)).surjective (⊥ : PrimeSpectrum K)
   have hv0 : v ≠ 0 := by
     rintro rfl
@@ -141,7 +120,7 @@ theorem exists_geometricallyConnected_away_of_fibre : ∀ (R : Type) [CommRing R
     hεs fun h0 : g ε ∈ (⊥ : Ideal F) => (isUnit_of_mul_isUnit_right hg).ne_zero h0
   obtain ⟨z, hz⟩ := hmem
   obtain ⟨y, -⟩ := Scheme.exists_preimage_of_isPullback h' z _ hz
-  have := preconnectedSpace_of_line P h' _ (hker F _ (isUnit_of_mul_isUnit_left hg))
+  have := GlobalTheory.AlgGroup.preconnectedSpace_of_line P h' _ (hker F _ (isUnit_of_mul_isUnit_left hg))
   exact ⟨⟨y⟩⟩
 
 end GlobalTheory.ConnSpread

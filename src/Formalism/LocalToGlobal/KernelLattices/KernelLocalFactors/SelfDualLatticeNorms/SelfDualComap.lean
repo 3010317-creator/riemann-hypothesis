@@ -1,9 +1,15 @@
 module
 
 public import Formalism.LocalToGlobal.KernelLattices.KerStd
-public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.StdOK
 public import Formalism.LocalToGlobal.GlobalTheory.GL3.LinkThetaStatementFamily
+import Formalism.LocalToGlobal.GlobalTheory.GL3.PStdOK
+public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.StdOK
 public import Formalism.LocalToGlobal.PairingIndexBounds.SplitPairEquations.IntegralSquareRoots.ZeroInjectionMemFourthPower
+import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.QuasiPeriodConstUniqueOf
+import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.CayleyGaussianIntegrals.FinitelyGeneratedModPow
+import Formalism.SharpRestriction.GlobalSchurBounds.StandardIntegralLatticeExists
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
 
 @[expose] public section
 
@@ -128,8 +134,8 @@ theorem matH_hSc (sc : ℝ) (a b : ℕ) (x y : DVar X.Tau a b → ℂ) :
 
 theorem herm_hSc (sc : ℝ) (a b : ℕ) : IsHerm (matH (hSc X.Tau a b sc)) := by
   intro x y
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [matH_hSc, matH_hSc, map_mul, Complex.conj_ofReal, map_sum]
+
+  rw [matH_hSc, matH_hSc, map_mul, Complex.conj_ofReal, map_sum]
   congr 1
   exact Finset.sum_congr rfl fun k _ => by rw [map_mul, Complex.conj_conj, mul_comm]
 
@@ -180,7 +186,7 @@ theorem La_theta {x : TaylorLogMetric.VC D a b} (hx : x ∈ TaylorLogMetric.La D
   induction hx using AddSubgroup.closure_induction with
   | mem x hx =>
     obtain ⟨w, hw, A, hA, rfl⟩ := hx
-    refine AddSubgroup.subset_closure ⟨cmTheta 1 D.host.d * w, Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.SO.lam_theta hw, A, hA, ?_⟩
+    refine AddSubgroup.subset_closure ⟨cmTheta 1 D.host.d * w, GlobalTheory.FourthRootStd.lam_theta hw, A, hA, ?_⟩
     rw [smul_smul]
   | zero => rw [smul_zero]; exact zero_mem _
   | add x y _ _ h1 h2 => rw [smul_add]; exact add_mem h1 h2

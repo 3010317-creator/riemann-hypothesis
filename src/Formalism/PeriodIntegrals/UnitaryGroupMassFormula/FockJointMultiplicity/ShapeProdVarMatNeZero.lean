@@ -1,6 +1,50 @@
 module
 
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FockJointMultiplicity.JointMultOfSteps
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -100,14 +144,12 @@ private theorem pderiv_eq_zero_of_mem_supported_of_not_mem {σ : Type*} {S : Set
   have hv : i ∉ P.vars := fun hmem => hi ((MvPolynomial.mem_supported.mp hP) (Finset.mem_coe.mpr hmem))
   first
   | exact MvPolynomial.pderiv_eq_zero_of_notMem_vars hv
-  | exact MvPolynomial.pderiv_eq_zero_of_not_mem_vars hv
 
 theorem dd_eq_zero {p q r s : ℕ} {S : Set (Ln p q r s)} {P : Pol p q r s}
     (hP : P ∈ MvPolynomial.supported ℂ S) {l l' : Ln p q r s} (h : l ∉ S ∨ l' ∉ S) : dd l l' P = 0 := by
   have key : PI.FJM.dd l l' P = MvPolynomial.pderiv l (MvPolynomial.pderiv l' P) := by
     first
     | rfl
-    | simp [PI.FJM.dd]
   rw [key]
   rcases h with h | h
   · rw [pderiv_pderiv_comm_of_complex, pderiv_eq_zero_of_mem_supported_of_not_mem hP h, map_zero]
@@ -125,15 +167,12 @@ theorem posPart_length (a : List ℤ) : (PI.FJM.posPart a).length = a.length := 
 theorem negPart_length (b : List ℤ) : (PI.FJM.negPart b).length = b.length := by
   simp [PI.FJM.negPart]
 
-private theorem fin_rev_val {n : ℕ} (i : Fin n) : (Fin.rev i).val = n - (i.val + 1) := rfl
-
 private theorem varMat_apply_mem_supported {p q r s m k : ℕ} (ρ : Fin m → FockH1Action.Ix p q)
     (κ : Fin k → FockH1Action.Ix r s) (T : Set (FockH1Action.Ln p q r s)) (i : Fin m) (j : Fin k)
     (h : (ρ i, κ j) ∈ T) : PI.FJM.varMat ρ κ i j ∈ MvPolynomial.supported ℂ T := by
   rw [show PI.FJM.varMat ρ κ i j = MvPolynomial.X (ρ i, κ j) from rfl]
   first
   | exact MvPolynomial.X_mem_supported.mpr h
-  | exact MvPolynomial.mem_supported.mpr (by rw [MvPolynomial.vars_X]; simpa using h)
 
 theorem hwVec_mem_supported (p q r s : ℕ) (a b c d : List ℤ) :
     hwVec p q r s a b c d ∈ MvPolynomial.supported ℂ
@@ -150,7 +189,7 @@ theorem hwVec_mem_supported (p q r s : ℕ) (a b c d : List ℤ) :
     intro i j hi hj
     rw [negPart_length] at hi hj
     apply varMat_apply_mem_supported
-    simp only [Set.mem_setOf_eq, inS, fin_rev_val]
+    simp only [Set.mem_setOf_eq, inS, Fin.val_rev]
     have := i.isLt
     have := j.isLt
     constructor <;> omega
@@ -164,7 +203,7 @@ theorem hwVec_mem_supported (p q r s : ℕ) (a b c d : List ℤ) :
     intro i j hi hj
     rw [negPart_length] at hi hj
     apply varMat_apply_mem_supported
-    simp only [Set.mem_setOf_eq, inS, fin_rev_val]
+    simp only [Set.mem_setOf_eq, inS, Fin.val_rev]
     have := i.isLt
     have := j.isLt
     constructor <;> omega
@@ -193,7 +232,6 @@ private theorem moduleEnd_finset_sum_apply {V : Type*} [AddCommGroup V] [Module 
     (t : Finset ι) (f : ι → Module.End ℂ V) (v : V) : (∑ x ∈ t, f x) v = ∑ x ∈ t, f x v := by
   first
   | exact LinearMap.sum_apply t f v
-  | simp
 
 theorem vecJ_of (hF : FormJ) : VecJ := by
   intro p q r s a b c d h

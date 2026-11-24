@@ -1,6 +1,46 @@
 module
 
 public import Formalism.SharpRestriction.CuspSpanNormBounds.RootMeasBig
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Formalism.SharedLemmas.HpkSq
 
 @[expose] public section
 
@@ -42,20 +82,9 @@ theorem hs_sq (i : ℕ) : hs k r i * hs k r i = 1 := by
   split_ifs <;> norm_num
 
 theorem Hpk_mul_self : Hpk k r * Hpk k r = 1 := by
-  ext i j
-  have hi := i.isLt
-  rw [Matrix.mul_apply, Finset.sum_eq_single (⟨hτ k r i.val, hτ_lt i.val hi⟩ : Fin (2 * r + k + 1))]
-  · rw [Hpk_apply, Hpk_apply, Matrix.one_apply]
-    show (if hτ k r i.val = hτ k r i.val then hs k r i.val else 0) *
-      (if j.val = hτ k r (hτ k r i.val) then hs k r (hτ k r i.val) else 0) = if i = j then 1 else 0
-    rw [if_pos rfl, hτ_hτ i.val hi, hs_hτ i.val hi]
-    by_cases hij : i = j
-    · rw [if_pos (congrArg Fin.val hij).symm, if_pos hij, hs_sq]
-    · rw [if_neg (fun h => hij (Fin.ext h.symm)), if_neg hij, mul_zero]
-  · intro l _ hl
-    rw [Hpk_apply, if_neg (fun h => hl (Fin.ext h)), zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  first
+  | exact _root_.Formalism.SharedLemmas.upq_hpk_mul_self
+  | (apply _root_.Formalism.SharedLemmas.upq_hpk_mul_self <;> assumption)
 
 theorem uh_left {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hg : g ∈ UH (Hpk k r)) :
     (Hpk k r * gᴴ * Hpk k r) * g = 1 := by

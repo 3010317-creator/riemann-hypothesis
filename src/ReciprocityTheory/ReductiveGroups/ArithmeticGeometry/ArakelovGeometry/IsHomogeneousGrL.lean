@@ -1,6 +1,9 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.ExistsPrimeFiltrationOfIsMultiHomogIdeal
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.DoubleBlock
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Tactic.TypeStar
 
 @[expose] public section
 
@@ -40,7 +43,7 @@ theorem mHom_eq (a : K → ℕ) : mHom ι a = grL ι (lexDeg a) := by
     exact (mem_grL_iff s a).symm
   rw [this, Submodule.span_eq]
 
-theorem mem_mHom_iff (f : MRing ι) (a : K → ℕ) : f ∈ mHom ι a ↔ IsMultiHomog f a := by
+theorem mem_mHom_iff_via_grL (f : MRing ι) (a : K → ℕ) : f ∈ mHom ι a ↔ IsMultiHomog f a := by
   rw [mHom_eq, mem_grL_iff]
 
 theorem isHomogeneous_grL {J : Ideal (MRing ι)} (hJ : IsMultiHomogIdeal J) :

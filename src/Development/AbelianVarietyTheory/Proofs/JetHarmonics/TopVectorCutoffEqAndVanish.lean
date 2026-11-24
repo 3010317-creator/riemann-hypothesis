@@ -1,10 +1,53 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Jets.ImportsAlt
-public import Formalism.HermitianCurvature.HerGenC
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.SlicesFiniteRegularityBuilt
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TopVectorAddSmulCompactCoefficientsStatement
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.OpApplyContinuousOn
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.SlicesFiniteRegularityBuilt
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.TheoremPIntegralOfPlaces
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.TriangleInequalityAtPlace
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BetaSesquilinearity
 
 @[expose] public section
 
@@ -27,33 +70,6 @@ private lemma vecV_cutoff_lemma {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup W
   · rw [_root_.Formalism.FourierDecayAlt.P.JCx1.needs.orbJ_cutF, _root_.Formalism.FourierDecayAlt.P.TBBx2.Gf_of_Zhat _ _ _ _ h'.choose_spec.2.1]
   · simp
   · simp
-
-open Filter Topology MeasureTheory in
-open scoped Matrix.Norms.Elementwise in
-private lemma foldr_RdV_zero {k r : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
-    (w : List (_root_.Formalism.FourierDecayAlt.B.Mat k r)) : List.foldr _root_.Formalism.REAL.RdV (fun _ => (0 : E)) w = fun _ => 0 := by
-  induction w with
-  | nil => rfl
-  | cons X w ih =>
-    rw [List.foldr_cons, ih]
-    funext g
-    unfold _root_.Formalism.REAL.RdV
-    simp
-
-open Filter Topology MeasureTheory in
-open scoped Matrix.Norms.Elementwise in
-private lemma opApply_zero {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp]
-    [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq]
-    [FiniteDimensional ℂ Wq] (D : _root_.Formalism.FourierDecayAlt.B.DiffOp k r Wp Wq) (g : _root_.Formalism.FourierDecayAlt.B.Mat k r) :
-    _root_.Formalism.FourierDecayAlt.B.opApply D (fun _ => 0) g = 0 := by
-  unfold _root_.Formalism.FourierDecayAlt.B.opApply
-  apply List.sum_eq_zero
-  intro x hx
-  simp only [List.mem_map] at hx
-  obtain ⟨T, -, rfl⟩ := hx
-  unfold _root_.Formalism.FourierDecayAlt.B.Rw
-  rw [foldr_RdV_zero]
-  simp
 
 open Filter Topology MeasureTheory in
 open scoped Matrix.Norms.Elementwise in
@@ -155,7 +171,8 @@ theorem _root_.GlobalTheory.TopVec.tv_cutF (Wp Wq : Type) [NormedAddCommGroup Wp
           have hx' : _root_.Formalism.QuantumDeterminants.Gf P.k P.r p.T.base.z p.T.base.z' x < δ * ε := hx
           rw [hcut, hδ _ ((div_lt_iff₀ hε).mpr hx')]
           simp
-        rw [hDop _ g hOQ, hloc, opApply_zero]
+        rw [hDop _ g hOQ, hloc, _root_.Formalism.FourierDecayAlt.P.PBE.opApply_zero_near Dop
+          (F := fun _ => 0) isOpen_univ (fun _ _ _ => rfl) g hg.1 trivial]
       · have : ¬ (_root_.Formalism.QuantumDeterminants.Gf P.k P.r p.T.base.z p.T.base.z' g / G < δ * ε / G) := by
           rw [div_lt_div_iff_of_pos_right hGpos]; exact hgd
         simp [this]

@@ -1,18 +1,55 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsRealFam
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryAdelicInfFinSplitPeriodsUnimodular
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealLineOfPeriodsOnLine
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsFinOf
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumOKEx
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevRowSuccInfUA
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalBlockDetBlockTriangular
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupElementsJacobiBessel
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemRootExchangeParabolicAndFourierJacobiIffEntri
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PeriodIdealZpowCompletionAdeleConjIff
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PeriodLocalGroupsNormalFramesSplitPlace
-public import Formalism.LocalToGlobal.Divisibility.DefGroupLemmas
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.CuspAlongSmoothRows
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevRowSuccInfUA
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumOKEx
+import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
+import Formalism.LocalToGlobal.Divisibility.DefGroupLemmas
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalBlockDetBlockTriangular
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealLineOfPeriodsOnLine
 
 @[expose] public section
 
@@ -24,7 +61,6 @@ noncomputable section
 
 namespace GlobalTheory.RowRep
 open GlobalTheory.RootEx
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 theorem diag_conj_symR {k : Type} [Field k] {n : Type} [Fintype n] [DecidableEq n] {c : ℕ} {x y : GL (n ⊕ Fin c) k}
     {f : n ⊕ Fin c → k} (hy : y.val = diagonal f) (hx : x ∈ symR k n c) : y⁻¹ * x * y ∈ symR k n c := by
@@ -125,7 +161,6 @@ theorem frame_diag {D : D7} {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : Hermiti
 end GlobalTheory.RowRep
 
 namespace GlobalTheory.RowRep
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 theorem glue_alg {R : Type} [CommRing R] {n : Type} [Fintype n] [DecidableEq n] {X X' Y Y' G H : Matrix n n R} {e e' : R}
     (h0 : e * e' = 0) (h1 : e * e = e) (h2 : e' * e' = e') (hX : e • X = X) (hY : e • Y = Y) (hX' : e' • X' = X')
@@ -216,7 +251,7 @@ theorem supp_glue {R : Type} [CommRing R] {n : Type} [Fintype n] [DecidableEq n]
   linear_combination (1 - e') * k1 + (1 - e) * k2 + (X i j + z - 2 * o) * h0 - o * h1 - o * h2
 
 
-set_option maxHeartbeats 1600000 in
+
 theorem exists_glue (V : HSp D) {e : AE D} (h0 : e * cA D e = 0) (hee : e * e = e) {X Y : Mx D V.rank V.rank} (hX : e • X = X)
     (hY : e • Y = Y) (hYX : HMul.hMul Y X = e • (1 : Mx D V.rank V.rank)) :
     ∃ r : GA D V, SuppAt e V r ∧ ∀ w : Pl D.host.E, piAt w e = 1 → (mt V r).map (piAt w) = X.map (piAt w) := by
@@ -242,7 +277,7 @@ theorem exists_glue (V : HSp D) {e : AE D} (h0 : e * cA D e = 0) (hee : e * e = 
     exact this
 
 
-set_option maxHeartbeats 800000 in
+
 theorem exists_suppAt_loc_eq : ∀ {D : D7} (V : HSp D) (P : Finset (Formalism.L2.DIV.Pl D.host.E)) (e : AE D), IsIdemSum e P → ∀ (g : ∀ w : P, GL (Fin V.rank) (Kw w.1)), ∃ r : GA D V, SuppAt e V r ∧ ∀ w : P, GlobalTheory.StdFrames.loc w.1 (Lev.finE V r) = g w := by
   intro D V P e he g
   obtain ⟨e0, e1, e2⟩ := GlobalTheory.FunObj.Comparison₂.cpt_idemSum he
@@ -356,7 +391,6 @@ end GlobalTheory.RowRep
 
 namespace GlobalTheory.RowRep
 open GlobalTheory.RootEx GlobalTheory.LocGrp GlobalTheory.LocGrpIff
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 theorem jac_par {D : D7} {K : Type} [Field K] (π : AE D →+* K) {A B : HSp D} {σ : ℕ} {ε : D.host.E} (d : HermitianOrthogonalExtensionData A B (2 * σ) ε)
     {b b' : Matrix (Fin A.rank) (Fin A.rank) K} (hb : b * b' = 1) {u : Fin (2 * σ) → K}
@@ -409,7 +443,6 @@ end GlobalTheory.RowRep
 
 namespace GlobalTheory.RowRep
 open GlobalTheory.RootEx GlobalTheory.LocGrp GlobalTheory.LocGrpIff
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 theorem bes_par {D : D7} {K : Type} [Field K] (π : AE D →+* K) {A B : HSp D} {σ : ℕ} (d : HermitianOrthogonalExtensionData A B (2 * σ + 1) (-1))
     (l : Fin σ → D.host.E) (hl : ∀ a, l a ≠ 0)
@@ -508,7 +541,6 @@ theorem besGrp_mem_symR : ∀ {D : D7} {A B : HSp D} {c σ : ℕ} (d : Hermitian
 end GlobalTheory.RowRep
 
 namespace GlobalTheory.RowRep
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc}
 
 theorem exists_isTilt (G : GridData L sc) (j : ℕ) : ∃ δ, GlobalTheory.RowVal.IsTilt G j δ := by
@@ -557,7 +589,6 @@ theorem locAt_lat (B : Frames G) (t : T) (w : Pl D.host.E) {j : ℕ} (h1 : 1 ≤
 end GlobalTheory.RowRep
 
 namespace GlobalTheory.RowRep
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {W : G.Weil} {U : Set T}
 
 theorem exists_inBasis_eq {n n' : ℕ} (h : n' = n) (β : GL (Fin n) (Lev.EAf D)) (w : Pl D.host.E) (g : GL (Fin n') (Kw w)) :
@@ -657,10 +688,9 @@ theorem tilt_conj (S : GridChoice W U) {t : T} (ht : t ∈ U) {w : Pl D.host.E} 
 end GlobalTheory.RowRep
 
 namespace GlobalTheory.RowRep
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 
-set_option maxHeartbeats 1600000 in
+
 theorem rep_at : Big fun ch => ∀ s, RepAt ch s := by
   refine ⟨0, fun _ _ _ => ⟨0, fun D large₂ _ _ Γ _ _ Pl0 T A Ks _ _ _ R F hS ch _ _ => ?_⟩⟩
   intro s t

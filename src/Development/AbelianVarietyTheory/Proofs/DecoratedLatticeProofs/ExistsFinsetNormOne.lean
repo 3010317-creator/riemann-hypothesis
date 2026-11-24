@@ -1,7 +1,56 @@
 module
 
-public import Mathlib
+public import Mathlib.NumberTheory.NumberField.Completion.FinitePlace
+public import Mathlib.NumberTheory.NumberField.InfiniteAdeleRing
+public import Mathlib.RingTheory.DedekindDomain.FiniteAdeleRing
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnipotentApproximation.AddDense
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+public import Mathlib.NumberTheory.NumberField.CanonicalEmbedding.ConvexBody
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -26,13 +75,13 @@ theorem norm_nat_le_one (v : HeightOneSpectrum (𝓞 F)) (m : ℕ) : ‖(m : v.a
 
 theorem norm_int_le_one (v : HeightOneSpectrum (𝓞 F)) (o : 𝓞 F) :
     ‖algebraMap F (v.adicCompletion F) (o : F)‖ ≤ 1 :=
-  (norm_le_one_iff_int v _).2 (PI.UnipApproxD.IntegersDenseFiniteAdeles.int_R v o)
+  (norm_le_one_iff_int v _).2 (ReciprocityTheory.ChartRestriction.G.Lib.AdeleIntA.int_R v o)
 
 theorem norm_int_eq_one (v : HeightOneSpectrum (𝓞 F)) (o : 𝓞 F) (ho : o ∉ v.asIdeal) :
     ‖algebraMap F (v.adicCompletion F) (o : F)‖ = 1 := by
   refine le_antisymm (norm_int_le_one v o) (not_lt.1 fun h => ho ?_)
   rw [Valued.toNormedField.norm_lt_one_iff] at h
-  have e := PI.UnipApproxD.IntegersDenseFiniteAdeles.val_R (K := F) v o
+  have e := ReciprocityTheory.ChartRestriction.G.Lib.AdeleIntA.val_R (K := F) v o
   rw [show algebraMap F (v.adicCompletion F) (o : F) = algebraMap F (v.adicCompletion F) (algebraMap (𝓞 F) F o) from rfl,
     e] at h
   exact (HeightOneSpectrum.intValuation_lt_one_iff_mem v o).1 h
@@ -49,7 +98,7 @@ theorem norm_natCast_lt_one (v : HeightOneSpectrum (𝓞 F)) (c : ℕ) (hc : Ide
     exact Ideal.mul_mem_right _ _ (Ideal.absNorm_mem _)
   have hval := (HeightOneSpectrum.intValuation_lt_one_iff_mem v (c : 𝓞 F)).2 hmem
   rw [Valued.toNormedField.norm_lt_one_iff]
-  have e := PI.UnipApproxD.IntegersDenseFiniteAdeles.val_R (K := F) v (c : 𝓞 F)
+  have e := ReciprocityTheory.ChartRestriction.G.Lib.AdeleIntA.val_R (K := F) v (c : 𝓞 F)
   rw [map_natCast, map_natCast] at e
   rw [e]
   exact hval
@@ -99,17 +148,17 @@ theorem exists_int_near (F : Type) [Field F] [NumberField F] : ∃ C : ℝ, 0 < 
   have e : ((∑ i, ⌊b.repr f i⌋ • RingOfIntegers.basis F i : 𝓞 F) : F) - f =
       ∑ i, (((⌊b.repr f i⌋ : ℚ) - b.repr f i : ℚ) : F) * b i := by
     conv_lhs => arg 2; rw [← b.sum_repr f]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [show ((∑ i, ⌊b.repr f i⌋ • RingOfIntegers.basis F i : 𝓞 F) : F) =
-      algebraMap (𝓞 F) F (∑ i, ⌊b.repr f i⌋ • RingOfIntegers.basis F i) from rfl, map_sum, ← Finset.sum_sub_distrib]
+
+    rw [show ((∑ i, ⌊b.repr f i⌋ • RingOfIntegers.basis F i : 𝓞 F) : F) =
+    algebraMap (𝓞 F) F (∑ i, ⌊b.repr f i⌋ • RingOfIntegers.basis F i) from rfl, map_sum, ← Finset.sum_sub_distrib]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [map_zsmul, ← integralBasis_apply, ← hb, Rat.smul_def, zsmul_eq_mul]
     push_cast
     ring
   have h2 : ‖algebraMap F w.Completion (((∑ i, ⌊b.repr f i⌋ • RingOfIntegers.basis F i : 𝓞 F) : F) - f)‖ ≤
       ∑ i, w (b i) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [e, map_sum]
+
+    rw [e, map_sum]
     refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun i _ => ?_)
     rw [norm_alg_inf, map_mul]
     refine mul_le_of_le_one_left (apply_nonneg _ _) ?_
@@ -182,7 +231,7 @@ theorem strong_approx (v₀ : HeightOneSpectrum (𝓞 F)) (t : InfiniteAdeleRing
         ‖algebraMap F (v.adicCompletion F) c - s v‖ ≤ ‖(M : v.adicCompletion F)‖ := by
   have hMF : (M : F) ≠ 0 := Nat.cast_ne_zero.2 hM
   have hMR : (0 : ℝ) < M := Nat.cast_pos.2 (Nat.pos_of_ne_zero hM)
-  obtain ⟨u, hu⟩ := PI.UnipApproxD.IntegersDenseFiniteAdeles.exists_approx_adele
+  obtain ⟨u, hu⟩ := ReciprocityTheory.ChartRestriction.G.Lib.AdeleIntA.exists_approx_adele
     (algebraMap F (FiniteAdeleRing (𝓞 F) F) (M : F)⁻¹ * s)
   obtain ⟨C, hC, hCt⟩ := exists_int_near F
   obtain ⟨x, hx0, hxw, hxv⟩ := exists_small_elt v₀ (ε / (M * (C + 1))) (by positivity)

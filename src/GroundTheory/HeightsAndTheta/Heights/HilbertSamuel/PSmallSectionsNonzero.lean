@@ -1,7 +1,10 @@
 module
 
-public import Mathlib
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PSectionBoundedMul
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsSmallSectionsNonzero
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
 
 @[expose] public section
 
@@ -27,15 +30,6 @@ theorem isMultiHomog_mul {g h : MRing ι} {a b : K → ℕ} (hg : IsMultiHomog g
   simp only [Finsupp.add_apply, Finset.sum_add_distrib, Pi.add_apply]
   rw [hg m₁ hm₁ k, hh m₂ hm₂ k]
 
-
-omit [Fintype K] in
-theorem isMultiHomog_sub {g h : MRing ι} {d : K → ℕ} (hg : IsMultiHomog g d)
-    (hh : IsMultiHomog h d) : IsMultiHomog (g - h) d := by
-  classical
-  intro m hm
-  rcases Finset.mem_union.mp (support_sub _ g h hm) with hm | hm
-  · exact hg m hm
-  · exact hh m hm
 
 
 omit [Fintype K] in
@@ -103,46 +97,7 @@ theorem X_mem_mCoordIdeal (y : (Σ k, ι k) → Ω) (p : Σ k, ι k) (h0 : y p =
 theorem exists_form_of_mem_chartRingZ (y : (Σ k, ι k) → Ω) (c : ∀ k, ι k) (hc : ∀ k, y ⟨k, c k⟩ ≠ 0) {x : Ω}
     (hx : x ∈ chartRingZ y c) :
     ∃ (δ : K → ℕ) (e : MRing ι), IsMultiHomog e δ ∧ aeval y e = x * ∏ k, y ⟨k, c k⟩ ^ δ k := by
-  classical
-  have hpow : ∀ δ₁ δ₂ : K → ℕ, ∏ k, y ⟨k, c k⟩ ^ (δ₁ + δ₂) k =
-      (∏ k, y ⟨k, c k⟩ ^ δ₁ k) * ∏ k, y ⟨k, c k⟩ ^ δ₂ k := fun δ₁ δ₂ => by
-    rw [← Finset.prod_mul_distrib]
-    exact Finset.prod_congr rfl fun k _ => by rw [Pi.add_apply, pow_add]
-  rw [chartRingZ] at hx
-  induction hx using Algebra.adjoin_induction with
-  | mem x hx =>
-    obtain ⟨p, rfl⟩ := hx
-    obtain ⟨k₀, j⟩ := p
-    refine ⟨fun k => ∑ i, (Finsupp.single (⟨k₀, j⟩ : Σ k, ι k) 1) ⟨k, i⟩, X ⟨k₀, j⟩, ?_, ?_⟩
-    · have h := isMultiHomog_monomial (ι := ι) (Finsupp.single (⟨k₀, j⟩ : Σ k, ι k) 1) 1
-      rwa [← X] at h
-    · have h1 : ∏ k, y ⟨k, c k⟩ ^ (∑ i, (Finsupp.single (⟨k₀, j⟩ : Σ k, ι k) 1) ⟨k, i⟩) = y ⟨k₀, c k₀⟩ := by
-        simp only [sum_single_apply]
-        rw [Finset.prod_eq_single k₀ (fun k _ hk => by rw [if_neg (Ne.symm hk), pow_zero])
-          (fun h => absurd (Finset.mem_univ _) h)]
-        simp
-      rw [aeval_X, h1, div_mul_cancel₀ _ (hc k₀)]
-  | algebraMap r =>
-    refine ⟨fun _ => 0, C r, ?_, by simp⟩
-    have h := isMultiHomog_monomial (ι := ι) 0 r
-    simpa using h
-  | add x w _ _ hx hw =>
-    obtain ⟨δ₁, e₁, h₁, v₁⟩ := hx
-    obtain ⟨δ₂, e₂, h₂, v₂⟩ := hw
-    refine ⟨δ₁ + δ₂, e₁ * chartMono c δ₂ + e₂ * chartMono c δ₁, ?_, ?_⟩
-    · intro m hm
-      rcases Finset.mem_union.mp (support_add hm) with hm | hm
-      · exact isMultiHomog_mul h₁ (isMultiHomog_chartMono c δ₂) m hm
-      · rw [add_comm δ₁]
-        exact isMultiHomog_mul h₂ (isMultiHomog_chartMono c δ₁) m hm
-    · rw [map_add (f := _), map_mul, map_mul, v₁, v₂, aeval_chartMono, aeval_chartMono, hpow]
-      ring
-  | mul x w _ _ hx hw =>
-    obtain ⟨δ₁, e₁, h₁, v₁⟩ := hx
-    obtain ⟨δ₂, e₂, h₂, v₂⟩ := hw
-    refine ⟨δ₁ + δ₂, e₁ * e₂, isMultiHomog_mul h₁ h₂, ?_⟩
-    rw [map_mul, v₁, v₂, hpow]
-    ring
+  apply GroundTheory.Heights₂.Heights.HilbertSamuel.SectionBoundedMul.exists_form_of_mem_chartRingZ <;> assumption
 
 theorem exists_chartForm (y : (Σ k, ι k) → Ω) (a : K → ℤ) (n : ℕ) {s : Ω} (hs : s ∈ chartLat y a n)
     (c : ∀ k, ι k) (hc : ∀ k, y ⟨k, c k⟩ ≠ 0) :
@@ -203,7 +158,7 @@ theorem isSmallH_one (y : (Σ k, ι k) → Ω) (A : HermLine ι) : IsSmallH (mCo
   intro dg dh g h z hg hh hdeg he hz
   have hd : dg = dh := funext fun k => by simpa using hdeg k
   subst hd
-  have hmem := mem_mCoordIdeal_of_aeval_eq_zero y (isMultiHomog_sub hg hh) (by rw [map_sub, he, one_mul, sub_self])
+  have hmem := mem_mCoordIdeal_of_aeval_eq_zero y (GroundTheory.Heights₂.Heights.HilbertSamuel.SectionBoundedMul.isMultiHomog_sub hg hh) (by rw [map_sub, he, one_mul, sub_self])
   have hz0 := hz.2 _ hmem
   simp only [map_sub] at hz0
   rw [sub_eq_zero] at hz0
@@ -235,7 +190,7 @@ theorem isSmallH_mul {y : (Σ k, ι k) → Ω} {A : HermLine ι} {n m : ℕ} {s 
       linear_combination e1 + e2 - e3
     exact_mod_cast this
   have hF : IsMultiHomog (gs * gt * h - g * chartMono c (N + M)) (dgs + dgt + dh) := by
-    refine isMultiHomog_sub (isMultiHomog_mul (isMultiHomog_mul hgs hgt) hh) ?_
+    refine GroundTheory.Heights₂.Heights.HilbertSamuel.SectionBoundedMul.isMultiHomog_sub (isMultiHomog_mul (isMultiHomog_mul hgs hgt) hh) ?_
     rw [hdeq]
     exact isMultiHomog_mul hg (isMultiHomog_chartMono c (N + M))
   have hmono : ∀ (w : (Σ k, ι k) → Ω), aeval w (chartMono c (N + M)) =

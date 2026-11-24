@@ -1,8 +1,62 @@
 module
 
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.Rigid0
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.GRepresents
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.CoQuot
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.UnivLift
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.AdicCompletion.Noetherian
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+public import Mathlib.Topology.Algebra.ClopenNhdofOne
+import Mathlib.Topology.Algebra.ProperAction.Basic
+import Mathlib.Topology.Compactness.Paracompact
+import Mathlib.Topology.Separation.Connected
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AutomorphicArithmetic.AutomorphicVarieties.HeightAndVanishing.DirichletPrimeToLPartMulLPowerPart
+public import Formalism.SharedLemmas.TotDiscQuot
 
 @[expose] public section
 
@@ -278,31 +332,9 @@ end Desc
 private theorem totDisc_quot {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G]
     [TotallyDisconnectedSpace G] (N : Subgroup G) [N.Normal] (hN : IsClosed (N : Set G)) :
     TotallyDisconnectedSpace (G ⧸ N) := by
-  haveI : IsClosed (N : Set G) := hN
-  rw [totallyDisconnectedSpace_iff_connectedComponent_one]
-  refine Set.eq_singleton_iff_unique_mem.mpr ⟨mem_connectedComponent, fun q hq => ?_⟩
-  induction q using QuotientGroup.induction_on with
-  | H g =>
-    by_contra hne
-    have hgN : g ∉ N := fun h => hne ((QuotientGroup.eq_one_iff g).mpr h)
-    have key := ProfiniteGrp.closedSubgroup_eq_sInf_open (⟨N, hN⟩ : ClosedSubgroup G)
-    have hmem : g ∉ (⟨N, hN⟩ : ClosedSubgroup G).toSubgroup := hgN
-    rw [key, Subgroup.mem_sInf] at hmem
-    push_neg at hmem
-    obtain ⟨K, ⟨hKo, hNK⟩, hgK⟩ := hmem
-    let H : Subgroup (G ⧸ N) := K.map (QuotientGroup.mk' N)
-    have hHo : IsOpen (H : Set (G ⧸ N)) := by
-      have hset : (H : Set (G ⧸ N)) = (QuotientGroup.mk : G → G ⧸ N) '' K := by
-        simp [H]
-      rw [hset]
-      exact QuotientGroup.isOpenQuotientMap_mk.isOpenMap _ hKo
-    have hHc : IsClopen (H : Set (G ⧸ N)) := ⟨H.isClosed_of_isOpen hHo, hHo⟩
-    have hgH := hHc.connectedComponent_subset H.one_mem hq
-    obtain ⟨k, hk, hkg⟩ := Subgroup.mem_map.mp hgH
-    apply hgK
-    have hkN : k⁻¹ * g ∈ N := QuotientGroup.eq.mp hkg
-    have hmul := K.mul_mem hk (hNK hkN)
-    simpa using hmul
+  first
+  | exact _root_.Formalism.SharedLemmas.totDisc_quot
+  | (apply _root_.Formalism.SharedLemmas.totDisc_quot <;> assumption)
 
 section Quot
 

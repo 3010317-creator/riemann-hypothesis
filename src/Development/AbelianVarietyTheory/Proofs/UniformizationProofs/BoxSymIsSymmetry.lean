@@ -1,10 +1,49 @@
 module
 
-public import Mathlib
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.MapsAtLeA
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.PrecompleteBases.PsbLb
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.PullGenBoxGen
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ValCalc
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.CubePullbacks.SubAddEqZeroOfEqAdd
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.DegProd
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.GeneratorPullback.PullAlong
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.PrecompleteBases.PsbLb
 
 @[expose] public section
 
@@ -88,30 +127,6 @@ private theorem gm_pullU_eq_gm_comp' {X Y Z : Scheme.{0}} (f : Y ⟶ X) (r : Z �
   simp
   rfl
 
-private theorem units_ext_of_gm_id_eq_on_open {Y : Scheme.{0}} {W : Y.Opens} (s s' : Γ(Y, W)ˣ)
-    (h : ∀ y : Y, y ∈ W → gm (𝟙 Y) y W s = gm (𝟙 Y) y W s') : s = s' := by
-  apply Units.ext
-  apply TopCat.Presheaf.section_ext Y.sheaf W
-  intro y hy
-  have e := congrArg Units.val (h y hy)
-  unfold gm pullU at e
-  rw [dite_eq_left (by simpa using hy)] at e
-  exact e
-
-private theorem gm_linComb_transition_eq {X' Y Z : Scheme.{0}} (M : LB X') {K : Type} [Fintype K] (φ : K → (Y ⟶ X'))
-    (ε : K → ℤ) (r : Z ⟶ Y) (z : Z) (a b : K → M.ι)
-    (hz : r z ∈ (M.LinComb φ ε).U a ⊓ (M.LinComb φ ε).U b) :
-    gm r z ((M.LinComb φ ε).U a ⊓ (M.LinComb φ ε).U b) ((M.LinComb φ ε).g a b) = trF (L := M) φ ε r z a b := by
-  unfold trF
-  unfold LB.LinComb at *
-  dsimp only at *
-  refine (map_prod _ _ _).trans (Finset.prod_congr rfl fun k _ => ?_)
-  rw [map_zpow]
-  congr 1
-  refine (gm_res_eq_gm r z _ hz _).trans (gm_pullU_eq_gm_comp' (φ k) r z (M.U (a k) ⊓ M.U (b k)) ?_ (M.g (a k) (b k)))
-  unfold LB.wchart at hz
-  exact ⟨Set.mem_iInter.1 hz.1 k, Set.mem_iInter.1 hz.2 k⟩
-
 private theorem mem_pull_wchart_of_mem_linComb_wchart {X X' Y : Scheme.{0}} (L : LB X) {J K : Type} [Fintype J] [Fintype K]
     (F : J → (X' ⟶ X)) (φ : K → (Y ⟶ X')) (y : Y) (jj : K → J → L.ι) (i : J)
     (h : y ∈ (L.LinComb F fun _ => 1).wchart φ jj) : y ∈ (L.pull (F i)).wchart φ (fun k _ => jj k i) := by
@@ -144,23 +159,7 @@ private theorem gm_pullAlong_section_eq_gm_comp {X X' Y Y' Z : Scheme.{0}} (L : 
 theorem isGen_boxGen (F : J → (X' ⟶ X)) (φ : K → (Y ⟶ X')) (ε : K → ℤ)
     (t : ∀ i, LB.Gen (LB.LinComb (L.pull (F i)) φ ε)) (ht : ∀ i, (t i).IsGen) :
     (GeneratorPullback.boxGen L F φ ε t).IsGen := by
-  intro (a : K → (L.LinComb F fun _ => 1).ι) (b : K → (L.LinComb F fun _ => 1).ι)
-  apply units_ext_of_gm_id_eq_on_open
-  intro y hy
-  have hy' : (𝟙 Y : Y ⟶ Y) y ∈ ((L.LinComb F fun _ => 1).LinComb φ ε).U a ⊓
-      ((L.LinComb F fun _ => 1).LinComb φ ε).U b := hy
-  have ha : (𝟙 Y : Y ⟶ Y) y ∈ (L.LinComb F fun _ => 1).wchart φ a := hy.1
-  have hb : (𝟙 Y : Y ⟶ Y) y ∈ (L.LinComb F fun _ => 1).wchart φ b := hy.2
-  rw [map_mul, gm_res_eq_gm (𝟙 Y) y _ hy' _, gm_res_eq_gm (𝟙 Y) y _ hy' _, gm_linComb_transition_eq _ φ ε (𝟙 Y) y a b hy']
-  erw [gm_boxGen L F φ ε t (𝟙 Y) y a ha, gm_boxGen L F φ ε t (𝟙 Y) y b hb, trF_box L F φ ε (𝟙 Y) y a b ha hb,
-    ← Finset.prod_mul_distrib]
-  refine Finset.prod_congr rfl fun i _ => ?_
-  have hi : (𝟙 Y : Y ⟶ Y) y ∈ ((L.pull (F i)).LinComb φ ε).U (fun k _ => a k i) ⊓
-      ((L.pull (F i)).LinComb φ ε).U (fun k _ => b k i) :=
-    ⟨mem_pull_wchart_of_mem_linComb_wchart L F φ y a i hy.1, mem_pull_wchart_of_mem_linComb_wchart L F φ y b i hy.2⟩
-  have e := congrArg (gm (𝟙 Y) y _) (ht i (fun k _ => a k i) (fun k _ => b k i))
-  rw [map_mul, gm_res_eq_gm (𝟙 Y) y _ hi _, gm_res_eq_gm (𝟙 Y) y _ hi _, gm_linComb_transition_eq _ φ ε (𝟙 Y) y _ _ hi] at e
-  exact e
+  apply GlobalTheory.BoxCubical.isGen_boxGen <;> assumption
 
 end Generators
 

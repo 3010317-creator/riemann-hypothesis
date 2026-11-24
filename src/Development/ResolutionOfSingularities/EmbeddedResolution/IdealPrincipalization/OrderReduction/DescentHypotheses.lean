@@ -1,23 +1,45 @@
 module
 
-public import Mathlib
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.BlowupSequenceRelations
-public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.StrictNormalCrossings
-public import Development.ResolutionOfSingularities.EmbeddedResolution.DerivativeIdeal.IdealSheafOrder
-public import Development.ResolutionOfSingularities.EmbeddedResolution.MaximalContactHypersurfaces.TunedSheaf
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReductionProperties
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.PrincipalizationCertificate
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReduction.MaxContactReduction
 public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReduction.DerivedAndCoverTriples
 public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReduction.StrictPullbackBlowupSeq
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.FunctorialPrincipalization
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.BlowupSequenceData
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.Append
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.ControlledTransform
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.IdealBlowupSequence
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.MarkedSequenceOfBlowups
-public import Development.ResolutionOfSingularities.Foundations.BlowupUniversalProperty
-public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionOfSingularities
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -84,7 +106,7 @@ structure CoverSequenceProperties (hinv : ComapIsoInvariance.{u}) (P : ℕ → P
       IsSmoothDivisor T.structMap (Scheme.Hom.ker e) →
     ∀ J : Y.IdealSheafData,
       (T.withSchemeIdealBoundary Y q J ([] : List Y.IdealSheafData)).IsAdmissible →
-      T.ideal = imageIdealSheaf e J →
+      T.ideal = _root_.FunctorialResolution.Blowup.schemeImageIdeal e J →
       IsStrictPullbackBlowupSeq (MaxContactCoverData.coverMap T h.valid)
         (coverBlowupSequence hinv A T h.valid).toBlowupSequenceData.toSequenceOfBlowups
         (A 0 (T.withBoundary [Scheme.Hom.ker e])).toSequenceOfBlowups
@@ -101,30 +123,6 @@ structure DescentHypotheses (hinv : ComapIsoInvariance.{u}) (P : ℕ → Prop)
     ∀ (N : W.IdealSheafData) (μ : ℕ) (Mem : Set ↥W) (Z : W.IdealSheafData),
       OrderCertificate W' (g ≫ p) (N.comap g) μ (g.base ⁻¹' Mem) (Z.comap g) →
       OrderCertificate W p N μ Mem Z
-  base_change : ∀ T : MarkedIdealWithBoundary.{u}, T.IsAdmissible → P T.krullDimSucc →
-      (∀ x : ↥T.scheme, orderAt T.ideal x ≤ (T.mult : ℕ∞)) →
-    ∀ (L : Type u) [Field L] [CharZero L] (f : T.base →+* L)
-      (E' : List (T.baseChange L f).scheme.IdealSheafData),
-      MarkedIdealWithBoundary.SameNontrivialBoundary (T.baseChange L f).boundary E' →
-      ((T.baseChange L f).withBoundary E').IsAdmissible →
-      P ((T.baseChange L f).withBoundary E').krullDimSucc →
-      (∀ x : ↥((T.baseChange L f).withBoundary E').scheme,
-        orderAt ((T.baseChange L f).withBoundary E').ideal x ≤ (T.mult : ℕ∞)) →
-      IsPullbackBlowupSequence (pullback.fst T.structMap (specMapOfFieldHom T.base L f))
-        (maxContactPrincipalization hinv A ((T.baseChange L f).withBoundary E')).toSequenceOfBlowups
-        (maxContactPrincipalization hinv A T).toSequenceOfBlowups
-  base_change_strict : ∀ T : MarkedIdealWithBoundary.{u}, T.IsAdmissible → P T.krullDimSucc →
-      (∀ x : ↥T.scheme, orderAt T.ideal x ≤ (T.mult : ℕ∞)) →
-    ∀ (L : Type u) [Field L] [CharZero L] (f : T.base →+* L)
-      (E' : List (T.baseChange L f).scheme.IdealSheafData),
-      MarkedIdealWithBoundary.SameNontrivialBoundary (T.baseChange L f).boundary E' →
-      ((T.baseChange L f).withBoundary E').IsAdmissible →
-      P ((T.baseChange L f).withBoundary E').krullDimSucc →
-      (∀ x : ↥((T.baseChange L f).withBoundary E').scheme,
-        orderAt ((T.baseChange L f).withBoundary E').ideal x ≤ (T.mult : ℕ∞)) →
-      IsStrictPullbackBlowupSeq (pullback.fst T.structMap (specMapOfFieldHom T.base L f))
-        (maxContactPrincipalization hinv A ((T.baseChange L f).withBoundary E')).toSequenceOfBlowups
-        (maxContactPrincipalization hinv A T).toSequenceOfBlowups
   comp_openImmersion : ∀ (T : MarkedIdealWithBoundary.{u}) (h : OrderReductionHypotheses P T) (d : BlowupSequenceData T.scheme)
       (D : StrictPullbackBlowupSeq (MaxContactCoverData.coverMap T h.valid)
         (coverBlowupSequence hinv A T h.valid).toMarkedSequenceOfBlowups.toSequenceOfBlowups d.toSequenceOfBlowups)
@@ -163,19 +161,6 @@ structure DescentHypotheses (hinv : ComapIsoInvariance.{u}) (P : ℕ → Prop)
       IsPullbackBlowupSequence g
         (maxContactPrincipalization hinv A ((T.pullbackAlong Y q g).withBoundary E')).toSequenceOfBlowups
         (maxContactPrincipalization hinv A T).toSequenceOfBlowups
-  smooth_pullback_strict : ∀ T : MarkedIdealWithBoundary.{u}, T.IsAdmissible → P T.krullDimSucc →
-      (∀ x : ↥T.scheme, orderAt T.ideal x ≤ (T.mult : ℕ∞)) →
-    ∀ (Y : Scheme.{u}) (q : Y ⟶ Spec (CommRingCat.of T.base)) (g : Y ⟶ T.scheme)
-      [AlgebraicGeometry.Smooth g] [AlgebraicGeometry.Surjective g], g ≫ T.structMap = q →
-    ∀ E' : List Y.IdealSheafData,
-      MarkedIdealWithBoundary.SameNontrivialBoundary (T.pullbackAlong Y q g).boundary E' →
-      ((T.pullbackAlong Y q g).withBoundary E').IsAdmissible →
-      P ((T.pullbackAlong Y q g).withBoundary E').krullDimSucc →
-      (∀ x : ↥((T.pullbackAlong Y q g).withBoundary E').scheme,
-        orderAt ((T.pullbackAlong Y q g).withBoundary E').ideal x ≤ (T.mult : ℕ∞)) →
-      IsStrictPullbackBlowupSeq g
-        (maxContactPrincipalization hinv A ((T.pullbackAlong Y q g).withBoundary E')).toSequenceOfBlowups
-        (maxContactPrincipalization hinv A T).toSequenceOfBlowups
   flat_coverMap : ∀ (T : MarkedIdealWithBoundary.{u}) (h : OrderReductionHypotheses P T),
       AlgebraicGeometry.Flat (MaxContactCoverData.coverMap T h.valid)
   surjective_coverMap : ∀ (T : MarkedIdealWithBoundary.{u}) (h : OrderReductionHypotheses P T),
@@ -187,10 +172,10 @@ structure DescentHypotheses (hinv : ComapIsoInvariance.{u}) (P : ℕ → Prop)
     ∀ (ε : Y ⟶ (Scheme.Hom.ker e).subscheme),
       ε ≫ (Scheme.Hom.ker e).subschemeι = e →
       (T.withSchemeIdealBoundary (Scheme.Hom.ker e).subscheme
-          ((Scheme.Hom.ker e).subschemeι ≫ T.structMap) (imageIdealSheaf ε J)
+          ((Scheme.Hom.ker e).subschemeι ≫ T.structMap) (_root_.FunctorialResolution.Blowup.schemeImageIdeal ε J)
           ([] : List (Scheme.Hom.ker e).subscheme.IdealSheafData)).IsAdmissible ∧
       (T.withSchemeIdealBoundary (Scheme.Hom.ker e).subscheme
-          ((Scheme.Hom.ker e).subschemeι ≫ T.structMap) (imageIdealSheaf ε J)
+          ((Scheme.Hom.ker e).subschemeι ≫ T.structMap) (_root_.FunctorialResolution.Blowup.schemeImageIdeal ε J)
           ([] : List (Scheme.Hom.ker e).subscheme.IdealSheafData)).krullDimSucc =
         (T.withSchemeIdealBoundary Y q J ([] : List Y.IdealSheafData)).krullDimSucc
   tunedIdeal_of_mult_one : ∀ (T : MarkedIdealWithBoundary.{u}) (hv : T.IsAdmissible), T.mult = 1 →

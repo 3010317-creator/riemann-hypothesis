@@ -1,6 +1,50 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -43,8 +87,8 @@ theorem isExp_add_smul {V : Type} [AddCommGroup V] [Module ℂ V] {L U : Module.
     simp [mul_comm]
   rw [hval]
   convert key using 2 with n
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hcomm.add_pow', LinearMap.sum_apply, map_sum, Finset.mul_sum]
+
+  rw [hcomm.add_pow', LinearMap.sum_apply, map_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl ?_
   rintro ⟨i, j⟩ hij
   obtain rfl : i + j = n := by simpa using hij
@@ -112,9 +156,9 @@ theorem der_pow_mul (D : Derivation ℂ (MvPolynomial σ ℂ) (MvPolynomial σ �
   induction n with
   | zero => simp
   | succ n ih =>
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Finset.sum_antidiagonal_choose_succ_nsmul (fun i j => (L ^ i) P * (L ^ j) Q) n, pow_succ',
-      Module.End.mul_apply, ih, map_sum, ← Finset.sum_add_distrib]
+
+    rw [Finset.sum_antidiagonal_choose_succ_nsmul (fun i j => (L ^ i) P * (L ^ j) Q) n, pow_succ',
+    Module.End.mul_apply, ih, map_sum, ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl ?_
     rintro ⟨i, j⟩ hij
     obtain rfl : i + j = n := by simpa using hij
@@ -132,8 +176,8 @@ theorem eval_series_mul (D : Derivation ℂ (MvPolynomial σ ℂ) (MvPolynomial 
   have key := hasSum_cauchy hP hQ
   rw [map_mul, map_mul]
   convert key using 2 with n
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [der_pow_mul, map_sum, Finset.mul_sum]
+
+  rw [der_pow_mul, map_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl ?_
   rintro ⟨i, j⟩ hij
   obtain rfl : i + j = n := by simpa using hij
@@ -153,7 +197,7 @@ def linDer (T : Matrix σ σ ℂ) : Derivation ℂ (MvPolynomial σ ℂ) (MvPoly
 
 theorem linDer_apply (T : Matrix σ σ ℂ) (f : MvPolynomial σ ℂ) :
     linDer T f = ∑ l, ∑ l', T l l' • (X l * pderiv l' f) := by
-  simp [linDer, der_sum_apply, smul_eq_C_mul, mul_assoc]
+  simp [linDer, smul_eq_C_mul, mul_assoc]
 
 theorem linDer_X (T : Matrix σ σ ℂ) (i : σ) : linDer T (X i) = ∑ l, T l i • (X l : MvPolynomial σ ℂ) := by
   simp [linDer_apply, pderiv_X, Pi.single_apply]
@@ -164,8 +208,8 @@ theorem linDer_pow_X (T : Matrix σ σ ℂ) (n : ℕ) (i : σ) :
   induction n with
   | zero => simp [Matrix.one_apply, ite_smul]
   | succ n ih =>
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [pow_succ', Module.End.mul_apply, ih, map_sum, pow_succ']
+
+    rw [pow_succ', Module.End.mul_apply, ih, map_sum, pow_succ']
     simp only [map_smul, Derivation.coeFn_coe, linDer_X, Finset.smul_sum, smul_smul, Matrix.mul_apply, Finset.sum_smul]
     rw [Finset.sum_comm]
     exact Finset.sum_congr rfl fun m _ => Finset.sum_congr rfl fun l _ => by rw [mul_comm]
@@ -174,15 +218,12 @@ theorem linDer_locFin (T : Matrix σ σ ℂ) :
     LocFin ((linDer T : Derivation ℂ (MvPolynomial σ ℂ) (MvPolynomial σ ℂ)) : MvPolynomial σ ℂ →ₗ[ℂ] MvPolynomial σ ℂ) := by
   have hst0 : ∀ y ∈ Submodule.span ℂ (Set.range (X : σ → MvPolynomial σ ℂ)),
       linDer T y ∈ Submodule.span ℂ (Set.range (X : σ → MvPolynomial σ ℂ)) := by
-    intro y hy
-    induction hy using Submodule.span_induction with
-    | mem y hy =>
-      obtain ⟨i, rfl⟩ := hy
-      rw [linDer_X]
-      exact Submodule.sum_mem _ fun l _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨l, rfl⟩)
-    | zero => simp
-    | add a b _ _ ha hb => simpa using Submodule.add_mem _ ha hb
-    | smul c a _ ha => simpa using Submodule.smul_mem _ c ha
+    refine (Submodule.span_le.2 ?_ :
+      _ ≤ (Submodule.span ℂ (Set.range (X : σ → MvPolynomial σ ℂ))).comap
+        (linDer T : MvPolynomial σ ℂ →ₗ[ℂ] MvPolynomial σ ℂ))
+    rintro _ ⟨i, rfl⟩
+    rw [SetLike.mem_coe, Submodule.mem_comap, Derivation.coeFn_coe, linDer_X]
+    exact Submodule.sum_mem _ fun l _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨l, rfl⟩)
   have hfd0 : (Submodule.span ℂ (Set.range (X : σ → MvPolynomial σ ℂ))).FG :=
     Submodule.fg_span (Set.finite_range _)
   intro v
@@ -240,7 +281,7 @@ theorem linDer_eval_series (T G : Matrix σ σ ℂ)
     · simp
     · intro n hn
       obtain ⟨m, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hn
-      simp [pow_succ, Module.End.mul_apply, h0]
+      simp [pow_succ, h0]
   | add p q hp hq =>
     simpa [mul_add, map_add (f := _)] using hp.add hq
   | mul_X p i hp =>
@@ -254,8 +295,8 @@ theorem linDer_eval_series (T G : Matrix σ σ ℂ)
           MvPolynomial σ ℂ →ₗ[ℂ] MvPolynomial σ ℂ) ^ n) (X i))) =
         fun b : ℕ => ∑ l, (b.factorial : ℂ)⁻¹ * (T ^ b) l i * z l := by
       funext n
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [linDer_pow_X, map_sum, Finset.mul_sum]
+
+      rw [linDer_pow_X, map_sum, Finset.mul_sum]
       exact Finset.sum_congr rfl fun l _ => by simp [smul_eval, mul_assoc]
     rw [heq]
     exact hs

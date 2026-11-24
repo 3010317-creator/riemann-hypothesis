@@ -1,9 +1,18 @@
 module
 
-public import Mathlib
-public import GroundTheory.ProfiniteCohomology.RestrictedRamification.EqZeroOfCohomologyInflThreeEqZero
+public import GroundTheory.ProfiniteCohomology.GlobalClassFormation.CupDecompositionGlobal
+public import GroundTheory.ProfiniteCohomology.RestrictedRamification.BrauerDefs
+import GroundTheory.ProfiniteCohomology.Colimit
+public import GroundTheory.ProfiniteCohomology.GlobalClassFormation.RealPlaces
+public import GroundTheory.ProfiniteCohomology.GlobalClassFormation.Splitting
 public import GroundTheory.ProfiniteCohomology.RestrictedRamification.BrauerSplit
-public import GroundTheory.ProfiniteCohomology.GlobalClassFormation
+import GroundTheory.ProfiniteCohomology.RestrictedRamification.BrauerSplitLayers
+public import GroundTheory.ProfiniteCohomology.RestrictedRamification.EqZeroOfCohomologyInflThreeEqZero
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.NumberTheory.NumberField.Cyclotomic.Embeddings
+public import GroundTheory.GlobalFields.CyclotomicCharacters.PadicUnitsLog
+public import GroundTheory.GlobalFields.NormResidueSymbol.CyclotomicCompositum
+public import GroundTheory.ProfiniteCohomology.GlobalClassFormation.LocalDegrees.Layers
 
 @[expose] public section
 
@@ -23,7 +32,7 @@ abbrev gsKernel : Subgroup K.1.fixingSubgroup := (gsRestrict K S).ker
 
 theorem isClosed_gsKernel : IsClosed (gsKernel K S : Set K.1.fixingSubgroup) := by
   have ht2 : T2Space (galUnramifiedOutside K.1 ℚ̄ S) :=
-    galois_t2Space K.1 (maxUnramifiedOutside K.1 ℚ̄ S)
+    krullTopology_t2 (K := K.1) (L := maxUnramifiedOutside K.1 ℚ̄ S)
   have : T1Space (galUnramifiedOutside K.1 ℚ̄ S) := @T2Space.t1Space _ _ ht2
   exact (isClosed_singleton (x := (1 : galUnramifiedOutside K.1 ℚ̄ S))).preimage (continuous_gsRestrict K S)
 

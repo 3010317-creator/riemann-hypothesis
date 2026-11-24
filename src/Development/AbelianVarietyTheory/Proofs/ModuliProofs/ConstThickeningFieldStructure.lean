@@ -1,11 +1,51 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsInvDer
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualNumberSectionsUniqueDecomposition
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsLieBasis
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+public import Mathlib.RingTheory.TensorProduct.IsBaseChangeFree
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsInvDer
 
 @[expose] public section
 
@@ -22,52 +62,16 @@ theorem existsUnique_of_isPushout {K : Type} [Field K] {A A' : CommRingCat.{0}} 
     (s : DualNumber K →+* A')
     (H : IsPushout (CommRingCat.ofHom c) (CommRingCat.ofHom (algebraMap K (DualNumber K))) p (CommRingCat.ofHom s))
     (F : A') : ∃! ab : A × A, F = p.hom ab.1 + s DualNumber.eps * p.hom ab.2 := by
-  let _ : Algebra K A := c.toAlgebra
-  let _ : Algebra A A' := p.hom.toAlgebra
-  let _ : Algebra (DualNumber K) A' := s.toAlgebra
-  let _ : Algebra K A' := (s.comp (algebraMap K (DualNumber K))).toAlgebra
-  have : IsScalarTower K (DualNumber K) A' := .of_algebraMap_eq fun _ => rfl
-  have : IsScalarTower K A A' := .of_algebraMap_eq fun r => (congrArg (fun q => q.hom r) H.w).symm
-  have h : Algebra.IsPushout K A (DualNumber K) A' := CommRingCat.isPushout_iff_isPushout.mp H
-  let b : Module.Basis (Fin 2) K (DualNumber K) := Module.Basis.finTwoProd K
-  have b0 : b 0 = 1 := Module.Basis.finTwoProd_zero K
-  have b1 : b 1 = DualNumber.eps := Module.Basis.finTwoProd_one K
-  let B := h.out.basis b
-  have B0 : B 0 = 1 := by
-    rw [h.out.basis_apply, b0]; exact map_one s
-  have B1 : B 1 = s DualNumber.eps := by
-    rw [h.out.basis_apply, b1]; rfl
-  have key : ∀ x y : A, p.hom x + s DualNumber.eps * p.hom y = B.equivFun.symm ![x, y] := fun x y => by
-    rw [Module.Basis.equivFun_symm_apply, Fin.sum_univ_two, B0, B1, Algebra.smul_def, Algebra.smul_def, _root_.mul_one,
-      _root_.mul_comm (s _)]
-    rfl
-  refine ⟨(B.equivFun F 0, B.equivFun F 1), ?_, fun ab hab => ?_⟩
-  · change F = _
-    rw [key, LinearEquiv.eq_symm_apply]
-    ext i; fin_cases i <;> rfl
-  · replace hab : F = _ := hab
-    rw [key, LinearEquiv.eq_symm_apply] at hab
-    rw [hab]; rfl
+  apply GlobalTheory.RelConstThickening.existsUnique_of_isPushout <;> assumption
 
 variable {K : Type} [Field K] {Y Y' : Scheme.{0}} {q : Y ⟶ Sp K} {π : Y' ⟶ Sp (DualNumber K)} {ρ : Y' ⟶ Y}
 
 def constHom {R : Type} [CommRing R] {X : Scheme.{0}} (f : X ⟶ Sp R) (U : X.Opens) : R →+* Γ(X, U) :=
   (f.appLE ⊤ U (fun _ _ => trivial)).hom.comp (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom
 
-theorem res_constFn {R : Type} [CommRing R] {X : Scheme.{0}} (f : X ⟶ Sp R) {U V : X.Opens} (h : V ≤ U) (a : R) :
-    (X.presheaf.map (homOfLE h).op).hom (constFn f U a) = constFn f V a := by
-  exact congrArg (fun g => g.hom ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom a))
-    (f.appLE_map (U := ⊤) (fun _ _ => trivial) (homOfLE h).op)
-
 theorem res_app {X X' : Scheme.{0}} (f : X' ⟶ X) {U V : X.Opens} (h : V ≤ U) (h' : f ⁻¹ᵁ V ≤ f ⁻¹ᵁ U) (a : Γ(X, U)) :
     (X'.presheaf.map (homOfLE h').op).hom ((f.app U).hom a) = (f.app V).hom ((X.presheaf.map (homOfLE h).op).hom a) := by
   rw [← CommRingCat.comp_apply, ← CommRingCat.comp_apply, Scheme.Hom.naturality]
-  rfl
-
-theorem res_res {X : Scheme.{0}} {U V W : X.Opens} (h : V ≤ U) (h' : W ≤ V) (a : Γ(X, U)) :
-    (X.presheaf.map (homOfLE h').op).hom ((X.presheaf.map (homOfLE h).op).hom a) =
-      (X.presheaf.map (homOfLE (h'.trans h)).op).hom a := by
-  rw [← CommRingCat.comp_apply, ← Functor.map_comp]
   rfl
 
 theorem existsUnique_affine (H : IsPullback ρ π q (spMap (algebraMap K (DualNumber K)))) {U : Y.Opens}
@@ -89,7 +93,7 @@ theorem res_comb {U V : Y.Opens} (h : V ≤ U) (h' : ρ ⁻¹ᵁ V ≤ ρ ⁻¹�
     (Y'.presheaf.map (homOfLE h').op).hom ((ρ.app U).hom a + constFn π _ DualNumber.eps * (ρ.app U).hom b) =
       (ρ.app V).hom ((Y.presheaf.map (homOfLE h).op).hom a) +
         constFn π _ DualNumber.eps * (ρ.app V).hom ((Y.presheaf.map (homOfLE h).op).hom b) := by
-  rw [map_add (f := _), map_mul, res_app ρ h, res_app ρ h, res_constFn]
+  rw [map_add (f := _), map_mul, res_app ρ h, res_app ρ h, GlobalTheory.RelConstThickening.res_constFn]
 
 theorem le_iSup_affine (O : Y.Opens) : O ≤ ⨆ U : {U : Y.Opens // IsAffineOpen U ∧ U ≤ O}, U.1 := fun x hx => by
   obtain ⟨_, ⟨U, hU, rfl⟩, hxU, hUO⟩ := Y.isBasis_affineOpens.exists_subset_of_mem_open hx O.isOpen
@@ -123,7 +127,7 @@ theorem existsUnique_comb (H : IsPullback ρ π q (spMap (algebraMap K (DualNumb
         (Y.presheaf.map (homOfLE (inf_le_right : U.1 ⊓ V.1 ≤ V.1)).op).hom (ab V).2 := fun U V => by
     apply unique_comb H
     rw [← res_comb inf_le_left (fun x hx => hx.1), ← res_comb inf_le_right (fun x hx => hx.2), ← hab, ← hab]
-    exact (res_res _ _ F).trans (res_res _ _ F).symm
+    exact (GlobalTheory.RelConstThickening.res_res _ _ F).trans (GlobalTheory.RelConstThickening.res_res _ _ F).symm
   obtain ⟨a, ha, -⟩ := Y.sheaf.existsUnique_gluing' _ O (fun U => homOfLE U.2.2) (le_iSup_affine O)
     (fun U => (ab U).1) (fun U V => (comp U V).1)
   obtain ⟨b, hb, -⟩ := Y.sheaf.existsUnique_gluing' _ O (fun U => homOfLE U.2.2) (le_iSup_affine O)

@@ -1,12 +1,53 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
+public import Development.WeilBound.ThetaLifts.TowerModels.TwistedSums.EventuallySelfDualLatticeIndicatorIsVacuum
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAddCharSymplecticLocalLatticeEqOne
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsDualFamilyOfIsLattice
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallySelfDualLatticeIndicatorIsVacuum
+public import Development.WeilBound.ThetaLifts.TowerModels.PlaneReal
 
 @[expose] public section
 
@@ -62,18 +103,9 @@ theorem exists_traceFamily [Algebra.Unramified (𝓞 F) (𝓞 E)] :
   rw [hc', hD]
 
 theorem det_ne_zero_of_hasSig {n r s : ℕ} {M : Matrix (Fin n) (Fin n) ℂ} (h : HasSig M r s) : M.det ≠ 0 := by
-  obtain ⟨hrs, A, hA⟩ := h
-  let e : Fin r ⊕ Fin s ≃ Fin n := finSumFinEquiv.trans (finCongr hrs)
-  let A' : Matrix (Fin n) (Fin n) ℂ := A.submatrix id e.symm
-  have h2 : A'ᵀ * M * A'.map star =
-      (Matrix.fromBlocks 1 0 0 (-1) : Matrix (Fin r ⊕ Fin s) (Fin r ⊕ Fin s) ℂ).submatrix e.symm e.symm := by
-    rw [← hA]; ext i j; simp [A', Matrix.mul_apply]
-  intro h0
-  have hd := congrArg Matrix.det h2
-  rw [Matrix.det_mul, Matrix.det_mul, h0, mul_zero, zero_mul, Matrix.det_submatrix_equiv_self,
-    Matrix.det_fromBlocks_zero₂₁, Matrix.det_one, one_mul, Matrix.det_neg] at hd
-  rw [Matrix.det_one, mul_one, Fintype.card_fin] at hd
-  exact (pow_ne_zero s (by norm_num : (-1 : ℂ) ≠ 0)) hd.symm
+  first
+  | exact _root_.PositivityTheory.ThKG.Tow.Pln.det_ne_zero_of_hasSig
+  | (apply _root_.PositivityTheory.ThKG.Tow.Pln.det_ne_zero_of_hasSig <;> assumption)
 
 theorem det_ne_zero_of_herm (σ : E →ₐ[F] E) (B : Base F E) {n r s : ℕ} {X : Spc F E n} (h : X.IsHerm σ B r s) :
     X.J.det ≠ 0 := by
@@ -109,14 +141,14 @@ theorem exists_formFrame (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin
             rw [Finset.sum_comm]
             exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
         _ = σ ((Φ *ᵥ x) j) := by
-            set_option synthInstance.maxHeartbeats 100000 in
-              rw [h2]; simp [Matrix.mulVec, dotProduct, map_sum, map_mul]
+
+            rw [h2]; simp [Matrix.mulVec, dotProduct, map_sum, map_mul]
     rw [e]; exact GlobalTheory.AdelicU.SelfDual.sig_mem_range σ (hΦ x hx j)
   · rw [Matrix.transpose_mul, ← Matrix.mul_assoc, Matrix.mul_assoc _ (Φ.map σ)ᵀ, ← Matrix.transpose_mul,
       ← Matrix.map_mul, h1, Matrix.map_one _ (map_zero _) (map_one _), Matrix.transpose_one, Matrix.mul_one,
       Matrix.nonsing_inv_mul _ hJtu]
 
-theorem cA_inclR (σ : E →ₐ[F] E) (e : E) : cA σ (inclR (F := F) (AF F) e) = inclR (F := F) (AF F) (σ e) := rfl
+alias cA_inclR := _root_.Tw.VacIndic.cA_inclR
 
 theorem trace_inclR (e : E) :
     Algebra.trace (AF F) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) (inclR (F := F) (AF F) e) = algebraMap F (AF F) (Algebra.trace F E e) := by
@@ -141,8 +173,8 @@ theorem trace_expand {k : ℕ} (s c : Fin k → 𝓞 E)
     rw [h1]
     simp_rw [mul_smul_comm, map_smul, ← map_mul, trace_inclR, smul_eq_mul]
     conv_lhs => rw [← hsc e]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finset.smul_sum]
+
+    rw [map_sum, Finset.smul_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [inclR_smul, smul_smul]
   | add x y hx hy =>
@@ -177,9 +209,9 @@ theorem hTens_frame (σ : E →ₐ[F] E) {n d k k' : ℕ} (JA : Matrix (Fin n) (
     (j : Fin k) (l : Fin k') :
     hTens (cA σ) (incM F JA) (incM F JB) z (incM F (Matrix.vecMulVec (fun i => e * S i j) (fun i => S' i l))) =
       inclR (F := F) (AF F) (σ e) * (incM F (JA * S.map σ)ᵀ * z * (incM F (JB * S'.map σ)ᵀ)ᵀ) j l := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hTens, incM, Matrix.map_apply, Matrix.mul_apply, Matrix.transpose_apply, Matrix.vecMulVec_apply,
-    cA_inclR, map_mul, map_sum, Finset.mul_sum, Finset.sum_mul]
+
+  simp only [hTens, incM, Matrix.map_apply, Matrix.mul_apply, Matrix.transpose_apply, Matrix.vecMulVec_apply,
+  cA_inclR, map_mul, map_sum, Finset.mul_sum, Finset.sum_mul]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun b _ => ?_
   symm
@@ -236,7 +268,7 @@ theorem latAtV_selfDual : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
       have hx : (fun i => e * S i j) ∈ G.V.L := by
         have := G.V.L.smul_mem (⟨e, hei⟩ : 𝓞 E) (hS j)
         convert this using 1
-        ext i; first | rfl | simp [Algebra.smul_def]
+        ext i; first | rfl
       have htat : At (evFin F v) t := fun u hu => by
         have := GlobalTheory.LatVac.symp_smul_smul σ (incM F G.V.J) (incM F G.W.J) (-1) u 1 z M
         rw [hz u hu, one_smul, mul_one, GlobalTheory.LatVacArith.symp_zero_left] at this
@@ -256,7 +288,7 @@ theorem latAtV_selfDual : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
           have := htat u hu
           rw [smul_eq_mul] at this ⊢
           rw [mul_left_comm, this, mul_zero]
-        rw [GlobalTheory.VacIndic.psi_of_at _ hat2, map_mul, GlobalTheory.LatVac.evFin_liftV, mul_comm] at h1
+        rw [Tw.VacIndic.psi_of_at _ hat2, map_mul, GlobalTheory.LatVac.evFin_liftV, mul_comm] at h1
         exact h1
       have := (hunr _).1 key
       rw [htC, map_neg] at this

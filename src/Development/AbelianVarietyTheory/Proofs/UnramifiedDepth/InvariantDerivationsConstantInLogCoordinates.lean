@@ -1,15 +1,54 @@
 module
 
-public import Mathlib
-public import Formalism.LocalToGlobal.CharacterGerms.NondegenerateCharts
-public import Formalism.LocalToGlobal.CharacterGerms.RowTieSelf
-public import Formalism.LocalToGlobal.CharacterGerms.BlockAdmissibleChart
-public import Formalism.LocalToGlobal.CharacterGerms.NegMem
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF
-public import Development.AbelianVarietyTheory.Definitions.TeichmullerDepth.HasTeich
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IntSOfMulEqOne
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsIntegralGaugedFormalGroupLawSelfConjugateSquar
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.LogChain
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IntSOfMulEqOne
+import Formalism.FormalGroupLog.FormalGroupLogProofs.ChainRule
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.Separation.CompletelyRegular
+import Std.Tactic.BVDecide.Normalize.Prop
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.LogChain
 
 @[expose] public section
 
@@ -24,32 +63,11 @@ open MvPowerSeries GlobalTheory.RowLawSquare ReciprocityTheory.ChartRestriction.
 
 variable {C : Type} [Field C] {dd : ℕ} {τ : Type}
 
-open scoped MvPowerSeries.WithPiTopology in
-private theorem pderiv_subst_of_zero_constantCoeff {σ : Type} [Fintype σ]
-    {a : σ → MvPowerSeries τ C} (ha : ∀ s, constantCoeff (a s) = 0)
-    (f : MvPowerSeries σ C) (t : τ) :
-    pderiv t (subst a f) = ∑ s, subst a (pderiv s f) * pderiv t (a s) := by
-  let : UniformSpace C := ⊥
-  let : DiscreteUniformity C := ⟨rfl⟩
-  have hsubst : Continuous (subst a : MvPowerSeries σ C → MvPowerSeries τ C) :=
-    continuous_subst (hasSubst_of_constantCoeff_zero ha)
-  have hderiv {ι : Type} (i : ι) :
-      Continuous (pderiv (R := C) i : MvPowerSeries ι C → MvPowerSeries ι C) := by
-    apply continuous_pi
-    intro d
-    change Continuous (fun g : MvPowerSeries ι C => coeff d (pderiv i g))
-    simp only [coeff_pderiv]
-    exact (WithPiTopology.continuous_coeff C _).mul continuous_const
-  refine WithPiTopology.denseRange_toMvPowerSeries.induction_on f
-    (isClosed_eq ((hderiv t).comp hsubst) (continuous_finsetSum _ fun s _ =>
-      (hsubst.comp (hderiv s)).mul continuous_const)) ?_
-  intro p
-  simpa only [pderiv_coe, subst_coe] using Formalism.G.LogCR.pderiv_aeval p a t
-
 theorem pderiv_substPointsPowerSeries_one {a : Fin dd → MvPowerSeries τ C} (ha : Zc a) (f : PS C 1 dd) (t : τ) :
     pderiv (R := C) t (sb ![a] f) = ∑ l, sb ![a] (pderiv (R := C) ((0 : Fin 1), l) f) * pderiv (R := C) t (a l) := by
   unfold sb
-  rw [pderiv_subst_of_zero_constantCoeff (fun p : Fin 1 × Fin dd => zc1 ha p.1 p.2),
+  rw [_root_.ReciprocityTheory.ChartRestriction.G.TB.LogPf.pderiv_subst
+      (fun p : Fin 1 × Fin dd => zc1 ha p.1 p.2),
     Fintype.sum_prod_type, Fin.sum_univ_one]
   rfl
 
@@ -57,7 +75,8 @@ theorem pderiv_substPointsPowerSeries_two {a b : Fin dd → MvPowerSeries τ C} 
     pderiv (R := C) t (sb ![a, b] f) = ∑ l, sb ![a, b] (pderiv (R := C) ((0 : Fin 2), l) f) * pderiv (R := C) t (a l) +
       ∑ l, sb ![a, b] (pderiv (R := C) ((1 : Fin 2), l) f) * pderiv (R := C) t (b l) := by
   unfold sb
-  rw [pderiv_subst_of_zero_constantCoeff (fun p : Fin 2 × Fin dd => zc2 ha hb p.1 p.2),
+  rw [_root_.ReciprocityTheory.ChartRestriction.G.TB.LogPf.pderiv_subst
+      (fun p : Fin 2 × Fin dd => zc2 ha hb p.1 p.2),
     Fintype.sum_prod_type, Fin.sum_univ_two]
   rfl
 
@@ -67,8 +86,8 @@ theorem sb_mul {n : ℕ} {a : Fin n → Fin dd → MvPowerSeries τ C} (ha : ∀
 theorem sb_sum {n : ℕ} {a : Fin n → Fin dd → MvPowerSeries τ C} (ha : ∀ j, Zc (a j)) {α : Type} (s : Finset α)
     (f : α → PS C n dd) : sb a (∑ x ∈ s, f x) = ∑ x ∈ s, sb a (f x) := by
   unfold sb
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [← coe_substAlgHom (hasSubst_sb ha), map_sum]
+
+  simp only [← coe_substAlgHom (hasSubst_sb ha), map_sum]
 
 theorem sb_zero {n : ℕ} {a : Fin n → Fin dd → MvPowerSeries τ C} (ha : ∀ j, Zc (a j)) :
     sb a (0 : PS C n dd) = 0 := by
@@ -126,8 +145,8 @@ theorem cc_pderiv_ex (i l : Fin dd) :
   have e : sb ![Y.ex] (Y.lg l) = X ((0 : Fin 1), l) := congrFun Y.lg_ex l
   have e2 := congrArg (fun f => constantCoeff (pderiv (R := C) ((0 : Fin 1), i) f)) e
   have hz : Zc Y.ex := Y.ex_const
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [pderiv_substPointsPowerSeries_one hz, map_sum, map_mul] at e2
+
+  simp only [pderiv_substPointsPowerSeries_one hz, map_sum, map_mul] at e2
   have h3 : ∀ x, constantCoeff (sb ![Y.ex] (pderiv (R := C) ((0 : Fin 1), x) (Y.lg l))) = if l = x then 1 else 0 :=
     fun x => by
       unfold sb
@@ -208,8 +227,9 @@ theorem subst_ex_DofN : ∀ (C : Type) [Field C] [CharZero C] (V : VF C) (O : Ty
   have hR : ∑ w, co w • pderiv (R := C) w (sb E G) =
       ∑ p : Fin n × Fin dd, sb E (pderiv (R := C) p G) * ∑ w, co w • pderiv (R := C) w (E p.1 p.2) := by
     unfold sb
-    simp only [pderiv_subst_of_zero_constantCoeff (a := fun p : Fin n × Fin dd => E p.1 p.2)
-      (fun p => hE p.1 p.2), Finset.smul_sum, ← mul_smul_comm, Finset.mul_sum]
+    simp only [_root_.ReciprocityTheory.ChartRestriction.G.TB.LogPf.pderiv_subst
+        (a := fun p : Fin n × Fin dd => E p.1 p.2) (fun p => hE p.1 p.2),
+      Finset.smul_sum, ← mul_smul_comm, Finset.mul_sum]
     exact Finset.sum_comm
   rw [hR, Fintype.sum_prod_type, Finset.sum_eq_single b]
   · unfold DofN

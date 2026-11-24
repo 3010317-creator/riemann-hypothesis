@@ -1,9 +1,55 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoMulInvOf
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrandPeriodic
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DerivativeClosedFunctionClassSmoothAndSchwartz
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrandPeriodic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Development.WeilBound.ThetaLifts.LeviDeterminants.GrowSplit
 
 @[expose] public section
 
@@ -95,30 +141,9 @@ namespace GlobalTheory.ThetaTransform.RealSchwartz
 variable {F : Type} [Field F] [NumberField F]
 
 theorem continuous_mixedSpace_symm : Continuous (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm := by
-  apply continuous_pi
-  intro v
-  by_cases hv : v.IsReal
-  · have hE := (InfinitePlace.Completion.isometry_extensionEmbeddingOfIsReal hv).isEmbedding
-    refine hE.isInducing.continuous_iff.2 ?_
-    have h : (InfinitePlace.Completion.extensionEmbeddingOfIsReal hv ∘
-        fun y => (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm y v) = fun y => y.1 ⟨v, hv⟩ := by
-      funext y
-      have h0 := congrArg (fun z => z.1 ⟨v, hv⟩) ((InfiniteAdeleRing.ringEquiv_mixedSpace F).apply_symm_apply y)
-      rw [Function.comp_apply]
-      exact h0
-    rw [h]
-    exact (continuous_apply _).comp continuous_fst
-  · have hc : v.IsComplex := InfinitePlace.not_isReal_iff_isComplex.1 hv
-    have hE := (InfinitePlace.Completion.isometry_extensionEmbedding v).isEmbedding
-    refine hE.isInducing.continuous_iff.2 ?_
-    have h : (InfinitePlace.Completion.extensionEmbedding v ∘
-        fun y => (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm y v) = fun y => y.2 ⟨v, hc⟩ := by
-      funext y
-      have h0 := congrArg (fun z => z.2 ⟨v, hc⟩) ((InfiniteAdeleRing.ringEquiv_mixedSpace F).apply_symm_apply y)
-      rw [Function.comp_apply]
-      exact h0
-    rw [h]
-    exact (continuous_apply _).comp continuous_snd
+  first
+  | exact _root_.PositivityTheory.ThKF0.Split.continuous_ofMixed
+  | (apply _root_.PositivityTheory.ThKF0.Split.continuous_ofMixed <;> assumption)
 
 theorem embR_add {N : ℕ} (a b : Fin N → mixedEmbedding.mixedSpace F) :
     (embR (a + b) : Fin N → AF F) = embR a + embR b := by
@@ -142,7 +167,6 @@ theorem fin_embR {N : ℕ} (t : Fin N → mixedEmbedding.mixedSpace F) : fin (em
   funext l
   first
   | rfl
-  | simp [fin, embR, pairA, sndA]
 
 def lineR {N : ℕ} (v : Fin N → mixedEmbedding.mixedSpace F) : ℝ →+ VA F N where
   toFun s := (embR (s • v), 0)
@@ -156,7 +180,6 @@ theorem isRealLine_lineR {N : ℕ} (v : Fin N → mixedEmbedding.mixedSpace F) :
   · funext l
     first
     | rfl
-    | simp [fin, sndA]
 
 end GlobalTheory.ThetaTransform.RealSchwartz
 

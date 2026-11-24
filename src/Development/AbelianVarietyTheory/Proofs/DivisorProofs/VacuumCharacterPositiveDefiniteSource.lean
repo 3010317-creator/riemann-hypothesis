@@ -1,11 +1,46 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdeleAt
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIdeleAt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumRealPlacesFockVacuumCharacterStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQuaStatement
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.EqNegOfCommute
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryActionAtRealPlace
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -26,9 +61,9 @@ theorem vacuum_character : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : I
     have := hG.2.2.det_pos.ne'
     rw [Matrix.det_mul] at this
     exact left_ne_zero_of_mul this
-  obtain ⟨x, hx, hxv⟩ := exists_root hθ S (fun τ => hdet (hS τ)) g hg
-  obtain ⟨y, hy, hyv⟩ := exists_root hθ T (fun τ => hdet (hT τ)) h hh
-  choose p hp hd using fun τ => detPlus_one (n := S.rank) (sT τ) (hT τ).1
+  obtain ⟨x, hx, hxv⟩ := GlobalTheory.OneMapRef.RealMove.exists_root hθ S (fun τ => hdet (hS τ)) g hg
+  obtain ⟨y, hy, hyv⟩ := GlobalTheory.OneMapRef.RealMove.exists_root hθ T (fun τ => hdet (hT τ)) h hh
+  choose p hp hd using fun τ => GlobalTheory.OneMapRef.RealMove.detPlus_one (n := S.rank) (sT τ) (hT τ).1
   rw [GlobalTheory.T.weilDatum_realPlaces_fockVacuum_character D ψ hW.std S T θ hθ χS χT om η ⟨e1, e4, e3, e2⟩ hW (fun _ => 1) sT hS hT g hg h hh
     (fun τ => by rw [one_mul, mul_one]) hc x y hx hy f hf hv]
   congr 1
@@ -39,14 +74,14 @@ theorem vacuum_character : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : I
     push_cast
     linear_combination -this
   rw [Circle.coe_mul, Circle.coe_inv,
-    hxv _ (fun τ => -x₃ τ - p τ) (fun τ => by rw [hb']; exact hasInfExp_twist (hb τ) (e2 τ) _),
-    hyv _ x₂ (fun τ => by rw [h2]; exact hasInfExp_twist (ha τ) (e2 τ) _),
+    hxv _ (fun τ => -x₃ τ - p τ) (fun τ => by rw [hb']; exact GlobalTheory.OneMapRef.RealMove.hasInfExp_twist (hb τ) (e2 τ) _),
+    hyv _ x₂ (fun τ => by rw [h2]; exact GlobalTheory.OneMapRef.RealMove.hasInfExp_twist (ha τ) (e2 τ) _),
     ← Finset.prod_inv_distrib, ← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun τ _ => ?_
   obtain ⟨d1, d2⟩ := hd τ (compAt θ τ (Formalism.L2.Theta.mt S g⁻¹)) (compAt θ τ (Formalism.L2.Theta.mt T h)) (hc τ)
   have inv : ∀ (V : HSp D) (k : GA D V),
       (compAt θ τ (Formalism.L2.Theta.mt V k)).det * (compAt θ τ (Formalism.L2.Theta.mt V k⁻¹)).det = 1 := fun V k => by
-    rw [det_compAt, det_compAt, ← map_mul, ← map_mul, ← Matrix.det_mul]
+    rw [GlobalTheory.OneMapRef.RealMove.det_compAt, GlobalTheory.OneMapRef.RealMove.det_compAt, ← map_mul, ← map_mul, ← Matrix.det_mul]
     unfold Formalism.L2.Theta.mt
     rw [← Units.val_mul, ← map_mul, mul_inv_cancel, map_one, Units.val_one, Matrix.det_one, map_one, map_one]
   have g0 := left_ne_zero_of_mul_eq_one (inv S g)

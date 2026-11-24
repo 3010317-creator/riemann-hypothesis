@@ -1,25 +1,56 @@
 module
 
-public import Mathlib
-public import Development.ResolutionOfSingularities.Foundations.Blowup.BlowupBasic
-public import Development.ResolutionOfSingularities.Foundations.Blowup.BlowupExistence
-public import Development.ResolutionOfSingularities.Foundations.Blowup.BlowupProperties
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.ClopenRestriction
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.BlowupSequenceRelations
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.StrictTransform
-public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.CoordinateDivisorSmoothness
-public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.StrictNormalCrossings
-public import Development.ResolutionOfSingularities.Foundations.Schemes.IdealSheafData
-public import Development.ResolutionOfSingularities.EmbeddedResolution.AlgebraicPreliminaries.DisjointUnionOfOpens
-public import Development.ResolutionOfSingularities.Foundations.Schemes.SchemeMorphismProperties
-public import Development.ResolutionOfSingularities.EmbeddedResolution.MaximalContactHypersurfaces.TunedSheaf
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReductionProperties
 public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReduction.MaxContactReduction
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReduction.DescentHypotheses
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.IdealBlowupSequence
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.MarkedSequenceOfBlowups
-public import Development.ResolutionOfSingularities.Foundations.BlowupUniversalProperty
-public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionOfSingularities
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.CoordinateDivisorSmoothness
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.StrictTransform
+import Development.ResolutionOfSingularities.Foundations.Schemes.IdealSheafData
+import Development.ResolutionOfSingularities.Foundations.Schemes.SchemeCoproduct
+import Development.ResolutionOfSingularities.Foundations.Schemes.SchemeMorphismProperties
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.Morphisms.WeaklyEtale
+import Mathlib.AlgebraicGeometry.QuasiAffine
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -73,23 +104,11 @@ theorem disjointUnionMap_summandι_mem (D : FiniteOpenCoverWithIdeals T) (i : D.
   exact hmem
 
 private theorem comap_imageIdealSheaf_summandι (D : FiniteOpenCoverWithIdeals T) (i : D.idx) :
-    (imageIdealSheaf (D.summandι i) (D.localIdeal i)).comap (D.summandι i) = D.localIdeal i :=
+    (_root_.FunctorialResolution.Blowup.schemeImageIdeal (D.summandι i) (D.localIdeal i)).comap (D.summandι i) = D.localIdeal i :=
   FunctorialResolution.EmbeddedResolution.comap_ker_subschemeι_comp (D.localIdeal i) (D.summandι i)
 
 private theorem imageIdealSheaf_eq_ker {X Y : Scheme.{u}} (f : X ⟶ Y) [QuasiCompact f]
-    (I : X.IdealSheafData) : imageIdealSheaf f I = Scheme.Hom.ker (I.subschemeι ≫ f) := rfl
-
-private theorem subsingleton_sections_bot (Z : Scheme.{u}) :
-    Subsingleton ↥(Z.presheaf.obj (Opposite.op (⊥ : Z.Opens))) := by
-  have ht : CategoryTheory.Limits.IsTerminal (Z.presheaf.obj (Opposite.op (⊥ : Z.Opens))) :=
-    TopCat.Sheaf.isTerminalOfEmpty Z.sheaf
-  refine ⟨fun a b => ?_⟩
-  have h := ht.hom_ext
-    (CommRingCat.ofHom (RingHom.fst ↥(Z.presheaf.obj (Opposite.op (⊥ : Z.Opens)))
-      ↥(Z.presheaf.obj (Opposite.op (⊥ : Z.Opens)))))
-    (CommRingCat.ofHom (RingHom.snd ↥(Z.presheaf.obj (Opposite.op (⊥ : Z.Opens)))
-      ↥(Z.presheaf.obj (Opposite.op (⊥ : Z.Opens)))))
-  exact congrArg (fun m => (CommRingCat.Hom.hom m) (a, b)) h
+    (I : X.IdealSheafData) : _root_.FunctorialResolution.Blowup.schemeImageIdeal f I = Scheme.Hom.ker (I.subschemeι ≫ f) := rfl
 
 private theorem ideal_ker_eq_top_of_disjoint {Y Z : Scheme.{u}} (g : Z ⟶ Y) [QuasiCompact g]
     (U : Y.affineOpens) (hdisj : ∀ z : ↥Z, g.base z ∉ (U.1 : Set ↥Y)) :
@@ -98,9 +117,8 @@ private theorem ideal_ker_eq_top_of_disjoint {Y Z : Scheme.{u}} (g : Z ⟶ Y) [Q
     refine TopologicalSpace.Opens.ext ?_
     rw [TopologicalSpace.Opens.coe_bot]
     exact Set.eq_empty_iff_forall_notMem.mpr fun z hz => hdisj z hz
-  have hsub : Subsingleton ↥(Z.presheaf.obj (Opposite.op (g ⁻¹ᵁ U.1))) := by
-    rw [hempty]
-    exact subsingleton_sections_bot Z
+  have hsub : Subsingleton ↥(Z.presheaf.obj (Opposite.op (g ⁻¹ᵁ U.1))) :=
+    CommRingCat.subsingleton_of_isTerminal (Z.sheaf.isTerminalOfEqEmpty hempty)
   rw [Scheme.Hom.ker_apply]
   refine (Ideal.eq_top_iff_one _).mpr ?_
   rw [RingHom.mem_ker, map_one]
@@ -109,7 +127,7 @@ private theorem ideal_ker_eq_top_of_disjoint {Y Z : Scheme.{u}} (g : Z ⟶ Y) [Q
 private theorem ideal_imageIdealSheaf_eq_top_of_ne (D : FiniteOpenCoverWithIdeals T) {i j : D.idx} (hij : j ≠ i)
     (W : D.disjointUnion.Opens) (hW : IsAffineOpen W)
     (hsub : ∀ y ∈ (W : Set ↥D.disjointUnion), y ∈ Set.range (D.summandι i).base) :
-    (imageIdealSheaf (D.summandι j) (D.localIdeal j)).ideal ⟨W, hW⟩ = ⊤ := by
+    (_root_.FunctorialResolution.Blowup.schemeImageIdeal (D.summandι j) (D.localIdeal j)).ideal ⟨W, hW⟩ = ⊤ := by
   rw [imageIdealSheaf_eq_ker]
   refine ideal_ker_eq_top_of_disjoint ((D.localIdeal j).subschemeι ≫ D.summandι j) ⟨W, hW⟩ ?_
   intro z hz
@@ -122,7 +140,7 @@ private theorem ideal_imageIdealSheaf_eq_top_of_ne (D : FiniteOpenCoverWithIdeal
 theorem comap_iInfImageIdeal_summandι (D : FiniteOpenCoverWithIdeals T) (i : D.idx) :
     D.iInfImageIdeal.comap (D.summandι i) = D.localIdeal i := by
   have hglue : D.iInfImageIdeal
-      = ⨅ j : D.idx, imageIdealSheaf (D.summandι j) (D.localIdeal j) := rfl
+      = ⨅ j : D.idx, _root_.FunctorialResolution.Blowup.schemeImageIdeal (D.summandι j) (D.localIdeal j) := rfl
   refine le_antisymm ?_ ?_
   · rw [hglue]
     exact le_trans (Scheme.IdealSheafData.comap_mono (D.summandι i) (iInf_le _ i))
@@ -139,9 +157,9 @@ theorem comap_iInfImageIdeal_summandι (D : FiniteOpenCoverWithIdeals T) (i : D.
     have h1 := Scheme.IdealSheafData.comap_ideal_eq_map_appLE D.iInfImageIdeal (D.summandι i)
       ⟨_, hW⟩ V hle
     have h2 := Scheme.IdealSheafData.comap_ideal_eq_map_appLE
-      (imageIdealSheaf (D.summandι i) (D.localIdeal i)) (D.summandι i) ⟨_, hW⟩ V hle
+      (_root_.FunctorialResolution.Blowup.schemeImageIdeal (D.summandι i) (D.localIdeal i)) (D.summandι i) ⟨_, hW⟩ V hle
     have h3 : D.iInfImageIdeal.ideal ⟨_, hW⟩
-        = (imageIdealSheaf (D.summandι i) (D.localIdeal i)).ideal ⟨_, hW⟩ := by
+        = (_root_.FunctorialResolution.Blowup.schemeImageIdeal (D.summandι i) (D.localIdeal i)).ideal ⟨_, hW⟩ := by
       rw [hglue]
       simp only [Scheme.IdealSheafData.ideal_iInf, iInf_apply]
       refine le_antisymm (iInf_le _ i) (le_iInf fun j => ?_)
@@ -238,28 +256,6 @@ theorem summandEtaleChart_coordIdeal (D : FiniteOpenCoverWithIdeals T) (i : D.id
   rw [EtaleChart.coordIdeal_eq_comap_coordSubspaceIdeal, EtaleChart.coordIdeal_eq_comap_coordSubspaceIdeal, summandEtaleChart_map,
     ← Scheme.IdealSheafData.comap_comp]
 
-private theorem eq_of_map_eq_of_bijective {A B : Type u} [CommRing A] [CommRing B]
-    (φ : A →+* B) (hinj : Function.Injective φ) (hsurj : Function.Surjective φ)
-    {I I' : Ideal A} (h : Ideal.map φ I = Ideal.map φ I') : I = I' := by
-  ext x
-  constructor
-  · intro hx
-    have hmem : φ x ∈ Ideal.map φ I' := by
-      rw [← h]
-      exact Ideal.mem_map_of_mem φ hx
-    obtain ⟨a, ha, hax⟩ := (Ideal.mem_map_iff_of_surjective (f := φ) hsurj).mp hmem
-    have hax' : a = x := hinj hax
-    rw [hax'] at ha
-    exact ha
-  · intro hx
-    have hmem : φ x ∈ Ideal.map φ I := by
-      rw [h]
-      exact Ideal.mem_map_of_mem φ hx
-    obtain ⟨a, ha, hax⟩ := (Ideal.mem_map_iff_of_surjective (f := φ) hsurj).mp hmem
-    have hax' : a = x := hinj hax
-    rw [hax'] at ha
-    exact ha
-
 private theorem top_le_preimage_opens {X : Scheme.{u}} (V : X.Opens) :
     (⊤ : V.toScheme.Opens) ≤ (TopologicalSpace.Opens.map V.ι.base).obj V := by
   intro y _
@@ -270,24 +266,25 @@ private theorem appLE_ι_eq_topIso_inv {X : Scheme.{u}} (V : X.Opens) :
   simp
   rfl
 
+private theorem ideal_le_of_comap_ι_le {Y : Scheme.{u}} {J J' : Y.IdealSheafData}
+    (V : Y.Opens) (hV : IsAffineOpen V) (h : J.comap V.ι ≤ J'.comap V.ι) :
+    J.ideal ⟨V, hV⟩ ≤ J'.ideal ⟨V, hV⟩ := by
+  have : IsAffine V.toScheme := hV
+  have k1 := Scheme.IdealSheafData.comap_ideal_eq_map_appLE J V.ι ⟨V, hV⟩
+    ⟨⊤, isAffineOpen_top V.toScheme⟩ (top_le_preimage_opens V)
+  have k2 := Scheme.IdealSheafData.comap_ideal_eq_map_appLE J' V.ι ⟨V, hV⟩
+    ⟨⊤, isAffineOpen_top V.toScheme⟩ (top_le_preimage_opens V)
+  have hle := Scheme.IdealSheafData.le_def.mp h ⟨⊤, isAffineOpen_top V.toScheme⟩
+  rw [k1, k2, appLE_ι_eq_topIso_inv V] at hle
+  have hbij : Function.Bijective (CommRingCat.Hom.hom V.topIso.inv) :=
+    V.topIso.symm.commRingCatIsoToRingEquiv.bijective
+  have h2 := Ideal.comap_mono (f := CommRingCat.Hom.hom V.topIso.inv) hle
+  rwa [Ideal.comap_map_of_bijective _ hbij, Ideal.comap_map_of_bijective _ hbij] at h2
+
 private theorem ideal_eq_of_comap_ι_eq {X : Scheme.{u}} {I J : X.IdealSheafData}
     (V : X.Opens) (hV : IsAffineOpen V) (h : I.comap V.ι = J.comap V.ι) :
-    I.ideal ⟨V, hV⟩ = J.ideal ⟨V, hV⟩ := by
-  have : IsAffine V.toScheme := hV
-  have key1 := Scheme.IdealSheafData.comap_ideal_eq_map_appLE I V.ι ⟨V, hV⟩
-      ⟨⊤, isAffineOpen_top V.toScheme⟩ (top_le_preimage_opens V)
-  have key2 := Scheme.IdealSheafData.comap_ideal_eq_map_appLE J V.ι ⟨V, hV⟩
-      ⟨⊤, isAffineOpen_top V.toScheme⟩ (top_le_preimage_opens V)
-  rw [h] at key1
-  have hinj : Function.Injective
-      (CommRingCat.Hom.hom (V.ι.appLE V ⊤ (top_le_preimage_opens V))) := by
-    rw [appLE_ι_eq_topIso_inv V]
-    exact V.topIso.symm.commRingCatIsoToRingEquiv.injective
-  have hsurj : Function.Surjective
-      (CommRingCat.Hom.hom (V.ι.appLE V ⊤ (top_le_preimage_opens V))) := by
-    rw [appLE_ι_eq_topIso_inv V]
-    exact V.topIso.symm.commRingCatIsoToRingEquiv.surjective
-  exact eq_of_map_eq_of_bijective _ hinj hsurj (key1.symm.trans key2)
+    I.ideal ⟨V, hV⟩ = J.ideal ⟨V, hV⟩ :=
+  le_antisymm (ideal_le_of_comap_ι_le V hV h.le) (ideal_le_of_comap_ι_le V hV h.ge)
 
 private theorem ext_of_comap_ι_eq_of_iSup_eq_top {X : Scheme.{u}} {ι : Type u} (U : ι → X.Opens)
     (hU : iSup U = ⊤) {I J : X.IdealSheafData}
@@ -324,31 +321,6 @@ theorem ext_of_comap_summandι (D : FiniteOpenCoverWithIdeals T) {J J' : D.disjo
     have h2 := restrictIdeal_summandOpen D i J'
     rw [h i] at h1
     exact h1.trans h2.symm
-
-private theorem ideal_le_of_map_le_of_bijective {A B : Type u} [CommRing A] [CommRing B]
-    (φ : A →+* B) (hinj : Function.Injective φ) (hsurj : Function.Surjective φ)
-    {I I' : Ideal A} (h : Ideal.map φ I ≤ Ideal.map φ I') : I ≤ I' := by
-  intro a ha
-  have h1 : φ a ∈ Ideal.map φ I' := h (Ideal.mem_map_of_mem φ ha)
-  obtain ⟨b, hb, hba⟩ := (Ideal.mem_map_iff_of_surjective (f := φ) hsurj).mp h1
-  have hba' : b = a := hinj hba
-  rwa [hba'] at hb
-
-private theorem ideal_le_of_comap_ι_le {Y : Scheme.{u}} {J J' : Y.IdealSheafData}
-    (V : Y.Opens) (hV : IsAffineOpen V) (h : J.comap V.ι ≤ J'.comap V.ι) :
-    J.ideal ⟨V, hV⟩ ≤ J'.ideal ⟨V, hV⟩ := by
-  have : IsAffine V.toScheme := hV
-  have k1 := Scheme.IdealSheafData.comap_ideal_eq_map_appLE J V.ι ⟨V, hV⟩
-    ⟨⊤, isAffineOpen_top V.toScheme⟩ (top_le_preimage_opens V)
-  have k2 := Scheme.IdealSheafData.comap_ideal_eq_map_appLE J' V.ι ⟨V, hV⟩
-    ⟨⊤, isAffineOpen_top V.toScheme⟩ (top_le_preimage_opens V)
-  have hle := Scheme.IdealSheafData.le_def.mp h ⟨⊤, isAffineOpen_top V.toScheme⟩
-  rw [k1, k2, appLE_ι_eq_topIso_inv V] at hle
-  have hinj : Function.Injective (CommRingCat.Hom.hom V.topIso.inv) :=
-    V.topIso.symm.commRingCatIsoToRingEquiv.injective
-  have hsurj : Function.Surjective (CommRingCat.Hom.hom V.topIso.inv) :=
-    V.topIso.symm.commRingCatIsoToRingEquiv.surjective
-  exact ideal_le_of_map_le_of_bijective _ hinj hsurj hle
 
 private theorem le_of_ideal_le_locally {Y : Scheme.{u}} {J J' : Y.IdealSheafData}
     (V : ↥Y → Y.Opens) (hmem : ∀ y : ↥Y, y ∈ V y)

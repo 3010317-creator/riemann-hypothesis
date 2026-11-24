@@ -1,12 +1,51 @@
 module
 
-public import Mathlib
-public import Formalism.HermitianCurvature.StatementD
-public import Formalism.HermitianCurvature.StatementQ
-public import Formalism.HermitianCurvature.BigCellVanishingOfCommute
-public import Formalism.HermitianCurvature.StatementU
 public import Development.AbelianVarietyTheory.Definitions.Jets.WigMap
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitaryQuotientCompactness.MulVecBvecApply
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Formalism.SharedLemmas.HpkSq
 
 @[expose] public section
 
@@ -48,34 +87,9 @@ private lemma hpk_apply_of_middle {i : Fin (2 * r + k + 1)} (hi : r ≤ i.val �
   split_ifs <;> first | rfl | (exfalso; omega)
 
 private lemma hpk_mul_hpk : Hpk k r * Hpk k r = 1 := by
-  ext i j
-  rw [Matrix.mul_apply, Matrix.one_apply]
-  have := i.isLt
-  have := j.isLt
-  by_cases hout : i.val < r ∨ r + k < i.val
-  · have hp : 2 * r + k - i.val < 2 * r + k + 1 := by omega
-    have hp' : 2 * r + k - i.val < r ∨ r + k < 2 * r + k - i.val := by omega
-    rw [Finset.sum_eq_single ⟨2 * r + k - i.val, hp⟩]
-    · rw [hpk_apply_of_outer hout, hpk_apply_of_outer (i := ⟨2 * r + k - i.val, hp⟩) hp']
-      simp only [Fin.ext_iff]
-      split_ifs <;> first | rfl | (exfalso; omega) | norm_num
-    · intro l _ hl
-      rw [hpk_apply_of_outer hout, if_neg, zero_mul]
-      intro e
-      exact hl (Fin.ext (show l.val = 2 * r + k - i.val by omega))
-    · intro h
-      exact absurd (Finset.mem_univ _) h
-  · have hmid : r ≤ i.val ∧ i.val ≤ r + k := by omega
-    rw [Finset.sum_eq_single i]
-    · rw [hpk_apply_of_middle hmid, hpk_apply_of_middle hmid]
-      by_cases hij : i = j
-      · subst hij
-        by_cases hv : i.val = r + k <;> simp [hv]
-      · simp [hij]
-    · intro l _ hl
-      rw [hpk_apply_of_middle hmid, if_neg (Ne.symm hl), zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+  first
+  | exact _root_.Formalism.SharedLemmas.upq_hpk_mul_self
+  | (apply _root_.Formalism.SharedLemmas.upq_hpk_mul_self <;> assumption)
 
 private lemma hpk_conjTranspose_hpk_mul_eq_one_of_mem_UH {g : Mx k r} (hg : g ∈ UH (Hpk k r)) :
     Hpk k r * gᴴ * Hpk k r * g = 1 := by
@@ -177,9 +191,7 @@ lemma block {h : Mx k r} (hh : h ∈ UWset k r z) (i j : Fin (2 * r + k + 1))
       _ = bvec j i := herm_hpk_bvec_eq_of_outer _ ⟨2 * r + k - i.val, hlt⟩ i hp hpi
       _ = if i = j then 1 else 0 := hbv i j
 
-lemma mul_inv {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : g * g⁻¹ = 1 := mul_inv_cancel_of_mem_UH hg
-
-lemma inv_eq {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : g⁻¹ = Hpk k r * gᴴ * Hpk k r := inv_eq_hpk_mul_conjTranspose_mul_hpk hg
+alias mul_inv := _root_.GlobalTheory.WigSh.OmgEquiv.mul_inv_cancel_of_mem_UH
 
 lemma mul_mem {a b : Mx k r} (ha : a ∈ UH (Hpk k r)) (hb : b ∈ UH (Hpk k r)) : a * b ∈ UH (Hpk k r) := by
   have ea : aᴴ * Hpk k r * a = Hpk k r := ha
@@ -249,7 +261,7 @@ theorem omg_equivariant : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ))
     GlobalTheory.WigSh.OmgEquiv.mul_mem
       (GlobalTheory.WigSh.OmgEquiv.mul_mem (hUW (GlobalTheory.WigSh.OmgEquiv.inv_mem hh)) hg) (hUW hh')
   unfold GlobalTheory.WigSh.omg
-  rw [GlobalTheory.WigSh.OmgEquiv.Zhat_eq hh hh', ← GlobalTheory.WigSh.OmgEquiv.inv_eq hG, ← GlobalTheory.WigSh.OmgEquiv.inv_eq hg,
+  rw [GlobalTheory.WigSh.OmgEquiv.Zhat_eq hh hh', ← _root_.GlobalTheory.WigSh.OmgEquiv.inv_eq_hpk_mul_conjTranspose_mul_hpk hG, ← _root_.GlobalTheory.WigSh.OmgEquiv.inv_eq_hpk_mul_conjTranspose_mul_hpk hg,
     Matrix.mul_inv_rev, Matrix.mul_inv_rev]
   set S := ∑ a, star ((Zhat k r z z' g).adjugate (Fin.last r) a) • fvec k r z a with hSdef
   have hfixS : ∀ m : Mx k r, m ∈ UWset k r z → m *ᵥ S = S := by

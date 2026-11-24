@@ -1,22 +1,49 @@
 module
 
-public import Mathlib
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.RemoveIsoBlowups
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.BlowupSequenceRelations
-public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.StrictNormalCrossings
-public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionDescent.AffineResolutionRule
-public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionDescent.InducedBlowupsFlatBaseChange
-public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionDescent.ChartFlatBaseChange
-public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionDescent.EmbeddedResolutionRule
-public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionDescent.FieldExtensionEtaleCover
-public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionDescent.StrictPullbackCriterion
-public import Development.ResolutionOfSingularities.EmbeddedResolution.AlgebraicPreliminaries.KernelFlatBaseChange
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.FunctorialPrincipalization
 public import Development.ResolutionOfSingularities.EmbeddedResolution.StrongResolution.EmbeddedBlowupSequence
-public import Development.ResolutionOfSingularities.EmbeddedResolution.StrongResolution.EmbeddedStrictTransform
-public import Development.ResolutionOfSingularities.EmbeddedResolution.StrongResolution.SequenceIsomorphism
-public import Development.ResolutionOfSingularities.Foundations.BlowupUniversalProperty
-public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionOfSingularities
+public import Development.ResolutionOfSingularities.EmbeddedResolution.AlgebraicPreliminaries.KernelFlatBaseChange
+public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionDescent.InducedBlowupsFlatBaseChange
+public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionDescent.StrictPullbackCriterion
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionDescent.ChartFlatBaseChange
 
 @[expose] public section
 
@@ -84,83 +111,5 @@ theorem embeddedResolutionRule_isCompatibleWithSmoothAmbientMaps
     EmbeddedResolutionRule.IsCompatibleWithSmoothAmbientMaps (embeddedResolutionRuleOfPrincipalization A hw) := by
   intro k _ _ Y Y' p p' _ _ _ _ _ _ _ _ D D' φ _ ψ hφ hsq
   exact embeddedResolutionRule_isPullbackBlowupSequence_of_smooth A hA hw k Y Y' p p' D D' φ ψ hφ hsq
-
-theorem embeddedResolutionRule_isStrictPullbackBlowupSeq_baseChange
-    (A : PrincipalizationAlgorithm.{u}) (hA : IsFunctorialPrincipalization A) (hw : TransitionsAreBlowupsForEmbeddings A)
-    (k : Type u) [Field k] [CharZero k] (Y : Scheme.{u})
-    (p : Y ⟶ Spec (CommRingCat.of k))
-    [AlgebraicGeometry.LocallyOfFiniteType p] [AlgebraicGeometry.QuasiCompact p]
-    [AlgebraicGeometry.IsReduced Y] [AlgebraicGeometry.IsAffine Y]
-    (D : EmbeddingDatum k Y p) (K : Type u) [Field K] [CharZero K] [Algebra k K]
-    [AlgebraicGeometry.IsReduced (baseChange p K)]
-    (hker : NonzeroOnComponents (D.baseChangeEmb K).ker)
-    (hsnc : InStrictNormalCrossingPosition (baseChangeToSpec D.ambientStruct K)
-      ([] : List (baseChange D.ambientStruct K).IdealSheafData)) :
-    haveI : AlgebraicGeometry.IsAffine (baseChange p K) := isAffine_baseChange p K
-    haveI : AlgebraicGeometry.LocallyOfFiniteType (baseChangeToSpec p K) :=
-      locallyOfFiniteType_baseChangeToSpec p K
-    haveI : AlgebraicGeometry.QuasiCompact (baseChangeToSpec p K) :=
-      quasiCompact_baseChangeToSpec p K
-    IsStrictPullbackBlowupSeq (baseChangeProjection p K)
-      (embeddedResolutionRuleOfPrincipalization A hw K (baseChange p K) (baseChangeToSpec p K)
-        (D.baseChange K hker hsnc))
-      (embeddedResolutionRuleOfPrincipalization A hw k Y p D) := by
-  have : AlgebraicGeometry.IsAffine (baseChange p K) := isAffine_baseChange p K
-  have : AlgebraicGeometry.LocallyOfFiniteType (baseChangeToSpec p K) :=
-    locallyOfFiniteType_baseChangeToSpec p K
-  have : AlgebraicGeometry.QuasiCompact (baseChangeToSpec p K) :=
-    quasiCompact_baseChangeToSpec p K
-  have : AlgebraicGeometry.IsAffine (baseChange D.ambientStruct K) :=
-    EmbeddingDatum.isAffine_baseChange_ambientToSpec D K
-  have : AlgebraicGeometry.Smooth (baseChangeToSpec D.ambientStruct K) :=
-    EmbeddingDatum.smooth_baseChangeToSpec_ambientToSpec D K
-  have : AlgebraicGeometry.LocallyOfFiniteType (baseChangeToSpec D.ambientStruct K) :=
-    EmbeddingDatum.locallyOfFiniteType_baseChangeToSpec_ambientToSpec D K
-  have : AlgebraicGeometry.QuasiCompact (baseChangeToSpec D.ambientStruct K) :=
-    EmbeddingDatum.quasiCompact_baseChangeToSpec_ambientToSpec D K
-  have : AlgebraicGeometry.Flat (baseChangeProjection D.ambientStruct K) := inferInstance
-  have : AlgebraicGeometry.Surjective (baseChangeProjection p K) := inferInstance
-  have : AlgebraicGeometry.QuasiCompact D.emb := inferInstance
-  have : AlgebraicGeometry.QuasiCompact (D.baseChangeEmb K) := inferInstance
-  show IsStrictPullbackBlowupSeq (baseChangeProjection p K)
-      (embeddedResolutionRuleOfPrincipalization A hw K (baseChange p K) (baseChangeToSpec p K)
-        (D.baseChange K hker hsnc))
-      (embeddedResolutionRuleOfPrincipalization A hw k Y p D)
-  have hkerbc : (D.baseChangeEmb K).ker
-      = D.emb.ker.comap (baseChangeProjection D.ambientStruct K) :=
-    ker_eq_comap_ker_of_isPullback_of_flat (D.isPullback_baseChangeEmb K).flip
-  have hI' : NonzeroOnComponents (D.emb.ker.comap (baseChangeProjection D.ambientStruct K)) :=
-    hkerbc ▸ hker
-  have hE' : InStrictNormalCrossingPosition (baseChangeToSpec D.ambientStruct K)
-      (List.map (fun Z => Z.comap (baseChangeProjection D.ambientStruct K))
-        ([] : List D.ambient.IdealSheafData)) := hsnc
-  have h0 := hA.base_change k D.ambient D.ambientStruct D.emb.ker D.nonzeroOnComponents_ker
-      [] D.sncEmpty K (algebraMap k K) hI' hE'
-  have hpb : IsPullbackBlowupSequence (baseChangeProjection D.ambientStruct K)
-      ((D.baseChange K hker hsnc).toEmbeddedBlowupSequence A).ambientSeq
-      (D.toEmbeddedBlowupSequence A).ambientSeq := by
-    rw [EmbeddingDatum.ambientBlowups_eq_toSequenceOfBlowups, EmbeddingDatum.ambientBlowups_eq_toSequenceOfBlowups]
-    exact isPullbackSequenceOfBlowups_congr_left
-      (principalizationAlgorithm_toSequenceOfBlowups_congr_ideal A K (baseChange D.ambientStruct K)
-        (baseChangeToSpec D.ambientStruct K)
-        (D.emb.ker.comap (baseChangeProjection D.ambientStruct K)) (D.baseChangeEmb K).ker
-        hkerbc.symm hI' _ [] hE' _) h0
-  have hflat2 : AlgebraicGeometry.Flat
-      (show ((D.baseChange K hker hsnc).toEmbeddedBlowupSequence A).ambient ⟶
-          (D.toEmbeddedBlowupSequence A).ambient from baseChangeProjection D.ambientStruct K) :=
-    (inferInstance : AlgebraicGeometry.Flat (baseChangeProjection D.ambientStruct K))
-  rw [embeddedResolutionRuleOfPrincipalization_apply, embeddedResolutionRuleOfPrincipalization_apply]
-  refine IsPullbackBlowupSequence.isStrictPullback_of_surjective ?_ ?_
-  · exact (chartFlatBaseChangeOfIsPullbackSeq (D.toEmbeddedBlowupSequence A)
-      ((D.baseChange K hker hsnc).toEmbeddedBlowupSequence A) (baseChangeProjection D.ambientStruct K)
-      (baseChangeProjection p K) (D.isPullback_baseChangeEmb K).flip hpb).isPullbackBlowupSequence_inducedBlowupsWithoutIso _ _
-  · intro i hi
-    exact SequenceOfBlowups.withoutIsoBlowups_center_ne_top ((D.toEmbeddedBlowupSequence A).inducedBlowups _) hi
-
-theorem embeddedResolutionRule_isCompatibleWithFieldBaseChange
-    (A : PrincipalizationAlgorithm.{u}) (hA : IsFunctorialPrincipalization A) (hw : TransitionsAreBlowupsForEmbeddings A) :
-    EmbeddedResolutionRule.IsCompatibleWithFieldBaseChange (embeddedResolutionRuleOfPrincipalization A hw) := by
-  intro k _ _ Y p _ _ _ _ D K _ _ _ _ hker hsnc
-  exact embeddedResolutionRule_isStrictPullbackBlowupSeq_baseChange A hA hw k Y p D K hker hsnc
 
 end FunctorialResolution.EmbeddedResolution

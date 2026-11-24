@@ -1,6 +1,58 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LeviSmoothLocalization.LeviBlockInduction.GxDefs
+public import GroundTheory.AutomorphicForms.GL2.GJFELeviConv
+import Development.AbelianVarietyTheory.Definitions.Divisors.LineOppositeParabolicUnitaryLeviSectionEq
+import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
+import Formalism.DoubleCosetMeasures.Statement
+import GroundTheory.AutomorphicForms.GL2.ExistsEqPowMulOfValuationLe
+public import GroundTheory.AutomorphicForms.GL2.GJFEBlock
+public import GroundTheory.AutomorphicForms.GL2.GJFELeviMulti
+import GroundTheory.AutomorphicForms.LocallyProfinite
+import GroundTheory.AutomorphicForms.WhittakerGroups
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -10,7 +62,6 @@ open MeasureTheory Measure GroundTheory GroundTheory.Automorphic GroundTheory.Au
 open GroundTheory.Automorphic.GodementJacquet
 open scoped NNReal ENNReal Classical ValuativeRel
 
-attribute [-instance] Formalism.DoubleCosetMeasures.instMeasGL
 
 set_option linter.unusedSectionVars false
 
@@ -208,6 +259,38 @@ theorem gxMulti_succ (hB : GxBlock) {ψ : AddChar F Circle} (hψ : Continuous ψ
     congr 1
     ext1 <;> simp
 
+  have hfubini : ∀ (f : (∀ i, GL (Fin (d i)) F) → ℂ) (blk : Module.Dual ℂ W → ℂ)
+      (f₂ : W → (∀ j : {i // i ≠ a}, GL (Fin (d j)) F) → ℂ),
+      Integrable f (Measure.pi μ) →
+      (∀ i, Integrable (fun y => f₂ (b i : W) y) (Measure.pi fun j : {i // i ≠ a} => μ j)) →
+      (∀ y, ∫ g, f (splitSymm d a g y) ∂(μ a) = ∑ i, blk (L i) * f₂ (b i : W) y) →
+      ∫ x, f x ∂Measure.pi μ =
+        ∑ i, blk (L i) * ∫ y, f₂ (b i : W) y ∂(Measure.pi fun j : {i // i ≠ a} => μ j) := by
+    intro f blk f₂ hint hf₂int hinner
+    set G : GL (Fin (d a)) F × (∀ j : {i // i ≠ a}, GL (Fin (d j)) F) → ℂ :=
+      fun p => f (splitSymm d a p.1 p.2) with hG
+    have hGF : ∀ x, G (Equiv.piSplitAt a (fun i => GL (Fin (d i)) F) x) = f x := fun x => by
+      simp only [hG]
+      rw [show splitSymm d a (Equiv.piSplitAt a (fun i => GL (Fin (d i)) F) x).1
+        (Equiv.piSplitAt a (fun i => GL (Fin (d i)) F) x).2 = x from
+          (Equiv.piSplitAt a fun i => GL (Fin (d i)) F).symm_apply_apply x]
+    have hGint : Integrable G ((μ a).prod (Measure.pi fun j : {i // i ≠ a} => μ j)) := by
+      rw [← hmp.integrable_comp_emb hemb]
+      exact hint.congr (Filter.Eventually.of_forall fun x => (hGF x).symm)
+    calc ∫ x, f x ∂Measure.pi μ
+        = ∫ x, G (Equiv.piSplitAt a (fun i => GL (Fin (d i)) F) x) ∂Measure.pi μ := by
+          simp_rw [hGF]
+      _ = ∫ p, G p ∂((μ a).prod (Measure.pi fun j : {i // i ≠ a} => μ j)) :=
+          hmp.integral_comp hemb G
+      _ = ∫ y, ∫ g, G (g, y) ∂(μ a) ∂(Measure.pi fun j : {i // i ≠ a} => μ j) :=
+          integral_prod_symm G hGint
+      _ = ∫ y, ∑ i, blk (L i) * f₂ (b i : W) y ∂(Measure.pi fun j : {i // i ≠ a} => μ j) :=
+          integral_congr_ae (Filter.Eventually.of_forall hinner)
+      _ = _ := by
+          rw [integral_finsetSum _ fun i _ => (hf₂int i).const_mul _]
+          refine Finset.sum_congr rfl fun i _ => ?_
+          rw [integral_const_mul]
+
   have hA : ∀ s : ℂ, max sa (max s₀ s₂) < s.re →
       ∫ x, multiA ρ Ψ w ℓ s x ∂Measure.pi μ =
         ∑ i, blockA (μ a) ρ₁ (Ψ a) w (L i) s *
@@ -216,31 +299,22 @@ theorem gxMulti_succ (hB : GxBlock) {ψ : AddChar F Circle} (hψ : Continuous ψ
     intro s hs
     simp only [max_lt_iff] at hs
     obtain ⟨hsa, hs₀, hs₂⟩ := hs
-    have hint := (hconv Ψ hΨ w ℓ hℓ).1 s hs₀
-    set G : GL (Fin (d a)) F × (∀ j : {i // i ≠ a}, GL (Fin (d j)) F) → ℂ :=
-      fun p => multiA ρ Ψ w ℓ s (splitSymm d a p.1 p.2) with hG
-    have hGF : ∀ x, G (Equiv.piSplitAt a (fun i => GL (Fin (d i)) F) x) = multiA ρ Ψ w ℓ s x :=
-      fun x => by
-        simp only [hG]
-        rw [show splitSymm d a (Equiv.piSplitAt a (fun i => GL (Fin (d i)) F) x).1
-          (Equiv.piSplitAt a (fun i => GL (Fin (d i)) F) x).2 = x from
-            (Equiv.piSplitAt a fun i => GL (Fin (d i)) F).symm_apply_apply x]
-    have hGint : Integrable G ((μ a).prod (Measure.pi fun j : {i // i ≠ a} => μ j)) := by
-      rw [← hmp.integrable_comp_emb hemb]
-      exact hint.congr (Filter.Eventually.of_forall fun x => (hGF x).symm)
-    have hinner : ∀ y : ∀ j : {i // i ≠ a}, GL (Fin (d j)) F, ∫ g, G (g, y) ∂(μ a) =
-        ∑ i, blockA (μ a) ρ₁ (Ψ a) w (L i) s *
-          multiA ρ₂ (fun j : {i // i ≠ a} => Ψ j) (b i : W) ℓ s y := by
-      intro y
+    refine hfubini (multiA ρ Ψ w ℓ s) (fun μ' => blockA (μ a) ρ₁ (Ψ a) w μ' s)
+      (fun v y => multiA ρ₂ (fun j : {i // i ≠ a} => Ψ j) v ℓ s y)
+      ((hconv Ψ hΨ w ℓ hℓ).1 s hs₀)
+      (fun i => (hconv₂ (fun j : {i // i ≠ a} => Ψ j) (fun j => hΨ j) (b i : W) ℓ hℓ₂).1 s hs₂)
+      ?_
+    · intro y
       set μy : smoothVectors (Representation.dual ρ₁) :=
         contragredient ρ₁ ((1 : GL (Fin (d a)) F), (y, (1 : H)))⁻¹ ⟨ℓ, hℓ₁⟩ with hμy
       have hμyv : ∀ v, (μy : Module.Dual ℂ W) v = ℓ (ρ₁ ((1 : GL (Fin (d a)) F), (y, (1 : H))) v) :=
         fun v => by rw [hμy, contragredient_apply_apply, inv_inv]
       set P : ℂ := ∏ j : {i // i ≠ a}, Ψ j (y j : Matrix (Fin (d j)) (Fin (d j)) F) *
         detPow (y j) s with hP
-      have hGy : ∀ g, G (g, y) = P * (Ψ a (g : Matrix (Fin (d a)) (Fin (d a)) F) * detPow g s *
+      have hGy : ∀ g, multiA ρ Ψ w ℓ s (splitSymm d a g y) =
+          P * (Ψ a (g : Matrix (Fin (d a)) (Fin (d a)) F) * detPow g s *
           (μy : Module.Dual ℂ W) (ρ₁ (g, 1) w)) := fun g => by
-        simp only [hG, multiA]
+        simp only [multiA]
         rw [prod_splitSymm (fun i x => Ψ i (x : Matrix (Fin (d i)) (Fin (d i)) F) * detPow x s) g y,
           hprod1, Module.End.mul_apply, hμyv]
         ring
@@ -260,23 +334,6 @@ theorem gxMulti_succ (hB : GxBlock) {ψ : AddChar F Circle} (hψ : Continuous ψ
         blockA (μ a) ρ₁ (Ψ a) w (L i) s) = _
       rw [hP, show ((1 : GL (Fin (d a)) F), (1 : H)) = (1 : GL (Fin (d a)) F × H) from rfl]
       ring
-    calc ∫ x, multiA ρ Ψ w ℓ s x ∂Measure.pi μ
-        = ∫ x, G (Equiv.piSplitAt a (fun i => GL (Fin (d i)) F) x) ∂Measure.pi μ := by
-          simp_rw [hGF]
-      _ = ∫ p, G p ∂((μ a).prod (Measure.pi fun j : {i // i ≠ a} => μ j)) :=
-          hmp.integral_comp hemb G
-      _ = ∫ y, ∫ g, G (g, y) ∂(μ a) ∂(Measure.pi fun j : {i // i ≠ a} => μ j) :=
-          integral_prod_symm G hGint
-      _ = ∫ y, ∑ i, blockA (μ a) ρ₁ (Ψ a) w (L i) s *
-            multiA ρ₂ (fun j : {i // i ≠ a} => Ψ j) (b i : W) ℓ s y
-            ∂(Measure.pi fun j : {i // i ≠ a} => μ j) :=
-          integral_congr_ae (Filter.Eventually.of_forall hinner)
-      _ = _ := by
-          rw [integral_finsetSum _ fun i _ =>
-            ((hconv₂ (fun j : {i // i ≠ a} => Ψ j) (fun j => hΨ j) (b i : W) ℓ hℓ₂).1 s
-              hs₂).const_mul _]
-          refine Finset.sum_congr rfl fun i _ => ?_
-          rw [integral_const_mul]
 
   set Ψh : ∀ i, Matrix (Fin (d i)) (Fin (d i)) F → ℂ :=
     fun i => GJMatrix.localMatrixFourier ψ (Ψ i) with hΨhdef
@@ -292,22 +349,12 @@ theorem gxMulti_succ (hB : GxBlock) {ψ : AddChar F Circle} (hψ : Continuous ψ
       lt_of_lt_of_le hs (neg_le_neg ((le_max_left _ _).trans (le_max_right _ _)))
     have hs₂ : s.re < -s₂ :=
       lt_of_lt_of_le hs (neg_le_neg ((le_max_right _ _).trans (le_max_right _ _)))
-    have hint := (hconv Ψh hΨh w ℓ hℓ).2 s hs₀
-    set G : GL (Fin (d a)) F × (∀ j : {i // i ≠ a}, GL (Fin (d j)) F) → ℂ :=
-      fun p => multiB ρ Ψh w ℓ s (splitSymm d a p.1 p.2) with hG
-    have hGF : ∀ x, G (Equiv.piSplitAt a (fun i => GL (Fin (d i)) F) x) = multiB ρ Ψh w ℓ s x :=
-      fun x => by
-        simp only [hG]
-        rw [show splitSymm d a (Equiv.piSplitAt a (fun i => GL (Fin (d i)) F) x).1
-          (Equiv.piSplitAt a (fun i => GL (Fin (d i)) F) x).2 = x from
-            (Equiv.piSplitAt a fun i => GL (Fin (d i)) F).symm_apply_apply x]
-    have hGint : Integrable G ((μ a).prod (Measure.pi fun j : {i // i ≠ a} => μ j)) := by
-      rw [← hmp.integrable_comp_emb hemb]
-      exact hint.congr (Filter.Eventually.of_forall fun x => (hGF x).symm)
-    have hinner : ∀ y : ∀ j : {i // i ≠ a}, GL (Fin (d j)) F, ∫ g, G (g, y) ∂(μ a) =
-        ∑ i, blockB (μ a) ρ₁ (Ψh a) w (L i) s *
-          multiB ρ₂ (fun j : {i // i ≠ a} => Ψh j) (b i : W) ℓ s y := by
-      intro y
+    refine hfubini (multiB ρ Ψh w ℓ s) (fun μ' => blockB (μ a) ρ₁ (Ψh a) w μ' s)
+      (fun v y => multiB ρ₂ (fun j : {i // i ≠ a} => Ψh j) v ℓ s y)
+      ((hconv Ψh hΨh w ℓ hℓ).2 s hs₀)
+      (fun i => (hconv₂ (fun j : {i // i ≠ a} => Ψh j) (fun j => hΨh j) (b i : W) ℓ hℓ₂).2 s
+        hs₂) ?_
+    · intro y
       set μy : smoothVectors (Representation.dual ρ₁) :=
         contragredient ρ₁ ((1 : GL (Fin (d a)) F), (y⁻¹, (1 : H)))⁻¹ ⟨ℓ, hℓ₁⟩ with hμy
       have hμyv : ∀ v, (μy : Module.Dual ℂ W) v =
@@ -315,9 +362,10 @@ theorem gxMulti_succ (hB : GxBlock) {ψ : AddChar F Circle} (hψ : Continuous ψ
         fun v => by rw [hμy, contragredient_apply_apply, inv_inv]
       set P : ℂ := ∏ j : {i // i ≠ a}, Ψh j (y j : Matrix (Fin (d j)) (Fin (d j)) F) *
         detPow (y j) ((d j : ℂ) - s) with hP
-      have hGy : ∀ g, G (g, y) = P * (Ψh a (g : Matrix (Fin (d a)) (Fin (d a)) F) *
+      have hGy : ∀ g, multiB ρ Ψh w ℓ s (splitSymm d a g y) =
+          P * (Ψh a (g : Matrix (Fin (d a)) (Fin (d a)) F) *
           detPow g ((d a : ℂ) - s) * (μy : Module.Dual ℂ W) (ρ₁ (g⁻¹, 1) w)) := fun g => by
-        simp only [hG, multiB]
+        simp only [multiB]
         rw [prod_splitSymm (fun i x => Ψh i (x : Matrix (Fin (d i)) (Fin (d i)) F) *
             detPow x ((d i : ℂ) - s)) g y, splitSymm_inv, hprod1, Module.End.mul_apply, hμyv]
         ring
@@ -337,23 +385,6 @@ theorem gxMulti_succ (hB : GxBlock) {ψ : AddChar F Circle} (hψ : Continuous ψ
         blockB (μ a) ρ₁ (Ψh a) w (L i) s) = _
       rw [hP, show ((1 : GL (Fin (d a)) F), (1 : H)) = (1 : GL (Fin (d a)) F × H) from rfl]
       ring
-    calc ∫ x, multiB ρ Ψh w ℓ s x ∂Measure.pi μ
-        = ∫ x, G (Equiv.piSplitAt a (fun i => GL (Fin (d i)) F) x) ∂Measure.pi μ := by
-          simp_rw [hGF]
-      _ = ∫ p, G p ∂((μ a).prod (Measure.pi fun j : {i // i ≠ a} => μ j)) :=
-          hmp.integral_comp hemb G
-      _ = ∫ y, ∫ g, G (g, y) ∂(μ a) ∂(Measure.pi fun j : {i // i ≠ a} => μ j) :=
-          integral_prod_symm G hGint
-      _ = ∫ y, ∑ i, blockB (μ a) ρ₁ (Ψh a) w (L i) s *
-            multiB ρ₂ (fun j : {i // i ≠ a} => Ψh j) (b i : W) ℓ s y
-            ∂(Measure.pi fun j : {i // i ≠ a} => μ j) :=
-          integral_congr_ae (Filter.Eventually.of_forall hinner)
-      _ = _ := by
-          rw [integral_finsetSum _ fun i _ =>
-            ((hconv₂ (fun j : {i // i ≠ a} => Ψh j) (fun j => hΨh j) (b i : W) ℓ hℓ₂).2 s
-              hs₂).const_mul _]
-          refine Finset.sum_congr rfl fun i _ => ?_
-          rw [integral_const_mul]
 
   have hterm : ∀ i, RatFE F (γa * γ')
       (fun s => blockA (μ a) ρ₁ (Ψ a) w (L i) s *

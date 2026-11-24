@@ -2,6 +2,43 @@ module
 
 public import Formalism.SharpRestriction.GrowthBounds.BinomialRatio.FamilyFourthBound
 public import Formalism.SharpRestriction.GrowthBounds.BinomialRatio.ThresholdLowerBounds
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -12,7 +49,7 @@ namespace Formalism.MainNotions.ColumnSystems.Pf
 open Formalism.MainNotions.G
 
 theorem kap_core {p k N N1 La Q c a b' Y CE1 CE2 Cm : ℝ} (hk : 1 ≤ k) (hY : 1 ≤ Y) (hN : 1 ≤ N) (hN1 : 1 ≤ N1)
-    (_hLa : 0 ≤ La) (hQ : 1 ≤ Q) (hc : 0 ≤ c) (hb : 0 < b') (hp : k ^ 2 * Y ^ 2 ≤ p)
+    (hQ : 1 ≤ Q) (hc : 0 ≤ c) (hb : 0 < b') (hp : k ^ 2 * Y ^ 2 ≤ p)
     (hLaNY : 8 * Real.log (N * Y) ≤ La) (hLak : La ≤ k) (hkb : k * b' ≤ a) (hLaY : La * Y * b' ≤ a)
     (hHc : k ^ 3 * Q ^ 2 * c * Y ≤ b') (hHb : k ^ 3 * Q * Y ≤ b') (h1 : 0 ≤ CE1) (h2 : 0 ≤ CE2) (h3 : 0 ≤ Cm) :
     Real.exp (-La / 8) + k * Q * (m0G4 Cm k N1 Q c + N1 * k) / b' + 1 / Y +
@@ -116,7 +153,7 @@ theorem rest2 (D : Formalism.BasicNotions.D7) : FamilyFourthBound D := by
     linarith [this]
   have core := kap_core (p := X.p) (k := X.k) (N := X.N) (N1 := X.N1) (La := X.La C0) (Q := X.Q) (c := X.c)
     (a := X.a) (b' := X.b') (Y := X.Y) (CE1 := CE1) (CE2 := CE2) (Cm := Cm) (by linarith) S.Y1 (by linarith) S.one_le_level_alt
-    (by have := S.La1; linarith) S.Q1 (by positivity) S.bpos S.pk S.LaNY S.LaLeK S.kb hLaY
+    S.Q1 (by positivity) S.bpos S.pk S.LaNY S.LaLeK S.kb hLaY
     (by have := S.Hc2 zero_le_one; linarith) (by have := S.Hb1 zero_le_one; linarith)
     (by linarith) (by linarith) (by linarith)
   have hN0 : 0 ≤ X.N := by linarith

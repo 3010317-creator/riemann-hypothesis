@@ -1,18 +1,61 @@
 module
 
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.FinDefs
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.CoRes
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.LayerApproximation
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Topology.Sheaves.Init
+import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.IsLocalHom
+import Development.AutomorphicArithmetic.AutomorphicVarieties.WeilGroupCharacters.RepAlg
+public import Mathlib.Algebra.Module.Torsion.Basic
+public import Mathlib.LinearAlgebra.Dual.Lemmas
 
 @[expose] public section
 
 open TensorProduct IsLocalRing Polynomial UpperTheory.V.W UpperTheory.V.Alg UpperTheory.V.CA
-
-private theorem u_gen_approx {O R : Type} [CommRing O] [CommRing R] [Algebra O R] (m : Ideal R)
-    (A : Subalgebra O R) (T : Set R) (h0 : ∀ x : R, ∃ a : O, x - algebraMap O R a ∈ m)
-    (hT : ∀ t ∈ T, t ∈ A ∧ t ∈ m) (hm : m ≤ Ideal.span T ⊔ m ^ 2) (N : ℕ) (x : R) :
-    ∃ a ∈ A, x - a ∈ m ^ N :=
-  _root_.UpperTheory.Reformulated.B.LayerApproximation.co_ext_approx m A T h0 hT hm N x
 
 private theorem u_gen_dual (O : Type) [CommRing O] [IsLocalRing O] (M : Type) [AddCommGroup M] [Module O M]
     (h : Module.IsTorsionBySet O M (maximalIdeal O)) (x : M) (hx : x ≠ 0) :
@@ -112,8 +155,9 @@ private theorem u_gen_span (O : Type) [CommRing O] [IsLocalRing O] (R : Type) [C
 theorem UpperTheory.V.CA.u_gen :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] (R : Type) [CommRing R] [Algebra O R] [IsCO O R] (T : Set R), (∀ (R' : Type) [CommRing R'] [Algebra O R'] [IsCO O R'] (f f' : R →ₐ[O] R'), (∀ t ∈ T, f t = f' t) → f = f') → ∀ (N : ℕ) (x : R), ∃ y ∈ Algebra.adjoin O T, x - y ∈ maximalIdeal R ^ N := by
   intro O _ _ R _ _ _ T H N x
-  refine u_gen_approx (maximalIdeal R) (Algebra.adjoin O T)
-    {y | y ∈ Algebra.adjoin O T ∧ y ∈ maximalIdeal R} (IsCO.res_surj (O := O)) (fun _ h => h) ?_ N x
+  refine _root_.UpperTheory.Reformulated.B.LayerApproximation.co_ext_approx (maximalIdeal R)
+    (Algebra.adjoin O T) {y | y ∈ Algebra.adjoin O T ∧ y ∈ maximalIdeal R}
+    (IsCO.res_surj (O := O)) (fun _ h => h) ?_ N x
   refine u_gen_span O R _ (fun _ h => h.2)
     (fun a ha => ⟨Subalgebra.algebraMap_mem _ a, fun h => ha (IsLocalHom.map_nonunit a h)⟩) ?_
   intro f f' h

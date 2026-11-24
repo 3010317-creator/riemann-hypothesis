@@ -1,8 +1,54 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.InfinitesimalDecay.DecBoundJ
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.SmoothDS
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.SmoothA
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.Smooth
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.SmoothA
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.SmoothDS
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -33,12 +79,13 @@ def wordOf (ε : Fin n → Bool) (w : List (Fin n × Fin n)) (s : Fin w.length �
 def coefOf (w : List (Fin n × Fin n)) (s : Fin w.length → Bool) : ℂ :=
   ∏ i, if s i then Complex.I else 1
 
-theorem dSW_smooth {ε : Fin n → Bool} {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (hσ : IsURepOn (UJset ε) σ) :
-    ∀ (W : List (Matrix (Fin n) (Fin n) ℂ)), (∀ X ∈ W, inG ε X) → ∀ {v : H}, IsSmoothVecU ε σ v →
-      IsSmoothVecU ε σ (dSW σ W v)
-  | [], _, _, hv => hv
-  | X :: W, hW, _, hv => IsSmoothVecU.dS hσ (hW X (List.mem_cons_self ..))
-      (dSW_smooth hσ W (fun Y hY => hW Y (List.mem_cons_of_mem _ hY)) hv)
+theorem dSW_smooth {ε : Fin n → Bool} {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (hσ : IsURepOn (UJset ε) σ)
+    {w : List (Matrix (Fin n) (Fin n) ℂ)} (hw : ∀ X ∈ w, inG ε X) {v : H} (hv : IsSmoothVecU ε σ v) :
+    IsSmoothVecU ε σ (dSW σ w v) := by
+  induction w with
+  | nil => exact hv
+  | cons X w ih =>
+    exact IsSmoothVecU.dS hσ (hw X (List.mem_cons_self ..)) (ih fun Y hY => hw Y (List.mem_cons_of_mem _ hY))
 
 theorem dS_fsum {ε : Fin n → Bool} {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (hσ : IsURepOn (UJset ε) σ)
     {X : Matrix (Fin n) (Fin n) ℂ} (hX : inG ε X) {ι : Type*} (s : Finset ι) (c : ι → ℂ) (v : ι → H)
@@ -74,7 +121,7 @@ theorem wAct_expand {ε : Fin n → Bool} {σ : Matrix (Fin n) (Fin n) ℂ → (
     have hx : IsSmoothVecU ε σ (x : H) := (mem_smD_iff ε σ _).mp x.2
     have ih := wAct_expand hσ x w
     have hsm : ∀ s : Fin w.length → Bool, IsSmoothVecU ε σ (dSW σ (wordOf ε w s) x) := fun s =>
-      dSW_smooth hσ _ (fun X hX => by
+      dSW_smooth hσ (fun X hX => by
         obtain ⟨i, rfl⟩ := List.mem_ofFn.mp hX
         exact lt_inG ε _ _) hx
     show ((smE ε σ p.1 p.2 (wAct (smE ε σ) w x) : smD ε σ) : H) = _

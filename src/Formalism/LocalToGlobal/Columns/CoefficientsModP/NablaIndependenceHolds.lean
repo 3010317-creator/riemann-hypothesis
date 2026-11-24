@@ -1,11 +1,19 @@
 module
 
 public import Formalism.LocalToGlobal.Divisibility.CoefModLemmas
-public import Formalism.LocalToGlobal.Columns.PolyFnLemmas
-public import Formalism.LocalToGlobal.Columns.LocWLemmas
+public import Formalism.LocalToGlobal.Columns.AlgebraMapMemMaximalIdealPowIff
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanLocalIff
+import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
+import Formalism.GradedWeylDivisibility.FinalC
+import Formalism.GradedWeylDivisibility.FinalD
+public import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LClosedeqLemmas
+import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LDlatLemmas
+public import Formalism.GradedWeylDivisibility.FockSpaceTableaux.NablaLTwist
 public import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
 public import Formalism.LocalToGlobal.Columns.CoefficientsModP.LatticeBasisExistsHolds
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanLocalIff
+public import Formalism.LocalToGlobal.Columns.PolyFnLemmas
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.TotallySplit
 
 @[expose] public section
 
@@ -91,11 +99,6 @@ section Loc
 
 variable {K : Type} [Field K] [NumberField K]
 
-theorem nb_mem_span_ow {V : Type} [AddCommGroup V] [Module (𝓞 K) V] (w : HeightOneSpectrum (𝓞 K)) [Module (Ow w) V]
-    [IsScalarTower (𝓞 K) (Ow w) V] (T : Set V) (x : V) :
-    x ∈ Submodule.span (Ow w) T ↔ x ∈ Formalism.HermitianLatticesTheory.localization₂ w.asIdeal (Submodule.span (𝓞 K) T) :=
-  GlobalTheory.LocalSpanCriterion.span_local_iff w T x
-
 variable {ι : Type} [Fintype ι] {n : ℕ}
 
 theorem nb_nabStd_eq (lam : ι → DomWeight n) :
@@ -123,14 +126,14 @@ theorem nb_mem_nabW (w : HeightOneSpectrum (𝓞 K)) (lam : ι → DomWeight n) 
   have h : (fun τ => (nablaSq (Ow w) n (lam τ)).map
       (mapAlgHom (σ := Fin n × Fin n) (Algebra.ofId (Ow w) K)).toLinearMap) =
       fun τ => Submodule.span (Ow w) (bideterminantsOfShape K (lam τ).natW) := funext fun τ => nb_map_nablaSq (Ow w) (lam τ)
-  rw [nbNabW, h, nb_tensorLat_span, nb_nabStd_eq, nb_mem_span_ow]
+  rw [nbNabW, h, nb_tensorLat_span, nb_nabStd_eq, _root_.GlobalTheory.LocalSpanCriterion.span_local_iff]
 
 theorem nb_mem_delW (w : HeightOneSpectrum (𝓞 K)) (lam : ι → DomWeight n) (x : Pol K ι n) :
     x ∈ nbDelW w lam ↔ x ∈ Formalism.HermitianLatticesTheory.localization₂ w.asIdeal (delStd K lam) := by
   have h : (fun τ => (delSq (Ow w) n (lam τ)).map
       (mapAlgHom (σ := Fin n × Fin n) (Algebra.ofId (Ow w) K)).toLinearMap) =
       fun τ => Submodule.span (Ow w) (nbWord K (lam τ).natW) := funext fun τ => nb_map_delSq (Ow w) (lam τ)
-  rw [nbDelW, h, nb_tensorLat_span, nb_delStd_eq, nb_mem_span_ow]
+  rw [nbDelW, h, nb_tensorLat_span, nb_delStd_eq, _root_.GlobalTheory.LocalSpanCriterion.span_local_iff]
 
 end Loc
 
@@ -510,10 +513,7 @@ theorem nb_at_comm {lam : ι → DomWeight n} {T : Submodule (𝓞 K) (Pol K ι 
   refine ⟨c * d ^ nbN lam, mul_ne_zero hc0 (pow_ne_zero _ hd0), fun w x hx => ?_, fun w x hx => ?_⟩
   · have hBasis : ∀ τ, ∃ B : GL (Fin n) K, IsBasisAt w (M τ) B := by
       intro τ
-      -- The dependency stubs can still expose the earlier IsLattice signature.
-      first
-      | exact latticeBasisExists_holds K n (M τ) (hM τ) w
-      | exact latticeBasisExists_holds K n (M τ) (hM τ).toIsLattice w
+      exact latticeBasisExists_holds K n (M τ) (hM τ) w
     choose B hB using hBasis
     have h1 := localization_mono w.asIdeal hc2 ((nb_mem_at lam T M w x).1 hx B hB)
     have h2 := nb_scale w lam d B (fun τ => (nb_entries w (M τ) (B τ) (hB τ) d (hd τ).1 (hd τ).2).1)

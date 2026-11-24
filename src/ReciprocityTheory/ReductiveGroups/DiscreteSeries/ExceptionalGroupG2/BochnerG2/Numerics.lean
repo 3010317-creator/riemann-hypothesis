@@ -1,7 +1,13 @@
 module
 
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.Numerics
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.ExceptionalGroupG2.StdGap
+public import Mathlib.Basic.Real.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -14,9 +20,7 @@ variable {n : ℕ}
 
 section Num
 
-variable {ε : Fin n → Bool}
-
-theorem gap_gt {a b : Fin n} (hε : ε a ≠ ε b) {h : ℝ}
+theorem gap_gt {h : ℝ}
     (hbig : 2 * (n : ℝ) < h) :
     2 * (n : ℝ) - 3 < h ∧ (n : ℝ) - 1 < h := by
   have := (Nat.cast_nonneg n : (0 : ℝ) ≤ n)

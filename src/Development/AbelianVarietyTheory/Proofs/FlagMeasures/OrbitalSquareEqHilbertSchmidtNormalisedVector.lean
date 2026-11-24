@@ -1,12 +1,61 @@
 module
 
-public import Mathlib
 public import Formalism.SharpRestriction.CuspSpanNormBounds.LeadMinorK
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.Admissible
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ThresholdProductsBounded
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.IntegrableUnipotentNormRpowNeg
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.UnipotentLevelZeroEqOne
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.UnipotentCoordinatesMeasurePreserving
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsOrbQuotWithDensity
+import Formalism.FormalDegreeBessel.FormalDegreeRatio.UnitaryWeylNormalHolds
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.CompactGroupHaarExists
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.ComponentFamilySettingOfSetting
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.IntegrableUnipotentNormRpowNeg
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.NormDiagonalEntryDilationGeneratorLeOne
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.OrbitalIntegralAeConvergenceContinuity
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.RegularisedPairingViaPhase
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.UnipotentLevelZeroEqOne
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.WittOrthonormalBasis
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.CategoryTheory.Countable
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -261,19 +310,6 @@ open Formalism.FourierDecayAlt.P Formalism.FourierDecayAlt.P.Dx2 Formalism.Fouri
 variable {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
   [InnerProductSpace ℂ Wq]
 
-theorem closed_SS (D : B.RealPlaceData k r Wp Wq) : IsClosed {p | D.inSS p} := by
-  have hWc := (P.weyl_subgroup_closed k r D.z).closed
-  have hWc' := (P.weyl_subgroup_closed k r D.z').closed
-  have hNc := (P.unipotent_radical_closed k r).closed
-  have e : {p | D.inSS p} = (fun p : B.SS k r => (p.1.1 : B.Mat k r)) ⁻¹' (UWset k r D.z) ∩
-      ((fun p : B.SS k r => (p.1.2 : B.Mat k r)) ⁻¹' (Nset k r) ∩
-        ((fun p : B.SS k r => (p.2.1 : B.Mat k r)) ⁻¹' (UWset k r D.z') ∩
-          (fun p : B.SS k r => (p.2.2 : B.Mat k r)) ⁻¹' (Nset k r))) := by
-    ext p; rfl
-  rw [e]
-  exact (hWc.preimage continuous_fst.fst).inter ((hNc.preimage continuous_fst.snd).inter
-    ((hWc'.preimage continuous_snd.fst).inter (hNc.preimage continuous_snd.snd)))
-
 theorem integrand_contOn (D : B.RealPlaceData k r Wp Wq) {γ : B.Mat k r} (hγ : γ ∈ B.GV k r)
     {F : B.Mat k r → (Wq →L[ℂ] Wp)} (hF : ContinuousOn F (B.GV k r)) :
     ContinuousOn (Formalism.FourierDecayAlt.D.orbIntegrand D γ F) {p | D.inSS p} := by
@@ -359,7 +395,7 @@ theorem orbInt_eq {μsec : ℂ → Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hS :
     {θ : B.SS k r → ℝ} (hθ : D.IsNormCut Bs g μ θ) :
     OrbInt L F g ν = ((L.κN.toReal * cN) ^ 2 * a) • ∫ p, θ p • D.orbIntegrand Bs g F p ∂Bs.μSS := by
   classical
-  have hcl := closed_SS Bs
+  have hcl := Formalism.FourierDecayAlt.P.B6.setting_support_closed Bs
   have hco := integrand_contOn Bs hrel.1 hF
   borelize (L.Wq →L[ℂ] L.Wp)
   have ha0 : ENNReal.ofReal a⁻¹ ≠ 0 := by simpa using ha

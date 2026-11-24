@@ -1,7 +1,62 @@
 module
 
-public import Mathlib
+import Formalism.SharpRestriction.CuspSpanNormBounds.LocalOrbitGerms
 public import Formalism.SharpRestriction.CuspSpanNormBounds.FractionFieldToGenericStalkAlgebraMapEq
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.Valuation.Extension
+public import Mathlib.RingTheory.Valuation.Integral
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -13,25 +68,7 @@ section Field
 variable (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F]
 
 theorem localField_secondCountable : SecondCountableTopology F := by
-  have hZ : Countable (WithZero (Multiplicative ℤ)) := by
-    have : Countable (Multiplicative ℤ) := inferInstanceAs (Countable ℤ)
-    exact inferInstanceAs (Countable (Option (Multiplicative ℤ)))
-  have hcount : Countable (ValueGroupWithZero F) :=
-    (IsNonarchimedeanLocalField.valueGroupWithZeroIsoInt F).injective.countable
-  have : Countable (ValueGroupWithZero F)ˣ := Units.val_injective.countable
-  have hsig : SigmaCompactSpace F := by
-    refine SigmaCompactSpace.of_countable (Set.range fun γ : ValueGroupWithZero F => {x : F | valuation F x ≤ γ})
-      (Set.countable_range _) ?_ ?_
-    · rintro _ ⟨γ, rfl⟩
-      exact IsNonarchimedeanLocalField.isCompact_closedBall F γ
-    · refine Set.eq_univ_of_forall fun x => ?_
-      exact Set.mem_sUnion.mpr ⟨_, ⟨valuation F x, rfl⟩, show valuation F x ≤ valuation F x from le_rfl⟩
-  let := IsTopologicalAddGroup.rightUniformSpace F
-  have := isUniformAddGroup_of_addCommGroup (G := F)
-  have : (nhds (0 : F)).IsCountablyGenerated :=
-    (IsValuativeTopology.hasBasis_nhds_zero F).isCountablyGenerated
-  have := IsUniformAddGroup.uniformity_countably_generated (α := F)
-  infer_instance
+  apply Formalism.MainNotions.LocalOrbitGerms.Top.sc_F <;> assumption
 
 theorem t2Space_of_isNonarchimedeanLocalField_flag_measures : T2Space F := by
   refine IsTopologicalAddGroup.t2Space_of_zero_sep fun x hx => ?_
@@ -57,15 +94,11 @@ end Field
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
 variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E]
 
-theorem locE_nontrivial (L : LocE F E) : Nontrivial E := by
-  have := L.free
-  exact Module.nontrivial_of_finrank_pos (R := F) (by rw [L.rank]; norm_num)
-
 theorem locE_exists_pure [CharZero F] (L : LocE F E) :
     ∃ (d : E) (D : F), D ≠ 0 ∧ D ∈ 𝒪[F] ∧ L.cj d = -d ∧ d * d = algebraMap F E D := by
   have := L.free
   have := L.reduced
-  have hnt := locE_nontrivial L
+  have hnt := Formalism.MainNotions.LocalModelPeriodLattices.nontrivial_E L
   obtain ⟨x, hx⟩ : ∃ x : E, ∀ a : F, algebraMap F E a ≠ x := by
     by_contra! h
     have e := LinearEquiv.ofBijective (Algebra.linearMap F E) ⟨(algebraMap F E).injective, fun y => h y⟩
@@ -102,7 +135,7 @@ theorem locE_exists_coords [CharZero F] (L : LocE F E) :
       (∀ p : F × F, ψ p ∈ L.O → 2 * p.1 ∈ 𝒪[F] ∧ 2 * D * p.2 ∈ 𝒪[F]) := by
   obtain ⟨d, D, hD0, hDO, hcj, hdd⟩ := locE_exists_pure L
   have := L.free
-  have hnt := locE_nontrivial L
+  have hnt := Formalism.MainNotions.LocalModelPeriodLattices.nontrivial_E L
   have hfin : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [L.rank]; norm_num)
   let φ : (F × F) →ₗ[F] E := (LinearMap.fst F F F).smulRight (1 : E) + (LinearMap.snd F F F).smulRight d
   have hφ : ∀ p : F × F, φ p = algebraMap F E p.1 + algebraMap F E p.2 * d := by

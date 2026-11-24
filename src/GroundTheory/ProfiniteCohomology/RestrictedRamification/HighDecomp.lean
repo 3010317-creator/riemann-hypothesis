@@ -1,7 +1,12 @@
 module
 
-public import Mathlib
-public import GroundTheory.ProfiniteCohomology.RestrictedRamification.SurjectiveOfInjectiveOfInjective
+public import GroundTheory.GlobalFields.CompletionAtPlace.Integers
+public import GroundTheory.LocalFields.MaximalUnramified
+public import GroundTheory.ProfiniteCohomology.ProcyclicDefs
+public import GroundTheory.ProfiniteCohomology.RestrictedRamification.BrauerDivisor
+import GroundTheory.ProfiniteCohomology.RestrictedRamification.BrauerDefs
+public import GroundTheory.ProfiniteCohomology.RestrictedRamification.BrauerFrob
+import Mathlib.Topology.Separation.CompletelyRegular
 
 @[expose] public section
 
@@ -21,7 +26,7 @@ section Degree
 variable {K : FiniteSubfield} (w : HeightOneSpectrum (𝓞 K.1))
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem eq_univ_of_unramifiedDegree
     (σ : Gal(AlgebraicClosure (w.adicCompletion K.1)/w.adicCompletion K.1))
     (hσ : unramifiedDegree (w.adicCompletion K.1) (AlgebraicClosure (w.adicCompletion K.1)) σ =
@@ -64,7 +69,7 @@ theorem continuous_rangeRestrict_gsDecomp : Continuous (gsDecomp K S ιs v).rang
   (continuous_gsDecomp K S ιs v).subtype_mk _
 
 instance t2Space_galUnramifiedOutside : T2Space (galUnramifiedOutside K.1 (AlgebraicClosure ℚ) S) :=
-  galois_t2Space K.1 (maxUnramifiedOutside K.1 (AlgebraicClosure ℚ) S)
+  krullTopology_t2 (K := K.1) (L := maxUnramifiedOutside K.1 (AlgebraicClosure ℚ) S)
 
 instance compactSpace_range_gsDecomp : CompactSpace (gsDecomp K S ιs v).range := by
   refine isCompact_iff_compactSpace.mp ?_
@@ -76,7 +81,7 @@ theorem isQuotientMap_rangeRestrict_gsDecomp : Topology.IsQuotientMap (gsDecomp 
     (continuous_rangeRestrict_gsDecomp K S ιs v) (MonoidHom.rangeRestrict_surjective _)
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem isTopologicalGenerator_rangeRestrict_gsDecomp
     (σ : Gal(AlgebraicClosure (v.1.adicCompletion K.1)/v.1.adicCompletion K.1))
     (hσ : unramifiedDegree (v.1.adicCompletion K.1) (AlgebraicClosure (v.1.adicCompletion K.1)) σ =

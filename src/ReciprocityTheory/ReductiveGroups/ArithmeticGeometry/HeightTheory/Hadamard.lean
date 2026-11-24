@@ -1,6 +1,58 @@
 module
 
-public import Mathlib
+import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.LinearIndependentRealOfIntOfDiscrete
+import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.ExistsOrthonormalOfLinearIndependent
+import Formalism.FlagUnipotentLattices.MinkowskiFactorialBounds.SchurAverage
+public import Mathlib.Analysis.Complex.Order
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+public import Mathlib.Analysis.Matrix.PosDef
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.Analysis.Complex.Exponential
 
 @[expose] public section
 
@@ -17,14 +69,13 @@ theorem psd_det_re_le_one_of_diag (N : ℕ) (H : Matrix (Fin N) (Fin N) ℂ) (hH
     have h2 : H.trace = N := by simp [Matrix.trace, hd]
     rw [h2] at h
     have h4 := congrArg (RCLike.re : ℂ → ℝ) h
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, RCLike.ofReal_re, RCLike.natCast_re] at h4
+
+    simp only [map_sum, RCLike.ofReal_re, RCLike.natCast_re] at h4
     linarith
   have hre : H.det.re = ∏ i, hHerm.eigenvalues i := by
     rw [hHerm.det_eq_prod_eigenvalues]
     first
       | (norm_cast)
-      | simp [← Complex.ofReal_prod]
   rw [hre]
   calc ∏ i, hHerm.eigenvalues i ≤ ∏ i, Real.exp (hHerm.eigenvalues i - 1) :=
         Finset.prod_le_prod₀ (fun i _ => hH.eigenvalues_nonneg i)
@@ -34,86 +85,14 @@ theorem psd_det_re_le_one_of_diag (N : ℕ) (H : Matrix (Fin N) (Fin N) ℂ) (hH
 
 theorem psd_det_re_le_prod_diag (N : ℕ) (G : Matrix (Fin N) (Fin N) ℂ) (hG : G.PosSemidef) :
     G.det.re ≤ ∏ c, (G c c).re := by
-  classical
-  have hdiag : ∀ c, G c c = ((G c c).re : ℂ) := fun c =>
-    (Complex.conj_eq_iff_re.mp (by
-      simpa [Matrix.conjTranspose_apply] using congrFun (congrFun hG.1 c) c)).symm
-  have hnn : ∀ c, 0 ≤ (G c c).re := fun c => (Complex.nonneg_iff.mp (hG.diag_nonneg (i := c))).1
-  by_cases hz : ∃ c, (G c c).re = 0
-  · obtain ⟨c, hc⟩ := hz
-    have hcol : G *ᵥ Pi.single c 1 = 0 := by
-      rw [← hG.dotProduct_mulVec_zero_iff]
-      simp [Matrix.mulVec, dotProduct, Pi.single_apply]
-      rw [hdiag c, hc]
-      simp
-    have hdet : G.det = 0 := by
-      apply Matrix.det_eq_zero_of_column_eq_zero c
-      intro i
-      have h := congrFun hcol i
-      simpa [Matrix.mulVec, dotProduct, Pi.single_apply] using h
-    rw [hdet, Complex.zero_re]
-    exact Finset.prod_nonneg fun c _ => hnn c
-  · push_neg at hz
-    have hpos : ∀ c, 0 < (G c c).re := fun c => lt_of_le_of_ne (hnn c) (Ne.symm (hz c))
-    set d : Fin N → ℝ := fun c => (Real.sqrt (G c c).re)⁻¹ with hd_def
-    have hdr : ∀ c, d c * (G c c).re * d c = 1 := fun c => by
-      have hs := Real.mul_self_sqrt (hnn c)
-      have hsq : Real.sqrt (G c c).re ≠ 0 := (Real.sqrt_pos.mpr (hpos c)).ne'
-      simp only [hd_def]
-      field_simp
-      nlinarith [hs]
-    set D : Matrix (Fin N) (Fin N) ℂ := Matrix.diagonal fun c => (d c : ℂ) with hD_def
-    have hD : Dᴴ = D := by simp [hD_def, Matrix.diagonal_conjTranspose]
-    have hH : (D * G * D).PosSemidef := by
-      have h := hG.conjTranspose_mul_mul_same D
-      rwa [hD] at h
-    have hHd : ∀ c, (D * G * D) c c = 1 := by
-      intro c
-      simp only [hD_def, Matrix.diagonal_mul, Matrix.mul_diagonal]
-      rw [hdiag c]
-      exact_mod_cast hdr c
-    have h1 := psd_det_re_le_one_of_diag N _ hH hHd
-    have hdet : (D * G * D).det = (((∏ c, d c) ^ 2 : ℝ) : ℂ) * G.det := by
-      simp only [hD_def, Matrix.det_mul, Matrix.det_diagonal]
-      push_cast
-      ring
-    rw [hdet, Complex.re_ofReal_mul] at h1
-    have hprod : (∏ c, d c) ^ 2 * ∏ c, (G c c).re = 1 := by
-      rw [show (∏ c, d c) ^ 2 * ∏ c, (G c c).re = ∏ c, (d c * (G c c).re * d c) by
-        rw [sq, ← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
-        exact Finset.prod_congr rfl fun c _ => by ring]
-      exact Finset.prod_eq_one fun c _ => hdr c
-    have hp : 0 < (∏ c, d c) ^ 2 :=
-      pow_pos (Finset.prod_pos fun c _ => inv_pos.mpr (Real.sqrt_pos.mpr (hpos c))) 2
-    by_contra hlt
-    push_neg at hlt
-    have := mul_lt_mul_of_pos_left hlt hp
-    linarith
+  have hd (i : Fin N) : ((G i i).re : ℂ) = G i i :=
+    Complex.conj_eq_iff_re.mp (by simpa [conjTranspose_apply] using congrFun (congrFun hG.1 i) i)
+  have h := (Complex.le_def.mp (GlobalTheory.posSemidef_det_le_prod_diag hG)).1
+  rwa [← Complex.ofReal_re (∏ i, (G i i).re), Complex.ofReal_prod,
+    Finset.prod_congr rfl (fun i _ => hd i)]
 
 theorem hadamard_det_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ) :
     ‖A.det‖ ≤ ∏ i, Real.sqrt (∑ j, ‖A i j‖ ^ 2) := by
-  have hdet : (A * Aᴴ).det.re = ‖A.det‖ ^ 2 := by
-    rw [Matrix.det_mul, Matrix.det_conjTranspose]
-    rw [show star A.det = (starRingEnd ℂ) A.det from rfl, Complex.mul_conj, Complex.ofReal_re,
-      Complex.normSq_eq_norm_sq]
-  have hdiag : ∀ i, ((A * Aᴴ) i i).re = ∑ j, ‖A i j‖ ^ 2 := fun i => by
-    simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, Complex.re_sum]
-    refine Finset.sum_congr rfl fun j _ => ?_
-    rw [show star (A i j) = (starRingEnd ℂ) (A i j) from rfl, Complex.mul_conj, Complex.ofReal_re,
-      Complex.normSq_eq_norm_sq]
-  have key := psd_det_re_le_prod_diag n (A * Aᴴ) (Matrix.posSemidef_self_mul_conjTranspose A)
-  rw [hdet] at key
-  simp only [hdiag] at key
-  have hs : ∀ i, 0 ≤ ∑ j, ‖A i j‖ ^ 2 := fun i => Finset.sum_nonneg fun j _ => by positivity
-  calc ‖A.det‖ = Real.sqrt (‖A.det‖ ^ 2) := (Real.sqrt_sq (norm_nonneg _)).symm
-    _ ≤ Real.sqrt ((∏ i, Real.sqrt (∑ j, ‖A i j‖ ^ 2)) ^ 2) := by
-        apply Real.sqrt_le_sqrt
-        rw [← Finset.prod_pow]
-        have h : ∏ i, Real.sqrt (∑ j, ‖A i j‖ ^ 2) ^ 2 = ∏ i, ∑ j, ‖A i j‖ ^ 2 :=
-          Finset.prod_congr rfl fun i _ => Real.sq_sqrt (hs i)
-        rw [h]
-        exact key
-    _ = ∏ i, Real.sqrt (∑ j, ‖A i j‖ ^ 2) :=
-        Real.sqrt_sq (Finset.prod_nonneg fun i _ => Real.sqrt_nonneg _)
+  apply Formalism.HermitianLatticeCounting.P.norm_det_le_prod_row_norms
 
 end ReciprocityTheory.ChartRestriction.G.T0

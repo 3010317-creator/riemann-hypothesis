@@ -1,10 +1,319 @@
 module
 
-public import Mathlib
+public import Mathlib.LinearAlgebra.Determinant
+public import Mathlib.RingTheory.Etale.Basic
+public import Mathlib.RingTheory.Etale.Kaehler
+public import Mathlib.RingTheory.TensorProduct.Free
 public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.EtaleCoordinates
-public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.JacobianCriterion
 public import Development.ResolutionOfSingularities.EmbeddedResolution.AlgebraicPreliminaries.SpanSingletonProduct
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Linter.Style
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.JacobianCriterion, Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.FormallyEtaleCoordinates
+
+-- ===== clump member: Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.JacobianCriterion =====
+-- clump-header: {"m": "Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.JacobianCriterion", "h": "module\n\npublic import Mathlib.LinearAlgebra.Determinant\npublic import Mathlib.RingTheory.Etale.Basic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\npublic import Mathlib.RingTheory.Etale.Kaehler\npublic import Mathlib.RingTheory.TensorProduct.Free\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open scoped TensorProduct
+
+namespace FunctorialResolution.EmbeddedResolution
+namespace JacobianCriterion
+
+section
+
+variable (k : Type*) [CommRing k] (ι : Type*) (S : Type*) [CommRing S]
+variable [Algebra (MvPolynomial ι k) S]
+
+noncomputable def coord (i : ι) : S := algebraMap (MvPolynomial ι k) S (MvPolynomial.X i)
+
+end
+
+section
+
+variable (k : Type*) [CommRing k] (ι : Type*) (S : Type*) [CommRing S]
+variable [Algebra k S] [Algebra (MvPolynomial ι k) S] [IsScalarTower k (MvPolynomial ι k) S]
+
+omit [Algebra k S] [IsScalarTower k (MvPolynomial ι k) S] in
+theorem linearIndependent_one_tmul_D_X :
+    LinearIndependent S fun i : ι =>
+      (1 : S) ⊗ₜ[MvPolynomial ι k]
+        (KaehlerDifferential.D k (MvPolynomial ι k) (MvPolynomial.X i)) := by
+  have hfun : (fun i : ι => (1 : S) ⊗ₜ[MvPolynomial ι k]
+        (KaehlerDifferential.D k (MvPolynomial ι k) (MvPolynomial.X i))) =
+      ⇑(Algebra.TensorProduct.basis S (KaehlerDifferential.mvPolynomialBasis k ι)) := by
+    funext i
+    rw [Algebra.TensorProduct.basis_apply, KaehlerDifferential.mvPolynomialBasis_apply]
+  rw [hfun]
+  exact (Algebra.TensorProduct.basis S
+    (KaehlerDifferential.mvPolynomialBasis k ι)).linearIndependent
+
+omit [Algebra k S] [IsScalarTower k (MvPolynomial ι k) S] in
+theorem top_le_span_one_tmul_D_X :
+    ⊤ ≤ Submodule.span S (Set.range fun i : ι =>
+        (1 : S) ⊗ₜ[MvPolynomial ι k]
+          (KaehlerDifferential.D k (MvPolynomial ι k) (MvPolynomial.X i))) := by
+  have hfun : (fun i : ι => (1 : S) ⊗ₜ[MvPolynomial ι k]
+        (KaehlerDifferential.D k (MvPolynomial ι k) (MvPolynomial.X i))) =
+      ⇑(Algebra.TensorProduct.basis S (KaehlerDifferential.mvPolynomialBasis k ι)) := by
+    funext i
+    rw [Algebra.TensorProduct.basis_apply, KaehlerDifferential.mvPolynomialBasis_apply]
+  rw [hfun]
+  exact (Algebra.TensorProduct.basis S (KaehlerDifferential.mvPolynomialBasis k ι)).span_eq.ge
+
+noncomputable def tensorKaehlerBasis :
+    Module.Basis ι S (S ⊗[MvPolynomial ι k] KaehlerDifferential k (MvPolynomial ι k)) :=
+  Module.Basis.mk (linearIndependent_one_tmul_D_X k ι S) (top_le_span_one_tmul_D_X k ι S)
+
+@[simp]
+theorem tensorKaehlerBasis_mapBaseChange (i : ι) :
+    KaehlerDifferential.mapBaseChange k (MvPolynomial ι k) S (tensorKaehlerBasis k ι S i) =
+      KaehlerDifferential.D k S (coord k ι S i) := by
+  have h : tensorKaehlerBasis k ι S i =
+      (1 : S) ⊗ₜ[MvPolynomial ι k]
+        (KaehlerDifferential.D k (MvPolynomial ι k) (MvPolynomial.X i)) :=
+    Module.Basis.mk_apply (linearIndependent_one_tmul_D_X k ι S) (top_le_span_one_tmul_D_X k ι S) i
+  have h2 : coord k ι S i = algebraMap (MvPolynomial ι k) S (MvPolynomial.X i) := rfl
+  rw [h, KaehlerDifferential.mapBaseChange_tmul, one_smul, KaehlerDifferential.map_D, h2]
+
+theorem formallyUnramified_of_mapBaseChange_surjective
+    (h : Function.Surjective (KaehlerDifferential.mapBaseChange k (MvPolynomial ι k) S)) :
+    Algebra.FormallyUnramified (MvPolynomial ι k) S := by
+  have hexact := KaehlerDifferential.exact_mapBaseChange_map k (MvPolynomial ι k) S
+  have hD : ∀ s : S, KaehlerDifferential.D (MvPolynomial ι k) S s = 0 := by
+    intro s
+    obtain ⟨y, hy⟩ := h (KaehlerDifferential.D k S s)
+    have h2 := hexact.apply_apply_eq_zero y
+    rw [hy, KaehlerDifferential.map_D] at h2
+    simpa using h2
+  have key : ∀ x : KaehlerDifferential (MvPolynomial ι k) S, x = 0 := by
+    intro x
+    have hx : x ∈ Submodule.span S
+        (Set.range (KaehlerDifferential.D (MvPolynomial ι k) S)) := by
+      rw [KaehlerDifferential.span_range_derivation]
+      exact Submodule.mem_top
+    induction hx using Submodule.span_induction with
+    | mem y hy =>
+        obtain ⟨s, rfl⟩ := hy
+        exact hD s
+    | zero => rfl
+    | add a b _ _ ha hb => rw [ha, hb, add_zero]
+    | smul c a _ ha => rw [ha, smul_zero]
+  exact Algebra.FormallyUnramified.mk ⟨fun a b => by rw [key a, key b]⟩
+
+theorem mapBaseChange_bijective_of_basis
+    (b : Module.Basis ι S (KaehlerDifferential k S))
+    (hb : ∀ i : ι, b i = KaehlerDifferential.D k S (coord k ι S i)) :
+    Function.Bijective (KaehlerDifferential.mapBaseChange k (MvPolynomial ι k) S) := by
+  have h : (KaehlerDifferential.mapBaseChange k (MvPolynomial ι k) S) =
+      (((tensorKaehlerBasis k ι S).equiv b (Equiv.refl ι)) :
+        (S ⊗[MvPolynomial ι k] KaehlerDifferential k (MvPolynomial ι k)) →ₗ[S]
+          KaehlerDifferential k S) := by
+    refine (tensorKaehlerBasis k ι S).ext fun i => ?_
+    rw [tensorKaehlerBasis_mapBaseChange]
+    simp [hb i]
+  have hx : ∀ x, KaehlerDifferential.mapBaseChange k (MvPolynomial ι k) S x =
+      ((tensorKaehlerBasis k ι S).equiv b (Equiv.refl ι)) x := by
+    intro x
+    have h2 := congrArg
+      (fun f : (S ⊗[MvPolynomial ι k] KaehlerDifferential k (MvPolynomial ι k)) →ₗ[S]
+        KaehlerDifferential k S => f x) h
+    simpa using h2
+  constructor
+  · intro x y hxy
+    apply ((tensorKaehlerBasis k ι S).equiv b (Equiv.refl ι)).injective
+    rw [← hx, ← hx, hxy]
+  · intro y
+    obtain ⟨x, hxe⟩ := ((tensorKaehlerBasis k ι S).equiv b (Equiv.refl ι)).surjective y
+    exact ⟨x, (hx x).trans hxe⟩
+
+theorem formallyEtale_of_basis [Algebra.FormallySmooth k S]
+    (b : Module.Basis ι S (KaehlerDifferential k S))
+    (hb : ∀ i : ι, b i = KaehlerDifferential.D k S (coord k ι S i)) :
+    Algebra.FormallyEtale (MvPolynomial ι k) S := by
+  have hbij := mapBaseChange_bijective_of_basis k ι S b hb
+  have hfu : Algebra.FormallyUnramified (MvPolynomial ι k) S :=
+    formallyUnramified_of_mapBaseChange_surjective k ι S hbij.2
+  have hh1 : Subsingleton (Algebra.H1Cotangent (MvPolynomial ι k) S) := by
+    have key : ∀ z : Algebra.H1Cotangent (MvPolynomial ι k) S, z = 0 := by
+      intro z
+      have hz : Algebra.H1Cotangent.δ k (MvPolynomial ι k) S z = 0 := by
+        have h0 := (Algebra.H1Cotangent.exact_δ_mapBaseChange k (MvPolynomial ι k)
+          S).apply_apply_eq_zero z
+        refine hbij.1 ?_
+        rw [h0, map_zero]
+      obtain ⟨w, hw⟩ := (Algebra.H1Cotangent.exact_map_δ k (MvPolynomial ι k) S z).mp hz
+      rw [← hw, Subsingleton.elim w 0, map_zero]
+    exact ⟨fun x y => by rw [key x, key y]⟩
+  refine ⟨?_, ?_⟩
+  · infer_instance
+  · infer_instance
+
+end
+
+section
+
+variable (k : Type*) [CommRing k] (ι : Type*) [Fintype ι] [DecidableEq ι]
+variable (S : Type*) [CommRing S]
+variable [Algebra k S] [Algebra (MvPolynomial ι k) S] [IsScalarTower k (MvPolynomial ι k) S]
+
+omit [IsScalarTower k (MvPolynomial ι k) S] in
+theorem linearIndependent_D_coord_of_isUnit_det (b : Module.Basis ι S (KaehlerDifferential k S))
+    (h : IsUnit (b.det fun i : ι => KaehlerDifferential.D k S (coord k ι S i))) :
+    LinearIndependent S fun i : ι => KaehlerDifferential.D k S (coord k ι S i) :=
+  (b.is_basis_iff_det.mpr h).1
+
+omit [IsScalarTower k (MvPolynomial ι k) S] in
+theorem top_le_span_D_coord_of_isUnit_det (b : Module.Basis ι S (KaehlerDifferential k S))
+    (h : IsUnit (b.det fun i : ι => KaehlerDifferential.D k S (coord k ι S i))) :
+    ⊤ ≤ Submodule.span S
+        (Set.range fun i : ι => KaehlerDifferential.D k S (coord k ι S i)) := by
+  have hb := b.is_basis_iff_det.mpr h
+  have h2 : Submodule.span S
+      (Set.range fun i : ι => KaehlerDifferential.D k S (coord k ι S i)) = ⊤ := hb.2
+  exact h2.ge
+
+noncomputable def coordBasis (b : Module.Basis ι S (KaehlerDifferential k S))
+    (h : IsUnit (b.det fun i : ι => KaehlerDifferential.D k S (coord k ι S i))) :
+    Module.Basis ι S (KaehlerDifferential k S) :=
+  Module.Basis.mk (linearIndependent_D_coord_of_isUnit_det k ι S b h) (top_le_span_D_coord_of_isUnit_det k ι S b h)
+
+omit [IsScalarTower k (MvPolynomial ι k) S] in
+@[simp]
+theorem coordBasis_apply (b : Module.Basis ι S (KaehlerDifferential k S))
+    (h : IsUnit (b.det fun i : ι => KaehlerDifferential.D k S (coord k ι S i))) (i : ι) :
+    coordBasis k ι S b h i = KaehlerDifferential.D k S (coord k ι S i) :=
+  Module.Basis.mk_apply (linearIndependent_D_coord_of_isUnit_det k ι S b h) (top_le_span_D_coord_of_isUnit_det k ι S b h) i
+
+theorem formallyEtale_of_isUnit_det [Algebra.FormallySmooth k S]
+    (b : Module.Basis ι S (KaehlerDifferential k S))
+    (h : IsUnit (b.det fun i : ι => KaehlerDifferential.D k S (coord k ι S i))) :
+    Algebra.FormallyEtale (MvPolynomial ι k) S :=
+  formallyEtale_of_basis k ι S (coordBasis k ι S b h) (coordBasis_apply k ι S b h)
+
+end
+
+section
+
+variable (k : Type*) [CommRing k] (ι : Type*) (S : Type*) [CommRing S] [Algebra k S]
+variable (S' : Type*) [CommRing S'] [Algebra k S'] [Algebra S S'] [IsScalarTower k S S']
+variable [Algebra.FormallyEtale S S']
+
+theorem linearIndependent_kaehlerMap_basis
+    (b : Module.Basis ι S (KaehlerDifferential k S)) :
+    LinearIndependent S' fun i : ι => KaehlerDifferential.map k k S S' (b i) := by
+  have hbc := KaehlerDifferential.isBaseChange_of_formallyEtale k S S'
+  have hfun : (fun i : ι => KaehlerDifferential.map k k S S' (b i)) =
+      ⇑((Algebra.TensorProduct.basis S' b).map hbc.equiv) := by
+    funext i
+    rw [Module.Basis.map_apply, Algebra.TensorProduct.basis_apply, hbc.equiv_tmul, one_smul]
+  rw [hfun]
+  exact ((Algebra.TensorProduct.basis S' b).map hbc.equiv).linearIndependent
+
+theorem top_le_span_kaehlerMap_basis (b : Module.Basis ι S (KaehlerDifferential k S)) :
+    ⊤ ≤ Submodule.span S'
+        (Set.range fun i : ι => KaehlerDifferential.map k k S S' (b i)) := by
+  have hsub : Subsingleton (KaehlerDifferential S S') :=
+    Algebra.FormallyUnramified.subsingleton_kaehlerDifferential
+  have hexact := KaehlerDifferential.exact_mapBaseChange_map k S S'
+  have hsurj : Function.Surjective (KaehlerDifferential.mapBaseChange k S S') := by
+    intro x
+    obtain ⟨y, hy⟩ := (hexact x).mp (Subsingleton.elim _ _)
+    exact ⟨y, hy⟩
+  have hfun : (fun i : ι => (1 : S') ⊗ₜ[S] b i) = ⇑(Algebra.TensorProduct.basis S' b) :=
+    funext fun i => (Algebra.TensorProduct.basis_apply (A := S') b i).symm
+  have hspan : ⊤ ≤ Submodule.span S' (Set.range fun i : ι => (1 : S') ⊗ₜ[S] b i) := by
+    rw [hfun]
+    exact (Algebra.TensorProduct.basis S' b).span_eq.ge
+  have hle : Submodule.span S' (Set.range fun i : ι => (1 : S') ⊗ₜ[S] b i) ≤
+      Submodule.comap (KaehlerDifferential.mapBaseChange k S S')
+        (Submodule.span S'
+          (Set.range fun i : ι => KaehlerDifferential.map k k S S' (b i))) := by
+    rw [Submodule.span_le]
+    rintro _ ⟨i, rfl⟩
+    have h1 : KaehlerDifferential.mapBaseChange k S S' ((1 : S') ⊗ₜ[S] b i) ∈
+        Submodule.span S'
+          (Set.range fun j : ι => KaehlerDifferential.map k k S S' (b j)) := by
+      rw [KaehlerDifferential.mapBaseChange_tmul, one_smul]
+      exact Submodule.subset_span ⟨i, rfl⟩
+    exact h1
+  intro x _
+  obtain ⟨y, rfl⟩ := hsurj x
+  exact hle (hspan Submodule.mem_top)
+
+noncomputable def inducedBasis (b : Module.Basis ι S (KaehlerDifferential k S)) :
+    Module.Basis ι S' (KaehlerDifferential k S') :=
+  Module.Basis.mk (linearIndependent_kaehlerMap_basis k ι S S' b) (top_le_span_kaehlerMap_basis k ι S S' b)
+
+@[simp]
+theorem inducedBasis_apply (b : Module.Basis ι S (KaehlerDifferential k S)) (i : ι) :
+    inducedBasis k ι S S' b i = KaehlerDifferential.map k k S S' (b i) :=
+  Module.Basis.mk_apply (linearIndependent_kaehlerMap_basis k ι S S' b)
+    (top_le_span_kaehlerMap_basis k ι S S' b) i
+
+theorem inducedBasis_apply_D (b : Module.Basis ι S (KaehlerDifferential k S)) (x : ι → S)
+    (hx : ∀ i : ι, b i = KaehlerDifferential.D k S (x i)) (i : ι) :
+    inducedBasis k ι S S' b i = KaehlerDifferential.D k S' (algebraMap S S' (x i)) := by
+  rw [inducedBasis_apply, hx i, KaehlerDifferential.map_D]
+
+end
+
+end JacobianCriterion
+end FunctorialResolution.EmbeddedResolution
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.JacobianCriterion =====
+
+-- ===== clump member: Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.FormallyEtaleCoordinates =====
+-- clump-header: {"m": "Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.FormallyEtaleCoordinates", "h": "module\n\npublic import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.EtaleCoordinates\npublic import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.JacobianCriterion\npublic import Development.ResolutionOfSingularities.EmbeddedResolution.AlgebraicPreliminaries.SpanSingletonProduct\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
 @[expose] public section
 
 open scoped TensorProduct
@@ -186,8 +495,8 @@ private theorem repr_map_basisKaehler
   have key : KaehlerDifferential.map k k S S' ω
       = ∑ j : ι, algebraMap S S' ((basisKaehler k ι S).repr ω j) • basisKaehler k ι S' j := by
     conv_lhs => rw [hω]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_congr rfl ?_
     intro j _
     rw [map_smul, hb j]
@@ -335,3 +644,6 @@ end
 
 end EtaleCoordinates
 end FunctorialResolution.EmbeddedResolution
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.FormallyEtaleCoordinates =====

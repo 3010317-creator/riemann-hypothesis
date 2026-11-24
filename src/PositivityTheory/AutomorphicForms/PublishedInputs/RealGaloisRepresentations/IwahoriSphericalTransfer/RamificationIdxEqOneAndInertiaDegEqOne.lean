@@ -1,20 +1,19 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.Brauer
-public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.FinrankAdjoinSqrtNegOne
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.RealTransport.RealTransport
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.LocIsotypic
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Langlands
-public import GroundTheory.GlobalFields.SemilocalAlgebras.Finite
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.BcDefs
 public import GroundTheory.GlobalFields.CompletionAtPlace.Galois
-public import ReciprocityTheory.GaloisValuations.Global
+import GroundTheory.GlobalFields.CompletionAtPlace.Integers
+public import GroundTheory.GlobalFields.SemilocalAlgebras.Finite
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.Valuation.LocalSubring
+public import GroundTheory.GlobalFields.SemilocalAlgebras.ContinuousCompletionMap
+import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.FinrankAdjoinSqrtNegOne
 
 @[expose] public section
 
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N
 open GlobalTheory.CuspRep GlobalTheory.WeilDeligne GlobalTheory.Pst GlobalTheory.LocLanglands GlobalTheory.HeckeGal GlobalTheory.LocGL GlobalTheory.GalOfCusp UpperTheory.V UpperTheory.V.Af UpperTheory.V.Published UpperTheory.V.Af.Bc GlobalTheory.RealGal
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace GlobalTheory.PlaceIsoDec
 

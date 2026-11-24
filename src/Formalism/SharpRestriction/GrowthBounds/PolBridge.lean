@@ -1,12 +1,59 @@
 module
 
-public import Formalism.SharpRestriction.GrowthBounds.ObjSeg
-public import Formalism.SharpRestriction.GrowthBounds.CovariantDegrees
-public import Formalism.SharpRestriction.GrowthBounds.GLWeightTheory
-public import Formalism.SharpRestriction.GrowthBounds.ProjectionOfIsotypicDecomposition
-public import Formalism.SharpRestriction.GrowthBounds.ValuationLowestDegreeMapFractionField
 public import Formalism.SharpRestriction.GrowthBounds.FlipOneThree
-public import Formalism.SharpRestriction.GrowthBounds.StatementOfDegreeAndBound
+public import Formalism.SharpRestriction.GrowthBounds.ProjectionOfIsotypicDecomposition
+public import Formalism.SharpRestriction.GrowthBounds.RootWeights.DescendingProdEqFactorialChoose
+public import Formalism.SharpRestriction.GrowthBounds.RootWeights.ExistsHighestWeightVectorFindim
+public import Formalism.SharpRestriction.GrowthBounds.RootWeights.GeneratedModuleWeightLemmaOfInterfaces
+public import Formalism.SharpRestriction.GrowthBounds.RootWeights.GeneratedModuleWeightLemmaPartB
+public import Formalism.SharpRestriction.GrowthBounds.RootWeights.GeneratedWeightLemmaOfReducibility
+public import Formalism.SharpRestriction.GrowthBounds.RootWeights.HighestWeightDominantHolds
+public import Formalism.SharpRestriction.GrowthBounds.RootWeights.IntegralEnvelopingPreservesStable
+import Formalism.SharpRestriction.GrowthBounds.RootWeights.MonomialsAreWeightVectors
+import Formalism.SharpRestriction.GrowthBounds.RootWeights.WeightEntryRestrictionMem
+public import Formalism.SharpRestriction.GrowthBounds.ValuationLowestDegreeMapFractionField
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Presheaf
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Formalism.SharpRestriction.GrowthBounds.RootWeights.ContravariantIsotypicOrthogonal
 
 @[expose] public section
 
@@ -185,7 +232,7 @@ theorem ycond_top (LL : ChainLetters N) (j : ℕ) : YCond K (r := r) LL j ⊤ = 
   apply le_sSup
   refine ⟨?_, ?_⟩
   · intro x _
-    simp [MvPolynomial.mem_restrictSupport_iff]
+    simp
   · intro c d x _
     exact Submodule.mem_top
 
@@ -237,18 +284,21 @@ theorem combined_weight_of_nested_sets (D : Formalism.BasicNotions.D7) (X : Form
     intro i G
     obtain ⟨e, he, hd⟩ := hdec i
     rw [mem_iSup_iso_iff Lt _ e he hd]
-    constructor
-    · intro h k hk
-      cases hM : M k with
-      | top => rw [ycond_top]; exact Submodule.mem_top
+    have hthreshold : ∀ k, J k = i.val →
+        (G ∈ YCond (KK X.O) (r := X.r) LL (J k) (M k) ↔
+          ∀ mu, e mu G ≠ 0 → ((mu ⟨0, Nat.pos_of_ne_zero X.hm⟩ : ℤ) : WithTop ℤ) ≤ M k) := by
+      intro k hk
+      cases M k with
+      | top => simp [ycond_top]
       | coe Mk =>
         rw [mem_ycond_iff D LL (J k) Mk G]
         have hS : {l : Fin N | (l : ℕ) < J k} = {l : Fin N | l.val < i.val} := by rw [hk]
         rw [hS, lowest_degree_le_iff_types D h2 Lt _ e he G Mk]
-        intro mu hmu
-        have := (h mu hmu).2 k hk
-        rw [hM] at this
-        exact_mod_cast this
+        have hzero : (0 : Fin X.r) = ⟨0, Nat.pos_of_ne_zero X.hm⟩ := Fin.ext (by simp)
+        simp only [WithTop.coe_le_coe, ← hzero]
+    constructor
+    · intro h k hk
+      exact (hthreshold k hk).2 fun mu hmu => (h mu hmu).2 k hk
     · intro h mu hmu
       refine ⟨?_, fun k hk => ?_⟩
       · by_contra hdom
@@ -257,14 +307,7 @@ theorem combined_weight_of_nested_sets (D : Formalism.BasicNotions.D7) (X : Form
         have : e mu G ∈ isoSub (glOps (KK X.O) X.r Lt {l : Fin N | l.val < i.val}) mu := hmem mu
         rw [isoSub_eq_bot D h2 Lt _ mu hdom] at this
         exact (Submodule.mem_bot _).1 this
-      · have hY := h k hk
-        cases hM : M k with
-        | top => exact le_top
-        | coe Mk =>
-          rw [hM, mem_ycond_iff D LL (J k) Mk G] at hY
-          have hS : {l : Fin N | (l : ℕ) < J k} = {l : Fin N | l.val < i.val} := by rw [hk]
-          rw [hS, lowest_degree_le_iff_types D h2 Lt _ e he G Mk] at hY
-          exact_mod_cast hY mu hmu
+      · exact (hthreshold k hk).1 (h k hk) mu hmu
   have hmemL : ∀ G : MvPolynomial (Fin N × Fin X.r) X.O,
       G ∈ Formalism.MainNotions.CovariantDegrees.nestLat X.O N X.r Lt LL.deg pi Ix ↔
         G ∈ Pol X.O X.r LL.deg ∧ ∀ k, MvPolynomial.map (algebraMap X.O (KK X.O)) G ∈ YCond (KK X.O) (r := X.r) LL (J k) (M k) := by

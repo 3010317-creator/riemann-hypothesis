@@ -1,39 +1,70 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.IsInertiaInfiniteCyclotomic
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.FiniteCohomology
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.CoFinite
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.Padics.LocalField
+import Mathlib.NumberTheory.Padics.ProperSpace
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.AdicCompletion.Functoriality
+import Mathlib.RingTheory.AdicCompletion.Noetherian
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Algebra.Ring.Compact
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Formalism.SharedLemmas.PrecompleteFinite
 
 @[expose] public section
 
 open Formalism.BasicNotions Formalism.BasicNotions.Loc ReciprocityTheory.Gal Module UpperTheory.V.Loc UpperTheory.V.U3 UpperTheory.V.Alg IsLocalRing Polynomial
 
-private theorem mem_smul_top_pi {R : Type} [CommRing R] (J : Ideal R) {r : ℕ} (x : Fin r → R) :
-    x ∈ J • (⊤ : Submodule R (Fin r → R)) ↔ ∀ i, x i ∈ J := by
-  constructor
-  · intro hx
-    refine Submodule.smul_induction_on hx (fun a ha y _ i => ?_) (fun a b ha hb i => ?_)
-    · exact J.mul_mem_right _ ha
-    · exact J.add_mem (ha i) (hb i)
-  · intro hx
-    rw [pi_eq_sum_univ x]
-    exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem_smul (hx i) Submodule.mem_top
-
 private theorem isPrecomplete_pi {R : Type} [CommRing R] (I : Ideal R) [IsPrecomplete I R] (r : ℕ) :
     IsPrecomplete I (Fin r → R) := by
-  refine ⟨fun f hf => ?_⟩
-  have key : ∀ i, ∃ L : R, ∀ n, f n i ≡ L [SMOD (I ^ n • ⊤ : Submodule R R)] := fun i =>
-    IsPrecomplete.prec' (I := I) (fun n => f n i) fun {m n} hmn => by
-      have h := hf hmn
-      rw [SModEq.sub_mem, mem_smul_top_pi] at h
-      rw [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top]
-      exact h i
-  choose L hL using key
-  refine ⟨L, fun n => ?_⟩
-  rw [SModEq.sub_mem, mem_smul_top_pi]
-  intro i
-  have h := hL i n
-  rwa [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top] at h
+  first
+  | exact _root_.Formalism.SharedLemmas.isPrecomplete_fin_pi
+  | (apply _root_.Formalism.SharedLemmas.isPrecomplete_fin_pi <;> assumption)
 
 private theorem finOfHaus {l : ℕ} [Fact l.Prime] {V M : Type} [AddCommGroup V] [Module ℚ_[l] V] [Module ℤ_[l] V]
     [IsScalarTower ℤ_[l] ℚ_[l] V] [Module.Finite ℚ_[l] V] [AddCommGroup M] [Module ℤ_[l] M]
@@ -118,8 +149,8 @@ private theorem evCongr {l : ℕ} [Fact l.Prime] {V M X : Type} [AddCommGroup V]
     intro m
     have : i m = Fintype.linearCombination ℚ_[l] (i ∘ e) fun j => (e.equivFun m j : ℚ_[l]) := by
       conv_lhs => rw [← e.sum_equivFun m]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [Fintype.linearCombination_apply, map_sum]
+
+      rw [Fintype.linearCombination_apply, map_sum]
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [map_smul, ← algebraMap_smul ℚ_[l]]
       rfl

@@ -2,7 +2,50 @@ module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.SpectralOperatorNorms.KillExempt
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.SpectralOperatorNorms.ChebyshevNormEstimates.FinAct
+import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosedKernelMinors.HpSpec
+public import Development.AutomorphicArithmetic.Foundations.Convolution.ConvolutionKernels.KernelTransforms.CommPrj
 public import Development.AutomorphicArithmetic.Foundations.Convolution.ConvolutionKernels.KernelTransforms.PrjFix
+import GroundTheory.GlobalFields.Adele.Topology
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -82,38 +125,6 @@ private theorem fin_facts {K : Type} [Field K] [NumberField K] {n : ℕ} {k : Ad
   · rw [MultiplicityOne.finProj_of_mem (maxCompact_le_normOneGL (finEmb_mem_maxCompact hk))]
   · exact (AdelicGLn.prodEquiv K n).apply_symm_apply _
 
-private theorem level_open {K : Type} [Field K] [NumberField K] {n : ℕ} {D : TypeDat K n}
-    {Kf : Subgroup (AdelicGLn.FiniteAdelicGL K n)} (hL : D.Level Kf) (hle : Kf ≤ AdelicGLn.integralFiniteGL K n) :
-    IsOpen (Kf : Set (AdelicGLn.FiniteAdelicGL K n)) := by
-  obtain ⟨O, hO, hU⟩ := D.isOpen
-  have : (Kf : Set (AdelicGLn.FiniteAdelicGL K n)) = (AdelicGLn.integralFiniteGL K n : Set _) ∩ finEmb K n ⁻¹' O := by
-    ext k
-    constructor
-    · intro hk
-      obtain ⟨h1, h2, h3⟩ := fin_facts (hle hk)
-      have := (hL.1 (MultiplicityOne.finProj K n k) (by rw [h1, h3])).2 (by rw [h1, h3]; exact hk)
-      rw [hU, h1] at this
-      exact ⟨hle hk, this.1⟩
-    · rintro ⟨hk, hk'⟩
-      obtain ⟨h1, h2, h3⟩ := fin_facts hk
-      have := (hL.1 (MultiplicityOne.finProj K n k) (by rw [h1, h3])).1 (by rw [hU, h1]; exact ⟨hk', h2⟩)
-      rw [h1, h3] at this
-      exact this
-  rw [this]
-  exact (AdelicGLn.isOpen_integralFiniteGL K n).inter (hO.preimage continuous_finEmb)
-
-private theorem fix_inv {K : Type} [Field K] [NumberField K] {n : ℕ} {D : TypeDat K n}
-    {Kf : Subgroup (AdelicGLn.FiniteAdelicGL K n)} (hL : D.Level Kf) (hle : Kf ≤ AdelicGLn.integralFiniteGL K n)
-    {f : G1 K n → ℂ} (hf : D.Fix f) {k : AdelicGLn.FiniteAdelicGL K n} (hk : k ∈ Kf) (g : G1 K n) :
-    f (g * MultiplicityOne.finProj K n k) = f g := by
-  obtain ⟨h1, h2, h3⟩ := fin_facts (hle hk)
-  have h4 : (AdelicGLn.prodEquiv K n (MultiplicityOne.finProj K n k : G1 K n)).1 = 1 := by rw [h1, h3]
-  have hU : MultiplicityOne.finProj K n k ∈ D.U := (hL.1 _ h4).2 (by rw [h1, h3]; exact hk)
-  rw [← hf g, ← hf (g * _), ← (D.inv _ hU).integral_comp (measurableEmbedding_mulLeft _) fun y => D.e y * f (g * y)]
-  refine integral_congr_ae ?_
-  filter_upwards [D.supp] with y hy
-  rw [hL.2.2 _ hU h4 y hy, mul_assoc]
-
 theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.cosAct :
     ForAllC fun K _ _ μ _ _ _ _ _ D d _ A A' => ∀ (Kf : Subgroup (AdelicGLn.FiniteAdelicGL K (2 + 2))), D.Level Kf → Kf ≤ AdelicGLn.integralFiniteGL K (2 + 2) →
       ∀ (h : AdelicGLn.FiniteAdelicGL K (2 + 2)) (Y : L2 μ →L[ℂ] L2 μ),
@@ -122,7 +133,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.cosAct :
         ∑ᶠ c ∈ {c : AdelicGLn.FiniteAdelicGL K (2 + 2) ⧸ Kf | ∃ k ∈ Kf, c = QuotientGroup.mk (k * h)},
           flat z (A.sec v) (x * MultiplicityOne.finProj K (2 + 2) c.out)) ∧ ∀ P, IsOrthogonalProjectionTwoLines A.J A'.J P → Y ∘L P = P ∘L Y := by
   intro K _ _ _ μ _ μ₂ _ τ₁ τ₂ hp D d d' A A' Kf hL hle h Y hY
-  have ho := level_open hL hle
+  have ho := _root_.UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.FinA.lev_open hL hle
   have hc : IsCompact (Kf : Set (AdelicGLn.FiniteAdelicGL K (2 + 2))) :=
     (AdelicGLn.isCompact_integralFiniteGL K (2 + 2)).of_isClosed_subset (Kf.isClosed_of_isOpen ho) hle
   have hfin := coset_fin Kf ho hc h
@@ -180,7 +191,8 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.cosAct :
       rw [h1]
       exact h2
     unfold flat
-    rw [fix_inv hL hle hfix hk, show HP 2 2 (y * MultiplicityOne.finProj K (2 + 2) k) = HP 2 2 y from (hK _ h3).2 y]
+    rw [FinA.fix_inv hL hle hfix y hk,
+      show HP 2 2 (y * MultiplicityOne.finProj K (2 + 2) k) = HP 2 2 y from (hK _ h3).2 y]
   rw [← hsz, finsum_mem_eq_finite_toFinset_sum _ hfin]
   refine (hint ℂ (fun g => flat z (A.sec v) (x * MultiplicityOne.finProj K (2 + 2) g))
     (hfl.comp (continuous_const.mul MultiplicityOne.continuous_finProj))).trans (Finset.sum_congr rfl fun c _ => ?_)
