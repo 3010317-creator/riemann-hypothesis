@@ -307,22 +307,37 @@ theorem divNormR_of_zero [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fi
     simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
     field_simp
 
+/-- The nonzero column case needs only the archimedean chain estimates and the
+eigenvalue budget, not the lattice-shift or finite-place slope data. -/
+theorem divNormR_of_nonzero [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintype Pl] [DecidableEq Pl] (wf0 : Df0.WF) (wf1 : Df1.WF)
+    (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl) (u : Dc.Mem)
+    (hne : P.cols.col.B u ≠ 0)
+    (X0 : InfinitePlace K → Matrix (Fin (Df1.nV Bs.μ0)) (Fin (Df1.nV Bs.μ0)) ℂ)
+    (hX0 : ∀ v, IsUnit (X0 v).det ∧ ((X0 v)⁻¹).conjTranspose * (X0 v)⁻¹ = (Df1.HV Bs.μ0).map v.embedding)
+    (ch : ColChain Dc u) (hn : HtNums R (InfinitePlace K))
+    (nP : ∀ v, Formalism.HN.opNormAt (Pi.basisFun K (Fin (ch.c (Fin.last ch.mm)))) (ch.X (Fin.last ch.mm))
+      (Pi.basisFun K (Fin (Df1.nV Bs.μ0))).dualBasis (Formalism.HN.dualFrame X0) v ch.PtL ^ 2 ≤ Real.exp hn.hPn)
+    (cb : CBData ch.X ch.Kj)
+    (nKcb : ∀ j v, Real.log (cb.sq j v) ≤ ∑ l ∈ Finset.univ.filter (fun l => ch.lf l = j), hn.sz l v)
+    (eig6 : ∑ j, R.hX j ≤ ∑ j, N.l6 j) : DivNormR P R u := by
+  have : Nonempty Bs.Ix := nonempty_Ix wf0 P.base.pos
+  have hX := fun v => OperatorNormFrames.opNormAt_nonneg (Pi.basisFun K (Fin (Dc.a u))) (Dc.Xc u) (Pi.basisFun K (Fin P.cols.D)).dualBasis
+    (Formalism.HN.dualFrame P.cols.XE) v (P.cols.col.B u)
+  have nK := nK_of_cb cb (fun j v => ∑ l ∈ Finset.univ.filter (fun l => ch.lf l = j), hn.sz l v) nKcb
+  obtain ⟨Hv, Hm⟩ := height_chain_atR wf1 P.cols u hne X0 hX0 ch hn.hPn hn.sz nP nK
+  have h1 := hn.le_hu (∑ j, N.l6 j) eig6
+  refine exists_cu _ (fun v => hn.hPn + ∑ j, ∑ l ∈ Finset.univ.filter (fun l => ch.lf l = j), hn.sz l v -
+    Real.log (P.cols.κ v) - minOver (fun p => ∑ j, Real.log (P.cols.lam j Bs.μ0 p v))) _ hX (fun v => Or.inr (Hv v)) ?_
+  linarith [Hm, h1]
+
 /-- The norm majorants use the arithmetic input before the local valuation estimate
 is adjoined. The zero-map case and the nonzero-map height argument remain distinct. -/
 theorem divNormR_of [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintype Pl] [DecidableEq Pl] (wf0 : Df0.WF) (wf1 : Df1.WF)
     (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl) (u : Dc.Mem) (Nu : Submodule (𝓞 K) (Fin (Dc.a u) → K))
     (sg : HeightOneSpectrum (𝓞 K) → ℝ) (I : DivInputs0R P R u Nu sg) : DivNormR P R u := by
-  have : Nonempty Bs.Ix := nonempty_Ix wf0 P.base.pos
-  have hX := fun v => OperatorNormFrames.opNormAt_nonneg (Pi.basisFun K (Fin (Dc.a u))) (Dc.Xc u) (Pi.basisFun K (Fin P.cols.D)).dualBasis
-    (Formalism.HN.dualFrame P.cols.XE) v (P.cols.col.B u)
   by_cases hne : P.cols.col.B u = 0
   · exact divNormR_of_zero wf0 P R u hne
-  · have nK := nK_of_cb I.cb (fun j v => ∑ l ∈ Finset.univ.filter (fun l => I.ch.lf l = j), I.hn.sz l v) I.nKcb
-    obtain ⟨Hv, Hm⟩ := height_chain_atR wf1 P.cols u hne I.X0 I.base_matrix_det_unit I.ch I.hn.hPn I.hn.sz I.nP nK
-    have h1 := I.hn.le_hu (∑ j, N.l6 j) I.eig6
-    refine exists_cu _ (fun v => I.hn.hPn + ∑ j, ∑ l ∈ Finset.univ.filter (fun l => I.ch.lf l = j), I.hn.sz l v -
-      Real.log (P.cols.κ v) - minOver (fun p => ∑ j, Real.log (P.cols.lam j Bs.μ0 p v))) _ hX (fun v => Or.inr (Hv v)) ?_
-    linarith [Hm, h1]
+  · exact divNormR_of_nonzero wf0 wf1 P R u hne I.X0 I.base_matrix_det_unit I.ch I.hn I.nP I.cb I.nKcb I.eig6
 
 /-- The slope estimate uses the base slope, the passage bound and the numerical
 divisor inequality, without the additional local valuation estimate. -/
