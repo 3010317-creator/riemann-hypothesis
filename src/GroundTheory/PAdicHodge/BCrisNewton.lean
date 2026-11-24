@@ -26,17 +26,6 @@ theorem exists_eq_div_of_mem_closure_range {R F : Type*} [CommRing R] [Field F] 
   obtain ⟨v, rfl⟩ := hle hz
   exact ⟨u, v, rfl⟩
 
-theorem exists_mul_eq_of_away_away {A B F : Type*} [CommRing A] [CommRing B] [CommRing F] {r : A}
-    {t : Localization.Away r} (ι : A →+* B) (ιP : Localization.Away r →+* B)
-    (hP : ∀ a, ιP (algebraMap A _ a) = ι a) (φ : B →+* F) (ιB : Localization.Away t →+* F)
-    (hB : ∀ x, ιB (algebraMap _ _ x) = φ (ιP x)) (u : Localization.Away t) :
-    ∃ (w : A) (n m : ℕ), ιB u * φ (ιP t ^ n * ι r ^ m) = φ (ι w) := by
-  obtain ⟨x, n, hx⟩ := ACris.exists_mul_pow_eq_of_away (φ.comp ιP) ιB hB u
-  obtain ⟨w, m, hw⟩ := ACris.exists_mul_pow_eq_of_away ι ιP hP x
-  refine ⟨w, n, m, ?_⟩
-  rw [RingHom.comp_apply, RingHom.comp_apply] at hx
-  rw [map_mul, map_pow, ← mul_assoc, hx, ← map_mul, hw]
-
 theorem mul_eq_mul_of_eqs {F : Type*} [CommRing F] {Y U V Wu Wv Su Sv : F} (h1 : Y * V = U)
     (hu : U * Su = Wu) (hv : V * Sv = Wv) : Wu * Sv = Y * (Wv * Su) := by
   rw [← hu, ← hv, ← h1]
