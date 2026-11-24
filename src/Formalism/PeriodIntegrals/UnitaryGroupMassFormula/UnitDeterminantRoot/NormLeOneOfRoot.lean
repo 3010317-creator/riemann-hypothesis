@@ -93,12 +93,12 @@ lemma norm_iota_natCast (l : ℕ) [Fact l.Prime] (ι : ℂ ≃+* ℂ_[l]) (k : �
 
 theorem normOne : NormOne := by
   rintro l _ ι x ⟨hx0, k, hk, h1, h2⟩
-  have hI : ∀ z : ℂ, IsIntegral ℤ z → ‖ι z‖ ≤ 1 := by
-    rintro z ⟨p, hp, hpz⟩
-    apply _root_.Bl.general_b_fact_left_ter.goal1 p hp
-    have h : (ι.toRingHom) (p.eval₂ (algebraMap ℤ ℂ) z) = 0 := by rw [hpz, map_zero]
-    rw [Polynomial.hom_eval₂, RingHom.ext_int (ι.toRingHom.comp (algebraMap ℤ ℂ)) (Int.castRingHom _)] at h
-    exact h
+  have hI (z : ℂ) (hz : IsIntegral ℤ z) : ‖ι z‖ ≤ 1 :=
+    _root_.Bl.general_b_fact_left_ter.norm_le_one_of_isIntegral
+      (fun r => by simpa only [eq_intCast] using IsUltrametricDist.norm_intCast_le_one ℂ_[l] r)
+      (hz.map ({ ι.toRingHom with
+        toFun := ι
+        commutes' := fun r => by simpa only [eq_intCast] using map_intCast ι r } : ℂ →ₐ[ℤ] ℂ_[l]))
   have e1 := hI _ h1
   have e2 := hI _ h2
   rw [map_mul, norm_mul, norm_iota_natCast l ι k hk, one_mul] at e1 e2
