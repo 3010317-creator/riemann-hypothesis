@@ -235,12 +235,9 @@ theorem BranchFillDimension.proof (hHF : HolomorphicFibreInfinite.Statement) :
   rw [hdim]
   refine BranchFillDimension.of_fin hHF _ J (ψ h) (L w) k r (L ∘ φ) (M ⁻¹' B) hJ ?_ ((hZ w).2 hw)
     (L.differentiable.comp_differentiableOn hφd) ?_ ?_ ?_ ?_
-  · rw [hmemJ, RingEquiv.symm_apply_apply]
-    exact hh
-  · intro t ht t' ht' htt
-    exact hφi ht ht' (by simpa [hML] using congrArg M htt)
-  · intro t ht
-    exact (hZ _).2 (hφm ht)
+  · rwa [hmemJ, RingEquiv.symm_apply_apply]
+  · exact fun t ht t' ht' htt => hφi ht ht' (by simpa [hML] using congrArg M htt)
+  · exact fun t ht => (hZ _).2 (hφm ht)
   · exact M.continuous.continuousAt.preimage_mem_nhds (by rwa [hML])
   · rintro x ⟨⟨hxZ, hxB⟩, hxh⟩
     rw [← hLM x] at hxZ hxh
@@ -453,8 +450,7 @@ theorem centredDiscCover_punctured_branch (hPCC : PuncturedCoverCycles.Statement
         · refine Φ.symm.differentiable.comp_differentiableOn
             ((hg₀.comp ((differentiableOn_const _).add (differentiable_apply 0).differentiableOn)
               ?_).sub_const w)
-          intro y hy
-          exact hy.1
+          exact fun y hy => hy.1
         · rw [hA]
           refine hone y _ ?_
           simp [hpg₀ _ hy.1]
@@ -546,8 +542,7 @@ theorem centredDiscCover_extend_across_centre
     exact (hφY s (hrδ hs)).2
   have hℓ : ℓ = w := huniq ℓ hℓK.1 hpℓ
   refine ⟨r, hr0, Function.update φ 0 w, ?_, ?_, Function.update_self _ _ _, ?_⟩
-  · rw [← hℓ]
-    exact hF
+  · rwa [← hℓ]
   · have hoff : ∀ s ∈ ball (0 : ℂ) r, s ≠ 0 → Function.update φ 0 w s ≠ w := by
       intro s hs h0 heq
       rw [Function.update_of_ne h0] at heq
@@ -568,8 +563,7 @@ theorem centredDiscCover_extend_across_centre
   · intro s hs
     by_cases h0 : s = 0
     · subst h0
-      rw [Function.update_self]
-      exact hwY
+      rwa [Function.update_self]
     · rw [Function.update_of_ne h0]
       exact (hφY s (hrδ ⟨hs, h0⟩)).1
 
@@ -650,15 +644,13 @@ theorem CurveMinimalPrimeQuotient.proof : CurveMinimalPrimeQuotient.Statement :=
       sup_eq_left.2 hIP'] at h1
     have h2 := (IsLocalization.under_map_of_isPrime_disjoint (RingHom.ker (eval q)).primeCompl
       (Localization.AtPrime (RingHom.ker (eval q))) hJ'P hdisj)
-    rw [← h2]
-    exact h1
+    rwa [← h2]
 
   have hle : ext I ≤ ext J := Ideal.map_mono hIJ
   refine ⟨J, hJmin, hJm, (Ideal.Quotient.factor hle : curveLocalRing I q →+* curveLocalRing J q),
     Ideal.Quotient.factor_surjective hle, ?_, fun f ↦ Ideal.Quotient.factor_mk hle _⟩
   change RingHom.ker (Ideal.Quotient.factor hle) = p
-  rw [Ideal.Quotient.factor_ker, hextJ]
-  exact hpmap
+  rwa [Ideal.Quotient.factor_ker, hextJ]
 
 end GroundTheory.Heights₂.Heights
 end -- clump:auto
@@ -703,8 +695,7 @@ theorem DominantFibreBound.trdeg_le {n d : ℕ} (P : Ideal (MvPolynomial (Fin n)
       change ((hind.aevalEquiv y : Algebra.adjoin ℂ (Set.range a)) : MvPolynomial (Fin n) ℂ ⧸ P) = projHom P A y
       rw [hproj]
       exact hind.algebraMap_aevalEquiv y
-    rw [Polynomial.eval₂_map, hcomp]
-    exact hfb
+    rwa [Polynomial.eval₂_map, hcomp]
   have : Algebra.IsAlgebraic (Algebra.adjoin ℂ (Set.range a)) (MvPolynomial (Fin n) ℂ ⧸ P) :=
     Algebra.IsIntegral.isAlgebraic
   exact (Algebra.IsAlgebraic.trdeg_le_cardinalMk (R := ℂ) (s := Set.range a)).trans Cardinal.mk_range_le
@@ -720,8 +711,7 @@ theorem DominantFibreBound.exists_poly (hG : ComplexSets.GenericProjectionFinite
   set q : Fin d → MvPolynomial (Fin n) ℂ ⧸ P := fun i => Ideal.Quotient.mk P (p i) with hq_def
   have hind : AlgebraicIndependent ℂ q := by
     rw [algebraicIndependent_iff_injective_aeval]
-    rw [comp_aeval] at hinj
-    exact hinj
+    rwa [comp_aeval] at hinj
   have hbasis : IsTranscendenceBasis ℂ q :=
     hind.isTranscendenceBasis_of_trdeg_le_of_finite (DominantFibreBound.trdeg_le P A hA)
   obtain ⟨f, hf0, hfb⟩ := hbasis.isAlgebraic.isAlgebraic b
@@ -941,8 +931,7 @@ theorem comap_curveLocalRing_strictMono (I : Ideal (MvPolynomial (Fin n) ℂ)) (
   intro P Q h
   apply PrimeSpectrum.comap_injective_of_surjective _ (Ideal.Quotient.mk_surjective (I := I.map
     (algebraMap (MvPolynomial (Fin n) ℂ) (Localization.AtPrime (RingHom.ker (eval q))))))
-  apply PrimeSpectrum.localization_comap_injective _ (RingHom.ker (eval q)).primeCompl
-  exact h
+  exact PrimeSpectrum.localization_comap_injective _ (RingHom.ker (eval q)).primeCompl h
 
 theorem le_comap_curveLocalRing (I : Ideal (MvPolynomial (Fin n) ℂ)) (q : Fin n → ℂ)
     (P : PrimeSpectrum (curveLocalRing I q)) :
@@ -1161,8 +1150,7 @@ theorem PlaceOnComponent.proof (h₁ : ReducedNormalisationPlace.Statement)
   obtain ⟨P', hP'⟩ := hS (curveLocalRing J q) φ hφ hker
   refine ⟨J, hJ, hJq, ringKrullDim_eq_one_of_surjective_of_ker_mem_minimalPrimes hdim hp φ hφ hker, P', fun f ↦ ?_⟩
   have e := hP' (algebraMap (MvPolynomial (Fin n) ℂ) (curveLocalRing I q) f)
-  rw [hφf] at e
-  exact e
+  rwa [hφf] at e
 
 end GroundTheory.Heights₂.Heights
 end -- clump:auto
@@ -1242,8 +1230,7 @@ theorem ReducedNormalisationPlace.proof : ReducedNormalisationPlace.Statement :=
       refine Finset.prod_eq_zero (hfin.mem_toFinset.2 hp) ?_
       rw [map_sub, map_one,
         (he p hp (R ⧸ p) (Ideal.Quotient.mk p) Ideal.Quotient.mk_surjective Ideal.mk_ker).1, sub_self]
-    rw [hz, fracMap_mk'_eq_zero_iff, Ideal.mk_ker] at h0
-    exact h0
+    rwa [hz, fracMap_mk'_eq_zero_iff, Ideal.mk_ker] at h0
   have hprod : ∏ p ∈ hfin.toFinset, (1 - e p) = 0 := Subtype.ext (by push_cast; exact hprodK)
   obtain ⟨p, hpT, hp1⟩ := (Ideal.IsPrime.prod_mem_iff (p := P.asIdeal)).1
     (by rw [hprod]; exact P.asIdeal.zero_mem)
@@ -1337,13 +1324,11 @@ theorem volume_eq_zero_of_hausdorff {S : Set (Fin d → ℂ)} (hS : μH[((2 * d 
   have hT : volume (E ⁻¹' S) = 0 := by
     rw [← hausdorffMeasure_pi_real, hcard]
     have h := E.symm.lipschitzWith.hausdorffMeasure_image_le (d := ((2 * d : ℕ) : ℝ)) (by positivity) S
-    rw [hS, mul_zero, nonpos_iff_eq_zero, ContinuousLinearEquiv.image_symm_eq_preimage] at h
-    exact h
+    rwa [hS, mul_zero, nonpos_iff_eq_zero, ContinuousLinearEquiv.image_symm_eq_preimage] at h
   have : (Measure.map E volume).IsAddHaarMeasure := E.isAddHaarMeasure_map volume
   have hac : (volume : Measure (Fin d → ℂ)) ≪ Measure.map E volume :=
     Measure.absolutelyContinuous_isAddHaarMeasure _ _
-  apply hac
-  exact (E.toHomeomorph.toMeasurableEquiv.map_apply S).trans hT
+  exact hac ((E.toHomeomorph.toMeasurableEquiv.map_apply S).trans hT)
 
 theorem volume_image_eq_zero (W I : Ideal (MvPolynomial (Fin n) ℂ)) (A : Matrix (Fin d) (Fin n) ℂ)
     (hI : ringKrullDim (MvPolynomial (Fin n) ℂ ⧸ I) < d) :
@@ -1484,8 +1469,7 @@ theorem ZeroDimIsolated.proof : ZeroDimIsolated.Statement := by
           (X i - C (q i)) ∈ IsLocalRing.maximalIdeal (Localization.AtPrime (RingHom.ker (eval q))) := by
         rw [IsLocalization.AtPrime.to_map_mem_maximal_iff _ (RingHom.ker (eval q))]
         simp [RingHom.mem_ker]
-      rw [← IsLocalRing.eq_maximalIdeal hPm] at hL
-      exact hL
+      rwa [← IsLocalRing.eq_maximalIdeal hPm] at hL
     rw [Ring.jacobson_eq_nilradical_of_krullDimLE_zero, mem_nilradical] at hmem
     obtain ⟨k, hk⟩ := hmem
     rw [← map_pow] at hk

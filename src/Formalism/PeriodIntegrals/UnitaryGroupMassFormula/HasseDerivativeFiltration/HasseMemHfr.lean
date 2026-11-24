@@ -96,9 +96,7 @@ theorem hasse_mem_Hfr (u : WeightFamilies.Wt D j) (β : Idx D j N →₀ ℕ) :
     (Submodule.sum_mem _ fun q hq => ?_)
   obtain ⟨hne, hq⟩ := Finset.mem_erase.mp hq
   rw [mem_antidiagonal] at hq
-  have h1 : q.1 ≠ 0 := by
-    intro h0
-    exact hne (Prod.ext h0 (by rw [← hq, h0, zero_add]))
+  have h1 : q.1 ≠ 0 := fun h0 => hne (Prod.ext h0 (by rw [← hq, h0, zero_add]))
   have hlt : q.2 < β := by
     refine lt_of_le_of_ne (le_add_self.trans_eq hq) fun e => h1 ?_
     rw [e] at hq

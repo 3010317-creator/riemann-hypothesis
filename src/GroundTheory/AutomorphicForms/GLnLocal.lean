@@ -31,8 +31,7 @@ theorem mem_integralMatrices {A : Matrix (Fin n) (Fin n) F} :
   constructor
   · rintro ⟨B, rfl⟩ i j
     exact (B i j).2
-  · intro h
-    exact ⟨Matrix.of fun i j => ⟨A i j, h i j⟩, rfl⟩
+  · exact fun h => ⟨Matrix.of fun i j => ⟨A i j, h i j⟩, rfl⟩
 
 def integralGLHom : GL (Fin n) 𝒪[F] →* GL (Fin n) F :=
   Units.map (RingHom.mapMatrix (𝒪[F]).subtype).toMonoidHom
@@ -107,8 +106,7 @@ theorem valuation_uniformizer_lt_one : valuation F (uniformizer F : F) < 1 := by
 
 theorem valuation_uniformizer_ne_zero : valuation F (uniformizer F : F) ≠ 0 := by
   rw [Valuation.ne_zero_iff]
-  intro h
-  exact (irreducible_uniformizer F).ne_zero (Subtype.ext h)
+  exact fun h => (irreducible_uniformizer F).ne_zero (Subtype.ext h)
 
 theorem eq_zero_of_forall_valuation_le {x : F}
     (h : ∀ m : ℕ, valuation F x ≤ valuation F (uniformizer F : F) ^ m) : x = 0 := by
@@ -290,8 +288,7 @@ theorem hasBasis_nhds_one :
   have : g ∈ (integralGL F n : Set (GL (Fin n) F)) ∩
       ((congruenceSubgroup F n m : Set (GL (Fin n) F)) ∩ (interior U)ᶜ) :=
     ⟨congruenceSubgroup_le F n m hg, hg, h⟩
-  rw [hm] at this
-  exact this
+  rwa [hm] at this
 
 end Congruence
 

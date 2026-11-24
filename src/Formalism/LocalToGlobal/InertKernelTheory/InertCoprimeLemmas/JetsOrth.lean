@@ -26,8 +26,7 @@ theorem smulLat_star {N : ℕ} (γ : Matrix (Fin N) (Fin N) D.host.E) (h : star 
   constructor
   · rintro ⟨y, hy, rfl⟩
     obtain ⟨z, hz, rfl⟩ := (PullbackComparison.mem_smulLat γ M y).1 hy
-    rw [Matrix.mulVec_mulVec, h, Matrix.one_mulVec]
-    exact hz
+    rwa [Matrix.mulVec_mulVec, h, Matrix.one_mulVec]
   · intro hx
     refine ⟨γ.mulVec x, (PullbackComparison.mem_smulLat γ M _).2 ⟨x, hx, rfl⟩, ?_⟩
     rw [Matrix.mulVec_mulVec, h, Matrix.one_mulVec]
@@ -40,8 +39,7 @@ theorem locBasis_push {N N' r : ℕ} (p : ℕ) (γ : Matrix (Fin N) (Fin N) D.ho
     LocBasis D p (YYl D (SDLat.smulLat γ M) (SDLat.smulLat γ' M')) (fun i => γ' * b i * star γ) := by
   have hb' : LocBasis D p (YYl D (SDLat.smulLat (star γ) (SDLat.smulLat γ M))
       (SDLat.smulLat (star γ') (SDLat.smulLat γ' M'))) b := by
-    rw [smulLat_star γ h2, smulLat_star γ' h4]
-    exact hb
+    rwa [smulLat_star γ h2, smulLat_star γ' h4]
   have := PullbackComparison.locBasis_pull p (star γ) (star γ') (by rw [star_star]; exact h2) (by rw [star_star]; exact h1)
     (by rw [star_star]; exact h4) (by rw [star_star]; exact h3) (SDLat.smulLat γ M) (SDLat.smulLat γ' M') b hb'
   simpa only [star_star] using this

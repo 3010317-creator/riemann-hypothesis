@@ -104,8 +104,7 @@ theorem mem_span_matrixTensor {Φ : Matrix (Fin n) (Fin n) F → ℂ} (hΦ : IsS
       fun p => matrixTensor fun ij => cosetInd (LocalField.valBall F p.1) (p.2 ij) := by
     funext p X
     rfl
-  rw [e1, e2] at hm
-  exact hm
+  rwa [e1, e2] at hm
 
 section Unip
 
@@ -329,10 +328,8 @@ theorem measurePreserving_mul_right {y : GL (Fin n) F} (hy : y ∈ integralGL F 
     intro X
     rw [hB]
     constructor
-    · intro h i j
-      exact LocalField.mem_valBall_zero_iff.1 (h i (Set.mem_univ _) j (Set.mem_univ _))
-    · intro h i _ j _
-      exact LocalField.mem_valBall_zero_iff.2 (h i j)
+    · exact fun h i j => LocalField.mem_valBall_zero_iff.1 (h i (Set.mem_univ _) j (Set.mem_univ _))
+    · exact fun h i _ j _ => LocalField.mem_valBall_zero_iff.2 (h i j)
   have hpre : e ⁻¹' B = B := by
     ext X
     rw [Set.mem_preimage, hmemB, hmemB]
@@ -721,8 +718,7 @@ theorem continuous_parabolicB {φ : GL (Fin n) F → W} (hφ : φ ∈ parabolicI
     refine IsLocallyConstant.continuous fun S => isOpen_iff_forall_mem_open.2 fun g hg => ?_
     refine ⟨g • (K : Set (GL (Fin n) F)), ?_, hKo.smul g, ⟨1, one_mem _, mul_one g⟩⟩
     rintro _ ⟨k, hk, rfl⟩
-    simp only [Set.mem_preimage, smul_eq_mul, hK k hk]
-    exact hg
+    simpa only [Set.mem_preimage, smul_eq_mul, hK k hk] using hg
   have hv : Continuous fun p : blockUpper F n β => (p : GL (Fin n) F) := continuous_subtype_val
   exact ((hΞ.1.continuous.comp (Units.continuous_val.comp hv)).mul
     ((continuous_detPow _).comp hv)).mul (hℓφ.comp ((hv.inv).mul continuous_const))

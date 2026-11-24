@@ -126,8 +126,7 @@ theorem kept_block_at_of_pair_level_chain_threshold : jumpWindows.MirabolicColum
   have start : Bump ψ S (Om 0 0) {1} (Wh ψ (J x)) := by
     refine ⟨isCompact_singleton, ?_, ⟨1, one_pos, by rw [h1]; simp⟩, ?_⟩
     · intro c hc
-      rw [Set.mem_singleton_iff.mp hc]
-      exact ins1
+      rwa [Set.mem_singleton_iff.mp hc]
     · intro g hg _
       obtain rfl := om0 g hg
       exact ⟨1, 1, rfl, 1, uu1, ins1, (mul_one 1).symm, zero_le_one, by rw [h1, ps1]; simp⟩

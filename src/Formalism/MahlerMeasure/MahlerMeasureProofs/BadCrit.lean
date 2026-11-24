@@ -200,9 +200,7 @@ theorem badCrit_pairs (be : Vs →ₗ[ℚ_[p]] Vs →ₗ[ℚ_[p]] ℚ_[p]) (L L�
   have hCE : C ≤ (p : ℝ) ^ ((E : ℤ) - D) := by
     rw [zpow_sub₀ hp0.ne', zpow_natCast, le_div_iff₀ (zpow_pos hp0 _)]
     exact hE.le
-  have hnp : ∀ z : ℤ, ‖(p : ℚ_[p]) ^ z‖ = (p : ℝ) ^ (-z) := by
-    intro z
-    exact Padic.norm_p_zpow z
+  have hnp : ∀ z : ℤ, ‖(p : ℚ_[p]) ^ z‖ = (p : ℝ) ^ (-z) := fun z => Padic.norm_p_zpow z
   have hint : ∀ w ∈ L, ∀ a, ‖(p : ℚ_[p]) ^ ((E : ℤ) - D) * be (u a) w‖ ≤ 1 := by
     intro w hw a
     rw [norm_mul, hnp]

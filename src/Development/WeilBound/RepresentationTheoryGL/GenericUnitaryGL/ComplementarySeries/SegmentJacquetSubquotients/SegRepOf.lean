@@ -378,10 +378,8 @@ theorem isSmooth_sub {G V : Type} [Group G] [TopologicalSpace G] [AddCommGroup V
   ext g
   simp only [Set.mem_setOf_eq]
   constructor
-  · intro hg
-    exact congrArg Subtype.val hg
-  · intro hg
-    exact Subtype.ext hg
+  · exact fun hg => congrArg Subtype.val hg
+  · exact fun hg => Subtype.ext hg
 
 end SrEasy
 
@@ -419,8 +417,7 @@ private theorem exists_irreducible_subrep_le_of_ne_bot {G V : Type} [Group G] [A
       intro h
       apply hU
       apply Submodule.map_injective_of_injective S.toSubmodule.injective_subtype
-      rw [Submodule.map_bot]
-      exact h
+      rwa [Submodule.map_bot]
     have himgS : img U ≤ S := by
       rintro _ ⟨w, _, rfl⟩
       exact w.2
@@ -435,8 +432,7 @@ private theorem exists_irreducible_subrep_le_of_ne_bot {G V : Type} [Group G] [A
       exact w.2
     obtain ⟨u, hu, hu'⟩ := hw
     have : u = w := Subtype.ext hu'
-    rw [← this]
-    exact hu
+    rwa [← this]
 
 
 
@@ -532,19 +528,16 @@ theorem entries_zero_or_d {d l : ℕ} (hd : 0 < d) (σ : IrrRep (GL (Fin d) k)) 
     (hs : ∀ i, IsSubquotient (piTensor fun j => (s i j).ρ) (jac (f i) (segTerm σ.ρ l i))) :
     ∀ i j, b.1 i j = 0 ∨ b.1 i j = d := by
   intro i j
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   obtain ⟨h0, hdj⟩ := hne
   have hcusp : IsCuspidal (segTerm σ.ρ l i) :=
     GlobalTheory.LocGL.isCuspidal_twist hσ (GlobalTheory.LocGL.isSmoothChar_absPow _)
   have hsum := b.2.1 i
   simp only [Fintype.card_fin] at hsum
   obtain ⟨j', hj'ne, hj'0⟩ : ∃ j', j' ≠ j ∧ b.1 i j' ≠ 0 := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     apply hdj
-    rw [Finset.sum_eq_single j (fun j' _ hj' => hall j' hj') (by simp)] at hsum
-    exact hsum
+    rwa [Finset.sum_eq_single j (fun j' _ hj' => hall j' hj') (by simp)] at hsum
   have hpos : 0 < b.1 i j := Nat.pos_of_ne_zero h0
   have hpos' : 0 < b.1 i j' := Nat.pos_of_ne_zero hj'0
   have hbot : unipRad k (f i) ≠ ⊥ := by

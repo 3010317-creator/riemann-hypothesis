@@ -139,8 +139,7 @@ theorem class_sum_dual_le_fixed : ClassSumDualLeF := by
   obtain ⟨δ, hδ, hδz⟩ := Submodule.mem_map.mp hz0
   have h2 : N⁻¹ • ∑ γ, ρ c0 γ δ = N⁻¹ • I y c0 := by
     have := congrArg (Subtype.val) hδz
-    rw [← avg_coe]
-    exact this
+    rwa [← avg_coe]
   have h3 : ∑ γ, ρ c0 γ δ = I y c0 := by
     have := congrArg (fun v => N • v) h2
     simpa [smul_smul, hN0] using this
@@ -160,8 +159,7 @@ theorem valLatF_isLattice {K : Type} [Field K] [NumberField K] [StarRing K]
   refine ⟨?_, ?_⟩
   · apply Submodule.fg_of_fg_map_injective (I.restrictScalars (𝓞 K)) hI
     exact (Submodule.fg_pi fun c => (hN c).fg).of_le (Submodule.map_comap_le _ _)
-  · intro s hs hli
-    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+  · exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
 
 theorem valLatF_isFullLattice {K : Type} [Field K] [NumberField K] [StarRing K]
     {n : ℕ} {Cl V : Type} [Fintype Cl] [AddCommGroup V] [Module K V]

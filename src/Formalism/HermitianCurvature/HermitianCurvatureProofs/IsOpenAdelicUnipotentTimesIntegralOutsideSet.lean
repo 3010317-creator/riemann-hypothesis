@@ -296,8 +296,7 @@ lemma hx_up {x : Fin (2 * r + k + 1) → ℂ} (hx' : IsX k r l x) : hx k r l x �
   refine ⟨hs_glev (h_e_e l l) hvp ?_ ?_ ?_, ?_, fun y hy => ?_⟩
   · simp only [h_sub_left, h_sub_right, h_smul_left, h_smul_right, h1, h1', h2, h4, h_es_e, h_e_e, h_e_es, h_es_es, ite_true]
     ring
-  · intro a ha
-    exact ⟨h_e_e a l, by rw [h_es_e, ite_eq_right (ne_of_val_lt ha)]⟩
+  · exact fun a ha => ⟨h_e_e a l, by rw [h_es_e, ite_eq_right (ne_of_val_lt ha)]⟩
   · intro a ha
     simp only [h_sub_right, h_smul_right, (h3 a ha).1, (h3 a ha).2, h_e_e, h_es_es, h_e_es, h_es_e,
       ite_eq_right (ne_of_val_lt ha)]
@@ -782,8 +781,7 @@ theorem resSurj : ResSurj := by
     have h2 := hD₁.2 g₁ ⟨d.hg, hg₁⟩ (h * n₁) ⟨h, hh, n₁, hn₁, rfl⟩ (h' * n₃) ⟨h', hh', n₃, hn₃, rfl⟩
     have e2 : h * (n₁ * g₁) * h' * n₃ = h * n₁ * g₁ * (h' * n₃) := by simp only [Matrix.mul_assoc]
     rw [e2]; exact h2
-  · intro g hg
-    exact hg.1.1
+  · exact fun g hg => hg.1.1
   · intro c hc g hg
     have d := dec_w (l := l) hc hg
     constructor
@@ -956,8 +954,7 @@ theorem fFTransfer : FFTransfer := by
     obtain ⟨m₂, hm₂, rfl⟩ := level_one_eq_embedding hm'.2
     have hgD : g ∈ D := by
       have := hx.2
-      simp only [Set.mem_preimage, blk_lev] at this
-      exact this
+      simpa only [Set.mem_preimage, blk_lev] using this
     show blk (ιLev k 1 r' h₁ * ιLev k 1 r' m₁ * ιLev k 1 r' g * (ιLev k 1 r' h₂ * ιLev k 1 r' m₂)) ∈ D
     rw [← B2x8.al_lev_mul, ← B2x8.al_lev_mul, ← B2x8.al_lev_mul, ← B2x8.al_lev_mul, blk_lev]
     exact hD.2 g ⟨glev0 hg, hgD⟩ (h₁ * m₁) ⟨h₁, lev_uw hh₁ hh, m₁, ⟨lev_nset hm₁ hm.1, glev0 hm₁⟩, rfl⟩
@@ -966,8 +963,7 @@ theorem fFTransfer : FFTransfer := by
     obtain ⟨g₀, hg₀, rfl⟩ := level_one_eq_embedding hx₀.1
     have hgD : g₀ ∈ D := by
       have := hx₀.2
-      simp only [Set.mem_preimage, blk_lev] at this
-      exact this
+      simpa only [Set.mem_preimage, blk_lev] using this
     obtain ⟨U, F, hU, hmem, hF, hag⟩ := hJs g₀ ⟨glev0 hg₀, hgD⟩
     refine ⟨(fun x : Mx k (1 + r') => (blk x : Mx k r')) ⁻¹' U, fun x => F (blk x), hU.preimage cont_blk, ?_, ?_, ?_⟩
     · simp only [Set.mem_preimage, blk_lev]; exact hmem
@@ -975,39 +971,32 @@ theorem fFTransfer : FFTransfer := by
     · intro x hxU hxG
       obtain ⟨g, hg, rfl⟩ := level_one_eq_embedding hxG
       simp only [Set.mem_preimage, blk_lev] at hxU
-      simp only [blk_lev]
-      exact hag g hxU (glev0 hg)
+      simpa only [blk_lev] using hag g hxU (glev0 hg)
   · intro x hx n hn
     obtain ⟨g, hg, rfl⟩ := level_one_eq_embedding hx.1
     obtain ⟨n₁, hn₁, rfl⟩ := level_one_eq_embedding hn.2
     have hgD : g ∈ D := by
       have := hx.2
-      simp only [Set.mem_preimage, blk_lev] at this
-      exact this
+      simpa only [Set.mem_preimage, blk_lev] using this
     rw [← B2x8.al_lev_mul, psi_lev]
-    simp only [blk_lev]
-    exact hJL g ⟨glev0 hg, hgD⟩ n₁ ⟨lev_nset hn₁ hn.1, glev0 hn₁⟩
+    simpa only [blk_lev] using hJL g ⟨glev0 hg, hgD⟩ n₁ ⟨lev_nset hn₁ hn.1, glev0 hn₁⟩
   · intro x hx n hn
     obtain ⟨g, hg, rfl⟩ := level_one_eq_embedding hx.1
     obtain ⟨n₁, hn₁, rfl⟩ := level_one_eq_embedding hn.2
     have hgD : g ∈ D := by
       have := hx.2
-      simp only [Set.mem_preimage, blk_lev] at this
-      exact this
+      simpa only [Set.mem_preimage, blk_lev] using this
     rw [← B2x8.al_lev_mul, psi_lev]
-    simp only [blk_lev]
-    exact hJR g ⟨glev0 hg, hgD⟩ n₁ ⟨lev_nset hn₁ hn.1, glev0 hn₁⟩
+    simpa only [blk_lev] using hJR g ⟨glev0 hg, hgD⟩ n₁ ⟨lev_nset hn₁ hn.1, glev0 hn₁⟩
   · intro x hx h hh h' hh'
     obtain ⟨g, hg, rfl⟩ := level_one_eq_embedding hx.1
     obtain ⟨h₁, hh₁, rfl⟩ := level_one_eq_embedding (uw_glev hh _)
     obtain ⟨h₂, hh₂, rfl⟩ := level_one_eq_embedding (uw_glev hh' _)
     have hgD : g ∈ D := by
       have := hx.2
-      simp only [Set.mem_preimage, blk_lev] at this
-      exact this
+      simpa only [Set.mem_preimage, blk_lev] using this
     rw [← B2x8.al_lev_mul, ← B2x8.al_lev_mul]
-    simp only [blk_lev]
-    exact hJW g ⟨glev0 hg, hgD⟩ h₁ (lev_uw hh₁ hh) h₂ (lev_uw hh₂ hh')
+    simpa only [blk_lev] using hJW g ⟨glev0 hg, hgD⟩ h₁ (lev_uw hh₁ hh) h₂ (lev_uw hh₂ hh')
   · intro g _
     simp only [Set.mem_preimage, blk_lev, true_and, iff_self]
 

@@ -212,8 +212,7 @@ theorem coeff_p1_pow_top_isUnit {O : Type*} [CommRing O] [IsDomain O] [IsDiscret
   have h0 : PowerSeries.coeff (l * y) (P.u ^ y * PowerSeries.X ^ (l * y)) =
       PowerSeries.constantCoeff (P.u ^ y) := by
     have := PowerSeries.coeff_mul_X_pow (P.u ^ y) (l * y) 0
-    rw [zero_add, PowerSeries.coeff_zero_eq_constantCoeff] at this
-    exact this
+    rwa [zero_add, PowerSeries.coeff_zero_eq_constantCoeff] at this
   rw [h0]
   have hu : IsUnit (PowerSeries.constantCoeff (P.u ^ y)) := (P.hu.pow y).map _
   by_contra hne
@@ -374,8 +373,7 @@ theorem arc_length_one_or_two_case_b [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsD
   have hAj : A.j = 1 := rfl
   have hη0 : η < b₀ := by
     have := hOK.2.2.2.2.1 c
-    rw [htyc] at this
-    exact this
+    rwa [htyc] at this
   have hh : b₀ + S ≤ A.h := by
     have := hOK.2.2.2.2.2.2.2.1 c
     rw [htyc] at this
@@ -494,8 +492,7 @@ theorem arc_length_one_or_two_case_b [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsD
     intro i hi
     have hc := (hgi i).2
     constructor
-    · by_contra hlt
-      push Not at hlt
+    · by_contra! hlt
       have hm := hc 0 hL0
       rw [filS_top W hcase A T₁ hW₁ c 0 _ ?_, Submodule.mem_bot] at hm
       · exact hi (hdvO0 _ hm)
@@ -504,8 +501,7 @@ theorem arc_length_one_or_two_case_b [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsD
         simp only [Formalism.MainNotions.LocalTheoryWindows.LT.win, hAS, hAη, Set.mem_union, Set.mem_Icc] at hx
         push_cast at hlt
         omega
-    · by_contra hlt
-      push Not at hlt
+    · by_contra! hlt
       have hm := hc 1 hL1
       rw [filS_top W hcase A T₁ hW₁ c 1 _ ?_, Submodule.mem_bot] at hm
       · exact hi (hdvO0 _ hm)
@@ -653,8 +649,7 @@ theorem arc_length_one_or_two_case_b [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsD
     set a : O := ((PD.p : ℕ) : O) ^ κ * th with ha
     have hsc : dvO W T₁ L b₁ (fun m => a * c₁ m) = algebraMap O LL a • dvO W T₁ L b₁ c₁ := by
       unfold dvO
-      simp only [map_mul]
-      exact ArcLengthTwoLifting.dv_smul W T₁ L b₁ _ _
+      simpa only [map_mul] using ArcLengthTwoLifting.dv_smul W T₁ L b₁ _ _
     have hfun : (fun m => a * c₁ m) = fun m => ∑ i, PowerSeries.coeff k₀' (Tt i) * c₀ i m := by
       funext m
       rw [← hcoefF m, hc₁, ha]
@@ -768,14 +763,12 @@ theorem arc_length_one_or_two_case_b [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsD
       exact hlt0
     · rw [Finset.prod_singleton, hty0]
       have := hf.1
-      rw [hnnDen] at this
-      exact this
+      rwa [hnnDen] at this
     · intro s hs bs hbs
       obtain ⟨κ', x, hx⟩ := hf.2 s hs bs hbs
       refine ⟨κ', x, ?_⟩
       rw [Finset.prod_singleton, hty0]
-      rw [hnnDen] at hx
-      exact hx
+      rwa [hnnDen] at hx
     · intro s hs hs0 bs hbs
       rw [Finset.mem_singleton] at hs0
       have hs2 : s < 2 := by have : s < L := hs; omega

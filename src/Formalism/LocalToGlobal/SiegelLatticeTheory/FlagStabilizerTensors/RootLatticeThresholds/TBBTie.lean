@@ -45,8 +45,7 @@ theorem topLevelBesselHypothesis : TopLevelBesselHypothesis := by
   intro F γ hK hdec hpos _
   have hp : Formalism.FourierDecayAlt.D.IsLocPt (γ.1.map Prod.swap) (r + 1) := isLocPt_swap γ
   have hG : 0 < Formalism.FourierDecayAlt.D.ptG (Tz (k0 + 1) r Ds.z * Tz (k0 + 1) r Ds.z') r (γ.1.map Prod.swap) := by
-    rw [ptG_eq_GPoint, hz, hz']
-    exact hpos
+    rwa [ptG_eq_GPoint, hz, hz']
   obtain ⟨g, hgG, hgZ, hgF⟩ := hDF (k0 + 1) r L.Wp L.Wq Ds ν' m₀ _ hBF hp hG
   have hvec := hVI (k0 + 1) r L.Wp L.Wq Ds ν' m₀ F _ hp g hBF hG hgG hgZ hgF
   have hrep : IsPtRep L γ g := ⟨hgG, by rw [← hz, ← hz', hgZ, ptMatN_swap]⟩
@@ -54,14 +53,12 @@ theorem topLevelBesselHypothesis : TopLevelBesselHypothesis := by
   have hrel : IsRelStab L g := fun a ha => by
     have h1 := hrelD.2 a ha
     rw [hz, hz'] at h1
-    rw [hc]
-    exact h1
+    rwa [hc]
   have hroot := hRM k0 r L Ds γ g hp hc hz hz' hgG hgZ
   obtain ⟨ν, hq⟩ := hQE k0 r L γ g _ hc hκ0 hκ1 hrep hrel hroot
   have hcard_pos : (0 : ℝ) < Real.pi⁻¹ ^ (rootPat γ).card := by positivity
   have hl0 : ENNReal.ofReal (Real.pi⁻¹ ^ (rootPat γ).card) ≠ 0 := by
-    rw [Ne, ENNReal.ofReal_eq_zero, not_le]
-    exact hcard_pos
+    rwa [Ne, ENNReal.ofReal_eq_zero, not_le]
   have hq' := isOrbQuot_rescale L _ ENNReal.ofReal_ne_top hq
   have hconc : Formalism.FourierDecayAlt.D.muR Ds g (hp.2 ▸ Formalism.FourierDecayAlt.D.ptPerm (γ.1.map Prod.swap))
       {x | Matrix.of x ∉ RStab (k0 + 1) r g} = 0 := by

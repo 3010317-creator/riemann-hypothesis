@@ -78,8 +78,7 @@ theorem det_norm_le {ι : Type*} [Fintype ι] [DecidableEq ι] (A : Matrix ι ι
     (h : ∀ i j, ‖A i j‖ ≤ c) : ‖A.det‖ ≤ (Fintype.card ι).factorial * c ^ Fintype.card ι := by
   have h' : ∀ i j, NormedField.toAbsoluteValue ℂ (A i j) ≤ c := h
   have := Matrix.det_le h'
-  rw [nsmul_eq_mul] at this
-  exact this
+  rwa [nsmul_eq_mul] at this
 
 theorem ut_entry_eq_det {m : ℕ} {L U : Matrix (Fin m) (Fin m) ℂ} (hL : L ∈ LTset m)
     (hU : U ∈ UTset m) (i j : Fin m) : U i j = ((L * U).submatrix (rws i) (cls i j)).det := by
@@ -100,8 +99,7 @@ theorem ut_entry_eq_det {m : ℕ} {L U : Matrix (Fin m) (Fin m) ℂ} (hL : L ∈
     have hb : b.val < i.val := by
       have := a.isLt; rw [Fin.lt_def] at hab'; omega
     show U (rws i a) (cls i j b) = 0
-    simp only [cls, ite_eq_left hb]
-    exact hU.1 _ _ hab'
+    simpa only [cls, ite_eq_left hb] using hU.1 _ _ hab'
   rw [hfac, det_mul, det_of_isLowerTriangular _ hlo]
   have hl1 : ∀ t : Fin (i.val + 1), L.submatrix (rws i) (rws i) t t = 1 := fun t => hL.2 _
   have hcs : ∀ t : Fin i.val, U.submatrix (rws i) (cls i j) t.castSucc t.castSucc = 1 := by

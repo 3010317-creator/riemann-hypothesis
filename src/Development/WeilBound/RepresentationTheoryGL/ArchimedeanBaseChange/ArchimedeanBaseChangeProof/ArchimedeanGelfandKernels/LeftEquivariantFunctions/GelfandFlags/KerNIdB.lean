@@ -61,8 +61,7 @@ theorem nil_fix {W₁ W₂ : Submodule ℂ (Fin n → ℂ)} {u : G n} (hu : u �
     ∀ v ∈ W₁, u.val *ᵥ v = v := by
   intro v hv
   have h := hu.2.2 v hv
-  rw [Matrix.sub_mulVec, Matrix.one_mulVec, sub_eq_zero] at h
-  exact h
+  rwa [Matrix.sub_mulVec, Matrix.one_mulVec, sub_eq_zero] at h
 
 theorem nil_mem₂ {W₁ W₂ : Submodule ℂ (Fin n → ℂ)} (hW : W₁ ≤ W₂) {u : G n} (hu : u ∈ nilSet W₁ W₂) :
     ∀ v ∈ W₂, u.val *ᵥ v ∈ W₂ := by
@@ -77,8 +76,7 @@ theorem nil_maps {W₁ W₂ : Submodule ℂ (Fin n → ℂ)} (hW : W₁ ≤ W₂
   · apply le_antisymm
     · intro x hx
       obtain ⟨v, hv, rfl⟩ := Submodule.mem_map.mp hx
-      rw [Matrix.mulVecLin_apply, nil_fix hu v hv]
-      exact hv
+      rwa [Matrix.mulVecLin_apply, nil_fix hu v hv]
     · intro v hv
       exact Submodule.mem_map.mpr ⟨v, hv, by rw [Matrix.mulVecLin_apply, nil_fix hu v hv]⟩
   · apply le_antisymm

@@ -30,10 +30,10 @@ theorem uN_colX_mul_uN_colX_of_lt {k j : ℕ} (hkj : k < j) (x : Fin k → R) (y
   rw [Matrix.mul_apply]
   by_cases hb : b.val = j
   · by_cases ha : a.val < k
-    · have hk : k < n := by have := b.2; omega
+    · have hk : k < n := by omega
       rw [Finset.sum_eq_single ⟨k, hk⟩]
-      · have hab : a < b := by rw [Fin.lt_def]; omega
-        have hak : a < (⟨k, hk⟩ : Fin n) := by rw [Fin.lt_def]; exact ha
+      · have hab : a < b := by omega
+        have hak : a < (⟨k, hk⟩ : Fin n) := ha
         have hkb : (⟨k, hk⟩ : Fin n) < b := by rw [Fin.lt_def]; simp only; omega
         rw [uN_apply, uN_apply, uN_apply, dite_eq_left hak, dite_eq_left hkb, dite_eq_left hab, colX_apply,
           colX_apply, colX_apply, dite_eq_left rfl, dite_eq_left hb, dite_eq_left hb]
@@ -45,8 +45,7 @@ theorem uN_colX_mul_uN_colX_of_lt {k j : ℕ} (hkj : k < j) (x : Fin k → R) (y
         · rw [dite_eq_left hac, colX_apply, dite_eq_right (fun h => hc (Fin.ext h)), zero_mul]
         · rw [dite_eq_right hac, zero_mul]
       · simp
-    · rw [uN_apply]
-      have h0 : ∀ c : Fin n, uN (colX (n := n) k x) a c * uN (colX j y) c b = 0 := by
+    · have h0 : ∀ c : Fin n, uN (colX (n := n) k x) a c * uN (colX j y) c b = 0 := by
         intro c
         rw [uN_apply]
         by_cases hac : a < c
@@ -56,21 +55,10 @@ theorem uN_colX_mul_uN_colX_of_lt {k j : ℕ} (hkj : k < j) (x : Fin k → R) (y
           · rw [dite_eq_right hck, zero_mul]
         · rw [dite_eq_right hac, zero_mul]
       rw [Finset.sum_eq_zero fun c _ => h0 c]
-      split_ifs with hab
-      · rw [colX_apply, dite_eq_left hb]
-        simp only [colShift]
-        rw [dite_eq_right (by simpa using ha)]
-      · rfl
-  · have h0 : ∀ c : Fin n, uN (colX (n := n) k x) a c * uN (colX j y) c b = 0 := by
-      intro c
-      rw [uN_apply (colX j y)]
-      by_cases hcb : c < b
-      · rw [dite_eq_left hcb, colX_apply, dite_eq_right hb, mul_zero]
-      · rw [dite_eq_right hcb, mul_zero]
-    rw [Finset.sum_eq_zero fun c _ => h0 c, uN_apply]
-    split_ifs with hab
-    · rw [colX_apply, dite_eq_right hb]
-    · rfl
+      simp only [uN_apply, colX_apply, colShift, dite_eq_left hb, dite_eq_right ha, dite_eq_ite,
+        ite_self]
+  · simp only [uN_apply, colX_apply, dite_eq_right hb, dite_eq_ite, ite_self, mul_zero,
+      Finset.sum_const_zero]
 
 theorem colGL_mul_colGL_of_lt {k j : ℕ} (hkj : k < j) (x : Fin k → R) (y : Fin j → R) :
     (colGL k x : GL (Fin n) R) * colGL j y = colGL j (y + colShift hkj x y) * colGL k x := by

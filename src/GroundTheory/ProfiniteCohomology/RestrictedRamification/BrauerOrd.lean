@@ -57,8 +57,7 @@ theorem levelOf_subset_max {y : ℚ̄} (hy : y ∈ maxUnramifiedOutside K.1 ℚ�
   have h : (levelOf K y).1 ≤ (maxUnramifiedOutside K.1 ℚ̄ S).restrictScalars ℚ := by
     refine sup_le (fun x hx => ?_) ?_
     · exact (maxUnramifiedOutside K.1 ℚ̄ S).algebraMap_mem ⟨x, hx⟩
-    · rw [IntermediateField.adjoin_simple_le_iff]
-      exact hy
+    · rwa [IntermediateField.adjoin_simple_le_iff]
   exact fun x hx => h hx
 
 theorem supLevel_subset_max {F E : FiniteSubfield}
@@ -188,8 +187,7 @@ theorem valuation_placeOfEmbedding_eq (hv : v ∉ S) (F : FiniteSubfield) [Fact 
   rw [← h1, h3, h2]
   have h0 : (placeOfEmbedding ι L).1.valuation L.1 ⟨(y : ℚ̄), mem_levelOf (y : ℚ̄)⟩ ≠ 0 := by
     rw [Ne, map_eq_zero]
-    intro h
-    exact y.ne_zero (congrArg Subtype.val h)
+    exact fun h => y.ne_zero (congrArg Subtype.val h)
   rw [ordEmbFun, neg_neg, WithZero.exp_log h0]
 
 abbrev maxUnitsToUnits : (maxUnramifiedOutside K.1 ℚ̄ S)ˣ →* ℚ̄ˣ :=
@@ -254,8 +252,7 @@ theorem ordEmb_decompHomS (hv : v ∉ S)
     have h1 := key (y : maxUnramifiedOutside K.1 ℚ̄ S)
     have h2 := hg ⟨_, hYN⟩
     change ι _ = ι _
-    rw [h2]
-    exact h1
+    rwa [h2]
   generalize maxUnitsToUnits S (galUnitsHom K.1 _ τ y) = b at hz ⊢
   generalize maxUnitsToUnits S y = a at hY hYN hz ⊢
   have hbN : (b : ℚ̄) ∈ N.1 := by
@@ -321,9 +318,7 @@ theorem ordEmb_eq_zero_of_mem (hv : v ∉ S) {z : (maxUnramifiedOutside K.1 ℚ�
       exact hz.2
   rw [mem_sUnitsOf_iff_mem_unit] at hmem
   have hw : (placeOfEmbedding ι F).1 ∉ placesOver S := by
-    rw [mem_placesOver_iff]
-    rw [← liesOver_iff_eq_underPlace.1 (placeOfEmbedding ι F).2]
-    exact hv
+    rwa [mem_placesOver_iff, ← liesOver_iff_eq_underPlace.1 (placeOfEmbedding ι F).2]
   have h1 := hmem _ hw
   change (placeOfEmbedding ι F).1.valuation F.1 ⟨(a : ℚ̄), mem_levelOf _⟩ = 1 at h1
   rw [h1, ← WithZero.exp_zero] at e1

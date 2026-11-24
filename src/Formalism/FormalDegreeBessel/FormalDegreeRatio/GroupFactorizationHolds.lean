@@ -62,8 +62,7 @@ theorem sum_fin_castLE {m l : ℕ} (h : l ≤ m) (f : Fin m → ℂ)
   rw [show (∑ j : Fin l, f (Fin.castLE h j)) = ∑ j ∈ Finset.univ.map (Fin.castLEEmb h), f j from
     (Finset.sum_map Finset.univ (Fin.castLEEmb h) f).symm]
   refine (Finset.sum_subset (Finset.subset_univ _) fun j _ hj => hf j ?_).symm
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   exact hj (Finset.mem_map.mpr ⟨⟨j.val, hlt⟩, Finset.mem_univ _, Fin.ext rfl⟩)
 
 theorem minor_eq_of_mul {m : ℕ} (L U X Y : Matrix (Fin m) (Fin m) ℂ)
@@ -95,8 +94,7 @@ theorem minor_eq_of_mul {m : ℕ} (L U X Y : Matrix (Fin m) (Fin m) ℂ)
   have h3 := congrArg Matrix.det
     (show (L * X).submatrix (Fin.castLE hl) (Fin.castLE hl) = (Y * U).submatrix (Fin.castLE hl) (Fin.castLE hl)
       by rw [h])
-  rw [h1, h2, Matrix.det_mul, Matrix.det_mul, hdL, hdU, one_mul, mul_one] at h3
-  exact h3
+  rwa [h1, h2, Matrix.det_mul, Matrix.det_mul, hdL, hdU, one_mul, mul_one] at h3
 
 def Fm (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) : Matrix (Fin (2 * r + k + 1)) (Fin (r + 1)) ℂ :=
   Matrix.of fun i a => fvec k r z a i

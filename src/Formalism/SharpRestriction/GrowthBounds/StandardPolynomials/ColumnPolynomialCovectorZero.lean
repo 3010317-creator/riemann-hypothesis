@@ -241,8 +241,7 @@ theorem cleaned_product_order_family_eq (g' : Matrix (Fin (X.m + 1)) (Fin (X.m +
     rw [sum_split_constant, ← order_sum_eq_order_family S hS hD h2 Cs hG0 j0 Std hStd stdEq]
     simp only [mul_one, add_zero]
     ring
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 end Ctx
 
@@ -576,8 +575,7 @@ theorem preAt_of {C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ} (hroom : RoomAt C0 CYb C
       ((X.seg C0 CE1 CE2 j).Qj X.p * (Cs j).a0) + zPart C0 CE1 CE2 X β j) :=
     Finset.sum_congr rfl fun j _ => (Cs j).plSum
   refine ⟨lemmaRData S hS hD h2 hGle hβ Cs hG0 ⟨0, by omega⟩ Std hStd ?_⟩
-  rw [hplsum, sum_aMk]
-  exact hstd
+  rwa [hplsum, sum_aMk]
 
 theorem restPre : RestPre := TransportedAlt.mono (fun _ _ _ _ _ _ _ _ _ _ h => preAt_of h) restRoom
 

@@ -123,8 +123,7 @@ theorem afsplit_eps_mul_IE (v : HeightOneSpectrum (𝓞 F)) (x : E ⊗[F] v.adic
   | add x y hx hy => rw [map_add (f := _), mul_add, hx, hy]
 
 theorem afsplit_eps_idem (v : HeightOneSpectrum (𝓞 F)) :
-    afsplitEps E v * afsplitEps E v = afsplitEps E v := by
-  exact afsplit_eps_mul_IE (E := E) v 1
+    afsplitEps E v * afsplitEps E v = afsplitEps E v := afsplit_eps_mul_IE (E := E) v 1
 
 theorem afsplit_sigR_eps (σ : E →ₐ[F] E) (v : HeightOneSpectrum (𝓞 F)) :
     sigR σ (FiniteAdeleRing (𝓞 F) F) (afsplitEps E v) = afsplitEps E v := by
@@ -134,8 +133,7 @@ theorem afsplit_prV_eps (v : HeightOneSpectrum (𝓞 F)) : prV (E := E) v (afspl
   exact afsplit_prV_IE (E := E) v 1
 
 theorem afsplit_prV_eps_ne (v w : HeightOneSpectrum (𝓞 F)) (h : w ≠ v) :
-    prV (E := E) w (afsplitEps E v) = 0 := by
-  exact afsplit_prV_IE_ne (E := E) v w h 1
+    prV (E := E) w (afsplitEps E v) = 0 := afsplit_prV_IE_ne (E := E) v w h 1
 
 theorem afsplit_prV_inclE (v : HeightOneSpectrum (𝓞 F)) (e : E) :
     prV (E := E) v (inclE (F := F) (FiniteAdeleRing (𝓞 F) F) e) = inclE (F := F) (v.adicCompletion F) e := rfl

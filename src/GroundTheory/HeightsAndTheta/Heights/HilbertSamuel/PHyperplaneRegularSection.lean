@@ -128,8 +128,7 @@ theorem HyperplaneRegularSection.proof : HyperplaneRegularSection.Statement := b
     obtain ⟨v, hv⟩ := exists_notMem_of_finite S hS htop
     refine ⟨v, fun h0 => hv _ (Or.inl rfl) ?_, fun c' hc' p hp hvp =>
       hv _ (Or.inr (Set.mem_iUnion.mpr ⟨⟨c', hc'⟩, p, hp, rfl⟩)) hvp⟩
-    rw [LinearMap.mem_ker, Fintype.linearCombination_apply]
-    exact h0
+    rwa [LinearMap.mem_ker, Fintype.linearCombination_apply]
   choose v hv0 hvp using hlam
   set m := ∏ k, y ⟨k, c k⟩ with hm_def
   have hm : m ≠ 0 := Finset.prod_ne_zero_iff.mpr fun k _ => hc k

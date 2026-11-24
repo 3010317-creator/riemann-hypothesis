@@ -35,8 +35,7 @@ theorem schurDichotomy : SchurDichotomy := by
     intro g v w
     rw [inner_def, hτ]
     have h := hR.inner_left (θ g)⁻¹ (ofCj v) (ofCj w)
-    rw [inv_inv] at h
-    exact h
+    rwa [inv_inv] at h
   have hT : Formalism.MainNotions.BridgeCSchur.SqRep μ τ := by
     refine ⟨?_, ?_, ?_, ?_, ?_⟩
     · ext v
@@ -75,15 +74,13 @@ theorem schurDichotomy : SchurDichotomy := by
     have hS'i : ∀ h, ∀ x ∈ S', ρ h x ∈ S' := by
       intro h x hx
       have h2 := hSi (θ h⁻¹) (toCj x) hx
-      rw [hτ, hθθ, inv_inv] at h2
-      exact h2
+      rwa [hτ, hθθ, inv_inv] at h2
     rcases hirr S' hS'c hS'i with h | h
     · left
       rw [eq_bot_iff]
       intro v hv
       have h3 : ofCj v ∈ S' := hv
-      rw [h, Submodule.mem_bot] at h3
-      exact h3
+      rwa [h, Submodule.mem_bot] at h3
     · right
       rw [eq_top_iff]
       intro v _
@@ -99,8 +96,7 @@ theorem schurDichotomy : SchurDichotomy := by
         _ = ⟪U (toCj x), ρ g (U (toCj y))⟫_ℂ := by rw [hU]
     · intro h v
       have h2 := hU (θ h)⁻¹ (toCj v)
-      rw [hτ, hθinv, hθθ, inv_inv] at h2
-      exact h2
+      rwa [hτ, hθinv, hθθ, inv_inv] at h2
   · left
     intro x y x' y'
     have h0 := Formalism.MainNotions.BridgeCSchur.schur_orth_ineq hT hR hirrT hirr hne (toCj y) (toCj x) x' y'

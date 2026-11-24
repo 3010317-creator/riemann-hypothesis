@@ -57,8 +57,7 @@ private lemma mul_eq_smul_one_comm_of_ne_zero {n : Type*} [Fintype n] [Decidable
   have h3 := congrFun (congrFun h2 i) j
   simp only [Matrix.smul_apply, smul_eq_mul, Matrix.zero_apply] at h3
   have h4 := (mul_eq_zero.1 h3).resolve_left hA
-  rw [Matrix.sub_apply, sub_eq_zero] at h4
-  exact h4
+  rwa [Matrix.sub_apply, sub_eq_zero] at h4
 
 lemma ht_cp_surj {R : Type} [CommRing R] [IsDomain R] {g : ℕ} (Ht Bt : Matrix (Fin g) (Ix g) R)
     (E : Matrix (Ix g) (Ix g) R) (cp : R) (hEt : Eᵀ = -E) (hdiag : ∀ i, E i i = 0)
@@ -78,8 +77,7 @@ lemma ht_cp_surj {R : Type} [CommRing R] [IsDomain R] {g : ℕ} (Ht Bt : Matrix 
     ext i
     simp [Matrix.mulVec, dotProduct, Matrix.one_apply]
   have h1 := congrFun (congrArg (fun M => M *ᵥ (Sum.elim f 0 : Fin g ⊕ Fin g → R)) hsq) (Sum.inl k)
-  rw [← Matrix.mulVec_mulVec, h5] at h1
-  exact h1
+  rwa [← Matrix.mulVec_mulVec, h5] at h1
 
 lemma span_mk_top {R M : Type} [CommRing R] [AddCommGroup M] [Module R M] (N : Submodule R M)
     {d : ℕ} (y : Fin d → M) (hy : Submodule.span R (Set.range y) = ⊤) :
@@ -227,8 +225,7 @@ lemma up_kill (hS : HodgeTateSetting p v R O σ cp) (H : HodgeTateDatum p g v R 
       intro h
       apply hk
       rw [← h, cj_cj hS U]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   have key2 : (U.εL (U.cj i))ᵀ * H.Ht * U.εT i = (U.εL (U.cj i))ᵀ * H.Ht := by
     conv_rhs => rw [← Matrix.mul_one ((U.εL (U.cj i))ᵀ * H.Ht), ← U.εT_sum, Matrix.mul_sum]
     rw [Finset.sum_eq_single i]
@@ -236,8 +233,7 @@ lemma up_kill (hS : HodgeTateSetting p v R O σ cp) (H : HodgeTateDatum p g v R 
       apply ht_block_zero hS H U
       rw [cj_cj hS U]
       exact fun h => hj h.symm
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   intro m
   refine Submodule.Quotient.induction_on _ m fun x => ?_
   rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]

@@ -113,11 +113,9 @@ theorem logOk_low {p : ℕ} [Fact p.Prime] {l ex : PowerSeries ℂ_[p]} (h : Log
     exact PowerSeries.constantCoeff_X
   have hl1 : PowerSeries.coeff 1 l * PowerSeries.coeff 1 ex = 1 := by
     have hc := congrArg (PowerSeries.coeff 1) hsub
-    rw [pcoeff1_subst hex l, PowerSeries.coeff_one_X] at hc
-    exact hc
+    rwa [pcoeff1_subst hex l, PowerSeries.coeff_one_X] at hc
   have hv0 : PowerSeries.coeff 0 v * PowerSeries.coeff 1 l = 1 := by
-    have hc := congrArg (PowerSeries.coeff 0) hv
-    simpa [PowerSeries.coeff_mul, dX] using hc
+    simpa [PowerSeries.coeff_mul, dX] using congrArg (PowerSeries.coeff 0) hv
   have hev : PowerSeries.coeff 1 ex = PowerSeries.coeff 0 v := by
     linear_combination PowerSeries.coeff 0 v * hl1 - PowerSeries.coeff 1 ex * hv0
   refine ⟨hl0, hl1, ?_⟩
@@ -135,8 +133,7 @@ theorem firstJetIntegralGeneral_holds : OneG := by
   have hXe : MvPowerSeries.coeff (Finsupp.single () 1) (Xv () : MvPowerSeries Unit ℂ_[p]) = 1 := by
     simp [Xv, MvPowerSeries.coeff_X]
   have hL0 : MvPowerSeries.constantCoeff (PowerSeries.subst (Xv () : MvPowerSeries Unit ℂ_[p]) l) = 0 := by
-    rw [const_subst hX0]
-    exact h0
+    rwa [const_subst hX0]
   have hLe : MvPowerSeries.coeff (Finsupp.single () 1) (PowerSeries.subst (Xv () : MvPowerSeries Unit ℂ_[p]) l) =
       PowerSeries.coeff 1 l := by
     rw [coeff_subst_of_degree_eq_one hX0 l hde, hXe, mul_one]
@@ -147,8 +144,7 @@ theorem firstJetIntegralGeneral_holds : OneG := by
       (MvPowerSeries.C (-1 : ℂ_[p]) * PowerSeries.subst (Xv () : MvPowerSeries Unit ℂ_[p]) l) = -PowerSeries.coeff 1 l := by
     rw [MvPowerSeries.coeff_C_mul, hLe, neg_one_mul]
   have hA0 : MvPowerSeries.constantCoeff (mulBy l ex (-1) (Xv ()) : MvPowerSeries Unit ℂ_[p]) = 0 := by
-    rw [mulBy, const_subst hB0]
-    exact hex
+    rwa [mulBy, const_subst hB0]
   have hAe : MvPowerSeries.coeff (Finsupp.single () 1)
       (mulBy l ex (-1) (Xv ()) : MvPowerSeries Unit ℂ_[p]) = -1 := by
     rw [mulBy, coeff_subst_of_degree_eq_one hB0 ex hde, hBe]
@@ -165,8 +161,7 @@ theorem firstJetIntegralGeneral_holds : OneG := by
   have hc : ‖PowerSeries.coeff 1 ph‖ ≤ 1 := by
     have h2c : -PowerSeries.coeff 1 ph - PowerSeries.coeff 1 ph = -(2 * PowerSeries.coeff 1 ph) := by
       ring
-    rw [h2c, norm_neg, norm_mul, norm_two hp, one_mul] at hint
-    exact hint
+    rwa [h2c, norm_neg, norm_mul, norm_two hp, one_mul] at hint
   show ‖((Nat.factorial 1 : ℕ) : ℂ_[p]) * PowerSeries.coeff 1 (PowerSeries.subst ex ph : PowerSeries ℂ_[p])‖ ≤ 1
   rw [pcoeff1_subst hex ph, Nat.factorial_one, Nat.cast_one, one_mul, norm_mul]
   exact mul_le_one₀ hc (norm_nonneg _) h2

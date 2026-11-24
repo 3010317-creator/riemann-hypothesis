@@ -114,8 +114,7 @@ theorem psi_sec (x : Fin m → Ω) (j₀ : Fin m) (hx₀ : x j₀ ≠ 0) (i : Fi
     · rw [ite_eq_left rfl]
     · intro b _ hb
       rw [ite_eq_right hb, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ j₀) h
+    · exact fun h => absurd (Finset.mem_univ j₀) h
   have h1 : psi x j₀ (sec x i) = ∑ j, gs x j₀ (i.succ, j) * C (x j) := by
 
     simp only [sec, map_sum, map_mul, psi_X, psi_C]
@@ -238,8 +237,7 @@ theorem pderiv_gs (x : Fin m → Ω) (j₀ : Fin m) (q : {p : Fin (D + 1) × Fin
     · intro k _ hk
       have e : (p.1, k) ≠ q.1 := fun h => hk (congrArg Prod.snd h)
       rw [ite_eq_right e, mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   · have hn : ¬ (Zs j₀ p ∧ p.1 = q.1.1) := fun h => hp h.1
     rw [gs, ite_eq_right hp, pderiv_xv, ite_eq_right hn, sub_zero]
 
@@ -264,8 +262,7 @@ theorem pderiv_aeval {ι : Type*} [Fintype ι] [DecidableEq ι] (j₀ : Fin m) (
           first
           | exact pderiv_X_of_ne (Ne.symm hb)
         rw [h0, mul_zero, map_zero, zero_mul]
-      · intro hi
-        exact absurd (Finset.mem_univ i) hi
+      · exact fun hi => absurd (Finset.mem_univ i) hi
     rw [map_mul, aeval_X, Derivation.leibniz, smul_eq_mul, smul_eq_mul, h]
     simp only [e1, map_add (f := _), add_mul, Finset.sum_add_distrib]
     rw [hs]

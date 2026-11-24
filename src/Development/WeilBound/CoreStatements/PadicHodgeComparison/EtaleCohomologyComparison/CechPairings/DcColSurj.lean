@@ -178,13 +178,11 @@ theorem flip_tot : ∀ {R : Type} [CommRing R] (K : DCx.{w} R), ∃ φ : Cx.Hom 
   · refine Subtype.ext (funext fun p => funext fun q => ?_)
     have h' : (-1 : ℤ) ^ (p * q) • x.1 p q = (-1 : ℤ) ^ (p * q) • y.1 p q :=
       congrFun (congrFun (congrArg Subtype.val h) q) p
-    have h'' := congrArg (fun z => (-1 : ℤ) ^ (p * q) • z) h'
-    simpa only [sign_smul_sign_smul] using h''
+    simpa only [sign_smul_sign_smul] using congrArg (fun z => (-1 : ℤ) ^ (p * q) • z) h'
   · refine ⟨⟨fun p q => (-1 : ℤ) ^ (p * q) • y.1 q p, fun p q h => ?_⟩, ?_⟩
     · change (-1 : ℤ) ^ (p * q) • y.1 q p = 0
       rw [y.2 q p (by omega), smul_zero]
-    · refine Subtype.ext (funext fun q => funext fun p => ?_)
-      exact sign_smul_sign_smul (p * q) (y.1 q p)
+    · exact Subtype.ext (funext fun q => funext fun p => (sign_smul_sign_smul (p * q) (y.1 q p)))
 
 end GlobalTheory.CompanionTheory.DCFlip
 end -- clump:auto
@@ -231,8 +229,7 @@ theorem stair (K : DCx.{w} R) (s : R) (N : ℕ)
   | zero =>
     intro _
     refine ⟨0, fun _ _ _ => rfl, fun p q hq => ?_⟩
-    simp only [pow_zero, one_smul, map_zero, sub_zero]
-    exact hx p q (by omega)
+    simpa only [pow_zero, one_smul, map_zero, sub_zero] using hx p q (by omega)
   | succ k ih =>
     intro hk
     obtain ⟨y, hy, hs⟩ := ih (by omega)

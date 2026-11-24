@@ -163,8 +163,7 @@ lemma dim_le_of_charP (q q' : Ideal (MvPolynomial σ ℤ)) [q.IsPrime] [q'.IsPri
       rw [hspan]
       infer_instance
     have := (Ideal.span_singleton_prime hp0).mp hpr
-    rw [Int.prime_iff_natAbs_prime, Int.natAbs_natCast] at this
-    exact this
+    rwa [Int.prime_iff_natAbs_prime, Int.natAbs_natCast] at this
   set p := g.natAbs with hpdef
   have : Fact p.Prime := ⟨hpP⟩
 
@@ -214,8 +213,7 @@ lemma dim_le_of_charP (q q' : Ideal (MvPolynomial σ ℤ)) [q.IsPrime] [q'.IsPri
         ← MvPolynomial.comp_aeval_apply] at h1
       have h2 : Ideal.Quotient.mk _ (MvPolynomial.map (Int.castRingHom ℚ) (aeval x G)) = 0 := h1.symm
       rw [Ideal.Quotient.eq_zero_iff_mem] at h2
-      rw [← comap_map_eq q hq]
-      exact h2
+      rwa [← comap_map_eq q hq]
     rw [hG0, map_zero] at hGH
     have hc0 : algebraMap (MvPolynomial s ℤ) (MvPolynomial s ℚ) (c : MvPolynomial s ℤ) ≠ 0 := by
       rw [← hnc, MvPolynomial.algebraMap_def, MvPolynomial.map_C, Ne, MvPolynomial.C_eq_zero]

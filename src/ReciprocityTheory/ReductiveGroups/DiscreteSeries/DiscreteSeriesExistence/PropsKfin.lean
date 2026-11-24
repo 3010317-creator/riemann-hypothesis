@@ -36,10 +36,7 @@ theorem kfin_mapsTo_orth (U : H →L[ℂ] H) (hU : ∀ x, ‖U x‖ = ‖x‖) (
       map_add' := by intro x y; ext; simp
       map_smul' := by intro c x; ext; simp }
   have hinj : Function.Injective f := by
-    intro a b hab
-    apply Subtype.ext
-    apply L.injective
-    exact congrArg Subtype.val hab
+    exact fun a b hab => Subtype.ext (L.injective (congrArg Subtype.val hab))
   have hsurj := LinearMap.injective_iff_surjective.mp hinj
   rw [Submodule.mem_orthogonal] at hv ⊢
   intro u hu
@@ -88,8 +85,7 @@ theorem kfin_wt_orth (hσ : IsURepOn (UJset ε) σ) {μ ν : Fin n → ℝ} {v w
     (hne : μ ≠ ν) : inner ℂ v w = 0 := by
   classical
   obtain ⟨a, ha⟩ : ∃ a, μ a ≠ ν a := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hne (funext h)
   have hd : ν a - μ a ≠ 0 := sub_ne_zero.mpr (Ne.symm ha)
   set c : ℝ := Real.pi / (ν a - μ a) with hc
@@ -131,8 +127,7 @@ theorem kfin_wts_finite (hσ : IsURepOn (UJset ε) σ) (S : Submodule ℂ H) [Fi
     apply linearIndependent_of_ne_zero_of_inner_eq_zero
     · exact hf0
     · exact fun i j hij => kfin_wt_orth hσ (hfw i) (hfw j) (fun h => hij (Subtype.ext h))
-  have hfin := (LinearIndependent.of_comp S.subtype hli).finite
-  exact Set.finite_coe_iff.mp hfin
+  exact Set.finite_coe_iff.mp ((LinearIndependent.of_comp S.subtype hli).finite)
 
 end Wt
 
@@ -176,8 +171,7 @@ theorem kfin_key (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E)
     rw [hy]
     exact Submodule.sub_mem _ (hS hx) (hFcl (Fm.starProjection_apply_mem x))
   obtain ⟨z0, hz0M, hz0⟩ : ∃ z0 : D, z0 ∈ genSub E V ∧ inner ℂ (z0 : H) y ≠ 0 := by
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     have hyo : y ∈ ((genSub E V).map D.subtype)ᗮ := by
       rw [Submodule.mem_orthogonal]
       rintro u ⟨z1, hz1, rfl⟩
@@ -202,16 +196,14 @@ theorem kfin_key (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E)
       obtain ⟨f, hf, hfx⟩ := Submodule.mem_map.1 (Fm.starProjection_apply_mem x)
       rw [← hfx]
       have := (Submodule.mem_orthogonal' _ _).1 hz'Lm f hf
-      rw [Submodule.coe_inner] at this
-      exact this
+      rwa [Submodule.coe_inner] at this
     have e2 : inner ℂ ((Lm.starProjection z0 : D) : H) y = 0 :=
       (Submodule.mem_orthogonal _ _).1 hyF _ (Submodule.mem_map_of_mem (Lm.starProjection_apply_mem z0))
     have e3 : inner ℂ (z' : H) x = inner ℂ (z' : H) y + inner ℂ (z' : H) (Fm.starProjection x) := by
       rw [← inner_add_right, hy, sub_add_cancel]
     have e4 : inner ℂ (z' : H) y = inner ℂ (z0 : H) y := by
       rw [hz', Submodule.coe_sub, inner_sub_left, e2, sub_zero]
-    rw [e3, e1, add_zero, e4]
-    exact hz0
+    rwa [e3, e1, add_zero, e4]
   have hLmk := layer_kStable hE hVk m
   have hGDk : IsKStableSub ε E GD := by
     rw [hGD]

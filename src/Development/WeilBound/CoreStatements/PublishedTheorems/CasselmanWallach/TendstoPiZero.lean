@@ -65,8 +65,7 @@ theorem const_of_slope {E : Type} [AddCommGroup E] [Module ℂ E] [UniformSpace 
     rw [hasDerivAt_iff_tendsto_slope_zero]
     have h1 : Tendsto (fun h : ℝ => p i (((h : ℂ)⁻¹) • (f (t + h) - f t))) (𝓝[≠] 0) (𝓝 0) := by
       have := ((hp.continuous_seminorm i).tendsto 0).comp (hf t)
-      rw [map_zero] at this
-      exact this
+      rwa [map_zero] at this
     refine squeeze_zero_norm (fun h => ?_) h1
     rw [norm_smul, Real.norm_eq_abs, Real.norm_eq_abs, map_smul_eq_mul, norm_inv, Complex.norm_real,
       Real.norm_eq_abs, abs_inv]
@@ -89,8 +88,7 @@ theorem tendsto_pi_zero {ε : Fin n → Bool} {E : Type} [AddCommGroup E] [Modul
     refine Tendsto.mul ?_ ?_
     · exact ((tendsto_const_nhds.add ((continuous_hs).tendsto g₀ |>.comp hg₀)).pow N)
     · have := (hq.tendsto 0).comp hv
-      rw [map_zero] at this
-      exact this
+      rwa [map_zero] at this
   rw [mul_zero] at h1
   filter_upwards [(tendsto_order.1 h1).2 δ hδ] with x hx
   rw [sub_zero]
@@ -188,8 +186,7 @@ theorem tendsto_key {ε : Fin n → Bool} {H : Type} [NormedAddCommGroup H] [Inn
     simp only [Function.comp_apply, Complex.ofReal_neg, inv_neg, neg_smul, neg_neg]
   have t3 : Tendsto (fun h : ℝ => π (NormedSpace.exp ((-h) • X)) b) (𝓝[≠] 0) (𝓝 b) := by
     have := ((hπ.continuousOn b) 1 (one_mem_UJ ε)).tendsto.comp hgW
-    rw [hπ.map_one] at this
-    exact this
+    rwa [hπ.map_one] at this
   have hsum := (t1.add t2).add t3
   rw [zero_add, neg_add_cancel] at hsum
   refine hsum.congr' ?_

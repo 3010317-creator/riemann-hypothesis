@@ -253,8 +253,7 @@ theorem iterNested : IterNested := by
     rfl
   have he' : (fun t1 => iteratedFDeriv ℂ b (fun t2 => F (c + L1 t1 + L2 t2)) 0 w) =ᶠ[𝓝[univ] 0]
       (fun t1 => iteratedFDeriv ℂ b F (c + L1 t1) (fun i => L2 (w i))) := by
-    rw [nhdsWithin_univ]
-    exact he
+    rwa [nhdsWithin_univ]
   have hE := Filter.EventuallyEq.iteratedFDerivWithin_eq (𝕜 := ℂ) he' he.eq_of_nhds a
   simp only [iteratedFDerivWithin_univ] at hE
   rw [hE, iterAffine V W1 _ Ω hΩ hg c hc L1 a]

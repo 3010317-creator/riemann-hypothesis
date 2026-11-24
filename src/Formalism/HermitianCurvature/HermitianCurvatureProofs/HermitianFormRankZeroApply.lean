@@ -81,8 +81,7 @@ lemma skewOf_gt (q : (G.UT j → ℂ) × (Fin j → ℝ)) {a b : Fin j} (h : b <
   rw [conjTranspose_apply, Matrix.neg_apply] at this
   have h2 : conj (skewOf q a b) = -skewOf q b a := this
   have h3 := congrArg conj h2
-  rw [Complex.conj_conj, map_neg] at h3
-  exact h3
+  rwa [Complex.conj_conj, map_neg] at h3
 
 lemma skewOf_skc {M : Matrix (Fin j) (Fin j) ℂ} (hM : Mᴴ = -M) : skewOf (_root_.Formalism.FourierDecayAlt.P.Ux3.skewCoords M) = M := by
   have hM' : ∀ a b, conj (M b a) = -M a b := fun a b => by
@@ -331,8 +330,7 @@ theorem E_mul (z : Fin (2 * r + k + 1) → ℂ) (x1 x2 : X0 k r) : E z x1 * E z 
 
 lemma w_mulVec_inj {d : ℕ} {v : Fin d → ℂ} (h : G.wMat d *ᵥ v = 0) : v = 0 := by
   have := congrArg (G.wMat d *ᵥ ·) h
-  simp only [Matrix.mulVec_mulVec, wMat_sq, Matrix.one_mulVec, Matrix.mulVec_zero] at this
-  exact this
+  simpa only [Matrix.mulVec_mulVec, wMat_sq, Matrix.one_mulVec, Matrix.mulVec_zero] using this
 
 theorem rn_fix_z_iff {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) (x : RC k r 0) :
     Rn k r 0 x *ᵥ z = z ↔ Cstr z x.1 := by
@@ -419,8 +417,7 @@ theorem cont_extC (z : Fin (2 * r + k + 1) → ℂ) : Continuous (extC (k := k) 
   · simp only [extC, Fin.lastCases_last, lastRow]
     refine (Continuous.neg ?_).div_const _
     exact continuous_finsetSum _ fun i _ => (continuous_apply_apply i a).mul continuous_const
-  · simp only [extC, Fin.lastCases_castSucc]
-    exact continuous_apply_apply i a
+  · simpa only [extC, Fin.lastCases_castSucc] using continuous_apply_apply i a
 
 theorem cont_ofExtC (z : Fin (2 * r + k + 1) → ℂ) :
     Continuous fun c : Fin (2 * 0 + k) → Fin r → ℂ => (Matrix.of (extC z c) : Matrix (Fin (2 * 0 + k + 1)) (Fin r) ℂ) :=
@@ -804,8 +801,7 @@ theorem disint {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) {μ0 μN :
   have hconc : P {x : Mt k r | Matrix.of x ∈ Nset k r}ᶜ = 0 := by
     rw [hP, Measure.map_apply hPm hNcl.measurableSet.compl]
     refine measure_mono_null (fun p hp => ?_) hbad
-    refine ⟨Set.mem_univ _, fun h2 => hp ?_⟩
-    exact hNc.mul_mem _ (tau_N hz (upper_mem p.1)) _ h2.1
+    exact ⟨Set.mem_univ _, fun h2 => hp (hNc.mul_mem _ (tau_N hz (upper_mem p.1)) _ h2.1)⟩
 
   have hleft : ∀ a ∈ Nset k r, P.map (lmulM a) = P := by
     intro a ha

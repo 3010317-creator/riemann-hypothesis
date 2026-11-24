@@ -80,8 +80,7 @@ theorem lact_eq_of_rho (X : Data E r) {x0 : Frame X.Ψ r} (ho : IsOrth X x0) {γ
   simp only [rho_apply, Equiv.symm_apply_apply] at hk
   have e1 := mat_lact_eq X ho γ τ
   have e2 := mat_lact_eq X ho γ' τ
-  rw [hk, ← e2] at e1
-  exact e1
+  rwa [hk, ← e2] at e1
 
 theorem rho_inj (X : Data E r) {x0 : Frame X.Ψ r} (ho : IsOrth X x0) :
     Function.Injective ((rho X ho).comp X.Γ.subtype) := by
@@ -234,8 +233,7 @@ theorem cpt_inj (X : Data E r) {x0 : Frame X.Ψ r} (ho : IsOrth X x0) {z z' : V 
   funext τ
   have hu : IsUnit (ExF.nM X z τ).det := by rw [ExF.det_nM]; exact isUnit_one
   have := hN τ
-  rw [hn τ] at this
-  rw [← hn τ] at this
+  rw [hn τ, ← hn τ] at this
   have := congrArg (fun M => (ExF.nM X z τ)⁻¹ * M) this
   simp only [Matrix.nonsing_inv_mul_cancel_left _ _ hu] at this
   exact this

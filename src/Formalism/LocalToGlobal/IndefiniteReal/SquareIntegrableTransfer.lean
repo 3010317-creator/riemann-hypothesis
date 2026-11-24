@@ -52,10 +52,7 @@ theorem evalTieT_of (M : DSModel (D.sp.Y 0) S) (μ : Measure (GA D (D.sp.Y 0))) 
   choose Φ hΦ using fun T : E => hI T T.2
   have key : ∀ (T : E) (F : EEC X G), ((F : L2X X) =ᵐ[muX X] fun x => ev M v₀ (T : MMap M) (ι.symm x * t)) →
       Φ T = F := by
-    intro T F hF
-    apply Subtype.ext
-    apply Lp.ext
-    exact (hΦ T).1.trans hF.symm
+    exact fun T F hF => Subtype.ext (Lp.ext ((hΦ T).1.trans hF.symm))
   let L : E →ₗ[ℂ] EEC X G :=
     { toFun := Φ
       map_add' := fun T T' => by

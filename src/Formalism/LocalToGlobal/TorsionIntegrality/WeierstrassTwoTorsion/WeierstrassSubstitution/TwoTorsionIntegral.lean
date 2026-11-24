@@ -134,8 +134,7 @@ theorem isFlow_subst {a b : K⟦X⟧} (h : IsFlow (curveS W) (D W) a b) :
     have h2 := congrArg (PowerSeries.substAlgHom (he W)) hE
     simp only [map_add (f := _), map_mul, map_pow, curveS, WeierstrassCurve.map_a₁, WeierstrassCurve.map_a₂,
       WeierstrassCurve.map_a₃, WeierstrassCurve.map_a₄, WeierstrassCurve.map_a₆, hC] at h2 ⊢
-    rw [hφ, hφ]
-    exact h2
+    rwa [hφ, hφ]
   · rw [chainZ K W, hDa]
     simp only [hφ, map_add (f := _), map_mul, map_ofNat, curveS, WeierstrassCurve.map_a₁, WeierstrassCurve.map_a₃, hC]
   · rw [chainZ K W, hDb]
@@ -165,8 +164,7 @@ theorem inv_subst_cc (xP : K) :
   have h1 : (tDen W xP).subst (expSer W) * (invOfUnit (tDen W xP) 1).subst (expSer W) = 1 := by
     rw [← PowerSeries.coe_substAlgHom (he W), ← map_mul, hm, map_one]
   have h2 := congrArg constantCoeff h1
-  rw [map_mul, map_one, cc_subst_lemma (he W) (e0 W) (tDen W xP), hc, one_mul] at h2
-  exact h2
+  rwa [map_mul, map_one, cc_subst_lemma (he W) (e0 W) (tDen W xP), hc, one_mul] at h2
 
 theorem sq_dvd_tS (xP : K) : X ^ 2 ∣ (tS W xP).subst (expSer W) := by
   rw [subst_tS]
@@ -176,8 +174,7 @@ theorem coeff_two_tS (xP : K) : coeff 2 ((tS W xP).subst (expSer W)) = 1 := by
   obtain ⟨e1, he1⟩ : X ∣ expSer W := PowerSeries.X_dvd_iff.mpr (e0 W)
   have hc1 : constantCoeff e1 = 1 := by
     have h1 := (expSpec K W).2.1
-    rw [he1, PowerSeries.coeff_succ_X_mul, PowerSeries.coeff_zero_eq_constantCoeff_apply] at h1
-    exact h1
+    rwa [he1, PowerSeries.coeff_succ_X_mul, PowerSeries.coeff_zero_eq_constantCoeff_apply] at h1
   rw [subst_tS]
   have hg := inv_subst_cc W xP
   generalize (invOfUnit (tDen W xP) 1).subst (expSer W) = g at hg ⊢
@@ -347,8 +344,7 @@ theorem wpInU_of (hS : WpShape.{u}) : WpInU.{u} := by
   have e4' : PowerSeries.subst (logSer W : K⟦X⟧) (C (W.b₂ / 12) : K⟦X⟧) = C (W.b₂ / 12) := by
     rw [← PowerSeries.coe_substAlgHom hl]
     exact (PowerSeries.substAlgHom hl).commutes _
-  simp only [hel, e3', e4'] at h2
-  exact h2
+  simpa only [hel, e3', e4'] using h2
 
 theorem tInZ_of (hS : WpShape.{u}) : TInZ.{u} := by
   intro K _ _ W xP

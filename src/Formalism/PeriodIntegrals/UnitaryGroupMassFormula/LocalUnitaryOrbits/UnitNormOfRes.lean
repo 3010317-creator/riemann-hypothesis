@@ -210,8 +210,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem tr_nd_field {k K : Type} [Field k] [Field K] [Algebra k K] (σ' : K ≃ₐ[k] K) (hne : σ' ≠ AlgEquiv.refl)
     (z : K) (hz : z ≠ 0) : ∃ t : K, t * z + σ' (t * z) ≠ 0 := by
   have hu : ∃ u : K, u + σ' u ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     apply hne
     have h1 : (1 : K) + 1 = 0 := by simpa using h 1
     ext u
@@ -222,15 +221,12 @@ theorem tr_nd_field {k K : Type} [Field k] [Field K] [Algebra k K] (σ' : K ≃�
     exact (eq_neg_of_add_eq_zero_left h3).symm
   obtain ⟨u, hu⟩ := hu
   refine ⟨u * z⁻¹, ?_⟩
-  rw [mul_assoc, inv_mul_cancel₀ hz, mul_one]
-  exact hu
+  rwa [mul_assoc, inv_mul_cancel₀ hz, mul_one]
 
 theorem tr_nd_prod {k : Type} [Field k] (z : k × k) (hz : z ≠ 0) :
     ∃ t : k × k, t * z + (RingEquiv.prodComm (R := k) (S := k)).toRingHom (t * z) ≠ 0 := by
   by_cases h1 : z.1 = 0
-  · have h2 : z.2 ≠ 0 := by
-      intro h2
-      exact hz (Prod.ext h1 h2)
+  · have h2 : z.2 ≠ 0 := fun h2 => hz (Prod.ext h1 h2)
     refine ⟨(0, z.2⁻¹), fun h => ?_⟩
     have := congrArg Prod.fst h
     simp [inv_mul_cancel₀ h2] at this
@@ -254,8 +250,7 @@ theorem trNd_of_res {K : Type} [CommRing K] (τ : K →+* K) (π : OR (E := E) v
     obtain ⟨d, hd0, hd⟩ := (hker cO).1 h
     apply hcn
     have hd' : c = sc (E := E) v ϖ * d := hd
-    rw [hd', ← mul_assoc, sc_eq, sc_eq, ← map_mul, inv_mul_cancel₀ hϖ0, map_one, one_mul]
-    exact hd0
+    rwa [hd', ← mul_assoc, sc_eq, sc_eq, ← map_mul, inv_mul_cancel₀ hϖ0, map_one, one_mul]
   obtain ⟨tb, htb⟩ := hnd _ hc0
   obtain ⟨tO, htO⟩ := hsurj tb
   have ht0 : (tO : Fv F v ⊗[F] E) ∈ OEv (E := E) v := tO.2
@@ -264,8 +259,7 @@ theorem trNd_of_res {K : Type} [CommRing K] (τ : K →+* K) (π : OR (E := E) v
   have hy : π yO = τ (π (tO * cO)) := hsig (tO * cO) yO rfl
   set s := (tO : Fv F v ⊗[F] E) * c + sigR (Fv F v) σ ((tO : Fv F v ⊗[F] E) * c) with hs
   have hsO : π (tO * cO + yO) ≠ 0 := by
-    rw [map_add (f := _), hy, map_mul, htO]
-    exact htb
+    rwa [map_add (f := _), hy, map_mul, htO]
   have hs0 : s ∈ OEv (E := E) v := (tO * cO + yO).2
   have hsf : sigR (Fv F v) σ s = s := by
     rw [hs, map_add (f := _), sigR_invol σ v hcm, add_comm]

@@ -240,8 +240,7 @@ theorem top_core {Cb Cc : ℝ} {S : C.HidaSetting E Wp Wq} {p : ∀ v, KB.Pl (D.
     have ht0 : l1 * x⁻¹ ≠ 0 := mul_ne_zero hl1 (inv_ne_zero hx)
     have hV : (p v).V F' (H ++ [(m + 1, l1 * x⁻¹), (1, x ^ (m + 1) * y)]) ≠ 0 := by
       rw [hOB _ _ ht0 hc0]
-      refine smul_ne_zero ?_ hOm
-      exact Complex.ofReal_ne_zero.2 (inv_ne_zero (pow_ne_zero _ qU_pos.ne'))
+      exact smul_ne_zero (Complex.ofReal_ne_zero.2 (inv_ne_zero (pow_ne_zero _ qU_pos.ne'))) hOm
     have hGe : ε0 ≤ D.ptG (S.T * S.T') S.G.r (H ++ [(m + 1, l1 * x⁻¹), (1, x ^ (m + 1) * y)]) := by
       by_contra hlt
       exact hV (Formalism.FourierDecayAlt.P.PBO.vecV_zero_small (p v).T.base (p v).ν' (p v).m₀ hsupp _
@@ -394,8 +393,7 @@ theorem germ_sum {E : Type} [Field E] [NumberField E] [IsCMField E] {Wp Wq : Inf
   have hz : ∀ z ∈ G.rootSet s D, z ≠ 0 := by
     intro z hz h0
     unfold G.rootSet at hz
-    rw [Multiset.mem_toFinset, Polynomial.mem_nthRoots (by omega)] at hz
-    rw [h0, zero_pow (by omega)] at hz
+    rw [Multiset.mem_toFinset, Polynomial.mem_nthRoots (by omega), h0, zero_pow (by omega)] at hz
     exact hD hz.symm
   congr 1
   · simp only [utOf, vOf, ptX, coJ, ptJ, smul_smul, List.append_assoc, List.singleton_append]
@@ -1023,8 +1021,7 @@ theorem final_cmp (Pa x0 F q TT sA E1 qw : ℝ) (hPa : 0 ≤ Pa) (hx0 : 0 < x0) 
     rw [← hC] at hmain
     refine hmain.trans (mul_le_mul_of_nonneg_left hqw ?_)
     positivity
-  rw [← mul_div_assoc, le_div_iff₀ (mul_pos hx0 hF0)]
-  exact hfin
+  rwa [← mul_div_assoc, le_div_iff₀ (mul_pos hx0 hF0)]
 
 theorem one_add_pow_le_exp (x : ℝ) (hx : 0 ≤ x) (n : ℕ) : (1 + x) ^ n ≤ Real.exp (n * x) := by
   rw [Real.exp_nat_mul]
@@ -1257,8 +1254,7 @@ theorem topRatio : TopRatio := by
     generalize I.xpoly S.G.k (M.rho (D.parOf S v) ρ) (y + 1) = X at hIR ⊢
     generalize |y + 1 / 2 + (D.parOf S v).u (S.l + 1)| * |y + 1 / 2 + (D.parOf S v).u' (S.l + 1)| = U at hIR hul
     have hAB : A * B < 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       have h3 := mul_nonneg hTT.le h
       have h4 : -(S.T * S.T') * (A * B) = -(S.T * S.T' * (A * B)) := by ring
       linarith
@@ -1270,13 +1266,11 @@ theorem topRatio : TopRatio := by
         _ ≤ -(A * B) := hIR
     have h5 := mul_le_mul_of_nonneg_left h1 hTT.le
     have h6 : -(S.T * S.T') * (A * B) = S.T * S.T' * -(A * B) := by ring
-    rw [h6, mul_comm (X ^ 2)]
-    exact h5
+    rwa [h6, mul_comm (X ^ 2)]
 
   have hroot : ∀ t ∈ Icc 1 (Cf.k + Cf.m - 1), -Cf.lam t < α ∨ β < -Cf.lam t := by
     intro t ht
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hmem : -Cf.lam t ∈ Cf.cutI S.l := by rw [hCf, cutI_eq]; exact ⟨hcon.1, hcon.2⟩
     have hfac := (Formalism.FourierDecayAlt.P.betaFactorisation Cf S.de S.de' S.G.ka S.T S.T' (-Cf.lam t) S.l (hOkp v)
       hw hw' hT hT' hl1 hlk hne hmem).2.1

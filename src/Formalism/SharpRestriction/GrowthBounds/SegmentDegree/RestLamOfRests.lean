@@ -227,8 +227,7 @@ theorem lam_li_all {Φ : Type} (g : Fin J → σ → τ) (e : Fin J → σ → �
       simp only at h
       subst h
       rfl
-    rw [heq]
-    exact hcomp
+    rwa [heq]
 
 end LamAbs
 
@@ -354,8 +353,7 @@ theorem restLam_of_rests (C₀ : ℝ) (hA : RestLamA) (hI : RestLamInj C₀) (hD
     have hy'i : ∀ i : Fin X.F.J, y' (i.val : ℤ) = Yf i := by
       intro i
       have h : 0 ≤ (i.val : ℤ) ∧ ((i.val : ℤ)).toNat < X.F.J := ⟨by positivity, by simpa using i.isLt⟩
-      simp only [y', dite_eq_left h]
-      exact congrArg Yf (Fin.ext (by simp))
+      simpa only [y', dite_eq_left h] using congrArg Yf (Fin.ext (by simp))
     obtain ⟨hlab, hdeg⟩ := hD p n' r K X hX hLa hk f.1.1 (hΦ f).1 f.1.2 (hΦ f).2
     have hprod : (∏ j ∈ Finset.range X.F.J, X.phc p K O (j : ℤ) (y' j)) =
         ∏ j : Fin X.F.J, lam_ph (R := O) (X.lamG K) (X.lamE p K) j (Yf j) := by
@@ -373,8 +371,7 @@ theorem restLam_of_rests (C₀ : ℝ) (hA : RestLamA) (hI : RestLamInj C₀) (hD
         simp only at this
         rw [this]
         exact hyM f ⟨k, hk'⟩ (a ⟨k, hk'⟩)
-      · simp only [y', dite_eq_right h]
-        exact Submodule.zero_mem _
+      · simpa only [y', dite_eq_right h] using Submodule.zero_mem _
     · rw [hprod, lam_expand]
       unfold RRdeg
       rw [MvPolynomial.mem_restrictSupport_iff]
@@ -410,8 +407,7 @@ theorem restLam_of_rests (C₀ : ℝ) (hA : RestLamA) (hI : RestLamInj C₀) (hD
     exact map_mem_restrictSupport _ _ h
   have hli' : LinearIndependent (FF O) (fun x : (Σ f : Φ, ∀ j, Fin (nn f j)) =>
       (⟨_, hmem x⟩ : X.LamBar p K O)) := by
-    refine LinearIndependent.of_comp (X.LamBar p K O).subtype ?_
-    exact hli
+    exact LinearIndependent.of_comp (X.LamBar p K O).subtype hli
   have hcard := hli'.fintype_card_le_finrank
   refine le_trans (le_of_eq ?_) hcard
   rw [Fintype.card_sigma]

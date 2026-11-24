@@ -156,15 +156,13 @@ theorem conj_core (hgi : gi * g = 1) (hgi' : g * gi = 1)
         set N' := nxt E Z' a with hN'
         have hxa : g *ᵥ N' - N ∈ spanLt E (a.1 + 1) := by
           by_cases h : a.1 + 1 < r
-          · simp only [hN, hN', nxt, dite_eq_left h]
-            exact hEg ⟨a.1 + 1, h⟩
+          · simpa only [hN, hN', nxt, dite_eq_left h] using hEg ⟨a.1 + 1, h⟩
           · simp only [hN, hN', nxt, dite_eq_right h]
             have : a.1 + 1 = r := by omega
             rw [this]; exact hZ
         have hsN : s *ᵥ N - N ∈ spanLt E (a.1 + 1) := by
           by_cases h : a.1 + 1 < r
-          · simp only [hN, nxt, dite_eq_left h]
-            exact hsE' ⟨a.1 + 1, h⟩
+          · simpa only [hN, nxt, dite_eq_left h] using hsE' ⟨a.1 + 1, h⟩
           · simp only [hN, nxt, dite_eq_right h]
             have : a.1 + 1 = r := by omega
             rw [this]; exact hsZ'
@@ -293,8 +291,7 @@ theorem inv_flag (γ : (VS D).V ≃ₗ[D.host.E] (VS D).V) (h : ∀ b : Fin D.R.
     induction hw using Submodule.span_induction with
     | mem y hy =>
       obtain ⟨c, hc, rfl⟩ := hy
-      simp only [LinearEquiv.symm_apply_apply]
-      exact e_mem X c hc
+      simpa only [LinearEquiv.symm_apply_apply] using e_mem X c hc
     | zero => simp
     | add p q _ _ hp hq => rw [map_add (f := _)]; exact Submodule.add_mem _ hp hq
     | smul c p _ hp => rw [map_smul]; exact Submodule.smul_mem _ c hp
@@ -349,8 +346,7 @@ theorem rv_span {S : Set (VS D).V} {w : (VS D).V} (hw : w ∈ Submodule.span D.h
   have h1 := Formalism.L2.SG.Pf.Vanish2.crd_span' X hw
   have h2 := Formalism.L2.SG.Pf.Vanish2.tr_span (X.B.I.φ v) (Formalism.L2.SG.Pf.Level.rvHom X v)
     (Formalism.L2.SG.Pf.Level.rv_smul X v) h1
-  rw [Set.image_image] at h2
-  exact h2
+  rwa [Set.image_image] at h2
 
 theorem rv_crd_sub (a b : (VS D).V) :
     rv X.B.I v (X.crd (a - b)) = rv X.B.I v (X.crd a) - rv X.B.I v (X.crd b) := by
@@ -386,22 +382,19 @@ theorem idOffConj_all {D : D7} (X : HidaSetting D) (u u' : D.what₂.Word)
       show uMat (t.pt.1 v) *ᵥ rv X.B.I v (X.crd (X.eX b)) - rv X.B.I v (X.crd (X.eX b)) ∈ _
       rw [real_of_ratLink X v hx, ← rv_crd_sub]
       have := rv_span X v (hre b)
-      rw [Set.image_image] at this
-      exact this
+      rwa [Set.image_image] at this
     · intro b
       have e1 : uMat (t.pt.1⁻¹ v) = uMat ((t.pt⁻¹).1 v) := rfl
       show uMat (t.pt.1⁻¹ v) *ᵥ rv X.B.I v (X.crd (X.eX b)) - rv X.B.I v (X.crd (X.eX b)) ∈ _
       rw [e1, real_of_ratLink X v hxi, ← rv_crd_sub]
       have := rv_span X v (hrei b)
-      rw [Set.image_image] at this
-      exact this
+      rwa [Set.image_image] at this
     · show uMat (t.pt.1 v) *ᵥ rv X.B.I v (X.crd (X.zu u')) - rv X.B.I v (X.crd (X.zu u)) ∈ _
       rw [real_of_ratLink X v hx, ← rv_crd_sub]
       have := rv_span X v hrz
       rw [← Set.range_comp] at this
       unfold spanLt
-      rw [← Formalism.L2.SG.Pf.range_eq_image_lt]
-      exact this
+      rwa [← Formalism.L2.SG.Pf.range_eq_image_lt]
     · intro a b
       show hJ (X.B.I.ε v) (rv X.B.I v (X.crd (X.fY a))) (rv X.B.I v (X.crd (X.eX b))) = _
       rw [Formalism.L2.SG.PoincareInHH.Cut.hJ_crd, Formalism.L2.SG.Pf.Level.hT_f_e X a b]
@@ -454,8 +447,7 @@ theorem inv_maps {D : D7} (X : HidaSetting D) (γ : (VS D).V ≃ₗ[D.host.E] (V
   induction hw using Submodule.span_induction with
   | mem y hy =>
     obtain ⟨c, hc, rfl⟩ := hy
-    simp only [LinearEquiv.symm_apply_apply]
-    exact Conj.e_mem X c hc
+    simpa only [LinearEquiv.symm_apply_apply] using Conj.e_mem X c hc
   | zero => simp
   | add p q _ _ hp hq => rw [map_add (f := _)]; exact Submodule.add_mem _ hp hq
   | smul c p _ hp => rw [map_smul]; exact Submodule.smul_mem _ c hp
@@ -585,8 +577,7 @@ theorem idOffLift_all {D : D7} (X : HidaSetting D) (u u' : D.what₂.Word)
           exact X.wfr_on u' v a b
   have hA : A ∈ Formalism.REAL.Kset (allPos D.R.k) := by
     refine ⟨?_, by rw [Formalism.L2.SG.Pf.IdBlocks2.HW.jm_allPos', Matrix.mul_one, Matrix.one_mul]⟩
-    rw [Matrix.mem_unitaryGroup_iff', Matrix.star_eq_conjTranspose]
-    exact hAA
+    rwa [Matrix.mem_unitaryGroup_iff', Matrix.star_eq_conjTranspose]
   refine ⟨A, hA, fun h hh hsupp x => ?_⟩
   have hS : t.pt.1⁻¹ * h * t.pt.1 ∈ X.SinfU u' :=
     ((Conj.idOffConj_all X u u' what₂ rows' hu t ht).1 h (hinf_le_sinf X u h hh)).1

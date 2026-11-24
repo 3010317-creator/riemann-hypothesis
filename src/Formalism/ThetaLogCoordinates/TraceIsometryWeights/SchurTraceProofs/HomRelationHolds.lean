@@ -146,9 +146,7 @@ theorem hom_divided_holds : HomDiv := by
   unfold ZpClosed DivStable HomLat at *
   refine ⟨fun c hc φ hφ => ?_, fun a b hab k φ hφ => ?_⟩
   · have hφ' : ∀ y ∈ L, φ y ∈ M := hφ
-    show ∀ y ∈ L, (c • φ) y ∈ M
-    intro y hy
-    exact hM c hc _ (hφ' y hy)
+    exact fun y hy => hM c hc _ (hφ' y hy)
   · have hφ' : ∀ y ∈ L, φ y ∈ M := hφ
     show ∀ y ∈ L, ((k.factorial : Padic p)⁻¹ • (homAct EV EW a b ^ k) φ) y ∈ M
     intro x hx

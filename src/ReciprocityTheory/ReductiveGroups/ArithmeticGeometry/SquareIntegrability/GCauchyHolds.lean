@@ -232,8 +232,7 @@ lemma one_char [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
           Hf (prj σ (Mc σ 1 z)) (prj σ (χ j)) := by
         simp only [Hf, PiLp.inner_apply, RCLike.inner_apply]
       rw [key]; exact hH
-    intro w hw
-    exact Submodule.mem_orthogonal_singleton_iff_inner_left.mp (hsub hw)
+    exact fun w hw => Submodule.mem_orthogonal_singleton_iff_inner_left.mp (hsub hw)
 
   have hpn : 0 < ‖prj σ (Mc σ 1 z)‖ := norm_pos_iff.mpr hp0
   obtain ⟨r, hr⟩ : ∃ r : ℝ, r = T / ‖prj σ (Mc σ 1 z)‖ := ⟨_, rfl⟩
@@ -401,8 +400,7 @@ private lemma inv_step_lemma {dim : (E →+* ℂ) → ℕ} {L I : Submodule ℤ 
   obtain ⟨f, hf⟩ : ∃ f : Vsp dim → Vsp dim, ∀ y ∈ S, f y ∈ t ∧ y ∈ Metric.ball (f y) (1 / 2) := by
     refine ⟨fun y => if h : ∃ x ∈ t, y ∈ Metric.ball x (1 / 2) then h.choose else 0, fun y hy => ?_⟩
     have h := hex y hy
-    simp only [dite_eq_left h]
-    exact h.choose_spec
+    simpa only [dite_eq_left h] using h.choose_spec
   have hinj : Set.InjOn f S := by
     intro y hy y' hy' hyy
     have h1 := (hf y hy).2
@@ -478,8 +476,7 @@ lemma inv_step [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
     · rw [inner_smul_right, h3 j hj j hj, ite_eq_left rfl, mul_one, sub_self]
     · intro i hi hij
       rw [inner_smul_right, h3 j hj i (Finset.mem_range.mp hi), ite_eq_right (Ne.symm hij), mul_zero]
-    · intro hj'
-      exact absurd (Finset.mem_range.mpr hj) hj'
+    · exact fun hj' => absurd (Finset.mem_range.mpr hj) hj'
   obtain ⟨Wp, hWp⟩ : ∃ Wp, Wp = ∑ i ∈ Finset.range k, inner ℂ (w i) e • w i := ⟨_, rfl⟩
   have hWpW : Wp ∈ Wk σ χ k := by
     rw [hWp]
@@ -587,8 +584,7 @@ lemma inv_step [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
         rwa [Function.update_self] at hm
       · have h' : Wk σ (Function.update χ k χn) k = Wk σ χ k := Wk_update σ χ le_rfl χn
         apply Wk_mono σ _ (Nat.le_succ k)
-        rw [h']
-        exact hWpW
+        rwa [h']
   · intro s hs s' hs'
     rcases Nat.lt_succ_iff_lt_or_eq.mp hs with hs | hs <;>
       rcases Nat.lt_succ_iff_lt_or_eq.mp hs' with hs' | hs'
@@ -608,8 +604,7 @@ lemma inv_step [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
       exact h4 s hs
     · rw [hs]
       simp only [Function.update_self]
-      rw [hsumw k le_rfl]
-      exact hrep
+      rwa [hsumw k le_rfl]
   · intro s hs i hi
     rcases Nat.lt_succ_iff_lt_or_eq.mp hs with hs | hs
     · rw [Function.update_of_ne (Nat.ne_of_lt hs)]; exact h5 s hs i hi
@@ -624,14 +619,12 @@ lemma inv_step [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
     rcases Nat.lt_succ_iff_lt_or_eq.mp hs with hs | hs
     · simp only [Function.update_of_ne (Nat.ne_of_lt hs)]; exact h7 s hs
     · rw [hs]
-      simp only [Function.update_self]
-      exact ⟨hRlow, hχnorm⟩
+      simpa only [Function.update_self] using ⟨hRlow, hχnorm⟩
   · intro s hs
     rcases Nat.lt_succ_iff_lt_or_eq.mp hs with hs | hs
     · simp only [Function.update_of_ne (Nat.ne_of_lt hs)]; exact h8 s hs
     · rw [hs]
-      simp only [Function.update_self]
-      exact ⟨hμ1, hχu⟩
+      simpa only [Function.update_self] using ⟨hμ1, hχu⟩
   · intro s hs
     rcases Nat.lt_succ_iff_lt_or_eq.mp hs with hs | hs
     · simp only [Function.update_of_ne (Nat.ne_of_lt hs)]
@@ -785,10 +778,8 @@ theorem char_main (hx : Ext.All) : CharStatement := by
     by_cases h : s = s'
     · subst h; simp
     · rw [ite_eq_right (fun e => h (Fin.ext e).symm), ite_eq_right h]
-  · intro s
-    exact (hχX s s.2).choose_spec
-  · intro s s' h
-    exact hεz s s.2 s' (Fin.lt_def.mp h).le
+  · exact fun s => (hχX s s.2).choose_spec
+  · exact fun s s' h => hεz s s.2 s' (Fin.lt_def.mp h).le
   · intro s
     have hsum : ∑ s' : Fin ρ, ‖ε s s'‖ ^ 2 = ∑ i ∈ Finset.range s, ‖ε s i‖ ^ 2 := by
       rw [show (∑ s' : Fin ρ, ‖ε s s'‖ ^ 2) = ∑ i ∈ Finset.range ρ, ‖ε s i‖ ^ 2 from

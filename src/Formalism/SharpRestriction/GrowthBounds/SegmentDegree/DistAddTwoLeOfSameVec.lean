@@ -111,8 +111,7 @@ theorem good_path_weight_of_parts (C₀ : ℝ) (ha : PathWeightEqRank) (hT : Lem
       (fun i => X.a / (p : ℝ) ^ (X.F.dist j (segE X.F j i) + X.Rj p K j)) X.La p).ncard : ℝ) ≤ S.ncard := by
     exact_mod_cast Set.ncard_le_ncard hGS hSfin
   rw [mul_assoc, ← hrk]
-  refine le_trans ?_ (le_trans hcard h1)
-  exact mul_le_mul_of_nonneg_right (by linarith) (Nat.cast_nonneg _)
+  exact le_trans (mul_le_mul_of_nonneg_right (by linarith) (Nat.cast_nonneg _)) (le_trans hcard h1)
 
 end Formalism.MainNotions.SelectionLemmas.Pf
 end -- clump:auto
@@ -166,8 +165,7 @@ theorem oldest_spec (hV : F.Valid L₁ N₁) (j : ℤ) (i : Fin (segN F j)) (hi 
   classical
   set E := segE F j i with hE
   have hmono : StrictMono (segE F j) := fun a b hab => by
-    simp only [segE]
-    exact Subtype.coe_lt_coe.2 (((F.letters j).orderIsoOfFin rfl).strictMono hab)
+    simpa only [segE] using Subtype.coe_lt_coe.2 (((F.letters j).orderIsoOfFin rfl).strictMono hab)
   have hsurj : ∀ x ∈ F.letters j, ∃ k, segE F j k = x := fun x hx =>
     ⟨((F.letters j).orderIsoOfFin rfl).symm ⟨x, hx⟩, by simp [segE]⟩
   have hlow : ∀ i' < r, F.fr (j - 1) i' < E := by
@@ -198,8 +196,7 @@ theorem oldest_spec (hV : F.Valid L₁ N₁) (j : ℤ) (i : Fin (segN F j)) (hi 
   simp only [Finset.mem_filter] at hm
   refine ⟨hm.1, hm.2.1, hm.2.2, ?_⟩
   rw [Finset.filter_filter] at hc
-  refine Eq.trans ?_ hc
-  exact congrArg Finset.card (Finset.filter_congr (fun z _ => by tauto))
+  exact Eq.trans (congrArg Finset.card (Finset.filter_congr (fun z _ => by tauto))) hc
 
 theorem exists_od (hV : F.Valid L₁ N₁) (j : ℤ) : ∃ od : Fin (segN F j) → Fin (segN F j), ∀ i, r ≤ i.val →
     segE F j (od i) = F.oldest j (segE F j i) ∧ od i < i ∧ (segLL F j).vec (od i) = true ∧

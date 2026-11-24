@@ -78,8 +78,7 @@ private theorem jet0_eq_lemma (x : Jet S κ 0) :
   show (Ideal.Quotient.mk (orig S κ ^ (0 + 1))) P =
     Ideal.Quotient.mk (orig S κ ^ (0 + 1)) (MvPolynomial.C (MvPolynomial.constantCoeff P))
   rw [Ideal.Quotient.eq]
-  have h := sub_const_mem_orig P
-  simpa using h
+  simpa using sub_const_mem_orig P
 
 theorem aug_comp_eq (f : Jet S κ 0 →ₐ[S] Jet S κ' 0) :
     (jetAug : Jet S κ' 0 →ₐ[S] S).comp f = jetAug := by
@@ -124,8 +123,7 @@ private theorem psTrunc_succ_sub_lemma (n : ℕ) (f : MvPowerSeries κ S) :
     psTrunc (n + 1) f - psTrunc n f ∈ orig S κ ^ (n + 1) := by
   have hsub : (degLE n : Finset (κ →₀ ℕ)) = (degLE (n + 1)).filter (fun e => (e.sum fun _ k => k) ≤ n) := by
     ext e
-    simp only [Finset.mem_filter, mem_degLE_lemma]
-    exact ⟨fun h => ⟨by omega, h⟩, fun h => h.2⟩
+    simpa only [Finset.mem_filter, mem_degLE_lemma] using ⟨fun h => ⟨by omega, h⟩, fun h => h.2⟩
   unfold psTrunc
   rw [hsub, ← Finset.sum_filter_add_sum_filter_not (degLE (n + 1))
     (fun e => (e.sum fun _ k => k) ≤ n), add_sub_cancel_left]
@@ -173,12 +171,10 @@ theorem jetTrunc_psJet (m : ℕ) (f : MvPowerSeries κ S) :
   exact psTrunc_succ_sub_lemma m f
 
 theorem mem_orig_of_cc' (P : MvPolynomial κ S) (h : MvPolynomial.constantCoeff P = 0) : P ∈ orig S κ := by
-  have h1 := sub_const_mem_orig P
-  simpa [h] using h1
+  simpa [h] using sub_const_mem_orig P
 
 theorem cc_psTrunc' (m : ℕ) (f : MvPowerSeries κ S) :
-    MvPolynomial.constantCoeff (psTrunc m f) = MvPowerSeries.constantCoeff f := by
-  exact cc_psTrunc_lemma m f
+    MvPolynomial.constantCoeff (psTrunc m f) = MvPowerSeries.constantCoeff f := cc_psTrunc_lemma m f
 
 theorem psJet_zero_of (f : MvPowerSeries κ S) (hf : MvPowerSeries.constantCoeff f = 1) : psJet 0 f = 1 := by
   show Ideal.Quotient.mk (orig S κ ^ (0 + 1)) (psTrunc 0 f) = 1
@@ -205,8 +201,7 @@ theorem const_compL {d' : ℕ} (φ : Fin d' → MvPowerSeries (Fin 1 × Fin (dL 
   · simp
   · intro d hd
     obtain ⟨i, hi⟩ : ∃ i, d i ≠ 0 := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       exact hd (Finsupp.ext hcon)
     have h0 : MvPowerSeries.constantCoeff (d.prod fun s e => (φ s.2) ^ e) = 0 := by
       rw [Finsupp.prod, map_prod]

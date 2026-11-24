@@ -118,8 +118,7 @@ theorem mem_gcone_insert {n : ℕ} {ι : Type*} [DecidableEq ι] {s : Finset ι}
     · rcases Finset.mem_insert.1 hi with h | h
       · subst h
         show 0 ≤ (if i = i then t else c i)
-        rw [ite_eq_left rfl]
-        exact ht
+        rwa [ite_eq_left rfl]
       · show 0 ≤ (if i = w then t else c i)
         rw [ite_eq_right (ne_of_mem_of_not_mem h hw)]
         exact hc i h
@@ -148,8 +147,7 @@ theorem fm_scalar {κ : Type*} (P : Finset κ) (u c : κ → ℚ) :
         rw [mul_left_comm, mul_inv_cancel₀ hp, mul_one]⟩
     have key : ∀ p ∈ P, ∀ q ∈ P, 0 < c p → c q < 0 → b p ≤ b q := by
       intro p hp q hq hcp hcq
-      by_contra hlt
-      push Not at hlt
+      by_contra! hlt
       have e1 : c p * b p * c q = -u p * c q := by rw [eb p hcp.ne']
       have e2 : c q * b q * c p = -u q * c p := by rw [eb q hcq.ne]
       have hm := mul_pos (mul_pos hcp (neg_pos.2 hcq)) (sub_pos.2 hlt)
@@ -223,8 +221,7 @@ theorem fm_vec {n : ℕ} (P : Finset ((Fin n → ℚ) × ℚ)) (x : Fin n → �
       (Finset.mem_image_of_mem _ (Finset.mem_filter.2 ⟨hp, hz⟩))), fun p hp q hq hcp hcq => ?_⟩
     have h2 := h' (p.2 • q.1 - q.2 • p.1) (Finset.mem_union_right _ (Finset.mem_image.2
       ⟨(p, q), Finset.mem_product.2 ⟨Finset.mem_filter.2 ⟨hp, hcp⟩, Finset.mem_filter.2 ⟨hq, hcq⟩⟩, rfl⟩))
-    rw [fm_dot] at h2
-    exact h2
+    rwa [fm_dot] at h2
 
 def stdIneq (n : ℕ) : Finset (Fin n → ℚ) :=
   (Finset.univ.image fun i : Fin n => (Pi.single i 1 : Fin n → ℚ)) ∪
@@ -256,8 +253,7 @@ theorem mem_hcone_stdIneq (n : ℕ) (x : Fin n → ℚ) : x ∈ hcone (stdIneq n
     exact le_antisymm (by linarith) h1
   · rintro rfl
     show ∀ a ∈ stdIneq n, 0 ≤ id a ⬝ᵥ (0 : Fin n → ℚ)
-    intro a _
-    exact le_of_eq (rat_dotProduct_zero_right _).symm
+    exact fun a _ => le_of_eq (rat_dotProduct_zero_right _).symm
 
 theorem mem_gcone_empty {n : ℕ} (x : Fin n → ℚ) :
     x ∈ gcone (∅ : Finset (Fin n → ℚ)) id ↔ x = 0 := by
@@ -302,14 +298,12 @@ theorem minkowskiQ {n : ℕ} (T : Finset (Fin n → ℚ)) :
         linarith
       · rw [Finset.mem_singleton.1 hp]
         show 0 ≤ (0 : Fin n → ℚ) ⬝ᵥ x + 1 * t
-        rw [rat_dotProduct_zero_left, one_mul, zero_add]
-        exact ht
+        rwa [rat_dotProduct_zero_left, one_mul, zero_add]
     · intro h
       have ht : 0 ≤ t := by
         have h0 := h ((0 : Fin n → ℚ), (1 : ℚ)) (Finset.mem_union_right _ (Finset.mem_singleton_self _))
         have h0' : 0 ≤ (0 : Fin n → ℚ) ⬝ᵥ x + 1 * t := h0
-        rw [rat_dotProduct_zero_left, one_mul, zero_add] at h0'
-        exact h0'
+        rwa [rat_dotProduct_zero_left, one_mul, zero_add] at h0'
       refine ⟨ht, ?_⟩
       show ∀ a ∈ A, 0 ≤ id a ⬝ᵥ (x - t • id w)
       intro a ha
@@ -322,7 +316,6 @@ theorem minkowskiQ {n : ℕ} (T : Finset (Fin n → ℚ)) :
       linarith
 
 private theorem rat_dotProduct_comm {n : ℕ} (a b : Fin n → ℚ) : a ⬝ᵥ b = b ⬝ᵥ a := by
-  show ∑ j, a j * b j = ∑ j, b j * a j
   exact Finset.sum_congr rfl fun j _ => mul_comm _ _
 
 private theorem rat_dotProduct_add_left {n : ℕ} (a b x : Fin n → ℚ) : (a + b) ⬝ᵥ x = a ⬝ᵥ x + b ⬝ᵥ x := by
@@ -381,13 +374,10 @@ theorem weylQ {n : ℕ} (A : Finset (Fin n → ℚ)) :
       rw [hD] at hb'
       have h2 : 0 ≤ id d ⬝ᵥ id b := hb' d hd
       show 0 ≤ b ⬝ᵥ d
-      rw [rat_dotProduct_comm]
-      exact h2
+      rwa [rat_dotProduct_comm]
     exact dotProduct_nonneg_of_mem_hcone_of_mem_gcone hx hdA
   · refine gcone_sub B id _ ?_ ?_ ?_ ?_
-    · show ∀ a ∈ A, 0 ≤ id a ⬝ᵥ (0 : Fin n → ℚ)
-      intro a _
-      exact le_of_eq (rat_dotProduct_zero_right _).symm
+    · exact fun a _ => le_of_eq (rat_dotProduct_zero_right _).symm
     · intro x hx y hy
       have hx' : ∀ a ∈ A, 0 ≤ id a ⬝ᵥ x := hx
       have hy' : ∀ a ∈ A, 0 ≤ id a ⬝ᵥ y := hy
@@ -407,8 +397,7 @@ theorem weylQ {n : ℕ} (A : Finset (Fin n → ℚ)) :
       have h1 : id a ∈ gcone A id := mem_gcone ha
       rw [hB] at h1
       have h2 : 0 ≤ id b ⬝ᵥ id a := h1 b hb
-      rw [rat_dotProduct_comm]
-      exact h2
+      rwa [rat_dotProduct_comm]
 
 theorem exists_int_multiple {n : ℕ} (v : Fin n → ℚ) :
     ∃ N : ℚ, 0 < N ∧ ∃ z : Fin n → ℤ, GordanCones.toQ z = N • v := by

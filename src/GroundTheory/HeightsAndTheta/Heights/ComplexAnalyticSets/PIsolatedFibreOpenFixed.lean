@@ -58,8 +58,7 @@ theorem finiteProjection_near (hGen : GenericProjectionFinite.Statement) {n k : 
     have h1 : (fun p : Fin k × Fin n => M p.1 p.2) = a + (1 : ℂ) • b := by
       funext p
       simp [a, b]
-    rw [h1]
-    exact hz
+    rwa [h1]
   · filter_upwards [hne] with t ht
     exact hS _ ⟨f, hfS, by rw [hg]; exact ht⟩
 
@@ -135,8 +134,7 @@ theorem proof (hGen : GenericProjectionFinite.Statement) (hFin : FiniteMapOpen.S
 
   have h0 : Tendsto (fun t : ℂ => ‖t‖ * C) (𝓝[≠] 0) (𝓝 0) := by
     have hc : Continuous fun t : ℂ => ‖t‖ * C := continuous_norm.mul continuous_const
-    have h := (hc.tendsto 0).mono_left (nhdsWithin_le_nhds : 𝓝[≠] (0 : ℂ) ≤ 𝓝 0)
-    simpa using h
+    simpa using (hc.tendsto 0).mono_left (nhdsWithin_le_nhds : 𝓝[≠] (0 : ℂ) ≤ 𝓝 0)
   have hsmall : ∀ᶠ t in 𝓝[≠] (0 : ℂ), ‖t‖ * C < ε / 4 := h0.eventually (gt_mem_nhds (by positivity))
   refine mem_of_superset (ball_mem_nhds (A *ᵥ x) (by positivity : (0 : ℝ) < ε / 4)) ?_
   intro y hy

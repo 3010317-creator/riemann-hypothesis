@@ -50,11 +50,8 @@ theorem minimalPrimes_transfer {A B : Type*} [CommRing A] [CommRing B] (f : A �
         Ideal.Quotient.eq_zero_iff_mem.mpr hb
     refine ringKrullDim_eq_of_ringEquiv (RingEquiv.ofRingHom φ ψ ?_ ?_)
     · refine Ideal.Quotient.ringHom_ext (RingHom.ext fun b => ?_)
-      show Ideal.Quotient.mk (J.comap g) (f (g b)) = Ideal.Quotient.mk (J.comap g) b
       exact Ideal.Quotient.eq.mpr (hIJ (hg (hfg b)))
-    · refine Ideal.Quotient.ringHom_ext (RingHom.ext fun a => ?_)
-      show Ideal.Quotient.mk J (g (f a)) = Ideal.Quotient.mk J a
-      exact Ideal.Quotient.eq.mpr (hIJ (hgf a))
+    · exact Ideal.Quotient.ringHom_ext (RingHom.ext fun a => (Ideal.Quotient.eq.mpr (hIJ (hgf a))))
 
 theorem ringKrullDim_le_of_mem_minimalPrimes_sup_span {F : Type} [Field F] {τ : Type} [Fintype τ]
     (s : Finset (MvPolynomial τ F)) :
@@ -139,8 +136,7 @@ theorem mem_mcPts_iff {P : Ideal (MRing ι)} (z : (Σ k, ι k) → ℂ) :
   refine and_congr_right fun _ => ⟨fun h f hf => ?_, fun h f hf => h _ (Ideal.mem_map_of_mem _ hf)⟩
   have hle : P.map (MvPolynomial.map (Int.castRingHom ℂ)) ≤ RingHom.ker (MvPolynomial.eval z) := by
     rw [Ideal.map_le_iff_le_comap]
-    intro g hg
-    exact h g hg
+    exact fun g hg => h g hg
   exact hle hf
 
 end SegreChartDim

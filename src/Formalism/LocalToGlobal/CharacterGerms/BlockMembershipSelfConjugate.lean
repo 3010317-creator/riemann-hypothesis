@@ -81,9 +81,7 @@ def plAt {K : Orb → ℕ} {what₂ : ∀ o, Fin (K o) → ℕ} (pl : (Σ o, Σ 
 theorem plAt_inj {K : Orb → ℕ} {what₂ : ∀ o, Fin (K o) → ℕ} {pl : (Σ o, Σ i : Fin (K o), Fin (what₂ o i)) → Fin n}
     (h : Function.Injective pl) (o : Orb) : Function.Injective (plAt n pl o) := by
   intro s s' hs
-  have h1 := h hs
-  simp only [Sigma.mk.inj_iff, heq_eq_eq, true_and] at h1
-  exact h1
+  simpa only [Sigma.mk.inj_iff, heq_eq_eq, true_and] using h hs
 
 variable {X n}
 
@@ -158,14 +156,12 @@ theorem val_lists {FFimg : Set (∀ o, MvPolynomial (Fin n × WV (I o)) C)} {ν 
     refine le_trans (le_of_eq ?_) hrows
     refine Finset.sum_congr rfl fun o _ => ?_
     rw [Fintype.card_sigma]
-    simp only [Fintype.card_fin]
-    exact sum_get (L o) fun q => q.1.what₂ (X o).n
+    simpa only [Fintype.card_fin] using sum_get (L o) fun q => q.1.what₂ (X o).n
   obtain ⟨pl⟩ := Function.Embedding.nonempty_of_card_le hcard
   choose kind hrow hatt' using hOK'
   have key := val_pieces hV hJ (fun o => (L o).length) (fun o i => rowsAt X L o i) pl pl.injective
     (fun o i => (blkAt L o i).poly (X o) (F o)) kind (fun o i => ((L o).get i).2) hrow hatt' (hmem pl pl.injective)
-  refine key.trans (le_of_eq ?_)
-  exact Finset.sum_congr rfl fun o _ => sum_get (L o) Prod.snd
+  exact key.trans (le_of_eq (Finset.sum_congr rfl fun o _ => sum_get (L o) Prod.snd))
 
 variable (X n)
 
@@ -212,8 +208,7 @@ theorem valBlocks_G {FFimg : Set (∀ o, MvPolynomial (Fin n × WV (I o)) C)} {�
       simp
   rw [← hsumR]
   refine val_lists hV hJ F L' hOK ?_ (hM L' hLn hwt')
-  rw [hsum (fun o l => (l.map fun q => q.1.what₂ (X o).n).sum) (fun o => by simp)]
-  exact hrows
+  rwa [hsum (fun o l => (l.map fun q => q.1.what₂ (X o).n).sum) (fun o => by simp)]
 
 end Formalism.L2.FormalSeriesBounds.RF
 

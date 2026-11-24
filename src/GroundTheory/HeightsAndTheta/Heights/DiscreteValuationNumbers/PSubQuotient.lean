@@ -31,8 +31,7 @@ theorem classNum_rename {σ τ : Type*} (e : σ → τ) (he : Function.Injective
     congr 2
     unfold classList
     rw [← Finsupp.toMultiset_map, Multiset.map_map]
-  · intro a _ b _ h
-    exact Finsupp.mapDomain_injective he h
+  · exact fun a _ b _ h => Finsupp.mapDomain_injective he h
 
 theorem rename_psumExpansion {M N : ℕ} (e : Fin M → Fin N) (k : ℕ) (i : Fin M) :
     rename (Sum.map e e) (psumExpansion M k i) = psumExpansion N k (e i) := by
@@ -244,8 +243,7 @@ theorem SubQuotient.proof (hF : FlagIndependence.Statement) : SubQuotient.Statem
       (q ∈ BV.lat c ↔ ∃ z ∈ B.lat c, (φ.symm z).2 = q) ∧
         (q ∈ BV'.lat c ↔ ∃ z ∈ B'.lat c, (φ.symm z).2 = q) := by
     intro c hc q
-    simp only [hφπ]
-    exact ⟨(hlat c hc).2.2.1 q, (hlat c hc).2.2.2 q⟩
+    simpa only [hφπ] using ⟨(hlat c hc).2.2.1 q, (hlat c hc).2.2.2 q⟩
   have hsU : SameGenericFibre ϖ BU BU' := by
     intro c hc
     obtain ⟨h1, h2⟩ := hsame c hc

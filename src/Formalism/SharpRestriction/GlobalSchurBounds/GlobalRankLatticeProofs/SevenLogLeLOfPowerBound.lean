@@ -61,12 +61,10 @@ theorem hc_u_step {R : Ranks} (h : HCParam R) (i : ℕ) (hi : i + 1 < R.k) :
   obtain ⟨c, hc⟩ := h.v_int ⟨i, hi'⟩
   have e1 : (a : ℚ) + 1 / 2 < c := by
     have h2' : h.u ⟨i + 1, hi⟩ < h.v ⟨i, hi'⟩ := h2
-    rw [ha, hc] at h2'
-    exact h2'
+    rwa [ha, hc] at h2'
   have e2 : (c : ℚ) < b + 1 / 2 := by
     have h1' : h.v ⟨i, hi'⟩ < h.u ⟨i, by omega⟩ := h1
-    rw [hb, hc] at h1'
-    exact h1'
+    rwa [hb, hc] at h1'
   have f1 : a < c := by exact_mod_cast (show (a : ℚ) < c by linarith)
   have f2 : c < b + 1 := by exact_mod_cast (show (c : ℚ) < b + 1 by linarith)
   have f3 : ((a + 1 : ℤ) : ℚ) ≤ b := by exact_mod_cast (show a + 1 ≤ b by omega)
@@ -604,8 +602,7 @@ theorem nums_of_params {D : D7} {L : SizeData₂ D} (P : ParameterChoice' D L) (
       _ ≤ Cn * D.R.m * (cL * L.sc.L) := by
         have : L.sc.L ≤ cL * L.sc.L := by linarith
         gcongr
-  · rw [mul_div_cancel_left₀ _ (by linarith : L.sc.x ≠ 0)]
-    exact r3
+  · rwa [mul_div_cancel_left₀ _ (by linarith : L.sc.x ≠ 0)]
   · rw [← L.logDerivative_at_one_eq]
     refine le_trans hdl ?_
     have : L.sc.x ^ L.sc.eps = L.sc.L := rfl

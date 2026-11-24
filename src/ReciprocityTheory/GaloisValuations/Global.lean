@@ -42,8 +42,7 @@ theorem valuation_lt_one_iff' (A : ValuationSubring (Ω)) (y : Ω) :
   rcases eq_or_ne y 0 with rfl | hy
   · simp
   · rw [← A.valuation_le_one_iff, ← A.valuation_le_one_iff, not_le, Valuation.one_lt_val_iff _ (inv_ne_zero hy), inv_inv]
-    simp only [hy, false_or]
-    exact ⟨fun h => ⟨h.le, h⟩, And.right⟩
+    simpa only [hy, false_or] using ⟨fun h => ⟨h.le, h⟩, And.right⟩
 
 theorem valuation_apply_lt_one_iff {A : ValuationSubring (Ω)} {σ : G F Ω}
     (hσ : σ ∈ Dec (F := F) A) (y : Ω) :
@@ -156,8 +155,7 @@ variable (Ω) in
 def toGS : G F Ω →* GS Ω S := QuotientGroup.mk' (NS Ω S)
 
 variable (Ω) in
-theorem continuous_toGS : Continuous (toGS Ω S) := by
-  exact continuous_quot_mk
+theorem continuous_toGS : Continuous (toGS Ω S) := continuous_quot_mk
 
 def locHom (A : ValuationSubring (Ω)) : Dec (F := F) A →* GS Ω S :=
   (toGS Ω S).comp (Dec (F := F) A).subtype
@@ -325,8 +323,7 @@ theorem exists_isPlaceOver (v : HeightOneSpectrum (𝓞 F)) :
         ((u⁻¹ : ((v.valuation F).valuationSubring.toSubring.map (algebraMap F Ω))ˣ) :
           ((v.valuation F).valuationSubring.toSubring.map (algebraMap F Ω))).1 = 1 := by
       have h3 := congrArg Subtype.val u.mul_inv
-      rw [hu] at h3
-      exact h3
+      rwa [hu] at h3
     obtain ⟨z, hz, hzt⟩ := Subring.mem_map.mp ht
     have hzx : z = (x : F)⁻¹ := by
       apply hinj
@@ -342,12 +339,10 @@ theorem isPlaceOver_placeOf (v : HeightOneSpectrum (𝓞 F)) : IsPlaceOver (plac
 
 theorem exists_smul_eq_of_isPlaceOver [IsAlgClosure F Ω] {A A' : ValuationSubring (Ω)}
     {v : HeightOneSpectrum (𝓞 F)} (h : IsPlaceOver A v) (h' : IsPlaceOver A' v) :
-    ∃ σ : G F Ω, σ • A = A' := by
-  exact exists_smul_eq_of_over h h'
+    ∃ σ : G F Ω, σ • A = A' := exists_smul_eq_of_over h h'
 
 theorem exists_isFrob [IsAlgClosure F Ω] {A : ValuationSubring (Ω)} {v : HeightOneSpectrum (𝓞 F)}
-    (h : IsPlaceOver A v) : ∃ σ : G F Ω, IsFrob A (normV v) σ := by
-  exact exists_frob_over h
+    (h : IsPlaceOver A v) : ∃ σ : G F Ω, IsFrob A (normV v) σ := exists_frob_over h
 
 variable (Ω) in
 theorem isFrob_frobOf [IsAlgClosure F Ω] (v : HeightOneSpectrum (𝓞 F)) :

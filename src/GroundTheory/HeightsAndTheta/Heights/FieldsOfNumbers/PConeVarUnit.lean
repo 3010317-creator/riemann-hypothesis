@@ -51,8 +51,7 @@ theorem ConeVarUnit.proof (hDZ : DegZeroLocQuot.Statement.{u})
     have hdeg : (∑ k, d k • blockWeight ι ⟨k, v k⟩) = ⇑d := by
       ext j
       simp [blockWeight, Finset.sum_apply, Pi.single_apply]
-    rw [hdeg] at this
-    exact this
+    rwa [hdeg] at this
   have huW : ∀ d : K →₀ ℕ, (∏ k, (X ⟨k, v k⟩ : MRing ι F) ^ d k) ∉ W := by
     intro d hd
     obtain ⟨k, -, hk⟩ := Ideal.IsPrime.prod_mem_iff.mp hd
@@ -68,8 +67,7 @@ theorem ConeVarUnit.proof (hDZ : DegZeroLocQuot.Statement.{u})
       refine weightedHomogeneousComponent_eq_zero' _ _ fun c hc hw => hde ?_
       rw [((hh d).mul (hu d)) (mem_support_iff.mp hc)] at hw
       exact DFunLike.coe_injective (add_left_cancel hw)
-    · intro hes
-      exact absurd (notMem_support_iff.mp hes) he.ne_zero
+    · exact fun hes => absurd (notMem_support_iff.mp hes) he.ne_zero
   have hNW : N ∉ W := fun hN => by
     have := hW.multiHomog N hN (b + ⇑e)
     rw [hcomp] at this

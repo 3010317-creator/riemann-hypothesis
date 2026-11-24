@@ -167,8 +167,7 @@ theorem degAt_C_mul {R : Type} [CommRing R] {ι : Type} {n : ℕ} {x : ι} {d : 
   intro m hm
   refine h m ?_
   rw [mem_support_iff] at hm ⊢
-  intro h0
-  exact hm (by rw [coeff_C_mul, h0, mul_zero])
+  exact fun h0 => hm (by rw [coeff_C_mul, h0, mul_zero])
 
 theorem degAt_detPl {R : Type} [CommRing R] {n' r : ℕ} [NeZero n'] (X : Dat n' r) (j x t : ℤ) :
     DegAt t (∑ a : Fin r, if X.row j x a = t then 1 else 0) (X.detPl R j x) := by
@@ -184,8 +183,7 @@ theorem degAt_detPl {R : Type} [CommRing R] {n' r : ℕ} [NeZero n'] (X : Dat n'
   have h2 := degAt_prod (R := R) (x := t) Finset.univ
     (fun i : Fin r => (Matrix.of fun a b : Fin r => (MvPolynomial.X (X.row j x a, b) : MvPolynomial (ℤ × Fin r) R)) (σ i) i)
     (fun i => if X.row j x (σ i) = t then 1 else 0) (fun i _ => degAt_X (x := t) (X.row j x (σ i), i))
-  rw [Equiv.sum_comp σ (fun a => if X.row j x a = t then 1 else 0)] at h2
-  exact h2
+  rwa [Equiv.sum_comp σ (fun a => if X.row j x a = t then 1 else 0)] at h2
 
 theorem segment_image_multihomogeneous : SegmentImageMultihomogeneous := by
   intro p n' r K _ _ _ X O _ j b y e hy

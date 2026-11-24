@@ -123,8 +123,7 @@ theorem apply_mul_centralSection {φ : cuspForms K n} {c : ℂ}
     have e : (fun x => f (t + (x - t))) = f := by
       funext x
       simp only [add_sub_cancel]
-    rw [e] at h3
-    exact h3
+    rwa [e] at h3
 
   set F : ℝ → ℂ := fun t => Complex.exp (-(c * t)) * f t with hF
   have hFd : ∀ t, HasDerivAt F 0 t := by
@@ -136,13 +135,11 @@ theorem apply_mul_centralSection {φ : cuspForms K n} {c : ℂ}
           funext y
           simp
         have e2 : -c * ((1 : ℝ) : ℂ) = -c := by simp
-        rw [e1, e2] at this
-        exact this
+        rwa [e1, e2] at this
       exact hl.cexp
     have := he.mul (hder t)
     have e : Complex.exp (-(c * t)) * (-c) * f t + Complex.exp (-(c * t)) * (c * f t) = 0 := by ring
-    rw [e] at this
-    exact this
+    rwa [e] at this
   have hconst : F (Real.log s) = F 0 :=
     is_const_of_deriv_eq_zero (fun t => (hFd t).differentiableAt)
       (fun t => (hFd t).deriv) _ _

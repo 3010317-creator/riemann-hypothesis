@@ -189,8 +189,7 @@ lemma X_mem_TT (i : σ) : (MvPowerSeries.X i : MvPowerSeries σ K) ∈ TT W σ :
   · exact zero_mem _
 
 private theorem hasSubst_of_cc_zero_lemma {τ : Type} [Finite τ] {a : τ → MvPowerSeries σ K} (ha : ∀ i, cc (a i) = 0) :
-    MvPowerSeries.HasSubst a := by
-  exact MvPowerSeries.hasSubst_of_constantCoeff_zero ha
+    MvPowerSeries.HasSubst a := MvPowerSeries.hasSubst_of_constantCoeff_zero ha
 
 lemma subst_mem {τ : Type} [Finite τ] {f : MvPowerSeries τ K} (hf : f ∈ TT W τ)
     {a : τ → MvPowerSeries σ K} (ha : ∀ i, a i ∈ TT W σ) (ha0 : ∀ i, cc (a i) = 0) :
@@ -314,8 +313,7 @@ private theorem constantCoeff_subst_of_zero_lemma_2 {τ : Type} [Finite τ] {a :
   · simp
   · intro d hd
     obtain ⟨i, hi⟩ : ∃ i, d i ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hd (Finsupp.ext h)
     have h0 : cc (d.prod fun s e => a s ^ e) = 0 := by
       rw [Finsupp.prod, map_prod]
@@ -383,42 +381,27 @@ lemma lit_facts (hw : WFixed W w) :
       (F2 W w) ≠ MvPowerSeries.X 2 ∧
     (MvPowerSeries.X 0 : MvPowerSeries (Fin 3) K) ≠ MvPowerSeries.X 1 := by
   classical
-  have hX01 : (MvPowerSeries.X 0 : MvPowerSeries (Fin 3) K) ≠ MvPowerSeries.X 1 := by
-    intro h
-    have h' := congrArg (MvPowerSeries.coeff (Finsupp.single (0 : Fin 3) 1)) h
-    rw [MvPowerSeries.coeff_X, MvPowerSeries.coeff_X, ite_eq_left rfl, ite_eq_right] at h'
-    · exact one_ne_zero h'
-    · intro h2
-      exact absurd ((Finsupp.single_left_inj one_ne_zero).mp h2) (by decide)
-  have hb0 : ∀ i, cc ((![MvPowerSeries.X 0, MvPowerSeries.X 1, 0] : Fin 3 → MvPowerSeries (Fin 2) K) i) = 0 := by
-    intro i
-    fin_cases i <;> simp
-  have ha0 : ∀ i, cc ((![MvPowerSeries.X 0, MvPowerSeries.X 1] : Fin 2 → MvPowerSeries (Fin 3) K) i) = 0 := by
-    intro i
-    fin_cases i <;> simp
+  have hX01 : (MvPowerSeries.X 0 : MvPowerSeries (Fin 3) K) ≠ MvPowerSeries.X 1 := fun h => by
+    simpa [MvPowerSeries.coeff_X, Finsupp.single_left_inj] using
+      congrArg (MvPowerSeries.coeff (Finsupp.single (0 : Fin 3) 1)) h
   have hb : MvPowerSeries.HasSubst (![MvPowerSeries.X 0, MvPowerSeries.X 1, 0] : Fin 3 → MvPowerSeries (Fin 2) K) :=
-    hasSubst_of_cc_zero_lemma hb0
+    hasSubst_of_cc_zero_lemma fun i => by fin_cases i <;> simp
   have ha : MvPowerSeries.HasSubst (![MvPowerSeries.X 0, MvPowerSeries.X 1] : Fin 2 → MvPowerSeries (Fin 3) K) :=
-    hasSubst_of_cc_zero_lemma ha0
-  have hid : (fun i : Fin 2 => MvPowerSeries.subst
-      (![MvPowerSeries.X 0, MvPowerSeries.X 1, 0] : Fin 3 → MvPowerSeries (Fin 2) K)
-      ((![MvPowerSeries.X 0, MvPowerSeries.X 1] : Fin 2 → MvPowerSeries (Fin 3) K) i)) = MvPowerSeries.X := by
-    funext i
-    fin_cases i <;> simp [MvPowerSeries.subst_X hb]
+    hasSubst_of_cc_zero_lemma fun i => by fin_cases i <;> simp
   have key : MvPowerSeries.subst (![MvPowerSeries.X 0, MvPowerSeries.X 1, 0] : Fin 3 → MvPowerSeries (Fin 2) K)
       (MvPowerSeries.subst ![(MvPowerSeries.X 0 : MvPowerSeries (Fin 3) K), MvPowerSeries.X 1] (Formalism.ELL.WeierstrassChordSeries.F2 W w))
       = Formalism.ELL.WeierstrassChordSeries.F2 W w := by
     rw [MvPowerSeries.subst_comp_subst_apply ha hb]
-    rw [hid]
-    exact congrFun MvPowerSeries.subst_self (Formalism.ELL.WeierstrassChordSeries.F2 W w)
+    convert congrFun MvPowerSeries.subst_self (Formalism.ELL.WeierstrassChordSeries.F2 W w) using 2
+    · funext i
+      fin_cases i <;> simp [MvPowerSeries.subst_X hb]
+    · rfl
   have hF : Formalism.ELL.WeierstrassChordSeries.F2 W w ≠ 0 :=
     Formalism.ELL.WeierstrassChordSeries.ne_zero_of_L (i := 0) (by rw [Formalism.ELL.WeierstrassChordSeries.linearCoeff_formalSum hw]; exact one_ne_zero)
-  have hX2 : MvPowerSeries.subst (![MvPowerSeries.X 0, MvPowerSeries.X 1, 0] : Fin 3 → MvPowerSeries (Fin 2) K)
-      (MvPowerSeries.X 2 : MvPowerSeries (Fin 3) K) = 0 := by
-    simp [MvPowerSeries.subst_X hb]
   refine ⟨fun h => hF ?_, fun h => hF ?_, hX01⟩
   · rw [← key, h, ← MvPowerSeries.coe_substAlgHom hb, map_zero]
-  · rw [← key, h, hX2]
+  · rw [← key, h]
+    simp [MvPowerSeries.subst_X hb]
 
 end Mser
 

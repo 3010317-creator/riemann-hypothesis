@@ -75,8 +75,7 @@ theorem log_card_le_unitE {G : Type} [Fintype G] (L : SizeData₂ D) (hSG : Size
   have hlam : Real.log (Fintype.card G : ℝ) ≤
       2 * (D.R.f : ℝ) * (D.R.r : ℝ) ^ 2 * Real.log (2 * (D.host.g 0 : ℝ)) := by
     have h := _root_.PI.GZeroLogBound.UnitaryGroupMassFormula.target D (D.host.g 0 : ℝ) (fun i => (hSG i 0).2.1)
-    rw [hc]
-    exact h
+    rwa [hc]
 
   have hth : L.sc.x ^ szTh L ≤ L.sc.x ^ L.sc.eps := by
     apply Real.rpow_le_rpow_of_exponent_le hx1
@@ -86,7 +85,6 @@ theorem log_card_le_unitE {G : Type} [Fintype G] (L : SizeData₂ D) (hSG : Size
     rw [Real.log_mul (by norm_num) hg0.ne']
     have h1 := (hSG 0 0).2.2
     have h2 : L.sc.x ^ szTh L * L.sc.L ≤ L.sc.x ^ L.sc.eps * L.sc.x ^ L.sc.eps := by
-      show L.sc.x ^ szTh L * L.sc.x ^ L.sc.eps ≤ _
       exact mul_le_mul_of_nonneg_right hth hX0
     have h3 := Real.log_two_lt_d9
     have h4 : (1 : ℝ) ≤ L.sc.x ^ L.sc.eps * L.sc.x ^ L.sc.eps := by nlinarith
@@ -136,8 +134,7 @@ theorem lamSizeAt_record_one {G : Type} [Group G] [Fintype G] (L : SizeData₂ D
     LamSizeAt (G := G) (ofRecord D L Del h0) Nc 1 2 := by
   have h := lamSizeAt_record (G := G) L hSG hSC Del h0 Nc hNc hc 1 0 (by simp)
   have e : (2 : ℝ) + 0 = 2 := by norm_num
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 end Formalism.L2.DIV.Cons
 

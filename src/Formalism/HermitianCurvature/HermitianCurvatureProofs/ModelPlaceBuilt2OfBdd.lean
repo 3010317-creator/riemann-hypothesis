@@ -366,8 +366,7 @@ theorem sAPairOne_of_parts (hZ : SAZero) (hL : SALocal) (hE : SAExh) (hJC : SAJC
           by_contra hyC
           exact hne (hK0 y hy hyC)
         exact (hc2 y hy (hCU₂ hyC)).2⟩)
-    rw [hLp, hRp]
-    exact hβ
+    rwa [hLp, hRp]
 
 theorem sAPairL_of_parts (hF : JAFFStable) (hL : SALocal) (hE : SAExh) (hJC : SAJCommC) (hB3 : CompactSupportClassMembership) : SAPairL :=
   sAPairL_of_one hF (sAPairOne_of_parts self_adjoint_zero_holds hL hE hJC hB3)
@@ -530,8 +529,7 @@ theorem sec_at (hR : SARadSec) (hD : SADescend) (hC : SACover)
     show MA.toSm P (Gauge.rawJ P Bs e K ρ) = U ρ
     have hm : Gauge.rawJ P Bs e K ρ ∈ MA.smSub P.r P.TT := by rw [hraw]; exact (U ρ).2
     rw [Gauge.toSm_of_mem P hm]
-    apply Subtype.ext
-    exact hraw
+    exact Subtype.ext hraw
 
 theorem sASection_of_parts (hR : SARadSec) (hD : SADescend) (hC : SACover) : SASection := by
   refine ⟨0, ?_⟩
@@ -543,8 +541,7 @@ theorem sASection_of_parts (hR : SARadSec) (hD : SADescend) (hC : SACover) : SAS
   obtain ⟨K, hK, hKU⟩ := sec_at hR hD hC (D.parOf S v) (T v).base hpl e he U
   refine ⟨K, ?_, hKU⟩
   show K ∈ Q.FFl S.G.k S.G.r (T v).base.z (T v).base.z' (T v).base.π (T v).base.π' 0 (OmP S T v)
-  rw [Formalism.FourierDecayAlt.P.CutMP.JA.FFS.omP_eq E Wp Wq S T v]
-  exact hK
+  rwa [Formalism.FourierDecayAlt.P.CutMP.JA.FFS.omP_eq E Wp Wq S T v]
 
 end
 
@@ -598,8 +595,7 @@ theorem radial_section_holds : SARadSec := by
         intro p hp
         have h3 := fib_sum_smul P Bs x.2 (fun ρ => if ρ = ρ0 then (((Real.sqrt (MA.wq P.k x P.TT))⁻¹ : ℝ) : ℂ) else 0)
           (fun _ => ∑ ρ, MA.ext (U ρ : MA.Qp P.r P.TT → ℂ) x • e ρ x.2) (fun _ => h1) p hp
-        simp only [ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h3
-        exact h3
+        simpa only [ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true] using h3
       · have : ∑ ρ, MA.ext (U ρ : MA.Qp P.r P.TT → ℂ) x • e ρ x.2 = 0 := by
           rw [Finset.univ_eq_empty_iff.2 (not_nonempty_iff.1 hne)]; simp
         rw [this, smul_zero]
@@ -811,8 +807,7 @@ theorem isLoc_add {X Y : Module.End ℂ (SmQ r TT)} (hX : IsLoc X) (hY : IsLoc Y
   simp [hX u V hV hu q hq, hY u V hV hu q hq]
 
 theorem isLoc_mul {X Y : Module.End ℂ (SmQ r TT)} (hX : IsLoc X) (hY : IsLoc Y) : IsLoc (X * Y) := by
-  intro u V hV hu q hq
-  exact hX (Y u) V hV (fun q' hq' => hY u V hV hu q' hq') q hq
+  exact fun u V hV hu q hq => hX (Y u) V hV (fun q' hq' => hY u V hV hu q' hq') q hq
 
 theorem isLoc_algebraMap (z : ℂ) : IsLoc (algebraMap ℂ (Module.End ℂ (SmQ r TT)) z) := by
   intro u V hV hu q hq
@@ -830,8 +825,7 @@ theorem isLoc_euler (v : M.Var r) : IsLoc (eulerQ (r := r) (TT := TT) v) := by
   intro u V hV hu q hq
   have h0 : MA.ext (u : Qp r TT → ℂ) =ᶠ[nhds q.1] fun _ => (0 : ℂ) := by
     filter_upwards [(hV.inter (Qset_open r TT)).mem_nhds ⟨hq, q.2⟩] with x hx
-    simp only [MA.ext, dite_eq_left hx.2]
-    exact hu ⟨x, hx.2⟩ hx.1
+    simpa only [MA.ext, dite_eq_left hx.2] using hu ⟨x, hx.2⟩ hx.1
   have hd : fderiv ℝ (MA.ext (u : Qp r TT → ℂ)) q.1 = 0 := by
     rw [h0.fderiv_eq]; exact fderiv_const_apply _
   show coordE v q.1 * wirt v (MA.ext (u : Qp r TT → ℂ)) q.1 = 0

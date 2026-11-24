@@ -134,8 +134,7 @@ theorem EulerVar.proof (hSq : KH.CechDSqStatement) (hE : EulerSES.Statement) : E
 
   have hWV : W ≤ Submodule.comap (LinearMap.mulLeft (MvPolynomial (Σ k, ι k) F) x) V := fun p hp => by
     rw [hW, Submodule.mem_colon_span_singleton, smul_eq_mul] at hp
-    rw [Submodule.mem_comap, LinearMap.mulLeft_apply, mul_comm]
-    exact hp
+    rwa [Submodule.mem_comap, LinearMap.mulLeft_apply, mul_comm]
   let g : (MvPolynomial (Σ k, ι k) F ⧸ W) →ₗ[MvPolynomial (Σ k, ι k) F] (MvPolynomial (Σ k, ι k) F ⧸ V) :=
     Submodule.mapQ W V (LinearMap.mulLeft _ x) hWV
   let h : (MvPolynomial (Σ k, ι k) F ⧸ V) →ₗ[MvPolynomial (Σ k, ι k) F] (MvPolynomial (Σ k, ι k) F ⧸ U) :=
@@ -489,11 +488,9 @@ theorem ker_pB (n : ℕ) : LinearMap.ker (H.pB n) = LinearMap.range (H.iA n) := 
     have hdx : dA n x = 0 := by
       refine H.f_inj (n + 1) _ (H.dA_mem n x hx) ?_
       have h1 := d_of_mem_bnd H.dB_dB hb
-      rw [map_sub, hy.2, zero_sub, neg_eq_zero, H.f_d n x hx] at h1
-      exact h1
+      rwa [map_sub, hy.2, zero_sub, neg_eq_zero, H.f_d n x hx] at h1
     refine ⟨Submodule.Quotient.mk ⟨x, mem_cyc.2 ⟨hx, hdx⟩⟩, ?_⟩
-    rw [iA, cohMap_mk, coh_mk_eq]
-    rw [← neg_sub]
+    rw [iA, cohMap_mk, coh_mk_eq, ← neg_sub]
     exact neg_mem hb
   · rintro ⟨q, rfl⟩
     obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ q
@@ -628,8 +625,7 @@ theorem EulerSES.full : EulerSES.Statement := by
     have := hfa (N + 1)
     have h0 : Module.finrank F (coh CA dA (N + 1)) = 0 := Module.finrank_zero_of_subsingleton
     exact Nat.eq_zero_of_le_zero (h0 ▸ Submodule.finrank_le _)
-  simp only [hr, Nat.cast_zero, mul_zero, add_zero] at key
-  exact key
+  simpa only [hr, Nat.cast_zero, mul_zero, add_zero] using key
 
 end
 

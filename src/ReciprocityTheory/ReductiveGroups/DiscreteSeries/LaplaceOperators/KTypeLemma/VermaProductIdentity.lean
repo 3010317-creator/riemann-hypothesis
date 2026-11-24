@@ -32,8 +32,7 @@ theorem vk_stepV (E : Fin n → Fin n → Module.End ℂ M) (lam : Fin n → ℝ
   funext c
   simp only [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply, Pi.sub_apply,
     Pi.smul_apply, vk_eeV_apply, Finset.sum_apply, vk_tensV_apply, Finset.sum_add_distrib]
-  rw [Finset.sum_eq_single t (fun b _ hb => by simp [hb]) (by simp)]
-  rw [Pi.single_eq_same]
+  rw [Finset.sum_eq_single t (fun b _ hb => by simp [hb]) (by simp), Pi.single_eq_same]
   rcases lt_trichotomy c t with h | h | h
   · rw [hlow t c h, Pi.single_eq_of_ne (ne_of_lt h)]
     have h1 : ∀ d ∈ Ioi t, E t d ((Pi.single d φ : Fin n → M) c) = 0 := fun d hd => by
@@ -65,8 +64,7 @@ theorem vk_stepVd (E : Fin n → Fin n → Module.End ℂ M) (lam : Fin n → �
   funext c
   simp only [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply, Pi.sub_apply,
     Pi.smul_apply, Pi.neg_apply, vk_eeVd_apply, Finset.sum_apply, vk_tensVd_apply, Finset.sum_sub_distrib]
-  rw [Finset.sum_eq_single s (fun b _ hb => by simp [hb]) (by simp)]
-  rw [Pi.single_eq_same]
+  rw [Finset.sum_eq_single s (fun b _ hb => by simp [hb]) (by simp), Pi.single_eq_same]
   rcases lt_trichotomy c s with h | h | h
   · rw [Finset.sum_eq_single c (fun b hb hbc => by rw [Pi.single_eq_of_ne (Ne.symm hbc), map_zero])
       (fun hc => absurd (mem_Iio.2 h) hc)]
@@ -117,14 +115,12 @@ theorem vk_gen_top (E : Fin n → Fin n → Module.End ℂ M) (φ : M)
         exact G.smul_mem r (hx c) }
   have hφ : Submodule.span ℂ {φ} ≤ S := by
     rw [Submodule.span_le, Set.singleton_subset_iff]
-    intro c
-    exact vk_le_genSub T _ (Submodule.subset_span ⟨c, rfl⟩)
+    exact fun c => vk_le_genSub T _ (Submodule.subset_span ⟨c, rfl⟩)
   have hSS : ∀ a b, ∀ m ∈ S, E a b m ∈ S := by
     intro a b m hm c
     have h1 : Submodule.span ℂ (Set.range fun x : Fin n => (Pi.single x m : Fin n → M)) ≤ G :=
       Submodule.span_le.mpr (by rintro _ ⟨x, rfl⟩; exact hm x)
-    have h2 := G.add_mem (h1 (hT a b c m)) (vk_genSub_stable T _ a b _ (hm c))
-    simpa using h2
+    simpa using G.add_mem (h1 (hT a b c m)) (vk_genSub_stable T _ a b _ (hm c))
   have hle : genSub E (Submodule.span ℂ {φ}) ≤ S := sInf_le ⟨hφ, hSS⟩
   rw [hgen] at hle
   rw [← Finset.univ_sum_single f]
@@ -192,7 +188,6 @@ theorem verma_product_identity (n : ℕ) : VermaProductIdentity n := by
     rw [vk_stepVd E lam φ hlow hdiag (Fin.rev t)]
     refine Submodule.neg_mem _ (Submodule.sum_mem _ fun d hd => vk_genSub_stable _ _ _ _ _
       (vk_le_genSub _ _ (Submodule.subset_span ⟨Fin.rev d, ?_, by simp⟩)))
-    simp only [Set.mem_ofPred_eq]
-    exact Fin.lt_rev_iff.2 (mem_Iio.1 hd)
+    simpa only [Set.mem_ofPred_eq] using Fin.lt_rev_iff.2 (mem_Iio.1 hd)
 
 end ReciprocityTheory.ChartRestriction.DS.Lap.LemK

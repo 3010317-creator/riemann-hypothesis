@@ -149,8 +149,7 @@ theorem expSet_card (hR : PolBRank) (n i N : ℕ) (B : ℕ → ℕ) :
 theorem psiFam_mem (k : Type) [Field k] (N : ℕ) (isVec : ℕ → Bool) (B : ℕ → ℕ) (x : PathIdx n N isVec B) :
     psiFam k n N isVec B x ∈ polB k n N B := by
   rw [polB, Submodule.mem_iInf]
-  intro j
-  exact (pathProductDegrees k n N isVec B x.1.1 x.1.2 x.2.1 x.2.2.2.1).2 j
+  exact fun j => (pathProductDegrees k n N isVec B x.1.1 x.1.2 x.2.1 x.2.2.2.1).2 j
 
 end ExponentSetCounting
 
@@ -347,8 +346,7 @@ theorem restOne_of (hW : RestWord) (hT : RestTop) (hF : RestSplit) : RestOne := 
     exact Nat.mul_le_mul_left _ (by rw [Nat.card_coe_set_eq]; exact ExponentSetCounting.expSet_card hR n i N B))
   have hGW : G ∈ W := mem_span_wordMonomialProducts hT hF k hi isVec B pi hpi G hG hg
   rw [← hEq, hU] at hGW
-  rw [Set.image_eq_range]
-  exact hGW
+  rwa [Set.image_eq_range]
 
 theorem partialAction_X {L : Type*} [CommRing L] (isVec : ℕ → Bool) (i : ℕ) (g gi : Matrix (Fin n) (Fin n) L)
     (x : ℕ × Fin n) :
@@ -431,8 +429,7 @@ theorem restSplit : RestSplit := by
           simp only [Finsupp.coe_tsub, Finsupp.coe_add, Pi.sub_apply, Pi.add_apply] at a1 a2
           omega
       · rfl
-    · intro h
-      exact absurd hβ₀ h
+    · exact fun h => absurd hβ₀ h
   have hmem : e + β₀ ∈ (actI isVec i (Formalism.InvariantFactorPaths.GelfandTsetlinBases.genMat k n) (Formalism.InvariantFactorPaths.GelfandTsetlinBases.genMat k n)⁻¹
         (map (algebraMap k (GenField k n)) G)).support := by
     rw [mem_support_iff, hcoef]
@@ -727,8 +724,7 @@ theorem restWord : RestWord := by
     have hv1 : ∀ x ∈ (psiPath L isVec μ i I').vars, x.1 < i := by
       refine DominanceOrderLemmas.vars_of_polB (N := i) (B := B) ?_
       rw [polB, Submodule.mem_iInf]
-      intro j
-      exact (pathProductDegrees L n i isVec B μ I' hpi hidx).2 j
+      exact fun j => (pathProductDegrees L n i isVec B μ I' hpi hidx).2 j
     have hv2 : ∀ x ∈ (∏ c ∈ F, Q c (I' c)).vars, i ≤ x.1 := by
       intro x hx
       obtain ⟨c, -, hc⟩ := Finset.mem_biUnion.1 (vars_prod _ hx)
@@ -752,8 +748,7 @@ theorem restWord : RestWord := by
         have h1 : I' c = ∅ := by rw [hI']; exact dite_eq_right hn
         have h2 := A1hw.isIndex_can (μ i) c
         rw [(hFi c hn).2 _ (A1hw.isIndex_can (μ i))] at h2
-        rw [h1]
-        exact h2
+        rwa [h1]
       refine Finset.prod_eq_zero hcF ?_
       by_contra hne
       exact hc (A0.pathWord_card hpi c _ i le_rfl _ hne)
@@ -806,8 +801,7 @@ theorem restTop : RestTop := by
   intro k _ n N isVec B pi G hpi hG hgood
   have hG' : G ∈ Submodule.span k
       (Set.range fun x : PathIdx n N isVec B => psiPath k isVec x.1.1 N x.1.2) := by
-    rw [(Top.psiPath_basis n N isVec B k).2]
-    exact hG
+    rwa [(Top.psiPath_basis n N isVec B k).2]
   obtain ⟨c, hc⟩ := Finsupp.mem_span_range_iff_exists_finsupp.1 hG'
   have key : ∀ x ∈ c.support, x.1.1 N ∈ pi := by
     intro x hx

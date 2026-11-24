@@ -30,8 +30,7 @@ def liftCell (J : Cell V) : Cell U := ⟨J.1, J.2.1, J.2.2.trans hVU⟩
 def liftIdx {i : ℕ} (J : Idx V i) : Idx U i := ⟨liftCell hVU J.1, J.2⟩
 
 theorem liftIdx_injective {i : ℕ} : Function.Injective (liftIdx (i := i) hVU) := by
-  intro J J' h
-  exact Subtype.ext (Subtype.ext (congrArg (fun I : Idx U i => I.1.1) h))
+  exact fun J J' h => Subtype.ext (Subtype.ext (congrArg (fun I : Idx U i => I.1.1) h))
 
 theorem exists_liftIdx {i : ℕ} (I : Idx U i) (hI : I.1.1 ⊆ V) : ∃ J : Idx V i, liftIdx hVU J = I :=
   ⟨⟨⟨I.1.1, I.1.2.1, hI⟩, I.2⟩, rfl⟩
@@ -272,10 +271,8 @@ theorem ker_chartMap {L : LineBundle S x} {L' : LineBundle S y} {r : Ω → K'}
   rw [LinearMap.mem_ker]
   change (⟨r z, _⟩ : L'.sub J) = 0 ↔ (z : Ω) ∈ (L.toSubSystem.twist (idealSys x pp)).sub (liftChart hxy J)
   constructor
-  · intro hz
-    exact mem_of_map_eq_zero h hpy.le J z.2 (congrArg Subtype.val hz)
-  · intro hz
-    exact Subtype.ext (map_eq_zero_of_mem h hpy.ge J hz).2
+  · exact fun hz => mem_of_map_eq_zero h hpy.le J z.2 (congrArg Subtype.val hz)
+  · exact fun hz => Subtype.ext (map_eq_zero_of_mem h hpy.ge J hz).2
 
 def chartEquiv {L : LineBundle S x} {L' : LineBundle S y} {r : Ω → K'}
     (h : RestrictData L.toSubSystem hxy L'.toSubSystem r) {pp : Ideal (Poly S N)}
@@ -303,8 +300,7 @@ theorem quotH_equiv {L : LineBundle S x} {L' : LineBundle S y} {r : Ω → K'}
     apply Subtype.ext
     have e1 := congrArg Subtype.val
       (chartEquiv_mk h hpy J' (L.toSubSystem.res (liftChart hxy J) (liftChart hxy J') hJJ' z))
-    have e2 := congrArg Subtype.val (chartEquiv_mk h hpy J z)
-    exact e1.trans e2.symm
+    exact e1.trans (congrArg Subtype.val (chartEquiv_mk h hpy J z)).symm
   · intro I hI m
     obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ m
     exact (Submodule.Quotient.mk_eq_zero _).mpr (mem_twist_ideal_of_not_subset hpy.le _ I hI z.2)

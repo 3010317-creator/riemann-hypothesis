@@ -138,13 +138,11 @@ theorem FundCycleBaseChange.proof (h : MinimalPrimeComap.Statement) : FundCycleB
         ite_eq_left ⟨hPW, hP.2⟩, hone _ hWp P ⟨hPW, hP.2⟩, mul_one]
     · intro W₀ hW₀ hne
       rw [fundCycle_apply (Ideal.map (MvPolynomial.map σ) W₀) P, ite_eq_right, mul_zero]
-      intro hPW₀
-      exact hne (hc W₀ (hsupp W₀ hW₀).1.1.1 P hPW₀.1).symm
+      exact fun hPW₀ => hne (hc W₀ (hsupp W₀ hW₀).1.1.1 P hPW₀.1).symm
     · intro hW
       rw [Finsupp.notMem_support_iff.mp hW, zero_mul]
   · refine (Finset.sum_eq_zero fun W hW => ?_).symm
     rw [fundCycle_apply (Ideal.map (MvPolynomial.map σ) W) P, ite_eq_right, mul_zero]
-    intro hPW
-    exact hP ⟨mem_minimalPrimes_map _ hc (hsupp W hW).1 hPW.1, hPW.2⟩
+    exact fun hPW => hP ⟨mem_minimalPrimes_map _ hc (hsupp W hW).1 hPW.1, hPW.2⟩
 
 end GroundTheory.Heights₂.Heights

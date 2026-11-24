@@ -56,8 +56,7 @@ theorem genNear_mul_pow (hM : GenNearMul.Statement) (hgr : KH.IsMGraded S ι �
   | succ a ih =>
     have h' := hM S K ι M 𝓜 W (d + a • n) n (f * g ^ a) g (δ + a • γ) γ hgr hW
       (isMultiHomog_mul hf (isMultiHomog_pow hg a)) hg ih hgn
-    rw [succ_nsmul, succ_nsmul, pow_succ, ← mul_assoc, ← add_assoc, ← add_assoc]
-    exact h'
+    rwa [succ_nsmul, succ_nsmul, pow_succ, ← mul_assoc, ← add_assoc, ← add_assoc]
 
 end ClosedPtGenUniform
 
@@ -93,8 +92,7 @@ theorem ClosedPtGenUniform.proof (hG : GradedSubmodules.Statement) (hF : ClosedP
   obtain ⟨-, hQsub⟩ := hG S K ι (MRingOver S ι ⧸ W) (KH.quotPart S W) hWgr
   have : IsNoetherian (MRingOver S ι) (MRingOver S ι ⧸ W) := isNoetherian_of_isNoetherianRing_of_finite _ _
   have hVQ : V ≤ Module.annihilator (MRingOver S ι) (MRingOver S ι ⧸ W) := by
-    rw [Ideal.annihilator_quotient]
-    exact hV
+    rwa [Ideal.annihilator_quotient]
   have hVPQ : V ≤ Module.annihilator (MRingOver S ι) (P • ⊤ : Submodule (MRingOver S ι) (MRingOver S ι ⧸ W)) :=
     hVQ.trans (LinearMap.annihilator_le_of_injective
       (P • ⊤ : Submodule (MRingOver S ι) (MRingOver S ι ⧸ W)).subtype

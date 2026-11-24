@@ -104,8 +104,6 @@ theorem exists_mem_archCompact_mul_expG (a : archGroup K n) :
     rw [← coe_polarExpHomeomorphComplex_apply, Homeomorph.apply_symm_apply]
   set Y : archLie K n := ⟨archMatOfComps (fun v => (kr v).2.1) (fun v => (kc v).2.1), Submodule.mem_top⟩
   set E := (isExpLieAlgebra K n).expG Y
-  have hE : ((E : (ArchMatrix K n)ˣ) : ArchMatrix K n) = NormedSpace.exp (Y : ArchMatrix K n) :=
-    IsExpLieAlgebra.coe_expG _ Y
   refine ⟨a * E⁻¹, ?_, Y, (inv_mul_cancel_right a E).symm⟩
   apply mem_archCompact_of_unitary
   · intro v
@@ -118,14 +116,9 @@ theorem exists_mem_archCompact_mul_expG (a : archGroup K n) :
     have e2 : ((Units.map (realCompM (n := n) v).toMonoidHom (E : (ArchMatrix K n)ˣ) : GL (Fin n) ℝ) :
         Matrix (Fin n) (Fin n) ℝ) = NormedSpace.exp (kr v).2.1 := by
       show realCompM v ((E : (ArchMatrix K n)ˣ) : ArchMatrix K n) = _
-      rw [hE, realCompM_exp]
+      rw [IsExpLieAlgebra.coe_expG _ Y, realCompM_exp]
       exact congrArg _ (realCompM_archMatOfComps _ _ v)
-    rw [e1, hr]
-    have e3 : ((kr v).1 : Matrix (Fin n) (Fin n) ℝ) * NormedSpace.exp (kr v).2.1 *
-        (((Units.map (realCompM (n := n) v).toMonoidHom (E : (ArchMatrix K n)ˣ))⁻¹ : GL (Fin n) ℝ) :
-          Matrix (Fin n) (Fin n) ℝ) = (kr v).1 := by
-      rw [← e2, Units.mul_inv_cancel_right]
-    rw [e3]
+    rw [e1, hr, ← e2, Units.mul_inv_cancel_right]
     exact (kr v).1.2
   · intro v
     have e1 : complexCompM v (((a * E⁻¹ : archGroup K n) : (ArchMatrix K n)ˣ) : ArchMatrix K n) =
@@ -137,14 +130,9 @@ theorem exists_mem_archCompact_mul_expG (a : archGroup K n) :
     have e2 : ((Units.map (complexCompM (n := n) v).toMonoidHom (E : (ArchMatrix K n)ˣ) :
         GL (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ) = NormedSpace.exp (kc v).2.1 := by
       show complexCompM v ((E : (ArchMatrix K n)ˣ) : ArchMatrix K n) = _
-      rw [hE, complexCompM_exp]
+      rw [IsExpLieAlgebra.coe_expG _ Y, complexCompM_exp]
       exact congrArg _ (complexCompM_archMatOfComps _ _ v)
-    rw [e1, hc]
-    have e3 : ((kc v).1 : Matrix (Fin n) (Fin n) ℂ) * NormedSpace.exp (kc v).2.1 *
-        (((Units.map (complexCompM (n := n) v).toMonoidHom (E : (ArchMatrix K n)ˣ))⁻¹ :
-          GL (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ) = (kc v).1 := by
-      rw [← e2, Units.mul_inv_cancel_right]
-    rw [e3]
+    rw [e1, hc, ← e2, Units.mul_inv_cancel_right]
     exact (kc v).1.2
 
 end AutomorphicForm

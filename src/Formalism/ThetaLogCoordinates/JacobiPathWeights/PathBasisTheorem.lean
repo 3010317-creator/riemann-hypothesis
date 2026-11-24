@@ -123,8 +123,7 @@ theorem mem_polB {R : Type*} [CommRing R] {N : ℕ} {B : ℕ → ℕ} {f : MvPol
   constructor
   · intro h e he j
     have := h j (mem_support_iff.mp he)
-    rw [weight_indicator_eq_degree] at this
-    exact this
+    rwa [weight_indicator_eq_degree] at this
   · intro h j d hd
     rw [weight_indicator_eq_degree]
     exact h d (mem_support_iff.mpr hd) j
@@ -175,8 +174,7 @@ theorem coeff_key {σ τ L : Type*} [CommRing L] (Lo : Set σ) (T : Finset τ) (
         rw [Finsupp.add_apply, h2] at h3
         omega
     · rfl
-  · intro h
-    exact absurd hβ h
+  · exact fun h => absurd hβ h
 
 variable {k : Type*} [Field k] (isVec : ℕ → Bool) (S : Set ℕ) [DecidablePred (· ∈ S)]
 
@@ -395,8 +393,7 @@ theorem expand (m : X → σ →₀ ℕ) (hm : Function.Injective m) (F : X → 
 
 private theorem sum_smul_sum_smul_eq_sum_mul_smul {S : Type} [CommRing S] (M : Matrix X X S) (e : X → MvPolynomial σ S)
     (g : X → S) : ∑ x, g x • ∑ y, M x y • e y = ∑ y, (∑ x, g x * M x y) • e y := by
-  simp only [Finset.smul_sum, smul_smul, Finset.sum_smul]
-  exact Finset.sum_comm
+  simpa only [Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
 
 theorem rows_indep (m : X → σ →₀ ℕ) (hm : Function.Injective m) (F : X → MvPolynomial σ ℤ)
     (hF : ∀ x, ∀ d ∈ (F x).support, d ∈ Set.range m) (S : Type) [CommRing S]
@@ -444,8 +441,7 @@ theorem basis_of (m : X → σ →₀ ℕ) (hm : Function.Injective m) (F : X �
   set M := (cmat m F).map (Int.castRingHom R) with hM
   have hdet : IsUnit M.det := by
     have h1 := (det_unit m hm F hF hp).map (Int.castRingHom R)
-    rw [RingHom.map_det] at h1
-    exact h1
+    rwa [RingHom.map_det] at h1
   have hNM : M⁻¹ * M = 1 := Matrix.nonsing_inv_mul M hdet
   have hMN : M * M⁻¹ = 1 := Matrix.mul_nonsing_inv M hdet
   have he : LinearIndependent R fun y => (monomial (m y) (1 : R) : MvPolynomial σ R) := by
@@ -542,9 +538,7 @@ theorem path_basis_of_count : LemmaA2indep → PathIdxFinite → PolBRank → Pa
   have hm : Function.Injective m := Subtype.val_injective.comp e.injective
   have hFs : ∀ x : PathIdx n N isVec B, ∀ d ∈ (psiPath ℤ isVec x.1.1 N x.1.2).support,
       d ∈ Set.range m := by
-    intro x d hd
-    have h1 := psi_support hR x.2.1 x.2.2.2.1 d hd
-    exact ⟨e.symm ⟨d, h1⟩, by simp [m]⟩
+    exact fun x d hd => ⟨e.symm ⟨d, (psi_support hR x.2.1 x.2.2.2.1 d hd)⟩, by simp [m]⟩
   have hfun : ∀ (S : Type) [CommRing S], (fun x : PathIdx n N isVec B =>
       MvPolynomial.map (Int.castRingHom S) (psiPath ℤ isVec x.1.1 N x.1.2)) =
       fun x => psiPath S isVec x.1.1 N x.1.2 := fun S _ =>

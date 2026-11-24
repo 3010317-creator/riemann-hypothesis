@@ -160,8 +160,7 @@ theorem isoC_diag (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r)) (c : Fin r) (
     have h := glAct_comm (p := p) LL j c c c' d' y
     have h1 : ¬ c = c' := fun h => hc (h ▸ hc')
     have h2 : ¬ d' = c := fun h => hc (h ▸ hd')
-    rw [ite_eq_right h1, ite_eq_right h2, sub_zero, sub_eq_zero] at h
-    exact h
+    rwa [ite_eq_right h1, ite_eq_right h2, sub_zero, sub_eq_zero] at h
 
 theorem wtSpC_mono (LL : Letters N) (j : ℕ) {Cs Cs' : Finset (Fin r)} (h : Cs ⊆ Cs') (la : Fin r → ℤ) :
     WtSpC p LL j Cs' la ≤ WtSpC p LL j Cs la := by
@@ -200,8 +199,7 @@ theorem fock_comp_right {n : ℕ} (LL : Letters N) (j : ℕ) (e : Fin n ↪o Fin
   rw [fock_sum_right', Finset.sum_eq_single μ]
   · intro ν _ hν
     exact fock_wt_ne LL j e (Ne.symm hν) hx ((GAe p LL j e).isWt_comp ν z)
-  · intro h
-    exact absurd (Finset.mem_insert_self μ S) h
+  · exact fun h => absurd (Finset.mem_insert_self μ S) h
 
 theorem extP_of (hI : IntP) : ExtP := by
   intro p _ N r LL ρ j _ la
@@ -273,8 +271,7 @@ theorem extP_of (hI : IntP) : ExtP := by
         rw [isoC_eq] at hz
         rw [Submodule.mem_comap]
         refine lowIm_le_lowC LL j Cs (comp_mem_lowIm G ?_ hz)
-        intro h
-        exact hmu ((comp_eq_iff Cs mu la).mp h.symm)
+        exact fun h => hmu ((comp_eq_iff Cs mu la).mp h.symm)
       have h3 := hle hx1
       rw [Submodule.mem_comap] at h3
       have h4 : G.comp (la ∘ enumC Cs) x = x :=
@@ -495,8 +492,7 @@ theorem weylInt_of (hNat : InvNat) (hSchur : SchurTrace) : WeylInt := by
     intro z
     obtain ⟨z', hz', hzz⟩ := hle (wl_iso_le_iSup G W la z.2)
     have : z' = z := Subtype.ext hzz
-    rw [← this]
-    exact hz'
+    rwa [← this]
 
   have hLd : DivStable (res G (IsoW G W la) (wl_iso_stable G W la)).E (M.comap (IsoW G W la).subtype.toAddMonoidHom) := by
     intro a b hab j y hy

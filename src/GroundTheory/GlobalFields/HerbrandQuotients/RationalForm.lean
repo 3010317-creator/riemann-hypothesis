@@ -57,12 +57,10 @@ theorem exists_rat_intertwiner {ι J : Type*} [Fintype ι] [DecidableEq ι]
         ext; simp
       have e1 : ∑ k, (c k : ℝ) • ((Bm k).map (Rat.cast : ℚ → ℝ) * (A j).map (Rat.cast : ℚ → ℝ)) =
           P * (A j).map (Rat.cast : ℚ → ℝ) := by
-        rw [hP_eq, Finset.sum_mul]
-        simp only [Matrix.smul_mul]
+        simp only [hP_eq, Finset.sum_mul, Matrix.smul_mul]
       have e2 : ∑ k, (c k : ℝ) • ((A' j).map (Rat.cast : ℚ → ℝ) * (Bm k).map (Rat.cast : ℚ → ℝ)) =
           (A' j).map (Rat.cast : ℚ → ℝ) * P := by
-        rw [hP_eq, Finset.mul_sum]
-        simp only [Matrix.mul_smul]
+        simp only [hP_eq, Finset.mul_sum, Matrix.mul_smul]
       simp only [hsub, hmap, smul_sub, Finset.sum_sub_distrib, e1, e2, h j, sub_self]
     ext a b
     have hab := congrFun (congrFun hsum a) b
@@ -75,48 +73,28 @@ theorem exists_rat_intertwiner {ι J : Type*} [Fintype ι] [DecidableEq ι]
   clear_value Bm
   obtain ⟨Mx, hMx⟩ : ∃ Mx : Matrix ι ι (MvPolynomial κ ℚ),
       Mx = Matrix.of fun a b => ∑ k, MvPolynomial.X k * MvPolynomial.C (Bm k a b) := ⟨_, rfl⟩
-  have hev : ∀ (t : κ → ℝ),
-      (MvPolynomial.aeval t : MvPolynomial κ ℚ →ₐ[ℚ] ℝ).mapMatrix Mx =
-        Matrix.of fun a b => ∑ k, t k * algebraMap ℚ ℝ (Bm k a b) := by
-    intro t
-    ext a b
-    rw [AlgHom.mapMatrix_apply, Matrix.map_apply, Matrix.of_apply]
-
-    rw [hMx, Matrix.of_apply, map_sum]
-    refine Finset.sum_congr rfl fun k _ => ?_
-    rw [map_mul, MvPolynomial.aeval_X, MvPolynomial.aeval_C]
-  have hPof : P = Matrix.of fun a b => ∑ k, (c k : ℝ) * algebraMap ℚ ℝ (Bm k a b) := by
-    refine hP_eq.trans ?_
-    ext a b
-    rw [Matrix.sum_apply, Matrix.of_apply]
-    refine Finset.sum_congr rfl fun k _ => ?_
-    rw [Matrix.smul_apply, Matrix.map_apply, smul_eq_mul, eq_ratCast]
   have hF : Mx.det ≠ 0 := by
     intro h0
     apply hP
-    rw [hPof, ← hev, ← AlgHom.map_det, h0]
+    have hPM : P = (MvPolynomial.aeval fun k => (c k : ℝ) :
+        MvPolynomial κ ℚ →ₐ[ℚ] ℝ).mapMatrix Mx := by
+      ext a b
+      rw [hP_eq]
+      simp only [Matrix.sum_apply, Matrix.smul_apply, Matrix.map_apply, smul_eq_mul,
+        AlgHom.mapMatrix_apply, hMx, Matrix.of_apply, map_sum, map_mul, MvPolynomial.aeval_X,
+        MvPolynomial.aeval_C, eq_ratCast]
+    rw [hPM, ← AlgHom.map_det, h0]
     exact map_zero _
   obtain ⟨q, hq⟩ : ∃ q : κ → ℚ, MvPolynomial.eval q Mx.det ≠ 0 := by
     by_contra! hall
     exact hF (MvPolynomial.funext fun x => by rw [hall x, map_zero])
   refine ⟨∑ k, q k • Bm k, ?_, fun j => ?_⟩
-  · have hQ : ∑ k, q k • Bm k = Matrix.of fun a b => ∑ k, q k * algebraMap ℚ ℚ (Bm k a b) := by
+  · have hQ : (MvPolynomial.eval q).mapMatrix Mx = ∑ k, q k • Bm k := by
       ext a b
-      rw [Matrix.sum_apply, Matrix.of_apply]
-      refine Finset.sum_congr rfl fun k _ => ?_
-      rw [Matrix.smul_apply, smul_eq_mul, Algebra.algebraMap_self, RingHom.id_apply]
-    have hevq : (MvPolynomial.eval q).mapMatrix Mx =
-        Matrix.of fun a b => ∑ k, q k * algebraMap ℚ ℚ (Bm k a b) := by
-      ext a b
-
-      rw [RingHom.mapMatrix_apply, Matrix.map_apply, hMx, Matrix.of_apply, Matrix.of_apply,
-      map_sum]
-      refine Finset.sum_congr rfl fun k _ => ?_
-      rw [map_mul, MvPolynomial.eval_X, MvPolynomial.eval_C, Algebra.algebraMap_self,
-        RingHom.id_apply]
-    have := RingHom.map_det (MvPolynomial.eval q) Mx
-    rw [hevq] at this
-    rw [hQ, ← this]
+      simp only [RingHom.mapMatrix_apply, Matrix.map_apply, hMx, Matrix.of_apply, map_sum,
+        map_mul, MvPolynomial.eval_X, MvPolynomial.eval_C, Matrix.sum_apply, Matrix.smul_apply,
+        smul_eq_mul]
+    rw [← hQ, ← RingHom.map_det]
     exact hq
   · rw [Finset.sum_mul, Finset.mul_sum]
     exact Finset.sum_congr rfl fun k _ => by rw [Matrix.smul_mul, Matrix.mul_smul, hB]

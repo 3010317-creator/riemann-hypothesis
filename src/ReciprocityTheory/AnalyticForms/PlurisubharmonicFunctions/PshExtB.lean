@@ -39,8 +39,7 @@ theorem psh_line {V : Set (Fin D → ℂ)} {φ : (Fin D → ℂ) → ℝ} (h : I
       ext i
       simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
       ring
-    rw [e] at h2
-    exact h2
+    rwa [e] at h2
   obtain ⟨hi, hle⟩ := h.2 (z + a • w) ((s : ℂ) • w) hU
   refine ⟨?_, ?_⟩
   · unfold CircleIntegrable at hi ⊢
@@ -108,8 +107,7 @@ theorem slice_step (hU1 : U ⊆ ball 0 1) (hc : ContinuousOn u (U \ coordDiv S))
   have hx1 : ∀ i, ‖x i‖ < 1 := by
     have h0 := hU1 (hdisc 0 (Metric.mem_closedBall_self hr.le))
     rw [zero_smul, add_zero, mem_ball, dist_zero_right] at h0
-    intro i
-    exact lt_of_le_of_lt (norm_le_pi_norm x i) h0
+    exact fun i => lt_of_le_of_lt (norm_le_pi_norm x i) h0
   obtain ⟨a0, ha0def⟩ : ∃ a0 : ℝ, a0 = ∑ i ∈ S.erase j, log ‖x i‖⁻¹ := ⟨_, rfl⟩
   have ha0 : 0 ≤ a0 := by
     rw [ha0def]
@@ -165,14 +163,12 @@ theorem slice_step (hU1 : U ⊆ ball 0 1) (hc : ContinuousOn u (U \ coordDiv S))
     exact hgood ζ (ball_subset_closedBall h1.1) (fun h => h1.2 (by simp [h]))
   have hF0 : (0 : ℂ) ∉ ({-x j} : Finset ℂ) := by
     rw [Finset.mem_singleton]
-    intro h
-    exact hxi j hj (by linear_combination h)
+    exact fun h => hxi j hj (by linear_combination h)
   have hFr : ∀ f ∈ ({-x j} : Finset ℂ), f ∈ ball (0 : ℂ) r := by
     intro f hf
     rw [Finset.mem_singleton] at hf
     subst hf
-    rw [mem_ball, dist_zero_right, norm_neg]
-    exact hxj
+    rwa [mem_ball, dist_zero_right, norm_neg]
   have hmean := smg2 hr hF0 hFr hcont hgrow hsub
   have hcs : ContinuousOn (fun ζ : ℂ => u (x + ζ • ej j)) (sphere 0 r) := by
     refine hcont.mono (fun ζ hζ => ⟨sphere_subset_closedBall hζ, fun h => ?_⟩)
@@ -310,8 +306,7 @@ theorem local_bound (hU : IsOpen U) (hU1 : U ⊆ ball 0 1) (hc : ContinuousOn u 
   have hF : ∀ i ∈ S.filter (fun i => p i = 0), ‖z i‖ < r / 2 := by
     intro i hi
     have h1 := hzb i
-    rw [(Finset.mem_filter.1 hi).2, dist_zero_right] at h1
-    exact h1
+    rwa [(Finset.mem_filter.1 hi).2, dist_zero_right] at h1
   obtain ⟨y, hyL, hy⟩ := key (S.filter (fun i => p i = 0)) (fun i hi => Finset.mem_filter.1 hi) z hzS hd hm hF
   exact hy.trans (hMb ⟨y, hyL, rfl⟩)
 
@@ -370,8 +365,7 @@ theorem avg_lim {E X : Type*} [TopologicalSpace E] {ψ : E → ℝ} {U K : Set E
     intro x hxK θ
     rw [abs_le]
     have h1 := abs_le.1 (bnd _ (hxK θ))
-    have h2 := abs_le.1 (bnd _ (hP0K θ))
-    exact ⟨le_trans h1.1 (le_max_left _ _), max_le h1.2 h2.2⟩
+    exact ⟨le_trans h1.1 (le_max_left _ _), max_le h1.2 (abs_le.1 (bnd _ (hP0K θ))).2⟩
   have hlimG : ∀ θ, Tendsto (fun x => max (ψ (P x θ)) (ψ (P0 θ))) l (𝓝 (ψ (P0 θ))) := by
     intro θ
     rw [tendsto_order]

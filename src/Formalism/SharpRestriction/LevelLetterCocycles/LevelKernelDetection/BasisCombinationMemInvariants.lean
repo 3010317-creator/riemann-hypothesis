@@ -126,8 +126,7 @@ theorem isUnit_of_unit_coefficient (hOloc : IsLocalRing O)
     have h1 := congrArg (PowerSeries.coeff k₀) hU
     rw [PowerSeries.coeff_X_pow_mul', ite_eq_left le_rfl, Nat.sub_self, map_sub, hcL,
       ite_eq_right (lt_irrefl _), sub_zero] at h1
-    rw [← h1]
-    exact hu₀
+    rwa [← h1]
   let δf : LetA O n := fun j => if j = i then 1 else PowerSeries.X ^ k₀
   let uf : LetA O n := fun j => if j = i then U else 1
   let γf : LetA O n := fun j => if j = i then PowerSeries.X ^ k₀ * U else 1
@@ -368,8 +367,7 @@ theorem letterRing_val_surjective (i : ZMod n) (ε : W.EE) (hε : ε ∈ EEl W i
   refine ⟨Ideal.Quotient.mk _ ⟨ε, hε.2⟩, ?_⟩
   rw [letterRing_val_mk]
   have h1 := hε.1
-  rw [idempotent_smul_eq_mul] at h1
-  exact h1
+  rwa [idempotent_smul_eq_mul] at h1
 
 end Formalism.MainNotions.N.Ln03.Pf
 end -- clump:auto
@@ -412,9 +410,7 @@ theorem exists_EE_basis_of_lattice (hcr : IsCrys PD T.ρ) (b : Fin r → W.DD T)
     intro g hg j
     have h0 : (0 : W.DD T) = ∑ j, g j • b j := by rw [← hv, hg]; rfl
     obtain ⟨a, -, ha⟩ := huniq 0 (W.N T).zero_mem
-    have e1 := ha g h0
-    have e2 := ha 0 (by simp)
-    exact congrFun (e1.trans e2.symm) j
+    exact congrFun ((ha g h0).trans (ha 0 (by simp)).symm) j
   have hsp : ⊤ ≤ Submodule.span (LetA O n) (Set.range v) := by
     rintro ⟨x, hx⟩ -
     obtain ⟨a, ha, -⟩ := huniq x hx
@@ -502,8 +498,7 @@ theorem letter_invariants_basis (i : ZMod n) {ι : Type} [Fintype ι]
   have hlc : ∀ c : ι → W.EE, lc (fun t => ∑ l, letterRingVal W i (C t l) • B l) c =
       ∑ l, (∑ t, c t * letterRingVal W i (C t l)) • B l := by
     intro c
-    simp only [lc, Finset.smul_sum, smul_smul, Finset.sum_smul]
-    exact Finset.sum_comm
+    simpa only [lc, Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
   refine ⟨fun c hc => ?_, fun c c' hc hc' h => ?_, fun x hx => ?_⟩
   · rw [hlc]
     exact basis_combination_mem_invariants B hB i _ fun l =>
@@ -516,8 +511,7 @@ theorem letter_invariants_basis (i : ZMod n) {ι : Type} [Fintype ι]
       funext l
       apply letterRing_val_injective i
       rw [← letterRing_sum_mul, ← letterRing_sum_mul]
-      simp only [ha, ha']
-      exact congrFun h1 l
+      simpa only [ha, ha'] using congrFun h1 l
     have h3 : a = a' := by
       have h4 := Fintype.linearIndependent_iff.1 C.linearIndependent (a - a') (by
         simp only [Pi.sub_apply, sub_smul, Finset.sum_sub_distrib, h2, sub_self])

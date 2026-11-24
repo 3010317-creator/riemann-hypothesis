@@ -84,8 +84,7 @@ theorem contDiffAt_mul' {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] {�
   have hg' : ∀ i j, ContDiffAt ℝ k (fun y => g y i j) x := fun i j =>
     contDiffAt_pi.1 (contDiffAt_pi.1 hg i) j
   refine contDiffAt_pi.2 fun i => contDiffAt_pi.2 fun j => ?_
-  simp only [Matrix.mul_apply]
-  exact ContDiffAt.sum fun l _ => (hf' i l).mul (hg' l j)
+  simpa only [Matrix.mul_apply] using ContDiffAt.sum fun l _ => (hf' i l).mul (hg' l j)
 
 theorem contDiff_mul' {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] {ι : Type} [Fintype ι]
     {f g : E → Matrix ι ι ℂ} {k : WithTop ℕ∞} (hf : ContDiff ℝ k f) (hg : ContDiff ℝ k g) :
@@ -119,10 +118,8 @@ theorem analyticAt_adj {ι : Type} [Fintype ι] [DecidableEq ι] (M0 : Matrix ι
   refine analyticAt_det_of_analyticAt_entries M0 (fun M => M.updateRow j (Pi.single i 1)) fun a b => ?_
   by_cases h : a = j
   · subst h
-    simp only [Matrix.updateRow_self]
-    exact analyticAt_const
-  · simp only [Matrix.updateRow_ne h]
-    exact hasDerivAt_exp_smul_apply_zero M0 a b
+    simpa only [Matrix.updateRow_self] using analyticAt_const
+  · simpa only [Matrix.updateRow_ne h] using hasDerivAt_exp_smul_apply_zero M0 a b
 
 theorem contDiffAt_inv {ι : Type} [Fintype ι] [DecidableEq ι] (M0 : Matrix ι ι ℂ) (h : M0.det ≠ 0)
     {k : WithTop ℕ∞} : ContDiffAt ℝ k (fun M : Matrix ι ι ℂ => M⁻¹) M0 := by

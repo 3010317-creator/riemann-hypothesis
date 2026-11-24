@@ -139,8 +139,7 @@ theorem core (m : ℕ) : ∃ om omS : Fin (m + 1) → WW p,
   have hBshift : ∀ i s, sig2 p (B i s) = B (i + 1) s := by
     intro i s
     have h := congrArg (fun M : Matrix (Fin (m + 1)) (Fin (m + 1)) (WW p) => M (i + 1) s) hCB
-    simp only [hCd, Matrix.of_apply, add_sub_cancel_right] at h
-    exact h
+    simpa only [hCd, Matrix.of_apply, add_sub_cancel_right] using h
   have hBk : ∀ (k : ℕ) (s : Fin (m + 1)), (sig2 p)^[k] (B 0 s) = B (g k) s := by
     intro k s
     induction k with

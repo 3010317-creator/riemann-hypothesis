@@ -70,8 +70,7 @@ theorem eU_apply (a : S) (i j : Fin 2) (x y : Ix S) :
       by_cases hb : b = a
       · subst hb
         simp [h2]
-      · simp only [Function.update_apply, ite_eq_right hb]
-        exact (h3 b hb).symm
+      · simpa only [Function.update_apply, ite_eq_right hb] using (h3 b hb).symm
     · rintro ⟨h1, rfl⟩
       exact ⟨h1, by simp, fun b hb => by simp [hb]⟩
   simp only [eU, Matrix.of_apply, key]
@@ -213,8 +212,7 @@ namespace Formalism.FourierDecayAlt.P
 open Formalism.FourierDecayAlt.Wd
 
 theorem word_free_of_unused_positions : Formalism.FourierDecayAlt.Wd.WordFree := by
-  intro K A S _ _ _ _ _ _ _ _ QQ w c hc
-  exact Formalism.FourierDecayAlt.P.Wd5.word_free QQ w c hc
+  exact fun K A S _ _ _ _ _ _ _ _ QQ w c hc => Formalism.FourierDecayAlt.P.Wd5.word_free QQ w c hc
 
 theorem word_module_structure : Formalism.FourierDecayAlt.Wd.WordModule := Formalism.FourierDecayAlt.P.Wd5.wordModule_of initial_module_structure letter_module_plus letter_module_minus
   word_free_of_unused_positions

@@ -63,7 +63,6 @@ theorem map_genEval_genericPoint {L : Type*} [Field L] [Algebra F L] [DecidableE
 
 theorem isGenPt_map_genericPoint {L : Type*} [Field L] [Algebra F L] [DecidableEq L]
     (σ : E.toAffine.FunctionField →ₐ[F] L) : IsGenPt E (Point.map σ (genericPoint E)) := by
-  show Transcendental F (σ (genX E))
   exact fun h => transcendental_genX E ((isAlgebraic_algHom_iff σ σ.toRingHom.injective).mp h)
 
 theorem eq_genEval {L : Type*} [Field L] [Algebra F L] [DecidableEq L]
@@ -129,8 +128,7 @@ theorem respectsAdd_iff (Q : (E'.baseChange E.toAffine.FunctionField).toAffine.P
         | some u₃ v₃ k₃ => exact hQ L u₁ v₁ u₂ v₂ u₃ v₃ k₁ k₂ k₃ h₁ h₂ h₃ hs
   · intro hQ L _ _ _ u₁ v₁ u₂ v₂ u₃ v₃ k₁ k₂ k₃ t₁ t₂ t₃ hs
     have key := hQ L (.some u₁ v₁ k₁) (.some u₂ v₂ k₂) t₁ t₂ (hs ▸ t₃)
-    rw [genEval_congr E hs _ t₃] at key
-    exact key
+    rwa [genEval_congr E hs _ t₃] at key
 
 omit [E.IsElliptic] [E'.IsElliptic] in
 theorem respectsAdd_zero : RespectsAdd E E' 0 := by
@@ -299,8 +297,7 @@ theorem map_constMap (E : WeierstrassCurve F) {L L' : Type*} [Field L] [Algebra 
   | zero => rfl
   | some x y h =>
     show Point.some _ _ _ = Point.some _ _ _
-    simp only [Point.some.injEq]
-    exact ⟨σ.commutes x, σ.commutes y⟩
+    simpa only [Point.some.injEq] using ⟨σ.commutes x, σ.commutes y⟩
 
 theorem exists_map_eq_of_not_isGenPt (E : WeierstrassCurve F) {L : Type*} [Field L] [Algebra F L]
     [DecidableEq L] (P : (E.baseChange L).toAffine.Point) (hP : ¬ IsGenPt E P) :
@@ -333,8 +330,7 @@ theorem exists_map_eq_of_not_isGenPt (E : WeierstrassCurve F) {L : Type*} [Field
         (algebraMap F L).injective c d).mp h'
     refine ⟨.some c d hcd, ?_⟩
     show Point.some _ _ _ = Point.some _ _ _
-    simp only [Point.some.injEq]
-    exact ⟨hc, hd⟩
+    simpa only [Point.some.injEq] using ⟨hc, hd⟩
 
 variable {E E' E'' : WeierstrassCurve F} [E.IsElliptic] [E'.IsElliptic] [E''.IsElliptic]
 

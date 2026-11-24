@@ -76,8 +76,7 @@ local notation3 "K⁺" => maximalRealSubfield K
 
 theorem cases (g : K ≃ₐ[K⁺] K) : g = 1 ∨ g = IsCMField.complexConj K := by
   classical
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have h2 : Nat.card (K ≃ₐ[K⁺] K) = 2 := by
     rw [IsGalois.card_aut_eq_finrank]
     exact Algebra.IsQuadraticExtension.finrank_eq_two _ _
@@ -160,8 +159,7 @@ theorem ncard_eq_two_iff
         apply hcP
         rw [← hg1]
         exact (hmem g).mp hg
-    rw [hb, Subgroup.card_bot, mul_one] at h1
-    exact h1
+    rwa [hb, Subgroup.card_bot, mul_one] at h1
 
 end CM
 

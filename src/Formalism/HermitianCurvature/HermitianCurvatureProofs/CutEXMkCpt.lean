@@ -151,10 +151,8 @@ theorem mkCpt : MkCpt := by
     · intro q hq
       obtain ⟨h1, h2⟩ := hKU hq
       refine ⟨h1, ?_⟩
-      rw [hz, hz', gf_eq_ggl hρ]
-      exact h2
-    · intro q hG hq
-      exact hsupp q ((glev_last_iff hρ _).2 hG) hq
+      rwa [hz, hz', gf_eq_ggl hρ]
+    · exact fun q hG hq => hsupp q ((glev_last_iff hρ _).2 hG) hq
   refine ⟨cptCoef_castF e p.T.base _ hCpt,
     (fun q : (Fin P.r → Fin P.r → ℂ) × Mt P.k (P.r - P.r) => (Matrix.of q.1).det) '' K,
     hK.image (Continuous.matrix_det continuous_fst), ?_, ?_⟩
@@ -178,8 +176,7 @@ theorem mkCpt : MkCpt := by
     refine ⟨_, hK', ?_⟩
     have hpsi : PBI.psiC (PBI.chart (Matrix.of.symm (D.castM e g))) = D.castM e g := by
       unfold PBI.psiC PBI.chart
-      simp only [Equiv.apply_symm_apply]
-      exact heq.symm
+      simpa only [Equiv.apply_symm_apply] using heq.symm
     have e1 := PBI.djU_psiC (PBI.chart (Matrix.of.symm (D.castM e g)))
     rw [hpsi] at e1
     show (Matrix.of (PBI.chart (Matrix.of.symm (D.castM e g))).2.1).det = _

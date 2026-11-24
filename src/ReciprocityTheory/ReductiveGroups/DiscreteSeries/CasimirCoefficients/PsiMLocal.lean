@@ -46,8 +46,7 @@ lemma lcB_path (z Y : Matrix (Fin n) (Fin n) ℂ) :
   have h1 := hasDerivAt_exp_smul_const Y ((0 : ℝ) : ℂ)
   have hof : HasDerivAt (fun y : ℝ => (y : ℂ)) 1 (0 : ℝ) := Complex.ofRealCLM.hasDerivAt
   have h2 := HasDerivAt.scomp (h := fun y : ℝ => (y : ℂ)) (0 : ℝ) h1 hof
-  have h3 := h2.const_mul z
-  exact h3.congr_deriv (by simp)
+  exact (h2.const_mul z).congr_deriv (by simp)
 
 end PathL
 
@@ -95,8 +94,7 @@ lemma lcB_hasDerivAt (T : KType ε Λ) (μ : Fin n → ℤ) {U : Set (Matrix (Fi
       simp only [KType.op]
       rw [hs, map_mul]
       rfl
-    rw [he]
-    exact h6
+    rwa [he]
   have hprod := ho1.mul hq
   have hzero : T.op (γ t) * T.dτ Y * psM T μ (A * NormedSpace.exp ((t : ℂ) • Y)) +
       T.op (γ t) * -(T.dτ Y * psM T μ z) = 0 := by
@@ -227,8 +225,7 @@ theorem psiM_local (T : KType ε (lowK ε lam)) (μ : Fin n → ℤ) (hμ : IsMu
         (𝓝 (g₀ * NormedSpace.exp (-PolarDecomposition.polar_L g₀))) :=
       (tendsto_id.mono_left nhdsWithin_le_nhds).mul hEt
     have hKfun : K = fun g => g * NormedSpace.exp (-PolarDecomposition.polar_L g) := funext hK
-    rw [hKfun]
-    exact h
+    rwa [hKfun]
   have hFt : Tendsto (fun g => (K g)ᴴ * K g₀) (𝓝[{g | inUJ ε g}] g₀) (𝓝 1) := by
     have h : Tendsto (fun g => (K g)ᴴ * K g₀) (𝓝[{g | inUJ ε g}] g₀) (𝓝 ((K g₀)ᴴ * K g₀)) :=
       hKt.star.mul tendsto_const_nhds
@@ -292,8 +289,7 @@ theorem psiM_local (T : KType ε (lowK ε lam)) (μ : Fin n → ℤ) (hμ : IsMu
     have hc := lcB_const T μ hUo hdiff hid hY γ hγ hmul
       (NormedSpace.exp (-PolarDecomposition.polar_L g)) hq2
     have hγ1 : toMK (γ 1) = (K g)ᴴ * K g₀ := by
-      rw [hγ 1, Complex.ofReal_one, one_smul]
-      exact hYe
+      rwa [hγ 1, Complex.ofReal_one, one_smul]
     have hkA : toMK (k₀ * (γ 1)⁻¹) = K g := by
       rw [toMK_mul', toMK_inv, hγ1, hk₀, Matrix.conjTranspose_mul,
         Matrix.conjTranspose_conjTranspose, ← Matrix.mul_assoc, (hKun _ (hkmem g₀ hg₀)).2,

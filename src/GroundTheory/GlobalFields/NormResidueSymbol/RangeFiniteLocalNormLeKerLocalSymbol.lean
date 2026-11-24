@@ -203,19 +203,9 @@ theorem symbolAt_eq (w w' : PlacesOver L v) : symbolAt L v w = symbolAt L v w' :
       (show σ * d * σ⁻¹ = d by rw [mul_comm' σ d, mul_inv_cancel_right])
     simpa only [AlgEquiv.mul_apply] using this
   apply (algebraMap L (w'.1.adicCompletion L)).injective
-  calc algebraMap L (w'.1.adicCompletion L) (d l)
-      = algebraMap L (w'.1.adicCompletion L) (σ (d (σ⁻¹ l))) := by rw [hd]
-    _ = s (algebraMap L (w.1.adicCompletion L) (d (σ⁻¹ l))) :=
-        (galEquiv_algebraMap v σ w.1 w'.1 h' _).symm
-    _ = s (a (algebraMap L (w.1.adicCompletion L) (σ⁻¹ l))) := by
-        rw [hd_def, algebraMap_symbolAt_apply]
-    _ = a' (s (algebraMap L (w.1.adicCompletion L) (σ⁻¹ l))) := (hs _).symm
-    _ = a' (algebraMap L (w'.1.adicCompletion L) (σ (σ⁻¹ l))) := by
-        rw [hs_def, galEquiv_algebraMap]
-    _ = a' (algebraMap L (w'.1.adicCompletion L) l) := by
-        rw [← AlgEquiv.mul_apply, mul_inv_cancel, AlgEquiv.one_apply]
-    _ = algebraMap L (w'.1.adicCompletion L) (symbolAt L v w' x l) :=
-        (algebraMap_symbolAt_apply L v w' x l).symm
+  rw [← hd, ← galEquiv_algebraMap v σ w.1 w'.1 h', hd_def,
+    algebraMap_symbolAt_apply L v w x (σ⁻¹ l), ← hs, galEquiv_algebraMap v σ w.1 w'.1 h',
+    ← AlgEquiv.mul_apply, mul_inv_cancel, AlgEquiv.one_apply, algebraMap_symbolAt_apply L v w' x l]
 
 def localSymbol : (v.adicCompletion K)ˣ →* (L ≃ₐ[K] L) :=
   symbolAt L v (nonempty_placesOver L v).some

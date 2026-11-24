@@ -69,8 +69,7 @@ theorem kBasisIn_map {K : Type} [Field K] [NumberField K] {r k : ℕ}
     exact h2.map' _ (LinearMap.ker_eq_bot.2 hinj)
   · rintro x ⟨y, hy, rfl⟩
     have h4 := Submodule.mem_map_of_mem (f := Matrix.mulVecLin Q) (h3 y hy)
-    rw [Submodule.map_span, ← Set.range_comp] at h4
-    exact h4
+    rwa [Submodule.map_span, ← Set.range_comp] at h4
 
 def formM {K : Type} [Field K] {r : ℕ} (c : K →+* K) (M : Matrix (Fin r) (Fin r) K)
     (x y : Fin r → K) : K :=

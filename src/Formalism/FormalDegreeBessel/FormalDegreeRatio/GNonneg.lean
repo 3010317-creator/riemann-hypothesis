@@ -65,10 +65,8 @@ namespace Formalism.QuantumDeterminants
 lemma gn_card_le_of_ker {S : Type*} [Fintype S] {m : ℕ} (f : (S → ℂ) →ₗ[ℂ] (Fin m → ℂ))
     (hf : ∀ v, f v = 0 → v = 0) : Fintype.card S ≤ m := by
   have hinj : Function.Injective f := by
-    intro a b hab
-    exact sub_eq_zero.mp (hf (a - b) (by rw [map_sub, hab, sub_self]))
-  have h := LinearMap.finrank_le_finrank_of_injective hinj
-  simpa [Module.finrank_fintype_fun_eq_card] using h
+    exact fun a b hab => sub_eq_zero.mp (hf (a - b) (by rw [map_sub, hab, sub_self]))
+  simpa [Module.finrank_fintype_fun_eq_card] using LinearMap.finrank_le_finrank_of_injective hinj
 
 def gnExt {ι : Type*} [DecidableEq ι] (p : ι → Prop) : Matrix ι {i // p i} ℂ :=
   fun i j => if i = j.val then 1 else 0
@@ -83,8 +81,7 @@ lemma gnExt_mulVec {ι : Type*} [Fintype ι] [DecidableEq ι] (p : ι → Prop) 
     · intro b _ hb
       have hne : i ≠ b.val := fun e => hb (Subtype.ext e.symm)
       simp [hne]
-    · intro h'
-      exact absurd (Finset.mem_univ _) h'
+    · exact fun h' => absurd (Finset.mem_univ _) h'
   · apply Finset.sum_eq_zero
     intro j _
     have hne : i ≠ j.val := fun e => h (by rw [e]; exact j.property)
@@ -137,8 +134,7 @@ lemma gn_Hpk_mulVec (k r : ℕ) (y : Fin (2 * r + k + 1) → ℂ) (i : Fin (2 * 
         simp only [Hpk]
         split_ifs <;> first | (simp; done) | omega
       rw [e, zero_mul]
-    · intro hb
-      exact absurd (Finset.mem_univ _) hb
+    · exact fun hb => absurd (Finset.mem_univ _) hb
   · rw [dite_eq_right h, Finset.sum_eq_single i]
     · have e : Hpk k r i i = if i.val = r + k then -1 else 1 := by
         simp only [Hpk, and_true]
@@ -151,8 +147,7 @@ lemma gn_Hpk_mulVec (k r : ℕ) (y : Fin (2 * r + k + 1) → ℂ) (i : Fin (2 * 
         simp only [Hpk]
         split_ifs <;> first | (simp; done) | omega
       rw [e, zero_mul]
-    · intro hb
-      exact absurd (Finset.mem_univ _) hb
+    · exact fun hb => absurd (Finset.mem_univ _) hb
 
 lemma gn_Hpk_mulVec_lo (k r : ℕ) (y : Fin (2 * r + k + 1) → ℂ) (i : Fin (2 * r + k + 1))
     (hi : i.val < r) : (Hpk k r *ᵥ y) i = y ⟨2 * r + k - i.val, by omega⟩ := by
@@ -177,8 +172,7 @@ lemma gn_herm_nonneg (k r : ℕ) (y : Fin (2 * r + k + 1) → ℂ)
         have e1 : eI k r ⟨2 * r + k - i.val, ha⟩ = ⟨2 * r + k - i.val, by omega⟩ := Fin.ext rfl
         have e2 : esI k r ⟨2 * r + k - i.val, ha⟩ = i :=
           Fin.ext (by show 2 * r + k - (2 * r + k - i.val) = i.val; omega)
-        rw [e1, e2] at e
-        exact e
+        rwa [e1, e2] at e
     · have ei : i = ⟨r + k, by omega⟩ := Fin.ext hk
       rw [ei, h2, neg_zero]
     · rfl
@@ -234,8 +228,7 @@ lemma gn_herm_bvec_right {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (v : Fin m �
   · simp
   · intro b _ hb
     simp [hb]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 lemma gn_gram_ff (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ)
     (g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (hz : inWb k r z) (a b : Fin (r + 1)) :
@@ -280,16 +273,14 @@ lemma gn_quad_inl (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ)
         rw [gn_gram_ff k r z z' g hz, ite_eq_right, zero_mul]
         rintro ⟨_, h2⟩
         exact hb (Fin.ext h2)
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     · intro a _ ha
       rw [Finset.sum_eq_zero, mul_zero]
       intro b _
       rw [gn_gram_ff k r z z' g hz, ite_eq_right, zero_mul]
       rintro ⟨h1, _⟩
       exact ha (Fin.ext h1)
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   have h1 : star (c (Sum.inl (Fin.last r))) * c (Sum.inl (Fin.last r)) =
       (Complex.normSq (c (Sum.inl (Fin.last r))) : ℂ) := by
     rw [Complex.normSq_eq_conj_mul_self]
@@ -303,8 +294,7 @@ lemma gn_sum_neg {ι : Type*} [Fintype ι] [DecidableEq ι] (lam : ι → ℝ)
     (v : {i // lam i < 0} → ℂ) (hv : v ≠ 0) :
     ∑ i, lam i * Complex.normSq ((gnExt (fun i => lam i < 0) *ᵥ v) i) < 0 := by
   obtain ⟨j, hj⟩ : ∃ j, v j ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hv (funext hcon)
   calc ∑ i, lam i * Complex.normSq ((gnExt (fun i => lam i < 0) *ᵥ v) i) < ∑ _i : ι, (0 : ℝ) := by
         apply Finset.sum_lt_sum
@@ -325,8 +315,7 @@ lemma gn_sum_pos {ι : Type*} [Fintype ι] [DecidableEq ι] (lam : ι → ℝ)
     (v : {i // 0 < lam i} → ℂ) (hv : v ≠ 0) :
     0 < ∑ i, lam i * Complex.normSq ((gnExt (fun i => 0 < lam i) *ᵥ v) i) := by
   obtain ⟨j, hj⟩ : ∃ j, v j ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hv (funext hcon)
   calc (0 : ℝ) = ∑ _i : ι, (0 : ℝ) := by simp
     _ < ∑ i, lam i * Complex.normSq ((gnExt (fun i => 0 < lam i) *ᵥ v) i) := by
@@ -420,8 +409,7 @@ theorem gNonneg_of (h : GGram) : GNonneg := by
         constructor
         · intro h
           linarith
-        · intro h
-          exact lt_of_le_of_ne (not_lt.mp h) (Ne.symm (h0 i))
+        · exact fun h => lt_of_le_of_ne (not_lt.mp h) (Ne.symm (h0 i))
       rw [this, Finset.card_filter_add_card_filter_not]
       simp
       omega

@@ -90,32 +90,22 @@ theorem le_gaussNormOf_mul (hna : IsNonarchimedean w) {f g : MvPolynomial ι R} 
   let _ : LinearOrder ι := linearOrderOfSTO WellOrderingRel
   have hNf := gaussNormOf_pos w hf
   have hNg := gaussNormOf_pos w hg
-  obtain ⟨i, hi, hmin_i⟩ :=
-    (f.support.filter fun a => w (f.coeff a) = gaussNormOf w f).exists_min_image toLex (by
-      obtain ⟨m, hm, h⟩ := exists_gaussNormOf_eq w hf
-      exact ⟨m, Finset.mem_filter.mpr ⟨hm, h.symm⟩⟩)
-  obtain ⟨j, hj, hmin_j⟩ :=
-    (g.support.filter fun a => w (g.coeff a) = gaussNormOf w g).exists_min_image toLex (by
-      obtain ⟨m, hm, h⟩ := exists_gaussNormOf_eq w hg
-      exact ⟨m, Finset.mem_filter.mpr ⟨hm, h.symm⟩⟩)
-  have hi' : w (f.coeff i) = gaussNormOf w f := (Finset.mem_filter.mp hi).2
-  have hj' : w (g.coeff j) = gaussNormOf w g := (Finset.mem_filter.mp hj).2
-  have ltf : ∀ a, toLex a < toLex i → w (f.coeff a) < gaussNormOf w f := by
-    intro a ha
-    refine lt_of_le_of_ne (le_gaussNormOf w f a) fun h => ?_
-    have ha' : a ∈ f.support.filter fun a => w (f.coeff a) = gaussNormOf w f := by
+  have aux : ∀ q : MvPolynomial ι R, q ≠ 0 → ∃ i, w (q.coeff i) = gaussNormOf w q ∧
+      ∀ a, toLex a < toLex i → w (q.coeff a) < gaussNormOf w q := by
+    intro q hq
+    obtain ⟨i, hi, hmin⟩ :=
+      (q.support.filter fun a => w (q.coeff a) = gaussNormOf w q).exists_min_image toLex (by
+        obtain ⟨m, hm, h⟩ := exists_gaussNormOf_eq w hq
+        exact ⟨m, Finset.mem_filter.mpr ⟨hm, h.symm⟩⟩)
+    refine ⟨i, (Finset.mem_filter.mp hi).2, fun a ha => ?_⟩
+    refine lt_of_le_of_ne (le_gaussNormOf w q a) fun h => ?_
+    have ha' : a ∈ q.support.filter fun a => w (q.coeff a) = gaussNormOf w q := by
       refine Finset.mem_filter.mpr ⟨mem_support_iff.mpr fun h0 => ?_, h⟩
       rw [h0, map_zero] at h
-      exact hNf.ne h
-    exact absurd (hmin_i a ha') (not_le.mpr ha)
-  have ltg : ∀ a, toLex a < toLex j → w (g.coeff a) < gaussNormOf w g := by
-    intro a ha
-    refine lt_of_le_of_ne (le_gaussNormOf w g a) fun h => ?_
-    have ha' : a ∈ g.support.filter fun a => w (g.coeff a) = gaussNormOf w g := by
-      refine Finset.mem_filter.mpr ⟨mem_support_iff.mpr fun h0 => ?_, h⟩
-      rw [h0, map_zero] at h
-      exact hNg.ne h
-    exact absurd (hmin_j a ha') (not_le.mpr ha)
+      exact (gaussNormOf_pos w hq).ne h
+    exact absurd (hmin a ha') (not_le.mpr ha)
+  obtain ⟨i, hi', ltf⟩ := aux f hf
+  obtain ⟨j, hj', ltg⟩ := aux g hg
   have key : w ((f * g).coeff (i + j)) = gaussNormOf w f * gaussNormOf w g := by
     rw [coeff_mul]
     have hk : (i, j) ∈ Finset.HasAntidiagonal.antidiagonal (i + j) :=
@@ -125,25 +115,20 @@ theorem le_gaussNormOf_mul (hna : IsNonarchimedean w) {f g : MvPolynomial ι R} 
     rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
     rw [map_mul, map_mul, hi', hj']
     rcases lt_trichotomy (toLex p.1) (toLex i) with h | h | h
-    · calc w (f.coeff p.1) * w (g.coeff p.2) ≤ w (f.coeff p.1) * gaussNormOf w g :=
+    · calc _ ≤ w (f.coeff p.1) * gaussNormOf w g :=
             mul_le_mul_of_nonneg_left (le_gaussNormOf w g _) (w.nonneg _)
-        _ < gaussNormOf w f * gaussNormOf w g := mul_lt_mul_of_pos_right (ltf _ h) hNg
+        _ < _ := mul_lt_mul_of_pos_right (ltf _ h) hNg
     · have h1 : p.1 = i := toLex.injective h
-      have h2 : p.2 = j := by
-        rw [h1] at hp
-        exact add_left_cancel hp
-      exact absurd (Prod.ext h1 h2) hne
+      rw [h1] at hp
+      exact absurd (Prod.ext h1 (add_left_cancel hp)) hne
     · have h2 : toLex p.2 < toLex j := by
         by_contra hc
-        rw [not_lt] at hc
-        have hlt : toLex i + toLex j < toLex p.1 + toLex p.2 := add_lt_add_of_lt_of_le h hc
-        have e : toLex p.1 + toLex p.2 = toLex i + toLex j := by
-          rw [← toLex_add, ← toLex_add, hp]
-        rw [e] at hlt
-        exact lt_irrefl _ hlt
-      calc w (f.coeff p.1) * w (g.coeff p.2) ≤ gaussNormOf w f * w (g.coeff p.2) :=
+        have := add_lt_add_of_lt_of_le h (not_lt.mp hc)
+        rw [← toLex_add, ← toLex_add, hp] at this
+        exact lt_irrefl _ this
+      calc _ ≤ gaussNormOf w f * w (g.coeff p.2) :=
             mul_le_mul_of_nonneg_right (le_gaussNormOf w f _) (w.nonneg _)
-        _ < gaussNormOf w f * gaussNormOf w g := mul_lt_mul_of_pos_left (ltg _ h2) hNf
+        _ < _ := mul_lt_mul_of_pos_left (ltg _ h2) hNf
   rw [← key]
   exact le_gaussNormOf w _ _
 

@@ -73,8 +73,7 @@ theorem dual_weyl_action_mul : Formalism.UG.DwActMul := by
   refine ⟨?_, ?_⟩
   · simp only [Formalism.UG.dwAct]
     rw [mul_inv_rev, Units.val_mul, wact_rowAct_mul]
-  · simp only [Formalism.UG.dwAct, inv_one, Units.val_one]
-    exact wact_rowAct_one R r n
+  · simpa only [Formalism.UG.dwAct, inv_one, Units.val_one] using wact_rowAct_one R r n
 
 private theorem isWeightedHomogeneous_pow' {σ R M : Type*} [CommRing R] [AddCommMonoid M] {w : σ → M}
     {φ : MvPolynomial σ R} {m : M} (h : IsWeightedHomogeneous w φ m) (k : ℕ) :
@@ -125,8 +124,7 @@ theorem dual_weyl_module_stable : Formalism.UG.DwStable := by
     rw [mem_weightedHomogeneousSubmodule]
     have h1 := (isWeightedHomogeneous_C (Formalism.GradedWeylDivisibility.colW r n) (M v.1 b)).mul
       (isWeightedHomogeneous_X R (Formalism.GradedWeylDivisibility.colW r n) (b, v.2))
-    rw [zero_add] at h1
-    exact h1
+    rwa [zero_add] at h1
   · simp only [Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.sub_apply,
       AlgHom.toLinearMap_apply, sub_eq_zero] at hk ⊢
     intro l j hlj

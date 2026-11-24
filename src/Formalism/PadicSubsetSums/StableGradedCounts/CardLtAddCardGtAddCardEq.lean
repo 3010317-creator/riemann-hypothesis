@@ -224,8 +224,7 @@ theorem factorOverLocalSubalgebra : FactorOverLocalSubalgebra := by
     ext n x
     have h1 : (F %ₘ (X - C c') ^ t).map (ev T x) = 0 := by
       rw [map_modByMonic _ hq, hqmap, hF, (modByMonic_eq_zero_iff_dvd hqO).mpr (dvd_mul_left _ _)]
-    have h2 := congrArg (fun p => p.coeff n) h1
-    simpa [Polynomial.coeff_map, ev] using h2
+    simpa [Polynomial.coeff_map, ev] using congrArg (fun p => p.coeff n) h1
   have hmapP : ∀ x, (F /ₘ (X - C c') ^ t).map (ev T x) = s x := by
     intro x
     rw [map_divByMonic _ hq, hqmap, hF, mul_comm, mul_divByMonic_cancel_left _ hqO]
@@ -284,8 +283,7 @@ theorem goodCuspidal_holds : GoodCuspidal := by
     have e3 := hn i
     omega
   refine ⟨hd1, ?_⟩
-  by_contra hcard
-  push Not at hcard
+  by_contra! hcard
   haveI : Nontrivial I := Fintype.one_lt_card_iff_nontrivial.mp hcard
   obtain ⟨i, j, hij⟩ := exists_pair_ne I
   have hf0 : f v0 ≠ 0 := (hsq v0).ne_zero
@@ -463,8 +461,7 @@ theorem good_cuspidal_multiplicity_one : GoodCuspidalOne := by
   have hsub : Subsingleton I := Fintype.card_le_one_iff_subsingleton.1 hcard
   refine ⟨le_antisymm hcard (Fintype.card_pos_iff.2 hne), fun i => ⟨hd i, ?_⟩⟩
   have := hdeg v₀
-  rw [hprod v₀, Fintype.prod_subsingleton _ i, hd i, pow_one, hn] at this
-  exact this
+  rwa [hprod v₀, Fintype.prod_subsingleton _ i, hd i, pow_one, hn] at this
 
 theorem first_charpoly_in_T : CharpolyOverSubalgebra := by
   intro O _ _ X' _ T n M h
@@ -499,8 +496,7 @@ theorem first_charpoly_in_T : CharpolyOverSubalgebra := by
       apply Subtype.ext
       funext x
       have := (Matrix.charpoly_monic (M x)).coeff_natDegree
-      rw [hdeg] at this
-      exact this
+      rwa [hdeg] at this
   · ext j
     rw [coeff_map, hFc]
     by_cases hj : j ≤ n

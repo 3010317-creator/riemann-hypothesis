@@ -182,8 +182,7 @@ theorem exists_isClosed_diff_orbit {Z : Set X} (hZ : IsClosed Z) (hZne : Z.Nonem
       have ha' : a • x = z := ha
       have hb' : b • x = (w : X) := hb
       apply hzW (b * a⁻¹)
-      rw [mul_smul, ← ha', inv_smul_smul, hb']
-      exact hwW
+      rwa [mul_smul, ← ha', inv_smul_smul, hb']
   rw [key]
   exact hZ.inter (isClosed_iInter fun h =>
     hWo.isClosed_compl.preimage (continuous_const_smul h))
@@ -303,8 +302,7 @@ theorem supportedIn_le_relT_sup {U C : Set (GL (Fin n) F)} (hU : IsOpen U) (hC :
     refine ⟨hl', ?_⟩
     have : ΦH (ΦH l) = l := by
       simp only [ΦH, ConjAct.ofConjAct_toConjAct, hΦΦ, ConjAct.toConjAct_ofConjAct]
-    rw [this]
-    exact hl
+    rwa [this]
 
   have hP : ∀ x, transposeGL x ∈ orbitPiece L₀ x₀ ↔ (ConjAct.toConjAct S)⁻¹ • x ∈ orbitPiece L₀ x₀ := by
     intro x
@@ -607,8 +605,7 @@ theorem mem_relT_sup_vanishingOn {Z : Set (GL (Fin n) F)} (hZ : IsClosed Z)
       · intro h hx
         have := hOτ _ (h hx)
         rwa [transposeGL_transposeGL] at this
-      · intro h hx
-        exact hOτ _ (h hx)
+      · exact fun h hx => hOτ _ (h hx)
     have hU'O : U' ∩ (Z \ U) = O := by
       ext x
       simp only [hU'def, mem_inter_iff, mem_compl_iff, Set.mem_sdiff, not_and, not_not]

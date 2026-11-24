@@ -118,8 +118,7 @@ theorem freeSurj_of (h : SemisimpleTens) : FreeSurj := by
       simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Z, Matrix.vecMul, dotProduct,
         Finset.mul_sum, Pi.zero_apply] at this
       simp only [Matrix.vecMul, dotProduct, v, Finset.sum_mul, Pi.zero_apply]
-      rw [Finset.sum_comm]
-      rw [← this]
+      rw [Finset.sum_comm, ← this]
       exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun l _ => by ring
     have hv : v = 0 := by
       have := congrArg (fun u => Matrix.vecMul u (JR (F := F) (Ainf F) J)⁻¹) hv0
@@ -133,9 +132,7 @@ theorem freeSurj_of (h : SemisimpleTens) : FreeSurj := by
       simp only [v, map_sum, map_mul, s, sigR_invol (Ainf F) σ hσ, Pi.zero_apply, map_zero] at this
       simpa [Finset.sum_apply, Pi.smul_apply, smul_eq_mul] using this
     have := Fintype.linearIndependent_iff.1 hX _ hX0 i
-    have e2 := congrArg s this
-    simp only [s, sigR_invol (Ainf F) σ hσ, map_zero] at e2
-    exact e2
+    simpa only [s, sigR_invol (Ainf F) σ hσ, map_zero] using congrArg s this
   let half : Ainf F ⊗[F] E := algebraMap F (Ainf F ⊗[F] E) (1/2)
   have hh : half + half = 1 := by
     simp only [half, ← map_add (f := _)]; norm_num

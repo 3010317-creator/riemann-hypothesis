@@ -88,8 +88,7 @@ theorem hol_comp (g : GL (Fin 2) ℝ) (k : ℕ) {f : P → ℂ} (hf : Hol1 f) :
   have hmob : DifferentiableOn ℂ (fun t => num g t / den g t) {t : ℂ | t.im ≠ 0} :=
     fun t ht => ((hnum t).div (hden t) (den_ne g ht)).differentiableWithinAt
   have hmaps : Set.MapsTo (fun t => num g t / den g t) {t : ℂ | t.im ≠ 0} {t | t.im ≠ 0} := by
-    intro t ht
-    exact (g • mkP t ht).2
+    exact fun t ht => (g • mkP t ht).2
   have h1 : DifferentiableOn ℂ (fun t => ext1 f (num g t / den g t) /
       (den g t ^ k * ((|g.val.det| ^ (-(k : ℝ) / 2) : ℝ) : ℂ))) {t | t.im ≠ 0} := by
     refine (hf.comp hmob hmaps).div ?_ ?_
@@ -230,8 +229,7 @@ theorem at_i (B1b' : B1b) (B1c' : B1c) (B2' : B2) (B6' : B6) {k : ℕ} (hk : 4 �
         (ext1 f (Complex.I * (1 + circleMap 0 p.1 p.2) / (1 - circleMap 0 p.1 p.2)) /
           (1 - circleMap 0 p.1 p.2) ^ (m + 2)))
       (Set.Ioo 0 1 ×ˢ Set.Ioo (-π) π) := by
-    intro p hp
-    exact pt_eq f m hp.1.1 hp.1.2
+    exact fun p hp => pt_eq f m hp.1.1 hp.1.2
   rw [setIntegral_congr_fun hS hpt]
   have hI2 := hIO.congr_fun hpt hS
   rw [Measure.volume_eq_prod] at hI2 ⊢

@@ -352,8 +352,7 @@ theorem psdOn_of_full {α : Type} (Y : Finset α) (K : α → α → ℂ) (c : �
     exact hρ ((Set.Finite.mem_toFinset _).2 (Set.mem_iUnion₂.2 ⟨x, hx, h⟩))
   have hts : ∀ x ∈ Y, ∀ y ∈ Y, ∑' ρ, c ρ x * (starRingEnd ℂ) (c ρ y) =
       ∑ ρ ∈ F, c ρ x * (starRingEnd ℂ) (c ρ y) := by
-    intro x hx y hy
-    exact tsum_eq_sum (fun ρ hρ => by simp [hmem x hx ρ hρ])
+    exact fun x hx y hy => tsum_eq_sum (fun ρ hρ => by simp [hmem x hx ρ hρ])
   have hR : ∀ x ∈ Y, ∀ y ∈ Y, ∑ ρ ∈ R, c ρ x * (starRingEnd ℂ) (c ρ y) =
       ∑ ρ ∈ F ∩ R, c ρ x * (starRingEnd ℂ) (c ρ y) := by
     intro x hx y hy
@@ -581,15 +580,13 @@ theorem density_gram_matrix_sub_posSemidef {ι Θ : Type*} [Fintype ι] [Fintype
       · simp [hvx]
       by_cases hvy : v θ y = 0
       · simp [hvy]
-      have hxy := hsupp θ x y hvx hvy
-      exact absurd (hxy ▸ hx) hy
+      exact absurd ((hsupp θ x y hvx hvy) ▸ hx) hy
     · simp only [ite_eq_right hx, ite_eq_left hy, star_zero, mul_zero, zero_mul, zero_add]
       by_cases hvx : v θ x = 0
       · simp [hvx]
       by_cases hvy : v θ y = 0
       · simp [hvy]
-      have hxy := hsupp θ x y hvx hvy
-      exact absurd (hxy ▸ hy) hx
+      exact absurd ((hsupp θ x y hvx hvy) ▸ hy) hx
     · simp only [ite_eq_right hx, ite_eq_right hy, star_zero, mul_zero, zero_add]
       push_cast
       ring
@@ -691,8 +688,7 @@ theorem rows_pair {δ : ∀ p : PlF D, (D.s.atP p).Fp} {M : ∀ p : PlF D, Loc.M
     intro ρ hρ
     have : Γx.filter (fun t => κ t = ρ) = ∅ := by
       rw [Finset.filter_eq_empty_iff]
-      intro t ht hκt
-      exact hρ (Finset.mem_image.2 ⟨t, ht, hκt⟩)
+      exact fun t ht hκt => hρ (Finset.mem_image.2 ⟨t, ht, hκt⟩)
     simp [Sx, this]
   rw [tsum_eq_sum (s := Γx.image κ) hz, ← Finset.sum_div]
   congr 1
@@ -847,8 +843,7 @@ theorem dom_points (hN : SupportG.NormProd D) {δ : ∀ p : PlF D, (D.s.atP p).F
       rw [hsum]
       ring
     · have h0 : n x = 0 ∨ n y = 0 := by
-        by_contra h
-        push Not at h
+        by_contra! h
         exact hxy ⟨lt_of_le_of_ne (hn0 x) (Ne.symm h.1), lt_of_le_of_ne (hn0 y) (Ne.symm h.2)⟩
       rcases h0 with h0 | h0
       · have hc : ∀ ρ, chat vR κ nc ρ (w x) = 0 := fun ρ => by

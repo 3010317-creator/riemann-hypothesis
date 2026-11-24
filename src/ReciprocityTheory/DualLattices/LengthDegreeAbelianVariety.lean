@@ -296,8 +296,7 @@ theorem colength_sq_mul_le {n : ℕ} (a : Fin n → C) (hinj : Function.Injectiv
       funext i'
       rw [hwd]
       simp [phiMap, Pi.single_apply]
-    rw [hp] at key
-    exact key
+    rwa [hp] at key
   obtain ⟨Gτ, hGτ⟩ : ∃ Gτ : Fin n → Matrix (Fin s) (Fin h) C,
       Gτ = fun τ => (Mτ τ).B⁻¹ * A τ := ⟨_, rfl⟩
   obtain ⟨Yτ, hYτ⟩ : ∃ Yτ : Fin n → Matrix (Fin h) (Fin s) C,
@@ -457,8 +456,7 @@ theorem colength_sq_mul_le {n : ℕ} (a : Fin n → C) (hinj : Function.Injectiv
       · have hyx : y ≠ x := fun e => h1 (by rw [e])
         simp [h1, hyx]
     rw [hcv, Matrix.mulVec_smul, Pi.smul_apply, mulVec_single_one_apply, smul_eq_mul] at key
-    rw [hDh, Matrix.mul_diagonal, mul_comm]
-    exact key
+    rwa [hDh, Matrix.mul_diagonal, mul_comm]
   have hQint : ∀ y x, v (((1 : Matrix (Fin n × Fin h) (Fin n × Fin h) C) - Y * G) y x) ≤ 1 := by
     intro y x
     rw [Matrix.sub_apply]
@@ -541,8 +539,7 @@ theorem infinite_residueField [IsAlgClosed C] :
     Polynomial.eval_add, Polynomial.eval_C] at hα
   have hαq : α ^ q = α + 1 := sub_eq_zero.mp hα
   have hle : v α ≤ 1 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     have h1 : v (α + 1) ≤ v α := by
       calc v (α + 1) ≤ max (v α) (v 1) := v.map_add _ _
         _ = v α := by rw [map_one]; exact max_eq_left h.le
@@ -580,8 +577,7 @@ theorem v_eq_one_of_residue_ne_zero {x : v.valuationSubring}
       v (((u⁻¹ : (v.valuationSubring)ˣ) : v.valuationSubring) : C) = 1 := by
     rw [← map_mul, hmul, map_one]
   refine le_antisymm h1 ?_
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have : v ((u : v.valuationSubring) : C) *
       v (((u⁻¹ : (v.valuationSubring)ˣ) : v.valuationSubring) : C) ≤
       v ((u : v.valuationSubring) : C) := mul_le_of_le_one_right zero_le h2
@@ -651,8 +647,7 @@ theorem exists_generic [IsAlgClosed C] {ι σ T : Type} [Fintype ι] [DecidableE
     exact zero_ne_one h1'
   have hP : ∏ t, p t ≠ 0 := Finset.prod_ne_zero_iff.mpr fun t _ => hp t
   obtain ⟨z, hz⟩ : ∃ z, MvPolynomial.eval z (∏ t, p t) ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hP (MvPolynomial.funext fun x => by rw [h x, map_zero])
   rw [map_prod] at hz
   have hzt : ∀ t, MvPolynomial.eval z (p t) ≠ 0 :=
@@ -684,8 +679,7 @@ theorem exists_generic [IsAlgClosed C] {ι σ T : Type} [Fintype ι] [DecidableE
     map_sum, map_mul]
     refine Finset.sum_congr rfl fun r _ => ?_
     rw [← hy (r, j)]
-  rw [hmat]
-  exact hzt'
+  rwa [hmat]
 
 variable {n s : ℕ}
 
@@ -805,8 +799,7 @@ theorem valuation_pairwiseDifferenceProduct_pow_le_colength_sq (C : Type) [Field
         simp [Q, R, Matrix.mul_apply, Matrix.mulVec, dotProduct, Pi.single_apply]
       rw [h1, hce, Matrix.mulVec_mulVec, hB, Matrix.one_mulVec]
     have := hc i
-    rw [← hQc] at this
-    exact this
+    rwa [← hQc] at this
   have hsec : ∀ τ, ∃ d : Matrix (Fin n × Fin s) (Fin s) C, (∀ r i, v (d r i) ≤ 1) ∧ Q τ * d = 1 := by
     intro τ
     have hmem : ∀ j, (fun i => (Mτ τ).B i j) ∈ projPts M.pts τ := by
@@ -867,8 +860,7 @@ theorem valuation_pairwiseDifferenceProduct_pow_le_colength_sq (C : Type) [Field
     rw [pos_iff_ne_zero, Ne, map_eq_zero]
     exact S.det_ne
   have hcol : v (Matrix.vandermonde a).det ^ s ≤ colen M S := by
-    rw [colen, le_div_iff₀ hSpos, hSdet, mul_comm, ← hdetX]
-    exact hle
+    rwa [colen, le_div_iff₀ hSpos, hSdet, mul_comm, ← hdetX]
   rw [v_discr, ← pow_mul, mul_comm 2 s, pow_mul]
   exact pow_le_pow_left₀ zero_le hcol 2
 
@@ -1035,8 +1027,7 @@ theorem idemGen : IdemGenStatement := by
     exact Finset.sum_congr rfl fun k _ => mul_comm _ _
   refine (Submodule.mem_span_range_iff_exists_fun R).mpr ⟨fun i => (Nᵀ *ᵥ v) i, ?_⟩
   apply Subtype.ext
-  simp only [Submodule.coe_sum, Submodule.coe_smul]
-  exact key.symm
+  simpa only [Submodule.coe_sum, Submodule.coe_smul] using key.symm
 
 end ReciprocityTheory.PGsh.Up
 end -- clump:auto
@@ -1115,8 +1106,7 @@ private lemma prime_rpow_neg_succ_eq_inv_mul_inv_pow {p : ℕ} [Fact p.Prime] (n
 
 private lemma prime_inv_lt_one {p : ℕ} [Fact p.Prime] : (p : ℝ)⁻¹ < 1 := by
   have hp : (1 : ℝ) < p := by exact_mod_cast (Fact.out : p.Prime).one_lt
-  have h1 := one_div_lt_one_div_of_lt one_pos hp
-  simpa using h1
+  simpa using one_div_lt_one_div_of_lt one_pos hp
 
 private lemma summable_prime_rpow_neg_succ {p : ℕ} [Fact p.Prime] :
     Summable fun n : ℕ => (p : ℝ) ^ (-((n : ℝ) + 1)) := by

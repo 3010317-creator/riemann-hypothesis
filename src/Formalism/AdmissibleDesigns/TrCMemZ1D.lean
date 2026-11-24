@@ -208,8 +208,7 @@ theorem trC_mem_Z1D {e : ℕ} (Cd : CoefDict PD LL O σ M r χ Dw eG e) [Topolog
   rw [hc, map_add (f := _)]
   congr 1
   have hu := Cd.u_act (eG.symm g) ((z : Dw → M) (eG.symm h))
-  rw [MulEquiv.apply_symm_apply] at hu
-  exact hu
+  rwa [MulEquiv.apply_symm_apply] at hu
 
 end Transport
 
@@ -245,8 +244,7 @@ def TBTarget (cB : ℕ) : Prop :=
 
 theorem mem_plSet {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : w ∈ placesOver D.host.E (D.nd.l i)) :
     w ∈ plSet i dc := by
-  simp only [plSet, Finset.mem_union]
-  exact Or.inl ((dc.cover w).2 hw)
+  simpa only [plSet, Finset.mem_union] using Or.inl ((dc.cover w).2 hw)
 
 theorem Dw_idx {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : w ∈ placesOver D.host.E (D.nd.l i)) :
     Dw i dc (idx i dc w) = Dec (F := D.host.E) (D.nd.plOm.1 w) := by

@@ -40,8 +40,7 @@ theorem exists_eq_X_pow_of_mem_monos_single {s : Poly S N} (hs : s ∈ monos {j}
   have hs' : s ∈ Submonoid.closure {(X j : Poly S N)} := by
     have : ((fun i => (X i : Poly S N)) '' ((({j} : Finset (Fin (N + 1))) : Set (Fin (N + 1))))) =
         {X j} := by simp
-    rw [← this]
-    exact hs
+    rwa [← this]
   obtain ⟨n, rfl⟩ := Submonoid.mem_closure_singleton.mp hs'
   exact ⟨n, rfl⟩
 
@@ -95,8 +94,7 @@ def chartPrimeIdeal (hj : x j ≠ 0) (pp : Ideal (Poly S N)) :
 theorem chartPrime_le_chartPrimeIdeal (hj : x j ≠ 0) (pp : Ideal (Poly S N)) :
     chartPrime pp hj ≤ chartPrimeIdeal x hj pp := by
   rw [chartPrime, Ideal.span_le]
-  intro a ha
-  exact ha
+  exact fun a ha => ha
 
 theorem mem_chartPrime_iff (hj : x j ≠ 0) {pp : Ideal (Poly S N)} [pp.IsPrime]
     (hle : primeOf (S := S) x ≤ pp) (hX : (X j : Poly S N) ∉ pp) {a : chartRing S x (singleChart hj)}
@@ -106,8 +104,7 @@ theorem mem_chartPrime_iff (hj : x j ≠ 0) {pp : Ideal (Poly S N)} [pp.IsPrime]
   · intro h
     obtain ⟨G, t, D, hG, ht, hGD, htD, hat⟩ := chartPrime_le_chartPrimeIdeal hj pp h
     exact mem_of_div_eq hj hle hX hf hs hse hG hGD ht htD (ha.symm.trans hat)
-  · intro h
-    exact Ideal.subset_span ⟨f, s, e, h, hs, hf, hse, ha⟩
+  · exact fun h => Ideal.subset_span ⟨f, s, e, h, hs, hf, hse, ha⟩
 
 theorem coe_aeval_ratio (hj : x j ≠ 0) {f : Poly S N} {e : ℕ} (hf : f.IsHomogeneous e) :
     ((aeval (ratio (S := S) hj) f : chartRing S x (singleChart hj)) : Ω) = aeval x f / x j ^ e := by

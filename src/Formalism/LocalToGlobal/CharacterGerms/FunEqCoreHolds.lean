@@ -72,14 +72,12 @@ theorem decomp {f : PS C 3 dd} (h1 : ev (rz 2) f = 1) : f = 1 + ∑ k, X ((0 : F
     set k0 := S.min' hS with hk0
     have hk0S : k0 ∈ S := S.min'_mem hS
     have hk0p : p ((0 : Fin 3), k0) ≠ 0 := by
-      simp only [hSdef, Finset.mem_filter, Finset.mem_univ, true_and] at hk0S
-      exact hk0S
+      simpa only [hSdef, Finset.mem_filter, Finset.mem_univ, true_and] using hk0S
     have hmin : ∀ j, j < k0 → p ((0 : Fin 3), j) = 0 := by
       intro j hj
       by_contra hne
       have hjS : j ∈ S := by
-        simp only [hSdef, Finset.mem_filter, Finset.mem_univ, true_and]
-        exact hne
+        simpa only [hSdef, Finset.mem_filter, Finset.mem_univ, true_and] using hne
       exact absurd hj (not_lt.mpr (S.min'_le j hjS))
     have hp0 : p ≠ 0 := by
       intro h
@@ -123,8 +121,7 @@ theorem decomp {f : PS C 3 dd} (h1 : ev (rz 2) f = 1) : f = 1 + ∑ k, X ((0 : F
           simp only [Prod.mk.injEq, true_and] at h
           exact hk h
       · rw [ite_eq_right hle]
-    · intro h
-      exact absurd (Finset.mem_univ k0) h
+    · exact fun h => absurd (Finset.mem_univ k0) h
 
 theorem QQ_expand (Y : FBChart C V O dd) :
     QQ Y = 1 + ∑ k, m3 Y.B.G V.l k * ev ![m3 Y.B.G V.l, p3 1, p3 2] (Tk Y.B.ph2 k) := by

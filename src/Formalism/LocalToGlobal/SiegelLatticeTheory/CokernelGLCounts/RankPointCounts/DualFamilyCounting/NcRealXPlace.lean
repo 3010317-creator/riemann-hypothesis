@@ -124,8 +124,7 @@ theorem coordW_exact (r k : ℕ) (T T' sc : ℝ) (hk : 1 ≤ k) (hT : 0 < T) (hT
       conv_rhs => rw [← hc']
       rw [coordSc_last]
     have key := hptq ((Phe r sc hsc).symm c) (by rw [h2]; exact hc)
-    rw [hc'] at key
-    exact key
+    rwa [hc'] at key
 
   have hL : ∫⁻ q : (Fin r → ℂ) × ℂ, ENNReal.ofReal (Formalism.QuantumDeterminants.bcWeight k r T T' q) * F (coordSc r sc q) =
       ENNReal.ofReal (nrm r sc)⁻¹ * ∫⁻ c : Fin (r + 1) → ℂ,
@@ -345,9 +344,7 @@ def lieIso (hPJ : Pᴴ * Formalism.REAL.Jm ε * P = Hpk k r) (h1 : Pᴴ * P = 1)
 theorem unrealify_lieIso (hPJ : Pᴴ * Formalism.REAL.Jm ε * P = Hpk k r) (h1 : Pᴴ * P = 1) (h2 : P * Pᴴ = 1)
     (y : Formalism.MainNotions.S.Gauge.gLie ε) :
     unrealify ((lieIso hPJ h1 h2 y : lieE (UH (Hpk k r))) : EuclideanSpace ℝ _) =
-      Pᴴ * unrealify (y : EuclideanSpace ℝ _) * P := by
-  show unrealify (adE Pᴴ P (y : EuclideanSpace ℝ _)) = _
-  exact unrealify_adE _ _ _
+      Pᴴ * unrealify (y : EuclideanSpace ℝ _) * P := unrealify_adE _ _ _
 
 end Lie
 
@@ -528,8 +525,7 @@ theorem jacLocX_of (hJ : JacGauge) : JacLocX := by
     refine ⟨fun i j => (hμ.1 i j).congr fun ζ hζ => ?_, fun ζ hζ => ?_⟩
     · have hζ' : Tz k r zB * Tz k r zB' < Complex.normSq ζ := hζ
       simp only [μs, ite_eq_left hζ']
-    · simp only [μs, ite_eq_left hζ]
-      exact hμ.2 ζ hζ
+    · simpa only [μs, ite_eq_left hζ] using hμ.2 ζ hζ
   have hU : ∀ ζ, (μs ζ)ᴴ * Hb k * μs ζ = Hb k := by
     intro ζ
     by_cases hζ : Tz k r zB * Tz k r zB' < Complex.normSq ζ

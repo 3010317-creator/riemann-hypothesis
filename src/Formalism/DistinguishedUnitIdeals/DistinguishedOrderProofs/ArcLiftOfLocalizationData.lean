@@ -71,8 +71,7 @@ theorem sm_le (a : PowerSeries O) (S : Submodule (PowerSeries O) V) : sm a S ≤
   exact S.smul_mem _ hu
 
 theorem le_dv (a : PowerSeries O) (S : Submodule (PowerSeries O) V) : S ≤ dv a S := by
-  intro v hv
-  exact mem_dv.2 (S.smul_mem _ hv)
+  exact fun v hv => mem_dv.2 (S.smul_mem _ hv)
 
 theorem lc_pow (B : Base O) (K : ℕ) : B.lc ^ K = C ((B.ℓ : O) ^ K) := by
   simp [Base.lc]
@@ -184,8 +183,7 @@ theorem map_mem_arcSpan {L : Lat B n V} {L' : Lat B n V'} (h : LatHom L L') (c :
   have h1 : Λ • v ∈ L.pull (c - (ell : ZMod n)) ell := mem_dv.1 hv
   have h2 := hp h1
   refine mem_dv.2 ?_
-  rw [← map_smul]
-  exact h2
+  rwa [← map_smul]
 
 end lat
 

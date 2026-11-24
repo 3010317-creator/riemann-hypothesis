@@ -47,8 +47,7 @@ lemma boxSec_le_b (pG : IsPowGrp G' G j) (jN : Fin j → LG.ι) (jL : LG'.ι) (i
   have h := Set.mem_iInter.1 hy.1 i
   refine Set.mem_iInter.2 fun _ => ?_
   show (pullback.fst G.hom (jK R)).base ((prK pG i).base y) ∈ (LG.U (jN i) : Set G.left)
-  rw [← Scheme.Hom.comp_apply, prK_fst, Scheme.Hom.comp_apply]
-  exact h
+  rwa [← Scheme.Hom.comp_apply, prK_fst, Scheme.Hom.comp_apply]
 
 def IsBoxSecK (pG : IsPowGrp G' G j) (w : LB.Iso LG' (boxLB LG pG.pr)) (k : ℕ)
     (s' : LB.Sec (LB.LinComb LG' (K := Fin 1) (fun _ => pullback.fst G'.hom (jK R))
@@ -75,8 +74,7 @@ lemma box_le_of_comp {X X' Y Y' : Scheme.{0}} (L : LB X) {j : ℕ} {Kx : Type} [
   have h1 := Set.mem_iInter.1 hy a
   have h2 := Set.mem_iInter.1 h1 i
   show (φ a).base (p.base y) ∈ (L.U (jN a i) : Set X)
-  rw [← Scheme.Hom.comp_apply, ← hφ a, Scheme.Hom.comp_apply]
-  exact h2
+  rwa [← Scheme.Hom.comp_apply, ← hφ a, Scheme.Hom.comp_apply]
 
 variable {R : Type} [CommRing R] [IsDomain R] {j : ℕ}
 

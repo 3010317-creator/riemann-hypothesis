@@ -59,8 +59,7 @@ theorem not_lt_lt {R : Type*} [CommRing R] [IsNoetherianRing R] {V W W' : Ideal 
   apply le_antisymm hVW'.le
   intro y hy
   have : q y ∈ W'.map q := Ideal.mem_map_of_mem q hy
-  rw [h0, Ideal.mem_bot, Ideal.Quotient.eq_zero_iff_mem] at this
-  exact this
+  rwa [h0, Ideal.mem_bot, Ideal.Quotient.eq_zero_iff_mem] at this
 
 theorem mem_minimalPrimes_of_mem {R : Type*} [CommRing R] [IsNoetherianRing R] {P W : Ideal R}
     [P.IsPrime] {a b : R} (hW : W ∈ (P ⊔ Ideal.span {a}).minimalPrimes) (hbP : b ∉ P)
@@ -198,8 +197,7 @@ theorem sum_eq_finsum {V Z : Ideal (MRing ι)} [V.IsPrime] [Z.IsPrime] {A : Type
     have hle := h.comap_le p.asIdeal
     simp only [Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
     exact ⟨⟨hm, isRelevant_of_le hZr hle⟩, hle⟩
-  · intro p _ p' _ e
-    exact PrimeSpectrum.ext (h.eq_of_comap_eq e)
+  · exact fun p _ p' _ e => PrimeSpectrum.ext (h.eq_of_comap_eq e)
   · intro W hW
     simp only [Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hW
     obtain ⟨p, hp, hpW⟩ := hex W hW.1.1.1.1 (le_sup_left.trans hW.1.1.1.2) hW.2
@@ -242,8 +240,7 @@ theorem coeff_eq (hlen2 : LocalLengthMultiplicativity.{0}) {P U : Ideal (MRing �
       (fun e => hs' ((h.map_eq_zero_iff hPU s').mp e)) hlen).2.2
     have e : ((∑ W ∈ (divSupp_finite P s).toFinset, divCycle P s W * divCycle W s' U : ℕ) : ℕ∞) =
         ((∑ W ∈ (divSupp_finite P s').toFinset, divCycle P s' W * divCycle W s U : ℕ) : ℕ∞) := by
-      rw [sum_eq_finsum h hPU hex hUr hUm hs, sum_eq_finsum h hPU hex hUr hUm' hs']
-      exact key
+      rwa [sum_eq_finsum h hPU hex hUr hUm hs, sum_eq_finsum h hPU hex hUr hUm' hs']
     exact_mod_cast e
   · rw [sum_eq_zero_of_not hP hs hs' hnc hU,
       sum_eq_zero_of_not hP hs' hs hnc' (by rwa [sup_right_comm])]

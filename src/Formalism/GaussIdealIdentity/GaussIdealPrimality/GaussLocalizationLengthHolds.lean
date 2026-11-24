@@ -98,8 +98,7 @@ theorem isDVR : IsDiscreteValuationRing A := by
     rw [hϖ', Ideal.span_singleton_eq_bot]
     exact algebraMap_injective σ O (h0.trans (map_zero _).symm)
   have hnf : ¬ IsField A := by
-    rw [IsLocalRing.isField_iff_maximalIdeal_eq, hmA, Ideal.span_singleton_eq_bot]
-    exact hne
+    rwa [IsLocalRing.isField_iff_maximalIdeal_eq, hmA, Ideal.span_singleton_eq_bot]
   have hp : (IsLocalRing.maximalIdeal A).IsPrincipal := ⟨⟨_, hmA⟩⟩
   exact ((IsDiscreteValuationRing.TFAE A hnf).out 1 5).2 hp
 

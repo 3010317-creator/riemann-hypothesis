@@ -202,14 +202,12 @@ variable {ω₀ : ℂ} (h0 : ω₀ ∈ L.lattice) (hθ : cmTheta 1 d * (ω₀ / 
   (hθ' : (1 - cmTheta 1 d) * (ω₀ / 2) ∉ L.lattice)
 include h0 hθ hθ'
 
-theorem half_notMem : ω₀ / 2 ∉ L.lattice := by
-  exact fun h => hθ (hst _ h)
+theorem half_notMem : ω₀ / 2 ∉ L.lattice := fun h => hθ (hst _ h)
 
 private theorem half_periods_not_mem_cm_lattice : ω₀ / 2 ∉ L.lattice ∧ cmTheta 1 d * ω₀ / 2 ∉ L.lattice ∧
     (ω₀ + cmTheta 1 d * ω₀) / 2 ∉ L.lattice := by
   refine ⟨half_notMem hst h0 hθ hθ', ?_, ?_⟩
-  · rw [mul_div_assoc]
-    exact hθ
+  · rwa [mul_div_assoc]
   · intro h
     apply hθ'
     have e : (1 - cmTheta 1 d) * (ω₀ / 2) = ω₀ - (ω₀ + cmTheta 1 d * ω₀) / 2 := by ring
@@ -232,16 +230,14 @@ theorem q_odd : ∃ Q : ℤ, Odd Q ∧ q1 L d ω₀ = (Q : ℝ) := by
     intro h
     apply n3
     have eq : ω₀ + cmTheta 1 d * ω₀ = (((a + c : ℤ)) : ℂ) * L.ω₁ + ((b + e : ℤ) : ℂ) * L.ω₂ := by
-      rw [hce]
-      rw [hab]
+      rw [hce, hab]
       push_cast
       ring
     rw [eq]
     exact half_mem L _ _ h.1 h.2
   obtain ⟨s, hs, hE⟩ := exists_sign_EE_lattice_eq_det L
   have hq : q1 L d ω₀ = ((s * (c * b - e * a) : ℤ) : ℝ) := by
-    rw [← altE_theta, hce]
-    rw [hab]
+    rw [← altE_theta, hce, hab]
     exact hE c e a b
   have hodd : Odd (c * b - e * a) := by
     rw [Int.odd_iff, Int.sub_emod, Int.mul_emod c, Int.mul_emod e]

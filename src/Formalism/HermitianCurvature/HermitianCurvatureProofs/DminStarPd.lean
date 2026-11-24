@@ -105,8 +105,7 @@ lemma ubl_monoM (D : RealPlaceData k r Wp Wq) (L : Finset (Fin (r + 2))) (a b : 
       exact ubl_const 1 hSG n _
   have hP := ubl_prod hSG Finset.univ
     (fun l g => (Dmin k r D.z D.z' g l)⁻¹ ^ a l * (star (Dmin k r D.z D.z' g l))⁻¹ ^ b l) hfac
-  have hG := ubl_invpow (gram_function_polynomial k r D.z D.z') hSG hc₀ hSGf c n
-  exact ubl_mul hSG hP hG
+  exact ubl_mul hSG hP (ubl_invpow (gram_function_polynomial k r D.z D.z') hSG hc₀ hSGf c n)
 
 private lemma rw_congr_on_open_of_eq_on_GV {F : Type*} [NormedAddCommGroup F] [NormedSpace ℂ F] {V : Set (Mat k r)}
     (hV : IsOpen V) {f f' : Mat k r → F} (he : ∀ g ∈ GV k r, g ∈ V → f g = f' g) :

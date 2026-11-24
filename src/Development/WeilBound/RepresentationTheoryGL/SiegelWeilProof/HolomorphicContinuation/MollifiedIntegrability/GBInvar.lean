@@ -165,8 +165,7 @@ theorem wd_comp (T : Mc n →L[ℂ] Mc n) {F : Mc n → ℂ} {U : Set (Mc n)} (h
     rw [dd_congr hV (g := fun c => wd (L.map T) F (T c)) (fun y hy => ih y hy) H hx]
     unfold dd
     have hG : DifferentiableAt ℂ (wd (L.map T) F) (T x) := diffAt hU (wd_smooth hU hF _) hx
-    have h := hG.hasFDerivAt.comp x T.hasFDerivAt
-    exact congrArg (fun L => L H) h.fderiv
+    exact congrArg (fun L => L H) (hG.hasFDerivAt.comp x T.hasFDerivAt).fderiv
 
 theorem wd_expand {F : Mc n → ℂ} {U : Set (Mc n)} (hU : IsOpen U) (hF : ContDiffOn ℂ (⊤ : ℕ∞) F U) :
     ∀ (m : ℕ) (v : Fin m → Mc n), ∀ x ∈ U, wd (List.ofFn v) F x =
@@ -329,8 +328,7 @@ theorem invar_one {F : Mc n → ℂ} {U : Set (Mc n)} (hU : IsOpen U) (hF : Cont
     refine Finset.sum_congr rfl fun r _ => ?_
     congr 1
     refine Finset.prod_congr rfl fun t _ => ?_
-    simp only [Function.comp_apply, hT]
-    exact conj_single k (σ t, t) (r t).1 (r t).2
+    simpa only [Function.comp_apply, hT] using conj_single k (σ t, t) (r t).1 (r t).2
   simp_rw [h1]
   rw [alg k (k.map star) (fun r => wd (List.ofFn fun t => E (r t)) F (k * b * kᴴ))
     (fun r π => wd_perm hU hF (Equiv.Perm.ofFn_comp_perm π fun t => E (r t)) _ hb)]
@@ -341,8 +339,7 @@ theorem invar_one {F : Mc n → ℂ} {U : Set (Mc n)} (hU : IsOpen U) (hF : Cont
       rfl
     have h3 := congrArg Matrix.det hu
     rw [Matrix.det_mul, Matrix.det_one, Matrix.star_eq_conjTranspose, Matrix.det_conjTranspose] at h3
-    rw [h2, mul_comm]
-    exact h3
+    rwa [h2, mul_comm]
   rw [hdet, one_mul]
 
 theorem invar_iter {F : Mc n → ℂ} {U : Set (Mc n)} (hU : IsOpen U) (hF : ContDiffOn ℂ (⊤ : ℕ∞) F U) :

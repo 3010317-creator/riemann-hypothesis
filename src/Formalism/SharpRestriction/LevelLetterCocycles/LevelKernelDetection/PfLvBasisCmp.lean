@@ -181,8 +181,7 @@ theorem lvBasis_letter_span (hspan : Submodule.span LL (Set.range (W.cmp T)) = D
         rw [map_sub, smul_sub, h1, ((lvBasis_mem_DcrisL PD T.ρ _ _).1 hd).2 c]
       · rw [sub_zero, h1]) (by simp [Finset.sum_sub_distrib, hzs]) j
   rw [ite_eq_left rfl, sub_eq_zero] at key
-  rw [← key]
-  exact hzj
+  rwa [← key]
 
 theorem lvBasis_cmp_mem_φ (h3 : ∀ (x : ↥(W.N T)) (k : ℕ) (hk : W.Q ^ k • W.φD T x ∈ W.N T),
       W.cmp T ⟨_, hk⟩ = ((PD.p : LL) ^ k) • φVB PD (LL := LL) (V := T.V) (W.cmp T x))
@@ -203,8 +202,7 @@ theorem lvBasis_cmp_mem_φ (h3 : ∀ (x : ↥(W.N T)) (k : ℕ) (hk : W.Q ^ k �
           W.Q ^ k • W.φD T ((letE (i - 1) : LetA O n) • x) := by
         rw [φD_smulA W, φA_letE W, smul_comm]
       have hk' : W.Q ^ k • W.φD T ((letE (i - 1) : LetA O n) • x) ∈ W.N T := he ▸ (W.N T).smul_mem _ hk2
-      rw [lvBasis_cmp_congr _ hk' he]
-      rw [h3 ⟨_, hx'⟩ k hk']
+      rw [lvBasis_cmp_congr _ hk' he, h3 ⟨_, hx'⟩ k hk']
       exact U.smul_mem _ (Submodule.mem_map_of_mem (W.cmp_mem T _))
     | zero =>
       refine ⟨0, fun i => ⟨by simp, ?_⟩⟩
@@ -284,8 +282,7 @@ theorem lvBasis_φpow_pre (hspan : Submodule.span LL (Set.range (W.cmp T)) = Dcr
     obtain ⟨d₁, hd₁, rfl⟩ := ih
     obtain ⟨d', hd', rfl⟩ := lvBasis_letter_pre hspan h3 _ hd₁
     refine ⟨d', ?_, ?_⟩
-    · rw [Nat.cast_succ, ← sub_sub]
-      exact hd'
+    · rwa [Nat.cast_succ, ← sub_sub]
     · rw [pow_succ, Module.End.mul_apply]
 
 end Formalism.MainNotions.N.Ln03.Pf

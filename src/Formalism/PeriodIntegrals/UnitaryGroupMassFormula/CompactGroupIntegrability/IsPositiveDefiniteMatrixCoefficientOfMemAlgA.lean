@@ -133,8 +133,7 @@ lemma isPositiveDefinite_matrix_coefficient_of_mem_algA [FiniteDimensional ℂ S
     · refine Finset.sum_congr rfl fun i _ => ?_
       simp_rw [mul_assoc]
       rw [integral_const_mul]
-    · intro i _
-      exact integrable_cont ((continuous_const.mul (hb i)).mul hcont)
+    · exact fun i _ => integrable_cont ((continuous_const.mul (hb i)).mul hcont)
   have e : (fun h : UG N => ⟪w, σ h ((T hst f u : S) : H)⟫_ℂ) = fun h => ∑ i, a i h *
       ∫ y, b i y * ⟪w, σ (y : Matrix (Fin N) (Fin N) ℂ) (u : H)⟫_ℂ ∂(muU N) := funext hfun
   rw [e]
@@ -216,8 +215,7 @@ theorem Ugood_eq_top (hrep : IsURepOn (Kset (allPos N)) σ) (hfin : FiniteDimens
   have hF' : ∫ x, Complex.normSq (g x) ∂(muU N) = 0 := by
     have h4 : ∫ x, ((Complex.normSq (g x) : ℝ) : ℂ) ∂(muU N) = 0 := by
       rw [← hF]
-      refine integral_congr_ae (Filter.Eventually.of_forall fun x => ?_)
-      exact Complex.normSq_eq_conj_mul_self
+      exact integral_congr_ae (Filter.Eventually.of_forall fun x => Complex.normSq_eq_conj_mul_self)
     rw [integral_complex_ofReal] at h4
     exact_mod_cast h4
   have hae := (integral_eq_zero_iff_of_nonneg (fun x => Complex.normSq_nonneg (g x))

@@ -186,16 +186,14 @@ theorem eel_inR' (hG : GoodCongruenceObjects N r ρ π S) : InR' N r S (Eel N S)
             (fun x' => S.X0 (S.p x')) + fun x' => (-S.rr c) x' • S.eB (S.p x') := by
           funext x'
           simp [sub_eq_add_neg, neg_smul]
-        rw [e1]
-        exact this
+        rwa [e1]
       have h2 := inSpan_mul N S.T' (fun x' => rO N i r (S.p x')) h1 (ih fun c' hc' => hL c' (by simp [hc']))
       have e2 : (fun x' => ((c :: L).map fun c => S.X0 (S.p x') - S.rr c x' • S.eB (S.p x')).prod) =
           (fun x' => S.X0 (S.p x') - S.rr c x' • S.eB (S.p x')) *
             fun x' => (L.map fun c => S.X0 (S.p x') - S.rr c x' • S.eB (S.p x')).prod := by
         funext x'
         simp
-      rw [e2]
-      exact h2
+      rwa [e2]
   unfold Eel
   apply key
   intro c hc

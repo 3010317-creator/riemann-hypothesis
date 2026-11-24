@@ -445,8 +445,7 @@ theorem continuous_of_entries (ℓ : ℕ) (R' : Subalgebra O (X' → Matrix d d 
     exact LinearMap.continuous_on_pi (R'.val.toLinearMap.comp f)
   have hemb := (hval.isClosedEmbedding Subtype.val_injective).isEmbedding
   rw [hemb.continuous_iff]
-  refine continuous_pi fun x' => ?_
-  exact continuous_pi fun a => continuous_pi fun b => hu x' a b
+  exact continuous_pi fun x' => continuous_pi fun a => continuous_pi fun b => hu x' a b
 
 end Entries
 
@@ -556,8 +555,7 @@ theorem l_or_noReal : D.nd.l i ≠ 2 ∨ InfinitePlace.nrRealPlaces D.host.E = 0
   have := D.host.isCMField_hostE
   exact Or.inr (NumberField.nrRealPlaces_eq_zero_iff.mpr inferInstance)
 
-theorem one_le_localLevel : 1 ≤ D.nd.s0 i := by
-  exact UpperTheory.KStar.S0.one_le_localLevel D.nd i
+theorem one_le_localLevel : 1 ≤ D.nd.s0 i := UpperTheory.KStar.S0.one_le_localLevel D.nd i
 
 theorem restNLevelExponent_of_two : D.nd.l i = 2 → 2 ≤ D.nd.s0 i := by
   exact UpperTheory.KStar.S0.two_le_localLevel_of_eq_two D.nd i
@@ -578,8 +576,7 @@ theorem rows_over : ∀ w ∈ Formalism.MainNotions.N.K.rowsN i dc,
   rw [hAw, hpl]
   refine ⟨?_, D.nd.plOm.2 v⟩
   have hmem : ((D.nd.l i : ℕ) : 𝓞 D.host.E) ∈ v.asIdeal := (dc.cover v).1 (Or.inl hv)
-  have h := (D.nd.plOm.2 v ((D.nd.l i : ℕ) : 𝓞 D.host.E)).2 hmem
-  simpa using h
+  simpa using (D.nd.plOm.2 v ((D.nd.l i : ℕ) : 𝓞 D.host.E)).2 hmem
 
 end Rec
 

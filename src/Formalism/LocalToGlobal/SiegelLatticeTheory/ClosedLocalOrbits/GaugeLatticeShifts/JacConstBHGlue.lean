@@ -151,8 +151,7 @@ theorem itgSwap : ItgSwap := by
   have e1 : ∀ b m : Mt k r, f (fA g (Formalism.FourierDecayAlt.B2.invM a) (Formalism.FourierDecayAlt.B2.invM b) m) = f (fB g a b m) :=
     fun b m => by rw [fA_inv g a b m hau]
   simp_rw [e1]
-  refine lintegral_lintegral_swap ?_
-  exact (meas_fB_slice g a hf).aemeasurable
+  exact lintegral_lintegral_swap (meas_fB_slice g a hf).aemeasurable
 
 end Formalism.L2.SG.Pf.BH
 
@@ -224,8 +223,7 @@ theorem measurableSet_expBall (S : Set (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r
   have hE := Formalism.MainNotions.BridgeCSB.continuous_expLie (k := k) (r := r) S
   unfold expBall
   rw [ball_eq_iUnion ρ hρ, Set.image_iUnion]
-  refine MeasurableSet.iUnion fun n => ?_
-  exact ((isCompact_closedBall _ _).image hE).isClosed.measurableSet
+  exact MeasurableSet.iUnion fun n => ((isCompact_closedBall _ _).image hE).isClosed.measurableSet
 
 theorem long_weyl_element_mem : w0B k r ∈ UH (Hpk k r) :=
   Formalism.QuantumDeterminants.bigCellMem k r 1 1 (fun a => one_ne_zero) (by simp)

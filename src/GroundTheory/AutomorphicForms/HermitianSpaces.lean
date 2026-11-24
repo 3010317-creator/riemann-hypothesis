@@ -54,8 +54,7 @@ theorem exists_mem_unitaryGroupMatrix_iff (s : A →+* A) {H : Matrix ι ι A} (
   constructor
   · rintro ⟨g, hg, rfl⟩
     exact hg
-  · intro hM
-    exact ⟨nonsingInvUnit M (isUnit_det_of_unitary s hH hM), hM, rfl⟩
+  · exact fun hM => ⟨nonsingInvUnit M (isUnit_det_of_unitary s hH hM), hM, rfl⟩
 
 def IsHermitianFor (s : A →+* A) (H : Matrix ι ι A) : Prop := (H.map s)ᵀ = H
 
@@ -122,8 +121,7 @@ omit [Fintype ι] [DecidableEq ι] in
 theorem isHermitianFor_gram (h : HermitianForm F E V) (v : Basis ι E V) :
     IsHermitianFor (conjHom F E) (gram h.toSesq v) := by
   ext i j
-  simp only [transpose_apply, map_apply, gram_apply]
-  exact h.isSymm.eq (v j) (v i)
+  simpa only [transpose_apply, map_apply, gram_apply] using h.isSymm.eq (v j) (v i)
 
 theorem isUnit_det_gram (h : HermitianForm F E V) (v : Basis ι E V) :
     IsUnit (gram h.toSesq v).det := by

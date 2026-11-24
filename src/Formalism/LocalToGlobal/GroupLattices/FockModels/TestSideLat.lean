@@ -147,8 +147,7 @@ theorem ten_side (O Kf : Type) [CommRing O] [IsDomain O] [Field Kf] [Algebra O K
       nablaLTw O Kf m (lamAt lam0 s) (Ms s) → P ∈ Submodule.span O (Set.range (Z s)) := by
     intro s P hP
     rw [← hZ s] at hP
-    rw [← comap_span_coe]
-    exact hP
+    rwa [← comap_span_coe]
   constructor
   · rw [Submodule.span_le]
     rintro _ ⟨j, rfl⟩
@@ -184,8 +183,7 @@ theorem ten_side (O Kf : Type) [CommRing O] [IsDomain O] [Field Kf] [Algebra O K
     rw [hr, oS', Submodule.coe_smul, ← Finset.prod_pow_eq_pow_sum]
     have hQ' : (Q : MvPolynomial (Fin n' × (Fin (m + 1) × Fin (m + 1))) Kf) ∈
         tensorLat O Kf (fun s => nablaLTw O Kf m (lamAt lam0 s) ((Ms s)⁻¹).transpose) := by
-      rw [← hH _ hMs']
-      exact hQ
+      rwa [← hH _ hMs']
     refine lb_tensor O Kf _ _ (fun s => (p : Kf) ^ N s) (fun s F hF => ?_) _ hQ'
     have hFV : F ∈ V s := la_nablaLTw_le m (lamAt lam0 s) _ (hMs' s) F hF
     have h1 : (((p : Kf) ^ N s) • (⟨F, hFV⟩ : V s)) ∈
@@ -197,7 +195,6 @@ theorem ten_side (O Kf : Type) [CommRing O] [IsDomain O] [Field Kf] [Algebra O K
       rw [← hZ s]
       exact Submodule.subset_span ⟨i, rfl⟩
     simp only [one_smul] at h1
-    rw [← comap_span_coe] at h1
-    exact h1
+    rwa [← comap_span_coe] at h1
 
 end Formalism.L2.G.Model

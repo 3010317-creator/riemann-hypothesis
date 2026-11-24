@@ -280,18 +280,12 @@ theorem dpb_det {ε : Fin n → Bool} {U : Matrix (Fin n) (Fin n) ℂ} {x : Fin 
   · intro v
     show Jm ε * (Jm ε * v * Jm ε) * Jm ε = v
     simp only [Matrix.mul_assoc, hJJ, Matrix.mul_one, hJJv]
-  · intro v
-    show (vᴴ)ᴴ = v
-    exact Matrix.conjTranspose_conjTranspose v
+  · exact fun v => Matrix.conjTranspose_conjTranspose v
   · intro v
     show Jm ε * vᴴ * Jm ε = (Jm ε * v * Jm ε)ᴴ
     simp only [Matrix.conjTranspose_mul, hJh, Matrix.mul_assoc]
-  · intro v
-    show Jm ε * dpbH U x shc v * Jm ε = dpbH U x shc (Jm ε * v * Jm ε)
-    exact dpbH_theta hU hU' hJJ hJh hY shc dpb_shc_neg v
-  · intro v
-    show (dpbH U x shc v)ᴴ = dpbH U x shc vᴴ
-    exact dpbH_conjTranspose U x shc dpb_shc_neg v
+  · exact fun v => dpbH_theta hU hU' hJJ hJh hY shc dpb_shc_neg v
+  · exact fun v => dpbH_conjTranspose U x shc dpb_shc_neg v
   · intro v
     show (U * dpbD x * Uᴴ) * dpbH U x (fun u => (shc u - 1) / u) v -
       dpbH U x (fun u => (shc u - 1) / u) v * (U * dpbD x * Uᴴ) = dpbH U x shc v - v
@@ -307,19 +301,15 @@ theorem dpb_det {ε : Fin n → Bool} {U : Matrix (Fin n) (Fin n) ℂ} {x : Fin 
   · intro v
     show Complex.I • (Complex.I • v) = -v
     rw [smul_smul, Complex.I_mul_I, neg_one_smul]
-  · intro v
-    show Complex.I • dpbH U x shc v = dpbH U x shc (Complex.I • v)
-    exact (dpbH_smul U x shc Complex.I v).symm
+  · exact fun v => (dpbH_smul U x shc Complex.I v).symm
   · intro v
     show Jm ε * (Complex.I • v) * Jm ε = Complex.I • (Jm ε * v * Jm ε)
     rw [Matrix.mul_smul, Matrix.smul_mul]
   · intro v
     show (Complex.I • v)ᴴ = -(Complex.I • vᴴ)
     rw [Matrix.conjTranspose_smul, Complex.star_def, Complex.conj_I, neg_smul]
-  · intro v
-    exact dpbE_P v
-  · intro w
-    exact dpbP_E w
+  · exact fun v => dpbE_P v
+  · exact fun w => dpbP_E w
 
 end ReciprocityTheory.ChartRestriction.DS
 end -- clump:auto
@@ -393,8 +383,7 @@ theorem det_pos_of_posForm {V : Type*} [AddCommGroup V] [Module ℝ V] [FiniteDi
     (T : V →ₗ[ℝ] V) (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (hBs : ∀ v w, B v w = B w v)
     (hB : ∀ v, v ≠ 0 → 0 < B v v) (hT : ∀ v w, B v (T w) = B (T v) w)
     (hTp : ∀ v, v ≠ 0 → 0 < B v (T v)) : 0 < LinearMap.det T := by
-  by_contra hneg
-  push Not at hneg
+  by_contra! hneg
   set f : ℝ → ℝ := fun t => LinearMap.det (t • T + (1 - t) • LinearMap.id) with hf
   have hcont : Continuous f := by
     let b := Module.finBasis ℝ V
@@ -508,8 +497,7 @@ theorem trF_shcAd_pos (X : Matrix (Fin n) (Fin n) ℂ) (hX : X ≠ 0) : 0 < trF 
             Matrix.mul_assoc, Uy_mul_star, Matrix.mul_one]
       _ = 0 := by rw [h, Matrix.mul_zero, Matrix.zero_mul]
   obtain ⟨i0, j0, hij⟩ : ∃ i j, W i j ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hW0 (Matrix.ext fun i j => h i j)
   have hterm : ∀ i j, (((shc (pev y i - pev y j) : ℝ) : ℂ) * (star (W i j) * W i j)).re =
       shc (pev y i - pev y j) * Complex.normSq (W i j) := by
@@ -523,8 +511,7 @@ theorem trF_shcAd_pos (X : Matrix (Fin n) (Fin n) ℂ) (hX : X ≠ 0) : 0 < trF 
     exact Finset.sum_nonneg fun j _ => mul_nonneg (shc_pos _).le (Complex.normSq_nonneg _)
   · refine ⟨i0, Finset.mem_univ _, ?_⟩
     apply Finset.sum_pos'
-    · intro j _
-      exact mul_nonneg (shc_pos _).le (Complex.normSq_nonneg _)
+    · exact fun j _ => mul_nonneg (shc_pos _).le (Complex.normSq_nonneg _)
     · exact ⟨j0, Finset.mem_univ _, mul_pos (shc_pos _) (Complex.normSq_pos.2 hij)⟩
 
 end U
@@ -562,8 +549,7 @@ theorem trF_smul_right (c : ℝ) (X Z : Matrix (Fin n) (Fin n) ℂ) : trF X (c �
 theorem trF_self_pos (X : Matrix (Fin n) (Fin n) ℂ) (hX : X ≠ 0) : 0 < trF X X := by
   unfold trF
   obtain ⟨i0, j0, hij⟩ : ∃ i j, X i j ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hX (Matrix.ext fun i j => h i j)
   have hterm : ∀ i j, (star (X i j) * X i j).re = Complex.normSq (X i j) := by
     intro i j
@@ -572,12 +558,10 @@ theorem trF_self_pos (X : Matrix (Fin n) (Fin n) ℂ) (hX : X ≠ 0) : 0 < trF X
     rw [h, Complex.ofReal_re]
   simp only [Complex.re_sum, hterm]
   apply Finset.sum_pos'
-  · intro i _
-    exact Finset.sum_nonneg fun j _ => Complex.normSq_nonneg _
+  · exact fun i _ => Finset.sum_nonneg fun j _ => Complex.normSq_nonneg _
   · refine ⟨i0, Finset.mem_univ _, ?_⟩
     apply Finset.sum_pos'
-    · intro j _
-      exact Complex.normSq_nonneg _
+    · exact fun j _ => Complex.normSq_nonneg _
     · exact ⟨j0, Finset.mem_univ _, Complex.normSq_pos.2 hij⟩
 
 section P
@@ -785,17 +769,14 @@ def Bp (ε : Fin n → Bool) : (PCoord ε → ℂ) →ₗ[ℝ] (PCoord ε → �
 theorem det_shcAdCL_pos (y : PCoord ε → ℂ) : 0 < LinearMap.det (shcAdCL y) := by
   apply det_pos_of_posForm (shcAdCL y) (Bp ε)
   · intro v w
-    simp only [Bp, LinearMap.mk₂_apply]
-    exact trF_comm _ _
+    simpa only [Bp, LinearMap.mk₂_apply] using trF_comm _ _
   · intro v hv
-    simp only [Bp, LinearMap.mk₂_apply]
-    exact trF_self_pos _ (pmat_ne_zero v hv)
+    simpa only [Bp, LinearMap.mk₂_apply] using trF_self_pos _ (pmat_ne_zero v hv)
   · intro v w
     simp only [Bp, LinearMap.mk₂_apply, pmat_shcAdCL]
     rw [trF_shcAd_right, trF_shcAd_left]
   · intro v hv
-    simp only [Bp, LinearMap.mk₂_apply, pmat_shcAdCL]
-    exact trF_shcAd_pos y _ (pmat_ne_zero v hv)
+    simpa only [Bp, LinearMap.mk₂_apply, pmat_shcAdCL] using trF_shcAd_pos y _ (pmat_ne_zero v hv)
 
 end P
 
@@ -1148,8 +1129,7 @@ theorem fderiv_exp_two {ε : Fin n → Bool} (y : PCoord ε → ℂ) (W : Matrix
       fun s : ℝ => NormedSpace.exp ((2 : ℝ) • pmat y + s • W) := by
     funext s
     rw [two_smul, two_smul, Complex.coe_smul]
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem conj_cancel {A B X : Matrix (Fin n) (Fin n) ℂ}
     (h : NormedSpace.exp X * A * NormedSpace.exp X = NormedSpace.exp X * B * NormedSpace.exp X) :

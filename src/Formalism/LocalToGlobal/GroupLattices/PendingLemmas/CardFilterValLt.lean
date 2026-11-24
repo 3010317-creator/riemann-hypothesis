@@ -429,8 +429,7 @@ theorem initMinor_cat {n m : ℕ} (hm : m ≤ n) (I : Fin m → Fin n) :
       e0.extendSubtype_apply_of_mem (Fin.castLE hm q) q.isLt
     refine ⟨((Equiv.Perm.sign π : ℤ) : R),
       fun a i => if h : m + i < n then (if a = π ⟨m + i, h⟩ then 1 else 0) else 0, fun y => ?_⟩
-    rw [← Matrix.det_permute]
-    rw [det_unit_cols hm]
+    rw [← Matrix.det_permute, det_unit_cols hm]
     · congr 1
       ext p q
       have : (Fin.castLE hm q).val < n - (n - m) := by have := q.isLt; simp only [Fin.val_castLE]; omega
@@ -575,8 +574,7 @@ include hlam in
 theorem kap_eq (v : X.Pl) (s : Fin (X.G.P.n' v)) (ho : IsOddPos s) (t : Fin (m₀ + 1)) :
     ((nuOf (lamAt (lam v) s) t : ℕ) : ℤ) = cMu X j v s - X.nuv v (j + 1) s (t.rev.val + 1) := by
   have hne : ¬ Even s.val := by
-    rw [Nat.not_even_iff]
-    exact ho
+    rwa [Nat.not_even_iff]
   have h1 : cMu X j v s = lam v s 0 + X.Fl.w v (j + 1) s := hlam v s 0
   have h2 := nuv_le_first X v j s (t.rev.val + 1)
   unfold nuOf lamAt
@@ -790,8 +788,7 @@ theorem vtG_deg (v : X.Pl) (s : Fin (X.G.P.n' v))
     · intro b _ hb
       have : ¬ ((⟨b.1, b.2⟩ : Σ v : X.Pl, Fin (X.G.P.n' v)) = ⟨v, s⟩) := hb
       rw [ite_eq_right this, zero_mul]
-    · intro h
-      exact absurd (by simp) h
+    · exact fun h => absurd (by simp) h
   rw [hd, ← mem_weightedHomogeneousSubmodule]
   unfold VtG at hG
   refine Submodule.span_le.2 ?_ hG

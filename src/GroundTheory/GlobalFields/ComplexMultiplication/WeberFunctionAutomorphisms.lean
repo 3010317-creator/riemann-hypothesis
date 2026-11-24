@@ -72,8 +72,7 @@ theorem scale_conditions_iff (hW : IsShortForm W) (w : F) :
     intro k c hc
     rw [inv_pow]
     constructor
-    · intro h
-      exact inv_eq_one.mp (mul_right_cancel₀ hc (h.trans (one_mul c).symm))
+    · exact fun h => inv_eq_one.mp (mul_right_cancel₀ hc (h.trans (one_mul c).symm))
     · intro h
       rw [h, inv_one, one_mul]
   unfold automorphismOrder
@@ -82,17 +81,14 @@ theorem scale_conditions_iff (hW : IsShortForm W) (w : F) :
       rcases hW.a₄_ne_zero_or_a₆_ne_zero with h | h
       · exact h
       · exact absurd h6 h
-    simp only [h6, mul_zero, and_true, ite_true]
-    exact key 4 _ h4
+    simpa only [h6, mul_zero, and_true, ite_true] using key 4 _ h4
   by_cases h4 : W.a₄ = 0
-  · simp only [h4, h6, mul_zero, true_and, ite_false, ite_true]
-    exact key 6 _ h6
+  · simpa only [h4, h6, mul_zero, true_and, ite_false, ite_true] using key 6 _ h6
   · simp only [h4, h6, ite_false, key 4 _ h4, key 6 _ h6]
     constructor
     · rintro ⟨a, b⟩
       have : w ^ 6 = w ^ 4 * w ^ 2 := by ring
-      rw [this, a, one_mul] at b
-      exact b
+      rwa [this, a, one_mul] at b
     · intro h
       refine ⟨?_, ?_⟩
       · rw [show w ^ 4 = (w ^ 2) ^ 2 by ring, h, one_pow]

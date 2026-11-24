@@ -38,14 +38,12 @@ theorem isEquivalent_add_pow (D j : ℕ) :
       simpa [Real.norm_eq_abs] using
         (tendsto_natCast_atTop_atTop (R := ℝ)).congr' (Eventually.of_forall fun n => by simp)
     simpa using this.const_mul_left (j : ℝ)
-  have h2 := (IsEquivalent.refl (u := fun n : ℕ => (n : ℝ)) (l := atTop)).add_isLittleO h1
-  exact h2.pow D
+  exact ((IsEquivalent.refl (u := fun n : ℕ => (n : ℝ)) (l := atTop)).add_isLittleO h1).pow D
 
 theorem isLittleO_succ_pow_sub (D : ℕ) :
     (fun n : ℕ => ((n : ℝ) + 1) ^ (D + 1) - (n : ℝ) ^ (D + 1)) =o[atTop]
       fun n : ℕ => (n : ℝ) ^ (D + 1) := by
-  have h := (isEquivalent_add_pow (D + 1) 1).isLittleO
-  exact h.congr (fun n => by simp) (fun n => rfl)
+  exact ((isEquivalent_add_pow (D + 1) 1).isLittleO).congr (fun n => by simp) (fun n => rfl)
 
 theorem powLog_mono (D : ℕ) {m n : ℕ} (h : m ≤ n) :
     (m : ℝ) ^ D * Real.log ((m : ℝ) + 1) ≤ (n : ℝ) ^ D * Real.log ((n : ℝ) + 1) := by

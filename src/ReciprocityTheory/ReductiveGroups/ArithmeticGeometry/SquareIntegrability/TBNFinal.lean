@@ -127,13 +127,11 @@ theorem stepP : StepP := by
     exact setAverage_preimage_linearEquiv_comp X (piR X hq hπ) g hg _ (ZSpan.fundamentalDomain_measurableSet X.b)
   · intro β hβ x
     have h1 := (mem_P X hq hπ β).mp hβ
-    simp only [map_add (f := _)]
-    exact hper _ h1 _
+    simpa only [map_add (f := _)] using hper _ h1 _
 
 section Q
 
-theorem q_ne {q : ℕ} (hq : 1 ≤ q) : (q : ℝ) ≠ 0 := by
-  exact Nat.cast_ne_zero.mpr (by omega)
+theorem q_ne {q : ℕ} (hq : 1 ≤ q) : (q : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
 
 def bQ (X : PT E) {q : ℕ} (hq : 1 ≤ q) : Basis (Fin (2 * Fintype.card (Idx X.dim))) ℝ (Vsp X.dim) :=
   X.b.map (LinearEquiv.smulOfNeZero ℝ _ (q : ℝ) (q_ne hq)).symm
@@ -203,11 +201,9 @@ theorem P_le_Q (X : PT E) {q : ℕ} {π : Vsp X.dim →ₗ[ℂ] Vsp X.dim} (hq :
     rw [inner_smul_right] at h1
     simp only [Complex.mul_im, Complex.I_re, Complex.I_im, zero_mul, one_mul, zero_add] at h1
     have h2 : ‖w - (q : ℝ) • x‖ ^ 2 = 0 := by
-      rw [← inner_self_eq_norm_sq (𝕜 := ℂ)]
-      exact h1
+      rwa [← inner_self_eq_norm_sq (𝕜 := ℂ)]
     exact norm_eq_zero.mp (pow_eq_zero_iff (by norm_num) |>.mp h2)
-  rw [← sub_eq_zero.mp hu0]
-  exact hwL
+  rwa [← sub_eq_zero.mp hu0]
 
 theorem stepK : StepK := by
   intro E _ _ X q n π hq hπ K hK
@@ -242,8 +238,7 @@ theorem stepK : StepK := by
   have hf : ∀ c ∈ T, f c ∈ K ∧ ∀ k, π (c k - f c k) ∈ X.L := by
     intro c hc
     have h := hT c hc
-    simp only [f, dite_eq_left h]
-    exact Classical.choose_spec (hK.2 c h).exists
+    simpa only [f, dite_eq_left h] using Classical.choose_spec (hK.2 c h).exists
   have hcard : T.card ≤ K.card := by
     apply Finset.card_le_card_of_injOn f
     · intro c hc
@@ -267,8 +262,7 @@ theorem stepK : StepK := by
       exact sub_eq_zero.mp h5
   have hTc : T.card = q ^ (Fintype.card (Idx X.dim) * n) := by
     simp only [T, Fintype.card_piFinset, Finset.prod_const, Finset.card_univ, Fintype.card_fin, hcR', pow_mul]
-  rw [← hTc]
-  exact hcard
+  rwa [← hTc]
 
 end
 

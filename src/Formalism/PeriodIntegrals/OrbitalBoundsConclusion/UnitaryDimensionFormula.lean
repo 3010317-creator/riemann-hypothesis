@@ -190,8 +190,7 @@ theorem da_cT_sub {m p : Type} (M N : Matrix m p A) :
 theorem da_herm (hσ : ∀ a, σ (σ a) = a) (hJ : Formalism.UG.IsHerm σ J) (x y : Fin n → A) :
     Formalism.UG.hform σ J x y = σ (Formalism.UG.hform σ J y x) := by
   have hJ' : ∀ i j, σ (J i j) = J j i := fun i j => by
-    have h := congrFun (congrFun hJ j) i
-    simpa [Formalism.UG.cT] using h
+    simpa [Formalism.UG.cT] using congrFun (congrFun hJ j) i
 
   simp only [Formalism.UG.hform, map_sum, map_mul, hσ, hJ']
   rw [Finset.sum_comm]
@@ -975,8 +974,7 @@ theorem fixV_perp (hS : IdxDSig) {e : Af X.B.I.F} (he : e * e = e) (u : D.what�
   · exact h1 a
   · exact h2 a
   · rw [Set.mem_singleton_iff] at hz
-    rw [hz]
-    exact h3
+    rwa [hz]
 
 variable (hJ : IdxDJacE) {e : Af X.B.I.F} (hE : EgProp X.B.I.F X.B.g e) (u : D.what₂.Word)
 include hJ hE
@@ -985,20 +983,17 @@ theorem eh_cong (a : Fin D.R.rS) : eh X e a - E1 X e • X.e0 a ∈ mL X.B.I X.B
   have := congruence_on_idempotent hJ hE (X.basisApprox a).1
   rw [smul_sub] at this
   have h2 := (mL X.B.I X.B.g).neg_mem this
-  rw [neg_sub] at h2
-  exact h2
+  rwa [neg_sub] at h2
 
 theorem fh_cong (a : Fin D.R.rS) : fh X e a - E1 X e • X.f0 a ∈ mL X.B.I X.B.g := by
   have := congruence_on_idempotent hJ hE (X.basisApprox a).2
   rw [smul_sub] at this
   have h2 := (mL X.B.I X.B.g).neg_mem this
-  rw [neg_sub] at h2
-  exact h2
+  rwa [neg_sub] at h2
 
 theorem zh_cong : zh X e u - E1 X e • X.z0 ∈ mL X.B.I X.B.g := by
   have := congruence_on_idempotent hJ hE (X.xu_z u)
-  rw [smul_sub] at this
-  exact this
+  rwa [smul_sub] at this
 
 theorem mem_of_cong {x x0 : VA X.B.I} (hx0 : x0 ∈ X.B.I.Lf) (h : x - E1 X e • x0 ∈ mL X.B.I X.B.g) :
     x ∈ X.B.I.Lf := by
@@ -1049,8 +1044,7 @@ theorem N_cong : ZMod' X.B.I X.B.g (hA X.B.I (zh X e u) (zh X e u) + E1 X e) := 
   have heq : (hA X.B.I (zh X e u) (zh X e u) - E1 X e * hA X.B.I X.z0 X.z0) +
       E1 X e * (hA X.B.I X.z0 X.z0 + 1) =
       hA X.B.I (zh X e u) (zh X e u) + E1 X e := by ring
-  rw [heq] at hsum
-  exact hsum
+  rwa [heq] at hsum
 
 theorem Qv_cong {y : VA X.B.I} (hy : y ∈ X.B.I.Lf) (he0 : ∀ a, ZMod' X.B.I X.B.g (hA X.B.I (X.e0 a) y))
     (hf0 : ∀ a, ZMod' X.B.I X.B.g (hA X.B.I (X.f0 a) y)) (hz0 : ZMod' X.B.I X.B.g (hA X.B.I X.z0 y)) :
@@ -1324,10 +1318,8 @@ theorem cj_good {D : D7} {X : HidaSetting D} (u : D.what₂.Word) (s : Hfin X u)
   have hk1 : (((1 : Hfin X u) : X.B.I.Gf) * X.xu u)⁻¹ * ((s : X.B.I.Gf) * X.xu u) ∈ X.B.I.Kset := by
     simpa [cj, mul_assoc] using hs
   have hk2 : ((s : X.B.I.Gf) * X.xu u)⁻¹ * (((1 : Hfin X u) : X.B.I.Gf) * X.xu u) ∈ X.B.I.Kset := by
-    have hi := PI.UnitaryDimensionFormula.kset_inv hs
-    simpa [cj, mul_assoc, mul_inv_rev] using hi
-  have hg := NormCutK.colGood X u 1 s hk1 hk2
-  simpa [cj, mul_assoc] using hg
+    simpa [cj, mul_assoc, mul_inv_rev] using PI.UnitaryDimensionFormula.kset_inv hs
+  simpa [cj, mul_assoc] using NormCutK.colGood X u 1 s hk1 hk2
 
 theorem idxHom : IdxHom := by
   intro D X Y u _
@@ -1660,8 +1652,7 @@ theorem stabBound_holds : StabBound := by
       intro x hx
       have h3 := hfun (Submodule.Quotient.mk ⟨x, hx⟩)
       rw [indQ_mk _ _ _ _ _ (hp η1.1 η1.2 x hx), indQ_mk _ _ _ _ _ (hp η2.1 η2.2 x hx)] at h3
-      have h4 := (Submodule.Quotient.eq _).1 h3
-      simpa using h4
+      simpa using (Submodule.Quotient.eq _).1 h3
     have hM : ((matOf X (η1.1 : X.B.I.Gf) : GL (Fin X.B.I.n) X.B.I.E) :
           Matrix (Fin X.B.I.n) (Fin X.B.I.n) X.B.I.E) =
         ((matOf X (η2.1 : X.B.I.Gf) : GL (Fin X.B.I.n) X.B.I.E) :

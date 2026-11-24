@@ -110,8 +110,7 @@ theorem le_finrank_sec (x : κ → Ω) (e : Fin (D + 1) → κ) (h : IsProjFrame
     funext l
     exact Subtype.ext (congrFun h1 l)
   have h2 := LinearMap.finrank_le_finrank_of_injective hinj
-  rw [finrank_fin_pi, finrank_sec_free (x ∘ e) h.isRatProjFrame.free n] at h2
-  exact h2
+  rwa [finrank_fin_pi, finrank_sec_free (x ∘ e) h.isRatProjFrame.free n] at h2
 
 noncomputable def betaMap (x : κ → Ω) (e : Fin (D + 1) → κ) (h : IsProjFrame x e) {k δ : ℕ} (ε : Fin δ → Ω)
     (hε : ∀ l, ε l ∈ sec ℤ x k) (n : ℕ) : sec ℤ x n →+ (Fin δ → sec ℤ (x ∘ e) (n + k)) :=
@@ -135,14 +134,12 @@ theorem finrank_sec_le (x : κ → Ω) (e : Fin (D + 1) → κ) (h : IsProjFrame
       congrArg Subtype.val (congrFun hs l)
     exact Subtype.ext (eq_zero_of_secTrace_mul_eq_zero x e h.isRatProjFrame ε hε hli n s.2 h0)
   have h2 := LinearMap.finrank_le_finrank_of_injective hinj
-  rw [finrank_fin_pi, finrank_sec_free (x ∘ e) h.isRatProjFrame.free (n + k)] at h2
-  exact h2
+  rwa [finrank_fin_pi, finrank_sec_free (x ∘ e) h.isRatProjFrame.free (n + k)] at h2
 
 theorem shift_pow_sub_pow_isBigO (D : ℕ) (a : ℝ) :
     (fun n : ℕ => ((n : ℝ) + a) ^ D - (n : ℝ) ^ D) =O[atTop] fun n : ℕ => (n : ℝ) ^ D / (n : ℝ) := by
   rcases Nat.eq_zero_or_pos D with rfl | hD
-  · simp
-    exact Asymptotics.isBigO_zero _ _
+  · simpa using Asymptotics.isBigO_zero _ _
   have key : (fun n : ℕ => ((n : ℝ) + a) ^ D - (n : ℝ) ^ D) =
       ∑ i ∈ Finset.range D, fun n : ℕ => (n : ℝ) ^ i * a ^ (D - i) * (D.choose i : ℝ) := by
     funext n

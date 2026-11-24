@@ -78,8 +78,7 @@ theorem gmap_eq_iff (g : S.V ≃ₗ[E] S.V) (L : Submodule (𝓞 E) S.V) :
     constructor
     · rintro ⟨y, hy, rfl⟩
       simpa using hy
-    · intro hx
-      exact ⟨g.symm x, hx, by simp⟩
+    · exact fun hx => ⟨g.symm x, hx, by simp⟩
   constructor
   · intro h y
     have := hm (g y)
@@ -197,8 +196,7 @@ theorem nlam_conj (hg : IsAutLam S Λ g) (hfr : ∀ a, frame F₂ a = g (frame F
   have hO : ∀ x, x ∈ orth S (Xsp F₂) ↔ g.symm x ∈ orth S (Xsp F₁) := orth_mem hfr hg.1
   have hAut : IsAutLam S Λ s ↔ IsAutLam S Λ (g⁻¹ * s * g) := by
     constructor
-    · intro h
-      exact isAutLam_mul Λ (isAutLam_mul Λ (isAutLam_inv Λ hg) h) hg
+    · exact fun h => isAutLam_mul Λ (isAutLam_mul Λ (isAutLam_inv Λ hg) h) hg
     · intro h
       have := isAutLam_mul Λ (isAutLam_mul Λ hg h) (isAutLam_inv Λ hg)
       simpa [mul_assoc] using this
@@ -302,12 +300,9 @@ theorem nr_units {u u' : D.what₂.Word} {F0 : FlagG (VS D) D.R.rS ((Tu D u : �
 private theorem isUpUni_inv' {N : ℕ} {K : Type} [Field K] {U : Matrix (Fin N) (Fin N) K}
     (h : IsUpUni U) : IsUpUni U⁻¹ := by
   have h' : Formalism.DoubleCosetMeasures.IsUpUni U := by
-    refine ⟨?_, fun a => (h a a).2 rfl⟩
-    intro i j hij
-    exact (h i j).1 hij
+    exact ⟨fun i j hij => (h i j).1 hij, fun a => (h a a).2 rfl⟩
   have h2 := Formalism.DoubleCosetMeasures.isUpUni_inv K h'
-  intro i j
-  exact ⟨fun hij => h2.1 hij, fun hij => hij ▸ h2.2 i⟩
+  exact fun i j => ⟨fun hij => h2.1 hij, fun hij => hij ▸ h2.2 i⟩
 
 private theorem conj_lemma_2 {N : ℕ} {K : Type} [Field K] (Z L B W U b S : Matrix (Fin N) (Fin N) K)
     (hZ : IsUnit Z.det) (hL : IsUnit L.det) (hU : IsUnit U.det) (hB : IsUnit B.det)
@@ -397,8 +392,7 @@ theorem tw_isom_st (F0 : FlagG (VS D) D.R.rS ((Tu D u : ℕ) : D.host.E))
     (hZ1 : Zhat F0 F'' * sgnM D.R.rS = L * ptMat w * U) (hGr : IsUnit (gramOf (gg F0 F'')).det) (β : StG w) :
     tw F0 F'' L (hLu_of hL) hZu hGr (β : GLR D) ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := by
   have hβ : (β : GLR D) ∈ StSet (ptMat w) := β.2
-  intro x y
-  exact tw_isom hL (hLu_of hL) hZu hGr (β : GLR D) hβ.1 (P'm_up_st hL hU hZu hZ1 hβ) x y
+  exact fun x y => tw_isom hL (hLu_of hL) hZu hGr (β : GLR D) hβ.1 (P'm_up_st hL hU hZu hZ1 hβ) x y
 
 def Phi (F0 : FlagG (VS D) D.R.rS ((Tu D u : ℕ) : D.host.E))
     (F'' : FlagG (VS D) D.R.rS ((Tu D u' : ℕ) : D.host.E)) {w : Point D.host.E (D.R.rS + 1)} {L U : MatR D}
@@ -657,8 +651,7 @@ theorem volume_dictionary_lu_decomposition (Y : Formalism.L2.SG.Full.Full X) {u 
         rw [LinearEquiv.apply_symm_apply]
       exact h2.trans ((congrArg (fun v => n0 (m0 v)) h3).trans (h5.symm.trans h4.symm))
     have this2 := (Formalism.L2.SG.Pf.RelativeIndexFlags.nlam_conj h1 hfr1 n).symm
-    simp only [inv_one, one_mul, mul_one] at this2
-    exact this2
+    simpa only [inv_one, one_mul, mul_one] using this2
   have hRO : ∀ y, (∃ r ∈ Formalism.L2.SG.TermOp.ROinf t, y = xn.1 * r * xn.1⁻¹) ↔
       y ∈ ROset X (X.Fu u) (X.Fu u') t.lam t.lam' γ' := by
     intro y
@@ -832,9 +825,7 @@ private theorem sgnM_mul_self' {r : ℕ} {K : Type*} [Field K] :
 
 private theorem isUpUni_inv_and_isUnit_det_of_isUpUni {n : ℕ} {K : Type*} [Field K] {N : Matrix (Fin n) (Fin n) K} (hN : IsUpUni N) :
     IsUpUni N⁻¹ ∧ IsUnit N.det := by
-  have hbt : N.BlockTriangular id := by
-    intro i j hij
-    exact (hN i j).1 hij
+  have hbt : N.BlockTriangular id := fun i j hij => (hN i j).1 hij
   have hdet : N.det = 1 := by
     rw [Matrix.det_of_upperTriangular hbt]
     exact Finset.prod_eq_one fun i _ => (hN i i).2 rfl
@@ -860,9 +851,7 @@ theorem P'm_eq {u u' : D.what₂.Word} {F0 : FlagG (VS D) D.R.rS ((Tu D u : ℕ)
     P'm F0 F'' L B = sgnM D.R.rS * (U⁻¹ * b * U) * sgnM D.R.rS := by
   have hWu : IsUnit (ptMat w).det := isUnit_iff_ne_zero.mpr (Formalism.L2.SG.Pf.StabilizerIndexVolumes.ptMat_det w)
   have hLu : IsUnit L.det := by
-    have hbt : Lᵀ.BlockTriangular id := by
-      intro i j h
-      exact (hL j i).1 h
+    have hbt : Lᵀ.BlockTriangular id := fun i j h => (hL j i).1 h
     rw [← Matrix.det_transpose, Matrix.det_of_upperTriangular hbt]
     rw [Finset.prod_eq_one (fun i _ => (show Lᵀ i i = 1 from (hL i i).2 rfl))]
     exact isUnit_one
@@ -947,8 +936,7 @@ theorem conjW_blk {w : Point D.host.E (D.R.rS + 1)} {β : GLR D} (hβ : β ∈ S
   have e1 := hWi c c' h1
   have e2 := hWb d' d h2
   have hlt : c' < d' := by
-    by_contra hle
-    push Not at hle
+    by_contra! hle
     have := blkOf_mono w.1 d'.1 c'.1 hle
     omega
   rw [(hlo c' d').1 hlt, mul_zero, zero_mul]
@@ -1193,8 +1181,7 @@ theorem K_FM {F0' F'' : FlagG (VS D) D.R.rS T'} (τ g m' : (VS D).V ≃ₗ[D.hos
     rw [LinearEquiv.symm_apply_apply]
   have hinv : FM F0'.fvec ⇑(m'⁻¹) Mm⁻¹ := FM_inv hm hMm
   have h1 := FM_comp (g := m'.toLinearMap) (h := (g⁻¹ * τ * g).toLinearMap) hm hA
-  have h2 := FM_comp (g := m'.toLinearMap ∘ₗ (g⁻¹ * τ * g).toLinearMap) (h := (m'⁻¹).toLinearMap) h1 hinv
-  exact h2
+  exact FM_comp (g := m'.toLinearMap ∘ₗ (g⁻¹ * τ * g).toLinearMap) (h := (m'⁻¹).toLinearMap) h1 hinv
 
 end KFM
 
@@ -1259,8 +1246,7 @@ theorem Alin_shear {N : Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) ℂ} (hN : 
       have h2 : d.val ≤ p.1.2.val := hdb
       have h3 : c.val < d.val := hcd.1
       have h4 : c.val ≠ p.1.1.val ∨ d.val ≠ p.1.2.val := by
-        by_contra hh
-        push Not at hh
+        by_contra! hh
         exact hne (Prod.ext (Fin.ext hh.1) (Fin.ext hh.2))
       show d.val - c.val < p.1.2.val - p.1.1.val
       omega

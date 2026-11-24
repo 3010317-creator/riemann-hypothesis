@@ -108,8 +108,7 @@ theorem divisorSum_mul {ψ : Ideal (𝓞 K) → ℝ} (hψ : ∀ A B, ψ (A * B) 
   · intro D hD
     rw [mem_idealDivisors hIJ0] at hD
     exact sup_mul_sup_eq_of_le hIJ hD
-  · intro p _
-    exact (hψ p.1 p.2).symm
+  · exact fun p _ => (hψ p.1 p.2).symm
 
 theorem divisorSum_prime_pow {ψ : Ideal (𝓞 K) → ℝ} (hψ : ∀ A B, ψ (A * B) = ψ A * ψ B)
     (hψ1 : ψ ⊤ = 1) {P : Ideal (𝓞 K)} (hP : Prime P) (k : ℕ) :
@@ -286,8 +285,7 @@ theorem divisorSumCoeff_nonneg {ψ : Ideal (𝓞 K) → ℝ} (hψ : ∀ A B, ψ 
 theorem divisorSumCoeff_one (ψ : Ideal (𝓞 K) → ℝ) : divisorSumCoeff ψ 1 = ψ ⊤ := by
   rw [divisorSumCoeff, tsum_eq_single ⟨⊤, absNorm_top⟩]
   · rw [divisorSum_top]
-  · intro I hI
-    exact absurd (Subtype.ext (absNorm_eq_one_iff.1 I.2)) hI
+  · exact fun I hI => absurd (Subtype.ext (absNorm_eq_one_iff.1 I.2)) hI
 
 end
 
@@ -427,8 +425,7 @@ theorem continuation_ne_zero_of_sq_eq_one (t : ℝ)
 
   have hψL : ∀ s : ℂ, 1 < s.re →
       ∑' J, (ψ J : ℂ) * (absNorm J : ℂ) ^ (-s) = χ.LFunction (s + t * I) := fun s hs ↦ by
-    simp only [hψc]
-    exact (χ.hasSum_twistCoeff t hs).tsum_eq
+    simpa only [hψc] using (χ.hasSum_twistCoeff t hs).tsum_eq
 
   set g₁ : ℂ → ℂ := fun s ↦ G (s + t * I) with hg₁_def
   have hg₁ : Differentiable ℂ g₁ := hG.comp (differentiable_id.add_const _)
@@ -586,8 +583,7 @@ theorem continuation_ne_zero_of_not_sq (t : ℝ)
     have hre : 1 < ((x : ℂ) + q).re := by simp [hq, hxpos']
     have := χ.one_le_norm_dedekindZeta_pow_mul (σ := 1 + x) (by linarith) t
     rw [e1, e2] at this
-    rw [norm_one, hx, hG₂L _ hre]
-    exact this
+    rwa [norm_one, hx, hG₂L _ hre]
 
   have HZ : (fun x : ℝ ↦ dedekindZeta K ((1 + x : ℝ) : ℂ)) =O[𝓝[>] 0] fun x ↦ (1 : ℂ) / x := by
     have hmap : Tendsto (fun x : ℝ ↦ 1 + x) (𝓝[>] 0) (𝓝[>] 1) := by
@@ -698,8 +694,7 @@ theorem continuation_ne_zero_of_one_le_re
   rw [hse]
   refine χ.LFunction_continuation_ne_zero s.im ?_ (hG _)
     (Eventually.of_forall fun z hz ↦ hGL z hz)
-  intro h
-  exact hχ ⟨-s.im, χ.toIdele_eq_cpow_of_forall s.im h⟩
+  exact fun h => hχ ⟨-s.im, χ.toIdele_eq_cpow_of_forall s.im h⟩
 
 end HeckeCharacter
 

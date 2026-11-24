@@ -29,8 +29,7 @@ theorem mem_imgLat_iff {W : Type} [AddCommGroup W] [Module ℂ W] (g : W ≃ₗ[
   · rintro ⟨y, hy, rfl⟩
     show g.symm (g y) ∈ M
     rw [LinearEquiv.symm_apply_apply]; exact hy
-  · intro h
-    exact ⟨g.symm x, h, g.apply_symm_apply x⟩
+  · exact fun h => ⟨g.symm x, h, g.apply_symm_apply x⟩
 
 theorem symm_coord (e : V ≃ₗ[ℂ] (ι → V₁)) (g : V ≃ₗ[ℂ] V) (g₁ : V₁ ≃ₗ[ℂ] V₁) (h : ∀ x i, e (g x) i = g₁ (e x i))
     (x : V) (i : ι) : e (g.symm x) i = g₁.symm (e x i) := by
@@ -57,15 +56,13 @@ theorem mem_prodReps (S₁ : Finset V₁) (x : V) : x ∈ prodReps e S₁ ↔ �
   · rintro ⟨p, hp, rfl⟩ i
     rw [LinearEquiv.apply_symm_apply]
     exact Fintype.mem_piFinset.mp hp i
-  · intro h
-    exact ⟨e x, Fintype.mem_piFinset.mpr h, e.symm_apply_apply x⟩
+  · exact fun h => ⟨e x, Fintype.mem_piFinset.mpr h, e.symm_apply_apply x⟩
 
 theorem Copies.reps (c : Copies e H H₁ α α₁ Λ Λ₁ δ Ae δ₁ Ae₁) {S₁ : Finset V₁}
     (hS : IsReps (latA Λ₁ δ₁ Ae₁) Λ₁ S₁) : IsReps (latA Λ δ Ae) Λ (prodReps e S₁) := by
   obtain ⟨h1, h2, h3⟩ := hS
   refine ⟨?_, ?_, ?_⟩
-  · intro x hx
-    exact (c.lat x).2 fun i => h1 _ ((mem_prodReps S₁ x).1 hx i)
+  · exact fun x hx => (c.lat x).2 fun i => h1 _ ((mem_prodReps S₁ x).1 hx i)
   · intro x hx y hy hxy
     apply e.injective
     funext i

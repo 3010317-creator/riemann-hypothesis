@@ -70,13 +70,11 @@ theorem hint_zero {H : Type} [Group H] (K : Subgroup H) : hint K (fun _ : H => (
 
 theorem mconv_zero_right {a b : ℕ} {w : Pl E} (u : LF a b w) : mconv u (0 : LF a b w) = 0 := by
   funext m
-  simp only [mconv, Pi.zero_apply, mul_zero]
-  exact hint_zero _
+  simpa only [mconv, Pi.zero_apply, mul_zero] using hint_zero _
 
 theorem mconv_zero_left {a b : ℕ} {w : Pl E} (u : LF a b w) : mconv (0 : LF a b w) u = 0 := by
   funext m
-  simp only [mconv, Pi.zero_apply, zero_mul]
-  exact hint_zero _
+  simpa only [mconv, Pi.zero_apply, zero_mul] using hint_zero _
 
 theorem lfStar_zero {a b : ℕ} {w : Pl E} : lfStar (0 : LF a b w) = 0 := by
   funext y
@@ -276,8 +274,7 @@ theorem sum_diag_right {a : ℕ} {w : Pl E} (M : d.kap w → d.kap w → LF a (n
   · simp [LocData.diag]
   · intro z _ hz
     simp [LocData.diag, hz, mconv_zero_right]
-  · intro h
-    exact absurd (Finset.mem_univ y) h
+  · exact fun h => absurd (Finset.mem_univ y) h
 
 theorem sum_diag_left {a : ℕ} {w : Pl E} (M : d.kap w → d.kap w → LF a (n - a) w) (f : LF a (n - a) w)
     (x y : d.kap w) : ∑ z, mconv (d.diag (fun _ => f) x z) (M z y) = mconv f (M x y) := by
@@ -285,8 +282,7 @@ theorem sum_diag_left {a : ℕ} {w : Pl E} (M : d.kap w → d.kap w → LF a (n 
   · simp [LocData.diag]
   · intro z _ hz
     simp [LocData.diag, Ne.symm hz, mconv_zero_left]
-  · intro h
-    exact absurd (Finset.mem_univ x) h
+  · exact fun h => absurd (Finset.mem_univ x) h
 
 theorem hecke_qT {a : ℕ} (w : Pl E) (s : Finset (Fin (n / 2))) : IsHecke (I2 a (n - a) w) (d.qT a w s) := by
   by_cases h : LocData.admitted n a s
@@ -329,16 +325,14 @@ theorem hecke_mac (h3 : LocOpUniformizer E) (hd : d.Ok) {a : ℕ} (ha : a ≤ n)
     have e : (-1) ^ (a * (n - a)) * GeneralLinearGroup.det (k * g).1 ^ (n - a) * GeneralLinearGroup.det (k * g).2 ^ a =
         ((-1) ^ (a * (n - a)) * GeneralLinearGroup.det g.1 ^ (n - a) * GeneralLinearGroup.det g.2 ^ a) *
           (GeneralLinearGroup.det k.1 ^ (n - a) * GeneralLinearGroup.det k.2 ^ a) := by
-      simp only [Prod.fst_mul, Prod.snd_mul, map_mul, mul_pow]
-      exact rearr _ _ _ _ _
+      simpa only [Prod.fst_mul, Prod.snd_mul, map_mul, mul_pow] using rearr _ _ _ _ _
     rw [e, map_mul, hk'.2, mul_one]
   have m2 : d.μ w ((-1) ^ (a * (n - a)) * GeneralLinearGroup.det (g * k).1 ^ (n - a) * GeneralLinearGroup.det (g * k).2 ^ a) =
       d.μ w ((-1) ^ (a * (n - a)) * GeneralLinearGroup.det g.1 ^ (n - a) * GeneralLinearGroup.det g.2 ^ a) := by
     have e : (-1) ^ (a * (n - a)) * GeneralLinearGroup.det (g * k).1 ^ (n - a) * GeneralLinearGroup.det (g * k).2 ^ a =
         ((-1) ^ (a * (n - a)) * GeneralLinearGroup.det g.1 ^ (n - a) * GeneralLinearGroup.det g.2 ^ a) *
           (GeneralLinearGroup.det k.1 ^ (n - a) * GeneralLinearGroup.det k.2 ^ a) := by
-      simp only [Prod.fst_mul, Prod.snd_mul, map_mul, mul_pow]
-      exact rearr' _ _ _ _ _
+      simpa only [Prod.fst_mul, Prod.snd_mul, map_mul, mul_pow] using rearr' _ _ _ _ _
     rw [e, map_mul, hk'.2, mul_one]
   refine ⟨?_, ?_⟩
   · simp only [LocData.mac, phiMu, p1, m1]

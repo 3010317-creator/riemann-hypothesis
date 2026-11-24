@@ -524,8 +524,7 @@ theorem bd_local (v : HeightOneSpectrum (𝓞 F)) (a : v.adicCompletion F) :
   obtain ⟨c, hc⟩ := Ideal.mem_span_singleton'.1 (Ideal.absNorm_mem (Ideal.span {b}))
   refine ⟨(Ideal.absNorm (Ideal.span {b}) : ℤ), ?_, ?_⟩
   · have h0 : Ideal.absNorm (Ideal.span {b}) ≠ 0 := by
-      rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-      exact hb0
+      rwa [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
     exact_mod_cast h0
   · have hab' : a * algebraMap F (v.adicCompletion F) (b : F) ∈ v.adicCompletionIntegers F := by
       first
@@ -586,8 +585,7 @@ theorem bounded_rational_unitary : BddR := by
   have e : dv E v (N : 𝓞 F) = (N : E ⊗[F] v.adicCompletion F) := by
     unfold dv
     simp [PI.UnitaryApproxDefs.inclE]
-  rw [e]
-  exact h
+  rwa [e]
 
 end PI.UnitaryApproxFinWork
 
@@ -790,8 +788,7 @@ theorem unitary_scalars : UnitS := by
   let O := v.adicCompletionIntegers F
   let S := Sv E v
   have hgen2 : ∀ y : O, ((1 : E) ⊗ₜ[F] (y : v.adicCompletion F)) ∈ S := by
-    intro y
-    exact Subring.subset_closure (Or.inr ⟨⟨y, y.2⟩, rfl⟩)
+    exact fun y => Subring.subset_closure (Or.inr ⟨⟨y, y.2⟩, rfl⟩)
   let ψ : O →+* E ⊗[F] v.adicCompletion F :=
     (Algebra.TensorProduct.includeRight :
       v.adicCompletion F →ₐ[F] E ⊗[F] v.adicCompletion F).toRingHom.comp O.subtype

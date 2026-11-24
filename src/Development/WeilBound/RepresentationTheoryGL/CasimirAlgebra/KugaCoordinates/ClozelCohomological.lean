@@ -161,8 +161,7 @@ theorem intersection_update_fsHerm_neg_one (τ : E →+* ℂ) (k : Kinf E a) (X 
     have h1 : star k.1 * k.1 = 1 := Matrix.UnitaryGroup.star_mul_self k
     have h2 := congrArg (fun m => m.map (coord τ)) h1
     simp only [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)] at h2
-    rw [hs] at h2
-    exact h2
+    rwa [hs] at h2
   have hm : (k.1 * X * star k.1).map (coord τ) = U * X.map (coord τ) * Uᴴ := by
     rw [Matrix.map_mul, Matrix.map_mul, hs]
     rfl
@@ -180,8 +179,7 @@ theorem intersection_update_fsHerm_neg_one (τ : E →+* ℂ) (k : Kinf E a) (X 
 
 theorem kap_bar [_root_.NumberField.IsTotallyComplex E] (τ : E →+* ℂ) (k : Kinf E a) (x y : Fin a) :
     kap E a (barE E τ) k x y = star (kap E a τ k x y) := by
-  simp only [kap, Matrix.map_apply]
-  exact J.coord_conjugate τ _
+  simpa only [kap, Matrix.map_apply] using J.coord_conjugate τ _
 
 theorem eta_expand [_root_.NumberField.IsTotallyComplex E] (lab : Fin q → (E →+* ℂ)) (tl : Fin N → (E →+* ℂ)) (ρ : Kinf E a → Module.End ℂ M)
     (η : TV a M (Fin q ⊕ (Fin N ⊕ Fin N)))
@@ -346,8 +344,7 @@ theorem om_ne [_root_.NumberField.IsTotallyComplex E] (tl : Fin N → (E →+* �
   let A : Fin N → Herm E a := fun j => hY (tl j) (Q j) (P j) (1 / 2)
   let B : Fin N → Herm E a := fun j => hY (tl j) (Q j) (P j) (Complex.I / 2)
   have hz : cEv (fun v => om tl η v I) A B = 0 := by
-    simp only [h0, AlternatingMap.zero_apply, Pi.zero_apply]
-    exact cEv_zero (V := M) A B
+    simpa only [h0, AlternatingMap.zero_apply, Pi.zero_apply] using cEv_zero (V := M) A B
   have e2 : ∀ A B : Fin N → Herm E a, cEv (fun v => mm tl η v I) A B = ∑ x : Fin N → Fin a, ∑ y : Fin N → Fin a,
       (∏ k, (coord (tl k) ((A k).1 (y k) (x k)) - Complex.I * coord (tl k) ((B k).1 (y k) (x k)))) •
         η (Sum.elim I (Sum.elim x y)) := fun A B => by
@@ -473,8 +470,7 @@ theorem lie_apply_eq_sum : ∀ (E : Type) [Field E] [NumberField E] (a : ℕ) (M
       exact h1.mul (hE s k).star
     have e : Z * (Y i).1 * star (c 0).1 + (c 0).1 * (Y i).1 * star Z = (W i).1 := by
       rw [hW, hc0, hZ]; simp [sub_eq_add_neg]
-    rw [e] at key
-    exact key
+    rwa [e] at key
   refine sub_eq_zero.1 (hS _ fun l hl => ?_)
   rw [map_sub, sub_eq_zero]
   let f : (Fin q → Lie E a) →ₘₗ[ℝ] ℂ :=
@@ -789,8 +785,7 @@ theorem kg_lieOp_comm (X Y : Matrix (Fin a) (Fin a) (Cinf E)) :
   have h := LinearMap.congr_fun (lie_comm (E := E) (a := a) (toL X) (toL Y)) φ.1
   have e : toL (X * Y - Y * X) =
       toL (Matrix.of (toL X) * Matrix.of (toL Y)) - toL (Matrix.of (toL Y) * Matrix.of (toL X)) := rfl
-  rw [e, map_sub]
-  exact h
+  rwa [e, map_sub]
 
 theorem kgA_comm (X Y : Matrix (Fin a) (Fin a) (Cinf E)) :
     kgA π Ξ σ (toL X) * kgA π Ξ σ (toL Y) - kgA π Ξ σ (toL Y) * kgA π Ξ σ (toL X) = kgA π Ξ σ (toL (X * Y - Y * X)) := by
@@ -817,8 +812,7 @@ theorem kgA_kgR_comm (X Y : Lie E a) : Commute (kgA π Ξ σ X) (kgR π Ξ σ Y)
     rw [Module.End.mul_eq_comp, Module.End.mul_eq_comp, LinearMap.rTensor_comp_lTensor, LinearMap.lTensor_comp_rTensor]
   rw [kgA_apply, kgR_apply]
   refine Commute.add_left ?_ ?_
-  · refine Commute.add_right h ?_
-    exact (Commute.one_right _).smul_right _
+  · exact Commute.add_right h ((Commute.one_right _).smul_right _)
   · exact (Commute.one_left _).smul_left _
 
 theorem cx_kgA (τ : E →+* ℂ) (i j : Fin a) :

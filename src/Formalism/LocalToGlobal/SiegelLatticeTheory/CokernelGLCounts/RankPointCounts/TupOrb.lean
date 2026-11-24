@@ -263,8 +263,7 @@ theorem n0rel_pull {T T' : D.host.E} {F0 : FlagG (VS D) D.R.rS T} {Λ : Submodul
     show n.symm (k (n (rAct β (frame a) c))) = rAct β (frame b) c
     rw [← ha c, hkc c, hb c]
     exact n.symm_apply_apply _
-  intro c
-  exact congrFun (rAct_inj h0 h1 h2) c
+  exact fun c => congrFun (rAct_inj h0 h1 h2) c
 
 theorem n0rel_refl' {T T' : D.host.E} {F0 : FlagG (VS D) D.R.rS T} (Λ : Submodule (𝓞 D.host.E) (VS D).V)
     (F' : LFlag (D.sp.Y 0) D.R.rS T') : CntLocal.NilradicalFlagMoved F0 Λ F' F' :=

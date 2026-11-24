@@ -137,8 +137,7 @@ theorem ev_dite {n : ℕ} {p : Pl E → Prop} (y : ∀ w : {w // p w}, GLw n w.1
   by_cases hp : p u
   · refine ⟨⟨u, hp⟩, ?_, rfl⟩
     have hu' : ¬ (if hu : p u then y ⟨u, hu⟩ else 1) ∈ GlobalTheory.LFun.KGL u (n := n) := hu
-    rw [dite_eq_left hp] at hu'
-    exact hu'
+    rwa [dite_eq_left hp] at hu'
   · exact absurd (by rw [dite_eq_right hp]; exact one_mem _) hu
 
 theorem cP_cP (v : Pl E) : cP (cP v) = v := GlobalTheory.CompanionTheory.SuppFinTw.cPl_cPl v
@@ -159,10 +158,8 @@ theorem cp_eq {a b : ℕ} {S : Set (Pl E)} (i : Slot S) (x : Gf E a b) : i.cp a 
 
 theorem continuous_cpn (n : ℕ) {S : Set (Pl E)} (i : Slot S) : Continuous (cpn (E := E) n i) := by
   rcases i with w | w
-  · show Continuous (loc n w.1)
-    exact continuous_loc n w.1
-  · show Continuous ((loc n w.1).comp (thF E n))
-    exact (continuous_loc n w.1).comp (PositivityTheory.Rg.BcB.G8.topo_holds E n).2.2.2.2.1
+  · exact continuous_loc n w.1
+  · exact (continuous_loc n w.1).comp (PositivityTheory.Rg.BcB.G8.topo_holds E n).2.2.2.2.1
 
 theorem continuous_cpH (a b : ℕ) {S : Set (Pl E)} (i : Slot S) : Continuous (cpH (E := E) a b i) :=
   ((continuous_cpn a i).comp continuous_fst).prodMk ((continuous_cpn b i).comp continuous_snd)
@@ -256,8 +253,7 @@ theorem pair_mem {a b : ℕ} {S : Set (Pl E)} (hS : IsSection S) (x : Gf E a b) 
   constructor
   · rintro ⟨h1, h2⟩ i
     exact Subgroup.mem_prod.2 ⟨h1 i, h2 i⟩
-  · intro h
-    exact ⟨fun i => (Subgroup.mem_prod.1 (h i)).1, fun i => (Subgroup.mem_prod.1 (h i)).2⟩
+  · exact fun h => ⟨fun i => (Subgroup.mem_prod.1 (h i)).1, fun i => (Subgroup.mem_prod.1 (h i)).2⟩
 
 theorem pair_compact {a b : ℕ} {S : Set (Pl E)} (hS : IsSection S) (C : ∀ i : Slot S, Set (GLw a i.pl × GLw b i.pl))
     (hC : ∀ i, IsCompact (C i)) (hCK : ∀ᶠ i in cofinite, C i = K2 a b i.pl) :
@@ -316,8 +312,7 @@ theorem pair_compact {a b : ℕ} {S : Set (Pl E)} (hS : IsSection S) (C : ∀ i 
       exact hc ⟨i, hi⟩
     · rw [dite_eq_right hi, inv_one, one_mul]
       have hi' : ¬ ¬ C i = K2 a b i.pl := by
-        rw [hT] at hi
-        exact hi
+        rwa [hT] at hi
       have := hx i
       rwa [not_not.1 hi'] at this
   exact Subgroup.mem_prod.1 hk

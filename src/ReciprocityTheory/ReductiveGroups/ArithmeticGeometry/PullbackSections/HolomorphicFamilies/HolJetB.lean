@@ -144,8 +144,7 @@ theorem jetψ_res (m : ℕ) (U V : Y.Opens) (hU : e 0 cpt ∈ U) (hV : e 0 cpt �
     Y.presheaf.map (homOfLE h).op ≫ jetψ e hol m V hV = jetψ e hol m U hU := by
   ext f
   rw [CommRingCat.comp_apply, jetψ_apply, jetψ_apply]
-  refine jetOf_congr m ((eventually_mem e hol hV).mono fun z hz => ?_)
-  exact valAt'_res _ h hz f
+  exact jetOf_congr m ((eventually_mem e hol hV).mono fun z hz => (valAt'_res _ h hz f))
 
 theorem jetψ_loc (m : ℕ) (U : Y.Opens) (hU : e 0 cpt ∈ U) (f : Γ(Y, U)) (hf : IsUnit (jetψ e hol m U hU f)) :
     e 0 cpt ∈ Y.basicOpen f := by

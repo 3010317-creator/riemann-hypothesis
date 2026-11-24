@@ -109,8 +109,7 @@ theorem opGen_of' (hU : UnipTau) (hLv : LeviTau) (hW : WEx) (hS : SchOps) (hF : 
       obtain ⟨-, -, e5, -⟩ := hfs' _ sP
       obtain ⟨-, -, e6, -⟩ := hfs' _ s2
       constructor
-      · rw [hy', map_mul, map_mul, mul_apply_eq_comp, mul_apply_eq_comp, e1, e4]
-        exact e5
+      · rwa [hy', map_mul, map_mul, mul_apply_eq_comp, mul_apply_eq_comp, e1, e4]
       · have hid : ω w (ω w⁻¹ ⟨tens θ τ fr f Ψ, hΨ.2 f hf⟩) = ⟨tens θ τ fr f Ψ, hΨ.2 f hf⟩ := by
           rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one, one_apply_eq_self]
         rw [e1] at hid
@@ -129,8 +128,7 @@ theorem opGen_of' (hU : UnipTau) (hLv : LeviTau) (hW : WEx) (hS : SchOps) (hF : 
           rw [hx1]; exact Matrix.mul_zero _
         simp only [tens] at e
         rw [hz0, hf₁0, one_mul] at e
-        rw [← hΨ.1 x' x hx2 hx3, ← hAA.1 x' x hx2 hx3]
-        exact e
+        rwa [← hΨ.1 x' x hx2 hx3, ← hAA.1 x' x hx2 hx3]
       by_cases hz : c₀ = 0
       · have hΨ0 : ∀ x, Ψ x = 0 := fun x => by rw [hrel x, hz, zero_mul]
         have h00 : (⟨tens θ τ fr f Ψ, hΨ.2 f hf⟩ : schwartzA θ V.rank n) = 0 := by

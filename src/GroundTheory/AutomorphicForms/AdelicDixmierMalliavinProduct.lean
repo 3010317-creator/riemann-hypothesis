@@ -330,8 +330,7 @@ theorem isSumConv_tensorFun_groupConv (h : IsExpLieAlgebra A 𝔤) (e : G ≃ₜ
     fun x => ?_⟩
   rw [Fin.sum_univ_one, conv_tensorCc_cosetInd e μ μA μB c hc V hVo hVc b _ _ _ _ x]
   have hg : groupConv μA φ' ψ (e x).1 = s * groupConv μA φ ψ (e x).1 := by
-    simp only [groupConv, φ', mul_assoc]
-    exact integral_const_mul _ _
+    simpa only [groupConv, φ', mul_assoc] using integral_const_mul _ _
   rw [hg, tensorFun, hs]
   field_simp
 
@@ -381,9 +380,7 @@ theorem exists_sum_conv (h : IsExpLieAlgebra A 𝔤) (e : G ≃ₜ* A × B) (μ 
       by_contra hfx
       have hxS : (e x).2 ∈ S := ⟨x, subset_tsupport _ hfx, rfl⟩
       obtain ⟨b, hbt, hb⟩ := mem_iUnion₂.1 (hcov hxS)
-      apply hT
-      refine Finset.mem_image.2 ⟨b, hbt, ?_⟩
-      exact QuotientGroup.eq.2 ((mem_leftCoset_iff b).1 hb)
+      exact hT (Finset.mem_image.2 ⟨b, hbt, QuotientGroup.eq.2 ((mem_leftCoset_iff b).1 hb)⟩)
 
   have hfq : ∀ q, IsSumConv μ (IsSmooth h e) (tensorFun e (fq q) (cosetInd V (r q))) := by
     intro q

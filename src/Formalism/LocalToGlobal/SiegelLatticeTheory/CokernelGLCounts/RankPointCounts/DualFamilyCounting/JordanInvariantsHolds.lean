@@ -33,8 +33,7 @@ theorem smul_top_pi {R : Type*} [CommRing R] {κ : Type*} [Fintype κ] [Decidabl
   · rw [Submodule.smul_le]
     intro r hr n _
     rw [Submodule.mem_pi]
-    intro i _
-    exact Submodule.smul_mem_smul hr Submodule.mem_top
+    exact fun i _ => Submodule.smul_mem_smul hr Submodule.mem_top
   · intro v hv
     rw [Submodule.mem_pi] at hv
     rw [← Finset.univ_sum_single v]
@@ -76,8 +75,7 @@ theorem two_le_absNorm {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) : 2 ≤ 
     · intro ht
       have h2 : algebraMap F K (t : F) = 0 := by
         have h3 := congrArg (algebraMap (𝓞 K) K) ht
-        rw [map_zero] at h3
-        exact h3
+        rwa [map_zero] at h3
       have h4 : (t : F) = 0 := (algebraMap F K).injective (by rw [h2, map_zero])
       exact_mod_cast h4
     · intro ht

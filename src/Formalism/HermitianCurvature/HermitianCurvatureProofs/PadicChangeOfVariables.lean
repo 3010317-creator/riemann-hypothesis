@@ -745,8 +745,7 @@ theorem padic_change_of_variables : Formalism.FourierDecayAlt.A6.ChangeVar := by
     have h1 := hst _ hp.1 _ (hBΛ (out_sub_mem' (B := B) (p.2 : K)))
     have e : (p.2 : K) + ((Quotient.out (((p.2 : Kˣ) : K) : K ⧸ B) : K) - (p.2 : K)) =
       (Quotient.out (((p.2 : Kˣ) : K) : K ⧸ B) : K) := by ring
-    rw [e] at h1
-    exact h1
+    rwa [e] at h1
   have hfib : ∀ w ∈ W, ∀ p : (K ⧸ R.toAddSubgroup) × Kˣ,
       (p ∈ S ∧ (((p.2 : Kˣ) : K) : K ⧸ B) = w) ↔
         ((p.2 : K) - (Quotient.out w : K) ∈ B ∧ p.2 ^ (m + 1) = T * cr p.1) := by
@@ -765,12 +764,10 @@ theorem padic_change_of_variables : Formalism.FourierDecayAlt.A6.ChangeVar := by
       · rw [← QuotientAddGroup.out_eq' w]
         apply (QuotientAddGroup.eq).2
         have h4 := B.neg_mem h1
-        rw [neg_sub, sub_eq_neg_add] at h4
-        exact h4
+        rwa [neg_sub, sub_eq_neg_add] at h4
   have hSfin : S.Finite := by
     refine (hW.biUnion (fun w hw => (hloc _ hw).1)).subset ?_
-    intro p hp
-    exact Set.mem_biUnion (hq p hp) ((hfib _ (hq p hp) p).1 ⟨hp, rfl⟩)
+    exact fun p hp => Set.mem_biUnion (hq p hp) ((hfib _ (hq p hp) p).1 ⟨hp, rfl⟩)
 
   have step1 : ∀ x : K ⧸ R.toAddSubgroup,
       (if (cr x : K) ∈ cutSet m Om t then
@@ -793,8 +790,7 @@ theorem padic_change_of_variables : Formalism.FourierDecayAlt.A6.ChangeVar := by
           rw [mul_pow, inv_pow, h, h1, mul_inv_cancel]
         have h3 := hOζ _ hz0 ((z * zu⁻¹ : Kˣ) : K) (by
           rw [← Units.val_pow_eq_pow_val, h2, Units.val_one])
-        rw [← Units.val_mul, inv_mul_cancel_right] at h3
-        exact h3
+        rwa [← Units.val_mul, inv_mul_cancel_right] at h3
       · exact fun h => h.2
     · rw [ite_eq_right hc]
       symm
@@ -840,8 +836,7 @@ theorem padic_change_of_variables : Formalism.FourierDecayAlt.A6.ChangeVar := by
       {p : (K ⧸ R.toAddSubgroup) × Kˣ | (p.2 : K) - (Quotient.out w : K) ∈ B ∧
         p.2 ^ (m + 1) = T * cr p.1} := by
     ext p
-    simp only [Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
-    exact hfib w hw p
+    simpa only [Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] using hfib w hw p
   have hconst : ∀ p ∈ hSfin.toFinset.filter
       (fun p : (K ⧸ R.toAddSubgroup) × Kˣ => (((p.2 : Kˣ) : K) : K ⧸ B) = w),
       (if p ∈ S then f (p.2 : K) else 0) = f (Quotient.out w : K) := by

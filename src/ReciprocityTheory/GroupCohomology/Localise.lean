@@ -172,8 +172,7 @@ theorem localise_holds : LocaliseStatement.{u} := by
     rcases j with ⟨φ, u, hφc, huc, heq⟩
     dsimp only at hφ hu
     subst hφ
-    refine Subtype.ext (funext fun g => hu.injective ?_)
-    exact congrFun (congrArg Subtype.val hxy) g
+    exact Subtype.ext (funext fun g => hu.injective (congrFun (congrArg Subtype.val hxy) g))
   · intro k
     constructor
     · intro x y hxy
@@ -210,8 +209,7 @@ theorem localise_holds : LocaliseStatement.{u} := by
       have : (u ∘ fun g => invFun u (t ^ m • x.1 g)) = fun g => t ^ m • x.1 g := funext hy
       rw [this]
       exact hx.const_smul _
-    refine ⟨m, ⟨fun g => invFun u (t ^ m • x.1 g), hyc⟩, Subtype.ext (funext fun g => ?_)⟩
-    exact hy g
+    exact ⟨m, ⟨fun g => invFun u (t ^ m • x.1 g), hyc⟩, Subtype.ext (funext fun g => (hy g))⟩
 
 end ReciprocityTheory.Coh
 end -- clump:auto

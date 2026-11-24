@@ -350,17 +350,12 @@ theorem hecke_coupled_entry : HeckeCEntry := by
       have h2 := (hsec x2).2
       have : lp x1 = lp x2 := congrArg Subtype.val he
       rw [← h1, ← h2, this]
-    · intro La
-      refine ⟨KA.cls (D.R.m - 1) La.1.1 La.1.2, ?_⟩
-      apply hb.1
-      show KA.cls (D.R.m - 1) (lp _).1 (lp _).2 = KA.cls (D.R.m - 1) La.1.1 La.1.2
-      exact (hsec _).2
+    · exact fun La => ⟨KA.cls (D.R.m - 1) La.1.1 La.1.2, hb.1 (hsec _).2⟩
   have hw : ∀ x : (D.chTw u μ).cls (D.R.m - 1),
       Nat.card ((D.chTw u μ).stab (D.R.m - 1) x) = (sysAt Ch std vp unif eO eO_spec dG dG_spec om).stab (D.R.m - 1) (lp x) := by
     intro x
     have e := hst (lp x) (hsec x).1
-    rw [(hsec x).2] at e
-    exact e
+    rwa [(hsec x).2] at e
   refine (Fintype.sum_bijective _ hbij _ _ fun x => ?_).trans (hk.trans (Fintype.sum_bijective _ hbij _ _ fun x => ?_).symm)
   · simp only [hw x]
     rfl
@@ -377,8 +372,7 @@ theorem coupled_compatibility_at_place : TiesCOfAt := by
     rw [e]
     exact dG_spec (D.R.m - 1) (by have := KA.fl_m; omega) (lp x).1 (lp x).2 (Y.Rep_lat _ _ (hsec x).1)
   · have e := hDel (lp x) (hsec x).1 y c' L' hL
-    rw [(hsec x).2] at e
-    exact e
+    rwa [(hsec x).2] at e
 
 theorem coupled_section_exists : SecCEx := by
   intro D L hT Gi Gl Kc0 Dx cX ex u μ w h _ Fl Lv Ch KA std vp unif eO eO_spec dG dG_spec om Y hm
@@ -421,8 +415,7 @@ theorem admissible_stabilizer_of_law (D : Formalism.BasicNotions.D7) (ThR : ∀ 
   have hS' : StabLaw X ℂ_[p] hfin ThR' := by
     intro j c L0 La' ε h0 hε
     by_cases hj : j < X.mm ∧ (X.Pj (j + 1)).IsLatTup La'.2
-    · simp only [ThR', ite_eq_left hj]
-      exact hS j hj.1 c L0 La' ε h0 hj.2 hε
+    · simpa only [ThR', ite_eq_left hj] using hS j hj.1 c L0 La' ε h0 hj.2 hε
     · simp only [ThR', ite_eq_right hj]
       unfold SA
       rw [← MvPowerSeries.coe_substAlgHom (hasSubst_actS X ℂ_[p] j _), map_zero, mul_zero]

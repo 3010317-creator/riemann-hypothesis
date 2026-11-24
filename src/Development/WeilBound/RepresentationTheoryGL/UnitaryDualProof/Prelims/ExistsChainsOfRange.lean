@@ -113,11 +113,9 @@ theorem exists_chains_of_range [FiniteDimensional K V] (f : V →ₗ[K] V)
   let v : ι' ⊕ Fin (finrank K C) → V := Sum.elim u z
   let T := span K (Set.range (chainVec f e v))
   have hTu : ∀ (b : ι') (j : ℕ), j ≤ e' b → (f ^ j) (u b) ∈ T := by
-    intro b j hj
-    exact subset_span ⟨⟨Sum.inl b, ⟨j, Nat.lt_succ_of_le hj⟩⟩, rfl⟩
+    exact fun b j hj => subset_span ⟨⟨Sum.inl b, ⟨j, Nat.lt_succ_of_le hj⟩⟩, rfl⟩
   have hTz : ∀ c, z c ∈ T := by
-    intro c
-    exact subset_span ⟨⟨Sum.inr c, ⟨0, Nat.one_pos⟩⟩, by simp [chainVec, v]⟩
+    exact fun c => subset_span ⟨⟨Sum.inr c, ⟨0, Nat.one_pos⟩⟩, by simp [chainVec, v]⟩
   have hkerS : map N.subtype (span K (Set.range tN)) ≤ T := by
     refine (Submodule.map_span_le _ _ _).2 ?_
     rintro _ ⟨b, rfl⟩

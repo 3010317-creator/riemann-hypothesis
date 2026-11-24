@@ -112,8 +112,7 @@ lemma hasFDerivAt_conv {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F] [C
       fderiv ℝ g) x = ∫ t, ρ.scaled ε t • fderiv ℝ g (x - t) := by
     rw [convolution_def]
     congr 1
-  rw [e1, e2] at h
-  exact h
+  rwa [e1, e2] at h
 
 end Scaled
 

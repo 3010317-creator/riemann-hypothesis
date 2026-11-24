@@ -103,8 +103,7 @@ theorem logCutoff_le_one (F : V n → ℂ) (k : ℝ) (z : V n) : extCut F k z �
 
 theorem logCutoff_eq_one {F : V n → ℂ} {k : ℝ} (hk : 0 < k) {z : V n} (hz : F z ≠ 0)
     (h : -Real.log (‖F z‖ ^ 2) ≤ k) : extCut F k z = 1 := by
-  simp only [extCut, hz, ite_false]
-  exact extCh_of_le_one ((div_le_one hk).2 h)
+  simpa only [extCut, hz, ite_false] using extCh_of_le_one ((div_le_one hk).2 h)
 
 theorem logCutoff_eventuallyEq_zero {F : V n → ℂ} {k : ℝ} (hk : 0 < k) {z : V n}
     (hFc : ContinuousAt F z) (hz : F z = 0) : extCut F k =ᶠ[𝓝 z] fun _ => (0 : ℝ) := by
@@ -729,8 +728,7 @@ theorem ext_cut {n : ℕ} {Ω : Set (V n)} {F : V n → ℂ} (hΩ : IsOpen Ω)
           (Eventually.of_forall fun z => mul_nonneg (by norm_num) (hG0 z))).symm
     _ ≤ ENNReal.ofReal (C0 * k ^ 2) := by
         apply ENNReal.ofReal_le_ofReal
-        rw [integral_const_mul]
-        exact hbound
+        rwa [integral_const_mul]
     _ = ENNReal.ofReal C0 * ENNReal.ofReal (k ^ 2) := ENNReal.ofReal_mul hC0
 
 end ReciprocityTheory.L2DbarEstimates.C
@@ -808,8 +806,7 @@ theorem tendsto_setLIntegral_band {W : Set (V n)} (hW : IsOpen W) {f : V n → �
   have h := tendsto_measure_iInter_atTop (fun k => (hmeas k).nullMeasurableSet) hanti hfin
   rw [hempty, measure_empty] at h
   refine h.congr (fun k => ?_)
-  simp only [Function.comp_apply]
-  exact withDensity_apply _ (hmeas k)
+  simpa only [Function.comp_apply] using withDensity_apply _ (hmeas k)
 
 noncomputable def extErr (F : V n → ℂ) (k : ℝ) (v z : V n) : ℂ :=
   (fderiv ℝ (extCut F k) z (I • v) : ℂ) - I * (fderiv ℝ (extCut F k) z v : ℂ)
@@ -1067,8 +1064,7 @@ private theorem main_lemma_2 {Ω : Set (V n)} {F u g : V n → ℂ} (hΩ : IsOpe
   obtain ⟨C, hC, hCb⟩ := ext_cut hΩ hF hgs hgΩ
   have hfc : ContinuousOn (fun z => -Real.log (‖F z‖ ^ 2)) W := by
     refine ContinuousOn.neg (ContinuousOn.log ((hF.continuousOn.mono hWsub).norm.pow 2) ?_)
-    intro z hz
-    exact pow_ne_zero 2 (norm_ne_zero_iff.mpr hz.2)
+    exact fun z hz => pow_ne_zero 2 (norm_ne_zero_iff.mpr hz.2)
   have hm2 : ∫⁻ z in W, ‖u z‖ₑ ^ 2 < ⊤ := by
     have e : ∀ z, ‖‖u z‖ ^ 2‖ₑ = ‖u z‖ₑ ^ 2 := fun z => by rw [enorm_pow, enorm_norm]
     have h := hu2.2

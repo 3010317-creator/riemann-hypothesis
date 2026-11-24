@@ -132,8 +132,7 @@ theorem dL_uPow (n : ℤ) :
     have h := dL_toL (R := R) 1
     rwa [map_one, Derivation.map_one_eq_zero, map_zero] at h
   have h := dL_uPow_mul n (1 : LaurentSeries R)
-  rw [mul_one, mul_one, h1, mul_zero, zero_add] at h
-  exact h
+  rwa [mul_one, mul_one, h1, mul_zero, zero_add] at h
 
 theorem dL_C (r : R) : dL (HahnSeries.C r : LaurentSeries R) = 0 := by
   rw [← toL_C, dL_toL]

@@ -335,8 +335,7 @@ theorem capelliTensor : CapelliTensorStatement.{u} := by
   exact ⟨isGlRep_tensV E hE, isGlRep_tensVd E hE, casimir_tensV E, casimir_tensVd E⟩
 
 theorem capelliAPlus : CapelliAPlusStatement.{u} := by
-  intro M _ _ m E y om v hE hv
-  exact eeV_nnPlus E hE y om v hv
+  exact fun M _ _ m E y om v hE hv => eeV_nnPlus E hE y om v hv
 
 theorem capelliAMinus : CapelliAMinusStatement.{u} := by
   intro M _ _ m E β om v hE hv
@@ -347,8 +346,7 @@ theorem capelliB : CapelliBStatement.{u, v} := by
   exact capelli_whittaker k r E D ψ l x hE hr hl hψ hD
 
 theorem whittakerZeroStatement : WhittakerZeroStatement.{u, v} := by
-  intro M R _ _ _ _ k E D l x hD
-  exact capelli_whittaker_zero k E D l x hD
+  exact fun M R _ _ _ _ k E D l x hD => capelli_whittaker_zero k E D l x hD
 
 end ReciprocityTheory.ChartRestriction.DS.Lap.Capelli
 end -- clump:auto

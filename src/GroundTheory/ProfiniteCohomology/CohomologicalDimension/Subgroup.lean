@@ -104,8 +104,7 @@ theorem ofNat_prime_dvd_iff (p : Nat.Primes) (a : Supernatural) :
     simp [p.prop.factorization_self]
   rw [dvd_iff_le, le_def]
   constructor
-  · intro h
-    exact h1 ▸ h p
+  · exact fun h => h1 ▸ h p
   · intro h q
     by_cases hq : q = p
     · subst hq
@@ -267,8 +266,7 @@ theorem superRelIndex_eq_iSup [TotallyDisconnectedSpace G] {K H : Subgroup G} (h
       refine sup_le_sup_left (fun x hx => ?_) _
       have : (x : G) ∈ W := hUW hx
       have : x ∈ Subtype.val ⁻¹' W := this
-      rw [hWV] at this
-      exact this
+      rwa [hWV] at this
     have hne : ((K ⊔ (U : Subgroup G)).subgroupOf H).index ≠ 0 := relIndex_sup_ne_zero K H U
     show Supernatural.ofNat _ ≤ Supernatural.ofNat ((K ⊔ (U : Subgroup G)).subgroupOf H).index
     rw [← Supernatural.dvd_iff_le, Supernatural.ofNat_dvd_ofNat
@@ -366,9 +364,7 @@ omit [TotallyDisconnectedSpace G] in
 theorem not_dvd_superIndex_iff_map (H : Subgroup G) :
     ¬ Supernatural.ofNat p ∣ superIndex H ↔
       ∀ U : OpenNormalSubgroup G, ¬ p ∣ (H.map (QuotientGroup.mk' (U : Subgroup G))).index := by
-  have h := not_dvd_superIndex_iff (⟨p, hp.out⟩ : Nat.Primes) H
-  simp only [index_sup_eq_index_map] at h
-  exact h
+  simpa only [index_sup_eq_index_map] using not_dvd_superIndex_iff (⟨p, hp.out⟩ : Nat.Primes) H
 
 theorem isProSylow_iff {P : Subgroup G} (hP : IsClosed (P : Set G)) :
     IsProSylow p P ↔ ∀ U : OpenNormalSubgroup G,
@@ -552,8 +548,7 @@ theorem finite_of_isSimpleOrder {p : ℕ} (hp : p.Prime) (A : Rep.{u} (ULift.{u}
       exact ha₀ ((Submodule.mem_bot _).1 this)
     · have hall : ∀ a : A, a ∈ W := fun a => by
         have : a ∈ (⊤ : Subrepresentation A.ρ).toSubmodule := Submodule.mem_top
-        rw [← h] at this
-        exact this
+        rwa [← h] at this
       exact Finite.of_injective (fun x : A => (⟨x, hall x⟩ : W)) fun x y h => congrArg Subtype.val h
   · rw [not_nontrivial_iff_subsingleton] at hnt
     infer_instance

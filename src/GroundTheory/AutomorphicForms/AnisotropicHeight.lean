@@ -192,12 +192,10 @@ theorem exists_adelicNorm_aeval_le (hd : 0 < d) (P : Fin m → MvPolynomial (Fin
     rfl
   · intro v t y
     funext k
-    simp only [Pi.smul_apply, smul_eq_mul]
-    exact hvh v t y k
+    simpa only [Pi.smul_apply, smul_eq_mul] using hvh v t y k
   · intro w t y
     funext k
-    simp only [Pi.smul_apply, smul_eq_mul]
-    exact hwh w t y k
+    simpa only [Pi.smul_apply, smul_eq_mul] using hwh w t y k
   · intro v
     refine ⟨∑ k, ∑ s ∈ (P k).support, ‖algebraMap K (v.adicCompletion K) ((P k).coeff s)‖,
       fun y hy => (pi_norm_le_iff_of_nonneg (by positivity)).2 fun k => ?_⟩

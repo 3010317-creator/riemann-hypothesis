@@ -190,8 +190,7 @@ theorem algebraicIndependent_rows (F E : Type) [Field F] [Field E] [Algebra F E]
         have hCT : ∀ e : E, (C e : MvPolynomial (Fin k × Fin N) E) ∈ T := fun e => T.algebraMap_mem e
         have hBT : (B : Set (MvPolynomial (Fin k × Fin N) E)) ⊆ T := by
           apply adjoin_subset T.toSubring
-          · intro c
-            exact hCT (algebraMap F E c)
+          · exact fun c => hCT (algebraMap F E c)
           · rintro _ ⟨t, ht, rfl⟩
             rcases t with ab | l
             · exact hXT ab (fun h => ht (by simp [h]))
@@ -212,8 +211,7 @@ theorem algebraicIndependent_rows (F E : Type) [Field F] [Field E] [Algebra F E]
             ((MvPolynomial.algebraicIndependent_X _ E).transcendental_adjoin
               (s := {(i', m0)}ᶜ) (i := (i', m0)) (by simp))
           apply adjoin_subset T.toSubring
-          · intro c
-            exact hBT c.2
+          · exact fun c => hBT c.2
           · intro z hz
             rcases hz with rfl | hz
             · exact hCT _

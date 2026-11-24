@@ -162,8 +162,7 @@ theorem exists_cellUnipotent_of_leviUnipotent (x : leviUnipotent F n β (γ ∘ 
     simp only [a]
     group
   have haN : a ∈ unipotentRadical F n γ := by
-    rw [← conj_permGL_mem_unipotentRadical_iff w, hconj]
-    exact hxN
+    rwa [← conj_permGL_mem_unipotentRadical_iff w, hconj]
   have haP : a ∈ blockUpper F n (β ∘ w) := by
     rw [← conj_permGL_mem_blockUpper_iff w, hconj]
     exact levi_le_blockUpper (x : levi F n β).2
@@ -224,9 +223,7 @@ def leviInfIncl (δ : Fin n → ℕ) : (levi F n β ⊓ blockUpper F n δ : Subg
 theorem leviInfIncl_conj_mem {δ : Fin n → ℕ} (x : (levi F n β ⊓ blockUpper F n δ : Subgroup (GL (Fin n) F)))
     (u : leviUnipotent F n β δ) :
     leviInfIncl β δ x * (u : levi F n β) * (leviInfIncl β δ x)⁻¹ ∈ leviUnipotent F n β δ := by
-  refine Subgroup.mem_subgroupOf.2 ?_
-  show (x : GL (Fin n) F) * (((u : levi F n β)) : GL (Fin n) F) * (x : GL (Fin n) F)⁻¹ ∈ _
-  exact conj_mem_unipotentRadical x.2.2 (Subgroup.mem_subgroupOf.1 u.2)
+  exact Subgroup.mem_subgroupOf.2 (conj_mem_unipotentRadical x.2.2 (Subgroup.mem_subgroupOf.1 u.2))
 
 
 variable (β) in

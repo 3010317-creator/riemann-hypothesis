@@ -203,7 +203,6 @@ theorem div_diag {W : WeierstrassCurve K} (H : MvPowerSeries (Fin 2) K) (hT : H 
     (h : H.subst ![(MvPowerSeries.X 0 : MvPowerSeries (Fin 2) K), MvPowerSeries.X 0] = 0) :
     ∃ Q ∈ T W, H = (MvPowerSeries.X 1 - MvPowerSeries.X 0) * Q := by
   have c0 : cc (MvPowerSeries.X 0 : MvPowerSeries (Fin 2) K) = 0 := by simp
-  have c1 : cc (MvPowerSeries.X 1 : MvPowerSeries (Fin 2) K) = 0 := by simp
   have hτ : MvPowerSeries.HasSubst ![(MvPowerSeries.X 0 : MvPowerSeries (Fin 2) K),
       MvPowerSeries.X 1 + MvPowerSeries.X 0] := FormalGroupPointsHom.hasSubst2 c0 (by simp)
   have hτ' : MvPowerSeries.HasSubst ![(MvPowerSeries.X 0 : MvPowerSeries (Fin 2) K),
@@ -214,25 +213,18 @@ theorem div_diag {W : WeierstrassCurve K} (H : MvPowerSeries (Fin 2) K) (hT : H 
       MvPowerSeries.X 1 + MvPowerSeries.X 0] := ⟨_, rfl⟩
   have e1 : H'.subst ![(MvPowerSeries.X 0 : MvPowerSeries (Fin 2) K), 0] = 0 := by
     rw [hH', MvPowerSeries.subst_comp_subst_apply hτ hε]
-    have : (fun i => MvPowerSeries.subst ![(MvPowerSeries.X 0 : MvPowerSeries (Fin 2) K), 0]
-        (![(MvPowerSeries.X 0 : MvPowerSeries (Fin 2) K), MvPowerSeries.X 1 + MvPowerSeries.X 0] i))
-        = ![(MvPowerSeries.X 0 : MvPowerSeries (Fin 2) K), MvPowerSeries.X 0] := by
-      funext i; fin_cases i
-      · simp [MvPowerSeries.subst_X hε]
-      · simp [MvPowerSeries.subst_add hε, MvPowerSeries.subst_X hε]
-    rw [this]; exact h
+    convert h using 2
+    funext i; fin_cases i
+    · simp [MvPowerSeries.subst_X hε]
+    · simp [MvPowerSeries.subst_add hε, MvPowerSeries.subst_X hε]
   obtain ⟨Q', hQ'⟩ := X_one_dvd_of_subst_X_zero_eq_zero H' e1
   have hback : H'.subst ![(MvPowerSeries.X 0 : MvPowerSeries (Fin 2) K),
       MvPowerSeries.X 1 - MvPowerSeries.X 0] = H := by
     rw [hH', MvPowerSeries.subst_comp_subst_apply hτ hτ']
-    have : (fun i => MvPowerSeries.subst ![(MvPowerSeries.X 0 : MvPowerSeries (Fin 2) K),
-        MvPowerSeries.X 1 - MvPowerSeries.X 0]
-        (![(MvPowerSeries.X 0 : MvPowerSeries (Fin 2) K), MvPowerSeries.X 1 + MvPowerSeries.X 0] i))
-        = ![(MvPowerSeries.X 0 : MvPowerSeries (Fin 2) K), MvPowerSeries.X 1] := by
-      funext i; fin_cases i
-      · simp [MvPowerSeries.subst_X hτ']
-      · simp [MvPowerSeries.subst_add hτ', MvPowerSeries.subst_X hτ']
-    rw [this]; exact FormalGroupPointsHom.subst_XX H
+    convert FormalGroupPointsHom.subst_XX H using 2
+    funext i; fin_cases i
+    · simp [MvPowerSeries.subst_X hτ']
+    · simp [MvPowerSeries.subst_add hτ', MvPowerSeries.subst_X hτ']
   refine ⟨Q'.subst ![(MvPowerSeries.X 0 : MvPowerSeries (Fin 2) K),
       MvPowerSeries.X 1 - MvPowerSeries.X 0], ?_, ?_⟩
   · have hH'T : H' ∈ T W := by

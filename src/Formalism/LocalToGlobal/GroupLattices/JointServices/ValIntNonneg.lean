@@ -32,8 +32,7 @@ theorem perToVal2 : PerToVal2 := by
   have hV0 : B.I.jA t ((rV0 D B.A B.Ps B.ψs t).mulVec F) ∈ D.what₂.V0 (B.I.tup t) := by
     refine ⟨B.I.jA t ((rV0 D B.A B.Ps B.ψs t).mulVec F), ?_⟩
     have h1 := (hB.sharp.forms t).op_eq ((rV0 D B.A B.Ps B.ψs t).mulVec F)
-    rw [level_operator_fixes_image hOk B.Ps B.ψs B.Zs t F] at h1
-    exact h1
+    rwa [level_operator_fixes_image hOk B.Ps B.ψs B.Zs t F] at h1
   have hgen := ((hB.sharp.Mtilde t).2 _).1 ((image_mem_nabla_iff hOk B.Ps B.ψs B.Zs t F).2 hF)
   obtain ⟨S, c, hS, hx0⟩ := hcut _ hgen hV0
   have key : ∀ φ ∈ Submodule.span (𝓞 D.what₂.LL) N, VGeq z s (B.Dc.Pt (B.I.wU u) t φ F) := by
@@ -84,8 +83,7 @@ theorem val2AllAtR : SecondLevelValuationAtRestricted := by
       have h4 := h2 _ hμ _ (hNu x hx) F hF1 hF0
       rw [Equiv.apply_symm_apply] at h4
       exact h4)
-  rw [Submodule.span_eq] at h3
-  exact h3
+  rwa [Submodule.span_eq] at h3
 
 end Formalism.L2.G.ServJoint
 

@@ -72,15 +72,13 @@ theorem isMultiHomog_X_single [DecidableEq K] (p : Σ k, ι k) :
     · intro i _ hi
       classical
       rw [Finsupp.single_apply, ite_eq_right]
-      intro h
-      exact hi (eq_of_heq (Sigma.mk.inj_iff.mp h).2).symm
+      exact fun h => hi (eq_of_heq (Sigma.mk.inj_iff.mp h).2).symm
     · simp
   · rw [ite_eq_right hk]
     refine Finset.sum_eq_zero fun i _ => ?_
     classical
     rw [Finsupp.single_apply, ite_eq_right]
-    intro h
-    exact hk (congrArg Sigma.fst h).symm
+    exact fun h => hk (congrArg Sigma.fst h).symm
 
 end Values
 

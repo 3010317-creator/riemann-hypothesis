@@ -131,8 +131,7 @@ theorem pd_det {l : ℕ} (M : Matrix (Fin N) (Fin N) ℂ → Matrix (Fin l) (Fin
       (pd_prod (Finset.univ : Finset (Fin l)) (fun i _ => h (σ i) i))
     refine pd_mono ?_ h1
     simp
-  have h2 := pd_sum _ key
-  simpa [Matrix.det_apply'] using h2
+  simpa [Matrix.det_apply'] using pd_sum _ key
 
 end Formalism.FourierDecayAlt.P.PartialDerivativeAlgebra
 
@@ -185,8 +184,7 @@ private theorem isPolyDeg_star' {M a : ℕ} {P : Matrix (Fin M) (Fin M) ℂ → 
     rcases x with x | x <;> simp
 
 theorem zhat_star_pd (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) (a b : Fin (r + 1)) :
-    U.IsPolyDeg 1 (fun g => star (Zhat k r z z' g a b)) := by
-  exact isPolyDeg_star' (zhat_pd k r z z' a b)
+    U.IsPolyDeg 1 (fun g => star (Zhat k r z z' g a b)) := isPolyDeg_star' (zhat_pd k r z z' a b)
 
 theorem minor_polynomial_property : C6.DminPoly := by
   intro k r z z' l

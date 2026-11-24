@@ -84,8 +84,7 @@ theorem mem_of_forall_maximal_mul_mem (A : Subalgebra S Ω) (M : Submodule A Ω)
     obtain ⟨P, hP, hJP⟩ := Ideal.exists_le_maximal J hne
     obtain ⟨b, hb, hbt⟩ := h P hP
     exact hb (hJP ((hJ b).mpr hbt))
-  have h1 := (hJ 1).mp (htop ▸ Submodule.mem_top)
-  simpa using h1
+  simpa using (hJ 1).mp (htop ▸ Submodule.mem_top)
 
 end Loc
 
@@ -290,8 +289,7 @@ theorem generatesOver_of_span_chartSec (hy : IndefiniteRowSideFullHecke.Kleiman2
   choose Nf hNf using hΦ
   have hN : ∀ d : ∀ k, ι k, ∃ n', (y ⟨k₀, e.symm i⟩ / y ⟨k₀, d k₀⟩) ^ n' *
       ((f : Ω) ^ (Finset.univ.sup Nf) * (genInv y β d * (genInv y β c)⁻¹)) ∈ chartRingOver S y d := by
-    intro d
-    exact pow_mul_mem_of_le _ (hRB d f.2) (Finset.le_sup (Finset.mem_univ d)) (hNf d)
+    exact fun d => pow_mul_mem_of_le _ (hRB d f.2) (Finset.le_sup (Finset.mem_univ d)) (hNf d)
   choose nf hnf using hN
   set Nt := Finset.univ.sup Nf
   set nt := Finset.univ.sup nf
@@ -359,8 +357,7 @@ theorem ChartSecGen.full : ChartSecGen.Statement := by
       rintro _ ⟨j, rfl⟩
       rw [hQI]
       exact mem_chartSecOver_of_mem S y k₀ e β I (hη j)
-    · intro t ht
-      exact mem_span_of_generatesOver_chartSec hy β η hgen I t ht
+    · exact fun t ht => mem_span_of_generatesOver_chartSec hy β η hgen I t ht
   · exact generatesOver_of_span_chartSec hy β η hη
 
 end

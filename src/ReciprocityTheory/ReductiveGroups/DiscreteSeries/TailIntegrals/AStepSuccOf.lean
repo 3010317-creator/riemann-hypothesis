@@ -92,8 +92,7 @@ theorem sum_levelExponents_shifted : ∑ l : Fin (r' + 1), s0 k (1 + r') (sc r' 
   simp only [h1, h2, Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
   ring
 
-theorem levelExponent_first_eq_two : s0 k (1 + r') 0 = 2 := by
-  exact ite_eq_left (by simp)
+theorem levelExponent_first_eq_two : s0 k (1 + r') 0 = 2 := ite_eq_left (by simp)
 
 theorem exponentShift_eq_levelExponent (hk : 1 ≤ k) (l : Fin (1 + r' + 1)) : s0N (1 + r') (k - 1) l = s0 k (1 + r') l := by
   unfold s0N s0
@@ -196,8 +195,7 @@ private lemma Hpk_sq_eq_one (k r' : ℕ) : Hpk k r' * Hpk k r' = 1 := by
       simp only [Hpk, ne_eq, Fin.ext_iff] at hl ⊢
       split_ifs at hl ⊢ <;> first | (exfalso; omega) | rfl
     rw [h0, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem hpk_mem (k r' : ℕ) : Hpk k r' ∈ GV k r' := by
   simp only [GV, UH, Set.mem_setOf_eq]

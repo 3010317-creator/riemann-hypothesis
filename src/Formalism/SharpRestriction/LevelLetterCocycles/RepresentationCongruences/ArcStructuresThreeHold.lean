@@ -462,8 +462,7 @@ theorem exists_partition_of_l_pow_levels (hC : Formalism.MainNotions.UnusedSlot8
     refine ⟨m + m', fun t => if t = a then lA W ^ m * q * P else ε t * r * ps W a ^ N, ?_, ?_, ?_⟩
     · intro t
       by_cases h : t = a
-      · simp only [h, ite_true]
-        exact W.AΔ.mul_mem (W.AΔ.mul_mem (l_pow_mem_invariants W m) hq) hPΔ
+      · simpa only [h, ite_true] using W.AΔ.mul_mem (W.AΔ.mul_mem (l_pow_mem_invariants W m) hq) hPΔ
       · simp only [h, ite_false]
         exact W.AΔ.mul_mem (W.AΔ.mul_mem (hεΔ t) hr) (W.AΔ.pow_mem (hps a) N)
     · intro t ht
@@ -539,8 +538,7 @@ theorem inId_shift_levels (hR : Formalism.MainNotions.UnusedSlot80.ToolsR.RingP 
       (algebraMap (LetA O n) W.EE (Pz * x) * g)) =
       algebraMap (LetA O n) W.EE D' * algebraMap (LetA O n) W.EE (Pz * x) *
         (algebraMap (LetA O n) W.EE D * g) := by ring
-  rw [e1, he]
-  rw [← map_mul, ← map_mul, ← map_mul]
+  rw [e1, he, ← map_mul, ← map_mul, ← map_mul]
   congr 1
   linear_combination (-(letE a * x * u)) * key
 
@@ -623,8 +621,7 @@ theorem section_in_ideal_of_levels (hR : Formalism.MainNotions.UnusedSlot80.Tool
     refine ⟨inId_shift_levels W hR hs ((hsec s hs).1 i).1 hx, fun t ht => ?_⟩
     by_cases hts : t = s
     · subst hts
-      simp only [A', ite_true]
-      exact ((hsec t hs).1 i).2
+      simpa only [A', ite_true] using ((hsec t hs).1 i).2
     · simp only [A', hts, ite_false]
       refine hU t ht _ ?_ _
       have h1 : (U t).natAbs + (α s i t).natAbs ≤

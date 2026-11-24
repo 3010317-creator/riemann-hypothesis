@@ -54,15 +54,13 @@ theorem twPar_block {n r : ℕ} (hr : r < n) (H : Sp E n ≃ₗ[E] Sp E n) (h' :
     · rw [ite_eq_right hl] at this; simpa using this
   have hxD : ∀ l : Fin n, r ≤ l.1 → IntAt P ((qOf P : E)⁻¹ * x l) := fun l hl => by
     have := hx l
-    rw [ite_eq_left ⟨hl, l.2⟩, zpow_one] at this
-    exact this
+    rwa [ite_eq_left ⟨hl, l.2⟩, zpow_one] at this
   intro l
   rw [hH]
   by_cases hl : l.1 < n - 1
   · rw [dite_eq_left hl]
     by_cases hDl : r ≤ l.1
-    · rw [ite_eq_left ⟨hDl, l.2⟩, zpow_one]
-      rw [twApply_coordE h' (twInit x) ⟨l.1, hl⟩, Finset.mul_sum]
+    · rw [ite_eq_left ⟨hDl, l.2⟩, zpow_one, twApply_coordE h' (twInit x) ⟨l.1, hl⟩, Finset.mul_sum]
       apply twIntAt_sum
       intro a
       have ea : (twE a : Sp E (n - 1)) = Pi.single a 1 := by
@@ -114,8 +112,7 @@ theorem mem_kOne_of_block {n r c : ℕ} (hr : r < n) (G : ↥(GLint E n P)) (g' 
       exact this
     · rw [dite_eq_right h]
       have := congrFun hx l
-      rw [hblk, dite_eq_right h] at this
-      exact this
+      rwa [hblk, dite_eq_right h] at this
   have hinitG' : ∀ x, twInit (Gm.symm x) = g'.symm (twInit x) := fun x => by
     funext i
     show Gm.symm x ⟨i.1, by have := i.2; omega⟩ = g'.symm (twInit x) i
@@ -133,12 +130,10 @@ theorem mem_kOne_of_block {n r c : ℕ} (hr : r < n) (G : ↥(GLint E n P)) (g' 
     · exact ⟨0, 1, one_notMem P, by simp⟩
   have hg1 : ∀ x' : Sp E (n - 1), (∀ i, IntAt P (x' i)) → ∀ i, IntAt P (g' x' i) := fun x' hx i => by
     have h1 := hstd _ (hsnoc x' hx) ⟨i.1, by have := i.2; omega⟩
-    rw [hblk, dite_eq_left i.2, twInit_snoc] at h1
-    exact h1
+    rwa [hblk, dite_eq_left i.2, twInit_snoc] at h1
   have hg2 : ∀ x' : Sp E (n - 1), (∀ i, IntAt P (x' i)) → ∀ i, IntAt P (g'.symm x' i) := fun x' hx i => by
     have h1 := hstd' _ (hsnoc x' hx) ⟨i.1, by have := i.2; omega⟩
-    rw [hinv, dite_eq_left i.2, twInit_snoc] at h1
-    exact h1
+    rwa [hinv, dite_eq_left i.2, twInit_snoc] at h1
   have hsc : ∀ (f : Sp E (n - 1) ≃ₗ[E] Sp E (n - 1)), (∀ x' : Sp E (n - 1), (∀ i, IntAt P (x' i)) → ∀ i, IntAt P (f x' i)) →
       ∀ x' : Sp E (n - 1), (∀ i, IntAt P (((qOf P : E) ^ (c : ℤ))⁻¹ * x' i)) → ∀ i, IntAt P (((qOf P : E) ^ (c : ℤ))⁻¹ * f x' i) :=
     fun f hf x' hx i => by
@@ -163,8 +158,7 @@ theorem mem_kOne_of_block {n r c : ℕ} (hr : r < n) (G : ↥(GLint E n P)) (g' 
         simpa [twInit] using this
       · have := h (twLastI hn)
         have e : kOneLastExponents n c (twLastI hn).1 = (c : ℤ) := by unfold kOneLastExponents twLastI; rw [ite_eq_left (by simp; omega)]
-        rw [e] at this
-        exact this
+        rwa [e] at this
     · rintro ⟨h1, h2⟩ l
       unfold kOneLastExponents
       by_cases hl : l.1 + 1 = n
@@ -186,8 +180,7 @@ theorem mem_kOne_of_block {n r c : ℕ} (hr : r < n) (G : ↥(GLint E n P)) (g' 
         simpa [twInit] using this
       · have := h (twLastI hn)
         have e : twistedLevelExponent n c (twLastI hn).1 = 0 := by unfold twistedLevelExponent twLastI; rw [ite_eq_left (by simp; omega)]
-        rw [e, zpow_zero, inv_one, one_mul] at this
-        exact this
+        rwa [e, zpow_zero, inv_one, one_mul] at this
     · rintro ⟨h1, h2⟩ l
       unfold twistedLevelExponent
       by_cases hl : l.1 + 1 = n

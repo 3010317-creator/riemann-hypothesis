@@ -41,26 +41,15 @@ theorem RestPrimeBoundOfFactor.proof (h₁ : RestInnerTsumBound.Statement)
     refine (h₁ (p : ℝ) k _ _ hp2 (by omega) ?_).2
     intro n
     have hb := hT k hk.1 hk.2 τ (s p (n + 1) τ)
-    have habs : |e p (n + 1) τ k * restTerm f (r + a) Q k τ
-        (smallPowerSum f r a c (k - 1) (s p (n + 1) τ))| =
-        |restTerm f (r + a) Q k τ (smallPowerSum f r a c (k - 1) (s p (n + 1) τ))| := by
-      rw [abs_mul]
+    have habs : |e p (n + 1) τ k| = 1 := by
       rcases he p (n + 1) τ k with h | h <;> simp [h]
-    rw [← Rat.cast_abs, habs]
-    calc ((|restTerm f (r + a) Q k τ (smallPowerSum f r a c (k - 1) (s p (n + 1) τ))| : ℚ) : ℝ)
-        ≤ ((((f * (r * a) + 1 : ℕ) : ℚ) * |fibreDegree f r a c| * restX r a ^ (k - 1) /
-            (k.factorial : ℚ) : ℚ) : ℝ) := Rat.cast_le.mpr hb
-      _ = Y * X ^ (k - 1) / (k.factorial : ℝ) := by
-        rw [hY, hX]; push_cast; ring
+    rw [← Rat.cast_abs, abs_mul, habs, one_mul]
+    exact (Rat.cast_le.mpr hb).trans_eq (by rw [hY, hX]; push_cast; ring)
   have hsumk := h₂ (p : ℝ) X (r + a) hp0 hX0 hXp
   have hlog : 0 ≤ Real.log p := Real.log_nonneg (by linarith)
   unfold restPrimeModel
   rw [abs_mul, abs_of_nonneg hlog]
-  calc Real.log p * |∑ τ : Fin f, ∑ k ∈ Finset.Icc 2 (r + a), ∑' n : ℕ,
-        ((p : ℝ) ^ ((n + 1) * k))⁻¹ *
-          ((e p (n + 1) τ k * restTerm f (r + a) Q k τ
-            (smallPowerSum f r a c (k - 1) (s p (n + 1) τ)) : ℚ) : ℝ)|
-      ≤ Real.log p * ∑ τ : Fin f, ∑ k ∈ Finset.Icc 2 (r + a),
+  calc _ ≤ Real.log p * ∑ τ : Fin f, ∑ k ∈ Finset.Icc 2 (r + a),
           (Y * X ^ (k - 1) / (k.factorial : ℝ)) * (2 * ((p : ℝ) ^ k)⁻¹) := by
         apply mul_le_mul_of_nonneg_left _ hlog
         refine (Finset.abs_sum_le_sum_abs _ _).trans (Finset.sum_le_sum fun τ _ => ?_)
@@ -69,13 +58,11 @@ theorem RestPrimeBoundOfFactor.proof (h₁ : RestInnerTsumBound.Statement)
     _ = Real.log p * ((f : ℝ) * (Y * ∑ k ∈ Finset.Icc 2 (r + a),
           2 * ((p : ℝ) ^ k)⁻¹ * X ^ (k - 1) / (k.factorial : ℝ))) := by
         rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
-        congr 1
-        congr 1
+        congr 2
         rw [Finset.mul_sum]
         exact Finset.sum_congr rfl fun k _ => by ring
     _ ≤ Real.log p * ((f : ℝ) * (Y * (1.5 * X / (p : ℝ) ^ 2))) := by
         gcongr
-    _ = 1.5 * (f : ℝ) * X * (Real.log p / (p : ℝ) ^ 2) * Y := by ring
     _ = 1.5 * f * (restX r a : ℝ) * (Real.log p / (p : ℝ) ^ 2) *
           ((f * (r * a) + 1 : ℕ) : ℝ) * |(fibreDegree f r a c : ℝ)| := by
         rw [hY, hX]; ring

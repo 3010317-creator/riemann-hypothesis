@@ -33,8 +33,7 @@ theorem matLat_full {K : Type} [Field K] [NumberField K] {m n : ℕ}
   refine { toIsLattice := Submodule.IsLattice.of_fg K (hM.fg.map _), span_eq_top := ?_ }
   rw [matLat, Submodule.map_coe]
   change Submodule.span K (A.mulVecLin '' (M : Set _)) = ⊤
-  rw [Submodule.span_image, hM.span_eq_top, Submodule.map_top, LinearMap.range_eq_top]
-  exact hA
+  rwa [Submodule.span_image, hM.span_eq_top, Submodule.map_top, LinearMap.range_eq_top]
 
 namespace BlockDat
 
@@ -190,9 +189,7 @@ theorem eigProj_mem_of_stable [FiniteDimensional K V] (hc : PairComm op) (hs : S
   have hcA : PairComm opA := by
     intro i j
     apply LinearMap.ext
-    intro a
-    apply Subtype.ext
-    exact congrArg (fun f : Module.End K V => f a.1) (hc i j).eq
+    exact fun a => Subtype.ext (congrArg (fun f : Module.End K V => f a.1) (hc i j).eq)
   have hsA : SplitOver opA := fun i =>
     Module.End.genEigenspace_restrict_eq_top (hA i) (hs i)
   have htop := iSup_eigAt_eq_top hcA hsA
@@ -205,8 +202,7 @@ theorem eigProj_mem_of_stable [FiniteDimensional K V] (hc : PairComm op) (hs : S
         rw [eigAt, Submodule.mem_iInf] at ha ⊢
         intro i
         have h2 := ha i
-        rw [Module.End.maxGenEigenspace, Module.End.genEigenspace_restrict] at h2
-        exact h2
+        rwa [Module.End.maxGenEigenspace, Module.End.genEigenspace_restrict] at h2
       by_cases hx : C x
       · rw [eigProj_apply_of_mem hc hs (eigAt_le_eigSum hx h1)]
         exact a.2
@@ -260,8 +256,7 @@ theorem mem_coord (W : Submodule K B.S.Forms) (x : Fin B.S.dim → K) :
   constructor
   · rintro ⟨y, hy, rfl⟩
     simpa using hy
-  · intro hx
-    exact ⟨_, hx, B.S.basis.equivFun.apply_symm_apply x⟩
+  · exact fun hx => ⟨_, hx, B.S.basis.equivFun.apply_symm_apply x⟩
 
 theorem mem_goodPart_iff (W : Submodule K B.S.Forms) (u : Fin (B.nV ℓ) → K) :
     u ∈ B.inV0 ℓ W ↔ B.S.basis.equivFun.symm ((B.vE ℓ).mulVec u) ∈ W := by
@@ -308,8 +303,7 @@ theorem HasRes.excl {Sg Sg' : Pl0 → K[X]} (hne : ∃ P : B.Pl, Sg (B.pl P) ≠
 
 theorem exists_of_partF_ne_bot {Sg : Pl0 → K[X]} (h : B.partF Sg ≠ ⊥) :
     ∃ x, B.HasRes Sg x ∧ Col.Occurs B.op x := by
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   apply h
   unfold partF Col.eigSum
   refine le_antisymm (iSup₂_le fun x hx => ?_) bot_le
@@ -322,8 +316,7 @@ theorem good_part_coordinates_bot : B.inV0 ℓ ⊥ = ⊥ := by
   ext u
   rw [mem_goodPart_iff, Submodule.mem_bot, Submodule.mem_bot, LinearEquiv.map_eq_zero_iff]
   constructor
-  · intro h
-    exact h1 (h.trans (Matrix.mulVec_zero _).symm)
+  · exact fun h => h1 (h.trans (Matrix.mulVec_zero _).symm)
   · rintro rfl
     exact Matrix.mulVec_zero _
 
@@ -338,11 +331,9 @@ theorem resSet_finite (hc : Col.PairComm B.op) (X : Finset (G → K)) : (B.resSe
     if h : Sg ∈ B.resSet X then (hex Sg h).choose else 0
   have hf : ∀ Sg (h : Sg ∈ B.resSet X), B.HasRes Sg (f Sg) ∧ Col.Occurs B.op (f Sg) := by
     intro Sg h
-    simp only [f, dite_eq_left h]
-    exact (hex Sg h).choose_spec
+    simpa only [f, dite_eq_left h] using (hex Sg h).choose_spec
   refine Set.Finite.of_injOn (f := f) (t := (F : Set (B.Pl × ℕ → K))) ?_ ?_ F.finite_toSet
-  · intro Sg h
-    exact Finset.mem_coe.2 ((hF _).1 (hf Sg h).2)
+  · exact fun Sg h => Finset.mem_coe.2 ((hF _).1 (hf Sg h).2)
   · intro Sg h Sg' h' e
     funext P0
     by_cases hP : P0 ∈ Set.range B.pl
@@ -555,8 +546,7 @@ theorem gaMat_single (g : G) : B.S.gaMat B.r (MonoidAlgebra.single g 1) = B.S.ac
   · simp
   · intro b _ hb
     simp [hb]
-  · intro h
-    exact absurd (Finset.mem_univ g) h
+  · exact fun h => absurd (Finset.mem_univ g) h
 
 theorem mem_goodF {v0 : InfinitePlace K} (hv0 : IsConjAt v0) {X : Finset (G → K)} (hX : ∀ χ ∈ X, IsAbsIrrChar χ)
     (φ : B.S.Forms) : φ ∈ B.goodF X ↔ B.S.gaOp B.r (goodAt X (⊥ : Subgroup G) 1) φ = φ := by
@@ -564,8 +554,7 @@ theorem mem_goodF {v0 : InfinitePlace K} (hv0 : IsConjAt v0) {X : Finset (G → 
   constructor
   · rintro ⟨ψ, rfl⟩
     rw [← gaOp_mul, hidem]
-  · intro h
-    exact ⟨φ, h⟩
+  · exact fun h => ⟨φ, h⟩
 
 theorem good_part_coordinates_good_eq_top {v0 : InfinitePlace K} (hv0 : IsConjAt v0) (hX : ∀ χ ∈ ℓ.X, IsAbsIrrChar χ) :
     B.inV0 ℓ (B.goodF ℓ.X) = ⊤ := by
@@ -595,8 +584,7 @@ theorem goodF_stable {v0 : InfinitePlace K} (hv0 : IsConjAt v0) {s : ℕ} (h : B
   · rw [Submodule.mem_comap, B.mem_goodF hv0 hX] at *
     have hc : MonoidAlgebra.single g (1 : K) * a = a * MonoidAlgebra.single g 1 := by
       rw [ha, goodAt, level_idempotent_bot K G 1]
-      simp only [mul_one]
-      exact idemOf_central X hX _
+      simpa only [mul_one] using idemOf_central X hX _
     apply B.S.basis.equivFun.injective
     rw [← CSD.gaMat_mulVec_equivFun, equivFun_act, Matrix.mulVec_mulVec, ← gaMat_single,
       ← (group_action_matrix_hom K B.S G B.r).2, ← hc, (group_action_matrix_hom K B.S G B.r).2, gaMat_single,
@@ -608,8 +596,7 @@ theorem sep_of_mem_ixFin {X : Finset (G → K)} {Sg Sg' : Pl0 → K[X]} (h : Sg 
   split_ifs at h h' with hf
   · rw [Set.Finite.mem_toFinset] at h h'
     simp only [resSet, Set.mem_setOf_eq] at h h'
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     apply hne
     funext P0
     by_cases hP : P0 ∈ Set.range B.pl
@@ -722,8 +709,7 @@ theorem sum_partPr (t : Bs.Tup) (hi : iSupIndep (Df.Qp t)) (ht : (⨆ p, Df.Qp t
       rw [(Submodule.projectionOnto_apply_eq_zero_iff (hc p)).2
         (Submodule.mem_iSup_of_mem q (Submodule.mem_iSup_of_mem (Ne.symm hpq) hy))]
       rfl
-    · intro hq
-      exact absurd (Finset.mem_univ q) hq
+    · exact fun hq => absurd (Finset.mem_univ q) hq
   | zero => simp
   | add a b _ _ iha ihb => rw [map_add (f := _), iha, ihb, map_add (f := _)]
 
@@ -781,8 +767,7 @@ theorem GmOf_le [_root_.NumberField.IsTotallyComplex K] {s : ℕ} (h : F.Ok s) (
       rw [pow_one]
       exact BlockDat.Mt_dual (ℓ := F.lvl P ψ) h.conj (h.what₂ t) h.irr x hx)
     w (ebOf (F.side P ψ Zs) t w) (locBasisOf_spec _ hlat w)
-  rw [Nat.cast_one, one_mul] at this
-  exact this
+  rwa [Nat.cast_one, one_mul] at this
 
 end DefFam
 

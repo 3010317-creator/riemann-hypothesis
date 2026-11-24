@@ -215,8 +215,7 @@ theorem colLeR_of_lengthCount [IsDomain O] [IsDiscreteValuationRing O] (hp0 : ((
       obtain ⟨x, hx⟩ := hg z
       refine ⟨Submodule.Quotient.mk x, ?_⟩
       rw [Submodule.liftQ_apply]
-      refine ((Submodule.Quotient.eq I').2 ?_).symm
-      exact Submodule.mem_sup_right hx
+      exact ((Submodule.Quotient.eq I').2 (Submodule.mem_sup_right hx)).symm
     exact Module.length_le_of_surjective _ hs
   have hb := length_le_of_filtration ((PD.p : ℕ) : O) (preIm PD F g) k Fl gen m e e' ⌊c * kO⌋₊ kO hkO hF0 hF hgen hgs
     (fun x => by
@@ -293,8 +292,7 @@ def openKR (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (R : ℕ → P
 
 theorem Theorem_C_range_of_open (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (R : ℕ → Prop) (C CA CB CK : ℝ) (h10 : adm10 D HW F CA CB CK)
     (h : openKR D HW F R C) : TheoremCConstantsRange D HW F R 32 4 10 4 (3 / 2) C := by
-  intro l _ K LL hg _
-  exact thmCKR_of_open _ R C (h10.1 l K 1 LL hg) (h l K LL hg)
+  exact fun l _ K LL hg _ => thmCKR_of_open _ R C (h10.1 l K 1 LL hg) (h l K LL hg)
 
 theorem Theorem_C_of_open (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (C CA CB CK : ℝ) (h10 : adm10 D HW F CA CB CK)
     (h : openKR D HW F (fun _ => True) C) : aux₃ D HW F C :=

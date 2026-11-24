@@ -76,16 +76,14 @@ theorem IsHilbertSchmidt.isCompactOperator {T : H →L[𝕜] K} (hT : IsHilbertS
   set b := stdHilbertBasis (𝕜 := 𝕜) (H := H)
   have htail : Tendsto (fun F : Finset (exists_hilbertBasis 𝕜 H).choose =>
       hsNormSq (T - hsTruncation b T F)) atTop (𝓝 0) := by
-    simp only [b, hsNormSq_sub_hsTruncation]
-    exact ENNReal.tendsto_tsum_compl_atTop_zero hT.ne
+    simpa only [b, hsNormSq_sub_hsTruncation] using ENNReal.tendsto_tsum_compl_atTop_zero hT.ne
   have hHS : ∀ F, IsHilbertSchmidt (T - hsTruncation b T F) := fun F => by
     refine lt_of_le_of_lt ?_ hT
     rw [hsNormSq_sub_hsTruncation, hsNormSq]
     exact tsum_comp_le_tsum_of_injective Subtype.val_injective (fun i => ‖T (b i)‖ₑ ^ 2)
   have hnorm : Tendsto (fun F => hsNorm (T - hsTruncation b T F)) atTop (𝓝 0) := by
     have h1 := (ENNReal.tendsto_toReal ENNReal.zero_ne_top).comp htail
-    have h2 := (Real.continuous_sqrt.tendsto _).comp h1
-    simpa [hsNorm, Function.comp_def] using h2
+    simpa [hsNorm, Function.comp_def] using (Real.continuous_sqrt.tendsto _).comp h1
   refine isCompactOperator_of_tendsto (l := atTop) (F := fun F => hsTruncation b T F) ?_
     (Eventually.of_forall fun F => isCompactOperator_hsTruncation b T F)
   rw [tendsto_iff_norm_sub_tendsto_zero]

@@ -94,8 +94,7 @@ theorem Fil.smul {p : ℕ} {X : Mat k r} (c : ℂ) (hX : Fil p X) : Fil p (c •
 
 theorem Fil.zero (p : ℕ) : Fil p (0 : Mat k r) := by
   unfold PI.SwSand.Fil
-  intro i j _
-  exact Matrix.zero_apply i j
+  exact fun i j _ => Matrix.zero_apply i j
 
 def adjH (X : Mat k r) : Mat k r := Hpk k r * Xᴴ * Hpk k r
 
@@ -120,9 +119,7 @@ theorem lieN_add {X Y : Mat k r} (hX : X ∈ lieN k r) (hY : Y ∈ lieN k r) : X
   refine ⟨hX1.add hY1, ?_⟩
   rw [adjH_add, add_add_add_comm, hX2, hY2, add_zero]
 
-theorem zero_mem_lieN : (0 : Mat k r) ∈ lieN k r := by
-  show Fil 1 (0 : PI.SwBig.Mat k r) ∧ adjH (0 : PI.SwBig.Mat k r) + 0 = 0
-  exact ⟨PI.SwSand.Fil.zero 1, by simp [adjH]⟩
+theorem zero_mem_lieN : (0 : Mat k r) ∈ lieN k r := ⟨PI.SwSand.Fil.zero 1, by simp [adjH]⟩
 
 def lieNS (k r : ℕ) : Submodule ℝ (Mat k r) where
   carrier := lieN k r

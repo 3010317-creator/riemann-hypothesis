@@ -112,8 +112,7 @@ theorem pre_chain (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hnL : ∀ j, Dt.nL j
     · subst hj
       simp only [SignedChainData.chainML, Set.mem_image, hch, Set.mem_union, Set.mem_setOf_eq, true_and]
       constructor
-      · intro h
-        exact ⟨Sum.inl l, Or.inr ⟨l, rfl, h⟩, rfl⟩
+      · exact fun h => ⟨Sum.inl l, Or.inr ⟨l, rfl, h⟩, rfl⟩
       · rintro ⟨y, hy, hyx⟩
         cases y with
         | inl l' =>
@@ -316,8 +315,7 @@ private theorem sDegs_rename_subset_sDegs_preimage {R : Type} [CommRing R] {ι �
   intro k hk
   simp only [Finset.mem_biUnion, MvPolynomial.mem_support_iff, Finsupp.mem_support_iff] at hk ⊢
   obtain ⟨m, -, hk⟩ := hk
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   apply hk
 
   rw [B.as_sum, map_sum, coeff_sum]
@@ -445,8 +443,7 @@ theorem ml_mem_letters (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hnL : ∀ j, nL
     apply (LL_sub_letters hV hr _ _ _).1
     exact llPos_mem Fr (segZ j) l.val (by rw [← hnL]; exact l.isLt)
   | lab j m =>
-    simp only [mlPos]
-    exact fr_mem_letters hV hr _ _ (by omega)
+    simpa only [mlPos] using fr_mem_letters hV hr _ _ (by omega)
   | wc j m =>
     simp only [mlPos]
     rw [dv_mem_letters]
@@ -455,8 +452,7 @@ theorem ml_mem_letters (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hnL : ∀ j, nL
     refine ⟨⟨hmon _ _ _ (by omega) (by omega), ?_⟩, (hTT _ _ (by omega)).1⟩
     exact ((hmon _ _ _ (by omega) (by omega)).trans h1.le).trans (hmon _ _ _ (by omega) (by omega))
   | tp j m h =>
-    simp only [mlPos]
-    exact fr_mem_letters hV hr _ _ (by omega)
+    simpa only [mlPos] using fr_mem_letters hV hr _ _ (by omega)
 
 theorem tl_mem_letters (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hnL : ∀ j, nL j = (Fr.LLset (segZ j)).card) (x : TL J nL r) :
     (tlPos Fr nL x).2 ∈ Fr.letters (segZ (tlPos Fr nL x).1) ∧ ¬ Fr.IsW (segZ (tlPos Fr nL x).1) (tlPos Fr nL x).2 := by

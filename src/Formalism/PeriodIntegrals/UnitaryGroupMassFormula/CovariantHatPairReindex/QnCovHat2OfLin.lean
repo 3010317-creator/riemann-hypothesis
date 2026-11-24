@@ -89,9 +89,7 @@ theorem sum_rows {m : ℕ} {α : Type*} [Fintype α] [DecidableEq α] {M : Type*
   simp only [Fin.cons_zero, Fin.cons_one, Fin.cons_succ, Fin.prod_univ_succ, Fin.succ_zero_eq_one]
   simp only [Finset.sum_mul, Finset.mul_sum, Finset.sum_smul, Finset.smul_sum, smul_smul]
   symm
-  rw [Finset.sum_comm]
-  rw [Finset.sum_congr rfl fun x1 _ => Finset.sum_comm]
-  rw [Finset.sum_comm]
+  rw [Finset.sum_comm, Finset.sum_congr rfl fun x1 _ => Finset.sum_comm, Finset.sum_comm]
   refine Finset.sum_congr rfl fun x0 _ => Finset.sum_congr rfl fun x1 _ =>
     Finset.sum_congr rfl fun y _ => ?_
   congr 1

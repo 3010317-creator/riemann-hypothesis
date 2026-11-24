@@ -72,8 +72,7 @@ theorem xD_iter_dil (φ : ℝ → ℝ) {ε : ℝ} (hε : 0 < ε) (q : ℕ) :
 
 theorem xD_contDiff {φ : ℝ → ℝ} (hφ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) φ) :
     ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (xD φ) := by
-  have hd := (contDiff_infty_iff_deriv.mp hφ).2
-  exact contDiff_id.mul hd
+  exact contDiff_id.mul ((contDiff_infty_iff_deriv.mp hφ).2)
 
 theorem xD_iter_contDiff {φ : ℝ → ℝ} (hφ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) φ) (q : ℕ) :
     ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (xD^[q] φ) := by
@@ -99,8 +98,7 @@ private theorem xD_iterate_eq_ite_of_const_on_open {φ : ℝ → ℝ} {U : Set �
   | succ q ih =>
     intro y hy
     rw [Function.iterate_succ_apply']
-    simp only [Nat.succ_ne_zero, ite_false]
-    exact xD_zero_of_const hU _ ih y hy
+    simpa only [Nat.succ_ne_zero, ite_false] using xD_zero_of_const hU _ ih y hy
 
 theorem truncated_supremum_bound_holds : NFCutSup := by
   unfold NFCutSup

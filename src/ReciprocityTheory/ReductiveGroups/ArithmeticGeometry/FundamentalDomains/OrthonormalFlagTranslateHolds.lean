@@ -22,8 +22,7 @@ noncomputable section
 variable {r : ℕ} (X : Data E r)
 
 lemma upper_of_bor {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (τ : X.Ψ) : (mat b τ).BlockTriangular id := by
-  intro i j hij
-  exact (hb τ).2 i j hij
+  exact fun i j hij => (hb τ).2 i j hij
 
 lemma bdiag_ne {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (τ : X.Ψ) (j : Fin r) : b τ j j ≠ 0 := by
   have h1 := (hb τ).1
@@ -35,8 +34,7 @@ private theorem sum_eq_sum_castLE_of_eq_zero {n m : ℕ} (h : m ≤ n) (f : Fin 
     ∑ j, f j = ∑ j : Fin m, f (Fin.castLE h j) := by
   refine Eq.trans ?_ (Finset.sum_map (Finset.univ : Finset (Fin m)) ⟨Fin.castLE h, Fin.castLE_injective h⟩ f)
   refine (Finset.sum_subset (Finset.subset_univ _) fun j _ hj => hf j ?_).symm
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   exact hj (Finset.mem_map.2 ⟨⟨j.val, hlt⟩, Finset.mem_univ _, Fin.ext rfl⟩)
 
 private alias gram_eq_lemma := _root_.ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.gram_eq
@@ -80,8 +78,7 @@ lemma dmin_rmul (x : Frame X.Ψ r) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (�
     intro j k hjk
     apply hB
     show e k < e j
-    rw [Fin.lt_iff_val_lt_val, he, Fin.coe_castLE, Fin.coe_castLE]
-    exact hjk
+    rwa [Fin.lt_iff_val_lt_val, he, Fin.coe_castLE, Fin.coe_castLE]
   rw [hsub, Matrix.det_mul, Matrix.det_mul, Matrix.det_transpose,
     show ((B.submatrix e e).map (starRingEnd ℂ)).det = starRingEnd ℂ (B.submatrix e e).det from
       (RingHom.map_det _ _).symm,

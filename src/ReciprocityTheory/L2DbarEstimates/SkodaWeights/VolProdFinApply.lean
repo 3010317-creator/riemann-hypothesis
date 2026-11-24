@@ -355,8 +355,7 @@ theorem pt_G {p : ℕ} (g a : Fin p → ℂ) (c : ℝ) (hN : 0 < vsq g) :
   rw [hexp, ← Finset.sum_mul]
   have hcs := norm_sum_mul_sq_le g a
   have h1 : ‖∑ i, g i * a i‖ ^ 2 / vsq g ≤ ∑ i, ‖a i‖ ^ 2 := by
-    rw [div_le_iff₀ hN, mul_comm]
-    exact hcs
+    rwa [div_le_iff₀ hN, mul_comm]
   have he := Real.exp_pos (-c)
   calc ‖∑ i, g i * a i‖ ^ 2 * (Real.exp (-c) / vsq g)
       = (‖∑ i, g i * a i‖ ^ 2 / vsq g) * Real.exp (-c) := by ring
@@ -459,8 +458,7 @@ theorem ae_lift_prodFin (z : M → V n) (hz : IsLocalHomeomorph z) (p : ℕ) {P 
 
 theorem measurable_vsq {p : ℕ} {g : Fin p → M → ℂ} (hg : ∀ l, Measurable (g l)) :
     Measurable (fun x => vsq (gv g x)) := by
-  simp only [vsq, gv]
-  exact Finset.measurable_sum _ fun i _ => ((hg i).norm).pow_const 2
+  simpa only [vsq, gv] using Finset.measurable_sum _ fun i _ => ((hg i).norm).pow_const 2
 
 theorem wint_G_le (z : M → V n) (hz : IsLocalHomeomorph z) (p : ℕ) (g : Fin p → M → ℂ)
     (φ : M → ℝ) (hφ : Measurable φ) (hN : ∀ x, 0 < vsq (gv g x))
@@ -643,8 +641,7 @@ theorem skodaOps (n : ℕ) (M : Type*) [TopologicalSpace M] [T2Space M]
   have hN : ∀ x, 0 < vsq (gv g x) := by
     intro x
     obtain ⟨i, hi⟩ : ∃ i, gv g x i ≠ 0 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hgv x (funext hc)
     have h1 : 0 < ‖gv g x i‖ ^ 2 := pow_pos (norm_pos_iff.mpr hi) 2
     have h2 : ‖gv g x i‖ ^ 2 ≤ ∑ j, ‖gv g x j‖ ^ 2 :=
@@ -653,7 +650,6 @@ theorem skodaOps (n : ℕ) (M : Type*) [TopologicalSpace M] [T2Space M]
     unfold vsq
     linarith
   have hvc : Continuous fun x => vsq (gv g x) := by
-    show Continuous fun x => ∑ i, ‖g i x‖ ^ 2
     exact continuous_finsetSum _ fun i _ => ((hgc i).norm).pow 2
   have hvm : Measurable fun x => vsq (gv g x) := hvc.measurable
   have hφm : Measurable φ := hφ.measurable
@@ -879,8 +875,7 @@ theorem holo_finsum (n : ℕ) (z : M → V n) {p : ℕ} (F : Fin p → M → ℂ
   have e : (fun x => ∑ i, F i x) = ∑ i, F i := by
     ext x
     simp [Finset.sum_apply]
-  rw [e]
-  exact h
+  rwa [e]
 
 end SlopeTestRemainingChoices
 

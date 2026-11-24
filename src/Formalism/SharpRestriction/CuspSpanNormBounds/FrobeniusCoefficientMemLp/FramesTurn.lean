@@ -126,8 +126,7 @@ theorem cAE_coe : ⇑(cAE k r) = cA k r := rfl
 theorem conjI_delta {M : Mx k r} {i j : Fin (2 * r + k + 1)} (h : M i j = if i = j then 1 else 0) :
     (tTi k r * M * tT k r) i j = if i = j then 1 else 0 := by
   have hd : ∀ l, star (dT k r l) * dT k r l = 1 := fun l => by
-    have h1 := congrFun (congrFun (tTi_mul_tT k r) l) l
-    simpa [tTi, tT] using h1
+    simpa [tTi, tT] using congrFun (congrFun (tTi_mul_tT k r) l) l
   simp only [tTi, tT, Matrix.diagonal_mul, Matrix.mul_diagonal, h]
   split_ifs with hij
   · subst hij
@@ -138,8 +137,7 @@ theorem conjI_delta {M : Mx k r} {i j : Fin (2 * r + k + 1)} (h : M i j = if i =
 theorem conj_delta {M : Mx k r} {i j : Fin (2 * r + k + 1)} (h : M i j = if i = j then 1 else 0) :
     (tT k r * M * tTi k r) i j = if i = j then 1 else 0 := by
   have hd : ∀ l, dT k r l * star (dT k r l) = 1 := fun l => by
-    have h1 := congrFun (congrFun (tT_mul_tTi k r) l) l
-    simpa [tTi, tT] using h1
+    simpa [tTi, tT] using congrFun (congrFun (tT_mul_tTi k r) l) l
   simp only [tTi, tT, Matrix.diagonal_mul, Matrix.mul_diagonal, h]
   split_ifs with hij
   · subst hij
@@ -806,8 +804,7 @@ theorem isRootMeas_turn (L : LocBessel k r) (ka : ℝ) (hka : 0 < ka) (hc : L.c 
     have e : (fun (x : Mt k r) (q : rootPat p) => flagMat k r L.z (Matrix.of x) q.1.1 q.1.2) ∘ cA k r =
         (fun (v : rootPat p → ℂ) q => u q * v q) ∘ (fun (x : Mt k r) (q : rootPat p) => flagMat k r L.z (Matrix.of x) q.1.1 q.1.2) := by
       funext x q
-      simp only [Function.comp_apply, of_cA]
-      exact flagMat_conjI L.hz.1 _ _ _
+      simpa only [Function.comp_apply, of_cA] using flagMat_conjI L.hz.1 _ _ _
     rw [Measure.map_map (continuous_rootCoordsS _).measurable continuous_cA.measurable, e,
       ← Measure.map_map (rot_mp u hu).measurable (continuous_rootCoordsS _).measurable, h2', Measure.map_smul,
       (rot_mp u hu).map_eq]

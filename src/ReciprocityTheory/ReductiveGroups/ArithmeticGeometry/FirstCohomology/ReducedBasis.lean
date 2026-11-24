@@ -58,8 +58,7 @@ lemma greedy [FiniteDimensional ℝ E] (X : Submodule ℤ E) [DiscreteTopology X
       ∀ z ∈ X, z ∉ V u n → ‖w‖ ≤ ‖z‖ := by
     intro u n hn
     have hex : ∃ i, v i ∉ V u n := by
-      by_contra h
-      push Not at h
+      by_contra! h
       have hle : span ℝ (Set.range v) ≤ V u n :=
         span_le.mpr (by rintro _ ⟨i, rfl⟩; exact h i)
       have h1 : finrank ℝ (span ℝ (Set.range v)) = d := by
@@ -122,8 +121,7 @@ lemma greedy [FiniteDimensional ℝ E] (X : Submodule ℤ E) [DiscreteTopology X
         rw [Function.update_of_ne hki]
         exact hu k hk
       · have hki : k = ⟨n, by omega⟩ := Fin.ext hk
-        rw [hki, Function.update_self]
-        exact hw
+        rwa [hki, Function.update_self]
   obtain ⟨u, hu⟩ := key d le_rfl
   exact ⟨u, fun k => hu k k.isLt⟩
 
@@ -143,10 +141,8 @@ lemma exists_b [FiniteDimensional ℝ E] {d : ℕ} (u : Fin d → E) (hu : Linea
       rintro y ⟨hyX, -, -, -, hy⟩
       refine ⟨mem_closedBall_zero_iff.mpr ?_, hyX⟩
       have h2 : ‖y‖ ^ 2 ≤ (Real.sqrt d * ‖u k‖) ^ 2 := by
-        rw [mul_pow, Real.sq_sqrt (Nat.cast_nonneg d)]
-        exact hy
-      by_contra hc
-      push Not at hc
+        rwa [mul_pow, Real.sq_sqrt (Nat.cast_nonneg d)]
+      by_contra! hc
       nlinarith [norm_nonneg y])
   have hBne : ({y : E | y ∈ X ∧ y ∈ V u (k.val + 1) ∧ 0 < phi u k y ∧ phi u k y ≤ 1 ∧
       ‖y‖ ^ 2 ≤ d * ‖u k‖ ^ 2}).Nonempty :=
@@ -173,8 +169,7 @@ lemma exists_b [FiniteDimensional ℝ E] {d : ℕ} (u : Fin d → E) (hu : Linea
       exact hbmin x ⟨⟨hxX, hxV, hx0, hx1, hxd⟩, hx.trans hbphi⟩
     · push Not at hxd
       have hlt : ‖b‖ ^ 2 < ‖x‖ ^ 2 := lt_of_le_of_lt hbd hxd
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       nlinarith [norm_nonneg b, norm_nonneg x]
 
 lemma span_flag {d : ℕ} (u : Fin d → E) (hu : LinearIndependent ℝ u) (X : Submodule ℤ E)
@@ -262,8 +257,7 @@ theorem reducedBasis_holds : ReducedBasisStatement := by
   have hmono : ∀ k j : Fin (finrank ℝ E), j < k → ‖u j‖ ≤ ‖u k‖ := by
     intro k j hjk
     apply (hu j).2.2.2 (u k) (huX k)
-    intro hmem
-    exact huV k (RB.V_mono u (Fin.lt_iff_val_lt_val.1 hjk).le hmem)
+    exact fun hmem => huV k (RB.V_mono u (Fin.lt_iff_val_lt_val.1 hjk).le hmem)
   have hb := fun k => RB.exists_b u hli X huX k (fun j hj => hmono k j hj)
   choose b hbX hbV hb0 hb1 hbmin hbnrm hbd using hb
   have hspan := RB.span_flag u hli X b hbX hbV hb0 hb1 hbmin
@@ -282,8 +276,7 @@ theorem reducedBasis_holds : ReducedBasisStatement := by
       rw [RB.V, Submodule.span_le]
       rintro _ ⟨l, hl, rfl⟩
       exact RB.V_mono u (show l.val + 1 ≤ k.val from hl) (hbV l)
-    have h0 := RB.phi_V u k (hsub hmem)
-    exact (hb0 k).ne' h0
+    exact (hb0 k).ne' (RB.phi_V u k (hsub hmem))
   have hliR : LinearIndependent ℝ b := RB.indep_of_flag rfl b hbnot
   have hliZ : LinearIndependent ℤ b := by
     first
@@ -299,8 +292,7 @@ theorem reducedBasis_holds : ReducedBasisStatement := by
     rw [hrange, ← Submodule.map_span] at hx
     obtain ⟨y, hy, hyx⟩ := Submodule.mem_map.1 hx
     have hyx' : y = x := Subtype.ext hyx
-    rw [← hyx']
-    exact hy
+    rwa [← hyx']
   let B := Basis.mk hliX hspX
   have hBj : ∀ j, (B j : E) = b j := fun j => by
     simp only [B, Basis.mk_apply, bX]

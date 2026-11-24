@@ -85,12 +85,10 @@ theorem isDIntegral_inv_smul (g : h.unitaryGroup) {D : ℕ} {La : AddSubgroup W}
         γ.toLinearMap '' (La : Set W) := by
       ext y
       constructor
-      · intro hy
-        exact ⟨g • y, mem_inv_smul_iff.1 hy, inv_smul_smul g y⟩
+      · exact fun hy => ⟨g • y, mem_inv_smul_iff.1 hy, inv_smul_smul g y⟩
       · rintro ⟨x, hx, rfl⟩
         change g⁻¹ • x ∈ g⁻¹ • La
-        rw [mem_inv_smul_iff, smul_inv_smul]
-        exact hx
+        rwa [mem_inv_smul_iff, smul_inv_smul]
     rw [hset, Submodule.span_image, hLa.isLattice.span_eq_top, Submodule.map_top,
       LinearMap.range_eq_top]
     exact LinearEquiv.surjective _
@@ -135,8 +133,7 @@ theorem AdaptedReduction.proof (h : HermitianForm F E W) [FiniteDimensional E W]
     constructor <;> ring
   refine ⟨g, g⁻¹ • La, smul_inv_smul g La, hgv ▸ hvl, ?_, hsplit,
     hD' _ (isDIntegral_inv_smul g hLa) hsplit⟩
-  rw [hI, hJ]
-  exact hK
+  rwa [hI, hJ]
 
 end
 

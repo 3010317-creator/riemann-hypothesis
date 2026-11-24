@@ -110,8 +110,7 @@ theorem capelliC_hw (μ : Fin n → ℂ) (v : M) (x : ℂ) (hup : ∀ a b, a < b
     (hd : ∀ a, E a a v = μ a • v) :
     capelliC E x v = (∏ a : Fin n, (x + μ a - ((a : ℕ) : ℂ))) • v := by
   unfold capelliC cminor
-  rw [LinearMap.sum_apply]
-  rw [Finset.sum_eq_single (1 : Equiv.Perm (Fin n))]
+  rw [LinearMap.sum_apply, Finset.sum_eq_single (1 : Equiv.Perm (Fin n))]
   · rw [LinearMap.smul_apply]
     have := prod_ofFn_apply_highestWeight E μ v x hup hd n (fun j => (1 : Equiv.Perm (Fin n)) j) id
       (Equiv.injective _) (fun j => by simp) (fun j => rfl)
@@ -152,8 +151,7 @@ theorem capelliC_genSub (hE : IsGlRep E) (μ : Fin n → ℝ) (v : M) (hv : IsHW
       have hcomm := congrArg (fun f : Module.End ℂ M => f w) (capelliC_central E hE' x a b).eq
       simp only [Module.End.mul_apply] at hcomm
       rw [← hcomm, hw, map_smul]
-  intro y hy
-  exact (hmem y).1 (hle hy)
+  exact fun y hy => (hmem y).1 (hle hy)
 
 end Module
 

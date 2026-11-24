@@ -323,14 +323,12 @@ theorem blockK_liftC (hA : P5.ThmPActualCpt) (hDL : KB.DegLift) (hSS : KB.SizeSt
       have h1 := hsp
       rw [sizeAt_plusW, prod_ofFn_map'] at h1
       have h2 := (pos_of_mul_pos_left h1 hsa.le).ne'
-      intro c hc0'
-      exact h2 (Finset.prod_eq_zero (Finset.mem_univ c) (by rw [hc0', abs_zero]))
+      exact fun c hc0' => h2 (Finset.prod_eq_zero (Finset.mem_univ c) (by rw [hc0', abs_zero]))
     have hPm : ∀ c, S.P v (grid c (n c) + 1) ≠ 0 := by
       have h1 := hsm
       rw [sizeAt_minusW, prod_ofFn_map'] at h1
       have h2 := (pos_of_mul_pos_left h1 hsa.le).ne'
-      intro c hc0'
-      exact h2 (Finset.prod_eq_zero (Finset.mem_univ c) (by rw [hc0', abs_zero]))
+      exact fun c hc0' => h2 (Finset.prod_eq_zero (Finset.mem_univ c) (by rw [hc0', abs_zero]))
     have hrb := ratio_bound (fun c => grid c (n c)) (S.P v) qv Λ T (ΓS S j) (S.sizeAt v a)
       (Real.exp 1 * J.supA S.G S.de S.de' S.T S.T' S.l false (S.pl v)) Xc hΓ hsa
       (fun c => hqpos _ (List.mem_ofFn.2 ⟨c, rfl⟩)) hPp hPm
@@ -342,8 +340,7 @@ theorem blockK_liftC (hA : P5.ThmPActualCpt) (hDL : KB.DegLift) (hSS : KB.SizeSt
       rw [hcp, sizeAt_plusW, prod_ofFn_map']
     have ecm : cm = 1 / (ΓS S j * ((∏ c, |S.P v (grid c (n c) + 1)|) * S.sizeAt v a)) := by
       rw [hcm, sizeAt_minusW, prod_ofFn_map']
-    rw [hκn, eQ, ecp, ecm]
-    exact hrb
+    rwa [hκn, eQ, ecp, ecm]
   have hblock := block_of_choices Y
     (fun n p' q' => KB.gN S' v ε j (KB.plusW (ys n) a) (p' ++ [(s, t)]) (q' ++ [(s, t)]))
     (fun n p' q' => KB.gN S' v ε j (KB.minusW (ys n) a) (p' ++ [(s, t')]) (q' ++ [(s, t')])) Pn θ (Xc ^ K) (Xc ^ K)
@@ -507,8 +504,7 @@ theorem supA_pos (hB : KB.IsLeadingFormSetting Cb Cc S p f χ A₀) (v : Fin S.f
   cases one
   · simpa using hyI
   · simp only [ite_true]
-    rw [← PBL.ntop_eq_N']
-    exact hy1
+    rwa [← PBL.ntop_eq_N']
 
 theorem glob_pos' (hB : KB.IsLeadingFormSetting Cb Cc S p f χ A₀) : 0 < S.G.g := by
   obtain ⟨hg1, hg2, -⟩ := hB
@@ -976,8 +972,7 @@ theorem Formalism.FourierDecayAlt.P.wave_local_compact_support_route : Formalism
     fun ε hε l Y hY => ⟨?_, Complex.I ^ C.Kst, by simp, ?_⟩⟩
   · have hY' : ∀ h ∈ Y, D.ptSize h = j := fun h hh => by have := hY h hh; omega
     have h0 := block0C hA hPSC hVI hFP hB F hF v ε hε j hj a hwa l Y hY'
-    rw [Nat.add_sub_cancel]
-    exact h0
+    rwa [Nat.add_sub_cancel]
   · have hY' : ∀ h ∈ Y, D.ptSize h = j := fun h hh => by have := hY h hh; omega
     have hK := blockK_waveC hA hPSC hDW hSS hVI hFP hB F hF v ε hε j hj a ha' haN hwa C.Kst grid hinj hnodes
       (Xw S (j + 1) v) (xw_nonneg hB _ v) (xw_K hB v j C.Kst grid hl1) l Y hY'
@@ -1033,8 +1028,7 @@ theorem liftLocB_of_cpt (hDL : KB.DegLift) : P5.ThmPActualCpt → LiftLocB := by
     rw [ite_eq_left ⟨hb, hs, hbs⟩]; exact (hΛ0 b s hb hs hbs v).2
   · intro F hF v b s hb hs hbs
     have h : (if 1 ≤ b ∧ 1 ≤ s ∧ b + s ≤ S.G.r + 1 then Λ0 b s v else 0) = Λ0 b s v := ite_eq_left ⟨hb, hs, hbs⟩
-    simp only [h]
-    exact hl F hF v b s hb hs hbs
+    simpa only [h] using hl F hF v b s hb hs hbs
 
 end
 

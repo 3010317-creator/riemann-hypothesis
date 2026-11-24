@@ -73,8 +73,7 @@ theorem ModG_map {γ : S.V ≃ₗ[E] S.V} {Λ : Submodule (𝓞 E) S.V} {g : ℕ
     ModG S (Formalism.HermitianLatticesTheory.gmap γ Λ) g (γ x) := by
   intro P hP
   have h1 := h P hP
-  rw [← gmap_smul, ← gmap_locP, ap_mem_gmap]
-  exact h1
+  rwa [← gmap_smul, ← gmap_locP, ap_mem_gmap]
 
 theorem frameAct_map {γ : S.V ≃ₗ[E] S.V} {n : ℕ} (f : Fin n → S.V) (ξ : Matrix (Fin n) (Fin n) (𝓞 E))
     (b : Fin n) : frameAct (fun i => γ (f i)) ξ b = γ (frameAct f ξ b) := by
@@ -110,8 +109,7 @@ theorem IsFixedConv_map {T : E} {γ : S.V ≃ₗ[E] S.V} (hγ : γ ∈ Formalism
     rfl
   · rw [Lsub_mapL hγ] at hc
     have h3 : γ (c • F.fl.z) ∈ Formalism.HermitianLatticesTheory.gmap γ (Lsub Λ F) := by
-      rw [map_smul]
-      exact hc
+      rwa [map_smul]
     exact ap_mem_gmap.1 h3
 
 theorem UU_map {T T' : E} {γ : S.V ≃ₗ[E] S.V} (hγ : γ ∈ Formalism.HermitianLatticesTheory.isom S.hT) (Λ : Submodule (𝓞 E) S.V)

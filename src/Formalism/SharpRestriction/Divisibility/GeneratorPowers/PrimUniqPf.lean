@@ -105,9 +105,7 @@ theorem wchart_cover {X Y : Scheme.{0}} (L : LB X) (hL : L.IsLB) {K : Type} [Fin
     have hy : (φ k).base y ∈ (⨆ i, L.U i) := by rw [hL.cover]; trivial
     simpa [TopologicalSpace.Opens.mem_iSup] using hy
   choose j hj using hk
-  refine TopologicalSpace.Opens.mem_iSup.2 ⟨j, ?_⟩
-  show y ∈ ⋂ k, (φ k).base ⁻¹' (L.U (j k) : Set X)
-  exact Set.mem_iInter.2 fun k => hj k
+  exact TopologicalSpace.Opens.mem_iSup.2 ⟨j, Set.mem_iInter.2 fun k => hj k⟩
 
 theorem gen_ratio {Y : Scheme.{0}} (M : LB Y) (hcov : (⊤ : Y.Opens) ≤ ⨆ j, M.U j)
     (t t' : LB.Gen M) (ht : t.IsGen) (ht' : t'.IsGen) :
@@ -205,8 +203,7 @@ theorem pull_unit_eq_one {X Y S0 : Scheme.{0}} (L : LB X) (hL : L.IsLB) {K : Typ
       fun _ hy => Set.mem_iInter.2 fun k => Set.mem_iInter.1 hy k
     exact (pull_restrict_unit_value h (W' := W z) hWV inf_le_left u).symm.trans (e3.trans Units.val_one)
   refine S0.sheaf.eq_of_locally_eq' W (h ⁻¹ᵁ ⊤) (fun z => homOfLE le_top) ?_ _ _ ?_
-  · intro z _
-    exact TopologicalSpace.Opens.mem_iSup.2 ⟨z, hzW z⟩
+  · exact fun z _ => TopologicalSpace.Opens.mem_iSup.2 ⟨z, hzW z⟩
   · intro z
     change (S0.presheaf.map (homOfLE (le_top : W z ≤ h ⁻¹ᵁ ⊤)).op).hom
       ((h.app ⊤).hom (u : Γ(Y, ⊤))) = (S0.presheaf.map (homOfLE (le_top : W z ≤ h ⁻¹ᵁ ⊤)).op).hom 1

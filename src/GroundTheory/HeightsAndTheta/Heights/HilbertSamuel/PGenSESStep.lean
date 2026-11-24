@@ -40,8 +40,7 @@ theorem isMultiHomog_X (k : K) (i : ι k) :
   · have : ∀ j : ι l, (Finsupp.single (⟨k, i⟩ : Σ k, ι k) 1) ⟨l, j⟩ = 0 := by
       intro j
       rw [Finsupp.single_apply, ite_eq_right]
-      intro h
-      exact hl (congrArg Sigma.fst h).symm
+      exact fun h => hl (congrArg Sigma.fst h).symm
     simp [this, hl]
 
 theorem cellMon_homog {I : ∀ k, Finset (ι k)} {u : MRingOver S ι} (hu : u ∈ KH.cellMon S I) :
@@ -147,8 +146,7 @@ theorem mem_of_map_mem {M' : Type*} [AddCommGroup M'] [Module (MRingOver S ι) M
   have hc : g m' - g y ∈ 𝓜 c := sub_mem hm (hg c y hy)
   have h0 : g m' - g y = 0 := Submodule.disjoint_def.mp (h𝓜.1.submodule_iSupIndep c) _ hc hd
   rw [sub_eq_zero] at h0
-  rw [hinj h0]
-  exact hy
+  rwa [hinj h0]
 
 end Loc
 
@@ -185,8 +183,7 @@ theorem proof (hSES : KH.CechSESStatement) (hMap : KH.CechMapDegStatement) : Gen
   obtain ⟨u, hu⟩ := h0
   rw [one_smul, smul_zero, smul_zero] at hu
   have hker : u • m ∈ LinearMap.ker h := by
-    rw [LinearMap.mem_ker, Submonoid.smul_def, map_smul, ← Submonoid.smul_def]
-    exact hu
+    rwa [LinearMap.mem_ker, Submonoid.smul_def, map_smul, ← Submonoid.smul_def]
   rw [← hex] at hker
   obtain ⟨m', hm'⟩ := hker
   obtain ⟨e, hue⟩ := cellMon_homog u.2
@@ -204,8 +201,7 @@ theorem proof (hSES : KH.CechSESStatement) (hMap : KH.CechMapDegStatement) : Gen
       funext k
       simp only [Pi.add_apply, Nat.cast_add]
       ring
-    rw [edeg]
-    exact hm'deg
+    rwa [edeg]
   obtain ⟨t₂, a₂, r', p', z', ht₂T, ht₂, hp', hz', e₂⟩ := hgen' I _ hy''
 
   have hw : ∀ l, KH.cechMap S ι g 0 (z' l) ∈ KH.cechZc ι 𝓜 d 0 := by

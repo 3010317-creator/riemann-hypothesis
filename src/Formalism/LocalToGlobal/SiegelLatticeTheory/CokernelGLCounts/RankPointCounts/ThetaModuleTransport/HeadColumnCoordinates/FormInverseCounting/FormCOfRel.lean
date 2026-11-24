@@ -56,8 +56,7 @@ theorem cvec_gram (hcj : ∀ x, cj (cj x) = x) (Z : Matrix (Fin (r + 1)) (Fin (r
       simpa only [Matrix.mulVec, dotProduct] using this
     have a2 : ∑ b, Z j b * Z⁻¹ b (Fin.last r) = if j = Fin.last r then 1 else 0 := by
       have := congrFun (congrFun hZ j) (Fin.last r)
-      rw [Matrix.mul_apply, Matrix.one_apply] at this
-      exact this
+      rwa [Matrix.mul_apply, Matrix.one_apply] at this
     have e1 : ∑ b, Z j b * cvec O cj Z T T' Y (Sum.inr b) =
         (Y (Sum.inl j) : E) + T * lamStarC cj Z (fun k => (Y (Sum.inr k) : E)) *
           (if j = Fin.last r then 1 else 0) := by
@@ -115,8 +114,7 @@ theorem formC_eq (hcj : ∀ x, cj (cj x) = x) (Z : Matrix (Fin (r + 1)) (Fin (r 
     exact Finset.sum_congr rfl (fun k _ => Finset.sum_congr rfl (fun a _ => by ring))
   have s3 : ∑ b, (Z.map O.subtype)⁻¹.mulVec (fun j => (Y (Sum.inl j) : E)) b * cj (W (Sum.inr b) : E) =
       bRaw O cj Z (fun j => Y (Sum.inl j)) (fun j => W (Sum.inr j)) := by
-    simp only [bRaw]
-    exact Finset.sum_congr rfl (fun b _ => mul_comm _ _)
+    simpa only [bRaw] using Finset.sum_congr rfl (fun b _ => mul_comm _ _)
   have s2 : ∑ a, T' * lamC (Z.map O.subtype) (fun j => (Y (Sum.inl j) : E)) *
         cj ((Z.map O.subtype)⁻¹ (Fin.last r) a) * cj (W (Sum.inl a) : E) =
       T' * lamC (Z.map O.subtype) (fun j => (Y (Sum.inl j) : E)) *

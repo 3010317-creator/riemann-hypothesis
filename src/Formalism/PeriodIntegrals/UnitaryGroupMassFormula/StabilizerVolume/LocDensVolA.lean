@@ -99,8 +99,7 @@ theorem vol_one_of_ann {μ : Measure V} {χ : V → V → ℂ} (hμ : SelfDual �
   have h1 : c * c = 1 := by exact_mod_cast h0
   have hc0 : 0 ≤ c := measureReal_nonneg
   have hc1 : c = 1 := by nlinarith
-  rw [hc, measureReal_def, ENNReal.toReal_eq_one_iff] at hc1
-  exact hc1
+  rwa [hc, measureReal_def, ENNReal.toReal_eq_one_iff] at hc1
 
 end Vol
 
@@ -127,8 +126,7 @@ theorem ann_eq {V : Type} (ψ0 : Fv F v → ℂ) (B : V → V → Fv F v) (L : S
   · intro hy
     rw [← hD] at hy
     intro x hx
-    have ht := (hC _).2 (hy x hx) 1 (one_mem _)
-    simpa using ht
+    simpa using (hC _).2 (hy x hx) 1 (one_mem _)
 
 theorem ev_int (f : F) :
     ∀ᶠ v in cofinite, algebraMap F (Fv F v) f ∈ (v.adicCompletionIntegers F) := by

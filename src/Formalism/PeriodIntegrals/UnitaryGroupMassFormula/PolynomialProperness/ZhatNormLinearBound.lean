@@ -112,8 +112,7 @@ theorem gN_sq {k r : ℕ} (g : B.Mat k r) : B.gN g ^ 2 = hs g := by
 
 theorem hs_conjTranspose {ι : Type*} [Fintype ι] (M : Matrix ι ι ℂ) : hs Mᴴ = hs M := by
   unfold hs
-  simp only [conjTranspose_apply, RCLike.star_def, Complex.normSq_conj]
-  exact Finset.sum_comm
+  simpa only [conjTranspose_apply, RCLike.star_def, Complex.normSq_conj] using Finset.sum_comm
 
 theorem hs_hpk_mul {k r : ℕ} (M : B.Mat k r) : hs (Hpk k r * M) = hs M := by
   unfold hs
@@ -192,8 +191,7 @@ theorem mx_le_iff {m : ℕ} (M : Matrix (Fin m) (Fin m) ℂ) {c : ℝ} (hc : 0 �
   · intro h i j; exact (entry_le_mx M i j).trans h
   · intro h
     unfold C2.mx
-    refine (pi_norm_le_iff_of_nonneg hc).2 fun i => (pi_norm_le_iff_of_nonneg hc).2 fun j => ?_
-    exact h i j
+    exact (pi_norm_le_iff_of_nonneg hc).2 fun i => (pi_norm_le_iff_of_nonneg hc).2 fun j => h i j
 
 theorem mx_conjTranspose {m : ℕ} (M : Matrix (Fin m) (Fin m) ℂ) : C2.mx Mᴴ = C2.mx M := by
   apply le_antisymm
@@ -260,8 +258,7 @@ theorem zhat_norm_linear_bound : C2.ZhatBound := by
   have h2 := fvec_sum_le k r z' b
   have h3 : 0 ≤ ∑ i, ‖fvec k r z a i‖ := Finset.sum_nonneg fun _ _ => norm_nonneg _
   have h4 : 0 ≤ ∑ i, ‖fvec k r z' b i‖ := Finset.sum_nonneg fun _ _ => norm_nonneg _
-  have h5 := gN_nonneg g
-  exact mul_le_mul_of_nonneg_right (mul_le_mul h1 h2 h4 (by linarith)) h5
+  exact mul_le_mul_of_nonneg_right (mul_le_mul h1 h2 h4 (by linarith)) (gN_nonneg g)
 
 theorem polynomial_normInv : C2.NormInv := fun _ _ _ hg => ⟨gN_inv hg, gN_ge_one hg⟩
 

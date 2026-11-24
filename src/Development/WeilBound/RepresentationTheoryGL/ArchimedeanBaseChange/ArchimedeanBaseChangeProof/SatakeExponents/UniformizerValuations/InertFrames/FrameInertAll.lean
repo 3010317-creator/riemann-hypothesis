@@ -84,7 +84,6 @@ theorem antiJ_eq_rev {L : Type} [Field L] {n : ℕ} (i j : Fin n) :
     have hj := j.isLt
     rw [Fin.ext_iff, Fin.val_rev]
     omega
-  show (if (i : ℕ) + j + 1 = n then (1 : L) else 0) = _
   exact if_congr key rfl rfl
 
 theorem antiJ_mul_self {L : Type} [Field L] (n : ℕ) : antiJ L n * antiJ L n = 1 := by
@@ -95,8 +94,7 @@ theorem antiJ_mul_self {L : Type} [Field L] (n : ℕ) : antiJ L n * antiJ L n = 
   · simp [Fin.rev_rev]
   · intro b _ hb
     simp [hb]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 def bM {n : ℕ} (d₁ d₂ : Fin n → R) : Matrix (Fin n) (Fin n) R :=
   fun i j => (if i = j then d₁ i else 0) + (if i = Fin.rev j then d₂ i else 0)
@@ -161,8 +159,7 @@ theorem wittEx : WittEx := by
     have e : x₀ * -δ⁻¹ + GlobalTheory.BCT.cj w x₀ * δ⁻¹ = (GlobalTheory.BCT.cj w x₀ - x₀) * δ⁻¹ := by ring
     rw [e, ← hδdef, mul_inv_cancel₀ hδ0]
   have hwv1 : Valued.v wv ≤ 1 := by
-    rw [hwvdef, map_mul, map_inv₀, hval, hδv, inv_one, mul_one]
-    exact hx0
+    rwa [hwvdef, map_mul, map_inv₀, hval, hδv, inv_one, mul_one]
   obtain ⟨d₁, hd₁⟩ : ∃ f : Fin n → IsDedekindDomain.HeightOneSpectrum.adicCompletion E w, ∀ j, f j =
       if (j : ℕ) < (Fin.rev j : ℕ) then 1 else if j = Fin.rev j then 1 else -(t * wv) :=
     ⟨_, fun _ => rfl⟩
@@ -229,8 +226,7 @@ theorem wittEx : WittEx := by
     split_ifs
     · simp
     · simp
-    · rw [Valuation.map_neg, map_mul, ht1, one_mul]
-      exact hwv1
+    · rwa [Valuation.map_neg, map_mul, ht1, one_mul]
   have hd2int : ∀ j, Valued.v (d₂ j) ≤ 1 := by
     intro j
     rw [hd₂]
@@ -261,8 +257,7 @@ theorem wittEx : WittEx := by
     intro a c
     have h := hBint c a
     rw [IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers] at h ⊢
-    rw [Matrix.transpose_apply, Matrix.map_apply, hval]
-    exact h
+    rwa [Matrix.transpose_apply, Matrix.map_apply, hval]
   refine ⟨(⟨WittBasisGramMatrix.bM d₁ d₂, antiJ (IsDedekindDomain.HeightOneSpectrum.adicCompletion E w) n *
       ((WittBasisGramMatrix.bM d₁ d₂).map (GlobalTheory.BCT.cj w))ᵀ, hBC, hCB⟩ :
       GL (Fin n) (IsDedekindDomain.HeightOneSpectrum.adicCompletion E w)), ?_⟩
@@ -373,8 +368,7 @@ theorem inertPlaceEx : InertPlaceEx := by
   obtain ⟨u, ⟨huSec, huw⟩, -⟩ := hSec w0
   have huv : HeightOneSpectrum.under (𝓞 ↥(maximalRealSubfield E)) u = v := huw.trans hw0
   refine ⟨u, huSec, ?_, ?_, ?_⟩
-  · intro huX
-    exact hvT ⟨u, Or.inl huX, huv⟩
+  · exact fun huX => hvT ⟨u, Or.inl huX, huv⟩
   · rintro ⟨u', hne, hu'⟩
     apply hne
     have h1 : u.asIdeal.LiesOver v.asIdeal :=
@@ -540,9 +534,7 @@ namespace UniformizerOfValuationOne
 theorem v_of_ordL_eq_one {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))] {x : L}
     (hx0 : x ≠ 0) (hx : ordL x = 1) :
     Valued.v x = ((Multiplicative.ofAdd (-1 : ℤ) : Multiplicative ℤ) : WithZero (Multiplicative ℤ)) := by
-  have h0 : Valued.v x ≠ 0 := by
-    intro h
-    exact hx0 ((Valuation.zero_iff _).mp h)
+  have h0 : Valued.v x ≠ 0 := fun h => hx0 ((Valuation.zero_iff _).mp h)
   unfold ordL at hx
   rw [dite_eq_right h0] at hx
   have hu : WithZero.unzero h0 = Multiplicative.ofAdd (-1 : ℤ) := by

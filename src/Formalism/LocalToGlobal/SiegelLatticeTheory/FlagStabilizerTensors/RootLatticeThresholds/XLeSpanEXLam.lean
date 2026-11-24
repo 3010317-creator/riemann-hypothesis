@@ -190,8 +190,7 @@ theorem indW_eq {T : D.host.E} (F0 : FlagG (VS D) D.R.rS T) {c c' : (VS D).V ≃
     (h : ⇑(indW F0 c hc hX) = ⇑(indW F0 c' hc' hX')) : ∀ x ∈ perpS (VS D) F0.X, c x - c' x ∈ F0.X := by
   intro x hx
   have h1 := congrFun h (Submodule.Quotient.mk ⟨x, hx⟩)
-  rw [indW_mk, indW_mk, Submodule.Quotient.eq] at h1
-  exact h1
+  rwa [indW_mk, indW_mk, Submodule.Quotient.eq] at h1
 
 variable (Y) in
 theorem fib_data (t : RT Y u u') (s₀ s : fib Y t) : ∃ c : (VS D).V ≃ₗ[D.host.E] (VS D).V,
@@ -614,8 +613,7 @@ theorem hs_frame (s : TT Y u u') : Xsp s.frame ≤ spanE (VS D) (XLam s.lam s.fr
   have h0 := X_le_spanE_XLam (X.Fu u') s.lam' hrow
   have e1 : XLam s.lam s.frame = Formalism.HermitianLatticesTheory.gmap s.lin (XLam s.lam' (lf D (X.Fu u'))) := by
     have := XLam_mapL s.lin (lin_isom s) s.lam' (lf D (X.Fu u'))
-    rw [lin_lam, ← frame_eq] at this
-    exact this
+    rwa [lin_lam, ← frame_eq] at this
   rw [e1, spanE_gmap, Xsp_frame]
   exact Submodule.map_mono h0
 
@@ -712,7 +710,6 @@ end Pair
 theorem pairIndep_of (hK : IotaKer) : Formalism.L2.SG.TermTieOf.PairIndepAll := by
   intro D X Y u u' s₁ s₂ s₁' s₂' h1 h2 hr hr'
   have A := pair_step hK h1 h2 hr hr'
-  have B := pair_step hK h1.symm h2.symm hr' hr
-  exact ⟨A.1, A.2, B.2⟩
+  exact ⟨A.1, A.2, (pair_step hK h1.symm h2.symm hr' hr).2⟩
 
 end Formalism.L2.SG.Pf.FinXP

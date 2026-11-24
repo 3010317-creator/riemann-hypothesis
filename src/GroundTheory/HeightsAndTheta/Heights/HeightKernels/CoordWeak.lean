@@ -74,8 +74,7 @@ theorem posLog_le_half_log (ρ : ℝ) (hρ : 0 < ρ) :
     have : log ((ρ ^ 2)⁻¹) ≤ log (1 + (ρ ^ 2)⁻¹) :=
       Real.log_le_log (by positivity) (by linarith)
     linarith
-  simp only [Real.posLog]
-  exact max_le h0 h1
+  simpa only [Real.posLog] using max_le h0 h1
 
 end KCoord
 
@@ -171,8 +170,7 @@ theorem WeakMatrixArithmetic.intersectionNumber_baseChange : WeakMatrixArithmeti
         rw [← Finset.mul_sum, Finset.sum_add_distrib]
         simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_one, finMean]
         field_simp
-      rw [e1, e2] at hJ
-      exact hJ
+      rwa [e1, e2] at hJ
     linarith
 
 end GroundTheory.Heights₂.Heights

@@ -142,13 +142,11 @@ theorem colH_off {N n : ℕ} (mu : Fin (N + 1) → Fin n → ℤ) {c : ℤ} (hc 
   simp only [colRange, Finset.mem_Icc, not_and_or, not_le] at hc
   unfold colH
   rcases hc with hc | hc
-  · rw [ite_eq_right (by omega)]
-    rw [Finset.filter_true_of_mem, Finset.card_univ, Fintype.card_fin]
+  · rw [ite_eq_right (by omega), Finset.filter_true_of_mem, Finset.card_univ, Fintype.card_fin]
     intro m _
     have := abs_le.mp (hT m)
     omega
-  · rw [ite_eq_left (by omega)]
-    rw [Finset.card_eq_zero, Finset.filter_eq_empty_iff]
+  · rw [ite_eq_left (by omega), Finset.card_eq_zero, Finset.filter_eq_empty_iff]
     intro m _
     have := abs_le.mp (hT m)
     omega
@@ -167,8 +165,7 @@ theorem pathWord_off (R : Type*) [CommRing R] {n N : ℕ} (isVec : ℕ → Bool)
 theorem restPsi : RestPsi := by
   intro R _ n N LL B P I hI
   unfold Psi Formalism.InvariantFactorPaths.GelfandTsetlinBases.psiPath
-  rw [map_prod]
-  rw [finprod_eq_prod_of_mulSupport_subset (s := colRange P.mu)]
+  rw [map_prod, finprod_eq_prod_of_mulSupport_subset (s := colRange P.mu)]
   · exact Finset.prod_congr rfl fun c _ => Kcol_eq_pathWord R P c N le_rfl (I c)
   · intro c hc
     by_contra hcn

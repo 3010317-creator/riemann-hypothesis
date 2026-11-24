@@ -85,8 +85,7 @@ private theorem smithMatrix_lemma {O : Type} [CommRing O] [IsDomain O] [IsPrinci
   have hs : ∀ y : LinearMap.range φ, φ (s y) = y := by
     have : φ ∘ₗ s = (LinearMap.range φ).subtype :=
       snf.bN.ext fun i => by simp [s, hx]
-    intro y
-    exact LinearMap.congr_fun this y
+    exact fun y => LinearMap.congr_fun this y
   have hsi : Function.Injective s := fun y y' h => Subtype.ext (by rw [← hs y, ← hs y', h])
   let f : (Fin n → O) →ₗ[O] LinearMap.range s := s.rangeRestrict ∘ₗ φ.rangeRestrict
   have hf : ∀ v : LinearMap.range s, f v = v := by
@@ -266,8 +265,7 @@ theorem span_single {β E : Type} [DecidableEq β] [AddCommGroup E] [Module O E]
       split_ifs with hi
       · rfl
       · have h0 := hf i (Set.mem_univ i)
-        rw [hM i hi, Submodule.mem_bot] at h0
-        exact h0
+        rwa [hM i hi, Submodule.mem_bot] at h0
     rw [hfT]
     refine Submodule.sum_mem _ fun b hb => ?_
     have hfb : f b ∈ Submodule.span O (Set.range (al b)) := by
@@ -316,8 +314,7 @@ theorem smithData_seg {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationR
     refine ⟨Submodule.subset_span ⟨_, rfl⟩, ?_⟩
     rw [hALs, ← hBEs]
     exact Submodule.subset_span ⟨_, rfl⟩
-  · intro i b hb
-    exact ⟨Pi.single_eq_of_ne hb _, Pi.single_eq_of_ne hb _⟩
+  · exact fun i b hb => ⟨Pi.single_eq_of_ne hb _, Pi.single_eq_of_ne hb _⟩
   · intro i l hil
     set x := ev.symm i with hx
     set y := ev.symm l with hy
@@ -388,8 +385,7 @@ theorem bb_coeff {p : ℕ} (S : UniformizedDVR p O) (h2 : S.w ^ 2 = (p : O)) {σ
       rw [valuation_mul_alt, vK_wpow S.w_irr h2]
       have e : (((padicValNat p (expFact μ') + padicValNat p sp : ℕ) : ℚ) / 2 : ℚ) =
           (padicValNat p (expFact μ') : ℚ) / 2 + (padicValNat p sp : ℚ) / 2 := by push_cast; ring
-      rw [e, add_comm]
-      exact hc
+      rwa [e, add_comm]
     · exact ⟨0, by simp⟩
   | zero => exact ⟨0, by simp⟩
   | add x y _ _ hx hy =>
@@ -414,8 +410,7 @@ theorem fg_inter {p : ℕ} (S : UniformizedDVR p O) (h2 : S.w ^ 2 = (p : O)) {σ
     have hF' : (⟨F, hF⟩ : V) = ∑ k, (bV.repr ⟨F, hF⟩ k) • bV k := (bV.sum_repr _).symm
     have : F = ∑ k, (bV.repr ⟨F, hF⟩ k) • ((bV k : V) : MvPolynomial σ (KK O)) := by
       have h := congrArg (fun v : V => (v : MvPolynomial σ (KK O))) hF'
-      simp only [Submodule.coe_sum, Submodule.coe_smul] at h
-      exact h
+      simpa only [Submodule.coe_sum, Submodule.coe_smul] using h
     rw [this, coeff_sum]
     refine Finset.sum_eq_zero fun k _ => ?_
     rw [MvPolynomial.coeff_smul]
@@ -459,9 +454,7 @@ theorem fg_inter {p : ℕ} (S : UniformizedDVR p O) (h2 : S.w ^ 2 = (p : O)) {σ
   let f : Λ →ₗ[O] N := (Φ.comp Λ.subtype).codRestrict N fun F => hΦN F.1 F.2
   refine Module.Finite.of_injective f ?_
   rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-  intro F hF
-  apply Subtype.ext
-  exact hinj F.1 F.2 (congrArg Subtype.val hF)
+  exact fun F hF => Subtype.ext (hinj F.1 F.2 (congrArg Subtype.val hF))
 
 end FG
 

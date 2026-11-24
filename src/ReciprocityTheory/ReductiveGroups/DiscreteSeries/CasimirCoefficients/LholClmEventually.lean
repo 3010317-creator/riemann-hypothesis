@@ -198,8 +198,7 @@ theorem contOn_FY (T : KType ε Λ) (μ : Fin n → ℤ) (Y : Matrix (Fin n) (Fi
   refine continuousOn_clm_apply.mpr fun H => ?_
   refine (((hA.clm_apply (hcY (Matrix.of H)).continuousOn).add
     ((hA2.clm_apply (hcH (Matrix.of H)).continuousOn).clm_apply hcYx.continuousOn)).smul hP).congr ?_
-  intro p hp
-  exact (FY_facts T μ Y p.2 (hΩ p.1 hp.1 p.2)).2 H
+  exact fun p hp => (FY_facts T μ Y p.2 (hΩ p.1 hp.1 p.2)).2 H
 
 section Lhol
 
@@ -444,8 +443,7 @@ lemma lhol_neg (X : Matrix (Fin n) (Fin n) ℂ) (G : Matrix (Fin n) (Fin n) ℂ 
     (z : Matrix (Fin n) (Fin n) ℂ) : Lhol X (fun w => -G w) z = -Lhol X G z := by
   unfold Lhol
   by_cases hG : DifferentiableAt ℂ G z
-  · have h2 := hG.hasFDerivAt.neg.fderiv
-    exact congrArg (fun A : Matrix (Fin n) (Fin n) ℂ →L[ℂ] E => A (X * z)) h2
+  · exact congrArg (fun A : Matrix (Fin n) (Fin n) ℂ →L[ℂ] E => A (X * z)) hG.hasFDerivAt.neg.fderiv
   · have h3 : ¬ DifferentiableAt ℂ (fun w => -G w) z := fun h => hG (differentiableAt_neg_iff.1 h)
     simp [fderiv_zero_of_not_differentiableAt hG, fderiv_zero_of_not_differentiableAt h3]
 

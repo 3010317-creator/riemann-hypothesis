@@ -63,8 +63,7 @@ lemma maj_smul (hself : ∀ v, X.Hf x τ v v = (X.maj x τ v : ℂ)) (c : ℂ) (
   exact_mod_cast h1.symm
 
 lemma maj_zero' (hself : ∀ v, X.Hf x τ v v = (X.maj x τ v : ℂ)) : X.maj x τ 0 = 0 := by
-  have h1 := X.maj_smul hself (0 : ℂ) 0
-  simpa using h1
+  simpa using X.maj_smul hself (0 : ℂ) 0
 
 lemma maj_nonneg' (hself : ∀ v, X.Hf x τ v v = (X.maj x τ v : ℂ))
     (hpos : ∀ v, v ≠ 0 → 0 < X.maj x τ v) (v : Fin r → ℂ) : 0 ≤ X.maj x τ v := by
@@ -286,8 +285,7 @@ lemma majorant_bound_orthogonal_part (ξ : Fin r → E) (x : Frame X.Ψ r) (hx :
           simp [Data.Jz, Data.Jp, u, hermC, Finset.mul_sum, mul_assoc]
         rw [hsm, X.Jp_adj hx τ' w (emb τ'.1 ξ), hw2, mul_zero]
       · simp [Data.Jz, u, h, X.ppos_zero, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_zero_left]
-  have hmain := hδ u hu τ
-  simpa [u] using hmain
+  simpa [u] using hδ u hu τ
 
 set_option maxHeartbeats 1000000 in
 theorem unipotent_majorant_bound_data : ReducedFrameDomainCovering (E := E) := by

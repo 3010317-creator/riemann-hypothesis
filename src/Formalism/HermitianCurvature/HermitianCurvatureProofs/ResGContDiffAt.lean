@@ -202,8 +202,7 @@ theorem vAB_lin (y : ℂ) : ∀ (i : ℕ) {G₁ G₂ : (Fin r → ℂ) → V}, G
         rw [smul_comm y s]
         abel
       · rw [show ciOp ⟨i, hi⟩ = opL ⟨i, hi⟩ 2 from rfl, opL_add _ _ hA₁ hsA, opL_smul _ _ hA₂]
-    · simp only [vAB, dite_eq_right hi]
-      exact ⟨ih1, ih2⟩
+    · simpa only [vAB, dite_eq_right hi] using ⟨ih1, ih2⟩
 
 theorem vAB_comm (y : ℂ) (j : Fin r) : ∀ (i : ℕ), i ≤ j.val → ∀ {G : (Fin r → ℂ) → V}, G ∈ WSm r V →
     (vAB r y i).1 G ∈ WSm r V ∧ (vAB r y i).2 G ∈ WSm r V ∧

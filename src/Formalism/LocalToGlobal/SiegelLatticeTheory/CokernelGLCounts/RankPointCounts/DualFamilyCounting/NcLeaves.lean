@@ -61,8 +61,7 @@ variable {ι : Type*}
 theorem hasProd_inv₀' {f : ι → ℝ} {a : ℝ} (h : HasProd f a) (ha : a ≠ 0) :
     HasProd (fun i => (f i)⁻¹) a⁻¹ := by
   unfold HasProd at h ⊢
-  refine (h.inv₀ ha).congr (fun s => ?_)
-  exact (Finset.prod_inv_distrib f).symm
+  exact (h.inv₀ ha).congr (fun s => (Finset.prod_inv_distrib f).symm)
 
 theorem hasProd_rpow' {f : ι → ℝ} {a : ℝ} (p : ℝ) (hf : ∀ i, 0 ≤ f i) (h : HasProd f a) (ha : a ≠ 0) :
     HasProd (fun i => f i ^ p) (a ^ p) := by
@@ -186,9 +185,7 @@ theorem finite_dvd (t : ℕ) (ht : t ≠ 0) :
   have hI : Ideal.span {((t : ℕ) : 𝓞 X.B.I.F)} ≠ 0 := by
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact_mod_cast ht
-  refine (Ideal.finite_factors hI).subset ?_
-  intro v hv
-  exact Ideal.dvd_span_singleton.mpr hv
+  exact (Ideal.finite_factors hI).subset (fun v hv => Ideal.dvd_span_singleton.mpr hv)
 
 theorem absV_nonneg (v : PlX X) : 0 ≤ absV v (dV v) := by
   unfold absV; split_ifs
@@ -459,10 +456,8 @@ theorem sigNeg_card_le {n ι : Type} [Fintype n] [DecidableEq n] [Fintype ι]
     conv_rhs =>
       rw [← hP, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, hv, dotProduct_mulVec,
         ← Matrix.star_mulVec, hv, Matrix.reindex_apply, Matrix.submatrix_mulVec_equiv]
-    simp only [dotProduct]
-    exact Fintype.sum_equiv e _ _ (fun i => by simp [Function.comp_def])
-  by_contra hlt
-  push Not at hlt
+    simpa only [dotProduct] using Fintype.sum_equiv e _ _ (fun i => by simp [Function.comp_def])
+  by_contra! hlt
   let L : (ι → ℂ) →ₗ[ℂ] (Fin q → ℂ) :=
     (LinearMap.funLeft ℂ ℂ Sum.inr) ∘ₗ (Matrix.mulVecLin Qi) ∘ₗ
       (LinearMap.funLeft ℂ ℂ e.symm) ∘ₗ (Fintype.linearCombination ℂ u)
@@ -608,15 +603,13 @@ theorem wbDef_pos (D : D7) (u : D.what₂.Word) (F0 : FlagG (VS D) D.R.rS (Tn u)
   | H a => ?_
   have hya : (VS D).hT F0.z a.1 = 0 := by
     have h := hy
-    rw [wPerp, LinearMap.mem_ker, zbar, hWb_mk] at h
-    exact h
+    rwa [wPerp, LinearMap.mem_ker, zbar, hWb_mk] at h
   have hna : a.1 ∉ F0.X := by
     intro hmem
     apply hne
     apply Subtype.ext
     show Submodule.Quotient.mk a = 0
-    rw [Submodule.Quotient.mk_eq_zero]
-    exact hmem
+    rwa [Submodule.Quotient.mk_eq_zero]
   have hval : hPerp (hWb D F0) (zbar D F0) ⟨Submodule.Quotient.mk a, hy⟩ ⟨Submodule.Quotient.mk a, hy⟩ =
       (VS D).hT a.1 a.1 := hWb_mk D F0 a a
   rw [hval]
@@ -654,8 +647,7 @@ theorem wbDef_pos (D : D7) (u : D.what₂.Word) (F0 : FlagG (VS D) D.R.rS (Tn u)
         · exact h
         · exact absurd (neg_eq_zero.1 h) hT0
       apply hna
-      rw [← hxw, hc, zero_smul, add_zero]
-      exact hx
+      rwa [← hxw, hc, zero_smul, add_zero]
   have horth : ∀ o o', o ≠ o' → (VS D).hT (v o) (v o') = 0 := by
     intro o o' hne'
     match o, o', hne' with
@@ -771,8 +763,7 @@ theorem wbDef_dim (D : D7) (u : D.what₂.Word) (F0 : FlagG (VS D) D.R.rS (Tn u)
 
 theorem anisotropic_complement_definite : WbDef := by
   unfold WbDef
-  intro D u F0
-  exact ⟨wbDef_pos D u F0, wbDef_dim D u F0⟩
+  exact fun D u F0 => ⟨wbDef_pos D u F0, wbDef_dim D u F0⟩
 
 end PI.UnitaryGroupMassFormula.CntFormula.RowsMassW
 end -- clump:auto
@@ -1164,8 +1155,7 @@ theorem exists_one {K : Type} [Field K] [NumberField K] [StarRing K]
           star (algebraMap (𝓞 K) K (a * b))
         rw [map_mul, star_mul'] }
   have memI : ∀ o : 𝓞 K, o ∈ I ↔ ∃ m ∈ M, h m z = star (o : K) := fun o => Iff.rfl
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have hI : I ≠ ⊤ := by
     intro htop
     have h1 : (1 : 𝓞 K) ∈ I := by rw [htop]; exact Submodule.mem_top
@@ -1210,8 +1200,7 @@ theorem row_unit_condition : RowZUnit := by
   obtain ⟨m, hm, hm1⟩ := exists_one (hWb D F0) (Mof D F0 Λ) hMU hzM hprim
   obtain ⟨a, haΛ, rfl⟩ := (RowMPf.mem_Mof D F0 Λ m).1 hm
   refine ⟨a, haΛ, a.2, ?_⟩
-  rw [zbar, hWb_mk] at hm1
-  exact hm1
+  rwa [zbar, hWb_mk] at hm1
 
 end PI.UnitaryGroupMassFormula.CntFormula.RowsMassW.RowZUnitPf
 

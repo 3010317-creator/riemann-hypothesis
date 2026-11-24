@@ -251,8 +251,7 @@ theorem laurentCoeff_mem_dominatedWeightPolynomials (y : MvPolynomial (ι × Fin
     rw [LaurentPolynomial.single_eq_C_mul_T, mul_comm]
   simp only [h3, AddMonoidAlgebra.coeff_sum, AddMonoidAlgebra.coeff_single, Finsupp.coe_finsetSum,
     Finset.sum_apply, Finsupp.single_apply, AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply] at h2
-  rw [Finset.sum_ite_eq' K k0] at h2
-  rw [ite_eq_left hk0] at h2
+  rw [Finset.sum_ite_eq' K k0, ite_eq_left hk0] at h2
   exact (MvPolynomial.mem_support_iff.1 hm) h2
 
 theorem dividedPower_mem_dominatedWeightPolynomials (hT : TransvectionExpansion) (a b : Fin n) (hab : a ≠ b) (k : ℕ) (y : MvPolynomial (ι × Fin n) R)
@@ -268,8 +267,7 @@ theorem dividedPower_mem_dominatedWeightPolynomials (hT : TransvectionExpansion)
         (y.totalDegree + k + 1) (by omega), Finset.sum_map]
       refine Finset.sum_congr rfl fun i _ => ?_
       simp [LaurentPolynomial.T_pow]
-  · simp only [Finset.mem_map, Finset.mem_range]
-    exact ⟨k, by omega, rfl⟩
+  · simpa only [Finset.mem_map, Finset.mem_range] using ⟨k, by omega, rfl⟩
 
 theorem torusComponent_mem_dominatedWeightPolynomials (hTo : TorusActsThroughWeight) (a : Fin n) (w : ℤ) (y : MvPolynomial (ι × Fin n) R)
     (hy : y ∈ dominatedWeightPolynomials LL S Pr) : weightEntryComponent LL S a w y ∈ dominatedWeightPolynomials LL S Pr := by
@@ -347,8 +345,7 @@ theorem restFwd : RestFwd := by
   rintro mu ⟨x, hx, hx0, hmu⟩
   obtain ⟨m, hm⟩ := MvPolynomial.support_nonempty.2 hx0
   have := hW hx R (RingHom.id R) 1 1 (by simp) m (by rw [matrixSubst_one, MvPolynomial.map_id]; exact hm)
-  rw [hmu m hm] at this
-  exact this
+  rwa [hmu m hm] at this
 
 theorem restAct : RestAct := by
   classical
@@ -504,8 +501,7 @@ theorem firstLettersLowerSet_of_restWord_restOne (D : Formalism.BasicNotions.D7)
       have hy' : ext x.1.1.mu i.val ∈ pi := hy
       rwa [ext_val] at hy'
     obtain ⟨G', hG', hGG⟩ := hle h1
-    rw [← hinj hGG]
-    exact hG'
+    rwa [← hinj hGG]
 
 end Formalism.MainNotions.G.ColumnFamilies
 end -- clump:auto

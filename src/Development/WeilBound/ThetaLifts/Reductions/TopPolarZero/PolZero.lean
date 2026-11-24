@@ -878,15 +878,12 @@ theorem pm_add (hm : IsMatched B G X om om' R Rf) {Φ Φ' Ψ Ψ'} (c : ℂ) (h1 
   refine ⟨T₁ ∪ T₂, hT₁.trans Finset.subset_union_left, m + k, m' + k', Fin.append (c • f) g, Fin.append φ ψ, Fin.append (c • f') g',
     Fin.append φ' ψ', fun i => ?_, fun i => ?_, funext fun x => ?_, funext fun x => ?_, ?_⟩
   · refine Fin.addCases (fun i => ?_) (fun i => ?_) i
-    · simp only [Fin.append_left, Pi.smul_apply]
-      exact ⟨Submodule.smul_mem _ _ (hf i).1, (hf i).2⟩
-    · simp only [Fin.append_right]
-      exact hg i
+    · simpa only [Fin.append_left, Pi.smul_apply] using ⟨Submodule.smul_mem _ _ (hf i).1, (hf i).2⟩
+    · simpa only [Fin.append_right] using hg i
   · refine Fin.addCases (fun i => ?_) (fun i => ?_) i
     · simp only [Fin.append_left, Pi.smul_apply]
       exact ⟨Submodule.smul_mem _ _ (hf' i).1, (hf' i).2⟩
-    · simp only [Fin.append_right]
-      exact hg' i
+    · simpa only [Fin.append_right] using hg' i
   · simp [Fin.sum_univ_add, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Finset.mul_sum, mul_assoc]
   · simp [Fin.sum_univ_add, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Finset.mul_sum, mul_assoc]
   · rw [Fin.sum_univ_add, Fin.sum_univ_add]
@@ -1037,8 +1034,7 @@ theorem theta_act (om : Rep σ X W) (Ψ : Fn F n d) (u g : UA σ X.J) (h x : UA 
 
 theorem theta_add {om : Rep σ X W} (hp : ∀ x, ∀ Ψ ∈ schA F (Fin n × Fin d), om x Ψ ∈ schA F _) {Φ Ψ : Fn F n d} (hΦ : Φ ∈ schA F _)
     (hΨ : Ψ ∈ schA F _) (g h) : theta om (Φ + Ψ) g h = theta om Φ g h + theta om Ψ g h := by
-  simp only [theta, map_add (f := _)]
-  exact thetaSum_add F (hp _ _ hΦ) (hp _ _ hΨ)
+  simpa only [theta, map_add (f := _)] using thetaSum_add F (hp _ _ hΦ) (hp _ _ hΨ)
 
 theorem theta_smul (om : Rep σ X W) (c : ℂ) (Φ : Fn F n d) (g h) : theta om (c • Φ) g h = c * theta om Φ g h := by
   simp only [theta, map_smul, thetaSum_smul]

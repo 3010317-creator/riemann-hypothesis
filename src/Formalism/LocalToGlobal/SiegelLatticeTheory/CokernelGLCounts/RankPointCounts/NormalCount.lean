@@ -66,8 +66,7 @@ theorem card_mul_conj_eq_le_of_fractionalIdeal (E : Type) [Field E] [NumberField
   have hnum : J.num ≠ ⊥ := by
     intro h
     apply hJ
-    rw [← FractionalIdeal.num_eq_zero_iff]
-    exact h
+    rwa [← FractionalIdeal.num_eq_zero_iff]
   have hc0 : IsCMField.complexConj E (algebraMap (𝓞 E) E a) ≠ 0 :=
     (map_ne_zero_iff _ (IsCMField.complexConj E).injective).2 ha0
   have hm'0 : g x0 * cO E (g x0) ≠ 0 := by
@@ -82,8 +81,7 @@ theorem card_mul_conj_eq_le_of_fractionalIdeal (E : Type) [Field E] [NumberField
   push_cast [Nat.cast_natAbs, Int.cast_abs] at key'
   rw [hTcard] at key'
   have hconj : ∀ y : E, Algebra.norm ℚ (IsCMField.complexConj E y) = Algebra.norm ℚ y := by
-    intro y
-    exact Algebra.norm_eq_of_algEquiv ((IsCMField.complexConj E).restrictScalars ℚ) y
+    exact fun y => Algebra.norm_eq_of_algEquiv ((IsCMField.complexConj E).restrictScalars ℚ) y
   have hNaQ : ((Algebra.norm ℤ a : ℤ) : ℚ) = Algebra.norm ℚ (algebraMap (𝓞 E) E a) :=
     Algebra.coe_norm_int a
   have hNa0 : ((Algebra.norm ℤ a : ℤ) : ℝ) ≠ 0 := by

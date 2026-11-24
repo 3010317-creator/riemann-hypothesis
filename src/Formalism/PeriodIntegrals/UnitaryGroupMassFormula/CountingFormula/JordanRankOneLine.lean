@@ -73,8 +73,7 @@ theorem vF_eq_vT {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {t : ℕ} (ht 
     vF 𝔭 ((t : ℕ) : 𝓞 F) = vT F t 𝔭 := by
   have ht0 : ((t : ℕ) : 𝓞 F) ≠ 0 := by exact_mod_cast ht.ne'
   have hI : Ideal.span {((t : ℕ) : 𝓞 F)} ≠ 0 := by
-    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact ht0
+    rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   have hne : 𝔭 ≠ ⊥ := Formalism.HermitianLattices.Ext.L3.idealPowerSpanBounds.ne_bot h𝔭
   have hp : Prime 𝔭 := Ideal.prime_of_isPrime hne h𝔭.isPrime
   rw [Formalism.L2.SG.Pf.G1.vF_eq_multiplicity h𝔭 ht0, vT,
@@ -149,8 +148,7 @@ theorem jordan_rank_one_line {h1 : V1 →ₗ⋆[K] V1 →ₗ[K] K} {z : V1} {t :
     rw [hzz]
     simp
   · intro i
-    simp only [ne_eq, neg_eq_zero, Nat.cast_eq_zero]
-    exact ht.ne'
+    simpa only [ne_eq, neg_eq_zero, Nat.cast_eq_zero] using ht.ne'
 
 end GluedLatticeMass
 

@@ -166,10 +166,8 @@ theorem globProd_of (ha : CompH) (hk : CompK) (hg : ConjugateLevelIsSubgroup) (h
     ext x
     simp only [Subgroup.mem_subgroupOf, Subgroup.mem_comap, Subgroup.mem_pi, Set.mem_univ, true_implies]
     constructor
-    · intro hx p
-      exact ⟨x.1.1, hx, rfl⟩
-    · intro hx
-      exact hp X hb hK hL w x.1.1 x.1.2 (Subgroup.mem_subgroupOf.1 x.2) (fun p => hx p)
+    · exact fun hx p => ⟨x.1.1, hx, rfl⟩
+    · exact fun hx => hp X hb hK hL w x.1.1 x.1.2 (Subgroup.mem_subgroupOf.1 x.2) (fun p => hx p)
   · intro y
     obtain ⟨h, hH, hKf, hh⟩ := hs X w (fun p => (y p).1.1) (fun p => (y p).1.2) (fun p => (y p).2)
     refine ⟨⟨⟨h, hH⟩, Subgroup.mem_subgroupOf.2 hKf⟩, ?_⟩

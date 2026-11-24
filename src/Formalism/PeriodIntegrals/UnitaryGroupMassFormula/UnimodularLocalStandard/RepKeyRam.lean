@@ -144,8 +144,7 @@ theorem rep_prim_pair (a : ℕ) (b c : ℤ) (d : ℕ) (ha : 0 < a) (hd : 0 < d) 
 
   set P : ℕ → Prop := fun j => ((l : ℂ) ^ j)⁻¹ • (Df • f) ∈ Λ with hPdef
   have hex : ∃ j, ¬ P j := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     set K : ℕ := Nf * Df with hK
     have hK0 : K ≠ 0 := Nat.mul_ne_zero (Nat.factorial_ne_zero _) (Nat.factorial_ne_zero _)
     have hdvd : ∀ j : ℕ, (l : ℤ) ^ j ∣ K * x ∧ (l : ℤ) ^ j ∣ K * y := by
@@ -208,15 +207,13 @@ theorem rep_prim_pair (a : ℕ) (b c : ℤ) (d : ℕ) (ha : 0 < a) (hd : 0 < d) 
     have hne : j ≠ i₀ := by rintro rfl; exact hi₀ hj
     simp [hxt, hfdef, fvec, hne]
   have hdiv : ((l : ℂ)⁻¹) • xt ∉ Λ := by
-    rw [hxt, smul_smul, ← mul_inv, ← pow_succ', show j₁ - 1 + 1 = j₁ by omega]
-    exact hPj
+    rwa [hxt, smul_smul, ← mul_inv, ← pow_succ', show j₁ - 1 + 1 = j₁ by omega]
   refine ⟨xt, hxtΛ, hxtT, ?_⟩
   have hnd : ¬ ∀ yv ∈ Λ, ∃ k : ℤ, altE (stdH L m) ((l : ℂ)⁻¹ • xt) yv = k := by
     intro hall
     apply hdiv
     have : ((l : ℂ)⁻¹ • xt) ∈ dualLat (stdH L m) Λ := hall
-    rw [hΛ] at this
-    exact this
+    rwa [hΛ] at this
   push Not at hnd
   obtain ⟨yv, hyv, hyk⟩ := hnd
   have hxtd : xt ∈ dualLat (stdH L m) Λ := by rw [hΛ]; exact hxtΛ
@@ -771,8 +768,7 @@ theorem keyNewton : KeyNewton := by
     rcases hlp.dvd_mul.mp h with h | h
     · exact hq (hlp.dvd_of_dvd_pow h)
     · exact hs h
-  · rw [rep_H_smul, hξ, hww]
-    rw [hε]
+  · rw [rep_H_smul, hξ, hww, hε]
     push_cast
     field_simp
     ring

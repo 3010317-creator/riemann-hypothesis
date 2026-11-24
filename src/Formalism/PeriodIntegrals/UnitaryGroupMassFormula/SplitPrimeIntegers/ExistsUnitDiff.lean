@@ -265,10 +265,8 @@ lemma exists_sep (hspl : ∀ a : (v.adicCompletion F), spl ((1 : E) ⊗ₜ[F] a)
   · have hlt : Valued.v (emb spl (RingHom.fst (v.adicCompletion F) (v.adicCompletion F)) y - ϖ⁻¹) < Valued.v ϖ⁻¹ := by
       rw [Valuation.map_sub_swap]
       exact h1.trans hinv
-    rw [Valuation.map_eq_of_sub_lt _ hlt]
-    exact hinv
-  · rw [zero_sub, Valuation.map_neg] at h2
-    exact h2
+    rwa [Valuation.map_eq_of_sub_lt _ hlt]
+  · rwa [zero_sub, Valuation.map_neg] at h2
 
 lemma emb_mem_of_mul (p : (v.adicCompletion F) × (v.adicCompletion F) →+* (v.adicCompletion F)) (a s : 𝓞 E) (hs : s ∉ P spl p) (z : E)
     (hz : z * algebraMap (𝓞 E) E s = algebraMap (𝓞 E) E a) : emb spl p z ∈ (v.adicCompletionIntegers F) := by
@@ -276,8 +274,7 @@ lemma emb_mem_of_mul (p : (v.adicCompletion F) × (v.adicCompletion F) →+* (v.
     by_contra h
     apply hs
     show phi spl p s ∈ IsLocalRing.maximalIdeal (v.adicCompletionIntegers F)
-    rw [IsLocalRing.mem_maximalIdeal]
-    exact h
+    rwa [IsLocalRing.mem_maximalIdeal]
   obtain ⟨w, hw⟩ := hu.exists_right_inv
   have h2 : (phi spl p s : (v.adicCompletion F)) * (w : (v.adicCompletion F)) = 1 := congrArg Subtype.val hw
   have h3 : emb spl p z = (phi spl p a : (v.adicCompletion F)) * (w : (v.adicCompletion F)) := by

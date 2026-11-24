@@ -119,8 +119,7 @@ theorem geom_tail (q N m : ℕ) (hq : 2 ≤ q) (hN : 2 ≤ N) (hm : m ≤ N) :
     rw [hq1, hN1] at h
     set S := ∑ j ∈ Finset.Icc 2 m, (p + 2) ^ (N - j)
     set Q := (p + 2) ^ (N - 2)
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have h4 := Nat.mul_le_mul_right (p + 1) (show 2 * Q + 1 ≤ S by omega)
     clear_value S Q
     ring_nf at h h4
@@ -206,8 +205,7 @@ theorem squarefree_count : SquarefreeCount := by
     simp only
     rw [← smul_eq_mul, ← Finset.sum_const]
     apply Finset.sum_le_sum
-    intro p _
-    exact card_mult_le N j (monicOf p) (monicOf_monic p) (monicOf_natDegree p)
+    exact fun p _ => card_mult_le N j (monicOf p) (monicOf_monic p) (monicOf_natDegree p)
   have hI1 : I 1 ≤ q - 1 := by
     have hsub : ((Finset.univ : Finset (Fin 1 → K)).filter
         (fun p => Irreducible (monicOf p) ∧ (monicOf p).coeff 0 ≠ 0)) ⊆
@@ -217,8 +215,7 @@ theorem squarefree_count : SquarefreeCount := by
       rintro rfl
       have := (Finset.mem_filter.mp hp).2.2
       apply this
-      have h := monicOf_coeff (0 : Fin 1 → K) 0
-      simpa using h
+      simpa using monicOf_coeff (0 : Fin 1 → K) 0
     have := Finset.card_le_card hsub
     rw [Finset.card_erase_of_mem (Finset.mem_univ _), Finset.card_univ] at this
     simpa [hI, hq] using this
@@ -228,8 +225,7 @@ theorem squarefree_count : SquarefreeCount := by
     have h2 : I j ≤ ((Finset.univ : Finset (Fin j → K)).filter
         (fun c => Irreducible (monicOf c))).card := by
       apply Finset.card_le_card
-      intro p hp
-      exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, (Finset.mem_filter.mp hp).2.1⟩
+      exact fun p hp => Finset.mem_filter.mpr ⟨Finset.mem_univ _, (Finset.mem_filter.mp hp).2.1⟩
     calc 2 * I j ≤ j * I j := Nat.mul_le_mul_right _ hj
       _ ≤ j * _ := Nat.mul_le_mul_left _ h2
       _ ≤ q ^ j := h1

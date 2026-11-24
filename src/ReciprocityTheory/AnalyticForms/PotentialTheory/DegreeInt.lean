@@ -112,13 +112,11 @@ theorem exists_sheet_partition [CompactSpace Y] [T2Space Y] [CompactSpace X] [T2
       exact fun hxS => Set.disjoint_left.1 (hV0S (f m)) hm hxS
     · intro x hx
       have hx' : x ∈ ⋃ i, V0 i := Set.mem_iUnion.2 ⟨⟨x, hx⟩, hxV0 _⟩
-      rw [← hTU] at hx'
-      exact hx'
+      rwa [← hTU] at hx'
   · intro m
     first
       | exact disjointed_subset _ m
-  · intro m
-    exact ⟨hV0o _, hk0 _, hW0 _, hdis0 _, hpre0 _, hsh0 _⟩
+  · exact fun m => ⟨hV0o _, hk0 _, hW0 _, hdis0 _, hpre0 _, hsh0 _⟩
 
 theorem degree_piece [CompactSpace Y] [T2Space Y] [CompactSpace X] [T2Space X]
     [MeasurableSpace X] [BorelSpace X]

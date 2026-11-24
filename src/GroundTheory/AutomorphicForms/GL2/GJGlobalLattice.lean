@@ -78,8 +78,7 @@ theorem infNorm_mul_le (X Y : Matrix (Fin n) (Fin n) 𝔸[K]) :
   have key : ∀ i j (w : InfinitePlace K),
       ‖((X * Y) i j).1 w‖ ≤ ∑ k, ‖(X i k).1 w‖ * ‖(Y k j).1 w‖ := fun i j w => by
     rw [mul_apply_fst_apply]
-    refine (norm_sum_le _ _).trans (le_of_eq ?_)
-    exact Finset.sum_congr rfl fun k _ => norm_mul _ _
+    exact (norm_sum_le _ _).trans (le_of_eq (Finset.sum_congr rfl fun k _ => norm_mul _ _))
   set B : Fin n → ℝ := fun j => ∑ k, ∑ w : InfinitePlace K, ‖(Y k j).1 w‖ with hB
   have hb : ∀ k j (w : InfinitePlace K), ‖(Y k j).1 w‖ ≤ B j := fun k j w => by
     refine le_trans ?_ (Finset.single_le_sum (f := fun k => ∑ w : InfinitePlace K,
@@ -87,24 +86,16 @@ theorem infNorm_mul_le (X Y : Matrix (Fin n) (Fin n) 𝔸[K]) :
     exact Finset.single_le_sum (f := fun w : InfinitePlace K => ‖(Y k j).1 w‖)
       (fun _ _ => norm_nonneg _) (Finset.mem_univ w)
   have hBsum : ∑ j, B j = infNorm Y := by
-    simp only [hB, infNorm]
-    exact Finset.sum_comm
+    simpa only [hB, infNorm] using Finset.sum_comm
   have hA : ∑ i, ∑ w : InfinitePlace K, ∑ k, ‖(X i k).1 w‖ = infNorm X := by
-    simp only [infNorm]
-    exact Finset.sum_congr rfl fun i _ => Finset.sum_comm
-  calc infNorm (X * Y) ≤ ∑ i, ∑ j, ∑ w : InfinitePlace K, ∑ k, ‖(X i k).1 w‖ * B j :=
+    simpa only [infNorm] using Finset.sum_congr rfl fun i _ => Finset.sum_comm
+  calc _ ≤ ∑ i, ∑ j, ∑ w : InfinitePlace K, ∑ k, ‖(X i k).1 w‖ * B j :=
         Finset.sum_le_sum fun i _ => Finset.sum_le_sum fun j _ => Finset.sum_le_sum fun w _ =>
           (key i j w).trans (Finset.sum_le_sum fun k _ =>
             mul_le_mul_of_nonneg_left (hb k j w) (norm_nonneg _))
-    _ = (∑ i, ∑ w : InfinitePlace K, ∑ k, ‖(X i k).1 w‖) * ∑ j, B j := by
-        rw [Finset.sum_mul]
-        refine Finset.sum_congr rfl fun i _ => ?_
-        rw [Finset.mul_sum]
-        refine Finset.sum_congr rfl fun j _ => ?_
-        rw [Finset.sum_mul]
-        refine Finset.sum_congr rfl fun w _ => ?_
-        rw [Finset.sum_mul]
-    _ = infNorm X * infNorm Y := by rw [hA, hBsum]
+    _ = infNorm X * infNorm Y := by
+        rw [← hA, ← hBsum, Finset.sum_mul_sum]
+        simp only [Finset.sum_mul]
 
 theorem infNorm_smul {a : 𝔸[K]} {ρ : ℝ} (ha : ∀ w, ‖a.1 w‖ = ρ) (X : Matrix (Fin n) (Fin n) 𝔸[K]) :
     infNorm (a • X) = ρ * infNorm X := by
@@ -314,15 +305,12 @@ theorem summable_latticeWeight (J : (FractionalIdeal (𝓞 K)⁰ K)ˣ) {M : ℕ}
   have hmem : ∀ ξ : T, embPi K (matrixCoordEquiv (ξ : Matrix (Fin n) (Fin n) K)) ∈ L := by
     intro ξ
     rw [hL, mem_idealLatticePi]
-    intro p
-    exact (mixedEmbedding.mem_idealLattice K J).2 ⟨_, ξ.2 p.1 p.2, rfl⟩
+    exact fun p => (mixedEmbedding.mem_idealLattice K J).2 ⟨_, ξ.2 p.1 p.2, rfl⟩
   set e : T → L := fun ξ => ⟨_, hmem ξ⟩ with he
   have he_inj : Function.Injective e := by
     intro ξ η h
     have h1 := congrArg (fun z : L => (z : Fin n × Fin n → mixedEmbedding.mixedSpace K)) h
-    refine Subtype.ext (Matrix.ext fun i j => ?_)
-    have h2 := congrFun h1 (i, j)
-    exact (mixedEmbedding K).injective h2
+    exact Subtype.ext (Matrix.ext fun i j => ((mixedEmbedding K).injective (congrFun h1 (i, j))))
   have hsT : Summable fun ξ : T => ((1 + ‖((e ξ : L) : Fin n × Fin n →
       mixedEmbedding.mixedSpace K)‖) ^ M)⁻¹ := hsL.comp_injective he_inj
   have hsT' : Summable fun ξ : T => ((1 + infNorm (ratMat (ξ : Matrix (Fin n) (Fin n) K))) ^ M)⁻¹ := by
@@ -341,8 +329,7 @@ theorem summable_latticeWeight (J : (FractionalIdeal (𝓞 K)⁰ K)ˣ) {M : ℕ}
     by_cases h : ∀ i j, ξ i j ∈ (J : FractionalIdeal (𝓞 K)⁰ K)
     · rw [ite_eq_left h, indicator_of_mem (show ξ ∈ T from h)]
     · rw [ite_eq_right h, indicator_of_notMem (show ξ ∉ T from h)]
-  rw [heq, ← summable_subtype_iff_indicator]
-  exact hsT'
+  rwa [heq, ← summable_subtype_iff_indicator]
 
 def twistedWeight (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) (M : ℕ) (x y : AdelicGLn.AdelicGL K n)
     (ξ : Matrix (Fin n) (Fin n) K) : ℝ :=
@@ -536,8 +523,7 @@ theorem norm_det_le_of_mem {v : IsDedekindDomain.HeightOneSpectrum (𝓞 K)}
   have h1 := Reduction.norm_le_one_of_mem v hdet
   rw [norm_mul, norm_pow, norm_inv] at h1
   have htp : 0 < ‖t‖ ^ n := pow_pos (norm_pos_iff.2 ht) n
-  rw [inv_pow, inv_mul_le_iff₀ htp, mul_one] at h1
-  exact h1
+  rwa [inv_pow, inv_mul_le_iff₀ htp, mul_one] at h1
 
 theorem exists_le_infNorm_of_isInBox (hn : 0 < n) (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) :
     ∃ c₀ : ℝ, 0 < c₀ ∧ ∀ W : AdelicGLn.AdelicGL K n, (Reduction.detModule K n W : ℝ) = 1 →
@@ -593,8 +579,7 @@ theorem exists_le_infNorm_of_isInBox (hn : 0 < n) (I : (FractionalIdeal (𝓞 K)
     have h2 := Matrix.det_le (abv := NormedField.toAbsoluteValue w.Completion) (x := X)
       (A := (W : Matrix (Fin n) (Fin n) 𝔸[K]).map (Reduction.infEval w))
       (fun i j => norm_apply_le_infNorm _ i j w)
-    rw [Fintype.card_fin, nsmul_eq_mul] at h2
-    exact h2
+    rwa [Fintype.card_fin, nsmul_eq_mul] at h2
   have hPinf : ∏ w : InfinitePlace K, ‖((u : 𝔸[K])).1 w‖ ^ w.mult ≤
       ((n.factorial : ℝ) * X ^ n) ^ d := by
     calc ∏ w : InfinitePlace K, ‖((u : 𝔸[K])).1 w‖ ^ w.mult

@@ -91,9 +91,7 @@ theorem charpoly_of_isRhoOf (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd �
     have hne : Ideal.span {((D.nd.l i : ℕ) : 𝓞 D.host.E)} ≠ 0 := by
       rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
       exact Nat.cast_ne_zero.mpr (D.nd.lPrime i).out.ne_zero
-    refine (Ideal.finite_factors hne).subset ?_
-    intro v hv
-    exact Ideal.dvd_span_singleton.mpr hv
+    exact (Ideal.finite_factors hne).subset (fun v hv => Ideal.dvd_span_singleton.mpr hv)
   set Sg : Set (PlE D.host) := placesOver D.host.E (D.nd.l i) ∪ (↑(D.nd.S i) : Set (PlE D.host)) ∪
     (↑(D.nd.Q i) : Set (PlE D.host)) with hSg_def
   have hSg : Sg.Finite := (hP.union (D.nd.S i).finite_toSet).union (D.nd.Q i).finite_toSet
@@ -111,8 +109,7 @@ theorem charpoly_of_isRhoOf (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd �
     refine IsTopologicalAddGroup.t2Space_of_zero_sep ?_
     intro y hy
     obtain ⟨n, hn⟩ : ∃ n, y ∉ (IsLocalRing.maximalIdeal (D.nd.O i)) ^ n := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       apply hy
       refine (D.nd.O_complete i).toIsHausdorff.haus y fun n => ?_
       rw [SModEq.zero, Ideal.smul_eq_mul, Ideal.mul_top]
@@ -144,10 +141,7 @@ theorem semisimple_decomposition_of (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (G
     (ρ : D.nd.X i → (GE D.nd →* GL (Fin D.R.r) (D.nd.O i))) (π : D.nd.X i)
     (hAN : Formalism.MainNotions.SumRepresentations.adm5 D) (hr : GoodR D.nd i r) (hρ : IsRhoOf D.nd i π (ρ π))
     (hSS : IsSSRep (rhoChiK D i (ρ π))) : Formalism.MainNotions.TruncatedSeriesCountingIdentities.SemisimpleDecomposition (D := D) i r ρ π := by
-  have hcp : ∀ g, ((r π g : GL _ _) : Matrix (Fin D.R.nV) (Fin D.R.nV) (D.nd.O i)).charpoly =
-      ((ρ π g : GL _ _) : Matrix (Fin D.R.r) (Fin D.R.r) (D.nd.O i)).charpoly *
-        ∏ c ∈ Finset.Icc 1 D.R.t, (X - C ((D.nd.chi i c g : (D.nd.O i)ˣ) : D.nd.O i)) :=
-    fun g => charpoly_of_isRhoOf D i r π (ρ π) hAN hr hρ g
+  have hcp := charpoly_of_isRhoOf D i r π (ρ π) hAN hr hρ
   unfold Formalism.MainNotions.SumRepresentations.adm5 Formalism.MainNotions.SumRepresentations.At.JacquetShalikaStrongMultOne at hAN
   have hBN := hAN.2.2.2
   obtain ⟨-, hSS1, -⟩ := hr π
@@ -156,20 +150,15 @@ theorem semisimple_decomposition_of (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (G
         ((toK D.nd i).mapMatrix ((ρ π g : GL _ _) : Matrix (Fin D.R.r) (Fin D.R.r) (D.nd.O i)),
          Matrix.diagonal fun c : Fin D.R.t =>
            toK D.nd i ((D.nd.chi i ((c : ℕ) + 1) g : (D.nd.O i)ˣ) : D.nd.O i)) := fun g => rfl
-  have hdiag : ∀ d : Fin D.R.t → KK D.nd i, (Matrix.diagonal d).charpoly = ∏ c, (X - C (d c)) := by
-    intro d
-    first
-    | exact Matrix.charpoly_diagonal d
   obtain ⟨Pm, hPm⟩ := hBN (KK D.nd i) (D.R.r + D.R.t) (mapRep (toK D.nd i) (r π)) (rhoChiK D i (ρ π))
     hSS1 hSS (by
       intro g
-      show ((toK D.nd i).mapMatrix ((r π g : GL _ _) : Matrix (Fin D.R.nV) (Fin D.R.nV) (D.nd.O i))).charpoly =
-        (blockHom (KK D.nd i) D.R.r D.R.t
-          ((toK D.nd i).mapMatrix ((ρ π g : GL _ _) : Matrix (Fin D.R.r) (Fin D.R.r) (D.nd.O i)),
-           Matrix.diagonal fun c : Fin D.R.t =>
-             toK D.nd i ((D.nd.chi i ((c : ℕ) + 1) g : (D.nd.O i)ˣ) : D.nd.O i))).charpoly
+      rw [hblk g]
+      show ((toK D.nd i).mapMatrix
+        ((r π g : GL _ _) : Matrix (Fin D.R.nV) (Fin D.R.nV) (D.nd.O i))).charpoly = _
       rw [blockHom_charpoly, RingHom.mapMatrix_apply, RingHom.mapMatrix_apply, Matrix.charpoly_map,
-        Matrix.charpoly_map, hcp g, Polynomial.map_mul, Polynomial.map_prod, hdiag]
+        Matrix.charpoly_map, hcp g, Polynomial.map_mul, Polynomial.map_prod,
+        Matrix.charpoly_diagonal]
       congr 1
       simp only [Polynomial.map_sub, Polynomial.map_X, Polynomial.map_C]
       rw [Fin.prod_univ_eq_prod_range
@@ -179,8 +168,7 @@ theorem semisimple_decomposition_of (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (G
         zero_add]
       congr 1)
   let e0 : (Fin (D.R.r + D.R.t) → KK D.nd i) ≃ₗ[KK D.nd i] (Fin (D.R.r + D.R.t) → KK D.nd i) :=
-    LinearEquiv.ofLinear (Matrix.toLin' ((Pm⁻¹ : GL (Fin (D.R.r + D.R.t)) (KK D.nd i)) : Matrix (Fin (D.R.r + D.R.t)) (Fin (D.R.r + D.R.t)) (KK D.nd i)))
-      (Matrix.toLin' ((Pm : GL (Fin (D.R.r + D.R.t)) (KK D.nd i)) : Matrix (Fin (D.R.r + D.R.t)) (Fin (D.R.r + D.R.t)) (KK D.nd i)))
+    LinearEquiv.ofLinear (Matrix.toLin' ↑Pm⁻¹) (Matrix.toLin' ↑Pm)
       (by rw [← Matrix.toLin'_mul, Units.inv_mul, Matrix.toLin'_one])
       (by rw [← Matrix.toLin'_mul, Units.mul_inv, Matrix.toLin'_one])
   refine ⟨e0.trans (splitRT (KK D.nd i) D.R.r D.R.t), ?_⟩
@@ -189,7 +177,8 @@ theorem semisimple_decomposition_of (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (G
   rw [Units.val_mul, Units.val_mul] at hm'
   have hv : ((Pm⁻¹ : GL (Fin (D.R.r + D.R.t)) (KK D.nd i)) : Matrix (Fin (D.R.r + D.R.t)) (Fin (D.R.r + D.R.t)) (KK D.nd i)).mulVec ((mapM (toK D.nd i) (rO D.nd i r π) g : Matrix (Fin (D.R.r + D.R.t)) (Fin (D.R.r + D.R.t)) (KK D.nd i)).mulVec u) =
       ((rhoChiK D i (ρ π) g : GL (Fin (D.R.r + D.R.t)) (KK D.nd i)) : Matrix (Fin (D.R.r + D.R.t)) (Fin (D.R.r + D.R.t)) (KK D.nd i)).mulVec (((Pm⁻¹ : GL (Fin (D.R.r + D.R.t)) (KK D.nd i)) : Matrix (Fin (D.R.r + D.R.t)) (Fin (D.R.r + D.R.t)) (KK D.nd i)).mulVec u) := by
-    have key : ∀ (A P Q : Matrix (Fin (D.R.r + D.R.t)) (Fin (D.R.r + D.R.t)) (KK D.nd i)) (v : Fin (D.R.r + D.R.t) → KK D.nd i), P * Q = 1 →
+    have key : ∀ (A P Q : Matrix (Fin (D.R.r + D.R.t)) (Fin (D.R.r + D.R.t)) (KK D.nd i))
+        (v : Fin (D.R.r + D.R.t) → KK D.nd i), P * Q = 1 →
         (Q * A * P).mulVec (Q.mulVec v) = Q.mulVec (A.mulVec v) := by
       intro A P Q v hPQ
       rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec]

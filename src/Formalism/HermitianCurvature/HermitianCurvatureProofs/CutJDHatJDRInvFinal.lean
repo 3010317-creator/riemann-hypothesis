@@ -182,8 +182,7 @@ theorem det_Mr_expand (R0 : Fin (2 * r + k + 1) → Fin (2 * r + k + 1) → ℂ)
   have hmul := (Matrix.detRowAlternating (n := Fin (2 * r + k + 1)) (R := ℂ)).toMultilinearMap.map_sum_finset g A
   have e2 : (Mr k r R0 (fun l => ∑ j, c l j • bvec j)).det = ∑ ρ ∈ Fintype.piFinset A,
       Matrix.detRowAlternating (fun q => g q (ρ q)) := by
-    rw [Matrix.det, e1]
-    exact hmul
+    rwa [Matrix.det, e1]
   rw [e2]
   refine Finset.sum_nbij' (fun ρ l => ρ (iota k r l)) (PhiJ k r) ?_ ?_ ?_ ?_ ?_
   · intro ρ _; exact Finset.mem_univ _
@@ -526,16 +525,14 @@ theorem nset_wv {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) {m : Matrix 
         · rw [hzx, mul_zero]
         · have h3 : r ≤ x.val ∧ x.val ≤ r + k := by
             by_contra hc
-            apply hzx
-            exact hz x (by omega)
+            exact hzx (hz x (by omega))
           rw [hm3 x x h3.1 h3.2 (by omega), ite_eq_left rfl, one_mul]
       · intro j _ hj
         by_cases hzj : z j = 0
         · rw [hzj, mul_zero]
         · have h3 : r ≤ j.val ∧ j.val ≤ r + k := by
             by_contra hc
-            apply hzj
-            exact hz j (by omega)
+            exact hzj (hz j (by omega))
           rw [hm3 x j h3.1 h3.2 (by omega), ite_eq_right (Ne.symm hj), zero_mul]
       · intro h; exact absurd (Finset.mem_univ x) h
 
@@ -964,8 +961,7 @@ theorem qminor_right_all (S : Mat k r) (hS : S ∈ GV k r) {t : ℕ} (a b : Fin 
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl (fun d _ => ?_)
   rw [qm_eq, Finset.smul_sum]
-  refine Finset.sum_congr rfl (fun σ _ => ?_)
-  exact smul_comm _ _ _
+  exact Finset.sum_congr rfl (fun σ _ => (smul_comm _ _ _))
 
 end Formalism.FourierDecayAlt.P.CutMP.RInvCov
 

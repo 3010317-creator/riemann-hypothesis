@@ -81,8 +81,7 @@ theorem nc_geom (p : ℕ) (hp : 2 ≤ p) :
     first
       | (field_simp; ring)
       | field_simp
-  rw [e1, e2]
-  exact this
+  rwa [e1, e2]
 
 theorem nc_geomc (p : ℕ) (hp : 2 ≤ p) (c : ℝ) :
     HasSum (fun e : ℕ => c / ((p : ℝ)) ^ (2 * e + 1)) (c * Formalism.MainNotions.FormalGroupSystem.gam p) := by
@@ -92,8 +91,7 @@ theorem nc_geomc (p : ℕ) (hp : 2 ≤ p) (c : ℝ) :
 theorem nc_abs_min_le (a b : ℝ) (hb : 0 ≤ b) : |min a b| ≤ |a| := by
   rcases le_total a b with h | h
   · rw [min_eq_left h]
-  · rw [min_eq_right h, abs_of_nonneg hb, abs_of_nonneg (hb.trans h)]
-    exact h
+  · rwa [min_eq_right h, abs_of_nonneg hb, abs_of_nonneg (hb.trans h)]
 
 theorem nc_summable_min (p : ℕ) (hp : 2 ≤ p) (y : ℝ) (z : ℕ → ℝ) (hz : ∀ e, 0 ≤ z e) :
     Summable fun e : ℕ => min (y / ((p : ℝ)) ^ (2 * e + 1)) (z e) := by
@@ -196,8 +194,7 @@ theorem nc_gB_ge (p t : ℕ) (TT : Finset (Fin n')) (lam0 : Fin n' → Fin (k1 +
   have hB : ∑ s ∈ TT.filter (fun s => ¬ IsOddPos s), Formalism.MainNotions.FormalGroupSystem.gam p * ya s ≤
       ∑ s ∈ TT.filter (fun s => ¬ IsOddPos s), Formalism.MainNotions.FormalGroupSystem.gam p * (al TT lam0 s : ℝ) := by
     apply Finset.sum_le_sum
-    intro s hs
-    exact mul_le_mul_of_nonneg_left (h1 s (Finset.mem_filter.1 hs).1) hg0
+    exact fun s hs => mul_le_mul_of_nonneg_left (h1 s (Finset.mem_filter.1 hs).1) hg0
   rw [Finset.sum_sub_distrib, Finset.sum_sub_distrib] at hA
   linarith
 

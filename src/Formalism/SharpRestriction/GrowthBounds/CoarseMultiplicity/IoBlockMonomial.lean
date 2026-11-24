@@ -50,54 +50,36 @@ open Formalism.MainNotions.G MvPolynomial
 
 theorem symVar_inj (C0 CE1 CE2 : ℝ) (X : Loc) (j : Fin (numSeg X.TT)) :
     Function.Injective (symVar C0 CE1 CE2 X j) := by
-  rintro (⟨a, c⟩ | ⟨l, b⟩) (⟨a', c'⟩ | ⟨l', b'⟩) h
-  · simp only [symVar] at h
-    have ha2 := a.2
+  rintro (⟨a, c⟩ | ⟨l, b⟩) (⟨a', c'⟩ | ⟨l', b'⟩) h <;> simp only [symVar] at h
+  · have ha2 := a.2
     have ha2' := a'.2
-    split_ifs at h with h1 h2 h2
-    · simp only [Prod.mk.injEq] at h
-      obtain ⟨⟨e1, e2⟩, e3⟩ := h
+    split_ifs at h with h1 h2 h2 <;> simp only [Prod.mk.injEq] at h
+    · obtain ⟨⟨e1, e2⟩, e3⟩ := h
       have e1' : (a : ℕ) / 2 = (a' : ℕ) / 2 := congrArg Fin.val (topOdd_inj X j e1)
       have e2' := decide_eq_decide.1 e2
-      have hc : c = c' := Fin.succ_injective _ e3
-      have ha : a = a' := Fin.ext (by omega)
-      rw [ha, hc]
-    · simp only [Prod.mk.injEq] at h
-      exact absurd h.1.1 (topOdd_ne_end X j _)
-    · simp only [Prod.mk.injEq] at h
-      exact absurd h.1.1.symm (topOdd_ne_end X j _)
-    · simp only [Prod.mk.injEq] at h
-      obtain ⟨⟨-, e2⟩, e3⟩ := h
+      rw [Fin.ext (by omega : (a : ℕ) = a'), Fin.succ_injective _ e3]
+    · exact absurd h.1.1 (topOdd_ne_end X j _)
+    · exact absurd h.1.1.symm (topOdd_ne_end X j _)
+    · obtain ⟨⟨-, e2⟩, e3⟩ := h
       have e2' := decide_eq_decide.1 e2
-      have hc : c = c' := Fin.succ_injective _ e3
-      have ha : a = a' := Fin.ext (by omega)
-      rw [ha, hc]
+      rw [Fin.ext (by omega : (a : ℕ) = a'), Fin.succ_injective _ e3]
   · exfalso
-    simp only [symVar] at h
     split_ifs at h <;> simp only [Prod.mk.injEq] at h <;> exact Fin.succ_ne_zero _ h.2
   · exfalso
-    simp only [symVar] at h
     split_ifs at h <;> simp only [Prod.mk.injEq] at h <;> exact Fin.succ_ne_zero _ h.2.symm
-  · simp only [symVar] at h
-    have hl2 := l.2
+  · have hl2 := l.2
     have hl2' := l'.2
-    split_ifs at h with h1 h2 h2
-    · simp only [Prod.mk.injEq] at h
-      obtain ⟨⟨e1, e2⟩, -⟩ := h
+    split_ifs at h with h1 h2 h2 <;> simp only [Prod.mk.injEq] at h
+    · obtain ⟨⟨e1, e2⟩, -⟩ := h
       have e1' : (X.seg C0 CE1 CE2 j).sigma + (l : ℕ) = (X.seg C0 CE1 CE2 j).sigma + (l' : ℕ) :=
         congrArg Fin.val (topOdd_inj X j e1)
-      have hl : l = l' := Fin.ext (by omega)
       have hb : b = b' := by simpa using e2
-      rw [hl, hb]
-    · simp only [Prod.mk.injEq] at h
-      exact absurd h.1.1 (topOdd_ne_end X j _)
-    · simp only [Prod.mk.injEq] at h
-      exact absurd h.1.1.symm (topOdd_ne_end X j _)
-    · simp only [Prod.mk.injEq] at h
-      obtain ⟨⟨-, e2⟩, -⟩ := h
-      have hl : l = l' := Fin.ext (by omega)
+      rw [Fin.ext (by omega : (l : ℕ) = l'), hb]
+    · exact absurd h.1.1 (topOdd_ne_end X j _)
+    · exact absurd h.1.1.symm (topOdd_ne_end X j _)
+    · obtain ⟨⟨-, e2⟩, -⟩ := h
       have hb : b = b' := by simpa using e2
-      rw [hl, hb]
+      rw [Fin.ext (by omega : (l : ℕ) = l'), hb]
 
 theorem symLev_pos (C0 CE1 CE2 : ℝ) (X : Loc) (hp : 0 < X.p) (j : Fin (numSeg X.TT)) (v : BV C0 CE1 CE2 X j) :
     0 < symLev X.p C0 CE1 CE2 X j v := by

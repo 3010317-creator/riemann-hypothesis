@@ -38,8 +38,7 @@ lemma tb_inv_hasFDerivAt {x : Matrix (Fin n) (Fin n) ℂ} (hx : IsUnit x) :
     rw [hx.unit_spec] at h
     have e : (fun z : Matrix (Fin n) (Fin n) ℂ => z⁻¹) = Ring.inverse :=
       funext Matrix.nonsing_inv_eq_ringInverse
-    rw [e]
-    exact h
+    rwa [e]
   · intro h
     simp only [Matrix.coe_units_inv, hx.unit_spec]
     exact congrArg Neg.neg (ContinuousLinearMap.mulLeftRight_apply ℂ (Matrix (Fin n) (Fin n) ℂ) x⁻¹ x⁻¹ h)
@@ -70,10 +69,8 @@ lemma tb_contDiff_lead (i : ℕ) : ContDiff ℂ ω (lead (n := n) i) := by
   · simp only [dite_eq_left h]
     simp_rw [det_apply']
     refine ContDiff.sum fun σ _ => ?_
-    refine contDiff_const.mul ?_
-    exact contDiff_prod fun j _ => tb_contDiff_entry _ _
-  · simp only [dite_eq_right h]
-    exact contDiff_const
+    exact contDiff_const.mul (contDiff_prod fun j _ => tb_contDiff_entry _ _)
+  · simpa only [dite_eq_right h] using contDiff_const
 
 lemma tb_contDiffOn_zpow {f : Matrix (Fin n) (Fin n) ℂ → ℂ} {s : Set (Matrix (Fin n) (Fin n) ℂ)}
     (hf : ContDiffOn ℂ ω f s) (h0 : ∀ x ∈ s, f x ≠ 0) (m : ℤ) :

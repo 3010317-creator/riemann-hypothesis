@@ -132,8 +132,7 @@ theorem counting_exponential_sum_holds : CountingExponentialSum := by
               obtain ⟨j, hj, rfl⟩ := Finset.mem_image.mp hy
               rw [Finset.mem_Ico]
               exact ⟨hmj4 j, Nat.lt_succ_of_le (Finset.le_sup hj)⟩
-            · intro y _ _
-              exact pow_nonneg hq0 y
+            · exact fun y _ _ => pow_nonneg hq0 y
         _ ≤ q ^ 4 / (1 - q) := geom_sum_Ico_le_of_lt_one hq0 (by linarith)
     calc ∑ j ∈ s, Real.exp (-Real.pi * t j) ≤ ∑ j ∈ s, Real.exp (-Real.pi * ((mj j : ℝ) - 1)) := step1
       _ = ∑ y ∈ s.image mj, ∑ j ∈ s.filter (fun j => mj j = y), Real.exp (-Real.pi * ((mj j : ℝ) - 1)) :=
@@ -303,10 +302,8 @@ theorem isotropic_outside_line_of_covering (hD3 : IntegerApproximationCount (E :
     · have hc : ComplexEmbedding.conjugate σ ∈ X.Ψ := by
         have hcc : ComplexEmbedding.conjugate (ComplexEmbedding.conjugate σ) = σ :=
           RingHom.ext fun a => by simp
-        rw [X.cmType, hcc]
-        exact hσ
-      have h := hΨ ⟨_, hc⟩
-      simpa [ComplexEmbedding.conjugate_coe_eq] using h
+        rwa [X.cmType, hcc]
+      simpa [ComplexEmbedding.conjugate_coe_eq] using hΨ ⟨_, hc⟩
   refine ⟨hxx, ?_⟩
   obtain ⟨α, hα⟩ := (hD3 r X.toData).1 (fun τ => -(X.Hf z0 τ (Data.emb τ.1 x) (Data.emb τ.1 ξ) /
     X.Hf z0 τ (Data.emb τ.1 ξ) (Data.emb τ.1 ξ)) / (X.NA : ℂ))

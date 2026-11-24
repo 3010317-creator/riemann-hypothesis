@@ -70,8 +70,7 @@ theorem gram_herm (V : HSp D) (τ : D.host.E →+* ℂ) : Formalism.UG.IsHerm (s
   rw [← emb_star]
   congr 1
   have := V.herm.eq (V.frame j) (V.frame i)
-  rw [starRingEnd_apply] at this
-  exact this
+  rwa [starRingEnd_apply] at this
 
 theorem sig_ex (V : HSp D) (τ : D.host.E →+* ℂ) : ∃ s : ℕ × ℕ, Formalism.UG.HasSignature (V.gram.map τ) s.1 s.2 := by
   obtain ⟨p, q, h⟩ := Formalism.UG.P.signature_exists _ (V.gram.map τ) (gram_herm V τ) (by

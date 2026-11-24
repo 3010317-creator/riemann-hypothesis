@@ -58,22 +58,15 @@ theorem lam_spec {K : Type} [Field K] (σ : K →+* K) (m : ℕ) (hm : 0 < m) (�
 
 theorem norm_two {K : Type} [NormedField K] [IsUltrametricDist K] (m : ℕ)
     (h : ‖((2 * m + 1 : ℕ) : K)‖ < 1) : ‖(2 : K)‖ = 1 := by
-  have h2 : ‖(2 : K)‖ ≤ 1 := by
-    have := IsUltrametricDist.norm_natCast_le_one K 2
-    simpa using this
-  refine le_antisymm h2 ?_
-  by_contra hlt
-  rw [not_le] at hlt
+  have h2 : ‖(2 : K)‖ ≤ 1 := by simpa using IsUltrametricDist.norm_natCast_le_one K 2
+  refine le_antisymm h2 (not_lt.1 fun hlt => ?_)
   have hm : ‖(m : K)‖ ≤ 1 := IsUltrametricDist.norm_natCast_le_one K m
-  have e : (1 : K) = ((2 * m + 1 : ℕ) : K) + -(2 * (m : K)) := by push_cast; ring
   have h1 : ‖(1 : K)‖ < 1 := by
-    rw [e]
+    rw [show (1 : K) = ((2 * m + 1 : ℕ) : K) + -(2 * (m : K)) by push_cast; ring]
     refine lt_of_le_of_lt (IsUltrametricDist.norm_add_le_max _ _) (max_lt h ?_)
     rw [norm_neg, norm_mul]
-    calc ‖(2 : K)‖ * ‖(m : K)‖ ≤ ‖(2 : K)‖ * 1 := by gcongr
-      _ < 1 := by rwa [mul_one]
-  rw [norm_one] at h1
-  exact lt_irrefl _ h1
+    exact (mul_le_of_le_one_right (norm_nonneg _) hm).trans_lt hlt
+  simp at h1
 
 end OrbitCoverLemmas
 

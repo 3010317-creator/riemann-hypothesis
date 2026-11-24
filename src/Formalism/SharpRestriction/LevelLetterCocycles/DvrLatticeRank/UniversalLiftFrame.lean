@@ -398,8 +398,7 @@ variable {W T π' c}
 theorem valAt_zero (ζ : LL) (hvsmul : ∀ (a : O) x, x ∈ NcS W T (c - 1) →
       valAt W T c ζ (a • x) = algebraMap O LL a • valAt W T c ζ x) : valAt W T c ζ 0 = 0 := by
   have h := hvsmul 0 0 (Submodule.zero_mem _)
-  rw [zero_smul, map_zero, zero_smul] at h
-  exact h
+  rwa [zero_smul, map_zero, zero_smul] at h
 
 theorem valAt_sum (ζ : LL)
     (hvadd : ∀ x y, x ∈ NcS W T (c - 1) → y ∈ NcS W T (c - 1) →
@@ -600,8 +599,7 @@ lemma exists_isCompl_finrank_add_of_saturated_of_isPrincipalIdealRing {O : Type*
   refine ⟨L₂, h, ?_⟩
   have h1 := Submodule.finrank_quotient_add_finrank L'
   rw [Module.finrank_fin_fun] at h1
-  rw [← (Submodule.quotientEquivOfIsCompl L' L₂ h).finrank_eq]
-  exact h1
+  rwa [← (Submodule.quotientEquivOfIsCompl L' L₂ h).finrank_eq]
 
 lemma saturated_comap_coordinateMap_of_isPrincipalIdealRing {O K : Type*} [CommRing O] [IsDomain O] [IsPrincipalIdealRing O]
     [Field K] [Algebra O K] [IsFractionRing O K] {r : ℕ} (W : Submodule K (Fin r → K)) :
@@ -766,8 +764,7 @@ theorem decomp_coord {O LL : Type*} [CommRing O] [IsDomain O] [IsDiscreteValuati
     refine Finset.sum_congr rfl fun i _ => ?_
     simp [hP, smul_eq_mul, mul_comm]
   refine ⟨k, fun j => bL.equivFun.symm (bu j), L₂.map (bL.equivFun.symm : (Fin r → O) →ₗ[O] L), P, ?_, ?_, ?_, ?_⟩
-  · rw [LinearEquiv.finrank_map_eq]
-    exact hrk
+  · rwa [LinearEquiv.finrank_map_eq]
   · intro j τ
     convert hCL τ (bu j) (bu j).2 using 1
     funext i
@@ -867,8 +864,7 @@ theorem serMul_sum {V : Type} [AddCommGroup V] [Module LL V] (gp : PowerSeries L
   obtain ⟨N, hN⟩ : ∃ N : ℕ, i - m₀ < N := ⟨(i - m₀).toNat + 1, by omega⟩
   rw [ModelFPf.serMul_eq_sum gp _ m₀ (fun t ht => Finset.sum_eq_zero fun k _ => hF k t ht) i N hN]
   rw [Finset.sum_congr rfl fun k _ => ModelFPf.serMul_eq_sum gp (F k) m₀ (hF k) i N hN]
-  simp only [Finset.smul_sum]
-  exact Finset.sum_comm
+  simpa only [Finset.smul_sum] using Finset.sum_comm
 
 theorem pt_fil {T : LocLat G Qp LL O} (Pt : ZMod n → LL → (K →ₐ[Qp] LL) → Prop)
     (π' Eπ : LetA O n) (h' M : ℕ) (c : ZMod n)
@@ -897,7 +893,6 @@ theorem pt_fil {T : LocLat G Qp LL O} (Pt : ZMod n → LL → (K →ₐ[Qp] LL) 
     rw [MQ.smulLA_eq, MQ.coord_smulE, hgeq i, hbrep i]
   · simp only [Phi_apply]
     rw [serMul_sum _ _ _ (-(h' : ℤ)) (fun k t ht => by rw [ev_of_lt _ (by omega), zero_smul])]
-    show _ = ∑ j, serC (W.lev c ζ (g j)) (valAt W T c ζ (rep j)) i
     exact Finset.sum_congr rfl fun k _ => serMul_ev h0 h1 (g k) (valAt W T c ζ (rep k)) i
 
 

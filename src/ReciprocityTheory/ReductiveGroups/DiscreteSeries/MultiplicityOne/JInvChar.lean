@@ -96,14 +96,12 @@ private theorem embWb_mul' (X Y : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) :
       · simp [embWb_apply_of_right_not_mem_block X hj, embWb_apply_of_right_not_mem_block Y hj, embWb_apply_of_right_not_mem_block (X * Y) hj]
       · intro l _ hl
         rw [embWb_apply_of_right_not_mem_block Y hj, ite_eq_right hl, mul_zero]
-      · intro h
-        exact absurd (Finset.mem_univ j) h
+      · exact fun h => absurd (Finset.mem_univ j) h
   · rw [Finset.sum_eq_single i]
     · simp [embWb_apply_of_left_not_mem_block X hi, embWb_apply_of_left_not_mem_block Y hi, embWb_apply_of_left_not_mem_block (X * Y) hi]
     · intro l _ hl
       rw [embWb_apply_of_left_not_mem_block X hi, ite_eq_right (Ne.symm hl), zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+    · exact fun h => absurd (Finset.mem_univ i) h
 
 private theorem embWb_one' : embWb k r (1 : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) = 1 := by
   ext i j
@@ -162,8 +160,7 @@ private theorem mul_apply_of_left_index_eq_single {A B : Matrix (Fin (2 * r + k 
   · rw [hA i, ite_eq_left rfl, one_mul]
   · intro l _ hl
     rw [hA l, ite_eq_right (Ne.symm hl), zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 private theorem mul_apply_of_right_col_eq_single {A B : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} {j : Fin (2 * r + k + 1)}
     (hB : ∀ l, B l j = if l = j then 1 else 0) (i : Fin (2 * r + k + 1)) : (A * B) i j = A i j := by
@@ -171,8 +168,7 @@ private theorem mul_apply_of_right_col_eq_single {A B : Matrix (Fin (2 * r + k +
   · rw [hB j, ite_eq_left rfl, mul_one]
   · intro l _ hl
     rw [hB l, ite_eq_right hl, mul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 private theorem embWb_inv_apply_of_left_index_not_isW {i : Fin (2 * r + k + 1)} (hi : ¬ isW k r i) (j : Fin (2 * r + k + 1)) :
     (embWb k r γ)⁻¹ i j = if i = j then 1 else 0 := by
@@ -193,8 +189,7 @@ private theorem embWb_mulVec_apply_of_not_isW {i : Fin (2 * r + k + 1)} (hi : ¬
   · rw [embWb_apply_eq_ite_of_left_index_not_isW hE hi i, ite_eq_left rfl, one_mul]
   · intro l _ hl
     rw [embWb_apply_eq_ite_of_left_index_not_isW hE hi l, ite_eq_right (Ne.symm hl), zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem embWb_inv_apply_offW (v : Fin (2 * r + k + 1) → ℂ) (i : Fin (2 * r + k + 1)) (hi : ¬ isW k r i) :
     ((embWb k r γ)⁻¹ *ᵥ v) i = v i := by
@@ -203,8 +198,7 @@ theorem embWb_inv_apply_offW (v : Fin (2 * r + k + 1) → ℂ) (i : Fin (2 * r +
   · rw [embWb_inv_apply_of_left_index_not_isW hE hi i, ite_eq_left rfl, one_mul]
   · intro l _ hl
     rw [embWb_inv_apply_of_left_index_not_isW hE hi l, ite_eq_right (Ne.symm hl), zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem cc_apply_offW (v : Fin (2 * r + k + 1) → ℂ) (i : Fin (2 * r + k + 1)) (hi : ¬ isW k r i) :
     cc γ v i = conj (v i) := by
@@ -286,8 +280,7 @@ theorem N_inv_col (m n : Mat k r) (hm : m ∈ Nset k r) (hnm : n * m = 1) :
     have h1 : (n * m) i (eI k r ⟨j, hj⟩) = if i = eI k r ⟨j, hj⟩ then 1 else 0 := by
       rw [hnm, Matrix.one_apply]
     rw [Matrix.mul_apply, Finset.sum_eq_single (eI k r ⟨j, hj⟩)] at h1
-    · rw [hm2 ⟨j, hj⟩ (eI k r ⟨j, hj⟩) (le_refl _), ite_eq_left rfl, mul_one] at h1
-      exact h1
+    · rwa [hm2 ⟨j, hj⟩ (eI k r ⟨j, hj⟩) (le_refl _), ite_eq_left rfl, mul_one] at h1
     · intro l _ hl
       by_cases hlj : j ≤ l.val
       · rw [hm2 ⟨j, hj⟩ l hlj, ite_eq_right hl, mul_zero]
@@ -296,8 +289,7 @@ theorem N_inv_col (m n : Mat k r) (hm : m ∈ Nset k r) (hnm : n * m = 1) :
         have hil := ih l.val (by omega) hl' i (by omega)
         rw [hel, ite_eq_right (show ¬ i = l from fun h => by subst h; omega)] at hil
         rw [hil, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
 
 private theorem mulVec_apply_eq_sum' (M : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (v : Fin (2 * r + k + 1) → ℂ) (i : Fin (2 * r + k + 1)) :
     (M *ᵥ v) i = ∑ j, M i j * v j := rfl
@@ -344,8 +336,7 @@ theorem ell_inv_N (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (m n : Mat
   split_ifs with h
   · have hv : (eI k r ⟨a.val + 1, h⟩).val = a.val + 1 := rfl
     have key := N_inv_vec m n hm hnm a (bvec (eI k r ⟨a.val + 1, h⟩)) (fun p hp => ?_) (fun p hp => ?_)
-    · rw [mulVec_bvec_apply_multiplicity_one, mulVec_bvec_apply_multiplicity_one] at key
-      exact key
+    · rwa [mulVec_bvec_apply_multiplicity_one, mulVec_bvec_apply_multiplicity_one] at key
     · simp only [bvec, Pi.single_apply]
       rw [ite_eq_right (show ¬ p = eI k r ⟨a.val + 1, h⟩ from fun hpe => by rw [hpe] at hp; omega)]
     · rw [mulVec_bvec_apply_multiplicity_one, hm.2.1 ⟨a.val + 1, h⟩ p (show a.val + 1 ≤ p.val by omega)]
@@ -360,8 +351,7 @@ theorem ell_inv_N (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (m n : Mat
       by_cases hjw : r ≤ j.val ∧ j.val ≤ r + k
       · rw [hm.2.2 p j hjw.1 hjw.2 hpr, ite_eq_right (Ne.symm hjp), zero_mul]
       · rw [hz j (by omega), mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
 
 end ReciprocityTheory.ChartRestriction.DS.Mult1.InvChr
 end -- clump:auto

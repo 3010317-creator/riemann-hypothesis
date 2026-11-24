@@ -21,10 +21,8 @@ theorem discreteTopology_of_isOpen_of_forall_mem {G : Type*} [AddGroup G] [Topol
   constructor
   · intro h
     have hx0 : x = 0 := by simpa using congrArg Subtype.val h
-    rw [hx0]
-    exact h0
-  · intro h
-    exact Subtype.ext (hH x hx h)
+    rwa [hx0]
+  · exact fun h => Subtype.ext (hH x hx h)
 
 variable (K : Type*) [Field K]
 
@@ -78,23 +76,17 @@ theorem isCompact_closure_fundamentalSetInfinite :
 theorem existsUnique_sub_mem_fundamentalSetInfinite (x : K∞) :
     ∃! z : 𝓞 K, x - algebraMap (𝓞 K) K∞ z ∈ fundamentalSetInfinite K := by
   set b := mixedEmbedding.latticeBasis K
-  have hmem : ∀ z : 𝓞 K, mixedEmbedding K (z : K) ∈ Submodule.span ℤ (Set.range b) := by
-    intro z
-    rw [mixedEmbedding.mem_span_latticeBasis]
-    exact ⟨z, rfl⟩
+  have hmem : ∀ z : 𝓞 K, mixedEmbedding K (z : K) ∈ Submodule.span ℤ (Set.range b) := fun z =>
+    (mixedEmbedding.mem_span_latticeBasis K).2 ⟨z, rfl⟩
   have himg : ∀ z : 𝓞 K, homeomorphMixedSpace K (x - algebraMap (𝓞 K) K∞ z) =
-      homeomorphMixedSpace K x - mixedEmbedding K (z : K) := by
-    intro z
+      homeomorphMixedSpace K x - mixedEmbedding K (z : K) := fun z => by
     rw [homeomorphMixedSpace_sub, IsScalarTower.algebraMap_apply (𝓞 K) K K∞,
       homeomorphMixedSpace_algebraMap]
   have hinj : Function.Injective fun z : 𝓞 K => mixedEmbedding K (z : K) :=
     (mixedEmbedding K).injective.comp RingOfIntegers.coe_injective
   obtain ⟨z, hz⟩ : ∃ z : 𝓞 K, mixedEmbedding K (z : K) =
-      (ZSpan.floor b (homeomorphMixedSpace K x) : mixedEmbedding.mixedSpace K) := by
-    have := (ZSpan.floor b (homeomorphMixedSpace K x)).2
-    rw [mixedEmbedding.mem_span_latticeBasis] at this
-    obtain ⟨z, hz⟩ := this
-    exact ⟨z, hz⟩
+      (ZSpan.floor b (homeomorphMixedSpace K x) : mixedEmbedding.mixedSpace K) :=
+    (mixedEmbedding.mem_span_latticeBasis K).1 (ZSpan.floor b (homeomorphMixedSpace K x)).2
   refine ⟨z, ?_, fun z' hz' => ?_⟩
   · change homeomorphMixedSpace K (x - algebraMap (𝓞 K) K∞ z) ∈ ZSpan.fundamentalDomain b
     rw [himg, hz]
@@ -109,11 +101,8 @@ theorem existsUnique_sub_mem_fundamentalSetInfinite (x : K∞) :
     have heq : ZSpan.fract b (homeomorphMixedSpace K x - mixedEmbedding K (z' : K)) =
         ZSpan.fract b (homeomorphMixedSpace K x - mixedEmbedding K (z : K)) := by
       rw [ZSpan.fract_eq_fract]
-      have : -(homeomorphMixedSpace K x - mixedEmbedding K (z' : K)) +
-          (homeomorphMixedSpace K x - mixedEmbedding K (z : K)) =
-          mixedEmbedding K (z' : K) - mixedEmbedding K (z : K) := by abel
-      rw [this]
-      exact Submodule.sub_mem _ (hmem z') (hmem z)
+      convert Submodule.sub_mem _ (hmem z') (hmem z) using 1
+      abel
     rw [hz', h1] at heq
     exact hinj (sub_right_injective heq)
 

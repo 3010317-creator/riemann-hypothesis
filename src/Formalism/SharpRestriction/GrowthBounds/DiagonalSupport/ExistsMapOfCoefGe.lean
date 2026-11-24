@@ -183,8 +183,7 @@ private theorem mem_range_algebraMap_of_vK_nonneg {p : ℕ} {O : Type} [CommRing
     unfold ramE
     rcases ENat.ne_top_iff_exists.mp hpt with ⟨k, hk⟩
     rw [← hk] at hp0 ⊢
-    simp only [ENat.toNat_coe]
-    exact Nat.pos_of_ne_zero (by exact_mod_cast hp0)
+    simpa only [ENat.toNat_coe] using Nat.pos_of_ne_zero (by exact_mod_cast hp0)
   have hq := h ((((Formalism.MainNotions.G.Joints.nv a : ℤ) - (Formalism.MainNotions.G.Joints.nv (b : O) : ℤ) : ℤ) : ℚ) / (ramE p O : ℚ))
     (by rw [vK, hord, WithTop.map_coe])
   have hq' : (0 : ℚ) ≤ (((Formalism.MainNotions.G.Joints.nv a : ℤ) - (Formalism.MainNotions.G.Joints.nv (b : O) : ℤ) : ℤ) : ℚ) /

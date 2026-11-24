@@ -504,8 +504,7 @@ theorem GaussPacking.proof : GaussPacking.Statement := by
     congr 1
     field_simp
     ring
-  rw [key, le_div_iff₀ hp]
-  exact h2
+  rwa [key, le_div_iff₀ hp]
 
 end GroundTheory.Heights₂.Heights
 end -- clump:auto
@@ -666,8 +665,7 @@ theorem GaussPoissonDual.proof (hS : GaussSqrt.Statement) (hP : GaussPoissonBoun
     have hq : 0 ≤ qf Y⁻¹ (intVec l) := le_trans (sq_nonneg ρ) h2
     have h3 : ρ ^ 2 ≤ ‖v‖ ^ 2 := by linarith
     nlinarith [norm_nonneg v]
-  · rw [tsum_congr hterm, ← hD g Y B hY hB]
-    exact hle
+  · rwa [tsum_congr hterm, ← hD g Y B hY hB]
 
 end
 
@@ -810,8 +808,7 @@ theorem GaussShellSum.proof (hS : GaussShell.Statement) : GaussShellSum.Statemen
     have : 0 ≤ 1 + 1 / δ := by positivity
     positivity
   have hr0 : 0 ≤ Real.exp (-1) := (Real.exp_pos _).le
-  have hr1 : Real.exp (-1) < 1 := by
-    exact Real.exp_lt_one_iff.2 (by norm_num)
+  have hr1 : Real.exp (-1) < 1 := Real.exp_lt_one_iff.2 (by norm_num)
   have hgeo : Summable fun j : ℕ => K * Real.exp (-1) ^ j :=
     (summable_geometric_of_lt_one hr0 hr1).mul_left K
   have hbound : ∀ u : Finset Λ, ∑ μ ∈ u, f μ ≤ 2 * gaussShellConst n * (1 + 1 / δ) ^ n := by
@@ -1054,8 +1051,7 @@ theorem le_of_diag_pos {n : ℕ} {A : Matrix (Fin n) (Fin n) ℂ} (hA : A.PosSem
   have hnormB : ‖(D * A * D).det‖ ≤ 1 := by
     have h1 : (D * A * D).det = ((∏ i, hB.1.eigenvalues i : ℝ) : ℂ) := by
       rw [hB.1.det_eq_prod_eigenvalues]; push_cast; rfl
-    rw [h1, Complex.norm_of_nonneg (prod_nonneg fun i _ => hB.eigenvalues_nonneg i)]
-    exact hprod
+    rwa [h1, Complex.norm_of_nonneg (prod_nonneg fun i _ => hB.eigenvalues_nonneg i)]
   have hdetB : (D * A * D).det = (((∏ i, c i) ^ 2 : ℝ) : ℂ) * A.det := by
     simp only [det_mul, hD_def, det_diagonal]
     push_cast
@@ -1246,8 +1242,7 @@ theorem rootsOfUnity_infinite :
     rw [hab] at ha
     have := IsPrimitiveRoot.unique ha hb
     omega
-  · intro m
-    exact ⟨m + 1, Nat.succ_pos m, (hprim m).pow_eq_one⟩
+  · exact fun m => ⟨m + 1, Nat.succ_pos m, (hprim m).pow_eq_one⟩
 
 end RootsOfUnityDenseAlt
 
@@ -1550,8 +1545,7 @@ theorem ThetaInnerMean.proof (h₁ : ThetaSummandNorm.Statement) (h₂ : ThetaCu
   intro g X Y a b u₁ hY
   have hS : Y.IsSymm := by
     have h := hY.isHermitian
-    rw [Matrix.IsHermitian, Matrix.conjTranspose_eq_transpose_of_trivial] at h
-    exact h
+    rwa [Matrix.IsHermitian, Matrix.conjTranspose_eq_transpose_of_trivial] at h
   set E : ℝ := exp (-π * qf Y u₁) with hE
   have hEpos : 0 < E := exp_pos _
   set c : (Fin g → ℤ) → ℂ := fun k => thetaSummand X Y a b
@@ -1622,8 +1616,7 @@ theorem ThetaMean.proof (h : ThetaInnerMean.Statement) : ThetaMean.Statement := 
   simp_rw [hinner]
   have hs : ∀ u : Fin g → ℝ, Summable fun k : Fin g → ℤ => F (intVec k + u) := by
     intro u
-    simp only [hF, add_assoc]
-    exact KTheta.summable_exp_qf Y hY (2 * π) (by positivity) (u + a)
+    simpa only [hF, add_assoc] using KTheta.summable_exp_qf Y hY (2 * π) (by positivity) (u + a)
   rw [KTheta.integral_cube_tsum F (fun x => (exp_pos _).le)
     (KThetaMean.continuous_exp_qf_add Y (2 * π) a) hs]
   rw [hF, integral_add_right_eq_self (fun x : Fin g → ℝ => exp (-(2 * π) * qf Y x)) a]
@@ -1650,8 +1643,7 @@ namespace KThetaNormMajorant
 theorem isSymm_of_posDef {g : ℕ} {Y : Matrix (Fin g) (Fin g) ℝ} (hY : Y.PosDef) : Y.IsSymm := by
   have h := hY.isHermitian
   unfold Matrix.IsHermitian at h
-  rw [Matrix.conjTranspose_eq_transpose_of_trivial] at h
-  exact h
+  rwa [Matrix.conjTranspose_eq_transpose_of_trivial] at h
 
 end KThetaNormMajorant
 

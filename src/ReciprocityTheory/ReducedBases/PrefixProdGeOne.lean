@@ -46,8 +46,7 @@ lemma prefix_prod_ge_one (e : Module.Basis (Fin d) ℤ (Fin d → ℤ))
       rw [Fin.le_iff_val_le_val, Fin.coe_castLE]
       have := i.isLt
       omega
-    · intro a _ b _ h
-      exact Fin.castLE_injective hk h
+    · exact fun a _ b _ h => Fin.castLE_injective hk h
     · intro j hj
       simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hj
       have hj' : j.val ≤ k.val := Fin.le_iff_val_le_val.mp hj
@@ -66,9 +65,7 @@ lemma prefix_prod_ge_one (e : Module.Basis (Fin d) ℤ (Fin d → ℤ))
     have := (Int.castRingHom ℝ).map_det G
     simpa [RingHom.mapMatrix_apply] using this.symm
   have hpos : 0 < ∏ i, ‖gs w i‖ ^ 2 := by
-    apply Finset.prod_pos
-    intro i _
-    exact pow_pos (norm_pos_iff.mpr (gs_ne_zero w hw i)) 2
+    exact Finset.prod_pos (fun i _ => pow_pos (norm_pos_iff.mpr (gs_ne_zero w hw i)) 2)
   have h0 : (0 : ℝ) < (G.det : ℝ) := by rw [← hdetZ, hdet]; exact hpos
   have h1 : (0 : ℤ) < G.det := by exact_mod_cast h0
   have h2 : (1 : ℤ) ≤ G.det := by omega
@@ -83,8 +80,7 @@ lemma hlow_of (A B : Matrix (Fin d) (Fin d) ℝ) (hA : A.PosDef) (hAB : A = Bᴴ
     (LinearMap.injective_iff_antilipschitz (TB B)).mp (TB_injective A B hA hAB)
   have hbound : ∀ v, ‖v‖ ≤ (K : ℝ) * ‖TB B v‖ := by
     intro v
-    have h := hK.le_mul_dist v 0
-    simpa [dist_zero_right] using h
+    simpa [dist_zero_right] using hK.le_mul_dist v 0
   have hK0 : (0 : ℝ) < K := by exact_mod_cast hKpos
   set m : ℝ := min 1 (((K : ℝ)⁻¹) ^ 2) with hm
   have hm0 : 0 < m := lt_min one_pos (pow_pos (inv_pos.mpr hK0) 2)

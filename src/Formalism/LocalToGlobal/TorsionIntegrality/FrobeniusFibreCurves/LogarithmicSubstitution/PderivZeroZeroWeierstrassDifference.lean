@@ -198,16 +198,14 @@ theorem Lop_wpDiff (h8 : WpReduced) {g2 g3 : K} {P : PowerSeries K} (hP : IsWp g
     intro x
     have := congrArg (PowerSeries.substAlgHom (PowerSeries.HasSubst.X (S := K) x)) hA
     simp only [map_sub, map_add (f := _), map_mul, map_pow, map_ofNat, map_one] at this
-    simp only [T, hX, series_at_variable_const] at this
-    exact this
+    simpa only [T, hX, series_at_variable_const] using this
   have F2 : ∀ x : Fin 2, (MvPowerSeries.X x) ^ 2 * at1 x (dz (dz P)) =
       12 * at1 x P + 6 * (MvPowerSeries.X x) ^ 2 * (at1 x P) ^ 2 -
         MvPowerSeries.C (g2 / 2) * (MvPowerSeries.X x) ^ 2 := by
     intro x
     have := congrArg (PowerSeries.substAlgHom (PowerSeries.HasSubst.X (S := K) x)) hB
     simp only [map_sub, map_add (f := _), map_mul, map_pow, map_ofNat] at this
-    simp only [T, hX, series_at_variable_const] at this
-    exact this
+    simpa only [T, hX, series_at_variable_const] using this
   have F1a := F1 0
   have AutomorphicLevelEquivariance := F1 1
   rw [hC] at F1a AutomorphicLevelEquivariance
@@ -322,8 +320,7 @@ theorem AddSigmaLog_of (h2 : ExpLogDeriv) (h3 : ExpLogSubst) (h4 : PrimRules)
   have hφ : ∀ i, MvPowerSeries.constantCoeff (![(PowerSeries.X : PowerSeries K), 0] i) = 0 := by
     intro i
     fin_cases i
-    · show MvPowerSeries.constantCoeff (PowerSeries.X : PowerSeries K) = 0
-      exact PowerSeries.constantCoeff_X
+    · exact PowerSeries.constantCoeff_X
     · simp
   have hevN : ev0 N = 1 := by
     rw [hNdef, show (MvPowerSeries.X 0 ^ 2 * MvPowerSeries.X 1 ^ 2 * dq P : MvPowerSeries (Fin 2) K) =

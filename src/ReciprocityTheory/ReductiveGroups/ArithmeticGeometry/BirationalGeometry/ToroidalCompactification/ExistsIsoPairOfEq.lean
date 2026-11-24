@@ -20,16 +20,13 @@ private theorem res_res_lemma {X : Scheme.{0}} {U V W : X.Opens} (h : W ≤ V) (
       X.presheaf.map (homOfLE (h.trans h')).op := by
     rw [← Functor.map_comp]
     rfl
-  apply Units.ext
-  exact congrArg (fun φ => φ.hom (x : Γ(X, U))) e
+  exact Units.ext (congrArg (fun φ => φ.hom (x : Γ(X, U))) e)
 
 private theorem res_g_mul_res_g_eq_res_g_of_isLB {X : Scheme.{0}} {L : LB X} (hL : L.IsLB) (i j k : L.ι) {W : X.Opens}
     (h₁ : W ≤ L.U i ⊓ L.U j) (h₂ : W ≤ L.U j ⊓ L.U k) (h₃ : W ≤ L.U i ⊓ L.U k) :
     res h₁ (L.g i j) * res h₂ (L.g j k) = res h₃ (L.g i k) := by
   have hW : W ≤ L.U i ⊓ L.U j ⊓ L.U k := le_inf h₁ (h₂.trans inf_le_right)
-  have key := congrArg (⇑(res hW)) (hL.cocycle i j k)
-  simp only [map_mul, res_res_lemma] at key
-  exact key
+  simpa only [map_mul, res_res_lemma] using congrArg (⇑(res hW)) (hL.cocycle i j k)
 
 private theorem isGen_g_iso_self_of_isLB {X : Scheme.{0}} {L : LB X} (hL : L.IsLB) :
     (⟨fun p : L.ι × L.ι => L.g p.1 p.2⟩ : LB.Iso L L).IsGen := by

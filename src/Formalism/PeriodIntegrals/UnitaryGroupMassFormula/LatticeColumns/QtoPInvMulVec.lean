@@ -122,8 +122,7 @@ theorem lat_of_crd (hL : LatBasis X p θ (reindex₂ X p Q)) (v : Fin X.B.I.n �
     v ∈ latLoc (E := X.B.I.E) p.1 (X.B.I.L : Set (Fin X.B.I.n → X.B.I.E)) := by
   refine (hL v).mpr ⟨fun i => ?_, ?_⟩
   · have h := h1 ((idxEquiv X) i)
-    rw [reindex_inv_mulVec, Function.comp_apply]
-    exact h
+    rwa [reindex_inv_mulVec, Function.comp_apply]
   · intro i
     have hz : (fun j => th2 X p θ (v j)) = 0 := h2
     rw [hz, Matrix.mulVec_zero]

@@ -266,8 +266,7 @@ theorem mmF_le_H (A : ArcP n) (hOK : A.OK) {c : ZMod n} (hc : c ∈ A.cuts) {s :
   | thin => exact hG
   | up b =>
     have h' := thick_le_H A hOK hc hs (by rw [hty]; rfl)
-    rw [hty] at h'
-    exact h'
+    rwa [hty] at h'
   | down b => exact Nat.zero_le _
 
 theorem nnNF_le_H (A : ArcP n) (hOK : A.OK) {c : ZMod n} (hc : c ∈ A.cuts) {s : ℕ} (hs : s < A.len c) :
@@ -278,8 +277,7 @@ theorem nnNF_le_H (A : ArcP n) (hOK : A.OK) {c : ZMod n} (hc : c ∈ A.cuts) {s 
   | up b => exact Nat.zero_le _
   | down b =>
     have h' := thick_le_H A hOK hc hs (by rw [hty]; rfl)
-    rw [hty] at h'
-    exact h'
+    rwa [hty] at h'
 
 theorem nnDF_le_H (A : ArcP n) (hOK : A.OK) {c : ZMod n} (hc : c ∈ A.cuts) {s : ℕ} (hs : s < A.len c) :
     nnDF (A.ty (c - (s : ZMod n))) ≤ A.Hs c (A.len c) s := by
@@ -343,7 +341,6 @@ theorem exists_gamma_pi0_eq_pi0_mul [IsDomain O] [NeZero n] (hR : RingP W) : ∃
   have hq : qP W ∈ W.AΔ := qP_AΔ hR
   have hc : W.π₀ * qP W ∈ W.AΔ := Subalgebra.mul_mem _ hπ hq
   have hc0 : ∀ i, (W.π₀ * qP W) i ≠ 0 := fun i => by
-    show W.π₀₁ * qP W i ≠ 0
     exact mul_ne_zero (π₀₁_ne hR) (q_component_ne_zero' hR hp0 i)
   have hwΔ : (w : LetA O n) ∈ W.AΔ := by
     refine cancel_AΔ hc hc0 ?_
@@ -528,8 +525,7 @@ theorem mem_JS_up (A : ArcP n) {c : ZMod n} {s : ℕ} (hs : s < A.len c) {b : �
   apply Finset.mem_union_right
   rw [Finset.mem_biUnion]
   refine ⟨s, Finset.mem_range.2 hs, ?_⟩
-  rw [hτ]
-  exact hi
+  rwa [hτ]
 
 theorem mem_JS_down (A : ArcP n) {c : ZMod n} {s : ℕ} (hs : s < A.len c) {b : ℕ}
     (hτ : A.ty (c - (s : ZMod n)) = LT.down b) {i : ℤ} (hi : i ∈ Finset.Ico (b : ℤ) ((b : ℤ) + A.S)) :
@@ -538,8 +534,7 @@ theorem mem_JS_down (A : ArcP n) {c : ZMod n} {s : ℕ} (hs : s < A.len c) {b : 
   apply Finset.mem_union_right
   rw [Finset.mem_biUnion]
   refine ⟨s, Finset.mem_range.2 hs, ?_⟩
-  rw [hτ]
-  exact hi
+  rwa [hτ]
 
 theorem inId_Lam {A : ArcP n} {c : ZMod n} {e : ℕ} {f : W.EE} (h : InFr W c 1 (abelian₂ W A c e) f) :
     InId W c e (fun s => ((0 : ℕ) : ℤ) - (A.Hs c e s : ℕ)) f := by
@@ -575,8 +570,7 @@ theorem part_b (hKL : KillerLevCore W) (hCA : Formalism.MainNotions.LiftingTheor
     refine inId_of_inFr W (A.len c) (fun _ => 0) (fun t => mmF A (A.ty (c - (t : ZMod n))))
       (fun _ _ => Or.inl rfl) ?_
     simp only [pow_zero, Finset.prod_const_one]
-    rw [mmDen_eq] at h2
-    exact h2
+    rwa [mmDen_eq] at h2
   have hg := Formalism.MainNotions.UnusedSlot80.KL.inId_aeval (W := W) hS
     (∑ k ∈ Finset.range (PD.p ^ A.len c), (Polynomial.X : Polynomial O) ^ k) f hf2
   have hLam : InFr W c 1 (abelian₂ W A c (A.len c)) (PPγ W (A.len c) (A.JS c) f) :=
@@ -635,16 +629,14 @@ theorem part_b (hKL : KillerLevCore W) (hCA : Formalism.MainNotions.LiftingTheor
     have h' := inFr_of_inId W (A.len c) (fun _ => 0) (fun t => nnDF (A.ty (c - (t : ZMod n))))
       (fun _ _ => Or.inl rfl) hi
     simp only [pow_zero, Finset.prod_const_one] at h'
-    rw [nnDen_eq]
-    exact h'
+    rwa [nnDen_eq]
   have hnn : nnDen W A c ∈ W.AΔ := by
     rw [nnDen_eq]; exact prod_ps_mem W hπ _ _
   have hLm : abelian₂ W A c (A.len c) ∈ W.AΔ := by
     unfold abelian₂; exact prod_ps_mem W hπ _ _
   have hf₂' : InFr W c 1 (nnDen W A c) f₂ := by
     have h' := inFr_den_mul W hnn hf₂
-    rw [one_mul] at h'
-    rw [← one_mul (W.π₀ * abelian₂ W A c (A.len c))] at h'
+    rw [one_mul, ← one_mul (W.π₀ * abelian₂ W A c (A.len c))] at h'
     exact inFr_num_drop W (mul_mem hπ hLm) h'
   rw [hsum]
   exact inFr_add W hf₁' hf₂'
@@ -725,8 +717,7 @@ theorem part_a [IsDomain O] (hR : Formalism.MainNotions.UnusedSlot80.ToolsR.Ring
       (fun _ _ => Or.inl rfl) ?_
     simp only [pow_zero, Finset.prod_const_one]
     have h2' := h2
-    rw [mmDen_eq] at h2'
-    exact h2'
+    rwa [mmDen_eq] at h2'
   have hdn : downB W A c ∈ W.AΔ := by rw [downB_eq]; exact prod_ps_mem W hπ _ _
   have hnn : nnDen W A c ∈ W.AΔ := by rw [nnDen_eq]; exact prod_ps_mem W hπ _ _
   have hf3 : InId W c (A.len c) α₃ (W.γE W.gam f - f) := by
@@ -822,8 +813,7 @@ theorem part_a [IsDomain O] (hR : Formalism.MainNotions.UnusedSlot80.ToolsR.Ring
     | down b =>
       have hb : 1 ≤ b := by
         have h' := size_pos A hOK (c - (s : ZMod n)) (by rw [hty]; rfl)
-        rw [hty] at h'
-        exact h'
+        rwa [hty] at h'
       refine step s hs α₃ _ _ A.S hg3 ?_ ?_ hH3 hF2
       · intro i hi
         rw [Finset.mem_Ico, hα₃t, hty] at hi

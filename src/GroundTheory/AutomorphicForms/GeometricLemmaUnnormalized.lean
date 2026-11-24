@@ -83,13 +83,11 @@ theorem exists_filtration_jacquetModule_parabolicInd (hσ : IsSmooth σ) :
   have hdiff : cellUnion C ((j : ℕ) + 1) \ C j = cellUnion C j := by
     rw [cellUnion_succ j, union_sdiff_right, (disjoint_cellUnion hdisj j).symm.sdiff_eq_left]
   refine ⟨⟨gradedJacquetMap γ (w j) σ hYo hCY hYQ, fun m => ?_⟩, ?_, fun x => ?_⟩
-  · refine LinearMap.ext fun x => ?_
-    exact gradedJacquetMap_jacquetRep σ hYo hCY hYQ m x
+  · exact LinearMap.ext fun x => gradedJacquetMap_jacquetRep σ hYo hCY hYQ m x
   · exact gradedJacquetMap_surjective σ hYo hCY hYQ (cellJacquetMap_surjective hYo hCY hYP hYQ hσ)
   · have := gradedJacquetMap_eq_zero_iff σ hYo hCY hYQ
       (fun f hf h0 => exists_sub_mem_ker_of_cellJacquet_eq_zero σ hσ hYo hCY hYQ hf h0) x
-    rw [hdiff] at this
-    exact this
+    rwa [hdiff] at this
 
 end Parabolic
 

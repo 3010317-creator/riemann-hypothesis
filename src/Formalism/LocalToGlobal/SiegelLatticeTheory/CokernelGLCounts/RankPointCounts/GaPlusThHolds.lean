@@ -425,8 +425,7 @@ theorem cross_of_comp {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
   have d : ∀ (f : E →+* F) (B : Matrix (Fin (r + 1)) (Fin (r + 1)) E), (B.map f).det = f B.det :=
     fun f B => (RingHom.map_det f B).symm
   rw [ld_map, ld_map, d, d, ← map_mul, ← map_mul] at h1 h2
-  apply g.e.injective
-  exact Prod.ext h1 h2
+  exact g.e.injective (Prod.ext h1 h2)
 
 theorem gaPlusTh_of (hLO : LiftOrb) (M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep)
     (δ : ∀ p : PlF D, (D.s.atP p).Fp) (u u' : D.what₂.Word) : GaPlusTh M δ u u' := by
@@ -504,8 +503,7 @@ theorem gaPlusTh_of (hLO : LiftOrb) (M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp
     have hX : ZhatLoc M δ p Z' = L * ZhatLoc M δ p Z * P := by
       have e := hZrel
       unfold CntLocal.ZZP Loc.HermSp.ZZplusOf at e
-      rw [hs] at e
-      exact e
+      rwa [hs] at e
     obtain ⟨yL, hyL, hLy⟩ := hLu
     obtain ⟨yP, hyP, hPy⟩ := hPu
     exact gaCong_L δ M hA p hs _ _ Z Z' L P hL hP (fun i j => hRO ▸ hLR i j) (fun i j => hRO ▸ hPR i j)
@@ -773,8 +771,7 @@ theorem srLift_field (A : Matrix (Fin (n + 1)) (Fin (n + 1)) k) (K : Submodule k
     rw [Submodule.disjoint_def]
     intro x hx1 hx2
     obtain ⟨t, rfl⟩ := Submodule.mem_span_singleton.1 hx2
-    rw [LinearMap.mem_ker, map_smul, Matrix.mulVecLin_apply, he] at hx1
-    exact hx1
+    rwa [LinearMap.mem_ker, map_smul, Matrix.mulVecLin_apply, he] at hx1
   obtain ⟨C, hC, heC⟩ := exists_isCompl_mem hdisj
   have hdim : finrank k (LinearMap.ker A.mulVecLin) = finrank k W := by
     have h1 := LinearMap.finrank_range_add_finrank_ker A.mulVecLin
@@ -811,8 +808,7 @@ theorem srLift_field (A : Matrix (Fin (n + 1)) (Fin (n + 1)) k) (K : Submodule k
       have e : h (x + c) = (φ ⟨x, hx⟩ : Fin (n + 1) → k) := by
         simp only [h, LinearMap.comp_apply, hproj]
         rfl
-      rw [Matrix.mulVec_add, hfx, zero_add, e] at hv
-      exact hv
+      rwa [Matrix.mulVec_add, hfx, zero_add, e] at hv
     have hz : A *ᵥ c = 0 := by
       refine Submodule.disjoint_def.1 hW.disjoint _
         (LinearMap.mem_range.2 ⟨c, Matrix.mulVecLin_apply A c⟩) ?_
@@ -968,8 +964,7 @@ theorem srLift_of_finite (hfin : {m : Ideal R | m.IsMaximal}.Finite) (A : Matrix
     · intro b hb hbM
       rw [Matrix.smul_apply, smul_eq_mul, map_mul,
         Ideal.Quotient.eq_zero_iff_mem.2 (he0 b hb M hMS (Ne.symm hbM)), zero_mul]
-    · intro h
-      exact absurd hMS h
+    · exact fun h => absurd hMS h
 
 end Semilocal
 
@@ -1207,8 +1202,7 @@ theorem rFinMax_holds : RFinMax := by
   | some g =>
     haveI := isLocal_R M hOK hs
     refine (Set.finite_singleton (IsLocalRing.maximalIdeal M.R)).subset ?_
-    intro m hm
-    exact IsLocalRing.eq_maximalIdeal hm
+    exact fun m hm => IsLocalRing.eq_maximalIdeal hm
 
 theorem srLift_holds : SRLift := srLift_of_finMax rFinMax_holds
 

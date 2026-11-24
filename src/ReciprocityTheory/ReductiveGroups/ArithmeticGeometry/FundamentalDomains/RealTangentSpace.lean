@@ -95,8 +95,7 @@ def VT.mk {z : Frame X.Ψ r} {ξ : Fin r → E} (u : X.Ψ → Fin r → ℂ) (hu
     (hu : u ∈ X.Uz z ξ) : (VT.mk u hu).val = u := rfl
 
 theorem VT.ext {z : Frame X.Ψ r} {ξ : Fin r → E} {u v : VT (X := X) z ξ} (h : u.val = v.val) :
-    u = v := by
-  exact Subtype.ext h
+    u = v := Subtype.ext h
 
 @[simp] theorem VT.val_add {z : Frame X.Ψ r} {ξ : Fin r → E} (u v : VT (X := X) z ξ) :
     (u + v).val = u.val + v.val := rfl
@@ -204,7 +203,6 @@ noncomputable def Lat (hξ : X.IsIso ξ) : Submodule ℤ (VT (X := X) z ξ) :=
   (phi z ξ hξ).range.toIntSubmodule
 
 theorem mem_Lat (hξ : X.IsIso ξ) {a : VT (X := X) z ξ} : a ∈ Lat z ξ hξ ↔ ∃ μ, phi z ξ hξ μ = a := by
-  show a ∈ (phi z ξ hξ).range ↔ _
   exact AddMonoidHom.mem_range
 
 theorem ucomp_line (hξ : X.IsIso ξ) (e : E) : X.ucomp z ξ (X.embV (e • ξ)) = 0 := by

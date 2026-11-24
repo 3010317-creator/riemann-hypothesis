@@ -32,20 +32,16 @@ noncomputable abbrev pd (a : I ⊕ J) : Module.End K (MvPolynomial (I ⊕ J) K) 
   (pderiv a).toLinearMap
 
 theorem commute_pd (a b : I ⊕ J) : Commute (pd (K := K) a) (pd b) := by
-  apply LinearMap.ext
-  intro p
-  exact pderiv_comm a b p
+  exact LinearMap.ext (fun p => pderiv_comm a b p)
 
 theorem commute_gdelta_pd (κ : I → J → K) (c : I ⊕ J) : Commute (gdelta κ) (pd c) := by
   unfold gdelta
   refine Commute.sum_left _ _ _ fun i _ => Commute.sum_left _ _ _ fun j _ => ?_
-  refine Commute.smul_left ?_ _
-  exact (commute_pd (Sum.inl i) c).mul_left (commute_pd (Sum.inr j) c)
+  exact Commute.smul_left ((commute_pd (Sum.inl i) c).mul_left (commute_pd (Sum.inr j) c)) _
 
 theorem commute_gdelta_dL (κ : I → J → K) (i : I) : Commute (gdelta κ) (dL κ i) := by
   unfold dL
-  refine Commute.sum_right _ _ _ fun j _ => ?_
-  exact Commute.smul_right (commute_gdelta_pd κ (Sum.inr j)) _
+  exact Commute.sum_right _ _ _ fun j _ => Commute.smul_right (commute_gdelta_pd κ (Sum.inr j)) _
 
 theorem gdelta_dL_apply (κ : I → J → K) (i : I) (S : MvPolynomial (I ⊕ J) K) :
     gdelta κ (dL κ i S) = dL κ i (gdelta κ S) :=
@@ -87,8 +83,7 @@ end
 
 theorem commL_holds : CommL := by
   intro K I J _ _ _ κ i R n
-  have h := ((commute_gdelta_dL κ i).pow_left n).eq
-  exact LinearMap.congr_fun h R
+  exact LinearMap.congr_fun (((commute_gdelta_dL κ i).pow_left n).eq) R
 
 theorem powXL_holds : PowXL := by
   intro K I J _ _ _ κ i R n

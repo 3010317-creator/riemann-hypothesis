@@ -75,8 +75,7 @@ theorem CompletionNormalDescent.proof : CompletionNormalDescent.Statement := by
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := R) z
   have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
   have hbK : algebraMap R (FractionRing R) b ≠ 0 := by
-    rw [Ne, map_eq_zero_iff _ (IsFractionRing.injective R (FractionRing R))]
-    exact hb0
+    rwa [Ne, map_eq_zero_iff _ (IsFractionRing.injective R (FractionRing R))]
 
   have hint : IsIntegral (AdicCompletion J R) (φ (algebraMap R (FractionRing R) a /
       algebraMap R (FractionRing R) b)) := by

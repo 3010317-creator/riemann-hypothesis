@@ -17,8 +17,7 @@ theorem exists_hookShape_of_isHook {r k : ℕ} (hk : 1 ≤ k) (nu : Fin r → �
   have hgnu : ∀ i : Fin r, g i = nu i := fun i => by simp [hg, i.isLt]
   have hsumg : ∑ j ∈ range r, g j = k := by
     rw [← Fin.sum_univ_eq_sum_range]
-    simp only [hgnu]
-    exact hsum
+    simpa only [hgnu] using hsum
   have hr : 0 < r := by
     rcases Nat.eq_zero_or_pos r with h | h
     · subst h
@@ -39,8 +38,7 @@ theorem exists_hookShape_of_isHook {r k : ℕ} (hk : 1 ≤ k) (nu : Fin r → �
       exact hhook ⟨j, h⟩ (by simp only; omega)
     · simp [hg, dite_eq_right h]
   have hsplit : g 0 + ∑ j ∈ Ico 1 r, g j = k := by
-    rw [← Finset.sum_eq_sum_Ico_succ_bot hr, ← Finset.range_eq_Ico]
-    exact hsumg
+    rwa [← Finset.sum_eq_sum_Ico_succ_bot hr, ← Finset.range_eq_Ico]
   set t := ∑ j ∈ Ico 1 r, g j with ht
   have hrow : ∀ i, 1 ≤ i → i < r → g i = if i ≤ t then 1 else 0 := by
     intro i hi1 hir

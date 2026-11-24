@@ -110,8 +110,7 @@ theorem chartRing_frac (y : Fin (D + 1) → Ω) (hfree : coordIdeal ℤ y = ⊥)
   have hl : y 0 ≠ 0 := coord_ne_zero y hfree 0
   refine IsFractionRing.of_field _ _ fun z => ?_
   have hinj : Function.Injective (algebraMap (chartRing y) Ω) := by
-    intro a b hab
-    exact Subtype.val_injective (Subtype.val_injective hab)
+    exact fun a b hab => Subtype.val_injective (Subtype.val_injective hab)
   let F : Subfield Ω := (IsFractionRing.lift (K := FractionRing (chartRing y)) hinj).fieldRange
   have hgen : ∀ i, y i / y 0 ∈ F := by
     intro i
@@ -174,8 +173,7 @@ theorem Lx_eq (x : ι → Ω) (e : Fin (D + 1) → ι) (hx0 : x (e 0) ≠ 0) :
         by_cases hj0 : x j = 0
         · simp [hj0]
         · field_simp
-      rw [e2] at hq
-      exact hq
+      rwa [e2] at hq
     exact key ht
   · rw [IntermediateField.adjoin_le_iff]
     rintro t ⟨i, rfl⟩
@@ -202,8 +200,7 @@ theorem adjoin_gL (x : ι → Ω) (e : Fin (D + 1) → ι) (hx0 : x (e 0) ≠ 0)
     constructor
     · rintro ⟨w, -, rfl⟩
       exact w.2
-    · intro hz
-      exact ⟨⟨z, hz⟩, IntermediateField.mem_top, rfl⟩
+    · exact fun hz => ⟨⟨z, hz⟩, IntermediateField.mem_top, rfl⟩
   rw [IntermediateField.adjoin_map, ← Set.range_comp, htop]
   exact (Lx_eq x e hx0).symm
 

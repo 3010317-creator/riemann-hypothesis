@@ -31,8 +31,7 @@ theorem isMultiHomog_forms (D : ℕ) (q : Ix (Veronese.Idx D)) :
     funext k
     cases k
     simp
-  rw [e]
-  exact h
+  rwa [e]
 
 def xc {D : ℕ} (i : Fin (D + 1)) : Σ k, Sum.elim (GlobalTheory (Fin (D + 1))) (GlobalTheory (Veronese.Idx D)) k := ⟨Sum.inl (), i⟩
 
@@ -77,8 +76,7 @@ theorem x'_ne_zero {D : ℕ} (G : GenFibre (inrV (ι := GlobalTheory (Fin (D + 1
     G.x' p ≠ 0 := by
   intro h
   apply hp
-  rw [← G.genericFibre_ker_target, RingHom.mem_ker, aeval_X]
-  exact h
+  rwa [← G.genericFibre_ker_target, RingHom.mem_ker, aeval_X]
 
 theorem ratio_mem {D : ℕ} (G : GenFibre (inrV (ι := GlobalTheory (Fin (D + 1))) (ι₂ := GlobalTheory (Veronese.Idx D))) (Γ D))
     (i : Fin (D + 1)) : G.x' (xc i) / G.x' (xc 0) ∈ (⊥ : IntermediateField G.Φ G.Φ') := by

@@ -32,9 +32,7 @@ theorem sg_dec_eq {m : ℕ} (a : Loc.Pt E (m + 1)) (l ρ l' ρ' : Matrix (Fin (m
   have hu : Formalism.DoubleCosetMeasures.IsUpUni (rI a ρ') := upUni_rI a hρ'
   have hvPu : rI a l' * Formalism.DoubleCosetMeasures.pt (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1 (Formalism.MainNotions.LocalModelPeriodLattices.tr a).2 * rI a ρ' =
       rI a l * Formalism.DoubleCosetMeasures.pt (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1 (Formalism.MainNotions.LocalModelPeriodLattices.tr a).2 * rI a ρ := by
-    have h' := congrArg (rI a) h
-    simp only [rI_mul, rI_mat] at h'
-    exact h'
+    simpa only [rI_mul, rI_mat] using congrArg (rI a) h
   have hLd : IsUnit (rI a l).det := by rw [Formalism.DoubleCosetMeasures.isLowUni_det E hLo]; exact isUnit_one
   have hUd : IsUnit (rI a ρ).det := by rw [Formalism.DoubleCosetMeasures.isUpUni_det E hUp]; exact isUnit_one
   have hfix : ((rI a l)⁻¹ * rI a l') * Formalism.DoubleCosetMeasures.pt (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1 (Formalism.MainNotions.LocalModelPeriodLattices.tr a).2 *
@@ -256,8 +254,7 @@ theorem phaseLoc_L (hA : ∀ p, Agree δ M p) {γ : TermDef.Term D u u' F0 what�
       (D.s.atP p).ιE ((Formalism.DoubleCosetMeasures.sLow L + Formalism.DoubleCosetMeasures.sUp U) / ((gS D : ℕ) : D.host.E)) := by
     rw [div_eq_mul_one_div, ← hup, map_mul, map_add (f := _), ← hyP]
     ring
-  simp only [sgLo_eq, sgUp_eq, map_neg]
-  exact congrArg Neg.neg key
+  simpa only [sgLo_eq, sgUp_eq, map_neg] using congrArg Neg.neg key
 
 section Steps
 

@@ -200,8 +200,7 @@ theorem ext_intl {k : ℕ} (μ : Fin (k + 1) → ℤ) (hμ : 0 ≤ μ (Fin.last 
     induction j using Fin.lastCases with
     | last => simp [ext_cl]
     | cast j =>
-      simp only [ext_cc]
-      exact g.2.1 l' j (by simpa using hlj) a
+      simpa only [ext_cc] using g.2.1 l' j (by simpa using hlj) a
 
 theorem rho_surj {k : ℕ} (μ : Fin (k + 1) → ℤ) (hμ : 0 ≤ μ (Fin.last k)) : Function.Surjective (rho μ) := by
   intro g
@@ -332,8 +331,7 @@ theorem weyl_dualWeyl (K : Type) [Field K] (n : ℕ) (nu : Fin n → ℕ) (h : A
   rfl
 
 theorem weyl_dual_weight_admissible (D : Formalism.BasicNotions.D7) : Formalism.MainNotions.ColumnSystems.adm3 D := by
-  intro K _ _ n nu h
-  exact weyl_dualWeyl K n nu h
+  exact fun K _ _ n nu h => weyl_dualWeyl K n nu h
 
 theorem finrank_tensor' (Kf : Type) [Field Kf] (S : Type) [Fintype S] [DecidableEq S] (k n : ℕ)
     (ν : S → Fin n → ℕ) :
@@ -393,8 +391,7 @@ theorem gl_branching_dimension (D : Formalism.BasicNotions.D7) : Formalism.MainN
   · intro mu hmu
     rw [Finset.mem_filter] at hmu
     rw [_root_.Formalism.InvariantFactorPaths.GelfandTsetlinBases.Pieri.mem_gtBox]
-    intro i
-    exact ⟨Nat.cast_le.mpr (hmu.2 i).1, Nat.cast_le.mpr (hmu.2 i).2⟩
+    exact fun i => ⟨Nat.cast_le.mpr (hmu.2 i).1, Nat.cast_le.mpr (hmu.2 i).2⟩
   · intro κ hκ
     rw [_root_.Formalism.InvariantFactorPaths.GelfandTsetlinBases.Pieri.mem_gtBox] at hκ
     rw [Finset.mem_filter, Fintype.mem_piFinset]

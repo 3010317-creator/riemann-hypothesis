@@ -65,8 +65,7 @@ theorem card_fiber_restriction_pi {ι ι' : Type} [Fintype ι] [DecidableEq ι] 
       by_cases h : ∃ i', φ i' = i
       · simp only [h, dite_true, Finset.mem_singleton]
         rw [← hc, Function.comp, h.choose_spec]
-      · simp only [h, dite_false]
-        exact hA i
+      · simpa only [h, dite_false] using hA i
     · intro hA
       constructor
       · intro i
@@ -317,9 +316,7 @@ theorem meanX_of (D : Formalism.BasicNotions.D7) (K : Cst) (hK : K.Pos) (hA : K.
         X.c4 (ex A) (ex B) jj =
       ∑ jj, ∑ B ∈ PB, ∑ A ∈ PA, kapTI R.O K.C₀ K.CA K.CE1 K.CE2 K.Cm X.p X.n' X.m X.TT X.G' X.N₁ X.Y X.a X.b'
         X.c4 (ex A) (ex B) jj := by
-    rw [Finset.sum_comm]
-    rw [Finset.sum_congr rfl fun B _ => Finset.sum_comm]
-    rw [Finset.sum_comm]
+    rw [Finset.sum_comm, Finset.sum_congr rfl fun B _ => Finset.sum_comm, Finset.sum_comm]
   have e3 : ∑ jj, ∑ B ∈ PB, ∑ A ∈ PA, kapTI R.O K.C₀ K.CA K.CE1 K.CE2 K.Cm X.p X.n' X.m X.TT X.G' X.N₁ X.Y X.a X.b'
         X.c4 (ex A) (ex B) jj ≤
       ∑ jj : Fin (numSeg X.TT), (PB.card : ℝ) * (((X.WaP K).card : ℝ) ^ X.N *

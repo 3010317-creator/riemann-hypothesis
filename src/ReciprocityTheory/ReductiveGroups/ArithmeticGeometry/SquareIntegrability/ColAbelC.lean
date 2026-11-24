@@ -21,8 +21,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {X : PT E}
 theorem cab_emb_sep {σ τ : E →+* ℂ} (h : σ ≠ τ) : ∃ α : 𝓞 E, σ (α : E) ≠ τ (α : E) := by
   by_contra hc
   push Not at hc
-  apply h
-  exact IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E)) (RingHom.ext fun x => hc x)
+  exact h (IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E)) (RingHom.ext fun x => hc x))
 
 omit [IsCMField E] in
 theorem cab_conjugate_ne [_root_.NumberField.IsTotallyComplex E] (σ : E →+* ℂ) : ComplexEmbedding.conjugate σ ≠ σ := by
@@ -45,8 +44,7 @@ theorem cab_Hf_K (K : Submodule ℝ (Vsp X.dim)) (hK : ∀ a ∈ K, ∀ b ∈ K,
   simp only [Col.p1, Col.Hf_sum_r, Col.Hf_smul_r]
   refine Finset.sum_congr rfl fun j _ => ?_
   have hr : (starRingEnd ℂ) (Col.z K j u) = Col.z K j u := by
-    apply Complex.conj_eq_iff_im.mpr
-    exact hK u hu _ (Col.e_mem K j)
+    exact Complex.conj_eq_iff_im.mpr (hK u hu _ (Col.e_mem K j))
   rw [hr]; rfl
 
 theorem cab_S_zero (K : Submodule ℝ (Vsp X.dim)) (hK : ∀ a ∈ K, ∀ b ∈ K, (Hf a b).im = 0)
@@ -66,8 +64,7 @@ theorem cab_S_zero (K : Submodule ℝ (Vsp X.dim)) (hK : ∀ a ∈ K, ∀ b ∈ 
     intro j k
     simp only [Col.z]
     rw [Hf_actE, hba, Col.Hf_swap (actE a (Col.e K j))]
-    apply Complex.conj_eq_iff_im.mpr
-    exact hK _ (hKa _ (Col.e_mem K j)) _ (Col.e_mem K k)
+    exact Complex.conj_eq_iff_im.mpr (hK _ (hKa _ (Col.e_mem K j)) _ (Col.e_mem K k))
   have h1 : σ a * Col.S K v =
       ∑ k, ∑ j, Col.z K j (actE b (Col.e K k)) * Col.z K j v * Col.z K k v := by
     have : ∀ k, Col.z K k (actE a v) = ∑ j, Col.z K j (actE b (Col.e K k)) * Col.z K j v := by

@@ -19,8 +19,7 @@ theorem isPrime_map_mk {q M : Ideal A} [M.IsPrime] (h : q ≤ M) :
   Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective (by rw [Ideal.mk_ker]; exact h)
 
 theorem comap_map_mk {q M : Ideal A} (h : q ≤ M) :
-    (M.map (Ideal.Quotient.mk q)).comap (Ideal.Quotient.mk q) = M := by
-  exact Ideal.comap_map_mk h
+    (M.map (Ideal.Quotient.mk q)).comap (Ideal.Quotient.mk q) = M := Ideal.comap_map_mk h
 
 theorem finiteHeight_of_dim_lt_top {B : Type*} [CommRing B] (I : Ideal B) (hI : I ≠ ⊤)
     (h : ringKrullDim B < ⊤) : I.FiniteHeight := by
@@ -44,8 +43,7 @@ theorem height_add_height_map_le [IsNoetherianRing A] [FiniteRingKrullDim A] {q 
       (RingHom.strictMono_comap_of_surjective Ideal.Quotient.mk_surjective)
   have hlast : l'.last = ⟨M, ‹_›⟩ := by
     ext1
-    simp only [l', LTSeries.last_map, hlq, PrimeSpectrum.comap_asIdeal]
-    exact comap_map_mk h
+    simpa only [l', LTSeries.last_map, hlq, PrimeSpectrum.comap_asIdeal] using comap_map_mk h
   have hle : lp.last ≤ l'.head := by
     rw [hlp, ← PrimeSpectrum.asIdeal_le_asIdeal]
     simp only [l', LTSeries.head_map, PrimeSpectrum.comap_asIdeal]
@@ -184,7 +182,6 @@ theorem dim_quot_add_height [IsNoetherianRing A] [IsJacobsonRing A] [FiniteRingK
     rw [hmax M₀ hM₀, hk] at this
     have h' : (k : ℕ∞) ≤ n := le_trans le_self_add this
     exact_mod_cast h'
-  rw [le_antisymm hup hlow, hdimA, hk]
-  rw [WithBot.coe_natCast, ← Nat.cast_add, Nat.sub_add_cancel hkn]
+  rw [le_antisymm hup hlow, hdimA, hk, WithBot.coe_natCast, ← Nat.cast_add, Nat.sub_add_cancel hkn]
 
 end ReciprocityTheory.ChartRestriction.G.Geo.DimF

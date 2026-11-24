@@ -62,9 +62,7 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 variable {n : ℕ}
 
-theorem isOpen_GLs : IsOpen (GLs n) := by
-  show IsOpen {g : Mat n | g.det ≠ 0}
-  exact isOpen_ne_fun continuous_id.matrix_det continuous_const
+theorem isOpen_GLs : IsOpen (GLs n) := isOpen_ne_fun continuous_id.matrix_det continuous_const
 
 theorem rm_diff (lam : Fin n → ℤ) {x : Mat n} (hx : x ∈ GLs n) : DifferentiableAt ℝ (Rm lam) x :=
   ((Cxc.rm_smooth lam).contDiffAt (isOpen_GLs.mem_nhds hx)).differentiableAt (by simp)
@@ -78,8 +76,7 @@ theorem hasDerivAt_line {W : Type} [NormedAddCommGroup W] [NormedSpace ℝ W] {f
       rw [mul_add, mul_one, Matrix.mul_smul]
     rw [e]
     have := ((hasDerivAt_id (0 : ℝ)).smul_const (x * X)).const_add x
-    rw [one_smul] at this
-    exact this
+    rwa [one_smul] at this
   exact hf.hasFDerivAt.comp_hasDerivAt_of_eq (0 : ℝ) hg (by simp)
 
 def entL {J : Type} [Fintype J] [DecidableEq J] (P N : Matrix J J ℂ) (i j : J) : Matrix J J ℂ →L[ℝ] ℂ :=

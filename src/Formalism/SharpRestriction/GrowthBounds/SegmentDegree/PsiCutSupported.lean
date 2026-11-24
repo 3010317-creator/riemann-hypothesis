@@ -106,9 +106,7 @@ theorem Kcol_supported (ν : Fin (N + 1) → Fin r → ℤ) (c : ℤ) :
       simp only [Set.mem_setOf_eq] at hv ⊢
       omega
     have hx : ∀ m, letVec R ⟨j, by omega⟩ m ∈ supported R {v : Fin N × Fin r | v.1.val < j + 1} := by
-      intro m
-      show X ((⟨j, by omega⟩ : Fin N), m) ∈ Algebra.adjoin R (X '' _)
-      exact Algebra.subset_adjoin ⟨((⟨j, by omega⟩ : Fin N), m), by simp, rfl⟩
+      exact fun m => Algebra.subset_adjoin ⟨((⟨j, by omega⟩ : Fin N), m), by simp, rfl⟩
     rw [Kcol_succ ν c j (by omega)]
     unfold colStep wedgeR contrR
     split_ifs <;> first

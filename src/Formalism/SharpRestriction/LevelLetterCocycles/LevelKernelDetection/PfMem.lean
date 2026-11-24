@@ -294,8 +294,7 @@ theorem power_series_cancel_bounded (q : O) {f : PowerSeries O} (hf : f ≠ 0) :
   obtain ⟨f', hf'⟩ := hdv
   have hf'P : ¬ P ∣ f' := by
     rintro ⟨u, hu⟩
-    apply hnot
-    exact ⟨u, by rw [hf', hu, pow_succ, mul_assoc]⟩
+    exact hnot ⟨u, by rw [hf', hu, pow_succ, mul_assoc]⟩
   have iter : ∀ (M : ℕ) (g : PowerSeries O), P ^ M ∣ f' * g → P ^ M ∣ g := by
     intro M
     induction M with
@@ -322,8 +321,7 @@ theorem power_series_cancel_bounded (q : O) {f : PowerSeries O} (hf : f ≠ 0) :
   · obtain ⟨e, he⟩ := IsDiscreteValuationRing.associated_pow_irreducible hq hϖ
     have hA : ∀ j : ℕ, Associated ((PowerSeries.C q) ^ j) (P ^ (e * j)) := fun j => by
       have h0 := (he.map PowerSeries.C).pow_pow (n := j)
-      rw [map_pow, ← pow_mul] at h0
-      exact h0
+      rwa [map_pow, ← pow_mul] at h0
     rcases Nat.eq_zero_or_pos e with he0 | he0
     · rw [(hA k).dvd_iff_dvd_left, he0, zero_mul, pow_zero]
       exact one_dvd _
@@ -400,8 +398,7 @@ theorem smul_cancel [IsDomain O] [IsDiscreteValuationRing O] (κ : PowerSeries O
   have hz : (baseIdOf hR).d κ • C.t 0 (x - y) = 0 := by
     rw [← C.t_smul, smul_sub, h, sub_self, C.t_zero]
   have hz' : algebraMap (LetA O n) W.EE ((baseIdOf hR).d κ) • C.t 0 (x - y) = 0 := by
-    rw [algebraMap_smul]
-    exact hz
+    rwa [algebraMap_smul]
   have := (W.DD_free T).1
   have h0 : C.t 0 (x - y) = 0 := by
     apply (Module.Free.chooseBasis W.EE (W.DD T)).repr.injective
@@ -603,11 +600,8 @@ theorem classes_span_top (hP4 : LevelMapHodgeFiltration W) (hcrys : IsCrys PD T.
   have hprim : IsPrimitiveRoot (ζ : LL) (PD.p ^ (s + 1)) :=
     (mem_primitiveRoots (pow_pos PD.hp.pos _)).1 ζ.2
   have htop : ∀ j : ℤ, 1 - lo ≤ j → F (1 - j) = ⊤ := by
-    intro j hj
-    exact eq_top_iff.2 (hlo ▸ hanti (by omega))
-  have hbot : ∀ j : ℤ, j < -hi → F (-j) = ⊥ := by
-    intro j hj
-    exact eq_bot_iff.2 (hhi ▸ hanti (by omega))
+    exact fun j hj => eq_top_iff.2 (hlo ▸ hanti (by omega))
+  have hbot : ∀ j : ℤ, j < -hi → F (-j) = ⊥ := fun j hj => eq_bot_iff.2 (hhi ▸ hanti (by omega))
 
   have hsingle : ∀ (m : ℕ) (k : ℤ), (1 - lo - k).toNat = m → ∀ (w : Dc W T c) (hw : w ∈ F (-k)),
       singleCoeffClass F k w hw ∈ U := by
@@ -650,8 +644,7 @@ theorem classes_span_top (hP4 : LevelMapHodgeFiltration W) (hcrys : IsCrys PD T.
         rw [hval, map_sub, map_smul, ← hLb]
         by_cases hjk : j = k
         · subst hjk
-          rw [Pi.single_eq_same, ← neg_add_eq_sub]
-          exact hk0
+          rwa [Pi.single_eq_same, ← neg_add_eq_sub]
         · rw [Pi.single_eq_of_ne hjk, ZeroMemClass.coe_zero, map_zero, sub_zero, ← neg_add_eq_sub]
           exact hlow j (by omega)
       have hhigh : ∀ j ≥ 1 - lo, (h : ℤ → Dc W T c) j ∈ F (1 - j) := by
@@ -754,8 +747,7 @@ theorem span_classes (hP4 : LevelMapHodgeFiltration W) (hcrys : IsCrys PD T.ρ)
       (fun δ hδ => by rw [γD_smulA, γA_letE, (hbΔ j).2 δ hδ])
     have he'N : e' ∈ (latOf C).N c := by
       show C.t c e' ∈ W.N T
-      rw [he']
-      exact hN
+      rwa [he']
     rw [← hspan] at he'N
     obtain ⟨β, hβ⟩ := (Submodule.mem_span_range_iff_exists_fun _).1 he'N
     have hy : (⟨(letE c : LetA O n) • b j, hN⟩ : ↥(W.N T)) =
@@ -813,8 +805,7 @@ theorem hfrac_of {O LL : Type} [CommRing O] [Field LL] [Algebra O LL] [IsFractio
   obtain ⟨⟨x, s⟩, hx⟩ := IsLocalization.surj (nonZeroDivisors O) a
   refine ⟨s, x, ?_, ?_⟩
   · exact IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors s.2
-  · rw [mul_comm]
-    exact hx
+  · rwa [mul_comm]
 
 variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field K]
     [Algebra Qp K₀] [Algebra Qp K] [Algebra K₀ K] [IsScalarTower Qp K₀ K]
@@ -948,8 +939,7 @@ theorem detect [IsFractionRing O LL] (hP4 : LevelMapHodgeFiltration W) (hSat : S
             (⟨Lb.levB T c ζ ⟨C.t c (b j), hb j⟩ (k - i), Lb.mem T c ζ _ (k - i)⟩ : Dc W T c)) =
           W.levN T c ζ ((baseIdOf hR).d (a j) • (⟨C.t c (b j), hb j⟩ : ↥(W.N T))) k by
 
-        rw [map_sum, Finset.sum_congr rfl fun j _ => heq j]
-        exact hk
+        rwa [map_sum, Finset.sum_congr rfl fun j _ => heq j]
       intro j
       rw [W.levN_smul]
       obtain ⟨m, hm⟩ := Lb.supp T c ζ ⟨C.t c (b j), hb j⟩
@@ -1129,8 +1119,7 @@ theorem mem_holds [IsDomain O] [IsDiscreteValuationRing O] [IsFractionRing O LL]
     have hxy : (x : C.V) = y' := by
       apply smul_cancel κ hκ0
       rw [hyy, ← hκE]
-    rw [hxy]
-    exact hy'
+    rwa [hxy]
 
 end Formalism.MainNotions.N.Ln03.Pf
 

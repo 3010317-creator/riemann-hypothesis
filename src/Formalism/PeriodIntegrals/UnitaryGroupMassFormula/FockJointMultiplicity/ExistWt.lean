@@ -123,8 +123,7 @@ theorem leadT_hom_row (ρ : Fin m → Ix p q) (κ : Fin k → Ix r s) (w : Ln p 
         ext
         simp [← e]
       · simp
-    rw [hs] at this
-    exact this
+    rwa [hs] at this
   · have := minorPolynomial_isWeightedHomogeneous (R := ℂ) (fun i j : Fin t => (ρ (Fin.castLE hh.1 i), κ (Fin.castLE hh.2 j))) w
       (fun i => if Fin.castLE hh.1 i = i₀ then 1 else 0) (fun _ => 0) (fun i j => by simp [hw])
     have hs : ∑ i : Fin t, (if Fin.castLE hh.1 i = i₀ then 1 else 0) + ∑ _j : Fin t, 0 = 0 := by
@@ -136,8 +135,7 @@ theorem leadT_hom_row (ρ : Fin m → Ix p q) (κ : Fin k → Ix r s) (w : Ln p 
       apply hlt
       rw [← e]
       simp
-    rw [hs] at this
-    exact this
+    rwa [hs] at this
   · exact isWeightedHomogeneous_zero _ _ _
   · exact isWeightedHomogeneous_zero _ _ _
 
@@ -160,8 +158,7 @@ theorem leadT_hom_col (ρ : Fin m → Ix p q) (κ : Fin k → Ix r s) (w : Ln p 
         ext
         simp [← e]
       · simp
-    rw [hs] at this
-    exact this
+    rwa [hs] at this
   · have := minorPolynomial_isWeightedHomogeneous (R := ℂ) (fun i j : Fin t => (ρ (Fin.castLE hh.1 i), κ (Fin.castLE hh.2 j))) w
       (fun _ => 0) (fun j => if Fin.castLE hh.2 j = j₀ then 1 else 0) (fun i j => by simp [hw])
     have hs : ∑ _i : Fin t, 0 + ∑ j : Fin t, (if Fin.castLE hh.2 j = j₀ then 1 else 0) = 0 := by
@@ -173,8 +170,7 @@ theorem leadT_hom_col (ρ : Fin m → Ix p q) (κ : Fin k → Ix r s) (w : Ln p 
       apply hlt
       rw [← e]
       simp
-    rw [hs] at this
-    exact this
+    rwa [hs] at this
   · exact isWeightedHomogeneous_zero _ _ _
   · exact isWeightedHomogeneous_zero _ _ _
 

@@ -30,8 +30,7 @@ theorem inPow_algebraMap (r : ℕ) (y : 𝒪[k]) :
   · rintro ⟨z, hz, e⟩
     have : z = y := Subtype.val_injective e
     exact this ▸ hz
-  · intro h
-    exact ⟨y, h, rfl⟩
+  · exact fun h => ⟨y, h, rfl⟩
 
 omit [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
 theorem entry_sub (n : ℕ) (u : GL (Fin n) 𝒪[k]) (i j : Fin n) :
@@ -81,10 +80,7 @@ theorem isOpen_inPow (r : ℕ) : IsOpen {x : k | InPow r x} := by
   rw [← hA]
   obtain ⟨w, hw, hw0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot
     (IsDiscreteValuationRing.not_a_field 𝒪[k])
-  have hc : (algebraMap 𝒪[k] k w) ^ r ≠ 0 := by
-    refine pow_ne_zero _ ?_
-    intro h
-    exact hw0 (Subtype.val_injective h)
+  have hc : (algebraMap 𝒪[k] k w) ^ r ≠ 0 := pow_ne_zero _ (fun h => hw0 (Subtype.val_injective h))
   refine A.isOpen_of_mem_nhds (g := 0) ?_
   rw [mem_nhds_iff]
   refine ⟨(fun x => (algebraMap 𝒪[k] k w) ^ r * x) '' (𝒪[k] : Set k), ?_, ?_, ?_⟩

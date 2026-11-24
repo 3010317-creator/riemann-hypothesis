@@ -210,8 +210,7 @@ theorem cohomologyπ_cocycleOf_eq (n : ℕ) (v v' : locallyConstantCochains B (n
       (cohomologyπ B (n + 1)).hom (cocycleOf (n + 1) v hv) := by
   rw [← sub_eq_zero, ← map_sub]
   refine (homologyπ_succ_eq_zero_iff _ n _).2 ⟨w, ?_⟩
-  rw [map_sub, iCycles_cocycleOf, iCycles_cocycleOf]
-  exact hw
+  rwa [map_sub, iCycles_cocycleOf, iCycles_cocycleOf]
 
 end CocycleOf
 
@@ -899,20 +898,17 @@ theorem fiveTerm_exact :
       rw [coe_cohomologyResInv_apply, ZeroMemClass.coe_zero]
       have := congrArg (fun φ => ModuleCat.Hom.hom φ y) (cohomologyInfl_comp_cohomologyRes A N 0)
       simpa using this
-    · intro hh
-      exact exists_cohomologyInfl_one_eq A N h (congrArg Subtype.val hh)
+    · exact fun hh => exists_cohomologyInfl_one_eq A N h (congrArg Subtype.val hh)
   · ext h
     constructor
     · rintro ⟨g, rfl⟩
       exact transgression_cohomologyResInv A N hN g
-    · intro hh
-      exact exists_cohomologyResInv_eq A N hN h hh
+    · exact fun hh => exists_cohomologyResInv_eq A N hN h hh
   · ext t
     constructor
     · rintro ⟨h, rfl⟩
       exact cohomologyInfl_transgression A N hN h
-    · intro ht
-      exact exists_transgression_eq A N hN t ht
+    · exact fun ht => exists_transgression_eq A N hN t ht
 
 
 include hN in

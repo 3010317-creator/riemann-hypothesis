@@ -95,8 +95,7 @@ theorem muDef_line (b : Basis ι K V) (X : InfinitePlace K → Matrix ι ι ℂ)
   set L := Submodule.span (𝓞 K) ({x} : Set V) with hLdef
   have hFG : L.FG := Submodule.fg_span_singleton x
   have hne : L ≠ ⊥ := by
-    rw [hLdef, Ne, Submodule.span_singleton_eq_bot]
-    exact hx
+    rwa [hLdef, Ne, Submodule.span_singleton_eq_bot]
   obtain ⟨-, -, hpos⟩ := Formalism.HN.place_lattice_structure K V ι b X hX L hFG
   have hmu := (Formalism.HN.size_maximal_slope K V ι b X hX L hFG hne).2.1
   have hli : LinearIndependent K ![x] := linearIndependent_unique_iff.mpr (by simpa using hx)
@@ -139,8 +138,7 @@ theorem muMin_line (b : Basis ι K V) (X : InfinitePlace K → Matrix ι ι ℂ)
   have hFG : (Submodule.span (𝓞 K) ({x} : Set V)).FG := Submodule.fg_span_singleton x
   obtain ⟨hLat, hrkL, -⟩ := Formalism.HN.place_lattice_structure K V ι b X hX _ hFG
   have hne : Submodule.span (𝓞 K) ({x} : Set V) ≠ ⊥ := by
-    rw [Ne, Submodule.span_singleton_eq_bot]
-    exact hx
+    rwa [Ne, Submodule.span_singleton_eq_bot]
   obtain ⟨-, hmin, -, -, -⟩ := Formalism.HN.slope_characterization (𝓞 K) V _ (Formalism.HermitianLatticesTheory.realize b X) _ hLat hne
   rw [hmin]
   intro N hN
@@ -220,8 +218,7 @@ theorem span_min_slope : SpanMuMin := by
   have hrkS := (place_lattice_structure K V ι b X hX S hSfg).2.1
   have hspanEq : Submodule.span K (S : Set V) = Submodule.span K (B : Set V) := by
     refine le_antisymm (Submodule.span_mono hsat.1) (Submodule.span_le.2 ?_)
-    intro y hy
-    exact Submodule.span_mono (fun x hx => hmem x hx) (hspan hy)
+    exact fun y hy => Submodule.span_mono (fun x hx => hmem x hx) (hspan hy)
   have hrkK : rkK (K := K) S = rkK (K := K) B := by
     unfold rkK
     rw [hspanEq]

@@ -74,8 +74,7 @@ theorem isSmoothVecU_restrict {H : Type*} [NormedAddCommGroup H] [InnerProductSp
     have hmem : σ g (x : H) ∈ S := hSG g hg x x.2
     dsimp only at e1 ⊢
     rw [← e1]
-    simp only [ContinuousLinearMap.comp_apply, Submodule.subtypeL_apply]
-    exact (hP _ hmem).symm
+    simpa only [ContinuousLinearMap.comp_apply, Submodule.subtypeL_apply] using (hP _ hmem).symm
   · intro h g₀ hg₀
     obtain ⟨U, F, hU, hg₀U, hF, hFe⟩ := h g₀ hg₀
     refine ⟨U, fun g => P (F g), hU, hg₀U, (P.restrictScalars ℝ).contDiff.comp_contDiffOn hF, ?_⟩
@@ -203,12 +202,10 @@ theorem dsExistsG (hS7 : ∀ m : ℕ, S7.PsiExistsStatement m) :
     have hpq : pOf ε = 0 ∨ qOf ε = 0 := by omega
     obtain ⟨σ, hDS, hcas, hK⟩ := isDS_compact hpq hlam T
     refine ⟨T.V, inferInstance, inferInstance, σ, hDS, hcas, ?_, ?_, ?_⟩
-    · intro S S' hS hS'
-      exact lowKMultOne_of_cas hDS hgap hcas S S' hS hS'
+    · exact fun S S' hS hS' => lowKMultOne_of_cas hDS hgap hcas S S' hS hS'
     · intro μ
       infer_instance
-    · intro S _ _ v _
-      exact all_smooth_of_kType T hDS hK v
+    · exact fun S _ _ v _ => all_smooth_of_kType T hDS hK v
   · have h8 : 8 * (n : ℝ) * S7.q0 ε < h := by
       have hs : 0 ≤ Real.sqrt (2 * (S7.q0 ε : ℝ)) := Real.sqrt_nonneg _
       have hn : 0 ≤ (n : ℝ) * S7.q0 ε := by positivity

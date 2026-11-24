@@ -46,9 +46,7 @@ lemma tmax_eq_of_forall_le {t : ι → ℝ} {i : ι} (h : ∀ j, t j ≤ t i) : 
 
 lemma tmax_smul (t : ι → ℝ) {c : ℝ} (hc : 0 ≤ c) : tmax (c • t) = c * tmax t := by
   apply le_antisymm
-  · refine tmax_le fun j => ?_
-    show c * t j ≤ c * tmax t
-    exact mul_le_mul_of_nonneg_left (le_tmax t j) hc
+  · exact tmax_le fun j => mul_le_mul_of_nonneg_left (le_tmax t j) hc
   · obtain ⟨i, hi⟩ := exists_tmax t
     rw [hi]
     exact le_tmax (c • t) i
@@ -123,7 +121,6 @@ lemma kK_nonneg (h : ι → ℝ) : 0 ≤ kK h := Finset.prod_nonneg fun j _ => k
 lemma kK_neg (h : ι → ℝ) : kK (-h) = kK h := by
   simp only [kK, Pi.neg_apply, kθ_neg]
 lemma kK_contDiff : ContDiff ℝ ∞ (kK : (ι → ℝ) → ℝ) := by
-  show ContDiff ℝ ∞ (fun h : ι → ℝ => ∏ j, kθ (h j))
   exact contDiff_prod fun j _ => kθ_contDiff.comp (contDiff_apply ℝ (fun _ => ℝ) j)
 lemma norm_le_of_kK_ne {h : ι → ℝ} (hh : kK h ≠ 0) : ‖h‖ ≤ 1 / 2 := by
   have hh' : ∏ j, kθ (h j) ≠ 0 := hh
@@ -324,8 +321,7 @@ lemma tmax_scale {η : ℝ} (hη : 0 < η) (t h : ι → ℝ) :
   congr 1
   funext j
   simp only [Pi.smul_apply, smul_eq_mul, one_mul]
-  rw [mul_add, ← mul_assoc η η⁻¹, mul_inv_cancel₀ hη.ne']
-  rw [one_mul]
+  rw [mul_add, ← mul_assoc η η⁻¹, mul_inv_cancel₀ hη.ne', one_mul]
 
 lemma regMax_scale {η : ℝ} (hη : 0 < η) (t : ι → ℝ) : regMax η t = η * regMax 1 (η⁻¹ • t) := by
   rw [regMax_eq_kK, regMax_eq_kK]

@@ -117,8 +117,7 @@ theorem cut_ppath {LL : Letters (Fin N)} {b' : Fin N → ℕ} (P1 : PPath r N LL
     simp only [Fin.val_zero, Nat.zero_min]
     rw [← stg_eq P1.mu 0 (by omega)]
     exact P1.zero
-  · intro i
-    exact hdom _ (lt_of_le_of_lt (min_le_left _ _) i.isLt)
+  · exact fun i => hdom _ (lt_of_le_of_lt (min_le_left _ _) i.isLt)
   · intro i
     have hi := i.isLt
     by_cases h : i.val < n0
@@ -129,8 +128,7 @@ theorem cut_ppath {LL : Letters (Fin N)} {b' : Fin N → ℕ} (P1 : PPath r N LL
         show stg P1.mu (min (i.val + 1) n0) = _
         rw [min_eq_left (by omega), stg_succ P1.mu]
       rw [e1, e2]
-      simp only [h, ite_true]
-      exact P1.step i
+      simpa only [h, ite_true] using P1.step i
     · have e1 : cutPath n0 P1.mu i.castSucc = stg P1.mu n0 := by
         show stg P1.mu (min i.val n0) = _
         rw [min_eq_right (by omega)]
@@ -202,8 +200,7 @@ theorem plHyp_of (hX : X.Hyp p K) (j : ℤ) (b : ℤ → ℕ) (μ : Fin (segN X.
     intro i hi m
     have h1 := T.mu_le_dplus P i (by omega) m
     rw [hPμ, stg_eq μ i (by omega)] at h1
-    have h2 := dplus_le_beS X p K hX j b μ dd hP i hi
-    exact le_trans h1 (by exact_mod_cast h2)
+    exact le_trans h1 (by exact_mod_cast (dplus_le_beS X p K hX j b μ dd hP i hi))
   have hup : ∀ t ≤ r, ∀ m, stg μ (segN X.F j - r + t) m ≤ (X.beS p K j b : ℤ) := by
     intro t
     induction t with
@@ -244,8 +241,7 @@ theorem plHyp_of (hX : X.Hyp p K) (j : ℤ) (b : ℤ → ℕ) (μ : Fin (segN X.
     have := hP.head l ⟨r - 1, by omega⟩ hl (Fin.castAdd K m) (by
       have := m.isLt
       simp only [Fin.val_castAdd]; omega)
-    rw [stg_succ μ, hlv, show segN X.F j - r + (r - 1) + 1 = segN X.F j by omega] at this
-    exact this
+    rwa [stg_succ μ, hlv, show segN X.F j - r + (r - 1) + 1 = segN X.F j by omega] at this
   · intro t ht c
     obtain ⟨l, hlv, hl, hs⟩ := htau t ht
     refine colH_step (hdom _ (by omega)) (hdom _ (by omega)) ?_ ?_ c

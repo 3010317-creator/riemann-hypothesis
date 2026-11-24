@@ -85,8 +85,7 @@ theorem phiT_smul (K : Type) [Field K] {a b : ℕ} {ST SG SG' : Finset (HeightOn
     constructor
     · intro H P y hy
       have := H P (γ.1 y) ((hat P _).2 (by rwa [LinearEquiv.symm_apply_apply]))
-      rw [hx, hat', hf', hf, LinearEquiv.symm_apply_apply, LinearEquiv.symm_apply_apply] at this
-      exact this
+      rwa [hx, hat', hf', hf, LinearEquiv.symm_apply_apply, LinearEquiv.symm_apply_apply] at this
     · intro H P y hy
       rw [hx, hat', hf', hf, LinearEquiv.symm_apply_apply]
       exact H P _ ((hat P y).1 hy)
@@ -121,8 +120,7 @@ theorem phiT_add_mul (K : Type) [Field K] {a b : ℕ} {ST SG SG' : Finset (Heigh
       rw [LinearMap.add_apply] at h1 h2
       have hxm : x y ∈ d'.1.at P.1 := by simpa using sub_mem h1 h3
       refine ⟨hxm, ?_⟩
-      rw [d'.2.f_add P _ hxm _ h3, h4, add_zero] at h2
-      exact h2
+      rwa [d'.2.f_add P _ hxm _ h3, h4, add_zero] at h2
     · intro H P y hy
       obtain ⟨h1, h2⟩ := H P y hy
       obtain ⟨h3, h4⟩ := hzy P y hy

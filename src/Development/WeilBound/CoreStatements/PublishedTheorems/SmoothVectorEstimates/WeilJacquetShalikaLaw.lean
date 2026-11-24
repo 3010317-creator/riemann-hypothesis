@@ -121,8 +121,7 @@ theorem psiOK {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) {w : Pl E} (hc : Cond 
   change Valued.v (ϖ * y) ≤ 1 at hy
   rw [map_mul] at hy ⊢
   rw [hu]
-  rw [hϖ] at hy
-  exact hy
+  rwa [hϖ] at hy
 
 theorem dot_eLast {k : ℕ} (y : UnipotentBlockColumnIndex a k k → Ad E) : dot (eLast a k) y = lastE k y := by
   simp only [dot, eLast, lastE]
@@ -166,8 +165,7 @@ theorem whittaker_uniqueness_local : PositivityTheory.JacquetShalikaLocal.L7 →
   let vs : WeilJacquetShalikaLaw.WS (WeilJacquetShalikaLaw.psiW ψ w) a := ⟨v, hv⟩
   have hv1 : (vs : GL (Fin a) (w.adicCompletion E) → ℂ) 1 = 0 := by
     change Wh ψ φ (h * fl a w 1) = 0
-    rw [map_one, mul_one]
-    exact hWh
+    rwa [map_one, mul_one]
   by_cases h0 : vs = 0
   · exact congrFun (congrArg Subtype.val h0) u
   have hK := Final.GLintComm E w a

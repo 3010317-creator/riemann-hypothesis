@@ -29,8 +29,7 @@ theorem fin_of_weil (μ μS ν : Measure G) [IsFiniteMeasureOnCompacts μ] (hμ 
     have := hW (fun _ => 1) measurable_const
     simpa using this
   obtain ⟨C, hC, hνC⟩ : ∃ C : Set G, IsCompact C ∧ ν C ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hν
     have : ν Set.univ = 0 := by
       rw [← iUnion_compactCovering G]
@@ -70,16 +69,14 @@ theorem sloc_sub_NH (X : HidaSetting D) (u : D.what₂.Word) (v : InfinitePlace 
     intro w
     by_cases hw : w = v
     · subst hw
-      rw [hsdef, Function.update_self]
-      exact hx
+      rwa [hsdef, Function.update_self]
     · rw [hsdef, Function.update_of_ne hw]
       exact Formalism.L2.SG.Pf.WuDec.one_mem_Sloc X u w
   obtain ⟨-, -, -, -, -, -, -, -, -, -, -, -, -, hdec⟩ := Formalism.L2.S.Pv.HaarSubS.sDecomp_holds D X u
   obtain ⟨n, hn, h, hh, he⟩ := hdec s hs
   have hxv : x = n v * h v := by
     have := congrFun he v
-    rw [hsdef, Function.update_self] at this
-    exact this
+    rwa [hsdef, Function.update_self] at this
   exact ⟨n v, hn v, h v, hh v, hxv⟩
 
 end Formalism.L2.SG.RealObj.EnergyConvJ

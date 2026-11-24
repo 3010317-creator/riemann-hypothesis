@@ -114,8 +114,7 @@ theorem action_linear : ActLinSt := by
     obtain ⟨p, hp⟩ := Multiset.card_eq_one.mp hc
     refine ⟨p, ?_⟩
     have h2 := congrArg Multiset.toFinsupp hp
-    rw [Finsupp.toMultiset_toFinsupp, Multiset.toFinsupp_singleton] at h2
-    exact h2
+    rwa [Finsupp.toMultiset_toFinsupp, Multiset.toFinsupp_singleton] at h2
   intro k _ _ d O _ _ B ℓ ε hℓ0 hℓ1 hadd hinv a i
   obtain ⟨hε0, -, hεℓ, hℓε⟩ := hinv
   have hA0 : ∀ i, constantCoeff (B.A.act a i) = 0 := B.A.const a
@@ -156,8 +155,7 @@ theorem action_linear : ActLinSt := by
   have hfadd : comp1 (comp1 ℓ (comp1 (B.A.act a) ε)) (pt k (n := 2) d 0 + pt k (n := 2) d 1) =
       comp1 (comp1 ℓ (comp1 (B.A.act a) ε)) (pt k (n := 2) d 0) +
         comp1 (comp1 ℓ (comp1 (B.A.act a) ε)) (pt k (n := 2) d 1) := by
-    rw [hF _ hxy, hF _ hx, hF _ hy]
-    exact S4
+    rwa [hF _ hxy, hF _ hx, hF _ hy]
   have hlin := addition_linear k d (comp1 ℓ (comp1 (B.A.act a) ε) i) (congrFun hfadd i)
   have hdε : dLin ε = 1 := by
     have h := dLin_comp1 ε ℓ hℓ0
@@ -182,11 +180,8 @@ theorem action_linear : ActLinSt := by
     · intro j _ hj
       rw [ite_eq_right, mul_zero]
       intro h
-      apply hj
-      have h2 := (Finsupp.single_left_inj (one_ne_zero : (1 : ℕ) ≠ 0)).mp h
-      exact (Prod.mk.inj h2).2.symm
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+      exact hj (Prod.mk.inj ((Finsupp.single_left_inj (one_ne_zero : (1 : ℕ) ≠ 0)).mp h)).2.symm
+    · exact fun h => absurd (Finset.mem_univ _) h
   · rw [hlin n hn]
     symm
     apply Finset.sum_eq_zero

@@ -196,8 +196,7 @@ lemma hs_one : Formalism.REAL.hs (1 : Matrix (Fin n) (Fin n) ℂ) = n := by
     · simp
     · intro j _ hj
       simp [Matrix.one_apply_ne (Ne.symm hj)]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+    · exact fun h => absurd (Finset.mem_univ i) h
   simp [h1]
 
 lemma norm_one_eq : ‖(1 : Matrix (Fin n) (Fin n) ℂ)‖ = Real.sqrt n := by
@@ -275,8 +274,7 @@ theorem box_lattice_point_bound : BoxBound := by
           Real.sqrt_le_sqrt (hs_exp_le X)
       _ = Real.sqrt n * Real.exp (Real.sqrt (Formalism.REAL.hs X)) := Real.sqrt_sq (by positivity)
   show hsN (Formalism.MainNotions.S.uMat g) ≤ Real.sqrt n * Real.exp (sInf S)
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   rcases Nat.eq_zero_or_pos n with hn0 | hnpos
   · subst hn0
     have h0 : hsN (Formalism.MainNotions.S.uMat g) = 0 := by
@@ -288,8 +286,7 @@ theorem box_lattice_point_bound : BoxBound := by
     set a := hsN (Formalism.MainNotions.S.uMat g) with ha
     have hapos : 0 < a := lt_of_le_of_lt (by positivity) hlt
     have h1 : sInf S < Real.log (a / Real.sqrt n) := by
-      rw [Real.lt_log_iff_exp_lt (div_pos hapos hsqpos), lt_div_iff₀ hsqpos, mul_comm]
-      exact hlt
+      rwa [Real.lt_log_iff_exp_lt (div_pos hapos hsqpos), lt_div_iff₀ hsqpos, mul_comm]
     obtain ⟨t, htS, htlt⟩ := exists_lt_of_csInf_lt hne h1
     have h2 := hbound t htS
     have h3 : Real.exp t < a / Real.sqrt n := by
@@ -329,8 +326,7 @@ lemma ann_range (δ : Matrix (Fin n) (Fin n) K) (a : Fin n → K)
       map_smul' := fun c x => by simp [dotProduct_smul] }
   have hmem : ℓ ∈ (LinearMap.ker δ.mulVecLin).dualAnnihilator := by
     rw [Submodule.mem_dualAnnihilator]
-    intro z hz
-    exact ha z (by simpa using hz)
+    exact fun z hz => ha z (by simpa using hz)
   rw [← LinearMap.range_dualMap_eq_dualAnnihilator_ker] at hmem
   obtain ⟨φ, hφ⟩ := hmem
   refine ⟨fun j => φ (fun r => if j = r then 1 else 0), ?_⟩
@@ -1008,8 +1004,7 @@ theorem step (K : Type) [Field K] [NumberField K] (k : ℕ) (X Y : Submodule (�
     · rintro ⟨⟨r, hr, hrt⟩, htX⟩
       obtain ⟨o, rfl⟩ := Ideal.mem_span_singleton'.mp hr
       have hrt' : algebraMap (𝓞 K) K a * algebraMap (𝓞 K) K o = algebraMap (𝓞 K) K a * (x ⬝ᵥ t) := by
-        rw [← map_mul, mul_comm a o]
-        exact hrt
+        rwa [← map_mul, mul_comm a o]
       have hxt : x ⬝ᵥ t = algebraMap (𝓞 K) K o := (mul_left_cancel₀ ha0K hrt').symm
       intro s hs
       obtain ⟨s0, hs0, s1, hs1, rfl⟩ := Submodule.mem_sup.mp hs
@@ -1176,12 +1171,10 @@ theorem separation_of_points : SepOf := by
   obtain ⟨k, u, b', hk, hu, hind1, hspan1, hb', hind2, hperp, hspan2⟩ := hCh I y δ hδ
   have huΛ : ∀ c, u c ∈ Λ := fun c => by
     have := hu c
-    rw [hΛ] at this
-    exact this
+    rwa [hΛ] at this
   have hbΛ : ∀ a, b' a ∈ Λ := fun a => by
     have := hb' a
-    rw [hΛ] at this
-    exact this
+    rwa [hΛ] at this
   let s₁ : Sub I x :=
     { j := k
       j_pos := hk
@@ -1220,8 +1213,7 @@ theorem separation_of_points : SepOf := by
   have hdualΛ : ∀ w, (∀ w' ∈ Λ, hf I w' w ∈ (algebraMap (𝓞 I.E) I.E).range) → w ∈ Λ := by
     intro w hw
     have := hDual I y w (by rw [hΛ]; exact hw)
-    rw [hΛ] at this
-    exact this
+    rwa [hΛ] at this
   have hN := hIdx I Λ hFG hspan hdualΛ δ k u b' huΛ hind1 hspan1 hbΛ hind2 hperp hspan2 hi1 hi2
   have hNP' := hNP I (pairM I b' u).det
   have hi1' : (0 : ℝ) < idx I (imSub I Λ δ) (fun c => δ *ᵥ u c) := by exact_mod_cast Nat.pos_of_ne_zero hi1
@@ -1329,8 +1321,7 @@ theorem lattice_packLem : PackLem := by
   have hB : ∀ p, ν (B p) = ∏ v, ENNReal.ofReal ((ρ v / 2) ^ d) * c := by
     intro p
     simp only [ν, B, Measure.pi_pi]
-    refine Finset.prod_congr rfl fun v _ => ?_
-    exact Measure.addHaar_ball_of_pos μ _ (by linarith [hρ v])
+    exact Finset.prod_congr rfl fun v _ => Measure.addHaar_ball_of_pos μ _ (by linarith [hρ v])
   have hBig : ν Big = ∏ v, ENNReal.ofReal ((R v + ρ v / 2) ^ d) * c := by
     simp only [ν, Big, Measure.pi_pi]
     refine Finset.prod_congr rfl fun v _ => ?_

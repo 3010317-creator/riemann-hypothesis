@@ -104,15 +104,10 @@ theorem iwasawa_transfer (μG : Measure (GL (Fin n) F)) [μG.IsHaarMeasure]
     intro y hy
     obtain ⟨h, hq⟩ := QuotientGroup.mk_out_eq_mul
       ((congruenceSubgroup F n r).subgroupOf (integralGL F n)) (⟨y, hy⟩ : integralGL F n)
-    have heq : ∀ p : blockUpper F n β, f ((p : GL (Fin n) F) * y) =
-        f ((p : GL (Fin n) F) * (((QuotientGroup.mk ⟨y, hy⟩ : integralGL F n ⧸
-          (congruenceSubgroup F n r).subgroupOf (integralGL F n)).out : integralGL F n) :
-            GL (Fin n) F)) := by
-      intro p
-      rw [hq, Subgroup.coe_mul, ← mul_assoc]
-      exact (hr _ _ (Subgroup.mem_subgroupOf.1 h.2)).symm
-    simp_rw [heq]
-    exact hint _
+    refine (hint (QuotientGroup.mk ⟨y, hy⟩)).congr (Filter.Eventually.of_forall fun p => ?_)
+    dsimp only
+    rw [hq, Subgroup.coe_mul, ← mul_assoc]
+    exact hr _ _ (Subgroup.mem_subgroupOf.1 h.2)
   have hP0 : μP (Subtype.val ⁻¹' (integralGL F n : Set (GL (Fin n) F))) ≠ 0 :=
     ((isOpen_integralGL F n).preimage continuous_subtype_val).measure_ne_zero _
       ⟨1, by simp [one_mem]⟩
@@ -121,26 +116,20 @@ theorem iwasawa_transfer (μG : Measure (GL (Fin n) F)) [μG.IsHaarMeasure]
     refine ⟨hf.aestronglyMeasurable, ?_⟩
     have hC := lintegral_eq_sum_parabolic (β := β) (r := r) μG μP μK hf.enorm.measurable
       (h := fun g => ‖f g‖ₑ) (fun g k hk => by simp only [hr g k hk])
-    have hlt : μG (integralGL F n) * (μK ((congruenceSubgroup F n r).subgroupOf
-        (integralGL F n)) * ∑ q : integralGL F n ⧸ (congruenceSubgroup F n r).subgroupOf
-          (integralGL F n), ∫⁻ p, ‖f ((p : GL (Fin n) F) *
-          ((q.out : integralGL F n) : GL (Fin n) F))‖ₑ ∂μP) < ⊤ :=
-      ENNReal.mul_lt_top (isCompact_integralGL F n).measure_lt_top
-        (ENNReal.mul_lt_top (measure_lt_top _ _)
-          (ENNReal.sum_lt_top.2 fun q _ => (hint q).2))
-    rw [hC] at hlt
-    exact ENNReal.lt_top_of_mul_ne_top_right hlt.ne (mul_ne_zero hP0 hK0)
+    refine ENNReal.lt_top_of_mul_ne_top_right ?_ (mul_ne_zero hP0 hK0)
+    rw [← hC]
+    exact (ENNReal.mul_lt_top (isCompact_integralGL F n).measure_lt_top
+      (ENNReal.mul_lt_top (measure_lt_top _ _)
+        (ENNReal.sum_lt_top.2 fun q _ => (hint q).2))).ne
   refine ⟨hintG, ?_⟩
   have hκ0 : κ ≠ 0 := by
     rw [hκ]
-    have hPc : IsCompact (Subtype.val ⁻¹' (integralGL F n : Set (GL (Fin n) F)) :
-        Set (blockUpper F n β)) :=
-      (Measures.isClosed_blockUpper F n β).isClosedEmbedding_subtypeVal.isCompact_preimage
-        (isCompact_integralGL F n)
-    exact mul_ne_zero (ENNReal.toReal_ne_zero.2 ⟨hP0, hPc.measure_lt_top.ne⟩)
+    exact mul_ne_zero (ENNReal.toReal_ne_zero.2 ⟨hP0,
+      ((Measures.isClosed_blockUpper F n β).isClosedEmbedding_subtypeVal.isCompact_preimage
+        (isCompact_integralGL F n)).measure_lt_top.ne⟩)
       (ENNReal.toReal_ne_zero.2 ⟨hK0, measure_ne_top _ _⟩)
   have hC := integral_eq_sum_parabolic (β := β) μG μP μK hintG hr hintP
-  rw [Complex.real_smul, Complex.real_smul, Complex.real_smul] at hC
+  simp only [Complex.real_smul] at hC
   have hκC : (κ : ℂ) ≠ 0 := Complex.ofReal_ne_zero.2 hκ0
   rw [← hκ, ← mul_assoc, ← Complex.ofReal_mul, ← hκ'] at hC
   push_cast

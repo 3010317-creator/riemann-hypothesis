@@ -75,8 +75,7 @@ theorem differentiableOn_circleAverage {k : ℕ} {O : Set (Fin k → ℂ)} {f : 
   · refine Eventually.of_forall fun θ _ τ hτ => ?_
     have h1 : HasFDerivAt f (fderiv ℂ f (τ + circleMap 0 ρ θ • v)) (τ + circleMap 0 ρ θ • v) :=
       (hf.differentiableAt (hO.mem_nhds (hmem τ (ball_subset_closedBall hτ) θ))).hasFDerivAt
-    have h2 := h1.comp τ ((hasFDerivAt_id τ).add_const (circleMap 0 ρ θ • v))
-    simpa [Function.comp_def] using h2
+    simpa [Function.comp_def] using h1.comp τ ((hasFDerivAt_id τ).add_const (circleMap 0 ρ θ • v))
 
 theorem slice_cauchy {R ρ : ℝ} {ψ h : ℂ → ℂ} (hρ : 0 < ρ) (hρR : ρ < R)
     (hψ : DifferentiableOn ℂ ψ (ball 0 R)) (hsph : ∀ z ∈ sphere (0 : ℂ) ρ, ψ z ≠ 0) (hψ0 : ψ 0 ≠ 0)
@@ -85,16 +84,12 @@ theorem slice_cauchy {R ρ : ℝ} {ψ h : ℂ → ℂ} (hρ : 0 < ρ) (hρR : ρ
     (2 * π * I : ℂ)⁻¹ • (∮ z in C(0, ρ), z⁻¹ • h z) = h 0 := by
   classical
   have hψa : AnalyticOnNhd ℂ ψ (ball 0 R) := hψ.analyticOnNhd isOpen_ball
-  have h0R : (0 : ℂ) ∈ ball (0 : ℂ) R := mem_ball_self (hρ.trans hρR)
-  have hiso : ∀ z₀ ∈ ball (0 : ℂ) R, ∀ᶠ z in 𝓝[≠] z₀, ψ z ≠ 0 := by
-    intro z₀ hz₀
-    rcases (hψa z₀ hz₀).eventually_eq_zero_or_eventually_ne_zero with h' | h'
-    · exact absurd (hψa.eqOn_zero_of_preconnected_of_eventuallyEq_zero (convex_ball 0 R).isPreconnected
-        hz₀ h' h0R) hψ0
-    · exact h'
+  have hiso : ∀ z₀ ∈ ball (0 : ℂ) R, ∀ᶠ z in 𝓝[≠] z₀, ψ z ≠ 0 := fun z₀ hz₀ =>
+    (hψa z₀ hz₀).eventually_eq_zero_or_eventually_ne_zero.resolve_left fun h' =>
+      hψ0 (hψa.eqOn_zero_of_preconnected_of_eventuallyEq_zero (convex_ball 0 R).isPreconnected
+        hz₀ h' (mem_ball_self (hρ.trans hρR)))
   set H : ℂ → ℂ := fun z => if ψ z = 0 then limUnder (𝓝[≠] z) h else h z with hH
-  have hHd : ∀ z₀ ∈ ball (0 : ℂ) R, DifferentiableAt ℂ H z₀ := by
-    intro z₀ hz₀
+  have hHd : ∀ z₀ ∈ ball (0 : ℂ) R, DifferentiableAt ℂ H z₀ := fun z₀ hz₀ => by
     by_cases hz : ψ z₀ = 0
     · obtain ⟨N, hN, C, hC⟩ := hb z₀ hz₀
       have hev : ∀ᶠ z in 𝓝 z₀, z ≠ z₀ → ψ z ≠ 0 := eventually_nhdsWithin_iff.mp (hiso z₀ hz₀)
@@ -102,34 +97,25 @@ theorem slice_cauchy {R ρ : ℝ} {ψ h : ℂ → ℂ} (hρ : 0 < ρ) (hρR : ρ
         inter_mem (inter_mem hN (isOpen_ball.mem_nhds hz₀)) hev
       have hdiff : DifferentiableOn ℂ (Function.update h z₀ (limUnder (𝓝[≠] z₀) h))
           (N ∩ ball (0 : ℂ) R ∩ {z | z ≠ z₀ → ψ z ≠ 0}) := by
-        refine Complex.differentiableOn_update_limUnder_of_bddAbove hsn ?_ ?_
-        · intro z hz'
-          exact (hh z hz'.1.1.2 (hz'.1.2 hz'.2)).differentiableWithinAt
-        · refine ⟨C, ?_⟩
-          rintro _ ⟨z, hz', rfl⟩
-          exact hC z hz'.1.1.1 hz'.1.1.2 (hz'.1.2 hz'.2)
-      have heq : H =ᶠ[𝓝 z₀] Function.update h z₀ (limUnder (𝓝[≠] z₀) h) := by
-        filter_upwards [hev] with z hz'
-        by_cases hzz : z = z₀
-        · subst hzz
-          simp [hH, hz]
-        · simp [hH, hz' hzz, Function.update_of_ne hzz]
-      exact (hdiff.differentiableAt hsn).congr_of_eventuallyEq heq
-    · have hev : ∀ᶠ z in 𝓝 z₀, ψ z ≠ 0 := (hψa z₀ hz₀).continuousAt.eventually_ne hz
-      have heq : H =ᶠ[𝓝 z₀] h := by
-        filter_upwards [hev] with z hz'
-        simp [hH, hz']
-      exact (hh z₀ hz₀ hz).congr_of_eventuallyEq heq
-  have hcl : closedBall (0 : ℂ) ρ ⊆ ball 0 R := closedBall_subset_ball hρR
+        refine Complex.differentiableOn_update_limUnder_of_bddAbove hsn
+          (fun z hz' => (hh z hz'.1.1.2 (hz'.1.2 hz'.2)).differentiableWithinAt) ⟨C, ?_⟩
+        rintro _ ⟨z, hz', rfl⟩
+        exact hC z hz'.1.1.1 hz'.1.1.2 (hz'.1.2 hz'.2)
+      refine (hdiff.differentiableAt hsn).congr_of_eventuallyEq ?_
+      filter_upwards [hev] with z hz'
+      rcases eq_or_ne z z₀ with rfl | hzz
+      · simp [hH, hz]
+      · simp [hH, hz' hzz, Function.update_of_ne hzz]
+    · refine (hh z₀ hz₀ hz).congr_of_eventuallyEq ?_
+      filter_upwards [(hψa z₀ hz₀).continuousAt.eventually_ne hz] with z hz'
+      simp [hH, hz']
   have hC := two_pi_I_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_countable
     (s := ∅) countable_empty (mem_ball_self hρ)
-    (fun z hz => (hHd z (hcl hz)).continuousAt.continuousWithinAt)
-    (fun z hz => hHd z (hcl (ball_subset_closedBall hz.1)))
-  have hH0 : H 0 = h 0 := by simp [hH, hψ0]
-  rw [← hH0, ← hC]
+    (fun z hz => (hHd z (closedBall_subset_ball hρR hz)).continuousAt.continuousWithinAt)
+    (fun z hz => hHd z (closedBall_subset_ball hρR (ball_subset_closedBall hz.1)))
+  rw [← show H 0 = h 0 by simp [hH, hψ0], ← hC]
   congr 1
-  refine circleIntegral.integral_congr hρ.le fun z hz => ?_
-  simp [hH, hsph z hz]
+  exact circleIntegral.integral_congr hρ.le fun z hz => by simp [hH, hsph z hz]
 
 theorem local_extension {k : ℕ} {U : Set (Fin k → ℂ)} {g f : (Fin k → ℂ) → ℂ}
     (hU : IsOpen U) (hg : DifferentiableOn ℂ g U)
@@ -148,8 +134,7 @@ theorem local_extension {k : ℕ} {U : Set (Fin k → ℂ)} {g f : (Fin k → �
     ((ball_subset_ball (by linarith)).trans hrU) ⟨τ₀, mem_ball_self (by linarith)⟩
   set v : Fin k → ℂ := t₁ - τ₀ with hvdef
   have hv : ‖v‖ < r / 2 := by
-    rw [hvdef, ← dist_eq_norm]
-    exact ht₁
+    rwa [hvdef, ← dist_eq_norm]
   have hline : ∀ τ ∈ ball τ₀ (r / 4), ∀ z : ℂ, ‖z‖ < 3 / 2 → τ + z • v ∈ U := by
     intro τ hτ z hz
     apply hrU

@@ -292,10 +292,7 @@ theorem supportedIn_le_of_irrelevant (hψ : Continuous ψ₀) {U C : Set (GL (Fi
     group
   have hχs : chi ψ₀ s ≠ 1 := by
     rw [chi_apply]
-    intro h
-    apply ha
-    have h0 := psiN_ne_zero ψ₀ (rootElt i j a)
-    exact (mul_inv_eq_one₀ h0).1 h
+    exact fun h => ha ((mul_inv_eq_one₀ (psiN_ne_zero ψ₀ (rootElt i j a))).1 h)
   exact supportedIn_le_of_stabilizer hU hC hO hUinv (chi ψ₀) (exists_open_chi_trivial ψ₀ hψ)
     hS₀ hs hsx hχs
 
@@ -494,8 +491,7 @@ theorem cell_relevant (hψ : Continuous ψ₀) (hψ₁ : ψ₀ ≠ 1) {g : GL (F
     rintro _ ⟨k, rfl⟩
     exact ⟨swapTheta k, by rw [sigma_smul, hfix]⟩
   have hOC : ∀ z ∈ orbit (NN F n) x₀, z ∈ U ∧ z ∈ C := fun z hz => by
-    rw [← hO] at hz
-    exact hz
+    rwa [← hO] at hz
   obtain ⟨K, hKc, hKo, hKψ⟩ := exists_compactOpen_psiN_trivial F n hψ
   set L₀ : Subgroup (NN F n) :=
     (K.map (thetaN : Iwasawa.unipotent F n ≃* Iwasawa.unipotent F n).toMonoidHom).prod K
@@ -731,25 +727,14 @@ theorem distribution_sigma_invariant (hψ : Continuous ψ₀) (hψ₁ : ψ₀ �
         funext x
         simp [biAction_smul]
       rw [e, map_sub, map_smul, hD ⟨g, hg.1⟩ _ _ k.1.2 k.2.2, chi_apply, smul_eq_mul, sub_self]
-    | zero =>
-      have : (⟨0, rel_le ψ₀ (zero_mem _)⟩ : locallyConstantCompactSupport (GL (Fin n) F) ℂ ℂ) = 0 :=
-        rfl
-      rw [this, map_zero]
+    | zero => exact map_zero D
     | add x y hx hy ihx ihy =>
-      have : (⟨x + y, rel_le ψ₀ (add_mem hx hy)⟩ :
-          locallyConstantCompactSupport (GL (Fin n) F) ℂ ℂ) =
-          ⟨x, rel_le ψ₀ hx⟩ + ⟨y, rel_le ψ₀ hy⟩ := rfl
-      rw [this, map_add (f := _), ihx, ihy, add_zero]
+      exact (map_add D ⟨x, rel_le ψ₀ hx⟩ ⟨y, rel_le ψ₀ hy⟩).trans (by rw [ihx, ihy, add_zero])
     | smul c x hx ihx =>
-      have : (⟨c • x, rel_le ψ₀ (Submodule.smul_mem _ c hx)⟩ :
-          locallyConstantCompactSupport (GL (Fin n) F) ℂ ℂ) = c • ⟨x, rel_le ψ₀ hx⟩ := rfl
-      rw [this, map_smul, ihx, smul_zero]
+      exact (map_smul D c ⟨x, rel_le ψ₀ hx⟩).trans (by rw [ihx, smul_zero])
   have h := hrel _ (sub_sigma_mem_rel ψ₀ hψ hψ₁ f.2)
-  have e : (⟨(f : GL (Fin n) F → ℂ) - sigmaL f, rel_le ψ₀ (sub_sigma_mem_rel ψ₀ hψ hψ₁ f.2)⟩ :
-      locallyConstantCompactSupport (GL (Fin n) F) ℂ ℂ) =
-      f - ⟨fun x => (f : GL (Fin n) F → ℂ) (sigma x), comp_sigma_mem f.2⟩ := rfl
-  rw [e, map_sub, sub_eq_zero] at h
-  exact h.symm
+  change D (f - ⟨fun x => (f : GL (Fin n) F → ℂ) (sigma x), comp_sigma_mem f.2⟩) = 0 at h
+  rwa [map_sub, sub_eq_zero, eq_comm] at h
 
 end LocalField
 

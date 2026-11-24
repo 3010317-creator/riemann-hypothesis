@@ -133,8 +133,7 @@ theorem inum_eq_zero_of_valEq_zero (h3 : UnitZero) {z : (Σ b, ι b) → Ω} {d 
   rw [key, ← Fin.snoc_init_self (a ∘ Equiv.swap i (Fin.last n))]
   apply h3 k Ω K ι z n _ _ hz ht
   show ValEq k z (a (Equiv.swap i (Fin.last n) (Fin.last n))) z 0
-  rw [Equiv.swap_apply_right]
-  exact h
+  rwa [Equiv.swap_apply_right]
 
 theorem inum_update (h1 : PtDim) (h3 : UnitZero) {z : (Σ b, ι b) → Ω} {d : ℕ} (hz : IsPt k z d) (ht : fnField k z = ⊤)
     (a : Fin d → K → ℤ) (i : Fin d) (b : K → ℤ) (h : ValEq k z b z (a i)) : inum k z (Function.update a i b) = inum k z a := by

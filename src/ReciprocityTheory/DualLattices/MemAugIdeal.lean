@@ -15,8 +15,7 @@ open ReciprocityTheory.PGsh.L2
 variable {C : Type} [Field C] {R : Type} [CommRing R] [Algebra R C]
 
 theorem mem_augIdeal {X : Type} [AddCommGroup X] {M : Submodule R (X → C)} {f : X → C} :
-    f ∈ augIdeal M ↔ f ∈ M ∧ f 0 = 0 := by
-  exact Iff.rfl
+    f ∈ augIdeal M ↔ f ∈ M ∧ f 0 = 0 := Iff.rfl
 
 theorem sqIdeal_le {X Y : Type} (F : (X → C) →ₗ[R] (Y → C))
     (hF : ∀ f g, F (f * g) = F f * F g) {I : Submodule R (X → C)} {J : Submodule R (Y → C)}
@@ -101,8 +100,7 @@ theorem omega_pull (q : ℕ) {g d : ℕ} (ψ : X →+ N) (χ : N →+ X) (hχψ 
     rw [mem_augIdeal] at hg ⊢
     obtain ⟨⟨f, hf, rfl⟩, h0⟩ := hg
     refine ⟨hA f hf, ?_⟩
-    rw [LinearMap.funLeft_apply, map_zero]
-    exact h0
+    rwa [LinearMap.funLeft_apply, map_zero]
   let Φ0 : augIdeal (A.map (LinearMap.funLeft R C ψ)) →ₗ[R] augIdeal A :=
     ((LinearMap.funLeft R C χ).comp (augIdeal (A.map (LinearMap.funLeft R C ψ))).subtype).codRestrict
       (augIdeal A) (fun g => hχI g.1 g.2)
@@ -133,8 +131,7 @@ theorem omega_pull (q : ℕ) {g d : ℕ} (ψ : X →+ N) (χ : N →+ X) (hχψ 
             mq q P1 (Submodule.Quotient.mk (P2 *ᵥ l)) from rfl, h0, map_zero]
       have hmem : ((Φ0 u : augIdeal A) : N → C) ∈ sqIdeal (augIdeal A) := by
         have := LinearMap.mem_ker.2 hφ0
-        rw [hker, Submodule.mem_comap] at this
-        exact this
+        rwa [hker, Submodule.mem_comap] at this
       have := Submodule.mem_comap.1
         (sqIdeal_le (LinearMap.funLeft R C ψ) (fun _ _ => rfl) hψI hmem)
       convert this using 1
@@ -145,8 +142,7 @@ theorem omega_pull (q : ℕ) {g d : ℕ} (ψ : X →+ N) (χ : N →+ X) (hχψ 
       have h1 := Submodule.mem_comap.1
         (sqIdeal_le (LinearMap.funLeft R C χ) (fun _ _ => rfl) hχI hu)
       have hφ0 : φ (Φ0 u) = 0 := by
-        rw [← LinearMap.mem_ker, hker, Submodule.mem_comap]
-        exact h1
+        rwa [← LinearMap.mem_ker, hker, Submodule.mem_comap]
       rw [hφ0, map_zero]
   exact ⟨(Submodule.quotEquivOfEq _ _ hkerΦ.symm).trans (Φ.quotKerEquivOfSurjective hsurjΦ)⟩
 

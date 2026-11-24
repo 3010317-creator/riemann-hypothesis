@@ -72,8 +72,7 @@ theorem capR_lev {n : Fin 2 → ℕ} (W₁ : Submodule ℂ (Sm E (n 0))) (W₂ :
       fun p q => Eop (a := n 0 + n 1) τ (Fin.castAdd (n 1) p) (Fin.castAdd (n 1) q) := by
     funext p q
     rw [CapFactor.std_zero, CapFactor.std_zero]
-  rw [e1, ← CapFactor.lev_eq_leviEmb n h] at key
-  exact key
+  rwa [e1, ← CapFactor.lev_eq_leviEmb n h] at key
 
 theorem capS_lev {n : Fin 2 → ℕ} (W₁ : Submodule ℂ (Sm E (n 0))) (W₂ : Submodule ℂ (Sm E (n 1))) (τ : E →+* ℂ)
     (M : Multiset ℂ) (hM : HasInfCharGL W₂ τ M) (w : ℂ) (ψ : Sm E (n 0 + n 1))
@@ -86,8 +85,7 @@ theorem capS_lev {n : Fin 2 → ℕ} (W₁ : Submodule ℂ (Sm E (n 0))) (W₂ :
       fun p q => Eop (a := n 0 + n 1) τ (Fin.natAdd (n 0) p) (Fin.natAdd (n 0) q) := by
     funext p q
     rw [CapFactor.std_one, CapFactor.std_one]
-  rw [e1, ← CapFactor.lev_eq_leviEmb n h] at key
-  exact key
+  rwa [e1, ← CapFactor.lev_eq_leviEmb n h] at key
 
 theorem casimir_on_parabolic_induction {n : Fin 2 → ℕ} (W₁ : Submodule ℂ (Sm E (n 0))) (W₂ : Submodule ℂ (Sm E (n 1))) (τ : E →+* ℂ)
     (M₁ M₂ : Multiset ℂ) (h₁ : HasInfCharGL W₁ τ M₁) (h₂ : HasInfCharGL W₂ τ M₂) (u : ℂ) (F : Sm E (n 0 + n 1))
@@ -120,8 +118,7 @@ theorem casimir_on_parabolic_induction {n : Fin 2 → ℕ} (W₁ : Submodule ℂ
     exact (GlobalTheory.CapAdInv.cap_commute_rt_infGL E _ τ u _).mul_right (commute_cap_finRep τ u g)
   set ψ := rt E (n 0 + n 1) y F
   have hψ : ∀ (x : BlockIx (n 0 + n 1) (n 0) → Ad E) g', ψ.1 (unip x * g') = ψ.1 g' := fun x g' => by
-    simp only [ψ, rt_apply, mul_assoc]
-    exact hF.1 x _
+    simpa only [ψ, rt_apply, mul_assoc] using hF.1 x _
   have hψT : (fun p => ψ.1 (lev (Ad E) (n 0) (n 1) p)) ∈ tens2 W₁ W₂ := hF.2 k g
   have h3 := hlev ψ hψ hψT (m 0, m 1)
   have h4 : (cap τ u ψ).1 (lev (Ad E) (n 0) (n 1) (m 0, m 1)) =

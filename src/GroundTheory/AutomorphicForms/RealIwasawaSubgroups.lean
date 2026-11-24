@@ -108,10 +108,8 @@ theorem continuous_strictUpperMatrix :
     Continuous (strictUpperMatrix : (StrictUpperIndex n → 𝕜) → Matrix n n 𝕜) := by
   refine continuous_matrix fun i j => ?_
   by_cases h : i < j
-  · simp only [strictUpperMatrix_apply, h, dite_true]
-    exact continuous_apply _
-  · simp only [strictUpperMatrix_apply, h, dite_false]
-    exact continuous_const
+  · simpa only [strictUpperMatrix_apply, h, dite_true] using continuous_apply _
+  · simpa only [strictUpperMatrix_apply, h, dite_false] using continuous_const
 
 end StrictUpper
 
@@ -358,8 +356,7 @@ theorem upperPosDiagPart_inv_mul_mem (b : upperPosSubgroup n 𝕜) :
         ((b : GL n 𝕜) : Matrix n n 𝕜) := rfl
   rw [mem_upperUnipotentSubgroup, e]
   refine ⟨(blockTriangular_diagonal _).mul b.2.1, fun i => ?_⟩
-  rw [diagonal_mul]
-  rw [ofReal_re_of_pos (b.2.2 i)]
+  rw [diagonal_mul, ofReal_re_of_pos (b.2.2 i)]
   exact inv_mul_cancel₀ (b.2.2 i).ne'
 
 def upperPosUnipotentPart (b : upperPosSubgroup n 𝕜) : upperUnipotentSubgroup n 𝕜 :=

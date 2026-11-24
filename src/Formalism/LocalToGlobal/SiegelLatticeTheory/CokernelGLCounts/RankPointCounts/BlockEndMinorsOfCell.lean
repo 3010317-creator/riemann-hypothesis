@@ -53,8 +53,7 @@ theorem blockEndMinors_of_cell {D : D7} (Z : Matrix (Fin (D.R.rS + 1)) (Fin (D.R
     (by intro i j; rw [← ptMat_eq]; exact hZ i j)
   have := key.1 ((a : ℕ) + 1)
   show IsIntegral ℤ (IndexedMinorEntry (toComp γ).blocksFun (toT γ) a) ∧ IndexedMinorEntry (toComp γ).blocksFun (toT γ) a ≠ 0
-  rw [E5minor_eq]
-  exact this
+  rwa [E5minor_eq]
 
 theorem stepPoints_of_ctx
     (hOV : ∀ (Cg cb Cw cT CT C0 C' Cl : ℝ) (D : D7) (large₂ : SizeData₂ D) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word),
@@ -89,8 +88,7 @@ theorem stepPoints_of_ctx
   have hF : ∀ b, frame (lf D (X.Fu u)) b ∈ t.toTerm.lam := frame_mem _ hrow.2.1.2.2.1.1 hrow.2.2
   have hF' : ∀ b, frame F' b ∈ t.toTerm.lam := frame_mem _ hP.1.1 hP.2.2.2
   have hE := blockEndMinors_of_cell _ (zhatOM_isIntegral _ _ hrow.2.1.2.1 hF hF') _ hcell
-  rw [← hpt]
-  exact hE
+  rwa [← hpt]
 
 theorem stepPoints_of
     (hOV : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word),

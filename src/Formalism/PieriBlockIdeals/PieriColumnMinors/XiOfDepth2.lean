@@ -186,8 +186,7 @@ theorem res_eval_id (f : MvPolynomial (Fin (p + q) × Fin (p + q)) R) :
       rw [ite_eq_right (by omega)]
     · rw [lrb_var_rr, aeval_X]
       simp only [idFrame, Fin.val_natAdd, add_right_inj]
-  have h2 := congrArg (fun φ => φ f) h
-  simpa [AlgHom.comp_apply, aeval_eq_eval] using h2
+  simpa [AlgHom.comp_apply, aeval_eq_eval] using congrArg (fun φ => φ f) h
 
 end
 
@@ -398,8 +397,7 @@ theorem lrc_inv_mem {l : ℕ} (hl : l.Prime) (m : ℤ) (hm : ¬ (l : ℤ) ∣ m)
     exact hm (dvd_zero _)
   have h : ((m : ℚ)⁻¹).den = m.natAbs := by
     rw [Rat.inv_intCast_den, ite_eq_right hm0]
-  rw [h, lrc_coprime_iff hl, Int.dvd_natAbs]
-  exact hm
+  rwa [h, lrc_coprime_iff hl, Int.dvd_natAbs]
 
 theorem zl_mem_iff {l : ℕ} (hl : l.Prime) (x : ℚ) :
     x ∈ Zl l ↔ ∃ m : ℤ, ¬ (l : ℤ) ∣ m ∧ ∃ z : ℤ, (m : ℚ) * x = z := by
@@ -434,8 +432,7 @@ theorem mem_one_iff (l : ℕ) (x : ℚ) : x ∈ (1 : Submodule (Zl l) ℚ) ↔ x
   constructor
   · rintro ⟨y, rfl⟩
     exact y.2
-  · intro hx
-    exact ⟨⟨x, hx⟩, rfl⟩
+  · exact fun hx => ⟨⟨x, hx⟩, rfl⟩
 
 theorem lrc_smul_def (l : ℕ) {V : Type*} [AddCommGroup V] [Module ℚ V] (c : Zl l) (v : V) :
     c • v = (c : ℚ) • v := rfl
@@ -581,8 +578,7 @@ theorem dual_int_loc (hC : CoeffWord) (hL : LowerTriIntegral) (l : ℕ) (hl : l.
   set M : ℕ := ∏ e ∈ g.support.filter (fun e => LowerTri e), (AddMonoidAlgebra.coeff g e).den with hM
   have hMc : M.Coprime l := by
     rw [hM]
-    refine Nat.Coprime.prod_left fun e he => ?_
-    exact h1 e (Finset.mem_filter.1 he).2
+    exact Nat.Coprime.prod_left fun e he => h1 e (Finset.mem_filter.1 he).2
   have h2 : ∀ e : Fin r × Fin r →₀ ℕ, LowerTri e → ∃ z : ℤ, AddMonoidAlgebra.coeff ((M : ℚ) • g) e = z := by
     intro e he
     rw [MvPolynomial.coeff_smul, smul_eq_mul]
@@ -593,8 +589,7 @@ theorem dual_int_loc (hC : CoeffWord) (hL : LowerTriIntegral) (l : ℕ) (hl : l.
   have hMg : (M : ℚ) • g ∈ dualWeyl ℚ r r ν := (dualWeyl ℚ r r ν).smul_mem _ hg
   obtain ⟨Q', hQ'⟩ := hL r r ν _ hMg h2
   refine ⟨(M : ℤ), (lrc_coprime_iff hl M).1 hMc, Q', ?_, ?_⟩
-  · rw [dualWeylIntRat r r ν Q', ← lrc_intQ_apply, ← hQ']
-    exact hMg
+  · rwa [dualWeylIntRat r r ν Q', ← lrc_intQ_apply, ← hQ']
   · rw [← hQ']
     push_cast
     rfl

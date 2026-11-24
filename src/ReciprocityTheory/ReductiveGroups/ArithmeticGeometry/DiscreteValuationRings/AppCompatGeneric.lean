@@ -141,8 +141,7 @@ lemma wchart_inl (φ : K → (Y ⟶ X)) (φ' : K' → (Y ⟶ X)) (j : K ⊕ K' �
   have hz' : z ∈ (LB.wchart L (Sum.elim φ φ') j : Set Y) := hz
   show z ∈ (LB.wchart L φ (j ∘ Sum.inl) : Set Y)
   simp only [LB.wchart, TopologicalSpace.Opens.coe_mk, Set.mem_iInter, Set.mem_preimage] at hz' ⊢
-  intro k
-  exact hz' (Sum.inl k)
+  exact fun k => hz' (Sum.inl k)
 
 lemma wchart_inr (φ : K → (Y ⟶ X)) (φ' : K' → (Y ⟶ X)) (j : K ⊕ K' → L.ι) :
     LB.wchart L (Sum.elim φ φ') j ≤ LB.wchart L φ' (j ∘ Sum.inr) := by
@@ -150,8 +149,7 @@ lemma wchart_inr (φ : K → (Y ⟶ X)) (φ' : K' → (Y ⟶ X)) (j : K ⊕ K' �
   have hz' : z ∈ (LB.wchart L (Sum.elim φ φ') j : Set Y) := hz
   show z ∈ (LB.wchart L φ' (j ∘ Sum.inr) : Set Y)
   simp only [LB.wchart, TopologicalSpace.Opens.coe_mk, Set.mem_iInter, Set.mem_preimage] at hz' ⊢
-  intro k
-  exact hz' (Sum.inr k)
+  exact fun k => hz' (Sum.inr k)
 
 lemma linComb_g_sum (φ : K → (Y ⟶ X)) (ε : K → ℤ) (φ' : K' → (Y ⟶ X)) (ε' : K' → ℤ) (i j : K ⊕ K' → L.ι) :
     (LB.LinComb L (Sum.elim φ φ') (Sum.elim ε ε')).g i j =

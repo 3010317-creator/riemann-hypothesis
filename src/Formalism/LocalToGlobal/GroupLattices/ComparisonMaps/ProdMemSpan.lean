@@ -22,8 +22,7 @@ theorem prod_mem_span {O Y ι : Type} [CommRing O] [CommRing Y] [Algebra O Y] (t
   classical
   induction t using Finset.induction_on with
   | empty =>
-    apply Submodule.subset_span
-    exact ⟨fun _ => 1, by simp, by simp⟩
+    exact Submodule.subset_span ⟨fun _ => 1, by simp, by simp⟩
   | insert j t hj ih =>
     have h1 : x j ∈ Submodule.span O (A j) := hx j (Finset.mem_insert_self j t)
     have h2 := ih (fun i hi => hx i (Finset.mem_insert_of_mem hi))
@@ -127,8 +126,7 @@ theorem dl_rat (hinj : Function.Injective (algebraMap O Kf)) (m : ℕ) (lam : Fi
   have hF0 : F0 = rowAct Kf gK⁻¹ (map (algebraMap O Kf) f) := by
     rw [hfe', ldlat_rowAct_inv_right rowActMul gK hdet]
   have := key hf
-  rw [Submodule.mem_comap, hT, ← hF0] at this
-  exact this
+  rwa [Submodule.mem_comap, hT, ← hF0] at this
 
 theorem htenW_rat (hinj : Function.Injective (algebraMap O Kf)) {n' m : ℕ} (lam0 : Fin n' → Fin (m + 1) → ℤ)
     (hdom : ∀ s, Antitone (lamAt lam0 s)) (g : Fin n' → GL (Fin (m + 1)) LL) :

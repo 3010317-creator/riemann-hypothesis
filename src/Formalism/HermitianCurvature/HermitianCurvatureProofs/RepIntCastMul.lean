@@ -244,8 +244,7 @@ theorem Fw_zero (hC : HC Eop) (hL : HL Eop) (hS : HS Eop) (w : List (Ix k r)) :
   intro g hg
   have h0 : CkOn ((w.length : ℕ) : ℕ∞) (GV k r) (fun _ : Mat k r => (0 : E)) :=
     fun g₀ _ => ⟨Set.univ, fun _ => 0, isOpen_univ, Set.mem_univ _, contDiffOn_const, fun _ _ _ => rfl⟩
-  have h1 := Fw_smul Eop hC hL hS w 0 (fun _ => (0 : E)) h0 g hg
-  simpa using h1
+  simpa using Fw_smul Eop hC hL hS w 0 (fun _ => (0 : E)) h0 g hg
 
 theorem ck_lsum {m : ℕ∞} (L : List (ℂ × (Mat k r → E))) (h : ∀ p ∈ L, CkOn m (GV k r) p.2) :
     CkOn m (GV k r) (fun x => (L.map fun p => p.1 • p.2 x).sum) := by
@@ -272,8 +271,7 @@ theorem Fw_lsum (hC : HC Eop) (hL : HL Eop) (hA : HA Eop) (hS : HS Eop) (w : Lis
   induction L with
   | nil =>
     intro _ g hg
-    simp only [List.map_nil, List.sum_nil]
-    exact Fw_zero Eop hC hL hS w g hg
+    simpa only [List.map_nil, List.sum_nil] using Fw_zero Eop hC hL hS w g hg
   | cons p L ih =>
     intro h g hg
     have hL' : ∀ q ∈ L, CkOn ((w.length : ℕ) : ℕ∞) (GV k r) q.2 := fun q hq => h q (by simp [hq])

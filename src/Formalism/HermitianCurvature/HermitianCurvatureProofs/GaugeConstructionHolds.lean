@@ -107,8 +107,7 @@ theorem exp_genW (w : Fin (k + 1) → ℝ) (t : ℝ) :
       push_cast
       ring
     · rw [dite_eq_right (fun h' => h h'.1), ite_eq_left ⟨rfl, h⟩, Matrix.diagonal_apply_eq]
-      simp only [Pi.coe_exp, Pi.smul_apply, dite_eq_right h, smul_zero]
-      exact NormedSpace.exp_zero
+      simpa only [Pi.coe_exp, Pi.smul_apply, dite_eq_right h, smul_zero] using NormedSpace.exp_zero
   · rw [Matrix.diagonal_apply_ne _ hij]
     by_cases h1 : (r ≤ i.val ∧ i.val ≤ r + k) ∧ (r ≤ j.val ∧ j.val ≤ r + k)
     · rw [dite_eq_left h1, Matrix.diagonal_apply_ne]
@@ -343,8 +342,7 @@ namespace RRFin
 
 theorem hasDerivAt_rotExp (m : ℂ) :
     HasDerivAt (fun φ : ℝ => Complex.exp (m * (φ : ℂ) * Complex.I)) (m * Complex.I) 0 := by
-  have h := (((hasDerivAt_id (0 : ℝ)).ofReal_comp.const_mul m).mul_const Complex.I).cexp
-  simpa using h
+  simpa using (((hasDerivAt_id (0 : ℝ)).ofReal_comp.const_mul m).mul_const Complex.I).cexp
 
 end RRFin
 
@@ -382,9 +380,7 @@ theorem rotation_finite_from_matrix : GTRRFinFrom := by
     have hm := _root_.Formalism.FourierDecayAlt.P.NFRadRedA.radRedMem Wp Wq P.k P.r Bs.z Bs.z' Bs.μsec Bs.π Bs.π' hB Φ.1 Φ.2
     have hx : ((q.1.1, q.1.2 * Complex.exp ((φ : ℂ) * Complex.I)) : (Fin P.r → ℂ) × ℂ) ∈ NF.QR P.k P.r Bs.z Bs.z' :=
       ⟨hcq, by rw [normSq_rot]; exact ann_tz P Bs hpl hζq⟩
-    have h2 := hm.2.1 _ hx
-    simp only [NF.radR, Set.indicator_of_mem hx] at h2
-    exact h2
+    simpa only [NF.radR, Set.indicator_of_mem hx] using hm.2.1 _ hx
   have hGy : ∀ φ : ℝ, inner ℂ (B.hsVec (E ρ)) (B.hsVec ((Φ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) q.1.1
         (NF.muZ P.k P.r Bs.μsec q.1.2 * zc P.k P.r φ))) =
       Complex.exp ((n ρ : ℂ) * (φ : ℂ) * Complex.I) * inner ℂ (B.hsVec (E ρ)) (B.hsVec
@@ -464,15 +460,13 @@ theorem rotation_ode_holds : GTRRODE := by
       rw [Finset.sum_eq_single i]
       · intro k _ hk
         rw [hoff i k (Ne.symm hk), zero_mul]
-      · intro h
-        exact absurd (Finset.mem_univ i) h
+      · exact fun h => absurd (Finset.mem_univ i) h
     rw [hsum] at hg0
     have h2 := HasDerivAt.comp_sub_const φ φ (by rw [sub_self]; exact hg0)
     have e : (fun x => Mf x i j) = fun x : ℝ => ∑ k, Mf (x - φ) i k * Mf φ k j := by
       funext x
       rw [← Matrix.mul_apply, ← hadd, sub_add_cancel]
-    rw [e]
-    exact h2
+    rwa [e]
   have hsol : ∀ (i j : ι) (x : ℝ), Mf x i j = Complex.exp (Bm i i * x) * (if i = j then 1 else 0) := by
     intro i j x
     have hf : ∀ y : ℝ, HasDerivAt (fun y : ℝ => Complex.exp (-Bm i i * y) * Mf y i j) 0 y := by
@@ -482,8 +476,7 @@ theorem rotation_ode_holds : GTRRODE := by
       have hm := he.mul (hderiv y i j)
       have h3 : Complex.exp (-Bm i i * ↑y) * (-Bm i i * 1) * Mf y i j + Complex.exp (-Bm i i * ↑y) * (Bm i i * Mf y i j) = 0 := by
         ring
-      rw [h3] at hm
-      exact hm
+      rwa [h3] at hm
     have hc := is_const_of_deriv_eq_zero (fun y => (hf y).differentiableAt) (fun y => (hf y).deriv) x 0
     simp only [Complex.ofReal_zero, mul_zero, Complex.exp_zero, one_mul, h0, Matrix.one_apply] at hc
     rw [← hc, ← mul_assoc, ← Complex.exp_add]
@@ -888,8 +881,7 @@ theorem rotation_wirtinger_holds : GTRRWirt := by
       (Complex.exp ((((0 : ℝ) : ℂ)) * Complex.I) * (1 * Complex.I)) 0 :=
     ((hasDerivAt_id (0 : ℝ)).ofReal_comp.mul_const Complex.I).cexp
   have h2 : HasDerivAt (fun φ : ℝ => x.2 * Complex.exp ((φ : ℂ) * Complex.I)) (x.2 * Complex.I) 0 := by
-    have h3 := h1.const_mul x.2
-    simpa using h3
+    simpa using h1.const_mul x.2
   have hγ : HasDerivAt (fun φ : ℝ => ((x.1, x.2 * Complex.exp ((φ : ℂ) * Complex.I)) : MA.E r))
       ((0 : Fin r → ℂ), x.2 * Complex.I) 0 := by
     first
@@ -917,8 +909,7 @@ theorem rotation_wirtinger_holds : GTRRWirt := by
     rw [hv, map_add (f := _), map_smul, map_smul, Complex.real_smul, Complex.real_smul]
     push_cast
     ring
-  rw [key]
-  exact hc
+  rwa [key]
 
 end Formalism.FourierDecayAlt.P.CutMP.Gauge.GC
 end -- clump:auto

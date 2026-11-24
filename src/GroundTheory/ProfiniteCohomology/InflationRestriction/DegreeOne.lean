@@ -25,14 +25,12 @@ theorem homologyπ_succ_eq_zero_iff (n : ℕ) (z : K.cycles (n + 1)) :
     (K.homologyπ (n + 1)).hom z = 0 ↔
       ∃ w : K.X n, (K.d n (n + 1)).hom w = (K.iCycles (n + 1)).hom z := by
   have h := homologyπ_eq_zero_iff K z
-  rw [CochainComplex.prev_nat_succ] at h
-  exact h
+  rwa [CochainComplex.prev_nat_succ] at h
 
 theorem exists_iCycles_eq_of_d_eq_zero (n : ℕ) (x : K.X n) (hx : (K.d n (n + 1)).hom x = 0) :
     ∃ z : K.cycles n, (K.iCycles n).hom z = x := by
   refine exists_iCycles_eq K x ?_
-  rw [CochainComplex.next]
-  exact hx
+  rwa [CochainComplex.next]
 
 theorem homologyπ_surjective (n : ℕ) : Function.Surjective (K.homologyπ n).hom :=
   (ModuleCat.epi_iff_surjective _).1 inferInstance
@@ -200,8 +198,7 @@ theorem exists_cohomologyInfl_one_eq (h : cohomology A 1)
   change (groupCohomology.map (QuotientGroup.mk' N) (Rep.ofHom (A.ρ.quotientToInvariants_lift N))
       1).hom ((HomologicalComplex.homologyMap (cochainsComplexι (A.quotientToInvariants N)) 1).hom
         (((cochainsComplex (A.quotientToInvariants N)).homologyπ 1).hom zY)) = _
-  rw [homologyMap_homologyπ_apply, hcyc]
-  exact hy0
+  rwa [homologyMap_homologyπ_apply, hcyc]
 
 end InflationRestriction
 

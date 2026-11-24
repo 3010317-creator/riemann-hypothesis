@@ -94,8 +94,7 @@ theorem wK_diag_wt (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E) {
     wK hD (diag_mem_Kset' ε θ) y = Complex.exp (((∑ a, μ a * θ a : ℝ) : ℂ) * Complex.I) • y := by
   apply coordH_injective
   funext s
-  rw [map_smul, Pi.smul_apply, coordH_apply, coordH_apply, tco_wK]
-  rw [Finset.sum_eq_single s]
+  rw [map_smul, Pi.smul_apply, coordH_apply, coordH_apply, tco_wK, Finset.sum_eq_single s]
   · rw [ff_diag, map_smul, Module.Basis.coord_apply, Module.Basis.repr_self, Finsupp.single_eq_same,
       smul_eq_mul, mul_one, prod_modeChar_exp]
     have hts : ∀ a, E a a (tcoef ((fockBasis n).coord s) y) =
@@ -170,8 +169,7 @@ theorem diagE_wt_of_wK (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D 
   have hI : -Complex.I * Complex.I = 1 := by rw [neg_mul, Complex.I_mul_I, neg_neg]
   have hI' : -Complex.I * (((μ a : ℝ) : ℂ) * Complex.I) = ((μ a : ℝ) : ℂ) := by
     linear_combination (-((μ a : ℝ) : ℂ)) * Complex.I_mul_I
-  rw [hI, one_smul, hI'] at h3
-  exact h3
+  rwa [hI, one_smul, hI'] at h3
 
 section Orth
 

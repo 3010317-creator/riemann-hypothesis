@@ -135,8 +135,7 @@ variable {S : Type} [CommRing S] (O : Subring S)
 
 theorem mulVec_mem {n : ℕ} (M : Matrix (Fin n) (Fin n) S) (hM : ∀ i j, M i j ∈ O) (z : Fin n → S)
     (hz : ∀ k, z k ∈ O) (k : Fin n) : (M *ᵥ z) k ∈ O := by
-  simp only [mulVec, dotProduct]
-  exact O.sum_mem fun j _ => O.mul_mem (hM k j) (hz j)
+  simpa only [mulVec, dotProduct] using O.sum_mem fun j _ => O.mul_mem (hM k j) (hz j)
 
 theorem mul_mem' {n : ℕ} (M N : Matrix (Fin n) (Fin n) S) (hM : ∀ i j, M i j ∈ O) (hN : ∀ i j, N i j ∈ O)
     (i j : Fin n) : (M * N) i j ∈ O := by
@@ -157,8 +156,7 @@ theorem hform_mem {n : ℕ} (J : Matrix (Fin n) (Fin n) S) (hJ : ∀ i j, J i j 
 
 theorem cT_mem {n : ℕ} (M : Matrix (Fin n) (Fin n) S) (hM : ∀ i j, M i j ∈ O) (i j : Fin n) :
     cT s M i j ∈ O := by
-  simp only [cT, Matrix.transpose_apply, Matrix.map_apply]
-  exact hsO _ (hM j i)
+  simpa only [cT, Matrix.transpose_apply, Matrix.map_apply] using hsO _ (hM j i)
 
 theorem vmv_mem {n : ℕ} (J : Matrix (Fin n) (Fin n) S) (hJ : ∀ i j, J i j ∈ O) (u : Fin n → S)
     (hu : ∀ k, u k ∈ O) (i j : Fin n) : vecMulVec u (vecMul (fun k => s (u k)) J) i j ∈ O := by

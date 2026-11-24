@@ -133,8 +133,7 @@ theorem finite_support_localConductorExponent :
   refine (Filter.eventually_cofinite.1 h).subset fun v hv ↦ ?_
   intro hu
   apply hv
-  rw [← Nat.le_zero, ← unitsLevel_le_ker_localSymbol_iff, unitsLevel_zero]
-  exact hu
+  rwa [← Nat.le_zero, ← unitsLevel_le_ker_localSymbol_iff, unitsLevel_zero]
 
 end Local
 

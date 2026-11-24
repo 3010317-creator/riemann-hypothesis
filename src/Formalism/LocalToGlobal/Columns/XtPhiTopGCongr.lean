@@ -92,14 +92,12 @@ theorem xt_split {P : HeightOneSpectrum (𝓞 X.E)} (j : ℕ) (a : Sp X.E (R.N j
     (∀ i, IntAt P (a i)) ↔ (∀ i, IntAt P (prXpG X.E (R.N j) a i)) ∧ IntAt P (atNL X.E (R.N j) (R.N j - 1) a) := by
   rw [xt_atNL]
   constructor
-  · intro h
-    exact ⟨fun i => h _, h _⟩
+  · exact fun h => ⟨fun i => h _, h _⟩
   · rintro ⟨h1, h2⟩ i
     by_cases hi : i.1 < R.N j - 1
     · exact h1 ⟨i.1, by omega⟩
     · have : i = ⟨R.N j - 1, xt_last_lt R j⟩ := Fin.ext (by show i.1 = R.N j - 1; have := i.2; omega)
-      rw [this]
-      exact h2
+      rwa [this]
 
 theorem topDat_congr (hX : X.Ok) (hPr : Pr.Ok) (hc : cst.Ok) {i : ℕ} (hn : TopNum R i) (P : rowSG Pr sel mu) (hP : P.1 ∈ Pr.vGs)
     (y y₁ : HomE X.E (R.N i) (R.N (i + 1))) (y'' : Sp X.E (R.N i)) (hy : ∀ j, IntAt P.1 ((qOf P.1 : X.E) * y'' j))
@@ -117,8 +115,7 @@ theorem topDat_congr (hX : X.Ok) (hPr : Pr.Ok) (hc : cst.Ok) {i : ℕ} (hn : Top
       rw [xt_atNL, xt_atNL]
       exact (H j).2 hall _⟩⟩) y'' hy
   unfold topDat ftY
-  rw [ite_eq_left hP, ite_eq_left hP]
-  exact key
+  rwa [ite_eq_left hP, ite_eq_left hP]
 
 theorem topDat_int {i : ℕ} (hn : TopNum R i) (P : rowSG Pr sel mu) (hP : P.1 ∈ Pr.vGs)
     (y : HomE X.E (R.N i) (R.N (i + 1))) (y'' : Sp X.E (R.N i)) (h : topDat Ch sel mu cst i P y y'' ≠ 0) (j : Fin (R.N i)) (l : Fin (R.N (i + 1))) :

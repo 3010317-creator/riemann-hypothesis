@@ -63,15 +63,13 @@ open Formalism.L2.SG.AdBridge
 variable (I : AutInst)
 
 theorem exists_not_mem_range : ∃ x : I.E, x ∉ Set.range (algebraMap I.F I.E) := by
-  by_contra h
-  push Not at h
+  by_contra! h
   have hs : Function.Surjective (Algebra.linearMap I.F I.E) := fun x => by
     obtain ⟨a, ha⟩ := h x
     exact ⟨a, ha⟩
   have e := (LinearEquiv.ofBijective (Algebra.linearMap I.F I.E)
     ⟨(algebraMap I.F I.E).injective, hs⟩).finrank_eq
-  rw [I.cm.deg2] at e
-  rw [Module.finrank_self] at e
+  rw [I.cm.deg2, Module.finrank_self] at e
   omega
 
 private theorem exists_nat_mul_lemma {E : Type} [Field E] [NumberField E] (x : E) :

@@ -24,8 +24,7 @@ theorem cd_nmat (τ : X.Ψ) (a b : Fin r) : ContDiff ℂ ∞ fun z : V (nd X) =>
   · simp only [dite_eq_left h]
     first
     | fun_prop
-  · simp only [dite_eq_right h]
-    exact contDiff_const
+  · simpa only [dite_eq_right h] using contDiff_const
 
 theorem cd_cpt_entry (τ : X.Ψ) (a b : Fin r) :
     ContDiff ℂ ∞ fun z : V (nd X) => cpt X x0 z τ a b := by
@@ -74,8 +73,7 @@ theorem cd_dmin (τ : X.Ψ) (i : Fin (r + 1)) :
   have hC : ∀ (τ : X.Ψ) (a b : Fin r),
       ContDiff ℝ ∞ fun z : V (nd X) => starRingEnd ℂ (cpt X x0 z τ a b) := by
     intro τ a b
-    have h := Complex.conjCLE.contDiff.comp (hE τ a b)
-    simpa [Function.comp_def] using h
+    simpa [Function.comp_def] using Complex.conjCLE.contDiff.comp (hE τ a b)
   unfold dmin lminor
   simp only [Matrix.det_apply, Units.smul_def, zsmul_eq_mul]
   refine ContDiff.sum fun σ _ => contDiff_const.mul ?_
@@ -190,11 +188,9 @@ theorem levi_rh_nonneg (hGrad : RhGradFStatement (E := E)) (hx0 : IsOrth X x0) {
         · exact h0
         · norm_num at h0
       have hp : p = 0 := by
-        have h3 := congrArg Complex.re h2
-        simpa using h3
+        simpa using congrArg Complex.re h2
       have hq : q = 0 := by
-        have h3 := congrArg Complex.im h2
-        simpa using h3
+        simpa using congrArg Complex.im h2
       rw [hp, hq]
       simp
     have hL : leviV (nd X) (fun w => ((rhF X x0 w : ℝ) : ℂ)) z ξ = 0 := by

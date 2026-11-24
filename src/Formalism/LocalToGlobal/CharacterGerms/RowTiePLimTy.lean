@@ -24,8 +24,7 @@ theorem tendsS_sum {σ ι : Type} (S : Finset ι) {f : ι → ℕ → MvPowerSer
     (h : ∀ i ∈ S, TendsS V (f i) (F i)) : TendsS V (fun k => ∑ i ∈ S, f i k) (∑ i ∈ S, F i) := by
   intro μ
 
-  simp only [map_sum]
-  exact Tends.sum S (fun i hi => h i hi μ)
+  simpa only [map_sum] using Tends.sum S (fun i hi => h i hi μ)
 
 theorem tendsS_smul {σ : Type} (c : C) {f : ℕ → MvPowerSeries σ C} {F : MvPowerSeries σ C}
     (h : TendsS V f F) : TendsS V (fun k => c • f k) (c • F) := by
@@ -141,8 +140,7 @@ theorem lim_mem {d : ℕ} {I : Fin 2 → Type} [∀ g, Fintype (I g)] {κ : Type
     ⟨_, rfl⟩
   have hγlim : ∀ i, TendsS V (fun k => γk k i) (γ' i) := by
     intro i
-    simp only [hγeq, hγ'def]
-    exact TendsS.subst (fun k j => hT0 k j) hT'0 hTlim (TendsS.const _)
+    simpa only [hγeq, hγ'def] using TendsS.subst (fun k j => hT0 k j) hT'0 hTlim (TendsS.const _)
   have hγ' : IsCv V γ' := isCv_lim hγlim hγk
   have hγ'0 : ∀ i, MvPowerSeries.constantCoeff (γ' i) = 0 := fun i => (hγ' i).1
   have hrel : ∀ i, alongCv γ' (X.lg i) = T' i := by

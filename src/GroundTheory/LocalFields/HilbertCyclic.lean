@@ -37,14 +37,12 @@ theorem partialNorm_orderOf (hσ : ∀ g, g ∈ Subgroup.zpowers σ) :
   rw [partialNorm, ← Fin.prod_univ_eq_prod_range, tateNorm_apply]
   refine Fintype.prod_bijective (fun j : Fin (orderOf σ) => σ ^ (j : ℕ)) ⟨?_, ?_⟩ _ _
     (fun _ => rfl)
-  · intro i j hij
-    exact Fin.ext (pow_injOn_Iio_orderOf i.2 j.2 hij)
+  · exact fun i j hij => Fin.ext (pow_injOn_Iio_orderOf i.2 j.2 hij)
   · intro g
     obtain ⟨k, hk⟩ := (mem_powers_iff_mem_zpowers (x := σ) (y := g)).mpr (hσ g)
     refine ⟨⟨k % orderOf σ, Nat.mod_lt _ (orderOf_pos σ)⟩, ?_⟩
     change σ ^ (k % orderOf σ) = g
-    rw [pow_mod_orderOf]
-    exact hk
+    rwa [pow_mod_orderOf]
 
 variable (hσ : ∀ g, g ∈ Subgroup.zpowers σ) {x} (hx : tateNorm (L ≃ₐ[K] L) Lˣ x = 1)
 include hσ hx

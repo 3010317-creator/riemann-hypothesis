@@ -101,10 +101,8 @@ theorem stage_step (G : ℤ → Submodule K (Fin d → K)) (hG : Antitone G) (hi
   · intro x hx
     by_cases hxS : x ∈ S
     · obtain ⟨h1, h2, h3⟩ := hmem x hxS
-      simp only [hxS, ite_true]
-      exact ⟨h1, by omega, h3⟩
-    · simp only [hxS, ite_false]
-      exact ⟨hbt hx, le_rfl, hu.le⟩
+      simpa only [hxS, ite_true] using ⟨h1, by omega, h3⟩
+    · simpa only [hxS, ite_false] using ⟨hbt hx, le_rfl, hu.le⟩
   · intro u' h1 h2
     rcases eq_or_lt_of_le h1 with rfl | hlt
     · intro v hv
@@ -115,8 +113,7 @@ theorem stage_step (G : ℤ → Submodule K (Fin d → K)) (hG : Antitone G) (hi
         · have h3 := (hmem x hxS).2.1
           simp only [hxS, ite_true]
           omega
-        · simp only [hxS, ite_false]
-          exact le_rfl
+        · simpa only [hxS, ite_false] using le_rfl
       exact Submodule.span_mono hsub (htb hv)
     · refine (hspan u' (by omega) h2).trans (Submodule.span_mono ?_)
       rintro x ⟨hxS, hx⟩
@@ -131,8 +128,7 @@ theorem stage_all (G : ℤ → Submodule K (Fin d → K)) (hG : Antitone G) (hi 
     | succ k ih =>
       refine stage_step G hG hi (hi - ((k + 1 : ℕ) : ℤ)) (by push_cast; omega) ?_
       have e : hi - ((k + 1 : ℕ) : ℤ) + 1 = hi - (k : ℤ) := by push_cast; ring
-      rw [e]
-      exact ih
+      rwa [e]
   intro u hu
   have h := key (hi - u).toNat
   rwa [Int.toNat_of_nonneg (by omega), sub_sub_cancel] at h
@@ -198,15 +194,13 @@ theorem adapted (G : ℤ → Submodule K (Fin d → K)) (hG : Antitone G) (lo hi
         · rintro ⟨hxS, hx⟩
           refine ⟨e ⟨x, hxS⟩, ?_, ?_⟩
           · show u ≤ ℓ (B (e ⟨x, hxS⟩))
-            rw [hB, Equiv.symm_apply_apply]
-            exact hx
+            rwa [hB, Equiv.symm_apply_apply]
           · rw [hB, Equiv.symm_apply_apply]
         · rintro ⟨j, hj, rfl⟩
           exact ⟨by rw [hB]; exact (e.symm j).2, hj⟩
       rw [hset, Module.Basis.mem_span_image] at hcs
       by_contra hne
-      have hmemi := hcs (Finsupp.mem_support_iff.2 hne)
-      exact absurd (show u ≤ ℓ (B i) from hmemi) (not_le.2 hi'')
+      exact absurd (show u ≤ ℓ (B i) from (hcs (Finsupp.mem_support_iff.2 hne))) (not_le.2 hi'')
 
 end Formalism.MainNotions.UnusedSlot80.CrA
 end -- clump:auto
@@ -317,8 +311,7 @@ theorem secIn_of_fil (C : Formalism.MainNotions.UnusedSlot80.LevC.Ctx W) (A : Ar
     have hz := hvan ((H : ℤ) - j) (by omega) _ hmem i (by omega)
     rw [← map_mul]
     have e1 : W.π₀ * LU * Vp i = ∑ m, algebraMap O (LetA O n) (Q' (i, m)) * (W.π₀ * LU * u m) := by
-      simp only [Vp, Finset.mul_sum]
-      exact Finset.sum_congr rfl fun m _ => by ring
+      simpa only [Vp, Finset.mul_sum] using Finset.sum_congr rfl fun m _ => by ring
     have e2 : ∀ m, coeff j (W.lev a ζ (algebraMap O (LetA O n) (Q' (i, m)) * (W.π₀ * LU * u m))) =
         (PD.p : LL) ^ κ2 * (Q i m * coeff j (W.lev a ζ (W.π₀ * LU * u m))) := by
       intro m

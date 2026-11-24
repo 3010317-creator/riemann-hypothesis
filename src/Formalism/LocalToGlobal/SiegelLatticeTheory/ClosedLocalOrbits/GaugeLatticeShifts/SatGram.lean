@@ -428,8 +428,7 @@ theorem gt_mk {u' : D.what₂.Word}
 theorem gterm_G {u u' : D.what₂.Word}
     (t : GTerm X u u' (X.Fu u) (X.Fu u') (Y.what₂ u) (Y.what₂ u')) :
     t.G = Gval (lf D (X.Fu u)) t.frame := by
-  have hΛ := (Y.rowsOK u).1 t.lam t.mem
-  exact gt_mk ((_root_.term_function_const D u u' (X.Fu u) t.lam hΛ).1) _
+  exact gt_mk ((_root_.term_function_const D u u' (X.Fu u) t.lam ((Y.rowsOK u).1 t.lam t.mem)).1) _
 
 theorem corankPos_tO (u u' : D.what₂.Word) : (Y.tO u u').CorankPos := by
   intro t t' hr hG _
@@ -564,8 +563,7 @@ theorem mem_ker_jointR (TR : TypedRed X) (x : ↥(IntAf X.B.I.F X.B.I.E)) :
     x ∈ RingHom.ker (jointR TR) ↔ ZMod' X.B.I X.B.g (X.ew * x) := by
   rw [RingHom.mem_ker, ← TR.res_ker]
   constructor
-  · intro h v
-    exact congrFun h v
+  · exact fun h v => congrFun h v
   · intro h
     funext v
     exact h v
@@ -674,8 +672,7 @@ theorem card_prod (hN : GCount X) (TR : TypedRed X) :
     rw [hcard]
     constructor
     · intro h
-      rw [← hinj j i h]
-      exact hj
+      rwa [← hinj j i h]
     · intro hi
       have hij : i = j := by
         by_contra hne
@@ -750,9 +747,7 @@ theorem cardU_eq (F : Type) [Field F] [Fintype F] (p : ℕ) [Fact p.Prime] (h : 
     map_eq_zero_iff _ (eqZ F p h).injective]
   constructor
   · rintro ⟨h1, h2⟩
-    refine ⟨?_, h1⟩
-    intro i j hij
-    exact h2 i j hij
+    exact ⟨fun i j hij => h2 i j hij, h1⟩
   · rintro ⟨h1, h2⟩
     exact ⟨h2, fun i j hij => h1 i j hij⟩
 
@@ -842,8 +837,7 @@ theorem card_typ (hN : GCount X) (i : Fin 2) :
     split_ifs with h0
     · constructor
       · intro h
-        rw [← hinj 0 i h]
-        exact h0
+        rwa [← hinj 0 i h]
       · intro hi
         by_contra hne
         fin_cases i
@@ -852,8 +846,7 @@ theorem card_typ (hN : GCount X) (i : Fin 2) :
     · have h1 : ((D.host.g 1 : ℕ) : 𝓞 X.B.I.F) ∈ p.1.asIdeal := hp.resolve_left h0
       constructor
       · intro h
-        rw [← hinj 1 i h]
-        exact h1
+        rwa [← hinj 1 i h]
       · intro hi
         fin_cases i
         · exact absurd hi h0

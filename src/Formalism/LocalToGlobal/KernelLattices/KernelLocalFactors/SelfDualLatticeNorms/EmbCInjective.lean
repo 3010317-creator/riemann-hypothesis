@@ -138,8 +138,7 @@ theorem unmat_mem_hom {A : Matrix (Fin b) (Fin a) D.host.E} (hA : ∀ x ∈ s.la
   have : z = unmat s A y := by
     funext i
     exact s.iE.injective (congrFun hzz i)
-  rw [← this]
-  exact hz
+  rwa [← this]
 
 theorem gen_eq (c : 𝓞 D.host.K) (t : D.host.E) (x : HomE X.E a b) :
     phi s δ (s.iE.symm ((((c : 𝓞 D.host.K) : D.host.K) : D.host.E) * t) • x) =
@@ -249,14 +248,12 @@ theorem embH_iff (hok : s.Ok) (δ : ℂ) {a b : ℕ} (x : HomE X.E a b) (z : DVa
     funext τ i j
     have h1 := congrFun (congrFun (congrFun h (s.iT.symm τ)) i) j
     have h2 : δ * s.σ₀ (X.emb (s.iT.symm τ) (x (Pi.single j 1) i)) = z (s.iT.symm τ, i, j) := h1
-    rw [hok.1, Equiv.apply_symm_apply] at h2
-    exact h2
+    rwa [hok.1, Equiv.apply_symm_apply] at h2
   · intro h
     funext τ i j
     have h1 := congrFun (congrFun (congrFun h (s.iT τ)) i) j
     have h2 : δ * TaylorLogMetric.embT D (s.iT τ) (s.iE (x (Pi.single j 1) i)) = z (s.iT.symm (s.iT τ), i, j) := h1
-    rw [← hok.1, Equiv.symm_apply_apply] at h2
-    exact h2
+    rwa [← hok.1, Equiv.symm_apply_apply] at h2
 
 theorem lamTie : LamTie := by
   intro D X s cc δ B χ cD a b N N' hok
@@ -338,8 +335,7 @@ theorem inMul_std (hok : s.Ok) {a b : ℕ} (N : Submodule (𝓞 X.E) (Sp X.E a))
         push_cast
         ring
       · simp only [Pi.smul_apply, ite_eq_right hi, smul_zero]
-    rw [e]
-    exact h3
+    rwa [e]
 
 theorem embC_injective (hok : s.Ok) : Function.Injective (X.embC (ambOf s B χ cD).σ₀) := by
   intro τ τ' h
@@ -349,8 +345,7 @@ theorem embC_injective (hok : s.Ok) : Function.Injective (X.embC (ambOf s B χ c
   intro y
   have h1 := congrArg (fun f : X.E →+* ℂ => f (s.iE.symm y)) h
   have h2 : s.σ₀ (X.emb τ (s.iE.symm y)) = s.σ₀ (X.emb τ' (s.iE.symm y)) := h1
-  rw [hok.1, hok.1, RingEquiv.apply_symm_apply] at h2
-  exact h2
+  rwa [hok.1, hok.1, RingEquiv.apply_symm_apply] at h2
 
 theorem thF_eq {a b : ℕ} (N : Submodule (𝓞 X.E) (Sp X.E a)) (N' : Submodule (𝓞 X.E) (Sp X.E b)) :
     Formalism.L2.AlgTh.thF (ambOf s B χ cD) N N' = fun z => B.eNat χ a b (s.lat N) (s.lat N') (s.flatV a b z) := rfl

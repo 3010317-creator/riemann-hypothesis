@@ -190,8 +190,7 @@ theorem fockInner_sum_left {ι : Type*} (s : Finset ι) (f : ι → MvPolynomial
 theorem wt_conj (α : σ →₀ ℕ) : (starRingEnd ℂ) (wt α) = wt α := by
   unfold wt Finsupp.prod
   rw [map_prod]
-  refine Finset.prod_congr rfl (fun i _ => ?_)
-  exact map_natCast _ _
+  exact Finset.prod_congr rfl (fun i _ => (map_natCast _ _))
 
 theorem fockInner_swap (P Q : MvPolynomial σ ℂ) :
     fockInner Q P = (starRingEnd ℂ) (fockInner P Q) := by
@@ -209,8 +208,7 @@ theorem wt_single_add (l : σ) (α : σ →₀ ℕ) :
     intro i hi
     rw [Finsupp.mem_support_iff, Finsupp.add_apply] at hi
     by_cases h : i = l
-    · rw [h]
-      exact hl
+    · rwa [h]
     · rw [Finsupp.single_apply, ite_eq_right (Ne.symm h), zero_add] at hi
       exact Finset.mem_insert_of_mem (Finsupp.mem_support_iff.mpr hi)
   have hsub2 : α.support ⊆ insert l α.support := fun i hi => Finset.mem_insert_of_mem hi
@@ -245,8 +243,7 @@ theorem fockInner_X_mul (l : σ) (P Q : MvPolynomial σ ℂ) :
       Finset.sum_singleton, Finset.sum_singleton, coeff_monomial, coeff_monomial, ite_eq_left rfl, ite_eq_left rfl]
     by_cases h : β l = 0
     · have hl : l ∉ β.support := by
-        rw [Finsupp.mem_support_iff, not_not]
-        exact h
+        rwa [Finsupp.mem_support_iff, not_not]
       rw [coeff_X_mul', ite_eq_right hl, h]
       simp
     · have hβ : β = Finsupp.single l 1 + (β - Finsupp.single l 1) := by

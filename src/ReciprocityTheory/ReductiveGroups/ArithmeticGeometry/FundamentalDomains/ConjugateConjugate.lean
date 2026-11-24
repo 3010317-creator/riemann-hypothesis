@@ -47,8 +47,7 @@ theorem d4l2_dual_int' (t : E) (h : ∀ γ : 𝓞 E, ∃ k : ℤ, Algebra.trace 
   · have e : ((NumberField.discr E).natAbs : E) = (NumberField.discr E : E) := by
       conv_rhs => rw [hd]
       simp
-    rw [e]
-    exact key
+    rwa [e]
   · have e : ((NumberField.discr E).natAbs : E) = -(NumberField.discr E : E) := by
       conv_rhs => rw [hd]
       simp
@@ -195,8 +194,7 @@ theorem exists_emb_int (z : X.Ψ → ℂ) (g : ℕ) (hg : 0 < g)
       Nat.cast_ne_zero.2 (Nat.mul_ne_zero (Nat.mul_ne_zero two_ne_zero hg.ne')
         (Int.natAbs_ne_zero.2 (NumberField.discr_ne_zero E)))
     refine ⟨(k : ℚ) / ((2 * g * (NumberField.discr E).natAbs : ℕ) : ℚ), ?_⟩
-    rw [Rat.cast_div, Rat.cast_intCast, Rat.cast_natCast, eq_div_iff hne, mul_comm]
-    exact hk
+    rwa [Rat.cast_div, Rat.cast_intCast, Rat.cast_natCast, eq_div_iff hne, mul_comm]
   obtain ⟨ω, hω⟩ := X.exists_emb_eq z hN
   refine ⟨ω, hω, ?_⟩
   have key : ∀ γ : 𝓞 E, ∃ k : ℤ,
@@ -221,8 +219,7 @@ theorem exists_emb_int (z : X.Ψ → ℂ) (g : ℕ) (hg : 0 < g)
       ((NumberField.discr E).natAbs : E) * (((g * (NumberField.discr E).natAbs : ℕ) : E) * ω) := by
     push_cast
     ring
-  rw [e]
-  exact hint
+  rwa [e]
 
 end Data
 

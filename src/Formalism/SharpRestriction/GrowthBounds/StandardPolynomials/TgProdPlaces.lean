@@ -93,8 +93,7 @@ theorem tgTop_surj (X : Loc) (h2 : 2 ≤ numSeg X.TT) : Function.Surjective (tgT
     obtain ⟨j, hj⟩ := (rot_bij (numSeg X.TT)).2 j0
     refine ⟨⟨j, none⟩, Subtype.ext ?_⟩
     show segNext X.TT j = t
-    rw [next_eq, hj]
-    exact hj0
+    rwa [next_eq, hj]
   · obtain ⟨j, hj⟩ := odd_covered X.TT h2 t ht he
     have hs := Finset.mem_filter.mp hj
     obtain ⟨i, hi⟩ := List.mem_iff_get.mp (mem_dists.mpr ⟨t, hs, rfl⟩)
@@ -126,8 +125,7 @@ theorem tg_prod_uTop {M : Type} [CommMonoid M] {s : ℕ} (S : SegData s) (g : Fi
     ∏ l : Fin S.t, g (uTop S l) = ∏ i : Fin s, if S.sigma ≤ i.val then g i else 1 := by
   rw [← Finset.prod_filter]
   refine Finset.prod_nbij (fun l => uTop S l) ?_ ?_ ?_ (fun _ _ => rfl)
-  · intro l _
-    exact Finset.mem_filter.2 ⟨Finset.mem_univ _, Nat.le_add_right _ _⟩
+  · exact fun l _ => Finset.mem_filter.2 ⟨Finset.mem_univ _, Nat.le_add_right _ _⟩
   · intro l _ l' _ h
     have : S.sigma + l.val = S.sigma + l'.val := congrArg Fin.val h
     exact Fin.ext (by omega)

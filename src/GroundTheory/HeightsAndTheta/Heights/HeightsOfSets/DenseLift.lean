@@ -48,8 +48,7 @@ theorem exists_rootsOfUnity_eval_ne_zero {s : ℕ} {c : MvPolynomial (Fin s) ℚ
     have hx' : ∀ j, x j ^ N = 1 := fun j ↦ (Polynomial.mem_nthRootsFinset hNpos 1).mp (hx j)
     have := hcon N x hNpos hx'
     rw [MvPolynomial.eval_map]
-    rw [MvPolynomial.aeval_def] at this
-    exact this
+    rwa [MvPolynomial.aeval_def] at this
 
 theorem exists_algHom_rootsOfUnity_ne_zero {B : Type*} [CommRing B] [IsDomain B] [Algebra ℚ B]
     {s : ℕ} (g0 : MvPolynomial (Fin s) ℚ →ₐ[ℚ] B) (hinj : Function.Injective g0)
@@ -110,8 +109,7 @@ theorem exists_algHom_rootsOfUnity_ne_zero {B : Type*} [CommRing B] [IsDomain B]
   refine ⟨ψ0.toRatAlgHom, ?_, fun j ↦ ⟨N, hNpos, ?_⟩⟩
   · intro h0
     apply hcy
-    rw [← hψ0, ← hmap, ← hb]
-    rw [map_mul]
+    rw [← hψ0, ← hmap, ← hb, map_mul]
     change ψ0 b * ψ0.toRatAlgHom g = 0
     rw [h0, mul_zero]
   · change ψ0 (g0 (X j)) ^ N = 1

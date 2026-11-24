@@ -465,12 +465,10 @@ theorem Pstep_inv [CharZero K] (h : GlRel E) {NN : Submodule K W} (hN : ∀ a b,
   have hSS : ∀ a ∈ S, ∀ b ∈ S, E a b (Pstep E S z l u) = 0 := by
     intro a ha b hb
     have e1 := DFunLike.congr_fun (Pstep_comm S z l (E a b) (fun q => Om_comm_S h hz ha hb q)) u
-    simp only [Module.End.mul_apply, hS a ha b hb, map_zero] at e1
-    exact e1
+    simpa only [Module.End.mul_apply, hS a ha b hb, map_zero] using e1
   have hZ : E z z (Pstep E S z l u) = 0 := by
     have e1 := DFunLike.congr_fun (Pstep_comm S z l (E z z) (fun q => diag_comm_omega h hz q)) u
-    simp only [Module.End.mul_apply, hzz, map_zero] at e1
-    exact e1
+    simpa only [Module.End.mul_apply, hzz, map_zero] using e1
   have hJ : ∀ j ∈ S, E j z (Pstep E S z l u) = 0 := by
     intro j hj
     have hjz : j ≠ z := fun e => hz (e ▸ hj)
@@ -505,16 +503,13 @@ theorem invariant_inverse_holds : InvInv := by
     have hz : z ∉ L.toFinset := by simpa using hzL
     have hzz : E z z (InvOp E l L u) = 0 := by
       have e1 := DFunLike.congr_fun (InvOp_comm_out h l z L hzL) u
-      simp only [Module.End.mul_apply, hdiag z (by simp), map_zero] at e1
-      exact e1
+      simpa only [Module.End.mul_apply, hdiag z (by simp), map_zero] using e1
     have hS : ∀ a ∈ L.toFinset, ∀ b ∈ L.toFinset, E a b (InvOp E l L u) = 0 := by
-      intro a ha b hb
-      exact h1 a (by simpa using ha) b (by simpa using hb)
+      exact fun a ha b hb => h1 a (by simpa using ha) b (by simpa using hb)
     have key := Pstep_inv h hN hev hz h2 hS hzz
     simp only [InvOp, Module.End.mul_apply]
     refine ⟨fun a ha b hb => key a (by simpa using ha) b (by simpa using hb), Pstep_mem hN _ _ _ _ h2, ?_⟩
-    have h4 := Submodule.add_mem _ (Pstep_sub_mem (E := E) hz l (InvOp E l L u)) h3
-    simpa using h4
+    simpa using Submodule.add_mem _ (Pstep_sub_mem (E := E) hz l (InvOp E l L u)) h3
 
 end gl
 

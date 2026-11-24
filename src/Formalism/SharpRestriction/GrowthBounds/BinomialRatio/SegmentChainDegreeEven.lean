@@ -72,11 +72,9 @@ theorem strip_cons {r : ℕ} {nu mu : Fin r → ℤ} {g e : ℕ} (h : Strip nu m
     · intro hij; simp at hij
     · refine Fin.cases ?_ (fun c => ?_) i
       · intro hij
-        simp only [Fin.cons_succ, Fin.cons_zero]
-        exact h2 j' (by simpa using hij.symm)
+        simpa only [Fin.cons_succ, Fin.cons_zero] using h2 j' (by simpa using hij.symm)
       · intro hij
-        simp only [Fin.cons_succ]
-        exact h.2.1 c j' (by simpa using hij)
+        simpa only [Fin.cons_succ] using h.2.1 c j' (by simpa using hij)
   · rw [Fin.sum_univ_succ, Fin.sum_univ_succ]
     simp only [Fin.cons_zero, Fin.cons_succ]
     have := h.2.2
@@ -194,13 +192,11 @@ theorem chain_of_facts {s r : ℕ} {A0 : ℤ} {A C : Fin s → ℕ} {cp : ℕ �
         have e0 : muOf (fstOf A cp LLv) ka (Fin.castSucc ⟨2 * (i' + 1), ha⟩) =
             Fin.cons (cp i' + A ⟨i', hi⟩ - LLv.deg ⟨2 * i', by omega⟩) (ka (Fin.castSucc ⟨2 * i' + 1, by omega⟩)) := by
           have h := muOf_succ (fstOf A cp LLv) ka (2 * i' + 1) (by omega)
-          rw [show fstOf A cp LLv (2 * i' + 1 + 1) = _ from fstOf_even A cp LLv ⟨i', hi⟩] at h
-          exact h
+          rwa [show fstOf A cp LLv (2 * i' + 1 + 1) = _ from fstOf_even A cp LLv ⟨i', hi⟩] at h
         have e1 : muOf (fstOf A cp LLv) ka (Fin.succ ⟨2 * (i' + 1), ha⟩) =
             Fin.cons (cp (i' + 1)) (ka (Fin.succ ⟨2 * i' + 1, by omega⟩)) := by
           have h := muOf_succ (fstOf A cp LLv) ka (2 * (i' + 1)) (by omega)
-          rw [fstOf_odd A cp LLv (i' + 1)] at h
-          exact h
+          rwa [fstOf_odd A cp LLv (i' + 1)] at h
         have hdeg : (kLetters A0.toNat A C).deg ⟨2 * (i' + 1), ha⟩ = C ⟨i', hi⟩ :=
           kLetters_deg_even A0.toNat A C ⟨i', hi⟩
         rw [e0, e1, hdeg]
@@ -215,13 +211,11 @@ theorem chain_of_facts {s r : ℕ} {A0 : ℤ} {A C : Fin s → ℕ} {cp : ℕ �
         have e0 : muOf (fstOf A cp LLv) ka (Fin.castSucc ⟨2 * i + 1, ha⟩) =
             Fin.cons (cp i) (ka (Fin.castSucc ⟨2 * i, by omega⟩)) := by
           have h := muOf_succ (fstOf A cp LLv) ka (2 * i) (by omega)
-          rw [fstOf_odd A cp LLv i] at h
-          exact h
+          rwa [fstOf_odd A cp LLv i] at h
         have e1 : muOf (fstOf A cp LLv) ka (Fin.succ ⟨2 * i + 1, ha⟩) =
             Fin.cons (cp i + A ⟨i, hi⟩ - LLv.deg ⟨2 * i, by omega⟩) (ka (Fin.succ ⟨2 * i, by omega⟩)) := by
           have h := muOf_succ (fstOf A cp LLv) ka (2 * i + 1) (by omega)
-          rw [show fstOf A cp LLv (2 * i + 1 + 1) = _ from fstOf_even A cp LLv ⟨i, hi⟩] at h
-          exact h
+          rwa [show fstOf A cp LLv (2 * i + 1 + 1) = _ from fstOf_even A cp LLv ⟨i, hi⟩] at h
         have hdeg : (kLetters A0.toNat A C).deg ⟨2 * i + 1, ha⟩ = A ⟨i, hi⟩ :=
           kLetters_deg_odd A0.toNat A C ⟨i, hi⟩
         rw [e0, e1, hdeg]
@@ -232,14 +226,12 @@ theorem chain_of_facts {s r : ℕ} {A0 : ℤ} {A C : Fin s → ℕ} {cp : ℕ �
     have e1 : muOf (fstOf A cp LLv) ka (Fin.last (2 * s + 1)) =
         Fin.cons (cp s) (ka (Fin.castSucc (Fin.last (2 * s)))) := by
       have h := muOf_succ (fstOf A cp LLv) ka (2 * s) (by omega)
-      rw [fstOf_odd A cp LLv s] at h
-      exact h
+      rwa [fstOf_odd A cp LLv s] at h
     rw [Fin.succ_last] at hst
     rw [e1]
     intro i
     constructor
-    · simp only [Fin.cons_succ]
-      exact hst.1 i
+    · simpa only [Fin.cons_succ] using hst.1 i
     · rcases Nat.eq_zero_or_pos i.val with h0 | hp
       · have : i.castSucc = 0 := Fin.ext (by simp [h0])
         rw [this, Fin.cons_zero]
@@ -272,11 +264,9 @@ theorem muOf_inj {s r : ℕ} {fst fst' : ℕ → ℤ} {ka ka' : Fin (2 * s + 1 +
   · have e := congrFun h ⟨l.val + 1, hlt⟩
     rw [muOf_succ, muOf_succ] at e
     funext c
-    have e2 := congrFun e c.succ
-    simpa only [Fin.cons_succ] using e2
+    simpa only [Fin.cons_succ] using congrFun e c.succ
   · have hl' : l = Fin.last _ := Fin.ext (by simp only [Fin.val_last]; omega)
-    rw [hl']
-    exact hl
+    rwa [hl']
 
 theorem matchUp_of {C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ} (hF : LevFactsAt C0 CYb Cde Ck CD Cb CE1 CE2 Cc)
     (hI : SrcInjAt) : MatchUpAt C0 CYb Cde Ck CD Cb CE1 CE2 Cc := by
@@ -287,8 +277,7 @@ theorem matchUp_of {C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ} (hF : LevFactsAt C0 CY
   · intro z hz z' hz' h
     have h1 := congrArg Prod.fst h
     have h2 := congrArg (fun t => t.2.1) h
-    have h3 := congrArg (fun t => t.2.2) h
-    exact hI C0 CE1 CE2 X j m rz ry z z' hz hz' (muOf_inj h1 h2) h3
+    exact hI C0 CE1 CE2 X j m rz ry z z' hz hz' (muOf_inj h1 h2) (congrArg (fun t => t.2.2) h)
   · intro z hz
     have h := chain_of_facts (hF X hD hH hc j m hm rz ry hd z hz) hz.2.2.1
     exact ⟨h.1, h.2, rfl, rfl⟩
@@ -339,8 +328,7 @@ theorem tieSum (S : SegData s) (jl : Fin S.t → ℕ) (a : ℕ) :
       apply Fin.ext
       show l.val = a / 2 - S.sigma
       omega
-    · intro h'
-      exact absurd (Finset.mem_univ _) h'
+    · exact fun h' => absurd (Finset.mem_univ _) h'
   · apply Finset.sum_eq_zero
     intro l _
     rw [ite_eq_right]
@@ -564,8 +552,7 @@ theorem srcInjAt : SrcInjAt := by
     funext l
     have hl : l.val < segS X.TT j - (X.seg C0 CE1 CE2 j).sigma := l.2
     have := (key ⟨(X.seg C0 CE1 CE2 j).sigma + l.val, by omega⟩).2.2.2
-    rw [jE_at, jE_at] at this
-    exact this
+    rwa [jE_at, jE_at] at this
   rw [hbb, hjl]
 
 def FirstRowsAt (C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ) : Prop :=
@@ -614,8 +601,7 @@ theorem levFactsAt_of {C0 CYb Cde Ck CD Cb CE1 CE2 Cc H : ℝ}
       · have h3 := hrows.2 0 c0
         have e3 : Fin.last (2 * segS X.TT j + 1) = Fin.succ ⟨0, by omega⟩ :=
           Fin.ext (by show 2 * segS X.TT j + 1 = 1; omega)
-        rw [e3, congrArg (cap X.p (X.seg C0 CE1 CE2 j) b) hs] at h3
-        exact h3
+        rwa [e3, congrArg (cap X.p (X.seg C0 CE1 CE2 j) b) hs] at h3
       · exact (hrows.1 ⟨0, hs⟩ 0 c0).1
     exact le_trans e1 e2
   · rw [hA i, levW]

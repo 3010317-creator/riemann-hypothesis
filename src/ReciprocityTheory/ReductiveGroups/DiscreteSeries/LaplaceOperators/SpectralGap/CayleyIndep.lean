@@ -40,8 +40,7 @@ lemma kset_uj {g : Matrix (Fin n) (Fin n) ℂ} (hg : g ∈ Formalism.REAL.Kset �
   simp only [Formalism.REAL.Kset, Formalism.MainNotions.S.UJset, Formalism.REAL.inUJ, Set.mem_setOf_eq] at hg ⊢
   obtain ⟨hu, hc⟩ := hg
   have h1 : gᴴ * g = 1 := by
-    have h2 := Matrix.mem_unitaryGroup_iff'.mp hu
-    simpa [Matrix.star_eq_conjTranspose] using h2
+    simpa [Matrix.star_eq_conjTranspose] using Matrix.mem_unitaryGroup_iff'.mp hu
   rw [mul_assoc, ← hc, ← mul_assoc, h1, one_mul]
 
 lemma conj_back {a b g : Matrix (Fin n) (Fin n) ℂ} (hba : b * a = 1) : b * (a * g * b) * a = g := by
@@ -105,8 +104,7 @@ lemma urep_conj : Formalism.MainNotions.S.IsURepOn (Formalism.MainNotions.S.UJse
     rw [conj_apply σ₁ hrep ha hb (uj_mul hg hh), conj_apply σ₁ hrep ha hb hg,
       conj_apply σ₁ hrep ha hb hh, ab_cancel σ₁ hrep hab ha hb, hrep.1.2 _ hg _ hh,
       ContinuousLinearMap.comp_apply]
-  · intro g hg v
-    exact hrep.2.1 _ (hmem g hg) v
+  · exact fun g hg v => hrep.2.1 _ (hmem g hg) v
   · intro v
     have hc : Continuous (fun g : Matrix (Fin n) (Fin n) ℂ => b * g * a) :=
       (continuous_const.matrix_mul continuous_id).matrix_mul continuous_const
@@ -139,8 +137,7 @@ lemma sqint_conj (hsq : Formalism.MainNotions.S.IsSqIntOn ε σ₁) : Formalism.
 include ha hb in
 lemma isKStable_biTranslate_of_isKStable {S : Submodule ℂ H} (h : Formalism.MainNotions.S.IsKStableOn ε σ₁ S) :
     Formalism.MainNotions.S.IsKStableOn ε (fun g => σ₁ (b * g * a)) S := by
-  intro g hg v hv
-  exact h _ (kset_mul (kset_mul hb hg) ha) v hv
+  exact fun g hg v hv => h _ (kset_mul (kset_mul hb hg) ha) v hv
 
 include hba ha hb in
 lemma isKStable_of_isKStable_biTranslate {S : Submodule ℂ H} (h : Formalism.MainNotions.S.IsKStableOn ε (fun g => σ₁ (b * g * a)) S) :
@@ -154,16 +151,14 @@ lemma wt12 {μ : Fin n → ℝ} {v : H} (h : Formalism.MainNotions.S.IsWtOn (For
     Formalism.MainNotions.S.IsWtOn (Formalism.REAL.Kset ε) (fun g => σ₁ (b * g * a)) μ (σ₁ b v) := by
   intro θ hθ
   have e := conj_apply σ₁ hrep ha hb (kset_uj hθ) (σ₁ b v)
-  rw [ab_cancel σ₁ hrep hab ha hb, h θ hθ, map_smul] at e
-  exact e
+  rwa [ab_cancel σ₁ hrep hab ha hb, h θ hθ, map_smul] at e
 
 include hrep hab ha hb in
 lemma wt21 {μ : Fin n → ℝ} {v : H} (h : Formalism.MainNotions.S.IsWtOn (Formalism.REAL.Kset ε) (fun g => σ₁ (b * g * a)) μ v) :
     Formalism.MainNotions.S.IsWtOn (Formalism.REAL.Kset ε) σ₁ μ (σ₁ a v) := by
   intro θ hθ
   have e := congrArg (fun y => σ₁ a y) ((conj_apply σ₁ hrep ha hb (kset_uj hθ) v).symm.trans (h θ hθ))
-  rw [ab_cancel σ₁ hrep hab ha hb, map_smul] at e
-  exact e
+  rwa [ab_cancel σ₁ hrep hab ha hb, map_smul] at e
 
 include hrep ha in
 lemma ne_a {v : H} (hv : v ≠ 0) : σ₁ a v ≠ 0 := by

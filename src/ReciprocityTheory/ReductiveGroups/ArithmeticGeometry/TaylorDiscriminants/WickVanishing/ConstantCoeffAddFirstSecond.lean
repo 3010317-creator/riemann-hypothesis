@@ -105,8 +105,7 @@ theorem sig_add {B : FB R d O} {h : PS k 2 d} (hc : B.IsCanonGauge k h) (i : Fin
       ev (n := 2) ![pt k d 1] (sgOf k h i) =
       -ev (n := 2) ![pt k d 0] (sgOf k h i) + -ev (n := 2) ![pt k d 1] (sgOf k h i) -
         -ev (n := 2) ![(lawK k B).F] (sgOf k h i) := by ring
-  rw [e]
-  exact h2
+  rwa [e]
 
 theorem sig_lin {B : FB R d O} {h : PS k 2 d} (hc : B.IsCanonGauge k h) (i b : Fin d) :
     ∑ c, pderiv (R := k) ((0 : Fin 1), c) (sgOf k h i) * Jac (lawK k B) c b - C (sg1 k h i b) ∈ Ig R k (Fin 1 × Fin d) := by
@@ -128,8 +127,7 @@ theorem dof_sig {B : FB R d O} {h : PS k 2 d} (hc : B.IsCanonGauge k h) (u : Fin
   have e2 : (C (∑ j, sg1 k h i j * algebraMap R k (u j)) : PS k 1 d) =
       ∑ b, C (algebraMap R k (u b)) * C (sg1 k h i b) := by
 
-    simp only [map_sum, map_mul]
-    exact Finset.sum_congr rfl fun b _ => mul_comm _ _
+    simpa only [map_sum, map_mul] using Finset.sum_congr rfl fun b _ => mul_comm _ _
   rw [e1, e2, ← Finset.sum_sub_distrib]
   refine sum_mem fun b _ => ?_
   rw [← mul_sub]

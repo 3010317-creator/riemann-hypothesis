@@ -134,8 +134,7 @@ theorem wa_denom (p : ℕ) (hp : p.Prime) {n : ℕ} (M₁ M₂ : Submodule (𝓞
     have ha0 : Ideal.Quotient.mk I a = 0 := Ideal.Quotient.eq_zero_iff_mem.2 haI
     have h1' : Ideal.Quotient.mk I c * (p : 𝓞 E ⧸ I) = 1 := by
       have := congrArg (Ideal.Quotient.mk I) hca
-      rw [map_add (f := _), map_mul, ha0, add_zero, map_one, map_natCast] at this
-      exact this
+      rwa [map_add (f := _), map_mul, ha0, add_zero, map_one, map_natCast] at this
     have hx0 : x = 0 := by
       calc x = (Ideal.Quotient.mk I c * (p : 𝓞 E ⧸ I)) * x := by rw [h1', one_mul]
         _ = Ideal.Quotient.mk I c * ((p : 𝓞 E ⧸ I) * x) := by ring
@@ -194,8 +193,7 @@ theorem wa_main (hWA : WAPlaces) (hCM : PI.UG.IsCMUnram E) (p : ℕ) (hp : p.Pri
     ext x
     rw [hMmem, Submodule.mem_map]
     constructor
-    · intro h
-      exact ⟨γ x, h, by simp⟩
+    · exact fun h => ⟨γ x, h, by simp⟩
     · rintro ⟨y, hy, rfl⟩
       simpa using hy
   have hMfg : M.FG := by
@@ -231,8 +229,7 @@ theorem wa_main (hWA : WAPlaces) (hCM : PI.UG.IsCMUnram E) (p : ℕ) (hp : p.Pri
           show γ (γ.symm x') ∈ L
           simpa using hx'
         have := h _ hm
-        rw [← e, LinearEquiv.apply_symm_apply] at this
-        exact this
+        rwa [← e, LinearEquiv.apply_symm_apply] at this
   · have hstd : ∀ P : Ideal (𝓞 E), P.IsMaximal → (p : 𝓞 E) ∈ P →
         PI.UG.stdLat E n ≤ PI.UG.loc (K := E) P M := by
       intro P hP hpP x hx
@@ -243,8 +240,7 @@ theorem wa_main (hWA : WAPlaces) (hCM : PI.UG.IsCMUnram E) (p : ℕ) (hp : p.Pri
       obtain ⟨s, hs, hsx⟩ := hx2
       refine ⟨s, hs, ?_⟩
       show γ (s • x) ∈ L
-      rw [hγs]
-      exact hsx
+      rwa [hγs]
     have hM : ∀ P : Ideal (𝓞 E), P.IsMaximal → (p : 𝓞 E) ∈ P →
         M ≤ PI.UG.loc (K := E) P (PI.UG.stdLat E n) := by
       intro P hP hpP x hx
@@ -252,8 +248,7 @@ theorem wa_main (hWA : WAPlaces) (hCM : PI.UG.IsCMUnram E) (p : ℕ) (hp : p.Pri
       rw [← hγP P hP hpP] at hx1
       obtain ⟨y, hy, hyx⟩ := hx1
       have : y = x := γ.injective hyx
-      rw [← this]
-      exact hy
+      rwa [← this]
     obtain ⟨s1, hs1, h1⟩ := wa_denom p hp (PI.UG.stdLat E n) M (wa_std_fg n) hstd
     obtain ⟨s2, hs2, h2⟩ := wa_denom p hp M (PI.UG.stdLat E n) hMfg hM
     refine ⟨s1 * s2, Nat.Coprime.mul_left hs1 hs2, ?_, ?_⟩

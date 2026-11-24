@@ -186,8 +186,7 @@ theorem exists_coord (w : sp (R₀ := R) (DualNumber R) ⟶ G) (hw : IsTan w) :
   obtain ⟨ψ, ⟨h1, h2⟩, hu⟩ := hx.2.2 (DualNumber R) (fstD R) 1 kerD_sq w hw
   refine ⟨fun j => (ψ (zR 1 j)).snd, ?_, ?_⟩
   · show w = spMap (dualLift (fun j => (ψ (zR 1 j)).snd)) ≫ x 1
-    rw [← eq_dualLift ψ h1]
-    exact h2
+    rwa [← eq_dualLift ψ h1]
   · intro c hc
     have := hu (dualLift c) ⟨fstD_comp_dualLift c, hc⟩
     rw [← this]

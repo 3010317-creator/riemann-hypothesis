@@ -185,14 +185,10 @@ theorem torsion_reduction_trivial (S : StepLevel F E σ J T f bad) (G : GLoc F E
         unfold blkOf
         rw [ite_eq_left (lt_of_lt_of_le q.2 ha), ite_eq_left (lt_of_lt_of_le p.2 ha)]
         exact hqp)
-      rw [hred] at h1
-      exact h1
+      rwa [hred] at h1
     · have h1 := hInJ.2.1 p (lt_of_lt_of_le p.2 ha)
-      rw [hred] at h1
-      exact h1
-  have hiw : M ∈ iwU F n v := by
-    refine ⟨aGL, ?_, hbc⟩
-    exact Subgroup.subset_closure hup
+      rwa [hred] at h1
+  have hiw : M ∈ iwU F n v := ⟨aGL, Subgroup.subset_closure hup, hbc⟩
   have hpw : ∀ j : ℕ, M ^ j = fr⁻¹ * (bc (G.phi i v h) x) ^ j * fr := by
     intro j
     induction j with
@@ -232,8 +228,7 @@ theorem level_functional_torsion (S : StepLevel F E σ J T f bad) (v : HeightOne
     (T : ℤ) • S.fT v hv x = 0 := by
   have h := S.fT_T v hv x
   rw [map_smul] at h
-  rw [natCast_zsmul, ← Nat.cast_smul_eq_nsmul (intV E v)]
-  exact h
+  rwa [natCast_zsmul, ← Nat.cast_smul_eq_nsmul (intV E v)]
 
 def LocalDiamondCondition (S : StepLevel F E σ J T f bad) (v : HeightOneSpectrum (𝓞 F)) (hv : (T : 𝓞 F) ∈ v.asIdeal) (k : ℤ)
     (x : GL (Fin n) (E ⊗[F] v.adicCompletion F)) : Prop :=
@@ -299,8 +294,7 @@ theorem local_diamond_mem_level (S : StepLevel F E σ J T f bad) (v : HeightOneS
   rw [S.UlocAlt v hv]
   refine ⟨h2, hg, fun y => ?_⟩
   have e := h3 y
-  rw [zsmul_eq_of_dvd_sub_one T _ (level_functional_torsion S v hv _) k hk] at e
-  exact e
+  rwa [zsmul_eq_of_dvd_sub_one T _ (level_functional_torsion S v hv _) k hk] at e
 
 theorem local_multiplier_congr_one (S : StepLevel F E σ J T f bad) (hT : T.Prime) (v : HeightOneSpectrum (𝓞 F))
     (hv : (T : 𝓞 F) ∈ v.asIdeal) {k : ℤ} {x : GL (Fin n) (E ⊗[F] v.adicCompletion F)} (h : LocalDiamondCondition S v hv k x)
@@ -309,8 +303,7 @@ theorem local_multiplier_congr_one (S : StepLevel F E σ J T f bad) (hT : T.Prim
   rw [S.UlocAlt v hv] at hU
   obtain ⟨_, hg', hfix⟩ := hU
   obtain ⟨y, hy⟩ : ∃ y, S.fT v hv y ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact S.fT_ne v hv (LinearMap.ext hc)
   have e1 := h3 y
   rw [hfix y] at e1
@@ -441,8 +434,7 @@ theorem fixed_class_mem_level_general (K : ClsTied u 0 (Nat.zero_le _)) (G : GLo
   obtain ⟨g, hgU, hge⟩ := Subgroup.mem_map.1 (Subgroup.mem_subgroupOf.1 hhH)
   have e1 : (K.y c).1 = hh.1 * ((K.y c).1 * δ.1) * κ.1 := by
     have := congrArg Subtype.val e
-    simp only [Subgroup.coe_mul] at this
-    exact this
+    simpa only [Subgroup.coe_mul] using this
   have hzp := conj_pow_rational_rel (bc (inclE (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F))) g hh.1 (K.y c).1
     δ.1 κ.1 hge e1
   have hgi : g⁻¹ ∈ UJ (sigD D : D.host.E →+* D.host.E) (gramN D 0 (Nat.zero_le _)) := (UJ _ _).inv_mem hgU
@@ -732,8 +724,7 @@ theorem zero_of_group_action_zero [Fact (D.mem u).A.T.Prime] (Tf : Forms0 D u) (
   · intro a b ha hb c φ hab
     rw [map_mul, Module.End.mul_apply] at hab
     have h2 := hb _ φ (ha c _ hab)
-    rw [mul_comm a b, map_mul]
-    exact h2
+    rwa [mul_comm a b, map_mul]
   · intro c φ h1
     rw [map_one] at h1 ⊢
     exact h1
@@ -781,8 +772,7 @@ theorem multi_diamond_of_group_elem [Fact (D.mem u).A.T.Prime] (Tf : Forms0 D u)
   · intro v _
     obtain ⟨k0, hk0, δ, hδ⟩ := hE 0 (Nat.zero_le _) rfl v ((t2xU v).symm (g v))
     refine ⟨Function.update 1 v k0, δ, Formalism.L2.GlobalTheoryTheory.LocalLatticeBases.S0.multi_diamond_of_is_diamond _ _ _ ?_ v hδ, ?_, ?_⟩
-    · intro a b hab
-      exact Tf.atT.eV.injective (Subtype.ext hab)
+    · exact fun a b hab => Tf.atT.eV.injective (Subtype.ext hab)
     · intro w
       by_cases hw : w = v
       · subst hw
@@ -833,8 +823,7 @@ theorem free_rank_model_of_free_action (A : ColumnsAtT R C) {H : Type} [CommGrou
     simpa using h1
   · intro v a φ hmem x
     have hφ : (⟨A.rhoT v a φ, hmem⟩ : A.Mu0) = ρ (Pi.mulSingle v (e v a)) φ := by
-      apply Subtype.ext
-      exact (hρ v a φ).symm
+      exact Subtype.ext (hρ v a φ).symm
     rw [hφ, t2xEquiv_apply, t2xEquiv_apply]
     show Φ (ρ x.1 (ρ (Pi.mulSingle v (e v a)) φ)) (Quotient.out x.2.1) x.2.2 =
       Φ (ρ (Pi.mulSingle v (e v a) * x.1) φ) (Quotient.out x.2.1) x.2.2
@@ -853,8 +842,7 @@ theorem free_rank_model_of_diamonds (Tf : Forms0 D u) (hS : Formalism.MainNotion
   · intro g c φ h
     rw [hΦ] at h ⊢
     exact zero_of_group_action_zero Tf hE g c φ h
-  · intro g c h
-    exact group_acts_freely_classes Tf hS hE g c h
+  · exact fun g c h => group_acts_freely_classes Tf hS hE g c h
   · intro v a φ
     rw [group_rep_mulSingle_eq_rho, MulEquiv.symm_apply_apply]
 

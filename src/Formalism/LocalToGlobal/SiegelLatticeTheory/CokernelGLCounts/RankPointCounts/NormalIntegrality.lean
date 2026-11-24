@@ -70,16 +70,14 @@ theorem pair_int (hun : Formalism.HermitianLatticesTheory.IsUnimodular (VS D).hT
     simp
 
   have ha1d : a1 ∈ Formalism.HermitianLatticesTheory.dual (VS D).hT Λ := by
-    rw [show Formalism.HermitianLatticesTheory.dual (VS D).hT Λ = Λ from hun]
-    exact ha1
+    rwa [show Formalism.HermitianLatticesTheory.dual (VS D).hT Λ = Λ from hun]
   unfold Formalism.HermitianLatticesTheory.dual Formalism.E.hdual at ha1d
   have h2 := (Submodule.mem_iInf _).mp ha1d a2
   have h3 := (Submodule.mem_iInf _).mp h2 ha2
   have h4 := Submodule.mem_comap.mp h3
   obtain ⟨c, hc⟩ := Submodule.mem_one.mp h4
   refine ⟨c, ?_⟩
-  rw [e]
-  exact hc
+  rwa [e]
 
 end Hyp
 

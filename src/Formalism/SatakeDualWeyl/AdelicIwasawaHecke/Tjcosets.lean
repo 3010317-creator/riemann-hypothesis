@@ -229,8 +229,7 @@ theorem tjcosets_entries (n j : ℕ) (ϖ : L) (hϖ : ϖ ≠ 0)
     · rw [ite_eq_left ha, ite_eq_right hb, mul_one]
       apply (hmax _).2
       have := hpar a b ha (not_lt.1 hb)
-      rw [tjcosets_bc_apply] at this
-      exact this
+      rwa [tjcosets_bc_apply] at this
     · rw [ite_eq_right ha, ite_eq_left hb, one_mul]
       exact O.mul_mem ((h : Matrix (Fin n) (Fin n) O) a b).2 hϖO
     · rw [ite_eq_right ha, ite_eq_right hb, one_mul, mul_one]
@@ -265,16 +264,13 @@ theorem tjcosets_stab (n j : ℕ) (ϖ : L) (hϖO : ϖ ∈ O) (hϖ : ϖ ≠ 0)
   · rintro ⟨_, h2⟩
     refine E2.1 (fun a b => ?_)
     have h3 := h2 a b
-    rw [tjcosets_conj_apply, tjcosets_bc_apply] at h3
-    exact h3
+    rwa [tjcosets_conj_apply, tjcosets_bc_apply] at h3
   · intro hp
     refine ⟨fun a b => ?_, fun a b => ?_⟩
     · have h3 := E1.2 hp a b
-      rw [tjcosets_conj_apply, tjcosets_bc_apply]
-      exact h3
+      rwa [tjcosets_conj_apply, tjcosets_bc_apply]
     · have h3 := E2.2 hp a b
-      rw [tjcosets_conj_apply, tjcosets_bc_apply]
-      exact h3
+      rwa [tjcosets_conj_apply, tjcosets_bc_apply]
 
 theorem tjcosets_index (n j : ℕ) (ϖ : L) (hϖO : ϖ ∈ O) (hϖ : ϖ ≠ 0)
     (hmax : ∀ x : O, ϖ⁻¹ * (x : L) ∈ O ↔ IsLocalRing.residue O x = 0)
@@ -432,8 +428,7 @@ theorem tjcosets_card_residue :
         IsScalarTower.algebraMap_apply (𝓞 F) F (v.adicCompletion F),
         HeightOneSpectrum.algebraMap_adicCompletion]
       rfl
-    rw [e, Valuation.map_neg]
-    exact hr
+    rwa [e, Valuation.map_neg]
   have := v.isMaximal
   letI := Ideal.Quotient.field v.asIdeal
   let ψ := Ideal.Quotient.lift v.asIdeal φ hker

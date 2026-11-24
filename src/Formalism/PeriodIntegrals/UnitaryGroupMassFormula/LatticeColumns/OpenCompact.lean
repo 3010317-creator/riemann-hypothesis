@@ -92,10 +92,8 @@ theorem finHA_mem_Kf_iff {D : D7} (X : HidaSetting D) (hb : AdBridgeIso X.B.I) (
   rw [← hbr] at hK
   rw [Kf, Subgroup.mem_iInf]
   constructor
-  · intro h
-    exact hK.2 h
-  · intro h
-    exact hK.1 h
+  · exact fun h => hK.2 h
+  · exact fun h => hK.1 h
 
 theorem kf_eq_image {D : D7} (X : HidaSetting D) (hb : AdBridgeIso X.B.I)
     (hs : Function.Surjective (finHA X hb)) :

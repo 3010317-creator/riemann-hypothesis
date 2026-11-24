@@ -120,8 +120,7 @@ theorem IsUSmooth.hasDerivAt {ϕ : AdelicGLn.AdelicGL K n → ℂ} (hϕ : IsUSmo
   have h1 : (fun t : ℝ => archSlice ϕ g (1 * (isExpLieAlgebra K n).expG (t • Y))) =
       fun s => ϕ (g * oneParam Y s) := by
     funext s; simp only [one_mul, archSlice_apply, oneParam]
-  rw [h1] at this
-  exact this
+  rwa [h1] at this
 
 theorem hasDerivAt_stepCoeff (k : ℕ) {F F' : AdelicGLn.AdelicGL K n → ℂ} (hF : Continuous F)
     (hF' : Continuous F') {e : ℝ → AdelicGLn.AdelicGL K n} (he : Continuous e)

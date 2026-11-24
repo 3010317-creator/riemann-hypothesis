@@ -15,8 +15,7 @@ namespace Bl.SecondBlockLemmaI
 variable {A : Type} [CommRing A] (I : Ideal A)
 
 theorem goal1 [IsAdicComplete I A] (ε : A) (h : ε * ε - ε ∈ I) : ∃ e : A, e * e = e ∧ e - ε ∈ I := by
-  have hm : (X ^ 2 - X : A[X]).Monic := by
-    exact monic_X_pow_sub (lt_of_le_of_lt degree_X_le (by norm_num))
+  have hm : (X ^ 2 - X : A[X]).Monic := monic_X_pow_sub (lt_of_le_of_lt degree_X_le (by norm_num))
   have h0 : (X ^ 2 - X : A[X]).eval ε ∈ I := by
     simp only [eval_sub, eval_pow, eval_X]
     rw [pow_two]; exact h

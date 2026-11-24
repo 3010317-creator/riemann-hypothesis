@@ -80,8 +80,7 @@ theorem tensor_gaussian_vacuum_injective {θ : InfFam D} (hθ : IsInfFam θ) {V 
   intro U
   have hx := congrFun h (xL θ τ (fr * U))
   have hc : compAt θ τ (xL θ τ (fr * U)) = fr * U := by
-    have h1 := congrFun (compAt_xL hθ τ (fr * U)) τ
-    simpa [dirAt_self] using h1
+    simpa [dirAt_self] using congrFun (compAt_xL hθ τ (fr * U)) τ
   have hp : psi0 θ V n l s τ (xL θ τ (fr * U)) = 1 := by
     show gAway V l s τ (fun τ' => compAt θ τ' (xL θ τ (fr * U))) *
       g0 D V.rank n (fun i j => finPart D (xL θ τ (fr * U) i j)) = 1
@@ -90,7 +89,6 @@ theorem tensor_gaussian_vacuum_injective {θ : InfFam D} (hθ : IsInfFam θ) {V 
     rw [← Matrix.mul_assoc, Matrix.nonsing_inv_mul fr hdet, Matrix.one_mul]
   change f (fr⁻¹ * compAt θ τ (xL θ τ (fr * U))) * psi0 θ V n l s τ (xL θ τ (fr * U)) =
     g (fr⁻¹ * compAt θ τ (xL θ τ (fr * U))) * psi0 θ V n l s τ (xL θ τ (fr * U)) at hx
-  rw [hc, hp, hinv, mul_one, mul_one] at hx
-  exact hx
+  rwa [hc, hp, hinv, mul_one, mul_one] at hx
 
 end PositivityTheory.Rg.Sw.Glob.RhoH

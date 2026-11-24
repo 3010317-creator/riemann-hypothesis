@@ -40,8 +40,7 @@ theorem freeQuot_rank_span (S : Submodule R X) :
     obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective S' q
     obtain ⟨d, hd, hd'⟩ := _root_.Bl.SecondBlockLemmaK.goal1 S (y.2 : (y : X) ∈ T)
     refine ⟨d, hd, ?_⟩
-    rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]
-    exact hd'
+    rwa [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]
   have h1 := rank_quotient_add_rank_of_isDomain S'
   rw [h0, zero_add, (Submodule.comapSubtypeEquivOfLe hST).rank_eq] at h1
   rw [h1, IsLocalization.rank_eq (N := T) F (nonZeroDivisors R) le_rfl]
@@ -102,8 +101,7 @@ theorem rank_quot (M₁ : Submodule R X) (hM₁ : M₁.FG) (N : Submodule F X) :
     rw [(Submodule.equivMapOfInjective M₁.subtype M₁.injective_subtype
       ((N.restrictScalars R).comap M₁.subtype)).finrank_eq, Submodule.map_comap_subtype, ← hspan]
     exact congrArg Cardinal.toNat (freeQuot_rank_span _)
-  rw [← hP, ← hM]
-  exact hrn
+  rwa [← hP, ← hM]
 
 end
 
@@ -116,8 +114,7 @@ theorem rank_QuotMW (M : Submodule (𝓞 K) V) (hM : M.FG)
     (hspan : Submodule.span K (M : Set V) = ⊤) (W : Submodule K V) :
     Module.finrank (𝓞 K) (QuotMW M W) + Module.finrank K W = Module.finrank K V := by
   have h := rank_quot (F := K) M hM W
-  rw [hspan, top_inf_eq, finrank_top] at h
-  exact h
+  rwa [hspan, top_inf_eq, finrank_top] at h
 
 theorem span_tmul_one : Submodule.span K₁ (Set.range fun v : V => (1 : K₁) ⊗ₜ[K] v) = ⊤ := by
   rw [eq_top_iff]
@@ -161,8 +158,7 @@ theorem quot_finrank (M : Submodule (𝓞 K) V) (hM : M.FG)
       have h1 : (⟨a, ha⟩ : W) ∈ Submodule.span K (Set.range B) := by
         rw [B.span_eq]; trivial
       have h2 := Submodule.apply_mem_span_image_of_mem_span W.subtype h1
-      rw [← Set.range_comp] at h2
-      exact h2
+      rwa [← Set.range_comp] at h2
     calc finrank K₁ P ≤ _ := Submodule.finrank_mono hle
       _ ≤ Fintype.card (Fin (finrank K W)) := finrank_range_le_card _
       _ = finrank K W := Fintype.card_fin _
@@ -180,13 +176,11 @@ theorem quot_finrank (M : Submodule (𝓞 K) V) (hM : M.FG)
   let f : Fin (finrank (𝓞 K) (QuotMW M W)) → (K₁ ⊗[K] V) ⧸ P := fun j => P.mkQ (e j)
   have hfspan : ⊤ ≤ Submodule.span K₁ (Set.range f) := by
     have h1 : Set.range f = P.mkQ '' Set.range e := Set.range_comp _ _
-    rw [h1, Submodule.span_image, top_le_iff, Submodule.map_mkQ_eq_top, sup_comm]
-    exact htop
+    rwa [h1, Submodule.span_image, top_le_iff, Submodule.map_mkQ_eq_top, sup_comm]
   have hle : finrank K₁ ((K₁ ⊗[K] V) ⧸ P) ≤ finrank (𝓞 K) (QuotMW M W) := by
     have h1 : finrank K₁ (Submodule.span K₁ (Set.range f)) ≤
         Fintype.card (Fin (finrank (𝓞 K) (QuotMW M W))) := finrank_range_le_card f
-    rw [top_le_iff.mp hfspan, finrank_top, Fintype.card_fin] at h1
-    exact h1
+    rwa [top_le_iff.mp hfspan, finrank_top, Fintype.card_fin] at h1
   omega
 
 theorem detCT_ne_zero (M : Submodule (𝓞 K) V) (hM : M.FG)
@@ -213,8 +207,7 @@ theorem detCT_ne_zero (M : Submodule (𝓞 K) V) (hM : M.FG)
   let f : Fin (finrank (𝓞 K) (QuotMW M W)) → (K₁ ⊗[K] V) ⧸ P := fun j => P.mkQ (e j)
   have hfspan : ⊤ ≤ Submodule.span K₁ (Set.range f) := by
     have h1 : Set.range f = P.mkQ '' Set.range e := Set.range_comp _ _
-    rw [h1, Submodule.span_image, top_le_iff, Submodule.map_mkQ_eq_top, sup_comm]
-    exact htop
+    rwa [h1, Submodule.span_image, top_le_iff, Submodule.map_mkQ_eq_top, sup_comm]
   have hli : LinearIndependent K₁ f :=
     linearIndependent_of_top_le_span_of_card_eq_finrank hfspan (by rw [Fintype.card_fin, hq])
   intro hdet

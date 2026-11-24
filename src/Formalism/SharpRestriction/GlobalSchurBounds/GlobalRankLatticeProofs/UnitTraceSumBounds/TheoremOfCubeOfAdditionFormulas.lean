@@ -183,8 +183,7 @@ theorem logMv_eq {σ : Type} (F : MvPowerSeries σ ℂ_[p]) : logMv F = logS F :
 theorem expMv_eq {σ : Type} (F : MvPowerSeries σ ℂ_[p]) : expMv F = PI.FglPhSplit.expMv F := rfl
 
 theorem expMv_addC {σ : Type} {f g : MvPowerSeries σ ℂ_[p]} (hf : constantCoeff f = 0)
-    (hg : constantCoeff g = 0) : expMv (f + g) = expMv f * expMv g := by
-  exact PI.FglShared.expMv_add' hf hg
+    (hg : constantCoeff g = 0) : expMv (f + g) = expMv f * expMv g := PI.FglShared.expMv_add' hf hg
 
 theorem main : Lemma := by
   intro p _ W wq l ex E T ha1 ha2 ha3 ha4 ha6 hW hex0 hinv hE0 hT ⟨n, hnI, hn1, hTn⟩
@@ -298,32 +297,25 @@ theorem main : Lemma := by
     exact PI.FglShared.subst_ne_zero hex0 hinv hy0 hy
   have e0 : MvPowerSeries.coeff (Finsupp.single (0 : Fin 3) k) (lg l x0) = PowerSeries.coeff k l := by
     have h := hcoef 0 0
-    rw [ite_eq_left rfl] at h
-    exact h
+    rwa [ite_eq_left rfl] at h
   have e1 : MvPowerSeries.coeff (Finsupp.single (0 : Fin 3) k) (lg l x1) = 0 := by
     have h := hcoef 0 1
-    rw [ite_eq_right (by decide)] at h
-    exact h
+    rwa [ite_eq_right (by decide)] at h
   have e2 : MvPowerSeries.coeff (Finsupp.single (0 : Fin 3) k) (lg l x2) = 0 := by
     have h := hcoef 0 2
-    rw [ite_eq_right (by decide)] at h
-    exact h
+    rwa [ite_eq_right (by decide)] at h
   have f1 : MvPowerSeries.coeff (Finsupp.single (1 : Fin 3) k) (lg l x1) = PowerSeries.coeff k l := by
     have h := hcoef 1 1
-    rw [ite_eq_left rfl] at h
-    exact h
+    rwa [ite_eq_left rfl] at h
   have f2 : MvPowerSeries.coeff (Finsupp.single (1 : Fin 3) k) (lg l x2) = 0 := by
     have h := hcoef 1 2
-    rw [ite_eq_right (by decide)] at h
-    exact h
+    rwa [ite_eq_right (by decide)] at h
   have g2 : MvPowerSeries.coeff (Finsupp.single (2 : Fin 3) k) (lg l x2) = PowerSeries.coeff k l := by
     have h := hcoef 2 2
-    rw [ite_eq_left rfl] at h
-    exact h
+    rwa [ite_eq_left rfl] at h
   have g0 : MvPowerSeries.coeff (Finsupp.single (2 : Fin 3) k) (lg l x0) = 0 := by
     have h := hcoef 2 0
-    rw [ite_eq_right (by decide)] at h
-    exact h
+    rwa [ite_eq_right (by decide)] at h
   have hs0 : s ≠ 0 := by
     have hs' : s = pt ex (lg l x0 + lg l x1 + lg l x2) := by
       show pt ex (lg l (add l ex x0 x1) + lg l x2) = _
@@ -348,8 +340,7 @@ theorem main : Lemma := by
       PowerSeries.constantCoeff_subst_eq_zero ha _ (by rw [map_sub, hE0, map_one, sub_self])
     rw [← PowerSeries.coe_substAlgHom hsa, map_sub, map_one, map_sub, map_one, sub_eq_zero] at h1
     unfold eAt
-    rw [← PowerSeries.coe_substAlgHom hsa]
-    exact h1
+    rwa [← PowerSeries.coe_substAlgHom hsa]
   have hR : (eAt E x0 * eAt E x1 * eAt E x2) ^ 3 ≠ 0 := by
     intro h
     have := congrArg MvPowerSeries.constantCoeff h
@@ -448,8 +439,7 @@ theorem wq_const' {W : WeierstrassCurve ℂ_[p]} {wq : PowerSeries ℂ_[p]} (h :
   have h' : wq = 1 + cP W.a₁ * PowerSeries.X * wq + cP W.a₂ * PowerSeries.X ^ 2 * wq +
       cP W.a₃ * PowerSeries.X ^ 3 * wq ^ 2 + cP W.a₄ * PowerSeries.X ^ 4 * wq ^ 2 +
       cP W.a₆ * PowerSeries.X ^ 6 * wq ^ 3 := h
-  have e := congrArg PowerSeries.constantCoeff h'
-  simpa using e
+  simpa using congrArg PowerSeries.constantCoeff h'
 
 theorem D_const (W : WeierstrassCurve ℂ_[p]) (wq : PowerSeries ℂ_[p]) :
     PowerSeries.constantCoeff (Dser W wq) = 1 := by
@@ -564,8 +554,7 @@ private theorem derivative_subst_eq_subst_derivative_mul (a f : PowerSeries ℂ_
     rw [MvPowerSeries.coeff_pderiv, ← Finsupp.single_add, Finsupp.single_eq_same]
     rfl
   have := PI.AddIntG.Wk.pderiv_subst (σ := Unit) ha f ()
-  rw [hpd, hpd] at this
-  exact this
+  rwa [hpd, hpd] at this
 
 theorem flog_iW {W : WeierstrassCurve ℂ_[p]} {wq : PowerSeries ℂ_[p]} (h : IsWq W wq) :
     PowerSeries.subst (iW W wq) (flog W wq) = -flog W wq := by
@@ -681,8 +670,7 @@ theorem cc_msubst {φ : Fin 2 → MvPowerSeries (Fin 2) ℂ_[p]} (hφ : MvPowerS
   · simp
   · intro d hd
     obtain ⟨s, hs⟩ : ∃ s, d s ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hd (Finsupp.ext h)
     have h0 : MvPowerSeries.constantCoeff (d.prod fun s e => φ s ^ e) = 0 := by
       rw [Finsupp.prod, map_prod]
@@ -999,8 +987,7 @@ theorem main_mv (p : ℕ) [Fact p.Prime] (W : WeierstrassCurve ℂ_[p]) (wq ex :
       (inv_mem_SerS S hwa0 hwaS)) (inv_mem_SerS S hwb0 hwbS)
   refine ⟨-(P2 * U⁻¹ * (-U')⁻¹) * (PowerSeries.subst (MvPowerSeries.X 0 : MvPowerSeries (Fin 2) ℂ_[p]) wq)⁻¹ *
       (PowerSeries.subst (MvPowerSeries.X 1 : MvPowerSeries (Fin 2) ℂ_[p]) wq)⁻¹, ?_, ?_, ?_⟩
-  · intro e
-    exact (hS _).1 ((mem_SerS S _).1 hnS e)
+  · exact fun e => (hS _).1 ((mem_SerS S _).1 hnS e)
   · simp only [map_mul, map_neg, MvPowerSeries.constantCoeff_inv, hP2c, hUc, hU'c, hwa0, hwb0]
     norm_num
   · have hPd' : MvPowerSeries.X 0 ^ 2 * PowerSeries.subst (MvPowerSeries.X 0 : MvPowerSeries (Fin 2) ℂ_[p]) wq -
@@ -1294,20 +1281,17 @@ theorem main : Lemma := by
   have hlg : ∀ i : Fin 2, constantCoeff (lg l (Xv i : MvPowerSeries (Fin 2) ℂ_[p])) = 0 := by
     intro i
     unfold lg
-    rw [constantCoeff_subst_of_zero (hcX i)]
-    exact hl0
+    rwa [constantCoeff_subst_of_zero (hcX i)]
   have hs0 : constantCoeff (lg l (Xv 0 : MvPowerSeries (Fin 2) ℂ_[p]) + lg l (Xv 1)) = 0 := by
     rw [map_add (f := _), hlg, hlg, add_zero]
   have hd0 : constantCoeff (lg l (Xv 0 : MvPowerSeries (Fin 2) ℂ_[p]) - lg l (Xv 1)) = 0 := by
     rw [map_sub, hlg, hlg, sub_zero]
   have hA0 : constantCoeff (add l ex (Xv 0) (Xv 1) : MvPowerSeries (Fin 2) ℂ_[p]) = 0 := by
     unfold add pt
-    rw [constantCoeff_subst_of_zero hs0]
-    exact hex0
+    rwa [constantCoeff_subst_of_zero hs0]
   have hB0 : constantCoeff (sub l ex (Xv 0) (Xv 1) : MvPowerSeries (Fin 2) ℂ_[p]) = 0 := by
     unfold sub pt
-    rw [constantCoeff_subst_of_zero hd0]
-    exact hex0
+    rwa [constantCoeff_subst_of_zero hd0]
   obtain ⟨k, hk, hlk⟩ := exists_coeff_ne hex0 hinv
   have hc0 : ∀ i : Fin 2, coeff (Finsupp.single (0 : Fin 2) k) (lg l (Xv i : MvPowerSeries (Fin 2) ℂ_[p])) =
       if i = 0 then PowerSeries.coeff k l else 0 := fun i => coeff_single_lg l 0 i hk
@@ -1361,8 +1345,7 @@ theorem main : Lemma := by
   have hph0 : ∀ a : MvPowerSeries (Fin 2) ℂ_[p], constantCoeff a = 0 → constantCoeff (phAt E a) = 0 := by
     intro a ha
     unfold phAt
-    rw [constantCoeff_subst_of_zero ha, logMv_eq]
-    exact hnL0
+    rwa [constantCoeff_subst_of_zero ha, logMv_eq]
   have hnph0 : ∀ a : MvPowerSeries (Fin 2) ℂ_[p], constantCoeff a = 0 → constantCoeff (-phAt E a) = 0 := by
     intro a ha
     rw [map_neg, hph0 a ha, neg_zero]

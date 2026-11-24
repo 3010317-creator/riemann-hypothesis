@@ -100,8 +100,7 @@ theorem mem_chartPrime_iff (y : (Σ k, ι k) → Ω) {c : ∀ k, ι k} {W : Idea
       (add_comm e d) ?_ (W.mul_mem_left _ hgW)
     simp only [map_mul, HilbertSamuel.SmallSectionsNonzero.aeval_chartMono]
     linear_combination (-(∏ k, y ⟨k, c k⟩ ^ e k)) * hd + (∏ k, y ⟨k, c k⟩ ^ d k) * hr
-  · intro hkW
-    exact ⟨e, k, hk, hkW, hr⟩
+  · exact fun hkW => ⟨e, k, hk, hkW, hr⟩
 
 theorem chartPrime_add (y : (Σ k, ι k) → Ω) {c : ∀ k, ι k} {W : Ideal (MRing ι)} {r r' : Ω}
     (hr : r ∈ chartPrime y c W) (hr' : r' ∈ chartPrime y c W) : r + r' ∈ chartPrime y c W := by
@@ -180,8 +179,7 @@ theorem curvePtIdeal_eq (y : (Σ k, ι k) → Ω) {c : ∀ k, ι k} {W : Ideal (
     apply Ideal.subset_span
     refine ⟨d, g, HilbertSamuel.SmallSectionsNonzero.chartMono c d, hg,
       HilbertSamuel.SmallSectionsNonzero.isMultiHomog_chartMono c d, hgW, chartMono_notMem hWp hc d, ?_⟩
-    rw [HilbertSamuel.SmallSectionsNonzero.aeval_chartMono]
-    exact hd
+    rwa [HilbertSamuel.SmallSectionsNonzero.aeval_chartMono]
 
 theorem chartPrimeB_isMaximal (y : (Σ k, ι k) → Ω) {c : ∀ k, ι k} {W : Ideal (MRing ι)}
     (hB : Module.Finite ℤ (curveRing y))

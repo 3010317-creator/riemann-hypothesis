@@ -104,8 +104,7 @@ private theorem mem_fundamentalDomain_reindex_bstd_iff {N : ℕ} (e : Fin N ≃ 
   · intro h p
     have := h (e.symm p)
     rwa [Equiv.apply_symm_apply] at this
-  · intro h j
-    exact h (e j)
+  · exact fun h j => h (e j)
 
 theorem volume_fd_std {N : ℕ} (e : Fin N ≃ ι × κ × Fin 2) :
     volume (ZSpan.fundamentalDomain ((bstd : Module.Basis (ι × κ × Fin 2) ℝ (ι → κ → ℂ)).reindex e.symm)) = 1 := by
@@ -119,7 +118,6 @@ theorem volume_fd_std {N : ℕ} (e : Fin N ≃ ι × κ × Fin 2) :
       intro i _
       rw [Set.mem_pi]
       intro c _
-      show (m i c).re ∈ Set.Ico (0 : ℝ) 1 ∧ (m i c).im ∈ Set.Ico (0 : ℝ) 1
       exact ⟨by simpa [reCo_apply] using h (i, c, 0), by simpa [reCo_apply] using h (i, c, 1)⟩
     · intro h p
       obtain ⟨i, c, t⟩ := p
@@ -218,8 +216,7 @@ theorem covol_of_gram {N : ℕ} (w : Fin N → (ι → κ → ℂ)) (g : κ → 
   obtain ⟨b, hb⟩ : ∃ b : Module.Basis (Fin N) ℝ (ι → κ → ℂ), ⇑b = w :=
     ⟨Module.Basis.mk hli hsp.ge, by simp⟩
   have hEq : (Submodule.span ℤ (Set.range ⇑b)).toAddSubgroup = AddSubgroup.closure (Set.range w) := by
-    rw [hb]
-    exact hEqW
+    rwa [hb]
   refine ⟨hcount, ⟨ZSpan.fundamentalDomain b, ZSpan.fundamentalDomain_measurableSet b, fun v => ?_⟩,
     fun F hFm hF => ?_⟩
   · rw [← hEq]
@@ -340,8 +337,7 @@ theorem rowRank_holds : RowRank := by
     refine le_antisymm (Submodule.map_comap_le _ _) fun x hx => ?_
     refine ⟨eS ⟨x, hSle x hx⟩, ?_, ?_⟩
     · show Φ (eS ⟨x, hSle x hx⟩) ∈ aaLbS X b
-      rw [hΦ, LinearEquiv.symm_apply_apply]
-      exact hx
+      rwa [hΦ, LinearEquiv.symm_apply_apply]
     · show Φ (eS ⟨x, hSle x hx⟩) = x
       rw [hΦ, LinearEquiv.symm_apply_apply]
   have hAfg : A.FG := Submodule.fg_of_fg_map_injective Φ hΦinj (by rw [hmap]; exact fg_aaLbS X b)
@@ -355,8 +351,7 @@ theorem rowRank_holds : RowRank := by
       | mem x hx =>
         refine Submodule.subset_span ?_
         show Φ (eS ⟨x, _⟩) ∈ aaLbS X b
-        rw [hΦ, LinearEquiv.symm_apply_apply]
-        exact hx
+        rwa [hΦ, LinearEquiv.symm_apply_apply]
       | zero =>
         have : eS ⟨0, S.zero_mem⟩ = 0 := by
           rw [show (⟨0, S.zero_mem⟩ : S) = 0 from rfl, map_zero]

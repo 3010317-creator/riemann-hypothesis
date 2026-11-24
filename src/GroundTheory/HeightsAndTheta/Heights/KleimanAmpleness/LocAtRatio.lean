@@ -109,8 +109,7 @@ theorem restrictData_scale {Ω : Type w} [Field Ω] [Algebra k Ω] {x : Fin (N +
     (hr : Kleiman.RestrictData Q hxy P.toSubSystem r) (μ : K') (hμ : μ ≠ 0) :
     Kleiman.RestrictData Q hxy (scaleBundle P μ hμ).toSubSystem (fun q => μ * r q) := by
   constructor
-  · intro I q hq
-    exact Submodule.mem_span_singleton_mul.mpr ⟨r q, hr.mem I q hq, rfl⟩
+  · exact fun I q hq => Submodule.mem_span_singleton_mul.mpr ⟨r q, hr.mem I q hq, rfl⟩
   · intro I q hq q' hq'
     simp only [hr.add I q hq q' hq', mul_add]
   · intro I q hq f s e hs hf hse
@@ -153,8 +152,7 @@ theorem graphEq_of_le {K' : Type} [Field K'] [Algebra k K'] {x : Fin (N + 1) →
   have hmem : X ⟨Sum.inr (), b⟩ * baseRename h - X ⟨Sum.inr (), l⟩ * baseRename f ∈
       mIdealOver k (graphVec x s) := by
     change _ ∈ RingHom.ker _
-    rw [RingHom.mem_ker]
-    rw [mConeMapOver_graphEq x s hf hh, hx, sub_self, map_zero, zero_mul]
+    rw [RingHom.mem_ker, mConeMapOver_graphEq x s hf hh, hx, sub_self, map_zero, zero_mul]
   have h0 := hle hmem
   change _ ∈ RingHom.ker _ at h0
   rw [RingHom.mem_ker] at h0
@@ -412,8 +410,7 @@ theorem GraphRestrict.full : GraphRestrict.Statement := by
       rw [← hgen]; exact Submodule.subset_span ⟨b, rfl⟩
     obtain ⟨q, hq, hqb⟩ :=
       (TranslateEq.mem_twist_twistSys_iff Q.toSubSystem n (Kleiman.liftChart hxy I) hi (s b)).mp hsb
-    rw [hqb, smul_eq_mul, ← mul_assoc, ← zpow_add₀ hxi, neg_add_cancel, zpow_zero, one_mul]
-    exact hq
+    rwa [hqb, smul_eq_mul, ← mul_assoc, ← zpow_add₀ hxi, neg_add_cancel, zpow_zero, one_mul]
   have hi₀I : i₀ ∈ (Kleiman.singleChart hi₀).1 := Finset.mem_singleton_self i₀
   have hx₀ : x i₀ ≠ 0 := hxy i₀ hi₀
   obtain ⟨t, ht⟩ : ∃ t : Fin m → Ω, t = fun b => x i₀ ^ (-n) * s b / γ := ⟨_, rfl⟩

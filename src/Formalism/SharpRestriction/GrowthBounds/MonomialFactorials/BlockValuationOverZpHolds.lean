@@ -709,10 +709,8 @@ theorem chDeg_cast (LL : M.Letters N) (a0 : Fin N) : chDeg LL (Fin.castSucc a0) 
   · simp
   · intro b _ hb
     rw [ite_eq_right]
-    intro h
-    exact hb (Fin.castSucc_injective _ h)
-  · intro h
-    exact absurd (Finset.mem_univ a0) h
+    exact fun h => hb (Fin.castSucc_injective _ h)
+  · exact fun h => absurd (Finset.mem_univ a0) h
 
 theorem chDeg_last (LL : M.Letters N) : chDeg LL (Fin.last N) = 0 := by
   unfold chDeg
@@ -774,8 +772,7 @@ theorem level_room (hB : G.BlockOK) (j : Fin G.T.t → ℕ) (jp : ℕ) (hl : G.L
         · exact hdisj i0 b (by omega)
         · exact hdisj b i0 (by omega)
         · exact hb (hmono.injective (by omega))
-      · intro h'
-        exact absurd (Finset.mem_univ i0) h'
+      · exact fun h' => absurd (Finset.mem_univ i0) h'
     · push Not at hex
       rw [Finset.sum_eq_zero]
       · exact Nat.zero_le _
@@ -850,10 +847,8 @@ theorem sum_ite_inj_le {ι α : Type} [Fintype ι] [DecidableEq α] (x : ι → 
     · intro b _ hb
       rw [ite_eq_right]
       · simp
-      intro hba
-      exact hb (hx (hba.trans hi0.symm))
-    · intro h'
-      exact absurd (Finset.mem_univ i0) h'
+      exact fun hba => hb (hx (hba.trans hi0.symm))
+    · exact fun h' => absurd (Finset.mem_univ i0) h'
   · push Not at hex
     rw [Finset.sum_eq_zero]
     · exact Nat.zero_le _
@@ -1035,8 +1030,7 @@ theorem restValNum_proved {CYb Cde Ck CD Cb Cc : ℝ} (hCYb : 1 ≤ CYb) (hCE1 :
     have e2 := Real.logb_le_logb_of_le hp1 e0 e1
     rw [Real.logb_mul (by linarith) hbase.ne'] at e2
     have e3 : Real.logb X.p (3 * (X.s : ℝ) + 2) ≤ 1 := by
-      rw [Real.logb_le_iff_le_rpow hp1 (by linarith), Real.rpow_one]
-      exact hsp
+      rwa [Real.logb_le_iff_le_rpow hp1 (by linarith), Real.rpow_one]
     unfold lgA
     linarith
   have hL1 : (Nat.log X.p (8 * aBig X + X.r) : ℝ) ≤ lgA X.p X.L.a X.r := by

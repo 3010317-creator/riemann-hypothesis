@@ -95,8 +95,7 @@ theorem constantCoeff_subst_of_zero {σ τ : Type*} [Finite σ] [Finite τ]
   · simp
   · intro d hd
     obtain ⟨i, hi⟩ : ∃ i, d i ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hd (Finsupp.ext h)
     have h0 : constantCoeff (d.prod fun s e => b s ^ e) = 0 := by
       rw [Finsupp.prod, map_prod]
@@ -254,8 +253,7 @@ theorem omega_key :
   simp only [subst_X hc3, Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one,
     Matrix.cons_val_two, Matrix.tail_cons, Matrix.head_cons] at E'
   rw [subst_XX, F.add_zero (PowerSeries.HasSubst.of_constantCoeff_zero hX1), subst_XX] at E'
-  rw [omega_subst hFc, atY, omega_subst hX1]
-  exact E'
+  rwa [omega_subst hFc, atY, omega_subst hX1]
 
 end Formalism.G.LogP
 
@@ -292,8 +290,7 @@ theorem eq_zero_of_pderiv_one [Algebra ℚ R] {h : MvPowerSeries (Fin 2) R}
       fin_cases s
       · simp
       · exact absurd hn (Finsupp.mem_support_iff.mp hs)
-    rw [hprod, one_mul] at h1
-    exact h1
+    rwa [hprod, one_mul] at h1
   · have hm : n = (n - Finsupp.single 1 1) + Finsupp.single 1 1 := by
       ext i
       fin_cases i <;> simp <;> omega
@@ -358,8 +355,7 @@ theorem logF_isLog : IsLog F (logF F) := by
         subst_X hc2, subst_X hc2]
       simp [PowerSeries.subst_zero_of_constantCoeff_zero hc0]
     have := eq_zero_of_pderiv_one hD h0
-    rw [sub_sub, sub_eq_zero] at this
-    exact this
+    rwa [sub_sub, sub_eq_zero] at this
 
 end Formalism.G.LogP
 

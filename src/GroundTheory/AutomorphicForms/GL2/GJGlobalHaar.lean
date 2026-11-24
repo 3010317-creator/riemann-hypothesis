@@ -100,8 +100,7 @@ theorem integrable_iff_prod (hn : 0 < n) {E : Type*} [NormedAddCommGroup E]
   have e : Integrable H ν ↔ Integrable H ((centralHaarConst hn μ ν : ℝ≥0∞) • splitHaar hn μ) := by
     conv_lhs => rw [h]
     rfl
-  rw [e]
-  rw [integrable_smul_measure hc ENNReal.coe_ne_top, integrable_splitHaar_iff]
+  rw [e, integrable_smul_measure hc ENNReal.coe_ne_top, integrable_splitHaar_iff]
   simp only [centralSection_mul_comm]
 
 instance isMulRightInvariant_splitHaar : (splitHaar (K := K) hn μ).IsMulRightInvariant := by
@@ -122,8 +121,7 @@ theorem isMulRightInvariant_haar (hn : 0 < n) : ν.IsMulRightInvariant := by
   have h := eq_centralHaarConst_smul hn μ₀ ν
   have : ((centralHaarConst hn μ₀ ν) • splitHaar (K := K) hn μ₀).IsMulRightInvariant :=
     inferInstance
-  rw [h]
-  exact this
+  rwa [h]
 
 theorem isInvInvariant_haar (hn : 0 < n) : ν.IsInvInvariant := by
   have := isMulRightInvariant_haar ν hn

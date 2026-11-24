@@ -58,9 +58,7 @@ theorem LiftAtPrime.proof (hC : GeneratedPow.Statement) (hA : FibreSectionLift.S
       Fintype.sum_sigma, Finset.sum_eq_single J]
     · refine Finset.sum_congr rfl fun j _ => ?_
       simp [U]
-    · intro I _ hI
-      exact Finset.sum_eq_zero fun j _ => by simp [U, hI]
-    · intro h
-      exact absurd (Finset.mem_univ J) h
+    · exact fun I _ hI => Finset.sum_eq_zero fun j _ => by simp [U, hI]
+    · exact fun h => absurd (Finset.mem_univ J) h
 
 end GroundTheory.Heights₂.Heights.HilbertSamuel

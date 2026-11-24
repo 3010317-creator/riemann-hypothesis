@@ -149,8 +149,7 @@ theorem fixM (V : HSp D) {ψ : AddChar (AF D.host.F) ℂ} {χ : (AE D)ˣ →* Ci
         rw [Matrix.mul_assoc, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.mul_one]
       rw [ex]
       exact intS_mul h hint' i j
-    · intro h i j
-      exact intS_mul h hint i j
+    · exact fun h i j => intS_mul h hint i j
   have hexa : ∀ x : Mx D V.rank n, e • (x * a.1) = e • x := by
     intro x
     ext i j
@@ -326,8 +325,7 @@ theorem finPart_plc_mem (v : Pl D) {t : Fv D.host.F v ⊗[D.host.F] D.host.E} (h
   by_cases h : w = v
   · subst h
     show (iV w a).2 w ∈ _
-    rw [show (iV w a).2 w = a from GlobalTheory.CompanionTheory.PsiCondLoc.single_self w a]
-    exact ha
+    rwa [show (iV w a).2 w = a from GlobalTheory.CompanionTheory.PsiCondLoc.single_self w a]
   · show (iV v a).2 w ∈ _
     rw [show (iV v a).2 w = 0 from GlobalTheory.CompanionTheory.PsiCondLoc.single_ne v a h]
     exact zero_mem _
@@ -540,8 +538,7 @@ theorem unit_triv (D : D7) (χ : (AE D)ˣ →* Circle) (hχ : IsHeckeChar D χ) 
   have hinv : ∀ v ∈ S, cv D v ((u⁻¹ : (AE D)ˣ) : AE D) = 1 := by
     intro v hv
     have := congrArg (cv D v) u.inv_mul
-    rw [RingHom.map_mul, RingHom.map_one, hSv v hv, mul_one] at this
-    exact this
+    rwa [RingHom.map_mul, RingHom.map_one, hSv v hv, mul_one] at this
   have hint : ∀ z : AE D, (∀ v ∈ S, cv D v z ∈ intLoc D.host.F D.host.E v) →
       (∀ v ∉ S, cv D v z ∈ intLoc D.host.F D.host.E v) → finPart D z ∈ intAE D := by
     intro z h1 h2
@@ -632,8 +629,7 @@ theorem fixW : IdemEx → GenK → WMaj → FixW := by
       constructor
       · intro h x
         rw [h]
-      · intro h
-        exact Subtype.ext (funext h)
+      · exact fun h => Subtype.ext (funext h)
     rw [hEq]
     exact isClosed_iInter fun x =>
       isClosed_eq (hcont.comp (continuous_id.prodMk continuous_const)) continuous_const

@@ -50,8 +50,7 @@ theorem cEi_infPart (x : AE D) : cEi D (infPart D x) = fun a => (cED D x a).1 :=
 theorem finPart_eq_zero_iff (x : AE D) : finPart D x = 0 ↔ ∀ a, (cED D x a).2 = 0 := by
   rw [← (cEf D).map_eq_zero_iff (x := finPart D x), cEf_finPart]
   constructor
-  · intro h a
-    exact congrFun h a
+  · exact fun h a => congrFun h a
   · intro h
     funext a
     exact h a
@@ -59,8 +58,7 @@ theorem finPart_eq_zero_iff (x : AE D) : finPart D x = 0 ↔ ∀ a, (cED D x a).
 theorem infPart_eq_zero_iff (x : AE D) : infPart D x = 0 ↔ ∀ a, (cED D x a).1 = 0 := by
   rw [← (cEi D).map_eq_zero_iff (x := infPart D x), cEi_infPart]
   constructor
-  · intro h a
-    exact congrFun h a
+  · exact fun h a => congrFun h a
   · intro h
     funext a
     exact h a

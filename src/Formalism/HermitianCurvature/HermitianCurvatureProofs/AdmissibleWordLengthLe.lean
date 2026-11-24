@@ -73,8 +73,7 @@ lemma admissible_word_mem_lie {n : ℕ} {w : List (Bool × Mat k r)} (h : admitt
 
 lemma admissible_word_length_le {n : ℕ} {w : List (Bool × Mat k r)} (h : admitted n w) : w.length ≤ n := by
   obtain ⟨u, v, -, -, hl, rfl⟩ := h
-  rw [len_LR]
-  exact hl
+  rwa [len_LR]
 
 section defs
 
@@ -88,8 +87,7 @@ def UB (f : Mat k r → E) (S : Set (Mat k r)) (n : ℕ) (C : ℝ) (e γ : ℕ) 
   ∀ w, admitted n w → ∀ g ∈ S, ‖Dw w f g‖ ≤ C * gN g ^ (e + γ * w.length)
 
 lemma lss_of_contDiff {f : Mat k r → E} (hf : ContDiff ℝ ∞ f) (S : Set (Mat k r)) : LSS f S := by
-  intro g _
-  exact ⟨f, hf, univ, isOpen_univ, mem_univ g, fun _ _ _ => rfl⟩
+  exact fun g _ => ⟨f, hf, univ, isOpen_univ, mem_univ g, fun _ _ _ => rfl⟩
 
 lemma lss_mono {f : Mat k r → E} {S S' : Set (Mat k r)} (h : LSS f S) (hS : S' ⊆ S) : LSS f S' := fun g hg => h g (hS hg)
 
@@ -185,8 +183,7 @@ lemma ub_const (c : E) (S : Set (Mat k r)) (hSG : S ⊆ GV k r) (n : ℕ) (γ : 
     simp
   | cons x w =>
     rw [Dw_cons_const_eq_zero]
-    simp only [norm_zero]
-    exact mul_nonneg (norm_nonneg c) (pow_nonneg h0 _)
+    simpa only [norm_zero] using mul_nonneg (norm_nonneg c) (pow_nonneg h0 _)
 
 end defs
 

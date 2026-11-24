@@ -56,8 +56,7 @@ theorem range_op_eq_span {n k : ℕ} {σ : K →+* ℂ} {W : Type} [NormedAddCom
   · rw [LinearMap.range_eq_map, ← h.span, Submodule.map_span, Submodule.span_le]
     rintro _ ⟨_, ⟨i, rfl⟩, rfl⟩
     obtain ⟨F, hF⟩ := h1 (Pi.single i 1)
-    apply Submodule.subset_span
-    exact ⟨F, by rw [h.op_eq, hF]⟩
+    exact Submodule.subset_span ⟨F, by rw [h.op_eq, hF]⟩
   · rw [Submodule.span_le]
     rintro _ ⟨F, rfl⟩
     exact LinearMap.mem_range.mpr ⟨j (V.mulVec F), by rw [h.op_eq, h2]⟩

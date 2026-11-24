@@ -329,8 +329,7 @@ theorem minor_of : FrameBasis → Minor := by
     linarith
   have hdle : ‖N.det‖ ≤ i.val.factorial * (K * (1 + z)) ^ i.val := by
     have := Matrix.det_le (A := N) (abv := NormedField.toAbsoluteValue ℂ) (x := K * (1 + z)) hent
-    rw [Fintype.card_fin, nsmul_eq_mul] at this
-    exact this
+    rwa [Fintype.card_fin, nsmul_eq_mul] at this
   have hv : Real.exp (viol s t) ≤ (A * (1 + z)) ^ (n + 1) := by
     have e1 : Real.exp (viol s t) ≤ Real.exp (psum s i - ∑ a, lam' (c a) t) := by
       rw [viol, ← hi]
@@ -491,8 +490,7 @@ theorem frameBasis_of : FrameBasis := by
         simpa [lam0, rId_zero, v] using this
     ext l k
     have := congrFun (key (e.symm k)) l
-    rw [Matrix.mul_diagonal, mul_comm, ← Algebra.smul_def]
-    exact this
+    rwa [Matrix.mul_diagonal, mul_comm, ← Algebra.smul_def]
 
 end PositivityTheory.ThKEst
 
@@ -1399,8 +1397,7 @@ theorem qb_piece (hP : Parity) (hS : CoefSum) (hE : CoefEq) (hB : CoefBd) (hp : 
   rw [theta_neg hP hp hm] at e
   refine sq_le_of_coef hc (apply_nonneg q f) e (fun x hx => h0 f μ hμ _ fun hr => hx ?_) fun x => ?_
   · rw [Matrix.map_mul, Matrix.map_mul, ThKEst.W.incM_piW] at hr
-    have hr2 := ThKEst.W.rank_of_mul _ _ _ hr
-    exact ThKEst.W.rank_of_map (B.τ₁.comp σ).toRingHom x hr2
+    exact ThKEst.W.rank_of_map (B.τ₁.comp σ).toRingHom x (ThKEst.W.rank_of_mul _ _ _ hr)
   · rw [hPf]
     refine (h2 f (P f) _).trans (mul_le_mul_of_nonneg_right ?_ (sq_maj_nonneg _ _ _ _))
     have a1 := apply_nonneg p f

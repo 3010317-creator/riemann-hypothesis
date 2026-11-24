@@ -72,11 +72,9 @@ theorem wtL_good (T T' : ℕ) (w : Point D.host.E (D.R.rS + 1)) (p : PlF D) (hA 
       obtain ⟨h1, h2⟩ := hint x y hYint
       refine ⟨fun i => ?_, fun i => ?_⟩
       · have := h1 i.1.1 i.1.2
-        simp only [Loc.uLow, ite_eq_right (ne_of_gt i.2), dite_eq_left i.2] at this
-        exact this
+        simpa only [Loc.uLow, ite_eq_right (ne_of_gt i.2), dite_eq_left i.2] using this
       · have := h2 i.1.1 i.1.2
-        simp only [Loc.uUp, ite_eq_right (ne_of_lt i.2.1), dite_eq_left i.2] at this
-        exact this
+        simpa only [Loc.uUp, ite_eq_right (ne_of_lt i.2.1), dite_eq_left i.2] using this
     · rintro ⟨hx, hy⟩
       have hL := isLoU_of (Formalism.MainNotions.LocalModelPeriodLattices.isLowUni_uLow x)
       have hN := isUpU_of (Formalism.MainNotions.LocalModelPeriodLattices.isUpUni_uUp w₀ y)

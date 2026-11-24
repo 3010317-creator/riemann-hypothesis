@@ -83,8 +83,7 @@ theorem elim_cls {m : ℕ} (x : Fin (m + 1) → ℂ) (y : UT (m + 2) → ℂ) (i
   · exact (tri_lt x y _).symm
 
 theorem succ_le_castSucc {m : ℕ} {i j : Fin (m + 1)} (h : i < j) : i.succ ≤ j.castSucc := by
-  rw [Fin.le_iff_val_le_val, Fin.val_succ, Fin.val_castSucc]
-  exact h
+  rwa [Fin.le_iff_val_le_val, Fin.val_succ, Fin.val_castSucc]
 
 def idx (m : ℕ) : Tgt m → FinalTheorems m
   | Sum.inl _ => Sum.inr ⟨(0, Fin.last (m + 1)), Fin.last_pos⟩
@@ -176,8 +175,7 @@ theorem mp_elim (β : ℂ) (m : ℕ) :
       (MeasurableEquiv.sumPiEquivProdPi (fun _ : FinalTheorems m => ℂ)).symm := by
     funext p i
     cases i <;> rfl
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem mp_split (β : ℂ) (m : ℕ) : MeasurePreserving (split m) (muPi β (Tgt m)) (muRed β m) := by
   have := Formalism.FourierDecayAlt.P.G5.sigmaFinite_mu β

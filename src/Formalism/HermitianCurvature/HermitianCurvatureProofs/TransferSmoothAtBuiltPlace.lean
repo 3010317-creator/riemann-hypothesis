@@ -333,8 +333,7 @@ lemma dec_0l : Dec k T T' (Su k 0 (Fin.last k)) := by
   have e3 : -(sZ T T' ζ / (kap T T')⁻¹) = (-1 : ℂ) * sig (T * T') ζ := by
     rw [sZ_eq T T' hT hT' ζ hζ]; field_simp
   rw [e1, e2, e3, ← nuI_eq, ← nu_eq] at key
-  rw [zero_smul, add_zero]
-  exact key
+  rwa [zero_smul, add_zero]
 
 lemma decomposition_lower_corner_unit : Dec k T T' (Su k (Fin.last k) 0) := by
   refine dec_mk _ (fun ζ => (-2⁻¹ : ℂ) * (ζ * (sig (T * T') ζ)⁻¹)) (fun ζ => (2⁻¹ : ℂ) * (ζ * (sig (T * T') ζ)⁻¹))
@@ -352,8 +351,7 @@ lemma decomposition_lower_corner_unit : Dec k T T' (Su k (Fin.last k) 0) := by
   have e3 : -(sZ T T' ζ / (kap T T')⁻¹) = (-1 : ℂ) * sig (T * T') ζ := by
     rw [sZ_eq T T' hT hT' ζ hζ]; field_simp
   rw [e2, e1, e3, ← nuI_eq, ← nu_eq] at key
-  rw [zero_smul, add_zero]
-  exact key
+  rwa [zero_smul, add_zero]
 
 lemma dec_ll : Dec k T T' (Su k (Fin.last k) (Fin.last k)) := by
   refine dec_mk _ (fun _ => 0) (fun _ => 1) (fun ζ => ζ) (fun ζ => (-1 : ℂ) * conj ζ) (Su k 0 0) (Su k 0 0)
@@ -364,8 +362,7 @@ lemma dec_ll : Dec k T T' (Su k (Fin.last k) (Fin.last k)) := by
   have e1 : -(wZ T T' ζ / (kap T T')⁻¹) = ζ := by rw [wZ_eq]; field_simp
   have e2 : star (wZ T T' ζ) / (kap T T')⁻¹ = (-1 : ℂ) * conj ζ := by rw [wZ_star]; field_simp
   rw [e1, e2, ← nuI_eq, ← nu_eq] at key
-  rw [zero_smul, zero_add, one_smul]
-  exact key
+  rwa [zero_smul, zero_add, one_smul]
 
 lemma dec_unit (a b : Fin (k + 1)) : Dec k T T' (Su k a b) := by
   by_cases ha : a = Fin.last k
@@ -1054,8 +1051,7 @@ theorem rc_smul (hL : RcLin) {D : Set (Q.Mx k r)} (hD : IsOpen D) {f : Q.Mx k r 
     (hf : Q.SmoothLev k r (Fin.last r) D f) {g : Q.Mx k r} (hg : g ∈ Q.Glev k r (Fin.last r) ∩ D)
     (a : ℂ) {Z : Q.Mx k r} (hZ : GLc k r Z) : Rc (a • Z) f g = a • Rc Z f g := by
   have := hL k r E D f hD hf g hg a Z 0 hZ (glc_of_kl kl_zero)
-  rw [add_zero, rc_zeroZ, add_zero] at this
-  exact this
+  rwa [add_zero, rc_zeroZ, add_zero] at this
 
 theorem rc_lincomb (hL : RcLin) {D : Set (Q.Mx k r)} (hD : IsOpen D) {f : Q.Mx k r → E}
     (hf : Q.SmoothLev k r (Fin.last r) D f) {g : Q.Mx k r} (hg : g ∈ Q.Glev k r (Fin.last r) ∩ D)
@@ -1358,8 +1354,7 @@ theorem word_polynomial_vector_holds : WordPSVOfCut := by
       rw [wordR_cons]
       conv_rhs => rw [hZdec]
       rw [rc_lincomb hLin hDo hF hμ _ _ _ fun p _ => glc_of_kl (kl_single p.1 p.2)]
-  intro w hw
-  exact WA.psv_congr (fun ζ _ => by simp only [hmu]) (main _ w rfl hw)
+  exact fun w hw => WA.psv_congr (fun ζ _ => by simp only [hmu]) (main _ w rfl hw)
 
 end
 
@@ -1463,8 +1458,7 @@ theorem finset_sum_list {ι α M : Type*} [AddCommMonoid M] (s : Finset ι) (l :
   | cons a l ih => simp [Finset.sum_add_distrib, ih]
 
 theorem sum_toList_map {ι M : Type*} [AddCommMonoid M] (s : Finset ι) (F : ι → M) :
-    (s.toList.map F).sum = ∑ i ∈ s, F i := by
-  exact Finset.sum_map_toList s F
+    (s.toList.map F).sum = ∑ i ∈ s, F i := Finset.sum_map_toList s F
 
 theorem coeff_listSum {σ' : Type*} {α : Type*} (m : σ' →₀ ℕ) (l : List α) (F : α → MvPolynomial σ' ℂ) :
     AddMonoidAlgebra.coeff ((l.map F).sum) m = (l.map fun a => AddMonoidAlgebra.coeff (F a) m).sum := by
@@ -1485,8 +1479,7 @@ theorem taylor_coeff_top (p : Polynomial ℂ) (c : ℂ) (d : ℕ) (h : p.natDegr
       Polynomial.coeff_eq_zero_of_natDegree_lt (by rwa [Polynomial.natDegree_taylor])]
   · subst h
     have := Polynomial.leadingCoeff_taylor c p
-    rw [Polynomial.leadingCoeff, Polynomial.leadingCoeff, Polynomial.natDegree_taylor] at this
-    exact this
+    rwa [Polynomial.leadingCoeff, Polynomial.leadingCoeff, Polynomial.natDegree_taylor] at this
 
 theorem single_pair_finsupp_eq_iff (d l a b : ℕ) :
     (Finsupp.single (0 : Fin 2) d + Finsupp.single (1 : Fin 2) l =

@@ -270,8 +270,7 @@ theorem eq_zero_of_datumEmbedding_eq_zero (hP : IsPsiFor ε lam T Ψ) {v₀ : T.
 theorem datumV_ne_bot (hP : IsPsiFor ε lam T Ψ) {v₀ : T.V} (hv₀ : v₀ ≠ 0) : datumV ε Ψ v₀ ≠ ⊥ := by
   rw [Submodule.ne_bot_iff]
   refine ⟨⟨uniformisationL2 ε Ψ v₀ v₀, datumEmbedding_mem_smooth hP v₀ v₀⟩, (mem_datumV_iff hP v₀ _).2 ⟨v₀, rfl⟩, ?_⟩
-  intro h0
-  exact datumEmbedding_self_ne_zero hP hv₀ (congrArg Subtype.val h0)
+  exact fun h0 => datumEmbedding_self_ne_zero hP hv₀ (congrArg Subtype.val h0)
 
 theorem datumV_weight_le (hP : IsPsiFor ε lam T Ψ) {v₀ : T.V} (hv₀ : v₀ ≠ 0) {μ : Fin n → ℝ}
     {x : smD ε (rreg ε)} (hx : x ∈ datumV ε Ψ v₀) (hx0 : x ≠ 0)
@@ -289,8 +288,7 @@ theorem datumV_weight_le (hP : IsPsiFor ε lam T Ψ) {v₀ : T.V} (hv₀ : v₀ 
     intro a
     have e1 := rightDerivative_datum_embedding hP v₀ v (a := a) (b := a) rfl
     have e2 := congrArg Subtype.val (hμ a)
-    rw [hxe] at e2
-    rw [e1, Submodule.coe_smul] at e2
+    rw [hxe, e1, Submodule.coe_smul] at e2
     have e3 : datumEmbeddingToL2 hP v₀ (T.dτ (Matrix.single a a 1) v - ((μ a : ℝ) : ℂ) • v) = 0 := by
       rw [map_sub, map_smul]
       exact sub_eq_zero.2 e2

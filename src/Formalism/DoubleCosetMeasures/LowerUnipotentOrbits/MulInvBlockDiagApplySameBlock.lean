@@ -387,9 +387,7 @@ theorem phase_main : PhaseWellDef := by
           have e2 : revIn s (revF s a) = a := congrArg Fin.val (revF_revF s a)
           omega
         · have hle : blk s a ≤ blk s c := by
-            have := blk_mono s (revF s a) (revF s c) (by omega)
-            rwa [blk_revF, blk_revF] at this
-          have hlt : blk s a < blk s c := lt_of_le_of_ne hle hb
+            simpa only [blk_revF] using blk_mono s (revF s a) (revF s c) (by omega)
           have hac : a < c := by
             by_contra hca
             have := blk_mono s c a (not_lt.1 hca)
@@ -401,28 +399,16 @@ theorem phase_main : PhaseWellDef := by
       -(if (c : ℕ) = a + 1 then y⁻¹ a c else 0) := by
     intro a c
     split_ifs with hc
-    · have := simple_add_zero hy hzU hy1 a c hc
-      linear_combination this
+    · linear_combination simple_add_zero hy hzU hy1 a c hc
     · simp
   rw [sum_subdiagonal_eq_sum_ite x, sum_superdiagonal_eq_sum_ite y]
-  have hS : (∑ a : Fin s.sum, ∑ c : Fin s.sum, if (c : ℕ) = a + 1 then y a c else 0) =
-      -∑ a : Fin s.sum, ∑ c : Fin s.sum, if (a : ℕ) = c + 1 then x a c else 0 := by
-    calc (∑ a : Fin s.sum, ∑ c : Fin s.sum, if (c : ℕ) = a + 1 then y a c else 0)
-        = -∑ a : Fin s.sum, ∑ c : Fin s.sum, if (c : ℕ) = a + 1 then y⁻¹ a c else 0 := by
-          simp only [hyz, Finset.sum_neg_distrib]
-      _ = -∑ a : Fin s.sum, ∑ c : Fin s.sum,
-            if (revF s c : ℕ) = revF s a + 1 then y⁻¹ (revF s a) (revF s c) else 0 := by
-          congr 1
-          refine Fintype.sum_equiv (Function.Involutive.toPerm _ (revF_revF s)) _ _ fun a => ?_
-          refine Fintype.sum_equiv (Function.Involutive.toPerm _ (revF_revF s)) _ _ fun c => ?_
-          first
-          | simp [Function.Involutive.toPerm, revF_revF]
-      _ = -∑ a : Fin s.sum, ∑ c : Fin s.sum, if (a : ℕ) = c + 1 then x a c else 0 := by
-          congr 1
-          refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun c _ => ?_
-          rw [hz a c, hterm a c]
-  rw [hS]
-  ring
+  simp only [hyz, Finset.sum_neg_distrib]
+  rw [add_neg_eq_zero]
+  refine Fintype.sum_equiv (Function.Involutive.toPerm _ (revF_revF s)) _ _ fun a => ?_
+  refine Fintype.sum_equiv (Function.Involutive.toPerm _ (revF_revF s)) _ _ fun c => ?_
+  simp only [Function.Involutive.toPerm, Equiv.coe_fn_mk]
+  rw [hz a c]
+  exact (hterm a c).symm
 
 end Phase
 

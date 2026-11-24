@@ -41,8 +41,7 @@ theorem pow_mul_mem_chartLatQ (c : ∀ k, ι k) (b : K → ℤ) {s : Ω} (hs : s
   | zero =>
     rw [pow_zero, one_mul]
     have h0 : (b + fun _ => ((0 : ℕ) : ℤ)) = b := by funext k; simp
-    rw [h0]
-    exact hs
+    rwa [h0]
   | succ j ih =>
     rw [← shift_succ_sub_one] at ih
     have h := mul_mem_chartLatQ (c := c) (b + fun _ => ((j + 1 : ℕ) : ℤ)) ih
@@ -63,8 +62,7 @@ theorem finiteDimensional_chartLatQ (hfin : SectionLatticeFinite.Statement) (hy 
       intro x hx
       induction hx using AddSubsemigroup.closure_induction with
       | mem x hx =>
-        apply Submodule.subset_span
-        exact Finset.mem_coe.mpr (Finset.mem_image.mpr ⟨x, hx, rfl⟩)
+        exact Submodule.subset_span (Finset.mem_coe.mpr (Finset.mem_image.mpr ⟨x, hx, rfl⟩))
       | add x z hx hz ihx ihz =>
         exact Submodule.add_mem _ ihx ihz
     exact hall _ ht

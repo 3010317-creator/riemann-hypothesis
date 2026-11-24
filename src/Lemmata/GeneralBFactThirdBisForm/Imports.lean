@@ -31,12 +31,10 @@ theorem goal1 :
       Set.pi Set.univ (fun p => Set.pi Set.univ (t p)) =
       Set.pi Set.univ (fun v => Set.pi Set.univ (fun p => t p v)) := by
     ext x
-    simp only [Set.mem_preimage, Set.mem_univ_pi]
-    exact forall_comm
+    simpa only [Set.mem_preimage, Set.mem_univ_pi] using forall_comm
   have hmeas : MeasurableSet (Set.pi Set.univ (fun p => Set.pi Set.univ (t p))) :=
     MeasurableSet.univ_pi fun p => MeasurableSet.univ_pi fun v => hmt p v
   rw [MeasureTheory.Measure.map_apply hf hmeas, hpre, MeasureTheory.Measure.pi_pi]
-  simp only [MeasureTheory.Measure.pi_pi]
-  exact Finset.prod_comm
+  simpa only [MeasureTheory.Measure.pi_pi] using Finset.prod_comm
 
 end Bl.general_b_fact_third_bis_form

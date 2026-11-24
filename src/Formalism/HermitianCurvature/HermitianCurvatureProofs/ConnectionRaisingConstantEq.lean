@@ -448,8 +448,7 @@ section Regular
 theorem xC_ne_of_im (P : M.Par) (ρ : M.Ty P) {Y : ℂ} (h : Y.im ≠ 0) : M.xC P ρ Y ≠ 0 := by
   unfold M.xC
   rw [Finset.prod_ne_zero_iff]
-  intro i _ h0
-  exact h (by simpa using congrArg Complex.im h0)
+  exact fun i _ h0 => h (by simpa using congrArg Complex.im h0)
 
 theorem reg_of_im (P : M.Par) {Y : ℂ} (h : Y.im ≠ 0) : Reg P Y := fun ρ => xC_ne_of_im P ρ h
 
@@ -460,8 +459,7 @@ theorem nreg_finite (P : M.Par) : {Y : ℂ | ¬ Reg P Y}.Finite := by
     obtain ⟨ρ, hρ⟩ := hY
     unfold M.xC at hρ
     obtain ⟨i, hi, h0⟩ := Finset.prod_eq_zero_iff.1 hρ
-    simp only [Set.mem_iUnion, Set.mem_singleton_iff]
-    exact ⟨ρ, i, hi, by linear_combination h0⟩
+    simpa only [Set.mem_iUnion, Set.mem_singleton_iff] using ⟨ρ, i, hi, by linear_combination h0⟩
   refine Set.Finite.subset ?_ this
   exact Set.finite_iUnion fun ρ => Set.Finite.biUnion (Finset.finite_toSet _) fun i _ => Set.finite_singleton _
 
@@ -645,8 +643,7 @@ theorem sb_off (h : SHyp P L0 QQ κ) (hP : P.OK) {σ ρ : M.Ty P} (hne : σ ≠ 
   have O : ∀ u v, (u - v) • (xs u • T v - xr u • T v) = xs u • T v - xs v • T u := by
     intro u v
     have e := sb_feq h σ ρ u v
-    rw [pj_orth κ hne, mul_zero, smul_zero, sub_zero] at e
-    exact e
+    rwa [pj_orth κ hne, mul_zero, smul_zero, sub_zero] at e
   have S : ∀ u v, (xs u - xr u) • T v = (xs v - xr v) • T u := by
     intro u v
     by_cases huv : u = v
@@ -2224,8 +2221,7 @@ theorem sc_keyN (h : SHyp P L0 QQ κ) (hF : SForm P L0 QQ κ b SS) (hR : Raises 
       e u • (M.xC P ρ' v • ((sc_LL h hF).l0 v * K) - M.xC P ρ v • (K * (sc_LL h hF).l0 v))) = 0 := by
       rw [mul_sub, mul_smul_comm, mul_smul_comm, ← hG u, ← hG v]; exact hC u v
     have := congrArg (fun X => L0.GGi * X) c'
-    simp only [← mul_assoc, L0.GGi_GG, one_mul, mul_zero] at this
-    exact this
+    simpa only [← mul_assoc, L0.GGi_GG, one_mul, mul_zero] using this
   rw [sc_x_up hl hu u, sc_x_up hl hu v, sc_x_self hl ρ u, sc_x_self hl ρ v, connection_lowering_eq_nabla, connection_lowering_eq_nabla] at c2
   have e2 : ∀ Y : ℂ, K * (-N - (Y + 1 / 2) • Z) = -(K * N) - (Y + 1 / 2) • (Z * K) := by
     intro Y; rw [mul_sub, mul_neg, mul_smul_comm, hKZ]
@@ -2514,8 +2510,7 @@ theorem sc_keyNs (h : SHyp P L0 QQ κ) (hF : SForm P L0 QQ κ b SS) (hR : Raises
         simp only [mul_sub, mul_smul_comm, smul_sub]; module
       rw [e1, hR1, sub_self]
     have := congrArg (fun X => L0.GGi * X) c'
-    simp only [← mul_assoc, L0.GGi_GG, one_mul, mul_zero] at this
-    exact this
+    simpa only [← mul_assoc, L0.GGi_GG, one_mul, mul_zero] using this
   rw [sc_x_up hl hu u, sc_x_up hl hu v, sc_x_self hl ρ u, connection_raising_constant_eq, connection_raising_constant_eq, connection_raising_constant_eq] at c2
   have e2 : ∀ Y : ℂ, K * (-Ns - (Y - 1 / 2) • W) = -(K * Ns) - (Y - 1 / 2) • (W * K) := by
     intro Y; rw [mul_sub, mul_neg, mul_smul_comm, hKW]

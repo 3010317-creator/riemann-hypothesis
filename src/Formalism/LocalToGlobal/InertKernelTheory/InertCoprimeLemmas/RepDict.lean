@@ -378,8 +378,7 @@ theorem dict_core (hp2 : p ≠ 2) (D : D7) {N N' r : ℕ} (lam : Qbar →+* ℂ_
       (@Formalism.MainNotions.FormalGroupSystem.inParamK p _ (Fin r) ℂ_[p] _ (Formalism.L2.G.Pend.wittFractionAlgebraCp p)
         (Formalism.L2.KerInert.Rep.thOrth D lam (((C.u⁻¹ : ℂ_[p]ˣ) : ℂ_[p]) * κ) b G) *
         MvPowerSeries.subst S (ePh lam Λ C wq r)) := by ring
-  rw [e]
-  exact key
+  rwa [e]
 
 end Formalism.L2.KerInert.WeierstrassScaling
 
@@ -630,8 +629,7 @@ theorem rdictMain : Formalism.L2.KerInert.Rep.CurveDict := by
     have hn : PowerSeries.constantCoeff (Formalism.L2.Th1.C.mvExp (-ψ) : PowerSeries ℂ_[l]) ≠ 0 := by
       have h1 := Formalism.L2.Th1.C.constantCoeff_mvExp (show MvPowerSeries.constantCoeff (-ψ : PowerSeries ℂ_[l]) = 0 by
         rw [map_neg]; exact (neg_eq_zero.mpr hψ0))
-      intro h0
-      exact one_ne_zero (h1.symm.trans h0)
+      exact fun h0 => one_ne_zero (h1.symm.trans h0)
     have hinvE : (Formalism.L2.Th1.C.mvExp ψ : PowerSeries ℂ_[l]) = (Formalism.L2.Th1.C.mvExp (-ψ) : PowerSeries ℂ_[l])⁻¹ :=
       (PowerSeries.eq_inv_iff_mul_eq_one hn).mpr (Formalism.L2.Th1.C.mvExp_mul_neg hψ0)
     rw [hsubE, ← hinvE, hVdef]
@@ -647,8 +645,7 @@ theorem rdictMain : Formalism.L2.KerInert.Rep.CurveDict := by
   have key := Formalism.L2.KerInert.WeierstrassScaling.dict_core hp2 D' g.lam g.abelian₂ C' wq' hh hh0 hhI (ν * (eLT hLT)⁻¹) hlog
     phC V hphC0 hV hexp b G hInt
   rw [hcEq] at key
-  rw [hphL]
-  exact key
+  rwa [hphL]
 
 end Formalism.L2.KerInert.BeCob
 

@@ -73,8 +73,7 @@ theorem norm_tensor_phi_le_sqrt_hs {g : Matrix (Fin n) (Fin n) ℂ} (hg : inUJ �
     have h2 : ∑ j', ‖g c j'‖ ^ 2 ≤ ∑ i', ∑ j', ‖g i' j'‖ ^ 2 :=
       Finset.single_le_sum (f := fun i' => ∑ j', ‖g i' j'‖ ^ 2) (fun _ _ => by positivity) (Finset.mem_univ c)
     have h3 : ‖g c d‖ ^ 2 ≤ S7.hs g := by
-      simp only [S7.hs]
-      exact h1.trans h2
+      simpa only [S7.hs] using h1.trans h2
     have h4 := Real.abs_le_sqrt h3
     rwa [abs_of_nonneg (norm_nonneg _)] at h4
   rw [tensor_phi_of_unitary hg dual c d]
@@ -84,8 +83,7 @@ theorem norm_tensor_phi_le_sqrt_hs {g : Matrix (Fin n) (Fin n) ℂ} (hg : inUJ �
       intro b
       cases b <;> simp
     simp only [cond_true, norm_mul, norm_star]
-    rw [hb, hb, one_mul, mul_one]
-    exact hent
+    rwa [hb, hb, one_mul, mul_one]
 
 theorem smoothOnG_finset_sum {ι : Type*} (s : Finset ι) (F : ι → Matrix (Fin n) (Fin n) ℂ → ℂ)
     (h : ∀ i ∈ s, Formalism.REAL.SmoothOnG ε (F i)) : Formalism.REAL.SmoothOnG ε (fun x => ∑ i ∈ s, F i x) := by

@@ -43,8 +43,7 @@ theorem mem_homL {N N' : ℕ} {L : Submodule (𝓞 D.host.E) (Fin N → D.host.E
       intro x hx
       rw [Matrix.smul_mulVec]
       exact L'.smul_mem c (hB x hx)
-  · intro h
-    exact Submodule.subset_span h
+  · exact fun h => Submodule.subset_span h
 
 theorem homL_mul_pres {N N' : ℕ} {L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)}
     {L' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)} {e : Matrix (Fin N') (Fin N') D.host.E}

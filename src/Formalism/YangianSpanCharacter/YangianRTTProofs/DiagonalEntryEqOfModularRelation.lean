@@ -62,8 +62,7 @@ theorem comm_of_inv {a b bi : A} (h1 : b * bi = 1) (h2 : bi * b = 1) (hab : a * 
     _ = bi * a := by simp only [mul_assoc]; rw [h1, mul_one]
 
 theorem smul_cancel {c : 𝕜} (hc : c ≠ 0) {x y : A} (h : c • x = c • y) : x = y := by
-  have h' := congrArg (fun z => c⁻¹ • z) h
-  simpa [smul_smul, inv_mul_cancel₀ hc] using h'
+  simpa [smul_smul, inv_mul_cancel₀ hc] using congrArg (fun z => c⁻¹ • z) h
 
 theorem left_cancel {b bi x y : A} (h2 : bi * b = 1) (h : b * x = b * y) : x = y := by
   calc x = bi * b * x := by rw [h2, one_mul]
@@ -114,8 +113,7 @@ theorem y1'_alg {a b ai bi X Y : A} {c : 𝕜} (hc : c ≠ 0)
   have hL : a * (bi * Y) - bi * Y * a = bi * (a * Y - Y * a) := by
     rw [hc'', mul_sub, mul_assoc]
   apply smul_cancel hc
-  rw [hL, mul_smul_comm, smul_smul, mul_inv_cancel₀ hc, one_smul, ← mul_smul_comm, hR1]
-  rw [hXb]
+  rw [hL, mul_smul_comm, smul_smul, mul_inv_cancel₀ hc, one_smul, ← mul_smul_comm, hR1, hXb]
   simp only [mul_sub]
   rw [hbX, haX, hc'']
   abel

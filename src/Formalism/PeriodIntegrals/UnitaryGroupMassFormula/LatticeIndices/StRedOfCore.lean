@@ -75,8 +75,7 @@ theorem reindex_gl {H R : Type} [Group H] [CommRing R] {n ι : Type} [Fintype n]
   constructor
   · intro H i j
     simpa using H (e i) (e j)
-  · intro H i j
-    exact H _ _
+  · exact fun H i j => H _ _
 
 end MassDataIdxCore
 end -- clump:auto
@@ -140,8 +139,7 @@ theorem latCore_of (hC : CoreAll) : LatCore := by
       Kloc (E := X.B.I.E) p.1 (X.B.I.L : Set (Fin X.B.I.n → X.B.I.E)) := by
     intro h
     have : (h : HAp X p) ∈ (K : Set (HAp X p)) := h.2
-    rw [hK] at this
-    exact this
+    rwa [hK] at this
   have hKl : ∀ h x, x ∈ MassDataIdxCore.Lat (p.1.adicCompletionIntegers X.B.I.F) θ (JR (FpX X p) X.B.I.J) P ↔
       ((m h : GL (Fin X.B.I.n) (TpX X p)) : Matrix _ _ (TpX X p)) *ᵥ x ∈
         MassDataIdxCore.Lat (p.1.adicCompletionIntegers X.B.I.F) θ (JR (FpX X p) X.B.I.J) P := by

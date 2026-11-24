@@ -205,7 +205,6 @@ theorem inOrbP_of_orb {δ : ∀ p : PlF D, (D.s.atP p).Fp} {T T' : ℕ} {p : PlF
   obtain ⟨n, hn⟩ : ∃ n : MatP D p, n = β⁻¹ * uU := ⟨_, rfl⟩
   have hn1 : bdM blk n = 1 := by
     rw [hn, bdM_mul blk β⁻¹ uU hβiblk]
-    show β⁻¹ * β = 1
     exact Matrix.nonsing_inv_mul _ hβdet
   have hnU : IsUp n := by rw [hn]; exact isUp_mul (isUp_inv hβU) hU
   have huU : uU = β * n := by
@@ -220,8 +219,7 @@ theorem inOrbP_of_orb {δ : ∀ p : PlF D, (D.s.atP p).Fp} {T T' : ℕ} {p : PlF
     have h1 := modPt_blocks δ T T' p w w₀ hw₀
     have h2 := congrArg (List.map Prod.snd) h1
     simp only [List.map_map] at h2
-    rw [PI.SupportDatumW.mapBlocks_snd] at h2
-    exact h2
+    rwa [PI.SupportDatumW.mapBlocks_snd] at h2
   refine ⟨w₀, hw₀, (fun x => (uL * β') x.1.1 x.1.2, fun y => n y.1.1 y.1.2), ?_⟩
   rw [hY2]
   congr 2
@@ -251,8 +249,7 @@ theorem inOrbP_of_orb {δ : ∀ p : PlF D, (D.s.atP p).Fp} {T T' : ℕ} {p : PlF
             (by rw [hsum]; exact b.2)).1 hsb
           have := congrFun (congrFun hn1 a) b
           simp only [bdM, Matrix.of_apply] at this
-          rw [ite_eq_left hb', Matrix.one_apply_ne hab] at this
-          exact this
+          rwa [ite_eq_left hb', Matrix.one_apply_ne hab] at this
         · exact hnU.2 b a (lt_of_le_of_ne (not_lt.1 hlt) (Ne.symm hab))
 
 theorem exists_shift_gen (p : PlF D) (c : (D.s.atP p).Ep) (hns : (D.s.atP p).split = none → IsUnit c) :

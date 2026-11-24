@@ -37,10 +37,8 @@ theorem contDiff_lead (i : ℕ) {m : ℕ∞ω} : ContDiff ℂ m (lead (n := n) i
     refine ContDiff.sum fun σ _ => ?_
     refine ContDiff.const_smul _ ?_
     refine contDiff_prod fun k _ => ?_
-    simp only [Matrix.submatrix_apply]
-    exact contDiff_entry _ _
-  · simp only [h, dite_eq_right, not_false_eq_true]
-    exact contDiff_const
+    simpa only [Matrix.submatrix_apply] using contDiff_entry _ _
+  · simpa only [h, dite_eq_right, not_false_eq_true] using contDiff_const
 
 theorem contDiffAt_zpow_lead (i : ℕ) (k : ℤ) {z : Matrix (Fin n) (Fin n) ℂ} (hz : lead i z ≠ 0)
     {m : ℕ∞ω} : ContDiffAt ℂ m (fun w => lead i w ^ k) z := by
@@ -57,16 +55,14 @@ theorem contDiffAt_phiM (μ : Fin n → ℤ) {z : Matrix (Fin n) (Fin n) ℂ} (h
   exact contDiffAt_prod fun i _ => contDiffAt_zpow_lead _ _ (hz i)
 
 theorem differentiableAt_phiM (μ : Fin n → ℤ) {z : Matrix (Fin n) (Fin n) ℂ} (hz : z ∈ OmegaSet n) :
-    DifferentiableAt ℂ (PhiM μ) z := by
-  exact (contDiffAt_phiM μ hz (m := 1)).differentiableAt (by norm_num)
+    DifferentiableAt ℂ (PhiM μ) z := (contDiffAt_phiM μ hz (m := 1)).differentiableAt (by norm_num)
 
 theorem hasDerivAt_line {F : Matrix (Fin n) (Fin n) ℂ → ℂ} {z : Matrix (Fin n) (Fin n) ℂ}
     (hF : DifferentiableAt ℂ F z) (v : Matrix (Fin n) (Fin n) ℂ) :
     HasDerivAt (fun t : ℂ => F (z + t • v)) (fderiv ℂ F z v) 0 := by
   have hl : HasDerivAt (fun t : ℂ => z + t • v) v 0 := by
     have h := ((hasDerivAt_id (0 : ℂ)).smul_const v).const_add z
-    rw [one_smul] at h
-    exact h
+    rwa [one_smul] at h
   have hF' : HasFDerivAt F (fderiv ℂ F z) (z + (0 : ℂ) • v) := by
     simpa using hF.hasFDerivAt
   exact hF'.comp_hasDerivAt (0 : ℂ) hl

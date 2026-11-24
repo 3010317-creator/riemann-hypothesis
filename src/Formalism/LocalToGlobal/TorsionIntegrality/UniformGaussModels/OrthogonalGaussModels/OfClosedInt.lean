@@ -107,8 +107,7 @@ theorem phNorm {σ : MaximalUnramifiedExtension l →+* MaximalUnramifiedExtensi
       map_mulBy (MaximalUnramifiedExtension l).subtype hl α
     rw [h2, map_mul]
     rfl
-  rw [← e]
-  exact h1
+  rwa [← e]
 
 end Field
 
@@ -167,7 +166,6 @@ theorem CalcC_proof : CalcC := by
       exact Units.isUnit _)
     (BrC.two_units hU)
     (fun u => phNorm hl (hN _ (BrC.norm_unitO u) (u : BrC.Osub σ).2.2))
-  refine ⟨hFr, hC1, fun α hα hs => ⟨endInt hU hα hs, ?_⟩, hbin⟩
-  exact key ⟨α, BrC.mem_Osub.2 ⟨hα, hs⟩⟩
+  exact ⟨hFr, hC1, fun α hα hs => ⟨endInt hU hα hs, (key ⟨α, BrC.mem_Osub.2 ⟨hα, hs⟩⟩)⟩, hbin⟩
 
 end Formalism.L2.Th1.Top

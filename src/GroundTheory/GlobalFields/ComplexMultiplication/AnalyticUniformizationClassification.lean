@@ -271,7 +271,6 @@ theorem IsAnalyticUniformization.omegaFun_order_nonneg_of_mem
     le_trans (by exact_mod_cast mneg.le) analyticAt_const.meromorphicOrderAt_nonneg
   have hH : MeromorphicAt (fun w ↦ a₄ * X w + a₆) z := by fun_prop
   have h3 : (m : WithTop ℤ) ≤ meromorphicOrderAt (fun w ↦ a₄ * X w + a₆) z := by
-    show (m : WithTop ℤ) ≤ meromorphicOrderAt ((fun w ↦ a₄ * X w) + fun _ ↦ a₆) z
     exact le_trans (le_min h1 h2) (meromorphicOrderAt_add (by fun_prop) (MeromorphicAt.const _ _))
   have oX3 : meromorphicOrderAt (fun w ↦ X w ^ 3) z = ((3 * m : ℤ) : WithTop ℤ) := by
     show meromorphicOrderAt (X ^ 3) z = _
@@ -317,8 +316,7 @@ theorem eq_of_eventuallyEq_codiscrete {f₁ f₂ : ℂ → ℂ} {z : ℂ} (h : f
     (h₁ : ContinuousAt f₁ z) (h₂ : ContinuousAt f₂ z) : f₁ z = f₂ z := by
   have h' : ∀ᶠ w in 𝓝[≠] z, f₁ w = f₂ w := by
     have := (mem_codiscreteWithin_iff_forall_mem_nhdsNE.1 h) z (mem_univ z)
-    rw [compl_univ, union_empty] at this
-    exact this
+    rwa [compl_univ, union_empty] at this
   exact tendsto_nhds_unique ((h₁.tendsto.mono_left nhdsWithin_le_nhds).congr' h')
     (h₂.tendsto.mono_left nhdsWithin_le_nhds)
 
@@ -447,8 +445,7 @@ theorem IsAnalyticUniformization.exists_mul_add (hg : IsAnalyticUniformization L
     exact mul_left_cancel₀ h2Y e
   have hα0 : α ≠ 0 := by
     rintro rfl
-    rw [map_zero, mul_zero] at hderiv
-    rw [← germDeriv_germ hXm] at hderiv
+    rw [map_zero, mul_zero, ← germDeriv_germ hXm] at hderiv
     obtain ⟨c, hc⟩ := exists_eq_algebraMap_of_germDeriv_eq_zero hderiv
     rw [← germ_const, germ_eq_germ_iff hXm (Meromorphic.const c)] at hc
     exact hg.not_eventually_ptX_eq_const c hc
@@ -534,7 +531,6 @@ theorem exists_vcPoint_of_isAnalyticUniformization {f : ℂ →+ E.toAffine.Poin
   refine ⟨C'⁻¹ * scaleVC hα, by rw [mul_smul, scaleVC_smul hα hlat, hinv], fun z ↦ ?_⟩
   rw [vcPoint_mul_apply (C'⁻¹) (scaleVC hα) (scaleVC_smul hα hlat) hinv,
     vcPoint_scaleVC_toPoint hα hlat, ← hgz z]
-  show f z = vcPoint C'⁻¹ hinv (vcPoint C' hC' (f z))
   exact (vcPoint_inv_vcPoint C' hC' (f z)).symm
 
 theorem exists_mul_eq_of_isAnalyticUniformization {f₁ f₂ : ℂ →+ E.toAffine.Point}

@@ -78,8 +78,7 @@ theorem measurableEmbedding_levM : MeasurableEmbedding (B2.levM k ρ) := by
     constructor
     · rintro ⟨x, rfl⟩
       simp only [Set.mem_setOf_eq, projM_levM]
-    · intro hy
-      exact ⟨projM y, hy⟩
+    · exact fun hy => ⟨projM y, hy⟩
   rw [hr]
   exact (isClosed_eq (continuous_levM.comp continuous_projM) continuous_id).measurableSet
 

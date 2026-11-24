@@ -35,8 +35,7 @@ theorem rhoC_conj (s : D.what₂.LL →+* ℂ) (τ : D.what₂.Tau) (a : D.host.
     | exact NumberField.IsCMField.complexEmbedding_complexConj _ (s.comp D.embE) _
 
 theorem exists_im_ne (φ : D.host.E →+* ℂ) : ∃ t : D.host.E, (φ t).im ≠ 0 := by
-  by_contra h
-  push Not at h
+  by_contra! h
   have hr : NumberField.ComplexEmbedding.IsReal φ := by
     first
       | (rw [NumberField.ComplexEmbedding.isReal_iff]; ext t; simp [Complex.conj_eq_iff_im, h t])
@@ -137,7 +136,6 @@ theorem gram_Y (v : InfinitePlace D.what₂.LL) (c : (D.mem u).C.cls 0) (τ : D.
     rw [← Module.Basis.equivFun_apply, LinearEquiv.apply_symm_apply]
     simp
   have h := B.bc_norm c τ v y
-  rw [maj_bc, hT_crd, hy] at h
-  exact h
+  rwa [maj_bc, hT_crd, hy] at h
 
 end Formalism.L2.GlobalTheoryTheory.ColValS

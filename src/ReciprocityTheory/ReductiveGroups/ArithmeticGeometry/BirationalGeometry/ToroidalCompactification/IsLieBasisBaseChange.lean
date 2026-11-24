@@ -107,8 +107,7 @@ theorem chart_of_basis [IsLocalRing R] [Smooth G.hom] {d : ℕ} {v : Fin d → (
     refine ⟨ψ.comp (sub Le.symm.toLinearMap m), ⟨?_, ?_⟩, ?_⟩
     · rw [← AlgHom.comp_assoc, hψaug, sub_aug]
     · dsimp only [y]
-      rw [← Category.assoc, spMap_comp, AlgHom.comp_assoc, hforward, AlgHom.comp_id]
-      exact hψw
+      rwa [← Category.assoc, spMap_comp, AlgHom.comp_assoc, hforward, AlgHom.comp_id]
     · rintro φ ⟨hφaug, hφw⟩
       have hφ : φ.comp (sub Le.toLinearMap m) = ψ := by
         apply hψunique
@@ -143,14 +142,12 @@ theorem basis_of_chart {n : ℕ} {x : ∀ m : ℕ, sp (R₀ := R) (JetR R (Fin n
     obtain ⟨h, e⟩ := prodPts_tan hx c v htan
     have e2 : tcoord hx _ h = c := by
       rw [e]
-      simp only [hM]
-      exact sum_single c
+      simpa only [hM] using sum_single c
     rw [isLieComb_iff]
     constructor
     · intro hwc
       rw [tcoord_congr hx hwc hw' h, e2]
-    · intro hc
-      exact tan_ext hx hw' h (hc.trans e2.symm)
+    · exact fun hc => tan_ext hx hw' h (hc.trans e2.symm)
   exact ⟨tcoord hx w hw', (key _).mpr rfl, fun c hc => ((key c).mp hc).symm⟩
 
 theorem isLieBasis_iso {G' : Over (Spec (CommRingCat.of R))} [GrpObj G'] (e : G' ≅ G) [IsMonHom e.hom] {n : ℕ}

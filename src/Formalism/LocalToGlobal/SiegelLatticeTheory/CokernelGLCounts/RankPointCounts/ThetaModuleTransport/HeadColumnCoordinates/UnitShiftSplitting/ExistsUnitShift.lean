@@ -73,10 +73,8 @@ theorem exists_unit_shift (g : SplitG M.L) (u : E) : ∃ a : 𝒪[F], IsUnit (u 
     · exact Or.inr (Or.inr h2)
     left
     apply isUnit_of_comp g
-    · rw [map_add (f := _), e_alg g]
-      exact h1
-    · rw [map_add (f := _), e_alg g]
-      exact h2
+    · rwa [map_add (f := _), e_alg g]
+    · rwa [map_add (f := _), e_alg g]
   rcases hsh 0 with h0 | h0
   · exact ⟨0, h0⟩
   rcases hsh 1 with h1 | h1

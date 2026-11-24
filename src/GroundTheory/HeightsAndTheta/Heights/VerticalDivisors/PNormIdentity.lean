@@ -80,8 +80,7 @@ theorem chart_sum_eq_one {R : Type*} [CommRing R] {Q : Ideal (MvPolynomial (Fin 
   rw [← secLin_eq_sum]
   have hmem : chartForm y - 1 ∈ secIdeal Q y := Ideal.mem_sup_right (Ideal.subset_span rfl)
   have h := Ideal.Quotient.eq.mpr hmem
-  rw [map_one] at h
-  exact h
+  rwa [map_one] at h
 
 end Lemmas
 
@@ -117,8 +116,7 @@ theorem NormIdentity.proof (hcn : ChowNormForm.Statement) (hfin : SecBFinite.Sta
   set P := normForm (R := ParDVR e n v) (SecB e I v) (secCoord (modelR e I v) (parY e n v)) with hP
   replace hcn' : specRest (kToFrac K e n) (g.map (algebraMap (𝓞 K) K)) (parYF K e n) =
       C c * P.map (algebraMap (ParDVR e n v) (ParFrac K e n)) := by
-    rw [hNL]
-    exact hcn'
+    rwa [hNL]
 
   have hevP : ∀ z : Fin n → ParDVR e n v,
       eval (fun j => parToFrac e n v (z j)) (P.map (algebraMap (ParDVR e n v) (ParFrac K e n))) =

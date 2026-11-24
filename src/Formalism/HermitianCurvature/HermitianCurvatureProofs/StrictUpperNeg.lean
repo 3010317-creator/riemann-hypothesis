@@ -115,8 +115,7 @@ theorem utInv_eQ {j : ℕ} (p : (G.UT j → ℂ) × (Fin j → ℂ)) :
     rw [Matrix.mul_apply, Fin.sum_univ_castSucc]
     refine Fin.lastCases ?_ (fun a => ?_) a <;> refine Fin.lastCases ?_ (fun b => ?_) b
     · simp [upper_eQ_lc, upper_eQ_ll]
-    · simp [upper_eQ_lc, upper_eQ_ll, Matrix.one_apply]
-      exact (Fin.castSucc_ne_last _).symm
+    · simpa [upper_eQ_lc, upper_eQ_ll, Matrix.one_apply] using (Fin.castSucc_ne_last _).symm
     · simp only [upper_eQ_cc, upper_eQ_cl, upper_eQ_ll, mul_one, Matrix.one_apply, Fin.castSucc_ne_last, ite_false,
         upper_utInv]
       have : ∑ x : Fin j, (G.upper p.1)⁻¹ a x * p.2 x = ((G.upper p.1)⁻¹ *ᵥ p.2) a := rfl
@@ -242,11 +241,9 @@ theorem psiR_cont (j : ℕ) : Continuous (psiR k j) := by
   exact ((Dx2.SplitF.mup_cont (k := k) j 0).comp continuous_snd).matrix_mul
     ((Dx2.SplitF.rn_cont (k := k) j 0).comp continuous_fst)
 
-theorem psiF_meas (j : ℕ) : Measurable (psiF k j) := by
-  exact (psiF_cont j).measurable
+theorem psiF_meas (j : ℕ) : Measurable (psiF k j) := (psiF_cont j).measurable
 
-theorem psiR_meas (j : ℕ) : Measurable (psiR k j) := by
-  exact (psiR_cont j).measurable
+theorem psiR_meas (j : ℕ) : Measurable (psiR k j) := (psiR_cont j).measurable
 
 theorem muN_fwd (j : ℕ) : D.muN k (j + 0) = ((U.muRC k j 0).prod (volume : Measure (G.UT j → ℂ))).map (psiF k j) := by
   have hs := Dx2.SplitF.split_all (k := k) j 0

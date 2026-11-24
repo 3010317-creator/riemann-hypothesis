@@ -86,8 +86,7 @@ theorem eq_zero_of_pow_mul (hb : TFBase γ l s) (N : ℕ) (x : A) (h : (l : A) ^
       rw [hb.nil]
       rw [pow_succ', mul_assoc] at h
       exact h)
-    rw [hb.nil] at this
-    exact this
+    rwa [hb.nil] at this
 
 theorem mem_of_fact_mul (hb : TFBase γ l s) (k : ℕ) (x : A) (h : (k.factorial : A) * x ∈ I) : x ∈ I := by
   obtain ⟨N, u, hu⟩ := hb.dv _ k.factorial_ne_zero
@@ -122,8 +121,7 @@ theorem dpow_congr (hb : TFBase γ l s) {n : ℕ} {x y : A} (hx : x ∈ I) (hy :
     obtain ⟨j, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hj
     exact Ideal.mul_mem_left _ _ (Ideal.mul_mem_right _ _ (by
       rw [pow_succ]; exact Ideal.mul_mem_left _ _ (Ideal.mem_span_singleton_self _)))
-  · intro h0
-    exact absurd (by simp) h0
+  · exact fun h0 => absurd (by simp) h0
 
 end Abstract
 
@@ -182,8 +180,7 @@ theorem lam0_mem_of_mem_fil0_one (hb : TFBase γ l s) (lam : Acris l →+* A)
     refine mem_of_fact_mul hb k _ ?_
     rw [← map_natCast (lam0 lam), ← map_mul, (RL.filtration_multiplicative (base l)).2.2.1 k, map_pow]
     refine Ideal.pow_mem_of_mem _ ?_ _ hk
-    rw [show (base l).xi = (base l).sW (xi0 l) from rfl, lam0_algebraMap_sW_eq_lam_algebraMap]
-    exact hξ
+    rwa [show (base l).xi = (base l).sW (xi0 l) from rfl, lam0_algebraMap_sW_eq_lam_algebraMap]
   exact this hx
 
 theorem lam0_dpow (hb : TFBase γ l s) (lam : Acris l →+* A)

@@ -21,8 +21,7 @@ theorem eval₂_mul_const_of_isHomogeneous {σ R S : Type*} [CommSemiring R] [Co
   rw [eval₂_eq, eval₂_eq, Finset.sum_mul]
   refine Finset.sum_congr rfl fun d hd => ?_
   have hdeg : ∑ i ∈ d.support, d i = n := by
-    have h := hf (mem_support_iff.1 hd)
-    simpa [Finsupp.weight_apply, Finsupp.sum] using h
+    simpa [Finsupp.weight_apply, Finsupp.sum] using hf (mem_support_iff.1 hd)
   rw [Finset.prod_congr rfl (fun i _ => mul_pow (y i) t (d i)), Finset.prod_mul_distrib,
     Finset.prod_pow_eq_pow_sum, hdeg]
   ring
@@ -96,44 +95,23 @@ theorem segreMap_aeval_update [DecidableEq K] (p : (k : K) → ι k) {f : MvPoly
     segreMap (aeval (fun q : Σ k, ι k => (X (Function.update p q.1 q.2) :
         MvPolynomial ((k : K) → ι k) ℂ)) f) =
       (∏ k, (∏ j ∈ Finset.univ.erase k, (X ⟨j, p j⟩ : MvPolynomial (Σ k, ι k) ℂ)) ^ a k) * f := by
-  have h1 : segreMap (aeval (fun q : Σ k, ι k => (X (Function.update p q.1 q.2) :
-        MvPolynomial ((k : K) → ι k) ℂ)) f) =
-      aeval (fun q : Σ k, ι k => segreMap (X (Function.update p q.1 q.2) :
-        MvPolynomial ((k : K) → ι k) ℂ)) f := by
-    rw [← AlgHom.comp_apply, MvPolynomial.comp_aeval]
-  have hY : (fun q : Σ k, ι k => segreMap (X (Function.update p q.1 q.2) :
-        MvPolynomial ((k : K) → ι k) ℂ)) =
-      fun q => X q * ∏ j ∈ Finset.univ.erase q.1, (X ⟨j, p j⟩ : MvPolynomial (Σ k, ι k) ℂ) := by
-    funext q
-    rw [segreMap_X, prod_update_eq X p q.1 q.2]
-  rw [h1, hY]
-  have key : ∀ m ∈ f.support,
-      aeval (fun q : Σ k, ι k => X q *
-          ∏ j ∈ Finset.univ.erase q.1, (X ⟨j, p j⟩ : MvPolynomial (Σ k, ι k) ℂ))
-        (monomial m (f.coeff m)) =
-      (∏ k, (∏ j ∈ Finset.univ.erase k, (X ⟨j, p j⟩ : MvPolynomial (Σ k, ι k) ℂ)) ^ a k) *
-        monomial m (f.coeff m) := by
-    intro m hm
-    have hdeg := hf m hm
-    rw [aeval_monomial, monomial_eq, Finsupp.prod_fintype _ _ (fun _ => pow_zero _),
-      Finsupp.prod_fintype _ _ (fun _ => pow_zero _), MvPolynomial.algebraMap_eq]
-    simp_rw [mul_pow]
-    rw [Finset.prod_mul_distrib]
-    have hc : ∏ q : (Σ k, ι k),
-        (∏ j ∈ Finset.univ.erase q.1, (X ⟨j, p j⟩ : MvPolynomial (Σ k, ι k) ℂ)) ^ m q =
-        ∏ k, (∏ j ∈ Finset.univ.erase k, (X ⟨j, p j⟩ : MvPolynomial (Σ k, ι k) ℂ)) ^ a k := by
-      rw [Fintype.prod_sigma]
-      refine Finset.prod_congr rfl fun k _ => ?_
-      dsimp only
-      rw [Finset.prod_pow_eq_pow_sum, hdeg k]
-    rw [hc]
-    ring
-  conv_lhs => rw [f.as_sum]
-
-  rw [map_sum]
-  conv_rhs => rw [f.as_sum]
-  rw [Finset.mul_sum]
-  exact Finset.sum_congr rfl key
+  rw [← AlgHom.comp_apply, MvPolynomial.comp_aeval]
+  simp only [segreMap_X, prod_update_eq]
+  rw [f.as_sum, map_sum, Finset.mul_sum]
+  refine Finset.sum_congr rfl fun m hm => ?_
+  rw [aeval_monomial, monomial_eq, Finsupp.prod_fintype _ _ (fun _ => pow_zero _),
+    Finsupp.prod_fintype _ _ (fun _ => pow_zero _), MvPolynomial.algebraMap_eq]
+  simp_rw [mul_pow]
+  rw [Finset.prod_mul_distrib]
+  have hc : ∏ q : (Σ k, ι k),
+      (∏ j ∈ Finset.univ.erase q.1, (X ⟨j, p j⟩ : MvPolynomial (Σ k, ι k) ℂ)) ^ m q =
+      ∏ k, (∏ j ∈ Finset.univ.erase k, (X ⟨j, p j⟩ : MvPolynomial (Σ k, ι k) ℂ)) ^ a k := by
+    rw [Fintype.prod_sigma]
+    refine Finset.prod_congr rfl fun k _ => ?_
+    dsimp only
+    rw [Finset.prod_pow_eq_pow_sum, hf m hm k]
+  rw [hc]
+  ring
 
 abbrev invW (P : Ideal (MvPolynomial (Σ k, ι k) ℂ)) (p : (k : K) → ι k) :
     Localization.Away (segreW P p) :=
@@ -234,8 +212,7 @@ theorem toSpecZero_appLE_basicOpen {f : A} {m : ℕ} (f_deg : f ∈ 𝒜 m) (hm 
         (Scheme.ΓSpecIso (CommRingCat.of (HomogeneousLocalization.Away 𝒜 f))).hom ≫
           Proj.awayToSection 𝒜 f ≫ (Proj.basicOpen 𝒜 f).topIso.inv :=
       Proj.basicOpenToSpec_app_top 𝒜 f
-    rw [hA]
-    rw [← Category.assoc, Scheme.ΓSpecIso_naturality]
+    rw [hA, ← Category.assoc, Scheme.ΓSpecIso_naturality]
     simp only [Category.assoc]
   have h3 := (cancel_mono (Proj.basicOpen 𝒜 f).topIso.inv).1 h2
   rw [h3, Iso.inv_hom_id_assoc]

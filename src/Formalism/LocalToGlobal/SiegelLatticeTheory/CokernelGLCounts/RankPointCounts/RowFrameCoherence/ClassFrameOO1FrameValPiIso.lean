@@ -69,12 +69,10 @@ theorem isDFrame_transfer (ε : Fin n → Bool) (f f' : Fin (r + 1) → Fin n �
   refine ⟨hu, hu', ?_, ?_, fun y ha hb => ?_⟩
   · have e1 : nrm1 ε f f' g₁ wb = nrm1 ε f f' g₂ wb := hN1
     unfold nrm1 at e1
-    rw [← e1]
-    exact h1
+    rwa [← e1]
   · have e2 : nrm2 ε f f' g₁ gi₁ wb' = nrm2 ε f f' g₂ gi₂ wb' := hN2
     unfold nrm2 at e2
-    rw [← e2]
-    exact h2
+    rwa [← e2]
   · obtain ⟨y₁, ha1, hb1, hw1, hw⟩ := hU y ha hb
     rw [← hw, ← hw1]
     exact h3 y₁ ha1 hb1

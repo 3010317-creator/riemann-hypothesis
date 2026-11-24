@@ -146,8 +146,7 @@ private theorem vol_val_eq_comap_volume (hU : IsOpen U) :
         ext b
         simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_singleton_iff,
           Set.mem_empty_iff_false, iff_false, not_and]
-        intro hb hby
-        exact hy ⟨b, hb, hby⟩
+        exact fun hb hby => hy ⟨b, hb, hby⟩
       rw [h1, Set.encard_empty]
       simp [hy]
   simp_rw [hind]
@@ -199,8 +198,7 @@ theorem horm_open (hU : IsOpen U) (S : EtaleStein n U) (hSz : S.z = Subtype.val)
     refine h1.congr ?_
     intro y hy
     have h2 : (gch hU).symm y = ⟨y, hy⟩ := Subtype.ext (gch_symm hU hy)
-    simp only [Function.comp_apply, h2]
-    exact hF' ⟨y, hy⟩
+    simpa only [Function.comp_apply, h2] using hF' ⟨y, hy⟩
   refine ⟨F', hdiff, ?_⟩
   have L1 := lintegral_subtype_comap (μ := (volume : Measure (V n))) hmeas
     (fun y => ENNReal.ofReal (‖F0 y - F' y‖ ^ 2 * Real.exp (-ph y)))
@@ -245,10 +243,8 @@ theorem measurable_densF : Measurable fun z => ENNReal.ofReal (densF X x0 z) := 
     · simp only [nmat, dite_eq_left h]
       fun_prop
     · by_cases h' : a = b
-      · simp only [nmat, dite_eq_right h, ite_eq_left h']
-        exact continuous_const
-      · simp only [nmat, dite_eq_right h, ite_eq_right h']
-        exact continuous_const
+      · simpa only [nmat, dite_eq_right h, ite_eq_left h'] using continuous_const
+      · simpa only [nmat, dite_eq_right h, ite_eq_right h'] using continuous_const
   have hc : ∀ τ i, Continuous fun z => dmin X.Gm (cpt X x0 z) τ i := by
     intro τ i
     simp only [dmin, lminor, ReciprocityTheory.ChartRestriction.G.FD.gram, hermC, ReciprocityTheory.ChartRestriction.G.FD.col, mat, cpt, rmul]
@@ -289,10 +285,8 @@ theorem dbar_ka (bb : ℝ) {f0 : Frame X.Ψ r → ℂ} (hf0 : DifferentiableOn �
       first
         | fun_prop
     · by_cases h' : a = b
-      · simp only [nmat, dite_eq_right h, ite_eq_left h']
-        exact differentiable_const _
-      · simp only [nmat, dite_eq_right h, ite_eq_right h']
-        exact differentiable_const _
+      · simpa only [nmat, dite_eq_right h, ite_eq_left h'] using differentiable_const _
+      · simpa only [nmat, dite_eq_right h, ite_eq_right h'] using differentiable_const _
   have hcpt : Differentiable ℂ (cpt X x0) := by
     refine differentiable_pi.2 fun τ => differentiable_pi.2 fun a => differentiable_pi.2 fun b => ?_
     simp only [cpt, rmul, mat, Matrix.mul_apply, Matrix.of_apply]

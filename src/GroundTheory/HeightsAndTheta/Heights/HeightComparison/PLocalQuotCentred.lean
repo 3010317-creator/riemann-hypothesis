@@ -56,11 +56,9 @@ theorem LocalQuotCentred.proof (hN : CentredRingNormal.Statement) (hI : LocalNor
   set P := placesRing {w : FinitePlace L | AbsCentredAt O m fun t ↦ w t} with hPdef
   have hAP : A.toSubring ≤ P := by
     rw [hS]
-    intro x hx
-    exact (isIntegral_algebraMap : IsIntegral A (algebraMap A L ⟨x, hx⟩))
+    exact fun x hx => (isIntegral_algebraMap : IsIntegral A (algebraMap A L ⟨x, hx⟩))
   have hfin : A.toSubring.toAddSubgroup.relIndex P.toAddSubgroup ≠ 0 := by
-    rw [hS]
-    exact hAI
+    rwa [hS]
   let e : Localization.AtPrime m ≃ₐ[O] A := IsLocalization.algEquiv m.primeCompl _ _
   have h1 : Nat.card (Localization.AtPrime m ⧸ Ideal.span {algebraMap O (Localization.AtPrime m) f}) =
       Nat.card (A.toSubring ⧸ Ideal.span {(algebraMap O A f : A.toSubring)}) := by

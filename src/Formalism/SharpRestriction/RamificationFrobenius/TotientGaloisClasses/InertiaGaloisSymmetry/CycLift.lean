@@ -63,8 +63,7 @@ variable {E L : Type} [Field E] [NumberField E] [Field L] [NumberField L] [Algeb
 omit [IsScalarTower ℚ E L] in
 theorem res_smul (σ : E ≃ₐ[ℚ] E) (τ : L ≃ₐ[ℚ] L) (h : ∀ x, algebraMap E L (σ x) = τ (algebraMap E L x)) (x : 𝓞 E) :
     algebraMap (𝓞 E) (𝓞 L) (σ • x) = τ • algebraMap (𝓞 E) (𝓞 L) x := by
-  apply RingOfIntegers.coe_injective
-  exact h x
+  exact RingOfIntegers.coe_injective (h x)
 
 omit [IsScalarTower ℚ E L] [NumberField E] [NumberField L] in
 theorem mem_over_iff (P : Ideal (𝓞 E)) (Q : Ideal (𝓞 L)) [Q.LiesOver P] (x : 𝓞 E) :
@@ -87,8 +86,7 @@ theorem frob_res (p : ℕ) (P : Ideal (𝓞 E)) (Q : Ideal (𝓞 L)) [Q.LiesOver
     hτ (algebraMap (𝓞 E) (𝓞 L) x)
   show σ • x - x ^ Nat.card (ℤ ⧸ P.under ℤ) ∈ P
   rw [odd_card_under p Q] at hx
-  rw [odd_card_under p P, mem_over_iff P Q, map_sub, map_pow, res_smul σ τ h]
-  exact hx
+  rwa [odd_card_under p P, mem_over_iff P Q, map_sub, map_pow, res_smul σ τ h]
 
 theorem smul_mem_of_inertia {G S : Type*} [Group G] [CommRing S] [MulSemiringAction G S] (g : G) (I : Ideal S)
     (h : ∀ x : S, g • x - x ∈ I) (z : S) : g • z ∈ I ↔ z ∈ I :=

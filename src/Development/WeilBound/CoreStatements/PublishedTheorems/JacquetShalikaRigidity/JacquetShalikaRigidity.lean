@@ -303,8 +303,7 @@ theorem fin (T : Finset ι) :
     have e2 := hasSum_unique (fun l : {l : ι →₀ L // l.support ⊆ ∅} => ‖Φ F l.1‖)
     rw [hΦ] at e1
     rw [hΦ, norm_one] at e2
-    simp only [Finset.prod_empty]
-    exact ⟨e2.summable, e1, e2⟩
+    simpa only [Finset.prod_empty] using ⟨e2.summable, e1, e2⟩
   | insert a T ha ih =>
     obtain ⟨ih1, ih2, ih3⟩ := ih
     let e := splitE (L := L) a T ha
@@ -430,8 +429,7 @@ theorem cauchy_of_local_prime : CauchyLoc → PrimeOff → CAUCHY := by
     congr 1
     funext w
     exact ((hloc w).2.1.tsum_eq).symm
-  rw [e]
-  exact h2
+  rwa [e]
 
 end PositivityTheory.RgJS
 end -- clump:auto
@@ -474,8 +472,7 @@ theorem evalAt_hL (z : Fin m → ℂˣ) (p : ℕ) : evalAt z (hL m p) = hN p (fu
   unfold hL hN
 
   rw [map_sum]
-  refine Finset.sum_congr rfl fun k _ => ?_
-  exact evalAt_monomial_nat z k
+  exact Finset.sum_congr rfl fun k _ => evalAt_monomial_nat z k
 
 theorem evalAt_hLZ (z : Fin m → ℂˣ) (w : ℤ) : evalAt z (hLZ m w) = hZ w (fun i => (z i : ℂ)) := by
   unfold hLZ hZ
@@ -783,8 +780,7 @@ theorem beta_generating_of_sum_bound : HGen → SumBd → SchurJT → BetaGen :=
     · simp [Set.indicator, h]
     · simp [Set.indicator, h, gF]
   have hsumAll : Summable (gF α b X) := by
-    rw [← hind, ← summable_subtype_iff_indicator]
-    exact hsumF
+    rwa [← hind, ← summable_subtype_iff_indicator]
   set Hs : Fin k → ℂ := fun i => ∏ a, (1 - α a * (b i * X))⁻¹ with hHs
   have hH : ∀ i, HasSum (fun p => hN p α * (b i * X) ^ p) (Hs i) := by
     intro i
@@ -809,8 +805,7 @@ theorem beta_generating_of_sum_bound : HGen → SumBd → SchurJT → BetaGen :=
     (hsumAll.hasSum.comp (tendsto_atTop_finset_of_monotone KL_mono KL_exh)).const_mul _
   have hlim1' : Tendsto (fun L => altN b (stair k) * ∑ l ∈ KL k L, gF α b X l) atTop
       (𝓝 ((∏ i, Hs i) * altN b (stair k))) := by
-    refine hlim1.congr fun L => ?_
-    exact finite_id hAlt α b X L
+    exact hlim1.congr fun L => finite_id hAlt α b X L
   have heq := tendsto_nhds_unique hlim2 hlim1'
   have htsum : ∑' l, gF α b X l = ∏ i, Hs i := by
     have hne := altN_ne hbinj
@@ -913,15 +908,12 @@ theorem continuous_hN (p : ℕ) : Continuous fun α : Fin m → ℂ => hN p α :
 
 theorem continuous_hZ (z : ℤ) : Continuous fun α : Fin m → ℂ => hZ z α := by
   by_cases h : z < 0
-  · simp only [hZ, ite_eq_left h]
-    exact continuous_const
-  · simp only [hZ, ite_eq_right h]
-    exact continuous_hN _
+  · simpa only [hZ, ite_eq_left h] using continuous_const
+  · simpa only [hZ, ite_eq_right h] using continuous_hN _
 
 theorem continuous_jt {m' : ℕ} (l : Fin m' → ℕ) : Continuous fun γ : Fin m → ℂ => jt γ l := by
   unfold jt
-  refine Continuous.matrix_det ?_
-  exact continuous_pi fun i => continuous_pi fun j => continuous_hZ _
+  exact Continuous.matrix_det (continuous_pi fun i => continuous_pi fun j => continuous_hZ _)
 
 end BetaAllContinuity
 
@@ -1084,8 +1076,7 @@ theorem pi_hasSum (m : ℕ) : ∀ (f : Fin m → ℕ → ℂ), (∀ i, Summable 
     · rw [← e.hasSum_iff]
       have hfun : ((fun k : Fin (n + 1) → ℕ => ∏ i, f i (k i)) ∘ e) =
           fun x => f 0 x.1 * ∏ i : Fin n, f i.succ (x.2 i) := funext hcomp
-      rw [hfun, Fin.prod_univ_succ]
-      exact hH2
+      rwa [hfun, Fin.prod_univ_succ]
 
 theorem card_le (m p : ℕ) : ((Finset.Nat.antidiagonalTuple m p).card : ℝ) ≤ ((p + 1 : ℕ) : ℝ) ^ m := by
   have hsub : Finset.Nat.antidiagonalTuple m p ⊆ Fintype.piFinset (fun _ : Fin m => Finset.range (p + 1)) := by
@@ -1135,8 +1126,7 @@ theorem complete_homogeneous_generating : HGen := by
       rw [hset c]
       exact ((Finset.tsum_subtype' _ (fun k : Fin m → ℕ => ∏ i, (α i * u) ^ k i)).trans
         (term_eq m α u c)).symm
-    rw [hfun]
-    exact hF
+    rwa [hfun]
   · have hterm : ∀ k ∈ Finset.Nat.antidiagonalTuple m p, ‖∏ i, α i ^ k i‖ ≤ A ^ p := by
       intro k hk
       rw [Finset.Nat.mem_antidiagonalTuple] at hk
@@ -1381,8 +1371,7 @@ theorem diag (hC : Cauchy) (hS : SchurJT) {n q : ℕ} (hq : 2 ≤ q) {s : ℂ} (
   have hnorm : ‖P‖ = P.re := by
     calc ‖P‖ = ‖(P.re : ℂ)‖ := congrArg norm hPe
       _ = P.re := by rw [Complex.norm_real, Real.norm_of_nonneg hPre]
-  rw [hnorm]
-  exact hre
+  rwa [hnorm]
 
 theorem diag_le {n q : ℕ} (hq : 2 ≤ q) {s : ℂ} (hs : 1 < s.re) (z : Fin n → ℂˣ) (hz : ∀ i, ‖(z i : ℂ)‖ ≤ Real.sqrt q) :
     ‖∏ a, ∏ b, (1 - (z a : ℂ) * conj (z b : ℂ) * (((q : ℝ) ^ (-s.re) : ℝ) : ℂ))⁻¹‖ ≤

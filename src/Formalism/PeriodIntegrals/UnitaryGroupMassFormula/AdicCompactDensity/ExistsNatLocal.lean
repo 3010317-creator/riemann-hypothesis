@@ -74,8 +74,7 @@ theorem exists_nat_local (v : HeightOneSpectrum (𝓞 F)) (x : v.adicCompletion 
   have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
   obtain ⟨c, hc⟩ := Ideal.mem_span_singleton'.mp (Ideal.absNorm_mem (Ideal.span {b}))
   refine ⟨Ideal.absNorm (Ideal.span {b}), ?_, ?_⟩
-  · rw [Nat.pos_iff_ne_zero, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-    exact hb0
+  · rwa [Nat.pos_iff_ne_zero, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
   · have h1 : ((Ideal.absNorm (Ideal.span {b}) : ℕ) : v.adicCompletion F)
         = algebraMap (𝓞 F) (v.adicCompletion F) c * algebraMap (𝓞 F) (v.adicCompletion F) b := by
       rw [← map_mul, hc, map_natCast]
@@ -128,8 +127,7 @@ theorem PI.adCpctDen : PI.AdCpctDen := by
         v.adicCompletionIntegers F := by
       rw [hA, natCast_mul_apply]
       exact mul_mem (natCast_mem_int v k) ((mem_intAd _).mp hfa' v)
-    rw [FiniteAdeleRing.algebraMap_apply] at h2
-    exact h2
+    rwa [FiniteAdeleRing.algebraMap_apply] at h2
   obtain ⟨r, hr⟩ := mem_integers_of_valuation_le_one (R := 𝓞 F) (K := F) _ hint
   rw [← hr]
   exact RingOfIntegers.isIntegral_coe r

@@ -301,8 +301,7 @@ theorem exists_real (c d : Matrix (Fin n) (Fin n) ℂ) (h : (d - Complex.I • c
     (Polynomial.finite_setOfPred_isRoot hP).preimage Complex.ofReal_injective.injOn
   obtain ⟨t, -, ht⟩ := Set.infinite_univ.exists_notMem_finite hfin
   refine ⟨t, ?_⟩
-  rw [← hev]
-  exact ht
+  rwa [← hev]
 
 abbrev genSet (n : ℕ) : Set (GR n) := {h : GR n | IsNElt h ∨ IsMElt h ∨ IsWElt h}
 
@@ -467,8 +466,7 @@ theorem continuous_nU : Continuous (nU (n := n)) :=
 
 theorem continuous_nuE : Continuous (nuE (n := n)) := by
   refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
-  · show Continuous fun A => nU (hpart A)
-    exact continuous_nU.comp continuous_hpart
+  · exact continuous_nU.comp continuous_hpart
   · show Continuous fun A : Matrix (Fin n) (Fin n) ℂ => (nU (hpart A))⁻¹
     have e : (fun A : Matrix (Fin n) (Fin n) ℂ => (nU (hpart A))⁻¹) = fun A => nU (-hpart A) := by
       funext A
@@ -1084,8 +1082,7 @@ theorem perPsi (hA : AbsThm) (hTM : TensMem) (hLo : LocOpEx) (hLi : LocInst) (hL
     obtain ⟨𝓕, h𝓕⟩ := hcx.hμ
     have := GlobalTheory.StdUnn.SiegelSection.fock_mem_degenerate D n V ψ hcx.hψ χ hcx.hχ hcx.hη θ hcx.hθ μ 𝓕 h𝓕 ω hcx.hω
       l hcx.hl s hcx.hs _ hstd1.hΦ
-    rw [hsec 1]
-    exact this
+    rwa [hsec 1]
   have hn0 : 0 < n := hcx.hn
   have hGD : GlobData ε (cLoc l τ) sL ρ (G D n) (P D n) (GF D n) ι (s0 V n) H sec I (lamSet ψ) := {
     ιcont := hcx.hι.1
@@ -1128,8 +1125,7 @@ theorem perPsi (hA : AbsThm) (hTM : TensMem) (hLo : LocOpEx) (hLi : LocInst) (hL
       exact this }
   have := hA V.rank n ε (cLoc l τ) (tLoc l τ) p q e sL ρ hLD hgood (G D n) (P D n) (GF D n) ι (s0 V n) H sec I
     (lamSet ψ) hGD Q g
-  rw [hsec Q, hI Q] at this
-  exact this
+  rwa [hsec Q, hI Q] at this
 
 theorem main : MainSt := by
   intro hA hFr hEmb hSig hSp hTM hLo hLi hLS hGS hIa hIk hIi hId hEis hLB hLsg hCo hCR hTL hLZ
@@ -1150,8 +1146,7 @@ theorem main : MainSt := by
   have hΦeq : Φ = ∑ i, Φi i := by
     apply Subtype.ext
     rw [Submodule.coe_sum]
-    simp only [hval]
-    exact hsum
+    simpa only [hval] using hsum
   have hstdT : ∀ T : Finset (Fin k), PositivityTheory.PfSWUS.Std D n V ψ χ θ μ ω H l s ν (∑ i ∈ T, Φi i) := fun T =>
     ⟨hStd.hψ, hStd.hχ, hStd.hη, hStd.hθ, hStd.hμ, hStd.hω, hStd.hH, hStd.hl, hStd.hs, hStd.hν, by
       rw [Submodule.coe_sum]
@@ -1279,11 +1274,9 @@ theorem sEmb : SEmb := by
   obtain rfl := eq_thetaC D hθ
   refine ⟨iota τ, continuous_iota τ, fun y => ⟨?_, fun τ' hτ' => ?_, ?_⟩⟩
   · have e := psi_atMN D τ τ (reidx (mR y))
-    rw [ite_eq_left rfl] at e
-    exact e
+    rwa [ite_eq_left rfl] at e
   · have e := psi_atMN D τ τ' (reidx (mR y))
-    rw [ite_eq_right hτ'] at e
-    exact e
+    rwa [ite_eq_right hτ'] at e
   · exact fin_atMN D τ (reidx (mR y))
 
 end PositivityTheory.Rg.Sw.Glob
@@ -1498,8 +1491,7 @@ theorem thetaInt_smul {θ : InfFam D} {V : HSp D} (ω : G D n →* Module.End �
     (r : ℂ) (Φ : schwartzA θ V.rank n) (g : G D n) : thetaInt ω ν (r • Φ) g = r * thetaInt ω ν Φ g := by
   have h : theta ω (r • Φ) g = fun h => r * theta ω Φ g h := by
     funext h
-    simp only [theta, map_smul, Submodule.coe_smul, Pi.smul_apply, smul_eq_mul]
-    exact tsum_mul_left
+    simpa only [theta, map_smul, Submodule.coe_smul, Pi.smul_apply, smul_eq_mul] using tsum_mul_left
   simp only [thetaInt, h, GlobalTheory.AutomorphicL2Unitary.descend, MeasureTheory.average_eq, integral_const_mul]
   exact (mul_smul_comm _ _ _).symm
 

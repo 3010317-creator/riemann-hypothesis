@@ -174,22 +174,16 @@ theorem grpPiecesStd_of (h0 : BlockEx) (hS : ChiStab) (hD : GrpDens) (hH : GrpHa
     continuousAt_id, ?_, hdc, hec, he0, ?_, ?_⟩
   · intro a ha b hb' hab
     exact hχi (ball_subset_ball h3 ha) (ball_subset_ball h3 hb') (congrArg Subtype.val hab)
-  · intro a ha b hb' hm
-    exact hinj a (ball_subset_ball h3 ha) b (ball_subset_ball h3 hb') hm
-  · intro A hA hAm
-    exact hdens A (hA.trans (ball_subset_ball h1)) hAm
-  · intro p _
-    exact hasFDerivWithinAt_id p _
+  · exact fun a ha b hb' hm => hinj a (ball_subset_ball h3 ha) b (ball_subset_ball h3 hb') hm
+  · exact fun A hA hAm => hdens A (hA.trans (ball_subset_ball h1)) hAm
+  · exact fun p _ => hasFDerivWithinAt_id p _
   · rw [Set.image_id]
   · intro p _
     rfl
-  · intro s hs hsr
-    exact hνd s hs (hsr.trans h2)
-  · simp only [hdet1]
-    exact continuousAt_const
+  · exact fun s hs hsr => hνd s hs (hsr.trans h2)
+  · simpa only [hdet1] using continuousAt_const
   · simp only [hdet1, abs_one, one_mul, id]
-    rw [hd0]
-    exact hgpos
+    rwa [hd0]
   · simp only [hdet1, abs_one, one_mul, id]
     rw [hd0, gVal, ← hvol]
     ring

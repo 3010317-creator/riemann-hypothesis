@@ -57,8 +57,7 @@ theorem sum_C_mul {σ K : Type*} [CommRing K] (κ : K) (R0 : MvPolynomial σ K) 
     intro n hn
     rw [mem_support_iff, coeff_C_mul] at hn
     rw [mem_support_iff]
-    intro h0
-    exact hn (by rw [h0, mul_zero])
+    exact fun h0 => hn (by rw [h0, mul_zero])
   rw [Finset.sum_subset hsub, Finset.mul_sum]
   · refine Finset.sum_congr rfl fun n _ => ?_
     rw [coeff_C_mul]; ring
@@ -94,8 +93,7 @@ theorem evX_det (x : ℕ × Fin n → K) :
     evX x (Matrix.of fun a i : Fin n => gX K n a i.val).det = C (Matrix.of fun a i : Fin n => x (i.val, a)).det := by
   rw [RingHom.map_det, RingHom.map_det]
   congr 1
-  refine Matrix.ext fun a i => ?_
-  exact evX_gX x a i.val
+  exact Matrix.ext fun a i => evX_gX x a i.val
 
 theorem src_even (g gi : Matrix (Fin n) (Fin n) K) (hg : g * gi = 1) (x : Fin n → ℕ → K) (c e : ℕ) (h : Fin c → ℕ)
     (hh : ∀ k, h k ≤ n) :
@@ -407,8 +405,7 @@ theorem blkX (hS : XShape) (j : ℕ) (b : BX X) (i0 : X.Pl → ℕ)
     have h4 := H _ _ h3 (mulC (Γi.transpose * d0 * Γ'.transpose).transpose (mulC Γ y)) (mulC d0.transpose y)
       (by rw [z_odd Γ Γi Γ' Γ'i _ (mul_eq_one_comm.1 h1) (mul_eq_one_comm.1 h2), mulC_diag])
     unfold tgtN nuT xT
-    simp only [ite_eq_left ho]
-    exact h4
+    simpa only [ite_eq_left ho] using h4
   · obtain ⟨J, H⟩ := blk_even Kc (p : Kc) (p_ne Kc) (NJ X (j + 1)) (NJ_pos X (j + 1)) (muX X j (NJ X (j + 1)) b) (hanti _)
       (cX X j b) (hle _) (X.colHt b.1 (j + 1) b.2) hcol (i0 b.1) (szT X j b) (szT_le X j b)
       (by funext k; unfold szT; rw [ite_eq_right ho]) I hI
@@ -420,8 +417,7 @@ theorem blkX (hS : XShape) (j : ℕ) (b : BX X) (i0 : X.Pl → ℕ)
         unfold DgX
         rw [mulC_diag])
     unfold tgtN nuT xT
-    simp only [ite_eq_right ho, one_mul]
-    exact h4
+    simpa only [ite_eq_right ho, one_mul] using h4
 
 end BlkX
 
@@ -450,8 +446,7 @@ theorem eval_PI (j : ℕ) (Ist : X.ColCh j) (i0 : X.Pl → ℕ) (xK : X.FrI j �
   unfold Sys.PI
   rw [Fintype.prod_sigma]
   simp only [map_prod, map_mul, map_pow, map_natCast, eval_colFac]
-  refine Finset.prod_congr rfl fun v _ => Finset.prod_congr rfl fun s _ => ?_
-  exact Finset.prod_range _
+  exact Finset.prod_congr rfl fun v _ => Finset.prod_congr rfl fun s _ => Finset.prod_range _
 
 end PIX
 
@@ -487,8 +482,7 @@ theorem pair_of_hyp (hB : XB) (hG : XG) (j : ℕ) (La : X.Lt j) (La' : X.Lt (j +
   have : Infinite Kc := CharZero.infinite Kc
   have h1 := hB p X Kc j La La' φ P f (fockL T') (C κ * map (eval₂Hom (Int.castRingHom Kc) xK) (X.PI j Ist i0))
     (fun d0 => by rw [map_mul, eval_C]; exact (h d0).symm)
-  rw [sum_C_mul, hG] at h1
-  exact h1
+  rwa [sum_C_mul, hG] at h1
 
 omit [Algebra (K0 p) Kc] [CharZero Kc] in
 theorem scal (j : ℕ) (b : BX X) (γ γi : Matrix (Fin (NJ X j)) (Fin (NJ X j)) X.G.Kf)

@@ -82,9 +82,7 @@ theorem fsum_line (t : ℤ) (c k0 : Fin N) (y : Matrix (Fin N) (Fin (N + 1)) ℂ
       fsum t c y - s * fderiv ℂ (H N t) (piF y) (Matrix.single k0 c 1) := by
   have hp : piF (y + s • Matrix.single k0 0 1) = piF y := by
     ext k l
-    simp [piF, Matrix.single_apply]
-    intro _ h
-    exact absurd h.symm (Fin.succ_ne_zero l)
+    simpa [piF, Matrix.single_apply] using fun _ h => absurd h.symm (Fin.succ_ne_zero l)
   simp only [fsum, hp]
   (simp [Matrix.add_apply, Matrix.single_apply, add_mul, Finset.sum_add_distrib,
     ite_mul, Finset.sum_ite_eq]) <;> ring

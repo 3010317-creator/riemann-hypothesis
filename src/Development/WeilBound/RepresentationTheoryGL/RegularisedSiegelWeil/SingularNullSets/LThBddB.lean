@@ -82,8 +82,7 @@ theorem proj_eq_one_iff {v : Pl D} {g : G D n} :
     rwa [val_bc_matHom, Units.val_one] at this
   · intro h
     apply Units.ext
-    rw [val_bc_matHom, Units.val_one]
-    exact h
+    rwa [val_bc_matHom, Units.val_one]
 
 theorem projArch_eq_one_iff {w : InfinitePlace D.host.F} {g : G D n} :
     projArch D.sp.cm.sig (Jst D n) w g = 1 ↔ (mat g).map (compInf D.host.F D.host.E w) = 1 := by
@@ -94,8 +93,7 @@ theorem projArch_eq_one_iff {w : InfinitePlace D.host.F} {g : G D n} :
     rwa [val_bc_matHom, Units.val_one] at this
   · intro h
     apply Units.ext
-    rw [val_bc_matHom, Units.val_one]
-    exact h
+    rwa [val_bc_matHom, Units.val_one]
 
 theorem nb_mem_atPts {nb : hermA D n → G D n} (hnb : IsNMap nb) {v : Pl D} (x : hermA D n)
     (hinf : ∀ w i j, compInf D.host.F D.host.E w (x.1 i j) = 0) (hoff : ∀ v' ≠ v, ∀ i j, cv D v' (x.1 i j) = 0) :

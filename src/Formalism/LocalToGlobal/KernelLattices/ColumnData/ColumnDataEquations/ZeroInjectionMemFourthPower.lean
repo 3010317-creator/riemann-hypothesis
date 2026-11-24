@@ -92,8 +92,7 @@ theorem putL_mem (ΛM : AddSubgroup (n → ℂ)) (N N' : ℕ) (k : Fin N' × Fin
   · have e : (fun τ => putL n N N' k x τ i j) = x := by
       funext τ
       simp [putL, h]
-    rw [e]
-    exact hx
+    rwa [e]
   · have e : (fun τ => putL n N N' k x τ i j) = 0 := by
       funext τ
       simp [putL, h]
@@ -128,8 +127,7 @@ theorem isLat_powLat (ΛM : AddSubgroup (n → ℂ)) (h : IsLat ΛM) (N N' : ℕ
       intro x y hxy
       apply Subtype.ext
       funext τ i j
-      have h1 := congrArg (fun f => ((f (i, j) : ΛM) : n → ℂ) τ) hxy
-      exact h1
+      exact congrArg (fun f => ((f (i, j) : ΛM) : n → ℂ) τ) hxy
     exact DiscreteTopology.of_continuous_injective hψc hψi
   · rw [eq_top_iff]
     intro z _

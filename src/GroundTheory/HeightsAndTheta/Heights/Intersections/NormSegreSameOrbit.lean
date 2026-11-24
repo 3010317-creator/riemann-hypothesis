@@ -68,8 +68,7 @@ theorem ncard_pullW_eq {κ : K → K'} {v : (Σ k, ι k) → (Σ k', ι' k')} (h
       (Ψ (segre fun p => z' (v p)) 0)⁻¹ • segre (fun p => z' (v p)) ≠ w) :
     {x | pullW R v Ψ x = w}.ncard = (ptsOver P' v Ψ w).ncard := by
   refine Set.ncard_congr (fun x _ => {z'' | SameOrbit z'' (R.lift x x)}) ?_ ?_ ?_
-  · intro x hx
-    exact ⟨R.lift x x, R.mem x x (R.mem_U x), rfl, hx⟩
+  · exact fun x hx => ⟨R.lift x x, R.mem x x (R.mem_U x), rfl, hx⟩
   · intro x x' hx hx' h
     have hxB : R.lift x x ∉ mcPts J' := fun hJ => hB _ (R.mem x x (R.mem_U x)) hJ hx
     have hmem : R.lift x x ∈ {z'' | SameOrbit z'' (R.lift x' x')} := h ▸ sameOrbit_self _
@@ -98,8 +97,7 @@ theorem PullbackDegreeCount.proof (hDim : FibreDimStatement) (hRank : ChartRankA
   have hz : ∀ k : FibreBlock κ, G.x' ⟨k.1, i k⟩ ≠ 0 := by
     intro k h0
     apply hi k
-    rw [fibreIdeal, RingHom.mem_ker, aeval_X]
-    exact h0
+    rwa [fibreIdeal, RingHom.mem_ker, aeval_X]
   have he : J (fibreIdeal κ G) 0 Fin.elim0 = (Module.finrank G.Φ (IntermediateField.adjoin G.Φ
       (Set.range fun q : Σ k : FibreBlock κ, ι' k.1 => G.x' ⟨q.1.1, q.2⟩ / G.x' ⟨q.1.1, i q.1⟩)) : ℤ) := by
     rw [hJ.1 _ Fin.elim0 i hfib hi]

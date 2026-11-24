@@ -65,8 +65,7 @@ lemma isPrecomplete_of_basis (I : Ideal R) [IsPrecomplete I R] (b : Module.Basis
     · intro j _ hj
       simp [Ne.symm hj]
     · simp
-  rw [hs]
-  exact h1
+  rwa [hs]
 
 end Coord
 
@@ -81,15 +80,13 @@ lemma exists_monic_lift (g : (ResidueField V)[X]) (hg : g.Monic) :
 variable (f : V[X]) (hf : f.Monic) (hg : Irreducible (f.map (residue V)))
 include hf hg
 
-lemma irr : Irreducible f := by
-  exact Polynomial.Monic.irreducible_of_irreducible_map (residue V) f hf hg
+lemma irr : Irreducible f := Polynomial.Monic.irreducible_of_irreducible_map (residue V) f hf hg
 
 lemma isDomain : IsDomain (AdjoinRoot f) := by
   exact AdjoinRoot.isDomain_of_prime (UniqueFactorizationMonoid.irreducible_iff_prime.mp (irr f hf hg))
 
 omit hg in
-lemma finite : Module.Finite V (AdjoinRoot f) := by
-  exact (AdjoinRoot.powerBasis' hf).finite
+lemma finite : Module.Finite V (AdjoinRoot f) := (AdjoinRoot.powerBasis' hf).finite
 
 lemma natDeg_pos : 0 < f.natDegree := by
   rw [← hf.natDegree_map (residue V)]
@@ -148,8 +145,7 @@ lemma dvr [IsDomain (AdjoinRoot f)] [IsLocalRing (AdjoinRoot f)] :
     rw [← map_zero (algebraMap V (AdjoinRoot f))]
     exact fun h => hw.ne_zero (inj f hf hg h)
   have hnf : ¬IsField (AdjoinRoot f) := by
-    rw [IsLocalRing.isField_iff_maximalIdeal_eq, hmA, Ideal.span_singleton_eq_bot]
-    exact hne
+    rwa [IsLocalRing.isField_iff_maximalIdeal_eq, hmA, Ideal.span_singleton_eq_bot]
   have hpr : (maximalIdeal (AdjoinRoot f)).IsPrincipal := ⟨⟨_, hmA⟩⟩
   exact ((IsDiscreteValuationRing.TFAE (AdjoinRoot f) hnf).out 1 5).mpr hpr
 
@@ -224,8 +220,7 @@ theorem nbMain (n : ℕ) : ∀ (V' : Type) [CommRing V'] [IsDomain V'] [IsDiscre
     rw [RingHom.comp_apply, ResidueField.map_residue]
     exact e0.symm_apply_apply (residue V' y)
   · obtain ⟨a, ha⟩ : ∃ a : k'', a ∉ (algebraMap (ResidueField V') k'').range := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hs fun x => RingHom.mem_range.mp (h x)
     have hint : IsIntegral (ResidueField V') a := Algebra.IsIntegral.isIntegral a
     obtain ⟨f, hfg, -, hf⟩ := exists_monic_lift (minpoly (ResidueField V') a) (minpoly.monic hint)
@@ -290,7 +285,6 @@ end Nb
 
 theorem nb : NbSt := by
   unfold NbSt
-  intro V' _ _ _ _ k'' _ _ _
-  exact Nb.nbMain _ V' k'' rfl
+  exact fun V' _ _ _ _ k'' _ _ _ => Nb.nbMain _ V' k'' rfl
 
 end ReciprocityTheory.ChartRestriction.G.Semi

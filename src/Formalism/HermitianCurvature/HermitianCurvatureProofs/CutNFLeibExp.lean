@@ -104,8 +104,7 @@ theorem term_deriv (z z' : Fin (2 * r + k + 1) → ℂ) (Ψ : ℕ → ℝ → �
   set dG : ℝ := deriv (fun s => Gf k r z z' (c s)) 0 with hdG
   have hGr : HasDerivAt (fun s => Gf k r z z' (c s)) dG 0 := hdiff.hasDerivAt
   have hD : Formalism.REAL.RdV X (Gc z z') x = (dG : ℂ) := by
-    have h2 := hGr.ofReal_comp
-    exact hGc.unique (by simpa [Gc] using h2)
+    exact hGc.unique (by simpa [Gc] using hGr.ofReal_comp)
   have hGx : Gf k r z z' (c 0) = Gf k r z z' x := by rw [hc0]
   have hne : Gf k r z z' (c 0) ≠ 0 := by rw [hGx]; exact hxp.ne'
   have hΨq : HasDerivAt (Ψ q) (Ψ (q + 1) (Gf k r z z' x) / Gf k r z z' x) (Gf k r z z' (c 0)) := by
@@ -200,7 +199,6 @@ namespace Formalism.FourierDecayAlt.P.CutBP
 
 theorem leibniz_expansion_holds : NFLeibExp := by
   unfold NFLeibExp
-  intro k r Wp Wq _ _ _ _ Bs w hw
-  exact LeibExp.exp_main Bs w hw
+  exact fun k r Wp Wq _ _ _ _ Bs w hw => LeibExp.exp_main Bs w hw
 
 end Formalism.FourierDecayAlt.P.CutBP

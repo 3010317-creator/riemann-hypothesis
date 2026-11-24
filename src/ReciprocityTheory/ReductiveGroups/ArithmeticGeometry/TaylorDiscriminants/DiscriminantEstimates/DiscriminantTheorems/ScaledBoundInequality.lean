@@ -48,10 +48,7 @@ theorem eBasis : ReciprocityTheory.ChartRestriction.G.TB.EBasisSt := by
       exact ⟨⟨i, Finset.mem_filter.mpr ⟨Finset.mem_univ _, hx⟩⟩, rfl⟩
   have hli : LinearIndependent E (fun i : s => v i) := by
     let f : s → b := fun i => ⟨v i, (Finset.mem_filter.mp i.2).2⟩
-    have hf : Function.Injective f := by
-      intro i j hij
-      apply Subtype.ext
-      exact hinj (congrArg Subtype.val hij)
+    have hf : Function.Injective f := fun i j hij => Subtype.ext (hinj (congrArg Subtype.val hij))
     exact hbli.comp f hf
   have hspan : Submodule.span E (Set.range fun i : s => v i) = ⊤ := by
     rw [hrange, hbspan, hspanE]
@@ -85,13 +82,11 @@ theorem schwarzBall : ReciprocityTheory.ChartRestriction.G.TB.SchwarzBallSt := b
     intro w hw
     rw [mem_ball_zero_iff] at hw ⊢
     rw [norm_smul]
-    rw [lt_div_iff₀ hzpos] at hw
-    exact hw
+    rwa [lt_div_iff₀ hzpos] at hw
   have hg : DifferentiableOn ℂ (fun w : ℂ => u (w • z)) (Metric.ball 0 (ρ / ‖z‖)) :=
     hu.comp (differentiable_id.smul_const z).differentiableOn hmaps
   have h1 : (1 : ℂ) ∈ Metric.ball (0 : ℂ) (ρ / ‖z‖) := by
-    rw [mem_ball_zero_iff, norm_one, lt_div_iff₀ hzpos, one_mul]
-    exact hzρ
+    rwa [mem_ball_zero_iff, norm_one, lt_div_iff₀ hzpos, one_mul]
   have hmap2 : Set.MapsTo (fun w : ℂ => u (w • z)) (Metric.ball 0 (ρ / ‖z‖))
       (Metric.closedBall (u ((0 : ℂ) • z)) M) := by
     intro w hw
@@ -99,8 +94,7 @@ theorem schwarzBall : ReciprocityTheory.ChartRestriction.G.TB.SchwarzBallSt := b
     exact hM _ (hmaps hw)
   have hS := Complex.dist_le_div_mul_dist_of_mapsTo_ball hg hmap2 h1
   simp only [one_smul, zero_smul, dist_eq_norm, sub_zero, norm_one, mul_one] at hS
-  rw [div_div_eq_mul_div] at hS
-  exact hS
+  rwa [div_div_eq_mul_div] at hS
 
 end PI.UnitaryGroupMassFormula.TBNum
 end -- clump:auto

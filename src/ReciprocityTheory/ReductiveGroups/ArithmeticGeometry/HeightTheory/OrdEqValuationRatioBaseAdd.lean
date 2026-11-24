@@ -63,8 +63,7 @@ theorem eq_ratio_base_smul (hd : d.AxH 𝒜) (c : ι) {f : A c} (hf : f ∈ 𝒜
     have h1 := congrArg Subtype.val ha
     simp only [SetLike.val_smul] at h1
     exact h1.symm
-  rw [ratio_eq_of_eq_smul_field hw0 hfa]
-  exact hfa
+  rwa [ratio_eq_of_eq_smul_field hw0 hfa]
 
 theorem ratio_base_ne_zero (hd : d.AxH 𝒜) (c : ι) {f : A c} (hf : f ∈ 𝒜 c d.wL) (hf0 : f ≠ 0) :
     ratio (Ω := Ω c) f (d.w (d.jc c) c) ≠ 0 := by
@@ -97,8 +96,7 @@ theorem eq_ratio_smul_of_mem (hd : d.AxH 𝒜) (c : ι) {f g : A c} (hf : f ∈ 
     have h1 := congrArg Subtype.val ha
     simp only [SetLike.val_smul] at h1
     exact h1.symm
-  rw [_root_.ReciprocityTheory.ChartRestriction.G.T0.Data.x4v4_ratio_spec hg0 hfa]
-  exact hfa
+  rwa [_root_.ReciprocityTheory.ChartRestriction.G.T0.Data.x4v4_ratio_spec hg0 hfa]
 
 theorem ratio_ne_zero_of_ne_zero (hd : d.AxH 𝒜) (c : ι) {f g : A c} (hf : f ∈ 𝒜 c d.wL) (hg : g ∈ 𝒜 c d.wL)
     (hg0 : g ≠ 0) (hf0 : f ≠ 0) : ratio (Ω := Ω c) f g ≠ 0 := by

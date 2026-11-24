@@ -41,8 +41,7 @@ private theorem pc_lemma_9 {σ τ : Type*} {a : σ → MvPowerSeries τ C}
     (ha : ∀ s, constantCoeff (a s) = 0) {m : σ →₀ ℕ} (hm : m ≠ 0) :
     constantCoeff (m.prod fun s n => a s ^ n) = 0 := by
   obtain ⟨s, hs⟩ : ∃ s, m s ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hm (Finsupp.ext hc)
   unfold Finsupp.prod
   rw [map_prod]
@@ -97,8 +96,7 @@ theorem ptAdd_good (G : LogFGL v d) {τ : Type*} {x y : Fin d → MvPowerSeries 
 
 theorem ptAdd_const (G : LogFGL v d) {τ : Type*} {x y : Fin d → MvPowerSeries τ C}
     (hx : ∀ a, constantCoeff (x a) = 0) (hy : ∀ a, constantCoeff (y a) = 0) (a : Fin d) :
-    constantCoeff (ptAdd G x y a) = 0 := by
-  exact cc_lemma_2 (ptc_elim_const hx hy) (G.F a) (G.F_const a)
+    constantCoeff (ptAdd G x y a) = 0 := cc_lemma_2 (ptc_elim_const hx hy) (G.F a) (G.F_const a)
 
 theorem ptAdd_lg (G : LogFGL v d) {τ : Type*} {x y : Fin d → MvPowerSeries τ C}
     (hx : ∀ a, constantCoeff (x a) = 0) (hy : ∀ a, constantCoeff (y a) = 0) (a : Fin d) :
@@ -243,8 +241,7 @@ private theorem ag_lemma_15 {σ τ : Type*} [Finite σ] {x y : σ → MvPowerSer
   by_cases h0 : m = 0
   · rw [h0, MvPowerSeries.coeff_zero_eq_constantCoeff_apply, hr0, zero_smul, zero_smul]
   · obtain ⟨s, hs⟩ : ∃ s, m s ≠ 0 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact h0 (Finsupp.ext hc)
     have hle : Finsupp.single s 1 ≤ m :=
       Finsupp.single_le_iff.mpr (Nat.one_le_iff_ne_zero.mpr hs)
@@ -284,8 +281,7 @@ theorem pt_agree_of_lg (G : LogFGL v d) {τ : Type*} {x y : Fin d → MvPowerSer
       rw [hlg, subst_add hsx, subst_add hsy, subst_X hsx, subst_X hsy, map_add (f := _), map_add (f := _),
         ag_lemma_15 hx hy n hlow _ (hr0 i) (hr1 i) e (le_of_eq hen)] at h1
       exact add_right_cancel h1
-  intro i e he
-  exact key _ i e rfl he
+  exact fun i e he => key _ i e rfl he
 
 private theorem rs_lemma_6 (c : C) (f : PowerSeries C) (n : ℕ) :
     coeff (Finsupp.single () n) (PowerSeries.rescale c f) =

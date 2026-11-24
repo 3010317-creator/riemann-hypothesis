@@ -191,8 +191,7 @@ theorem lg_agree (G : LogFGL v d) {p : ℕ} (hp : p.Prime) {γ : Fin d → Fin d
   by_cases hpow : ∃ m, j = p ^ m
   · obtain ⟨m, rfl⟩ := hpow
     have hmn : m < n := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact absurd hj (not_lt.mpr (Nat.pow_le_pow_right hp.pos h))
     have hrel := congrFun (ptx_rel G p hγ hdet ga m) a
     change G.lc p ga m a = _
@@ -310,8 +309,7 @@ private theorem lgCurve_const_zero (G : LogFGL v d) (a : Fin d) :
   · subst he
     rw [coeff_zero_eq_constantCoeff_apply, G.lg_const a, zero_smul]
   · obtain ⟨s, hs⟩ : ∃ s, e s ≠ 0 := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       exact he (Finsupp.ext hcon)
     rw [Finsupp.prod, Finset.prod_eq_zero (Finsupp.mem_support_iff.mpr hs) (by simp [hs]),
       map_zero, smul_zero]
@@ -530,8 +528,7 @@ theorem pt6' : TypicalCurveRebasing := by
     intro n
     funext a
     rw [Finset.sum_apply]
-    simp only [Pi.smul_apply, smul_eq_mul, LogFGL.lc]
-    exact hlc (p ^ n) a
+    simpa only [Pi.smul_apply, smul_eq_mul, LogFGL.lc] using hlc (p ^ n) a
   refine ⟨hγ', ?_, hL, ?_⟩
   · rw [tangent_eq_lc_zero G p (fun b => (hγ' b).1), hL 0]
     refine Finset.sum_congr rfl fun u _ => ?_
@@ -612,8 +609,7 @@ theorem pt5v' : TypicalCurveValuationBounds := by
     · rw [← tangent_eq_lc_zero G p (fun e => (hcur b e).1)]
       have h0 : (0 : WithTop ℝ) ≤ v (tangent (γ b) c) := (hcur b c).2 1
       have e0 : (((-((0 : ℕ) : ℝ)) : ℝ) : WithTop ℝ) = 0 := by simp
-      rw [e0]
-      exact h0
+      rwa [e0]
     · have hr := congrFun (hrec b n) c
       simp only [Pi.smul_apply, smul_eq_mul, Finset.sum_apply] at hr
       have hge : (((-(n : ℝ)) : ℝ) : WithTop ℝ) ≤ v ((p : C) * G.lc p (γ b) (n + 1) c) := by
@@ -656,8 +652,7 @@ theorem pt5v' : TypicalCurveValuationBounds := by
       refine Eq.trans ?_ hb.symm
       refine Finset.sum_congr rfl fun e _ => ?_
       rw [tangent_eq_lc_zero G p (fun f => (hcur e f).1)]
-    intro e
-    exact congrFun (Matrix.eq_zero_of_vecMul_eq_zero hne hM) e
+    exact fun e => congrFun (Matrix.eq_zero_of_vecMul_eq_zero hne hM) e
   obtain _ | _ | k := n
   · omega
   · have h10 : G.lc p (γ a) (0 + 1) c = 0 := by simp [h1]

@@ -50,12 +50,10 @@ theorem phase2 (k : Fin g) (n : ℕ) : ∀ M ∈ symplecticGroup (Fin g) ℤ, Co
   wlog hle : (M (Sum.inl b) (Sum.inl k)).natAbs ≤ (M (Sum.inl a) (Sum.inl k)).natAbs generalizing a b
   · exact this b a hb ha (Ne.symm hab) (by omega)
   have hak : (k : ℕ) ≤ a := by
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     exact ha (symplectic_inl_inl_eq_zero_of_colsFixed hM hF hlt (fun h => by subst h; exact lt_irrefl _ hlt))
   have hbk : (k : ℕ) ≤ b := by
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     exact hb (symplectic_inl_inl_eq_zero_of_colsFixed hM hF hlt (fun h => by subst h; exact lt_irrefl _ hlt))
   let t : ℤ := M (Sum.inl a) (Sum.inl k) / M (Sum.inl b) (Sum.inl k)
   let E : Matrix (Fin g) (Fin g) ℤ :=
@@ -110,8 +108,7 @@ theorem phase2 (k : Fin g) (n : ℕ) : ∀ M ∈ symplecticGroup (Fin g) ℤ, Co
       rw [hnew]
       by_cases hja : j = a
       · subst hja
-        simp only [ite_true]
-        exact hkey.le
+        simpa only [ite_true] using hkey.le
       · simp [hja]
     · exact ⟨a, Finset.mem_univ _, by rw [hnew]; simpa using hkey⟩
   have hM1 : spDiag U * M ∈ symplecticGroup (Fin g) ℤ :=
@@ -194,8 +191,7 @@ theorem col_inl_step (k : Fin g) (M : Matrix (Fin g ⊕ Fin g) (Fin g ⊕ Fin g)
   simp only [hb2, zero_mul, zero_sub] at hid
   simp [Matrix.J, Matrix.fromBlocks, Finset.sum_neg_distrib] at hid
   obtain ⟨j, hj⟩ : ∃ j, (O2 * (O1 * M)) (Sum.inl j) (Sum.inl k) ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     simp [hcon] at hid
   have hz : ∀ c, c ≠ j → (O2 * (O1 * M)) (Sum.inl c) (Sum.inl k) = 0 := by
     intro c hc
@@ -213,8 +209,7 @@ theorem col_inl_step (k : Fin g) (M : Matrix (Fin g ⊕ Fin g) (Fin g ⊕ Fin g)
   rw [Finset.sum_eq_single j (fun c _ hc => by rw [hz c hc, zero_mul]) (by simp)] at hid
   have hs := Int.eq_one_or_neg_one_of_mul_eq_one hid
   have hjk : (k : ℕ) ≤ j := by
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     exact hj (symplectic_inl_inl_eq_zero_of_colsFixed hA hFA hlt (fun h => by subst h; exact lt_irrefl _ hlt))
   rcases eq_or_ne j k with hjk' | hjk'
   · rw [hjk'] at hsupp hs
@@ -372,8 +367,7 @@ theorem exists_colsFixed (M : Matrix (Fin g ⊕ Fin g) (Fin g ⊕ Fin g) ℤ)
   intro k
   induction k with
   | zero =>
-    intro _
-    exact ⟨1, one_mem _, fun i hi => absurd hi (Nat.not_lt_zero _)⟩
+    exact fun _ => ⟨1, one_mem _, fun i hi => absurd hi (Nat.not_lt_zero _)⟩
   | succ k ih =>
     intro hk
     obtain ⟨O1, hO1, hF1⟩ := ih (by omega)
@@ -412,8 +406,7 @@ theorem spGen : SpGenStatement := by
           (A : Matrix (Fin g ⊕ Fin g) (Fin g ⊕ Fin g) ℤ)) := by rw [h2, Matrix.mul_one]
       _ = (A : Matrix (Fin g ⊕ Fin g) (Fin g ⊕ Fin g) ℤ) := by
           rw [← Matrix.mul_assoc, h1, Matrix.one_mul]
-  rw [← hOM]
-  exact hO
+  rwa [← hOM]
 
 end ReciprocityTheory.ChartRestriction.G.Key.Chi
 end -- clump:auto

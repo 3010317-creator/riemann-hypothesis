@@ -81,8 +81,7 @@ theorem scal_move_rev {Λ : Submodule (𝓞 E) S.V} {F : LFlag S r T} {G₁ G₂
         show m (m.symm (n.symm w)) = _; rw [m.apply_symm_apply]
       rwa [e] at this
     have := hy _ hw1
-    rw [← Formalism.L2.SG.Saturated.isom_apply hn.1.1, n.apply_symm_apply] at this
-    exact this
+    rwa [← Formalism.L2.SG.Saturated.isom_apply hn.1.1, n.apply_symm_apply] at this
   have hoX : orth S (Xplus F) ≤ orth S (Xsp F) := _root_.Formalism.MainNotions.LatticeGluingRadicals.c_orth_anti le_sup_left
   have hoX' : ∀ (G : LFlag S r T'), orth S (Xplus G) ≤ orth S (Xsp G) := fun G => _root_.Formalism.MainNotions.LatticeGluingRadicals.c_orth_anti le_sup_left
   intro y1 hy1 y2 hy2 y1' hy1' y2'' hy2'' h12 h2'' al al'
@@ -106,8 +105,7 @@ theorem scal_move_rev {Λ : Submodule (𝓞 E) S.V} {F : LFlag S r T} {G₁ G₂
     rw [this]; exact sub_mem h2'' hk
   have key := hS _ hY1 _ hY2 _ hY1' _ hY2'' hc12 hc2 al al'
   have s1 := sg_move hn₁ hX₁ (hzK hm₁ hL₁ hX₁ hz₁) hLF y1 y1' al al'
-  have s2 := sg_move hn₂ hX₂ (hzK hm₂ hL₂ hX₂ hz₂) hLF y2 y2'' al al'
-  exact s1.symm.trans (key.trans s2)
+  exact s1.symm.trans (key.trans (sg_move hn₂ hX₂ (hzK hm₂ hL₂ hX₂ hz₂) hLF y2 y2'' al al'))
 
 theorem Th_map {Λ : Submodule (𝓞 E) S.V} {F : LFlag S r T} {F' F'' : LFlag S r T'} (δ B : S.V ≃ₗ[E] S.V)
     (hδ : δ ∈ Formalism.HermitianLatticesTheory.isom S.hT) :
@@ -184,8 +182,7 @@ theorem sg_map (δ : S.V ≃ₗ[E] S.V) (hδ : δ ∈ Formalism.HermitianLattice
     simpa [Formalism.L2.SG.Saturated.mapL, map_add (f := _), map_sub, map_smul] using h2
   · rintro ⟨x, hx, x', hx', h⟩
     refine ⟨δ x, ⟨x, hx, rfl⟩, δ x', ⟨x', hx', rfl⟩, ?_⟩
-    have h2 := congrArg δ h
-    simpa [Formalism.L2.SG.Saturated.mapL, map_add (f := _), map_sub, map_smul] using h2
+    simpa [Formalism.L2.SG.Saturated.mapL, map_add (f := _), map_sub, map_smul] using congrArg δ h
 
 theorem scal_map_fwd {Λ : Submodule (𝓞 E) S.V} {F : LFlag S r T} {F' F'' : LFlag S r T'} (δ B : S.V ≃ₗ[E] S.V)
     (hδ : δ ∈ Formalism.HermitianLatticesTheory.isom S.hT) (hS : IsScalar Λ F F' F'' B) :
@@ -233,8 +230,7 @@ theorem scal_map {Λ : Submodule (𝓞 E) S.V} {F : LFlag S r T} {F' F'' : LFlag
       show δ.symm (δ x) ∈ Λ ↔ x ∈ Λ
       rw [LinearEquiv.symm_apply_apply]
     have hb : δ⁻¹ * (δ * B * δ⁻¹) * δ⁻¹⁻¹ = B := by group
-    rw [hg, hb, mapL_inv_mapL, mapL_inv_mapL, mapL_inv_mapL] at h2
-    exact h2
+    rwa [hg, hb, mapL_inv_mapL, mapL_inv_mapL, mapL_inv_mapL] at h2
   · exact scal_map_fwd δ B hδ
 
 theorem isPair_map_fwd {Λ : Submodule (𝓞 E) S.V} {F : LFlag S r T} {F' F'' : LFlag S r T'} (δ B : S.V ≃ₗ[E] S.V)
@@ -248,16 +244,12 @@ theorem isPair_map_fwd {Λ : Submodule (𝓞 E) S.V} {F : LFlag S r T} {F' F'' :
   · exact Subgroup.mul_mem _ (Subgroup.mul_mem _ hδ hA.1) (Subgroup.inv_mem _ hδ)
   · ext x
     rw [_root_.Formalism.L2.SG.Saturated.mem_gmap_iff, _root_.Formalism.L2.SG.Saturated.mem_gmap_iff, _root_.Formalism.L2.SG.Saturated.mem_gmap_iff]
-    have e : δ.symm ((δ * B * δ⁻¹).symm x) = B.symm (δ.symm x) := by
-      show δ.symm (δ (B.symm (δ.symm x))) = _
-      exact δ.symm_apply_apply _
+    have e : δ.symm ((δ * B * δ⁻¹).symm x) = B.symm (δ.symm x) := δ.symm_apply_apply _
     rw [e]
     constructor
     · intro hy
-      have h3 := _root_.PI.UnitaryGroupMassFormula.ScalRelRepFree.aut_mem hA hy
-      simpa using h3
-    · intro hy
-      exact _root_.PI.UnitaryGroupMassFormula.ScalRelRepFree.aut_symm_mem hA hy
+      simpa using _root_.PI.UnitaryGroupMassFormula.ScalRelRepFree.aut_mem hA hy
+    · exact fun hy => _root_.PI.UnitaryGroupMassFormula.ScalRelRepFree.aut_symm_mem hA hy
   · intro j
     rw [Formalism.L2.SG.Pf.Xflag_mapL, Formalism.L2.SG.Pf.Xflag_mapL, ← hX j, ← Submodule.map_comp, ← Submodule.map_comp]
     congr 1
@@ -405,9 +397,7 @@ theorem xflag_map_of_frame {T₀ T₁ : D.host.E} {K : LFlag (D.sp.Y 0) D.R.rS T
   unfold Formalism.MainNotions.S.FlagG.Xa
   rw [Submodule.map_span, ← Set.image_comp]
   congr 1
-  apply Set.image_congr
-  intro i _
-  exact he i
+  exact Set.image_congr (fun i _ => he i)
 
 theorem rp_data (q : RP Y u u') :
     q.l1.toTerm = q.1.1 ∧ q.l2.toTerm = q.1.2 ∧

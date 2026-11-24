@@ -76,13 +76,11 @@ theorem inv_mem_UFin {x : Ideles L} (hx : x ∈ UFin L) : x⁻¹ ∈ UFin L := b
   refine ⟨?_, fun v => ?_⟩
   · have h2 : (x : AdeleRing (𝓞 L) L).1 * ((x⁻¹ : Ideles L) : AdeleRing (𝓞 L) L).1 = 1 :=
       congrArg (fun y : AdeleRing (𝓞 L) L => y.1) hmul
-    rw [hx.1, one_mul] at h2
-    exact h2
+    rwa [hx.1, one_mul] at h2
   · have h2 : (x : AdeleRing (𝓞 L) L).2 v * ((x⁻¹ : Ideles L) : AdeleRing (𝓞 L) L).2 v = 1 :=
       congrArg (fun y : AdeleRing (𝓞 L) L => y.2 v) hmul
     have h3 := congrArg Valued.v h2
-    rw [map_mul, hx.2 v, one_mul, map_one] at h3
-    exact h3
+    rwa [map_mul, hx.2 v, one_mul, map_one] at h3
 
 theorem val_inv_sub {x : Ideles L} (hx : x ∈ UFin L) (v : HeightOneSpectrum (𝓞 L)) :
     Valued.v ((x⁻¹ : Ideles L).val.2 v - 1) = Valued.v ((x : AdeleRing (𝓞 L) L).2 v - 1) := by
@@ -152,7 +150,6 @@ theorem exists_nbhd (W : Set (Ideles L)) (hW : IsOpen W) (h1 : (1 : Ideles L) �
     rw [e1, e2]
     rfl
   have := hsub hy
-  rw [Set.mem_preimage, hgx] at this
-  exact this
+  rwa [Set.mem_preimage, hgx] at this
 
 end PI.AlgValsFin.W

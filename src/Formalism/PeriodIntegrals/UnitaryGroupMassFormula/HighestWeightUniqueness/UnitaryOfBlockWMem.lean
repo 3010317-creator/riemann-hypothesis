@@ -162,8 +162,7 @@ lemma blockW_mul (a b : Matrix (Fin k) (Fin k) ℂ) :
       exact blockW_out b hi
     · intro l _ hl
       rw [blockW_out a hi, ite_eq_right (Ne.symm hl), zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+    · exact fun h => absurd (Finset.mem_univ i) h
 
 lemma blockW_one : blockW k r (1 : Matrix (Fin k) (Fin k) ℂ) = 1 := by
   ext i j
@@ -290,10 +289,8 @@ lemma fix_col {m : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hm :
       · have e : j = wI k r (Fin.last k) := by
           apply Fin.ext
           show j.val = r + (Fin.last k).val
-          rw [Fin.val_last]
-          exact c2
-        rw [e]
-        exact h2
+          rwa [Fin.val_last]
+        rwa [e]
       · have e : j = esI k r ⟨2 * r + k - j.val, by omega⟩ := by
           apply Fin.ext
           show j.val = 2 * r + k - (2 * r + k - j.val)
@@ -316,8 +313,7 @@ lemma fix_row {m : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hU :
     exact (mul_eq_zero.mp e).resolve_left hne
   · intro l _ hl
     rw [Matrix.conjTranspose_apply, fix_col hm _ hpo, ite_eq_right hl, star_zero, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem fix_block {m : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hU : m ∈ UH (Hpk k r))
     (hm : FixEW k r m) : sub k r m ∈ UJset (allPos k) ∧ m = blockW k r (sub k r m) := by

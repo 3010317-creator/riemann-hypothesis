@@ -55,12 +55,10 @@ theorem mt_of_embRel (hι : HSpace.IsIsomEmb A T ι) {g : GA D T} {h : GA D A} (
       funext i'
       have := congrFun (congrFun hperp i') k
       rw [Matrix.mul_apply, Matrix.zero_apply] at this
-      rw [Pi.zero_apply, Matrix.mulVec, dotProduct]
-      exact this
+      rwa [Pi.zero_apply, Matrix.mulVec, dotProduct]
     have := congrFun (hr.2 (fun i => Q i k) hx) i
     rw [Matrix.mulVec, dotProduct] at this
-    rw [Matrix.mul_apply, Matrix.map_apply]
-    exact this
+    rwa [Matrix.mul_apply, Matrix.map_apply]
   have hQmap : Q.map (incA D) = 1 - (F * P).map (incA D) := by
     ext i j
     simp only [hQ, Matrix.map_apply, Matrix.sub_apply, map_sub, Matrix.one_apply]

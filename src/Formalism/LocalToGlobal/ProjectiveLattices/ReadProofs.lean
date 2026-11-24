@@ -64,8 +64,7 @@ theorem eq_zero_of_orbit (X : Data E r) (la : Wt X.Ψ r) (P : Frame X.Ψ r → �
       Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.2 (hb τ).1), Matrix.mul_one]
   have h1 : P (lact γ x) = 0 := by
     have h2 := hB _ hz (frInv b) hbinv
-    rw [hrm, h0, mul_zero] at h2
-    exact h2
+    rwa [hrm, h0, mul_zero] at h2
   rw [hΓ γ hγ x hx] at h1
   obtain ⟨n, hn, hχ⟩ := X.χ_fin la
   have hne : X.χ la γ ≠ 0 := by
@@ -151,8 +150,7 @@ theorem adelMeas_of_aut {U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r} {σ : c.F �
   obtain ⟨hL, hc⟩ := h la P hP
   haveI : BorelSpace (GA D V) := ⟨rfl⟩
   rw [onQ_eq_lift _ hL]
-  refine Measurable.aestronglyMeasurable ?_
-  exact measurable_from_quotient.2 hc.measurable
+  exact Measurable.aestronglyMeasurable (measurable_from_quotient.2 hc.measurable)
 
 theorem aeDom_of_aut {U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r} {σ : c.F →+* ℂ} {V : HSp D}
     {dict : GA D V → Σ k, Frame ((U σ).X k).Ψ r} {mu : GA D V → ℂ} {Kf : Subgroup (GA D V)}

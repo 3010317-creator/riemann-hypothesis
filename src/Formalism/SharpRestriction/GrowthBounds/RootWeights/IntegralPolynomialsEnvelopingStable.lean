@@ -385,8 +385,7 @@ theorem divided_powers_preserve_add (Q : V → Prop) (h0 : Q 0) (hadd : ∀ x y,
     have hkm : ((k - m).factorial : K) ≠ 0 := by exact_mod_cast (k - m).factorial_ne_zero
     rw [h4]
     field_simp
-  rw [h2]
-  exact h1
+  rwa [h2]
 
 end good
 
@@ -690,8 +689,7 @@ theorem char_zero_stability_of_closure {p : ℕ} (hp : p.Prime) {O : Type} [Comm
     have hQ : MonomialGradedLattice p (fun F : MvPolynomial (ι × Fin n) (KK O) => F ∈ IntPol O (ι × Fin n)) := by
       refine ⟨?_, ?_, ?_, ?_⟩
       · rw [hiff]
-        intro m
-        exact ⟨0, by simp⟩
+        exact fun m => ⟨0, by simp⟩
       · intro F G hF hG
         rw [hiff] at hF hG ⊢
         intro m
@@ -831,9 +829,7 @@ theorem multidegree_part_spans {ι : Type} [Fintype ι] {n : ℕ}
     rw [Finset.sum_attach _ (fun m => monomial m ((x : MvPolynomial (ι × Fin n) (KK O)).coeff m))]
     exact (x : MvPolynomial (ι × Fin n) (KK O)).as_sum
   rw [hx2]
-  show _ ∈ Submodule.span (KK O) _
-  refine Submodule.sum_mem _ (fun m _ => Submodule.smul_mem _ _ (Submodule.subset_span ?_))
-  exact h m.1
+  exact Submodule.sum_mem _ (fun m _ => Submodule.smul_mem _ _ (Submodule.subset_span (h m.1)))
 
 theorem fock_lattice_finite_spanning_holds {p : ℕ} (hp : p.Prime) (S0 : UniformizedDVR p O) (hV : ValuationProperties p O) : FockLatticeFiniteSpanning p O := by
   intro n ι _
@@ -921,8 +917,7 @@ theorem operator_list_lattice_scaling {O : Type} [CommRing O] [IsDomain O] {σ :
     simp only [List.map_cons, List.prod_cons, List.sum_cons]
     refine ⟨hW eD (by simp) _ h1, ?_⟩
     have h3 := hL eD (by simp) _ (W.smul_mem ((p : KK O) ^ (l.map Prod.snd).sum) h1) h2
-    rw [map_smul, smul_smul, ← pow_add] at h3
-    exact h3
+    rwa [map_smul, smul_smul, ← pow_add] at h3
 
 theorem polynomial_isotypic_lattice_of_parts (D : Formalism.BasicNotions.D7) (hCR : CompleteReducibilityIsotypic) (hOrth : ContravariantIsotypicOrthogonal) (hDom : HighestWeightDominant)
     (hRes : SubrepRestrictionRep) (hPol : PolynomialGLRepresentation) (hLat : AdmissibleDVRIntegralFormLatticesStable) (h13 : IsotypicProjectorTheoremField D) : FilteredProjectorCorollaryField D := by

@@ -164,8 +164,7 @@ theorem isIrreducible_outerTensor {ρ₁ : Representation ℂ M₁ V₁} {ρ₂ 
           show TensorProduct.map (ρ₁ 1) (ρ₂ m) = _
           rw [map_one]
           rfl
-        rw [← h1]
-        exact this
+        rwa [← h1]
       | add f g hf hg =>
         rw [map_add (f := _), TensorProduct.map_add_right, LinearMap.add_apply]
         exact Y.toSubmodule.add_mem hf hg
@@ -186,8 +185,7 @@ theorem isIrreducible_outerTensor {ρ₁ : Representation ℂ M₁ V₁} {ρ₂ 
       · intro j hj hjj
         rw [TensorProduct.map_tmul, LinearMap.id_apply, hr _ (Finset.mem_image_of_mem _ hj)]
         simp [A, hjj]
-      · intro h
-        exact absurd (Finsupp.mem_support_iff.2 hj₀) h
+      · exact fun h => absurd (Finsupp.mem_support_iff.2 hj₀) h
 
     intro a b'
     have h1 : ∀ a' ∈ Submodule.span ℂ (range fun m => ρ₁ m (F y j₀)),

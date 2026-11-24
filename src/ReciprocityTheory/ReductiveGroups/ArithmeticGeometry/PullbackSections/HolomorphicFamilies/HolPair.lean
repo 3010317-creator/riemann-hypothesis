@@ -160,8 +160,7 @@ private theorem top_le_lemma_3 {Y : Scheme.{0}} (x : Sp ℂ ⟶ Y) (W : Y.Opens)
     (h : x q ∈ W) : ⊤ ≤ x ⁻¹ᵁ W := by
   intro q' _
   have hq : q' = q := pt_lemma_2 q' q
-  rw [hq]
-  exact h
+  rwa [hq]
 
 theorem holPair (X Y₁ Y₂ : Scheme.{0}) (p₁ : Y₁ ⟶ X) (p₂ : Y₂ ⟶ X) (n : ℕ) (B : Set (Fin n → ℂ))
     (e₁ : (Fin n → ℂ) → (Sp ℂ ⟶ Y₁)) (e₂ : (Fin n → ℂ) → (Sp ℂ ⟶ Y₂)) (he : ∀ b, e₁ b ≫ p₁ = e₂ b ≫ p₂) :

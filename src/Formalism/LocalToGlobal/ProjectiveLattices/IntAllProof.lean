@@ -194,8 +194,7 @@ theorem isCombAt_single {S : Type} [CommRing S] {Xo : Moduli Dw l} {x : Sp S ⟶
       show epsPt (hv i) ((Pi.single j (1 : S) : Fin m → S) i) = 1
       rw [Pi.single_eq_of_ne hi]
       exact epsPt_zero (hv i))]
-  simp only [Pi.single_eq_same]
-  exact epsPt_one_left (hv j)
+  simpa only [Pi.single_eq_same] using epsPt_one_left (hv j)
 
 variable (Xo : Moduli Dw l) (c : Coeff l)
 
@@ -272,8 +271,7 @@ theorem reFrame_of (hT : TanLin Xo) (hR : IntRebase Xo c) : ReFrame Xo c := by
     rw [← h3]
     rfl
   rw [hkc] at hc
-  rw [← isCombAt_unique hc (hu'' τ i)]
-  exact hw'
+  rwa [← isCombAt_unique hc (hu'' τ i)]
 
 end Frames
 

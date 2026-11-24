@@ -56,14 +56,12 @@ theorem isRegularLocalRing_quotient_of_not_mem_sq [IsRegularLocalRing R] {x : R}
     exact_mod_cast h
   haveI : Fintype s := hs_fin.fintype
   have hxs : x ∈ Submodule.span R (Set.range ((↑) : s → R)) := by
-    rw [Subtype.range_coe, hs_span]
-    exact hx
+    rwa [Subtype.range_coe, hs_span]
   obtain ⟨c, hc⟩ := Finsupp.mem_span_range_iff_exists_finsupp.mp hxs
   simp only [Finsupp.sum] at hc
 
   obtain ⟨i0, hi0⟩ : ∃ i, IsUnit (c i) := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hx2
     rw [← hc, sq]
     refine Submodule.sum_mem _ (fun i _ => ?_)
@@ -93,8 +91,7 @@ theorem isRegularLocalRing_quotient_of_not_mem_sq [IsRegularLocalRing R] {x : R}
     rw [← hs_span]
     refine Submodule.span_le.mpr (fun y hy => ?_)
     by_cases hyi : y = (i0 : R)
-    · rw [hyi]
-      exact hi0J
+    · rwa [hyi]
     · exact Submodule.mem_sup_left (Ideal.subset_span ⟨hy, hyi⟩)
 
   have hmap : Ideal.map (Ideal.Quotient.mk (Ideal.span {x}))
@@ -204,8 +201,7 @@ theorem regular_params_spec [IsRegularLocalRing R] {n : ℕ} (f : Fin n → R)
       refine Ideal.span_le.mpr ?_
       rintro _ ⟨k, rfl⟩
       by_cases hk : k = j
-      · rw [hk, hspan, Ideal.smul_eq_mul, ← sq]
-        exact hj
+      · rwa [hk, hspan, Ideal.smul_eq_mul, ← sq]
       · apply Submodule.mem_sup_left
         rw [← hS]
         exact Ideal.subset_span (Finset.mem_coe.mpr

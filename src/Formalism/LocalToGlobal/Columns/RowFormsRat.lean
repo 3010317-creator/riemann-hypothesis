@@ -59,15 +59,13 @@ theorem csum_basis (i : Fin S.dim) (x : Fin S.dim → K) :
     · rw [Pi.single_eq_same, one_smul]
     · intro b _ hb
       rw [Pi.single_eq_of_ne hb, zero_smul]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+    · exact fun h => absurd (Finset.mem_univ i) h
   rw [e, Finset.sum_eq_single i] at h
   · rw [h]
     simp [Matrix.mulVec, dotProduct]
   · intro b _ hb
     simp [Pi.single_eq_of_ne hb]
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 theorem repr_mem (R : S.Rat) (hb : S.HasRatBasis) (hdet : S.H.det ≠ 0) (f : S.Forms) (hf : S.IsRat (f : S.Cl → S.V))
     (i : Fin S.dim) : S.basis.repr f i ∈ cmMax K := by
@@ -124,7 +122,6 @@ theorem GSD.repCSD_actRat (h : S.Ok) (R : S.Rat) {A : Type} [Group A] [Fintype A
   obtain ⟨d', hd'⟩ := hr t ((S.res h).symm f) (S.outSec.rep c)
   show S.bV.repr ((r t ((S.res h).symm f) : S.D → S.V) (S.outSec.rep c)) i ∈ cmMax K
   rw [hd']
-  show S.bV.repr (S.ρ (S.outSec.mv d') ((f.1 : S.Cl → S.V) (S.cls d'))) i ∈ cmMax K
   exact S.rho_mem R _ _ (hf _) i
 
 end GSDRat

@@ -76,8 +76,7 @@ theorem sum_eq_of_transversal {P : Ideal (MRing ι)} {R R' : Finset ((Σ k, ι k
     obtain ⟨t, ⟨htR, hto⟩, -⟩ := hRu t' (hR'P t' ht')
     exact ⟨t, htR, (hR'u t (hRP t htR)).unique (hR'u t (hRP t htR)).exists.choose_spec
       ⟨ht', sameOrbit_symm hto⟩⟩
-  · intro t ht
-    exact hh _ _ (hRP t ht) (hR'u t (hRP t ht)).exists.choose_spec.2
+  · exact fun t ht => hh _ _ (hRP t ht) (hR'u t (hRP t ht)).exists.choose_spec.2
 
 theorem logNorm_sameOrbit {A : HermLine ι} {s : MRing ι} {a : K → ℕ} (ha : ∀ k, A.a k = a k)
     (hs : IsMultiHomog s a) {z z' : (Σ k, ι k) → ℂ} (h : SameOrbit z z') :
@@ -124,8 +123,7 @@ theorem proof : CurveDegreeVert.Statement := by
       ⟨fun _ => 1, fun _ => rfl, isMultiHomog_curveChartMono c _, hmono _⟩
     have h1 := norm_ne_zero_iff.mpr (eval_ne_zero_of_dimOne arithVarZero hP hs1 hz)
     rw [norm_eval_curveChartMono] at h1
-    have h2 := Finset.prod_ne_zero_iff.mp h1 k (Finset.mem_univ k)
-    simpa using h2
+    simpa using Finset.prod_ne_zero_iff.mp h1 k (Finset.mem_univ k)
 
   have hadd := hI.2.1 P 0 Fin.elim0 A B hP hL hA hB
   have hRd := hI.2.2 P 0 Fin.elim0 (A.tensor B) (curveChartMono c d) d hP hL

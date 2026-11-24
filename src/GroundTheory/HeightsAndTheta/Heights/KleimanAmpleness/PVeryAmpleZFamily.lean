@@ -46,8 +46,7 @@ theorem aeval_mem_pow {I : Chart x} {Q : Submodule (chartRing S x I) Ω} (hQ : �
   rw [hdeg] at hm
   have := Submodule.smul_mem (Q ^ e)
     (⟨algebraMap S Ω (AddMonoidAlgebra.coeff f d), Subalgebra.algebraMap_mem _ _⟩ : chartRing S x I) hm
-  rw [chartRing_smul_def] at this
-  exact this
+  rwa [chartRing_smul_def] at this
 
 
 omit [Module S E] [IsScalarTower S Ω E] in
@@ -220,8 +219,7 @@ theorem proof : VeryAmpleZFamily.Statement := by
           (prod_pow_mem H.toSubSystem I (hh I) J'.1 (J.1.card * M - n I))
         have e2 : J'.1.card * n I + J'.1.card * (J.1.card * M - n I) = J.1.card * (J'.1.card * M) := by
           rw [← Nat.mul_add, Nat.add_sub_cancel' hnK]; ring
-        rw [e2] at this
-        exact this
+        rwa [e2] at this
     · rintro ⟨a, ha, hay⟩
       change y ∈ secsOnZ F.toSubSystem H.toSubSystem h J'
       have h1 : (a : Ω) • y ∈ secsOnZ F.toSubSystem H.toSubSystem h J' := mono J J' hJ _ hay
@@ -229,8 +227,7 @@ theorem proof : VeryAmpleZFamily.Statement := by
       have h2 := smul J' (↑u⁻¹) _ h1
       have hinv : ((↑u⁻¹ : chartRing S h J') : Ω) * (a : Ω) = 1 := by
         have := congrArg Subtype.val u.inv_mul
-        rw [hu] at this
-        exact this
+        rwa [hu] at this
       rwa [smul_smul, hinv, one_smul] at h2
   · ext e
     exact Iff.rfl

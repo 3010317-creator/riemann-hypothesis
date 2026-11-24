@@ -83,8 +83,7 @@ theorem scale_alt (T : V ≃ₗ[Kf] V) (c : Kf) {M M' : Submodule O V} (h : ∀ 
 
 theorem comp_symm_mem_dualLat_of_mem_iff (T : V ≃ₗ[Kf] V) {M M' : Submodule O V} (h : ∀ x, x ∈ M ↔ T x ∈ M') {φ : Module.Dual Kf V}
     (hφ : φ ∈ Formalism.GradedWeylDivisibility.dualLat O Kf M) : φ.comp T.symm.toLinearMap ∈ Formalism.GradedWeylDivisibility.dualLat O Kf M' := by
-  intro v hv
-  exact hφ (T.symm v) ((h _).2 (by rwa [LinearEquiv.apply_symm_apply]))
+  exact fun v hv => hφ (T.symm v) ((h _).2 (by rwa [LinearEquiv.apply_symm_apply]))
 
 theorem comp_symm_mem_scale_dualLat_of_mem_iff (T : V ≃ₗ[Kf] V) (c : Kf) {M M' : Submodule O V} (h : ∀ x, x ∈ M ↔ T x ∈ M')
     {φ : Module.Dual Kf V} (hφ : φ ∈ scale c (Formalism.GradedWeylDivisibility.dualLat O Kf M)) :
@@ -122,8 +121,7 @@ theorem restEdge_of (hFun : RestFunct) : RestEdge := by
   let γ : GL (Fin (m + 1)) R.Qq := hug'.unit * hug.unit⁻¹
   have hγg : (γ : Matrix (Fin (m + 1)) (Fin (m + 1)) R.Qq) * g = g' := by
     have : γ * hug.unit = hug'.unit := by simp [γ]
-    have h2 := congrArg Units.val this
-    simpa using h2
+    simpa using congrArg Units.val this
   have hee : e' = mapE γ e := by
     cases e with
     | mk s tg =>

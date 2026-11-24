@@ -85,9 +85,7 @@ theorem centre_loc {X : Scheme.{0}} {O : Type} [CommRing O] (z : Sp O ⟶ X) (P 
     centre (spMap (algebraMap O (Localization.AtPrime P)) ≫ z) = z (⟨P, hP⟩ : PrimeSpectrum O) := by
   have e : (spMap (algebraMap O (Localization.AtPrime P))) (IsLocalRing.closedPoint (Localization.AtPrime P)) =
       (⟨P, hP⟩ : PrimeSpectrum O) := by
-    apply PrimeSpectrum.ext
-    show (IsLocalRing.maximalIdeal _).comap (algebraMap O (Localization.AtPrime P)) = P
-    exact Localization.AtPrime.under_maximalIdeal
+    exact PrimeSpectrum.ext Localization.AtPrime.under_maximalIdeal
   show z ((spMap (algebraMap O (Localization.AtPrime P))) (IsLocalRing.closedPoint _)) = _
   rw [e]
 

@@ -69,8 +69,7 @@ theorem coeff_mul_low (V G : PowerSeries ℂ) (hV : PowerSeries.coeff 0 V = 1) (
         have hbn : b = n := by simp only at hx; omega
         rw [ha0, hbn]
       rw [hG b hb, mul_zero]
-    · intro h
-      exact absurd (Finset.HasAntidiagonal.mem_antidiagonal.2 (by simp)) h
+    · exact fun h => absurd (Finset.HasAntidiagonal.mem_antidiagonal.2 (by simp)) h
 
 theorem exists_dC_inv : ∃ v : PowerSeries ℤ, PowerSeries.coeff 0 v = 1 ∧
     ∀ H : PowerSeries ℂ, PowerSeries.X * H = v.map (Int.castRingHom ℂ) * (dC * H) := by
@@ -121,8 +120,7 @@ theorem low_of_dC_mul (H : PowerSeries ℂ) (n0 : ℕ) (u : ℂ) (hu : u ≠ 0)
   · refine ⟨k, rfl, fun n hn => ?_, ?_⟩
     · rw [← PowerSeries.coeff_succ_X_mul]
       exact hlow _ (by omega)
-    · rw [← PowerSeries.coeff_succ_X_mul]
-      exact hn0
+    · rwa [← PowerSeries.coeff_succ_X_mul]
 
 theorem exists_integral_poly_of_qExpansion (R : Subring ℂ) (N : ℕ) : ∀ f : ℍ → ℂ, IsMF (12 * (N : ℤ)) f →
     CoeffIn R (qExpansion 1 f) →

@@ -73,8 +73,7 @@ theorem proj_specOp (a : ι → ℂ) (q : ι) (x : E) :
   · rw [map_smul, Submodule.starProjection_eq_self_iff.2 (proj_mem U q x)]
   · intro p _ hp
     rw [map_smul, proj_of_mem U hU (proj_mem U p x), ite_eq_right (Ne.symm hp), smul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ q) h
+  · exact fun h => absurd (Finset.mem_univ q) h
 
 theorem sum_proj {x : E} (hx : x ∈ ⨆ p, U p) : ∑ p, (U p).starProjection x = x := by
   classical
@@ -200,8 +199,7 @@ theorem heckeRows_spec (h2 : X.H2 cr b) (hE : X.PartsE b) (hQ : ∀ y, y ∈ ⨆
             rat := fun T => ?_,
             eig := fun c => spec_eig Bs.v0.embedding X.EEp (X.EEl b) cf.ev cf.ev_inj hE.1 hE.2 c }⟩
   have h := spec_rat Bs.v0.embedding (X.iC cr b Bs.μ0) h2.1 X.EEp (fun p => cf.ev p T) hO' hQ
-  rw [h2.2.2] at h
-  exact h
+  rwa [h2.2.2] at h
 
 theorem heckeW_spec (hk : X.KForm b) (he : X.EWnorm b) (hn : 0 < X.nP b) (hP : X.PartsW b)
     (hK : ∀ j y, y ∈ ⨆ p, X.WpK b j p) (cf : ConvFace Bs) : Nonempty (X.HeckeWC b cf) :=

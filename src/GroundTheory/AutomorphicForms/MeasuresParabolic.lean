@@ -269,8 +269,7 @@ theorem modularCharacter_blockUpper_of_mem_borel' (p : blockUpper F n β)
   have hdisj : Disjoint (Finset.univ.filter fun ij : Fin n × Fin n => β ij.1 < β ij.2)
       (Finset.univ.filter fun ij : Fin n × Fin n => β ij.1 = β ij.2) := by
     rw [Finset.disjoint_filter]
-    intro ij _ h1 h2
-    exact h1.ne h2
+    exact fun ij _ h1 h2 => h1.ne h2
   rw [hsplit, Finset.prod_union hdisj]
   set S := Finset.univ.filter fun ij : Fin n × Fin n => β ij.1 = β ij.2
   have hswap : ∏ ij ∈ S, f ij.2 = ∏ ij ∈ S, f ij.1 := by

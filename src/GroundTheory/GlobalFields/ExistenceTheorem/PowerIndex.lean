@@ -34,8 +34,7 @@ theorem range_powMonoidHom_subgroupOf_torsion {n : ℕ} (hn : n ≠ 0) :
   · rintro ⟨x, hx⟩
     rw [powMonoidHom_apply] at hx
     refine ⟨⟨x, mem_torsion_of_pow_mem_torsion hn ?_⟩, Subtype.ext ?_⟩
-    · rw [hx]
-      exact ht
+    · rwa [hx]
     · exact hx
   · rintro ⟨x, hx⟩
     exact ⟨x, congrArg Subtype.val hx⟩
@@ -56,8 +55,7 @@ theorem range_powMonoidHom_sup_torsion (n : ℕ) :
     obtain ⟨b, rfl⟩ := QuotientGroup.mk'_surjective (CommGroup.torsion G) q
     have ht : (b ^ n)⁻¹ * x ∈ CommGroup.torsion G := by
       rw [← QuotientGroup.eq]
-      rw [← map_pow] at hq
-      exact hq
+      rwa [← map_pow] at hq
     have h := Subgroup.mul_mem_sup (S := (powMonoidHom n : G →* G).range)
       (T := CommGroup.torsion G) ⟨b, rfl⟩ ht
     rwa [powMonoidHom_apply, mul_inv_cancel_left] at h

@@ -256,8 +256,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} {X : Data 
 
 theorem exists_s_ne {Xa : ArchInM X} (Fl : FlatM X Xa) (x0 : Frame X.Ψ r) (hx0 : IsOrth X x0) :
     ∃ k0 : Fin (nd X), ∃ z ∈ OmF X x0, Fl.s k0 (cpt X x0 z) ≠ 0 := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hall : ∀ k, ∀ x ∈ X.dom, Fl.s k x = 0 := fun k =>
     bigCell_of lu_holds r X x0 hx0 Xa.L (Fl.s k) ⟨(Fl.s_van k).1.1.1.1, (Fl.s_van k).1.1.1.2.1⟩ (hcon k)
   have hx0d := IW.orth_mem_dom X x0 hx0
@@ -276,8 +275,7 @@ theorem exists_s_ne {Xa : ArchInM X} (Fl : FlatM X Xa) (x0 : Frame X.Ψ r) (hx0 
   apply hc
   have h2 := Xa.n_ge
   rw [ContinuousLinearMap.det, ContinuousLinearMap.toLinearMap_zero, LinearMap.det_zero]
-  simp only [finrank_euclideanSpace, Fintype.card_fin]
-  exact zero_pow (by omega)
+  simpa only [finrank_euclideanSpace, Fintype.card_fin] using zero_pow (by omega)
 
 end
 
@@ -436,8 +434,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} {X : Data 
 
 theorem s_not_ev_zero {Xa : ArchInM X} (Fl : FlatM X Xa) (j : Fin Fl.δ) :
     ∃ k, ¬ (fun z => Fl.s k (cpt X (Fl.xs j) z)) =ᶠ[𝓝 (0 : V (nd X))] 0 := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hc := Fl.coord j
   have hev : (fun z : V (nd X) => (WithLp.toLp 2 fun k =>
       Fl.s k (cpt X (Fl.xs j) z) / Fl.w0 (cpt X (Fl.xs j) z) : V (nd X))) =ᶠ[𝓝 0] fun _ => 0 := by
@@ -449,8 +446,7 @@ theorem s_not_ev_zero {Xa : ArchInM X} (Fl : FlatM X Xa) (j : Fin Fl.δ) :
   apply hc
   have h2 := Xa.n_ge
   rw [ContinuousLinearMap.det, ContinuousLinearMap.toLinearMap_zero, LinearMap.det_zero]
-  simp only [finrank_euclideanSpace, Fintype.card_fin]
-  exact zero_pow (by omega)
+  simpa only [finrank_euclideanSpace, Fintype.card_fin] using zero_pow (by omega)
 
 theorem T_ge_n (Xa : ArchInM X) : nd X ≤ Xa.T := by
   have h1 := Xa.T_ge
@@ -597,8 +593,7 @@ theorem mem_satB_self (x1 : Frame X.Ψ r) {ρ : ℝ} (hρ : 0 < ρ) : x1 ∈ Sat
     refine ⟨?_, fun a c hca => ?_⟩
     · show Matrix.det (1 : Matrix (Fin r) (Fin r) ℂ) ≠ 0
       simp
-    · show (1 : Matrix (Fin r) (Fin r) ℂ) a c = 0
-      exact Matrix.one_apply_ne (ne_of_lt hca).symm
+    · exact Matrix.one_apply_ne (ne_of_lt hca).symm
   · funext τ a c
     simp [lact, rmul, mat, cpt, hn]
     change x1 τ a c = ((Matrix.of (x1 τ) * (1 : Matrix (Fin r) (Fin r) ℂ)) *
@@ -910,8 +905,7 @@ theorem dense_nonzero {U : Set (V n)} (hU : IsOpen U) (hUc : IsPreconnected U) {
     obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.mp hU y hyU
     obtain ⟨b, hb, hdist⟩ := Metric.mem_closure_iff.mp hycl ε hε
     have hbb : b ∈ ball y ε := by
-      rw [mem_ball, dist_comm]
-      exact hdist
+      rwa [mem_ball, dist_comm]
     have hEq := ReciprocityTheory.L2DbarEstimates.C.ident n (ball y ε) g b isOpen_ball (convex_ball y ε)
       (hg.mono hball) hbb hb
     exact Filter.eventually_of_mem (ball_mem_nhds y hε) (fun w hw => by simpa using hEq hw)
@@ -948,8 +942,7 @@ theorem ext_glue {U : Set (V n)} (hU : IsOpen U) (hUc : IsPreconnected U) {g : V
       refine h1.mono ?_
       rintro v ⟨⟨-, hgv⟩, hv1, hv2⟩
       rw [Set.mem_singleton_iff, sub_eq_zero, hEe y hy ⟨hv1, hgv⟩, hEe z hz ⟨hv2, hgv⟩]
-    have h0 := isClosed_singleton.mem_of_frequently_of_tendsto hfreq (hc1.sub hc2)
-    simpa [sub_eq_zero] using h0
+    simpa [sub_eq_zero] using isClosed_singleton.mem_of_frequently_of_tendsto hfreq (hc1.sub hc2)
   refine ⟨fun w => E w w, ?_, ?_⟩
   · intro z hz
     have hev : (fun w => E w w) =ᶠ[𝓝 z] E z := by
@@ -1028,8 +1021,7 @@ theorem levi_logSw_nonneg {z : V (nd X)} (hz : z ∈ OmF X x0) (ξ : Fin (nd X) 
     exact (ReciprocityTheory.ChartRestriction.G.AR.Up.HE.contDiffAt_of_punct hopen hd hz).of_le (by norm_cast)
   have hne : (fun k => Xa.w k (cpt X x0 z)) ≠ 0 := by
     obtain ⟨k, hk0⟩ := Xa.w_nz _ hz
-    intro h
-    exact hk0 (congrFun h k)
+    exact fun h => hk0 (congrFun h k)
   have hl := leviLogNormSq (nd X) Xa.N (fun k y => Xa.w k (cpt X x0 y)) z ξ hg hne
   beta_reduce at hl
   rw [hl, Complex.ofReal_re]
@@ -1150,8 +1142,7 @@ private theorem volume_ball_inter_zeroSet_eq_zero_of_ne_zero {U : Set (V n)} {g 
     by_cases hx : x ∈ ball z0 R
     · set v := x - z0 with hv
       have hvR : ‖v‖ < R := by
-        rw [hv, ← dist_eq_norm]
-        exact hx
+        rwa [hv, ← dist_eq_norm]
       have hmpos : 0 < max ‖v‖ (R / 2) := lt_max_of_lt_right (by linarith)
       have hmR : max ‖v‖ (R / 2) < R := max_lt hvR (by linarith)
       set ρ := R / max ‖v‖ (R / 2) with hρ
@@ -1170,8 +1161,7 @@ private theorem volume_ball_inter_zeroSet_eq_zero_of_ne_zero {U : Set (V n)} {g 
       have hφa := hφd.analyticOnNhd isOpen_ball
       have h0D : (0:ℂ) ∈ ball (0:ℂ) ρ := Metric.mem_ball_self (by linarith)
       have hφ0 : g (z0 + (0:ℂ) • v) ≠ 0 := by
-        rw [zero_smul, add_zero]
-        exact hz0
+        rwa [zero_smul, add_zero]
       have hpre : IsPreconnected (ball (0:ℂ) ρ) := (convex_ball (0:ℂ) ρ).isPreconnected
       have hiso : ∀ t : ℝ, t ∈ Ioo (0:ℝ) 1 →
           ∃ ε > 0, ∀ u : ℝ, t < u → u < t + ε → g (z0 + u • v) ≠ 0 := by
@@ -1183,8 +1173,7 @@ private theorem volume_ball_inter_zeroSet_eq_zero_of_ne_zero {U : Set (V n)} {g 
           by_contra hne
           rw [Filter.not_eventually] at hne
           simp only [not_not] at hne
-          have h5 := hφa.eqOn_zero_of_preconnected_of_frequently_eq_zero hpre htD hne h0D
-          exact hφ0 h5
+          exact hφ0 (hφa.eqOn_zero_of_preconnected_of_frequently_eq_zero hpre htD hne h0D)
         obtain ⟨ε, hε, hεp⟩ := Metric.eventually_nhds_iff.mp (eventually_nhdsWithin_iff.mp hev)
         refine ⟨ε, hε, fun u hu1 hu2 => ?_⟩
         have h6 := hεp (y := (u:ℂ)) ?_ ?_
@@ -1252,8 +1241,7 @@ private theorem volume_ball_inter_zeroSet_eq_zero_of_ne_zero {U : Set (V n)} {g 
       ∫⁻ t, volume (Prod.mk t ⁻¹' A) := lintegral_mono hind
   rw [lintegral_indicator_const measurableSet_Ioo, Real.volume_Ioo, hprod] at hle
   have hpos : ENNReal.ofReal (1 - R' / R) ≠ 0 := by
-    rw [Ne, ENNReal.ofReal_eq_zero, not_le, sub_pos, div_lt_one hR]
-    exact hRR
+    rwa [Ne, ENNReal.ofReal_eq_zero, not_le, sub_pos, div_lt_one hR]
   exact (mul_eq_zero.mp (le_zero_iff.mp hle)).resolve_right hpos
 
 theorem zero_null {U : Set (V n)} (hU : IsOpen U) (hUc : IsPreconnected U) {g : V n → ℂ}
@@ -1266,8 +1254,7 @@ theorem zero_null {U : Set (V n)} (hU : IsOpen U) (hUc : IsPreconnected U) {g : 
     obtain ⟨r, hr, hrU⟩ := Metric.isOpen_iff.mp hU z hz
     by_contra hne
     have hex : ∃ z0 ∈ ball z (r / 4), g z0 ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hne (Metric.eventually_nhds_iff_ball.mpr ⟨r / 4, by linarith, h⟩)
     obtain ⟨z0, hz0, hgz0⟩ := hex
     rw [Metric.mem_ball] at hz0
@@ -1306,8 +1293,7 @@ theorem zero_null {U : Set (V n)} (hU : IsOpen U) (hUc : IsPreconnected U) {g : 
   obtain ⟨hzU, hgz⟩ := hz
   obtain ⟨r, hr, hrU⟩ := Metric.isOpen_iff.mp hU z hzU
   have hex : ∃ z0 ∈ ball z (r / 4), g z0 ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hWempty z hzU (Metric.eventually_nhds_iff_ball.mpr ⟨r / 4, by linarith, h⟩)
   obtain ⟨z0, hz0, hgz0⟩ := hex
   rw [Metric.mem_ball] at hz0
@@ -1376,8 +1362,7 @@ theorem loc_int {U U' : Set (V n)} (hU : IsOpen U) (hU'o : IsOpen U') {g : V n �
           refine ENNReal.ofReal_le_ofReal ?_
           have hcy : c ≤ ω y := hcω y ⟨ball_subset_closedBall hy.1, hy.2⟩
           have h1 : 1 ≤ c⁻¹ * ω y := by
-            rw [inv_mul_eq_div, one_le_div hc]
-            exact hcy
+            rwa [inv_mul_eq_div, one_le_div hc]
           nlinarith [mul_nonneg (sq_nonneg ‖H y‖) (sub_nonneg.2 h1)]
       _ = ENNReal.ofReal c⁻¹ * ∫⁻ y in ball z (ε / 2) ∩ U', ENNReal.ofReal (‖H y‖ ^ 2 * ω y) :=
           lintegral_const_mul' _ _ ENNReal.ofReal_ne_top
@@ -1584,8 +1569,7 @@ theorem upDiv_holds : UpDivStatement (E := E) := by
           rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
           refine ENNReal.mul_lt_top ENNReal.ofReal_lt_top ?_
           have := (hH α hα).2
-          rw [hexp] at this
-          exact this
+          rwa [hexp] at this
   · have hcont : ContinuousOn (fun z => F z - ∑ α ∈ Finset.Nat.antidiagonalTuple (nd X) (Xa.T - nd X),
         (∏ k, Fl.s k (cpt X x0 z) ^ α k) * Hx α z) (OmF X x0) := by
       refine hF.continuousOn.sub (continuousOn_finsetSum _ fun α hα => ?_)

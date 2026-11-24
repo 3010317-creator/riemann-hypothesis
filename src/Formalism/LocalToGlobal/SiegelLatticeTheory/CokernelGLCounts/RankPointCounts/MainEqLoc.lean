@@ -31,8 +31,7 @@ theorem localInputG_of_le {τ Rw I H H₁ : Type} [Fintype I] [NormedAddCommGrou
   obtain ⟨L, hB, hZ, hM, hU, ha, hH, hpos, hle⟩ := h γ hγ S
   obtain ⟨c, hc⟩ : ∃ c : ℝ, c = AAre * 2 * N.Hh γ ^ PN.eN r * N.n γ / L.ngenTot := ⟨_, rfl⟩
   have hc1 : 1 ≤ c := by
-    rw [hc, le_div_iff₀ hpos, one_mul]
-    exact hle
+    rwa [hc, le_div_iff₀ hpos, one_mul]
   have hV0 : 0 ≤ L.V0 := hB.2.2.2.2.2.1
   refine ⟨{ L with V0 := L.V0 * c }, ?_, hZ, hM, ?_, ?_, hH, ?_⟩
   · obtain ⟨h1, h2, h3, h4, h5, h6, h7⟩ := hB
@@ -101,8 +100,6 @@ theorem stepLocGenPinnedG_of_loc (h : StepLocPinnedG) : StepLocGenPinnedG := by
     apply mul_nonneg
     · exact pow_nonneg (mul_nonneg (inv_nonneg.2 (Even.pow_nonneg (Even.mul_right (even_two_mul _) _) _))
         (w.1.nonneg _)) _
-    · apply Finset.prod_nonneg
-      intro a _
-      exact Even.pow_nonneg (Even.mul_right (even_two_mul _) _) _
+    · exact Finset.prod_nonneg (fun a _ => Even.pow_nonneg (Even.mul_right (even_two_mul _) _) _)
 
 end Formalism.L2.SG.Pf

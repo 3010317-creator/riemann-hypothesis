@@ -47,37 +47,25 @@ theorem SecPointSeparable.proof (h₁ : GenericFormsKer.Statement) (h₂ : Deriv
   set z : Fin n → L := fun m => x m * (x j₀)⁻¹ with hz
   obtain ⟨r, hre, b, hb⟩ := h₂ k L (Fin n) z e (htr j₀ hj₀)
   have hind := h₃ k n e L x hx hU hT j₀ hj₀ (htr j₀ hj₀)
-  apply isSeparable_of_derivation_eq_zero
-  intro D
-  obtain ⟨c, hc⟩ := hb (D.restrictScalars k)
-  have hc' : ∀ j, D (z j) = ∑ m, c m * (b m j : L) := hc
-  have hDK : ∀ a : GenParField k e n, D (algebraMap (GenParField k e n) L a) = 0 :=
-    fun a => D.map_algebraMap a
+  refine isSeparable_of_derivation_eq_zero fun D => ?_
+  obtain ⟨c, hc'⟩ : ∃ c : _ → L, ∀ j, D (z j) = ∑ m, c m * (b m j : L) := hb (D.restrictScalars k)
   have hlin : ∀ (a : GenParField k e n) (y : L),
       D (algebraMap (GenParField k e n) L a * y) = algebraMap (GenParField k e n) L a * D y := by
     intro a y
-    rw [D.leibniz, hDK, smul_zero, add_zero, smul_eq_mul]
-  have hDz₀ : D (z j₀) = 0 := by
-    simp only [z, mul_inv_cancel₀ hj₀, Derivation.map_one_eq_zero]
+    rw [D.leibniz, D.map_algebraMap, smul_zero, add_zero, smul_eq_mul]
+  have hDz₀ : D (z j₀) = 0 := by simp only [z, mul_inv_cancel₀ hj₀, Derivation.map_one_eq_zero]
   have hUDz : ∀ i : Fin e,
-      ∑ j, algebraMap (GenParField k e n) L (genPar k e n (.inl (i, j))) * D (z j) = 0 := by
-    intro i
+      ∑ j, algebraMap _ L (genPar k e n (.inl (i, j))) * D (z j) = 0 := fun i => by
     have h0 : ∑ j, algebraMap (GenParField k e n) L (genPar k e n (.inl (i, j))) * z j = 0 := by
       simp only [z, ← mul_assoc, ← Finset.sum_mul, hU i, zero_mul]
     have := congrArg D h0
-
     rw [map_sum, map_zero] at this
-    rw [← this]
-    exact Finset.sum_congr rfl fun j _ => (hlin _ _).symm
+    exact (Finset.sum_congr rfl fun j _ => (hlin _ _).symm).trans this
   have hDz : ∀ j, D (z j) = 0 := by
     have key := h₁ (IntermediateField.adjoin k (Set.range z)) L {j : Fin n // j ≠ j₀} e r hre
       (fun p => algebraMap (GenParField k e n) L (genPar k e n (.inl (p.1, p.2.1)))) hind
       (fun m j => b m j.1) c (fun i => ?_)
-    · intro j
-      by_cases hj : j = j₀
-      · rw [hj, hDz₀]
-      · rw [hc' j]
-        exact key ⟨j, hj⟩
+    · exact fun j => if hj : j = j₀ then hj ▸ hDz₀ else (hc' j).trans (key ⟨j, hj⟩)
     · have := hUDz i
       rw [Fintype.sum_eq_add_sum_subtype_ne _ j₀, hDz₀, mul_zero, zero_add] at this
       rw [← this]
@@ -92,10 +80,9 @@ theorem SecPointSeparable.proof (h₁ : GenericFormsKer.Statement) (h₂ : Deriv
     rw [map_sum, Finset.sum_eq_zero fun j _ => by rw [hlin, hDz, mul_zero], Derivation.leibniz_inv,
     eq_comm, smul_eq_mul, neg_mul, neg_eq_zero, mul_eq_zero] at h1
     exact h1.resolve_left (pow_ne_zero _ (inv_ne_zero hj₀))
-  have hxj : ∀ j, D (x j) = 0 := by
-    intro j
-    have hxz : x j = z j * x j₀ := by simp only [z, mul_assoc, inv_mul_cancel₀ hj₀, mul_one]
-    rw [hxz, D.leibniz, hx₀, hDz, smul_zero, smul_zero, add_zero]
+  have hxj : ∀ j, D (x j) = 0 := fun j => by
+    rw [show x j = z j * x j₀ by simp only [z, mul_assoc, inv_mul_cancel₀ hj₀, mul_one],
+      D.leibniz, hx₀, hDz, smul_zero, smul_zero, add_zero]
   exact Derivation.ext_of_adjoin_eq_top (Set.range x) hx (by rintro _ ⟨j, rfl⟩; simpa using hxj j)
 
 end

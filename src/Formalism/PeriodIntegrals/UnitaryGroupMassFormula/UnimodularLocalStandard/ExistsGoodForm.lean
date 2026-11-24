@@ -59,8 +59,7 @@ section Transport
 variable {V : Type*} [AddCommGroup V] [Module ℂ V]
 
 lemma mem_dualLat_iff (H : Sesq V) (Λ : AddSubgroup V) (x : V) :
-    x ∈ dualLat H Λ ↔ ∀ y ∈ Λ, ∃ k : ℤ, altE H x y = k := by
-  exact Iff.rfl
+    x ∈ dualLat H Λ ↔ ∀ y ∈ Λ, ∃ k : ℤ, altE H x y = k := Iff.rfl
 
 lemma mem_imgLat_iff (g : V ≃ₗ[ℂ] V) (Λ : AddSubgroup V) (x : V) :
     x ∈ imgLat (g : V →ₗ[ℂ] V) Λ ↔ ∃ y ∈ Λ, g y = x := by
@@ -85,8 +84,7 @@ lemma selfDual_img (H : Sesq V) (g : V ≃ₗ[ℂ] V) (hg : IsIsom H H (g : V �
       exact ⟨k, by simp only [altE]; rw [hg']; exact hk⟩
   rw [key, hΛ]
   constructor
-  · intro h
-    exact ⟨x₀, h, rfl⟩
+  · exact fun h => ⟨x₀, h, rfl⟩
   · rintro ⟨y, hy, hxy⟩
     rwa [g.injective hxy] at hy
 

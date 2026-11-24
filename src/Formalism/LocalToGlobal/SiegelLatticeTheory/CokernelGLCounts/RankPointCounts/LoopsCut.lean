@@ -82,8 +82,7 @@ theorem pp_cover (k : ℕ) (hk : ∀ t t', X.s0 t t' ≤ k) :
   unfold RowsOther.PP at hp
   rcases (Set.mem_union _ _ _).1 hp with h | h
   · left
-    refine Set.mem_iUnion₂.2 ⟨X.s0 p.1 p.2, Finset.mem_Icc.2 ⟨h.2, hk p.1 p.2⟩, ?_⟩
-    exact ⟨h.1, rfl⟩
+    exact Set.mem_iUnion₂.2 ⟨X.s0 p.1 p.2, Finset.mem_Icc.2 ⟨h.2, hk p.1 p.2⟩, ⟨h.1, rfl⟩⟩
   · exact Or.inr h
 
 theorem loopsAmp_of_classes (A C : ℝ) (k r f : ℕ) (b g v Gam : ℝ) (Xi : ℕ → ℝ) (dd : ℝ)

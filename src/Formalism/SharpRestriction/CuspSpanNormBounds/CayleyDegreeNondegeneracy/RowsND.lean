@@ -84,8 +84,7 @@ theorem rows_thmA_nd (hThA : VanishingOnXAndXPlus.adm14 D u u') (hSt : Cnt.Stand
   have e2 : G0 (X.abelian₂ (D.s.psnd p)) (gS D) (X.fl (D.s.psnd p)) (X.fl' (D.s.psnd p)) =
       wordPairGramProduct D u u' (termGramMatrix X (D.s.psnd p)) := hG0 (D.s.psnd p) hG2
   rw [← X.pLam p, ← X.pfl p] at e2
-  rw [e1, e2, ← X.s0_eq p, ← rows_gg_eq] at h
-  exact h
+  rwa [e1, e2, ← X.s0_eq p, ← rows_gg_eq] at h
 
 def rows_l (D : D7) (large₂ : SizeData₂ D) (c C2 Ch : ℝ) (q : ℕ) (Z : GramM D) : ℝ :=
   (HHZ D large₂.sc.b c Z ^ (c * (D.R.rS : ℝ) ^ 2)) ^ 2 *
@@ -214,8 +213,7 @@ theorem rows_nd_count (h : rows_Hyps Y C' Cl Cg cb Cu cT CT C0 A c Cpr Ca C2 Ch 
       intro p hp
       obtain ⟨⟨hG1, hG2, hs0, hnd⟩, e1, e2⟩ := hS p hp
       have h' := rows_thmA_nd Y h.hThA h.hH.2.1 h.hG0 p hG1 hG2 (by rw [hs0]; exact hs) hnd
-      rw [hs0, ← gramProductG0_equiv_invariant e1, ← gramProductG0_equiv_invariant e2] at h'
-      exact h'
+      rwa [hs0, ← gramProductG0_equiv_invariant e1, ← gramProductG0_equiv_invariant e2] at h'
     have h1 : 1 ≤ rows_DeZ D u u' s x y :=
       le_trans (rows_DetGeOne_of h.hH.2.1 p₀ (hS p₀ hp₀).1.1 (hS p₀ hp₀).1.2.1) (hDe_of p₀ hp₀)
     have h2 : rows_DeZ D u u' s x y ≤ (HHZ D large₂.sc.b c x * HHZ D large₂.sc.b c y) ^ (3 : ℝ) := by
@@ -223,8 +221,7 @@ theorem rows_nd_count (h : rows_Hyps Y C' Cl Cg cb Cu cT CT C0 A c Cpr Ca C2 Ch 
         (HHZ D large₂.sc.b c x) (HHZ D large₂.sc.b c y) hg2 (gramProductG0_pos Y h.hH.1 h.hT gx).le
         (gramProductG0_pos Y h.hH.1 h.hT gy).le (gramProductG0_le_height Y h.hH h.hHH h.hT gx)
         (gramProductG0_le_height Y h.hH h.hHH h.hT gy) (rows_one_le_HHZ D large₂ h.hc x) (rows_one_le_HHZ D large₂ h.hc y)).2
-      rw [show (3 : ℝ) = ((3 : ℕ) : ℝ) by norm_num, Real.rpow_natCast]
-      exact this
+      rwa [show (3 : ℝ) = ((3 : ℕ) : ℝ) by norm_num, Real.rpow_natCast]
     obtain ⟨t1, hG1, hr1, hE1, _⟩ := gx
     obtain ⟨t2, hG2, hr2, hE2, _⟩ := gy
     refine rows_count Y h.hH h.hC3 x y (rows_RelZ_inv hE1 (rows_RelZ_term X t1 hG1 hr1))
@@ -289,14 +286,10 @@ theorem rows_nd_prod (h : rows_Hyps Y C' Cl Cg cb Cu cT CT C0 A c Cpr Ca C2 Ch �
       2 * (q : ℝ) / ((D.R.rS : ℝ) + 1) / 2 ≤ -(12 * ((D.R.rS : ℝ) + 1) ^ 2) := by
     have e : 2 * (q : ℝ) / ((D.R.rS : ℝ) + 1) / 2 = (q : ℝ) / ((D.R.rS : ℝ) + 1) := by ring
     rw [e]; linarith
-  have n2 := rows_num_pair (P := rows_P D large₂ c Ch) (σ₁ := sizeZ D large₂.sc.b Ch x) (σ₂ := sizeZ D large₂.sc.b Ch y)
-    (h₁ := HHZ D large₂.sc.b c x) (h₂ := HHZ D large₂.sc.b c y)
-    (cr := c * (D.R.rS : ℝ) ^ 2) (Γ := GamS D large₂) (a2 := C2 * (D.R.m : ℝ) ^ 2)
-    (dq := 2 * (q : ℝ) / ((D.R.rS : ℝ) + 1)) (E1 := pairCountExponent D c s) (F6 := (c * s * D.R.f) ^ (6 * s * D.R.f))
-    (XiH := XiS D u (HHZ D large₂.sc.b c x * HHZ D large₂.sc.b c y) c s) (XiP := XiS D u (rows_P D large₂ c Ch ^ 2) c s)
-    (ck := c * D.R.k) (e := 12 * ((D.R.rS : ℝ) + 1) ^ 2) (l₁ := rows_l D large₂ c C2 Ch q x) (l₂ := rows_l D large₂ c C2 Ch q y)
-    hP1 sx1 sy1 hx1 hy1 cx cy (by positivity) hGam0.le (pairCountExponent_nonneg D hc s) (by positivity)
-    (rows_XiS_nonneg D u hh0 hc s) hXi rfl rfl he
+  have n2 := rows_num_pair (F6 := (c * s * D.R.f) ^ (6 * s * D.R.f))
+    (l₁ := rows_l D large₂ c C2 Ch q x) (l₂ := rows_l D large₂ c C2 Ch q y) hP1 sx1 sy1 hx1 hy1
+    cx cy (by positivity) hGam0.le
+    (pairCountExponent_nonneg D hc s) (by positivity) (rows_XiS_nonneg D u hh0 hc s) hXi rfl rfl he
   have hA0 : 0 ≤ (2 / gg D) ^ ((s - 1) * D.R.k * D.R.f) *
       ((D.R.k : ℝ) * D.host.v / (Real.exp 1 * Real.pi)) ^ (D.R.k * D.R.f) := by
     have hpi := Real.pi_pos
@@ -308,18 +301,8 @@ theorem rows_nd_prod (h : rows_Hyps Y C' Cl Cg cb Cu cT CT C0 A c Cpr Ca C2 Ch �
       = wordSublatticeTripleBound D large₂ u c x y s (rows_DeZ D u u' s x y) * rows_al D large₂ u u' c C2 Ch δ q x *
           rows_al D large₂ u u' c C2 Ch δ q y := by ring
     _ ≤ _ := n1
-    _ = (2 / gg D) ^ ((s - 1) * D.R.k * D.R.f) *
-          ((D.R.k : ℝ) * D.host.v / (Real.exp 1 * Real.pi)) ^ (D.R.k * D.R.f) *
-          (XiS D u (HHZ D large₂.sc.b c x * HHZ D large₂.sc.b c y) c s *
-            ((HHZ D large₂.sc.b c x * HHZ D large₂.sc.b c y) ^ pairCountExponent D c s * (c * s * D.R.f) ^ (6 * s * D.R.f)) *
-            Real.sqrt (rows_l D large₂ c C2 Ch q x * rows_l D large₂ c C2 Ch q y)) * ((1 + δ) * rDD D u') := by ring
-    _ ≤ (2 / gg D) ^ ((s - 1) * D.R.k * D.R.f) *
-          ((D.R.k : ℝ) * D.host.v / (Real.exp 1 * Real.pi)) ^ (D.R.k * D.R.f) *
-          (XiS D u (rows_P D large₂ c Ch ^ 2) c s * ((rows_P D large₂ c Ch ^ pairCountExponent D c s) ^ 2 *
-            (rows_P D large₂ c Ch ^ (c * (D.R.rS : ℝ) ^ 2)) ^ 2 * (c * s * D.R.f) ^ (6 * s * D.R.f) * GamS D large₂) *
-            (sizeZ D large₂.sc.b Ch x ^ (-(12 * ((D.R.rS : ℝ) + 1) ^ 2)) *
-              sizeZ D large₂.sc.b Ch y ^ (-(12 * ((D.R.rS : ℝ) + 1) ^ 2)))) * ((1 + δ) * rDD D u') :=
-        mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left n2 hA0) hτ0
+    _ ≤ _ := Eq.trans_le (by ring)
+      (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left n2 hA0) hτ0)
     _ = _ := by unfold rows_R; ring
 
 theorem rows_nd_size (h : rows_Hyps Y C' Cl Cg cb Cu cT CT C0 A c Cpr Ca C2 Ch δ δm q) (𝒵 : Finset (GramM D))

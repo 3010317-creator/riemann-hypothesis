@@ -145,8 +145,7 @@ theorem locDual_sigma_mem (hinj : Function.Injective (algebraMap R K))
     obtain ⟨hs1, hs2⟩ := hs
     refine ⟨hs2 _ (spec s), fun t ht => ?_⟩
     rw [spec, star_star] at ht
-    rw [hinj ht]
-    exact hs1
+    rwa [hinj ht]
   | one => rw [map_one]; exact Submonoid.one_mem _
   | mul a b _ _ ha hb => rw [map_mul]; exact Submonoid.mul_mem _ ha hb
 
@@ -171,8 +170,7 @@ theorem locDual_dualAt_loc (h : V →ₗ⋆[K] V →ₗ[K] K) (hinj : Function.I
       Submonoid.mul_mem _ ht (locDual_sigma_mem hinj hstar p s hs), ?_⟩
     have spec : algebraMap R K (locBasic_sigma hinj hstar s) = star (algebraMap R K s) :=
       (hstar s).choose_spec
-    rw [map_mul, spec, mul_assoc]
-    exact hty
+    rwa [map_mul, spec, mul_assoc]
 
 end SlopeTestRemainingChoices
 

@@ -26,12 +26,10 @@ theorem eq_zero_of_dotProduct_gens (F : HermLattice K i) (s : Finset (Fin i → 
       map_smul' := fun c x => by simp [dotProduct_smul] }
   have h1 : F.lattice ≤ (LinearMap.ker L).restrictScalars (𝓞 K) := by
     rw [← hs, Submodule.span_le]
-    intro g hg
-    exact h g hg
+    exact fun g hg => h g hg
   have h2 : Submodule.span K (F.lattice : Set (Fin i → K)) ≤ LinearMap.ker L := by
     rw [Submodule.span_le]
-    intro x hx
-    exact h1 hx
+    exact fun x hx => h1 hx
   rw [F.span_eq, top_le_iff] at h2
   funext j
   have hj : Pi.single j (1 : K) ∈ LinearMap.ker L := by rw [h2]; trivial
@@ -52,8 +50,7 @@ theorem dualLattice_fg (F : HermLattice K i) : (dualLattice F).FG := by
   have hG : Function.Injective G := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro φ hφ
-    refine eq_zero_of_dotProduct_gens F s hs φ (fun g hg => ?_)
-    exact congrFun hφ ⟨g, hg⟩
+    exact eq_zero_of_dotProduct_gens F s hs φ (fun g hg => (congrFun hφ ⟨g, hg⟩))
 
   let ι : (s → 𝓞 K) →ₗ[ℤ] (s → K) :=
     LinearMap.pi (fun g => ((Algebra.linearMap (𝓞 K) K).restrictScalars ℤ).comp (LinearMap.proj g))

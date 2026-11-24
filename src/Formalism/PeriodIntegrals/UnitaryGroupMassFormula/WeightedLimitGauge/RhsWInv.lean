@@ -175,10 +175,8 @@ theorem inWb_eq {w : Fin (2 * r + k + 1) → ℂ} (hw : inWb k r w) : MB.Em k r 
     · rw [ite_eq_left (MB.wI_midx hi).symm, MB.wI_midx hi]
     · intro m _ hm
       rw [ite_eq_right]
-      intro h
-      exact hm (MB.wI_inj (h.symm.trans (MB.wI_midx hi).symm))
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+      exact fun h => hm (MB.wI_inj (h.symm.trans (MB.wI_midx hi).symm))
+    · exact fun h => absurd (Finset.mem_univ _) h
   · rw [Finset.sum_eq_zero]
     · refine (hw i ?_).symm
       simp only [MB.mid, not_and_or, not_le] at hi
@@ -331,8 +329,7 @@ theorem nu_aSet_lt (hD : WbData k r z z' μW μW' a a' μsec) (n : ℕ) :
     · left
       refine ⟨?_, trivial⟩
       have hq' : ‖q.1‖ ≤ n := by
-        rw [← zF_chart hD hg]
-        exact hq
+        rwa [← zF_chart hD hg]
       exact mem_closedBall_zero_iff.2 hq'
     · exact Or.inr hg
   refine lt_of_le_of_lt (measure_mono hsub) (lt_of_le_of_lt (measure_union_le _ _) ?_)

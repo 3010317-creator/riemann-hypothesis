@@ -44,9 +44,7 @@ theorem sum_crd {r : ℕ} {v : Fin r → V} (hli : LinearIndependent K v) {x : V
     (hx : x ∈ Submodule.span K (Set.range v)) : ∑ i, crd hli x i • v i = x := by
   rw [crd_of_mem hli hx]
   have h := (Basis.span hli).sum_equivFun ⟨x, hx⟩
-  have h2 := congrArg Subtype.val h
-  simp only [Submodule.coe_sum, Submodule.coe_smul, Basis.span_apply] at h2
-  exact h2
+  simpa only [Submodule.coe_sum, Submodule.coe_smul, Basis.span_apply] using congrArg Subtype.val h
 
 theorem sum_mem_span {r : ℕ} (v : Fin r → V) (c : Fin r → K) :
     ∑ i, c i • v i ∈ Submodule.span K (Set.range v) := Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)

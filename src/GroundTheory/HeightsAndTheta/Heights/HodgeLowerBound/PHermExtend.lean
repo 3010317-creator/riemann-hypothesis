@@ -99,8 +99,7 @@ theorem secAt_proj_self {z₀ : (Σ k, ι k) → ℂ} (hz : z₀ ∈ blocksNe ι
 theorem coef_ne_zero {c : K → ℂ} {w : (Σ k, ι k) → ℂ} (h : torusSmul c w ∈ blocksNe ι) (k : K) :
     c k ≠ 0 := by
   obtain ⟨i, hi⟩ := h k
-  intro h0
-  exact hi (by simp [torusSmul, h0])
+  exact fun h0 => hi (by simp [torusSmul, h0])
 
 theorem eq_smul_of_proj_eq {z w : (Σ k, ι k) → ℂ} (hz : z ∈ blocksNe ι) (h : proj w = proj z) :
     ∃ c : K → ℂ, (∀ k, c k ≠ 0) ∧ z = torusSmul c w := by
@@ -151,8 +150,7 @@ theorem isCompact_unitPts (P : Ideal (MRing ι)) : IsCompact (unitPts P) := by
     · rintro ⟨⟨_, h⟩, h1⟩; exact ⟨h1, h⟩
     · rintro ⟨h1, h⟩
       refine ⟨⟨fun k => ?_, h⟩, h1⟩
-      by_contra hk
-      push Not at hk
+      by_contra! hk
       have h0 : blkSq z k = 0 := by simp [blkSq, hk]
       rw [h1 k] at h0
       exact one_ne_zero h0

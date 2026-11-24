@@ -114,16 +114,14 @@ theorem uni_measurePreserving {A : Type} [CommRing A] [MeasurableSpace A] [Measu
         (ih _ (Or.inl ⟨fun a => ?_, fun a b hab => ?_⟩))
       · rw [Fin.succAbove_last]
         exact hL.2 _ _ (Fin.castSucc_lt_last i)
-      · simp only [Matrix.submatrix_apply, Fin.succAbove_last]
-        exact hL.1 _
+      · simpa only [Matrix.submatrix_apply, Fin.succAbove_last] using hL.1 _
       · simp only [Matrix.submatrix_apply, Fin.succAbove_last]
         exact hL.2 _ _ (Fin.castSucc_lt_castSucc_iff.mpr hab)
     · refine mulVec_succAbove_step ν U 0 (hT.1 0) (fun i => ?_)
         (ih _ (Or.inr ⟨fun a => ?_, fun a b hab => ?_⟩))
       · rw [Fin.succAbove_zero]
         exact hT.2 0 i.succ (Fin.succ_pos i)
-      · simp only [Matrix.transpose_apply, Matrix.submatrix_apply, Fin.succAbove_zero]
-        exact hT.1 _
+      · simpa only [Matrix.transpose_apply, Matrix.submatrix_apply, Fin.succAbove_zero] using hT.1 _
       · simp only [Matrix.transpose_apply, Matrix.submatrix_apply, Fin.succAbove_zero]
         exact hT.2 _ _ (Fin.succ_lt_succ_iff.mpr hab)
 

@@ -207,8 +207,7 @@ theorem isDS_props_of_copies {ε : Fin n → Bool} {lam : Fin n → ℝ} (hlam :
         {S : Submodule ℂ H | Formalism.MainNotions.S.IsKTypeOf ε σ μ S} := by
       ext S
       simp
-    rw [hset] at hadm
-    exact hadm
+    rwa [hset] at hadm
   · have hle : S ≤ closGen (smE ε σ) V := by rw [htop]; exact le_top
     have hmem := data_kfin_le hgap hσ hD hV hc hVK S hle hSf hSK hv
     obtain ⟨x, -, rfl⟩ := Submodule.mem_map.1 hmem

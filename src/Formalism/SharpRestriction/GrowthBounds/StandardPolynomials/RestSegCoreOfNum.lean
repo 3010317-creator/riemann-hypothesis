@@ -208,8 +208,7 @@ theorem nb_coarseA_ge (hp : 0 < X.p) (b : SegBlock (segS X.TT j) X.m) (i : Fin (
   set B := (X.seg C0 CE1 CE2 j).bTop i
   have hy : ∑ c : Fin (X.m + 1), (segmentBlockOfMonomial C0 CE1 CE2 X j ju jp du A).rz i c ≤ (X.m + 1) * P := by
     calc _ ≤ ∑ _c : Fin (X.m + 1), P := Finset.sum_le_sum fun c _ => by
-            simp only [segmentBlockOfMonomial]
-            exact (Nat.mod_lt _ hP).le
+            simpa only [segmentBlockOfMonomial] using (Nat.mod_lt _ hP).le
       _ = (X.m + 1) * P := by simp
   unfold coarseA
   rw [← hPdef]
@@ -326,13 +325,11 @@ theorem ycond_mEps (LL : ChainLetters (2 * s + 1)) (J : ℕ) (hE : ∀ i : Fin s
         rw [← WithTop.coe_add] at this
         simpa using this)
     rw [← Finset.sum_mul] at h1
-    rw [Nat.cast_sum]
-    exact h1
+    rwa [Nat.cast_sum]
   · have h1 := ycond_prod (K := K) LL J Finset.univ (fun c : Fin r => (ax c : ℤ) * (vWt LL J (chU s) : ℤ))
       (fun c => X (chU s, c) ^ ax c) (fun c _ => ycond_pow LL J _ (ycond_X (K := K) LL J (chU s) c) (ax c))
     rw [← Finset.sum_mul] at h1
-    rw [Nat.cast_sum]
-    exact h1
+    rwa [Nat.cast_sum]
 
 theorem ycond_pairs (S : SegData s) (LL : ChainLetters (2 * s + 1)) (J : ℕ) (hW : ∀ i : Fin s, LL.vec (chW i) = true)
     (hE : ∀ i : Fin s, LL.vec (chE i) = false) (k : Fin S.t → ℕ) :
@@ -355,16 +352,12 @@ theorem pWt_sum_le (S : SegData s) (LL : ChainLetters (2 * s + 1)) (J : ℕ) :
         simp only [pWt, chW, chE, hu]
         rw [ite_eq_right]
         rintro ⟨h1, h2⟩
-        apply hl
-        exact Fin.ext (by omega)
-      · intro h
-        exact absurd (Finset.mem_univ l0) h
+        exact hl (Fin.ext (by omega))
+      · exact fun h => absurd (Finset.mem_univ l0) h
     have hv : vWt LL J (chU s) = 0 := by
       simp only [vWt, chU]
       have := hlt l0
-      apply ite_eq_right_iff.mpr
-      intro h
-      exact absurd h.2 (by omega)
+      exact ite_eq_right_iff.mpr (fun h => absurd h.2 (by omega))
     omega
   · have hsum : ∑ l, pWt J (chW (uTop S l)) (chE (uTop S l)) = 0 := by
       refine Finset.sum_eq_zero fun l _ => ?_

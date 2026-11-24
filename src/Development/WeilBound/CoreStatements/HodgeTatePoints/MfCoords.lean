@@ -286,8 +286,7 @@ theorem piece_zero : piece o t 0 = (integralClosure o L).toSubmodule := by
     rw [coe_evalRingHom, eval_C] at h2
     haveI : Algebra.IsIntegral o (⊥ : Subalgebra o L) := inferInstance
     exact isIntegral_trans a h2
-  · intro h
-    exact (h.map (CAlgHom (R := o) (A := L))).tower_top
+  · exact fun h => (h.map (CAlgHom (R := o) (A := L))).tower_top
 
 theorem isIntegral_div_of_mem_piece (i : σ) {n : ℕ} {a : L} (ha : a ∈ piece o t n) :
     IsIntegral (ratioRing o t i) (a / t i ^ n) := by
@@ -1015,8 +1014,7 @@ theorem inChart_iff (hξ : IsCptGen ξ) (hi : ξ ≫ i = point o t ht) (c : Fin 
     have hmem := (X.mem_basicOpen _ q.1 hd).mpr hunit
     rw [basicOpen_pullRatio] at hmem
     exact (TopologicalSpace.Opens.mem_inf.mp hmem).2
-  · intro hq
-    exact ⟨hne c hq, fun c' => ⟨_, key c hq c'⟩⟩
+  · exact fun hq => ⟨hne c hq, fun c' => ⟨_, key c hq c'⟩⟩
 
 private theorem valR_point_chart_aeval_ratio {o : Type} [CommRing o] [Algebra o Ω] {n : ℕ} {t : Fin (n + 1) → Ω}
     {ht : t ≠ 0} {c : Fin (n + 1)} (hc : t c ≠ 0) (P : MvPolynomial (Fin (n + 1)) o) :
@@ -1189,8 +1187,7 @@ theorem coordTie_comp {o : Type} [CommRing o] [Algebra o Ω] {κ : Type} {x : κ
     · rintro ⟨hq, hin⟩
       obtain ⟨p, hp⟩ := hr ⟨q, hq⟩
       have hin' : InChart (ξ ≫ f) x c (push ξ f p) := by
-        rw [hp]
-        exact hin
+        rwa [hp]
       have hpV : p.1 ∈ V := (hVmem p.1).mpr ⟨p.2, (inChart_push_iff ξ f x c p).mp hin'⟩
       have hq' : f p.1 = q := congrArg Subtype.val hp
       exact ⟨p.1, hpV, hq'⟩
@@ -1233,8 +1230,7 @@ theorem xr_coords : ∀ (o : Type) [CommRing o] [IsNoetherianRing o] (X : Scheme
     rw [Category.assoc, Category.assoc, his, ← Category.assoc, hfac, hover]
   obtain ⟨t, ht, hpt⟩ := exists_point (ξ' ≫ W.ι ≫ i) hy
   have hgen' : IsCptGen (ξ' ≫ W.ι) := by
-    rw [hfac]
-    exact hgen
+    rwa [hfac]
   have hcg : IsCptGen ξ' := isCptGen_of_comp ξ' W.ι hgen'
   have hgp : W.ι (GlobalTheory.CompanionTheory.Ar.genPt ξ') = GlobalTheory.CompanionTheory.Ar.genPt ξ := by
     show (ξ' ≫ W.ι) (IsLocalRing.closedPoint Ω) = ξ (IsLocalRing.closedPoint Ω)
@@ -1248,8 +1244,7 @@ theorem xr_coords : ∀ (o : Type) [CommRing o] [IsNoetherianRing o] (X : Scheme
     intro q
     have hq : GlobalTheory.CompanionTheory.Ar.genPt ξ ⤳ q.1 := by
       have h2 := q.2
-      rw [← hgp]
-      exact h2
+      rwa [← hgp]
     exact ⟨⟨⟨q.1, hq⟩, hall' ⟨q.1, hq⟩⟩, rfl⟩
   have hfin := coordTie_comp W.ι hgen' hr hct
   rw [hfac] at hfin
@@ -1294,8 +1289,7 @@ theorem isCptGen_of_isDominant (ξ : Sp Ω ⟶ X) [IsDominant ξ] [IsReduced X]
     show (X.presheaf.stalkSpecializes (genericPoint_specializes p.1)).hom a =
       (X.presheaf.stalkSpecializes (genericPoint_specializes p.1)).hom b
     rw [← ea, ← eb, hab]
-  intro a b hab
-  exact hinj (h.1 hab)
+  exact fun a b hab => hinj (h.1 hab)
 
 theorem genMap_point_mem {o : Type} [CommRing o] [Algebra o Ω] {n : ℕ} {t : Fin (n + 1) → Ω} {ht : t ≠ 0}
     (q : Cpt (point o t ht)) (g : (PSpace o n).presheaf.stalk q.1) :
@@ -1317,8 +1311,7 @@ theorem genMap_point_mem {o : Type} [CommRing o] [Algebra o Ω] {n : ℕ} {t : F
     have hb : valR (point o t ht) (chart o n i) b ∈
         Set.range (valMap (point o t ht) (chart o n i) hle).hom :=
       ⟨b, by simp [valR, dite_eq_left hle, valMap]⟩
-    rw [GlobalTheory.TuplePoint.range_valMap_point hle] at hb
-    exact hb
+    rwa [GlobalTheory.TuplePoint.range_valMap_point hle] at hb
   have hunit : IsUnit (algebraMap Γ(PSpace o n, chart o n i) ((PSpace o n).presheaf.stalk q.1) s) :=
     IsLocalization.map_units _ s
   have hs' := congrArg (genMap (point o t ht) q) hs

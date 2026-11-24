@@ -97,8 +97,7 @@ theorem exists_decomp_orth_isotropic (x : (VS D).V) (hx : x ∈ orth (hS D) F0.X
         field_simp
         ring)
   refine ⟨w, -((VS D).hT F0.z x) / ((Tu D u : ℕ) : D.host.E), ?_⟩
-  rw [add_comm, ← sub_sub]
-  exact hw
+  rwa [add_comm, ← sub_sub]
 
 
 include hT he hz in
@@ -158,8 +157,7 @@ theorem exists_induced_isometry_W (σ : (VS D).V ≃ₗ[D.host.E] (VS D).V) (hσ
     intro w
     have hW := (Formalism.MainNotions.WHyp_Wsp D u hT (lf D F0) he hz).1
     have : D.sp.iXY 0 w ∈ Wsp D ⊔ Xsp (lf D F0) := Submodule.mem_sup_left ⟨w, rfl⟩
-    rw [hW] at this
-    exact this
+    rwa [hW] at this
   have hdec : ∀ w, ∃ w', σ (D.sp.iXY 0 w) - D.sp.iXY 0 w' ∈ F0.X := by
     intro w
     refine exists_decomp_orth_isotropic_plus D u hT F0 he hz _ ?_
@@ -180,8 +178,7 @@ theorem exists_induced_isometry_W (σ : (VS D).V ≃ₗ[D.host.E] (VS D).V) (hσ
       have : σ (D.sp.iXY 0 w) = D.sp.iXY 0 w' + (σ (D.sp.iXY 0 w) - D.sp.iXY 0 w') := by abel
       rw [this]
       exact projW_apply D w' _ (isotropic_le_orth_range D u F0 he hw')
-    rw [e]
-    exact hw'
+    rwa [e]
   have hiso : ∀ w w', (D.sp.X 0).hT (γ0 w) (γ0 w') = (D.sp.X 0).hT w w' := by
     intro w w'
     have e1 : σ (D.sp.iXY 0 w) = D.sp.iXY 0 (γ0 w) + (σ (D.sp.iXY 0 w) - D.sp.iXY 0 (γ0 w)) := by abel

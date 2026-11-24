@@ -39,7 +39,6 @@ theorem psum_one {n : ℕ} {T : Over S} (I : Finset (Fin n)) : psum G (fun _ => 
   | cons a l ih =>
     simp only [List.foldr_cons]
     rw [ih]
-    show (1 : T ⟶ G) * 1 = 1
     exact _root_.mul_one _
 
 theorem one_comp_proj_three (k : Fin 3) : (1 : 𝟙_ (Over S) ⟶ G3 G) ≫ x3 G k = 1 := by
@@ -101,7 +100,6 @@ theorem cub_at_one {L : RigLB G} (c : CubicalStr G L) (z : (𝟙_ (Over S)).left
       (hv.trans (val_one _))
   have hm : ∀ I, J ((eSec (G2 G) ≫ (faceMap G 0).left) ≫ thφ G (x3 G) I) = q₀ := fun I => by
     rw [eSec_face, eSec_thφ]; simp [J]
-  rw [val_of (φ := thφ G (x3 G)) (ε := thε) c.t _ z J (fun _ => q₀) hm, eSec_face] at hv2
-  exact hv2
+  rwa [val_of (φ := thφ G (x3 G)) (ε := thε) c.t _ z J (fun _ => q₀) hm, eSec_face] at hv2
 
 end ReciprocityTheory.ChartRestriction.G.Geo.Tor

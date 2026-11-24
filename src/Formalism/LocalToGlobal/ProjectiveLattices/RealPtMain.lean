@@ -74,8 +74,7 @@ theorem valued_unif (la : HeightOneSpectrum (𝓞 B.KO)) :
   obtain ⟨π, hπ⟩ := HeightOneSpectrum.intValuation_exists_uniformizer la
   have hπv : Valued.v (algebraMap (𝓞 B.KO) (X.Kl la) π) = exp (-1 : ℤ) := by
     have h := HeightOneSpectrum.valuedAdicCompletion_eq_valuation (K := B.KO) (v := la) π
-    rw [HeightOneSpectrum.valuation_of_algebraMap, hπ] at h
-    exact h
+    rwa [HeightOneSpectrum.valuation_of_algebraMap, hπ] at h
   set o : X.Ol la := algebraMap (𝓞 B.KO) (X.Ol la) π with ho
   have ho0 : o ≠ 0 := by
     intro h0
@@ -88,8 +87,7 @@ theorem valued_unif (la : HeightOneSpectrum (𝓞 B.KO)) :
     HeightOneSpectrum.adicCompletionIntegers.isUnit_iff_valued_eq_one.1 u.isUnit
   have hv0 : Valued.v ((unif X la : X.Ol la) : X.Kl la) ≠ 0 := by
     rw [Valuation.ne_zero_iff]
-    intro h0
-    exact hu.ne_zero (Subtype.ext h0)
+    exact fun h0 => hu.ne_zero (Subtype.ext h0)
   have e1 : Valued.v ((o : X.Ol la) : X.Kl la) = exp (-1 : ℤ) := hπv
   rw [hk] at e1
   push_cast at e1
@@ -349,8 +347,7 @@ theorem realPt_of (h : LawsP T) (j : ℕ) (hj : InR D j) (hG : GenFrEx (T.Q.Xo j
     evRp_alg la G.N kap χ _
   have hev_inc : ∀ (w : WeightFamilies.Wt D j) (F : (recB h.toLawsCore).Cusp j w),
       ev (emb (recPlus h j hj) la G.N ((recPlus h j hj).inc w F)) = evI y (F : T.R j) := by
-    intro w F
-    exact (evRp_emb la G.N kap χ _ ((recPlus h j hj).inc w F)).trans (chiI_inc j h y w F)
+    exact fun w F => (evRp_emb la G.N kap χ _ ((recPlus h j hj).inc w F)).trans (chiI_inc j h y w F)
   have hev_sec : ev (Formalism.MainNotions.Gaps.EtaleWeightGaps.sec (recPlus h j hj) la G.w 0) =
       ∑ k, kap (@algebraMap (Op (recPlus h j hj) la G.N) (Kp (recPlus h j hj) la G.N) _ _ _ (Tv (recPlus h j hj) la G.N (0, k))) *
         evI y ((G.w k : (recB h.toLawsCore).Cusp j wL) : T.R j) := by
@@ -375,7 +372,6 @@ theorem realPt_of (h : LawsP T) (j : ℕ) (hj : InR D j) (hG : GenFrEx (T.Q.Xo j
   refine ⟨yP, Tc, ι, hloc, hunr, ev, hu, ?_, ?_, ?_⟩
   · intro w F
     rw [extAll_vAt_inc]
-    show vAtV yV (F : T.R j) = _
     exact congrArg (nval Tc.V (ep (unifO (recPlus h j hj) la G.N) ζ)) (hev_inc w F).symm
   · intro x
     obtain ⟨k, ⟨g, hg⟩, rfl⟩ := exists_weightZero_fraction_eq _ _ _ x

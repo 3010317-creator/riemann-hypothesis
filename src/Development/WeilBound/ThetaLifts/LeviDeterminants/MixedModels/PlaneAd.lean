@@ -170,9 +170,7 @@ theorem full_of_dual_zero {B : Base F E} (hB : B.IsGood σ) {Y : Spc F E n}
     Submodule.exists_mem_ne_zero_of_ne_bot (LinearMap.ker_ne_bot_of_finrank_lt (f := g) hdim)
   let y : Fin n → E := fun i => σ (z i)
   have hy₀ : y ≠ 0 := by
-    intro hy
-    apply hz₀
-    exact funext fun i => σ.injective ((congrFun hy i).trans (map_zero σ).symm)
+    exact fun hy => hz₀ (funext fun i => σ.injective ((congrFun hy i).trans (map_zero σ).symm))
   have horth (x : Fin n → E) (hx : x ∈ Y.L) : form σ Y.J y x = 0 := by
     have hz' : z ⬝ᵥ Y.Jᵀ *ᵥ x = 0 :=
       congrArg (fun f : Module.Dual E W => f ⟨x, Submodule.subset_span hx⟩)

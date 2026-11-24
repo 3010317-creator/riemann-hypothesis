@@ -176,8 +176,7 @@ theorem image_latSet (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M) 
       rwa [LinearEquiv.apply_symm_apply]
     · apply b.equivFun.injective
       change b.equivFun (linOf b _ _) = _
-      rw [equivFun_linOf, LinearEquiv.apply_symm_apply]
-      exact hxv
+      rwa [equivFun_linOf, LinearEquiv.apply_symm_apply]
 
 theorem set_of_coords_inj {M : ℕ} (b : Module.Basis (Fin M) E V) {A A' : Set (Fin M → E)}
     (e : {v : V | b.equivFun v ∈ A} = {v | b.equivFun v ∈ A'}) : A = A' := by
@@ -251,8 +250,7 @@ theorem cardStep_of (hR : PI.UnitaryGroupMassFormula.UJClassFin.RatDense) (hC : 
         PI.UnitaryGroupMassFormula.UJClassFin.abelian₂ σ (gramOf h b) (crdOf b L0) ((γ : HA (AF F) σ (gramOf h b)) * g) := by
       rw [PI.UnitaryGroupMassFormula.UJClassFin.Lam_emb_mul]; exact e2.symm
     have hk := PI.UnitaryGroupMassFormula.UJClassFin.sfin_of_Lam_eq σ (gramOf h b) (crdOf b L0) hR' _ _ e3
-    refine ⟨⟨γ, hk⟩, ?_⟩
-    exact Subtype.ext hι
+    exact ⟨⟨γ, hk⟩, Subtype.ext hι⟩
 
 theorem uJClassMass_of_deep (hR : PI.UnitaryGroupMassFormula.UJClassFin.RatDense) (hC : CrdBounds) (s1 : LatStep) (s4 : SurjStep) :
     PI.UJClassMass2.UJClassMass :=

@@ -83,12 +83,10 @@ theorem kill {X : Type} [TopologicalSpace X] (N : Submodule ℂ (X → ℂ)) (Y�
   have hmm : ∀ Y, Y ≠ Y₁ → IsLocallyConstant (mm Y) ∧ mm Y Y ≠ mm Y Y₁ ∧
       ∀ Φ ∈ SB X, (fun y => (mm Y y - mm Y Y₁) * Φ y) ∈ N := by
     intro Y hY
-    simp only [mm, dite_eq_right hY]
-    exact Classical.choose_spec (h Y hY)
+    simpa only [mm, dite_eq_right hY] using Classical.choose_spec (h Y hY)
   let U : X → Set X := fun Y => {y | mm Y y ≠ mm Y Y₁}
   have hUc : ∀ Y, Y ≠ Y₁ → IsClopen (U Y) := by
-    intro Y hY
-    exact ((hmm Y hY).1.isClopen_fiber (mm Y Y₁)).compl
+    exact fun Y hY => ((hmm Y hY).1.isClopen_fiber (mm Y Y₁)).compl
   have key : ∀ (s : Finset X), (∀ Y ∈ s, Y ≠ Y₁) → ∀ Ψ ∈ SB X,
       Function.support Ψ ⊆ ⋃ Y ∈ s, U Y → Ψ ∈ N := by
     intro s
@@ -204,8 +202,7 @@ private theorem coord_lemma {M : ℕ} (hM : M ≠ 0) (v : Pl F) (a : Fv F v) :
       · rintro ⟨y, hy, rfl⟩
         have : (a + π * y - a) * π⁻¹ = y := by field_simp; ring
         show (a + π * y - a) * π⁻¹ ∈ (v.adicCompletionIntegers F : Set (Fv F v))
-        rw [this]
-        exact hy
+        rwa [this]
     rw [himg]
     have hc : IsCompact (v.adicCompletionIntegers F : Set (Fv F v)) := by
       have := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
@@ -243,17 +240,14 @@ theorem ball_cof {M : ℕ} (hM : M ≠ 0) (c : κ → Af F) :
   have h1 : ∀ᶠ v in cofinite, (v : Pl F).intValuation (M : 𝓞 F) = 1 := by
     have hM' : (M : 𝓞 F) ≠ 0 := Nat.cast_ne_zero.mpr hM
     have hI : Ideal.span {(M : 𝓞 F)} ≠ 0 := by
-      rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-      exact hM'
+      rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     rw [Filter.eventually_cofinite]
     refine (Ideal.finite_factors hI).subset (fun v hv => ?_)
     simp only [Set.mem_setOf_eq, IsDedekindDomain.HeightOneSpectrum.intValuation_eq_one_iff, not_not] at hv
-    rw [Set.mem_setOf_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-    exact hv
+    rwa [Set.mem_setOf_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   have h2 : ∀ᶠ v in cofinite, ∀ i, evalV F v (c i) ∈ (v : Pl F).adicCompletionIntegers F := by
     rw [Filter.eventually_all]
-    intro i
-    exact (c i).2
+    exact fun i => (c i).2
   filter_upwards [h1, h2] with v hv1 hv2
   have hset : ballAt M c v = {x : κ → Fv F v | ∀ i, x i ∈ v.adicCompletionIntegers F} := by
     ext z
@@ -266,8 +260,7 @@ theorem ball_cof {M : ℕ} (hM : M ≠ 0) (c : κ → Af F) :
       have e : z i = (z i - evalV F v (c i)) + evalV F v (c i) := by ring
       rw [e]
       exact le_trans (Valuation.map_add _ _ _) (max_le h hc)
-    · intro h
-      exact le_trans (Valuation.map_sub _ _ _) (max_le h hc)
+    · exact fun h => le_trans (Valuation.map_sub _ _ _) (max_le h hc)
   rw [hset]
 
 def box (M : ℕ) (c : κ → Af F) (y : κ → Af F) : ℂ := ∏ᶠ v, (ballAt M c v).indicator (1 : (κ → Fv F v) → ℂ) fun i => evalV F v (y i)
@@ -296,8 +289,7 @@ theorem box_of_not {M : ℕ} (hM : M ≠ 0) {c y : κ → Af F} (h : ¬ Near M c
       filter_upwards [hcof, hy] with w hw hwy
       rw [hw]
       exact Set.indicator_of_mem (show (fun j => evalV F w (y j)) ∈ {x : κ → Fv F w | ∀ j, x j ∈ w.adicCompletionIntegers F} from hwy) _
-    rw [Filter.eventually_cofinite] at hev
-    exact hev
+    rwa [Filter.eventually_cofinite] at hev
 
 theorem Near.symm {M : ℕ} {c y : κ → Af F} (h : Near M c y) : Near M y c := by
   intro v i
@@ -355,8 +347,7 @@ private theorem isOpen_isCompact_adelic_integers :
       GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
     have hc := isCompact_range (RestrictedProduct.isEmbedding_structureMap (R := fun v : Pl F => Fv F v)
       (A := fun v => (v.adicCompletionIntegers F : Set (Fv F v))) (𝓕 := cofinite)).continuous
-    rw [hr] at hc
-    exact hc
+    rwa [hr] at hc
 
 private theorem exists_nat_valuation_le_subset_of_mem_nhds_zero {W : Set (Af F)} (hW : W ∈ 𝓝 (0 : Af F)) :
     ∃ n : ℕ, n ≠ 0 ∧ ∀ a : Af F, (∀ v : Pl F, Valued.v (a v) ≤ v.intValuation (n : 𝓞 F)) → a ∈ W := by
@@ -382,8 +373,7 @@ private theorem exists_nat_valuation_le_subset_of_mem_nhds_zero {W : Set (Af F)}
     by_cases ha0 : a = 0
     · exact (hall ⟨1, one_ne_zero⟩).2 (ha0 ▸ h0)
     · obtain ⟨v, hv⟩ : ∃ v : Pl F, a v ≠ 0 := by
-        by_contra hcon
-        push Not at hcon
+        by_contra! hcon
         exact ha0 (IsDedekindDomain.FiniteAdeleRing.ext F (fun v => by
           change a v = 0
           exact hcon v))

@@ -98,8 +98,7 @@ theorem exists_galUnramifiedOutside_restrict {M : IntermediateField F Ω} [Norma
   refine ⟨(τ.liftNormal Ω).restrictNormal (maxUnramifiedOutside F Ω S), fun y => ?_⟩
   have h1 := AlgEquiv.restrictNormal_commutes (τ.liftNormal Ω) (maxUnramifiedOutside F Ω S)
     ⟨y, hMle y.2⟩
-  have h2 := AlgEquiv.liftNormal_commutes τ Ω y
-  exact h1.trans h2
+  exact h1.trans (AlgEquiv.liftNormal_commutes τ Ω y)
 
 theorem valuation_eq_of_isSInvariant {M : IntermediateField F Ω} [FiniteDimensional F M]
     [IsGalois F M] [NumberField M] (hMle : M ≤ maxUnramifiedOutside F Ω S)
@@ -179,8 +178,7 @@ theorem exists_place_valuation_eq_of_le {E M : IntermediateField F Ω} [NumberFi
   have hun : Algebra.IsUnramifiedAt (𝓞 F) W.asIdeal :=
     hMu (underPlace (F := F) W) (hWF ▸ hwS) W.asIdeal inferInstance inferInstance
   have := valuation_algebraMap_underPlace (F := F) W hun y
-  rw [hW] at this
-  exact this
+  rwa [hW] at this
 
 theorem IsOrdAbove.unique {v : HeightOneSpectrum (𝓞 F)} (hv : v ∉ S)
     {x : (maxUnramifiedOutside F Ω S)ˣ} (hx : IsSInvariant S x) {m m' : ℤ}
@@ -206,8 +204,7 @@ theorem IsOrdAbove.unique {v : HeightOneSpectrum (𝓞 F)} (hv : v ∉ S)
   have e3 := valuation_eq_of_isSInvariant S hMle hx (hEM hxE) W W' (by rw [hW, hW', hw, hw'])
     (by rw [hW, hw]; exact hv)
   have : WithZero.exp (-m) = WithZero.exp (-m') := by
-    rw [← hwx, ← hw'x, ← e1, ← e2]
-    exact e3
+    rwa [← hwx, ← hw'x, ← e1, ← e2]
   simpa using this
 
 noncomputable def ordAbove (v : HeightOneSpectrum (𝓞 F)) (x : (maxUnramifiedOutside F Ω S)ˣ) : ℤ :=
@@ -337,8 +334,7 @@ theorem ordAbove_mul {v : HeightOneSpectrum (𝓞 F)} (hv : v ∉ S)
     le_sup_right (α := IntermediateField F Ω) hyE'
   have hxy : (((x * y : (maxUnramifiedOutside F Ω S)ˣ) : maxUnramifiedOutside F Ω S) : Ω) ∈
       E ⊔ E' := by
-    simp only [Units.val_mul, IntermediateField.coe_mul]
-    exact mul_mem hxE'' hyE''
+    simpa only [Units.val_mul, IntermediateField.coe_mul] using mul_mem hxE'' hyE''
   obtain ⟨w, hw⟩ := exists_underPlace_eq (L := ↥(E ⊔ E')) v
   have hxy' : IsSInvariant S (x * y) := (mul_mem hx hy : x * y ∈ sInvariantSubgroup Ω S)
   have h1 := valuation_eq_exp_ordAbove S hxy' hle hxy w (hw ▸ hv)

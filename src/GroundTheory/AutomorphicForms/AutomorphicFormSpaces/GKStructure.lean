@@ -208,10 +208,8 @@ theorem finiteDimensional_span_archCompactRepKZ (v : smoothKZ K n) :
     · rintro _ ⟨k, rfl⟩
       exact Submodule.subset_span ⟨⟨infEmb K n k, k.2⟩, rfl⟩
     · exact Wf.zero_mem
-    · intro x y _ _ hx hy
-      exact Wf.add_mem hx hy
-    · intro c x _ hx
-      exact Wf.smul_mem c hx
+    · exact fun x y _ _ hx hy => Wf.add_mem hx hy
+    · exact fun c x _ hx => Wf.smul_mem c hx
   refine FiniteDimensional.of_injective
     (((smoothKZ K n).subtype ∘ₗ W.subtype).codRestrict Wf hW) ?_
   intro x y hxy
@@ -239,8 +237,7 @@ theorem hasDerivAt_uActionKZ_ι (X : archLie K n) (v : smoothKZ K n) (x : Adelic
         smoothKZ K n) : AdelicGLn.AdelicGL K n → ℂ) x) 0 := by
   have h := (isExpLieAlgebra K n).hasDerivAt_rightDeriv (v.2.isSmooth.1 x) X 1
   simp only [one_mul] at h
-  rw [coe_uActionKZ, uAction_ι_apply]
-  exact h
+  rwa [coe_uActionKZ, uAction_ι_apply]
 
 theorem hasDerivAt_archCompactRepKZ (X : archLie K n)
     (hX : ∀ t : ℝ, (isExpLieAlgebra K n).expG (t • X) ∈ archCompact K n)

@@ -95,8 +95,7 @@ theorem bsH_orb' (φ : Formalism.HC.Frame) (h t : φ.A) : ∃ i : ℕ, i < addOr
   obtain ⟨i, hi, he⟩ := exists_pow_orbRep (zH φ h) (tau1P φ t)
   refine ⟨i, by rwa [orderOf_zH] at hi, ?_⟩
   apply tau1P_injective' φ
-  rw [tau_add_nsmul, ← orbRep_vOfH]
-  exact he
+  rwa [tau_add_nsmul, ← orbRep_vOfH]
 
 theorem bsH_orb (φ : Formalism.HC.Frame) (h t : φ.A) : ∃ i : ℕ, bsH φ h t + i • h = t := by
   obtain ⟨i, -, hi⟩ := bsH_orb' φ h t

@@ -301,8 +301,7 @@ theorem exp_w_conj (d : ℕ) (M : Matrix (Fin d) (Fin d) ℂ) :
     NormedSpace.exp (G.wMat d * M * G.wMat d) = G.wMat d * NormedSpace.exp M * G.wMat d := by
   have hu : IsUnit (G.wMat d) := ⟨⟨G.wMat d, G.wMat d, Ux4.wMat_mul_self d, Ux4.wMat_mul_self d⟩, rfl⟩
   have e := Matrix.exp_conj (G.wMat d) M hu
-  rw [w_inv] at e
-  exact e
+  rwa [w_inv] at e
 
 theorem block_two_exp_conjTranspose_inv {j : ℕ} (y : MJ j) :
     (U.blk2 (NormedSpace.exp y) 0 0 (1 : Matrix (Fin 1) (Fin 1) ℂ))ᴴ⁻¹ = U.blk2 (NormedSpace.exp (-yᴴ)) 0 0 1 := by
@@ -754,10 +753,8 @@ theorem wirtinger_slice_smooth : WirtingerOperators.DzSlice := by
     refine ((rdz_H_smooth κ c s hU hKc).comp hι.contDiffOn (fun Z hZ => hZ)).congr fun Z hZ => ?_
     exact rdz_H_eq κ c s τ₀ Z (rdz_da hU hKc hZ)
   refine ⟨?_, ?_⟩
-  · simp only [rdz_dz_eq]
-    exact key _ _
-  · simp only [rdz_dzb_eq]
-    exact key _ _
+  · simpa only [rdz_dz_eq] using key _ _
+  · simpa only [rdz_dzb_eq] using key _ _
 
 end Formalism.FourierDecayAlt.P
 end -- clump:auto
@@ -1199,8 +1196,7 @@ theorem zOnly_of_parts (hC : CurveLevi) (hH : HpartLevi) (hXC : XiCoef) (hXV : X
   refine ⟨{Z' | Z'.det ≠ 0} ∩ (fun Z' => x0 k r j hj Z' τ γ) ⁻¹' UF,
     hcont.isOpen_inter_preimage isOpen_inv hUF, ⟨hZ, hgUF⟩, ?_⟩
   refine (hF.comp ((hXS k r j hj τ γ).mono Set.inter_subset_left) (fun _ h => h.2)).congr ?_
-  intro Z' hZ'
-  exact hΦF _ hZ'.2 (hXM k r j hj Z' τ γ hZ'.1 hτ hγ)
+  exact fun Z' hZ' => hΦF _ hZ'.2 (hXM k r j hj Z' τ γ hZ'.1 hτ hγ)
 
 end Formalism.FourierDecayAlt.P.WirtingerOperators
 end -- clump:auto
@@ -1477,8 +1473,7 @@ theorem rules_uw (hR : RulesClosed) {k r j : ℕ} (hj : j + 1 ≤ r) {z z' : Fin
   induction w with
   | nil => intro e; exact hΦ
   | cons l w ih =>
-    intro e
-    exact hR k r j hj z z' E Dm _ hz hz' hDm hDs (ih _) i (by omega) hor l (e 0)
+    exact fun e => hR k r j hj z z' E Dm _ hz hz' hDm hDs (ih _) i (by omega) hor l (e 0)
 
 theorem core (hH : HeadLetter) (hZ : ZOnly) (hR : RulesClosed) (hX : BasePointSmoothAndMem) {k r j : ℕ} (hj : j + 1 ≤ r)
     {z z' : Fin (2 * r + k + 1) → ℂ} {Dm : Set (Q.Mx k r)} {Φ : Q.Mx k r → E} (hz : inWb k r z)
@@ -1588,8 +1583,7 @@ theorem es_const {m n : Type} (M : Matrix m n ℂ) (s : Set P) : ES (fun _ => M)
 theorem es_mul {m n o : Type} [Fintype n] {f : P → Matrix m n ℂ} {g : P → Matrix n o ℂ} (hf : ES f s) (hg : ES g s) :
     ES (fun x => f x * g x) s := by
   intro a b
-  simp only [Matrix.mul_apply]
-  exact ContDiffOn.sum fun c _ => (hf a c).mul (hg c b)
+  simpa only [Matrix.mul_apply] using ContDiffOn.sum fun c _ => (hf a c).mul (hg c b)
 
 theorem es_conjTranspose {m n : Type} {f : P → Matrix m n ℂ} (hf : ES f s) : ES (fun x => (f x)ᴴ) s := by
   intro a b
@@ -1599,8 +1593,7 @@ theorem es_conjTranspose {m n : Type} {f : P → Matrix m n ℂ} (hf : ES f s) :
 theorem es_det {n : Type} [Fintype n] [DecidableEq n] {f : P → Matrix n n ℂ} (hf : ES f s) :
     ContDiffOn ℝ ∞ (fun x => (f x).det) s := by
   simp only [Matrix.det_apply, Units.smul_def, zsmul_eq_mul]
-  refine ContDiffOn.sum fun σ _ => contDiffOn_const.mul ?_
-  exact contDiffOn_prod fun i _ => hf (σ i) i
+  exact ContDiffOn.sum fun σ _ => contDiffOn_const.mul (contDiffOn_prod fun i _ => hf (σ i) i)
 
 theorem es_updateRow {n : Type} [Fintype n] [DecidableEq n] {f : P → Matrix n n ℂ} (hf : ES f s) (r : n) (v : n → ℂ) :
     ES (fun x => (f x).updateRow r v) s := fun a b => by
@@ -1620,8 +1613,7 @@ theorem es_inv {n : Type} [Fintype n] [DecidableEq n] {f : P → Matrix n n ℂ}
 theorem es_reindex {m n m' n' : Type} (e : m ≃ m') (e' : n ≃ n') {f : P → Matrix m n ℂ} (hf : ES f s) :
     ES (fun x => Matrix.reindex e e' (f x)) s := by
   intro a b
-  simp only [Matrix.reindex_apply, Matrix.submatrix_apply]
-  exact hf _ _
+  simpa only [Matrix.reindex_apply, Matrix.submatrix_apply] using hf _ _
 
 theorem es_fromBlocks {l m n o : Type} {A : P → Matrix n l ℂ} {B' : P → Matrix n m ℂ} {C : P → Matrix o l ℂ}
     {D' : P → Matrix o m ℂ} (hA : ES A s) (hB : ES B' s) (hC : ES C s) (hD : ES D' s) :
@@ -1665,8 +1657,7 @@ theorem es_zfull (j : ℕ) (s : Set (ℂ × (Fin j → Fin j → ℂ))) :
     simp only [Matrix.of_apply]
     fun_prop
   have h4 : ES (fun q : ℂ × (Fin j → Fin j → ℂ) => (Matrix.of fun _ _ : Fin 1 => q.1)) s := fun a b => by
-    simp only [Matrix.of_apply]
-    exact contDiff_fst.contDiffOn
+    simpa only [Matrix.of_apply] using contDiff_fst.contDiffOn
   simp only [zfull, U.blk2]
   exact es_reindex _ _ (es_fromBlocks h1 (es_const _ _) (es_const _ _) h4)
 
@@ -1703,8 +1694,7 @@ theorem base_point_facts_holds : BasePointSmoothAndMem := by
         (es_fromCols (es_mul (es_const _ _) hZ) (es_const _ _)) (es_const _ _))
     have hX : ES (fun q : ℂ × (Fin j → Fin j → ℂ) => x0 k r j hj (Matrix.of q.2) q.1 γ)
         {q : ℂ × (Fin j → Fin j → ℂ) | q.1 ≠ 0 ∧ (Matrix.of q.2).det ≠ 0} := by
-      simp only [x0, D.castM]
-      exact es_reindex _ _ hM
+      simpa only [x0, D.castM] using es_reindex _ _ hM
     exact es_contDiffOn hX
   · intro q h1 h2
     apply PBF.mem_level_zero_of_mem_group

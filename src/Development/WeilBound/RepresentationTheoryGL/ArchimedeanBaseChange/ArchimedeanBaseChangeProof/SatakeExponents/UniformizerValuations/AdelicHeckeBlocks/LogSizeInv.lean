@@ -107,12 +107,10 @@ theorem mulOk (h2 : MultAlg) (h4 : TensMul) (t t' : PT B) (ht : t.Ok) (ht' : t'.
   · intro x y g hg
     have hg' : ∑ z, ∫ h, t.ψ x z h * t'.ψ z y (h⁻¹ * g) ∂B.ν ≠ 0 := hg
     obtain ⟨z, hz⟩ : ∃ z, ∫ h, t.ψ x z h * t'.ψ z y (h⁻¹ * g) ∂B.ν ≠ 0 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hg' (Finset.sum_eq_zero fun z _ => hc z)
     obtain ⟨h, hh⟩ : ∃ h, t.ψ x z h * t'.ψ z y (h⁻¹ * g) ≠ 0 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hz (by simp [hc])
     have s1 := ht.size x z h (left_ne_zero_of_mul hh)
     have s2 := ht'.size z y (h⁻¹ * g) (right_ne_zero_of_mul hh)
@@ -145,8 +143,7 @@ theorem adjOk (h2 : MultAlg) (t : PT B) (ht : t.Ok) : t.adj.Ok := by
   · intro x y g hg
     have hg' : t.ψ y x g⁻¹ ≠ 0 := fun h0 => hg (by show starRingEnd ℂ (t.ψ y x g⁻¹) = 0; rw [h0, map_zero])
     have s := ht.size y x g⁻¹ hg'
-    rw [Prod.fst_inv, Prod.snd_inv, map_inv, map_inv, logSize_inv, logSize_inv] at s
-    exact s
+    rwa [Prod.fst_inv, Prod.snd_inv, map_inv, map_inv, logSize_inv, logSize_inv] at s
 
 theorem adjOp (h1 : OpEx) (h2 : MultAlg) (h3 : TensTest) (t : PT B) (ht : t.Ok) :
     t.adj.op = ContinuousLinearMap.adjoint t.op := by

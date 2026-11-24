@@ -144,10 +144,8 @@ theorem colT_mul_apply (p : Fin k) (c : Fin k → A) (s : Finset (Fin k))
   split_ifs with ha
   · rw [Finset.sum_eq_single a]
     · exact single_mul_apply_same _ _ _ _ _
-    · intro i _ hia
-      exact single_mul_apply_of_ne _ _ _ _ _ (Ne.symm hia) _
-    · intro h
-      exact absurd ha h
+    · exact fun i _ hia => single_mul_apply_of_ne _ _ _ _ _ (Ne.symm hia) _
+    · exact fun h => absurd ha h
   · exact Finset.sum_eq_zero (fun i hi => single_mul_apply_of_ne _ _ _ _ _
       (fun h => ha (by rw [h]; exact hi)) _)
 
@@ -160,10 +158,8 @@ theorem mul_rowT_apply (p : Fin k) (c : Fin k → A) (s : Finset (Fin k))
   split_ifs with hb
   · rw [Finset.sum_eq_single b]
     · exact mul_single_apply_same _ _ _ _ _
-    · intro j _ hjb
-      exact mul_single_apply_of_ne _ _ _ _ _ (Ne.symm hjb) _
-    · intro h
-      exact absurd hb h
+    · exact fun j _ hjb => mul_single_apply_of_ne _ _ _ _ _ (Ne.symm hjb) _
+    · exact fun h => absurd hb h
   · exact Finset.sum_eq_zero (fun j hj => mul_single_apply_of_ne _ _ _ _ _
       (fun h => hb (by rw [h]; exact hj)) _)
 
@@ -226,8 +222,7 @@ theorem step (hA : HasStableRangeOne A) (m : ℕ) (hm : m < k) (X : GL (Fin k) A
     congr 1
     exact Finset.sum_congr rfl (fun i _ => by rw [hc1]; ring)
   have hUnit : IsUnit (X1 p p) := by
-    rw [hX1pp]
-    exact ht
+    rwa [hX1pp]
   set w : A := ((hUnit.unit⁻¹ : Aˣ) : A) with hw
   have huw : X1 p p * w = 1 := hUnit.mul_val_inv
   have hwu : w * X1 p p = 1 := hUnit.val_inv_mul
@@ -305,8 +300,7 @@ theorem step (hA : HasStableRangeOne A) (m : ℕ) (hm : m < k) (X : GL (Fin k) A
     rcases tri b with hb | hb | hb
     · rw [hX3, ite_eq_right (fun h => by have := (mem_s b).1 h; omega), add_zero, X2_notin p b hps,
         X1_p_low b hb, mul_zero, Matrix.one_apply_ne (nev p b (by omega))]
-    · rw [hb, hX3, ite_eq_right hps, add_zero, X2_notin p p hps, Matrix.one_apply_eq]
-      exact hwu
+    · rwa [hb, hX3, ite_eq_right hps, add_zero, X2_notin p p hps, Matrix.one_apply_eq]
     · have := (mem_s b).1 hb
       rw [hX3, ite_eq_left hb, hc3, X2_notin p b hps, X2_notin p p hps,
         Matrix.one_apply_ne (nev p b (by omega))]
@@ -352,8 +346,6 @@ theorem reduce (hA : HasStableRangeOne A) : ∀ n : ℕ, ∀ X : GL (Fin k) A,
 
 end
 
-theorem gl_generated_transvections_diag : ElimSR1 := by
-  intro A _ hA k X
-  exact reduce hA k X (by simp [Red])
+theorem gl_generated_transvections_diag : ElimSR1 := fun A _ hA k X => reduce hA k X (by simp [Red])
 
 end PI.VolSemiDirect.W.Cj

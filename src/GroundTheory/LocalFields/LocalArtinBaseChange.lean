@@ -218,8 +218,7 @@ theorem isAbelianExtension_fixingOpenSubgroup_of_le {F : IntermediateField K Ω}
   have := congrArg (fun ρ : IntermediateField.extendScalars h ≃ₐ[E] IntermediateField.extendScalars h =>
     ((ρ ⟨y, (IntermediateField.mem_extendScalars h).2 hy⟩ : IntermediateField.extendScalars h) : Ω)) hσ
   simp only [r] at this
-  rw [MonoidHom.comp_apply, AlgEquiv.restrictNormalHom_apply] at this
-  exact this
+  rwa [MonoidHom.comp_apply, AlgEquiv.restrictNormalHom_apply] at this
 
 
 omit [ValuativeRel Ω] [TopologicalSpace Ω] [IsValuativeTopology Ω] [ValuativeExtension K Ω] in
@@ -240,8 +239,7 @@ theorem restrictAb_baseChangeArtinMap_eq_one {F : IntermediateField K Ω} (h : E
       at hx
     obtain ⟨c, hc, hcx⟩ := hx
     have : c = a := by
-      rw [ha, MulEquiv.eq_symm_apply]
-      exact hcx
+      rwa [ha, MulEquiv.eq_symm_apply]
     rwa [← this]
   have h1 : abelianizationRestrict hUV
       ((localClassFieldData K Ω).reciprocityLimit (classFieldAxiom_units K Ω) (fixingOpenSubgroup E) a) = 1 := by
@@ -306,8 +304,7 @@ theorem restrictAb_baseChangeArtinMap_uniformizer {ϖ : Eˣ} (hϖ : ord (ϖ : E)
     rintro τ ⟨hτU, hτ⟩
     replace hτ : (localClassFieldData K Ω).deg τ = 1 := hτ
     have h1 : (localClassFieldData K Ω).relDeg (fixingOpenSubgroup E) ⟨τ, hτU⟩ = 1 := by
-      rw [ClassFieldData.relDeg_eq_iff, one_pow]
-      exact hτ
+      rwa [ClassFieldData.relDeg_eq_iff, one_pow]
     rw [relDeg_fixingOpenSubgroup, unramifiedDegree_eq_one_iff] at h1
     rw [coe_fixingOpenSubgroup, IntermediateField.mem_fixingSubgroup_iff]
     intro z hz

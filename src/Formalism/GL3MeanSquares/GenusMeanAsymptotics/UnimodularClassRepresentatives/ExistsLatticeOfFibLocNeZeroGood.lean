@@ -118,16 +118,14 @@ theorem loc_eq_loc_adjoin_cut (S : VecSplit h h') {P : Ideal (𝓞 K)} (hP : P.I
       rwa [add_sub_cancel_left] at h3
     obtain ⟨s, hs', h4⟩ := h2
     refine ⟨s, hs', ?_⟩
-    rw [VecSplit.mem_cut_iff, LinearMap.map_smul_of_tower]
-    exact h4
+    rwa [VecSplit.mem_cut_iff, LinearMap.map_smul_of_tower]
   · rw [← hidem]
     apply (hloc P hP _ _).2.1
     unfold VecSplit.adjoin
     refine sup_le ?_ ?_
     · rw [Submodule.span_le, Set.singleton_subset_iff]; exact hx
     · rw [Submodule.map_le_iff_le_comap]
-      intro a ha
-      exact (hloc P hP B B).1 ha
+      exact fun a ha => (hloc P hP B B).1 ha
 
 theorem unimod_of_unimod_adjoin (hs : h.IsSymm) (S : VecSplit h h') {p : Ideal (𝓞 K)}
     {L' : Submodule (𝓞 K) V'} (hU : Formalism.HermitianLatticesTheory.IsUnimodularAt h p (S.adjoin L')) :
@@ -290,8 +288,7 @@ theorem exists_unimod_through (hs : h.IsSymm) (hd : IsTotPosDef h) {L : Submodul
   · have LDB := (Formalism.HermitianLatticesTheory.locDual (𝓞 K) K V h hs Formalism.HermitianLatticesTheory.star_algebraMap_ringOfIntegers_mem_range B hBfg).1 P hP
     have LDL := (Formalism.HermitianLatticesTheory.locDual (𝓞 K) K V h hs Formalism.HermitianLatticesTheory.star_algebraMap_ringOfIntegers_mem_range L hL.fg).1 P hP
     have e4 : Formalism.HermitianLatticesTheory.loc (K := K) P (Formalism.HermitianLatticesTheory.dual h L) = Formalism.HermitianLatticesTheory.loc (K := K) P L := by
-      rw [LDL.1, ← LDL.2]
-      exact hU
+      rwa [LDL.1, ← LDL.2]
     unfold Formalism.HermitianLatticesTheory.IsUnimodularAt
     rw [LDB.2, ← LDB.1, e3, (hloc P hP _ _).2.2.2.1, (hloc P hP _ _).2.2.2.2, e4, hB,
       (hloc P hP _ _).2.2.2.2, (hloc P hP _ _).2.2.2.1, sup_comm, sup_inf_assoc_of_le, sup_comm]

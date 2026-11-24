@@ -180,8 +180,7 @@ theorem prod_sq_ge (n : ℕ) (o : 𝓞 D.host.E) (ho : o ∈ dI D ^ n) (h0 : (o 
   rw [Nat.cast_pow, absNorm_dI, ← pow_mul] at hle'
   have e : (((Algebra.norm ℤ o).natAbs : ℕ) : ℝ) = ((|((Algebra.norm ℤ o : ℤ) : ℚ)| : ℚ) : ℝ) := by
     simp [Nat.cast_natAbs, Rat.cast_abs]
-  rw [← e]
-  exact hle'
+  rwa [← e]
 
 end Norm
 

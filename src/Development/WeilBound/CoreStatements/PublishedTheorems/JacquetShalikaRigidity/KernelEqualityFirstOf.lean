@@ -160,8 +160,7 @@ theorem sq_fC (hD0 : D0) (hP2 : P2) (hG5t : RowsInCompactSet) (hK1 : K1) (hk : 1
   have hm1 : min 1 (dmin g) ≤ 1 := min_le_left _ _
   have hwa : ∀ a : ℕ, a ≤ k + 1 → wt (k + 1) g ^ 2 ≤ wt a g := by
     intro a ha
-    simp only [wt, ← pow_mul]
-    exact pow_le_pow_of_le_one hm0 hm1 (by omega)
+    simpa only [wt, ← pow_mul] using pow_le_pow_of_le_one hm0 hm1 (by omega)
   have key : ∀ c X : ℝ, 0 ≤ X → c ≤ Cm → A ^ 2 * (c * X) ≤ A ^ 2 * Cm * X := fun c X hX hc => by
     rw [mul_assoc]; exact mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_right hc hX) (sq_nonneg A)
   rcases le_total 1 (Dt g) with h1 | h1
@@ -197,8 +196,7 @@ theorem pos_mir {S : Finset (Pl E)} {g : GA E k} (hm : MirS S g) (hi : InS S g) 
   intro i c hic
   apply pos_adele_ext
   · have h := hm.1 i c hic
-    rw [pos_one_map]
-    exact h
+    rwa [pos_one_map]
   · intro w
     have e1 := pos_one_map ((pLoc E w).comp (pFin E)) i c
     simp only [RingHom.comp_apply] at e1
@@ -458,8 +456,7 @@ theorem law_fC (hG0 : jumpWindows.G0) (hG5 : jumpWindows.G5) (hP2 : P2) (hP3 : P
     have h1 := hW _ φ hgood (hsat w) _ hgσ x
     have h2 := hW _ φ' hgood' (hsat' w) g hg x
     have h3 := law_sph hK8a hk α α' w hχ hn hκ l hl
-    rw [hPW g', hPW g, hdep.1, e1, h1, h2, hηe, map_mul]
-    rw [← h3]
+    rw [hPW g', hPW g, hdep.1, e1, h1, h2, hηe, map_mul, ← h3]
     ring
 
 open scoped ValuativeRel
@@ -529,8 +526,7 @@ theorem sph_fC (hG0 : jumpWindows.G0) (hP2 : P2) (hP3 : P3) (hK8 : K8) (hk : 1 �
       refine sph_rowint _ (fun c => ?_) _ (by simpa [map_inv] using (hK w).2) i
       have := h w hw c
       rw [hloc, ← _root_.PositivityTheory.AdelicQuotientData.PKEq1.law_memO] at this
-      rw [map_mul, Units.val_mul, Matrix.mul_apply]
-      exact this
+      rwa [map_mul, Units.val_mul, Matrix.mul_apply]
   have hsy : s y' = s y := (hcut.dep y' y hinf hS').1
   have hη : η y' = η y := by
     by_cases h : η y = 0

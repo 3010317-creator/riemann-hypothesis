@@ -33,8 +33,7 @@ theorem toL2_eq_toLp_of_memLp {F : Matrix (Fin n) (Fin n) ℂ → ℂ}
   rw [dite_eq_left hF]
 
 theorem slm_exists_y {g : Matrix (Fin n) (Fin n) ℂ} (hg : Formalism.REAL.inUJ ε g) :
-    ∃ y : Formalism.REAL.UJ ε, Formalism.MainNotions.S.umat y = g := by
-  exact exists_unitary_preimage ε hg
+    ∃ y : Formalism.REAL.UJ ε, Formalism.MainNotions.S.umat y = g := exists_unitary_preimage ε hg
 
 theorem slm_memLp_tr {F : Matrix (Fin n) (Fin n) ℂ → ℂ}
     (hF : MemLp (fun x : Formalism.REAL.UJ ε => F (Formalism.MainNotions.S.umat x)) 2 (Formalism.REAL.muG ε))
@@ -65,8 +64,7 @@ theorem slm_Rd_sum {F : Matrix (Fin n) (Fin n) ℂ → ℂ} (hF : Formalism.REAL
   unfold Formalism.REAL.EcV at h
   rw [h1, h2] at h
   have h0 : Formalism.REAL.RdV (0 : Matrix (Fin n) (Fin n) ℂ) F g = 0 := slm_Rd_zero F g
-  rw [h0, smul_zero, add_zero] at h
-  exact h
+  rwa [h0, smul_zero, add_zero] at h
 
 theorem slm_chain {F : Matrix (Fin n) (Fin n) ℂ → ℂ} (hF : Formalism.REAL.SmoothOnG ε F)
     {c : ℝ → Matrix (Fin n) (Fin n) ℂ} {c' : Matrix (Fin n) (Fin n) ℂ} {s0 : ℝ}
@@ -85,8 +83,7 @@ theorem slm_chain {F : Matrix (Fin n) (Fin n) ℂ → ℂ} (hF : Formalism.REAL.
     exact heq _ hs1 hs2
   have hR : Formalism.REAL.Rd (slmJi ε (c s0) * c') F (c s0) = fderiv ℝ Ft (c s0) c' := by
     have h := _root_.Formalism.REAL.vector_right_derivative_extends n ε ℂ F Ft U (c s0) (slmJi ε (c s0) * c') hU hmem hc0 hcd heq hY
-    rw [← Matrix.mul_assoc, slm_mul_Ji hc0, Matrix.one_mul] at h
-    exact h
+    rwa [← Matrix.mul_assoc, slm_mul_Ji hc0, Matrix.one_mul] at h
   rw [← slm_Rd_sum hF hc0 hY, hR]
   exact h1.congr_of_eventuallyEq hev
 
@@ -246,8 +243,7 @@ theorem slm_hint {V : Set (Matrix (Fin n) (Fin n) ℂ)} (hV : IsOpen V)
           slmJi ε (γ (q + s • W)) * fderiv ℝ γ (q + s • W) W := by
         rw [slm_Ji_mul_mul, Matrix.mul_assoc, ← Matrix.mul_assoc (slmJi ε (Formalism.MainNotions.S.umat x)),
           slm_Ji_mul x.2, Matrix.one_mul]
-      rw [e] at h
-      exact h
+      rwa [e] at h
     have hint1 : IntervalIntegrable (fun s => slmSum ε γ F W (q + slmCl s • W) (Formalism.MainNotions.S.umat x))
         volume 0 1 :=
       (hSc.comp (continuous_id.prodMk continuous_const : Continuous fun s : ℝ => (s, x))).intervalIntegrable 0 1
@@ -311,8 +307,7 @@ theorem slm_dS {F : Matrix (Fin n) (Fin n) ℂ → ℂ} (hF : IsSmoothL2 ε F) {
     (fun G hG q hq => slm_hint hV hγ hγU hG hq) F hF 1 h1V
   have hcurve : HasDerivAt (fun t : ℝ => NormedSpace.exp ((t : ℂ) • X)) X 0 := by
     have h := Formalism.REAL.hasDerivAt_mul_exp_smul_zero (1 : Matrix (Fin n) (Fin n) ℂ) X
-    simp only [Matrix.one_mul] at h
-    exact h
+    simpa only [Matrix.one_mul] using h
   have h0 : NormedSpace.exp (((0:ℝ) : ℂ) • X) = 1 := by simp
   have hev1 : ∀ᶠ t : ℝ in 𝓝 (0:ℝ), NormedSpace.exp ((t : ℂ) • X) ∈ V :=
     hcurve.continuousAt.preimage_mem_nhds (by rw [h0]; exact hV.mem_nhds h1V)

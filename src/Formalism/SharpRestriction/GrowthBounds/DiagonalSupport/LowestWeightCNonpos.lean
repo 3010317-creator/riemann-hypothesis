@@ -162,8 +162,7 @@ private lemma sDegs_subset_sDegs_smul_of_ne_zero (LL : Letters ι) (S : Set ι) 
     intro h0
     rw [h0] at hq
     exact hq rfl
-  · rw [h1, MvPolynomial.coeff_C_mul]
-    exact hq
+  · rwa [h1, MvPolynomial.coeff_C_mul]
 
 theorem valS_sat (LL : Letters ι) (S : Set ι) (c : O) (hc : c ≠ 0) (x : MvPolynomial (ι × Fin n) O) :
     valS LL S (c • x) ≤ valS LL S x := by
@@ -274,8 +273,7 @@ theorem decGen (hA : ATL) (hS : ValSlice) [IsPrincipalIdealRing O] [Fintype G] [
     rw [Finsupp.mem_support_iff, Finsupp.filter_apply] at hvd
     by_contra hne
     exact hvd (ite_eq_right hne)
-  · intro j
-    exact ⟨F.support.image (partOf π j), fun x hx mo hmo => hx.1 mo hmo⟩
+  · exact fun j => ⟨F.support.image (partOf π j), fun x hx mo hmo => hx.1 mo hmo⟩
   · intro j c x hc hcx
     obtain ⟨a1, a2, a3⟩ := hcx
     refine ⟨fun mo hmo => a1 mo ?_, fun q hq => (a2 q hq).trans (valS_sat LL q.1 c hc x),
@@ -293,11 +291,9 @@ theorem decGen (hA : ATL) (hS : ValSlice) [IsPrincipalIdealRing O] [Fintype G] [
         · intro v hv
           have hvars : v ∈ (cM M).vars := (MvPolynomial.mem_vars_iff_mem_support v).mpr ⟨mo, hmo, hv⟩
           exact (MvPolynomial.mem_supported.mp (hcM M hM)) hvars
-        · intro v hv
-          exact hMs M hM v hv
+        · exact fun v hv => hMs M hM v hv
       · rw [MvPolynomial.mem_supported, MvPolynomial.vars_monomial one_ne_zero]
-        intro v hv
-        exact hMs M hM v hv
+        exact fun v hv => hMs M hM v hv
     rwa [← hF] at hmem
 
 end Dec

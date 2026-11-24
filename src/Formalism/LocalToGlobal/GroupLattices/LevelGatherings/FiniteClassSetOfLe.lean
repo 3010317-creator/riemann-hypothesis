@@ -17,8 +17,7 @@ theorem finite_classSet_of_le {G : Type} [Group G] (Γ K K' : Subgroup G) (h : K
     (fun g => (Quotient.mk'' g : ClassSet Γ K')) (fun a b hab => ?_)) ?_
   · obtain ⟨x, hx, y, hy, rfl⟩ := (DoubleCoset.rel_iff).mp hab
     exact Quotient.sound' ((DoubleCoset.rel_iff).mpr ⟨x, hx, y, h hy, rfl⟩)
-  · intro q
-    exact Quotient.inductionOn' q (fun g => ⟨Quotient.mk'' g, rfl⟩)
+  · exact fun q => Quotient.inductionOn' q (fun g => ⟨Quotient.mk'' g, rfl⟩)
 
 variable {R : Ranks} {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E]
     [StarRing E] [Algebra F E] {sp : Spaces R F E} {gp : Fin 2 → ℕ}

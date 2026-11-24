@@ -159,8 +159,7 @@ theorem glAct_succ (LL : Letters (K + 1)) (hv : LL.vec (Fin.last K) = true) (c d
     simp only [Fin.coe_castSucc]
     omega
   have h2 : ∀ i : Fin K, ((Fin.castSucc i : Fin (K + 1)) : ℕ) < K := fun i => by
-    simp only [Fin.coe_castSucc]
-    exact i.is_lt
+    simpa only [Fin.coe_castSucc] using i.is_lt
   rw [glAct, glAct, LinearMap.sum_apply, LinearMap.sum_apply, Fin.sum_univ_castSucc,
     Fin.sum_univ_castSucc]
   simp only [h1, h2, ite_true, Fin.val_last, lt_self_iff_false, ite_false, Nat.lt_succ_self, hv,
@@ -173,8 +172,7 @@ theorem wt_succ (LL : Letters (K + 1)) (hv : LL.vec (Fin.last K) = true) (c : Fi
     simp only [Fin.coe_castSucc]
     omega
   have h2 : ∀ i : Fin K, ((Fin.castSucc i : Fin (K + 1)) : ℕ) < K := fun i => by
-    simp only [Fin.coe_castSucc]
-    exact i.is_lt
+    simpa only [Fin.coe_castSucc] using i.is_lt
   simp only [wt, Fin.sum_univ_castSucc, h1, h2, ite_true, Fin.val_last, lt_self_iff_false, ite_false,
     Nat.lt_succ_self, hv, add_zero]
 
@@ -338,8 +336,7 @@ private theorem X_mul_mem_freeLast_of_ne_last (v : Fin (K + 1) × Fin r) (hv : v
   split_ifs at hm with hmem
   · have h1 := hy (MvPolynomial.mem_support_iff.2 hm) c
     have hne : v ≠ (Fin.last K, c) := fun h => hv (congrArg Prod.fst h)
-    rw [Finsupp.tsub_apply, Finsupp.single_apply, ite_eq_right hne, Nat.sub_zero] at h1
-    exact h1
+    rwa [Finsupp.tsub_apply, Finsupp.single_apply, ite_eq_right hne, Nat.sub_zero] at h1
   · exact absurd rfl hm
 
 private theorem glAct_mem_freeLast (LL : Letters (K + 1)) (a b : Fin r) :
@@ -355,8 +352,7 @@ private theorem glAct_mem_freeLast (LL : Letters (K + 1)) (a b : Fin r) :
     · simp only [hij, hvi, ite_true, Bool.false_eq_true, ite_false, LinearMap.neg_apply,
         LinearMap.comp_apply, LinearMap.mulLeft_apply]
       exact Submodule.neg_mem _ (X_mul_mem_freeLast_of_ne_last (i, b) hi _ (pderiv_mem_freeLast (i, a) y hy))
-  · simp only [hij, ite_false, LinearMap.zero_apply]
-    exact Submodule.zero_mem _
+  · simpa only [hij, ite_false, LinearMap.zero_apply] using Submodule.zero_mem _
 
 theorem free_le_ycond [NeZero r] (LL : Letters (K + 1)) (hv : LL.vec (Fin.last K) = true) (Mt : WithTop ℤ) :
     YCond p LL (K + 1) Mt ⊓ FreeLast p K r ≤ YCond p LL K Mt := by
@@ -370,8 +366,7 @@ theorem free_le_ycond [NeZero r] (LL : Letters (K + 1)) (hv : LL.vec (Fin.last K
     have hw := h1 hm
     have h0 : m (Fin.last K, 0) = 0 := hzF hm 0
     simp only [Set.mem_setOf_eq] at hw ⊢
-    rw [wt_succ LL hv, h0, Nat.cast_zero, add_zero] at hw
-    exact hw
+    rwa [wt_succ LL hv, h0, Nat.cast_zero, add_zero] at hw
   · rintro a b z ⟨hzY, hzF⟩
     have e := glAct_succ LL hv a b z
     rw [pderiv_freeLast z hzF b, mul_zero, add_zero] at e
@@ -427,8 +422,7 @@ theorem mulX_ycond [NeZero r] (LL : Letters (K + 1)) (Mt : WithTop ℤ) (c : Fin
     exact X_last_mul_mem_restrictSupport_wt_le LL Mt c y (yCond_le_restrictSupport_wt_le LL K Mt hy)
   · rintro a b _ ⟨y, hy, rfl⟩
     refine ⟨glAct p LL K a b y, glAct_mem_yCond_of_neZero LL K Mt a b y hy, ?_⟩
-    simp only [LinearMap.mulLeft_apply]
-    exact (glAct_X_last_mul_eq LL a b c y).symm
+    simpa only [LinearMap.mulLeft_apply] using (glAct_X_last_mul_eq LL a b c y).symm
 
 private theorem pderiv_last_eulL_eq (c : Fin r) (g : MvPolynomial (Fin (K + 1) × Fin r) ℚ_[p]) :
     pderiv (Fin.last K, c) (Formalism.GM.ProjS.eulL (fun d : Fin r => (Fin.last K, d)) g) =
@@ -445,8 +439,7 @@ private theorem pderiv_last_eulL_eq (c : Fin r) (g : MvPolynomial (Fin (K + 1) �
     · intro d _ hd
       have hne : ((Fin.last K, d) : Fin (K + 1) × Fin r) ≠ (Fin.last K, c) := by simp [hd]
       simp [hne]
-    · intro h
-      exact absurd (Finset.mem_univ c) h
+    · exact fun h => absurd (Finset.mem_univ c) h
   · refine Finset.sum_congr rfl fun d _ => ?_
     rw [Formalism.GM.ProjS.pderiv_comm]
 
@@ -506,8 +499,7 @@ theorem restriction_into_holds : ResInto := by
   split_ifs with hk
   · have h1 : h ∈ YCond p LL (K + 1) (M k) := by
       have := hhY k
-      rw [ycond_min, min_eq_right hk] at this
-      exact this
+      rwa [ycond_min, min_eq_right hk] at this
     refine Submodule.mem_inf.mpr ⟨key K le_rfl _ _ (condition_drop_holds p K r LL (M k) hv h hhP h1), ?_⟩
     have h0 : (0 : Fin r) ∈ (univ : Finset (Fin r)).erase ρ := by
       refine Finset.mem_erase.mpr ⟨?_, Finset.mem_univ _⟩

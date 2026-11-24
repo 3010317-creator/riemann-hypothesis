@@ -132,8 +132,7 @@ theorem coe_prod_finiteSingleUnits_apply (T : Finset (HeightOneSpectrum (𝓞 K)
     (f : ∀ v : HeightOneSpectrum (𝓞 K), (v.adicCompletion K)ˣ) (x : HeightOneSpectrum (𝓞 K)) :
     ((∏ v ∈ T, finiteSingleUnits v (f v) : (𝔸ᶠ[K])ˣ) : 𝔸ᶠ[K]) x =
       if x ∈ T then ((f x : (x.adicCompletion K)ˣ) : x.adicCompletion K) else 1 := by
-  rw [Units.coe_prod]
-  rw [← finiteAdeleEval_apply, map_prod]
+  rw [Units.coe_prod, ← finiteAdeleEval_apply, map_prod]
   simp only [finiteAdeleEval_apply, coe_finiteSingleUnits]
   split_ifs with hx
   · rw [Finset.prod_eq_single_of_mem x hx fun b _ hbx ↦
@@ -151,8 +150,7 @@ theorem finite_setOf_not_isIntegralUnitAt (u : (𝔸ᶠ[K])ˣ) :
   Filter.eventually_cofinite.1 ((u : 𝔸ᶠ[K]).2.and ((u⁻¹ : (𝔸ᶠ[K])ˣ) : 𝔸ᶠ[K]).2)
 
 theorem units_mul_inv_apply (u : (𝔸ᶠ[K])ˣ) (v : HeightOneSpectrum (𝓞 K)) :
-    (u : 𝔸ᶠ[K]) v * ((u⁻¹ : (𝔸ᶠ[K])ˣ) : 𝔸ᶠ[K]) v = 1 := by
-  exact congrArg (fun a : 𝔸ᶠ[K] ↦ a v) u.mul_inv
+    (u : 𝔸ᶠ[K]) v * ((u⁻¹ : (𝔸ᶠ[K])ˣ) : 𝔸ᶠ[K]) v = 1 := congrArg (fun a : 𝔸ᶠ[K] ↦ a v) u.mul_inv
 
 theorem norm_eq_one_of_isIntegralUnitAt {u : (𝔸ᶠ[K])ˣ} {v : HeightOneSpectrum (𝓞 K)}
     (h : IsIntegralUnitAt u v) : ‖(u : 𝔸ᶠ[K]) v‖ = 1 :=
@@ -289,8 +287,7 @@ theorem finiteSingleUnits_smul_eq_ker {v : HeightOneSpectrum (𝓞 K)}
       · subst hw
         exact hv
       · exact h1 w hw
-    refine ⟨⟨y, hy⟩, ?_, rfl⟩
-    exact (IsLocalRing.residue_eq_zero_iff _).2 hm
+    exact ⟨⟨y, hy⟩, (IsLocalRing.residue_eq_zero_iff _).2 hm, rfl⟩
   · rintro ⟨⟨y, hy⟩, h0, rfl⟩
     exact ⟨fun w _ ↦ hy w, hy v, (IsLocalRing.residue_eq_zero_iff _).1 h0⟩
 
@@ -369,8 +366,7 @@ theorem distribHaarChar_finiteSingleUnits (v : HeightOneSpectrum (𝓞 K))
   rcases (v.adicCompletionIntegers K).mem_or_inv_mem (z : v.adicCompletion K) with hz | hz
   · exact hint z hz
   · have := hint z⁻¹ (by rwa [Units.val_inv_eq_inv_val])
-    rw [map_inv, map_inv, Units.val_inv_eq_inv_val, nnnorm_inv, inv_inj] at this
-    exact this
+    rwa [map_inv, map_inv, Units.val_inv_eq_inv_val, nnnorm_inv, inv_inj] at this
 
 theorem distribHaarChar_finiteAdeleRing (u : (𝔸ᶠ[K])ˣ) :
     distribHaarChar 𝔸ᶠ[K] u = ∏ᶠ v : HeightOneSpectrum (𝓞 K), ‖(u : 𝔸ᶠ[K]) v‖₊ := by

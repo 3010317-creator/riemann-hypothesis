@@ -64,8 +64,7 @@ theorem SplitPlace.ideal_isPrime (s : SplitPlace L) : s.ideal.IsPrime := by
   · intro x y hxy
     rw [s.split_mem_ideal, s.split_mem_ideal]
     rw [s.split_mem_ideal] at hxy
-    by_contra h
-    push Not at h
+    by_contra! h
     obtain ⟨h1, h2⟩ := h
     simp only [RingOfIntegers.coe_eq_algebraMap, map_mul] at hxy h1 h2
     exact not_lt.mpr (one_le_mul h1 h2) hxy
@@ -114,8 +113,7 @@ theorem SplitPlace.card_quot (s : SplitPlace L) :
     have e : s.i (algebraMap (𝓞 L) L (algebraMap (𝓞 L⁺) (𝓞 L) a)) =
         algebraMap (𝓞 L⁺) (s.v.adicCompletion L⁺) a := by
       rw [← RingOfIntegers.coe_eq_algebraMap, split_coe_algebraMap, AlgHom.commutes]; rfl
-    rw [e]
-    exact ha
+    rwa [e]
   exact (Nat.card_eq_of_bijective g ⟨hinj, hsurj⟩).symm
 
 def SplitPlace.q (s : SplitPlace L) : ℕ := Nat.card (𝓞 L⁺ ⧸ s.v.asIdeal)

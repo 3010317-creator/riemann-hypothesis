@@ -57,8 +57,7 @@ theorem cay_icay {N : ℕ} {M : Matrix ι ι K} (hT : ((⅟2 : K) • (M - 1)) ^
   have hAN : (-A) ^ N = 0 := by rw [neg_pow, hT, mul_zero]
   have hAG : (1 + A) * G = 1 := by
     have := mul_neg_geom_sum (-A) N
-    rw [sub_neg_eq_add, hAN, sub_zero] at this
-    exact this
+    rwa [sub_neg_eq_add, hAN, sub_zero] at this
   have hZ2 : (⅟2 : K) • icay N M = A * G := by rw [icay, Matrix.smul_mul]
   have h1 : 1 - A * G = G := by
     have e : (1 + A) * G = G + A * G := by rw [Matrix.add_mul, Matrix.one_mul]
@@ -72,8 +71,7 @@ theorem cay_icay {N : ℕ} {M : Matrix ι ι K} (hT : ((⅟2 : K) • (M - 1)) ^
       _ = 1 + A := by rw [Matrix.mul_assoc, hZ2, hgeo, Matrix.mul_one]
   have hGA : G * (1 + A) = 1 := by
     have := geom_sum_mul_neg (-A) N
-    rw [sub_neg_eq_add, hAN, sub_zero] at this
-    exact this
+    rwa [sub_neg_eq_add, hAN, sub_zero] at this
   unfold cay
   rw [hg, icay, ← hG, Matrix.mul_assoc, hGA, Matrix.mul_one]
   abel
@@ -88,12 +86,10 @@ theorem icay_skew (h : J * J' = 1) (h' : J' * J = 1) {N : ℕ} {M P : Matrix ι 
   have hBN : (-B) ^ N = 0 := by rw [neg_pow, hT', mul_zero]
   have hAG : (1 + A) * geo N (-A) = 1 := by
     have := mul_neg_geom_sum (-A) N
-    rw [sub_neg_eq_add, hAN, sub_zero] at this
-    exact this
+    rwa [sub_neg_eq_add, hAN, sub_zero] at this
   have hGB : geo N (-B) * (1 + B) = 1 := by
     have := geom_sum_mul_neg (-B) N
-    rw [sub_neg_eq_add, hBN, sub_zero] at this
-    exact this
+    rwa [sub_neg_eq_add, hBN, sub_zero] at this
   have hQ : (P - 1) * (M - 1) = (1 + 1) - P - M := by
     simp only [Matrix.sub_mul, Matrix.mul_sub, Matrix.one_mul, Matrix.mul_one, hPM]
     abel
@@ -151,8 +147,7 @@ theorem star_ic (e : X.B.I.E) : star (ic X e) = ic X (star e) := DictLat.sigR_in
 
 theorem map_cT {m p : Type*} (M : Matrix m p X.B.I.E) : (M.map (ic X))ᴴ = (Mᴴ).map (ic X) := by
   ext i j
-  simp only [conjTranspose_apply, map_apply]
-  exact star_ic X _
+  simpa only [conjTranspose_apply, map_apply] using star_ic X _
 
 theorem cT_eqR {m p : Type} (M : Matrix m p (RA X)) :
     Formalism.UG.cT (Formalism.UG.sigR X.B.I.cm.sig (Af X.B.I.F)) M = Mᴴ := by
@@ -360,8 +355,7 @@ theorem nf_of_pat (x : X.B.I.Gf) (hpat : InPat (lvk X) 1 (Mf X x - 1)) : x ∈ X
     · rw [hcf b, mul_zero]
   show _ ∧ _ ∧ _
   refine ⟨fun a => ?_, hperp _ fun a => adelicHermitian_hyperbolicE_anisotropic_eq_zero X u a, hperp⟩
-  rw [hgv]
-  rw [show incl X.B.I (X.eR a) = incl X.B.I (bv X (Sum.inl a)) from rfl, Bf'_incl]
+  rw [hgv, show incl X.B.I (X.eR a) = incl X.B.I (bv X (Sum.inl a)) from rfl, Bf'_incl]
   refine Bf_mulVec_mem X {b | b.1 < a.1} _ fun k hk => ?_
   rw [mulVec_single_one]
   refine hpat k _ ?_

@@ -281,8 +281,7 @@ lemma LamL_Wop (m : Matrix (Fin k) (Fin k) A) (x : Fin k → A) :
 
 lemma LamL_Wop_apply (m : Matrix (Fin k) (Fin k) A) (x : Fin k → A) (v : Finset (Fin k) → A) :
     LamL m (Wop x v) = Wop (Matrix.vecMul x m) (LamL m v) := by
-  have h := congrArg (fun f => f v) (LamL_Wop m x)
-  simpa only [Module.End.mul_apply] using h
+  simpa only [Module.End.mul_apply] using congrArg (fun f => f v) (LamL_Wop m x)
 
 theorem Lam_wedge (m : Matrix (Fin k) (Fin k) A) (x : Fin k → A) (K : Finset (Fin k) → A) :
     Matrix.vecMul (wedgeR x K) (abelian₂ m) = wedgeR (Matrix.vecMul x m) (Matrix.vecMul K (abelian₂ m)) := by
@@ -363,8 +362,7 @@ theorem Lam_contr (m m' : Matrix (Fin k) (Fin k) A) (h : m * m' = 1) (y : Fin k 
   have hK : K = ∑ I, Pi.single I (K I) := (Finset.univ_sum_single K).symm
   rw [hK]
 
-  simp only [map_sum]
-  exact Finset.sum_congr rfl fun I _ => LamL_Iop_single m m' h y I (K I)
+  simpa only [map_sum] using Finset.sum_congr rfl fun I _ => LamL_Iop_single m m' h y I (K I)
 
 theorem Lam_empty (m : Matrix (Fin k) (Fin k) A) (J : Finset (Fin k)) (hJ : J ≠ ∅) : abelian₂ m ∅ J = 0 := by
   simp [abelian₂, img_empty, extOne, hJ]
@@ -980,8 +978,7 @@ theorem lifted_column_order (hF : FrobCong p f) (S : UniformizedDVR p O) (hsq : 
   rw [oS_top] at hq
   unfold InWjRg
   rw [lift_substitution_column_kernel p f S.w LL g g' hg hg', hq]
-  intro m
-  exact ⟨q.coeff m, by rw [coeff_map, ← C_pow, coeff_C_mul]⟩
+  exact fun m => ⟨q.coeff m, by rw [coeff_map, ← C_pow, coeff_C_mul]⟩
 
 end Final
 

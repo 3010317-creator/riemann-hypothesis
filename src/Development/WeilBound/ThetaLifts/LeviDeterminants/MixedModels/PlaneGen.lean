@@ -130,8 +130,7 @@ theorem ext {A B : Matrix (Fin n) (Fin n) R} (hx : A *ᵥ x = B *ᵥ x) (hy : A 
     obtain ⟨s, t, z, rfl⟩ := h.span v
     simp only [mulVec_add, mulVec_smul, hx, hy, hi]
   ext i j
-  have e := congrFun (hv (Pi.single j 1)) i
-  simpa [mulVec_single_one] using e
+  simpa [mulVec_single_one] using congrFun (hv (Pi.single j 1)) i
 
 
 omit h in
@@ -176,8 +175,7 @@ theorem lev_unit {t s : R} (h1 : t * c s = 1) : (lev c J ε x y t s)ᵀ * J * (l
   have hcs : s * c t = 1 := by
     have e := congrArg c h1
     rw [map_mul, h.cc, map_one] at e
-    rw [mul_comm]
-    exact e
+    rwa [mul_comm]
   have key : ∀ u v, bf c J (lev c J ε x y t s *ᵥ u) (lev c J ε x y t s *ᵥ v) = bf c J u v := by
     intro u v
     obtain ⟨a, b, z, rfl⟩ := h.span u
@@ -187,8 +185,7 @@ theorem lev_unit {t s : R} (h1 : t * c s = 1) : (lev c J ε x y t s)ᵀ * J * (l
     linear_combination (a * c b') * h1 + (b * c a' * ε) * hcs
   ext i j
   have e := key (Pi.single i 1) (Pi.single j 1)
-  rw [bf_mulVec, bf_single, bf_single] at e
-  exact e
+  rwa [bf_mulVec, bf_single, bf_single] at e
 
 theorem exists_lev (t : Rˣ) : ∃ m : GL (Fin n) R, m.1ᵀ * J * m.1.map c = J ∧ m.1 *ᵥ x = t.1 • x ∧ m.1 *ᵥ y = c (t⁻¹).1 • y ∧
     ∀ z, m.1 *ᵥ (ι *ᵥ z) = ι *ᵥ z := by

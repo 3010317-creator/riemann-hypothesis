@@ -67,27 +67,18 @@ theorem cycHerbrand_eq_of_surjective_of_finite_ker (ρB : Representation ℤ G B
   have hgK : ∀ x ∈ p.ker, cycNorm ρB x ∈ p.ker := by
     intro x hx
     rw [AddMonoidHom.mem_ker] at hx ⊢
-
     rw [cycNorm_apply, map_sum]
     simp [hpG, hx]
   have hfgK : ∀ x, restrictEnd (cycSubOne ρB σ) p.ker hfK
       (restrictEnd (cycNorm ρB) p.ker hgK x) = 0 := fun x =>
-    Subtype.ext (by
-      change cycSubOne ρB σ (cycNorm ρB x.val) = 0
-      exact cycSubOne_cycNorm ρB σ x.val)
+    Subtype.ext (cycSubOne_cycNorm ρB σ x.val)
   have hgfK : ∀ x, restrictEnd (cycNorm ρB) p.ker hgK
       (restrictEnd (cycSubOne ρB σ) p.ker hfK x) = 0 := fun x =>
-    Subtype.ext (by
-      change cycNorm ρB (cycSubOne ρB σ x.val) = 0
-      exact cycNorm_cycSubOne ρB σ x.val)
+    Subtype.ext (cycNorm_cycSubOne ρB σ x.val)
   have hA : HasHerbrandQuotient (restrictEnd (cycSubOne ρB σ) p.ker hfK)
       (restrictEnd (cycNorm ρB) p.ker hgK) := hasHerbrandQuotient_of_finite _ _
-  have hex : Function.Exact p.ker.subtype p := by
-    intro b
-    simp
-
   rw [cycHerbrand, cycHerbrand,
-  herbrandQuotient_eq_mul_of_shortExact p.ker.subtype_injective hp hex
+  herbrandQuotient_eq_mul_of_shortExact p.ker.subtype_injective hp (fun b => by simp)
     (fun _ => rfl) (fun _ => rfl)
     (fun b => by rw [cycSubOne_apply, cycSubOne_apply, map_sub, hpG])
     (fun b => by rw [cycNorm_apply, cycNorm_apply, map_sum]; simp only [hpG])

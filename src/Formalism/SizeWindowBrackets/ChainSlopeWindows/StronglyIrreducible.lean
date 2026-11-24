@@ -113,8 +113,7 @@ lemma sum_partner {β : Type*} [AddCommMonoid β] (t : H) (F : E0 × H → β) :
     rfl
 
 lemma card_notPhi : (univ.filter (fun g : E0 × H => ¬ InPhi g)).card = (PhiSet (H := H)).card := by
-  have h := sum_partner (H := H) (β := ℕ) 0 (fun _ => 1)
-  simpa using h
+  simpa using sum_partner (H := H) (β := ℕ) 0 (fun _ => 1)
 
 lemma conj_eq_neg (ψ : AddChar (E0 × H) ℂ) (g : E0 × H) : starRingEnd ℂ (ψ g) = ψ (-g) := by
   first
@@ -173,8 +172,7 @@ lemma chC_ne_zero : (chC : AddChar (E0 × H) ℂ) ≠ 0 := by
 
 lemma phi_card_ne_zero : ((PhiSet (H := H)).card : ℂ) ≠ 0 := by
   rw [Nat.cast_ne_zero]
-  apply Finset.card_ne_zero.mpr
-  exact ⟨0, by simp [PhiSet, inPhi_iff]⟩
+  exact Finset.card_ne_zero.mpr ⟨0, by simp [PhiSet, inPhi_iff]⟩
 
 lemma card_G : (Fintype.card (E0 × H) : ℂ) = 2 * ((PhiSet (H := H)).card : ℂ) := by
   have hN : Fintype.card (E0 × H) = 2 * (PhiSet (H := H)).card := by

@@ -60,12 +60,9 @@ theorem heisenbergIsometry : OpUIsom := by
 theorem precompHeisenberg : PullOpU := by
   intro V _ _ H δ hδ x F z
   have h1 : H z (δ x) = H (δ.symm z) x := by
-    have h := hδ (δ.symm z) x
-    simp only [LinearEquiv.coe_coe, LinearEquiv.apply_symm_apply] at h
-    exact h
+    simpa only [LinearEquiv.coe_coe, LinearEquiv.apply_symm_apply] using hδ (δ.symm z) x
   have h2 : H (δ x) (δ x) = H x x := by
-    have h := hδ x x
-    simpa only [LinearEquiv.coe_coe] using h
+    simpa only [LinearEquiv.coe_coe] using hδ x x
   simp only [pullInv, opU, map_add (f := _), LinearEquiv.symm_apply_apply, h1, h2]
 
 theorem semicharacterBasic : SemiCharBasic := by
@@ -158,8 +155,7 @@ theorem matrixFormBasic : MatHBasic := by
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   have hc : conj (h i j) = h j i := by
-    have h' := congrFun (congrFun hh j) i
-    simpa [Matrix.conjTranspose_apply] using h'
+    simpa [Matrix.conjTranspose_apply] using congrFun (congrFun hh j) i
   rw [hc]
   ring
 

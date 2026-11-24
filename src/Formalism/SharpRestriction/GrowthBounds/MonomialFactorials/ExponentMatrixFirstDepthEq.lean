@@ -125,8 +125,7 @@ theorem lvlRoom_of {dl : DCl X} {a0 : Fin X.s → ℕ} (ha0 : a0 ∈ cbox C0 CE1
     rw [← e2]; exact hOK
   rw [e] at hOK'
   unfold coarseC at hOK'
-  rw [Function.update_self, hb] at hOK'
-  exact hOK'
+  rwa [Function.update_self, hb] at hOK'
 
 theorem reindex {dl : DCl X} {x : Lv C0 CE1 CE2 X} (hr : LvlRoom C0 CE1 CE2 X dl x) (f : (Fin (X.S C0 CE1 CE2).t → ℕ) → ℝ) :
     ∑ n ∈ Fintype.piFinset (fun i => Wl C0 CE1 CE2 X dl (uTop (X.S C0 CE1 CE2) i)),
@@ -184,8 +183,7 @@ theorem fibre_ineq (D : Formalism.BasicNotions.D7) (ε : ℝ) {dl : DCl X} (a : 
   have hc : (0 : ℝ) < ((Fintype.piFinset (Nl C0 CE1 CE2 X dl x)).card : ℝ) := by
     have : (Fintype.piFinset (Nl C0 CE1 CE2 X dl x)).Nonempty := by
       rw [Fintype.piFinset_nonempty]
-      intro i
-      exact (hne i).image _
+      exact fun i => (hne i).image _
     exact_mod_cast this.card_pos
 
   have hL : ∑ n ∈ Fintype.piFinset (fun i => Wl C0 CE1 CE2 X dl (uTop (X.S C0 CE1 CE2) i)),

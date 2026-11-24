@@ -298,8 +298,7 @@ theorem actFormWedge : FactX2wedge := by
   have hR : ∑ b ∈ J, ((sg J b : ℤ) : R) * (∑ I', K I' * minorF m I' (J.erase b)) * Matrix.vecMul X m b =
       ∑ I', ∑ a, K I' * X a * ∑ b ∈ J, ((sg J b : ℤ) : R) * minorF m I' (J.erase b) * m a b := by
     simp only [Matrix.vecMul, dotProduct, Finset.mul_sum, Finset.sum_mul]
-    rw [Finset.sum_congr rfl (fun a _ => Finset.sum_comm)]
-    rw [Finset.sum_comm]
+    rw [Finset.sum_congr rfl (fun a _ => Finset.sum_comm), Finset.sum_comm]
     apply Finset.sum_congr rfl
     intro I' _
     rw [Finset.sum_comm]

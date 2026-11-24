@@ -152,8 +152,7 @@ lemma act_mem_IR {dim : (E →+* ℂ) → ℕ} {I : Submodule ℤ (Vsp dim)}
     act α a ∈ IR I := by
   have key : Submodule.span ℝ (I : Set (Vsp dim)) ≤ (IR I).comap ((actL α).restrictScalars ℝ) := by
     rw [Submodule.span_le]
-    intro x hx
-    exact Submodule.subset_span (hs α x hx)
+    exact fun x hx => Submodule.subset_span (hs α x hx)
   exact key ha
 
 lemma isU_act [IsCMField E] {dim : (E →+* ℂ) → ℕ} {I : Submodule ℤ (Vsp dim)}
@@ -169,8 +168,7 @@ lemma norm_act_le {dim : (E →+* ℂ) → ℕ} (α : 𝓞 E) (B : ℝ) (hB : �
     rw [show act α (0 : Vsp dim) = 0 from (actL α).map_zero]
     simp
   obtain ⟨i, hi⟩ : ∃ i, v i ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hv (by ext i; simpa using h i)
   have hB0 : 0 ≤ B := (norm_nonneg _).trans (hB i.1)
   rw [EuclideanSpace.norm_eq, EuclideanSpace.norm_eq, ← Real.sqrt_sq hB0, ← Real.sqrt_mul (sq_nonneg B)]

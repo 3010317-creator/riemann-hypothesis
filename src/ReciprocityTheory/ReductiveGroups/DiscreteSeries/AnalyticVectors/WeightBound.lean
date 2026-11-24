@@ -94,10 +94,7 @@ theorem le_span_weightVecs (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hVf : Fini
       · subst hac
         simp
       · simp [hac, Ne.symm hac]
-    show T a * T c = T c * T a
-    refine LinearMap.ext fun v => Subtype.ext ?_
-    show E a a (E c c v) = E c c (E a a v)
-    exact congrArg (fun F : Module.End ℂ M => F (v : M)) hEc
+    exact LinearMap.ext fun v => Subtype.ext (congrArg (fun F : Module.End ℂ M => F (v : M)) hEc)
   have htop := LinearMap.IsSymmetric.iSup_iInf_eq_top_of_commute hsym hcomm
   intro x hx
   have hy : (⟨x, hx⟩ : V) ∈ ⨆ χ : Fin n → ℂ, ⨅ i, Module.End.eigenspace (T i) (χ i) := by
@@ -283,8 +280,7 @@ theorem weight_layer_le (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hVf : FiniteD
       ∃ T : Module.End ℂ M, ∃ c : ℂ, c ≠ 0 ∧ T w = c • w ∧ ∀ s ∈ G, T s = 0 := by
     intro G
     refine Finset.induction_on G ?_ ?_
-    · intro _
-      exact ⟨1, 1, one_ne_zero, by simp, by simp⟩
+    · exact fun _ => ⟨1, 1, one_ne_zero, by simp, by simp⟩
     · intro s G hsG ih hG
       obtain ⟨T, c, hc, hTw, hTG⟩ := ih fun x hx => hG x (Finset.mem_insert_of_mem hx)
       rcases (hG s (Finset.mem_insert_self s G)).2 with h0 | ⟨a, l, hl, hs⟩

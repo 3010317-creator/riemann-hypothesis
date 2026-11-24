@@ -495,8 +495,7 @@ theorem pow_log_smul_isotypicProj_mem (R : Subring K) (p : ℕ) (hp : p.Prime) (
     congr 1
     rw [two_mul, pow_add]
     ring
-  rw [this]
-  exact h3
+  rwa [this]
 
 end Proj
 
@@ -669,8 +668,7 @@ theorem mem_latOf_iff {K : Type} [Field K] {k : ℕ} (g : GL (Fin k) K) (S : Set
   constructor
   · rintro ⟨h, hS, rfl⟩
     rwa [glAct_inv_glAct]
-  · intro hf
-    exact ⟨glAct g⁻¹ f, hf, glAct_glAct_inv g f⟩
+  · exact fun hf => ⟨glAct g⁻¹ f, hf, glAct_glAct_inv g f⟩
 
 def wXY (k : ℕ) : XY k → ℕ × ℕ := Sum.elim (fun _ => (1, 0)) (fun _ => (0, 1))
 
@@ -773,12 +771,10 @@ def xMul {k : ℕ} (m : XY k →₀ ℕ) : ℕ := Nat.multinomial Finset.univ (f
 def yMul {k : ℕ} (m : XY k →₀ ℕ) : ℕ := Nat.multinomial Finset.univ (fun i : Fin k => m (Sum.inr i))
 
 theorem xFact_mul_xMul {k : ℕ} (m : XY k →₀ ℕ) : xFact m * xMul m = (xDeg m).factorial := by
-  simp only [xFact, xMul, xDeg]
-  exact Nat.multinomial_spec _ _
+  simpa only [xFact, xMul, xDeg] using Nat.multinomial_spec _ _
 
 theorem yFact_mul_yMul {k : ℕ} (m : XY k →₀ ℕ) : yFact m * yMul m = (yDeg m).factorial := by
-  simp only [yFact, yMul, yDeg]
-  exact Nat.multinomial_spec _ _
+  simpa only [yFact, yMul, yDeg] using Nat.multinomial_spec _ _
 
 theorem xMul_ne_zero {k : ℕ} (m : XY k →₀ ℕ) : xMul m ≠ 0 :=
   (Nat.multinomial_pos _ _).ne'
@@ -1167,8 +1163,7 @@ theorem harQuot_of (H1 : HarProj) (H2 : GaussProj) : HarQuot := by
       have e1 := H1b w hw
       have e2 := H1c hAB.1 hAB.2 G' hG'
       rw [← hwG'] at e2
-      rw [← e1]
-      exact e2
+      rwa [← e1]
     · exact h_mul_eq_zero_of_deg (by omega) hwP hwG
   · obtain ⟨hhar, g', hg', hdiff⟩ := H1a f hf
     have hEO : (p : K) ^ ((k + 1) * Nat.log p (A + B + k)) ∈ O.toSubring :=

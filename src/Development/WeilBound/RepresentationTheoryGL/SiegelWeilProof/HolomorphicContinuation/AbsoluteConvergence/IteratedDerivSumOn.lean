@@ -61,8 +61,7 @@ theorem iteratedDeriv_sum_on {ι : Type} (s : Finset ι) {U : Set ℂ} (hU : IsO
     EqOn (iteratedDeriv r (fun w => ∑ i ∈ s, f i w)) (fun w => ∑ i ∈ s, iteratedDeriv r (f i) w) U := by
   induction r with
   | zero =>
-    simp only [iteratedDeriv_zero]
-    exact ⟨hf, fun _ _ => rfl⟩
+    simpa only [iteratedDeriv_zero] using ⟨hf, fun _ _ => rfl⟩
   | succ r ih =>
     obtain ⟨hd, he⟩ := ih
     refine ⟨fun i hi => ?_, fun z hz => ?_⟩
@@ -92,8 +91,7 @@ theorem exists_int_elem {X : Type} [MeasurableSpace X] (ν : Measure X) {V : Typ
     have h1 := b.sum_repr ⟨φ x, hφ x⟩
     have h2 := congrArg (fun w : W => (w : V)) h1
     simp only [Submodule.coe_sum, Submodule.coe_smul] at h2
-    simp only [hc]
-    exact h2.symm
+    simpa only [hc] using h2.symm
   refine ⟨∑ j, (∫ x, cl j (φ x) ∂ν) • (b j : V), Submodule.sum_mem _ fun j _ => Submodule.smul_mem _ _ (b j).2,
     fun l => ?_⟩
   have e1 : ∀ x, l (φ x) = ∑ j, cl j (φ x) * l (b j) := by
@@ -107,7 +105,6 @@ theorem exists_int_elem {X : Type} [MeasurableSpace X] (ν : Measure X) {V : Typ
   rw [integral_finsetSum]
   · refine Finset.sum_congr rfl fun j _ => ?_
     rw [integral_mul_const]
-  · intro j _
-    exact (hint (cl j)).mul_const _
+  · exact fun j _ => (hint (cl j)).mul_const _
 
 end PositivityTheory.Rg.Sw.AbsSt.TSC

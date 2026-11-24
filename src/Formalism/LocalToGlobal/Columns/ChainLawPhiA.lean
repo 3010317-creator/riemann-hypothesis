@@ -94,8 +94,7 @@ def clPfMul (N : ℕ) (X Y : ℕ → ℕ → k) : ℕ → ℕ → k := fun p p' 
 
 theorem clPf_exists_of_sum {N : ℕ} {X Y : ℕ → ℕ → k} {p p' : ℕ} (h : clPfMul N X Y p p' ≠ 0) :
     ∃ u, u < N ∧ X p u ≠ 0 ∧ Y u p' ≠ 0 := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   apply h
   unfold clPfMul
   apply Finset.sum_eq_zero
@@ -119,8 +118,7 @@ theorem clPf_diag_mul (hr : k₀ + rS < r) {N : ℕ} (hrN : r ≤ N) {X Y : ℕ 
     have h0' : X p' u * Y u p' ≠ 0 := h0
     exact hne (clPf_beta_inj hr hp' (le_antisymm (hY u hu hne (right_ne_zero_of_mul h0'))
       (hX u hu hne (left_ne_zero_of_mul h0'))))
-  · intro h
-    exact absurd (Finset.mem_range.mpr (by omega)) h
+  · exact fun h => absurd (Finset.mem_range.mpr (by omega)) h
 
 theorem clPf_pat_mulL (hr : k₀ + rS < r) (ht : 0 < t) {N A J : ℕ} (hA : A = r + J * t) (hAN : A ≤ N)
     {G X : ℕ → ℕ → k} (hG : clPfPat k₀ rS r t N N G) (hX : clPfPat k₀ rS r t N A X) :
@@ -321,8 +319,7 @@ theorem clPf_blk_mulL (hr : k₀ + rS < r) (ht : 0 < t) {N A : ℕ} (hAN : A ≤
     have x1 := x.2.1
     rw [e1] at g1
     rw [e2] at x1
-    have hb := clPf_beta_blk hr ht (le_antisymm x1 g1)
-    exact hnot (Finset.mem_Ico.mpr hb)
+    exact hnot (Finset.mem_Ico.mpr (clPf_beta_blk hr ht (le_antisymm x1 g1)))
 
 theorem clPf_blk_mulR (hr : k₀ + rS < r) (ht : 0 < t) {N A : ℕ} (hAN : A ≤ N) {X K : ℕ → ℕ → k}
     (hX : clPfPat k₀ rS r t N A X) (hK : clPfPat k₀ rS r t A A K) {i : ℕ} (hi : r + i * t + t ≤ A) :
@@ -353,8 +350,7 @@ theorem clPf_blk_mulR (hr : k₀ + rS < r) (ht : 0 < t) {N A : ℕ} (hAN : A ≤
     have x1 := x.2.1
     rw [e1] at g1
     rw [e2] at x1
-    have hb := clPf_beta_blk hr ht (le_antisymm x1 g1)
-    exact hnot (Finset.mem_Ico.mpr hb)
+    exact hnot (Finset.mem_Ico.mpr (clPf_beta_blk hr ht (le_antisymm x1 g1)))
 
 theorem clPf_top_mulL {N A : ℕ} (hAN : A ≤ N) {G X : ℕ → ℕ → k} (hX : clPfPat k₀ rS r t N A X) {p p' : ℕ} (hp' : p' < A) :
     clPfMul N G X p p' = clPfMul A G X p p' := by

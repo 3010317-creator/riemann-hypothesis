@@ -76,56 +76,49 @@ private theorem step_seq (hb : b ≠ 0) (hc : c ≠ 0) (h : ℤ)
     (hI : InvAt (normEDS b c d) b c d h) :
     (SomosAt (normEDS b c d) b c (2 * h) ∧ InvAt (normEDS b c d) b c d (2 * h)) ∧
       (SomosAt (normEDS b c d) b c (2 * h + 1) ∧ InvAt (normEDS b c d) b c d (2 * h + 1)) := by
+  have a1 : h - 1 + 2 = h + 1 := by ring
+  have a2 : h - 1 - 2 = h - 3 := by ring
+  have a3 : h - 1 + 1 = h := by ring
+  have a4 : h - 1 - 1 = h - 2 := by ring
+  have b1 : h + 1 + 2 = h + 3 := by ring
+  have b2 : h + 1 - 2 = h - 1 := by ring
+  have b3 : h + 1 + 1 = h + 2 := by ring
+  have b4 : h + 1 - 1 = h := by ring
   have sm1 := hS (h - 1) le_rfl (by omega)
   have s0 := hS h (by omega) (by omega)
   have s1 := hS (h + 1) (by omega) le_rfl
   simp only [SomosAt, InvAt] at sm1 s0 s1 hI ⊢
-  rw [show h - 1 + 2 = h + 1 by ring, show h - 1 - 2 = h - 3 by ring, show h - 1 + 1 = h by ring,
-    show h - 1 - 1 = h - 2 by ring] at sm1
-  rw [show h + 1 + 2 = h + 3 by ring, show h + 1 - 2 = h - 1 by ring,
-    show h + 1 + 1 = h + 2 by ring, show h + 1 - 1 = h by ring] at s1
+  rw [a1, a2, a3, a4] at sm1
+  rw [b1, b2, b3, b4] at s1
   set w := normEDS b c d with hw
-  have hE0 : w (2 * h) * b = w (h - 1) ^ 2 * w h * w (h + 2) - w (h - 2) * w h * w (h + 1) ^ 2 :=
-    normEDS_even b c d h
   have hE2 : w (2 * h + 2) * b =
       w h ^ 2 * w (h + 1) * w (h + 3) - w (h - 1) * w (h + 1) * w (h + 2) ^ 2 := by
     have := normEDS_even b c d (h + 1)
-    rwa [show 2 * (h + 1) = 2 * h + 2 by ring, show h + 1 - 1 = h by ring,
-      show h + 1 + 2 = h + 3 by ring, show h + 1 - 2 = h - 1 by ring,
-      show h + 1 + 1 = h + 2 by ring] at this
+    rwa [show 2 * (h + 1) = 2 * h + 2 by ring, b4, b1, b2, b3] at this
   have hEm2 : w (2 * h - 2) * b =
       w (h - 2) ^ 2 * w (h - 1) * w (h + 1) - w (h - 3) * w (h - 1) * w h ^ 2 := by
     have := normEDS_even b c d (h - 1)
-    rwa [show 2 * (h - 1) = 2 * h - 2 by ring, show h - 1 - 1 = h - 2 by ring,
-      show h - 1 + 2 = h + 1 by ring, show h - 1 - 2 = h - 3 by ring,
-      show h - 1 + 1 = h by ring] at this
-  have hO1 : w (2 * h + 1) = w (h + 2) * w h ^ 3 - w (h - 1) * w (h + 1) ^ 3 :=
-    normEDS_odd b c d h
+    rwa [show 2 * (h - 1) = 2 * h - 2 by ring, a4, a1, a2, a3] at this
   have hOm1 : w (2 * h - 1) = w (h + 1) * w (h - 1) ^ 3 - w (h - 2) * w h ^ 3 := by
     have := normEDS_odd b c d (h - 1)
-    rwa [show 2 * (h - 1) + 1 = 2 * h - 1 by ring, show h - 1 + 2 = h + 1 by ring,
-      show h - 1 - 1 = h - 2 by ring, show h - 1 + 1 = h by ring] at this
+    rwa [show 2 * (h - 1) + 1 = 2 * h - 1 by ring, a1, a4, a3] at this
   have hO3 : w (2 * h + 3) = w (h + 3) * w (h + 1) ^ 3 - w h * w (h + 2) ^ 3 := by
     have := normEDS_odd b c d (h + 1)
-    rwa [show 2 * (h + 1) + 1 = 2 * h + 3 by ring, show h + 1 + 2 = h + 3 by ring,
-      show h + 1 - 1 = h by ring, show h + 1 + 1 = h + 2 by ring] at this
+    rwa [show 2 * (h + 1) + 1 = 2 * h + 3 by ring, b1, b4, b3] at this
   have ne1 := hne (h - 1) le_rfl (by omega)
   have ne2 := hne (h + 1) (by omega) (by omega)
   have ne3 := hne (h + 2) (by omega) le_rfl
   obtain ⟨e1, e2⟩ := step_even b c d (w (h - 3)) (w (h - 2)) (w (h - 1)) (w h) (w (h + 1))
     (w (h + 2)) (w (h + 3)) (w (2 * h)) (w (2 * h + 2)) (w (2 * h - 2)) (w (2 * h + 1))
-    (w (2 * h - 1)) hb hc ne1 ne2 ne3 hE0 hE2 hEm2 hO1 hOm1 (by linear_combination sm1)
-    (by linear_combination s0) (by linear_combination s1) hI
+    (w (2 * h - 1)) hb hc ne1 ne2 ne3 (normEDS_even b c d h) hE2 hEm2 (normEDS_odd b c d h) hOm1
+    (by linear_combination sm1) (by linear_combination s0) (by linear_combination s1) hI
   obtain ⟨o1, o2⟩ := step_odd b c d (w (h - 2)) (w (h - 1)) (w h) (w (h + 1)) (w (h + 2))
     (w (h + 3)) (w (2 * h)) (w (2 * h + 2)) (w (2 * h + 1)) (w (2 * h - 1)) (w (2 * h + 3))
-    hb hc ne1 ne3 hE0 hE2 hO1 hOm1 hO3 (by linear_combination s0) (by linear_combination s1) hI
-  refine ⟨⟨e1, e2⟩, ?_, ?_⟩
-  · rw [show 2 * h + 1 + 2 = 2 * h + 3 by ring, show 2 * h + 1 - 2 = 2 * h - 1 by ring,
-      show 2 * h + 1 + 1 = 2 * h + 2 by ring, show 2 * h + 1 - 1 = 2 * h by ring]
-    exact o1
-  · rw [show 2 * h + 1 + 2 = 2 * h + 3 by ring, show 2 * h + 1 - 2 = 2 * h - 1 by ring,
-      show 2 * h + 1 + 1 = 2 * h + 2 by ring, show 2 * h + 1 - 1 = 2 * h by ring]
-    exact o2
+    hb hc ne1 ne3 (normEDS_even b c d h) hE2 (normEDS_odd b c d h) hOm1 hO3
+    (by linear_combination s0) (by linear_combination s1) hI
+  rw [show 2 * h + 1 + 2 = 2 * h + 3 by ring, show 2 * h + 1 - 2 = 2 * h - 1 by ring,
+    show 2 * h + 1 + 1 = 2 * h + 2 by ring, show 2 * h + 1 - 1 = 2 * h by ring]
+  exact ⟨⟨e1, e2⟩, o1, o2⟩
 
 end Induction
 

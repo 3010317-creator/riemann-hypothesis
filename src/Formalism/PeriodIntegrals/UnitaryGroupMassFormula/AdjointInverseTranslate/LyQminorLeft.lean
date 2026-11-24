@@ -82,12 +82,10 @@ theorem lx_herm_eI (k r : ℕ) (v : Fin (2 * r + k + 1) → ℂ) (a : Fin r) :
     · rw [lf_H_eI, ite_eq_left rfl, one_mul]
     · intro q _ hq
       rw [lf_H_eI, ite_eq_right hq, zero_mul]
-    · intro hn
-      exact absurd (Finset.mem_univ _) hn
+    · exact fun hn => absurd (Finset.mem_univ _) hn
   · intro t _ ht
     rw [Pi.star_apply, lf_bvec_apply, ite_eq_right ht, star_zero, zero_mul]
-  · intro hn
-    exact absurd (Finset.mem_univ _) hn
+  · exact fun hn => absurd (Finset.mem_univ _) hn
 
 theorem lx_sum_red {n m : ℕ} (e : Fin m → Fin n) (he : Function.Injective e) (F : Fin n → ℂ)
     (hF : ∀ j, j ∉ Set.range e → F j = 0) : ∑ j, F j = ∑ b, F (e b) := by
@@ -156,8 +154,7 @@ theorem coef_left_aa : CoefLeftAA := by
   · intro a
     simp only [of_apply]
     rw [hrow _ _ ?_, ite_eq_left rfl]
-    intro c hc
-    exact lx_esI_ne k r _ _ (by omega)
+    exact fun c hc => lx_esI_ne k r _ _ (by omega)
 
 theorem coef_left_aa_vector : CoefLeftAAv := by
   unfold CoefLeftAAv
@@ -174,15 +171,12 @@ theorem coef_left_aa_vector : CoefLeftAAv := by
       (fun j => g⁻¹ (B l) j * s⁻¹ j (eI k r (Fin.castLE hm a))) ?_).trans ?_
     · intro b b' h
       apply Fin.ext
-      have h2 := congrArg Fin.val h
-      simp only [lf_eI_val, Fin.coe_castLE] at h2
-      exact h2
+      simpa only [lf_eI_val, Fin.coe_castLE] using congrArg Fin.val h
     · intro j hj
       show g⁻¹ (B l) j * s⁻¹ j (eI k r (Fin.castLE hm a)) = 0
       by_cases hle : (Fin.castLE hm a).val ≤ j.val
       · rw [lf_S_invCol k r z s hs (Fin.castLE hm a) j hle, ite_eq_right, mul_zero]
-        intro he
-        exact hj ⟨a, he.symm⟩
+        exact fun he => hj ⟨a, he.symm⟩
       · exfalso
         apply hj
         push Not at hle

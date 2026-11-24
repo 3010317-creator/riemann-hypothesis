@@ -37,8 +37,7 @@ theorem linearIndependent_pow_of_transcendental {x : K} (hx : Transcendental k x
   simp only [hp, finsetSum_coeff, coeff_monomial, coeff_zero] at h
   rw [Finset.sum_eq_single i] at h
   · simpa using h
-  · intro j _ hj
-    exact Finsupp.single_eq_of_ne' (fun h' => hj (Fin.ext h'))
+  · exact fun j _ hj => Finsupp.single_eq_of_ne' (fun h' => hj (Fin.ext h'))
   · intro h'; exact absurd (Finset.mem_univ i) h'
 
 theorem adjoin_inv_eq {x : K} :
@@ -132,8 +131,7 @@ theorem finrank_le_deg_poleDivisor {x : K} (hx : Transcendental k x) :
             fun i : Fin (l + 1) => x ^ (i : ℕ) := by
           funext i
           simp
-        rw [heq]
-        exact h
+        rwa [heq]
       convert linearIndependent_smul hb' b.linearIndependent using 1
       funext p
       simp [G, Algebra.smul_def]
@@ -158,14 +156,12 @@ theorem deg_poleDivisor {x : K} (hx : Transcendental k x) :
     deg (poleDivisor x : Divisor k K) = finrank (IntermediateField.adjoin k {x}) K := by
   refine le_antisymm ?_ (finrank_le_deg_poleDivisor hx)
   have h := deg_zeroDivisor_le (transcendental_inv hx)
-  rw [zeroDivisor_inv, adjoin_inv_eq] at h
-  exact h
+  rwa [zeroDivisor_inv, adjoin_inv_eq] at h
 
 theorem deg_zeroDivisor {x : K} (hx : Transcendental k x) :
     deg (zeroDivisor x : Divisor k K) = finrank (IntermediateField.adjoin k {x}) K := by
   have h := deg_poleDivisor (transcendental_inv hx)
-  rw [poleDivisor_inv, adjoin_inv_eq] at h
-  exact h
+  rwa [poleDivisor_inv, adjoin_inv_eq] at h
 
 theorem deg_divisor (x : K) : deg (divisor x : Divisor k K) = 0 := by
   by_cases hx0 : x = 0
@@ -194,13 +190,11 @@ theorem finrank_L_add_divisor (D : Divisor k K) {x : K} (hx : x ≠ 0) :
   apply le_antisymm
   · refine LinearMap.finrank_le_finrank_of_injective
       (f := (LinearMap.mulLeft k x).restrict fun z hz => mul_mem_L hx hz) ?_
-    intro a b h
-    exact Subtype.ext (mul_left_cancel₀ hx (congrArg Subtype.val h))
+    exact fun a b h => Subtype.ext (mul_left_cancel₀ hx (congrArg Subtype.val h))
   · refine LinearMap.finrank_le_finrank_of_injective
       (f := (LinearMap.mulLeft k x⁻¹).restrict fun z hz =>
         mul_mem_L (inv_ne_zero hx) (hD.symm ▸ hz)) ?_
-    intro a b h
-    exact Subtype.ext (mul_left_cancel₀ (inv_ne_zero hx) (congrArg Subtype.val h))
+    exact fun a b h => Subtype.ext (mul_left_cancel₀ (inv_ne_zero hx) (congrArg Subtype.val h))
 
 end Divisor
 

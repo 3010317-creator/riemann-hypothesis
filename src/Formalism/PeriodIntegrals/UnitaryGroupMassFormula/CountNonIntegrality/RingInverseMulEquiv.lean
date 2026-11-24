@@ -71,8 +71,7 @@ theorem ringInverse_mulEquiv {R S : Type*} [MonoidWithZero R] [MonoidWithZero S]
     rw [Ring.inverse_unit, e, Ring.inverse_unit]
     rfl
   · have hf : ¬ IsUnit (f x) := fun hu => h (by simpa using hu.map f.symm)
-    rw [Ring.inverse_non_unit x h, Ring.inverse_non_unit _ hf]
-    exact f0
+    rwa [Ring.inverse_non_unit x h, Ring.inverse_non_unit _ hf]
 
 theorem iE_mem_O (D : Formalism.BasicNotions.D7) (p : PlF D) (o : 𝓞 D.host.E) : (D.s.atP p).ιE (o : D.host.E) ∈ (D.s.atP p).O := by
   rw [(D.s.atP p).O_def]
@@ -110,8 +109,7 @@ theorem frame_mem {D : Formalism.BasicNotions.D7} {T : D.host.E} (Λ : Submodule
     rw [e1] at hx
     have hmem : x • F.fl.e b ∈ XS D F.fl := by
       unfold XS
-      apply Submodule.subset_span
-      exact ⟨b, x, hx, rfl⟩
+      exact Submodule.subset_span ⟨b, x, hx, rfl⟩
     unfold FlagG.fvec
     rw [Fin.snoc_castSucc]
     exact hXS hmem

@@ -52,9 +52,7 @@ theorem not_two_of_prime (𝔭 : Ideal (𝓞 D.host.F)) (h0 : 𝔭 ≠ ⊥)
   have hle : ∀ R : Ideal (𝓞 D.host.E), R.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) = 𝔭 →
       𝔭.map (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) ≤ R :=
     fun R hR => Ideal.map_le_iff_le_comap.2 (le_of_eq hR.symm)
-  have e1 := hmax.eq_of_le hP.ne_top (hle P hPc)
-  have e2 := hmax.eq_of_le hQ.ne_top (hle Q hQc)
-  exact hPQ (e1.symm.trans e2)
+  exact hPQ ((hmax.eq_of_le hP.ne_top (hle P hPc)).symm.trans (hmax.eq_of_le hQ.ne_top (hle Q hQc)))
 
 def sigO : 𝓞 D.host.E ≃+* 𝓞 D.host.E := RingOfIntegers.mapRingEquiv (starRingAut : D.host.E ≃+* D.host.E)
 
@@ -383,8 +381,7 @@ theorem root_of_idem (hQ : QuadAlg T t n) (h : IdemNT A) : ∃ β : K, β ^ 2 - 
   obtain ⟨x, y, rfl⟩ := hQ.span' e
   have he' : (algebraMap K A y * T + algebraMap K A x) * (algebraMap K A y * T + algebraMap K A x) =
       algebraMap K A y * T + algebraMap K A x := by
-    rw [add_comm (algebraMap K A y * T)]
-    exact he
+    rwa [add_comm (algebraMap K A y * T)]
   rw [linear_mul_linear_of_quadAlg hQ] at he'
   have key : algebraMap K A (x * x - y * y * n - x) +
       algebraMap K A (y * x + x * y + y * y * t - y) * T = 0 := by
@@ -430,8 +427,7 @@ theorem idem_of_root (hQ : QuadAlg T t n) {β : K} (hβ : β ^ 2 - t * β + n = 
     rw [hX, hY]
   · intro h0
     have h1 : algebraMap K A (-(c * (t - β))) + algebraMap K A c * T = 0 := by
-      rw [add_comm]
-      exact h0
+      rwa [add_comm]
     exact hc0 (hQ.indep' _ _ h1).2
   · intro h0
     have h1 : algebraMap K A (-(c * (t - β)) - 1) + algebraMap K A c * T = 0 := by
@@ -512,8 +508,7 @@ theorem mem_OOv_of_val {a : K} (h : v.valuation K a ≤ 1) : a ∈ OOv (K := K) 
     show a ∈ IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime K v
     rw [IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime_eq_valuationSubring]
     exact (Valuation.mem_valuationSubring_iff _ _).2 h
-  rw [IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime_toSubring] at h1
-  exact h1
+  rwa [IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime_toSubring] at h1
 
 theorem exists_inv_mod (n : ℕ) {s : R} (hs : s ∉ v.asIdeal) : ∃ t : R, 1 - s * t ∈ v.asIdeal ^ n := by
   have h1 : Ideal.span {s} ⊔ v.asIdeal = ⊤ := by
@@ -528,8 +523,7 @@ theorem exists_inv_mod (n : ℕ) {s : R} (hs : s ∉ v.asIdeal) : ∃ t : R, 1 -
   obtain ⟨t, rfl⟩ := Ideal.mem_span_singleton'.1 hy
   refine ⟨t, ?_⟩
   have : 1 - s * t = z := by rw [← hyz]; ring
-  rw [this]
-  exact hz
+  rwa [this]
 
 theorem approx (c : v.adicCompletionIntegers K) (n : ℕ) :
     ∃ r : R, Valued.v ((c : v.adicCompletion K) - algebraMap K (v.adicCompletion K) (algebraMap R K r)) ≤
@@ -622,8 +616,7 @@ theorem nsub_le {K : Type*} [NormedField K] [IsUltrametricDist K] (a b : K) : �
 
 theorem root_norm_le {K : Type*} [NormedField K] [IsUltrametricDist K] {tr nm β : K} (htr : ‖tr‖ ≤ 1)
     (hnm : ‖nm‖ ≤ 1) (h : β ^ 2 - tr * β + nm = 0) : ‖β‖ ≤ 1 := by
-  by_contra hb
-  push Not at hb
+  by_contra! hb
   have h1 : β ^ 2 = tr * β - nm := by linear_combination h
   have hn : ‖β‖ ^ 2 ≤ max (‖tr‖ * ‖β‖) ‖nm‖ := by
     rw [← norm_pow, h1, ← norm_mul]
@@ -761,8 +754,7 @@ theorem root_of_twoOver (h : ThetaAt p θ c tr nm) (h2 : TwoOver p.asIdeal) :
       refine Ideal.IsDedekindDomain.ramificationIdx'_ne_zero ?_ hRp ?_
       · exact Ideal.map_ne_bot_of_ne_bot hq0
       · rw [Ideal.map_le_iff_le_comap]; exact le_of_eq hRl.over
-    have hf := Ideal.inertiaDeg'_pos p.asIdeal R
-    exact Nat.one_le_iff_ne_zero.2 (Nat.mul_ne_zero he hf.ne')
+    exact Nat.one_le_iff_ne_zero.2 (Nat.mul_ne_zero he (Ideal.inertiaDeg'_pos p.asIdeal R).ne')
   have hle : p.asIdeal.ramificationIdx' P * p.asIdeal.inertiaDeg' P +
       p.asIdeal.ramificationIdx' Q * p.asIdeal.inertiaDeg' Q ≤ 2 := by
     rw [← hsum]
@@ -792,8 +784,7 @@ theorem root_of_twoOver (h : ThetaAt p θ c tr nm) (h2 : TwoOver p.asIdeal) :
   have ha0 : ‖iotaR p a ^ 2 - iotaR p tr * iotaR p a + iotaR p nm‖ < 1 := by
     have e : iotaR p a ^ 2 - iotaR p tr * iotaR p a + iotaR p nm = iotaR p (a ^ 2 - tr * a + nm) := by
       simp only [map_add (f := _), map_sub, map_mul, map_pow]
-    rw [e, norm_int_lt_one]
-    exact hfa
+    rwa [e, norm_int_lt_one]
   exact newton_quad _ _ _ hdisc (norm_int_eq_one p c h.hcp) (norm_four_le p) _ ha0
 
 theorem root_iff (h : ThetaAt p θ c tr nm) :

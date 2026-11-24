@@ -241,9 +241,7 @@ theorem qr_multOne_of (hS : Qr.ExistsSingMax) (hD : Qr.DualMinor) (hP : Qr.SpanS
     by_contra hne
     have haa : a = a₀ := by
       funext x
-      have e1 := key _ hw a hne x
-      have e2 := key _ h1 a₀ ha₀ x
-      exact Nat.cast_injective (R := ℂ) (e1.trans e2.symm)
+      exact Nat.cast_injective (R := ℂ) ((key _ hw a hne x).trans (key _ h1 a₀ ha₀ x).symm)
     subst haa
     apply hne
     rw [map_sub, map_sub, map_smul, map_smul, smul_eq_mul, hc, div_mul_cancel₀ _ ha₀, sub_self]

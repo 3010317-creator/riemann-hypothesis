@@ -109,8 +109,7 @@ theorem conv_finDosetSupp {k : Type} [CommRing k] {K : Subgroup G} (hK : IsComme
       (finite_cosets_in_doset hK t).biUnion fun y _ => Set.finite_singleton _
   refine ⟨hT.toFinset, fun g hg => ?_⟩
   obtain ⟨x, hx⟩ : ∃ x : G ⧸ K, f₁ x.out * f₂ (x.out⁻¹ * g) ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hg (finsum_eq_zero_of_forall_eq_zero h)
   have h1 : f₁ x.out ≠ 0 := left_ne_zero_of_mul hx
   have h2 : f₂ (x.out⁻¹ * g) ≠ 0 := right_ne_zero_of_mul hx
@@ -130,7 +129,6 @@ theorem hecke_convolution_mem_holds : Formalism.UG.HeckeConvMem := by
   intro G _ K k _ hK f₁ hf₁ f₂ hf₂
   have h1 : IsBiInv K f₁ ∧ FinDosetSupp K f₁ := hf₁
   have h2 : IsBiInv K f₂ ∧ FinDosetSupp K f₂ := hf₂
-  show IsBiInv K (conv K f₁ f₂) ∧ FinDosetSupp K (conv K f₁ f₂)
   exact ⟨conv_biInv K f₁ f₂ h1.1 h2.1, conv_finDosetSupp hK f₁ f₂ h1.2 h2.2⟩
 
 theorem convolution_count_holds : Formalism.UG.ConvCount := by

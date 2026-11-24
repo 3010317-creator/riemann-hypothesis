@@ -556,8 +556,7 @@ theorem badFinite {Λ₀ : Submodule (𝓞 K) V} (hΛ₀ : Submodule.IsFullLatti
       rwa [e, Ideal.mem_bot] at this)
     refine ⟨⟨𝔭.1, 𝔭.2.isPrime, hne⟩, ?_, rfl⟩
     show 𝔭.1 ∣ Ideal.span {a}
-    rw [Ideal.dvd_iff_le, Ideal.span_le, Set.singleton_subset_iff]
-    exact h𝔭
+    rwa [Ideal.dvd_iff_le, Ideal.span_le, Set.singleton_subset_iff]
   refine ⟨hfin.toFinset, fun 𝔭 h𝔭 => ?_⟩
   have haP : a ∉ 𝔭.1 := fun h => h𝔭 (hfin.mem_toFinset.2 h)
   have e : a = (n₁ : 𝓞 F) * (n₂ : 𝓞 F) := by rw [ha]; push_cast; ring
@@ -1119,8 +1118,7 @@ theorem det_unit_of_selfdual (hF : IsFixF K F) {h : V →ₗ⋆[K] V →ₗ[K] K
   have hdual : ∀ x ∈ locF 𝔭 (spanO β), ∀ y ∈ locF 𝔭 (spanO β),
       h y x ∈ locF 𝔭 (1 : Submodule (𝓞 K) K) := by
     intro x hx
-    rw [← hsd] at hx
-    exact hx
+    rwa [← hsd] at hx
   have hG : Ent (SP K 𝔭) (gramK h β) := fun i j =>
     mem_SP_iff_locF.mpr (hdual _ (hβ j) _ (hβ i))
   have hinv : gramK h β * (gramK h β)⁻¹ = 1 := Matrix.mul_nonsing_inv _ hunit
@@ -1213,10 +1211,8 @@ theorem NU.inv {x : K} (hx : NU 𝔭 x) : NU 𝔭 x⁻¹ := by
   have e : x⁻¹ * (a⁻¹ * star a⁻¹) = (x * (a * star a))⁻¹ := by
     rw [hs, mul_inv, mul_inv]
   refine ⟨a⁻¹, inv_ne_zero ha, ?_, ?_⟩
-  · rw [e]
-    exact h2
-  · rw [e, inv_inv]
-    exact h1
+  · rwa [e]
+  · rwa [e, inv_inv]
 
 theorem NU.of_mul_left {x y : K} (hxy : NU 𝔭 (x * y)) (hy : NU 𝔭 y) (hy0 : y ≠ 0) : NU 𝔭 x := by
   have h := NU.mul hxy (NU.inv hy)
@@ -1233,10 +1229,8 @@ theorem NU.norm_mul {u z : K} (h1 : u ∈ SP K 𝔭) (h2 : u⁻¹ ∈ SP K 𝔭)
     calc star z * u * z * (z⁻¹ * (star z)⁻¹) = u * (z * z⁻¹) * (star z * (star z)⁻¹) := by ring
       _ = u := by rw [mul_inv_cancel₀ hz, mul_inv_cancel₀ hsz, mul_one, mul_one]
   refine ⟨z⁻¹, inv_ne_zero hz, ?_, ?_⟩
-  · rw [e]
-    exact h1
-  · rw [e]
-    exact h2
+  · rwa [e]
+  · rwa [e]
 
 theorem NU.prod {ι : Type} (s : Finset ι) (f : ι → K) (hf : ∀ i ∈ s, NU 𝔭 (f i)) :
     NU 𝔭 (∏ i ∈ s, f i) :=
@@ -1252,10 +1246,8 @@ theorem NU.pair {A C : K} (hA : A ≠ 0) (hAs : star A = A) (h1 : C * A⁻¹ ∈
     calc A * C * (A⁻¹ * A⁻¹) = C * A⁻¹ * (A * A⁻¹) := by ring
       _ = C * A⁻¹ := by rw [mul_inv_cancel₀ hA, mul_one]
   refine ⟨A⁻¹, inv_ne_zero hA, ?_, ?_⟩
-  · rw [e]
-    exact h1
-  · rw [e, mul_inv, inv_inv, mul_comm]
-    exact h2
+  · rwa [e]
+  · rwa [e, mul_inv, inv_inv, mul_comm]
 
 section Vec
 
@@ -1272,8 +1264,7 @@ theorem linInd_orth {ι : Type} {h : V →ₗ⋆[K] V →ₗ[K] K} (g : ι → V
     exact (mul_eq_zero.1 key).resolve_right (hn i)
   · intro j _ hji
     rw [map_smul, ho i j (Ne.symm hji), smul_zero]
-  · intro hi'
-    exact absurd hi hi'
+  · exact fun hi' => absurd hi hi'
 
 end Vec
 
@@ -1365,8 +1356,7 @@ theorem last_unit_holds : LastUnit := by
         | mem y hy =>
           obtain ⟨r, hr⟩ := hint (h y (γ i)) (Finset.mem_image.mpr ⟨(y, i), Finset.mem_product.mpr ⟨hy, Finset.mem_univ _⟩, rfl⟩)
           refine ⟨r, ?_⟩
-          rw [← algebraMap_smul K d, LinearMap.map_smul, smul_eq_mul]
-          exact hr
+          rwa [← algebraMap_smul K d, LinearMap.map_smul, smul_eq_mul]
         | zero => exact ⟨0, by simp⟩
         | add x y _ _ hx hy =>
           obtain ⟨a, ha⟩ := hx

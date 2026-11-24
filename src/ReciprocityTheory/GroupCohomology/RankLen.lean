@@ -62,8 +62,7 @@ theorem len_K_eq_len_quot (hM : IsFiniteLength R M) (r : R) :
     (LinearEquiv.ofEq _ _ (smul_top_eq_range r)).length_eq
   have hMt : Module.length R M ≠ ⊤ := Module.length_ne_top_iff.2 hM
   have hL : Module.length R (LinearMap.range φ) ≠ ⊤ := fun h => hMt (by rw [h1, h, add_top])
-  rw [h3] at h2
-  rw [h1, add_comm (Module.length R (LinearMap.range φ))] at h2
+  rw [h3, h1, add_comm (Module.length R (LinearMap.range φ))] at h2
   exact WithTop.add_right_cancel hL h2
 
 end General
@@ -119,8 +118,7 @@ theorem len_quot_pow {t : R} (ht : Irreducible t) (k : ℕ) :
       constructor
       · intro hz
         have hz' : z ∈ Ideal.span {t ^ k} := by
-          rw [← Ideal.Quotient.eq_zero_iff_mem]
-          exact hz
+          rwa [← Ideal.Quotient.eq_zero_iff_mem]
         obtain ⟨w, rfl⟩ := Ideal.mem_span_singleton'.1 hz'
         exact ⟨Submodule.Quotient.mk w, by
           simp only [f, Submodule.mapQ_apply, LinearMap.mulLeft_apply]
@@ -146,8 +144,7 @@ theorem torsion_finLen : IsFiniteLength R (torsion R H) := by
     (DirectSum.linearEquivFunOnFintype R ι (fun i => R ⧸ R ∙ p i ^ e i)).length_eq,
     Module.length_pi_of_fintype]
   have : ∀ i, Module.length R (R ⧸ R ∙ p i ^ e i) = e i := fun i => len_quot_pow (hp i) (e i)
-  simp only [this]
-  exact (ENat.sum_lt_top.mpr fun i _ => ENat.natCast_lt_top _).ne
+  simpa only [this] using (ENat.sum_lt_top.mpr fun i _ => ENat.natCast_lt_top _).ne
 
 theorem finrank_torsion_eq_zero : Module.finrank R (torsion R H) = 0 := by
   rw [Module.finrank_eq_zero_iff]
@@ -191,15 +188,11 @@ theorem len_K_torsion {r : R} (hr : r ≠ 0) :
       map_smul' := fun c x => rfl }
   have hf : Function.Bijective f := by
     constructor
-    · intro x y hxy
-      apply Subtype.ext
-      apply Subtype.ext
-      exact congrArg (fun z : K H r => (z : H)) hxy
+    · exact fun x y hxy => Subtype.ext (Subtype.ext (congrArg (fun z : K H r => (z : H)) hxy))
     · intro y
       refine ⟨⟨⟨y, hmem y (mem_K.1 y.2)⟩, ?_⟩, rfl⟩
       rw [mem_K]
-      apply Subtype.ext
-      exact mem_K.1 y.2
+      exact Subtype.ext (mem_K.1 y.2)
   exact ((LinearEquiv.ofBijective f hf).length_eq).symm
 
 end DVR
@@ -266,8 +259,7 @@ theorem rankLen_holds : RankLenStatement.{u} := by
     simp only [LinearMap.smul_apply, LinearMap.id_apply]
     rw [Cx.Hom.H, Submodule.mapQ_apply, ← Submodule.Quotient.mk_smul]
     congr 1
-    apply Subtype.ext
-    exact hi n z.1
+    exact Subtype.ext (hi n z.1)
   have hrange : ∀ n, LinearMap.range (i.H n) = (t ^ m) • (⊤ : Submodule R (L.H n)) := by
     intro n
     ext x

@@ -104,8 +104,7 @@ theorem exists_intBasis : ∃ b : Module.Basis (Fin (Module.finrank F E)) F E,
   rw [Module.Basis.isUnitSMul_apply]
   have e : ((y : F)) • b0 i = y • b0 i := by
     rw [← Int.cast_smul_eq_zsmul F y (b0 i)]
-  rw [e]
-  exact h
+  rwa [e]
 
 def ib : Module.Basis (Fin (Module.finrank F E)) F E := (exists_intBasis (F := F) (E := E)).choose
 
@@ -236,8 +235,7 @@ theorem unitary_local_mass_identity : StepU := by
       have h1 := boxS_neg hy
       have e : x - (x + y) = -y := by abel
       show x - (x + y) ∈ boxS (E := E) v (cG v g r)
-      rw [e]
-      exact h1
+      rwa [e]
   unfold volU
   rw [← hmp.measure_preimage_equiv, hpre, Measure.prod_prod, ENNReal.toReal_mul]
 

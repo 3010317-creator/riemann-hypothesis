@@ -113,8 +113,7 @@ theorem maj_orth (X : Data E r) {u : Frame X.Ψ r} (hu : IsOrth X u) (τ : X.Ψ)
     · simp [hN]
     · intro k _ hk
       simp [hN, Matrix.one_apply_ne hk]
-    · intro h
-      exact absurd (Finset.mem_univ b) h
+    · exact fun h => absurd (Finset.mem_univ b) h
   have hAg : Ag X.p0 X.p0_le N = 1 := by
     ext a b
     simp only [Ag, Matrix.of_apply, hsf]
@@ -133,8 +132,7 @@ theorem maj_orth (X : Data E r) {u : Frame X.Ψ r} (hu : IsOrth X u) (τ : X.Ψ)
       ext k
       simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_map]
       constructor
-      · intro hk
-        exact ⟨⟨k, hk⟩, Fin.ext rfl⟩
+      · exact fun hk => ⟨⟨k, hk⟩, Fin.ext rfl⟩
       · rintro ⟨a, rfl⟩
         exact a.isLt
     rw [hset, Finset.sum_map]

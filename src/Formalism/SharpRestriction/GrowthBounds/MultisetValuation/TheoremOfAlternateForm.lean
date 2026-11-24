@@ -73,15 +73,13 @@ section Val
 
 variable {p : ℕ} [Fact p.Prime] (X : Sys p)
 
-theorem frac_of_place (v : X.Pl) : IsFractionRing X.G.O X.G.Kf := by
-  exact (X.G.P.setting v).frac_O
+theorem frac_of_place (v : X.Pl) : IsFractionRing X.G.O X.G.Kf := (X.G.P.setting v).frac_O
 
 abbrev piK : X.G.Kf := algebraMap X.G.O X.G.Kf X.vp
 
 theorem piK_ne (hfr : IsFractionRing X.G.O X.G.Kf) : piK X ≠ 0 := by
   haveI := hfr
-  intro h
-  exact X.unif.ne_zero (IsFractionRing.injective X.G.O X.G.Kf (h.trans (map_zero _).symm))
+  exact fun h => X.unif.ne_zero (IsFractionRing.injective X.G.O X.G.Kf (h.trans (map_zero _).symm))
 
 theorem vsc_def (g : ℝ) : X.vsc g = piK X ^ (⌈g * (X.eO : ℝ)⌉) := rfl
 
@@ -109,8 +107,7 @@ theorem vGeK_of_zpow (hfr : IsFractionRing X.G.O X.G.Kf) {x : X.G.Kf} {g : ℝ} 
   have hn' : n = ⌈g * (X.eO : ℝ)⌉ + k := by omega
   rw [hx, hn', zpow_add₀ (piK_ne X hfr), zpow_natCast, map_mul, map_pow, vsc_def, mul_assoc]
 
-theorem vGeK_zero (g : ℝ) : X.vGeK 0 g := by
-  exact (vGeK_iff X).2 ⟨0, by simp⟩
+theorem vGeK_zero (g : ℝ) : X.vGeK 0 g := (vGeK_iff X).2 ⟨0, by simp⟩
 
 theorem vGeK_add {x y : X.G.Kf} {g : ℝ} (hx : X.vGeK x g) (hy : X.vGeK y g) : X.vGeK (x + y) g := by
   obtain ⟨a, rfl⟩ := (vGeK_iff X).1 hx
@@ -150,8 +147,7 @@ theorem vGeK_mul (hfr : IsFractionRing X.G.O X.G.Kf) {x y : X.G.Kf} {g h : ℝ} 
 theorem vGeK_zero_iff {x : X.G.Kf} : X.vGeK x 0 ↔ x ∈ X.intK := by
   simp [vGeK_iff X, mem_intK X, vsc_def]
 
-theorem vGeK_one : X.vGeK 1 0 := by
-  exact (vGeK_zero_iff X).2 ((mem_intK X).2 ⟨1, map_one _⟩)
+theorem vGeK_one : X.vGeK 1 0 := (vGeK_zero_iff X).2 ((mem_intK X).2 ⟨1, map_one _⟩)
 
 theorem vGeK_multiset_prod (hfr : IsFractionRing X.G.O X.G.Kf) {ι : Type*} (f : ι → X.G.Kf) (μ : ℝ)
     (s : Multiset ι) (h : ∀ i ∈ s, X.vGeK (f i) μ) : X.vGeK (s.map f).prod ((Multiset.card s : ℝ) * μ) := by
@@ -183,8 +179,7 @@ theorem Rep.inv {x : X.G.Kf} {N : ℤ} (hx : Rep X x N) : Rep X x⁻¹ (-N) := b
   obtain ⟨u, rfl⟩ := hx
   exact ⟨u⁻¹, by rw [mul_inv, zpow_neg, map_units_inv]⟩
 
-theorem Rep.one : Rep X 1 0 := by
-  exact ⟨1, by simp⟩
+theorem Rep.one : Rep X 1 0 := ⟨1, by simp⟩
 
 theorem Rep.pow (hfr : IsFractionRing X.G.O X.G.Kf) {x : X.G.Kf} {N : ℤ} (hx : Rep X x N) (k : ℕ) :
     Rep X (x ^ k) (k * N) := by
@@ -234,8 +229,7 @@ theorem vGeK_iff_of_rep (hfr : IsFractionRing X.G.O X.G.Kf) {x : X.G.Kf} {N : �
   · intro h
     obtain ⟨a, ha⟩ := (vGeK_iff X).1 h
     rw [vsc_def] at ha
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     have hc : N < ⌈g * (X.eO : ℝ)⌉ := Int.lt_ceil.mpr hlt
     obtain ⟨k, hk⟩ := Int.eq_ofNat_of_zero_le (sub_nonneg.mpr hc.le)
     have e : ⌈g * (X.eO : ℝ)⌉ = N + k := by omega
@@ -243,16 +237,14 @@ theorem vGeK_iff_of_rep (hfr : IsFractionRing X.G.O X.G.Kf) {x : X.G.Kf} {N : �
     rw [e, zpow_add₀ (piK_ne X hfr), zpow_natCast, mul_assoc] at ha
     have ha' := mul_left_cancel₀ (zpow_ne_zero N (piK_ne X hfr)) ha
     have ha'' : algebraMap X.G.O X.G.Kf (X.vp ^ k * a) = algebraMap X.G.O X.G.Kf (u : X.G.O) := by
-      rw [map_mul, map_pow]
-      exact ha'
+      rwa [map_mul, map_pow]
     have hO := IsFractionRing.injective X.G.O X.G.Kf ha''
     apply X.unif.not_isUnit
     have hU : IsUnit (X.vp ^ k * a) := by
       rw [hO]
       exact u.isUnit
     exact isUnit_of_dvd_unit (dvd_mul_of_dvd_left (dvd_pow_self _ hk1) a) hU
-  · intro h
-    exact vGeK_of_zpow X hfr (u : X.G.O) h rfl
+  · exact fun h => vGeK_of_zpow X hfr (u : X.G.O) h rfl
 
 theorem vEqK_iff_of_rep (hfr : IsFractionRing X.G.O X.G.Kf) {x : X.G.Kf} {N : ℤ} (hx : Rep X x N) (g : ℝ) :
     X.vEqK x g ↔ 0 < X.eO ∧ g * (X.eO : ℝ) = N := by
@@ -268,8 +260,7 @@ theorem vEqK_iff_of_rep (hfr : IsFractionRing X.G.O X.G.Kf) {x : X.G.Kf} {N : �
       linarith
     refine ⟨he, le_antisymm h1 ?_⟩
     have hepos : (0 : ℝ) < X.eO := by exact_mod_cast he
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     have h5 : (N : ℝ) / X.eO * X.eO = N := by field_simp
     linarith [h2 ((N : ℝ) / X.eO) (by rw [lt_div_iff₀ hepos]; exact hlt)]
   · rintro ⟨he, h⟩
@@ -342,8 +333,7 @@ theorem vGe_iff {j : ℕ} {F : X.Fm j} {g : ℝ} : X.vGe j F g ↔ ∃ F0 ∈ X.
   unfold Sys.vGe
   exact mem_scale
 
-theorem vGe_zero (j : ℕ) (g : ℝ) : X.vGe j 0 g := by
-  exact (vGe_iff X).2 ⟨0, (X.Int j).zero_mem, smul_zero _⟩
+theorem vGe_zero (j : ℕ) (g : ℝ) : X.vGe j 0 g := (vGe_iff X).2 ⟨0, (X.Int j).zero_mem, smul_zero _⟩
 
 theorem vGe_add {j : ℕ} {F F' : X.Fm j} {g : ℝ} (h : X.vGe j F g) (h' : X.vGe j F' g) : X.vGe j (F + F') g := by
   obtain ⟨F0, h0, rfl⟩ := (vGe_iff X).1 h
@@ -530,8 +520,7 @@ theorem vGeK_FF (v : X.Pl) (m : ℕ → X.G.Kf) (hm : ∀ l ∈ Icc 1 X.mm, X.vE
   have h4 : ((muZ X.t (X.w v) j : ℤ) : ℝ) ≤
       ((X.vm v (x.1.val + 1) + ((X.G.P.n' v / 2 : ℕ) : ℤ) * ((X.t : ℤ) - 2 * x.2.val) : ℤ) : ℝ) := by
     exact_mod_cast h3
-  rw [Int.cast_add] at h4
-  exact h4
+  rwa [Int.cast_add] at h4
 
 theorem vGeK_hsymm (v : X.Pl) (m : ℕ → X.G.Kf) (hm : ∀ l ∈ Icc 1 X.mm, X.vEqK (m l) (X.vm v l)) (j : ℕ)
     (hj : j ≤ X.mm) (l : ℕ) :
@@ -547,8 +536,7 @@ theorem vGeK_hsymm (v : X.Pl) (m : ℕ → X.G.Kf) (hm : ∀ l ∈ Icc 1 X.mm, X
   rw [s.2] at h1
   have e : Multiset.map (⇑(MvPolynomial.eval (X.FF v m j)) ∘ MvPolynomial.X) s.1 =
       Multiset.map (fun x => X.FF v m j x) s.1 := Multiset.map_congr rfl fun x _ => by simp
-  rw [e]
-  exact h1
+  rwa [e]
 
 theorem vGeK_cl (v : X.Pl) (m : ℕ → X.G.Kf) (hm : ∀ l ∈ Icc 1 X.mm, X.vEqK (m l) (X.vm v l)) (j : ℕ)
     (hj : j ≤ X.mm) (l : ℕ) :
@@ -634,8 +622,7 @@ theorem Ciii (D : Formalism.BasicNotions.D7) (h3 : PointsLemma D X) (h2b : MassR
       (X.gv v (j + 1) + ∑ v' ∈ univ.erase v, X.g0v v' (j + 1) - X.dG j) := by
   obtain ⟨hc, hcr⟩ := Cii X v m hm j hj
   refine CiiiGen X v u m j (fun l hl => hu l (by rw [mem_Icc] at hl ⊢; omega)) hc hcr _ (h3 v j hj).2 ?_
-  intro G hG
-  exact vGe_mono X (frac_of_place X v) (le_of_eq (by ring)) (h2b v j hj G hG)
+  exact fun G hG => vGe_mono X (frac_of_place X v) (le_of_eq (by ring)) (h2b v j hj G hG)
 
 theorem eO_pos (v : X.Pl) : 0 < X.eO := by
   rcases Nat.eq_zero_or_pos X.eO with h0 | h0

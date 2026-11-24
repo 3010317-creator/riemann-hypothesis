@@ -479,10 +479,8 @@ lemma lower_pk {N : (Fin d → ℝ) → ℝ} (hN0 : ∀ z, 0 ≤ N z) (hint : In
     (integrable_mul_pk hint z₀ n) hpt
   rw [integral_finsetSum] at hmono
   · simp_rw [integral_const_mul, integral_sub_right_eq_self G] at hmono
-    rw [← Finset.sum_mul] at hmono
-    exact hmono
-  · intro m _
-    exact (hGint.comp_sub_right (fun j => z₀ j + (m j : ℝ))).const_mul _
+    rwa [← Finset.sum_mul] at hmono
+  · exact fun m _ => (hGint.comp_sub_right (fun j => z₀ j + (m j : ℝ))).const_mul _
 
 end Formalism.FourierDecayAlt.P.HLsc
 
@@ -621,8 +619,7 @@ lemma eq_zero_of_pair (σ : V f) (h : ∀ z, pair σ z = 0) : σ = 0 := by
   have h1 : ∀ v ∈ (Finset.univ : Finset (Fin f)), 2 * Complex.normSq (σ v) = 0 :=
     (Finset.sum_eq_zero_iff_of_nonneg (fun v _ => mul_nonneg (by norm_num) (Complex.normSq_nonneg _))).mp h0
   funext v
-  have h2 := h1 v (Finset.mem_univ v)
-  simpa using h2
+  simpa using h1 v (Finset.mem_univ v)
 
 section Lat
 

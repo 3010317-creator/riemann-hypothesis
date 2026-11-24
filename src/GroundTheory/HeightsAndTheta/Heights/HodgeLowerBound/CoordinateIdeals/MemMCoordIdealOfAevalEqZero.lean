@@ -74,9 +74,7 @@ theorem isValueAt_one {y : (Σ k, ι k) → Ω} {z : (Σ k, ι k) → ℂ} (hz :
   obtain ⟨d, g, h, hg, hh, hy, heq, hz0, rfl⟩ := hv
   have hsub : IsMultiHomog (g - h) d := by
     rw [sub_eq_add_neg]
-    refine isMultiHomog_add hg ?_
-    intro m hm
-    exact hh m (by simpa using hm)
+    exact isMultiHomog_add hg (fun m hm => hh m (by simpa using hm))
   have h0 : aeval y (g - h) = 0 := by rw [map_sub, heq, one_mul, sub_self]
   have := eval_eq_zero_of_mem_mcPts hz (mem_mCoordIdeal_of_aeval_eq_zero y hsub h0)
   rw [map_sub, map_sub, sub_eq_zero] at this

@@ -54,8 +54,7 @@ lemma muK_inv (ε : Fin n → Bool) : Measure.map (fun x : KG ε => x⁻¹) (muK
   have e := Measure.isMulInvariant_eq_smul_of_compactSpace ν (muK ε)
   have huniv : ν Set.univ = muK ε Set.univ := by
     rw [hν, Measure.map_apply measurable_inv MeasurableSet.univ, Set.preimage_univ]
-  rw [e] at huniv
-  rw [smul_apply, ENNReal.smul_def, smul_eq_mul] at huniv
+  rw [e, smul_apply, ENNReal.smul_def, smul_eq_mul] at huniv
   have hc : (ν.haarScalarFactor (muK ε) : ℝ≥0∞) = 1 :=
     (ENNReal.mul_eq_right (muK_univ_ne_zero ε) (muK_univ_ne_top ε)).mp huniv
   rw [e, ENNReal.coe_eq_one.mp hc, one_smul]

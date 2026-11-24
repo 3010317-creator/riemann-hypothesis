@@ -114,7 +114,6 @@ theorem seq_step (k : ℕ) : X ^ k ∣ seq W (k + 1) - seq W k := by
   induction k with
   | zero => rw [pow_zero]; exact one_dvd _
   | succ k ih =>
-    show X ^ (k + 1) ∣ T W (seq W (k + 1)) - T W (seq W k)
     exact contract W (X_dvd_seq W _) (X_dvd_seq W _) ih
 
 theorem seq_far (j i : ℕ) : X ^ j ∣ seq W (j + i) - seq W j := by
@@ -262,8 +261,7 @@ theorem wSeriesExistsUnique_holds : WSeriesUnique.{u} := by
 
 open WeierstrassSeriesLimit in
 theorem wSeriesLeadingTerm_holds : WSeriesLead.{u} := by
-  intro R _ W w hw
-  exact Formalism.ELL.WeierstrassSeriesLimit.lead W hw
+  exact fun R _ W w hw => Formalism.ELL.WeierstrassSeriesLimit.lead W hw
 
 open WeierstrassSeriesLimit in
 theorem wSeriesSubstUnique_holds : WSubstUnique.{u} := by

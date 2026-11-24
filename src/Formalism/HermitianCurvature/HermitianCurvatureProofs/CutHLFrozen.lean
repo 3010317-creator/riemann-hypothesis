@@ -117,10 +117,8 @@ theorem comm_AAx (Eu : Fin (2 * r + k + 1) → Fin (2 * r + k + 1) → A) (hG : 
       have hdet : (of fun (a l : Fin j) => xi (Fin.castLE (by omega) a) (c l)).det = 0 := by
         apply Matrix.det_eq_zero_of_column_eq_zero l
         intro a
-        simp only [of_apply, hl]
-        exact h0 _ a.isLt
-      simp only [hdet, zero_smul]
-      exact Commute.zero_right _
+        simpa only [of_apply, hl] using h0 _ a.isLt
+      simpa only [hdet, zero_smul] using Commute.zero_right _
     · push Not at hp
       refine Commute.smul_right ?_ _
       refine comm_qminor Eu hG _ _ u _ (fun i => ?_) hp
@@ -141,10 +139,8 @@ theorem comm_AAv (Eu : Fin (2 * r + k + 1) → Fin (2 * r + k + 1) → A) (hG : 
       have hdet : (of fun (a l : Fin j) => y (Fin.castLE (by omega) a) (c l)).det = 0 := by
         apply Matrix.det_eq_zero_of_column_eq_zero l
         intro a
-        simp only [of_apply, hl]
-        exact h0 _ a.isLt
-      simp only [hdet, zero_smul]
-      exact Commute.zero_right _
+        simpa only [of_apply, hl] using h0 _ a.isLt
+      simpa only [hdet, zero_smul] using Commute.zero_right _
     · push Not at hp
       refine Commute.smul_right ?_ _
       refine comm_qminor Eu hG _ _ _ _ hp (fun i => ?_)
@@ -234,8 +230,7 @@ private theorem sgn_sig_mul_y0_eq_star_esI_apply_of_mem_GV {k r : ℕ} (g : B.Ma
     calc Hpk k r * g⁻¹ = gᴴ * Hpk k r * g * g⁻¹ := by rw [hg']
       _ = gᴴ * Hpk k r := by rw [Matrix.mul_assoc (gᴴ * Hpk k r), Matrix.mul_nonsing_inv _ hu, Matrix.mul_one]
   have h2 := congrFun (congrFun h1 (GBasic.sig k r p)) (eI k r a)
-  rw [C2x6.Hpk_mul_apply, C2x6.mul_Hpk_apply] at h2
-  rw [hs, he, hn, mul_one, conjTranspose_apply] at h2
+  rw [C2x6.Hpk_mul_apply, C2x6.mul_Hpk_apply, hs, he, hn, mul_one, conjTranspose_apply] at h2
   have hy : PBG.y0 g a p = g⁻¹ p (eI k r a) := by
     simp [PBG.y0, bvec, mulVec, dotProduct, Pi.single_apply]
   rw [hy, h2]

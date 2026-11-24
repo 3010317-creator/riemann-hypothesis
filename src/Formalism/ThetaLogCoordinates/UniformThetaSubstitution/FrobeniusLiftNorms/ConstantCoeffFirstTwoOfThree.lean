@@ -80,8 +80,7 @@ theorem constantCoeff_first_two_of_three {F : MvPowerSeries (Fin 2) K} (hF : con
   · subst hd
     simp [MvPowerSeries.coeff_zero_eq_constantCoeff_apply, hF]
   · obtain ⟨s, hs⟩ : ∃ s, d s ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hd (Finsupp.ext h)
     rw [Finsupp.prod, map_prod, Finset.prod_eq_zero (Finsupp.mem_support_iff.2 hs), smul_zero]
     have h0 : constantCoeff ((![(X 0 : MvPowerSeries (Fin 3) K), X 1] : Fin 2 → MvPowerSeries (Fin 3) K) s) = 0 := by
@@ -147,8 +146,7 @@ theorem partial_coboundary_product {F : MvPowerSeries (Fin 2) K} (hF : constantC
 
 theorem include_three_zero : in3 (0 : MvPowerSeries (Fin 2) K) = 0 := by
   have h := MvPowerSeries.subst_sub (R := K) (has_subst_first_pair (K := K)) (0 : MvPowerSeries (Fin 2) K) 0
-  rw [sub_self, sub_self] at h
-  exact h
+  rwa [sub_self, sub_self] at h
 
 theorem partial_coboundary_h_series {p : ℕ} (σ : K →+* K) {F : MvPowerSeries (Fin 2) K} (hF : constantCoeff F = 0)
     (hl : cob F (lgF K p) = 0) (G : MvPowerSeries (Fin 2) K) (γ γ' : K) :

@@ -181,8 +181,7 @@ theorem stabilizerLatticeCoordinates_of (hB : StabilizerLatticeTwistedProduct) :
       have hy : ∀ p, (fun v => yOf x v p) - τ0 p (yOf x) ∈ (Λ p).map (embS φ 1) := by
         intro p
         have := hx p
-        rw [hdiff, hmemiff] at this
-        exact this
+        rwa [hdiff, hmemiff] at this
       obtain ⟨β, hβ, hyβ⟩ := (hset0 (yOf x)).2 hy
       refine ⟨β, hβ, ?_⟩
       rw [hS β, ← hSyOf x, hyβ]
@@ -215,8 +214,7 @@ theorem covolOne3C_of (hC : ChartC) (hL : StabilizerLatticeCoordinates) : Formal
   have hΓ : ∀ x, (∀ p, (fun v => x v p) - τ p x ∈ A p) ↔
       ∃ β : Formalism.L2.SG.Pf.VolPinAsm.StG w, (β : Formalism.L2.SG.PairVal.GLR D) ∈ Formalism.L2.SG.PairVal.stabInt D u u' Y.δ Y.M w ∧
         x = sc (gβ β) := by
-    intro x
-    exact (hset x).symm
+    exact fun x => (hset x).symm
   have hBd' : ∀ p (x x' y y' : Formalism.L2.SG.RealObj.FreeE w → ℂ), (∀ q, h' q < h' p → x q = x' q ∧ y q = y' q) →
       BX p x y = BX p x' y' :=
     fun p x x' y y' hxy => hBd p x x' y y' fun q hq => hxy q (hh' p q hq)
@@ -435,8 +433,7 @@ theorem sLat_relIndex (h : ℕ) (s : D.host.E) (hs : D.conjF s = s) (hs1 : s = 1
       ext z
       rw [Submodule.mem_toAddSubgroup, Formalism.FourierDecayAlt.P.S6x1.mem_twLat, ← qdPow_eq, ← Formalism.MainNotions.LocalModelPeriodLattices.conjF_eq_complexConj, ← hz]
       rfl
-    rw [e1]
-    exact h1
+    rwa [e1]
   rcases hs1 with rfl | rfl
   · exact key 1 (fun z => by ring)
   · exact key 0 (fun z => by ring)
@@ -485,8 +482,7 @@ theorem Λq_le (q : Formalism.L2.SG.RealObj.FreeE w) :
   by_cases hs : selfP w q
   · have hI : Iq w q = ddPow D (hgt w q) := by simp [Iq, hs]
     rw [hI, Λq, ite_eq_left hs]
-    intro z hz
-    exact hz.1
+    exact fun z hz => hz.1
   · rw [Λq, ite_eq_right hs]
 
 theorem relIndex_Λq (q : Formalism.L2.SG.RealObj.FreeE w) :
@@ -550,23 +546,18 @@ private theorem cfac_mul_cfac_qbar_eq_one (q : Formalism.L2.SG.RealObj.FreeE w) 
       have h2 : (qbar w (qbar w q)).1.2 = q.1.2 := by rw [qbar_qbar]
       change Formalism.L2.SG.PtCell.pinv w (qbar w q).1.1 = q.1.2 at h2
       rw [h] at h2
-      apply Subtype.ext
-      exact Prod.ext h h2
+      exact Subtype.ext (Prod.ext h h2)
     have hu : upperM w q ↔ ¬ upperM w (qbar w q) := by
       show (qbar w q).1.1 < q.1.1 ↔ ¬ (qbar w (qbar w q)).1.1 < (qbar w q).1.1
       rw [qbar_qbar]
       constructor
-      · intro h h'
-        exact lt_asymm h h'
-      · intro h
-        exact lt_of_le_of_ne (not_lt.mp h) hne
+      · exact fun h h' => lt_asymm h h'
+      · exact fun h => lt_of_le_of_ne (not_lt.mp h) hne
     by_cases hq : upperM w q
     · have h3 := hu.mp hq
-      simp only [cfac, hs, hs', hq, h3, ite_false, ite_true]
-      exact mul_inv_cancel₀ hgS
+      simpa only [cfac, hs, hs', hq, h3, ite_false, ite_true] using mul_inv_cancel₀ hgS
     · have h3 : upperM w (qbar w q) := not_not.mp (fun h => hq (hu.mpr h))
-      simp only [cfac, hs, hs', hq, h3, ite_false, ite_true]
-      exact inv_mul_cancel₀ hgS
+      simpa only [cfac, hs, hs', hq, h3, ite_false, ite_true] using inv_mul_cancel₀ hgS
 
 theorem prod_cfac : ∏ q, cfac w q = 1 := by
   exact Finset.prod_ninvolution (qbar w) (cfac_mul_cfac_qbar_eq_one w) (fun q hq h => hq (by
@@ -653,13 +644,11 @@ theorem stabilizer_lattice_twisted_prod : Formalism.L2.SG.NGCut.StabilizerCovolu
           τA w p (recov (Formalism.L2.SG.Pf.VolPinAsm.phiV X) y) ∈ Λq w p := by
         intro p
         obtain ⟨a, ha, hl⟩ := hz p
-        rw [recov_eq _ v0 y p a ha]
-        exact hl
+        rwa [recov_eq _ v0 y p a ha]
       obtain ⟨β, hlo, hup, hW, hX⟩ := exists_of_coord w (recov (Formalism.L2.SG.Pf.VolPinAsm.phiV X) y)
       refine ⟨⟨β, show β ∈ Formalism.L2.SG.Pf.StabilizerIndexVolumes.StSet (ptMat w) from ⟨hlo, _, hup, hW⟩⟩, ?_, ?_⟩
       · show β ∈ _
-        rw [mem_stabInt_iff_twist w Y.δ Y.M Y.agree hodd u u' β hlo hup hW, hX, coordX_Xmat]
-        exact hzL
+        rwa [mem_stabInt_iff_twist w Y.δ Y.M Y.agree hodd u u' β hlo hup hW, hX, coordX_Xmat]
       · funext v p
         show y v p = Formalism.L2.SG.Pf.VolPinAsm.phiV X v
           (((ptMat w)⁻¹ * ((β : Formalism.L2.SG.PairVal.GLR D) : Formalism.L2.SG.PairVal.MatR D) * ptMat w) p.1.1 p.1.2)

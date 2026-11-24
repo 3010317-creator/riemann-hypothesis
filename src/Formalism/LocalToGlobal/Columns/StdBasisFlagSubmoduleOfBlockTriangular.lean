@@ -163,8 +163,7 @@ theorem ob2Beta_lt_of_sym {k₀ rS r t p0 p : ℕ} (hr : k₀ + rS ≤ r) (hp0 :
   unfold betaExponentOfRanks
   rw [ite_eq_left hp0]
   by_cases hp : p < r
-  · rw [ite_eq_left hp]
-    exact h
+  · rwa [ite_eq_left hp]
   · rw [ite_eq_right hp]
     have := (symIndex_lt_iff hr).2 hp0
     exact Nat.lt_of_lt_of_le this (Nat.le_add_right r _)
@@ -241,14 +240,12 @@ theorem blockTriangular_maps_flag (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu 
   refine IntAt.mul ?_ hx'
   by_cases h1 : LocE.bd5 k₀ rS s ≤ symIdx k₀ rS (LocE.fPos k₀ c n l'.1) <;>
     by_cases h2 : LocE.bd5 k₀ rS s ≤ symIdx k₀ rS (LocE.fPos k₀ c n l.1)
-  · rw [ite_eq_left h1, ite_eq_left h2, sub_self, zpow_zero, mul_one]
-    exact hA
+  · rwa [ite_eq_left h1, ite_eq_left h2, sub_self, zpow_zero, mul_one]
   · rw [ite_eq_left h1, ite_eq_right h2, sub_zero, zpow_one]
     exact hA.mul ciIntAt_q
   · rw [ite_eq_right h1, ite_eq_left h2, zero_sub, zpow_neg_one, ← div_eq_mul_inv]
     exact ciIntAt_div hq hu hA (hred (ob2Beta_lt hr hs (not_le.1 h1) h2))
-  · rw [ite_eq_right h1, ite_eq_right h2, sub_self, zpow_zero, mul_one]
-    exact hA
+  · rwa [ite_eq_right h1, ite_eq_right h2, sub_self, zpow_zero, mul_one]
 
 theorem eq_of_symIndex_eq_add {k₀ rS p0 : ℕ} (h : symIdx k₀ rS p0 = rS + k₀) : p0 = k₀ + rS := by
   unfold symIdx at h
@@ -340,8 +337,7 @@ theorem stdBasis_flag_submodule_of_blockTriangular (hq : ((q : ℕ) : 𝓞 E) �
         rcases Nat.eq_or_lt_of_le hd with h | h
         · exact absurd (symIndex_injective (h.symm.trans hsym0.symm)) hne
         · exact h
-    · rw [ite_eq_right hd, zpow_zero, inv_one, mul_one]
-      exact hA
+    · rwa [ite_eq_right hd, zpow_zero, inv_one, mul_one]
 
 theorem mem_parahoric_of_blockTriangular (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : ℕ) : 𝓞 E) ∉ P.asIdeal ^ 2) {k₀ rS r t n c : ℕ}
     (hk : k₀ ≤ n) (hr : k₀ + rS < r) (hrN : r ≤ n + c) {κ : Sp E (n + c) ≃ₗ[E] Sp E (n + c)}

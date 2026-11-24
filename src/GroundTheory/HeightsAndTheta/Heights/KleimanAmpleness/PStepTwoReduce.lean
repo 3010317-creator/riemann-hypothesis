@@ -81,8 +81,7 @@ theorem StepTwo.Reduce.proof (hF : StepTwo.Filt.Statement.{u, v, w}) (hT : QuotT
       exact ⟨fun a => (ih1 a).trans (hle a), hT S Ω N x E _ _ _ (tildeSys_twist_mono ih1 _)
         (tildeSys_twist_mono hle _) ih2 hstep⟩
   obtain ⟨-, h⟩ := key n (Nat.lt_succ_self n)
-  rw [show (⟨n, Nat.lt_succ_self n⟩ : Fin (n + 1)) = Fin.last n from rfl, hlast, h0] at h
-  exact h
+  rwa [show (⟨n, Nat.lt_succ_self n⟩ : Fin (n + 1)) = Fin.last n from rfl, hlast, h0] at h
 
 end
 

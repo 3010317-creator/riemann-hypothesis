@@ -87,8 +87,7 @@ theorem mem_eigSum_iff_map [FiniteDimensional K V] [FiniteDimensional ℂ E] (f 
     (C : (I → K) → Prop) {v : V} (hv : v ∈ Z) :
     v ∈ eigSum op C ↔ f v ∈ eigSum h (cxSys σ C) := by
   constructor
-  · intro hv'
-    exact eigSum_le_comap_semi f hf C hv'
+  · exact fun hv' => eigSum_le_comap_semi f hf C hv'
   · intro hfv
     have hpv : eigProj hc hs C v ∈ eigSum op C := eigProj_apply_mem hc hs C v
     have h2 : v - eigProj hc hs C v ∈ eigSum op (fun x => ¬ C x) := sub_eigProj_mem hc hs C v
@@ -103,13 +102,11 @@ theorem mem_eigSum_iff_map [FiniteDimensional K V] [FiniteDimensional ℂ E] (f 
       rintro y ⟨x, hx, rfl⟩ ⟨x', hx', hxx⟩
       apply hx'
       have e : x' = x := funext fun i => (σ.injective (congrFun hxx i)).symm
-      rw [e]
-      exact hx
+      rwa [e]
     have h0 : f (v - eigProj hc hs C v) = 0 := (Submodule.disjoint_def.1 hdis) _ hf1 hf2
     have e := hinj _ hZ2 h0
     rw [sub_eq_zero] at e
-    rw [e]
-    exact hpv
+    rwa [e]
 
 theorem inj_of_li {ι : Type*} (b : Basis ι K V) (f : V →ₛₗ[σ] E)
     (h : LinearIndependent ℂ fun k => f (b k)) : Function.Injective f := by
@@ -193,8 +190,7 @@ theorem toF_mem_Z {B : BlockDat K G Pl0} (ℓ : Lvl K G) (Z : Submodule K B.S.Fo
       Matrix.mulVecLin_apply]
     rw [← hwe]
     simp
-  rw [e]
-  exact hw
+  rwa [e]
 
 variable (P0 : Subgroup G) (ψ0 : P0 →* Kˣ) (P1 : Subgroup G) (ψ1 : P1 →* Kˣ)
   (Dc : ∀ Zs : DefSub A.fam.amb, DefCols (A.side P1 ψ1 Zs)) (Sp : ∀ Zs : DefSub A.fam.amb, SPer (Dc Zs))
@@ -235,14 +231,12 @@ theorem relMat_op_key (σ : K →+* ℂ) {E : Type} [AddCommGroup E] [Module ℂ
   have hsol : ∀ e ∈ LinearMap.range f, f (solve f e) = e := by
     rintro e ⟨y, rfl⟩
     have h : ∃ y', f y' = f y := ⟨y, rfl⟩
-    simp only [solve, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [solve, dite_eq_left h] using h.choose_spec
   have hk : ∀ i k, σ (kOf σ (relMat f (S ∘ₗ f) i k)) = relMat f (S ∘ₗ f) i k := by
     intro i k
     obtain ⟨a, ha⟩ := hr i k
     have h : ∃ a : K, σ a = relMat f (S ∘ₗ f) i k := ⟨a, ha⟩
-    simp only [kOf, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [kOf, dite_eq_left h] using h.choose_spec
   have hc : cpt σ ((kMat σ (relMat f (S ∘ₗ f))).mulVec x) = (relMat f (S ∘ₗ f)).mulVec (cpt σ x) := by
     funext i
 
@@ -291,8 +285,7 @@ theorem eig_transport (σ : K →+* ℂ) {E : Type} [AddCommGroup E] [Module ℂ
     rw [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.smul_apply, LinearMap.id_apply, sub_eq_zero] at h2
     apply hcinj
     apply hf
-    rw [relMat_op_key σ f (S T) (hS T) (hr T) x, cpt_smul, map_smul]
-    exact h2
+    rwa [relMat_op_key σ f (S T) (hS T) (hr T) x, cpt_smul, map_smul]
   · intro hx
     have h1 : f (cpt σ x) ∈ P ⊓ LinearMap.range f := by
       rw [hP]
@@ -551,8 +544,7 @@ theorem theta_eV (eV : ∀ t, (Fin ((fc X.zs).Df1.nV t) → K) →ₗ[K] A.FR t)
     have h3 := Submodule.mem_orthogonal_singleton_iff_inner_right.1 (h2 h1)
     rwa [inner_eq_zero_symm] at h3
   have h0 : X.Θ t (X.jR t (eV t F - q)) = 0 := inner_self_eq_zero.1 (horth _ hΘE)
-  rw [map_sub, map_sub, sub_eq_zero] at h0
-  exact h0
+  rwa [map_sub, map_sub, sub_eq_zero] at h0
 
 section Ident
 
@@ -560,8 +552,7 @@ variable {eV : ∀ t, (Fin ((fc X.zs).Df1.nV t) → K) →ₗ[K] A.FR t} {sEE : 
 
 theorem zetaOf_spec (u : (fc X.zs).Dc.Mem) (t : Bs.Tup) (h : ∃ k : K, Bs.v0.embedding k = d.ζC u t) :
     Bs.v0.embedding (X.zetaOf d u t) = d.ζC u t := by
-  simp only [zetaOf, dite_eq_left h]
-  exact h.choose_spec
+  simpa only [zetaOf, dite_eq_left h] using h.choose_spec
 
 theorem zetaOf_not (u : (fc X.zs).Dc.Mem) (t : Bs.Tup) (h : ¬ ∃ k : K, Bs.v0.embedding k = d.ζC u t) :
     X.zetaOf d u t = 1 := by
@@ -652,8 +643,7 @@ theorem embedding_pairing_eq_mul_inner (hW : (fc X.zs).Df1.WF) (hJ : X.JIsoR cv)
   have h3 : ((fc X.zs).Df1.Pq Bs.μ0).mulVec ((rinv ((fc X.zs).Df1.Pq Bs.μ0)).mulVec y) = y :=
     mulVec_rinv _ (hW.Pq_surj Bs.μ0) y
   rw [h3] at h1
-  rw [X.iC_cpt' cr true Bs.μ0 y]
-  exact h1
+  rwa [X.iC_cpt' cr true Bs.μ0 y]
 
 theorem zetaC_mul_embedding_Pt (hW : (fc X.zs).Df1.WF) (h2 : X.H2 cr true) (hr : X.RATmu cr true) (hJ : X.JIsoR cv)
     (hRL : X.RatLev cr cv true) (hDn : X.DnLev cv true) (hUp : X.UpLev cv true) (hC : X.CoordinatesInGoodPart cr cv true)

@@ -178,8 +178,7 @@ theorem beK_sum (k : ℕ) {ι : Type} [Fintype ι] (a : ι → Fin k → 𝓞 D.
   simp only [beK_apply, Finset.mul_sum]
   conv_lhs => enter [2, i]; rw [Finset.sum_comm]
   rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun m _ => ?_
-  exact beO_sum D (fun i => a i m) c
+  exact Finset.sum_congr rfl fun m _ => beO_sum D (fun i => a i m) c
 
 def bK (k : ℕ) : Module.Basis (Σ _ : Fin k, Module.Free.ChooseBasisIndex ℤ (𝓞 D.host.E)) ℤ (Fin k → 𝓞 D.host.E) :=
   Pi.basis fun _ => RingOfIntegers.basis D.host.E
@@ -189,8 +188,7 @@ theorem beK_posDef (k : ℕ) (c : (Σ _ : Fin k, Module.Free.ChooseBasisIndex �
   obtain ⟨⟨m0, t0⟩, h0⟩ := Function.ne_iff.mp hc
   have key : ∃ σ : D.host.E →ₐ[ℚ] ℂ,
       ∑ i, (c i : ℂ) * σ ((bK D k i m0 : 𝓞 D.host.E) : D.host.E) ≠ 0 := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     let B := NumberField.integralBasis D.host.E
     have hred : ∀ σ : D.host.E →ₐ[ℚ] ℂ, ∑ t, (c ⟨m0, t⟩ : ℂ) * σ (B t) = 0 := by
       intro σ
@@ -246,8 +244,7 @@ theorem subsingleton_rank_indicator_iff (P : Prop) : Subsingleton (Fin (rk01 P) 
     exact ⟨fun _ => h, fun _ => inferInstance⟩
   · rw [ite_eq_right h]
     refine ⟨fun hs => ?_, fun hp => absurd hp h⟩
-    have h1 := congrFun (hs.elim (fun _ => (0 : 𝓞 D.host.E)) (fun _ => 1)) 0
-    exact absurd h1 zero_ne_one
+    exact absurd (congrFun (hs.elim (fun _ => (0 : 𝓞 D.host.E)) (fun _ => 1)) 0) zero_ne_one
 
 def pmM (dg : PsiT D → ℕ → ℤ) (n : ℕ) : ℤ := ∑ t : D.what₂.Tau, ∑ k ∈ Finset.Icc 1 n, |dg (D.eTau t) k|
 

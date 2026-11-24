@@ -66,8 +66,7 @@ theorem exists_beta (X : Data E r) {ξ : Fin r → E} (hξξ : herm X.Gm ξ ξ =
     simp only [Pi.zero_apply, cc] at hb
     simpa using hb
   obtain ⟨a, ha⟩ : ∃ a, (X.Gm *ᵥ fun b => cc (ξ b)) a ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hw (Matrix.eq_zero_of_mulVec_eq_zero X.Gm_det (funext h))
   have hfa : f (Pi.single a 1) ≠ 0 := by
     rw [hfx]
@@ -110,8 +109,7 @@ theorem exists_beta (X : Data E r) {ξ : Fin r → E} (hξξ : herm X.Gm ξ ξ =
     refine ⟨c, ?_⟩
     have hmk : Submodule.Quotient.mk (p := S) (∑ k, c k • βK k) = ∑ k, c k • bQ k := by
       have h := map_sum S.mkQ (fun k => c k • βK k) Finset.univ
-      simp only [Submodule.mkQ_apply, Submodule.Quotient.mk_smul, hβK] at h
-      exact h
+      simpa only [Submodule.mkQ_apply, Submodule.Quotient.mk_smul, hβK] using h
     have hq : Submodule.Quotient.mk (p := S) y = Submodule.Quotient.mk (∑ k, c k • βK k) := by
       rw [hmk, hc, bQ.sum_repr]
     rw [Submodule.Quotient.eq] at hq

@@ -201,8 +201,7 @@ theorem generatedHighestWeight_holds : GeneratedHW := by
     intro y hy
     have : lowSpan T κ ≤ LinearMap.ker (B v) := by
       rw [lowSpan, Submodule.span_le]
-      intro x hx
-      exact LinearMap.mem_ker.2 (horth x hx)
+      exact fun x hx => LinearMap.mem_ker.2 (horth x hx)
     exact LinearMap.mem_ker.1 (this hy)
   have h0 : B v v = 0 := hall v (by rw [htop]; exact Submodule.mem_top)
   exact absurd (hF.pos v hv) (by rw [h0]; exact lt_irrefl _)
@@ -285,8 +284,7 @@ private theorem weighted_sum_add_single_sub_single {K : Type*} [Field K] {q : �
     · simp
     · intro c _ hcd
       rw [Pi.single_eq_of_ne hcd, mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ d) h
+    · exact fun h => absurd (Finset.mem_univ d) h
   simp only [Pi.add_apply, Pi.sub_apply, mul_add, mul_sub, Finset.sum_add_distrib, Finset.sum_sub_distrib, hs]
   ring
 
@@ -350,16 +348,13 @@ theorem existsHighestWeight_holds : ExistsHW := by
   have hle : ∑ c : Fin q, -((c : ℕ) : K) * (μ + Pi.single a (1 : K) - Pi.single b (1 : K) : Fin q → K) c ≤
       ∑ c : Fin q, -((c : ℕ) : K) * μ c := hmax _ hνW
   rw [weighted_sum_add_single_sub_single] at hle
-  have hlt : ((a : ℕ) : K) < ((b : ℕ) : K) := by
-    exact Nat.cast_lt.mpr hab
+  have hlt : ((a : ℕ) : K) < ((b : ℕ) : K) := Nat.cast_lt.mpr hab
   linarith
 
 theorem completeReducibility_holds : CompleteRed := by
   intro K N q _ _ _ _ _ _ T B hU S S' hS hS' hhw
   classical
-  have hrefl : B.IsRefl := by
-    intro x y h
-    exact (hU.symm y x).trans h
+  have hrefl : B.IsRefl := fun x y h => (hU.symm y x).trans h
   have hRst : Stab T (S ⊓ S') := fun a b x hx =>
     Submodule.mem_inf.mpr ⟨hS a b x (Submodule.mem_inf.mp hx).1, hS' a b x (Submodule.mem_inf.mp hx).2⟩
   have hUst : Stab T (S ⊓ B.orthogonal (S ⊓ S')) := by
@@ -458,8 +453,7 @@ theorem highest_weight_successive : StepHW := by
   intro K N q _ _ _ T ε hmul hone hcomm z μ hz hw
   classical
   have hex : ∃ b, ε b b z ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     apply hz
     calc z = (∑ a, ε a a) z := by rw [hone]; rfl
       _ = ∑ a, ε a a z := LinearMap.sum_apply _ _ _
@@ -662,8 +656,7 @@ theorem lp_key (hDom : HWDominant) (H : Tower n D ε B) (j : ℕ) (hj : j < n) (
     have e : (fun a b => D j a b + ε j a b) = D (j + 1) := by
       funext a b
       exact (H.step j hj a b).symm
-    rw [e]
-    exact hw
+    rwa [e]
   obtain ⟨b, hbz, hhw⟩ := highest_weight_successive K N q (D j) (ε j) (H.unit_mul j hj) (H.unit_one j hj)
     (fun a b c d => H.comm j j le_rfl hj a b c d) z μ hz0 hw'
   have hmem : ε j b b z ∈ Eig D j κ :=
@@ -677,8 +670,7 @@ theorem lp_key (hDom : HWDominant) (H : Tower n D ε B) (j : ℕ) (hj : j < n) (
     rw [Pi.single_apply] at h1 ⊢
     split_ifs at h1 ⊢ <;> push_cast <;> linarith
   have hw2 : IsHW (D (j + 1)) (fun a => ((κ j + Pi.single b 1 : Fin q → ℕ) a : K)) z := by
-    rw [← hμ']
-    exact hw
+    rwa [← hμ']
   obtain ⟨hanti, hcas⟩ := lp_hw_cas hDom (H.form (j + 1) (by omega)) (κ j + Pi.single b 1) z hz0 hw2
   exact ⟨b, hμ', hanti, hcas⟩
 
@@ -755,8 +747,7 @@ theorem lp_claim [FiniteDimensional K N] (hCR : CompleteRed) (hDom : HWDominant)
         · intro i hi
           by_cases hij : i = j + 1
           · subst hij
-            rw [hκ'top]
-            exact hanti
+            rwa [hκ'top]
           · rw [hκ'le i (by omega)]
             exact hκ.2.2 i (by omega)
       have hvE : v ∈ Eig D (j + 1) κ' := by
@@ -764,8 +755,7 @@ theorem lp_claim [FiniteDimensional K N] (hCR : CompleteRed) (hDom : HWDominant)
         intro i hi
         by_cases hij : i = j + 1
         · subst hij
-          rw [hκ'top]
-          exact hcas
+          rwa [hκ'top]
         · rw [hκ'le i (by omega)]
           exact (lp_mem_Eig D j κ v).mp hv i (by omega)
       exact Submodule.mem_iSup_of_mem κ' (Submodule.mem_iSup_of_mem hpath hvE)
@@ -870,10 +860,8 @@ theorem lpc_Dpart_succ (EM : R → R → Module.End K M) (j : ℕ) (a b : R) :
     · simp
     · intro s _ hs
       rw [ite_eq_right]
-      intro e
-      exact hs (Fin.ext e)
-    · intro h'
-      exact absurd (Finset.mem_univ _) h'
+      exact fun e => hs (Fin.ext e)
+    · exact fun h' => absurd (Finset.mem_univ _) h'
   · apply Finset.sum_eq_zero
     intro s _
     rw [ite_eq_right]
@@ -883,8 +871,7 @@ theorem lpc_Dpart_succ (EM : R → R → Module.End K M) (j : ℕ) (a b : R) :
 theorem lpc_eps_mul (j : ℕ) (a b c d : R) :
     (epsY K n j a b * epsY K n j c d : Module.End K (Tens R P M n)) = if b = c then epsY K n j a d else 0 := by
   by_cases hj : j < n
-  · simp only [epsY, dite_eq_left hj]
-    exact unitSecond_mul_unitSecond K _ a b c d
+  · simpa only [epsY, dite_eq_left hj] using unitSecond_mul_unitSecond K _ a b c d
   · simp [epsY, hj]
 
 theorem lpc_eps_glrel (j : ℕ) : GlRel (epsY K n j : R → R → Module.End K (Tens R P M n)) := by
@@ -1173,8 +1160,7 @@ theorem diagonal_transfer : DiagTransfer := by
   choose w hw using fun μ : {μ // μ ∈ c.support} => LinearMap.mem_range.mp (hin μ.1 μ.2)
   let W : K → M := fun μ => if h : μ ∈ c.support then w ⟨μ, h⟩ else 0
   have hW : ∀ μ ∈ c.support, i (W μ) = c μ := fun μ h => by
-    simp only [W, dite_eq_left h]
-    exact hw ⟨μ, h⟩
+    simpa only [W, dite_eq_left h] using hw ⟨μ, h⟩
   have hxsum : x = ∑ μ ∈ c.support, W μ := by
     apply hi
 
@@ -1300,10 +1286,8 @@ theorem real_form_modular : RealFormMod := by
     show 0 < formB p q w lam2 x x
     rw [formB_apply]
     refine div_pos ((fockQPos _ ((x : VQ p q w lam2) : MvPolynomial (Fin (p + q) × Fin (p + q)) ℚ) ((x : VQ p q w lam2) : MvPolynomial (Fin (p + q) × Fin (p + q)) ℚ)).2 ?_) (hw_norm_pos _)
-    intro h0
-    exact hx (Subtype.ext (Subtype.ext h0))
-  · intro a b x y
-    exact real_contragredient p q w lam2 (Sum.inr a) (Sum.inr b) x y
+    exact fun h0 => hx (Subtype.ext (Subtype.ext h0))
+  · exact fun a b x y => real_contragredient p q w lam2 (Sum.inr a) (Sum.inr b) x y
   · intro a
     refine diagonal_transfer ℚ _ _
       ((dualWeyl ℚ (p + q) (p + q) (LD.blockWt p q w lam2)).subtype ∘ₗ (rationalBlockModuleSetting p q w lam2).W.subtype)

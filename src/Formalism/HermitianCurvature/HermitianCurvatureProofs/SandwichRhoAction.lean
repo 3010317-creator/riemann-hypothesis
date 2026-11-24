@@ -140,14 +140,12 @@ lemma sgs_curveL (D : RealPlaceData k r Wp Wq) {p : SS k r} (hp : D.inSS p) (X g
 lemma rdV_rho (D : RealPlaceData k r Wp Wq) {p : SS k r} (hp : D.inSS p) (X : Mat k r) (φ : Mat k r → (Wq →L[ℂ] Wp))
     (g : Mat k r) : RdV X (rho D p φ) g = rho D p (RdV (AdR p X) φ) g := by
   unfold RdV
-  simp only [rho_eq, sgs_curveR D hp]
-  exact deriv_comp_of_leftInv _ _ (sandw_leftInv D hp) _ 0
+  simpa only [rho_eq, sgs_curveR D hp] using deriv_comp_of_leftInv _ _ (sandw_leftInv D hp) _ 0
 
 lemma ldV_rho (D : RealPlaceData k r Wp Wq) {p : SS k r} (hp : D.inSS p) (X : Mat k r) (φ : Mat k r → (Wq →L[ℂ] Wp))
     (g : Mat k r) : LdV X (rho D p φ) g = rho D p (LdV (AdL p X) φ) g := by
   unfold LdV
-  simp only [rho_eq, sgs_curveL D hp]
-  exact deriv_comp_of_leftInv _ _ (sandw_leftInv D hp) _ 0
+  simpa only [rho_eq, sgs_curveL D hp] using deriv_comp_of_leftInv _ _ (sandw_leftInv D hp) _ 0
 
 lemma rw_rho (D : RealPlaceData k r Wp Wq) {p : SS k r} (hp : D.inSS p) :
     ∀ (v : List (Mat k r)) (φ : Mat k r → (Wq →L[ℂ] Wp)), Rw v (rho D p φ) = rho D p (Rw (v.map (AdR p)) φ)
@@ -172,7 +170,6 @@ theorem dLR_rho (D : RealPlaceData k r Wp Wq) {p : SS k r} (hp : D.inSS p) (u v 
   rw [rw_rho D hp v f, lw_rho D hp u]
 
 theorem _root_.Formalism.FourierDecayAlt.P.rewrite_rho_action : RwRho := by
-  intro k r Wp Wq _ _ _ _ D m f p hp _ u v _ _ _ g _
-  exact congrFun (dLR_rho D hp u v f) g
+  exact fun k r Wp Wq _ _ _ _ D m f p hp _ u v _ _ _ g _ => congrFun (dLR_rho D hp u v f) g
 
 end Formalism.FourierDecayAlt.P.SandwichRhoAction

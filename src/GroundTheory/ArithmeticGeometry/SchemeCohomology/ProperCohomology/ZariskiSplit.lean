@@ -92,9 +92,7 @@ lemma exists_mem_basicOpen_of_not_mem_closedFibre {x : X} (hx : x ∉ closedFibr
   set y := (X ↘ Spec (.of A)).base x
   have hne : y ≠ closedPoint A := hx
   have hnot : ¬ (maximalIdeal A ≤ y.asIdeal) := by
-    intro h
-    apply hne
-    exact PrimeSpectrum.ext (le_antisymm (le_maximalIdeal y.isPrime.ne_top) h)
+    exact fun h => hne (PrimeSpectrum.ext (le_antisymm (le_maximalIdeal y.isPrime.ne_top) h))
   obtain ⟨a, ha, hay⟩ := Set.not_subset.1 hnot
   exact ⟨a, ha, (mem_basicOpen_algebraMap_iff x a).2 hay⟩
 
@@ -104,8 +102,7 @@ lemma not_mem_basicOpen_of_mem_closedFibre {x : X} (hx : x ∈ closedFibre (A :=
     (ha : a ∈ maximalIdeal A) : x ∉ X.basicOpen (algebraMap A Γ(X, ⊤) a) := by
   rw [mem_basicOpen_algebraMap_iff, not_not]
   have : (X ↘ Spec (.of A)).base x = closedPoint A := hx
-  rw [this]
-  exact ha
+  rwa [this]
 
 
 variable (A X) in

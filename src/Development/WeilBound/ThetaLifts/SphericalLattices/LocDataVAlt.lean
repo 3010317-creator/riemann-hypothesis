@@ -152,9 +152,7 @@ theorem GlobalTheory.InertBridgeLine.locVac_line : ∀ (F E : Type) [Field F] [N
   obtain ⟨unr, odd, intS, intT, hermS, hermT, hδ, psiInt, psiNe, hAt, hSurj, hLat, hPsi, hEq, hιS, hιT, hKS, hKT⟩ := hC
   obtain ⟨-, -, θ, hθ, hvac⟩ := hTr.geo.hM'.vac v
   have h2 : evFin F v (⅟(2 : AF F)) ∈ v.adicCompletionIntegers F := by
-    have h2e : evFin F v (⅟(2 : AF F)) = algebraMap F (Fv F v) (2 : F)⁻¹ := by
-      show evFin F v (algebraMap F (AF F) 2⁻¹) = _
-      exact AlgHom.commutes _ _
+    have h2e : evFin F v (⅟(2 : AF F)) = algebraMap F (Fv F v) (2 : F)⁻¹ := AlgHom.commutes _ _
     rw [h2e]
     exact GlobalTheory.LatVac.half_mem_adicCompletionIntegers F v (hTr.base.inert v w hin).1
   have hone : ∀ γ ∈ latAtV G.V' G.W v, B.ψ (⅟(2 : AF F) * symp (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (inclR (F := F) (AF F) (θ : E))
@@ -171,8 +169,7 @@ theorem GlobalTheory.InertBridgeLine.locVac_line : ∀ (F E : Type) [Field F] [N
     rwa [hm x hx] at h
   obtain ⟨c, hc⟩ := _root_.GlobalTheory.VacUniqInert.vac_unique F E σ B a a' G X om om' hTr v w hin θ hθ hvac m m.2 hm'
   refine ⟨c, Subtype.ext ?_⟩
-  rw [Submodule.coe_smul, hs]
-  exact hc
+  rwa [Submodule.coe_smul, hs]
 
 end
 end -- clump:auto
@@ -247,8 +244,7 @@ theorem odd_absNorm {v : HeightOneSpectrum (𝓞 F)} (h2 : (2 : 𝓞 F) ∉ v.as
     exact Nat.even_iff.1 (Nat.not_odd_iff_even.1 hodd)
   have h3 : ((2 : ℕ) : 𝓞 F ⧸ v.asIdeal) = 0 := (ringChar.spec _ 2).2 (by rw [h1])
   apply h2
-  rw [← Ideal.Quotient.eq_zero_iff_mem]
-  rw [map_ofNat]
+  rw [← Ideal.Quotient.eq_zero_iff_mem, map_ofNat]
   simpa using h3
 
 end GlobalTheory.InertPsi
@@ -472,8 +468,7 @@ theorem exists_frame_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
       let coord := (LinearMap.proj i : (Fin a' → E) →ₗ[E] E).restrictScalars (𝓞 E)
       have ht : G.V'.L.map coord = ⊤ := by
         rw [eq_top_iff]
-        intro x _
-        exact ⟨(x / u i) • u, hline _, div_mul_cancel₀ _ hi⟩
+        exact fun x _ => ⟨(x / u i) • u, hline _, div_mul_cancel₀ _ hi⟩
       have : Module.Finite (𝓞 E) E := Module.finite_def.mpr (ht ▸ hX.lat.fg.map coord)
       exact RingOfIntegers.not_isField E
         (isField_of_isIntegral_of_isField (IsFractionRing.injective (𝓞 E) E) (Field.toIsField E))
@@ -699,8 +694,7 @@ theorem conj_preserves {n : ℕ} (X : Spc F E n) (P : GL (Fin n) (w.adicCompleti
   rw [Units.val_mul, Units.val_mul, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec]
   refine (hP _).1 fun i => ?_
   simp only [Matrix.mulVec, dotProduct]
-  refine Subring.sum_mem _ fun j _ => Subring.mul_mem _ ?_ (hy j)
-  exact (k'.1 i j).2
+  exact Subring.sum_mem _ fun j _ => Subring.mul_mem _ (k'.1 i j).2 (hy j)
 
 theorem conj_form {K : Type} [CommRing K] {n : ℕ} (c : K →+* K) (Ja p q m : Matrix (Fin n) (Fin n) K) (δ : K)
     (hpq : p * q = 1) (hP : pᵀ * Ja * p.map c = δ • 1) (hk : mᵀ * m.map c = 1) :
@@ -1094,8 +1088,7 @@ theorem kap_mem_latAtV_iff : ∀ (F E : Type) [Field F] [NumberField F] [Field E
         Matrix.transpose_one, Matrix.mul_one, ← Matrix.mul_assoc, ← Units.val_mul, inv_mul_cancel, Units.val_one,
         Matrix.one_mul]
     have := hΨ _ hk j i
-    rw [e] at this
-    exact this
+    rwa [e] at this
 
 end GlobalTheory.InertLat
 end -- clump:auto
@@ -1228,8 +1221,7 @@ theorem exists_chart : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
         ((g : GL (Fin k) (w.adicCompletion E)) : Matrix (Fin k) (Fin k) (w.adicCompletion E)).map σL = 1 := fun g => by
     have h2 := congrArg (fun M => M.map σL) (hS g)
     simp only [Matrix.map_mul (f := σL), Matrix.transpose_map, hmapσσ] at h2
-    rw [Matrix.map_one _ (map_zero σL) (map_one σL)] at h2
-    exact h2
+    rwa [Matrix.map_one _ (map_zero σL) (map_one σL)] at h2
   let φS : Formalism.UG.UJ σL ((1 : GL (Fin a') (w.adicCompletion E)) : Matrix (Fin a') (Fin a') (w.adicCompletion E)) →*
       GL (Fin a') (w.adicCompletion E) := (Formalism.UG.bc σL).comp (Subgroup.subtype _)
   have hφS : ∀ g, ((φS g : GL (Fin a') (w.adicCompletion E)) : Matrix (Fin a') (Fin a') (w.adicCompletion E)) =
@@ -1284,8 +1276,7 @@ theorem exists_chart : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     refine ⟨Formalism.UG.bc σO k, Units.ext (Matrix.ext fun i j => ?_)⟩
     rw [hφS, ← hk]
     rfl
-  · intro g hg
-    exact hTK hBf g hg
+  · exact fun g hg => hTK hBf g hg
 
 end GlobalTheory.InertBridge
 
@@ -1654,8 +1645,7 @@ theorem vac_locVac : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
     (⅟(2 : AF F)) hb (κ u) hγ (κ u) hγ
   have h1 := hfix (κ u) hγ
   rw [hone, one_smul] at h1
-  apply Subtype.ext
-  exact acts_eq v hr hx₀ _ _ _ (hρ u ⟨G.M'.vac v, hSB⟩) h1
+  exact Subtype.ext (acts_eq v hr hx₀ _ _ _ (hρ u ⟨G.M'.vac v, hSB⟩) h1)
 
 end GlobalTheory.InertBridgeVac
 

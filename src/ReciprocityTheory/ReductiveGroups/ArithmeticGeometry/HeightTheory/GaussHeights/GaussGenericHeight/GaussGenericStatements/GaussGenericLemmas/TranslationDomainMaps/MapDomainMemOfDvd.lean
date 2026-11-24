@@ -250,8 +250,7 @@ theorem multiHom_of_dvd [CharZero K] {g : MvPolynomial (Fin (D + 1) × Fin (N + 
         have hmem := mapDomain_mem_of_dvd (Equiv.swap 1 b) (hsw _ he0) hs
         have h2 := bdeg_mapDomain (Equiv.swap (1 : Fin (D + 1)) b) 1 s
         rw [Equiv.swap_apply_left] at h2
-        rw [← hc1 b _ hmem]
-        exact h2
+        rwa [← hc1 b _ hmem]
     show bdeg b s = g.support.sup fun r => bdeg 1 r
     rw [hb1]
     apply le_antisymm

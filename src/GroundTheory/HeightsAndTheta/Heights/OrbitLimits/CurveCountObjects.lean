@@ -50,8 +50,7 @@ theorem sum_single_chart_apply (k' : K) (j : ι k') (b : ℕ) (k : K) :
   · rw [ite_eq_right h]
     refine Finset.sum_eq_zero fun i _ => ?_
     rw [Finsupp.single_apply, ite_eq_right]
-    intro he
-    exact h (Sigma.mk.inj_iff.mp he).1
+    exact fun he => h (Sigma.mk.inj_iff.mp he).1
 
 theorem isMultiHomog_curveChartMono (c : ∀ k, ι k) (d : K → ℕ) :
     IsMultiHomog (curveChartMono c d) d := by
@@ -67,8 +66,7 @@ theorem isMultiHomog_curveChartMono (c : ∀ k, ι k) (d : K → ℕ) :
   rw [h]
   have hm := ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.isMultiHomog_monomial (ι := ι)
     (∑ k, Finsupp.single (⟨k, c k⟩ : Σ k, ι k) (d k)) (1 : ℤ)
-  rw [hd] at hm
-  exact hm
+  rwa [hd] at hm
 
 
 omit [∀ k, Fintype (ι k)] in

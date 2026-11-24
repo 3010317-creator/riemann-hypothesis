@@ -152,8 +152,7 @@ theorem homConstSet_of_smul {E E' : CMCurve K} {𝔞 : (FractionalIdeal (𝓞 K)
   obtain ⟨L', hL'lat, hL'⟩ := exists_lattice_mul σ₀ hK L hL 𝔞
   have h1 := classGroup_smul_ellOf σ₀ hK L L' hL hL' 𝔞 hL'lat
   have h2 : E'.toEll = (CMCurve.ofLattice σ₀ L' hL').toEll := by
-    rw [← h, ← hE]
-    exact h1
+    rwa [← h, ← hE]
   obtain ⟨C', hC'⟩ := (CMCurve.toEll_eq_iff _ _).1 h2
   have hC'' : C' • E'.curve = weierstrassCurve L' := hC'
   obtain ⟨d, hd, hset⟩ := homConstSet_vc C C' hC hC''
@@ -171,8 +170,7 @@ theorem smul_toEll_of_homConstSet {E E' : CMCurve K} {𝔞 : (FractionalIdeal (�
     rw [eq_image_mul_inv hd h', h, image_mul_image_mul]
   have hcls := (classGroup_mk_eq_iff σ₀ hK 𝔞⁻¹ J⁻¹).2 ⟨d⁻¹ * c, mul_ne_zero (inv_ne_zero hd) hc, e⟩
   rw [map_inv, map_inv, inv_inj] at hcls
-  rw [hcls]
-  exact hb
+  rwa [hcls]
 
 theorem ELL.map_smul (σ : ℂ ≃+* ℂ) (hσ : ∀ k : K, σ (σ₀ k) = σ₀ k) (a : ClassGroup (𝓞 K))
     (x : ELL K) :
@@ -228,8 +226,7 @@ theorem galClass_eq_one_iff (σ : ℂ ≃+* ℂ) (hσ : ∀ k : K, σ (σ₀ k) 
   constructor
   · intro h
     rw [h, ellMulAction_one_smul]
-  · intro h
-    exact (ell_smul_eq_self_iff σ₀ hK _ x).1 (ELL.j_injective h)
+  · exact fun h => (ell_smul_eq_self_iff σ₀ hK _ x).1 (ELL.j_injective h)
 
 end Elliptic
 end GroundTheory.Global

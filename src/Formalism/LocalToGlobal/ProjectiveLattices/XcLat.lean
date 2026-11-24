@@ -68,8 +68,7 @@ theorem hNs (j : ℕ) (hj : InR D j) (w : WeightFamilies.Wt D j) (σ : T.Q.c.F �
   unfold Core.Ns
   have hσ := goodEmb_goodOf T.Q.c σ
   refine ⟨?_, ?_, ?_, ?_⟩
-  · intro f _
-    exact mul_nonneg (lieFac_pos _ _ _).le (supN_nonneg _ _ _)
+  · exact fun f _ => mul_nonneg (lieFac_pos _ _ _).le (supN_nonneg _ _ _)
   · intro f hf h0
     exact h.supDef j hj _ _ (dom_wtA w) _ hσ f hf
       ((mul_eq_zero.mp h0).resolve_left (lieFac_pos _ _ _).ne')
@@ -134,8 +133,7 @@ theorem mul (j : ℕ) (hj : InR D j) (w w' : WeightFamilies.Wt D j) :
     simp only [e4]
     split_ifs <;> omega
   show f * g ∈ cusp (T.Q.Xo j) T.Q.c (T.U j) (wtA (WeightAlgebra.wadd w w')) (WeightAlgebra.wadd w w').n
-  rw [e1, e2, e3]
-  exact e
+  rwa [e1, e2, e3]
 
 end LawsCore
 

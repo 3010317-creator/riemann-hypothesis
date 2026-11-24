@@ -87,8 +87,7 @@ theorem colPsiKer : StatColPsiKer := by
             a • (((⟨x, hx⟩ : Ymod r χ E)), (0 : (l : ι) → A × (Fin (j l) → A) × A)) :=
           Prod.ext rfl (smul_zero a).symm
         rw [e, Submodule.Quotient.mk_smul, map_smul, ih, smul_zero]
-    intro y
-    exact key y.1 y.2
+    exact fun y => key y.1 y.2
   · intro h
     apply Subtype.ext
     funext g
@@ -151,8 +150,7 @@ theorem cobColumn : StatCobColumn := by
   have h2 : E • y₁ = algebraMap T' A δ • y₁ := by
     apply Subtype.ext
     simp only [Submodule.coe_smul, smul_eq_mul]
-    rw [hy₁]
-    exact hyE
+    rwa [hy₁]
   have h3 : Fl (algebraMap T' A δ • y₁) = -((δO * δO) • v) := by
     rw [map_smul, hFy, algebraMap_smul, hδ, smul_neg, smul_smul]
   rw [h2, h3] at h1

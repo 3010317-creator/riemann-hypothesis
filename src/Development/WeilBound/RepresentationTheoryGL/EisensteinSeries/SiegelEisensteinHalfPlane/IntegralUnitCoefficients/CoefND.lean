@@ -302,8 +302,7 @@ theorem fockKStable : PositivityTheory.PfSWUS.FockKStable := by
     GlobalTheory.T.isFockVector_of_schrodinger_mem_fockSpace D ψ₀ hstd θ hθ A V μ 𝓕 hμ μ' hsk s' s hstd' hs l habs f hf (hfΦ ▸ hΦ)
   obtain ⟨hth, N, hN⟩ := hfock
   have hk' : κ (κ.symm k) ∈ K D A.rank := by
-    rw [show κ (κ.symm k) = k from κ.apply_symm_apply k]
-    exact hk
+    rwa [show κ (κ.symm k) = k from κ.apply_symm_apply k]
   have hfock' : IsFockVec ψ₀ θ (dblSp A) V s' s (omh (κ.symm k, 1) f) :=
     ⟨hdat.om_pres _ f hth, N,
       GlobalTheory.T.weilRep_preserves_fockDegree_of_commute_cartan D ψ₀ θ (dblSp A) V 1 χ⁻¹ omh s' s hdat hθ (κ.symm k) (hcomm _ hk') N f hth hN⟩
@@ -371,8 +370,7 @@ theorem isPureFin_box (b : Module.Basis (Fin d) F E) {n M : ℕ}
       exact (finprod_eq_one_of_forall_eq_one fun v => Set.indicator_of_mem (hX v) _).symm
     · rw [Set.indicator_of_notMem hX]
       obtain ⟨v₀, hv₀⟩ : ∃ v, HeckeCharacterZeroLocus.SiegelWeilU.projV v X ∉ A v := by
-        by_contra h
-        push Not at h
+        by_contra! h
         exact hX h
       refine (finprod_eq_zero _ v₀ (Set.indicator_of_notMem hv₀ _) ?_).symm
       have hfin := Filter.eventually_cofinite.1 (GlobalTheory.CompanionTheory.SW.MeasProj.eventually_mem_latV b X)
@@ -895,8 +893,7 @@ theorem whit_step (hK : WhitKA) {D : D7} {n : ℕ} {V : HSp D} {ψ : AddChar (AF
     calc _ = (npow A (n : ℂ) * npow A (-(V.rank : ℂ)) * npow A ((V.rank : ℂ) - n)) * (c0 * ct *
             IfrB V ν (fun x => φ0.1 (HMul.hMul x a.1)) β) := by ring
       _ = _ := by rw [h5, one_mul]
-  rw [hval] at hfin
-  exact hfin
+  rwa [hval] at hfin
 
 theorem iwaRedA : GlobalTheory.CompanionTheory.IwaAd.WhitKA → PositivityTheory.PfSWUS.WhitNDg := by
   intro hK D n V ψ χ θ μ ω H l s ν Φ hS hR lam 𝓖 nb hC w hw β hβ g
@@ -1090,12 +1087,9 @@ theorem integrable_descend_tsum (a : G → X → ℂ) (ha : ∀ x, Measurable fu
     · filter_upwards [haeG] with g hg
       exact (GlobalTheory.CompanionTheory.ThetaOrbit.summable_of_tsum_enorm_lt_top hg).hasSum
   have hGm : AEStronglyMeasurable (descend Γ fun g => ∑' x, a g x) (GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ) := by
-    rw [aestronglyMeasurable_quotMeasure_iff_lift, hL.lift_descend]
-    exact hBm
+    rwa [aestronglyMeasurable_quotMeasure_iff_lift, hL.lift_descend]
   refine ⟨⟨hGm, ?_⟩, ?_⟩
-  · refine (lintegral_mono fun q => ?_).trans_lt hfin
-    show ‖∑' x, a q.out x‖ₑ ≤ ∑' x, ‖a q.out x‖ₑ
-    exact enorm_tsum_le_tsum_enorm
+  · exact (lintegral_mono fun q => enorm_tsum_le_tsum_enorm).trans_lt hfin
   · filter_upwards [hae] with q hq
     exact GlobalTheory.CompanionTheory.ThetaOrbit.summable_of_tsum_enorm_lt_top hq
 
@@ -1110,7 +1104,6 @@ theorem average_descend_finset_sum {N : ℕ} (a : Fin N → G → X → ℂ) (ha
   have hcongr : (descend Γ fun g => ∑' x, ∑ j, a j g x) =ᵐ[GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ]
       fun q => ∑ j, descend Γ (fun g => ∑' x, a j g x) q := by
     filter_upwards [hae] with q hq
-    show ∑' x, ∑ j, a j q.out x = ∑ j, ∑' x, a j q.out x
     exact Summable.tsum_finsetSum fun j _ => hq j
   simp_rw [average_eq]
   rw [integral_congr_ae hcongr, integral_finsetSum _ fun j _ => (key j).1, Finset.smul_sum]
@@ -1155,8 +1148,7 @@ theorem ifrB_finset_sum {V : HSp D} {ν : Measure (GA D V)} (hν : ν.IsHaarMeas
     unfold IfrB
     simp only [Finset.sum_apply]
     rfl
-  rw [e]
-  exact key
+  rwa [e]
 
 theorem hasTemperateGrowth_evalPoly {m n : ℕ} (p : MvPolynomial (D.what₂.Tau × Fin m × Fin n × Bool) ℂ) :
     (fun z : D.what₂.Tau → Fin m → Fin n → ℂ => evalPoly p (fun τ => Matrix.of (z τ))).HasTemperateGrowth := by

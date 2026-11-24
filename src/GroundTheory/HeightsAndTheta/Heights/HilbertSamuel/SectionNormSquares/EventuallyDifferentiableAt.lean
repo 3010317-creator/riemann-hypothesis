@@ -66,8 +66,7 @@ theorem hasFDerivAt_eval (P : MvPolynomial J ℂ) (x : J → ℂ) :
       ContinuousLinearMap.proj_apply]
     have hs : (∑ q, eval x (pderiv q p) • ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : J => ℂ) q) w =
         ∑ q, eval x (pderiv q p) * w q := by simp
-    rw [hs, Finset.mul_sum]
-    rw [add_comm]
+    rw [hs, Finset.mul_sum, add_comm]
     congr 1
     refine Finset.sum_congr rfl fun q _ => ?_
     ring

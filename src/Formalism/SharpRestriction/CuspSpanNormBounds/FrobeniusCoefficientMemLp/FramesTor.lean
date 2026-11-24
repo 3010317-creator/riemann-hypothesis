@@ -73,19 +73,15 @@ theorem dT_unit' {k r : ℕ} (i : Fin (2 * r + k + 1)) : dT k r i * star (dT k r
 
 theorem tTi_mul_tT (k r : ℕ) : tTi k r * tT k r = 1 := by
   rw [tTi, tT, Matrix.diagonal_mul_diagonal]
-  simp only [dT_unit]
-  exact Matrix.diagonal_one
+  simpa only [dT_unit] using Matrix.diagonal_one
 
 theorem tT_mul_tTi (k r : ℕ) : tT k r * tTi k r = 1 := by
   rw [tTi, tT, Matrix.diagonal_mul_diagonal]
-  simp only [dT_unit']
-  exact Matrix.diagonal_one
+  simpa only [dT_unit'] using Matrix.diagonal_one
 
-theorem tT_inv (k r : ℕ) : (tT k r)⁻¹ = tTi k r := by
-  exact Matrix.inv_eq_left_inv (tTi_mul_tT k r)
+theorem tT_inv (k r : ℕ) : (tT k r)⁻¹ = tTi k r := Matrix.inv_eq_left_inv (tTi_mul_tT k r)
 
-theorem tTi_inv (k r : ℕ) : (tTi k r)⁻¹ = tT k r := by
-  exact Matrix.inv_eq_left_inv (tT_mul_tTi k r)
+theorem tTi_inv (k r : ℕ) : (tTi k r)⁻¹ = tT k r := Matrix.inv_eq_left_inv (tT_mul_tTi k r)
 
 theorem conjI_apply {k r : ℕ} (M : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (i j : Fin (2 * r + k + 1)) :
     (tTi k r * M * tT k r) i j = star (dT k r i) * M i j * dT k r j := by

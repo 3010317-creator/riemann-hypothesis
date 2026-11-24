@@ -91,11 +91,9 @@ theorem hT_hv (a b : Fin (D.R.rS + 1 + D.R.rS)) :
       simp only [hv, Fin.append_left, Fin.snoc_last, Fin.snoc_castSucc]
       exact (hs.eq_iff).1 (X.zu_orth u' j).1
     · rw [piv_e, ite_eq_right (fun h => by have := congrArg Fin.val h; simp at this <;> omega)]
-      simp only [hv, Fin.append_left, Fin.snoc_last, Fin.snoc_castSucc]
-      exact (X.zu_orth u' i).1
+      simpa only [hv, Fin.append_left, Fin.snoc_last, Fin.snoc_castSucc] using (X.zu_orth u' i).1
     · rw [piv_e, ite_eq_right (fun h => by have := congrArg Fin.val h; simp at this <;> omega)]
-      simp only [hv, Fin.append_left, Fin.snoc_castSucc]
-      exact X.ee i j
+      simpa only [hv, Fin.append_left, Fin.snoc_castSucc] using X.ee i j
   · refine Fin.lastCases ?_ (fun i => ?_) a
     · rw [pivot_castAdd_last, ite_eq_right (fun h => by have := congrArg Fin.val h; simp at this <;> omega)]
       simp only [hv, Fin.append_left, Fin.append_right, Fin.snoc_last]
@@ -108,8 +106,7 @@ theorem hT_hv (a b : Fin (D.R.rS + 1 + D.R.rS)) :
       · rw [ite_eq_right h, ite_eq_right (fun e => h ((Fin.natAdd_inj _).1 e).symm)]
   · refine Fin.lastCases ?_ (fun j => ?_) b
     · rw [piv_f, ite_eq_right (fun h => by have := congrArg Fin.val h; simp at this <;> omega)]
-      simp only [hv, Fin.append_left, Fin.append_right, Fin.snoc_last]
-      exact (X.zu_orth u' a).2
+      simpa only [hv, Fin.append_left, Fin.append_right, Fin.snoc_last] using (X.zu_orth u' a).2
     · rw [piv_f]
       simp only [hv, Fin.append_left, Fin.append_right, Fin.snoc_castSucc]
       rw [← (LinearMap.isSymm_def.1 hs) (X.eX j) (X.fY a), X.ef]
@@ -117,8 +114,7 @@ theorem hT_hv (a b : Fin (D.R.rS + 1 + D.R.rS)) :
       · subst h; rw [ite_eq_left rfl, ite_eq_left rfl, ite_eq_right (by simp <;> omega), map_one]
       · rw [ite_eq_right h, ite_eq_right (fun e => h (Fin.castSucc_inj.1 (Fin.castAdd_inj.1 e))), map_zero]
   · rw [piv_f, ite_eq_right (fun h => by have := congrArg Fin.val h; simp at this <;> omega)]
-    simp only [hv, Fin.append_right]
-    exact X.ff a b
+    simpa only [hv, Fin.append_right] using X.ff a b
 
 def cD (a : Fin (D.R.rS + 1 + D.R.rS)) : X.B.I.E := if a.val = D.R.rS then -((Tw u' : ℕ) : X.B.I.E) else 1
 

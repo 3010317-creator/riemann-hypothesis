@@ -144,8 +144,7 @@ theorem mapDomain_add_inj (e : τ → σ) (he : Function.Injective e) (a b : τ 
     (h : Finsupp.mapDomain e a + β = Finsupp.mapDomain e b + β') : a = b ∧ β = β' := by
   have ha : a = b := by
     ext x
-    have h1 := DFunLike.congr_fun h (e x)
-    simpa [Finsupp.mapDomain_apply_of_injective he, hβ, hβ'] using h1
+    simpa [Finsupp.mapDomain_apply_of_injective he, hβ, hβ'] using DFunLike.congr_fun h (e x)
   subst ha
   exact ⟨rfl, add_left_cancel h⟩
 
@@ -430,8 +429,7 @@ theorem cf_mul (n : ℕ) (m : Formalism.GM.M.BVar N r G.T.t →₀ ℕ) (hm : m 
   obtain ⟨-, -, h3⟩ := xiMons_spec (r := r) G n m hm
   have hdvd : (m.prod fun _ k => k.factorial) ∣ n.factorial := by
     have := Nat.prod_factorial_dvd_factorial_sum m.support m
-    rw [h3] at this
-    exact this
+    rwa [h3] at this
   have e : (mfac m : ℚ_[p]) = ((m.prod fun _ k => k.factorial : ℕ) : ℚ_[p]) := by
     unfold mfac Finsupp.prod
     push_cast
@@ -460,8 +458,7 @@ theorem plusAW_of_blockOK (hB : G.BlockOK) (j : Fin G.T.t → ℕ) (jp : ℕ) (D
         Ljj p (r := r) G j jp :=
       Submodule.subset_span ⟨y (e.symm k).1, hy _, _, mono_mem_xiPolZ p (r := r) G (G.B - jp) _ (e.symm k).2.2, rfl⟩
     have h2 := Submodule.smul_mem (Ljj p (r := r) G j jp) ((cfn (e.symm k).2.1 : ℕ) : ℤ_[p]) h1
-    rw [algebra_compatible_smul ℚ_[p] ((cfn (e.symm k).2.1 : ℕ) : ℤ_[p]), map_natCast] at h2
-    exact h2
+    rwa [algebra_compatible_smul ℚ_[p] ((cfn (e.symm k).2.1 : ℕ) : ℤ_[p]), map_natCast] at h2
   have hpair : ∀ k k', bePhi p (r := r) G j jp
       (rename (Formalism.GM.M.chainEmb N r G.T.t) (x (e.symm k).1) * monomial (e.symm k).2.1 (1 : ℚ_[p]))
       (((cfn (e.symm k').2.1 : ℕ) : ℚ_[p]) •
@@ -474,8 +471,7 @@ theorem plusAW_of_blockOK (hB : G.BlockOK) (j : Fin G.T.t → ℕ) (jp : ℕ) (D
       constructor
       · rintro rfl
         rw [hk] at hk'
-        simp only [Prod.mk.injEq, Subtype.mk.injEq] at hk'
-        exact hk'
+        simpa only [Prod.mk.injEq, Subtype.mk.injEq] using hk'
       · rintro ⟨rfl, rfl⟩
         exact e.symm.injective (hk.trans hk'.symm)
     rw [hk, hk']
@@ -519,8 +515,7 @@ theorem plusAW_of_blockOK (hB : G.BlockOK) (j : Fin G.T.t → ℕ) (jp : ℕ) (D
     · rw [ite_eq_right hmm, ite_eq_right (fun h => hmm (hkk.1 h).2)]
       simp
   have hmem := le_csSup (gcL_bdd p (r := r) G j jp D) ⟨fun k => _, fun k => _, hXm, hYm, hpair⟩
-  rw [Fintype.card_prod, Fintype.card_fin, Fintype.card_coe, hcard] at hmem
-  exact hmem
+  rwa [Fintype.card_prod, Fintype.card_fin, Fintype.card_coe, hcard] at hmem
 
 end Level
 
@@ -616,8 +611,7 @@ theorem restDimBC_proved : RestDimBC C0 CE1 CE2 X := by
   let w : Fin (Module.finrank ℚ_[X.p] V0) → W := fun i => ⟨MvPolynomial.map (iotaX X) (bs i).1, hmemW _ (bs i).2⟩
   have hli3 : LinearIndependent (KK X.O) w := LinearIndependent.of_comp W.subtype hli2
   have h := hli3.fintype_card_le_finrank
-  rw [Fintype.card_fin] at h
-  exact h
+  rwa [Fintype.card_fin] at h
 
 end Formalism.MainNotions.G.SymmetricFormBlocks
 
@@ -834,8 +828,7 @@ private theorem finrank_span_blockData_gens {p : ℕ} [Fact (Nat.Prime p)] {O : 
     have := Submodule.subset_span (R := KK O) (Set.mem_image_of_mem fA hmem)
     rw [hfA] at this
     simp only [mι, map_mul, MvPolynomial.map_rename] at this
-    rw [← mul_assoc] at this
-    exact this
+    rwa [← mul_assoc] at this
   have hstep : ∀ a ∈ Submodule.span (KK O)
         (MvPolynomial.map ι '' (GM.M.YZ (r := r) p ((gmB D).lettersAt j jp) D.T.J D.T.thr : Set _)),
       ∀ c ∈ Submodule.span (KK O)

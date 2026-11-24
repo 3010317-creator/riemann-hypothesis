@@ -72,8 +72,7 @@ theorem degree_pos (φ : Isogeny E E') : 0 < φ.degree := by
   have hpos : 0 < relfinrank F⟮φ.x⟯ ⊤ := by
     rw [relfinrank_top_right]; exact Module.finrank_pos
   rw [degree, ← relfinrank_top_right]
-  by_contra h
-  push Not at h
+  by_contra! h
   rw [Nat.le_zero.mp h, mul_zero] at t
   omega
 
@@ -100,8 +99,7 @@ theorem degree_eq_one_of_comap_eq (ψ : Isogeny E E) {z : E.toAffine.FunctionFie
   rw [e] at t
   have h1 : relfinrank ψ.comap.fieldRange ⊤ = 1 :=
     Nat.eq_of_mul_eq_mul_left hpos (by rw [t, mul_one])
-  rw [degree, ← relfinrank_top_right]
-  exact h1
+  rwa [degree, ← relfinrank_top_right]
 
 theorem map_eq_app (φ : Isogeny E E') (σ : E.toAffine.FunctionField →ₐ[F] E.toAffine.FunctionField) :
     Point.map σ φ.1 = φ.app (Point.map σ (genericPoint E)) (isGenPt_map_genericPoint E σ) := by
@@ -220,8 +218,7 @@ noncomputable def kerTranslate (φ : Isogeny E E') (T : φ.pointHom.ker) :
       exact φ.translate_comap_of_mem_ker T.2 f }
 
 theorem kerTranslate_injective (φ : Isogeny E E') : Function.Injective φ.kerTranslate := by
-  intro S T h
-  exact Subtype.ext (translate_inj E (AlgHom.ext fun f => DFunLike.congr_fun h f))
+  exact fun S T h => Subtype.ext (translate_inj E (AlgHom.ext fun f => DFunLike.congr_fun h f))
 
 theorem card_ker_le_degree (φ : Isogeny E E') : Nat.card φ.pointHom.ker ≤ φ.degree := by
   have := φ.finiteDimensional

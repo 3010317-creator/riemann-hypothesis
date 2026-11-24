@@ -23,8 +23,7 @@ variable {C : Type} [Field C] {V : VF C}
 
 theorem mm_neg {a : C} (h : V.MM a) : V.MM (-a) := by
   unfold VF.MM at h ⊢
-  rw [AddValuation.map_neg]
-  exact h
+  rwa [AddValuation.map_neg]
 
 theorem mm_sub {a b : C} (ha : V.MM a) (hb : V.MM b) : V.MM (a - b) := by
   rw [sub_eq_add_neg]
@@ -239,8 +238,7 @@ theorem mms_add_pow {f g : MvPowerSeries σ C} (hf : IntS V f) (hg : IntS V g) :
     ring
   rw [hexp]
   apply mms_sum
-  intro i hi
-  exact mms_mul_natCast_lemma_5 (intS_mul (intS_pow hf _) (intS_pow hg _)) (hdvd i hi)
+  exact fun i hi => mms_mul_natCast_lemma_5 (intS_mul (intS_pow hf _) (intS_pow hg _)) (hdvd i hi)
 
 theorem mms_sum_pow {ι : Type} (s : Finset ι) (f : ι → MvPowerSeries σ C) (hf : ∀ i ∈ s, IntS V (f i)) :
     MMS V ((∑ i ∈ s, f i) ^ V.l - ∑ i ∈ s, f i ^ V.l) := by
@@ -304,8 +302,7 @@ private theorem mm_neg_pow_add_lemma_6 {a : C} (ha : V.Ge 0 a) : V.MM ((-a) ^ V.
   have e : -((-a + a) ^ V.l - (-a) ^ V.l - a ^ V.l) = (-a) ^ V.l + a ^ V.l := by
     rw [show -a + a = 0 by ring, zero_pow V.l_prime.ne_zero]
     ring
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem mms_frobTw_neg {f : MvPowerSeries σ C} (hf : IntS V f) :
     MMS V (frobTw V.l (-f) + frobTw V.l f) := by
@@ -366,8 +363,7 @@ theorem mms_pow_frobTw [Finite σ] {f : MvPowerSeries σ C} (hf : IntS V f) : MM
       first
         | rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
       rw [hlow p.1 (by rw [← hp]; exact le_self_add), zero_mul]
-    rw [map_sub, sub_eq_zero] at h2
-    exact h2
+    rwa [map_sub, sub_eq_zero] at h2
   have h3 : MvPowerSeries.coeff μ (frobTw V.l f) = MvPowerSeries.coeff μ (frobTw V.l P) := by
     rw [coeff_frobTw, coeff_frobTw]
     split_ifs
@@ -403,8 +399,7 @@ theorem mms_pow_frobTw [Finite σ] {f : MvPowerSeries σ C} (hf : IntS V f) : MM
     mms_sum_pow S _ (fun ν _ => intS_monomial_lemma_10 (hf ν))
   have h6 := h5 μ
   rw [map_sub] at h6 ⊢
-  rw [h1, h3, h4]
-  exact h6
+  rwa [h1, h3, h4]
 
 private theorem intS_subst_lemma_7 [Finite σ] {a : σ → MvPowerSeries τ C}
     (ha0 : ∀ s, MvPowerSeries.constantCoeff (a s) = 0) (ha : ∀ s, IntS V (a s)) {f : MvPowerSeries σ C}

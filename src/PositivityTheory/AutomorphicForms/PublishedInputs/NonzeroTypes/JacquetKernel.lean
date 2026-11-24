@@ -36,16 +36,14 @@ theorem zEl_eq_dia (ϖ : kˣ) :
     · have hne : G.e ⟨a, i'⟩ ≠ G.e ⟨a, j'⟩ := fun h => hij (by simpa using h)
       simp [Matrix.scalar_apply, Matrix.diagonal_pow, Matrix.diagonal_apply_ne _ hij, hne]
   · rw [zEl, leviEmb_apply_ne _ _ _ hab, Matrix.diagonal_apply_ne]
-    intro h
-    exact hab (congrArg Sigma.fst (G.e.injective h))
+    exact fun h => hab (congrArg Sigma.fst (G.e.injective h))
 
 theorem zEl_pow (ϖ : kˣ) (m : ℕ) :
     G.zEl ϖ ^ m = GlobalTheory.DepthZeroJac.dia G.e ϖ.ne_zero (fun a => m * (G.s - 1 - (a : ℕ))) := by
   induction m with
   | zero =>
     rw [pow_zero]
-    simp only [zero_mul]
-    exact (GlobalTheory.DepthZeroJac.dia_zero G.e ϖ.ne_zero).symm
+    simpa only [zero_mul] using (GlobalTheory.DepthZeroJac.dia_zero G.e ϖ.ne_zero).symm
   | succ m ih =>
     rw [pow_succ, ih, zEl_eq_dia, ← GlobalTheory.DepthZeroJac.dia_add]
     congr 1
@@ -72,8 +70,7 @@ theorem eventually_conj_deep {c : k} (hc : c ≠ 0) (hc1 : GlobalTheory.IwahoriI
       (((GlobalTheory.DepthZeroJac.dia G.e hc (fun a => m * (G.s - 1 - (a : ℕ))) * u *
         (GlobalTheory.DepthZeroJac.dia G.e hc (fun a => m * (G.s - 1 - (a : ℕ))))⁻¹).val - 1) i j) := by
   have key : ∀ᶠ M : ℕ in Filter.atTop, ∀ i j, GlobalTheory.IwahoriInj.Deep (-(M : ℤ)) ((u.val - 1) i j) := by
-    simp only [Filter.eventually_all]
-    exact fun i j => GlobalTheory.IwahoriInj.eventually_deep _
+    simpa only [Filter.eventually_all] using fun i j => GlobalTheory.IwahoriInj.eventually_deep _
   filter_upwards [key] with m hm
   intro i j
   rw [GlobalTheory.DepthZeroJac.conj_sub_apply]
@@ -160,8 +157,7 @@ theorem isClosed_unipRad : IsClosed (unipRad k G.e : Set (GL (Fin n) k)) := by
   rw [e]
   refine isClosed_iInter fun i => isClosed_iInter fun j => ?_
   by_cases h : blk G.e i < blk G.e j
-  · simp only [h, not_true_eq_false, false_implies, Set.ofPred_true]
-    exact isClosed_univ
+  · simpa only [h, not_true_eq_false, false_implies, Set.ofPred_true] using isClosed_univ
   · simp only [h, not_false_eq_true, true_implies]
     have hcont : Continuous fun g : GL (Fin n) k => (g.val - 1) i j := by
       have := Units.continuous_val (M := Matrix (Fin n) (Fin n) k)
@@ -174,15 +170,12 @@ theorem isOpen_KO : IsOpen (KO k (Fin n) : Set (GL (Fin n) k)) :=
 theorem isCompact_NO : IsCompact (G.NO : Set (GL (Fin n) k)) := by
   have hKO : IsCompact (KO k (Fin n) : Set (GL (Fin n) k)) := GlobalTheory.SplitFlip.isCompact_KO
   refine hKO.of_isClosed_subset ?_ (fun g hg => ((mem_NO G).1 hg).2)
-  show IsClosed ((unipRad k G.e : Set (GL (Fin n) k)) ∩ (KO k (Fin n) : Set (GL (Fin n) k)))
   exact (isClosed_unipRad G).inter (Subgroup.isClosed_of_isOpen _ isOpen_KO)
 
 theorem isOpen_zN (ϖ : kˣ) (m : ℕ) : IsOpen ((G.zN ϖ m : Subgroup ↥G.NO) : Set ↥G.NO) := by
   let f : ↥G.NO →* GL (Fin n) k := (MulAut.conj (G.zEl ϖ ^ m)⁻¹).toMonoidHom.comp G.NO.subtype
   let S : Subgroup ↥G.NO := (KO k (Fin n)).comap f
-  have hf : Continuous f := by
-    show Continuous fun u : ↥G.NO => (G.zEl ϖ ^ m)⁻¹ * (u : GL (Fin n) k) * (G.zEl ϖ ^ m)⁻¹⁻¹
-    exact (continuous_const.mul continuous_subtype_val).mul continuous_const
+  have hf : Continuous f := (continuous_const.mul continuous_subtype_val).mul continuous_const
   have hS : IsOpen (S : Set ↥G.NO) := isOpen_KO.preimage hf
   refine Subgroup.isOpen_mono (H₁ := S) ?_ hS
   intro u hu
@@ -230,7 +223,6 @@ theorem step_jacKer (G : Grp k n) : G.JacquetKernelProp := by
     inv_ne_zero (Nat.cast_ne_zero.2 Fintype.card_ne_zero)
   have hsum := (smul_eq_zero.1 hid.symm).resolve_left hcard
   show (∑ᶠ c : ↥G.NO ⧸ G.zN ϖ m, π ((Quotient.out c : ↥G.NO) : GL (Fin n) k) (π (G.zEl ϖ ^ m) x)) = 0
-  rw [finsum_eq_sum_of_fintype]
-  exact hsum
+  rwa [finsum_eq_sum_of_fintype]
 
 end UpperTheory.TNZ.Grp

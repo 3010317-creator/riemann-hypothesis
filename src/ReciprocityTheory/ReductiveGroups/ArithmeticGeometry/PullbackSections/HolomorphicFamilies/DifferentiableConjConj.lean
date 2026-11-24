@@ -34,8 +34,7 @@ theorem exists_chart_pt {X : Scheme.{0}} (L : LB X) (hL : L.IsLB) (y : Sp ℂ �
   obtain ⟨j, hj⟩ := TopologicalSpace.Opens.mem_iSup.mp hmem
   refine ⟨j, fun q _ => ?_⟩
   have : q = p0 := primeSpectrum_eq q p0
-  rw [this]
-  exact hj
+  rwa [this]
 
 theorem exists_gx_pt (z : Fin W.g → ℂ) : ∃ pt : Sp ℂ ⟶ Gx (U.un k x).x,
     pt ≫ gxFst (U.un k x).x = (W.F.ex (W.ik k) W.Pm z).left ∧ pt ≫ gxSnd (U.un k x).x = 𝟙 (Sp ℂ) := by
@@ -53,8 +52,7 @@ theorem theta_add (Wu : UnitAt W) (a : (W.F.Di (W.ik k)).La) (z : Fin W.g → �
   obtain ⟨j, hj⟩ := exists_chart_pt Xo.univ.t.PP.L Xo.univ.t.PP.isLB (W.F.ex (W.ik k) W.Pm z).left
   obtain ⟨pt, h1, h2⟩ := exists_gx_pt W z
   have hj' : ⊤ ≤ (W.F.ex (W.ik k) W.Pm (z + W.Pm a)).left ⁻¹ᵁ Xo.univ.t.PP.L.U j := by
-    rw [ex_periodic]
-    exact hj
+    rwa [ex_periodic]
   have e1 := Wu.c7 j z pt h1 h2 hj
   have e2 := Wu.c7 j (z + W.Pm a) pt (by rw [ex_periodic]; exact h1) h2 hj'
   have e3 := (Wu.c6 a j z).2 hj

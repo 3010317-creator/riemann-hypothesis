@@ -90,12 +90,9 @@ theorem ds_rep {ε : Fin (2 * r + k + 1) → Bool} {lam : Fin (2 * r + k + 1) �
     have e : P * a * P⁻¹ * (P * b * P⁻¹) = P * (a * b) * P⁻¹ := by
       calc P * a * P⁻¹ * (P * b * P⁻¹) = P * a * (P⁻¹ * P) * b * P⁻¹ := by simp only [Matrix.mul_assoc]
         _ = P * (a * b) * P⁻¹ := by rw [hinv, Matrix.mul_one]; simp only [Matrix.mul_assoc]
-    simp only [e, conj_back hP] at h
-    exact h
+    simpa only [e, conj_back hP] using h
   · intro a ha v
-    have h := hnorm _ (conj_mem_UJ hP ha) v
-    simp only [conj_back hP] at h
-    exact h
+    simpa only [conj_back hP] using hnorm _ (conj_mem_UJ hP ha) v
   · intro v
     have hc : Continuous (fun g : Mx k r => P * g * P⁻¹) :=
       (continuous_const.matrix_mul continuous_id).matrix_mul continuous_const

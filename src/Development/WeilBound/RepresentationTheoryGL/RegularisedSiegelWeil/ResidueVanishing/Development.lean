@@ -166,8 +166,7 @@ theorem k2b2_tendsto {s₀ : ℂ} : ∀ (k : ℕ) {g : ℂ → ℂ} {p : FormalM
   have hval : ∀ j, (Function.swap dslope s₀)^[j] g s₀ = p.coeff j := fun j => by
     rw [← (hp.has_fpower_series_iterate_dslope_fslope j).coeff_zero 1]
     have := FormalMultilinearSeries.coeff_iterate_fslope (p := p) j 0
-    rw [zero_add] at this
-    exact this
+    rwa [zero_add] at this
   have hz : ∀ j < k, (Function.swap dslope s₀)^[j] g s₀ = 0 := fun j hj => by
     rw [hval j, hk j hj]
   have heq := pow_sub_smul_iterate_dslope_of_zero k hz
@@ -420,12 +419,10 @@ theorem local_representation_smoothness : PositivityTheory.Rg.Rsw.Kplug.K1 := by
       have hsub : (fun w : ℂ => w - τ) ⁻¹' U ⊆ A := fun w hw τ' hτ' => by
         have h1 := interior_subset hw (τ + τ') (by positivity)
         have e : w - (τ : ℂ) + ((τ + τ' : ℝ) : ℂ) = w + τ' := by push_cast; ring
-        rw [e] at h1
-        exact h1
+        rwa [e] at h1
       refine interior_maximal hsub hopen ?_
       show z + (τ : ℂ) - τ ∈ U
-      rw [add_sub_cancel_right]
-      exact hz
+      rwa [add_sub_cancel_right]
 
   have hd0 : d ≠ 0 := Finset.prod_ne_zero_iff.2 fun x _ => pow_ne_zero _ (Polynomial.X_sub_C_ne_zero x)
 
@@ -576,8 +573,7 @@ theorem theta_continuation : K4 := by
   have hE : Continuous fun g : GA D (dblSp A) => F (κ (g * p)) :=
     hF.comp (hκc.comp (continuous_id.mul continuous_const))
   have hEi : LeftInv (GQ (dblSp A)) fun g => F (κ (g * p)) := fun γ hγ g => by
-    simp only [mul_assoc, map_mul]
-    exact hFi _ ((hG' γ).1 hγ) _
+    simpa only [mul_assoc, map_mul] using hFi _ ((hG' γ).1 hγ) _
   have key := hX (GA D A × GA D A) ((m.prod m).restrict (X ×ˢ X)) c hcm hcr w hwi ?_
   · rw [dblInt_eq_fd A hχ m hE hEi hcu hcui hcu hcui hXf hKc hXK, ← key]
     refine setIntegral_congr_fun hXXm fun x hx => ?_

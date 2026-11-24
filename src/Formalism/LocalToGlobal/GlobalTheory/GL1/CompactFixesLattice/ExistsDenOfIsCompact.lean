@@ -51,8 +51,7 @@ private theorem exists_int_ne_zero_mul_repr_mem_range {n : ℕ} (b : Module.Basi
   refine sum_mem fun j _ => zsmul_mem ?_ _
   have h2 : IsIntegral ℤ ((y : F) * b.repr (algebraMap (𝓞 E) E (g j)) i) := by
     have h := hy _ (Finset.mem_image_of_mem _ (Finset.mem_univ (j, i)))
-    rw [zsmul_eq_mul] at h
-    exact h
+    rwa [zsmul_eq_mul] at h
   exact ⟨⟨_, (mem_integralClosure_iff ℤ F).mpr h2⟩, rfl⟩
 
 theorem exists_den_of_incl (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E]

@@ -27,8 +27,7 @@ theorem fac_eq_zero_of_smul (t : ℕ × ℕ × ℕ) (τ : ℍ) (γ : SL(2, ℤ))
 private lemma exists_SL2_mul_eq_Tmat_of_det_eq {m : ℕ} (hm : 0 < m) (A B C D : ℤ) (hdet : A * D - B * C = m) :
     ∃ g : SL(2, ℤ), ∃ s ∈ Tm m, 0 < s.2.2 ∧ (g : Matrix (Fin 2) (Fin 2) ℤ) * !![A, B; C, D] = Tmat s := by
   have hAC : A ≠ 0 ∨ C ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have h0 : (m : ℤ) = 0 := by rw [← hdet, hc.1, hc.2]; ring
     omega
   obtain ⟨G, hG⟩ : ∃ G : ℕ, G = Int.gcd A C := ⟨_, rfl⟩
@@ -55,8 +54,7 @@ private lemma exists_SL2_mul_eq_Tmat_of_det_eq {m : ℕ} (hm : 0 < m) (A B C D :
   have hdpos : 0 < d := by
     have h2 : 0 < (G : ℤ) * d := by rw [hGd]; exact_mod_cast hm
     have h3 : (0 : ℤ) < G := by exact_mod_cast hGpos
-    by_contra h4
-    push Not at h4
+    by_contra! h4
     nlinarith
   obtain ⟨q, b, hdiv, hb0, hbd⟩ : ∃ q b : ℤ, d * q + b = x * B + y * D ∧ 0 ≤ b ∧ b < d :=
     ⟨(x * B + y * D) / d, (x * B + y * D) % d,
@@ -92,8 +90,7 @@ theorem Gm_vanish {m : ℕ} (hm : 0 < m) (τ : ℍ) (A B C D : ℤ) (hdet : A * 
     ⟨_, _, _, _, Matrix.eta_fin_two _⟩
   have hdg : p * w - q * r = 1 := by
     have h0 := Matrix.SpecialLinearGroup.det_coe g
-    rw [hg, Matrix.det_fin_two_of] at h0
-    exact h0
+    rwa [hg, Matrix.det_fin_two_of] at h0
   have hp : (g : Matrix (Fin 2) (Fin 2) ℤ) 0 0 = p := by rw [hg]; rfl
   have hq : (g : Matrix (Fin 2) (Fin 2) ℤ) 0 1 = q := by rw [hg]; rfl
   have hr : (g : Matrix (Fin 2) (Fin 2) ℤ) 1 0 = r := by rw [hg]; rfl
@@ -113,8 +110,7 @@ theorem Gm_vanish {m : ℕ} (hm : 0 < m) (τ : ℍ) (A B C D : ℤ) (hdet : A * 
   have hden : (r : ℂ) * τ + w ≠ 0 := by
     intro h0
     have him : (r : ℝ) * τ.im = 0 := by
-      have h3 := congrArg Complex.im h0
-      simpa using h3
+      simpa using congrArg Complex.im h0
     have hτ := τ.im_pos
     have hr0 : r = 0 := by
       rcases mul_eq_zero.mp him with h4 | h4

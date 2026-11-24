@@ -346,16 +346,14 @@ lemma exists_den (L : Submodule (𝓞 E) (Fin n → E)) (hL : L.FG) :
     obtain ⟨a, ha⟩ := hb (s j)
       (Finset.mem_biUnion.2 ⟨s, hs, Finset.mem_image.2 ⟨j, Finset.mem_univ _, rfl⟩⟩)
     refine (mem_intOE_iff _).2 ⟨a, ?_⟩
-    rw [show ((b : 𝓞 E) : E) * s j = b • s j from by rw [Submonoid.smul_def, Algebra.smul_def]]
-    exact ha
+    rwa [show ((b : 𝓞 E) : E) * s j = b • s j from by rw [Submonoid.smul_def, Algebra.smul_def]]
   intro z hz
   rw [← hS] at hz
   induction hz using Submodule.span_induction with
   | mem x hx => exact hgen x hx
   | zero =>
     intro j
-    simp only [Pi.zero_apply, mul_zero]
-    exact zero_mem _
+    simpa only [Pi.zero_apply, mul_zero] using zero_mem _
   | add x y _ _ hx hy =>
     intro j
     rw [Pi.add_apply, mul_add]
@@ -398,8 +396,7 @@ theorem nondeg : Nondeg := by
   intro F E _ _ _ _ _ n σ J Lb T hfin hT hT0 y hy
   by_contra hne
   obtain ⟨j, hj⟩ : ∃ j, y j ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hne (funext h)
   obtain ⟨d, hd0, hd⟩ := exists_den Lb (Module.Finite.iff_fg.1 hfin)
   obtain ⟨t, ht⟩ := exists_not_mem_intOE (E := E)

@@ -30,8 +30,7 @@ theorem ringKrullDim_add_one_le {P Q : Ideal (MRing ι F)} [P.IsPrime] (hPQ : P 
   refine ringKrullDim_succ_le_of_surjective (Ideal.Quotient.factor hPQ)
     (Ideal.Quotient.factor_surjective hPQ) (r := Ideal.Quotient.mk P f) ?_ ?_
   · exact mem_nonZeroDivisors_of_ne_zero (by rwa [ne_eq, Ideal.Quotient.eq_zero_iff_mem])
-  · rw [Ideal.Quotient.factor_mk, Ideal.Quotient.eq_zero_iff_mem]
-    exact hfQ
+  · rwa [Ideal.Quotient.factor_mk, Ideal.Quotient.eq_zero_iff_mem]
 
 theorem ringKrullDim_lt_top [Finite K] [∀ k, Finite (ι k)] (Q : Ideal (MRing ι F)) :
     ringKrullDim (MRing ι F ⧸ Q) < ⊤ := by
@@ -120,8 +119,7 @@ theorem killBlocks_of_isMultiHomog (T : Finset K) {p : MRing ι F} {b : K → �
       constructor
       · intro h k hk
         rw [← hw, weight_apply_eq_zero_iff]
-        intro v hv hvk
-        exact h v hv (hvk ▸ hk)
+        exact fun v hv hvk => h v hv (hvk ▸ hk)
       · intro h v hv hvT
         have := h v.1 hvT
         rw [← hw, weight_apply_eq_zero_iff] at this

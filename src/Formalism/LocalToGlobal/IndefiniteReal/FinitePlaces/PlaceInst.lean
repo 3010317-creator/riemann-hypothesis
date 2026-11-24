@@ -28,16 +28,13 @@ section FinsumAux
 variable {α M M' : Type*} [AddCommGroup M] [Module ℂ M] [AddCommGroup M'] [Module ℂ M']
 
 theorem finsum_add' {f g : α → M} (hf : (Function.support f).Finite) (hg : (Function.support g).Finite) :
-    ∑ᶠ i, (f i + g i) = ∑ᶠ i, f i + ∑ᶠ i, g i := by
-  exact finsum_add_distrib hf hg
+    ∑ᶠ i, (f i + g i) = ∑ᶠ i, f i + ∑ᶠ i, g i := finsum_add_distrib hf hg
 
 theorem map_finsum' (φ : M →ₗ[ℂ] M') {f : α → M} (hf : (Function.support f).Finite) :
-    φ (∑ᶠ i, f i) = ∑ᶠ i, φ (f i) := by
-  exact map_finsum φ hf
+    φ (∑ᶠ i, f i) = ∑ᶠ i, φ (f i) := map_finsum φ hf
 
 theorem smul_finsum' (c : ℂ) {f : α → M} (hf : (Function.support f).Finite) :
-    c • ∑ᶠ i, f i = ∑ᶠ i, c • f i := by
-  exact map_finsum (DistribSMul.toAddMonoidHom M c) hf
+    c • ∑ᶠ i, f i = ∑ᶠ i, c • f i := map_finsum (DistribSMul.toAddMonoidHom M c) hf
 
 end FinsumAux
 
@@ -217,8 +214,7 @@ theorem tfun_vac : tfun ρ χ L X Y f₀ (fun t => if t ∈ L ∧ t ∈ X then (
         refine integ_zero_of hfinX fun t ht => ?_
         show (if q1.out + t ∈ L ∧ q1.out + t ∈ X then (1 : ℂ) else 0) * _ = 0
         rw [ite_eq_right, zero_mul]
-        intro hh
-        exact h1X (by simpa using (L ⊓ X).sub_mem (AddSubgroup.mem_inf.2 hh) ht)
+        exact fun hh => h1X (by simpa using (L ⊓ X).sub_mem (AddSubgroup.mem_inf.2 hh) ht)
     · show (if q2.out ∈ Y then _ else _) = 0
       rw [ite_eq_right hy]
 
@@ -362,8 +358,7 @@ theorem exists_placeModel (e₁ : AE D) (he : e₁ * cA D e₁ = 0) (Λ : AddSub
   refine ⟨Tm, ⟨fun Φ hΦ x hx => ?_, fun Φ hΦ y hy => ?_, ?_⟩, fun Φ hΦ => hTe Φ ((isSBHalf_iff S T).1 hΦ)⟩
   · exact htr Φ ((isSBHalf_iff S T).1 hΦ) x hx
   · exact hmo Φ ((isSBHalf_iff S T).1 hΦ) y hy
-  · rw [one_smul]
-    exact hva
+  · rwa [one_smul]
 
 end Formalism.IndefR.Fin
 

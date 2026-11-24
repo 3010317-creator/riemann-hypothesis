@@ -110,8 +110,7 @@ theorem prod_reindex_option {e rc : ℕ} (J : Finset (Fin e)) (σ : Fin e → Op
         intro hl
         rw [← hσ', h] at hl
         exact hne (Option.some_injective _ hl).symm
-      · intro hn
-        exact absurd hJ hn
+      · exact fun hn => absurd hJ hn
   rw [Finset.prod_congr rfl fun l _ => hL l, Finset.prod_comm]
   exact Finset.prod_congr rfl fun k _ => (hR k).symm
 
@@ -134,8 +133,7 @@ theorem AlgRes.coord_mem_zero {P D : Ideal (MvPolynomial (Σ k, ι k) ℂ)} {e :
     (R : AlgRes ι P D e) (i : Fin R.n) {x : R.M} (hx : x ∈ R.src i) :
     ∀ g ∈ R.ideal i, eval (R.coord i x) g = 0 := by
   have h : R.coord i x ∈ R.coord i '' R.src i := ⟨x, hx, rfl⟩
-  rw [R.image i] at h
-  exact h
+  rwa [R.image i] at h
 
 theorem AlgRes.isSNC_pullback {P D : Ideal (MvPolynomial (Σ k, ι k) ℂ)} {e : ℕ}
     (R : AlgRes ι P D e) (A : FinHolAtlas e R.M) (hA : R.IsGoodAtlas A)
@@ -172,8 +170,7 @@ theorem AlgRes.isSNC_pullback {P D : Ideal (MvPolynomial (Σ k, ι k) ℂ)} {e :
       simp only [σ', dite_eq_left h, Option.some.injEq]
       constructor
       · rintro rfl; exact hc0
-      · intro hl
-        exact d.σ_injOn (hJ _ _ hc0) (hJ _ _ hl) (by rw [hc0, hl])
+      · exact fun hl => d.σ_injOn (hJ _ _ hc0) (hJ _ _ hl) (by rw [hc0, hl])
     · simp only [σ', dite_eq_right h]
       constructor
       · intro h'; cases h'
@@ -203,11 +200,8 @@ theorem AlgRes.isSNC_pullback {P D : Ideal (MvPolynomial (Σ k, ι k) ℂ)} {e :
   · intro j z hz
     have hz' : z ∈ (A.chart j).target ∩ (A.chart j).symm ⁻¹' R.src (idx x) :=
       ⟨hz.1, (hψs hz.2).2⟩
-    have h1 := hA.1 (idx x) pa j z hz'
-    have h2 := hA.1 (idx x) pb j z hz'
-    exact h1.div h2 (hψs hz.2).1.2.1.2.2
-  · intro y hy
-    exact div_ne_zero (hψs hy).1.2.1.1.2 (hψs hy).1.2.1.2.2
+    exact (hA.1 (idx x) pa j z hz').div (hA.1 (idx x) pb j z hz') (hψs hz.2).1.2.1.2.2
+  · exact fun y hy => div_ne_zero (hψs hy).1.2.1.1.2 (hψs hy).1.2.1.2.2
   · intro y hy
     have hyO := (hψs hy).1
     have hyz := R.coord_mem_zero (idx x) (hψs hy).2 _ hI

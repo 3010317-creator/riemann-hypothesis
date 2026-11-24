@@ -212,8 +212,7 @@ theorem nhds_good (hm : m + 1 < a) {U : Set (GL (Fin a) (ι → ℂ))} (hU : U �
       (PositivityTheory.jumpWindows.CornerBlockIndex.e ι hm) :=
     (PositivityTheory.jumpWindows.CornerBlockIndex.contOn_uM hm).continuousAt hb
   apply hc.preimage_mem_nhds
-  rw [PositivityTheory.jumpWindows.CornerBlockIndex.uM_e]
-  exact hU
+  rwa [PositivityTheory.jumpWindows.CornerBlockIndex.uM_e]
 
 theorem cd_cut (hm : m + 1 < a) {X : Type} [NormedAddCommGroup X] [NormedSpace ℂ X]
     {ρ : GL (Fin a) (ι → ℂ) →* (X →L[ℂ] X)} {v : X} (hv : SmV ρ v) {η : V ι a m → ℂ}
@@ -298,18 +297,15 @@ theorem mirabolic_induction_step_exists : S2 → S3 → S5 → S6 → S8 → Mir
   refine ⟨fun h => η (CornerBlockIndex.xi hm h), fun h => h * (CornerBlockIndex.uM hm (CornerBlockIndex.xi hm h))⁻¹, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · simp [η, CornerBlockIndex.xi_one, hfe]
   · simp [CornerBlockIndex.xi_one, CornerBlockIndex.uM_e]
-  · intro h hb hη
-    exact CornerBlockIndex.mir_mul hm hb (hfO (hne _ hη))
-  · intro h
-    exact ⟨f (CornerBlockIndex.xi hm h), (hfr ⟨_, rfl⟩).1, rfl⟩
+  · exact fun h hb hη => CornerBlockIndex.mir_mul hm hb (hfO (hne _ hη))
+  · exact fun h => ⟨f (CornerBlockIndex.xi hm h), (hfr ⟨_, rfl⟩).1, rfl⟩
   · refine ⟨CornerBlockIndex.uM hm '' tsupport f, ?_, ?_, ?_, ?_⟩
     · exact hfc.isCompact.image_of_continuousOn ((CornerBlockIndex.contOn_uM hm).mono hfO)
     · rintro _ ⟨x, hx, rfl⟩
       exact (hfW hx).2
     · rintro _ ⟨x, _, rfl⟩
       exact CornerBlockIndex.blk_uM hm x
-    · intro h _ hη
-      exact ⟨_, ⟨_, hne _ hη, rfl⟩, by group⟩
+    · exact fun h _ hη => ⟨_, ⟨_, hne _ hη, rfl⟩, by group⟩
   · intro v hv
     let F : CornerBlockIndex.V ι a m → X := fun x => η x • orb ρ v (CornerBlockIndex.sI hm x)
     have hFd : ContDiff ℝ ∞ F := CornerBlockIndex.cd_cut hm hv hηd hηO

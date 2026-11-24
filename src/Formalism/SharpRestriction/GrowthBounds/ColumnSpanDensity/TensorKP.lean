@@ -60,8 +60,7 @@ private theorem tm_comap {S α : Type} [Fintype S] [DecidableEq S] (n : S → α
     apply Finsupp.mapDomain_of_notMem_range
     rintro ⟨v, hv⟩
     exact hts (congrArg Prod.fst hv)
-  · intro h
-    exact absurd (Finset.mem_univ s) h
+  · exact fun h => absurd (Finset.mem_univ s) h
 
 theorem tensorMap {K : Type} [Field K] {S α B : Type} [Fintype S] [DecidableEq S] [CommRing B]
     [Algebra K B] (g : S → MvPolynomial α K →ₗ[K] B) :
@@ -118,8 +117,7 @@ private theorem rg_prod_mem {R A : Type} [CommSemiring R] [CommSemiring A] [Alge
     (hz : ∀ s, z s ∈ M s) : ∏ s ∈ U, z s ∈ ∏ s ∈ U, M s := by
   induction U using Finset.induction_on with
   | empty =>
-    simp only [Finset.prod_empty]
-    exact Submodule.one_le.mp (le_refl (1 : Submodule R A))
+    simpa only [Finset.prod_empty] using Submodule.one_le.mp (le_refl (1 : Submodule R A))
   | insert a U ha ih =>
     rw [Finset.prod_insert ha, Finset.prod_insert ha]
     exact Submodule.mul_mem_mul (hz a) ih

@@ -93,8 +93,7 @@ theorem map_mem (φ : Ω →ₐ[O] Ω₁) (x : (Σ k, ι k) → Ω) (z : (Σ k, 
       rw [mseg_join φ x z (comb t s), mseg_join φ x z s, map_div₀]
       exact (mul_div_mul_right _ _ hw).symm
     have h2 := div_mem_chartRing (o := O) (mseg (joinCoord (fun p => φ (x p)) z)) s (comb t s)
-    rw [← h] at h2
-    exact h2
+    rwa [← h] at h2
   exact hle hr
 
 theorem main [∀ k, Fintype (ι k)] [∀ k, Fintype (ι' k)]
@@ -109,8 +108,7 @@ theorem main [∀ k, Fintype (ι k)] [∀ k, Fintype (ι' k)]
       v = r * (φ u * chartMon (joinCoord (fun p => φ (x p)) z) s (pullDeg (K' := K') a)) := by
   have hx : mseg x (restrictChart s) ≠ 0 := by
     rw [mseg_join] at hs
-    intro h
-    exact left_ne_zero_of_mul hs (by rw [h, map_zero])
+    exact fun h => left_ne_zero_of_mul hs (by rw [h, map_zero])
   rw [hB s hs, chartMon_join, ← map_mul]
   constructor
   · intro hv

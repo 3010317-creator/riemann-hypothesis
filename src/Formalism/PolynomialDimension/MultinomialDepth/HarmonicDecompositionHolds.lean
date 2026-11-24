@@ -539,8 +539,7 @@ theorem levelProj_apply (A B j : ℕ) (f : PolXY K k) : levelProj K k A B j f =
 
 theorem ctrDiv_mem {A B : ℕ} (j : ℕ) {f : PolXY K k} (hf : f ∈ PolAB K k A B) :
     ctrDiv K k j f ∈ PolAB K k (A - j) (B - j) := by
-  simp only [ctrDiv, LinearMap.smul_apply]
-  exact Submodule.smul_mem _ _ (ctrF_pow_mem j hf)
+  simpa only [ctrDiv, LinearMap.smul_apply] using Submodule.smul_mem _ _ (ctrF_pow_mem j hf)
 
 theorem levelProj_image [CharZero K] (hk : 1 ≤ k) {A B : ℕ} (j : ℕ) {f : PolXY K k}
     (hf : f ∈ PolAB K k A B) :

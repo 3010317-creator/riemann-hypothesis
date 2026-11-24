@@ -91,8 +91,7 @@ theorem exists_intBasis : ∃ b : Module.Basis (Fin (Module.finrank F E)) F E,
   rw [Module.Basis.isUnitSMul_apply]
   have e : ((y : F)) • b0 i = y • b0 i := by
     rw [← Int.cast_smul_eq_zsmul F y (b0 i)]
-  rw [e]
-  exact h
+  rwa [e]
 
 def ib : Module.Basis (Fin (Module.finrank F E)) F E := (exists_intBasis (F := F) (E := E)).choose
 
@@ -131,13 +130,11 @@ variable (v : HeightOneSpectrum (𝓞 F))
 
 theorem exists_ne_zero_mem_nhds {U : Set (Fv F v)} (hU : U ∈ 𝓝 (0 : Fv F v)) :
     ∃ t ∈ U, t ≠ 0 := by
-  by_contra h
-  push Not at h
+  by_contra! h
   have h0 : ({0} : Set (Fv F v)) ∈ 𝓝 (0 : Fv F v) := Filter.mem_of_superset hU fun t ht => h t ht
   have hop : IsOpen ({0} : Set (Fv F v)) := by
     refine isOpen_iff_mem_nhds.mpr fun x hx => ?_
-    rw [Set.mem_singleton_iff.mp hx]
-    exact h0
+    rwa [Set.mem_singleton_iff.mp hx]
   have : DiscreteTopology (Fv F v) := discreteTopology_of_isOpen_singleton_zero hop
   have hfin : (v.adicCompletionIntegers F : Set (Fv F v)).Finite :=
     (PI.AdicCompletionValuation.isCompact_adicCompletionIntegers F v).finite_of_discrete
@@ -217,10 +214,8 @@ theorem isOpen_latLoc (Λ : Set (Fin n → E)) (hSD : IsSDLoc σ J v Λ)
     ext y
     simp only [Set.mem_iInter, Set.mem_preimage, SetLike.mem_coe]
     constructor
-    · intro hy a
-      exact (hSD y).mp hy (g a) (gens_mem v Λ g hg a)
-    · intro hy
-      exact (hSD y).mpr (hR_mem_of_gens σ J v Λ g hg y hy)
+    · exact fun hy a => (hSD y).mp hy (g a) (gens_mem v Λ g hg a)
+    · exact fun hy => (hSD y).mpr (hR_mem_of_gens σ J v Λ g hg y hy)
   rw [e]
   exact isOpen_iInter_of_finite fun a =>
     (isOpen_oev v).preimage (LocMassOrdKv.continuous_hR_right σ J v (g a))

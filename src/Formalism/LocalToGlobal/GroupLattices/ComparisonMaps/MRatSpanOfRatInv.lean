@@ -175,8 +175,7 @@ theorem jdI_decomp (reps : Finset (G.comp × G.P.Tup)) (hR : IsReps G reps)
           Formalism.MainNotions.G.LatticeSystems.jd_smul_one]
       · left
         exact fun h => h1 (by simpa using h)
-    · intro h
-      exact absurd hr0 h
+    · exact fun h => absurd hr0 h
   · rw [hzero i' L hL]
     symm
     apply Finset.sum_eq_zero
@@ -313,8 +312,7 @@ theorem span_inv (hsep : ∀ F : W, (∀ t, ev t F = 0) → F = 0)
       rfl
     have h5 := Fintype.linearIndependent_iff.1 hli q h4 j
     rw [← hq, h5, map_zero]
-  rw [map_sub, sub_eq_zero, hy] at hφz
-  exact hφz
+  rwa [map_sub, sub_eq_zero, hy] at hφz
 
 end Gen
 
@@ -350,8 +348,7 @@ theorem inv_span [IsFractionRing G.O G.Kf] (w : HeightOneSpectrum (𝓞 LL))
         simp only [Set.mem_ofPred_eq, map_add (f := _)] at h h' ⊢
         exact Submodule.add_mem _ h h'
       zero_mem' := by
-        simp only [Set.mem_ofPred_eq, map_zero]
-        exact Submodule.zero_mem _
+        simpa only [Set.mem_ofPred_eq, map_zero] using Submodule.zero_mem _
       smul_mem' := by
         intro a Q h
         simp only [Set.mem_ofPred_eq] at h ⊢
@@ -399,8 +396,7 @@ theorem inv_span [IsFractionRing G.O G.Kf] (w : HeightOneSpectrum (𝓞 LL))
     rintro _ ⟨Q, hQ, rfl⟩
     refine ⟨Q, fun γ hγ => ?_, rfl⟩
     have := hQ _ ⟨γ, hγ, rfl⟩
-    rw [hTm] at this
-    exact this
+    rwa [hTm] at this
 
   have hb : LinearIndependent G.Kf (φ ∘ (MvPolynomial.basisMonomials _ LL)) := by
     have e1 : φ ∘ (MvPolynomial.basisMonomials _ LL) = MvPolynomial.basisMonomials _ G.Kf := by

@@ -290,15 +290,12 @@ theorem hasDD_schur_sum (r a : ℕ) (c : SmallBlock) (κ : ℚ)
   rw [map_mul, yEval, aeval_C, Algebra.smul_def, mul_assoc]
 
 theorem antitone_of_mem_partitionsOf {m n : ℕ} {lam : Fin m → ℕ} (h : lam ∈ partitionsOf m n) :
-    Antitone lam := by
-  intro i j hij
-  exact (Finset.mem_filter.mp h).2 i j hij
+    Antitone lam := fun i j hij => (Finset.mem_filter.mp h).2 i j hij
 
 theorem sum_of_mem_partitionsOf {m n : ℕ} {lam : Fin m → ℕ} (h : lam ∈ partitionsOf m n) :
     ∑ i, lam i = n := by
   have := (Finset.mem_filter.mp h).1
-  rw [Finset.Nat.mem_antidiagonalTuple] at this
-  exact this
+  rwa [Finset.Nat.mem_antidiagonalTuple] at this
 
 theorem constantCoeff_pushOut_sum (r a : ℕ) (c : SmallBlock) (κ : ℚ) (s : Finset (Fin r → ℕ))
     (hs : ∀ lam ∈ s, Antitone lam) (b : (Fin r → ℕ) → ℚ) :
@@ -360,8 +357,7 @@ theorem extraFactor_expand (hF : FrobeniusCharacterFormula.Statement) (r q m : �
       rw [pow_succ', this, add_comm 1 m']
       refine Finset.sum_congr rfl fun lam _ => ?_
       rw [ite_eq_right hm, List.replicate_succ]
-  · simp only [ite_eq_right hq]
-    exact hF r q m (Nat.one_le_iff_ne_zero.mpr hq)
+  · simpa only [ite_eq_right hq] using hF r q m (Nat.one_le_iff_ne_zero.mpr hq)
 
 def blockOut (r a : ℕ) (c : SmallBlock) (κ : ℚ) (q m : ℕ) : RootRing 1 (r + a) :=
   ∑ lam ∈ partitionsOf r (q + m), blockCoeff q m lam • pushOut r a c κ lam
@@ -514,8 +510,7 @@ theorem restrict_gmfOut (f r a : ℕ) (c : SmallBlock) (κ : ℚ) (q : Fin f →
           ∏ σ ∈ Finset.univ.erase τ, (blockCoeff (q σ) (r * a - q σ) (rectangle r a) * κ)) •
         toN (r + a) (blockOut r a c κ (q τ) (mstar f r a q e τ τ)) := by
 
-  rw [gmfOut, map_sum]
-  rw [Finset.sum_eq_single (mstar f r a q e τ)]
+  rw [gmfOut, map_sum, Finset.sum_eq_single (mstar f r a q e τ)]
   · rw [map_smul, map_prod, ← Finset.mul_prod_erase _ _ (Finset.mem_univ τ)]
     rw [restrictToBlock_blockEmb, ite_eq_left rfl]
     have : ∏ x ∈ Finset.univ.erase τ, restrictToBlock f (r + a) τ
@@ -538,8 +533,7 @@ theorem restrict_gmfOut (f r a : ℕ) (c : SmallBlock) (κ : ℚ) (q : Fin f →
     rw [restrictToBlock_blockEmb, ite_eq_right hστ, constantCoeff_blockOut, ite_eq_right, map_zero]
     have := hq σ hστ
     omega
-  · intro h
-    exact absurd (mstar_mem f r a q e τ he) h
+  · exact fun h => absurd (mstar_mem f r a q e τ he) h
 
 theorem mem_partitionsOf_iff {m n : ℕ} (lam : Fin m → ℕ) :
     lam ∈ partitionsOf m n ↔ ∑ i, lam i = n ∧ Antitone lam := by
@@ -614,8 +608,7 @@ theorem blockOut_rect (r a : ℕ) (c : SmallBlock) (κ : ℚ) (q m : ℕ) (h : q
     have := hall i
     simp only [rectangle]
     omega
-  · intro h'
-    exact absurd ((rectangle_mem_partitionsOf r a _).mpr h) h'
+  · exact fun h' => absurd ((rectangle_mem_partitionsOf r a _).mpr h) h'
 
 theorem gmfOut_zero (f r a : ℕ) (c : SmallBlock) (κ : ℚ) :
     gmfOut f r a c κ 0 (f * (r * a)) =

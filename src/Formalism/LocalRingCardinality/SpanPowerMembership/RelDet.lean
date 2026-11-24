@@ -203,8 +203,7 @@ theorem det_root_of_unity_of_stab [StarRing E]
       rw [h2] at h
       exact_mod_cast h
     have h5 : ‖φ γ.det‖ ^ 2 = 1 := by
-      rw [← Complex.normSq_eq_norm_sq]
-      exact h4
+      rwa [← Complex.normSq_eq_norm_sq]
     nlinarith [norm_nonneg (φ γ.det)]
   obtain ⟨n, hn, h⟩ := NumberField.Embeddings.pow_eq_one_of_norm_eq_one (K := E) (A := ℂ) hint_r hnorm
   exact ⟨n, hn, h⟩

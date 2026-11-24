@@ -227,8 +227,7 @@ theorem atProj (hOn : DualPtsOnPlane.Statement) (hOf : DualPtsOfPlane.Statement)
     have hγy : γ y = dualPlanePt b σ (A σ *ᵥ Fin.cons 1 y) := by
       funext ⟨u, t⟩
       cases u
-      have h1 := congrFun hγ.1 (fun _ => t)
-      simpa only [segre_const] using h1
+      simpa only [segre_const] using congrFun hγ.1 (fun _ => t)
     have hcont : ContinuousAt γ y := (hγ.2.self_of_nhds).1.continuousAt
     have hR : ∀ᶠ y' in 𝓝 y, recLin b hb σ (γ y') ≠ 0 := by
       have hc : ContinuousAt (fun y' => recLin b hb σ (γ y')) y :=
@@ -279,8 +278,7 @@ theorem DualGeomDegCharts.proof (hInt : ChartDensityIntegrable.Statement) : Dual
   refine ⟨A, hA, ?_⟩
   show ptsIntegral (e := D) (dualIdeal b) (fun _ z => Real.log ((dualLine F b hb).h z)) (fun _ => 1) = _
   unfold ptsIntegral
-  rw [dite_eq_left hex]
-  exact hE
+  rwa [dite_eq_left hex]
 
 end
 
@@ -382,8 +380,7 @@ theorem atProj (hOn : DualPtsOnPlane.Statement) (hOf : DualPtsOfPlane.Statement)
     have hγy : γ y = dualPlanePt b σ (A σ *ᵥ Fin.cons 1 y) := by
       funext ⟨u, t⟩
       cases u
-      have h1 := congrFun hγ.1 (fun _ => t)
-      simpa only [segre_const] using h1
+      simpa only [segre_const] using congrFun hγ.1 (fun _ => t)
     have hcont : ContinuousAt γ y := (hγ.2.self_of_nhds).1.continuousAt
     have hR : ∀ᶠ y' in 𝓝 y, recLin b hb σ (γ y') ≠ 0 := by
       have hc : ContinuousAt (fun y' => recLin b hb σ (γ y')) y :=

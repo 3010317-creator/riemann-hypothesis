@@ -127,10 +127,8 @@ theorem card_fiber_ratPrimeBelow_le {ι : Type*} (g : ι → HeightOneSpectrum (
           have hx' : x ∈ F.filter (fun x => ratPrimeBelow (g x) = p) := hx
           have h2 := (Finset.mem_filter.1 hx').2
           have h3 := mem_primesOverFinset_ratPrimeBelow (g x)
-          rw [h2] at h3
-          exact h3
-        · intro x _ y _ hxy
-          exact hg (HeightOneSpectrum.ext hxy)
+          rwa [h2] at h3
+        · exact fun x _ y _ hxy => hg (HeightOneSpectrum.ext hxy)
     _ ≤ _ := card_primesOverFinset_span_le_finrank (K := K) p hp
 
 theorem rpow_neg_le_inv_ratPrimeBelow_sq (𝔭 : HeightOneSpectrum (𝓞 K)) (h : ¬ (Ideal.absNorm 𝔭.asIdeal).Prime)
@@ -189,8 +187,7 @@ theorem exists_prime_absNorm_of_hasDirichletDensity {S : Set (HeightOneSpectrum 
     (h : NumberField.Set.HasDirichletDensity S δ) (hδ : 0 < δ) {T : Set (HeightOneSpectrum (𝓞 K))} (hT : T.Finite) :
     ∃ 𝔭 ∈ S, 𝔭 ∉ T ∧ (Ideal.absNorm 𝔭.asIdeal).Prime := by
   classical
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   obtain ⟨B, hB0, hbound⟩ : ∃ B : ℝ, 0 ≤ B ∧
       ∀ s : ℝ, 1 < s → NumberField.Set.primeIdealZetaSum S s ≤ B := by
     refine ⟨(hT.toFinset.card : ℝ) + (Module.finrank ℚ K : ℝ) * ∑' m : ℕ, 1 / (m : ℝ) ^ 2,
@@ -212,12 +209,9 @@ theorem exists_prime_absNorm_of_hasDirichletDensity {S : Set (HeightOneSpectrum 
         _ ≤ (hT.toFinset.card : ℝ) := by
             refine Nat.cast_le.2 (Finset.card_le_card_of_injOn Subtype.val ?_
               Subtype.val_injective.injOn)
-            intro x hx
-            have hx' := (Finset.mem_filter.1 hx).2
-            exact (Set.Finite.mem_toFinset hT).2 hx'
+            exact fun x hx => (Set.Finite.mem_toFinset hT).2 ((Finset.mem_filter.1 hx).2)
     · refine sum_absNorm_rpow_neg_le_of_not_prime (ι := S) Subtype.val Subtype.val_injective _ ?_ hs
-      intro x hx
-      exact hcon x.1 x.2 (Finset.mem_filter.1 hx).2
+      exact fun x hx => hcon x.1 x.2 (Finset.mem_filter.1 hx).2
   unfold NumberField.Set.HasDirichletDensity at h
   have hU := tendsto_primeIdealZetaSum_univ (K := K)
   have h1 : ∀ᶠ s in 𝓝[>] (1 : ℝ), δ / 2 < NumberField.Set.primeIdealZetaSum S s /

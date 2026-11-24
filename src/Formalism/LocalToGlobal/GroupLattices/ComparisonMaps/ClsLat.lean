@@ -74,8 +74,7 @@ theorem gMap_std_le (g : GL (Fin k) Qq) :
     gMap W g (stdL W) ≤ stdL W ↔ ∀ a b, (g : Matrix (Fin k) (Fin k) Qq) a b ∈ (algebraMap W Qq).range := by
   rw [← colSpan_eq]
   constructor
-  · intro h a b
-    exact (mem_stdL W _).1 (h (Submodule.subset_span ⟨b, rfl⟩)) a
+  · exact fun h a b => (mem_stdL W _).1 (h (Submodule.subset_span ⟨b, rfl⟩)) a
   · intro h
     rw [colSpan, Submodule.span_le]
     rintro _ ⟨c, rfl⟩

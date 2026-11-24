@@ -82,8 +82,7 @@ theorem isCompact_of_unitary {T : Set (Matrix n n ℂ)} (hT : IsClosed T)
         (fun x _ => Complex.normSq_nonneg _) (Finset.mem_univ i)
     rw [Metric.mem_closedBall, dist_zero_right]
     have h2 : ‖M i j‖ ^ 2 ≤ 1 := by
-      rw [← Complex.normSq_eq_norm_sq]
-      exact hle
+      rwa [← Complex.normSq_eq_norm_sq]
     nlinarith [norm_nonneg (M i j)]
   have hK : IsCompact (Set.pi Set.univ (fun _ : n => Set.pi Set.univ
       (fun _ : n => Metric.closedBall (0 : ℂ) 1)) : Set (Matrix n n ℂ)) :=
@@ -107,8 +106,7 @@ theorem isCompact_units_of_unitary {T : Set (Matrix n n ℂ)} (hT : IsClosed T)
   have hS : {g : GL n ℂ | (g : Matrix n n ℂ) ∈ T} = Set.range f := by
     ext g
     constructor
-    · intro hg
-      exact ⟨⟨g, hg⟩, Units.ext rfl⟩
+    · exact fun hg => ⟨⟨g, hg⟩, Units.ext rfl⟩
     · rintro ⟨M, rfl⟩
       exact M.2
   rw [hS]

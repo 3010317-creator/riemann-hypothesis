@@ -51,10 +51,8 @@ theorem FlagModelJoinLeftAlt.proof (hVert : JoinVerticalDivisor.Statement)
       (Fin.append F.flag.g (fun l => rename (liftVar F.ι') (g l)) i) := by
     intro i
     refine Fin.addCases (fun j => ?_) (fun j => ?_) i
-    · simp only [Fin.append_left]
-      exact F.flag.vert j
-    · simp only [Fin.append_right, pullDeg_sub]
-      exact hVert O Ω K ι x F.K' F.ι' F.z _ _ _ (hv j)
+    · simpa only [Fin.append_left] using F.flag.vert j
+    · simpa only [Fin.append_right, pullDeg_sub] using hVert O Ω K ι x F.K' F.ι' F.z _ _ _ (hv j)
   have hH : (rename (Fin.castAdd r) G * rename (Fin.natAdd N) Q).IsHomogeneous (d + 1) := by
     have h : (rename (Fin.castAdd r) G * rename (Fin.natAdd N) Q).IsHomogeneous (c + (d + 1 - c)) :=
       hG.rename_isHomogeneous.mul hQ.rename_isHomogeneous

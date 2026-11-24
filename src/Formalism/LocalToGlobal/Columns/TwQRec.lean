@@ -46,8 +46,7 @@ theorem qdf_ratHom_stab (p : DecoF E n ST SG Q) (a : MulAction.stabilizer (UF E 
 
 theorem qdf_stab_deco (p : DecoF E n ST SG Q) (a : MulAction.stabilizer (UF E n × H × Θ.grp) p) :
     ((a.1.1, a.1.2.1) : UF E n × H) ∈ MulAction.stabilizer (UF E n × H) p.deco := by
-  have h := congrArg DecoF.deco (MulAction.mem_stabilizer_iff.1 a.2)
-  exact MulAction.mem_stabilizer_iff.2 h
+  exact MulAction.mem_stabilizer_iff.2 (congrArg DecoF.deco (MulAction.mem_stabilizer_iff.1 a.2))
 
 theorem qdf_stab_fr (p : DecoF E n ST SG Q) (a : MulAction.stabilizer (UF E n × H × Θ.grp) p) (P : Q) :
     (a.1.2.2.1 P).1 = (p.fr P)⁻¹ * a.1.1.1 * p.fr P := by

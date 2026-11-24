@@ -261,8 +261,7 @@ variable {n : ℕ} {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
 theorem comm_of_disj {E : GLOps n K V} (hE : IsGLRep E) {a b c d : Fin n} (h1 : b ≠ c) (h2 : d ≠ a) :
     Commute (E a b) (E c d) := by
   have := hE.1 a b c d
-  rw [ite_eq_right h1, ite_eq_right h2, sub_zero, sub_eq_zero] at this
-  exact this
+  rwa [ite_eq_right h1, ite_eq_right h2, sub_zero, sub_eq_zero] at this
 
 theorem divPow_comm {E : GLOps n K V} {a b c d : Fin n} (h : Commute (E a b) (E c d)) (j k : ℕ) :
     Commute (divPowE E a b j) (divPowE E c d k) := by
@@ -323,8 +322,7 @@ theorem restPair'_of (h : RestPair) : RestPair' := by
   have := h K V n (dualOps E) (dual_rep hE) c b a hbc.symm hac.symm hab.symm (-ν) t u
     (by simp only [Pi.neg_apply]; omega) T hT w ((dual_mem E ν w).2 hw)
   simp only [pf_dual] at this
-  simp only [dualOps, LinearMap.neg_apply, map_neg, neg_inj] at this
-  exact this
+  simpa only [dualOps, LinearMap.neg_apply, map_neg, neg_inj] using this
 
 theorem ybat_symm (sg ta : ℕ) (h : YBat sg ta) : YBat ta sg := by
   intro K V _ _ _ _ _ n E hE a b c hab hac hbc ν s t hs ht T hT x hx
@@ -415,8 +413,7 @@ theorem cross_ab [CharZero K] {E : GLOps n K V} (hE : IsGLRep E) {a b c : Fin n}
   have hrel := hE.1
   have hYF : E b c * E b a = E b a * E b c := by
     have h := hrel b c b a
-    rw [ite_eq_right (Ne.symm hbc), ite_eq_right hab, sub_zero, sub_eq_zero] at h
-    exact h
+    rwa [ite_eq_right (Ne.symm hbc), ite_eq_right hab, sub_zero, sub_eq_zero] at h
   have hYX : E b c * E a b = E a b * E b c + -(E a c) := by
     have h := hrel b c a b
     rw [ite_eq_right (Ne.symm hac), ite_eq_left rfl, zero_sub] at h
@@ -468,16 +465,14 @@ theorem cross_ac [CharZero K] {E : GLOps n K V} (hE : IsGLRep E) {a b c : Fin n}
   have hrel := hE.1
   have hYX : E b c * E a c = E a c * E b c := by
     have h := hrel b c a c
-    rw [ite_eq_right (Ne.symm hac), ite_eq_right (Ne.symm hbc), sub_zero, sub_eq_zero] at h
-    exact h
+    rwa [ite_eq_right (Ne.symm hac), ite_eq_right (Ne.symm hbc), sub_zero, sub_eq_zero] at h
   have hYF : E b c * E c a = E c a * E b c + E b a := by
     have h := hrel b c c a
     rw [ite_eq_left rfl, ite_eq_right hab, sub_zero] at h
     rw [← h]; abel
   have hEF : E b a * E c a = E c a * E b a := by
     have h := hrel b a c a
-    rw [ite_eq_right hac, ite_eq_right hab, sub_zero, sub_eq_zero] at h
-    exact h
+    rwa [ite_eq_right hac, ite_eq_right hab, sub_zero, sub_eq_zero] at h
   have hXc : ∀ k : ℕ, E b c * E a c ^ k = E a c ^ k * E b c := fun k =>
     (Commute.pow_right (hYX : Commute (E b c) (E a c)) k).eq
   have hEFk : ∀ k : ℕ, E b a * E c a ^ k = E c a ^ k * E b a := fun k =>
@@ -691,8 +686,7 @@ theorem lemA (hef : e * f = f * e + h) (hhf : h * f = f * h - (2 : K) • f) {v 
     (k : ℕ) : e ((f ^ (k + 1)) v) = (f ^ (k + 1)) (e v) + (((k : K) + 1) * (c - k)) • (f ^ k) v := by
   have hef' : ∀ y, e (f y) = f (e y) + h y := fun y => by
     have := LinearMap.congr_fun hef y
-    rw [Module.End.mul_apply, LinearMap.add_apply, Module.End.mul_apply] at this
-    exact this
+    rwa [Module.End.mul_apply, LinearMap.add_apply, Module.End.mul_apply] at this
   have hp : ∀ (n : ℕ) (y : V), (f ^ (n + 1)) y = f ((f ^ n) y) := fun n y => by
     rw [pow_succ', Module.End.mul_apply]
   induction k with
@@ -709,8 +703,7 @@ theorem lemB (hef : e * f = f * e + h) (hhe : h * e = e * h + (2 : K) • e) {v 
     (k : ℕ) : (e ^ (k + 1)) (f v) = f ((e ^ (k + 1)) v) + (((k : K) + 1) * (c + k)) • (e ^ k) v := by
   have hef' : ∀ y, e (f y) = f (e y) + h y := fun y => by
     have := LinearMap.congr_fun hef y
-    rw [Module.End.mul_apply, LinearMap.add_apply, Module.End.mul_apply] at this
-    exact this
+    rwa [Module.End.mul_apply, LinearMap.add_apply, Module.End.mul_apply] at this
   have hp : ∀ (n : ℕ) (y : V), (e ^ (n + 1)) y = e ((e ^ n) y) := fun n y => by
     rw [pow_succ', Module.End.mul_apply]
   induction k with
@@ -940,14 +933,12 @@ def resOps {m : ℕ} (E : GLOps n K V) (φ : Fin m → Fin n) : GLOps m K V := f
 theorem res_mem {m : ℕ} (E : GLOps n K V) (φ : Fin m → Fin n) (ν : Fin n → ℤ) (x : V) (hx : x ∈ weightSp E ν) :
     x ∈ weightSp (resOps E φ) (ν ∘ φ) := by
   simp only [weightSp, Submodule.mem_iInf, LinearMap.mem_ker] at hx ⊢
-  intro i
-  exact hx (φ i)
+  exact fun i => hx (φ i)
 
 theorem res_rep {m : ℕ} {E : GLOps n K V} (hE : IsGLRep E) (φ : Fin m → Fin n) (hφ : Function.Injective φ) :
     IsGLRep (resOps E φ) := by
   refine ⟨fun a b c d => ?_, fun x => ?_, ?_⟩
-  · have h := hE.1 (φ a) (φ b) (φ c) (φ d)
-    simpa only [resOps, hφ.eq_iff] using h
+  · simpa only [resOps, hφ.eq_iff] using hE.1 (φ a) (φ b) (φ c) (φ d)
   · obtain ⟨W, hW, hx, hst⟩ := hE.2.1 x
     exact ⟨W, hW, hx, fun a b y hy => hst (φ a) (φ b) y hy⟩
   · rw [eq_top_iff, ← hE.2.2]
@@ -1232,8 +1223,7 @@ theorem cn_key {j : ℕ} (l1 l2 : List (Fin n × Fin n)) (b c j' e : Fin n)
   have n2 : (j', e) ∉ l1 := fun hu => hmem _ hu (by simp)
   have ht := List.Nodup.of_append_right hnd
   have hce : (j', c) ≠ (j', e) := by
-    intro heq
-    exact (List.nodup_cons.mp (List.nodup_cons.mp ht).2).1 (by simp [heq])
+    exact fun heq => (List.nodup_cons.mp (List.nodup_cons.mp ht).2).1 (by simp [heq])
   have hec : e ≠ c := fun h' => hce (by rw [h'])
   have hbj : (b, c) ≠ (j', c) := fun h' => hnb (congrArg Prod.fst h').symm
   have hbje : (b, c) ≠ (j', e) := fun h' => hnb (congrArg Prod.fst h').symm
@@ -1241,8 +1231,7 @@ theorem cn_key {j : ℕ} (l1 l2 : List (Fin n × Fin n)) (b c j' e : Fin n)
   have i1 : L.idxOf (j', c) = l1.length + 1 := idxOf_append_second l1 ((j', e) :: l2) (b, c) (j', c) hbj n1
   have i2 : L.idxOf (j', e) = l1.length + 2 := idxOf_append_third l1 l2 (b, c) (j', c) (j', e) hbje hce n2
   have inj : ∀ u v, u ∈ L → v ∈ L → L.idxOf u = L.idxOf v → u = v := by
-    intro u v hu hv h'
-    exact eq_of_idxOf_eq_of_mem L u v hu hv h'
+    exact fun u v hu hv h' => eq_of_idxOf_eq_of_mem L u v hu hv h'
   have hje : j'.val < e.val := (hall (j', e) (by simp [hL])).2
   have o1 := hord j' b c hjj hjb' hbc
   rw [i1, i0] at o1
@@ -1263,8 +1252,7 @@ theorem cn_key {j : ℕ} (l1 l2 : List (Fin n × Fin n)) (b c j' e : Fin n)
   · exact hne (Fin.ext heb)
   · have hr1 : L.idxOf (b, e) ≠ l1.length := by
       rw [← i0]
-      intro h'
-      exact hec (congrArg Prod.snd (inj _ _ (hcomp b e (by omega) heb) (by simp [hL]) h'))
+      exact fun h' => hec (congrArg Prod.snd (inj _ _ (hcomp b e (by omega) heb) (by simp [hL]) h'))
     have hr2 : L.idxOf (b, e) ≠ l1.length + 1 := by
       rw [← i1]
       intro h'
@@ -1299,8 +1287,7 @@ theorem cn_meas_lt {j : ℕ} {l l' : List (Fin n × Fin n)}
     · exact h1 r hr
     · exact le_rfl
   · refine ⟨r0, Finset.mem_univ _, ?_⟩
-    rw [ite_eq_left h0, ite_eq_left h0]
-    exact h2
+    rwa [ite_eq_left h0, ite_eq_left h0]
 
 theorem cn_sort {j : ℕ} : ∀ (m : ℕ) (l : List (Fin n × Fin n)), NO n j l → meas j l < m →
     ∃ lF lG, Steps n l (lF ++ lG) ∧ NO n j (lF ++ lG) ∧ (∀ r ∈ lF, r.1.val = j) ∧ (∀ r ∈ lG, r.1.val ≠ j) := by

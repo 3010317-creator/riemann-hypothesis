@@ -28,8 +28,7 @@ theorem isNoetherianRing_adicCompletion (R : Type*) [CommRing R] [IsNoetherianRi
     constructor
     · rintro ⟨i, rfl⟩
       exact (s.equivFin.symm i).2
-    · intro hr
-      exact ⟨s.equivFin ⟨r, hr⟩, by simp [a]⟩
+    · exact fun hr => ⟨s.equivFin ⟨r, hr⟩, by simp [a]⟩
   let P := MvPolynomial (Fin k) R
   let σ : P →+* R := MvPolynomial.eval a
   let J := MvPolynomial.idealOfVars (Fin k) R
@@ -69,8 +68,7 @@ theorem isNoetherianRing_adicCompletion (R : Type*) [CommRing R] [IsNoetherianRi
       intro j
       have h1 := f.property (Nat.le_succ j)
       rw [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top] at h1
-      rw [hJn, ← neg_mem_iff, neg_sub]
-      exact h1
+      rwa [hJn, ← neg_mem_iff, neg_sub]
     choose Pj hPj hσP using fun j ↦ (Ideal.mem_map_iff_of_surjective σ hσs).1 (hd j)
     let Q : ℕ → P := fun n ↦ MvPolynomial.C (f.val 0) + ∑ j ∈ Finset.range n, Pj j
     have hQ : AdicCompletion.IsAdicCauchy J P Q := by

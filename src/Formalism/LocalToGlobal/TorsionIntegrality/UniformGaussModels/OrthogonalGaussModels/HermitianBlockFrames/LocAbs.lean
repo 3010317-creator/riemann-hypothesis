@@ -86,8 +86,7 @@ def UM (Γ : Matrix ι ι K) : Prop :=
 
 theorem IntV_mulVec {Γ : Matrix ι ι K} (hΓ : S.IntM Γ) {x : ι → K} (hx : S.IntV x) : S.IntV (Γ *ᵥ x) := by
   intro i
-  simp only [Matrix.mulVec, dotProduct]
-  exact S.O.sum_mem fun j _ => S.O.mul_mem (hΓ i j) (hx j)
+  simpa only [Matrix.mulVec, dotProduct] using S.O.sum_mem fun j _ => S.O.mul_mem (hΓ i j) (hx j)
 
 theorem IntV_cv {x : ι → K} (hx : S.IntV x) : S.IntV (S.cv x) := fun i => S.hσO (x i) (hx i)
 

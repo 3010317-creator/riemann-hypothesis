@@ -85,14 +85,12 @@ private theorem data_genSub_irred_of_highest_weight_mem (hσ : IsURepOn (UJset �
     intro a y _
     have h1 := hU a a w y
     simp only [hw.1 a, inner_smul_left, adjSign, ite_true, one_mul, Complex.conj_ofReal] at h1
-    simp only [innerₛₗ_apply_apply]
-    exact h1.symm
+    simpa only [innerₛₗ_apply_apply] using h1.symm
   have hfl : ∀ a b, a < b → ε a = ε b → ∀ y ∈ N, (innerₛₗ ℂ w) (E b a y) = 0 := by
     intro a b hab h y _
     have h1 := hU a b w y
     rw [hw.2 a b hab h, inner_zero_left, show adjSign ε a b = 1 by simp [adjSign, h], one_mul] at h1
-    simp only [innerₛₗ_apply_apply]
-    exact h1.symm
+    simpa only [innerₛₗ_apply_apply] using h1.symm
   have horth : ∀ z ∈ N, inner ℂ z w = 0 := by
     intro z hz
     rw [← inner_eq_zero_symm]
@@ -223,8 +221,7 @@ theorem data_form_scalar (hgap : StdGap ε lam) (hσ : IsURepOn (UJset ε) σ) (
     have := hfz y hy
     rw [hfapp, sub_eq_zero] at this
     exact this⟩
-  have hle := schA_genSub_le hV X hX hwV hwX hw0
-  exact ⟨cc, fun x hx y hy => (hle hx).2 y hy⟩
+  exact ⟨cc, fun x hx y hy => ((schA_genSub_le hV X hX hwV hwX hw0) hx).2 y hy⟩
 
 end Data
 

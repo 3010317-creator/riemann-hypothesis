@@ -39,8 +39,7 @@ theorem FiniteProjectionSheetedClosureEquations.surjective_of_no_germ {σ : Type
   obtain ⟨f, hf0, hfmap⟩ := Submodule.exists_dual_map_eq_bot_of_lt_top hlt inferInstance
   have hfA : ∀ z, f (A z) = 0 := fun z => by
     have : f (A z) ∈ (LinearMap.range (A : (σ → ℂ) →ₗ[ℂ] (Fin d → ℂ))).map f := ⟨A z, ⟨z, rfl⟩, rfl⟩
-    rw [hfmap] at this
-    exact this
+    rwa [hfmap] at this
   have hev := hA (fun y => LinearMap.toContinuousLinearMap f y)
     ((LinearMap.toContinuousLinearMap f).analyticAt _)
     (Eventually.of_forall fun z _ => by simpa using hfA z)
@@ -123,15 +122,13 @@ theorem FiniteProjectionSheetedClosureEquations.proof
         exact ⟨hzX, hzV⟩
       obtain ⟨t, ht, rfl⟩ := hzg
       refine ⟨t, ⟨⟨ht, hzb⟩, ?_⟩, rfl⟩
-      rw [hAg t ht] at hzD
-      exact hzD
+      rwa [hAg t ht] at hzD
     · rintro ⟨t, ⟨⟨ht, htb⟩, htD⟩, rfl⟩
       have hmem : g t ∈ X ∩ V := by
         rw [hXV]
         exact ⟨t, ht, rfl⟩
       have hA' : A (g t) ∈ D := by
-        rw [hAg t ht]
-        exact htD
+        rwa [hAg t ht]
       exact ⟨⟨⟨hmem.1, htb⟩, hA'⟩, ⟨⟨hmem.2, htb⟩, hA'⟩⟩
   obtain ⟨N, hN⟩ := hcount σ Y d A D δ hDo hDc hmap hprop hδD fun x hx hx' => by
     obtain ⟨O, V, g, hO, hV, hxV, hg, hAg, hYV⟩ := hsec x hx hx'
@@ -151,8 +148,7 @@ theorem FiniteProjectionSheetedClosureEquations.proof
     have hfin := Set.finite_of_encard_eq_coe h
     refine ⟨hfin.toFinset, hfin.coe_toFinset, ?_⟩
     have h' : ((hfin.toFinset : Finset (σ → ℂ)) : Set (σ → ℂ)).encard = N := by
-      rw [hfin.coe_toFinset]
-      exact h
+      rwa [hfin.coe_toFinset]
     rw [Set.encard_coe_eq_coe_finsetCard] at h'
     exact_mod_cast h'
   have hprod : ∀ u z, A z ∈ D → δ (A z) ≠ 0 → ∀ s : Finset (σ → ℂ),

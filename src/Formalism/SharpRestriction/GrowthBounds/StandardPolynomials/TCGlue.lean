@@ -169,8 +169,7 @@ theorem tg_head_wh (L : LvDat C0 CE1 CE2 mu X β) (j : Fin (numSeg X.TT)) (ju : 
     exact hU _
   have h3 : ω' (Sum.inr (Fin.last (X.seg C0 CE1 CE2 j).t, false)) + ω' (Sum.inr (Fin.last (X.seg C0 CE1 CE2 j).t, true)) =
       ωL (Fin.castSucc ⟨2 * segS X.TT j, by omega⟩) + ωL (Fin.last _) := by
-    rw [hx, hx, hUU, hXi]
-    exact hP
+    rwa [hx, hx, hUU, hXi]
   have hEh : ∀ l : Fin (X.seg C0 CE1 CE2 j).t, IsWeightedHomogeneous ω' ((BDk C0 CE1 CE2 mu X β j).Ehat O (r := X.m) l)
       (ωL (finPos (2 * segS X.TT j + 1) (2 * (uTop (X.seg C0 CE1 CE2 j) l : ℕ))) +
         ωL (finPos (2 * segS X.TT j + 1) (2 * (uTop (X.seg C0 CE1 CE2 j) l : ℕ) + 1))) := by
@@ -182,8 +181,7 @@ theorem tg_head_wh (L : LvDat C0 CE1 CE2 mu X β) (j : Fin (numSeg X.TT)) (ju : 
           (2 * (uTop (X.seg C0 CE1 CE2 j) l : ℕ)), c))).mul
         (isWeightedHomogeneous_X (KK O) ω' (Sum.inl (finPos (2 * segS X.TT j + 1)
           (2 * (uTop (X.seg C0 CE1 CE2 j) l : ℕ) + 1), c)))
-      rw [h1, h1] at this
-      exact this
+      rwa [h1, h1] at this
   have hEp : IsWeightedHomogeneous ω' ((BDk C0 CE1 CE2 mu X β j).Eplus O (r := X.m))
       (ωL (Fin.castSucc ⟨2 * segS X.TT j, by omega⟩) + ωL (Fin.last _)) := by
     refine IsWeightedHomogeneous.add ?_ (IsWeightedHomogeneous.sum _ _ _ fun c _ => ?_)
@@ -192,8 +190,7 @@ theorem tg_head_wh (L : LvDat C0 CE1 CE2 mu X β) (j : Fin (numSeg X.TT)) (ju : 
     · have := (isWeightedHomogeneous_X (KK O) ω' (Sum.inl (Fin.castSucc (⟨2 * segS X.TT j, by omega⟩ :
           Fin (2 * segS X.TT j + 1)), c))).mul
         (isWeightedHomogeneous_X (KK O) ω' (Sum.inl (Fin.last (2 * segS X.TT j + 1), c)))
-      rw [h1, h1] at this
-      exact this
+      rwa [h1, h1] at this
   have hA := IsWeightedHomogeneous.prod Finset.univ
     (fun l : Fin (X.seg C0 CE1 CE2 j).t => (BDk C0 CE1 CE2 mu X β j).Ehat O (r := X.m) l ^ ju l) _
     (fun l _ => (hEh l).pow (ju l))
@@ -315,24 +312,21 @@ theorem tg_ioD_Z (j : Fin (numSeg X.TT)) (l : Fin (X.seg C0 CE1 CE2 j).t) :
         (X.seg C0 CE1 CE2 j).P X.p (uTop (X.seg C0 CE1 CE2 j) l) := by
   have h := MvPolynomial.aeval_X (R := KK O) (fun v => (MvPolynomial.X (symVar C0 CE1 CE2 X j v) : RHH O X) ^
     symLev X.p C0 CE1 CE2 X j v) (Sum.inr (Fin.castSucc l, false))
-  rw [sv_Z, sl_Z] at h
-  exact h
+  rwa [sv_Z, sl_Z] at h
 
 theorem ioD_variable_last_eq_top_end (j : Fin (numSeg X.TT)) :
     ioD O C0 CE1 CE2 mu X β j (MvPolynomial.X (scalZ (2 * segS X.TT j + 1) X.m (BDk C0 CE1 CE2 mu X β j).T.t
       (Fin.last (BDk C0 CE1 CE2 mu X β j).T.t))) = MvPolynomial.X ((topEnd X j, true), 0) := by
   have h := MvPolynomial.aeval_X (R := KK O) (fun v => (MvPolynomial.X (symVar C0 CE1 CE2 X j v) : RHH O X) ^
     symLev X.p C0 CE1 CE2 X j v) (Sum.inr (Fin.last _, false))
-  rw [symbol_variable_last, symbol_level_last, pow_one] at h
-  exact h
+  rwa [symbol_variable_last, symbol_level_last, pow_one] at h
 
 theorem tg_ioD_xi (j : Fin (numSeg X.TT)) (c : Fin X.m) :
     ioD O C0 CE1 CE2 mu X β j (MvPolynomial.X (xiVar (2 * segS X.TT j + 1) X.m (BDk C0 CE1 CE2 mu X β j).T.t c)) =
       MvPolynomial.X ((topEnd X j, false), c.succ) := by
   have h := MvPolynomial.aeval_X (R := KK O) (fun v => (MvPolynomial.X (symVar C0 CE1 CE2 X j v) : RHH O X) ^
     symLev X.p C0 CE1 CE2 X j v) (Sum.inl (Fin.last (2 * segS X.TT j + 1), c))
-  rw [sv_xi, sl_xi, pow_one] at h
-  exact h
+  rwa [sv_xi, sl_xi, pow_one] at h
 
 theorem prod_pow_ite_zero_eq {M : Type} [CommMonoid M] {k : ℕ} (f : Fin (k + 1) → M) (a : ℕ) :
     ∏ c, f c ^ (if c = 0 then a else 0) = f 0 ^ a := by
@@ -488,16 +482,14 @@ theorem tg_eval_end (L : LvDat C0 CE1 CE2 mu X β) (ju : ∀ j, Fin (X.seg C0 CE
     intro j' i' b c
     unfold wLet
     rw [ite_eq_right]
-    intro h
-    exact tg_odd_ne_end X j' j i' (congrArg Prod.fst h)
+    exact fun h => tg_odd_ne_end X j' j i' (congrArg Prod.fst h)
   have hend : ∀ j' (b : Bool) (c : Fin (X.m + 1)),
       wLet X (topEnd X j, true) ((topEnd X j', b), c) = if j' = j ∧ b = true then 1 else 0 := by
     intro j' b c
     unfold wLet
     have e : topEnd X j' = topEnd X j ↔ j' = j := by
       constructor
-      · intro h
-        exact congrArg Sigma.fst (tgTop_inj X (a₁ := ⟨j', none⟩) (a₂ := ⟨j, none⟩) h)
+      · exact fun h => congrArg Sigma.fst (tgTop_inj X (a₁ := ⟨j', none⟩) (a₂ := ⟨j, none⟩) h)
       · intro h; rw [h]
     simp only [Prod.mk.injEq, e]
   rw [Finset.sum_eq_single j]
@@ -619,8 +611,7 @@ theorem tcoreAt_of_seg {C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ} (h : SegCoreAt C0 
         show hhDeg X.aT X.bT (segPos X.TT j i) true = X.bT (segPos X.TT j i)
         unfold hhDeg
         rw [ite_eq_left rfl, ite_eq_right (pos_mem X.TT j i).2]
-      rw [hb] at a
-      exact a
+      rwa [hb] at a
     · intro i
       have a := hdeg (topOdd X j i, false)
       rw [tg_eval_odd L ju du A j i false] at a
@@ -628,16 +619,14 @@ theorem tcoreAt_of_seg {C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ} (h : SegCoreAt C0 
         show hhDeg X.aT X.bT (segPos X.TT j i) false = X.aT (segPos X.TT j i)
         unfold hhDeg
         rw [ite_eq_right (by simp), ite_eq_right (pos_mem X.TT j i).2]
-      rw [hb] at a
-      exact a
+      rwa [hb] at a
     · have a := hdeg (topEnd X j, true)
       rw [tg_eval_end L ju du A j] at a
       have hb : hhDegs X.TT X.aT X.bT (topEnd X j, true) = segAPlus X.TT X.aT j := by
         show hhDeg X.aT X.bT (segNext X.TT j) true = X.aT (segNext X.TT j)
         unfold hhDeg
         rw [ite_eq_left rfl, ite_eq_left (next_mem X.TT j).2]
-      rw [hb] at a
-      exact a
+      rwa [hb] at a
   choose β' hBL hord u hu hEq using key
   rw [hsplit, Finset.prod_congr rfl fun j _ => hEq j]
   show symFam (KK O) X.p C0 CE1 CE2 X β' u ∈ _
@@ -647,8 +636,7 @@ theorem tcoreAt_of_seg {C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ} (h : SegCoreAt C0 
   intro s hs
   refine Submodule.subset_span ⟨β', hBL, ?_, s, hs, rfl⟩
   unfold ordFam
-  rw [Finset.sum_congr rfl fun j _ => hord j]
-  exact hnu
+  rwa [Finset.sum_congr rfl fun j _ => hord j]
 
 theorem restTCore_of_seg (h : RestSegCore) : RestTCore :=
   TransportedAlt.mono (fun _ _ _ _ _ _ _ _ _ _ h => tcoreAt_of_seg h) h

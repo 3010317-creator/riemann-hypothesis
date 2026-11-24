@@ -238,19 +238,12 @@ theorem jets_law (u : Sp ℂ ⟶ X) {u' : Sp ℂ ⟶ X} (ex : (Fin g → ℂ) �
     intro v
     have h1 : ex (anSum v) = ex (anPr 0 v) * ex (anPr 1 v) := by rw [← ex_add]; rfl
     rw [h1, CategoryTheory.Hom.mul_def, Over.comp_left, Over.lift_left]
-  have hol0 : IsHolFam fun v => (ex (anPr 0 v)).left := by
-    have h := isHolFam_comp P hPh (pullback.fst G.hom G.hom)
-    rwa [show (fun v => P v ≫ pullback.fst G.hom G.hom) = fun v => (ex (anPr 0 v)).left from funext hPf] at h
-  have hol1 : IsHolFam fun v => (ex (anPr 1 v)).left := by
-    have h := isHolFam_comp P hPh (pullback.snd G.hom G.hom)
-    rwa [show (fun v => P v ≫ pullback.snd G.hom G.hom) = fun v => (ex (anPr 1 v)).left from funext hPs] at h
-  have hols : IsHolFam fun v => (ex (anSum v)).left := by
-    have h := isHolFam_comp P hPh (MonObj.mul : G ⊗ G ⟶ G).left
-    rwa [show (fun v => P v ≫ (MonObj.mul : G ⊗ G ⟶ G).left) = fun v => (ex (anSum v)).left from funext hPm] at h
+  have hol0 : IsHolFam fun v => (ex (anPr 0 v)).left := funext hPf ▸ isHolFam_comp P hPh _
+  have hol1 : IsHolFam fun v => (ex (anPr 1 v)).left := funext hPs ▸ isHolFam_comp P hPh _
+  have hols : IsHolFam fun v => (ex (anSum v)).left := funext hPm ▸ isHolFam_comp P hPh _
   have Jc : ∀ (i : Fin 2) (hA : IsHolFam fun v => (ex (anPr i v)).left),
       (homAt u (jetCopy (S := ℂ) g m i) ≫ xm m).left =
-        spMap ((anRen m : Jet ℂ (Fin 1 × Fin (2 * g)) m →ₐ[ℂ] Jet ℂ (Fin 2 × Fin g) m) :
-          Jet ℂ (Fin 1 × Fin (2 * g)) m →+* Jet ℂ (Fin 2 × Fin g) m) ≫ jetPt (fun v => (ex (anPr i v)).left) hA m := by
+        spMap (anRen (g := g) m : _ →+* _) ≫ jetPt (fun v => (ex (anPr i v)).left) hA m := by
     intro i hA
     have hring : ((jetCopy (S := ℂ) g m i : Jet ℂ (Fin 1 × Fin g) m →ₐ[ℂ] Jet ℂ (Fin 2 × Fin g) m) :
         Jet ℂ (Fin 1 × Fin g) m →+* Jet ℂ (Fin 2 × Fin g) m) =
@@ -263,8 +256,7 @@ theorem jets_law (u : Sp ℂ ⟶ X) {u' : Sp ℂ ⟶ X} (ex : (Fin g → ℂ) �
     show spMap _ ≫ jetPt _ hol m = _
     rw [hring, anSpMap_comp, Category.assoc, anJX_jets ex hol m (anPr i) hA]
   have Js : (homAt u (jetSubstP (S := ℂ) m fun p : Fin 1 × Fin g => psTrunc m (addF ℂ g p.2)) ≫ xm m).left =
-      spMap ((anRen m : Jet ℂ (Fin 1 × Fin (2 * g)) m →ₐ[ℂ] Jet ℂ (Fin 2 × Fin g) m) :
-        Jet ℂ (Fin 1 × Fin (2 * g)) m →+* Jet ℂ (Fin 2 × Fin g) m) ≫ jetPt (fun v => (ex (anSum v)).left) hols m := by
+      spMap (anRen (g := g) m : _ →+* _) ≫ jetPt (fun v => (ex (anSum v)).left) hols m := by
     have hring : ((jetSubstP (S := ℂ) m fun p : Fin 1 × Fin g => psTrunc m (addF ℂ g p.2) :
         Jet ℂ (Fin 1 × Fin g) m →ₐ[ℂ] Jet ℂ (Fin 2 × Fin g) m) : Jet ℂ (Fin 1 × Fin g) m →+* Jet ℂ (Fin 2 × Fin g) m) =
         ((anRen m : Jet ℂ (Fin 1 × Fin (2 * g)) m →ₐ[ℂ] Jet ℂ (Fin 2 × Fin g) m) :
@@ -279,8 +271,7 @@ theorem jets_law (u : Sp ℂ ⟶ X) {u' : Sp ℂ ⟶ X} (ex : (Fin g → ℂ) �
   rw [Js, CategoryTheory.Hom.mul_def, Over.comp_left, Over.lift_left]
   have hl : pullback.lift (homAt u (jetCopy (S := ℂ) g m (0 : Fin 2)) ≫ xm m).left
       (homAt u (jetCopy (S := ℂ) g m (1 : Fin 2)) ≫ xm m).left (by rw [Over.w, Over.w]) =
-      spMap ((anRen m : Jet ℂ (Fin 1 × Fin (2 * g)) m →ₐ[ℂ] Jet ℂ (Fin 2 × Fin g) m) :
-        Jet ℂ (Fin 1 × Fin (2 * g)) m →+* Jet ℂ (Fin 2 × Fin g) m) ≫ jetPt P hPh m := by
+      spMap (anRen (g := g) m : _ →+* _) ≫ jetPt P hPh m := by
     apply pullback.hom_ext
     · rw [pullback.lift_fst, Category.assoc, jetPt_comp P hPh _ _ hol0 hPf, Jc 0 hol0]
     · rw [pullback.lift_snd, Category.assoc, jetPt_comp P hPh _ _ hol1 hPs, Jc 1 hol1]

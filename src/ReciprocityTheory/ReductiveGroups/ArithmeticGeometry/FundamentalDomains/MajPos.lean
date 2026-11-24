@@ -122,8 +122,7 @@ lemma maj_pos {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) {v : Fin r → �
         rw [Matrix.diagonal_apply_eq, Matrix.one_apply_eq]
         simp [ip, sgn]
       · have hne : ip b ≠ ip b' := by
-          intro heq
-          exact hbb (Fin.ext (by simpa [ip] using congrArg Fin.val heq))
+          exact fun heq => hbb (Fin.ext (by simpa [ip] using congrArg Fin.val heq))
         rw [Matrix.diagonal_apply_ne _ hne, Matrix.one_apply_ne hbb, neg_zero]
     have hquadN : ∀ d : Fin (r - X.p0) → ℂ,
         hermC τ.1 X.Gm (∑ b, d b • pc b) (∑ b, d b • pc b) =
@@ -211,8 +210,7 @@ lemma maj_pos {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) {v : Fin r → �
     have hmul : ∀ b, ∑ c, (X.gramPos x τ)⁻¹ b c * X.gramPos x τ c a = if b = a then 1 else 0 := by
       intro b
       have := congrFun (congrFun hAinv b) a
-      rw [Matrix.mul_apply, Matrix.one_apply] at this
-      exact this
+      rwa [Matrix.mul_apply, Matrix.one_apply] at this
     rw [ReciprocityTheory.ChartRestriction.G.FD.hermC_sub_left, X.ppos_eq, hermC_finset_sum_left']
     simp only [hAdef, Finset.sum_mul]
     rw [Finset.sum_comm]
@@ -263,8 +261,7 @@ lemma maj_pos {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) {v : Fin r → �
   rw [hmaj]
   by_cases hw0 : w = 0
   · have hy0 : y ≠ 0 := by
-      rw [hw0, add_zero] at hv
-      exact hv
+      rwa [hw0, add_zero] at hv
     have h2 : hermC τ.1 X.Gm w w = 0 := by
       rw [hw0]
       exact ReciprocityTheory.ChartRestriction.G.FD.hermC_zero_left _ _ _

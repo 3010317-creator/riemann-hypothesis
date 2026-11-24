@@ -236,8 +236,7 @@ theorem Tm_emb (C : Choice X θ) (τ : D.what₂.Tau) : MeasurableEmbedding (Tm 
     constructor
     · rintro ⟨x, rfl⟩
       exact of_Tm_mem_UH_Hpk C τ x
-    · intro hm
-      exact mem_range_Tm_of_of_mem_UH C τ hm
+    · exact fun hm => mem_range_Tm_of_of_mem_UH C τ hm
   have hUJ : ∀ m : Set.range (Tm C τ), (Qcs C τ * Matrix.of m.1 * Qics C τ)ᴴ * Formalism.REAL.Jm (X.B.I.ε (vOf X τ)) *
       (Qcs C τ * Matrix.of m.1 * Qics C τ) = Formalism.REAL.Jm (X.B.I.ε (vOf X τ)) := by
     intro m

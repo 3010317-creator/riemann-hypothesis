@@ -197,8 +197,7 @@ theorem muV_le_one_iff (s : SplitPlace L) (x : L) : muV s x ≤ 1 ↔ s.w.valuat
       (not_lt.1 fun h => hr ((s.w.intValuation_lt_one_iff_mem r).1 h))
   constructor
   · intro hμ
-    by_contra hν
-    push Not at hν
+    by_contra! hν
     have hx0 : x ≠ 0 := by
       rintro rfl
       simp at hν
@@ -215,13 +214,11 @@ theorem muV_le_one_iff (s : SplitPlace L) (x : L) : muV s x ≤ 1 ↔ s.w.valuat
     have hμt : muV s (algebraMap (𝓞 L) L t) < 1 := (muV_int_lt_one_iff s t).2 htw
     rw [← ht, map_mul, hμint c hc, one_mul, map_inv₀] at hμt
     have hμx0 : muV s x ≠ 0 := (muV s).ne_zero_iff.2 hx0
-    have h1 := (inv_lt_one₀ (zero_lt_iff.2 hμx0)).1 hμt
-    exact absurd hμ (not_le.2 h1)
+    exact absurd hμ (not_le.2 ((inv_lt_one₀ (zero_lt_iff.2 hμx0)).1 hμt))
   · intro hν
     obtain ⟨c, t, hc, ht⟩ := exists_ringOfIntegers_not_mem_mul_eq_of_valuation_le s x hν
     have h1 := muV_int_le_one s t
-    rw [← ht, map_mul, hμint c hc, one_mul] at h1
-    exact h1
+    rwa [← ht, map_mul, hμint c hc, one_mul] at h1
 
 theorem muV_eq (s : SplitPlace L) (x : L) : muV s x = s.w.valuation L x := by
   obtain ⟨ϖ, hϖ⟩ := IsDedekindDomain.HeightOneSpectrum.valuation_exists_uniformizer L s.w

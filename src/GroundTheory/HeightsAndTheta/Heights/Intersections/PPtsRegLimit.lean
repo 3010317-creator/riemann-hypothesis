@@ -51,8 +51,7 @@ theorem PtsRegLimit.proof (hInt : PtsIntegrableStatement) (hAbs : PtsAbsIntegrab
   unfold ptsIntegral
   by_cases hΨ : ∃ Ψ : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (e + 1) → ℂ), IsGoodProj Q Ψ
   swap
-  · simp only [dite_eq_right hΨ]
-    exact tendsto_const_nhds
+  · simpa only [dite_eq_right hΨ] using tendsto_const_nhds
   simp only [dite_eq_left hΨ]
   have hgood := hΨ.choose_spec
   generalize hΨ.choose = Ψ at hgood ⊢
@@ -134,7 +133,6 @@ theorem PtsRegLimit.proof (hInt : PtsIntegrableStatement) (hAbs : PtsAbsIntegrab
       refine Tendsto.mul_const _ ?_
       simp only [log_regLine_h, logNorm_eq_log_secNorm]
       exact PtsRegLimit.tendsto_half_log (hpt y hy w hγ)
-    · simp only [sheetDensity, dite_eq_right hγ]
-      exact tendsto_const_nhds
+    · simpa only [sheetDensity, dite_eq_right hγ] using tendsto_const_nhds
 
 end GroundTheory.Heights₂.Heights.Inter

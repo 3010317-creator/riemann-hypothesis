@@ -222,8 +222,7 @@ theorem volTW_meas (hinv : ∀ y, σ (σ y) = y) (μ : Measure (Fin (r + 1) × F
     simp only [VolTO, Set.mem_preimage, Set.mem_setOf_eq, Prod.forall]
     exact phiF_mem_iff σ v r Y
   rw [hK', hK, one_mul] at h
-  rw [volTW_eq σ v hinv g r c hc]
-  exact h
+  rwa [volTW_eq σ v hinv g r c hc]
 
 variable (ψ : AddChar (AF F) ℂ)
 

@@ -269,10 +269,8 @@ lemma coeff_det_eq (R' : Subalgebra O (X' → Matrix d d (FractionRing O)))
     rfl
   · intro b _ hb
     rw [mul_comm, PowerSeries.coeff_C_mul_X_pow, ite_eq_right]
-    intro h
-    exact hb (Fin.ext h.symm)
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+    exact fun h => hb (Fin.ext h.symm)
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 lemma detGood (T' : Subalgebra O (X' → O)) (R' : Subalgebra O (X' → Matrix d d (FractionRing O)))
     (hyp : HypDet T' R') {a : Matrix d d (PowerSeries (X' → FractionRing O))}
@@ -387,8 +385,7 @@ lemma schur (T' : Subalgebra O (X' → O)) (R' : Subalgebra O (X' → Matrix d d
       have hblk : Matrix.reindex E E Φ = Matrix.fromBlocks A B C D := by
         ext (i | ⟨p, i⟩) (j | ⟨q, j⟩) <;> simp [A, B, C, D, Matrix.reindex_apply, hE, hE']
       have hc' : ∀ P Q, PowerSeries.constantCoeff (Φ P Q) = if P = Q then 1 else 0 := fun P Q => by
-        have h1 := congrFun (congrFun hc P) Q
-        simpa [Matrix.one_apply] using h1
+        simpa [Matrix.one_apply] using congrFun (congrFun hc P) Q
       have hAc : (PowerSeries.constantCoeff).mapMatrix A = 1 := by
         ext i j
         simp [A, hc', Matrix.one_apply]

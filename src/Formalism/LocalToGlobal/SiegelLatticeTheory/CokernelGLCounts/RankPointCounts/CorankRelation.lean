@@ -87,9 +87,7 @@ theorem mem_Hp_of_orth {T T' : E} (Λ : Submodule (𝓞 E) S.V) (F : LFlag S r T
     · exact Submodule.span_le.2 (by rintro _ rfl; exact (hK _).2 hz')
   have hUUE : UUE Λ F F' ≤ K := Submodule.span_le.2 fun y hy => hUU hy
   show v ∈ orth S (UUE Λ F F')
-  simp only [orth, Submodule.mem_iInf, LinearMap.mem_ker]
-  intro y hy
-  exact (hK y).1 (hUUE hy)
+  simpa only [orth, Submodule.mem_iInf, LinearMap.mem_ker] using fun y hy => (hK y).1 (hUUE hy)
 
 theorem finrank_Hp {T T' : E} (k : ℕ) (hdim : finrank E S.V = k + 2 * r + 1) (Λ : Submodule (𝓞 E) S.V)
     (hΛ : Submodule.IsFullLattice E Λ) (F : LFlag S r T) (F' : LFlag S r T') (hL : IsLift Λ F) (hL' : IsLift Λ F')
@@ -122,8 +120,7 @@ theorem s0_eq_one_iff_Th_eq_Hp {T T' : E} (k : ℕ) (hdim : finrank E S.V = k + 
   have h2 := Submodule.finrank_mono hle
   unfold s0
   constructor
-  · intro h
-    exact Submodule.eq_of_le_of_finrank_le hle (by omega)
+  · exact fun h => Submodule.eq_of_le_of_finrank_le hle (by omega)
   · intro h
     rw [h]; omega
 
@@ -161,8 +158,7 @@ theorem Th_symm {T T' : E} (k : ℕ) (hdim : finrank E S.V = k + 2 * r + 1) (Λ 
       simp [this]
     rw [h2, sub_zero] at hsub
     have h1 := Xsp_Hp_eq_zero Λ hΛ F F₁ hL hL₁ hG₁ hsub.2.2.1 hsub.1
-    apply Subtype.ext
-    exact Prod.ext (sub_eq_zero.1 (by simpa using h1)) hab
+    exact Subtype.ext (Prod.ext (sub_eq_zero.1 (by simpa using h1)) hab)
   have hrange : LinearMap.range f = P.map (LinearMap.snd E S.V S.V) := LinearMap.range_domRestrict _ _
   have hTh2 : finrank E P ≤ finrank E (P.map (LinearMap.snd E S.V S.V)) := by
     rw [← hrange, LinearMap.finrank_range_of_inj hf]
@@ -223,8 +219,7 @@ theorem mem_Xsp_mapLF {T : E} (γ : S.V ≃ₗ[E] S.V) (hγ : γ ∈ Formalism.H
   constructor
   · rintro ⟨y, hy, rfl⟩
     simpa using hy
-  · intro h
-    exact ⟨γ.symm x, h, by simp⟩
+  · exact fun h => ⟨γ.symm x, h, by simp⟩
 
 end Gen
 

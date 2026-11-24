@@ -90,8 +90,7 @@ def DiscriminantNeZero : Prop :=
     [IsDiscreteValuationRing O], X.Hyp p K → X.Dl p K O ≠ 0
 
 theorem discriminant_ne_zero_of_residue_ne_zero (h : DiscriminantNonzeroModUniformiser) : DiscriminantNeZero := by
-  intro p n' r K _ _ _ X O _ _ _ hX h0
-  exact h p n' r K X O hX (by rw [h0, map_zero])
+  exact fun p n' r K _ _ _ X O _ _ _ hX h0 => h p n' r K X O hX (by rw [h0, map_zero])
 
 def TopCountLowerBounds (C₀ : ℝ) : Prop :=
   ∀ (p n' r K : ℕ) [NeZero n'] [NeZero r] [NeZero K] (X : Dat n' r),
@@ -190,8 +189,7 @@ theorem generator_of_segment_reductions (C₀ : ℝ) (hLab : CoarseLabelFactoris
       rw [← RRdeg_eq_Pol]; exact hdeg
     have := hom_Pol_mul O h1 h2
     rw [hsum] at this
-    rw [RRdeg_eq_Pol]
-    exact this
+    rwa [RRdeg_eq_Pol]
   have hDne : X.Dl p K O * u ≠ 0 := mul_ne_zero (hDlNe p n' r K X O hX) hu0
   refine ⟨(∏ j ∈ Finset.range X.F.J, phSeg O K p X.F (j : ℤ) (x j)) * monomial l0 1,
     ⟨x, hx1, l0, hl0, rfl, ?_⟩, ?_⟩

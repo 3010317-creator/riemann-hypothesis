@@ -300,8 +300,7 @@ theorem bwD_decomp (hL : bwD_Loc O) (N M : Matrix (Fin r) (Fin r) ℂ) (t : ℂ)
   have hN₀C : N₀ * (1 + S) = N := by rw [hN₀, Matrix.mul_assoc, hCinv, Matrix.mul_one]
   have hdetN₀ : N₀.det = N.det := by
     have h := congrArg Matrix.det hN₀C
-    rw [Matrix.det_mul, hdetC, mul_one] at h
-    exact h
+    rwa [Matrix.det_mul, hdetC, mul_one] at h
   have hN₀e : ∀ a b, N₀ a b = N a b - if b ∈ Finset.univ.erase j then N a j * av b else 0 := by
     intro a b
     rw [hN₀, mul_sub, mul_one, Matrix.sub_apply, hS, Finset.mul_sum, Matrix.sum_apply]
@@ -324,8 +323,7 @@ theorem bwD_decomp (hL : bwD_Loc O) (N M : Matrix (Fin r) (Fin r) ℂ) (t : ℂ)
   have hpj : ∀ a, N a j * M.det ∈ O := by
     intro a
     have h := bwD_Int_adj hM a j
-    rw [← hadj, Matrix.smul_apply, smul_eq_mul, mul_comm] at h
-    exact h
+    rwa [← hadj, Matrix.smul_apply, smul_eq_mul, mul_comm] at h
   obtain ⟨N₁, hN₁⟩ : ∃ N₁ : Matrix (Fin r) (Fin r) ℂ,
       N₁ = N₀ * Matrix.diagonal (Function.update (1 : Fin r → ℂ) j M.det) := ⟨_, rfl⟩
   have hN₁I : bwD_Int O N₁ := by rw [hN₁]; exact hint _ hpj
@@ -342,8 +340,7 @@ theorem bwD_decomp (hL : bwD_Loc O) (N M : Matrix (Fin r) (Fin r) ℂ) (t : ℂ)
     · simp [h]
   have htd : t * N.det ∈ O := by
     have h := bwD_det_mem (hint t fun a => by rw [mul_comm]; exact htN a j)
-    rw [hdet, mul_comm] at h
-    exact h
+    rwa [hdet, mul_comm] at h
   refine ⟨N₁, 1 + S, hN₁E, hCE, bwD_det_mem hM, hp0, hpN, htd, ?_⟩
   rw [hN₁, Matrix.mul_assoc N₀, hdd, Matrix.mul_one, hN₀C]
 

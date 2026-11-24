@@ -1352,8 +1352,7 @@ theorem finSt : FinSt := by
       rw [this]; exact hy
     · simp [MulAut.conj_apply, mul_assoc]
   have h3 : (H'.comap Φ ⊓ K).relIndex K ≠ 0 := by rwa [Subgroup.inf_relIndex_right]
-  intro h0
-  exact h3 (Nat.eq_zero_of_zero_dvd (h0 ▸ Subgroup.relIndex_dvd_of_le_left K h2))
+  exact fun h0 => h3 (Nat.eq_zero_of_zero_dvd (h0 ▸ Subgroup.relIndex_dvd_of_le_left K h2))
 
 end PositivityTheory.Sph
 
@@ -1469,8 +1468,7 @@ theorem iso_cT_cart2 (hc : ∀ x, c (c x) = x) {n : ℕ} (M : Matrix (Fin n) (Fi
   · intro h
     have := congrArg (fun N => N.map c) h
     simp only [Matrix.map_mul, antiJ_map_cart2] at this
-    rw [cT, Matrix.transpose_map, hcc] at this
-    exact this
+    rwa [cT, Matrix.transpose_map, hcc] at this
 
 theorem inv_mem_KgK_cart2 {ϖ : L} {q : ℕ} (hU : IsUnramInv ϖ c q) {n : ℕ} {G : Type} [Group G] (U : Subgroup G)
     (Φ : G →* Matrix (Fin n) (Fin n) L) (hiso : ∀ g, Iso c (antiJ L n) (antiJ L n) (Φ g))
@@ -1514,8 +1512,7 @@ theorem inv_mem_KgK_cart2 {ϖ : L} {q : ℕ} (hU : IsUnramInv ϖ c q) {n : ℕ} 
     inj _ (inv_mem hh) _ (mul_mem (mul_mem hg₁ hh) hg₂) ?_⟩
   have e' := congrArg (fun x : GL (Fin n) L => (x : Matrix (Fin n) (Fin n) L)) e
   simp only [Units.val_mul] at e'
-  rw [map_mul, map_mul, e₁, e₂, ← eg h⁻¹, map_inv]
-  exact e'
+  rwa [map_mul, map_mul, e₁, e₂, ← eg h⁻¹, map_inv]
 
 end Abstract
 
@@ -1548,8 +1545,7 @@ theorem cartanSt2 : CartanSt := by
     rw [hΦ]
     exact (iso_smul_iff hl _ _).1 (((hai.inv a.mul_inv).mul h1).mul hai)
   · have e1 : (mat g).map (piE hu) = (mat g').map (piE hu) := by
-      have e2 := congrArg (fun N => a.1 * N * (a⁻¹).1) e
-      simpa [hΦ, Matrix.mul_assoc] using e2
+      simpa [hΦ, Matrix.mul_assoc] using congrArg (fun N => a.1 * N * (a⁻¹).1) e
     refine Subtype.ext (Units.ext (mat_inj hw hu ?_ e1))
     have := at_sub (show At (evFin F v) (mat g - 1) from hg) (show At (evFin F v) (mat g' - 1) from hg')
     rwa [sub_sub_sub_cancel_right] at this
@@ -1588,8 +1584,7 @@ theorem unitLiftSt : UnitLiftSt := by
   intro F E _ _ _ _ _ v y
   have hab : ∀ a b : Ev E v, sgE E v a * sgE E v b = sgE E v (a * b) := fun a b => by
     have e := GlobalTheory.EmbChart.tensAt_mul_right (E := E) v a (sgE E v b)
-    rw [comp_sgE] at e
-    exact e
+    rwa [comp_sgE] at e
   have key : ∀ a b : Ev E v, (1 + sgE E v a) * (1 + sgE E v b) = 1 + sgE E v ((1 + a) * (1 + b) - 1) := fun a b => by
     have e : (1 + a) * (1 + b) - 1 = a + b + a * b := by ring
     rw [e, map_add (f := _), map_add (f := _), ← hab]

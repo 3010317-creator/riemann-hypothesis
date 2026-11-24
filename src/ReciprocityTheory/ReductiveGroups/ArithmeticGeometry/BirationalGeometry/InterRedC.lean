@@ -21,8 +21,7 @@ theorem eval_smul_of_isMultiHomog {s : MRing ι} {a : K → ℕ} (hs : IsMultiHo
   refine Finset.sum_congr rfl fun m hm => ?_
   have hms : m ∈ s.support := by
     rw [MvPolynomial.mem_support_iff] at hm ⊢
-    intro h0
-    exact hm (by rw [MvPolynomial.coeff_map, h0, map_zero])
+    exact fun h0 => hm (by rw [MvPolynomial.coeff_map, h0, map_zero])
   have hsub : ∀ f : (Σ k, ι k) → ℂ, ∏ i ∈ m.support, f i ^ m i = ∏ i, f i ^ m i := fun f =>
     Finset.prod_subset (Finset.subset_univ _) fun i _ hi => by
       rw [Finsupp.notMem_support_iff.mp hi, pow_zero]

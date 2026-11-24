@@ -70,8 +70,7 @@ theorem summable_inv_absNorm_sq :
   exact inv_anti₀ (by positivity) (pow_le_pow_left₀ h1.le h2 2)
 
 theorem absNorm_span_ne_zero {n : 𝓞 F} (hn : n ≠ 0) : Ideal.absNorm (Ideal.span {n}) ≠ 0 := by
-  rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-  exact hn
+  rwa [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
 
 theorem lt_of_mem_pow {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {n : 𝓞 F} (hn : n ≠ 0) {e : ℕ}
     (he : n ∈ 𝔭 ^ e) : e < Ideal.absNorm (Ideal.span {n}) := by
@@ -88,8 +87,7 @@ theorem mem_pow_iff_le_vF {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {n : 
   have hb : BddAbove {e : ℕ | n ∈ 𝔭 ^ e} :=
     ⟨Ideal.absNorm (Ideal.span {n}), fun e he => (lt_of_mem_pow h𝔭 hn he).le⟩
   constructor
-  · intro he
-    exact le_csSup hb he
+  · exact fun he => le_csSup hb he
   · intro he
     have hm : vF 𝔭 n ∈ {e : ℕ | n ∈ 𝔭 ^ e} := Nat.sSup_mem ⟨0, by simp⟩ hb
     exact Ideal.pow_le_pow_right he hm

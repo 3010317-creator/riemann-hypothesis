@@ -36,10 +36,8 @@ lemma ker_toRadicalClasses (Δ : Subgroup Kˣ) :
   ext a
   rw [MonoidHom.mem_ker, Subgroup.mem_subgroupOf, ← QuotientGroup.eq_one_iff (N := unitsPow K n)]
   constructor
-  · intro h
-    exact congrArg Subtype.val h
-  · intro h
-    exact Subtype.ext h
+  · exact fun h => congrArg Subtype.val h
+  · exact fun h => Subtype.ext h
 
 noncomputable def radicalQuotientEquiv (Δ : Subgroup Kˣ) :
     (Δ ⧸ (unitsPow K n).subgroupOf Δ) ≃* radicalClasses K n Δ :=
@@ -111,8 +109,7 @@ theorem unitsPowIn_kummerExtension (hΔ : unitsPow K n ≤ Δ) :
     rw [QuotientGroup.ker_mk']
     exact unitsPow_le_unitsPowIn K n _
   have h2 : (QuotientGroup.mk' (unitsPow K n)).ker ≤ Δ := by
-    rw [QuotientGroup.ker_mk']
-    exact hΔ
+    rwa [QuotientGroup.ker_mk']
   calc unitsPowIn K n (kummerExtension K n Ω Δ)
       = (kummerGroup K n (kummerExtension K n Ω Δ)).comap (QuotientGroup.mk' (unitsPow K n)) :=
         (Subgroup.comap_map_eq_self h1).symm

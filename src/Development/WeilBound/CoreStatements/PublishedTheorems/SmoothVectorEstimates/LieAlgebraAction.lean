@@ -106,8 +106,7 @@ theorem inverse_lm {M : LieI ι a} (hM : IsUnit (Matrix.of M)) : Ring.inverse (l
     ContinuousLinearMap.ext fun Z => lm_inv_mul hM Z⟩ : (LieI ι a →L[ℝ] LieI ι a)ˣ) = (isUnit_lm hM).unit :=
     Units.ext rfl
   have h2 := Ring.inverse_unit (isUnit_lm hM).unit
-  rw [← this] at h2
-  exact h2
+  rwa [← this] at h2
 
 omit [Fintype ι] in
 theorem orb_unit (ρ : GL (Fin a) (ι → ℂ) →* (X →L[ℂ] X)) (v : X) {M : LieI ι a} (hM : IsUnit (Matrix.of M)) :
@@ -194,8 +193,7 @@ theorem lie_algebra_action_exists : S1 := by
           ((contDiffOn_const (c := LinearMap.toContinuousLinearMap (b.coord i))).clm_comp hR).smulRight
             (ih _ (hDS v hv (b i)))
       exact hsum.congr fun M hM => fderiv_orb ρ (hD v hv) hM b
-  intro v hv
-  exact contDiffOn_infty.mpr fun N => key N v hv
+  exact fun v hv => contDiffOn_infty.mpr fun N => key N v hv
 
 end PositivityTheory.jumpWindows
 

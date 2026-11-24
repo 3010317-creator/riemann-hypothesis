@@ -144,8 +144,7 @@ private theorem eq_zero_on_ball_of_eventuallyEq_zero {F : V n → ℂ} {w : V n}
   have hmaps : Set.MapsTo (fun t : ℂ => w + t • (y - w)) (ball (0 : ℂ) (ρ / ‖y - w‖)) (ball w ρ) := by
     intro t ht
     rw [mem_ball, dist_zero_right, lt_div_iff₀ hd] at ht
-    rw [mem_ball, dist_eq_norm, add_sub_cancel_left, norm_smul]
-    exact ht
+    rwa [mem_ball, dist_eq_norm, add_sub_cancel_left, norm_smul]
   have hLd : Differentiable ℂ (fun t : ℂ => w + t • (y - w)) := by fun_prop
   have hg : DifferentiableOn ℂ (fun t : ℂ => F (w + t • (y - w))) (ball (0 : ℂ) (ρ / ‖y - w‖)) :=
     hF.comp hLd.differentiableOn hmaps
@@ -154,8 +153,7 @@ private theorem eq_zero_on_ball_of_eventuallyEq_zero {F : V n → ℂ} {w : V n}
     rwa [zero_smul, add_zero] at h
   have hg0 : (fun t : ℂ => F (w + t • (y - w))) =ᶠ[𝓝 0] 0 := h0.comp_tendsto hT
   have h1 : (1 : ℂ) ∈ ball (0 : ℂ) (ρ / ‖y - w‖) := by
-    rw [mem_ball, dist_zero_right, norm_one, lt_div_iff₀ hd, one_mul]
-    exact hyd
+    rwa [mem_ball, dist_zero_right, norm_one, lt_div_iff₀ hd, one_mul]
   have h2 := (hg.analyticOnNhd isOpen_ball).eqOn_zero_of_preconnected_of_eventuallyEq_zero
     (convex_ball (0 : ℂ) _).isPreconnected (mem_ball_self (div_pos hρ hd)) hg0 h1
   simpa using h2
@@ -188,8 +186,7 @@ theorem hgn_of (hU : IsOpen U) (hc : IsPreconnected U) {F : V n → ℂ} (hF : D
     {a : V n} (ha : a ∈ U) (hne : ¬ F =ᶠ[𝓝 a] 0) :
     ∀ W : Set (V n), IsOpen W → W ⊆ U → W.Nonempty → ∃ y ∈ W, F y ≠ 0 := by
   intro W hW hWU hWne
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   obtain ⟨y, hy⟩ := hWne
   have hy0 : F =ᶠ[𝓝 y] 0 := Filter.eventually_of_mem (hW.mem_nhds hy) (fun x hx => hcon x hx)
   have hall := ident_preconn hU hc hF (hWU hy) hy0
@@ -213,12 +210,10 @@ theorem iso_zero {f : V n → V n} {f' : V n →L[ℂ] V n} (hf : HasFDerivAt f 
 
 theorem coord_ne_of_det {f : V n → V n} (hn : 1 ≤ n) (hdet : (fderiv ℂ f 0).det ≠ 0) :
     ∃ k : Fin n, ¬ (fun z => f z k) =ᶠ[𝓝 0] 0 := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hall : ∀ᶠ z in 𝓝 (0 : V n), ∀ k : Fin n, f z k = 0 := by
     rw [Filter.eventually_all]
-    intro k
-    exact hcon k
+    exact fun k => hcon k
   have hf0 : f =ᶠ[𝓝 0] 0 := by
     filter_upwards [hall] with z hz
     ext k

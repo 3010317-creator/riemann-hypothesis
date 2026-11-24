@@ -493,8 +493,7 @@ theorem UpperPlace_holds : UpperPlace := by
   have hVvu : vandN v (n + 1) ≤ vandN u (n + 2) := by
     have h := up_vand_le (n + 1) u v (fun i hi => hint_r i (by omega))
       (fun i j h1 h2 => hu i j h1 (by omega)) hvdec
-    rw [show n + 1 + 1 = n + 2 by omega] at h
-    exact h
+    rwa [show n + 1 + 1 = n + 2 by omega] at h
   have hA1 : (1 : ℝ) ≤ ((n + 1 + t : ℕ) : ℝ) := by exact_mod_cast (show 1 ≤ n + 1 + t by omega)
   have hA2 : (1 : ℝ) ≤ (t : ℝ) := by exact_mod_cast ht1
   have hA3 : (1 : ℝ) ≤ ((n + 1 + (t + t) : ℕ) : ℝ) := by
@@ -660,8 +659,7 @@ theorem log_X_upper_arithmetic (f k m L CY lv l2v SL lg S5 S6 X : ℝ) (hf : 0 <
   have hm0 : 0 < m := by linarith
   have hL0 : 0 < L := by linarith
   have hCY : 0 ≤ CY := by
-    by_contra h
-    push Not at h
+    by_contra! h
     have : 2 * CY * L < 0 := by nlinarith
     linarith
   have ht1 : f * ((m - 1) * k + m * (m - 1) / 2) * lv ≤ f * ((m - 1) * k + m * (m - 1) / 2) * L :=

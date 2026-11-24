@@ -25,13 +25,11 @@ theorem analyticSubset_chart_local {e : ℕ} {X : Type} [TopologicalSpace X] (A 
   have hmem : (A.chart j) x ∈ (A.chart j).target ∩ (A.chart j).symm ⁻¹' W₀ := by
     refine ⟨(A.chart j).map_source hxs, ?_⟩
     show (A.chart j).symm ((A.chart j) x) ∈ W₀
-    rw [(A.chart j).left_inv hxs]
-    exact hxW₀
+    rwa [(A.chart j).left_inv hxs]
   obtain ⟨ε, hε0, hε⟩ := Metric.isOpen_iff.mp hopen _ hmem
 
   have hex : ∃ i, ∃ w ∈ Metric.ball ((A.chart j) x) ε, f i ((A.chart j).symm w) ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hsub : (A.chart j).symm '' Metric.ball ((A.chart j) x) ε ⊆ S := by
       rintro _ ⟨w, hw, rfl⟩
       have hw' := hε hw
@@ -44,8 +42,7 @@ theorem analyticSubset_chart_local {e : ℕ} {X : Type} [TopologicalSpace X] (A 
         (fun w hw => (hε hw).1)
     have hint' : (A.chart j).symm ((A.chart j) x) ∈ interior S :=
       interior_maximal hsub hop ⟨_, Metric.mem_ball_self hε0, rfl⟩
-    rw [hint] at hint'
-    exact hint'
+    rwa [hint] at hint'
   obtain ⟨i, w₀, hw₀, hfw₀⟩ := hex
   refine ⟨Metric.ball ((A.chart j) x) ε, Metric.isOpen_ball, Metric.mem_ball_self hε0,
     (convex_ball _ _).isPreconnected, f i ∘ (A.chart j).symm, ?_, ⟨w₀, hw₀, hfw₀⟩, ?_⟩

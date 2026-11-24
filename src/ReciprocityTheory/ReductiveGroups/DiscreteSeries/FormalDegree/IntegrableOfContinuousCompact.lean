@@ -50,8 +50,7 @@ theorem continuous_leading_minor (i : ℕ) : Continuous (fun A : Matrix (Fin n) 
   · simp only [Del, dite_eq_left h]
     first
     | exact (continuous_id.matrix_submatrix _ _).matrix_det
-  · simp only [Del, dite_eq_right h]
-    exact continuous_const
+  · simpa only [Del, dite_eq_right h] using continuous_const
 
 section
 attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra
@@ -154,8 +153,7 @@ theorem fF_eq_integral {ε : Fin n → Bool} (lam : Fin n → ℝ) {Λ : Fin n �
     fF ε lam T X = ((Module.finrank ℂ T.V : ℝ) : ℂ) • ∫ k, ((Real.exp (-Ph lam (toMK k⁻¹ * X * toMK k)) : ℝ) : ℂ) •
       (T.op k * projW T * T.op k⁻¹) ∂(dk ε) := by
   delta fF
-  rw [dk_def]
-  rw [integral_smul_measure, ← Complex.coe_smul, smul_smul]
+  rw [dk_def, integral_smul_measure, ← Complex.coe_smul, smul_smul]
   congr 1
   rw [ENNReal.toReal_inv]
   push_cast

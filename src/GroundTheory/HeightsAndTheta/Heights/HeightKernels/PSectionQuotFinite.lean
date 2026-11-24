@@ -39,8 +39,7 @@ theorem exists_int_mul_coord_mem : ∃ D : ℤ, D ≠ 0 ∧ ∀ t : T, (D : K') 
   obtain ⟨D, hD0, hD⟩ := exists_integral_multiples ℤ ℚ (L := K') (Finset.univ.image fun t => y ⟨(), t⟩)
   refine ⟨D, hD0, fun t => ?_⟩
   have h := hD (y ⟨(), t⟩) (Finset.mem_image_of_mem _ (Finset.mem_univ t))
-  rw [zsmul_eq_mul] at h
-  exact h
+  rwa [zsmul_eq_mul] at h
 
 theorem int_mul_mem_of_mem_sectionMod (hy : IsArithVar (mCoordIdeal y) 1) {D : ℤ}
     (hD : ∀ t : T, (D : K') * y ⟨(), t⟩ ∈ integralClosure ℤ K') {m : K'} (hm : m ∈ sectionMod y) :
@@ -142,8 +141,7 @@ theorem SectionQuotFinite.closed : SectionQuotFinite.Statement := by
   obtain ⟨n, hn, hnq⟩ := isTorsion y hy hs hsP q
   refine ⟨⟨(n : ℤ), mem_nonZeroDivisors_of_ne_zero (Int.natCast_ne_zero.mpr hn)⟩, ?_⟩
   change ((n : ℤ)) • q = 0
-  rw [natCast_zsmul]
-  exact hnq
+  rwa [natCast_zsmul]
 
 end
 

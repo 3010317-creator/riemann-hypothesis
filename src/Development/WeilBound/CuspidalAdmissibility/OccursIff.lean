@@ -87,8 +87,7 @@ theorem conjDual_finite (E : Type) [AddCommGroup E] [Module ℂ E] [FiniteDimens
   have he : Function.Injective e := fun l l' h => b.ext fun i => congrFun h i
   haveI : FiniteDimensional ℂ (E →ₗ⋆[ℂ] ℂ) := Module.Finite.of_injective e he
   refine ⟨this, ?_⟩
-  have h := LinearMap.finrank_le_finrank_of_injective he
-  simpa using h
+  simpa using LinearMap.finrank_le_finrank_of_injective he
 
 variable {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
   [LocallyCompactSpace G] [T2Space G] [TotallyDisconnectedSpace G]
@@ -259,14 +258,12 @@ theorem exists_vec (m : Measure G) [m.IsHaarMeasure] (ρ : Representation ℂ G 
       · simp [E]
       · intro s _ hs
         simp [E, Ne.symm hs]
-      · intro h
-        exact absurd hgS h
+      · exact fun h => absurd hgS h
   have hfun : (fun g => φ g * l (ρ g v)) = fun g => ∑ s ∈ S, (E s).indicator φ g * l s := funext hpt
   rw [hfun, integral_finsetSum]
 
   · simp only [map_sum, map_smul, smul_eq_mul, integral_mul_const]
-  · intro s _
-    exact (hφi.indicator (hE s)).mul_const (l s)
+  · exact fun s _ => (hφi.indicator (hE s)).mul_const (l s)
 
 theorem exists_integralOp (m : Measure G) [m.IsHaarMeasure] (ρ : Representation ℂ G X) (hρ : IsAdmissible ρ)
     (φ : G → ℂ) (hφ : IsLocallyConstant φ) (hφc : HasCompactSupport φ) :
@@ -409,8 +406,7 @@ theorem PositivityTheory.TfC.OccursBasics_holds : UpperTheory.ConvolutionTheory.
     · intro h
       apply hfz
       have := LinearMap.congr_fun (LinearMap.congr_fun h z) z
-      rw [pairL_apply, LinearMap.zero_apply, LinearMap.zero_apply, inner_self_eq_zero] at this
-      exact this
+      rwa [pairL_apply, LinearMap.zero_apply, LinearMap.zero_apply, inner_self_eq_zero] at this
   refine ⟨?_, ?_, ?_⟩
   · obtain ⟨u, hu, hu0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hV.ne_bot
     obtain ⟨f, hfF, z, hz⟩ := hdense u hu hu0

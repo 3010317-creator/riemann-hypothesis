@@ -90,8 +90,7 @@ theorem main_ind {N : ℕ} (K : Subgroup (GL (Fin N) (Af E))) (hK : IsOpen (K : 
       rw [hg, infGL_comm]
       simp only [mul_assoc]
     have hfm : f.1 (lev (Ad E) r s m * (infGL E (r + s) (Unitary.toUnits k) * finGL E (r + s) t)) ≠ 0 := by
-      rw [e₀, hT.1 l hl, hI.1] at hg₀
-      exact hg₀
+      rwa [e₀, hT.1 l hl, hI.1] at hg₀
     obtain ⟨n', ψ₁, ψ₂, h₁, h₂, hsum⟩ := tensor_pair_finite_sum (hI.2 k t)
     have hne : ∑ i, (ψ₁ i).1 m.1 * (ψ₂ i).1 m.2 ≠ 0 := (hsum m) ▸ hfm
 
@@ -123,8 +122,7 @@ theorem main_ind {N : ℕ} (K : Subgroup (GL (Fin N) (Af E))) (hK : IsOpen (K : 
         have hW₁ := Wf_left (W := W) hN hw k
         convert hW₁ using 1
         funext k₁
-        rw [hval₁]
-        rw [infGL_comm, ← mul_assoc, Slice1.lev_infGL_right]
+        rw [hval₁, infGL_comm, ← mul_assoc, Slice1.lev_infGL_right]
         simp only [map_mul, Slice1.toUnits_levK]
     obtain ⟨χ₁, hχ₁, hχ₁0, hχ₁T⟩ := untw hχ₁' hχ₁'0 hT₁ (Kf_le_det r)
 

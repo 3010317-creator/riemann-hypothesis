@@ -41,8 +41,7 @@ theorem nilradical_measure_conj_invariant {z : Fin (2 * r + k + 1) → ℂ} (hz 
 
 theorem continuous_matrix_mul_pair : Continuous fun p : Mt k r × Mt k r => (fun i j => (Matrix.of p.1 * Matrix.of p.2) i j : Mt k r) := by
   refine continuous_pi fun i => continuous_pi fun j => ?_
-  simp only [Matrix.mul_apply, Matrix.of_apply]
-  exact continuous_finsetSum _ fun l _ => by fun_prop
+  simpa only [Matrix.mul_apply, Matrix.of_apply] using continuous_finsetSum _ fun l _ => by fun_prop
 
 theorem measurable_mt_mul : Measurable fun p : Mt k r × Mt k r => (fun i j => (Matrix.of p.1 * Matrix.of p.2) i j : Mt k r) :=
   continuous_matrix_mul_pair.measurable
@@ -98,9 +97,7 @@ theorem meas_Jint {φ : Mt k r → ℝ≥0∞} (hφ : Measurable φ) (μW μW' :
   have h5 := hφ.comp (meas_hnxhn (k := k) (r := r))
   have h4 := h5.lintegral_prod_right' (ν := N1 k r)
   have h3 := h4.lintegral_prod_right' (ν := N1 k r)
-  have h2 := h3.lintegral_prod_right' (ν := μW')
-  have h1 := h2.lintegral_prod_right' (ν := μW)
-  exact h1
+  exact (h3.lintegral_prod_right' (ν := μW')).lintegral_prod_right' (ν := μW)
 
 def mm (A B : Mt k r) : Mt k r := fun i j => (Matrix.of A * Matrix.of B) i j
 

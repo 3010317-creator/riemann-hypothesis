@@ -65,16 +65,14 @@ theorem normTraceF_add (y z : Ω) : normTraceF F (y + z) = normTraceF F y + norm
   have h1 := e ⟨y, hy⟩
   have h2 := e ⟨z, hz⟩
   have h3 := e (⟨y, hy⟩ + ⟨z, hz⟩)
-  rw [LinearMap.map_add (f := _), add_div, ← h1, ← h2] at h3
-  exact h3
+  rwa [LinearMap.map_add (f := _), add_div, ← h1, ← h2] at h3
 
 theorem normTraceF_smul (a : F) (y : Ω) : normTraceF F (a • y) = a * normTraceF F y := by
   haveI := IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral (R := F) y)
   have e := normTraceF_eq_trace_div F (Ω := Ω) F⟮y⟯
   have h1 := e (AdjoinSimple.gen F y)
   have h2 := e (a • AdjoinSimple.gen F y)
-  rw [LinearMap.map_smul, smul_eq_mul, mul_div_assoc, ← h1] at h2
-  exact h2
+  rwa [LinearMap.map_smul, smul_eq_mul, mul_div_assoc, ← h1] at h2
 
 def normTraceFₗ : Ω →ₗ[F] F where
   toFun := normTraceF F
@@ -209,9 +207,8 @@ theorem natDegree_minpoly_eq_of_finrank_sup {k A B : IntermediateField B₀ Ω} 
     (h : finrank B₀ ↥(A ⊔ B) * finrank B₀ k = finrank B₀ A * finrank B₀ B) {z : Ω} (hz : z ∈ A) :
     (minpoly B z).natDegree = (minpoly k z).natDegree := by
   haveI := finiteDimensional_of_le hA
-  have hz0 : IsIntegral B₀ z := by
-    have := IsIntegral.of_finite B₀ (⟨z, hz⟩ : A)
-    exact this.map (IsScalarTower.toAlgHom B₀ A Ω)
+  have hz0 : IsIntegral B₀ z :=
+    (IsIntegral.of_finite B₀ (⟨z, hz⟩ : A)).map (IsScalarTower.toAlgHom B₀ A Ω)
   have hzk : IsIntegral k z := hz0.tower_top
   have hzB : IsIntegral B z := hz0.tower_top
   have hz' : adjoin B₀ {z} ≤ A := by
@@ -228,25 +225,18 @@ theorem natDegree_minpoly_eq_of_finrank_sup {k A B : IntermediateField B₀ Ω} 
   have s2 : B ⊔ (k ⊔ adjoin B₀ {z}) = B ⊔ adjoin B₀ {z} := by
     rw [← sup_assoc, sup_eq_left.2 hB]
   rw [s2, ek, eB] at c2
-  have pA : 0 < finrank B₀ A := Module.finrank_pos
-  have pB : 0 < finrank B₀ B := Module.finrank_pos
-  have pk : 0 < finrank B₀ k := Module.finrank_pos
-  have pAB : 0 < finrank B₀ A * finrank B₀ B := Nat.mul_pos pA pB
-  have pBk : 0 < finrank B₀ B * finrank B₀ k := Nat.mul_pos pB pk
   apply le_antisymm
-  · have : finrank B₀ B * finrank B₀ k * (minpoly B z).natDegree ≤
-        finrank B₀ B * finrank B₀ k * (minpoly k z).natDegree := by
-      calc _ = finrank B₀ B * (minpoly B z).natDegree * finrank B₀ k := by ring
-        _ ≤ finrank B₀ B * (finrank B₀ k * (minpoly k z).natDegree) := c2
-        _ = _ := by ring
-    exact Nat.le_of_mul_le_mul_left this pBk
-  · have : finrank B₀ A * finrank B₀ B * (minpoly k z).natDegree ≤
-        finrank B₀ A * finrank B₀ B * (minpoly B z).natDegree := by
-      calc _ = finrank B₀ ↥(A ⊔ B) * finrank B₀ k * (minpoly k z).natDegree := by rw [h]
-        _ = finrank B₀ ↥(A ⊔ B) * (finrank B₀ k * (minpoly k z).natDegree) := by ring
-        _ ≤ finrank B₀ A * (finrank B₀ B * (minpoly B z).natDegree) := c1
-        _ = _ := by ring
-    exact Nat.le_of_mul_le_mul_left this pAB
+  · refine Nat.le_of_mul_le_mul_left ?_
+      (Nat.mul_pos (Module.finrank_pos (R := B₀) (M := B)) (Module.finrank_pos (R := B₀) (M := k)))
+    calc _ = finrank B₀ B * (minpoly B z).natDegree * finrank B₀ k := by ring
+      _ ≤ finrank B₀ B * (finrank B₀ k * (minpoly k z).natDegree) := c2
+      _ = _ := by ring
+  · refine Nat.le_of_mul_le_mul_left ?_
+      (Nat.mul_pos (Module.finrank_pos (R := B₀) (M := A)) (Module.finrank_pos (R := B₀) (M := B)))
+    calc _ = finrank B₀ ↥(A ⊔ B) * finrank B₀ k * (minpoly k z).natDegree := by rw [h]
+      _ = finrank B₀ ↥(A ⊔ B) * (finrank B₀ k * (minpoly k z).natDegree) := by ring
+      _ ≤ finrank B₀ A * (finrank B₀ B * (minpoly B z).natDegree) := c1
+      _ = _ := by ring
 
 theorem normTrace_eq_of_finrank_sup {k A B : IntermediateField B₀ Ω} (hA : k ≤ A)
     (hB : k ≤ B) [FiniteDimensional B₀ A] [FiniteDimensional B₀ B]
@@ -321,8 +311,7 @@ theorem norm_nextCoeff_minpoly_le (F : Type*) [Field F] [Algebra ℚ_[p] F] [Alg
   refine norm_multiset_sum_le_of_forall_le_of_nonneg _ (norm_nonneg y) fun r hr => le_of_eq ?_
   apply norm_eq_of_aeval_minpoly_eq_zero
   have h1 : aeval r (minpoly F y) = 0 := by
-    rw [mem_roots hm.ne_zero, IsRoot, eval_map, ← aeval_def] at hr
-    exact hr
+    rwa [mem_roots hm.ne_zero, IsRoot, eval_map, ← aeval_def] at hr
   have h2 := minpoly.dvd_map_of_isScalarTower ℚ_[p] F y
   have := Polynomial.aeval_eq_zero_of_dvd_aeval_eq_zero h2 h1
   rwa [aeval_map_algebraMap] at this

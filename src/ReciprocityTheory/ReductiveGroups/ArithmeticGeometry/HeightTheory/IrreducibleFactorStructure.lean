@@ -269,8 +269,7 @@ theorem wt_single (v : σ) (e : ℕ) : wt p (Finsupp.single v e) = if p v then e
   · simp
   · intro b _ hb
     simp [Ne.symm hb]
-  · intro h
-    exact absurd (Finset.mem_univ v) h
+  · exact fun h => absurd (Finset.mem_univ v) h
 
 noncomputable def psiP : MvPolynomial σ K →ₐ[K] Polynomial (MvPolynomial σ K) :=
   aeval fun v => if p v then Polynomial.C (X v) * Polynomial.X else Polynomial.C (X v)
@@ -325,8 +324,7 @@ theorem coeff_psiP_ne_zero (f : MvPolynomial σ K) (s : σ →₀ ℕ) (hs : s �
   · classical
     intro t _ hts
     rw [coeff_monomial, ite_eq_right hts]
-  · intro hn
-    exact (hn (Finset.mem_filter.mpr ⟨hs, rfl⟩)).elim
+  · exact fun hn => (hn (Finset.mem_filter.mpr ⟨hs, rfl⟩)).elim
 
 theorem hom_of_psiP (n : ℕ) (f : MvPolynomial σ K) (hf : psiP p f = Polynomial.C f * Polynomial.X ^ n) :
     ∀ s ∈ f.support, wt p s = n := by
@@ -819,8 +817,7 @@ theorem eq_monomial_of_dehomog_const (A : MvPolynomial (V D N) K) (m : ℕ) (hA 
       rw [ite_eq_right]
       intro hs0
       apply hu
-      rw [← h, ← hsingle s hs hs0]
-      exact hs
+      rwa [← h, ← hsingle s hs hs0]
     · rw [ite_eq_right h, mul_zero]
 
 end LinearSubstitution

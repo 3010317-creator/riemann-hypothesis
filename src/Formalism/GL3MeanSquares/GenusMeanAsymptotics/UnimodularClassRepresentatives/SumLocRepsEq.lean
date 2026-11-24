@@ -81,11 +81,9 @@ theorem akCount_congr {A B : Submodule (𝓞 K) V} (e : ↥A ≃ₗ[𝓞 K] ↥B
     rw [he, he]
     refine H x y x' y' ?_ ?_
     · apply ε.injective
-      rw [hε, ← hX]
-      exact h1
+      rwa [hε, ← hX]
     · apply ε.injective
-      rw [hε, ← hX]
-      exact h2
+      rwa [hε, ← hX]
   · intro H x y x' y' h1 h2
     rw [← he, ← he x y]
     refine H (e x) (e y) (e x') (e y') ?_ ?_

@@ -56,8 +56,7 @@ theorem mem_differentIdeal_iff (x : 𝓞 E) : x ∈ differentIdeal ℤ (𝓞 E) 
     algebraMap (𝓞 E) E x ∈ (1 / Submodule.traceDual ℤ ℚ (1 : Submodule (𝓞 E) E) : Submodule (𝓞 E) E) := by
   rw [← coeSubmodule_differentIdeal ℤ ℚ, IsLocalization.mem_coeSubmodule]
   constructor
-  · intro h
-    exact ⟨x, h, rfl⟩
+  · exact fun h => ⟨x, h, rfl⟩
   · rintro ⟨y, hy, e⟩
     rwa [← (IsFractionRing.injective (𝓞 E) E) e]
 
@@ -70,8 +69,7 @@ theorem traceDual_smul (τ : E ≃ₐ[ℚ] E) {y : E} (hy : y ∈ Submodule.trac
     Submodule.mem_one.mpr ⟨τ.symm • o, algebraMap_smul_oe τ.symm o⟩
   have key := hy _ hb
   rw [Algebra.traceForm_apply] at key ⊢
-  rw [← Algebra.trace_eq_of_algEquiv τ, map_mul, AlgEquiv.apply_symm_apply] at key
-  exact key
+  rwa [← Algebra.trace_eq_of_algEquiv τ, map_mul, AlgEquiv.apply_symm_apply] at key
 
 theorem smul_mem_differentIdeal (σ : E ≃ₐ[ℚ] E) {x : 𝓞 E} (hx : x ∈ differentIdeal ℤ (𝓞 E)) :
     σ • x ∈ differentIdeal ℤ (𝓞 E) := by
@@ -89,8 +87,7 @@ theorem smul_differentIdeal (σ : E ≃ₐ[ℚ] E) : σ • differentIdeal ℤ (
   constructor
   · intro h
     simpa using smul_mem_differentIdeal σ h
-  · intro h
-    exact smul_mem_differentIdeal σ⁻¹ h
+  · exact fun h => smul_mem_differentIdeal σ⁻¹ h
 
 theorem smul_span_nat (σ : E ≃ₐ[ℚ] E) (ℓ : ℕ) :
     σ • Ideal.span {(ℓ : 𝓞 E)} = Ideal.span {(ℓ : 𝓞 E)} := by
@@ -167,8 +164,7 @@ theorem padicValNat_absNorm_eq_sum (ℓ : ℕ) [Fact ℓ.Prime] {X : Ideal (𝓞
     letI : Field (𝓞 E ⧸ Q) := Ideal.Quotient.field Q
     have hfin : Finite (𝓞 E ⧸ Q) := by
       apply Nat.finite_of_card_ne_zero
-      rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, Ne, Ideal.absNorm_eq_zero_iff]
-      exact hQ0
+      rwa [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, Ne, Ideal.absNorm_eq_zero_iff]
     haveI := Fintype.ofFinite (𝓞 E ⧸ Q)
     haveI := ringChar.charP (𝓞 E ⧸ Q)
     obtain ⟨n, hp, hcard⟩ := FiniteField.card (𝓞 E ⧸ Q) (ringChar (𝓞 E ⧸ Q))

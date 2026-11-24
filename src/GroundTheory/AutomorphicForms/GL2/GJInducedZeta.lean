@@ -91,17 +91,14 @@ theorem borel_eq_generateFrom_smallCosets
     let s : ι → Set G := fun q => q.1.1 • (q.1.2 : Set G)
     have hU' : U = ⋃ q, s q := by
       refine Subset.antisymm (fun y hy => ?_) (iUnion_subset fun q => q.2.2)
-      have : y⁻¹ • U ∈ 𝓝 (1 : G) := by
-        refine (hU.smul y⁻¹).mem_nhds ?_
-        exact ⟨y, hy, inv_mul_cancel y⟩
+      have : y⁻¹ • U ∈ 𝓝 (1 : G) := (hU.smul y⁻¹).mem_nhds ⟨y, hy, inv_mul_cancel y⟩
       obtain ⟨N, hN, hNU⟩ := hN _ this
       refine mem_iUnion.2 ⟨⟨(y, N), hN, ?_⟩, ⟨1, N.one_mem, mul_one y⟩⟩
       rintro _ ⟨a, ha, rfl⟩
       obtain ⟨u, hu, hua⟩ := hNU ha
       rw [← hua]
       show y * (y⁻¹ * u) ∈ U
-      rw [mul_inv_cancel_left]
-      exact hu
+      rwa [mul_inv_cancel_left]
     obtain ⟨T, hTc, hT⟩ := TopologicalSpace.isOpen_iUnion_countable s fun q => q.2.1.1.smul _
     rw [hU', ← hT]
     exact MeasurableSet.biUnion hTc fun q _ =>
@@ -377,8 +374,7 @@ theorem continuous_detPow (s : ℂ) : Continuous fun g : GL (Fin n) F => detPow 
   refine ⟨g • (integralGL F n : Set (GL (Fin n) F)), ?_, (isOpen_integralGL F n).smul g,
     ⟨1, one_mem _, mul_one g⟩⟩
   rintro _ ⟨k, hk, rfl⟩
-  simp only [Set.mem_preimage, smul_eq_mul, detPow_mul_of_mem_integralGL g hk]
-  exact hg
+  simpa only [Set.mem_preimage, smul_eq_mul, detPow_mul_of_mem_integralGL g hk] using hg
 
 section Parabolic
 
@@ -468,10 +464,8 @@ theorem continuous_unipMatrix :
     Continuous fun u : UnipotentIndex n β → F => unipMatrix F u := by
   refine continuous_pi fun i => continuous_pi fun j => ?_
   by_cases h : β i < β j
-  · simp only [unipMatrix_apply_of_lt _ h]
-    exact continuous_apply _
-  · simp only [unipMatrix_apply_of_not_lt _ h]
-    exact continuous_const
+  · simpa only [unipMatrix_apply_of_lt _ h] using continuous_apply _
+  · simpa only [unipMatrix_apply_of_not_lt _ h] using continuous_const
 
 theorem integrable_add_unipMatrix (μ𝔫 : Measure (UnipotentIndex n β → F)) [μ𝔫.IsAddHaarMeasure]
     {Φ : Matrix (Fin n) (Fin n) F → ℂ} (hΦ : IsSchwartzBruhat Φ) {X : Matrix (Fin n) (Fin n) F}
@@ -540,8 +534,7 @@ theorem continuous_monoidHom_of_eq_one {G : Type*} [Group G] [TopologicalSpace G
   refine IsLocallyConstant.continuous fun S => isOpen_iff_forall_mem_open.2 fun g hg =>
     ⟨g • (V : Set G), ?_, V.isOpen.smul g, ⟨1, V.one_mem, mul_one g⟩⟩
   rintro _ ⟨v, hv, rfl⟩
-  simp only [Set.mem_preimage, smul_eq_mul, map_mul, hV v hv, mul_one]
-  exact hg
+  simpa only [Set.mem_preimage, smul_eq_mul, map_mul, hV v hv, mul_one] using hg
 
 
 variable (β) in
@@ -575,8 +568,7 @@ theorem continuous_inducedIntegrand {Φ : Matrix (Fin n) (Fin n) F → ℂ} (hΦ
     refine IsLocallyConstant.continuous fun S => isOpen_iff_forall_mem_open.2 fun g hg => ?_
     refine ⟨g • (K : Set (GL (Fin n) F)), ?_, hKo.smul g, ⟨1, one_mem _, mul_one g⟩⟩
     rintro _ ⟨k, hk, rfl⟩
-    simp only [Set.mem_preimage, smul_eq_mul, hK k hk]
-    exact hg
+    simpa only [Set.mem_preimage, smul_eq_mul, hK k hk] using hg
   exact ((hΦ.1.continuous.comp Units.continuous_val).mul (continuous_detPow s)).mul hℓφ
 
 theorem inducedIntegrand_parabolicMk_mul {Φ : Matrix (Fin n) (Fin n) F → ℂ}

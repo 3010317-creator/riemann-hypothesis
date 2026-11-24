@@ -94,8 +94,7 @@ theorem H0 (nu : ℕ → ℤ) (ka : Fin (N + 1) → Fin K → ℤ) (c : ℤ) :
     colH (muP nu ka 0) c = (if c ≤ nu 0 then 1 else 0) + (if c ≤ 0 then K else 0) := by
   rw [colH_muP, Fin.val_zero]
   congr 1
-  simp only [kaS, Fin.cons_zero]
-  exact colH_zero c
+  simpa only [kaS, Fin.cons_zero] using colH_zero c
 
 theorem HS (nu : ℕ → ℤ) (ka : Fin (N + 1) → Fin K → ℤ) (i : Fin (N + 1)) (c : ℤ) :
     colH (muP nu ka i.succ) c = (if c ≤ nu (i.val + 1) then 1 else 0) + colH (ka i) c := by

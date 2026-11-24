@@ -29,8 +29,7 @@ namespace UnipotentCentral
 omit [DecidableEq ι] in
 theorem pair_map {G g : Matrix ι ι ℂ} (hg : (g.map (starRingEnd ℂ))ᵀ * G * g = G)
     (a b : ι → ℂ) : star (g *ᵥ a) ⬝ᵥ (G *ᵥ (g *ᵥ b)) = star a ⬝ᵥ (G *ᵥ b) := by
-  have hg' : gᴴ * G * g = G := by
-    exact hg
+  have hg' : gᴴ * G * g = G := hg
   rw [star_mulVec, mulVec_mulVec, dotProduct_mulVec, vecMul_vecMul, ← Matrix.mul_assoc, hg',
     ← dotProduct_mulVec]
 
@@ -123,8 +122,7 @@ theorem proof (h : HermitianForm F E W) (v : Basis ι E W) (h0 : RationalUnipote
     have e := congrArg w.embedding ha
     rw [map_add (f := _), embedding_conj (F := F) w.embedding, map_zero, Complex.add_conj] at e
     have e2 := congrArg Complex.re e
-    simp only [Complex.ofReal_re, Complex.zero_re, mul_eq_zero, two_ne_zero, false_or] at e2
-    exact e2
+    simpa only [Complex.ofReal_re, Complex.zero_re, mul_eq_zero, two_ne_zero, false_or] using e2
   obtain ⟨γ, hγLa, hγx, hγw, hγz⟩ := hm' 0 ((m : E) * a) (Submodule.zero_mem _)
     ⟨0, zero_mem _, (smul_zero _).symm⟩ ⟨a, rfl⟩
     (by rw [ha]; simp)
@@ -137,8 +135,7 @@ theorem proof (h : HermitianForm F E W) (v : Basis ι E W) (h0 : RationalUnipote
       simp
     have e : (γ : W ≃ₗ[E] W) (z - h.toSesq w₀ z • x₀) = z - h.toSesq w₀ z • x₀ := by
       have := hγz _ hz'
-      rw [map_zero, LinearMap.zero_apply, zero_smul, sub_zero] at this
-      exact this
+      rwa [map_zero, LinearMap.zero_apply, zero_smul, sub_zero] at this
     have hγx' : (γ : W ≃ₗ[E] W) x₀ = x₀ := hγx
     have hdec : z = h.toSesq w₀ z • x₀ + (z - h.toSesq w₀ z • x₀) := by abel
     show (γ : W ≃ₗ[E] W) z = z + (0 : E) • x₀

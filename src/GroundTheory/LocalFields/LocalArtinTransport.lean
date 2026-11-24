@@ -91,10 +91,8 @@ theorem mem_transportField {M : IntermediateField K Ω} {y : Ω'} :
   constructor
   · rintro ⟨x, hx, rfl⟩
     change ε.symm (ε x) ∈ M
-    rw [RingEquiv.symm_apply_apply]
-    exact hx
-  · intro h
-    exact ⟨_, h, ε.apply_symm_apply y⟩
+    rwa [RingEquiv.symm_apply_apply]
+  · exact fun h => ⟨_, h, ε.apply_symm_apply y⟩
 
 theorem apply_mem_transportField {M : IntermediateField K Ω} {x : Ω} :
     ε x ∈ transportField e ε hε M ↔ x ∈ M := by
@@ -273,8 +271,7 @@ theorem transportedArtinMap_apply' (x' : K'ˣ) {y' : Ω'}
   have h := transportedArtinMap_apply e ε hε x'
     ((mem_maximalAbelianExtension_transport_iff e ε hε).1 (by rwa [RingEquiv.apply_symm_apply] :
       ε (ε.symm y') ∈ maximalAbelianExtension K' Ω'))
-  simp only [RingEquiv.apply_symm_apply] at h
-  exact h
+  simpa only [RingEquiv.apply_symm_apply] using h
 
 
 include he in
@@ -320,8 +317,7 @@ theorem transportedArtinMap_eq : transportedArtinMap K Ω e ε hε = localArtinM
         e.symm (Algebra.norm K' (z' : L'))
       exact (norm_transportField e.symm ε.symm hε' L' (z' : L')).symm
     have hker : restrictAb L (le_maximalAbelianExtension L) (localArtinMap K Ω x) = 1 := by
-      rw [← MonoidHom.comp_apply, ← MonoidHom.mem_ker, ker_restrictAb_localArtinMap]
-      exact hx
+      rwa [← MonoidHom.comp_apply, ← MonoidHom.mem_ker, ker_restrictAb_localArtinMap]
     ext y'
     rw [restrictAb_apply, transportedArtinMap_apply', AlgEquiv.one_apply]
     have hyL : ε.symm (y' : Ω') ∈ L := by
@@ -389,8 +385,7 @@ theorem localArtinMap_algEquiv_apply (ε : Ω ≃ₐ[K] Ω') (x : Kˣ) {y : Ω}
   have hx : Units.map (RingEquiv.refl K).toRingHom.toMonoidHom x = x := by
     ext
     rfl
-  rw [hx] at h
-  exact h
+  rwa [hx] at h
 
 end Corollaries
 

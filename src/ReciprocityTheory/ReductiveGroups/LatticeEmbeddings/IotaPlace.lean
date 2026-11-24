@@ -14,16 +14,14 @@ namespace ReciprocityTheory.ChartRestriction.B3.IotaPl
 
 theorem norm_le_one_of_isIntegral_int {p : ℕ} [Fact p.Prime] {x : ℂ_[p]} (hx : IsIntegral ℤ x) :
     ‖x‖ ≤ 1 := by
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   obtain ⟨f, hf, hfx⟩ := hx
   set n := f.natDegree with hn
   have hsum := hf.as_sum
   rw [hsum, Polynomial.eval₂_add, Polynomial.eval₂_X_pow, Polynomial.eval₂_finsetSum] at hfx
   have key : x ^ n = -∑ i ∈ Finset.range n,
       Polynomial.eval₂ (algebraMap ℤ ℂ_[p]) x (Polynomial.C (f.coeff i) * Polynomial.X ^ i) := by
-    rw [eq_neg_iff_add_eq_zero]
-    exact hfx
+    rwa [eq_neg_iff_add_eq_zero]
   have hx1 : 1 ≤ ‖x‖ := hlt.le
   have bound : ‖∑ i ∈ Finset.range n,
       Polynomial.eval₂ (algebraMap ℤ ℂ_[p]) x (Polynomial.C (f.coeff i) * Polynomial.X ^ i)‖ ≤
@@ -42,8 +40,7 @@ theorem norm_le_one_of_isIntegral_int {p : ℕ} [Fact p.Prime] {x : ℂ_[p]} (hx
           mul_le_mul hc (pow_le_pow_right₀ hx1 hi') (by positivity) zero_le_one
       _ = ‖x‖ ^ (n - 1) := one_mul _
   have h2 : ‖x‖ ^ n ≤ ‖x‖ ^ (n - 1) := by
-    rw [← norm_pow, key, norm_neg]
-    exact bound
+    rwa [← norm_pow, key, norm_neg]
   rcases Nat.eq_zero_or_pos n with h0 | hpos
   · rw [h0] at key
     simp at key
@@ -88,8 +85,7 @@ theorem smallIdeal_isPrime (ι : K →+* ℂ_[p]) : (smallIdeal ι).IsPrime := b
     simp only [mem_smallIdeal] at hab ⊢
     have e : ι ((a * b : 𝓞 K) : K) = ι (a : K) * ι (b : K) := by simp
     rw [e, norm_mul] at hab
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     obtain ⟨ha, hb⟩ := hc
     nlinarith [norm_int_le ι a, norm_int_le ι b]
 

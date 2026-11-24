@@ -127,10 +127,8 @@ theorem PT.lag {d : ℕ} {f : ℂ → A} {c : A} (h : PT d f c) :
   · rw [key, ite_eq_left (by simp), one_smul, ha]
   · intro j _ hj
     rw [key, ite_eq_right, zero_smul]
-    intro hjd
-    exact hj (Fin.ext (by simpa using hjd))
-  · intro h0
-    exact absurd (Finset.mem_univ _) h0
+    exact fun hjd => hj (Fin.ext (by simpa using hjd))
+  · exact fun h0 => absurd (Finset.mem_univ _) h0
 
 theorem PT.prod (ε Y : ℂ) (l : List (A × A × A)) :
     PT l.length (fun s => (l.map fun x => (!![algebraMap ℂ A (Y + ε * s) + x.1, -x.2.1; x.2.2, 0] :
@@ -240,8 +238,7 @@ theorem basicLift : BasicLift := by
       Lf n κ (∑ s, c s • f s) := by
     intro κ f c hf
     refine Finset.sum_induction _ (fun x => Lf n κ x) (fun a b ha hb => hS.add ha hb) (hS.zero n κ) ?_
-    intro s _
-    exact hS.smul (c s) (hf s)
+    exact fun s _ => hS.smul (c s) (hf s)
   obtain ⟨hD, hDb, hDr, hDrb, hDi, hDbi, hgI⟩ := hS.fns
   have hN : r + 1 ≤ (r + 1) * n := Nat.le_mul_of_pos_right _ (by omega)
   have hterm : ∀ {u v : A} (hu : Lf 0 0 u) (hv : Lf 0 (r + 1) v) (Z : ℂ), star Z = Z →

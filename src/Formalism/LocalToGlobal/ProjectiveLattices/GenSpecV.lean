@@ -292,8 +292,7 @@ theorem gsv_eig_iff [Algebra c.F L] (hx : IsUnivChart _ n xc) (τ : E →+* ℂ)
       exact h'
   simp only [IsEigAt, key, eigLat, Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.sub_apply,
     LinearMap.smul_apply, LinearMap.id_apply, sub_eq_zero]
-  refine forall_congr' fun a => ?_
-  exact ReciprocityTheory.ChartRestriction.G.Chart.tvec_eig_iff ..
+  exact forall_congr' fun a => ReciprocityTheory.ChartRestriction.G.Chart.tvec_eig_iff ..
 
 theorem gsv_tvec_sum (hx : IsUnivChart _ n xc) {m : ℕ} (a : Fin m → L) (e : Fin m → Fin n → L) :
     tvec (x := xc) (∑ j, a j • e j) =
@@ -325,8 +324,7 @@ theorem gsv_comb_iff (hx : IsUnivChart _ n xc) {m : ℕ} (e : Fin m → Fin n �
   have hleft : ((List.ofFn u0).prod).left = gsvVec x xc (∑ j, a j • e j) := by
     have h : ((List.ofFn u0).prod).left ≫ 𝟙 _ =
         (tvec (x := xc) (∑ j, a j • e j)).left ≫ pullback.fst Xo.univ.t.G.hom x := hprod
-    rw [Category.comp_id] at h
-    exact h
+    rwa [Category.comp_id] at h
   constructor
   · rintro ⟨u, hu, hprodu⟩
     have hue : u = u0 := by

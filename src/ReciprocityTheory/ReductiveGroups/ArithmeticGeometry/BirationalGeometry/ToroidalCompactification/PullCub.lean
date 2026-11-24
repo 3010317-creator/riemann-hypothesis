@@ -31,8 +31,7 @@ theorem gm_res (f : Y ⟶ X) (y : Y) {U V : X.Opens} (hle : V ≤ U) (h : f y �
   rw [gm_val f y V h, gm_val f y U (hle h)]
   simp only [res, Units.coe_map, MonoidHom.coe_coe]
   have e1 := Scheme.Hom.naturality f (homOfLE hle).op
-  rw [← Y.presheaf.germ_res (homOfLE (Scheme.Hom.preimage_mono f hle)) y h]
-  rw [CommRingCat.comp_apply]
+  rw [← Y.presheaf.germ_res (homOfLE (Scheme.Hom.preimage_mono f hle)) y h, CommRingCat.comp_apply]
   congr 1
   rw [← CommRingCat.comp_apply, ← CommRingCat.comp_apply, e1]
   rfl
@@ -82,8 +81,7 @@ theorem glue_unit {J : Type} (V : X.Opens) (W : J → X.Opens) (hW : ∀ i, W i 
     rw [map_mul, map_one, a1, a2]
     have e := congrArg (X.sheaf.presheaf.germ (W i) x hi) (Units.mul_inv (u i))
     exact (map_mul _ _ _).symm.trans (e.trans (map_one _))
-  refine ⟨⟨s, s', hss, (mul_comm s' s).trans hss⟩, fun i => Units.ext ?_⟩
-  exact hs i
+  exact ⟨⟨s, s', hss, (mul_comm s' s).trans hss⟩, fun i => Units.ext (hs i)⟩
 
 theorem exists_chart {L : LB X} (hL : L.IsLB) (x : X) : ∃ i, x ∈ L.U i := by
   have := hL.cover
@@ -108,8 +106,7 @@ variable {X' : Scheme.{0}} {L : LB X} {L' : LB X'} {F : X' ⟶ X}
 
 theorem mem_pull {x : X'} {J : PUnit → L.ι} : x ∈ (L.pull F).U J ↔ F x ∈ L.U (J PUnit.unit) := by
   simp only [LB.pull, LB.LinComb, LB.wchart]
-  simp
-  exact ⟨fun h => h _, fun h _ => h⟩
+  simpa using ⟨fun h => h _, fun h _ => h⟩
 
 def gw (w : LB.Iso L' (L.pull F)) (f : Y ⟶ X') (y : Y) (j : L.ι) (k : L'.ι) : (Y.presheaf.stalk y)ˣ :=
   gm f y ((L.pull F).U (fun _ => j) ⊓ L'.U k) (w.s (fun _ => j, k))
@@ -334,8 +331,7 @@ theorem Tri.pgen_comp (T : Tri w w' w'') (hL' : L'.IsLB) (hw : PGen w) (hw' : PG
   rw [T Y f y j i k hj hi hk, T Y f y j' i k' hj' hi hk',
     hw Y (f ≫ F') y j j' i i hj hj' hi hi, hw' Y f y i i k k' hi hi hk hk',
     gm_self hL' (f ≫ F') y hi, Category.assoc]
-  simp only [inv_one, mul_one, one_mul]
-  exact mul_mul_mul_comm _ _ _ _
+  simpa only [inv_one, mul_one, one_mul] using mul_mul_mul_comm _ _ _ _
 
 theorem Tri.pgen_cancel (T : Tri w w' w'') (hL : L.IsLB) (hw : PGen w) (hw'' : PGen w'') : PGen w' := by
   have key : ∀ {G : Type _} [CommGroup G] (a d p q : G),

@@ -69,13 +69,11 @@ theorem div_mul_sub_le_div_sub_div (n s P Q ee kk rr : ℕ) (hP : 0 < P) (hQ : 0
   set U : ℤ := (((n - s) / P : ℕ) : ℤ)
   set W : ℤ := ((((n - s) / P - ee) / Q : ℕ) : ℤ)
   have st1 : A * Q - kk < U + 1 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have := mul_le_mul_of_nonneg_left hc hP'.le
     nlinarith
   have st2 : A - rr - kk < W + 1 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have h1 := mul_le_mul_of_nonneg_left hc (by linarith : (0 : ℤ) ≤ Q)
     have hk0 : (0 : ℤ) ≤ kk := by positivity
     have h2 := mul_le_mul_of_nonneg_left hQ' hk0
@@ -103,8 +101,7 @@ theorem eZ_lt_mul_Qc (hX : X.Hyp p K) (la : Fin n' → Fin (r + K) → ℕ) (e :
     omega
   have hq : X.Qc p K ((((j % (X.F.J : ℤ)).toNat % X.F.J : ℕ)) : ℤ) = X.Qc p K j := by
     rw [hv]
-    have e1 : j % (X.F.J : ℤ) + (j / (X.F.J : ℤ)) * X.F.J = j := by
-      exact Int.emod_add_ediv_mul j (X.F.J : ℤ)
+    have e1 : j % (X.F.J : ℤ) + (j / (X.F.J : ℤ)) * X.F.J = j := Int.emod_add_ediv_mul j (X.F.J : ℤ)
     have e2 := sum_Qc_per (p := p) (K := K) X hV (j % (X.F.J : ℤ)) (j / (X.F.J : ℤ))
     rw [e1] at e2
     exact e2.symm
@@ -149,8 +146,7 @@ theorem restPad : RestPad 1088 := by
         rcases lt_or_gt_of_ne hne with h | h
         · exact absurd heq.symm (ne_of_lt (_root_.Formalism.MainNotions.SelectionLemmas.Pf.bk_fr_lt hV (j - 1) b.val i h hi))
         · exact absurd heq (ne_of_lt (_root_.Formalism.MainNotions.SelectionLemmas.Pf.bk_fr_lt hV (j - 1) i b.val h b.isLt))
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     rw [hval]
     have hPQ := sum_PzQc hX (j - 1) _ hW
     rw [sub_add_cancel] at hPQ

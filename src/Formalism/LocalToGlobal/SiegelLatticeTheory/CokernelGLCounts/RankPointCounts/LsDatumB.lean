@@ -23,10 +23,8 @@ theorem hasSum_of_fiber {P G : Type*} [Finite P] (c : P → ℂ) (cls : P → G)
   have h2 := h1.tsum_fiberwise cls
   have e : F = fun g => ∑' x : ↑(cls ⁻¹' {g}), c x := funext fun g => ((hF g).tsum_eq).symm
   have h4 : HasSum F (∑ x, c x) := by
-    rw [e]
-    exact h2
-  rw [hs.unique h4]
-  exact h1
+    rwa [e]
+  rwa [hs.unique h4]
 
 variable {ι : Type*} {X : ι → Type*}
 
@@ -52,8 +50,7 @@ theorem hasSum_rst (x0 : ∀ p, X p) (f : ∀ p, X p → ℂ) (a : ι → ℂ) (
   have hzero : ∀ x ∉ Set.range j, (∏ᶠ p, f p (x.1 p)) = 0 := by
     intro x hx
     have : ∃ p ∉ S, x.1 p ≠ x0 p := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hx ⟨⟨x.1, h⟩, rfl⟩
     obtain ⟨p, hpS, hp⟩ := this
     exact finprod_eq_zero _ p (by rw [hoff p hpS, ite_eq_right hp]) (hfin x)

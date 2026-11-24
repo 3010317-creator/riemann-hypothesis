@@ -301,8 +301,7 @@ theorem exists_dual_lt (hl : 1 ≤ l) (D : ZMod d → ℝ) (hD : 0 ≤ D) {v : �
     simp [Pi.single_apply]
   have ha : ∀ t, 0 ≤ a t := by
     intro t
-    by_contra hneg
-    push Not at hneg
+    by_contra! hneg
     have hq : ((u / a t) • ((Pi.single t (1 : ℝ) : ZMod d → ℝ), (0 : ℝ))) ∈ Kset l d := by
       refine hrec _ (fun s => ?_) (by simp)
       simp only [Prod.smul_fst, Pi.smul_apply, smul_eq_mul]
@@ -313,8 +312,7 @@ theorem exists_dual_lt (hl : 1 ≤ l) (D : ZMod d → ℝ) (hD : 0 ≤ D) {v : �
     rw [map_smul, hat, smul_eq_mul, div_mul_cancel₀ _ hneg.ne] at h1
     exact lt_irrefl _ h1
   have hc : c < 0 := by
-    by_contra hc'
-    push Not at hc'
+    by_contra! hc'
     have h1 := key' (D, v + ε)
     dsimp only at h1
     have h2 : 0 ≤ ∑ t, D t * a t := Finset.sum_nonneg fun t _ => mul_nonneg (hD t) (ha t)
@@ -323,8 +321,7 @@ theorem exists_dual_lt (hl : 1 ≤ l) (D : ZMod d → ℝ) (hD : 0 ≤ D) {v : �
   have hcpos : 0 < -c := neg_pos.2 hc
   have hw : ∀ s, ∀ i ∈ oddLevels d, 0 ≤ (l : ℝ) ^ i * a s + a (s + (i : ZMod d)) + c := by
     intro s i hi
-    by_contra hw0
-    push Not at hw0
+    by_contra! hw0
     obtain ⟨W, hW⟩ : ∃ W : ℝ, W = (l : ℝ) ^ i * a s + a (s + (i : ZMod d)) + c := ⟨_, rfl⟩
     rw [← hW] at hw0
     have hτ : 0 < u / W := div_pos_iff.2 (Or.inr ⟨hu, hw0⟩)
@@ -380,8 +377,7 @@ theorem clip_dual (hl : 1 ≤ l) {τ : ZMod d → ℝ} (h0 : ∀ s, 0 ≤ τ s)
   have hp : 0 ≤ (l : ℝ) ^ i * τ s := mul_nonneg (by positivity) (h0 s)
   have hq := h0 (s + (i : ZMod d))
   rcases le_total (τ s) 1 with h | h <;> rcases le_total (τ (s + (i : ZMod d))) 1 with h' | h'
-  · rw [min_eq_left h, min_eq_left h']
-    exact hτ
+  · rwa [min_eq_left h, min_eq_left h']
   · rw [min_eq_left h, min_eq_right h']
     linarith
   · rw [min_eq_right h, min_eq_left h']

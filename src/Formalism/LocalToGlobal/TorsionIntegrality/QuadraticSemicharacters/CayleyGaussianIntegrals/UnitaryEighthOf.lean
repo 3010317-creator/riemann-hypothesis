@@ -35,8 +35,7 @@ theorem gram_det_ne_zero {ι : Type} [Fintype ι] [DecidableEq ι] (H : Sesq V) 
     LinearMap.zero_apply]
     exact h
   have hw0 : (∑ i, v i • e i) ≠ 0 := by
-    intro h0
-    exact hv (funext fun i => Fintype.linearIndependent_iff.1 e.linearIndependent v h0 i)
+    exact fun h0 => hv (funext fun i => Fintype.linearIndependent_iff.1 e.linearIndependent v h0 i)
   have h := hpos _ hw0
   rw [hHw, LinearMap.zero_apply, Complex.zero_re] at h
   exact lt_irrefl _ h
@@ -139,8 +138,7 @@ theorem UnitaryEighth_of (hC : UnitaryConstant) (hG : UnitaryGauss) (hI : Unitar
     rw [h0, smul_zero] at hc
     apply hθ0
     funext z
-    have h1 := congrFun hc (δ z)
-    simpa [pullInv] using h1
+    simpa [pullInv] using congrFun hc (δ z)
   have hceq : c = (‖LinearMap.det (Ae : V →ₗ[ℂ] V)‖ : ℂ) / LinearMap.det (Ae : V →ₗ[ℂ] V)
       * gaussC H α Ae S := smul_left_injective ℂ hI0 (hc.symm.trans hc')
   have hdc := cayleyDet V H hU.herm hU.pos δ Ae hU.isom hU.cay

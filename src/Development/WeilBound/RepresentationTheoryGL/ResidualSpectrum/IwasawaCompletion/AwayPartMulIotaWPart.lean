@@ -112,8 +112,7 @@ theorem one_apply_blk (e : (Σ a, Fin (n a)) ≃ Fin N) (a : Fin c) (i j : Fin (
 theorem one_apply_blk_ne (e : (Σ a, Fin (n a)) ≃ Fin N) {a b : Fin c} (h : a ≠ b) (i : Fin (n a)) (j : Fin (n b)) :
     (1 : Matrix (Fin N) (Fin N) R) (e ⟨a, i⟩) (e ⟨b, j⟩) = 0 := by
   rw [Matrix.one_apply_ne]
-  intro h'
-  exact h (congrArg Sigma.fst (e.injective h'))
+  exact fun h' => h (congrArg Sigma.fst (e.injective h'))
 
 theorem cornerGL_apply {a : ℕ} (s : R →ₙ+* S) (g : GL (Fin a) R) (i j : Fin a) :
     (cornerGL a s g : Matrix (Fin a) (Fin a) S) i j =
@@ -186,8 +185,7 @@ theorem commute_iota [_root_.NumberField.IsTotallyComplex E] {y : GA E N} (hy : 
   · simp only [map_mul, MonoidHom.comp_apply, pInf_finGL, mul_one, one_mul]
   · simp only [map_mul, MonoidHom.comp_apply, pFin_finGL]
     refine (locGL_commute w _ x ?_).symm
-    rw [← wPart_apply]
-    exact hy
+    rwa [← wPart_apply]
 
 variable {c : ℕ} {n : Fin c → ℕ} (h : ∑ i, n i = N)
 

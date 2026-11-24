@@ -62,8 +62,7 @@ theorem sum_pairs_pmat_fp {ε : Fin n → Bool} (w : Fin n → Fin n → ℝ) (z
       exact hx (dite_eq_right h))]
   rw [Finset.sum_subtype (p := fun x : Fin n × Fin n => x.2 < x.1 ∧ ε x.1 ≠ ε x.2) _
     (fun x => by simp)]
-  refine Finset.sum_congr rfl fun ab _ => ?_
-  exact dite_eq_left ab.2
+  exact Finset.sum_congr rfl fun ab _ => dite_eq_left ab.2
 
 theorem qForm_term {ε : Fin n → Bool} (y : PCoord ε → ℂ) (a b : Fin n) :
     -((((Dvec n a : ℝ) : ℂ) - ((Dvec n b : ℝ) : ℂ)) * (pmat y a b * Lap.Base.partNM ε (Dvec n) (pmat y) b a)) =
@@ -145,8 +144,7 @@ theorem matrix_coefficient_pointwise_limit (hB3 : Lap.Base.TangentPairingStateme
     nlinarith [sq_nonneg (S7.hs (pmat y) + 1 / 2)]
   have hsq : Filter.Tendsto (fun t : ℕ => Real.sqrt (t : ℝ)) Filter.atTop Filter.atTop := by
     refine Filter.tendsto_atTop_atTop.mpr fun b => ⟨⌈b ^ 2⌉₊, fun a ha => ?_⟩
-    refine (le_abs_self b).trans (Real.abs_le_sqrt ?_)
-    exact (Nat.le_ceil _).trans (by exact_mod_cast ha)
+    exact (le_abs_self b).trans (Real.abs_le_sqrt ((Nat.le_ceil _).trans (by exact_mod_cast ha)))
   have hC0 : Filter.Tendsto (fun t : ℕ => C / Real.sqrt (t : ℝ)) Filter.atTop (nhds 0) :=
     tendsto_const_nhds.div_atTop hsq
   rw [tendsto_iff_norm_sub_tendsto_zero]
@@ -167,7 +165,6 @@ theorem matrix_coefficient_pointwise_limit (hB3 : Lap.Base.TangentPairingStateme
   have hL : (((Real.exp (-(Qf (0 : Fin n → ℝ) y / 2)) : ℝ) : ℂ)) =
       Complex.exp (-((Qf (0 : Fin n → ℝ) y : ℝ) : ℂ) / 2) := by
     rw [Complex.ofReal_exp]; push_cast; ring_nf
-  rw [← heq, hy, adKAux_pmat_smul, hL]
-  exact hb
+  rwa [← heq, hy, adKAux_pmat_smul, hL]
 
 end ReciprocityTheory.ChartRestriction.DS

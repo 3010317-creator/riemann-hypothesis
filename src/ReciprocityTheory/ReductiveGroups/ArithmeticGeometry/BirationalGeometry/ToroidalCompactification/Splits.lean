@@ -51,8 +51,7 @@ theorem transL {B Y Z : Scheme.{0}} (a : Z ⟶ Y) (q : Y ⟶ B) (U U' : B.Opens)
     res (a.preimage_mono (q.preimage_mono (inf_le_right : U ⊓ U' ≤ U'))) (pullU a _ u') =
       pullU a _ (pullU q _ g) * res (a.preimage_mono (q.preimage_mono (inf_le_left : U ⊓ U' ≤ U))) (pullU a _ u) := by
   have := congrArg (pullU a _) h
-  rw [map_mul, pullU_res₂, pullU_res₂] at this
-  exact this
+  rwa [map_mul, pullU_res₂, pullU_res₂] at this
 
 private theorem pullU_comp_lemma {X Y Z : Scheme.{0}} (b : Z ⟶ Y) (a : Y ⟶ X) (W : X.Opens) (u : Γ(X, W)ˣ) :
     pullU b (a ⁻¹ᵁ W) (pullU a W u) = pullU (b ≫ a) W u := by
@@ -155,8 +154,7 @@ theorem isGt_of_iso (e : G₁ ≅ G₂) [IsMonHom e.hom] (h : E.IsGt G₁) : E.I
       y ∈ (snd (splitTorus S E.X) G₂).left ⁻¹ᵁ ((e.inv ≫ d.q).left ⁻¹ᵁ E.chart j) →
       (splitTorus S E.X ◁ e.inv).left y ∈ (snd (splitTorus S E.X) G₁).left ⁻¹ᵁ (d.q.left ⁻¹ᵁ E.chart j) := by
     intro j y hy
-    have e₁ := congrArg (fun g => g y) hsnd
-    exact (congrArg (fun z => d.q.left z ∈ E.chart j) e₁).mp hy
+    exact (congrArg (fun z => d.q.left z ∈ E.chart j) (congrArg (fun g => g y) hsnd)).mp hy
   have le : ∀ j : E.ChartIdx, (snd (splitTorus S E.X) G₂).left ⁻¹ᵁ ((e.inv ≫ d.q).left ⁻¹ᵁ E.chart j) ≤
       (lift (fst (splitTorus S E.X) G₂ ≫ d.i ≫ e.hom) (snd _ _) ≫ μ[G₂]).left ⁻¹ᵁ
         ((e.inv ≫ d.q).left ⁻¹ᵁ E.chart j) := by
@@ -187,8 +185,7 @@ theorem isGt_of_iso (e : G₁ ≅ G₂) [IsMonHom e.hom] (h : E.IsGt G₁) : E.I
       (fun k => res (e.inv.left.preimage_mono (Scheme.Hom.preimage_mono d.q.left hle)) (pullU e.inv.left _ (d.u j k)))
       (fun k => congrArg Units.val (pullU_res₂ e.inv.left (Scheme.Hom.preimage_mono d.q.left hle) (d.u j k)).symm)
     have hb₂ := hb.comp (d.coord j V hV hle)
-    rw [← RingHom.coe_comp, ← hl] at hb₂
-    exact hb₂
+    rwa [← RingHom.coe_comp, ← hl] at hb₂
 
 end GtIso
 

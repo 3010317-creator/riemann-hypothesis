@@ -49,9 +49,7 @@ theorem image_mem_compsH {T : Set α} {A : Set T} (hA : A ∈ irreducibleCompone
   refine ⟨⟨hA.1.image _ continuous_subtype_val.continuousOn, by rintro _ ⟨x, _, rfl⟩; exact x.2⟩, ?_⟩
   intro C' hC' hle
   have h1 : A ⊆ Subtype.val ⁻¹' C' := fun x hx => hle ⟨x, hx, rfl⟩
-  have h2 := hA.2 (compsH_pre_isIrreducible hC'.2 hC'.1) h1
-  intro c hc
-  exact ⟨⟨c, hC'.2 hc⟩, h2 hc, rfl⟩
+  exact fun c hc => ⟨⟨c, hC'.2 hc⟩, (hA.2 (compsH_pre_isIrreducible hC'.2 hC'.1) h1) hc, rfl⟩
 
 theorem pre_mem_irreducibleComponents {T C : Set α} (hC : C ∈ compsH T) :
     (Subtype.val ⁻¹' C : Set T) ∈ irreducibleComponents T := by
@@ -59,8 +57,7 @@ theorem pre_mem_irreducibleComponents {T C : Set α} (hC : C ∈ compsH T) :
   intro B hB hle
   have h1 : C ⊆ Subtype.val '' B := fun c hc => ⟨⟨c, hC.1.2 hc⟩, hle hc, rfl⟩
   have h2 := hC.2 ⟨hB.image _ continuous_subtype_val.continuousOn, by rintro _ ⟨x, _, rfl⟩; exact x.2⟩ h1
-  intro x hx
-  exact h2 ⟨x, hx, rfl⟩
+  exact fun x hx => h2 ⟨x, hx, rfl⟩
 
 theorem compsH_finite [NoetherianSpace α] (T : Set α) : (compsH T).Finite := by
   have hfin : (irreducibleComponents T).Finite := NoetherianSpace.finite_irreducibleComponents
@@ -106,8 +103,7 @@ theorem parPrime_spec (hrsp : FinalTheorems.Rsp S n (fun i => algebraMap A S (f 
   have := hle (Ideal.mem_comap.mp ha)
   have h2 : (maximalIdeal S).comap (algebraMap A S) = p :=
     IsLocalization.AtPrime.under_maximalIdeal S p
-  rw [← Ideal.mem_comap, h2] at this
-  exact this
+  rwa [← Ideal.mem_comap, h2] at this
 
 variable (S) in
 theorem mem_iff_parPrime_le (hrsp : FinalTheorems.Rsp S n (fun i => algebraMap A S (f i))) (i : Fin n)
@@ -115,8 +111,7 @@ theorem mem_iff_parPrime_le (hrsp : FinalTheorems.Rsp S n (fun i => algebraMap A
   refine ⟨fun h => ?_, fun h => h (parPrime_spec (p := p) S hrsp i).2.2⟩
   have hdisj : Disjoint (p.primeCompl : Set A) Q := by
     rw [Set.disjoint_left]
-    intro a ha haQ
-    exact ha (hQ haQ)
+    exact fun a ha haQ => ha (hQ haQ)
   have hQ' := IsLocalization.under_map_of_isPrime_disjoint p.primeCompl S ‹Q.IsPrime› hdisj
   intro a ha
   rw [← hQ']
@@ -152,8 +147,7 @@ theorem specializes_iff_pOf (hU : IsAffineOpen U) {z z' : W} (hz : z ∈ U) (hz'
   have := hU.fromSpec.isOpenEmbedding.isInducing.specializes_iff
     (x := hU.primeIdealOf ⟨z, hz⟩) (y := hU.primeIdealOf ⟨z', hz'⟩)
   rw [hU.fromSpec_primeIdealOf, hU.fromSpec_primeIdealOf] at this
-  rw [PrimeSpectrum.le_iff_specializes]
-  exact this
+  rwa [PrimeSpectrum.le_iff_specializes]
 
 theorem eq_of_pOf_eq (hU : IsAffineOpen U) {z z' : W} (hz : z ∈ U) (hz' : z' ∈ U)
     (h : hU.primeIdealOf ⟨z, hz⟩ = hU.primeIdealOf ⟨z', hz'⟩) : z = z' := by
@@ -221,16 +215,13 @@ theorem exists_parPrimes {U : W.Opens} (hU : IsAffineOpen U) {y : W} (hy : y ∈
   have hsp := fun i => parPrime_spec (A := Γ(W, U)) (S := W.presheaf.stalk y)
     (p := (hU.primeIdealOf ⟨y, hy⟩).asIdeal) hrsp' i
   refine ⟨fun i => ⟨parPrime (S := W.presheaf.stalk y) f i, (hsp i).1⟩, ?_, ?_, ?_, ?_⟩
-  · intro i
-    exact (hsp i).2.1
-  · intro i
-    exact (hsp i).2.2
+  · exact fun i => (hsp i).2.1
+  · exact fun i => (hsp i).2.2
   · intro i Q hQ
     haveI := Q.isPrime
     exact mem_iff_parPrime_le (A := Γ(W, U)) (S := W.presheaf.stalk y)
       (p := (hU.primeIdealOf ⟨y, hy⟩).asIdeal) hrsp' i hQ
-  · intro i j h
-    exact eq_of_mem_parPrime (A := Γ(W, U)) (S := W.presheaf.stalk y) hrsp' h
+  · exact fun i j h => eq_of_mem_parPrime (A := Γ(W, U)) (S := W.presheaf.stalk y) hrsp' h
 
 section Br
 
@@ -250,8 +241,7 @@ private lemma fromSpec_specializes_iff_le {V : W.Opens} (hV : IsAffineOpen V) (P
 
 private lemma exists_fromSpec_eq_of_mem {V : W.Opens} (hV : IsAffineOpen V) {z : W} (hz : z ∈ V) :
     ∃ P : PrimeSpectrum Γ(W, V), hV.fromSpec P = z := by
-  rw [← SetLike.mem_coe, ← hV.range_fromSpec] at hz
-  exact hz
+  rwa [← SetLike.mem_coe, ← hV.range_fromSpec] at hz
 
 private lemma supp_lemma_5 (hZU : Z.ideal ⟨U, hU⟩ = Ideal.span {∏ i ∈ J, f i})
     (P : PrimeSpectrum Γ(W, U)) :
@@ -309,8 +299,7 @@ theorem comp_eq_closure (hq : ParPrimes hU hy f q)
   have hηy : η ⤳ y := hK.specializes hyC
   obtain ⟨P, hP⟩ := exists_fromSpec_eq_of_mem hU (hηy.mem_open U.isOpen hy)
   have hPy : P ≤ hU.primeIdealOf ⟨y, hy⟩ := by
-    rw [← fromSpec_specializes_iff_le hU, hP, hU.fromSpec_primeIdealOf]
-    exact hηy
+    rwa [← fromSpec_specializes_iff_le hU, hP, hU.fromSpec_primeIdealOf]
   have hηs : hU.fromSpec P ∈ (Z.support : Set W) := by
     rw [hP]
     exact hC.1.2 hK.mem
@@ -417,8 +406,7 @@ theorem exists_open_compsH [IsNoetherian W] {Z : W.IdealSheafData} (y : W) (U : 
     refine ⟨?_, hzO⟩
     rw [(isBranch_iff hq hZU hi C).1 hbr]
     have hzE : z ∈ ⋃₀ compsH (W.zeroLocus {f i}) := by
-      rw [sUnion_compsH]
-      exact hzf
+      rwa [sUnion_compsH]
     obtain ⟨E, hE, hzE⟩ := hzE
     have hyE : y ∈ E := by
       by_contra hyE
@@ -428,8 +416,7 @@ theorem exists_open_compsH [IsNoetherian W] {Z : W.IdealSheafData} (y : W) (U : 
     have hζy : ζ ⤳ y := hK.specializes hyE
     obtain ⟨P, hP⟩ := exists_fromSpec_eq_of_mem U.2 (hζy.mem_open U.1.isOpen hy)
     have hPy : P ≤ U.2.primeIdealOf ⟨y, hy⟩ := by
-      rw [← fromSpec_specializes_iff_le U.2, hP, U.2.fromSpec_primeIdealOf]
-      exact hζy
+      rwa [← fromSpec_specializes_iff_le U.2, hP, U.2.fromSpec_primeIdealOf]
     have hζf : U.2.fromSpec P ∈ W.zeroLocus {f i} := by
       rw [hP]
       exact hE.1.2 hK.mem

@@ -61,8 +61,7 @@ theorem inA_of_mem (O : Type) [CommRing O] [IsDomain O] {σ : Type*} {P : MvPoly
     InA (O := O) P := by
   obtain ⟨Q, rfl⟩ := (AlgHom.mem_range _).mp h
   unfold InA
-  intro m
-  exact ⟨Q.coeff m, by simp [MvPolynomial.mapAlgHom_apply, MvPolynomial.coeff_map]⟩
+  exact fun m => ⟨Q.coeff m, by simp [MvPolynomial.mapAlgHom_apply, MvPolynomial.coeff_map]⟩
 
 theorem rename_mem_intAlg (O : Type) [CommRing O] [IsDomain O] {σ τ : Type*} (f : σ → τ) {P : MvPolynomial σ (KK O)}
     (h : P ∈ IntAlg O σ) : rename f P ∈ IntAlg O τ := by

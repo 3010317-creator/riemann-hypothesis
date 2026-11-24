@@ -126,8 +126,7 @@ theorem norm_mix_sq {N : Type} [Fintype N] (lam : N → ℂ) (W : N → H) :
     have e2 : ∀ n, Real.sqrt ‖lam n‖ ^ 2 = ‖lam n‖ := fun n => Real.sq_sqrt (norm_nonneg _)
     have e3 : ∀ n, (Real.sqrt ‖lam n‖ * ‖W n‖) ^ 2 = ‖lam n‖ * ‖W n‖ ^ 2 := fun n => by
       rw [mul_pow, e2]
-    simp only [e1, e2, e3] at this
-    exact this
+    simpa only [e1, e2, e3] using this
   exact (pow_le_pow_left₀ (norm_nonneg _) h1 2).trans h2
 
 theorem loe_convex {N : Type} [Fintype N] (Y : Finset α) (lam : N → ℂ) (h : N → α → H) :
@@ -148,8 +147,7 @@ theorem loe_convex {N : Type} [Fintype N] (Y : Finset α) (lam : N → ℂ) (h :
     have hre : ∀ x : H, (⟪x, x⟫_ℂ).re = ‖x‖ ^ 2 := fun x => by
       have := inner_self_eq_norm_sq (𝕜 := ℂ) x; simpa using this
     rw [Complex.re_ofReal_mul, Complex.re_sum, hre]
-    simp only [Complex.re_ofReal_mul, hre]
-    exact norm_mix_sq lam _
+    simpa only [Complex.re_ofReal_mul, hre] using norm_mix_sq lam _
 
 theorem loe_congr {Y : Finset α} {A A' B B' : α → α → ℂ} (hA : ∀ x ∈ Y, ∀ y ∈ Y, A x y = A' x y)
     (hB : ∀ x ∈ Y, ∀ y ∈ Y, B x y = B' x y) (h : Loe Y A B) : Loe Y A' B' :=

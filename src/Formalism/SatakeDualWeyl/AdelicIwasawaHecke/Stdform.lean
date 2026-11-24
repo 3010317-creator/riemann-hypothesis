@@ -157,8 +157,7 @@ theorem stdform_psd (τ : E →+* ℂ) (M : Matrix n n ℂ) (hM : ∀ i j, ∃ e
           {r : n → ℝ | 0 ≤ c * stdformQ M (fun i => ((r i : ℝ) : ℂ))} := by
         rw [hclR.closure_subset_iff]
         rintro _ ⟨v, rfl⟩
-        have h3 := hall fun i => ((v i : ℚ) : E)
-        simpa [map_ratCast] using h3
+        simpa [map_ratCast] using hall fun i => ((v i : ℚ) : E)
       intro r
       exact hsub (by rw [hd.closure_range]; trivial)
     rw [stdform_Q_real M hM' y, mul_add]
@@ -184,8 +183,7 @@ variable {n : Type} [Fintype n] [DecidableEq n] {F E : Type} [Field F] [Field E]
 theorem stdform_conj (σ : E →ₐ[F] E) (τ : E →+* ℂ)
     (hσ : τ.comp (σ : E →+* E) = (starRingEnd ℂ).comp τ) (e : E) :
     τ (σ e) = starRingEnd ℂ (τ e) := by
-  have h := RingHom.congr_fun hσ e
-  simpa using h
+  simpa using RingHom.congr_fun hσ e
 
 theorem stdform_invol (σ : E →ₐ[F] E) (τ : E →+* ℂ)
     (hσ : τ.comp (σ : E →+* E) = (starRingEnd ℂ).comp τ) (e : E) : σ (σ e) = e := by
@@ -205,8 +203,7 @@ theorem stdform_hform_fixed (σ : E →ₐ[F] E) (τ : E →+* ℂ)
     σ (hform (σ : E →+* E) J x x) = hform (σ : E →+* E) J x x := by
   unfold IsHerm at hJ
   have hJ' : ∀ i j, σ (J i j) = J j i := fun i j => by
-    have h := congrFun (congrFun hJ j) i
-    simpa [cT] using h
+    simpa [cT] using congrFun (congrFun hJ j) i
 
   simp only [hform, map_sum, map_mul, AlgHom.coe_toRingHom, stdform_invol σ τ hσ, hJ']
   rw [Finset.sum_comm]

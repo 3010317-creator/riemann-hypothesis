@@ -134,8 +134,7 @@ theorem eq_zero_of_pow_nsmul_eq_zero {M : Type*} [AddCommMonoid M] {p : ℕ}
   | succ k ih =>
     apply hp
     apply ih
-    rw [← mul_smul, ← pow_succ]
-    exact hx
+    rwa [← mul_smul, ← pow_succ]
 
 theorem primaryComponent_cohomology_eq_bot_of_bijective (A : Rep.{u} (ULift.{u} ℤ) G)
     [IsDiscreteRep A] {p : ℕ} (hp : Function.Bijective fun a : A => p • a) (n : ℕ) :
@@ -374,7 +373,6 @@ theorem exists_finite_stable_submodule [CompactSpace G] (A : Rep.{u} (ULift.{u} 
     rw [(mem_stabilizer _ _ _).1 s.2]
   refine ⟨Submodule.span _ O, fun g => Submodule.span_le.2 ?_, ?_, Submodule.subset_span ⟨1, by simp⟩⟩
   · rintro _ ⟨h, rfl⟩
-    show A.ρ g (A.ρ h a) ∈ Submodule.span _ O
     exact Submodule.subset_span ⟨g * h, by simp [map_mul]⟩
   · have hsub : (Submodule.span (ULift.{u} ℤ) O : Set A) ⊆ AddSubgroup.closure O := by
       intro x hx
@@ -434,7 +432,6 @@ theorem primary_discreteCoind [CompactSpace G] (A : Rep.{u} (ULift.{u} ℤ) G) [
   choose kk hkk using fun v : Set.range f' => hA v
   obtain ⟨K, hK⟩ := (Set.finite_range kk).bddAbove
   refine ⟨K, LocallyConstant.ext fun x => ?_⟩
-  show p ^ K • f' x = 0
   exact pow_nsmul_eq_zero_of_le (hK ⟨⟨f' x, x, rfl⟩, rfl⟩) (hkk ⟨f' x, x, rfl⟩)
 
 theorem primary_coindCokernel [CompactSpace G] (A : Rep.{u} (ULift.{u} ℤ) G) [IsDiscreteRep A]

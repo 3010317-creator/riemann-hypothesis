@@ -107,8 +107,7 @@ theorem card_fiber [_root_.NumberField.IsTotallyComplex K] (v : InfinitePlace K)
       · by_contra hr
         exact InfinitePlace.not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex _)
           (InfinitePlace.isRamified_iff.1 hr).2
-  rw [h0, h1, Set.ncard_empty, mul_zero, add_zero, Set.ncard_coe_finset] at h
-  exact h
+  rwa [h0, h1, Set.ncard_empty, mul_zero, add_zero, Set.ncard_coe_finset] at h
 
 theorem nPl_ext [_root_.NumberField.IsTotallyComplex K] [_root_.NumberField.IsTotallyComplex K'] : nPl K' = finrank K K' * nPl K := by
   have h1 := sizeMu_finrank_eq K
@@ -820,8 +819,7 @@ theorem shortAt_pos (D : D7) (u : D.what₂.Word) (c : (D.mem u).C.cls 0) (y : F
     (hy : Formalism.MainNotions.flipTwoThree.ShortAt D u c y) (w : InfinitePlace D.host.E) (a : Fin (D.R.N 0)) :
     0 < (w.embedding ((D.sp.X 0).hT (y a) (y a))).re := by
   obtain ⟨r, hr, he⟩ := (columnHypotheses D u).pos w.embedding (y a) (hy.2.1.ne_zero a)
-  rw [he, Complex.ofReal_re]
-  exact hr
+  rwa [he, Complex.ofReal_re]
 
 def ClassMapT (D : D7) : Prop :=
   ∀ u (CV : ColVal D u) (c : (D.mem u).C.cls 0) (y : Fin (D.R.N 0) → (D.sp.X 0).V), Formalism.MainNotions.flipTwoThree.ShortAt D u c y →
@@ -929,8 +927,7 @@ theorem localization_map₃ (p : Ideal (𝓞 K)) [p.IsPrime] (f : V →ₗ[K] V'
       rw [this]; exact p.zero_mem
     refine ⟨((s : K)⁻¹) • a, ⟨s, hs, ?_⟩, ?_⟩
     · rw [← algebraMap_smul K s, smul_smul]
-      rw [show (algebraMap (𝓞 K) K s) * (s : K)⁻¹ = 1 from mul_inv_cancel₀ hs0, one_smul]
-      exact ha
+      rwa [show (algebraMap (𝓞 K) K s) * (s : K)⁻¹ = 1 from mul_inv_cancel₀ hs0, one_smul]
     · simp only [LinearMap.restrictScalars_apply, map_smul]
       simp only [LinearMap.restrictScalars_apply] at hax
       rw [hax, ← algebraMap_smul K s x, smul_smul]
@@ -1158,8 +1155,7 @@ theorem mem_twLoc_iff (lam : ι → DomWeight n) (M : ι → Submodule (𝓞 K) 
     a ∈ twLoc lam M w ↔ detTwK lam B⁻¹ * a ∈ locRing w := by
   rw [mem_twLoc]
   constructor
-  · intro h
-    exact h B hB
+  · exact fun h => h B hB
   · intro h B' hB'
     have e : detTwK lam B'⁻¹ * a = (detTwK lam B'⁻¹ * detTwK lam B) * (detTwK lam B⁻¹ * a) := by
       calc detTwK lam B'⁻¹ * a = detTwK lam B'⁻¹ * a * (detTwK lam B⁻¹ * detTwK lam B) := by
@@ -1317,8 +1313,7 @@ theorem local_index_twisted_ideal (lam : ι → DomWeight n) (M : ι → Submodu
       have e : detTwK lam B⁻¹ * (detTwK lam B • y) = y := by
         rw [smul_eq_mul, ← mul_assoc, det_twist_inv_mul, one_mul]
       simp only [LinearMap.restrictScalars_apply, LinearEquiv.coe_coe, LinearEquiv.smulOfNeZero_apply]
-      rw [e]
-      exact hy
+      rwa [e]
     · intro hx
       refine ⟨detTwK lam B⁻¹ * x, hx, ?_⟩
       simp only [LinearMap.restrictScalars_apply, LinearEquiv.coe_coe, LinearEquiv.smulOfNeZero_apply, smul_eq_mul]
@@ -1512,8 +1507,7 @@ theorem cf_mem_twId (c : (D.mem u).C.cls 0) (y : Fin (D.R.N 0) → (D.sp.X 0).V)
     have e : (((g * B) τ : GL (Fin (D.R.N 0)) D.what₂.LL) : Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) D.what₂.LL)ᵀ a b =
         ((g τ : Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) D.what₂.LL) *ᵥ fun c => (B τ : Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) D.what₂.LL) c a) b := by
       simp [Matrix.mul_apply, Matrix.mulVec, dotProduct]
-    rw [e]
-    exact this
+    rwa [e]
   have hkey := coeff_mem_of_mem_range _ (block_action_integral (locRing w) _ hU hF0) m.1
   have e : Formalism.GradedWeylDivisibility.blockAct D.what₂.LL (fun τ => (((g * B) τ : GL (Fin (D.R.N 0)) D.what₂.LL) :
       Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) D.what₂.LL)ᵀ) (actP ((D.fm u).lam 0) B⁻¹ F) =
@@ -1521,8 +1515,7 @@ theorem cf_mem_twId (c : (D.mem u).C.cls 0) (y : Fin (D.R.N 0) → (D.sp.X 0).V)
     show trAct (g * B) (actP ((D.fm u).lam 0) B⁻¹ F) = _
     rw [trAct_mul]
     simp only [actP, LinearMap.smul_apply, AlgHom.toLinearMap_apply, AlgHom.comp_apply, map_smul, transpose_action_inv_right]
-  rw [e, MvPolynomial.coeff_smul, smul_eq_mul, mem_locRing] at hkey
-  exact hkey
+  rwa [e, MvPolynomial.coeff_smul, smul_eq_mul, mem_locRing] at hkey
 
 end Int2
 
@@ -1587,8 +1580,7 @@ theorem fockN_smul {σ : Type} (d : ℂ) (f : MvPolynomial σ ℂ) : fockN (d �
     rw [MvPolynomial.coeff_smul, smul_eq_mul, norm_mul, mul_pow, mul_assoc]
 
 theorem nfAll_self_eq {ι : Type} [Fintype ι] {n : ℕ} (lam : ι → DomWeight n) (p : MvPolynomial (ι × Fin n × Fin n) ℂ) :
-    nfAll lam p p = ((fockN p / extremalFockNormProduct lam : ℝ) : ℂ) := by
-  exact nfL_self lam p
+    nfAll lam p p = ((fockN p / extremalFockNormProduct lam : ℝ) : ℂ) := nfL_self lam p
 
 end SlopeTestRemainingChoices
 
@@ -1782,8 +1774,7 @@ theorem class_norm (c : (D.mem u).C.cls 0) (y : Fin (D.R.N 0) → (D.sp.X 0).V) 
     rw [h2, fockN_smul]
     refine mul_le_mul_of_nonneg_left ?_ (sq_nonneg _)
     have := h3
-    simp only [h4] at this
-    exact this
+    simpa only [h4] using this
   have hprod : 0 ≤ Gp :=
     Finset.prod_nonneg fun τ _ => pow_nonneg (by rw [← h4 τ]; exact hsN_nonneg _) _
   calc normAt (Pi.basisFun D.what₂.LL (MonI lam)) (fun _ => (monD lam)⁻¹) v (cfMap lam g (coE CV (hTV0 D u) x c)) ^ 2
@@ -1893,10 +1884,8 @@ theorem classMapT_of (h : QFrameDeg D) : ClassMapT D := by
   · intro x hx m
     rw [twIdeal_coe]
     exact cf_mem_twId CV c y hyd (gG CV c y hli) (fun τ => gG_coe CV c y hli τ) hx m
-  · intro v
-    exact pow_pos (norm_pos_iff.2 (detTwK_inv_ne CV c v)) 2
-  · intro v x
-    exact class_norm CV c y hli v x
+  · exact fun v => pow_pos (norm_pos_iff.2 (detTwK_inv_ne CV c v)) 2
+  · exact fun v x => class_norm CV c y hli v x
   · rw [twisted_ideal_norm_formula D.what₂.LL hn _ _ hM]
     simp_rw [log_detTw CV c]
     have hQ := fun τ => h u CV c τ

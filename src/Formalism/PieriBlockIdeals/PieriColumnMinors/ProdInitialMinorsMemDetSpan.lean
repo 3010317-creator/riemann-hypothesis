@@ -125,8 +125,7 @@ theorem la_mem_of_dvd (R : Type) [CommRing R] {n : ℕ} (s : Fin n) {d p q N : �
       la_binLat R s d := Submodule.subset_span ⟨p, q, h, rfl⟩
   have h2 := Submodule.smul_mem _ (c : R) hmem
   rw [MvPolynomial.smul_eq_C_mul, map_natCast] at h2
-  rw [Nat.cast_mul, mul_comm ((p + q).choose q : MvPolynomial (Fin 2 × Fin n) R), mul_assoc]
-  exact h2
+  rwa [Nat.cast_mul, mul_comm ((p + q).choose q : MvPolynomial (Fin 2 × Fin n) R), mul_assoc]
 
 theorem la_coeff (A : Type) [CommRing A] (u v w : A) (p k : ℕ) :
     ((Polynomial.C u + Polynomial.X * Polynomial.C v) ^ p * Polynomial.C w).coeff k =
@@ -340,8 +339,7 @@ theorem la_arith_conv (l d m e : ℕ) (hl : l.Prime) (hm : ¬ l ∣ m)
   have h2 : (m * l ^ e).factorization l = e := by
     rw [Nat.factorization_mul hm0 (pow_ne_zero _ hl.ne_zero)]
     simp [Nat.factorization_eq_zero_of_not_dvd hm, hl.factorization_self]
-  rw [h2] at h1
-  exact h1
+  rwa [h2] at h1
 
 theorem la_smul_monLat {n : ℕ} (s : Fin n) (d N : ℕ) (hN : ∀ i ≤ d, d.choose i ∣ N)
     (y : MvPolynomial (Fin 2 × Fin n) ℤ) (hy : y ∈ la_monLat ℤ s d) :
@@ -388,8 +386,7 @@ theorem la_core {n : ℕ} (s : Fin n) (d : ℕ) (g : MvPolynomial (Fin 2 × Fin 
     refine Submodule.mem_map.mpr ⟨((m * l ^ e : ℕ) : ℤ) • y,
       la_smul_monLat s d (m * l ^ e)
         (fun i hi => (hdiv i hi).trans (Nat.mul_dvd_mul_left m (Nat.pow_dvd_pow l he))) y hy, ?_⟩
-    simp only [LinearMap.mulLeft_apply]
-    exact mul_smul_comm _ _ _
+    simpa only [LinearMap.mulLeft_apply] using mul_smul_comm _ _ _
 
 theorem la_lpMinor_one (R : Type) [CommRing R] {r n : ℕ} (s : ℕ) (hs : s = 1) (hr : s ≤ r)
     (hn : s ≤ n) :
@@ -434,8 +431,7 @@ theorem la_weyl_r2n1 (R : Type) [CommRing R] (hn : 1 ≤ 2) (ν : Fin 1 → ℕ)
       show rowDiv R 1 0 q (hw R hn ν) = _
       rw [hhw, ← hpq, la_rowDiv_xy_zero]
       simp [la_xy]
-    rw [e] at h
-    exact h
+    rwa [e] at h
 
 theorem la_mono_of_weight {m : Fin 2 × Fin 1 →₀ ℕ} {ν : Fin 1 → ℕ}
     (h : Finsupp.weight (colW 2 1) m = ν) :
@@ -471,8 +467,7 @@ theorem la_nabla_r2n1 (R : Type) [CommRing R] (ν : Fin 1 → ℕ) :
       fin_cases j
       simp [la_mono, colW, Finsupp.weight_single, hpq]
     · simp only [Submodule.mem_iInf]
-      intro a b hab
-      exact ((ne_of_lt hab) (Subsingleton.elim a b)).elim
+      exact fun a b hab => ((ne_of_lt hab) (Subsingleton.elim a b)).elim
 
 theorem la_eExp_r2n1 (ν : Fin 1 → ℕ) (l : ℕ) :
     Formalism.RankGapBounds.JumpSetsAlt.eExp (lamU 2 1 ν) l = Formalism.RankGapBounds.JumpSetsAlt.maxVal l (ν 0) := by
@@ -487,8 +482,7 @@ theorem sharp_rank_two_one_column : SharpInclusionRankTwoOneColumn := by
   have hc := la_core (0 : Fin 1) (ν 0) 1 one_ne_zero l e hl
   simp only [LinearMap.mulLeft_one, Submodule.map_id] at hc
   unfold InclZ
-  rw [la_nabla_r2n1, la_weyl_r2n1]
-  exact hc
+  rwa [la_nabla_r2n1, la_weyl_r2n1]
 
 theorem lattice_z_rank_two_one_column : LemmaAZ_r2n1 := by
   unfold LemmaAZ_r2n1
@@ -613,8 +607,7 @@ theorem la_weyl_r2n2 (R : Type) [CommRing R] (hn : 2 ≤ 2) (ν : Fin 2 → ℕ)
       rw [hhw, la_rowDiv_tw_ne R 1 0 (by decide), ← hpq, la_rowDiv_xy_zero,
         LinearMap.mulLeft_apply]
       simp [la_xy]
-    rw [e] at h
-    exact h
+    rwa [e] at h
 
 theorem la_monLat_mul (R : Type) [CommRing R] {n : ℕ} (s : Fin n) {d d' : ℕ}
     {u u' : MvPolynomial (Fin 2 × Fin n) R} (hu : u ∈ la_monLat R s d)
@@ -725,8 +718,7 @@ theorem la_nabla_r2n2 (hn : 2 ≤ 2) (ν : Fin 2 → ℕ) (hν : Antitone ν) :
       simp only [Fin.val_zero]
       split_ifs <;> omega
     have c2 : (∑ k : Fin K, if sz k = 1 then 1 else 0) = ν 0 - ν 1 := by omega
-    rw [c1, c2] at h1
-    exact h1
+    rwa [c1, c2] at h1
   · unfold detPowMulMonomialSpan
     rw [Submodule.map_le_iff_le_comap]
     apply Submodule.span_le.2
@@ -753,8 +745,7 @@ theorem sharp_rank_two_two_columns : SharpInclusionRankTwoTwoColumns := by
   intro hn ν hν l e hl
   have hc := la_core (0 : Fin 2) (ν 0 - ν 1) (la_det ℤ ^ ν 1) (pow_ne_zero _ la_det_ne) l e hl
   unfold InclZ
-  rw [la_nabla_r2n2 hn ν hν, la_weyl_r2n2 ℤ hn ν]
-  exact hc
+  rwa [la_nabla_r2n2 hn ν hν, la_weyl_r2n2 ℤ hn ν]
 
 theorem lattice_z_rank_two_two_columns : LemmaAZ_r2n2 := by
   unfold LemmaAZ_r2n2
@@ -804,8 +795,7 @@ theorem la_uniform (r n : ℕ) (hn : n ≤ r) (ν : Fin n → ℕ) (hν : Antito
       | add x y _ _ hx hy => rw [smul_add]; exact Submodule.add_mem _ hx hy
       | smul a x _ hx => rw [smul_comm]; exact Submodule.smul_mem _ _ hx
     rcases Int.natAbs_eq (∏ g ∈ S, c g) with h | h
-    · rw [← h]
-      exact key
+    · rwa [← h]
     · have h2 : (((∏ g ∈ S, c g).natAbs : ℕ) : ℤ) = -(∏ g ∈ S, c g) := by omega
       rw [h2, neg_smul]
       exact Submodule.neg_mem _ key

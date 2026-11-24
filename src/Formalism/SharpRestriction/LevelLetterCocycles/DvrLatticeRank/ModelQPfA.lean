@@ -137,8 +137,7 @@ theorem finite_of (Pt : ZMod n → LL → (K →ₐ[Qp] LL) → Prop) (π' Eπ :
     | add x y hx hy => rw [map_add (f := _)]; exact add_mem hx hy
     | tmul a l =>
       obtain ⟨co, s, hs⟩ := hdiv a
-      rw [toLA_tmul, hs]
-      rw [map_add (f := _), TensorProduct.add_tmul]
+      rw [toLA_tmul, hs, map_add (f := _), TensorProduct.add_tmul]
       refine add_mem ?_ ?_
       · refine Submodule.mem_sup_left ?_
         have hl : (l : LcQ W T π' c) ∈ Submodule.span O (Set.range gL) := by rw [hgL]; trivial
@@ -217,8 +216,7 @@ theorem finite_of (Pt : ZMod n → LL → (K →ₐ[Qp] LL) → Prop) (π' Eπ :
     Subtype.ext (by rw [Submodule.coe_add]; exact hxe)
   have hz0 : mkQ ⟨_, hzL⟩ = 0 := (Submodule.Quotient.mk_eq_zero _).2 hzN
   show mkQ ⟨x, hx0⟩ ∈ _
-  rw [hsplit, map_add (f := _), hz0, add_zero]
-  exact hyL2
+  rwa [hsplit, map_add (f := _), hz0, add_zero]
 
 theorem tf_of (Pt : ZMod n → LL → (K →ₐ[Qp] LL) → Prop) (π' Eπ : LetA O n) (h' : ℕ) (c : ZMod n)
     (hπu : IsUnit (algebraMap (LetA O n) W.EE π'))
@@ -246,8 +244,7 @@ theorem tf_of (Pt : ZMod n → LL → (K →ₐ[Qp] LL) → Prop) (π' Eπ : Let
   have hzL : z ∈ LamLA W T π' Eπ h' c ⊤ := by
     show smulLA W T π' c (Eπ ^ h') z ∈ LinearMap.range (toLA W T π' c ⊤)
     refine hsat a ha _ ?_ ?_
-    · rw [smulLA_eq, smulLA_eq, smulE_comm, ← smulLA_eq, ← smulLA_eq, hzx]
-      exact hx
+    · rwa [smulLA_eq, smulLA_eq, smulE_comm, ← smulLA_eq, ← smulLA_eq, hzx]
     · rw [← map_smul, hyz]
       exact h1 hyN
   have hzN : z ∈ NL W T Pt π' Eπ h' c := by

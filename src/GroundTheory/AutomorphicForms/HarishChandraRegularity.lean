@@ -93,9 +93,7 @@ theorem analyticAt_expChartProd {d : ℕ} (b : Module.Basis (Fin d) ℝ 𝔤) (X
       (ContinuousLinearMap.fst ℝ _ ℝ))).analyticAt p
   have h2 : AnalyticAt ℝ (fun q : EuclideanSpace ℝ (Fin d) × ℝ => q.2 • (X : 𝔸)) p :=
     ((ContinuousLinearMap.snd ℝ (EuclideanSpace ℝ (Fin d)) ℝ).smulRight (X : 𝔸)).analyticAt p
-  have h1' := (exp_analytic (𝕂 := ℝ) _).comp h1
-  have h2' := (exp_analytic (𝕂 := ℝ) _).comp h2
-  exact h1'.mul h2'
+  exact ((exp_analytic (𝕂 := ℝ) _).comp h1).mul ((exp_analytic (𝕂 := ℝ) _).comp h2)
 
 theorem analyticAt_expChartFlow {d : ℕ} (b : Module.Basis (Fin d) ℝ 𝔤) (X : 𝔤)
     {p : EuclideanSpace ℝ (Fin d) × ℝ}
@@ -123,8 +121,7 @@ theorem exists_ball_coordEquiv_mem_nhd {d : ℕ} (b : Module.Basis (Fin d) ℝ �
   have hc : Continuous (fun x : EuclideanSpace ℝ (Fin d) => ((coordEquiv b x : 𝔤) : 𝔸)) :=
     continuous_subtype_val.comp (coordEquiv b).continuous
   have h0 : h.nhd ∈ 𝓝 ((fun x : EuclideanSpace ℝ (Fin d) => ((coordEquiv b x : 𝔤) : 𝔸)) 0) := by
-    simp only [map_zero, ZeroMemClass.coe_zero]
-    exact h.isOpen_nhd.mem_nhds h.zero_mem_nhd
+    simpa only [map_zero, ZeroMemClass.coe_zero] using h.isOpen_nhd.mem_nhds h.zero_mem_nhd
   obtain ⟨r, hr, hball⟩ := Metric.mem_nhds_iff.1 (hc.continuousAt.preimage_mem_nhds h0)
   exact ⟨r, hr, fun x hx => hball hx⟩
 
@@ -155,8 +152,7 @@ theorem expChartFlow_zero {d : ℕ} (b : Module.Basis (Fin d) ℝ 𝔤) (X : �
 theorem expChartProd_zero_mem_nhdOne {d : ℕ} (b : Module.Basis (Fin d) ℝ 𝔤) (X : 𝔤)
     {x : EuclideanSpace ℝ (Fin d)} (hx : ((coordEquiv b x : 𝔤) : 𝔸) ∈ h.nhd) :
     expChartProd b X (x, 0) ∈ h.nhdOne := by
-  simp only [expChartProd, zero_smul, exp_zero, mul_one]
-  exact h.exp_mem_nhdOne hx
+  simpa only [expChartProd, zero_smul, exp_zero, mul_one] using h.exp_mem_nhdOne hx
 
 theorem hasDerivAt_expChartFlow {d : ℕ} (b : Module.Basis (Fin d) ℝ 𝔤) (X : 𝔤)
     {x : EuclideanSpace ℝ (Fin d)} (hx : ((coordEquiv b x : 𝔤) : 𝔸) ∈ h.nhd) :
@@ -219,8 +215,7 @@ theorem exists_expChart_coeff {d : ℕ} (b : Module.Basis (Fin d) ℝ 𝔤) :
     have h1 : HasDerivAt (fun t : ℝ => u (expChartFlow b X (x, t)))
         (fderiv ℝ u x (expChartCoeff b X x)) 0 := by
       have := (hud (expChartFlow b X (x, 0))).hasFDerivAt.comp_hasDerivAt (x := (0 : ℝ)) hφ
-      rw [h.expChartFlow_zero b X hxN] at this
-      exact this
+      rwa [h.expChartFlow_zero b X hxN] at this
     have h2 := h.hasDerivAt_rightDeriv hf X (g * h.expG (coordEquiv b x))
     have hev : (fun t : ℝ => f (g * h.expG (coordEquiv b x) * h.expG (t • X))) =ᶠ[𝓝 0]
         fun t : ℝ => u (expChartFlow b X (x, t)) := by
@@ -905,8 +900,7 @@ theorem prod_eq_mpow {k : ℕ} (J : Fin k → Fin n) (ξ : 𝔼) :
   intro i _ hi
   have h0 : (univ.filter fun l => J l = i).card = 0 := by
     rw [card_eq_zero, filter_eq_empty_iff]
-    intro l _ hl
-    exact hi (mem_image.2 ⟨l, mem_univ _, hl⟩)
+    exact fun l _ hl => hi (mem_image.2 ⟨l, mem_univ _, hl⟩)
   simp [h0]
 
 theorem exists_diffOp_eq_tupleOp {Ω : Set 𝔼} (m : ℕ) (a : (k : ℕ) → (Fin k → Fin n) → 𝔼 → ℂ)

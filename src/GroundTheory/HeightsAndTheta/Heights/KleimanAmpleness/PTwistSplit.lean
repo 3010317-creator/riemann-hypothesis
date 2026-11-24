@@ -336,8 +336,7 @@ theorem locEmb_locRes {I J : Finset (Fin (N + 1))} (hI : I ⊆ support x) (hJ : 
     rw [locRes_mk]
     have hu := isUnit_xyHom η hJ (monos_mono h s.2)
     have k1 := xyHom_mul_locEmb_mk η M₀ hJ m ⟨(s : Poly _ N), monos_mono h s.2⟩
-    have k2 := xyHom_mul_locEmb_mk η M₀ hI m s
-    exact hu.mul_left_cancel (k1.trans k2.symm)
+    exact hu.mul_left_cancel (k1.trans (xyHom_mul_locEmb_mk η M₀ hI m s).symm)
 
 theorem twLocMod_subsingleton {J : Finset (Fin (N + 1))} (hJ : ¬ J ⊆ support x) :
     Subsingleton (LocMod (MvPolynomial (Fin (r + 1)) S) N (TwM η M₀) J) := by
@@ -812,8 +811,7 @@ end Retract
 theorem TwistSplit.proof : TwistSplit.Statement := by
   intro S _ _ Ω _ _ N x M₀ G B r η hG _ hB
   refine ⟨TwM η M₀, inferInstance, inferInstance, inferInstance, inferInstance, twGraded η M₀, inferInstance, ?_⟩
-  intro b c i
-  exact twist_retract η M₀ b c hG hB i
+  exact fun b c i => twist_retract η M₀ b c hG hB i
 
 end
 

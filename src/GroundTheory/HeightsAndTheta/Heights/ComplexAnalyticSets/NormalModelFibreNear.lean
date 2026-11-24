@@ -26,11 +26,9 @@ theorem firstCoords_mem_zeroSet {w : Fin n ⊕ Fin M.m → ℂ} (hw : w ∈ Inde
   intro f hf
   have h1 : f ∈ M.ideal.comap
       (rename Sum.inl : MvPolynomial (Fin n) ℂ →ₐ[ℂ] MvPolynomial (Fin n ⊕ Fin M.m) ℂ) := by
-    rw [M.comap_eq]
-    exact hf
+    rwa [M.comap_eq]
   have h0 := hw _ (Ideal.mem_comap.1 h1)
-  rw [eval_rename] at h0
-  exact h0
+  rwa [eval_rename] at h0
 
 theorem exists_mem_fibre {q : Fin n → ℂ} (hq : q ∈ zeroSet J) :
     ∃ w ∈ IndefiniteRowSideFullHecke.ComplexSets.zeroSetIn M.ideal, IndefiniteRowSideFullHecke.ComplexSets.firstCoords w = q := by
@@ -42,8 +40,7 @@ theorem exists_mem_fibre {q : Fin n → ℂ} (hq : q ∈ zeroSet J) :
     rw [RingHom.mem_ker]
     have h1 : rename Sum.inl f ∈ M.ideal := Ideal.Quotient.eq_zero_iff_mem.1 hf0
     have h2 : f ∈ J := by
-      rw [← M.comap_eq]
-      exact h1
+      rwa [← M.comap_eq]
     exact hq f h2
   have hle := le_nonZeroDivisors_of_noZeroDivisors h0
   have : Nontrivial (Localization (normalModelSubmonoid M q)) :=

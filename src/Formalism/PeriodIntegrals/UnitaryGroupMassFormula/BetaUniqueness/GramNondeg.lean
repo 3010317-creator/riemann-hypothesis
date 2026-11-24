@@ -114,8 +114,7 @@ theorem key {r : ℕ} (Z : Matrix (Fin (r + 1)) (Fin (r + 1)) E) (T T' : E) (c c
       linear_combination (star (det Z)) * e1 + (d * T) * e2
     exact (mul_eq_zero.mp h5).resolve_left hG
   have hnd : det Z ≠ 0 ∨ d ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     apply hG
     rw [hc.1, hc.2]
     simp
@@ -187,8 +186,7 @@ theorem coeffs_zero {T T' : E} (F : FlagG S r T) (F' : FlagG S r T') (c c' : Fin
     rw [hw, map_add (f := _), map_sum, map_sum, ← self_sum F c a]
     simp only [map_smul, smul_eq_mul]
     congr 1
-    simp only [mulVec, dotProduct, Zhat, brS]
-    exact Finset.sum_congr rfl (fun b _ => mul_comm _ _)
+    simpa only [mulVec, dotProduct, Zhat, brS] using Finset.sum_congr rfl (fun b _ => mul_comm _ _)
   have hl2 : ∀ b, S.hT (F'.fvec b) w = ((Zhat F F')ᴴ *ᵥ c) b +
       (Pi.single (Fin.last r) (-T' * c' (Fin.last r)) : Fin (r + 1) → E) b := by
     intro b
@@ -220,8 +218,7 @@ theorem coeffs_zero {T T' : E} (F : FlagG S r T) (F' : FlagG S r T') (c c' : Fin
   have hG' : det (Zhat F F') * star (det (Zhat F F')) - T * T' *
       (det ((Zhat F F').submatrix Fin.castSucc Fin.castSucc) *
         star (det ((Zhat F F').submatrix Fin.castSucc Fin.castSucc))) ≠ 0 := by
-    rw [← Dl_succ, ← Dl_r]
-    exact hG
+    rwa [← Dl_succ, ← Dl_r]
   exact key (Zhat F F') T T' c c' k1 k2 hG'
 
 end Flag

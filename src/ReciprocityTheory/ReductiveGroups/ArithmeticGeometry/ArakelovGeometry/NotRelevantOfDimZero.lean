@@ -40,8 +40,7 @@ theorem killB_monomial (T : Finset K) (m : (Σ k, ι k) →₀ ℕ) (c : ℤ) :
     have hc : ∀ p ∈ m.support, (if p.1 ∈ T then (0 : MRing ι) else X p) ^ m p = X p ^ m p := by
       intro p hp
       rw [ite_eq_right]
-      intro hT
-      exact (Finsupp.mem_support_iff.mp hp) (h p hT)
+      exact fun hT => (Finsupp.mem_support_iff.mp hp) (h p hT)
     rw [Finset.prod_congr rfl hc, ← Finsupp.prod, MvPolynomial.monomial_eq, MvPolynomial.algebraMap_eq]
 
 theorem killB_multiHomog (T : Finset K) {s : MRing ι} {c : K → ℕ} (hs : IsMultiHomog s c) :
@@ -126,8 +125,7 @@ theorem card_le_dim {P : Ideal (MRing ι)} (hPp : P.IsPrime) (hPm : IsMultiHomog
       rw [Ideal.mem_comap, killB_X, ite_eq_left hin]
       exact P.zero_mem
     have h2 : (X ⟨k, i⟩ : MRing ι) ∉ Q j := by
-      rw [Ideal.mem_comap, killB_X, ite_eq_right hout]
-      exact hi
+      rwa [Ideal.mem_comap, killB_X, ite_eq_right hout]
     exact h2 (heq ▸ h1)
   let f : Fin (Fintype.card K + 1) → PrimeSpectrum.zeroLocus (P : Set (MRing ι)) :=
     fun j => ⟨⟨Q j, hQp j⟩, fun x hx => hPQ j hx⟩
@@ -172,8 +170,7 @@ theorem not_relevant_of_dim_zero {W : Ideal (MRing ι)} [W.IsPrime] (hWm : IsMul
     obtain ⟨b, rfl⟩ := Ideal.mem_span_singleton'.mp ha
     rw [map_mul]
     have : g (Ideal.Quotient.mk W s) = 0 := by
-      simp only [g, Ideal.Quotient.factor_mk]
-      exact Ideal.Quotient.eq_zero_iff_mem.mpr hsW'
+      simpa only [g, Ideal.Quotient.factor_mk] using Ideal.Quotient.eq_zero_iff_mem.mpr hsW'
     rw [this, mul_zero]
   let f : (MRing ι ⧸ W) ⧸ Ideal.span {Ideal.Quotient.mk W s} →+* MRing ι ⧸ W' :=
     Ideal.Quotient.lift _ g hg
@@ -182,9 +179,7 @@ theorem not_relevant_of_dim_zero {W : Ideal (MRing ι)} [W.IsPrime] (hWm : IsMul
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective y
     exact ⟨Ideal.Quotient.mk _ (Ideal.Quotient.mk W x), rfl⟩
   have hnz : Ideal.Quotient.mk W s ∈ nonZeroDivisors (MRing ι ⧸ W) := by
-    apply mem_nonZeroDivisors_of_ne_zero
-    intro h0
-    exact hsW (Ideal.Quotient.eq_zero_iff_mem.mp h0)
+    exact mem_nonZeroDivisors_of_ne_zero (fun h0 => hsW (Ideal.Quotient.eq_zero_iff_mem.mp h0))
   have h2 : ((Fintype.card K : ℕ) : WithBot ℕ∞) + 1 ≤ ((0 + Fintype.card K : ℕ) : WithBot ℕ∞) := by
     calc ((Fintype.card K : ℕ) : WithBot ℕ∞) + 1 ≤ ringKrullDim (MRing ι ⧸ W') + 1 := by
           gcongr

@@ -82,8 +82,7 @@ lemma uw_conj_N {h n : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (
         · rw [hnc a b hb2 (by rw [min_eq_right hb1]; exact har), ite_eq_right hab, mul_zero]
         · rw [uw_block hh i a (fun h' => har h'.2.1),
             ite_eq_right (fun e => har (by rw [← e]; exact hir)), zero_mul]
-      · intro h'
-        exact absurd (Finset.mem_univ b) h'
+      · exact fun h' => absurd (Finset.mem_univ b) h'
     have hone : (h * h⁻¹) i j = if i = j then 1 else 0 := by
       rw [mul_inv_UH hU, Matrix.one_apply]
     rw [← hone, Matrix.mul_apply, Matrix.mul_apply]
@@ -101,8 +100,7 @@ lemma uw_conj_N {h n : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (
       · rw [uw_col_out hhi j hjn j, ite_eq_left rfl, mul_one]
       · intro b _ hb
         rw [uw_col_out hhi j hjn b, ite_eq_right hb, mul_zero]
-      · intro h'
-        exact absurd (Finset.mem_univ j) h'
+      · exact fun h' => absurd (Finset.mem_univ j) h'
     rw [hcol, Matrix.mul_apply]
     by_cases hiW : inW k r i
     · have hi1 := hiW.1
@@ -119,8 +117,7 @@ lemma uw_conj_N {h n : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (
           hnc i j (by omega) (by rw [hmin]; exact hij)]
       · intro a _ hai
         rw [uw_block hh i a (fun h' => hiW h'.1), ite_eq_right (Ne.symm hai), zero_mul]
-      · intro h'
-        exact absurd (Finset.mem_univ i) h'
+      · exact fun h' => absurd (Finset.mem_univ i) h'
 
 def fexp (k r : ℕ) (i : Fin (2 * r + k + 1)) : ℤ :=
   if i.val < r then (r : ℤ) - i.val else if i.val ≤ r + k then 0 else (r : ℤ) + k - i.val

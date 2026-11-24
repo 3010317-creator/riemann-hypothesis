@@ -213,8 +213,7 @@ theorem harProj_eq_zero_iff {K : Type} [Field K] [CharZero K] {k : ℕ} (hk : 1 
   constructor
   · intro h0
     refine ⟨g, hg, ?_⟩
-    rw [h0, sub_zero] at hfg
-    exact hfg
+    rwa [h0, sub_zero] at hfg
   · rintro ⟨G, -, rfl⟩
     refine (HQ K k a b p Ov 1 hk hp hloc).1 _ (G - g) hf1 ?_
     rw [mul_sub, ← hfg, sub_sub_cancel]
@@ -267,8 +266,7 @@ theorem oneTop_abs (K : Type) [Field K] [CharZero K] (k P Q p : ℕ) (hk : 1 ≤
     rw [h0] at h2
     simp only [zero_mul, map_zero, sub_self, zero_add] at h2
     have h3 : ((k : ℕ) : K) = 0 := by
-      have h4 := congrArg (AddMonoidAlgebra.coeff · 0) h2.symm
-      simpa using h4
+      simpa using congrArg (AddMonoidAlgebra.coeff · 0) h2.symm
     exact absurd (Nat.cast_eq_zero.1 h3) (by omega)
   have hle : ∀ A B, Formalism.CountingSumsFrames.HarAB K k A B ≤ Formalism.CountingSumsFrames.PolAB K k A B := fun A B => inf_le_left
   let D : ℕ → Formalism.CountingSumsFrames.PolXY K k →ₗ[K] Formalism.CountingSumsFrames.PolXY K k := fun j =>
@@ -284,8 +282,7 @@ theorem oneTop_abs (K : Type) [Field K] [CharZero K] (k P Q p : ℕ) (hk : 1 ≤
     intro j hj F hF
     obtain ⟨w, hw, hw'⟩ := (IP K k P Q hk).1 F hF j hj
     rw [hD] at hw'
-    rw [mul_left_cancel₀ (pow_ne_zero j hpair) hw']
-    exact hw
+    rwa [mul_left_cancel₀ (pow_ne_zero j hpair) hw']
   have hjP : ∀ j, j ≤ min P Q → j ≤ P := fun j hj => le_trans hj (min_le_left _ _)
   have hjQ : ∀ j, j ≤ min P Q → j ≤ Q := fun j hj => le_trans hj (min_le_right _ _)
   let Dc : ∀ j, j ≤ min P Q → V2 →ₗ[K] Formalism.CountingSumsFrames.PolAB K k (P - j) (Q - j) := fun j hj =>
@@ -329,8 +326,7 @@ theorem oneTop_abs (K : Type) [Field K] [CharZero K] (k P Q p : ℕ) (hk : 1 ≤
     simp only [pr, dite_eq_left hj, LinearMap.comp_apply]
   have hio : ∀ j (hj : j ≤ min P Q) f, io j (β j f) = E j hj f := by
     intro j hj f
-    simp only [io, dite_eq_left hj, LinearMap.comp_apply]
-    exact hEβ j hj f
+    simpa only [io, dite_eq_left hj, LinearMap.comp_apply] using hEβ j hj f
   have hterm : ∀ j (hj : j ≤ min P Q) x,
       ((α (io j (pr j x)) : Formalism.CountingSumsFrames.PolAB K k P Q) : Formalism.CountingSumsFrames.PolXY K k) =
         Formalism.CountingSumsFrames.levelProj K k P Q j (α x) := by
@@ -352,8 +348,7 @@ theorem oneTop_abs (K : Type) [Field K] [CharZero K] (k P Q p : ℕ) (hk : 1 ≤
       · apply GLP K k Ov g j _ hk
         have h := ((GP K k P Q p Ov.toSubring g hk hp hloc (α x) (α x).2).1 hx).2 j hj
         rw [hD, ← mul_smul_comm] at h
-        rw [Submodule.coe_smul]
-        exact h
+        rwa [Submodule.coe_smul]
       · rw [map_smul, hpr j hj]
     · have hw : ((p : K) ^ ((k + 1) * Nat.log p (P + Q + k))) •
           Formalism.CountingSumsFrames.harProj K k (P - j) (Q - j) f ∈ Formalism.CountingSumsFrames.HarAB K k (P - j) (Q - j) :=

@@ -36,8 +36,7 @@ instance : Algebra.FormallyEtale ℚ_[p] (PadicAlgCl p) :=
 theorem thetaAlgHom_eq_zero_of_mem_pow {n : ℕ} {a : 𝔹} (ha : a ∈ 𝔪 ^ (n + 1)) :
     thetaAlgHom p a = 0 := by
   have h : a ∈ 𝔪 := Ideal.pow_le_self (Nat.succ_ne_zero n) ha
-  rw [IsPerfectoidField.maximalIdeal_bDeRhamPlus, RingHom.mem_ker] at h
-  exact h
+  rwa [IsPerfectoidField.maximalIdeal_bDeRhamPlus, RingHom.mem_ker] at h
 
 def thetaQuot (n : ℕ) : 𝔹 ⧸ 𝔪 ^ (n + 1) →ₐ[ℚ_[p]] ℂ_[p] :=
   Ideal.Quotient.liftₐ _ (thetaAlgHom p) fun _ ha => thetaAlgHom_eq_zero_of_mem_pow p ha
@@ -57,8 +56,7 @@ theorem isNilpotent_ker_thetaQuot (n : ℕ) :
     intro y hy
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective y
     refine Ideal.mem_map_of_mem _ ?_
-    rw [IsPerfectoidField.maximalIdeal_bDeRhamPlus, RingHom.mem_ker]
-    exact hy
+    rwa [IsPerfectoidField.maximalIdeal_bDeRhamPlus, RingHom.mem_ker]
   refine ⟨n + 1, le_bot_iff.1 ((Ideal.pow_right_mono hle (n + 1)).trans ?_)⟩
   rw [← Ideal.map_pow, Ideal.map_quotient_self]
 

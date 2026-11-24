@@ -119,9 +119,7 @@ section gen2
 variable {k r : ℕ} {E₁ E₂ : Type*} [NormedAddCommGroup E₁] [NormedSpace ℂ E₁] [NormedAddCommGroup E₂] [NormedSpace ℂ E₂]
 
 theorem jdc_ckOn_mono {m : ℕ∞} {UU VV : Set (B.Mat k r)} (h : UU ⊆ VV) {f : B.Mat k r → E₁} (hf : B.CkOn m VV f) :
-    B.CkOn m UU f := by
-  intro g₀ hg₀
-  exact hf g₀ (h hg₀)
+    B.CkOn m UU f := fun g₀ hg₀ => hf g₀ (h hg₀)
 
 theorem jdc_ckOn_ap {UU : Set (B.Mat k r)} {a : B.Mat k r → (E₁ →L[ℂ] E₂)} {Φ : B.Mat k r → E₁}
     (ha : B.CkOn ⊤ UU a) (hΦ : B.CkOn ⊤ UU Φ) : B.CkOn ⊤ UU (fun g => a g (Φ g)) := by
@@ -177,8 +175,7 @@ theorem jdc_ckOn_om (z z' : Fin (2 * r + k + 1) → ℂ) {J : B.Mat k r → (Wq 
     ⟨⟨hgG, fun a ha => absurd ha (Nat.not_lt_zero _)⟩, hG, fun a => hD _ (show (a : ℕ) + 1 ≤ r from a.isLt)⟩
   obtain ⟨U, F, hU, hgU, hF, hJF⟩ := hJ g₀ hmem
   refine ⟨U, F, hU, hgU, hF, ?_⟩
-  intro g hg hgV
-  exact hJF g hg ⟨hgV, fun a ha => absurd ha (Nat.not_lt_zero _)⟩
+  exact fun g hg hgV => hJF g hg ⟨hgV, fun a ha => absurd ha (Nat.not_lt_zero _)⟩
 
 variable [FiniteDimensional ℂ Wp]
 
@@ -214,8 +211,7 @@ theorem jdc_ffl (Db : B.RealPlaceData k r Wp Wq) (Θ : B.DiffOp k r Wp Wq) (hSC 
     have e := hN g 1 WeylGroupFacts.mem_n_one n hn.1
     rw [Matrix.one_mul, Formalism.FourierDecayAlt.P.BesselCapelliCommutation.psi_one Db.z_mem, one_mul] at e
     exact e
-  · intro g _ h hh h' hh'
-    exact Formalism.FourierDecayAlt.P5.jf_uEquiv Db H g hh hh'
+  · exact fun g _ h hh h' hh' => Formalism.FourierDecayAlt.P5.jf_uEquiv Db H g hh hh'
 
 end gen3
 

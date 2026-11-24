@@ -60,8 +60,7 @@ theorem metricW_of (hR : NfacRmulStatement (E := E)) (hLa : NfacLactStatement (E
     have h1 := hnpos (rmul x b) (OntoS.dom_rmul (X := X) hx hb)
     rw [hR r X la x hx b hb] at h1
     have hinv : 0 < ‖bchar la b‖⁻¹ := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       nlinarith
     refine ⟨inv_pos.mp hinv, ?_⟩
     unfold phla
@@ -96,7 +95,6 @@ theorem metricW_of (hR : NfacRmulStatement (E := E)) (hLa : NfacLactStatement (E
       intro y hy
       obtain ⟨hzy, hby, hye⟩ := hdec y hy.1 hy.2
       have hmem : cpt X x1 (zOf y) ∈ X.dom := hzy
-      show ψ y = ψ (cpt X x1 (zOf y))
       exact (congrArg ψ hye).trans (hψr _ hmem _ hby)
     exact ((hcomp'.congr heq).continuousAt (hUo.mem_nhds ⟨hx, hΔx⟩)).continuousWithinAt
   have hphc : ContinuousOn (phla X la) X.dom := by

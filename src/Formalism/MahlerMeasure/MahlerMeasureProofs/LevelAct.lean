@@ -235,8 +235,7 @@ theorem euler_pow (hw : Function.Injective w) (he : Function.Injective e) (hwe :
     (∑ c, X (e c) * pderiv (e c) ((tieE w e ^ j) u) = ((b + j : ℕ) : k) • (tieE w e ^ j) u) := by
   induction j with
   | zero =>
-    simp only [linearMap_pow_zero_apply, Nat.add_zero]
-    exact ⟨hW, hE⟩
+    simpa only [linearMap_pow_zero_apply, Nat.add_zero] using ⟨hW, hE⟩
   | succ j ih =>
     rw [tieE_pow_succ_apply j u]
     refine ⟨?_, ?_⟩

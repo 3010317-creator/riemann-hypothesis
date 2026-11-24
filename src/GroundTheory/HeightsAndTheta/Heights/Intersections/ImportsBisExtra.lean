@@ -32,8 +32,7 @@ theorem isLocalization_of_mem_iff {O F : Type*} [CommRing O] [Field F] (φ : O �
     have hs0 : φ s ≠ 0 := fun h0 => hs (by rw [(map_eq_zero_iff φ hφ).1 h0]; exact m.zero_mem)
     refine IsUnit.of_mul_eq_one ⟨(φ s)⁻¹, (h _).2 ⟨1, s, hs, by rw [map_one, inv_mul_cancel₀ hs0]⟩⟩ ?_
     apply Subtype.ext
-    simp only [Subring.coe_mul, hL, Subring.coe_one]
-    exact mul_inv_cancel₀ hs0
+    simpa only [Subring.coe_mul, hL, Subring.coe_one] using mul_inv_cancel₀ hs0
   · intro z
     obtain ⟨x, s, hs, hxs⟩ := (h z).1 z.2
     exact ⟨⟨x, ⟨s, hs⟩⟩, Subtype.ext (by simp only [Subring.coe_mul, hL]; exact hxs)⟩
@@ -50,10 +49,8 @@ theorem card_quot_map_eq_card_localization {R S : Type*} [CommRing R] [CommRing 
     obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective x
     constructor
     · rintro ⟨r', hr', he⟩
-      rw [← he]
-      exact hr'
-    · intro hx
-      exact ⟨r, hx, rfl⟩
+      rwa [← he]
+    · exact fun hx => ⟨r, hx, rfl⟩
   have : IsLocalization p.primeCompl (S ⧸ I.map (algebraMap R S)) := hM ▸ inferInstance
   exact Nat.card_congr (IsLocalization.algEquiv p.primeCompl _ (Localization.AtPrime p)).toEquiv
 

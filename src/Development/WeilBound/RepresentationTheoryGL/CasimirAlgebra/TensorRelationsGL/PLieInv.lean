@@ -120,8 +120,7 @@ theorem Sop_single {ι : Type} {n : ℕ} {M : Type} [AddCommGroup M] [Module ℂ
   · simp
   · intro b _ hb; simp [Ne.symm hb]
   · simp
-  · intro a _ ha
-    exact Finset.sum_eq_zero fun b _ => by simp [Ne.symm ha]
+  · exact fun a _ ha => Finset.sum_eq_zero fun b _ => by simp [Ne.symm ha]
   · simp
 
 end LieInverse
@@ -139,16 +138,14 @@ theorem lieInv_holds : LieInv := by
       intro τ'
       by_cases h1 : τ' = τ
       · subst h1
-        simp only [D, ite_true]
-        exact hasDerivAt_det _ X (by rw [hc0, hK.one]) hcd
+        simpa only [D, ite_true] using hasDerivAt_det _ X (by rw [hc0, hK.one]) hcd
       · by_cases h2 : τ' = bar τ
         · subst h2
           simp only [D, ite_eq_right h1, ite_true]
           have ht : (X.map star).trace = star X.trace := by simp [Matrix.trace, star_sum]
           rw [← ht]
           refine hasDerivAt_det _ _ (by rw [hc0, hK.one]) fun i j => ?_
-          simp only [hK.conj, Matrix.map_apply]
-          exact (hcd i j).star
+          simpa only [hK.conj, Matrix.map_apply] using (hcd i j).star
         · simp only [D, ite_eq_right h1, ite_eq_right h2]
           have hf : (fun t => (κ τ' (cv t)).det) = fun _ => 1 := by
             funext t; rw [hcoth τ' h1 h2 t, Matrix.det_one]
@@ -158,8 +155,7 @@ theorem lieInv_holds : LieInv := by
       intro τ'
       have := (hasDerivAt_zpow (c τ') ((κ τ' (cv 0)).det) (Or.inl (by rw [h1]; exact one_ne_zero))).comp
         (0 : ℝ) (hdet τ')
-      rw [h1, _root_.one_zpow, mul_one] at this
-      exact this
+      rwa [h1, _root_.one_zpow, mul_one] at this
     have hχ : HasDerivAt (fun t => ∏ τ', (κ τ' (cv t)).det ^ c τ')
         ((c τ : ℂ) * X.trace + (c (bar τ) : ℂ) * star X.trace) 0 := by
       have := HasDerivAt.finsetProd (u := Finset.univ) (fun τ' _ => hz τ')

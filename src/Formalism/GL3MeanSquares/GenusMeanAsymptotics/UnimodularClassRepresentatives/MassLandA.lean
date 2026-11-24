@@ -64,8 +64,7 @@ theorem conjAlg_apply (x : K) : conjAlg K x = star x := rfl
 theorem mem_cmF_iff (x : K) : x ∈ cmF K ↔ star x = x := by
   rw [IntermediateField.mem_fixedField_iff]
   constructor
-  · intro h
-    exact h _ (Subgroup.mem_zpowers _)
+  · exact fun h => h _ (Subgroup.mem_zpowers _)
   · intro h f hf
     have hs : conjAlg K ∈ MulAction.stabilizer (K ≃ₐ[ℚ] K) x :=
       MulAction.mem_stabilizer_iff.2 (by rw [AlgEquiv.smul_def, conjAlg_apply, h])
@@ -77,8 +76,7 @@ theorem star_coe_cmF (x : cmF K) : star (x : K) = x := (mem_cmF_iff K x).1 x.2
 variable {K}
 
 theorem exists_star_ne (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) : ∃ a : K, star a ≠ a := by
-  by_contra h
-  push Not at h
+  by_contra! h
   let φ : K →+* ℂ := (IsAlgClosed.lift : K →ₐ[ℚ] ℂ).toRingHom
   have hφ : ComplexEmbedding.IsReal φ := by
     rw [ComplexEmbedding.isReal_iff]
@@ -117,8 +115,7 @@ theorem totPos_iff (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (a : cmF
     have hr := isReal_embedding_cmF hK w.embedding
     have hw' : InfinitePlace.mk (w.embedding.comp (algebraMap (cmF K) K)) =
         InfinitePlace.mk (Complex.ofRealHom.comp φ) := by
-      rw [← InfinitePlace.comap_mk, InfinitePlace.mk_embedding]
-      exact hw
+      rwa [← InfinitePlace.comap_mk, InfinitePlace.mk_embedding]
     rw [InfinitePlace.mk_eq_iff] at hw'
     have e : w.embedding.comp (algebraMap (cmF K) K) = Complex.ofRealHom.comp φ := by
       rcases hw' with e | e
@@ -126,8 +123,7 @@ theorem totPos_iff (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (a : cmF
       · rwa [ComplexEmbedding.isReal_iff.1 hr] at e
     have h1 := h w.embedding
     have e2 : w.embedding (a : K) = (φ a : ℂ) := RingHom.congr_fun e a
-    rw [e2, Complex.ofReal_re] at h1
-    exact h1
+    rwa [e2, Complex.ofReal_re] at h1
   · intro h ψ
     have hr := isReal_embedding_cmF hK ψ
     have e : ((hr.embedding a : ℝ) : ℂ) = ψ (a : K) := hr.coe_embedding_apply a

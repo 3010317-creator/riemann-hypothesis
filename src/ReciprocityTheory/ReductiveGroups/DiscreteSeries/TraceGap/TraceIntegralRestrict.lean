@@ -83,8 +83,7 @@ theorem int_str_eq (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E)
   let W : Kg → (Yt →L[ℂ] Yt) := fun k => tOp hD hSK (φ k)
   have hWc : Continuous W := by
     rw [continuous_clm_apply]
-    intro y
-    exact ((tOp_isURepOn hD hSK hσ).2.2 y).comp_continuous hφc hφK
+    exact fun y => ((tOp_isURepOn hD hSK hσ).2.2 y).comp_continuous hφc hφK
   let Γt : Yt →L[ℂ] Yt := LinearMap.toContinuousLinearMap
     ((gradT.restrict hYG : Y →ₗ[ℂ] Y) : Yt →ₗ[ℂ] Yt)
   let Y0t : Submodule ℂ Yt := Y₀.comap (tsubVal Y)
@@ -145,8 +144,7 @@ theorem int_str_eq (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E)
         have h' : ((f x : Y₀) : TensorProduct ℂ D (Fock n)) = ((f y : Y₀) : TensorProduct ℂ D (Fock n)) := by
           rw [hxy]
         exact Subtype.ext (tsubVal_injective h')
-      · intro y
-        exact ⟨⟨(show Yt from ⟨y, hle y.2⟩), y.2⟩, rfl⟩
+      · exact fun y => ⟨⟨(show Yt from ⟨y, hle y.2⟩), y.2⟩, rfl⟩
     let e := LinearEquiv.ofBijective f hf
     rw [← LinearMap.trace_conj' _ e]
     congr 1
@@ -218,8 +216,7 @@ theorem btot_range (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E)
   intro s
   have hW : Continuous fun k => tOp hD hSK (φ k) := by
     rw [continuous_clm_apply]
-    intro v
-    exact ((tOp_isURepOn hD hSK hσ).2.2 v).comp_continuous hφc hφK
+    exact fun v => ((tOp_isURepOn hD hSK hσ).2.2 v).comp_continuous hφc hφK
   have hint : Integrable (fun k => c k • tOp hD hSK (φ k)) μ := integrable_of_cont (hc.smul hW)
   let Ψ : TSub Y →L[ℂ] H := LinearMap.toContinuousLinearMap
     (D.subtype ∘ₗ tcoef ((fockBasis n).coord s) ∘ₗ tsubVal Y)
@@ -246,8 +243,7 @@ theorem btot_range (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E)
   obtain ⟨x, hx, hxe⟩ := hmem
   have : tcoef ((fockBasis n).coord s) (tsubVal Y ((∫ k, c k • tOp hD hSK (φ k) ∂μ) y)) = x :=
     Subtype.ext (hxe.trans (hΨ _)).symm
-  rw [this]
-  exact hx
+  rwa [this]
 
 end Range
 

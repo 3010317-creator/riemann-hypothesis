@@ -89,8 +89,7 @@ theorem not_lt_lt_of_mem_minimalPrimes {V W W' : Ideal (MRingOver F ι)} [V.IsPr
   apply le_antisymm hVW'.le
   intro y hy
   have : q y ∈ W'.map q := Ideal.mem_map_of_mem q hy
-  rw [h0, Ideal.mem_bot, Ideal.Quotient.eq_zero_iff_mem] at this
-  exact this
+  rwa [h0, Ideal.mem_bot, Ideal.Quotient.eq_zero_iff_mem] at this
 
 theorem not_mem_of_mem_divSupp_swap {V W : Ideal (MRingOver F ι)} {n : ℕ} {f t : MRingOver F ι}
     {α β : K → ℕ} (hV : IsProjVarF V (n + 1)) (hf : IsMultiHomog f α) (ht : IsMultiHomog t β)
@@ -253,8 +252,7 @@ theorem sum_eq_finsum {V Z : Ideal (MRingOver F ι)} [V.IsPrime] [hZp : Z.IsPrim
     have hle := h.comap_le p.asIdeal
     simp only [Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
     exact ⟨⟨hm, isRelevant_of_le hZr hle⟩, hle⟩
-  · intro p _ p' _ e
-    exact PrimeSpectrum.ext (h.eq_of_comap_eq e)
+  · exact fun p _ p' _ e => PrimeSpectrum.ext (h.eq_of_comap_eq e)
   · intro W hW
     simp only [Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hW
     obtain ⟨p, hp, hpW⟩ := hex W hW.1.1.1.1 (le_sup_left.trans hW.1.1.1.2) hW.2
@@ -305,8 +303,7 @@ theorem swap_coeff {V Z : Ideal (MRingOver F ι)} {n : ℕ} {f t : MRingOver F �
       (fun e => htV ((h.map_eq_zero_iff hVZ t).mp e)) hlen).2.2
     have e : ((∑ W ∈ (divSupp_finite V f).toFinset, divCycle V f W * divCycle W t Z : ℕ) : ℕ∞) =
         ((∑ W ∈ (divSupp_finite V t).toFinset, divCycle V t W * divCycle W f Z : ℕ) : ℕ∞) := by
-      rw [sum_eq_finsum hZr hZm hfV, sum_eq_finsum hZr hZm' htV]
-      exact key
+      rwa [sum_eq_finsum hZr hZm hfV, sum_eq_finsum hZr hZm' htV]
     exact_mod_cast e
   · rw [sum_eq_zero_of_not hV hf ht hfV hft hZ,
       sum_eq_zero_of_not hV ht hf htV hft' (by rwa [sup_right_comm])]

@@ -206,8 +206,7 @@ theorem inj_at {s s' : X.B.I.Ginf} (hs : s ∈ X.NinfU u) (hs' : s' ∈ X.NinfU 
       simp only [Matrix.mulVec, dotProduct, Matrix.conjTranspose_apply, Pi.zero_apply]
       rw [← hexp b]
       exact hgd _ (he b) a
-    intro c
-    exact congrFun (key _ hXu) c
+    exact fun c => congrFun (key _ hXu) c
   have hdz : ∀ a, hJ (X.B.I.ε v) (zV X u v) (d a) = 0 := by
     intro a
     have h := hgd _ hz a
@@ -271,8 +270,7 @@ theorem inj_at {s s' : X.B.I.Ginf} (hs : s ∈ X.NinfU u) (hs' : s' ∈ X.NinfU 
   have hskew : ∀ b a, (αmᴴ * Δ) b a + star ((αmᴴ * Δ) a b) = 0 := by
     intro b a
     have h := hsk b a
-    rw [hstar, Matrix.conjTranspose_apply] at h
-    exact h
+    rwa [hstar, Matrix.conjTranspose_apply] at h
   have hlt : ∀ b a : Fin D.R.rS, b < a → (αmᴴ * Δ) b a = 0 := by
     intro b a hba
     have h1 := hskew b a
@@ -292,8 +290,7 @@ theorem inj_at {s s' : X.B.I.Ginf} (hs : s ∈ X.NinfU u) (hs' : s' ∈ X.NinfU 
         linarith
       · rw [hNe, Complex.sub_im, cdiag b, sub_self, Complex.zero_im]
     · have h1 := hskew b a
-      rw [hlt a b hab, star_zero, add_zero] at h1
-      exact h1
+      rwa [hlt a b hab, star_zero, add_zero] at h1
   have hΔ0 : Δ = 0 := by
     have hz0 : αmᴴ * Δ = 0 := Matrix.ext fun b a => by rw [hN0 b a]; rfl
     calc Δ = (xMat X v s * αmᴴ) * Δ := by rw [hXαh, Matrix.one_mul]

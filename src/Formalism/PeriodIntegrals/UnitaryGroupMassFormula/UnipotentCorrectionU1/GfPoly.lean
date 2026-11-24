@@ -106,8 +106,7 @@ theorem pd_sum {ι : Type*} (s : Finset ι) {a : ℕ} (P : ι → Matrix (Fin N)
   classical
   induction s using Finset.induction_on with
   | empty =>
-    simp only [Finset.sum_empty]
-    exact pd_mono (Nat.zero_le a) (pd_const 0)
+    simpa only [Finset.sum_empty] using pd_mono (Nat.zero_le a) (pd_const 0)
   | insert i s hi ih =>
     simp only [Finset.sum_insert hi]
     exact pd_add (h i (Finset.mem_insert_self _ _)) (ih fun j hj => h j (Finset.mem_insert_of_mem hj))
@@ -117,8 +116,7 @@ theorem pd_prod {ι : Type*} (s : Finset ι) (d : ι → ℕ) (P : ι → Matrix
   classical
   induction s using Finset.induction_on with
   | empty =>
-    simp only [Finset.sum_empty, Finset.prod_empty]
-    exact pd_const 1
+    simpa only [Finset.sum_empty, Finset.prod_empty] using pd_const 1
   | insert i s hi ih =>
     simp only [Finset.sum_insert hi, Finset.prod_insert hi]
     exact pd_mul (h i (Finset.mem_insert_self _ _)) (ih fun j hj => h j (Finset.mem_insert_of_mem hj))

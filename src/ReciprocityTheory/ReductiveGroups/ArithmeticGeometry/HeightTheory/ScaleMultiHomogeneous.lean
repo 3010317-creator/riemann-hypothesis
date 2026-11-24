@@ -82,8 +82,7 @@ theorem scale_multiHomogeneous (b : Fin (D + 1)) (u : Kˣ) (a : Fin (D + 1) → 
     · simp
     · intro x _ hx
       simp [hx]
-    · intro h
-      exact absurd (Finset.mem_univ b) h
+    · exact fun h => absurd (Finset.mem_univ b) h
   conv_lhs => rw [F.as_sum]
   conv_rhs => rw [F.as_sum]
 
@@ -103,8 +102,7 @@ private theorem prop_insertNth_of_forall {n : ℕ} {M : Type*} (Q : M → Prop) 
     Q (Fin.insertNth (α := fun _ => M) j₀ a f j) := by
   by_cases hj : j = j₀
   · subst hj
-    rw [Fin.insertNth_apply_same]
-    exact ha
+    rwa [Fin.insertNth_apply_same]
   · obtain ⟨k, rfl⟩ := Fin.exists_succAbove_eq hj
     rw [Fin.insertNth_apply_succAbove]
     exact hf k

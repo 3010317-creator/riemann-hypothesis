@@ -153,10 +153,8 @@ lemma radial_preimage (p : sphere (0 : E) 1) (s : Set (sphere (0 : E) 1)) :
         apply Subtype.ext
         rw [radial_coe_of_ne p hne, norm_smul, hq1, mul_one, Real.norm_eq_abs, abs_of_pos hr0,
           smul_smul, inv_mul_cancel₀ hr0.ne', one_smul]
-      rw [hrad]
-      exact hq
-    · rw [norm_smul, hq1, mul_one, Real.norm_eq_abs, abs_of_pos hr0]
-      exact hr1
+      rwa [hrad]
+    · rwa [norm_smul, hq1, mul_one, Real.norm_eq_abs, abs_of_pos hr0]
 
 lemma map_radial (μ : Measure E) [μ.IsAddHaarMeasure] (p : sphere (0 : E) 1) :
     (ballP μ).map (radial p) = (μ.toSphere univ)⁻¹ • μ.toSphere := by
@@ -742,8 +740,7 @@ theorem isMultiHomogeneous_rename_castLE {B N n : ℕ} (h : N ≤ n) (a : Fin B 
   have hsub : (Finset.univ.map emb) ⊆ Finset.univ := Finset.subset_univ _
   rw [← Finset.sum_subset hsub ?_]
   · rw [Finset.sum_map]
-    refine Finset.sum_congr rfl fun j _ => ?_
-    exact Finsupp.mapDomain_apply_of_injective he t (b, j)
+    exact Finset.sum_congr rfl fun j _ => Finsupp.mapDomain_apply_of_injective he t (b, j)
   · intro j _ hj
     apply Finsupp.mapDomain_notin_range
     rintro ⟨q, hq⟩
@@ -989,8 +986,7 @@ theorem mean_gen {B N m δ : ℕ} (hN : 0 < N) (G : Matrix (Fin N) (Fin m) ℂ) 
       have := congrFun (Matrix.vecMul_vecMul z A⁻¹ (G * M)) a
       rw [← Matrix.vecMul_vecMul] at this
       simp only [Matrix.vecMul, dotProduct] at this ⊢
-      simp only [mul_comm (M _ a), mul_comm (G _ _), mul_comm _ (z _)]
-      exact this
+      simpa only [mul_comm (M _ a), mul_comm (G _ _), mul_comm _ (z _)] using this
     have e2 : ∀ i, ∑ j, A j i * Matrix.vecMul z A⁻¹ j = z i := fun i => by
       have := congrFun (Matrix.vecMul_vecMul z A⁻¹ A) i
       rw [Matrix.nonsing_inv_mul _ hA.isUnit, Matrix.vecMul_one] at this
@@ -1282,8 +1278,7 @@ private theorem exists_right_inverse_of_span_col_eq_top {K : Type} [Field K] {N 
   refine ⟨LinearMap.toMatrix' r, ?_⟩
   have h1 := congrArg LinearMap.toMatrix' hr
   have h2 : LinearMap.toMatrix' g.mulVecLin = g := LinearMap.toMatrix'_toLin' g
-  rw [LinearMap.toMatrix'_comp, h2, LinearMap.toMatrix'_id] at h1
-  exact h1
+  rwa [LinearMap.toMatrix'_comp, h2, LinearMap.toMatrix'_id] at h1
 
 private theorem isMultiHomog_of_isMultiHomogeneous_const {K : Type} [Field K] {B n δ : ℕ} (f : MvPolynomial (Fin B × Fin n) K)
     (hf : ReciprocityTheory.MultiplicativeHeights.IsMultiHomogeneous (fun _ => δ) f) : GroundTheory.Heights₂.Heights.IsMultiHomog δ f := by
@@ -1334,10 +1329,8 @@ theorem ChowFormHeightComparison₂.CF.stForm : ChowFormHeightComparison₂.CF.S
         rw [← GlobalTheory.CompHt.aeval_coordSubst]
         apply hzI
         show GlobalTheory.CompHt.coneMap K y (GlobalTheory.CompHt.coordSubst g h) = 0
-        rw [← AlgHom.comp_apply, coneMap_comp_coordSubst]
-        exact hh
-      · intro i
-        exact (sum_sum_algebraMap_mul_comm g (fun k => u (i, k)) z).symm.trans (hzu i)
+        rwa [← AlgHom.comp_apply, coneMap_comp_coordSubst]
+      · exact fun i => (sum_sum_algebraMap_mul_comm g (fun k => u (i, k)) z).symm.trans (hzu i)
     · rintro ⟨x, hx0, hxI, hxu⟩
       have hxz : ∀ k, x k = ∑ j, algebraMap K (AlgebraicClosure K) (g j k) *
           ∑ k', algebraMap K (AlgebraicClosure K) (P k' j) * x k' := by
@@ -1369,12 +1362,10 @@ theorem ChowFormHeightComparison₂.CF.stForm : ChowFormHeightComparison₂.CF.S
           funext k
           rw [sum_algebraMap_mul_sum_eq_matrix_mul, hgP]
           simp [Matrix.one_apply]
-        rw [← AlgHom.comp_apply, coneMap_comp_coordSubst, e]
-        exact hh
+        rwa [← AlgHom.comp_apply, coneMap_comp_coordSubst, e]
       · intro i
         refine (sum_sum_algebraMap_mul_comm g (fun k => u (i, k)) _).trans ?_
-        simp only [← hxz]
-        exact hxu i
+        simpa only [← hxz] using hxu i
   · rw [← PositivityTheory.UnitarySelfGeneration.UnitProductCombination.formHeight_gen hN g hspan A hA (fun σ => (H.normAt σ).mat⁻¹) ?_ hne hΦ.homog,
       formHeight_one_eq hm H δ (GlobalTheory.HeightUnique.linSubst_ne_zero hgP hne)]
     intro σ x

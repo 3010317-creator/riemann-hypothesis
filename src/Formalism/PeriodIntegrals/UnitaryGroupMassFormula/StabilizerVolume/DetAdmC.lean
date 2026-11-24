@@ -137,8 +137,7 @@ theorem locBox_eq_latV {D : Fin a × Fin M × Fin d → ∀ v : HeightOneSpectru
   constructor
   · intro h x i k
     have h1 := h (x, i, k)
-    rw [hv] at h1
-    exact h1
+    rwa [hv] at h1
   · intro h c
     rw [hv]
     exact h c.1 c.2.1 c.2.2
@@ -152,9 +151,7 @@ theorem finprod_ite {α : Type} (P : α → Prop) [DecidablePred P] [Decidable (
     push Not at hall
     obtain ⟨v0, hv0⟩ := hall
     refine finprod_eq_zero _ v0 (ite_eq_right hv0) ?_
-    refine (eventually_cofinite.1 h).subset fun v hv => ?_
-    intro hP
-    exact hv (ite_eq_left hP)
+    exact (eventually_cofinite.1 h).subset fun v hv => fun hP => hv (ite_eq_left hP)
 
 theorem finprod_locBox {D : Fin a × Fin M × Fin d → ∀ v : HeightOneSpectrum (𝓞 F), Set (Fv F v)}
     (hD : IsBoxD D) (W : Fin a → Fin M → Af F ⊗[F] E) :

@@ -152,8 +152,7 @@ theorem gSet_eq (S : Set (Pl E)) (d : LocData E n) (a : ℕ) :
     rcases i with w | w
     · exact (hx w.1 w.2).1
     · exact (hx w.1 w.2.1).2 w.2.2
-  · intro hx w hw
-    exact ⟨hx (.inl ⟨w, hw⟩), fun hs => hx (.inr ⟨w, hw, hs⟩)⟩
+  · exact fun hx w hw => ⟨hx (.inl ⟨w, hw⟩), fun hs => hx (.inr ⟨w, hw, hs⟩)⟩
 
 def levSub (S : Set (Pl E)) (d : LocData E n) (a : ℕ) : Subgroup (Hf E a (n - a)) where
   carrier := gSet S d a

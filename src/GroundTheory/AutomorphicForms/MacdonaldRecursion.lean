@@ -97,8 +97,7 @@ theorem exists_perm_antitone {V : Type*} (H : (Fin n → ℤ) → V)
     have hsum := sum_val_map_swap hij hiS hjS
     obtain ⟨σ, hσ, hHσ⟩ := ih _ (by omega) (S.map (Equiv.swap i j).toEmbedding) rfl
     refine ⟨Equiv.swap i j * σ, ?_, ?_⟩
-    · rw [Equiv.Perm.coe_mul, ← Function.comp_assoc, hcomp]
-      exact hσ
+    · rwa [Equiv.Perm.coe_mul, ← Function.comp_assoc, hcomp]
     · rw [Equiv.Perm.coe_mul, ← Function.comp_assoc, hcomp, hHσ, ← hcomp]
       refine hH _ i j hij ?_
       simp only [Pi.add_apply, lamS_apply, hiS, hjS, ite_true, ite_false, hlij]
@@ -111,8 +110,7 @@ theorem mem_initSeg {r : ℕ} (hr : r ≤ n) {i : Fin n} : i ∈ initSeg hr ↔ 
   constructor
   · rintro ⟨j, rfl⟩
     simp
-  · intro h
-    exact ⟨⟨i, h⟩, Fin.ext (by simp)⟩
+  · exact fun h => ⟨⟨i, h⟩, Fin.ext (by simp)⟩
 
 theorem card_initSeg {r : ℕ} (hr : r ≤ n) : (initSeg hr).card = r := by
   simp [initSeg]
@@ -272,8 +270,7 @@ theorem eq_zero_of_recursion (κ : Finset (Fin n) → ℝ) (hκ : ∀ S, 0 < κ 
     by_cases hc : ∀ i j, ν i = ν j
     · rcases n.eq_zero_or_pos with hn | hn
       · subst hn
-        rw [show ν = 0 from funext fun i => i.elim0]
-        exact h0
+        rwa [show ν = 0 from funext fun i => i.elim0]
       · have : ν = fun _ => ν ⟨0, hn⟩ := funext fun i => hc i _
         rw [this]
         exact hconst _

@@ -25,8 +25,7 @@ theorem fix_iff (D : Dat F I Gf) (hD : D.Ax) (hE : E0d) (s : Fin 2 → F) (γ δ
 
 theorem fix_mk (D : Dat F I Gf) (hD : D.Ax) (hE : E0d) (s : Fin 2 → F) (γ : GL (Fin 2) F) :
     Fix s (γ : PG F) ↔ ∃ c : F, s ᵥ* γ.val = c • s := by
-  have h := fix_iff D hD hE s γ 1
-  simpa using h
+  simpa using fix_iff D hD hE s γ 1
 
 theorem isEll_conj (D : Dat F I Gf) (hD : D.Ax) (hE : E0d) (γ δ : GL (Fin 2) F) :
     IsEll ((δ : PG F) * (γ : PG F) * (δ : PG F)⁻¹) ↔ IsEll (γ : PG F) := by
@@ -91,8 +90,7 @@ theorem supp (D : Dat F I Gf) {ι : Type} [Fintype ι] (a : ι → Gf) (γ : PG 
   have e2 : (show D.Om from ((D.rep ω : Gf) : Gf ⧸ D.H)) = ω := Quotient.out_eq ω
   have h2 : γ • ω = ((D.j γ.out * D.rep ω : Gf) : Gf ⧸ D.H) := by
     have h3 := D.mk_smulO γ.out (D.rep ω)
-    rw [e1, e2] at h3
-    exact h3
+    rwa [e1, e2] at h3
   rw [h2]
   refine QuotientGroup.eq.2 ?_
   simpa [_root_.mul_inv_rev, mul_assoc] using hm
@@ -206,9 +204,7 @@ theorem pf_Fell : UpperTheory.Esk.C4 → UpperTheory.Esk.E0a → UpperTheory.Esk
             · exfalso
               exact hS ⟨hpR, htot, hte, (hF3 F I Gf ι D k a hk (D.el γ) ω htot hte).1⟩
           · refine hF2 F I Gf ι D k a hk (D.el γ) ω htot (β (γ, ω)) (hβ (γ, ω)) ?_
-            have hI' := hI
-            simp only [u, hell, ite_true] at hI'
-            exact hI'
+            simpa only [u, hell, ite_true] using hI
         · simp [hell]
     · rw [Set.indicator_of_notMem hpR, Set.indicator_of_notMem (by exact fun h => hpR h.1)]
   have h1 : HasSum ((Set.range f).indicator g') (∫ y, (fun p : (D.Cj × D.Om) × D.Xs => b (p.1.2, p.2)) y •

@@ -110,8 +110,7 @@ theorem dense_hat (A : X.B.I.Gf) {Λ : Submodule (𝓞 D.host.E) (VS D).V}
   refine ⟨Formalism.L2.SG.Pf.LatDictK.vOf X v, ?_, X.B.I.fmat A⁻¹ *ᵥ z', hz'L, ?_⟩
   · rw [hlat]
     unfold hat
-    rw [Formalism.L2.SG.Pf.LatDictK.crd_vOf]
-    exact hv
+    rwa [Formalism.L2.SG.Pf.LatDictK.crd_vOf]
   · have e1 : w = X.B.I.fmat A⁻¹ *ᵥ (X.B.I.fmat A *ᵥ w) := by
       rw [Matrix.mulVec_mulVec, NormCut.fmat_inv_mul, Matrix.one_mulVec]
     rw [e1, he, Matrix.mulVec_add, Matrix.mulVec_smul]
@@ -165,8 +164,7 @@ theorem hat_NgX (A : X.B.I.Gf) {u : D.what₂.Word} {Λ : Submodule (𝓞 D.host
     have hct : ∀ a, (c a : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) * t a ∈ IntAf X.B.I.F X.B.I.E := by
       intro a
       have h1 := hA_int X.B.I (hcF a) hqL
-      rw [hA_smul_left, map_natCast, ← hfixF a, hA_hat, hcoef a] at h1
-      exact h1
+      rwa [hA_smul_left, map_natCast, ← hfixF a, hA_hat, hcoef a] at h1
     have hot : ∀ a, (N1 : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) * t a ∈ IntAf X.B.I.F X.B.I.E := by
       intro a
       have e : (N1 : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) =
@@ -187,8 +185,7 @@ theorem hat_NgX (A : X.B.I.Gf) {u : D.what₂.Word} {Λ : Submodule (𝓞 D.host
         (∑ a, ((c2 : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) * ((N1 : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) * t a)) • X.e0 a) -
         (c2 : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) • (∑ a, ((N1 : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) * t a) •
           (X.e0 a - incl X.B.I (X.crd (X.eX a)))) := by
-      rw [hhq, Finset.smul_sum, Finset.smul_sum]
-      rw [← Finset.sum_sub_distrib]
+      rw [hhq, Finset.smul_sum, Finset.smul_sum, ← Finset.sum_sub_distrib]
       refine Finset.sum_congr rfl fun a _ => ?_
       rw [Nat.cast_mul]
       simp only [smul_sub, smul_smul, mul_assoc]
@@ -232,8 +229,7 @@ theorem iotaBridgeRAC_holds : IotaBridgeRAC := by
   have hbl : (Y.cs u).lamOf ((Y.cs u).base Λ) = Λ := (Y.cs u).base_lam Λ hΛ
   have hlat : ∀ y, y ∈ Λ ↔ hat X A y ∈ X.B.I.Lf := fun y => by
     have := (Y.cs u).lat_eq ((Y.cs u).base Λ) y
-    rw [hbl] at this
-    exact this
+    rwa [hbl] at this
   have hfixE : ∀ a, hat X A (X.eX a) = incl X.B.I (X.crd (X.eX a)) := fun a => by
     unfold hat
     exact fixes_inv X (fixes_mul X (((Y.cs u).h ((Y.cs u).base Λ)).2 _ (Or.inl (Or.inl ⟨a, rfl⟩)))

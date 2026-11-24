@@ -43,8 +43,7 @@ include hunit
 
 theorem either {c : k} (hc : c ≠ 0) (σ τ₁ τ₂ : T)
     (P : ∀ a, c * ((χ σ a - χ τ₁ a) * (χ σ a - χ τ₂ a)) = 0) : σ = τ₁ ∨ σ = τ₂ := by
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   obtain ⟨a₁, hu₁⟩ := hunit σ τ₁ hne.1
   obtain ⟨a₂, hu₂⟩ := hunit σ τ₂ hne.2
   have e1 : c * (χ σ a₁ - χ τ₂ a₁) = 0 := by
@@ -138,8 +137,7 @@ theorem eq_zero_of_pow_sub {n : ℕ} (hn : n ≠ 2) {x : k} (h : ((2 : k) ^ n - 
     have h4 : (2 : ℚ) ^ n = 2 ^ 2 := by linarith
     exact hn (Nat.pow_right_injective (le_refl 2) (by exact_mod_cast h4))
   have e : algebraMap ℚ k ((2 : ℚ) ^ n - 4) * x = 0 := by
-    rw [map_sub, map_pow, map_ofNat (algebraMap ℚ k) 2, map_ofNat (algebraMap ℚ k) 4]
-    exact h
+    rwa [map_sub, map_pow, map_ofNat (algebraMap ℚ k) 2, map_ofNat (algebraMap ℚ k) 4]
   calc x = algebraMap ℚ k (((2 : ℚ) ^ n - 4)⁻¹ * ((2 : ℚ) ^ n - 4)) * x := by
         rw [inv_mul_cancel₀ hq, map_one, one_mul]
     _ = algebraMap ℚ k (((2 : ℚ) ^ n - 4)⁻¹) * (algebraMap ℚ k ((2 : ℚ) ^ n - 4) * x) := by
@@ -163,8 +161,7 @@ theorem gaugeRatio : GaugeRatioSt := by
       scaleBy χ a q + scaleBy χ a q + q + scaleBy χ (a * star a) q := by
     intro a
     have h1 := hfe a
-    rw [hE, hE, hE] at h1
-    rw [hrq] at h1
+    rw [hE, hE, hE, hrq] at h1
     have s1 : constantCoeff (scaleBy χ a q + scaleBy χ a q) = 0 := by rw [map_add (f := _), hA, add_zero]
     have s2 : constantCoeff (scaleBy χ a q + scaleBy χ a q + q) = 0 := by rw [map_add (f := _), s1, hq0, add_zero]
     have s3 : constantCoeff (scaleBy χ a q + scaleBy χ a q + q + scaleBy χ (a * star a) q) = 0 := by

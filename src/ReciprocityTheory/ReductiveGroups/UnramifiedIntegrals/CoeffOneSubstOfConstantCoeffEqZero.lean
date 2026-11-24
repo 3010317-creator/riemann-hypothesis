@@ -103,8 +103,7 @@ theorem mult_unique (b : K) (e : PowerSeries K) (he : constantCoeff e = 0)
   have hl := HasSubst.of_constantCoeff_zero (lgS_const g2 g3)
   have hE := HasSubst.of_constantCoeff_zero he
   have h1 := PowerSeries.subst_comp_subst_apply hl hE (uSer g2 g3)
-  rw [uSer_subst_lgS, PowerSeries.subst_X hE, h] at h1
-  exact h1
+  rwa [uSer_subst_lgS, PowerSeries.subst_X hE, h] at h1
 
 theorem ltLog_const (l : ℕ) (hl : 2 ≤ l) : constantCoeff (ltLog K l) = 0 := by
   first | unfold Formalism.L2.Th1.CM.ltLog

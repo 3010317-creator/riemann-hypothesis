@@ -124,8 +124,7 @@ theorem wK_ne_wc (kv kv' : Σ k : Fin 2, D.nd.PlG k) : wK X kv ≠ wc X.B.I (wK 
     have he' := wB_inj X he
     apply D.naut.plGw_nconj k v' v
     have := isConjPl_conjH X (D.naut.plGw k v')
-    rw [← he'] at this
-    exact this
+    rwa [← he'] at this
   · have h0 := gk_mem X ⟨k, v⟩
     have h1 := gk_mem_c X ⟨k', v'⟩
     rw [← he] at h1
@@ -182,8 +181,7 @@ theorem exists_eps (kv : Σ k : Fin 2, D.nd.PlG k) :
   · have := hε ⟨wK X kv, hmem _ (g_mem_of_gk X (gk_mem X kv))⟩
     simpa using this
   · have := hε ⟨P, hmem P hP⟩
-    simp only [ite_eq_right hne, sub_zero] at this
-    exact this
+    simpa only [ite_eq_right hne, sub_zero] using this
 
 theorem eps_other (kv : Σ k : Fin 2, D.nd.PlG k) {ε : 𝓞 X.B.I.E}
     (hε : ∀ P : HeightOneSpectrum (𝓞 X.B.I.E), ((X.B.g : ℕ) : 𝓞 X.B.I.E) ∈ P.asIdeal → P ≠ wK X kv → ε ∈ P.asIdeal)

@@ -488,8 +488,7 @@ theorem normSq_ne_of_beta {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSp
     · rw [integral_non_aestronglyMeasurable hm, Complex.ofReal_zero]
   have hz := key _ ?nn h0
   case nn =>
-    intro p
-    exact mul_nonneg (bcWeight_nonneg' k r _ _ p) (sq_nonneg _)
+    exact fun p => mul_nonneg (bcWeight_nonneg' k r _ _ p) (sq_nonneg _)
   rw [← hz]
   congr 1
   funext p
@@ -549,13 +548,11 @@ theorem jNorm2_coef_ne {k0 r : ℕ} (hk2 : 2 ≤ k0 + 1) (L : LocBessel (k0 + 1)
   have hbD : Formalism.FourierDecayAlt.ThreeDimData.be D.z cStd D.π (turnL L ka).σ D.μW D.μN ((turnL L ka).σ (dMi (k0 + 1) r ka⁻¹ 1) v)
       ((turnL L ka).σ (dMi (k0 + 1) r ka⁻¹ 1) v) = (innerSL ℂ ((fun _ => l) ((turnL L ka).σ (dMi (k0 + 1) r ka⁻¹ 1) v))).smulRight
         ((fun _ => l) ((turnL L ka).σ (dMi (k0 + 1) r ka⁻¹ 1) v)) := by
-    rw [hDz, hDπ, hDμW, hDμN, be_dil L ka hka v v, be_turn L ka hc v v]
-    exact hbe
+    rwa [hDz, hDπ, hDμW, hDμN, be_dil L ka hka v v, be_turn L ka hc v v]
   have hbD' : Formalism.FourierDecayAlt.ThreeDimData.be D.z' cStd D.π' (turnL L ka).σ D.μW' D.μN ((turnL L ka).σ (dMi (k0 + 1) r ka⁻¹ 1) v')
       ((turnL L ka).σ (dMi (k0 + 1) r ka⁻¹ 1) v') = (innerSL ℂ ((fun _ => l') ((turnL L ka).σ (dMi (k0 + 1) r ka⁻¹ 1) v'))).smulRight
         ((fun _ => l') ((turnL L ka).σ (dMi (k0 + 1) r ka⁻¹ 1) v')) := by
-    rw [hDz', hDπ', hDμW', hDμN, be_dil' L ka hka v' v', be_turn' L ka hc v' v']
-    exact hbe'
+    rwa [hDz', hDπ', hDμW', hDμN, be_dil' L ka hka v' v', be_turn' L ka hc v' v']
   have hbI := hBI (k0 + 1) r _ _ D L.ε L.lam L.Hs (turnL L ka).σ h L.hlam hσt hgap hok _ _ (fun _ => l) (fun _ => l')
     ξ ξ' hvt hvt' hbD hbD' hl hl'
   have hbeta : Formalism.FourierDecayAlt.B.beta D Fc Fc ≠ 0 := by
@@ -598,8 +595,7 @@ theorem smooth_turn (L : LocBessel k r) (ka : ℝ) {v : L.Hs} (hv : v ∈ PI.Upq
   obtain ⟨U, F, hU, hgU, hF, hEq⟩ := hv (tT k r * g₀ * tTi k r) (hconj g₀ hg₀)
   refine ⟨(fun g => tT k r * g * tTi k r) ⁻¹' U, fun g => F (tT k r * g * tTi k r), hU.preimage hcont, hgU, ?_, ?_⟩
   · exact hF.comp (LinearMap.toContinuousLinearMap Φ).contDiff.contDiffOn (fun g hg => hg)
-  · intro g hg hgH
-    exact hEq _ hg (hconj g hgH)
+  · exact fun g hg hgH => hEq _ hg (hconj g hgH)
 
 theorem jNorm2_coef_ne' {k r : ℕ} (hk2 : 2 ≤ k) (L : LocBessel k r)
     (ka : ℝ) (hka : 0 < ka) (hc : L.c = ((2 * ka : ℝ) : ℂ)) (hκ0 : L.κN ≠ 0) (hκT : L.κN ≠ ⊤)

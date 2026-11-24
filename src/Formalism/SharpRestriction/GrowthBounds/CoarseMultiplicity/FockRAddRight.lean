@@ -162,8 +162,7 @@ theorem Aa_dual {K : Type} [Field K] {m : ℕ} (vec : Bool) (M : Matrix (Fin (m 
   · simp only [Aa, Bool.false_eq_true, ite_false]
     rw [Matrix.nonsing_inv_nonsing_inv _ hMt, Matrix.nonsing_inv_nonsing_inv _ hM, Matrix.transpose_transpose,
       Matrix.transpose_transpose, Matrix.nonsing_inv_mul _ hM]
-  · simp only [Aa, ite_true]
-    exact Matrix.nonsing_inv_mul _ hMt
+  · simpa only [Aa, ite_true] using Matrix.nonsing_inv_mul _ hMt
 
 theorem multDiv_kapFl (O : Type) [CommRing O] [IsLocalRing O] (p : ℕ) [hp : Fact p.Prime]
     (hpO : (p : O) ∈ IsLocalRing.maximalIdeal O) {S : Type} [Fintype S] {k : ℕ} (d : S → ℕ) :
@@ -190,8 +189,7 @@ theorem multDiv_kapFl (O : Type) [CommRing O] [IsLocalRing O] (p : ℕ) [hp : Fa
     have := Formalism.CountingSumsFrames.fock_mult_val_le p (fun c : Fin k => α (s, c)) Finset.univ
     rw [Finset.card_univ, Fintype.card_fin] at this
     have e : ∑ c : Fin k, α (s, c) = d s := hα s
-    rw [e] at this
-    exact this
+    rwa [e] at this
 
   have hdv : p ^ padicValNat p Mn ∣ Mn := (_root_.Dvd.intro_left _ (_root_.Nat.divMaxPow_mul_pow_padicValNat _ _))
   have hnd : ¬ p ^ (padicValNat p Mn + 1) ∣ Mn := by
@@ -259,9 +257,7 @@ theorem exists_thK (Kf : Type) [Field Kf] {S : Type} [Fintype S] [DecidableEq S]
       ((Th0 Kf m vec).toLinearMap.comp (Pol Kf (ι := S) (m + 1) d).subtype)
       (fun P => (mem_tens_dw Kf m hm vec d _).2 ⟨P.1, P.2, rfl⟩)
   have hinj : Function.Injective f := by
-    intro P Q hPQ
-    apply Subtype.ext
-    exact Th0_inj Kf m hm vec d _ _ P.2 Q.2 (congrArg Subtype.val hPQ)
+    exact fun P Q hPQ => Subtype.ext (Th0_inj Kf m hm vec d _ _ P.2 Q.2 (congrArg Subtype.val hPQ))
   have hsurj : Function.Surjective f := by
     intro y
     have hy : (y : MvPolynomial (S × (Fin (m + 1) × Fin (m + 1))) Kf) ∈ VS Kf m vec d := y.2

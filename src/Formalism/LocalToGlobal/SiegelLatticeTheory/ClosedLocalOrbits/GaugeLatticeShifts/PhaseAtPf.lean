@@ -278,8 +278,7 @@ theorem chiL_eq_psiG {x : X.B.I.Gf} (hx : Good X x) (hk : x ∈ X.K2) : chiL X x
       · simp
       · intro j _ hj
         rw [ite_eq_right]
-        intro hj'
-        exact hj (Fin.ext hj')
+        exact fun hj' => hj (Fin.ext hj')
       · simp
     · refine Finset.sum_eq_zero (fun j _ => ?_)
       rw [ite_eq_right]
@@ -298,8 +297,7 @@ theorem chiL_eq_psiG {x : X.B.I.Gf} (hx : Good X x) (hk : x ∈ X.K2) : chiL X x
     refine Finset.sum_congr rfl (fun i _ => ?_)
     rw [hinner v]
     split_ifs with h
-    · show resT TR v (hA X.B.I (X.bwd i) (X.B.I.fmat x *ᵥ X.bw ⟨i.1 + 1, h⟩)) = _
-      exact resT_of_mem TR v (hint i ⟨i.1 + 1, h⟩)
+    · exact resT_of_mem TR v (hint i ⟨i.1 + 1, h⟩)
     · rfl
   unfold psiG
   simp only [hfac]

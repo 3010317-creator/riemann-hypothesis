@@ -42,31 +42,22 @@ theorem mem_map_of_app_fst_eq_zero (p : X ⟶ Sp V) (J : Ideal V) {U : X.Opens} 
   have hzapp : z.appLE U ⊤ hz = hU.fromSpec.appLE U ⊤ hfs ≫ (Spec.map (CommRingCat.ofHom q)).appTop := by
     rw [Scheme.Hom.comp_appLE]
     rfl
-  have m2 : z.appLE U ⊤ hz = (Scheme.ΓSpecIso Γ(X, U)).inv ≫ (Spec.map (CommRingCat.ofHom q)).appTop := by
-    rw [hzapp, fromSpec_appLE_top]
-  have m3 : (Scheme.ΓSpecIso Γ(X, U)).inv ≫ (Spec.map (CommRingCat.ofHom q)).appTop =
-      CommRingCat.ofHom q ≫ (Scheme.ΓSpecIso (CommRingCat.of (Γ(X, U) ⧸ I₀))).inv :=
-    (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom q)).symm
   have k1 : ∀ b, (z.appLE U ⊤ hz).hom b = (Scheme.ΓSpecIso (CommRingCat.of (Γ(X, U) ⧸ I₀))).inv.hom (q b) := by
     intro b
-    rw [m2, m3]
+    rw [hzapp, fromSpec_appLE_top, ← Scheme.ΓSpecIso_inv_naturality]
     rfl
   have m1 : (z ≫ p).appTop = p.appLE ⊤ U le_top ≫ z.appLE U ⊤ hz :=
     ((Scheme.Hom.appLE_comp_appLE z p ⊤ U ⊤ le_top hz).trans (appLE_top_eq _ _)).symm
-  have m5 : (Scheme.ΓSpecIso (CommRingCat.of V)).inv ≫ (Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk J))).appTop =
-      CommRingCat.ofHom (Ideal.Quotient.mk J) ≫ (Scheme.ΓSpecIso (CommRingCat.of (V ⧸ J))).inv :=
-    (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom (Ideal.Quotient.mk J))).symm
-  have m6 : (Scheme.ΓSpecIso (CommRingCat.of (V ⧸ J))).inv ≫ (Spec.map (CommRingCat.ofHom ψ)).appTop =
-      CommRingCat.ofHom ψ ≫ (Scheme.ΓSpecIso (CommRingCat.of (Γ(X, U) ⧸ I₀))).inv :=
-    (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom ψ)).symm
   have e5 : ∀ c : V, (Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk J))).appTop.hom
       ((Scheme.ΓSpecIso (CommRingCat.of V)).inv.hom c) =
       (Scheme.ΓSpecIso (CommRingCat.of (V ⧸ J))).inv.hom (Ideal.Quotient.mk J c) :=
-    fun c => congrArg (fun φ => φ.hom c) m5
+    fun c => congrArg (fun φ => φ.hom c)
+      (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom (Ideal.Quotient.mk J))).symm
   have e6 : ∀ c : V ⧸ J, (Spec.map (CommRingCat.ofHom ψ)).appTop.hom
       ((Scheme.ΓSpecIso (CommRingCat.of (V ⧸ J))).inv.hom c) =
       (Scheme.ΓSpecIso (CommRingCat.of (Γ(X, U) ⧸ I₀))).inv.hom (ψ c) :=
-    fun c => congrArg (fun φ => φ.hom c) m6
+    fun c => congrArg (fun φ => φ.hom c)
+      (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom ψ)).symm
   have hsq : z ≫ p = Spec.map (CommRingCat.ofHom ψ) ≫ Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk J)) := by
     apply ext_of_isAffine
     apply (cancel_epi (Scheme.ΓSpecIso (CommRingCat.of V)).inv).1

@@ -59,24 +59,15 @@ theorem isLocallyConstant_d (A : Rep.{u} k G) [IsDiscreteRep A] {n : ℕ}
   have h2 : ∀ j : Fin (n + 1), IsLocallyConstant fun g : Fin (n + 1) → G =>
       (-1 : k) ^ ((j : ℕ) + 1) • f (Fin.contractNth j (· * ·) g) := fun j =>
     (hf.comp_continuous (continuous_contractNth j)).comp _
-  have h3 : IsLocallyConstant fun g : Fin (n + 1) → G => Finset.univ.sum fun j : Fin (n + 1) =>
-      (-1 : k) ^ ((j : ℕ) + 1) • f (Fin.contractNth j (· * ·) g) := by
-    have : (fun g : Fin (n + 1) → G => Finset.univ.sum fun j : Fin (n + 1) =>
-        (-1 : k) ^ ((j : ℕ) + 1) • f (Fin.contractNth j (· * ·) g)) =
-        Finset.univ.sum fun j : Fin (n + 1) => fun g : Fin (n + 1) → G =>
+  have : (inhomogeneousCochains.d A n).hom f =
+      (fun g : Fin (n + 1) → G => A.ρ (g 0) (f fun i => g i.succ)) +
+        ∑ j : Fin (n + 1), fun g : Fin (n + 1) → G =>
           (-1 : k) ^ ((j : ℕ) + 1) • f (Fin.contractNth j (· * ·) g) := by
-      ext g
-      simp [Finset.sum_apply]
-    rw [this]
-    exact Finset.sum_induction _ IsLocallyConstant (fun _ _ ha hb => ha.add hb)
-      (IsLocallyConstant.const 0) fun j _ => h2 j
-  have : (inhomogeneousCochains.d A n).hom f = fun g =>
-      A.ρ (g 0) (f fun i => g i.succ) + Finset.univ.sum fun j : Fin (n + 1) =>
-        (-1 : k) ^ ((j : ℕ) + 1) • f (Fin.contractNth j (· * ·) g) := by
     ext g
-    simp [inhomogeneousCochains.d_hom_apply]
+    simp [inhomogeneousCochains.d_hom_apply, Finset.sum_apply]
   rw [this]
-  exact h1.add h3
+  exact h1.add (Finset.sum_induction _ IsLocallyConstant (fun _ _ ha hb => ha.add hb)
+    (IsLocallyConstant.const 0) fun j _ => h2 j)
 
 theorem d_mem_locallyConstantCochains (A : Rep.{u} k G) [IsDiscreteRep A] {n : ℕ}
     {f : (Fin n → G) → A} (hf : f ∈ locallyConstantCochains A n) :

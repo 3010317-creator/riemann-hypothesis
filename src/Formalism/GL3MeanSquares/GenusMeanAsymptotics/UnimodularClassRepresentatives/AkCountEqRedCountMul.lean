@@ -218,8 +218,7 @@ theorem inP_jK_iff {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) (k : ℕ) (a
     refine Ideal.add_mem _ (Ideal.mul_mem_right _ _ ?_) (Ideal.mul_mem_left _ _ (by rw [← e1]; exact hz))
     rw [map_pow]
     exact Ideal.pow_mem_pow (Ideal.mem_map_of_mem _ hi) k
-  · intro ha
-    exact ⟨1, fun h1 => h𝔭.ne_top ((Ideal.eq_top_iff_one _).2 h1), a, ha, by simp⟩
+  · exact fun ha => ⟨1, fun h1 => h𝔭.ne_top ((Ideal.eq_top_iff_one _).2 h1), a, ha, by simp⟩
 
 theorem smul_mono_pow {𝔭 : Ideal (𝓞 F)} {A : Submodule (𝓞 K) V} {j k : ℕ} (hjk : j ≤ k) :
     (extP K 𝔭 ^ k • A : Submodule (𝓞 K) V) ≤ extP K 𝔭 ^ j • A := Submodule.smul_mono_left (Ideal.pow_le_pow_right hjk)
@@ -236,10 +235,8 @@ theorem aut_mem_smul {h : V →ₗ⋆[K] V →ₗ[K] K} {A : Submodule (𝓞 K) 
     rw [← algebraMap_smul K r v, map_smul, algebraMap_smul]
   refine Submodule.smul_induction_on (p := fun w => g w ∈ J • A) hx (fun r hr a ha => ?_)
     (fun u w hu hw => ?_)
-  · simp only [hs]
-    exact Submodule.smul_mem_smul hr (aut_mem hg ha)
-  · simp only [map_add (f := _)]
-    exact Submodule.add_mem _ hu hw
+  · simpa only [hs] using Submodule.smul_mem_smul hr (aut_mem hg ha)
+  · simpa only [map_add (f := _)] using Submodule.add_mem _ hu hw
 
 theorem aut_cmb {𝔭 : Ideal (𝓞 F)} (b : Basis κ K V) {g : V ≃ₗ[K] V} {Y : Matrix κ κ (𝓞 K)} {j : ℕ}
     (hgY : ∀ i, g (b i) - ∑ l, Y l i • b l ∈ (extP K 𝔭 ^ j • locF 𝔭 (spanO b) : Submodule (𝓞 K) V))

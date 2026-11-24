@@ -397,12 +397,10 @@ private theorem exists_mat_apply_eq_one_at_S_and_int_off_S {S : Finset (Pl D)} {
     have hker := MonoidHom.mem_ker.mp (Subgroup.mem_iInf.mp (Subgroup.mem_iInf.mp haway v) hv)
     have h3 := matHom_proj_fst_eq_mat_map_cv h v
     rw [hker, map_one] at h3
-    have h4 := congrArg (fun M : Matrix (Fin (p + p)) (Fin (p + p)) _ => M i j) h3
-    exact h4.symm
+    exact (congrArg (fun M : Matrix (Fin (p + p)) (Fin (p + p)) _ => M i j) h3).symm
   · have hs := (GlobalTheory.AdelicU.mem_stabLoc_stdLattice_iff.mp
       (Subgroup.mem_comap.mp (Subgroup.mem_iInf.mp (Subgroup.mem_iInf.mp hoff v) hv))).1 i j
-    rw [matHom_proj_fst_eq_mat_map_cv] at hs
-    exact hs
+    rwa [matHom_proj_fst_eq_mat_map_cv] at hs
 
 theorem levi_blocks {S : Finset (Pl D)} {g : G D p} (hg : g ∈ KOff D p S) {a : GL (Fin p) (AE D)}
     (ha : mat g = blk4 a.1 0 0 (adj (a⁻¹).1)) :

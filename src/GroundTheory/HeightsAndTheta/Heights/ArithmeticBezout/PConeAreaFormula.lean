@@ -42,8 +42,7 @@ theorem volume_linProj_image_null {m n : ℕ} (π : Fin m → Fin n → ℂ) {s 
   refine volume_null_of_hausdorff_null (nonpos_iff_eq_zero.1 ?_)
   have hL := (LinearMap.toContinuousLinearMap (linProjₗ π)).lipschitz.hausdorffMeasure_image_le
     (d := ((2 * m : ℕ) : ℝ)) (by positivity) s
-  rw [LinearMap.coe_toContinuousLinearMap', hs, mul_zero] at hL
-  exact hL
+  rwa [LinearMap.coe_toContinuousLinearMap', hs, mul_zero] at hL
 
 theorem ConeAreaFormula.proof (hCover : ConeGraphCover.Statement) (hArea : GraphAreaFibre.Statement) :
     ConeAreaFormula.Statement := by
@@ -81,8 +80,7 @@ theorem ConeAreaFormula.proof (hCover : ConeGraphCover.Statement) (hArea : Graph
           exact ⟨i, hi, rfl⟩)⟩, rfl⟩
       · rintro ⟨i, hi, hw'⟩
         exact ⟨hUC (Set.mem_iUnion.2 ⟨i, hi⟩), hw'⟩
-    · intro i j hij
-      exact (hDd hij).mono (fun y hy => hy.1) (fun y hy => hy.1)
+    · exact fun i j hij => (hDd hij).mono (fun y hy => hy.1) (fun y hy => hy.1)
   calc volume (Metric.ball (0 : EuclideanSpace ℂ (Fin m)) 1) *
         ∫⁻ y in coneSet h J, g (linProj π y) * ENNReal.ofReal (coneJac h J π y)
           ∂(Measure.hausdorffMeasure ((2 * m : ℕ) : ℝ))

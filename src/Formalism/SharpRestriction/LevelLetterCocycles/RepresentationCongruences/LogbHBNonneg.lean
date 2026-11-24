@@ -568,8 +568,7 @@ theorem RepVV_smulO (o : O) {x : W.DD T} {f : Fin d → W.EE} (h : RepVV W T c' 
       fun k => algebraMap (LetA O n) W.EE (algebraMap O (LetA O n) o) * f k := by
     funext k
     rw [← IsScalarTower.algebraMap_apply]
-  rw [hx, hf]
-  exact h1
+  rwa [hx, hf]
 
 theorem RepVV_zero {x : W.DD T} {f : Fin d → W.EE} (h : RepVV W T c' e M Λ b sol x f) :
     RepVV W T c' e M Λ b sol 0 (fun _ => 0) := by
@@ -761,9 +760,7 @@ theorem arc_length_bound_theorem [Fintype (K →ₐ[Qp] LL)] (W : LocWach PD LL 
     have h2 : 2 * A.G₀ ≤ (PD.p - 1) * A.M PD.p := by
       have hGh : A.G₀ ≤ A.h := hA.2.2.2.2.2.1
       have hp1 : 0 < PD.p - 1 := by omega
-      have h3 := Nat.lt_mul_div_succ (2 * A.h) hp1
-      show 2 * A.G₀ ≤ (PD.p - 1) * (2 * A.h / (PD.p - 1) + 1)
-      exact le_trans (by omega : 2 * A.G₀ ≤ 2 * A.h) h3.le
+      exact le_trans (by omega : 2 * A.G₀ ≤ 2 * A.h) (Nat.lt_mul_div_succ (2 * A.h) hp1).le
     obtain ⟨t, ht, hte⟩ := φpow_π₀_JJ hR A.j (A.M PD.p) A.G₀ h2
     refine ⟨u * (W.φA ^ (A.len c - A.j)) t, W.AΔ.mul_mem hu (TypesA.φA_pow_mem W ht _), ?_⟩
     have hsplit : (W.φA ^ A.len c) W.π₀ = (W.φA ^ (A.len c - A.j)) ((W.φA ^ A.j) W.π₀) := by
@@ -802,8 +799,7 @@ theorem arc_length_bound_theorem [Fintype (K →ₐ[Qp] LL)] (W : LocWach PD LL 
     exact hPN y hy
   refine ⟨Finset.univ.image xJ, ?_, ?_, ?_⟩
   · refine Finset.card_image_le.trans ?_
-    rw [Finset.card_univ, Fintype.card_fin]
-    exact hg₀
+    rwa [Finset.card_univ, Fintype.card_fin]
   · intro z hz
     obtain ⟨i, -, rfl⟩ := Finset.mem_image.1 hz
     exact hxJf i
@@ -1161,8 +1157,7 @@ theorem padicValNat_eq_card_dvd_pows (l : ℕ) (hl : 2 ≤ l) (N b : ℕ) (hN : 
     exact hfin.pow_dvd_iff_le_multiplicity
   have hv : padicValNat l N < b := by
     have h1 : l ^ padicValNat l N ≤ N := Nat.le_of_dvd hN0 ((key _).2 le_rfl)
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have : l ^ b ≤ l ^ padicValNat l N := Nat.pow_le_pow_right (by omega) hc
     omega
   have hset : (Ico 1 b).filter (fun i => l ^ i ∣ N) = Icc 1 (padicValNat l N) := by
@@ -1225,8 +1220,7 @@ theorem sum_padicVal_window_le (l : ℕ) (hl : 2 ≤ l) (m S : ℕ) :
       _ ≤ S * ((1 / (l:ℝ)) ^ 1 / (1 - 1 / (l:ℝ))) := by
           apply mul_le_mul_of_nonneg_left _ (by positivity)
           apply geom_sum_Ico_le_of_lt_one (by positivity)
-          rw [div_lt_one (by linarith)]
-          exact hl1
+          rwa [div_lt_one (by linarith)]
       _ = S / ((l:ℝ) - 1) := by
           have hl0 : (l:ℝ) ≠ 0 := by positivity
           have hl1' : (l:ℝ) - 1 ≠ 0 := hlpos.ne'
@@ -1258,8 +1252,7 @@ theorem sum_padicValInt_Ico_le_div_sub_one_add_logb (l : ℕ) (hl2 : 2 ≤ l) (a
       constructor
       · rintro ⟨k, hk, rfl⟩
         omega
-      · intro h
-        exact ⟨(i - a).toNat, by omega, by omega⟩
+      · exact fun h => ⟨(i - a).toNat, by omega, by omega⟩
     rw [← himg, Finset.sum_image]
     intro x _ y _ h
     simpa using h
@@ -1846,8 +1839,7 @@ theorem sum_alt {CR CA CB CK : ℝ} (hU : AdmBoundsB D HW F Cm CR CA CB CK) (hJ 
   haveI : IsAdicComplete (IsLocalRing.maximalIdeal ↥(OL LL)) ↥(OL LL) := isAdicComplete_integers_local l LL
   have h := sumAltW ((HW l).W K 1 LL hG) (coresAt D HW F Cm hU hJ l K LL hG hK hl) f hB hAlt Cb hCb
     (by rw [hp]; exact hsm)
-  rw [hp] at h
-  exact h
+  rwa [hp] at h
 
 theorem sum_one {CR CA CB CK : ℝ} (hU : AdmBoundsB D HW F Cm CR CA CB CK) (hJ : UsedJ D HW F)
     (l : ℕ) [Fact l.Prime] (K LL : FinExt l) (hG : Good K 1 LL) (hK : CaseA K LL)
@@ -1867,8 +1859,7 @@ theorem sum_one {CR CA CB CK : ℝ} (hU : AdmBoundsB D HW F Cm CR CA CB CK) (hJ 
     rwa [hp] at h11
   haveI : IsAdicComplete (IsLocalRing.maximalIdeal ↥(OL LL)) ↥(OL LL) := isAdicComplete_integers_local l LL
   have h := sumOneW ((HW l).W K 1 LL hG) (coresAt D HW F Cm hU hJ l K LL hG hK hl) f hB R hR hOne
-  rw [hp] at h
-  exact h
+  rwa [hp] at h
 
 end Record2
 

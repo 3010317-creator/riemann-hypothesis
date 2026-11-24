@@ -96,8 +96,7 @@ theorem uu_mul {u u' : GA E k} (hu : UU 0 u) (hu' : UU 0 u') : UU 0 (u * u') := 
       rcases lt_or_gt_of_ne hl with h | h
       · rw [hu.1 i l h, zero_mul]
       · rw [hu'.1 l i h, mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
 
 end UpperBlockProducts
 

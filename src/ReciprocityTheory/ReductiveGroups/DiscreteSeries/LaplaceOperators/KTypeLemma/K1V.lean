@@ -199,8 +199,7 @@ theorem isPolyN_list_prod {R : Type*} [Ring R] [Algebra ℂ R] (l : List (R × R
   induction l with
   | nil => simpa using isPolyN_const (1 : R)
   | cons p l ih =>
-    simp only [List.map_cons, List.prod_cons, List.length_cons]
-    exact ih.affine_mul p.1 p.2
+    simpa only [List.map_cons, List.prod_cons, List.length_cons] using ih.affine_mul p.1 p.2
 
 theorem poly_coeff_eq_zero {N : ℕ} (v : ℕ → X) (h : ∀ x : ℂ, ∑ k ∈ range N, x ^ k • v k = 0) (k : ℕ)
     (hk : k < N) : v k = 0 := by
@@ -290,8 +289,7 @@ theorem adjVec_key (E : Fin (m + 1) → Fin (m + 1) → Module.End ℂ M) (hE : 
     · rw [ite_eq_left rfl]
     · intro c _ hc
       rw [ite_eq_right (Ne.symm hc), LinearMap.zero_apply]
-    · intro h
-      exact absurd (mem_univ b) h
+    · exact fun h => absurd (mem_univ b) h
   rw [← hsum, ← Finset.sum_congr rfl (fun c _ => hx c)]
 
   simp only [Pi.add_apply, Pi.smul_apply, eeV_apply', adjVec, LinearMap.sum_apply, LinearMap.smul_apply,
@@ -303,8 +301,7 @@ theorem adjVec_key (E : Fin (m + 1) → Fin (m + 1) → Module.End ℂ M) (hE : 
   · rw [ite_eq_left rfl, smul_comm]
   · intro d _ hd
     rw [ite_eq_right hd, smul_zero]
-  · intro h
-    exact absurd (mem_univ b) h
+  · exact fun h => absurd (mem_univ b) h
 
 theorem isPolyN_adjVec (E : Fin (m + 1) → Fin (m + 1) → Module.End ℂ M) (f : Fin (m + 1) → M) :
     IsPolyN (adjVec E f) (m + 1) := by

@@ -214,10 +214,8 @@ theorem exists_norm_mem_Ioo_of_exists_pow_eq
   obtain ⟨y, hy⟩ := h c N (Nat.pos_of_ne_zero hN0)
   have hyN : ‖y‖ ^ N = ‖c‖ := by rw [← norm_pow, hy]
   refine ⟨y, lt_of_le_of_lt (le_max_left r 0) ?_, ?_⟩
-  · rw [← pow_lt_pow_iff_left₀ hr'0 (norm_nonneg y) hN0, hyN]
-    exact hN
-  · rw [← pow_lt_one_iff_of_nonneg (norm_nonneg y) hN0, hyN]
-    exact hc1
+  · rwa [← pow_lt_pow_iff_left₀ hr'0 (norm_nonneg y) hN0, hyN]
+  · rwa [← pow_lt_one_iff_of_nonneg (norm_nonneg y) hN0, hyN]
 
 theorem of_isAlgClosed (p : ℕ) [Fact p.Prime] [CompleteSpace K] [IsAlgClosed K]
     (hp : ‖(p : K)‖ < 1) : IsPerfectoidField K p := by

@@ -51,7 +51,6 @@ theorem inv_val (g : Formalism.REAL.UJ ε) :
 
 theorem jU_isEmbedding : IsEmbedding (jU ε) := by
   have hcont : Continuous (jU ε) := by
-    show Continuous fun g : Formalism.REAL.UJ ε => ((g : (Matrix (Fin n) (Fin n) ℂ)ˣ) : Matrix (Fin n) (Fin n) ℂ)
     exact (Units.continuous_val (M := Matrix (Fin n) (Fin n) ℂ)).comp continuous_subtype_val
   have hinj : Function.Injective (jU ε) := fun a b h => Subtype.ext (Units.ext h)
   let φ : (Fin n → Fin n → ℂ) → Matrix (Fin n) (Fin n) ℂ × (Matrix (Fin n) (Fin n) ℂ)ᵐᵒᵖ :=
@@ -397,8 +396,7 @@ theorem SecMeasLoc_holds : SecMeasLoc := by
       · intro b l
         simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
         exact measurable_const.add ((hlam b).neg.mul measurable_const)
-      · intro b
-        exact (Complex.continuous_conj.measurable.comp (hlam b).neg).inv
+      · exact fun b => (Complex.continuous_conj.measurable.comp (hlam b).neg).inv
     exact meas_mul (fun c => Rm c * Bm c) (fun _ => K) (meas_mul Rm Bm hRm hBm) (fun _ _ => measurable_const)
   · intro c hc
     obtain ⟨hc0, hG⟩ := hc
@@ -437,8 +435,7 @@ theorem SecMeasLoc_holds : SecMeasLoc := by
       rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, hKe]
       have hBe : Bm c *ᵥ e b = lamOf sc c b • p b := by
         have h := SecMeasLoc_holds_lemma_5 ε e p (fun b => -lamOf sc c b) hF.ee hep b (neg_ne_zero.mpr (hlam0 b))
-        rw [neg_smul, neg_neg] at h
-        exact h
+        rwa [neg_smul, neg_neg] at h
       rw [hBe, hRc, tv_apply]
       have h0 : hJ ε ((σ:ℂ) • z - y c) (lamOf sc c b • p b) = 0 := by
         rw [_root_.Formalism.L2.SG.PoincareInHH.Cut.hJ_sub_left]

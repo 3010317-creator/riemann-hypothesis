@@ -101,9 +101,7 @@ theorem exists_thK (Kf : Type) [Field Kf] {n' m : ℕ} (hm : 1 ≤ m) (d : Fin n
     LinearMap.codRestrict _ ((Th0 Kf m (vecE n')).toLinearMap.comp (Pol Kf (ι := Fin n') (m + 1) d).subtype) hV
   have hinj : Function.Injective f := by
     intro P Q h
-    apply Subtype.ext
-    have h' := congrArg Subtype.val h
-    exact Th0_inj Kf m hm (vecE n') d _ _ P.2 Q.2 h'
+    exact Subtype.ext (Th0_inj Kf m hm (vecE n') d _ _ P.2 Q.2 (congrArg Subtype.val h))
   have hsurj : Function.Surjective f := by
     intro y
     have hy : (y : MvPolynomial (Fin n' × (Fin (m + 1) × Fin (m + 1))) Kf) ∈ VS Kf m (vecE n') d := by

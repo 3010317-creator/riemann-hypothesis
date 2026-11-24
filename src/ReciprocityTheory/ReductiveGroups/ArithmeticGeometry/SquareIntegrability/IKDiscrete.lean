@@ -42,8 +42,7 @@ theorem IK_span : Submodule.span ℝ (IK I : Set (IR I)) = ⊤ := by
   constructor
   · rintro ⟨z, hz, rfl⟩
     exact mem_IK.1 hz
-  · intro hy
-    exact ⟨⟨y, Submodule.subset_span hy⟩, mem_IK.2 hy, rfl⟩
+  · exact fun hy => ⟨⟨y, Submodule.subset_span hy⟩, mem_IK.2 hy, rfl⟩
 
 def Ib (hI : IsSplit P I) : Module.Basis (Fin (Module.finrank ℝ (IR I))) ℝ (IR I) :=
   haveI := IK_discrete hI

@@ -79,8 +79,7 @@ theorem idx_map_inj {O Y X : Type} [CommRing O] [AddCommGroup Y] [Module O Y]
         refine ⟨⟨p, hp⟩, ?_, Subtype.ext hpz⟩
         have hpq : q = p := hι (hqz.trans hpz.symm)
         show p ∈ Q₁
-        rw [← hpq]
-        exact hq
+        rwa [← hpq]
     exact (Submodule.Quotient.equiv _ _ e hm).length_eq.symm
   unfold Formalism.LatticeIndexTer.idx Formalism.LatticeIndexTer.qlen
   rw [key P Q, key Q P]
@@ -185,10 +184,8 @@ theorem exists_indep [FiniteDimensional K V] (A : Submodule O V) (hA : A.FG) (U 
     first
     | exact EquivLike.range_comp e σ.symm
   refine ⟨e ∘ σ.symm, hli.comp _ σ.symm.injective, ?_, ?_⟩
-  · rw [hr]
-    exact hAe
-  · rw [hr]
-    exact hspan
+  · rwa [hr]
+  · rwa [hr]
 
 end Core
 

@@ -147,8 +147,7 @@ theorem hasSum_integral_tile [NeZero m] (μ : Measure (GL (Fin m) F)) [μ.IsMulL
         Set.indicator_of_mem ((centralUnif_zpow_mul_mem_tile_iff j g).2 hg)]
     · rw [Set.indicator_of_notMem hg,
         Set.indicator_of_notMem (mt (centralUnif_zpow_mul_mem_tile_iff j g).1 hg)]
-  rw [e]
-  exact h
+  rwa [e]
 
 section Null
 
@@ -423,8 +422,7 @@ theorem exists_integral_GL_eq [NeZero m] (μ : Measure (GL (Fin m) F)) [μ.IsHaa
   · have h1 := integral_withDensity_eq_integral_smul hρ (μ := μ)
       (fun g : GL (Fin m) F => f (g : Matrix (Fin m) (Fin m) F))
     have h2 := hv.integral_map (μ := μ.withDensity fun g => ((detModulusPow g : ℝ≥0) : ℝ≥0∞)) f
-    rw [hmap, integral_smul_nnreal_measure] at h2
-    rw [NNReal.smul_def] at h2
+    rw [hmap, integral_smul_nnreal_measure, NNReal.smul_def] at h2
     calc ∫ g, f (g : Matrix (Fin m) (Fin m) F) * detPow g (m : ℂ) ∂μ
         = ∫ g, detModulusPow g • f (g : Matrix (Fin m) (Fin m) F) ∂μ := by
           refine integral_congr_ae (Filter.Eventually.of_forall fun g => ?_)
@@ -442,8 +440,7 @@ theorem exists_integral_GL_eq [NeZero m] (μ : Measure (GL (Fin m) F)) [μ.IsHaa
           congr 1; funext g; simp only [Pi.mul_apply, Function.comp_apply]; ring
       _ = _ := by
           have := h1.symm.trans h2.symm
-          rw [smul_eq_mul] at this
-          exact this
+          rwa [smul_eq_mul] at this
 
 end Change
 

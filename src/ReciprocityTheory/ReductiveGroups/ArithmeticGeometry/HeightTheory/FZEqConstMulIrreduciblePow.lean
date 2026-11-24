@@ -208,8 +208,7 @@ theorem fZ_factor_positive_places (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (F : KTp
     exact hp.1
   have hnotT : ∀ p ∈ d.HtOne, p ∉ hP0fin.toFinset →
       p ∉ {p | p ∈ d.HtOne ∧ ∃ w ∈ d.OverP c p, w (d.rationalBaseRow c) ≠ 0} := by
-    intro p _ hpT hpP
-    exact hpT ((Set.Finite.mem_toFinset hP0fin).mpr hpP)
+    exact fun p _ hpT hpP => hpT ((Set.Finite.mem_toFinset hP0fin).mpr hpP)
   have hgen0 : ∀ p ∈ d.HtOne, algebraMap (KTp K d.D d.N) (KTf K d.D d.N) (d.gen p) ≠ 0 := fun p hp =>
     (map_ne_zero_iff _ (IsFractionRing.injective (KTp K d.D d.N) (KTf K d.D d.N))).mpr
       (d.generator_ne_zero_of_height p hp)
@@ -249,8 +248,7 @@ theorem fZ_factor_positive_places (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (F : KTp
   refine ⟨κ, hP0fin.toFinset, fun p => (Nn p).toNat, hκ, hTS,
     IsFractionRing.injective _ _ hF', ?_⟩
   intro p hpT hpos
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have hz : Nn p = 0 := by
     rw [hNn]
     refine (finsum_mem_congr rfl fun w hw => ?_).trans (finsum_mem_zero _)
@@ -393,10 +391,8 @@ theorem relation_ker_le_valuation_prime (hd : d.AxH 𝒜) (c : ι) (p : Ideal (K
           rw [relation_section_identity d hd c i]
           split_ifs with hi
           · exact hpos
-          · rw [AddValuation.map_zero]
-            exact htop
-        · rw [hΨs, sub_self, AddValuation.map_zero]
-          exact htop
+          · rwa [AddValuation.map_zero]
+        · rwa [hΨs, sub_self, AddValuation.map_zero]
       simp only [map_mul]
       have e : d.sH c P * d.sH c (MvPolynomial.X n) - Ψ (d.relationEliminateColumn c P) * Ψ (d.relationEliminateColumn c (MvPolynomial.X n)) =
           d.sH c P * (d.sH c (MvPolynomial.X n) - Ψ (d.relationEliminateColumn c (MvPolynomial.X n))) +

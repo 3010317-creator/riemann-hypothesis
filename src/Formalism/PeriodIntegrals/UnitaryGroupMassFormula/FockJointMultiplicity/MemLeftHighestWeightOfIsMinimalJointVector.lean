@@ -132,8 +132,7 @@ theorem noVar_of_pderiv_eq_zero {P : MvPolynomial σ ℂ} {v : σ} (h : pderiv v
         have h1 : Finsupp.single v 1 ≤ b := Finsupp.single_le_iff.mpr (Nat.one_le_iff_ne_zero.mpr hbv)
         have h2 : Finsupp.single v 1 ≤ e := Finsupp.single_le_iff.mpr (Nat.one_le_iff_ne_zero.mpr hev)
         rw [← tsub_add_cancel_of_le h1, ← tsub_add_cancel_of_le h2, hb]
-    · intro h'
-      exact absurd he h'
+    · exact fun h' => absurd he h'
   simp only [h, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply] at hc
   exact mul_ne_zero (mem_support_iff.mp he) (Nat.cast_ne_zero.mpr hev) hc.symm
 
@@ -167,14 +166,12 @@ theorem gR_pos_lemma (u v : κ → σ) (pos : κ → Bool) (hu : Function.Inject
   unfold gR at h0
 
   rw [map_sum, Finset.sum_eq_single c0] at h0
-  · rw [ite_eq_left hc0, key, pderiv_X_self, mul_one] at h0
-    exact h0
+  · rwa [ite_eq_left hc0, key, pderiv_X_self, mul_one] at h0
   · intro c _ hc
     split_ifs with hpc
     · rw [key, pderiv_X_of_ne (fun h => hc (hu h)), mul_zero]
     · rw [map_neg, key, pderiv_X_of_ne (huv c0 c).symm, mul_zero, neg_zero]
-  · intro h
-    exact absurd (Finset.mem_univ c0) h
+  · exact fun h => absurd (Finset.mem_univ c0) h
 
 theorem gR_neg_lemma (u v : κ → σ) (pos : κ → Bool) (hv : Function.Injective v) (huv : ∀ c c', u c ≠ v c')
     (P : MvPolynomial σ ℂ) (hR : gR u v pos P = 0) (hno : ∀ c, pos c = false → NoVar P (v c))
@@ -188,8 +185,7 @@ theorem seg_pos_gen (u v : κ → σ) (pos : κ → Bool) (hu : Function.Injecti
     (hwV : ∀ e ∈ P.support, (sw e v pos : ℚ) = nuV)
     (hpU : ∀ e ∈ P.support, ∀ c, e (u c) ≠ 0 → nuU ≠ 0 ∧ (pos c = true ↔ 0 < nuU)) (hV : 0 < nuV) :
     0 < nuU := by
-  by_contra hneg
-  push Not at hneg
+  by_contra! hneg
   have hnoU : ∀ c, pos c = true → NoVar P (u c) := by
     intro c hc e he
     by_contra hne
@@ -215,8 +211,7 @@ theorem seg_neg_gen (u v : κ → σ) (pos : κ → Bool) (hv : Function.Injecti
     (hwU : ∀ e ∈ P.support, (sw e u pos : ℚ) = nuU)
     (hpV : ∀ e ∈ P.support, ∀ c, e (v c) ≠ 0 → nuV ≠ 0 ∧ (pos c = true ↔ 0 < nuV)) (hU : nuU < 0) :
     nuV < 0 := by
-  by_contra hneg
-  push Not at hneg
+  by_contra! hneg
   have hnoV : ∀ c, pos c = false → NoVar P (v c) := by
     intro c hc e he
     by_contra hne
@@ -288,10 +283,8 @@ theorem pure_gen {ι κ : Type*} [Fintype ι] [Fintype κ] (x : ι → κ → �
     refine ⟨hs.ne, ?_⟩
     rw [hpc]
     constructor
-    · intro h'
-      exact absurd h' (by decide)
-    · intro h'
-      exact absurd h' (not_lt.mpr hs.le)
+    · exact fun h' => absurd h' (by decide)
+    · exact fun h' => absurd h' (not_lt.mpr hs.le)
 
 theorem monomialLeftWeight_eq_weight_sub (hW : FormWt1) {p q r s : ℕ} {μ : Ix p q → ℚ} {P : Pol p q r s}
     (hP : P ∈ hwSub (fockAct1 p q r s) μ) (e : Ln p q r s →₀ ℕ) (he : e ∈ P.support) (a : Ix p q) :
@@ -377,8 +370,7 @@ theorem pureJ_of (hW1 : FormWt1) (hW2 : FormWt2) : PureJ := by
       refine Finset.sum_congr rfl fun a _ => ?_
       rw [monomialLeftWeight_eq_weight_sub hW1 hP1 e he a]
     have h3 : (∑ a, |wt1 e a|) = (d : ℤ) := by exact_mod_cast h1
-    rw [hsum]
-    exact h3
+    rwa [hsum]
   have hcol : ∑ c, |∑ a : Ix p q, (if linePos ((a, c) : Ln p q r s) = true then (e (a, c) : ℤ) else -(e (a, c) : ℤ))|
       = ∑ c : Ix r s, ∑ a : Ix p q, (e (a, c) : ℤ) := by
     have h1 : (∑ c, |((wt2 e c : ℤ) : ℚ)|) = (d : ℚ) := by
@@ -387,8 +379,7 @@ theorem pureJ_of (hW1 : FormWt1) (hW2 : FormWt2) : PureJ := by
       refine Finset.sum_congr rfl fun c _ => ?_
       rw [monomialRightWeight_eq_weight_sub hW2 hP2 e he c]
     have h3 : (∑ c, |wt2 e c|) = (d : ℤ) := by exact_mod_cast h1
-    rw [Finset.sum_comm, hsum]
-    exact h3
+    rwa [Finset.sum_comm, hsum]
   obtain ⟨a, c⟩ := l
   obtain ⟨r1, r2⟩ := pure_gen (fun a c => (e ((a, c) : Ln p q r s))) (fun a c => linePos ((a, c) : Ln p q r s))
     hrow a c hl
@@ -500,8 +491,7 @@ theorem seg1 (hW1 : FormWt1) (hW2 : FormWt2) (hR1 : FormRaise1) {p q r s : ℕ} 
     obtain ⟨h1, -, h3, -⟩ := hPJ e he (b, c) hc
     refine ⟨h1, ?_⟩
     show linePos ((a, c) : Ln p q r s) = true ↔ _
-    rw [← hsame c]
-    exact h3
+    rwa [← hsame c]
 
 theorem seg2 (hW1 : FormWt1) (hW2 : FormWt2) (hR2 : FormRaise2) {p q r s : ℕ} {μ : Ix p q → ℚ}
     {μ' : Ix r s → ℚ} {P : Pol p q r s} (hM : MinHyp p q r s μ μ' P) (c d : Ix r s) (hcd : posC c d)
@@ -541,8 +531,7 @@ theorem seg2 (hW1 : FormWt1) (hW2 : FormWt2) (hR2 : FormRaise2) {p q r s : ℕ} 
     obtain ⟨-, h2, -, h4⟩ := hPJ e he (a, d) ha
     refine ⟨h2, ?_⟩
     show linePos ((a, c) : Ln p q r s) = true ↔ _
-    rw [← hsame a]
-    exact h4
+    rwa [← hsame a]
 
 theorem segJ_of (hW1 : FormWt1) (hW2 : FormWt2) (hR1 : FormRaise1) (hR2 : FormRaise2) : SegJ := by
   intro p q r s μ μ' P hM

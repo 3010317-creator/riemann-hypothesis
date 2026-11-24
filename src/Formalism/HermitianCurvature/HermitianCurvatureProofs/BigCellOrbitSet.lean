@@ -84,9 +84,7 @@ theorem _root_.Formalism.FourierDecayAlt.P.big_cell_orbit_set : GqOm := by
         omega
       rw [hp, zero_mul] at hqQ
       exact lt_irrefl _ hqQ
-    · refine lt_of_le_of_ne hle ?_
-      intro heq
-      exact hq ⟨Set.mem_univ _, heq.symm⟩
+    · exact lt_of_le_of_ne hle (fun heq => hq ⟨Set.mem_univ _, heq.symm⟩)
   · exact absurd hqQ (lt_irrefl _)
 
 end Formalism.FourierDecayAlt.P.JFxA3

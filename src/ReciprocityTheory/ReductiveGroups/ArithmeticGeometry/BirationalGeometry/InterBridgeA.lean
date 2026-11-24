@@ -60,8 +60,7 @@ theorem pushForward_null' [CompactSpace X] [T2Space X] (A : FinHolAtlas e X)
   have hnull : ∀ j, volume ((q ∘ (A.chart j).symm) '' (goodT A q j ∩ (A.chart j).symm ⁻¹' S)) = 0 := by
     intro j
     refine addHaar_image_eq_zero_of_differentiableOn_of_addHaar_eq_zero (μ := volume) ?_ ?_
-    · intro u hu
-      exact (hu.1.2.1.differentiableAt.restrictScalars ℝ).differentiableWithinAt
+    · exact fun u hu => (hu.1.2.1.differentiableAt.restrictScalars ℝ).differentiableWithinAt
     · exact measure_mono_null
         (show goodT A q j ∩ (A.chart j).symm ⁻¹' S ⊆ (A.chart j).target ∩ (A.chart j).symm ⁻¹' S from
           fun u hu => ⟨hu.1.1, hu.2⟩) (hS j)
@@ -102,8 +101,7 @@ theorem pushForward_null' [CompactSpace X] [T2Space X] (A : FinHolAtlas e X)
   have hae : ∀ᵐ y ∂(volume : Measure (Fin e → ℂ)),
       ∀ j, y ∉ (q ∘ (A.chart j).symm) '' (goodT A q j ∩ (A.chart j).symm ⁻¹' S) := by
     rw [ae_all_iff]
-    intro j
-    exact compl_mem_ae_iff.2 (hnull j)
+    exact fun j => compl_mem_ae_iff.2 (hnull j)
   calc ∑ j, ∫ u in (A.chart j).target, Pt.χ j ((A.chart j).symm u) * g ((A.chart j).symm u) * locDens A Φ j u
       = ∑ j, ∫ y, fibSum (goodT A q j) (q ∘ (A.chart j).symm) (fun u => Pt.χ j ((A.chart j).symm u) * g ((A.chart j).symm u) * locDens A Φ j u) y :=
         Finset.sum_congr rfl (fun j _ => (htarget j).trans (harea j).2)
@@ -241,8 +239,7 @@ theorem exists_monic_rel (Ψ : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (e 
           rw [Finset.sum_apply]
           show MvPolynomial.eval (segre z.1) (X i ^ r i) =
             ∑ j, MvPolynomial.eval (Ψ (segre z.1)) (X j) * MvPolynomial.eval (segre z.1) (G i j)
-          simp only [map_pow, eval_X]
-          exact hrelz i z.1 z.2
+          simpa only [map_pow, eval_X] using hrelz i z.1 z.2
         have hri := hr i
         rw [hsplit, monomial_add_single, map_mul, hXr, Finset.mul_sum]
         refine N.sum_mem fun j _ => ?_
@@ -281,8 +278,7 @@ theorem exists_monic_rel (Ψ : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (e 
   obtain ⟨p, hpm, hp⟩ := hint
   refine ⟨p.natDegree, p.coeff, hpm.coeff_natDegree, fun z hz => ?_⟩
   have h := congrFun hp ⟨z, hz⟩
-  rw [Polynomial.eval₂_eq_sum_range, Finset.sum_apply] at h
-  exact h
+  rwa [Polynomial.eval₂_eq_sum_range, Finset.sum_apply] at h
 
 end ReciprocityTheory.ChartRestriction.G.Geo
 end -- clump:auto
@@ -338,8 +334,7 @@ theorem eval_eq_zero_of_mul (hM : PCMinContractStatement) {K : Type} [Fintype K]
     have hle : (pC P).radical ≤ Q := (Ideal.IsPrime.radical_le_iff hQp).mpr hQ.1.2
     have hvQ : map (Int.castRingHom ℂ) (u * m) ∉ Q := fun h' => by
       apply hv
-      rw [← hM K ι P e hP Q hQ]
-      exact h'
+      rwa [← hM K ι P e hP Q hQ]
     exact (hQp.mem_or_mem (hle hvan)).resolve_left hvQ
   intro z hz
   rw [← MvPolynomial.vanishingIdeal_zeroLocus_eq_radical (K := ℂ),
@@ -384,8 +379,7 @@ theorem exists_homog_of_cone {n : ℕ} {c : MvPolynomial (Fin n) ℂ} (hc : c �
     have hQ0 : Q = 0 := by
       apply Polynomial.eq_zero_of_infinite_isRoot
       apply Set.Infinite.mono (s := {t : ℂ | t ≠ 0})
-      · intro t ht
-        exact hQ t ht
+      · exact fun t ht => hQ t ht
       · exact (Set.finite_singleton (0 : ℂ)).infinite_compl
     by_cases hm : m ≤ c.totalDegree
     · have h1 := congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p m) hQ0
@@ -393,8 +387,7 @@ theorem exists_homog_of_cone {n : ℕ} {c : MvPolynomial (Fin n) ℂ} (hc : c �
         (by omega : m < c.totalDegree + 1)] using h1
     · rw [homogeneousComponent_eq_zero m c (by omega), map_zero]
   obtain ⟨m, -, hm⟩ : ∃ m ∈ Finset.range (c.totalDegree + 1), homogeneousComponent m c ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hc
     rw [← sum_homogeneousComponent c]
     exact Finset.sum_eq_zero hcon
@@ -502,12 +495,10 @@ theorem normPoly_of (hM : PCMinContractStatement) : NormPolyStatement := by
     rw [map_mul, map_pow, hbind, hF]
   have hmul : ∀ z ∈ mcPts P, eval z (map (Int.castRingHom ℂ) (f' ^ k0)) * eval z H = 0 := by
     intro z hz
-    rw [hevalH, map_pow, map_pow, hF, Finset.mul_sum, ← hrelF z hz]
-    rw [hSdef, Finset.sum_filter]
+    rw [hevalH, map_pow, map_pow, hF, Finset.mul_sum, ← hrelF z hz, hSdef, Finset.sum_filter]
     refine Finset.sum_congr rfl fun j _ => ?_
     by_cases hj : k0 ≤ j
-    · rw [ite_eq_left hj]
-      rw [show j = k0 + (j - k0) from (Nat.add_sub_cancel' hj).symm]
+    · rw [ite_eq_left hj, show j = k0 + (j - k0) from (Nat.add_sub_cancel' hj).symm]
       rw [Nat.add_sub_cancel_left, pow_add]
       ring
     · rw [ite_eq_right hj, hlt j (not_le.mp hj), map_zero, zero_mul]
@@ -520,16 +511,14 @@ theorem normPoly_of (hM : PCMinContractStatement) : NormPolyStatement := by
     have h0 := hH z hz
     have hF0 : eval (segre z) F = 0 := by
       rw [← hF, hf'def, map_mul, map_mul, hfz, zero_mul]
-    rw [hevalH, hF0] at h0
-    rw [Finset.sum_eq_single k0] at h0
+    rw [hevalH, hF0, Finset.sum_eq_single k0] at h0
     · simpa using h0
     · intro j hj hjk
       have : 0 < j - k0 := by
         have := (Finset.mem_filter.mp hj).2
         omega
       rw [zero_pow this.ne', mul_zero]
-    · intro h
-      exact absurd (Finset.mem_filter.mpr ⟨Finset.mem_range.mpr (by omega), le_rfl⟩) h
+    · exact fun h => absurd (Finset.mem_filter.mpr ⟨Finset.mem_range.mpr (by omega), le_rfl⟩) h
   have hT : ∀ v ∈ T, ∀ t : ℂ, t ≠ 0 → (fun j => t * v j) ∈ T := by
     rintro _ ⟨z, hz, hfz, rfl⟩ t ht
     set cc : K → ℂ := Function.update (fun _ => (1 : ℂ)) k1 t with hccdef

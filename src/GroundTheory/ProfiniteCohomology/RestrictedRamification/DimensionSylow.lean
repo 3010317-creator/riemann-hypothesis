@@ -56,8 +56,7 @@ theorem rho_eq_self_of_isProPGroup {ℓ : ℕ} (hℓ : ℓ.Prime) (A : Rep.{0} (
   obtain ⟨U, hU⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one (isOpen_stabilizer A (e 1))
     (show (1 : G) ∈ (stabilizer A.ρ (e 1) : Set G) from (stabilizer A.ρ (e 1)).one_mem)
   obtain ⟨k, hk⟩ := isProPGroup_subgroup_iff.1 hP U σ hσ
-  have hfix : A.ρ (σ ^ ℓ ^ k) (e 1) = e 1 := by
-    exact (mem_stabilizer A.ρ (e 1) _).1 (hU hk)
+  have hfix : A.ρ (σ ^ ℓ ^ k) (e 1) = e 1 := (mem_stabilizer A.ρ (e 1) _).1 (hU hk)
   have hc : c σ = 1 := by
     rw [hpow, one_mul] at hfix
     have h1 := e.injective hfix
@@ -71,8 +70,7 @@ theorem cdp_le_of_forall_openSubgroup {ℓ : ℕ} (hℓ : ℓ.Prime) (A : Rep.{0
   have : Fact ℓ.Prime := ⟨hℓ⟩
   obtain ⟨P, hP⟩ := exists_isProSylow (G := G) (p := ℓ)
   have : CompactSpace P := isCompact_iff_compactSpace.1 hP.1.isCompact
-  rw [← cdp_eq_of_isProSylow hℓ hP]
-  rw [cdp_le_iff_of_isProPGroup hℓ hP.2.1 n]
+  rw [← cdp_eq_of_isProSylow hℓ hP, cdp_le_iff_of_isProPGroup hℓ hP.2.1 n]
   have hA : Subsingleton (cohomology (Rep.res P.subtype A) (n + 1)) := by
     suffices h' : ∀ x : cohomology (Rep.res P.subtype A) (n + 1), x = 0 from
       ⟨fun x y => (h' x).trans (h' y).symm⟩

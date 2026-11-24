@@ -164,8 +164,7 @@ theorem IsLogEqn.lcAt_iff {k : Type} [Field k] [PerfectField k] {X : Scheme.{0}}
   · rintro ⟨η', m', g', hη', hm', h', hE⟩ E hx
     rw [discrep_eq hn hη hη' hm hm' h h' hx]
     exact hE E hx
-  · intro hE
-    exact ⟨η, m, g, hη, hm, h, hE⟩
+  · exact fun hE => ⟨η, m, g, hη, hm, h, hE⟩
 
 private theorem toFunctionField_mem_divOver_ring {k : Type} [Field k] {X : Scheme.{0}} [IsIntegral X]
     (p : X ⟶ Sp k) (E : DivOver p) (a : k) : toFunctionField p a ∈ E.ring := by
@@ -246,8 +245,7 @@ private theorem specializes_of_through_dominatesStalk {k : Type} [Field k] {X : 
   rw [← hl2, heq]
   have hr : l' (IsLocalRing.closedPoint E.ring) ∈ Set.range (X.fromSpecStalk x) :=
     ⟨Spec.map (CommRingCat.ofHom φ) (IsLocalRing.closedPoint E.ring), rfl⟩
-  rw [Scheme.range_fromSpecStalk] at hr
-  exact hr
+  rwa [Scheme.range_fromSpecStalk] at hr
 
 private theorem exists_dominatesStalk_of_isProjOver {k : Type} [Field k] {Y : Scheme.{0}} [IsIntegral Y]
     (q : Y ⟶ Sp k) (hq : IsProjOver q) (E : DivOver q) : ∃ w, DominatesStalk E.ring w := by
@@ -455,8 +453,7 @@ theorem kltAt_lcAt_iff_of_isLogRes : ∀ (k : Type) [Field k] [CharZero k] (X : 
   · rw [IsLogEqn.kltAt_iff hn hlm.ne_zero hlm.pos hL]
     constructor
     · intro H w hw
-      by_contra hlt
-      push Not at hlt
+      by_contra! hlt
       have hne : (pullCart s G - m • K).mult w ≠ 0 := by
         have : (0 : ℤ) < m := by exact_mod_cast hlm.pos
         omega
@@ -474,8 +471,7 @@ theorem kltAt_lcAt_iff_of_isLogRes : ∀ (k : Type) [Field k] [CharZero k] (X : 
   · rw [IsLogEqn.lcAt_iff hn hlm.ne_zero hlm.pos hL]
     constructor
     · intro H w hw
-      by_contra hlt
-      push Not at hlt
+      by_contra! hlt
       have hne : (pullCart s G - m • K).mult w ≠ 0 := by
         have : (0 : ℤ) < m := by exact_mod_cast hlm.pos
         omega

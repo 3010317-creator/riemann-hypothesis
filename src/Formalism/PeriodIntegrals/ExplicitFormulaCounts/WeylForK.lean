@@ -153,8 +153,7 @@ theorem typePl_of (hB : Blocks) (hD : BlockDiag) (hT : TorusWt) (hW : WtUniq) (h
   have hres := (hC N ε ν Λ hCD).1
   have hμν : μ = fun i => ν (ePl ε i) :=
     hW (nPl ε) H (sPl ε σ) μ _ u hu0 ((hmem u).1 huW).2 (isWtOn_sPl hD ε σ ν u huw)
-  rw [hμν]
-  exact hres
+  rwa [hμν]
 
 theorem typeMi_of (hB : Blocks) (hD : BlockDiag) (hT : TorusWt) (hW : WtUniq) (hM : MinIrr)
     (hC : CDomRes) : TypeMi := by
@@ -208,8 +207,7 @@ theorem typeMi_of (hB : Blocks) (hD : BlockDiag) (hT : TorusWt) (hW : WtUniq) (h
   have hres := (hC N ε ν Λ hCD).2
   have hμν : μ = fun j => ν (eMi ε j) :=
     hW (nMi ε) H (sMi ε σ) μ _ u hu0 ((hmem u).1 huW).2 (isWtOn_sMi hD ε σ ν u huw)
-  rw [hμν]
-  exact hres
+  rwa [hμν]
 
 end PI.WeylForKWork
 end -- clump:auto
@@ -554,8 +552,7 @@ theorem count (hρ : Good ρ) (hρ' : Good ρ') (hcomm : ∀ i j v, ρ i (ρ' j 
       apply le_antisymm hY'Y
       rintro _ ⟨x, hx, rfl⟩
       have hm : x ∈ X ⊓ Y'.comap c := by
-        rw [h]
-        exact hx
+        rwa [h]
       exact hm.2
   have hYpos : 0 < finrank ℂ (X.map c) :=
     finrank_pos_iff_exists_ne_zero.2 ⟨⟨c x₀, x₀, hx₀, rfl⟩, fun h => hc0 (congrArg Subtype.val h)⟩
@@ -626,8 +623,7 @@ theorem main (hρ : Good ρ) (hρ' : Good ρ') (hcomm : ∀ i j v, ρ i (ρ' j v
     exact h0 ((Submodule.mem_bot ℂ).1 hx₀U)
   have hUi : Irr ρ' U := by
     intro U' hU'U hU's
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     obtain ⟨hU'0, hU'ne⟩ := hne
     have hU''le : U'ᗮ ⊓ U ≤ U := inf_le_right
     have hU''0 : U'ᗮ ⊓ U ≠ ⊥ := by
@@ -688,8 +684,7 @@ theorem main (hρ : Good ρ) (hρ' : Good ρ') (hcomm : ∀ i j v, ρ i (ρ' j v
           apply le_antisymm hY'Y
           rintro _ ⟨x, hx, rfl⟩
           have hm : x ∈ X ⊓ Y'.comap d' := by
-            rw [h]
-            exact hx
+            rwa [h]
           exact hm.2
       set P : H →ₗ[ℂ] H := ((X.map d').starProjection : H →ₗ[ℂ] H) with hP
       have hPd : Comm ρ (P ∘ₗ d'') := comm_comp (proj_comm hρ hKs) hd''
@@ -1101,12 +1096,10 @@ theorem wt_common_eigvec {H : Type} [NormedAddCommGroup H] [InnerProductSpace �
     rw [hmemE]
     refine ⟨v.2, ?_⟩
     have h1 := Module.End.mem_eigenspace_iff.mp hv.1
-    have h2 := congrArg Subtype.val h1
-    simpa [f] using h2
+    simpa [f] using congrArg Subtype.val h1
   have hE0 : E ≠ ⊥ := by
     rw [Submodule.ne_bot_iff]
-    refine ⟨v, hvE, fun h => hv.2 ?_⟩
-    exact Subtype.ext h
+    exact ⟨v, hvE, fun h => hv.2 (Subtype.ext h)⟩
   have hEW : E ≤ W₀ := inf_le_left
   have hEeq : E = W₀ := Submodule.eq_of_le_of_finrank_le hEW (hmin E (hEW.trans hW₀W) hE0 hEst)
   have hwE : w ∈ E := hEeq ▸ hw
@@ -1188,8 +1181,7 @@ theorem torus_weight_exists : TorusWt := by
     rw [hχ' θ, inner_smul_right, mul_div_assoc, div_self hinner, mul_one]
   have hTc : Continuous (fun θ : Fin N → ℝ => wtTorus θ) := by
     unfold wtTorus
-    apply Continuous.matrix_diagonal
-    exact continuous_pi fun a => by fun_prop
+    exact Continuous.matrix_diagonal (continuous_pi fun a => by fun_prop)
   have hχc : Continuous χ := by
     have h1 : Continuous (fun θ => σ (wtTorus θ) w) := (hσ.2.2 w).comp_continuous hTc hTK
     have : χ = fun θ => ⟪w, σ (wtTorus θ) w⟫_ℂ / ⟪w, w⟫_ℂ := funext hχeq

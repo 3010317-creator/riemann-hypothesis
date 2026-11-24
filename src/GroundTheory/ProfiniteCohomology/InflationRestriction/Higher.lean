@@ -75,8 +75,7 @@ theorem exists_mem_invariants_map_eq (hX : X.ShortExact) (h1 : IsZero (cohomolog
   have e2 : v.1 = (((cochainsComplex X.X₂).iCycles 0).hom z₂ :
       locallyConstantCochains X.X₂ 0).1 Fin.elim0 :=
     congrArg (fun c : locallyConstantCochains X.X₂ 0 => c.1 Fin.elim0) hv
-  rw [e2]
-  exact e1
+  rwa [e2]
 
 theorem isIso_δ_of_isZero (hX : X.ShortExact) (n : ℕ) (h₁ : IsZero (cohomology X.X₂ (n + 1)))
     (h₂ : IsZero (cohomology X.X₂ (n + 1 + 1))) : IsIso (δ hX (n + 1) (n + 1 + 1) rfl) := by
@@ -104,8 +103,7 @@ theorem infResShortComplex_zero_mono_exact :
     Mono (infResShortComplex A N 0).f ∧ (infResShortComplex A N 0).Exact := by
   refine ⟨(ModuleCat.mono_iff_injective _).2 (cohomologyInfl_one_injective A N), ?_⟩
   rw [ShortComplex.moduleCat_exact_iff_ker_sub_range]
-  intro h hh
-  exact exists_cohomologyInfl_one_eq A N h hh
+  exact fun h hh => exists_cohomologyInfl_one_eq A N h hh
 
 end ShortComplex
 

@@ -235,9 +235,7 @@ theorem deg_eta (aTop : Fin X.s → ℕ) (b : SegBlock X.s X.r) (x : Lv C0 CE1 C
   have hodd : ¬ (q : ℕ) % 2 = 0 := by omega
   have htop : topOf q h1 = uTop (X.S C0 CE1 CE2) i := Fin.ext (by simp only [topOf, uTop]; omega)
   have hnl : ¬ ((uTop (X.S C0 CE1 CE2) i : ℕ) < (X.S C0 CE1 CE2).sigma) := by simp only [uTop]; omega
-  have hu : ¬ q = ⟨2 * X.s, by omega⟩ := by
-    intro h
-    exact h1 (by rw [h])
+  have hu : ¬ q = ⟨2 * X.s, by omega⟩ := fun h => h1 (by rw [h])
   rw [dite_eq_right h1, ite_eq_right hodd, htop, ite_eq_right hnl]
   simp only [hu, ite_false, Nat.sub_zero]
   congr 1
@@ -249,8 +247,7 @@ theorem deg_eta (aTop : Fin X.s → ℕ) (b : SegBlock X.s X.r) (x : Lv C0 CE1 C
     apply ite_eq_right
     show ¬ ((q : ℕ) = 2 * ((X.S C0 CE1 CE2).sigma + (j : ℕ)) ∨ (q : ℕ) = 2 * ((X.S C0 CE1 CE2).sigma + (j : ℕ)) + 1)
     omega
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 theorem deg_other (aTop aTop' : Fin X.s → ℕ) (b : SegBlock X.s X.r) (x : Lv C0 CE1 CE2 X)
     (hag : ∀ l : Fin X.s, (l : ℕ) < (X.S C0 CE1 CE2).sigma → aTop l = aTop' l)

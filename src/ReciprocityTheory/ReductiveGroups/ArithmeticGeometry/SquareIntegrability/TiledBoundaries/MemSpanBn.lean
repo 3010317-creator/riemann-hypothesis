@@ -58,7 +58,6 @@ theorem fd_trans (X : PT E) (n : ℕ) (a : Fin n → Vsp X.dim) :
       ((fun u => u + a) ⁻¹' X.fd n) volume := by
   refine (fd_fund X n).preimage_of_equiv (measurePreserving_add_right volume a).quasiMeasurePreserving
     (e := id) Function.bijective_id (fun g x => ?_)
-  show ((g : Fin n → Vsp X.dim) + x) + a = (g : Fin n → Vsp X.dim) + (x + a)
   exact add_assoc _ _ _
 
 theorem per_span (X : PT E) (n : ℕ) {F : Type} (g : (Fin n → Vsp X.dim) → F)
@@ -123,8 +122,7 @@ theorem stepPos : StepPos := by
   have hpos : 0 < ∫ v in X.fd n, X.ptN2 q F v := by
     rw [setIntegral_pos_iff_support_of_nonneg_ae (Filter.Eventually.of_forall hnn) hint]
     refine lt_of_lt_of_le hUfd (measure_mono (Set.inter_subset_inter_left _ ?_))
-    intro v hv
-    exact ne_of_gt hv
+    exact fun v hv => ne_of_gt hv
   rw [PT.l2, setAverage_eq, smul_eq_mul]
   refine mul_pos (inv_pos.mpr ?_) hpos
   first
@@ -199,8 +197,7 @@ theorem stepDual : StepDual := by
       (Finset.mem_univ i)
     simpa using Complex.normSq_eq_zero.mp h1
   have hxx : x = x' := sub_eq_zero.mp hz0
-  rw [hxx]
-  exact hx'L
+  rwa [hxx]
 
 end
 

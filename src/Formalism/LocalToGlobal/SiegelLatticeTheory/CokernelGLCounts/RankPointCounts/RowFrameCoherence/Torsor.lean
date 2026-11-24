@@ -159,8 +159,7 @@ theorem torsorC_of (hRL : Formalism.L2.SG.DataInst.RowLabel κ) (hI : LiftIotaFr
         rw [tsum_subtype S (fun R => Formalism.MainNotions.S.wRow D (X.Fu u') R.2.1.1)]
         refine tsum_congr fun R => ?_
         simp only [g, S, Set.indicator_apply, Set.mem_setOf_eq]
-      rw [h1, ← e2.tsum_eq]
-      exact hmass
+      rwa [h1, ← e2.tsum_eq]
     have hg0 : ∀ R, 0 ≤ g R := fun R => by
       simp only [g]; split_ifs
       · exact hw' _

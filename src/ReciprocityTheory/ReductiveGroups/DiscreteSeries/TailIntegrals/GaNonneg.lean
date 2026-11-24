@@ -78,8 +78,7 @@ theorem linA_apply {k r : ℕ} (A : Mat k r) (x : EuclideanSpace ℂ (Fin (2 * r
 
 theorem gram_one {m n : ℕ} (u : Fin m → EuclideanSpace ℂ (Fin n)) (hu : Orthonormal ℂ u) : GS.gram u = 1 := by
   ext a b
-  simp only [GS.gram, Matrix.of_apply, Matrix.one_apply]
-  exact orthonormal_iff_ite.mp hu a b
+  simpa only [GS.gram, Matrix.of_apply, Matrix.one_apply] using orthonormal_iff_ite.mp hu a b
 
 theorem ga_mul_le (k r : ℕ) (A : Mat k r) (l : Fin (r + 1)) (Y : Fin (r + 1) → Fin (2 * r + k + 1) → ℂ) :
     Ga k r l (fun a => A *ᵥ Y a) ≤ (gN A ^ 2) ^ (l.val + 1) * Ga k r l Y := by
@@ -149,8 +148,7 @@ theorem row_fix {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} {h : Mat k r} (hm 
   have hU' : hᴴ * Hpk k r * h = Hpk k r := hU
   have h1 : hᴴ *ᵥ bvec (eI k r a) = bvec (eI k r a) := by
     have := congrArg (fun M => M *ᵥ bvec (esI k r a)) hU'
-    simp only [← Matrix.mulVec_mulVec, (hfix a).2, H_es] at this
-    exact this
+    simpa only [← Matrix.mulVec_mulVec, (hfix a).2, H_es] using this
   have h2 := congrFun h1 j
   simp only [bvec, Matrix.mulVec, dotProduct, Matrix.conjTranspose_apply, Pi.single_apply, mul_ite,
     mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h2
@@ -218,8 +216,7 @@ theorem rpow_bd (a b K s : ℝ) (ha : 0 ≤ a) (hb : 0 ≤ b) (hK : 1 ≤ K) (hs
     have h4 : 0 ≤ (0:ℝ) ^ (-s) := Real.rpow_nonneg le_rfl _
     nlinarith
   · have hbpos : 0 < b := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       nlinarith
     rw [Real.rpow_neg ha, Real.rpow_neg hb]
     have hbs : b ^ s ≤ K ^ s * a ^ s := by
@@ -246,16 +243,14 @@ theorem xi_bd {k r : ℕ} (s : Fin (r + 1) → ℝ) (hs : ∀ l, 0 ≤ s l) (h :
   unfold xiR
   rw [← Finset.prod_mul_distrib]
   apply Finset.prod_le_prod₀
-  · intro l _
-    exact Real.rpow_nonneg (Real.sqrt_nonneg _) _
+  · exact fun l _ => Real.rpow_nonneg (Real.sqrt_nonneg _) _
   · intro l _
     have hK0 : 0 ≤ K ^ (l.val + 1) := pow_nonneg (by linarith) _
     have hK' : 1 ≤ K ^ (l.val + 1) := one_le_pow₀ hK
     have e1 : Ga k r l (fun a => (h * m) *ᵥ phiV k r a) ≤
         (K ^ (l.val + 1)) ^ 2 * Ga k r l (fun a => m *ᵥ phiV k r a) := by
       have := ga_two h K h1 l (fun a => m *ᵥ phiV k r a)
-      simp only [Matrix.mulVec_mulVec] at this
-      exact this
+      simpa only [Matrix.mulVec_mulVec] using this
     have e2 : Ga k r l (fun a => m *ᵥ phiV k r a) ≤
         (K ^ (l.val + 1)) ^ 2 * Ga k r l (fun a => (h * m) *ᵥ phiV k r a) := by
       have := ga_two h⁻¹ K h2 l (fun a => (h * m) *ᵥ phiV k r a)
@@ -263,12 +258,10 @@ theorem xi_bd {k r : ℕ} (s : Fin (r + 1) → ℝ) (hs : ∀ l, 0 ≤ s l) (h :
       exact this
     have d1 : Del k r l (h * m) ≤ K ^ (l.val + 1) * Del k r l m := by
       have := Real.sqrt_le_sqrt e1
-      rw [Real.sqrt_mul (sq_nonneg _), Real.sqrt_sq hK0] at this
-      exact this
+      rwa [Real.sqrt_mul (sq_nonneg _), Real.sqrt_sq hK0] at this
     have d2 : Del k r l m ≤ K ^ (l.val + 1) * Del k r l (h * m) := by
       have := Real.sqrt_le_sqrt e2
-      rw [Real.sqrt_mul (sq_nonneg _), Real.sqrt_sq hK0] at this
-      exact this
+      rwa [Real.sqrt_mul (sq_nonneg _), Real.sqrt_sq hK0] at this
     exact rpow_bd _ _ _ _ (Real.sqrt_nonneg _) (Real.sqrt_nonneg _) hK' (hs l) d2 d1
 
 theorem cont_gN {k r : ℕ} : Continuous (gN : Mat k r → ℝ) := by
@@ -291,9 +284,7 @@ theorem cont_ga {k r : ℕ} (l : Fin (r + 1)) :
 theorem meas_xi (k r : ℕ) (s : Fin (r + 1) → ℝ) : Measurable fun x : Mt k r => xiN k r s (Matrix.of x) := by
   unfold xiN xiR
   refine Measurable.real_toNNReal ?_
-  refine Finset.measurable_prod _ fun l _ => ?_
-  refine Measurable.pow_const ?_ _
-  exact ((cont_ga l).sqrt).measurable
+  exact Finset.measurable_prod _ fun l _ => Measurable.pow_const ((cont_ga l).sqrt).measurable _
 
 end ReciprocityTheory.ChartRestriction.DS.Xi.XI
 end -- clump:auto

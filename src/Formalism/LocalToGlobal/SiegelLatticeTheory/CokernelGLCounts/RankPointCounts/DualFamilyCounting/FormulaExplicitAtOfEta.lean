@@ -134,8 +134,7 @@ theorem densProdValAt_of (D : Formalism.BasicNotions.D7) (hη : EtaLocAt D) : De
         simp only [map_sub]
         show A.ιF (algebraMap (𝓞 F) F a) - (z : A.Fp) = _
         ring
-      rw [he]
-      exact h2
+      rwa [he]
     rw [← hker, Ideal.absNorm_apply, Submodule.cardQuot_apply]
     exact (Nat.card_congr (RingHom.quotientKerEquivOfSurjective hsurj).toEquiv).symm
   have hq := resCard_loc (D.s.atP p)
@@ -175,8 +174,7 @@ theorem densValAt_of (D : Formalism.BasicNotions.D7) (hF : DualityBasisChange.Fr
     omega
   have hcle : cJ (VS D).hT (UPair D F0 F') (MMof D F0 F') p.asIdeal ≤ 2 * (D.R.rS + 1) := by
     have := Formalism.L2.SG.Pf.Asm.cJ_le (VS D).hT (UPair D F0 F') (MMof D F0 F') p.asIdeal
-    rw [hUr, hm] at this
-    exact this
+    rwa [hUr, hm] at this
   unfold densP
   rw [hG, local_density_corank (D.s.atP p).Fp (D.s.atP p).Ep (M p) (D.s.atP p).lf (D.s.atP p).char0 (L.V p)
     (L.H p) (lattice₂ L p (VS D).L0) hSD (ϖ p) (hϖ p) _ A a hAO hAdet hcard, L.rank p, Fintype.card_sum,
@@ -205,8 +203,7 @@ theorem densMultIntAt_of (D : Formalism.BasicNotions.D7) (hF : DualityBasisChang
     simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_lt] at hp
     have hcle : cJ (VS D).hT (UPair D F0 F') (MMof D F0 F') p.asIdeal ≤ 2 * (D.R.rS + 1) := by
       have := Formalism.L2.SG.Pf.Asm.cJ_le (VS D).hT (UPair D F0 F') (MMof D F0 F') p.asIdeal
-      rw [hUr, hm] at this
-      exact this
+      rwa [hUr, hm] at this
     obtain ⟨-, hup, hlow⟩ := Formalism.L2.SG.Pf.DensLoc.ratio_bounds (K := D.host.E) p.asIdeal (by linarith)
       (j := D.R.k - 1 - cJ (VS D).hT (UPair D F0 F') (MMof D F0 F') p.asIdeal) (n := D.R.r) (s := 2)
       (by omega) (by omega) (by norm_num)

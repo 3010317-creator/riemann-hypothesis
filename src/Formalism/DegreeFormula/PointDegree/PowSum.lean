@@ -63,8 +63,7 @@ theorem degFl_add {ι : Type} [Fintype ι] [DecidableEq ι] {N : ℕ} (P Q : MvP
 
 theorem degFl_C_mul {ι : Type} [Fintype ι] [DecidableEq ι] {N : ℕ} (c : ℝ) (P : MvPolynomial (ι × Fin N) ℝ) :
     degFl ι N (C c * P) = c * degFl ι N P := by
-  simp only [degFl, coeff_C_mul, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun σ _ => by ring
+  simpa only [degFl, coeff_C_mul, Finset.mul_sum] using Finset.sum_congr rfl fun σ _ => by ring
 
 theorem degFl_zero {ι : Type} [Fintype ι] [DecidableEq ι] {N : ℕ} :
     degFl ι N (0 : MvPolynomial (ι × Fin N) ℝ) = 0 := by
@@ -222,8 +221,7 @@ theorem degFlEsymm : DegFlEsymm := by
       degFl ι N (rename (fun i : Fin N => (τ, i)) (psum (Fin N) ℝ n) * P) = 0 := by
     intro n hn P
 
-    simp only [psum, map_sum, map_pow, rename_X]
-    exact degFlPowerSum ι N τ n P hn
+    simpa only [psum, map_sum, map_pow, rename_X] using degFlPowerSum ι N τ n P hn
   have hZ : ∀ P : MvPolynomial (ι × Fin N) ℝ, degFl ι N (rename (fun i : Fin N => (τ, i))
       ((k : MvPolynomial (Fin N) ℝ) * esymm (Fin N) ℝ k) * P) = 0 := by
     rw [mul_esymm_eq_sum, map_mul]

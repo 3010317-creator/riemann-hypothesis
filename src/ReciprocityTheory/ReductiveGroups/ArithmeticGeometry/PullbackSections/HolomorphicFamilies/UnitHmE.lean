@@ -19,14 +19,12 @@ theorem relab_injective (c : Coeff l) (σ : c.F →+* ℂ) : Function.Injective 
   intro a b h
   ext x
   have h1 : σ (embF c a x) = σ (embF c b x) := congrArg (fun f : E →+* ℂ => f x) h
-  have h2 := σ.injective h1
-  exact congrArg Subtype.val h2
+  exact congrArg Subtype.val (σ.injective h1)
 
 theorem relab_rt (c : Coeff l) (σ : c.F →+* ℂ) (hσ : GoodEmb c σ) (τ : E →+* ℂ) :
     relab c σ τ (H.rt : E) = H.rt0 ↔ τ (H.rt : E) = H.rt0 := by
   have e1 : (H.rt : E) ^ 2 = -(H.d : E) := by
-    have h := congrArg (fun x : 𝓞 E => (x : E)) H.rt_sq
-    simpa using h
+    simpa using congrArg (fun x : 𝓞 E => (x : E)) H.rt_sq
   have hsq : τ (H.rt : E) ^ 2 = H.rt0 ^ 2 := by
     rw [← map_pow, e1, map_neg, map_natCast, H.sqrt_neg_disc_sq]
   have hcases : τ (H.rt : E) = H.rt0 ∨ τ (H.rt : E) = -H.rt0 := sq_eq_sq_iff_eq_or_eq_neg.mp hsq

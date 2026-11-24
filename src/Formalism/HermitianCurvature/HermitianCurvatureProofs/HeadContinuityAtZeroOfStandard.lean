@@ -71,8 +71,7 @@ theorem vecCutAt_of_one (p : KB.Pl P Wp Wq) (χ : ℝ → ℝ) (F : B.Mat P.k P.
 
 theorem hsInner_self_re_nonneg (A : Wq →L[ℂ] Wp) : 0 ≤ (B.hsInner A A).re := by
   unfold B.hsInner
-  have h := inner_self_nonneg (𝕜 := ℂ) (x := B.hsVec A)
-  simpa using h
+  simpa using inner_self_nonneg (𝕜 := ℂ) (x := B.hsVec A)
 
 theorem rr_top_re_nonneg (p : KB.Pl P Wp Wq) (F : B.Mat P.k P.r → (Wq →L[ℂ] Wp)) (i : ℕ) (w : List C.Letter)
     (h : C.LPt) (hi : P.r < i) : 0 ≤ (p.RR F i w h h).re := by
@@ -136,8 +135,7 @@ theorem limZeroAt_of_limits (p : KB.Pl P Wp Wq) (nn : ℝ → ℝ) (χ : ℝ →
       (p.RR (D.cutF p.T.base χ F ε) 0 w [] []).re / TBB.normC nn w := fun ε => ew_zero_nil p nn _ w
   have hlim2 : Tendsto (fun ε => ENNReal.ofReal (TBB.Ew p nn (D.cutF p.T.base χ F ε) 0 w [])) (𝓝[>] 0)
       (𝓝 (ENNReal.ofReal (sz * (B.beta p.T.base F F).re / TBB.normC nn w))) := by
-    simp only [hEw]
-    exact ENNReal.tendsto_ofReal (hlim.div_const _)
+    simpa only [hEw] using ENNReal.tendsto_ofReal (hlim.div_const _)
   rw [hlim2.limsup_eq]
   refine le_trans ?_ hB
   rw [ENNReal.ofReal_le_ofReal_iff']
@@ -149,8 +147,7 @@ theorem limZeroAt_of_limits (p : KB.Pl P Wp Wq) (nn : ℝ → ℝ) (χ : ℝ →
       calc sz * (B.beta p.T.base F F).re ≤ TBB.normC nn w * (B.beta p.T.base F F).re :=
             mul_le_mul_of_nonneg_right hszn hb
         _ = (B.beta p.T.base F F).re * TBB.normC nn w := mul_comm _ _
-    · rw [← hzero, div_zero]
-      exact hb
+    · rwa [← hzero, div_zero]
   · right
     push Not at hb
     exact div_nonpos_of_nonpos_of_nonneg (mul_nonpos_of_nonneg_of_nonpos hsz0 hb.le) hn0

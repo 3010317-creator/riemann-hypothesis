@@ -95,9 +95,7 @@ theorem latOfLattice_holds {D : D7} (X : HidaSetting D) (u : D.what₂.Word) : L
   constructor
   · rintro ⟨v, hv, rfl⟩
     show X.B.I.fmat ((h : X.B.I.Gf) * X.xu u)⁻¹ *ᵥ incl X.B.I (X.crd (gv X v)) ∈ X.B.I.Lf
-    rw [crd_gv]
-    exact hv
-  · intro hy
-    exact ⟨X.crd y, hy, gv_crd X y⟩
+    rwa [crd_gv]
+  · exact fun hy => ⟨X.crd y, hy, gv_crd X y⟩
 
 end Formalism.L2.SG.PoincareInHH.Cut

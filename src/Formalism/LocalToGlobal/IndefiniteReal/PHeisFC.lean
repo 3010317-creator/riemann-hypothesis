@@ -136,8 +136,7 @@ theorem FD_sub_compact (V W : HSp D) : ∃ K : Set (WA V W), IsCompact K ∧ FD 
   · exact (isCompact_univ_pi fun _ => isCompact_univ_pi fun _ => isCompact_univ_pi fun _ => hK0).image hg
   · intro x hx
     refine ⟨fun i j => cE D.host.F D.host.E (x i j), ?_, ?_⟩
-    · intro i _ j _ k _
-      exact hF0 (hx i j k)
+    · exact fun i _ j _ k _ => hF0 (hx i j k)
     · funext i j
       exact (cE D.host.F D.host.E).symm_apply_apply (x i j)
 

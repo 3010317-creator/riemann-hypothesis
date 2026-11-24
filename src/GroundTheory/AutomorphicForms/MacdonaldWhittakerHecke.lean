@@ -61,45 +61,33 @@ theorem integral_mul_mul_eigen (z : Fin n → ℂˣ) {f : GL (Fin n) F → ℂ}
       evalAt z (satakeTransform μ (h₁ * h₂)) * f g := by
   rw [map_mul, map_mul]
   have hconv : ∀ x, (((h₁ * h₂ : SphericalHecke μ (F := F) (n := n)) : HeckeAlgebra μ) x) =
-      ∫ y, (h₁ : HeckeAlgebra μ) y * (h₂ : HeckeAlgebra μ) (y⁻¹ * x) ∂μ := by
-    intro x
+      ∫ y, (h₁ : HeckeAlgebra μ) y * (h₂ : HeckeAlgebra μ) (y⁻¹ * x) ∂μ := fun x => by
     rw [HeckeAlgebraLevel.val_mul, HeckeAlgebra.coe_mul]
     rfl
   simp only [hconv, ← integral_mul_const]
   set B := tsupport ((h₁ : HeckeAlgebra μ) : GL (Fin n) F → ℂ)
   set C := tsupport ((h₂ : HeckeAlgebra μ) : GL (Fin n) F → ℂ)
   have hB : IsCompact B := (h₁ : HeckeAlgebra μ).mem.2
-  have hC : IsCompact C := (h₂ : HeckeAlgebra μ).mem.2
   have hswap := integral_integral_swap_of_coset μ (integralOpen F n) (isCompact_integralGL F n)
-    (hB.mul hC) hB (F := fun x y => (h₁ : HeckeAlgebra μ) y * (h₂ : HeckeAlgebra μ) (y⁻¹ * x) *
-      f (g * x))
-    (by
-      intro x y hxy
+    (hB.mul (h₂ : HeckeAlgebra μ).mem.2) hB
+    (F := fun x y => (h₁ : HeckeAlgebra μ) y * (h₂ : HeckeAlgebra μ) (y⁻¹ * x) * f (g * x))
+    (fun x y hxy => by
       have hy : y ∈ B := subset_tsupport _ (left_ne_zero_of_mul (left_ne_zero_of_mul hxy))
       have hx : y⁻¹ * x ∈ C := subset_tsupport _ (right_ne_zero_of_mul (left_ne_zero_of_mul hxy))
       exact ⟨Set.mem_mul.2 ⟨y, hy, y⁻¹ * x, hx, by group⟩, hy⟩)
-    (by
-      intro x y k hk
+    (fun x y k hk => by
       rw [← mul_assoc, (HeckeAlgebraLevel.val_mem _ _ h₂ k hk _).2, ← mul_assoc, hf _ k hk])
-    (by
-      intro x y k hk
+    (fun x y k hk => by
       rw [(HeckeAlgebraLevel.val_mem _ _ h₁ k hk y).2, _root_.mul_inv_rev,
         show k⁻¹ * y⁻¹ * x = k⁻¹ * (y⁻¹ * x) from mul_assoc _ _ _,
         HeckeAlgebraLevel.apply_mul_left _ _ h₂ ((integralGL F n).inv_mem hk)])
   rw [hswap]
   have hinner : ∀ y, ∫ x, (h₁ : HeckeAlgebra μ) y * (h₂ : HeckeAlgebra μ) (y⁻¹ * x) * f (g * x) ∂μ =
-      (h₁ : HeckeAlgebra μ) y * f (g * y) * evalAt z (satakeTransform μ h₂) := by
-    intro y
-    have e := integral_mul_left_eq_self (μ := μ)
-      (fun x => (h₁ : HeckeAlgebra μ) y * (h₂ : HeckeAlgebra μ) (y⁻¹ * x) * f (g * x)) y
-    simp only [inv_mul_cancel_left] at e
-    rw [← e]
-    have hpt : ∀ x, (h₁ : HeckeAlgebra μ) y * (h₂ : HeckeAlgebra μ) x * f (g * (y * x)) =
-        (h₁ : HeckeAlgebra μ) y * ((h₂ : HeckeAlgebra μ) x * f ((g * y) * x)) := by
-      intro x
-      rw [mul_assoc g y x]
-      ring
-    rw [integral_congr_ae (Filter.Eventually.of_forall hpt), integral_const_mul, hh₂ (g * y)]
+      (h₁ : HeckeAlgebra μ) y * f (g * y) * evalAt z (satakeTransform μ h₂) :=
+    fun y => by
+    rw [← integral_mul_left_eq_self (μ := μ) _ y]
+    simp only [inv_mul_cancel_left, ← mul_assoc g y, mul_assoc ((h₁ : HeckeAlgebra μ) y)]
+    rw [integral_const_mul, hh₂ (g * y)]
     ring
   rw [integral_congr_ae (Filter.Eventually.of_forall hinner), integral_mul_const, hh₁ g]
   ring

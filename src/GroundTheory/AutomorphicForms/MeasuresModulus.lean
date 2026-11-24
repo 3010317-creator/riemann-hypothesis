@@ -222,8 +222,7 @@ theorem distribHaarChar_glEquiv_diagonal {D : ι → F} (h : (Matrix.diagonal D)
     (isOpen_box.measure_ne_zero μ ⟨0, zero_mem_box⟩) isCompact_box.measure_lt_top.ne ?_
   rw [himage, box, Measure.pi_pi, Measure.pi_pi, ENNReal.ofNNReal_finsetProd,
     ← Finset.prod_mul_distrib]
-  refine Finset.prod_congr rfl fun i _ => ?_
-  exact (distribHaarChar_mul ν (u i) _).symm
+  exact Finset.prod_congr rfl fun i _ => (distribHaarChar_mul ν (u i) _).symm
 
 theorem distribHaarChar_glEquiv_transvection (t : Matrix.TransvectionStruct ι F)
     (h : t.toMatrix.det ≠ 0) :
@@ -296,8 +295,7 @@ theorem distribHaarChar_glEquiv (g : GL ι F) :
     refine Matrix.diagonal_transvection_induction_of_det_ne_zero
       (fun M => ∀ h : M.det ≠ 0, φ (Matrix.GeneralLinearGroup.mkOfDetNeZero M h) =
         ψ (Matrix.GeneralLinearGroup.mkOfDetNeZero M h)) M hM ?_ ?_ ?_ hM
-    · intro D _ h
-      exact distribHaarChar_glEquiv_diagonal h
+    · exact fun D _ h => distribHaarChar_glEquiv_diagonal h
     · intro t h
       have hdet : Matrix.GeneralLinearGroup.det (Matrix.GeneralLinearGroup.mkOfDetNeZero _ h) = 1 := by
         ext
@@ -316,8 +314,7 @@ theorem distribHaarChar_glEquiv (g : GL ι F) :
     ext : 1
     rfl
   have := key _ (Matrix.det_ne_zero_of_left_inverse (g.inv_mul))
-  rw [hg] at this
-  exact this
+  rwa [hg] at this
 
 theorem distribHaarChar_pi_eq (L : (ι → F) ≃ₗ[F] (ι → F)) :
     distribHaarChar (ι → F) L = distribHaarChar F (LinearEquiv.det L) := by

@@ -57,8 +57,7 @@ def p1 (π : R ≃+* k × k) : R →+* k := (RingHom.fst k k).comp π.toRingHom
 def p2 (π : R ≃+* k × k) : R →+* k := (RingHom.snd k k).comp π.toRingHom
 
 theorem ext_p (π : R ≃+* k × k) {r s : R} (h1 : p1 π r = p1 π s) (h2 : p2 π r = p2 π s) : r = s := by
-  apply π.injective
-  exact Prod.ext h1 h2
+  exact π.injective (Prod.ext h1 h2)
 
 theorem mat_ext_p (π : R ≃+* k × k) {M N : Matrix n n R} (h1 : M.map (p1 π) = N.map (p1 π))
     (h2 : M.map (p2 π) = N.map (p2 π)) : M = N := by
@@ -168,8 +167,7 @@ theorem proj_bijective (J : Matrix n n R) (hJ : Formalism.UG.cT σ J = J) (hdet 
       rw [Matrix.det_mul, Matrix.det_mul] at h
       have h' : IsUnit ((Formalism.UG.cT σ M).det * J.det * M.det) := by rw [h]; exact hdet
       exact isUnit_of_mul_isUnit_right h'
-    refine ⟨⟨((Matrix.isUnit_iff_isUnit_det M).2 hdetM).unit, hU⟩, ?_⟩
-    exact Units.ext hM1
+    exact ⟨⟨((Matrix.isUnit_iff_isUnit_det M).2 hdetM).unit, hU⟩, Units.ext hM1⟩
 
 end PI.UnitaryGroupMassFormula.AdIndexEq.SplitGL
 

@@ -50,8 +50,7 @@ theorem chartLin_self : chartLin I t e t = 1 := by
   have h : chartX I t e (linForm t - 1) = 0 := by
     exact (Ideal.Quotient.eq_zero_iff_mem (I := chartIncIdeal I t e)).mpr
       (Ideal.mem_sup_left (Ideal.mem_map_of_mem _ (Ideal.mem_sup_right (Ideal.mem_span_singleton_self _))))
-  rw [map_sub, map_one, sub_eq_zero] at h
-  exact h
+  rwa [map_sub, map_one, sub_eq_zero] at h
 
 theorem chartLoc_adjoin_eq_top :
     Algebra.adjoin (Localization.AtPrime p)
@@ -155,8 +154,7 @@ theorem ChartNorm.proof (h₁ : IncIdealBelow.Statement) (h₂ : SpecFirstMemInc
     · have := h₃ _ q _ hq rfl
       infer_instance
   have : Module.IsTorsionFree (Localization.AtPrime p) (ChartLoc I t e p) := by
-    rw [Module.isTorsionFree_iff_algebraMap_injective]
-    exact hinj
+    rwa [Module.isTorsionFree_iff_algebraMap_injective]
   have : Module.Free (Localization.AtPrime p) (ChartLoc I t e p) := Module.free_of_finite_type_torsion_free'
   have : CharZero (Localization.AtPrime p) :=
     charZero_of_injective_algebraMap (algebraMap F (Localization.AtPrime p)).injective
@@ -175,8 +173,7 @@ theorem ChartNorm.proof (h₁ : IncIdealBelow.Statement) (h₂ : SpecFirstMemInc
   rw [← map_map] at hdvd
   have key := h₈ (Localization.AtPrime p) (ChartLoc I t e p) n _ _ _ (chartLoc_adjoin_eq_top I t p) hsum
     (h₆ F n e I f p hI hf) hdvd (fun m => algebraMap F (Localization.AtPrime p) (u m))
-  rw [eval_map_firstGroup, eval_map_firstGroup, ← chartLin_eq_sum] at key
-  exact key
+  rwa [eval_map_firstGroup, eval_map_firstGroup, ← chartLin_eq_sum] at key
 
 end
 

@@ -27,8 +27,7 @@ private theorem sum_castLE_lemma {p0 : ℕ} (hp : p0 ≤ r) (f : Fin r → ℝ) 
   refine Finset.sum_bij (fun a _ => Fin.castLE hp a) ?_ ?_ ?_ ?_
   · intro a _
     simp [a.2]
-  · intro a _ b _ h
-    exact Fin.castLE_injective hp h
+  · exact fun a _ b _ h => Fin.castLE_injective hp h
   · intro k hk
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hk
     exact ⟨⟨k, hk⟩, Finset.mem_univ _, Fin.ext rfl⟩
@@ -200,8 +199,7 @@ theorem Ms_unif (X : Data E r) (τ : X.Ψ) {κ : ℝ} (hκ : 1 < κ) :
     intro v0 hv0
     have hc := Ms_contAt X.p0 X.p0_le v0
     have hval : Ms X.p0 X.p0_le (Nid r) v0 = 1 := by
-      rw [Ms_id X τ]
-      exact hv0
+      rwa [Ms_id X τ]
     have hmem : Set.Ioo κ⁻¹ κ ∈ 𝓝 (Ms X.p0 X.p0_le (Nid r) v0) := by
       rw [hval]
       exact Ioo_mem_nhds (inv_lt_one_of_one_lt₀ hκ) hκ

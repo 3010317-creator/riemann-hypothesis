@@ -176,19 +176,16 @@ theorem cycHerbrand_ideleClassGroup (σ : Gal(L/K)) (hσ : ∀ g, g ∈ Subgroup
         ((v.asIdeal.ramificationIdxIn (𝓞 L) * v.asIdeal.inertiaDegIn (𝓞 L) : ℕ) : ℚ)) =
       ∏ v ∈ S.finite_toSet.toFinset,
         (finrank (v.adicCompletion K) ((wFin v).1.adicCompletion L) : ℚ) := by
-    rw [Finset.finite_toSet_toFinset]
-    rw [finprod_cond_eq_prod_of_cond_iff _ (t := S) fun {v} _ ↦ ?_]
+    rw [Finset.finite_toSet_toFinset, finprod_cond_eq_prod_of_cond_iff _ (t := S) fun {v} _ ↦ ?_]
     · exact Finset.prod_congr rfl fun v _ ↦ by
         rw [finrank_adicCompletion_eq_ramificationIdxIn_mul v (wFin v)]
     · constructor
       · rintro ⟨w, hw, hlies⟩
         have := (below_eq_iff w v).2 hlies
-        rw [← this]
-        exact hw
+        rwa [← this]
       · intro hv
         refine ⟨(wFin v).1, ?_, inferInstance⟩
-        rw [hTdef, mem_placesAbove, (below_eq_iff (wFin v).1 v).2 inferInstance]
-        exact hv
+        rwa [hTdef, mem_placesAbove, (below_eq_iff (wFin v).1 v).2 inferInstance]
   rw [hBval, cycHerbrand_sUnitRep T hT hσ, hFin, hInf] at hmul
   have hI : (∏ v : InfinitePlace K, (if v.IsUnramifiedIn L then 1 else 2 : ℚ)) ≠ 0 :=
     Finset.prod_ne_zero_iff.2 fun v _ ↦ by split_ifs <;> norm_num

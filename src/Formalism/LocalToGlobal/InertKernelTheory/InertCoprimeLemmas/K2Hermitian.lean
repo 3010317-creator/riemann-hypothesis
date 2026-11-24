@@ -228,10 +228,8 @@ theorem substitution_split : SubBSplit := by
         · rw [ite_eq_left rfl]
         · intro a'' _ hne
           rw [ite_eq_right]
-          intro hh
-          exact hne (congrArg (fun z : X.ZA j => z.2.2.1) hh).symm
-        · intro hh
-          exact absurd (Finset.mem_univ _) hh
+          exact fun hh => hne (congrArg (fun z : X.ZA j => z.2.2.1) hh).symm
+        · exact fun hh => absurd (Finset.mem_univ _) hh
       rw [hL]
       have htw : Formalism.L2.PairingIndexBounds.F.twG X E v s = Formalism.L2.G.Pend.tw X ℂ_[p] v s := rfl
       have hB : ((BOf fd j La v : GL _ _) : Matrix _ _ _) = (fd.frM j La v)⁻¹ := by
@@ -265,24 +263,20 @@ theorem substitution_split : SubBSplit := by
       obtain ⟨a'', _, ha''⟩ := Finset.exists_ne_zero_of_sum_ne_zero hLk
       have hy : (⟨v, (s, a', b')⟩ : X.ZA j) = ⟨vz, (sz, a'', bz)⟩ := by
         by_contra hc
-        apply ha''
-        exact ite_eq_right hc
+        exact ha'' (ite_eq_right hc)
       cases h1
       have hb : b' = bz := congrArg (fun z : X.ZA j => z.2.2.2) hy
       subst hb
       exact hz (by rw [show az = a from h2])
-    · intro hh
-      exact absurd (Finset.mem_univ _) hh
+    · exact fun hh => absurd (Finset.mem_univ _) hh
   · have hne : (Formalism.L2.G.Pend.kapOf X pos j ⟨v, (s, a, b)⟩).1 ≠ (Formalism.L2.G.Pend.kapOf X pos j ⟨v', (s', a', b')⟩).1 := by
-      intro hh
-      exact h (pos.injective hh).symm
+      exact fun hh => h (pos.injective hh).symm
     unfold Formalism.L2.PairingIndexBounds.F.subBG
     rw [ite_eq_right hne, mul_zero]
     symm
     refine Finset.sum_eq_zero fun z _ => ?_
     by_contra hz
     have h1 := blockDiag_VOf X ℂ_[p] j fd c La' _ z (left_ne_zero_of_mul hz)
-    have h2 := blockDiag_LkB X ℂ_[p] j (BOf fd j La) z _ (right_ne_zero_of_mul hz)
-    exact h (h2.trans h1)
+    exact h ((blockDiag_LkB X ℂ_[p] j (BOf fd j La) z _ (right_ne_zero_of_mul hz)).trans h1)
 
 end Formalism.L2.KerInert.SecondKernelHermitian

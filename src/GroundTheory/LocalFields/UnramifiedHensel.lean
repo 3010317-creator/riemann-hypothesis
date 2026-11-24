@@ -86,17 +86,13 @@ theorem exists_lift_primitive :
     exact hsep.aeval_derivative_ne_zero (minpoly.aeval _ _)
   obtain ⟨β, hβ, hβb⟩ := HenselianLocalRing.is_henselian Q hQ b0 h1 h2
   have hres : residue 𝒪[L] β = residue 𝒪[L] b0 := by
-    rw [← sub_eq_zero, ← map_sub, residue_eq_zero_iff]
-    exact hβb
+    rwa [← sub_eq_zero, ← map_sub, residue_eq_zero_iff]
   refine ⟨β, P, hPmon, ?_, ?_, ?_, ?_⟩
-  · rw [← eval_map_algebraMap]
-    exact hβ
+  · rwa [← eval_map_algebraMap]
   · rw [hPdeg, residueDegree_eq_finrank, ← IntermediateField.adjoin.finrank hbi, hb,
       IntermediateField.finrank_top']
-  · rw [hPmap]
-    exact hsep
-  · rw [hres]
-    exact hb
+  · rwa [hPmap]
+  · rwa [hres]
 
 theorem residueDegree_eq_one_iff_surjective (F : Type*) [Field F] [ValuativeRel F]
     [TopologicalSpace F] [IsNonarchimedeanLocalField F] [Algebra F L] [ValuativeExtension F L]
@@ -118,8 +114,7 @@ theorem exists_unramified_adjoin :
   set T := K⟮(β : L)⟯ with hT
   have hβL : aeval (β : L) P = 0 := by
     have := aeval_algHom_apply (IsScalarTower.toAlgHom 𝒪[K] 𝒪[L] L) β P
-    rw [hβ, map_zero] at this
-    exact this
+    rwa [hβ, map_zero] at this
   have hle : Module.finrank K T ≤ ((IsLocalRing.maximalIdeal 𝒪[L]).inertiaDeg (𝒪[K])) := by
     have hi : IsIntegral K (β : L) := .of_finite K _
     rw [hT, IntermediateField.adjoin.finrank hi, ← hdeg]
@@ -181,24 +176,21 @@ theorem mem_of_residueDegree_eq_one (F : IntermediateField K L) (hF : ((IsLocalR
     exact (residue_ne_zero_iff_isUnit _).2 hd this.symm
   obtain ⟨c, hc, hcc₀⟩ := HenselianLocalRing.is_henselian Q (hP.map _) c₀ h1 h2
   have hcF : aeval c P = 0 := by
-    rw [← eval_map_algebraMap]
-    exact hc
+    rwa [← eval_map_algebraMap]
   set c' := algebraMap 𝒪[F] 𝒪[L] c
   have hc' : aeval c' P = 0 := by
     rw [aeval_algebraMap_apply, hcF, map_zero]
   have hres : residue 𝒪[L] c' = residue 𝒪[L] γ := by
     rw [← hc₀]
     have : residue 𝒪[F] c = residue 𝒪[F] c₀ := by
-      rw [← sub_eq_zero, ← map_sub, residue_eq_zero_iff]
-      exact hcc₀
+      rwa [← sub_eq_zero, ← map_sub, residue_eq_zero_iff]
     change algebraMap 𝓀[F] 𝓀[L] (residue 𝒪[F] c) = algebraMap 𝓀[F] 𝓀[L] (residue 𝒪[F] c₀)
     rw [this]
   have heq : γ = c' := by
     refine IsLocalRing.eq_of_eval_eq_zero_of_not_isUnit_sub (f := P.map (algebraMap 𝒪[K] 𝒪[L]))
       (by rw [eval_map_algebraMap]; exact hγ) (by rw [eval_map_algebraMap]; exact hc') ?_ ?_
     · rw [← mem_nonunits_iff, ← mem_maximalIdeal, ← residue_eq_zero_iff, map_sub, hres, sub_self]
-    · rw [derivative_map, eval_map_algebraMap]
-      exact hd
+    · rwa [derivative_map, eval_map_algebraMap]
   rw [heq]
   exact (c : F).2
 

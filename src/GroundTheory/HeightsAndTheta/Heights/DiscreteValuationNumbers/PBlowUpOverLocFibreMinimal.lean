@@ -25,8 +25,7 @@ theorem BlowUpOverLocFibreMinimal.proof (h₁ : BlowUpOverLocPointLoc.Statement.
   have := hP.multiProj.isPrime
   have hxW : x ∈ W := hWmin.1.2 (Ideal.mem_sup_right (Ideal.mem_span_singleton_self x))
   have hxW' : liftForm x ∈ W' := by
-    rw [← Ideal.mem_comap, hW'c]
-    exact hxW
+    rwa [← Ideal.mem_comap, hW'c]
   have hle : blowUpOf P u ⊔ Ideal.span {liftForm x} ≤ W' :=
     sup_le hW'le ((Ideal.span_singleton_le_iff_mem _).mpr hxW')
   refine ⟨⟨hW'p, hle⟩, fun Q hQ hQW' => ?_⟩
@@ -84,13 +83,11 @@ theorem BlowUpOverLocFibreMinimal.proof (h₁ : BlowUpOverLocPointLoc.Statement.
     have e1 : z * ((s : blowUpOverLoc P W u) : FractionRing (MRing ι O ⧸ P)) =
         ((b : blowUpOverLoc P W u) : FractionRing (MRing ι O ⧸ P)) := by
       have := congrArg Subtype.val (IsLocalization.mk'_spec (blowUpLocRing P u Q₀) b s)
-      rw [hbs] at this
-      exact this
+      rwa [hbs] at this
     have e2 : ((s : blowUpOverLoc P W u) : FractionRing (MRing ι O ⧸ P)) *
         (((v⁻¹ : (blowUpLocRing P u W')ˣ) : blowUpLocRing P u W') : FractionRing (MRing ι O ⧸ P)) = 1 := by
       have := congrArg Subtype.val v.mul_inv
-      rw [hv] at this
-      exact this
+      rwa [hv] at this
     have e3 : z = ((algebraMap (blowUpOverLoc P W u) (blowUpLocRing P u W') b *
         ((v⁻¹ : (blowUpLocRing P u W')ˣ) : blowUpLocRing P u W') : blowUpLocRing P u W') :
           FractionRing (MRing ι O ⧸ P)) := by
@@ -100,8 +97,7 @@ theorem BlowUpOverLocFibreMinimal.proof (h₁ : BlowUpOverLocPointLoc.Statement.
     exact Subtype.property _
   have heq : Q₀ = W' :=
     h₂ O K ι J P u Q₀ W' hQ₀p hQ₀h hQ₀r hQ₀le hW'p hW'h hW'r hW'le (le_antisymm hsup hsub)
-  rw [← heq]
-  exact hQ₀Q
+  rwa [← heq]
 
 end
 

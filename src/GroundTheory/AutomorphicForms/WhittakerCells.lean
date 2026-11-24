@@ -63,8 +63,7 @@ theorem isOpen_setOf_le_llRank (i j : Fin n) (k : ℕ) :
       ⋃ (A : Matrix (Fin k) (Fin n) F) (B : Matrix (Fin n) (Fin k) F),
         {g | (A * (rowsFrom i * (g : Matrix (Fin n) (Fin n) F) * colsTo j) * B).det ≠ 0} := by
     ext g
-    simp only [Set.mem_ofPred_eq, Set.mem_iUnion, llRank]
-    exact le_rank_iff_exists_det_ne_zero _ k
+    simpa only [Set.mem_ofPred_eq, Set.mem_iUnion, llRank] using le_rank_iff_exists_det_ne_zero _ k
   rw [e]
   refine isOpen_iUnion fun A => isOpen_iUnion fun B => ?_
   have hc : Continuous fun g : GL (Fin n) F =>
@@ -297,8 +296,7 @@ theorem bruhatCell_eq_iff {g : GL (Fin n) F} {w : Equiv.Perm (Fin n)} :
   constructor
   · rintro rfl
     exact mem_doubleCoset_bruhatCell g
-  · intro h
-    exact doubleCoset_permGL_injective (mem_doubleCoset_bruhatCell g) h
+  · exact fun h => doubleCoset_permGL_injective (mem_doubleCoset_bruhatCell g) h
 
 theorem bruhatCell_mul_mul {a b : GL (Fin n) F} (ha : a ∈ Iwasawa.borel F n) (hb : b ∈ Iwasawa.borel F n)
     (g : GL (Fin n) F) : bruhatCell (a * g * b) = bruhatCell g := by
@@ -462,8 +460,7 @@ theorem det_submatrix_of_mem_unipotent {v : GL (Fin n) F} (hv : v ∈ Iwasawa.un
     ⟨⟨⟨x, rfl⟩⟩, fun y => Subtype.ext (hc y.2)⟩
   rw [det_unique, toSquareBlock_def, of_apply,
     ← Unique.eq_default (⟨x, rfl⟩ : {y // (id ∘ c) y = (id ∘ c) x})]
-  simp only [submatrix_apply]
-  exact ((Iwasawa.mem_unipotent F n).1 hv).2 (c x)
+  simpa only [submatrix_apply] using ((Iwasawa.mem_unipotent F n).1 hv).2 (c x)
 
 theorem cellMinor_normalForm (w : Equiv.Perm (Fin n)) {u v : GL (Fin n) F}
     (hu : u ∈ Iwasawa.unipotent F n) (hv : v ∈ Iwasawa.unipotent F n) (t : Fin n → Fˣ) :

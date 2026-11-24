@@ -128,8 +128,7 @@ theorem tS_subst (hI : ISerSpec.{u}) : (tS W xP).subst (iSer W) = tS W xP := by
 theorem equation_C {xP yP : R} (hP : W.toAffine.Equation xP yP) :
     (curveL W).toAffine.Equation (HahnSeries.C xP) (HahnSeries.C yP) := by
   rw [WeierstrassCurve.Affine.equation_iff] at hP ⊢
-  have h := congrArg (HahnSeries.C : R →+* LaurentSeries R) hP
-  simpa using h
+  simpa using congrArg (HahnSeries.C : R →+* LaurentSeries R) hP
 
 theorem chord (hFL : FlowL.{u}) {xP yP : R} (hP : W.toAffine.Equation xP yP) :
     toL (xPlus W xP yP) = (curveL W).toAffine.addX (xL W) (HahnSeries.C xP) (slopeL W xP yP) ∧

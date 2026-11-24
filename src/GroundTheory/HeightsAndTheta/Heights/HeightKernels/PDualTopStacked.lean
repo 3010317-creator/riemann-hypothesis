@@ -108,8 +108,7 @@ theorem exists_cover {K : Type} [Field K] [NumberField K] {i : ℕ}
   · exact Or.inl h
   · right
     have hlt : X.lattice < N' := lt_of_le_of_ne h1 (Ne.symm h)
-    have hNN' := hN.2 ⟨hlt, (h2.trans hle).trans hN.1.2⟩ (h2.trans hle)
-    exact le_antisymm h2 (hle.trans hNN')
+    exact le_antisymm h2 (hle.trans (hN.2 ⟨hlt, (h2.trans hle).trans hN.1.2⟩ (h2.trans hle)))
 
 end GroundTheory.Variant₂.N1
 end -- clump:auto
@@ -156,8 +155,7 @@ theorem DegForm.trans {F G H : HermLattice K i} (h₁ : DegForm F G) (h₂ : Deg
 theorem degForm_self (hBasis : DualTopBasisChange.Statement) (F : HermLattice K i) : DegForm F F := by
   intro T T' _ _ _ _ b hb b' hb' II hi hII
   have e := hBasis K i F.withStdMetric T T' b hb b' hb' II hi hII
-  rw [sub_self, zero_mul, add_zero]
-  exact e
+  rwa [sub_self, zero_mul, add_zero]
 
 theorem withStdMetric_eq {F G : HermLattice K i} (h : F.lattice = G.lattice) :
     F.withStdMetric = G.withStdMetric := by
@@ -230,8 +228,7 @@ theorem DualTopStacked.proof (hSimple : DualTopSimpleSub.Statement) (hBasis : Du
     (hDeg : DualStackedDegree.Statement) : DualTopStacked.Statement := by
   intro K _ _ i F F' T _ _ b hb b' hb' a II hi hII hle hab
   have e := degForm_of_le hSimple hBasis F F' hle T T b hb b' hb' II hi hII
-  rw [hDeg K i F F' T b b' a hle hab] at e
-  exact e
+  rwa [hDeg K i F F' T b b' a hle hab] at e
 
 end
 

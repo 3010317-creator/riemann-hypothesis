@@ -232,8 +232,7 @@ theorem Tm_rsmul (hσ : IsURepOn (UJset ε) σ) {X : Matrix (Fin n) (Fin n) ℂ}
     (congrArg (fun w => (r : ℂ) • w) (Tm_apply hσ hX v).symm))
 
 theorem Tm_zero (hσ : IsURepOn (UJset ε) σ) : Tm hσ (0 : Matrix (Fin n) (Fin n) ℂ) = 0 := by
-  refine LinearMap.ext fun v => Subtype.ext ?_
-  exact (Tm_apply hσ (inG_zero ε) v).trans (dS_zero_mat _)
+  exact LinearMap.ext fun v => Subtype.ext ((Tm_apply hσ (inG_zero ε) v).trans (dS_zero_mat _))
 
 theorem Tm_sub (hσ : IsURepOn (UJset ε) σ) {X Y : Matrix (Fin n) (Fin n) ℂ} (hX : inG ε X)
     (hY : inG ε Y) : Tm hσ (X - Y) = Tm hσ X - Tm hσ Y := by
@@ -249,8 +248,7 @@ theorem Tm_br (hσ : IsURepOn (UJset ε) σ) {X Y : Matrix (Fin n) (Fin n) ℂ} 
   refine LinearMap.ext fun v => Subtype.ext ?_
   show ((Tm hσ X (Tm hσ Y v) : smSub ε σ) : H) - ((Tm hσ Y (Tm hσ X v) : smSub ε σ) : H) =
     ((Tm hσ (X * Y - Y * X) v : smSub ε σ) : H)
-  simp only [Tm_apply hσ hX, Tm_apply hσ hY, Tm_apply hσ hXY]
-  exact dS_bracket hσ hX hY v.2
+  simpa only [Tm_apply hσ hX, Tm_apply hσ hY, Tm_apply hσ hXY] using dS_bracket hσ hX hY v.2
 
 end Op
 
@@ -431,8 +429,7 @@ theorem cas_pair (ε : Fin n → Bool) (p : Fin n × Fin n) :
     simp only [Prod.swap_prod_mk, hw, hs, hg, actM_smul, actM_single, smulI_sq, mul_one,
       one_smul, neg_neg]
   · have := cas_pair_lt E ε h
-    simp only [Prod.swap_prod_mk]
-    exact (add_comm _ _).trans (this.trans (add_comm _ _))
+    simpa only [Prod.swap_prod_mk] using (add_comm _ _).trans (this.trans (add_comm _ _))
 
 theorem casimir_eq (ε : Fin n → Bool) :
     casimir E = -∑ p : Fin n × Fin n, (casWt p * casSg ε p) • (actM E (casGen ε p) * actM E (casGen ε p)) := by

@@ -91,8 +91,7 @@ theorem witt_teichmuller_root : Formalism.FG.WittTeichRoot := by
   haveI : NeZero (((l ^ d - 1 : ℕ) : AlgebraicClosure (ZMod l))) := by
     have h := NeZero.of_injective (f := algebraMap (ZMod l) (AlgebraicClosure (ZMod l)))
       (a := (((l ^ d - 1 : ℕ) : ZMod l))) (algebraMap (ZMod l) (AlgebraicClosure (ZMod l))).injective
-    rw [map_natCast] at h
-    exact h
+    rwa [map_natCast] at h
   have hdeg : (Polynomial.cyclotomic (l ^ d - 1) (AlgebraicClosure (ZMod l))).degree ≠ 0 := by
     rw [Polynomial.degree_cyclotomic]
     exact_mod_cast (Nat.totient_pos.mpr hNpos).ne'
@@ -100,7 +99,6 @@ theorem witt_teichmuller_root : Formalism.FG.WittTeichRoot := by
   have hprim : IsPrimitiveRoot μ (l ^ d - 1) := Polynomial.isRoot_cyclotomic_iff.mp hμ
   refine ⟨WittVector.teichmuller l μ, hprim.map_of_injective ?_⟩
   intro a b h
-  have h2 := congrArg (fun w => WittVector.coeff w 0) h
-  simpa [WittVector.teichmuller_coeff_zero] using h2
+  simpa [WittVector.teichmuller_coeff_zero] using congrArg (fun w => WittVector.coeff w 0) h
 
 end Formalism.FG

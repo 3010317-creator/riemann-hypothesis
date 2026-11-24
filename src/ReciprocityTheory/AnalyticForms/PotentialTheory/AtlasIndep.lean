@@ -42,12 +42,10 @@ def unionAtlas (A B : FinHolAtlas e X) (h : A.Compatible B) : FinHolAtlas e X wh
 
 @[simp] theorem unionAtlas_chart_castAdd (A B : FinHolAtlas e X) (h : A.Compatible B)
     (j : Fin A.n) : (unionAtlas A B h).chart (Fin.castAdd B.n j) = A.chart j := by
-  show Fin.append A.chart B.chart (Fin.castAdd B.n j) = A.chart j
   exact Fin.append_left _ _ _
 
 @[simp] theorem unionAtlas_chart_natAdd (A B : FinHolAtlas e X) (h : A.Compatible B)
     (k : Fin B.n) : (unionAtlas A B h).chart (Fin.natAdd A.n k) = B.chart k := by
-  show Fin.append A.chart B.chart (Fin.natAdd A.n k) = B.chart k
   exact Fin.append_right _ _ _
 
 theorem FinHolAtlas.Compatible.symm' {A B : FinHolAtlas e X} (h : A.Compatible B) :

@@ -51,8 +51,7 @@ theorem hint_mpTail (D n : ℕ) (hn : 0 < n) :
     funext z i
     first
       | rfl
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem hint_blockPoint_eq {D n : ℕ} (z : BlockSphere (D + 1) n) :
     blockPoint z = hintPt (spherePoint (z 0)) (fun i : Fin D => z i.succ) := by
@@ -78,8 +77,7 @@ theorem hint_eval_indep {D n : ℕ} {a : Fin (D + 1) → ℕ} {q : MvPolynomial 
           (Finset.mem_univ _)
       have hz : s (0, v.2) = 0 := by omega
       have hv' : v = (0, v.2) := Prod.ext hv rfl
-      rw [hv']
-      exact hz
+      rwa [hv']
     rw [h0, pow_zero, pow_zero]
   · rw [hxy v hv]
 
@@ -89,8 +87,7 @@ theorem hint_continuous_pt {D n : ℕ} (t0 : Fin n → ℂ) :
   rintro ⟨i, j⟩
   cases i using Fin.cases with
   | zero =>
-    simp only [hintPt, Fin.cases_zero]
-    exact continuous_const
+    simpa only [hintPt, Fin.cases_zero] using continuous_const
   | succ i =>
     simp only [hintPt, Fin.cases_succ]
     unfold spherePoint

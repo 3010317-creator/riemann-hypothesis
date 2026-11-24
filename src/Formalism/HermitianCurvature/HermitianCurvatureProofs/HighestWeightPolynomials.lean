@@ -74,8 +74,7 @@ theorem map_eq_of_cpol {n : ℕ} (m m' : Fin n → ℂ) (h : ∀ w, cpol m w = c
     Polynomial.funext (fun w => by rw [← key, ← key, h])
   have hr := congrArg Polynomial.roots hp
   rw [Polynomial.roots_multiset_prod_X_sub_C, Polynomial.roots_multiset_prod_X_sub_C] at hr
-  have h2 := congrArg (Multiset.map (fun z : ℂ => -z)) hr
-  simpa [Multiset.map_map, Function.comp_def] using h2
+  simpa [Multiset.map_map, Function.comp_def] using congrArg (Multiset.map (fun z : ℂ => -z)) hr
 
 theorem sdec_re {n : ℕ} {m : Fin n → ℂ} (hm : SDec m) : StrictAnti fun a => (m a).re := by
   intro a b hab
@@ -87,8 +86,7 @@ theorem sdec_re {n : ℕ} {m : Fin n → ℂ} (hm : SDec m) : StrictAnti fun a =
   linarith
 
 theorem sdec_inj {n : ℕ} {m : Fin n → ℂ} (hm : SDec m) : Function.Injective m := by
-  intro a b hab
-  exact (sdec_re hm).injective (congrArg Complex.re hab)
+  exact fun a b hab => (sdec_re hm).injective (congrArg Complex.re hab)
 
 theorem sdec_shift {n : ℕ} {ν : Fin n → ℂ} (h : ∀ a b : Fin n, a < b → ∃ N : ℕ, ν a - ν b = (N : ℂ)) :
     SDec fun k => ν k - ((k : ℕ) : ℂ) := by

@@ -163,8 +163,7 @@ end Dict
 theorem simeq_iff_congruence : SimeqIffCong := fun _ _ _ _ _ _ _ => Iff.rfl
 
 theorem unit_ball_closed : UnitBallClosed := by
-  intro K _ _
-  exact isClosed_le continuous_norm continuous_const
+  exact fun K _ _ => isClosed_le continuous_norm continuous_const
 
 theorem odd_phi_is_phi : PhOIsPh := by
   intro K _ _ e l s2 hl hl1
@@ -178,8 +177,7 @@ theorem first_level_from_universal_holds : FirstLevelFromUniversal := by
   obtain ⟨hF0, hFi, -, -, hc⟩ := hL
   have hF := Dict.law_eq h hF0 hc
   have hFG : FGInt (Formalism.G.unitBall K) l linv := by
-    rw [FGInt, ← hF]
-    exact hFi
+    rwa [FGInt, ← hF]
   refine ⟨hF, hFG, ?_⟩
   intro σ x x' y hx hx' hy
   have hLG : LG (Formalism.G.unitBall K) (Formalism.InvariantFactorPaths.G7.d1 F (Formalism.InvariantFactorPaths.G7.cob F ph)) := by
@@ -204,8 +202,7 @@ theorem first_level_from_universal_holds : FirstLevelFromUniversal := by
     Dict.subst_biextension_form h ph (Pts.constantCoeff_fadd h h0 h1) h2 ha, Dict.subst_biextension_form h ph h0 h2 ha,
     Dict.subst_biextension_form h ph h1 h2 ha, Dict.substMv_fadd h h0 h1 ha, MvPowerSeries.subst_X hs,
     MvPowerSeries.subst_X hs, MvPowerSeries.subst_X hs] at key
-  rw [Cong, ← sub_sub]
-  exact key
+  rwa [Cong, ← sub_sub]
 
 theorem adjoint_universal_form : AdjUniversal := by
   intro K _ _ _ F l linv ph a b h hL hph ha hb hA

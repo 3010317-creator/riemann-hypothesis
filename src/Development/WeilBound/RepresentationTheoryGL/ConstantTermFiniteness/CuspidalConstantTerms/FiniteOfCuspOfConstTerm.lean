@@ -208,8 +208,7 @@ theorem exists_ext [CharZero E] (hs : ∀ x, s (s x) = x) (hJ : adj s J = J) (hd
       rw [← e, b, Matrix.mulVec_zero]
     · have a' : ∀ i, (fun k => s (Cᵀ i k)) ⬝ᵥ J *ᵥ z = 0 := fun i => by
         have := congrFun a i
-        rw [← Matrix.mulVec_mulVec] at this
-        exact this
+        rwa [← Matrix.mulVec_mulVec] at this
       ext i j
       rw [gram_apply, Matrix.zero_apply]
       induction i using Fin.lastCases with
@@ -614,8 +613,7 @@ theorem chart_general {E : Type} [NormedRing E] [NormedAlgebra ℝ E] [FiniteDim
   have ht : Tendsto (fun g => Θ (Ψ (P g))) (𝓝 1) (𝓝 1) := by
     have h3 : Tendsto (fun g => Ψ (P g)) (𝓝 1) (𝓝 0) := by
       have := hcont.tendsto
-      simp only [hP0, p2] at this
-      exact this
+      simpa only [hP0, p2] using this
     have := hD.continuousAt.tendsto.comp h3
     rwa [h0] at this
   refine ⟨fun g => cL (Ψ (P g)), cC.continuous.continuousAt.comp hcont, ?_⟩
@@ -736,8 +734,7 @@ theorem exists_realLines_chart : ∀ (F E : Type) [Field F] [NumberField F] [Fie
     obtain ⟨u, hu⟩ := Matrix.isUnit_exp (t • Zg a)
     have h1 := GlobalTheory.SmoothForms.exp_mem_UH (hHu (q.symm a).1) (X := t • Zg a) ((lieU (H (q.symm a).1)).smul_mem t (hZg a))
     refine ⟨(archEquiv J h (τ (q.symm a).1)).symm ⟨u, show _ * _ * _ = _ from hu ▸ h1⟩, ?_⟩
-    rw [GlobalTheory.Orb.archMat_eq_archEquiv J h, MulEquiv.apply_symm_apply]
-    exact hu
+    rwa [GlobalTheory.Orb.archMat_eq_archEquiv J h, MulEquiv.apply_symm_apply]
   choose y hy using hy
   let δ : Fin (Fintype.card (Σ w : InfinitePlace F, Fin (e w))) → ℝ → GAd σ J :=
     fun a t => embArch σ J (q.symm a).1 (y a t)
@@ -1041,17 +1038,14 @@ theorem isSmModOn_constAlong : ∀ (D : D7) (V : HSp D) (m : ℕ) (X Y : Matrix 
     have : p ∈ GlobalTheory.UAut.leftGrp D.sp.cm.sig V.gram (X.submatrix id (Fin.castLE (top_le S)))
         (fun i : Fin (top S) => (S.filter (· < Fin.castLE (top_le S) i)).card) :=
       Subgroup.mem_sup_right ⟨hp.1, parFlag_le_of_subset X hST (top_le S) (top_le T) (top_mono hST) (lt_top_iff S) hp.2⟩
-    rw [e] at this
-    exact this
+    rwa [e] at this
   obtain ⟨r1, r2⟩ := isSmModOn_constTermOn h hJ _ hC hΓ hφ hc'
   refine ⟨?_, fun l hl => ?_⟩
   · have e : (leftSub V X Y T : Subgroup (GA D V)) = GlobalTheory.UAut.leftGrp D.sp.cm.sig V.gram (X.submatrix id (Fin.castLE (top_le T)))
         (fun i : Fin (top T) => (T.filter (· < Fin.castLE (top_le T) i)).card) := (leftGrp_eq h hJ hW T).symm
-    rw [e]
-    exact r1
+    rwa [e]
   · have := r2 l hl
-    rw [← hu] at this
-    exact this
+    rwa [← hu] at this
 
 end GlobalTheory.CompanionTheory.Hypotheses₂.ConstMod
 
@@ -1120,8 +1114,7 @@ theorem exists_interp {K : Type} (A : Submodule ℂ (K → ℂ)) [FiniteDimensio
       rw [Submodule.mem_bot]
       apply Subtype.ext
       funext k
-      have h := hf (E k) (Submodule.subset_span ⟨k, rfl⟩)
-      simpa [E] using h
+      simpa [E] using hf (E k) (Submodule.subset_span ⟨k, rfl⟩)
     rw [← Subspace.dualCoannihilator_dualAnnihilator_eq (W := Submodule.span ℂ (Set.range E)), h0,
       Submodule.dualAnnihilator_bot]
   obtain ⟨b, hbsub, hbspan, hbli⟩ := exists_linearIndependent ℂ (Set.range E)
@@ -1165,12 +1158,10 @@ theorem hasTypeAt_of_isConstAlong : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D
     refine ⟨K, hK, fun n => ?_⟩
     obtain ⟨γ, hγ, hγK⟩ := hKc n
     refine ⟨γ, ?_, hγK⟩
-    rw [Subgroup.inf_subgroupOf_right]
-    exact hγ
+    rwa [Subgroup.inf_subgroupOf_right]
   have h𝓕' : IsFundamentalDomain ((GQ V ⊓ unip D.sp.cm.sig V.gram X T).subgroupOf
       (unip D.sp.cm.sig V.gram X T)) 𝓕 μ := by
-    rw [Subgroup.inf_subgroupOf_right]
-    exact h𝓕
+    rwa [Subgroup.inf_subgroupOf_right]
   haveI hdQ : DiscreteTopology ↥(GlobalTheory.AdelicU.ratPts D.sp.cm.sig V.gram) := inferInstance
   haveI hdisc : DiscreteTopology ↥(GQ V ⊓ unip D.sp.cm.sig V.gram X T) :=
     DiscreteTopology.of_subset hdQ (fun y hy => hy.1)
@@ -1187,8 +1178,7 @@ theorem hasTypeAt_of_isConstAlong : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D
     have hpt : ∀ u : unip D.sp.cm.sig V.gram X T, φ ((u : GA D V) * (x * kAt θ V τ e P k)) =
         ∑ i, φ ((u : GA D V) * (x * kAt θ V τ e P (p i))) * a i k := by
       intro u
-      have h := hrep _ (hty ((u : GA D V) * x)) k
-      simpa [mul_assoc] using h
+      simpa [mul_assoc] using hrep _ (hty ((u : GA D V) * x)) k
     simp_rw [hpt]
     rw [integral_finsetSum _ (fun i _ => Integrable.mul_const (hint _) _)]
     refine Finset.sum_congr rfl fun i _ => ?_
@@ -1320,8 +1310,7 @@ theorem good_of_mem_pairSpan (hW : IsWittFrame D.sp.cm.sig V.gram X Y) (T : Fins
       (Γ := (GQ V ⊓ unip D.sp.cm.sig V.gram X T : Subgroup (GA D V))) (φ := φ) (fun γ hγ x => hφ.left γ hγ x) l
     refine GlobalTheory.integrableOn_fundamentalDomain_of_cocompact _ _ C hC hcov μ hμ 𝓕 h𝓕 _
       (hcont.comp (continuous_subtype_val.mul continuous_const)) fun γ hγ u => ?_
-    simp only [Subgroup.coe_mul, mul_assoc]
-    exact hleft γ ⟨Subgroup.mem_subgroupOf.1 hγ, γ.2⟩ _
+    simpa only [Subgroup.coe_mul, mul_assoc] using hleft γ ⟨Subgroup.mem_subgroupOf.1 hγ, γ.2⟩ _
   | zero => exact ⟨integrableOn_zero, by simp⟩
   | add x y _ _ ihx ihy =>
     refine ⟨ihx.1.add ihy.1, ?_⟩
@@ -1642,8 +1631,7 @@ theorem finite_of_cusp_of_constTerm {D : D7} (θ : D.what₂.Tau → (Ainf D.hos
     have hx : hex r := ⟨C, hC⟩
     have h0 : GlobalTheory.Cusp.constTerm (GlobalTheory.Cusp.frameFlag hx.choose_spec) f.1 = 0 := by
       have := congrFun hf ⟨r, Nat.lt_succ_of_le hr⟩
-      have h2 := congrArg Subtype.val this
-      simpa [Ψ, T, hx, Tm] using h2
+      simpa [Ψ, T, hx, Tm] using congrArg Subtype.val this
     exact GlobalTheory.CompanionTheory.ConstTermConj.constTerm_eq_zero_of_frame D V r _ C hx.choose_spec hC f.1 hl h0
   haveI := hcusp
   haveI : FiniteDimensional ℂ (LinearMap.ker Ψ) := by

@@ -280,9 +280,7 @@ theorem zz_scale (Zh : Matrix (Fin (r + 1)) (Fin (r + 1)) E) (T T' : F)
   ext a b
   have hZab : ((Z a b : M.R) : E) = HermSp.ZZplusOf M Zh T T' a b := by
     rw [← hZ]; rfl
-  have hq : ((g.q : F)) ≠ 0 := by
-    intro h
-    exact g.q_irr.ne_zero (Subtype.ext h)
+  have hq : ((g.q : F)) ≠ 0 := fun h => g.q_irr.ne_zero (Subtype.ext h)
   simp only [HermSp.ZZplusOf, hs, Matrix.of_apply] at hZab
   simp only [HermSp.ZZplusOf, hs, Matrix.map_apply, Matrix.of_apply, dlast, Matrix.diagonal_mul,
     Matrix.mul_diagonal, Matrix.add_apply, Subring.coe_subtype]
@@ -343,9 +341,7 @@ theorem nz2 {F : Type} [Field F] {B b t u : F} (hB : B ≠ 0) (ht : t ≠ 0) (hu
   · apply h
     rw [eq_div_iff (mul_ne_zero ht hb)]
     have h1 : B + t * b * u = 0 := by
-      have h2 := congrArg (· * u) h0
-      simp only [add_mul, inv_mul_cancel_right₀ hu, zero_mul] at h2
-      exact h2
+      simpa only [add_mul, inv_mul_cancel_right₀ hu, zero_mul] using congrArg (· * u) h0
     linear_combination h1
 
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
@@ -379,8 +375,7 @@ theorem scaleChoice_holds : ScaleChoiceP := by
     have := pow_injective_of_not_isUnit g.q_irr.not_isUnit g.q_irr.ne_zero (add_left_cancel h')
     simpa using this
   obtain ⟨k, -, hk⟩ : ∃ k ∈ Finset.range 9, f k ∉ L.toFinset := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hsub : (Finset.range 9).image f ⊆ L.toFinset := fun x hx => by
       obtain ⟨k, hk, rfl⟩ := Finset.mem_image.1 hx; exact hcon k hk
     have h1 := Finset.card_le_card hsub
@@ -826,8 +821,7 @@ theorem relG_map (h : ScHyp O cj qi T T' α) (Zh : Matrix (Fin (r + 1)) (Fin (r 
       (Zh * dlast r α)
     rw [Matrix.mul_assoc, dlast_mul_cj h, Matrix.mul_one] at this
     have hb : (cj α - 1) * qi = -((α - 1) * qi * cj α) := by linear_combination qi * h.αn
-    rw [hb] at this
-    exact this
+    rwa [hb] at this
   apply le_antisymm
   · rintro _ ⟨Y, hY, rfl⟩
     exact relC_fwd O cj _ _ _ _ h.C_mul hG (scA h) (by ext i j; rfl)
@@ -855,8 +849,7 @@ theorem formG_scale (h : ScHyp O cj qi T T' α) (Zh : Matrix (Fin (r + 1)) (Fin 
     (gramG_scale cj qi h.cjcj α T T' h.αn h.qic h.Tc h.T'c Zh) (by rw [scC_det]; exact hu)
     (by rw [show ((scC r α ((α - 1) * qi)).map cj).det = cj (scC r α ((α - 1) * qi)).det from
       (RingHom.map_det cj _).symm, scC_det]; exact hcu) (fun i => (Y i : E)) (fun i => (W i : E))
-  rw [← e1, ← e1] at this
-  exact this
+  rwa [← e1, ← e1] at this
 
 theorem inv_scale (h : ScHyp O cj qi T T' α) (Zh : Matrix (Fin (r + 1)) (Fin (r + 1)) E) :
     (Zh * dlast r α)⁻¹ = dlast r (cj α) * Zh⁻¹ := by
@@ -1180,8 +1173,7 @@ theorem algGAllT_holds : AlgGAllT := by
     e₁' e₂' (by rw [hdet]; exact u₁.mul hαu) (by rw [hdet]; exact u₂.mul hαu)
     (by rw [hdet, hdet, head_dlast, head_dlast]; linear_combination α * hrel)
     (by rw [hN, head_dlast]; exact hG₁) (by rw [hN, head_dlast]; exact hG₂) hT0 d₁ d₂ s₁ s₂
-  rw [card_thetaGC_scale _ hH hqq hqO, hcard] at key
-  exact key
+  rwa [card_thetaGC_scale _ hH hqq hqO, hcard] at key
 
 end Formalism.L2.SG.LocalCountModules.ThetaMbe0GWork
 end -- clump:auto

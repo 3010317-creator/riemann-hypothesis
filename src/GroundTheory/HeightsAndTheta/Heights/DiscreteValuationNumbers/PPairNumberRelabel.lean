@@ -144,8 +144,7 @@ theorem RenameMultiProjPrime.proof : RenameMultiProjPrime.Statement.{u} := by
     have hs : s' = s := E.injective (by simpa [hv] using (hσ ⟨s', i⟩).symm)
     subst hs
     refine ⟨i, ?_⟩
-    rw [Ideal.mem_comap, rename_X, hv]
-    exact hi'
+    rwa [Ideal.mem_comap, rename_X, hv]
 
 end
 
@@ -359,8 +358,7 @@ theorem isModelOver_map [Fintype K₁] [Fintype K₂] (hσ : ∀ v, (σ v).1 = e
   refine ⟨?_, ?_, ?_⟩
   · have := GroundTheory.Heights₂.Heights.FieldNumbers.RenameMultiProjPrime.proof O K₂ K₁ ι₂ ι₁ e.symm σ.symm
       hσ' P hmp
-    rw [Ideal.map_comap_of_equiv]
-    exact this
+    rwa [Ideal.map_comap_of_equiv]
   · rw [← hnt]
     ext c
     simp only [Ideal.mem_comap]
@@ -394,8 +392,7 @@ theorem isVerticalDivisor_map (hσ : ∀ v, (σ v).1 = e v.1) (P : Ideal (MRing 
     have hWp : W.IsPrime := Ideal.comap_isPrime _ _
     have hPW : P ≤ W := Ideal.map_le_iff_le_comap.1 hPW'
     have hWrel : IsRelevant W := by
-      rw [← isRelevant_map_iff σ e hσ W, hWW']
-      exact hrel
+      rwa [← isRelevant_map_iff σ e hσ W, hWW']
     have hϖW : (C ϖ : MRing ι₁ O) ∉ W := by
       intro hm
       apply hϖ

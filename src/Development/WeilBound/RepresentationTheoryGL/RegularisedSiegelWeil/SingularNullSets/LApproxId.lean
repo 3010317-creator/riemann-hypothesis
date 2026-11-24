@@ -272,19 +272,16 @@ theorem kdata (ψ : AddChar (AF F) ℂ) (hψ : IsCharAF F ψ) {S S' : Finset (He
   have hτR : Integrable (fun h : fixE ε => tR ρ S' U h.1) ν := by
     have := hτHI.norm
     refine this.congr (Filter.Eventually.of_forall fun h => ?_)
-    simp only [hτH, Complex.norm_real, Real.norm_eq_abs]
-    exact abs_of_nonneg (tR_nonneg hρ0 S' U _)
+    simpa only [hτH, Complex.norm_real, Real.norm_eq_abs] using abs_of_nonneg (tR_nonneg hρ0 S' U _)
   set IHr := ∫ h, tR ρ S' U h.1 ∂ν with hIHr
   have hIHc : IH = (IHr : ℂ) := integral_ofReal
   have hIHr0 : 0 < IHr := by
     refine lt_of_le_of_ne (integral_nonneg fun h => tR_nonneg hρ0 S' U _) fun h0 => hIH0 ?_
     rw [hIHc, ← h0, Complex.ofReal_zero]
   have hA0 : A 0 = IH := by
-    simp only [hA, mul_zero, AddChar.map_zero_eq_one, mul_one]
-    exact hIH.symm
+    simpa only [hA, mul_zero, AddChar.map_zero_eq_one, mul_one] using hIH.symm
   have hB0 : Bf 0 = IY := by
-    simp only [hBf, mul_zero, AddChar.map_zero_eq_one, mul_one]
-    exact hIY.symm
+    simpa only [hBf, mul_zero, AddChar.map_zero_eq_one, mul_one] using hIY.symm
   have hψn : ∀ x, ‖ψ x‖ = 1 := hψ.2.1
 
   have hAc : Continuous A := by
@@ -314,8 +311,7 @@ theorem kdata (ψ : AddChar (AF F) ℂ) (hψ : IsCharAF F ψ) {S S' : Finset (He
     ring
 
   obtain ⟨h₀, hh₀⟩ : ∃ h₀ : fixE ε, tR ρ S' U h₀.1 ≠ 0 := by
-    by_contra hn
-    push Not at hn
+    by_contra! hn
     apply hIHr0.ne'
     rw [hIHr]
     simp [hn]
@@ -547,8 +543,7 @@ theorem oneD : OneD := by
       rw [snd_eq, fix_snd hε (memH h) (fun h' => hv (Finset.mem_union_left _ h'))]
       exact zero_mem _
     rw [Set.indicator_of_mem hm] at hl
-    simp only [hgeq]
-    exact hl
+    simpa only [hgeq] using hl
   · have ht : tR (ρ k) (S ∪ S₁) (U k) (-(ε * s)) ≠ 0 := fun h0 => hs (by simp only [h0, mul_zero])
     unfold tR at ht
     have hρne : ρ k (fstA F (-(ε * s))) ≠ 0 := fun h0 => ht (by rw [h0, zero_mul])
@@ -769,8 +764,7 @@ theorem approxId_of (h1 : OneD) : ApproxId := by
     have hU : IsOpen {M : Mx D t t | -M ∉ C} := hC.isOpen_compl.preimage continuous_neg
     have h0 : R 0 ∈ {M : Mx D t t | -M ∉ C} := by
       have : R 0 = 0 := by simp [R, Matrix.mulVec_zero]
-      simp only [Set.mem_ofPred_eq, this, neg_zero]
-      exact fun h => (hCT 0 h).2.2 rfl
+      simpa only [Set.mem_ofPred_eq, this, neg_zero] using fun h => (hCT 0 h).2.2 rfl
     filter_upwards [small_eventually R hRc _ hU h0 Sp hSp] with k hk T hTC
     obtain ⟨hTA, heT, -⟩ := hCT T hTC
     by_contra hlt

@@ -234,8 +234,7 @@ theorem cancel_AΔ {a c : LetA O n} (hc : c ∈ W.AΔ) (hc0 : ∀ i, c i ≠ 0) 
   intro δ hδ
   apply cancel_comp hc0
   have e := h δ hδ
-  rw [map_mul, hc δ hδ] at e
-  exact e
+  rwa [map_mul, hc δ hδ] at e
 
 theorem φ_AΔ {a : LetA O n} (ha : a ∈ W.AΔ) : W.φA a ∈ W.AΔ := by
   intro δ hδ

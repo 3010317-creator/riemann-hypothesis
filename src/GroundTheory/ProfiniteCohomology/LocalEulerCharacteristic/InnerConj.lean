@@ -94,9 +94,7 @@ theorem cohomologyInnerConj_zero (A : Rep.{u} k Γ) [IsDiscreteRep A] (g : Γ) :
   have hd : ((cochainsComplex A).d 0 1).hom c = 0 := iCycles_d_apply _ 0 1 z
   have hfix : A.ρ g (c.1 Fin.elim0) = c.1 Fin.elim0 := by
     have h1 := congrArg (fun c' : locallyConstantCochains A 1 => c'.1 fun _ => g) hd
-    have h2 := cochainsComplex_d_zero_apply A c (fun _ => g)
-    have h3 := h2.symm.trans h1
-    exact sub_eq_zero.1 h3
+    exact sub_eq_zero.1 ((cochainsComplex_d_zero_apply A c (fun _ => g)).symm.trans h1)
   apply Subtype.ext
   funext x
   change A.ρ g (c.1 (⇑(innerConjHom g) ∘ x)) = c.1 x

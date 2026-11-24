@@ -52,8 +52,7 @@ theorem cellUnion_succ (j : Fin k) : cellUnion C ((j : ℕ) + 1) = cellUnion C j
 theorem cellUnion_of_cover (hcov : ∀ x, ∃ l, x ∈ C l) : cellUnion C k = univ := by
   ext x
   obtain ⟨l, hl⟩ := hcov x
-  simp only [mem_univ, iff_true]
-  exact (mem_cellUnion C).2 ⟨l, l.2, hl⟩
+  simpa only [mem_univ, iff_true] using (mem_cellUnion C).2 ⟨l, l.2, hl⟩
 
 variable [TopologicalSpace X]
 variable (hdisj : Pairwise fun i j => Disjoint (C i) (C j)) (hcov : ∀ x, ∃ l, x ∈ C l)
@@ -217,8 +216,7 @@ theorem supportedIn_empty : supportedIn σ (∅ : Set (GL (Fin n) F)) = ⊥ := b
 
 theorem supportedIn_univ : supportedIn σ (univ : Set (GL (Fin n) F)) = ⊤ := by
   rw [eq_top_iff]
-  intro _ _ g hg
-  exact absurd (mem_univ g) hg
+  exact fun _ _ g hg => absurd (mem_univ g) hg
 
 theorem supportedIn_le_comap {Y : Set (GL (Fin n) F)}
     (hY : ∀ g ∈ Y, ∀ q ∈ blockUpper F n γ, g * q ∈ Y) {q : GL (Fin n) F}

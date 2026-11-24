@@ -128,10 +128,8 @@ theorem tens_slice {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} {τ : D.what�
   have hp : psi0 θ V n l s τ (xL θ τ (fr * u)) = 1 := by
     unfold psi0
     rw [compAt_xL hθ, gAway_dirAt, finPart_xL hθ]
-    simp only [one_mul]
-    exact gaussian_at_zero_eq_one D V.rank n
+    simpa only [one_mul] using gaussian_at_zero_eq_one D V.rank n
   simp only [tens] at h
-  rw [hc, hinv, hp, mul_one] at h
-  exact h
+  rwa [hc, hinv, hp, mul_one] at h
 
 end PositivityTheory.Rg.Sw.Glob.RhoH

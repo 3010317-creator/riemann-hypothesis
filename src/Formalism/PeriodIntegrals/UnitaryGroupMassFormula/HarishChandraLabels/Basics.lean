@@ -133,9 +133,7 @@ theorem basics_inj_of_mono {σ τ : FDRep ℂ Γ} (f : σ ⟶ τ) [Mono f] : Fun
     rw [this, hv, map_zero]
   have h0 : basicsIncl σ _ hW ≫ f = 0 ≫ f := by
     rw [Limits.zero_comp]
-    apply basics_hom_ext
-    refine LinearMap.ext fun w => ?_
-    exact LinearMap.mem_ker.1 w.2
+    exact basics_hom_ext (LinearMap.ext fun w => LinearMap.mem_ker.1 w.2)
   have hι := (cancel_mono f).1 h0
   rw [← LinearMap.ker_eq_bot, Submodule.eq_bot_iff]
   intro v hv

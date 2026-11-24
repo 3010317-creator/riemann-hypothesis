@@ -120,8 +120,7 @@ theorem exists_monic_aeval_eq_zero (J : Ideal (MvPolynomial (Fin n) ℂ)) [J.IsP
     intro h0
     apply nonZeroDivisors.coe_ne_zero c
     apply hA.injective
-    rw [map_zero]
-    exact h0
+    rwa [map_zero]
 
 theorem proof : FibreBound.Statement := by
   intro n d J A hJ _ hA y
@@ -156,8 +155,7 @@ theorem proof : FibreBound.Statement := by
       have hs : ev (Ideal.Quotient.mk J (∑ j, C (c j) * X j)) = ∑ j, c j * x j := by
         change eval x (∑ j, C (c j) * X j) = _
         simp
-      rw [hs] at h
-      exact h
+      rwa [hs] at h
     calc T.card = (T.image fun x => ∑ j, c j * x j).card := (Finset.card_image_of_injOn hc).symm
       _ ≤ (g.map (MvPolynomial.eval y)).roots.toFinset.card := Finset.card_le_card (by
           intro v hv

@@ -112,8 +112,7 @@ theorem fz_twist (m : ℕ) (e : ℤ) (z : ℂ) (y : M2 n) : fz m e z y = y.det ^
 
 theorem det_unit_of_inK {k : M2 n} (hk : InK k) : star k.det * k.det = 1 := by
   have h := congrArg Matrix.det hk.2
-  rw [Matrix.det_mul, Matrix.det_conjTranspose, Matrix.det_one] at h
-  exact h
+  rwa [Matrix.det_mul, Matrix.det_conjTranspose, Matrix.det_one] at h
 
 theorem rhoP_twist {Kg : Type} (ι : Kg → M2 n) (hK : ∀ k, InK (ι k)) (m : ℕ) (e : ℤ) (Y : Matrix (Fin n) (Fin n) ℂ)
     (k : Kg) : rhoP ι m e Y k * (ι k).det ^ e = rhoP ι m 0 Y k := by
@@ -264,8 +263,7 @@ theorem fdProps : FdProps := by
     rw [integral_prod _ hG]
     unfold tOp
     refine integral_congr_ae (Filter.Eventually.of_forall fun k => ?_)
-    simp only [hydef]
-    exact (integral_const_mul _ _).symm
+    simpa only [hydef] using (integral_const_mul _ _).symm
   have e1 : (fun z => tOp μ ι ρ ψ a b (fz m 0 z) x) = fun z => ∫ p, F z p ∂(μ.prod volume) := by
     funext z; exact hT (fz m 0 z) (hFi z)
   have e2 : ∫ p, F' 0 p ∂(μ.prod volume) = tOp μ ι ρ ψ a b (Fd m) x := by
@@ -357,8 +355,7 @@ theorem ks_single_eq (a b : Fin n) :
     · subst hi
       simp <;> norm_num
     · have : ¬ (Equiv.swap a j i = j) := by
-        rw [Equiv.swap_apply_eq_iff, Equiv.swap_apply_right]
-        exact hi
+        rwa [Equiv.swap_apply_eq_iff, Equiv.swap_apply_right]
       simp [this, Ne.symm hi]
   · simp only [hj, ite_false]
     by_cases h : Equiv.swap a b i = j

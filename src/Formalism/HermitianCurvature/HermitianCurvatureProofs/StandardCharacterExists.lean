@@ -240,8 +240,7 @@ theorem map_mul_vol (α : ℂ) (hα : α ≠ 0) :
     rfl
   have h := Measure.map_linearMap_addHaar_eq_smul_addHaar (volume : Measure ℂ)
     (f := LinearMap.mulLeft ℝ α) (by rw [hdet]; positivity)
-  rw [hdet, abs_of_nonneg (by positivity)] at h
-  exact h
+  rwa [hdet, abs_of_nonneg (by positivity)] at h
 
 instance (β : ℂ) : SigmaFinite (mu β) := by unfold mu; infer_instance
 
@@ -372,8 +371,7 @@ theorem reduced_phase_critical_points : Formalism.FourierDecayAlt.G.CornerEntryC
   have hval : rho1 D σ ρ' X B 0 = z := by
     unfold rho1
     rw [hC0, hR0, hD', zero_pow (by omega)]
-    simp only [zero_mul, zero_sub, neg_neg, sub_zero]
-    exact mul_div_cancel_left₀ z hCne
+    simpa only [zero_mul, zero_sub, neg_neg, sub_zero] using mul_div_cancel_left₀ z hCne
   refine ⟨hval, ?_⟩
   have hnum0 : (0 : ℂ) ^ (m + 1) * σ - D - R0 X B ρ' 0 = (-z) ^ m * z * z := by
     rw [hR0, hD', zero_pow (by omega)]; ring
@@ -412,8 +410,7 @@ theorem reduced_phase_critical_points : Formalism.FourierDecayAlt.G.CornerEntryC
     have hCof : HasDerivAt (fun t : ℂ => Cof X B t)
         ((-z) ^ m * ∑ k ∈ Finset.Ico 0 (m + 1), ex (blk X B 0 0) k (k + 2)) 0 := by
       have h2 := poly_deriv_succ m (fun j => ((-X) ^ j *ᵥ B) 0)
-      rw [l2 0 (by simp)] at h2
-      exact h2
+      rwa [l2 0 (by simp)] at h2
     have hdiv := hNum.div hCof hCne'
     refine hdiv.congr_deriv ?_
     have hc1 : (Fin.cons z ρ' : Fin (m + 2) → ℂ) 1 = ρ' 0 := Fin.cons_succ (α := fun _ => ℂ) z ρ' 0

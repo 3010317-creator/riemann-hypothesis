@@ -49,8 +49,7 @@ theorem diamond_conj_mem_level (S : StepLevel F E σ J T f bad) (v : HeightOneSp
     have A := h3 y
     rw [e1, hkf ⟨_, (hg x.1).1 x.2⟩, h3 x] at A
     exact A.symm
-  · have hk := hκ.2 v'
-    simpa [map_mul, map_inv, h1 v' hv'] using hk
+  · simpa [map_mul, map_inv, h1 v' hv'] using hκ.2 v'
 
 theorem level_character_conj_diamond (S : StepLevel F E σ J T f bad) (v : HeightOneSpectrum (𝓞 F))
     (hv : (T : 𝓞 F) ∈ v.asIdeal) (hb : v ∉ bad) {k : ℤ} {δ : UPts σ J (FiniteAdeleRing (𝓞 F) F)}
@@ -76,8 +75,7 @@ theorem adelic_function_right_translate_diamond {ι : Type} [Fintype ι] (S : St
     simp only [Subgroup.coe_mul, hx]
     group
   have := hg γ hγ (x * δ) (x' * δ) ⟨δ.1⁻¹ * κ.1 * δ.1, diamond_conj_mem_level S v hv h κ⟩ e y y' hy
-  rw [level_character_conj_diamond S v hv hb h κ] at this
-  exact this
+  rwa [level_character_conj_diamond S v hv hb h κ] at this
 
 end Gen
 

@@ -75,8 +75,7 @@ theorem rrs_cover (μ : Measure G) [SigmaFinite μ] [μ.IsOpenPosMeasure] {V : S
     rw [huniv] at hc
     exact Set.countable_coe_iff.1 (Set.countable_univ_iff.1 hc)
   · intro y
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hyS : y ∉ S := fun hy => hcon y hy ⟨1 * 1⁻¹, Set.mul_mem_mul h1 (Set.inv_mem_inv.2 (by simpa using h1)),
       by simp⟩
     have hins : (insert y S).PairwiseDisjoint (fun x => x • V) := by
@@ -113,8 +112,7 @@ theorem rrs_secondCountable_abs (μ : Measure G) [SigmaFinite μ] [μ.IsOpenPosM
       have h2' := hV₂ r hr.1 s⁻¹ (Set.mem_inv.1 hs.2)
       have h3 := hV₁ _ h1' _ h2'
       obtain ⟨o, ho, he⟩ := Set.mem_smul_set.1 h3
-      rw [← he, smul_eq_mul, ← mul_assoc, mul_inv_cancel, one_mul]
-      exact ho
+      rwa [← he, smul_eq_mul, ← mul_assoc, mul_inv_cancel, one_mul]
     obtain ⟨n, hn⟩ := hb _ hW
     obtain ⟨x, hxS, hax⟩ := hS n a
     refine ⟨x • (U n * (U n)⁻¹), Set.mem_iUnion.2 ⟨n, x, hxS, rfl⟩, hax, ?_⟩
@@ -140,8 +138,7 @@ theorem rr_secondCountable (I : AutInst) (μf : Measure I.Gf) [SigmaFinite μf] 
     · intro O hO
       obtain ⟨g, hg, hsub⟩ := I.topf_basis O hO
       refine ⟨g - 1, ?_⟩
-      simp only [Nat.sub_add_cancel hg]
-      exact hsub
+      simpa only [Nat.sub_add_cancel hg] using hsub
   exact rrs_secondCountable_abs μf U hU h1 hb
 
 end Formalism.MainNotions.LeviCoordinates

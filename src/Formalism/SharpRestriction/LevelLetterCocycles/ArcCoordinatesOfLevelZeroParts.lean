@@ -136,8 +136,7 @@ theorem secCrit_zero (A : ArcP n) (c' : ZMod n) (T : LocLat G Qp LL O) {d : ℕ}
       refine ⟨lA W ^ 0 * u, W.AΔ.mul_mem (lA_mem W 0) hu, ?_⟩
       rw [lam_zero, map_one, one_mul] at hfu
       simp only [Finset.range_zero, Finset.prod_empty, pow_zero, map_one, one_mul, mul_one, map_mul] at hfu ⊢
-      rw [show lE W 0 = 1 by simp [lE], one_mul]
-      exact hfu
+      rwa [show lE W 0 = 1 by simp [lE], one_mul]
     · simp [Pi.single_apply]
   · intro _
     rw [lam_zero, one_smul] at hx
@@ -248,8 +247,7 @@ theorem step_mpr (C : Ctx W) (A : ArcP n) (hA : A.OK) (c' : ZMod n) (hc' : c' �
       simp [hci]
     · have hα : ∀ s, s < e → -(A.Hs a e s : ℤ) ≤ α i (s + 1) := by
         intro s hs
-        by_contra hlt
-        push Not at hlt
+        by_contra! hlt
         apply hci
         have hcond := (hg i).2 (s + 1) (by omega)
         have hH1 : A.Hs a' (e + 1) (s + 1) = A.Hs a e s := by
@@ -341,8 +339,7 @@ theorem secCrit_all (C : Ctx W) (A : ArcP n) (hA : A.OK) (c' : ZMod n) (hc' : c'
   | succ e IH =>
     intro x k f hxP hrep hfr
     constructor
-    · intro hxN
-      exact (step_mp C A hA c' hc' T hT b sol hb e IH (h0 e) x hxP hxN).2 k f hrep hfr
+    · exact fun hxN => (step_mp C A hA c' hc' T hT b sol hb e IH (h0 e) x hxP hxN).2 k f hrep hfr
     · rintro ⟨κ, hS⟩
       exact step_mpr C A hA c' hc' T hT b sol hb e IH (h0 e) x k f hxP hrep hfr κ hS
 

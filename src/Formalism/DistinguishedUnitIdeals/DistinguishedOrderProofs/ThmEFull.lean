@@ -172,8 +172,7 @@ theorem exists_lift_of_dvd {ϖ : O} (hϖ : Irreducible ϖ) {r : ℕ} {V : Submod
       intro v hv
       apply ih
       apply hV
-      rw [smul_smul, ← pow_succ']
-      exact hv
+      rwa [smul_smul, ← pow_succ']
   have : Module.IsTorsionFree O ((Fin r → O) ⧸ V) := by
     refine Module.IsTorsionFree.of_smul_eq_zero (fun a q hq => ?_)
     obtain ⟨v, rfl⟩ := Submodule.Quotient.mk_surjective V q
@@ -459,8 +458,7 @@ theorem sub_unit_X_pow_mem {ϖ : O} {n : ℕ} {p : PowerSeries O} (h : UnitDist 
     have e : ((E : PowerSeries O) - PowerSeries.X ^ n) =
         ((E - Polynomial.X ^ n : Polynomial O) : PowerSeries O) := by
       push_cast; rfl
-    rw [e, Polynomial.coeff_coe]
-    exact hm
+    rwa [e, Polynomial.coeff_coe]
   rw [Ideal.mem_span_singleton]
   have hd := C_dvd_of_forall_dvd_coeff ϖ _ hc
   have e2 : u * (E : PowerSeries O) - u * PowerSeries.X ^ n =
@@ -758,8 +756,7 @@ theorem pow_mem_pair {ϖ : O} {p₁ p₀ : PowerSeries O} (h : CoprimeRat ϖ p�
     Ideal.pow_mem_pow hmem _
   have h3 := Ideal.sup_pow_add_le_pow_sup_pow h2
   rw [Ideal.span_singleton_pow, Ideal.span_singleton_pow] at h3
-  rw [pow_mul, map_pow, Ideal.span_insert]
-  exact h3
+  rwa [pow_mul, map_pow, Ideal.span_insert]
 
 theorem consts_DD {ϖ : O} {p₁ p₀ : PowerSeries O} (h : CoprimeRat ϖ p₁ p₀) (b₁ b₀ : ℕ) :
     ∃ (ρ : ℕ) (fρ : PowerSeries O),

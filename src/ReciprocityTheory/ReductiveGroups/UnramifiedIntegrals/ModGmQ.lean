@@ -146,9 +146,7 @@ theorem gmQ_low {m : ℕ} (hm : 0 < m) (hsq : ¬ IsSquare m) :
   obtain ⟨k, rfl⟩ := hdvd
   refine ⟨k, u, hu1, hu2, hu3, fun j hj => ?_, ?_⟩
   · have h2 := hlow (m * j) (by nlinarith)
-    rw [hc, ite_eq_left (dvd_mul_right m j), Nat.mul_div_cancel_left j hm] at h2
-    exact h2
-  · rw [hc, ite_eq_left (dvd_mul_right m k), Nat.mul_div_cancel_left k hm] at hn0
-    exact hn0
+    rwa [hc, ite_eq_left (dvd_mul_right m j), Nat.mul_div_cancel_left j hm] at h2
+  · rwa [hc, ite_eq_left (dvd_mul_right m k), Nat.mul_div_cancel_left k hm] at hn0
 
 end ReciprocityTheory.ChartRestriction.L1

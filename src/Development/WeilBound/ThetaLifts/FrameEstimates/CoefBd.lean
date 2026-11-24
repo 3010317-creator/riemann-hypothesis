@@ -143,9 +143,7 @@ def spl : ((κ → mixedSpace F) × (κ → Af F)) ≃+ (κ → AF F) where
 
 theorem spl_cont : Continuous (spl F κ) := by
   show Continuous (fun p : (κ → mixedSpace F) × (κ → Af F) => fun i => re F (p.1 i) + fi F (p.2 i))
-  have hfi : Continuous (fi F) := by
-    show Continuous fun x : Af F => Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.pairA F 0 x
-    exact continuous_const.prodMk continuous_id
+  have hfi : Continuous (fi F) := continuous_const.prodMk continuous_id
   exact continuous_pi fun i => (continuous_re.comp ((continuous_apply i).comp continuous_fst)).add
     (hfi.comp ((continuous_apply i).comp continuous_snd))
 
@@ -164,7 +162,6 @@ theorem pureA_spl (f : (κ → mixedSpace F) → ℂ) (φ : (κ → Af F) → �
     rw [evI_add, evI_re, evI_fi, add_zero]
   · congr 1
     funext i
-    show (re F (p.1 i)).2 + (fi F (p.2 i)).2 = p.2 i
     exact zero_add _
 
 theorem spl_dot (p q : (κ → mixedSpace F) × (κ → Af F)) :
@@ -257,8 +254,7 @@ theorem lin_cont (m : ((κ → AF F) × (κ → AF F)) →ₗ[AF F] Ten F E n d)
   have he : (⇑m : (κ → AF F) × (κ → AF F) → Ten F E n d) = fun x =>
       (∑ i, x.1 i • m (Pi.single i 1, 0) + ∑ i, x.2 i • m (0, Pi.single i 1) : Matrix (Fin n) (Fin d) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) :=
     funext hm
-  rw [he]
-  exact hc
+  rwa [he]
 
 theorem piInf_fi {w : InfinitePlace F} (τ : EmbOver E w) (z : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) : piInf τ (fi F 1 • z) = 0 := by
   rw [Algebra.smul_def, map_mul]

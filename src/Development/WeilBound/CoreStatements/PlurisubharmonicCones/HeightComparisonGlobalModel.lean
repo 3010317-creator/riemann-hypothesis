@@ -226,8 +226,7 @@ theorem abelian_part_integral_point_bis : Top.Given → ∀ (E : Type) [Field E]
   have hσ : ∀ s a, ValAt 𝔐.ξ (spMap (algebraMap (𝓞 L) L) ≫ z) (𝔐.emb s a) (algebraMap (𝓞 L) L (σ₀ s a)) :=
     fun s a => by
       have h := hlab s a
-      rw [← hσ₀] at h
-      exact h
+      rwa [← hσ₀] at h
   have hinj : Function.Injective fun s => (algebraMap (𝓞 L) L).comp (σ₀ s) := by
     simpa only [hσ₀] using A.σ_bij.1
   have hex : ∀ p : ℕ, ∃ (κ : Ω) (k : 𝓞 L), p ∈ S → (HT.HTFree 𝔐 p ∧ HT.Sandwich 𝔐 p κ ∧
@@ -549,14 +548,12 @@ theorem abel_abstract :
       _ = f * m * μ := by rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, hf]; ring
 
   have hsum : x + y ≤ -h := by
-    rw [hh, neg_neg]
-    exact hsum0
+    rwa [hh, neg_neg]
   have hxy : x - y ≤ f * (C₀ * N * La) := by
     have h1 : x - y ≤ ∑ _τ : Ψ, C₀ * N * La := by
       rw [hx, hy, ← Finset.sum_sub_distrib]
       exact Finset.sum_le_sum fun τ _ => (le_abs_self _).trans (hdd τ)
-    rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul] at h1
-    exact h1
+    rwa [Finset.sum_const, Finset.card_univ, nsmul_eq_mul] at h1
   have hfC : f * (C₀ * N * La) ≤ C₀ * g * La := by
     have : C₀ * (f * N) * La ≤ C₀ * g * La :=
       mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hfN hC₀) hLa0.le
@@ -842,8 +839,7 @@ theorem height_comparison_global_model : (Top.Given → Fl.FlatDegree → FlatSa
       rw [← hNeq]
       exact_mod_cast hfNB
     have h2 : (B : ℝ) ≤ Real.exp (abelian₂ B (hostRd E) (hostLval H)) := by
-      rw [← Real.log_le_iff_le_exp hB0]
-      exact hBLa
+      rwa [← Real.log_le_iff_le_exp hB0]
     exact h1.trans h2
   have hrank : ∀ τ, A.Bq.rank (A.img (Or.sm τ)) ≤ Dc.j' := by
     intro τ

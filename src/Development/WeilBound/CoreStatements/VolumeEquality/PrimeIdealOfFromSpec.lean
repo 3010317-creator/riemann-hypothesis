@@ -102,8 +102,7 @@ theorem exists_frac {U : X.Opens} (hU : IsAffineOpen U) (q : Cpt ξ) (hq : q.1 �
 
 theorem primeIdealOf_fromSpec {U : X.Opens} (hU : IsAffineOpen U) (y : PrimeSpectrum Γ(X, U))
     (hy : hU.fromSpec y ∈ U) : hU.primeIdealOf ⟨hU.fromSpec y, hy⟩ = y := by
-  apply hU.fromSpec.isOpenEmbedding.injective
-  exact hU.fromSpec_primeIdealOf _
+  exact hU.fromSpec.isOpenEmbedding.injective (hU.fromSpec_primeIdealOf _)
 
 theorem fromSpec_mem {U : X.Opens} (hU : IsAffineOpen U) (y : PrimeSpectrum Γ(X, U)) : hU.fromSpec y ∈ U := by
   have : hU.fromSpec y ∈ Set.range hU.fromSpec := ⟨_, rfl⟩
@@ -153,7 +152,6 @@ theorem chart (h : CoordTie o ξ x) (c : κ) (hc : x c ≠ 0) :
   constructor
   · rintro ⟨s, rfl⟩ p hp
     exact ev_mem p U ((hm _).2 ⟨p.2, hp⟩) hg s
-  · intro ha
-    exact mem_range_ev hU hg hs fun q hq => ha _ ((hm q).1 hq).2
+  · exact fun ha => mem_range_ev hU hg hs fun q hq => ha _ ((hm q).1 hq).2
 
 end SheetDecomposition.BBase

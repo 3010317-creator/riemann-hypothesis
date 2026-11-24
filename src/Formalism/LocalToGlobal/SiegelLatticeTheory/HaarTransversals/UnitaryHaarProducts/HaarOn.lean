@@ -40,8 +40,7 @@ theorem haarOnSet_isHaar (H : Subgroup G) (hH : IsClosed (H : Set G)) (μ : Meas
   haveI : LocallyCompactSpace H := hce.locallyCompactSpace
   haveI : SigmaFinite (μ.comap ((↑) : H → G)) := by
     refine SigmaFinite.of_map _ he.measurable.aemeasurable ?_
-    rw [hmap]
-    exact hσ
+    rwa [hmap]
   haveI : IsMulLeftInvariant (μ.comap ((↑) : H → G)) := by
     constructor
     intro g
@@ -59,8 +58,7 @@ theorem haarOnSet_isHaar (H : Subgroup G) (hH : IsClosed (H : Set G)) (μ : Meas
       | exact (measure_pos_of_mem_nhds _ hK1).ne'
   have hKfin : (Measure.haar : Measure H) K < ⊤ := hK.measure_lt_top
   obtain ⟨n, hn⟩ : ∃ n, (Measure.haar : Measure H) (K ∩ spanningSets (μ.comap ((↑) : H → G)) n) ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hKpos
     have hU : K = ⋃ n, K ∩ spanningSets (μ.comap ((↑) : H → G)) n := by
       rw [← Set.inter_iUnion, iUnion_spanningSets, Set.inter_univ]

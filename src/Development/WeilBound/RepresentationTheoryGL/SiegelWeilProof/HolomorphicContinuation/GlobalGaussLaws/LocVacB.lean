@@ -93,8 +93,7 @@ theorem vec_zero (g : GR n) (z : ℂ) (hz : z.im ≠ 0) (v : Fin n → ℂ)
   have hl := lagr g
   rw [Matrix.vecMul_add, Matrix.vecMul_smul] at hv
   have hW : v ᵥ* (mR g).toBlocks₂₂ = -(z • (v ᵥ* (mR g).toBlocks₂₁)) := by
-    rw [eq_neg_iff_add_eq_zero, add_comm]
-    exact hv
+    rwa [eq_neg_iff_add_eq_zero, add_comm]
   have key : ∀ A B : Matrix (Fin n) (Fin n) ℂ, (v ᵥ* A) ⬝ᵥ star (v ᵥ* B) = (v ᵥ* (A * Bᴴ)) ⬝ᵥ star v := by
     intro A B
     rw [Matrix.star_vecMul, Matrix.dotProduct_mulVec, Matrix.vecMul_vecMul]
@@ -130,8 +129,7 @@ theorem vec_zero (g : GR n) (z : ℂ) (hz : z.im ≠ 0) (v : Fin n → ℂ)
     simp [mR]
   have hu0 : (Sum.elim 0 v : Fin n ⊕ Fin n → ℂ) = 0 := by
     have := congrArg (fun w => w ᵥ* ((g : GL (Fin n ⊕ Fin n) ℂ)⁻¹ : GL (Fin n ⊕ Fin n) ℂ).val) hu
-    simp only [Matrix.vecMul_vecMul, hinv, Matrix.vecMul_one, Matrix.zero_vecMul] at this
-    exact this
+    simpa only [Matrix.vecMul_vecMul, hinv, Matrix.vecMul_one, Matrix.zero_vecMul] using this
   ext i
   simpa using congrFun hu0 (Sum.inr i)
 

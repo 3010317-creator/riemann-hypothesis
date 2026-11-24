@@ -253,12 +253,10 @@ theorem normOneSubgroup_eq_map :
   ext c
   obtain ⟨x, rfl⟩ := mk_surjective K c
   constructor
-  · intro hx
-    exact ⟨x, hx, rfl⟩
+  · exact fun hx => ⟨x, hx, rfl⟩
   · rintro ⟨y, hy, hyx⟩
     change ideleModule K (mk K x) = 1
-    rw [← hyx]
-    exact hy
+    rwa [← hyx]
 
 end IdeleClassGroup
 

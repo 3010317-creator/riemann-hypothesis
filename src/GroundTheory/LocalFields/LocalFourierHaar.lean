@@ -76,8 +76,7 @@ theorem smul_valBall {c : K} (hc : c ≠ 0) (n : ℤ) :
   constructor
   · rintro ⟨y, hy, rfl⟩
     have := mul_mem_valBall (mem_valBall_ord (x := c)) hy
-    rw [add_comm]
-    exact this
+    rwa [add_comm]
   · intro hx
     refine ⟨c⁻¹ * x, ?_, by simp [smul_eq_mul, hc]⟩
     have h1 : c⁻¹ ∈ valBall (K := K) (-ord c) := by
@@ -266,19 +265,16 @@ theorem measure_valBall_zero_eq_mul (μ : Measure K) [μ.IsAddLeftInvariant] :
       have h1 := add_mem hx0 (mem_valBall_zero_iff.mpr (s r).2)
       rw [sub_add_cancel] at h1
       refine ⟨mem_valBall_zero_iff.mp h1, ?_⟩
-      rw [← hs r, residue_eq_residue_iff]
-      exact hx'
+      rwa [← hs r, residue_eq_residue_iff]
     · rintro ⟨h, hr⟩
       rw [← hs r, residue_eq_residue_iff] at hr
       show -((s r : 𝒪[K]) : K) + x ∈ valBall (K := K) 1
-      rw [neg_add_eq_sub]
-      exact hr
+      rwa [neg_add_eq_sub]
   have hunion : (valBall (K := K) 0 : Set K) = ⋃ r, T r := by
     ext x
     simp only [Set.mem_iUnion, hmem, SetLike.mem_coe, mem_valBall_zero_iff]
     constructor
-    · intro hx
-      exact ⟨_, hx, rfl⟩
+    · exact fun hx => ⟨_, hx, rfl⟩
     · rintro ⟨r, h, -⟩
       exact h
   have hdisj : Pairwise (Function.onFun Disjoint T) := by
@@ -413,8 +409,7 @@ theorem haarIntegers_valBall (n : ℤ) :
 theorem eq_smul_haarIntegers (ν : Measure K) [ν.IsAddHaarMeasure] :
     ν = ν (𝒪[K] : Set K) • haarIntegers K := by
   have := addHaarMeasure_unique ν (integersPositiveCompacts K)
-  rw [← coe_valBall_zero]
-  exact this
+  rwa [← coe_valBall_zero]
 
 end Haar
 

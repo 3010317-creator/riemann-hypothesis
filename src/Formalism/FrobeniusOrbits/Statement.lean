@@ -60,8 +60,7 @@ def HostHyp (q d : ℕ) : Prop :=
 theorem HostHyp.toHypQD {q d : ℕ} (h : HostHyp q d) : HypQD q d := by
   exact ⟨h.1, h.2.1, h.2.2.1, by have h4 := h.2.2.2.1; omega⟩
 
-theorem HostHyp.toHypOdd {q d : ℕ} (h : HostHyp q d) : HypOdd q d := by
-  exact h.toHypQD.toHypOdd
+theorem HostHyp.toHypOdd {q d : ℕ} (h : HostHyp q d) : HypOdd q d := h.toHypQD.toHypOdd
 
 abbrev HGrp (e : ℕ) : Type :=
   (ZMod (2 ^ (e + 2)))ˣ ⧸ Subgroup.zpowers (-1 : (ZMod (2 ^ (e + 2)))ˣ)
@@ -84,8 +83,7 @@ def chQ (e : ℕ) : GG e →* ℤˣ := (MonoidHom.fst ℤˣ ℤˣ).comp (MonoidH
 
 def Psi (e : ℕ) : Subgroup (GG e) := (chD e).ker
 
-theorem mem_Psi_iff {e : ℕ} (g : GG e) : g ∈ Psi e ↔ g.1.2 = 1 := by
-  exact MonoidHom.mem_ker (f := chD e)
+theorem mem_Psi_iff {e : ℕ} (g : GG e) : g ∈ Psi e ↔ g.1.2 = 1 := MonoidHom.mem_ker (f := chD e)
 
 section Fields
 

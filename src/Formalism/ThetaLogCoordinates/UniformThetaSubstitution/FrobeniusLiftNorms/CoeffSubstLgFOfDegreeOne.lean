@@ -93,7 +93,6 @@ theorem frobenius_lift_padic_square : Formalism.FG.FrobLiftPadicSq := by
   let y : ℤ_[l] := ⟨a, ha⟩
   have h := PadicFrobeniusSquare.padicInt_norm_le_p (y - y ^ l ^ 2) (by rw [map_sub, map_pow, hz, sub_self])
   rw [PadicInt.norm_def, PadicInt.norm_def, PadicInt.coe_sub, PadicInt.coe_pow, PadicInt.coe_natCast] at h
-  show ‖a - a ^ l ^ 2‖ ≤ ‖(l : ℚ_[l])‖
   exact h
 
 end Formalism.FG
@@ -192,8 +191,7 @@ private theorem coeff_lgF_pow_sq_pow_eq_inv_pow (p : ℕ) (hp : 2 ≤ p) (j : �
   · simp
   · intro i _ hij
     rw [ite_eq_right]
-    intro h
-    exact hij (Nat.pow_right_injective hq h).symm
+    exact fun h => hij (Nat.pow_right_injective hq h).symm
   · intro hj
     exfalso
     apply hj
@@ -331,8 +329,7 @@ theorem norm_ratCast_le_one {K : Type} [NormedField K] [IsUltrametricDist K] {p 
       have h1' := congrArg (Int.cast : ℤ → K) hab
       push_cast at h1'
       exact h1'.symm
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     have hm := IsUltrametricDist.norm_add_le_max ((r.den : K) * ((Nat.gcdA r.den p : ℤ) : K))
       ((p : K) * ((Nat.gcdB r.den p : ℤ) : K))
     rw [← h1, norm_one, norm_mul, norm_mul] at hm
@@ -391,8 +388,7 @@ theorem law_integral {K : Type} [NormedField K] [IsUltrametricDist K] [CharZero 
     exact inv_lt_one_of_one_lt₀ (by exact_mod_cast hp.one_lt)
   intro n
   rw [← hEqK, MvPowerSeries.coeff_map]
-  have h2 := norm_ratCast_le_one hp hnp' (MvPowerSeries.coeff n FQ) (not_dvd_den _ (hQp n))
-  simpa using h2
+  simpa using norm_ratCast_le_one hp hnp' (MvPowerSeries.coeff n FQ) (not_dvd_den _ (hQp n))
 
 end FormalGroupLaws
 
@@ -437,8 +433,7 @@ theorem formal_law_symmetric : LawSymm := by
       coeff_subst_lgF_of_degree_one p hp2 (MvPowerSeries.X (1 : Fin 2)) (by simp) n hn]
     have hsum : n 0 + n 1 = 1 := by
       have h1 := hn
-      rw [Finsupp.degree_eq_sum, Fin.sum_univ_two] at h1
-      exact h1
+      rwa [Finsupp.degree_eq_sum, Fin.sum_univ_two] at h1
     have hne : Finsupp.single (1 : Fin 2) 1 ≠ Finsupp.single 0 1 := by
       rw [Ne, Finsupp.single_left_inj one_ne_zero]
       decide

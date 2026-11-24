@@ -125,10 +125,8 @@ theorem finUnitAt_finUnitsSingle_of_mem (a : (v : S) → (v.1.adicCompletion K)�
   change finUnitAt w.1 (∏ v : S, finUnitSingle v.1 (a v)) = a w
   rw [map_prod, Finset.prod_eq_single w]
   · exact finUnitAt_finUnitSingle_self w.1 (a w)
-  · intro u _ hu
-    exact finUnitAt_finUnitSingle_of_ne (fun h ↦ hu (Subtype.ext h).symm) _
-  · intro h
-    exact absurd (Finset.mem_univ w) h
+  · exact fun u _ hu => finUnitAt_finUnitSingle_of_ne (fun h ↦ hu (Subtype.ext h).symm) _
+  · exact fun h => absurd (Finset.mem_univ w) h
 
 theorem finUnitAt_finUnitsSingle_of_notMem (a : (v : S) → (v.1.adicCompletion K)ˣ)
     {w : HeightOneSpectrum (𝓞 K)} (hw : w ∉ S) : finUnitAt w (finUnitsSingle S a) = 1 := by
@@ -378,8 +376,7 @@ theorem integral_finiteIdele_prod_local_mul (S : Finset (HeightOneSpectrum (𝓞
   have hF : Integrable (fun a : (v : S) → (v.1.adicCompletion K)ˣ ↦ ∏ v : S, Fv v (a v))
       (multHaarS S) := Integrable.fintype_prod_dep hFv
   have h := integral_finiteIdele_local_mul hF hGm hG hGi
-  rw [integral_fintype_prod_eq_prod] at h
-  exact h
+  rwa [integral_fintype_prod_eq_prod] at h
 
 end Integrals
 

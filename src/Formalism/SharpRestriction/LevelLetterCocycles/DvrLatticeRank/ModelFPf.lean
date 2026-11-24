@@ -123,8 +123,7 @@ theorem alpha_core (hfr : IsFrame W Pt π' Eπ h' M σ c α β) (hcry : IsCrys P
       rw [h, zero_mul] at hw
       exact zero_ne_one hw
     have hB0 : PowerSeries.constantCoeff B' ≠ 0 := by
-      rw [hB', PowerSeries.coeff_succ_X_mul, PowerSeries.coeff_zero_eq_constantCoeff_apply] at hc1
-      exact hc1
+      rwa [hB', PowerSeries.coeff_succ_X_mul, PowerSeries.coeff_zero_eq_constantCoeff_apply] at hc1
     have eg : W.lev c ζ (w' ^ h' * W.Q ^ h') =
         PowerSeries.X ^ h' * (W.lev c ζ w' ^ h' * B' ^ h') := by
       rw [map_mul, map_pow, map_pow, hB', mul_pow]
@@ -420,8 +419,7 @@ theorem modelF_local (hfr : IsFrame W Pt π' Eπ h' M σ c α β) (hcry : IsCrys
     have h := HighestWeightIntegral 1 hM _ hsy _ hsx hβ' hγy
     refine Submodule.mem_inf.2 ⟨hx, ?_⟩
     show ((γLA W T π' c - LinearMap.id : LA W T π' c →ₗ[O] LA W T π' c) x) ∈ piNL W T Pt π' Eπ h' c 1
-    rw [LinearMap.sub_apply, LinearMap.id_apply]
-    exact h
+    rwa [LinearMap.sub_apply, LinearMap.id_apply]
 
 end Local
 
@@ -453,8 +451,7 @@ theorem modelflink_pf : ModelFLinkStep := by
   have hgam : ((HW l).W K 1 LL hG).gamK = ((HW l).W K 1 LL hG).gam :=
     ((HW l).W K 1 LL hG).gamK_eq_one hs (by rw [hp]; exact hl)
   have hQ : ((HW l).W K 1 LL hG).Q = (w : LetA _ _) * Formalism.MainNotions.DeltaInvariantLattices.Eat E π' := by
-    rw [Q_eq_q _ hs]
-    exact hw
+    rwa [Q_eq_q _ hs]
   have hl2 : 2 ≤ l := (Fact.out : l.Prime).two_le
   have hd := Formalism.MainNotions.N.Ln34.DvdPf.dvdCondition l hl K LL hG
   have he : 0 < eK K := Nat.pos_of_ne_zero fun h0 => by

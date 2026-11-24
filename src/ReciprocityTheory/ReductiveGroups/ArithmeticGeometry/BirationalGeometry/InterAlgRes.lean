@@ -57,8 +57,7 @@ theorem nonempty_anLogRes_of_algRes (P J : Ideal (MRing ι)) (e : ℕ)
   · intro x y hy
     rw [mem_mcPts_iff_conePts_pC]
     exact R.lift_mem (idx x) y hy
-  · intro x x' y hy
-    exact R.compat (idx x) (idx x') y hy
+  · exact fun x x' y hy => R.compat (idx x) (idx x') y hy
   · intro z hz hzJ
     rw [mem_mcPts_iff_conePts_pC] at hz hzJ
     obtain ⟨i, x, hx, hxz⟩ := R.surj z hz hzJ
@@ -85,7 +84,6 @@ theorem nonempty_anLogRes_of_algRes (P J : Ideal (MRing ι)) (e : ℕ)
     rintro y ⟨hy1, hy2⟩
     refine ⟨hy1, idx _, hidx _, ?_⟩
     simp only [Set.mem_preimage, Set.mem_ofPred_eq] at hy2 ⊢
-    rw [← mem_mcPts_iff_conePts_pC]
-    exact hy2
+    rwa [← mem_mcPts_iff_conePts_pC]
 
 end ReciprocityTheory.ChartRestriction.G.Geo

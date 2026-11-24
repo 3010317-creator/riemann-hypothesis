@@ -167,8 +167,7 @@ theorem cast_eq_of_prod_eq {K Γ ι : Type} [Field K] (t : Finset ι) (f : ι �
       rw [(hm i hi g).nextCoeff_pow, nsmul_eq_mul]
     rw [e1, e1] at h1
     simp only [sub_mul, Finset.sum_sub_distrib, h1, sub_self]
-  intro i hi
-  exact sub_eq_zero.mp (hli _ key i hi)
+  exact fun i hi => sub_eq_zero.mp (hli _ key i hi)
 
 theorem exponents_eq_of_monic_products {K Γ ι : Type} [Field K] (t : Finset ι) (f : ι → Γ → K[X])
     (hm : ∀ i ∈ t, ∀ g, (f i g).Monic)
@@ -230,8 +229,7 @@ theorem exponents_eq_of_monic_products {K Γ ι : Type} [Field K] (t : Finset ι
       rw [hsplit a a' ha g, hsplit b b' hb g] at h2
       have hne : (∏ i ∈ t, f i g ^ c i) ≠ 0 :=
         (monic_prod_of_monic _ _ fun i hi => (hm i hi g).pow _).ne_zero
-      have h3 := mul_left_cancel₀ hne h2
-      exact frobenius_inj K[X] p h3
+      exact frobenius_inj K[X] p (mul_left_cancel₀ hne h2)
     have h2p : 2 ≤ p := hprime.two_le
     have hsum : 2 * ∑ i ∈ t, (a' i + b' i) ≤ ∑ i ∈ t, (a i + b i) := by
       rw [Finset.mul_sum]
@@ -321,8 +319,7 @@ theorem exists_kills {K A : Type} [Field K] [Ring A] [Algebra K A]
       · exact ⟨S1, i1, i2, i3, i4, i5, hF, fun w => by rw [mul_smul, mul_smul, hx1, smul_zero, smul_zero]⟩
       · exact ha.mul_right _ G hG
     · have : u • x • s = s' := by simpa using hu
-      rw [mul_smul, mul_smul, this]
-      exact hs'
+      rwa [mul_smul, mul_smul, this]
 
 theorem lin_indep {K A : Type} [Field K] [IsAlgClosed K] [Ring A] [Algebra K A]
     (t : Finset (A → K[X])) (ht : ↑t ⊆ simpleCps K A) (c : (A → K[X]) → K)

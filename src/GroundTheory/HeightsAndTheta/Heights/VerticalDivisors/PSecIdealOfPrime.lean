@@ -37,7 +37,6 @@ theorem secAlg_of_ratFunc {k E : Type} [Field k] [Field E] (n e : ℕ) (φ : k �
   have : IsFractionRing (MvPolynomial (Par e n) k) E := IsFractionRing.of_field _ _ hsurj
   let σ : GenParField k e n ≃ₐ[MvPolynomial (Par e n) k] E := FractionRing.algEquiv _ E
   have hσX : ∀ p, σ (genPar k e n p) = y p := fun p => by
-    show σ (algebraMap (MvPolynomial (Par e n) k) (GenParField k e n) (X p)) = y p
     exact (σ.commutes (X p)).trans (eval₂_X _ _ p)
   have hσC : (σ : GenParField k e n →+* E).comp (algebraMap k (GenParField k e n)) = φ := by
     refine RingHom.ext fun c => ?_
@@ -78,8 +77,7 @@ theorem secAlg_of_ratFunc {k E : Type} [Field k] [Field E] (n e : ℕ) (φ : k �
       Ideal.Quotient.mk (secIdeal QE y) (MvPolynomial.map (σ : GenParField k e n →+* E)
         (MvPolynomial.map (algebraMap k (GenParField k e n)) p))
     rw [MvPolynomial.map_map, hσC]
-  rw [hc, RingHom.ker_comp_of_injective _ (f := (τ : GenSec k e Q →+* SecAlg QE y)) τ.injective]
-  exact hQK
+  rwa [hc, RingHom.ker_comp_of_injective _ (f := (τ : GenSec k e Q →+* SecAlg QE y)) τ.injective]
 
 theorem residue_algebraMap {K : Type*} [Field K] [NumberField K] (e n : ℕ) (v : HeightOneSpectrum (𝓞 K))
     (a : MvPolynomial (Par e n) (𝓞 K)) :

@@ -109,8 +109,7 @@ theorem tmA_sm_left {f : Matrix (Fin n) (Fin n) ℂ → ℂ} (hf : Formalism.REA
   have hL := tmA_contDiff_mulLeft x
   refine ⟨(fun g => x * g) ⁻¹' U, fun g => F (x * g), hU.preimage hL.continuous, hgU, ?_, ?_⟩
   · exact hF.comp hL.contDiffOn (fun g hg => hg)
-  · intro g hg hgJ
-    exact hfF (x * g) hg (tmA_inUJ_mul hx hgJ)
+  · exact fun g hg hgJ => hfF (x * g) hg (tmA_inUJ_mul hx hgJ)
 
 theorem tmA_eab_sum {ι : Type*} (s : Finset ι) (F : ι → Matrix (Fin n) (Fin n) ℂ → ℂ)
     (hF : ∀ i ∈ s, Formalism.REAL.SmoothOnG ε (F i)) (a b : Fin n) {g : Matrix (Fin n) (Fin n) ℂ}
@@ -149,8 +148,7 @@ variable {n : ℕ} {ε : Fin n → Bool}
 
 theorem tmA_entry_le_frob (g : Matrix (Fin n) (Fin n) ℂ) (i j : Fin n) : ‖g i j‖ ≤ frob g := by
   have h := Real.abs_le_sqrt (S7.hs_entry_leVG g i j)
-  rw [abs_of_nonneg (norm_nonneg _)] at h
-  exact h
+  rwa [abs_of_nonneg (norm_nonneg _)] at h
 
 theorem tmA_one_le_col {g : Matrix (Fin n) (Fin n) ℂ} (hg : Formalism.REAL.inUJ ε g) (a : Fin n) :
     1 ≤ ∑ i, ‖g i a‖ ^ 2 := by

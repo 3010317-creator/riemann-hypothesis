@@ -51,8 +51,7 @@ theorem posDef_lower (A : Matrix (Fin n) (Fin n) ℂ) (hA : A.PosDef) :
       exact zero_ne_one hx0
     refine ⟨(star x0 ⬝ᵥ A *ᵥ x0).re, ?_, ?_⟩
     · have h := hA.dotProduct_mulVec_pos hx0ne
-      have h2 := (Complex.lt_def.1 h).1
-      simpa using h2
+      simpa using (Complex.lt_def.1 h).1
     · intro x
       by_cases hx : x = 0
       · subst hx; simp
@@ -102,8 +101,7 @@ theorem isCompact_KAt {G s : Matrix (Fin n) (Fin n) ℂ} (hs : IsCartanInv G s) 
         hpres, ← Matrix.dotProduct_mulVec]
     have h1 := hcP (k *ᵥ x)
     rw [h2] at h1
-    rw [le_div_iff₀ hc, mul_comm]
-    exact h1
+    rwa [le_div_iff₀ hc, mul_comm]
   refine IsCompact.of_isClosed_subset (isCompact_univ_pi fun i => isCompact_univ_pi fun j =>
     isCompact_closedBall (0 : ℂ)
       (Real.sqrt ((star (Pi.single j 1 : Fin n → ℂ) ⬝ᵥ (G * s) *ᵥ (Pi.single j 1 : Fin n → ℂ)).re / c)))

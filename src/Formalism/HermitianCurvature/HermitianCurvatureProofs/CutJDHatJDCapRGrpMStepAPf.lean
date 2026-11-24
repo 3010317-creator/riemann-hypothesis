@@ -312,15 +312,13 @@ theorem reidx4 {M : Type*} [AddCommMonoid M] {n : ℕ} (F : Fin (n + 1) → Fin 
     · rw [ite_eq_right hW]
       refine Finset.sum_eq_zero fun X _ => Finset.sum_eq_zero fun X' _ => ?_
       rw [ite_eq_right (fun h => hW (Ne.symm h.1))]
-  simp only [h1]
-  exact sum_ne_succAbove W (fun W' => ∑ t, ∑ x, F W W' (t.succAbove x) t)
+  simpa only [h1] using sum_ne_succAbove W (fun W' => ∑ t, ∑ x, F W W' (t.succAbove x) t)
 
 theorem alternating_sign_row {n : ℕ} (s : Fin (n + 1)) (w : Fin n) :
     (((-1 : ℤ) ^ ((s : ℕ) + (w : ℕ)) : ℤ) : ℂ) = ((sg2 s (s.succAbove w) : ℤ) : ℂ) := by
   unfold sg2
   rcases Fin.lt_or_le (Fin.castSucc w) s with h | h
-  · rw [Fin.succAbove_of_castSucc_lt _ _ h]
-    rw [ite_eq_left (by simpa [Fin.lt_def] using h)]
+  · rw [Fin.succAbove_of_castSucc_lt _ _ h, ite_eq_left (by simpa [Fin.lt_def] using h)]
     simp
   · rw [Fin.succAbove_of_le_castSucc _ _ h]
     have h' : ¬ (w.succ : Fin (n + 1)).val < s.val := by
@@ -678,8 +676,7 @@ theorem lvlA_last : LvlA := by
   intro Wp Wq _ _ _ _ k r hr z z' π π' D' Y hz hz' hD J₀ hJ₀ c hc g hg hgD
   have h := Formalism.FourierDecayAlt.P.Qx6.lvlA (E := Wq →L[ℂ] Wp) hz hz' (TemperedBoundGL3.lr hr) (by show r - 1 + 1 = r; omega) hD hJ₀.1
     hJ₀.2.1 hJ₀.2.2.1 Y hc (by rw [TemperedBoundGL3.lr_succ]; exact hg) hgD
-  rw [TemperedBoundGL3.lr_succ] at h
-  exact h
+  rwa [TemperedBoundGL3.lr_succ] at h
 
 theorem mirror_residue_first_move : JDRvStepA := jDRvStepA_of_lvlA lvlA_last
 

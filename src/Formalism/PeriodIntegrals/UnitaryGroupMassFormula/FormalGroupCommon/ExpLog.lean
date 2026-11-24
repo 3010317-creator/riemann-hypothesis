@@ -88,8 +88,7 @@ private theorem coeff_pow_eq_zero_of_degree_lt_formal_group_splitting {f : MvPow
         rw [← hp, map_add (f := _)]
       have h2' : 0 < Finsupp.degree p.2 := by
         rw [Nat.pos_iff_ne_zero]
-        intro h0
-        exact h2 ((Finsupp.degree_eq_zero_iff _).mp h0)
+        exact fun h0 => h2 ((Finsupp.degree_eq_zero_iff _).mp h0)
       rw [ih (by omega), zero_mul]
 
 theorem coeff_pow_mul_pow_eq_zero {f g : MvPowerSeries σ K} (hf : constantCoeff f = 0)
@@ -261,8 +260,7 @@ theorem exp_subst_log :
       derivative_log_eq]
   · have h := constantCoeff_subst_of_zero (τ := Unit) (a := PowerSeries.log K)
       PowerSeries.constantCoeff_log (PowerSeries.exp K)
-    rw [PowerSeries.constantCoeff_exp] at h
-    exact h
+    rwa [PowerSeries.constantCoeff_exp] at h
 
 end Field
 
@@ -349,9 +347,7 @@ theorem int_of_mul_eq_one {σ : Type} [DecidableEq σ] {u n : MvPowerSeries σ �
     intro x hx
     obtain ⟨hne, hx⟩ := Finset.mem_erase.mp hx
     rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
-    have h2 : x.2 ≠ 0 := by
-      intro h0
-      exact hne (Prod.ext (by simpa [h0] using hx) (by simpa using h0))
+    have h2 : x.2 ≠ 0 := fun h0 => hne (Prod.ext (by simpa [h0] using hx) (by simpa using h0))
     have hdeg : Finsupp.degree x.1 < d := by
       have hsum := congrArg Finsupp.degree hx
       rw [map_add (f := _)] at hsum

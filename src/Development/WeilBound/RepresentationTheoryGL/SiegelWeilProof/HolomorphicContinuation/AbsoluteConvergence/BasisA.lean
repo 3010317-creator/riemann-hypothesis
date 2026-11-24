@@ -105,8 +105,7 @@ theorem hLoc_one : hLoc (1 : GR n) = 1 := by
 
 theorem hLoc_K (hM : Mult) (k : GR n) (hk : k ∈ KR n) : hLoc k = 1 := by
   have := ((hM n 0 0 0).1 1 k hk).2
-  rw [one_mul, hLoc_one] at this
-  exact this
+  rwa [one_mul, hLoc_one] at this
 
 def uSet (n : ℕ) : Set (M2 n) := {u | uᴴ * u = 1 ∧ InG u}
 
@@ -123,8 +122,7 @@ theorem isCompact_uSet (n : ℕ) : IsCompact (uSet n) := by
   · intro u hu
     have hU : u ∈ Matrix.unitaryGroup (Fin n ⊕ Fin n) ℂ := Matrix.mem_unitaryGroup_iff'.2 hu.1
     simp only [Set.mem_pi, Set.mem_univ, true_implies, Metric.mem_closedBall, dist_zero_right]
-    intro i j
-    exact entry_norm_bound_of_unitary hU i j
+    exact fun i j => entry_norm_bound_of_unitary hU i j
 
 def toK (u : uSet n) : KR n :=
   ⟨⟨⟨u.1, u.1ᴴ, mul_eq_one_comm.1 u.2.1, u.2.1⟩, u.2.2⟩, ⟨u.2.2, u.2.1⟩⟩

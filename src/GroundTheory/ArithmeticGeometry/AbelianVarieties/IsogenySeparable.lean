@@ -132,8 +132,7 @@ theorem card_ker_le_finSepDegree_fixedKer (φ : Isogeny E E') :
       commutes' := fun x => (mem_fixedField_iff _ _).mp x.2 h.1 h.2 }
   have hf : Function.Injective f := by
     intro h₁ h₂ e
-    refine Subtype.ext (AlgEquiv.ext fun x => ι.toRingHom.injective ?_)
-    exact DFunLike.congr_fun e x
+    exact Subtype.ext (AlgEquiv.ext fun x => ι.toRingHom.injective (DFunLike.congr_fun e x))
   exact Nat.card_le_card_of_injective f hf
 
 theorem finSepDegree_fixedKer (φ : Isogeny E E') :

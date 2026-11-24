@@ -66,8 +66,7 @@ theorem map_inner (V : HSp D) (τ : D.what₂.Tau) (x y : Mx D V.rank n) :
     exact psiT_sigR D τ (x j i)
   have h2 : (gA V).map (psiT D τ) = gramAt D V τ := by
     ext i j
-    simp only [gA, rat, Matrix.map_apply, gramAt]
-    exact psiT_inclR D τ _
+    simpa only [gA, rat, Matrix.map_apply, gramAt] using psiT_inclR D τ _
   show (adj x * (gA V * y)).map (psiT D τ) = _
   rw [Matrix.map_mul, Matrix.map_mul, h1, h2]
 
@@ -101,8 +100,7 @@ theorem psi_inner_sIns {θ : InfFam D} (hθ : IsInfFam θ) {ψ : AddChar (AF D.h
   have hins : ∀ τ', (sIns (D := D) τ fr u).map (psiT D τ') = if τ' = τ then fr * Matrix.of u else 0 := by
     intro τ'
     have := compAt_insT (D := D) hθ τ τ' (fr * Matrix.of u)
-    rw [eq_thetaC D hθ] at this
-    exact this
+    rwa [eq_thetaC D hθ] at this
   rw [psi_trA_tau hθ hl τ]
   · congr 2
     · simp only [tLoc]; push_cast; ring

@@ -241,8 +241,7 @@ theorem localKummerSeq_shortExact [IsAlgClosed Ωv] : (localKummerSeq S θ j hj)
       have e : (2 • x' : Additive Ωvˣ) = x' + x' := two_nsmul x'
       rw [e] at hx'
       have := congrArg (fun t : Additive Ωvˣ => ((Additive.toMul t : Ωvˣ) : Ωv)) hx'
-      simp only [toMul_add, toMul_zero, Units.val_mul, Units.val_one] at this
-      exact this
+      simpa only [toMul_add, toMul_zero, Units.val_mul, Units.val_one] using this
     have hneg : (-1 : (maxUnramifiedOutside K.1 ℚ̄ S)ˣ) ∈ rootsOfUnity 2 (maxUnramifiedOutside K.1 ℚ̄ S) := by
       rw [mem_rootsOfUnity]
       exact neg_one_sq
@@ -622,7 +621,6 @@ theorem primary_discreteCoind_of_primary (A : Rep.{u} k G) [IsDiscreteRep A]
   choose kk hkk using fun v : Set.range f' => hA v
   obtain ⟨K, hK⟩ := (Set.finite_range kk).bddAbove
   refine ⟨K, LocallyConstant.ext fun x => ?_⟩
-  show ℓ ^ K • f' x = 0
   exact pow_nsmul_eq_zero_of_le (hK ⟨⟨f' x, x, rfl⟩, rfl⟩) (hkk ⟨f' x, x, rfl⟩)
 
 
@@ -642,8 +640,7 @@ theorem IsPrimePowGenerator.mem_range_sub_one_discreteCoind (hℓ : ℓ.Prime) (
     ModuleCat.subsingleton_of_isZero hz
   obtain ⟨x, hx⟩ := hσ.H1Eval_surjective hℓ (discreteCoind k G A)
     (primary_discreteCoind_of_primary A hA) (Submodule.Quotient.mk c)
-  rw [Subsingleton.elim x 0, map_zero, eq_comm, Submodule.Quotient.mk_eq_zero] at hx
-  exact hx
+  rwa [Subsingleton.elim x 0, map_zero, eq_comm, Submodule.Quotient.mk_eq_zero] at hx
 
 theorem IsPrimePowGenerator.isZero_cohomology_two (hℓ : ℓ.Prime) (hσ : IsPrimePowGenerator ℓ σ)
     (A : Rep.{u} k G) [IsDiscreteRep A] (hA : ∀ a : A, ∃ e : ℕ, ℓ ^ e • a = 0) :
@@ -659,8 +656,7 @@ theorem IsPrimePowGenerator.isZero_cohomology_two (hℓ : ℓ.Prime) (hσ : IsPr
   rw [← hc]
   obtain ⟨d, hd⟩ := hσ.mem_range_sub_one_discreteCoind hℓ A hA c
   refine ⟨(coindCokernelπ A).hom d, ?_⟩
-  rw [LinearMap.sub_apply, Module.End.one_apply, ← Rep.hom_comm_apply, ← map_sub]
-  rw [← hd]
+  rw [LinearMap.sub_apply, Module.End.one_apply, ← Rep.hom_comm_apply, ← map_sub, ← hd]
   rfl
 
 theorem IsPrimePowGenerator.isZero_cohomology_of_primary (hℓ : ℓ.Prime) (hσ : IsPrimePowGenerator ℓ σ)
@@ -708,8 +704,7 @@ theorem IsPrimePowGenerator.eq_zero_of_pow_nsmul (hℓ : ℓ.Prime) (hσ : IsPri
         intro y hy
         apply ih
         apply hinj
-        rw [map_zero, cohomologyMap_nsmul_id_apply, ← mul_smul, ← pow_succ']
-        exact hy
+        rwa [map_zero, cohomologyMap_nsmul_id_apply, ← mul_smul, ← pow_succ']
     exact hpow n _ (by rw [← map_nsmul, hx', map_zero])
   obtain ⟨y, hy'⟩ := (ShortComplex.moduleCat_exact_iff _).1 (cohomology_exact₂ hS p) x' hg
   have hy : IsZero (cohomology (subQuotShortComplex A W hW).X₁ p) :=
@@ -848,8 +843,7 @@ private theorem char_eq_proj_nsmul {G : Type*} [Group G] [TopologicalSpace G]
     exact (val_intCast_nsmul_eq_zsmul hc k).symm
   have hmul (g : G) (hg : g ∈ E) (h : G) (hh : deg h = 1) : g * h ∈ E := by
     change χ (Additive.ofMul (g * h)) = (proj (Multiplicative.toAdd (deg (g * h)))).val • c
-    rw [ofMul_mul, map_add (f := χ), hker h hh, add_zero, deg.map_mul, hh, mul_one]
-    exact hg
+    rwa [ofMul_mul, map_add (f := χ), hker h hh, add_zero, deg.map_mul, hh, mul_one]
   exact Set.eq_univ_iff_forall.mp (eq_univ E hclosed hpow hmul) g
 
 set_option maxHeartbeats 4000000 in
@@ -1020,8 +1014,7 @@ theorem PrimaryVanishes.of_union (M : Rep.{0} k G) [IsDiscreteRep M] {ι : Type}
   intro x k hx
   obtain ⟨i, y, rfl⟩ := exists_cohomologyMap_subtype_eq M W hW hstable hunion p x
   have hy : (cohomologyMap (Rep.subtype M (W i) (hstable i)) p).hom (ℓ ^ k • y) = 0 := by
-    rw [map_nsmul]
-    exact hx
+    rwa [map_nsmul]
   obtain ⟨j, hij, hj⟩ := exists_cohomologyMap_subrepInclusion_eq_zero M W hW hstable hunion p i _ hy
   rw [map_nsmul] at hj
   obtain ⟨l, hjl, hl⟩ := hW' j _ k hj
@@ -1209,13 +1202,11 @@ theorem primaryVanishes_divFunRepOne (hZ : IsClosed (ψ.range : Set G)) {ℓ p :
     rw [cohomologyResLE_apply_eq_zero_iff]
     have e : (U' : Subgroup G).subgroupOf (a.1 : Subgroup G) = U₀ :=
       Subgroup.comap_map_eq_self_of_injective (Subgroup.subtype_injective _) U₀
-    rw [e]
-    exact hU₀
+    rwa [e]
   have hsh : (shapiroMap b.1 (trivQZRes b.1) (q + 1)).hom ((cohomologyMap (coindIncl hab) (q + 1)).hom x) = 0 := by
     have := congrArg (fun φ => φ.hom x) (cohomologyMap_coindIncl_comp_shapiroMap hab (q + 1))
     simp only [ModuleCat.hom_comp, LinearMap.comp_apply] at this
-    rw [this]
-    exact hres
+    rwa [this]
   have hinj : Function.Injective (shapiroMap b.1 (trivQZRes b.1) (q + 1)).hom :=
     (ModuleCat.mono_iff_injective _).1 inferInstance
   have h0 : (cohomologyMap (coindIncl hab) (q + 1)).hom x = 0 := hinj (hsh.trans (map_zero _).symm)
@@ -1246,8 +1237,7 @@ theorem ker_repHom_le_comap {k : Type} [CommRing k] {A B : Rep.{0} k G} (f : A �
     LinearMap.ker f.hom.toLinearMap ≤ (LinearMap.ker f.hom.toLinearMap).comap (A.ρ g) := by
   intro a ha
   change f.hom (A.ρ g a) = 0
-  rw [Rep.hom_comm_apply]
-  rw [show f.hom a = 0 from ha, map_zero]
+  rw [Rep.hom_comm_apply, show f.hom a = 0 from ha, map_zero]
 
 
 omit [IsTopologicalGroup G] [CompactSpace G] [TotallyDisconnectedSpace G] in
@@ -1258,10 +1248,8 @@ theorem mem_divFun_ite (T : Finset I) (f : divFun φ QZ) :
     apply hi
     simp only [hc, ite_self]
   · by_cases hi : i ∈ T
-    · simp only [hi, ite_true]
-      exact ⟨IsLocallyConstant.const 0, fun _ _ => rfl⟩
-    · simp only [hi, ite_false]
-      exact f.2.2 i
+    · simpa only [hi, ite_true] using ⟨IsLocallyConstant.const 0, fun _ _ => rfl⟩
+    · simpa only [hi, ite_false] using f.2.2 i
 
 def divFunOutside (T : Finset I) : divFunRep φ QZ ⟶ divFunRep φ QZ :=
   Rep.ofHom ⟨{
@@ -1357,10 +1345,8 @@ theorem single_mem_divFun (j : I) (F : G → QZ) (hF : IsLocallyConstant F ∧ �
     exact hi (by simp [Pi.single_apply, h'])
   · by_cases h : i = j
     · subst h
-      simp only [Pi.single_eq_same]
-      exact hF
-    · simp only [Pi.single_eq_of_ne h]
-      exact ⟨IsLocallyConstant.const 0, fun _ _ => rfl⟩
+      simpa only [Pi.single_eq_same] using hF
+    · simpa only [Pi.single_eq_of_ne h] using ⟨IsLocallyConstant.const 0, fun _ _ => rfl⟩
 
 theorem divFunSuppSequence_shortExact (T : Finset I) (j : I) (hj : j ∉ T) :
     (divFunSuppSequence φ T j hj).ShortExact := by
@@ -1640,8 +1626,7 @@ theorem two_nsmul_realLocal (w : {v : InfinitePlace K.1 // v.IsReal}) {n : ℕ} 
     apply (realLocalEquiv w n).injective
     rw [map_nsmul, map_zero]
     have h := card_nsmul_eq_zero' (G := localGaloisCohomology K n (.inl w.1)) (x := realLocalEquiv w n t)
-    rw [hc] at h
-    exact h
+    rwa [hc] at h
   · have := subsingleton_realLocal_of_odd w ho
     exact Subsingleton.elim _ _
 

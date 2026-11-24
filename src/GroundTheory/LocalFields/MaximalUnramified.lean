@@ -304,15 +304,13 @@ theorem unramifiedDegree_eq_ofAdd_natCast_iff (σ : Ω ≃ₐ[K] Ω) (a : ℕ) :
 theorem unramifiedDegree_eq_one_iff (σ : Ω ≃ₐ[K] Ω) :
     unramifiedDegree K Ω σ = 1 ↔ ∀ ξ ∈ unramifiedRoots K Ω, σ ξ = ξ := by
   have := unramifiedDegree_eq_ofAdd_natCast_iff σ 0
-  simp only [Nat.cast_zero, ofAdd_zero, pow_zero, pow_one] at this
-  exact this
+  simpa only [Nat.cast_zero, ofAdd_zero, pow_zero, pow_one] using this
 
 theorem unramifiedDegree_eq_ofAdd_one_iff (σ : Ω ≃ₐ[K] Ω) :
     unramifiedDegree K Ω σ = Multiplicative.ofAdd 1 ↔
       ∀ ξ ∈ unramifiedRoots K Ω, σ ξ = ξ ^ Nat.card 𝓀[K] := by
   have := unramifiedDegree_eq_ofAdd_natCast_iff σ 1
-  simp only [Nat.cast_one, pow_one] at this
-  exact this
+  simpa only [Nat.cast_one, pow_one] using this
 
 omit [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K] [HasUnramifiedRoots K Ω] in
 theorem mem_fixingSubgroup_adjoin_iff {S : Set Ω} {σ : Ω ≃ₐ[K] Ω} :
@@ -467,8 +465,7 @@ theorem unramifiedDegree_maximalUnramifiedExtension_injective :
   obtain ⟨σ, rfl⟩ := AlgEquiv.restrictNormalHom_surjective (F := K)
     (K₁ := maximalUnramifiedExtension K Ω) (E := Ω) ρ
   have hσ : σ ∈ (unramifiedDegree K Ω).ker := by
-    rw [MonoidHom.mem_ker, ← unramifiedDegree_restrictNormal]
-    exact hρ
+    rwa [MonoidHom.mem_ker, ← unramifiedDegree_restrictNormal]
   rw [ker_unramifiedDegree, ← IntermediateField.restrictNormalHom_ker] at hσ
   exact MonoidHom.mem_ker.1 hσ
 
@@ -586,8 +583,7 @@ theorem unramifiedCoord_fixingSubgroup (σ : L.fixingSubgroup) (n : ℕ+) :
       rw [hc, pow_mul, hξ, one_pow]
     have h := (natCast_eq_unramifiedCoord_iff_forall (K := L) (fixingSubgroupEquiv L σ) n
       (unramifiedCoord L (fixingSubgroupEquiv L σ) n).val).1 (ZMod.natCast_zmod_val _) ξ hξ'
-    rw [hQ, ← pow_mul] at h
-    exact h
+    rwa [hQ, ← pow_mul] at h
   rw [← key, Nat.cast_mul, ZMod.natCast_zmod_val]
 
 theorem unramifiedDegree_fixingSubgroup (σ : L.fixingSubgroup) :

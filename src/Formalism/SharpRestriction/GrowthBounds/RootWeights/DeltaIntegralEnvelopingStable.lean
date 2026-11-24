@@ -72,8 +72,7 @@ def nablaToDeltaMaps (E : GLOps n (KK O) V) (lam : Fin n → ℤ) (v : V) : Subm
 
 theorem nabla_integral_enveloping_stable (E : GLOps n (KK O) V) (lam : Fin n → ℤ) (v : V) :
     UZStable (O := O) E (NablaSub (O := O) E lam v) := by
-  intro u hu x hx u' hu'
-  exact hx (u' * u) (Submonoid.mul_mem _ hu' (Submonoid.subset_closure hu))
+  exact fun u hu x hx u' hu' => hx (u' * u) (Submonoid.mul_mem _ hu' (Submonoid.subset_closure hu))
 
 theorem delta_integral_enveloping_stable (E : GLOps n (KK O) V) (v : V) : UZStable (O := O) E (Delta (O := O) E v) := by
   intro u hu x hx
@@ -125,8 +124,7 @@ theorem nabla_to_delta_maps_stable [CharZero (KK O)] [FiniteDimensional (KK O) V
     have h1 : divPowE E a b (k - m) x ∈ NablaSub (O := O) E lam v := hN _ (Or.inl ⟨a, b, k - m, hab, rfl⟩) x hx
     have h2 : f (divPowE E a b (k - m) x) ∈ Delta (O := O) E v := hf _ h1
     have h3 := hD _ (Or.inl ⟨a, b, m, hab, rfl⟩) _ h2
-    have h4 := intCast_smul_mem_submodule (Delta (O := O) E v) ((-1 : ℤ) ^ (k - m)) h3
-    simpa using h4
+    simpa using intCast_smul_mem_submodule (Delta (O := O) E v) ((-1 : ℤ) ^ (k - m)) h3
   · have hR : ∀ (m : ℕ) (μ ν : Fin n → ℤ) (z : V), z ∈ weightSp E μ →
         (((List.range m).map fun j : ℕ => E a a - ((ν a : KK O) + j) • (1 : Module.End (KK O) V)).prod) z =
           (∏ j ∈ range m, ((μ a : KK O) - ((ν a : KK O) + j))) • z := by

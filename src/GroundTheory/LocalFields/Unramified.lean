@@ -145,8 +145,7 @@ theorem exists_maximalUnramified_eq :
 theorem finrank_maximalUnramified :
     Module.finrank K (maximalUnramified K L) = ((IsLocalRing.maximalIdeal 𝒪[L]).inertiaDeg (𝒪[K])) := by
   obtain ⟨β, P, -, -, -, heq, -, hdeg, -⟩ := exists_maximalUnramified_eq K L
-  rw [heq]
-  exact hdeg
+  rwa [heq]
 
 end Maximal
 
@@ -174,8 +173,7 @@ theorem inertiaSubgroup_apply_eq (σ : L ≃ₐ[K] L) (hσ : σ ∈ inertiaSubgr
   set γσ := integerAlgEquiv K L σ γ
   have h0 : aeval γσ P = 0 := by
     have := aeval_algHom_apply (integerAlgEquiv K L σ : 𝒪[L] →ₐ[𝒪[K]] 𝒪[L]) γ P
-    rw [hγ, map_zero] at this
-    exact this
+    rwa [hγ, map_zero] at this
   have hres : residue 𝒪[L] γσ = residue 𝒪[L] γ := by
     have h1 : residueAlgEquiv K L σ = 1 := hσ
     rw [← residueAlgEquiv_residue, h1]
@@ -184,8 +182,7 @@ theorem inertiaSubgroup_apply_eq (σ : L ≃ₐ[K] L) (hσ : σ ∈ inertiaSubgr
     refine IsLocalRing.eq_of_eval_eq_zero_of_not_isUnit_sub (f := P.map (algebraMap 𝒪[K] 𝒪[L]))
       (by rw [eval_map_algebraMap]; exact hγ) (by rw [eval_map_algebraMap]; exact h0) ?_ ?_
     · rw [← mem_nonunits_iff, ← mem_maximalIdeal, ← residue_eq_zero_iff, map_sub, hres, sub_self]
-    · rw [derivative_map, eval_map_algebraMap]
-      exact hd
+    · rwa [derivative_map, eval_map_algebraMap]
   rw [← coe_integerAlgEquiv_apply]
   exact congrArg Subtype.val heq.symm
 

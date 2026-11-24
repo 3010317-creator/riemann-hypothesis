@@ -224,7 +224,6 @@ theorem pcoeff2_subst {A : PowerSeries K} (hA : PowerSeries.constantCoeff A = 0)
       Finset.Nat.sum_antidiagonal_succ, Finset.Nat.antidiagonal_zero, Finset.sum_singleton]
     simp [hA]
     ring
-  rw [← h2]
-  exact h
+  rwa [← h2]
 
 end PI.JetsPhW.Low

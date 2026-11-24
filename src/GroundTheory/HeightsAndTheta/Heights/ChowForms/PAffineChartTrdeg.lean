@@ -111,8 +111,7 @@ theorem transcendental (hP : IsHomogIdeal P) (j : Fin n) (hj : X j ∉ P) :
       · intro b _ hb
         rw [homogeneousComponent_of_mem ((mem_homogeneousSubmodule _ _).2
           ((hhom b).mul (isHomogeneous_X_pow j b))), ite_eq_right (by omega)]
-      · intro hne
-        exact absurd (Finset.mem_range.2 he) hne
+      · exact fun hne => absurd (Finset.mem_range.2 he) hne
     have hmem : h e * X j ^ e ∈ P := hcomp ▸ hP G hG (M + e)
     have hhe : h e ∈ P := by
       rcases Ideal.IsPrime.mem_or_mem ‹_› hmem with h1 | h1
@@ -174,9 +173,7 @@ theorem proof : AffineChartTrdeg.Statement := by
     · have := congrArg (AddMonoidAlgebra.coeff · 1) h
       simp only [Polynomial.coeff_sub, Polynomial.coeff_C_mul_X, Polynomial.coeff_C, ↓reduceIte,
         one_ne_zero, Polynomial.coeff_zero] at this
-      have h' := congrArg Subtype.val this
-      simp only [Subalgebra.coe_zero, sub_zero] at h'
-      exact h'
+      simpa only [Subalgebra.coe_zero, sub_zero] using congrArg Subtype.val this
     · simp only [map_sub, map_mul, Polynomial.aeval_C, Polynomial.aeval_X]
       show algebraMap R K b * (algebraMap R K a / algebraMap R K b) - algebraMap R K a = 0
       rw [mul_comm, div_mul_cancel₀ _ hb0, sub_self]

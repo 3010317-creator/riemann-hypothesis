@@ -140,8 +140,7 @@ theorem bc_span {R R' X X' : Type*} [CommRing R] [CommRing R'] [AddCommGroup X] 
     rintro _ ⟨x, hx, rfl⟩
     have h : Submodule.span R S ≤ (Submodule.span R' (μ '' S)).comap μ := by
       rw [Submodule.span_le]
-      intro y hy
-      exact Submodule.subset_span ⟨y, hy, rfl⟩
+      exact fun y hy => Submodule.subset_span ⟨y, hy, rfl⟩
     exact h hx
 
 section Maps
@@ -183,8 +182,7 @@ theorem bc_dualWeyl {R R' : Type} [CommRing R] [CommRing R'] [IsDomain R'] (φ :
     apply Submodule.subset_span
     refine ⟨bideterminant R sz hsz I, ?_, ldlat_map_bidet φ sz hsz I⟩
     have := bidetMem R k n K sz hsz I
-    rw [hshape] at this
-    exact this
+    rwa [hshape] at this
   · rw [Submodule.span_le]
     rintro _ ⟨f, hf, rfl⟩
     exact dualWeylMap R R' φ k n ν f hf
@@ -326,8 +324,7 @@ theorem bc_colSpan {k : ℕ} (g : Matrix (Fin k) (Fin k) K) :
   have h1 : (vecS φ φK hφ k) '' (Set.range fun c : Fin k => fun i => g i c) =
       Set.range fun c : Fin k => fun i => (g.map φK) i c := by
     rw [← Set.range_comp]; rfl
-  rw [h1] at h0
-  exact h0
+  rwa [h1] at h0
 
 
 include hφ in
@@ -395,8 +392,7 @@ theorem bc_comap (A : Submodule R X) (A' : Submodule R' X') (hA : ∀ z ∈ A, z
     rw [← hmap] at hv2
     obtain ⟨y, hy, hye⟩ := hv2
     have : y = v' := Subtype.ext hye
-    rw [← this]
-    exact hy
+    rwa [← this]
   · rw [Submodule.span_le]
     rintro _ ⟨x, hx, rfl⟩
     exact h.mem hx
@@ -414,12 +410,10 @@ theorem span_muV_top (h : BC μ Vs Vs') {I : Type} (x : Module.Basis I K Vs) :
     refine ⟨muV μ Vs Vs' hV ⟨z, hz⟩, ?_, rfl⟩
     have h1 : (⟨z, hz⟩ : Vs) ∈ Submodule.span K (Set.range x) := by rw [x.span_eq]; trivial
     have h2 := (bc_span (muV μ Vs Vs' hV) (Set.range x)).mem h1
-    rw [← Set.range_comp] at h2
-    exact h2
+    rwa [← Set.range_comp] at h2
   obtain ⟨y, hy, hye⟩ := hle hv
   have : y = v' := Subtype.ext hye
-  rw [← this]
-  exact hy
+  rwa [← this]
 
 end Sub
 
@@ -502,8 +496,7 @@ variable {W Qq O Kf O' Kf' : Type} [CommRing W] [Field Qq] [Algebra W Qq] [CommR
 theorem bc_extO (s : ℕ) {k : ℕ} (L : Submodule W (Fin k → Qq)) :
     BC (vecS φ φK hφ k) (extO O ι σ s L) (extO O' (φK.comp ι) σ s L) := by
   have h0 := bc_span (vecS φ φK hφ k) (twistVec ι σ s '' (L : Set (Fin k → Qq)))
-  rw [Set.image_image] at h0
-  exact h0
+  rwa [Set.image_image] at h0
 
 theorem bc_LeAt (p : ℕ) (w : O) (s : ℕ) {k : ℕ} (e : Edge W Qq k) :
     BC (vecS φ φK hφ k) (LeAt p ι σ w s e) (LeAt p (φK.comp ι) σ (φ w) s e) := by
@@ -643,21 +636,18 @@ theorem lpAt_dom (hφ : ∀ x : O, φK (algebraMap O Kf x) = algebraMap O' Kf' (
       ν y ∈ Re (O := O') p (φK.comp ι) σ (φ w) r lam0 e := by
     intro e he y hy
     have h1 := scale_mem φK ν (fun y hy => (hHLe e he).mem hy) _ hy
-    rw [hwz] at h1
-    exact h1
+    rwa [hwz] at h1
   have hRe' : ∀ e : Edge W Qq (m + 1), IsEdge p n' r e → ∀ G ∈ Re' (O := O) p ι σ w r lam0 e,
       δ G ∈ Re' (O := O') p (φK.comp ι) σ (φ w) r lam0 e := by
     intro e he G hG
     have h1 := scale_mem φK δ (fun G hG => dual_mem φ φK hφ ν x x' hx _ _ (hHLe e he) G hG) _ hG
-    rw [hwz] at h1
-    exact h1
+    rwa [hwz] at h1
   have hN : ∀ A : Submodule W (Fin (m + 1) → Qq), IsLattice W A → ∀ y ∈ Nsrc (O := O) p n' ι σ w r lam0 t A,
       ν y ∈ Nsrc (O := O') p n' (φK.comp ι) σ (φ w) r lam0 t A := by
     intro A hA y hy
     refine Submodule.mem_inf.2 ⟨?_, ?_⟩
     · have h1 := scale_mem φK ν (fun y hy => (hHL A hA).mem hy) _ (Submodule.mem_inf.1 hy).1
-      rw [hwz] at h1
-      exact h1
+      rwa [hwz] at h1
     · rw [Submodule.mem_iInf]
       intro e
       rw [Submodule.mem_iInf]
@@ -669,8 +659,7 @@ theorem lpAt_dom (hφ : ∀ x : O, φK (algebraMap O Kf x) = algebraMap O' Kf' (
     refine Submodule.mem_inf.2 ⟨?_, ?_⟩
     · have h1 := scale_mem φK δ (fun G hG => dual_mem φ φK hφ ν x x' hx _ _ (hHL A hA) G hG) _
         (Submodule.mem_inf.1 hG).1
-      rw [hwz] at h1
-      exact h1
+      rwa [hwz] at h1
     · rw [Submodule.mem_iInf]
       intro e
       rw [Submodule.mem_iInf]
@@ -680,8 +669,7 @@ theorem lpAt_dom (hφ : ∀ x : O, φK (algebraMap O Kf x) = algebraMap O' Kf' (
   refine ⟨M, e, fun i => ν (F i), h1, fun i => hN _ (h1 i).1.1 _ (h2 i), ?_, n, ?_, ?_⟩
   · intro i e' he' hs hne
     have h4 := scale_mem φK ν (hRe e' he') _ (h3 i e' he' hs hne)
-    rw [hwz] at h4
-    exact h4
+    rwa [hwz] at h4
   · rw [hdim]; exact hn
   · have hbe : ∀ (i : Fin M) (Gd : Module.Dual Kf (Vsp Kf lam0)),
         be p r lam0 (ν (F i)) (δ Gd) = φK (be p r lam0 (F i) Gd) := by
@@ -727,8 +715,7 @@ theorem lpAt_dom (hφ : ∀ x : O, φK (algebraMap O Kf x) = algebraMap O' Kf' (
           · rw [Pi.single_eq_same, mul_one, map_pow, map_natCast, ← map_mul, mul_comm]
           · intro l _ hl
             rw [Pi.single_eq_of_ne hl.symm, mul_zero, map_zero, map_zero, mul_zero]
-          · intro hjj
-            exact absurd (Finset.mem_univ jj) hjj
+          · exact fun hjj => absurd (Finset.mem_univ jj) hjj
 
 end Main
 
@@ -858,8 +845,7 @@ theorem geo_chain (hV : Fr.Valid L₁ N₁) (hT : TieS Fr Dt) (j : ZMod J) (i : 
   · rw [hm, chain_mem Dt hT]
     have hl := l.isLt
     refine ⟨⟨fun h => Or.inr ⟨l, rfl, ?_⟩, ?_⟩, ?_⟩
-    · by_contra hc
-      push Not at hc
+    · by_contra! hc
       have hi' : i.val < Dt.nL j := lt_of_le_of_lt hc hl
       rw [Formalism.MainNotions.Proposition5Numerics.posU_ll' (Fr := Fr) (segZ j) (Dt.nL j) i.val hi'] at h
       rcases Nat.eq_or_lt_of_le hc with he | hlt
@@ -878,21 +864,18 @@ theorem geo_chain (hV : Fr.Valid L₁ N₁) (hT : TieS Fr Dt) (j : ZMod J) (i : 
             rw [ite_eq_right hi', show i.val - Dt.nL j = 0 by omega]
           rw [he]
           exact (Formalism.MainNotions.NormalSetCounting.ll_between (Fr := Fr) (nL := Dt.nL) hT.2.1 j l).2
-    · show Dt.sgn j l = decide (Even (llPos Fr (segZ j) l.val))
-      exact hT.2.2.1 j l
+    · exact hT.2.2.1 j l
   · rw [hm, chain_mem Dt hT]
     have hmr := m.isLt
     refine ⟨⟨fun h => absurd h (not_lt.2 ?_), fun h => ?_⟩, ?_⟩
     · exact le_trans hpU.2 (Formalism.MainNotions.Proposition5Numerics.dg_fr_le hV (segZ j) (Nat.zero_le _) (by omega))
     · rcases h with ⟨m', h'⟩ | ⟨l', h', _⟩ <;> cases h'
-    · show true = decide (Even (Fr.fr (segZ j) (r - 1 - m.val)))
-      exact (decide_eq_true (hV.2.2.2.2.1 _ _ (by omega)).2).symm
+    · exact (decide_eq_true (hV.2.2.2.2.1 _ _ (by omega)).2).symm
   · rw [hm, chain_mem Dt hT]
     have hmr := m.isLt
     refine ⟨⟨fun _ => Or.inl ⟨m, rfl⟩, fun _ => ?_⟩, ?_⟩
     · exact lt_of_le_of_lt (Formalism.MainNotions.Proposition5Numerics.dg_fr_le hV (segZ j - 1) (by omega) (by omega)) hpU.1
-    · show true = decide (Even (Fr.fr (segZ j - 1) (r - 1 - m.val)))
-      exact (decide_eq_true (hV.2.2.2.2.1 _ _ (by omega)).2).symm
+    · exact (decide_eq_true (hV.2.2.2.2.1 _ _ (by omega)).2).symm
 
 theorem chi_out (hV : Fr.Valid L₁ N₁) (hT : TieS Fr Dt) (j j' : ZMod J) (hj : j' ≠ j) (i : Fin (Dt.nch j)) (y : ℤ)
     (hy : y ∈ Fr.letters (segZ j')) : mlOf Fr Dt.nL j' y ∉ Dt.chainML j i := by
@@ -1038,8 +1021,7 @@ theorem restChain_of (hVA : ValAeval) (hVF : ValFilt) (hNN : ValNN) (hPM : PhMon
     have hlt : j'.val < Fr.J := by rw [← hT.1]; exact ZMod.val_lt j'
     have h1 : A (segZ j') ∈ supported O {v : ℤ × Fin r | v.1 ∈ Fr.letters (segZ j')} := hA j'.val hlt
     rw [mem_supported] at h1 ⊢
-    intro v hv
-    exact h1 (Finset.mem_coe.2 ((vars_map _ _) (Finset.mem_coe.1 hv)))
+    exact fun v hv => h1 (Finset.mem_coe.2 ((vars_map _ _) (Finset.mem_coe.1 hv)))
   have hPisupp : Pi ∈ supported (KK O) {v | ∀ (j' : ZMod J) (m : Fin r) (h : 1 ≤ m.val), v.1 ≠ ML.tp j' m h} := by
     rw [hPi]
     exact Subalgebra.prod_mem _ fun j' _ => chi_supp (Fr := Fr) Dt j' _ _ fun y _ a =>
@@ -1070,8 +1052,7 @@ theorem restChain_of (hVA : ValAeval) (hVF : ValFilt) (hNN : ValNN) (hPM : PhMon
       _ ≤ _ := add_le_add h1 h2
   refine geZ_of_ceil_le (chain_core Dt hNN hPM hFP hFS ?_ j i (chain_mem Dt hT j i) rho' b
     (hTr2 j) _ ?_ _ (le_trans hPival (hVF _ _ _ _ _ _ _)))
-  · intro j' m'
-    exact pow_pos (Fact.out : p.Prime).pos _
+  · exact fun j' m' => pow_pos (Fact.out : p.Prime).pos _
   · exact mem_supported_of _ _ fun mo hmo v hv => of_mem_supported hPisupp (support_filtQ _ _ hmo) hv
 
 end Formalism.MainNotions.TraceSpectra

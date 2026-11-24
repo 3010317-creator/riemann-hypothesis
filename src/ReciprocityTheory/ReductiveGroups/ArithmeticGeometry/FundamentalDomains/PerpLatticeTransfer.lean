@@ -115,9 +115,7 @@ lemma LB_lattice (hli : LinearIndependent E (Fin.cons ξ β : Fin (n + 1) → Fi
         obtain ⟨u, v, hv, hcv⟩ := hdiv
         have hvO : v ≠ 0 := nonZeroDivisors.ne_zero hv
         refine ⟨a * v, mul_ne_zero ha hvO, ?_⟩
-        have hvE : (v : E) ≠ 0 := by
-          intro h
-          exact hvO ((IsFractionRing.injective (𝓞 E) E) h)
+        have hvE : (v : E) ≠ 0 := fun h => hvO ((IsFractionRing.injective (𝓞 E) E) h)
         have hmul : ((a * v : 𝓞 E) : E) * c = (u * a : 𝓞 E) := by
           change (a : E) * (v : E) * c = (u : E) * (a : E)
           calc
@@ -135,11 +133,8 @@ lemma LB_lattice (hli : LinearIndependent E (Fin.cons ξ β : Fin (n + 1) → Fi
       have hsmul : (∑ k, (a • c) k • β k) + (0 : E) • ξ = a • (∑ k, c k • β k) := by
         simp only [Pi.smul_apply, Finset.smul_sum]
         simp
-      rw [hsmul]
-      exact hmem
-    have haE : (a : E) ≠ 0 := by
-      intro h
-      exact ha ((IsFractionRing.injective (𝓞 E) E) (by simpa using h))
+      rwa [hsmul]
+    have haE : (a : E) ≠ 0 := fun h => ha ((IsFractionRing.injective (𝓞 E) E) (by simpa using h))
     have hcspan : a • c ∈ Submodule.span E (LBsub X β ξ : Set (Fin n → E)) :=
       Submodule.subset_span hcoef
     have := Submodule.smul_mem _ ((a : E)⁻¹) hcspan

@@ -160,8 +160,7 @@ theorem ffa_eval {F : Matrix (Fin n) (Fin n) ℂ → ℂ} (hF : ContinuousOn F (
         c k * F (Formalism.MainNotions.S.umat g * S7.toMK k)) (((Formalism.REAL.muG ε).restrict S).prod (dk ε)) := by
       have hc2 : IsCompact (S ×ˢ (Set.univ : Set (S7.KG ε))) := hSc.prod isCompact_univ
       have h3 := hjoint.continuousOn.integrableOn_compact (μ := (Formalism.REAL.muG ε).prod (dk ε)) hc2
-      rw [IntegrableOn, ← Measure.prod_restrict, Measure.restrict_univ] at h3
-      exact h3
+      rwa [IntegrableOn, ← Measure.prod_restrict, Measure.restrict_univ] at h3
     show ∫ g in S, (∫ k, c k * F (Formalism.MainNotions.S.umat g * S7.toMK k) ∂(dk ε)) ∂(Formalism.REAL.muG ε) = 0
     rw [integral_integral_swap hint]
     first
@@ -172,7 +171,6 @@ theorem ffa_eval {F : Matrix (Fin n) (Fin n) ℂ → ℂ} (hF : ContinuousOn F (
   have hzero : Φ = 0 := (hΦc.ae_eq_iff_eq (μ := Formalism.REAL.muG ε) continuous_const).1 hae
   have h1 : Φ 1 = 0 := congrFun hzero 1
   have h2 : ∀ k : S7.KG ε, Formalism.MainNotions.S.umat (1 : Formalism.REAL.UJ ε) * S7.toMK k = S7.toMK k := fun k => by
-    show (1 : Matrix (Fin n) (Fin n) ℂ) * S7.toMK k = S7.toMK k
     exact Matrix.one_mul _
   simpa only [Φ, h2] using h1
 
@@ -361,8 +359,7 @@ theorem ffa_kmap_zero (hgap : StdGap ε lam) (hP : IsPsiFor ε lam T Ψ) (hv₀ 
       refine ext_inner_left ℂ fun v => ?_
       rw [hJd, inner_zero_right, hxe, inner_neg_right, ← inner_conj_symm, horth, map_zero, neg_zero]
     apply Subtype.ext
-    rw [hJx, map_zero, add_zero] at hx'
-    exact hx'
+    rwa [hJx, map_zero, add_zero] at hx'
   have hint : ∀ g ∈ Formalism.REAL.Kset ε, ∀ x, φ (sigLam ε Ψ v₀ g x) = sigLam ε Ψ v₀ g (φ x) := by
     intro g hg x
     have h1 := subtype_sigLam hgap hP hv₀ g hg x
@@ -384,8 +381,7 @@ theorem ffa_kmap_zero (hgap : StdGap ε lam) (hP : IsPsiFor ε lam T Ψ) (hv₀ 
     obtain ⟨z, hz, hzy⟩ := hy'
     have hz' : (z : L2 ε) ∈ Submodule.span ℂ (Set.range (uniformisationL2 ε Ψ v₀)) := hz
     have hzy' : (z : L2 ε) = (y : L2 ε) := hzy
-    rw [← hzy']
-    exact hz'
+    rwa [← hzy']
   have hJlow : ∀ v, (⟨uniformisationL2 ε Ψ v₀ v, datumEmbedding_mem_Hlam hP v⟩ : Hlam ε Ψ v₀) ∈ lowKSubLam ε Ψ v₀ := by
     intro v
     show (Hlam ε Ψ v₀).subtype ⟨uniformisationL2 ε Ψ v₀ v, datumEmbedding_mem_Hlam hP v⟩ ∈
@@ -408,8 +404,7 @@ theorem ffa_kmap_zero (hgap : StdGap ε lam) (hP : IsPsiFor ε lam T Ψ) (hv₀ 
     have h4 := Submodule.sub_mem _ h1 h2
     have h5 : uniformisationL2 ε Ψ v₀ v + B (Jd (uniformisationL2 ε Ψ v₀ v)) - uniformisationL2 ε Ψ v₀ v = c • B v := by
       rw [hJdJ, map_smul, add_sub_cancel_left]
-    rw [← h5]
-    exact h4
+    rwa [← h5]
   have h6 : inner ℂ (B v) (c • B v) = 0 := by
     first
     | exact hspan v h3

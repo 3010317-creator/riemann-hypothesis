@@ -89,8 +89,7 @@ theorem I_nhds {R : Subring K} (ho : IsOpen (R : Set K)) (a : Kˣ) : I R (a : K)
     constructor
     · rintro ⟨r, hr, rfl⟩
       simpa using hr
-    · intro hx
-      exact ⟨_, hx, by simp⟩
+    · exact fun hx => ⟨_, hx, by simp⟩
   rw [h]
   exact (ho.preimage (continuous_const.mul continuous_id)).mem_nhds (by simp)
 
@@ -175,8 +174,7 @@ theorem I_isOpen {R : Subring K} (ho : IsOpen (R : Set K)) (a : Kˣ) : IsOpen (I
     ext x; constructor
     · rintro ⟨r, hr, rfl⟩
       simpa using hr
-    · intro hx
-      exact ⟨_, hx, by simp⟩
+    · exact fun hx => ⟨_, hx, by simp⟩
   rw [this]
   exact ho.preimage (continuous_const.mul continuous_id)
 
@@ -292,12 +290,9 @@ theorem Adic.fp (h : Adic R ϖ) {E ι : Type} [TopologicalSpace E] (co : ι → 
     rw [this]
     exact isClosed_iInter fun i =>
       (I_compact h.isCompact _).isClosed.preimage ((hco i).sub continuous_const)
-  · intro x hx y hy i
-    exact ⟨_, R.sub_mem (hXR x hx i) (hXR y hy i), by simp⟩
-  · intro n x i
-    exact ⟨0, R.zero_mem, by simp⟩
-  · intro n x y hxy i
-    exact I_anti h.mem (Nat.le_succ n) (hxy i)
+  · exact fun x hx y hy i => ⟨_, R.sub_mem (hXR x hx i) (hXR y hy i), by simp⟩
+  · exact fun n x i => ⟨0, R.zero_mem, by simp⟩
+  · exact fun n x y hxy i => I_anti h.mem (Nat.le_succ n) (hxy i)
   · intro n x y z h1 h2 i
     obtain ⟨r, hr, e⟩ := h1 i
     obtain ⟨r', hr', e'⟩ := h2 i
@@ -305,8 +300,7 @@ theorem Adic.fp (h : Adic R ϖ) {E ι : Type} [TopologicalSpace E] (co : ι → 
   · intro n x y h1 i
     obtain ⟨r, hr, e⟩ := h1 i
     exact ⟨-r, R.neg_mem hr, by linear_combination -e⟩
-  · intro x y hxy
-    exact hinj x y fun i => sub_eq_zero.1 (h.sep _ fun n => hxy n i)
+  · exact fun x y hxy => hinj x y fun i => sub_eq_zero.1 (h.sep _ fun n => hxy n i)
 
 theorem mul_mem_sub (Λ : Submodule R K) {r x : K} (hr : r ∈ R) (hx : x ∈ Λ) : r * x ∈ Λ :=
   Λ.smul_mem (⟨r, hr⟩ : R) hx
@@ -470,8 +464,7 @@ theorem Adic.core (h : Adic R ϖ) (𝔅 : Submodule R K) (hBR : ∀ x ∈ 𝔅, 
         refine ⟨-l, R.neg_mem hl, ?_⟩
         simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
         linear_combination (-(ϖ : K)) * e)
-    refine ⟨v, hv, ?_⟩
-    exact (sub_eq_iff_eq_add.1 e).symm
+    exact ⟨v, hv, (sub_eq_iff_eq_add.1 e).symm⟩
   · intro Λ v v' hv hv'
     constructor
     · intro hd
@@ -755,7 +748,6 @@ theorem Adic.morse_local (h : Adic R ϖ) (h2 : IsUnit (2 : K)) (m : ℕ) (c z : 
     have : x = r := by linear_combination ai * e - (x - r) * haai
     rwa [this]
   have hBcl : IsClosed ((cm a B : Submodule R K) : Set K) := by
-    show IsClosed ((fun v => a * v) ⁻¹' (B : Set K))
     exact hBc.preimage (continuous_const.mul continuous_id)
   obtain ⟨Nv, hNv⟩ : ∃ Nv : (Fin m → K) → Matrix (Fin m) (Fin m) K,
       ∀ v, Nv v = ((c⁻¹ : Kˣ) : K) • (MW (wv (c : K) v) - HH K m) := ⟨_, fun _ => rfl⟩
@@ -776,8 +768,7 @@ theorem Adic.morse_local (h : Adic R ϖ) (h2 : IsUnit (2 : K)) (m : ℕ) (c z : 
     have := hNL (Rs R) v 0 hv (fun _ => R.zero_mem) (fun k => by
       show v k - (0 : Fin m → K) k ∈ R
       simpa using hv k) i j
-    rw [hN0, sub_zero] at this
-    exact this
+    rwa [hN0, sub_zero] at this
   have hNs : ∀ v, (Nv v)ᵀ = Nv v := fun v => by
     rw [hNv, Matrix.transpose_smul, Matrix.transpose_sub, MW_symm, HH_symm]
   have hHA := HA_int R m

@@ -77,13 +77,11 @@ theorem hasLen_ext {C : Type} [Field C] {v : Valuation C NNReal} {R : Type} [Com
     simpa [Algebra.smul_def, Ideal.Quotient.algebraMap_eq, Ideal.Quotient.eq_zero_iff_mem] using h3
   have hπι : ∀ y : A, π (ι y) = 0 := fun y => by
     have h1 : ι y ∈ LinearMap.range ι := ⟨y, rfl⟩
-    rw [hex] at h1
-    exact h1
+    rwa [hex] at h1
   choose b hb using fun j => hπ (gD j)
   have hdb : ∀ j, ∃ y : A, ι y = δ j • b j := fun j => by
     have h1 : δ j • b j ∈ LinearMap.ker π := by rw [LinearMap.mem_ker, map_smul, hb, hgD0]
-    rw [← hex] at h1
-    exact h1
+    rwa [← hex] at h1
   choose aj haj using hdb
   set x : Fin m' → Fin m → R := fun j i => (Quotient.out (eA (aj j) i) : R) with hxdef
   have hx : ∀ j, aj j = ∑ i, x j i • gA i := fun j => reprA (aj j)

@@ -124,8 +124,7 @@ lemma isIso_morphismRestrict_of_eq_ι {T : Scheme.{u}} (V : T.Opens) (h : V.toSc
   subst hh
   rw [isIso_iff_isOpenImmersion_and_surjective]
   refine ⟨inferInstance, ⟨fun x => ?_⟩⟩
-  refine ⟨⟨x, by simp⟩, ?_⟩
-  exact Subtype.ext ((morphismRestrict_base_coe _ _ _).trans rfl)
+  exact ⟨⟨x, by simp⟩, Subtype.ext ((morphismRestrict_base_coe _ _ _).trans rfl)⟩
 
 variable [IsProper (ProjSpace.mpStr A k n)]
 
@@ -290,8 +289,7 @@ def gQ : (g s n U c hc ⁻¹ᵁ O s n i).toScheme ⟶ Q s n U c hc i :=
 
 omit [IsProper (ProjSpace.mpStr A k n)] [QuasiCompact (g s n U c hc)] [IsSeparated s] in
 lemma gQ_Qo : gQ s n U c hc i ≫ Qo s n U c hc i = g s n U c hc ∣_ O s n i := by
-  simp only [gQ, Qo, eqLocusLift_ι_assoc, gE]
-  exact pullback.lift_snd _ _ _
+  simpa only [gQ, Qo, eqLocusLift_ι_assoc, gE] using pullback.lift_snd _ _ _
 
 
 omit [IsProper (ProjSpace.mpStr A k n)] [QuasiCompact (g s n U c hc)] in
@@ -642,8 +640,7 @@ lemma isIso_opens_ι_restrict {Z : Scheme.{u}} (O : Z.Opens) : IsIso (O.ι ∣_ 
   refine ⟨⟨x, ?_⟩, ?_⟩
   · change O.ι x ∈ O
     exact x.2
-  · apply Subtype.ext
-    exact morphismRestrict_base_coe O.ι O ⟨x, _⟩
+  · exact Subtype.ext (morphismRestrict_base_coe O.ι O ⟨x, _⟩)
 
 theorem exists_irreducible_isIso_restrict (Z : Scheme.{u}) [IsNoetherian Z] [Nonempty Z] :
     ∃ (Z₁ : Scheme.{u}) (c : Z₁ ⟶ Z) (O : Z.Opens), IsClosedImmersion c ∧ IrreducibleSpace Z₁ ∧
@@ -719,8 +716,7 @@ lemma bijective_app_of_isIso_morphismRestrict {U : Y.Opens} [IsIso (f ∣_ U)] {
   have h0 : IsIso ((f ∣_ V).app ⊤) := inferInstance
   have h1 : IsIso (f.app (V.ι ''ᵁ ⊤) ≫
       X.presheaf.map (eqToHom (image_morphismRestrict_preimage f V ⊤)).op) := by
-    rw [← morphismRestrict_app]
-    exact h0
+    rwa [← morphismRestrict_app]
   have h2 : IsIso (f.app (V.ι ''ᵁ ⊤)) := IsIso.of_isIso_comp_right _
     (X.presheaf.map (eqToHom (image_morphismRestrict_preimage f V ⊤)).op)
   have e : V.ι ''ᵁ ⊤ = V := V.ι_image_top
@@ -742,8 +738,7 @@ lemma exists_preimage_of_isIso_morphismRestrict {U : Y.Opens} [IsIso (f ∣_ U)]
   have hsurj : Function.Surjective (f ∣_ U).base :=
     (TopCat.homeoOfIso (Scheme.forgetToTop.mapIso (asIso (f ∣_ U)))).surjective
   obtain ⟨⟨x, hx⟩, hxy⟩ := hsurj ⟨y, hy⟩
-  refine ⟨x, hx, ?_⟩
-  exact (morphismRestrict_base_coe f U ⟨x, hx⟩).symm.trans (congrArg Subtype.val hxy)
+  exact ⟨x, hx, ((morphismRestrict_base_coe f U ⟨x, hx⟩).symm.trans (congrArg Subtype.val hxy))⟩
 
 end
 
@@ -812,8 +807,7 @@ theorem exists_isBasisOn_generatingSection (L : X.Modules) [L.IsQuasicoherent]
       rw [hspan, Submodule.map_top,
         LinearMap.range_eq_top]
       exact φ.symm.surjective
-    rw [Submodule.map_span, ← Set.range_comp] at h2
-    exact h2
+    rwa [Submodule.map_span, ← Set.range_comp] at h2
   have hxcov : V ≤ ⨆ k, X.basicOpen (a k) := by
     have := (hVaff.self_le_iSup_basicOpen_iff (s := Set.range a)).2 hIdeal
     intro y hy
@@ -1119,17 +1113,14 @@ theorem finiteH_step
     · have h1 : π.base y' = π.base y := hcjinj hyy'
       have hy'U : y' ∈ π ⁻¹ᵁ U₁ := by
         change π.base y' ∈ U₁
-        rw [h1, hyz]
-        exact hzU
+        rwa [h1, hyz]
       exact hy' (injOn_of_isIso_morphismRestrict π hy'U hyU h1 ▸ hyWg)
     · have h1 : o = c.base (π.base y) := hjinj hoy
       apply ho
-      rw [h1, hyz]
-      exact hzO
+      rwa [h1, hyz]
     · have h1 : z' = π.base y := hcjinj hzy
       apply hz'
-      rw [h1, hyz]
-      exact hzU
+      rwa [h1, hyz]
   have hψW : ψ ⁻¹ᵁ W ≤ Wg := fun y' hy' => by
     have hy' : ψ.base y' ∈ (W : Set X) := hy'
     rw [hWdef] at hy'

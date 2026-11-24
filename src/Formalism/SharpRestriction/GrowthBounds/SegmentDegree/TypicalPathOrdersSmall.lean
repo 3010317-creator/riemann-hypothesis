@@ -157,8 +157,7 @@ theorem vcount_od {n0 : ℕ} {LL : Letters (Fin N)} {B : Fin N → ℕ} {od : Fi
     · rintro (rfl | ⟨h1, h2, h3⟩)
       · exact ⟨le_rfl, H.od_lt i hi, H.od_vec i hi⟩
       · exact ⟨by rw [Fin.le_def]; omega, h2, h3⟩
-  rw [h2, Finset.card_insert_of_notMem (by simp)] at h1
-  exact h1
+  rwa [h2, Finset.card_insert_of_notMem (by simp)] at h1
 
 theorem nu_last_le [NeZero r] {n0 : ℕ} {LL : Letters (Fin N)} {B : Fin N → ℕ} {od : Fin N → Fin N} {bb : Fin N → ℝ}
     {a La : ℝ} {p : ℕ} (H : HypT N n0 r K LL B od bb a La p) {dd : Fin N → ℕ} (P : PPath (r + K) N LL dd)
@@ -179,8 +178,7 @@ theorem nu_last_le [NeZero r] {n0 : ℕ} {LL : Letters (Fin N)} {B : Fin N → �
     · rw [ite_eq_right hl, ite_eq_right hl]
   have h4 : dplus LL B ((od i).val + 1) = dplus LL B (od i).val + B (od i) := by
     have := dsum_succ (fun l => LL.vec l = true) B (od i).val (od i).2
-    rw [ite_eq_left (H.od_vec i hi)] at this
-    exact this
+    rwa [ite_eq_left (H.od_vec i hi)] at this
   have h5 := dplus_le_geom H.p13 H.H2 (od i).val (od i) (H.od_vec i hi) le_rfl hod
   have hp' : (13 : ℝ) ≤ (p : ℝ) := by exact_mod_cast H.p13
   have hp2 : (169 : ℝ) ≤ (p : ℝ) ^ 2 := by nlinarith
@@ -231,8 +229,7 @@ theorem typical_path_orders_small : TypicalPathOrdersSmall := by
       have he : (⟨(Fin.castAdd K (lastIdx r)).val + 1, by simp [lastIdx]; omega⟩ : Fin (r + K)) =
           Fin.natAdd r (0 : Fin K) := by
         apply Fin.ext; simp [lastIdx]; omega
-      rw [he] at this
-      exact this
+      rwa [he] at this
     have hnn : 0 ≤ plPart P.mu i.castSucc (lastIdx r) := F1 _ _ (by simp [lastIdx])
     have hsum : ∑ c, (tanPart P.mu i.succ c - tanPart P.mu i.castSucc c) =
         (∑ c : Fin K, max (tanPart P.mu i.succ c) 0 - ∑ c : Fin K, max (tanPart P.mu i.castSucc c) 0) +
@@ -260,8 +257,7 @@ theorem typical_path_orders_small : TypicalPathOrdersSmall := by
       intro s
       rw [posS_split]
       congr 1
-      refine Finset.sum_congr rfl fun c _ => ?_
-      exact max_eq_left (F1 s (Fin.castAdd K c) (by simp))
+      exact Finset.sum_congr rfl fun c _ => max_eq_left (F1 s (Fin.castAdd K c) (by simp))
     have hmono : ∑ c : Fin K, max (tanPart P.mu i.succ c) 0 ≤ ∑ c : Fin K, max (tanPart P.mu i.castSucc c) 0 :=
       Finset.sum_le_sum fun c _ => max_le_max (hstep.1 (Fin.natAdd r c)) le_rfl
     have hle : ∑ c, (plPart P.mu i.castSucc c - plPart P.mu i.succ c) ≤

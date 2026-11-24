@@ -36,8 +36,7 @@ theorem hasSum_indicator {E : ℕ → Set (Fin n → ℂ)} (hE : Pairwise (Funct
       have hxi : x ∉ E i := fun h => hx (Set.mem_iUnion.2 ⟨i, h⟩)
       simp [hxi]
     have hu : (⋃ i, E i).indicator g x = 0 := by simp only [Set.indicator_of_notMem hx]
-    simp only [h0, hu]
-    exact hasSum_zero
+    simpa only [h0, hu] using hasSum_zero
 
 
 open Classical in
@@ -110,15 +109,13 @@ theorem ChartIntCountAdd.proof (hCM : ChartMassCompact.Statement) : ChartIntCoun
     intro y
     unfold chartDens
     refine hasSum_sheetSum (hfin y) _ _ fun x s => ?_
-    simp only [indicator_mul]
-    exact hasSum_indicator hE _ x
+    simpa only [indicator_mul] using hasSum_indicator hE _ x
   have habs : ∀ y, HasSum (fun i => chartAbsDens W A ((E i).indicator f) φ y)
       (chartAbsDens W A ((⋃ i, E i).indicator f) φ y) := by
     intro y
     unfold chartAbsDens
     refine hasSum_sheetSum (hfin y) _ _ fun x s => ?_
-    simp only [abs_indicator_mul]
-    exact hasSum_indicator hE _ x
+    simpa only [abs_indicator_mul] using hasSum_indicator hE _ x
 
   have hdom : Integrable (chartAbsDens W A ((⋃ i, E i).indicator f) φ) := by
     refine (hCM n d W A f φ hW hdim hA hf.continuousOn hφ (Or.inl hfc)).mono'

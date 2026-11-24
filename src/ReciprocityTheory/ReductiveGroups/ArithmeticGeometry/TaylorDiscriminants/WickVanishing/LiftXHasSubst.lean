@@ -70,8 +70,7 @@ theorem nablaL_bracket (hN2 : ConnectionCommutator) (B : FB R d O) (h : PS k 2 d
 theorem nablaL_comm (hN2 : ConnectionCommutator) (B : FB R d O) (h : PS k 2 d) (m : ℕ) (ξ η : (Fin d → k) × (Fin d → k))
     (hb : betaH k ξ η = 0) : Commute (nablaL B h m ξ.1 ξ.2) (nablaL B h m η.1 η.2) := by
   have hbr := nablaL_bracket hN2 B h m ξ η
-  rw [hb, mul_zero, map_zero, sub_eq_zero] at hbr
-  exact hbr
+  rwa [hb, mul_zero, map_zero, sub_eq_zero] at hbr
 
 def sideE {ι : Type} [Fintype ι] (s : ι → Bool) :
     ι ≃ Fin (Fintype.card {l // s l = true}) ⊕ Fin (Fintype.card {l // ¬ s l = true}) :=

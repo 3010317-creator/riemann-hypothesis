@@ -66,8 +66,7 @@ private theorem exists_block_lt_unipotent_lemma {K : Type} [Field K] {n s : ℕ}
   obtain ⟨a, i', hi⟩ : ∃ a i', e.symm i = ⟨a, i'⟩ := ⟨_, _, rfl⟩
   obtain ⟨b, j', hj⟩ : ∃ b j', e.symm j = ⟨b, j'⟩ := ⟨_, _, rfl⟩
   have hab : a = b := by
-    simp only [GlobalTheory.SmGL.blk, hi, hj] at hij
-    exact hij
+    simpa only [GlobalTheory.SmGL.blk, hi, hj] using hij
   subst hab
   have hi2 : i = e ⟨a, i'⟩ := by
     rw [← hi, Equiv.apply_symm_apply]
@@ -81,8 +80,7 @@ private theorem exists_block_lt_unipotent_lemma {K : Type} [Field K] {n s : ℕ}
 theorem exists_block_lt_unipotent {K : Type} [Field K] {n s : ℕ} {d : Fin s → ℕ}
     (e : (Σ a, Fin (d a)) ≃ Fin n) (h : GlobalTheory.SmGL.unipRad K e ≠ ⊥) :
     ∃ i j : Fin n, GlobalTheory.SmGL.blk e i < GlobalTheory.SmGL.blk e j := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   apply h
   rw [eq_bot_iff]
   intro g hg
@@ -138,8 +136,7 @@ theorem finite_cuspidal_of_isCuspidal {K : Type} [Field K] [Fintype K] [Decidabl
     fin_cases k
     · exact ⟨i0, by simp [hlt]⟩
     · exact ⟨j0, by simp⟩
-  · intro u hu
-    exact hv u (finite_cuspidal_of_isCuspidal_lemma_2 e _ u hu)
+  · exact fun u hu => hv u (finite_cuspidal_of_isCuspidal_lemma_2 e _ u hu)
 
 theorem hasCuspLabel_of_equiv {K : Type} [Field K] [Fintype K] [DecidableEq K]
     (C : Formalism.IrreducibleCountingLemmas.TYPES.LabelConv K) {n : ℕ} {τ τ' : FDRep ℂ (GL (Fin n) K)} (e : τ ≃ₗ[ℂ] τ')

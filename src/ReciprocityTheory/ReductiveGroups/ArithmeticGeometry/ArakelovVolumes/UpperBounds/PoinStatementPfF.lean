@@ -127,8 +127,7 @@ theorem lminor_mul_upper {n : ℕ} (A N : Matrix (Fin n) (Fin n) ℂ) (hN : N.Bl
     simp only [Matrix.submatrix_apply, Matrix.mul_apply]
     refine (Fintype.sum_of_injective e (Fin.castLE_injective _) _ _ (fun k hk => ?_) (fun k => rfl)).symm
     have hk' : (i : ℕ) ≤ k := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hk ⟨⟨k, h⟩, Fin.ext rfl⟩
     apply mul_eq_zero_of_right
     apply hN
@@ -139,8 +138,7 @@ theorem lminor_mul_upper {n : ℕ} (A N : Matrix (Fin n) (Fin n) ℂ) (hN : N.Bl
     intro a c hac
     apply hN
     show e c < e a
-    rw [Fin.lt_iff_val_lt_val, he, Fin.coe_castLE, Fin.coe_castLE]
-    exact hac
+    rwa [Fin.lt_iff_val_lt_val, he, Fin.coe_castLE, Fin.coe_castLE]
   rw [hsub, Matrix.det_mul, Matrix.det_of_upperTriangular hT]
   rfl
 
@@ -269,8 +267,7 @@ theorem prod_bdiag_ne (X : Data E r) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) 
   have hd := (hb τ).1
   rw [Matrix.det_of_upperTriangular hT] at hd
   rw [Finset.prod_ne_zero_iff]
-  intro j _
-  exact (Finset.prod_ne_zero_iff.mp hd) _ (Finset.mem_univ _)
+  exact fun j _ => (Finset.prod_ne_zero_iff.mp hd) _ (Finset.mem_univ _)
 
 theorem lminor_gM_ne (X : Data E r) {x0 y : Frame X.Ψ r} (hx0 : IsOrth X x0) (hy : y ∈ X.dom)
     (τ : X.Ψ) : lminor (gM X x0 y τ) (i0 X) ≠ 0 := by

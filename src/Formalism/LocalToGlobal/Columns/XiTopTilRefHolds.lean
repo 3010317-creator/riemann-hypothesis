@@ -47,8 +47,7 @@ theorem xtMid (hN : N = n + 1) (d : DecoSet (E := E) (n := n) (ST := ∅) (SG :=
     · intro h
       have := (IntAt.coe w.1 pi).mul h
       rwa [← mul_assoc, mul_inv_cancel₀ hpi0, one_mul] at this
-    · intro h
-      exact (xtIntAt_piInv (hG w)).mul h
+    · exact fun h => (xtIntAt_piInv (hG w)).mul h
   refine ⟨by rw [hv1, xtTilH_mem hN d hT hG w.1 v, hv2, hv3], fun hall => ?_⟩
   have hvD := hv1.1 hall
   have hbe : (DecoSet.tilH (ST := ST) hN pi d).1.be w v = redV w.1 (F'.symm v) := by
@@ -62,12 +61,10 @@ theorem xtMid (hN : N = n + 1) (d : DecoSet (E := E) (n := n) (ST := ∅) (SG :=
   · intro i
     have h1 := xtTilH_be hN d hT hG w v hvD ⟨i.1, by omega⟩
     rw [dite_eq_left i.2, hbe] at h1
-    have h2 := congrFun hbe0 i
-    exact h1.trans h2
+    exact h1.trans (congrFun hbe0 i)
   · have h1 := xtTilH_be hN d hT hG w v hvD ⟨n, by omega⟩
     rw [dite_eq_right (lt_irrefl n), hbe] at h1
-    rw [inv_mul_eq_div]
-    exact h1
+    rwa [inv_mul_eq_div]
 
 end Mid
 

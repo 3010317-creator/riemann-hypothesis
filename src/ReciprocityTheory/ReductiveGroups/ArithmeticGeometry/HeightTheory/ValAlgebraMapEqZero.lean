@@ -36,8 +36,7 @@ theorem exists_rename_notMem {K : Type} [Field K] {σ : Type} (p : Ideal (MvPoly
     have hPh : (Ideal.span {g}).height = 0 := ENat.lt_one_iff_eq_zero.mp h1
     haveI : (Ideal.span {g}).FiniteHeight := ⟨Or.inr (by rw [hPh]; exact ENat.zero_ne_top)⟩
     have hbot : (⊥ : Ideal (MvPolynomial σ K)) < Ideal.span {g} := by
-      rw [bot_lt_iff_ne_bot, Ne, Ideal.span_singleton_eq_bot]
-      exact hg0
+      rwa [bot_lt_iff_ne_bot, Ne, Ideal.span_singleton_eq_bot]
     have h2 : (⊥ : Ideal (MvPolynomial σ K)).height < (Ideal.span {g}).height :=
       Ideal.height_strict_mono_of_isPrime_of_isPrime hbot
     rw [hPh] at h2
@@ -71,8 +70,7 @@ theorem exists_rename_notMem {K : Type} [Field K] {σ : Type} (p : Ideal (MvPoly
   obtain ⟨h, hh2⟩ := hmem
   have hr0 : rename Subtype.val q ≠ 0 := by
     intro h0
-    apply hq
-    exact MvPolynomial.rename_injective _ Subtype.val_injective (by rw [h0, map_zero])
+    exact hq (MvPolynomial.rename_injective _ Subtype.val_injective (by rw [h0, map_zero]))
   have hh0 : h ≠ 0 := by
     rintro rfl
     rw [mul_zero] at hh2
@@ -269,8 +267,7 @@ theorem genericHomAt_relation (hd : d.AxH 𝒜) (c : ι) (j0 : Fin (d.N + 1)) (h
     rw [hTX, Fin.succAbove_cases_eq_insertNth, Fin.insertNth_apply_succAbove]
   have hsum : ∑ j, T j * algebraMap (Ω c) (OmS (Ω c) d.D d.N) (q j) = 0 := by
     rw [Fin.sum_univ_succAbove _ (d.jc c), hq1, map_one, mul_one, hTjc]
-    simp only [hxq]
-    exact neg_add_cancel _
+    simpa only [hxq] using neg_add_cancel _
   simp only [hq, hqdef, hTdef, map_div₀]
   rw [← Finset.add_sum_erase _ _ (Finset.mem_univ j0)] at hsum
   have hr0 : algebraMap (Ω c) (OmS (Ω c) d.D d.N) (q j0) ≠ 0 := (map_ne_zero _).mpr hq0

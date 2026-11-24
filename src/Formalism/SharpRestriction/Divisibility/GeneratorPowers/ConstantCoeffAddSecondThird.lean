@@ -225,8 +225,7 @@ theorem mk_X_psJet {n : ℕ} (m : ℕ) (q : Fin n × Fin d) :
         rfl
       · intro b _ hb
         rw [hc, ite_eq_right hb, map_zero]
-      · intro h
-        exact absurd hmem h
+      · exact fun h => absurd hmem h
     rw [ht, sub_self]
     exact Ideal.zero_mem _
 
@@ -301,13 +300,11 @@ theorem bal_sum {R : Type} [CommRing R] [Algebra S R] (cc M N : Matrix (Fin d) (
     simp only [Finset.sum_mul, Finset.smul_sum, Finset.sum_smul, smul_mul_assoc, smul_smul]
     conv_lhs => rw [Finset.sum_comm]
     conv_rhs => rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl fun l _ => ?_
-    exact Finset.sum_comm
+    exact Finset.sum_congr rfl fun l _ => Finset.sum_comm
   have hR : ∑ i, ∑ l, cc i l • (u i * ∑ k, N l k • v k) =
       ∑ a, ∑ b, (∑ l, cc a l * N l b) • (u a * v b) := by
     simp only [Finset.mul_sum, Finset.smul_sum, Finset.sum_smul, mul_smul_comm, smul_smul]
-    refine Finset.sum_congr rfl fun i _ => ?_
-    exact Finset.sum_comm
+    exact Finset.sum_congr rfl fun i _ => Finset.sum_comm
   rw [hL, hR]
   simp only [key]
 
@@ -463,8 +460,7 @@ theorem twist_bal_jet {O : Type} [CommRing O] [StarRing O] (B : FB S d O) (cc : 
       psJet m ((![comp1 (B.A.act a) (pt S d 0), pt S d 1] : Fin 2 → Pt S 2 d) p.1 p.2) := by
     rintro ⟨j, k⟩; fin_cases j
     · have h := mk_psIn_psJet m (![0] : Fin 1 → Fin 2) (B.A.act a k)
-      rw [e0] at h
-      exact h
+      rwa [e0] at h
     · exact mk_X_psJet m ((1 : Fin 2), k)
   have mB : ∀ p : Fin 2 × Fin d, Ideal.Quotient.mk (Formalism.L2.Pj.orig S (Fin 2 × Fin d) ^ (m + 1))
       ((![fun j => X ((0 : Fin 2), j), fun j => psIn d m ![1] (B.A.act b j)] : Fin 2 → Fin d → MvPolynomial (Fin 2 × Fin d) S) p.1 p.2) =
@@ -472,8 +468,7 @@ theorem twist_bal_jet {O : Type} [CommRing O] [StarRing O] (B : FB S d O) (cc : 
     rintro ⟨j, k⟩; fin_cases j
     · exact mk_X_psJet m ((0 : Fin 2), k)
     · have h := mk_psIn_psJet m (![1] : Fin 1 → Fin 2) (B.A.act b k)
-      rw [e1] at h
-      exact h
+      rwa [e1] at h
   rw [jetSubstP_psJet m _ (![comp1 (B.A.act a) (pt S d 0), pt S d 1] : Fin 2 → Pt S 2 d) (fun p => h0 p.1 p.2) cA mA,
     jetSubstP_psJet m _ (![pt S d 0, comp1 (B.A.act b) (pt S d 1)] : Fin 2 → Pt S 2 d) (fun p => h1 p.1 p.2) cB mB,
     twist_bal B cc a b hbal]

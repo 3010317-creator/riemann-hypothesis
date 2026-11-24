@@ -113,8 +113,7 @@ theorem trL_cont (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℂ V] [Fi
 
 theorem trL_mul_comm {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V] [FiniteDimensional ℂ V]
     (A B : V →L[ℂ] V) : trL V (A * B) = trL V (B * A) := by
-  simp only [trL_apply, ContinuousLinearMap.toLinearMap_mul]
-  exact LinearMap.trace_mul_comm ℂ _ _
+  simpa only [trL_apply, ContinuousLinearMap.toLinearMap_mul] using LinearMap.trace_mul_comm ℂ _ _
 
 theorem sigma_mem {σ : (Fin n × Fin n → ℝ) → Mat n} (hσ2 : ∀ v ∈ cone n, σ v * (σ v)ᴴ = hOf v) {v} (hv : v ∈ cone n) :
     σ v ∈ GLs n := by
@@ -409,8 +408,7 @@ theorem mem_GLs_mul {x y : Mat n} (hx : x ∈ GLs n) (hy : y ∈ GLs n) : x * y 
   exact mul_ne_zero hx hy
 
 theorem unitary_mem_GLs (k : Matrix.unitaryGroup (Fin n) ℂ) : k.1 ∈ GLs n := by
-  have h := Matrix.UnitaryGroup.det_isUnit k
-  exact h.ne_zero
+  exact (Matrix.UnitaryGroup.det_isUnit k).ne_zero
 
 theorem isMult_props [MeasurableSpace (G n)] {μ : Measure (G n)} {E : KMod n} {k : Mat n → (E.V →L[ℂ] E.V)}
     {val : Inf n → ℂ} {T : ℝ} (h : IsMult μ E k val T) :
@@ -485,8 +483,7 @@ theorem lAsm : LAsm := by
     intro x hx hlt
     by_contra hne
     have hle : lg (x⁻¹ * diagonal z * xᴴ⁻¹) ≤ R := by
-      by_contra hgt
-      push Not at hgt
+      by_contra! hgt
       exact hne (hd ▸ hsuppk _ (hd ▸ tw_mem_GLs hx hdG) hgt)
     have := hR' 1 ⟨zero_le_one, le_refl _⟩ x hx x hx (by simp) hle
     linarith
@@ -503,8 +500,7 @@ theorem lAsm : LAsm := by
       ∫ v in cone n, LinearMap.trace ℂ E.V ((Γ * S 0 * Kc σ c Fr k Γ T d.val (oPt n, v) : E.V →L[ℂ] E.V) : E.V →ₗ[ℂ] E.V) :=
     setIntegral_congr_fun hopen.measurableSet fun v hv => by
       simp only [hK'def, ite_eq_left (show (oPt n, v) ∈ cone n ×ˢ cone n from ⟨hoPt, hv⟩)]
-  rw [← e1, ← e0]
-  exact hH
+  rwa [← e1, ← e0]
 
 end PositivityTheory.RgBcC.LfSt
 end -- clump:auto
@@ -631,8 +627,7 @@ theorem diag_unitary {z : Fin n → ℂ} (hz : ∀ a, ‖z a‖ = 1) : diagonal 
   simpa [hz i] using Complex.mul_conj' (z i)
 
 theorem lg_diag_mul {z : Fin n → ℂ} (hz : ∀ a, ‖z a‖ = 1) (x : Mat n) : lg (diagonal z * x) = lg x := by
-  have h := GlobalTheory.CompanionTheory.LengthGL.lg_unitary x ⟨diagonal z, diag_unitary hz⟩ 1
-  simpa using h
+  simpa using GlobalTheory.CompanionTheory.LengthGL.lg_unitary x ⟨diagonal z, diag_unitary hz⟩ 1
 
 def trL {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V] [FiniteDimensional ℂ V] (A : V →L[ℂ] V) :
     (V →L[ℂ] V) →L[ℂ] ℂ :=

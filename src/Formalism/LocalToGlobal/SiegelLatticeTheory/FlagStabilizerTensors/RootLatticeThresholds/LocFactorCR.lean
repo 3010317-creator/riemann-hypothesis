@@ -69,15 +69,13 @@ theorem continuousOn_wTg {n : ℕ} {ε : Fin n → Bool} {V : Type} [Topological
     apply Continuous.subtype_mk
     rw [Units.continuous_iff]
     constructor
-    · show Continuous fun p : Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r) => Q * p.1 * Qi
-      exact (continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const
+    · exact (continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const
     · show Continuous fun p : Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r) =>
         Formalism.REAL.Jm ε * (Q * p.1 * Qi)ᴴ * Formalism.REAL.Jm ε
       exact (continuous_const.matrix_mul (((continuous_const.matrix_mul continuous_subtype_val).matrix_mul
         continuous_const).matrix_conjTranspose)).matrix_mul continuous_const
   have : (Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r)).domRestrict (wTg Q Qi W) = W ∘ G := by
     funext p
-    show wTg Q Qi W p.1 = W (G p)
     exact wTg_eq W (G p) (uMat_toUJn _ _)
   rw [this]
   exact hW.comp hG

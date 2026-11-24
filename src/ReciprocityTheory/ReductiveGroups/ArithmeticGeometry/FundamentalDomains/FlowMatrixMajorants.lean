@@ -203,8 +203,7 @@ theorem maj_jp {x : Frame X.Ψ r} (hx : x ∈ X.dom) (v : Fin r → ℂ) :
     ← hermC_conj τ.1 X.Gm_herm v (X.jp x τ v), Complex.conj_re]
 
 theorem herm_eq_Hf_jp {x : Frame X.Ψ r} (hx : x ∈ X.dom) (u v : Fin r → ℂ) :
-    hermC τ.1 X.Gm u v = X.Hf x τ u (X.jp x τ v) := by
-  exact (hermC_jp_lemma_6 X τ hx u v).symm
+    hermC τ.1 X.Gm u v = X.Hf x τ u (X.jp x τ v) := (hermC_jp_lemma_6 X τ hx u v).symm
 
 private lemma flowMat_mulVec_lemma_10 (t : ℝ) (w : Fin r → ℂ) :
     Matrix.mulVec (X.flowMat ξ τ t) w =

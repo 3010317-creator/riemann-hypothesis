@@ -71,8 +71,7 @@ theorem JacobianRankOffHypersurface.finrank_of_generators {σ ι : Type*} [Finty
         (hw' _ (hfQ k)) ?_
       rw [map_pow]
       exact pow_ne_zero _ ht0
-  rw [heq, finrank_span_eq_card (hδ w hδ0)]
-  exact hcard
+  rwa [heq, finrank_span_eq_card (hδ w hδ0)]
 
 theorem JacobianRankOffHypersurface.exists_fin (hF : FrameJacobianGeneric.Statement) {n d : ℕ}
     (J : Ideal (MvPolynomial (Fin n) ℂ)) (hJ : J.IsPrime) (hd : ringKrullDim (MvPolynomial (Fin n) ℂ ⧸ J) = d) :
@@ -143,11 +142,9 @@ theorem JacobianRankOffHypersurface.proof_of_frame (hF : FrameJacobianGeneric.St
       simp only [Function.comp_apply, LinearMap.funLeft_apply]
       have hx : pderiv x (φ (f k)) = φ (pderiv (e x) (f k)) := by
         have := pderiv_rename (R := ℂ) e.symm.injective (e x) (f k)
-        rw [Equiv.symm_apply_apply] at this
-        exact this
+        rwa [Equiv.symm_apply_apply] at this
       rw [hx, hφ]
-    rw [hfam]
-    exact hL
+    rwa [hfam]
   have hμQ : φ s * t * φ δ ∉ Q := by
     intro h
     rcases hQ.mem_or_mem h with h | h

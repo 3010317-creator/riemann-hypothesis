@@ -600,8 +600,7 @@ theorem harm_sub (lam : Fin n → ℤ) (hlam : Antitone lam) : harmSet lam ⊆ t
     ring
   unfold topTypes
   refine mem_filter.2 ⟨mem_image.2 ⟨levi lev, ?_, ?_⟩, ?_⟩
-  · refine mem_filter.2 ⟨mem_univ _, fun p hp => ?_⟩
-    exact (mem_filter.1 hp).2.1
+  · exact mem_filter.2 ⟨mem_univ _, fun p hp => (mem_filter.1 hp).2.1⟩
   · rw [hx, domC_of_anti _ hanti.antitone]
     simp
   · exact hanti
@@ -840,8 +839,7 @@ theorem card_fst (B : Finset (Fin n × Fin n)) (c : Fin n) :
     obtain ⟨_, h2⟩ := Finset.mem_filter.1 hp
     obtain ⟨_, h4⟩ := Finset.mem_filter.1 hq
     exact Prod.ext (h2.trans h4.symm) e
-  · intro b hb
-    exact ⟨(c, b), by simpa using hb, rfl⟩
+  · exact fun b hb => ⟨(c, b), by simpa using hb, rfl⟩
 
 theorem card_snd (B : Finset (Fin n × Fin n)) (c : Fin n) :
     (B.filter fun p => p.2 = c).card = (univ.filter fun b => (b, c) ∈ B).card := by
@@ -854,8 +852,7 @@ theorem card_snd (B : Finset (Fin n × Fin n)) (c : Fin n) :
     obtain ⟨_, h2⟩ := Finset.mem_filter.1 hp
     obtain ⟨_, h4⟩ := Finset.mem_filter.1 hq
     exact Prod.ext e (h2.trans h4.symm)
-  · intro b hb
-    exact ⟨(b, c), by simpa using hb, rfl⟩
+  · exact fun b hb => ⟨(b, c), by simpa using hb, rfl⟩
 
 theorem sum_tB (B : Finset (Fin n × Fin n)) (c : Fin n) : ∑ b, tB B c b = 2 * rhoV n c - 2 * wtB B c := by
   simp only [wtB, card_fst, card_snd]
@@ -1024,8 +1021,7 @@ theorem domC_eq {y z : Fin n → ℝ} (hz : StrictAnti z) {w : Equiv.Perm (Fin n
   funext a
   have ha := congrFun key a
   simp only [Function.comp_apply, neg_inj] at ha
-  simp only [domC, Function.comp_apply]
-  exact ha.symm
+  simpa only [domC, Function.comp_apply] using ha.symm
 
 theorem nsq_eq (x : Fin n → ℝ) : PositivityTheory.RgBcC.RealD.nsq x = Formalism.REAL.nsq x := by
   simp [PositivityTheory.RgBcC.RealD.nsq, Formalism.REAL.nsq, Formalism.REAL.dot, sq]
@@ -1044,8 +1040,7 @@ theorem mem_topTypes {lam : Fin n → ℤ} {lev : Fin n → ℕ} (hl : IsLev lam
     exact hmono.reflect_lt hp
   have hBL : B ⊆ (univ.filter fun p : Fin n × Fin n => lev p.1 < lev p.2) := by
     intro p hp
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-    exact hBlev p hp
+    simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using hBlev p hp
   have hdisj : Disjoint ((univ.filter fun p : Fin n × Fin n => p.1 < p.2) \
       (univ.filter fun p : Fin n × Fin n => lev p.1 < lev p.2)) B :=
     Finset.sdiff_disjoint.mono_right hBL
@@ -1148,8 +1143,7 @@ theorem weight_int (h : IsDerivK σ Kf) (a : Fin n) (r : ℝ) {v : V} (hv : v �
     have := deriv_expU (Kf := Kf) h X hX v
     have e := sum_single (Kf := Kf) v a a Complex.I
     rw [← hXdef] at e
-    rw [e, hr, smul_smul] at this
-    exact this
+    rwa [e, hr, smul_smul] at this
   have hstep : ∀ s, HasDerivAt φ ((Complex.I * r) • φ s) s := by
     intro s
     let L : V →L[ℝ] V :=
@@ -1182,8 +1176,7 @@ theorem weight_int (h : IsDerivK σ Kf) (a : Fin n) (r : ℝ) {v : V} (hv : v �
         (Complex.exp ((s : ℂ) * (-(Complex.I * r))) * -(Complex.I * r)) • φ s = 0 := by
       rw [smul_smul, ← add_smul]
       simp
-    rw [this] at h3
-    exact h3
+    rwa [this] at h3
   have hconst : ψ (2 * Real.pi) = ψ 0 :=
     is_const_of_deriv_eq_zero (fun s => (hψd s).differentiableAt) (fun s => (hψd s).deriv) _ _
   have h0 : φ 0 = v := by
@@ -1419,8 +1412,7 @@ theorem dirac_ineq0 : ∀ {n : ℕ} (lam : Fin n → ℤ) (V : Type) [NormedAddC
   have hEq' : (∑ i, ‖D x i‖ ^ 2) = -((4 * (S - R) + 3 * R - T) * ∑ i, ‖x i‖ ^ 2) := by
     exact_mod_cast hEq
   have hle : 4 * (S - R) + 3 * R - T ≤ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have := mul_pos hcon hN
     linarith
   have hT' : T = ∑ a, (τ a + rhoV n a) ^ 2 - R := by
@@ -1451,8 +1443,7 @@ theorem dirac_inequality_k_types : DiracInequalityWithoutSplitComponent := by
   have hn := dirac_ineq0 lam V E1 E2 σ hc ι c hcl _ y hy hyh
   rw [hνm] at hn
   have e1 : LSq lam = ∑ a, (m0 lam a) ^ 2 := by
-    simp only [LSq, nsq, m0, rhoV]
-    exact Finset.sum_congr rfl fun a _ => by ring
+    simpa only [LSq, nsq, m0, rhoV] using Finset.sum_congr rfl fun a _ => by ring
   have e2 : Formalism.REAL.nsq (ν - rhoV n + rhoV n ∘ w.symm) = ∑ a, (ν (w a) - rhoV n (w a) + rhoV n a) ^ 2 := by
     simp only [Formalism.REAL.nsq, Formalism.REAL.dot]
     rw [← Equiv.sum_comp w]

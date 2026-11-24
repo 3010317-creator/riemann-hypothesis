@@ -24,8 +24,7 @@ section Wt
 
 theorem partialSum_finset_sum_eq {ι : Type*} (s : Finset ι) (f : ι → Fin n → ℝ) (k : ℕ) :
     kirrPs k (∑ i ∈ s, f i) = ∑ i ∈ s, kirrPs k (f i) := by
-  simp only [kirrPs, Finset.sum_apply]
-  exact Finset.sum_comm
+  simpa only [kirrPs, Finset.sum_apply] using Finset.sum_comm
 
 theorem rootCone_entry_int (k : ℕ) (μ ν : Fin n → ℝ) : kirrPs k (μ + ν) = kirrPs k μ + kirrPs k ν := by
   simp only [kirrPs, Pi.add_apply, Finset.sum_add_distrib]
@@ -56,8 +55,7 @@ theorem partialSum_root_nonneg {a b : Fin n} (hab : a < b) (k : ℕ) : 0 ≤ kir
 
 theorem partialSum_add_eq {ι : Type*} (s : Finset ι) (f : ι → Fin n → ℝ) :
     kUnitWtLin (∑ i ∈ s, f i) = ∑ i ∈ s, kUnitWtLin (f i) := by
-  simp only [kUnitWtLin, Finset.sum_apply, Finset.mul_sum]
-  exact Finset.sum_comm
+  simpa only [kUnitWtLin, Finset.sum_apply, Finset.mul_sum] using Finset.sum_comm
 
 theorem unitWeightSum_sub (μ ν : Fin n → ℝ) : kUnitWtLin (μ - ν) = kUnitWtLin μ - kUnitWtLin ν := by
   simp only [kUnitWtLin, Pi.sub_apply, mul_sub, Finset.sum_sub_distrib]
@@ -133,8 +131,7 @@ theorem highestWeight_dominant {N : Type*} [NormedAddCommGroup N] [InnerProductS
     first
     | exact (Complex.ofReal_injective (by simpa using key))
   have hpos : 0 < ‖y‖ ^ 2 := pow_pos (norm_pos_iff.mpr hy0) 2
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have := mul_neg_of_neg_of_pos (sub_neg.mpr hlt) hpos
   nlinarith [sq_nonneg ‖A b a y‖]
 
@@ -217,8 +214,7 @@ theorem exists_minimal_kStable {X : Type*} [AddCommGroup X] [Module ℂ X] {ε :
     ⟨_, S, le_rfl, hne, hS, rfl⟩
   obtain ⟨W, hWS, hW0, hWst, hWd⟩ := Nat.find_spec hex
   refine ⟨W, hWS, hW0, hWst, fun W' hW'W hW'st => ?_⟩
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   obtain ⟨h1, h2⟩ := hcon
   have hlt : W' < W := lt_of_le_of_ne hW'W h2
   haveI : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le hWS
@@ -242,8 +238,7 @@ private theorem k3a_joint_lemma {N : Type*} [AddCommGroup N] [Module ℂ N] (T :
     obtain ⟨hvm, hvne⟩ := Module.End.hasEigenvector_iff.mp hv
     have hv1 := Module.End.mem_eigenspace_iff.mp hvm
     have hTv : T j (v : N) = l • (v : N) := by
-      have h := congrArg Subtype.val hv1
-      simpa [LinearMap.restrict_apply] using h
+      simpa [LinearMap.restrict_apply] using congrArg Subtype.val hv1
     have hv0 : (v : N) ≠ 0 := fun h => hvne (Subtype.ext h)
     have memU : ∀ x, x ∈ U ⊓ LinearMap.ker (T j - l • (1 : Module.End ℂ N)) ↔ x ∈ U ∧ T j x = l • x := by
       intro x
@@ -338,8 +333,7 @@ theorem exists_kIrreducible_highestWeight {N : Type*} [NormedAddCommGroup N] [In
   obtain ⟨hvm, hvne⟩ := Module.End.hasEigenvector_iff.mp hv
   have hv1 := Module.End.mem_eigenspace_iff.mp hvm
   have hHv : H (v : N) = μ • (v : N) := by
-    have h := congrArg Subtype.val hv1
-    simpa [LinearMap.restrict_apply] using h
+    simpa [LinearMap.restrict_apply] using congrArg Subtype.val hv1
   have hv0 : (v : N) ≠ 0 := fun h => hvne (Subtype.ext h)
   have memU : ∀ x, x ∈ W ⊓ LinearMap.ker (H - μ • (1 : Module.End ℂ N)) ↔ x ∈ W ∧ H x = μ • x := by
     intro x

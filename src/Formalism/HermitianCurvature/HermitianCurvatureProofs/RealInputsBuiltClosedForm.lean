@@ -67,8 +67,7 @@ theorem jct_isBuiltPlace_mono {E : Type} [Field E] [NumberField E] [IsCMField E]
   obtain ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12, h13⟩ := h
   refine ⟨h1, h2, h3, h4, h5, h6, h7, ?_, le_trans hc h9, h10, h11, ?_, h13⟩
   · unfold JCT.LongCut at h8 ⊢
-    intro v
-    exact le_trans (mul_le_mul_of_nonneg_right hc (by positivity)) (h8 v)
+    exact fun v => le_trans (mul_le_mul_of_nonneg_right hc (by positivity)) (h8 v)
   · exact le_trans (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hc (by positivity)) (by positivity)) h12
 
 theorem energy_of_built_setting : JCT.EnergyOfLemmaE := by

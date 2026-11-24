@@ -95,8 +95,7 @@ theorem exists_embedding (K k : Type) [Field K] [Field k] [Countable K] [Countab
   have h := j.commutes (MvPolynomial.C a)
   have h1 : algebraMap (MvPolynomial I₁ K) k (MvPolynomial.C a) = β a := MvPolynomial.aeval_C x a
   have h2 : algebraMap (MvPolynomial I₁ K) ℂ (MvPolynomial.C a) = s a := MvPolynomial.aeval_C (z ∘ e) a
-  rw [h1, h2] at h
-  exact h
+  rwa [h1, h2] at h
 
 variable {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Sp Ω ⟶ X}
 
@@ -123,8 +122,7 @@ theorem countable_of_tie {κ : Type} [Finite κ] {x : κ → Ω} (h : CoordTie �
   refine ⟨(g, f), ?_⟩
   have hf' : MvPolynomial.aeval (fun j => x j / x c) f = s := hf
   have hg' : MvPolynomial.aeval (fun j => x j / x c) g = s * a := hg
-  simp only [hf', hg']
-  exact mul_div_cancel_left₀ _ hu.1
+  simpa only [hf', hg'] using mul_div_cancel_left₀ _ hu.1
 
 theorem cancel_gen (hξ : IsCptGen ξ) {R : Type} [CommRing R] {a b : Ω →+* R} (h : spMap a ≫ ξ = spMap b ≫ ξ) :
     a = b := by

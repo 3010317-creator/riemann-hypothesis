@@ -127,8 +127,7 @@ theorem swap_key {φ₁ φ₂ f : Γ → ℂ} (h₁ : Continuous φ₁) (s₁ : 
     · rw [image_eq_zero_of_notMem_tsupport h1, zero_mul, zero_mul]
   calc ∫ g, (∫ h, φ₁ h * φ₂ (h⁻¹ * g) ∂ν) * f g ∂ν
       = ∫ g, ∫ h, φ₁ h * φ₂ (h⁻¹ * g) * f g ∂ν ∂ν := by
-        refine integral_congr_ae (Eventually.of_forall fun g => ?_)
-        exact (integral_mul_const _ _).symm
+        exact integral_congr_ae (Eventually.of_forall fun g => (integral_mul_const _ _).symm)
     _ = ∫ h, ∫ g, φ₁ h * φ₂ (h⁻¹ * g) * f g ∂ν ∂ν := integral_integral_swap_of_hasCompactSupport hc hs
     _ = ∫ h, φ₁ h * ∫ k, φ₂ k * f (h * k) ∂ν ∂ν := by
         refine integral_congr_ae (Eventually.of_forall fun h => ?_)

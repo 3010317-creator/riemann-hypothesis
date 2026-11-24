@@ -37,31 +37,21 @@ theorem homConstSet_vc_pair (C C' : VariableChange F) (h : C • E = E₁) (h' :
   set c := homConst E' E₁' R * homConst E₁ E Q
   have hc : c * (homConst E₁' E' R' * homConst E E₁ Q') = 1 := by
     linear_combination (homConst E₁' E' R' * homConst E' E₁' R) * e1 + e2
-  have hcinv : c⁻¹ = homConst E E₁ Q' * homConst E₁' E' R' := by
-    rw [inv_eq_of_mul_eq_one_right hc, mul_comm]
-  refine ⟨c, left_ne_zero_of_mul_eq_one hc, ?_, ?_⟩
-  · ext z
-    simp only [SetLike.mem_coe, Set.mem_image]
-    constructor
-    · intro hz
-      refine ⟨homConst E₁' E' R' * z * homConst E E₁ Q', homConstSet_le_mul Q' R' hz, ?_⟩
-      linear_combination z * hc
-    · rintro ⟨w, hw, rfl⟩
-      have := homConstSet_le_mul Q R hw
-      convert this using 1
-      ring
-  · ext z
-    simp only [SetLike.mem_coe, Set.mem_image]
-    constructor
-    · intro hz
-      refine ⟨homConst E₁ E Q * z * homConst E' E₁' R, homConstSet_le_mul R Q hz, ?_⟩
-      rw [hcinv]
-      linear_combination z * hc
-    · rintro ⟨w, hw, rfl⟩
-      have := homConstSet_le_mul R' Q' hw
-      convert this using 1
-      rw [hcinv]
-      ring
+  have hcinv := inv_eq_of_mul_eq_one_right hc
+  refine ⟨c, left_ne_zero_of_mul_eq_one hc, ?_, ?_⟩ <;> ext z <;>
+    simp only [SetLike.mem_coe, Set.mem_image] <;> constructor
+  · refine fun hz => ⟨homConst E₁' E' R' * z * homConst E E₁ Q', homConstSet_le_mul Q' R' hz, ?_⟩
+    linear_combination z * hc
+  · rintro ⟨w, hw, rfl⟩
+    convert homConstSet_le_mul Q R hw using 1
+    ring
+  · refine fun hz => ⟨homConst E₁ E Q * z * homConst E' E₁' R, homConstSet_le_mul R Q hz, ?_⟩
+    rw [hcinv]
+    linear_combination z * hc
+  · rintro ⟨w, hw, rfl⟩
+    convert homConstSet_le_mul R' Q' hw using 1
+    rw [hcinv]
+    ring
 
 end VC
 
@@ -121,8 +111,7 @@ theorem homConstSet_pair_of_smul {E E' : CMCurve K} {𝔞 : (FractionalIdeal (�
   obtain ⟨L', hL'lat, hL'⟩ := exists_lattice_mul σ₀ hK L hL 𝔞
   have h1 := classGroup_smul_ellOf σ₀ hK L L' hL hL' 𝔞 hL'lat
   have h2 : E'.toEll = (CMCurve.ofLattice σ₀ L' hL').toEll := by
-    rw [← h, ← hE]
-    exact h1
+    rwa [← h, ← hE]
   obtain ⟨C', hC'⟩ := (CMCurve.toEll_eq_iff _ _).1 h2
   have hC'' : C' • E'.curve = weierstrassCurve L' := hC'
   obtain ⟨d, hd, hset, hset'⟩ := homConstSet_vc_pair C C' hC hC''
@@ -343,8 +332,7 @@ theorem exists_isogeny_homConstSet_eq {E E' : CMCurve K} (v : HeightOneSpectrum 
     rw [map_zero] at hQ
     exact hc hQ.symm
   refine ⟨isogOfHom Q hQ0, ?_⟩
-  rw [← homConst_toHom, isogOfHom_toHom, hQ]
-  exact hset
+  rwa [← homConst_toHom, isogOfHom_toHom, hQ]
 
 end Degree
 

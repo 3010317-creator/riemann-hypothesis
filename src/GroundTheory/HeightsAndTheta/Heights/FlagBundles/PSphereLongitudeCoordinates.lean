@@ -134,27 +134,21 @@ lemma SphereLongitudeCoordinates.radial (g : ℝ → ℝ≥0∞) (hg : Measurabl
   have hm : Measurable (fun p : ℝ × ℝ => ENNReal.ofReal p.1 *
       (ENNReal.ofReal (p.1 / Real.sqrt (1 - p.2 ^ 2) ^ 3) *
         (if p.1 ^ 2 < 1 - p.2 ^ 2 then g p.2 else 0))) := by
-    refine (by fun_prop : Measurable fun p : ℝ × ℝ => ENNReal.ofReal p.1).mul
-      ((by fun_prop : Measurable fun p : ℝ × ℝ =>
-        ENNReal.ofReal (p.1 / Real.sqrt (1 - p.2 ^ 2) ^ 3)).mul
+    refine Measurable.mul (by fun_prop) (Measurable.mul (by fun_prop)
       (Measurable.ite (measurableSet_lt (by fun_prop) (by fun_prop)) (hg.comp measurable_snd)
         measurable_const))
-  calc _ = ∫⁻ ρ in Ioi (0 : ℝ), ∫⁻ c in Ioo (-1 : ℝ) 1, ENNReal.ofReal ρ *
+  calc _ = ∫⁻ ρ in Ioi 0, ∫⁻ c in Ioo (-1) 1, ENNReal.ofReal ρ *
           (ENNReal.ofReal (ρ / Real.sqrt (1 - c ^ 2) ^ 3) *
             (if ρ ^ 2 < 1 - c ^ 2 then g c else 0)) := by
         refine setLIntegral_congr_fun measurableSet_Ioi fun ρ hρ => ?_
         rw [SphereLongitudeCoordinates.height_subst hρ,
           ← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
-    _ = ∫⁻ c in Ioo (-1 : ℝ) 1, ∫⁻ ρ in Ioi (0 : ℝ), ENNReal.ofReal ρ *
-          (ENNReal.ofReal (ρ / Real.sqrt (1 - c ^ 2) ^ 3) *
-            (if ρ ^ 2 < 1 - c ^ 2 then g c else 0)) :=
-        lintegral_lintegral_swap hm.aemeasurable
-    _ = ∫⁻ c in Ioo (-1 : ℝ) 1, 3⁻¹ * g c := by
+    _ = _ := lintegral_lintegral_swap hm.aemeasurable
+    _ = ∫⁻ c in Ioo (-1) 1, 3⁻¹ * g c := by
         refine setLIntegral_congr_fun measurableSet_Ioo fun c hc => ?_
-        have hpos : 0 < 1 - c ^ 2 := by nlinarith [hc.1, hc.2]
         set w := Real.sqrt (1 - c ^ 2) with hwdef
-        have hw : 0 < w := Real.sqrt_pos.2 hpos
-        calc _ = ∫⁻ ρ in Ioi (0 : ℝ),
+        have hw : 0 < w := Real.sqrt_pos.2 (by nlinarith [hc.1, hc.2])
+        calc _ = ∫⁻ ρ in Ioi 0,
               (Iio w).indicator (fun ρ => ENNReal.ofReal (ρ ^ 2 / w ^ 3)) ρ * g c := by
               refine setLIntegral_congr_fun measurableSet_Ioi fun ρ hρ => ?_
               have e : ρ ^ 2 < 1 - c ^ 2 ↔ ρ ∈ Iio w := by
@@ -166,14 +160,13 @@ lemma SphereLongitudeCoordinates.radial (g : ℝ → ℝ≥0∞) (hg : Measurabl
                 ring
               · rw [ite_eq_right h, indicator_of_notMem (fun h' => h (e.2 h'))]
                 simp
-          _ = (∫⁻ ρ in Ioi (0 : ℝ),
-              (Iio w).indicator (fun ρ => ENNReal.ofReal (ρ ^ 2 / w ^ 3)) ρ) * g c :=
+          _ = _ :=
               lintegral_mul_const _ ((by fun_prop : Measurable fun ρ : ℝ =>
                 ENNReal.ofReal (ρ ^ 2 / w ^ 3)).indicator measurableSet_Iio)
           _ = 3⁻¹ * g c := by
               rw [setLIntegral_indicator measurableSet_Iio, inter_comm, Ioi_inter_Iio,
                 SphereLongitudeCoordinates.radial_pow hw]
-    _ = 3⁻¹ * ∫⁻ c in Ioo (-1 : ℝ) 1, g c := lintegral_const_mul _ hg
+    _ = 3⁻¹ * ∫⁻ c in Ioo (-1) 1, g c := lintegral_const_mul _ hg
 
 lemma SphereLongitudeCoordinates.continuous_spherePoint :
     Continuous fun p : ℝ × ℝ => spherePoint p.1 p.2 := by

@@ -49,8 +49,7 @@ private lemma mem_iff_lemma (y : F) : y ∈ vRing v ↔ 0 ≤ v y := by
 theorem val_eq_zero_of_isUnit (x : vRing v) (hx : IsUnit x) : v (x : F) = 0 := by
   obtain ⟨y, hy⟩ := hx.exists_right_inv
   have hxy : (x : F) * (y : F) = 1 := by
-    have h1 := congrArg (fun z : vRing v => (z : F)) hy
-    simpa using h1
+    simpa using congrArg (fun z : vRing v => (z : F)) hy
   have h1 : v ((x : F) * (y : F)) = 0 := by
     rw [hxy, AddValuation.map_one]
   rw [AddValuation.map_mul] at h1
@@ -66,10 +65,7 @@ theorem isUnit_of_val_eq_zero (x : vRing v) (hx : v (x : F) = 0) : IsUnit x := b
     rw [inv_mul_cancel₀ hx0, AddValuation.map_one, hx, add_zero] at h3
     exact h3.symm
   have hinv : (x : F)⁻¹ ∈ vRing v := (mem_iff_lemma v _).2 (le_of_eq h2.symm)
-  have hmul : x * ⟨(x : F)⁻¹, hinv⟩ = 1 := by
-    apply Subtype.ext
-    show (x : F) * (x : F)⁻¹ = 1
-    exact mul_inv_cancel₀ hx0
+  have hmul : x * ⟨(x : F)⁻¹, hinv⟩ = 1 := Subtype.ext (mul_inv_cancel₀ hx0)
   first
     | exact IsUnit.of_mul_eq_one _ hmul
 
@@ -77,17 +73,14 @@ theorem mem_max_iff (x : vRing v) : x ∈ maximalIdeal (vRing v) ↔ 0 < v (x : 
   rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
   have h0 : 0 ≤ v (x : F) := (mem_iff_lemma v _).1 x.2
   constructor
-  · intro h
-    exact lt_of_le_of_ne h0 (fun he => h (isUnit_of_val_eq_zero v x he.symm))
-  · intro h hu
-    exact h.ne' (val_eq_zero_of_isUnit v x hu)
+  · exact fun h => lt_of_le_of_ne h0 (fun he => h (isUnit_of_val_eq_zero v x he.symm))
+  · exact fun h hu => h.ne' (val_eq_zero_of_isUnit v x hu)
 
 theorem residue_ne_zero_iff (x : vRing v) : residue (vRing v) x ≠ 0 ↔ v (x : F) = 0 := by
   rw [Ne, IsLocalRing.residue_eq_zero_iff, mem_max_iff]
   have h0 : 0 ≤ v (x : F) := (mem_iff_lemma v _).1 x.2
   constructor
-  · intro h
-    exact (eq_of_le_of_not_lt h0 h).symm
+  · exact fun h => (eq_of_le_of_not_lt h0 h).symm
   · intro h hlt
     rw [h] at hlt
     exact lt_irrefl _ hlt

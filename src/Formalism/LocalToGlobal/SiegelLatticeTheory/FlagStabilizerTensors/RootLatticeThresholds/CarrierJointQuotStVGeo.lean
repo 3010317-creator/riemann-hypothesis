@@ -117,8 +117,7 @@ theorem tri_mp' (ρ : ι → ℕ) (ε : ι → ℂ) (hε : ∀ p, MeasurePreserv
   intro p c c' hc
   have e1 : f c p - ε p * c p = G p c (f c) := by rw [hf c p]; ring
   have e2 : f c' p - ε p * c' p = G p c' (f c') := by rw [hf c' p]; ring
-  simp only [e1, e2]
-  exact hG p _ _ _ _ fun q hq => ⟨hc q hq, low (ρ p) c c' hc q hq⟩
+  simpa only [e1, e2] using hG p _ _ _ _ fun q hq => ⟨hc q hq, low (ρ p) c c' hc q hq⟩
 
 end Tri
 
@@ -138,10 +137,8 @@ theorem extC_measurable (w : Point D.host.E (D.R.rS + 1)) (a b : Fin (D.R.rS + 1
     Measurable fun c : FreeE w → ℂ => extC w c a b := by
   unfold extC
   by_cases h : a < b ∧ blkOf w.1 a.1 = blkOf w.1 b.1
-  · simp only [dite_eq_left h]
-    exact measurable_pi_apply _
-  · simp only [dite_eq_right h]
-    exact measurable_const
+  · simpa only [dite_eq_left h] using measurable_pi_apply _
+  · simpa only [dite_eq_right h] using measurable_const
 
 theorem extC_of_not_lt (w : Point D.host.E (D.R.rS + 1)) (c : FreeE w → ℂ) (a b : Fin (D.R.rS + 1)) (h : ¬ a < b) :
     extC w c a b = 0 := by
@@ -179,8 +176,7 @@ theorem nV_inv (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u : D.what₂.Wo
 theorem stV_one (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.what₂.Word) (γ : X.B.I.Ginf) (v : InfinitePlace X.B.I.F) :
     (1 : Formalism.REAL.UJ (X.B.I.ε v)) ∈ StV X u u' γ v := by
   refine ⟨nV_one X u v, ?_⟩
-  simp only [mul_one, inv_mul_cancel]
-  exact nV_one X u' v
+  simpa only [mul_one, inv_mul_cancel] using nV_one X u' v
 
 theorem stV_mul (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.what₂.Word) (γ : X.B.I.Ginf) (v : InfinitePlace X.B.I.F)
     (s t : Formalism.REAL.UJ (X.B.I.ε v)) (hs : s ∈ StV X u u' γ v) (ht : t ∈ StV X u u' γ v) :
@@ -243,10 +239,8 @@ theorem hJ_T_e (e f : Fin r → Fin n → ℂ) (z' : Fin n → ℂ)
   have h := flag_expand ε e f z' hfe hfz' T hT c.castSucc
   rw [fam_castSucc] at h
   have h2 := congrArg (Formalism.L2.SG.HidaSetting.hJ ε (f a)) h
-  rw [hJ_add_r', hJ_sum_r', hfe] at h2
-  rw [Finset.sum_eq_single a] at h2
-  · rw [hfe, ite_eq_left rfl, mul_one] at h2
-    exact h2
+  rw [hJ_add_r', hJ_sum_r', hfe, Finset.sum_eq_single a] at h2
+  · rwa [hfe, ite_eq_left rfl, mul_one] at h2
   · intro d _ hda; rw [hfe, ite_eq_right hda, mul_zero]
   · intro h; exact absurd (Finset.mem_univ a) h
 

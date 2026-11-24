@@ -26,13 +26,11 @@ def mW (H : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin k) (Fin k) ℂ := fun a b 
 
 private lemma hJ_sum_left' {ι : Type*} (s : Finset ι) (v : ι → Fin n → ℂ) (y : Fin n → ℂ) :
     hJ ε (∑ i ∈ s, v i) y = ∑ i ∈ s, hJ ε (v i) y := by
-  simp only [PtRepPf.hJ_apply, Finset.sum_apply, star_sum, Finset.sum_mul]
-  exact Finset.sum_comm
+  simpa only [PtRepPf.hJ_apply, Finset.sum_apply, star_sum, Finset.sum_mul] using Finset.sum_comm
 
 private lemma hJ_sum_right_root_lattice_thresholds {ι : Type*} (s : Finset ι) (x : Fin n → ℂ) (v : ι → Fin n → ℂ) :
     hJ ε x (∑ i ∈ s, v i) = ∑ i ∈ s, hJ ε x (v i) := by
-  simp only [PtRepPf.hJ_apply, Finset.sum_apply, Finset.mul_sum]
-  exact Finset.sum_comm
+  simpa only [PtRepPf.hJ_apply, Finset.sum_apply, Finset.mul_sum] using Finset.sum_comm
 
 private lemma hJ_sub_left_root_lattice_thresholds (x x' y : Fin n → ℂ) : hJ ε (x - x') y = hJ ε x y - hJ ε x' y := by
   simp only [PtRepPf.hJ_apply, Pi.sub_apply, star_sub, sub_mul, Finset.sum_sub_distrib]
@@ -182,8 +180,7 @@ theorem c_ne (hT : TrHyp F Qm Qim c) (a : Fin r) : c a ≠ 0 := by
   have h := hT.he a
   rw [h0, zero_smul] at h
   have h3 : Formalism.QuantumDeterminants.bvec (Formalism.QuantumDeterminants.eI k r a) = 0 := by
-    have h4 := congrArg (Qim *ᵥ ·) h
-    simpa [Matrix.mulVec_mulVec, hT.h1] using h4
+    simpa [Matrix.mulVec_mulVec, hT.h1] using congrArg (Qim *ᵥ ·) h
   have h5 := congrFun h3 (Formalism.QuantumDeterminants.eI k r a)
   simp [Formalism.QuantumDeterminants.bvec] at h5
 
@@ -221,8 +218,7 @@ private lemma herm_Hpk_bvec_eq_apply_of_antidiagonal (v : Fin (2 * r + k + 1) �
       simp only [Formalism.QuantumDeterminants.Hpk]
       split_ifs <;> first | rfl | (exfalso; (try simp only [Fin.ext_iff] at *); omega)
     rw [hm, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ q) h
+  · exact fun h => absurd (Finset.mem_univ q) h
 
 theorem inWb_Qi' (hT : TrHyp F Qm Qim c) (w : Fin n → ℂ) (hwe : ∀ a, hJ ε (F.e a) w = 0)
     (hwf : ∀ a, hJ ε (F.fd a) w = 0) : Formalism.QuantumDeterminants.inWb k r (Qim *ᵥ w) := by
@@ -593,8 +589,7 @@ theorem bridge_place (hT : TrHyp F Qm Qim c) (hT' : TrHyp F' Qm Qim c) {sc : ℝ
       have := (hu b).2
       rw [herm_Q hT, hz', Q_delta hT, Q_fvec hT' hsc, Matrix.mulVec_smul, PtRepPf.hJ_smul_left, hAf'] at this
       have h0 := (mul_eq_zero.mp this).resolve_left (hs0 b)
-      rw [← isom hH, Matrix.mulVec_mulVec, hHi, Matrix.one_mulVec] at h0
-      exact h0
+      rwa [← isom hH, Matrix.mulVec_mulVec, hHi, Matrix.one_mulVec] at h0
     have hfHy : ∀ a, hJ ε (f a) (H *ᵥ y) = 0 := fun a => by rw [fixed_left hH (hHf_ a), hfy a]
     have hR := h3 (H *ᵥ y) hfHy hgy
     have hWy : wc F (H *ᵥ y) = M *ᵥ wc F y := wc_fwd F hH hHi hiH hHe hHf hHz hMu y

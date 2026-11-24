@@ -22,15 +22,13 @@ theorem MinkowskiCovolumeBound.proof : MinkowskiCovolumeBound.Statement.{u} := b
   set c := lam / √(m : ℝ) with hc
 
   have hlow : ∀ v ∈ L, v ≠ 0 → lam ≤ ‖v‖ := by
-    intro v hv hv0
-    exact csInf_le ⟨0, fun x ⟨_, _, _, hx⟩ => hx ▸ norm_nonneg _⟩ ⟨v, hv, hv0, rfl⟩
+    exact fun v hv hv0 => csInf_le ⟨0, fun x ⟨_, _, _, hx⟩ => hx ▸ norm_nonneg _⟩ ⟨v, hv, hv0, rfl⟩
   have hlam0 : 0 ≤ lam := Real.sInf_nonneg (fun x ⟨_, _, _, hx⟩ => hx ▸ norm_nonneg _)
   have hcov : 0 ≤ ZLattice.covolume L := (ZLattice.covolume_pos L).le
   have hm0 : (0 : ℝ) < m := by exact_mod_cast hm
   have hc0' : 0 ≤ c := div_nonneg hlam0 (Real.sqrt_nonneg _)
   rcases hc0'.eq_or_lt with hc0 | hc0
-  · rw [← hc0, zero_pow (by omega)]
-    exact hcov
+  · rwa [← hc0, zero_pow (by omega)]
   by_contra hlt
   push Not at hlt
 

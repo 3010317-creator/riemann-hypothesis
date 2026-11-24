@@ -250,8 +250,7 @@ theorem integrable_unipotent_norm_rpow_neg {μN : Measure (Mt k r)} (hN : B.IsHa
   rcases Nat.eq_zero_or_pos r with hr | hr
   · subst hr
     have hsub : (Nset k 0 : Set (B.Mat k 0)) ⊆ {(1 : B.Mat k 0)} := by
-      intro x hx
-      exact P.SliceLastLevel.sz_N_zero hx
+      exact fun x hx => P.SliceLastLevel.sz_N_zero hx
     have hfin : IsFiniteMeasure μN := by
       refine ⟨?_⟩
       calc μN Set.univ ≤ μN (Nset k 0) + μN (Nset k 0)ᶜ := measure_univ_le_add_compl _
@@ -593,8 +592,7 @@ theorem geom (D : B.RealPlaceData k r Wp Wq) {γ : B.Mat k r} (hγ : γ ∈ B.GV
     calc B.gN n' = B.gN (γ⁻¹ * ρ * γ * s'') := by rw [← hn'e]
       _ ≤ B.gN γ⁻¹ * B.gN ρ * B.gN γ * B.gN s'' := by
         refine (P.B6.gN_mul_le _ _).trans (mul_le_mul_of_nonneg_right ?_ h0s'')
-        refine (P.B6.gN_mul_le _ _).trans (mul_le_mul_of_nonneg_right ?_ h0')
-        exact P.B6.gN_mul_le _ _
+        exact (P.B6.gN_mul_le _ _).trans (mul_le_mul_of_nonneg_right (P.B6.gN_mul_le _ _) h0')
       _ ≤ B.gN γ⁻¹ * (B.gN n * B.gN σ) * B.gN γ * B.gN s'' := by
         have := mul_le_mul_of_nonneg_left hgρ h0
         have := mul_le_mul_of_nonneg_right this h0'
@@ -745,8 +743,7 @@ theorem d_orbJConv : Formalism.FourierDecayAlt.D.OrbJConv := by
     (le_max_right _ _) hCP0 hK10 hKγ0 hM hbN0 hA4
   rw [norm_smul, Real.norm_of_nonneg hθ0]
   unfold Formalism.FourierDecayAlt.D.orbIntegrand
-  rw [norm_smul, P.B7.norm_xi, one_mul]
-  exact hkey
+  rwa [norm_smul, P.B7.norm_xi, one_mul]
 
 end Formalism.FourierDecayAlt.P.Dx3
 

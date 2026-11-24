@@ -125,8 +125,7 @@ lemma shift_bound {b : ℝ} (hb : 0 ≤ b) {R : ℝ} (hR : 0 ≤ R) (y x : V) (h
   rw [Real.mul_rpow h1.le h3.le] at key'
   have hA := Real.rpow_pos_of_pos h1 b
   have hB := Real.rpow_pos_of_pos h2 b
-  rw [Real.rpow_neg h1.le, Real.rpow_neg h2.le, le_mul_inv_iff₀ hB, inv_mul_le_iff₀ hA]
-  exact key'
+  rwa [Real.rpow_neg h1.le, Real.rpow_neg h2.le, le_mul_inv_iff₀ hB, inv_mul_le_iff₀ hA]
 
 lemma summable_one_add_norm (Λ : Submodule ℤ V) [DiscreteTopology Λ] [IsZLattice ℝ Λ]
     {b : ℝ} (hb : (Module.finrank ℝ V : ℝ) < b) :
@@ -182,7 +181,6 @@ theorem poisson_periodization (V : Type*) [NormedAddCommGroup V] [InnerProductSp
     exact hcont.continuousAt (Metric.isOpen_ball.mem_nhds (by simp))
   · intro l₀ x
     have h := (Equiv.addRight l₀).tsum_eq (fun l : Λ => f (↑l + x))
-    simp only [Equiv.coe_addRight, Submodule.coe_add, add_assoc] at h
-    exact h
+    simpa only [Equiv.coe_addRight, Submodule.coe_add, add_assoc] using h
 
 end Formalism.H

@@ -301,8 +301,7 @@ theorem skew_reduction_analytic : StepAnalytic := by
           star (f₂ (Matrix.of x * NormedSpace.exp (((0 : ℝ) : ℂ) • X))) +
         f₁ (Matrix.of x * NormedSpace.exp (((0 : ℝ) : ℂ) • X)) *
           star (RdV X f₂ (Matrix.of x * NormedSpace.exp (((0 : ℝ) : ℂ) • X)))) μ := by
-    simp only [flow_zero]
-    exact aesm_of_contOn hGc hconc hQc
+    simpa only [flow_zero] using aesm_of_contOn hGc hconc hQc
   obtain ⟨C, hC⟩ := (hK₁c.inter_left hGc).exists_bound_of_continuousOn (hQc.mono Set.inter_subset_left)
   set L : Set (Matrix (Fin n) (Fin n) ℂ) :=
     (fun p : Matrix (Fin n) (Fin n) ℂ × ℝ => p.1 * NormedSpace.exp ((p.2 : ℂ) • X)) ''

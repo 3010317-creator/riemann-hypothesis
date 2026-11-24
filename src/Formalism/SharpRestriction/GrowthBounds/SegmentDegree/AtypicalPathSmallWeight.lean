@@ -195,9 +195,7 @@ theorem lemT_of (ha : PathWeightEqRank) (hb : PathCountFinite) (hc : AtypicalPat
         rw [this]; simpa using hcR0
       · refine le_trans ?_ (hc' μ hμ ht)
         have hIfin : ({I | IsSt (tanPart μ) I} : Set (ℤ → Finset (Fin K))).Finite := by
-          refine (hfin.image Prod.snd).subset ?_
-          intro I hI
-          exact ⟨(μ, I), ⟨hμ, hI⟩, rfl⟩
+          exact (hfin.image Prod.snd).subset (fun I hI => ⟨(μ, I), ⟨hμ, hI⟩, rfl⟩)
         rw [Set.ncard_eq_toFinset_card _ hIfin]
         have : (hBfin.toFinset.filter fun q => q.1 = μ).card ≤ hIfin.toFinset.card := by
           refine Finset.card_le_card_of_injOn Prod.snd ?_ ?_

@@ -62,8 +62,7 @@ theorem AssociatedMultiHomogPrime.proof (h1 : MultiHomogPrimeCriterion.Statement
   have hne : A.Nonempty := by
     refine ⟨J.colon {1}, 1, 0, ?_, ?_, rfl⟩
     · exact isWeightedHomogeneous_one F (blockWeight ι)
-    · intro h
-      exact hJtop ((Ideal.eq_top_iff_one J).2 h)
+    · exact fun h => hJtop ((Ideal.eq_top_iff_one J).2 h)
   have hnoeth : IsNoetherianRing (MRing ι F) := inferInstance
   obtain ⟨Q, ⟨f, s, hf, hfJ, rfl⟩, hmax⟩ :=
     (set_has_maximal_iff_noetherian (R := MRing ι F) (M := MRing ι F)).2 hnoeth A hne
@@ -78,9 +77,7 @@ theorem AssociatedMultiHomogPrime.proof (h1 : MultiHomogPrimeCriterion.Statement
     · exact Or.inr hbQ
     left
     have hbf : b * f ∉ J := by
-      intro h
-      apply hbQ
-      exact Submodule.mem_colon_singleton.2 (by simpa [smul_eq_mul] using h)
+      exact fun h => hbQ (Submodule.mem_colon_singleton.2 (by simpa [smul_eq_mul] using h))
     have hform : IsMultiHomog (b * f) (sb + s) := hb.mul hf
     have hle : J.colon {f} ≤ J.colon {b * f} := by
       intro x hx
@@ -434,8 +431,7 @@ theorem CutPieces.proof : CutPieces.Statement := by
       apply le_antisymm
       · rintro f ⟨hf, hfI⟩
         obtain ⟨i, hi, y, rfl⟩ := hsplit f hf hfI
-        rw [CutPieces.component_mul hx, ite_eq_right hem, add_zero]
-        exact hi
+        rwa [CutPieces.component_mul hx, ite_eq_right hem, add_zero]
       · exact inf_le_inf_left _ (Submodule.restrictScalars_mono F le_sup_left)
     rw [hsup]
 
@@ -476,8 +472,7 @@ theorem foldr_diffStep_eventuallyEq (l : List (K → ℤ)) {F G : (K → ℤ) �
   induction l with
   | nil => simpa using h
   | cons b l ih =>
-    simp only [List.foldr_cons]
-    exact diffStep_eventuallyEq b ih
+    simpa only [List.foldr_cons] using diffStep_eventuallyEq b ih
 
 theorem DegLTClosure.proof (h1 : MixedDiffLinear.Statement) : DegLTClosure.Statement := by
   intro K n f g c s
@@ -491,8 +486,7 @@ theorem DegLTClosure.proof (h1 : MixedDiffLinear.Statement) : DegLTClosure.State
   · intro hf bs
     have h' := (tendsto_sub_const_atTop s).eventually (hf bs)
     filter_upwards [h'] with m hm
-    rw [(h1 K n bs f g c s 0).2.2.1]
-    exact hm
+    rwa [(h1 K n bs f g c s 0).2.2.1]
   · intro hf bs
     have hz : ∀ᶠ m in Filter.atTop, mixedDiff (fun i : Fin n => bs i.succ) f m = 0 :=
       hf (fun i => bs i.succ)
@@ -580,8 +574,7 @@ theorem proof (h1 : MixedDiffLinear.Statement) : DegLTEventuallyConst.Statement 
       mixedDiff bs f m - mixedDiff bs f (m - Pi.single k 1) = 0 := by
     intro k
     have hk := hf (Matrix.vecCons (Pi.single k 1) bs)
-    rw [(h1 K n bs f 0 0 0 (Pi.single k 1)).2.2.2.2] at hk
-    exact hk
+    rwa [(h1 K n bs f 0 0 0 (Pi.single k 1)).2.2.2.2] at hk
   obtain ⟨N, hN⟩ := Filter.eventually_atTop.mp (Filter.eventually_all.mpr hev)
   exact ⟨mixedDiff bs f N, Filter.eventually_atTop.mpr ⟨N, fun m hm =>
     eq_of_unitSteps_eq_zero (mixedDiff bs f) N (fun m hm => hN m hm) _ m hm rfl⟩⟩
@@ -810,8 +803,7 @@ theorem FiltrationStepLength.proof : FiltrationStepLength.Statement := by
     (LocalizedModule.map_injective _ _ hinj) (LocalizedModule.map_surjective _ _ hsurj)
     (LocalizedModule.map_exact _ _ _ hex)
   unfold multAt
-  rw [add_comm]
-  exact key
+  rwa [add_comm]
 
 end GroundTheory.Heights₂.Heights.NumbersDVR
 end -- clump:auto
@@ -1228,8 +1220,7 @@ theorem IntNumAssoc.proof (h1 : PrimeFiltration.Statement.{u})
       have hJ' : ringKrullDim (MRing ι F ⧸ J) <
           ((n + Fintype.card K + 1 : ℕ) : WithBot ℕ∞) := by
         have e : n + Fintype.card K + 1 = n + 1 + Fintype.card K := by omega
-        rw [e]
-        exact hdim
+        rwa [e]
       have hmin := h5 _ J p.1 (n + Fintype.card K) (hl p hpl).2.2 hJ' hbig
       rw [ite_eq_left (hfin.mem_toFinset.mpr hmin), ite_eq_left hrel]
   have hl2 : (l.map fun p => intNum F p.1 bs) = l.map fun p =>
@@ -1500,10 +1491,7 @@ theorem RelevantDimGe.proof (h1 : BlockAdjoinPrime.Statement.{u}) : RelevantDimG
     exact hi (((hJ j).2 ⟨e.symm ⟨j, hj⟩, i⟩ (by simp [B])).1 hmem)
   let f : Fin (Fintype.card K + 1) → PrimeSpectrum.zeroLocus (R := MRing ι R) (Q : Set (MRing ι R)) :=
     fun j => ⟨⟨J j, (hJ j).1⟩, hle j⟩
-  have hf : StrictMono f := by
-    refine Fin.strictMono_iff_lt_succ.2 fun j => ?_
-    show J j < J (j + 1)
-    exact hstrict j j.isLt
+  have hf : StrictMono f := Fin.strictMono_iff_lt_succ.2 fun j => hstrict j j.isLt
   rw [ringKrullDim_quotient]
   exact Order.LTSeries.length_le_krullDim (LTSeries.mk (Fintype.card K) f hf)
 

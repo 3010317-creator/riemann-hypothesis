@@ -142,8 +142,7 @@ theorem taylor_mul_coeff_low_degree (N : ℕ) : ∀ (f h : (Fin g → ℂ) → �
     ∀ n : Fin 1 × Fin g →₀ ℕ, n.degree < N → coeff n (tay (f * h) 0) = coeff n (tay f 0 * tay h 0) := by
   induction N with
   | zero =>
-    intro f h _ _ n hn
-    exact absurd hn (Nat.not_lt_zero _)
+    exact fun f h _ _ n hn => absurd hn (Nat.not_lt_zero _)
   | succ N ih =>
     intro f h hf hh n hn
     by_cases h0 : n = 0
@@ -153,8 +152,7 @@ theorem taylor_mul_coeff_low_degree (N : ℕ) : ∀ (f h : (Fin g → ℂ) → �
       show mD (f * h) 0 (dirs 0 + 0) / fct 0 = (mD f 0 (dirs 0 + 0) / fct 0) * (mD h 0 (dirs 0 + 0) / fct 0)
       simp [dirs, fct, mD_zero]
     · obtain ⟨x, hx⟩ : ∃ x, n x ≠ 0 := by
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         exact h0 (Finsupp.ext hc)
       obtain ⟨i, j⟩ := x
       have hi : i = 0 := Subsingleton.elim _ _

@@ -110,8 +110,7 @@ theorem complexifyLie_bijective : Function.Bijective (complexifyLie (N := N)) :=
       have e := congrArg Matrix.conjTranspose h0
       rw [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, hA', hB', Matrix.conjTranspose_zero] at e
       have hI : star Complex.I = -Complex.I := Complex.conj_I
-      rw [hI, neg_smul_neg] at e
-      exact e
+      rwa [hI, neg_smul_neg] at e
     have hA0 : A = 0 := by
       have e : (2 : ℂ) • A = 0 := by
         rw [two_smul]
@@ -120,8 +119,7 @@ theorem complexifyLie_bijective : Function.Bijective (complexifyLie (N := N)) :=
       exact (smul_eq_zero.1 e).resolve_left two_ne_zero
     have hB0 : B = 0 := by
       have e : Complex.I • B = 0 := by
-        rw [hA0, zero_add] at h0
-        exact h0
+        rwa [hA0, zero_add] at h0
       exact (smul_eq_zero.1 e).resolve_left Complex.I_ne_zero
     exact Prod.ext (Subtype.ext hA0) (Subtype.ext hB0)
   · intro Z
@@ -316,8 +314,7 @@ theorem uToLieMat_mem (x : UCo N) : uToLieMat x ∈ Formalism.BasicNotions.lieU 
   have h := congrFun (congrFun (skMat_conjTranspose_om x) (Equiv.sumEmpty (Fin N) (Fin 0) i))
     (Equiv.sumEmpty (Fin N) (Fin 0) j)
   simp only [Matrix.conjTranspose_apply, Matrix.neg_apply] at h ⊢
-  rw [uToLieMat_apply, uToLieMat_apply]
-  exact h
+  rwa [uToLieMat_apply, uToLieMat_apply]
 
 def uToLie (x : UCo N) : Formalism.BasicNotions.lieU N 0 := ⟨uToLieMat x, uToLieMat_mem x⟩
 
@@ -660,8 +657,7 @@ lemma toM_preimage_exp_ball_eq_upqT_exp_ball (N : ℕ) (r : ℝ) :
     rfl
   · rintro ⟨X, hX, hXe⟩
     refine ⟨coords (reindex (eN N) (eN N) (X : Matrix (Fin N ⊕ Fin 0) (Fin N ⊕ Fin 0) ℂ)), ?_, ?_⟩
-    · rw [uToLie_coords]
-      exact hX
+    · rwa [uToLie_coords]
     · rw [hXe, reindex_exp, skMat_coords]
       rw [Matrix.conjTranspose_reindex, lie_skew X]
       rfl
@@ -686,7 +682,6 @@ lemma continuous_skMat (N : ℕ) : Continuous (skMat : UCo N → Matrix (Fin N) 
         exact continuous_const
 
 lemma continuous_uToLie (N : ℕ) : Continuous (uToLie (N := N)) := by
-  show Continuous fun x : UCo N => (⟨uToLieMat x, uToLieMat_mem x⟩ : Formalism.BasicNotions.lieU N 0)
   exact Continuous.subtype_mk ((continuous_skMat N).matrix_reindex _ _) _
 
 lemma isOpen_ballU (N : ℕ) (r : ℝ) : IsOpen (Formalism.BasicNotions.ballU N 0 r) := by
@@ -715,13 +710,11 @@ lemma norm_skMat_lt (x : UCo N) (r : ℝ) (hx : uToLie x ∈ Formalism.BasicNoti
 lemma norm_lt_of_mem (x : UCo N) (r : ℝ) (hr : 0 < r) (hx : uToLie x ∈ Formalism.BasicNotions.ballU N 0 r) : ‖x‖ < r := by
   have h1 : ‖x.1‖ < r := by
     refine (pi_norm_lt_iff hr).2 fun a => ?_
-    have h5 := norm_skMat_lt x r hx a a
-    simpa [skMat] using h5
+    simpa [skMat] using norm_skMat_lt x r hx a a
   have h2 : ‖x.2‖ < r := by
     refine (pi_norm_lt_iff hr).2 ?_
     rintro ⟨⟨a, b⟩, hab⟩
-    have h5 := norm_skMat_lt x r hx a b
-    simpa [skMat, ne_of_gt hab, hab] using h5
+    simpa [skMat, ne_of_gt hab, hab] using norm_skMat_lt x r hx a b
   rw [Prod.norm_def]
   exact max_lt h1 h2
 

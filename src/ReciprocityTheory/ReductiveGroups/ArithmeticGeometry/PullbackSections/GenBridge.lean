@@ -118,10 +118,8 @@ def bcV : Gx (spMap ψ ≫ x) ⟶ pullback (pullback.snd Xo.univ.t.G.hom x) (spM
 theorem bcU_fst : bcU ψ x ≫ (fst (Over.mk (spMap ψ ≫ x)) Xo.univ.t.G).left = pullback.snd _ _ := by
   exact gxLift_fst _ _ _ _
 theorem bcU_snd : bcU ψ x ≫ (snd (Over.mk (spMap ψ ≫ x)) Xo.univ.t.G).left =
-    pullback.fst _ _ ≫ pullback.fst Xo.univ.t.G.hom x := by
-  exact gxLift_snd _ _ _ _
-theorem bcV_fst : bcV ψ x ≫ pullback.fst _ _ = bcPm ψ x ≫ gxV x := by
-  exact pullback.lift_fst _ _ _
+    pullback.fst _ _ ≫ pullback.fst Xo.univ.t.G.hom x := gxLift_snd _ _ _ _
+theorem bcV_fst : bcV ψ x ≫ pullback.fst _ _ = bcPm ψ x ≫ gxV x := pullback.lift_fst _ _ _
 theorem bcV_snd : bcV ψ x ≫ pullback.snd _ _ = (fst (Over.mk (spMap ψ ≫ x)) Xo.univ.t.G).left := by
   exact pullback.lift_snd _ _ _
 

@@ -199,8 +199,7 @@ theorem exp_lift {r c n m : ℕ} (e : Fin n → Fin r) (he : Function.Injective 
       | last =>
         have hl : Fin.last m ∉ S.map Fin.castSuccEmb := by
           simp only [Finset.mem_map, Fin.coe_castSuccEmb, not_exists, not_and]
-          intro q _ hq
-          exact (Fin.castSucc_lt_last q).ne hq
+          exact fun q _ hq => (Fin.castSucc_lt_last q).ne hq
         simp [upd, hl, liftR_last]
       | cast q =>
         have hm : Fin.castSucc q ∈ S.map Fin.castSuccEmb ↔ q ∈ S := Finset.mem_map' Fin.castSuccEmb
@@ -212,8 +211,7 @@ theorem exp_lift {r c n m : ℕ} (e : Fin n → Fin r) (he : Function.Injective 
   · intro S hS
     beta_reduce
     rw [ite_eq_right]
-    intro hall
-    exact hz b ((liftR_last e z ρ).symm.trans (hall _ hS)).symm
+    exact fun hall => hz b ((liftR_last e z ρ).symm.trans (hall _ hS)).symm
 
 theorem rowDiv_prod {r c n K : ℕ} (e : Fin n → Fin r) (sz : Fin K → ℕ)
     (G : ∀ k, (Fin (sz k) → Fin n) → MvPolynomial (Fin r × Fin c) ℤ) (hG : ∀ k, Exp e (G k))
@@ -241,8 +239,7 @@ theorem rowDiv_prod {r c n K : ℕ} (e : Fin n → Fin r) (sz : Fin K → ℕ)
     · rw [ite_eq_left hs, ite_eq_left ⟨hA', hs⟩]
     · rw [ite_eq_right hs, ite_eq_right (fun h => hs h.2)]
   · rw [ite_eq_right hA, mul_zero, Polynomial.coeff_zero, ite_eq_right]
-    intro h
-    exact hA (fun k _ => h.1 k)
+    exact fun h => hA (fun k _ => h.1 k)
 
 def tmat {n K : ℕ} (sz : Fin K → ℕ) (a b : Fin n) (t : ℕ) (I : ∀ k, Fin (sz k) → Fin n) :
     (∀ k, Fin (sz k) → Fin n) →₀ ℤ :=

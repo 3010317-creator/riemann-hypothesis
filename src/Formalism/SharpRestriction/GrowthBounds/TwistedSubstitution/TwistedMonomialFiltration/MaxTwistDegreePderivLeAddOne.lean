@@ -166,8 +166,7 @@ theorem flt_tay_monomial (R : Type*) [CommRing R] {σ : Type*} (m : σ →₀ �
     · subst hbe
       simp [flt_g]
     · obtain ⟨k, hk⟩ : ∃ k, be k ≠ 0 := by
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         exact hbe (Finsupp.ext hc)
       have hz : (be.prod fun k j => ((Nat.choose 0 j : ℕ) : R)) = 0 := by
         rw [Finsupp.prod]
@@ -197,8 +196,7 @@ theorem flt_tay_coeff (R : Type*) [CommRing R] {σ : Type*} (F : MvPolynomial σ
   · rfl
   · have hz : (be.prod fun k j => (m k).choose j) = 0 := by
       obtain ⟨k, hk⟩ : ∃ k, m k < be k := by
-        by_contra hcon
-        push Not at hcon
+        by_contra! hcon
         exact hle fun k => hcon k
       rw [Finsupp.prod]
       exact Finset.prod_eq_zero (Finsupp.mem_support_iff.2 (by omega)) (Nat.choose_eq_zero_of_lt hk)
@@ -289,12 +287,10 @@ theorem flt_Th_mem {R : Type*} [CommRing R] {ι : Type*} {n : ℕ} (LL : Letters
   refine AddSubgroup.sum_mem _ fun m _ => ?_
   rw [show monomial m (AddMonoidAlgebra.coeff P m) = C (AddMonoidAlgebra.coeff P m) * monomial m 1 by rw [C_mul_monomial, mul_one], map_mul]
   have hc : AddMonoidAlgebra.coeff P m ∈ (flt_L (GLCoord R n) e).F t := by
-    have h3 := (flt_lift_mem.1 hP) m
-    simpa using h3
+    simpa using (flt_lift_mem.1 hP) m
   have h1 : flt_Th LL S j (C (AddMonoidAlgebra.coeff P m)) ∈
       (flt_lift (laurentCoeffFiltration R n (ι × Fin n) e) (flt_cost LL S (!bm))).F t := by
-    simp only [flt_Th, eval₂Hom_C, RingHom.comp_apply]
-    exact flt_C_mem (flt_C_mem hc)
+    simpa only [flt_Th, eval₂Hom_C, RingHom.comp_apply] using flt_C_mem (flt_C_mem hc)
   have h2 := flt_hom_monomial _ (flt_Th LL S j) 0 hX m
   rw [AddMonoidHom.zero_apply] at h2
   have h4 := (flt_lift (laurentCoeffFiltration R n (ι × Fin n) e) (flt_cost LL S (!bm))).mul_mem h1 h2
@@ -309,8 +305,7 @@ theorem flt_divDer_mem {R : Type*} [CommRing R] {ι : Type*} {n : ℕ} (LL : Let
     have h2 := congrArg (fun φ => AddMonoidAlgebra.coeff (φ F) be) (flt_Th_twist (R := R) LL S j)
     simp only [RingHom.comp_apply, coeff_map] at h2
     rw [← h2, flt_tay_coeff]
-  rw [e1]
-  exact h1
+  rwa [e1]
 
 theorem flt_op_mem {R : Type*} [CommRing R] {ι : Type*} {n : ℕ} (LL : Letters ι) (S : Set ι) (j : Fin n)
     {e : ℤ} {bm : Bool} (h : flt_compat e bm) {t : ℤ} {F : MvPolynomial (ι × Fin n) R}
@@ -366,8 +361,7 @@ theorem flt_op_valS {R : Type*} [CommRing R] {ι : Type} {n : ℕ} [NeZero n] (L
     (F : MvPolynomial (ι × Fin n) R) (al be : ι × Fin n →₀ ℕ) (N : ℕ)
     (hN : covDeg LL S al + vecDeg LL S be ≤ N) :
     valS LL S F ≤ valS LL S (monomial al 1 * divDer be F) + ((N : ℤ) : WithTop ℤ) := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   cases hv : valS LL S (monomial al 1 * divDer be F) with
   | top =>
     rw [hv] at hcon
@@ -388,8 +382,7 @@ theorem flt_op_lam1S {R : Type*} [CommRing R] {ι : Type} {n : ℕ} [NeZero n] (
     (F : MvPolynomial (ι × Fin n) R) (al be : ι × Fin n →₀ ℕ) (N : ℕ)
     (hN : vecDeg LL S al + covDeg LL S be ≤ N) :
     lam1S LL S (monomial al 1 * divDer be F) ≤ lam1S LL S F + ((N : ℤ) : WithBot ℤ) := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   cases hv : lam1S LL S (monomial al 1 * divDer be F) with
   | bot =>
     rw [hv] at hcon
@@ -524,15 +517,13 @@ theorem valS_X_mul_of (F : MvPolynomial (ι × Fin n) R) (v : ι × Fin n) (h : 
     valS LL S F ≤ valS LL S (X v * F) := by
   have hv := flt_op_valS LL S F (Finsupp.single v 1) 0 0
     (by rw [covDeg_single_of LL S v h, vecDeg_zero'])
-  rw [divDer_zero', ← X_eq_monomial', Nat.cast_zero, WithTop.coe_zero, add_zero] at hv
-  exact hv
+  rwa [divDer_zero', ← X_eq_monomial', Nat.cast_zero, WithTop.coe_zero, add_zero] at hv
 
 theorem valS_X_mul (F : MvPolynomial (ι × Fin n) R) (v : ι × Fin n) :
     valS LL S F ≤ valS LL S (X v * F) + ((1 : ℤ) : WithTop ℤ) := by
   have hv := flt_op_valS LL S F (Finsupp.single v 1) 0 1
     (by rw [vecDeg_zero', add_zero]; exact covDeg_single_le LL S v)
-  rw [divDer_zero', ← X_eq_monomial', Nat.cast_one] at hv
-  exact hv
+  rwa [divDer_zero', ← X_eq_monomial', Nat.cast_one] at hv
 
 theorem valS_pderiv_of (F : MvPolynomial (ι × Fin n) R) (v : ι × Fin n) (h : v.1 ∈ S → LL.vec v.1 = false) :
     valS LL S F ≤ valS LL S (pderiv v F) := by
@@ -546,22 +537,19 @@ theorem valS_pderiv (F : MvPolynomial (ι × Fin n) R) (v : ι × Fin n) :
     valS LL S F ≤ valS LL S (pderiv v F) + ((1 : ℤ) : WithTop ℤ) := by
   have hv := flt_op_valS LL S F 0 (Finsupp.single v 1) 1
     (by rw [covDeg_zero', zero_add]; exact vecDeg_single_le LL S v)
-  rw [divDer_single_one, MvPolynomial.monomial_zero', C_1, one_mul, Nat.cast_one] at hv
-  exact hv
+  rwa [divDer_single_one, MvPolynomial.monomial_zero', C_1, one_mul, Nat.cast_one] at hv
 
 theorem maxTwistDegree_X_mul_le_of (F : MvPolynomial (ι × Fin n) R) (v : ι × Fin n) (h : v.1 ∈ S → LL.vec v.1 = false) :
     lam1S LL S (X v * F) ≤ lam1S LL S F := by
   have hv := flt_op_lam1S LL S F (Finsupp.single v 1) 0 0
     (by rw [vecDeg_single_of LL S v h, covDeg_zero'])
-  rw [divDer_zero', ← X_eq_monomial', Nat.cast_zero, WithBot.coe_zero, add_zero] at hv
-  exact hv
+  rwa [divDer_zero', ← X_eq_monomial', Nat.cast_zero, WithBot.coe_zero, add_zero] at hv
 
 theorem maxTwistDegree_X_mul_le_add_one (F : MvPolynomial (ι × Fin n) R) (v : ι × Fin n) :
     lam1S LL S (X v * F) ≤ lam1S LL S F + ((1 : ℤ) : WithBot ℤ) := by
   have hv := flt_op_lam1S LL S F (Finsupp.single v 1) 0 1
     (by rw [covDeg_zero', add_zero]; exact vecDeg_single_le LL S v)
-  rw [divDer_zero', ← X_eq_monomial', Nat.cast_one] at hv
-  exact hv
+  rwa [divDer_zero', ← X_eq_monomial', Nat.cast_one] at hv
 
 theorem maxTwistDegree_pderiv_le_of (F : MvPolynomial (ι × Fin n) R) (v : ι × Fin n) (h : v.1 ∈ S → LL.vec v.1 = true) :
     lam1S LL S (pderiv v F) ≤ lam1S LL S F := by
@@ -575,8 +563,7 @@ theorem maxTwistDegree_pderiv_le_add_one (F : MvPolynomial (ι × Fin n) R) (v :
     lam1S LL S (pderiv v F) ≤ lam1S LL S F + ((1 : ℤ) : WithBot ℤ) := by
   have hv := flt_op_lam1S LL S F 0 (Finsupp.single v 1) 1
     (by rw [vecDeg_zero', zero_add]; exact covDeg_single_le LL S v)
-  rw [divDer_single_one, MvPolynomial.monomial_zero', C_1, one_mul, Nat.cast_one] at hv
-  exact hv
+  rwa [divDer_single_one, MvPolynomial.monomial_zero', C_1, one_mul, Nat.cast_one] at hv
 
 end Formalism.MainNotions.TestSideWords.TwistedFiltration.G2
 end -- clump:auto

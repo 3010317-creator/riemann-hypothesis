@@ -303,8 +303,7 @@ def lawK (B : FB R d O) : FGLaw k d where
 
 theorem invariantDerivations_commute_formal_connection : GE.DofCommSt := by
   unfold GE.DofCommSt
-  intro R _ d O _ _ k _ _ _ B u v g
-  exact dof_comm_law (lawK k B) u v g
+  exact fun R _ d O _ _ k _ _ _ B u v g => dof_comm_law (lawK k B) u v g
 
 end Transfer
 

@@ -150,8 +150,7 @@ theorem ctens_dense [DecidableEq V] (l : List V) (hl : l.Nodup) :
     have hy : y ∈ Submodule.span ℂ (Set.range (pt H l)) := by rw [pt_span H l hl]; trivial
     have h2 := Submodule.mem_map_of_mem
       (f := (UniformSpace.Completion.toComplL : (tw H l).C →L[ℂ] Cw H l).toLinearMap) hy
-    rw [Submodule.map_span, ← Set.range_comp] at h2
-    exact h2
+    rwa [Submodule.map_span, ← Set.range_comp] at h2
   exact Dense.mono h1 UniformSpace.Completion.denseRange_coe
 
 end Formalism.L2.SG.Pf.BunT
@@ -225,8 +224,7 @@ theorem repF_mp (g : I.GA) : MeasurePreserving (fun x => repF I (x * g))
     ((I.muA (muF I)).restrict (fundF I)) ((I.muA (muF I)).restrict (fundF I)) := by
   obtain ⟨_, h2⟩ := rr_map (fundF_FD I) g
   refine ⟨(repF_meas I).comp (measurable_mul_const g), ?_⟩
-  rw [← Measure.map_congr (rep_ae I g)]
-  exact h2
+  rwa [← Measure.map_congr (rep_ae I g)]
 
 def regR (g : I.GA) : I.L2 (muF I) (fundF I) →L[ℂ] I.L2 (muF I) (fundF I) :=
   (Lp.compMeasurePreservingₗᵢ ℂ (fun x => repF I (x * g)) (repF_mp I g)).toContinuousLinearMap
@@ -314,8 +312,7 @@ theorem b_lt (R : Ranks) (P : HCParam R) {h : ℚ} (hh : 0 ≤ h)
   have hij' : i.1 < j.1 := hij
   have := b_gap R P hh hb (j.1 - i.1 - 1) i (by omega)
   have e : (⟨i.1 + (j.1 - i.1 - 1) + 1, by omega⟩ : Fin R.m) = j := Fin.ext (by simp only; omega)
-  rw [e] at this
-  exact this
+  rwa [e] at this
 
 theorem u_anti (R : Ranks) (P : HCParam R) : ∀ (d : ℕ) (i : Fin R.k) (hi : i.1 + d < R.k),
     P.u ⟨i.1 + d, hi⟩ ≤ P.u i := by
@@ -1047,8 +1044,7 @@ theorem exp (h : FH I g e0 f0 z0 bw bwd ew) : ∀ w ∈ I.Lf, w - Rc I e0 f0 z0 
     show (g : I.E ⊗[I.F] Af I.F) • y - Rc I e0 f0 z0 bw bwd ((g : I.E ⊗[I.F] Af I.F) • y) ∈ mL I g
     rw [Rc_smul, ← smul_sub]
     exact smul_mem_mL I (sub_mem hy (Rc_Lf I e0 f0 z0 bw bwd hm hy))
-  intro w hw
-  exact (sup_le (Submodule.span_le.2 hgen) hmL) (h.span w hw)
+  exact fun w hw => (sup_le (Submodule.span_le.2 hgen) hmL) (h.span w hw)
 
 end Main
 
@@ -1065,20 +1061,15 @@ theorem adj (x : I.Gf) (u w : VA I) :
     hA I u ((I.fmat x - 1) *ᵥ w) = hA I ((I.fmat x⁻¹ - 1) *ᵥ u) w := by
   have h1 : hA I u (I.fmat x *ᵥ w) = hA I (I.fmat x⁻¹ *ᵥ u) w := by
     have := hA_fmat I x (I.fmat x⁻¹ *ᵥ u) w
-    rw [Matrix.mulVec_mulVec, ← fmat_mul, mul_inv_cancel, fmat_one, Matrix.one_mulVec] at this
-    exact this
+    rwa [Matrix.mulVec_mulVec, ← fmat_mul, mul_inv_cancel, fmat_one, Matrix.one_mulVec] at this
   rw [Matrix.sub_mulVec, Matrix.sub_mulVec, Matrix.one_mulVec, Matrix.one_mulVec, hA_sub_right, hA_sub_left, h1]
 
 theorem mem_Mo_of {S : Set (VA I)} {w : VA I} (h1 : w - Rc I e0 f0 z0 bw bwd w ∈ mL I g)
     (h2 : Rc I e0 f0 z0 bw bwd w ∈ Mo I g S) : w ∈ Mo I g S := by
-  have h3 : w - Rc I e0 f0 z0 bw bwd w ∈ Mo I g S := by
-    show _ ∈ Submodule.span (IntAf I.F I.E) S ⊔ mL I g
-    exact Submodule.mem_sup_right h1
-  have h4 := Submodule.add_mem _ h3 h2
-  simpa using h4
+  have h3 : w - Rc I e0 f0 z0 bw bwd w ∈ Mo I g S := Submodule.mem_sup_right h1
+  simpa using Submodule.add_mem _ h3 h2
 
 theorem span_Mo {S : Set (VA I)} {v : VA I} (h : v ∈ Submodule.span (IntAf I.F I.E) S) : v ∈ Mo I g S := by
-  show v ∈ Submodule.span (IntAf I.F I.E) S ⊔ mL I g
   exact Submodule.mem_sup_left h
 
 theorem D1 (h : FH I g e0 f0 z0 bw bwd ew) {x : I.Gf} (hx : x ∈ I.Kset) (hcx : K2cong I g e0 z0 bw x) (j : Fin k) :
@@ -1115,8 +1106,7 @@ theorem D1 (h : FH I g e0 f0 z0 bw bwd ew) {x : I.Gf} (hx : x ∈ I.Kset) (hcx :
       · have hl' : l.1 < i.1 := hl
         have hlj : j ≠ l := fun e => hji (by rw [e]; exact hl')
         have := Zsym (h.dual j l)
-        rw [ite_eq_right hlj, map_zero, sub_zero] at this
-        exact this
+        rwa [ite_eq_right hlj, map_zero, sub_zero] at this
 
 theorem F1 (h : FH I g e0 f0 z0 bw bwd ew) {x : I.Gf} (hx : x ∈ I.Kset) (hcx : K2cong I g e0 z0 bw x) (b : Fin r) :
     (I.fmat x - 1) *ᵥ f0 b ∈

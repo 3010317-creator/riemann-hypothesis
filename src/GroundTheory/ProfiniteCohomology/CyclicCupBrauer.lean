@@ -66,8 +66,7 @@ theorem inflation_H2π_eq_zero_iff (A : Rep.{u} k G) [IsDiscreteRep A] (U : Open
         A.ρ (v 0) (cochainOf A w (fun _ => v 1)) - cochainOf A w (fun _ => v 0 * v 1) +
           cochainOf A w (fun _ => v 0) := by
     intro w v
-    have e := congrFun (cochainOf_d (A := A) w) v
-    exact e.trans (inhomogeneousCochains_d_one_apply A _ v)
+    exact (congrFun (cochainOf_d (A := A) w) v).trans (inhomogeneousCochains_d_one_apply A _ v)
   constructor
   · rintro ⟨w, hw⟩
     refine ⟨fun g => cochainOf A w (fun _ => g),
@@ -75,8 +74,7 @@ theorem inflation_H2π_eq_zero_iff (A : Rep.{u} k G) [IsDiscreteRep A] (U : Open
       fun g h => ?_⟩
     have e := congrArg (fun c => cochainOf A c ![g, h]) hw
     simp only at e
-    rw [hL, hR] at e
-    exact e
+    rwa [hL, hR] at e
   · rintro ⟨f, hf, hfz⟩
     refine ⟨mkCochain A (fun v : Fin 1 → G => f (v 0)) (hf.comp_continuous (continuous_apply 0)), ?_⟩
     apply cochainOf_injective
@@ -201,9 +199,7 @@ theorem galCupClass_eq_zero_iff (χ : Additive Gal(L/K) →ₜ+ QZ) (a : Kˣ) :
       rw [this, Algebra.norm_zero] at hy
       exact a.ne_zero hy.symm
     refine ⟨⟨Additive.ofMul (Units.mk0 (y : L) hy0), fun σ => ?_⟩, ?_⟩
-    · apply Additive.toMul.injective
-      apply Units.ext
-      exact (coe_galUnitsHom_apply K L σ.1 _).trans (y.2 σ)
+    · exact Additive.toMul.injective (Units.ext ((coe_galUnitsHom_apply K L σ.1 _).trans (y.2 σ)))
     · apply Subtype.ext
       apply Additive.toMul.injective
       apply Units.ext

@@ -77,8 +77,7 @@ theorem hc_shift (L : Module.End ℂ (MvPolynomial σ ℂ)) (k : ℕ)
   rw [map_sum, map_sum]
   have hterm : ∀ d, homogeneousComponent j (L (homogeneousComponent d P)) =
       if j = d + k then L (homogeneousComponent d P) else 0 := by
-    intro d
-    exact homogeneousComponent_of_mem (hL d _ (homogeneousComponent_mem d P))
+    exact fun d => homogeneousComponent_of_mem (hL d _ (homogeneousComponent_mem d P))
   simp only [hterm]
   split_ifs with hkj
   · rw [Finset.sum_eq_single (j - k)]
@@ -131,15 +130,13 @@ theorem low_sum {ι : Type*} (t : Finset ι) (L : ι → Module.End ℂ (MvPolyn
       homogeneousComponent e ((∑ i ∈ t, L i) P) = (∑ i ∈ t, L i) (homogeneousComponent (e + 2) P) := by
   intro e P
 
-  simp only [LinearMap.sum_apply, map_sum]
-  exact Finset.sum_congr rfl fun i _ => hL i e P
+  simpa only [LinearMap.sum_apply, map_sum] using Finset.sum_congr rfl fun i _ => hL i e P
 
 theorem exists_homog_of (P : MvPolynomial σ ℂ) (h0 : P ≠ 0) (D : ℚ)
     (h : ∀ e : ℕ, homogeneousComponent e P ≠ 0 → (e : ℚ) = D) :
     ∃ d : ℕ, (d : ℚ) = D ∧ P ∈ homog σ d := by
   have hex : ∃ e, homogeneousComponent e P ≠ 0 := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     apply h0
     rw [← sum_homogeneousComponent P]
     exact Finset.sum_eq_zero fun i _ => hall i

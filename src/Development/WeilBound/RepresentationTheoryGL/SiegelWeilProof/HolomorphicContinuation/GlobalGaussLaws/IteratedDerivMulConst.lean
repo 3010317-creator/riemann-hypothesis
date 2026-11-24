@@ -398,8 +398,7 @@ theorem l2conv (c : ℝ) (hc : 0 < c) (X : Fin n → ℝ) (P : PX m n) (s : ℝ)
     have hq := quot_le c X P u s _ hB h hh
     have hhpos : 0 < |h| := abs_pos.2 h0
     have e1 : ‖(fF c X P u (s + h) - fF c X P u s) / (h : ℂ)‖ ≤ K * Real.exp (-(a * sqN u)) := by
-      rw [norm_div, Complex.norm_real, Real.norm_eq_abs, div_le_iff₀ hhpos]
-      exact hq
+      rwa [norm_div, Complex.norm_real, Real.norm_eq_abs, div_le_iff₀ hhpos]
     have e2 : ‖fF c X (dil c X P) u s‖ ≤ K * Real.exp (-(a * sqN u)) := hb u s ⟨by linarith, by linarith⟩
     have e3 : ‖(fF c X P u (s + h) - fF c X P u s) / (h : ℂ) - fF c X (dil c X P) u s‖ ≤ 2 * K * Real.exp (-(a * sqN u)) := by
       calc _ ≤ ‖(fF c X P u (s + h) - fF c X P u s) / (h : ℂ)‖ + ‖fF c X (dil c X P) u s‖ := norm_sub_le _ _
@@ -672,8 +671,7 @@ theorem fam_hasDeriv (V : HSp D) (ν : Measure (GA D V)) [ν.IsHaarMeasure] {U :
       (f := fun k q => (s k - z₀)⁻¹ • (descend (GQ V) (thS V (f (s k))) q - descend (GQ V) (thS V (f z₀)) q))
       (fun k => ((hf.meas _ (hballU (hs_mem k))).sub (hf.meas _ hz₀)).const_smul (s k - z₀)⁻¹) ?_
     filter_upwards [hdiff] with q hq
-    have hd := hq z₀ hz₀r
-    exact (hasDerivAt_iff_tendsto_slope.1 hd).comp hs_lim
+    exact (hasDerivAt_iff_tendsto_slope.1 (hq z₀ hz₀r)).comp hs_lim
   refine ⟨hmeas', ?_⟩
   have hint0 : Integrable (descend (GQ V) (thS V (f z₀))) (autMeasure V ν) := by
     refine ⟨hf.meas _ hz₀, lt_of_le_of_lt (lintegral_mono fun q => ?_) (lt_of_le_of_lt (le_refl _) hMfin)⟩
@@ -944,8 +942,7 @@ theorem deriv_step {U : Set ℂ} (hU : IsOpen U) {g : ℂ → E → ℂ}
   have hhalf : ε * r / 2 / r = ε / 2 := by field_simp
   rw [hhalf] at hdiff
   have hfirst : dist (deriv (fun z => g z u) z) (deriv (fun z => g z u0) z) < ε / 2 := by
-    rw [hcu, hcu0]
-    exact hdiff
+    rwa [hcu, hcu0]
   calc dist (deriv (fun z => g z u) z) (deriv (fun z => g z u0) z0)
       ≤ dist (deriv (fun z => g z u) z) (deriv (fun z => g z u0) z)
         + dist (deriv (fun z => g z u0) z) (deriv (fun z => g z u0) z0) := dist_triangle _ _ _
@@ -986,8 +983,7 @@ theorem contDeriv : ContDeriv := by
     have h1 := DilDH.deriv_step hU hc hd
     have h2 : ∀ u, DifferentiableOn ℂ (fun z => deriv (fun z => f z u) z) U :=
       fun u => (hd u).deriv hU
-    have h3 := ih (fun z u => deriv (fun z => f z u) z) h1 h2
-    simpa only [iteratedDeriv_succ'] using h3
+    simpa only [iteratedDeriv_succ'] using ih (fun z u => deriv (fun z => f z u) z) h1 h2
 
 end PositivityTheory.Rg.Sw.Glob
 end -- clump:auto
@@ -1232,8 +1228,7 @@ theorem gIdil_of' (hWTC : GlobalTheory.Published.WeilThetaConvergence) (hDecA : 
     have hb := hbd _ hpz hz (fr⁻¹ * compAt θ τ xx)
     simp only [hφ, tens, norm_mul]
     have hgg := gC_gauss ε (tLoc l τ) (cLoc l τ) hc δ (fr⁻¹ * compAt θ τ xx)
-    rw [hgg]
-    rw [Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg (le_max_right C 0)]
+    rw [hgg, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg (le_max_right C 0)]
     have he : ∀ r : ℝ, ‖Complex.exp (-(r : ℂ))‖ = Real.exp (-r) := fun r => by
       rw [← Complex.ofReal_neg, Complex.norm_exp_ofReal]
     rw [he]

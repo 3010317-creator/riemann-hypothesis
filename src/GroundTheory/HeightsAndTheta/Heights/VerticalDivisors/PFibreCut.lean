@@ -101,8 +101,7 @@ theorem FibreCut.proof (hAvoid : CodimOnePrimeAvoid.Statement) : FibreCut.Statem
   have hhN : h ∉ N := fun hh => hhN₀ ((hmemN h).mp hh)
   have hdimN : ringKrullDim (MvPolynomial (Fin n) O ⧸ N) + 1 =
       ringKrullDim (MvPolynomial (Fin n) O ⧸ W) := by
-    rw [ringKrullDim_eq_of_ringEquiv (RingHom.quotientKerEquivOfSurjective hφs)]
-    exact hdimN₀
+    rwa [ringKrullDim_eq_of_ringEquiv (RingHom.quotientKerEquivOfSurjective hφs)]
   have hNW : ¬ N ≤ W := by
     intro hle
     have hN₀bot : N₀ = ⊥ := by
@@ -169,16 +168,14 @@ theorem FibreCut.proof (hAvoid : CodimOnePrimeAvoid.Statement) : FibreCut.Statem
   have hWW' : W ≤ W' := by
     obtain ⟨Q, hQ, hQW'⟩ := Ideal.exists_minimalPrimes_le
       (sup_le (hPP'.trans (le_sup_left.trans hW'.le)) (le_sup_right.trans hW'.le) : P ⊔ vX ≤ W')
-    rw [← hQN Q hQ (hQW'.trans hW'N)]
-    exact hQW'
+    rwa [← hQN Q hQ (hQW'.trans hW'N)]
   have hfW' : f ∈ W' := hW'.le (Ideal.mem_sup_left hfP')
   refine ⟨P', W', f, hfP, hP', hP'C, hW', le_antisymm ?_ ?_⟩
   · have hne : W'.map (Ideal.Quotient.mk W) ≠ ⊥ := by
       intro hb
       apply hfW
       have hm : Ideal.Quotient.mk W f ∈ W'.map (Ideal.Quotient.mk W) := Ideal.mem_map_of_mem _ hfW'
-      rw [hb, Ideal.mem_bot, Ideal.Quotient.eq_zero_iff_mem] at hm
-      exact hm
+      rwa [hb, Ideal.mem_bot, Ideal.Quotient.eq_zero_iff_mem] at hm
     have h2 := GroundTheory.Arith.Abelian.Jacobian.ringKrullDim_quotient_add_one_le _ hne
     rwa [ringKrullDim_eq_of_ringEquiv (DoubleQuot.quotQuotEquivQuotOfLE hWW')] at h2
   · rw [← hdimN]

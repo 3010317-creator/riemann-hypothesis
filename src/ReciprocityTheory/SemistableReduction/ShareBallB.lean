@@ -90,14 +90,12 @@ theorem sb_herm_swap {r : ℕ} {M : Matrix (Fin r) (Fin r) ℂ} (hM : Mᴴ = M) 
 theorem sb_dot_Dp (p : ℕ) {r : ℕ} (v w : Fin r → ℂ) :
     star v ⬝ᵥ (sbDp p r *ᵥ w) = star (sbDp p r *ᵥ v) ⬝ᵥ (sbDp p r *ᵥ w) := by
   have h := sb_herm_swap (sb_Dp_herm p r) v (sbDp p r *ᵥ w)
-  rw [mulVec_mulVec, sb_Dp_mul_Dp] at h
-  exact h
+  rwa [mulVec_mulVec, sb_Dp_mul_Dp] at h
 
 theorem sb_dot_Dn (p : ℕ) {r : ℕ} (v w : Fin r → ℂ) :
     star v ⬝ᵥ (sbDn p r *ᵥ w) = star (sbDn p r *ᵥ v) ⬝ᵥ (sbDn p r *ᵥ w) := by
   have h := sb_herm_swap (sb_Dn_herm p r) v (sbDn p r *ᵥ w)
-  rw [mulVec_mulVec, sb_Dn_mul_Dn] at h
-  exact h
+  rwa [mulVec_mulVec, sb_Dn_mul_Dn] at h
 
 theorem sb_dot_split (p : ℕ) {r : ℕ} (v w : Fin r → ℂ) :
     star v ⬝ᵥ w = star (sbDp p r *ᵥ v) ⬝ᵥ (sbDp p r *ᵥ w) +
@@ -148,8 +146,7 @@ private theorem two_mul_one_add_mul_le_of_le_mul (a b c d s : ℝ) (ha : 0 ≤ a
     have e2 : 0 ≤ 2 * a * d * ((d - c) * (s * d - c)) :=
       mul_nonneg (mul_nonneg (mul_nonneg zero_le_two ha) hd) (mul_nonneg hdc hsdc)
     have hd2 : 0 < d ^ 2 := pow_pos hdpos 2
-    by_contra hneg
-    push Not at hneg
+    by_contra! hneg
     have e3 := mul_lt_mul_of_pos_left hneg hd2
     nlinarith
 

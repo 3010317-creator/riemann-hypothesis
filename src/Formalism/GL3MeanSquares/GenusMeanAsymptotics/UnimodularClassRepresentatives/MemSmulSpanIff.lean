@@ -256,8 +256,7 @@ theorem mem_sesqL_iff (hF : IsFixF K F) {κ : Type} [Fintype κ] (a : Basis κ K
     s ∈ sesqL (locF 𝔭 (Submodule.span (𝓞 K) (Set.range a))) 𝔭 k ↔
       ∀ i j, s (a i) (a j) ∈ pK K 𝔭 k := by
   constructor
-  · intro hs i j
-    exact hs _ (basis_mem_locF a 𝔭 i) _ (basis_mem_locF a 𝔭 j)
+  · exact fun hs i j => hs _ (basis_mem_locF a 𝔭 i) _ (basis_mem_locF a 𝔭 j)
   · intro hs x hx y hy
 
     rw [← a.sum_repr x, ← a.sum_repr y, map_sum]
@@ -268,7 +267,6 @@ theorem mem_sesqL_iff (hF : IsFixF K F) {κ : Type} [Fintype κ] (a : Basis κ K
     rw [map_smul, LinearMap.map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, smul_eq_mul]
     have h1 := mul_mem_pK h𝔭 (repr_mem_pK_zero a h𝔭 hy j)
       (mul_mem_pK h𝔭 (star_mem_pK hF h𝔭 (repr_mem_pK_zero a h𝔭 hx i)) (hs i j))
-    rw [zero_add, zero_add] at h1
-    exact h1
+    rwa [zero_add, zero_add] at h1
 
 end Formalism.HermitianLattices.Ext.L3.D2

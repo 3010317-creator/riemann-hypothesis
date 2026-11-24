@@ -142,8 +142,7 @@ theorem liftV_mem (Λ : Set (Fin n → E)) (v : HeightOneSpectrum (𝓞 F)) {y :
   intro w
   by_cases h : w = v
   · subst h
-    rw [pv_liftV_self]
-    exact hy
+    rwa [pv_liftV_self]
   · rw [pv_liftV_ne h]
     exact zero_mem _
 
@@ -187,8 +186,7 @@ theorem mem_Kloc_of (Λ : Set (Fin n → E)) {g : GL (Fin n) (Af F ⊗[F] E)} (h
     (v : HeightOneSpectrum (𝓞 F)) : compV v g ∈ Kloc (E := E) v Λ := by
   intro y
   constructor
-  · intro hy
-    exact loc_of_matStab Λ hg.1 v hy
+  · exact fun hy => loc_of_matStab Λ hg.1 v hy
   · intro hy
     have hy' : ((g : Matrix (Fin n) (Fin n) (Af F ⊗[F] E)).map (tensMap (E := E) (evalV F v))) *ᵥ y ∈
         latLoc (E := E) v Λ := hy
@@ -213,8 +211,7 @@ theorem kf_iff (Λ : Set (Fin n → E)) (g : HA (Af F) σ J) :
     exact matStab_of_mem Λ fun v => (Subgroup.mem_iInf.1 hg' v)
   · intro h
     rw [Kf, Subgroup.mem_iInf]
-    intro v
-    exact mem_Kloc_of Λ h v
+    exact fun v => mem_Kloc_of Λ h v
 
 end Char
 

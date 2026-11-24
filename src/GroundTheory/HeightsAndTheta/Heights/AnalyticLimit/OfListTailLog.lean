@@ -200,14 +200,12 @@ theorem formNonneg_pullback (A : FinHolAtlas e X) (B : FinHolAtlas e' Y) (h : Y 
     simp only [Function.comp_apply, LocPot.pullback]
     rw [(A.chart j).left_inv (show h ((B.chart k).symm y') ∈ (A.chart j).source from hy')]
   have hU : (A.chart j).symm ((A.chart j ∘ h ∘ (B.chart k).symm) y) ∈ P.U (h x) := by
-    rw [hsymm]
-    exact hyU
+    rwa [hsymm]
   rw [ReciprocityTheory.AnForm.levi_congr hev w, ReciprocityTheory.AnForm.levi_comp w hτa
     (ReciprocityTheory.AnForm.M.pot_contDiffAt_two hP (h x) j hτy hU)]
   refine hnn (h x) j _ ⟨hτy, ?_, hU⟩ _
   show (A.chart j).symm ((A.chart j ∘ h ∘ (B.chart k).symm) y) ∈ V
-  rw [hsymm]
-  exact hyV
+  rwa [hsymm]
 
 theorem smooth_comp_holoMap (A : FinHolAtlas e X) (B : FinHolAtlas e' Y) (h : Y → X)
     (hh : HoloMap B A h) {u : X → ℝ} (hu : A.Smooth u) : B.Smooth (u ∘ h) := by
@@ -1297,8 +1295,7 @@ theorem interior_secZero {r : ℕ} {m : Fin r → ℕ} {Δ : Fin r → Set W} (h
     by_cases h : ψ x i = 0
     · simp only [w, ite_eq_left h, ne_eq, Complex.ofReal_eq_zero]
       linarith
-    · simp only [w, ite_eq_right h]
-      exact h
+    · simpa only [w, ite_eq_right h] using h
   have hwb : w ∈ Metric.ball (ψ x) δ := by
     rw [Metric.mem_ball, dist_eq_norm, pi_norm_lt_iff hδ]
     intro i
@@ -1307,8 +1304,7 @@ theorem interior_secZero {r : ℕ} {m : Fin r → ℕ} {Δ : Fin r → Set W} (h
       simp only [w]
       rw [ite_eq_left h, h, sub_zero, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (by linarith)]
       linarith
-    · simp only [w, Pi.sub_apply, ite_eq_right h, sub_self, norm_zero]
-      exact hδ
+    · simpa only [w, Pi.sub_apply, ite_eq_right h, sub_self, norm_zero] using hδ
   obtain ⟨hwt, hwU⟩ := hball hwb
   obtain ⟨i, hi⟩ := hcoord _ (ψ.map_target hwt) hwU
   rw [ψ.right_inv hwt] at hi
@@ -1555,8 +1551,7 @@ theorem GreenMassStep.proof : GreenMassStep.Statement := by
     · exact mIntAdd S.A _ _ _ hth hDd hΦ _ (hGi _ hth) (hGi _ hDd)
     · intro i x y
       refine Fin.cases ?_ (fun j => ?_) i
-      · simp only [Fin.cons_zero]
-        exact (add_formDiff_φ _ _ x y).symm
+      · simpa only [Fin.cons_zero] using (add_formDiff_φ _ _ x y).symm
       · simp only [Fin.cons_succ]
   have hpos : 0 ≤ mInt S.A (Fin.cons (formDiff S.Om.pot (S.th a')) (S.rest a t))
       (greenSplit S.L S.s ε) := by
@@ -1664,8 +1659,7 @@ theorem ListTailLog.proof (hE : LemmaETailLog.Statement) (hM : ListMono.Statemen
     · rcases hTi.smooth_or_pole with h | h
       · exact Or.inl h
       · right
-        rw [hYo]
-        exact h
+        rwa [hYo]
   have h2 : TailLogBound A R.Yo (rSec L s) (fun j => potForm (th j) (u j)) CE := by
     have h1 := hCE u hu
     rw [hYo] at h1

@@ -111,15 +111,13 @@ theorem trace_norm_bound_constant_one : NFTrNormKB := by
   have hkey : bcWeight P.k P.r P.T P.T' q.1 * ‖B.hsVec (B.JF p.T.base H (B.gq p.T.base q.1))‖ ^ 2 ≤
       TBB.Ew p (fun _ => 1) H (P.r + 1) [] (TBB.bigPt P.r c) := by
     unfold B.gq
-    rw [hq]
-    exact hpt
+    rwa [hq]
   have hprod : ∏ l : Fin P.r, Complex.normSq (q.1.1 l) = ∏ l : Fin P.r, Complex.normSq (c l.castSucc) := by
     rw [hq]
   calc ∑ ρ, ‖MA.evQ P (trJKB p e (B.JF p.T.base H) ρ) q‖ ^ 2
       ≤ (∏ l : Fin P.r, Complex.normSq (q.1.1 l)) *
           (bcWeight P.k P.r P.T P.T' q.1 * ‖B.hsVec (B.JF p.T.base H (B.gq p.T.base q.1))‖ ^ 2) := by
-        rw [← mul_assoc, ← hwq]
-        exact hsum
+        rwa [← mul_assoc, ← hwq]
     _ ≤ (∏ l : Fin P.r, Complex.normSq (q.1.1 l)) * TBB.Ew p (fun _ => 1) H (P.r + 1) [] (TBB.bigPt P.r c) :=
         mul_le_mul_of_nonneg_left hkey (Finset.prod_nonneg fun _ _ => Complex.normSq_nonneg _)
     _ = 1 * (∏ l : Fin P.r, Complex.normSq (c l.castSucc)) *

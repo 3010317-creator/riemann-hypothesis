@@ -390,8 +390,7 @@ theorem res_sum (n : Lt → (ℕ × Fin N0 →₀ ℕ)) (t : Lt) :
     rintro ⟨q, hq⟩
     simp only [emb, Prod.mk.injEq] at hq
     exact hst hq.1
-  · intro h
-    exact absurd (Finset.mem_univ t) h
+  · exact fun h => absurd (Finset.mem_univ t) h
 
 theorem prod_rename_monomial (n : Lt → (ℕ × Fin N0 →₀ ℕ)) :
     ∏ s, rename (emb s) (monomial (n s) (1 : ℤ)) =
@@ -474,10 +473,8 @@ theorem Tmap_prod (π : Lt → (MvPolynomial (ℕ × Fin N0) ℤ →ₗ[ℤ] MvP
             rename (emb s) (π s (Function.update h a (monomial u 1) s)) =
             ∏ s ∈ Finset.univ.erase a, rename (emb s) (π s (h s)) :=
           Finset.prod_congr rfl fun s hs => by rw [Function.update_of_ne (Finset.ne_of_mem_erase hs)]
-        rw [e1, e2] at h1
-        exact h1
-      intro g
-      exact LinearMap.congr_fun hAB g
+        rwa [e1, e2] at h1
+      exact fun g => LinearMap.congr_fun hAB g
     rw [← Finset.mul_prod_erase _ _ (Finset.mem_univ a),
       ← Finset.mul_prod_erase _ (fun s => rename (emb s) (π s (h s))) (Finset.mem_univ a)]
     exact key (h a)
@@ -494,8 +491,7 @@ theorem prod_mem_span (nu : Lt → YoungDiagram) (g : Lt → MvPolynomial (ℕ �
       have hf : (fun J : ColChoice N0 nu =>
           ∏ s, rename (emb s) (∏ c : Fin ((nu s).rowLen 0), minorX ℤ N0 ((nu s).colLen c) (J s c))) = nablaX N0 nu :=
         funext fun J => (nablaX_eq nu J).symm
-      rw [hf] at H1
-      exact H1
+      rwa [hf] at H1
     intro F
     induction F using Finset.induction_on with
     | empty =>
@@ -507,8 +503,7 @@ theorem prod_mem_span (nu : Lt → YoungDiagram) (g : Lt → MvPolynomial (ℕ �
           j : (∀ c : Fin ((nu a).rowLen 0), Fin ((nu a).colLen c) ↪o Fin N0) =>
             rename (emb a) (∏ c : Fin ((nu a).rowLen 0), minorX ℤ N0 ((nu a).colLen c) (j c))) := by
         have := Submodule.mem_map_of_mem (f := (rename (emb a)).toLinearMap) (hg a)
-        rw [nablaSpan, Submodule.map_span, ← Set.range_comp] at this
-        exact this
+        rwa [nablaSpan, Submodule.map_span, ← Set.range_comp] at this
       have hm := Submodule.mul_mem_mul ha ih
       rw [Submodule.span_mul_span] at hm
       refine Submodule.span_mono ?_ hm
@@ -532,8 +527,7 @@ theorem prod_mem_span (nu : Lt → YoungDiagram) (g : Lt → MvPolynomial (ℕ �
     obtain ⟨s, hs⟩ := hex
     have h0 : g s = 0 := by
       have := hg s
-      rw [nablaSpan, Set.range_eq_empty, Submodule.span_empty, Submodule.mem_bot] at this
-      exact this
+      rwa [nablaSpan, Set.range_eq_empty, Submodule.span_empty, Submodule.mem_bot] at this
     rw [Finset.prod_eq_zero (Finset.mem_univ s) (by rw [h0, map_zero])]
     exact Submodule.zero_mem _
 
@@ -657,8 +651,7 @@ theorem card_colLen_gt (ν : YoungDiagram) (t : ℕ) :
     constructor
     · rintro ⟨a, ha, rfl⟩
       exact ha
-    · intro hx
-      exact ⟨⟨x, by omega⟩, hx, rfl⟩
+    · exact fun hx => ⟨⟨x, by omega⟩, hx, rfl⟩
   rw [hm, Finset.card_range]
 
 theorem rowLen_eq_zero (ν : YoungDiagram) {t : ℕ} (ht : ν.colLen 0 ≤ t) : ν.rowLen t = 0 := by
@@ -729,8 +722,7 @@ theorem reorder (R : Type) [CommRing R] (ν : YoungDiagram) (N : ℕ) {K : ℕ} 
     intro t
     rw [card_colLen_gt]
     by_cases ht : t < ν.colLen 0
-    · have h := congrFun hsh ⟨t, ht⟩
-      simpa [shapeDeg, nuR] using h
+    · simpa [shapeDeg, nuR] using congrFun hsh ⟨t, ht⟩
     · rw [rowLen_eq_zero ν (not_lt.1 ht), Finset.card_eq_zero, Finset.filter_eq_empty_iff]
       intro k _
       have := hsz k
@@ -763,11 +755,9 @@ theorem reorder (R : Type) [CommRing R] (ν : YoungDiagram) (N : ℕ) {K : ℕ} 
   have hJ : ∀ c, sz0 ν c = sz (e.symm c).1 := by
     intro c
     have h := he (e.symm c)
-    rw [e.apply_symm_apply] at h
-    exact h
+    rwa [e.apply_symm_apply] at h
   refine ⟨fun c => I (e.symm c).1 ∘ Fin.cast (hJ c), fun c => ?_, ?_⟩
-  · intro a b hab
-    exact hI _ hab
+  · exact fun a b hab => hI _ hab
   · unfold bideterminant
     rw [← Fintype.prod_subtype_mul_prod_subtype (fun k => 0 < sz k)]
     have h1 : ∏ k : {k // ¬ 0 < sz k}, initMinor R (I k.1) (hsz k.1) = 1 :=
@@ -812,10 +802,7 @@ theorem exists_coeff_ne_zero_of_mem_span (O : MonomialOrder σ) {ι : Type*}
   obtain ⟨i, hi, hmax⟩ := Finset.exists_max_image f.support (fun j => O.toSyn (O.degree (c j))) hne
   refine ⟨i, ?_⟩
   have hlt : ∀ j ∈ f.support, j ≠ i → O.toSyn (O.degree (c j)) < O.toSyn (O.degree (c i)) := by
-    intro j hj hji
-    refine lt_of_le_of_ne (hmax j hj) ?_
-    intro heq
-    exact hji (hinj (O.toSyn.injective heq))
+    exact fun j hj hji => lt_of_le_of_ne (hmax j hj) (fun heq => hji (hinj (O.toSyn.injective heq)))
   rw [Finsupp.sum, MvPolynomial.coeff_sum, Finset.sum_eq_single i]
   · rw [MvPolynomial.coeff_smul, smul_eq_mul]
     have h1 : (c i).coeff (O.degree (c i)) = 1 := hlc i
@@ -823,8 +810,7 @@ theorem exists_coeff_ne_zero_of_mem_span (O : MonomialOrder σ) {ι : Type*}
     exact Finsupp.mem_support_iff.mp hi
   · intro j hj hji
     rw [MvPolynomial.coeff_smul, MonomialOrder.coeff_eq_zero_of_lt (hlt j hj hji), smul_zero]
-  · intro h
-    exact absurd hi h
+  · exact fun h => absurd hi h
 
 theorem monomial_mem_sup (O : MonomialOrder σ) {ι : Type*} (c : ι → MvPolynomial σ R)
     (hlc : ∀ i, O.leadingCoeff (c i) = 1) (e : σ →₀ ℕ) (a : R) :
@@ -886,8 +872,7 @@ theorem isCompl_map_rename (O : MonomialOrder σ) {τ : Type*} {φ : σ → τ}
     have hmem : Finsupp.mapDomain φ (O.degree (c i)) ∈ ((rename φ).toLinearMap h).support := by
       rw [MvPolynomial.mem_support_iff]
       show AddMonoidAlgebra.coeff (rename φ h) (Finsupp.mapDomain φ (O.degree (c i))) ≠ 0
-      rw [MvPolynomial.coeff_rename_mapDomain φ hφ]
-      exact hi
+      rwa [MvPolynomial.coeff_rename_mapDomain φ hφ]
     exact hsupp (Finset.mem_coe.mpr hmem) ⟨O.degree (c i), ⟨i, rfl⟩, rfl⟩
   · rw [codisjoint_iff, eq_top_iff]
     intro g _
@@ -1036,8 +1021,7 @@ theorem minorSpanCompl : PI.MinorSpanCompl := by
     have hZd := column_lex_bideterminant ℤ N n K sz hsz I hI
     have hdeg := (hb m).1
     rw [hbm] at hdeg
-    simp only [hcdef, hbm, map_bidet]
-    exact ⟨hR.1.trans (hZd.1.symm.trans hdeg), hR.2⟩
+    simpa only [hcdef, hbm, map_bidet] using ⟨hR.1.trans (hZd.1.symm.trans hdeg), hR.2⟩
   have hinj : Function.Injective fun m => (colLex N n).degree (c m) := by
     intro m m' h
     apply Subtype.ext

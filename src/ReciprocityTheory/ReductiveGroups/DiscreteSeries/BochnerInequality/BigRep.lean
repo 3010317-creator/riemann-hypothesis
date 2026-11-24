@@ -15,8 +15,7 @@ variable {n : ℕ}
 section BigRepA
 variable {M : Type*} [NormedAddCommGroup M] [InnerProductSpace ℂ M]
 
-theorem big_ext {k : ℕ} {F G : Big n k M} (h : ∀ κ, F κ = G κ) : F = G := by
-  exact PiLp.ext h
+theorem big_ext {k : ℕ} {F G : Big n k M} (h : ∀ κ, F κ = G κ) : F = G := PiLp.ext h
 
 theorem mAct_apply (E : Fin n → Fin n → Module.End ℂ M) (k : ℕ) (a b : Fin n) (F : Big n k M) (κ) :
     (mAct E k a b F) κ = E a b (F κ) := rfl
@@ -241,8 +240,7 @@ theorem finiteDimensional_ncV (hV : FiniteDimensional ℂ V) (k : ℕ) :
     LinearMap.pi fun κ => LinearMap.codRestrict V ((coord k κ).comp (ncV ε V k).subtype)
       (fun F => ncV_mem F.2 κ)
   refine FiniteDimensional.of_injective f ?_
-  intro F G h
-  exact Subtype.ext (big_ext fun κ => congrArg Subtype.val (congrFun h κ))
+  exact fun F G h => Subtype.ext (big_ext fun κ => congrArg Subtype.val (congrFun h κ))
 
 end BigRep
 

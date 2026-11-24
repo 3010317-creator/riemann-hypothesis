@@ -85,8 +85,7 @@ theorem exists_mat_at {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
   choose a ha using fun i j => _root_.GlobalTheory.PolRangeInf.exists_at_inf_values hcm τ (fun w => z w i j)
   refine ⟨Matrix.of a, fun x hx => ?_, fun w => ?_⟩
   · ext i j
-    simp only [Matrix.smul_apply, Matrix.of_apply, Matrix.zero_apply]
-    exact (ha i j).1 x hx
+    simpa only [Matrix.smul_apply, Matrix.of_apply, Matrix.zero_apply] using (ha i j).1 x hx
   · ext i j
     simp [(ha i j).2 w]
 
@@ -109,8 +108,7 @@ theorem sumPl_twist_one {ι : Type} [Fintype ι] [DecidableEq ι] {P Q R S : ℕ
     sumPl (fun w => heisOp (Complex.I • (Jm P Q * c w * Jm R S))) (PiTensorProduct.tprod ℂ (fun _ => (1 : Formalism.BasicNotions.TH.Pol P Q R S)))
       = Complex.I • sumPl (fun w => heisOp (c w)) (PiTensorProduct.tprod ℂ (fun _ => (1 : Formalism.BasicNotions.TH.Pol P Q R S))) := by
   simp only [sumPl, LinearMap.sum_apply, Finset.smul_sum, _root_.GlobalTheory.RealLift.atPl_tprod, _root_.GlobalTheory.RealLift.heisOp_twist_one]
-  refine Finset.sum_congr rfl fun w _ => ?_
-  exact (PiTensorProduct.tprod ℂ).map_update_smul _ w Complex.I _
+  exact Finset.sum_congr rfl fun w _ => (PiTensorProduct.tprod ℂ).map_update_smul _ w Complex.I _
 
 theorem polRange_of (hL : ActsLaws) (_hD : DerEx) (hV : VacLine) : PolRange := by
   apply GlobalTheory.RealLift.PolRangePf.polRange_of <;> assumption

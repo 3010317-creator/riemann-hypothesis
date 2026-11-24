@@ -129,9 +129,7 @@ theorem muDef_line_eq (b : Basis ι K V) (X : InfinitePlace K → Matrix ι ι �
       -((1 / (nPl K : ℝ)) * ∑ v, 2 * Real.log (Formalism.HermitianLatticesTheory.normAt b X v x)) := by
   set L : Submodule (𝓞 K) V := Submodule.span (𝓞 K) ({x} : Set V) with hL
   have hLfg : L.FG := Submodule.fg_span (Set.finite_singleton x)
-  have hL0 : L ≠ ⊥ := by
-    intro h
-    exact hx ((Submodule.span_singleton_eq_bot).1 h)
+  have hL0 : L ≠ ⊥ := fun h => hx ((Submodule.span_singleton_eq_bot).1 h)
   have hrk : rkK (K := K) L = 1 := rkK_span_singleton x hx
   have hf : 0 < nPl K := Fintype.card_pos
   have hfR : (0 : ℝ) < (nPl K : ℝ) := by exact_mod_cast hf

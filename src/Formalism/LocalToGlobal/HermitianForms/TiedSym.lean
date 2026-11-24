@@ -143,8 +143,7 @@ structure FormsTiedSym (D : D7) (u : D.what₂.Word) (Ch : ℕ → Type) (chOf :
 
 attribute [instance] FormsTiedSym.YbFin FormsTiedSym.YbAct
 
-theorem k_le_N (R : Ranks) (i : ℕ) : R.k ≤ R.N i := by
-  exact Nat.le_add_right _ _
+theorem k_le_N (R : Ranks) (i : ℕ) : R.k ≤ R.N i := Nat.le_add_right _ _
 
 
 end Formalism.L2.Forms

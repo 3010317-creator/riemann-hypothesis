@@ -78,8 +78,7 @@ theorem rhGrad_main (hf : 0 < f) (hm : 0 < min p q) (v0 : V (nD f p q)) (hv0 : v
   have hdk : ∀ v ∈ Dset f p q, ∀ k, 0 < dk v k := by
     intro v hv k
     have hv' : ∀ k, (1 - Zof v k * (Zof v k)ᴴ).PosDef := hv
-    have h := (hv' k).det_pos
-    exact (Complex.pos_iff.mp h).1
+    exact (Complex.pos_iff.mp ((hv' k).det_pos)).1
   have hkey : ∀ v ∈ Dset f p q, 0 < ∑ k, Q k v ∧
       -((f * min p q : ℕ) : ℝ) * Real.log (∑ k, Q k v) ≤
         rh v - (rh v0 + ((f * min p q : ℕ) : ℝ) * Real.log ((f * min p q : ℕ) : ℝ)) := by
@@ -89,8 +88,7 @@ theorem rhGrad_main (hf : 0 < f) (hm : 0 < min p q) (v0 : V (nD f p q)) (hv0 : v
       have h1 := hQle k v hv
       have ha : 0 < dk v k ^ (((min p q : ℕ) : ℝ)⁻¹) := Real.rpow_pos_of_pos (hdk v hv k) _
       have ha0 : 0 < dk v0 k ^ (((min p q : ℕ) : ℝ)⁻¹) := Real.rpow_pos_of_pos (hdk v0 hv0 k) _
-      by_contra hneg
-      push Not at hneg
+      by_contra! hneg
       have h2 : dk v0 k ^ (((min p q : ℕ) : ℝ)⁻¹) * (Q k v / ((min p q : ℕ) : ℝ)) ≤ 0 :=
         mul_nonpos_of_nonneg_of_nonpos ha0.le hneg
       linarith

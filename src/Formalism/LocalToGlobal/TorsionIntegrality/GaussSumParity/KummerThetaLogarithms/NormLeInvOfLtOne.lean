@@ -35,8 +35,7 @@ theorem poly_id (l : ℕ) (hl : l.Prime) : ∃ Q : Polynomial ℤ,
       exact_mod_cast hl.one_lt
     have h := Polynomial.prod_multiset_X_sub_C_of_monic_of_roots_card_eq hmon
       (by rw [hr, hdeg]; simp)
-    rw [hr] at h
-    exact h
+    rwa [hr] at h
   have hrange : ∏ n ∈ Finset.range l, (Polynomial.X - ((n : ℕ) : Polynomial (ZMod l))) =
       ∏ a : ZMod l, (Polynomial.X - Polynomial.C a) := by
     refine Finset.prod_bij (fun n _ => ((n : ℕ) : ZMod l)) (fun _ _ => Finset.mem_univ _) ?_ ?_
@@ -45,8 +44,7 @@ theorem poly_id (l : ℕ) (hl : l.Prime) : ∃ Q : Polynomial ℤ,
       have := congrArg ZMod.val hab
       rwa [ZMod.val_natCast_of_lt (Finset.mem_range.1 ha),
         ZMod.val_natCast_of_lt (Finset.mem_range.1 hb)] at this
-    · intro b _
-      exact ⟨b.val, Finset.mem_range.2 (ZMod.val_lt b), by simp⟩
+    · exact fun b _ => ⟨b.val, Finset.mem_range.2 (ZMod.val_lt b), by simp⟩
   change Polynomial.C (l : ℤ) ∣ _
   rw [Polynomial.C_dvd_iff_dvd_coeff]
   intro i
@@ -59,8 +57,7 @@ theorem poly_id (l : ℕ) (hl : l.Prime) : ∃ Q : Polynomial ℤ,
     simp only [Polynomial.map_sub, Polynomial.map_X, Polynomial.map_natCast]
     rw [hrange, hprod, sub_self]
   have h := congrArg (fun P => _root_.AddMonoidAlgebra.coeff (M := ℕ) P i) hmap
-  simp only [Polynomial.coeff_map, Polynomial.coeff_zero, eq_intCast] at h
-  exact h
+  simpa only [Polynomial.coeff_map, Polynomial.coeff_zero, eq_intCast] using h
 
 section Normed
 
@@ -115,8 +112,7 @@ theorem norm_le_inv_of_lt_one {l : ℕ} (hl : 1 < l)
   rw [hk] at hy ⊢
   have hl' : (1 : ℝ) < l := by exact_mod_cast hl
   have hk' : k < 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have h1 : (1 : ℝ) ≤ (l : ℝ) ^ k := by
       first
       | exact one_le_zpow₀ hl'.le hc

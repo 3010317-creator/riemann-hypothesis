@@ -79,12 +79,10 @@ private theorem sh_pow (x : PreTilt O p) (n : ℕ) : sh x n ^ p ^ n = x.untilt :
   | succ n ih => rw [pow_succ', pow_mul, sh_pow_succ, ih]
 
 private theorem preTilt_coeff_succ_pow_p (f : PreTilt O p) (n : ℕ) :
-    PreTilt.coeff (n + 1) (f ^ p) = PreTilt.coeff n f := by
-  exact Perfection.coeff_pow_p f n
+    PreTilt.coeff (n + 1) (f ^ p) = PreTilt.coeff n f := Perfection.coeff_pow_p f n
 
 private theorem preTilt_ext_coeff {x y : PreTilt O p} (h : ∀ n, PreTilt.coeff n x = PreTilt.coeff n y) :
-    x = y := by
-  exact Perfection.ext h
+    x = y := Perfection.ext h
 
 private theorem preTilt_coeff_iterate_frobenius_symm (y : PreTilt O p) (n m : ℕ) :
     PreTilt.coeff m (((_root_.frobeniusEquiv (PreTilt O p) p).symm)^[n] y) =
@@ -110,8 +108,7 @@ private theorem witt_exists_eq_teichmuller_coeff_zero_add_p_mul {R : Type*} [Com
   · refine ⟨0, ?_⟩
     have h1 := hx
     rw [hw', add_zero] at h1
-    rw [mul_zero, add_zero]
-    exact h1
+    rwa [mul_zero, add_zero]
   · obtain ⟨m, b, hb, hwb⟩ := WittVector.exists_eq_pow_p_mul w hw'
     cases m with
     | zero =>

@@ -62,8 +62,7 @@ lemma dsJ_basicOpen (hV : ∀ x : W, ∃ c, x ∈ V c)
         ((W.presheaf.map (homOfLE <| W.basicOpen_le f).op).hom b) =
         W.presheaf.germ U.1 y (W.basicOpen_le f hy) b :=
       TopCat.Presheaf.germ_res_apply W.presheaf (homOfLE <| W.basicOpen_le f) y hy b
-    rw [e]
-    exact h1
+    rwa [e]
   · intro b hb
     letI := (W.presheaf.map (homOfLE <| W.basicOpen_le f).op).hom.toAlgebra
     haveI := U.2.isLocalization_basicOpen f
@@ -160,8 +159,7 @@ theorem effCartier_of_stalkId {W : Scheme.{0}} [IsNoetherian W] (G : W.IdealShea
   · have hu := (IsLocalization.AtPrime.isUnit_to_map_iff (W.presheaf.stalk x)
       (hU0.primeIdealOf ⟨x, hxU0⟩).asIdeal σ).2 hσ
     exact (Scheme.mem_basicOpen W σ x hxU0).2 hu
-  · rw [← G.map_ideal_basicOpen ⟨U0, hU0⟩ σ]
-    exact h1
+  · rwa [← G.map_ideal_basicOpen ⟨U0, hU0⟩ σ]
 
 theorem mem_support_iff_stalkId {W : Scheme.{0}} (G : W.IdealSheafData) (x : W) :
     x ∈ (G.support : Set W) ↔ FinalTheorems.stalkId G x ≠ ⊤ := by
@@ -172,13 +170,11 @@ theorem mem_support_iff_stalkId {W : Scheme.{0}} (G : W.IdealSheafData) (x : W) 
   constructor
   · intro h htop
     obtain ⟨f, hf, hu⟩ : ∃ f ∈ G.ideal ⟨U', hU'⟩, IsUnit (W.presheaf.germ U' x hxU' f) := by
-      by_contra hno
-      push Not at hno
+      by_contra! hno
       have hle : Ideal.map (W.presheaf.germ U' x hxU').hom (G.ideal ⟨U', hU'⟩) ≤
           IsLocalRing.maximalIdeal _ := by
         rw [Ideal.map_le_iff_le_comap]
-        intro f hf
-        exact (IsLocalRing.mem_maximalIdeal _).2 (hno f hf)
+        exact fun f hf => (IsLocalRing.mem_maximalIdeal _).2 (hno f hf)
       rw [htop] at hle
       exact (IsLocalRing.maximalIdeal.isMaximal _).ne_top (top_le_iff.1 hle)
     exact h f hf ((Scheme.mem_basicOpen _ _ _ _).2 hu)

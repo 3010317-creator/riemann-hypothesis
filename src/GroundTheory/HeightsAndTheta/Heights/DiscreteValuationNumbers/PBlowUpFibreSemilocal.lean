@@ -67,8 +67,7 @@ theorem BlowUpFibreSemilocal.proof (ha : HomLocRingLocal.Statement.{u})
         algebraMap (MRing (extIdx ι J) O ⧸ blowUpOf P u)
           (FractionRing (MRing (extIdx ι J) O ⧸ blowUpOf P u)) (Ideal.Quotient.mk _ y) ≠ 0 := by
       intro y hy
-      rw [Ne, map_eq_zero_iff _ hinj, Ideal.Quotient.eq_zero_iff_mem]
-      exact hy
+      rwa [Ne, map_eq_zero_iff _ hinj, Ideal.Quotient.eq_zero_iff_mem]
     have hz0 : (⟨_, hz'⟩ : homLocRing (blowUpOf P u) Q) ≠ 0 := fun h0 =>
       div_ne_zero (hne _ hxbl) (hne _ fun hm => hgQ (hblQ hm)) (congrArg Subtype.val h0)
     have hQp : Q.IsPrime := hQmin.1.1
@@ -105,8 +104,7 @@ theorem BlowUpFibreSemilocal.proof (ha : HomLocRingLocal.Statement.{u})
     apply Subtype.ext
     rw [hφ (liftMDeg c) _ _ hxl hgl hgQ, blowUpEval_liftForm, blowUpEval_liftForm]
     rfl
-  rw [length_quot_span_ringEquiv ψ, hψ]
-  exact hlen
+  rwa [length_quot_span_ringEquiv ψ, hψ]
 
 end
 

@@ -63,8 +63,7 @@ theorem homS_monomial (m i : ℕ) (hi : i ≤ m) (a : K) :
   · intro b _ hb
     rw [coeff_monomial_of_ne a hb]
     simp
-  · intro h
-    exact absurd (Finset.mem_range.2 (Nat.lt_succ_of_le hi)) h
+  · exact fun h => absurd (Finset.mem_range.2 (Nat.lt_succ_of_le hi)) h
 
 theorem homS_mul (m n : ℕ) (P Q : K[X]) (hP : P.natDegree ≤ m) (hQ : Q.natDegree ≤ n) :
     homS U (m + n) (P * Q) = homS U m P * homS U n Q := by
@@ -106,8 +105,7 @@ theorem homS_eq_zero (hU : PowerSeries.constantCoeff U = 1) (m : ℕ) (P : K[X])
       · rw [PowerSeries.coeff_mul_X_pow', ite_eq_right (by omega)]
       · rw [coeff_eq_zero_of_natDegree_lt hgt]
         simp
-    · intro hh
-      exact absurd (Finset.mem_range.2 (Nat.lt_succ_of_le hP)) hh
+    · exact fun hh => absurd (Finset.mem_range.2 (Nat.lt_succ_of_le hP)) hh
   rw [h, map_zero] at h1
   exact leadingCoeff_eq_zero.1 h1.symm
 
@@ -228,8 +226,7 @@ theorem exists_proj (k : Subfield E) : ∃ ψ : E →+ E, (∀ c ∈ k, ∀ x, �
     have h2 : (⟨c, hc⟩ : k) • x = c * x := rfl
     rw [← h2, this]
     rfl
-  · intro x
-    exact (g x).2
+  · exact fun x => (g x).2
   · have := LinearMap.congr_fun hg 1
     simp only [LinearMap.comp_apply, Algebra.linearMap_apply, map_one, LinearMap.id_apply] at this
     simp [this]
@@ -399,8 +396,7 @@ theorem hasT_uFun (L : PeriodPair) : HasT (uFun L) (wpNum L.g₂ L.g₃) := by
     ⟨L.analyticAt_weierstrassPExcept 0, pOfLattice L⟩
   rw [(wpNumDen ℂ L.g₂ L.g₃).1]
   have h3 := (hasT_const 1).add ((hasT_id.pow 2).mul h)
-  rw [map_one] at h3
-  exact h3
+  rwa [map_one] at h3
 
 theorem uFun_eq (L : PeriodPair) {z : ℂ} (hz : z ≠ 0) : uFun L z = z ^ 2 * L.weierstrassP z := by
   have h := L.weierstrassPExcept_add 0 z
@@ -557,8 +553,7 @@ theorem sqrt_poly {E : Type} [Field E] [CharZero E] (k : Subfield E) (h : E[X]) 
         rwa [one_add_one_eq_two] at this
       have := k.mul_mem (k.inv_mem h2k) h2
       rwa [← mul_assoc, inv_mul_cancel₀ (two_ne_zero), one_mul] at this
-  intro i
-  exact key h.natDegree i (by omega)
+  exact fun i => key h.natDegree i (by omega)
 
 end ReciprocityTheory.ChartRestriction.L1
 end -- clump:auto

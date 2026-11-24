@@ -144,8 +144,7 @@ theorem nsq_lt_top {μ : @Measure (κ → AF F) (borel _)} (hμ : IsHaar μ) {Φ
     haveI := borelV (F := F) (κ := κ)
     refine nsq_pure_lt_top hμ f.continuous ?_ hg
     have := f.memLp 2 (volume : Measure (V F κ))
-    have h2 := lintegral_rpow_enorm_lt_top_of_eLpNorm_lt_top (by simp) (by simp) this
-    simpa using h2
+    simpa using lintegral_rpow_enorm_lt_top_of_eLpNorm_lt_top (by simp) (by simp) this
   | zero => simp [nsq]
   | add x x' hx _ h h' =>
     exact (nsq_add_le μ (continuous_of_mem hx) x').trans_lt
@@ -195,8 +194,7 @@ theorem schr_emb {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (w : V F κ × V F �
       lineFn f w.1 (linForm w.2) (qc w) (fun i => evI F (x i)) t * g (fun i => (x i).2) := by
   have := schr_line ψ hψ _ _ (at_inf w.1) (at_inf w.2) f g x t
   simp only [evI_inf] at this
-  rw [emb_smul]
-  exact this
+  rwa [emb_smul]
 
 def dS (w : V F κ × V F κ) (f : SInf F κ) : SInf F κ :=
   ∂_{w.1} f + (-(2 * Real.pi * Complex.I)) • SchwartzMap.smulLeftCLM ℂ (linForm w.2) f

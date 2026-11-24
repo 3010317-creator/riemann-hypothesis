@@ -16,8 +16,7 @@ open scoped ContDiff ENNReal
 noncomputable section
 
 theorem smoothR_const {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (c : ℝ) :
-    SmoothR n z (fun _ => c) := by
-  exact fun _ _ => contDiffOn_const
+    SmoothR n z (fun _ => c) := fun _ _ => contDiffOn_const
 
 theorem smoothR_prod {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) {ι : Type*}
     (s : Finset ι) (f : ι → M → ℝ) (hf : ∀ i ∈ s, SmoothR n z (f i)) :
@@ -28,8 +27,7 @@ theorem smoothR_prod {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) 
   | @insert a s ha ih =>
     have h1 := hf a (Finset.mem_insert_self a s)
     have h2 := ih (fun i hi => hf i (Finset.mem_insert_of_mem hi))
-    have h3 := SmoothR.mul n z _ _ h1 h2
-    simpa [Finset.prod_insert ha] using h3
+    simpa [Finset.prod_insert ha] using SmoothR.mul n z _ _ h1 h2
 
 theorem smoothR_sum {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) {ι : Type*}
     (s : Finset ι) (f : ι → M → ℝ) (hf : ∀ i ∈ s, SmoothR n z (f i)) :
@@ -40,8 +38,7 @@ theorem smoothR_sum {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) {
   | @insert a s ha ih =>
     have h1 := hf a (Finset.mem_insert_self a s)
     have h2 := ih (fun i hi => hf i (Finset.mem_insert_of_mem hi))
-    have h3 := SmoothR.add n z _ _ h1 h2
-    simpa [Finset.sum_insert ha] using h3
+    simpa [Finset.sum_insert ha] using SmoothR.add n z _ _ h1 h2
 
 theorem exists_chart_bump {M : Type*} [TopologicalSpace M] [T2Space M] (n : ℕ) (z : M → V n)
     (hz : IsLocalHomeomorph z) (U : Set M) (hU : IsOpen U) (x : M) (hx : x ∈ U) :
@@ -96,8 +93,7 @@ theorem exists_chart_bump {M : Type*} [TopologicalSpace M] [T2Space M] (n : ℕ)
         simp [h2]
       exact contDiffAt_const.congr_of_eventuallyEq h1
   · by_cases hys : y ∈ e.source
-    · simp only [ψ, Set.indicator_of_mem hys]
-      exact ⟨φ.nonneg, φ.le_one⟩
+    · simpa only [ψ, Set.indicator_of_mem hys] using ⟨φ.nonneg, φ.le_one⟩
     · simp [ψ, hys]
   · have h1 : IsOpen (e.source ∩ e ⁻¹' Metric.ball (e x) (r / 2)) :=
       e.isOpen_inter_preimage Metric.isOpen_ball

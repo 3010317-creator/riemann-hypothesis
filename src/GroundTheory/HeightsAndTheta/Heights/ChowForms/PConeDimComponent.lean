@@ -39,8 +39,7 @@ theorem ConeDimComponent.proof_closed : ConeDimComponent.Statement := by
       exact Ideal.homogeneousCore_mono _ hmin.1.2
     have hle : core ≤ W := Ideal.toIdeal_homogeneousCore_le _ _
     have heq : core = W := le_antisymm hle (hmin.2 ⟨hcore_prime, hJcore⟩ hle)
-    rw [Ideal.IsHomogeneous.iff_eq]
-    exact heq
+    rwa [Ideal.IsHomogeneous.iff_eq]
   refine ⟨hproj, ?_⟩
 
   have hIprime : I.IsPrime := hI.isPrime
@@ -58,8 +57,7 @@ theorem ConeDimComponent.proof_closed : ConeDimComponent.Statement := by
     apply hu
     rw [← Ideal.Quotient.eq_zero_iff_mem]
     have : Ideal.Quotient.mk I (linForm u) ∈ W' := Ideal.mem_map_of_mem _ huW
-    rw [h, Ideal.mem_bot] at this
-    exact this
+    rwa [h, Ideal.mem_bot] at this
   have hht : W'.height ≤ 1 := Ideal.map_height_le_one_of_mem_minimalPrimes hmin
   have hquot : ringKrullDim (B ⧸ W') = ringKrullDim (MvPolynomial (Fin n) F ⧸ W) :=
     ringKrullDim_eq_of_ringEquiv (DoubleQuot.quotQuotEquivQuotOfLE hIW)

@@ -192,16 +192,13 @@ theorem exists_unit (x y z : ℕ) (hx : Nat.Coprime x (2 ^ (e + 2))) (hy : Nat.C
   have hm2 : m ≡ y [MOD q] := (hm12.of_dvd (dvd_mul_left _ _)).trans hn2
   have c1 : Nat.Coprime m (2 ^ (e + 2)) := by
     unfold Nat.Coprime
-    rw [hm1.gcd_eq]
-    exact hx
+    rwa [hm1.gcd_eq]
   have c2 : Nat.Coprime m q := by
     unfold Nat.Coprime
-    rw [hm2.gcd_eq]
-    exact hy
+    rwa [hm2.gcd_eq]
   have c3 : Nat.Coprime m d := by
     unfold Nat.Coprime
-    rw [hm3.gcd_eq]
-    exact hz
+    rwa [hm3.gcd_eq]
   have cN : Nat.Coprime m (2 ^ (e + 2) * q * d) := (c1.mul_right c2).mul_right c3
   refine ⟨ZMod.unitOfCoprime m cN, ?_, ?_, ?_⟩ <;> rw [ZMod.coe_unitOfCoprime, ZMod.val_natCast]
   · exact ((Nat.mod_modEq m _).of_dvd (two_dvd e q d)).trans hm1

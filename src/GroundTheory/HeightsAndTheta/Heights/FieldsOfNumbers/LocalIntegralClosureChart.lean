@@ -85,8 +85,7 @@ theorem exists_finset_integral_span (hN : NoetherIntegralClosureFinite.Statement
     have := Submodule.mem_map_of_mem
       (f := ι₀.toLinearMap.comp (integralClosure (Algebra.adjoin F S) L').val.toLinearMap) hzt
     rw [Submodule.map_span] at this
-    rw [Finset.coe_image]
-    exact this
+    rwa [Finset.coe_image]
   have e : (⟨d⁻¹, hdA⟩ : A) • (d * x) = x := by
     rw [Subalgebra.smul_def, smul_eq_mul, ← mul_assoc]
     change d⁻¹ * d * x = x
@@ -137,8 +136,7 @@ theorem degZeroLoc_map_eq_mul_inv (hQ : DegZeroLocQuot.Statement.{u})
     simp
   have hq : ∀ g : MRing ι F, g ∉ P → algebraMap (MRing ι F ⧸ P) (FractionRing (MRing ι F ⧸ P))
       (Ideal.Quotient.mk P g) ≠ 0 := fun g hg => by
-    rw [Ne, IsFractionRing.to_map_eq_zero_iff, Ideal.Quotient.eq_zero_iff_mem]
-    exact hg
+    rwa [Ne, IsFractionRing.to_map_eq_zero_iff, Ideal.Quotient.eq_zero_iff_mem]
   refine ⟨Algebra.adjoin_le ?_, fun a ha => ?_⟩
   · rintro _ ⟨v, rfl⟩
     refine Subalgebra.mem_map.mpr ⟨_, div_mem_degZeroLoc P {W} (b := blockWeight ι v)

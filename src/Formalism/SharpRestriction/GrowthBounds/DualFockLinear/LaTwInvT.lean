@@ -148,8 +148,7 @@ theorem FD_edge (hS : HidaSetting p n' W Qq O Kf ι σ j w) (hm : 1 ≤ m)
         lb_D (m + 1) r (algebraMap O Kf w)) =
         fun s => ((la_tw ι σ s.val b * lb_D (m + 1) r (algebraMap O Kf w))⁻¹).transpose :=
       funext fun s => dualM hS s.val r b hb.1
-    rw [e1] at h1
-    exact h1
+    rwa [e1] at h1
   · rw [map_smul, map_smul]
 
 theorem FD_HL (hS : HidaSetting p n' W Qq O Kf ι σ j w) (hm : 1 ≤ m)
@@ -170,8 +169,7 @@ theorem FD_HL (hS : HidaSetting p n' W Qq O Kf ι σ j w) (hm : 1 ≤ m)
   have h1 := (HL_iff hS _ hℓt y0).1 hy0
   have e1 : (fun s : Fin n' => la_tw ι σ s.val ((ℓ⁻¹).transpose)) = fun s => ((la_tw ι σ s.val ℓ)⁻¹).transpose :=
     funext fun s => la_tw_invT s.val ℓ hℓ
-  rw [e1] at h1
-  exact h1
+  rwa [e1] at h1
 
 end
 

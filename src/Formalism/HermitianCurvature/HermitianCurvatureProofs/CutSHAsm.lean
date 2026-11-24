@@ -110,11 +110,9 @@ theorem class0_form (hU : UUiwScalar) (S : Type) [Fintype S] [DecidableEq S] (P 
   intro i Ψ h
   induction h with
   | jf F Φ hF hΦ =>
-    intro _
-    exact ⟨F, Φ, 0, 1, hF, hΦ, fun c g => by simp [fsv_zero']⟩
+    exact fun _ => ⟨F, Φ, 0, 1, hF, hΦ, fun c g => by simp [fsv_zero']⟩
   | slice l w a b Φ hw hΦ ih =>
-    intro h
-    exact absurd h (Fin.succ_ne_zero l)
+    exact fun h => absurd h (Fin.succ_ne_zero l)
   | waveC l w s Wv Wv' a b Φ hw hW hW' hΦ ih =>
     intro h
     have hl0 : l.val = 0 := by

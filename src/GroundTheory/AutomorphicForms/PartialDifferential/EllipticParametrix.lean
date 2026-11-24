@@ -94,8 +94,7 @@ theorem integral_fourierInv_smul_eq_of_integrable (φ : 𝓢(E, ℂ)) {g : E →
     Real.continuous_fourierChar
     (by simp only [LinearMap.neg_apply, innerₗ_apply_apply]; fun_prop)
     (φ.integrable (μ := (volume : Measure E))) hg
-  rw [hflip] at h
-  exact h
+  rwa [hflip] at h
 
 theorem toDistribution_apply_eq_integral {s : ℝ} (hs : (Module.finrank ℝ E : ℝ) < 2 * s)
     (u : SobolevSpace E F s) (φ : 𝓢(E, ℂ)) :
@@ -109,8 +108,7 @@ theorem toDistribution_apply_eq_integral {s : ℝ} (hs : (Module.finrank ℝ E :
 theorem integrable_pow_mul_norm_fourierFun_neg {s : ℝ} {j : ℕ}
     (hj : (Module.finrank ℝ E : ℝ) < 2 * (s - j)) (u : SobolevSpace E F s) :
     Integrable (fun ξ : E ↦ ‖ξ‖ ^ j * ‖fourierFun u (-ξ)‖) (volume : Measure E) := by
-  have h := (integrable_pow_mul_norm_fourierFun hj u).comp_neg
-  simpa [Function.comp_def, norm_neg] using h
+  simpa [Function.comp_def, norm_neg] using (integrable_pow_mul_norm_fourierFun hj u).comp_neg
 
 theorem sobolev_embedding {s : ℝ} (k : ℕ)
     (hs : (k : ℝ) + (Module.finrank ℝ E : ℝ) / 2 < s) (u : SobolevSpace E F s) :
@@ -191,8 +189,7 @@ theorem eqOn_of_integral_smul_eq {g h : E → ℂ} (hg : Continuous g) (hh : Con
       _ = ∫ x, φ x * (θ x * h x) := by congr 1; ext x; ring
   have := congrFun key y
   have hθy : θ y = 1 := by rw [hθ]; exact bump_eq_one y hr (Metric.mem_closedBall_self hr.le)
-  simp only [hθy, one_mul] at this
-  exact this
+  simpa only [hθy, one_mul] using this
 
 theorem exists_contDiff_of_memSobolev {u : 𝓢'(E, ℂ)} (hu : ∀ t, MemSobolev t 2 u) :
     ∃ g : E → ℂ, ContDiff ℝ ∞ g ∧ ∀ φ : 𝓢(E, ℂ), u φ = ∫ x, φ x • g x := by
@@ -317,8 +314,7 @@ theorem exists_contDiffOn_of_local {Λ : 𝓢(E, ℂ) → ℂ} {Ω : Set E} (hΩ
       hrep y hy φ hφc (hφ.trans Set.inter_subset_right)]
   set g : E → ℂ := fun y ↦ G y y
   have hgW : ∀ x ∈ Ω, Set.EqOn g (G x) (W x) := by
-    intro x hx y hy
-    exact (hcons x hx y (hWΩ x hx hy) ⟨hy, hxW y (hWΩ x hx hy)⟩).symm
+    exact fun x hx y hy => (hcons x hx y (hWΩ x hx hy) ⟨hy, hxW y (hWΩ x hx hy)⟩).symm
   have hgsmooth : ContDiffOn ℝ ∞ g Ω := by
     refine contDiffOn_of_locally_contDiffOn fun x hx ↦ ⟨W x, hWo x hx, hxW x hx, ?_⟩
     exact ((hG x hx).contDiffOn.mono Set.inter_subset_right).congr fun y hy ↦ hgW x hx hy.2
@@ -365,8 +361,7 @@ theorem exists_contDiffOn_of_local {Λ : 𝓢(E, ℂ) → ℂ} {Ω : Set E} (hΩ
         congr 1; ext y; rw [← hab, add_apply, add_smul]
       show Λ ψ - ∫ y, ψ y • g y = (Λ a - ∫ y, a y • g y) + (Λ b - ∫ y, b y • g y)
       rw [hΛ, hI]; ring
-  simp only [Λ', sub_eq_zero] at key
-  exact key
+  simpa only [Λ', sub_eq_zero] using key
 
 theorem exists_contDiffOn_of_locally_memSobolev {u : 𝓢'(E, ℂ)} {Ω : Set E} (hΩ : IsOpen Ω)
     (h : ∀ x ∈ Ω, ∃ ψ : 𝓢(E, ℂ), (∀ᶠ y in nhds x, ψ y = 1) ∧
@@ -415,8 +410,7 @@ theorem IsEllipticAt.regularity_le {T : 𝓢'(E, ℂ) →L[ℂ] 𝓢'(E, ℂ)} {
           (Set.compl_subset_compl.2 (hsub.trans Metric.ball_subset_closedBall))
       have hψT : smulLeftCLM ℂ (ψ : E → ℂ) (T u) = smulLeftCLM ℂ (ψ : E → ℂ) F := by
         have h0 := smulLeftCLM_eq_zero_of_isVanishingOn ψ.hasTemperateGrowth hTF hψ
-        rw [map_sub, sub_eq_zero] at h0
-        exact h0
+        rwa [map_sub, sub_eq_zero] at h0
       have hψψ₁ : smulLeftCLM ℂ (ψ : E → ℂ) (smulLeftCLM ℂ (ψ₁ : E → ℂ) u) =
           smulLeftCLM ℂ (ψ : E → ℂ) u := by
         have hfun : ((ψ₁ : E → ℂ) * (ψ : E → ℂ)) = (ψ : E → ℂ) := by
@@ -444,8 +438,7 @@ theorem IsEllipticAt.regularity_le {T : 𝓢'(E, ℂ) →L[ℂ] 𝓢'(E, ℂ)} {
             (hsub.trans (Metric.ball_subset_ball (by linarith)))
         have : comm T ψ (u - smulLeftCLM ℂ (ψ₁ : E → ℂ) u) = 0 := by
           rw [comm_apply, hz1, map_zero, hz3, sub_zero]
-        rw [map_sub, sub_eq_zero] at this
-        exact this
+        rwa [map_sub, sub_eq_zero] at this
       have hTw : MemSobolev (s₀ + j - m + 1) 2 (T w) := by
         have e : T w = smulLeftCLM ℂ (ψ : E → ℂ) F + comm T ψ (smulLeftCLM ℂ (ψ₁ : E → ℂ) u) := by
           rw [← hcomm, ← hψT, comm_apply]; abel
@@ -564,8 +557,7 @@ theorem smulLeft_comm_eq {T : 𝓢'(E, ℂ) →L[ℂ] 𝓢'(E, ℂ)} (hT : IsLoc
   have hc : Distribution.IsVanishingOn (comm T θ (u - smulLeftCLM ℂ (ψ₁ : E → ℂ) u)) V :=
     isLocal_comm hT θ V hV _ hz
   have h0 := smulLeftCLM_eq_zero_of_isVanishingOn ψ.hasTemperateGrowth hc hψ
-  rw [map_sub, map_sub, sub_eq_zero] at h0
-  exact h0
+  rwa [map_sub, map_sub, sub_eq_zero] at h0
 
 theorem pderiv_congr {n : ℕ} {α : Fin n → ℕ} {f f' : EuclideanSpace ℝ (Fin n) → ℂ}
     {x : EuclideanSpace ℝ (Fin n)} (h : f =ᶠ[nhds x] f') : pderiv α f x = pderiv α f' x := by
@@ -751,14 +743,11 @@ theorem exists_parametrix {m : ℕ} (hn : 0 < n) (hm : 1 ≤ m) (hnm : n < 2 * m
     · have : x ∉ Metric.closedBall x₀ (ρ / 2) := by
         intro h; apply hxb; rw [Metric.mem_closedBall] at h; rw [Metric.mem_ball]; linarith
       simp only [E, hθ0 x this, zero_mul]
-  have hEint : Integrable E := by
-    have h := (θ.memLp 2 volume).integrable_mul (Lp.memLp e)
-    exact h.congr hEe.symm
+  have hEint : Integrable E := ((θ.memLp 2 volume).integrable_mul (Lp.memLp e)).congr hEe.symm
   have hEsmooth : ContDiffOn ℝ ∞ E {x₀}ᶜ := by
     refine contDiffOn_of_locally_contDiffOn fun x hx ↦ ?_
     by_cases hxb : x ∈ Metric.ball x₀ ρ
-    · refine ⟨Ω', hΩ', ⟨hxb, hx⟩, ?_⟩
-      exact (θ.smooth'.contDiffOn.mul hg).mono Set.inter_subset_right
+    · exact ⟨Ω', hΩ', ⟨hxb, hx⟩, (θ.smooth'.contDiffOn.mul hg).mono Set.inter_subset_right⟩
     · refine ⟨(Metric.closedBall x₀ (ρ / 2))ᶜ, Metric.isClosed_closedBall.isOpen_compl, ?_, ?_⟩
       · intro h; apply hxb; rw [Metric.mem_closedBall] at h; rw [Metric.mem_ball]; linarith
       · refine (contDiffOn_const (c := (0 : ℂ))).congr fun y hy ↦ ?_
@@ -816,8 +805,7 @@ theorem exists_parametrix {m : ℕ} (hn : 0 < n) (hm : 1 ≤ m) (hnm : n < 2 * m
         TemperedDistribution.delta x₀ := by
       have h0 := smulLeftCLM_eq_zero_of_isVanishingOn θ.hasTemperateGrowth hvan
         (hθs.trans (Metric.closedBall_subset_ball (by linarith)))
-      rw [map_sub, sub_eq_zero, smulLeftCLM_delta, hθx₀, one_smul] at h0
-      exact h0
+      rwa [map_sub, sub_eq_zero, smulLeftCLM_delta, hθx₀, one_smul] at h0
     rw [comm_apply, h1]; abel
   refine ⟨E, fun x ↦ -β' x, hEint, hEc, hEs.trans hhalfU, hEsmooth, hβ'.neg, ?_, ?_, fun φ hφ ↦ ?_⟩
   · refine IsCompact.of_isClosed_subset (isCompact_closedBall x₀ (ρ / 2)) (isClosed_tsupport _) ?_

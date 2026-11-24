@@ -207,12 +207,10 @@ theorem st_Q_update (k : ℕ) (kk : Fin D.T.t) (j : Fin D.T.t → ℕ) (jp l : �
   simp only [stQ, h]
 
 theorem st_wv_inj (kk : Fin D.T.t) : Function.Injective (wv (r := r) D kk) := by
-  intro c d h
-  exact (Prod.mk.inj (Sum.inl.inj h)).2
+  exact fun c d h => (Prod.mk.inj (Sum.inl.inj h)).2
 
 theorem st_ev_inj (kk : Fin D.T.t) : Function.Injective (ev (r := r) D kk) := by
-  intro c d h
-  exact (Prod.mk.inj (Sum.inl.inj h)).2
+  exact fun c d h => (Prod.mk.inj (Sum.inl.inj h)).2
 
 theorem st_wv_ne_ev (hB : D.BlockOK) (kk : Fin D.T.t) (c d : Fin r) : wv D kk c ≠ ev D kk d := by
   intro h
@@ -286,8 +284,7 @@ theorem st_gen (hPS : PairStep) (hLT : LatTie) (hLin : PLLin) (hC : CommPL) (hPa
   subst hL'
   constructor
   · have := span_map_mem (LinearMap.mulLeft ℚ_[p] (stQ p D k ⟨k, hk⟩ j jp)) _ (Mid p (r := r) D k) ?_ _ key.1
-    · rw [st_mid_succ p k hk, ← hT, ← mul_smul_comm]
-      exact this
+    · rwa [st_mid_succ p k hk, ← hT, ← mul_smul_comm]
     · rintro v ⟨l', hl', x', ⟨x'', hx'', rfl⟩, rfl⟩
       apply Submodule.subset_span
       refine ⟨Function.update j ⟨k, hk⟩ l', jp, st_levelOK _ j jp l' hOK hl', x'', hx'', ?_⟩
@@ -296,8 +293,7 @@ theorem st_gen (hPS : PairStep) (hLT : LatTie) (hLin : PLLin) (hC : CommPL) (hPa
           (fun i hi => Function.update_of_ne (fun h : i = ⟨k, hk⟩ => hnot (h ▸ hi)) _ _), ← hT]
       rfl
   · have := span_map_mem (LinearMap.mulLeft ℚ_[p] (stQ p D k ⟨k, hk⟩ j jp)) _ (Mid p (r := r) D (k + 1)) ?_ _ key.2
-    · rw [st_mid p hB k hk, ← hT, ← mul_smul_comm]
-      exact this
+    · rwa [st_mid p hB k hk, ← hT, ← mul_smul_comm]
     · rintro v ⟨l', hl', x', ⟨x'', hx'', rfl⟩, rfl⟩
       apply Submodule.subset_span
       refine ⟨Function.update j ⟨k, hk⟩ l', jp, st_levelOK _ j jp l' hOK hl', x'', hx'', ?_⟩

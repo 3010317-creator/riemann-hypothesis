@@ -180,8 +180,7 @@ theorem xlam0 : XLam Λ (lf D F0) = XS D F0 := by
       exact (Submodule.span_le.2 (by rintro _ ⟨a, rfl⟩; exact e_mem_XS D F0 a)) h2
     · obtain ⟨s, hs, hsv⟩ := (loc_cases hw hB hvB P).2 hg
       exact ⟨s, hs, v1 hw (F0.X.smul_of_tower_mem s hvX') hsv⟩
-  · intro v hv
-    exact ⟨BB_le_Lam hw hB (flag_xs_le_big_block D F0 F' hv), XS_le_X D F0 hv⟩
+  · exact fun v hv => ⟨BB_le_Lam hw hB (flag_xs_le_big_block D F0 F' hv), XS_le_X D F0 hv⟩
 
 theorem xlam1 : XLam Λ F' = XS D F'.fl := by
   apply le_antisymm
@@ -197,8 +196,7 @@ theorem xlam1 : XLam Λ F' = XS D F'.fl := by
       exact (Submodule.span_le.2 (by rintro _ ⟨a, rfl⟩; exact e_mem_XS D F'.fl a)) h2
     · obtain ⟨s, hs, hsv⟩ := (loc_cases hw hB hvB P).2 hg
       exact ⟨s, hs, v3 hw (F'.fl.X.smul_of_tower_mem s hvX') hsv⟩
-  · intro v hv
-    exact ⟨BB_le_Lam hw hB (second_flag_xs_le_big_block D F0 F' hv), XS_le_X D F'.fl hv⟩
+  · exact fun v hv => ⟨BB_le_Lam hw hB (second_flag_xs_le_big_block D F0 F' hv), XS_le_X D F'.fl hv⟩
 
 omit hB in
 theorem z_ne : F0.z ≠ 0 := by
@@ -383,8 +381,7 @@ theorem mplus1_loc (hX0 : XLam Λ (lf D F0) = XS D F0) (P : Ideal (𝓞 D.host.E
       rw [hv]
       exact Formalism.L2.SG.Pf.le_locP' _ _ (z_mem_MMg D F0 F')
     · refine Formalism.L2.SG.Pf.le_locP' _ _ ?_
-      simp only [frame, frameAct_one]
-      exact m_mem_MMg D F0 F' b
+      simpa only [frame, frameAct_one] using m_mem_MMg D F0 F' b
   · rintro v (⟨i, rfl⟩ | ⟨b, rfl⟩)
     · induction i using Fin.lastCases with
       | last => rw [fvec_last]; exact Submodule.subset_span (Or.inl (Or.inr rfl))

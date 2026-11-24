@@ -97,8 +97,7 @@ private theorem pv_psigma_eq_pv : ∀ (bs : List (K × ℕ)) (i : ℕ), i < (bs.
     · have h1 : s - 1 - i < s := by omega
       simp only [pσ, pv, hi, h1, ite_true]
     · have h1 : ¬ s + pσ bs (i - s) < s := by omega
-      simp only [pσ, pv, hi, h1, ite_false, Nat.add_sub_cancel_left]
-      exact ih (i - s) (by omega)
+      simpa only [pσ, pv, hi, h1, ite_false, Nat.add_sub_cancel_left] using ih (i - s) (by omega)
 
 theorem same_phiF (p : Point K N) {a : ℕ} (hs : _root_.Formalism.L2.SG.Pf.sameB p.1 N a) :
     _root_.Formalism.L2.SG.Pf.sameB p.1 N (pσ p.1 (a + 1)) ∧ pσ p.1 (pσ p.1 (a + 1) + 1) = a := by
@@ -169,8 +168,7 @@ private lemma ptMat_mul_apply_eq (p : Point K N) (A : Matrix (Fin N) (Fin N) K) 
   · intro c _ hc
     have e : ptMat p i c = 0 := by
       rw [ptMat_apply'_pv, ite_eq_right]
-      intro e
-      exact hc (Fin.ext (e.trans hk.symm))
+      exact fun e => hc (Fin.ext (e.trans hk.symm))
     rw [e, zero_mul]
   · intro h; exact absurd (Finset.mem_univ k) h
 
@@ -203,8 +201,7 @@ theorem simple_eqF (p : Point K N) {n m : Matrix (Fin N) (Fin N) K} (hn : IsLoUn
       obtain ⟨t, s⟩ := b
       by_cases hsucc : i + 1 < s
       · have hi : i < s := by omega
-        simp only [pσ, pv, ite_eq_left hsucc, ite_eq_left hi]
-        exact Or.inl ⟨by omega, trivial⟩
+        simpa only [pσ, pv, ite_eq_left hsucc, ite_eq_left hi] using Or.inl ⟨by omega, trivial⟩
       · by_cases hi : i < s
         · right
           simp only [pσ, ite_eq_right hsucc, ite_eq_left hi]
@@ -516,8 +513,7 @@ theorem place_id (u u' : D.what₂.Word) {γ γw g g' : X.B.I.Ginf} (hg : g ∈ 
   set ψ : D.host.E →+* ℂ := (X.B.I.φ v).comp X.ιE.symm.toRingHom with hψ
   set Zγ := Zhat ε (fam e z) (fam e z') (uMat (γ v))
   have hz' : Zγ * FormRegularity.sgn D.R.rS = L.map ψ * ptMat (mapPt ψ w) * U.map ψ := by
-    rw [ptMat_mapPt, ← Matrix.map_mul, ← Matrix.map_mul]
-    exact hz
+    rwa [ptMat_mapPt, ← Matrix.map_mul, ← Matrix.map_mul]
   have hw' : (Pg.map star * L.map ψ) * ptMat (mapPt ψ w) * (U.map ψ * (FormRegularity.sgn D.R.rS * Pg'ᵀ * FormRegularity.sgn D.R.rS)) =
       1 * ptMat (mapPt ψ w) * 1 := by
     rw [Matrix.one_mul, Matrix.mul_one]

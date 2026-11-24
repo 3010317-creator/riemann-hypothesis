@@ -49,8 +49,7 @@ theorem rename_pairCollapse_pairDiff (p i : Fin n) :
 theorem pairDiff_ne_zero (i : Fin n) : pairDiff i ≠ 0 := by
   unfold pairDiff
   rw [sub_ne_zero]
-  intro h
-  exact Sum.inl_ne_inr (X_injective h)
+  exact fun h => Sum.inl_ne_inr (X_injective h)
 
 theorem isHomogeneous_pairDiff (i : Fin n) : (pairDiff i).IsHomogeneous 1 :=
   (isHomogeneous_X _ _).sub (isHomogeneous_X _ _)
@@ -109,8 +108,7 @@ theorem koszul_finset (s : Finset (Fin n)) :
   classical
   induction s using Finset.induction_on with
   | empty =>
-    intro G hG _
-    exact ⟨0, fun _ _ => by simp, fun i => by simp [hG i (Finset.notMem_empty i)]⟩
+    exact fun G hG _ => ⟨0, fun _ _ => by simp, fun i => by simp [hG i (Finset.notMem_empty i)]⟩
   | insert p s hp ih =>
     intro G hG hrel
     choose Q hQ using fun i => exists_sub_rename_pairCollapse p (G i)
@@ -231,8 +229,7 @@ theorem foldr_diffStep_perm {l₁ l₂ : List (K → ℤ)} (hl : l₁.Perm l₂)
   | nil => rfl
   | cons x _ ih => simp only [List.foldr_cons, ih]
   | swap x y l =>
-    simp only [List.foldr_cons]
-    exact diffStep_comm' _ _ _
+    simpa only [List.foldr_cons] using diffStep_comm' _ _ _
   | trans _ _ ih₁ ih₂ => exact ih₁.trans ih₂
 
 theorem vNumL_perm (W : Ideal (MRing ι O)) {l₁ l₂ : List (K → ℤ)} (hl : l₁.Perm l₂) :

@@ -101,8 +101,7 @@ theorem theta_homomorphism : ThetaHom := by
     rw [map_add (f := _), Pair.cc_ps (by simp) hL0, Pair.cc_ps (by simp) hL0, add_zero]
   have hFl : PowerSeries.subst F (lgF K l) = at1 0 (lgF K l) + at1 1 (lgF K l) := by
     unfold cob at hFc
-    rw [sub_sub, sub_eq_zero] at hFc
-    exact hFc
+    rwa [sub_sub, sub_eq_zero] at hFc
   conv_rhs => rw [(Formalism.L2.Th1.A.fglLog K (shortW g2 g3)).2]
   rw [Pair.subst_subst1 hs (PowerSeries.HasSubst.of_constantCoeff_zero hsum),
     MvPowerSeries.subst_add hs]
@@ -161,8 +160,7 @@ theorem ph_sub {K : Type} [Field K] [CharZero K] {l : ℕ} (hl : 2 ≤ l) (g2 g3
       _ = _ := by rw [hC, one_mul]
   have cV : PowerSeries.constantCoeff (PowerSeries.C ε⁻¹ * lU θ) = 1 := by
     have := congrArg PowerSeries.constantCoeff hprod
-    rw [map_mul, cG, mul_one, cl] at this
-    exact this
+    rwa [map_mul, cG, mul_one, cl] at this
   refine ⟨cV, ?_⟩
   have hlog : fLog (lU (lgF K l)) =
       fLog (PowerSeries.C ε⁻¹ * lU θ) + fLog (PowerSeries.subst θ (lU L)) := by
@@ -248,8 +246,7 @@ theorem phi_comparison : PhCompare := by
   have e : (phFF l g2 g3 s2 ε : MvPowerSeries Unit K) -
       PowerSeries.subst (thetaS l g2 g3 ε) (phCurve g2 g3 s2) =
       -fLog (PowerSeries.C ε⁻¹ * lU (thetaS l g2 g3 ε)) := hsub
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem first_level_curve_holds : CurveExponentCoboundaryCocycle := by
   intro K _ _ _ l hl h2l hn F hF g2 g3 s2 ε hg2 hg3 hε hθ

@@ -74,8 +74,7 @@ lemma qrA_mul_diag {A B : Matrix (Fin N) (Fin N) ℂ} (hA : A.IsUpperTriangular)
     rcases lt_or_gt_of_ne hb with h | h
     · rw [hA h, zero_mul]
     · rw [hB h, mul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 lemma qrA_inv_tri {R : Matrix (Fin N) (Fin N) ℂ} (hR : R.IsUpperTriangular) (hd : R.det ≠ 0) :
     (R⁻¹).IsUpperTriangular := by
@@ -291,8 +290,7 @@ theorem qrMap_image :
     obtain ⟨Q, t, hQ, ht, hQt⟩ := qrA_exists (Matrix.of Z) hZ
     refine ⟨(⟨⟨Q, Qᴴ, mul_eq_one_comm.1 hQ, hQ⟩, ?_⟩, t), ⟨Set.mem_univ _, ht⟩, ?_⟩
     · show Qᴴ * Jm (fun _ : Fin N => true) * Q = Jm (fun _ : Fin N => true)
-      rw [qrA_Jm_one, Matrix.mul_one]
-      exact hQ
+      rwa [qrA_Jm_one, Matrix.mul_one]
     · show Matrix.of.symm (Q * upMat t) = Z
       rw [hQt]
       rfl

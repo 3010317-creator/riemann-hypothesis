@@ -100,8 +100,7 @@ theorem chainE (hs : W.s = 1) (T : LocLat G Qp LL O) {M h : ZMod n → ℕ}
       congr 1
       refine Finset.prod_congr rfl fun s hs' => ?_
       rw [map_pow, pow_succ', AlgHom.mul_apply, show k + 1 - (s + 1) = k - s by omega]
-    rw [e] at h2
-    exact h2
+    rwa [e] at h2
 
 theorem hs_ge (A : Formalism.MainNotions.ArcLiftingSetup.ArcP n) (hA : A.OK) (c' : ZMod n) (hc' : c' ∈ A.cuts) (e m : ℕ)
     (hm1 : 1 ≤ m) (hme : m ≤ e) :
@@ -355,12 +354,10 @@ theorem iter_down (hs : W.s = 1) (T : LocLat G Qp LL O) {M hh : ZMod n → ℕ}
       rw [hQ] at h1
       have h2 := φpow_span W T _ k _ h1
       rw [SatPW.φD_pow_smulA, map_pow, ← hc] at h2
-      rw [hlet]
-      exact h2
+      rwa [hlet]
     have h3 := hle (ih y hy)
     simp only [U, Submodule.mem_comap, LinearMap.smul_apply, LinearMap.id_apply, smul_smul] at h3
-    rw [Finset.prod_range_succ, mul_comm]
-    exact h3
+    rwa [Finset.prod_range_succ, mul_comm]
 
 theorem span_pow_le (T : LocLat G Qp LL O) {r : ℕ} (b : Fin r → W.DD T)
     (hb : ∀ x ∈ W.N T, ∃ a : Fin r → LetA O n, x = ∑ j, a j • b j) (c : ZMod n) (e : ℕ) :
@@ -495,8 +492,7 @@ theorem γD_Nl (T : LocLat G Qp LL O) (c : ZMod n) (δ : W.Gam) {x : W.DD T} (hx
 
 theorem Nl_le_N (T : LocLat G Qp LL O) (c : ZMod n) {x : W.DD T} (hx : x ∈ W.Nl T c) : x ∈ W.N T := by
   obtain ⟨z, hz, rfl⟩ := hx
-  simp only [LinearMap.smul_apply, LinearMap.id_apply]
-  exact (W.N T).smul_mem _ hz
+  simpa only [LinearMap.smul_apply, LinearMap.id_apply] using (W.N T).smul_mem _ hz
 
 alias map_smulA := _root_.Formalism.MainNotions.LiftingTheory.wmap_map_smul
 

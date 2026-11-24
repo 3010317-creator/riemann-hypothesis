@@ -183,14 +183,12 @@ theorem top_degree_comparison : TopDegreeComparison := by
       · rw [ite_eq_left rfl, mem_Pol_iff.mp hPol m hm z]
       · intro x hx hxz
         rw [ite_eq_right, zero_mul]
-        intro h
-        exact hxz (LL_unique hV j hj0' z hz j hj' x hx h).2
+        exact fun h => hxz (LL_unique hV j hj0' z hz j hj' x hx h).2
       · intro h; exact absurd hzl h
     · rw [ite_eq_right hjj]
       refine Finset.sum_eq_zero fun x hx => ?_
       rw [ite_eq_right, zero_mul]
-      intro h
-      exact hjj (LL_unique hV j0 hj0' z hz j hj' x hx h).1
+      exact fun h => hjj (LL_unique hV j0 hj0' z hz j hj' x hx h).1
   have hU := degAt_mul (degAt_prod _ _ _ hδ) (degAt_monomial l (1 : O) t)
   rw [Finset.sum_ite_eq' (Finset.range X.F.J) j0, ite_eq_left hj0] at hU
   obtain ⟨m0, hm0⟩ := MvPolynomial.ne_zero_iff.mp hne
@@ -213,7 +211,6 @@ theorem top_degree_comparison : TopDegreeComparison := by
     exact_mod_cast hlt
   have hPR : (0 : ℝ) < (P : ℝ) := by exact_mod_cast hP0
   have hPe : ((p : ℝ) ^ (X.F.dist (j0 : ℤ) z + X.Rj p K (j0 : ℤ))) = (P : ℝ) := by rw [hP]; push_cast; rfl
-  rw [hPe, sub_lt_iff_lt_add, div_lt_iff₀ hPR]
-  exact hltR
+  rwa [hPe, sub_lt_iff_lt_add, div_lt_iff₀ hPR]
 
 end Formalism.MainNotions.SelectionLemmas.Pf

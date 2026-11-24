@@ -147,8 +147,7 @@ theorem canonicalCommutation_holds : CCR := by
     · obtain ⟨rfl, rfl⟩ := hh
       simp
     · rw [ite_eq_right hh, ite_eq_right]
-      intro he
-      exact hh (Prod.mk.inj he)
+      exact fun he => hh (Prod.mk.inj he)
   simp only [bop, bpl]
   by_cases h1 : sgnv ε ε' i a = true <;> by_cases h2 : sgnv ε ε' j b = true
   · simp only [ite_eq_left h1, ite_eq_left h2]
@@ -357,8 +356,7 @@ theorem rowGen_coeff_zero (R : Type) [CommRing R] {r m : ℕ} (a b : Fin r) (f :
     intro v
     simp [rowGen]
     split_ifs <;> simp
-  have h2 := congrArg (fun φ => φ f) hh
-  simpa [Polynomial.coe_aeval_eq_eval] using h2
+  simpa [Polynomial.coe_aeval_eq_eval] using congrArg (fun φ => φ f) hh
 
 theorem rowDiv_zero (R : Type) [CommRing R] {r m : ℕ} (a b : Fin r) (f : MvPolynomial (Fin r × Fin m) R) :
     rowDiv R a b 0 f = f := rowGen_coeff_zero R a b f
@@ -405,8 +403,7 @@ theorem pol_eq_Eg {r m : ℕ} (a b : Fin r) :
 theorem pol_glRel (r m : ℕ) : Formalism.REAL.GlRel (fun a b : Fin r => (pol ℂ (m := m) a b : Module.End ℂ _)) := by
   have h := (Formalism.REAL.fockPairGl_of Formalism.REAL.canonicalCommutation_holds r m (fun _ => true) (fun _ => true)).1
   intro a b c d
-  simp only [pol_eq_Eg]
-  exact h a b c d
+  simpa only [pol_eq_Eg] using h a b c d
 
 end PI.WGL
 end -- clump:auto

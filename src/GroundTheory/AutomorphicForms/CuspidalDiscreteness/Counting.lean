@@ -25,8 +25,7 @@ theorem exists_pos_natCast_mul_isIntegral (k : K) : ∃ c : ℕ, 0 < c ∧ IsInt
   obtain ⟨c, hc | hc⟩ := Int.eq_nat_or_neg y
   · refine ⟨c, Nat.pos_of_ne_zero fun h => hy0 (by rw [hc, h, Nat.cast_zero]), ?_⟩
     have : (c : K) * k = y • k := by rw [zsmul_eq_mul, hc]; push_cast; ring
-    rw [this]
-    exact hyint
+    rwa [this]
   · refine ⟨c, Nat.pos_of_ne_zero fun h => hy0 (by rw [hc, h, Nat.cast_zero, neg_zero]), ?_⟩
     have : (c : K) * k = -(y • k) := by rw [zsmul_eq_mul, hc]; push_cast; ring
     rw [this]
@@ -124,8 +123,7 @@ theorem exists_ncard_integers_le :
       exact_mod_cast h3.2]
   have hinj : InjOn c {z : 𝓞 K | ∀ w : InfinitePlace K, w (z : K) ≤ T} := by
     intro z _ z' _ h
-    refine (RingOfIntegers.basis K).repr.injective (Finsupp.ext fun i => ?_)
-    exact congrFun h i
+    exact (RingOfIntegers.basis K).repr.injective (Finsupp.ext fun i => (congrFun h i))
   have hfin : (box : Set (ι → ℤ)).Finite := Finset.finite_toSet _
   refine ⟨hfin.of_injOn hmaps hinj, ?_⟩
   have hcard := Set.ncard_le_ncard_of_injOn c hmaps hinj hfin
@@ -166,8 +164,7 @@ theorem exists_ncard_ratGLBox_le (n : ℕ) {𝒦 : Set (FiniteAdeleRing (𝓞 K)
       ((Φ γ i j : 𝓞 K) : K) = m * (γ : Matrix (Fin n) (Fin n) K) i j := by
     intro γ hγ i j
     have h := hmint _ (hγ i j).1
-    simp only [Φ, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [Φ, dite_eq_left h] using h.choose_spec
   have hmaps : ∀ γ ∈ ratGLBox n 𝒦 T, Φ γ ∈ (box : Set (Fin n → Fin n → 𝓞 K)) := by
     intro γ hγ
     rw [Finset.mem_coe, Fintype.mem_piFinset]

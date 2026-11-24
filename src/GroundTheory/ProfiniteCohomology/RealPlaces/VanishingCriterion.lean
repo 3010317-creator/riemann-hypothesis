@@ -63,11 +63,8 @@ theorem injective_tateGlobalToLocal_iff (n : ℕ) (hv : ∀ v, Subsingleton (coh
     Function.Injective (tateGlobalToLocal φ ψ A Aᵥ a Aᵣ ar n).hom ↔
       Function.Injective (globalToLocal ψ A Aᵣ ar n).hom := by
   constructor
-  · intro h x y hxy
-    refine h (Prod.ext (funext fun v => Subsingleton.elim _ _) ?_)
-    exact hxy
-  · intro h x y hxy
-    exact h (congrArg Prod.snd hxy)
+  · exact fun h x y hxy => h (Prod.ext (funext fun v => Subsingleton.elim _ _) hxy)
+  · exact fun h x y hxy => h (congrArg Prod.snd hxy)
 
 
 omit [∀ w, Fintype (F w)] in

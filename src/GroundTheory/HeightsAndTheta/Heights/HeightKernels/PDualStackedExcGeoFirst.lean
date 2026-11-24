@@ -67,8 +67,7 @@ theorem exists_sub_mem_dual {F F' : HermLattice K i} (hlt : F'.lattice < F.latti
     obtain ⟨z, hz, ν, hzν⟩ := exists_decomp (F := F) (F' := F') hle hcov (F.lattice.smul_mem μ hyF)
       ((hmem μ).not.mp hμ) hyF
     refine ⟨ν, (hmem _).mpr ?_⟩
-    rw [sub_smul, one_smul, mul_smul, sub_eq_of_eq_add hzν]
-    exact hz
+    rwa [sub_smul, one_smul, mul_smul, sub_eq_of_eq_add hzν]
   have hbot : 𝔪 ≠ ⊥ := by
     intro h
     apply NumberField.RingOfIntegers.not_isField K
@@ -150,8 +149,7 @@ theorem mem_dualIdeal_of_isLinAt_zero {F' : HermLattice K i} {b' : Module.Basis 
     {f : MRing (dualBlocks T)} (hf : IsLinAt b' f 0) : f ∈ dualIdeal b' := by
   show f ∈ RingHom.ker (mConeMap (dualLatticeCoord b'))
   rw [RingHom.mem_ker]
-  rw [IsLinAt, map_zero, C_0, zero_mul] at hf
-  exact hf
+  rwa [IsLinAt, map_zero, C_0, zero_mul] at hf
 
 theorem mem_dualIdeal_of_isLinAt_quad {F' : HermLattice K i} {b' : Module.Basis T ℤ (dualLattice F')}
     {f₁ f₂ f₃ f₄ : MRing (dualBlocks T)} {v₁ v₂ v₃ v₄ : Fin i → K} (h₁ : IsLinAt b' f₁ v₁) (h₂ : IsLinAt b' f₂ v₂)
@@ -202,8 +200,7 @@ theorem exists_coeff {F' : HermLattice K i} (b' : Module.Basis T ℤ (dualLattic
     (hφ : φ ∈ dualLattice F') : ∃ n : T → ℤ, ∑ s, n s • (b' s : Fin i → K) = φ := by
   refine ⟨fun s => b'.repr ⟨φ, hφ⟩ s, ?_⟩
   have h := congrArg (fun x : dualLattice F' => (x : Fin i → K)) (b'.sum_repr ⟨φ, hφ⟩)
-  simp only [Submodule.coe_sum, Submodule.coe_smul_of_tower] at h
-  exact h
+  simpa only [Submodule.coe_sum, Submodule.coe_smul_of_tower] using h
 
 theorem graphFirst_mem {F F' : HermLattice K i} (hlt : F'.lattice < F.lattice)
     (hcov : ∀ N : Submodule (𝓞 K) (Fin i → K), F'.lattice ≤ N → N ≤ F.lattice → N = F'.lattice ∨ N = F.lattice)

@@ -71,8 +71,7 @@ theorem restrict_mem_weightSpace_iff (E : GLOps n K V) (W : Submodule K V) (h : 
   rw [mem_weightSp_iff_diagonal_apply, mem_weightSp_iff_diagonal_apply]
   constructor
   · intro hx a
-    have e := congrArg Subtype.val (hx a)
-    simpa using e
+    simpa using congrArg Subtype.val (hx a)
   · intro hx a
     ext
     simpa using hx a
@@ -170,11 +169,9 @@ theorem root_differences_bddAbove [CharZero K] [FiniteDimensional K V] (E : GLOp
 end
 
 theorem restriction_is_representation : RestrictionIsRepresentation := by
-  intro n K V _ _ _ _ _ E hE W h
-  exact restrictRepresentation_isRep E hE W h
+  exact fun n K V _ _ _ _ _ E hE W h => restrictRepresentation_isRep E hE W h
 
 theorem hom_space_is_representation : HomSpaceIsRepresentation := by
-  intro n K V V' _ _ _ _ _ _ _ _ E E' hE hE'
-  exact homRepresentation_isRep E E' hE hE'
+  exact fun n K V V' _ _ _ _ _ _ _ _ E E' hE hE' => homRepresentation_isRep E E' hE hE'
 
 end Formalism.MainNotions.G.GLWeightTheory

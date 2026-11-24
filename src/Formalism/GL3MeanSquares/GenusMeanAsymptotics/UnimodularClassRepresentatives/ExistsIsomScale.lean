@@ -92,8 +92,7 @@ theorem IsLatIn.cut (hM : IsLatIn S h W M) (X : V) : IsLatIn S h (cutW h W X) (c
     obtain ⟨hmM, hm0⟩ := mem_cutM.mp hm
     refine mem_cutM.mpr ⟨hM.smul_mem a ha m hmM, ?_⟩
     rw [map_smul, hm0, smul_zero]
-  · intro x hx y hy
-    exact hM.int x (mem_cutM.mp hx).1 y (mem_cutM.mp hy).1
+  · exact fun x hx y hy => hM.int x (mem_cutM.mp hx).1 y (mem_cutM.mp hy).1
   · intro x hx
     obtain ⟨hxW, hx0⟩ := mem_cutW.mp hx
     obtain ⟨t, ht0, ht⟩ := hM.span x hxW
@@ -105,8 +104,7 @@ theorem int_of_cut (hM : IsLatIn S h W M) {X : V} (hX : X ∈ M)
     ∀ m ∈ M, h m x ∈ S := by
   intro m hm
   have hp := hx _ (proj_mem hM hX hu hm)
-  rw [LinearMap.map_sub₂, LinearMap.map_smulₛₗ₂, hXx, smul_zero, sub_zero] at hp
-  exact hp
+  rwa [LinearMap.map_sub₂, LinearMap.map_smulₛₗ₂, hXx, smul_zero, sub_zero] at hp
 
 theorem IsSD.cut (hM : IsSD S h W M) {X : V} (hX : X ∈ M) (hu : IsUnitIn S (h X X)) :
     IsSD S h (cutW h W X) (cutM h M X) := by

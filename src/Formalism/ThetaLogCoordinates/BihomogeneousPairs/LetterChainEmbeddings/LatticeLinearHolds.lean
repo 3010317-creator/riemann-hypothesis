@@ -101,8 +101,7 @@ theorem cm_Fpow_P {r' : ℕ} (w' e' : Fin r' → σ) (w e : Fin r → σ) (zv sv
     (x : MvPolynomial σ ℚ_[p]) :
     (tieF w' e' ^ m) (tieP w e zv sv o n z x) = tieP w e zv sv o n z ((tieF w' e' ^ m) x) := by
   have h := (cm_F_P (p := p) w' e' w e zv sv o n z hw he).pow_left m
-  have h2 := LinearMap.congr_fun h.eq x
-  simpa only [Module.End.mul_apply, cm_tiePL_apply] using h2
+  simpa only [Module.End.mul_apply, cm_tiePL_apply] using LinearMap.congr_fun h.eq x
 
 end abs
 
@@ -271,8 +270,7 @@ theorem middle_p_eq_holds : MidPEq := by
     refine span_map_mem _ _ _ ?_ x hx
     rintro _ ⟨y, hy, g, hg, rfl⟩
     refine Submodule.subset_span ?_
-    simp only [Set.mem_iUnion]
-    exact ⟨j, jp, hok, y, hy, g, hg, by rw [key, Pall_eq]⟩
+    simpa only [Set.mem_iUnion] using ⟨j, jp, hok, y, hy, g, hg, by rw [key, Pall_eq]⟩
   · refine Submodule.span_le.mpr ?_
     intro v hv
     simp only [Set.mem_iUnion] at hv

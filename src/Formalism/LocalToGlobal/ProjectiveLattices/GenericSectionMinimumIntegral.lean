@@ -132,8 +132,7 @@ theorem algIndep_of_der {E : Type} [Field E] [CharZero E] [Algebra E F] {N : ℕ
       intro s hs
       by_contra hpos
       obtain ⟨l, hl⟩ : ∃ l, s l ≠ 0 := by
-        by_contra hall
-        push Not at hall
+        by_contra! hall
         have h0 : s = 0 := Finsupp.ext fun a => by simp [hall a]
         simp [h0] at hpos
       have hs' : s - Finsupp.single l 1 + Finsupp.single l 1 = s := by
@@ -177,9 +176,7 @@ theorem gauss_indep {K Ω U τ : Type} [Field K] [Field Ω] [Field U] [Algebra K
       (((ReciprocityTheory.MultiplicativeHeights.comapInclusion V (algebraMap Ω U)).comp
         (ReciprocityTheory.MultiplicativeHeights.comapInclusion (V.comap (algebraMap Ω U)) (algebraMap K Ω)) x : V) : U) =
         algebraMap K U (x : K) := by
-    intro x
-    show algebraMap Ω U (algebraMap K Ω (x : K)) = _
-    exact (IsScalarTower.algebraMap_apply K Ω U _).symm
+    exact fun x => (IsScalarTower.algebraMap_apply K Ω U _).symm
   have hcomp : ∀ x : (V.comap (algebraMap Ω U)).comap (algebraMap K Ω),
       algebraMap (ResidueField ((V.comap (algebraMap Ω U)).comap (algebraMap K Ω))) (ResidueField V)
         (residue _ x) =
@@ -204,8 +201,7 @@ theorem gauss_indep {K Ω U τ : Type} [Field K] [Field Ω] [Field U] [Algebra K
     have e2 : V.subtype.comp f0 =
         (algebraMap K U).comp ((V.comap (algebraMap Ω U)).comap (algebraMap K Ω)).subtype :=
       RingHom.ext fun x => f0def x
-    rw [← e2]
-    exact e1
+    rwa [← e2]
   have hres : residue V (MvPolynomial.eval₂ f0 (fun j => (⟨T j, hT j⟩ : V)) Q') =
       MvPolynomial.aeval (fun j => residue V ⟨T j, hT j⟩) (MvPolynomial.map (residue _) Q') := by
     rw [MvPolynomial.aeval_def, MvPolynomial.eval₂_map]
@@ -214,11 +210,9 @@ theorem gauss_indep {K Ω U τ : Type} [Field K] [Field Ω] [Field U] [Algebra K
         (algebraMap (ResidueField ((V.comap (algebraMap Ω U)).comap (algebraMap K Ω)))
           (ResidueField V)).comp (residue _) :=
       RingHom.ext fun x => (hcomp x).symm
-    rw [← e2]
-    exact e1
+    rwa [← e2]
   have hlt : V.valuation ((MvPolynomial.eval₂ f0 (fun j => (⟨T j, hT j⟩ : V)) Q' : V) : U) < 1 := by
-    rw [← ValuationSubring.valuation_lt_one_iff, ← IsLocalRing.residue_eq_zero_iff, hres]
-    exact hR
+    rwa [← ValuationSubring.valuation_lt_one_iff, ← IsLocalRing.residue_eq_zero_iff, hres]
   have hc : ∀ α, (MvPolynomial.map ((V.comap (algebraMap Ω U)).comap (algebraMap K Ω)).subtype Q').coeff α =
       ((Q'.coeff α : (V.comap (algebraMap Ω U)).comap (algebraMap K Ω)) : K) := fun α =>
     MvPolynomial.coeff_map _ _ _
@@ -235,8 +229,7 @@ theorem gauss_indep {K Ω U τ : Type} [Field K] [Field Ω] [Field U] [Algebra K
     have hu : IsUnit (Q'.coeff α) := by
       by_contra hnu
       apply hα
-      rw [IsLocalRing.residue_eq_zero_iff, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-      exact hnu
+      rwa [IsLocalRing.residue_eq_zero_iff, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
     rw [hc, ← f0def]
     exact (V.valuation_eq_one_iff _).mp (hu.map f0)
   have h1 := hG _ hle hex
@@ -434,8 +427,7 @@ theorem gauss_direct {F K : Type} [Field F] [Field K] [CharZero K] [Algebra K F]
       exact one_ne_zero this
     · intro b _ hb
       rw [ite_eq_right, mul_zero]
-      intro hs
-      exact hb ((Finsupp.single_left_inj one_ne_zero).mp hs)
+      exact fun hs => hb ((Finsupp.single_left_inj one_ne_zero).mp hs)
     · simp
   have hev : MvPolynomial.aeval (fun s => residue V ⟨T (0, s), hTV _⟩) Lp = residue V (∑ k, aV k * tV k) := by
 
@@ -444,8 +436,7 @@ theorem gauss_direct {F K : Type} [Field F] [Field K] [CharZero K] [Algebra K F]
     congr 1
   have hres : residue V (∑ k, aV k * tV k) ≠ 0 := by
     rw [← hev]
-    intro h0
-    exact hLp (RT3.eq_zero_of_aeval_eq_zero _ h0)
+    exact fun h0 => hLp (RT3.eq_zero_of_aeval_eq_zero _ h0)
   have hunit : IsUnit (∑ k, aV k * tV k) := by
     by_contra hnu
     apply hres
@@ -462,8 +453,7 @@ theorem gauss_direct {F K : Type} [Field F] [Field K] [CharZero K] [Algebra K F]
     ring
   have hyv : V.valuation (y j0) = 1 := by
     have := congrArg V.valuation hprod
-    rw [Valuation.map_mul, hL1, mul_one, Valuation.map_one] at this
-    exact this
+    rwa [Valuation.map_mul, hL1, mul_one, Valuation.map_one] at this
   intro k
   rw [← V.valuation_le_one_iff]
   exact (hj0 k (Finset.mem_univ _)).trans hyv.le
@@ -504,8 +494,7 @@ theorem isIntegral_of_quot {R A : Type*} [CommRing R] [CommRing A] [Algebra R A]
     rw [hqe, ← Ideal.Quotient.eq_zero_iff_mem]
     have e2 := Polynomial.aeval_algHom_apply (Ideal.Quotient.mkₐ R m) x p
     rw [Ideal.Quotient.mkₐ_eq_mk, Polynomial.aeval_def] at e2
-    rw [← e2]
-    exact e
+    rwa [← e2]
   let Pp := ∏ m ∈ S, q m
   have hP : Pp.Monic := Polynomial.monic_prod_of_monic _ _ fun m _ => hq m
   have hmem : ∀ J : Ideal A, J.IsPrime → Polynomial.aeval x Pp ∈ J := by
@@ -784,8 +773,7 @@ theorem generic_section_minimum_integral {D : D7} {B : WeightFamilies.Prov D} {P
     have h0 : vL ζ ⟨_, hint k⟩ = 0 := by
       show Ring.ord (Loc ζ) _ = 0
       have := Ring.ord_mul_of_isUnit_left hu (1 : Loc ζ)
-      rw [mul_one, Ring.ord_one] at this
-      exact this
+      rwa [mul_one, Ring.ord_one] at this
     rw [h0]
     rfl
   have hT : ∀ k, algebraMap (Kp (xplus X E hM) la G.N) (OsK (xplus X E hM) la G.w)

@@ -118,13 +118,11 @@ theorem VeryAmpleZFinite.proof (hExt : VeryAmpleZExtend.Statement.{u, v, w})
   have htop : Ideal.span (Set.range bA) = ⊤ := by
     rw [Ideal.eq_top_iff_one, Ideal.mem_span_range_iff_exists_fun]
     refine ⟨fun k => ⟨a k, hA _ (ha k)⟩, Subtype.ext ?_⟩
-    rw [AddSubmonoidClass.coe_finsetSum, OneMemClass.coe_one]
-    exact hab
+    rwa [AddSubmonoidClass.coe_finsetSum, OneMemClass.coe_one]
   have h1 : (1 : chartRing S h J) ∈ Ideal.span (Set.range fun k => bA k ^ L') := by
     have := Ideal.span_pow_eq_top _ htop L'
     rw [← Set.range_comp] at this
-    rw [← Ideal.eq_top_iff_one]
-    exact this
+    rwa [← Ideal.eq_top_iff_one]
   obtain ⟨c, hc⟩ := Ideal.mem_span_range_iff_exists_fun.mp h1
   have he' : e = ∑ k, c k • (b k ^ L' • e) := by
     have : ∑ k, c k • (b k ^ L' • e) = (∑ k, c k * bA k ^ L') • e := by

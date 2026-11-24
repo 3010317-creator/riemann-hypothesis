@@ -22,8 +22,7 @@ theorem sqQ_eq {m : ℤ} {w : Qb} (hw : w ^ 2 = (m : Qb)) : sqQ m = ℚ⟮w⟯ :
     rw [IntermediateField.adjoin_le_iff]
     intro z hz
     have hz' : z ^ 2 = w ^ 2 := by
-      rw [hw]
-      exact hz
+      rwa [hw]
     rcases sq_eq_sq_iff_eq_or_eq_neg.mp hz' with rfl | rfl
     · exact IntermediateField.mem_adjoin_simple_self ℚ z
     · exact neg_mem (IntermediateField.mem_adjoin_simple_self ℚ w)
@@ -36,10 +35,8 @@ theorem pow_add_inv_pow_mem {w : Qb} (hw : w ≠ 0) (k : ℕ) : w ^ k + w⁻¹ ^
     induction n with
     | zero =>
       refine ⟨?_, ?_⟩
-      · simp only [pow_zero]
-        exact add_mem (one_mem _) (one_mem _)
-      · simp only [zero_add, pow_one]
-        exact IntermediateField.mem_adjoin_simple_self ℚ _
+      · simpa only [pow_zero] using add_mem (one_mem _) (one_mem _)
+      · simpa only [zero_add, pow_one] using IntermediateField.mem_adjoin_simple_self ℚ _
     | succ n ih =>
       refine ⟨ih.2, ?_⟩
       have h1 : w * w⁻¹ = 1 := mul_inv_cancel₀ hw

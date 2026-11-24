@@ -180,15 +180,12 @@ theorem exists_mem_adjoin_eq {V : Type} [AddCommGroup V] [Module ℂ V] [Nontriv
   haveI : IsSimpleOrder (Submodule A V) := by
     refine ⟨fun N => ?_⟩
     have hst : ∀ T ∈ O, ∀ x ∈ N.restrictScalars ℂ, T x ∈ N.restrictScalars ℂ := by
-      intro T hT x hx
-      exact N.smul_mem (⟨T, Algebra.subset_adjoin hT⟩ : A) hx
+      exact fun T hT x hx => N.smul_mem (⟨T, Algebra.subset_adjoin hT⟩ : A) hx
     rcases hirr (N.restrictScalars ℂ) hst with h | h
     · left
-      rw [← Submodule.restrictScalars_eq_bot_iff ℂ]
-      exact h
+      rwa [← Submodule.restrictScalars_eq_bot_iff ℂ]
     · right
-      rw [← Submodule.restrictScalars_eq_top_iff ℂ]
-      exact h
+      rwa [← Submodule.restrictScalars_eq_top_iff ℂ]
   haveI : IsSimpleModule A V := ⟨⟩
   let F : Module.End (Module.End A V) V :=
     { toFun := f

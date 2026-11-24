@@ -88,10 +88,8 @@ theorem comb_reflect {b : Fin n → Fin n → K} (hb : UT b) (hd : ∀ l, b l l 
         · have h2 := Fin.lt_def.1 hgt
           have h3 := i.2
           rw [ih i (by omega) (by omega), zero_mul]
-      · intro h'
-        exact absurd (Finset.mem_univ l) h'
-  intro l hl
-  exact key (n - l.1) l le_rfl hl
+      · exact fun h' => absurd (Finset.mem_univ l) h'
+  exact fun l hl => key (n - l.1) l le_rfl hl
 
 def combL (b : Fin n → Fin n → K) : (Fin n → K) →ₗ[K] (Fin n → K) where
   toFun w := ∑ i, w i • b i
@@ -124,8 +122,7 @@ theorem combE_symm_zab {b : Fin n → Fin n → K} (hb : UT b) (hd : ∀ l, b l 
   have h := combE_apply hb hd ((combE hb hd).symm v)
   rw [LinearEquiv.apply_symm_apply] at h
   refine comb_reflect hb hd _ k0 ?_
-  rw [← h]
-  exact hv
+  rwa [← h]
 
 theorem eN_eq_single (l : Fin n) : Loc.eN K n l.1 = Pi.single l 1 := by
   funext m

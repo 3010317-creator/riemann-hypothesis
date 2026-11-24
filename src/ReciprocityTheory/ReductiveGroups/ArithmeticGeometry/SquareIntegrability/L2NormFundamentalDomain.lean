@@ -43,8 +43,7 @@ def tens {n : ℕ} (s : Fin n → (Fin 1 → Vsp X.dim) → ℂ) : (Fin n → Vs
   fun v => ∏ k, s k (fun _ => v k)
 
 theorem sec_contDiff {q n : ℕ} {F : (Fin n → Vsp X.dim) → ℂ} (hF : F ∈ X.Sec q n) :
-    ContDiff ℂ (⊤ : ℕ∞) F := by
-  exact contDiff_of_diff (show Differentiable ℂ F ∧ _ from hF).1
+    ContDiff ℂ (⊤ : ℕ∞) F := contDiff_of_diff (show Differentiable ℂ F ∧ _ from hF).1
 
 theorem tens_mem {n q : ℕ} {s : Fin n → (Fin 1 → Vsp X.dim) → ℂ} (hs : ∀ k, s k ∈ X.Sec q 1) :
     tens X s ∈ X.Sec q n := by
@@ -99,8 +98,7 @@ theorem l2_norm_fundamental_domain (q : ℕ) (s : (Fin 1 → Vsp X.dim) → ℂ)
 
 theorem l2_tens_eq_prod {n : ℕ} (q : ℕ) (s : Fin n → (Fin 1 → Vsp X.dim) → ℂ) :
     X.l2 q (tens X s) = ∏ k, X.l2 q (s k) := by
-  rw [Finset.prod_congr rfl fun k _ => l2_norm_fundamental_domain X q (s k)]
-  rw [PT.l2]
+  rw [Finset.prod_congr rfl fun k _ => l2_norm_fundamental_domain X q (s k), PT.l2]
   simp_rw [pointNormSq_tensor X q s]
   exact avg_fd_prod X (fun k x => X.ptN2 q (s k) (fun _ => x))
 
@@ -201,10 +199,8 @@ theorem eq_zero_of_l2_eq_zero (hP : Ext.PackingCount) {q : ℕ} (hq : 1 ≤ q) {
   have hz : g (v 0) = 0 := by
     by_contra hc
     have hm : v 0 ∈ ({x | g x ≠ 0} : Set (Vsp X.dim)) := hc
-    rw [hempty] at hm
-    exact hm
-  rw [hv]
-  exact hz
+    rwa [hempty] at hm
+  rwa [hv]
 
 theorem polyDeriv_zero_fun {σ W : Type*} [NormedAddCommGroup W] [NormedSpace ℂ W]
     (P : MvPolynomial σ ℂ) (u : σ → W) (x : W) : polyDeriv P u (0 : W → ℂ) x = 0 := by

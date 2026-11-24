@@ -422,8 +422,7 @@ theorem restCountLow_of (hT : RestTail) (hM : RestMatch) : RestCountLow := by
   unfold RestTail at hT
   unfold RestMatch at hM
   refine _root_.Formalism.MainNotions.ColumnSystems.Pf.TransportedAlt.mono ?_ (transported_and (transported_and threshold_standard_one hT) hM)
-  intro _ _ _ _ _ _ _ _ _ _ h
-  exact countLow_of h.1.1 h.1.2 h.2
+  exact fun _ _ _ _ _ _ _ _ _ _ h => countLow_of h.1.1 h.1.2 h.2
 
 def TgtOK (C0 CE1 CE2 : ℝ) (X : Loc) [NeZero X.m] (j : Fin (numSeg X.TT)) (m : ℝ)
     (rz ry : Fin (segS X.TT j) → Fin (X.m + 1) → ℕ) (t : Tgt (segS X.TT j) X.m) : Prop :=
@@ -627,8 +626,7 @@ theorem restMatch_of (hCD : ChainDimAt) (hMU : RestMatchUp) (hML : RestMatchLow)
   unfold RestMatchUp at hMU
   unfold RestMatchLow at hML
   refine _root_.Formalism.MainNotions.ColumnSystems.Pf.TransportedAlt.mono ?_ (transported_and hMU hML)
-  intro _ _ _ _ _ _ _ _ _ _ h
-  exact match_of hCD h.1 h.2
+  exact fun _ _ _ _ _ _ _ _ _ _ h => match_of hCD h.1 h.2
 
 theorem restCountLow_of' (hCD : ChainDimAt) (hT : RestTail) (hMU : RestMatchUp) (hML : RestMatchLow) : RestCountLow := by
   exact restCountLow_of hT (restMatch_of hCD hMU hML)
@@ -731,8 +729,7 @@ theorem restMatchLow_of (h : KeptBlocksBeyondThreshold) : RestMatchLow := by
   unfold RestMatchLow
   unfold KeptBlocksBeyondThreshold at h
   refine _root_.Formalism.MainNotions.ColumnSystems.Pf.TransportedAlt.mono ?_ h
-  intro _ _ _ _ _ _ _ _ _ _ h
-  exact matchLow_of h
+  exact fun _ _ _ _ _ _ _ _ _ _ h => matchLow_of h
 
 theorem restCountLow_of'' (hCD : ChainDimAt) (hT : RestTail) (hMU : RestMatchUp) (hK : KeptBlocksBeyondThreshold) : RestCountLow :=
   restCountLow_of' hCD hT hMU (restMatchLow_of hK)

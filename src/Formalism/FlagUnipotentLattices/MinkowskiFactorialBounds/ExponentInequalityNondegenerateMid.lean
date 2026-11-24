@@ -441,16 +441,14 @@ lemma massRatio_bound_of_top (C : ℝ) (hC : 1 ≤ C) (k m f s : ℕ) (b v NT : 
     exact Real.exp_pos _
   have hkv : ((k : ℝ) * v) ^ (k * f) ≤ Real.exp ((k : ℝ) * f * (Real.log k + Real.log b)) := by
     rw [pow_eq_exp_mul_log _ (mul_pos hk0 hv), Real.log_mul hk0.ne' hv.ne', Nat.cast_mul]
-    apply Real.exp_le_exp.2
-    exact mul_le_mul_of_nonneg_left (by linarith) (by positivity)
+    exact Real.exp_le_exp.2 (mul_le_mul_of_nonneg_left (by linarith) (by positivity))
   have hCk : (C * k) ^ (k * f) = Real.exp ((k : ℝ) * f * (Real.log C + Real.log k)) := by
     rw [pow_eq_exp_mul_log _ (mul_pos hC0 hk0), Real.log_mul hC0.ne' hk0.ne', Nat.cast_mul]
   have hB : (bigH C m f b ^ (C * m) * NT) ^ (C * k) ≤
       Real.exp (((C * (m : ℝ) ^ 2 * f * Real.log b) * (C * m) + C * m * f * Real.log b) * (C * k)) := by
     rw [Real.rpow_def_of_pos (mul_pos hH hNT), Real.log_mul hH.ne' hNT.ne', heightParameter_rpow C m f b _ hb,
       Real.log_exp]
-    apply Real.exp_le_exp.2
-    exact mul_le_mul_of_nonneg_right (by linarith) (mul_pos hC0 hk0).le
+    exact Real.exp_le_exp.2 (mul_le_mul_of_nonneg_right (by linarith) (mul_pos hC0 hk0).le)
   calc ((k : ℝ) * v) ^ (k * f) * Xi s ≤ Real.exp ((k : ℝ) * f * (Real.log k + Real.log b)) *
         ((C * k) ^ (k * f) * (bigH C m f b ^ (C * m) * NT) ^ (C * k)) :=
         mul_le_mul hkv h1 h0 (Real.exp_pos _).le
@@ -619,7 +617,6 @@ theorem singleRowBound : SingleRowBound := by
     push_cast
     ring
   rw [pow_eq_exp_mul_log C hC0 f, heightParameter_rpow C (2 * r + 2) f b _ hb0, ← Real.exp_log hGam0, e4]
-  simp only [← Real.exp_add]
-  exact Real.exp_le_exp.2 (by linarith)
+  simpa only [← Real.exp_add] using Real.exp_le_exp.2 (by linarith)
 
 end Formalism.HermitianLatticeCounting.P

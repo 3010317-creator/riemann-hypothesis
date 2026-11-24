@@ -46,9 +46,7 @@ theorem detG_holds : DetG := by
     intro x
     rw [← isUnit_map_iff g.e x, Prod.isUnit_iff, isUnit_iff_ne_zero, isUnit_iff_ne_zero]
     rfl
-  have hq : (g.q : F) ≠ 0 := by
-    intro h
-    exact g.q_irr.ne_zero (Subtype.ext h)
+  have hq : (g.q : F) ≠ 0 := fun h => g.q_irr.ne_zero (Subtype.ext h)
   set Zz := HermSp.ZZplusOf M Zh T T' with hZz
   have e1 : Zz.map φ₁ = (g.q : F)⁻¹ • Zh.map φ₁ + Matrix.of fun a b => cor r a b (T / (g.q : F)) := by
     ext a b

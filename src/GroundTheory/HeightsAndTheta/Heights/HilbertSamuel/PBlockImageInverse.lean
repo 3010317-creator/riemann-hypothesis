@@ -102,14 +102,12 @@ theorem isMultiHomog_X' [DecidableEq K] (p : Σ k, ι k) : IsMultiHomog (X p : M
     · simp [blockDeg]
     · intro b _ hb
       rw [Finsupp.single_apply, ite_eq_right]
-      intro h
-      exact hb (eq_of_heq (Sigma.mk.inj_iff.mp h).2).symm
+      exact fun h => hb (eq_of_heq (Sigma.mk.inj_iff.mp h).2).symm
     · simp
   · simp only [blockDeg, ite_eq_right hk]
     refine Finset.sum_eq_zero fun i _ => ?_
     rw [Finsupp.single_apply, ite_eq_right]
-    intro h
-    exact hk (congrArg Sigma.fst h).symm
+    exact fun h => hk (congrArg Sigma.fst h).symm
 
 theorem isMultiHomog_bind₁ {K' : Type} [Fintype K'] {ι' : K' → Type} [∀ k, Fintype (ι' k)]
     {f : MRing ι} {a : K → ℕ} (hf : IsMultiHomog f a) (τ : (Σ k, ι k) → MRing ι') (δ : K → K' → ℕ)
@@ -188,8 +186,7 @@ theorem mConeMap_of_isMultiHomog (y : (Σ k, ι k) → Ω) {f : MRing ι} {a : K
 
 theorem mem_mCoordIdeal_iff (y : (Σ k, ι k) → Ω) {f : MRing ι} {a : K → ℕ} (hf : IsMultiHomog f a) :
     f ∈ mCoordIdeal y ↔ aeval y f = 0 := by
-  rw [mCoordIdeal, RingHom.mem_ker]
-  rw [mConeMap_of_isMultiHomog y hf]
+  rw [mCoordIdeal, RingHom.mem_ker, mConeMap_of_isMultiHomog y hf]
   constructor
   · intro h
     rcases mul_eq_zero.mp h with h | h
@@ -251,8 +248,7 @@ theorem BlockImageInverse.proof : BlockImageInverse.Statement := by
     intro k
     obtain ⟨i, hi⟩ := hA.2.1.2.2 k
     refine ⟨i, fun h0 => hi ?_⟩
-    rw [mem_mCoordIdeal_iff y (isMultiHomog_X' _), aeval_X]
-    exact h0
+    rwa [mem_mCoordIdeal_iff y (isMultiHomog_X' _), aeval_X]
   choose c hc using hrel
 
   have hrat : ∀ k i, ∃ (n : ℕ) (g' h' : MRing ι), IsMultiHomog g' (blockDeg k₀ n) ∧
@@ -332,10 +328,8 @@ theorem BlockImageInverse.proof : BlockImageInverse.Statement := by
     by_cases hk : k = k₀
     · subst hk
       rw [hσ0]
-      simp only [ite_true]
-      exact isMultiHomog_sum _ fun j _ => isMultiHomog_C_mul (hXu j) _
-    · simp only [hσ, dite_eq_right hk, ite_eq_right hk]
-      exact isMultiHomog_zero _
+      simpa only [ite_true] using isMultiHomog_sum _ fun j _ => isMultiHomog_C_mul (hXu j) _
+    · simpa only [hσ, dite_eq_right hk, ite_eq_right hk] using isMultiHomog_zero _
   have hpull : ∀ {P : MRing ι} {n : ℕ}, IsMultiHomog P (blockDeg k₀ n) →
       IsMultiHomog (ι := GlobalTheory (Fin r)) (bind₁ σ P) (fun _ => n) := by
     intro P n hP
@@ -398,8 +392,7 @@ theorem BlockImageInverse.proof : BlockImageInverse.Statement := by
     · subst hk
       simp only [hτ, hDg, ite_true]
       simpa using hσH ⟨k, i⟩
-    · simp only [hτ, hDg, ite_eq_right hk]
-      exact hpull (hQH k i)
+    · simpa only [hτ, hDg, ite_eq_right hk] using hpull (hQH k i)
   obtain ⟨lam, hlam⟩ : ∃ lam : K → Ω,
       lam = fun k => if k = k₀ then 1 else (∏ i, aeval y (hh k i)) / y ⟨k, c k⟩ := ⟨_, rfl⟩
   have hτx : ∀ p : (Σ k, ι k), aeval x (τ p) = lam p.1 * y p := by
@@ -493,10 +486,8 @@ theorem BlockImageInverse.proof : BlockImageInverse.Statement := by
     exact mul_ne_zero (hBfac z hBz).1
       (Finset.prod_ne_zero_iff.mpr fun k _ => pow_ne_zero _ (hcz z hz hBz k)) this.symm
   refine ⟨F, e, bind₁ ρ F, _, hFH, ?_, hGH, ?_, ?_, ?_, ?_, ?_⟩
-  · rw [mem_coordIdeal_iff x hFH, hFx]
-    exact hBy
-  · rw [mem_mCoordIdeal_iff y hGH, hGy, hFx]
-    exact hBy
+  · rwa [mem_coordIdeal_iff x hFH, hFx]
+  · rwa [mem_mCoordIdeal_iff y hGH, hGy, hFx]
   · intro z
     rw [eval_map_int, eval_map_int, hGz]
   · intro u hu hFu

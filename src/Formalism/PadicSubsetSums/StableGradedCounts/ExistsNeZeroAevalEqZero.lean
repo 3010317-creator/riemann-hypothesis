@@ -105,10 +105,8 @@ theorem exists_annihilator_eq {K V : Type} [Field K] [AddCommGroup V] [Module K 
     rw [map_mul, hm, hx, map_zero]
   have hsq : Squarefree g.charpoly := hs.squarefree
   refine WfDvdMonoid.induction_on_irreducible d ?_ ?_ ?_
-  · intro h0
-    exact absurd (zero_dvd_iff.1 h0) (LinearMap.charpoly_monic g).ne_zero
-  · intro u hu _
-    exact ⟨0, map_zero _, fun q _ => hu.dvd⟩
+  · exact fun h0 => absurd (zero_dvd_iff.1 h0) (LinearMap.charpoly_monic g).ne_zero
+  · exact fun u hu _ => ⟨0, map_zero _, fun q _ => hu.dvd⟩
   · intro a i _ hi ih hdvd
     have ha : a ∣ g.charpoly := dvd_of_mul_left_dvd hdvd
     have hid : i ∣ g.charpoly := dvd_of_mul_right_dvd hdvd

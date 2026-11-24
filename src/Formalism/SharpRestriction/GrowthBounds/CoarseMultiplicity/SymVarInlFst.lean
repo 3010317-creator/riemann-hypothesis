@@ -192,8 +192,7 @@ theorem homAt (C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ) : HomAt C0 CYb Cde Ck CD Cb
           (Sum.inl (finPos (2 * segS X.TT j + 1) (2 * ↑(uTop (X.seg C0 CE1 CE2 j) i)), c))).mul
           (isWeightedHomogeneous_X (KK O) ω
           (Sum.inl (finPos (2 * segS X.TT j + 1) (2 * ↑(uTop (X.seg C0 CE1 CE2 j) i) + 1), c)))
-        rw [h1, h1] at hX
-        exact hX
+        rwa [h1, h1] at hX
     have hEp : IsWeightedHomogeneous ω (BlockData.Eplus (r := X.m) O (bD C0 CE1 CE2 X j mm b))
         (ωL (⟨2 * segS X.TT j, by omega⟩ : Fin (2 * segS X.TT j + 1)).castSucc +
           ωL (Fin.last (2 * segS X.TT j + 1))) := by
@@ -204,8 +203,7 @@ theorem homAt (C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ) : HomAt C0 CYb Cde Ck CD Cb
         have hX := (isWeightedHomogeneous_X (KK O) ω
           (Sum.inl ((⟨2 * segS X.TT j, by omega⟩ : Fin (2 * segS X.TT j + 1)).castSucc, c))).mul
           (isWeightedHomogeneous_X (KK O) ω (Sum.inl (Fin.last (2 * segS X.TT j + 1), c)))
-        rw [h1, h1] at hX
-        exact hX
+        rwa [h1, h1] at hX
     have hyP : y ∈ Pol (KK O) X.m ((bD C0 CE1 CE2 X j mm b).lettersAt jj jp).deg :=
       (Submodule.mem_inf.1 (Submodule.mem_inf.1 hy).1).1
     have hY := isWeightedHomogeneous_rename_chainEmb_of_mem_Pol ω ωL h1 _ y hyP
@@ -236,13 +234,11 @@ theorem homAt (C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ) : HomAt C0 CYb Cde Ck CD Cb
       rcases ha with ha | ha
       · have e : (bD C0 CE1 CE2 X j mm b).letterAt ((bD C0 CE1 CE2 X j mm b).T.pos i) = a :=
           Fin.ext (show min (2 * (uTop (X.seg C0 CE1 CE2 j) i : ℕ)) (2 * segS X.TT j + 1 - 1) = (a : ℕ) by omega)
-        rw [e] at k1
-        exact k1
+        rwa [e] at k1
       · have e : (bD C0 CE1 CE2 X j mm b).letterAt ((bD C0 CE1 CE2 X j mm b).T.pos i + 1) = a :=
           Fin.ext (show min (2 * (uTop (X.seg C0 CE1 CE2 j) i : ℕ) + 1) (2 * segS X.TT j + 1 - 1) = (a : ℕ) by
             omega)
-        rw [e] at k2
-        exact k2
+        rwa [e] at k2
     have hjp : ∀ a : Fin (2 * segS X.TT j + 1), (a : ℕ) = 2 * segS X.TT j →
         jp ≤ (segChain X.p (X.seg C0 CE1 CE2 j) (segATop X.TT X.aT j) b).deg a := by
       intro a ha

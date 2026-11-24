@@ -46,8 +46,7 @@ theorem infMat_brg (x : (UI.instV fr).GA) (ρ : D.what₂.Tau) :
     have h := ((UI.brg_isBridge fr) x).1 (Formalism.L2.Host.tauPl D ρ)
     have h2 := thetaV_eq_psiT fr ρ
     unfold Formalism.L2.SG.AdBridge.ofHAInf at h
-    rw [h2] at h
-    exact h
+    rwa [h2] at h
   rw [hb, infMat_thetaC]
   have hu := P_isUnit_det fr (Formalism.L2.Host.tauPl D ρ)
   rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hu, Matrix.one_mul, Matrix.mul_assoc,
@@ -80,8 +79,7 @@ theorem brg_mem_GfC (x : (UI.instV fr).GA) : UI.brg fr x ∈ GfC V ↔ x.1 = 1 :
     constructor
     · intro hh
       exact congrArg (fun u : GL (Fin V.rank) (Ainf D.host.F ⊗[D.host.F] D.host.E) => u.1) (MonoidHom.mem_ker.mp hh)
-    · intro hh
-      exact MonoidHom.mem_ker.mpr (Units.ext hh)
+    · exact fun hh => MonoidHom.mem_ker.mpr (Units.ext hh)
   rw [key, uM_one_iff]
   have hc : ∀ ρ, ((matA D V (UI.brg fr x)).map (infPart D)).map (thetaC D ρ) =
       fr.P (Formalism.L2.Host.tauPl D ρ) * uM fr x (Formalism.L2.Host.tauPl D ρ) * (fr.P (Formalism.L2.Host.tauPl D ρ))⁻¹ := by

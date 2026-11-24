@@ -635,8 +635,7 @@ theorem ubl_unitH (h6 : UBLInvSqrt) {S : Set (Mat k r)} (hSG : S ⊆ GV k r) (v 
       (((Real.sqrt (herm (Hpk k r) (v g) (v g)).re)⁻¹ : ℝ) : ℂ) * v g i := by
     funext g i; rfl
   rw [hfun]
-  refine ubl_pi hSG fun i => ?_
-  exact ubl_mono hSG (ubl_mul hSG hs (hv' i)) (by omega) le_rfl
+  exact ubl_pi hSG fun i => ubl_mono hSG (ubl_mul hSG hs (hv' i)) (by omega) le_rfl
 
 theorem ubl_nuG (h6 : UBLInvSqrt) {z z' : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) (hz' : C2.StdZ k r z')
     {ε : ℝ} (hε : 0 < ε) (n : ℕ) : UBL (nuG z z') (geG k r z z' ε) n (r + 1) (2 * (r + 1)) := by
@@ -744,8 +743,7 @@ theorem ubl_ioG {ε : ℝ} {z z' : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k 
     simpa [PpG, Matrix.sub_apply] using h2
   have hio : ∀ i j, UBL (fun g => ioG z z' g i j) S n (4 * (r + 1)) (2 * (r + 1)) := by
     intro i j
-    have h1 := ubl_mmul hSG hPhi hPp i j
-    exact ubl_mono hSG (by simpa [ioG] using h1) (by omega) le_rfl
+    exact ubl_mono hSG (by simpa [ioG] using (ubl_mmul hSG hPhi hPp i j)) (by omega) le_rfl
   exact ubl_pi hSG fun i => ubl_pi hSG fun j => hio i j
 
 end S7
@@ -1043,8 +1041,7 @@ lemma X_le (z : Fin (2 * r + k + 1) → ℂ) : Xsp k r ≤ Fsp k r z := by
   rintro _ ⟨a, rfl⟩
   have h := fv_mem z (Fin.castSucc a)
   unfold fvec at h
-  rw [dite_eq_left (show ((Fin.castSucc a : Fin (r + 1)) : ℕ) < r from a.isLt)] at h
-  exact h
+  rwa [dite_eq_left (show ((Fin.castSucc a : Fin (r + 1)) : ℕ) < r from a.isLt)] at h
 
 lemma lift_unique' {z z' : Fin (2 * r + k + 1) → ℂ} {y : B.Mat k r} (hd : (Zhat k r z z' y).det ≠ 0)
     {x : Fin (2 * r + k + 1) → ℂ} (hx : x ∈ Fsp k r z')
@@ -1400,8 +1397,7 @@ lemma omW'_N {z z' : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) (hz' : C2
           simp only [Matrix.mul_assoc]
       _ = 1 := by rw [hh, WeylGroupFacts.hpk_sq]
   have hnn : n⁻¹ * n = 1 := by
-    rw [Matrix.inv_eq_left_inv hleft]
-    exact hleft
+    rwa [Matrix.inv_eq_left_inv hleft]
   show prW k r z' ((n * g * n')⁻¹ *ᵥ xcofL k r z z' (n * g * n')) = prW k r z' (g⁻¹ *ᵥ xcofL k r z z' g)
   rw [xcofL_N hz hz' hn hn' g, Matrix.mul_inv_rev, Matrix.mul_inv_rev, Matrix.mulVec_mulVec,
     Matrix.mul_assoc, Matrix.mul_assoc, hnn, Matrix.mul_one, ← Matrix.mulVec_mulVec]
@@ -1459,8 +1455,7 @@ lemma smooth_hermitian_rank_two {s : Set (B.Mat k r)} {p q : B.Mat k r → Fin (
   refine contDiffOn_pi.mpr fun i => contDiffOn_pi.mpr fun j => ?_
   simp only [Matrix.vecMulVec_apply, Matrix.vecMul, dotProduct, Pi.star_apply]
   have hs : ∀ l, ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun x => star (q x l)) s := fun l => by
-    have h := Complex.conjCLE.contDiff.comp_contDiffOn (contDiffOn_pi.mp hq l)
-    simpa [Function.comp_def] using h
+    simpa [Function.comp_def] using Complex.conjCLE.contDiff.comp_contDiffOn (contDiffOn_pi.mp hq l)
   exact (contDiffOn_pi.mp hp i).mul (ContDiffOn.sum fun l _ => (hs l).mul contDiffOn_const)
 
 lemma s_unitH {s : Set (B.Mat k r)} {v : B.Mat k r → Fin (2 * r + k + 1) → ℂ} (hv : Sm v s)
@@ -1468,20 +1463,17 @@ lemma s_unitH {s : Set (B.Mat k r)} {v : B.Mat k r → Fin (2 * r + k + 1) → �
   unfold Sm unitH Formalism.QuantumDeterminants.herm at *
   have hvi : ∀ i, ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun x => v x i) s := fun i => contDiffOn_pi.mp hv i
   have hsi : ∀ i, ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun x => star (v x i)) s := fun i => by
-    have h := Complex.conjCLE.contDiff.comp_contDiffOn (hvi i)
-    simpa [Function.comp_def] using h
+    simpa [Function.comp_def] using Complex.conjCLE.contDiff.comp_contDiffOn (hvi i)
   have hh : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun x => star (v x) ⬝ᵥ Hpk k r *ᵥ v x) s := by
     simp only [dotProduct, Matrix.mulVec, Pi.star_apply]
     exact ContDiffOn.sum fun i _ => (hsi i).mul (ContDiffOn.sum fun j _ => contDiffOn_const.mul (hvi j))
   have hre : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun x => (star (v x) ⬝ᵥ Hpk k r *ᵥ v x).re) s := by
-    have h := Complex.reCLM.contDiff.comp_contDiffOn hh
-    simpa [Function.comp_def] using h
+    simpa [Function.comp_def] using Complex.reCLM.contDiff.comp_contDiffOn hh
   have hsq := hre.sqrt fun x hx => (hp x hx).ne'
   have hinv := hsq.inv fun x hx => (Real.sqrt_pos.mpr (hp x hx)).ne'
   have hc : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞)
       (fun x => (((Real.sqrt (star (v x) ⬝ᵥ Hpk k r *ᵥ v x).re)⁻¹ : ℝ) : ℂ)) s := by
-    have h := Complex.ofRealCLM.contDiff.comp_contDiffOn hinv
-    simpa [Function.comp_def] using h
+    simpa [Function.comp_def] using Complex.ofRealCLM.contDiff.comp_contDiffOn hinv
   exact hc.smul hv
 
 end S1

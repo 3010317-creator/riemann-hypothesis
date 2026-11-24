@@ -84,11 +84,9 @@ theorem LocRingChartLoc.proof : LocRingChartLoc.Statement := by
   refine ⟨θ u, hθB u, θ v, hθB v, hθv, ?_, ?_⟩
   · have he : (θ v)⁻¹ = q (∏ k, X ⟨k, c k⟩ ^ a k) / q v := by
       rw [eq_div_iff (hq v hvW), hv', ← mul_assoc, inv_mul_cancel₀ hθv, one_mul]
-    rw [he]
-    exact hinv
+    rwa [he]
   · apply mul_right_cancel₀ (hq _ hTW)
-    rw [mul_assoc, ← hv', ← hu']
-    exact hzv
+    rwa [mul_assoc, ← hv', ← hu']
 
 end
 

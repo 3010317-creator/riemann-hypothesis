@@ -30,16 +30,13 @@ theorem coeff_trDY (D : D7) {N N' : ℕ} {ι : ℂ →+* Kc} (e : GL3Theta.Idx D
     · rw [MvPolynomial.coeff_monomial, ite_eq_left rfl]
     · intro β _ hβ
       rw [MvPolynomial.coeff_monomial, ite_eq_right]
-      intro h
-      exact hβ (Finsupp.mapDomain_injective he h)
-    · intro h
-      exact absurd hα h
+      exact fun h => hβ (Finsupp.mapDomain_injective he h)
+    · exact fun h => absurd hα h
   · rw [Finset.sum_eq_zero]
     · rw [MvPolynomial.notMem_support_iff.1 hα, map_zero]
     · intro β hβ
       rw [MvPolynomial.coeff_monomial, ite_eq_right]
-      intro h
-      exact hα (by rwa [← Finsupp.mapDomain_injective he h])
+      exact fun h => hα (by rwa [← Finsupp.mapDomain_injective he h])
 
 theorem support_trDY (D : D7) {N N' : ℕ} {ι : ℂ →+* Kc} (e : GL3Theta.Idx D N N' → X.ZA j)
     (Φ₀ : MvPolynomial (GL3Theta.FrV D N') ℂ →ₛₗ[ι] XspC (X.Pj (j + 1)) Kc)
@@ -52,8 +49,7 @@ theorem support_trDY (D : D7) {N N' : ℕ} {ι : ℂ →+* Kc} (e : GL3Theta.Idx
   rw [MvPolynomial.coeff_sum]
   refine Finset.sum_eq_zero fun α hα => ?_
   rw [MvPolynomial.coeff_monomial, ite_eq_right]
-  intro h
-  exact hni (Finset.mem_image.2 ⟨α, hα, h⟩)
+  exact fun h => hni (Finset.mem_image.2 ⟨α, hα, h⟩)
 
 end Dict
 

@@ -133,8 +133,7 @@ theorem Compat.on {V : X.Opens} {s : ∀ α, κ α → Γ(X, V ⊓ U α)} (hs : 
   have hT : T ≤ V ⊓ U α ⊓ U β := le_inf h₁ (h₂.trans inf_le_right)
   have := congrArg (rs hT) (hs α β k)
 
-  simp only [map_sum, map_mul, rs_rs] at this
-  exact this
+  simpa only [map_sum, map_mul, rs_rs] using this
 
 def secGroup (V : X.Opens) : AddSubgroup (∀ α, κ α → Γ(X, V ⊓ U α)) where
   carrier := {s | Compat U κ g V s}
@@ -211,8 +210,7 @@ theorem isSheaf_secPresheaf : (secPresheaf U κ g).IsSheaf := by
     simp only [secRes_val] at e'
     have hD : D ≤ (C j ⊓ C l) ⊓ U α :=
       le_inf (le_inf (hj.trans inf_le_left) (hl.trans inf_le_left)) (hj.trans inf_le_right)
-    have e'' := congrArg (rs hD) e'
-    simpa only [rs_rs] using e''
+    simpa only [rs_rs] using congrArg (rs hD) e'
   have hcov (α : ι) : iSup C ⊓ U α ≤ ⨆ j, C j ⊓ U α := by
     rw [iSup_inf_eq]
   have hC (α : ι) (j : J) : C j ⊓ U α ≤ iSup C ⊓ U α := inf_le_inf_right _ (le_iSup C j)
@@ -232,8 +230,7 @@ theorem isSheaf_secPresheaf : (secPresheaf U κ g).IsSheaf := by
     refine Finset.sum_congr rfl fun k' _ => ?_
     rw [← hb β k' j, rs_rs]
   refine ⟨(⟨b, hbc⟩ : secGroup U κ g (iSup C)), fun j => ?_, fun t ht => ?_⟩
-  · refine Subtype.ext <| funext fun α => funext fun k => ?_
-    exact hb α k j
+  · exact Subtype.ext <| funext fun α => funext fun k => hb α k j
   · let t' : secGroup U κ g (iSup C) := t
     refine Subtype.ext <| funext fun α => funext fun k => ?_
     refine eq_of_cover (fun j => C j ⊓ U α) (hC α) (hcov α) fun j => ?_
@@ -791,8 +788,7 @@ theorem dividedPowerFiltration_bot {K : Type} [CommRing K] {s : ℕ} (hs : 0 < s
   refine le_bot_iff.1 (Ideal.span_le.2 ?_)
   rintro _ ⟨l, hl, hr, rfl⟩
   have : ∃ p ∈ l, p.1 ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have : (l.map Prod.fst).sum = 0 := List.sum_eq_zero (by
       intro x hx
       obtain ⟨p, hp, rfl⟩ := List.mem_map.1 hx

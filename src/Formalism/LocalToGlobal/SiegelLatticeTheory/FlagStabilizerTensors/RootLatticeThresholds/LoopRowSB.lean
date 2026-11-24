@@ -379,8 +379,7 @@ theorem normTie_of (T : TermTie D) {u u' : D.what₂.Word}
       intro τ
       have h := Formalism.MainNotions.S.Pv.HH.absGz_eq D (T.fl t).fl (T.fl' t) τ
       rw [abs_of_nonneg (hPos t hG hrel τ)] at h
-      rw [eo]
-      exact h
+      rwa [eo]
     rw [Finset.prod_congr rfl fun τ _ => habs τ, Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ,
       D.what₂.card_Tau, ← hP, hW]
     calc (1 : ℝ) = (D.host.rdE ^ D.R.f) ^ (2 * N) * ((D.host.rdE ^ (2 * N))⁻¹) ^ D.R.f := by
@@ -1147,8 +1146,7 @@ theorem coords_psL {u : Fin e → S.V} (hu : LinearIndependent E u) (I : Fin e �
   exact Submodule.comap_map_eq_of_injective (f := j_iotaO u) (j_iota_inj hu) _
 
 theorem exists_ne_mem {J : FractionalIdeal (𝓞 E)⁰ E} (hJ : J ≠ 0) : ∃ x ∈ J, x ≠ 0 := by
-  by_contra h
-  push Not at h
+  by_contra! h
   apply hJ
   ext x
   constructor
@@ -1199,8 +1197,7 @@ theorem mem_dual_psL (u : Fin e → S.V) {I : Fin e → FractionalIdeal (𝓞 E)
     intro y hy
     have h1 := h (star y • u i) (Submodule.subset_span ⟨i, star y, hs i y hy, rfl⟩)
     rw [_root_.PI.UnitaryGroupMassFormula.BetaLUniq.EigB.hT_smul_left, star_star, hT_iota_gram] at h1
-    rw [mem_one_frac, mul_comm]
-    exact h1
+    rwa [mem_one_frac, mul_comm]
   · intro h y hy
     induction hy using Submodule.span_induction with
     | mem y hy =>

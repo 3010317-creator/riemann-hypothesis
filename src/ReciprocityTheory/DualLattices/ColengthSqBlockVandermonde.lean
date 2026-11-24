@@ -36,8 +36,7 @@ lemma sumLat_mulVec {n s : ℕ} (Mτ : Fin n → Lat v (Fin s)) (c : Fin n × Fi
   simp only [Matrix.mulVec, dotProduct, sumLat_apply, Fintype.sum_prod_type, ite_mul, zero_mul]
   rw [Finset.sum_eq_single τ]
   · simp
-  · intro b _ hb
-    exact Finset.sum_eq_zero fun j _ => ite_eq_right (Ne.symm hb)
+  · exact fun b _ hb => Finset.sum_eq_zero fun j _ => ite_eq_right (Ne.symm hb)
   · intro h; exact absurd (Finset.mem_univ τ) h
 
 lemma sumLat_pts {n s : ℕ} (Mτ : Fin n → Lat v (Fin s)) : (sumLat Mτ).pts = sumPts Mτ := by
@@ -81,8 +80,7 @@ lemma v_det_vandermonde_sq {n : ℕ} (a : Fin n → C) :
   have hdisj : ∀ τ : Fin n, Disjoint (Finset.Ioi τ) (Finset.Iio τ) := by
     intro τ
     rw [Finset.disjoint_left]
-    intro x h1 h2
-    exact lt_asymm (Finset.mem_Ioi.1 h1) (Finset.mem_Iio.1 h2)
+    exact fun x h1 h2 => lt_asymm (Finset.mem_Ioi.1 h1) (Finset.mem_Iio.1 h2)
   rw [Matrix.det_vandermonde, discr]
   simp only [map_prod]
   have h1 : ∏ τ : Fin n, ∏ τ' ∈ Finset.univ.erase τ, v (a τ - a τ') =

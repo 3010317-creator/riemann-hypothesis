@@ -109,8 +109,7 @@ theorem Ar_le_AHH {n' : ℕ} (m : ℕ) (hm : 1 ≤ m) (TT : Finset (Fin n')) (A 
       by_cases he : Even s.val
       · rw [ite_eq_left he, ite_eq_left he, f0]
         exact_mod_cast Nat.sub_le _ _
-      · rw [ite_eq_right he, ite_eq_right he]
-        rw [Fin.rev_zero, fl, neg_neg]
+      · rw [ite_eq_right he, ite_eq_right he, Fin.rev_zero, fl, neg_neg]
         exact_mod_cast Nat.sub_le _ _
     · have hz : ∀ i, flatW m (fun s => A s - j s) (fun s => B s - j s) s i = 0 := fun i => by
         simp [flatW, hs]
@@ -118,8 +117,7 @@ theorem Ar_le_AHH {n' : ℕ} (m : ℕ) (hm : 1 ≤ m) (TT : Finset (Fin n')) (A 
       unfold lamAt
       by_cases he : Even s.val
       · rw [ite_eq_left he, hz]
-      · rw [ite_eq_right he]
-        rw [hz, neg_zero]
+      · rw [ite_eq_right he, hz, neg_zero]
   unfold Ar AHH
   calc _ ≤ ∑ s : Fin n', (if s ∈ TT then (hhDeg (ex A) (ex B) s true : ℤ) else 0) :=
         Finset.sum_le_sum fun s _ => key s
@@ -221,8 +219,7 @@ theorem lattice_maps_of_functor_comparison (h : LatticeFunctorComparison) : RhoS
     · exact scale_add_le R.w hω0 _ _ (hd j) _ (src _ (latE e he).1 _ x hx1)
     · have := src _ (latE e he).2.1 _ x hx2
       have e2 : -AHH TT (ex A) (ex B) + d j = -Ar 1 (lamj j) := by simp only [d]; ring
-      rw [e2] at this
-      exact this
+      rwa [e2] at this
     · refine SetLike.mem_coe.2 ((Submodule.mem_iInf _).2 fun e' => (Submodule.mem_iInf _).2 fun hc => ?_)
       have hx4 := (Submodule.mem_iInf _).1 ((Submodule.mem_iInf _).1 (SetLike.mem_coe.1 hx3) e') hc
       obtain ⟨x1, ⟨x0, hx0, rfl⟩, hx5⟩ := hx4
@@ -244,8 +241,7 @@ theorem lattice_maps_of_functor_comparison (h : LatticeFunctorComparison) : RhoS
     · exact scale_add_le R.w hω0 _ _ (hd j) _ (tst _ (latE e he).2.2 _ Φ h1)
     · have := tst _ (latE e he).2.1 _ Φ h2
       have e2 : -AHH TT (ex A) (ex B) + d j = -Ar 1 (lamj j) := by simp only [d]; ring
-      rw [e2] at this
-      exact this
+      rwa [e2] at this
     · refine SetLike.mem_coe.2 ((Submodule.mem_iInf _).2 fun e' => (Submodule.mem_iInf _).2 fun hc => ?_)
       have h4 := (Submodule.mem_iInf _).1 ((Submodule.mem_iInf _).1 (SetLike.mem_coe.1 h3) e') hc
       obtain ⟨Φ1, ⟨Φ0, hΦ0, rfl⟩, h5⟩ := h4

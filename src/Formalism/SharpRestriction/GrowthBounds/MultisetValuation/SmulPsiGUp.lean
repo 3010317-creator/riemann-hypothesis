@@ -187,9 +187,7 @@ theorem isLattice_between [IsDomain W] [IsPrincipalIdealRing W] [IsFractionRing 
     simpa using this
   obtain rfl : m = n := le_antisymm hmn hnm
   refine ⟨Matrix.of fun a b => c b a, ?_, ?_⟩
-  · rw [← Matrix.isUnit_iff_isUnit_det]
-    rw [← Matrix.linearIndependent_cols_iff_isUnit]
-    exact hliQ
+  · rwa [← Matrix.isUnit_iff_isUnit_det, ← Matrix.linearIndependent_cols_iff_isUnit]
   · unfold colSpan
     have e1 : (Set.range fun b : Fin m => fun a => (Matrix.of fun a b => c b a) a b) =
         (psi g).comp Sb.subtype '' Set.range bS := by
@@ -266,10 +264,8 @@ theorem psi_mem_LatOf (g : Matrix (Fin n) (Fin n) Qq) (hg : IsUnit g.det) (U : S
   rw [Submodule.mem_map]
   constructor
   · rintro ⟨w', hw', he⟩
-    rw [← psi_inj (IsFractionRing.injective W Qq) g hg he]
-    exact hw'
-  · intro hw
-    exact ⟨w, hw, rfl⟩
+    rwa [← psi_inj (IsFractionRing.injective W Qq) g hg he]
+  · exact fun hw => ⟨w, hw, rfl⟩
 
 theorem LatOf_le (g : Matrix (Fin n) (Fin n) Qq) (U : Submodule F (Fin n → F)) : LatOf (W := W) g U ≤ colSpan W g := by
   rw [← range_psi]
@@ -359,8 +355,7 @@ theorem down_card (p n' i : ℕ) (h : Res (p : W) F) (hq : Nat.card F = p ^ n') 
       (⟨LatOf (W := W) g U.1, (edge_down_iff p n' i h hq hq1 g hg U.1).2 U.2.2, (hP U.1).2 U.2.1⟩ :
         {B1 : Submodule W (Fin n → Qq) // IsEdge p n' i ⟨B1, colSpan W g⟩ ∧ Pd B1}))
   constructor
-  · intro U U' he
-    exact Subtype.ext (LatOf_inj h g hg (congrArg Subtype.val he))
+  · exact fun U U' he => Subtype.ext (LatOf_inj h g hg (congrArg Subtype.val he))
   · rintro ⟨B1, hE, hPd⟩
     obtain ⟨U, rfl⟩ := LatOf_surj h g hg B1 hE.2.2.1 hE.2.2.2.1
     exact ⟨⟨U, (hP U).1 hPd, (edge_down_iff p n' i h hq hq1 g hg U).1 hE⟩, rfl⟩

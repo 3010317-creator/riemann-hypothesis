@@ -254,8 +254,7 @@ theorem galE_mem_Psi_iff (σ : H.E ≃ₐ[ℚ] H.E) : H.galE σ ∈ φ.Psi ↔ �
   rcases Int.units_eq_one_or (H.galE σ).1.2 with h | h <;> rw [h]
   · simp
   · constructor
-    · intro h2
-      exact absurd h2 (by decide)
+    · exact fun h2 => absurd h2 (by decide)
     · intro h2
       exfalso
       apply H.sqd_ne_zero

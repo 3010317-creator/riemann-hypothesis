@@ -219,8 +219,7 @@ theorem dvd_of_norm_untilt_le {a b : 𝒪♭} (hb : b ≠ 0)
 
 theorem isUnit_iff_norm_untilt {x : 𝒪♭} : IsUnit x ↔ ‖((PreTilt.untilt x : 𝒪) : K)‖ = 1 := by
   constructor
-  · intro h
-    exact isUnit_iff_norm_eq_one.1 (h.map PreTilt.untilt)
+  · exact fun h => isUnit_iff_norm_eq_one.1 (h.map PreTilt.untilt)
   · intro h
     have hx : x ≠ 0 := by
       rintro rfl
@@ -275,8 +274,7 @@ theorem norm_fontaineTheta_eq_one_of_isUnit_coeff_one {ξ v : 𝕎𝒪♭}
 theorem untilt_coeff_zero_add_eq_zero {ξ v : 𝕎𝒪♭} (hξ : ξ ∈ RingHom.ker θ)
     (hv : ξ = teichmuller p (ξ.coeff 0) + v * p) :
     PreTilt.untilt (ξ.coeff 0) + θ v * p = 0 := by
-  rw [← fontaineTheta_teichmuller_add_mul_p, ← hv]
-  exact hξ
+  rwa [← fontaineTheta_teichmuller_add_mul_p, ← hv]
 
 theorem norm_untilt_coeff_zero {ξ v : 𝕎𝒪♭} (hξ : ξ ∈ RingHom.ker θ)
     (hv : ξ = teichmuller p (ξ.coeff 0) + v * p) :
@@ -493,8 +491,7 @@ theorem isHausdorff_span_of_isUnit_coeff_one {ξ : 𝕎𝒪♭} (hξ : ξ ∈ Ri
               gcongr; exact mem_normInteger.1 (PreTilt.untilt (w.coeff 0)).2
           _ = _ := mul_one _
       have ht := tendsto_pow_atTop_nhds_zero_of_lt_one (norm_nonneg (p : K)) hp1
-      have h0 := ge_of_tendsto' ht hle
-      exact Subtype.ext (norm_le_zero_iff.1 h0)
+      exact Subtype.ext (norm_le_zero_iff.1 (ge_of_tendsto' ht hle))
     obtain ⟨y, hy⟩ := Ideal.mem_span_singleton'.1
       ((mem_span_p_iff_coeff_zero_eq_zero x).2 hx0)
     have hy' : ∀ n, ξ ^ n ∣ y := by

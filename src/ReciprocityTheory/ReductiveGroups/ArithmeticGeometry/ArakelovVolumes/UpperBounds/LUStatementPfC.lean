@@ -77,8 +77,7 @@ theorem Lm_diff (τ : X.Ψ) (i k : Fin r) :
       fun a b => (Mx_diff τ a b).differentiableOn
     simp only [wv, Matrix.vecMul, dotProduct]
     refine DifferentiableOn.fun_neg ?_
-    refine DifferentiableOn.fun_sum fun j _ => ?_
-    exact (hM i _).mul (hinv j ⟨k, h1⟩)
+    exact DifferentiableOn.fun_sum fun j _ => (hM i _).mul (hinv j ⟨k, h1⟩)
   · by_cases h2 : k = i
     · subst h2
       simp only [Lm, Matrix.of_apply, lt_irrefl, ↓reduceDIte, ↓reduceIte]
@@ -100,14 +99,12 @@ theorem bF_diffOn : DifferentiableOn ℂ (bF X x0) (cellL X x0) := by
   rw [differentiableOn_pi]
   intro a
   rw [differentiableOn_pi]
-  intro c
-  exact bF_diff τ a c
+  exact fun c => bF_diff τ a c
 
 theorem zF_diffOn : DifferentiableOn ℂ (zF X x0) (cellL X x0) := by
   rw [differentiableOn_euclidean]
   intro k
-  simp only [zF, PiLp.toLp_apply]
-  exact nF_diff _ _ _
+  simpa only [zF, PiLp.toLp_apply] using nF_diff _ _ _
 
 end
 

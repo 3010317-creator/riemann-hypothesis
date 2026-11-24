@@ -29,10 +29,8 @@ theorem conductor_le_iff [IsSepClosure K Ω] (n : ℕ) :
   have hne : {n : ℕ | unitFiltrationUnits K n ≤ (normUnits K L).range}.Nonempty :=
     exists_unitFiltrationUnits_le (isOpen_range_normUnits_and_finiteIndex L).1
   constructor
-  · intro h
-    exact (unitFiltrationUnits_antitone h).trans (Nat.sInf_mem hne)
-  · intro h
-    exact Nat.sInf_le h
+  · exact fun h => (unitFiltrationUnits_antitone h).trans (Nat.sInf_mem hne)
+  · exact fun h => Nat.sInf_le h
 
 end Def
 

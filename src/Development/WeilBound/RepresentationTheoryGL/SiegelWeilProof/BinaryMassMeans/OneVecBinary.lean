@@ -264,15 +264,13 @@ theorem det_fixed {σ : E →ₐ[F] E} {M : ℕ} {J : Matrix (Fin M) (Fin M) E} 
     ext i j
     exact hJ.1 j i
   have h2 : (σ : E →+* E) J.det = (J.map (σ : E →+* E)).det := RingHom.map_det _ _
-  rw [h1, Matrix.det_transpose] at h2
-  exact h2
+  rwa [h1, Matrix.det_transpose] at h2
 
 theorem exists_place {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) (J : Matrix (Fin 2) (Fin 2) E)
     (hJ : IsHermND σ J) (t : F) (ht : t ≠ 0) (hne : ∀ x : Fin 2 → E, hE σ J x x ≠ algebraMap F E t) :
     ∃ (τ : E →+* ℂ) (c : ℝ), c ≠ 0 ∧ τ (algebraMap F E t) = c ∧
       ∀ w : Fin 2 → ℂ, c * (star w ⬝ᵥ (J.map τ *ᵥ w)).re ≤ 0 := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   haveI : IsTotallyReal F := hCM.1
   haveI : IsTotallyComplex E := hCM.2.1
   haveI : Algebra.IsQuadraticExtension F E := ⟨hCM.2.2.1⟩
@@ -1027,8 +1025,7 @@ theorem fibre_unit_dilation : ∀ (F E : Type) [Field F] [NumberField F] [Field 
     simp
   have key2 := congrArg (fun μ' => (N ^ (2 * M)) • μ') key
   simp only [smul_smul] at key2
-  rw [e1, e2, one_smul] at key2
-  exact key2
+  rwa [e1, e2, one_smul] at key2
 
 theorem dilation_inf_binary : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ →
   ∀ (J : Matrix (Fin 2) (Fin 2) E), IsHermND σ J → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (li : Measure (Ainf F)), IsStdInf li →
@@ -1169,8 +1166,7 @@ theorem fibre_masses_standard_lattice : ∀ (F E : Type) [Field F] [NumberField 
     refine measure_mono_null (fun X hX => ?_) n2
     have h0 : algebraMap F (Fv F v) (1 / 2) *
       Algebra.trace (Fv F v) (Fv F v ⊗[F] E) (gramR (Fv F v) σ J X 0 0) = 0 := by simpa using hX
-    intro hu
-    exact hu.ne_zero h0
+    exact fun hu => hu.ne_zero h0
   rw [measure_inter_conull hconull, hL1 lam hlam, ← hSm lam hlam.1] at hmass
   have hEmb : MeasurableEmbedding (hermScal (Fv F v) σ) :=
     (hSh.homeomorph _).isClosedEmbedding.measurableEmbedding
@@ -1184,8 +1180,7 @@ theorem fibre_masses_standard_lattice : ∀ (F E : Type) [Field F] [NumberField 
         (lam.restrict ({0}ᶜ : Set (Fv F v))) :=
       (ENNReal.continuous_ofReal.comp_continuousOn hcont).aemeasurable hVm
     rw [hres] at h1
-    refine h1.congr (Eventually.of_forall fun s => ?_)
-    exact ENNReal.ofReal_toReal (hfin _).ne
+    exact h1.congr (Eventually.of_forall fun s => (ENNReal.ofReal_toReal (hfin _).ne))
   rw [integral_toReal hae (Eventually.of_forall fun s => hfin _), ← hmass]
   simp
 

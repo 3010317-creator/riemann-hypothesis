@@ -55,7 +55,6 @@ noncomputable section
 namespace Formalism
 
 lemma continuous_mxS (n : ℕ) : Continuous (mxS n) := by
-  show Continuous (fun x : ℝ => max (x / n - 1) 0)
   exact ((continuous_id.div_const _).sub continuous_const).max continuous_const
 
 section
@@ -99,8 +98,7 @@ lemma Sa_eq_tsum (ha0 : a 0 = 0) (x : ℝ) : Sa a x = ∑' n, a n * mxS n x := b
   have hn0 : (0 : ℝ) < n := by exact_mod_cast (by omega : 0 < n)
   have hx : (n : ℝ) ≤ x := by
     have hx0 : 0 ≤ x := by
-      by_contra hneg
-      push Not at hneg
+      by_contra! hneg
       rw [Nat.floor_eq_zero.mpr (by linarith)] at hn
       omega
     exact (Nat.le_floor_iff hx0).mp hn.2

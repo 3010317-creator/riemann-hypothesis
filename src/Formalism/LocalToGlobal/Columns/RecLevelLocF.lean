@@ -190,8 +190,7 @@ theorem rll_psi_ker {P : Pl E} (hP : P ∈ ST) (huniq : ∀ Q ∈ ST, IsOver v Q
     obtain ⟨w, hw, e⟩ := rll_rho_eq_zero v h huniq _ h0
     refine ⟨hx.1, ?_⟩
     have e' : ιv (star pE) * x.1 (lastIdx n) = ιv pE * w := e
-    rw [e0, e', rll_pinv_mul v h]
-    exact hw
+    rwa [e0, e', rll_pinv_mul v h]
   · rintro ⟨_, h2⟩
     have e1 : (⟨_, rll_last_mem hc n v h x⟩ : 𝒪v) =
         ⟨ιv pE * ((⟨_, h2⟩ : 𝒪v) : Rv), mul_mem (rll_incl_int v π) h2⟩ := by

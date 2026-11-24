@@ -210,8 +210,7 @@ theorem chartDens_eq (hLP : MaDensLogPow.Statement) {e : ℕ} (J : Ideal (MvPoly
       exact hsx
     have key := sheet_identity hLP (CutOffBoundaryBound.analyticAt_of_isSheetAt h.choose_spec) x G Q a b hQ
       hQ0 hQ0' hb0 hQt
-    rw [hsx] at key
-    exact key
+    rwa [hsx] at key
   · simp
 
 theorem smoothNear_cons {m : ℕ} {S : Set (Fin n → ℂ)} {g : (Fin n → ℂ) → ℝ} {φ : Fin m → (Fin n → ℂ) → ℝ}
@@ -243,14 +242,12 @@ theorem RegRadialWeight.proof (hS : StokesOnChart.Statement) (hM : ChartMassComp
     have hcsa := hasCompactSupport_radial x a T hT
     have hb0 : radialTransform (e + 1) a 0 = 0 :=
       radialTransform_eq_zero_of_const e a hconst ⟨le_refl 0, ht₀.le⟩
-    have hsE : ∀ i : Fin e, SmoothNear (zeroSet J) ((fun _ => euclPot) i) :=
-      fun _ => smoothNear_of_contDiff (contDiff_euclPot n)
-    have hsE' : ∀ i : Fin (e + 1), SmoothNear (zeroSet J) ((fun _ => euclPot) i) :=
-      fun _ => smoothNear_of_contDiff (contDiff_euclPot n)
+    have hsE : ∀ (m : ℕ) (i : Fin m), SmoothNear (zeroSet J) ((fun _ => euclPot) i) :=
+      fun _ _ => smoothNear_of_contDiff (contDiff_euclPot n)
     have hsg : SmoothNear (zeroSet J) (logReg u ε) := smoothNear_of_contDiff (contDiff_logReg u hε)
-    have hsφ := smoothNear_cons hsg hsE
+    have hsφ := smoothNear_cons hsg (hsE e)
     have hsφ₁ := smoothNear_cons (smoothNear_of_contDiff hQψ) hsφ
-    have hsφ₂ := smoothNear_cons hsg hsE'
+    have hsφ₂ := smoothNear_cons hsg (hsE (e + 1))
 
     have hSt := hS n (e + 1) J A (fun z => Q (euclPot (z - x))) (fun _ => 1)
       (vecCons (logReg u ε) fun _ : Fin e => euclPot) hJ hd hA (smoothNear_of_contDiff hQψ)
@@ -284,19 +281,12 @@ theorem RegRadialWeight.proof (hS : StokesOnChart.Statement) (hM : ChartMassComp
           (ha.continuous.comp hψ.continuous).measurable hsφ₂).1.aestronglyMeasurable)
         (Eventually.of_forall fun y => norm_chartDens_le J A hA _ _ y)
     have hpt := chartDens_eq hLP J A hA x (logReg u ε) Q a (radialTransform (e + 1) a) hQ2 hQ0 hQ0' hb0 hQt
-    calc ∫ y, chartDens J A (fun z => a (euclPot (z - x))) (vecCons (logReg u ε) fun _ => euclPot) y
-        = (∫ y, chartDens J A (fun z => a (euclPot (z - x))) (vecCons (logReg u ε) fun _ => euclPot) y) -
-            ∫ y, chartDens J A (fun _ => 1)
-              (vecCons (fun z => Q (euclPot (z - x))) (vecCons (logReg u ε) fun _ : Fin e => euclPot)) y := by
-          rw [hzero, sub_zero]
-      _ = ∫ y, (chartDens J A (fun z => a (euclPot (z - x))) (vecCons (logReg u ε) fun _ => euclPot) y -
-            chartDens J A (fun _ => 1)
-              (vecCons (fun z => Q (euclPot (z - x))) (vecCons (logReg u ε) fun _ : Fin e => euclPot)) y) :=
-          (integral_sub hint2 hint1).symm
-      _ = _ := by
-          congr 1
-          funext y
-          exact (hpt y).symm
+    have hsub := integral_sub hint2 hint1
+    rw [hzero, sub_zero] at hsub
+    refine hsub.symm.trans ?_
+    congr 1
+    funext y
+    exact (hpt y).symm
 
 end
 

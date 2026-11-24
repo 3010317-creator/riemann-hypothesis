@@ -110,8 +110,7 @@ theorem ker_eval_ne_bot (hΩ : Algebra.trdeg K Ω = D) (j₀ : Fin (N + 1)) (x :
     | (ext i; simp)
   have hind : AlgebraicIndependent K
       (fun i : TVar D N => chiP (K := K) (D := D) j₀ x (MvPolynomial.X i)) := by
-    rw [algebraicIndependent_iff_injective_aeval, hphi]
-    exact hinj
+    rwa [algebraicIndependent_iff_injective_aeval, hphi]
   have h1 := hind.cardinalMk_le_trdeg
   have h2 : Algebra.trdeg K Ω + Algebra.trdeg Ω (MvPolynomial (Fin (D + 1) × Fin N) Ω) =
       Algebra.trdeg K (MvPolynomial (Fin (D + 1) × Fin N) Ω) := trdeg_add_eq K Ω
@@ -246,8 +245,7 @@ theorem ker_eval_le_of_place (hd : d.AxH 𝒜) (c : ι) {p : Ideal (KTp K d.D d.
         exact lt_of_lt_of_le hp.2 (le_add_of_nonneg_right (hv v).1)
   apply (hw2 F).2.mp
   have h := (key F).2
-  rw [hF0, map_zero, sub_zero] at h
-  exact h
+  rwa [hF0, map_zero, sub_zero] at h
 
 theorem ker_eval_eq_of_place (hd : d.AxH 𝒜) (c : ι) {p : Ideal (KTp K d.D d.N)} (hp : p ∈ d.HtOne)
     {w : AddValuation (OmS (Ω c) d.D d.N) (WithTop ℤ)} (hw : w ∈ d.OverP c p)
@@ -499,8 +497,7 @@ theorem rename_swap_F (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (F : KTp K d.D d.N)
         rwa [hgspan] at h1
       have hmem : rename swapT (d.gen P) ∈ P := rename_swap_mem_ker_eval (K := K) (D := d.D) (d.jc c) (d.x c) _ hmem0
       have hmem' : rename swapT (d.gen P) ∈ Ideal.span {d.gen P} := by
-        rw [hgspan]
-        exact hmem
+        rwa [hgspan]
       rw [Ideal.mem_span_singleton] at hmem'
       obtain ⟨q, hq⟩ := hmem'
       have hq0 : q ≠ 0 := by
@@ -508,8 +505,7 @@ theorem rename_swap_F (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (F : KTp K d.D d.N)
         rw [mul_zero] at hq
         apply hg0
         apply MvPolynomial.rename_injective _ (swapT (D := d.D) (N := d.N)).injective
-        rw [map_zero]
-        exact hq
+        rwa [map_zero]
       have hdeg := MvPolynomial.totalDegree_rename_le (swapT (D := d.D) (N := d.N)) (d.gen P)
       rw [hq, MvPolynomial.totalDegree_mul_of_isDomain hg0 hq0] at hdeg
       have hq' : q.totalDegree = 0 := by omega
@@ -545,8 +541,7 @@ theorem fZ_multiHomogeneous_degree_sum (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (F 
     first
     | (simp only [Fin.val_zero, Fin.val_one', Nat.mod_eq_of_lt (show 1 < d.D + 1 by omega)] at h2; omega)
   obtain ⟨s, hs⟩ : F.support.Nonempty := by
-    rw [Finset.nonempty_iff_ne_empty, Ne, MvPolynomial.support_eq_empty]
-    exact hF0
+    rwa [Finset.nonempty_iff_ne_empty, Ne, MvPolynomial.support_eq_empty]
   have ht : s.mapDomain swapT ∈ F.support := by
     have h1 : (rename swapT F).coeff (s.mapDomain swapT) = F.coeff s :=
       MvPolynomial.coeff_rename_mapDomain _ (swapT (D := d.D) (N := d.N)).injective F s

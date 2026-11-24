@@ -16,8 +16,7 @@ def ColsFixed (k : ℕ) (M : Matrix (Fin g ⊕ Fin g) (Fin g ⊕ Fin g) ℤ) : P
     (∀ r, M r (Sum.inr i) = (1 : Matrix (Fin g ⊕ Fin g) (Fin g ⊕ Fin g) ℤ) r (Sum.inr i))
 
 theorem colsFixed_one (k : ℕ) : ColsFixed k (1 : Matrix (Fin g ⊕ Fin g) (Fin g ⊕ Fin g) ℤ) := by
-  intro i _
-  exact ⟨fun r => rfl, fun r => rfl⟩
+  exact fun i _ => ⟨fun r => rfl, fun r => rfl⟩
 
 theorem colsFixed_mul {k : ℕ} {O M : Matrix (Fin g ⊕ Fin g) (Fin g ⊕ Fin g) ℤ}
     (hO : ColsFixed k O) (hM : ColsFixed k M) : ColsFixed k (O * M) := by
@@ -41,12 +40,10 @@ private theorem symplectic_entry_mul_J_mul_of_single_column_entry {M : Matrix (F
   rw [Matrix.transpose_transpose, Matrix.mul_assoc] at h1
   have h2 := congrArg (fun A : Matrix (Fin g ⊕ Fin g) (Fin g ⊕ Fin g) ℤ => A p q) h1
   rw [Matrix.mul_apply, Finset.sum_eq_single r0] at h2
-  · rw [Matrix.transpose_apply] at h2
-    exact h2
+  · rwa [Matrix.transpose_apply] at h2
   · intro r _ hr
     rw [Matrix.transpose_apply, h r hr, zero_mul]
-  · intro hr
-    exact absurd (Finset.mem_univ _) hr
+  · exact fun hr => absurd (Finset.mem_univ _) hr
 
 theorem low_entries {k : ℕ} {M : Matrix (Fin g ⊕ Fin g) (Fin g ⊕ Fin g) ℤ}
     (hM : M ∈ symplecticGroup (Fin g) ℤ) (hF : ColsFixed k M) {i j : Fin g} (hi : (i : ℕ) < k)
@@ -206,8 +203,7 @@ theorem phase1 (k : Fin g) (n : ℕ) : ∀ M ∈ symplecticGroup (Fin g) ℤ, Co
         exact hkey.le
       · exact le_rfl
     · refine ⟨j0, Finset.mem_univ _, ?_⟩
-      rw [hrow j0, ite_eq_left rfl, Int.natAbs_neg]
-      exact hkey
+      rwa [hrow j0, ite_eq_left rfl, Int.natAbs_neg]
   obtain ⟨O2, hO2, hF2, h2⟩ := ih _ hlt _ hM' hF' rfl
   refine ⟨O2 * (spPJ j0 * spTransl S), Submonoid.mul_mem _ hO2 hO1, colsFixed_mul hF2
     (colsFixed_mul (colsFixed_spPJ j0 hkj0) (colsFixed_spTransl hSk)), fun j => ?_⟩

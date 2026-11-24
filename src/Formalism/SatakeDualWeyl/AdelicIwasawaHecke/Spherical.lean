@@ -66,8 +66,7 @@ private lemma exists_GLint_of_integral_inverse {n : ℕ} (A B : Matrix (Fin n) (
   let B' : Matrix (Fin n) (Fin n) (Ov F v) := Matrix.of fun i j => ⟨B i j, hB i j⟩
   have hinj : ∀ M N : Matrix (Fin n) (Fin n) (Ov F v),
       RingHom.mapMatrix (Ov F v).subtype M = RingHom.mapMatrix (Ov F v).subtype N → M = N := by
-    intro M N h
-    exact Matrix.ext fun i j => Subtype.ext (congrFun (congrFun h i) j)
+    exact fun M N h => Matrix.ext fun i j => Subtype.ext (congrFun (congrFun h i) j)
   have hmA : RingHom.mapMatrix (Ov F v).subtype A' = A := Matrix.ext fun i j => rfl
   have hmB : RingHom.mapMatrix (Ov F v).subtype B' = B := Matrix.ext fun i j => rfl
   have hAB' : A' * B' = 1 := hinj _ _ (by rw [map_mul, map_one, hmA, hmB, hAB])
@@ -124,8 +123,7 @@ private lemma exists_GLint_eq_column_operation {n : ℕ} (r : Fin n) (c : Fin n 
     · split_ifs
       · exact Subring.neg_mem _ (hc j)
       · exact Subring.zero_mem _
-  · have h := column_operation_mul_neg_eq_one r (fun b => -c b)
-    simpa using h
+  · simpa using column_operation_mul_neg_eq_one r (fun b => -c b)
 
 private lemma mem_Ov_of_valuation_le_one (x : v.adicCompletion F) (h : Valued.v x ≤ 1) : x ∈ Ov F v := by
   change x ∈ v.adicCompletionIntegers F
@@ -185,8 +183,7 @@ private lemma exists_GLint_mul_clears_below_diag_from {n : ℕ} (M : Matrix (Fin
         · subst hji
           rw [hdiag, Valuation.map_add_eq_of_lt_right _ hlt]
         · rw [hk1eq, mul_column_operation_apply]
-          simp only [hji, ite_false, mul_zero, ite_self, add_zero]
-          exact hmax j hj
+          simpa only [hji, ite_false, mul_zero, ite_self, add_zero] using hmax j hj
       · rw [hdiag]
         intro h0
         have h1 := Valuation.map_add_eq_of_lt_right Valued.v hlt

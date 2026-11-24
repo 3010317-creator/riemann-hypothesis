@@ -150,8 +150,7 @@ theorem bd_eq_one_iff {x : Matrix (Fin n) (Fin n) R} (hx : IsLoUni x) :
   constructor
   · intro h i j hij hb
     have := congrFun (congrFun h i) j
-    simp only [bd, ite_eq_left hb, Matrix.one_apply, ite_eq_right hij] at this
-    exact this
+    simpa only [bd, ite_eq_left hb, Matrix.one_apply, ite_eq_right hij] using this
   · intro h
     ext i j
     unfold bd
@@ -391,8 +390,7 @@ theorem blockRetr_holds : BlockRetr M p a := by
       rw [← retrFun_fst a x]
       show ((((retr a x : UP p) : GG p).1 : GLp p) : MP p) = 1
       rw [h]; rfl
-    refine ⟨hx, fun i j hij hs => ?_⟩
-    exact (bd_eq_one_iff hx).1 h1 i j hij ((sameBlock_iff a i j).1 hs)
+    exact ⟨hx, fun i j hij hs => ((bd_eq_one_iff hx).1 h1 i j hij ((sameBlock_iff a i j).1 hs))⟩
   · rintro ⟨-, hV⟩
     have h1 : bd a (((x : GG p).1 : GLp p) : MP p) = 1 :=
       (bd_eq_one_iff hx).2 fun i j hij hb => hV i j hij ((sameBlock_iff a i j).2 hb)
@@ -442,8 +440,7 @@ theorem fC_range : Set.range (fC M a πa hker g) =
     | h x =>
       obtain ⟨hxN, k, hk, hxk⟩ := x.2
       refine ⟨pairOfU a πa hker x.1 (MonoidHom.mem_ker.1 hxN), rfl, ?_⟩
-      refine ⟨(((k : GG p).1 : GLp p)).val, (((k : GG p).2.unop : GLp p)).val, hk.1, hk.2, ?_⟩
-      exact hxk
+      exact ⟨(((k : GG p).1 : GLp p)).val, (((k : GG p).2.unop : GLp p)).val, hk.1, hk.2, hxk⟩
   · rintro ⟨pr, rfl, l, ρ, hl, hρ, he⟩
     have hv : IsLoUni pr.1.1 := fun i j => ⟨pr.2.1.2.1 i j, fun h => h ▸ pr.2.1.1 i⟩
     have hu : IsUpUni pr.1.2 := fun i j => ⟨pr.2.2.2 i j, fun h => h ▸ pr.2.2.1 i⟩
@@ -555,8 +552,7 @@ theorem fixes_base_iff (a : Loc.Pt (D.s.atP p).Ep (D.R.rS + 1)) (hB : BaseAt M �
     rw [← phi_smul p δ _ _ w x.2, h]
   · intro h
     apply phi_inj p δ (D.mem u).A.T (D.mem u').A.T w
-    rw [phi_smul p δ _ _ w x.2]
-    exact h
+    rwa [phi_smul p δ _ _ w x.2]
 
 theorem retr_of (a : Loc.Pt (D.s.atP p).Ep (D.R.rS + 1)) (πa : UP p →* UP p)
     (hD : CountAb.Data (a.mat) (MulAction.stabilizer (UP p) a.mat) πa.ker (KU M p) πa)
@@ -647,8 +643,7 @@ theorem mem_H_iff (x : UP p) :
     rw [← phi_smul p δ _ _ w x.2, h]
   · intro h
     apply phi_inj p δ (D.mem u).A.T (D.mem u').A.T w
-    rw [phi_smul p δ _ _ w x.2]
-    exact h
+    rwa [phi_smul p δ _ _ w x.2]
 
 end Parts
 
@@ -737,8 +732,7 @@ theorem index_eq_relIndex (hD : Data W S N' K π) :
   · rintro ⟨k, hk, hkx⟩
     refine ⟨k.1, ?_, ?_⟩
     · simpa [Hk, Subgroup.mem_subgroupOf] using hk
-    · have h2 := congrArg (fun y : ↥(Ak S K) => ((y : ↥K) : G)) hkx
-      simpa [πk, e] using h2
+    · simpa [πk, e] using congrArg (fun y : ↥(Ak S K) => ((y : ↥K) : G)) hkx
   · rintro ⟨y, hy, hyx⟩
     refine ⟨⟨y, hy.1⟩, ?_, ?_⟩
     · simpa [Hk, Subgroup.mem_subgroupOf] using hy
@@ -808,8 +802,7 @@ theorem Ag_eq :
     obtain ⟨hzU, hzY⟩ := (mem_StP_iff M δ u u' w p z).1 hS
     have hfix := (fixes_base_iff M δ u u' w p a hB ⟨z, hzU⟩).1 hzY
     refine ⟨⟨z, hzU⟩, ⟨tauU p ⟨z, hzU⟩, ⟨?_, ?_⟩, tauU_tauU p _⟩, rfl⟩
-    · show ((tauU p ⟨z, hzU⟩ : UP p) : GG p) ∈ KP M p
-      exact tau_mem_KP M p hK
+    · exact tau_mem_KP M p hK
     · exact hfix
   · rintro ⟨_, ⟨y, ⟨hyK, hyS⟩, rfl⟩, rfl⟩
     refine ⟨(mem_StP_iff M δ u u' w p _).2 ⟨(tauU p y).2, ?_⟩, ?_⟩
@@ -837,8 +830,7 @@ theorem countAt_of_parts (v : ℝ)
     apply Subgroup.map_mono
     rintro _ ⟨z, hz, rfl⟩
     exact ⟨hD.kπ z hz.1, hD.mem z⟩
-  · rw [hidx, ← hcard]
-    exact hpos
+  · rwa [hidx, ← hcard]
   · rw [hidx, ← hcard, hv]
 
 end Parts2

@@ -48,12 +48,10 @@ theorem srel_iff {S : Type} [CommRing S] {x x' : Sp S ⟶ Xo.X} (hx : x' = x) (s
   subst hx
   have e1 : pm ≫ pullback.fst (Over.mk x').hom Xo.univ.t.G.hom =
       𝟙 _ ≫ pullback.fst (Over.mk x').hom Xo.univ.t.G.hom := by
-    rw [Category.id_comp]
-    exact h2
+    rwa [Category.id_comp]
   have e2 : pm ≫ pullback.snd (Over.mk x').hom Xo.univ.t.G.hom =
       𝟙 _ ≫ pullback.snd (Over.mk x').hom Xo.univ.t.G.hom := by
-    rw [Category.id_comp]
-    exact h1
+    rwa [Category.id_comp]
   have hpm : pm = 𝟙 (Gx x') := pullback.hom_ext e1 e2
   subst hpm
   have e : ∀ (U : (Gx x').Opens) (h : U ≤ (𝟙 (Gx x')) ⁻¹ᵁ U), Scheme.Hom.appLE (𝟙 (Gx x')) U U h = 𝟙 _ := by

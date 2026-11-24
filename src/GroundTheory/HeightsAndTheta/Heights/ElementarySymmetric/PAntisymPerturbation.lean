@@ -87,16 +87,13 @@ theorem image_comp_perm (σ : Equiv.Perm (T × Fin N)) (τ : T) {a b a' b' : Fin
       ⟨y0 ∘ ⇑σ, ?_, ?_⟩, ?_⟩
     · have e : (y0 ∘ ⇑σ) ∘ ⇑σ⁻¹ = y0 := by funext p; simp
       show (y0 ∘ ⇑σ) ∘ ⇑σ⁻¹ ∈ O
-      rw [e]
-      exact hy0O
+      rwa [e]
     · show y0 (σ (τ, a)) = y0 (σ (τ, b))
-      rw [hσa, hσb]
-      exact hy0H
+      rwa [hσa, hσb]
     · rintro x ⟨hxO, hxH⟩
       refine ⟨x ∘ ⇑σ⁻¹, hOK ⟨hxO, ?_⟩, ?_⟩
       · show x (σ⁻¹ (τ, a')) = x (σ⁻¹ (τ, b'))
-        rw [hinv_a, hinv_b]
-        exact hxH
+        rwa [hinv_a, hinv_b]
       · funext p; simp
 
 end AntisymPerturbation

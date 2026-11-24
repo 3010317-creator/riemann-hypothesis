@@ -150,8 +150,7 @@ theorem classSetFiniteL_of (hSigmaInvol : Formalism.UG.CS.SigmaInvol) (hTracePos
         obtain ⟨o, ho⟩ := hx y hy
         rw [hfe] at ho
         refine ⟨o, ?_⟩
-        rw [csAsm_hform_smul_right]
-        exact ho
+        rwa [csAsm_hform_smul_right]
       have h2 := he g g.2 (cE • x) hx'
       convert h2 using 1
       show algebraMap (𝓞 E) E (e * cO) • x = algebraMap (𝓞 E) E e • cE • x
@@ -224,7 +223,6 @@ theorem classSetFinite_of (hSigmaInvol : Formalism.UG.CS.SigmaInvol) (hTracePos 
       split_ifs
       · exact ⟨1, by simp⟩
       · exact ⟨0, by simp⟩
-  rw [heq] at h
-  exact h
+  rwa [heq] at h
 
 end Formalism.UG.P

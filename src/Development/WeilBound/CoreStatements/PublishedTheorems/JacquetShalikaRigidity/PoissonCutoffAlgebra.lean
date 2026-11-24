@@ -112,8 +112,7 @@ theorem B_ker {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) (x : Fin k → Ad E) :
   · rintro ⟨d, rfl⟩ γ ⟨ξ, rfl⟩
     have : (∑ i, (fun i => algebraMap E (Ad E) (ξ i)) i * (fun i => algebraMap E (Ad E) (d i)) i) =
         algebraMap E (Ad E) (∑ i, ξ i * d i) := by simp [map_sum, map_mul]
-    simp only [B]
-    exact this ▸ hψ.rat _
+    simpa only [B] using this ▸ hψ.rat _
 
 theorem B_inj {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) (γ : Fin k → Ad E) (hγ : γ ∈ vecLattice E (Fin k))
     (h : ∀ x, B ψ γ x = 1) : γ = 0 := by
@@ -123,8 +122,7 @@ theorem B_inj {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) (γ : Fin k → Ad E) 
   subst hξ'
   by_contra hne
   have : ∃ i, ξ i ≠ 0 := by
-    by_contra h0
-    push Not at h0
+    by_contra! h0
     exact hne (funext fun i => by simp [h0 i])
   obtain ⟨i, hi⟩ := this
   obtain ⟨a, ha⟩ := psi_nontriv hψ

@@ -60,8 +60,7 @@ theorem hyp_remove (hWψ : W ∩ ψ.source = {p ∈ ψ.source | ψ p i = 0}) {p 
     rw [hWψ] at hp
     exact hp.2
   have h1 := Fin.insertNth_self_removeNth i (ψ p)
-  rw [h0] at h1
-  exact h1
+  rwa [h0] at h1
 
 theorem symm_hyp_mem (hWψ : W ∩ ψ.source = {p ∈ ψ.source | ψ p i = 0}) {z : Fin e → ℂ}
     (hz : hypInclAt i z ∈ ψ.target) :
@@ -101,8 +100,7 @@ theorem sliceMap_analytic (B : FinHolAtlas e W) (hB : HoloMap B A Subtype.val)
   have hg2 : AnalyticAt ℂ (ψ ∘ (A.chart k).symm) ((A.chart k ∘ Subtype.val ∘ (B.chart j).symm) y) := by
     refine (hψ k).1 _ ⟨(A.chart k).map_source hk, ?_⟩
     show (A.chart k).symm (A.chart k (((B.chart j).symm y : W) : X)) ∈ ψ.source
-    rw [(A.chart k).left_inv hk]
-    exact hp
+    rwa [(A.chart k).left_inv hk]
   have hcont : ContinuousAt (Subtype.val ∘ (B.chart j).symm) y :=
     continuous_subtype_val.continuousAt.comp ((B.chart j).continuousAt_symm hy.1)
   have hev : ∀ᶠ y' in 𝓝 y, (Subtype.val ∘ (B.chart j).symm) y' ∈ (A.chart k).source :=
@@ -313,8 +311,7 @@ theorem slice_mInt {A : FinHolAtlas (e + 1) X} {W : Set X} [CompactSpace W]
     rw [dite_eq_left hne]
     unfold integralWith
     have hj := fun j => slice_chart B hB Φ hΦ hψ hWψ x hx hV hVψ hVΦ hv hvV hne.some j
-    rw [Finset.sum_congr rfl (fun j _ => (hj j).2)]
-    rw [← integral_finsetSum _ (fun j _ => (hj j).1)]
+    rw [Finset.sum_congr rfl (fun j _ => (hj j).2), ← integral_finsetSum _ (fun j _ => (hj j).1)]
     congr 1
     funext z
     by_cases ht : hypInclAt i z ∈ ψ.target
@@ -323,8 +320,7 @@ theorem slice_mInt {A : FinHolAtlas (e + 1) X} {W : Set X} [CompactSpace W]
       rw [chartExt, Set.indicator_of_mem ht]
       simp only [sliceF, ← Finset.sum_mul]
       have h1 : ∑ j, extW W (hne.some.χ j) (ψ.symm (hypInclAt i z)) = 1 := by
-        simp only [extW, hpW, dite_eq_left]
-        exact hne.some.sum_eq_one _
+        simpa only [extW, hpW, dite_eq_left] using hne.some.sum_eq_one _
       rw [h1, one_mul]
       rfl
     · simp only [Set.indicator_of_notMem (show z ∉ hypInclAt i ⁻¹' ψ.target from ht),

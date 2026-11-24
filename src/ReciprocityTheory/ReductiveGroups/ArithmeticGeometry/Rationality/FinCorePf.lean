@@ -50,8 +50,7 @@ namespace ReciprocityTheory.MultiplicativeHeights
 
 theorem cauchy_inequality_on_torus : CauchyTorusStatement := by
   intro K _ _ _ K₀ hK₀ n c hc hτ χ
-  by_contra hχ
-  push Not at hχ
+  by_contra! hχ
   have hev : ∀ᶠ ψ in Filter.cofinite, ‖c ψ‖ < 1 / 2 := hc.eventually (gt_mem_nhds (by norm_num))
   have hFfin : {ψ | ¬ ‖c ψ‖ < 1 / 2}.Finite := Filter.eventually_cofinite.1 hev
   set F := hFfin.toFinset with hFdef
@@ -77,11 +76,9 @@ theorem cauchy_inequality_on_torus : CauchyTorusStatement := by
   set a : (Fin n → ℤ) → K := fun ψ => c ψ / lam with hadef
   have ha : ∀ ψ, ‖a ψ‖ ≤ 1 := by
     intro ψ
-    simp only [hadef, norm_div]
-    exact (div_le_one (norm_pos_iff.2 hlam0)).2 (hglob ψ)
+    simpa only [hadef, norm_div] using (div_le_one (norm_pos_iff.2 hlam0)).2 (hglob ψ)
   have ha0 : ‖a χm‖ = 1 := by
-    simp only [hadef, norm_div]
-    exact div_self (norm_ne_zero_iff.2 hlam0)
+    simpa only [hadef, norm_div] using div_self (norm_ne_zero_iff.2 hlam0)
   obtain ⟨τ, hτu, hτ1⟩ := exists_torus_point_one_le_norm_sum K₀ hK₀ F a ha χm hχmF ha0
   have hprodnorm : ∀ ψ : Fin n → ℤ, ‖∏ i, τ i ^ ψ i‖ = 1 := by
     intro ψ
@@ -160,8 +157,7 @@ theorem disc_holds : DiscStatement := by
   intro K _ _ _ K₀ hres S hS hdense c b hb hc n
   have hbd : ∀ t ∈ S, ‖c n‖ * ‖t‖ ^ n ≤ 1 := fun t ht => disc_bound K₀ hres c S hc t ht n
   constructor
-  · by_contra hlt
-    push Not at hlt
+  · by_contra! hlt
     have hcont : ContinuousAt (fun x : ℝ => ‖c n‖ * x ^ n) 1 :=
       continuousAt_const.mul (continuousAt_zpow₀ (1 : ℝ) n (Or.inl one_ne_zero))
     have hev : ∀ᶠ x in nhds (1 : ℝ), 1 < ‖c n‖ * x ^ n :=
@@ -207,8 +203,7 @@ theorem disc_holds : DiscStatement := by
       rw [← zpow_add₀ htpos.ne', add_neg_cancel, zpow_zero]
     have h9 : ‖c n‖ ≤ ‖t‖ ^ (-n) := by
       have h10 := mul_le_mul_of_nonneg_right h1 (zpow_pos htpos (-n)).le
-      rw [mul_assoc, h7, mul_one, one_mul] at h10
-      exact h10
+      rwa [mul_assoc, h7, mul_one, one_mul] at h10
     linarith
 
 end ReciprocityTheory.ChartRestriction.G.FreeQuotientRank
@@ -314,8 +309,7 @@ theorem exists_unit_point (K₀ : Subfield K) (hK₀ : ResidueFieldInfiniteOn (K
   have hex : ∃ y : ι → IsLocalRing.ResidueField (unitBallRing K), (∀ i, y i ∈ S0) ∧
       eval y (MvPolynomial.map (IsLocalRing.residue (unitBallRing K)) PO *
         MvPolynomial.map (IsLocalRing.residue (unitBallRing K)) δO) ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hQ (MvPolynomial.eq_zero_of_eval_zero_at_prod_finset _ (fun _ => S0)
       (fun i => lt_of_le_of_lt (MvPolynomial.degreeOf_le_totalDegree _ i) (by rw [hS0c]; omega)) hcon)
   obtain ⟨y, hyS, hyQ⟩ := hex
@@ -370,8 +364,7 @@ theorem finCore_holds : FinCoreStatement := by
     intro p hp
     have hne : p.support.Nonempty := by
       rw [Finset.nonempty_iff_ne_empty]
-      intro h
-      exact hp (MvPolynomial.support_eq_empty.mp h)
+      exact fun h => hp (MvPolynomial.support_eq_empty.mp h)
     obtain ⟨μ, hμ, hmax⟩ := Finset.exists_max_image p.support
       (fun ν => ‖AddMonoidAlgebra.coeff p ν‖) hne
     have hc : AddMonoidAlgebra.coeff p μ ≠ 0 := MvPolynomial.mem_support_iff.mp hμ

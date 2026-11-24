@@ -163,9 +163,7 @@ theorem la_fin (hNI : NormInv) {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProd
     have u3 := (weyl_subgroup_closed k r D.z').unit _ hp.2.2.1
     have u4 := (unipotent_radical_closed k r).unit _ hp.2.2.2
     have ii : ∀ x : Formalism.QuantumDeterminants.Mt k r, IsUnit (Matrix.of x).det → B2.invM (B2.invM x) = x := by
-      intro x hx
-      show (((Matrix.of x)⁻¹)⁻¹ : B.Mat k r) = Matrix.of x
-      exact Matrix.nonsing_inv_nonsing_inv _ hx
+      exact fun x hx => Matrix.nonsing_inv_nonsing_inv _ hx
     refine ⟨?_, ?_⟩
     · simp only [invP]
       rw [ii _ u1, ii _ u2, ii _ u3, ii _ u4]

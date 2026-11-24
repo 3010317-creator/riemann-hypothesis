@@ -61,8 +61,7 @@ theorem primeFibreLocalRing_nonempty_equiv_of_surjective
       obtain ⟨t', rfl⟩ := hφ t
       refine ⟨t', ht, ?_⟩
       have h1 : φ (t' * r) ∈ ((q.comap f).map (algebraMap R R')).map φ := by
-        rw [hmapq, map_mul]
-        exact htr
+        rwa [hmapq, map_mul]
       rw [← Ideal.mem_comap, Ideal.comap_map_of_surjective φ hφ] at h1
       have key : Ideal.comap φ ⊥ ≤ (q.comap f).map (algebraMap R R') := by
         refine le_trans ?_ (le_trans hker (Ideal.map_mono ?_))
@@ -151,8 +150,7 @@ theorem exists_adicCompletion_surjection_of_surjective
       have h2 : g (b n) ∈ (M ^ n • ⊤ : Submodule B A) := by
         rw [Ideal.smul_top_eq_map, Submodule.restrictScalars_mem]
         change f (b n) ∈ (M ^ n).map f
-        rw [hpow]
-        exact h1
+        rwa [hpow]
       simpa [AdicCompletion.map_mk] using h2
     obtain ⟨z, rfl⟩ := ((AdicCompletion.map_exact (I := M) Subtype.val_injective hfg hg) x).mp hx'
     obtain ⟨t, rfl⟩ := AdicCompletion.ofTensorProduct_surjective_of_finite M K z

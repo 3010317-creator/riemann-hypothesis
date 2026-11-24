@@ -53,8 +53,7 @@ theorem exists_mem_stabilizer_of_comap_eq (L : IntermediateField ℚ ℚ̄) (P :
   have : Algebra.IsInvariant (𝓞 L) (𝓞 ℚ̄) G := ⟨fun b hb => by
     have hmem : (b : ℚ̄) ∈ fixedField L.fixingSubgroup := by
       rw [mem_fixedField_iff]
-      intro f hf
-      exact congrArg (fun c : 𝓞 ℚ̄ => (c : ℚ̄)) (hb ⟨f, hf⟩)
+      exact fun f hf => congrArg (fun c : 𝓞 ℚ̄ => (c : ℚ̄)) (hb ⟨f, hf⟩)
     rw [InfiniteGalois.fixedField_fixingSubgroup] at hmem
     have hint : IsIntegral ℤ (⟨b, hmem⟩ : L) :=
       (isIntegral_algHom_iff (IsScalarTower.toAlgHom ℤ L ℚ̄) (algebraMap L ℚ̄).injective).1
@@ -115,8 +114,7 @@ theorem exists_mem_stabilizer_modCharacter_eq_prime {p : ℕ} [Fact p.Prime] (P 
     ext x
     rw [← hτ x, ← hστ _ x.2]
     exact σ.restrictNormal_commutes L x
-  rw [← isArithFrobAt_restrictNormal_iff M p Q hM σ, hres]
-  exact hτ₀
+  rwa [← isArithFrobAt_restrictNormal_iff M p Q hM σ, hres]
 
 theorem eq_of_natCast_mem_rootsOfUnityField {p : ℕ} [hp : Fact p.Prime] (k : ℕ)
     {Q₁ Q₂ : Ideal (𝓞 (rootsOfUnityField (p ^ (k + 1))))} [Q₁.IsPrime] [Q₂.IsPrime]
@@ -155,13 +153,11 @@ theorem exists_mem_stabilizer_modCharacter_eq_of_prime_pow {p : ℕ} [hp : Fact 
     have h : (p : ℤ) ∈ P.under ℤ := by
       rw [← hP.over]
       exact Ideal.mem_span_singleton_self _
-    rw [Ideal.under, Ideal.mem_comap, map_natCast] at h
-    exact h
+    rwa [Ideal.under, Ideal.mem_comap, map_natCast] at h
   have hpP' : ((p : ℕ) : 𝓞 ℚ̄) ∈ τ⁻¹ • P := by
     rw [Ideal.mem_pointwise_smul_iff_inv_smul_mem, inv_inv]
     change MulSemiringAction.toRingHom _ _ τ (p : 𝓞 ℚ̄) ∈ P
-    rw [map_natCast]
-    exact hpP
+    rwa [map_natCast]
   have h : (τ⁻¹ • P).comap (ringOfIntegersIncl L) = P.comap (ringOfIntegersIncl L) :=
     eq_of_natCast_mem_rootsOfUnityField k (by rw [Ideal.mem_comap, map_natCast]; exact hpP')
       (by rw [Ideal.mem_comap, map_natCast]; exact hpP)
@@ -248,8 +244,7 @@ theorem isClosed_stabilizer (P : Ideal (𝓞 ℚ̄)) :
       refine ⟨fun x hx => ?_, fun x hx => ?_⟩
       · rw [← h]
         exact Ideal.smul_mem_pointwise_smul_iff.2 hx
-      · rw [← Ideal.mem_pointwise_smul_iff_inv_smul_mem, h]
-        exact hx
+      · rwa [← Ideal.mem_pointwise_smul_iff_inv_smul_mem, h]
     · rintro ⟨h1, h2⟩
       apply le_antisymm
       · intro y hy

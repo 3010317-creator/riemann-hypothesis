@@ -114,8 +114,7 @@ private theorem card_quotient_comap_sq_eq_card_quotient_of_involution (hσ : ∀
     exact ⟨Ideal.Quotient.mk _ a, by rw [hφmk]; exact (Ideal.Quotient.eq.2 ha).symm⟩
   set th := Ideal.Quotient.mk P θ with hth
   have hδ : th - sb th ≠ 0 := by
-    rw [hth, hsbmk, ← map_sub, Ne, Ideal.Quotient.eq_zero_iff_mem]
-    exact hθ
+    rwa [hth, hsbmk, ← map_sub, Ne, Ideal.Quotient.eq_zero_iff_mem]
 
   let f : (A ⧸ P.comap ι) × (A ⧸ P.comap ι) → B ⧸ P := fun p => φ p.1 + φ p.2 * th
   have hf : Function.Bijective f := by
@@ -158,8 +157,7 @@ theorem exists_sq_card_quot (hσ : ∀ x, σ (σ x) = x) {P : Ideal B} (hP : P.I
   have hfix' : ∀ x, σ x = x ↔ x ∈ Set.range (S.subtype) := by
     intro x
     constructor
-    · intro hx
-      exact ⟨⟨x, hx⟩, rfl⟩
+    · exact fun hx => ⟨⟨x, hx⟩, rfl⟩
     · rintro ⟨a, rfl⟩
       exact a.2
   exact ⟨Nat.card (S ⧸ P.comap S.subtype), (card_quotient_comap_sq_eq_card_quotient_of_involution (ι := S.subtype) hσ hfix' hP hc hθ).symm⟩

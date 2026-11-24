@@ -241,8 +241,7 @@ theorem delta_topPart_eq_zero {ι : Type} [LinearOrder ι] {E : Type} [AddCommGr
   funext t
   by_cases ht : t.card = k + 1
   · have h1 : delta c t = 0 := by
-      have h := congrFun hc t
-      simpa [Dtot, hk t (by omega)] using h
+      simpa [Dtot, hk t (by omega)] using congrFun hc t
     rw [Pi.zero_apply, ← h1]
     refine Finset.sum_congr rfl fun i hi => ?_
     have : (t.erase i).card = k := by rw [Finset.card_erase_of_mem hi]; omega
@@ -274,10 +273,8 @@ theorem hypZero_of_cechZero : ∀ {ι : Type} [LinearOrder ι] {E : Type} [AddCo
       have hin : InCech (T q) (b + 1) (fun s => if s.card = b + 1 then c s else 0) := by
         refine ⟨by simp, fun s => ?_, fun s hs => by simp [hs]⟩
         by_cases hs : s.card = b + 1
-        · simp only [hs, ite_true]
-          exact hc.2.1 q s (by omega)
-        · simp only [hs, ite_false]
-          exact (T q s).zero_mem
+        · simpa only [hs, ite_true] using hc.2.1 q s (by omega)
+        · simpa only [hs, ite_false] using (T q s).zero_mem
       obtain ⟨y, hy, hyc⟩ := hC q b hq _ hin (delta_topPart_eq_zero d c (b + 1) hD h0)
       have hyT : InTot T n y := by
         refine ⟨hy.1, fun q' s hs => ?_, fun s hs => hy.2.2 s (by omega)⟩
@@ -304,8 +301,7 @@ theorem hypZero_of_cechZero : ∀ {ι : Type} [LinearOrder ι] {E : Type} [AddCo
       · rw [Pi.add_apply, hz.1, hyT.1, add_zero]
       · rw [Pi.add_apply, hz.2.2 s hs, hyT.2.2 s hs, add_zero]
       · rw [hadd, hzc, sub_add_cancel]
-  intro c hc hD
-  exact key (n + 1) le_rfl c hc hD hc.2.2
+  exact fun c hc hD => key (n + 1) le_rfl c hc hD hc.2.2
 
 end GlobalTheory.DI
 end -- clump:auto
@@ -340,10 +336,8 @@ theorem descend_vanishing : ∀ (p : ℕ) [Fact p.Prime] (X : Scheme.{0}) [IsInt
       exact fun y hy => hx y (hle hy)
     · intro q s x hx
       have := _root_.GlobalTheory.LogDR.extD_mem_logSec_roundedTwist p 𝒜 (G e) ρ hρ q (inter 𝒜.U s) x (by rw [← hGe]; exact hx)
-      rw [← hGe] at this
-      exact this
-    · intro q b' hqb
-      exact he q b' (by omega)
+      rwa [← hGe] at this
+    · exact fun q b' hqb => he q b' (by omega)
   induction e₀ with
   | zero => exact h0
   | succ k ih => exact ih (step k h0)
@@ -874,8 +868,7 @@ theorem isSheaf_pre : (pre M).IsSheaf := by
     · refine sv_ext M fun _ => ?_
       have := congrArg (sv M _) (ht k₀)
       rw [sv_map, ite_eq_left hk₀] at this
-      rw [sv_mk]
-      exact this
+      rwa [sv_mk]
   · refine ⟨mk M (Opposite.op (iSup W)) 0 (zero_mem _), fun k => ?_, fun t _ => ?_⟩
     · exact sv_ext M fun hk => (hg (Opens.mem_iSup.2 ⟨k, hk⟩)).elim
     · exact sv_ext M fun h => (hg h).elim
@@ -1364,8 +1357,7 @@ private theorem forms_mem_lemma {k A : Type} [CommRing k] [CommRing A] (α : k �
   choose c hc using hw
   have hw' : w = fun i => ∑ a ∈ (c i).support, c i a • KaehlerDifferential.D k A a :=
     funext fun i => (hc i).symm
-  rw [hw']
-  rw [← AlternatingMap.coe_multilinearMap, MultilinearMap.map_sum_finset]
+  rw [hw', ← AlternatingMap.coe_multilinearMap, MultilinearMap.map_sum_finset]
   refine P.sum_mem fun r _ => ?_
   rw [MultilinearMap.map_smul_univ, AlternatingMap.coe_multilinearMap]
   exact P.smul_mem _ (hgen r)
@@ -1421,8 +1413,7 @@ theorem formOf_eq_regAt_smul (p : ℕ) [Fact p.Prime] {X : Scheme.{0}} [IsIntegr
       refine det_mem_subring _ _ fun i j => ?_
       rw [Module.Basis.toMatrix_apply]
       exact hrep _ (mem_locRing.2 (regAt_fnOf hy _ _)) i
-    · simp only [formOf, formMap_dForm, formsToLam_dForm]
-      exact ιMulti_eq_det_lemma_2 x hxc _
+    · simpa only [formOf, formMap_dForm, formsToLam_dForm] using ιMulti_eq_det_lemma_2 x hxc _
   exact forms_mem_lemma (algX f U) d P hgen ω
 
 theorem coordForm_eq_regAt_smul (p : ℕ) [Fact p.Prime] {X : Scheme.{0}} [IsIntegral X] (f : X ⟶ Sp (ZMod p))
@@ -1517,8 +1508,7 @@ theorem exists_baseForm_eq (p : ℕ) [Fact p.Prime] (X : Scheme.{0}) [IsIntegral
     simp at hvu
   have hUu0 : UnitAt y u0 := by
     refine (unitAt_iff hu0ne).2 ⟨hu0, ?_⟩
-    rw [← eq_inv_of_mul_eq_one_left hvu]
-    exact hv
+    rwa [← eq_inv_of_mul_eq_one_left hvu]
   have hB := isFrame_baseFrame f d
   have hr := formOf_eq_ratio_smul (gen_mem_baseOpen f d) hgU hB hω
   set t := fnOf (baseOpen f d ⊓ L.bundle.U i) (by exact ⟨gen_mem_baseOpen f d, hgU⟩)
@@ -1545,8 +1535,7 @@ private theorem dlog_prod_lemma_4 {K : Type} [Field K] {n : ℕ} (u : Kˣ) (x : 
 
 private theorem unit_or_succ_lemma_5 {X : Scheme} [IsIntegral X] {y : X} {f : X.functionField}
     (hf : RegAt y f) : UnitAt y f ∨ UnitAt y (f + 1) := by
-  by_contra h
-  push Not at h
+  by_contra! h
   have h1 : ZeroAt y f := zeroAt_iff.2 ⟨hf, h.1⟩
   have hr1 : RegAt y (1 : X.functionField) := (unitAt_one y).regAt
   have h2 : ZeroAt y (f + 1) := zeroAt_iff.2 ⟨hf.add hr1, h.2⟩

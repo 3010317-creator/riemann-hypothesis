@@ -204,9 +204,7 @@ theorem smooth_bounded_of_fourier_decay (D : ℂ → ℂ) (m : ℕ) (C : ℝ) (h
   have h := hdec s
   rw [integral_fsv_eq_fourier, ← hw] at h
   refine h.trans ?_
-  have hC : 0 ≤ C := by
-    have h0 := (norm_nonneg _).trans (hdec 0)
-    exact nonneg_of_mul_nonneg_left h0 (by positivity)
+  have hC : 0 ≤ C := nonneg_of_mul_nonneg_left ((norm_nonneg _).trans (hdec 0)) (by positivity)
   have e : (-((m : ℝ) + ((2 : ℕ) : ℝ) + 1)) = -((m : ℝ) + 3) := by push_cast; ring
   rw [e]
   refine mul_le_mul_of_nonneg_left ?_ hC
@@ -453,8 +451,7 @@ theorem smooth_decay_of_weighted [FiniteDimensional ℝ V] [MeasurableSpace V] [
   refine ⟨hD, ⟨C, hC⟩, fun j hj1 hjm => integral_iteratedFDeriv_eq_zero hD C (fun i hi x => ?_) j hj1 hjm⟩
   refine (hC i hi x).trans ?_
   have hC0 : 0 ≤ C := by
-    have h := (norm_nonneg _).trans (hC 0 (Nat.zero_le _) 0)
-    exact nonneg_of_mul_nonneg_left h (by positivity)
+    exact nonneg_of_mul_nonneg_left ((norm_nonneg _).trans (hC 0 (Nat.zero_le _) 0)) (by positivity)
   gcongr
   · linarith [norm_nonneg x]
   · have : (finrank ℝ V : ℝ) ≤ 3 := by exact_mod_cast hV
@@ -498,7 +495,6 @@ theorem smooth_extension_of_fourier_decay (D : ℂ → ℂ) (m : ℕ) (C : ℝ) 
   obtain ⟨D', hD'c, -, hD'eq⟩ := smooth_bounded_of_fourier_decay D m C hD hdD
   obtain ⟨E', hE'c, hE'b, hE'eq⟩ := smooth_bounded_of_fourier_decay E m C hE hdE
   have hEc : ∀ t, t ≠ 0 → ContinuousAt E t := fun t ht => by
-    show ContinuousAt (fun t : ℂ => ((1 + ‖t‖ ^ 2) ^ 2 : ℝ) • D t) t
     exact (((continuous_const.add (continuous_norm.pow 2)).pow 2).continuousAt).smul (hc t ht)
   have hw : ∀ x, E' x = ((1 + ‖x‖ ^ 2) ^ 2 : ℝ) • D' x := by
     have hcont1 : Continuous E' := hE'c.continuous

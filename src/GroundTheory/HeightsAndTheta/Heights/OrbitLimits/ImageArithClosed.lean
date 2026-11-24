@@ -204,8 +204,7 @@ theorem isWeightedHomogeneous_rename (κ : K → K') {v : (Σ k, ι k) → (Σ k
       funext k
       simp only [forgetWeight, Pi.zero_apply]
       rw [ite_eq_right]
-      intro h
-      exact k.2 (h ▸ hv q)
+      exact fun h => k.2 (h ▸ hv q)
     have := hp.mul (isWeightedHomogeneous_X ℤ (forgetWeight κ) (v q))
     rwa [h0, add_zero] at this
 
@@ -293,8 +292,7 @@ theorem algebraicIndependent_forgotten (hv : ∀ p, (v p).1 = κ p.1) (hP : IsMu
   rcases hprime.mem_or_mem hcomp with h1 | h1
   · rw [← hker, RingHom.mem_ker] at h1
     have h2 : (N : L) * ((AddMonoidAlgebra.coeff p a : S) : L) = 0 := by
-      rw [← hg ⟨a, ha⟩]
-      exact h1
+      rwa [← hg ⟨a, ha⟩]
     have : CharZero L := charZero_of_injective_algebraMap (algebraMap ℚ L).injective
     have h3 := (mul_eq_zero.mp h2).resolve_left (Nat.cast_ne_zero.mpr hN)
     exact_mod_cast h3
@@ -330,8 +328,7 @@ theorem proof : Statement := by
   have hle := hy.cardinalMk_le_trdeg
   have hcard : ((Fintype.card K' - Fintype.card K : ℕ) : Cardinal) = #(Forgotten κ) := by
     rw [Cardinal.mk_fintype, Fintype.card_subtype_compl, Set.card_range_of_injective hκ]
-  rw [← hx.cardinalMk_eq_trdeg, hcard, add_comm, ← lift_id #(Forgotten κ), ← lift_id #τ, ← mk_sum]
-  exact hle
+  rwa [← hx.cardinalMk_eq_trdeg, hcard, add_comm, ← lift_id #(Forgotten κ), ← lift_id #τ, ← mk_sum]
 
 end BlockTrdeg
 

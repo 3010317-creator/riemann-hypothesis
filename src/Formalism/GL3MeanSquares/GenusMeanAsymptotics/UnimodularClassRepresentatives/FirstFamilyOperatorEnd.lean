@@ -158,8 +158,7 @@ theorem akCount_succ_fine (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (
   rw [akCount_eq h h𝔭 b hb hH, akCount_eq h h𝔭 b hb hH]
   rw [hv] at hk
   have key := akM_succ hK h𝔭 hHh hD (notMem_pow_vF h𝔭 hD0) hk
-  rw [Fintype.card_fin, ← sq] at key
-  exact key
+  rwa [Fintype.card_fin, ← sq] at key
 
 theorem alphaL_eq (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F)
     {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) (hd : IsTotPosDef h) {L : Submodule (𝓞 K) V}
@@ -193,7 +192,6 @@ theorem nkCount_le_nat (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF 
   obtain ⟨b, H, D, hb, hH, hHh, hD, hD0, hv⟩ := exists_local_data hF hs hd hL hLi h𝔭
   rw [nkCount_eq h h𝔭 b hb hH, hv]
   have key := nkM_le hK h𝔭 hHh hD (notMem_pow_vF h𝔭 hD0) (by rw [Fintype.card_fin]; exact hm) k n
-  rw [Fintype.card_fin] at key
-  exact key
+  rwa [Fintype.card_fin] at key
 
 end Formalism.HermitianLattices.Ext.L3.firstFamilyOperatorEnd

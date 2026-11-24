@@ -62,9 +62,7 @@ theorem gco_haar (ε : Fin n → Bool) :
   have h4 : (volume : Measure (KCo ε)).IsAddHaarMeasure := by
     show ((volume : Measure (Fin n → ℝ)).prod (volume : Measure (KPair ε → ℂ))).IsAddHaarMeasure
     infer_instance
-  refine ⟨h4, h3, ?_⟩
-  show ((volume : Measure (KCo ε)).prod (volume : Measure (PCoord ε → ℂ))).IsAddHaarMeasure
-  exact MeasureTheory.Measure.prod.instIsAddHaarMeasure _ _
+  exact ⟨h4, h3, MeasureTheory.Measure.prod.instIsAddHaarMeasure _ _⟩
 
 theorem upqT_borel (P Q : ℕ) : BorelSpace (Formalism.BasicNotions.UpqT P Q) := ⟨rfl⟩
 
@@ -131,11 +129,9 @@ theorem gMat_sOfLie (e : Fin P ⊕ Fin Q ≃ Fin n) {ε : Fin n → Bool}
   · have n1 : a ≠ b := hab.ne
     have n2 : ¬ (b < a) := not_lt.2 hab.le
     by_cases hε : ε a = ε b
-    · simp [n1, n2, hab, hε]
-      exact (lie_rel_c e he1 he2 X a b hε).symm
+    · simpa [n1, n2, hab, hε] using (lie_rel_c e he1 he2 X a b hε).symm
     · have hε' : ε b ≠ ε a := Ne.symm hε
-      simp [n1, n2, hab, hε, hε']
-      exact (lie_rel_nc e he1 he2 X a b hε).symm
+      simpa [n1, n2, hab, hε, hε'] using (lie_rel_nc e he1 he2 X a b hε).symm
   · have hre := lie_rel_d e he1 he2 X a
     simp
     apply Complex.ext <;> simp [hre]
@@ -222,8 +218,7 @@ theorem range_upqMat (e : Fin P ⊕ Fin Q ≃ Fin n) {ε : Fin n → Bool}
     have hAM : Matrix.reindex e e A = M := by rw [hA]; ext a b; simp
     have hform : Aᴴ * Formalism.UG.Jpq P Q * A = Formalism.UG.Jpq P Q := by
       apply (Matrix.reindex e e).injective
-      rw [← reindex_form e he1 he2, hAM, ← Jm_eq_reindex e he1 he2]
-      exact hM
+      rwa [← reindex_form e he1 he2, hAM, ← Jm_eq_reindex e he1 he2]
     have h2 : (Formalism.UG.Jpq P Q * Aᴴ * Formalism.UG.Jpq P Q) * A = 1 := by
       calc (Formalism.UG.Jpq P Q * Aᴴ * Formalism.UG.Jpq P Q) * A = Formalism.UG.Jpq P Q * (Aᴴ * Formalism.UG.Jpq P Q * A) := by
             simp only [Matrix.mul_assoc]
@@ -231,8 +226,7 @@ theorem range_upqMat (e : Fin P ⊕ Fin Q ≃ Fin n) {ε : Fin n → Bool}
     have h1 : A * (Formalism.UG.Jpq P Q * Aᴴ * Formalism.UG.Jpq P Q) = 1 := mul_eq_one_comm.mp h2
     let u : GL (Fin P ⊕ Fin Q) ℂ := ⟨A, Formalism.UG.Jpq P Q * Aᴴ * Formalism.UG.Jpq P Q, h1, h2⟩
     have hu : u ∈ Formalism.UG.Upq P Q := (mem_Upq_iff u).2 hform
-    refine ⟨(⟨u, hu⟩ : Formalism.UG.Upq P Q), ?_⟩
-    exact hAM
+    exact ⟨(⟨u, hu⟩ : Formalism.UG.Upq P Q), hAM⟩
 
 theorem upqMat_cont (e : Fin P ⊕ Fin Q ≃ Fin n) : Continuous (upqMat e : Formalism.BasicNotions.UpqT P Q → _) := by
   have h : Continuous fun g : Formalism.BasicNotions.UpqT P Q => Formalism.BasicNotions.UpqT.mat g :=

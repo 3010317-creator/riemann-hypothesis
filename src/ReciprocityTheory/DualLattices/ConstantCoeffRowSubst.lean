@@ -66,8 +66,7 @@ theorem pderiv_rowSubst (h : Matrix (Fin ν) (Fin ν) ℂ) (k : Fin ν) (a : ι)
         · intro m _ hm
           rw [ite_eq_right (fun h' => hm (congrArg Prod.fst h').symm)]
           ring
-        · intro h'
-          exact absurd (Finset.mem_univ _) h'
+        · exact fun h' => absurd (Finset.mem_univ _) h'
       · rw [ite_eq_right hn, mul_zero]
         refine Finset.sum_eq_zero (fun m _ => ?_)
         rw [ite_eq_right (fun h' => hn (congrArg Prod.snd h'))]

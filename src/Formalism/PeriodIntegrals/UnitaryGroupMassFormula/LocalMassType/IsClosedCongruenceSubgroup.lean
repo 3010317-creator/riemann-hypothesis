@@ -107,8 +107,7 @@ theorem continuous_sigR : Continuous (sigR (Fv F v) σ) := by
     | zero => simp
     | tmul a b => simp [f, sigR]
     | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
-  rw [heq]
-  exact hf
+  rwa [heq]
 
 theorem isClosed_HR : IsClosed (HR (Fv F v) σ J : Set (GL (Fin n) (Fv F v ⊗[F] E))) := by
   have hv : Continuous fun g : GL (Fin n) (Fv F v ⊗[F] E) => (g : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) :=
@@ -139,8 +138,7 @@ theorem sc_HA : SecondCountableTopology (HA (Fv F v) σ J) := by
 
 theorem continuous_smulTup {a : ℕ} (X : TupV (E := E) v n a) :
     Continuous (fun c : HA (Fv F v) σ J => c • X) := by
-  refine continuous_pi fun i => ?_
-  exact LocMassOrdKv.continuous_act (σ := σ) (J := J) (v := v) (X i)
+  exact continuous_pi fun i => LocMassOrdKv.continuous_act (σ := σ) (J := J) (v := v) (X i)
 
 theorem measurableSet_image_closed {a : ℕ} {C : Set (HA (Fv F v) σ J)} (hC : IsClosed C)
     (X : TupV (E := E) v n a) : MeasurableSet ((fun c : HA (Fv F v) σ J => c • X) '' C) := by
@@ -169,8 +167,7 @@ theorem mem_gLat_iff {x : Fv F v} (hx : x ≠ 0) (w : Fin n → Fv F v ⊗[F] E)
   constructor
   · rintro ⟨y, hy, rfl⟩
     rwa [smul_smul, h1, one_smul]
-  · intro hw
-    exact ⟨_, hw, by rw [smul_smul, h2, one_smul]⟩
+  · exact fun hw => ⟨_, hw, by rw [smul_smul, h2, one_smul]⟩
 
 theorem continuous_locF {r : ℕ} (a : Fin (r + 1)) :
     Continuous (fun X : TupV (E := E) v n (r + 1) => locF v X a) := by

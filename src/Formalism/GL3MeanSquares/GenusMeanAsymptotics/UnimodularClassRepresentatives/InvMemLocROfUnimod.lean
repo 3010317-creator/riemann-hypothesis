@@ -87,12 +87,10 @@ theorem cut_locF (S : VecSplit h h') (𝔭 : Ideal (𝓞 F)) (Λ : Submodule (�
   constructor
   · rintro ⟨s, hs, hx⟩
     refine ⟨s, hs, ?_⟩
-    rw [VecSplit.mem_cut_iff, LinearMap.map_smul_of_tower]
-    exact hx
+    rwa [VecSplit.mem_cut_iff, LinearMap.map_smul_of_tower]
   · rintro ⟨s, hs, hx⟩
     refine ⟨s, hs, ?_⟩
-    rw [VecSplit.mem_cut_iff, LinearMap.map_smul_of_tower] at hx
-    exact hx
+    rwa [VecSplit.mem_cut_iff, LinearMap.map_smul_of_tower] at hx
 
 theorem isLattice_gmap (g : V ≃ₗ[K] V) {L : Submodule (𝓞 K) V} (hL : Submodule.IsFullLattice K L) :
     Submodule.IsLattice K (Formalism.HermitianLatticesTheory.gmap g L) := by

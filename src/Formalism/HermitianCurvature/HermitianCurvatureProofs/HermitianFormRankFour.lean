@@ -74,8 +74,7 @@ open scoped Matrix.Norms.L2Operator
 
 theorem exists_theta {k : ℕ} (A : Matrix (Fin k) (Fin k) ℂ) :
     ∃ θ : ℝ, -Complex.exp (θ * Complex.I) ∉ spectrum ℂ A := by
-  by_contra h
-  push Not at h
+  by_contra! h
   have hfin : (spectrum ℂ A).Finite := by
     rw [← AlgEquiv.spectrum_eq (Matrix.toLinAlgEquiv' : Matrix (Fin k) (Fin k) ℂ ≃ₐ[ℂ] _) A]
     exact Module.End.finite_spectrum _
@@ -111,8 +110,7 @@ theorem exists_skew_hermitian_log_unitary {k : ℕ} (A : Matrix (Fin k) (Fin k) 
       show c * (-Complex.exp (θ * Complex.I)) = -1
       rw [hc, mul_neg, ← Complex.exp_add]
       simp
-    rw [e1]
-    exact h
+    rwa [e1]
   have hn := (Unitary.norm_sub_one_lt_two_iff hu).2 hsp
   have he := expUnitary_argSelfAdjoint (u := ⟨c • A, hu⟩) hn
   have he2 : NormedSpace.exp (Complex.I • (Unitary.argSelfAdjoint ⟨c • A, hu⟩ : Matrix (Fin k) (Fin k) ℂ)) = c • A := by
@@ -427,7 +425,6 @@ theorem exp_generates : Formalism.FourierDecayAlt.Qr.ExpGen := by
     ⟨⟨skew_of Qx8.hpk_herm hBs, fun a _ => ⟨col (Sum.inl a), col (Sum.inr (Sum.inl a))⟩⟩,
       col (Sum.inr (Sum.inr ()))⟩
   have hfin := hstep _ 1 hX h1
-  rw [Matrix.mul_one, exp_lift hc g1 g2 B, hBe, ← e2] at hfin
-  exact hfin
+  rwa [Matrix.mul_one, exp_lift hc g1 g2 B, hBe, ← e2] at hfin
 
 end Formalism.FourierDecayAlt.P

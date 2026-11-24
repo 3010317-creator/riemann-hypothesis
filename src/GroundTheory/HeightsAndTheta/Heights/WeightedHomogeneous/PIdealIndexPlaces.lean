@@ -61,9 +61,7 @@ theorem IdealIndexPlaces.proof : IdealIndexPlaces.Statement := by
   have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
   have hbL : (b : L) ≠ 0 := by rwa [Ne, RingOfIntegers.coe_eq_zero_iff]
   have hzy : ∀ i, ((z i : 𝓞 L) : L) = (b : L) * y i := fun i ↦ by
-    have h := hz i
-    simp only [Algebra.smul_def] at h
-    exact h
+    simpa only [Algebra.smul_def] using hz i
   obtain ⟨i0, hi0⟩ := Function.ne_iff.mp hy
   replace hi0 : y i0 ≠ 0 := hi0
   set c : 𝓞 L := z i0 with hc

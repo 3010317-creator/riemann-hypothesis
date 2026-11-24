@@ -568,8 +568,7 @@ private theorem gen_wh_of_pos_separated_of_le_deg {N T : ℕ} (deg : Fin N → �
       have hn : ∀ i, ¬ ((a : ℕ) = pos i ∨ (a : ℕ) = pos i + 1) := fun i h => by
         have := hu i
         omega
-      simp only [hn, ite_false, Finset.sum_const_zero, ite_true, zero_add]
-      exact hjp
+      simpa only [hn, ite_false, Finset.sum_const_zero, ite_true, zero_add] using hjp
     · rw [ite_eq_right hau, add_zero]
       by_cases hex : ∃ i0, (a : ℕ) = pos i0 ∨ (a : ℕ) = pos i0 + 1
       · obtain ⟨i0, h0⟩ := hex
@@ -578,19 +577,16 @@ private theorem gen_wh_of_pos_separated_of_le_deg {N T : ℕ} (deg : Fin N → �
           rcases h0 with h0 | h0
           · have h' := (hj i0).1
             have ha : a = ⟨pos i0, by have := hpos i0; omega⟩ := Fin.ext h0
-            rw [ha]
-            exact h'
+            rwa [ha]
           · have h' := (hj i0).2
             have ha : a = ⟨pos i0 + 1, hpos i0⟩ := Fin.ext h0
-            rw [ha]
-            exact h'
+            rwa [ha]
         · intro i _ hi
           rw [ite_eq_right]
           intro h
           have := hdis i i0 hi
           omega
-        · intro h
-          exact absurd (Finset.mem_univ i0) h
+        · exact fun h => absurd (Finset.mem_univ i0) h
       · push Not at hex
         rw [Finset.sum_eq_zero]
         · exact Nat.zero_le _
@@ -821,8 +817,7 @@ theorem sym_family_word_ne_zero (hp : 0 < X.p) (L : LvDat C0 CE1 CE2 mu X β)
       (top_letter_power_ne_zero _ _ (pow_pos hp _).ne')) (pow_ne_zero _ (top_letter_ne_zero _))) (ioD_ne_zero hp β j ?_)
     intro h
     exact hG0 j (rename_injective _ (chain_embedding_injective _ _ _) (by rw [h, map_zero]))
-  · intro h
-    exact one_ne_zero (monomial_eq_zero.1 h)
+  · exact fun h => one_ne_zero (monomial_eq_zero.1 h)
 
 theorem balanced_word_homogeneous (L : LvDat C0 CE1 CE2 mu X β) (G : ∀ j, MvPolynomial (Fin (2 * segS X.TT j + 1) × Fin X.m) (KK O))
     (hGpol : ∀ j, G j ∈ Pol (KK O) X.m (L.LL j).deg) :

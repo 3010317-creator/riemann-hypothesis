@@ -299,8 +299,7 @@ theorem selfadj (hmod : dK % 4 = 3) (h2 : p ≠ 2) {z : ℂ_[p] × ℂ_[p]} (hz 
     (hs : z.swap = z) : z.1 ∈ Zc p := by
   apply diag_int ι hmod h2
   have e : (z.1, z.1) = z := Prod.ext rfl (congrArg Prod.fst hs).symm
-  rw [e]
-  exact hz
+  rwa [e]
 
 theorem exists_shift (h5 : 5 ≤ p) {a b : ℂ_[p]} (ha : ‖a‖ ≤ 1) (hb : ‖b‖ ≤ 1) :
     ∃ k : ℤ, ‖(k : ℂ_[p])‖ = 1 ∧ ‖a - (k : ℂ_[p])‖ = 1 ∧ ‖b - (k : ℂ_[p])‖ = 1 := by
@@ -406,10 +405,8 @@ theorem CalcP_of (hD : CMDatum) : CalcP := by
       have t2 : tau ι hmod (star α) = ι ((m : ℂ) + (n : ℂ) * (1 - omegaK dK)) :=
         congrArg Prod.snd hα
       refine ⟨S, inferInstance, neg, xP, yP, ?_, g2, g3, ?_, ?_, ?_, ?_⟩
-      · rw [t1]
-        exact g1
-      · rw [t1, t2]
-        exact g4
+      · rwa [t1]
+      · rwa [t1, t2]
       · rw [t1]
         exact OrthogonalGaussModelNormLemmas.norm_eq_one_of_quad (em_sum ι (m, n)) (em_prod ι hmod (m, n)) (normZ_one hN)
       · rw [hb2]

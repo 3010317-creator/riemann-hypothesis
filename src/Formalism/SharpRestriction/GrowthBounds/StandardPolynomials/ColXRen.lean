@@ -90,8 +90,7 @@ theorem liftSubst_rename (w : O) (r : ℕ) {ι ι' : Type} (LL : LiftLetters ι)
 theorem isGLW_submatrix_cast {k k' : ℕ} (hk : k = k') (g : Matrix (Fin k') (Fin k') (WF p f)) (hg : IsGLW g) :
     IsGLW (g.submatrix (Fin.cast hk) (Fin.cast hk)) := by
   unfold IsGLW at hg ⊢
-  rw [show (Fin.cast hk : Fin k → Fin k') = finCongr hk from rfl, Matrix.det_submatrix_equiv_self]
-  exact hg
+  rwa [show (Fin.cast hk : Fin k → Fin k') = finCongr hk from rfl, Matrix.det_submatrix_equiv_self]
 
 theorem one_submatrix_cast {k k' : ℕ} (hk : k = k') :
     (1 : Matrix (Fin k') (Fin k') (WF p f)).submatrix (Fin.cast hk) (Fin.cast hk) = 1 := by
@@ -113,8 +112,7 @@ private theorem coeff_rename_mem_multiple_of_coeff {σ τ : Type} (φ : σ → �
     obtain ⟨c1, h1⟩ := hQ m
     obtain ⟨c2, h2⟩ := hR m
     exact ⟨c1 + c2, by rw [MvPolynomial.coeff_add, h1, h2, mul_add, map_add (f := _)]⟩
-  · intro m
-    exact ⟨0, by simp⟩
+  · exact fun m => ⟨0, by simp⟩
   · intro u _ m
     rw [coeff_monomial]
     split_ifs
@@ -175,8 +173,7 @@ theorem mem_Pol_rename {R : Type} [CommRing R] {ι ι' : Type} [Fintype ι] {k k
   · obtain ⟨i, rfl⟩ := hl
     have h1 : ∀ c, (Finsupp.mapDomain (renV e rfl) u) (e i, c) = u (i, c) := by
       intro c
-      have h2 := Finsupp.mapDomain_apply_of_injective (renV_injective e he rfl) u (i, c)
-      simpa [renV] using h2
+      simpa [renV] using Finsupp.mapDomain_apply_of_injective (renV_injective e he rfl) u (i, c)
     simp only [h1]
     rw [Finset.sum_eq_single i (fun j _ hj => by rw [ite_eq_right (fun h => hj (he h))]) (by simp), ite_eq_left rfl]
     exact hud i

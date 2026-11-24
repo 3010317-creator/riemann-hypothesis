@@ -129,8 +129,7 @@ theorem dense_mod (g : ℕ) (hg : 1 ≤ g) (y : FiniteAdeleRing (𝓞 F) F) (hy 
         exact (intValuation_le_pow_iff_mem v _ _).2 h1
       have h3 : Valued.v (algebraMap F (v.adicCompletion F) (algebraMap (𝓞 F) F (a v)) -
           algebraMap F (v.adicCompletion F) (algebraMap (𝓞 F) F s)) ≤ v.intValuation gO := by
-        rw [← map_sub, ← map_sub, val_int, ← Valuation.map_neg, neg_sub]
-        exact h2
+        rwa [← map_sub, ← map_sub, val_int, ← Valuation.map_neg, neg_sub]
       calc Valued.v (y v - algebraMap F (v.adicCompletion F) (algebraMap (𝓞 F) F s))
           = Valued.v ((y v - algebraMap F (v.adicCompletion F) (algebraMap (𝓞 F) F (a v))) +
               (algebraMap F (v.adicCompletion F) (algebraMap (𝓞 F) F (a v)) -
@@ -142,8 +141,7 @@ theorem dense_mod (g : ℕ) (hg : 1 ≤ g) (y : FiniteAdeleRing (𝓞 F) F) (hy 
         apply hv
         rw [hT, Set.Finite.mem_toFinset]
         show v.asIdeal ∣ Ideal.span {gO}
-        rw [Ideal.dvd_iff_le, Ideal.span_le, Set.singleton_subset_iff]
-        exact hm
+        rwa [Ideal.dvd_iff_le, Ideal.span_le, Set.singleton_subset_iff]
       have h1 : v.intValuation gO = 1 :=
         le_antisymm (intValuation_le_one v gO) (not_lt.1 fun h => hgv ((intValuation_lt_one_iff_mem v gO).1 h))
       rw [h1]

@@ -139,8 +139,7 @@ theorem regDom : RegDom := by
     congr 1
     funext a
     exact infOf_not _ _ _
-  · simp only [mOf]
-    exact Multiset.Nodup.map (infOf_inj _ (l _).anti _) Finset.univ.nodup
+  · simpa only [mOf] using Multiset.Nodup.map (infOf_inj _ (l _).anti _) Finset.univ.nodup
   · intro x hx y hy hxy
     simp only [mOf, Multiset.mem_map] at hx hy
     obtain ⟨a, -, rfl⟩ := hx
@@ -152,8 +151,7 @@ theorem reg_of (h : GelfInj) : Reg := by
   intro E _ _ _ n l χ hχ
   have e : mOf χ = mOf (fun v => PositivityTheory.RgBcC.infOf (l v).w) := by
     funext τ
-    simp only [mOf]
-    exact h n _ _ (hχ _ _)
+    simpa only [mOf] using h n _ _ (hχ _ _)
   rw [e]
   exact regDom E n l
 

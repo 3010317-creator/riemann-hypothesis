@@ -87,8 +87,7 @@ theorem mem_mcPts (hAB : A * B = 1) (hBA : B * A = 1) (Q : Ideal (MRing (dualBlo
     refine ⟨intCoordPt_ne_zero ⟨A, hBA⟩ hz, fun g hg => ?_⟩
     rw [← eval_subst]
     apply hf
-    rw [Ideal.mem_comap, TopDualBasisChange.subst_subst hAB]
-    exact hg
+    rwa [Ideal.mem_comap, TopDualBasisChange.subst_subst hAB]
   · rintro ⟨hz, hf⟩
     refine ⟨?_, fun f hf' => ?_⟩
     · have := intCoordPt_ne_zero ⟨B, hAB⟩ hz
@@ -102,8 +101,7 @@ theorem isGoodProj_comp (hAB : A * B = 1) (hBA : B * A = 1) {Q : Ideal (MRing (d
   intro z hz
   rw [LinearMap.comp_apply, ← segre_pt]
   apply h
-  rw [mem_mcPts hAB hBA, pt_pt hAB]
-  exact hz
+  rwa [mem_mcPts hAB hBA, pt_pt hAB]
 
 theorem isGoodProj_comp' (hAB : A * B = 1) (hBA : B * A = 1) {Q : Ideal (MRing (dualBlocks X))}
     {Ψ : (((k : Unit) → dualBlocks X k) → ℂ) →ₗ[ℂ] (Fin (e + 1) → ℂ)}
@@ -118,16 +116,13 @@ theorem bijOn_fibre (hAB : A * B = 1) (hBA : B * A = 1) (Q : Ideal (MRing (dualB
   refine ⟨?_, ?_, ?_⟩
   · rintro w₂ ⟨z₂, hz₂, rfl, hΨ⟩
     refine ⟨intCoordPt B z₂, (mem_mcPts hAB hBA Q z₂).1 hz₂, segre_pt B z₂, ?_⟩
-    rw [LinearMap.comp_apply, segreMap_segreMap hBA]
-    exact hΨ
+    rwa [LinearMap.comp_apply, segreMap_segreMap hBA]
   · intro v _ w _ hvw
     rw [← segreMap_segreMap hBA v, ← segreMap_segreMap hBA w, hvw]
   · rintro w ⟨z, hz, rfl, hΨ⟩
     refine ⟨segre (intCoordPt A z), ⟨intCoordPt A z, ?_, rfl, ?_⟩, ?_⟩
-    · rw [mem_mcPts hAB hBA, pt_pt hAB]
-      exact hz
-    · rw [segre_pt]
-      exact hΨ
+    · rwa [mem_mcPts hAB hBA, pt_pt hAB]
+    · rwa [segre_pt]
     · rw [segre_pt, segreMap_segreMap hAB]
 
 theorem isSheet_pt (hAB : A * B = 1) (hBA : B * A = 1) {Q : Ideal (MRing (dualBlocks X))}

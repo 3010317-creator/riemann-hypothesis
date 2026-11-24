@@ -249,8 +249,7 @@ theorem homologyMap_revHom (n : ℕ) (A : Rep k G) :
       (map_cochainsFunctor_shortExact hS) (map_cochainsFunctor_shortExact hS) n (n + 1) rfl
     have h3 : HomologicalComplex.homologyMap Φ.τ₃ n = 𝟙 _ := ih _
     rw [h3, Category.id_comp] at key
-    refine (cancel_epi (δ hS n (n + 1) rfl)).1 ?_
-    exact key.trans (Category.comp_id _).symm
+    exact (cancel_epi (δ hS n (n + 1) rfl)).1 (key.trans (Category.comp_id _).symm)
 
 variable {A : Rep k G} {n : ℕ}
 

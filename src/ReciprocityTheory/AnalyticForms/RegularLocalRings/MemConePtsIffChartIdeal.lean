@@ -74,8 +74,7 @@ theorem mem_conePts_iff_chartIdeal {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (
         rw [SetLike.mem_coe, RingHom.mem_ker, map_sub, eval_X, map_one]
         show z ⟨k, p k⟩ / z ⟨k, p k⟩ - 1 = 0
         rw [div_self (hz k), sub_self]
-    intro h hh
-    exact hle hh
+    exact fun h hh => hle hh
   · intro hch
     refine ⟨fun k => ⟨p k, hz k⟩, ?_⟩
     have hzeq : z = fun q => z ⟨q.1, p q.1⟩ * affCoord p z q := by
@@ -99,8 +98,7 @@ theorem conePts_of_chartIdeal {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : 
     have hmem : (X ⟨k, p k⟩ - 1 : MvPolynomial (Σ k, ι k) ℂ) ∈ chartIdeal P p :=
       hle (Ideal.subset_span (Set.mem_range_self k))
     have := hy _ hmem
-    rw [map_sub, eval_X, map_one, sub_eq_zero] at this
-    exact this
+    rwa [map_sub, eval_X, map_one, sub_eq_zero] at this
   refine ⟨?_, h1, ?_⟩
   · unfold conePts
     rw [Set.mem_setOf_eq]
@@ -128,7 +126,6 @@ theorem affCoord_eq_of_sameOrbit (p : (k : K) → ι k) {z z' : (Σ k, ι k) →
     (h : SameOrbit z z') : affCoord p z = affCoord p z' := by
   obtain ⟨c, hc, rfl⟩ := h
   funext q
-  show c q.1 * z' q / (c q.1 * z' ⟨q.1, p q.1⟩) = z' q / z' ⟨q.1, p q.1⟩
   exact mul_div_mul_left (z' q) (z' ⟨q.1, p q.1⟩) (hc q.1)
 
 theorem sameOrbit_affCoord (p : (k : K) → ι k) (z : (Σ k, ι k) → ℂ) (hz : ∀ k, z ⟨k, p k⟩ ≠ 0) :

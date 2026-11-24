@@ -122,8 +122,7 @@ theorem exists_appr {x : Fv F v} (hx : x ∈ v.adicCompletionIntegers F) :
     simp [iO, map_sub]
   rw [e]
   refine lt_of_le_of_lt (Valuation.map_add _ _ _) (max_lt ?_ ?_)
-  · rw [Valuation.map_sub_swap]
-    exact hy
+  · rwa [Valuation.map_sub_swap]
   · rw [Valuation.map_neg, e2, vcoe]
     simpa using ha
 
@@ -155,8 +154,7 @@ theorem red_eq_mk_iff {x : Fv F v} (hx : x ∈ v.adicCompletionIntegers F) (a : 
     have e2 : x - iO v a = (x - iO v (appr v x)) + ((x - iO v a) - (x - iO v (appr v x))) := by ring
     rw [e2]
     exact lt_of_le_of_lt (Valuation.map_add _ _ _) (max_lt hs h)
-  · intro h
-    exact lt_of_le_of_lt (Valuation.map_sub _ _ _) (max_lt h hs)
+  · exact fun h => lt_of_le_of_lt (Valuation.map_sub _ _ _) (max_lt h hs)
 
 theorem mem_O_iO (a : 𝓞 F) : iO v a ∈ v.adicCompletionIntegers F := by
   exact (IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers (𝓞 F) F v).mpr (v_iO_le v a)
@@ -249,8 +247,7 @@ theorem ev_int (x : F) : ∀ᶠ v in cofinite,
   refine Filter.eventually_cofinite.mpr (hfin.subset ?_)
   intro w hw
   simp only [Set.mem_setOf_eq] at hw
-  rw [IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers (𝓞 F) F w, vcoe, not_le] at hw
-  exact hw
+  rwa [IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers (𝓞 F) F w, vcoe, not_le] at hw
 
 theorem ev_unit {x : F} (hx : x ≠ 0) : ∀ᶠ v in cofinite,
     Valued.v (algebraMap F (Fv F v) x) = 1 := by
@@ -278,8 +275,7 @@ theorem measure_count {G V : Type} [AddCommGroup G] [MeasurableSpace G] [Measura
       rwa [e] at h2
     refine ⟨hxL, ?_⟩
     have h1 := hadd (xw w) (hxwL w) (-xw w + x) hnL
-    rw [e, hxw, (hker _ hnL).mpr hn, add_zero] at h1
-    exact h1
+    rwa [e, hxw, (hker _ hnL).mpr hn, add_zero] at h1
   have hset : {x | x ∈ L ∧ φ x ∈ S} = ⋃ w ∈ hS.toFinset, (fun n => -xw w + n) ⁻¹' (N : Set G) := by
     ext x
     simp only [Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_preimage, Set.Finite.mem_toFinset, exists_prop]
@@ -299,8 +295,7 @@ theorem measure_count {G V : Type} [AddCommGroup G] [MeasurableSpace G] [Measura
   have hd : (↑hS.toFinset : Set V).PairwiseDisjoint (fun w => (fun n => -xw w + n) ⁻¹' (N : Set G)) := by
     intro w _ w' _ hne
     rw [Function.onFun, Set.disjoint_left]
-    intro x hx hx'
-    exact hne ((key w x hx).2.symm.trans (key w' x hx').2)
+    exact fun x hx hx' => hne ((key w x hx).2.symm.trans (key w' x hx').2)
   have hm : ∀ w ∈ hS.toFinset, MeasurableSet ((fun n => -xw w + n) ⁻¹' (N : Set G)) :=
     fun w _ => measurable_const_add _ hN
   rw [hset, measure_biUnion_finset hd hm]
@@ -579,8 +574,7 @@ theorem rho_surj (w : K) : ∃ z : lamC v A hD, rho v A hD r hr z = w := by
   refine ⟨⟨Pt v A x y, (mem_lamC v A hD _).2 ⟨by rw [Xc_Pt]; exact hx, by rw [Yc_Pt]; exact hy⟩⟩, ?_⟩
   rw [rho_apply]
   show algebraMap _ K (red v (Xc v A (Pt v A x y))) + algebraMap _ K (red v (Yc v A (Pt v A x y))) * r = w
-  rw [Xc_Pt, Yc_Pt]
-  exact hab
+  rwa [Xc_Pt, Yc_Pt]
 
 theorem smul_char (z : Fv F v ⊗[F] E) :
     (∃ z', z' ∈ lamC v A hD ∧ unifV v • z' = z) ↔
@@ -782,10 +776,8 @@ theorem exists_quadAlg (k : Type) [Field k] [Finite k] (h2 : (2 : k) ≠ 0) (D :
     · apply bijective_algebraMap_add_mul_of_finrank_two
       · simp
       · intro a b h
-        have e1 : a + b * s = 0 := by
-          exact congrArg Prod.fst h
-        have e2 : a + b * -s = 0 := by
-          exact congrArg Prod.snd h
+        have e1 : a + b * s = 0 := congrArg Prod.fst h
+        have e2 : a + b * -s = 0 := congrArg Prod.snd h
         have hb : (2 * s) * b = 0 := by linear_combination e1 - e2
         have hb0 : b = 0 := (mul_eq_zero.mp hb).resolve_left (mul_ne_zero h2 hs0)
         refine ⟨?_, hb0⟩
@@ -809,8 +801,7 @@ theorem exists_quadAlg (k : Type) [Field k] [Finite k] (h2 : (2 : k) ≠ 0) (D :
       linear_combination hr
     have hneg' : eval₂ (algebraMap k (AdjoinRoot (X ^ 2 - C D : k[X])))
         (-AdjoinRoot.root (X ^ 2 - C D : k[X])) (X ^ 2 - C D : k[X]) = 0 := by
-      rw [← aeval_def]
-      exact hneg
+      rwa [← aeval_def]
     obtain ⟨τ, hτr⟩ : ∃ τ : AdjoinRoot (X ^ 2 - C D : k[X]) →ₐ[k] AdjoinRoot (X ^ 2 - C D : k[X]),
         τ (AdjoinRoot.root _) = -AdjoinRoot.root (X ^ 2 - C D : k[X]) := by
       exact ⟨{ AdjoinRoot.lift (algebraMap k _) (-AdjoinRoot.root _) hneg' with

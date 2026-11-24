@@ -81,8 +81,7 @@ lemma vand_split (p q : ℕ) (x : ℕ → ℝ) :
     rw [← Finset.prod_Ioc_consecutive _ hi.2 (Nat.le_add_right p q)]
     congr 1
     have hs := prod_Ioc_shift (fun j => x i - x j) p 0 q
-    rw [zero_add, Nat.add_comm q p] at hs
-    exact hs
+    rwa [zero_add, Nat.add_comm q p] at hs
   have h2 : ∏ i ∈ Ioc p (p + q), ∏ j ∈ Ioc i (p + q), (x i - x j)
       = ∏ i ∈ Ioc 0 q, ∏ j ∈ Ioc i q, (x (i + p) - x (j + p)) := by
     have hs := prod_Ioc_shift (fun i => ∏ j ∈ Ioc i (p + q), (x i - x j)) p 0 q
@@ -90,8 +89,7 @@ lemma vand_split (p q : ℕ) (x : ℕ → ℝ) :
     rw [hs]
     refine Finset.prod_congr rfl (fun i _ => ?_)
     have hs2 := prod_Ioc_shift (fun j => x (i + p) - x j) p i q
-    rw [Nat.add_comm q p] at hs2
-    exact hs2
+    rwa [Nat.add_comm q p] at hs2
   rw [← Finset.prod_Ioc_consecutive _ (Nat.zero_le p) (Nat.le_add_right p q), h1, h2]
 
 alias v_sub := _root_.Formalism.FourierDecayAlt.P.Sz4.v_sub
@@ -291,8 +289,7 @@ lemma E_le : Real.exp (1/4) ≤ 1.3 := by
     | (rw [← Real.exp_nat_mul]; norm_num)
   have h2 := Real.exp_one_lt_d9
   have h3 : 0 < Real.exp (1/4) := Real.exp_pos _
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   have ht4 : (2.8561:ℝ) < Real.exp (1/4) ^ 4 := by
     calc (2.8561 : ℝ) = (1.3 : ℝ) ^ 4 := by norm_num
       _ < Real.exp (1 / 4) ^ 4 := pow_lt_pow_left₀ hc (by norm_num) (by norm_num)
@@ -360,8 +357,7 @@ lemma fac_bound (n : ℕ) (hn : 2 ≤ n) :
   have hW : 0 ≤ (2.72:ℝ) ^ (n + 2) * (n.factorial : ℝ) := by positivity
   calc 2 * (0.38:ℝ) ^ (n + 2) * ((n:ℝ) + 2) ^ n * Real.exp (1/4) ^ (n + 1)
       ≤ 2 * (0.38:ℝ) ^ (n + 2) * ((2.72:ℝ) ^ (n + 2) * (n.factorial : ℝ)) * (1.3:ℝ) ^ (n + 1) := by
-        apply mul_le_mul (mul_le_mul_of_nonneg_left hX hA) hEp hZ
-        exact mul_nonneg hA hW
+        exact mul_le_mul (mul_le_mul_of_nonneg_left hX hA) hEp hZ (mul_nonneg hA hW)
     _ = (2 * (0.38:ℝ) ^ (n + 2) * (2.72:ℝ) ^ (n + 2) * (1.3:ℝ) ^ (n + 1)) * (n.factorial : ℝ) := by
         ring
     _ ≤ 4 ^ n * (n.factorial : ℝ) := mul_le_mul_of_nonneg_right hQ hf.le
@@ -469,8 +465,7 @@ lemma top_final_inequality (k : ℕ) (hk : 4 ≤ k) (e B a b Del θ W Vu : ℝ) 
   have hX3 : 1 / θ ^ 2 ≤ 1 := by
     have hd : 0 < θ ^ 2 := by positivity
     have hθ2 : 1 ≤ θ ^ 2 := one_le_pow₀ hθ
-    rw [div_le_one hd]
-    exact hθ2
+    rwa [div_le_one hd]
   have hX3' : 0 ≤ 1 / θ ^ 2 := by positivity
   have hX1' : 0 ≤ e ^ (n + 2) * B := by positivity
   have hfb := fac_bound n hn

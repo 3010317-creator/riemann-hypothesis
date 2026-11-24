@@ -36,8 +36,7 @@ theorem mem_quotPreimage {S : Subgroup (U ⧸ V.subgroupOf U)} {g : G} (hg : g �
   constructor
   · rintro ⟨x, hx, rfl⟩
     exact hx
-  · intro h
-    exact ⟨⟨g, hg⟩, h, rfl⟩
+  · exact fun h => ⟨⟨g, hg⟩, h, rfl⟩
 
 theorem le_quotPreimage (hVU : V ≤ U) (S : Subgroup (U ⧸ V.subgroupOf U)) :
     V ≤ quotPreimage U V S := by

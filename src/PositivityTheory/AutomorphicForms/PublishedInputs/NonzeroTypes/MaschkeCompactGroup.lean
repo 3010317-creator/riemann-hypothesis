@@ -118,12 +118,10 @@ theorem invariantComplement_holds : SmoothRepIrreducibleSubcontainingVector := b
       refine hUmax (U ⊔ W) ⟨hsup, hn⟩ (lt_of_le_of_ne le_sup_left fun heq => hW0 ?_)
       refine eq_bot_iff.2 ((le_inf (le_sup_right.trans heq.ge) hWS).trans (disjoint_iff.1 hUS.disjoint).le)
     obtain ⟨u, hu, w, hw, hsum⟩ := Submodule.mem_sup.1 hmem
-    rw [← hsum, map_add (f := _), hpU u hu, zero_add, hpid w (hWS hw)]
-    exact hw
+    rwa [← hsum, map_add (f := _), hpU u hu, zero_add, hpid w (hWS hw)]
   refine ⟨S, p, fun h => hpv0 ?_, hSst, fun S' hS'S hS'st => ?_, hpS, hpid, fun k v => ?_, hpv0⟩
   · have := hpS v0
-    rw [h, Submodule.mem_bot] at this
-    exact this
+    rwa [h, Submodule.mem_bot] at this
   · by_cases h0 : S' = ⊥
     · exact Or.inl h0
     right
@@ -146,8 +144,7 @@ theorem invariantComplement_holds : SmoothRepIrreducibleSubcontainingVector := b
     have ht0 : t = 0 := by
       have : t ∈ S ⊓ T := Submodule.mem_inf.2 ⟨htS, ht⟩
       rwa [hST0, Submodule.mem_bot] at this
-    rw [← hat, ht0, add_zero]
-    exact ha
+    rwa [← hat, ht0, add_zero]
   · have hv : V k v = V k (p v) + V k (v - p v) := by
       rw [← map_add (f := _)]
       congr 1

@@ -147,9 +147,7 @@ theorem big_cell_eq : BigCellEq := by
   have hgU : g ∈ UH (Hpk D.R.k D.R.rS) := Formalism.QuantumDeterminants.bigCellMem _ _ _ _ hc hμ
   have hGp := Gf_big hz hz' hsec q.1 hc q.2 hζ'
   have hRS := Formalism.MainNotions.S.Lem.orbRStabBig _ _ _ _ hc hμ
-  have hgi : g⁻¹ * g = 1 := by
-    have hu := WeylGroupFacts.isUnit_of_uh hgU
-    exact Matrix.nonsing_inv_mul _ hu
+  have hgi : g⁻¹ * g = 1 := Matrix.nonsing_inv_mul _ (WeylGroupFacts.isUnit_of_uh hgU)
   set one : Mt D.R.k D.R.rS := fun i j => (1 : Matrix (Fin (2 * D.R.rS + D.R.k + 1)) (Fin (2 * D.R.rS + D.R.k + 1)) ℂ) i j
     with hone
   have hof : (Matrix.of one : Matrix _ _ ℂ) = 1 := rfl
@@ -228,8 +226,7 @@ theorem big_cell_eq : BigCellEq := by
         rw [(hsec.2 q.2 hζ').2] at h1
         rw [← hz0]
         unfold zeta
-        rw [h1.2, mul_div_cancel_left₀ _ h1.1]
-        exact hζ0
+        rwa [h1.2, mul_div_cancel_left₀ _ h1.1]
     · ext i j
       simp only [Formalism.FourierDecayAlt.C2.monoP, Matrix.diagonal_apply, Matrix.of_apply, Equiv.refl_apply]
       by_cases hij : i = j

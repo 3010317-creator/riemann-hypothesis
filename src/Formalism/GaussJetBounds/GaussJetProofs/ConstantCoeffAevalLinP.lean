@@ -119,8 +119,7 @@ lemma jetPair_C_mul_right (c : K) (P : MvPolynomial ι K) (F : MvPowerSeries ι 
 lemma jetPair_sum_right {α : Type*} (s : Finset α) (P : MvPolynomial ι K)
     (F : α → MvPowerSeries ι K) : jetPair P (∑ a ∈ s, F a) = ∑ a ∈ s, jetPair P (F a) := by
 
-  simp only [jetPair, map_sum, Finset.mul_sum]
-  exact Finset.sum_comm
+  simpa only [jetPair, map_sum, Finset.mul_sum] using Finset.sum_comm
 
 lemma jetPair_C_left (c : K) (F : MvPowerSeries ι K) :
     jetPair (MvPolynomial.C c) F = c * MvPowerSeries.constantCoeff F := by
@@ -260,9 +259,7 @@ lemma jetPair_poly (A : ι → ι' → K) (P : MvPolynomial ι K) :
       rw [← MvPolynomial.coeToMvPowerSeries.ringHom_apply, map_sum]
       simp only [MvPolynomial.coeToMvPowerSeries.ringHom_apply]
     rw [jetPair_mul_X, mvPowerSeries_pderiv_coe_eq_coe_pderiv, pderiv_aeval_linP, hsum, jetPair_sum_right]
-    rw [map_mul, MvPolynomial.aeval_X]
-    rw [linP']
-    rw [Finset.mul_sum, jetPair_sum_left]
+    rw [map_mul, MvPolynomial.aeval_X, linP', Finset.mul_sum, jetPair_sum_left]
     refine Finset.sum_congr rfl (fun j _ => ?_)
     rw [MvPolynomial.coe_mul, MvPolynomial.coe_C, jetPair_C_mul_right, hP,
       show MvPolynomial.aeval (linP' A) P * (MvPolynomial.C (A i j) * MvPolynomial.X j) =
@@ -277,8 +274,7 @@ lemma jetPair_monomial_right (P : MvPolynomial ι' K) (μ : ι' →₀ ℕ) :
   · simp
   · intro κ _ hκ
     rw [MvPolynomial.coeff_coe, MvPolynomial.coeff_monomial, ite_eq_right (Ne.symm hκ), mul_zero]
-  · intro h
-    exact absurd (Finset.mem_insert_self μ _) h
+  · exact fun h => absurd (Finset.mem_insert_self μ _) h
 
 theorem jet_pair_linearity : JetPairLin.{u} := by
   classical
@@ -313,12 +309,10 @@ theorem jet_pair_linearity : JetPairLin.{u} := by
       rw [Finset.coe_biUnion]
       exact Set.mem_biUnion hκ (by simpa using hμ)
   unfold jetPair
-  rw [Finset.sum_congr rfl fun κ hκ => by rw [h1 κ hκ, Finset.mul_sum]]
-  rw [Finset.sum_comm]
+  rw [Finset.sum_congr rfl fun κ hκ => by rw [h1 κ hκ, Finset.mul_sum], Finset.sum_comm]
   refine Finset.sum_congr rfl fun μ _ => ?_
   have h2 := jetPair_poly A P (MvPolynomial.monomial μ (1 : K))
-  rw [jetPair_monomial_right, ← hmon] at h2
-  rw [← hP'] at h2
+  rw [jetPair_monomial_right, ← hmon, ← hP'] at h2
   rw [← h2]
   unfold jetPair
   rw [Finset.sum_mul]
@@ -414,8 +408,7 @@ lemma sum_genA_eq_rowOp {K : Type u} [Field K] {d N0 N1 : ℕ} [NeZero d] (TT : 
       · simp
       · intro k _ hk
         simp [hk]
-      · intro hi
-        exact absurd (Finset.mem_univ i) hi
+      · exact fun hi => absurd (Finset.mem_univ i) hi
     · simp only [ite_eq_right h]
       refine Finset.sum_congr rfl (fun k _ => ?_)
       split_ifs <;> simp
@@ -530,7 +523,6 @@ theorem thmAGen : ThmAGen.{u} := by
     (MvPowerSeries.subst (linSub (frameM (N1 := N1) x)) (MvPowerSeries.subst g U) *
       mvExp (ε • bSum (frameM (N1 := N1) x) be))
   rw [hF, hP] at e1
-  rw [e1]
-  exact key
+  rwa [e1]
 
 end Formalism.DworkPowerSeriesWeights

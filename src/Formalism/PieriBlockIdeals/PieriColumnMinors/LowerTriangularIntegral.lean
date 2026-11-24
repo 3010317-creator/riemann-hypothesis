@@ -90,8 +90,7 @@ theorem lower_triangular_integral : LowerTriIntegral := by
       (∀ e : Fin r × Fin n →₀ ℕ, LowerTri e → ∃ z : ℤ, AddMonoidAlgebra.coeff Q e = z) →
       (colLex r n).toSyn ((colLex r n).degree Q) = d →
       ∃ Q' : MvPolynomial (Fin r × Fin n) ℤ, Q = intQ r n Q' by
-    intro Q hQ hint
-    exact key _ Q hQ hint rfl
+    exact fun Q hQ hint => key _ Q hQ hint rfl
   intro d
   induction d using WellFoundedLT.induction with
   | _ d ih =>
@@ -108,8 +107,7 @@ theorem lower_triangular_integral : LowerTriIntegral := by
       rw [lre_intQ_apply, ldlat_map_bidet]
     have hbmem : bideterminant ℚ sz hsz I ∈ dualWeyl ℚ r n ν := by
       have := bidetMem ℚ r n K sz hsz I
-      rw [hshape] at this
-      exact this
+      rwa [hshape] at this
     have hmL : LowerTri m := by
       rw [← hexp]
       exact lre_lowerTri sz hsz I hmono

@@ -806,8 +806,7 @@ theorem reducedLattice_short_bound (hD5 : CoveringRadiusStatement) (r : ℕ) (X 
       have hτ : τ ∈ X.Ψ := by rw [← hi]; exact i.2
       have hc : ComplexEmbedding.conjugate τ ∈ X.Ψ := by rw [← hj]; exact j.2
       exact (h.mp hτ) hc
-    · intro hn'
-      exact ⟨⟨τ, h.mpr fun hc => hn' ⟨⟨_, hc⟩, rfl⟩⟩, rfl⟩
+    · exact fun hn' => ⟨⟨τ, h.mpr fun hc => hn' ⟨⟨_, hc⟩, rfl⟩⟩, rfl⟩
   have h_short : ∀ v ∈ LB, v ≠ 0 → ∃ i : X.Ψ, Real.sqrt ep ^ 2 ≤
       ReciprocityTheory.MultiplicativeHeights.normSq (Q i *ᵥ ReciprocityTheory.MultiplicativeHeights.embVec i.1 v) := by
     intro v hv hv0
@@ -818,8 +817,7 @@ theorem reducedLattice_short_bound (hD5 : CoveringRadiusStatement) (r : ℕ) (X 
     obtain ⟨τ, hτ⟩ := hD4 _ he (hlamξ v e) hne
     refine ⟨τ, ?_⟩
     rw [IsotropicIndexSums.ucomp_drop (hx := hz) (hne := hξ0), hQf, (hf τ).2.2.2.1] at hτ
-    rw [Real.sq_sqrt hep.le]
-    exact hτ
+    rwa [Real.sq_sqrt hep.le]
   have hD := hD5 E X.Ψ (r - 2) (X.p0 - 1) S (fun τ : X.Ψ => τ.1) Q LB (Real.sqrt ep) h_inj h_cm
     hpr (Real.sqrt_pos.mpr hep) hQ hSQ hLat hSD h_short
   obtain ⟨hcov, v, hvL, hvli, hvmaj⟩ := hD
@@ -971,8 +969,7 @@ theorem reducedLattice_short_bound (hD5 : CoveringRadiusStatement) (r : ℕ) (X 
       exact hl j (by simp only [Set.mem_setOf_eq, not_lt]; exact hj)
     have h3 := (hlapos τ l hws).1
     simp only [hcq] at h3
-    rw [show rh / 40 / 3 = rh / 120 by ring] at h3
-    exact h3
+    rwa [show rh / 40 / 3 = rh / 120 by ring] at h3
   exact ⟨fun j => (∑ i, la j i • β i + ec j • ξ), fun j => ⟨hec j, hlamξ _ _⟩, F2, F3, F4, F5, F6, F7, F8, F9, WorkedExample, LargeParameterEstimates, F12⟩
 
 end
@@ -1067,8 +1064,7 @@ theorem key (X : DataX E r) (ξ : Fin r → E) (z0 x0 : Frame X.Ψ r)
     rw [ite_eq_right hk, hJt, neg_smul, ← smul_neg] at h
     have h2 := smul_right_injective (Fin r → ℂ) Complex.I_ne_zero h
     have h3 : (2 : ℂ) • X.ppos z0 τ (f τ k) = 0 := by
-      have h4 := congrArg (· + f τ k) h2
-      simpa using h4
+      simpa using congrArg (· + f τ k) h2
     exact (smul_eq_zero.mp h3).resolve_left two_ne_zero
   have hfS : ∀ k : Fin (r - 2), (k : ℕ) < X.p0 - 1 → f τ k ∈ Spos X.toData z0 τ := by
     intro k hk
@@ -1172,8 +1168,7 @@ theorem key (X : DataX E r) (ξ : Fin r → E) (z0 x0 : Frame X.Ψ r)
     refine ⟨fun τ' => ?_, fun τ' => ?_⟩
     · by_cases h : τ' = τ
       · simp only [ite_eq_left h]
-        rw [h]
-        exact hwe
+        rwa [h]
       · simp only [ite_eq_right h]
         exact _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_zero_left _ _ _
     · by_cases h : τ' = τ
@@ -1184,11 +1179,9 @@ theorem key (X : DataX E r) (ξ : Fin r → E) (z0 x0 : Frame X.Ψ r)
         exact _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_zero_left _ _ _
   have hA := hUz _ hU
   have hA1 : hermC τ.1 X.Gm (h1 τ *ᵥ w) (Data.emb τ.1 ξ) = 0 := by
-    have h := hA.1 τ
-    simpa [Data.applyV] using h
+    simpa [Data.applyV] using hA.1 τ
   have hA2 : hermC τ.1 X.Gm (X.Jt z0 τ (h1 τ *ᵥ w)) (Data.emb τ.1 ξ) = 0 := by
-    have h := hA.2 τ
-    simpa [Data.applyV, Data.Jz, Data.Jt] using h
+    simpa [Data.applyV, Data.Jz, Data.Jt] using hA.2 τ
   obtain ⟨cc, hcc⟩ := (Submodule.mem_span_range_iff_exists_fun ℂ).mp (hspan _ hA1 hA2)
   have hg := hgraph τ w hwspan cc hcc.symm
   have hy : h1 τ *ᵥ v = (v - w) + ∑ k, cc k • f τ k := by
@@ -1471,8 +1464,7 @@ theorem unitary_fixing_isotropic_plane (r : ℕ) (X : DataX E r) (ξ : Fin r →
       have hv : v ∈ PositiveSpanMatrices.Spos X.toData z0 τ :=
         Submodule.sum_mem _ (fun b _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨b, rfl⟩))
       unfold PositiveSpanMatrices.Spos at hv ⊢
-      rw [← hflag τ]
-      exact hv
+      rwa [← hflag τ]
     have hv0 : v = 0 :=
       PositiveSpanMatrices.zero_of_mem_self (X := X.toData) hortho τ (hdetOf x0 hx0 τ) v hvx0 hvv
     apply hu0
@@ -1491,8 +1483,7 @@ theorem unitary_fixing_isotropic_plane (r : ℕ) (X : DataX E r) (ξ : Fin r →
       have h := congrFun (congrFun (Matrix.nonsing_inv_mul_cancel_right
         (LowerBlockMatrices.Amat X.toData h1 z0 x0 τ) (LowerBlockMatrices.Bmat X.toData h1 z0 x0 τ)
         ((Matrix.isUnit_iff_isUnit_det _).mp ((Matrix.isUnit_iff_isUnit_det _).mpr (Ne.isUnit hA)))) a) b
-      rw [Matrix.mul_apply] at h
-      exact h
+      rwa [Matrix.mul_apply] at h
     show col (h1 τ * mat z0 τ) (Fin.castLE X.p0_le b) = _
     rw [LowerBlockMatrices.colW_expand (X := X.toData) h1 z0 hortho τ (hdetOf x0 hx0 τ) b]
     simp only [LowerBlockMatrices.colZ (X := X.toData), smul_add, Finset.sum_add_distrib, Finset.smul_sum,

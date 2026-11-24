@@ -168,8 +168,7 @@ theorem isCompact_matStab {K : Type} [Field K] [Module K A] [SMulCommClass K A A
   refine ⟨mᵀ, fun j _ => ?_, Matrix.transpose_transpose m⟩
   refine ⟨c • mᵀ j, ?_, ?_⟩
   · have h := hm _ (hcol j)
-    rw [Matrix.mulVec_smul, Matrix.mulVec_single_one] at h
-    exact h
+    rwa [Matrix.mulVec_smul, Matrix.mulVec_single_one] at h
   · simp only [smul_smul, inv_mul_cancel₀ hc0, one_smul]
 
 end Mat

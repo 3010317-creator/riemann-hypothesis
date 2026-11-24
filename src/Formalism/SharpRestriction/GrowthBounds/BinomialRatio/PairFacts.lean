@@ -131,8 +131,7 @@ theorem pf_rho_le [NeZero r] (h : IsChain (kLetters A Ai Ci) mu) (i : Fin s) :
   have h1 := strip_first hW
   rw [Int.toNat_of_nonneg hw] at h1
   unfold pairRho
-  rw [finPos_eq (2 * s + 1) (2 * i.val + 2) (by omega)]
-  exact h1
+  rwa [finPos_eq (2 * s + 1) (2 * i.val + 2) (by omega)]
 
 theorem pf_u_ge [NeZero r] (h : IsChain (kLetters A Ai Ci) mu) (i : Fin s) :
     pairSg mu Ai i - mu ⟨2 * i.val + 1, by omega⟩ (0 : Fin r).succ ≤ pairO mu Ai i - pairRho mu i.val := by
@@ -164,22 +163,19 @@ theorem pf_d_le (h : IsPair A Ai Ci mu lam) (hr : s + 1 ≤ r) :
   have hmass := pf_mass hch s le_rfl
   have hmass' : pfMass ka ≤ ∑ i, (Ci i : ℤ) := by
     have e : ∀ x : Fin s, (if x.val < s then (Ci x : ℤ) else 0) = Ci x := fun x => ite_eq_left x.2
-    rw [Finset.sum_congr rfl fun x _ => e x] at hmass
-    exact hmass
+    rwa [Finset.sum_congr rfl fun x _ => e x] at hmass
   rw [hD, Finset.sum_range_add]
 
   have hup : ∑ t ∈ range (q + 1), (L t - K t) ≤ L 0 - K q := pf_tele L K q fun t ht => by
     simp only [L, K, dite_eq_left (show t + 1 < q + 1 + s by omega), dite_eq_left (show t < q + 1 + s by omega), hka]
     have := (hint ⟨t + 1, by omega⟩).2
     have e : (⟨t + 1, by omega⟩ : Fin (q + 1 + s)).castSucc = (⟨t, by omega⟩ : Fin (q + 1 + s)).succ := Fin.ext rfl
-    rw [e] at this
-    exact this
+    rwa [e] at this
   have hL0 : L 0 ≤ pairC mu s := by
     simp only [L, dite_eq_left (show 0 < q + 1 + s by omega)]
     have := (hint ⟨0, by omega⟩).2
     unfold pairC
-    rw [finPos_eq (2 * s + 1) (2 * s + 1) (by omega)]
-    exact this
+    rwa [finPos_eq (2 * s + 1) (2 * s + 1) (by omega)]
   have hKq : 0 ≤ K q := by
     simp only [K, dite_eq_left (show q < q + 1 + s by omega), hka]
     have hM : ∀ i, Ai i ≤ ∑ i, Ai i + ∑ i, Ci i := fun i =>

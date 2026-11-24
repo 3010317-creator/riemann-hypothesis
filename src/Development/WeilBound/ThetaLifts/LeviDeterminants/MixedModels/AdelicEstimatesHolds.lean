@@ -189,8 +189,7 @@ theorem eq_std {ψ : AddChar (AF F) ℂ} (hψ : PsiUnr ψ v) {Φ : (κ → Fv F 
   · rw [Pi.smul_apply, Set.indicator_of_notMem (show x ∉ {x : κ → Fv F v | ∀ i, x i ∈ v.adicCompletionIntegers F} from hx), smul_zero]
     obtain ⟨i, hi⟩ := not_forall.1 hx
     obtain ⟨y, hy, hne⟩ : ∃ y ∈ v.adicCompletionIntegers F, psiLoc ψ v (x i * y) ≠ 1 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hi ((hψ _).1 hc)
     have := congrFun (h (0, Pi.single i y) ⟨fun _ => zero_mem _, fun j => by
       by_cases e : j = i
@@ -244,8 +243,7 @@ theorem finite_adelic_estimates_holds : FinSt := by
         fun i => zero_mem _)] at this
       exact one_ne_zero this
     change c v • ι v (s v) = _
-    rw [show c v = (ι v (s v) 0)⁻¹ from ite_eq_right h0, inv_smul_eq_iff₀ h0]
-    exact h
+    rwa [show c v = (ι v (s v) 0)⁻¹ from ite_eq_right h0, inv_smul_eq_iff₀ h0]
 
 end PositivityTheory.Mix
 end -- clump:auto
@@ -655,8 +653,7 @@ theorem real_estimates_holds : RealSt := by
   simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, e] at h1
   have e1 : L.symm (E (S w)).1 = (S w).1 := L.symm_apply_apply _
   have e2 : M.symm (E (S w)).2 = (S w).2 := M.symm_apply_apply _
-  rw [e1, e2] at h1
-  exact h1
+  rwa [e1, e2] at h1
 
 end PositivityTheory.Mix
 end -- clump:auto
@@ -778,8 +775,7 @@ theorem infSt_of (h : RealSt) : InfSt := by
       simp only [beta, pr, pr_dot, ← map_sub, hS]
   refine ⟨T, fun w f g hg x => ?_⟩
   have := hT (pr w) f g hg x
-  rw [hp] at this
-  exact this
+  rwa [hp] at this
 
 end PositivityTheory.Mix
 end -- clump:auto

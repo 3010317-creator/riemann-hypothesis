@@ -114,8 +114,7 @@ private theorem eeN_mul_comm_of_val_le {n' : ℕ} (S : UniformizedDVR p O) (hR :
   have h01 := h.2.2.1 0 1 mu mu'
   have h0 : (0 : Fin 2).val = 0 := rfl
   have h1 : ¬ (1 : Fin 2).val = 0 := by decide
-  simp only [h0, h1, ↓reduceIte] at h01
-  exact h01
+  simpa only [h0, h1, ↓reduceIte] using h01
 
 private theorem eeN_mul_comm_of_ne_index {n' : ℕ} (S : UniformizedDVR p O) (hR : AdmissibleDVR p n' O) {j j' : ZMod J} (hj : j ≠ j')
     (a : Fin (Dt.nL j + r + 1)) (b : Fin (Dt.nL j' + r + 1)) (mu mu' : Fin K → ℤ) :
@@ -198,8 +197,7 @@ theorem jointN_props {n' : ℕ} (S : UniformizedDVR p O) (hR : AdmissibleDVR p n
     exact eeN_selfadj D K Dt S hR i (ka i)
   · intro d F hF
     exact jointE_pres (Pol (KK O) K d) (fun i mu F hF => eeN_pol D K Dt i mu d F hF) ka F hF
-  · intro F i
-    exact jointE_mem hcomm (fun i G => (eeN_spec D K Dt i).2 G) ka F i
+  · exact fun F i => jointE_mem hcomm (fun i G => (eeN_spec D K Dt i).2 G) ka F i
 
 def costN (dNo : TL J Dt.nL r → ℕ) (i : NIdx Dt) : ℕ :=
   N0 K * Nat.log p (2 * degIn dNo (NSet Dt.nL i.1 i.2.val) + K - 1)
@@ -219,8 +217,7 @@ theorem eeN_int {n' : ℕ} (S : UniformizedDVR p O) (hR : AdmissibleDVR p n' O) 
     simp [List.ofFn_succ]
   have e2 : (∑ _k : Fin 1, N0 K * Nat.log p (2 * degIn dNo (NSet Dt.nL i.1 i.2.val) + K - 1)) = costN K Dt dNo i := by
     simp [costN]
-  rw [e1, e2] at h5
-  exact h5
+  rwa [e1, e2] at h5
 
 theorem jointE_int_list {n' : ℕ} (S : UniformizedDVR p O) (hR : AdmissibleDVR p n' O) (ka : NIdx Dt → Fin K → ℤ)
     (dNo : TL J Dt.nL r → ℕ) (l : List (NIdx Dt)) (F : MvPolynomial (TL J Dt.nL r × Fin K) (KK O))
@@ -247,8 +244,7 @@ theorem jointE_int {n' : ℕ} (S : UniformizedDVR p O) (hR : AdmissibleDVR p n' 
   have hs : (List.map (costN K Dt dNo) (Finset.univ : Finset (NIdx Dt)).toList).sum = ∑ i : NIdx Dt, costN K Dt dNo i := by
     first
       | exact Finset.sum_map_toList _ _
-  rw [hs] at h
-  exact h
+  rwa [hs] at h
 
 end Inst
 
@@ -360,8 +356,7 @@ theorem restJP {n' : ℕ} (S : UniformizedDVR p O) (hR : AdmissibleDVR p n' O) (
   obtain ⟨h1, h2, h3, h4⟩ := jointN_props D K Dt S hR ka0
   have hj := jointE_int D K Dt S hR ka0 dNo
   refine ⟨ka, jointE (eeN D K Dt) ka0, ?_, hka0, h2, fun F hF => ⟨h3 dNo F hF, fun hB => hj F hF hB⟩, ?_⟩
-  · rw [hfun]
-    exact h1
+  · rwa [hfun]
   · intro F i
     rw [hka i]
     exact h4 F i

@@ -76,15 +76,13 @@ theorem fIwasawa_exists_max_pivot (hσv : ∀ x, Valued.v (σ x) = Valued.v x) (
     Finset.mem_filter.2 ⟨Finset.mem_univ _, h1, h2⟩
   have hout : ∀ i, i ∉ W → i < ρ ∨ Fin.rev ρ < i := by
     intro i hi
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hi (hmem i h.1 h.2)
   have hρW : ρ ∈ W := hmem ρ le_rfl hρ.le
   have hcz := fIwasawa_col_zero σ M hM r hT ρ hρr hρ
 
   have hex : ∃ j ∈ W, M j ρ ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hgram := fIwasawa_gram_un σ M hM (Fin.rev ρ) ρ
     rw [ite_eq_left (Fin.rev_rev ρ).symm] at hgram
     have h0 : ∑ j, σ (M (Fin.rev j) (Fin.rev ρ)) * M j ρ = 0 := by
@@ -113,8 +111,7 @@ theorem fIwasawa_exists_max_pivot (hσv : ∀ x, Valued.v (σ x) = Valued.v x) (
   obtain ⟨a, haW, hamax, hne⟩ : ∃ a ∈ W, (∀ i ∈ W, Valued.v (M i ρ) ≤ Valued.v (M a ρ)) ∧
       a ≠ Fin.rev a := by
     by_cases h₀ : a₀ = Fin.rev a₀
-    · by_contra hcon
-      push Not at hcon
+    · by_contra! hcon
       have hlt : ∀ i ∈ W, i ≠ a₀ → Valued.v (M i ρ) < Valued.v (M a₀ ρ) := by
         intro i hi hia
         refine lt_of_le_of_ne (ha₀max i hi) fun heq => ?_
@@ -172,8 +169,7 @@ theorem fIwasawa_exists_max_pivot (hσv : ∀ x, Valued.v (σ x) = Valued.v x) (
     · rw [hπfix i (hout i hiW)]
       exact hT i j hj hji
   · rw [permMatrix_mul_apply₂, hπa]
-    intro h0
-    exact hnz a haW hamax (by rw [h0, map_zero])
+    exact fun h0 => hnz a haW hamax (by rw [h0, map_zero])
   · intro i h1 h2
     rw [permMatrix_mul_apply₂, permMatrix_mul_apply₂, hπa]
     exact hamax (π i) (hπW i (hmem i h1 h2))
@@ -340,8 +336,7 @@ theorem fIwasawa_tri_succ_of_max_pivot (hσ : ∀ x, σ (σ x) = x) (hσv : ∀ 
           ≤ Valued.v (M ρ ρ) * (Valued.v (M ρ ρ))⁻¹ := by gcongr
         _ = 1 := mul_inv_cancel₀ hvp
     have h1 : Valued.v (-S) ≤ 1 := by
-      rw [Valuation.map_neg]
-      exact hSv
+      rwa [Valuation.map_neg]
     rw [hceq]
     first
       | exact Valuation.map_sub_le _ h1 hbp
@@ -368,8 +363,7 @@ theorem fIwasawa_tri_succ_of_max_pivot (hσ : ∀ x, σ (σ x) = x) (hσv : ∀ 
   rw [hcol]
   by_cases hj' : j.val < r
   · have hjρ : j < ρ := by
-      rw [Fin.lt_iff_val_lt_val, hρr]
-      exact hj'
+      rwa [Fin.lt_iff_val_lt_val, hρr]
     rw [fIwasawa_E_fix (σ := σ) ρ z c hzsupp (fun k => M k j) (hT ρ j hj' hjρ)
       (fun t h1 _ => hT t j hj' (lt_trans hjρ h1))]
     exact hT i j hj' hji
@@ -392,10 +386,7 @@ theorem fIwasawa_reduce (hσ : ∀ x, σ (σ x) = x) (hσv : ∀ x, Valued.v (σ
   intro r
   induction r with
   | zero =>
-    intro _
-    refine ⟨1, fIwasawa_Km_one (σ := σ), ?_⟩
-    intro i j hj _
-    exact absurd hj (Nat.not_lt_zero _)
+    exact fun _ => ⟨1, fIwasawa_Km_one (σ := σ), fun i j hj _ => absurd hj (Nat.not_lt_zero _)⟩
   | succ r ih =>
     intro hr
     obtain ⟨k, hk, hkT⟩ := ih (by omega)

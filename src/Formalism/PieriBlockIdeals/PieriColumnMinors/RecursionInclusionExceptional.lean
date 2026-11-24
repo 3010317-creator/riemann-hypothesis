@@ -500,8 +500,7 @@ theorem exZ_le_of_exCut (hC : ExCut) (l : ℕ) (hl : l.Prime) (w : ℕ) :
         simp only [UN]
         push_cast
         ring
-      rw [e]
-      exact hba
+      rwa [e]
     have hrest := ih (fun i => lam (1 + i)) hA' lo hb'
     have hch : (n + 1).choose 2 = n.choose 2 + n := by
       have h2 := Nat.choose_succ_succ n 1
@@ -699,8 +698,7 @@ theorem recursion_inputs_exceptional : InputsRec7E := by
     thin_exceptional hI hC P hH hL ι W hW _, thick_exceptional hI hC P hH hL ι W hW _,
     cloud_exceptional hI hC P hH hL ι W hW _, shape_t_real_holds P hH hL ι W hW _,
     widths_real_holds P ι W hW _⟩
-  intro l _ hc
-  exact (seventh_recursion_eq_a_of_small_prime W P l hc).le
+  exact fun l _ hc => (seventh_recursion_eq_a_of_small_prime W P l hc).le
 
 theorem recursion_sum_exceptional : RecSum7E := by
   intro hI hC hRS P hH hL ι _ _ W hW hcard hSp Q hQ

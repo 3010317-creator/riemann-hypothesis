@@ -251,8 +251,7 @@ theorem cntI_eq_zero (hF : IsFixF K F) (𝔭 : Ideal (𝓞 F)) (j M : ℕ) {n : 
 
 theorem eq_zero_of_inQ_one {𝔭 : Ideal (𝓞 F)} {a : AQ K 𝔭 1} (ha : InQ 𝔭 1 a) : a = 0 := by
   obtain ⟨z, hz, rfl⟩ := ha
-  rw [Ideal.Quotient.eq_zero_iff_mem, pow_one]
-  exact hz
+  rwa [Ideal.Quotient.eq_zero_iff_mem, pow_one]
 
 theorem cntI_one_of_mem (hF : IsFixF K F) (𝔭 : Ideal (𝓞 F)) (M : ℕ) {n : 𝓞 K}
     (hn : n ∈ extP K 𝔭) : cntI hF 𝔭 1 M n = 1 := by
@@ -264,8 +263,7 @@ theorem cntI_one_of_mem (hF : IsFixF K F) (𝔭 : Ideal (𝓞 F)) (M : ℕ) {n :
     rw [eq_zero_of_inQ_one (x.2.1 i), eq_zero_of_inQ_one (y.2.1 i)]
   · symm
     simp only [Pi.zero_apply, mul_zero, Finset.sum_const_zero]
-    rw [Ideal.Quotient.eq_zero_iff_mem, pow_one]
-    exact hn
+    rwa [Ideal.Quotient.eq_zero_iff_mem, pow_one]
 
 end Formalism.HermitianLattices.Ext.L3.unitaryAbsoluteValueBounds
 end -- clump:auto
@@ -433,8 +431,7 @@ private theorem stab_lemma (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) 
       rw [sub_single_one_add_single_one_of_ne_zero hK hF h𝔭 hn𝔭 (hc1 n hn𝔭) j]
       obtain ⟨ϖ, h1, h2, n', hn'0, hn'v, hdiv⟩ := exists_uniformizer_sq_mul_congr_of_two_le_vF h𝔭 hn0 (by omega) (N := j + 2) (by omega)
       have hdivK : ι n - ι ϖ ^ 2 * ι n' ∈ extP K 𝔭 ^ (j + 2) := by
-        rw [← map_pow, ← map_mul, ← map_sub, idealPowerSpanBounds.mem_pow_iff]
-        exact hdiv
+        rwa [← map_pow, ← map_mul, ← map_sub, idealPowerSpanBounds.mem_pow_iff]
       rw [cntI_add_two hK hF h𝔭 h1 h2 j (m + 1) hdivK]
       have hih := ih w (by omega) n' hn'0 (by omega) j (by omega)
       push_cast

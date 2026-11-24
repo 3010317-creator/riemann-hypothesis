@@ -109,8 +109,7 @@ theorem herm_hermitian {n : ℕ} (σ : E →+* E)
   rw [hσ]
   have h := congrFun (congrFun (hJ τ).isHermitian j) i
   rw [Matrix.conjTranspose_apply, Matrix.map_apply, Matrix.map_apply] at h
-  rw [starRingEnd_apply]
-  exact h
+  rwa [starRingEnd_apply]
 
 section Form
 
@@ -176,8 +175,7 @@ theorem hform_trace_pos (σ : E →+* E) (hst : ∀ a : E, star a = σ a)
     intro h0
     apply hx
     funext i
-    have h1 := congrFun h0 i
-    exact (map_eq_zero_iff _ τ.toRingHom.injective).1 h1
+    exact (map_eq_zero_iff _ τ.toRingHom.injective).1 (congrFun h0 i)
   have hsum : 0 < ∑ τ : E →ₐ[ℚ] ℂ, τ (hform J x x) :=
     Finset.sum_pos (fun τ _ => key τ) Finset.univ_nonempty
   rw [← trace_eq_sum_embeddings ℂ, eq_ratCast, ← Complex.ofReal_ratCast, Complex.zero_lt_real,
@@ -330,8 +328,7 @@ open PI.HermLatFin
 variable {E : Type} [Field E] [NumberField E]
 
 theorem int_nat (m : ℕ) : IsIntegral ℤ (m : E) := by
-  have h := isIntegral_algebraMap (R := ℤ) (A := E) (x := (m : ℤ))
-  simpa using h
+  simpa using isIntegral_algebraMap (R := ℤ) (A := E) (x := (m : ℤ))
 
 theorem int_sigma (σ : E →+* E) {a : E} (ha : IsIntegral ℤ a) : IsIntegral ℤ (σ a) := ha.map σ.toIntAlgHom
 
@@ -347,8 +344,7 @@ theorem mat_den {M : ℕ} (A : Matrix (Fin M) (Fin M) E) : ∃ d : ℕ, 0 < d �
     refine ⟨y.natAbs, Int.natAbs_pos.mpr hy0, ?_⟩
     have hcast : ((y.natAbs : ℕ) : E) = (((y.natAbs : ℕ) : ℤ) : E) := (Int.cast_natCast _).symm
     rcases (show ((y.natAbs : ℕ) : ℤ) = y ∨ ((y.natAbs : ℕ) : ℤ) = -y by omega) with h | h
-    · rw [hcast, h, ← zsmul_eq_mul]
-      exact hy
+    · rwa [hcast, h, ← zsmul_eq_mul]
     · rw [hcast, h, Int.cast_neg, neg_mul, ← zsmul_eq_mul]
       exact hy.neg
   choose d hd0 hd using fun p : Fin M × Fin M => hex (A p.1 p.2)

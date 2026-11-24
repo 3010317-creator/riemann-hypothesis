@@ -159,19 +159,14 @@ theorem Holo.db_eq_zero {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V 
   · rfl
 
 theorem Smooth.ck {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (k : ℕ) (f : M → ℂ)
-    (hf : Smooth n z f) : Ck n z k f := by
-  intro e he
-  exact contDiffOn_infty.1 (hf e he) k
+    (hf : Smooth n z f) : Ck n z k f := fun e he => contDiffOn_infty.1 (hf e he) k
 
 theorem SmoothR.ckR {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (k : ℕ) (f : M → ℝ)
-    (hf : SmoothR n z f) : CkR n z k f := by
-  intro e he
-  exact contDiffOn_infty.1 (hf e he) k
+    (hf : SmoothR n z f) : CkR n z k f := fun e he => contDiffOn_infty.1 (hf e he) k
 
 theorem Ck.mono {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (k l : ℕ) (hkl : k ≤ l)
     (f : M → ℂ) (hf : Ck n z l f) : Ck n z k f := by
-  intro e he
-  exact (hf e he).of_le (by exact_mod_cast hkl)
+  exact fun e he => (hf e he).of_le (by exact_mod_cast hkl)
 
 theorem Ck.continuous {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n)
     (hz : IsLocalHomeomorph z) (k : ℕ) (f : M → ℂ) (hf : Ck n z k f) : Continuous f := by

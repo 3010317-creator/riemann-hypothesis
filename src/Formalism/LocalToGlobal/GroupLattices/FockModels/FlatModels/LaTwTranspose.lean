@@ -41,8 +41,7 @@ theorem kapR_alg (h : HidaSetting p n' W Qq O Kf ι σ j w) (x : O) :
   exact (kap h).commutes x
 
 theorem kapR_inj (h : HidaSetting p n' W Qq O Kf ι σ j w) : Function.Injective (kapR h) := by
-  intro a b hab
-  exact (kap h).injective hab
+  exact fun a b hab => (kap h).injective hab
 
 theorem coeffs_iff (h : HidaSetting p n' W Qq O Kf ι σ j w) {τ : Type} (a : O) (P : MvPolynomial τ (KK O)) :
     (∀ m, ∃ c : O, P.coeff m = algebraMap O (KK O) (a * c)) ↔
@@ -56,8 +55,7 @@ theorem coeffs_iff (h : HidaSetting p n' W Qq O Kf ι σ j w) {τ : Type} (a : O
     rw [coeff_map, MvPolynomial.coeff_smul, coeff_map, smul_eq_mul]
     have e : (∑ x ∈ P.support, monomial x (c x)).coeff m = if m ∈ P.support then c m else 0 := by
       rw [coeff_sum]
-      simp only [coeff_monomial]
-      exact Finset.sum_ite_eq' _ _ _
+      simpa only [coeff_monomial] using Finset.sum_ite_eq' _ _ _
     rw [e]
     by_cases hm : m ∈ P.support
     · rw [ite_eq_left hm, hc m, kapR_alg, map_mul]
@@ -73,17 +71,14 @@ theorem coeffs_iff (h : HidaSetting p n' W Qq O Kf ι σ j w) {τ : Type} (a : O
 theorem inA_iff (h : HidaSetting p n' W Qq O Kf ι σ j w) {τ : Type} (P : MvPolynomial τ (KK O)) :
     InA (O := O) P ↔ ∃ P0 : MvPolynomial τ O, map (kapR h) P = map (algebraMap O Kf) P0 := by
   unfold InA
-  have e := coeffs_iff h (1 : O) P
-  simp only [one_mul, map_one, one_smul] at e
-  exact e
+  simpa only [one_mul, map_one, one_smul] using coeffs_iff h (1 : O) P
 
 theorem inWj_iff (h : HidaSetting p n' W Qq O Kf ι σ j w) {τ : Type} (P : MvPolynomial τ (KK O)) (i : ℕ) :
     InWj w P i ↔
       ∃ P0 : MvPolynomial τ O, map (kapR h) P = algebraMap O Kf w ^ i • map (algebraMap O Kf) P0 := by
   unfold InWj
   have e := coeffs_iff h (w ^ i) P
-  rw [map_pow] at e
-  exact e
+  rwa [map_pow] at e
 
 theorem pol_iff (h : HidaSetting p n' W Qq O Kf ι σ j w) {S : Type} (k : ℕ) (d : S → ℕ)
     (P : MvPolynomial (S × Fin k) (KK O)) : P ∈ Formalism.MainNotions.G.Pol (KK O) k d ↔ map (kapR h) P ∈ Formalism.MainNotions.G.Pol Kf k d := by
@@ -318,8 +313,7 @@ theorem gen_A (h : HidaSetting p n' W Qq O Kf ι σ j w) (m : ℕ) (hm : 1 ≤ m
   · rintro ⟨P0, hP0⟩
     obtain ⟨y, hy, hxy⟩ := key.2 ⟨P0, pol_of_map h P0 (hP0 ▸ hF'), hP0⟩
     unfold thF
-    rw [hxy]
-    exact hy
+    rwa [hxy]
   · intro hx
     obtain ⟨G, -, hG⟩ := key.1 ⟨_, hx, rfl⟩
     exact ⟨G, hG⟩

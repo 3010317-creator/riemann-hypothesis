@@ -69,15 +69,11 @@ theorem dom_support (R : Type) [CommRing R] [IsDomain R] (k n : ℕ) (ν : Fin n
   rw [SetLike.mem_coe, mem_restrictSupport_iff]
   intro m hm
   have h3 := (bidetDominance R k n K sz hsz I m (by rw [← hbm]; exact hm)).1 r
-  rw [hshape] at h3
-  exact h3
+  rwa [hshape] at h3
 
 theorem hom_map {R S σ M : Type} [CommRing R] [CommRing S] [AddCommMonoid M] (φ : R →+* S) (wt : σ → M)
     (f : MvPolynomial σ R) (μ : M) (h : IsWeightedHomogeneous wt f μ) : IsWeightedHomogeneous wt (map φ f) μ := by
-  intro d hd
-  apply h
-  intro h0
-  exact hd (by rw [MvPolynomial.coeff_map, h0, map_zero])
+  exact fun d hd => h (fun h0 => hd (by rw [MvPolynomial.coeff_map, h0, map_zero]))
 
 theorem weyl_scale (O Kf : Type) [CommRing O] [IsDomain O] [Field Kf] [Algebra O Kf] (k r : ℕ) (ν : Fin k → ℕ)
     (hν : Antitone ν) (w : O) (hw0 : algebraMap O Kf w ≠ 0) :
@@ -112,8 +108,7 @@ theorem weyl_scale (O Kf : Type) [CommRing O] [IsDomain O] [Field Kf] [Algebra O
     set π' : ℕ := ∑ a : Fin k with a.val < r, μ a with hπ
     have hle : π' ≤ N := by
       have h1 : (∑ a : Fin k with a.val < r, rowDeg d0 a) = π' := Finset.sum_congr rfl fun a _ => hwt a
-      rw [← h1]
-      exact hdom
+      rwa [← h1]
     refine ⟨w ^ (N - π') • f, Submodule.smul_mem _ _ hfW, ?_⟩
     rw [hT]
     unfold lb_D
@@ -330,8 +325,7 @@ theorem yv_pres (G : GAtP p) (v : Fin G.P.nV)
     · subst huv
       exact hE.2.1
     · have := hlat u
-      rw [hne L L'' u huv] at this
-      exact this
+      rwa [hne L L'' u huv] at this
 
 theorem operators_preserve_lattices (D : Formalism.BasicNotions.D7) (G : GAtP p) : Formalism.MainNotions.FormalGroupSystem.adm12 D G := by
   refine ⟨fun v => ?_, fun v => ?_⟩

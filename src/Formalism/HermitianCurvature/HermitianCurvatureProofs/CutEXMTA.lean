@@ -131,9 +131,7 @@ theorem blk_det_ne {Z : Matrix (Fin n) (Fin n) ℂ} (hZ : Z.det ≠ 0) (j : Fin 
   have hinj : Function.Injective (Z *ᵥ ·) := Matrix.mulVec_injective_of_isUnit ((Matrix.isUnit_iff_isUnit_det Z).mpr (isUnit_iff_ne_zero.mpr hZ))
   have := hinj hxy
   funext a
-  have h2 := congrFun this (Fin.castLE j.isLt.le a)
-  simp only [hex, Fin.val_castLE, dite_eq_left a.isLt] at h2
-  exact h2
+  simpa only [hex, Fin.val_castLE, dite_eq_left a.isLt] using congrFun this (Fin.castLE j.isLt.le a)
 
 theorem Wm_spec {Z : Matrix (Fin n) (Fin n) ℂ} (hZ : Z.det ≠ 0) (l j : Fin n) (hlj : l.val < j.val) :
     (gram Z * Wm Z) l j = 0 := by

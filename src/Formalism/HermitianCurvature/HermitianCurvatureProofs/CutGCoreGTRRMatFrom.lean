@@ -237,12 +237,10 @@ theorem rotation_matrix_form_holds : GTRRMatFrom := by
   have hexp : ∀ Y ∈ NF.Fib P.k P.r Bs.z Bs.z' Bs.μsec Bs.π Bs.π' ζ₀,
       Y = ∑ σ, inner ℂ (B.hsVec (E σ)) (B.hsVec Y) • E σ := by
     intro Y hY
-    have h := (he.2 ζ₀ hζ₀).2.2 Y hY
-    simpa only [heE] using h
+    simpa only [heE] using (he.2 ζ₀ hζ₀).2.2 Y hY
   have horth : ∀ ρ ρ', inner ℂ (B.hsVec (E ρ)) (B.hsVec (E ρ')) = if ρ = ρ' then (1 : ℂ) else 0 := by
     intro ρ ρ'
-    have h := (he.2 ζ₀ hζ₀).2.1 ρ ρ'
-    simpa only [heE] using h
+    simpa only [heE] using (he.2 ζ₀ hζ₀).2.1 ρ ρ'
 
   set Mf : ℝ → Matrix (M.Ty P) (M.Ty P) ℂ :=
     fun φ => Matrix.of fun ρ ρ' => rotM P Bs.z Bs.z' Bs.π Bs.π' (fun σ => e σ 0) φ ρ ρ' with hMfdef
@@ -273,8 +271,7 @@ theorem rotation_matrix_form_holds : GTRRMatFrom := by
         (B.hsVec ((Φ ρ' : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) x₀.1 (x₀.2 * zc P.k P.r φ))) := by
       funext φ
       rw [hMf, hAE, VLem.hsV_smul, inner_smul_right]
-    rw [hfun]
-    exact h
+    rwa [hfun]
   have hoff : ∀ ρ ρ', ρ ≠ ρ' → Bm ρ ρ' = 0 := by
     intro ρ ρ' hne
 
@@ -311,8 +308,7 @@ theorem rotation_matrix_form_holds : GTRRMatFrom := by
         (Rt (Φ ρ') : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) x₀.1 x₀.2 - ((s : ℂ)) • (Φ ρ' : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) x₀.1 x₀.2 := by
       rw [hsum]; abel
     have hv0 : (Φ ρ' : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) x₀.1 x₀.2 = w₀⁻¹ • E ρ' := by
-      have h := hval ρ' 0
-      simpa using h
+      simpa using hval ρ' 0
     show w₀ * (Complex.I * inner ℂ (B.hsVec (E ρ)) (B.hsVec _)) = 0
     rw [hS0, hv0, sub_eq_add_neg, VLem.hsV_add, inner_add_right, ← neg_smul, smul_smul, VLem.hsV_smul,
       inner_smul_right, horth, ite_eq_right hne, mul_zero, add_zero]

@@ -89,8 +89,7 @@ theorem FfG_sat (hB : ∀ v : V, coD0 ρV v ∈ Zf) (hiL : ∀ g m, iL (ρL g m)
   unfold finPreG at hw ⊢
   rw [Submodule.mem_comap, Submodule.restrictScalars_mem] at hw ⊢
   have hc' : algebraMap O (FractionRing O) c ≠ 0 := by
-    intro h0
-    exact hc ((IsFractionRing.injective O (FractionRing O)) (by rw [h0, map_zero]))
+    exact fun h0 => hc ((IsFractionRing.injective O (FractionRing O)) (by rw [h0, map_zero]))
   have key : LinearMap.compLeft iL Γ (z₀ : Γ → L) =
       (algebraMap O (FractionRing O) c)⁻¹ • (LinearMap.compLeft iL Γ (w : Γ → L) - coD0 ρV (iL m)) := by
     funext g
@@ -178,16 +177,14 @@ theorem latBasisG_of [IsPrincipalIdealRing O] (j : ℕ) (hfg : Module.Finite O �
     intro a
     have h := (f a).2
     unfold FfG at h
-    rw [Submodule.mem_map] at h
-    exact h
+    rwa [Submodule.mem_map] at h
   choose w hwmem hwf using hw
   refine ⟨w, ?_, ?_, ?_⟩
   · intro a
     have h := hwmem a
     rw [Submodule.mem_comap] at h
     unfold finPreG at h
-    rw [Submodule.mem_comap, Submodule.restrictScalars_mem] at h
-    exact h
+    rwa [Submodule.mem_comap, Submodule.restrictScalars_mem] at h
   · intro z hz
     let zF : ↥(FfG ρL iL Zf) := ⟨z, hz⟩
     let b := e.repr (Submodule.Quotient.mk zF)
@@ -211,8 +208,7 @@ theorem latBasisG_of [IsPrincipalIdealRing O] (j : ℕ) (hfg : Module.Finite O �
     have hT : ∑ a, b a • f a ∈ Submodule.torsion O ↥(FfG ρL iL Zf) :=
       (Submodule.mem_torsion_iff _).2 ⟨⟨c, mem_nonZeroDivisors_of_ne_zero hc⟩, hF⟩
     have h0 : (Submodule.torsion O ↥(FfG ρL iL Zf)).mkQ (∑ a, b a • f a) = 0 := by
-      rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-      exact hT
+      rwa [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
 
     rw [map_sum] at h0
     simp only [map_smul, Submodule.mkQ_apply, hf] at h0
@@ -352,8 +348,7 @@ theorem finRhoAt (l : K.Col i dc) (hB : CobFin i dc Dd l) (hL : LatBasis i dc Dd
     KHf.FinRhoAt i dc Dd.r Dd.χ (Ffr i dc Dd) (jr i dc ρ π) (κ i dc Dd ρ π) (κz i dc Dd ρ π) l := by
   unfold KHf.FinRhoAt
   refine ⟨fun a g => (κ_mem i dc Dd ρ π l a g).symm, ?_, fun a => ?_, ?_, ?_⟩
-  · intro c z hc hz
-    exact FfG_sat _ _ _ _ hB (iL_equiv i dc Dd l) c z hc hz
+  · exact fun c z hc hz => FfG_sat _ _ _ _ hB (iL_equiv i dc Dd l) c z hc hz
   · exact _root_.Formalism.MainNotions.N.KFin.kapG_mem' _ _ _ _ a
   · exact (kapG_basis (ρL i dc Dd l) (iLr i Dd) (Zf i dc Dd l) hL).1
   · exact (kapG_basis (ρL i dc Dd l) (iLr i Dd) (Zf i dc Dd l) hL).2

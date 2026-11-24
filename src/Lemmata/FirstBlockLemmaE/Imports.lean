@@ -18,8 +18,6 @@ theorem goal1 :
     · monicity!
     · simp only [Polynomial.eval₂_sub, Polynomial.eval₂_add, Polynomial.eval₂_X_pow, Polynomial.eval₂_X, Polynomial.eval₂_C, h]
       simp
-  refine ⟨⟨x, hi⟩, rfl, ?_⟩
-  apply NumberField.RingOfIntegers.coe_injective
-  exact h
+  exact ⟨⟨x, hi⟩, rfl, NumberField.RingOfIntegers.coe_injective h⟩
 
 end Bl.FirstBlockLemmaE

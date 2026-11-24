@@ -111,8 +111,7 @@ theorem hasProd_fibre (hK : Formalism.HermitianLatticesTheory.IsCMUnram K)
         · exact h
         · exact h.trans hc)
     rw [Finset.prod_singleton] at h
-    rw [← hval]
-    exact h
+    rwa [← hval]
   · have hN := absNorm_comap_split hK hF hP hc
     rw [hP𝔭] at hN
     have hPb := conjIdeal_isMaximal hK hP
@@ -123,9 +122,7 @@ theorem hasProd_fibre (hK : Formalism.HermitianLatticesTheory.IsCMUnram K)
         (⟨x.1.comap (algebraMap (𝓞 F) (𝓞 K)), comap_isMaximal x.2⟩ :
           {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal}) = 𝔭} :=
       ⟨⟨Formalism.HermitianLatticesTheory.conjIdeal (K := K) P, hPb⟩, Subtype.ext hPb𝔭⟩
-    have hne : c0 ≠ c1 := by
-      intro h
-      exact hc (congrArg (fun c => c.1.1) h).symm
+    have hne : c0 ≠ c1 := fun h => hc (congrArg (fun c => c.1.1) h).symm
     have hval : Formalism.HermitianLatticesTheory.eulerFac K M P * Formalism.HermitianLatticesTheory.eulerFac K M (Formalism.HermitianLatticesTheory.conjIdeal (K := K) P) =
         (1 - etaF K F 𝔭.1 ^ M * (Ideal.absNorm 𝔭.1 : ℝ) ^ (-(M : ℤ)))⁻¹ := by
       rw [← inv_inv (Formalism.HermitianLatticesTheory.eulerFac K M P * _), eulerFac_mul_conj_inv_split hK hP hc M hM, heta,
@@ -142,8 +139,7 @@ theorem hasProd_fibre (hK : Formalism.HermitianLatticesTheory.IsCMUnram K)
         · exact Or.inl (Subtype.ext (Subtype.ext h))
         · exact Or.inr (Subtype.ext (Subtype.ext h)))
     rw [Finset.prod_pair hne] at h
-    rw [← hval]
-    exact h
+    rwa [← hval]
 
 end Regroup
 

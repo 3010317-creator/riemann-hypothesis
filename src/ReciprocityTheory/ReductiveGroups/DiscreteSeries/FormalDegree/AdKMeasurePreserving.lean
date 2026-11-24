@@ -132,9 +132,7 @@ theorem adKAuxJ_sq (x : Fin n → ℝ) : adjointCompactJacobianFactor x ^ 2 = �
       · intro b hb hbs
         have hb' : ¬ a < b := by
           simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using hb
-        have hbs' : ¬ b < a := by
-          intro h
-          exact hbs (by simp [h])
+        have hbs' : ¬ b < a := fun h => hbs (by simp [h])
         have hba : b = a := le_antisymm (not_lt.mp hb') (not_lt.mp hbs')
         simp [hba, shc]
     exact hprod.symm

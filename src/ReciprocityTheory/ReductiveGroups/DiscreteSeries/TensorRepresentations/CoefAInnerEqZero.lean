@@ -151,8 +151,7 @@ private theorem exists_inner_comp_eq_functional_of_injOn {E : Submodule ℂ X} [
     ∃ x ∈ E, ∀ y ∈ E, inner ℂ (ι x) (ι y) = φ y := by
   have hker : LinearMap.ker (ι.comp E.subtype) = ⊥ := by
     rw [LinearMap.ker_eq_bot']
-    intro w hw
-    exact Subtype.ext (hinj w w.2 hw)
+    exact fun w hw => Subtype.ext (hinj w w.2 hw)
   obtain ⟨g, hg⟩ := LinearMap.exists_leftInverse_of_injective (ι.comp E.subtype) hker
   obtain ⟨f, hfR, hf⟩ := exists_mem_inner_eq_functional_of_finiteDim (LinearMap.range (ι.comp E.subtype))
     ((φ.comp E.subtype).comp g)
@@ -160,8 +159,7 @@ private theorem exists_inner_comp_eq_functional_of_injOn {E : Submodule ℂ X} [
   refine ⟨x, x.2, fun y hy => ?_⟩
   have h1 := hf (ι y) ⟨⟨y, hy⟩, rfl⟩
   have hgy : g (ι y) = ⟨y, hy⟩ := by
-    have h2 := LinearMap.congr_fun hg ⟨y, hy⟩
-    simpa using h2
+    simpa using LinearMap.congr_fun hg ⟨y, hy⟩
   simp only [LinearMap.comp_apply, Submodule.subtype_apply] at h1
   rw [h1, hgy]
 

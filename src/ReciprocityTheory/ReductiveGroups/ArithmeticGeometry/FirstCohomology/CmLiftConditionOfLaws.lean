@@ -87,8 +87,7 @@ theorem phiRel_scale (hG : GlobalFnsSt) {k : ℕ} (p : QkPt D.toPre F k)
     simp only [Units.val_mul]
     ring
   constructor
-  · intro h
-    exact phi_unique p _ ((phiRel_iff hG p _ hw' s t).1 h) (key s)
+  · exact fun h => phi_unique p _ ((phiRel_iff hG p _ hw' s t).1 h) (key s)
   · rintro rfl
     exact (phiRel_iff hG p _ hw' s _).2 (key s)
 
@@ -130,8 +129,7 @@ theorem finOrd_of_pow {k : ℕ} (hk : 1 ≤ k) (p : QkPt D.toPre F k)
     | succ n ih =>
       intro hn
       have h3 := hstep ⟨n, by omega⟩
-      rw [pow_succ', Module.End.mul_apply, ← ih (by omega)]
-      exact h3
+      rwa [pow_succ', Module.End.mul_apply, ← ih (by omega)]
   have hlast : ss (Fin.last k) = ss 0 := by
     rw [show Fin.last k = ⟨k, by omega⟩ from rfl, hall k le_rfl]
     exact hpow (ss 0)
@@ -153,8 +151,7 @@ namespace ReciprocityTheory.ChartRestriction.G.H1
 theorem qkActExists_of (hG : Out.GlobalFnsSt) : QkActExistsStatement := by
   intro E _ _ _ H V _ _ _ t P
   letI := H.starRing
-  intro F _ _ _ k a p
-  exact Geo.Tor.qkAct_exists hG P.D.tau_bimult P.oD a p
+  exact fun F _ _ _ k a p => Geo.Tor.qkAct_exists hG P.D.tau_bimult P.oD a p
 
 end ReciprocityTheory.ChartRestriction.G.H1
 end -- clump:auto
@@ -337,10 +334,7 @@ theorem card_killSub_le (hW : WeilSt) (A : PolAV (Sp (FractionRing R))) {O : Typ
   let ψ : killSub F A ρ ga → (killSub F A ρ gb →* Γ((TFK (R := R) F).left, ⊤)) := fun x =>
     (Units.coeHom _).comp (χ x)
   have hψ : Function.Injective ψ := by
-    intro x x' h
-    apply hinj
-    refine MonoidHom.ext fun z => Units.ext ?_
-    exact congrArg (fun f => f z) h
+    exact fun x x' h => hinj (MonoidHom.ext fun z => Units.ext (congrArg (fun f => f z) h))
   haveI : IsDomain Γ((TFK (R := R) F).left, ⊤) := by
     first
       | exact Function.Injective.isDomain (Scheme.ΓSpecIso (CommRingCat.of F)).hom.hom
@@ -350,8 +344,7 @@ theorem card_killSub_le (hW : WeilSt) (A : PolAV (Sp (FractionRing R))) {O : Typ
   haveI := Fintype.ofFinite (killSub F A ρ gb)
   have hcard := hli.fintype_card_le_finrank
   rw [Module.finrank_fintype_fun_eq_card] at hcard
-  rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
-  exact hcard
+  rwa [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
 
 def torsionEquiv (A : PolAV (Sp (FractionRing R))) {O : Type} [CommRing O] (ρ : RingAct A.A O) (N : ℕ)
     (α β u u' : O) (hab : α * β = (N : O)) (huu : u * α + u' * β = 1) :
@@ -455,8 +448,7 @@ theorem alphaBarEnum_holds (hW : WeilSt) (hM : MulNSt) : AlphaBarEnumStatement :
   refine ⟨fun b => (hsurj _ (hx1 b)).choose, fun b => (ev b).1, fun b => ?_, fun b => (ev b).2, ?_, ?_⟩
   · exact (hToA _ _).2 (hsurj _ (hx1 b)).choose_spec.symm
   · exact Subtype.val_injective.comp ev.injective
-  · intro y hy
-    exact ⟨ev.symm ⟨y, hy⟩, by simp⟩
+  · exact fun y hy => ⟨ev.symm ⟨y, hy⟩, by simp⟩
 
 end ReciprocityTheory.ChartRestriction.G.H1
 end -- clump:auto
@@ -529,8 +521,7 @@ lemma isUnit_of_val_zero (x : intRing v) (hx : v (x : F) = 0) : IsUnit x := by
     rw [hx, zero_add] at h1
     rw [h1]
   refine isUnit_iff_exists_inv.2 ⟨⟨(x : F)⁻¹, (mem_intRing v).2 hinv⟩, ?_⟩
-  apply Subtype.ext
-  exact mul_inv_cancel₀ hx0
+  exact Subtype.ext (mul_inv_cancel₀ hx0)
 
 lemma val_pos_of_mem_max (x : intRing v) (hx : x ∈ IsLocalRing.maximalIdeal (intRing v)) :
     0 < v (x : F) := by
@@ -582,8 +573,7 @@ lemma val_sub_roots {N : ℕ} (hN : 1 ≤ N) (hvN : v (N : F) = 0) {z z' : F} (h
       rw [← AddValuation.map_mul, h3, AddValuation.map_one]
     exact hne0 (wt_zero_of_add hnn ((mem_intRing v).1 w.2) h1)
   have hres : IsLocalRing.residue (intRing v) Z = IsLocalRing.residue (intRing v) Z' := by
-    rw [← sub_eq_zero, ← map_sub, IsLocalRing.residue_eq_zero_iff]
-    exact hmax
+    rwa [← sub_eq_zero, ← map_sub, IsLocalRing.residue_eq_zero_iff]
   have hsum0 : ∑ i ∈ Finset.range N, Z ^ i * Z' ^ (N - 1 - i) = 0 := by
     have h1 := geom_sum₂_mul Z Z' N
     rw [hZN, hZ'N, sub_self] at h1
@@ -641,9 +631,7 @@ theorem span_of_eigen (UU Pos : W → Prop) (hb : LinearIndependent F b)
       exact add_nonneg hr (hc i)
     · simp [Finset.smul_sum, mul_smul]
   have hsv0 : ∀ i, sv i ≠ 0 := by
-    intro i h
-    apply hsvp i
-    exact hPos (sv i) (hsv i) 0 0 (by simp) hUU0 (by rw [h, zero_smul])
+    exact fun i h => hsvp i (hPos (sv i) (hsv i) 0 0 (by simp) hUU0 (by rw [h, zero_smul]))
   have hχv : ∀ i γ, v (χ i γ) = 0 := fun i γ => val_root_unity v hN (hχN i γ)
   have hχd : ∀ i j γ, χ i γ ≠ χ j γ → v (χ i γ - χ j γ) = 0 :=
     fun i j γ h => val_sub_roots v hN hvN (hχN i γ) (hχN j γ) h
@@ -694,8 +682,7 @@ theorem span_of_eigen (UU Pos : W → Prop) (hb : LinearIndependent F b)
       have h1 : 0 ≤ v (a k * (χ k γ - χ j γ)) :=
         ih (S.erase j) (Finset.erase_ssubset hj) (fun i => a i * (χ i γ - χ j γ)) hmem k
           (Finset.mem_erase.2 ⟨Ne.symm hjk, hk⟩)
-      rw [AddValuation.map_mul, hχd k j γ hγ, add_zero] at h1
-      exact h1
+      rwa [AddValuation.map_mul, hχd k j γ hγ, add_zero] at h1
     · rw [Finset.sum_eq_single k (fun j hj hjk => absurd ⟨j, hj, hjk⟩ hex)
         (fun h => absurd hk h)] at ha
       by_contra hneg
@@ -716,8 +703,7 @@ theorem span_of_eigen (UU Pos : W → Prop) (hb : LinearIndependent F b)
         (by rw [smul_smul, inv_mul_cancel₀ hak, one_smul]))
   have hli : LinearIndependent F sv := by
     rw [Fintype.linearIndependent_iff]
-    intro g hg i
-    exact indep Finset.univ g hg i (Finset.mem_univ i)
+    exact fun g hg i => indep Finset.univ g hg i (Finset.mem_univ i)
   have hmemb : ∀ s, UU s → s ∈ Submodule.span F (Set.range b) := by
     intro s hs
     obtain ⟨c, -, rfl⟩ := (hUU s).1 hs
@@ -736,8 +722,7 @@ theorem span_of_eigen (UU Pos : W → Prop) (hb : LinearIndependent F b)
     exact hmemb s hs
   obtain ⟨a, ha⟩ := (Submodule.mem_span_range_iff_exists_fun F).1 hs'
   refine ⟨a, fun i => key Finset.univ a ?_ i (Finset.mem_univ i), ha.symm⟩
-  rw [ha]
-  exact hs
+  rwa [ha]
 
 end Core
 
@@ -871,8 +856,7 @@ theorem oneC_of (hL : Laws) (hΦ : PhiFunStatement) (h1c : PositiveValuationMaxi
       ((hΦb i θα _).mpr rfl) ((hΦq gm (Φ i θα) _).mpr rfl) (hfix gm) ((hΦb i θα _).mpr rfl)
 
   have hvN : v (((1 * N : ℕ)) : F) = 0 := by
-    have h := hv ((N : ℕ) : FractionRing V) 0 ⟨hNu.unit, by simp⟩
-    simpa using h
+    simpa using hv ((N : ℕ) : FractionRing V) 0 ⟨hNu.unit, by simp⟩
   have hπ : ∃ π : F, 0 < v π := by
     refine ⟨algebraMap (FractionRing V) F (algebraMap V (FractionRing V) ϖ), ?_⟩
     rw [hv _ 1 ⟨1, by simp⟩]

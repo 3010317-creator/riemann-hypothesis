@@ -78,8 +78,7 @@ theorem smulS_eq_sum {m : ℤ} {f : ℤ → V} (hf : LB m f) (g : PowerSeries LL
   intro j hj
   rw [Function.mem_support] at hj
   rw [Finset.coe_range, Set.mem_Iio]
-  by_contra hjN
-  push Not at hjN
+  by_contra! hjN
   apply hj
   rw [hf (k - j) (by omega), smul_zero]
 
@@ -144,8 +143,7 @@ private theorem Ub_succ_eq_inf_comap_sumAt {r : ℕ} (Fil : ℤ → Submodule LL
   rw [Submodule.mem_inf, Submodule.mem_comap, mem_Ub, mem_Ub,
     sumAt_apply]
   constructor
-  · intro h
-    exact ⟨fun i hi => h i (by omega), h j (by omega)⟩
+  · exact fun h => ⟨fun i hi => h i (by omega), h j (by omega)⟩
   · rintro ⟨h1, h2⟩ i hi
     rcases lt_or_eq_of_le (Int.lt_add_one_iff.mp hi) with hlt | rfl
     · exact h1 i hlt
@@ -201,8 +199,7 @@ theorem count_step (he : ∀ m k, e m k ∈ D ⊓ Fil (-k))
       obtain ⟨c, hc1, hc2⟩ := hS j w hw
       refine ⟨⟨c, (mem_Ub Fil e j c).mpr hc1⟩, ?_⟩
       change Submodule.Quotient.mk (sumAt e j c) = (Submodule.Quotient.mk w : E ⧸ Fil (-j + 1))
-      rw [Submodule.Quotient.eq, sumAt_apply]
-      exact hc2
+      rwa [Submodule.Quotient.eq, sumAt_apply]
   have hL1 := finrank_map_mkQ_add_finrank_inf (D ⊓ Fil (-j)) (Fil (-j + 1))
   have hinf : D ⊓ Fil (-j) ⊓ Fil (-j + 1) = D ⊓ Fil (-j + 1) := by
     rw [inf_assoc, inf_eq_right.mpr (hFa (by omega : -j ≤ -j + 1))]
@@ -244,8 +241,7 @@ theorem indep_of_span (a₀ a₁ : ℤ) (h₀ : D ≤ Fil a₀) (h₁ : D ⊓ Fi
   rw [Submodule.finrank_eq_zero] at h0
   have hcmem : c ∈ Ub Fil e (1 - a₁ + ((a₁ - a₀).toNat : ℤ)) :=
     (mem_Ub Fil e _ c).mpr fun i _ => hc i
-  rw [h0, Submodule.mem_bot] at hcmem
-  exact hcmem
+  rwa [h0, Submodule.mem_bot] at hcmem
 
 
 include hFa in

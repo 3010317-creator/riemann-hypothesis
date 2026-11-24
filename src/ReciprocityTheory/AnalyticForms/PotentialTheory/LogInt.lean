@@ -76,8 +76,7 @@ theorem logNormIntegrable_of (hLU : ReciprocityTheory.AnForm.A.LogUnitMonoLocInt
       ψ (c.symm y) ∈ V ∧ c (ψ.symm (ψ (c.symm y))) = y := by
     intro y hy
     refine ⟨⟨ψ.map_source hy.2, ?_⟩, ?_⟩
-    · simp only [Set.mem_preimage, ψ.left_inv hy.2]
-      exact c.map_target hy.1
+    · simpa only [Set.mem_preimage, ψ.left_inv hy.2] using c.map_target hy.1
     · rw [ψ.left_inv hy.2, c.right_inv hy.1]
 
   set m' : Fin e → ℤ :=
@@ -88,8 +87,7 @@ theorem logNormIntegrable_of (hLU : ReciprocityTheory.AnForm.A.LogUnitMonoLocInt
     intro z hz
     have hw : c (ψ.symm z) ∈ c.target ∩ c.symm ⁻¹' ψ.source := by
       refine ⟨c.map_source hz.2, ?_⟩
-      simp only [Set.mem_preimage, c.left_inv hz.2]
-      exact ψ.map_target hz.1
+      simpa only [Set.mem_preimage, c.left_inv hz.2] using ψ.map_target hz.1
     have h1 : AnalyticAt ℂ ((u ∘ c.symm) ∘ (c ∘ ψ.symm)) z :=
       AnalyticAt.comp (g := u ∘ c.symm) (f := c ∘ ψ.symm) (hu j _ hw) (hTinvA z hz)
     refine (h1.differentiableAt.congr_of_eventuallyEq ?_).differentiableWithinAt

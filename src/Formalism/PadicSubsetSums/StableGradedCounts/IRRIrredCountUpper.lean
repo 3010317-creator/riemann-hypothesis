@@ -123,8 +123,7 @@ theorem irreducible_count_upper : IrredCountUpper := by
       rw [natDegree_prod_of_monic _ _ (fun c _ => monicOf_monic c),
         Finset.sum_congr rfl (fun c _ => monicOf_natDegree c), Finset.sum_const, smul_eq_mul, mul_comm]
     have hle := natDegree_le_of_dvd hprod (FiniteField.X_pow_card_pow_sub_X_ne_zero K hd0 hq1)
-    rw [hdeg, FiniteField.X_pow_card_pow_sub_X_natDegree_eq K hd0 hq1] at hle
-    exact hle
+    rwa [hdeg, FiniteField.X_pow_card_pow_sub_X_natDegree_eq K hd0 hq1] at hle
   exact main _ (fun c hc => (Finset.mem_filter.mp hc).2)
 
 end Formalism.IrreducibleCountingLemmas.GaloisIrreducibility

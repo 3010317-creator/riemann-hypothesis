@@ -36,8 +36,7 @@ theorem dI_sheets [CompactSpace Y] [T2Space Y] [T2Space X]
   have hO : ∃ O : Set X, IsOpen O ∧ x ∈ O ∧ Disjoint O S := by
     obtain ⟨W, hWo, hxW, r, f, hf, hSW⟩ := hd.1 x
     have hex : ∃ i, f i x ≠ 0 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       have hm : x ∈ {y ∈ W | ∀ i, f i y = 0} := ⟨hxW, hc⟩
       rw [← hSW] at hm
       exact hx hm.1
@@ -130,8 +129,7 @@ theorem dI_sheets [CompactSpace Y] [T2Space Y] [T2Space X]
     obtain ⟨_, _, hinj, _⟩ := hUp y (hFS y (htF y hy))
     have hzy' : z = y := hinj hzy (hyU y)
       (by rw [show h z = x from hz, show h y = x from htF y hy])
-    rw [hzy']
-    exact hy
+    rwa [hzy']
   have hcard : hFfin.toFinset.card = d := by
     rw [← Set.ncard_eq_toFinset_card F hFfin]
     exact hd.2.2.2.2.1 x hx
@@ -200,8 +198,7 @@ theorem dI_sum_ind_le (E : ℕ → Set X) (hd : Pairwise (Function.onFun Disjoin
     · intro m _ hm
       have hxm : x ∉ E m := fun h' => Set.disjoint_left.mp (hd hm) h' hxm0
       simp [hxm]
-    · intro h'
-      exact absurd hm0 h'
+    · exact fun h' => absurd hm0 h'
   · push Not at hx
     refine le_trans (le_of_eq (Finset.sum_eq_zero fun m hm => ?_)) (abs_nonneg _)
     simp [hx m hm]

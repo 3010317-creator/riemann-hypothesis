@@ -144,14 +144,12 @@ theorem mem_nabla_iff_coordinate_integral {E : GLOps n (KK O) V} {lam : Fin n �
     obtain ⟨c, hc⟩ := H u hu
     refine ⟨c, ?_⟩
     have h := h2 _ hc
-    rw [map_sub, map_smul, h1, smul_eq_mul, mul_one, sub_eq_zero] at h
-    exact h
+    rwa [map_sub, map_smul, h1, smul_eq_mul, mul_one, sub_eq_zero] at h
   · intro H u hu
     obtain ⟨c, hc⟩ := H u hu
     refine ⟨c, ?_⟩
     have h := h3 (u x)
-    rw [hc] at h
-    exact h
+    rwa [hc] at h
 
 theorem enveloping_coordinate_separates [NeZero n] [CharZero (KK O)] {E : GLOps n (KK O) V} {lam : Fin n → ℤ} {v : V}
     (hI : IsIrrHW E lam v)
@@ -233,8 +231,7 @@ theorem enveloping_coordinate_separates [NeZero n] [CharZero (KK O)] {E : GLOps 
     exact Submodule.smul_mem W _ hw
   have hvW' : v ∈ W' := by
     rw [hwc, hc0, zero_smul, zero_add] at hvs
-    rw [← hvs]
-    exact hw'
+    rwa [← hvs]
   have htop := irreducible_stable_contains_eq_top hI hW'st hvW'
   have hxW' : x ∈ W' := by
     rw [htop]
@@ -256,21 +253,18 @@ theorem lattice_fg_of_integral_functionals {W : Type*} [AddCommGroup W] [Module 
     have hle' : Submodule.span (KK O) b ≤ LinearMap.ker (Module.Dual.eval (KK O) W w) := by
       rw [Submodule.span_le]
       intro η hη
-      simp only [SetLike.mem_coe, LinearMap.mem_ker, Module.Dual.eval_apply]
-      exact hw η hη
+      simpa only [SetLike.mem_coe, LinearMap.mem_ker, Module.Dual.eval_apply] using hw η hη
     have hmem : ξ ∈ Submodule.span (KK O) b := by
       rw [hbspan]
       exact Submodule.subset_span hξ
-    have h := hle' hmem
-    simpa using h
+    simpa using hle' hmem
   let Φ : W →ₗ[O] (b → KK O) := LinearMap.pi fun ξ => (ξ.1).restrictScalars O
   have hΦ : Function.Injective Φ := by
     refine (injective_iff_map_eq_zero Φ).2 ?_
     intro w hw
     apply hbsep
     intro ξ hξ
-    have h := congrFun hw ⟨ξ, hξ⟩
-    simpa [Φ] using h
+    simpa [Φ] using congrFun hw ⟨ξ, hξ⟩
   let g : (b → O) →ₗ[O] (b → KK O) :=
     LinearMap.pi fun i => (Algebra.linearMap O (KK O)).comp (LinearMap.proj i)
   have hle : N.map Φ ≤ LinearMap.range g := by

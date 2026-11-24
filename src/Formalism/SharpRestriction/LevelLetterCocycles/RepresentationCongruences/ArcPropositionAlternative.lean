@@ -103,8 +103,7 @@ theorem lifts_lE (W : LocWach PD LL O v n) (A : ArcP n) {T₁ T₂ : LocLat G Qp
   have hl : lE W e * (lE W k * f) = lE W (k + e) * f := by
     unfold lE
     ring
-  rw [hl] at h5
-  exact h5
+  rwa [hl] at h5
 
 end Formalism.MainNotions.N.FrobeniusPowerSeries.ArcLengthOneTwo
 end -- clump:auto
@@ -235,8 +234,7 @@ theorem arc_length_one_or_two_case_c [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsD
     · simp [htyc] at hbs
     · simp only [Nat.cast_one, hty1, Formalism.MainNotions.LocalTheoryWindows.LT.down.injEq] at hbs
       subst hbs
-      rw [hnn]
-      exact hx''
+      rwa [hnn]
 
   have hNg := liftsAt_thick_letter_type W (arcOf b w S η up size) F c bb sol k₀ hOK hc hthick hcase hl5 hP2 hP9 hpi0
     hSec hGL hFL hO hOv hinj hArc hArcL hNN hW₁ hW₂ hsur rr hkill hbb hk₀ _ hg1 hgdown
@@ -440,8 +438,7 @@ theorem lifts_scale (W : LocWach PD LL O v n) (A : ArcP n) {T₁ T₂ : LocLat G
     simp only [lE, pow_add, mul_assoc]
   have hfun : (fun kk => if kk = k₀ then lE W (e + k) * f else 0) =
       (fun kk => if kk = k₀ then lE W e * (lE W k * f) else 0) := funext fun kk => by rw [he]
-  rw [hfun]
-  exact h5
+  rwa [hfun]
 
 theorem lE_alg (W : LocWach PD LL O v n) (k : ℕ) :
     lE W k = algebraMap (LetA O n) W.EE (lA W ^ k) := by
@@ -576,8 +573,7 @@ theorem hmax_le' [NeZero n] (Mi hi : ZMod n → ℕ) (j : ZMod n) :
     Mi j + hi j ≤ Formalism.MainNotions.LiftingTheory.Hmax n Mi hi := by
   unfold Formalism.MainNotions.LiftingTheory.Hmax
   have h := Finset.le_sup (f := fun k : ℕ => Mi k + hi k) (Finset.mem_range.2 (ZMod.val_lt j))
-  simp only [ZMod.natCast_zmod_val] at h
-  exact h
+  simpa only [ZMod.natCast_zmod_val] using h
 
 theorem aI_le [NeZero n] [Fintype (K →ₐ[Qp] LL)] (W : LocWach PD LL O v n)
     {T₁ T₂ : LocLat G Qp LL O} (F : LatHom T₁.L T₂.L) {b w S η m : ℕ} {up : ZMod n → Bool}
@@ -650,8 +646,7 @@ theorem aI_le [NeZero n] [Fintype (K →ₐ[Qp] LL)] (W : LocWach PD LL O v n)
   have key := Aa_cut_le PD.p hp11 (b + η + S) w S η (Formalism.MainNotions.LiftingTheory.Hmax n Mi' hi') (size c + S + η)
     (w + S + η) hη1 hHle (by have := hct.2; omega) le_rfl _ _ hst hA
   have ec : (((size c + S + η : ℕ) : ℝ)) = (size c : ℝ) + S + η := by push_cast; ring
-  rw [ec] at key
-  exact key
+  rwa [ec] at key
 
 end Formalism.MainNotions.N.FrobeniusPowerSeries.ArcLengthTwo
 end -- clump:auto
@@ -710,9 +705,7 @@ theorem arc_length_two_case_down [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDomai
   have hl5 : 5 ≤ PD.p := by omega
   obtain ⟨hct, hcm⟩ := ArcLengthTwo.arc_len_two_thick_letters c hlen
   have hc1 : ¬ Formalism.MainNotions.TruncatedSeriesCountingBounds.Thick b η size (c + 1) := by
-    have h := hc
-    simp only [arcOf, Finset.mem_filter, Finset.mem_univ, true_and] at h
-    exact h
+    simpa only [arcOf, Finset.mem_filter, Finset.mem_univ, true_and] using hc
   have hupm : up (c - 1) = true := by
     cases h : up (c - 1)
     · exact absurd (h.trans hup.symm) hdiff
@@ -744,8 +737,7 @@ theorem arc_length_two_case_down [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDomai
     interval_cases s
     · simp only [Nat.cast_zero, sub_zero, hty0, Formalism.MainNotions.LocalTheoryWindows.LT.down.injEq] at hbs
       subst hbs
-      rw [hnn]
-      exact hg2
+      rwa [hnn]
     · simp [hty1] at hbs
   have hgl : LiftsAt W (arcOf b w S η up size) F c bb sol k₀ g (rr + (arcOf b w S η up size).σ PD.p) :=
     liftsAt_thick_letter_type W (arcOf b w S η up size) F c bb sol k₀ hOK hc hthick hcase hl5 hP2 hP9 hpi0 hSec hGL hFL
@@ -846,8 +838,7 @@ theorem hmax_le [NeZero n] (Mi hi : ZMod n → ℕ) (j : ZMod n) :
     Mi j + hi j ≤ Formalism.MainNotions.LiftingTheory.Hmax n Mi hi := by
   unfold Formalism.MainNotions.LiftingTheory.Hmax
   have h := Finset.le_sup (f := fun k : ℕ => Mi k + hi k) (Finset.mem_range.2 (ZMod.val_lt j))
-  simp only [ZMod.natCast_zmod_val] at h
-  exact h
+  simpa only [ZMod.natCast_zmod_val] using h
 
 theorem ai_le [NeZero n] [Fintype (K →ₐ[Qp] LL)] (W : LocWach PD LL O v n)
     {T₁ T₂ : LocLat G Qp LL O} (F : LatHom T₁.L T₂.L) {b w S η m : ℕ} {up : ZMod n → Bool}

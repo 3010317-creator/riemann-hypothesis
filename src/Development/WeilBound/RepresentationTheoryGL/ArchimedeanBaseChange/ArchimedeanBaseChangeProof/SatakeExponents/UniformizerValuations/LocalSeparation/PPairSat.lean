@@ -175,8 +175,7 @@ theorem pairSat_holds : PairSat := by
     have := congrFun (GlobalTheory.LGrp.mem_fixed.1 hf (k, 1) (Subgroup.mem_prod.2 ⟨hk, one_mem _⟩)) (x, y)
     change G ((x, y) * (embW a w k, embW b w 1)) = G (x, y) at this
     rw [map_one, Prod.mk_mul_mk, mul_one] at this
-    rw [e, e]
-    exact this
+    rwa [e, e]
   have fixB : ∀ x (φ : Sm E b), (∀ y, φ.1 y = G (x, y)) → ∀ k ∈ KGL w (n := b), finRep E b (locGL E b w k) φ = φ := by
     intro x φ e k hk
     refine Subtype.ext (funext fun y => ?_)
@@ -184,8 +183,7 @@ theorem pairSat_holds : PairSat := by
     have := congrFun (GlobalTheory.LGrp.mem_fixed.1 hf (1, k) (Subgroup.mem_prod.2 ⟨one_mem _, hk⟩)) (x, y)
     change G ((x, y) * (embW a w 1, embW b w k)) = G (x, y) at this
     rw [map_one, Prod.mk_mul_mk, mul_one] at this
-    rw [e, e]
-    exact this
+    rwa [e, e]
   obtain ⟨φa, hφa, ea⟩ := pairSlice₁ hG y₀
   obtain ⟨φb, hφb, eb⟩ := pairSlice₂ hG x₀
   have na : φa ≠ 0 := fun h => hp (by rw [← ea x₀, h]; rfl)

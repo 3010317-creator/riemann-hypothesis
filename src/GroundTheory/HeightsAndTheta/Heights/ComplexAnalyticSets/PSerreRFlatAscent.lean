@@ -74,14 +74,12 @@ theorem isRegularLocalRing_of_flat_of_closedFibre [IsNoetherianRing S] [Module.F
       have hx' : Ideal.Quotient.mk J x ∈ Ideal.map (Ideal.Quotient.mk J) (Ideal.span t') := by
         rw [Ideal.map_span, ht']
         change Ideal.Quotient.mk J x ∈ Submodule.span (S ⧸ J) t
-        rw [Submodule.span_generators, ← Ideal.mem_comap, hcomap]
-        exact hx
+        rwa [Submodule.span_generators, ← Ideal.mem_comap, hcomap]
       rw [← Ideal.mem_comap, Ideal.comap_map_of_surjective _ hsurj, ← RingHom.ker_eq_comap_bot,
         Ideal.mk_ker] at hx'
       rw [Ideal.span_union, sup_comm, ← Ideal.map_span]
       change x ∈ Submodule.span S t' ⊔ Ideal.map (algebraMap R S) (Submodule.span R s)
-      rw [Submodule.span_generators]
-      exact hx'
+      rwa [Submodule.span_generators]
     · rw [Ideal.span_le, Set.union_subset_iff]
       constructor
       · rintro _ ⟨y, hy, rfl⟩

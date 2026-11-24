@@ -48,8 +48,7 @@ theorem intMuCD_polar_int (ε : Fin n → Bool) (F : (Fin n → Fin n → ℂ) �
   refine (lintegral_prod (F ∘ intMuCD_pM ε) (hF.comp hpm).aemeasurable).trans ?_
   refine lintegral_congr (fun k => ?_)
   refine (lintegral_withDensity_eq_lintegral_mul _ hJ (hF.comp (hpm.comp measurable_prodMk_left))).trans ?_
-  refine lintegral_congr (fun z => ?_)
-  exact mul_comm _ _
+  exact lintegral_congr (fun z => (mul_comm _ _))
 
 theorem intMuCD_ae_range (ε : Fin n → Bool) (S : Set (Fin n → Fin n → ℂ)) (hS : MeasurableSet S)
     (h : ∀ kz : KG ε × (PCoord ε → ℂ), intMuCD_pM ε kz ∈ S) : ∀ᵐ x ∂(muPolarMat ε), x ∈ S := by
@@ -63,8 +62,7 @@ def intMuCD_eU (ε : Fin n → Bool) : Formalism.REAL.UJ ε → (Fin n → Fin n
 private theorem exists_UJ_toM_eq_of_inUJ {ε : Fin n → Bool} {g : Matrix (Fin n) (Fin n) ℂ} (hg : inUJ ε g) :
     ∃ u : UJ ε, toM u = g := by
   change g ∈ Set.range (fun u : UJ ε => toM u)
-  rw [range_toM]
-  exact hg
+  rwa [range_toM]
 
 theorem lintegral_muPolar (ε : Fin n → Bool) (F : (Fin n → Fin n → ℂ) → ENNReal) (hF : Measurable F) :
     ∫⁻ g, F (toM g) ∂(muPolar ε) =

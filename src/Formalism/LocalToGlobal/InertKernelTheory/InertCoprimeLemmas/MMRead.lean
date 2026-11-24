@@ -171,11 +171,9 @@ theorem exists_inv (h : PowerSeries ℂ_[p]) (h0 : PowerSeries.constantCoeff h =
   have hkh : k = h := by
     have e1 : PowerSeries.subst h (PowerSeries.subst g k) = h := by
       rw [hk, PowerSeries.subst_X hH]
-    rw [PowerSeries.subst_comp_subst_apply hG hH, hg, PowerSeries.X_subst] at e1
-    exact e1
+    rwa [PowerSeries.subst_comp_subst_apply hG hH, hg, PowerSeries.X_subst] at e1
   refine ⟨g, g0, gI, ?_⟩
-  rw [← hkh]
-  exact hk
+  rwa [← hkh]
 
 end ParameterChangeLemmas
 

@@ -65,8 +65,7 @@ theorem le_lord_iff (n : WithTop ℤ) (f : LaurentPolynomial R) :
 
 theorem lord_zero : lord (0 : LaurentPolynomial R) = ⊤ := by
   rw [eq_top_iff, le_lord_iff]
-  intro k hk
-  exact absurd rfl hk
+  exact fun k hk => absurd rfl hk
 
 theorem le_lord_add {n : WithTop ℤ} {f g : LaurentPolynomial R} (hf : n ≤ lord f) (hg : n ≤ lord g) :
     n ≤ lord (f + g) := by
@@ -308,8 +307,7 @@ theorem substS_mem (T : Subring (MvPolynomial (L × Fin r) R)) (hC : ∀ c : K, 
   rw [F.as_sum, map_sum]
   refine Subring.sum_mem _ fun α hα => ?_
   rw [substS_monomial]
-  refine Subring.mul_mem _ (hC _) ?_
-  exact Subring.prod_mem _ fun x hx => Subring.pow_mem _ (h α hα x hx) _
+  exact Subring.mul_mem _ (hC _) (Subring.prod_mem _ fun x hx => Subring.pow_mem _ (h α hα x hx) _)
 
 theorem substS_monomial_of_free (α : L × Fin r →₀ ℕ) (c : K) (h : ∀ x ∈ α.support, x.1 ∉ S) :
     substS ι sg S A B (monomial α c) = monomial α (ι c) := by
@@ -654,8 +652,7 @@ theorem valS_rename (f : L → L') (hf : Function.Injective f) (sg' : L' → Boo
         exact h β
       · rw [coeff_rename_eq_zero, lord_zero]
         · exact le_top
-        · intro u hu
-          exact absurd ⟨u, hu⟩ hβ
+        · exact fun u hu => absurd ⟨u, hu⟩ hβ
   exact le_antisymm ((key _).mp le_rfl) ((key _).mpr le_rfl)
 
 end Rename

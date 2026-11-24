@@ -38,8 +38,7 @@ theorem arithFrobAt_eq_of_isArithFrobAt (w : HeightOneSpectrum (𝓞 L))
     rw [Ideal.card_inertia_eq_ramificationIdxIn (w.asIdeal.under (𝓞 F)) w.asIdeal,
       Ideal.ramificationIdxIn_eq_ramificationIdx _ w.asIdeal Gal(L/F)]
     exact he
-  rw [Subgroup.card_eq_one.mp hcard, Subgroup.mem_bot, mul_inv_eq_one] at hmem
-  exact hmem
+  rwa [Subgroup.card_eq_one.mp hcard, Subgroup.mem_bot, mul_inv_eq_one] at hmem
 
 theorem ramificationIdx_smul (τ : Gal(L/F)) (w : HeightOneSpectrum (𝓞 L)) :
     (τ • w).asIdeal.ramificationIdx (𝓞 F) = w.asIdeal.ramificationIdx (𝓞 F) := by
@@ -93,8 +92,7 @@ theorem eq_of_under_eq_of_le_stabilizer (H : Subgroup Gal(L/K)) (w w' : HeightOn
   have hs := hH hgH
   rw [MulAction.mem_stabilizer_iff] at hs
   refine HeightOneSpectrum.ext ?_
-  rw [hg]
-  exact hs
+  rwa [hg]
 
 end Tower
 
@@ -302,10 +300,8 @@ theorem card_fiber_deuringSet_mul_orderOf (σ : Gal(L/K)) {v : HeightOneSpectrum
     ext z
     rw [MulAction.mem_stabilizer_iff, Subgroup.mem_subgroupOf, ← hD0, MulAction.mem_stabilizer_iff]
     constructor
-    · intro h
-      exact congrArg HeightOneSpectrum.asIdeal h
-    · intro h
-      exact HeightOneSpectrum.ext h
+    · exact fun h => congrArg HeightOneSpectrum.asIdeal h
+    · exact fun h => HeightOneSpectrum.ext h
   have hcardS : Nat.card S * orderOf σ = Nat.card Z := by
     rw [hSorb, Nat.card_coe_set_eq, ← MulAction.index_stabilizer, ← Nat.card_zpowers,
       ← Nat.card_congr (Subgroup.subgroupOfEquivOfLe hle).toEquiv, ← hstab, mul_comm,

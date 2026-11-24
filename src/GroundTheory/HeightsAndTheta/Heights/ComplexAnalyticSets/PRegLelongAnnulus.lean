@@ -212,8 +212,7 @@ theorem pk_le_one (k : ℕ) : pk k ≤ 1 := ((pk_lt_qk k).trans (qk_lt_one k)).l
 theorem tendsto_pk : Tendsto pk atTop (𝓝 1) := by
   have h := (tendsto_const_nhds (x := (1 : ℝ))).sub
     ((tendsto_one_div_add_atTop_nhds_zero_nat (𝕜 := ℝ)).div_const 2)
-  rw [zero_div, sub_zero] at h
-  exact h
+  rwa [zero_div, sub_zero] at h
 
 def hk (k : ℕ) : ContDiffBump (0 : ℝ) := ⟨pk k, qk k, pk_pos k, pk_lt_qk k⟩
 
@@ -275,8 +274,7 @@ theorem integral_hk_nonneg (e k : ℕ) {v : ℝ} (h0 : 0 ≤ v) :
 
 theorem Ik_le_one (e k : ℕ) : Ik e k ≤ 1 := by
   have := integral_hk_le e k zero_le_one
-  rw [one_pow] at this
-  exact this
+  rwa [one_pow] at this
 
 theorem pk_pow_le_Ik (e k : ℕ) : pk k ^ (e + 1) ≤ Ik e k := by
   unfold Ik
@@ -427,8 +425,7 @@ theorem tendsto_hk_indicator {ρ : ℝ} (hρ : 0 < ρ) (z : Fin n → ℂ) :
     exact tendsto_const_nhds.congr' ((eventually_le_pk hv).mono fun k hk' => (hk_one hv0 hk').symm)
   · rw [Set.indicator_of_notMem (fun h => hz ((mem_euclBall_iff_sq x hρ z).1 h))]
     have hv : 1 ≤ euclPot (z - x) / ρ ^ 2 := (one_le_div hρ2).2 (not_lt.1 hz)
-    simp only [hk_zero_of_one_le hv]
-    exact tendsto_const_nhds
+    simpa only [hk_zero_of_one_le hv] using tendsto_const_nhds
 
 end Ball
 
@@ -521,8 +518,7 @@ theorem tendsto_radialTransform_diff (hr : 0 < r) (hrs : r ≤ s) (z : Fin n →
       radialTransform_hk_of_one_le e k ((one_le_div hr2).2 h1)]
     ring
   · rw [Set.indicator_of_notMem (fun (h : z ∈ euclBall x s \ euclBall x r) => (not_lt.2 h2) ((mem_euclBall_iff_sq x hs z).1 h.1))]
-    simp only [radialTransform_diff_of_ge e hr hrs _ h2]
-    exact tendsto_const_nhds
+    simpa only [radialTransform_diff_of_ge e hr hrs _ h2] using tendsto_const_nhds
 
 end Weights
 
@@ -584,8 +580,7 @@ theorem RegLelongAnnulus.proof (hRW : RegRadialWeight.Statement) (hCM : ChartMas
         rw [div_self (pow_pos hs 2).ne', radialTransform_hk_of_one_le e k le_rfl,
           radialTransform_hk_of_one_le e k ((one_le_div hr2).2 hs2), sub_self, mul_zero] at h
         unfold radialTransform at h
-        rw [annWeight_zero_of_le e hr hrs k le_rfl, zero_mul, zero_sub, neg_eq_zero] at h
-        exact h
+        rwa [annWeight_zero_of_le e hr hrs k le_rfl, zero_mul, zero_sub, neg_eq_zero] at h
       have h := hRW n (e + 1) J A u ε x (annWeight r s e k) (pk k * r ^ 2) (s ^ 2) hJ hdim hAf hε
         (contDiff_annWeight e k) (mul_pos (pk_pos k) hr2) (fun t ht => annWeight_const e hr hrs k ht)
         (fun t ht => annWeight_zero_of_le e hr hrs k ht) hT
@@ -621,8 +616,7 @@ theorem RegLelongAnnulus.proof (hRW : RegRadialWeight.Statement) (hCM : ChartMas
         simp only [chartDens_sub' hAf]
         rw [integral_sub ((hball s hs le_rfl).const_mul _) ((hball r hr hrs).const_mul _), integral_const_mul,
           integral_const_mul]
-      rw [← hlim]
-      exact h
+      rwa [← hlim]
 
     have hφτ : ∀ k, SmoothNear (zeroSet J)
         ((vecCons (logReg u ε) fun _ => logDistSmooth x hr : Fin (e + 1 + 1) → (Fin n → ℂ) → ℝ) k) := by
@@ -635,10 +629,8 @@ theorem RegLelongAnnulus.proof (hRW : RegRadialWeight.Statement) (hCM : ChartMas
           (vecCons (logReg u ε) fun _ => logDistSmooth x hr : Fin (e + 1 + 1) → (Fin n → ℂ) → ℝ) i := by
       intro z hz i
       refine Fin.cases ?_ (fun j => ?_) i
-      · simp only [Matrix.cons_val_zero]
-        exact Filter.EventuallyEq.rfl
-      · simp only [Matrix.cons_val_succ]
-        exact (logDistSmooth_eventuallyEq x hr hz).symm
+      · simpa only [Matrix.cons_val_zero] using Filter.EventuallyEq.rfl
+      · simpa only [Matrix.cons_val_succ] using (logDistSmooth_eventuallyEq x hr hz).symm
     have hloc : ∀ k y, chartDens J A (fun z => r ^ (2 * (e + 1)) * s ^ (2 * (e + 1)) *
           (radialTransform (e + 1) (hk k) (euclPot (z - x) / s ^ 2) -
             radialTransform (e + 1) (hk k) (euclPot (z - x) / r ^ 2)))
@@ -695,8 +687,7 @@ theorem RegLelongAnnulus.proof (hRW : RegRadialWeight.Statement) (hCM : ChartMas
               ((euclBall x s \ euclBall x r).indicator fun _ => 1) (vecCons (logReg u ε) fun _ => logDistSq x) y :=
           fun y => chartDens_const_mul hAf _ _ _ y
         rw [← integral_const_mul]
-        simp only [← hl, hloc', hloc]
-        exact h
+        simpa only [← hl, hloc', hloc] using h
       · have h1 := abs_radialTransform_hk_le e k (div_nonneg (distSq_nonneg x z) (pow_pos hs 2).le)
         have h2 := abs_radialTransform_hk_le e k (div_nonneg (distSq_nonneg x z) hr2.le)
         rw [abs_mul, abs_of_nonneg hc0]

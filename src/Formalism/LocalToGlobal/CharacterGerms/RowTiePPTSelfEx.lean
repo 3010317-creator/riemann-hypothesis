@@ -87,8 +87,7 @@ theorem allSet_repar {V : VF C} {g : Fin 2} (τ : PowerSeries C) (hτ : PowerSer
   have hS := PowerSeries.HasSubst.of_constantCoeff_zero' hτ
   have hcv : ∀ {σ : Type} (δ : σ → PowerSeries C), IsCv V δ → IsCv V fun i => PowerSeries.subst τ (δ i) := by
     intro σ δ hδ i
-    refine ⟨?_, hint _ (hδ i).2⟩
-    exact constantCoeff_subst_zero (σ := Unit) (fun _ => hτ) (hδ i).1
+    exact ⟨constantCoeff_subst_zero (σ := Unit) (fun _ => hτ) (hδ i).1, hint _ (hδ i).2⟩
   refine ⟨fun i => PowerSeries.subst τ (γ i), fun q => PowerSeries.subst τ (lam q), hcv γ hγ, hcv lam hlam, ?_, ?_⟩
   · intro i
 
@@ -334,8 +333,7 @@ theorem typ_gen {N : Type} (M : Set (ℕ → N → C))
     intro K s x
     obtain ⟨k0, hk0⟩ := eventually_ge_nat K 0
     refine ⟨k0, fun k hk => ?_⟩
-    simp only [Pi.zero_apply, zero_sub, e]
-    exact ((ge_lpow k).neg).mono (by simpa using hk0 k hk)
+    simpa only [Pi.zero_apply, zero_sub, e] using ((ge_lpow k).neg).mono (by simpa using hk0 k hk)
 
   have hneg : ∀ m, m ∈ M → -m ∈ M := by
     intro m hm
@@ -454,8 +452,7 @@ theorem typ_gen {N : Type} (M : Set (ℕ → N → C))
         by_cases hl2' : V.l = 2
         · refine ⟨3, Finset.mem_filter.mpr ⟨Finset.mem_range.mpr (by omega), Nat.prime_three, by omega⟩, dvd_zero 3⟩
         · refine ⟨2, Finset.mem_filter.mpr ⟨Finset.mem_range.mpr (by omega), Nat.prime_two, fun h => hl2' h.symm⟩, dvd_zero 2⟩
-      · by_contra hne
-        push Not at hne
+      · by_contra! hne
         apply hpow'
         refine ⟨n.primeFactorsList.length, (Nat.eq_prime_pow_of_unique_prime_dvd hn0 ?_).symm⟩
         intro q hq hqn

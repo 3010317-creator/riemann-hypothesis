@@ -37,13 +37,11 @@ theorem placesOver_finite' (E : Type) [Field E] [NumberField E] (p : ℕ) (hp : 
     (placesOver E p).Finite := by
   have hp' : ((p : ℕ) : 𝓞 E) ≠ 0 := Nat.cast_ne_zero.mpr hp
   have hI : Ideal.span {((p : ℕ) : 𝓞 E)} ≠ ⊥ := by
-    rw [Ne, Ideal.span_singleton_eq_bot]
-    exact hp'
+    rwa [Ne, Ideal.span_singleton_eq_bot]
   refine (Ideal.finite_factors hI).subset ?_
   intro v hv
   show v.asIdeal ∣ Ideal.span {((p : ℕ) : 𝓞 E)}
-  rw [Ideal.dvd_span_singleton]
-  exact hv
+  rwa [Ideal.dvd_span_singleton]
 
 def pDC {R : Ranks} (H : Host R) (l : ℕ) : Finset (HeightOneSpectrum (𝓞 H.E)) :=
   (placesOver_finite' H.E (if l = H.pde then H.pde' else H.pde)

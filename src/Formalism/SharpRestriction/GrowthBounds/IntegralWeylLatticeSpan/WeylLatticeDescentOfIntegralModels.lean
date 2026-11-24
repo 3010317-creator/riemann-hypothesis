@@ -81,8 +81,7 @@ theorem desc_fun (ℓ : Kf →ₗ[LL] LL) (t : Finset (MvPolynomial ι LL)) (c :
   have e : ∀ (a : Kf) (r : LL), ℓ (a * algebraMap LL Kf r) = ℓ a * r := by
     intro a r
     rw [mul_comm, ← Algebra.smul_def, LinearMap.map_smul, smul_eq_mul, mul_comm]
-  simp only [e] at hm
-  exact hm
+  simpa only [e] using hm
 
 theorem exists_pivot {α : Type} [DecidableEq α] (R0 : Subring LL) (hv : ∀ x : LL, x ∈ R0 ∨ x⁻¹ ∈ R0) (f : α → LL)
     (t : Finset α) : (∃ x ∈ t, f x ≠ 0) → ∃ j ∈ t, f j ≠ 0 ∧ ∀ x ∈ t, f x / f j ∈ R0 := by
@@ -132,8 +131,7 @@ theorem exists_pivot {α : Type} [DecidableEq α] (R0 : Subring LL) (hv : ∀ x 
         exact R0.zero_mem
 
 theorem exists_dual_ne {v : Kf} (hv : v ≠ 0) : ∃ ℓ : Kf →ₗ[LL] LL, ℓ v ≠ 0 := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   exact hv ((Module.forall_dual_apply_eq_zero_iff LL v).mp hc)
 
 theorem desc_main (A : Subring Kf) (hA : ∀ x : Kf, x ∈ A ∨ x⁻¹ ∈ A) (R0 : Subring LL)
@@ -161,8 +159,7 @@ theorem desc_main (A : Subring Kf) (hA : ∀ x : Kf, x ∈ A ∨ x⁻¹ ∈ A) (
       have hsum : ∀ ℓ : Kf →ₗ[LL] LL, ∑ x ∈ t, ℓ (c x) • x = ℓ 1 • Q := by
         intro ℓ
         apply desc_fun ℓ t c 1 Q
-        rw [map_one, one_mul]
-        exact hQ
+        rwa [map_one, one_mul]
       have hrange : ∀ x ∈ t, c x ∈ Set.range (algebraMap LL Kf) := by
         intro x0 hx0
         by_contra hnot
@@ -173,8 +170,7 @@ theorem desc_main (A : Subring Kf) (hA : ∀ x : Kf, x ∈ A ∨ x⁻¹ ∈ A) (
           exact ⟨a, by rw [Algebra.algebraMap_eq_smul_one]; exact ha⟩
         obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual LL (Kf ⧸ Submodule.span LL {(1 : Kf)}),
             φ ((Submodule.span LL {(1 : Kf)}).mkQ (c x0)) ≠ 0 := by
-          by_contra hc'
-          push Not at hc'
+          by_contra! hc'
           exact hmk ((Module.forall_dual_apply_eq_zero_iff LL _).mp hc')
         set ℓ : Kf →ₗ[LL] LL := φ.comp (Submodule.span LL {(1 : Kf)}).mkQ with hℓ
         have hℓ1 : ℓ 1 = 0 := by
@@ -182,14 +178,12 @@ theorem desc_main (A : Subring Kf) (hA : ∀ x : Kf, x ∈ A ∨ x⁻¹ ∈ A) (
           rw [(Submodule.Quotient.mk_eq_zero _).mpr (Submodule.mem_span_singleton_self 1), map_zero]
         have h0 := hsum ℓ
         rw [hℓ1, zero_smul, ← Finset.sum_coe_sort t] at h0
-        have h1 := Fintype.linearIndependent_iff.mp hdep (fun x : t => ℓ (c x)) h0 ⟨x0, hx0⟩
-        exact hφ h1
+        exact hφ (Fintype.linearIndependent_iff.mp hdep (fun x : t => ℓ (c x)) h0 ⟨x0, hx0⟩)
       choose d hd using fun x (hx : x ∈ t) => hrange x hx
       obtain ⟨ℓ0, hℓ0⟩ := exists_dual_ne (LL := LL) (Kf := Kf) (one_ne_zero : (1 : Kf) ≠ 0)
       set ℓ1 : Kf →ₗ[LL] LL := (ℓ0 1)⁻¹ • ℓ0 with hℓ1def
       have hℓ11 : ℓ1 1 = 1 := by
-        simp only [hℓ1def, LinearMap.smul_apply, smul_eq_mul]
-        exact inv_mul_cancel₀ hℓ0
+        simpa only [hℓ1def, LinearMap.smul_apply, smul_eq_mul] using inv_mul_cancel₀ hℓ0
       have h0 := hsum ℓ1
       rw [hℓ11, one_smul] at h0
       rw [← h0]
@@ -564,8 +558,7 @@ theorem weylLatticeDescent_of_valuation (hD : DescVal)
   unfold CoreAt
   rw [mem_htupW_iff P rfl pos N hD hfr e R0 hR0 L HL Q]
   constructor
-  · intro hQ
-    exact span_to_int P pos lam M N embLL hodd hw G R0 Q hQ
+  · exact fun hQ => span_to_int P pos lam M N embLL hodd hw G R0 Q hQ
   · rintro ⟨Pp, hPp, hev⟩
     obtain ⟨Q', hQ', hev'⟩ := int_to_span P pos lam M N embLL hodd hw G R0 Pp hPp
     have h0 := Formalism.L2.G.evC_inj P rfl pos G (mcOf M embLL) (fun τ => gl_map_det embLL (M τ))

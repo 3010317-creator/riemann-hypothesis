@@ -34,8 +34,7 @@ theorem bchar_ne (la : Wt X.Ψ r) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) : b
   have hd := (hb' τ).1
   have hbt : (mat b τ).BlockTriangular id := fun a c hca => (hb' τ).2 a c hca
   rw [Matrix.det_of_upperTriangular hbt, Finset.prod_ne_zero_iff] at hd
-  have hi := hd i (Finset.mem_univ _)
-  exact zpow_ne_zero _ hi
+  exact zpow_ne_zero _ (hd i (Finset.mem_univ _))
 
 
 open Classical in
@@ -106,8 +105,7 @@ theorem nfac_pos {la : Wt X.Ψ r} {z : V (nd X)} (hz : z ∈ OmF X x0) : 0 < X.n
   apply Finset.prod_pos
   intro τ _
   apply Finset.prod_pos
-  intro i _
-  exact Real.rpow_pos_of_pos (norm_pos_iff.mpr (div_ne_zero (hd τ _) (hd τ _))) _
+  exact fun i _ => Real.rpow_pos_of_pos (norm_pos_iff.mpr (div_ne_zero (hd τ _) (hd τ _))) _
 
 theorem nfac_cont (la : Wt X.Ψ r) : ContinuousOn (fun z => X.nfac la (cpt X x0 z)) (OmF X x0) := by
   have hn : Continuous fun z : V (nd X) => nmat X z := by
@@ -116,12 +114,9 @@ theorem nfac_cont (la : Wt X.Ψ r) : ContinuousOn (fun z => X.nfac la (cpt X x0 
     by_cases h : b < a
     · simp only [h, dite_eq_left]
       fun_prop
-    · simp only [h, dite_eq_right, not_false_eq_true]
-      exact continuous_const
+    · simpa only [h, dite_eq_right, not_false_eq_true] using continuous_const
   have hc : Continuous fun z : V (nd X) => cpt X x0 z := by
-    refine continuous_pi fun τ => ?_
-    show Continuous fun z : V (nd X) => mat x0 τ * mat (nmat X z) τ
-    exact continuous_const.matrix_mul ((continuous_apply τ).comp hn)
+    exact continuous_pi fun τ => continuous_const.matrix_mul ((continuous_apply τ).comp hn)
   have hd : ∀ τ i, Continuous fun z : V (nd X) => dmin X.Gm (cpt X x0 z) τ i := by
     intro τ i
     have h1 : Continuous fun x : Frame X.Ψ r => dmin X.Gm x τ i := by

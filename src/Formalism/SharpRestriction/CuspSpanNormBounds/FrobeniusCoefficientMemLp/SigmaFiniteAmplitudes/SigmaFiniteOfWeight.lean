@@ -81,7 +81,6 @@ theorem sigmaFinite_of_weight (ν : Measure Y) (W : Y → ℝ≥0∞) (hWm : Mea
     · exact Set.mem_sUnion.2 ⟨_, Set.mem_insert _ _, h⟩
     · obtain ⟨n, hn⟩ := ENNReal.exists_inv_nat_lt h
       refine Set.mem_sUnion.2 ⟨_, Set.mem_insert_of_mem _ ⟨n, rfl⟩, ?_⟩
-      show ((n : ℝ≥0∞) + 1)⁻¹ ≤ W y
       exact le_trans (ENNReal.inv_le_inv.2 le_self_add) hn.le
 
 end Gen

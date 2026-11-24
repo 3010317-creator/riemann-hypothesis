@@ -28,16 +28,14 @@ theorem monic_X_pow_add_sum {R : Type*} [CommRing R] [Nontrivial R] (d : ℕ) (a
     (X ^ d + ∑ i ∈ range d, C (a i) * X ^ i).Monic := by
   refine monic_X_pow_add
     (lt_of_le_of_lt (degree_sum_le _ _) ((Finset.sup_lt_iff (WithBot.bot_lt_coe d)).2 ?_))
-  intro i hi
-  exact (degree_C_mul_X_pow_le i (a i)).trans_lt (WithBot.coe_lt_coe.2 (mem_range.1 hi))
+  exact fun i hi => (degree_C_mul_X_pow_le i (a i)).trans_lt (WithBot.coe_lt_coe.2 (mem_range.1 hi))
 
 theorem exists_nat_near (a : ℚ_[l]) (ha : ‖a‖ ≤ 1) : ∃ n : ℕ, ‖a - n‖ < 1 := by
   set x : ℤ_[l] := ⟨a, ha⟩ with hxdef
   obtain ⟨n, hn⟩ := PadicInt.denseRange_natCast.exists_dist_lt x one_pos
   have hxa : (x : ℚ_[l]) = a := rfl
   refine ⟨n, ?_⟩
-  rw [dist_eq_norm, PadicInt.norm_def, PadicInt.coe_sub, PadicInt.coe_natCast, hxa] at hn
-  exact hn
+  rwa [dist_eq_norm, PadicInt.norm_def, PadicInt.coe_sub, PadicInt.coe_natCast, hxa] at hn
 
 theorem exists_nat_poly_near (y : PadicAlgCl l) (hy : ‖y‖ ≤ 1) :
     ∃ d : ℕ, ∃ c : ℕ → ℕ, ‖((X ^ d + ∑ i ∈ range d, C ((c i : ℕ) : ℂ_[l]) * X ^ i).eval

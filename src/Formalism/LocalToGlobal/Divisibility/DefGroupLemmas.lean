@@ -110,8 +110,7 @@ theorem mem_stdLatS {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
   · intro h i
     obtain ⟨s, hs⟩ := h i (Set.mem_univ i)
     rw [← hs]; exact s.2
-  · intro h i _
-    exact ⟨⟨z i, h i⟩, rfl⟩
+  · exact fun h i _ => ⟨⟨z i, h i⟩, rfl⟩
 
 theorem frame_standard : FrameStd := by
   intro F E _ _ _ _ _ n x
@@ -187,8 +186,7 @@ theorem level_finite_index : KgFiniteIndex := by
       funext PP
       have h2 := (mem_princAt.1 (Subgroup.mem_iInf.1 (Subgroup.mem_iInf.1 h1 PP.1) PP.2)).2
       unfold redFn at h2
-      rw [extendOne_of_mem _ x.2.2] at h2
-      exact h2
+      rwa [extendOne_of_mem _ x.2.2] at h2
     · intro hx
       refine ⟨x.2, Subgroup.mem_iInf.2 fun PP => Subgroup.mem_iInf.2 fun hP => mem_princAt.2 ⟨x.2.2, ?_⟩⟩
       unfold redFn
@@ -280,10 +278,8 @@ theorem clFinite_of (h : LevFiniteIndex) : ClFinite := by
   have hfin := _root_.Formalism.UG.P.lattice_class_set_finite_local_holds F E (Fin n) hc.sig J (cm_comp hc) hU.herm hU.unit hU.tdef L
     (Module.Finite.iff_fg.2 hU.lat.fg) (span_eq_top_of_def_unimod hU)
   refine class_set_finite_of_finite_index _ _ _ _ ?_ ?_ hfin
-  · intro x hx
-    exact Subgroup.mem_subgroupOf.2 (hle (Subgroup.mem_subgroupOf.1 hx))
-  · rw [Subgroup.relIndex_subgroupOf (levelAfL_le_UA hc J L)]
-    exact hidx
+  · exact fun x hx => Subgroup.mem_subgroupOf.2 (hle (Subgroup.mem_subgroupOf.1 hx))
+  · rwa [Subgroup.relIndex_subgroupOf (levelAfL_le_UA hc J L)]
 
 section GamMap
 
@@ -388,8 +384,7 @@ theorem standard_definite_unimodular : StdIsDefUnimod := by
         rw [hform_diagonal, Finset.sum_eq_single i] at h1
         · rw [Pi.single_eq_same, map_one, one_mul] at h1
           have h2 := (algebraMap (𝓞 E) E).range.mul_mem (sgn_mem_range (E := E) neg) h1
-          rw [← mul_assoc, Formalism.BasicNotions.Examples₂.sgn_mul_self, one_mul] at h2
-          exact h2
+          rwa [← mul_assoc, Formalism.BasicNotions.Examples₂.sgn_mul_self, one_mul] at h2
         · intro j _ hj
           rw [Pi.single_eq_of_ne hj, map_zero, zero_mul, zero_mul]
         · intro h; exact absurd (Finset.mem_univ i) h
@@ -418,8 +413,7 @@ local notation "ιA" => inclE (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
 
 theorem levelafC_eq_incl (D : 𝓞 F) : levelafC E D = ιA (algebraMap (𝓞 F) E D) := by
   have := csGlob_tmul_int (F := F) (E := E) (1 : E) D
-  rw [mul_one] at this
-  exact this
+  rwa [mul_one] at this
 
 theorem latS_approx (L : Submodule (𝓞 E) (Fin n → E)) (D : 𝓞 F) (hD : D ≠ 0) (v : Fin n → 𝒜)
     (hv : v ∈ latS (F := F) (FiniteAdeleRing (𝓞 F) F) 𝒮 L) :
@@ -506,10 +500,8 @@ theorem hat_selfdual (σ : E →ₐ[F] E) (J : Matrix (Fin n) (Fin n) E) (L : Su
       have h3 : ιA (hform (σ : E →+* E) J l z0) ∈ 𝒮 := by
         have := sub_mem h1 h2
         rwa [add_sub_cancel_right] at this
-      have h4 := csGlob_int (F := F) _ h3
-      exact ⟨⟨_, h4⟩, rfl⟩
-    rw [hsd] at this
-    exact this
+      exact ⟨⟨_, (csGlob_int (F := F) _ h3)⟩, rfl⟩
+    rwa [hsd] at this
   rw [hw']
   exact Submodule.add_mem _ (Submodule.subset_span ⟨z0, hz0L, rfl⟩) hl1
 
@@ -614,10 +606,7 @@ theorem isUnit_intAd (a : intAd F) (h : ∀ v, Valued.v ((a : Af F) v) = 1) : Is
     have := h v; rw [h0, map_zero] at this; exact zero_ne_one this
   refine IsUnit.of_mul_eq_one (mkAd (fun v => ((a : Af F) v)⁻¹) (fun v => ?_)) ?_
   · rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_inv₀, h v, inv_one]
-  · apply Subtype.ext
-    refine FiniteAdeleRing.ext _ fun v => ?_
-    show (a : Af F) v * ((a : Af F) v)⁻¹ = 1
-    exact mul_inv_cancel₀ (h0 v)
+  · exact Subtype.ext (FiniteAdeleRing.ext _ fun v => mul_inv_cancel₀ (h0 v))
 
 def underPl (F : Type) [Field F] [NumberField F] [Algebra F E] (PP : Pl E) : HeightOneSpectrum (𝓞 F) where
   asIdeal := PP.asIdeal.comap (algebraMap (𝓞 F) (𝓞 E))
@@ -974,8 +963,7 @@ theorem exists_gramS (hc : CMData F E) {J : Matrix (Fin n) (Fin n) E} {L : Submo
       rw [e2, dotProduct_single, mul_one]
       exact Formalism.UG.P.csScale_sigR_mem hc.sig (hyS j)
     have h3 := (hβ _).1 hw i
-    rw [Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec, hu, Matrix.mulVec_single_one] at h3
-    exact h3
+    rwa [Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec, hu, Matrix.mulVec_single_one] at h3
   obtain ⟨G, hG⟩ := Formalism.UG.P.levelaf_mem_range_of_integral (intAf F E) Gu
     ⟨fun i j => ⟨(Gu : Matrix (Fin n) (Fin n) (E ⊗[F] Af F)) i j, by rw [hGv]; exact hG1 i j⟩, by ext i j; rfl⟩
     ⟨fun i j => ⟨((Gu⁻¹ : GL (Fin n) (E ⊗[F] Af F)) : Matrix (Fin n) (Fin n) (E ⊗[F] Af F)) i j, hG2 i j⟩,
@@ -1205,8 +1193,7 @@ theorem exists_unitary_lift (hc : CMData F E) (G : GL (Fin n) (intAf F E))
     refine isUnit_matrix_of_resS hc _ fun QQ => ?_
     by_cases h : QQ ∈ T
     · rw [hPbar1 QQ h, Matrix.det_mul]
-      refine mul_ne_zero (hgdet QQ) ?_
-      exact ((Matrix.isUnit_iff_isUnit_det _).1 (y ⟨QQ, h⟩).isUnit).ne_zero
+      exact mul_ne_zero (hgdet QQ) ((Matrix.isUnit_iff_isUnit_det _).1 (y ⟨QQ, h⟩).isUnit).ne_zero
     · rw [hPbar2 QQ h]; exact hgdet QQ
   have hQu : IsUnit (g + sigS hc c • N) := by
     refine isUnit_matrix_of_resS hc _ fun QQ => ?_
@@ -1362,8 +1349,7 @@ theorem fr_glue (L : Submodule (𝓞 E) (Fin n → E)) (B C : Matrix (Fin n) (Fi
         have h3 : C *ᵥ (d • l) = fun j => algebraMap (𝓞 E) E (a j) := by
           rw [ha, Matrix.mulVec_mulVec, hCB, Matrix.one_mulVec]
         have h4 := congrFun h3 i
-        rw [Matrix.mulVec_smul, Pi.smul_apply, Algebra.smul_def] at h4
-        exact h4
+        rwa [Matrix.mulVec_smul, Pi.smul_apply, Algebra.smul_def] at h4
       rw [e1, ← hdω, mul_right_comm, ← map_mul, e2]
       exact mul_mem (Formalism.UG.CS.incl_int (a i)) hω
     | zero =>
@@ -1422,8 +1408,7 @@ theorem frame_exists_alt : FrameExists := by
     rw [hD1, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
     exact mul_ne_zero hc0 hd00
   have hD2' : D2 ≠ 0 := by
-    rw [hD2, Ne, Ideal.absNorm_eq_zero_iff]
-    exact hp0
+    rwa [hD2, Ne, Ideal.absNorm_eq_zero_iff]
   obtain ⟨t, ht⟩ : ∃ t : 𝓞 F, t * (c * d0) = (D1 : 𝓞 F) :=
     Ideal.mem_span_singleton'.1 (Ideal.absNorm_mem _)
   have hP0 : ((D1 * D2 : ℕ) : 𝓞 E) ∈ P0.asIdeal := by
@@ -1575,9 +1560,7 @@ theorem mkAct_injective (Λ : Submodule (𝓞 E) (Fin n → E)) (hΛ : Submodule
     exact this
   have h2 : Matrix.mulVecLin ((a : GL (Fin n) E) : Matrix (Fin n) (Fin n) E) =
       Matrix.mulVecLin ((b : GL (Fin n) E) : Matrix (Fin n) (Fin n) E) := by
-    refine LinearMap.ext_on hΛ ?_
-    intro x hx
-    exact h1 x hx
+    exact LinearMap.ext_on hΛ (fun x hx => h1 x hx)
   exact Matrix.toLin'.injective h2
 
 theorem mk_card_dvd (hM : Formalism.HermitianLatticeCounting.S6.MinkowskiBound) (Λ : Submodule (𝓞 E) (Fin n → E))
@@ -1732,8 +1715,7 @@ theorem lc_stab_loc (v : HeightOneSpectrum (𝓞 F)) (L : Submodule (𝓞 E) (Fi
     bc (prV (E := E) v) x ∈ stabGL (locL v L) := by
   intro w
   constructor
-  · intro hw
-    exact lc_map_loc v L _ (fun u hu => (hx u).1 hu) w hw
+  · exact fun hw => lc_map_loc v L _ (fun u hu => (hx u).1 hu) w hw
   · intro hw
     have hx' := Subgroup.inv_mem _ hx
     have h1 := lc_map_loc v L _ (fun u hu => (hx' u).1 hu) _ hw
@@ -1745,8 +1727,7 @@ theorem lc_stab_loc (v : HeightOneSpectrum (𝓞 F)) (L : Submodule (𝓞 E) (Fi
             Matrix (Fin n) (Fin n) (E ⊗[F] v.adicCompletion F)) := rfl
       rw [h2, Matrix.mulVec_mulVec, ← Units.val_mul, ← map_mul, inv_mul_cancel, map_one, Units.val_one,
         Matrix.one_mulVec]
-    rw [e] at h1
-    exact h1
+    rwa [e] at h1
 
 theorem lc_div (g : ℕ) (hg0 : g ≠ 0)
     (hdiv : ∀ b : 𝓞 E, (∀ PP : Pl E, (g : 𝓞 E) ∈ PP.asIdeal → b ∈ PP.asIdeal) → (g : 𝓞 E) ∣ b)

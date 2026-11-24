@@ -71,13 +71,11 @@ theorem length_map (V W : Ideal R) [W.IsPrime] [(W.map (φ : R →+* R')).IsPrim
       exact h'.1 _ (fun h => hs ((mem_map_iff φ W s).1 h))
     · obtain ⟨r, s, hs, e⟩ := h'.2.1 y
       refine ⟨φ.symm r, φ.symm s, hS s hs, ?_⟩
-      rw [hal, hal, φ.apply_symm_apply, φ.apply_symm_apply]
-      exact e
+      rwa [hal, hal, φ.apply_symm_apply, φ.apply_symm_apply]
     · rw [hal] at hr
       obtain ⟨s, hs, e⟩ := h'.2.2.1 _ hr
       refine ⟨φ.symm s, hS s hs, ?_⟩
-      rw [← mem_map_iff φ V, map_mul, φ.apply_symm_apply]
-      exact e
+      rwa [← mem_map_iff φ V, map_mul, φ.apply_symm_apply]
     · rw [hal]
       exact h'.2.2.2 _ ((mem_map_iff φ V v).2 hv)
   exact (h'.length_eq (φ x)).trans (h.length_eq x).symm

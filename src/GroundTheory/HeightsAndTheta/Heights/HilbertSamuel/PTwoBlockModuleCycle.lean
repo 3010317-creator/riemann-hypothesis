@@ -34,8 +34,7 @@ theorem mem_minimalPrimes_iff_of {R : Type*} [CommRing R] {J J' W : Ideal R} (hJ
   constructor
   · intro h
     exact ⟨⟨h.1.1, key W h.1.1 le_rfl h.1.2⟩, fun Q hQ hQW => h.2 ⟨hQ.1, hJ.trans hQ.2⟩ hQW⟩
-  · intro h
-    exact ⟨⟨h.1.1, hJ.trans h.1.2⟩, fun Q hQ hQW => h.2 ⟨hQ.1, key Q hQ.1 hQW hQ.2⟩ hQW⟩
+  · exact fun h => ⟨⟨h.1.1, hJ.trans h.1.2⟩, fun Q hQ hQW => h.2 ⟨hQ.1, key Q hQ.1 hQW hQ.2⟩ hQW⟩
 
 theorem sup_range_le {R : Type*} [CommRing R] (P : Ideal R) (s : R) (v : τ → R) :
     P ⊔ Ideal.span (Set.range fun j => s * v j) ≤ P ⊔ Ideal.span {s} := by
@@ -119,8 +118,7 @@ theorem TwoBlockModuleCycle.proof : TwoBlockModuleCycle.Statement := by
 
   obtain ⟨hFp, -⟩ := TwoBlockFnField.proof Ω κ x B hB
   have hxA : IsArithVar (mCoordIdeal (ι := GlobalTheory κ) x) (D + 1) := by
-    rw [← coordIdeal_eq_mCoordIdeal]
-    exact hX
+    rwa [← coordIdeal_eq_mCoordIdeal]
   have hxc : x ⟨(), c⟩ ≠ 0 := hx.ne_zero _
   have hx0 : x ≠ 0 := fun h => hxc (by rw [h]; rfl)
   obtain ⟨B', -, hB'⟩ := isInvMat_mul hB

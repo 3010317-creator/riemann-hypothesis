@@ -133,8 +133,7 @@ theorem ae_UH_of_quot {μG μS νq : Measure (Formalism.QuantumDeterminants.Mt k
         ≤ ∫⁻ x, ∫⁻ s, B.indicator 1 (fun i j => (Matrix.of s * Matrix.of x) i j) ∂μS ∂νq := lintegral_mono hle
       _ = 0 := key.symm
   have hνB : νq B = 0 := (mul_eq_zero.mp h0).resolve_left hc
-  rw [ae_iff]
-  exact hνB
+  rwa [ae_iff]
 
 theorem muSof_facts {z : Fin (2 * r + k + 1) → ℂ} {μW μN : Measure (Formalism.QuantumDeterminants.Mt k r)}
     (hW : PI.BesselPeriodGGP.IsHaarOn (Formalism.QuantumDeterminants.UWset k r z) μW)
@@ -220,10 +219,8 @@ theorem bessel_smul {z : Fin (2 * r + k + 1) → ℂ} {ψ : Mx k r → ℂ} {σ 
   obtain ⟨hadd, hsm, heq, C, Ws, hWs, hbd⟩ := hB
   refine ⟨fun v hv w hw => ?_, fun c v hv => ?_, fun h hh m hm v hv => ?_, ‖κ‖ * C, Ws, hWs, fun v hv => ?_⟩
   · simp only [hadd v hv w hw, smul_add]
-  · simp only [hsm c v hv]
-    exact smul_comm κ c (B v)
-  · simp only [heq h hh m hm v hv, map_smul]
-    exact smul_comm κ (ψ m) _
+  · simpa only [hsm c v hv] using smul_comm κ c (B v)
+  · simpa only [heq h hh m hm v hv, map_smul] using smul_comm κ (ψ m) _
   · rw [norm_smul, mul_assoc]
     exact mul_le_mul_of_nonneg_left (hbd v hv) (norm_nonneg κ)
 

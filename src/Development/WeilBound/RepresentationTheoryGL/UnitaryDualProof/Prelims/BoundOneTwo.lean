@@ -73,8 +73,7 @@ theorem isEmbedding_valGL : IsEmbedding (Units.val : GL (Fin m) k → Matrix (Fi
     have hd : A.det ≠ 0 := ((Matrix.isUnit_iff_isUnit_det A).1 hA).ne_zero
     rw [Ring.inverse_eq_inv']
     exact continuousAt_inv₀ hd
-  · intro u
-    exact (Matrix.coe_units_inv u).symm
+  · exact fun u => (Matrix.coe_units_inv u).symm
 
 theorem range_valGL :
     Set.range (Units.val : GL (Fin m) k → Matrix (Fin m) (Fin m) k) = {A | A.det ≠ 0} := by
@@ -201,8 +200,7 @@ theorem exists_clopen_local (C : Set k) (hC : IsCompact C) (h0 : (0 : k) ∉ C) 
   have hWn : (W : Set k) ∈ 𝓝 (0 : k) := (IsValuativeTopology.hasBasis_nhds_zero' k).mem_of_mem hγ
   have hWo : IsOpen (W : Set k) := AddSubgroup.isOpen_of_mem_nhds W hWn
   refine ⟨(W : Set k)ᶜ, ⟨hWo.isClosed_compl, (AddSubgroup.isClosed_of_isOpen W hWo).isOpen_compl⟩, ?_, ?_⟩
-  · intro c hc hcW
-    exact hsub hcW hc
+  · exact fun c hc hcW => hsub hcW hc
   · exact fun h => h W.zero_mem
 
 end Dist

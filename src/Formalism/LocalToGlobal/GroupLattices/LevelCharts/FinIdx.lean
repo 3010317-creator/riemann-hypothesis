@@ -19,10 +19,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarR
 
 theorem finite_setOf_mem_asIdeal {x : 𝓞 F} (hx : x ≠ 0) : {v : HeightOneSpectrum (𝓞 F) | x ∈ v.asIdeal}.Finite := by
   have hI : (Ideal.span {x} : Ideal (𝓞 F)) ≠ 0 := by
-    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact hx
-  refine (Ideal.finite_factors hI).subset ?_
-  intro v hv
-  exact Ideal.dvd_span_singleton.mpr hv
+    rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
+  exact (Ideal.finite_factors hI).subset (fun v hv => Ideal.dvd_span_singleton.mpr hv)
 
 end Formalism.L2.G

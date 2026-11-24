@@ -34,8 +34,7 @@ theorem cc_mul (D : D7) (x y : D.host.E) : cc (x * y) = cc x * cc y := by
 
 theorem int_cc (D : D7) {b : D.host.E} (hb : IsIntegral ℤ b) : IsIntegral ℤ (cc b) := by
   have h := hb.map ((D.host.conj : D.host.E →ₐ[ℚ] D.host.E).restrictScalars ℤ)
-  rw [cc_eq_conj]
-  exact h
+  rwa [cc_eq_conj]
 
 theorem mem_one_of_int (D : D7) {z : D.host.E} (hz : IsIntegral ℤ z) :
     z ∈ (1 : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) :=
@@ -191,8 +190,7 @@ theorem localLattice_form_integral {x y : Fin r → D.host.E} (hx : x ∈ lattic
   intro a ha j hj
   have hj' : cc j ∈ D.host.AA := by rw [cc_eq_conj]; exact conj_mem_AA D hj
   have h1 := (hF (a • x)).1 (mem_latP.1 hx a ha) (cc j • y) (mem_latP.1 hy _ hj')
-  rw [herm_smul_left, herm_smul_right, cc_cc] at h1
-  exact h1
+  rwa [herm_smul_left, herm_smul_right, cc_cc] at h1
 
 theorem mem_dual_localLattice_of_forall {x : Fin r → D.host.E} (hx : ∀ y ∈ lattice₂ D Λ, IsIntegral ℤ (herm G x y)) : x ∈ lattice₂ D Λ := by
   refine mem_latP.2 fun a ha => ?_
@@ -243,8 +241,7 @@ theorem normCc_mem_AA (D : D7) : ((Ideal.absNorm D.host.ccK : ℕ) : D.host.E) �
     have := Ideal.mem_map_of_mem (algebraMap (𝓞 D.host.K) (𝓞 D.host.E)) (Ideal.absNorm_mem D.host.ccK)
     rwa [map_natCast] at this
   have h3 := mul_mem_mul (mem_coeIdeal_of_mem (S := nonZeroDivisors (𝓞 D.host.E)) (P := D.host.E) h2) h1
-  rw [map_natCast, mul_one] at h3
-  exact h3
+  rwa [map_natCast, mul_one] at h3
 
 theorem int_of_mem_b (D : D7) {n : ℕ} (hn : (n : 𝓞 D.host.E) ∈ D.host.𝔟) {a : D.host.E} (ha : a ∈ D.host.AA) :
     ∃ c : 𝓞 D.host.E, algebraMap _ _ c = a * n := by

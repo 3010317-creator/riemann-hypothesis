@@ -92,8 +92,7 @@ theorem vg_ellP : ((-(X.dS K j e : ℤ) : ℤ) : WithTop ℤ) ≤ valS LZ S (X.e
     rw [← Finset.sum_neg_distrib]
     refine Finset.sum_congr rfl fun x _ => ?_
     split_ifs <;> simp
-  rw [e1] at h
-  exact h
+  rwa [e1] at h
 
 theorem lg_ellN : lam1S LZ S (X.ellN K R j e) ≤ (((X.dV K j e : ℤ) : ℤ) : WithBot ℤ) := by
   have h := lg_prod D hV (R := R) S (X.toLate j)
@@ -106,8 +105,7 @@ theorem lg_ellN : lam1S LZ S (X.ellN K R j e) ≤ (((X.dV K j e : ℤ) : ℤ) : 
     push_cast
     refine Finset.sum_congr rfl fun x _ => ?_
     split_ifs <;> simp
-  rw [e1] at h
-  exact h
+  rwa [e1] at h
 
 theorem vg_DlSeg (hev : ∀ x' ∈ X.toLate j, ∀ i, Even (X.row j x' i)) (x : ℤ) (hx : x ∈ X.toLate j)
     (hinj : Function.Injective (X.row j x)) (hS : ∀ i, X.row j x i ∈ S) :
@@ -127,8 +125,7 @@ theorem vg_DlSeg (hev : ∀ x' ∈ X.toLate j, ∀ i, Even (X.row j x' i)) (x : 
       · rw [ite_eq_right hxx]
         have := vg_pow D hV S (vg_det D hV (R := R) S (X.row j x') (hev x' hx')) (X.sg p K j x')
         simpa [Dat.detPl] using this)
-  rw [Finset.sum_ite_eq' (X.toLate j) x, ite_eq_left hx] at h
-  exact h
+  rwa [Finset.sum_ite_eq' (X.toLate j) x, ite_eq_left hx] at h
 
 theorem vg_Aw (hev : ∀ x' ∈ X.toLate j, ∀ i, Even (X.row j x' i)) (x : ℤ) (hx : x ∈ X.toLate j)
     (hinj : Function.Injective (X.row j x)) (hS : ∀ i, X.row j x i ∈ S)

@@ -316,8 +316,7 @@ theorem unit_loc (ho : IsLocOm v om omv) (h : IsUnitaryOn (adeleClass F) om) : I
   rw [hom] at e3
   have hc' : (c : ENNReal) ≠ 0 := by exact_mod_cast hc
   refine (ENNReal.mul_right_inj hc' ENNReal.coe_ne_top).mp ?_
-  rw [← e1, ← e2]
-  exact e3
+  rwa [← e1, ← e2]
 
 end Gen
 
@@ -359,11 +358,9 @@ theorem uweilB_loc (hψ : IsStd ψ) (hA : JA.map (compFin F E v) = JAv) (hB : JB
         map_zero] at e
       exact e
     · have e := congrArg (fun M => M.map (compFin F E v)) h3
-      simp only [Matrix.map_mul, hF, Matrix.map_one, map_zero, map_one] at e
-      exact e
+      simpa only [Matrix.map_mul, hF, Matrix.map_one, map_zero, map_one] using e
     · have e := congrArg (fun M => M.map (compFin F E v)) h4
-      simp only [Matrix.map_mul, hF, Matrix.map_one, map_zero, map_one] at e
-      exact e
+      simpa only [Matrix.map_mul, hF, Matrix.map_one, map_zero, map_one] using e
   · exact fun μ hμ g φ hφ => hus.unit μ hμ _ φ hφ
   · exact fun l hl φ hφ => (hus.cont l hl φ hφ).comp (continuous_liftU _)
 

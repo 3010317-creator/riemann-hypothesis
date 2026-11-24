@@ -113,8 +113,7 @@ theorem finGen_tw {V : Submodule ℂ (Sm E a)} (hV : FinGen V) (w : ℂ) : FinGe
     obtain ⟨χ, hχ, rfl⟩ := Submodule.mem_map.1 (hle hψ)
     have e := ChordArithmetic.mulChi_absC_cancel (E := E) a w χ
     simp only [LinearEquiv.coe_coe] at e ⊢
-    rw [e]
-    exact hχ
+    rwa [e]
 
 theorem infNodup_tw {V : Submodule ℂ (Sm E a)} {τ : E →+* ℂ} (h : ∃ m, HasInfCharGL V τ m ∧ m.Nodup) (w : ℂ) :
     ∃ m, HasInfCharGL (tw V w) τ m ∧ m.Nodup := by
@@ -136,14 +135,12 @@ theorem tw_tw_neg (V : Submodule ℂ (Sm E a)) (w : ℂ) : tw (tw V (-w)) w = V 
     obtain ⟨χ, hχ, rfl⟩ := Submodule.mem_map.1 hφ
     obtain ⟨ψ, hψ, rfl⟩ := Submodule.mem_map.1 hχ
     simp only [LinearEquiv.coe_coe]
-    rw [ChordArithmetic.mulChi_absC_cancel]
-    exact hψ
+    rwa [ChordArithmetic.mulChi_absC_cancel]
   · intro hφ
     have h1 : (mulChi a (Model.absC E (-w))).toLinearMap φ ∈ tw V (-w) := Submodule.mem_map_of_mem hφ
     have h2 := Submodule.mem_map_of_mem (f := (mulChi a (Model.absC E w)).toLinearMap) h1
     simp only [LinearEquiv.coe_coe] at h2
-    rw [ChordArithmetic.mulChi_absC_cancel] at h2
-    exact h2
+    rwa [ChordArithmetic.mulChi_absC_cancel] at h2
 
 end PositivityTheory.Rg.BcB.SpectralAccumulation.Cz.BlockTwistCharacters
 

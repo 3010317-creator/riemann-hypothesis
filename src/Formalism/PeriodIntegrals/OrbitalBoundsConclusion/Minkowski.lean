@@ -156,8 +156,7 @@ theorem good_cyclotomic_succ (ℓ : ℕ) (hℓ : ℓ.Prime) (j : ℕ) :
             Nat.mul_le_mul_right _ (Nat.sub_le ℓ 1)
         _ = ℓ ^ (k + 1) * (ℓ - 1) := by ring
     · rw [hdeg, hz]; push_cast; ring
-    · intro h
-      exact absurd h (mul_ne_zero (pow_ne_zero _ hℓ.ne_zero) (by omega))
+    · exact fun h => absurd h (mul_ne_zero (pow_ne_zero _ hℓ.ne_zero) (by omega))
 
 theorem good_cyclotomic (ℓ : ℕ) (hℓ : ℓ.Prime) (j : ℕ) : Good ℓ (cyclotomic (ℓ ^ j) ℚ) := by
   rcases j with _ | j
@@ -378,8 +377,7 @@ theorem pGroupStep_of (ha : TraceStep) (hb : PowerSumStep) : PGroupStep := by
   · have h1 : Matrix.trace (((1 : P) : Matrix.GeneralLinearGroup (Fin N) ℤ) :
         Matrix (Fin N) (Fin N) ℤ) = (N : ℤ) := by
       simp
-    rw [h1, schurPoly_eval_top, Int.natCast_dvd_natCast, ← Nat.card_eq_fintype_card] at hdvd
-    exact hdvd
+    rwa [h1, schurPoly_eval_top, Int.natCast_dvd_natCast, ← Nat.card_eq_fintype_card] at hdvd
   · intro g _ hg
     obtain ⟨a, hga⟩ := hP g
     have hmat : ((g : Matrix.GeneralLinearGroup (Fin N) ℤ) : Matrix (Fin N) (Fin N) ℤ) ^ (ℓ ^ a)
@@ -394,8 +392,7 @@ theorem pGroupStep_of (ha : TraceStep) (hb : PowerSumStep) : PGroupStep := by
     apply Subtype.ext
     apply Units.ext
     simpa using hy0 h0
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem minkowskiBound_of_steps (ha : TraceStep) (hb : PowerSumStep) : PI.MinkowskiBound :=
   minkowskiBound_of (pGroupStep_of ha hb)

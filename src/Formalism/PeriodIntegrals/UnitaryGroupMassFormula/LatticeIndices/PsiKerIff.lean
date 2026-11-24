@@ -61,8 +61,7 @@ theorem toO_map (M : Matrix n n K) (hM : IntM O M) : (toO O M hM).map (algebraMa
 theorem map_inj : Function.Injective fun M : Matrix n n O => M.map (algebraMap O K) := by
   intro M N h
   ext i j
-  have h1 := congrFun (congrFun h i) j
-  exact h1
+  exact congrFun (congrFun h i) j
 
 variable (θ : T ≃ₐ[K] K × K) (J : Matrix n n T) (P : GL n K) {H : Type} [Group H] (m : H →* GL n T)
   (hK : ∀ h x, x ∈ Lat O θ J P ↔ ((m h : GL n T) : Matrix n n T) *ᵥ x ∈ Lat O θ J P)
@@ -120,8 +119,7 @@ theorem psi_ker_iff (c : O) (h : H) :
     obtain ⟨w, hw, hwe⟩ := H1 i j
     refine Ideal.mem_span_singleton'.mpr ⟨⟨w, hw⟩, ?_⟩
     apply Subtype.ext
-    rw [key]
-    rw [hwe]
+    rw [key, hwe]
     push_cast
     ring
 

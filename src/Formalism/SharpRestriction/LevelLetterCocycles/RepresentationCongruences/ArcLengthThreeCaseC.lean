@@ -189,8 +189,7 @@ theorem filS_zero_of (T : LocLat G Qp LL O) (a : ZMod n) (u : ℤ) (x : T.V ⊗[
   unfold FilS at hx
   rw [pow_one, Nat.cast_one, add_sub_cancel_right, Submodule.mem_map] at hx
   obtain ⟨y, hy, hyx⟩ := hx
-  rw [← φVB_inj T hyx]
-  exact hy
+  rwa [← φVB_inj T hyx]
 
 theorem repVV_smulA {T : LocLat G Qp LL O} {c' : ZMod n} {e M : ℕ} {Λ : LetA O n} {d : ℕ}
     {b : Fin d → W.DD T} {sol : Fin d → ℕ → Fin d → LL} {x : W.DD T} {f : Fin d → W.EE}
@@ -323,8 +322,7 @@ theorem dvO_lin (T : LocLat G Qp LL O) (e : ℕ) {d : ℕ} (b : Fin d → W.DD T
     dvO W T e b (fun k => ∑ i, t i * c i k) = ∑ i, algebraMap O LL (t i) • dvO W T e b (c i) := by
   unfold dvO dv
 
-  simp only [map_sum, map_mul, Finset.sum_smul, mul_smul, Finset.smul_sum]
-  exact Finset.sum_comm
+  simpa only [map_sum, map_mul, Finset.sum_smul, mul_smul, Finset.smul_sum] using Finset.sum_comm
 
 theorem isDist_XP (i j : ℕ) : IsDist ((X : PowerSeries O) ^ i * Br.P.p 1 ^ j) := by
   unfold IsDist PhiData.p
@@ -470,8 +468,7 @@ theorem coef_fil (hinj : Function.Injective (algebraMap O LL)) {T : LocLat G Qp 
       rw [coeff_C_mul] at h3
       rw [← h3]
 
-      simp only [V, map_sum, coeff_C_mul]
-      exact Finset.sum_congr rfl fun i _ => mul_comm _ _
+      simpa only [V, map_sum, coeff_C_mul] using Finset.sum_congr rfl fun i _ => mul_comm _ _
     have hmem : dvO W T 2 b (fun k => ((PD.p : ℕ) : O) ^ κ * coeff j (Gs k)) ∈ FilS W T a 0 bs := by
       rw [hco, dvO_lin]
       refine Submodule.sum_mem _ fun i _ => ?_
@@ -642,8 +639,7 @@ theorem content_notMem {l : ℕ} [Fact l.Prime] (P : PhiData O l) (σ A S y b₁
     rw [ht]
     push_cast [show 2 * σ ≤ s₁ by omega]
     ring
-  rw [← this]
-  exact htle
+  rwa [← this]
 
 end ArcLengthThreeFiltration
 end Formalism.MainNotions.N.FrobeniusPowerSeries

@@ -116,8 +116,7 @@ private theorem hT_isoG_of_gram_eq {ι : Type*} [Fintype ι] [DecidableEq ι] (u
     S.hT (isoG u u' x) (isoG u u' y) = S.hT x y := by
   have hlin : ∀ (w : ι → S.V) (c : ι → E), (∀ i, w i ∈ Submodule.span E (Set.range u)) →
       lin w c ∈ Submodule.span E (Set.range u) := by
-    intro w c hw
-    exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (hw i)
+    exact fun w c hw => Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (hw i)
   have hu : ∀ i, u i ∈ Submodule.span E (Set.range u) := fun i => Submodule.subset_span ⟨i, rfl⟩
   have hgram : ∀ (w : ι → S.V) (c d : ι → E), S.hT (lin w c) (lin w d) =
       ∑ i, ∑ j, star (c i) * d j * gram S w w i j := by
@@ -155,8 +154,7 @@ theorem isom_ext {ι : Type*} [Fintype ι] [DecidableEq ι] (u u' : ι → S.V) 
   have hsurj : Function.Surjective (isoG u u') := LinearMap.injective_iff_surjective.mp hinj
   have hbij : Function.Bijective (isoG u u') := ⟨hinj, hsurj⟩
   refine ⟨LinearEquiv.ofBijective (isoG u u') hbij, ?_, ?_, ?_, ?_⟩
-  · intro x y
-    exact hT_isoG_of_gram_eq u u' hG hdet hsp x y
+  · exact fun x y => hT_isoG_of_gram_eq u u' hG hdet hsp x y
   · intro i
     simp only [LinearEquiv.ofBijective_apply, isoG_apply, pc_self u hdet, lin_single]
     abel

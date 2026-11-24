@@ -120,8 +120,7 @@ theorem exists_highestWeight_general (ε : Fin n → Bool)
     refine Module.End.hasEigenvalue_of_hasEigenvector (x := ⟨w, hw⟩) ⟨?_, ?_⟩
     · rw [Module.End.mem_eigenspace_iff]
       exact Subtype.ext (by simpa using hμ c)
-    · intro h
-      exact hw0 (congrArg Subtype.val h)
+    · exact fun h => hw0 (congrArg Subtype.val h)
   have hPne : P.Nonempty := by
     obtain ⟨w, hw, hw0, z, hz⟩ := exists_joint_eigenvector_alt hcomm Finset.univ S hfd hSc hne
     refine ⟨fun c => (z c).re, w, hw, hw0, fun c => ?_⟩
@@ -176,8 +175,7 @@ theorem tensorFock_finiteDimensional {S : Submodule ℂ N} (hS : FiniteDimension
   exact LinearMap.finiteDimensional_range _
 
 theorem tensorFock_mono {S T : Submodule ℂ N} (h : S ≤ T) : tensFock (n := n) S ≤ tensFock T := by
-  intro y hy
-  exact mem_tensorFock_of_coeffs fun s => h (tcoef_mem hy _)
+  exact fun y hy => mem_tensorFock_of_coeffs fun s => h (tcoef_mem hy _)
 
 theorem tensorFock_diagAction_stable (ε : Fin n → Bool) {E : Fin n → Fin n → Module.End ℂ N} {S : Submodule ℂ N}
     (hS : IsKStableSub ε E S) {a b : Fin n} (hab : ε a = ε b) {y : TensorProduct ℂ N (Fock n)}

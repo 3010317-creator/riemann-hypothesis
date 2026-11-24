@@ -430,8 +430,7 @@ theorem EigenReflectionMaps.proof (h₁ : EigenReflection.Statement ι)
   · intro u hu
     apply hRfix
     rcases hε with rfl | rfl
-    · have h := h₂ H P hMaj v u (by rw [hAv, one_smul]) (by rw [hu, neg_smul, one_smul])
-      exact h
+    · exact h₂ H P hMaj v u (by rw [hAv, one_smul]) (by rw [hu, neg_smul, one_smul])
     · have h := h₂ H P hMaj u v (by rw [hu, neg_neg, one_smul]) (by rw [hAv, neg_smul, one_smul])
       rw [← star_dotProduct_mulVec_of_isHermitian hPh, h, star_zero]
 
@@ -520,8 +519,7 @@ theorem linearCombination_surjective {n : ℕ} {e : Fin n → W}
     rintro _ ⟨a, rfl⟩
     exact ⟨Pi.single a 1, by simp⟩
   rw [← LinearMap.range_eq_top, eq_top_iff, ← hL.span_eq_top, Submodule.span_le]
-  intro x hx
-  exact hle hx
+  exact fun x hx => hle hx
 
 
 omit [NumberField F] [NumberField E] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] in
@@ -962,8 +960,7 @@ theorem exists_posDef_mul_inv_mul_eq {n : Type*} [Fintype n] [DecidableEq n] {H 
   have hUU' : U * star U = 1 := Unitary.coe_mul_star_self _
   have hspec : H = U * diagonal (fun i => ((d i : ℝ) : ℂ)) * star U := by
     have := hH.spectral_theorem
-    rw [Unitary.conjStarAlgAut_apply] at this
-    exact this
+    rwa [Unitary.conjStarAlgAut_apply] at this
   have hd : ∀ i, d i ≠ 0 := by
     intro i hi
     have h0 := hdet.ne_zero
@@ -1512,8 +1509,7 @@ theorem WeightPos.proof (h : GroundTheory.Automorphic.HermitianForm F E W) (v : 
       rw [hz', mulVec_zero]
     rw [mulVec_mulVec, Units.inv_mul, one_mulVec] at h2
     exact h₁ x hx w h2
-  have hpos := (M.posDef w).dotProduct_mulVec_pos hne
-  exact (Complex.pos_iff.mp hpos).1
+  exact (Complex.pos_iff.mp ((M.posDef w).dotProduct_mulVec_pos hne)).1
 
 end Steps
 

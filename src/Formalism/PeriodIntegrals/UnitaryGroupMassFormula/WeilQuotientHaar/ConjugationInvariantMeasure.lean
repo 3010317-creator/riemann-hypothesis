@@ -63,8 +63,7 @@ theorem ennreal_eq_one_of_mul {a b : ℝ≥0∞} (h0 : b ≠ 0) (ht : b ≠ ⊤)
 
 theorem ennreal_le_one_of_pow_le {d M : ℝ≥0∞} (hdt : d ≠ ⊤) (hM : M ≠ ⊤)
     (h : ∀ k : ℕ, d ^ k ≤ M) : d ≤ 1 := by
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   lift d to NNReal using hdt
   lift M to NNReal using hM
   have h1 : (1 : NNReal) < d := by exact_mod_cast hlt
@@ -98,8 +97,7 @@ theorem invOn_map_conj {N : Set G} (hNc : IsClosed N) (h : G)
     simp
   refine ⟨?_, ?_, ?_, ?_⟩
   · have h1 : SigmaFinite ((μ.map (fun x : G => h * x * h⁻¹)).map (fun x : G => h⁻¹ * x * h⁻¹⁻¹)) := by
-      rw [Measure.map_map hm' hm, hid, Measure.map_id]
-      exact hsf
+      rwa [Measure.map_map hm' hm, hid, Measure.map_id]
     exact SigmaFinite.of_map _ hm'.aemeasurable h1
   · exact (Measure.map_ne_zero_iff hm.aemeasurable).mpr hne
   · rw [Measure.map_apply hm hNc.measurableSet.compl]

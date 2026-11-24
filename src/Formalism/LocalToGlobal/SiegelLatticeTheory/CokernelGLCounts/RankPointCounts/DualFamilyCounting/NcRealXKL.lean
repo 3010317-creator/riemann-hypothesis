@@ -200,14 +200,12 @@ theorem adj_lowId {A : Matrix (Fin r) (Fin r) ℂ} (hA : WlocSk.NB.LowId A) :
   · rw [hadj]
     have h1 : (A⁻¹ * A) a a = 1 := by rw [Matrix.nonsing_inv_mul _ hU, Matrix.one_apply_eq]
     rw [Matrix.mul_apply, Finset.sum_eq_single a] at h1
-    · rw [hA a a le_rfl, ite_eq_left rfl, mul_one] at h1
-      exact h1
+    · rwa [hA a a le_rfl, ite_eq_left rfl, mul_one] at h1
     · intro c _ hca
       rcases lt_or_gt_of_ne hca with hlt | hgt
       · rw [hinvT hlt, zero_mul]
       · rw [hA c a hgt.le, ite_eq_right hca, mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ a) h
+    · exact fun h => absurd (Finset.mem_univ a) h
 
 theorem cF_low (c : WlocSk.NB.CI k r → ℂ) :
     (∀ d a : Fin r, d < a → WlocSk.NB.cF c d a = 0) ∧ ∀ a, WlocSk.NB.cF c a a = 1 := by
@@ -232,16 +230,14 @@ theorem tri_conj (F Δ : Matrix (Fin r) (Fin r) ℂ) (hF : ∀ d a, d < a → F 
       rcases lt_or_gt_of_ne hcb with hlt | hgt
       · rw [hFz c hlt, zero_mul]
       · rw [hΔ c d hgt.le hd (fun h => hcb (Prod.ext_iff.1 h).1), mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ b) h
+    · exact fun h => absurd (Finset.mem_univ b) h
   rw [Matrix.mul_apply, Finset.sum_eq_single a]
   · rw [hrow a le_rfl, ite_eq_left rfl, hF1, mul_one]
   · intro d _ hda
     rcases lt_or_gt_of_ne hda with hlt | hgt
     · rw [hF d a hlt, mul_zero]
     · rw [hrow d hgt.le, ite_eq_right hda, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ a) h
+  · exact fun h => absurd (Finset.mem_univ a) h
 
 theorem cK_skew (c : WlocSk.NB.CI k r → ℂ) (s : Fin r → ℝ) (i j : Fin r) :
     star (WlocSk.NB.cK c s j i) = -WlocSk.NB.cK c s i j := by
@@ -536,8 +532,7 @@ theorem blk_eq (u : D.what₂.Word) (s : X.B.I.Ginf) (hs : s ∈ X.NinfU u) :
     · rw [dite_eq_left h, sclT, ite_eq_left h, one_mul]
       have := hw (s v) b ⟨j.val, h⟩
       have e : Fin.castSucc (⟨j.val, h⟩ : Fin D.R.k) = j := Fin.ext rfl
-      rw [e] at this
-      exact this
+      rwa [e] at this
     · rw [dite_eq_right h, sclT, ite_eq_right h]
       have e : j = Fin.last D.R.k := Fin.ext (by have := j.isLt; simp only [Fin.val_last]; omega)
       subst e

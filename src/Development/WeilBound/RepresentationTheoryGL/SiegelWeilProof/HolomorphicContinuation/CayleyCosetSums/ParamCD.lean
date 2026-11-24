@@ -111,8 +111,7 @@ theorem Good.hasFDerivAt [CompleteSpace E] (hΩ : IsOpen Ω) (hK : Good Ω K) (�
   have hc' := hK'.continuousOn
   have hcb : IsCompact (Metric.closedBall x₀ (ε / 2) ×ˢ C) := (isCompact_closedBall _ _).prod hC
   have hsub : Metric.closedBall x₀ (ε / 2) ×ˢ C ⊆ Ω ×ˢ univ := by
-    intro p hp
-    exact ⟨(hεs (Metric.closedBall_subset_ball (by linarith) hp.1)).1, mem_univ _⟩
+    exact fun p hp => ⟨(hεs (Metric.closedBall_subset_ball (by linarith) hp.1)).1, mem_univ _⟩
   obtain ⟨M, hM⟩ := hcb.exists_bound_of_continuousOn (hc'.mono hsub)
   have hcont_u : ∀ x ∈ Ω, Continuous (K x) := fun x hx =>
     hK.continuousOn.comp_continuous (Continuous.prodMk continuous_const continuous_id) (fun u => ⟨hx, mem_univ _⟩)
@@ -152,8 +151,7 @@ theorem contDiffOn_nat (hΩ : IsOpen Ω) (ν : Measure X) [IsFiniteMeasureOnComp
     rw [show ((N + 1 : ℕ) : WithTop ℕ∞) = (N : WithTop ℕ∞) + 1 by push_cast; rfl,
       contDiffOn_succ_iff_fderiv_of_isOpen hΩ]
     refine ⟨fun x hx => (hK.hasFDerivAt hΩ ν hx).differentiableAt.differentiableWithinAt, by simp, ?_⟩
-    refine (ih (F →L[ℝ] E') _ (hK.dK hΩ)).congr fun x hx => ?_
-    exact (hK.hasFDerivAt hΩ ν hx).fderiv
+    exact (ih (F →L[ℝ] E') _ (hK.dK hΩ)).congr fun x hx => (hK.hasFDerivAt hΩ ν hx).fderiv
 
 theorem contDiffOn_integral [CompleteSpace E] (hΩ : IsOpen Ω) (ν : Measure X) [IsFiniteMeasureOnCompacts ν]
     (hK : Good Ω K) : ContDiffOn ℝ ∞ (fun x => ∫ u, K x u ∂ν) Ω :=
@@ -171,8 +169,7 @@ theorem slice (hΩ : IsOpen Ω) {k : F × V → E} (hk : ContDiffOn ℝ ∞ k (�
   set f' : F × V → E := fun p => k (p + (0, w))
   have hS : IsOpen (Ω ×ˢ (univ : Set V)) := hΩ.prod isOpen_univ
   have hf' : ContDiffOn ℝ ∞ f' (Ω ×ˢ univ) := by
-    refine hk.comp (contDiffOn_id.add contDiffOn_const) fun p hp => ?_
-    exact ⟨by simpa using hp.1, mem_univ _⟩
+    exact hk.comp (contDiffOn_id.add contDiffOn_const) fun p hp => ⟨by simpa using hp.1, mem_univ _⟩
   have hpre : (ContinuousLinearMap.inl ℝ F V) ⁻¹' (Ω ×ˢ univ) = Ω := by ext y; simp
   have h1 := ContinuousLinearMap.iteratedFDerivWithin_comp_right (ContinuousLinearMap.inl ℝ F V) hf'
     hS.uniqueDiffOn (by rw [hpre]; exact hΩ.uniqueDiffOn) (x := x) (by simpa using hx) (i := N) (by exact_mod_cast le_top)

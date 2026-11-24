@@ -49,8 +49,7 @@ theorem nhds_zero_finiteAdele {W : Set (FiniteAdeleRing (𝓞 F) F)} (hW : W ∈
   have h2 : W' ∈ Filter.map (RestrictedProduct.structureMap (fun v : HeightOneSpectrum (𝓞 F) =>
       v.adicCompletion F) (fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F)))
       Filter.cofinite) (𝓝 0) := by
-    rw [← RestrictedProduct.nhds_eq_map_structureMap hopen 0]
-    exact hW
+    rwa [← RestrictedProduct.nhds_eq_map_structureMap hopen 0]
   have h1 := Filter.mem_map.1 h2
   rw [nhds_pi, Filter.mem_pi] at h1
   obtain ⟨I, hI, t, ht, hsub⟩ := h1
@@ -185,8 +184,7 @@ theorem nhds_of_sep [TopologicalSpace (AE F E)] [IsModuleTopology (FiniteAdeleRi
     refine Finset.sum_congr rfl fun l _ => ?_
     rw [smul_tmul', smul_eq_mul, mul_one]
   have hfin := hsub hmem
-  rw [Set.mem_preimage, hM'] at hfin
-  exact hfin
+  rwa [Set.mem_preimage, hM'] at hfin
 
 theorem of_placeMaps (hP : PlaceMaps.Statement) : AENeighbourhoods.Statement := by
   intro F E _ _ _ _ _ c h2 hc _ _
@@ -233,8 +231,7 @@ theorem AETopologicalRing.aut_mul_self (c : E ≃ₐ[F] E) (h2 : Module.finrank 
   have hc2 : c * c ≠ c := fun h' => hc (by simpa using congrArg (c⁻¹ * ·) h')
   have hcard : ({1, c, c * c} : Finset (E ≃ₐ[F] E)).card = 3 := by
     rw [Finset.card_insert_of_notMem, Finset.card_pair (Ne.symm hc2)]
-    simp only [Finset.mem_insert, Finset.mem_singleton, not_or]
-    exact ⟨Ne.symm hc, Ne.symm h⟩
+    simpa only [Finset.mem_insert, Finset.mem_singleton, not_or] using ⟨Ne.symm hc, Ne.symm h⟩
   have hle := Finset.card_le_univ ({1, c, c * c} : Finset (E ≃ₐ[F] E))
   have := AlgEquiv.card_le (F := F) (K := E)
   omega
@@ -372,8 +369,7 @@ theorem map_mem_SU_AE {F E : Type} [Field F] [NumberField F] [Field E] [Algebra 
   obtain ⟨hdet, hJ⟩ := hγ
   refine ⟨?_, ?_⟩
   · have h := (RingHom.map_det (inclA F E) γ).symm
-    rw [hdet, map_one] at h
-    exact h
+    rwa [hdet, map_one] at h
   · have hmap : (γ.map (inclA F E)).map (sigA c) = (γ.map c.toRingHom).map (inclA F E) := by
       ext i j; simp [sigA_inclA_gen]
     rw [hmap, ← transpose_map, ← Matrix.map_mul, ← Matrix.map_mul, hJ]
@@ -390,8 +386,7 @@ theorem ClosureIsSubmonoid.proof (h₁ : AETopologicalRing.Statement) (h₂ : Ei
   have himg : ι '' SU c.toRingHom J ⊆ SU (sigA c) (J.map (inclA F E)) := by
     rintro _ ⟨γ, hγ, rfl⟩; exact map_mem_SU_AE c J hγ
   refine ⟨closure_minimal himg hclosed, ?_, ?_, ?_⟩
-  · apply subset_closure
-    exact ⟨1, one_mem_SU, by simp⟩
+  · exact subset_closure ⟨1, one_mem_SU, by simp⟩
   · intro a ha b hb
     refine map_mem_closure₂ hmul ha hb ?_
     rintro _ ⟨γ, hγ, rfl⟩ _ ⟨δ, hδ, rfl⟩
@@ -1230,8 +1225,7 @@ theorem intersectionNumber_baseChange : PlaceMaps.Statement := by
     · rw [← RingHom.mapMatrix_apply, ← RingHom.map_det, hdet, map_one]
     · have : (xᵀ * J.map (inclA F E) * x.map (sigA c)).map (compAt E v) =
           (J.map (inclA F E)).map (compAt E v) := by rw [hJ]
-      rw [form_map_compAt, inclA_map_compAt] at this
-      exact this
+      rwa [form_map_compAt, inclA_map_compAt] at this
 
 theorem proof (_h : LocalRingHypotheses.Statement) : PlaceMaps.Statement := intersectionNumber_baseChange
 
@@ -1477,8 +1471,7 @@ theorem map_compAt_mem_SU (c : E ≃ₐ[F] E) (v : HeightOneSpectrum (𝓞 F)) {
       ext i j; simp [compAt_inclA]
     have hs : (x.map (sigA c)).map (compAt E v) = (x.map (compAt E v)).map (sigV c v).toRingHom := by
       ext i j; simp [compAt_sigA]
-    rw [hJ, hs, Matrix.transpose_map] at h
-    exact h
+    rwa [hJ, hs, Matrix.transpose_map] at h
 
 end Places
 

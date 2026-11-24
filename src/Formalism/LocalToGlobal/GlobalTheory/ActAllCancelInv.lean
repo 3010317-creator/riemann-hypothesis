@@ -168,15 +168,13 @@ theorem actAll_inv_cancel (lam : ι → DomWeight n) (g : ι → GL (Fin n) K) (
     Formalism.MainNotions.flipTwoThree.actAll lam (fun τ => (((g τ)⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K))
       (Formalism.MainNotions.flipTwoThree.actAll lam (fun τ => ((g τ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K)) p) = p := by
   rw [actAll_comp]
-  simp only [← Units.val_mul, inv_mul_cancel, Units.val_one]
-  exact actAll_one lam p
+  simpa only [← Units.val_mul, inv_mul_cancel, Units.val_one] using actAll_one lam p
 
 theorem actAll_cancel_inv (lam : ι → DomWeight n) (g : ι → GL (Fin n) K) (p : MvPolynomial (ι × Fin n × Fin n) K) :
     Formalism.MainNotions.flipTwoThree.actAll lam (fun τ => ((g τ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K))
       (Formalism.MainNotions.flipTwoThree.actAll lam (fun τ => (((g τ)⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K)) p) = p := by
   rw [actAll_comp]
-  simp only [← Units.val_mul, mul_inv_cancel, Units.val_one]
-  exact actAll_one lam p
+  simpa only [← Units.val_mul, mul_inv_cancel, Units.val_one] using actAll_one lam p
 
 theorem actAll_mem_TSpan [CharZero K] (lam : ι → DomWeight n) (h : ι → GL (Fin n) K)
     {p : MvPolynomial (ι × Fin n × Fin n) K} (hp : p ∈ Formalism.MainNotions.flipTwoThree.TSpan K lam) :
@@ -212,8 +210,7 @@ theorem coT_injective (g : (D.mem u).C.cls 0 → D.what₂.Tau → GL (Fin (D.R.
   funext c
   have h1 := congrArg (fun F => Formalism.MainNotions.flipTwoThree.actAll ((D.fm u).lam 0)
     (fun τ => (((g c τ)⁻¹ : GL (Fin (D.R.N 0)) D.what₂.LL) : Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) D.what₂.LL)) (F c)) h
-  simp only [coT_apply, actAll_inv_cancel] at h1
-  exact h1
+  simpa only [coT_apply, actAll_inv_cancel] using h1
 
 theorem coT_range (hst : ∀ c, Subsingleton ((D.mem u).C.stab 0 c))
     (g : (D.mem u).C.cls 0 → D.what₂.Tau → GL (Fin (D.R.N 0)) D.what₂.LL) (F : (D.mem u).C.cls 0 → Pol0 D) :

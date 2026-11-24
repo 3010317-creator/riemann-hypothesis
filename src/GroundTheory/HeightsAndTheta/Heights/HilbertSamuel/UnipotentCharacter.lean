@@ -64,8 +64,7 @@ theorem LatticeCount.encard_le (B : ShortLatticeBasis La c) (b : ℝ) (x : V) :
       _ ≤ ‖y‖ + ‖x + μ‖ := norm_add_le _ _
       _ ≤ b + finrank ℝ V * c := add_le_add hyb hxμ
   · rintro y ⟨hy, -⟩ y' ⟨hy', -⟩ h
-    simp only [hy, hy', dite_eq_left, Subtype.mk.injEq, add_left_inj] at h
-    exact h
+    simpa only [hy, hy', dite_eq_left, Subtype.mk.injEq, add_left_inj] using h
 
 end
 

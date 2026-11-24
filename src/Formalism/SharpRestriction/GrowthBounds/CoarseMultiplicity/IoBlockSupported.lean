@@ -98,8 +98,7 @@ theorem add_eq_add_disj {A B : Set σ} (hAB : Disjoint A B) {a a' b b' : σ →�
   constructor
   · intro h
     have hx : ∀ x, a' x + b' x = a x + b x := fun x => by
-      have h1 := congrArg (fun f : σ →₀ ℕ => f x) h
-      simpa using h1
+      simpa using congrArg (fun f : σ →₀ ℕ => f x) h
     refine ⟨Finsupp.ext fun x => ?_, Finsupp.ext fun x => ?_⟩
     · by_cases hxA : x ∈ A
       · have := hx x
@@ -119,8 +118,7 @@ theorem expFact_add_disj {A B : Set σ} (hAB : Disjoint A B) {a b : σ →₀ �
   unfold expFact
   apply Finsupp.prod_add_index_of_disjoint
   rw [Finset.disjoint_left]
-  intro x hxa hxb
-  exact Set.disjoint_left.mp hAB (ha hxa) (hb hxb)
+  exact fun x hxa hxb => Set.disjoint_left.mp hAB (ha hxa) (hb hxb)
 
 theorem fock_mono_disj {A B : Set σ} (hAB : Disjoint A B) {a a' b b' : σ →₀ ℕ} (ha : (a.support : Set σ) ⊆ A)
     (ha' : (a'.support : Set σ) ⊆ A) (hb : (b.support : Set σ) ⊆ B) (hb' : (b'.support : Set σ) ⊆ B)
@@ -217,8 +215,7 @@ theorem fock_prod_disj {J : Type} (A : J → Set σ) (hA : ∀ j j', j ≠ j' �
       exact Subalgebra.prod_mem _ fun j' hj' => supported_mono (Set.subset_biUnion_of_mem hj') (hH j')
     have hdisj : Disjoint (A j) (⋃ j' ∈ s, A j') := by
       rw [Set.disjoint_iUnion₂_right]
-      intro j' hj'
-      exact hA j j' (fun h => hj (h ▸ hj'))
+      exact fun j' hj' => hA j j' (fun h => hj (h ▸ hj'))
     exact fock_mul_disj hdisj (hF j) (hG j) (hsupp F hF) (hsupp G hG)
 
 theorem aeval_mem_sub {τ : Type} (S : Subalgebra K (MvPolynomial σ K)) (f : τ → MvPolynomial σ K) (hf : ∀ v, f v ∈ S)
@@ -255,8 +252,7 @@ theorem segVars_disj (X : Loc) (j j' : Fin (numSeg X.TT)) (h : j ≠ j') : Disjo
   classical
   have hnodup : (evenTops X.TT).Nodup := Finset.sort_nodup _ _
   have hN : 2 ≤ numSeg X.TT := by
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     have := j.isLt
     have := j'.isLt
     exact h (Fin.ext (by omega))
@@ -299,8 +295,7 @@ theorem segVars_disj (X : Loc) (j j' : Fin (numSeg X.TT)) (h : j ≠ j') : Disjo
   have hsm : ∀ c : Fin (numSeg X.TT), segStart X.TT c ∈ X.TT ∧ Even (segStart X.TT c).val := by
     intro c
     have hm : segStart X.TT c ∈ evenTops X.TT := List.get_mem _ _
-    rw [evenTops, Finset.mem_sort, Finset.mem_filter] at hm
-    exact hm
+    rwa [evenTops, Finset.mem_sort, Finset.mem_filter] at hm
   have hodd : ∀ a b (i : Fin (segS X.TT a)) (i' : Fin (segS X.TT b)), topOdd X a i = topOdd X b i' → a = b := by
     intro a b i i' heq
     by_contra hab
@@ -309,8 +304,7 @@ theorem segVars_disj (X : Loc) (j j' : Fin (numSeg X.TT)) (h : j ≠ j') : Disjo
     have hsb := hseg b i'
     rw [hx] at hsa
     have hstart : segStart X.TT a ≠ segStart X.TT b := by
-      intro hs
-      exact hab ((List.Nodup.get_inj_iff hnodup).1 hs)
+      exact fun hs => hab ((List.Nodup.get_inj_iff hnodup).1 hs)
     have hna := next_min X.TT a (segStart X.TT b) (hsm b).1 (hsm b).2 (Ne.symm hstart)
     have hnb := next_min X.TT b (segStart X.TT a) (hsm a).1 (hsm a).2 hstart
     have hga := (segG_eq X.TT hN a).1

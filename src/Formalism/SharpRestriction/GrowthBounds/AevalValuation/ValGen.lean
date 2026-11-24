@@ -69,8 +69,7 @@ private theorem le_valS_iff_forall_coeff_ne_zero {R : Type} [CommRing R] {ι : T
       intro h0
       rw [h0] at hk
       simp at hk
-    · rw [Finsupp.mem_support_iff]
-      exact hk
+    · rwa [Finsupp.mem_support_iff]
   · intro h k hk
     rw [sDegs, Finset.mem_biUnion] at hk
     obtain ⟨m, -, hm⟩ := hk
@@ -107,8 +106,7 @@ theorem valS_sum_ge {R : Type} [CommRing R] {ι : Type} {n : ℕ} [NeZero n] (LL
 
     rw [map_sum, coeff_sum]
     apply Joints.StandardMonomialSpace.SuppIn.sum
-    intro i hi k' hk'
-    exact (le_valS_iff_forall_coeff_ne_zero LL S (f i) a).mp (h i hi) m k' hk'
+    exact fun i hi k' hk' => (le_valS_iff_forall_coeff_ne_zero LL S (f i) a).mp (h i hi) m k' hk'
   exact hs k hk
 
 theorem filtQ_eq_sum {Kf : Type} [Field Kf] {ι : Type} {n : ℕ} (Q : (ι → ℕ) → Prop) (F : MvPolynomial (ι × Fin n) Kf) :

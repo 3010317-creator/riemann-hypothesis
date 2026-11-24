@@ -72,8 +72,7 @@ theorem flag_eq_span {Ω : Type*} [Field Ω] {E : Type*} [AddCommGroup E] [Modul
   · rw [Submodule.span_le]
     rintro _ ⟨q, hq, rfl⟩
     have hq' : q.succ ≤ j := by
-      rw [Fin.le_iff_val_le_val, Fin.val_succ]
-      exact hq
+      rwa [Fin.le_iff_val_le_val, Fin.val_succ]
     exact mono hq' (hmem q)
   · rw [himg, finrank_span_eq_card (hb.comp _ (Fin.castLE_injective hj)), Fintype.card_fin, dim]
 
@@ -144,8 +143,7 @@ theorem FlagFrameOfFullFlag.proof : FlagFrameOfFullFlag.Statement := by
       (∀ q, b q - u q • fl.gen q ∈ fl.Vs q.castSucc) → ∀ q, b q ∈ fl.Vs q.succ := by
     intro b u h q
     have h1 : fl.Vs q.castSucc ≤ fl.Vs q.succ := fl.mono (Fin.castSucc_le_succ q)
-    have h2 := add_mem (h1 (h q)) (Submodule.smul_mem _ (u q) (fl.gen_mem q))
-    simpa using h2
+    simpa using add_mem (h1 (h q)) (Submodule.smul_mem _ (u q) (fl.gen_mem q))
   have hVb0 := flag_eq_span fl.Vs fl.mono fl.dim b0 hb0li
     (tri_mem b0 _ fun q => (hu0 q).2)
 
@@ -209,8 +207,7 @@ theorem FlagFrameOfFullFlag.proof : FlagFrameOfFullFlag.Statement := by
     rw [map_sub, map_smul, Finsupp.sub_apply, Finsupp.smul_apply, hgw, Finsupp.single_eq_same,
       smul_eq_mul, mul_one, sub_eq_zero] at h1
     refine ⟨h1, fun j hj => (hmemV q.succ _).mp (tri_mem b (fun q => u q * M q) h q) j ?_⟩
-    rw [Fin.val_succ]
-    exact hj
+    rwa [Fin.val_succ]
   refine ⟨w, ⟨fun c hc i => ?_⟩⟩
   obtain ⟨k, f, cc, hf, hcc, hsum, hfr⟩ := fl.frame c hc
   have hM0 : IndefiniteRowSideFullHecke.NumbersDVR.Bundles.chartMon x c (fl.deg i) ≠ 0 := by

@@ -37,8 +37,7 @@ theorem isMultiHomog_pow {f : MRing ι} {c : K → ℕ} (hf : IsMultiHomog f c) 
     IsMultiHomog (f ^ n) (n • c) := by
   induction n with
   | zero =>
-    simp only [pow_zero, zero_smul]
-    exact isMultiHomog_one_arakelov_geometry
+    simpa only [pow_zero, zero_smul] using isMultiHomog_one_arakelov_geometry
   | succ n ih =>
     rw [pow_succ, succ_nsmul]
     exact isMultiHomog_mul_lemma ih hf
@@ -70,8 +69,7 @@ theorem isMultiHomog_xpow (i : ∀ k, ι k) (e : K → ℕ) : IsMultiHomog (xpow
   have he : (∑ k, e k • Pi.single k 1 : K → ℕ) = e := by
     ext k'
     simp [Finset.sum_apply, Pi.single_apply]
-  rw [he] at h
-  exact h
+  rwa [he] at h
 
 def dehomI (W : Ideal (MRing ι)) (i : ∀ k, ι k) : Ideal (MRing ι) :=
   W ⊔ Ideal.span (Set.range fun k => (X ⟨k, i k⟩ : MRing ι) - 1)

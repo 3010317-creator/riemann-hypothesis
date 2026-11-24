@@ -97,8 +97,7 @@ private theorem rows_leadMinor_aux_lemma {E : Type*} [CommRing E] {n l : ℕ} (h
       (Q.submatrix (Fin.castLE hl) (Fin.castLE hl)).det := by
   have hrange : ∀ q : Fin n, q ∉ Set.range (Fin.castLE hl) → l ≤ q.val := by
     intro q hq
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     exact hq ⟨⟨q.val, hlt⟩, Fin.ext rfl⟩
   have hval : ∀ i : Fin l, ((Fin.castLE hl i : Fin n) : ℕ) = (i : ℕ) := fun i => rfl
   have key : (P * Q * R).submatrix (Fin.castLE hl) (Fin.castLE hl) =
@@ -266,10 +265,8 @@ theorem rows_sizeZ_cmp (hrd : 0 < D.host.rdE) {b : ℝ} (hb : 1 ≤ b) (c Ch : �
           exact Finset.prod_nonneg (fun l _ => le_trans zero_le_one (le_max_left _ _))
         · intro τ _
           apply Finset.prod_le_prod₀
-          · intro l _
-            exact le_trans zero_le_one (le_max_left _ _)
-          · intro l _
-            exact rows_max_cmp hb (rows_absDl_nonneg hrd Z l τ) hM0
+          · exact fun l _ => le_trans zero_le_one (le_max_left _ _)
+          · exact fun l _ => rows_max_cmp hb (rows_absDl_nonneg hrd Z l τ) hM0
     _ = ((b ^ (max (Ch - c) 0 * (D.R.m : ℝ) ^ 2)) ^ (D.R.rS + 1)) ^ Fintype.card D.what₂.Tau *
           ∏ τ, ∏ l ∈ Finset.Icc 1 (D.R.rS + 1), max 1 (absDl D Z l τ / b ^ (Ch * (D.R.m : ℝ) ^ 2)) := by
         simp only [Finset.prod_mul_distrib, Finset.prod_const, Nat.card_Icc, Finset.card_univ,
@@ -409,15 +406,13 @@ theorem rows_foldr_max (l : List ℝ) : 1 ≤ l.foldr max 1 := by
   induction l with
   | nil => simp
   | cons a l ih =>
-    simp only [List.foldr_cons]
-    exact le_trans ih (le_max_right _ _)
+    simpa only [List.foldr_cons] using le_trans ih (le_max_right _ _)
 
 theorem loss_nonneg₂ {b : ℝ} (hb : 0 ≤ b) (C : ℝ) (m : ℕ) {k r : ℕ} (z z' : Fin (2 * r + k + 1) → ℂ)
     (γ : MatKR k r) (p : Point ℂ (r + 1)) : 0 ≤ lossP b C m z z' γ p := by
   unfold lossP
   apply Real.rpow_nonneg
-  apply mul_nonneg (Real.rpow_nonneg hb _)
-  exact le_trans zero_le_one (rows_foldr_max _)
+  exact mul_nonneg (Real.rpow_nonneg hb _) (le_trans zero_le_one (rows_foldr_max _))
 
 variable {D : D7} {large₂ : SizeData₂ D} {X : TermTie D} {u u' : D.what₂.Word} {C1 : ℝ} (Y : LoopTie D large₂ X u u' C1)
 
@@ -670,8 +665,7 @@ theorem rows_Dr_zero_iff (hrd : 0 < D.host.rdE) (t : D.s.Term u u') (τ : D.what
   · rintro (h | h)
     · exact h
     · exact absurd h (Real.rpow_pos_of_pos hrd _).ne'
-  · intro h
-    exact Or.inl h
+  · exact fun h => Or.inl h
 
 theorem rows_chRatio_eq (hrd : 0 < D.host.rdE) (t : D.s.Term u u') (τ : D.what₂.Tau) :
     chRatio (Tr D u) (Tr D u') (Y.W τ).z (Y.W τ).z' (Y.γ t τ) =

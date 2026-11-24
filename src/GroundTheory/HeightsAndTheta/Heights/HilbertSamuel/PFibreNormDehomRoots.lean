@@ -172,8 +172,7 @@ theorem algebraicIndependent_ratios {D : ℕ} {Ω : Type} [Field Ω] [CharZero �
   have hyz : ((fun k => y k / y a) ∘ Subtype.val) = z := by
     funext k; simp [y, hy, k.2]
   rw [hyz] at h1
-  rw [map_zero, ← MvPolynomial.coe_aeval_eq_eval]
-  exact h1
+  rwa [map_zero, ← MvPolynomial.coe_aeval_eq_eval]
 
 theorem adjoin_ratios_eq {D : ℕ} {Ω : Type} [Field Ω] [CharZero Ω] {l : Fin (D + 1) → Ω} {a : Fin (D + 1)} (ha : l a ≠ 0) :
     Algebra.adjoin ℚ (Set.range fun k : {k // k ≠ a} => l k.1 / l a) =
@@ -198,8 +197,7 @@ theorem exists_ratio_equiv {D : ℕ} {Ω : Type} [Field Ω] [CharZero Ω] {l : F
     fun k => ?_⟩
   simp only [AlgEquiv.trans_apply, Subalgebra.equivOfEq_apply]
   have := hind.algebraMap_aevalEquiv (X k)
-  rw [aeval_X] at this
-  exact this
+  rwa [aeval_X] at this
 
 theorem isIntegrallyClosed_adjoin_ratios {D : ℕ} {Ω : Type} [Field Ω] [CharZero Ω] {l : Fin (D + 1) → Ω}
     (hgen : ∀ (d : ℕ) (F : MvPolynomial (Fin (D + 1)) ℚ), F.IsHomogeneous d → aeval l F = 0 → F = 0)

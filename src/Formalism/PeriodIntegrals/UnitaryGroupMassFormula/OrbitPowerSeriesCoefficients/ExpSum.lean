@@ -208,8 +208,7 @@ theorem eS_sum {ι : Type*} (s : Finset ι) (f : ι → MvPowerSeries τ K)
   induction s using Finset.induction_on with
   | empty =>
     intro _
-    simp only [Finset.sum_empty, Finset.prod_empty]
-    exact eS_zero
+    simpa only [Finset.sum_empty, Finset.prod_empty] using eS_zero
   | @insert a s ha ih =>
     intro hf
     rw [Finset.sum_insert ha, Finset.prod_insert ha,

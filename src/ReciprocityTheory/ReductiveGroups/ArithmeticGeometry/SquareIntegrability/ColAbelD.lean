@@ -118,16 +118,14 @@ theorem cab_uc_ne {I : Submodule ℤ (Vsp X.dim)} {c c' : Col.Qc X I} (hne : c �
   have h1 : Col.uc (IR I) ((cabOut c - cabOut c' : X.L) : Vsp X.dim) = 0 := by
     rw [Submodule.coe_sub, uc_sub', heq, sub_self]
   have h3 := (Submodule.Quotient.mk_eq_zero _).mpr (cab_mem_NIp h1)
-  rw [Submodule.Quotient.mk_sub, sub_eq_zero, cabOut_mk, cabOut_mk] at h3
-  exact h3
+  rwa [Submodule.Quotient.mk_sub, sub_eq_zero, cabOut_mk, cabOut_mk] at h3
 
 theorem columnVector_ne_zero {I : Submodule ℤ (Vsp X.dim)} {c : Col.Qc X I} (hne : c ≠ 0) :
     Col.uc (IR I) (cabOut c : Vsp X.dim) ≠ 0 := by
   intro h0
   apply hne
   have h3 := (Submodule.Quotient.mk_eq_zero _).mpr (cab_mem_NIp h0)
-  rw [cabOut_mk] at h3
-  exact h3
+  rwa [cabOut_mk] at h3
 
 private theorem isU_uc' {I : Submodule ℤ (Vsp X.dim)} (x : Vsp X.dim) : IsU I x (Col.uc (IR I) x) := by
   refine ⟨?_, fun a ha => ?_⟩
@@ -482,7 +480,6 @@ theorem cab_YB_abs (hI : IsSplit P I) (hP : Ext.PackingCount) (q : ℕ) :
       exact_mod_cast h2
     have hRR : (1 : ℝ) ≤ RR (E := E) := by
       have := P.hrd
-      show (1 : ℝ) ≤ PT.rd E ^ 7
       exact one_le_pow₀ (by linarith)
     have hRR3 : (1 : ℝ) ≤ RR (E := E) ^ 3 := one_le_pow₀ hRR
     have hpi : (1 : ℝ) ≤ Real.pi := by linarith [Real.pi_gt_three]
@@ -529,8 +526,7 @@ theorem cab_gB_le [IsCMField E] (K : Submodule ℝ (Vsp X.dim)) : Col.gB K ≤ X
   have hf : PT.f E = k := by
     show Module.finrank ℚ E / 2 = k
     rw [hk]; omega
-  rw [hf, ← h4, ← h2]
-  exact h1
+  rwa [hf, ← h4, ← h2]
 
 theorem cab_dstar_ge (P : Par X DF) : 2 ≤ dstar (E := E) P.m := by
   show 2 ≤ 2 * PT.f E * P.m

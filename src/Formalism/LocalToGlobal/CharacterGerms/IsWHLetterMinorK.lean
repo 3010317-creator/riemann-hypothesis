@@ -37,8 +37,7 @@ theorem isWH_aeval {σ τ : Type} {w : τ → ℕ} {w' : σ → ℕ} (f : σ →
     rw [← hp (mem_support_iff.1 hm), Finsupp.weight_apply]
     rfl
   have h3 := (isWeightedHomogeneous_C w (AddMonoidAlgebra.coeff p m)).mul h1
-  rw [zero_add, h2] at h3
-  exact h3
+  rwa [zero_add, h2] at h3
 
 theorem isWH_add {σ : Type} {w1 w2 : σ → ℕ} {p : MvPolynomial σ R} {D1 D2 : ℕ}
     (h1 : IsWeightedHomogeneous w1 p D1) (h2 : IsWeightedHomogeneous w2 p D2) :

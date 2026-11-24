@@ -75,8 +75,7 @@ end Br1
 theorem cell_preimage_mem_domain {D : Set (Mx k r)} {c : Fin r → ℂ} (l : Fin r) {g : Mx k r}
     (hg : wCell k r l.succ c * g ∈ D) : g ∈ Qx6.Dc1 l (Qx6.Dcell D l.castSucc c) c := by
   show wCell k r l.castSucc c * (w1 k r l (c l) * g) ∈ D
-  rw [← Matrix.mul_assoc, ← Qx6.wCell_succ]
-  exact hg
+  rwa [← Matrix.mul_assoc, ← Qx6.wCell_succ]
 
 section Br2
 
@@ -116,8 +115,7 @@ theorem unipotent_fixes_base_vector (l : Fin r) (a : ℂ) {z : Fin (2 * r + k + 
   · intro q _ hq
     have : p ≠ Qx3.sw k l q := fun h => hq (by rw [h, Qx3.sw_sw])
     rw [Qx3.w1_apply, ite_eq_right this, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem wCell_fix_wb (i : Fin (r + 1)) (c : Fin r → ℂ) {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) :
     wCell k r i c *ᵥ z = z := by

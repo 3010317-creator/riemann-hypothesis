@@ -122,8 +122,7 @@ theorem card_autU_dvd_minkM (hE : PosStar E) (N : UniLat E n) :
       have : y = x := (a.1 : UF E n).1.injective e
       rwa [← this]
   have h1 := mk_card_dvd minkowskiBound_holds N.1 (hcnt_isFullLattice_of_unimodular N.2.1 N.2.2) φ.range hfin' hst
-  rw [← Nat.card_congr (MonoidHom.ofInjective hφ).toEquiv] at h1
-  exact h1
+  rwa [← Nat.card_congr (MonoidHom.ofInjective hφ).toEquiv] at h1
 
 theorem autLcm_pos (hE : PosStar E) : 0 < autLcm E n := (autLcm_mem (minkM_pos _) (card_autU_dvd_minkM hE)).1
 
@@ -177,8 +176,7 @@ def dGamAut (X : Fields) (R : Ranks) : ℕ := (dGamRanks R).lcm fun n => autLcm 
 variable {X : Fields} {R : Ranks}
 
 theorem dga_N_mono (R : Ranks) {i j : ℕ} (h : i ≤ j) : R.N i ≤ R.N j := by
-  simp only [Ranks.N]
-  exact Nat.add_le_add_left (Nat.mul_le_mul_right _ h) _
+  simpa only [Ranks.N] using Nat.add_le_add_left (Nat.mul_le_mul_right _ h) _
 
 theorem dGamRanks_le (R : Ranks) {n : ℕ} (hn : n ∈ dGamRanks R) : n ≤ R.N R.m := by
   have hm := R.two_le_m

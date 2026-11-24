@@ -119,8 +119,7 @@ theorem genSub_le_perpPerp (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε �
     genSub E V ≤ perpPerp ε σ V := by
   refine sInf_le ⟨fun y hy u hu => ?_, fun a b v hv => ?_⟩
   · have := hu 1 y hy
-    rw [umat_one, hσ.1.1] at this
-    exact this
+    rwa [umat_one, hσ.1.1] at this
   · have hE : E a b = (1 / 2 : ℂ) • actM E (Matrix.single a b 1 - Jm ε * (Matrix.single a b 1)ᴴ * Jm ε) +
         (-(Complex.I / 2)) • actM E (Complex.I • (Matrix.single a b 1 + Jm ε * (Matrix.single a b 1)ᴴ * Jm ε)) := by
       have h1 : actM E = mx E := rfl
@@ -143,8 +142,7 @@ theorem cf_inj (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E) {V : 
   have hself := hmem ((f c : D) : H) fun g y hy => by
     have := ha g⁻¹ y hy c
     rw [inner_sig hσ, inv_inv] at this
-    rw [inner_eq_zero_symm]
-    exact this
+    rwa [inner_eq_zero_symm]
   rw [inner_self_eq_zero] at hself
   simp only [Pi.zero_apply]
   exact_mod_cast hself

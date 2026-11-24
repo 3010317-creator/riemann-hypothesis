@@ -108,84 +108,63 @@ theorem wu_sum {r : ℕ} (f g : Fin r → ℤ) (l0 : Fin r) (c : ℤ) (h0 : f l0
   · exact h0
   · intro b _ hb
     rw [h b hb, sub_self]
-  · intro hn
-    exact absurd (Finset.mem_univ _) hn
+  · exact fun hn => absurd (Finset.mem_univ _) hn
 
 theorem wu_step {r : ℕ} (lam : Fin r → ℤ) (hlam : Antitone lam) (a : ℕ) (ha : a < 2 * r + 1) :
     if decide (a < r ∨ a = 2 * r) = true then Strip (wuSt lam (a + 1)) (wuSt lam a) (wuDeg lam a)
       else Strip (wuSt lam a) (wuSt lam (a + 1)) (wuDeg lam a) := by
   have hadj : ∀ i j : Fin r, i.val + 1 = j.val → lam j ≤ lam i := fun i j hij =>
     hlam (Fin.le_def.mpr (by omega))
-  rcases lt_or_ge a r with h1 | h1
-  · rw [ite_eq_left (by rw [decide_eq_true_eq]; omega)]
+  by_cases hc : a < r ∨ a = 2 * r
+  · rw [ite_eq_left (decide_eq_true hc)]
     refine ⟨fun l => ?_, fun i j hij => ?_, ?_⟩
     · unfold wuSt
-      have := l.2
       split_ifs <;> omega
     · unfold wuSt
       have := hadj i j hij
-      have := i.2
-      have := j.2
       split_ifs <;> omega
-    · have e : wuDeg lam a = (lam ⟨a, h1⟩).toNat := by
-        unfold wuDeg wuLam
-        rw [ite_eq_left h1, dite_eq_left h1]
-      rw [e]
-      apply wu_sum _ _ ⟨a, h1⟩
-      · unfold wuSt
-        dsimp only
-        split_ifs <;> omega
-      · intro l hl
-        have hl' : l.val ≠ a := fun h => hl (Fin.ext h)
-        unfold wuSt
-        split_ifs <;> omega
-  · rcases lt_or_ge a (2 * r) with h2 | h2
-    · rw [ite_eq_right (by rw [decide_eq_true_eq]; omega)]
-      have h3 : 2 * r - 1 - a < r := by omega
-      refine ⟨fun l => ?_, fun i j hij => ?_, ?_⟩
-      · unfold wuSt
-        have := l.2
-        split_ifs <;> omega
-      · unfold wuSt
-        have := hadj i j hij
-        have := i.2
-        have := j.2
-        split_ifs <;> omega
-      · have e : wuDeg lam a = (-(lam ⟨2 * r - 1 - a, h3⟩)).toNat := by
+    · rcases hc with h1 | h4
+      · have e : wuDeg lam a = (lam ⟨a, h1⟩).toNat := by
           unfold wuDeg wuLam
-          rw [ite_eq_right (by omega), ite_eq_left h2, dite_eq_left h3]
+          rw [ite_eq_left h1, dite_eq_left h1]
         rw [e]
-        apply wu_sum _ _ ⟨2 * r - 1 - a, h3⟩
+        apply wu_sum _ _ ⟨a, h1⟩
         · unfold wuSt
           dsimp only
           split_ifs <;> omega
         · intro l hl
-          have hl' : l.val ≠ 2 * r - 1 - a := fun h => hl (Fin.ext h)
-          have := l.2
+          have hl' : l.val ≠ a := fun h => hl (Fin.ext h)
           unfold wuSt
           split_ifs <;> omega
-    · have h4 : a = 2 * r := by omega
-      rw [ite_eq_left (by rw [decide_eq_true_eq]; omega)]
-      have e : wuDeg lam a = 0 := by
-        unfold wuDeg
-        rw [ite_eq_right (by omega), ite_eq_right (by omega)]
-      rw [e]
-      refine ⟨fun l => ?_, fun i j hij => ?_, ?_⟩
-      · unfold wuSt
-        have := l.2
-        split_ifs <;> omega
-      · unfold wuSt
-        have := hadj i j hij
-        have := i.2
-        have := j.2
-        split_ifs <;> omega
-      · have : wuSt lam (a + 1) = wuSt lam a := by
+      · have e : wuDeg lam a = 0 := by
+          unfold wuDeg
+          rw [ite_eq_right (by omega), ite_eq_right (by omega)]
+        have : wuSt lam (a + 1) = wuSt lam a := by
           funext l
-          have := l.2
           unfold wuSt
           split_ifs <;> omega
-        rw [this]
+        rw [e, this]
         simp
+  · rw [ite_eq_right (by rw [decide_eq_true_eq]; omega)]
+    have h3 : 2 * r - 1 - a < r := by omega
+    refine ⟨fun l => ?_, fun i j hij => ?_, ?_⟩
+    · unfold wuSt
+      split_ifs <;> omega
+    · unfold wuSt
+      have := hadj i j hij
+      split_ifs <;> omega
+    · have e : wuDeg lam a = (-(lam ⟨2 * r - 1 - a, h3⟩)).toNat := by
+        unfold wuDeg wuLam
+        rw [ite_eq_right (by omega), ite_eq_left (by omega), dite_eq_left h3]
+      rw [e]
+      apply wu_sum _ _ ⟨2 * r - 1 - a, h3⟩
+      · unfold wuSt
+        dsimp only
+        split_ifs <;> omega
+      · intro l hl
+        have hl' : l.val ≠ 2 * r - 1 - a := fun h => hl (Fin.ext h)
+        unfold wuSt
+        split_ifs <;> omega
 
 theorem wu_chain {r : ℕ} (lam : Fin r → ℤ) (hlam : Antitone lam) :
     IsChain (wuLL lam) (fun n : Fin (2 * r + 1 + 1) => wuSt lam n.val) := by
@@ -279,12 +258,10 @@ theorem wb_vstep (hP : IsPair A Ai Ci mu lam) (a : ℕ) (ha : a < 2 * s + 1) (hv
   refine ⟨fun t ht => ?_, fun t ht => ?_⟩
   · have := h1 ⟨t + 1, by omega⟩
     unfold wbK
-    rw [dite_eq_left (⟨by omega, by omega⟩ : _ ∧ _), dite_eq_left (⟨by omega, by omega⟩ : _ ∧ _)]
-    exact this
+    rwa [dite_eq_left (⟨by omega, by omega⟩ : _ ∧ _), dite_eq_left (⟨by omega, by omega⟩ : _ ∧ _)]
   · have := h2 ⟨t + 1, by omega⟩ ⟨t + 2, by omega⟩ rfl
     unfold wbK
-    rw [dite_eq_left (⟨by omega, by omega⟩ : _ ∧ _), dite_eq_left (⟨by omega, by omega⟩ : _ ∧ _)]
-    exact this
+    rwa [dite_eq_left (⟨by omega, by omega⟩ : _ ∧ _), dite_eq_left (⟨by omega, by omega⟩ : _ ∧ _)]
 
 theorem wb_cstep (hP : IsPair A Ai Ci mu lam) (a : ℕ) (ha : a < 2 * s + 1) (hc : ¬ (a = 0 ∨ a % 2 = 1)) :
     (∀ t, t < r → wbK mu (a + 1) t ≤ wbK mu a t) ∧ (∀ t, t + 1 < r → wbK mu a (t + 1) ≤ wbK mu (a + 1) t) := by
@@ -296,12 +273,10 @@ theorem wb_cstep (hP : IsPair A Ai Ci mu lam) (a : ℕ) (ha : a < 2 * s + 1) (hc
   refine ⟨fun t ht => ?_, fun t ht => ?_⟩
   · have := h1 ⟨t + 1, by omega⟩
     unfold wbK
-    rw [dite_eq_left (⟨by omega, by omega⟩ : _ ∧ _), dite_eq_left (⟨by omega, by omega⟩ : _ ∧ _)]
-    exact this
+    rwa [dite_eq_left (⟨by omega, by omega⟩ : _ ∧ _), dite_eq_left (⟨by omega, by omega⟩ : _ ∧ _)]
   · have := h2 ⟨t + 1, by omega⟩ ⟨t + 2, by omega⟩ rfl
     unfold wbK
-    rw [dite_eq_left (⟨by omega, by omega⟩ : _ ∧ _), dite_eq_left (⟨by omega, by omega⟩ : _ ∧ _)]
-    exact this
+    rwa [dite_eq_left (⟨by omega, by omega⟩ : _ ∧ _), dite_eq_left (⟨by omega, by omega⟩ : _ ∧ _)]
 
 theorem wb_one (hP : IsPair A Ai Ci mu lam) (t : ℕ) : wbK mu 1 t = 0 := by
   have h0 := hP.1.1

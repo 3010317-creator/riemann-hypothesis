@@ -122,8 +122,7 @@ theorem comap_fibreOf (hv : IsBlockMap κ v) (G : GenFibre v P') {W : Ideal (MRi
   · exact h
   · refine absurd ?_ hg
     have hg' : g ∈ imageZ v W := h
-    rw [hI, ← G.ker_x] at hg'
-    exact hg'
+    rwa [hI, ← G.ker_x] at hg'
 
 theorem fibreOf_isPrime (hv : IsBlockMap κ v) (G : GenFibre v P') {W : Ideal (MRing ι')} (hW : W.IsPrime)
     (hPW : P' ≤ W) (hI : imageZ v W = imageZ v P') : (fibreOf κ G W).IsPrime := by
@@ -188,8 +187,7 @@ theorem PFFibreBij.proof : PFFibreBij.Statement := by
     · intro k
       obtain ⟨i, hi⟩ := hWrel k.1
       refine ⟨i, fun h => hi ?_⟩
-      rw [← hcW, Ideal.mem_comap, baseSubst_X_fibre G ⟨k, i⟩]
-      exact h
+      rwa [← hcW, Ideal.mem_comap, baseSubst_X_fibre G ⟨k, i⟩]
   · rintro W₁ ⟨⟨⟨⟨h1p, h1le⟩, -⟩, -⟩, -, h1I⟩ W₂ ⟨⟨⟨⟨h2p, h2le⟩, -⟩, -⟩, -, h2I⟩ heq
     rw [← comap_fibreOf hv G h1p (sup_le_iff.mp h1le).1 h1I, heq,
       comap_fibreOf hv G h2p (sup_le_iff.mp h2le).1 h2I]
@@ -229,8 +227,7 @@ theorem PFFibreBij.proof : PFFibreBij.Statement := by
         exact ⟨j, hx⟩
       · obtain ⟨i, hi⟩ := hQrel ⟨k', hk⟩
         refine ⟨i, fun h => hi ?_⟩
-        rw [← baseSubst_X_fibre G ⟨⟨k', hk⟩, i⟩]
-        exact h
+        rwa [← baseSubst_X_fibre G ⟨⟨k', hk⟩, i⟩]
     · rw [IsHorizontal, eq_bot_iff]
       intro n hn
       have hn' : n ∈ (imageZ v P').comap (C : ℤ →+* MRing ι) := by
@@ -238,8 +235,7 @@ theorem PFFibreBij.proof : PFFibreBij.Statement := by
         show rename v (C n) ∈ Q.comap (baseSubst κ G)
         rw [rename_C]
         exact Ideal.mem_comap.mp hn
-      rw [hPhor] at hn'
-      exact hn'
+      rwa [hPhor] at hn'
 
 end
 

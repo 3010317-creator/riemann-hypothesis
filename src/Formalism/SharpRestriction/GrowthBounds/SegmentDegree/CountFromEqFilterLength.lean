@@ -249,8 +249,7 @@ theorem toL_Hyp [NeZero K] (H : HypT N n0 r K LL B od bb a La p) : (toL r K LL B
       push_cast at h4 ⊢
       linarith
     exact_mod_cast h7
-  · show (N : ℝ) ≤ a
-    exact h4a
+  · exact h4a
 
 def toB (bb : Fin N → ℝ) (p : ℕ) : ℕ → ℝ := fun i =>
   if h : 1 ≤ i ∧ i ≤ N then 13 * bb ⟨i - 1, by omega⟩ / (p : ℝ) else 1

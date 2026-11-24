@@ -101,8 +101,7 @@ theorem mem_X_ofU (f f' : Fin (r + 1) → V) (T T' : F) (hF : Formalism.MainNoti
       rw [Pi.single_eq_same]
       linear_combination this
     · simp only [ha, false_and, ite_false, mul_zero, zero_add] at this
-      rw [Pi.single_eq_of_ne ha]
-      exact this
+      rwa [Pi.single_eq_of_ne ha]
   have hc'eq : (fun b => c (Sum.inr b)) =
       (H.Zhat f f')⁻¹.mulVec (Pi.single (Fin.last r) (algebraMap F E T * c (Sum.inl (Fin.last r)))) := by
     rw [← hZ, Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hu, Matrix.one_mulVec]
@@ -136,8 +135,7 @@ theorem mem_X_ofU (f f' : Fin (r + 1) → V) (T T' : F) (hF : Formalism.MainNoti
   have hp'' : ∀ b, c (Sum.inr b) = 0 := by
     intro b
     have := congrFun hc'eq b
-    rw [hl, mul_zero, Pi.single_zero, Matrix.mulVec_zero] at this
-    exact this
+    rwa [hl, mul_zero, Pi.single_zero, Matrix.mulVec_zero] at this
   simp only [hp'', zero_smul, Finset.sum_const_zero, add_zero]
   rw [Fin.sum_univ_castSucc, hl, zero_smul, add_zero]
   exact Submodule.sum_mem _ fun a _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨a, rfl⟩)

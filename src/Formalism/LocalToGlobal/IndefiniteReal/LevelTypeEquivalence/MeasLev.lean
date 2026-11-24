@@ -125,8 +125,7 @@ theorem isMeasLevW_exists
     · intro h ρ
       have := (MF.cond_iff F x (Formalism.L2.Host.tauPl D ρ) (B' ((Formalism.L2.Host.tauPl D).symm (Formalism.L2.Host.tauPl D ρ)))).mpr
         (h (Formalism.L2.Host.tauPl D ρ) (Set.mem_univ _))
-      rw [Equiv.symm_apply_apply] at this
-      exact this
+      rwa [Equiv.symm_apply_apply] at this
   have hmap := (UI.brg (MF.toFrames F)).toHomeomorph.toMeasurableEquiv.map_apply
     (μ := μi.prod μf) {h : GA D V | Lev.finE V h ∈ K ∧ ∀ ρ, ∃ c ∈ B' ρ,
       UpqT.mat c * F.A ρ = F.A ρ * infMat D.sp.cm.sig V.gram (thetaC D ρ) h}

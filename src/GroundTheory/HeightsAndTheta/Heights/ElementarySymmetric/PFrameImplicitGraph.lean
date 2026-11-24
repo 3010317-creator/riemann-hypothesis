@@ -145,8 +145,7 @@ theorem proof : FrameImplicitGraph.Statement := by
     exact ((e.hasFDerivAt_symm hw.1 hd).comp w hιd).differentiableAt.differentiableWithinAt
   · intro w hw
     have := congrArg Prod.fst (e.right_inv hw.1)
-    rw [hecoe] at this
-    exact this
+    rwa [hecoe] at this
   · ext x
     constructor
     · rintro ⟨hx0, hxV⟩
@@ -162,8 +161,7 @@ theorem proof : FrameImplicitGraph.Statement := by
     · rintro ⟨w, hw, rfl⟩
       refine ⟨fun k => ?_, hw.2⟩
       have := congrArg (fun p => p.2 k) (e.right_inv hw.1)
-      rw [hecoe] at this
-      exact this
+      rwa [hecoe] at this
 
 end FrameImplicitGraph
 

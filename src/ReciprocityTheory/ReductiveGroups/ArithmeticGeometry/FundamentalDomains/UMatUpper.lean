@@ -86,8 +86,7 @@ lemma uT_G_zero (G : Matrix (Fin n) (Fin n) ℂ) (c : Fin n) (hdet : (blk G c).d
     apply Finset.sum_subset (Finset.subset_univ _)
     intro j _ hj
     have hjc : ¬ j < c := by
-      intro hlt
-      exact hj (Finset.mem_map.2 ⟨⟨j, hlt⟩, Finset.mem_univ _, Fin.ext rfl⟩)
+      exact fun hlt => hj (Finset.mem_map.2 ⟨⟨j, hlt⟩, Finset.mem_univ _, Fin.ext rfl⟩)
     simp only [g, dite_eq_right hjc]
   have k2 : ∑ j' : Fin c, Matrix.vecMul (rowc G c) (blk G c)⁻¹ j' * G (Fin.castLE c.isLt.le j') m =
       G c m := key ⟨m, hm⟩

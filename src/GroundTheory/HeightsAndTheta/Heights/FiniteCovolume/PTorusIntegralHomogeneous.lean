@@ -122,15 +122,10 @@ theorem TorusIntegralHomogeneous.proof (κ : Type*) [Fintype κ] :
       linarith
     have hbd : ∀ b ∈ {b : κ → ℂ | ∑ i, q i * ‖b i‖ ^ 2 < 1 ^ 2}, ∀ i, ‖b i‖ < R := by
       intro b hb i
-      have hb' : ∑ j, q j * ‖b j‖ ^ 2 < 1 := by simpa using hb
       have hi : q i * ‖b i‖ ^ 2 < 1 :=
         lt_of_le_of_lt (Finset.single_le_sum (f := fun j => q j * ‖b j‖ ^ 2)
-          (fun j _ => mul_nonneg (hq j).le (sq_nonneg _)) (Finset.mem_univ i)) hb'
-      have hsq : ‖b i‖ ^ 2 < (q i)⁻¹ := by
-        calc ‖b i‖ ^ 2 = (q i)⁻¹ * (q i * ‖b i‖ ^ 2) := by
-              rw [← mul_assoc, inv_mul_cancel₀ (hq i).ne', one_mul]
-          _ < (q i)⁻¹ * 1 := mul_lt_mul_of_pos_left hi (inv_pos.2 (hq i))
-          _ = (q i)⁻¹ := mul_one _
+          (fun j _ => mul_nonneg (hq j).le (sq_nonneg _)) (Finset.mem_univ i)) (by simpa using hb)
+      have hsq : ‖b i‖ ^ 2 < (q i)⁻¹ := ((lt_inv_mul_iff₀ (hq i)).2 hi).trans_eq (mul_one _)
       have hle : (q i)⁻¹ ≤ ∑ j, (q j)⁻¹ :=
         Finset.single_le_sum (f := fun j => (q j)⁻¹) (fun j _ => (inv_pos.2 (hq j)).le)
           (Finset.mem_univ i)
@@ -141,24 +136,14 @@ theorem TorusIntegralHomogeneous.proof (κ : Type*) [Fintype κ] :
       intro b hb
       rw [mem_ball_zero_iff, pi_norm_lt_iff (by linarith)]
       exact hbd b hb
-    have hle : {b : κ → ℂ | ∑ i, q i * ‖b i‖ ^ 2 < 1 ^ 2}.indicator
-          (fun b => ∏ i, ‖b i‖ₑ ^ (2 * n)) ≤
-        {b : κ → ℂ | ∑ i, q i * ‖b i‖ ^ 2 < 1 ^ 2}.indicator
-          (fun _ => ∏ _i : κ, ENNReal.ofReal R ^ (2 * n)) := by
-      intro b
-      by_cases hb : b ∈ {b : κ → ℂ | ∑ i, q i * ‖b i‖ ^ 2 < 1 ^ 2}
-      · rw [Set.indicator_of_mem hb, Set.indicator_of_mem hb]
-        refine Finset.prod_le_prod' fun i _ => pow_le_pow_left' ?_ _
-        rw [← ofReal_norm]
-        exact ENNReal.ofReal_le_ofReal (hbd b hb i).le
-      · rw [Set.indicator_of_notMem hb, Set.indicator_of_notMem hb]
-    calc _ ≤ ∫⁻ b : κ → ℂ, {b : κ → ℂ | ∑ i, q i * ‖b i‖ ^ 2 < 1 ^ 2}.indicator
-          (fun _ => ∏ _i : κ, ENNReal.ofReal R ^ (2 * n)) b := lintegral_mono hle
-      _ ≤ (∏ _i : κ, ENNReal.ofReal R ^ (2 * n)) *
-          volume {b : κ → ℂ | ∑ i, q i * ‖b i‖ ^ 2 < 1 ^ 2} := lintegral_indicator_const_le _ _
-      _ < ⊤ := ENNReal.mul_lt_top
-          (ENNReal.prod_lt_top fun i _ => ENNReal.pow_lt_top ENNReal.ofReal_lt_top)
-          (lt_of_le_of_lt (measure_mono hsub) measure_ball_lt_top)
+    refine lt_of_le_of_lt (lintegral_mono fun b => Set.indicator_le_indicator' fun hb => ?_)
+      ((lintegral_indicator_const_le _ (∏ _i : κ, ENNReal.ofReal R ^ (2 * n))).trans_lt ?_)
+    · refine Finset.prod_le_prod' fun i _ => pow_le_pow_left' ?_ _
+      rw [← ofReal_norm]
+      exact ENNReal.ofReal_le_ofReal (hbd b hb i).le
+    · exact ENNReal.mul_lt_top
+        (ENNReal.prod_lt_top fun i _ => ENNReal.pow_lt_top ENNReal.ofReal_lt_top)
+        (lt_of_le_of_lt (measure_mono hsub) measure_ball_lt_top)
 
 end
 

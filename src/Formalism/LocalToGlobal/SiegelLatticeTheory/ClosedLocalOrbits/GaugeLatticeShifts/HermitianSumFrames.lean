@@ -42,8 +42,7 @@ private theorem hJ_fintype_sum_smul_right {n : ℕ} {ι : Type} [Fintype ι] (ε
 theorem RootCoordFrame_holds : RootCoordFrame := by
   intro n r ε e f z hfe hfz g P hP a
   unfold rootCoord
-  rw [nxt_eq, hP, hJ_fintype_sum_smul_right]
-  rw [Finset.sum_eq_single a.castSucc]
+  rw [nxt_eq, hP, hJ_fintype_sum_smul_right, Finset.sum_eq_single a.castSucc]
   · rw [show fam e z a.castSucc = e a from by unfold fam; exact Fin.snoc_castSucc _ _ _, hfe, ite_eq_left rfl, mul_one]
   · intro c _ hc
     refine Fin.lastCases ?_ (fun b hb => ?_) c hc
@@ -52,8 +51,7 @@ theorem RootCoordFrame_holds : RootCoordFrame := by
     · rw [show fam e z b.castSucc = e b from by unfold fam; exact Fin.snoc_castSucc _ _ _, hfe]
       have hab : a ≠ b := fun h => hb (by rw [h])
       rw [ite_eq_right hab, mul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem ZhatNAct_holds : ZhatNAct := by
   intro n r ε f f' s si s' g P P' hsi hinv hP hP'

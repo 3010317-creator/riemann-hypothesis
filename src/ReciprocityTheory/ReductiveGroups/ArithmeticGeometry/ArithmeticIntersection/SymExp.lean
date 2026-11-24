@@ -26,8 +26,7 @@ theorem symm_piecewise_eq {V : Type*} [AddCommGroup V] [Module ℝ V] {n : ℕ}
         rw [h1, h2, hst])
   have hσ : ∀ i, (Equiv.ofFiberEquiv e i ∈ s ↔ i ∈ t) := fun i => by
     have := Equiv.ofFiberEquiv_map e i
-    rw [← decide_eq_decide]
-    exact this
+    rwa [← decide_eq_decide]
   have hfun : (s.piecewise (fun _ => x) fun _ => y) ∘ (Equiv.ofFiberEquiv e) =
       t.piecewise (fun _ => x) fun _ => y := by
     funext i
@@ -53,8 +52,7 @@ theorem symm_piecewise_eq_mix {V : Type*} [AddCommGroup V] [Module ℝ V] {n : �
       constructor
       · rintro ⟨i, hi, rfl⟩
         exact hi
-      · intro hm
-        exact ⟨⟨m, by omega⟩, hm, rfl⟩
+      · exact fun hm => ⟨⟨m, by omega⟩, hm, rfl⟩
     rw [← Finset.card_map Fin.valEmbedding, hmap, Finset.card_range]
   rw [symm_piecewise_eq I hI x y s t ht.symm]
   congr 1

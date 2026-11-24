@@ -28,10 +28,8 @@ theorem isMultiHomogeneous_iff_forall_weighted_lh0BlockWt {R : Type*} [CommSemir
     IsMultiHomogeneous a f ↔ ∀ b, IsWeightedHomogeneous (blockIndexWeight b) f (a b) := by
   simp only [IsMultiHomogeneous, IsWeightedHomogeneous, weight_lh0BlockWt_apply, mem_support_iff]
   constructor
-  · intro h b d hd
-    exact h d hd b
-  · intro h s hs b
-    exact h b hs
+  · exact fun h b d hd => h d hd b
+  · exact fun h s hs b => h b hs
 
 theorem eval_mul_of_isMultiHomogeneous {B n : ℕ} {a : Fin B → ℕ} {g : MvPolynomial (Fin B × Fin n) ℂ}
     (hg : IsMultiHomogeneous a g) (c : ℂ) (z : Fin B × Fin n → ℂ) :
@@ -109,15 +107,13 @@ theorem exists_torus_coeff_le {ι : Type*} [Fintype ι] (g : MvPolynomial ι ℂ
           · subst hds
             simp
           · obtain ⟨i, hi⟩ : ∃ i, d i ≠ s i := by
-              by_contra h
-              push Not at h
+              by_contra! h
               exact hds (Finsupp.ext h)
             exact Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right hi)
       _ = (N : ℂ) ^ Fintype.card ι * AddMonoidAlgebra.coeff g s := by
           rw [Finset.sum_eq_single s (fun d _ hd => by simp [hd]) (fun h => absurd hs h)]
           simp [mul_comm]
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hlt2 : ∀ k, ‖eval (z k) g * c k‖ < ‖AddMonoidAlgebra.coeff g s‖ := by
     intro k
     have hc : ‖c k‖ = 1 := by simp [c, norm_prod, norm_pow, norm_inv, hζn]

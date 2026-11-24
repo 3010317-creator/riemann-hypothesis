@@ -111,11 +111,9 @@ theorem IsSq.ext_basis {h' : V → V → K} (hs : IsSq σ h) (hs' : IsSq σ h') 
 theorem exists_aniso (h2 : (2 : K) ≠ 0) (hs : IsHS σ h) (x : V) (hx : x ≠ 0) :
     ∃ e, h e e ≠ 0 := by
   have hq := hs.toIsSq
-  by_contra H
-  push Not at H
+  by_contra! H
   obtain ⟨y, hy⟩ : ∃ y, h x y ≠ 0 := by
-    by_contra H'
-    push Not at H'
+    by_contra! H'
     exact hx (hs.nondeg x H')
   have key := H (x + (h x y)⁻¹ • y)
   simp only [hq.add_right, hq.add_left, hq.smul_right, hq.smul_left, H x, H y,
@@ -209,8 +207,7 @@ theorem exists_orth (h2 : (2 : K) ≠ 0) : ∀ (m : ℕ) (V : Type) [AddCommGrou
           simp only [Fin.cons_zero, Fin.cons_succ]
           rw [hq.herm e, (mem_perp hq e (g i)).1 (g i).2, map_zero]
         | succ j =>
-          simp only [Fin.cons_succ]
-          exact hg1 i j (fun hh => hij (by rw [hh]))
+          simpa only [Fin.cons_succ] using hg1 i j (fun hh => hij (by rw [hh]))
     · intro i
       induction i using Fin.cases with
       | zero => simpa using he

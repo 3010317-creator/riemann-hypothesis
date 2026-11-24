@@ -45,8 +45,7 @@ theorem exists_finset_eval_eq_zero {X : Type*} (W : Submodule ℂ (X → ℂ)) [
           intro e
           rw [← e] at hw
           exact hx ((mem_kerS _ w).1 hw x (Finset.mem_insert_self x S))
-        have hlt := Submodule.finrank_lt_finrank_of_lt (lt_of_le_of_ne hle hne)
-        exact ih _ (hS ▸ hlt) _ rfl
+        exact ih _ (hS ▸ (Submodule.finrank_lt_finrank_of_lt (lt_of_le_of_ne hle hne))) _ rfl
   obtain ⟨S, hS⟩ := key _ ∅ rfl
   refine ⟨S, fun w hw h0 => ?_⟩
   have : (⟨w, hw⟩ : W) ∈ kerS S := (mem_kerS S _).2 h0
@@ -121,8 +120,7 @@ theorem exists_openSubgroup_rightInvariant {φ : AdelicGLn.AdelicGL K n → ℂ}
   have hbfin : b.Finite := by
     have hli : LinearIndependent ℂ (fun x : b => (⟨(x : AdelicGLn.AdelicGL K n → ℂ),
         Submodule.subset_span (hbs x.2)⟩ : W)) := by
-      apply LinearIndependent.of_comp W.subtype
-      exact hbli
+      exact LinearIndependent.of_comp W.subtype hbli
     exact Set.finite_coe_iff.1 hli.finite
 
   have hbk : ∀ w ∈ b, ∃ k : Kc, w = rightTranslate (k : AdelicGLn.AdelicGL K n) φ := by
@@ -139,10 +137,8 @@ theorem exists_openSubgroup_rightInvariant {φ : AdelicGLn.AdelicGL K n → ℂ}
       rw [← rightTranslate_mul']
       exact Submodule.subset_span ⟨⟨_, mul_mem (finEmb_mem_maxCompact hu) k.2⟩, rfl⟩
     · exact W.zero_mem
-    · intro x y _ _ hx hy
-      exact W.add_mem hx hy
-    · intro c x _ hx
-      exact W.smul_mem c hx
+    · exact fun x y _ _ hx hy => W.add_mem hx hy
+    · exact fun c x _ hx => W.smul_mem c hx
 
   have hnhds : ∀ᶠ u in 𝓝 (1 : AdelicGLn.FiniteAdelicGL K n),
       u ∈ AdelicGLn.integralFiniteGL K n ∧

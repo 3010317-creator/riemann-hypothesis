@@ -164,12 +164,10 @@ theorem decomp {σ : Type*} [Fintype σ] [LinearOrder σ] (m : ℕ) (x : MvPower
         split_ifs with hle'
         · have hc : ¬ d.support.min = (i : WithTop σ) := by
             rw [hmin]
-            intro h
-            exact hi (WithTop.coe_injective h).symm
+            exact fun h => hi (WithTop.coe_injective h).symm
           rw [hy, tsub_add_cancel_of_le hle', ite_eq_right hc]
         · rfl
-      · intro h
-        exact absurd (Finset.mem_univ i0) h
+      · exact fun h => absurd (Finset.mem_univ i0) h
 
 private theorem subst_diff_lemma {σ τ : Type*} [Fintype σ] [Finite τ] (N : ℕ) :
     ∀ (z : MvPowerSeries σ K) (a b : σ → MvPowerSeries τ K),
@@ -288,8 +286,7 @@ theorem tail_low {ι : Type*} [Fintype ι] [DecidableEq ι] (f : ι → MvPowerS
     · subst hij
       simp
     · have hne : Finsupp.single i 1 ≠ Finsupp.single j 1 := by
-        intro heq
-        exact hij (Finsupp.single_left_injective one_ne_zero heq)
+        exact fun heq => hij (Finsupp.single_left_injective one_ne_zero heq)
       rw [ite_eq_right hij, ite_eq_right hne, sub_zero]
 
 theorem main (ι : Type v) [Fintype ι] [DecidableEq ι]

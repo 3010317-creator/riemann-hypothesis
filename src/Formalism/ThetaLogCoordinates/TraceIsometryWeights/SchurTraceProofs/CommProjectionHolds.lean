@@ -55,8 +55,7 @@ theorem isoC_stable (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r)) (la : Fin r
     GlStableC p LL j Cs (IsoC p LL j Cs la) := by
   intro c hc d hd x hx
   rw [IsoC, Submodule.mem_sInf] at hx ⊢
-  intro S hS
-  exact hS.2 c hc d hd x (hx S hS)
+  exact fun S hS => hS.2 c hc d hd x (hx S hS)
 
 theorem hwc_le_isoC (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r)) (la : Fin r → ℤ) :
     HWC p LL j Cs la ≤ IsoC p LL j Cs la := by
@@ -119,8 +118,7 @@ theorem isoC_map_of_comm (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r))
   have hle : IsoC p LL j Cs la ≤ (IsoC p LL j Cs la).comap A := by
     conv_lhs => rw [IsoC]
     refine sInf_le ⟨?_, ?_⟩
-    · intro x hx
-      exact hwc_le_isoC LL j Cs la (hwc_map_of_comm LL j Cs A hA la x hx)
+    · exact fun x hx => hwc_le_isoC LL j Cs la (hwc_map_of_comm LL j Cs A hA la x hx)
     · intro c hc d hd x hx
       rw [Submodule.mem_comap] at hx ⊢
       rw [hA c hc d hd]
@@ -160,8 +158,7 @@ theorem typeProj_comm (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r)) (T : Set 
   have h2 : P (A (x - P x)) = 0 := by
     apply hK
     rw [LinearMap.mem_ker, map_sub, hPP', sub_self]
-  rw [map_sub, map_sub, h1, sub_eq_zero] at h2
-  exact h2
+  rwa [map_sub, map_sub, h1, sub_eq_zero] at h2
 
 theorem comm_projection_holds : CommP := by
   intro p _ N r LL j j' Cs Cs' T T' P P' hj hC hP hP'

@@ -70,8 +70,7 @@ theorem ordGE_finsuppProd {σ τ : Type} (A : τ → MvPowerSeries σ k) (hA : �
   have key : ∀ S : Finset τ, OrdGE (∑ s ∈ S, dd s) (∏ s ∈ S, A s ^ dd s) := by
     intro S
     refine Finset.induction_on S ?_ ?_
-    · simp only [Finset.sum_empty, Finset.prod_empty]
-      exact ordGE_zero_left _
+    · simpa only [Finset.sum_empty, Finset.prod_empty] using ordGE_zero_left _
     · intro a S ha ih
       rw [Finset.sum_insert ha, Finset.prod_insert ha]
       exact ordGE_mul (ordGE_pow (hA a) _) ih

@@ -25,10 +25,8 @@ theorem subsingleton_H_one_iff :
   unfold H
   rw [Submodule.Quotient.subsingleton_iff, Submodule.comap_subtype_eq_top]
   constructor
-  · intro h z hz
-    exact h (LinearMap.mem_ker.mpr hz)
-  · intro h z hz
-    exact h z (LinearMap.mem_ker.mp hz)
+  · exact fun h z hz => h (LinearMap.mem_ker.mpr hz)
+  · exact fun h z hz => h z (LinearMap.mem_ker.mp hz)
 
 theorem sgn_mul_sgn_erase {J : Finset (Fin n)} {j k : Fin n} (hj : j ∈ J) (hk : k ∈ J) (hjk : j ≠ k) :
     sgn J j * sgn (J.erase j) k = -(sgn J k * sgn (J.erase k) j) := by
@@ -144,8 +142,7 @@ theorem subsingleton_H_one_of_smul (F' G : SubSystem S x Ω) (σ : Ω) (hσ : σ
   rw [Cech.subsingleton_H_one_iff] at hF ⊢
   have hdiv : ∀ I (z : G.sub I), σ⁻¹ * (z : Ω) ∈ F'.sub I := fun I z => by
     obtain ⟨y, hy, hzy⟩ := (hG I z).mp z.2
-    rw [hzy, ← mul_assoc, inv_mul_cancel₀ hσ, one_mul]
-    exact hy
+    rwa [hzy, ← mul_assoc, inv_mul_cancel₀ hσ, one_mul]
   let φ : ∀ I, G.sub I →ₗ[S] F'.sub I := fun I =>
     { toFun := fun z => ⟨σ⁻¹ * z, hdiv I z⟩
       map_add' := fun a b => Subtype.ext (mul_add _ _ _)

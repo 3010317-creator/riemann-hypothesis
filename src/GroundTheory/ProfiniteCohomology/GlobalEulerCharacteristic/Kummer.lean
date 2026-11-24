@@ -123,11 +123,7 @@ theorem sUnitsToGsInvariants_surjective : Function.Surjective (sUnitsToGsInvaria
       rw [Units.val_inv_eq_inv_val, Units.val_mk0, hxinv]
       exact (u⁻¹).2.1
   refine ⟨Additive.ofMul ⟨Units.mk0 x hx0, hmem⟩, ?_⟩
-  apply Subtype.ext
-  apply Additive.toMul.injective
-  apply Subtype.ext
-  apply Units.ext
-  exact hx
+  exact Subtype.ext (Additive.toMul.injective (Subtype.ext (Units.ext hx)))
 
 def gsH0SUnitsEquiv :
     cohomology (Rep.res (gsSubtype S hL) (galSUnitsMax F Ω S)) 0 ≃+

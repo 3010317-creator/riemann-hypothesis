@@ -47,8 +47,7 @@ private theorem integral_circleMap_smul_eq_two_pi_mul {n : ℕ} {a : ℝ} {h : V
     exact (h1.comp l h2).differentiableWithinAt
   have hdc : DiffContOnCl ℂ (fun l : ℂ => h (x + l • z)) (ball (0 : ℂ) 1) := by
     apply DifferentiableOn.diffContOnCl
-    rw [closure_ball (0 : ℂ) one_ne_zero]
-    exact hd
+    rwa [closure_ball (0 : ℂ) one_ne_zero]
   have hC := hdc.circleIntegral_sub_inv_smul (mem_ball_self one_pos)
   have e0 : h (x + (0 : ℂ) • z) = h x := by rw [zero_smul, add_zero]
   have key : Complex.I * ∫ θ in (0 : ℝ)..2 * Real.pi, h (x + circleMap 0 1 θ • z)
@@ -81,7 +80,6 @@ private theorem integral_comp_smul_of_norm_eq_one {n : ℕ} (c : ℂ) (hc : ‖c
       norm_map' := fun z => by
         show ‖c • z‖ = ‖z‖
         rw [norm_smul, hc, one_mul] }
-  show ∫ z, f (e z) = ∫ z, f z
   exact e.measurePreserving.integral_comp e.toHomeomorph.measurableEmbedding f
 
 private theorem integrable_moll (n : ℕ) {t : ℝ} (ht : 0 < t) : Integrable (moll n t) :=
@@ -238,8 +236,7 @@ theorem holoSmooth : HoloSmoothStatement := by
 
 theorem holo_contDiffOn {n : ℕ} {Ω : Set (EuclideanSpace ℂ (Fin n))}
     {f : EuclideanSpace ℂ (Fin n) → ℂ} (hΩ : IsOpen Ω) (hf : DifferentiableOn ℂ f Ω) :
-    ContDiffOn ℝ ∞ f Ω := by
-  exact holoSmooth n Ω f hΩ hf
+    ContDiffOn ℝ ∞ f Ω := holoSmooth n Ω f hΩ hf
 
 end ReciprocityTheory.L2DbarEstimates.C
 end -- clump:auto

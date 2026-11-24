@@ -25,9 +25,7 @@ omit [Fintype K] in
 theorem isMultiHomog_sub {g h : MRing ι} {d : K → ℕ} (hg : IsMultiHomog g d)
     (hh : IsMultiHomog h d) : IsMultiHomog (g - h) d := by
   rw [sub_eq_add_neg]
-  refine isMultiHomog_add hg ?_
-  intro m hm
-  exact hh m (by simpa using hm)
+  exact isMultiHomog_add hg (fun m hm => hh m (by simpa using hm))
 
 theorem isValueAt_unique {y : (Σ k, ι k) → Ω} {s : Ω} {z : (Σ k, ι k) → ℂ}
     (hz : z ∈ mcPts (mCoordIdeal y)) {v w : ℂ} (hv : IsValueAt y s z v) (hw : IsValueAt y s z w) :

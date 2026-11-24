@@ -155,9 +155,7 @@ theorem top (hP : SPois) (hI : SPois → SInt) (hG : SPois → SInt → SSmooth 
   have hs := hS' F ω c H
   let φ : UpperTheory.V.TR.Sm F 2 := ⟨Eis ω (Phi c), hs⟩
   have hlev : ∀ w, φ ∈ UpperTheory.V.Hi.fixd (locSm F w) (K1 w (c w)) := by
-    intro w k hk
-    refine Subtype.ext (funext fun g => ?_)
-    exact hV hP hI' hS' F ω c H w k hk g
+    exact fun w k hk => Subtype.ext (funext fun g => (hV hP hI' hS' F ω c H w k hk g))
   have hcent := hC hP hI' hS' F ω c H
   have hwt := hW hP hI' hS' F ω c H hs
   have hlow := hLo hP hI' hS' F ω c H hs
@@ -281,12 +279,10 @@ theorem phi_rot (c : HeightOneSpectrum (𝓞 F) → ℕ) (k : UpperTheory.V.TR.K
       lam k * PhiE c (eps k) v := by
   have hK : ((UpperTheory.V.TR.infGL F 2 (Unitary.toUnits k) : GA F 2) : Matrix (Fin 2) (Fin 2) (Ad F)).map
       (UpperTheory.V.TR.pInf F) = k.1 := by
-    have h := congrArg Units.val (UpperTheory.V.TR.pInf_infGL (E := F) (Unitary.toUnits k))
-    exact h
+    exact congrArg Units.val (UpperTheory.V.TR.pInf_infGL (E := F) (Unitary.toUnits k))
   have hKf : ((UpperTheory.V.TR.infGL F 2 (Unitary.toUnits k) : GA F 2) : Matrix (Fin 2) (Fin 2) (Ad F)).map
       (pFin F) = 1 := by
-    have h := congrArg Units.val (UpperTheory.V.TR.pFin_infGL (E := F) (Unitary.toUnits k))
-    exact h
+    exact congrArg Units.val (UpperTheory.V.TR.pFin_infGL (E := F) (Unitary.toUnits k))
   have ef : ∀ i, pFin F ((v ᵥ* ((UpperTheory.V.TR.infGL F 2 (Unitary.toUnits k) : GA F 2) :
       Matrix (Fin 2) (Fin 2) (Ad F))) i) = pFin F (v i) := by
     intro i
@@ -682,8 +678,7 @@ theorem phi_vecMul {c : HeightOneSpectrum (𝓞 F) → ℕ} {k : GL (Fin 2) (Af 
     refine ⟨fun h => ?_, cond_glob hk⟩
     have := cond_glob (inv_mem hk) h
     rwa [hinv] at this
-  simp only [Phi, pInf_vecMul]
-  exact congrArg _ (if_congr key rfl rfl)
+  simpa only [Phi, pInf_vecMul] using congrArg _ (if_congr key rfl rfl)
 
 theorem det_mem {c : HeightOneSpectrum (𝓞 F) → ℕ} {k : GL (Fin 2) (Af F)} (hk : k ∈ Kc F c) (v : HeightOneSpectrum (𝓞 F)) :
     pLoc F v ((Matrix.GeneralLinearGroup.det k : (Af F)ˣ) : Af F) ∈ v.adicCompletionIntegers F := by
@@ -967,8 +962,7 @@ theorem hasTemperateGrowth_prod {E : Type*} [NormedAddCommGroup E] [NormedSpace 
     have e : (fun x => ∏ i ∈ insert a s, f i x) = (f a * fun x => ∏ i ∈ s, f i x) := by
       funext x
       simp [Finset.prod_insert ha]
-    rw [e]
-    exact h
+    rwa [e]
 
 def poly (u : Fin 2 → mixedSpace F) : ℂ := ∏ v, lin F v u
 
@@ -1446,10 +1440,8 @@ theorem scalar_action_holds : SPois → SInt → SSmooth → SSmul := by
     · rw [e2, e2, hl]
     · have e : {x | UpperTheory.V.TR.finRep F 2 x (a • φ) = a • φ} = {x | UpperTheory.V.TR.finRep F 2 x φ = φ} := by
         ext x
-        simp only [Set.mem_ofPred_eq, map_smul]
-        exact smul_right_inj ha
-      rw [e]
-      exact hlev
+        simpa only [Set.mem_ofPred_eq, map_smul] using smul_right_inj ha
+      rwa [e]
     · refine Submodule.finiteDimensional_of_le
         (S₂ := Submodule.span ℂ (Set.range fun x => UpperTheory.V.TR.cptRep F 2 x φ)) (Submodule.span_le.2 ?_)
       rintro _ ⟨x, rfl⟩
@@ -1638,8 +1630,7 @@ theorem UpperTheory.HilbertEisensteinWeightOne.weight_holds : SPois → SInt →
     have e : (fun t : ℝ => φ.1 (g * UpperTheory.V.TR.infGL F 2 (Unitary.toUnits (rotv v t)))) =
         fun t : ℝ => Complex.exp (t * Complex.I) * φ.1 g := funext fun t => eis_rot ω c v t g
     rw [e]
-    have h3 := (((hasDerivAt_id (0 : ℝ)).ofReal_comp).mul_const Complex.I).cexp.mul_const (φ.1 g)
-    simpa using h3
+    simpa using (((hasDerivAt_id (0 : ℝ)).ofReal_comp).mul_const Complex.I).cexp.mul_const (φ.1 g)
   rw [UpperTheory.V.TR.lie_apply, h1.unique h2]
   simp [φ]
 end -- clump:auto

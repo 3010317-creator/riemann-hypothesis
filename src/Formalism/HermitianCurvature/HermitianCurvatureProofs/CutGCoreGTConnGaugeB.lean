@@ -109,7 +109,6 @@ theorem coordQ_unit (hTT : 0 ≤ P.TT) (v : M.Var P.r) : IsUnit (coordQ v : SmQ 
   refine isUnit_iff_exists_inv.mpr ⟨⟨_, hmem⟩, ?_⟩
   apply Subtype.ext
   funext q
-  show MA.coordE v q.1 * (MA.coordE v q.1)⁻¹ = 1
   exact mul_inv_cancel₀ (hne q.1 q.2)
 
 theorem dzQ_apply (hTT : 0 ≤ P.TT) (f : SmQ P.r P.TT) (q : Qp P.r P.TT) :
@@ -125,8 +124,7 @@ theorem dzQ_apply (hTT : 0 ≤ P.TT) (f : SmQ P.r P.TT) (q : Qp P.r P.TT) :
   have hne : MA.coordE M.vz q.1 ≠ 0 := by
     have h1 : MA.coordE M.vz q.1 = q.1.2 := by
       simp [MA.coordE, MA.zE, M.vz]
-    rw [h1]
-    exact hz
+    rwa [h1]
   rw [show ((coordQ M.vz : SmQ P.r P.TT) : Qp P.r P.TT → ℂ) q = MA.coordE M.vz q.1 from rfl,
     ← mul_assoc, inv_mul_cancel₀ hne, one_mul]
 
@@ -184,8 +182,7 @@ theorem fnZ_ev_eq {v : ℂ → ℂ} (hv : ContDiffOn ℝ ((⊤ : ℕ∞) : WithT
   have hopen : IsOpen (MA.Qset P.r P.TT) :=
     h1.inter (isOpen_lt continuous_const (Complex.continuous_normSq.comp continuous_snd))
   filter_upwards [hopen.mem_nhds q.2] with x hx
-  simp only [MA.ext, dite_eq_left hx]
-  exact fnZ_val P hv ⟨x, hx⟩
+  simpa only [MA.ext, dite_eq_left hx] using fnZ_val P hv ⟨x, hx⟩
 
 theorem fderiv_snd_comp {v : ℂ → ℂ} (hv : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) v (Ann P)) (q : Qp P.r P.TT) :
     fderiv ℝ (fun x : E P.r => v x.2) q.1 = (fderiv ℝ v q.1.2).comp (ContinuousLinearMap.snd ℝ _ _) := by
@@ -240,8 +237,7 @@ theorem dZ_conj_unit {u : ℂ → ℂ} (hu : ContDiffOn ℝ ((⊤ : ℕ∞) : Wi
       ((fderiv_mul hd hd.star).symm.trans (hconst.fderiv_eq.trans (fderiv_const_apply _)))
     simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul,
       ContinuousLinearMap.zero_apply] at h2
-    rw [hstar] at h2
-    exact h2
+    rwa [hstar] at h2
   have hN : star (u ζ) * u ζ = 1 := star_mul_self_eq_one_of_norm_eq_one (h1 ζ hζ)
   have hc : ∀ h : ℂ, star (fderiv ℝ u ζ h) = -(star (u ζ)) ^ 2 * fderiv ℝ u ζ h := by
     intro h

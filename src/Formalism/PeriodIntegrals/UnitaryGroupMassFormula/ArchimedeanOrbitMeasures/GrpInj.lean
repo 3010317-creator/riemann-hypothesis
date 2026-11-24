@@ -59,9 +59,7 @@ theorem injOn_nhds_of_strict {E F : Type} [NormedAddCommGroup E] [NormedSpace �
     [NormedAddCommGroup F] [NormedSpace ℝ F] {f : E → F} {f' : E →L[ℝ] F} {a : E}
     (hf : HasStrictFDerivAt f f' a) (hinj : Function.Injective f') : ∃ s ∈ 𝓝 a, InjOn f s := by
   obtain ⟨K, hK, hanti⟩ := (f' : E →ₗ[ℝ] F).injective_iff_antilipschitz.mp hinj
-  have hc : (0 : ℝ≥0) < (2 * K)⁻¹ := by
-    apply inv_pos.2
-    exact mul_pos (by norm_num) hK
+  have hc : (0 : ℝ≥0) < (2 * K)⁻¹ := inv_pos.2 (mul_pos (by norm_num) hK)
   obtain ⟨s, hs, hap⟩ := hf.approximates_deriv_on_nhds (c := (2 * K)⁻¹) (Or.inr hc)
   refine ⟨s, hs, fun x hx y hy hxy => ?_⟩
   have h1 : ‖f x - f y - f' (x - y)‖ ≤ ((2 * K)⁻¹ : ℝ≥0) * ‖x - y‖ := hap x hx y hy

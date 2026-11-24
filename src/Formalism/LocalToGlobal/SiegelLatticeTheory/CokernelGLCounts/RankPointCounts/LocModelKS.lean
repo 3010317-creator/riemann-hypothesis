@@ -276,8 +276,7 @@ theorem isUnit_qE (p : PlF D) : IsUnit (qE p) := by
   split
   · rename_i sg _
     have hq : ((sg.q : 𝒪[(D.s.atP p).Fp]) : (D.s.atP p).Fp) ≠ 0 := by
-      intro h0
-      exact sg.q_irr.ne_zero (Subtype.ext h0)
+      exact fun h0 => sg.q_irr.ne_zero (Subtype.ext h0)
     exact (isUnit_iff_ne_zero.2 hq).map _
   · exact isUnit_one
 
@@ -384,8 +383,7 @@ def Gd (δ : ∀ p : PlF D, (D.s.atP p).Fp) (M : ∀ p : PlF D, Loc.Model (D.s.a
 theorem gd_finite (δ : ∀ p : PlF D, (D.s.atP p).Fp) (M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep)
     (hA : ∀ p, Agree δ M p) (X : Finset D.host.E) : {p | ¬ Gd δ M p X}.Finite := by
   have h := LocModel.good_cofinite δ M hA X
-  rw [Filter.eventually_cofinite] at h
-  exact h
+  rwa [Filter.eventually_cofinite] at h
 
 theorem gd_place {δ : ∀ p : PlF D, (D.s.atP p).Fp} {M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep}
     (hA : ∀ p, Agree δ M p) (T T' : ℕ) {p : PlF D} {X : Finset D.host.E} (h : Gd δ M p X) {n : ℕ}
@@ -515,9 +513,7 @@ theorem pf_blk (hMN : ModNorm D) {δ : ∀ p : PlF D, (D.s.atP p).Fp}
     (Function.mulSupport fun p => A5.modK (M p).R ((D.s.atP p).ιE x * PI.SupportDatumW.hF D δ p a s)).Finite ∧
       ∏ᶠ p, A5.modK (M p).R ((D.s.atP p).ιE x * PI.SupportDatumW.hF D δ p a s) =
         (nrm (D := D) (nu D.R.rS a (a + s - 1)) x)⁻¹ := by
-  have h := hMN δ M hA (nu D.R.rS a (a + s - 1)) s x hx
-  simp only [tMod_eq] at h
-  exact h
+  simpa only [tMod_eq] using hMN δ M hA (nu D.R.rS a (a + s - 1)) s x hx
 
 theorem uS_mul (δ : ∀ p : PlF D, (D.s.atP p).Fp) (p : PlF D) (i s : ℕ) (t : D.host.E) :
     uS δ p i s * (D.s.atP p).ιE t = (D.s.atP p).ιE (sgn D i * t) * PI.SupportDatumW.hF D δ p (i - s + 1) s := by
@@ -531,8 +527,7 @@ theorem pf_uS (hMN : ModNorm D) {δ : ∀ p : PlF D, (D.s.atP p).Fp}
         (nrm (D := D) (nu D.R.rS (i - s + 1) (i - s + 1 + s - 1)) t)⁻¹ := by
   have h := pf_blk hMN hA (i - s + 1) s (mul_ne_zero (sgn_ne i) ht)
   simp only [← uS_mul] at h
-  rw [sgn, nrm_negOnePow] at h
-  exact h
+  rwa [sgn, nrm_negOnePow] at h
 
 def blkNr (D : Formalism.BasicNotions.D7) : ℕ → List (D.host.E × ℕ) → ℝ
   | _, [] => 1
@@ -1041,8 +1036,7 @@ theorem mem_pullL {M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep} {
 theorem uU_inv {δ : ∀ p : PlF D, (D.s.atP p).Fp} {p : PlF D} (hδ : δ p ≠ 0) (i s : ℕ) {v : (D.s.atP p).Ep}
     (hv : uS δ p i s * v = 1) : (((uU δ p i s)⁻¹ : (D.s.atP p).Epˣ) : (D.s.atP p).Ep) = v := by
   apply Units.inv_eq_of_mul_eq_one_right
-  rw [uU_val hδ]
-  exact hv
+  rwa [uU_val hδ]
 
 theorem mem_pullL' {M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep} {δ : ∀ p : PlF D, (D.s.atP p).Fp}
     (T T' i s : ℕ) (p : PlF D) (x : D.host.E) :
@@ -1187,8 +1181,7 @@ theorem lat_L'_mem {δ : ∀ p : PlF D, (D.s.atP p).Fp} {M : ∀ p : PlF D, Loc.
       rw [PI.SupportDatumW.twist_mul p s ((D.s.atP p).ιE x), map_one]
       ring
     rw [htmi]
-    rw [mul_assoc, ιE_sgn, negOnePow_mem] at h1
-    exact h1
+    rwa [mul_assoc, ιE_sgn, negOnePow_mem] at h1
   have h3 := (Formalism.MainNotions.BridgeLemma.localCondition_iff δ M hA
     (Formalism.MainNotions.BridgeLemma.isDiffGen_of_agree δ M hA (UpperTheory.Prune.fundamentalExactSequence_continuity_all_theories D) (explicit_formula_bound_holds D)) ν s x).2 h2
   have := Formalism.MainNotions.LocalModelPeriodLattices.cmE D

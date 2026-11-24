@@ -90,11 +90,9 @@ lemma scaleMap_eq :
     by_cases h : j = i
     · subst h
       rw [dehom_X_self, map_one, val_one]
-      simp only [scaleMap, coe_eval₂Hom, eval₂_X]
-      exact (algebraMap_X_mul_invSelf A j).symm
+      simpa only [scaleMap, coe_eval₂Hom, eval₂_X] using (algebraMap_X_mul_invSelf A j).symm
     · rw [dehom_X_of_ne A i j h]
-      simp only [polyToChart, coe_eval₂Hom, eval₂_X, scaleMap]
-      exact val_coordinate A i ⟨j, h⟩
+      simpa only [polyToChart, coe_eval₂Hom, eval₂_X, scaleMap] using val_coordinate A i ⟨j, h⟩
 
 lemma scaleMap_monomial (e : Fin (n + 1) →₀ ℕ) (c : A) :
     scaleMap A i (monomial e c) * algebraMap Pn (ChartLoc A i) (X i ^ e.degree) =

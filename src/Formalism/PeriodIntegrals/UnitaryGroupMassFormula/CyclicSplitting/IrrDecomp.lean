@@ -75,9 +75,7 @@ noncomputable def transportRep {V : Type} [AddCommGroup V] [Module L V] {n : ℕ
 
 theorem transportRep_character {V : Type} [AddCommGroup V] [Module L V] [FiniteDimensional L V] {n : ℕ}
     (e : V ≃ₗ[L] (Fin n → L)) (σ : Representation L G V) (g : G) :
-    (transportRep e σ).character g = σ.character g := by
-  show LinearMap.trace L (Fin n → L) (e.conj (σ g)) = LinearMap.trace L V (σ g)
-  exact LinearMap.trace_conj' (σ g) e
+    (transportRep e σ).character g = σ.character g := LinearMap.trace_conj' (σ g) e
 
 theorem transportRep_irreducible {V : Type} [AddCommGroup V] [Module L V] {n : ℕ}
     (e : V ≃ₗ[L] (Fin n → L)) (σ : Representation L G V) (hσ : σ.IsIrreducible) :
@@ -234,8 +232,7 @@ theorem hasIrreducibleDecomposition_of_finrank_eq : ∀ (n : ℕ) (V : Type) [Ad
     have h2 : (⊥ : Submodule L V) = ⊤ := congrArg Subrepresentation.toSubmodule h
     exact bot_ne_top h2
   obtain ⟨W, hW0, hWT⟩ : ∃ W : Subrepresentation σ, W ≠ ⊥ ∧ W ≠ ⊤ := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hirr (show IsSimpleOrder (Subrepresentation σ) from
       { toNontrivial := ⟨⟨⊥, ⊤, hbt⟩⟩
         eq_bot_or_eq_top := fun W => by

@@ -218,8 +218,7 @@ theorem betaInt_of (hLs : LsetB Zd u u' F0 what₂) (hIo : IotaB Zd u u' F0 what
   have htr : ∃ c : D.host.E, IsIntegral ℤ c ∧ c + star c = 1 := by
     obtain ⟨c, hc⟩ := D.host.exists_trace_one
     refine ⟨(c : D.host.E), RingOfIntegers.isIntegral_coe c, ?_⟩
-    rw [Formalism.BasicNotions.Examples₂.star_eq_conj (H := D.host)]
-    exact hc
+    rwa [Formalism.BasicNotions.Examples₂.star_eq_conj (H := D.host)]
   obtain ⟨n, hniso, hnX, hnz, hno, himg⟩ := BwdNA.main (VS D) (Xsp (liftF F'₂)) hXiso F'₂.fl.z hzX
     (Formalism.HermitianLatticesTheory.gmap β₀ γ.lam) Λ₂ hΛ₁lat hΛ₂lat hSD₁ hSD₂ hXm hz₁ hz₂ hL hL' hy htr
   have hnI : n ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := hniso
@@ -254,12 +253,10 @@ theorem betaInt_of (hLs : LsetB Zd u u' F0 what₂) (hIo : IotaB Zd u u' F0 what
     · intro h
       have h' : n x ∈ (n : (VS D).V → (VS D).V) '' (Λ₂ : Set (VS D).V) := by rw [himg]; exact h
       obtain ⟨y, hy, hyx⟩ := h'
-      rw [← n.injective hyx]
-      exact hy
+      rwa [← n.injective hyx]
     · intro h
       have h' : n x ∈ (n : (VS D).V → (VS D).V) '' (Λ₂ : Set (VS D).V) := ⟨x, h, rfl⟩
-      rw [himg] at h'
-      exact h'
+      rwa [himg] at h'
   exact ⟨n.symm, hvI, hvf, hvX, hgm, hIo γ Z F'₂ φ φ' Λ₂ hB0 β₀ hiso hfr hW hO n.symm hvI hvf hvX hgm⟩
 
 end Formalism.L2.SG.Pf.FrameGlobalPatching.FStar

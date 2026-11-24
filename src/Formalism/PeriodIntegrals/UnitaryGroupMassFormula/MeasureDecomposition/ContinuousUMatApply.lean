@@ -171,8 +171,7 @@ theorem fix_span {W : Set (Fin n → ℂ)} {g : Matrix (Fin n) (Fin n) ℂ} (hW 
     rw [Submodule.span_le]
     intro y hy
     simp [hW y hy]
-  have hx' := hle hx
-  simpa [sub_eq_zero] using hx'
+  simpa [sub_eq_zero] using hle hx
 
 theorem conj_sub_one {h x h' : Matrix (Fin n) (Fin n) ℂ} (hh : h * h' = 1) :
     h * x * h' - 1 = h * (x - 1) * h' := by

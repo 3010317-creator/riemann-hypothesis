@@ -164,8 +164,7 @@ theorem exists_archProj_eq {g : normOneGL (K := K) (n := n)} (hg : (AdelicGLn.pr
   set C : ArchUnits K n := ((archEquiv K n h : archGroup K n) : ArchUnits K n)
   have hincl : archIncl K n C = g := by
     have h1 := infEmb_mul_finEmb (K := K) (n := n) g
-    rw [hg, map_one, mul_one] at h1
-    exact h1
+    rwa [hg, map_one, mul_one] at h1
   refine ⟨C, ?_, ?_⟩
   · rw [archProj_of_mem (hincl ▸ g.2)]
     exact Subtype.ext hincl

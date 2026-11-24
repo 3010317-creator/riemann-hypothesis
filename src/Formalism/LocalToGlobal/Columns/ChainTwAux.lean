@@ -212,8 +212,7 @@ theorem ocbChrGLoc_holds (m2 : ℕ) : OcbChrGLoc Ch sel mu cst m2 := by
   have hk5 := R.m_add_three_le_k
   have e : j * (R.t + 1) = j * R.t + j := by ring
   have hJ : r ∈ Jat (Pr := Pr) cst.sharp j w.1 := by
-    have h := hr.2
-    simpa [MulAut.conj_apply] using h
+    simpa [MulAut.conj_apply] using hr.2
   rw [hB.sharp] at hJ
   have hJ' : r ∈ LocE.JGsym w.1 (qOf w.1) R.k R.rS R.r R.t (R.N j) (cOf R j) := by
     unfold Jat at hJ
@@ -324,8 +323,7 @@ theorem extendedMatrix_mulVec_single {n c : ℕ} (A : Matrix (Fin n) (Fin n) E) 
     · rw [Pi.single_apply, ite_eq_left (show Fin.castAdd c (⟨y.1, h⟩ : Fin n) = y from Fin.ext rfl), mul_one]
     · intro b _ hb
       rw [Pi.single_apply, ite_eq_right (fun h' => hb (Fin.ext (by have := congrArg Fin.val h'; simpa using this))), mul_zero]
-    · intro h'
-      exact absurd (Finset.mem_univ _) h'
+    · exact fun h' => absurd (Finset.mem_univ _) h'
   · rw [dite_eq_right h]
     refine Finset.sum_eq_zero fun b _ => ?_
     rw [Pi.single_apply, ite_eq_right (fun h' => h (by rw [← h']; simp)), mul_zero]
@@ -416,8 +414,7 @@ theorem ocbGrpGLoc_holds (m2 : ℕ) : OcbGrpGLoc Ch sel mu cst m2 := by
       rcases beta_lt_of_not_allowed (t := R.t) hcj hp hp' hne hna with h | ⟨h1, h2⟩
       · have h' : betaExponentOfRanks R.k R.rS R.r R.t (LocE.fPos R.k (cOf R j) (R.N j) (Fin.castAdd (cOf R j) (⟨p', hp'⟩ : Fin (R.N j))).1) <
             betaExponentOfRanks R.k R.rS R.r R.t (LocE.fPos R.k (cOf R j) (R.N j) (Fin.castAdd (cOf R j) (⟨p, hp⟩ : Fin (R.N j))).1) := by
-          rw [hrr]
-          exact h
+          rwa [hrr]
         exact reducedMatrix_parahoric_blockTriangular hq hu hk hr hJ h'
       · exact reducedMatrix_parahoric_corner_zero hq hu hk hr hJ _ _ h1 h2
   · intro hpat
@@ -456,8 +453,7 @@ theorem ocbGrpGLoc_holds (m2 : ℕ) : OcbGrpGLoc Ch sel mu cst m2 := by
             exact lt_irrefl _ hlt'
           have hall := hpat.2 y.1 y'.1 h1.1 h1.2 hne (by unfold ocbM; rw [dite_eq_left h1]; exact hnz)
           refine not_allowed_of_beta_lt (t := R.t) hcj h1.1 h1.2 (Or.inl ?_) hall
-          rw [← hrr]
-          exact hlt
+          rwa [← hrr]
         · subst h2
           exact absurd hlt (lt_irrefl _)
         · rfl
@@ -470,8 +466,7 @@ theorem ocbGrpGLoc_holds (m2 : ℕ) : OcbGrpGLoc Ch sel mu cst m2 := by
             split_ifs at hy <;> omega
           have h3 := hpat.1 y.1 hyk
           unfold ocbM at h3
-          rw [dite_eq_left ⟨h1.1, h1.1⟩] at h3
-          exact h3
+          rwa [dite_eq_left ⟨h1.1, h1.1⟩] at h3
         · rfl
         · exact absurd rfl h2
       · intro y y' hy hy'
@@ -556,8 +551,7 @@ theorem twSt_chrOk (hN : ∀ i, i < m2 → TwNormAt (Ch := Ch) (cst := cst) (twS
   intro j
   cases j with
   | zero =>
-    intro _ _ _ _ h0
-    exact absurd rfl h0
+    exact fun _ _ _ _ h0 => absurd rfl h0
   | succ i =>
     intro b P hP hd _
     by_cases h1 : i + 1 ≤ m2
@@ -571,8 +565,7 @@ theorem twSt_chrOk (hN : ∀ i, i < m2 → TwNormAt (Ch := Ch) (cst := cst) (twS
       subst i
       revert b
       rw [twSt_last Ch sel mu cst m2]
-      intro _
-      exact hC.2 P hP hd
+      exact fun _ => hC.2 P hP hd
 
 
 variable (Ch sel mu cst m2) in
@@ -668,8 +661,7 @@ theorem twIdx_ok_of (hB : OcbBase Ch sel mu cst m2) (hs : cst.sharp = true) (G :
     have hk5 := R.m_add_three_le_k
     have e : j * (R.t + 1) = j * R.t + j := by ring
     have hJ : r ∈ Jat (Pr := Pr) cst.sharp j w.1 := by
-      have h := hr.2
-      simpa [MulAut.conj_apply] using h
+      simpa [MulAut.conj_apply] using hr.2
     rw [hBase.sharp] at hJ
     have hJ' : r ∈ LocE.JGsym w.1 (qOf w.1) R.k R.rS R.r R.t (R.N j) (cOf R j) := by
       unfold Jat at hJ
@@ -739,8 +731,7 @@ theorem twIdx_ok_of (hB : OcbBase Ch sel mu cst m2) (hs : cst.sharp = true) (G :
         rfl
       nonvan := fun i hi => by
         have K := fun b P => twNext_nonvan (hNall i hi) b P
-        rw [← twSt_succ_le Ch sel mu cst (show i + 1 ≤ m2 by omega)] at K
-        exact K
+        rwa [← twSt_succ_le Ch sel mu cst (show i + 1 ≤ m2 by omega)] at K
       inj := fun i hi b b' H => by
         have K := fun b b' H => twNext_inj (hNall i hi) b b' H
         rw [← twSt_succ_le Ch sel mu cst (show i + 1 ≤ m2 by omega)] at K
@@ -1249,8 +1240,7 @@ theorem twNormLat_main : PI.TwNormLat.TwNormLat := by
     intro hN
     show d _ • b _ - (if N = N then x1 else 0) = _
     rw [ite_eq_left rfl]
-    simp only [x1, dite_eq_left hN]
-    exact sub_sub_cancel _ _
+    simpa only [x1, dite_eq_left hN] using sub_sub_cancel _ _
   have hr : (combE hcUT hcd)⁻¹ ∈ Loc.R1 E N c := combinationEquiv_inv_mem_unipotentFlagGroup hcUT hcd hc1 hca
   refine ⟨(combE hcUT hcd)⁻¹, hr, 1, Subgroup.one_mem _, ?_⟩
   have hinv : ∀ v, ((combE hcUT hcd)⁻¹ * h * 1)⁻¹ v = h⁻¹ (combE hcUT hcd v) := fun v => by
@@ -1316,8 +1306,7 @@ theorem twNormLat_main : PI.TwNormLat.TwNormLat := by
       have := hz0 l (Nat.zero_le _)
       rw [Pi.sub_apply, sub_eq_zero] at this
       rw [this]; exact hw l
-    · intro H
-      exact comb_mem P _ (Madd := Madd) (Msmul := Msmul) (Mlam := Mlam) b hbM _ H
+    · exact fun H => comb_mem P _ (Madd := Madd) (Msmul := Msmul) (Mlam := Mlam) b hbM _ H
   have hn : ∀ i, -(j : ℤ) ≤ n i ∧ n i ≤ 0 := by
     intro i
     simp only [n]
@@ -1369,8 +1358,7 @@ theorem twNormRep {X : Fields} {Pr : Primes X} {R : Ranks} (sharp : Bool) (j : �
   have hb0 : PI.TwNormLat.Bdd P (R.N j) (cOf R j) j h := by
     intro x hx
     have := hb x (by rw [hL]; exact hx)
-    rw [hL] at this
-    exact this
+    rwa [hL] at this
   obtain ⟨r, hr, κ, hκ, hb', hnf, hpr⟩ := _root_.TwNormLat X.E P (R.N j) (cOf R j) (R.k + j) j hd.1 hd.2 h hb0
   refine ⟨r * h * κ, ⟨r, hr, κ, by rw [hJ]; exact hκ, rfl⟩, ?_, ?_, ?_⟩
   · intro x hx
@@ -1381,8 +1369,7 @@ theorem twNormRep {X : Fields} {Pr : Primes X} {R : Ranks} (sharp : Bool) (j : �
     rw [hL]
     exact hv v
   · unfold prCat
-    rw [hJ]
-    exact hpr
+    rwa [hJ]
 
 theorem twChrOk_one {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars X Pr R.m)
     (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ} (mu : Tup X.F X.E X.K S)

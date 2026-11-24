@@ -63,11 +63,9 @@ variable {K T : Type} [Field K] [CommRing T] [Algebra K T] (O : ValuationSubring
   [DecidableEq n] {θ : T ≃ₐ[K] K × K} {s : T →+* T} (hs : ∀ t, θ (s t) = (θ t).swap) (J : Matrix n n T)
   (P : GL n K)
 
-theorem pinv_p : ((P⁻¹ : GL n K) : Matrix n n K) * (P : Matrix n n K) = 1 := by
-  exact P.inv_mul
+theorem pinv_p : ((P⁻¹ : GL n K) : Matrix n n K) * (P : Matrix n n K) = 1 := P.inv_mul
 
-theorem p_pinv : (P : Matrix n n K) * ((P⁻¹ : GL n K) : Matrix n n K) = 1 := by
-  exact P.mul_inv
+theorem p_pinv : (P : Matrix n n K) * ((P⁻¹ : GL n K) : Matrix n n K) = 1 := P.mul_inv
 
 theorem map_mul_inv (f : T →+* K) (g : GL n T) :
     (g : Matrix n n T).map f * ((g⁻¹ : GL n T) : Matrix n n T).map f = 1 := by
@@ -107,8 +105,7 @@ theorem kerBack (hJu : IsUnit J.det) : KerBack O θ s J P := by
   have hsm2 : ∀ (a : K) (t : T), t2 θ (a • t) = a * t2 θ t := fun a t => by simp [t2]
   have hint : ∀ W : Matrix n n K, (∀ i j, W i j ∈ O) → ∀ v : n → K, IntV O v →
       IntV O (W *ᵥ v) := by
-    intro W hW v hv i
-    exact sum_mem (fun j _ => mul_mem (hW i j) (hv j))
+    exact fun W hW v hv i => sum_mem (fun j _ => mul_mem (hW i j) (hv j))
   have m1 : ∀ (A : Matrix n n T) (x : n → T),
       (fun j => t1 θ ((A *ᵥ x) j)) = A.map (t1 θ) *ᵥ fun j => t1 θ (x j) := by
     intro A x
@@ -140,8 +137,7 @@ theorem kerBack (hJu : IsUnit J.det) : KerBack O θ s J P := by
   have hginv : ∀ x ∈ Lat O θ J P, ((g⁻¹ : GL n T) : Matrix n n T) *ᵥ x ∈ Lat O θ J P := by
     intro x hx
     apply (hL _).mpr
-    rw [Matrix.mulVec_mulVec, Units.mul_inv, Matrix.one_mulVec]
-    exact hx
+    rwa [Matrix.mulVec_mulVec, Units.mul_inv, Matrix.one_mulVec]
   have hVint := ker_fwd (O := O) (θ := θ) (J := J) (P := P) 1 g⁻¹ (fun x hx =>
     ⟨((g⁻¹ : GL n T) : Matrix n n T) *ᵥ x - x, lat_sub _ _ (hginv x hx) hx, by
       rw [one_smul, Matrix.sub_mulVec, Matrix.one_mulVec]⟩)

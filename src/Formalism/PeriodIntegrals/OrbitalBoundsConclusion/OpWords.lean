@@ -87,8 +87,7 @@ theorem wtLe_span (K : Type) [Field K] (k : ℕ) (c : ℤ) (s : Set (Pol K k))
     · exact hx m h a
     · exact hy m h a
   | smul r x _ hx =>
-    intro m hm a
-    exact hx m (support_smul hm) a
+    exact fun m hm a => hx m (support_smul hm) a
 
 theorem kappa_ad (hL : KappaLeft) (hR : KappaRight) (K : Type) [Field K] [CharZero K] (k d : ℕ)
     (a b : Fin k) (A : Module.End K ↥(homogeneousSubmodule (Fin k) K d)) :
@@ -104,8 +103,7 @@ theorem divide_all (hV : Vanish) (hD : DivT) (hRB : RBihom) (hRT : RTT) (hTW : T
   intro n
   induction n with
   | zero =>
-    intro W hW _ _ f hf
-    exact ⟨f, by simpa using hW hf, by simp⟩
+    exact fun W hW _ _ f hf => ⟨f, by simpa using hW hf, by simp⟩
   | succ n ih =>
     intro W hW hst hwt f hf
     rcases Nat.eq_zero_or_pos k with hk | hk
@@ -140,15 +138,12 @@ theorem divide_all (hV : Vanish) (hD : DivT) (hRB : RBihom) (hRT : RTT) (hTW : T
       have hW' : W' ≤ Bihom K k (c + n) := by
         intro g hg
         obtain ⟨g', hg', he⟩ := hdiv _ ((hmem g).1 hg)
-        rw [mul_left_cancel₀ htt he]
-        exact hg'
+        rwa [mul_left_cancel₀ htt he]
       have hst' : ∀ f ∈ W', ∀ a b, Rop K k a b f ∈ W' := by
         intro g hg a b
         rw [hmem, ← hRT K k a b g]
         exact hst _ ((hmem g).1 hg) a b
-      have hwt' : ∀ f ∈ W', WtLe K k c f := by
-        intro g hg
-        exact hTW K k c g (hwt _ ((hmem g).1 hg))
+      have hwt' : ∀ f ∈ W', WtLe K k c f := fun g hg => hTW K k c g (hwt _ ((hmem g).1 hg))
       obtain ⟨g, hg, rfl⟩ := hdiv f hf
       obtain ⟨g'', hg'', rfl⟩ := ih W' hW' hst' hwt' g ((hmem g).2 hf)
       exact ⟨g'', hg'', by ring⟩
@@ -410,8 +405,7 @@ theorem dvd_pow_mul (i0 : Fin k) (d : ℕ) (f : Pol K k) (hf : f ∈ Bihom K k d
     have h2 := (Submodule.mem_inf.1 hf').2
     rwa [mem_weightedHomogeneousSubmodule] at h2
   have h := chi_psi_dvd i0 f
-  rw [psi_zero i0 f hv, sub_zero, chi_eq i0 d f hfxi] at h
-  exact h
+  rwa [psi_zero i0 f hv, sub_zero, chi_eq i0 d f hfxi] at h
 
 theorem divT_one (d : ℕ) (hd : 1 ≤ d) (f : Pol K 1) (hf : f ∈ Bihom K 1 d) : tt K 1 ∣ f := by
   have hf' : f ∈ weightedHomogeneousSubmodule K (wx 1) d ⊓ weightedHomogeneousSubmodule K (wxi 1) d := hf
@@ -639,8 +633,7 @@ theorem bihom_le_Sc : ∀ c, c ≤ d → Bihom K k c ≤ Sc K k d c := by
     linear_combination (tt K k ^ n * (X (Sum.inl a) * X (Sum.inr b) * monomial m' (1 : K))) * hC
 
 theorem pairingPowMemSymbolRange : Surj := by
-  intro K _ _ k d c hc g hg
-  exact (mem_Sc K k d c g).1 (bihom_le_Sc K k d c hc hg)
+  exact fun K _ _ k d c hc g hg => (mem_Sc K k d c g).1 (bihom_le_Sc K k d c hc hg)
 
 end PI.OpWords
 end -- clump:auto
@@ -838,8 +831,7 @@ lemma eval_base {d c : ℕ} (hcd : c < d) (i0 : Fin k) {g : Pol K k} (hg : g ∈
     (hxi : p (Sum.inr i0) = 0) : eval p g = 0 := by
   apply eval_eq_zero_of_support
   intro m hm
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have hzero : ∀ b, b ≠ i0 → m (Sum.inl b) = 0 := by
     intro b hb
     by_contra h0
@@ -949,8 +941,7 @@ theorem vanishingOnQuadric : Vanish := by
     intro m hm
     have hsum := xdeg_of_bihom (hW hf) hm
     have hex : ∃ a, m (Sum.inl a) ≠ 0 := by
-      by_contra h0
-      push Not at h0
+      by_contra! h0
       simp [h0] at hsum
       omega
     obtain ⟨a, ha⟩ := hex

@@ -384,8 +384,7 @@ theorem expand {A : Type} [Ring A] [Algebra ℂ A] (m : ℕ) (GG GGi K α β γ 
       exact (this.mono (by omega)).congr fun s => by simp only [mul_assoc]
   refine hlow.congr fun u => ?_
   have e := key u
-  rw [C1, C2, sub_self, sub_self, smul_zero, smul_zero, add_zero, sub_eq_zero] at e
-  exact e
+  rwa [C1, C2, sub_self, sub_self, smul_zero, smul_zero, add_zero, sub_eq_zero] at e
 
 section NF
 
@@ -667,8 +666,7 @@ theorem curvature_radial_torus_holds : GTCCurvRTT := by
       (curv_polyIn_monomial n (T * Θ))) (polyIn_mono (polyIn_const_mul T hF) (by omega)))
       (curv_polyIn_csmul v (curv_polyIn_monomial n (Θ * T - T * Θ)))) ?_) ?_
     · have := polyIn_smul_var hG
-      rw [hn'] at this
-      exact this
+      rwa [hn'] at this
     · exact polyIn_mono (curv_polyIn_csmul v hG) (by omega)
   obtain ⟨s, hs⟩ := hSt
   have key : ∀ u : ℂ, u ^ (n + 1) • (Θ * T - T * Θ + T) = ∑ i ∈ Finset.range (n + 1), u ^ i • s i := by
@@ -679,8 +677,7 @@ theorem curvature_radial_torus_holds : GTCCurvRTT := by
     rw [← hT, hfu] at h
     simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm, one_mul, mul_one] at h
     linear_combination (norm := module) h
-  have h0 := curv_top_zero n _ s key
-  exact eq_neg_of_add_eq_zero_left h0
+  exact eq_neg_of_add_eq_zero_left (curv_top_zero n _ s key)
 
 end
 

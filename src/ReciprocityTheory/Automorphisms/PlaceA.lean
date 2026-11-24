@@ -33,8 +33,7 @@ theorem adic_exists_approx (y : v.adicCompletion K) (hy : Valued.v y ≤ 1) :
       Valued.mem_nhds.mpr ⟨1, fun w hw => by simpa using hw⟩
     obtain ⟨w, hw, k, rfl⟩ := mem_closure_iff_nhds.mp (denseRange_algebraMap K v y) _ hn
     refine ⟨k, ?_⟩
-    rw [← Valuation.map_neg, neg_sub]
-    exact hw
+    rwa [← Valuation.map_neg, neg_sub]
   have hk1 : v.valuation K k ≤ 1 := by
     rw [← adic_valued_algebraMap]
     have e : algebraMap K (v.adicCompletion K) k = y - (y - algebraMap K _ k) := by ring
@@ -45,8 +44,7 @@ theorem adic_exists_approx (y : v.adicCompletion K) (hy : Valued.v y ≤ 1) :
     have hb0 : algebraMap R K b ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hb
     haveI := v.isPrime
     have hex : ∃ N, b ∉ v.asIdeal ^ N := by
-      by_contra hall
-      push Not at hall
+      by_contra! hall
       have hmem : b ∈ ⨅ i, v.asIdeal ^ i := Submodule.mem_iInf _ |>.mpr hall
       rw [Ideal.iInf_pow_eq_bot_of_isDomain _ v.isPrime.ne_top, Ideal.mem_bot] at hmem
       exact hb0 (by rw [hmem, map_zero])
@@ -96,17 +94,14 @@ theorem adic_exists_approx (y : v.adicCompletion K) (hy : Valued.v y ≤ 1) :
     ring
   rw [e]
   refine lt_of_le_of_lt (Valuation.map_add _ _ _) (max_lt hk ?_)
-  rw [adic_valued_algebraMap]
-  exact hc
+  rwa [adic_valued_algebraMap]
 
 theorem adic_le_one_of_poly {x : v.adicCompletion K} (p : Polynomial ℤ) (hm : p.Monic)
     (hp : p.eval₂ (Int.castRingHom _) x = 0) : Valued.v x ≤ 1 := by
   have hint : IsIntegral (Valued.v : Valuation (v.adicCompletion K) _).integer x := by
     refine ⟨p.map (Int.castRingHom _), hm.map _, ?_⟩
-    rw [Polynomial.eval₂_map, RingHom.ext_int (RingHom.comp _ _) (Int.castRingHom _)]
-    exact hp
-  have hmem := (Valuation.integer.integers _).mem_of_integral hint
-  exact hmem
+    rwa [Polynomial.eval₂_map, RingHom.ext_int (RingHom.comp _ _) (Int.castRingHom _)]
+  exact (Valuation.integer.integers _).mem_of_integral hint
 
 end Gen
 

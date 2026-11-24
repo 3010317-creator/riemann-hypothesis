@@ -13,8 +13,7 @@ open scoped ENNReal
 
 theorem ae_eq_eqOn {n : ℕ} {Ω : Set (V n)} {U U' : V n → ℂ} (hΩ : IsOpen Ω)
     (hU : ContinuousOn U Ω) (hU' : ContinuousOn U' Ω) (h : U =ᵐ[volume.restrict Ω] U') :
-    EqOn U U' Ω := by
-  exact Measure.eqOn_open_of_ae_eq h hΩ hU hU'
+    EqOn U U' Ω := Measure.eqOn_open_of_ae_eq h hΩ hU hU'
 
 theorem reg_glue {n : ℕ} {Ω : Set (V n)} {u : V n → ℂ} (hΩ : IsOpen Ω)
     (hloc : ∀ x ∈ Ω, ∃ r > 0, ball x r ⊆ Ω ∧
@@ -49,8 +48,7 @@ theorem reg_glue {n : ℕ} {Ω : Set (V n)} {u : V n → ℂ} (hΩ : IsOpen Ω)
       ext z
       simp only [mem_iUnion]
       constructor
-      · intro hz
-        exact ⟨⟨z, hz⟩, mem_ball_self (hr z hz)⟩
+      · exact fun hz => ⟨⟨z, hz⟩, mem_ball_self (hr z hz)⟩
       · rintro ⟨x, hx⟩
         exact hsub x x.2 hx
     rw [hcov, Filter.EventuallyEq, ae_restrict_biUnion_iff _ hTc]

@@ -140,8 +140,7 @@ theorem eq_zero_of_valuation_sum_le (v : Place k K) {f : ℕ} {s : Fin f → K}
       exact le_of_mul_le_mul_right hd' (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hπ0))
     have hrest := ih (fun a => d a.succ) hTle
     funext a
-    refine Fin.cases h0 (fun b => ?_) a
-    exact congrFun hrest b
+    exact Fin.cases h0 (fun b => (congrFun hrest b)) a
 
 theorem exists_lift_basis (v : Place k K) :
     ∃ s : Fin v.deg → K, (∀ α, v.valuation (s α) ≤ 1) ∧
@@ -264,8 +263,7 @@ theorem sum_ord_mul_deg_le {x : K} (hx : Transcendental k x) (S : Finset (Place 
           exact w.valuation_mul_aeval_div_le (hx1 w hw) _ (ht i)
     obtain ⟨⟨v, hvS⟩, a₀, α₀⟩ := j
     have hcj : d ⟨⟨v, hvS⟩, a₀, α₀⟩ ≠ 0 := by
-      simp only [d, ne_eq, hgj, not_false_eq_true, and_self, ite_true]
-      exact hc _ hgj
+      simpa only [d, ne_eq, hgj, not_false_eq_true, and_self, ite_true] using hc _ hgj
     let v₀ : S := ⟨v, hvS⟩
     let B : ι → K := fun i => if i.1 = v₀ then π i.1.1 ^ (i.2.1 : ℕ) * s i.1.1 i.2.2 else 0
     have hBsum : ∑ i, algebraMap k K (d i) * B i =
@@ -314,8 +312,7 @@ theorem sum_ord_mul_deg_le {x : K} (hx : Transcendental k x) (S : Finset (Place 
   have hι : Fintype.card ι = ∑ v ∈ S, (v.ord x).toNat * v.deg := by
     simp only [ι, Fintype.card_sigma, Fintype.card_prod, Fintype.card_fin]
     exact Finset.sum_coe_sort S (fun v => (v.ord x).toNat * v.deg)
-  rw [← hι]
-  exact hcard
+  rwa [← hι]
 
 theorem finite_ord_pos (x : K) : {v : Place k K | 0 < v.ord x}.Finite := by
   classical

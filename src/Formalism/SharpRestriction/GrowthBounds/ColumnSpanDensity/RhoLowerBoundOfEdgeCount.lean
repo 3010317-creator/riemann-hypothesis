@@ -230,8 +230,7 @@ theorem RS.p_not_unit : ¬ IsUnit (p : R.O) := by
   have hs := R.std
   unfold UnramifiedQuadraticSetting at hs
   rw [← hs.1.w_sq]
-  intro h
-  exact hs.2.1.not_isUnit (isUnit_of_dvd_unit (dvd_pow_self R.w two_ne_zero) h)
+  exact fun h => hs.2.1.not_isUnit (isUnit_of_dvd_unit (dvd_pow_self R.w two_ne_zero) h)
 
 theorem RS.w_mem : R.w ∈ IsLocalRing.maximalIdeal R.O := by
   have hs := R.std

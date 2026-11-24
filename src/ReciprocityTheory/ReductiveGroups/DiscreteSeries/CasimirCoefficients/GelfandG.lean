@@ -84,20 +84,16 @@ theorem gelfand_psM (T : KType ε Λ) (μ : Fin n → ℤ) (lam : Fin n → ℝ)
     fun z hz => ⟨hpos hz, Ps1.posSet_subset_Uset hz⟩, hdiff.mono Set.inter_subset_left,
     fun z hz k => ⟨?_, ?_⟩⟩
   · refine GPs.gelfand_Fint T μ _ k _ (fun g y hy => ?_) hz.2
-    have hAB : toMK g⁻¹ * toMK g = 1 := by
-      exact (toMK_inv_mul_and_mul_inv g).1
-    have hBA : toMK g * toMK g⁻¹ = 1 := by
-      exact (toMK_inv_mul_and_mul_inv g).2
+    have hAB : toMK g⁻¹ * toMK g = 1 := (toMK_inv_mul_and_mul_inv g).1
+    have hBA : toMK g * toMK g⁻¹ = 1 := (toMK_inv_mul_and_mul_inv g).2
     rw [GPs.gelfand_conj isOpen_omega _ (toMK g⁻¹) (toMK g) hAB hBA (toMK g⁻¹)ᵀ (toMK g)ᵀ
       (fun a b => conj_single_lemma _ _ a b)
       (by rw [← Matrix.transpose_mul, hBA, Matrix.transpose_one])
       (by rw [← Matrix.transpose_mul, hAB, Matrix.transpose_one]) (phiM_contDiffOn μ) k hy]
     exact (gelfand_phiM μ lam hμ k hy).1
   · refine GPs.gelfand_Fint T μ _ k _ (fun g y hy => ?_) hz.2
-    have hAB : toMK g⁻¹ * toMK g = 1 := by
-      exact (toMK_inv_mul_and_mul_inv g).1
-    have hBA : toMK g * toMK g⁻¹ = 1 := by
-      exact (toMK_inv_mul_and_mul_inv g).2
+    have hAB : toMK g⁻¹ * toMK g = 1 := (toMK_inv_mul_and_mul_inv g).1
+    have hBA : toMK g * toMK g⁻¹ = 1 := (toMK_inv_mul_and_mul_inv g).2
     rw [GPs.gelfand_conj isOpen_omega _ (toMK g⁻¹) (toMK g) hAB hBA
       ((toMK g).submatrix Fin.rev Fin.rev) ((toMK g⁻¹).submatrix Fin.rev Fin.rev)
       (fun a b => mul_single_rev_mul_eq_sum _ _ a b)

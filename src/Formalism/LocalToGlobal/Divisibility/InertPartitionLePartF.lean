@@ -31,8 +31,7 @@ theorem eigAt_elim_le (x : I ⊕ I' → K) :
     eigAt (Sum.elim a b) x ≤ eigAt a (fun i => x (Sum.inl i)) := by
   intro v hv
   simp only [eigAt, Submodule.mem_iInf] at hv ⊢
-  intro i
-  exact hv (Sum.inl i)
+  exact fun i => hv (Sum.inl i)
 
 theorem eigSum_elim_le (C : (I → K) → Prop) :
     eigSum (Sum.elim a b) (fun x => C (fun i => x (Sum.inl i))) ≤ eigSum a C := by
@@ -57,8 +56,7 @@ theorem le_eigSum_elim [FiniteDimensional K V] (hc : PairComm (Sum.elim a b)) (h
     have := Submodule.sub_mem _ hv (hE he)
     simpa using this
   have he'0 : e' = 0 := Submodule.disjoint_def.mp hdis e' he'A (hE' he')
-  rw [he'0, add_zero]
-  exact he
+  rwa [he'0, add_zero]
 
 theorem splitOver_elim (ha : SplitOver a) (hb : SplitOver b) : SplitOver (Sum.elim a b) := by
   intro i
@@ -137,11 +135,9 @@ theorem resSet3_finite (hc : Col.PairComm D.opAll) (X : Finset (G → K)) : (D.r
     if h : p ∈ D.resSet3 X then (hex p h).choose else 0
   have hf : ∀ p (h : p ∈ D.resSet3 X), D.HasRes3 p (f p) ∧ Col.Occurs D.opAll (f p) := by
     intro p h
-    simp only [f, dite_eq_left h]
-    exact (hex p h).choose_spec
+    simpa only [f, dite_eq_left h] using (hex p h).choose_spec
   refine Set.Finite.of_injOn (f := f) (t := (F : Set (D.OpIx → K))) ?_ ?_ F.finite_toSet
-  · intro p h
-    exact Finset.mem_coe.2 ((hF _).1 (hf p h).2)
+  · exact fun p h => Finset.mem_coe.2 ((hF _).1 (hf p h).2)
   · intro p h p' h' e
     have h1 := hf p h
     have h2 := hf p' h'

@@ -71,8 +71,7 @@ theorem fock_rename (F G : MvPolynomial σ K) : fock (rename f F) (rename f G) =
   rw [support_rename_of_injective hf, Finset.sum_image]
   · refine Finset.sum_congr rfl fun α _ => ?_
     rw [coeff_rename_mapDomain f hf, coeff_rename_mapDomain f hf, fact_mapDomain f hf]
-  · intro a _ b _ h
-    exact Finsupp.mapDomain_injective hf h
+  · exact fun a _ b _ h => Finsupp.mapDomain_injective hf h
 
 include hf in
 theorem vBB_rename (v : AddValuation K (WithTop ℚ)) (F : MvPolynomial σ K) : vBB v (rename f F) = vBB v F := by
@@ -288,8 +287,7 @@ theorem mem_T (j : Fin J) (m : Fin r) (x : PlaneGramData.TL J Dt.nL r) :
         subst hk
         have hm2 : m'' = m' := by
           have := h
-          simp only [Sigma.mk.injEq, heq_eq_eq, Sum.inr.injEq, true_and] at this
-          exact this
+          simpa only [Sigma.mk.injEq, heq_eq_eq, Sum.inr.injEq, true_and] using this
         subst hm2
         refine Or.inr ⟨m'', hm, ?_⟩
         rw [RingEquiv.symm_apply_apply]
@@ -302,12 +300,12 @@ theorem mem_T (j : Fin J) (m : Fin r) (x : PlaneGramData.TL J Dt.nL r) :
 
 theorem mem_link (j : Fin J) (m : Fin r) (x : PlaneGramData.ML J Dt.nL r) :
     x ∈ Dt.linkML (zE J j) m ↔ fM Dt x ∈ (toData Dt).Yset j m := by
-  cases x with
-  | ll k l =>
-    show _ ↔ (Sum.inl ⟨k, l⟩ : (toData Dt).ML) ∈ (toData Dt).Yset j m
-    simp only [TwistData.Yset, TwistData.wSet, TwistData.LLj, TwistData.mb, TwistData.mw, TwistData.mtp, Finset.mem_union,
-      Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and]
-    simp only [PlaneGramData.SignedChainData.linkML, Set.mem_union, Set.mem_setOf_eq]
+  cases x
+  all_goals
+    simp only [fM, TwistData.Yset, TwistData.wSet, TwistData.LLj, TwistData.mb, TwistData.mw,
+      TwistData.mtp, Finset.mem_union, Finset.mem_image, Finset.mem_filter, Finset.mem_univ,
+      true_and, PlaneGramData.SignedChainData.linkML, Set.mem_union, Set.mem_setOf_eq]
+  case ll k l =>
     constructor
     · rintro ((⟨m'', h⟩ | ⟨l', h⟩) | ⟨m1, h1, h2, h⟩)
       · cases h
@@ -326,19 +324,11 @@ theorem mem_link (j : Fin J) (m : Fin r) (x : PlaneGramData.ML J Dt.nL r) :
         subst hk
         exact Or.inl (Or.inr ⟨l, rfl⟩)
       · cases h
-  | lab k m' =>
-    show _ ↔ (Sum.inr (Sum.inl ((zE J).symm k, m')) : (toData Dt).ML) ∈ (toData Dt).Yset j m
-    simp only [TwistData.Yset, TwistData.wSet, TwistData.LLj, TwistData.mb, TwistData.mw, TwistData.mtp, Finset.mem_union,
-      Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and]
-    simp only [PlaneGramData.SignedChainData.linkML, Set.mem_union, Set.mem_setOf_eq]
+  case lab k m' =>
     constructor
     · rintro ((⟨m'', h⟩ | ⟨l', h⟩) | ⟨m1, h1, h2, h⟩) <;> cases h
     · rintro ((⟨a, h⟩ | ⟨b, hb, h⟩) | ⟨a, -, h⟩) <;> cases h
-  | wc k m' =>
-    show _ ↔ (Sum.inr (Sum.inr (Sum.inl ((zE J).symm k, m'))) : (toData Dt).ML) ∈ (toData Dt).Yset j m
-    simp only [TwistData.Yset, TwistData.wSet, TwistData.LLj, TwistData.mb, TwistData.mw, TwistData.mtp, Finset.mem_union,
-      Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and]
-    simp only [PlaneGramData.SignedChainData.linkML, Set.mem_union, Set.mem_setOf_eq]
+  case wc k m' =>
     constructor
     · rintro ((⟨m'', h⟩ | ⟨l', h⟩) | ⟨m1, h1, h2, h⟩)
       · obtain ⟨hk, rfl⟩ := PlaneGramData.ML.wc.inj h
@@ -352,11 +342,7 @@ theorem mem_link (j : Fin J) (m : Fin r) (x : PlaneGramData.ML J Dt.nL r) :
         rw [← zE_prv Dt j, h.1, RingEquiv.apply_symm_apply]
       · cases h
       · cases h
-  | tp k m' hm' =>
-    show _ ↔ (Sum.inr (Sum.inr (Sum.inr ((zE J).symm k, m'))) : (toData Dt).ML) ∈ (toData Dt).Yset j m
-    simp only [TwistData.Yset, TwistData.wSet, TwistData.LLj, TwistData.mb, TwistData.mw, TwistData.mtp, Finset.mem_union,
-      Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and]
-    simp only [PlaneGramData.SignedChainData.linkML, Set.mem_union, Set.mem_setOf_eq]
+  case tp k m' hm' =>
     constructor
     · rintro ((⟨m'', h⟩ | ⟨l', h⟩) | ⟨m1, h1, h2, h⟩)
       · cases h
@@ -557,7 +543,6 @@ theorem dLL_eq (j : Fin J) : (toData Dt).dLL j = Dt.dLL (zE J j) := by
   rw [Finset.sum_filter, Fintype.sum_sigma, Finset.sum_eq_single (zE J j)]
   · refine Finset.sum_congr rfl fun l _ => ?_
     rw [ite_eq_left]
-    show (zE J).symm (zE J j) = j
     exact RingEquiv.symm_apply_apply _ _
   · intro k _ hk
     refine Finset.sum_eq_zero fun l _ => ?_
@@ -566,8 +551,7 @@ theorem dLL_eq (j : Fin J) : (toData Dt).dLL j = Dt.dLL (zE J j) := by
     apply hk
     have h' : (zE J).symm k = j := h
     rw [← h', RingEquiv.apply_symm_apply]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem vQ_unit (S : G.UniformizedDVR p O) (u : O) (hu : IsUnit u) : vQ p S (algebraMap O (G.KK O) u) = 0 := by
   have hx : algebraMap O (G.KK O) u ≠ 0 := by
@@ -667,8 +651,7 @@ theorem valid_toData [NeZero r] (S : G.UniformizedDVR p O) : (toData Dt).Valid (
     obtain ⟨x, hx', hx⟩ := Set.exists_of_ssubset hs
     rcases x with l | m
     · refine ⟨⟨zE J j, l⟩, ?_, ?_⟩
-      · simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-        exact ⟨l, rfl, hx'⟩
+      · simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using ⟨l, rfl, hx'⟩
       · simp only [Finset.mem_filter, Finset.mem_univ, true_and]
         rintro ⟨l', hl', hl⟩
         have hh := (Sigma.mk.inj_iff.mp hl').2
@@ -693,8 +676,7 @@ theorem hypH_toData {CH : ℝ} (hCH : 26 ≤ CH) (h : Dt.Hyp CH) : (toData Dt).H
     have e2 : (26 : ℝ) * (r * Dt.c) ≤ CH * (r * Dt.c) := mul_le_mul_of_nonneg_right hCH (mul_nonneg hr hc0)
     nlinarith
   have := key (zE J ((toData Dt).nxt j)) (zE_nxt Dt j) i
-  rw [dLL_eq]
-  exact this
+  rwa [dLL_eq]
 
 theorem hc_toData (h : 4 * (Dt.Dm + Dt.Dl + 3 * Dt.kp) < Dt.c) : (toData Dt).Hc p 1 := by
   unfold TwistData.Hc
@@ -710,12 +692,10 @@ theorem inXX_toData [NeZero r] (F : MvPolynomial (PlaneGramData.TL J Dt.nL r × 
     | top => simp [toR]
     | coe k =>
       have := hx k rfl
-      simp only [toR, WithTop.map_coe]
-      exact WithTop.coe_le_coe.mpr this
+      simpa only [toR, WithTop.map_coe] using WithTop.coe_le_coe.mpr this
   refine ⟨?_, ?_, ?_⟩
   · have e : (toData Dt).dO ∘ (gO Dt) = Dt.d := funext (dO_gO Dt)
-    rw [PolK_rename (gO Dt) (toData Dt).dO F, e]
-    exact hP
+    rwa [PolK_rename (gO Dt) (toData Dt).dO F, e]
   · intro ρ j i
     rw [digit_comm, valS_transport (fM Dt) (fM_injective Dt) (toData Dt).msg ((toData Dt).chainSet j i)
       Dt.modelLet (Dt.chainML (zE J j) i) (sg_M Dt) (fun x => mem_chain Dt j i x)]
@@ -825,8 +805,7 @@ theorem plane_gram_of_theorem_at {p : ℕ} {O : Type} [CommRing O] [IsDomain O] 
     · exact phDeg_mem Dt G0 hGd mo h
     · exact phDeg_mem Dt R0 hRd mo h
   · rw [geQ_vBB_iff hp S]
-    rw [vBB_rename _ (gO_inj Dt), normShift_eq Dt hp S, kapD_eq] at hBB
-    exact hBB
+    rwa [vBB_rename _ (gO_inj Dt), normShift_eq Dt hp S, kapD_eq] at hBB
   · rw [leQ_iff S]
     rw [fock_rename_gaAct_rename_eq_Bform, normShift_eq Dt hp S, kapD_eq, hE] at hB
     by_cases htop : vR (vQ p S) (Dt.Bform F (Dt.ph (G0 + R0))) = ⊤

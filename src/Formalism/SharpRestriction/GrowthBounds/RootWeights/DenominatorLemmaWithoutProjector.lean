@@ -107,12 +107,10 @@ theorem singleConjugation_commute {E : GLOps n K V} (hE : IsGLRep E) (c i j : Fi
     Commute (singleConjugation E c i) (singleConjugation E c j) := by
   have h1 : E c i * E c j = E c j * E c i := by
     have := hE.1 c i c j
-    rw [ite_eq_right hi, ite_eq_right hj, sub_zero, sub_eq_zero] at this
-    exact this
+    rwa [ite_eq_right hi, ite_eq_right hj, sub_zero, sub_eq_zero] at this
   have h2 : E j c * E i c = E i c * E j c := by
     have := hE.1 j c i c
-    rw [ite_eq_right (Ne.symm hi), ite_eq_right (Ne.symm hj), sub_zero, sub_eq_zero] at this
-    exact this
+    rwa [ite_eq_right (Ne.symm hi), ite_eq_right (Ne.symm hj), sub_zero, sub_eq_zero] at this
   unfold Commute SemiconjBy
   ext X : 1
   simp only [Module.End.mul_apply, singleConjugation_apply, ← mul_assoc, h1]
@@ -848,8 +846,7 @@ private theorem E_pow_apply_mem_weightSp_ne_zero_of_highest [CharZero K] {E : GL
       have e : μ + ((k + 1 : ℕ) : ℤ) • rootW b a = μ + (k : ℤ) • rootW b a + rootW b a := by
         push_cast
         rw [add_smul, one_smul, add_assoc]
-      rw [pow_succ', Module.End.mul_apply, e]
-      exact h
+      rwa [pow_succ', Module.End.mul_apply, e]
   have hcomm : ∀ w : V, E a b (E b a w) = E b a (E a b w) + (E a a w - E b b w) := by
     intro w
     have h := LinearMap.congr_fun (hE.1 a b b a) w
@@ -946,8 +943,7 @@ theorem root_string_through_weight [CharZero K] [FiniteDimensional K V] {E : GLO
     have hbot : weightSp E (ν + ((sSup T + 1 : ℕ) : ℤ) • rootW a b) = ⊥ := by
       by_contra hne
       exact ht1' hne
-    rw [hbot, Submodule.mem_bot] at h1
-    exact h1
+    rwa [hbot, Submodule.mem_bot] at h1
   have hμa : (ν + ((sSup T : ℕ) : ℤ) • rootW a b) a = ν a + sSup T := by
     simp [rootW, hab]
   have hμb : (ν + ((sSup T : ℕ) : ℤ) • rootW a b) b = ν b - sSup T := by
@@ -1031,8 +1027,7 @@ private theorem degreeZeroWeightsBounded_ellOf {n : ℕ} {K V : Type*} [Field K]
     · linarith
     · push Not at h0
       obtain ⟨b, hb, hbpos⟩ : ∃ b ∈ Finset.univ.erase a, 0 < ν b := by
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         have := Finset.sum_nonpos hc
         linarith
       have hba : b ≠ a := Finset.ne_of_mem_erase hb
@@ -1042,8 +1037,7 @@ private theorem degreeZeroWeightsBounded_ellOf {n : ℕ} {K V : Type*} [Field K]
     · linarith
     · push Not at h0
       obtain ⟨b, hb, hbneg⟩ : ∃ b ∈ Finset.univ.erase a, ν b < 0 := by
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         have := Finset.sum_nonneg hc
         linarith
       have hab : a ≠ b := (Finset.ne_of_mem_erase hb).symm

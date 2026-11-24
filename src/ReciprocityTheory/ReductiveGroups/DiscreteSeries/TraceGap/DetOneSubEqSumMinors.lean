@@ -104,8 +104,7 @@ theorem strPhys_eq_physDet (k : Matrix (Fin n) (Fin n) ℂ) : strPhys ε k = phy
     show IsPhys ε (finProdFinEquiv.symm (finProdFinEquiv x.1))
     rw [Equiv.symm_apply_apply]
     exact x.2
-  · intro s _ t _ h
-    exact Finset.map_injective _ h
+  · exact fun s _ t _ h => Finset.map_injective _ h
   · intro S hS
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hS
     refine ⟨Finset.univ.filter (fun x => physEmb ε x ∈ S), Finset.mem_univ _, ?_⟩
@@ -117,8 +116,7 @@ theorem strPhys_eq_physDet (k : Matrix (Fin n) (Fin n) ℂ) : strPhys ε k = phy
     · intro hm
       refine ⟨⟨finProdFinEquiv.symm m, hS m hm⟩, ?_, finProdFinEquiv.apply_symm_apply m⟩
       show finProdFinEquiv (finProdFinEquiv.symm m) ∈ S
-      rw [Equiv.apply_symm_apply]
-      exact hm
+      rwa [Equiv.apply_symm_apply]
   · intro s _
     rw [ffMat_map_physEmb, Finset.card_map]
 

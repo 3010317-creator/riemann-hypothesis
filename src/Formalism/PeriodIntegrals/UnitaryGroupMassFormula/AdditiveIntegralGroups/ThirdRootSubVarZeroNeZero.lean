@@ -78,8 +78,7 @@ theorem rt_two_le_add {f g : MvPowerSeries σ ℂ_[p]} (hf : 2 ≤ f.order) (hg 
     MvPowerSeries.coeff_of_lt_order (hd.trans_le hg), add_zero]
 
 theorem rt_two_le_neg {f : MvPowerSeries σ ℂ_[p]} (hf : 2 ≤ f.order) : 2 ≤ (-f).order := by
-  rw [MvPowerSeries.order_neg]
-  exact hf
+  rwa [MvPowerSeries.order_neg]
 
 theorem rt_two_le_sub {f g : MvPowerSeries σ ℂ_[p]} (hf : 2 ≤ f.order) (hg : 2 ≤ g.order) :
     2 ≤ (f - g).order := by
@@ -157,8 +156,7 @@ theorem rt_Acf_ne (W : WeierstrassCurve ℂ_[p]) (wq : PowerSeries ℂ_[p]) :
   exact one_ne_zero
 
 theorem rt_order_BA (W : WeierstrassCurve ℂ_[p]) (wq : PowerSeries ℂ_[p]) :
-    2 ≤ (Bcf W wq * (Acf W wq)⁻¹).order := by
-  exact rt_two_le_mul_right _ _ (rt_order_Bcf W wq)
+    2 ≤ (Bcf W wq * (Acf W wq)⁻¹).order := rt_two_le_mul_right _ _ (rt_order_Bcf W wq)
 
 theorem constantCoeff_thirdRoot (W : WeierstrassCurve ℂ_[p]) (wq : PowerSeries ℂ_[p]) :
     MvPowerSeries.constantCoeff (Z3 W wq) = 0 := by

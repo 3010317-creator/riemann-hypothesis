@@ -57,8 +57,7 @@ theorem mem_dual_iff' (Λ : Submodule (𝓞 E) S.V) (x : S.V) :
 theorem pair_int {Λ : Submodule (𝓞 E) S.V} (hU : Formalism.HermitianLatticesTheory.IsUnimodular S.hT Λ) {x y : S.V}
     (hx : x ∈ Λ) (hy : y ∈ Λ) : ∃ o : 𝓞 E, algebraMap (𝓞 E) E o = S.hT y x := by
   have hx' : x ∈ Formalism.HermitianLatticesTheory.dual S.hT Λ := by
-    rw [show Formalism.HermitianLatticesTheory.dual S.hT Λ = Λ from hU]
-    exact hx
+    rwa [show Formalism.HermitianLatticesTheory.dual S.hT Λ = Λ from hU]
   exact (mem_dual_iff' S Λ x).mp hx' y hy
 
 end Gen
@@ -118,8 +117,7 @@ theorem assembly_reduction : AsmStep := by
   refine ⟨f, L, hiso, ?_, ?_, ?_, ?_⟩
   · intro a b
     rw [hF.1 a b]
-  · intro x hx a
-    exact ((hmemL x).1 hx).2 a
+  · exact fun x hx a => ((hmemL x).1 hx).2 a
   · exact (hmemL _).2 ⟨hz, fun a => ⟨F0.z_orth a, hF.2.1 a⟩⟩
   · apply le_antisymm
     · intro l hl

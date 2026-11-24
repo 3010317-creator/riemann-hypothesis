@@ -21,8 +21,7 @@ theorem descend_gen {X Y : Scheme.{0}} (Q : X ⟶ Y) [Flat Q] [Surjective Q] [Is
     (hρ : ∀ {Z : Scheme.{0}} (y1 y2 : Z ⟶ X), y1 ≫ Q = y2 ≫ Q → y1.appTop.hom ρ = y2.appTop.hom ρ) :
     ∃ v : Γ(Y, ⊤), Q.appTop.hom v = ρ := by
 
-  have hE : EffectiveEpi Q := by
-    exact inferInstance
+  have hE : EffectiveEpi Q := inferInstance
 
   obtain ⟨e, he⟩ : ∃ e, ∀ i : Fin 1, AffineSpace.toSpecMvPolyIntEquiv (Fin 1) e i = ρ :=
     ⟨(AffineSpace.toSpecMvPolyIntEquiv (Fin 1)).symm fun _ => ρ, fun i => by simp⟩
@@ -39,7 +38,6 @@ theorem descend_gen {X Y : Scheme.{0}} (Q : X ⟶ Y) [Flat Q] [Surjective Q] [Is
   refine ⟨AffineSpace.toSpecMvPolyIntEquiv (Fin 1) (EffectiveEpi.desc Q e hdesc) 0, ?_⟩
   have hf : AffineSpace.toSpecMvPolyIntEquiv (Fin 1) (Q ≫ EffectiveEpi.desc Q e hdesc) 0 = ρ := by
     rw [EffectiveEpi.fac, he]
-  rw [AffineSpace.toSpecMvPolyIntEquiv_comp] at hf
-  exact hf
+  rwa [AffineSpace.toSpecMvPolyIntEquiv_comp] at hf
 
 end ReciprocityTheory.ChartRestriction.G.Out.TLinPf

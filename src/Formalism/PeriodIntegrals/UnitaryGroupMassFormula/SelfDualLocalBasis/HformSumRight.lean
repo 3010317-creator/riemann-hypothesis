@@ -87,8 +87,7 @@ theorem hform_sum_right {ι : Type} (s : Finset ι) (x : n → A) (f : ι → n 
     hform σ J x (∑ k ∈ s, f k) = ∑ k ∈ s, hform σ J x (f k) := by
   classical
   refine Finset.induction_on s ?_ ?_
-  · simp only [Finset.sum_empty]
-    exact hform_zero_right σ J x
+  · simpa only [Finset.sum_empty] using hform_zero_right σ J x
   · intro a t ha ih
     rw [Finset.sum_insert ha, Finset.sum_insert ha, hform_add_right, ih]
 
@@ -96,8 +95,7 @@ theorem hform_sum_left {ι : Type} (s : Finset ι) (f : ι → n → A) (y : n �
     hform σ J (∑ k ∈ s, f k) y = ∑ k ∈ s, hform σ J (f k) y := by
   classical
   refine Finset.induction_on s ?_ ?_
-  · simp only [Finset.sum_empty]
-    exact hform_zero_left σ J y
+  · simpa only [Finset.sum_empty] using hform_zero_left σ J y
   · intro a t ha ih
     rw [Finset.sum_insert ha, Finset.sum_insert ha, hform_add_left, ih]
 

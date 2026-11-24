@@ -411,8 +411,7 @@ theorem evQ_quotPart_mem (c : ∀ k, ι k) {e : K → ℤ} {m : MRingOver ℚ ι
     rw [evQ_mk]
     have h := aeval_homog_mem y c hp
     have h' : ∀ k, (((e k).toNat : ℕ) : ℤ) = e k := fun k => Int.toNat_of_nonneg (hnn k)
-    simp only [h'] at h
-    exact h
+    simpa only [h'] using h
   exact hle hm
 
 theorem mem_cellMon_chart {c : ∀ k, ι k} {t : MRingOver ℚ ι} (ht : t ∈ KH.cellMon ℚ (chartCell c).1) :
@@ -445,8 +444,7 @@ theorem prod_X_ne_zero (c : ∀ k, ι k) (e : K → ℕ) : (∏ k, (X ⟨k, c k�
 theorem eq_of_homog {f : MRingOver ℚ ι} {a b : K → ℕ} (ha : IsMultiHomog f a) (hb : IsMultiHomog f b)
     (hf : f ≠ 0) : a = b := by
   obtain ⟨m, hm⟩ : f.support.Nonempty := by
-    rw [Finset.nonempty_iff_ne_empty, Ne, MvPolynomial.support_eq_empty]
-    exact hf
+    rwa [Finset.nonempty_iff_ne_empty, Ne, MvPolynomial.support_eq_empty]
   funext k
   rw [← ha m hm k, hb m hm k]
 

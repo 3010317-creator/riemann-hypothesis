@@ -117,10 +117,7 @@ theorem glue_HA {d : ℕ} (b : Module.Basis (Fin d) F E) (kv : ∀ v : HeightOne
     refine Formalism.L2.SG.Pf.NcS.OmDecompPf.projV_ext b fun v => ?_
     rw [projV_eq_map, projV_eq_map, Matrix.map_mul, Matrix.map_mul, hcT, hJR, hA]
     exact (kv v).2
-  refine ⟨(⟨gGL, hmem⟩ : HR (Af F) σ J), fun v => ?_⟩
-  apply Subtype.ext
-  apply Units.ext
-  exact hA v
+  exact ⟨(⟨gGL, hmem⟩ : HR (Af F) σ J), fun v => (Subtype.ext (Units.ext (hA v)))⟩
 
 theorem continuous_act (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [IsTopologicalRing R] {a : ℕ} :
     Continuous (fun p : HA R σ J × (Fin a → Fin n → R ⊗[F] E) => p.1 • p.2) := by
@@ -227,8 +224,7 @@ theorem exists_cc_tup (v : HeightOneSpectrum (𝓞 F)) {a : ℕ} {O : Set (Fin a
     h.isCompact_preimage.2 (hKc.of_isClosed_subset (hV.inter hKo).isClosed Set.inter_subset_right),
     ⟨hpV, hpK⟩, fun z hz => ?_⟩
   obtain ⟨z', hz', hzz⟩ := hVO hz.1
-  rw [← h.injective hzz]
-  exact hz'
+  rwa [← h.injective hzz]
 
 end Gen
 
@@ -259,8 +255,7 @@ theorem exists_C (v : HeightOneSpectrum (𝓞 F)) (L : Submodule (𝓞 E) (Fin n
   have hsmulLT : ∀ (g : HA (Fv F v) σ J) (X : Fin a → Fin n → Fv F v ⊗[F] E), X ∈ LT → g • X ∈ LT := by
     intro g X hX
     show gramR (Fv F v) σ J (g • X) = Tv
-    rw [gram_smul]
-    exact hX
+    rwa [gram_smul]
   let S : SubMulAction (HA (Fv F v) σ J) (Fin a → Fin n → Fv F v ⊗[F] E) :=
     { carrier := LT, smul_mem' := fun g X hX => hsmulLT g X hX }
   have : ContinuousSMul (HA (Fv F v) σ J) S :=
@@ -311,8 +306,7 @@ theorem exists_C (v : HeightOneSpectrum (𝓞 F)) (L : Submodule (𝓞 E) (Fin n
   · rintro ⟨hXC, hXT⟩
     obtain ⟨y, -, hy⟩ := Set.mem_iUnion₂.1 hXC
     exact hOLT ⟨hWO y hy, hXT⟩
-  · intro hX
-    exact ⟨ht hX, hKYLT hX⟩
+  · exact fun hX => ⟨ht hX, hKYLT hX⟩
 
 end Place
 
@@ -343,8 +337,7 @@ theorem locSB_of (hW : WittLocT) (hI : IntWittAE) : LocSB := by
       rw [show N • ratTup (F := F) (Fv F v) X0 c = ratV (F := F) (Fv F v) (N • X0 c) from
         (MassDataMassesW.KCptW.ratV_zsmul v N (X0 c)).symm]
       exact Submodule.subset_span ⟨_, hN c, rfl⟩
-    have h2 := (hk' _).1 hYc
-    exact hc _ (mem_oev_of_std v _ h2 i) l
+    exact hc _ (mem_oev_of_std v _ ((hk' _).1 hYc) i) l
   have hgood : ∀ᶠ v : HeightOneSpectrum (𝓞 F) in cofinite, latV b v ∩ LT v = KY v := by
     filter_upwards [hI' _ b, hsub] with v h1 h2
     ext X
@@ -365,16 +358,13 @@ theorem locSB_of (hW : WittLocT) (hI : IntWittAE) : LocSB := by
     by_cases h : latV b v ∩ LT v = KY v
     · simp only [C, ite_eq_left h]
       exact ⟨PI.VolStabS.PositiveNearLattice.isClopen_latV b v a n, PI.VolStabS.PositiveNearLattice.isCompact_latV b v a n⟩
-    · simp only [C, ite_eq_right h]
-      exact ⟨hC'o v, hC'c v⟩
+    · simpa only [C, ite_eq_right h] using ⟨hC'o v, hC'c v⟩
   refine ⟨_, b, C, fun v => ?_, fun v => (hCo v).1.isOpen.measurableSet, fun v => ?_, ?_⟩
   · exact ⟨(LocallyConstant.indicator (LocallyConstant.const _ (1 : ℂ)) (hCo v).1).isLocallyConstant,
       HasCompactSupport.intro' (hCo v).2 (hCo v).1.isClosed fun Y hY => Set.indicator_of_notMem hY _⟩
   · by_cases h : latV b v ∩ LT v = KY v
-    · simp only [C, ite_eq_left h]
-      exact h
-    · simp only [C, ite_eq_right h]
-      exact hC'eq v
+    · simpa only [C, ite_eq_left h] using h
+    · simpa only [C, ite_eq_right h] using hC'eq v
   · filter_upwards [hgood] with v hv
     simp only [C, ite_eq_left hv]
 

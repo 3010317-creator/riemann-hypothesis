@@ -136,8 +136,7 @@ theorem isURepOn_sσ {G : Set (Matrix (Fin n) (Fin n) ℂ)} (h₁ : IsURepOn G �
   · intro a ha b hb
     show sop (σ₁ (a * b)) (σ₂ (a * b)) = (sop (σ₁ a) (σ₂ a)).comp (sop (σ₁ b) (σ₂ b))
     rw [h₁.1.2 a ha b hb, h₂.1.2 a ha b hb, sop_comp]
-  · intro g hg v
-    exact norm_sop (h₁.2.1 g hg) (h₂.2.1 g hg) v
+  · exact fun g hg v => norm_sop (h₁.2.1 g hg) (h₂.2.1 g hg) v
   · intro v
     have hc := ((h₁.2.2 (ofLp v).1).prodMk (h₂.2.2 (ofLp v).2))
     exact (WithLp.prod_continuous_toLp 2 H₁ H₂).comp_continuousOn hc
@@ -155,16 +154,14 @@ theorem isDerivedOn_sσ {D₁ : Submodule ℂ H₁} {D₂ : Submodule ℂ H₂}
     rw [← lift_mul, ← lift_mul, ← lift_sub, e1, e2]
     split_ifs <;> rw [lift_sub] <;> simp only [lift_zero]
   kStable := by
-    intro k hk v hv
-    exact ⟨hD₁.kStable k hk _ hv.1, hD₂.kStable k hk _ hv.2⟩
+    exact fun k hk v hv => ⟨hD₁.kStable k hk _ hv.1, hD₂.kStable k hk _ hv.2⟩
   deriv := by
     intro X hX v
     have h1 := hD₁.deriv X hX (toP v).1
     have h2 := hD₂.deriv X hX (toP v).2
     have h3 := (WithLp.prodContinuousLinearEquiv 2 ℝ H₁ H₂).symm.toContinuousLinearMap.hasFDerivAt.comp_hasDerivAt
       (0 : ℝ) (h1.prodMk h2)
-    rw [actM_sE]
-    exact h3
+    rwa [actM_sE]
 
 end Rep
 

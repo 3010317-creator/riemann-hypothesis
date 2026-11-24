@@ -83,8 +83,7 @@ theorem two_le_smooth : minSmoothness ℝ 2 ≤ (∞ : ℕ∞ω) := by
   have : (((2 : ℕ) : ℕ∞) : ℕ∞ω) ≤ ((⊤ : ℕ∞) : ℕ∞ω) := WithTop.coe_le_coe.mpr le_top
   exact this
 
-theorem top_ne_zero' : (∞ : ℕ∞ω) ≠ 0 := by
-  exact WithTop.coe_ne_zero.mpr (by simp)
+theorem top_ne_zero' : (∞ : ℕ∞ω) ≠ 0 := WithTop.coe_ne_zero.mpr (by simp)
 
 def Wc (u w : Fin m → ℂ) (s : ℂ) : ((Fin m → ℂ) →L[ℝ] E) →L[ℝ] E :=
   (ContinuousLinearMap.lsmul ℝ ℂ (1 / 2 : ℂ)).comp
@@ -119,12 +118,10 @@ theorem hasFDerivAt_inv_apply (k : Fin m) {x : Fin m → ℂ} (hx : x k ≠ 0) :
 def Reg (g : (Fin m → ℂ) → E) : Prop := ∀ x ∈ OmX m, ContDiffAt ℝ ∞ g x
 
 theorem reg_of_mem {f : (Fin m → ℂ) → E} (hf : f ∈ WSm m E) : Reg f := by
-  intro x hx
-  exact hf.1.contDiffAt ((isOpen_omX m).mem_nhds hx)
+  exact fun x hx => hf.1.contDiffAt ((isOpen_omX m).mem_nhds hx)
 
 theorem diff_of_reg {g : (Fin m → ℂ) → E} {x : Fin m → ℂ} (hg : ContDiffAt ℝ ∞ g x) :
-    DifferentiableAt ℝ g x := by
-  exact hg.differentiableAt top_ne_zero'
+    DifferentiableAt ℝ g x := hg.differentiableAt top_ne_zero'
 
 theorem diff_fderiv {g : (Fin m → ℂ) → E} {x : Fin m → ℂ} (hg : ContDiffAt ℝ ∞ g x) :
     DifferentiableAt ℝ (fderiv ℝ g) x := by
@@ -303,8 +300,7 @@ theorem opL_ev (k : Fin m) (j : Fin 6) (g : (Fin m → ℂ) → E) {x : Fin m �
   | 5 => exact Filter.Eventually.of_forall fun y => rfl
 
 theorem opL_on (k : Fin m) (j : Fin 6) (g : (Fin m → ℂ) → E) {x : Fin m → ℂ} (hx : x ∈ OmX m) :
-    opL k j g x = coef k j x • Dop k j g x := by
-  exact (opL_ev k j g hx).self_of_nhds
+    opL k j g x = coef k j x • Dop k j g x := (opL_ev k j g hx).self_of_nhds
 
 theorem opL_off (k : Fin m) (j : Fin 6) (g : (Fin m → ℂ) → E) {x : Fin m → ℂ} (hx : x ∉ OmX m)
     (h0 : g x = 0) : opL k j g x = 0 := by
@@ -437,8 +433,7 @@ theorem commuting_functional_holds : CommFun := by
     · exact Or.inl (Ne.symm h)
     · right
       constructor
-      · intro hj hi
-        exact (h.mp hi) hj
+      · exact fun hj hi => (h.mp hi) hj
       · intro hi
         by_contra hj
         exact hi (h.mpr hj)

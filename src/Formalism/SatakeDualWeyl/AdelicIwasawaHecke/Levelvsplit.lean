@@ -73,8 +73,7 @@ theorem levelvsplit_mem_range_iff (f : R →+* A) (hf : Function.Injective f) (g
     have hinj : Function.Injective (f.mapMatrix : Matrix n n R →+* Matrix n n A) := by
       intro X Y h
       ext i j
-      have h' := congrArg (fun Z : Matrix n n A => Z i j) h
-      exact hf h'
+      exact hf (congrArg (fun Z : Matrix n n A => Z i j) h)
     have hMg : f.mapMatrix (Matrix.of M) = (g : Matrix n n A) := by
       ext i j
       exact hM i j
@@ -104,8 +103,7 @@ theorem levelvsplit_unitary (τ : B →+* B) (φ : B ≃+* K × K)
     simp [Formalism.UG.cT, hτ, Formalism.UG.swapR]
   have h2 := congrArg (fun M : Matrix n n B => M.map ((RingHom.fst K K).comp φ.toRingHom)) hh'
   simp only [Matrix.map_mul] at h2
-  rw [key] at h2
-  exact h2
+  rwa [key] at h2
 
 theorem levelvsplit_solve (A Ainv P1 P1i P2 : Matrix n n K) (hA : A * Ainv = 1)
     (hP : P1 * P1i = 1) (hrel : P2ᵀ * A * P1 = A) : P2 = (A * P1i * Ainv)ᵀ := by

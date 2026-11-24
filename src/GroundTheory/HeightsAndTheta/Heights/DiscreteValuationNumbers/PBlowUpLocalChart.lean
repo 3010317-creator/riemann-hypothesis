@@ -85,8 +85,7 @@ theorem exists_mul_eq_of_forall_algebraMap {B X : Type*} [CommRing B] [CommRing 
   refine ⟨a, b, ?_, ?_⟩
   · rw [hb, IsLocalization.AtPrime.to_map_mem_maximal_iff _ W]
     exact s.2
-  · rw [hb, ha, mul_comm]
-    exact hzs
+  · rwa [hb, ha, mul_comm]
 
 end Abstract
 

@@ -37,12 +37,10 @@ theorem isLocComp_twist {π : TR.CuspSub F a} {η : HChar F} (hT : IsoTwist π �
     have h1 := hT1 (locGL F a u g) (T.symm x)
     rw [LinearEquiv.apply_symm_apply, TR.CuspSub.chiDet_locGL] at h1
     apply T.injective
-    rw [map_smul, LinearEquiv.apply_symm_apply]
-    exact h1
+    rwa [map_smul, LinearEquiv.apply_symm_apply]
   refine ⟨T.symm.toLinearMap ∘ₗ f, fun h => hf0 (LinearMap.ext fun v => T.symm.injective ?_), fun g v => ?_⟩
   · have h2 := LinearMap.congr_fun h v
-    rw [LinearMap.zero_apply, map_zero]
-    exact h2
+    rwa [LinearMap.zero_apply, map_zero]
   · change T.symm (f (((GlobalTheory.CuspRep.CuspSub.locDet a η u g : ℂˣ) : ℂ) • σ.ρ g v)) = π.locRep u g (T.symm (f v))
     rw [key, LinearMap.map_smul, LinearEquiv.map_smul]
     congr 2
@@ -82,8 +80,7 @@ theorem ine_trivial {x : WD h} (hx : x.unr) (hd : 1 ≤ x.lpDim) {ξ : Weil h �
   change ((ξ (ineIncl h s) : ℂ) • b.ρ (ineIncl h s)) = 1 at h1
   rw [hx.2 s] at h1
   have hn : 1 ≤ n := by simpa using hd
-  have h3 := congrFun (LinearMap.congr_fun h1 (fun _ => 1)) ⟨0, hn⟩
-  simpa using h3
+  simpa using congrFun (LinearMap.congr_fun h1 (fun _ => 1)) ⟨0, hn⟩
 
 end Par
 

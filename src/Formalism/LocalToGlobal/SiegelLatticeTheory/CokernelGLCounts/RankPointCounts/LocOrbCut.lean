@@ -175,8 +175,7 @@ theorem bb_eq_sum (M : Loc.Model F E) (hOK : M.OK) {m : ℕ} (a : Loc.Pt E (m + 
     have e : valQ M a c = fun q => Formalism.DoubleCosetMeasures.phi M.R (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1 (Formalism.MainNotions.LocalModelPeriodLattices.tr a).2 M.psiR
       (M.Cok (Quotient.out c)) (M.eCls (Quotient.out c)) (Formalism.MainNotions.LocalOrbitGerms.Cls.lamK M (Quotient.out c))
       (q.1.out, q.2.out) := funext hval
-    rw [e]
-    exact h
+    rwa [e]
   · rw [Formalism.MainNotions.LocalOrbitGerms.Cls.BB_eq M a μ₁ μ₂ hint c,
       Formalism.DoubleCosetMeasures.Final.bbNorm E M.R hD.isOpen _ _ M.psiR hψ μ₁ μ₂ hv1 hv2 _ _ _ hcs]
     exact finsum_congr fun q => (hval q).symm
@@ -257,16 +256,13 @@ theorem orbFin_of (M : Loc.Model F E) (hOK : M.OK) {m : ℕ} (a : Loc.Pt E (m + 
         · rw [ite_eq_left hqO, mul_one]
           have hgO := hg O hO
           refine (hV q (g O) (isZO_int M hZO hgO) ?_).symm
-          rw [isZO_eq M hZO hgO]
-          exact hqO
+          rwa [isZO_eq M hZO hgO]
         · intro O' hO' hne
           obtain ⟨q1, hq1, hOe'⟩ := Finset.mem_image.1 hO'
           have hZO' : IsZO M a O' := hOe' ▸ hR q1 (int_of_valQ M a c q1 ((memT q1).1 hq1))
           rw [ite_eq_right, mul_zero]
-          intro hqO'
-          exact hne ((isZO_eq M hZO' hqO').symm.trans (isZO_eq M hZO hqO))
-        · intro h
-          exact absurd hO h
+          exact fun hqO' => hne ((isZO_eq M hZO' hqO').symm.trans (isZO_eq M hZO hqO))
+        · exact fun h => absurd hO h
       · push Not at hex
         rw [Finset.sum_eq_zero fun O hO => by rw [ite_eq_right (hex O hO), mul_zero]]
         by_contra hne
@@ -325,10 +321,8 @@ theorem isCompact_intLocus (K : Type) [CommRing K] [TopologicalSpace K] [IsTopol
       ext Z
       show (∀ a b, Z a b ∈ R) ↔ _
       constructor
-      · intro h
-        exact Set.mem_univ_pi.2 fun i => Set.mem_univ_pi.2 fun j => h i j
-      · intro h a b
-        exact Set.mem_univ_pi.1 (Set.mem_univ_pi.1 h a) b
+      · exact fun h => Set.mem_univ_pi.2 fun i => Set.mem_univ_pi.2 fun j => h i j
+      · exact fun h a b => Set.mem_univ_pi.1 (Set.mem_univ_pi.1 h a) b
     rw [key]
     exact isCompact_univ_pi fun _ => isCompact_univ_pi fun _ => hRc
   let S : Set (Formalism.DoubleCosetMeasures.lowW K s t × Formalism.DoubleCosetMeasures.upUniG K s.sum) :=
@@ -369,8 +363,7 @@ theorem isClosed_intLow [T2Space E] (M : Loc.Model F E) (hRcl : IsClosed (M.R : 
     by_cases hab : a < b
     · simp only [hab, true_implies]
       exact isClosed_eq (continuous_id.matrix_elem a b) continuous_const
-    · simp only [hab, false_implies, Set.setOf_true]
-      exact isClosed_univ
+    · simpa only [hab, false_implies, Set.setOf_true] using isClosed_univ
   rw [e]
   exact ((isClosed_iInter fun a => isClosed_eq (continuous_id.matrix_elem a a) continuous_const).inter
     (isClosed_iInter fun a => isClosed_iInter fun b => hmid a b)).inter
@@ -387,8 +380,7 @@ theorem isClosed_intUp [T2Space E] (M : Loc.Model F E) (hRcl : IsClosed (M.R : S
     by_cases hab : b < a
     · simp only [hab, true_implies]
       exact isClosed_eq (continuous_id.matrix_elem a b) continuous_const
-    · simp only [hab, false_implies, Set.setOf_true]
-      exact isClosed_univ
+    · simpa only [hab, false_implies, Set.setOf_true] using isClosed_univ
   rw [e]
   exact ((isClosed_iInter fun a => isClosed_eq (continuous_id.matrix_elem a a) continuous_const).inter
     (isClosed_iInter fun a => isClosed_iInter fun b => hmid a b)).inter

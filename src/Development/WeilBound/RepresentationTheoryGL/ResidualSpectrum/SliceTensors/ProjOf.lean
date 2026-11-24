@@ -65,8 +65,7 @@ theorem proj_of (hP : Pr) (hT : SliceTens) (hI : IndMap) : Proj := by
   have hf₁ : twMap r z₁ p₁ (∑ i, (ψ₂ i).1 m₀.2 • ψ₁ i) ≠ 0 := by
     rw [← hχ₁e]
     change twMap r z₁ p₁ (mulChi r (Model.absC E z₁) χ₁) ≠ 0
-    rw [twMap_apply, mulChi_absC_neg, Ne, LinearEquiv.map_eq_zero_iff]
-    exact hp₁0
+    rwa [twMap_apply, mulChi_absC_neg, Ne, LinearEquiv.map_eq_zero_iff]
   obtain ⟨b₁, hb₁⟩ := step_left (twMap r z₁ p₁) hf₁
 
   obtain ⟨χ₂, hχ₂, hχ₂e⟩ : ∑ i, (twMap r z₁ p₁ (ψ₁ i)).1 b₁ • ψ₂ i ∈ tw (A2 E s) z₂ :=
@@ -76,8 +75,7 @@ theorem proj_of (hP : Pr) (hT : SliceTens) (hI : IndMap) : Proj := by
   have hf₂ : twMap s z₂ p₂ (∑ i, (twMap r z₁ p₁ (ψ₁ i)).1 b₁ • ψ₂ i) ≠ 0 := by
     rw [← hχ₂e]
     change twMap s z₂ p₂ (mulChi s (Model.absC E z₂) χ₂) ≠ 0
-    rw [twMap_apply, mulChi_absC_neg, Ne, LinearEquiv.map_eq_zero_iff]
-    exact hp₂0
+    rwa [twMap_apply, mulChi_absC_neg, Ne, LinearEquiv.map_eq_zero_iff]
   obtain ⟨b₂, hb₂⟩ := step_right (twMap s z₂ p₂) hf₂
 
   obtain ⟨T', hT'e, hT'u, hT's⟩ := hI E r s V (tw (A2 E r) z₁) (tw (A2 E s) z₂) T (twMap r z₁ p₁) (twMap s z₂ p₂)

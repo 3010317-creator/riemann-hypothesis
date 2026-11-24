@@ -294,8 +294,7 @@ theorem zhat_vc (Zd : LocDat D) (p : PlF D) (γ : TermDef.Term D u u' F0 what₂
 theorem vc_up (Zd : LocDat D) (p : PlF D) (γ : TermDef.Term D u u' F0 what₂) : IsUp (vc Zd p γ) := by
   obtain ⟨h0, h1⟩ := inv_unitri _ (admissibility_witness_unitriangular γ.lam (lf D F0) (repF γ)).1 (admissibility_witness_unitriangular γ.lam (lf D F0) (repF γ)).2
   refine ⟨fun k => ?_, fun k b hkb => ?_⟩
-  · simp only [vc, Matrix.of_apply, Matrix.map_apply, h1 k, map_one, mul_one]
-    exact c_cInv Zd p k
+  · simpa only [vc, Matrix.of_apply, Matrix.map_apply, h1 k, map_one, mul_one] using c_cInv Zd p k
   · simp only [vc, Matrix.of_apply, Matrix.map_apply, h0 b k hkb, map_zero, mul_zero]
 
 end VcDef
@@ -684,7 +683,6 @@ theorem xiTyped_of_ctx {Zd : LocDat D} {u u' : D.what₂.Word} {F0 : FlagG (VS D
     obtain ⟨cc, -, hc1, hloc⟩ := hFC.1 P
     have hcc : ∀ i, cc i = 1 := hc1 (hgP σ)
     have hlloc : l ∈ Formalism.HermitianLatticesTheory.localization₂ P.asIdeal (XLam γ.lam (lf D F0)) := by
-      show ∃ s ∈ P.asIdeal.primeCompl, s • l ∈ XLam γ.lam (lf D F0)
       exact ⟨1, P.asIdeal.primeCompl.one_mem, by simpa using hlXL⟩
     rw [hloc] at hlloc
     obtain ⟨t, htP, htl⟩ := hlloc
@@ -732,12 +730,10 @@ theorem xiTyped_of_ctx {Zd : LocDat D} {u u' : D.what₂.Word} {F0 : FlagG (VS D
   refine ⟨?_, ?_⟩
   · obtain ⟨x, hx, hxe⟩ := hinv σ1
     refine ⟨x, hx, ?_⟩
-    rw [adeleInfiniteComponent_apply, Matrix.map_apply, hcoe, ← hσ1]
-    exact hxe
+    rwa [adeleInfiniteComponent_apply, Matrix.map_apply, hcoe, ← hσ1]
   · obtain ⟨x, hx, hxe⟩ := hinv σ2
     refine ⟨x, hx, ?_⟩
-    rw [adele_ext_components, Matrix.map_apply, hcoe, ← hσ2]
-    exact hxe
+    rwa [adele_ext_components, Matrix.map_apply, hcoe, ← hσ2]
 
 theorem tau_one_holds {Zd : LocDat D} {u u' : D.what₂.Word} {F0 : FlagG (VS D) D.R.rS (CntLocal.Tn u)}
     {what₂ : Finset (Submodule (𝓞 D.host.E) (VS D).V)} : TauOneReduction Zd u u' F0 what₂ :=

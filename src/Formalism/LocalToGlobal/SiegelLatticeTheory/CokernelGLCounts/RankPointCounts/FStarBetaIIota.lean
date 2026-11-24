@@ -37,16 +37,14 @@ theorem isLattice_NgX_aux {Λ : Submodule (𝓞 D.host.E) (VS D).V} (hΛ : Submo
     (F : LFlag (D.sp.Y 0) D.R.rS T) (F' : LFlag (D.sp.Y 0) D.R.rS T') :
     Submodule.IsLattice D.host.E (NgX Λ (gS D) F F') := by
   have hle : NgX Λ (gS D) F F' ≤ Λ := by
-    refine sup_le (sup_le ?_ inf_le_left) inf_le_left
-    exact Submodule.smul_le_right
+    exact sup_le (sup_le Submodule.smul_le_right inf_le_left) inf_le_left
   exact ⟨hΛ.fg.of_le hle, fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli⟩
 
 theorem isLattice_NgX {Λ : Submodule (𝓞 D.host.E) (VS D).V} (hΛ : Submodule.IsFullLattice D.host.E Λ) {T T' : D.host.E}
     (F : LFlag (D.sp.Y 0) D.R.rS T) (F' : LFlag (D.sp.Y 0) D.R.rS T') :
     Submodule.IsFullLattice D.host.E (NgX Λ (gS D) F F') := by
   have hle : NgX Λ (gS D) F F' ≤ Λ := by
-    refine sup_le (sup_le ?_ inf_le_left) inf_le_left
-    exact Submodule.smul_le_right
+    exact sup_le (sup_le Submodule.smul_le_right inf_le_left) inf_le_left
   letI := Submodule.IsLattice.of_fg D.host.E (hΛ.toIsLattice.fg.of_le hle)
   refine ⟨top_unique ?_⟩
   rw [← hΛ.span_eq_top]
@@ -299,8 +297,7 @@ theorem iotaB_of (hP : PinB Zd u u' F0 what₂) : IotaB Zd u u' F0 what₂ := by
       Prod.map (φ' p) (LinearEquiv.refl (D.s.atP p).Ep ((locH Zd p).Wb (tLoc Zd p γ).f)) ''
         (locH Zd p).iotaGraph g (tLoc Zd p γ) = (locH Zd p).iotaGraph g (IotaBP.t2 Zd p γ F'₂ Λ₂) := fun p g hsp => by
     have := (hloc₂ p).2.2.2.2.2 g hsp
-    rw [hφ p] at this
-    exact this
+    rwa [hφ p] at this
   constructor
   · intro hmem
     obtain ⟨μ, hμ, ξ, hξ, ξ', hξ', heq⟩ := NgX_dec hmem

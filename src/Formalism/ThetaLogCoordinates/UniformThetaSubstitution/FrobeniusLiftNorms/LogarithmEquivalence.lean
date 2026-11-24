@@ -138,8 +138,7 @@ theorem mvExp_zero' {K ι : Type} [NormedField K] [CharZero K] :
   · simp
   · intro k _ hk
     rw [zero_pow hk, map_zero, mul_zero]
-  · intro h
-    exact absurd (mem_range.2 (Nat.succ_pos _)) h
+  · exact fun h => absurd (mem_range.2 (Nat.succ_pos _)) h
 
 theorem constantCoeff_mvExp' {K ι : Type} [NormedField K] [CharZero K] {f : MvPowerSeries ι K}
     (hf : MvPowerSeries.constantCoeff f = 0) : MvPowerSeries.constantCoeff (mvExp f) = 1 := by
@@ -412,8 +411,7 @@ theorem mem_span_p_iff {K : Type} [NormedField K] [IsUltrametricDist K] {p : ℕ
 theorem charP_quot {K : Type} [NormedField K] [IsUltrametricDist K] {p : ℕ} (hp : p.Prime)
     (hn : ‖(p : K)‖ = (p : ℝ)⁻¹) : CharP (ballRing K ⧸ Ideal.span {(p : ballRing K)}) p := by
   have hne : Ideal.span {(p : ballRing K)} ≠ ⊤ := by
-    rw [Ideal.ne_top_iff_one, mem_span_p_iff hp hn]
-    rw [Subring.coe_one, norm_one, not_le]
+    rw [Ideal.ne_top_iff_one, mem_span_p_iff hp hn, Subring.coe_one, norm_one, not_le]
     exact inv_lt_one_of_one_lt₀ (by exact_mod_cast hp.one_lt)
   have : Nontrivial (ballRing K ⧸ Ideal.span {(p : ballRing K)}) := Ideal.Quotient.nontrivial_iff.2 hne
   rw [CharP.charP_iff_prime_eq_zero hp, ← map_natCast (Ideal.Quotient.mk _) p,
@@ -492,8 +490,7 @@ theorem logRescale : LogRescale := by
       (subst_altR (ballRing K ⧸ Ideal.span {(p : ballRing K)}) hp)
     have h := (map_mk_eq_zero_iff hp hn (l0.substInvOfIsUnit hu0 - altR (ballRing K) p)).1 (by
       rw [map_sub, map_altR, key, sub_self])
-    rw [map_sub, map_altR] at h
-    exact h
+    rwa [map_sub, map_altR] at h
 
 end LogarithmEquivalence
 

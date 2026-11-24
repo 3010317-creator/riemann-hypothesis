@@ -436,8 +436,7 @@ theorem inertia_d : ∀ (P : Ideal (𝓞 H.E)) [P.IsPrime] [P.LiesOver (span {(H
       apply (hI σ).mpr
       refine ⟨tauN H.condN w, (gal_eq_art_iff H σ w).mp hg, ?_⟩
       apply (tauN_inertia_iff H.condN H.d Q w).mpr
-      rw [ordCompl_d H]
-      exact hw1
+      rwa [ordCompl_d H]
     rcases h with h | h
     · exact key 1 (val_one_modEq _ _ (QSq_dvd H)) (h.trans (map_one _).symm)
     · obtain ⟨u, hu1, hu2⟩ := exists_art_iod H
@@ -530,12 +529,10 @@ theorem decomp_typeI : ∀ (l : ℕ), l.Prime → l ∣ H.QS * H.q →
         ω - (1 - ((a + 1 : ℤ) : 𝓞 H.E)) - (ω - ((a + 1 : ℤ) : 𝓞 H.E)) := by
       push_cast
       ring
-    rw [h1]
-    exact h0
+    rwa [h1]
   have hls : (l : ℤ) ∣ 2 * a + 1 := by
     have h0 : (2 * a + 1 : ℤ) ∈ P.under ℤ := by simpa [Ideal.under] using hsP
-    rw [← Ideal.over_def P (span {(l : ℤ)}), Ideal.mem_span_singleton] at h0
-    exact h0
+    rwa [← Ideal.over_def P (span {(l : ℤ)}), Ideal.mem_span_singleton] at h0
   have hlsd : (l : ℤ) ∣ (2 * a + 1) ^ 2 + H.d := by
     rw [hc]
     exact Dvd.dvd.mul_right (by exact_mod_cast hlN) c
@@ -564,8 +561,7 @@ theorem decompConj : ∀ (l : ℕ), l.Prime → l ∣ H.condN →
   have hFrob : IsArithFrobAt ℤ (H.gal.symm (H.art uF)) P := by
     apply hF _ (tauN H.condN uF) ((gal_eq_art_iff H _ uF).mp (H.gal.apply_symm_apply _))
     apply tauN_frob H.condN H.d Q uF
-    rw [ordCompl_d H]
-    exact huF1
+    rwa [ordCompl_d H]
   obtain ⟨k, ρ, hρ, hconj⟩ := Formalism.FrobeniusOrbits.Decomp.stab_eq_inertia_mul H.d P _ H.conj hFrob hσ
   have hg : φ.cc = H.gal ρ * H.art uF ^ k := by
     rw [← h2, hconj, map_mul, map_pow, MulEquiv.apply_symm_apply]

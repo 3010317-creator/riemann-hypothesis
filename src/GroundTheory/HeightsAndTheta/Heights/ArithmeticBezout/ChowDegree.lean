@@ -77,8 +77,7 @@ theorem sum_weightSet_component (p : MvPolynomial σ R) :
   split_ifs with h
   · rfl
   · by_contra hne
-    apply h
-    exact Finset.mem_image.mpr ⟨d, mem_support_iff.mpr (Ne.symm hne), rfl⟩
+    exact h (Finset.mem_image.mpr ⟨d, mem_support_iff.mpr (Ne.symm hne), rfl⟩)
 
 theorem mem_weightSet {p : MvPolynomial σ R} {a : ℕ} :
     a ∈ weightSet w p ↔ ∃ d ∈ p.support, Finsupp.weight w d = a := by
@@ -115,8 +114,7 @@ theorem component_mul_of_unique (p q : MvPolynomial σ R) (a b : ℕ)
     by_cases hs : a' + b' = a + b
     · obtain ⟨rfl, rfl⟩ := h a' ha' b' hb' hs
       rw [ite_eq_left ⟨rfl, rfl⟩, hh.weightedHomogeneousComponent_same]
-    · rw [hh.weightedHomogeneousComponent_ne _ (Ne.symm hs)]
-      rw [ite_eq_right]
+    · rw [hh.weightedHomogeneousComponent_ne _ (Ne.symm hs), ite_eq_right]
       rintro ⟨rfl, rfl⟩
       exact hs rfl
 
@@ -129,23 +127,18 @@ theorem component_mul_of_unique (p q : MvPolynomial σ R) (a b : ℕ)
         · rw [ite_eq_left ⟨rfl, rfl⟩]
         · intro b' _ hb'
           rw [ite_eq_right fun h => hb' h.2]
-        · intro hb'
-          exact absurd hb hb'
-      · intro a' _ ha'
-        exact Finset.sum_eq_zero fun b' _ => ite_eq_right fun h => ha' h.1
-      · intro ha'
-        exact absurd ha ha'
+        · exact fun hb' => absurd hb hb'
+      · exact fun a' _ ha' => Finset.sum_eq_zero fun b' _ => ite_eq_right fun h => ha' h.1
+      · exact fun ha' => absurd ha ha'
     · have : weightedHomogeneousComponent w b q = 0 := by
         apply weightedHomogeneousComponent_eq_zero'
-        intro d hd hdb
-        exact hb (mem_weightSet.mpr ⟨d, hd, hdb⟩)
+        exact fun d hd hdb => hb (mem_weightSet.mpr ⟨d, hd, hdb⟩)
       rw [this, mul_zero]
       exact Finset.sum_eq_zero fun a' _ => Finset.sum_eq_zero fun b' _ => by
         split_ifs <;> simp
   · have : weightedHomogeneousComponent w a p = 0 := by
       apply weightedHomogeneousComponent_eq_zero'
-      intro d hd hda
-      exact ha (mem_weightSet.mpr ⟨d, hd, hda⟩)
+      exact fun d hd hda => ha (mem_weightSet.mpr ⟨d, hd, hda⟩)
     rw [this, zero_mul]
     exact Finset.sum_eq_zero fun a' _ => Finset.sum_eq_zero fun b' _ => by
       split_ifs <;> simp

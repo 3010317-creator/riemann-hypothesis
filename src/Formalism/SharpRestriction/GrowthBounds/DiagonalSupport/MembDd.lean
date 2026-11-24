@@ -64,15 +64,13 @@ theorem mapDomain_le {α β : Type} (f : α → β) (mo : α →₀ ℕ) (b : β
       apply Finset.sum_eq_zero
       intro x hx
       rw [Finsupp.single_apply, ite_eq_right]
-      intro hfx
-      exact (Finset.ne_of_mem_erase hx) (h x hfx)
+      exact fun hfx => (Finset.ne_of_mem_erase hx) (h x hfx)
     rw [hz, zero_add, Finsupp.single_apply]
     split_ifs <;> omega
   · have hz : ∀ x ∈ mo.support, (Finsupp.single (f x) (mo x)) b = 0 := by
       intro x hx
       rw [Finsupp.single_apply, ite_eq_right]
-      intro hfx
-      exact ha (h x hfx ▸ hx)
+      exact fun hfx => ha (h x hfx ▸ hx)
     rw [Finset.sum_eq_zero hz]
     exact Nat.zero_le _
 
@@ -94,8 +92,7 @@ theorem sumIteLe {α β : Type} [Fintype α] (g : α → β) (h : α → ℕ) (b
     apply Finset.sum_eq_zero
     intro t ht
     rw [ite_eq_right]
-    intro hgt
-    exact Finset.ne_of_mem_erase ht (hu t hgt)
+    exact fun hgt => Finset.ne_of_mem_erase ht (hu t hgt)
   rw [hz, zero_add]
   split_ifs <;> omega
 
@@ -167,8 +164,7 @@ theorem eq_fr (hgap : ∀ j : ℤ, ∀ i, ∀ x : ℤ, i + 1 < r → Fr.fr j i <
     · exact ⟨i, hir, heq.symm⟩
   · have hi1 : i = r - 1 := by omega
     refine ⟨i, hir, le_antisymm ?_ hix⟩
-    rw [hi1]
-    exact h1
+    rwa [hi1]
 
 theorem llPos_mem (j : ℤ) (l : ℕ) (hl : l < (Fr.LLset j).card) : llPos Fr j l ∈ Fr.LLset j := by
   unfold llPos

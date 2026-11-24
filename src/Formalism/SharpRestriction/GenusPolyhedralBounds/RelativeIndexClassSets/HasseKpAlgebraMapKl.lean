@@ -529,9 +529,7 @@ theorem hasse_of_mul_eq (β : Idx D j N →₀ ℕ) {s x : Rp X la N} {y : Lc X 
     (h : algebraMap (Rp X la N) (Lc X la w) s * y = algebraMap (Rp X la N) (Lc X la w) x) :
     ∑ q ∈ antidiagonal β, algebraMap (Rp X la N) (Lc X la w) (hasseRp X la N q.1 s) * hasse X la w q.2 y =
       algebraMap (Rp X la N) (Lc X la w) (hasseRp X la N β x) := by
-  have key := congrArg (fun z => hasse X la w β z) h
-  simp only [hasse_mul, hasse_algebraMap] at key
-  exact key
+  simpa only [hasse_mul, hasse_algebraMap] using congrArg (fun z => hasse X la w β z) h
 
 theorem Kl_charZero : CharZero (X.Kl la) := by
   first

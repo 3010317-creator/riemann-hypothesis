@@ -25,8 +25,7 @@ theorem exists_mem_not_mem (hlt : F'.lattice < F.lattice) :
   have h1 : (dualLattice F).toAddSubgroup.relIndex (dualLattice F').toAddSubgroup = 1 :=
     AddSubgroup.relIndex_eq_one.mpr fun φ hφ => h φ hφ
   rw [DualLatticeIndex.proof K i F F' hlt.le] at h1
-  have h2 := AddSubgroup.relIndex_eq_one.mp h1
-  exact hlt.not_ge fun x hx => h2 hx
+  exact hlt.not_ge fun x hx => (AddSubgroup.relIndex_eq_one.mp h1) hx
 
 def annIdeal (F : HermLattice K i) (φc : Fin i → K) : Ideal (𝓞 K) where
   carrier := {μ | algebraMap (𝓞 K) K μ • φc ∈ dualLattice F}
@@ -55,8 +54,7 @@ theorem annIdeal_isMaximal (hlt : F'.lattice < F.lattice)
     rwa [map_one, one_smul] at this
   obtain ⟨l, hl⟩ := exists_sub_mem_dual hlt hcov (smul_mem_dual F' x hc) (mem_annIdeal.not.mp hx) hc
   have h1 : 1 - l * x ∈ annIdeal F φc := by
-    rw [mem_annIdeal, map_sub, map_one, map_mul, sub_smul, one_smul, mul_smul]
-    exact hl
+    rwa [mem_annIdeal, map_sub, map_one, map_mul, sub_smul, one_smul, mul_smul]
   have h2 := J.add_mem (hle h1) (J.mul_mem_left l hxJ)
   rwa [sub_add_cancel] at h2
 

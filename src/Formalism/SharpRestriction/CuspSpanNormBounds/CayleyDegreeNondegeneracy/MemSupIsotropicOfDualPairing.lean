@@ -112,8 +112,7 @@ theorem mem_orthLattice_iff_image_mem_sup {x : (D.sp.X 0).V} :
     x ∈ L0X D Λ (lf D F0) ↔ D.sp.iXY 0 x ∈ Λ ⊔ toO (hS D) (Xsp (lf D F0)) := by
   rw [mem_orthLattice_iff_mem_sub]
   constructor
-  · intro h
-    exact ((mem_Lsub_iff_sup_and_orth F0 Λ).1 h.1).1
+  · exact fun h => ((mem_Lsub_iff_sup_and_orth F0 Λ).1 h.1).1
   · intro h
     exact ⟨(mem_Lsub_iff_sup_and_orth F0 Λ).2 ⟨h, orth_embedding_mem_orth_isotropic F0 he hz x⟩, inner_z_orth_embedding_eq_zero F0 he hz x⟩
 
@@ -143,8 +142,7 @@ theorem orthLattice_isLattice (hΛ : Submodule.IsLattice D.host.E Λ) (hu : Form
       Submodule.subset_span (Submodule.subset_span ⟨i, rfl⟩)
     have hn : algebraMap (𝓞 D.host.E) D.host.E (c i) ≠ 0 := by simpa using hc i
     have := (spanE (D.sp.X 0) M₁).smul_mem (algebraMap (𝓞 D.host.E) D.host.E (c i))⁻¹ hm
-    rw [← algebraMap_smul D.host.E (c i), smul_smul, inv_mul_cancel₀ hn, one_smul] at this
-    exact this
+    rwa [← algebraMap_smul D.host.E (c i), smul_smul, inv_mul_cancel₀ hn, one_smul] at this
   have hU : (⊤ : Submodule D.host.E (D.sp.X 0).V) ⊓ orth (D.sp.X 0) ⊤ = ⊥ := by
     rw [top_inf_eq, eq_bot_iff]
     intro y hy
@@ -157,8 +155,7 @@ theorem orthLattice_isLattice (hΛ : Submodule.IsLattice D.host.E Λ) (hu : Form
     exact ⟨o, ho⟩
   refine ⟨?_, ?_⟩
   · exact isNoetherian_submodule.1 (isNoetherian_of_fg_of_noetherian _ hdfg) _ hle
-  · intro s hs hli
-    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+  · exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
 
 
 include he in
@@ -176,8 +173,7 @@ theorem mem_sup_isotropic_of_dual_pairing (hΛ : Submodule.IsFullLattice D.host.
       refine Finset.sum_congr rfl (fun a _ => ?_)
       rw [map_smulₛₗ, starRingEnd_apply, star_star]
     have h2 : ∑ a, star (c a) • F0.e a = 0 := (hS D).nondeg.1 _ (fun y => by rw [h1]; rfl)
-    have h3 := Fintype.linearIndependent_iff.1 F0.e_indep _ h2 a
-    simpa using h3
+    simpa using Fintype.linearIndependent_iff.1 F0.e_indep _ h2 a
   let bb := Basis.extend hℓ.linearIndepOn_id
   let idx : Fin D.R.rS → hℓ.linearIndepOn_id.extend (Set.subset_univ _) :=
     fun a => ⟨ℓ a, hℓ.linearIndepOn_id.subset_extend _ ⟨a, rfl⟩⟩
@@ -205,8 +201,7 @@ theorem mem_sup_isotropic_of_dual_pairing (hΛ : Submodule.IsFullLattice D.host.
   have DL := Formalism.HermitianLatticesTheory.dualLattice (𝓞 D.host.E) D.host.E (hS D).V (hS D).hT (hS D).herm (hS D).nondeg i_star_int
   have hlat : ∀ N : LatV D, N.FG → Submodule.IsFullLattice D.host.E (Λ ⊔ N) := by
     letI := hΛ
-    intro N hN
-    exact Submodule.IsFullLattice.of_le_of_fg D.host.E le_sup_left (hΛ.fg.sup hN)
+    exact fun N hN => Submodule.IsFullLattice.of_le_of_fg D.host.E le_sup_left (hΛ.fg.sup hN)
   have hΛ₂ := (DL _ (hlat (Submodule.span (𝓞 D.host.E) {y}) (Submodule.fg_span (Set.finite_singleton y)))).1
   choose c hc hcf using fun a => a_exists_smul_mem _ hΛ₂ (f a)
   set ε : 𝓞 D.host.E := ∏ a, c a with hε

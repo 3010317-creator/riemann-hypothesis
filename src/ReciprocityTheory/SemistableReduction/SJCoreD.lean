@@ -94,9 +94,7 @@ theorem gauss_pair {n : ℕ} (hn : 0 < n) (c : EuclideanSpace ℂ (Fin n)) (hc :
     rw [hnorm2, hexp]
   set μ := (volume : Measure (EuclideanSpace ℂ (Fin (m + 1)))) with hμ
   let Me := M.toHomeomorph.toMeasurableEquiv
-  haveI : (μ.map Me).IsAddHaarMeasure := by
-    have h := M.isAddHaarMeasure_map μ
-    exact h
+  haveI : (μ.map Me).IsAddHaarMeasure := M.isAddHaarMeasure_map μ
   set k := (μ.map Me).addHaarScalarFactor (volume : Measure (Fin (m + 1) → ℂ))
   have hν : μ.map Me = k • (volume : Measure (Fin (m + 1) → ℂ)) :=
     Measure.isAddLeftInvariant_eq_smul _ _
@@ -207,8 +205,7 @@ theorem polar_mean {n : ℕ} (hn : 0 < n) (c : EuclideanSpace ℂ (Fin n)) (hc :
   obtain ⟨s, hs, hGi, hIG0, hIe0⟩ := gauss_pair hn c hc
   have hae : ∀ᵐ z ∂(volume : Measure (EuclideanSpace ℂ (Fin n))).toSphere, ∑ i, WithLp.ofLp c i * spherePoint z i ≠ 0 := by
     rw [ae_iff]
-    simp only [ne_eq, not_not]
-    exact sphere_linear_zero_null c hc
+    simpa only [ne_eq, not_not] using sphere_linear_zero_null c hc
 
   have hinner : ∀ z : UnitSphereC n, ∑ i, WithLp.ofLp c i * spherePoint z i ≠ 0 →
       ∫ r : Ioi (0 : ℝ), log ‖∑ i, WithLp.ofLp c i * WithLp.ofLp ((r : ℝ) • (z : EuclideanSpace ℂ (Fin n))) i‖ *

@@ -115,11 +115,9 @@ theorem first_derivative_at_normal_set {k r : ℕ} {E : Type} [NormedAddCommGrou
     exact hR _ p q hpq
   cases b
   · have := letter_minus_component_one_eq_smul_component_zero hDo z z' i0 s hs hj hh τ hdet hτ x₁ hx₁ hx₁G hnf hnfy _ hK' hR' Y
-    simp only [cLift, Bool.false_eq_true, ite_false]
-    exact this
+    simpa only [cLift, Bool.false_eq_true, ite_false] using this
   · have := letter_plus_component_one_eq_smul_component_zero hDo z z' i0 s hs hj hh τ hdet hτ x₁ hx₁ hnf _ hK' hR' Y
-    simp only [cLift, ite_true]
-    exact this
+    simpa only [cLift, ite_true] using this
 
 theorem vLet_congr_level {k r : ℕ} {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
     (z z' : Fin (2 * r + k + 1) → ℂ) {j₁ j₂ : ℕ} (hj : j₁ = j₂) (h₁ : j₁ ≤ r) (h₂ : j₂ ≤ r) (l : C.Letter) (e : Fin 2)
@@ -198,8 +196,7 @@ theorem liftDeg_core {k r : ℕ} (T : D.LevTower k r Wp Wq) (F : B.Mat k r → (
   have hyG : ∀ x, sx x * x₁ ∈ B.GV k r := fun x => Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_mul (Formalism.QuantumDeterminants.Sset_UH (hsx x)) hx₁G
   have hyD : ∀ x, Dmin k r z z' (sx x * x₁) ⟨j, by omega⟩ ≠ 0 := by
     intro x
-    rw [hDinv _ _ (hsx x), dmin_congr z z' x₁ hjeq _ (by omega)]
-    exact hD₁
+    rwa [hDinv _ _ (hsx x), dmin_congr z z' x₁ hjeq _ (by omega)]
   set G := D.uwG k r z z' F j hj w' a' with hGdef
   have hG := hPW w' a'
   set KG := Kr T.base G with hKG
@@ -282,8 +279,7 @@ theorem liftDeg_core {k r : ℕ} (T : D.LevTower k r Wp Wq) (F : B.Mat k r → (
   have hcast : j - s + 1 = i0 + 1 := by omega
   refine ⟨fun l => c' (Fin.cast hcast l), ?_, fun y => ?_⟩
   · have : Fin.cast hcast (Fin.last (j - s)) = Fin.last i0 := Fin.ext (by simp)
-    simp only [this]
-    exact hc'top
+    simpa only [this] using hc'top
   · rw [hc'exp y]
     exact (Fintype.sum_equiv (finCongr hcast) _ _ (fun l => rfl)).symm
 

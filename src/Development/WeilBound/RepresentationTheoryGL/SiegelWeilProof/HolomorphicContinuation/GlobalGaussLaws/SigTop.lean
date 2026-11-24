@@ -289,8 +289,7 @@ theorem perm_exists {r k : ℕ} (hk : k ≤ r) (ε : Fin r → Bool) (he : cnt �
     rw [Fintype.card_subtype]
     have e : {a : Fin r // (a : ℕ) < k} ≃ Fin k :=
       ⟨fun a => ⟨a, a.2⟩, fun i => ⟨⟨i, by omega⟩, i.2⟩, fun _ => rfl, fun _ => rfl⟩
-    rw [Fintype.card_congr e, Fintype.card_fin]
-    exact he
+    rwa [Fintype.card_congr e, Fintype.card_fin]
   have c2 : Fintype.card {a // ¬ ε a = true} = Fintype.card {a : Fin r // ¬ (a : ℕ) < k} := by
     rw [Fintype.card_subtype_compl, Fintype.card_subtype_compl, c1]
   let e1 := Fintype.equivOfCardEq c1
@@ -321,8 +320,7 @@ theorem wittLBeq : WittLBeq := by
     constructor
     · rintro ⟨y, hy, rfl⟩
       simpa [v] using hy
-    · intro hx
-      exact ⟨v x, hx, V.frame.equivFun.apply_symm_apply x⟩
+    · exact fun hx => ⟨v x, hx, V.frame.equivFun.apply_symm_apply x⟩
   have hL : ReciprocityTheory.MultiplicativeHeights.IsLattice L :=
     GlobalTheory.LocalConjugacy.isLattice_coordLat V V.L0 V.standardTuple_isLattice
       V.baseLattice_isUnimodular
@@ -353,8 +351,7 @@ theorem wittLBeq : WittLBeq := by
     intro a b
     have := V.herm.eq (V.frame b) (V.frame a)
     simp only [hG₁, Matrix.transpose_apply, HSpace.gram, ReciprocityTheory.ChartRestriction.G.FD.cc]
-    rw [← hst]
-    exact this
+    rwa [← hst]
   have hd : G₁.det ≠ 0 := by rw [hG₁, Matrix.det_transpose]; exact GlobalTheory.MassLinkSD.gram_det_ne V
   have key : ∀ ρ : D.what₂.Tau, ∃ Q : Matrix (Fin r) (Fin r) ℂ, Q.det ≠ 0 ∧
       (dSgn r k).map (tauE D ρ) = Qᵀ * G₁.map (tauE D ρ) * Q.map (starRingEnd ℂ) := by
@@ -399,8 +396,7 @@ theorem wittLBeq : WittLBeq := by
     by_cases h : ∃ ρ, tauE D ρ = NumberField.ComplexEmbedding.conjugate σ
     · obtain ⟨ρ, hρ⟩ := h
       have := GlobalTheory.Published.Landherr.congr_conjugate (G := G₁) (G' := dSgn r k) (tauE D ρ) (key ρ)
-      rw [hρ, NumberField.ComplexEmbedding.involutive_conjugate D.host.E σ] at this
-      exact this
+      rwa [hρ, NumberField.ComplexEmbedding.involutive_conjugate D.host.E σ] at this
     · obtain ⟨ρ, hρ⟩ := (GlobalTheory.PointAtPlace.tauE_cm σ).2 h
       rw [← hρ]
       exact key ρ
@@ -864,8 +860,7 @@ theorem wittLBlt : WittLBlt := by
         diagonal (PositivityTheory.Rg.Sw.sgn ε) := by
       have h1 : (fr.map (starRingEnd ℂ)).map (starRingEnd ℂ) = fr := by
         ext a b; simp
-      rw [h1]
-      exact hfr
+      rwa [h1]
     rw [posIndex_eq_card_of_congr_diagonal hP hd', negIndex_eq_card_of_congr_diagonal hP hd']
     have e1 : (Finset.univ.filter fun a => 0 < (PositivityTheory.Rg.Sw.sgn ε a).re) = Finset.univ.filter fun a => ε a = true := by
       apply Finset.filter_congr

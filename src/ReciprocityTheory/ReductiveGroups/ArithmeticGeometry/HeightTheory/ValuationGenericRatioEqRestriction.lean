@@ -29,8 +29,7 @@ namespace Data
 variable (d : Data K ι Ω WT A)
 
 theorem gen_ne_zero_of_htOne {p : Ideal (KTp K d.D d.N)} (hp : p ∈ d.HtOne) : d.gen p ≠ 0 := by
-  intro h0
-  exact d.x4v4_gen_ne hp (by rw [h0, map_zero])
+  exact fun h0 => d.x4v4_gen_ne hp (by rw [h0, map_zero])
 
 theorem valuation_genericRatio_eq_restriction (hd : d.AxH 𝒜) (c : ι) (w : AddValuation (OmS (Ω c) d.D d.N) (WithTop ℤ))
     (j0 : Fin (d.N + 1)) (hj0 : d.w j0 c ≠ 0)
@@ -86,8 +85,7 @@ theorem ordMinMax_at_good_place (hd : d.AxH 𝒜) (c : ι) (w : AddValuation (Om
 
 theorem exists_ne_zero_of_finsum_mem_ne_zero' {α M : Type*} [AddCommMonoid M] {s : Set α} {f : α → M}
     (h : ∑ᶠ i ∈ s, f i ≠ 0) : ∃ i ∈ s, f i ≠ 0 := by
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   exact h (by rw [finsum_mem_congr rfl hne, finsum_mem_zero])
 
 alias multiplicity_split_finsum := _root_.ReciprocityTheory.ChartRestriction.G.T0.Data.x4v4_split

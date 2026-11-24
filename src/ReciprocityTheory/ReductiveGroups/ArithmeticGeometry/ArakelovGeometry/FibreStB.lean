@@ -53,8 +53,7 @@ private theorem eval₂_deh_eq_zero_of_good_of_root (hw : G.Good w) {ρ : ℂ} (
     | exact Polynomial.natDegree_modByMonic_lt H G.monic hP1
   have hrx : (H %ₘ G.P).eval₂ (deh (x ∘ e) 0) (deh x (e 0) G.Θ) = 0 := by
     have h2 := congrArg (fun p => p.eval₂ (deh (x ∘ e) 0) (deh x (e 0) G.Θ)) hsplit
-    simp only [Polynomial.eval₂_add, Polynomial.eval₂_mul, G.root, zero_mul, add_zero, hH] at h2
-    exact h2
+    simpa only [Polynomial.eval₂_add, Polynomial.eval₂_mul, G.root, zero_mul, add_zero, hH] using h2
   have hc := G.min _ hdeg hrx
   have hrw : (H %ₘ G.P).map (deh w 0) = 0 := by
     ext j
@@ -131,8 +130,7 @@ theorem Gen.zOf_mem (hx0 : x (e 0) ≠ 0) (hw : G.Good w) {ρ : ℂ}
     rw [Polynomial.coeff_map, Polynomial.coeff_zero, Polynomial.coe_eval₂RingHom]
     apply eval₂_deh_eq_zero_of_good_of_root G hw hρ
     have h4 := Polynomial.ext_iff.mp h2 d
-    rw [Polynomial.coeff_map, Polynomial.coeff_zero, Polynomial.coe_eval₂RingHom] at h4
-    exact h4
+    rwa [Polynomial.coeff_map, Polynomial.coeff_zero, Polynomial.coe_eval₂RingHom] at h4
   rw [map_eval₂_X_mul_C_eq G (deh w 0) ρ f] at h3
   rw [MvPolynomial.eval_map]
   have h4 := congrArg (Polynomial.eval (w 0 / deh w 0 G.dd)) h3
@@ -145,8 +143,7 @@ theorem Gen.zOf_mem (hx0 : x (e 0) ≠ 0) (hw : G.Good w) {ρ : ℂ}
     simp only [Function.comp_apply, Polynomial.coe_evalRingHom, Polynomial.eval_mul, Polynomial.eval_X,
       Polynomial.eval_C, Gen.zOf, Gen.evQ]
     ring
-  rw [e1, e2] at h4
-  exact h4
+  rwa [e1, e2] at h4
 
 private theorem sum_coeff_homogenize_eq_pow_mul_eval₂ {S : Type*} [Field S] (F : MvPolynomial ι ℤ) (v a : ι → S) (d : S)
     (hv : ∀ i, v i = a i / d) (hd : d ≠ 0) (N : ℕ) (hN : F.totalDegree ≤ N) :
@@ -240,8 +237,7 @@ theorem Gen.of_mem (hx0 : x (e 0) ≠ 0) (hw : G.Good w) {z : ι → ℂ}
   · have h := deh_eq_zero_of_mem_pts_of_deh_eq_zero hx0
       (G.P.eval₂ (rename e : MvPolynomial _ ℤ →ₐ[ℤ] MvPolynomial ι ℤ).toRingHom G.Θ)
       (by rw [deh_eval₂_rename]; exact G.root) hz hz0
-    rw [deh_eval₂_rename, hze'] at h
-    exact h
+    rwa [deh_eval₂_rename, hze'] at h
   · funext i
     have h := deh_eq_zero_of_mem_pts_of_deh_eq_zero hx0
       ((G.Q i).eval₂ (rename e : MvPolynomial _ ℤ →ₐ[ℤ] MvPolynomial ι ℤ).toRingHom G.Θ -
@@ -369,14 +365,11 @@ theorem contDiffAt_eval₂ {E ι : Type*} [NormedAddCommGroup E] [NormedSpace �
     (G : MvPolynomial ι ℤ) : ContDiffAt ℂ 1 (fun e => eval₂ (Int.castRingHom ℂ) (g e) G) e₀ := by
   induction G using MvPolynomial.induction_on
   next r =>
-    simp only [eval₂_C]
-    exact contDiffAt_const
+    simpa only [eval₂_C] using contDiffAt_const
   next p q hp hq =>
-    simp only [eval₂_add]
-    exact hp.add hq
+    simpa only [eval₂_add] using hp.add hq
   next p i hp =>
-    simp only [eval₂_mul, eval₂_X]
-    exact hp.mul (hg i)
+    simpa only [eval₂_mul, eval₂_X] using hp.mul (hg i)
 
 theorem contDiffAt_deh {E ι : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     (g : E → ι → ℂ) (e₀ : E) (i₀ : ι) (hg : ∀ i, ContDiffAt ℂ 1 (fun e => g e i) e₀)
@@ -389,10 +382,8 @@ theorem contDiffAt_eval₂_deh {E ι : Type*} [NormedAddCommGroup E] [NormedSpac
     (ht : ContDiffAt ℂ 1 t e₀) (h0 : g e₀ i₀ ≠ 0) (H : Polynomial (MvPolynomial ι ℤ)) :
     ContDiffAt ℂ 1 (fun e => H.eval₂ (deh (g e) i₀) (t e)) e₀ := by
   refine Polynomial.induction_on' H (fun p q hp hq => ?_) (fun n a => ?_)
-  · simp only [Polynomial.eval₂_add]
-    exact hp.add hq
-  · simp only [Polynomial.eval₂_monomial]
-    exact (contDiffAt_deh g e₀ i₀ hg h0 a).mul (ht.pow n)
+  · simpa only [Polynomial.eval₂_add] using hp.add hq
+  · simpa only [Polynomial.eval₂_monomial] using (contDiffAt_deh g e₀ i₀ hg h0 a).mul (ht.pow n)
 
 theorem differentiableAt_eval₂_deh {E ι : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     (g : E → ι → ℂ) (t : E → ℂ) (e₀ : E) (i₀ : ι) (hg : ∀ i, ContDiffAt ℂ 1 (fun e => g e i) e₀)
@@ -454,8 +445,7 @@ theorem Gen.exists_section (hx0 : x (e 0) ≠ 0) {W : Set (Fin (D + 1) → ℂ)}
     simp only [Gen.zOf, Gen.evQ, div_eq_mul_inv]
     exact ((hproj w' 0).differentiableAt one_ne_zero).mul hC
   · show G.zOf w (τ w) = z
-    rw [hτw']
-    exact hzeq
+    rwa [hτw']
   · intro w' hw'
     have hg' := hgood w' hw'.2
     have hr : G.P.eval₂ (deh w' 0) (τ w') = 0 := (hτf w' hw'.1).trans hroot

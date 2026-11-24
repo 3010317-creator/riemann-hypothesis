@@ -82,8 +82,7 @@ variable {E F : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteD
 
 private lemma le_of_forall_nat_mul_le_mul_add {a b K : ℝ}
     (h : ∀ n : ℕ, 0 < n → (n : ℝ) * a ≤ n * b + K) : a ≤ b := by
-  by_contra hab
-  push Not at hab
+  by_contra! hab
   have hpos : 0 < a - b := sub_pos.mpr hab
   obtain ⟨n, hn⟩ := exists_nat_gt (K / (a - b))
   have h1 := h (n + 1) n.succ_pos
@@ -160,8 +159,7 @@ theorem rank_range_eq_and_degree_le {G : Type*} [AddCommGroup G] (α : G →+ E)
       Formalism.F.deg (LinearMap.range β.toIntLinearMap) := by
   have hker : LinearMap.ker α.toIntLinearMap = LinearMap.ker β.toIntLinearMap := by
     ext g
-    simp only [LinearMap.mem_ker]
-    exact ⟨hαβ g, hβα g⟩
+    simpa only [LinearMap.mem_ker] using ⟨hαβ g, hβα g⟩
   let e : LinearMap.range α.toIntLinearMap ≃ₗ[ℤ] LinearMap.range β.toIntLinearMap :=
     (α.toIntLinearMap.quotKerEquivRange.symm.trans (Submodule.quotEquivOfEq _ _ hker)).trans
       β.toIntLinearMap.quotKerEquivRange
@@ -175,8 +173,7 @@ theorem rank_range_eq_and_degree_le {G : Type*} [AddCommGroup G] (α : G →+ E)
     rintro ⟨_, g, rfl⟩
     have h1 := he g
     have h2 := h g
-    rw [← h1] at h2
-    exact h2
+    rwa [← h1] at h2
   have hrk : Module.finrank ℤ (LinearMap.range α.toIntLinearMap) =
       Module.finrank ℤ (LinearMap.range β.toIntLinearMap) := e.finrank_eq
   refine ⟨by simp only [Formalism.F.rk]; exact hrk.symm, ?_⟩
@@ -217,8 +214,7 @@ theorem norm_starProjection_le {G : Type*} [AddCommGroup G] (α : G →+ E) (β 
     have ha : α g = 0 := by
       have h1 := h g
       rw [hb g, norm_zero] at h1
-      have h2 := norm_nonneg (α g)
-      exact norm_eq_zero.mp (le_antisymm (by nlinarith) h2)
+      exact norm_eq_zero.mp (le_antisymm (by nlinarith) (norm_nonneg (α g)))
     rw [hb g, ha, map_zero, map_zero, norm_zero, norm_zero, mul_zero]
   push Not at hC
   have hw : α g - (span ℝ (α '' S))ᗮ.starProjection (α g) ∈ span ℝ (α '' S) := by
@@ -233,8 +229,7 @@ theorem norm_starProjection_le {G : Type*} [AddCommGroup G] (α : G →+ E) (β 
   choose s hsS hsα using hs
   have hrep : ∑ i, c i • α (s i) =
       α g - (span ℝ (α '' S))ᗮ.starProjection (α g) := by
-    simp only [hsα]
-    exact hf
+    simpa only [hsα] using hf
   apply le_of_forall_nat_mul_le_mul_add (K := C * ∑ i, ‖α (s i)‖)
   intro k _
   have hnn : (0 : ℝ) ≤ k := k.cast_nonneg
@@ -327,8 +322,7 @@ private theorem slopeIneq_of_lemma {R V W E F : Type*} [Ring R] [AddCommGroup V]
   have hj : ∀ v, v ∈ N ↔ ∃ g, j g = v := by
     intro v
     constructor
-    · intro hv
-      exact ⟨⟨⟨v, hNL hv⟩, hv⟩, rfl⟩
+    · exact fun hv => ⟨⟨⟨v, hNL hv⟩, hv⟩, rfl⟩
     · rintro ⟨g, rfl⟩
       exact g.2
   have hj' : ∀ w, w ∈ N' ↔ ∃ g, j' g = w := by
@@ -361,8 +355,7 @@ private theorem slopeIneq_of_lemma {R V W E F : Type*} [Ring R] [AddCommGroup V]
   have hR := rank_range_eq_and_degree_le (ρ.comp j) (ρ'.comp j')
     (fun g hg => by rw [hz g hg, map_zero])
     (fun g hg => by rw [hz' g hg, map_zero]) C hC (fun g => hφC (g : L))
-  rw [eA, eB] at hR
-  exact hR
+  rwa [eA, eB] at hR
 
 theorem slopeIneq_of (hmV : MuChar.{uR, uV, uE}) (hmW : MuChar.{uR, uW, uF})
     (hs : SatR.{uR, uW, uF}) (hbV : SatBasic.{uR, uV, uE}) (hbW : SatBasic.{uR, uW, uF}) :
@@ -395,14 +388,12 @@ theorem slopeIneq_of (hmV : MuChar.{uR, uV, uE}) (hmW : MuChar.{uR, uW, uF})
       intro h0
       apply hφ0
       ext x
-      have h1 := (Submodule.eq_bot_iff Im).1 h0 _ (hImmem x)
-      simpa using h1
+      simpa using (Submodule.eq_bot_iff Im).1 h0 _ (hImmem x)
     have hM0 : M ≠ ⊥ := by
       intro h0
       apply hIm0
       rw [Submodule.eq_bot_iff]
-      intro w hw
-      exact (Submodule.eq_bot_iff M).1 h0 w (hImM hw)
+      exact fun w hw => (Submodule.eq_bot_iff M).1 h0 w (hImM hw)
     have hL0 : L ≠ ⊥ := by
       intro h0
       apply hφ0
@@ -428,8 +419,7 @@ theorem slopeIneq_of (hmV : MuChar.{uR, uV, uE}) (hmW : MuChar.{uR, uW, uF})
           have hxg' : x = g := Subtype.ext hxg
           subst hxg'
           exact hx
-        · intro h
-          exact ⟨g, h, rfl⟩
+        · exact fun h => ⟨g, h, rfl⟩
       have hNL : N ≤ L := by
         rw [hNdef]; rintro _ ⟨x, _, rfl⟩; exact x.2
       have hkey : ∀ g : L, ρ' (φ g : W) ∈ span ℝ (zl ρ' N'' : Set F) → (g : V) ∈ N := by
@@ -437,8 +427,7 @@ theorem slopeIneq_of (hmV : MuChar.{uR, uV, uE}) (hmW : MuChar.{uR, uW, uF})
         have h4 := sp.1.2 _ (zmem (hImmem g)) hg
         obtain ⟨w, hw, hwg⟩ := h4
         have h5 : w = (φ g : W) := hM.1 (hImM (h2 hw)) (φ g).2 hwg
-        rw [hNmem, ← h5]
-        exact hw
+        rwa [hNmem, ← h5]
       let α0 : L →+ E := ρ.comp L.subtype.toAddMonoidHom
       let β0 : L →+ F := ρ'.comp (M.subtype ∘ₗ φ).toAddMonoidHom
       have hαS : α0 '' {g : L | (g : V) ∈ N} = (zl ρ N : Set E) := by
@@ -449,8 +438,7 @@ theorem slopeIneq_of (hmV : MuChar.{uR, uV, uE}) (hmW : MuChar.{uR, uW, uF})
         · rintro ⟨v, hv, rfl⟩
           exact ⟨⟨v, hNL hv⟩, hv, rfl⟩
       have hSU : ∀ s ∈ {g : L | (g : V) ∈ N}, β0 s ∈ span ℝ (zl ρ' N'' : Set F) := by
-        intro s hs'
-        exact Submodule.subset_span (zmem ((hNmem s).1 hs'))
+        exact fun s hs' => Submodule.subset_span (zmem ((hNmem s).1 hs'))
       have hproj : ∀ g : L, ‖(span ℝ (zl ρ' N'' : Set F))ᗮ.starProjection (β0 g)‖ ≤
           C * ‖(span ℝ (zl ρ N : Set E))ᗮ.starProjection (α0 g)‖ := by
         intro g
@@ -544,8 +532,7 @@ theorem slopeIneq_of (hmV : MuChar.{uR, uV, uE}) (hmW : MuChar.{uR, uW, uF})
       have h1 : φ ⟨v, hv⟩ = φ 0 := by
         rw [map_zero]
         exact Subtype.ext ((Submodule.eq_bot_iff M).1 h0 _ (φ ⟨v, hv⟩).2)
-      have h2 := congrArg Subtype.val (hinj h1)
-      simpa using h2
+      simpa using congrArg Subtype.val (hinj h1)
     refine ((hmV R V E ρ L hL hL0).1 _).2 ?_
     intro N hN
     obtain ⟨N', hN'mem⟩ : ∃ N' : Submodule R W,
@@ -721,8 +708,7 @@ theorem slopeIneqMean_of (h1 : Twist) (h2 : PlLat) (h3 : SlopeIneq.{0, 0, 0, 0, 
     intro N hN hN0
     have := (h1 K W κ b' X' c hX' hc N hN).2.1 hN0
     rw [ht0, add_zero, add_zero] at this
-    rw [hX'']
-    exact this
+    rwa [hX'']
   have hC : 0 < Real.exp s := Real.exp_pos s
   have hbound : ∀ x : V,
       ‖Formalism.HermitianLatticesTheory.realize b' X'' (φ x)‖ ≤ Real.exp s * ‖Formalism.HermitianLatticesTheory.realize b X x‖ := by
@@ -747,8 +733,7 @@ theorem slopeIneqMean_of (h1 : Twist) (h2 : PlLat) (h3 : SlopeIneq.{0, 0, 0, 0, 
   have hAlat := (h2 K V ι b X hX A hA).1
   have hA0 : A ≠ ⊥ := by
     rintro rfl
-    apply hφA
-    exact Submodule.map_bot _
+    exact hφA (Submodule.map_bot _)
   have key : ∀ M : Submodule (𝓞 K) W, M.FG → A.map (φ.restrictScalars (𝓞 K)) ≤ M →
       (muMin (Formalism.HermitianLatticesTheory.realize b X) A - s ≤
           muMin (Formalism.HermitianLatticesTheory.realize b' X'') (A.map (φ.restrictScalars (𝓞 K))) ∧

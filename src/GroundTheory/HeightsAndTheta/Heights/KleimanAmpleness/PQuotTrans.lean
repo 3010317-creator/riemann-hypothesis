@@ -27,10 +27,8 @@ theorem subsingleton_H_one_iff :
   unfold Cech.H
   rw [Submodule.Quotient.subsingleton_iff, Submodule.comap_subtype_eq_top]
   constructor
-  · intro h z hz
-    exact h (LinearMap.mem_ker.mpr hz)
-  · intro h z hz
-    exact h z (LinearMap.mem_ker.mp hz)
+  · exact fun h z hz => h (LinearMap.mem_ker.mpr hz)
+  · exact fun h z hz => h z (LinearMap.mem_ker.mp hz)
 
 theorem sgn_mul_sgn_erase {J : Finset (Fin n)} {j k : Fin n} (hj : j ∈ J) (hk : k ∈ J) (hjk : j ≠ k) :
     Cech.sgn J j * Cech.sgn (J.erase j) k = -(Cech.sgn J k * Cech.sgn (J.erase k) j) := by

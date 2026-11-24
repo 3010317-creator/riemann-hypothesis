@@ -90,12 +90,10 @@ theorem exists_int_near (v : HeightOneSpectrum (𝓞 F)) (a w : v.adicCompletion
           {x | Valued.v.restrict x < Valued.v.restrict w} := by
       ext y
       exact (Valuation.restrict_lt_iff (R := v.adicCompletion F) Valued.v).symm
-    rw [e]
-    exact h
+    rwa [e]
   have hs : {y : v.adicCompletion F | Valued.v (y - a) < Valued.v w} ∈ nhds a := by
     refine hU.mem_nhds ?_
-    simp only [Set.mem_setOf_eq, sub_self, map_zero]
-    exact zero_lt_iff.mpr hw0
+    simpa only [Set.mem_setOf_eq, sub_self, map_zero] using zero_lt_iff.mpr hw0
   obtain ⟨k, hk⟩ := (denseRange_algebraMap F v).mem_nhds hs
   simp only [Set.mem_setOf_eq] at hk
   have hak : Valued.v (a - algebraMap F (v.adicCompletion F) k) < Valued.v w := by

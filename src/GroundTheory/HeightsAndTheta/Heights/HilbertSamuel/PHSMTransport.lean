@@ -109,8 +109,7 @@ theorem dirD_X (z w : J → ℂ) (n : J) : dirD z w (X n) = w n := by
 theorem dirD_sum (z w : J → ℂ) {α : Type} (s : Finset α) (f : α → MvPolynomial J ℂ) :
     dirD z w (∑ a ∈ s, f a) = ∑ a ∈ s, dirD z w (f a) := by
 
-  simp only [dirD, map_sum, Finset.sum_mul]
-  exact Finset.sum_comm
+  simpa only [dirD, map_sum, Finset.sum_mul] using Finset.sum_comm
 
 theorem dirD_subC (M : J → J → ℤ) (z w : J → ℂ) (h : MvPolynomial J ℂ) :
     dirD z w (subC M h) = dirD (intAct M z) (intAct M w) h := by
@@ -241,8 +240,7 @@ theorem fderiv2_comp (φ : (J → ℂ) → ℝ) (L : (J → ℂ) →L[ℂ] (J �
     have hd : DifferentiableAt ℝ φ (Lr y) :=
       (hφ.contDiffAt (hU.mem_nhds hy)).differentiableAt (by norm_num)
     have := fderiv_fun_comp (𝕜 := ℝ) (g := φ) (f := ⇑Lr) y hd Lr.differentiableAt
-    rw [Lr.fderiv] at this
-    exact this
+    rwa [Lr.fderiv] at this
   rw [h1.fderiv_eq]
   have hd2 : HasFDerivAt (fderiv ℝ φ) (fderiv ℝ (fderiv ℝ φ) (Lr z)) (Lr z) := by
     have := (hφ.contDiffAt (hU.mem_nhds hz)).fderiv_right (m := 1) (by norm_num)
@@ -303,8 +301,7 @@ theorem blk_isMultiHomog_iff (g : MRing (GlobalTheory κ)) (a : Unit → ℕ) :
     have h1 : Finsupp.degree s = a () := by
       rw [← hdeg]
       exact h s (mem_support_iff.mpr hs) ()
-    rw [Finsupp.degree_eq_weight_one] at h1
-    exact h1
+    rwa [Finsupp.degree_eq_weight_one] at h1
   · intro h s hs k
     have h1 : Finsupp.degree s = a () := by
       rw [Finsupp.degree_eq_weight_one]
@@ -378,8 +375,7 @@ theorem holo_tr : ∀ x p, R.A.HoloOn (R.U x) (fun y => matActC A (R.lift x y) p
   show AnalyticOnNhd ℂ (fun u => ∑ q, (A p q : ℂ) * R.lift x ((R.A.chart j).symm u) q) _
   have := Finset.analyticOnNhd_sum (f := fun q u => (A p q : ℂ) * R.lift x ((R.A.chart j).symm u) q)
     Finset.univ fun q _ => analyticOnNhd_const.mul (R.holo x q j)
-  rw [Finset.sum_fn] at this
-  exact this
+  rwa [Finset.sum_fn] at this
 
 theorem mem_tr (hP : ∀ z, matActC A z ∈ mcPts (ι := GlobalTheory κ) P' ↔ z ∈ mcPts (ι := GlobalTheory κ) P) :
     ∀ x, ∀ y ∈ R.U x, matActC A (R.lift x y) ∈ mcPts (ι := GlobalTheory κ) P' :=
@@ -474,8 +470,7 @@ theorem semipos_tr (d : HSMDatum D Ω κ) {B B' : Matrix (Ix κ) (Ix κ) ℚ} (h
   have hz0 : z ≠ 0 := (blk_ne_zero_iff z).1 hz.1
   have hz' : matActC B' z ∈ mcPts (ι := GlobalTheory κ) (coordIdeal ℤ d.x) := by
     rw [mem_mcPts_iff_pts, ← pts_matAct_gen d.x B hB, ← mem_mcPts_iff_pts]
-    rw [show matActC B (matActC B' z) = z from matAct_matAct hBB' z]
-    exact hz
+    rwa [show matActC B (matActC B' z) = z from matAct_matAct hBB' z]
   have hLz : clmAct M z ∈ mcPts (ι := GlobalTheory κ) (coordIdeal ℤ d.x) := by
     rw [clmAct_apply, intAct_eqC hM]
     exact mcPts_smul (isMultiHomogIdeal_coordIdeal d.x) (fun _ => (c : ℂ)) (fun _ => hc') hz'
@@ -487,8 +482,7 @@ theorem semipos_tr (d : HSMDatum D Ω κ) {B B' : Matrix (Ix κ) (Ix κ) ℚ} (h
     change dirD z w (map (Int.castRingHom ℂ) (subZ M g)) = 0 at this
     rw [map_subZ, dirD_subC] at this
     show dirD (clmAct M z) (clmAct M w) (map (Int.castRingHom ℂ) g) = 0
-    rw [clmAct_apply, clmAct_apply]
-    exact this
+    rwa [clmAct_apply, clmAct_apply]
   have hsem := d.semipos.2 _ hLz _ htan
   have heq : (fun y => Real.log ((HermLine.ofCone (metricTr d.m B' hA)).h y)) =ᶠ[𝓝 z]
       fun y => Real.log (d.m.ρ (clmAct M y)) - Real.log c := by
@@ -501,8 +495,7 @@ theorem semipos_tr (d : HSMDatum D Ω κ) {B B' : Matrix (Ix κ) (Ix κ) ℚ} (h
   have hcomp := leviForm_comp (fun u => Real.log (d.m.ρ u)) (clmAct M) isOpen_ne (log_contDiffOn d.m d.smooth)
     ((blk_ne_zero_iff _).1 hLz.1) w
   beta_reduce at hcomp
-  rw [leviForm_congr heq, leviForm_sub_const, hcomp]
-  exact hsem
+  rwa [leviForm_congr heq, leviForm_sub_const, hcomp]
 
 theorem homog_tr (d : HSMDatum D Ω κ) (M : Ix κ → Ix κ → ℤ) :
     IsMultiHomogIdeal (ι := GlobalTheory κ) (d.J.map (subZ M)) := by
@@ -518,8 +511,7 @@ theorem nondeg_tr (d : HSMDatum D Ω κ) {B B' : Matrix (Ix κ) (Ix κ) ℚ} (hB
     ¬ d.J.map (subZ M) ≤ coordIdeal ℤ (matAct B d.x) := by
   intro hle
   apply d.R.nondeg
-  intro g hg
-  exact (subZ_mem_coordIdeal_iff hB'B hc hM d.x g).1 (hle (Ideal.mem_map_of_mem _ hg))
+  exact fun g hg => (subZ_mem_coordIdeal_iff hB'B hc hM d.x g).1 (hle (Ideal.mem_map_of_mem _ hg))
 
 theorem matActC_mem_mcPts_iff (d : HSMDatum D Ω κ) {B : Matrix (Ix κ) (Ix κ) ℚ} (hB : IsInvMat B) (z : Ix κ → ℂ) :
     matActC B z ∈ mcPts (ι := GlobalTheory κ) (coordIdeal ℤ (matAct B d.x)) ↔ z ∈ mcPts (ι := GlobalTheory κ) (coordIdeal ℤ d.x) := by

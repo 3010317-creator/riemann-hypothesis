@@ -70,8 +70,7 @@ theorem GramDetSandwich.loewner_inv {N : ℕ} (hN : 0 < N) (H : Matrix (Fin N) (
       apply inv_eq_left_inv
       rw [smul_mul_smul_comm, Matrix.one_mul, ← Complex.ofReal_mul, inv_mul_cancel₀ hM.ne',
         Complex.ofReal_one, one_smul]
-    rw [hinv] at this
-    exact this
+    rwa [hinv] at this
   · have hpos : IsStrictlyPositive ((c : ℂ) • (1 : Matrix (Fin N) (Fin N) ℂ)) :=
       (PosDef.one.smul (by exact_mod_cast hc)).isStrictlyPositive
     have hle : (c : ℂ) • (1 : Matrix (Fin N) (Fin N) ℂ) ≤ H⁻¹ := h1
@@ -81,8 +80,7 @@ theorem GramDetSandwich.loewner_inv {N : ℕ} (hN : 0 < N) (H : Matrix (Fin N) (
       apply inv_eq_left_inv
       rw [smul_mul_smul_comm, Matrix.one_mul, ← Complex.ofReal_mul, inv_mul_cancel₀ hc.ne',
         Complex.ofReal_one, one_smul]
-    rw [hinv] at this
-    exact this
+    rwa [hinv] at this
 
 theorem GramDetSandwich.re_det_ofReal_smul {k : ℕ} (t : ℝ) (X : Matrix (Fin k) (Fin k) ℂ) :
     ((t : ℂ) • X).det.re = t ^ k * X.det.re := by

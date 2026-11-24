@@ -187,7 +187,6 @@ theorem geo_X_X (F : FlagG S r T) (x y : S.V) (hx : x ∈ F.X) (hy : y ∈ F.X) 
   simp [key]
 
 theorem geo_fvec_perp (F : FlagG S r T) (p : Fin (r + 1)) : F.fvec p ∈ perpS S F.X := by
-  show ∀ x ∈ F.X, S.hT x (F.fvec p) = 0
   exact fun x hx => geo_X_fvec F x hx p
 
 theorem geo_coefX (F : FlagG S r T) (a : Fin r) (c : E) (y : S.V) (hy : y ∈ F.Xa a.val) :
@@ -332,8 +331,7 @@ theorem GeoDec.symm {F : FlagG S r T} {F' : FlagG S r T'} {hj : j ≤ r + 1} {A 
   exact ⟨β, α, by rw [h1, add_comm], h3, h2⟩
 
 theorem geo_img_mem (F : FlagG S r T) (hj : j ≤ r + 1) (A : Matrix (Fin j) (Fin j) E) (hA : StrictUp A) (a : Fin j) :
-    geoImg F hj A a ∈ F.Xa a.val := by
-  exact geo_W_mem hj F A hA a
+    geoImg F hj A a ∈ F.Xa a.val := geo_W_mem hj F A hA a
 
 theorem geometric_decomposition_maps_perp_into_flag (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1) (A A' : Matrix (Fin j) (Fin j) E)
     (hA : StrictUp A) (hA' : StrictUp A') (Y : S.V →ₗ[E] S.V) (hdec : GeoDec F F' hj A A' Y) (H1 : Y ∈ LieU S)
@@ -362,8 +360,7 @@ theorem geometric_decomposition_maps_perp_into_flag (F : FlagG S r T) (F' : Flag
         fun c => geo_X_X F _ _ (hFX a) (hFX c)
       rw [hx' _ (hFX a)] at e
       simp only [hz, zero_mul, Finset.sum_const_zero, zero_add] at e
-      simp only [Matrix.mulVec, dotProduct, Matrix.of_apply, Pi.zero_apply]
-      exact e.symm
+      simpa only [Matrix.mulVec, dotProduct, Matrix.of_apply, Pi.zero_apply] using e.symm
     subst hβ
     simp only [Pi.zero_apply, zero_smul, Finset.sum_const_zero, add_zero] at hYx
     have hmem : Y x ∈ F.Xa (j - 1) := by
@@ -398,14 +395,12 @@ theorem geometric_decomposition_maps_perp_into_flag (F : FlagG S r T) (F' : Flag
       have hpe : F.fvec p = F.fvec (Fin.castLE hj ⟨p.val, hp⟩) := rfl
       have h1 := H1' (F.fvec p) x
       rw [hpe, H2, hx' _ (geo_Xa_le_X F _ (geo_img_mem F hj A hA _)), zero_add] at h1
-      rw [hpe]
-      exact h1
+      rwa [hpe]
     · have hPP : S.hT P P = 0 := geo_X_X F _ _ hP hP
       have hQQ : S.hT Q Q = 0 := geo_X_X F' _ _ hQ hQ
       have hQP : S.hT Q P = 0 := by
         have h5 := hs1
-        rw [hYx, map_add (f := _), LinearMap.add_apply, hPP, zero_add] at h5
-        exact h5
+        rwa [hYx, map_add (f := _), LinearMap.add_apply, hPP, zero_add] at h5
       have hPQ : S.hT P Q = 0 := by
         rw [← S.herm.eq Q P, hQP, map_zero]
       rw [hYx]
@@ -460,8 +455,7 @@ theorem geo_hsk (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1) (A A' :
 theorem geo_Z_det (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1) (h : Dl F F' j ≠ 0) :
     ((Zhat F F').submatrix (Fin.castLE hj) (Fin.castLE hj)).det ≠ 0 := by
   unfold Dl leadMinorE at h
-  rw [dite_eq_left hj] at h
-  exact h
+  rwa [dite_eq_left hj] at h
 
 theorem geo_gram_unit (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1)
     (hcase : (j ≤ r ∧ Dl F F' j ≠ 0) ∨ (j = r + 1 ∧ Gflag F F' ≠ 0)) :
@@ -693,16 +687,13 @@ theorem geo_dec (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1) (A A' :
   intro y
   refine ⟨fun a => geoC (geoV F F' hj) (Sum.inl a) y, fun a => geoC (geoV F F' hj) (Sum.inr a) y, ?_, ?_, ?_⟩
   · have e := geo_Y_apply (geoV F F' hj) (geoW F F' hj A A') y
-    rw [Fintype.sum_sum_type] at e
-    exact e
+    rwa [Fintype.sum_sum_type] at e
   · intro a
     have e := geo_repr (geoV F F' hj) h (Sum.inl a) y
-    rw [Fintype.sum_sum_type] at e
-    exact e
+    rwa [Fintype.sum_sum_type] at e
   · intro a
     have e := geo_repr (geoV F F' hj) h (Sum.inr a) y
-    rw [Fintype.sum_sum_type, add_comm] at e
-    exact e
+    rwa [Fintype.sum_sum_type, add_comm] at e
 
 theorem geo_main (K : Type) [Field K] [Algebra K E] (F : FlagG S r T) (F' : FlagG S r T')
     (han : ∀ y : S.V, (∀ a, S.hT (F.fvec a) y = 0) → S.hT y y = 0 → y ∈ F.X)

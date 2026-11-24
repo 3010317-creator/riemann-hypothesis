@@ -168,8 +168,7 @@ theorem trR_zero : trR P μ e 0 = 0 := by
 theorem trR_add (Φ Ψ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) (hΦ : ∀ ρ, rawR P μ e Φ ρ ∈ MA.smSub P.r P.TT)
     (hΨ : ∀ ρ, rawR P μ e Ψ ρ ∈ MA.smSub P.r P.TT) : trR P μ e (Φ + Ψ) = trR P μ e Φ + trR P μ e Ψ := by
   funext ρ
-  simp only [trR, rawR_add, Pi.add_apply]
-  exact toSm_add P (hΦ ρ) (hΨ ρ)
+  simpa only [trR, rawR_add, Pi.add_apply] using toSm_add P (hΦ ρ) (hΨ ρ)
 
 theorem trR_sub (Φ Ψ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) (hΦ : ∀ ρ, rawR P μ e Φ ρ ∈ MA.smSub P.r P.TT)
     (hΨ : ∀ ρ, rawR P μ e Ψ ρ ∈ MA.smSub P.r P.TT) : trR P μ e (Φ - Ψ) = trR P μ e Φ - trR P μ e Ψ := by
@@ -270,11 +269,9 @@ theorem inv_coordQ_apply (v : M.Var r) (hv : ∀ x ∈ MA.Qset r TT, MA.coordE v
   let w : MA.SmQ r TT := ⟨_, hsm⟩
   have h1 : MA.coordQ (TT := TT) v * w = 1 := by
     apply Subtype.ext; funext q
-    show MA.coordE v q.1 * (MA.coordE v q.1)⁻¹ = 1
     exact mul_inv_cancel₀ (hv q.1 q.2)
   have h2 : w * MA.coordQ (TT := TT) v = 1 := by
     apply Subtype.ext; funext q
-    show (MA.coordE v q.1)⁻¹ * MA.coordE v q.1 = 1
     exact inv_mul_cancel₀ (hv q.1 q.2)
   let u : (MA.SmQ r TT)ˣ := ⟨MA.coordQ v, w, h1, h2⟩
   have hu : (u : MA.SmQ r TT) = MA.coordQ v := rfl

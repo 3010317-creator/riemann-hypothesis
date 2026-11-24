@@ -140,9 +140,7 @@ theorem phiEx (hO : BlockOperatorsProductAdjoint) (hW : BlockWordOperators) (hS 
   have bop : ∀ j, ((bw j).map BGen.op).prod = wdVal (genO g X) (w j) := fun j => by
     simp only [bw, wdVal, List.map_map]
     congr 1
-    apply List.map_congr_left
-    intro p _
-    exact (hl p).2
+    exact List.map_congr_left (fun p _ => (hl p).2)
   let R : J → ℝ := fun j => ((bw j).map fun b => Sum.elim (fun _ => (0 : ℝ)) (fun s => |s.T| + |s.r + B.c|) b).sum
   have hR0 : ∀ j, 0 ≤ R j := fun j => by
     apply List.sum_nonneg

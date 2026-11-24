@@ -131,8 +131,7 @@ theorem bwL_lcInt0 (D : D7) (u : D.what₂.Word) (Tt : Forms0 D u) (i : ℕ) (hi
   apply Submodule.subset_span
   intro x' hx'
   have hglob : ∀ z ∈ clsCrd D u i hi c, z ∈ Formalism.UG.CS.globLat ((Tt.cls i hi h0).y c).1 (Tt.cls i hi h0).lev.Lb := by
-    intro z hz
-    exact ((Tt.cls i hi h0).y_lat c _).1 (Submodule.subset_span ⟨z, hz, rfl⟩)
+    exact fun z hz => ((Tt.cls i hi h0).y_lat c _).1 (Submodule.subset_span ⟨z, hz, rfl⟩)
   have hm : ∀ a ∈ (Tt.cls i hi h0).lev.Lb, ∀ b ∈ (Tt.cls i hi h0).lev.Lb,
       IsIntegral ℤ (((1 : ℤ) : D.host.E) * Formalism.UG.hform (sigD D : D.host.E →+* D.host.E) (gramN D i hi) a b) := by
     intro a ha b hb
@@ -175,8 +174,7 @@ theorem basis_change_mem_elementary (Tt : Forms0 D u) (w : D.what₂.places.Pl) 
     intro a k
     obtain ⟨s, hs, hsL⟩ := bwD_col_loc D u w hw hB' k
     have := bwD_locBasis_int D u w hw τ hB _ s hs (hLk hsL) a
-    rw [bwD_mulVec_col, ← Units.val_mul] at this
-    exact this
+    rwa [bwD_mulVec_col, ← Units.val_mul] at this
   choose sB hsB hsBL using fun k => bwD_col_loc D u w hw hB k
   have hT0 : ∀ k, (sB k : D.host.E) ≠ 0 := fun k => Nat.cast_ne_zero.2 (fun h => hsB k (h ▸ dvd_zero _))
   have htN : ∀ a b, ((D.mem u).A.T : ℂ) * N a b ∈ bwA_Ow D w := by
@@ -184,8 +182,7 @@ theorem basis_change_mem_elementary (Tt : Forms0 D u) (w : D.what₂.places.Pl) 
     have hL : (sB b : D.host.E) • (((D.mem u).A.T : D.host.E) • colB b) ∈ (Lk Tt.atT i hi v c : Set _) := by
       rw [smul_comm]
       have := bwA_T_smul_Ld_mem_Lk D u Tt.atT i hi v c _ (hsBL b)
-      rw [Nat.cast_smul_eq_nsmul, ← Nat.cast_smul_eq_nsmul D.host.E] at this
-      exact this
+      rwa [Nat.cast_smul_eq_nsmul, ← Nat.cast_smul_eq_nsmul D.host.E] at this
     have := bwD_locBasis_int D u w hw τ hB' _ (sB b) (hsB b) hL a
     rw [Matrix.mulVec_smul, Pi.smul_apply, smul_eq_mul, map_mul, map_natCast] at this
     rw [hNa]; exact this
@@ -221,8 +218,7 @@ theorem basis_change_mem_elementary (Tt : Forms0 D u) (w : D.what₂.places.Pl) 
         (((Tt.lv i hi h0).fv_ker v c _).1 (hex k)) a
   obtain ⟨-, -, -, -, hpO, hp0, hdet, htdet, -⟩ := bwD_decomp (bwD_loc_Ow D w) N M _ hMI hNM htN j av hav hcol
   refine ⟨elementary_product_of_column_reduction (bwD_loc_Ow D w) N M hMI hNM j av hav hcol, hpO, hp0, ?_⟩
-  rw [← eq_inv_of_mul_eq_one_left hdet]
-  exact htdet
+  rwa [← eq_inv_of_mul_eq_one_left hdet]
 
 theorem pow_smul_mem_weight_lattice (Tt : Forms0 D u) (w : D.what₂.places.Pl) (hw : OverT D u w) (hs : (D.fm u).seenP w = true)
     (v : (D.mem u).A.vT) (i : ℕ) (hi : i ≤ D.R.m) (h0 : i = 0) (n : ℕ)

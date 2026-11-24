@@ -71,16 +71,14 @@ def V0 (D : RealPlaceData k r Wp Wq) (L : Finset (Fin (r + 2))) : Set (Mat k r) 
 lemma isOpen_big_cell_set (D : RealPlaceData k r Wp Wq) (L : Finset (Fin (r + 2))) : IsOpen (V0 D L) := by
   unfold V0
   refine (isOpen_lt continuous_const (Gf_cont D.z D.z')).inter ?_
-  refine isOpen_biInter_finset (fun l _ => ?_)
-  exact isOpen_ne_fun (Dmin_cont D.z D.z' l) continuous_const
+  exact isOpen_biInter_finset (fun l _ => (isOpen_ne_fun (Dmin_cont D.z D.z' l) continuous_const))
 
 lemma mem_domL (D : RealPlaceData k r Wp Wq) (L : Finset (Fin (r + 2))) (g : Mat k r) :
     g ∈ C6.domL D L ↔ g ∈ GV k r ∧ g ∈ V0 D L := by
   simp only [C6.domL, V0, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
 
 lemma domL_gpos {D : RealPlaceData k r Wp Wq} {L : Finset (Fin (r + 2))} {g : Mat k r} (hg : g ∈ C6.domL D L) :
-    g ∈ GPos D := by
-  exact ⟨hg.1, hg.2.1⟩
+    g ∈ GPos D := ⟨hg.1, hg.2.1⟩
 
 lemma nz_of_domL {D : RealPlaceData k r Wp Wq} {L : Finset (Fin (r + 2))} {g : Mat k r} (hg : g ∈ C6.domL D L)
     {nf : ℕ} {e : CT k r nf × List (Mat k r)} (he : Good L e) :

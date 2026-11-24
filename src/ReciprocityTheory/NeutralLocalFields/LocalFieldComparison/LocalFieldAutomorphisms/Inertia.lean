@@ -81,8 +81,7 @@ theorem cycZ_res (ι : Ω →+* PadicAlgCl p) (l : ℕ) [Fact l.Prime] (σ : GK 
   have := cyclotomicCharacter.spec (L := PadicAlgCl p) l (σ : PadicAlgCl p ≃+* PadicAlgCl p) (ι t) h1
   rw [map_pow]
   change ι (res ι σ t) = _
-  rw [res_spec]
-  exact this
+  rwa [res_spec]
 
 theorem norm_le_one_iff_isIntegral (x : PadicAlgCl p) : ‖x‖ ≤ 1 ↔ IsIntegral (PadicInt.subring p) x := by
   have hint : IsIntegral ℚ_[p] x := (Algebra.IsAlgebraic.isAlgebraic x).isIntegral
@@ -93,8 +92,7 @@ theorem norm_le_one_iff_isIntegral (x : PadicAlgCl p) : ‖x‖ ≤ 1 ↔ IsInte
   · intro hc
     have hl : minpoly ℚ_[p] x ∈ Polynomial.lifts (PadicInt.subring p).subtype := by
       rw [Polynomial.lifts_iff_coeff_lifts]
-      intro n
-      exact ⟨⟨_, hc n⟩, rfl⟩
+      exact fun n => ⟨⟨_, hc n⟩, rfl⟩
     obtain ⟨q, hq, -, hqm⟩ := Polynomial.lifts_and_natDegree_eq_and_monic hl hm
     refine ⟨q, hqm, ?_⟩
     have e : algebraMap (PadicInt.subring p) (PadicAlgCl p) =
@@ -107,8 +105,7 @@ theorem norm_le_one_iff_isIntegral (x : PadicAlgCl p) : ‖x‖ ≤ 1 ↔ IsInte
     have hP : Polynomial.aeval x P = 0 := by
       have e : algebraMap (PadicInt.subring p) (PadicAlgCl p) =
           (algebraMap ℚ_[p] (PadicAlgCl p)).comp (PadicInt.subring p).subtype := rfl
-      rw [Polynomial.aeval_def, Polynomial.eval₂_map, ← e]
-      exact he
+      rwa [Polynomial.aeval_def, Polynomial.eval₂_map, ← e]
     have h1 : spectralNorm ℚ_[p] (PadicAlgCl p) x ≤ spectralValue P :=
       norm_root_le_spectralValue (f := spectralAlgNorm ℚ_[p] (PadicAlgCl p))
         spectralAlgNorm_isPowMul isNonarchimedean_spectralNorm hPm hP

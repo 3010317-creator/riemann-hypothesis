@@ -120,8 +120,7 @@ lemma covA_span (K : Type) [Field K] [NumberField K] (d : ℕ) [Fact d.Prime] (h
         rw [hab]
         simp
       have h2 : IsIntegral ℤ a := by
-        rw [← isIntegral_algebraMap_iff (B := K), ← h1]
-        exact hyint
+        rwa [← isIntegral_algebraMap_iff (B := K), ← h1]
       obtain ⟨z, hz⟩ := IsIntegrallyClosed.isIntegral_iff.mp h2
       refine ⟨2 * z, by simp [← hz], z ^ 2, by simp [← hz]⟩
     · set q : Polynomial ℚ := Polynomial.X ^ 2 - Polynomial.C (2 * a) * Polynomial.X +
@@ -172,8 +171,7 @@ lemma covA_span (K : Type) [Field K] [NumberField K] (d : ℕ) [Fact d.Prime] (h
     have hden : r.den = 1 := by
       have e : (d : ℚ) * (r.num : ℚ) ^ 2 = M * (r.den : ℚ) ^ 2 := by
         have h := hr
-        rw [← Rat.num_div_den r, div_pow, mul_div_assoc', div_eq_iff (by positivity)] at h
-        exact h
+        rwa [← Rat.num_div_den r, div_pow, mul_div_assoc', div_eq_iff (by positivity)] at h
       have e' : (d : ℤ) * r.num ^ 2 = M * (r.den : ℤ) ^ 2 := by exact_mod_cast e
       have hcop : IsCoprime ((r.den : ℤ) ^ 2) (r.num ^ 2) := by
         have h0 : IsCoprime (r.den : ℤ) r.num := by

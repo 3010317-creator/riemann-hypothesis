@@ -147,7 +147,6 @@ theorem avgOver_comp_linearMap (hf : AvgFinite K f) {W' : Type*} [AddCommGroup W
   classical
   have hle : (rightStab f).subgroupOf K ≤ (rightStab fun y => T (f y)).subgroupOf K :=
     fun k hk y => by
-      show T (f (y * (k : G))) = T (f y)
       exact congrArg T (hk y)
   have : ((rightStab f).subgroupOf K).FiniteIndex := ⟨hf⟩
   let _ := Fintype.ofFinite (K ⧸ (rightStab f).subgroupOf K)
@@ -162,8 +161,7 @@ theorem avgOver_comp_mul_left (h x : G) :
     constructor
     · intro H y
       have := H (h⁻¹ * y)
-      simp only [← mul_assoc, mul_inv_cancel, one_mul] at this
-      exact this
+      simpa only [← mul_assoc, mul_inv_cancel, one_mul] using this
     · intro H y
       rw [← mul_assoc, H]
   rw [avgOver, avgOver, avgSub, avgSub, hst]
@@ -230,7 +228,6 @@ theorem avgOver_add {g : G → W} (hf : AvgFinite K f) (hg : AvgFinite K g) :
   have h1 : S ≤ (rightStab f).subgroupOf K := fun k hk => (Subgroup.mem_inf.1 hk).1
   have h2 : S ≤ (rightStab g).subgroupOf K := fun k hk => (Subgroup.mem_inf.1 hk).2
   have h3 : S ≤ (rightStab (f + g)).subgroupOf K := fun k hk y => by
-    show f (y * (k : G)) + g (y * (k : G)) = f y + g y
     exact congrArg₂ (· + ·) ((Subgroup.mem_inf.1 hk).1 y) ((Subgroup.mem_inf.1 hk).2 y)
   have : S.FiniteIndex := ⟨hSi⟩
   let _ := Fintype.ofFinite (K ⧸ S)
@@ -377,33 +374,18 @@ theorem relVol_eq_relIndex_mul {K₀ K L : Subgroup G} (hLK : L ≤ K) (hL : L.r
     have a := Subgroup.relIndex_mul_relIndex _ _ _ (inf_le_left : L ⊓ K₀ ≤ L) hLK
     have b := Subgroup.relIndex_mul_relIndex _ _ _ (inf_le_inf_right K₀ hLK)
       (inf_le_left : K ⊓ K₀ ≤ K)
-    rw [Subgroup.inf_relIndex_left] at a
-    rw [Subgroup.inf_relIndex_left] at b
+    rw [Subgroup.inf_relIndex_left] at a b
     rw [a, ← b]
   have E2 : (L ⊓ K₀).relIndex (K ⊓ K₀) * K.relIndex K₀ = L.relIndex K₀ := by
     have b := Subgroup.relIndex_mul_relIndex _ _ _ (inf_le_inf_right K₀ hLK)
       (inf_le_right : K ⊓ K₀ ≤ K₀)
-    rw [Subgroup.inf_relIndex_right, Subgroup.inf_relIndex_right] at b
-    exact b
-  have hc : (L ⊓ K₀).relIndex (K ⊓ K₀) ≠ 0 := fun h => hL (by rw [← E2, h, zero_mul])
+    rwa [Subgroup.inf_relIndex_right, Subgroup.inf_relIndex_right] at b
   have hK : K.relIndex K₀ ≠ 0 := fun h => hL (by rw [← E2, h, mul_zero])
   unfold relVol
-  have hc' : ((L ⊓ K₀).relIndex (K ⊓ K₀) : ℝ) ≠ 0 := Nat.cast_ne_zero.2 hc
-  have hK' : (K.relIndex K₀ : ℝ) ≠ 0 := Nat.cast_ne_zero.2 hK
-  have hL' : (L.relIndex K₀ : ℝ) ≠ 0 := Nat.cast_ne_zero.2 hL
-  have E1' : (K₀.relIndex L : ℝ) * L.relIndex K = (L ⊓ K₀).relIndex (K ⊓ K₀) * K₀.relIndex K := by
-    exact_mod_cast E1
-  have E2' : ((L ⊓ K₀).relIndex (K ⊓ K₀) : ℝ) * K.relIndex K₀ = L.relIndex K₀ := by
-    exact_mod_cast E2
-  have key : (L.relIndex K : ℝ) * ((K₀.relIndex L : ℝ) / (L.relIndex K₀)) =
-      (K₀.relIndex K : ℝ) / (K.relIndex K₀) := by
-    calc (L.relIndex K : ℝ) * ((K₀.relIndex L : ℝ) / (L.relIndex K₀))
-        = ((K₀.relIndex L : ℝ) * L.relIndex K) / (L.relIndex K₀) := by ring
-      _ = (((L ⊓ K₀).relIndex (K ⊓ K₀) : ℝ) * K₀.relIndex K) /
-            (((L ⊓ K₀).relIndex (K ⊓ K₀) : ℝ) * K.relIndex K₀) := by rw [E1', E2']
-      _ = (K₀.relIndex K : ℝ) / (K.relIndex K₀) := by
-            rw [mul_div_mul_left _ _ hc']
-  exact key.symm
+  rw [← mul_div_assoc, div_eq_div_iff (Nat.cast_ne_zero.2 hK) (Nat.cast_ne_zero.2 hL)]
+  norm_cast
+  rw [← E2, mul_comm (L.relIndex K), E1]
+  ring
 
 end Volume
 

@@ -250,17 +250,14 @@ theorem colLeR_of_exponent [IsDomain O] [IsDiscreteValuationRing O] (PD : Period
       show (hrep x (hmemH x hx)).choose ∈ Submodule.span O (↑s' : Set (G → T₂.V)) ⊔
         (F.ImF PD ⊓ latticeFiniteCocycles PD T₂.L)
       apply Submodule.mem_sup_left
-      apply Submodule.subset_span
-      refine Finset.mem_image.2 ⟨x, hx, ?_⟩
-      exact hrx x (hmemH x hx)
+      exact Submodule.subset_span (Finset.mem_image.2 ⟨x, hx, hrx x (hmemH x hx)⟩)
     obtain ⟨y, hyN, hyq⟩ := hle hq
     have hyN' : (y : G → T₂.V) ∈ Submodule.span O (↑s' : Set (G → T₂.V)) ⊔
         (F.ImF PD ⊓ latticeFiniteCocycles PD T₂.L) := hyN
     rw [Submodule.mkQ_apply, Submodule.mkQ_apply, Submodule.Quotient.eq] at hyq
     have h2 : (y : G → T₂.V) - c ∈ latticeCoboundaries T₂.L := by simpa using Submodule.mem_comap.1 hyq
     have hd : c - (y : G → T₂.V) ∈ latticeCoboundaries T₂.L := by
-      have h3 := (latticeCoboundaries T₂.L).neg_mem h2
-      simpa using h3
+      simpa using (latticeCoboundaries T₂.L).neg_mem h2
     have hyZ : (y : G → T₂.V) ∈ latticeFiniteCocycles PD T₂.L := hNle hyN'
     have hdI : c - (y : G → T₂.V) ∈ F.ImF PD ⊓ latticeFiniteCocycles PD T₂.L :=
       Submodule.mem_inf.2 ⟨hB hd, (latticeFiniteCocycles PD T₂.L).sub_mem hc hyZ⟩

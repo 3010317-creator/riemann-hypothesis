@@ -103,12 +103,10 @@ theorem ev_good (b : GL (Fin 2) (Af F)) :
     ∀ᶠ w in Filter.cofinite, LK Valued.v (Matrix.GeneralLinearGroup.map (pLoc F w) b) := by
   have h1 : ∀ᶠ w in Filter.cofinite, ∀ i j : Fin 2,
       Valued.v (pLoc F w ((b : Matrix (Fin 2) (Fin 2) (Af F)) i j)) ≤ 1 := by
-    simp only [Filter.eventually_all]
-    exact fun i j => ev_int _
+    simpa only [Filter.eventually_all] using fun i j => ev_int _
   have h2 : ∀ᶠ w in Filter.cofinite, ∀ i j : Fin 2,
       Valued.v (pLoc F w (((b⁻¹ : GL (Fin 2) (Af F)) : Matrix (Fin 2) (Fin 2) (Af F)) i j)) ≤ 1 := by
-    simp only [Filter.eventually_all]
-    exact fun i j => ev_int _
+    simpa only [Filter.eventually_all] using fun i j => ev_int _
   filter_upwards [h1, h2] with w hw hw'
   refine ⟨fun i j => hw i j, fun i j => ?_⟩
   rw [← map_inv]
@@ -132,8 +130,7 @@ theorem iwasawa_decomposition_finite_adeles (S : Finset (HeightOneSpectrum (𝓞
   classical
   induction S using Finset.induction_on with
   | empty =>
-    intro b hb
-    exact ⟨1, b, by simp, fun w => hb w (Finset.notMem_empty w), (one_mul b).symm⟩
+    exact fun b hb => ⟨1, b, by simp, fun w => hb w (Finset.notMem_empty w), (one_mul b).symm⟩
   | insert w S hw ih =>
     intro b hb
     obtain ⟨pw, kw, hpw, hkw, e⟩ := loc_iw Valued.v (Matrix.GeneralLinearGroup.map (pLoc F w) b)
@@ -168,8 +165,7 @@ theorem mem_maximal_compact_of_local (h1 : ∀ g : GF F, g ∈ K0 F ↔ (∀ i j
     (hk : ∀ w, LK Valued.v (Matrix.GeneralLinearGroup.map (pLoc F w) k)) : k ∈ K0 F := by
   refine (h1 k).2 ⟨fun i j => (h2 _).2 fun w => (hk w).1 i j, fun i j => (h2 _).2 fun w => ?_⟩
   have := (hk w).2 i j
-  rw [← map_inv] at this
-  exact this
+  rwa [← map_inv] at this
 
 end Fin
 

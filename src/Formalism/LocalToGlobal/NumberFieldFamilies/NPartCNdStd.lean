@@ -92,8 +92,7 @@ theorem PsiC_inj (hC : PartCompl B) (hL : MtLoc B hC) (i : LocT B) : Function.In
 theorem PsiC_range (hC : PartCompl B) (hL : MtLoc B hC) (i : LocT B) (y : B.V (jOf B i) (wOf B i)) :
     y ∈ NCov.part (hAlg B i) i.2.1 ↔ ∃ z, PsiC B hC hL i z = y := by
   constructor
-  · intro hy
-    exact ⟨(mtEquiv B hC hL i).symm ⟨y, hy⟩, by simp [PsiC]⟩
+  · exact fun hy => ⟨(mtEquiv B hC hL i).symm ⟨y, hy⟩, by simp [PsiC]⟩
   · rintro ⟨z, rfl⟩
     exact ((mtEquiv B hC hL i) z).2
 
@@ -220,8 +219,7 @@ theorem locsFin_of (hs : HeckeStd0 B) (hd : FinDimV B) : LocsFin B := by
 
 theorem tSep (i : LocT B) (x y : XOf B i) (hxy : x ≠ y) :
     ∃ f ∈ TOf B i, (f : XOf B i → OOf B i) x ≠ (f : XOf B i → OOf B i) y := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   apply hxy
   apply Subtype.ext
   refine AlgHom.ext_of_adjoin_eq_top Algebra.adjoin_adjoin_coe_preimage ?_

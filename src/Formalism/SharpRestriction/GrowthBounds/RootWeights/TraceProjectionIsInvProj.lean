@@ -129,8 +129,7 @@ theorem sl2_string_nonvanishing {n : ℕ} {K W : Type*} [Field K] [CharZero K] [
       push_cast
       module
   have hfin : ∃ k, (ρ c a ^ k) y = 0 := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     have hinj : Function.Injective (fun k : ℕ => (nu a : K) - k) := by
       intro i j hij
       simpa using hij
@@ -230,8 +229,7 @@ theorem trace_projection_isInvProj [NeZero n] [CharZero (KK O)] [FiniteDimension
     | one => left; rfl
     | mul x y _ _ hx hy =>
       rcases hy with rfl | ⟨hy1, hy2⟩
-      · rw [mul_one]
-        exact hx
+      · rwa [mul_one]
       · right
         rcases hx with rfl | ⟨hx1, hx2⟩
         · rw [one_mul]

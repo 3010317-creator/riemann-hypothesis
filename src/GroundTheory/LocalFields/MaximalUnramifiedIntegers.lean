@@ -128,9 +128,7 @@ theorem not_isUnit_algebraMap_uniformizer (E : IntermediateField K Ω) {ϖ : �
 
 theorem exists_associated_pow {ϖ : 𝒪[K]} (hϖ : Irreducible ϖ) {r : 𝒪[𝔼]} (hr : r ≠ 0) :
     ∃ n : ℕ, Associated (algebraMap 𝒪[K] 𝒪[𝔼] ϖ ^ n) r := by
-  have hx0 : ((r : 𝔼) : Ω) ≠ 0 := by
-    intro h
-    exact hr (Subtype.ext (Subtype.ext h))
+  have hx0 : ((r : 𝔼) : Ω) ≠ 0 := fun h => hr (Subtype.ext (Subtype.ext h))
   obtain ⟨a, ha, hva⟩ := exists_valuation_eq_algebraMap (r : 𝔼).2 hx0
   have haK : a ∈ 𝒪[K] := by
     rw [Valuation.mem_integer_iff, ← map_one (valuation K), ← valuation_algebraMap_le_iff (G := Ω),
@@ -397,8 +395,7 @@ theorem exists_pow_card_pow_eq_self (y : 𝓀[𝔼]) :
   obtain ⟨x, rfl⟩ := residue_surjective y
   obtain ⟨n, hn, hx⟩ := exists_pow_card_pow_sub_mem_maximalIdeal x
   refine ⟨n, hn, ?_⟩
-  rw [← map_pow, ← sub_eq_zero, ← map_sub, residue_eq_zero_iff]
-  exact hx
+  rwa [← map_pow, ← sub_eq_zero, ← map_sub, residue_eq_zero_iff]
 
 instance isAlgebraic_residueField : Algebra.IsAlgebraic 𝓀[K] 𝓀[𝔼] := by
   refine ⟨fun y ↦ ?_⟩

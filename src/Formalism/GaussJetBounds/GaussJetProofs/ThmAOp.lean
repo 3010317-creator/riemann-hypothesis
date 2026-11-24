@@ -167,8 +167,7 @@ lemma shape_minor {R : Type u} [CommRing R] {J : Type} [Fintype J] [DecidableEq 
     · exact Or.inr hd
     · left
       refine ⟨τ, hinj, ?_, rfl⟩
-      by_contra hno
-      push Not at hno
+      by_contra! hno
       apply hd
       rw [Matrix.det_apply]
       refine Finset.sum_eq_zero fun π _ => ?_
@@ -418,8 +417,7 @@ lemma op_minorProd_shape {K : Type u} [Field K] {d N0 N1 Cn : ℕ} (TT : Finset 
   · have := shape_prod_le (R := K) (rowDeg s k) (rowDeg_zero _ _) (rowDeg_add _ _) _
       (fun c => if 2 ≤ p c then 1 else 0) Finset.univ
       (fun c _ m hm => ((hmin c m hm).2.2.2 hs (hp1 c) k0 hk0).2 k hk) mono hm
-    rw [Finset.card_filter]
-    exact this
+    rwa [Finset.card_filter]
 
 lemma op_prod_shape {K : Type u} [Field K] {d N0 N1 : ℕ} [NeZero d] (TT : Finset (ZMod d))
     (T : ZMod d → Fin N0 → Fin N0 → K) (colN : ZMod d → ℕ) (p : ∀ s, Fin (colN s) → ℕ)
@@ -549,8 +547,7 @@ theorem thmAOp : ThmAOp.{u} := by
             ∑ k ∈ Finset.univ.erase (⟨0, h0⟩ : Fin N0), rowDeg s k κ := by
           refine Finset.sum_congr rfl fun k hk => ?_
           rw [ite_eq_left]
-          refine ⟨rfl, fun hh => ?_⟩
-          exact (Finset.mem_erase.mp hk).1 (Fin.ext hh.2)
+          exact ⟨rfl, fun hh => ((Finset.mem_erase.mp hk).1 (Fin.ext hh.2))⟩
         simp only at hrest ⊢
         rw [hrest, ite_eq_right (by simp [hs])]
         omega
@@ -560,8 +557,7 @@ theorem thmAOp : ThmAOp.{u} := by
     · intro s' _ hs'
       refine Finset.sum_eq_zero fun k _ => ?_
       simp [hs']
-    · intro hh
-      exact absurd (Finset.mem_univ s) hh
+    · exact fun hh => absurd (Finset.mem_univ s) hh
   · intro s0 j
     rw [sum_filter_rows (fun r => spec r = some (s0, j))]
     by_cases hex : ∃ r0, spec r0 = some (s0, j)

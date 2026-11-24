@@ -54,8 +54,7 @@ theorem coeff_eq_zero {y : (Σ k, ι k) → Ω} {r : ℕ} {f : Fin r → MRing �
 
   have hblk : ∀ k, ∃ i, y ⟨k, i⟩ ≠ 0 := by
     intro k
-    by_contra hk
-    push Not at hk
+    by_contra! hk
     obtain ⟨i, hi⟩ := hz₀.1 k
     apply hi
     have hmem : (X ⟨k, i⟩ : MRing ι) ∈ mCoordIdeal y := by
@@ -65,8 +64,7 @@ theorem coeff_eq_zero {y : (Σ k, ι k) → Ω} {r : ℕ} {f : Fin r → MRing �
   choose i₀ hi₀ using hblk
   set u : MRing ι := ∏ k, X ⟨k, i₀ k⟩
   have hu : aeval y u ≠ 0 := by
-    simp only [u, map_prod, aeval_X]
-    exact Finset.prod_ne_zero_iff.2 fun k _ => hi₀ k
+    simpa only [u, map_prod, aeval_X] using Finset.prod_ne_zero_iff.2 fun k _ => hi₀ k
   set b : Fin r → MvPolynomial (Σ k, ι k) ℚ := fun k => map (Int.castRingHom ℚ) (f k * u)
   have hq : LinearIndependent ℚ fun k => aeval y (f k) := (LinearIndependent.iff_fractionRing ℤ ℚ).1 hli
   have hs : LinearIndependent ℚ fun k => aeval y (b k) := by
@@ -186,8 +184,7 @@ theorem gram_posDef (d : HSMBlockDatum D K ι Ω) (n : ℕ) {r : ℕ} (f : Fin r
     rw [star_trivial, blockGram_eq d n f hf, blockGram_eq d n f hf]
     simp only [pairRe_comm d.A n (f l) (f k)]
   · rw [star_trivial]
-    by_contra hle
-    push Not at hle
+    by_contra! hle
     apply ha
     have hz : ∀ z ∈ mcPts (mCoordIdeal d.y),
         ∑ k, ((a k : ℝ) : ℂ) * eval z (map (Int.castRingHom ℂ) (f k)) = 0 := by
@@ -211,8 +208,7 @@ theorem quad_inv_le {r : ℕ} {G : Matrix (Fin r) (Fin r) ℝ} (hG : G.PosDef) {
   have hGa : G *ᵥ a = x := by rw [ha, mulVec_mulVec, mul_nonsing_inv _ hu, one_mulVec]
   have hq : 0 ≤ x ⬝ᵥ a := by
     have := hG.posSemidef.dotProduct_mulVec_nonneg a
-    rw [star_trivial, hGa, dotProduct_comm] at this
-    exact this
+    rwa [star_trivial, hGa, dotProduct_comm] at this
   have h1 := h a
   rw [hGa, dotProduct_comm a x] at h1
   rcases hq.eq_or_lt with h0 | hpos
@@ -362,8 +358,7 @@ theorem count_of_gram {r : ℕ} {G : Matrix (Fin r) (Fin r) ℝ} (hG : G.PosDef)
   have heinj : Function.Injective e := by
     intro m m' h
     have h0 : ∑ k, (m k - m' k) • B k = 0 := by
-      simp only [sub_smul, Finset.sum_sub_distrib]
-      exact sub_eq_zero.2 h
+      simpa only [sub_smul, Finset.sum_sub_distrib] using sub_eq_zero.2 h
     funext k
     exact sub_eq_zero.1 (Fintype.linearIndependent_iff.1 hliZ _ h0 k)
   have hfinP : {m | P m}.Finite := by

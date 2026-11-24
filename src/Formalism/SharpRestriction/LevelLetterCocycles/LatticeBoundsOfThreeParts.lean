@@ -362,8 +362,7 @@ theorem openC_of_steps [NeZero n] (W : LocWach PD LL O v n) (hG : LatticeFiniteC
   haveI := hdvr
   refine ⟨e₀, e0_le_eBd_of_ExpC hset.2.1 hE,
     lengthCount_of_kerChain F (↥s → O) g hg n (finrank LL T₂.V) m _ e₀ ?_ (hK (↥s → O) g hg), hL0⟩
-  rw [Module.finrank_fintype_fun_eq_card, Fintype.card_coe]
-  exact hcard
+  rwa [Module.finrank_fintype_fun_eq_card, Fintype.card_coe]
 
 end Core
 
@@ -378,8 +377,7 @@ theorem openKR_of_steps (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
 
 theorem theorem_of_lifting_steps (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (CA CB CK : ℝ)
     (h10 : adm10 D HW F CA CB CK) (hG : Formalism.MainNotions.LocalTheoryWindows.H1fGeneratorBoundAll D.loc) (hS : localLiftingConditionsGlobal D HW F) :
-    aux₃ D HW F 25 := by
-  exact Theorem_C_of_open D HW F 25 CA CB CK h10 (openKR_of_steps D HW F hG hS)
+    aux₃ D HW F 25 := Theorem_C_of_open D HW F 25 CA CB CK h10 (openKR_of_steps D HW F hG hS)
 
 theorem generator_count_iff (D : D7) : adm19 D ↔ Formalism.MainNotions.LocalTheoryWindows.H1fGeneratorBoundAll D.loc := by
   exact Iff.rfl
@@ -485,8 +483,7 @@ theorem PChain.trans {lenO : ℕ∞} {m : ℕ} {c : ℝ} {A B C : Submodule O FF
     · rintro (h | ⟨x, hx, rfl⟩)
       · exact absurd (Finset.mem_range.1 (hs₁ h)) (by omega)
       · rwa [Nat.add_sub_cancel]
-    · intro h
-      exact Or.inr ⟨i - k₁, h, by omega⟩
+    · exact fun h => Or.inr ⟨i - k₁, h, by omega⟩
   have c1 : g₁.card ≤ k₁ := by simpa using Finset.card_le_card hs₁
   have c2 : g₂.card ≤ k₂ := by simpa using Finset.card_le_card hs₂
   have hc : gen.card = g₁.card + g₂.card := by
@@ -518,8 +515,7 @@ theorem iter_chain {lenO : ℕ∞} {m : ℕ} {c : ℝ} {ι : Type} (P : ι → S
   intro L
   induction L with
   | nil =>
-    intro _ A _
-    exact ⟨A, by simpa using PChain.refl lenO m c A, by simp⟩
+    exact fun _ A _ => ⟨A, by simpa using PChain.refl lenO m c A, by simp⟩
   | cons i L ih =>
     intro hQ A hA
     obtain ⟨B₁, h1, hP1⟩ := hstep i (hQ i (by simp)) A hA
@@ -558,8 +554,7 @@ theorem two_mul_card_evens_le {n : ℕ} [NeZero n] (hn : Even n) (d : ℕ) :
       have := parity_succ hn d c
       simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq]
       omega
-    · intro a _ b _ hab
-      exact add_right_cancel hab
+    · exact fun a _ b _ hab => add_right_cancel hab
   have htot := Finset.card_filter_add_card_filter_not
     (s := (Finset.univ : Finset (ZMod n))) (fun c : ZMod n => (c.val + d) % 2 = 0)
   rw [Finset.card_univ, ZMod.card] at htot

@@ -28,8 +28,7 @@ theorem IntS.mul {f g : MvPowerSeries τ C} (hf : IntS V f) (hg : IntS V g) : In
   intro μ
   rw [MvPowerSeries.coeff_mul]
   refine VF.Ge.sum fun p _ => ?_
-  have hp := (hf p.1).mul (hg p.2)
-  simpa using hp
+  simpa using (hf p.1).mul (hg p.2)
 
 theorem IntS.one : IntS V (1 : MvPowerSeries τ C) := by
   intro μ
@@ -49,8 +48,7 @@ theorem IntS.subst {σ : Type} [Finite σ] {a : σ → MvPowerSeries τ C}
 
 theorem intS_ps {f : PowerSeries C} : IntS V f ↔ ∀ n, V.Ge 0 (PowerSeries.coeff n f) := by
   constructor
-  · intro h n
-    exact h (Finsupp.single () n)
+  · exact fun h n => h (Finsupp.single () n)
   · intro h μ
     have hμ : μ = Finsupp.single () (μ ()) := by
       ext

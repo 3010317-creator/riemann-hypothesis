@@ -66,30 +66,16 @@ theorem stab_of (hJ : IsHermND σ J) (hinv : ∀ x, σ (σ x) = x) {r : ℕ} (P 
     ∀ x ∈ latLoc (E := E) v (ΛX ∪ ΛW ∪ ΛY),
       Matrix.mulVec ((compV v (incAf σ J k) : GL (Fin n) (Fv F v ⊗[F] E)) :
         Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) x ∈ latLoc (E := E) v (ΛX ∪ ΛW ∪ ΛY) := by
-  have hgv := (mem_Kf _ g).1 hg v
-  have hL : latLoc (E := E) v (ΛX ∪ ΛW ∪ ΛY) = Submodule.span (v.adicCompletionIntegers F)
-      (ratV (F := F) (Fv F v) '' ΛX ∪ ratV (F := F) (Fv F v) '' ΛW ∪
-        ratV (F := F) (Fv F v) '' ΛY) := by
-    rw [latLoc, Set.image_union, Set.image_union]
-  have hXfix : ∀ x ∈ ΛX, lin (Af F) σ J k (ratV (F := F) (Af F) x) = ratV (F := F) (Af F) x :=
-    fun x hx => lin_fix_span k P.e (H_fix_e P k hk) _ (ratV_mem_span P.e x (hA.1 x hx))
-  have hYfix : ∀ x ∈ ΛY, lin (Af F) σ J k (ratV (F := F) (Af F) x) = ratV (F := F) (Af F) x :=
-    fun x hx => lin_fix_span k P.f (H_fix_f P k hk) _ (ratV_mem_span P.f x (hA.2.1 x hx))
   intro x hx
-  rw [hL] at hx ⊢
+  simp only [latLoc, Set.image_union] at hx ⊢
   refine Loc.mulVec_span_stable _ _ ?_ x hx
   rintro _ ((⟨l, hl, rfl⟩ | ⟨l, hl, rfl⟩) | ⟨l, hl, rfl⟩)
-  · rw [← phiV_ratV v l, compV_mulVec, hXfix l hl, phiV_ratV]
+  · rw [← phiV_ratV v l, compV_mulVec,
+      lin_fix_span k P.e (H_fix_e P k hk) _ (ratV_mem_span P.e l (hA.1 l hl)), phiV_ratV]
     exact Submodule.subset_span (Or.inl (Or.inl ⟨l, hl, rfl⟩))
-  · have hy : Matrix.mulVec ((compV v (incAf σ J g) : GL (Fin n) (Fv F v ⊗[F] E)) :
-        Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) (ratV (F := F) (Fv F v) l) ∈
-          Submodule.span (v.adicCompletionIntegers F)
-            (ratV (F := F) (Fv F v) '' ΛX ∪ ratV (F := F) (Fv F v) '' ΛW ∪
-              ratV (F := F) (Fv F v) '' ΛY) := by
-      rw [← hL]
-      refine (hgv _).1 ?_
-      rw [hL]
-      exact Submodule.subset_span (Or.inl (Or.inr ⟨l, hl, rfl⟩))
+  · have hy := ((mem_Kf _ g).1 hg v (ratV (F := F) (Fv F v) l)).1
+      (Submodule.subset_span ⟨l, Or.inl (Or.inr hl), rfl⟩)
+    simp only [latLoc, Set.image_union] at hy
     refine Loc.sep (fun a => ratV (F := F) (Fv F v) (P.e a))
       (fun a => ratV (F := F) (Fv F v) (P.f a)) (fun b => covR (Fv F v) σ J (P.e b))
       (fun b => covR (Fv F v) σ J (P.f b)) ?_ ?_ ?_ _ _ _ ?_ ?_ ?_ _ _ ?_ hy ?_
@@ -124,7 +110,8 @@ theorem stab_of (hJ : IsHermND σ J) (hinv : ∀ x, σ (σ x) = x) {r : ℕ} (P 
       apply phiV_span
       rw [← neg_sub]
       exact Submodule.neg_mem _ (hgk l hl)
-  · rw [← phiV_ratV v l, compV_mulVec, hYfix l hl, phiV_ratV]
+  · rw [← phiV_ratV v l, compV_mulVec,
+      lin_fix_span k P.f (H_fix_f P k hk) _ (ratV_mem_span P.f l (hA.2.1 l hl)), phiV_ratV]
     exact Submodule.subset_span (Or.inr ⟨l, hl, rfl⟩)
 
 theorem splitK_level : SplitK F E σ n J := by

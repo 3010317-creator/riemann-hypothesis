@@ -73,11 +73,9 @@ theorem adjoin_eq_top {T : Set (End ℂ M)} (h : IsSimpleUnder T) : Algebra.adjo
       exact this
     rcases h.2 _ hst with h0 | h0
     · left
-      rw [← Submodule.restrictScalars_eq_bot_iff ℂ]
-      exact h0
+      rwa [← Submodule.restrictScalars_eq_bot_iff ℂ]
     · right
-      rw [← Submodule.restrictScalars_eq_top_iff ℂ]
-      exact h0
+      rwa [← Submodule.restrictScalars_eq_top_iff ℂ]
   have hb := IsSimpleModule.algebraMap_end_bijective_of_isAlgClosed ℂ (A := A) (V := M)
   have : Module.Finite (End A M) M := Module.Finite.of_restrictScalars_finite ℂ (End A M) M
   have hsurj := Module.Finite.toModuleEnd_moduleEnd_surjective (R := A) (M := M)

@@ -80,17 +80,14 @@ theorem xKappaOfNF : XKappaOfNF := by
       rw [e1, e2]
   have hG : ∀ x ∈ DomR P.k P.r z z', fnVal P.k P.r z z' 5 x.2 * fnVal P.k P.r z z' 4 x.2 = 1 := by
     intro x hx
-    simp only [fnVal]
-    exact inv_mul_cancel₀ (Complex.ofReal_ne_zero.mpr hx.2.2.ne')
+    simpa only [fnVal] using inv_mul_cancel₀ (Complex.ofReal_ne_zero.mpr hx.2.2.ne')
   have hG' : ∀ x ∈ DomR P.k P.r z z', fnVal P.k P.r z z' 4 x.2 * fnVal P.k P.r z z' 5 x.2 = 1 := by
     intro x hx
-    simp only [fnVal]
-    exact mul_inv_cancel₀ (Complex.ofReal_ne_zero.mpr hx.2.2.ne')
+    simpa only [fnVal] using mul_inv_cancel₀ (Complex.ofReal_ne_zero.mpr hx.2.2.ne')
   have hGinv : L.GGi * L.GG = 1 := by
     rw [hL.2.2.2.2.2.2.2.2.2.2.1, hL.2.2.2.2.2.2.2.2.2.2.2.1]
     refine Prod.ext ?_ ?_
-    · show X.fn 5 * X.fn 4 = 1
-      exact hfn 5 4 hG
+    · exact hfn 5 4 hG
     · show MulOpposite.op (X.fn 5) * MulOpposite.op (X.fn 4) = MulOpposite.op 1
       rw [← MulOpposite.op_mul, hfn 4 5 hG']
   have hGG : L.GG = d.L.GG := hL.2.2.2.2.2.2.2.2.2.2.1.trans hdL.2.2.2.2.2.2.2.2.2.2.1.symm

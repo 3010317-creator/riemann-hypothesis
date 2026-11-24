@@ -103,8 +103,7 @@ theorem mem_fixedModule_frobeniusClosure {A : Type*} [CommGroup A] [MulDistribMu
     [IsDiscreteModule G A] {a : A} :
     a ∈ fixedModule A (frobeniusClosure d L σ) ↔ a ∈ fixedModule A (L ⊓ d.ker) ∧ σ • a = a := by
   constructor
-  · intro ha
-    exact ⟨fixedModule_anti le_frobeniusClosure ha, ha σ mem_frobeniusClosure_self⟩
+  · exact fun ha => ⟨fixedModule_anti le_frobeniusClosure ha, ha σ mem_frobeniusClosure_self⟩
   · rintro ⟨ha, hσa⟩
     have hS : IsClosed (MulAction.stabilizer G a : Set G) :=
       Subgroup.isClosed_of_isOpen _ (IsDiscreteModule.isOpen_stabilizer a)
@@ -135,8 +134,7 @@ theorem frobeniusClosure_inf_ker (hd : Continuous d) (hL : IsOpen (L : Set G))
     simp only [Set.mem_preimage, inv_mul_cancel, hVdef, Set.mem_inter_iff, map_one, toAdd_one]
     exact ⟨U0.one_mem', (multiples M).zero_mem⟩
   have hx' : x ∈ closure ((Subgroup.zpowers σ ⊔ (L ⊓ d.ker) : Subgroup G) : Set G) := by
-    rw [← Subgroup.topologicalClosure_coe]
-    exact hx
+    rwa [← Subgroup.topologicalClosure_coe]
   obtain ⟨h, hhO, hhH⟩ := mem_closure_iff.1 hx' _ hO hxO
   obtain ⟨k, j, hj, rfl⟩ := (mem_zpowers_sup_iff hσ).1 hhH
   obtain ⟨hU, hWm⟩ := hhO
@@ -145,15 +143,13 @@ theorem frobeniusClosure_inf_ker (hd : Continuous d) (hL : IsOpen (L : Set G))
     exact deg_zpow_mul hdσ k hj
   have hdiv : ((M : ℕ) : ℤ) ∣ k * N := by
     have hmem : ((k * N : ℤ) : ℤ̂) ∈ multiples M := by
-      rw [← hdk]
-      exact hWm
+      rwa [← hdk]
     exact (intCast_mem_multiples_iff M.pos).1 hmem
   have htk : (t : ℤ) ∣ k := by
     have h2 : (t : ℤ) * N ∣ k * N := by simpa [hMdef] using hdiv
     exact (mul_dvd_mul_iff_right (by exact_mod_cast hN)).1 h2
   have hσk : σ ^ k ∈ U0.toSubgroup := by
-    rw [← QuotientGroup.eq_one_iff, QuotientGroup.mk_zpow, ← orderOf_dvd_iff_zpow_eq_one]
-    exact htk
+    rwa [← QuotientGroup.eq_one_iff, QuotientGroup.mk_zpow, ← orderOf_dvd_iff_zpow_eq_one]
   refine ⟨?_, (MonoidHom.mem_ker).2 hxk⟩
   have hx_eq : x = σ ^ k * j * (x⁻¹ * (σ ^ k * j))⁻¹ := by group
   rw [hx_eq]
@@ -177,8 +173,7 @@ theorem map_frobeniusClosure (hd : Continuous d)
       rw [deg_zpow_mul hdσ k hj, mem_multiples]
       exact ⟨(k : ℤ̂), by push_cast; rw [nsmul_eq_mul]; ring⟩
     have hx' : x ∈ closure ((Subgroup.zpowers σ ⊔ (L ⊓ d.ker) : Subgroup G) : Set G) := by
-      rw [← Subgroup.topologicalClosure_coe]
-      exact hx
+      rwa [← Subgroup.topologicalClosure_coe]
     exact closure_minimal hsub hcl hx'
   · intro y hy
     have hy' : Multiplicative.toAdd y ∈ multiples N := hy

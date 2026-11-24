@@ -56,12 +56,10 @@ theorem spanIdx_pair {K : Type} [Field K] [NumberField K] {r : ℕ} (j p : Fin r
   set Y := (Submodule.span (𝓞 K) {y}).toAddSubgroup
   have hX0 : X0 ≤ Gj.toAddSubgroup := by
     show Submodule.span (𝓞 K) {x0} ≤ Gj
-    rw [Submodule.span_le, Set.singleton_subset_iff]
-    exact hx0
+    rwa [Submodule.span_le, Set.singleton_subset_iff]
   have hY : Y ≤ Gp.toAddSubgroup := by
     show Submodule.span (𝓞 K) {y} ≤ Gp
-    rw [Submodule.span_le, Set.singleton_subset_iff]
-    exact hy
+    rwa [Submodule.span_le, Set.singleton_subset_iff]
   have key := AddSubgroup.relIndex_mul_relIndex _ _ _ (sup_le_sup_left hY X0)
     (sup_le_sup_right hX0 Gp.toAddSubgroup)
   rw [← key, mul_comm (X0.relIndex _)]

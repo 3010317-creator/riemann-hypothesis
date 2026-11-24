@@ -68,8 +68,7 @@ theorem nfLeib_thChain_rpow (s : ℝ) : ThChain (fun n x => s ^ n * x ^ s) := by
     rw [Real.rpow_sub_one hx.ne', pow_succ]
     ring
   show HasDerivAt (fun y => s ^ n * y ^ s) (s ^ (n + 1) * x ^ s / x) x
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem nfLeib_xD_contDiff (φ : ℝ → ℝ) (hφ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) φ) :
     ∀ n : ℕ, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (xD^[n] φ) := by
@@ -92,8 +91,7 @@ theorem nfLeib_thChain_xD (φ : ℝ → ℝ) (hφ : ContDiff ℝ ((⊤ : ℕ∞)
     show x * deriv (xD^[n] φ) x / x = _
     field_simp
   show HasDerivAt (xD^[n] φ) (xD^[n + 1] φ x / x) x
-  rw [e]
-  exact hd
+  rwa [e]
 
 section cont
 

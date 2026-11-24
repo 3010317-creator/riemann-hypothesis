@@ -1231,8 +1231,7 @@ theorem gamma_q_expansion_of_points [IsDomain O] [IsDiscreteValuationRing O] [Ch
     set r := f %ʷ W.q₀ with hr
     have hdeg : r.degree < ((PD.p - 1 : ℕ) : WithBot ℕ) := by
       have := degree_weierstrassMod_lt f W.q₀
-      rw [hmapQ, order_X_pow, ENat.toNat_natCast] at this
-      exact this
+      rwa [hmapQ, order_X_pow, ENat.toNat_natCast] at this
     have hev : ∀ j, r.eval (xr j) = 0 := by
       intro j
       have hx : xr j ∈ IsLocalRing.maximalIdeal O := Formalism.MainNotions.N.FrobeniusPowerSeries.LTB.mem_max PD.p hlm (hxrr j)
@@ -1525,24 +1524,21 @@ theorem arc_length_three_first_level [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsD
   obtain ⟨cc, hcc⟩ := exists_cyclotomic_char_quotient W hcase hOv hinj
   have hU : Formalism.MainNotions.TruncatedSeriesCountingBounds.JumpsAt W T₁ (c - 1) ((Set.Icc (b₁ : ℤ) (b₁ + S)) ∪ Set.Icc (-(η : ℤ)) η) := by
     have := hJA (c - 1)
-    rw [hup1, ite_eq_left rfl] at this
-    exact this
+    rwa [hup1, ite_eq_left rfl] at this
   have hCONS : ∀ y : W.DD T₁, Formalism.MainNotions.LiftingTheory.InNΔi W T₁ (c - 1) (qA W ^ (Ai + ri) • y) →
       Formalism.MainNotions.LiftingTheory.InNΔi W T₁ (c - 1) (Polynomial.aeval dop₁ (TruncatedCoefficientPoly cc b₁ S η (Ai + ri)) y) := by
     rcases Nat.eq_zero_or_pos (Ai + ri) with h0 | hpos
     · intro y hy
       rw [h0, pow_zero, one_smul] at hy
       have h1 : TruncatedCoefficientPoly cc b₁ S η (Ai + ri) = 1 := by rw [h0]; simp [TruncatedCoefficientPoly, TruncationIndexSet]
-      rw [h1, map_one]
-      exact hy
+      rwa [h1, map_one]
     · refine hC4 hcase T₁ hW₁.1 (c - 1) (Ai + ri) hpos dop₁ hd₁ cc hcc (TruncationIndexSet b₁ S η (Ai + ri))
         (fun τ a j hτ ha hj1 hj2 => ?_)
       have hmem := hU τ hτ a ha
       refine Finset.mem_image.2 ⟨(a, (j : ℤ)), Finset.mem_product.2 ⟨?_,
         Finset.mem_Icc.2 ⟨by dsimp only; exact_mod_cast hj1, by dsimp only; exact_mod_cast hj2⟩⟩, rfl⟩
       simp only [Set.mem_union, Set.mem_Icc] at hmem
-      simp only [winU, Finset.mem_union, Finset.mem_Icc]
-      exact hmem
+      simpa only [winU, Finset.mem_union, Finset.mem_Icc] using hmem
   have hs' : ps W 1 ^ (size (c - 2) + S) ∈ Submonoid.closure {x | ∃ k ≥ 1, x = ps W k} :=
     Submonoid.pow_mem _ (Submonoid.subset_closure (show ps W 1 ∈ {x | ∃ k ≥ 1, x = ps W k} from ⟨1, le_rfl, rfl⟩)) _
 
@@ -1556,9 +1552,7 @@ theorem arc_length_three_first_level [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsD
     have := hT1.2
     generalize (PD.p - 1) * (2 * A.h / (PD.p - 1) + 1) = Z at h1 ⊢
     omega
-  have hM : 1 ≤ A.M PD.p := by
-    show 1 ≤ 2 * A.h / (PD.p - 1) + 1
-    exact Nat.le_add_left _ _
+  have hM : 1 ≤ A.M PD.p := Nat.le_add_left _ _
   have hH2 := arc_length_three_hyp_second W hcase hP9 hP5 A c hlen hW₂.1 Mi' hi' hJ₂ hM1 hM2 hN hM lam hlamγ s₀ hs₀eq
 
   obtain ⟨x₁, hx₁, hmap⟩ := existsLiftMapEqPrimePowSmul W hcase hP9 (c - 1) F hSur hW₁.1 hW₂.1 Ai ri hKA hKr b₁ S η hU hb
@@ -1692,8 +1686,7 @@ theorem arc_length_three_le_valuation_constant_term [NeZero n] [Fintype (K →�
     exact le_antisymm (le_of_le_of_eq (le_add_of_nonneg_right h2) h3) h1
   have hϖ0 : v (algebraMap O LL ϖ) ≠ ⊤ := by
     rw [Ne, AddValuation.top_iff]
-    intro h
-    exact hϖ.ne_zero (hinj (by rw [h, _root_.map_zero]))
+    exact fun h => hϖ.ne_zero (hinj (by rw [h, _root_.map_zero]))
   obtain ⟨d, hd⟩ := WithTop.ne_top_iff_exists.mp hϖ0
   have hvl1 : (((e : ℚ) * d : ℚ) : WithTop ℚ) = 1 := by
     have h := W.v_l

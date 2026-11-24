@@ -37,8 +37,7 @@ theorem mc_gr_unitary (M : GL (Fin X.B.I.n) X.B.I.E) (hM : M ∈ Formalism.UG.UJ
     simp [Matrix.conjTranspose_apply, starRingEnd_apply]
   have hMJ : (M : Matrix (Fin X.B.I.n) (Fin X.B.I.n) X.B.I.E)ᴴ * X.B.I.J *
       (M : Matrix (Fin X.B.I.n) (Fin X.B.I.n) X.B.I.E) = X.B.I.J := by
-    rw [← hc]
-    exact hM
+    rwa [← hc]
   have hJB : JB X = (Bm X)ᴴ * X.B.I.J * Bm X := by
     ext k k'
     unfold JB hE Formalism.UG.hform Bm
@@ -106,8 +105,7 @@ theorem memConjOf_holds : MemConjOf := by
       · rw [e] at h
         simpa using h
       · rw [e] at h
-        have h' := h.neg
-        simpa [neg_mul] using h'
+        simpa [neg_mul] using h.neg
     have hP : ∀ i j, (y.natAbs : X.B.I.E) * Gr X (↑M⁻¹ : Matrix _ _ _) i j ∈ integralClosure ℤ X.B.I.E :=
       fun i j => hint _ (Finset.mem_union_left _ (Finset.mem_image.mpr ⟨(i, j), Finset.mem_univ _, rfl⟩))
     have hQ : ∀ i j, (y.natAbs : X.B.I.E) * Gr X (M : Matrix _ _ _) i j ∈ integralClosure ℤ X.B.I.E :=

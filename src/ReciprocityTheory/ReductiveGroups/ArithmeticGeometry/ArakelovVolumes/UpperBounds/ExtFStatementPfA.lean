@@ -53,8 +53,7 @@ theorem oneF_mem : oneF X ∈ Bor X.Ψ r := by
   refine ⟨?_, fun a c h => ?_⟩
   · show (1 : Matrix (Fin r) (Fin r) ℂ).det ≠ 0
     simp
-  · show (1 : Matrix (Fin r) (Fin r) ℂ) a c = 0
-    exact Matrix.one_apply_ne (ne_of_gt h)
+  · exact Matrix.one_apply_ne (ne_of_gt h)
 
 theorem rmul_oneF (x : Frame X.Ψ r) : rmul x (oneF X) = x := by
   funext τ
@@ -99,7 +98,6 @@ theorem invF_mem {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) : invF X b ∈ Bor X
 
 theorem rmul_invF {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) : rmul b (invF X b) = oneF X := by
   funext τ
-  show mat b τ * (mat b τ)⁻¹ = (1 : Matrix (Fin r) (Fin r) ℂ)
   exact Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.2 (mem_bor_iff'.1 hb τ).1)
 
 theorem diag_mul {b b' : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (hb' : b' ∈ Bor X.Ψ r) (τ : X.Ψ) (i : Fin r) :
@@ -111,8 +109,7 @@ theorem diag_mul {b b' : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (hb' : b' ∈ Bor
     rcases lt_or_gt_of_ne hk with h | h
     · rw [show mat b τ i k = 0 from (mem_bor_iff'.1 hb τ).2 i k h, zero_mul]
     · rw [show mat b' τ k i = 0 from (mem_bor_iff'.1 hb' τ).2 k i h, mul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 theorem bchar_mul (la : Wt X.Ψ r) {b b' : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (hb' : b' ∈ Bor X.Ψ r) :
     bchar la (rmul b b') = bchar la b * bchar la b' := by
@@ -194,7 +191,6 @@ private lemma isOpen_dom_upper_bounds : IsOpen X.dom := by
   · exact isOpen_lt continuous_const (continuous_const.mul (Complex.continuous_re.comp (continuous_dmin' X.Gm τ i)))
 
 theorem isOpen_cell : IsOpen (cell D) := by
-  show IsOpen (X.dom ∩ {x | D.Δ x ≠ 0})
   exact (isOpen_dom_upper_bounds (X := X)).inter (isOpen_ne_fun D.hΔ.continuous continuous_const)
 
 theorem diffOn_prod {ι : Type*} (u : Finset ι) {g : ι → Frame X.Ψ r → ℂ} {s : Set (Frame X.Ψ r)}
@@ -202,8 +198,7 @@ theorem diffOn_prod {ι : Type*} (u : Finset ι) {g : ι → Frame X.Ψ r → �
   classical
   revert h
   refine Finset.induction_on u (fun _ => ?_) (fun a u ha ih h => ?_)
-  · simp only [Finset.prod_empty]
-    exact differentiableOn_const 1
+  · simpa only [Finset.prod_empty] using differentiableOn_const 1
   · simp only [Finset.prod_insert ha]
     exact (h a (Finset.mem_insert_self a u)).mul (ih (fun i hi => h i (Finset.mem_insert_of_mem hi)))
 

@@ -281,8 +281,7 @@ theorem exists_coords {d : ℕ} (b : Fin d → Fin d → K) (hb : LinearIndepend
     hb.span_eq_top_of_card_eq_finrank' (by simp)
   let B := Basis.mk hb (by rw [hsp])
   refine ⟨Matrix.of fun k i => B.repr (f i) k, funext fun i => ?_⟩
-  have h := (B.sum_repr (f i)).symm
-  simpa [B, Basis.mk_apply] using h
+  simpa [B, Basis.mk_apply] using (B.sum_repr (f i)).symm
 
 end Lat
 
@@ -429,8 +428,7 @@ theorem G_finite (hV : ValBasic) (hIC : IdxChange) (hLB : LcvBasis) (hPF : ProdF
       rintro rfl
       exact Formalism.HermitianLatticesTheory.locBasic_hcompl_not_mem (K := K) w1.asIdeal 0 hs
         w1.asIdeal.zero_mem
-    apply (Submodule.smul_mem_iff _ hs0).mp
-    exact Submodule.subset_span (by rwa [algebraMap_smul K])
+    exact (Submodule.smul_mem_iff _ hs0).mp (Submodule.subset_span (by rwa [algebraMap_smul K]))
   choose γ hγ using fun w => exists_coords (e w1) hb (e w)
   have hv0' : ∀ a : K, v0.embedding (star a) = starRingEnd ℂ (v0.embedding a) := hv0
   have hGne : ∀ w, G w ≠ 0 := fun w h => gram_ne XQ hXQ (e w) (he w).1 v0 (by rw [← hG w, h, map_zero])

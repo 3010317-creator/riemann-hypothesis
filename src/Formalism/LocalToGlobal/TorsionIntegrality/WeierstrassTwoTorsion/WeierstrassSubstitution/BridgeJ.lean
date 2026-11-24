@@ -27,14 +27,12 @@ theorem integral_of_coeff {f : K⟦X⟧} (h : ∀ n, coeff n f ∈ Formalism.G.u
     ext
     simp
   have hn := h (n ())
-  rw [e]
-  exact hn
+  rwa [e]
 
 theorem integral_of_mvCoeff {ι : Type} {f : MvPowerSeries ι K}
     (h : ∀ n, MvPowerSeries.coeff n f ∈ Formalism.G.unitBall K) : Formalism.DworkPowerSeriesWeights.Integral f := by
   unfold Formalism.DworkPowerSeriesWeights.Integral
-  intro n
-  exact h n
+  exact fun n => h n
 
 theorem integral_map {ι : Type} (c : MvPowerSeries ι (Formalism.G.unitBall K)) :
     Formalism.DworkPowerSeriesWeights.Integral (MvPowerSeries.map (Formalism.G.unitBall K).subtype c) := by
@@ -58,8 +56,7 @@ open Bridge
 
 theorem bridgeWp_of (h : WpCleared.{0}) : BridgeWp := by
   unfold BridgeWp
-  intro K _ _ W
-  exact h K W
+  exact fun K _ _ W => h K W
 
 theorem bridgeLaw_of (hM : CoeffMem.{0}) (hFL : FglLog.{0}) (hHS : HalfSpec.{0})
     (hHL : HalfLog.{0, 0}) : BridgeLaw := by

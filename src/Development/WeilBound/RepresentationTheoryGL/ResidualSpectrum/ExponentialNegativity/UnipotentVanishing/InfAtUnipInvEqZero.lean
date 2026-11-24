@@ -221,14 +221,11 @@ theorem prod_entrywise_le : ∀ (n r d : ℕ), r ≤ n → ∀ (C β t : ℝ), 0
       ≤ ∏ i : Fin n, ∏ j : Fin n, ((C * (1 + β) ^ d) *
           (if (i : ℕ) < r ∧ r ≤ (j : ℕ) then Real.exp ((d : ℝ) * t) else 1)) := by
     apply Finset.prod_le_prod₀
-    · intro i _
-      exact Finset.prod_nonneg (fun j _ => hnn i j)
+    · exact fun i _ => Finset.prod_nonneg (fun j _ => hnn i j)
     · intro i _
       apply Finset.prod_le_prod₀
-      · intro j _
-        exact hnn i j
-      · intro j _
-        exact factor_le d C β t _ hC hβ ht
+      · exact fun j _ => hnn i j
+      · exact fun j _ => factor_le d C β t _ hC hβ ht
   refine step.trans (le_of_eq ?_)
   simp only [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
   rw [prod_indicator n r hr, ← Real.exp_nat_mul, ← pow_mul]
@@ -237,8 +234,7 @@ theorem prod_entrywise_le : ∀ (n r d : ℕ), r ≤ n → ∀ (C β t : ℝ), 0
   have : (((r * (n - r) : ℕ) : ℝ)) * ((d : ℝ) * t) = (d : ℝ) * ((r : ℝ) * ((n : ℝ) - r)) * t := by
     rw [Nat.cast_mul, Nat.cast_sub hr]
     ring
-  rw [this]
-  rw [hp]
+  rw [this, hp]
 
 end GlobalTheory.CompanionTheory.EntrywiseCount
 end -- clump:auto

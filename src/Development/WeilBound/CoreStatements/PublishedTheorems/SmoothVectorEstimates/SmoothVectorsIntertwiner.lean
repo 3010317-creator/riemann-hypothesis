@@ -208,8 +208,7 @@ theorem smooth_vectors_stable_intertwiner : S2 := by
       have e : (fun M => orb ρ v (lmulL (Matrix.of N) M)) = fun M => ρ hN.unit (orb ρ v M) :=
         funext fun M => orb_lmul ρ v N hN M
       rw [e] at h1
-      have h3 := congrArg (fun D => D Z) (h2.unique h1)
-      simpa [lmulL_apply, rmulL_apply] using h3
+      simpa [lmulL_apply, rmulL_apply] using congrArg (fun D => D Z) (h2.unique h1)
     unfold SmV
     have hc : ContDiffOn ℝ ∞ (fun N => fderiv ℝ (orb ρ v) N (rmulL (Matrix.of Z) N))
         {M : LieI ι a | IsUnit (Matrix.of M)} :=

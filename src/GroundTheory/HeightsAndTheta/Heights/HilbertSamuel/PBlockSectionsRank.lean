@@ -66,8 +66,7 @@ theorem isHomogeneous_of_blockDeg {f : MRing ι} {k₀ : K} {n : ℕ} (hf : IsMu
 theorem isHomogeneous_fwd (k₀ : K) (N : Matrix (ι k₀) (Ix (Fin r)) ℤ) {f : MRing ι} {n : ℕ}
     (hf : IsMultiHomog f (blockDeg k₀ n)) : (fwd k₀ N f).IsHomogeneous n := by
   have := (isHomogeneous_of_blockDeg hf).aeval (blockSubst k₀ N) (isHomogeneous_blockSubst k₀ N)
-  rw [one_mul, aeval_eq_bind₁] at this
-  exact this
+  rwa [one_mul, aeval_eq_bind₁] at this
 
 def wB : (Σ k, ι k) → (K → ℕ) := fun p => Pi.single p.1 1
 
@@ -108,8 +107,7 @@ theorem isMultiHomog_back (k₀ : K) (M : Matrix (Ix (Fin r)) (ι k₀) ℤ) {g 
     simpa [Finsupp.sum] using this
   have hp := IsWeightedHomogeneous.prod d.support (fun j => blockLin k₀ M j ^ d j)
     (fun j => d j • Pi.single k₀ 1) fun j _ => (hbf j).pow (d j)
-  rw [← Finset.sum_smul, hn] at hp
-  exact hp
+  rwa [← Finset.sum_smul, hn] at hp
 
 end Forms
 
@@ -208,8 +206,7 @@ theorem BlockSectionsRank.proof (hRank : RankOfSections.Statement) (hGF : Generi
     congr!
   have := hC n
   rw [hpow] at this
-  rw [hrank, hgd]
-  exact this
+  rwa [hrank, hgd]
 
 end
 

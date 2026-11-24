@@ -78,8 +78,7 @@ lemma mulVec_map_mem (P : Mk k r) (hP : IsUnit P.det) (S : Submodule ℂ (Vk k r
     have h2 : y = w := by
       simpa [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hP, Matrix.one_mulVec] using congrArg (fun v => P⁻¹ *ᵥ v) hyw
     exact h2 ▸ hy
-  · intro hw
-    exact ⟨w, hw, by simp⟩
+  · exact fun hw => ⟨w, hw, by simp⟩
 
 lemma transport (P U : Mk k r) (hP : IsUnit P.det) (w : Vk k r) :
     (U - 1) *ᵥ (P *ᵥ w) = P *ᵥ ((P⁻¹ * U * P - 1) *ᵥ w) := by
@@ -341,8 +340,7 @@ lemma bwd (s : Mk k r) (zH : Vk k r) (hz : Formalism.QuantumDeterminants.inWb k 
     have hms : h *ᵥ (m *ᵥ stdX k r a) = m *ᵥ stdX k r a := by
       have e : m *ᵥ stdX k r a = stdX k r a + (m *ᵥ stdX k r a - stdX k r a) := by abel
       rw [e, Matrix.mulVec_add, hfX a, hfixX _ (supSub_mono a.isLt.le hx)]
-    rw [Matrix.sub_mulVec, Matrix.one_mulVec, ← Matrix.mulVec_mulVec, hms]
-    exact hx
+    rwa [Matrix.sub_mulVec, Matrix.one_mulVec, ← Matrix.mulVec_mulVec, hms]
   · have hy : m *ᵥ zH - zH ∈ supSub k r r := by
       rw [mem_supSub]; intro i hi
       rw [Pi.sub_apply, sub_eq_zero]
@@ -359,8 +357,7 @@ lemma bwd (s : Mk k r) (zH : Vk k r) (hz : Formalism.QuantumDeterminants.inWb k 
     have hmz : h *ᵥ (m *ᵥ zH) = m *ᵥ zH := by
       have e : m *ᵥ zH = zH + (m *ᵥ zH - zH) := by abel
       rw [e, Matrix.mulVec_add, hhz, hfixX _ hy]
-    rw [Matrix.sub_mulVec, Matrix.one_mulVec, ← Matrix.mulVec_mulVec, hmz]
-    exact hy
+    rwa [Matrix.sub_mulVec, Matrix.one_mulVec, ← Matrix.mulVec_mulVec, hmz]
 
 lemma gUH {ε : Fin (2 * r + k + 1) → Bool} (P : Mk k r) (hPu : IsUnit P.det)
     (hP : Pᴴ * Formalism.REAL.Jm ε * P = Formalism.QuantumDeterminants.Hpk k r) (U : Mk k r)

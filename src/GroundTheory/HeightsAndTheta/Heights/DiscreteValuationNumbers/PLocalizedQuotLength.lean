@@ -16,8 +16,7 @@ private theorem length_self_eq_of_ringEquiv' {S T : Type*} [CommRing S] [CommRin
   rw [Module.length_eq_coheight, Module.length_eq_coheight]
   have := Ideal.coheight_comap_of_surjective (e : S →+* T) e.surjective ⊥
   have hb : Ideal.comap (e : S →+* T) ⊥ = ⊥ := Ideal.comap_bot_of_injective _ e.injective
-  rw [hb] at this
-  exact this
+  rwa [hb] at this
 
 private theorem length_localizedModule_quot' {R : Type*} [CommRing R] (J W : Ideal R) [W.IsPrime] :
     Module.length (Localization.AtPrime W) (LocalizedModule W.primeCompl (R ⧸ J)) =
@@ -49,8 +48,7 @@ theorem LocalizedQuotLength.proof : LocalizedQuotLength.Statement.{u} := by
     have hs : t' ∈ W.primeCompl := by
       intro h
       apply t.2
-      rw [← ht']
-      exact h
+      rwa [← ht']
     refine ⟨IsLocalization.mk' _ a' ⟨t', hs⟩, ?_⟩
     rw [Localization.localRingHom_mk']
     congr 1
@@ -65,8 +63,7 @@ theorem LocalizedQuotLength.proof : LocalizedQuotLength.Statement.{u} := by
     obtain ⟨t', rfl⟩ := Ideal.Quotient.mk_surjective t
     have ht'W : t' ∈ W.primeCompl := ht
     have hmemP : t' * r ∈ P := by
-      rw [← Ideal.Quotient.eq_zero_iff_mem, map_mul]
-      exact htr
+      rwa [← Ideal.Quotient.eq_zero_iff_mem, map_mul]
     have hrJ : algebraMap S (Localization.AtPrime W) r ∈ J.map (algebraMap S (Localization.AtPrime W)) := by
       rw [← Ideal.unit_mul_mem_iff_mem _ (IsLocalization.map_units (Localization.AtPrime W) ⟨_, ht'W⟩),
         ← map_mul]

@@ -78,8 +78,7 @@ theorem Bdeg_congr (j : ℤ) {b b' : ℤ → ℕ} (x : ℤ) (h : b x = b' x) : X
 theorem beS_congr (j : ℤ) {b b' : ℤ → ℕ} (h : ∀ x, x < X.F.fr j 0 → b x = b' x) :
     X.beS p K j b = X.beS p K j b' := by
   unfold Dat.beS
-  refine Finset.sum_congr rfl fun x hx => ?_
-  exact Bdeg_congr X p K j x (h x (Finset.mem_filter.mp hx).2)
+  exact Finset.sum_congr rfl fun x hx => Bdeg_congr X p K j x (h x (Finset.mem_filter.mp hx).2)
 
 theorem IsPATH_congr (j : ℤ) {b b' : ℤ → ℕ} (h : ∀ x, x < X.F.fr j 0 → b x = b' x)
     {μ : Fin (segN X.F j + 1) → Fin (r + K) → ℤ} {dd : Fin (segN X.F j) → ℕ} (hP : X.IsPATH p K j b μ dd) :
@@ -128,8 +127,7 @@ theorem restr_setTau_tau (hX : X.Hyp p K) (j : ℤ) (b : ℤ → ℕ) (e : Fin r
   · simp
   · intro i _ hne
     rw [ite_eq_right]
-    intro h
-    exact hne (fr_injective X.F hV j h).symm
+    exact fun h => hne (fr_injective X.F hV j h).symm
   · intro h; exact absurd (Finset.mem_univ _) h
 
 end Congr
@@ -145,8 +143,7 @@ theorem restMon_of (C₀ : ℝ) (h61 : BetaRatioBound C₀) (h21 : TauDegreeOnPa
         (Nat.card (X.Idx p K j (X.restr j (X.setTau j b e))) : ℝ) :=
     Finset.sum_nonneg fun _ _ => Nat.cast_nonneg _
   rcases le_or_gt (1 - (r : ℝ) / (2 * X.Y)) 0 with hneg | hpos
-  · rw [max_eq_left hneg, mul_zero, zero_pow hr.ne', mul_zero]
-    exact hrhs
+  · rwa [max_eq_left hneg, mul_zero, zero_pow hr.ne', mul_zero]
   rw [max_eq_right hpos.le]
   set be := X.beS p K j (X.restr j b) with hbe
   set Q := X.Qc p K j with hQ

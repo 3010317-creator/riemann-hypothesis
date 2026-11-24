@@ -85,8 +85,7 @@ theorem finrank_gradedPiece_projectiveSpace (F : Type*) [Field F] (N a : ℕ) :
         exact congrFun h ()
       · intro h
         funext u
-        rw [weight_projIdx]
-        exact h
+        rwa [weight_projIdx]
   have : Fintype s := Fintype.ofEquiv _ e.symm
   rw [LinearEquiv.finrank_eq (AddMonoidAlgebra.supportedEquivFinsupp (R := F) (S := F) s), Module.finrank_finsupp_self,
     Fintype.card_congr e, Fintype.card_coe, Finset.card_finsuppAntidiag_nat_eq_choose]
@@ -110,8 +109,7 @@ theorem foldr_diffStep_binomFn (j N : ℕ) :
   | succ j ih =>
     rw [List.replicate_succ, List.foldr_cons, show N + (j + 1) = (N + 1) + j by omega, ih]
     funext m
-    simp only [diffStep, Pi.sub_apply, Pi.one_apply]
-    exact binomFn_sub N (m ())
+    simpa only [diffStep, Pi.sub_apply, Pi.one_apply] using binomFn_sub N (m ())
 
 theorem intNum_projectiveSpace (F : Type*) [Field F] (N : ℕ) :
     intNum F (⊥ : Ideal (MRing (ProjIdx N) F)) (fun _ : Fin N => (1 : Unit → ℤ)) = 1 := by

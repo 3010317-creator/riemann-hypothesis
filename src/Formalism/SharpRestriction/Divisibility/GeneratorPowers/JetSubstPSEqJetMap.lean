@@ -85,8 +85,7 @@ theorem jetSubstPS_eq_jetMap (m : ℕ) (Q : κ → MvPowerSeries κ' S) (hQ : �
     unfold psTrunc
     rw [MvPolynomial.coeff_sum]
     simp only [MvPolynomial.coeff_monomial]
-    rw [Finset.sum_ite_eq']
-    rw [ite_eq_left hmem]
+    rw [Finset.sum_ite_eq', ite_eq_left hmem]
     rfl
   rw [h0, map_zero, sub_zero]
 

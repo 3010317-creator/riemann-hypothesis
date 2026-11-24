@@ -209,8 +209,7 @@ theorem map_eq_self_of_iterate {G : Type*} [Group G] [TopologicalSpace G] [IsTop
     have h3 := congrArg ENNReal.toReal hKeq
     rw [ENNReal.toReal_mul, ENNReal.toReal_mul] at h3
     have hpos : 0 < (μ K).toReal := ENNReal.toReal_pos h0 htop
-    have h4 := mul_right_cancel₀ hpos.ne' h3
-    simpa using h4
+    simpa using mul_right_cancel₀ hpos.ne' h3
   have hc1 : c = 1 := by
     have := (pow_eq_one_iff_of_nonneg c.2 hN).1 hcN
     exact NNReal.eq (this.trans NNReal.coe_one.symm)
@@ -273,7 +272,6 @@ theorem tie_set {P Q n : ℕ} {ε : Fin n → Bool} (e : Fin P ⊕ Fin Q ≃ Fin
   · rintro ⟨a, ha, h⟩
     have : a = phi e h1 h2 g := umat_injective (h.trans (umat_phi e h1 h2 g).symm)
     exact this ▸ ha
-  · intro hg
-    exact ⟨_, hg, umat_phi e h1 h2 g⟩
+  · exact fun hg => ⟨_, hg, umat_phi e h1 h2 g⟩
 
 end PI.UnitaryGroupMassFormula.CdHaarScale.Main

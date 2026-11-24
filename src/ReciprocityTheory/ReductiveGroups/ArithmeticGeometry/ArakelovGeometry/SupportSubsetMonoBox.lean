@@ -37,9 +37,7 @@ theorem finite_monoBox (a : K → ℕ) :
     {m : (Σ k, ι k) →₀ ℕ | ∀ p, m p ≤ a p.1}.Finite := by
   have hfin : (Set.pi Set.univ fun p : (Σ k, ι k) => Set.Iic (a p.1)).Finite :=
     Set.Finite.pi fun p => Set.finite_Iic _
-  refine (hfin.preimage (Finsupp.equivFunOnFinite.injective.injOn)).subset ?_
-  intro m hm p _
-  exact hm p
+  exact (hfin.preimage (Finsupp.equivFunOnFinite.injective.injOn)).subset (fun m hm p _ => hm p)
 
 def monoBox (a : K → ℕ) : Finset ((Σ k, ι k) →₀ ℕ) := (finite_monoBox (ι := ι) a).toFinset
 
@@ -115,8 +113,7 @@ theorem card_mPiece_irrel {q : Ideal (MRing ι)} {k : K} (hk : ∀ i, (X ⟨k, i
       refine Ideal.sum_mem _ fun m hm => ?_
       have hsum := hs m hm k
       obtain ⟨i, hi⟩ : ∃ i, 0 < m ⟨k, i⟩ := by
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         have h0 : ∑ i, m ⟨k, i⟩ = 0 := Finset.sum_eq_zero fun i _ => by have := hc i; omega
         omega
       have e : MvPolynomial.monomial m (AddMonoidAlgebra.coeff s m) =
@@ -131,9 +128,7 @@ theorem card_mPiece_irrel {q : Ideal (MRing ι)} {k : K} (hk : ∀ i, (X ⟨k, i
   have hzero : ∀ x : mPiece q a, x = 0 := by
     rintro ⟨x, hx⟩
     obtain ⟨f, hf, rfl⟩ := Submodule.mem_map.mp hx
-    apply Subtype.ext
-    show Ideal.Quotient.mk q f = 0
-    exact Ideal.Quotient.eq_zero_iff_mem.mpr (hmem f hf)
+    exact Subtype.ext (Ideal.Quotient.eq_zero_iff_mem.mpr (hmem f hf))
   haveI : Unique (mPiece q a) := ⟨⟨0⟩, hzero⟩
   exact Nat.card_unique
 

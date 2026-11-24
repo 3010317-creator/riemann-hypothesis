@@ -141,21 +141,11 @@ theorem infRes_step (n : ℕ)
       τ₃ := ofHom ((shiftSC A).X₃.ρ.quotientToInvariants_lift S)
       comm₁₂ := by ext; rfl
       comm₂₃ := by ext; rfl }
-  have h1 : δ hQ (n + 1) (n + 1 + 1) rfl ≫ inflation A S (n + 1 + 1) =
-      inflation (shiftSC A).X₃ S (n + 1) ≫ δ hX (n + 1) (n + 1 + 1) rfl :=
-    δ_comp_map (QuotientGroup.mk' S) hQ hX F (n + 1) (n + 1 + 1) rfl
-  have h2 : δ hX (n + 1) (n + 1 + 1) rfl ≫ restriction A S (n + 1 + 1) =
-      restriction (shiftSC A).X₃ S (n + 1) ≫ δ hS (n + 1) (n + 1 + 1) rfl :=
-    δ_comp_map_res S.subtype hX (n + 1) (n + 1 + 1) rfl
   let e : infResShortComplex (shiftSC A).X₃ S n ≅ infResShortComplex A S (n + 1) :=
-    ShortComplex.isoMk (@asIso _ _ _ _ _ hδQ) (@asIso _ _ _ _ _ hδX) (@asIso _ _ _ _ _ hδS) h1 h2
-  refine ⟨?_, (ShortComplex.exact_iff_of_iso e).1 ihe⟩
-  have hf : e.inv.τ₁ ≫ (infResShortComplex (shiftSC A).X₃ S n).f ≫ e.hom.τ₂ =
-      (infResShortComplex A S (n + 1)).f := by
-    rw [← Category.assoc, e.inv.comm₁₂, Category.assoc, ← ShortComplex.comp_τ₂, e.inv_hom_id,
-      ShortComplex.id_τ₂, Category.comp_id]
-  rw [← hf]
-  infer_instance
+    ShortComplex.isoMk (@asIso _ _ _ _ _ hδQ) (@asIso _ _ _ _ _ hδX) (@asIso _ _ _ _ _ hδS)
+      (δ_comp_map (QuotientGroup.mk' S) hQ hX F (n + 1) (n + 1 + 1) rfl)
+      (δ_comp_map_res S.subtype hX (n + 1) (n + 1 + 1) rfl)
+  exact ((ShortComplex.exact_and_mono_f_iff_of_iso e).1 ⟨ihe, ihm⟩).symm
 
 theorem infResShortComplex_mono_exact (n : ℕ) :
     ∀ A : Rep k G, (∀ i, 0 < i → i < n + 1 → IsZero (groupCohomology (res S.subtype A) i)) →

@@ -57,10 +57,8 @@ theorem DivPushForward.proof (hC : ContractRelDimLe.Statement.{u})
     have hle := hC F K K' j ι' W' hW'
     rw [hdW'] at hle
     rcases hle.lt_or_eq with hlt | heq
-    · rw [h2 W' hW' hdW' hlt]
-      rw [hM0 _ W' (fun h => (ne_of_lt hlt) h.2), mul_zero, zero_mul]
-    · rw [h1 W' hW' hdW' heq]
-      rw [@hM1 _ W' hW'.isPrime rfl heq]
+    · rw [h2 W' hW' hdW' hlt, hM0 _ W' (fun h => (ne_of_lt hlt) h.2), mul_zero, zero_mul]
+    · rw [h1 W' hW' hdW' heq, @hM1 _ W' hW'.isPrime rfl heq]
       ring
 
   have step2 : ∀ W, ∑ᶠ W', D' W' * M W W' = relDeg j P' * D W := by

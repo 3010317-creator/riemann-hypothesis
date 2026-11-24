@@ -690,8 +690,7 @@ theorem clsOf_orb {p : PlF D} {Y Y' l ρ l' ρ' : MatP D p} (hl : TieN.IntLow (M
     have hZ : toR (M := M) l hl.2.2 * toR (Y + cornE p s) hc.1 * toR ρ hρ.2.2 = toR (Y' + cornE p s) hc'.1 := by
       ext a b
       have h3 := congrFun (congrFun (toIntegral_mul_three (M := M) l (Y + cornE p s) ρ hl.2.2 hc.1 hρ.2.2) a) b
-      rw [← e1] at h3
-      exact h3
+      rwa [← e1] at h3
     refine cast ?_ key
     congr 1
     unfold matLR

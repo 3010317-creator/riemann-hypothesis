@@ -38,8 +38,7 @@ theorem reInner_apply (a b : J → ℂ) :
   simp [reInner]
 
 theorem reInner_comm (a b : J → ℂ) : reInner a b = reInner b a := by
-  simp only [reInner_apply]
-  exact Finset.sum_congr rfl fun p _ => by ring
+  simpa only [reInner_apply] using Finset.sum_congr rfl fun p _ => by ring
 
 theorem reInner_self (a : J → ℂ) : reInner a a = sqSum a := by
   simp only [reInner_apply, sqSum]

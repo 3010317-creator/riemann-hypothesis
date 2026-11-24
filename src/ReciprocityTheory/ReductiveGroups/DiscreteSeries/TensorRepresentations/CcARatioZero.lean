@@ -68,8 +68,7 @@ theorem ccA_ratio_mul (dual : Bool) {ε : Fin n → Bool} {lam lam' : Fin n → 
     change ratioVd lam s * ratioV (lam - Pi.single s 1) s = 1
     have h := ratioVd_add_single_mul (μ := lam - Pi.single s 1) s hgap'.1.injective
       (by rw [sub_add_cancel]; exact hgap.1.injective)
-    rw [sub_add_cancel] at h
-    exact h
+    rwa [sub_add_cancel] at h
 
 theorem ccA_shift_back (dual : Bool) {lam lam' : Fin n → ℝ} (s : Fin n) (hlam' : lam' = shiftF dual lam s) :
     lam = shiftF (!dual) lam' s := by

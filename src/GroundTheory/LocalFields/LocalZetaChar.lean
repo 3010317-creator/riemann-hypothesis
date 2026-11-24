@@ -93,16 +93,14 @@ theorem quasiCharConductor_eq_zero_iff : quasiCharConductor χ = 0 ↔ IsUnramif
   · intro h
     have := unitFiltrationUnits_quasiCharConductor_le_ker hχ
     rwa [h] at this
-  · intro h
-    exact Nat.eq_zero_of_le_zero (Nat.sInf_le h)
+  · exact fun h => Nat.eq_zero_of_le_zero (Nat.sInf_le h)
 
 theorem exists_apply_ne_one_of_not_isUnramified (h : ¬ IsUnramifiedChar χ) :
     ∃ v ∈ unitFiltrationUnits K (quasiCharConductor χ - 1), χ v ≠ 1 := by
   have hc : quasiCharConductor χ ≠ 0 := mt (quasiCharConductor_eq_zero_iff hχ).mp h
   have hlt : quasiCharConductor χ - 1 < quasiCharConductor χ := by omega
   have hnot := Nat.notMem_of_lt_sInf hlt
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   exact hnot fun v hv => MonoidHom.mem_ker.mpr (hcon v hv)
 
 omit hχ in
@@ -118,8 +116,7 @@ theorem norm_quasiChar_apply_eq_one {u : Kˣ} (hu : u ∈ unitFiltrationUnits K 
     hcont.continuousOn
   have key : ∀ v ∈ unitFiltrationUnits K 0, ‖((χ v : ℂˣ) : ℂ)‖ ≤ 1 := by
     intro v hv
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     obtain ⟨n, hn⟩ := ((tendsto_pow_atTop_atTop_of_one_lt hlt).eventually_gt_atTop C).exists
     have := hC (v ^ n) (pow_mem hv n)
     rw [Real.norm_eq_abs, abs_of_nonneg (norm_nonneg _), map_pow, Units.val_pow_eq_pow_val,
@@ -184,8 +181,7 @@ theorem setIntegral_ordShell_quasiChar (hχ : Continuous χ) (k : ℤ) :
     rw [setIntegral_congr_fun (measurableSet_ordShell 0) hone, setIntegral_const,
       measureReal_def, multHaar_ordShell, ENNReal.toReal_one, one_smul, mul_one]
   · obtain ⟨v, hv, hv1⟩ : ∃ v ∈ unitFiltrationUnits K 0, χ v ≠ 1 := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       exact h fun v hv => MonoidHom.mem_ker.mpr (hcon v hv)
     rw [setIntegral_ordShell_eq_zero (fun u => ((χ u : ℂˣ) : ℂ))
       (mem_unitFiltrationUnits_zero_iff_ord.mp hv) (a := ((χ v : ℂˣ) : ℂ))

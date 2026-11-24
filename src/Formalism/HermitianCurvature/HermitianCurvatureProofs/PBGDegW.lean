@@ -152,8 +152,7 @@ theorem wv_step (hSP : SlicePoly p.T F j hj h hh) (hSP' : SlicePoly p.T F j hj h
     intro t Cf e hE
     rw [add_zero] at hE
     have h1 := waveG_congrGV Bs s (KB.plusW ys w) _ _ (onOld_congrGV (⇑Mo) hMoc ys _ _ hE)
-    rw [onOld_sum, waveG_sum] at h1
-    exact h1
+    rwa [onOld_sum, waveG_sum] at h1
   have e0 : ∀ t : ℝ, EqGV (fun e' => xP p F j hj w h hh s Mo (t :: ys) (Fin.cons 0 e'))
       (∑ l : Fin (j + 1), ((t : ℂ) ^ (l : ℕ)) • A0 l) := by
     intro t
@@ -262,8 +261,7 @@ theorem wv_step (hSP : SlicePoly p.T F j hj h hh) (hSP' : SlicePoly p.T F j hj h
       · rw [ite_eq_left rfl, pow_add]
       · intro q _ hq
         rw [ite_eq_right, mul_zero]
-        intro e
-        exact hq (Fin.ext e.symm)
+        exact fun e => hq (Fin.ext e.symm)
       · simp
     rw [hX t]
     calc ∑ l : Fin (j + 1), ∑ m : Fin (j + 1), ((t : ℂ) ^ (l : ℕ)) * ((t : ℂ) ^ (m : ℕ)) * X l m
@@ -272,8 +270,7 @@ theorem wv_step (hSP : SlicePoly p.T F j hj h hh) (hSP' : SlicePoly p.T F j hj h
           simp only [key]
       _ = ∑ q : Fin (2 * j + 1), ∑ l : Fin (j + 1), ∑ m : Fin (j + 1),
             ((t : ℂ) ^ (q : ℕ)) * (if l.val + m.val = q.val then X l m else 0) := by
-          refine (Finset.sum_congr rfl (fun l _ => Finset.sum_comm)).trans ?_
-          exact Finset.sum_comm
+          exact (Finset.sum_congr rfl (fun l _ => Finset.sum_comm)).trans Finset.sum_comm
       _ = _ := by
           apply Finset.sum_congr rfl
           intro q _

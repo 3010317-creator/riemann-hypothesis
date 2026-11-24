@@ -32,8 +32,7 @@ theorem exists_finset_mul_mem_standardOpenSubgroup :
     rw [← ker_toClassGroup, MonoidHom.mem_ker, map_mul, map_inv, hs, mul_inv_cancel]
   obtain ⟨_, ⟨k, rfl⟩, u, hu, hku⟩ := Subgroup.mem_sup.1 hmem
   refine ⟨k⁻¹, s (toClassGroup x), Finset.mem_image_of_mem _ (Finset.mem_univ _), ?_⟩
-  rw [map_inv, mul_assoc, ← hku, inv_mul_cancel_left]
-  exact hu
+  rwa [map_inv, mul_assoc, ← hku, inv_mul_cancel_left]
 
 theorem exists_isCompact_of_finset (R : Finset (IdeleGroup K))
     (hR : ∀ x : IdeleGroup K, ∃ k : Kˣ, ∃ r ∈ R,
@@ -55,8 +54,7 @@ theorem exists_isCompact_of_finset (R : Finset (IdeleGroup K))
   have hinf : |Real.log (infiniteModule y)| ≤ ∑ r ∈ R, |Real.log (ideleModule K r : ℝ)| := by
     have h1 : infiniteModule y = ((ideleModule K r : ℝ))⁻¹ := by
       have := congrArg Subtype.val hmod
-      rw [ideleModule_apply, finiteModule_eq_one_of_mem hy, mul_one] at this
-      exact this
+      rwa [ideleModule_apply, finiteModule_eq_one_of_mem hy, mul_one] at this
     rw [h1, Real.log_inv, abs_neg]
     exact Finset.single_le_sum (f := fun r ↦ |Real.log (ideleModule K r : ℝ)|)
       (fun r _ ↦ abs_nonneg _) hr

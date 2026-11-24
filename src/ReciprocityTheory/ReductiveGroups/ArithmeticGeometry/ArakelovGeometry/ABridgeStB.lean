@@ -37,14 +37,12 @@ theorem eq_zero_of_sum_tmul {Ω E : Type*} [Field Ω] [CharZero Ω] [Field E] [A
     have hc : ∀ k, ((𝒞 k : W) : Ω) = s k := fun k => by
       show ((Module.Basis.span hs k : W) : Ω) = s k
       rw [Module.Basis.span_apply]
-    simp only [LinearMap.lTensor_tmul, Submodule.subtype_apply, hc]
-    exact h
+    simpa only [LinearMap.lTensor_tmul, Submodule.subtype_apply, hc] using h
   have hb := TensorProduct.sum_tmul_basis_right_eq_zero 𝒞 (Finsupp.equivFunOnFinite.symm e) (by
     rw [Finsupp.sum_fintype _ _ (by intros; simp)]
     simpa using h0)
   funext k
-  have hk := congrArg (fun b => b k) hb
-  simpa using hk
+  simpa using congrArg (fun b => b k) hb
 
 theorem nilp_coeff_eq_zero {Ω : Type} [Field Ω] [CharZero Ω] {r : ℕ} {s : Fin r → Ω}
     (hs : LinearIndependent ℚ s) {c : Fin r → ℂ}
@@ -144,9 +142,7 @@ theorem coeff_eq_zero_of_vanish {x : J → Ω} {r : ℕ} {b : Fin r → MvPolyno
     intro z hz
     rw [MvPolynomial.mem_zeroLocus_iff] at hz
     have hz' : ∀ f ∈ coordIdeal ℤ x, eval z (map (Int.castRingHom ℂ) f) = 0 := by
-      intro f hf
-      have hf' := hz _ (Ideal.mem_map_of_mem _ hf)
-      exact hf'
+      exact fun f hf => hz _ (Ideal.mem_map_of_mem _ hf)
     have hsum := h z hz'
     change eval z P = 0
 

@@ -106,15 +106,13 @@ theorem wa_eq_of_le (v w : AddValuation F (WithTop ℤ)) (hv : ∀ a : F, a ≠ 
     intro x m n hm hn
     constructor
     · intro hm0
-      by_contra hn0
-      push Not at hn0
+      by_contra! hn0
       obtain ⟨y, c, d, hc, hd, hc0, hd0⟩ := exists_pos_neg_valuation v w hq1 hp hm hn one_pos hm0 hn0
       have hy := h y (by rw [hc, ← WithTop.coe_zero, WithTop.coe_lt_coe]; exact hc0)
       rw [hd, ← WithTop.coe_zero, WithTop.coe_le_coe] at hy
       omega
     · intro hn0
-      by_contra hm0
-      push Not at hm0
+      by_contra! hm0
       obtain ⟨y, c, d, hc, hd, hc0, hd0⟩ := exists_pos_neg_valuation w v hq1' hr hn hm one_pos hn0 hm0
       have hy := h y⁻¹ (by rw [wa_inv v hd, ← WithTop.coe_zero, WithTop.coe_lt_coe]; omega)
       rw [wa_inv w hc, ← WithTop.coe_zero, WithTop.coe_le_coe] at hy
@@ -149,8 +147,7 @@ theorem wa_eq_of_le (v w : AddValuation F (WithTop ℤ)) (hv : ∀ a : F, a ≠ 
 theorem wa_pair (v w : AddValuation F (WithTop ℤ)) (hv : ∀ a : F, a ≠ 0 → v a ≠ ⊤)
     (hw : ∀ a : F, a ≠ 0 → w a ≠ ⊤) (hv1 : ∃ π : F, v π = 1) (hw1 : ∃ ρ : F, w ρ = 1)
     (hne : v ≠ w) : ∃ s, 0 < v s ∧ w s < 0 := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   exact hne (wa_eq_of_le v w hv hw hv1 hw1 hcon)
 
 private theorem addValuation_add_eq_of_lt (w : AddValuation F (WithTop ℤ)) {x y : F} (h : w x < w y) :
@@ -309,12 +306,10 @@ theorem weak_approx_orders {F : Type*} [Field F] {k : ℕ} (v : Fin k → AddVal
   choose a ha using fun i j => wa_exists_coe (v j) (hfin j) (hs0 i)
   have hai : ∀ i, 0 < a i i := fun i => by
     have h' := hsi i
-    rw [ha i i, ← WithTop.coe_zero, WithTop.coe_lt_coe] at h'
-    exact h'
+    rwa [ha i i, ← WithTop.coe_zero, WithTop.coe_lt_coe] at h'
   have haij : ∀ i j, i ≠ j → a i j < 0 := fun i j hij => by
     have h' := hsj i j (Finset.mem_erase.mpr ⟨Ne.symm hij, Finset.mem_univ j⟩)
-    rw [ha i j, ← WithTop.coe_zero, WithTop.coe_lt_coe] at h'
-    exact h'
+    rwa [ha i j, ← WithTop.coe_zero, WithTop.coe_lt_coe] at h'
   choose N hN using fun i => exists_nat_gt_of_finset (Finset.univ : Finset (Fin k)) (fun j => n j - n i * p i j)
   have hdiag : ∀ i, v i (q i ^ n i * (1 + s i ^ (N i + 1))⁻¹) = ((n i : ℤ) : WithTop ℤ) := by
     intro i
@@ -340,8 +335,7 @@ theorem weak_approx_orders {F : Type*} [Field F] {k : ℕ} (v : Fin k → AddVal
     lt_addValuation_sum_of_forall_lt (v j) _ _ _ (fun i hi => hoff i j (Finset.ne_of_mem_erase hi)) WithTop.coe_ne_top
   have hlt : v j (q j ^ n j * (1 + s j ^ (N j + 1))⁻¹) <
       v j (∑ i ∈ Finset.univ.erase j, q i ^ n i * (1 + s i ^ (N i + 1))⁻¹) := by
-    rw [hdiag j]
-    exact hrest
+    rwa [hdiag j]
   rw [addValuation_add_eq_of_lt (v j) hlt, hdiag j]
 
 end ReciprocityTheory.ChartRestriction.G.T0

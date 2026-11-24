@@ -89,16 +89,14 @@ lemma exists_glue {ι : Type w} (U : ι → Opens X) (V : Opens X) (hUV : ∀ a,
     rw [res_congr P U τ e0 _ ((inf_le_right).trans (le_inter_const U j)),
       res_congr P U τ e1 _ ((inf_le_left).trans (le_inter_const U i))] at h'
     change res P inf_le_left (sf i) = res P inf_le_right (sf j)
-    simp only [sf, res_res]
-    exact h'.symm
+    simpa only [sf, res_res] using h'.symm
   obtain ⟨t, ht, -⟩ := TopCat.Sheaf.existsUnique_gluing' (⟨P, hP⟩ : TopCat.Sheaf AddCommGrpCat.{u} X)
     U V (fun a => homOfLE (hUV a)) hV sf compat
   refine ⟨t, fun i => ?_⟩
   have hi : (fun _ : Fin 1 => i 0) = i := funext fun a => by rw [Subsingleton.elim a 0]
   have ht' : res P (hUV (i 0)) t = sf (i 0) := ht (i 0)
   rw [← res_res P (inter_le U i 0) (hUV (i 0)), ht']
-  simp only [sf, res_res]
-  exact (res_congr P U τ hi _ le_rfl).trans (res_refl _ _ _)
+  simpa only [sf, res_res] using (res_congr P U τ hi _ le_rfl).trans (res_refl _ _ _)
 
 
 variable {P} in

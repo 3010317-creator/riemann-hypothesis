@@ -62,8 +62,7 @@ private lemma sum_filter_block_eq_degB {D N : ℕ} (b : Fin (D + 1)) (s : TVar D
   · simp [degB]
   · intro i _ hi
     simp [hi]
-  · intro h
-    exact absurd (Finset.mem_univ b) h
+  · exact fun h => absurd (Finset.mem_univ b) h
 
 theorem scaleBlock_eq_sum (b : Fin (D + 1)) (u : Kˣ) (p : MvPolynomial (TVar D N) K) (M : ℕ)
     (hM : ∀ s ∈ p.support, degB b s < M) :
@@ -124,8 +123,7 @@ theorem one_block (b : Fin (D + 1)) (z : KTf K D N)
       rw [Units.val_mk0] at hu
       show Polynomial.eval _ _ = 0
       rw [Polynomial.eval_finsetSum]
-      simp only [Polynomial.eval_monomial]
-      exact hu
+      simpa only [Polynomial.eval_monomial] using hu
   have hcoef : ∀ k < M, algebraMap (KTp K D N) (KTf K D N) (compB b k p) - z * algebraMap (KTp K D N) (KTf K D N) (compB b k q) = 0 := by
     intro k hk
     have h4 := congrArg (fun P => _root_.AddMonoidAlgebra.coeff (M := ℕ) P k) hQ
@@ -141,8 +139,7 @@ theorem one_block (b : Fin (D + 1)) (z : KTf K D N)
     · by_contra hne
       exact h (Finset.mem_range.mpr (hMq t (MvPolynomial.mem_support_iff.mpr hne)))
   obtain ⟨k, hk, hqk⟩ : ∃ k ∈ Finset.range M, compB b k q ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     apply hq
     rw [hqs]
     exact Finset.sum_eq_zero hc
@@ -164,8 +161,7 @@ private lemma aeval_block_zero_monomial (s : TVar D N →₀ ℕ) (a : K) :
     rw [Finsupp.prod_congr (g2 := fun i k => (X i : KTp K D N) ^ k) (fun i hi => by simp [hz i hi]),
       MvPolynomial.algebraMap_eq, ← monomial_eq]
   · have h' : ∃ j, s (0, j) ≠ 0 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact h (Finset.sum_eq_zero fun j _ => hc j)
     obtain ⟨j, hj⟩ := h'
     rw [Finsupp.prod, Finset.prod_eq_zero (i := ((0 : Fin (D + 1)), j))

@@ -143,8 +143,7 @@ theorem column_indicator_expansion : ExpansionCovector := by
       · rw [ite_eq_left ha, ite_eq_right]; intro hpw; apply hp; exact ⟨Fin.last _, by rw [hpw]; simp [ew]⟩
       · rw [ite_eq_right ha]
         have hane : a.val ≠ i0 := fun h' => ha (Fin.ext h')
-        rw [hxa _ _ (by simpa using hane)]
-        rw [ite_eq_right]
+        rw [hxa _ _ (by simpa using hane), ite_eq_right]
         rintro ⟨hp1, hp2⟩
         apply hp
         refine ⟨Fin.castSucc ⟨if p.val < i0 then p.val else p.val - 1, by split_ifs <;> omega⟩, ?_⟩
@@ -170,8 +169,7 @@ theorem column_indicator_expansion : ExpansionCovector := by
 
     rw [map_sum] at this
     simp only [map_smul] at this
-    rw [hzy] at this
-    exact this
+    rwa [hzy] at this
   have hD : Dlead i0 (s'' + 2) h t (i0 + s'' + 1 + 1) = h.det * t ^ (s'' + 2) * -sgnW s'' := by
     rw [show i0 + s'' + 1 + 1 = i0 + (s'' + 2) by omega, (derivative_leading_zb i0 (s'' + 2) h t).2, sign_alternates_add_two]
 

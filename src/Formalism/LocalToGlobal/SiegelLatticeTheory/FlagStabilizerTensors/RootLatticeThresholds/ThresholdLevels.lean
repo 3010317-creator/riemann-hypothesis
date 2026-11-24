@@ -174,9 +174,7 @@ private theorem continuousOn_mul_be_of_window (hOk : c.Ok) (hb1 : 40 * (c.m : �
     {T T' : ℝ} (hT : T ≠ 0) (hT' : T' ≠ 0) (ka gm : ℝ) {S : Set ℝ}
     (hS : ∀ Y ∈ S, 5 / 2 ≤ c.v l + Y ∧ c.v l + Y ≤ c.Del / 2) :
     ContinuousOn (fun Y => gm * c.be ka de de' T T' Y) S := by
-  have hP : Continuous c.P := by
-    show Continuous (fun Y : ℝ => ∏ s ∈ Icc 1 (c.k + c.m - 1), (Y + c.lam s))
-    exact continuous_finsetProd _ (fun s _ => continuous_add_const _)
+  have hP : Continuous c.P := continuous_finsetProd _ (fun s _ => continuous_add_const _)
   have hq : Continuous (fun Y => c.q de de' T T' Y) := by
     show Continuous (fun Y : ℝ =>
       -(T * T') * ∏ i ∈ Icc 1 c.k, ((Y + 1 / 2 + c.u de i) * (Y + 1 / 2 + c.u de' i)))
@@ -445,8 +443,7 @@ theorem thrSet_finite (C : ℝ) (de de' : ℕ → ℝ) (T T' : ℝ) (l : ℕ) : 
     · exact ⟨i, by omega, 0, by omega, Or.inr (Or.inr (Or.inr rfl))⟩
   refine Set.Finite.subset ?_ key
   refine Set.Finite.biUnion (Finset.range _).finite_toSet fun i _ => ?_
-  refine Set.Finite.biUnion (Finset.range _).finite_toSet fun s _ => ?_
-  exact Set.toFinite _
+  exact Set.Finite.biUnion (Finset.range _).finite_toSet fun s _ => Set.toFinite _
 
 theorem thrSet_nonempty (C : ℝ) (de de' : ℕ → ℝ) (T T' : ℝ) (l : ℕ) : (G.thrSet C de de' T T' l).Nonempty :=
   ⟨_, 1, le_rfl, by omega, Or.inl ⟨rfl, rfl⟩⟩

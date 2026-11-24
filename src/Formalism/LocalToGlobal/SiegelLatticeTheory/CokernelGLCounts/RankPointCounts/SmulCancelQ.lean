@@ -96,13 +96,11 @@ theorem part_MMsharp (t : Term V M r) (Λ : Submodule M.L.O V) (hsd : H.IsSelfDu
       exact hmm_le i
     exact hle hm
   have hbm : H.h b m = 0 := (show ∀ x ∈ H.Xp t.f ⊔ H.Xp t.f', H.h b x = 0 from hb) m hmX
-  rw [H.h_add_left, hbm, add_zero] at hab'
-  exact hab'
+  rwa [H.h_add_left, hbm, add_zero] at hab'
 
 theorem perp_left {g : Fin (r + 1) → V} {a b : V} (hb : b ∈ H.perp (H.X g)) (hab : a + b ∈ H.perp (H.X g)) :
     a ∈ H.perp (H.X g) := by
-  have h1 := (H.perp (H.X g)).sub_mem hab hb
-  simpa using h1
+  simpa using (H.perp (H.X g)).sub_mem hab hb
 
 theorem smul_cancel_q (g : SplitG M.L) {v w : V}
     (h : algebraMap F E (g.q : F) • v = algebraMap F E (g.q : F) • w) : v = w := by

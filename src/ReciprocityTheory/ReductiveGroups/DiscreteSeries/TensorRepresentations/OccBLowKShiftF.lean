@@ -47,8 +47,7 @@ theorem occB_trace_pos (dual : Bool) (hP : IsPsiFor ε lam T Ψ) (hP' : IsPsiFor
       starRingEnd ℂ (occPsiCoef dual Ψ (ι₀ (stdOrthonormalBasis ℂ T'.V i)) (ι₀ (stdOrthonormalBasis ℂ T'.V j))
         (Formalism.MainNotions.S.umat g)) *
       inner ℂ (stdOrthonormalBasis ℂ T'.V i) (Ψ' (Formalism.MainNotions.S.umat g) (stdOrthonormalBasis ℂ T'.V j))
-        ∂(Formalism.REAL.muG ε)).re := by
-  exact psi_pairing_trace_pos dual hP hP' hpos hpos' hWT ι₀ hι₀ hK
+        ∂(Formalism.REAL.muG ε)).re := psi_pairing_trace_pos dual hP hP' hpos hpos' hWT ι₀ hι₀ hK
 
 theorem occB_spread (dual : Bool) (hP : IsPsiFor ε lam T Ψ) (hP' : IsPsiFor ε lam' T' Ψ') {v₀' : T'.V} (hv₀' : v₀' ≠ 0)
     (hWT : ∀ v w : T.V, MemLp (fun g : Formalism.REAL.UJ ε => ((Real.sqrt (S7.hs (Formalism.MainNotions.S.umat g)) : ℝ) : ℂ) *
@@ -58,8 +57,7 @@ theorem occB_spread (dual : Bool) (hP : IsPsiFor ε lam T Ψ) (hP' : IsPsiFor ε
         ∂(Formalism.REAL.muG ε) = 0) :
     ∀ (ξ ζ : Fin n → T.V) (u' v' : T'.V), ∫ g : Formalism.REAL.UJ ε,
       starRingEnd ℂ (occPsiCoef dual Ψ ξ ζ (Formalism.MainNotions.S.umat g)) * inner ℂ u' (Ψ' (Formalism.MainNotions.S.umat g) v')
-        ∂(Formalism.REAL.muG ε) = 0 := by
-  exact psi_pairing_vanishing_spread dual hP hP' hv₀' hWT h0
+        ∂(Formalism.REAL.muG ε) = 0 := psi_pairing_vanishing_spread dual hP hP' hv₀' hWT h0
 
 theorem occB_pairing_ne (dual : Bool) (hP : IsPsiFor ε lam T Ψ) (hP' : IsPsiFor ε lam' T' Ψ') {v₀' : T'.V}
     (hv₀' : v₀' ≠ 0)

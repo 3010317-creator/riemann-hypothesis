@@ -76,8 +76,7 @@ private theorem gA_mulVec {v : Fin (2 * r + k + 1) → ℂ} (hv : inWb k r v) :
         simp only [Hpk]
         rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (fun h => hij h.2.2)]
       rw [h0, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 private theorem gA_herm {v w : Fin (2 * r + k + 1) → ℂ} (hv : inWb k r v) :
     herm (Hpk k r) v w = ∑ i, star (w i) * (Hpk k r i i * v i) := by
@@ -156,8 +155,7 @@ private theorem gA_herm_bvec (v : Fin (2 * r + k + 1) → ℂ) (j : Fin (2 * r +
   · simp [bvec]
   · intro i _ hij
     simp [bvec, hij]
-  · intro h
-    exact absurd (Finset.mem_univ j) h
+  · exact fun h => absurd (Finset.mem_univ j) h
 
 private theorem gA_mv_eI (v : Fin (2 * r + k + 1) → ℂ) (a : Fin r) :
     (Hpk k r *ᵥ v) (eI k r a) = v (esI k r a) := by
@@ -211,8 +209,7 @@ theorem glev_inWb {g : Mx k r} (hg : g ∈ Glev k r (Fin.last r)) {v : Fin (2 * 
     intro a
     obtain ⟨h1, h2⟩ := hh.2 a a.isLt
     have hv' := (gA_inWb_iff v).1 hv a
-    rw [← h1, ← h2, glev_herm hh, glev_herm hh]
-    exact hv'
+    rwa [← h1, ← h2, glev_herm hh, glev_herm hh]
   obtain ⟨-, hHH, -, -⟩ := hpkFacts k r
   have hdet : IsUnit (Hpk k r).det := by
     have h := congrArg Matrix.det hHH

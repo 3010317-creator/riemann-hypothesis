@@ -71,8 +71,7 @@ theorem inv_diag (U : GL (Fin n) ℂ) (hU : U.val.BlockTriangular id) (i : Fin n
     rcases lt_or_gt_of_ne hk with h | h
     · rw [h1 (show id k < id i from h), zero_mul]
     · rw [hU (show id i < id k from h), mul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 def swapB (U : GL (Fin n) ℂ) : GL (Fin n) ℂ :=
   ⟨((U⁻¹).val)ᵀ.submatrix Fin.rev Fin.rev, (U.val)ᵀ.submatrix Fin.rev Fin.rev,
@@ -96,8 +95,7 @@ theorem swapB_inv_val (U : GL (Fin n) ℂ) (i j : Fin n) : ((swapB U)⁻¹).val 
 theorem swapB_upper (U : GL (Fin n) ℂ) (hU : U.val.BlockTriangular id) : (swapB U).val.BlockTriangular id := by
   intro i j hij
   rw [swapB_val]
-  apply upper_inv U hU
-  exact Fin.rev_lt_rev.mpr hij
+  exact upper_inv U hU (Fin.rev_lt_rev.mpr hij)
 
 theorem swapB_prod (U : GL (Fin n) ℂ) (hU : U.val.BlockTriangular id) (lam' : Fin n → ℤ) :
     ∏ i, (swapB U).val i i ^ lam' i = ∏ i, U.val i i ^ (-lam' (Fin.rev i)) := by
@@ -105,8 +103,7 @@ theorem swapB_prod (U : GL (Fin n) ℂ) (hU : U.val.BlockTriangular id) (lam' : 
     intro i
     rw [swapB_val]
     exact eq_inv_of_mul_eq_one_left (inv_diag U hU (Fin.rev i))
-  simp only [hd, _root_.inv_zpow']
-  exact Fintype.prod_equiv Fin.revPerm _ _ (fun i => by simp)
+  simpa only [hd, _root_.inv_zpow'] using Fintype.prod_equiv Fin.revPerm _ _ (fun i => by simp)
 
 variable {L : Type} [Field L] [NumberField L] [IsCMField L]
 

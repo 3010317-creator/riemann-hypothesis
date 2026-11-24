@@ -95,8 +95,7 @@ theorem pointIdeal_rat {Ω : Type} [Field Ω] [inst : Algebra ℚ Ω] (y : (Σ b
   · rw [Ideal.map_le_iff_le_comap]
     intro F hF
     show pointConeMap ℚ y (MvPolynomial.map (Int.castRingHom ℚ) F) = 0
-    rw [hcomp]
-    exact hF
+    rwa [hcomp]
 
 omit [Fintype K] [∀ b, Fintype (ι b)] in
 theorem pointIdeal_map {R Ω₂ Ω : Type} [CommRing R] [Field Ω₂] [Field Ω] [Algebra R Ω₂] [Algebra R Ω] (i : Ω₂ →ₐ[R] Ω)
@@ -111,8 +110,7 @@ theorem pointIdeal_map {R Ω₂ Ω : Type} [CommRing R] [Field Ω₂] [Field Ω]
   constructor
   · intro h0
     apply MvPolynomial.map_injective (i : Ω₂ →+* Ω) i.toRingHom.injective
-    rw [map_zero]
-    exact h0
+    rwa [map_zero]
   · intro h0
     rw [h0, map_zero]
 
@@ -151,8 +149,7 @@ private theorem trdeg_eq_of_finrank_fieldRange_pos {Ω₂ Ω : Type} [Field Ω�
   have hQ : Algebra.trdeg ℚ Ω₂ = d := by
     haveI := IsLocalization.isAlgebraic ℚ (nonZeroDivisors ℤ)
     have h := _root_.trdeg_add_eq ℤ ℚ (A := Ω₂)
-    rw [_root_.trdeg_eq_zero, zero_add, hZ] at h
-    exact h
+    rwa [_root_.trdeg_eq_zero, zero_add, hZ] at h
   letI : Algebra Ω₂ Ω := i.toAlgebra
   haveI : IsScalarTower ℚ Ω₂ Ω := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
   letI : Algebra Ω₂ i.fieldRange := i.rangeRestrictField.toAlgebra

@@ -66,8 +66,7 @@ theorem pm_col (m : ℕ) (y : UnipotentBlockColumnIndex a m m → R) (i k : Fin 
       rw [Matrix.single_apply, ite_eq_right]
       rintro ⟨h1, h2⟩
       exact hb (Subtype.ext (Prod.ext h1 h2))
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   · refine Finset.sum_eq_zero fun t _ => ?_
     rw [Matrix.single_apply, ite_eq_right]
     rintro ⟨h1, h2⟩
@@ -168,8 +167,7 @@ theorem algebraic_modulus_one_of_finiteOrder_char : AdelicLinearChange → Corne
       ∫⁻ y, H y ∂vecMeasure E (UnipotentBlockColumnIndex k j j) = ∫⁻ v, H (Φ.symm v) ∂vecMeasure E (Fin j) := by
     intro H
     have h1 := hΦ.lintegral_comp_emb Φ.measurableEmbedding (fun v => H (Φ.symm v))
-    simp only [MeasurableEquiv.symm_apply_apply] at h1
-    exact h1
+    simpa only [MeasurableEquiv.symm_apply_apply] using h1
   have hsymm : ∀ (v : Fin j → Ad E) (t : UnipotentBlockColumnIndex k j j), Φ.symm v t = v (e t) := by
     intro v t
     rfl

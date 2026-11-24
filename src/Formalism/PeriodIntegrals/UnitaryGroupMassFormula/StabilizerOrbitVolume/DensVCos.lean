@@ -111,8 +111,7 @@ theorem isCompact_cos (Λ : AddSubgroup V) (hΛc : IsCompact (Λ : Set V)) (y : 
   have he : {z | z - y ∈ Λ} = (fun w => w + y) '' (Λ : Set V) := by
     ext z
     constructor
-    · intro hz
-      exact ⟨z - y, hz, sub_add_cancel z y⟩
+    · exact fun hz => ⟨z - y, hz, sub_add_cancel z y⟩
     · rintro ⟨w, hw, rfl⟩
       simpa using hw
   rw [he]

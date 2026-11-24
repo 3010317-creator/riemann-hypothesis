@@ -142,9 +142,7 @@ theorem latGL_gen (hKB : KerBack O θ s J P) (hSU : SurjCore O θ s J P) (c : O)
   · intro h
     rw [psi_ker_iff]
     constructor
-    · intro hw
-      exact hKB (c : K) (m h) (hmU h) (hK h) hw
-    · intro hl
-      exact ker_fwd O θ J P (c : K) (m h) hl
+    · exact fun hw => hKB (c : K) (m h) (hmU h) (hK h) hw
+    · exact fun hl => ker_fwd O θ J P (c : K) (m h) hl
 
 end MassDataIdxCore

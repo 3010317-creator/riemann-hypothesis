@@ -213,8 +213,7 @@ theorem topLawG_sym (hlaw : CtlPhiLaw) (hX : X.Ok) (hPr : Pr.Ok) {m2 : ℕ} (hm 
   have hH : h.1 ∈ HJsym (𝓞 X.E ⧸ w.1.asIdeal) (R.N (m2 + 1)) R.k R.r R.t (m2 + 1 + 1 - 1) R.rS hrn' := by
     have h2 := h.2
     change h.1 ∈ (colLevSym Ch (m2 + 1) ⟨w.1, hw⟩).H at h2
-    rw [colLevSym_pred Ch hj] at h2
-    exact h2
+    rwa [colLevSym_pred Ch hj] at h2
   have hlamS : ((((oneIdx (colLevSym Ch) (QE sel (mu : Chr X.F X.E X.K)) m2).levG (m2 + 1)
       (oneAl (colLevSym Ch) sel mu m2 (m2 + 1) le_rfl) ⟨w.1, hw⟩).lam h : X.Kˣ) : X.K) =
       ((lamJsym (Ch.psi0 ⟨w.1, hw⟩) (extChi fun s => Ch.chi s ⟨w.1, hw⟩) (R.N (m2 + 1)) R.k R.r R.t (m2 + 1 + 1 - 1) R.rS hrn'
@@ -231,13 +230,11 @@ theorem topLawG_sym (hlaw : CtlPhiLaw) (hX : X.Ok) (hPr : Pr.Ok) {m2 : ℕ} (hm 
   have hH'm : h'.1 ∈ HXmsym (𝓞 X.E ⧸ w.1.asIdeal) (R.N (m2 + 1 + 1)) R.k R.r R.t R.m R.rS hrN := by
     have h2 : ∀ M, M ∈ (colLevSym Ch (m2 + 1 + 1) ⟨w.1, hw⟩).H →
         M ∈ HXmsym (𝓞 X.E ⧸ w.1.asIdeal) (R.N (m2 + 1 + 1)) R.k R.r R.t R.m R.rS hrN := fun M hM => by
-      rw [colLevSym_top_H Ch (by omega) ⟨w.1, hw⟩] at hM
-      exact hM
+      rwa [colLevSym_top_H Ch (by omega) ⟨w.1, hw⟩] at hM
     exact h2 h'.1 h'.2
   have hH' : h'.1 ∈ HXmsym (𝓞 X.E ⧸ w.1.asIdeal) (R.N (m2 + 1 + 1)) R.k R.r R.t (m2 + 1 + 1) R.rS hrN := by
     have h3 := hH'm
-    rw [show R.m = m2 + 1 + 1 by omega] at h3
-    exact h3
+    rwa [show R.m = m2 + 1 + 1 by omega] at h3
   have hlamT : ((((colLevSym Ch (m2 + 1 + 1)) ⟨w.1, hw⟩).lam h' : X.Kˣ) : X.K) =
       ((lamXmsym (Ch.psi0 ⟨w.1, hw⟩) (extChi fun s => Ch.chi s ⟨w.1, hw⟩) (R.N (m2 + 1 + 1)) R.k R.r R.t (m2 + 1 + 1) R.rS hrN
         ⟨h'.1, hH'⟩ : X.Kˣ) : X.K) := by

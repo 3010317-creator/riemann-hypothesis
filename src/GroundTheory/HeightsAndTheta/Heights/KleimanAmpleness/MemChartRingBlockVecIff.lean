@@ -20,8 +20,7 @@ theorem ne_zero_of_mIdealOver_le {S : Type} [CommRing S] {K : Type} {ι : K → 
   apply hp
   have hmem : (X p : MvPolynomial (Σ k, ι k) S) ∈ mIdealOver S y := by
     simp [mIdealOver, RingHom.mem_ker, mConeMapOver, h0]
-  have h' := h hmem
-  simpa [mIdealOver, RingHom.mem_ker, mConeMapOver] using h'
+  simpa [mIdealOver, RingHom.mem_ker, mConeMapOver] using h hmem
 
 theorem mem_chartRing_blockVec_iff {S : Type} [CommRing S] {K : Type} {ι : K → Type} {Ω : Type} [Field Ω]
     [Algebra S Ω] (z : (Σ k, ι k) → Ω) (k₀ : K) (j : ι k₀) (u : Ω) :
@@ -48,8 +47,7 @@ theorem BlockGenTransfer.proof (hk : ChartKernel.Statement) : BlockGenTransfer.S
     refine ⟨Function.update c₀ k₀ j, Function.update_self _ _ _, fun k' => ?_⟩
     by_cases h : k' = k₀
     · cases h
-      rw [Function.update_self]
-      exact hj
+      rwa [Function.update_self]
     · rw [Function.update_of_ne h]
       exact hc₀ k'
   have hb₀ : y ⟨k, c k⟩ ≠ 0 := hy _ (hc k)

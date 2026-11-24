@@ -71,8 +71,7 @@ theorem cutWord_iff (P : M.Par) (l0 : ℕ) (L : List C.Letter) :
     · obtain ⟨a, rfl⟩ := List.mem_iff_get.1 hx
       exact h1 a
     · rw [List.pairwise_iff_get]
-      intro i j hij
-      exact h2 i j (ne_of_lt hij)
+      exact fun i j hij => h2 i j (ne_of_lt hij)
   · rintro ⟨h1, h2⟩
     refine ⟨fun a => h1 _ (List.mem_iff_get.2 ⟨a, rfl⟩), fun a b hab => ?_⟩
     rw [List.pairwise_iff_get] at h2
@@ -92,8 +91,7 @@ theorem pick_one (lo hi : ℝ) (Q B : Finset ℝ) (h : 9 * ((Q.card : ℝ) + B.c
   · have hn1 : (1 : ℝ) ≤ (Q.card : ℝ) + B.card := by
       have : 1 ≤ Q.card + B.card := Nat.one_le_iff_ne_zero.mpr hn
       exact_mod_cast this
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hsub : Set.Icc lo (hi - 1) ⊆
         (⋃ q ∈ Q, Metric.closedBall q 4) ∪ ((B : Set ℝ) ∪ (fun b => b - 1) '' (B : Set ℝ)) := by
       intro y hy
@@ -103,8 +101,7 @@ theorem pick_one (lo hi : ℝ) (Q B : Finset ℝ) (h : 9 * ((Q.card : ℝ) + B.c
       · exact Or.inr (Or.inr ⟨y + 1, hyB', by ring⟩)
       obtain ⟨q, hq, hyq⟩ := hcon y hy.1 (by linarith [hy.2]) hyB hyB'
       refine Or.inl (Set.mem_biUnion hq ?_)
-      rw [Metric.mem_closedBall, Real.dist_eq]
-      exact hyq
+      rwa [Metric.mem_closedBall, Real.dist_eq]
     have hfin : ((B : Set ℝ) ∪ (fun b => b - 1) '' (B : Set ℝ)).Finite :=
       B.finite_toSet.union (B.finite_toSet.image _)
     have h1 := MeasureTheory.measure_mono (μ := MeasureTheory.volume) hsub

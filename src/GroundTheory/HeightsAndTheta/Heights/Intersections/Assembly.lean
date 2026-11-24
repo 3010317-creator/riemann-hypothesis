@@ -309,8 +309,7 @@ theorem RegularityLocalPrime.proof (h₁ : RegularityOrder.Statement) : Regulari
       ((d : funField P) : FractionRing (MRing ι ⧸ P)) * (c : FractionRing (MRing ι ⧸ P)) := by
     have h := congrArg (fun z : regRing P => ((z : funField P) : FractionRing (MRing ι ⧸ P))) hd
     simp only [Subring.coe_mul, algebraMap_int_eq, eq_intCast, SubringClass.coe_intCast] at h
-    simp only [SubringClass.coe_intCast]
-    exact h.symm
+    simpa only [SubringClass.coe_intCast] using h.symm
   have hpu : p.natAbs ≠ 1 := fun h => hp.not_isUnit (Int.isUnit_iff_natAbs_eq.mpr h)
   obtain ⟨m, hNm, hpm⟩ := (Int.finiteMultiplicity_iff.mpr ⟨hpu, hN0⟩).exists_eq_pow_mul_and_not_dvd
   generalize multiplicity p N = e at hNm
@@ -593,8 +592,7 @@ theorem PullbackVanishingOfNullCycle.proof (hElim : PullbackEliminationOfVariabl
     obtain ⟨q, rfl⟩ := Ideal.mem_span_singleton'.mp hf
     rw [map_mul, map_mul, hvan z' hz'P hz'J, mul_zero]
   refine ⟨fun p => c p.1 * w p, mcPts_smul hP.2.1.2.1 c hc hwP, mcPts_smul hJh c hc hwh, ?_⟩
-  rw [segre_smul, hpc]
-  exact hΨy
+  rwa [segre_smul, hpc]
 
 end GroundTheory.Heights₂.Heights.Inter
 end -- clump:auto
@@ -679,14 +677,12 @@ theorem VerticalDegree.proof (h₁ : FibreDimensionZero.Statement) (h₂ : Chart
     intro k h0
     apply hch k.1
     have hX : (X ⟨k.1, i' k.1⟩ : MRing ι') ∈ W' := by
-      rw [← G'.genericFibre_ker_target, RingHom.mem_ker, aeval_X]
-      exact h0
+      rwa [← G'.genericFibre_ker_target, RingHom.mem_ker, aeval_X]
     simpa using Ideal.mem_map_of_mem (MvPolynomial.map (Int.castRingHom (ZMod p))) hX
   have hj : IsChart (fibreIdeal κ G') (fun k => i' k.1) := by
     intro k hk
     apply hz k
-    rw [fibreIdeal, RingHom.mem_ker, aeval_X] at hk
-    exact hk
+    rwa [fibreIdeal, RingHom.mem_ker, aeval_X] at hk
   rw [hJ.1 _ Fin.elim0 _ hfib hj, h₃ K ι K' ι' κ v p W' n i' hv hp hW hV hch G']
   congr 1
   exact (h₂ (FibreBlock κ) (fibreIdx ι' κ) G'.Φ G'.Φ' (fun q => G'.x' ⟨q.1.1, q.2⟩) (fun k => i' k.1) hz
@@ -719,8 +715,7 @@ theorem FibreDimensionZero.proof (h₁ : ArithmeticIntersectionFibreMultiHomogen
     refine ⟨i, fun h => hi ?_⟩
     rw [fibreIdeal, RingHom.mem_ker, aeval_X] at h
     have hX : (X ⟨k.1, i⟩ : MRing ι') ∈ W' := by
-      rw [← G'.genericFibre_ker_target, RingHom.mem_ker, aeval_X]
-      exact h
+      rwa [← G'.genericFibre_ker_target, RingHom.mem_ker, aeval_X]
     simpa using Ideal.mem_map_of_mem (MvPolynomial.map (Int.castRingHom (ZMod p))) hX
   · rw [fibreIdeal, h₂ (FibreBlock κ) (fibreIdx ι' κ) G'.Φ G'.Φ', h₃ K ι K' ι' κ v p W' n hv hp hW hV G']
     simp
@@ -903,8 +898,7 @@ theorem IntClosureLocFinite.proof (h : RelAlgClosureFinite.Statement) :
   have hyK : IsIntegral K y := hmx.tower_top
   let yM : M := ⟨y, hyK⟩
   have hyMint : IsIntegral D yM := by
-    rw [← isIntegral_algHom_iff (IsScalarTower.toAlgHom D M L) (fun a b hab => Subtype.ext hab)]
-    exact hmx
+    rwa [← isIntegral_algHom_iff (IsScalarTower.toAlgHom D M L) (fun a b hab => Subtype.ext hab)]
   have hyspan : (⟨yM, hyMint⟩ : integralClosure D M) ∈ Submodule.span D (s : Set _) :=
     hs ▸ Submodule.mem_top
   let f : integralClosure D M →ₗ[D] L :=
@@ -912,8 +906,7 @@ theorem IntClosureLocFinite.proof (h : RelAlgClosureFinite.Statement) :
   have hyD : y ∈ Submodule.span D ((s.image fun g : integralClosure D M => ((g : M) : L)) : Set L) := by
     have hmap := Submodule.mem_map_of_mem (f := f) hyspan
     rw [Submodule.map_span] at hmap
-    rw [Finset.coe_image]
-    exact hmap
+    rwa [Finset.coe_image]
   have hyA := Submodule.span_subset_span D A _ hyD
 
   have hu : IsUnit (algebraMap D A m) := hm
@@ -1445,8 +1438,7 @@ theorem SemilocIntegral.proof (h₁ : ValCentreZ.Statement) (h₂ : CentreOverW.
       (Polynomial.map_surjective f.rangeRestrict (fun ⟨_, a, ha⟩ => ⟨a, Subtype.ext ha⟩) p)) hp
   refine ⟨q, hqm, ?_⟩
   change Polynomial.eval₂ (f.range.subtype.comp f.rangeRestrict) (b : FractionRing _) q = 0
-  rw [← Polynomial.eval₂_map, hq]
-  exact hpx
+  rwa [← Polynomial.eval₂_map, hq]
 
 end GroundTheory.Heights₂.Heights.Inter
 end -- clump:auto
@@ -1513,13 +1505,11 @@ theorem SemilocRank.proof (hDim : FibreDimStatement) (hAdj : SemilocRankAdjoin.S
   have hz : ∀ k : FibreBlock κ, G.x' ⟨k.1, i' k.1⟩ ≠ 0 := by
     intro k h0
     apply hi' k.1
-    rw [← G.genericFibre_ker_target, RingHom.mem_ker, aeval_X]
-    exact h0
+    rwa [← G.genericFibre_ker_target, RingHom.mem_ker, aeval_X]
   have hj : IsChart (fibreIdeal κ G) (fun k => i' k.1) := by
     intro k hk
     apply hz k
-    rw [fibreIdeal, RingHom.mem_ker, aeval_X] at hk
-    exact hk
+    rwa [fibreIdeal, RingHom.mem_ker, aeval_X] at hk
   rw [hJ.1 _ Fin.elim0 _ hfib hj, hAdj K ι K' ι' κ v P' n G s α W i' hv hP' hZ hs hsP hW hi']
   congr 1
   exact (ChartRankAdjoin.proof (FibreBlock κ) (fibreIdx ι' κ) G.Φ G.Φ' (fun q => G.x' ⟨q.1.1, q.2⟩)

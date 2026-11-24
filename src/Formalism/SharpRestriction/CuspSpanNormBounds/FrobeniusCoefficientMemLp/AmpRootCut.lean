@@ -153,8 +153,7 @@ theorem rootCmp_of (hCR : CellRep) (hTr : AmpTransport) (hRJ : RootJac) (hRH : R
   have hmap' : μ₀.map (rootCoords D.R.k D.R.rS (toBessel D τ w w' θ W lam' A hW hA hT hT').z' p) =
       ENNReal.ofReal ((‖(toBessel D τ w w' θ W lam' A hW hA hT hT').c‖ / (2 * Real.pi)) ^ (rootPat p).card) •
         volume := by
-    rw [hcnorm]
-    exact hmap
+    rwa [hcnorm]
   have hRM' := hRJ D.R.k D.R.rS _ p g₀ μ₀ hPt hG hnull hmap'
   have hHaar := hRH D.R.k D.R.rS _ p g₀ μ₀ hc0 hPt hG hnull hmap'
   obtain ⟨ν, hν⟩ := hOQ D.R.k D.R.rS _ p g₀ _ hPt hG hHaar
@@ -166,8 +165,7 @@ theorem rootCmp_of (hCR : CellRep) (hTr : AmpTransport) (hRJ : RootJac) (hRH : R
   · have hid : (fun x : Mt D.R.k D.R.rS => fun i j => (g₀⁻¹ * Matrix.of x * g₀) i j) ∘
         (fun x : Mt D.R.k D.R.rS => fun i j => (g₀ * Matrix.of x * g₀⁻¹) i j) = id :=
       conj_conj_id hg₀
-    rw [Measure.map_map (measurable_conjL _ _) (measurable_conjL _ _), hid, Measure.map_id]
-    exact hq0
+    rwa [Measure.map_map (measurable_conjL _ _) (measurable_conjL _ _), hid, Measure.map_id]
   · rw [hγ]
     exact le_of_eq hamp
 

@@ -30,8 +30,7 @@ theorem isPrime_map_ringEquiv_iff (V : Ideal A) : (V.map σ).IsPrime ↔ V.IsPri
   · intro hV
     rw [← Ideal.comap_map_of_bijective σ σ.bijective (I := V)]
     exact Ideal.comap_isPrime σ (V.map σ)
-  · intro hV
-    exact Ideal.map_isPrime_of_equiv σ
+  · exact fun hV => Ideal.map_isPrime_of_equiv σ
 
 theorem map_ringEquiv_injective : Function.Injective (Ideal.map σ : Ideal A → Ideal A') :=
   fun I J hIJ => by
@@ -49,8 +48,7 @@ theorem length_int_quotient_map (I : Ideal A) :
 theorem minimalPrimes_map_ringEquiv (I : Ideal A) :
     (I.map σ).minimalPrimes = Ideal.map σ '' I.minimalPrimes := by
   have := Ideal.minimalPrimes_map_of_surjective (f := (σ : A →+* A')) σ.surjective I
-  rw [RingHom.ker_coe_equiv, sup_bot_eq] at this
-  exact this
+  rwa [RingHom.ker_coe_equiv, sup_bot_eq] at this
 
 theorem map_mem_primeCompl (V : Ideal A) [V.IsPrime] [(V.map σ).IsPrime] (s : V.primeCompl) :
     σ s ∈ (V.map σ).primeCompl :=

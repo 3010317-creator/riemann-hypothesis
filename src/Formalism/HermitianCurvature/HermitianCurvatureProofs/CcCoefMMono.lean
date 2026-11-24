@@ -199,8 +199,7 @@ theorem posCoreCont : ∃ Cc : ℝ, 0 ≤ Cc ∧
       (hZne t ht' v) hγ)
     rw [Formalism.FourierDecayAlt.P.Ux10.DjU_gaXi _root_.Formalism.FourierDecayAlt.P.Ux3.zhSlice]
     have e : G.detM (Zv n t v) = t ^ (n + 1) * (G.wMat (n + 1)).det := detM_Zv n t v
-    rw [e]
-    exact hc'
+    rwa [e]
 
   have hK : IsCompact ((fun w : ℂ => ‖w‖) '' tsupport χD) := hχD.2.1.isCompact.image continuous_norm
   have hK0 : (fun w : ℂ => ‖w‖) '' tsupport χD ⊆ Set.Ioi 0 := by
@@ -294,8 +293,7 @@ theorem posCoreCont : ∃ Cc : ℝ, 0 ≤ Cc ∧
     rw [norm_iteratedFDeriv_zero] at h
     refine h.trans ?_
     have := mul_le_mul_of_nonneg_left (Zv_decay n ht v ha0) hCc
-    rw [← mul_assoc] at this
-    exact this
+    rwa [← mul_assoc] at this
   have hfin : (Module.finrank ℝ (G.UT (n + 1) → ℂ) : ℝ) < a := by
     have e : Module.finrank ℝ (G.UT (n + 1) → ℂ) = Fintype.card (G.UT (n + 1)) * 2 := by
       rw [Module.finrank_pi_fintype]
@@ -333,8 +331,7 @@ theorem posCoreCont : ∃ Cc : ℝ, 0 ≤ Cc ∧
   have hgint : Integrable (fun v : G.UT (n + 1) → ℂ => C * c * m0 ^ (-a) * (1 + ‖v‖) ^ (-a))
       (G.muPi U.betaU (G.UT (n + 1))) := by
     rw [Dx2.SL.muPi_betaU]
-    apply Integrable.smul_measure_nnreal
-    exact (integrable_one_add_norm hfin).const_mul _
+    exact Integrable.smul_measure_nnreal ((integrable_one_add_norm hfin).const_mul _)
 
   let Wt : ℂ → V := fun t =>
     ∫ v, G.psi U.betaU (G.superSum (G.upper v)) • Φ (Zv n t v) ∂(G.muPi U.betaU (G.UT (n + 1)))

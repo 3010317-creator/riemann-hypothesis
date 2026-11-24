@@ -140,35 +140,25 @@ theorem coconeLeft_homology_eq_coconeRight_homology {r s n : ℕ} (h : r + s = n
   obtain ⟨x, rfl⟩ := homologyπ_hom_surjective _ r x
   obtain ⟨y, rfl⟩ := homologyπ_hom_surjective _ s y
   rw [homologyMap_homologyπ_apply, homologyMap_homologyπ_apply, homology_homologyπ,
-    homology_homologyπ]
-  rw [← sub_eq_zero, ← map_sub]
+    homology_homologyπ, ← sub_eq_zero, ← map_sub]
   cases n with
   | zero =>
     obtain ⟨rfl, rfl⟩ : r = 0 ∧ s = 0 := ⟨by omega, by omega⟩
-    have e : (coconeLeft μL ρB μK hL).cycles h x
-        ((HomologicalComplex.cyclesMap (mappingCoconeNat.fst fB) 0).hom y) -
-      (coconeRight μR ρA μK hR).cycles h
-        ((HomologicalComplex.cyclesMap (mappingCoconeNat.fst fA) 0).hom x) y = 0 := by
-      apply iCycles_hom_injective
-      rw [map_sub, iCycles_cycles, iCycles_cycles, iCycles_cyclesMap_apply,
-        iCycles_cyclesMap_apply, map_zero, sub_eq_zero]
-      exact Prod.ext rfl rfl
-    rw [e, map_zero]
+    refine (congrArg _ ?_).trans (map_zero _)
+    apply iCycles_hom_injective
+    rw [map_sub, iCycles_cycles, iCycles_cycles, iCycles_cyclesMap_apply,
+      iCycles_cyclesMap_apply, map_zero, sub_eq_zero]
+    exact Prod.ext rfl rfl
   | succ m =>
     have hX := iCycles_d_apply (mappingCoconeNat fA) r (r + 1) x
     have hY := iCycles_d_apply (mappingCoconeNat fB) s (s + 1) y
     rw [mappingCoconeNat_d] at hX hY
     obtain ⟨W, hW⟩ := coconeLeftμ_sub_coconeRightμ_eq_d μLL ρA ρB μL μR hLL hRR μK h _ _ hX hY
-    have e : (coconeLeft μL ρB μK hL).cycles h x
-        ((HomologicalComplex.cyclesMap (mappingCoconeNat.fst fB) s).hom y) -
-      (coconeRight μR ρA μK hR).cycles h
-        ((HomologicalComplex.cyclesMap (mappingCoconeNat.fst fA) r).hom x) y =
-        ((mappingCoconeNat fC).toCycles m (m + 1)).hom W := by
-      apply iCycles_hom_injective
-      rw [map_sub, iCycles_cycles, iCycles_cycles, iCycles_cyclesMap_apply,
-        iCycles_cyclesMap_apply, iCycles_toCycles_hom_apply, mappingCoconeNat_d]
-      exact hW
-    rw [e, homologyπ_toCycles_hom_apply]
+    refine (congrArg _ ?_).trans (homologyπ_toCycles_hom_apply _ _ _ W)
+    apply iCycles_hom_injective
+    rw [map_sub, iCycles_cycles, iCycles_cycles, iCycles_cyclesMap_apply,
+      iCycles_cyclesMap_apply, iCycles_toCycles_hom_apply, mappingCoconeNat_d]
+    exact hW
 
 end LeibnizPairing
 

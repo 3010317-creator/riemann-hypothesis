@@ -145,8 +145,7 @@ theorem ind_claim (hy : ∀ l l', Δ l (y l') = if l = l' then 1 else 0) (hθ : 
     intro c hc _
     funext i
     rw [Pi.zero_apply, ← MvPolynomial.support_eq_empty, Finset.eq_empty_iff_forall_notMem]
-    intro m hm
-    exact absurd (hc i m hm) (Nat.not_lt_zero _)
+    exact fun m hm => absurd (hc i m hm) (Nat.not_lt_zero _)
   | succ a ih =>
     intro c hc hmem
     rcases Nat.eq_zero_or_pos a with rfl | ha
@@ -250,8 +249,7 @@ theorem pdLw_algebraMap_Kp (p : Idx D j N) (c : Kp X la N) :
 theorem pdLw_mem (p : Idx D j N) (u : WeightFamilies.Wt D j) (a : ℕ) {x : Lw X la w} (hx : x ∈ JHfr X la w u (a + 1)) :
     pdLw X la w p x ∈ JHfr X la w u a := by
   have h := hasse_jid_power X la w u (Finsupp.single p 1) (a + 1) x hx
-  rw [Finsupp.sum_single_index rfl, Nat.add_sub_cancel] at h
-  exact h
+  rwa [Finsupp.sum_single_index rfl, Nat.add_sub_cancel] at h
 
 theorem pdLw_w0inv (p : Idx D j N) (hp : p.1 ≠ 0) : pdLw X la w p (w0inv X la w) = 0 := by
   have h := congrArg (pdLw X la w p) (section_mul_inverse_eq_one X la w)
@@ -326,8 +324,7 @@ theorem JHfr_succ_le (u : WeightFamilies.Wt D j) (a : ℕ) : JHfr X la w u (a + 
   have h1 : x ∈ JHs X la w u (a + 1) := hx
   rw [← Jid_pow_smul_HK] at h1
   have h2 : x ∈ Jid X la w ^ a • HK X la w u := Submodule.smul_mono (Ideal.pow_le_pow_right (Nat.le_succ a)) le_rfl h1
-  rw [Jid_pow_smul_HK] at h2
-  exact h2
+  rwa [Jid_pow_smul_HK] at h2
 
 open MvPolynomial in
 theorem aeval_ySec_monomial (m : Fin (WeightFamilies.dimY D j) →₀ ℕ) :
@@ -425,8 +422,7 @@ theorem exists_coeff_of_mem_span {x : ↥(Vw X la G.N (addL wF wL T))}
       by_cases h : i' = i
       · rw [ite_eq_left h] at hm
         have := Finset.mem_singleton.mp (support_monomial_subset hm)
-        rw [this, Finsupp.degree_eq_sum]
-        exact hal
+        rwa [this, Finsupp.degree_eq_sum]
       · rw [ite_eq_right h, support_zero] at hm
         exact absurd hm (Finset.notMem_empty _)
     · rw [Finset.sum_eq_single i]
@@ -482,8 +478,7 @@ theorem in64 (hB : InBasis G la) : ∀ x ∈ Submodule.span (Kp X la G.N) (secti
         refine Finset.sum_congr rfl fun i _ => ?_
         rw [Submodule.coe_smul, Algebra.smul_def, map_mul,
           ← IsScalarTower.algebraMap_apply (Kp X la G.N) (Rp X la G.N) (Lw X la G.w), ← Algebra.smul_def]
-      rw [e2]
-      exact hb
+      rwa [e2]
     funext i
     exact Fintype.linearIndependent_iff.mp hB.1 b hlin i
   have hmem : ∑ i, aeval (ySec X la G.w) (c i) *
@@ -493,8 +488,7 @@ theorem in64 (hB : InBasis G la) : ∀ x ∈ Submodule.span (Kp X la G.N) (secti
     have e : ∀ i, frac X la G.w T (phiN X la G.w wF T (G.th' i) (c i)) = aeval (ySec X la G.w) (c i) *
         algebraMap (Rp X la G.N) (Lw X la G.w) (emb X la G.N (X.inc wF (G.th' i))) := fun i =>
       frac_phiN X la G.w wF T (G.th' i) (c i) fun m hm => ((hc i m hm).le.trans (Nat.sub_le _ _))
-    simp only [e] at h0
-    exact h0
+    simpa only [e] using h0
   have hc0 := ind_claim (ySec X la G.w)
     (fun i => algebraMap (Rp X la G.N) (Lw X la G.w) (emb X la G.N (X.inc wF (G.th' i)))) (JHfr X la G.w wF)
     (dSec X la G.w) (dSec_ySec X la G.w) (fun l i => dSec_emb X la G.w l _) (dSec_algebraMap_Kp X la G.w)
@@ -564,8 +558,7 @@ theorem irreducible_algebraMap_int {π : R} (h : v.intValuation π = WithZero.ex
     Irreducible (algebraMap R (v.adicCompletionIntegers K) π) := by
   have hv : Valued.v ((algebraMap R (v.adicCompletionIntegers K) π : v.adicCompletionIntegers K) :
       v.adicCompletion K) = WithZero.exp (-1) := by
-    rw [valued_algebraMap_int]
-    exact h
+    rwa [valued_algebraMap_int]
   refine ⟨fun hu => ?_, ?_⟩
   · rw [IsDedekindDomain.HeightOneSpectrum.adicCompletionIntegers.isUnit_iff_valued_eq_one, hv] at hu
     have h1 : (-1 : ℤ) = 0 := WithZero.exp_inj.mp (hu.trans WithZero.exp_zero.symm)
@@ -577,8 +570,7 @@ theorem irreducible_algebraMap_int {π : R} (h : v.intValuation π = WithZero.ex
       (IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers R K v).mp z.2
     rw [hyz] at hv
     have hyz' : Valued.v (y : v.adicCompletion K) * Valued.v (z : v.adicCompletion K) = WithZero.exp (-1) := by
-      rw [← map_mul]
-      exact hv
+      rwa [← map_mul]
     have hy0 : Valued.v (y : v.adicCompletion K) ≠ 0 := by
       intro h0
       rw [h0, zero_mul] at hyz'
@@ -588,11 +580,9 @@ theorem irreducible_algebraMap_int {π : R} (h : v.intValuation π = WithZero.ex
       rw [h0, mul_zero] at hyz'
       exact WithZero.exp_ne_zero hyz'.symm
     have hm : (Valued.v (y : v.adicCompletion K)).log ≤ 0 := by
-      rw [← WithZero.exp_le_exp, WithZero.exp_log hy0, WithZero.exp_zero]
-      exact hy
+      rwa [← WithZero.exp_le_exp, WithZero.exp_log hy0, WithZero.exp_zero]
     have hn : (Valued.v (z : v.adicCompletion K)).log ≤ 0 := by
-      rw [← WithZero.exp_le_exp, WithZero.exp_log hz0, WithZero.exp_zero]
-      exact hz
+      rwa [← WithZero.exp_le_exp, WithZero.exp_log hz0, WithZero.exp_zero]
     rw [← WithZero.exp_log hy0, ← WithZero.exp_log hz0, ← WithZero.exp_add, WithZero.exp_inj] at hyz'
     by_cases hm0 : (Valued.v (y : v.adicCompletion K)).log = 0
     · left
@@ -627,8 +617,7 @@ theorem exists_irreducible_locToCompl :
     rcases hirr.isUnit_or_isUnit h1 with h | h
     · exact Or.inl (hloc y h)
     · exact Or.inr (hloc z h)
-  · rw [locToCompl_algebraMap]
-    exact hirr
+  · rwa [locToCompl_algebraMap]
 
 theorem length_le_length_localized {Q Q' : Type} [AddCommGroup Q] [Module R Q] [AddCommGroup Q']
     [Module (v.adicCompletionIntegers K) Q'] (g : Q →ₛₗ[algebraMap R (v.adicCompletionIntegers K)] Q')
@@ -705,8 +694,7 @@ theorem loc_span (s : Set X.Forms) :
     rintro _ ⟨F, hF, rfl⟩
     refine Submodule.span_induction (p := fun F _ => X.bc la F ∈ Submodule.span (X.Ol la) (X.bc la '' s))
       ?_ ?_ ?_ ?_ hF
-    · intro x hx
-      exact Submodule.subset_span ⟨x, hx, rfl⟩
+    · exact fun x hx => Submodule.subset_span ⟨x, hx, rfl⟩
     · simp
     · intro x y _ _ hx hy
       rw [map_add (f := _)]
@@ -747,14 +735,9 @@ theorem span_inW_loc (N : Submodule (𝓞 B.KO) X.Forms) (hN : N ≤ X.Msup ka)
     ?_ ?_ ?_ ?_ hw' hw
   · rintro _ ⟨n, hn, rfl⟩ h
     exact Submodule.subset_span (show X.bc la n ∈ X.loc la N from Submodule.subset_span ⟨n, hn, rfl⟩)
-  · intro h
-    exact Submodule.zero_mem _
-  · intro x y hx' hy' hx hy h
-    have h1 := Submodule.add_mem _ (hx (hWN x hx')) (hy (hWN y hy'))
-    exact h1
-  · intro a x hx' hx h
-    have h1 := Submodule.smul_mem _ a (hx (hWN x hx'))
-    exact h1
+  · exact fun h => Submodule.zero_mem _
+  · exact fun x y hx' hy' hx hy h => Submodule.add_mem _ (hx (hWN x hx')) (hy (hWN y hy'))
+  · exact fun a x hx' hx h => Submodule.smul_mem _ a (hx (hWN x hx'))
 
 theorem isLat_inW_loc (N : Submodule (𝓞 B.KO) X.Forms) (hN : N ≤ X.Msup ka) (hfg : N.FG)
     (hW : X.locK la (X.Msup ka) ≤ X.locK la N) :
@@ -799,15 +782,13 @@ section Quot
 variable (X : PJ D B P j) (la : HeightOneSpectrum (𝓞 B.KO)) (ka : WeightFamilies.Wt D j)
 
 theorem toW_mem_MW (F : B.Mlat j ka) : toW X la ka F ∈ T0.MW X ka la := by
-  show X.bc la (X.inc ka F) ∈ X.loc la (X.Msup ka)
   exact Submodule.subset_span ⟨X.inc ka F, ⟨F, F.2, rfl⟩, rfl⟩
 
 theorem MW_eq_span : T0.MW X ka la = Submodule.span (X.Ol la) (Set.range (toW X la ka)) := by
   have hle : X.loc la (X.Msup ka) ≤ (T0.WL X ka la).restrictScalars (X.Ol la) := by
     unfold Formalism.MainNotions.WeightAlgebra.PJ.loc
     rw [Submodule.span_le]
-    intro x hx
-    exact Submodule.subset_span hx
+    exact fun x hx => Submodule.subset_span hx
   apply Submodule.map_injective_of_injective (f := (T0.WL X ka la).subtype.restrictScalars (X.Ol la))
     Subtype.val_injective
   show Submodule.map _ (Submodule.comap _ (X.loc la (X.Msup ka))) = _
@@ -846,9 +827,7 @@ theorem quot_len_le (CRm T c : ℝ) {n : ℕ} (th : Fin n → B.Mlat j ka) :
     rw [LinearMap.mem_ker]
     show S₁.mkQ _ = 0
     rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-    refine Submodule.mem_sup_left ?_
-    show X.bc la (X.inc ka F) ∈ X.loc la (X.emb ka (MggO B CRm T c j ka))
-    exact Submodule.subset_span ⟨X.inc ka F, ⟨F, ⟨F.2, hF⟩, rfl⟩, rfl⟩
+    exact Submodule.mem_sup_left (Submodule.subset_span ⟨X.inc ka F, ⟨F, ⟨F.2, hF⟩, rfl⟩, rfl⟩)
   let g1 : WeightFamilies.Qm B CRm T c j ka →ₛₗ[algebraMap (𝓞 B.KO) (X.Ol la)] (↥(T0.MW X ka la) ⧸ S₁) :=
     (WeightFamilies.MggIn B CRm T c j ka).liftQ g0 hk
   have hk1 : Submodule.span (𝓞 B.KO)
@@ -868,15 +847,13 @@ theorem quot_len_le (CRm T c : ℝ) {n : ℕ} (th : Fin n → B.Mlat j ka) :
     induction hy' using Submodule.span_induction with
     | mem y h =>
       obtain ⟨F, rfl⟩ := h
-      intro hy
-      exact Submodule.subset_span ⟨Submodule.Quotient.mk (Submodule.Quotient.mk F), rfl⟩
+      exact fun hy => Submodule.subset_span ⟨Submodule.Quotient.mk (Submodule.Quotient.mk F), rfl⟩
     | zero => intro hy; exact Submodule.zero_mem _
     | add a b ha hb iha ihb =>
       intro hy
       exact Submodule.add_mem _ (iha (MW_eq_span X la ka ▸ ha)) (ihb (MW_eq_span X la ka ▸ hb))
     | smul r a ha ih =>
-      intro hy
-      exact Submodule.smul_mem _ r (ih (MW_eq_span X la ka ▸ ha))
+      exact fun hy => Submodule.smul_mem _ r (ih (MW_eq_span X la ka ▸ ha))
   rw [eq_top_iff]
   rintro z -
   obtain ⟨⟨y, hy⟩, rfl⟩ := Submodule.Quotient.mk_surjective _ z
@@ -1008,10 +985,8 @@ theorem ker_rhoN (e : ℕ) (h64 : In64 G la) (hN : N1 G la ≤ M1 X la G.N (addL
     obtain ⟨n, hn, z, hz, rfl⟩ := Submodule.mem_sup.1 hx'
     have hz0 : rhoK X la G.w wF (a0 D j T) T z = 0 := ZK_le_ker G la hDT hal hz
     rw [map_add (f := _), hz0, add_zero] at h
-    rw [h64 n hn h, zero_add]
-    exact hz
-  · intro h
-    exact ZK_le_ker G la hDT hal h.2
+    rwa [h64 n hn h, zero_add]
+  · exact fun h => ZK_le_ker G la hDT hal h.2
 
 theorem map_reduction_generators_eq (e : ℕ) : ((N1 G la).comap (Np G la e).subtype).map (rhoN G la e) = firstLength_le_prime_bound G la T := by
   rw [reducedGenerators_eq_map]
@@ -1156,8 +1131,7 @@ theorem localIdx (Q : LocalPointData G la) (S : Scal B) (CRm c : ℝ) (e : ℕ) 
   have hLP' : Module.length (Op X la G.N) (↥(Q.AAp T (Q.mm S T e)) ⧸ (Q.AA T).comap (Q.AAp T (Q.mm S T e)).subtype) ≤
       ((Nat.choose (T - 1) (WeightFamilies.dimY D j) * ∑ ζ, (max 0 ⌈(ep (unifO X la G.N) ζ : ℝ) *
         ((T : ℝ) * Q.nu S ζ - (e : ℝ))⌉).toNat * fdeg ζ : ℕ) : ℕ∞) := by
-    rw [finsum_eq_sum_of_fintype] at hLP
-    exact hLP
+    rwa [finsum_eq_sum_of_fintype] at hLP
   have hthΘ : ∀ i, toW X la (addL wF wL T) (G.th i) ∈ T0.ThW X S (addL wF wL T) wL wF T la := fun i => by
     show X.bc la (X.inc (addL wF wL T) (G.th i)) ∈ X.loc la (X.Theta S (addL wF wL T) wL wF T)
     exact Submodule.subset_span ⟨X.inc (addL wF wL T) (G.th i),

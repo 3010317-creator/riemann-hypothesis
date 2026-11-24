@@ -78,8 +78,7 @@ private theorem finsupp_prod_choose_eq_bin_of_le (M α : σ →₀ ℕ) (h : M �
   unfold bin Finsupp.prod
   refine Finset.prod_subset (Finset.subset_univ _) fun x _ hx => ?_
   have h0 : α x = 0 := by simpa using hx
-  have hle : M x ≤ α x := by
-    exact Finsupp.le_def.1 h x
+  have hle : M x ≤ α x := Finsupp.le_def.1 h x
   have h1 : M x = 0 := by omega
   simp [h0, h1]
 
@@ -90,10 +89,8 @@ theorem ddiv_monomial' (M α : σ →₀ ℕ) (c : K) :
   · rw [ite_eq_left h, finsupp_prod_choose_eq_bin_of_le M α h]
   · rw [ite_eq_right h]
     obtain ⟨x, hx⟩ : ∃ x, α x < M x := by
-      by_contra hc
-      push Not at hc
-      apply h
-      exact Finsupp.le_def.2 hc
+      by_contra! hc
+      exact h (Finsupp.le_def.2 hc)
     have h0 : (bin M α : K) = 0 := by
       unfold bin
       exact Finset.prod_eq_zero (Finset.mem_univ x) (by simp [Nat.choose_eq_zero_of_lt hx])
@@ -232,8 +229,7 @@ theorem der' (hDER : DER K v p) (hD : DVRHyp v p) (r g : ℕ) (M : Fin r →₀ 
       apply Fin.ext
       have h2 : ((b a : ℕ)) = η a % p ^ g := congrFun h a
       rw [h2, hρf a]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   have hpoly : ddiv M (monomial η (1 : K)) - (∑ s : (Σ ρf : Fin r → Fin (p ^ g), Fin (n ρf)),
       if (fun a => (s.1 a : ℕ)) = (fun a => η a % p ^ g) then
         monomial (ρ' s.1 s.2 + p ^ g • (δ s.1 s.2 + (divE (p ^ g) η - κ s.1 s.2)))
@@ -263,8 +259,7 @@ theorem bin_onLetter (i : L) (M : Fin r →₀ ℕ) (α : L × Fin r →₀ ℕ)
     refine Finset.prod_eq_one fun a _ => ?_
     rw [onLetter_apply, ite_eq_right hj]
     simp
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem sub_onLetter (i : L) (M : Fin r →₀ ℕ) (α : L × Fin r →₀ ℕ) :
     α - onLetter i M = offE i α + onLetter i (letE α i - M) := by
@@ -455,11 +450,9 @@ theorem inClass_new (ρ'' : D.Tau → Fin D.r → ℕ) (α : D.EA) (ρ1 x : Fin 
   · intro h
     refine ⟨fun a => ?_, fun t' ht' a => ?_⟩
     · have h1 := h t a
-      rw [hval, ite_eq_left rfl, Nat.add_mul_mod_self_left] at h1
-      exact h1
+      rwa [hval, ite_eq_left rfl, Nat.add_mul_mod_self_left] at h1
     · have h1 := h t' a
-      rw [hval, ite_eq_right ht'] at h1
-      exact h1
+      rwa [hval, ite_eq_right ht'] at h1
   · rintro ⟨h1, h2⟩ t' a
     rw [hval]
     by_cases h : t' = t
@@ -480,8 +473,7 @@ theorem inClass_update (ρ'' : D.Tau → Fin D.r → ℕ) (α : D.EA) (cl : Fin 
       rw [Function.update_apply, ite_eq_left rfl] at h1
       exact h1.symm
     · have h1 := h t' a
-      rw [Function.update_apply, ite_eq_right ht'] at h1
-      exact h1
+      rwa [Function.update_apply, ite_eq_right ht'] at h1
   · rintro ⟨h1, h2⟩ t' a
     rw [Function.update_apply]
     by_cases h : t' = t
@@ -653,8 +645,7 @@ theorem costA_choose [NeZero D.r] (hV2 : V2 K) (x : D.OL × Fin D.r) (k : ℕ) :
   intro ρ
   obtain ⟨i, a⟩ := x
   rcases i with b | t
-  · simp only [emb_inl]
-    exact D.costM_choose hV2 (D.mb b, a) k
+  · simpa only [emb_inl] using D.costM_choose hV2 (D.mb b, a) k
   · simp only [emb_inr]
     exact cost_choose_affine D.costM_ok (fun ζ => ζ (D.mw t, a))
       (fun k => D.costM_choose hV2 (D.mw t, a) k) (ρ t a) (D.P p t) k
@@ -812,8 +803,7 @@ theorem ChOK.ddiv_finset [NeZero D.r] (hV2 : V2 K) (hDER : DER K v p) (hD : DVRH
   induction s using Finset.induction_on with
   | empty =>
     simp only [Finset.sum_empty, sub_zero]
-    rw [ddiv_zero']
-    exact h
+    rwa [ddiv_zero']
   | insert t s ht ih =>
     have h1 := ih.ddiv hV2 hDER hD hc t (letE M (Sum.inr t))
     rw [ddiv_ddiv_of_disjoint] at h1
@@ -906,8 +896,7 @@ theorem stepE_of [CharZero K] (v : AddValuation K (WithTop ℚ)) (p : ℕ) (hV2 
   have h0 : D.ChOK v p D.th (-D.n0 v) F := by
     refine ⟨F, 0, by rw [add_zero], ?_, cge_zero v _, fun ρ j i => hF.2.1 ρ j i⟩
     have := cge_of_bge hD hF.1 hb
-    rw [zero_sub] at this
-    exact this
+    rwa [zero_sub] at this
   obtain ⟨T1, lam1, hl1, hf1⟩ := hgs 1 (Or.inl rfl)
   obtain ⟨T2, lam2, hl2, hf2⟩ := hgs (-1) (Or.inr rfl)
   have h1 := h0.dg hV2 D.ga (fun α => (hgu α).ge) T1 lam1 hl1

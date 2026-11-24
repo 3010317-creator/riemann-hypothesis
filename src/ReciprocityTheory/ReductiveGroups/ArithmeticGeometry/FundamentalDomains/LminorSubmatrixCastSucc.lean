@@ -233,8 +233,7 @@ theorem gramPos_posDef {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) : (X.gr
   have h1 := hx' (Fin.castLE (Nat.succ_le_succ X.p0_le) i)
   have h2 : psgn X.p0 ((Fin.castLE (Nat.succ_le_succ X.p0_le) i : Fin (r + 1)) : ℕ) = 1 :=
     psgn_eq_one (Nat.le_of_lt_succ i.isLt)
-  rw [h2, one_mul] at h1
-  exact h1
+  rwa [h2, one_mul] at h1
 
 theorem ppos_eq (x : Frame X.Ψ r) (τ : X.Ψ) (u : Fin r → ℂ) : X.ppos x τ u =
     ∑ a, (∑ b, hermC τ.1 X.Gm u (X.colP x τ b) * (X.gramPos x τ)⁻¹ b a) • X.colP x τ a := rfl
@@ -298,8 +297,7 @@ private theorem hermC_sum_smul_col_negative_block {p0 : ℕ} (τ : E →+* ℂ) 
 theorem neg_of_perp {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) {e : Fin r → ℂ} (he : e ≠ 0)
     (hperp : ∀ b, hermC τ.1 X.Gm e (X.colP x τ b) = 0) : (hermC τ.1 X.Gm e e).re < 0 := by
   classical
-  by_contra hneg
-  push Not at hneg
+  by_contra! hneg
   obtain ⟨P, -, hP⟩ := X.signature τ
   have hpd := X.gramPos_posDef hx τ
   have hle := X.p0_le

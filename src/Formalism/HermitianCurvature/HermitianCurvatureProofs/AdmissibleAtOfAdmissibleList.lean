@@ -89,8 +89,7 @@ theorem pairwise_iff_idx (L : List C.Letter) :
     rcases lt_or_gt_of_ne hne with hlt | hlt
     · exact h j j' hj hj' hlt
     · exact sep_symm (h j' j hj' hj hlt)
-  · intro h j j' hj hj' hlt
-    exact h j j' hj hj' (ne_of_lt hlt)
+  · exact fun h j j' hj hj' hlt => h j j' hj hj' (ne_of_lt hlt)
 
 section
 
@@ -256,8 +255,7 @@ theorem extend (S : C.HidaSetting E Wp Wq) (hG : C.GridsOK S) (hC : KB.CutInside
       rcases Finset.mem_union.1 (hL.1 j hj) with h | h
       · exact Or.inl ⟨_, h⟩
       · exact Or.inr h
-    · have h0 := h 0 (by norm_num) (by norm_num)
-      simpa using h0
+    · simpa using h 0 (by norm_num) (by norm_num)
   have hP : AdmList S v (KB.plusW ys a) := by
     rw [plusW_eq]
     refine admissible_list_prepend S v _ a ha ?_ ?_ ?_
@@ -435,8 +433,7 @@ theorem newLetters1 : NewLetters1 := by
   have hmem : ∀ y ∈ U.toList, y ∈ S.grid1 v ∧ y ∉ a.map nodeOf := by
     intro y hy
     have h := hUT (Finset.mem_toList.1 hy)
-    rw [Finset.mem_sdiff, List.mem_toFinset] at h
-    exact h
+    rwa [Finset.mem_sdiff, List.mem_toFinset] at h
   have hpw : U.toList.Pairwise fun y y' => 4 < |y - y'| := by
     refine U.nodup_toList.pairwise_of_forall_ne fun y hy y' hy' hne => ?_
     have h := (hG v).2.2.2.1 y (hmem y hy).1 y' (hmem y' hy').1 hne 0 (by simp) 0 (by simp)

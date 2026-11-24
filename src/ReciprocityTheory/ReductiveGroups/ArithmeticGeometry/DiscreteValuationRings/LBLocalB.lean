@@ -39,8 +39,7 @@ theorem exists_genHasVal (hϖ : Irreducible ϖ) {X : Scheme.{0}} (L : LB X) (hL 
     have hy' : (jK V).base y ∈ (⋂ k, (φ k).base ⁻¹' (L.U (j₀ k) : Set X)) := hy
     show y ∈ (⋂ k, (jK V ≫ φ k).base ⁻¹' (L.U (j₀ k) : Set X))
     refine Set.mem_iInter.2 fun k => ?_
-    have h1 := Set.mem_iInter.1 hy' k
-    simpa using h1
+    simpa using Set.mem_iInter.1 hy' k
   have hP := pullGen_isGen L φ ε e he (jK V)
   have gen3 : ∀ {A : Scheme.{0}} {U U' U'' : A.Opens} (h1 : U' ≤ U) (h2 : U'' ≤ U') (x : Γ(A, U)ˣ),
       res h2 (res h1 x) = res (h2.trans h1) x := by
@@ -115,8 +114,7 @@ theorem genHasVal_unique (hϖ : Irreducible ϖ) {X : Scheme.{0}} (L : LB X) (hL 
     have hy' : (jK V).base y ∈ (⋂ k, (φ k).base ⁻¹' (L.U (j₀ k) : Set X)) := hy
     show y ∈ (⋂ k, (jK V ≫ φ k).base ⁻¹' (L.U (j₀ k) : Set X))
     refine Set.mem_iInter.2 fun k => ?_
-    have h1 := Set.mem_iInter.1 hy' k
-    simpa using h1
+    simpa using Set.mem_iInter.1 hy' k
   obtain ⟨c1, hc1, u1, h1⟩ := genHasVal_top L φ ε t hn j₀ htop hK
   obtain ⟨c2, hc2, u2, h2⟩ := genHasVal_top L φ ε t hm j₀ htop hK
   have h12 : c1 * algebraMap V (FractionRing V) (u1 : V) = c2 * algebraMap V (FractionRing V) (u2 : V) :=
@@ -436,8 +434,7 @@ theorem genHasVal_ge_of_in (hϖ : Irreducible ϖ) {X : Scheme.{0}} (L : LB X) (h
     have hy' : (jK V).base y ∈ (⋂ k : PUnit, x.base ⁻¹' (L.U (j₀ k) : Set X)) := hy
     show y ∈ (⋂ k : PUnit, (jK V ≫ x).base ⁻¹' (L.U (j₀ k) : Set X))
     refine Set.mem_iInter.2 fun k => ?_
-    have h1 := Set.mem_iInter.1 hy' k
-    simpa using h1
+    simpa using Set.mem_iInter.1 hy' k
   obtain ⟨c, hc, eV, hX⟩ := genHasVal_top L (fun _ : PUnit => x) (fun _ => ε) t hn j₀ htop hK
   have hW : (⊤ : (Spec (CommRingCat.of V)).Opens) ≤ x ⁻¹ᵁ L.U (j₀ PUnit.unit) := by
     intro y _

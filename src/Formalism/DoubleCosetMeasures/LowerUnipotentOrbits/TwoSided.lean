@@ -111,8 +111,7 @@ theorem intTwoSided : Formalism.DoubleCosetMeasures.IntTwoSided := by
     obtain ⟨i, hi, hzi⟩ := Set.mem_iUnion₂.1 (ht hz)
     have hpi := (mem_box_iff K₁ K₂ i _).1 hzi
     rw [cls_out] at hpi
-    rw [hpi]
-    exact hi
+    rwa [hpi]
   refine ⟨hfin, ?_⟩
   change ∫ p, f p ∂(μ₁.prod μ₂) = ∑ᶠ p : Quotient (QuotientGroup.rightRel K₁) × (G₂ ⧸ K₂),
     ((μ₁ (K₁ : Set G₁)).toReal * (μ₂ (K₂ : Set G₂)).toReal) • g p
@@ -137,8 +136,7 @@ theorem intTwoSided : Formalism.DoubleCosetMeasures.IntTwoSided := by
     rw [hfg z]
     split_ifs with h
     · rfl
-    · rw [hS, Set.Finite.mem_toFinset, Function.mem_support, not_not] at h
-      exact h
+    · rwa [hS, Set.Finite.mem_toFinset, Function.mem_support, not_not] at h
   have hbox : ∀ p, (μ₁.prod μ₂) (box K₁ K₂ p) = μ₁ (K₁ : Set G₁) * μ₂ (K₂ : Set G₂) := by
     intro p
     rw [box, Measure.prod_prod, measure_preimage_mul_right, measure_preimage_mul]
@@ -158,8 +156,7 @@ theorem intTwoSided : Formalism.DoubleCosetMeasures.IntTwoSided := by
     exact Finset.sum_congr rfl fun p _ => hpiece p
   · rw [integral_undef hint]
     have hex : ∃ p ∈ S, ¬ Integrable ((box K₁ K₂ p).indicator (fun _ => g p)) (μ₁.prod μ₂) := by
-      by_contra hne
-      push Not at hne
+      by_contra! hne
       apply hint
       rw [hdecomp]
       exact MeasureTheory.integrable_finsetSum S hne

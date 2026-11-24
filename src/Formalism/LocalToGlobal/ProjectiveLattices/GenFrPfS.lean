@@ -70,7 +70,6 @@ theorem gfp_gen_of {L : Type} [Field L] (x : Sp L ⟶ Xo.X) {t' : SAB H (Sp L)} 
     intro j y hy
     have e : (k ≫ (CartesianMonoidalCategory.snd (Over.mk x) Xo.univ.t.G).left) y ∈ Xo.univ.t.PP.L.U j := by
       rw [hkφ]; exact hy
-    show k y ∈ (PPx x).U (fun _ => j)
     exact Set.mem_iInter.2 fun _ => e
   refine ⟨thfPull1 Xo.univ.t.PP.L h hF su, fun s'' => ?_⟩
   have hσ : ∀ (y : t'.G.left) (j j' : Xo.univ.t.PP.L.ι), m1.cm.F y ∈ Xo.univ.t.PP.L.U j →
@@ -128,8 +127,7 @@ theorem gfp_gen_of {L : Type} [Field L] (x : Sp L ⟶ Xo.X) {t' : SAB H (Sp L)} 
       rw [hkh]
       exact hsu _ (𝟙 _) y (fun _ => j) k' (Set.mem_iInter.2 fun _ => hj) hy
     rw [gs_mul (𝟙 _) y _ hy, gs_constFn _ _ (𝟙 _) y hy b, Category.id_comp]
-    apply (Units.mul_right_inj (gw w (𝟙 _) y j k')).1
-    exact hd.symm.trans (hL.trans (by ring))
+    exact (Units.mul_right_inj (gw w (𝟙 _) y j k')).1 (hd.symm.trans (hL.trans (by ring)))
 
 theorem gfp_gen (hT : ReciprocityTheory.ChartRestriction.G.Out.SecTwistSt) {L : Type} [Field L] (x : Sp L ⟶ Xo.X) :
     ∃ s : LB.Sec (PPx x), ∀ s'' : LB.Sec (PPx x), ∃! a : L, ∀ i, s''.f i = scal x a i * s.f i := by

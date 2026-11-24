@@ -77,8 +77,7 @@ theorem extendByIdentity_mem_flag_stabilizer (γ : (D.sp.X 0).V ≃ₗ[D.host.E]
       have e : (extendByIdentity D γ).symm x = x := (extendByIdentity D γ).symm.injective (hfix _ (partial_isotropic_le F0 j h))
       rwa [e] at h
     · intro h
-      rw [hfix x (partial_isotropic_le F0 j h)]
-      exact h
+      rwa [hfix x (partial_isotropic_le F0 j h)]
   · rw [← LinearEquiv.eq_symm_apply]
     exact (extendByIdentity_symm_fix_orth D γ _ (z_mem_orth_range D u F0 hz)).symm
 
@@ -115,8 +114,7 @@ theorem lattice_classes_of_lift_transitivity (hL : LiftsConjugateUnderStabilizer
       have h1 := hind (γ.symm w)
       rw [LinearEquiv.apply_symm_apply] at h1
       have h2 : σ.symm (σ (D.sp.iXY 0 (γ.symm w)) - D.sp.iXY 0 w) ∈ F0.X := by
-        rw [← Submodule.mem_map_equiv, hX]
-        exact h1
+        rwa [← Submodule.mem_map_equiv, hX]
       have hzs : σ.symm F0.z = F0.z := by
         rw [LinearEquiv.symm_apply_eq]
         exact hσ.2.2.symm

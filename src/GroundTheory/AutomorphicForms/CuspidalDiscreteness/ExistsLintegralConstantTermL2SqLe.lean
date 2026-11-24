@@ -137,8 +137,7 @@ theorem exists_lintegral_unip_sq_le (r : ℕ) {S : Set (normOneGL (K := K) (n :=
         ‖φ (mk Γ₁ (unipOne r X * y))‖ₑ ∂unipMeasure K n r ∂μ =
       ∫⁻ X in unipFundamentalDomain K n r, ∫⁻ y in S,
         ‖φ (mk Γ₁ (unipOne r X * y))‖ₑ ∂μ ∂unipMeasure K n r := by
-    refine lintegral_lintegral_swap ?_
-    exact (hmeas.comp measurable_swap).aemeasurable
+    exact lintegral_lintegral_swap (hmeas.comp measurable_swap).aemeasurable
   rw [hswap]
   calc ∫⁻ X in unipFundamentalDomain K n r, ∫⁻ y in S,
         ‖φ (mk Γ₁ (unipOne r X * y))‖ₑ ∂μ ∂unipMeasure K n r
@@ -218,8 +217,7 @@ theorem ae_constantTermL2_add (r : ℕ) (φ ψ : Lp ℂ 2 (quotientMeasure Γ₁
   filter_upwards [ae_ctFun_congr μ r (Lp.coeFn_add φ ψ), ae_integrableOn_unip μ r φ,
     ae_integrableOn_unip μ r ψ] with y h1 h2 h3
   rw [constantTermL2, h1]
-  simp only [constantTermL2, ctFun, Pi.add_apply]
-  exact integral_add h2 h3
+  simpa only [constantTermL2, ctFun, Pi.add_apply] using integral_add h2 h3
 
 theorem ae_constantTermL2_smul (r : ℕ) (c : ℂ) (φ : Lp ℂ 2 (quotientMeasure Γ₁ μ)) :
     ∀ᵐ y ∂μ, constantTermL2 μ r (c • φ) y = c * constantTermL2 μ r φ y := by
@@ -232,8 +230,7 @@ theorem ae_constantTermL2_sub (r : ℕ) (φ ψ : Lp ℂ 2 (quotientMeasure Γ₁
   filter_upwards [ae_ctFun_congr μ r (Lp.coeFn_sub φ ψ), ae_integrableOn_unip μ r φ,
     ae_integrableOn_unip μ r ψ] with y h1 h2 h3
   rw [constantTermL2, h1]
-  simp only [constantTermL2, ctFun, Pi.sub_apply]
-  exact integral_sub h2 h3
+  simpa only [constantTermL2, ctFun, Pi.sub_apply] using integral_sub h2 h3
 
 theorem exists_lintegral_constantTermL2_sq_le (r : ℕ) {S : Set (normOneGL (K := K) (n := n))} (hS : IsCompact S) :
     ∃ C : ℝ≥0∞, C ≠ ⊤ ∧ ∀ φ : Lp ℂ 2 (quotientMeasure Γ₁ μ),
@@ -364,8 +361,7 @@ theorem integral_rconv_unip_eq_zero (f : CompactlySupportedContinuousMap (normOn
   have hCT : ∀ z, ∫ X in unipFundamentalDomain K n r, F X z ∂unipMeasure K n r =
       f (x⁻¹ * z) * constantTermL2 μ r φ z := by
     intro z
-    simp only [F, constantTermL2, ctFun]
-    exact integral_const_mul _ _
+    simpa only [F, constantTermL2, ctFun] using integral_const_mul _ _
   simp_rw [hinner]
   rw [integral_integral_swap hint]
   simp_rw [hCT]

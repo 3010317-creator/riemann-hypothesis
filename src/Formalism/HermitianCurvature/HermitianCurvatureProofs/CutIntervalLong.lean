@@ -103,8 +103,7 @@ private lemma exp_le_succ_div_self_le_exp_of_le_abs {z dl : ℝ} (hdl : 8 ≤ dl
           ≤ Real.exp (-2 * (1 / dl)) * Real.exp (2 * (1 / dl)) := mul_le_mul_of_nonneg_left hexp hpos.le
         _ = 1 := hone
     have h3 : Real.exp (-2 * (1 / dl)) ≤ 1 - 1 / dl := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       have h4 : (1 - 1 / dl) * (1 + 2 * (1 / dl)) < Real.exp (-2 * (1 / dl)) * (1 + 2 * (1 / dl)) :=
         mul_lt_mul_of_pos_right hc (by positivity)
       nlinarith [mul_nonneg hx0.le (by linarith : (0 : ℝ) ≤ 1 - 2 * (1 / dl))]
@@ -248,10 +247,8 @@ theorem supA_nonneg (S : C.HidaSetting E Wp Wq) (hg : 0 < S.G.g) (hk : 0 < S.G.k
   unfold J.supA
   apply div_nonneg
   · cases one
-    · simp only [Bool.false_eq_true, ↓reduceIte, Sz.Glob.supI]
-      exact key _
-    · simp only [↓reduceIte, Sz.Glob.cutSupLong]
-      exact key _
+    · simpa only [Bool.false_eq_true, ↓reduceIte, Sz.Glob.supI] using key _
+    · simpa only [↓reduceIte, Sz.Glob.cutSupLong] using key _
   · exact mul_nonneg (pow_nonneg hg.le _) (inv_nonneg.mpr (pow_nonneg hk.le _))
 
 theorem core_le_supA (hB : KB.IsLeadingFormSetting Cb Cc S p f χ A₀) (v : Fin S.f) (one : Bool) (y : ℝ)
@@ -320,8 +317,7 @@ theorem node_far (hB : KB.IsLeadingFormSetting Cb Cc S p f χ A₀) (v : Fin S.f
   rcases hy with ⟨rfl, a', ha', -, hya'⟩ | ⟨rfl, hy1, hsep⟩
   · rw [ite_eq_right (by decide)]
     rcases hz' with ⟨n, hn, hzn⟩ | hz1
-    · have h := PBD.sep_grid S hG v hya' hzn (by omega) (e := 0) (by simp) he
-      simpa using h
+    · simpa using PBD.sep_grid S hG v hya' hzn (by omega) (e := 0) (by simp) he
     · have h := (hG v).2.2.2.2.1 (PBD.nodeOf z) hz1 a' y hya' e he 0 (by simp)
       rw [abs_sub_comm] at h
       simpa using h
@@ -345,8 +341,7 @@ theorem node_far (hB : KB.IsLeadingFormSetting Cb Cc S p f χ A₀) (v : Fin S.f
           simp only [PBD.nodeOf, ↓reduceIte] at hyz
           rw [hyz] at h
           norm_num at h
-      have h := (hG v).2.2.2.1 y hy1 (PBD.nodeOf z) hz1 hne 0 (by simp) e he
-      simpa using h
+      simpa using (hG v).2.2.2.1 y hy1 (PBD.nodeOf z) hz1 hne 0 (by simp) e he
 
 theorem node_bound (hB : KB.IsLeadingFormSetting Cb Cc S p f χ A₀) (v : Fin S.f) (a : List C.Letter) (ha : D.AdmAt S v a)
     (haN : a.length ≤ S.Ntop) (y : ℝ) (one : Bool)

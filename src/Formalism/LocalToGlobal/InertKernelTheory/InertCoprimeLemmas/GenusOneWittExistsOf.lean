@@ -211,8 +211,7 @@ theorem mulBy_eq (c : K) : Formalism.L2.Th1.C.mulBy (logSer (C • W)) (expSer (
   have heS : HasSubst (expSer W) := HasSubst.of_constantCoeff_zero' he.1
   have hl' : logSer (C • W) = PowerSeries.C (C.u : K) * (logSer W).subst (compInv (phi W C)) := by
     have h := congrArg (fun f : K⟦X⟧ => f.subst (compInv (phi W C))) (log_phi W C)
-    rw [subst_comp_subst_apply hs hpS, hci.2.1, X_subst, subst_mul hpS, subst_C' hp0] at h
-    exact h
+    rwa [subst_comp_subst_apply hs hpS, hci.2.1, X_subst, subst_mul hpS, subst_C' hp0] at h
   have hq0 : constantCoeff (PowerSeries.C c * logSer (C • W)) = 0 := by
     simp [(logSpec K (C • W)).1]
   have hqS : HasSubst (PowerSeries.C c * logSer (C • W)) := HasSubst.of_constantCoeff_zero' hq0
@@ -435,15 +434,13 @@ theorem endIntInertAll_of (hE : EndIntInert) (hG : GenusOneWittExists) : EndIntI
   have hE' : Formalism.L2.Th1.C.EndInt (RB p) (Formalism.L2.Th1.A.logSer g'.W) (Formalism.L2.Th1.A.expSer g'.W) α.1 := by
     unfold Formalism.L2.Th1.C.EndInt
     rw [← mulBy_g g' hOk']
-    intro n
-    exact h1 (Finsupp.single () n)
+    exact fun n => h1 (Finsupp.single () n)
   obtain ⟨hu, hui, hr, hs, ht⟩ := vc_pair h5 g g' hOk hOk' hl.symm hL
   have hEg : Formalism.L2.Th1.C.EndInt (RB p) (Formalism.L2.Th1.A.logSer g.W) (Formalism.L2.Th1.A.expSer g.W) α.1 := by
     rw [g_W_eq g g' hl.symm hL]
     exact Formalism.L2.KerInert.MC.endInt_varChange _ (coeffIn_g g' hOk') _ hu.le hui.le hr hs ht _ hE'
   rw [mulBy_g g hOk α.1]
-  intro n
-  exact Formalism.L2.Th1.C.Pts.intMv_of_intPS hEg n
+  exact fun n => Formalism.L2.Th1.C.Pts.intMv_of_intPS hEg n
 
 end EndInt
 
@@ -652,8 +649,7 @@ theorem change (h5 : 5 ≤ p) (g g' : G1 p) (hOk : g.Ok) (hOk' : g'.Ok) (hl : g'
     set q : PowerSeries ℂ_[p] := PowerSeries.mk fun n => coeff (n + 1) φ with hq
     have hφq : φ = (X : PowerSeries ℂ_[p]) * q := by
       have e := PowerSeries.eq_X_mul_shift_add_const φ
-      rw [hφ0, map_zero, add_zero] at e
-      exact e
+      rwa [hφ0, map_zero, add_zero] at e
     have hqE : q * Es = PowerSeries.C u * E := by
       have e : (X : PowerSeries ℂ_[p]) * (q * Es) = X * (PowerSeries.C u * E) := by
         rw [← mul_assoc, ← hφq, hkey]; ring

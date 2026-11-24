@@ -66,8 +66,7 @@ theorem mem_tr (φ : V ≃ₗ[K] V') (M : Submodule (𝓞 K) V) (y : V') : y ∈
   constructor
   · rintro ⟨x, hx, rfl⟩
     simpa using hx
-  · intro h
-    exact ⟨φ.symm y, h, by simp⟩
+  · exact fun h => ⟨φ.symm y, h, by simp⟩
 
 theorem tr_symm_tr (φ : V ≃ₗ[K] V') (M : Submodule (𝓞 K) V) : latMap φ.symm (latMap φ M) = M := by
   ext x; simp [mem_tr]
@@ -95,8 +94,7 @@ theorem mem_gmap (g : V ≃ₗ[K] V) (M : Submodule (𝓞 K) V) (y : V) : y ∈ 
   constructor
   · rintro ⟨x, hx, rfl⟩
     simpa using hx
-  · intro h
-    exact ⟨g.symm y, h, by simp⟩
+  · exact fun h => ⟨g.symm y, h, by simp⟩
 
 theorem gmap_cj (φ : V ≃ₗ[K] V') (g : V ≃ₗ[K] V) (M : Submodule (𝓞 K) V) :
     gmap (cj φ g) (latMap φ M) = latMap φ (gmap g M) := by

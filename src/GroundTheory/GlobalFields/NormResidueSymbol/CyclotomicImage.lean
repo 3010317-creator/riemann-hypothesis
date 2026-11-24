@@ -216,8 +216,7 @@ theorem exists_infiniteEmbedding_ideleModule_eq (t : {r : ℝ // 0 < r}) :
           (map_zero _) _).symm
       rw [hn, RingEquiv.apply_symm_apply, Real.norm_of_nonneg ht.le]
       simp [InfinitePlace.mult, hw]
-    · rw [Units.val_mk0, he]
-      exact ht
+    · rwa [Units.val_mk0, he]
   · let e := InfinitePlace.Completion.ringEquivComplexOfIsComplex hw
     have hz0 : e.symm (Real.sqrt t : ℂ) ≠ 0 :=
       (map_ne_zero_iff _ e.symm.injective).2 (Complex.ofReal_ne_zero.2 (Real.sqrt_ne_zero'.2 ht))
@@ -261,8 +260,7 @@ theorem exists_mem_fixingSubgroup_cycRestrict_eq (c : IdeleClassGroup K.1) :
     obtain ⟨g, hg, h⟩ := exists_restrictNormal_eq_ideleSymbol K (layer m) x
     refine ⟨g, hg, ?_⟩
     change g.restrictNormal (rootsOfUnityField m) = _
-    rw [layerSymbol_mk]
-    exact h
+    rwa [layerSymbol_mk]
   have hdir : Directed (· ⊇ ·) t := fun m n ↦ by
     refine ⟨m * n, fun g hg ↦ ⟨hg.1, ?_⟩, fun g hg ↦ ⟨hg.1, ?_⟩⟩
     · exact (agreesOn_cycSymbol_iff K m g c).1 ((agreesOn_cycSymbol_iff K _ g c).2 hg.2).of_mul
@@ -297,8 +295,7 @@ theorem exists_cycSymbol_eq {g : ℚ̄ ≃ₐ[ℚ] ℚ̄} (hg : g ∈ K.1.fixing
     · change IdeleClassGroup.ideleModule K.1 (IdeleClassGroup.mk K.1 _) = 1
       rw [IdeleClassGroup.ideleModule_mk, map_mul, map_inv, hmod, mul_inv_cancel]
     · change layerSymbol K m _ = _
-      rw [layerSymbol_mk, map_mul, map_inv, map_mul, map_inv, he, inv_one, mul_one]
-      exact hx
+      rwa [layerSymbol_mk, map_mul, map_inv, map_mul, map_inv, he, inv_one, mul_one]
   have hdir : Directed (· ⊇ ·) s := fun m n ↦ by
     refine ⟨m * n, fun c hc ↦ ⟨hc.1, ?_⟩, fun c hc ↦ ⟨hc.1, ?_⟩⟩
     · have h := (agreesOn_cycSymbol_iff K _ g c).2 (Set.mem_singleton_iff.1 hc.2).symm

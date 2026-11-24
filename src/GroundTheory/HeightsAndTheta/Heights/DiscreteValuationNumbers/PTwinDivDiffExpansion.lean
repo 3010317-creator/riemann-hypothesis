@@ -25,16 +25,14 @@ theorem prod_split {M : Type*} [CommMonoid M] {r : ℕ} (l : Fin r) (f : Fin r �
     · intro b hb hbl
       simp only [Finset.mem_filter] at hb
       exact absurd hb.2.2 hbl
-    · intro h
-      exact absurd (by simp) h
+    · exact fun h => absurd (by simp) h
   · congr 1
     ext j
     simp only [Finset.mem_filter, Finset.mem_univ, true_and]
     constructor
     · rintro ⟨h1, h2⟩
       exact lt_of_le_of_ne (not_lt.mp h1) (Ne.symm h2)
-    · intro h
-      exact ⟨not_lt.mpr h.le, ne_of_gt h⟩
+    · exact fun h => ⟨not_lt.mpr h.le, ne_of_gt h⟩
 
 noncomputable def stair {r : ℕ} (μ : Fin r →₀ ℕ) (k : ℕ) : MvPolynomial (Fin r ⊕ Fin r) ℤ :=
   ∏ j : Fin r, X (if (j : ℕ) < k then Sum.inr j else Sum.inl j) ^ μ j

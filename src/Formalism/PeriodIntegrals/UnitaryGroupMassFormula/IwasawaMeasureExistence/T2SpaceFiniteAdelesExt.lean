@@ -85,8 +85,7 @@ theorem norm_natCast_lt_one (v : HeightOneSpectrum (𝓞 F)) (c : ℕ) (hc : Ide
     rw [map_natCast]
     rw [show (((c : F)) : v.adicCompletion F) = algebraMap F (v.adicCompletion F) (c : F) from rfl,
       map_natCast]
-  rw [e, HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
-  exact hval
+  rwa [e, HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
 
 theorem mem_int_of_norm_le_one (v : HeightOneSpectrum (𝓞 F)) (x : v.adicCompletion F) (h : ‖x‖ ≤ 1) :
     x ∈ v.adicCompletionIntegers F :=
@@ -104,8 +103,7 @@ theorem exists_nat_mul_intAd (x : Af F) : ∃ N : ℕ, 1 ≤ N ∧ (N : Af F) * 
   set c : ℕ := ∏ v ∈ S, Ideal.absNorm v.asIdeal with hcdef
   have hc0 : c ≠ 0 := by
     rw [hcdef, Finset.prod_ne_zero_iff]
-    intro v _
-    exact (lt_trans zero_lt_one (NumberField.HeightOneSpectrum.one_lt_absNorm v)).ne'
+    exact fun v _ => (lt_trans zero_lt_one (NumberField.HeightOneSpectrum.one_lt_absNorm v)).ne'
   have hcv : ∀ v ∈ S, ‖(c : v.adicCompletion F)‖ < 1 := fun v hv =>
     norm_natCast_lt_one F v c (Finset.dvd_prod_of_mem _ hv)
   have hev : ∀ v ∈ S, ∀ᶠ k in atTop, ‖(c : v.adicCompletion F)‖ ^ k * ‖x v‖ < 1 := by
@@ -370,8 +368,7 @@ theorem IntAf_le_sumsInt {x : AEf I} (hx : x ∈ IntAf I.F I.E) : x ∈ sumsInt 
 
 theorem algebraMap_mem_intAd (r : 𝓞 I.F) :
     algebraMap I.F (Af I.F) (algebraMap (𝓞 I.F) I.F r) ∈ Formalism.UG.intAd I.F := by
-  intro v
-  exact HeightOneSpectrum.coe_algebraMap_mem (𝓞 I.F) I.F v r
+  exact fun v => HeightOneSpectrum.coe_algebraMap_mem (𝓞 I.F) I.F v r
 
 theorem crd_mem {ι : Type} [Fintype ι] (b : Module.Basis ι I.F I.E) {D : ℕ} (hD : ∀ o : 𝓞 I.E, ∀ j : ι,
     ∃ r : 𝓞 I.F, (D : I.F) * b.repr (o : I.E) j = algebraMap (𝓞 I.F) I.F r)
@@ -410,8 +407,7 @@ theorem t2Space_finite_adeles_ext : @T2Space (AEf I) (tAf I) := by
   haveI := isTopologicalRing_tAf I
   apply IsTopologicalAddGroup.t2Space_of_zero_sep
   intro x hx
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   apply hx
   apply eq_zero_of_forall_bsub I x
   intro N hN

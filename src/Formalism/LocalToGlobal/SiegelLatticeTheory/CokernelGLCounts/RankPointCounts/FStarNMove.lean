@@ -172,8 +172,7 @@ theorem exists_move {T T' : E} (F : FlagG S r T) (P Q : FlagG S r T')
   have hAinj : Function.Injective A := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro x hx
-    apply Subtype.ext
-    exact PI.ScalarPairDr.W.eq_zero_of_orth F Q hG x.2 (fun b => congrFun hx b)
+    exact Subtype.ext (PI.ScalarPairDr.W.eq_zero_of_orth F Q hG x.2 (fun b => congrFun hx b))
   let ℓ : (Fin (r + 1) → E) →ₗ[E] E := ∑ b, star (k b) • LinearMap.proj b
   have hℓ : ∀ t, ℓ t = ∑ b, star (k b) * t b := fun t => by
     simp [ℓ, LinearMap.sum_apply]
@@ -224,8 +223,7 @@ theorem exists_move {T T' : E} (F : FlagG S r T) (P Q : FlagG S r T')
     have h := (LinearEquiv.ofInjective A hAinj).apply_symm_apply (codR w)
     have h2 : A (xm w) = tw w := by
       have := congrArg Subtype.val h
-      rw [LinearEquiv.ofInjective_apply] at this
-      exact this
+      rwa [LinearEquiv.ofInjective_apply] at this
     exact congrFun h2 b
 
   let bs := Basis.span hLI
@@ -289,8 +287,7 @@ theorem exists_move {T T' : E} (F : FlagG S r T) (P Q : FlagG S r T')
     rw [e1, e2, e3, e4, e5, e6]
   have hinj : Function.Injective n₀ := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-    intro v hv
-    exact S.nondeg.1 v (fun y => by rw [← hiso v y, hv, map_zero, LinearMap.zero_apply])
+    exact fun v hv => S.nondeg.1 v (fun y => by rw [← hiso v y, hv, map_zero, LinearMap.zero_apply])
   let n : S.V ≃ₗ[E] S.V := LinearEquiv.ofInjectiveEndo n₀ hinj
   have hn : ∀ x, n x = n₀ x := fun x => rfl
   refine ⟨n, fun x y => by rw [hn, hn, hiso], fun i => by rw [hn]; exact hn₀b (Sum.inl i),
@@ -310,8 +307,7 @@ theorem exists_move {T T' : E} (F : FlagG S r T) (P Q : FlagG S r T')
   have h2 : S.hT (F.e a) (∑ a', g (Sum.inl a') • F.fvec a') = 0 :=
     spanR S F.fvec (F.e a) (fun c => by rw [hsw, hT_f_e, star_zero]) _
       (Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩))
-  rw [map_add (f := _), hw0, add_zero, hsplit, map_add (f := _), h2, zero_add] at h1
-  exact h1
+  rwa [map_add (f := _), hw0, add_zero, hsplit, map_add (f := _), h2, zero_add] at h1
 
 end NMoveP
 

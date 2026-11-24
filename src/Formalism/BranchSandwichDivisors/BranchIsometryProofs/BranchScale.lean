@@ -111,8 +111,7 @@ lemma bs_dom {r n : ℕ} (ν : Fin n → ℕ) (f : MvPolynomial (Fin r × Fin n)
     obtain ⟨K, sz, hsz, I, hshape, rfl⟩ := hx
     intro m hm
     have h := bidetDominance ℂ r n K sz hsz I m hm
-    rw [hshape] at h
-    exact h
+    rwa [hshape] at h
   | zero =>
     intro m hm
     simp at hm
@@ -122,8 +121,7 @@ lemma bs_dom {r n : ℕ} (ν : Fin n → ℕ) (f : MvPolynomial (Fin r × Fin n)
     · exact hx m h
     · exact hy m h
   | smul c x _ hx =>
-    intro m hm
-    exact hx m (support_smul hm)
+    exact fun m hm => hx m (support_smul hm)
 
 lemma bs_abel (n : ℕ) (x : Fin n → ℤ) :
     ∑ a, (a.val : ℤ) * x a =

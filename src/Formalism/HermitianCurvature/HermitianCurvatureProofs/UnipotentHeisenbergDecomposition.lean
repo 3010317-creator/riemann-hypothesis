@@ -124,8 +124,7 @@ lemma hpk_mulVec (k r : ℕ) (u : Fin (2 * r + k + 1) → ℂ) (i : Fin (2 * r +
   · rw [WeylGroupFacts.hpk_row, ite_eq_left rfl]
   · intro m _ hm
     rw [WeylGroupFacts.hpk_row, ite_eq_right hm, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 lemma tau_out {k r : ℕ} (i : Fin (2 * r + k + 1)) (h : i.val < r ∨ r + k < i.val) :
     (WeylGroupFacts.tau k r i).val = 2 * r + k - i.val := ite_eq_left h
@@ -552,8 +551,7 @@ theorem unipotent_haar_of_parts : Formalism.FourierDecayAlt.B2.AssembleHaarN := 
       rw [Set.mem_singleton_iff.mp ha, hl, Measure.map_id]
     · intro a ha
       rw [Set.mem_singleton_iff.mp ha, hr, Measure.map_id]
-    · intro K _
-      exact measure_lt_top _ _
+    · exact fun K _ => measure_lt_top _ _
     · exact IsProbabilityMeasure.ne_zero _
   | succ r' ih =>
     obtain ⟨μ', h'⟩ := ih

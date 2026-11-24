@@ -278,8 +278,7 @@ theorem finiteDimensional_of_liftY
     intro s hs
     have hli := linearIndependent_algebraMap_C_fractionRing (σ := σ) rfl (fun x : s => (x : E)) hs
     simpa using hli.fintype_card_le_finrank
-  have hr := rank_le hbound
-  exact Module.rank_lt_aleph0_iff.mp (hr.trans_lt (Cardinal.natCast_lt_aleph0))
+  exact Module.rank_lt_aleph0_iff.mp ((rank_le hbound).trans_lt (Cardinal.natCast_lt_aleph0))
 
 end Disjoint
 

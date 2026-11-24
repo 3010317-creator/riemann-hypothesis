@@ -543,8 +543,7 @@ theorem isClosed_KU {n : ℕ} {Y : Type} [MetricSpace Y] {K : Set ((Fin n → Fi
   have hq2 : q.2 = W.2 := tendsto_nhds_unique hY' hY
   have e1 : Matrix.of q.1 * ((Matrix.of q.1)⁻¹ * Matrix.of W.1) = Matrix.of W.1 := by
     rw [← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.mpr hqd), Matrix.one_mul]
-  rw [e1, hq2]
-  exact hWK
+  rwa [e1, hq2]
 
 end closed
 
@@ -681,8 +680,7 @@ theorem exceptional_assumption_holds : Asm := by
     · exact (hβq.mono Set.inter_subset_right).smul ((hFe.const_smul κ⁻¹).mono Set.inter_subset_left)
     · show ((β q.1 : ℝ) : ℂ) • (if (q.1, q.2) ∈ UT P.k P.r (p.T.bs P.r).z (p.T.bs P.r).z' then
           κ⁻¹ • Φf q.1 e q.2 else 0) = β q.1 • κ⁻¹ • Fe q
-      rw [ite_eq_left hq.2, Complex.coe_smul]
-      rw [show Φf q.1 e q.2 = Fe q from hag q hq.1 hqG]
+      rw [ite_eq_left hq.2, Complex.coe_smul, show Φf q.1 e q.2 = Fe q from hag q hq.1 hqG]
   have hΦβK : ∀ q, Matrix.of q.2 ∈ Q.Glev P.k (P.r - P.r) (Fin.last _) → q ∉ K' → Φβ q.1 q.2 = 0 := by
     intro q hqG hqK
     show ((β q.1 : ℝ) : ℂ) • (if (q.1, q.2) ∈ UT P.k P.r (p.T.bs P.r).z (p.T.bs P.r).z' then
@@ -891,8 +889,7 @@ theorem exceptional_assumption_holds : Asm := by
       refine (hT _ y.1 y.2).trans ?_
       refine (hRW Wp Wq P p X₀ μ₀ L₀ st₀ hD₀ F₁ hF₁ w hcut Φ₁ hΦ₁ e' x.1 hc y.2 hy.2.1 hy.2.2).trans ?_
       refine congrArg (fun X => W • X) ?_
-      refine Eq.symm ((hΨc e' y hy).trans ?_)
-      exact hRT _ (JC.parLev P P.r).k (JC.parLev P P.r).r hr0 _ _ _
+      exact Eq.symm ((hΨc e' y hy).trans (hRT _ (JC.parLev P P.r).k (JC.parLev P P.r).r hr0 _ _ _))
     rw [hxg]
     have hmul := Formalism.FourierDecayAlt.P.Topx1.act_mul ((Fr.ofWord L₀ st₀ (D.positionted w)).F) (P5.bTall L₀ (D.positionted w))
       (Top.firstStateVector Φ₁)
@@ -906,8 +903,7 @@ theorem exceptional_assumption_holds : Asm := by
     intro Φ hΦ c γ hγG hγGG
     refine hkey h hh Φ (fun e' => ?_) c γ hγG hγGG
     have h1 := hΦ e'
-    rw [hsl w e'] at h1
-    exact h1
+    rwa [hsl w e'] at h1
 
 end Formalism.FourierDecayAlt.P.CutEX
 end -- clump:auto

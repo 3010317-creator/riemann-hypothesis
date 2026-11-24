@@ -98,10 +98,8 @@ theorem coeff_eq_zero (x : (Σ k, ι k) → Ω) (i : ∀ k, ι k) (hx : ∀ k, x
     · rw [weightedHomogeneousComponent_of_mem (hmem β hβ), ite_eq_left rfl]
     · intro α hα hne
       rw [weightedHomogeneousComponent_of_mem (hmem α hα), ite_eq_right]
-      intro h
-      exact hne (DFunLike.coe_injective (add_left_cancel h)).symm
-    · intro h
-      exact absurd hβ h
+      exact fun h => hne (DFunLike.coe_injective (add_left_cancel h)).symm
+    · exact fun h => absurd hβ h
   have hβV := weightedHomogeneousComponent_mem_of_mem F (mw (ι := ι)) (isHomogeneous_mw hV) hH (M + ⇑β)
   rw [hcomp, RingHom.mem_ker, map_mul, hGx β hβ, hxc] at hβV
   have hcβ : (∏ k, x ⟨k, i k⟩ ^ β k) ≠ 0 :=

@@ -284,8 +284,7 @@ theorem intersection_symmetric {I : IFamily F ι} (hI : IsFieldIntersection I) (
         rw [(Fin.castSucc_injective n).swap_apply]
       rw [e1, e2]
       apply cycEval_congr
-      intro W hW
-      exact ih W _ _ (multi_isProjVarF_of_ratDiv hV (isRatSection_sec hV.1 _) hW)
+      exact fun W hW => ih W _ _ (multi_isProjVarF_of_ratDiv hV (isRatSection_sec hV.1 _) hW)
     have hlast : ∀ (V : Ideal (MRingOver F ι)) (L : Fin (n + 1) → K → ℤ) (x : Fin n),
         IsProjVarF V (n + 1) → I V (n + 1) (L ∘ Equiv.swap x.castSucc (Fin.last n)) =
           I V (n + 1) L := by
@@ -351,8 +350,7 @@ theorem intersection_multilinear {I : IFamily F ι} (hI : IsFieldIntersection I)
           intro h
           apply (Fin.castSucc_lt_last i').ne
           have h3 := congrArg σ h
-          rw [hσ, Equiv.swap_apply_self, Equiv.swap_apply_left] at h3
-          exact h3
+          rwa [hσ, Equiv.swap_apply_self, Equiv.swap_apply_left] at h3
         simp only [Function.comp, Fin.snoc_castSucc, Fin.init]
         rw [Function.update_of_ne h2]
     rw [key, key, key, multilin_last hI hV]
@@ -363,8 +361,7 @@ theorem symm_thm (F : Type*) [Field F] (ι : K → Type*) [∀ k, Fintype (ι k)
 
 theorem multilin_thm (F : Type*) [Field F] (ι : K → Type*) [∀ k, Fintype (ι k)] :
     MultilinStatement F ι := by
-  intro I hI V n L j a b hV
-  exact intersection_multilinear hI n V L j a b hV
+  exact fun I hI V n L j a b hV => intersection_multilinear hI n V L j a b hV
 
 end ReciprocityTheory.ChartRestriction.G.AI.I1
 end -- clump:auto

@@ -63,8 +63,7 @@ theorem sd_basis (hS : IsHermSemilocal S) (hπ : IsUnif S π) (hs : h.IsSymm)
   intro n
   induction n with
   | zero =>
-    intro W M hn hM
-    exact sd_basis_bot hM (Submodule.finrank_eq_zero.mp (Nat.le_zero.mp hn))
+    exact fun W M hn hM => sd_basis_bot hM (Submodule.finrank_eq_zero.mp (Nat.le_zero.mp hn))
   | succ n ih =>
     intro W M hn hM
     by_cases hbot : W = ⊥
@@ -180,8 +179,7 @@ private theorem linInd_lemma_6 {K V : Type} [Field K] [StarRing K] [AddCommGroup
     exact (mul_eq_zero.1 h1).resolve_right (hn i)
   · intro j _ hji
     rw [map_smul, ho i j (Ne.symm hji), smul_zero]
-  · intro h'
-    exact absurd hi h'
+  · exact fun h' => absurd hi h'
 
 private theorem form_sum_lemma_7 {K V : Type} [Field K] [StarRing K] [AddCommGroup V] [Module K V]
     {h : V →ₗ⋆[K] V →ₗ[K] K} {ι : Type} [Fintype ι] {b : ι → V}
@@ -196,8 +194,7 @@ private theorem form_sum_lemma_7 {K V : Type} [Field K] [StarRing K] [AddCommGro
     ring
   · intro j _ hji
     rw [map_smulₛₗ, LinearMap.smul_apply, ho j i hji, smul_zero]
-  · intro h'
-    exact absurd (Finset.mem_univ i) h'
+  · exact fun h' => absurd (Finset.mem_univ i) h'
 
 private theorem isSD_lemma_8 {K V : Type} [Field K] [StarRing K] [AddCommGroup V] [Module K V]
     {S : Subring K} (hS : IsHermSemilocal S) {h : V →ₗ⋆[K] V →ₗ[K] K} {ι : Type} [Fintype ι]
@@ -235,8 +232,7 @@ private theorem isSD_lemma_8 {K V : Type} [Field K] [StarRing K] [AddCommGroup V
       rwa [mul_assoc, mul_inv_cancel₀ (hu i).1, mul_one] at h2
     · intro j _ hji
       rw [map_smul, ho i j (Ne.symm hji), smul_zero]
-    · intro h'
-      exact absurd (Finset.mem_univ i) h'
+    · exact fun h' => absurd (Finset.mem_univ i) h'
 
 theorem uni_part {K V : Type} [Field K] [StarRing K] [AddCommGroup V] [Module K V] [FiniteDimensional K V]
     {S : Subring K} {π : K} {h : V →ₗ⋆[K] V →ₗ[K] K} (hS : IsHermSemilocal S) (hπ : IsUnif S π)
@@ -274,12 +270,10 @@ theorem uni_part {K V : Type} [Field K] [StarRing K] [AddCommGroup V] [Module K 
     rwa [p.2] at this
   have hSD := isSD_lemma_8 hS hoP huP
   have hXeq : Xs = ∑ p : {i // e i = e i₀}, x p • bP p := by
-    simp only [hbP]
-    exact Finset.sum_subtype _ (fun i => by simp) (fun i => x i • b i)
+    simpa only [hbP] using Finset.sum_subtype _ (fun i => by simp) (fun i => x i • b i)
   have hXL : Xs ∈ spanS S bP := (mem_iff_lemma _ _).2 ⟨fun p => x p, fun p => hx p, hXeq⟩
   have hXu' : IsUnitIn S (h' Xs Xs) := by
-    rw [hconv]
-    exact hX
+    rwa [hconv]
   have hXX : h' Xs Xs ≠ 0 := hXu'.1
   have hX0 : Xs ≠ 0 := fun h0 => hXX (by rw [h0, map_zero])
   have hXW : Xs ∈ Submodule.span K (Set.range bP) := mem_span_lemma_4 hXL
@@ -337,8 +331,7 @@ theorem uni_part {K V : Type} [Field K] [StarRing K] [AddCommGroup V] [Module K 
   have hfL : ∀ j, f j ∈ spanS S bP := fun j => (mem_cutM.1 ((hspf _).1 (_root_.Formalism.L2.SG.Pf.G3.mem_spanS_self f j))).1
   have hgL : ∀ p, gP p ∈ spanS S bP := fun p => by
     by_cases hp : p = p₀
-    · rw [hp, hg0]
-      exact hXL
+    · rwa [hp, hg0]
     · rw [show gP p = f (σ ⟨p, hp⟩) from hgq ⟨p, hp⟩]
       exact hfL _
   have hperp : ∀ w ∈ Submodule.span K (Set.range bP), ∀ j, e j ≠ e i₀ →
@@ -374,8 +367,7 @@ theorem uni_part {K V : Type} [Field K] [StarRing K] [AddCommGroup V] [Module K 
     by_cases hi : e i = e i₀
     · rw [show c i = gP ⟨i, hi⟩ from hcP ⟨i, hi⟩, hi, ← hconv]
       by_cases hp : (⟨i, hi⟩ : {i // e i = e i₀}) = p₀
-      · rw [hp, hg0]
-        exact hXu'
+      · rwa [hp, hg0]
       · rw [show gP ⟨i, hi⟩ = f (σ ⟨⟨i, hi⟩, hp⟩) from hgq ⟨⟨i, hi⟩, hp⟩]
         exact huf _
     · rw [hcn i hi]

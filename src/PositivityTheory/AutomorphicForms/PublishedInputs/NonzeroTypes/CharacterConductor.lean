@@ -24,8 +24,7 @@ def CS (ψ : 𝒪[k]ˣ →* ℂˣ) : Set ℕ :=
 theorem cond_eq (ψ : 𝒪[k]ˣ →* ℂˣ) : cond ψ = sInf (CS ψ) := rfl
 
 theorem CS_mono (ψ : 𝒪[k]ˣ →* ℂˣ) {c d : ℕ} (hc : c ∈ CS ψ) (hcd : c ≤ d) : d ∈ CS ψ := by
-  intro u hu
-  exact hc u (Ideal.pow_le_pow_right hcd hu)
+  exact fun u hu => hc u (Ideal.pow_le_pow_right hcd hu)
 
 theorem CS_inv (ψ : 𝒪[k]ˣ →* ℂˣ) : CS ψ⁻¹ = CS ψ := by
   ext c

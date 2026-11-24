@@ -225,8 +225,7 @@ theorem distChar_contragredient [μ.IsInvInvariant] (hρ : IsAdmissible ρ)
   change ((heckeAct μ (contragredient ρ) (f : G → ℂ)
     ((e.symm l : fixedVectors (contragredient ρ) K) : smoothVectors (Representation.dual ρ)) :
       smoothVectors (Representation.dual ρ)) : Module.Dual ℂ V) (v : V) = l ⟨_, hw⟩
-  rw [heckeAct_contragredient_apply μ hρ.1]
-  exact key
+  rwa [heckeAct_contragredient_apply μ hρ.1]
 
 def mulEquivHomeo (α : G ≃* G) (hα : Continuous α) (hα' : Continuous α.symm) : G ≃ₜ G where
   toEquiv := α.toEquiv
@@ -247,8 +246,7 @@ theorem isAdmissible_comp (α : G ≃* G) (hα : Continuous α) (hα' : Continuo
     constructor
     · rintro h _ ⟨k, hk, rfl⟩
       exact h k hk
-    · intro h k hk
-      exact h _ ⟨k, hk, rfl⟩
+    · exact fun h k hk => h _ ⟨k, hk, rfl⟩
   rw [e]
   refine hρ.2 _ ?_ ?_
   · rw [Subgroup.coe_map]
@@ -354,8 +352,7 @@ theorem nonempty_equiv_of_distChar_eq {W : Type*} [AddCommGroup W] [Module ℂ W
   have hpos : 0 < Module.finrank ℂ (fixedVectors ρ K) :=
     Module.finrank_pos_iff.2 (Submodule.nontrivial_iff_ne_bot.2 hVK)
   have hWK : fixedVectors σ K ≠ ⊥ := by
-    rw [← Submodule.nontrivial_iff_ne_bot, ← Module.finrank_pos_iff (R := ℂ), ← hdim]
-    exact hpos
+    rwa [← Submodule.nontrivial_iff_ne_bot, ← Module.finrank_pos_iff (R := ℂ), ← hdim]
   have := isSimpleModule_fixedVectors (μ := μ) hKc hKo hρ.1 hVK
   have := isSimpleModule_fixedVectors (μ := μ) hKc hKo hσ.1 hWK
   by_contra hne

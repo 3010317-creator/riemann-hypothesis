@@ -66,8 +66,7 @@ def LocOpG (T : (B.Mat k r → E) → (B.Mat k r → E)) : Prop :=
 
 theorem locOpG_top (u : ℂ) (a b : Fin (2 * r + k + 1)) :
     LocOpG (k := k) (r := r) (E := E) (Formalism.QuantumDeterminants.Top (EabH (Hpk k r)) u a b) := by
-  intro O hO f₁ f₂ h x hx hxG
-  exact PBG.top_congr' O hO u a b h x hx hxG
+  exact fun O hO f₁ f₂ h x hx hxG => PBG.top_congr' O hO u a b h x hx hxG
 
 theorem locOpG_foldr : ∀ (L : List ((B.Mat k r → E) → (B.Mat k r → E))), (∀ T ∈ L, LocOpG T) →
     LocOpG (fun f => L.foldr (fun T h => T h) f)
@@ -225,15 +224,13 @@ theorem topCls_uwG {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProd
   · intro g hg hne
     have hsub : S ⊆ {x | ε ≤ Gf k r Bs.z Bs.z' x} := fun x hx => hεG x hx.1 hx.2
     exact closure_minimal hsub (isClosed_le continuous_const (Formalism.FourierDecayAlt.P.Ux8.cont_Gf _ _ _ _)) (hcl g hg hne)
-  · intro g hg hne
-    exact hDcl g (hcl g hg hne)
+  · exact fun g hg hne => hDcl g (hcl g hg hne)
 
 end Formalism.FourierDecayAlt.P.CutEXUw
 
 namespace Formalism.FourierDecayAlt.P
 
 theorem unipotent_weight_top : CutEX.UwTop := by
-  intro Wp Wq _ _ _ _ _ _ P p F hF w e
-  exact CutEXUw.topCls_uwG p.T.base F hF w e
+  exact fun Wp Wq _ _ _ _ _ _ P p F hF w e => CutEXUw.topCls_uwG p.T.base F hF w e
 
 end Formalism.FourierDecayAlt.P

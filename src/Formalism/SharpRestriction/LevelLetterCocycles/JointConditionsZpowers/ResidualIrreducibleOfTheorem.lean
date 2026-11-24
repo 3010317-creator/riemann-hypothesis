@@ -103,8 +103,7 @@ theorem placesOver_finite_joint_conditions_zpowers (E : Type) [Field E] [NumberF
   refine (Ideal.finite_factors hI).subset ?_
   intro v hv
   simp only [Set.mem_setOf_eq]
-  rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-  exact hv
+  rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
 
 private theorem charpoly_eq_of_frob_on_split_places (D : D7) {k : Type} [Field k] {n : ℕ}
     (hC : ∀ Sg : Set (PlE D.host), Sg.Finite →
@@ -203,8 +202,7 @@ theorem residual_irreducible_of_theorem (D : D7) (h3p : Formalism.MainNotions.Ar
   refine ⟨hBN (D.nd.l a) D.R.r _ _ ?_ hirr0, ?_⟩
   · intro g
     have e := congrArg (Polynomial.map (D.naut.kFbar a)) (hcp g)
-    rw [← Matrix.charpoly_map, ← Matrix.charpoly_map] at e
-    exact e
+    rwa [← Matrix.charpoly_map, ← Matrix.charpoly_map] at e
   · intro k hk v hv
 
     have hvS : v ∈ D.nd.S a := by
@@ -237,7 +235,6 @@ theorem residual_irreducible_of_theorem (D : D7) (h3p : Formalism.MainNotions.Ar
       simp
     rw [hr0] at hroot
     have h2 := hroot.map (f := D.naut.kFbar a)
-    rw [← Matrix.charpoly_map] at h2
-    exact h2
+    rwa [← Matrix.charpoly_map] at h2
 
 end Formalism.MainNotions.N

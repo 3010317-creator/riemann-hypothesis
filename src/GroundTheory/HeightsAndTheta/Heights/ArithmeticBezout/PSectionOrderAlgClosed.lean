@@ -38,15 +38,13 @@ theorem SectionOrderAlgClosed.proof (h₁ : IncIdealBelow.Statement) (h₂ : Spe
   let p : Ideal (MvPolynomial (Fin e × Fin n) F) := Ideal.span {q}
   have hpp : p.IsPrime := (Ideal.span_singleton_prime hqp.ne_zero).mpr hqp
   have htp : specFirst f t ∉ p := by
-    rw [Ideal.mem_span_singleton]
-    exact ht
+    rwa [Ideal.mem_span_singleton]
   have : IsDiscreteValuationRing (Localization.AtPrime p) := h₅ _ q p hqp rfl
   have hem := h₆ _ q (specFirst f u) p hqp rfl hne
   have : Module.Finite (Localization.AtPrime p) (ChartLoc I t e p) := h₇ F n e I f t p hI hf htp
   obtain ⟨_, hinj, -⟩ := h₈ F n e I f t p hI hf htI
   have : Module.IsTorsionFree (Localization.AtPrime p) (ChartLoc I t e p) := by
-    rw [Module.isTorsionFree_iff_algebraMap_injective]
-    exact hinj
+    rwa [Module.isTorsionFree_iff_algebraMap_injective]
   have : Module.Free (Localization.AtPrime p) (ChartLoc I t e p) :=
     Module.free_of_finite_type_torsion_free'
   have hnorm := h₉ F n e I f t p hI hf (Or.inr ⟨q, hqp, rfl⟩) htp u

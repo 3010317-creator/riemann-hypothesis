@@ -103,8 +103,7 @@ theorem cohScalarsVanish : CohScalarsVanish := by
     funext g
     have h3 := congrFun hm g
     simp only [d0, LinearMap.pi_apply, LinearMap.sub_apply, LinearMap.id_apply] at h3 ⊢
-    rw [← hrr]
-    exact h3
+    rwa [← hrr]
   · rw [Submodule.Quotient.subsingleton_iff] at h2 ⊢
     rw [eq_top_iff] at h2 ⊢
     rintro ⟨f, hf⟩ -
@@ -114,8 +113,7 @@ theorem cohScalarsVanish : CohScalarsVanish := by
     funext p
     have h3 := congrFun hcf p
     simp only [d1, LinearMap.coe_mk, AddHom.coe_mk] at h3 ⊢
-    rw [← hrr]
-    exact h3
+    rwa [← hrr]
 
 end Formalism.MainNotions.N.CohomologyScalarsVanish
 end -- clump:auto

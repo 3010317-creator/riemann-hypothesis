@@ -165,8 +165,7 @@ theorem eventually_affPiece_eq (hy : IsSubvar (x := y) (primeOf (S := k) y) 0) (
   choose! m hm using hex
   refine eventually_atTop.mpr ⟨s.sup m, fun n hn => le_antisymm (affPiece_le n) ?_⟩
   rw [← hs, Submodule.span_le]
-  intro z hz
-  exact affPiece_mono hj ((Finset.le_sup hz).trans hn) (hm z hz)
+  exact fun z hz => affPiece_mono hj ((Finset.le_sup hz).trans hn) (hm z hz)
 
 theorem coordGraded_piece_eq (hj : y j ≠ 0) (n : ℕ) :
     (coordGraded k y).piece (n : ℤ) = (affPiece k y j n).map (LinearMap.mulLeft k (y j ^ n)) := by

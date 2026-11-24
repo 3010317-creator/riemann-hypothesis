@@ -106,11 +106,7 @@ theorem local_exists [Nonempty I] (G : Matrix I I R) (hG : Gᴴ = -G) (hdet : Is
   set v : I → R := e ᵥ* G⁻¹ with hv
   have hse : star e = e := by
     ext i
-    simp only [he, Pi.star_apply]
-    by_cases h : i = k
-    · subst h
-      simp
-    · simp [h]
+    by_cases h : i = k <;> simp [he, h]
   have hvG : v ᵥ* G = e := by
     rw [hv, Matrix.vecMul_vecMul, Matrix.nonsing_inv_mul _ hdet, Matrix.vecMul_one]
   have hve : hf G v e = 1 := by
@@ -118,18 +114,12 @@ theorem local_exists [Nonempty I] (G : Matrix I I R) (hG : Gᴴ = -G) (hdet : Is
     simp
   have hxy : hf G (a • v) e = a := by rw [hf_smul_left, hve, mul_one]
   have hyx : hf G e (a • v) = -star a := by rw [hf_skew G hG, hxy]
-  have key : hf G (a • v + e) (a • v + e) = hf G (a • v) (a • v) + a + -star a + hf G e e := by
+  have key : a - star a = hf G (a • v + e) (a • v + e) - hf G (a • v) (a • v) - hf G e e := by
     rw [hf_add_left, hf_add_right, hf_add_right, hxy, hyx]
     ring
   apply ha
-  have h1 := hcon (a • v + e)
-  have h2 := hcon (a • v)
-  have h3 := hcon e
-  have : a - star a = hf G (a • v + e) (a • v + e) - hf G (a • v) (a • v) - hf G e e := by
-    rw [key]
-    ring
-  rw [this]
-  exact m.sub_mem (m.sub_mem h1 h2) h3
+  rw [key]
+  exact m.sub_mem (m.sub_mem (hcon _) (hcon _)) (hcon _)
 
 def starI (m : Ideal R) : Ideal R := m.comap (starRingEnd R)
 

@@ -167,10 +167,8 @@ theorem trace_dual_lattice : TrDual := by
     ring
   have h2 : (D.s.atP p).psiE
       ((D.s.atP p).ιE x * algebraMap (D.s.atP p).Fp (D.s.atP p).Ep (c * (δ p)⁻¹)) = 1 := by
-    rw [hAB]
-    exact h1
+    rwa [hAB]
   have key := norm_trace_le_of_psi (D.s.atP p).psiE (D.s.atP p).psiE_def _ h2
-  rw [trace_tower_theta _ htr] at key
-  exact key
+  rwa [trace_tower_theta _ htr] at key
 
 end PI.CntNotIntW

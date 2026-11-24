@@ -191,8 +191,7 @@ theorem card_symIdx (n : ℕ) (mid : Prop) [Decidable mid] (s : Finset (Fin (n /
       simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton, Fin.ext_iff]
       exact ⟨fun h => h.2.2, fun h => ⟨hc.1, hc.2, h⟩⟩
     · rw [Finset.card_eq_zero, Finset.filter_eq_empty_iff]
-      intro i _ h
-      exact hc ⟨h.1, h.2.1⟩
+      exact fun i _ h => hc ⟨h.1, h.2.1⟩
   rw [hsplit, Finset.card_union_of_disjoint hd2, Finset.card_union_of_disjoint hd1, Finset.card_map,
     Finset.card_map, hM]
   ring
@@ -290,8 +289,7 @@ theorem csr_root {w : Pl E} (hw : ¬ IsSplitAt w) {Q : (w.adicCompletion E)[X]} 
   have h1 : eval₂ (RingHom.id _) (⅟(cj w r)) (Q.map (cj w)).reverse = 0 := by
     rw [eval₂_reverse_eq_zero_iff, eval₂_map, RingHom.id_comp, eval₂_at_apply, hr.eq_zero, map_zero]
   have h2 : eval (cj w r)⁻¹ (C (cj w (Q.coeff 0)) * Q) = 0 := by
-    rw [hc', ← invOf_eq_inv]
-    exact h1
+    rwa [hc', ← invOf_eq_inv]
   rw [eval_mul, eval_C] at h2
   exact (mul_eq_zero.mp h2).resolve_left ((_root_.map_ne_zero _).mpr h0)
 
@@ -328,14 +326,12 @@ theorem combine_caseA_pf (w : Pl E) (hw : ¬ IsSplitAt w) (n a : ℕ) (ha : a �
         · exact Finset.prod_congr rfl fun i hi => by simp only [ite_eq_right (Finset.disjoint_right.mp hD hi)]
   · intro i
     by_cases hi : i ∈ S₁
-    · simp only [ite_eq_left hi]
-      exact hu₁ i hi
+    · simpa only [ite_eq_left hi] using hu₁ i hi
     · have hi2 : i ∈ S₂ := by
         have := Finset.mem_univ i
         rw [← hU, Finset.mem_union] at this
         exact this.resolve_left hi
-      simp only [ite_eq_right hi]
-      exact hu₂ i hi2
+      simpa only [ite_eq_right hi] using hu₂ i hi2
 
 theorem split_caseA_pf (w : Pl E) (hw : ¬ IsSplitAt w) (n a : ℕ) (ha : a ≤ n) (x : Fin n → ℤ) (hx : StrictAnti x)
     (Q₁ Q₂ : (w.adicCompletion E)[X]) (hm₁ : Q₁.Monic) (hm₂ : Q₂.Monic) (hd₁ : Q₁.natDegree = a)
@@ -426,8 +422,7 @@ theorem split_caseA_pf (w : Pl E) (hw : ¬ IsSplitAt w) (n a : ℕ) (ha : a ≤ 
       apply hanti.injective
       rw [← (hu k).2, hku, GlobalTheory.WeylCell.U21TorusFactor.ordL_inv,
         GlobalTheory.WeylCell.U21TorusFactor.ordL_map (GlobalTheory.T.localConjugation_involutive_valuation_preserving E w).2, (hu i).2, wexp_rev]
-    rw [← hkr]
-    exact hk
+    rwa [← hkr]
   have hsymc : ∀ i, i ∈ Tᶜ → i.rev ∈ Tᶜ := fun i hi => by
     rw [Finset.mem_compl] at hi ⊢
     exact fun h => hi (by simpa using hsym _ h)

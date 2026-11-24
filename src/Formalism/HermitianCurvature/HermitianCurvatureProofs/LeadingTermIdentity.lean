@@ -233,8 +233,7 @@ theorem top_self {m N : ℕ} (a : Fin m → Fin N) (ha : Function.Injective a) :
       by_contra H
       exact hσ (Equiv.ext fun l => by simpa using not_not.mp (fun h => H ⟨l, h⟩))
     rw [Finset.prod_eq_zero (Finset.mem_univ k) (ite_eq_right (ha.ne hk)), mul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem prod_ne_zero_imp {m N : ℕ} (a b : Fin m → Fin N) (σ : Equiv.Perm (Fin m))
     (h : ∏ k, (if a (σ k) = b k then (1 : ℂ) else 0) ≠ 0) : ∀ k, a (σ k) = b k := by
@@ -255,10 +254,8 @@ private theorem leading_term_identity_lemma {A : Type} [Ring A] [Algebra ℂ A] 
       (qminor E (fa c) (fb c) (u + s0) - algebraMap ℂ A (u ^ m * ∑ σ : Equiv.Perm (Fin m), ((Equiv.Perm.sign σ : ℤ) : ℂ) * ∏ k, (if fa c (σ k) = fb c k then (1 : ℂ) else 0))) else 0)
       fun c _ => ?_
     by_cases hc : P c
-    · simp only [hc, ite_true]
-      exact pl_lmul _ (qminor_poly E (fa c) (fb c) s0)
-    · simp only [hc, ite_false]
-      exact pl_zero m
+    · simpa only [hc, ite_true] using pl_lmul _ (qminor_poly E (fa c) (fb c) s0)
+    · simpa only [hc, ite_false] using pl_zero m
   obtain ⟨C, hC⟩ := hP
   refine ⟨C, fun u => ?_⟩
   rw [← hC u]
@@ -281,8 +278,7 @@ private theorem leading_term_identity_lemma {A : Type} [Ring A] [Algebra ℂ A] 
       split_ifs with hPc
       · rw [hz c hPc hc, mul_zero, mul_zero, map_zero]
       · rfl
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   rw [Finset.sum_congr rfl fun c _ => hsplit c, Finset.sum_sub_distrib, hsecond]
   abel
 
@@ -302,8 +298,7 @@ theorem leading_term_identity : LeadAA := by
       have hσm : StrictMono (fun l => (σ l).val) := by
         intro a b hab
         have h1 : c a < c b := hc hab
-        rw [← heq a, ← heq b, Fin.lt_def, hxv, hxv] at h1
-        exact h1
+        rwa [← heq a, ← heq b, Fin.lt_def, hxv, hxv] at h1
       have hσ1 := perm_id_of_mono σ hσm
       apply hne
       funext l
@@ -345,9 +340,7 @@ theorem leading_term_vector_identity : LeadAAv := by
         rwa [Equiv.apply_symm_apply] at this
       have hσm : StrictMono (fun l => (σ.symm l).val) := by
         intro a b hab
-        have h1 := hB hab
-        simp only [hB', hkey] at h1
-        exact h1
+        simpa only [hB', hkey] using hB hab
       have hσ1 := perm_id_of_mono σ.symm hσm
       apply hne
       funext l
@@ -357,8 +350,7 @@ theorem leading_term_vector_identity : LeadAAv := by
   have h := hC ell
   simp only [id] at h
   unfold AAv
-  rw [show ell + (m : ℂ) - 1 = ell + ((m : ℂ) - 1) by ring]
-  exact h
+  rwa [show ell + (m : ℂ) - 1 = ell + ((m : ℂ) - 1) by ring]
 
 end Formalism.FourierDecayAlt.P.SignAntidiagonal
 end -- clump:auto

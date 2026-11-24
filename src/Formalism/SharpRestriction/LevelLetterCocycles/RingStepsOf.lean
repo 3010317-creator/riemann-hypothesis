@@ -81,8 +81,7 @@ theorem algHom_powerSeries_coe_eq_aeval {O S : Type} [CommRing O] [CommRing S] [
   have h : ρ.comp (Polynomial.coeToPowerSeries.algHom O) = Polynomial.aeval (ρ X) := by
     apply Polynomial.algHom_ext
     simp [Polynomial.coeToPowerSeries.algHom_apply]
-  have h2 := congrArg (fun f => f r) h
-  simpa [Polynomial.coeToPowerSeries.algHom_apply] using h2
+  simpa [Polynomial.coeToPowerSeries.algHom_apply] using congrArg (fun f => f r) h
 
 theorem exists_pow_mul_add_polynomial {O : Type} [CommRing O] [IsLocalRing O] [IsAdicComplete (maximalIdeal O) O]
     (P : Polynomial O) (hP : P.IsDistinguishedAt (maximalIdeal O)) (k : ℕ) (a : PowerSeries O) :
@@ -102,8 +101,7 @@ theorem rhoUnique : RhoUniqueStatement := by
     intro r
     rw [algHom_powerSeries_coe_eq_aeval, algHom_powerSeries_coe_eq_aeval, hX]
   have hdvd : X ∣ ρ (P : PowerSeries O) := by
-    rw [PowerSeries.X_dvd_iff, algHom_powerSeries_coe_eq_aeval]
-    exact h0
+    rwa [PowerSeries.X_dvd_iff, algHom_powerSeries_coe_eq_aeval]
   apply AlgHom.ext
   intro a
   ext n
@@ -115,8 +113,7 @@ theorem rhoUnique : RhoUniqueStatement := by
     rw [hd]
     exact Dvd.dvd.mul_right (pow_dvd_pow_of_dvd hdvd _) _
   have h1 := (PowerSeries.X_pow_dvd_iff.mp hX') n (Nat.lt_succ_self n)
-  rw [map_sub, sub_eq_zero] at h1
-  exact h1
+  rwa [map_sub, sub_eq_zero] at h1
 
 end LevelStatements.Lv
 end -- clump:auto
@@ -221,8 +218,7 @@ theorem coeff_blockSum_single {ι : PowerSeries O →ₐ[O] PowerSeries O} {m : 
     · rintro ⟨h1, h2⟩
       have h3 := Nat.div_add_mod n m
       have h4 : (i : ℕ) = n % m := by rw [h1, hi0]
-      rw [h2, h4]
-      exact h3
+      rwa [h2, h4]
   have hb : ∀ i : Fin m, powerSeriesBlockSplit m (fun n' => if n' = n then x else 0) i =
       if i = i0 then x • (X : PowerSeries O) ^ (n / m) else 0 := by
     intro i
@@ -248,8 +244,7 @@ theorem coeff_blockSum_single {ι : PowerSeries O →ₐ[O] PowerSeries O} {m : 
       coeff_zero_eq_constantCoeff_apply, map_pow, smul_eq_mul]
   · intro i _ hi
     rw [hb i, ite_eq_right hi, map_zero, mul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem coeff_blockSum_triangular {ι : PowerSeries O →ₐ[O] PowerSeries O} {m : ℕ} {w : PowerSeries O}
     (hX : ι X = w * X ^ m) (hm : 0 < m) (g : ℕ → O) (n : ℕ) :
@@ -348,8 +343,7 @@ theorem descendDvd : DescendDvdStatement := by
     · intro i _ hi
       have : (i : ℕ) ≠ 0 := fun h => hi (Fin.ext h)
       simp [this]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   refine ⟨?_, ?_⟩
   · intro p q hpq
     have hb := power_series_block_sum_injective hw hm hw0 (b := fun i => if (i : ℕ) = 0 then p else 0)
@@ -531,8 +525,7 @@ private theorem cyclotomic_comp_pow_dvd_of_X_pow_dvd {O LL : Type} [CommRing O] 
         C ζ * PowerSeries.exp LL := by
       rw [map_add (f := _), Polynomial.aeval_X, map_one, add_comm]
       exact hρ ζ hζ
-    rw [h1, hcyc]
-    exact hw
+    rwa [h1, hcyc]
   choose! w hw using hunit
   have hWu : IsUnit (ofPiFamily fun i : {ζ : LL // IsPrimitiveRoot ζ n} => (w i.1 : PowerSeries LL)) :=
     ((piSeries LL {ζ : LL // IsPrimitiveRoot ζ n}).2 _).2.mpr fun i => by

@@ -112,8 +112,7 @@ theorem torsUnit2 (K : Type) [NormedField K] [IsUltrametricDist K] (g2 g3 : K) (
         exact one_lt_pow₀ ((one_lt_div hyp).2 hy1) (by norm_num)
       have hs : ‖-x - x‖ < 1 :=
         Formalism.ELL.FormalGroupPointsTorsion.sub_lt (by rwa [norm_neg]) hx1
-      rw [Formalism.ELL.FormalGroupPointsTorsion.dom (hs.trans hl)]
-      exact hl
+      rwa [Formalism.ELL.FormalGroupPointsTorsion.dom (hs.trans hl)]
   have hQ0 : Affine.Point.some x y h + Affine.Point.some x y h = 0 := by
     apply hNoTorsion _ hQ
     rw [nsmul_add, hP, add_zero]
@@ -121,8 +120,7 @@ theorem torsUnit2 (K : Type) [NormedField K] [IsUltrametricDist K] (g2 g3 : K) (
     have := Nat.odd_iff.2 (by omega : n % 2 = 1)
     exact this
   refine Affine.Point.some_ne_zero h ?_
-  rw [add_nsmul, one_nsmul, mul_comm, mul_nsmul', two_nsmul, hQ0, nsmul_zero, zero_add] at hP
-  exact hP
+  rwa [add_nsmul, one_nsmul, mul_comm, mul_nsmul', two_nsmul, hQ0, nsmul_zero, zero_add] at hP
 
 end ReciprocityTheory.ChartRestriction.L1
 end -- clump:auto
@@ -174,8 +172,7 @@ lemma chordBig {x y x2 y2 m : K} (h2 : ‖(2 : K)‖ = 1) (hx : ‖x‖ < 1) (hy
     rw [hm, norm_div, hn]; exact (one_lt_div hd0).mpr hd
   have hmm : 1 < ‖m ^ 2‖ := by rw [norm_pow]; exact one_lt_pow₀ hm1 (by norm_num)
   have : m ^ 2 - x2 - x = m ^ 2 + (-x2 - x) := by ring
-  rw [this, dom ((sub_lt (by rwa [norm_neg]) hx).trans hmm)]
-  exact hmm
+  rwa [this, dom ((sub_lt (by rwa [norm_neg]) hx).trans hmm)]
 
 end ThreeTorsionChord
 

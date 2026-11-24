@@ -140,8 +140,7 @@ theorem orbitCores_single [Fintype X] [DecidableEq X] {ρ : Representation k G (
     intro h
     rw [eq_inv_smul_iff, orbitRep_smul] at h
     exact hy h
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem orbitCores_apply_sub_mem [Fintype X] {ρ : Representation k G (∀ x, M x)} {x₀ : X}
     {D : Subgroup G} [Fintype D] (hD : ∀ g, g ∈ D ↔ g • x₀ = x₀) {ρ₀ : Representation k D (M x₀)}
@@ -227,8 +226,7 @@ theorem orbitZeroMap_surjective [Fintype G] (ρ : Representation k G (∀ x, M x
       apply hρ.apply_single_of_ne
       rw [orbitRep_smul]
       exact Ne.symm hy
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   refine ⟨⟨F, ?_⟩, ?_⟩
   · rw [AddMonoidHom.mem_ker, cycSubOne_apply, hF, sub_self]
   · rw [orbitZeroMap_apply]

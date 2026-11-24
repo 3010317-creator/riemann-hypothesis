@@ -106,8 +106,7 @@ theorem crt_exists (R : Subring (Matrix (Fin N) (Fin N) E)) (f : ℕ → Matrix 
       intro q hq
       have hm : p ∈ S.erase q := Finset.mem_erase.2 ⟨(Finset.ne_of_mem_erase hq).symm, hp⟩
       have hd := Finset.dvd_prod_of_mem (fun r : ℕ => ((r : ℤ) ^ K)) hm
-      rw [hQdef]
-      exact hd
+      rwa [hQdef]
     choose! t ht using hdiv
     refine ⟨(-a p) • f p + ∑ q ∈ S.erase p, (b q * t q) • f q,
       add_mem (zsmul_mem (hf p hp) _)
@@ -355,9 +354,7 @@ theorem inert_isLocalRing {R : Type} [CommRing R] [StarRing R] {R₀ : Subring R
   have back : ∀ x : R, ϖ ∣ x → ¬ IsUnit x := by
     rintro x ⟨c, rfl⟩ hu
     exact hI.pi_nonunit (isUnit_of_mul_isUnit_left hu)
-  refine IsLocalRing.of_nonunits_add ?_
-  intro a b ha hb
-  exact back _ (dvd_add (key a ha) (key b hb))
+  exact IsLocalRing.of_nonunits_add (fun a b ha hb => back _ (dvd_add (key a ha) (key b hb)))
 
 theorem split_of (hS : SplitOff) : Split := by
   intro R _ _ R₀ ϖ hI κ _ _ A A' h k a hP hak x y v w hxx hyy hxy hv hw
@@ -823,8 +820,7 @@ theorem locCartanPair_of (h1 : Dichotomy) (hB : BaseLag) (hS : Step) :
   · obtain ⟨e, f, he, heA, hef⟩ := pgen_main hB hS R₀ (ϖ : R) hI N (Fin N) (Fintype.card_fin N) hN
       1 1 h k ⟨⟨conjTranspose_one, by simp⟩, ⟨conjTranspose_one, by simp⟩, hh'⟩
     refine ⟨e, f, he, ?_, hef⟩
-    rw [Matrix.mul_one, Matrix.one_mul] at heA
-    exact heA
+    rwa [Matrix.mul_one, Matrix.one_mul] at heA
 
 end PI.SqPair.LCP
 end -- clump:auto
@@ -990,8 +986,7 @@ theorem plane_core {R : Type*} [CommRing R] (σ : R ≃+* R) (α β t s c : R)
         * !![1 + s * t, c * t; s, c] = !![0, 1; 1, 0] ∧
       (!![1 + s * t, c * t; s, c] : Matrix (Fin 2) (Fin 2) R).det = c := by
   have h3σ : σ c * (1 + σ t * α) = 1 := by
-    have h4 := congrArg σ h3
-    simpa only [map_mul, map_add (f := _), map_one, hα] using h4
+    simpa only [map_mul, map_add (f := _), map_one, hα] using congrArg σ h3
   refine ⟨?_, ?_⟩
   · ext i j
     fin_cases i <;> fin_cases j <;>
@@ -1022,8 +1017,7 @@ theorem plane_exists {R : Type*} [CommRing R] (σ : R ≃+* R) (hσ : ∀ x, σ 
         eval_add, eval_sub, eval_mul, eval_C, eval_pow, eval_X, eval_one, eval_zero]
       norm_num)
   have hr : w ^ 2 - w + α * N * β = 0 := by
-    have h0 := hwroot.eq_zero
-    simpa only [eval_add, eval_sub, eval_pow, eval_X, eval_C] using h0
+    simpa only [eval_add, eval_sub, eval_pow, eval_X, eval_C] using hwroot.eq_zero
   obtain ⟨wu, rfl⟩ := plane_isUnit_of_sub_one_mem hw1
   have hwv : (wu : R₀) * ↑wu⁻¹ = 1 := wu.mul_inv
   let x : R₀ := -β * ↑wu⁻¹
@@ -1119,8 +1113,7 @@ theorem hyperbolic_plane : Plane := by
     rw [starRingAut_apply]
     exact hI.fix x
   have hθ' : IsUnit (θ - (starRingAut : R ≃+* R) θ) := by
-    rw [starRingAut_apply]
-    exact hθ
+    rwa [starRingAut_apply]
   obtain ⟨τ, hτ⟩ := tau_of_theta (starRingAut : R ≃+* R) hσ θ hθ'
   obtain ⟨w, hw1, hw2, hw3⟩ := plane_w (starRingAut : R ≃+* R) hσ R₀ hR₀ τ hτ α β hα
   refine ⟨w, hw1, ?_, hw3⟩
@@ -1277,8 +1270,7 @@ theorem pair_dichotomy : Dichotomy := by
       haveI : Nontrivial R := nontrivial_of_ne _ _ hne
       haveI : NoZeroDivisors R := by
         refine ⟨fun {x y} hxy => ?_⟩
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         obtain ⟨m, u, hu, rfl⟩ := hval x hc.1
         obtain ⟨n, v, hv, rfl⟩ := hval y hc.2
         have h1 : (ϖ : R) ^ (m + n) * (u * v) = 0 := by
@@ -1332,12 +1324,10 @@ theorem sel_factor (ϖ : R) (hϖ0 : ϖ ≠ 0)
   choose h₁ hh₁ using hdiv
   refine ⟨Nat.find hex, Matrix.of h₁, i₀, j₀, ?_, ?_⟩
   · ext i j
-    simp only [Matrix.smul_apply, smul_eq_mul, Matrix.of_apply]
-    exact hh₁ i j
+    simpa only [Matrix.smul_apply, smul_eq_mul, Matrix.of_apply] using hh₁ i j
   · have e : h₁ i₀ j₀ = u₀ :=
       mul_left_cancel₀ (pow_ne_zero _ hϖ0) ((hh₁ i₀ j₀).symm.trans he₀)
-    simp only [Matrix.of_apply, e]
-    exact hu₀
+    simpa only [Matrix.of_apply, e] using hu₀
 
 theorem sel_star_smul (σ : R ≃+* R) (ϖ : R) (hσϖ : σ ϖ = ϖ) (m : ℕ) {ι κ : Type}
     (h : Matrix ι κ R) : ((ϖ ^ m • h).map σ)ᵀ = ϖ ^ m • (h.map σ)ᵀ := by
@@ -1403,8 +1393,7 @@ theorem sel_comm {ι : Type} [Fintype ι] [DecidableEq ι] {c : R} (hc : c ≠ 0
   have key2 : h.det • (h * g - c • 1) = 0 := by
     have e := congrArg (· * h.adjugate) key
     simp only [Matrix.zero_mul] at e
-    rw [Matrix.mul_assoc, Matrix.mul_adjugate, Matrix.mul_smul, Matrix.mul_one] at e
-    exact e
+    rwa [Matrix.mul_assoc, Matrix.mul_adjugate, Matrix.mul_smul, Matrix.mul_one] at e
   have e0 : h * g - c • 1 = 0 := by
     ext i j
     have e := congrFun (congrFun key2 i) j
@@ -1614,8 +1603,7 @@ theorem step_of (h5 : Select) (h8 : Plane) (h6 : Split) : Step := by
   have hβR : hf A y y ∈ R₀ := (hin.fix _).2 (sg_hf_star hA y y)
   have hϖm : (⟨ϖ, hin.pi_mem⟩ : R₀) ∈ IsLocalRing.maximalIdeal R₀ := by
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-    intro hu
-    exact hin.pi_nonunit (hu.map R₀.subtype)
+    exact fun hu => hin.pi_nonunit (hu.map R₀.subtype)
   have hmα : ϖ ^ (2 * a) * c ∈ R₀ := R₀.mul_mem (R₀.pow_mem hin.pi_mem _) hcR
   have hαm : (⟨ϖ ^ (2 * a) * c, hmα⟩ : R₀) ∈ IsLocalRing.maximalIdeal R₀ := by
     have e : (⟨ϖ ^ (2 * a) * c, hmα⟩ : R₀) = ⟨ϖ, hin.pi_mem⟩ ^ (2 * a) * ⟨c, hcR⟩ := Subtype.ext (by simp)

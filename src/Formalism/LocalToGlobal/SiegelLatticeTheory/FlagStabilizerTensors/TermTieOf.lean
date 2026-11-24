@@ -230,8 +230,7 @@ theorem pt_cellC (hAt : ∀ u u', AtSome Y u u') {u u' : D.what₂.Word} (t : D.
     w0).mp h2).2
   have e : ZhatL (lf D (FlagOfWord W u)) (fl'Of W hI t) = ZhatL (lf D (X.Fu u)) (repF (tc hI t)) :=
     Formalism.L2.SG.Saturated.zhat_mapL (W.δ u) (W.isom u) (lf D (X.Fu u)) (repF (tc hI t))
-  rw [e]
-  exact h3
+  rwa [e]
 
 theorem rp_lam {u u' : D.what₂.Word} (q : RP Y u u') : q.1.1.lam = q.1.2.lam := by
   obtain ⟨⟨s₁, h₁⟩, ⟨s₂, h₂⟩, hrow⟩ := q.2

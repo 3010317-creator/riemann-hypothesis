@@ -120,8 +120,7 @@ theorem hostFrob_of (hGal : HostGalois) (hSpec : HostGalSpec) : HostFrob := by
     intro x
     have hx := hτ (algebraMap (𝓞 (hostE ζ a b)) (𝓞 L) x)
     rw [odd_card_under p Q] at hx
-    rw [odd_card_under p P]
-    rw [Ideal.over_def Q P, Ideal.under_def, Ideal.mem_comap]
+    rw [odd_card_under p P, Ideal.over_def Q P, Ideal.under_def, Ideal.mem_comap]
     convert hx using 1
     apply RingOfIntegers.coe_injective
     simp only [map_sub, map_pow, MulSemiringAction.toAlgHom_apply]
@@ -150,8 +149,7 @@ theorem hostFrob_of (hGal : HostGalois) (hSpec : HostGalSpec) : HostFrob := by
       · exact Units.ext (s2.trans hτ3.symm)
       · rw [hu2]
         exact congrArg (hcl e) (Units.ext (hu.trans hτ1.symm))
-    rw [this]
-    exact hσ₀F
+    rwa [this]
   · exact hIP σ (AddSubgroup.mem_inertia.mpr hσ)
   · subst hσ
     intro x

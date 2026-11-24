@@ -105,17 +105,20 @@ theorem norm_infAt_conj_le (w : InfinitePlace K) (b q : AdelicGLn.AdelicGL K n) 
         Matrix (Fin n) (Fin n) w.Completion) i j‖ ≤ (n : ℝ) ^ 2 * (β₁ * (L * β₂) * β₃) := by
   set d : Fin n → w.Completion := fun l =>
     ((GroundTheory.Global.posRealToUnits w ⟨ρ l ^ w.mult, pow_pos (hρ l) _⟩ : (w.Completion)ˣ) :
-      w.Completion) with hd_def
+      w.Completion)
   set d' : Fin n → w.Completion := fun l =>
     (((GroundTheory.Global.posRealToUnits w ⟨ρ l ^ w.mult, pow_pos (hρ l) _⟩)⁻¹ : (w.Completion)ˣ) :
-      w.Completion) with hd'_def
-  have hd : ∀ l, ‖d l‖ = ρ l := fun l => norm_posRealToUnits w (hρ l)
+      w.Completion)
   have hd' : ∀ l, ‖d' l‖ = (ρ l)⁻¹ := fun l => by
     simp only [d', Units.val_inv_eq_inv_val, norm_inv]
     rw [norm_posRealToUnits w (hρ l)]
   set B := (infAt w b : Matrix (Fin n) (Fin n) w.Completion)
   set B' := (((infAt w b)⁻¹ : GL (Fin n) w.Completion) : Matrix (Fin n) (Fin n) w.Completion)
   set Qm := (infAt w q : Matrix (Fin n) (Fin n) w.Completion)
+  have hEn : ∀ l m, ‖(diagonal d * Qm * diagonal d') l m‖ ≤ L * β₂ := fun l m => by
+    rw [Matrix.mul_diagonal, Matrix.diagonal_mul, norm_mul, norm_mul, norm_posRealToUnits w (hρ l),
+      hd', mul_right_comm, ← div_eq_mul_inv]
+    exact mul_le_mul (hL l m) (h2 l m) (norm_nonneg _) ((div_pos (hρ l) (hρ m)).le.trans (hL l m))
   have hmat : (infAt w (b * diagUnits n (fun i => posIdele (K := K) (ρ i) (hρ i)) * q *
       (diagUnits n (fun i => posIdele (K := K) (ρ i) (hρ i)))⁻¹ * b⁻¹) :
         Matrix (Fin n) (Fin n) w.Completion) = B * (diagonal d * Qm * diagonal d') * B' := by
@@ -123,30 +126,17 @@ theorem norm_infAt_conj_le (w : InfinitePlace K) (b q : AdelicGLn.AdelicGL K n) 
       infAt_diagUnits_posIdele, ← map_inv (diagUnits n)]
     simp only [Units.val_mul, coe_diagUnits, Pi.inv_apply, mul_assoc]
     rfl
-  have hE : ∀ l m, (diagonal d * Qm * diagonal d') l m = d l * Qm l m * d' m := by
-    intro l m
-    rw [Matrix.mul_diagonal, Matrix.diagonal_mul]
-  have hEn : ∀ l m, ‖(diagonal d * Qm * diagonal d') l m‖ ≤ L * β₂ := by
-    intro l m
-    rw [hE, norm_mul, norm_mul, hd, hd']
-    calc ρ l * ‖Qm l m‖ * (ρ m)⁻¹ = ρ l / ρ m * ‖Qm l m‖ := by ring
-      _ ≤ L * β₂ := mul_le_mul (hL l m) (h2 l m) (norm_nonneg _)
-          ((div_pos (hρ l) (hρ m)).le.trans (hL l m))
   rw [hmat, Matrix.mul_apply]
   calc ‖∑ m, (B * (diagonal d * Qm * diagonal d')) i m * B' m j‖
       ≤ ∑ m : Fin n, ∑ l : Fin n, β₁ * (L * β₂) * β₃ := by
         refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun m _ => ?_)
         rw [norm_mul, Matrix.mul_apply]
-        have hterm : ∀ l, ‖B i l * (diagonal d * Qm * diagonal d') l m‖ ≤ β₁ * (L * β₂) := by
-          intro l
-          rw [norm_mul]
-          exact mul_le_mul (h1 i l) (hEn l m) (norm_nonneg _) hβ₁
-        have hnn : ∀ l, 0 ≤ β₁ * (L * β₂) := fun l => (norm_nonneg _).trans (hterm l)
-        calc ‖∑ l, B i l * (diagonal d * Qm * diagonal d') l m‖ * ‖B' m j‖
-            ≤ (∑ l : Fin n, β₁ * (L * β₂)) * β₃ :=
-              mul_le_mul ((norm_sum_le _ _).trans (Finset.sum_le_sum fun l _ => hterm l)) (h3 m j)
-                (norm_nonneg _) (Finset.sum_nonneg fun l _ => hnn l)
-          _ = ∑ l : Fin n, β₁ * (L * β₂) * β₃ := Finset.sum_mul _ _ _
+        have hterm : ∀ l, ‖B i l * (diagonal d * Qm * diagonal d') l m‖ ≤ β₁ * (L * β₂) := fun l =>
+          (norm_mul _ _).trans_le (mul_le_mul (h1 i l) (hEn l m) (norm_nonneg _) hβ₁)
+        exact (mul_le_mul ((norm_sum_le _ _).trans (Finset.sum_le_sum fun l _ => hterm l))
+          (h3 m j) (norm_nonneg _)
+          (Finset.sum_nonneg fun l _ => (norm_nonneg _).trans (hterm l))).trans_eq
+            (Finset.sum_mul _ _ _)
     _ = (n : ℝ) ^ 2 * (β₁ * (L * β₂) * β₃) := by
         simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
         ring

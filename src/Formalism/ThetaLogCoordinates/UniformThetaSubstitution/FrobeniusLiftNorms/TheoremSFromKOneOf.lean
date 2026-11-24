@@ -220,10 +220,8 @@ theorem coeff_altF_pow {p : ℕ} (hp : 2 ≤ p) (l : ℕ) :
   · simp
   · intro j _ hj
     rw [ite_eq_right]
-    intro h
-    exact hj (powq_inj hp h).symm
-  · intro h
-    exact absurd (mem_range.2 (lt_powq hp l)) h
+    exact fun h => hj (powq_inj hp h).symm
+  · exact fun h => absurd (mem_range.2 (lt_powq hp l)) h
 
 theorem coeff_altF_ne_zero {p d : ℕ} (h : PowerSeries.coeff d (altF K p) ≠ 0) :
     ∃ l, d = (p ^ 2) ^ l := by
@@ -337,8 +335,7 @@ theorem cg_lin_pow [NeZero ν] {p : ℕ} (hp : p.Prime) (hn : ‖(p : K)‖ = (p
     · have := hw2 (s + 2 * (l : ZMod (2 * ν)))
       have e : s + 2 * ((l + 1 : ℕ) : ZMod (2 * ν)) = s + 2 * (l : ZMod (2 * ν)) + 2 := by
         push_cast; ring
-      rw [norm_sub_rev, e]
-      exact this
+      rwa [norm_sub_rev, e]
 
 theorem cg_altF_lin [NeZero ν] {p : ℕ} (hp : p.Prime) (hn : ‖(p : K)‖ = (p : ℝ)⁻¹)
     {w : ZMod (2 * ν) → K} (hw1 : ∀ s, ‖w s‖ ≤ 1)
@@ -566,8 +563,7 @@ theorem hhS_eq {p : ℕ} {om oms : Fin ν → ZMod (2 * ν) → K}
     unfold wE wE'
     by_cases a1 : s'.val % 2 = 1
     · by_cases a2 : s.val % 2 = 0
-      · simp only [a1, a2, ite_true, true_and]
-        exact hO3 s (s' + 1) (by omega)
+      · simpa only [a1, a2, ite_true, true_and] using hO3 s (s' + 1) (by omega)
       · have : s ≠ s' + 1 := fun h => a2 (by rw [h]; omega)
         simp [a2, this]
     · simp [a1]

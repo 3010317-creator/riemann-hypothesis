@@ -280,8 +280,7 @@ theorem homog_smul_mem (hM : IsMultigrading ι M piece) {f : MRing ι F} {b : K 
     (hf : IsWeightedHomogeneous (blockWeight ι) f b) {m : K → ℤ} {x : M} (hx : x ∈ piece m) :
     f • x ∈ piece (m + degZ b) := by
   have ef := f.as_sum
-  rw [ef]
-  rw [Finset.sum_smul]
+  rw [ef, Finset.sum_smul]
   refine Submodule.sum_mem _ fun d hd => ?_
   have hw : Finsupp.weight (blockWeight ι) d = b := hf (mem_support_iff.mp hd)
   have e : (monomial d (AddMonoidAlgebra.coeff f d) : MRing ι F) = AddMonoidAlgebra.coeff f d • monomial d (1 : F) := by
@@ -433,8 +432,7 @@ theorem isPrime_colon (hM : IsMultigrading ι M piece) {N : Submodule (MRing ι 
       exact N.smul_mem b hs
     have heq := eq_of_le_of_not_lt hle (hmax _ _ hbx hb)
     have ha : a ∈ N.colon {b • x} := by
-      rw [Submodule.mem_colon_singleton, ← mul_smul]
-      exact hab
+      rwa [Submodule.mem_colon_singleton, ← mul_smul]
     rwa [← heq] at ha
 
 theorem exists_step (hM : IsMultigrading ι M piece) {N : Submodule (MRing ι F) M}
@@ -475,13 +473,11 @@ theorem exists_chain [Module.Finite (MRing ι F) M] (hM : IsMultigrading ι M pi
   obtain ⟨n, N, x', c', q', h0, hl, hj⟩ := ih _ hlt (isGradedSub_sup hM hN₀ hx)
   refine ⟨n + 1, Fin.cons N₀ N, Fin.cons x x', Fin.cons c c', Fin.cons (N₀.colon {x}) q', rfl,
     ?_, fun j => ?_⟩
-  · rw [← Fin.succ_last, Fin.cons_succ]
-    exact hl
+  · rwa [← Fin.succ_last, Fin.cons_succ]
   · refine Fin.cases ?_ (fun j => ?_) j
     · simp only [Fin.cons_zero, Fin.castSucc_zero, Fin.cons_succ]
       exact ⟨hx, h0, hq, hqh, fun s => Submodule.mem_colon_singleton.symm⟩
-    · simp only [← Fin.succ_castSucc, Fin.cons_succ]
-      exact hj j
+    · simpa only [← Fin.succ_castSucc, Fin.cons_succ] using hj j
 
 end Chain
 

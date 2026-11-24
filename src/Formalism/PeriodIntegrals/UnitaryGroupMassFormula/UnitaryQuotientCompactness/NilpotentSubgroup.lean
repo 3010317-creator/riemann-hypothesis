@@ -98,8 +98,7 @@ lemma nc_mul {a b : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
       have hlr : l.val < r := lt_of_lt_of_le hl (min_le_right _ _)
       have h := ha i l (by omega) (by rw [min_eq_left hlr.le]; omega)
       rw [h, ite_eq_right (by intro h'; rw [h'] at hi; omega), zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ j) h
+  · exact fun h => absurd (Finset.mem_univ j) h
 
 private lemma mul_apply_eq_ite_of_lower_block_scalar {a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (ha : NC k r a) (c : ℂ)
     {x : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
@@ -118,8 +117,7 @@ private lemma mul_apply_eq_ite_of_lower_block_scalar {a : Matrix (Fin (2 * r + k
       have hlr : l.val < r := lt_of_lt_of_le hl (min_le_right _ _)
       have h := hx i l (by omega) (by rw [min_eq_left hlr.le]; omega)
       rw [h, ite_eq_right (by intro h'; rw [h'] at hi; omega), zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ j) h
+  · exact fun h => absurd (Finset.mem_univ j) h
 
 lemma nc_inv {a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (hU : a ∈ UH (Hpk k r)) (ha : NC k r a) : NC k r a⁻¹ := by
@@ -171,8 +169,7 @@ lemma nc_inv {a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
   intro i j hj hi
   rw [← hxinv]
   have h := x.2 i j hj hi
-  rw [hc] at h
-  exact h
+  rwa [hc] at h
 
 theorem nilpotent_subgroup : NGroup := by
   intro k r

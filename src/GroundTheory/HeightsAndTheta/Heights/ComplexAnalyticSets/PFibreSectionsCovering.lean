@@ -39,8 +39,7 @@ theorem FibreSectionsCovering.proof : FibreSectionsCovering.Statement := by
       have h := hfib _ (hX x.2)
       rw [hN, Nat.cast_zero, Set.encard_eq_zero] at h
       have hm : (x : Fin n → ℂ) ∈ {x' | x' ∈ X ∧ A *ᵥ x' = A *ᵥ (x : Fin n → ℂ)} := ⟨x.2, rfl⟩
-      rw [h] at hm
-      exact hm
+      rwa [h] at hm
     exact IsCoveringMap.of_isEmpty _
   intro y
 
@@ -103,13 +102,10 @@ theorem FibreSectionsCovering.proof : FibreSectionsCovering.Statement := by
       have hm : (⟨G i p, hGX i p hpW⟩ : X) ∈ f ⁻¹' W' ∩ U i := by
         refine ⟨?_, hGV i p hpW, ?_⟩
         · show f ⟨G i p, hGX i p hpW⟩ ∈ W'
-          rw [hres i p hpW]
-          exact hp
+          rwa [hres i p hpW]
         · show A *ᵥ G i p ∈ W
-          rw [hAG i p hpW]
-          exact hpW
-      rw [← hT'eq] at hm
-      exact hm
+          rwa [hAG i p hpW]
+      rwa [← hT'eq] at hm
     rw [mem_nhds_subtype]
     refine ⟨W ∩ G i ⁻¹' T', Filter.inter_mem (hWo.mem_nhds hpW)
       ((hGc i p (hWO i p hpW)).preimage_mem_nhds (hT'o.mem_nhds hGp)), ?_⟩
@@ -117,8 +113,7 @@ theorem FibreSectionsCovering.proof : FibreSectionsCovering.Statement := by
     have hm : (⟨G i q, hGX i q hqW⟩ : X) ∈ Subtype.val ⁻¹' T' := hqT
     rw [hT'eq] at hm
     have h1 := hm.1
-    rw [Set.mem_preimage, hres i q hqW] at h1
-    exact h1
+    rwa [Set.mem_preimage, hres i q hqW] at h1
   have inj : ∀ i, (U i).InjOn f := by
     intro i x hx x' hx' hxx'
     have h : A *ᵥ (x : Fin n → ℂ) = A *ᵥ (x' : Fin n → ℂ) := congrArg Subtype.val hxx'
@@ -128,8 +123,7 @@ theorem FibreSectionsCovering.proof : FibreSectionsCovering.Statement := by
     intro i p hp
     refine ⟨⟨G i p, hGX i p hp⟩, ⟨hGV i p hp, ?_⟩, hres i p hp⟩
     show A *ᵥ G i p ∈ W
-    rw [hAG i p hp]
-    exact hp
+    rwa [hAG i p hp]
   have disj : Pairwise (Function.onFun Disjoint U) := by
     intro i j hij
     refine Set.disjoint_left.2 fun x hxi hxj => ?_
@@ -149,8 +143,7 @@ theorem FibreSectionsCovering.proof : FibreSectionsCovering.Statement := by
       exact hWd w hxW i j hij h
     have heq : Set.range (fun i => G i w) = {x' | x' ∈ X ∧ A *ᵥ x' = w} := by
       refine ((Set.finite_of_encard_eq_coe hFw).subset hsub).eq_of_subset_of_encard_le hsub ?_
-      rw [hFw]
-      rw [hinj.encard_range]
+      rw [hFw, hinj.encard_range]
       simp
     have hxmem : (x : Fin n → ℂ) ∈ Set.range (fun i => G i w) := by
       rw [heq]

@@ -48,8 +48,7 @@ theorem one_le_ringKrullDim_quot {F : Type} [Field F] {n : ℕ} {W : Ideal (MvPo
     exact hWp.ne_top (Ideal.eq_top_of_isUnit_mem _ h0 ((Ne.isUnit hc).map C))
   have hne : W ≠ m := by
     obtain ⟨j, hj⟩ := hW.isRelevant
-    intro h
-    exact hj (h ▸ (by simp [m] : (X j : MvPolynomial (Fin n) F) ∈ m))
+    exact fun h => hj (h ▸ (by simp [m] : (X j : MvPolynomial (Fin n) F) ∈ m))
   have h := ringKrullDim_quot_add_one_le hle hne
   have h0 : (0 : WithBot ℕ∞) ≤ ringKrullDim (MvPolynomial (Fin n) F ⧸ m) :=
     ringKrullDim_nonneg_of_nontrivial
@@ -105,8 +104,7 @@ theorem ComponentOfIncIdeal.proof (h₁ : IncIdealDim.Statement) (h₂ : IncIdea
   have hh1 : h ≤ 1 := by exact_mod_cast hht
   have hnat : h + (e * n - e + min e (k - 1)) = e * n := by
     have h5 : (((h + (e * n - e + min e (k - 1)) : ℕ) : ℕ∞) : WithBot ℕ∞) = (((e * n : ℕ) : ℕ∞) : WithBot ℕ∞) := by
-      rw [Nat.cast_add, WithBot.coe_add]
-      exact hsum
+      rwa [Nat.cast_add, WithBot.coe_add]
     exact_mod_cast WithBot.coe_inj.mp h5
   have hn : 1 ≤ n := by
     obtain ⟨j, _⟩ := hW.isRelevant

@@ -38,8 +38,7 @@ theorem mem_locF_dualIn {h : V →ₗ⋆[K] V →ₗ[K] K} {X : Submodule K V} {
   obtain ⟨s, hs⟩ := hL
   have H' : ∀ y ∈ s, ∃ t ∈ Submonoid.closure {s : 𝓞 K | ∃ t : 𝓞 F, t ∉ 𝔭 ∧ algebraMap (𝓞 F) (𝓞 K) t = s},
       t • h y v ∈ (1 : Submodule (𝓞 K) K) := by
-    intro y hy
-    exact H y (hs ▸ Submodule.subset_span hy)
+    exact fun y hy => H y (hs ▸ Submodule.subset_span hy)
   choose! t ht using H'
   refine ⟨∏ y ∈ s, t y, Submonoid.prod_mem _ fun y hy => (ht y hy).1, ?_⟩
   refine ⟨X.restrictScalars (𝓞 K) |>.smul_mem _ hv, ?_⟩
@@ -70,7 +69,6 @@ theorem projection_into_holds : ProjInto := by
   have h0 : h y (Y.projection X hc.symm x) = 0 := hXY y hyX _ (Submodule.projection_apply_mem _ x)
   have hx' : x ∈ dualF h 𝔭 Λ := by rw [hΛd]; exact hx
   have := hx' y hyΛ
-  rw [← e, map_add (f := _), h0, add_zero] at this
-  exact this
+  rwa [← e, map_add (f := _), h0, add_zero] at this
 
 end Formalism.L2.SG.Pf.G6

@@ -142,8 +142,7 @@ theorem key_slice (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq) (hpl : Q.IsPl
     have hq := hQR c' hc' ζ' hζ'
     rw [hW ρ Θ]
     have h := Formalism.FourierDecayAlt.P.NFRO.radR_mulZ hRB (F ρ) Θ.2 hq
-    simp only [NF.radR, Set.indicator_of_mem hq] at h
-    exact h
+    simpa only [NF.radR, Set.indicator_of_mem hq] using h
   let Φc : Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π' := ∑ ρ, W ρ (Ψ ρ)
   have hsumv : ∀ (G : M.Ty P → Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') (c' : Fin P.r → ℂ) (g : Q.Mx P.k P.r),
       ((∑ ρ, G ρ : Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) c' g =
@@ -164,8 +163,7 @@ theorem key_slice (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq) (hpl : Q.IsPl
   rw [hT Φ Φc c c hc hc hΦv ζ hζ, map_sum, hsumv]
   refine Finset.sum_congr rfl fun ρ _ => ?_
   have hcomm : T (W ρ (Ψ ρ)) = W ρ (T (Ψ ρ)) := by
-    have h := (hC (F ρ) (hFs ρ) (W ρ) (hW ρ)).eq
-    exact LinearMap.congr_fun h (Ψ ρ)
+    exact LinearMap.congr_fun ((hC (F ρ) (hFs ρ) (W ρ) (hW ρ)).eq) (Ψ ρ)
   rw [hcomm, hmul ρ (T (Ψ ρ)) c hc ζ hζ]
   congr 1
   exact hT (Ψ ρ) (Ψ ρ) c c0 hc hc0 (fun ζ' hζ' => by rw [hΨ ρ c hc ζ' hζ', hΨ ρ c0 hc0 ζ' hζ']) ζ hζ
@@ -197,9 +195,7 @@ theorem second_shift_matrix_form : GTSSLMat := by
       (Ψ ρ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) c (NF.muZ P.k P.r Bs.μsec ζ) = e ρ ζ := by
     intro ρ c hc ζ hζ
     have hq : ((c, ζ) : (Fin P.r → ℂ) × ℂ) ∈ NF.QR P.k P.r Bs.z Bs.z' := ⟨hc, by rw [hTz]; exact hζ⟩
-    have h := congrFun (hΨr ρ) (c, ζ)
-    simp only [NF.radR, Set.indicator_of_mem hq] at h
-    exact h
+    simpa only [NF.radR, Set.indicator_of_mem hq] using congrFun (hΨr ρ) (c, ζ)
   have hCom : ∀ l ∈ Finset.Icc 1 (P.k - 1), ∀ f : ℂ → ℂ, ContDiffOn ℝ ∞ f {ζ | P.TT < Complex.normSq ζ} →
       ∀ W : Module.End ℂ (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π'), NF.IsMulZ W f →
         Commute (d.SS l).1 W ∧ Commute (star (d.SS l)).1 W := by

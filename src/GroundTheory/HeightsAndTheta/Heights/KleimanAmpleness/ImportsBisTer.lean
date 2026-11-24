@@ -57,11 +57,9 @@ theorem RealiseRestrict.proof (hG : ModelGenerated.Statement) (hS : SpanSecs.Sta
     rw [← hcb c hcB I, hQ'' c]
     apply le_antisymm
     · rw [Submodule.span_le]
-      intro t ht
-      exact (hT t).mp ht I
+      exact fun t ht => (hT t).mp ht I
     · rw [Submodule.span_le]
-      intro t ht
-      exact Submodule.subset_span ((hT t).mpr fun J => Submodule.subset_span ht)
+      exact fun t ht => Submodule.subset_span ((hT t).mpr fun J => Submodule.subset_span ht)
 
   have hfx : ∀ (f g : Kleiman.Poly F N) (m : ℕ), f.IsHomogeneous m → g.IsHomogeneous m →
       aeval (IndefiniteRowSideFullHecke.Kleiman2.blockVec y' k₀ ∘ e.symm) g ≠ 0 →

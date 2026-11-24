@@ -77,8 +77,7 @@ theorem good_one : Good lam 1 := good_of_pow lam 1 1 1 one_pos (Nat.coprime_one_
 theorem good_iota (n : ℕ) (hn : n ≠ 0 → Nat.Coprime n p) : Good lam ((Real.sqrt (n : ℝ))⁻¹ : ℂ) := by
   by_cases h0 : n = 0
   · subst h0
-    simp only [Nat.cast_zero, Real.sqrt_zero, Complex.ofReal_zero, inv_zero]
-    exact good_zero lam
+    simpa only [Nat.cast_zero, Real.sqrt_zero, Complex.ofReal_zero, inv_zero] using good_zero lam
   · refine good_of_pow lam _ 2 n (by norm_num) (hn h0) ?_
     have hn' : (n : ℂ) ≠ 0 := by exact_mod_cast h0
     have hs : ((Real.sqrt (n : ℝ) : ℝ) : ℂ) ^ 2 = (n : ℂ) := by
@@ -92,8 +91,7 @@ theorem good_al (T : Tor D) (x : VC D N N') : Good lam (al D T x) := by
   refine good_of_pow lam _ 2 1 (by norm_num) (Nat.coprime_one_left p) ?_
   simp only [al, Nat.cast_one, mul_one]
   rw [← zpow_natCast, ← zpow_mul]
-  apply Even.neg_one_zpow
-  exact Int.even_mul.2 (Or.inr ⟨1, by norm_num⟩)
+  exact Even.neg_one_zpow (Int.even_mul.2 (Or.inr ⟨1, by norm_num⟩))
 
 theorem good_cf (T : Tor D) (x y : VC D N N') (q : ℚ) (hq : (Formalism.MainNotions.TaylorLogMetric.Hf D T x y).im = q) :
     Good lam (IO.cf T x y) := by
@@ -350,8 +348,7 @@ theorem pairs_standard_at_p : StdStep := by
   have R2 : Rep lam B.tor (fun y => ∃ a ∈ La2, ∃ b ∈ La1, y = a + b) (B.thMoved N N' M M') (B.thZero N N') := by
     show Rep lam B.tor _ (Iop D B.tor La1 La2 (B.thHalf N N' M)) (B.thZero N N')
     refine rep_Iop R1 ?_ ?_
-    · intro x hx y hy
-      exact ⟨cf_good x y (q2_2 x hx) (q2_1 y hy), x, hx, y, hy, rfl⟩
+    · exact fun x hx y hy => ⟨cf_good x y (q2_2 x hx) (q2_1 y hy), x, hx, y, hy, rfl⟩
     · exact idx_coprime La1 La2 (1 * s') (by simpa using hs') k21
 
   obtain ⟨n, hn, hnp, hnt⟩ := ht

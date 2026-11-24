@@ -74,12 +74,10 @@ theorem gi_of_le {A B D : AddSubgroup V} (hA : D ≤ A) (hB : D ≤ B) (hDA : D.
     (hDB : D.relIndex B ≠ 0) : gi A B = (D.relIndex A : ℝ) / (D.relIndex B : ℝ) := by
   have e1 : D.relIndex (A ⊓ B) * B.relIndex A = D.relIndex A := by
     have h := AddSubgroup.relIndex_inf_mul_relIndex (H := D) (K := B) (L := A)
-    rw [inf_eq_left.mpr hB, inf_comm] at h
-    exact h
+    rwa [inf_eq_left.mpr hB, inf_comm] at h
   have e2 : D.relIndex (A ⊓ B) * A.relIndex B = D.relIndex B := by
     have h := AddSubgroup.relIndex_inf_mul_relIndex (H := D) (K := A) (L := B)
-    rw [inf_eq_left.mpr hA] at h
-    exact h
+    rwa [inf_eq_left.mpr hA] at h
   have hc : D.relIndex (A ⊓ B) ≠ 0 := fun h0 => hDA (by rw [← e1, h0, zero_mul])
   unfold gi
   rw [← e1, ← e2]
@@ -96,8 +94,7 @@ private theorem relIndex_eq_of_mem_iff {H H' K : AddSubgroup V} (h : ∀ v ∈ K
     H.relIndex K = H'.relIndex K := by
   have e : H.addSubgroupOf K = H'.addSubgroupOf K := by
     ext x
-    simp only [AddSubgroup.mem_addSubgroupOf]
-    exact h x x.2
+    simpa only [AddSubgroup.mem_addSubgroupOf] using h x x.2
   unfold AddSubgroup.relIndex
   rw [e]
 
@@ -136,8 +133,7 @@ theorem gi_pos {A B : AddSubgroup V} (hA : Lat A) (hB : Lat B) : 0 < gi A B := b
 theorem gi_trans {A B C : AddSubgroup V} (hA : Lat A) (hB : Lat B) (hC : Lat C) :
     gi A B * gi B C = gi A C := by
   have hD : IsOpen ((A ⊓ B ⊓ C : AddSubgroup V) : Set V) := by
-    simp only [AddSubgroup.coe_inf]
-    exact (hA.op.inter hB.op).inter hC.op
+    simpa only [AddSubgroup.coe_inf] using (hA.op.inter hB.op).inter hC.op
   rw [gi_of_le (D := A ⊓ B ⊓ C) (inf_le_left.trans inf_le_left) (inf_le_left.trans inf_le_right)
       (relIndex_ne_zero hD hA.cp) (relIndex_ne_zero hD hB.cp),
     gi_of_le (D := A ⊓ B ⊓ C) (inf_le_left.trans inf_le_right) inf_le_right
@@ -186,8 +182,7 @@ theorem lat_mulR (ho : IsOpen (R : Set K)) (hc : IsCompact (R : Set K)) (x : Kˣ
       constructor
       · rintro ⟨r, hr, rfl⟩
         simpa using hr
-      · intro hy
-        exact ⟨_, hy, by simp⟩
+      · exact fun hy => ⟨_, hy, by simp⟩
     rw [h]
     exact ho.preimage (continuous_const_mul _)
   · have h : ((mulR R (x : K)) : Set K) = (fun y => (x : K) * y) '' (R : Set K) := by
@@ -238,8 +233,7 @@ def dl (R : Subring K) (M : Matrix ι ι K) : ℝ := gi ((LL R ι).map (mv M)) (
 theorem mv_injective {M : Matrix ι ι K} (h : IsUnit M.det) : Function.Injective (mv M) := by
   intro v w hvw
   have h' : M *ᵥ v = M *ᵥ w := by simpa using hvw
-  have h'' := congrArg (fun u => M⁻¹ *ᵥ u) h'
-  simpa [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ h] using h''
+  simpa [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ h] using congrArg (fun u => M⁻¹ *ᵥ u) h'
 
 theorem map_mv_mul (M N : Matrix ι ι K) (A : AddSubgroup (ι → K)) :
     A.map (mv (M * N)) = (A.map (mv N)).map (mv M) := by
@@ -289,8 +283,7 @@ theorem lat_map {M : Matrix ι ι K} (h : IsUnit M.det) {A : AddSubgroup (ι →
     constructor
     · rintro ⟨u, hu, rfl⟩
       simpa [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ h] using hu
-    · intro hv
-      exact ⟨_, hv, by simp [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ h]⟩
+    · exact fun hv => ⟨_, hv, by simp [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ h]⟩
   have hi : ((A.map (mv M) : AddSubgroup (ι → K)) : Set (ι → K)) =
       (fun v => M *ᵥ v) '' (A : Set (ι → K)) := by
     ext v
@@ -354,8 +347,7 @@ theorem dl_blockL (S : Matrix ι ι K) :
       obtain ⟨x, hx, rfl⟩ := AddSubgroup.mem_map.mp hA
       refine AddSubgroup.mem_map.mpr ⟨x ∘ Sum.inl, ?_, ?_⟩
       · rw [mem_LL] at hx ⊢
-        intro i
-        exact hx (Sum.inl i)
+        exact fun i => hx (Sum.inl i)
       · rw [hres, hB, Sum.elim_comp_inl, mv_apply]
     · intro hA
       obtain ⟨y, hy, hyv⟩ := AddSubgroup.mem_map.mp hA
@@ -376,8 +368,7 @@ theorem dl_blockL (S : Matrix ι ι K) :
     constructor
     · intro h
       rw [mem_LL] at h ⊢
-      intro i
-      exact h (Sum.inl i)
+      exact fun i => h (Sum.inl i)
     · intro h
       rw [mem_LL] at h hx ⊢
       rintro (i | u)
@@ -389,8 +380,7 @@ theorem dl_blockL (S : Matrix ι ι K) :
     · intro hu
       obtain ⟨w, hw, rfl⟩ := AddSubgroup.mem_map.mp hu
       rw [mem_LL] at hw ⊢
-      intro i
-      exact hw (Sum.inl i)
+      exact fun i => hw (Sum.inl i)
     · intro hu
       refine AddSubgroup.mem_map.mpr ⟨Sum.elim u 0, ?_, rfl⟩
       rw [mem_LL] at hu ⊢
@@ -404,8 +394,7 @@ theorem dl_blockL (S : Matrix ι ι K) :
       obtain ⟨x, hx, rfl⟩ := AddSubgroup.mem_map.mp hw
       refine AddSubgroup.mem_map.mpr ⟨x ∘ Sum.inl, ?_, ?_⟩
       · rw [mem_LL] at hx ⊢
-        intro i
-        exact hx (Sum.inl i)
+        exact fun i => hx (Sum.inl i)
       · rw [hres, hB, Sum.elim_comp_inl, mv_apply]
     · intro hu
       obtain ⟨y, hy, rfl⟩ := AddSubgroup.mem_map.mp hu
@@ -449,8 +438,7 @@ theorem dl_blockR (D : Matrix Unit Unit K) :
   · intro v hA
     obtain ⟨x, hx, rfl⟩ := AddSubgroup.mem_map.mp hA
     constructor
-    · intro h
-      exact (mem_LL.mp h) (Sum.inr ())
+    · exact fun h => (mem_LL.mp h) (Sum.inr ())
     · intro h
       rw [mem_LL]
       rintro (i | u)
@@ -462,8 +450,7 @@ theorem dl_blockR (D : Matrix Unit Unit K) :
     · intro hr
       obtain ⟨w, hw, rfl⟩ := AddSubgroup.mem_map.mp hr
       exact mem_LL.mp hw (Sum.inr ())
-    · intro hr
-      exact AddSubgroup.mem_map.mpr ⟨fun _ => r, mem_LL.mpr fun _ => hr, rfl⟩
+    · exact fun hr => AddSubgroup.mem_map.mpr ⟨fun _ => r, mem_LL.mpr fun _ => hr, rfl⟩
   · ext z
     constructor
     · intro hz
@@ -496,8 +483,7 @@ theorem dl_reindex (e : ι ≃ κ) (M : Matrix ι ι K) : dl R (reindex e e M) =
     · intro hv
       refine AddSubgroup.mem_map.mpr ⟨v ∘ e, ?_, ?_⟩
       · rw [mem_LL] at hv ⊢
-        intro i
-        exact hv _
+        exact fun i => hv _
       · rw [hf_apply]
         funext k
         simp
@@ -747,8 +733,7 @@ theorem good_step (hd : LocalDatum K R ψ) (hG : Good R ι) : Good R (ι ⊕ Uni
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [Matrix.fromBlocks_apply₁₂, hq]
       ring
-    rw [e]
-    exact hc'
+    rwa [e]
   have key := good_corner hd hG _ hME hcorner
   rw [dl_mul hL hM hE, dl_upper hd, mul_one, Matrix.det_mul, Matrix.det_fromBlocks_zero₂₁] at key
   simpa using key
@@ -791,8 +776,7 @@ theorem cokernel_finite_card_eq_inv_modulus (hd : LocalDatum K R ψ) (n : ℕ) (
     · intro hv
       obtain ⟨y, rfl⟩ := AddMonoidHom.mem_range.mp hv
       rw [mem_LL]
-      intro i
-      exact (y i).2
+      exact fun i => (y i).2
     · intro hv
       rw [mem_LL] at hv
       exact AddMonoidHom.mem_range.mpr ⟨fun i => ⟨v i, hv i⟩, rfl⟩
@@ -946,8 +930,7 @@ variable [TopologicalSpace K] [IsTopologicalRing K] {ψ : AddChar K ℂ}
 theorem kernel_nonzero_modulus_determinant_eq (hd : LocalDatum K R ψ) (w w' : Point K) (h : Kp R ψ w w' ≠ 0) :
     modK R (pt w.1 w.2).det = modK R (pt w'.1 w'.2).det := by
   obtain ⟨q, hq⟩ : ∃ q, pairTerm R ψ w w' q ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact h (finsum_eq_zero_of_forall_eq_zero hc)
   unfold pairTerm at hq
   by_cases hc : IsInt R (orbZ w (rep R q.1)) ∧ IsInt R (orbZ w' (rep R q.2))

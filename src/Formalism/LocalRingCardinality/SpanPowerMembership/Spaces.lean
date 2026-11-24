@@ -198,8 +198,7 @@ variable (hstar : ∀ x : E, IsIntegral ℤ x → IsIntegral ℤ (star x))
 theorem stdSpace_gram_apply (N : ℕ) (neg : Fin N → Bool) (p q : ℕ) (i j : Fin N) :
     (stdSpace hstar N neg p q).gram i j = if i = j then (sgn (neg i) : E) else 0 := by
   show diagForm N neg ((Pi.basisFun E (Fin N)) i) ((Pi.basisFun E (Fin N)) j) = _
-  simp only [Pi.basisFun_apply]
-  exact diagForm_single N neg i j
+  simpa only [Pi.basisFun_apply] using diagForm_single N neg i j
 
 def posSpace (N : ℕ) : HSpace E := stdSpace hstar N (fun _ => false) N 0
 
@@ -214,14 +213,12 @@ theorem posSpace_sigOK (N : ℕ) : (posSpace hstar N).SigOK := by
   rw [hg]
   show Formalism.UG.HasSignature _ N 0
   have h := Formalism.UG.P.stdform_sig_one (n := Fin N)
-  rw [Fintype.card_fin] at h
-  exact h
+  rwa [Fintype.card_fin] at h
 
 def negLast : Fin (8 + 1) → Bool := fun i => decide ((i : ℕ) = 8)
 
 theorem negLast_castAdd (i : Fin 8) : negLast (Fin.castAdd 1 i) = false := by
-  simp only [negLast, decide_eq_false_iff_not, Fin.val_castAdd]
-  exact i.isLt.ne
+  simpa only [negLast, decide_eq_false_iff_not, Fin.val_castAdd] using i.isLt.ne
 
 theorem castAdd_ne_natAdd' (i : Fin 8) (j : Fin 1) : Fin.castAdd 1 i ≠ Fin.natAdd 8 j := by
   intro h

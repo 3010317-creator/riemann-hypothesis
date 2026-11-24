@@ -62,8 +62,7 @@ theorem isMultiHomog_of_mem_lex (e : K ≃ Fin n) {f : MRing ι} {m : Lex (Fin n
   have hm : (fun k => ofLex m (e k)) ∘ e.symm = ofLex m := by
     funext j
     simp
-  rw [hm, toLex_ofLex]
-  exact h
+  rwa [hm, toLex_ofLex]
 
 theorem mem_lex_of_isMultiHomog (e : K ≃ Fin n) {f : MRing ι} {a : K → ℕ} (h : IsMultiHomog f a) :
     f ∈ weightedHomogeneousSubmodule ℤ (lexW (ι := ι) e) (toLex (a ∘ e.symm)) := by
@@ -140,8 +139,7 @@ theorem exists_colon_prime (J : Ideal (MRing ι)) (hJ : IsMultiHomogIdeal J) (hJ
     have hxf := SetLike.GradedMul.mul_mem hx hfm
     have hxfJ : x * f ∉ J := by rwa [Submodule.mem_colon_singleton, smul_eq_mul] at hxP
     have hmem : J.colon {x * f} ∈ S := by
-      simp only [S, Set.mem_setOf_eq]
-      exact ⟨x * f, _, isMultiHomog_of_mem_lex e hxf, hxfJ, rfl⟩
+      simpa only [S, Set.mem_setOf_eq] using ⟨x * f, _, isMultiHomog_of_mem_lex e hxf, hxfJ, rfl⟩
     have hle : J.colon {f} ≤ J.colon {x * f} := by
       intro g hg
       rw [Submodule.mem_colon_singleton, smul_eq_mul] at hg ⊢
@@ -152,8 +150,7 @@ theorem exists_colon_prime (J : Ideal (MRing ι)) (hJ : IsMultiHomogIdeal J) (hJ
       exact hmax _ hmem (lt_of_le_of_ne hle hne')
     rw [heq, Submodule.mem_colon_singleton, smul_eq_mul]
     rw [Submodule.mem_colon_singleton, smul_eq_mul] at hxy
-    rw [← mul_assoc, mul_comm y x]
-    exact hxy
+    rwa [← mul_assoc, mul_comm y x]
 
 theorem isMultiHomogIdeal_sup_span_via_span_union {J : Ideal (MRing ι)} (hJ : IsMultiHomogIdeal J) {f : MRing ι}
     {c : K → ℕ} (hf : IsMultiHomog f c) : IsMultiHomogIdeal (J ⊔ Ideal.span {f}) := by
@@ -180,15 +177,13 @@ theorem exists_primeFiltration_of_isMultiHomogIdeal (J : Ideal (MRing ι)) (hJ :
     hfJ (h ▸ Ideal.mem_sup_right (Ideal.mem_span_singleton_self f))
   obtain ⟨N, F, g, cc, q, hF0, hFl, hstep⟩ := ih _ hlt (isMultiHomogIdeal_sup_span hJ hf)
   refine ⟨N + 1, Fin.cons J F, Fin.cons f g, Fin.cons c cc, Fin.cons (J.colon {f}) q, rfl, ?_, ?_⟩
-  · rw [← Fin.succ_last, Fin.cons_succ]
-    exact hFl
+  · rwa [← Fin.succ_last, Fin.cons_succ]
   · intro j
     refine Fin.cases ?_ (fun j => ?_) j
     · refine ⟨by simpa using hf, ?_, by simpa using hprime, by simpa using hqh, fun g' => ?_⟩
       · simp [hF0]
       · simp [Submodule.mem_colon_singleton, smul_eq_mul]
-    · simp only [← Fin.succ_castSucc, Fin.cons_succ]
-      exact hstep j
+    · simpa only [← Fin.succ_castSucc, Fin.cons_succ] using hstep j
 
 end Filtration
 

@@ -112,8 +112,7 @@ lemma admissible_chain_inf [CompactSpace G] (U : Subgroup G) (hU : IsClosed (U :
     exact fun p hp => (hc p hp).2.2.1 k (hk p hp) s (hs p hp)
   · intro a ha b hb hab
     simp only [Set.mem_iInter] at ha hb
-    simp only [Subgroup.mem_iInf]
-    exact fun p hp => (hc p hp).2.2.2.1 a (ha p hp) b (hb p hp) hab
+    simpa only [Subgroup.mem_iInf] using fun p hp => (hc p hp).2.2.2.1 a (ha p hp) b (hb p hp) hab
   · intro g
     have : Nonempty c := ⟨⟨y, hy⟩⟩
     have hne := IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed
@@ -123,8 +122,7 @@ lemma admissible_chain_inf [CompactSpace G] (U : Subgroup G) (hU : IsClosed (U :
     · obtain ⟨a, ha⟩ := hne
       simp only [Set.mem_iInter] at ha
       refine ⟨a, ?_, (ha ⟨y, hy⟩).2⟩
-      simp only [Set.mem_iInter]
-      exact fun p hp => (ha ⟨p, hp⟩).1
+      simpa only [Set.mem_iInter] using fun p hp => (ha ⟨p, hp⟩).1
     · intro p q
       rcases htot p.1 p.2 q.1 q.2 with hpq | hqp
       · exact ⟨p, le_rfl, Set.inter_subset_inter_left _ (Prod.le_def.1 hpq).2⟩
@@ -189,8 +187,7 @@ theorem core [CompactSpace G] [T2Space G] [TotallyDisconnectedSpace G] (U : Subg
         simpa using U.inv_mem (htU g)
       · rintro ⟨u, hu, a, ⟨haS, haC⟩, rfl⟩
         show t (u * a) ∈ C
-        rw [huniq (u * a) (t (u * a)) a (htS _) haS (htU _) (by simpa using U.inv_mem hu)]
-        exact haC
+        rwa [huniq (u * a) (t (u * a)) a (htS _) haS (htU _) (by simpa using U.inv_mem hu)]
     rw [hset]
     exact (hU.isCompact.mul (hA.2.1.inter hC).isCompact).isClosed
   · refine huniq g (t g) (t h) (htS g) (htS h) (htU g) ?_
@@ -315,8 +312,7 @@ theorem isOpen_setOf_conj_eq (M : TRep R G) [DiscreteTopology M.V] (N : Subgroup
   have hev : ∀ᶠ s in nhds s0, ∀ n ∈ (Set.univ : Set N),
       M.rho s (f (cj N s n)) - f n - (M.rho (n : G) m - m) = 0 := by
     apply isCompact_univ.eventually_forall_of_forall_eventually
-    intro n _
-    exact hO.mem_nhds (sub_eq_zero.mpr (hs0 n))
+    exact fun n _ => hO.mem_nhds (sub_eq_zero.mpr (hs0 n))
   filter_upwards [hev] with s hs n
   exact sub_eq_zero.mp (hs n (Set.mem_univ n))
 

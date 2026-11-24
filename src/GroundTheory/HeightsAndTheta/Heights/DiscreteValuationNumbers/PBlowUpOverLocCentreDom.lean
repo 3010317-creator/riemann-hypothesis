@@ -139,8 +139,7 @@ theorem exists_blowUp_centre (P W : Ideal (MRing ι O)) [P.IsPrime] (hPh : IsMul
   have ht : ∀ o, t o ≠ 0 := by
     rintro (_ | k)
     · show τ (X ⟨none, j⟩) ≠ 0
-      rw [hτY, Ne, hq0]
-      exact hjP
+      rwa [hτY, Ne, hq0]
     · show τ (X ⟨some k, ik k⟩) ≠ 0
       rw [hτX, Ne, hq0]
       exact fun h => hik k (hPW h)
@@ -155,8 +154,7 @@ theorem exists_blowUp_centre (P W : Ideal (MRing ι O)) [P.IsPrime] (hPh : IsMul
       · refine V.mem_of_valuation_le_one _ ?_
         rw [map_div₀]
         have hj0 : V.valuation (q (u j)) ≠ 0 := by
-          rw [Ne, Valuation.zero_iff, hq0]
-          exact hjP
+          rwa [Ne, Valuation.zero_iff, hq0]
         exact (div_le_one₀ (zero_lt_iff.2 hj0)).2 (hjmax i hi)
     · show τ (X ⟨some k, i⟩) / τ (X ⟨some k, ik k⟩) ∈ V
       rw [show τ (X ⟨some k, i⟩) = q (X ⟨k, i⟩) from hτX k i, hτX]
@@ -170,8 +168,7 @@ theorem exists_blowUp_centre (P W : Ideal (MRing ι O)) [P.IsPrime] (hPh : IsMul
   let aV : (Σ o, extIdx ι J o) → V := fun s => ⟨a s, ha s⟩
   let ψV : MRing (extIdx ι J) O →+* V := eval₂Hom cV aV
   have hψ : ∀ F, (ψV F : L) = eval₂ (τ.comp C) a F := fun F => by
-    have h := eval₂_comp_left V.subtype cV aV F
-    exact h
+    exact eval₂_comp_left V.subtype cV aV F
   have hτψ : ∀ F b, IsMultiHomog F b → τ F = (∏ o, t o ^ b o) * ψV F := by
     intro F b hF
     rw [hψ, ← eval₂_blockScale _ t a hF]
@@ -189,8 +186,7 @@ theorem exists_blowUp_centre (P W : Ideal (MRing ι O)) [P.IsPrime] (hPh : IsMul
     intro F b hF
     have h := eval₂_blockVar_of_isMultiHomog (ρ.comp cV) (fun s => ρ (aV s)) hF
     have h2 : eval₂ (ρ.comp cV) (fun s => ρ (aV s)) F = ρ (ψV F) := (eval₂_comp_left ρ cV aV F).symm
-    rw [h2] at h
-    exact h
+    rwa [h2] at h
   have hmem : ∀ F b, IsMultiHomog F b → (F ∈ RingHom.ker Φ ↔ ψV F ∈ IsLocalRing.maximalIdeal V) := by
     intro F b hF
     rw [RingHom.mem_ker, hΦhom F b hF, monomial_eq_zero, IsLocalRing.residue_eq_zero_iff]
@@ -322,8 +318,7 @@ theorem BlowUpOverLocCentreDom.proof : BlowUpOverLocCentreDom.Statement.{u} := b
   have hinv : ((w⁻¹ : (blowUpLocRing P u W')ˣ) : FractionRing (MRing ι O ⧸ P)) ∈ V := hloc ((w⁻¹ : (blowUpLocRing P u W')ˣ) : blowUpLocRing P u W').2
   have hmul : (y : FractionRing (MRing ι O ⧸ P)) * ((w⁻¹ : (blowUpLocRing P u W')ˣ) : _) = 1 := by
     have h1 := congrArg Subtype.val w.mul_inv
-    rw [hw] at h1
-    exact h1
+    rwa [hw] at h1
   exact (IsLocalRing.mem_maximalIdeal _).1 hymax (IsUnit.of_mul_eq_one ⟨_, hinv⟩ (Subtype.ext hmul))
 
 end

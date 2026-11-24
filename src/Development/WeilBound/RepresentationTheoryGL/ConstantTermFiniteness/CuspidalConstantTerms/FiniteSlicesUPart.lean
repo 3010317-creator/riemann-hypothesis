@@ -543,8 +543,7 @@ theorem exists_adapted_onb {ι : Type*} [Fintype ι] [DecidableEq ι]
     constructor
     · rintro ⟨x, hx, rfl⟩
       exact hx
-    · intro hy
-      exact ⟨⟨y, hvu hy⟩, hy, rfl⟩
+    · exact fun hy => ⟨⟨y, hvu hy⟩, hy, rfl⟩
   rw [himg]
   have hr : W.subtype '' Set.range (stdOrthonormalBasis ℂ W) = v := (Set.range_comp _ _).symm
   rw [← hr, Submodule.span_image, ← (stdOrthonormalBasis ℂ W).coe_toBasis,
@@ -650,8 +649,7 @@ theorem exists_KG_coordinate (W : Submodule ℂ (Fin n → ℂ))
     · rw [hM i j, extendByZero_apply_of_ne ε _ hi]
       ring
   have hunit : M ∈ Matrix.unitaryGroup (Fin n) ℂ := by
-    rw [Matrix.mem_unitaryGroup_iff', Matrix.star_eq_conjTranspose]
-    exact hMM
+    rwa [Matrix.mem_unitaryGroup_iff', Matrix.star_eq_conjTranspose]
   let u : (Matrix (Fin n) (Fin n) ℂ)ˣ := ⟨M, Mᴴ, hMM', hMM⟩
   have hUJ : u ∈ Formalism.REAL.UJ ε := by
     show Mᴴ * Formalism.REAL.Jm ε * M = Formalism.REAL.Jm ε
@@ -756,8 +754,7 @@ theorem isUnit_gram (a : Matrix (Fin n) (Fin m) ℂ) (b : Matrix (Fin m) (Fin n)
   have h3 : P *ᵥ v = 0 := by
     rw [← hb, ← Matrix.mulVec_mulVec, h1, Matrix.mulVec_zero]
   apply hv
-  rw [Matrix.sub_mulVec, h3, Matrix.one_mulVec, sub_zero] at h2
-  exact h2
+  rwa [Matrix.sub_mulVec, h3, Matrix.one_mulVec, sub_zero] at h2
 
 theorem exists_gram_inverse (a : Matrix (Fin n) (Fin m) ℂ) (b : Matrix (Fin m) (Fin n) ℂ)
     (P : Matrix (Fin m) (Fin m) ℂ) (hPh : Pᴴ = P) (hPP : P * P = P) (hb : b * a = P)
@@ -921,8 +918,7 @@ theorem eichler_of_involution (J : Matrix (Fin n) (Fin n) ℂ) (hJJ : J * J = 1)
     have h0 : (u * a) i j = 0 := by rw [hua]; rfl
     rw [ha, ← Matrix.mul_assoc, colP] at h0
     simpa [hj] using h0
-  · rw [hN, hu]
-    exact hiso
+  · rwa [hN, hu]
   · rw [hN]
     obtain ⟨N, hNdef⟩ : ∃ N, N = 1 + a * u + d * (aᴴ * J) := ⟨_, rfl⟩
     rw [← hNdef]
@@ -1005,8 +1001,7 @@ theorem eichler_of_involution (J : Matrix (Fin n) (Fin n) ℂ) (hJJ : J * J = 1)
           rw [mulVec_column, hy₂P]
         rw [hgy, e, Matrix.mulVec_add]
         exact G.add_mem (J2 _) (J1 _)
-    intro v hv
-    exact hle hv
+    exact fun v hv => hle hv
 
 theorem eichler_transformation : ∀ {n m : ℕ} (ε : Fin n → Bool) (x y : Matrix (Fin n) (Fin m) ℂ) (A : Set (Fin m)),
     xᴴ * Formalism.REAL.Jm ε * x = 0 → xᴴ * Formalism.REAL.Jm ε * y = 1 →
@@ -1245,8 +1240,7 @@ theorem eichler_frame : ∀ {n m : ℕ} (ε : Fin n → Bool) (G Q : Matrix (Fin
         (1 + Q * x * u + w * (Q * x)ᴴ * Formalism.REAL.Jm ε) *ᵥ fun j => (Q * z) j i := fun z i => by
       rw [key, ← Matrix.mulVec_mulVec]
       congr 1
-    simp only [cx]
-    exact hJ
+    simpa only [cx] using hJ
 
 theorem iwasawa_adapted : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)), IsInfFam θ → ∀ (V : HSp D) (ε : D.what₂.Tau → Fin V.rank → Bool) (fr : D.what₂.Tau → Matrix (Fin V.rank) (Fin V.rank) ℂ), IsFrameFam V ε fr → ∀ (m : ℕ) (X Y : Matrix (Fin V.rank) (Fin m) D.host.E), GlobalTheory.SiegelSet.IsWittFrame D.sp.cm.sig V.gram X Y → ∀ (T : Finset (Fin m)) (b : GA D V), ∃ n ∈ unip D.sp.cm.sig V.gram X T, ∃ mm ∈ levi D.sp.cm.sig V.gram X Y T, ∃ b₀ : GA D V, b = n * mm * b₀ ∧ GlobalTheory.CompanionTheory.Hypotheses₂.LeviPart.UCore.IsAdapted V X Y T ε (fun τ => fr τ * (infMat D.sp.cm.sig V.gram (θ τ) b₀)⁻¹) := by
   intro D θ hθ V ε fr hfr m X Y hW T b
@@ -1285,8 +1279,7 @@ theorem iwasawa_adapted : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F �
   obtain ⟨k, S, hk⟩ := _root_.GlobalTheory.CompanionTheory.JStable.exists_KG_coordinate (ε τ) _ (hJ τ)
   refine ⟨k, S, ?_⟩
   beta_reduce
-  rw [e2]
-  exact hk
+  rwa [e2]
 
 end GlobalTheory.CompanionTheory.Hypotheses₂.LeviPart.UCore
 end
@@ -1357,8 +1350,7 @@ theorem finite_slices_uPart : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.
       constructor
       · rintro ⟨u, hu, rfl⟩
         simpa [mul_assoc] using hu
-      · intro hx
-        exact ⟨b₀⁻¹ * x * b₀, hx, by group⟩
+      · exact fun hx => ⟨b₀⁻¹ * x * b₀, hx, by group⟩
     rw [e]
     exact hU.preimage (by fun_prop)
   have hfr' := GlobalTheory.T.frame_family_right_translate D θ hθ V ε fr hfr b₀

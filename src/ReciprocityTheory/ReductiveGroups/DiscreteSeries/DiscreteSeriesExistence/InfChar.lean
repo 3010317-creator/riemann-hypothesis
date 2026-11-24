@@ -101,8 +101,7 @@ private theorem inUJ_mul_exp_smul_of_inG {g X : Matrix (Fin n) (Fin n) ℂ} (hg 
   have hE : (NormedSpace.exp Y)ᴴ = Jm ε * NormedSpace.exp (-Y) * Jm ε := by
     rw [← Matrix.exp_conjTranspose, hYc]
     have := Matrix.exp_conj (Jm ε) (-Y) hJu
-    rw [hJinv] at this
-    exact this
+    rwa [hJinv] at this
   have e1 : NormedSpace.exp (-Y) * NormedSpace.exp Y = 1 := by
     rw [← Matrix.exp_add_of_commute _ _ (Commute.neg_left (Commute.refl Y)), neg_add_cancel,
       NormedSpace.exp_zero]
@@ -248,8 +247,7 @@ theorem icxGood_zero : IcxGood ε φ 0 (fun _ => (0 : E)) := by
     intro g₀ _
     exact ⟨Set.univ, fun _ => 0, isOpen_univ, Set.mem_univ _, contDiffOn_const, fun _ _ _ => rfl⟩
   · simpa using (isSmoothL2_zero (ε := ε))
-  · simp only [map_zero, Submodule.coe_zero]
-    exact toL2_zero'.symm
+  · simpa only [map_zero, Submodule.coe_zero] using toL2_zero'.symm
 
 private theorem smoothOnGV_add_smul {Φ Φ' : Matrix (Fin n) (Fin n) ℂ → E}
     (hΦ : S7.SmoothOnGV ε Φ) (hΦ' : S7.SmoothOnGV ε Φ') (c : ℂ) :
@@ -298,8 +296,7 @@ theorem icxGood_sum {ι : Type*} (s : Finset ι) {x : ι → smD ε (rreg ε)} {
   classical
   revert h
   refine Finset.induction_on s ?_ ?_
-  · intro _
-    exact icxGood_congr (icxGood_zero (ε := ε) (φ := φ)) (by simp) (fun g _ => by simp)
+  · exact fun _ => icxGood_congr (icxGood_zero (ε := ε) (φ := φ)) (by simp) (fun g _ => by simp)
   · intro i s hi ih h
     have h1 := h i (Finset.mem_insert_self i s)
     have h2 := ih (fun j hj => h j (Finset.mem_insert_of_mem hj))
@@ -392,8 +389,7 @@ private theorem toL2_const_mul (F : Matrix (Fin n) (Fin n) ℂ → ℂ) (c : ℂ
     rfl
   · by_cases hc : c = 0
     · subst hc
-      simp only [zero_mul, zero_smul]
-      exact toL2_zero'
+      simpa only [zero_mul, zero_smul] using toL2_zero'
     · have hm' : ¬ MemLp (fun y : Formalism.REAL.UJ ε => c * F (Formalism.MainNotions.S.umat y)) 2 (Formalism.REAL.muG ε) := by
         intro h
         apply hm

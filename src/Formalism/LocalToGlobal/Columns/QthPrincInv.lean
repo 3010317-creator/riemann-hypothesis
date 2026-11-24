@@ -111,8 +111,7 @@ theorem qth_princ_inv {N : ℕ} (g : ↥(GLint E n P)) (hg : lqPrinc P N (g : Sp
       (g⁻¹ : GLint E n P).2
     have h2 := ((ChainCounts.mem_stabL_iff.1 hmem) _).2 hs
     have h3 := (mem_localization_standardLattice P _).1 h2 a
-    rw [qth_intAt_iff] at h3
-    exact h3
+    rwa [qth_intAt_iff] at h3
   have hBm : B - 1 = -(B * (A - 1)) := by
     rw [Matrix.mul_sub, hBA, Matrix.mul_one, neg_sub]
   rw [hBm, Matrix.neg_apply, Valuation.map_neg, Matrix.mul_apply]

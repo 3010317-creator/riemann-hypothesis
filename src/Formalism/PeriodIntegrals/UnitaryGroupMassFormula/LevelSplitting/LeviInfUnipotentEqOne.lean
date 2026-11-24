@@ -589,8 +589,7 @@ theorem levG_e (n : HA R σ J) (hn : n ∈ Nsub R σ J P) (b : Fin r) :
       Submodule.span (R ⊗[F] E) (Set.range (datR R σ J P T).e) := by
     have := uni_map_le hn1 Set.univ (fun _ _ _ _ => Set.mem_univ _)
       (Submodule.mem_map_of_mem (Submodule.subset_span ⟨b, Set.mem_univ _, rfl⟩))
-    rw [PI.LevelKSplit.W.Glob.spanR_univ] at this
-    exact this
+    rwa [PI.LevelKSplit.W.Glob.spanR_univ] at this
   have e1 : lin R σ J n (ratV (F := F) R (P.e b)) = ∑ a, (datR R σ J P T).h ((datR R σ J P T).f a)
       (lin R σ J n (ratV (F := F) R (P.e b))) • (datR R σ J P T).e a := by
     conv_lhs => rw [← PG.Dat.pX_of_span H hmem]
@@ -625,8 +624,7 @@ theorem levi_inf_unipotent_eq_one (u : HA R σ J) (hu : u ∈ Asub R σ J P) (hu
     have hm : lin R σ J u (ratV (F := F) R (P.f b)) ∈
         Submodule.span (R ⊗[F] E) (Set.range (datR R σ J P T).f) := by
       have := hF b
-      rw [PI.LevelKSplit.W.Glob.spanR_univ] at this
-      exact this
+      rwa [PI.LevelKSplit.W.Glob.spanR_univ] at this
     rw [← pXv_of_span H hm, PG.Dat.pXv_apply]
     have hc : ∀ d, (datR R σ J P T).h ((datR R σ J P T).e d) (lin R σ J u (ratV (F := F) R (P.f b))) =
         if d = b then 1 else 0 := fun d => by
@@ -656,8 +654,7 @@ theorem unipotent_radical_normal (n m : HA R σ J) (hn : n ∈ Nsub R σ J P) (h
       Submodule.span (R ⊗[F] E) (Set.range fun a => ratV (F := F) R (P.e a)) := by
     have := uni_map_le ((Nsub R σ J P).inv_mem hn).1 Set.univ (fun _ _ _ _ => Set.mem_univ _)
       (Submodule.mem_map_of_mem (Submodule.subset_span ⟨b, Set.mem_univ _, rfl⟩))
-    rw [PI.LevelKSplit.W.Glob.spanR_univ] at this
-    exact this
+    rwa [PI.LevelKSplit.W.Glob.spanR_univ] at this
   rw [lin_mul, lin_mul, PI.LevelKSplit.W.Glob.lin_fix_span m P.e hmS _ h1, lin_lin_inv]
 
 theorem H_comm_A (H : (datR R σ J P T).Hyp) (h u : HA R σ J) (hh : h ∈ Hsub R σ J P)
@@ -677,8 +674,7 @@ theorem H_comm_A (H : (datR R σ J P T).Hyp) (h u : HA R σ J) (hh : h ∈ Hsub 
     have hx : (datR R σ J P T).pX x ∈ spanR (F := F) R P.e Set.univ := by
       rw [PI.LevelKSplit.W.Glob.spanR_univ]; exact pX_mem x
     have := uni_map_le hu1' Set.univ (fun _ _ _ _ => Set.mem_univ _) (Submodule.mem_map_of_mem hx)
-    rw [PI.LevelKSplit.W.Glob.spanR_univ] at this
-    exact this
+    rwa [PI.LevelKSplit.W.Glob.spanR_univ] at this
   have uF : lin R σ J u ((datR R σ J P T).pXv x) ∈
       Submodule.span (R ⊗[F] E) (Set.range fun a => ratV (F := F) R (P.f a)) := by
     have hle : spanR (F := F) R P.f Set.univ ≤ (spanR (F := F) R P.f Set.univ).comap (lin R σ J u) := by
@@ -688,8 +684,7 @@ theorem H_comm_A (H : (datR R σ J P T).Hyp) (h u : HA R σ J) (hh : h ∈ Hsub 
     have hx : (datR R σ J P T).pXv x ∈ spanR (F := F) R P.f Set.univ := by
       rw [PI.LevelKSplit.W.Glob.spanR_univ]; exact pXv_mem x
     have := hle hx
-    rw [PI.LevelKSplit.W.Glob.spanR_univ] at this
-    exact this
+    rwa [PI.LevelKSplit.W.Glob.spanR_univ] at this
   rw [lin_mul, lin_mul]
   conv_lhs => rw [decomp (datR R σ J P T) x]
   conv_rhs => rw [decomp (datR R σ J P T) x]

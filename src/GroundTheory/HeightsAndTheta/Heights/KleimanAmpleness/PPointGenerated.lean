@@ -54,10 +54,7 @@ theorem mem_sub_iff_of_subset (hx : IsSubvar x (primeOf (S := k) x) 0) (Q : Line
     (h : I.1 ⊆ J.1) (y : Ω) : y ∈ Q.sub J ↔ y ∈ Q.sub I := by
   refine ⟨fun hy => ?_, Q.mono I J h y⟩
   obtain ⟨a, ha, hay⟩ := (Q.mem_iff I J h y).mp hy
-  have ha0 : (a : Ω) ≠ 0 := by
-    intro h0
-    apply ha.ne_zero
-    exact Subtype.ext h0
+  have ha0 : (a : Ω) ≠ 0 := fun h0 => ha.ne_zero (Subtype.ext h0)
   have hy' : y = (⟨(a : Ω)⁻¹, inv_mem_chartRing hx I a.2⟩ : chartRing k x I) • ((a : Ω) • y) := by
     rw [chartRing_smul_def, smul_eq_mul, ← mul_assoc, inv_mul_cancel₀ ha0, one_mul]
   rw [hy']
@@ -78,10 +75,8 @@ theorem PointGenerated.proof : PointGenerated.Statement.{u, w} := by
     rw [SubSystem.secs, Submodule.mem_iInf]
     exact ⟨fun h => h I, fun h J => (PointGenerated.mem_sub_iff hx Q I J y).mp h⟩
   apply le_antisymm
-  · refine Submodule.span_le.mpr fun y hy => ?_
-    exact (hsecs y).mp hy
-  · intro y hy
-    exact Submodule.subset_span ((hsecs y).mpr hy)
+  · exact Submodule.span_le.mpr fun y hy => (hsecs y).mp hy
+  · exact fun y hy => Submodule.subset_span ((hsecs y).mpr hy)
 
 end
 

@@ -379,18 +379,15 @@ theorem norm_two_cp (hp : p ≠ 2) : ‖(2 : ℂ_[p])‖ = 1 := by
   exact_mod_cast h
 
 theorem norm_le_one_of_quad (x : ℂ_[p]) (t n : ℤ) (h : x ^ 2 = t * x - n) : ‖x‖ ≤ 1 := by
-  by_contra hx
-  push Not at hx
+  by_contra! hx
   have h1 : ‖(t : ℂ_[p]) * x‖ ≤ ‖x‖ := by
     rw [norm_mul]
     exact mul_le_of_le_one_left (norm_nonneg _) (norm_int_cp_le t)
   have h2 : ‖(n : ℂ_[p])‖ ≤ ‖x‖ := (norm_int_cp_le n).trans hx.le
   have h3 : ‖x‖ ^ 2 ≤ ‖x‖ := by
-    rw [← norm_pow, h]
-    rw [sub_eq_add_neg]
+    rw [← norm_pow, h, sub_eq_add_neg]
     refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le h1 ?_)
-    rw [norm_neg]
-    exact h2
+    rwa [norm_neg]
   nlinarith
 
 theorem okp_norm_le (α : ℂ_[p] × ℂ_[p]) (hα : α ∈ OKp D lam) : ‖α.1‖ ≤ 1 ∧ ‖α.2‖ ≤ 1 := by
@@ -459,8 +456,7 @@ theorem pick_c (hp : p ≠ 2) (x y : ℂ_[p]) (hx : ‖x‖ ≤ 1) (hy : ‖y‖
   have hnm1 : ‖(-1 : ℂ_[p])‖ = 1 := by rw [norm_neg, norm_one]
   have hboth : ∀ z : ℂ_[p], ‖z‖ ≤ 1 → ‖z - 1‖ = 1 ∨ ‖z - (-1)‖ = 1 := by
     intro z hz
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have h1 : ‖z - 1‖ < 1 := lt_of_le_of_ne (sub_le_lemma z 1 hz hn1) hc.1
     have h2 : ‖z - (-1)‖ < 1 := lt_of_le_of_ne (sub_le_lemma z (-1) hz hnm1) hc.2
     have h3 : ‖(2 : ℂ_[p])‖ ≤ max ‖z - (-1)‖ ‖-(z - 1)‖ := by
@@ -470,8 +466,7 @@ theorem pick_c (hp : p ≠ 2) (x y : ℂ_[p]) (hx : ‖x‖ ≤ 1) (hy : ‖y‖
     rw [norm_neg, norm_two_cp hp] at h3
     exact absurd h3 (not_le.mpr (max_lt h2 h1))
   have hxy' : ‖x‖ < 1 ∨ ‖y‖ < 1 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hxy ⟨le_antisymm hx hc.1, le_antisymm hy hc.2⟩
   rcases hxy' with hx1 | hy1
   · rcases hboth y hy with h | h
@@ -559,7 +554,6 @@ theorem tauKc_sK : tauKc D lam (sK D : D.host.K) = - tauK D lam (sK D : D.host.K
   have e : tauKc D lam (sK D : D.host.K) = tauK D lam (-(sK D : D.host.K)) := by
     unfold tauKc tauK
     congr 2
-    show D.host.conj D.host.sqrtMinusD = -D.host.sqrtMinusD
     exact Formalism.MainNotions.UnusedSlot33.HK.conj_b D.host
   rw [e]; linear_combination h0
 
@@ -641,8 +635,7 @@ theorem ePhiOne_holds (D : D7) : EPhiOne D := by
   have hw0 : PowerSeries.constantCoeff g.wq = 1 := by
     have h := ok.2.1
     unfold IsWq at h
-    have h2 := congrArg PowerSeries.constantCoeff h
-    simpa using h2
+    simpa using congrArg PowerSeries.constantCoeff h
   have hom : PowerSeries.constantCoeff (omegaW (g.C • wModel g.lam g.abelian₂) g.wq) = 1 := by
     unfold omegaW
     simp [PowerSeries.constantCoeff_inv, hw0]

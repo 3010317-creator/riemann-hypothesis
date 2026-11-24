@@ -97,8 +97,7 @@ theorem locJ_actB (hB : FrRatJ t B) : (locJ hi t B).ActB := by
   refine LocAt.actB_of (locJ hi t B) (rankN D (i + 1) hi) B (fun c γ => (t.gamI c γ).1) rfl (fun _ _ => rfl) ?_
   intro c v γ a b a' b' ha hb
   have h1 := t.act_eq c v _ rfl ((X.g u w hg).pl v).2 γ a b a' b' ha hb
-  rw [hB _ ((X.g u w hg).pl v).2, bc_comp] at h1
-  exact h1
+  rwa [hB _ ((X.g u w hg).pl v).2, bc_comp] at h1
 
 
 
@@ -112,8 +111,7 @@ theorem locGood_locJ : LocGood (sigD D) (gramN D (i + 1) hi) (locJ hi t B) := by
   intro c v
   have h1 := t.yG_p c _ ((X.g u w hg).pl v).2
   have h2 := bc_reGL (rankN D (i + 1) hi) (prV (E := D.host.E) ((X.g u w hg).pl v).1) (t.yG c).1
-  rw [h1, map_one] at h2
-  exact h2
+  rwa [h1, map_one] at h2
 
 theorem locInt_locJ : LocInt (locJ hi t B) :=
   fun v x => (X.g u w hg).completion_integers_iff v _ rfl x

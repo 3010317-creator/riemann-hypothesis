@@ -34,8 +34,7 @@ theorem GeoNumCut.full : GeoNumCut.Statement := by
   have : Fact p.Prime := ⟨hp⟩
   have hpV : (C (p : ℤ) : ReciprocityTheory.ChartRestriction.G.Geo.MRing ι) ∈ V := C_charOf_mem V
   have hker : RingHom.ker (red (ι := ι) p) ≤ V := by
-    rw [ker_red, Ideal.span_le, Set.singleton_subset_iff]
-    exact hpV
+    rwa [ker_red, Ideal.span_le, Set.singleton_subset_iff]
   have hcm : (V.map (red p)).comap (red p) = V := comap_map_eq p hker
   have : V.IsPrime := hV.1
 
@@ -61,8 +60,7 @@ theorem GeoNumCut.full : GeoNumCut.Statement := by
   have htrV : red p t ∉ V.map (red p) := by
     intro h
     apply htV
-    rw [← hcm]
-    exact h
+    rwa [← hcm]
 
   rw [← intNum_map_eq_geoNum p (n + 1) V hV hpV hdim,
     CutRegular.full (ZMod p) K ι (V.map (red p)) hQ n hd b (red p t) htr htrV a]
@@ -72,8 +70,7 @@ theorem GeoNumCut.full : GeoNumCut.Statement := by
       obtain ⟨hW'm, hW'd⟩ :=
         DivCycleSupport.full (ZMod p) K ι (V.map (red p)) hQ n hd b _ htr htrV W' hW'
       exact intNum_eq_geoNum_comap p n W' hW'm hW'd a)
-  rw [hcm] at hcut
-  exact hcut
+  rwa [hcm] at hcut
 
 end
 

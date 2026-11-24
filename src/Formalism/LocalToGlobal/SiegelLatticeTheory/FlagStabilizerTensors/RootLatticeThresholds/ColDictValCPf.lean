@@ -626,8 +626,7 @@ theorem sl_tenV (τ₀ : ι) (x : ι × Fin n × Fin n → ℂ) (f : ι → MvPo
   rw [tenV, map_prod, ← Finset.mul_prod_erase _ _ (Finset.mem_univ τ₀), sl_rename_self, mul_comm,
     map_prod]
   congr 1
-  refine Finset.prod_congr rfl fun σ hσ => ?_
-  exact sl_rename_ne τ₀ σ (Finset.ne_of_mem_erase hσ) x (f σ)
+  exact Finset.prod_congr rfl fun σ hσ => sl_rename_ne τ₀ σ (Finset.ne_of_mem_erase hσ) x (f σ)
 
 theorem sl_mem (lam : ι → DomWeight n) (τ₀ : ι) (x : ι × Fin n × Fin n → ℂ)
     {Q : MvPolynomial (ι × Fin n × Fin n) ℂ} (hQ : Q ∈ CSpanV lam) :
@@ -750,9 +749,7 @@ theorem bigGen_rename_ne (τ σ : ι) (h : σ ≠ τ) (a b : Fin n) (p : MvPolyn
     apply MvPolynomial.algHom_ext
     intro q
     simp [bigGen, h]
-  have h2 := DFunLike.congr_fun h' p
-  simp only [AlgHom.comp_apply, Polynomial.CAlgHom_apply] at h2
-  exact h2
+  simpa only [AlgHom.comp_apply, Polynomial.CAlgHom_apply] using DFunLike.congr_fun h' p
 
 theorem bigDiv_tenV_update (f : ι → MvPolynomial (Fin n × Fin n) ℂ) (τ : ι) (a b : Fin n) (k : ℕ)
     (p : MvPolynomial (Fin n × Fin n) ℂ) :
@@ -774,8 +771,7 @@ theorem generation_holds : Gen := by
     refine Finset.induction_on s ?_ ?_
     · intro f _ h0
       have : f = fun τ => extremal ℂ n (lam τ) := funext fun τ => h0 τ (Finset.notMem_empty τ)
-      rw [this]
-      exact hT
+      rwa [this]
     · intro τ₀ s hτ ih f h1 h0
       have hword : ∀ wd : List (Fin n × Fin n × ℕ),
           tenV (Function.update f τ₀ (applyWord ℂ wd (hw ℂ le_rfl (lam τ₀).natW))) ∈ M := by

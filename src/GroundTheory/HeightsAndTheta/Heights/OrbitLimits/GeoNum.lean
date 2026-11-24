@@ -44,8 +44,7 @@ theorem finsum_mul_eq_sum {α : Type*} (D : α →₀ ℤ) (J : α → ℤ) :
   intro W hW
   rw [Function.mem_support] at hW
   rw [Finset.mem_coe, Finsupp.mem_support_iff]
-  intro h0
-  exact hW (by rw [h0, zero_mul])
+  exact fun h0 => hW (by rw [h0, zero_mul])
 
 theorem isIntersectionTheory {F : Type} [Field F] (I : ReciprocityTheory.ChartRestriction.G.AI.I1.IFamily F ι)
     (hI : ReciprocityTheory.ChartRestriction.G.AI.I1.IsFieldIntersection I) :
@@ -90,19 +89,15 @@ theorem geoNumStatement {K : Type} [Fintype K] (ι : K → Type) [∀ k, Fintype
   classical
   intro p _ I hI V n a hV hpV hproj
   have hker : RingHom.ker (red (ι := ι) p) ≤ V := by
-    rw [ker_red, Ideal.span_le, Set.singleton_subset_iff]
-    rw [map_natCast]
-    exact hpV
+    rwa [ker_red, Ideal.span_le, Set.singleton_subset_iff, map_natCast]
   have hcm : (V.map (red p)).comap (red p) = V := comap_map_eq p hker
   have hdim : ringKrullDim (ReciprocityTheory.ChartRestriction.G.Geo.MRing ι ⧸ V) =
       ((n + Fintype.card K : ℕ) : WithBot ℕ∞) := by
     rw [← hproj.2]
     have := ringKrullDim_eq_of_ringEquiv (quotEquiv p (V.map (red p)))
-    rw [hcm] at this
-    exact this
+    rwa [hcm] at this
   have hC : (C (p : ℤ) : ReciprocityTheory.ChartRestriction.G.Geo.MRing ι) ∈ V := by
-    rw [map_natCast]
-    exact hpV
+    rwa [map_natCast]
   rw [← Bridge.intNum_map_eq_geoNum p n V hV hC hdim a]
   exact (IntNumUnique.full (ZMod p) K ι _ (isIntersectionTheory I hI) _
     (dvrIsMultiProjPrime hproj.1) n ((CutRegular.relDim_eq_natCast_iff _ n).mpr hproj.2) a).symm

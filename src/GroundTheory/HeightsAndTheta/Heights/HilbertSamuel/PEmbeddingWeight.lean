@@ -158,8 +158,7 @@ theorem isCompact_sphere : IsCompact {z : (Σ k, ι k) → ℂ | ∀ k, blockNor
   have hN : ∀ k, Continuous fun z : (Σ k, ι k) → ℂ => blockNormSq z k := fun k =>
     continuous_finsetSum _ fun i _ => ((continuous_apply _).norm).pow 2
   refine Metric.isCompact_of_isClosed_isBounded ?_ ?_
-  · simp only [Set.setOf_forall]
-    exact isClosed_iInter fun k => isClosed_eq (hN k) continuous_const
+  · simpa only [Set.setOf_forall] using isClosed_iInter fun k => isClosed_eq (hN k) continuous_const
   · refine (Metric.isBounded_iff_subset_closedBall 0).2 ⟨1, fun z hz => ?_⟩
     rw [Metric.mem_closedBall, dist_zero_right]
     refine (pi_norm_le_iff_of_nonneg zero_le_one).2 fun p => ?_
@@ -208,8 +207,7 @@ theorem EmbeddingWeight.proof : EmbeddingWeight.Statement := by
           exact ⟨⟨h1, h2⟩, h3⟩
         · rintro ⟨⟨h1, h2⟩, h3⟩
           refine ⟨⟨⟨fun k => ?_, h1⟩, h2⟩, h3⟩
-          by_contra hcon
-          push Not at hcon
+          by_contra! hcon
           have := h3 k
           simp [blockNormSq, hcon] at this
       rw [this]
@@ -267,8 +265,7 @@ theorem EmbeddingWeight.proof : EmbeddingWeight.Statement := by
     have h2 := hg.comp_contDiffOn ((contDiffOn_projPt (ι := ι)).comp
       (contDiff_conjVec.contDiffOn (s := {z | ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0}))
       fun z hz => conjVec_mem_blockNonzero hz)
-    have hu := ((h1.add h2).div_const (2 : ℝ)).neg.neg
-    exact Real.contDiff_exp.comp_contDiffOn hu
+    exact Real.contDiff_exp.comp_contDiffOn (((h1.add h2).div_const (2 : ℝ)).neg.neg)
   · intro z
     change Real.exp (-(-u (conjVec z))) = Real.exp (-(-u z))
     simp only [u, conjVec_conjVec, add_comm]

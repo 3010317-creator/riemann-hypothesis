@@ -70,8 +70,7 @@ theorem exists_bound_mulEquivHaarChar_conjCME {K : Set G} (hK : IsCompact K)
     gcongr
   have : (mulEquivHaarChar (conjCME k) : ℝ≥0∞) ≤ μ C / μ V :=
     (ENNReal.le_div_iff_mul_le (Or.inl hV0) (Or.inr hCt)).2 hle
-  rw [← ENNReal.coe_le_coe, ENNReal.coe_toNNReal (ENNReal.div_ne_top hCt hV0)]
-  exact this
+  rwa [← ENNReal.coe_le_coe, ENNReal.coe_toNNReal (ENNReal.div_ne_top hCt hV0)]
 
 theorem mulEquivHaarChar_conjCME_eq_one {K : Subgroup G} (hK : IsCompact (K : Set G)) {k : G}
     (hk : k ∈ K) : mulEquivHaarChar (conjCME k) = 1 := by
@@ -126,8 +125,7 @@ theorem IsExpLieAlgebra.isClosed (h : IsExpLieAlgebra G 𝔤) : IsClosed (G : Se
     rintro _ ⟨u, ⟨huW, huG⟩, rfl⟩
     apply h.mem_of_mem_nhd (h.symm_mem_nhd huW)
     have : expUnit ℝ 𝔸 (L u) = u := Units.ext (h.exp_symm huW)
-    rw [this]
-    exact huG
+    rwa [this]
   have hLy : L y ∈ 𝔤 :=
     (Submodule.closed_of_finiteDimensional 𝔤).closure_subset_iff.2 himg (mem_closure_image hL hyc')
   have hyG : y ∈ G := by

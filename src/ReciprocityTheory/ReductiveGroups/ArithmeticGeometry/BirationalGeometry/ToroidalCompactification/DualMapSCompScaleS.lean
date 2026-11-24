@@ -40,7 +40,6 @@ theorem tanS_lift {y' : sp (R₀ := S) (DualNumber A') ⟶ G} (hy' : TanS y') :
   have hh'' : IsTanAt ((IsScalarTower.toAlgHom (Localization.Away s) A A').comp (epsA C A)) h' := by
     intro b
     rw [hh' b]
-    show algebraMap (Localization.Away s) A' (eps C b) = algebraMap A A' (algebraMap (Localization.Away s) A (eps C b))
     exact IsScalarTower.algebraMap_apply _ _ _ _
   obtain ⟨m, hm, h, hh, he⟩ := tan_lift (epsA C A) M h' hh''
   refine ⟨m, hm, pushR G (pt C h), chart_tanS C h hh, ?_⟩
@@ -140,11 +139,9 @@ theorem glue_tan' {n : ℕ} (s : Fin n → S) (hs : Ideal.span (Set.range s) = �
   have hin : ∀ x : S, α (TrivSqZeroExt.inl (algebraMap S (Localization.Away (s k)) x)) =
       β (TrivSqZeroExt.inl (algebraMap S (Localization.Away (s l)) x)) := by
     intro x
-    have h1 := RingHom.congr_fun hαβ (TrivSqZeroExt.inl x)
-    simpa [dAway, dualMapR] using h1
+    simpa [dAway, dualMapR] using RingHom.congr_fun hαβ (TrivSqZeroExt.inl x)
   have heps : α (TrivSqZeroExt.inr 1) = β (TrivSqZeroExt.inr 1) := by
-    have h1 := RingHom.congr_fun hαβ (TrivSqZeroExt.inr 1)
-    simpa [dAway, dualMapR] using h1
+    simpa [dAway, dualMapR] using RingHom.congr_fun hαβ (TrivSqZeroExt.inr 1)
   have hu : IsUnit (α (TrivSqZeroExt.inl (algebraMap S (Localization.Away (s k)) (s l)))) := by
     rw [hin]
     exact (IsLocalization.Away.algebraMap_isUnit (s l)).map (β.comp (TrivSqZeroExt.inlHom _ _))
@@ -202,8 +199,7 @@ theorem tan_ext_cover {n : ℕ} (s : Fin n → S) (hs : Ideal.span (Set.range s)
       spMap (dualMapS (Algebra.ofId S (Localization.Away (s k)))) ≫ v₂) : v₁ = v₂ := by
   have hs' : Ideal.span (Set.range (fun k => (TrivSqZeroExt.inl (s k) : DualNumber S))) = ⊤ := by
     have := congrArg (Ideal.map (TrivSqZeroExt.inlHom S S)) hs
-    rw [Ideal.map_span, Ideal.map_top, ← Set.range_comp] at this
-    exact this
+    rwa [Ideal.map_span, Ideal.map_top, ← Set.range_comp] at this
   let 𝒰 := (Scheme.affineOpenCoverOfSpanRangeEqTop (R := CommRingCat.of (DualNumber S)) _ hs').openCover
   apply Over.OverMorphism.ext
   refine Scheme.Cover.hom_ext 𝒰 _ _ fun (k : Fin n) => ?_

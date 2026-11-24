@@ -173,8 +173,7 @@ theorem colRho : StatColRho := by
       have := key g g.2
       simp only [map_smul, ← Finset.smul_sum]
       exact this)
-  rw [map_add (f := _), mkQ_cobZ, add_zero] at hz
-  exact hz
+  rwa [map_add (f := _), mkQ_cobZ, add_zero] at hz
 
 theorem liftBound : StatLiftBound := by
   intro O _ _ _ A T' G _ _ _ _ M _ _ _ _ L _ _ _ r χ e₁ Dl j Kc ℓ e' tens v₁ κ
@@ -188,8 +187,7 @@ theorem liftBound : StatLiftBound := by
     funext g
     refine Finset.sum_congr rfl fun a _ => ?_
     rw [hx a, ← htens, hK a g g.2, map_smul, map_smul, LinearMap.smul_apply]) a
-  rw [hx a, ← map_smul]
-  exact h
+  rwa [hx a, ← map_smul]
 
 end Formalism.RepresentationBoundsCohomology.BR
 end -- clump:auto
@@ -232,8 +230,7 @@ theorem qPlace : StatQPlace := by
       (qAlg A T' G r χ E (γ : G) ζ hquad hζ)
     have h2 := congrArg φ h
     rw [map_smul, map_zero, sub_smul, one_smul, hγM] at h2
-    rw [sub_smul, one_smul]
-    exact h2
+    rwa [sub_smul, one_smul]
   have hpw : ∀ (φ : ColNNJ r χ E e₁ δ D j Kc k0 →ₗ[A] M) (k : ℕ),
       φ (yGen r χ E e₁ δ D j Kc k0 ((γ : G) ^ k)) =
         k • φ (yGen r χ E e₁ δ D j Kc k0 (γ : G)) := by
@@ -458,8 +455,7 @@ lemma length_mid_zero {H : Type*} [AddCommGroup H] [Module O H] (ρM : Represent
     obtain ⟨-, hz2⟩ := Submodule.mem_inf.mp hz
     rw [LinearMap.mem_ker, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero,
       Submodule.mem_comap, Submodule.subtype_apply] at hz2
-    have h0 := hB _ hz2
-    exact Subtype.ext (Subtype.ext h0)
+    exact Subtype.ext (Subtype.ext (hB _ hz2))
   rw [hz a, hz b]
 
 end Triv
@@ -572,8 +568,7 @@ theorem blockChiCFull_of (hK : StatColKerChiC.{u₁, u₂, u₃, u₄, u₅}) :
     by_cases hwl : w ∈ lrows
     · obtain ⟨B, h1, h2, h3⟩ := hl w hwl
       refine ⟨B, h1, h2.trans ?_, h3⟩
-      simp only [lenRow, ite_eq_left hwl]
-      exact le_self_add
+      simpa only [lenRow, ite_eq_left hwl] using le_self_add
     · have hwq : w ∈ qs := (Finset.mem_union.mp hw).resolve_left hwl
       obtain ⟨B, h1, h2, h3⟩ := hq w hwq
       refine ⟨B, h1, h2.trans ?_, h3⟩
@@ -630,8 +625,7 @@ theorem blockChiOneFull_of (hK : StatColKerChiOne.{u₁, u₂, u₃, u₄, u₅}
     by_cases hwl : w ∈ lrows
     · obtain ⟨B, h1, h2, h3⟩ := hl w hwl
       refine ⟨B, h1, h2.trans ?_, h3⟩
-      simp only [lenRow, ite_eq_left hwl]
-      exact le_self_add
+      simpa only [lenRow, ite_eq_left hwl] using le_self_add
     · have hwq : w ∈ qs := (Finset.mem_union.mp hw).resolve_left hwl
       obtain ⟨B, h1, h2, h3⟩ := hq w hwq
       refine ⟨B, h1, h2.trans ?_, h3⟩

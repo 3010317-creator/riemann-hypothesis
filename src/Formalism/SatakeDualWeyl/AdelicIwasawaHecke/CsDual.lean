@@ -139,9 +139,7 @@ theorem dual_lattice_bound_holds (hSpanRecover : Formalism.UG.CS.SpanRecover) : 
     mul_ne_zero (adelstab_algebraMap_ne_zero (F := F) (E := E) _ (mul_ne_zero hc hc))
       (Int.cast_ne_zero.2 hm0)
   refine ⟨⟨_, haint⟩, ?_, ?_⟩
-  · intro h
-    apply ha0
-    exact congrArg (fun t : 𝓞 E => (t : E)) h
+  · exact fun h => ha0 (congrArg (fun t : 𝓞 E => (t : E)) h)
   intro g hg x hx
   have hU : cT (sigR σ (FiniteAdeleRing (𝓞 F) F)) ((g : GL n (E ⊗[F] FiniteAdeleRing (𝓞 F) F)) :
       Matrix n n (E ⊗[F] FiniteAdeleRing (𝓞 F) F)) * J.map (inclE (F := F) (FiniteAdeleRing (𝓞 F) F)) *

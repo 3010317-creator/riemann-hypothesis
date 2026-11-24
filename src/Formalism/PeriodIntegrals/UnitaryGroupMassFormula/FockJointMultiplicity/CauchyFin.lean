@@ -85,8 +85,7 @@ theorem leadT_der_rows' (D : Derivation ℂ A A) (M : Matrix (Fin m) (Fin k) A) 
     rcases h (Fin.castLE hh.1 i) (by simp) with h0 | ⟨i₁, hi₁, hne, e, he⟩
     · left
       intro j
-      simp only [Matrix.submatrix_apply]
-      exact h0 _ (by simp)
+      simpa only [Matrix.submatrix_apply] using h0 _ (by simp)
     · right
       refine ⟨⟨i₁.val, hi₁⟩, ?_, e, ?_⟩
       · intro hc
@@ -110,8 +109,7 @@ theorem leadT_der_cols' (D : Derivation ℂ A A) (M : Matrix (Fin m) (Fin k) A) 
     rcases h (Fin.castLE hh.2 j) (by simp) with h0 | ⟨j₁, hj₁, hne, e, he⟩
     · left
       intro i
-      simp only [Matrix.submatrix_apply]
-      exact h0 _ (by simp)
+      simpa only [Matrix.submatrix_apply] using h0 _ (by simp)
     · right
       refine ⟨⟨j₁.val, hj₁⟩, ?_, e, ?_⟩
       · intro hc
@@ -237,8 +235,7 @@ theorem prod_castLE_eq {M : Type*} [CommMonoid M] {t : ℕ} (h : t ≤ m) (g : F
     ext x
     simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_map, Fin.castLEEmb]
     constructor
-    · intro hx
-      exact ⟨⟨x.val, hx⟩, Fin.ext rfl⟩
+    · exact fun hx => ⟨⟨x.val, hx⟩, Fin.ext rfl⟩
     · rintro ⟨a, -, rfl⟩
       simp
   rw [e2, Finset.prod_map]
@@ -266,8 +263,7 @@ theorem leadT_diag (ι : Fin m × Fin m → σ) (hι : Function.Injective ι) (t
       simp [PI.FJMB.killS, this]
     · have : ι (Fin.castLE ht i, Fin.castLE ht j) ∈ PI.FJMB.offD ι := by
         refine ⟨Fin.castLE ht i, Fin.castLE ht j, rfl, ?_⟩
-        simp only [Fin.coe_castLE]
-        exact fun h => hij (Fin.ext h)
+        simpa only [Fin.coe_castLE] using fun h => hij (Fin.ext h)
       simp [PI.FJMB.killS, this, hij]
   rw [hD, Matrix.det_diagonal]
   exact prod_castLE_eq ht (fun i => (X (ι (i, i)) : MvPolynomial σ ℂ))
@@ -278,8 +274,7 @@ theorem shapeProd_diag (ι : Fin m × Fin m → σ) (hι : Function.Injective ι
   classical
   have hpw : (List.ofFn α).Pairwise (· ≥ ·) := by
     rw [List.pairwise_ofFn]
-    intro i j hij
-    exact hα hij.le
+    exact fun i j hij => hα hij.le
   unfold PI.FJM.shapeProd
   rw [map_prod]
   have e1 : ∀ t ∈ Finset.range (List.ofFn α).length,
@@ -525,12 +520,10 @@ theorem cd_mono_factor {m : ℕ} (ι : Fin m × Fin m → σ) (hι : Function.In
   · obtain ⟨v, hv, hvo⟩ := hoff
     have h1 : (e.prod fun v k => killS (offD ι) v ^ k) = 0 := by
       refine Finset.prod_eq_zero hv ?_
-      simp only [killS, ite_eq_left hvo]
-      exact zero_pow (Finsupp.mem_support_iff.mp hv)
+      simpa only [killS, ite_eq_left hvo] using zero_pow (Finsupp.mem_support_iff.mp hv)
     have h2 : (e.prod fun v k => diagOne' ι v ^ k) = 0 := by
       refine Finset.prod_eq_zero hv ?_
-      simp only [diagOne', ite_eq_left hvo]
-      exact zero_pow (Finsupp.mem_support_iff.mp hv)
+      simpa only [diagOne', ite_eq_left hvo] using zero_pow (Finsupp.mem_support_iff.mp hv)
     rw [h1, h2, mul_zero]
   · push Not at hoff
     have hsum : ∀ i, ∑ k : Fin m, e (ι (i, k)) = e (ι (i, i)) := by
@@ -539,8 +532,7 @@ theorem cd_mono_factor {m : ℕ} (ι : Fin m × Fin m → σ) (hι : Function.In
       · intro k _ hk
         by_contra hne
         exact hoff (ι (i, k)) (Finsupp.mem_support_iff.mpr hne) ⟨i, k, rfl, fun h => hk (Fin.ext h).symm⟩
-      · intro h
-        exact absurd (Finset.mem_univ i) h
+      · exact fun h => absurd (Finset.mem_univ i) h
     simp only [hsum]
     have hL : (e.prod fun v k => killS (offD ι) v ^ k) = ∏ v ∈ e.support, (X v : MvPolynomial σ ℂ) ^ e v := by
       unfold Finsupp.prod

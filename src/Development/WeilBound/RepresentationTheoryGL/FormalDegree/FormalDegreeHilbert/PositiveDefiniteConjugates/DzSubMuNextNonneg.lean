@@ -63,8 +63,7 @@ theorem exists_pmat {ε : Fin n → Bool} {X : Matrix (Fin n) (Fin n) ℂ} (hX :
   show (if h : b < a ∧ ε a ≠ ε b then X a b else if h' : a < b ∧ ε b ≠ ε a then star (X b a) else 0) = X a b
   split_ifs with h1 h2
   · rfl
-  · have h3 := congrFun (congrFun hH a) b
-    simpa [Matrix.conjTranspose_apply] using h3
+  · simpa [Matrix.conjTranspose_apply] using congrFun (congrFun hH a) b
   · symm
     apply _root_.ReciprocityTheory.ChartRestriction.DS.inP_apply_eq_zero hX
     by_contra hne
@@ -126,8 +125,7 @@ theorem phiLe : PhiLe := by
     rw [Complex.ofReal_zpow, ← hreal (↑i + 1) i.isLt]
   rw [hprod, Complex.ofReal_re]
   apply Finset.prod_le_one₀
-  · intro i _
-    exact zpow_nonneg (le_trans zero_le_one (hge1 i)) _
+  · exact fun i _ => zpow_nonneg (le_trans zero_le_one (hge1 i)) _
   · intro i _
     apply zpow_le_one_of_nonpos₀ (hge1 i)
     have h4 := dz_sub_muNext_nonneg i

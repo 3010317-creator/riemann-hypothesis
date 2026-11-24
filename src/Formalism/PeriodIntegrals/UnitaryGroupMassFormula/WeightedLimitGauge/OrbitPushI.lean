@@ -306,9 +306,7 @@ theorem hypInv_of (hL : LebInvB) (hC : ConeForm) : HypInv := by
       · rw [hypS_iff, ← qf_blkAct hμ, hw]; exact hwS
       · have h1 : blkAct k μ (t • blkAct k ν w) = blkAct k μ x := by
           rw [blkAct_smul, hw]; exact hx
-        have h2 := congrArg (blkAct k ν) h1
-        simp only [blkAct_mul, hνμ, blkAct_one] at h2
-        exact h2
+        simpa only [blkAct_mul, hνμ, blkAct_one] using congrArg (blkAct k ν) h1
   ext E hE
   rw [Measure.map_apply (continuous_blkAct μ).measurable hE,
     hκ _ ((continuous_blkAct μ).measurable hE), hκ _ hE, hset]

@@ -144,8 +144,7 @@ theorem differentiableAt_reads {V : Unf Xo c σ r} (hσ : GoodEmb c σ) (hU : Is
   obtain ⟨uf, huf⟩ := exists_fun_chart (σ := σ) T hf i
   let x : (Fin m → ℂ) → Frame (V.X k₀).Ψ r := fun b => ReciprocityTheory.ChartRestriction.G.AR.Inst.cpt (V.X k₀) x₀.1 (z b)
   have hx₀ : x b₀ = x₀.1 := by
-    simp only [x, hz₀]
-    exact ReciprocityTheory.ChartRestriction.G.AR.Up.PoinPf.cpt_zero _ _
+    simpa only [x, hz₀] using ReciprocityTheory.ChartRestriction.G.AR.Up.PoinPf.cpt_zero _ _
   have hn := hB₁.mem_nhds hb₁
   have hxd : DifferentiableOn ℂ x B₁ := (ReciprocityTheory.ChartRestriction.G.AR.Up.PoinPf.diff_cpt _ _).comp_differentiableOn hz
   have hsec : ∀ {la Q}, (V.X k₀).IsSec la Q → DifferentiableAt ℂ (fun b => Q (x b)) b₀ := fun hQ =>
@@ -159,8 +158,7 @@ theorem differentiableAt_reads {V : Unf Xo c σ r} (hσ : GoodEmb c σ) (hU : Is
     rw [hx₀, rdU_eq, evR_frBor hf (g2 _ _ _ ht₀)]
     exact mul_ne_zero (chr_ne_zero _ _) hf0
   have n₂ : ev _ σ _ ug (s b₀) ≠ 0 := by
-    rw [← hug _ _ _ (hsub b₀ hb₀').1 (hQ b₀ hb₀')]
-    exact hg0
+    rwa [← hug _ _ _ (hsub b₀ hb₀').1 (hQ b₀ hb₀')]
   have hq : DifferentiableAt ℂ (fun b => P (x b) * rdU V g k₀ (x b) * ev _ σ _ uf (s b) *
       (rdU V f k₀ (x b) * ev _ σ _ ug (s b))⁻¹) b₀ :=
     ((d₁.mul d₂).mul (hfun uf)).mul ((d₃.mul (hfun ug)).inv (mul_ne_zero n₃ n₂))

@@ -91,9 +91,7 @@ private theorem addVal_toNat_mul_of_ne_zero {O : Type*} [CommRing O] [IsDomain O
 private theorem vO_eq_addVal_div_ramE_of_ne_zero' {O : Type*} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] (p : ℕ) {z : O}
     (hz : z ≠ 0) :
     vO p z = ((((IsDiscreteValuationRing.addVal O z).toNat : ℚ) / (ramE p O : ℚ) : ℚ) : WithTop ℚ) := by
-  have hz' : algebraMap O (KK O) z ≠ 0 := by
-    intro h
-    exact hz ((IsFractionRing.to_map_eq_zero_iff).mp h)
+  have hz' : algebraMap O (KK O) z ≠ 0 := fun h => hz ((IsFractionRing.to_map_eq_zero_iff).mp h)
   have hspec := Classical.choose_spec (IsLocalization.surj (nonZeroDivisors O) (algebraMap O (KK O) z))
   simp only [vO, vK, ordW, ite_eq_right hz']
   generalize Classical.choose (IsLocalization.surj (nonZeroDivisors O) (algebraMap O (KK O) z)) = ab at hspec ⊢

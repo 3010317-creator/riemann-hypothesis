@@ -409,8 +409,7 @@ theorem eInf_smul_of_at {u : Matrix (Fin n) (Fin d) (AE F E)} (hu : At (evI F) u
 
 theorem archimedean_evaluation_vector (M : Model σ X W) {u} (hu : At (evI F) u) : mixedSpaceVecPairAsAdeles F (vec M u) = M.co.e u := by
   have := mixedSpaceVecPair_archimedeanPart_idempotent_smul (M.co.e u)
-  rw [← map_smul, eInf_smul_of_at hu] at this
-  exact this
+  rwa [← map_smul, eInf_smul_of_at hu] at this
 
 theorem phL_vec (M : Model σ X W) (x) {u} (hu : At (evI F) u) : phL M x (vec M u) = vec M (actAB (cA σ) x u) := by
   rw [phL_eq, archimedean_evaluation_vector M hu, phB_e, vec]
@@ -468,8 +467,7 @@ theorem exists_strictHenselian_absolutely_closed_local_ring (hP : IsPair B M χX
   obtain ⟨u, hu⟩ := M.co.e.surjective (finE2 F m)
   have := hs.impl (g, h) u Φ hΦ
   simp only [Darboux.rho] at this
-  rw [← phB_e, hu, phB_fin M hg hh] at this
-  exact this
+  rwa [← phB_e, hu, phB_fin M hg hh] at this
 
 theorem surj_of (hP : IsPair B M χX χW om r s r' s') {g h} (hg : g ∈ UAt σ X (evI F)) (hh : h ∈ UAt σ W (evI F))
     {T : SInf F (Fin n × Fin d) →ₗ[ℂ] SInf F (Fin n × Fin d)}

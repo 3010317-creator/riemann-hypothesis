@@ -63,8 +63,7 @@ theorem eventually_exists_root {d : ℕ} {F : Polynomial (MvPolynomial (Fin d) �
     have hr0 : G.eval r = 0 := (Polynomial.mem_roots hGm.ne_zero).1 hr
     by_contra! hlt
     refine hfar r (hball ?_) hr0
-    rw [Metric.mem_ball, dist_comm, dist_eq_norm]
-    exact hlt
+    rwa [Metric.mem_ball, dist_comm, dist_eq_norm]
   have hprod : ‖G.eval t₀‖ = (G.roots.map fun r => ‖t₀ - r‖).prod := by
     rw [hsplit.eval_eq_prod_roots_of_monic hGm]
     exact (G.roots.prod_hom' (NormedField.toMulRingNorm ℂ) (fun r : ℂ => t₀ - r)).symm
@@ -72,8 +71,7 @@ theorem eventually_exists_root {d : ℕ} {F : Polynomial (MvPolynomial (Fin d) �
     have := Multiset.prod_map_le_prod_map₀ (fun _ => ε) (fun r => ‖t₀ - r‖)
       (fun _ _ => hε.le) hle
     rw [Multiset.map_const', Multiset.prod_replicate] at this
-    rw [hprod, ← hGdeg, hsplit.natDegree_eq_card_roots]
-    exact this
+    rwa [hprod, ← hGdeg, hsplit.natDegree_eq_card_roots]
   exact absurd hy (not_lt.2 hge)
 
 theorem norm_le_of_monic_root {G : Polynomial ℂ} (hG : G.Monic) {t : ℂ} (ht : G.eval t = 0) :
@@ -85,8 +83,7 @@ theorem norm_le_of_monic_root {G : Polynomial ℂ} (hG : G.Monic) {t : ℂ} (ht 
     exact Finset.sup_le fun k hk =>
       Finset.single_le_sum (f := fun k => ‖G.coeff k‖₊) (fun _ _ => zero_le) hk
   have h3 : ‖t‖₊ ≤ ∑ k ∈ Finset.range G.natDegree, ‖G.coeff k‖₊ + 1 := (h1.trans_le h2).le
-  have h4 := NNReal.coe_le_coe.2 h3
-  simpa using h4
+  simpa using NNReal.coe_le_coe.2 h3
 
 variable {n d : ℕ}
 
@@ -111,8 +108,7 @@ theorem evalYT_eq_zero (J : Ideal (MvPolynomial (Fin n) ℂ)) (p : Fin d → MvP
     evalYT F (fun i => eval z (p i)) (evalAt J hz s) = 0 := by
   have h := congrArg (evalAt J hz : (MvPolynomial (Fin n) ℂ ⧸ J) →+* ℂ) hs
   rw [map_zero, Polynomial.hom_eval₂, evalAt_comp_toRingHom] at h
-  rw [evalYT, Polynomial.eval_map]
-  exact h
+  rwa [evalYT, Polynomial.eval_map]
 
 theorem exists_point_of_evalYT_eq_zero (J : Ideal (MvPolynomial (Fin n) ℂ))
     (p : Fin d → MvPolynomial (Fin n) ℂ) (hfin : ((Ideal.Quotient.mkₐ ℂ J).comp (aeval p)).Finite)
@@ -148,14 +144,12 @@ theorem exists_point_of_evalYT_eq_zero (J : Ideal (MvPolynomial (Fin n) ℂ))
   have key : ∀ q, Ideal.Quotient.mk J q ∈ Q → eval z q = 0 := by
     intro q hq
     have hq' : q ∈ Q.comap (Ideal.Quotient.mk J) := hq
-    rw [hz, MvPolynomial.mem_vanishingIdeal_singleton_iff, aeval_eq_eval] at hq'
-    exact hq'
+    rwa [hz, MvPolynomial.mem_vanishingIdeal_singleton_iff, aeval_eq_eval] at hq'
   have key2 : ∀ F, e F = 0 → g F ∈ Q := by
     intro F hF
     have hF' : F ∈ Q.comap (algebraMap _ _) := by
       change F ∈ Ideal.under _ Q
-      rw [hQP]
-      exact hF
+      rwa [hQP]
     exact hF'
   refine ⟨z, fun q hq => key q ?_, ?_, ?_⟩
   · rw [Ideal.Quotient.eq_zero_iff_mem.2 hq]
@@ -166,15 +160,13 @@ theorem exists_point_of_evalYT_eq_zero (J : Ideal (MvPolynomial (Fin n) ℂ))
       simp [g, f]
       rfl
     rw [h2] at h1
-    have h3 := key _ h1
-    simpa [sub_eq_zero] using h3
+    simpa [sub_eq_zero] using key _ h1
   · have h1 := key2 (Polynomial.X - Polynomial.C (C t)) (by simp [e])
     have h2 : g (Polynomial.X - Polynomial.C (C t)) = Ideal.Quotient.mk J (L - C t) := by
       simp [g, f]
       rfl
     rw [h2] at h1
-    have h3 := key _ h1
-    simpa [sub_eq_zero] using h3
+    simpa [sub_eq_zero] using key _ h1
 
 end FiniteMapOpen
 
@@ -226,8 +218,7 @@ theorem FiniteMapOpen.proof : FiniteMapOpen.Statement := by
       hsub.biUnion fun w hw =>
         Polynomial.finite_setOfPred_isRoot (hP0 w hw.2)
     obtain ⟨c, hc⟩ := hbad.infinite_compl.nonempty
-    refine ⟨c, fun w hw hwx h => hc ?_⟩
-    exact Set.mem_biUnion (x := w) ⟨hw, hwx⟩ (by simp [hP, h])
+    exact ⟨c, fun w hw hwx h => hc (Set.mem_biUnion (x := w) ⟨hw, hwx⟩ (by simp [hP, h]))⟩
   set L : MvPolynomial (Fin n) ℂ := ∑ j : Fin n, C (c ^ (j : ℕ)) * X j with hL
   have hLz : ∀ z, eval z L = ∑ j : Fin n, c ^ (j : ℕ) * z j := by
     intro z
@@ -244,8 +235,7 @@ theorem FiniteMapOpen.proof : FiniteMapOpen.Statement := by
     have h0 := minpoly.aeval (MvPolynomial (Fin d) ℂ) ℓ
     rw [Polynomial.aeval_def] at h0
     have := evalYT_eq_zero J p (F := μ) (s := ℓ) h0 hx
-    rw [hℓ, evalAt_mk] at this
-    exact this
+    rwa [hℓ, evalAt_mk] at this
 
   obtain ⟨r, hr, hrU⟩ := Metric.mem_nhds_iff.1 hU
   have hφc : Continuous φ := continuous_pi fun i => MvPolynomial.continuous_eval _
@@ -297,10 +287,8 @@ theorem FiniteMapOpen.proof : FiniteMapOpen.Statement := by
   · exfalso
     refine huv (Set.mk_mem_prod hyu htv) ⟨z, ⟨hz, ?_, hzr⟩, ?_⟩
     · change φ z ∈ Metric.closedBall y₀ 1
-      rw [← hzy] at hyB
-      exact hyB
-    · simp only [Ψ, Prod.mk.injEq]
-      exact ⟨hzy, hzt⟩
+      rwa [← hzy] at hyB
+    · simpa only [Ψ, Prod.mk.injEq] using ⟨hzy, hzt⟩
 
 end
 

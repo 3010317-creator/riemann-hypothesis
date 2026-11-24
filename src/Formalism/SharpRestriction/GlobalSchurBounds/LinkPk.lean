@@ -124,8 +124,7 @@ theorem nuAtT_of {D : D7} {L : SizeData₂ D} (hAtT : NuAtTDef D L)
   refine ⟨s, hs, ?_⟩
   rw [pow_zero, Ideal.one_eq_top, Submodule.top_smul]
   show (D.nuIn u).restrictScalars (𝓞 D.what₂.LL) (s • x) ∈ ((D.fm u).lat 0).L
-  rw [map_smul]
-  exact hsx
+  rwa [map_smul]
 
 theorem nu_le_mram {D : D7} {L : SizeData₂ D} (hNu : DV.NuDef D L) (hT : NuAtT D L) (u : D.what₂.Word) :
     L.NuLat u ≤ DV.MramL D u := by
@@ -160,8 +159,7 @@ theorem nuCommens_of {D : D7} {L : SizeData₂ D} (hNu : DV.NuDef D L) (hT : NuA
   · have : Module.Finite (𝓞 D.what₂.LL) (DV.MramL D u) := Module.Finite.iff_fg.2 (D.MramL_fg u)
     have : IsNoetherian (𝓞 D.what₂.LL) (DV.MramL D u) := inferInstance
     have h2 := (IsNoetherian.noetherian ((L.NuLat u).comap (DV.MramL D u).subtype)).map (DV.MramL D u).subtype
-    rw [Submodule.map_comap_subtype, inf_eq_right.2 hle] at h2
-    exact h2
+    rwa [Submodule.map_comap_subtype, inf_eq_right.2 hle] at h2
   · obtain ⟨p, hp, hpT, hin⟩ := exists_free_prime D u
     obtain ⟨w, hw⟩ := _root_.Formalism.MainNotions.Lnk.place_over D p hp
     have hEq := hNu.2.1 u w (by rw [hw]; exact hpT) (Or.inr (by rw [hw]; exact hin))

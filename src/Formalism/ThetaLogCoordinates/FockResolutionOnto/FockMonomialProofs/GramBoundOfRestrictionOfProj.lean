@@ -102,8 +102,7 @@ theorem strip_monomial_eq (v : σ) (e : ℕ) (m : σ →₀ ℕ) (hm : m v = 0) 
     · subst h2
       simp
     · rw [ite_eq_right h2, ite_eq_right]
-      intro h3
-      exact h2 (add_left_cancel h3)
+      exact fun h3 => h2 (add_left_cancel h3)
   · rw [ite_eq_right h1, ite_eq_right]
     rintro rfl
     exact h1 hm
@@ -261,8 +260,7 @@ theorem projAtOf_of (hX : ProjX) : ProjAtOf := by
         omega
       · have hik' : ¬ Fin.last K = i := fun h => hik h.symm
         simp [hik'] at hi
-        rw [ite_eq_right hik]
-        exact hi
+        rwa [ite_eq_right hik]
     obtain ⟨hP1, hP2, hP3⟩ := hPr' m' hMD hm'v
     have hPr : ((LinearMap.mulLeft ℚ_[p] (X (Fin.last K, ρ) ^ e)) ∘ₗ Pr' ∘ₗ strip p (Fin.last K, ρ) e)
         (monomial (Finsupp.single (Fin.last K, ρ) e + m') 1) = X (Fin.last K, ρ) ^ e * Pr' (monomial m' 1) := by

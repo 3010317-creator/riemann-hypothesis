@@ -40,8 +40,7 @@ lemma product_cusp_forms_mem_weight {e : ℕ} {w' : WeightFamilies.Wt D j} (θ :
   have := mul_mem_Vw (xplus X E hM) la G.N (emb_mem_Vw (xplus X E hM) la G.N wF g0)
     (emb_mem_Vw (xplus X E hM) la G.N w' θ)
   have hw' : addL (wt0 D j) wL e = wadd wF w' := by rw [hw]; exact zero_weight_add _
-  rw [hw']
-  exact this
+  rwa [hw']
 
 def u0 {e : ℕ} {w' : WeightFamilies.Wt D j} (θ : B.Cusp j w') (hw : wadd wF w' = wsmul e wL) :
     ↥(Frac0 (xplus X E hM) la G.w) :=
@@ -111,8 +110,7 @@ theorem curveModel_of_fr
         ↥(Frac0 (xplus X E hM) la G.w)) : Lw (xplus X E hM) la G.w) *
         algebraMap (Rp (xplus X E hM) la G.N) (Lw (xplus X E hM) la G.w)
           (emb (xplus X E hM) la G.N (X.inc wF g0)) = 0 := by
-      rw [Subalgebra.coe_sub, sub_mul, sub_eq_zero]
-      exact h12
+      rwa [Subalgebra.coe_sub, sub_mul, sub_eq_zero]
     exact sub_eq_zero.1 (hinj _ h0)
   · intro x
     obtain ⟨k, g, hg, hx⟩ := (mem_Hfr (xplus X E hM) la G.w).1 ((mem_HK (xplus X E hM) la G.w).1 x.2)

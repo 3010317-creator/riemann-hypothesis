@@ -33,10 +33,8 @@ theorem norm_hypIncl {d : ℕ} (w : Fin d → ℂ) : ‖hypIncl w‖ = ‖w‖ :
 theorem differentiable_hypIncl {d : ℕ} : Differentiable ℂ (hypIncl : (Fin d → ℂ) → Fin (d + 1) → ℂ) := by
   refine differentiable_pi.2 fun i => ?_
   refine Fin.cases ?_ (fun j => ?_) i
-  · simp only [hypIncl, Fin.cons_zero]
-    exact differentiable_const _
-  · simp only [hypIncl, Fin.cons_succ]
-    exact differentiable_apply j
+  · simpa only [hypIncl, Fin.cons_zero] using differentiable_const _
+  · simpa only [hypIncl, Fin.cons_succ] using differentiable_apply j
 
 theorem hypIncl_tail {d : ℕ} (t : Fin (d + 1) → ℂ) (ht : t 0 = 0) :
     hypIncl (Fin.tail t) = t ∧ ‖Fin.tail t‖ ≤ ‖t‖ := by

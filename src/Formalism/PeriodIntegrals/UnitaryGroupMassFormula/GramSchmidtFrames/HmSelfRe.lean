@@ -93,8 +93,7 @@ lemma hm_symm (hH : Hᴴ = H) (x y : Fin m → ℂ) : herm H y x = star (herm H 
   ring
 
 lemma hm_self_re (hH : Hᴴ = H) (x : Fin m → ℂ) : herm H x x = ((herm H x x).re : ℂ) := by
-  have h := hm_symm H hH x x
-  exact (Complex.conj_eq_iff_re.mp h.symm).symm
+  exact (Complex.conj_eq_iff_re.mp (hm_symm H hH x x).symm).symm
 
 end herm
 

@@ -233,8 +233,7 @@ theorem reciprocity_frobenius_lubinTate (m : ℕ) (U : OpenSubgroup (Ω ≃ₐ[K
     rw [mem_fixedField_iff]
     intro g hg
     have h1 := (mem_fixedModule_units_iff' _ _).mp hy g hg
-    rw [Units.val_neg, Units.val_mk0, map_neg, neg_inj] at h1
-    exact h1
+    rwa [Units.val_neg, Units.val_mk0, map_neg, neg_inj] at h1
   have hπ' : Irreducible ((w : 𝒪[K]) * π) := (irreducible_units_mul w).2 hπ
   have hq := one_lt_card_residueField' K
   have hdeg : 0 < (ltEisenstein ((w : 𝒪[K]) * π) m).natDegree := by

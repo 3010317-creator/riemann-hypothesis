@@ -38,8 +38,7 @@ theorem homogeneousComponent_mul_of_deg_one (c t : MvPolynomial σ R) (ht : t.Is
     fun x i => decomposition.decompose'_apply x i
   have h := DirectSum.coe_decompose_mul_of_right_mem_of_le (𝒜 := homogeneousSubmodule σ R) (a := c)
     (n := d + 1) ((mem_homogeneousSubmodule 1 t).mpr ht) (by omega)
-  rw [key, key, Nat.add_sub_cancel] at h
-  exact h
+  rwa [key, key, Nat.add_sub_cancel] at h
 
 theorem isHomogeneous_span_of {s : Set (MvPolynomial σ R)} (h : ∀ x ∈ s, ∃ d, x.IsHomogeneous d) :
     (Ideal.span s).IsHomogeneous (homogeneousSubmodule σ R) :=
@@ -171,10 +170,8 @@ theorem exists_C_mul_mem {σ : Type*} (J : Ideal (MvPolynomial σ (𝓞 K))) (h 
   refine ⟨d, nonZeroDivisors.ne_zero hd, ?_⟩
   have hda : C d * h = a := by
     apply MvPolynomial.map_injective _ (IsFractionRing.injective (𝓞 K) K)
-    rw [map_mul, mul_comm]
-    exact hx
-  rw [hda]
-  exact ha
+    rwa [map_mul, mul_comm]
+  rwa [hda]
 
 theorem incIdeal_le_map {n k : ℕ} (I : Ideal (MvPolynomial (Fin n) K)) :
     incIdeal I k ≤ (incIdeal (integralModel I) k).map (MvPolynomial.map (algebraMap (𝓞 K) K)) := by

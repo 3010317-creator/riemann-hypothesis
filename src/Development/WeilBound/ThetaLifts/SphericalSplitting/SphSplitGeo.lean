@@ -131,8 +131,7 @@ theorem exists_isUnit_add_mul {K : Type} [Field K] {n : ℕ} (A D : Matrix (Fin 
       have hmem : A *ᵥ x ∈ R := hneg ▸ R.neg_mem hcR
       exact (Submodule.disjoint_def.mp hR.disjoint) _ haR hmem
     have hcx : c (D *ᵥ x) = 0 := by
-      rw [hax, zero_add] at hx
-      exact hx
+      rwa [hax, zero_add] at hx
     have hDU : D *ᵥ x ∈ (LinearMap.ker (Matrix.toLin' A)).map (Matrix.toLin' D) :=
       ⟨x, by rw [SetLike.mem_coe, LinearMap.mem_ker, Matrix.toLin'_apply]; exact hax,
         Matrix.toLin'_apply D x⟩
@@ -142,9 +141,7 @@ theorem exists_isUnit_add_mul {K : Type} [Field K] {n : ℕ} (A D : Matrix (Fin 
       have h3 : ((e (proj (D *ᵥ x)) : R) : Fin n → K) = 0 := hcx
       rw [hproj] at h3
       exact Subtype.ext h3
-    have hDx : D *ᵥ x = 0 := by
-      have h4 := congrArg Subtype.val (e.injective (hex.trans (map_zero e).symm))
-      exact h4
+    have hDx : D *ᵥ x = 0 := congrArg Subtype.val (e.injective (hex.trans (map_zero e).symm))
     exact h x hax hDx
   intro x y hxy
   have hsub : (A + LinearMap.toMatrix' c * D) *ᵥ (x - y) = 0 := by
@@ -168,8 +165,7 @@ theorem orbit {n d : ℕ} {t : k} {Y Y' : Matrix (Fin n) (Fin d) k} (h1 : Below 
   let C : Matrix (Fin n) (Fin n) 𝒪[k] := Cb.map (Function.surjInv hsurj)
   have hC : C.map (IsLocalRing.residue 𝒪[k]) = Cb := by
     ext i j
-    simp only [C, Matrix.map_apply]
-    exact Function.surjInv_eq hsurj _
+    simpa only [C, Matrix.map_apply] using Function.surjInv_eq hsurj _
   let FinalForm : Matrix (Fin n) (Fin d) 𝒪[k] := Matrix.of fun i j => ⟨Z i j, hZ i j⟩
   let Zo' : Matrix (Fin n) (Fin d) 𝒪[k] := Matrix.of fun i j => ⟨Z' i j, hZ' i j⟩
   have hZo : FinalForm.map (algebraMap 𝒪[k] k) = Z := by
@@ -184,8 +180,7 @@ theorem orbit {n d : ℕ} {t : k} {Y Y' : Matrix (Fin n) (Fin d) k} (h1 : Below 
       Matrix.map_mul, Matrix.map_sub (IsLocalRing.residue 𝒪[k]) (map_sub _), Matrix.map_one _ (map_zero _) (map_one _),
       Matrix.map_mul, hC]
     exact hCb
-  · intro i j
-    exact ((FinalForm - C * (B * FinalForm + Zo')) i j).2
+  · exact fun i j => ((FinalForm - C * (B * FinalForm + Zo')) i j).2
   · have hU : (A + C * (1 - B * A)).map (algebraMap 𝒪[k] k)
         = A.map (algebraMap 𝒪[k] k) + C.map (algebraMap 𝒪[k] k)
           * (1 - B.map (algebraMap 𝒪[k] k) * A.map (algebraMap 𝒪[k] k)) := by
@@ -203,8 +198,7 @@ theorem orbit {n d : ℕ} {t : k} {Y Y' : Matrix (Fin n) (Fin d) k} (h1 : Below 
           abel
     have e1 : Y' - B.map (algebraMap 𝒪[k] k) * A.map (algebraMap 𝒪[k] k) * Y'
         = t • (B.map (algebraMap 𝒪[k] k) * Z + Z') := by
-      rw [sub_eq_iff_eq_add']
-      exact h2'
+      rwa [sub_eq_iff_eq_add']
     have e2 : (A.map (algebraMap 𝒪[k] k) + C.map (algebraMap 𝒪[k] k)
           * (1 - B.map (algebraMap 𝒪[k] k) * A.map (algebraMap 𝒪[k] k))) * Y'
         = A.map (algebraMap 𝒪[k] k) * Y' + C.map (algebraMap 𝒪[k] k)
@@ -270,8 +264,7 @@ private lemma zero_mem_vBall {m p : Type} (r : k) : (0 : Matrix m p k) ∈ vBall
 private lemma add_mem_vBall {m p : Type} {r : k} {Y Z : Matrix m p k} (hY : Y ∈ vBall r)
     (hZ : Z ∈ vBall r) : Y + Z ∈ vBall r := by
   intro i j
-  simp only [Matrix.add_apply]
-  exact (Valuation.map_add _ _ _).trans (max_le (hY i j) (hZ i j))
+  simpa only [Matrix.add_apply] using (Valuation.map_add _ _ _).trans (max_le (hY i j) (hZ i j))
 
 private lemma neg_mem_vBall {m p : Type} {r : k} {Y : Matrix m p k} (hY : Y ∈ vBall r) :
     -Y ∈ vBall r := by
@@ -482,8 +475,7 @@ theorem latt_eq {n d : ℕ} {t : k} (ht : t ≠ 0) (Y₀ : Matrix (Fin n) (Fin d
     intro x hx
     have e := congrArg Subtype.val (b.sum_repr ⟨x, hx⟩)
     simp only [Submodule.coe_sum, Submodule.coe_smul] at e
-    refine e.symm.trans (Finset.sum_congr rfl fun i _ => ?_)
-    exact (algebraMap_smul k _ _).symm
+    exact e.symm.trans (Finset.sum_congr rfl fun i _ => (algebraMap_smul k _ _).symm)
   have hLw : ∀ x ∈ L, x ∈ Submodule.span k (Set.range w) := by
     intro x hx
     rw [hsum x hx]
@@ -531,8 +523,7 @@ theorem latt_eq {n d : ℕ} {t : k} (ht : t ≠ 0) (Y₀ : Matrix (Fin n) (Fin d
     simp [bk', Module.Basis.equivFun_apply]
   show v ∈ L ↔ ∀ j, (v ᵥ* hmat) j ∈ 𝒪[k]
   rw [key, hmem]
-  simp only [hre]
-  exact ⟨fun H j => H _, fun H i => by simpa using H (finCongr hm i)⟩
+  simpa only [hre] using ⟨fun H j => H _, fun H i => by simpa using H (finCongr hm i)⟩
 
 end PositivityTheory.Sph
 
@@ -675,8 +666,7 @@ theorem latSt : LatSt := by
     have := hK (Matrix.GeneralLinearGroup.map (algebraMap 𝒪[k] k) hu.unit) ⟨hu.unit, rfl⟩ Y'
     have e : ((Matrix.GeneralLinearGroup.map (algebraMap 𝒪[k] k) hu.unit : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) =
         U.map (algebraMap 𝒪[k] k) := rfl
-    rw [← e]
-    exact this
+    rwa [← e]
   set s := bsetoid (n := n) (d := d) t with hs
   set T : Finset (Quotient s) := (S.filter fun y => IntM (t • y)).image (Quotient.mk s) with hT
   have memT : ∀ Y, IntM (t • Y) → Quotient.mk s Y ∈ T := by
@@ -712,8 +702,7 @@ theorem latSt : LatSt := by
       · have h0 : ∑ c' ∈ F c, e c' Y = 0 := Finset.sum_eq_zero fun c' hc' => by
           simp only [e]
           rw [ite_eq_right]
-          intro h
-          exact (Finset.mem_filter.1 hc').2.2 (h.symm.trans hqc)
+          exact fun h => (Finset.mem_filter.1 hc').2.2 (h.symm.trans hqc)
         rw [h0, add_zero]
         simp only [e]
         rw [ite_eq_left hqc]
@@ -760,11 +749,9 @@ theorem latSt : LatSt := by
           refine Finset.mem_filter.2 ⟨h1, below_trans h2 h4, fun h => h5 ?_⟩
           rw [← Quotient.out_eq c', ← Quotient.out_eq c]
           refine mk_eq_iff.2 ⟨h4, ?_⟩
-          rw [← h]
-          exact h2
+          rwa [← h]
       have := Submodule.sub_mem _ (hi c hc) hsum
-      rw [hdec c hc, add_sub_cancel_right] at this
-      exact this
+      rwa [hdec c hc, add_sub_cancel_right] at this
   have hΦ : Φ = ∑ c ∈ T, Φ c.out • e c := by
     funext Y
     rw [Finset.sum_apply]
@@ -776,8 +763,7 @@ theorem latSt : LatSt := by
     · rw [ite_eq_right]
       · by_contra h
         exact hY (hsupp Y h)
-      · intro hq
-        exact hY (below_int htO (out_rel Y).2 (outT _ hq))
+      · exact fun hq => hY (below_int htO (out_rel Y).2 (outT _ hq))
   rw [hΦ]
   exact Submodule.sum_mem _ fun c hc => Submodule.smul_mem _ _ (he _ c hc rfl)
 

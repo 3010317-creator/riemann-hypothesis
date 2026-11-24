@@ -46,9 +46,7 @@ theorem exists_mul_mem_of_algebraMap_mem (w : σ → ℂ) (J : Ideal (MvPolynomi
   rw [← map_mul] at hys
   obtain ⟨c, hc⟩ := (IsLocalization.eq_iff_exists (ptMax w).primeCompl _).1 hys
   refine ⟨(c : MvPolynomial σ ℂ) * s, ?_, ?_⟩
-  · have h := (ptMax w).primeCompl.mul_mem c.2 s.2
-    intro h0
-    exact h (RingHom.mem_ker.2 h0)
+  · exact fun h0 => ((ptMax w).primeCompl.mul_mem c.2 s.2) (RingHom.mem_ker.2 h0)
   · rw [show (c : MvPolynomial σ ℂ) * s * x = c * (x * s) by ring, hc]
     exact J.mul_mem_left _ y.2
 
@@ -95,8 +93,7 @@ theorem exists_of_isDiscreteValuationRing (I : Ideal (MvPolynomial σ ℂ)) (w :
     intro x hx
     have hx' : algebraMap (ptLoc w) S (algebraMap _ (ptLoc w) x) ∈
         ((ptMax w ^ 2).map (algebraMap _ (ptLoc w))).map (algebraMap (ptLoc w) S) := by
-      rw [Ideal.map_map, ← IsScalarTower.algebraMap_eq, Ideal.map_pow, hmap, ← hRS]
-      exact hx
+      rwa [Ideal.map_map, ← IsScalarTower.algebraMap_eq, Ideal.map_pow, hmap, ← hRS]
     rw [← Ideal.mem_comap, Ideal.comap_map_of_surjective _ hsurj, ← RingHom.ker_eq_comap_bot, hker, ptIdeal,
       ← Ideal.map_sup] at hx'
     obtain ⟨s, hs, hsx⟩ := exists_mul_mem_of_algebraMap_mem w _ x hx'
@@ -151,15 +148,13 @@ theorem exists_of_isDiscreteValuationRing (I : Ideal (MvPolynomial σ ℂ)) (w :
     have hmem : algebraMap _ S (a - C (eval w a / eval w (s : MvPolynomial σ ℂ)) * (s : MvPolynomial σ ℂ)) ∈
         maximalIdeal S := by
       rw [← Ideal.mem_comap, hcomap, RingHom.mem_ker, map_sub, map_mul, eval_C, div_mul_cancel₀ _ hs, sub_self]
-    rw [← Ideal.mul_unit_mem_iff_mem _ (hunit _ hs), sub_mul, hspec, ← map_mul, ← map_sub]
-    exact hmem
+    rwa [← Ideal.mul_unit_mem_iff_mem _ (hunit _ hs), sub_mul, hspec, ← map_mul, ← map_sub]
 
   obtain ⟨t, ht⟩ := (IsPrincipalIdealRing.principal (maximalIdeal S)).principal
   obtain ⟨p', rfl⟩ := hsurj t
   obtain ⟨⟨a, s⟩, rfl⟩ := IsLocalization.mk'_surjective (ptMax w).primeCompl p'
   have hgena : maximalIdeal S = Ideal.span {algebraMap _ S a} := by
-    rw [← hspec, Ideal.span_singleton_mul_right_unit (hunit _ fun h => s.2 (RingHom.mem_ker.2 h))]
-    exact ht
+    rwa [← hspec, Ideal.span_singleton_mul_right_unit (hunit _ fun h => s.2 (RingHom.mem_ker.2 h))]
   have hsup : ∀ i, Pi.single i (1 : ℂ) ∈ V ⊔ ℂ ∙ grad w a := by
     intro i
     have hi : algebraMap _ S (X i - C (w i)) ∈ maximalIdeal S := by

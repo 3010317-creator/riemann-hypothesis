@@ -35,8 +35,7 @@ theorem ConeRadialIntegral.proof : ConeRadialIntegral.Statement := by
     · have hempty : (fun y : EuclideanSpace ℂ (Fin n) => ‖y‖) ⁻¹' Iio r ∩ C = ∅ := by
         ext y
         simp only [mem_inter_iff, mem_preimage, mem_Iio, mem_empty_iff_false, iff_false, not_and]
-        intro h
-        exact absurd (lt_of_lt_of_le h hr) (not_lt.2 (norm_nonneg y))
+        exact fun h => absurd (lt_of_lt_of_le h hr) (not_lt.2 (norm_nonneg y))
       rw [hempty, measure_empty, max_eq_right hr, zero_pow h2m, ENNReal.ofReal_zero, zero_mul]
     · have hset : (fun y : EuclideanSpace ℂ (Fin n) => ‖y‖) ⁻¹' Iio r ∩ C =
           r • {y : EuclideanSpace ℂ (Fin n) | ‖y‖ < 1 ∧ y ∈ C} := by
@@ -45,8 +44,7 @@ theorem ConeRadialIntegral.proof : ConeRadialIntegral.Statement := by
         constructor
         · rintro ⟨hy, hyC⟩
           refine ⟨r⁻¹ • y, ⟨?_, hC y hyC r⁻¹ (inv_pos.2 hr)⟩, smul_inv_smul₀ hr.ne' y⟩
-          rw [norm_smul, Real.norm_eq_abs, abs_inv, abs_of_pos hr, inv_mul_lt_iff₀ hr, mul_one]
-          exact hy
+          rwa [norm_smul, Real.norm_eq_abs, abs_inv, abs_of_pos hr, inv_mul_lt_iff₀ hr, mul_one]
         · rintro ⟨z, ⟨hz, hzC⟩, rfl⟩
           refine ⟨?_, hC z hzC r hr⟩
           rw [norm_smul, Real.norm_eq_abs, abs_of_pos hr]
@@ -107,8 +105,7 @@ theorem ConeRadialIntegral.proof : ConeRadialIntegral.Statement := by
           lintegral_withDensity_eq_lintegral_mul _ hDm hf]
         congr 1
         refine lintegral_congr fun r => ?_
-        simp only [Pi.mul_apply]
-        exact mul_comm _ _
+        simpa only [Pi.mul_apply] using mul_comm _ _
 
 end
 

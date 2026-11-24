@@ -103,8 +103,7 @@ theorem mat_ww {w : G D p} (hw : IsW w) :
     mat (w * w)⁻¹ = blk4 ((-1 : GL (Fin p) (AE D)) : Matrix _ _ _) 0 0 (adj (((-1 : GL (Fin p) (AE D))⁻¹ : GL _ _) : Matrix _ _ _)) := by
   have hM : mat (w * w) = -1 := by
     rw [mat_mul, show mat w = blk4 0 1 (-1) 0 from hw, submatrix_fromBlocks_mul]
-    simp only [zero_mul, mul_zero, one_mul, mul_one, zero_add, add_zero]
-    exact blk4_neg_one_lemma
+    simpa only [zero_mul, mul_zero, one_mul, mul_one, zero_add, add_zero] using blk4_neg_one_lemma
   have h1 := mat_mul_inv (w * w)
   rw [hM, neg_one_mul, neg_eq_iff_eq_neg] at h1
   rw [h1, inv_neg_one, Units.val_neg, Units.val_one, adj_neg_one, blk4_neg_one_lemma]

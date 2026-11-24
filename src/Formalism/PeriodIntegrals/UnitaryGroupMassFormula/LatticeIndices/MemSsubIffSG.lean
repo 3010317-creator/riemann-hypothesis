@@ -131,8 +131,7 @@ variable {F E R : Type} [Field F] [Field E] [Algebra F E] [Field R] [Algebra F R
 
 theorem reindex_mul' {ι : Type} [Fintype ι] [DecidableEq ι] (e : Fin n ≃ ι) (A B : Matrix (Fin n) (Fin n) R) :
     Matrix.reindex e e A * Matrix.reindex e e B = Matrix.reindex e e (A * B) := by
-  simp only [Matrix.reindex_apply]
-  exact Matrix.submatrix_mul_equiv A B e.symm e.symm e.symm
+  simpa only [Matrix.reindex_apply] using Matrix.submatrix_mul_equiv A B e.symm e.symm e.symm
 
 private theorem flagC_reindex_iff {K ι : Type} [Field K] [Fintype ι] [DecidableEq ι] {m : ℕ}
     (e : Fin n ≃ ι) (M : Matrix (Fin n) (Fin n) K) (v : Fin m → Fin n → K) :
@@ -153,8 +152,7 @@ private theorem flagC_reindex_iff {K ι : Type} [Field K] [Fintype ι] [Decidabl
     · rintro ⟨y, hy, hxy⟩
       have hyx : y = x := f.injective hxy
       exact hyx ▸ hy
-    · intro hx
-      exact ⟨x, hx, rfl⟩
+    · exact fun hx => ⟨x, hx, rfl⟩
   unfold FlagC
   refine forall_congr' fun b => ?_
   show Matrix.reindex e e M *ᵥ (v b ∘ e.symm) - v b ∘ e.symm ∈

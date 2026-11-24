@@ -58,8 +58,7 @@ variable {L : Type*} [Group L] [TopologicalSpace L] [IsTopologicalGroup L] [Loca
 theorem isSmooth_mGenSubrep (hτ : IsSmooth τ) (N : Submodule ℂ V) :
     IsSmooth (mGenSubrep τ N).toRepresentation := by
   intro u
-  refine Subgroup.isOpen_mono (H₁ := stabilizerOf τ (u : V)) (fun g hg => ?_) (hτ u)
-  exact Subtype.ext hg
+  exact Subgroup.isOpen_mono (H₁ := stabilizerOf τ (u : V)) (fun g hg => (Subtype.ext hg)) (hτ u)
 
 theorem isSmooth_mGenQuotRep (hτ : IsSmooth τ) (e : End ℂ V) (N : Submodule ℂ V) :
     IsSmooth (mGenQuotRep τ e N) := by
@@ -229,14 +228,12 @@ theorem nonempty_decomposition (hirr : Mx.IsIrreducible) (hadm : Mx.IsAdmissible
       rw [isSimpleModule_iff_isAtom] at hS ⊢
       refine ⟨fun hb => hS.1 ?_, fun N hN => ?_⟩
       · apply Submodule.map_injective_of_injective hjR
-        rw [Submodule.map_bot]
-        exact hb
+        rwa [Submodule.map_bot]
       · have hle : N.comap jR < S := by
           have h1 : N.comap jR ≤ S := by
             intro x hx
             obtain ⟨y, hy, hyx⟩ := hN.le hx
-            rw [← hjR hyx]
-            exact hy
+            rwa [← hjR hyx]
           refine lt_of_le_of_ne h1 fun heq => hN.ne ?_
           refine le_antisymm hN.le ?_
           show S.map jR ≤ N
@@ -268,8 +265,7 @@ theorem nonempty_decomposition (hirr : Mx.IsIrreducible) (hadm : Mx.IsAdmissible
       Subtype.ext (hj (congrArg Subtype.val hab))
   have hirr₁ : π₁.IsIrreducible := by
     show π₁.rep.IsIrreducible
-    rw [hπ₁rep]
-    exact hπ₁
+    rwa [hπ₁rep]
   have Φ' : Mx.fullRep.Equiv (outerTensor π₁.rep π₂) := by
     rw [hπ₁rep]
     exact Φ
@@ -342,10 +338,8 @@ theorem isAdmissible_comp (hρ : IsAdmissible ρ) (e : G₁ ≃ₜ* G₂) :
     constructor
     · rintro h _ ⟨k, hk, rfl⟩
       exact h k hk
-    · intro h k hk
-      exact h _ ⟨k, hk, rfl⟩
-  rw [heq]
-  exact this
+    · exact fun h k hk => h _ ⟨k, hk, rfl⟩
+  rwa [heq]
 
 theorem isIrreducible_comp (hρ : ρ.IsIrreducible) {f : G₁ →* G₂} (hf : Function.Surjective f) :
     Representation.IsIrreducible (ρ.comp f) := by

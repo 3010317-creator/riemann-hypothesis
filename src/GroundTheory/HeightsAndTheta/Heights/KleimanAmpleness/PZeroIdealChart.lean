@@ -26,8 +26,7 @@ def chartUnion (I K : Chart x) : Chart x :=
 theorem monos_union_split {I K : Finset (Fin (N + 1))} {s : Poly S N} (hs : s ∈ monos (I ∪ K)) :
     ∃ u ∈ monos (S := S) I, ∃ v ∈ monos (S := S) K, u * v = s := by
   unfold monos at hs
-  rw [Finset.coe_union, Set.image_union, Submonoid.closure_union, Submonoid.mem_sup] at hs
-  exact hs
+  rwa [Finset.coe_union, Set.image_union, Submonoid.closure_union, Submonoid.mem_sup] at hs
 
 theorem aeval_mem_twistMod {f : Poly S N} {e : ℕ} (hf : f.IsHomogeneous e) (K : Chart x) :
     aeval x f ∈ twistMod S x (e : ℤ) K :=
@@ -51,8 +50,7 @@ theorem exists_monos_mul_mem_twistMod (I K : Chart x) (b : Ω)
 theorem twistMod_mul_mem {K : Chart x} {a b : Ω} {c c' : ℤ} (ha : a ∈ twistMod S x c K)
     (hb : b ∈ twistMod S x c' K) : a * b ∈ twistMod S x (c + c') K := by
   have h := Submodule.mul_mem_mul (M := (twistSys S x c).sub K) (N := (twistSys S x c').sub K) ha hb
-  rw [twistSys_sub_mul] at h
-  exact h
+  rwa [twistSys_sub_mul] at h
 
 theorem mul_mem_chartRing_union (D : SubFamily S x Ω) (I K : Chart x) (y : Ω)
     (hy : ∀ δ ∈ D.sub I, y * δ ∈ chartRing S x I) :
@@ -61,8 +59,7 @@ theorem mul_mem_chartRing_union (D : SubFamily S x Ω) (I K : Chart x) (y : Ω)
   obtain ⟨a, ⟨w, hw⟩, haδ⟩ := (D.mem_iff I (chartUnion I K) Finset.subset_union_left δ).mp hδ
   have hinv : ((↑w⁻¹ : chartRing S x (chartUnion I K)) : Ω) * (a : Ω) = 1 := by
     have := congrArg Subtype.val (Units.inv_mul w)
-    rw [hw] at this
-    exact this
+    rwa [hw] at this
   have h1 : y * ((a : Ω) • δ) ∈ chartRing S x (chartUnion I K) :=
     chartRing_mono Finset.subset_union_left (hy _ haδ)
   have h2 : y * δ = ((↑w⁻¹ : chartRing S x (chartUnion I K)) : Ω) * (y * ((a : Ω) • δ)) := by

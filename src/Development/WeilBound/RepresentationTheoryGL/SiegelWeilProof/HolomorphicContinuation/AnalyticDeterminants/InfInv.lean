@@ -523,8 +523,7 @@ theorem ptId : PtId := by
   have hxZ : x * Z = M * x := by rw [hM, Matrix.mul_assoc (x * Z), hx.2, Matrix.mul_one]
   have hΘd : DifferentiableAt ℂ Θ x := hΘ.differentiableAt (by simp)
   have hR : ∀ v, fderiv ℝ Θ x v = fderiv ℂ Θ x v := fun v => by
-    have h := (hΘd.hasFDerivAt.restrictScalars ℝ).fderiv
-    exact (congrArg (fun L => L v) h).trans rfl
+    exact (congrArg (fun L => L v) ((hΘd.hasFDerivAt.restrictScalars ℝ).fderiv)).trans rfl
   have hdK : ∀ e, dK Θ x e = fderiv ℂ Θ x (e * x) := fun e => by
     rw [dK, hR, hR]
     conv_rhs => rw [← reK_add_imK e]
@@ -644,10 +643,8 @@ theorem infInv_of (hL : LeftDeriv) (hP : LawDeriv) (hI : PtId) (hC : CDiff) : In
     rw [MeasureTheory.integral_finsetSum]
     · refine Finset.sum_eq_zero (fun b _ => ?_)
       rw [integral_add (hA a b).1 (hB a b).1, (hA a b).2, (hB a b).2, add_zero]
-    · intro b _
-      exact (hA a b).1.add (hB a b).1
-  · intro a _
-    exact MeasureTheory.integrable_finsetSum _ (fun b _ => (hA a b).1.add (hB a b).1)
+    · exact fun b _ => (hA a b).1.add (hB a b).1
+  · exact fun a _ => MeasureTheory.integrable_finsetSum _ (fun b _ => (hA a b).1.add (hB a b).1)
 
 end PositivityTheory.Rg.Sw.LVs.II
 

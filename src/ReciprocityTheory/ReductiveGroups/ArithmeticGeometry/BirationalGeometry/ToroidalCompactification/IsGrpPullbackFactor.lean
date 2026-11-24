@@ -27,8 +27,7 @@ def preH {X Y : Over (Spec (CommRingCat.of R))} (f : Y ⟶ X) : (X ⟶ M) →* (
 theorem pre_prod {X Y : Over (Spec (CommRingCat.of R))} (f : Y ⟶ X) {d : ℕ} (v : Fin d → (X ⟶ M)) :
     f ≫ (List.ofFn v).prod = (List.ofFn fun i => f ≫ v i).prod := by
   have h := map_list_prod (preH (M := M) f) (List.ofFn v)
-  rw [List.map_ofFn] at h
-  exact h
+  rwa [List.map_ofFn] at h
 
 theorem scale_prodPts {d : ℕ} (a : R) (c : Fin d → R) (v : Fin d → (sp (R₀ := R) (DualNumber R) ⟶ M)) :
     spMap (scaleD a) ≫ prodPts c v = prodPts (a • c) v := by
@@ -60,8 +59,7 @@ def pushforwardHom : (sp (R₀ := R') P ⟶ (Over.pullback (fB R R')).obj G) →
 theorem pushR_prod {d : ℕ} (v : Fin d → (sp (R₀ := R') P ⟶ (Over.pullback (fB R R')).obj G)) :
     pushR G (List.ofFn v).prod = (List.ofFn fun i => pushR G (v i)).prod := by
   have h := map_list_prod (pushforwardHom (R := R) (R' := R') (P := P) G) (List.ofFn v)
-  rw [List.map_ofFn] at h
-  exact h
+  rwa [List.map_ofFn] at h
 
 end Push
 

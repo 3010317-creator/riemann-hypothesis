@@ -145,9 +145,7 @@ theorem proof : PlaceCentredSum.Statement := by
         (fun a _ b _ h ↦ FinitePlace.mk_eq_iff.mp h)).subset fun Q hQ ↦ ?_
       simp only [Function.mem_support, g] at hQ
       split_ifs at hQ
-      · simp only [Set.mem_preimage, Function.mem_mulSupport]
-        intro h1
-        exact hQ (by simp [h1])
+      · simpa only [Set.mem_preimage, Function.mem_mulSupport] using fun h1 => hQ (by simp [h1])
       · exact absurd rfl hQ
   rw [hK, hL]
   exact finsum_fibre below (deg L) _ g hg sum_fibre

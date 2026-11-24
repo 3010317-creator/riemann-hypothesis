@@ -12,8 +12,7 @@ namespace ReciprocityTheory.ChartRestriction.L1
 
 theorem norm_le_one_of_root {l : ℕ} [Fact l.Prime] {x : ℂ_[l]} (P : Polynomial ℤ) (hm : P.Monic)
     (h : P.eval₂ (Int.castRingHom ℂ_[l]) x = 0) : ‖x‖ ≤ 1 := by
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have hsum := hm.as_sum
   rw [hsum] at h
   simp only [Polynomial.eval₂_add, Polynomial.eval₂_X_pow, Polynomial.eval₂_finsetSum,
@@ -37,8 +36,7 @@ theorem norm_le_one_of_root {l : ℕ} [Fact l.Prime] {x : ℂ_[l]} (P : Polynomi
       _ = ‖x‖ ^ (P.natDegree - 1) := one_mul _
   have heq := eq_neg_of_add_eq_zero_left h
   have h1 : ‖x‖ ^ P.natDegree ≤ ‖x‖ ^ (P.natDegree - 1) := by
-    rw [← norm_pow, heq, norm_neg]
-    exact hbound
+    rwa [← norm_pow, heq, norm_neg]
   have h2 : ‖x‖ ^ (P.natDegree - 1) < ‖x‖ ^ P.natDegree := pow_lt_pow_right₀ hlt (by omega)
   linarith
 

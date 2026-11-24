@@ -213,8 +213,7 @@ theorem mem_hat_iff {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
             have : (a • fun i => b ⊗ₜ[maximalRealSubfield E] x i) = fun i => (a * b) ⊗ₜ[maximalRealSubfield E] x i := rfl
             rw [this, coordR_tmul, coordR_tmul, mul_smul_comm]
           | h2 x y hx hy => rw [smul_add, coordR_add, coordR_add, hx, hy, mul_add]
-        have e2 := this a x
-        exact (show coordR (l j) _ (a • x) = _ from e2) ▸ mul_mem a.2 hx
+        exact (show coordR (l j) _ (a • x) = _ from (this a x)) ▸ mul_mem a.2 hx
     exact key _ (h v)
 
 open GroundTheory.Heights₂.Heights.StrongApprox in
@@ -723,8 +722,7 @@ theorem levelDict : LevelDict := by
         exact (hs u).1 hu
       · intro hv
         refine ⟨γ₀.symm v, (hs _).2 ?_, γ₀.apply_symm_apply v⟩
-        rw [← hγ₀, γ₀.apply_symm_apply]
-        exact hv
+        rwa [← hγ₀, γ₀.apply_symm_apply]
     let δ : D.La ≃ₗ[𝓞 E] D.La := φ.trans ((γ₀.ofSubmodules _ _ hm).trans φ.symm)
     have hδ : ∀ x, e (δ x) = (γ : Matrix (Fin N) (Fin N) E) *ᵥ e x := fun x =>
       congrArg Subtype.val (φ.apply_symm_apply ((γ₀.ofSubmodules _ _ hm) (φ x)))
@@ -1146,8 +1144,7 @@ theorem permFam_fund {F : UnivFam E Ψ j j' n g Λ} (π : Ψ ≃ Ψ) {Γ : Subgr
     (h : F.IsFundSet Γ FF) : (permFam F π).IsFundSet Γ FF := by
   have e : ballDom (permFam F π).q = ballDom F.q := ballDom_permQ F.q π
   unfold UnivFam.IsFundSet
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem conjFam_fund {F : UnivFam E Ψ j j' n g Λ} {Γ : Subgroup (Λ ≃ₗ[𝓞 E] Λ)} {FF : Set (Fin n → ℂ)}
     (h : F.IsFundSet Γ FF) : (conjFam F).IsFundSet Γ (star ⁻¹' FF) := by
@@ -1283,8 +1280,7 @@ theorem stdZ_reach (A : Ψ → Matrix (Fin (j + j')) (Sg j j') ℂ) (hA : ∀ τ
   have hs : R'.HasSig F.σ j j' := by
     have := F.sig 0 h0
     unfold RiemLat.HasSig at this ⊢
-    rw [h2]
-    exact this
+    rwa [h2]
   obtain ⟨t, ht, he⟩ := (F.univ R' (h1.trans (F.form_eq 0)) hs).exists
   exact ⟨t, ht, _root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.isAdapted_of_eqvBy E Ψ j j' n g Λ F C R' (F.R t) A h5 (stdZ_eqvBy_symm he)⟩
 
@@ -1495,8 +1491,7 @@ theorem onePiece : OnePiece := by
     refine ⟨IsOpenImmersion.lift (W'.ι ≫ f) z ?_, IsOpenImmersion.lift_fac _ _ _⟩
     rintro _ ⟨q, rfl⟩
     have : q = IsLocalRing.closedPoint R := Subsingleton.elim (α := PrimeSpectrum R) _ _
-    rw [hrange, this]
-    exact hz
+    rwa [hrange, this]
   obtain ⟨π, hπ⟩ : ∃ π, π = f ≫ pullback.fst Y.s (spMap (algebraMap (𝓞 c.F) c.F)) := ⟨_, rfl⟩
   obtain ⟨s', hs'⟩ : ∃ s', s' = f ≫ pullback.snd Y.s (spMap (algebraMap (𝓞 c.F) c.F)) := ⟨_, rfl⟩
   haveI hemb : IsPreimmersion (W'.ι ≫ π) := by
@@ -1524,8 +1519,7 @@ theorem onePiece : OnePiece := by
       rw [← hrange]
       exact ⟨⟨centre x, GagaRat.centre_mem hx⟩, rfl⟩
     rw [← Y.ab_gen] at h1
-    rw [hπ]
-    exact h1
+    rwa [hπ]
   have hexF : ∀ x : Sp ℂ ⟶ X', ∃ r : ℂ, r ≠ 0 ∧ ∀ k, ∀ t ∈ Cusp.ballDom (B.F k).q, x ≫ π = B.pt k t →
       r = (((k : ℕ) + 1 : ℕ) : ℂ) := by
     intro x
@@ -1566,8 +1560,7 @@ theorem onePiece : OnePiece := by
       exact a3.map W'.ι.continuous
   have hgU : genPt (ξW ≫ W'.ι) ∈ W' ⊓ π ⁻¹ᵁ U := by
     refine ⟨hgW, ?_⟩
-    rw [← h2] at hU
-    exact hU
+    rwa [← h2] at hU
   obtain ⟨x, hx, hxU⟩ := exists_point κ s' _ hgU
   obtain ⟨k, t, ht, e⟩ := B.onto _ (hab x fun q hq => (hxU hq).1)
   have hk : B.κ k = κ := by

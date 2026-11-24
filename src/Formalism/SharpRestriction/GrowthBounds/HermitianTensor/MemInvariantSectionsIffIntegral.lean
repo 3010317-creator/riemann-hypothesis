@@ -82,13 +82,11 @@ private theorem mem_nablaLTw_lemma (m : ℕ) (lam : Fin (m + 1) → ℤ) (g : Ma
     obtain ⟨y, hy, rfl⟩ := Submodule.mem_map.mp hF
     have hy' : rowAct K g y ∈ intO O (m + 1) (nuOf lam) := hy
     show g.det ^ (lam (Fin.last m)) • rowAct K g (g.det ^ (-lam (Fin.last m)) • y) ∈ intO O (m + 1) (nuOf lam)
-    rw [map_smul, smul_smul, ← zpow_add₀ hd, add_neg_cancel, zpow_zero, one_smul]
-    exact hy'
+    rwa [map_smul, smul_smul, ← zpow_add₀ hd, add_neg_cancel, zpow_zero, one_smul]
   · intro hF
     refine Submodule.mem_map.mpr ⟨g.det ^ (lam (Fin.last m)) • F, ?_, ?_⟩
     · show rowAct K g (g.det ^ (lam (Fin.last m)) • F) ∈ intO O (m + 1) (nuOf lam)
-      rw [map_smul]
-      exact hF
+      rwa [map_smul]
     · show g.det ^ (-lam (Fin.last m)) • (g.det ^ (lam (Fin.last m)) • F) = F
       rw [smul_smul, ← zpow_add₀ hd, neg_add_cancel, zpow_zero, one_smul]
 
@@ -133,8 +131,7 @@ theorem mem_invariant_sections_iff_integral (hinj : Function.Injective (algebraM
     F ∈ H0 O m lam (colSpan O g) ↔ g.det ^ (lam (Fin.last m)) • rowAct K g F ∈ intO O (m + 1) (nuOf lam) := by
   simp only [H0, ite_eq_left hlam, Submodule.mem_iInf]
   constructor
-  · intro h
-    exact (mem_nablaLTw_lemma (O := O) m lam g hg F).mp (h g ⟨hg, rfl⟩)
+  · exact fun h => (mem_nablaLTw_lemma (O := O) m lam g hg F).mp (h g ⟨hg, rfl⟩)
   · intro h g' hg'
     exact (mem_nablaLTw_lemma (O := O) m lam g' hg'.1 F).mpr (step_lemma_3 hinj m lam g g' hg hg'.2 F h)
 
@@ -161,8 +158,7 @@ theorem rowAct_D {k : ℕ} (c : K) (f : MvPolynomial (Fin (k + 1) × Fin (k + 1)
     · simp [lb_D, Fin.val_eq_zero_iff]
     · intro b _ hb
       simp [lb_D, Matrix.diagonal_apply_ne _ (Ne.symm hb)]
-    · intro hn
-      exact absurd (Finset.mem_univ _) hn
+    · exact fun hn => absurd (Finset.mem_univ _) hn
   have hP : ∀ u : Fin (k + 1) × Fin (k + 1) →₀ ℕ,
       (∏ v : Fin (k + 1) × Fin (k + 1), (if v.1 = 0 then c⁻¹ else 1) ^ (u v)) = (c⁻¹) ^ rowDeg u 0 := by
     intro u
@@ -170,8 +166,7 @@ theorem rowAct_D {k : ℕ} (c : K) (f : MvPolynomial (Fin (k + 1) × Fin (k + 1)
     · simp [rowDeg, Finset.prod_pow_eq_pow_sum]
     · intro a _ ha
       simp [ha]
-    · intro hn
-      exact absurd (Finset.mem_univ _) hn
+    · exact fun hn => absurd (Finset.mem_univ _) hn
   have hmono : ∀ (u : Fin (k + 1) × Fin (k + 1) →₀ ℕ) (a : K),
       rowAct K (lb_D (k + 1) 1 c) (monomial u a) = (c⁻¹) ^ rowDeg u 0 • monomial u a := by
     intro u a
@@ -222,14 +217,12 @@ theorem highest_weight_first_entry (k : ℕ) (ν : Fin (k + 1) → ℕ) (hν : A
     · simp [rowW]
     · intro a _ ha
       simp [rowW, Ne.symm ha]
-    · intro hn
-      exact absurd (Finset.mem_univ _) hn
+    · exact fun hn => absurd (Finset.mem_univ _) hn
   rw [← key, h]
   simp [rowNu]
 
 theorem hw_int (k : ℕ) (ν : Fin k → ℕ) (hν : Antitone ν) : hw K (le_refl k) ν ∈ intO O k ν := by
   refine Submodule.mem_map.mpr ⟨hw O (le_refl k) ν, hwMem O k k (le_refl k) ν hν, ?_⟩
-  show map (algebraMap O K) (hw O (le_refl k) ν) = hw K (le_refl k) ν
   exact _root_.Formalism.UG.P.wlocal_map_hw (algebraMap O K) (le_refl k) ν
 
 private theorem eval_hw_lemma_5 {R : Type} [CommRing R] (k : ℕ) (ν : Fin k → ℕ) :

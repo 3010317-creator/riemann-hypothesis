@@ -115,8 +115,7 @@ theorem explicit_map_injective : ExplicitMapInjective := by
     have h3 := DFunLike.congr_fun hcomm f2
     simp only [RingHom.comp_apply, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, RingEquiv.toRingHom_eq_coe] at h2 h3
     rw [h, h3] at h2
-    have h4 := map_injective _ hφ h2
-    exact ((sumRingEquiv K (Fin (m + 1)) (Fin (m + 1))).injective h4).symm
+    exact ((sumRingEquiv K (Fin (m + 1)) (Fin (m + 1))).injective (map_injective _ hφ h2)).symm
   rw [hfac]
   exact (rename_injective e he).comp h1
 

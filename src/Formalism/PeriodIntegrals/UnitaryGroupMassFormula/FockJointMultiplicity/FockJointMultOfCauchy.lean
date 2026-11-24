@@ -103,8 +103,7 @@ theorem neg_iff_nN {n : ℕ} (f : Fin n → ℚ) (hseg : ∀ i i' : Fin n, i < i
       intro x hx
       rw [Finset.mem_filter] at hx
       rw [Finset.mem_Ioi]
-      by_contra hle
-      push Not at hle
+      by_contra! hle
       rcases hle.lt_or_eq with h | h
       · exact hn (hseg x i h hx.2)
       · rw [← h] at hn; exact hn hx.2
@@ -251,14 +250,12 @@ theorem blkHyp_pos (hM : MinHyp p q r s μ μ' P) {m n : ℕ} (iX : Fin m → Ix
     have hR := ker_of_hw hw1 (iX a) (iX b) (hmi a b hab)
     rw [leftOffDiagonalActionFormula p q r s _ _ hne, leftRootOperator_eq_signedPolarization _ _ hne (hs1 a b) P,
       gR_pos_block _ _ _ jX hj P (fun c hc => urow a c hc) (fun c hc => urow b c hc) (fun k => hlp a k)] at hR
-    rw [bRow_apply']
-    exact hR
+    rwa [bRow_apply']
   · have hne := ne_of_posC (hmj c d hcd)
     have hR := ker_of_hw hw2 (jX c) (jX d) (hmj c d hcd)
     rw [rightOffDiagonalActionFormula p q r s _ _ hne, rightRootOperator_eq_signedPolarization _ _ hne (hs2 c d) P,
       gR_pos_block _ _ _ iX hi P (fun a ha => ucol c a ha) (fun a ha => ucol d a ha) (fun i => hlp i c)] at hR
-    rw [bCol_apply']
-    exact hR
+    rwa [bCol_apply']
   · rw [hα i, rowv e he i, Nat.floor_natCast]
   · rw [hβ k, colv e he k, Nat.floor_natCast]
   · rw [hα i, Nat.floor_pos]
@@ -343,15 +340,13 @@ theorem blkHyp_neg (hM : MinHyp p q r s μ μ' P) {m n : ℕ} (iX : Fin m → Ix
     rw [leftOffDiagonalActionFormula p q r s _ _ hne, leftRootOperator_eq_signedPolarization _ _ hne (hs1 b a) P,
       gR_neg_block _ _ _ jX hj P (fun c hc => urow b c hc) (fun c hc => urow a c hc) (fun k => hlp b k),
       neg_eq_zero] at hR
-    rw [bRow_apply']
-    exact hR
+    rwa [bRow_apply']
   · have hne := ne_of_posC (hmj c d hcd)
     have hR := ker_of_hw hw2 (jX d) (jX c) (hmj c d hcd)
     rw [rightOffDiagonalActionFormula p q r s _ _ hne, rightRootOperator_eq_signedPolarization _ _ hne (hs2 d c) P,
       gR_neg_block _ _ _ iX hi P (fun a ha => ucol d a ha) (fun a ha => ucol c a ha) (fun i => hlp i d),
       neg_eq_zero] at hR
-    rw [bCol_apply']
-    exact hR
+    rwa [bCol_apply']
   · rw [hα i, rowv e he i, Nat.floor_natCast]
   · rw [hβ k, colv e he k, Nat.floor_natCast]
   · rw [hα i, Nat.floor_pos]
@@ -664,8 +659,7 @@ theorem leadT_der_rows (D : Derivation ℂ (Pol p q r s) (Pol p q r s)) (ρ : Fi
     rcases h (Fin.castLE hh.1 i) (by simp) with h0 | ⟨i₁, hi₁, hne, e, he⟩
     · left
       intro j
-      simp only [Matrix.submatrix_apply, varMat, Matrix.of_apply]
-      exact h0 _ (by simp)
+      simpa only [Matrix.submatrix_apply, varMat, Matrix.of_apply] using h0 _ (by simp)
     · right
       refine ⟨⟨i₁.val, hi₁⟩, ?_, e, ?_⟩
       · intro hc
@@ -691,8 +685,7 @@ theorem leadT_der_cols (D : Derivation ℂ (Pol p q r s) (Pol p q r s)) (ρ : Fi
     rcases h (Fin.castLE hh.2 j) (by simp) with h0 | ⟨j₁, hj₁, hne, e, he⟩
     · left
       intro i
-      simp only [Matrix.submatrix_apply, varMat, Matrix.of_apply]
-      exact h0 _ (by simp)
+      simpa only [Matrix.submatrix_apply, varMat, Matrix.of_apply] using h0 _ (by simp)
     · right
       refine ⟨⟨j₁.val, hj₁⟩, ?_, e, ?_⟩
       · intro hc
@@ -823,12 +816,10 @@ theorem vecRaise1 (a b c d : List ℤ) (x y : Ix p q) (hxy : posC x y) :
         omega
       · intro t
         refine leadingMinor_leftRootDerivation_neg _ _ hne _ _ t (fun _ => rfl) ?_
-        intro i₀ _ e
-        exact absurd e (by simp)
+        exact fun i₀ _ e => absurd e (by simp)
       · intro t
         refine leadingMinor_leftRootDerivation_pos _ _ hne _ _ t (fun _ => rfl) ?_
-        intro i₀ _ e
-        exact absurd e (by simp)
+        exact fun i₀ _ e => absurd e (by simp)
   | inr j =>
     cases y with
     | inl _ => exact hxy.elim
@@ -838,12 +829,10 @@ theorem vecRaise1 (a b c d : List ℤ) (x y : Ix p q) (hxy : posC x y) :
       apply hwVec_der
       · intro t
         refine leadingMinor_leftRootDerivation_neg _ _ hne _ _ t (fun _ => rfl) ?_
-        intro i₀ _ e
-        exact absurd e (by simp)
+        exact fun i₀ _ e => absurd e (by simp)
       · intro t
         refine leadingMinor_leftRootDerivation_pos _ _ hne _ _ t (fun _ => rfl) ?_
-        intro i₀ _ e
-        exact absurd e (by simp)
+        exact fun i₀ _ e => absurd e (by simp)
       · intro t
         refine leadingMinor_leftRootDerivation_pos _ _ hne _ _ t (fun _ => rfl) ?_
         intro i₀ hi₀ e
@@ -877,12 +866,10 @@ theorem vecRaise2 (a b c d : List ℤ) (x y : Ix r s) (hxy : posC x y) :
         exact ⟨k, by omega, rfl⟩
       · intro t
         refine leadingMinor_rightRootDerivation_pos _ _ hne _ _ t (fun _ => rfl) ?_
-        intro j₀ _ e
-        exact absurd e (by simp)
+        exact fun j₀ _ e => absurd e (by simp)
       · intro t
         refine leadingMinor_rightRootDerivation_neg _ _ hne _ _ t (fun _ => rfl) ?_
-        intro j₀ _ e
-        exact absurd e (by simp)
+        exact fun j₀ _ e => absurd e (by simp)
       · intro t
         refine leadingMinor_rightRootDerivation_neg _ _ hne _ _ t (fun _ => rfl) ?_
         intro j₀ hj₀ e
@@ -900,8 +887,7 @@ theorem vecRaise2 (a b c d : List ℤ) (x y : Ix r s) (hxy : posC x y) :
       apply hwVec_der
       · intro t
         refine leadingMinor_rightRootDerivation_neg _ _ hne _ _ t (fun _ => rfl) ?_
-        intro j₀ _ e
-        exact absurd e (by simp)
+        exact fun j₀ _ e => absurd e (by simp)
       · intro t
         refine leadingMinor_rightRootDerivation_neg _ _ hne _ _ t (fun _ => rfl) ?_
         intro j₀ hj₀ e
@@ -918,8 +904,7 @@ theorem vecRaise2 (a b c d : List ℤ) (x y : Ix r s) (hxy : posC x y) :
         exact ⟨l, by omega, rfl⟩
       · intro t
         refine leadingMinor_rightRootDerivation_pos _ _ hne _ _ t (fun _ => rfl) ?_
-        intro j₀ _ e
-        exact absurd e (by simp)
+        exact fun j₀ _ e => absurd e (by simp)
 
 end PI.FJMX
 end -- clump:auto

@@ -61,8 +61,7 @@ theorem FibreClosedComponent.proof : FibreClosedComponent.Statement := by
   let Q : PrimeSpectrum (MvPolynomial (Fin n) O ⧸ P) := ⟨W.map mk, hQprime⟩
   have hcomapQ : (W.map mk).comap mk = W := by
     rw [Ideal.comap_map_of_surjective _ hmk, ← RingHom.ker_eq_comap_bot, hker, sup_eq_left.mpr hPW]
-  have halg : algebraMap O (MvPolynomial (Fin n) O ⧸ P) = mk.comp C := by
-    exact RingHom.ext fun _ => rfl
+  have halg : algebraMap O (MvPolynomial (Fin n) O ⧸ P) = mk.comp C := RingHom.ext fun _ => rfl
 
   have hfin := Ideal.finite_minimalPrimes_of_isNoetherianRing (MvPolynomial (Fin n) O)
     (P ⊔ Ideal.map (C : O →+* MvPolynomial (Fin n) O) v.asIdeal)
@@ -97,8 +96,7 @@ theorem FibreClosedComponent.proof : FibreClosedComponent.Statement := by
           exact q.asIdeal.zero_mem
         · rw [Ideal.map_le_iff_le_comap, Ideal.comap_comap, ← halg, hq', halg, ← Ideal.comap_comap]
           show v.asIdeal ≤ ((W.map mk).comap mk).comap C
-          rw [hcomapQ, ← Ideal.map_le_iff_le_comap]
-          exact hvW
+          rwa [hcomapQ, ← Ideal.map_le_iff_le_comap]
       obtain ⟨W'', hW'', hW''le⟩ := Ideal.exists_minimalPrimes_le hle
       have hW''W : W'' = W := by
         by_contra hne
@@ -359,8 +357,7 @@ theorem ker_eq {k L : Type} [Field k] [CommRing L] (hL : IsField L) [Algebra k L
   have hcomp : ⇑(Ideal.kerLiftAlg (aeval x : MvPolynomial (Fin n) k →ₐ[k] L)) ∘ v =
       ((↑) : (u ∩ Set.range x : Set L) → L) := by
     funext z
-    simp only [Function.comp_apply, v, Ideal.kerLiftAlg_mk, aeval_X]
-    exact z.2.2.choose_spec
+    simpa only [Function.comp_apply, v, Ideal.kerLiftAlg_mk, aeval_X] using z.2.2.choose_spec
   have hv : AlgebraicIndependent k v :=
     AlgebraicIndependent.of_comp (Ideal.kerLiftAlg _) (by rw [hcomp]; exact hu1)
   have hcard1 : #(u ∩ Set.range x : Set L) ≤ m := htr ▸ hv.cardinalMk_le_trdeg

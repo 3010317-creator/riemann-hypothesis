@@ -20,8 +20,7 @@ theorem eq_smul_of_sigmaFinite (μ ν : Measure G) [SigmaFinite μ] [SigmaFinite
     [μ.IsMulLeftInvariant] [ν.IsMulLeftInvariant] (hμ : μ ≠ 0) (hν : ν ≠ 0) :
     ∃ c : ℝ≥0, c ≠ 0 ∧ μ = c • ν := by
   obtain ⟨n, hn⟩ : ∃ n, ν (spanningSets (μ + ν) n) ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     apply hν
     have : ν Set.univ = 0 := by
       rw [← iUnion_spanningSets (μ + ν)]
@@ -52,8 +51,7 @@ theorem eq_smul_of_sigmaFinite (μ ν : Measure G) [SigmaFinite μ] [SigmaFinite
     · exact hμ0 h
     · exact hνf h
     · exact ENNReal.div_ne_top hμf hn h
-  · rw [ENNReal.smul_def, ENNReal.coe_toNNReal (ENNReal.div_ne_top hμf hn)]
-    exact heq
+  · rwa [ENNReal.smul_def, ENNReal.coe_toNNReal (ENNReal.div_ne_top hμf hn)]
 
 end Grp
 
@@ -78,8 +76,7 @@ theorem measurableSet_Aset (hU : IsClosedSubgroup U) : MeasurableSet (Aset U) :=
 
 def toM (a : Aset U) : Mat k r := Matrix.of a.1
 
-theorem toM_inj {a b : Aset U} (h : toM a = toM b) : a = b := by
-  exact Subtype.ext (Matrix.of.injective h)
+theorem toM_inj {a b : Aset U} (h : toM a = toM b) : a = b := Subtype.ext (Matrix.of.injective h)
 
 variable [hU : Fact (IsClosedSubgroup U)]
 
@@ -104,7 +101,6 @@ theorem continuous_toM : Continuous (toM : Aset U → Mat k r) := by
 
 theorem continuous_mulA : Continuous fun p : Aset U × Aset U => p.1 * p.2 := by
   refine Continuous.subtype_mk ?_ _
-  show Continuous fun p : Aset U × Aset U => (toM p.1 * toM p.2 : Mat k r)
   exact (continuous_toM.comp continuous_fst).mul (continuous_toM.comp continuous_snd)
 
 theorem continuous_invA : Continuous fun a : Aset U => a⁻¹ := by
@@ -150,8 +146,7 @@ theorem isMulLeftInvariant_comap (μ : Measure (Mt k r)) (hc : μ (Aset U)ᶜ = 
   constructor
   intro g
   have hm : Measurable (fun x : Aset U => g * x) := by
-    refine Measurable.subtype_mk ?_
-    exact (continuous_lmulM (toM g)).measurable.comp measurable_subtype_coe
+    exact Measurable.subtype_mk ((continuous_lmulM (toM g)).measurable.comp measurable_subtype_coe)
   have hval : Subtype.val ∘ (fun x : Aset U => g * x) = lmulM (toM g) ∘ Subtype.val := rfl
   have hmap : ((μ.comap (Subtype.val : Aset U → Mt k r)).map (fun x : Aset U => g * x)).map Subtype.val
       = (μ.comap (Subtype.val : Aset U → Mt k r)).map Subtype.val := by

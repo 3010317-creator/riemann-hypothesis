@@ -138,8 +138,7 @@ theorem unifOp_irreducible (la : HeightOneSpectrum (𝓞 K)) : Irreducible (unif
     have v1 : la.intValuation (Data.unif la) = la.intValuation (Data.unif la) * la.intValuation (AddMonoidAlgebra.coeff s mm) := by
       have : la.intValuation (AddMonoidAlgebra.coeff s mm) = 1 := by
         apply le_antisymm (la.intValuation_le_one _)
-        rw [← not_lt, la.intValuation_lt_one_iff_mem]
-        exact hmm
+        rwa [← not_lt, la.intValuation_lt_one_iff_mem]
       rw [this, mul_one]
     have h4 : la.intValuation (Data.unif la) ≤ WithZero.exp (-((2 : ℕ) : ℤ)) := by
       rw [v1, ← map_mul]
@@ -159,8 +158,7 @@ theorem exp_unique (la : HeightOneSpectrum (𝓞 K)) {m m' : ℤ} {u u' : Op D N
       (algebraMap K (KTf K D N) ((Data.unif la : 𝓞 K) : K)) ^ m * OpToKT D N la u =
         (algebraMap K (KTf K D N) ((Data.unif la : 𝓞 K) : K)) ^ m' * OpToKT D N la u' → m ≤ m' := by
     intro m m' u u' hu hu' h
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     have hϖ0 : algebraMap K (KTf K D N) ((Data.unif la : 𝓞 K) : K) ≠ 0 := by
       rw [algK_unif]
       exact (map_ne_zero_iff _ (OpToKT_injective D N la)).mpr (unifOp_irreducible D N la).ne_zero

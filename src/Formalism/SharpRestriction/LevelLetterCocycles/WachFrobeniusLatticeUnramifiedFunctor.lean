@@ -169,8 +169,7 @@ theorem latD_free (I : BaseId W) (T : LocLat G Qp LL O) (hInj : I.Inj) (hFull : 
     have h2 := congrFun (congrFun hu j) i
     simp only [hsingle, Pi.single_eq_same, Pi.zero_apply] at h2
     apply hinj
-    rw [map_zero, ← hdk (g j) i]
-    exact h2
+    rwa [map_zero, ← hdk (g j) i]
   · apply le_antisymm
     · rw [Submodule.span_le]
       rintro _ ⟨j, rfl⟩
@@ -412,7 +411,6 @@ theorem inPM_inj {T : LocLat G Qp LL O} {M : ℕ} (hR : RingA W)
     (h2 : ∀ w : W.DD T, InPM T M w → ∃! z : W.DD T, InPM T M z ∧ W.φD T z - z = w)
     {a b : W.DD T} (ha : InPM T M a) (hb : InPM T M b) (he : W.φD T a - a = W.φD T b - b) : a = b := by
   have hq : Formalism.MainNotions.WachCoordinates.qP W ∈ W.AΔ := by
-    show W.π₀ + ((PD.p : ℕ) : LetA O n) ∈ W.AΔ
     exact W.AΔ.add_mem hR.1 (Subalgebra.natCast_mem _ _)
   have hφ : ∀ {c : W.DD T}, InPM T M c → InPM T M (W.φD T c) := by
     rintro c ⟨y, hy, rfl⟩
@@ -508,8 +506,7 @@ theorem wach_frobenius_lattice_unramified_functor [IsDomain O] (hA : Formalism.M
         apply Subtype.ext
         refine Prod.ext he ?_
         change (x₃ : W.DD T × W.DD T).2 = (x₁ : W.DD T × W.DD T).2 + (x₂ : W.DD T × W.DD T).2
-        rw [sub_sub, sub_eq_zero] at h0
-        exact h0
+        rwa [sub_sub, sub_eq_zero] at h0
       rw [e]
       exact (W.clK T).map_add x₁ x₂
   · obtain ⟨hR, c1, c2⟩ := wach_frobenius_divisibility_ringA hA h5 h9 hcomp T' hT' h M hM (fun τ _ _ => hJ' τ)
@@ -574,8 +571,7 @@ section F1Rows
 theorem caseA_of_unram' {l : ℕ} [Fact l.Prime] (P : LocPrime l) (H : LocHW l P) {K LL : FinExt l}
     (h : Good K 1 LL) (hK : K.1 ≤ MaximalUnramifiedExtension l) (hl : l ≠ 2) : Formalism.MainNotions.LiftingTheory.CaseA (H.W K 1 LL h) := by
   refine ⟨⟨(algebraMap ↥(K0 K) ↥K.1).injective, fun x => ⟨⟨x, x.2, hK x.2⟩, rfl⟩⟩, H.W_s K 1 LL h, ?_⟩
-  rw [P.PD_p]
-  exact hl
+  rwa [P.PD_p]
 
 theorem neZero_finrank_max_unramified {l : ℕ} [Fact l.Prime] (K : FinExt l) : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := by
   haveI : FiniteDimensional ℚ_[l] K.1 := K.2

@@ -287,8 +287,7 @@ theorem clsOf_mul (X A Ai B Bi : Matrix (Fin (m + 1)) (Fin (m + 1)) E)
         rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, h2, Matrix.one_mul, Matrix.mul_assoc, h3, Matrix.mul_one]
       rw [e]
       exact int_mul' Mp (int_mul' Mp hAi h) hBi
-    · intro h
-      exact int_mul' Mp (int_mul' Mp hA h) hB
+    · exact fun h => int_mul' Mp (int_mul' Mp hA h) hB
   have dA : IsUnit A.det := IsUnit.of_mul_eq_one Ai.det (by rw [← Matrix.det_mul, h1, Matrix.det_one])
   have dB : IsUnit B.det := IsUnit.of_mul_eq_one Bi.det (by rw [← Matrix.det_mul, h3, Matrix.det_one])
   have hdet : IsUnit (A * X * B).det ↔ IsUnit X.det := by
@@ -342,8 +341,7 @@ theorem clsOf_mul (X A Ai B Bi : Matrix (Fin (m + 1)) (Fin (m + 1)) E)
         rw [e, Matrix.one_apply]
       · intro k _ hk
         rw [hAl, ite_eq_right hk, mul_zero]
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     have hinv : (A * X * B)⁻¹ = Bi * X⁻¹ * Ai := by
       rw [Matrix.mul_inv_rev, Matrix.mul_inv_rev, Matrix.inv_eq_right_inv h3, Matrix.inv_eq_right_inv h1,
         Matrix.mul_assoc]
@@ -383,8 +381,7 @@ theorem clsOf_mul (X A Ai B Bi : Matrix (Fin (m + 1)) (Fin (m + 1)) E)
           · rw [hBl, ite_eq_left rfl, one_mul]
           · intro k _ hk
             rw [hBl, ite_eq_right hk, zero_mul]
-          · intro h
-            exact absurd (Finset.mem_univ _) h
+          · exact fun h => absurd (Finset.mem_univ _) h
         rw [hXm, hYm, hfx, hinv, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, hBv]
   · have hY : ¬ ((∀ a b, (A * X * B) a b ∈ Mp.R) ∧ IsUnit (A * X * B).det) :=
       fun h => hX ⟨hint.1 h.1, hdet.1 h.2⟩
@@ -443,8 +440,7 @@ theorem thL_inv (T T' : ℕ) (p : PlF D) (w : Point D.host.E (D.R.rS + 1)) (Y Y'
     have := Formalism.L2.SG.Pf.LocOrbSumPf.mul_of_mul (1 : MatP D p) (sgnP p) (cornerSh δ T T' p w)
       (Formalism.L2.SG.Pf.LocOrbSumPf.last_of_low 1 (fun a => Matrix.one_apply_eq a)
         (fun a b h => Matrix.one_apply_ne (ne_of_lt h))) (sgnP_last p)
-    rw [Matrix.one_mul] at this
-    exact this
+    rwa [Matrix.one_mul] at this
   have e : l * (Y' * sgnP p) * ρ + C = l * ((Y' + C) * sgnP p) * ρ := by
     rw [add_mul, mul_add, add_mul, hC2, hC1]
   rw [e]
@@ -490,8 +486,7 @@ theorem theta_of_class : ThOfCls M δ u u' := by
   rw [hrep]
   have hmem : hcls.choose ∈ kkOrb M p (CntLocal.ZZP (M := M) δ u u' p Z * sgnP p) := by
     have h := mem_kkOrb_self M p hcls.choose
-    rw [← hO] at h
-    exact h
+    rwa [← hO] at h
   exact thL_inv M δ _ _ p w _ _ hmem
 
 end ThInv
@@ -1274,12 +1269,10 @@ theorem detG (hA : ∀ p, Agree δ M p) (u u' : D.what₂.Word) (p : PlF D) (g :
     have hqq : (sg.q : (D.s.atP p).Fp) * (sg.q : (D.s.atP p).Fp)⁻¹ = 1 := mul_inv_cancel₀ hq
     have h1' : ((p1 sg.e).comp (D.s.atP p).ιE) Z.det = p1 sg.e ((D.s.atP p).ιE (zetaOf w)) * ((p1 sg.e).comp (D.s.atP p).ιE) (Z.submatrix Fin.castSucc Fin.castSucc).det := by
       have := congrArg ((p1 sg.e).comp (D.s.atP p).ιE) hζZ
-      rw [map_mul] at this
-      exact this
+      rwa [map_mul] at this
     have h2' : ((p2 sg.e).comp (D.s.atP p).ιE) Z.det = p2 sg.e ((D.s.atP p).ιE (zetaOf w)) * ((p2 sg.e).comp (D.s.atP p).ιE) (Z.submatrix Fin.castSucc Fin.castSucc).det := by
       have := congrArg ((p2 sg.e).comp (D.s.atP p).ιE) hζZ
-      rw [map_mul] at this
-      exact this
+      rwa [map_mul] at this
     rw [hcs]
     refine key _ ?_ ?_
     · rw [v1, map_natCast (p1 sg.e) ((hex.choose : Fin 3) : ℕ)]
