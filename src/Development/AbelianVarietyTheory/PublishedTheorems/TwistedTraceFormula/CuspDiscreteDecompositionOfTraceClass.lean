@@ -60,6 +60,12 @@ namespace GlobalTheory
 
 namespace Published
 
+/-- **Langlands trace class theorem for cuspidal spectrum**: for any compactly supported
+smooth test function `f` on an adelic reductive group `G(\mathbb{A})`, the cuspidal projection
+operator `R_{\mathrm{cusp}}(f)` is of trace class on the space of cusp forms `L^2_{\mathrm{cusp}}(G(F) \backslash G(\mathbb{A}))`.
+
+Proposed reference:
+[R. P. Langlands, *On the Functional Equations Satisfied by Eisenstein Series*][langlands1976trace]. -/
 def CuspTraceClass : Prop :=
   ∀ (D : D7) (V : HSp D) (μ : Measure (GA D V)) [μ.IsHaarMeasure] [μ.IsMulRightInvariant],
     ∀ f ∈ CcGA V, IsTraceClass (RcuspOp V μ f)
