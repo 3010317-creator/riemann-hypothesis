@@ -58,6 +58,12 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.Published
 
+/-- **Godement's compactness criterion**: the quotient `G(F) \backslash G(\mathbb{A})` of an
+algebraic group over a number field has finite volume and no cusps (is compact) if and only if
+every unipotent element in `G(F)` is trivial.
+
+Proposed reference:
+[R. Godement, *Domaines fondamentaux des groupes arithm\'etiques*][godement1962]. -/
 def CuspBounded : Prop :=
   ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)), IsInfFam θ →
     ∀ (V : HSp D) (φ : GA D V → ℂ), IsAutFun V φ →
