@@ -134,12 +134,6 @@ This is the Segal–Shale–Weil representation; see
 [G. B. Folland, *Harmonic analysis in phase space* (Chapter 4)][folland1989] and
 [A. Weil, *Sur certains groupes d'opérateurs unitaires*][weil1964]. It is proved in
 `GlobalTheory.metaplecticRepresentation_holds`. -/
-/-- **Weil's metaplectic theorem**: there exists a canonical unitary representation
-of the metaplectic group `\mathrm{Mp}(W)` on `L^2(X)` which intertwines the symplectic action
-with the Poisson summation formula for theta distributions.
-
-Proposed reference:
-[A. Weil, *Sur certains groupes d'op\'erateurs unitaires*][weil1964metaplectic]. -/
 def MetaplecticRepresentation : Prop :=
   ∀ (ι : Type) [Fintype ι] [DecidableEq ι],
     ∃ (G : Type) (_ : Group G) (_ : TopologicalSpace G) (_ : IsTopologicalGroup G)
