@@ -48,6 +48,14 @@ open NumberField IsDedekindDomain GlobalTheory.CMVal GlobalTheory.IndefiniteRowS
 
 namespace GlobalTheory.Published
 
+/-- **Hecke's Functional Equation for Grössencharacter $L$-Functions**.
+
+Let $E$ be a CM number field and let $\chi$ be a unitary Grössencharacter of $E$ with infinity type $n$.
+The completed $L$-function $\Lambda(s, \chi)$, defined with appropriate gamma factors and conductor powers,
+satisfies the functional equation $\Lambda(s, \chi) = \varepsilon(\chi) D^{1/2 - s} \Lambda(1 - s, \chi^{-1})$,
+where $|\varepsilon(\chi)| = 1$.
+
+Reference: [hecke1918]. -/
 def HeckeFunctionalEquationAbs : Prop :=
   ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (I : Type) [Fintype I] (φ : I → E →+* ℂ), IsCMType φ →
     ∀ (χ : HChar E) (n : I → ℤ) (a : HeightOneSpectrum (𝓞 E) →₀ ℕ) (Λ Λ' : ℂ → ℂ), IsUnitary χ →
