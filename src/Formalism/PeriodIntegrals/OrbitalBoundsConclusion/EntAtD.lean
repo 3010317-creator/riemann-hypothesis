@@ -1147,12 +1147,6 @@ theorem cc_zero (S : ℂ_[p]) (ut : H → ℂ_[p]) :
   have h2 := DFunLike.congr_fun h (vX false j)
   simp [eJ, vX] at h2
 
-private theorem monomial_pow_lemma {σ R : Type*} [CommSemiring R] (n : σ →₀ ℕ) (a : R) (k : ℕ) :
-    MvPowerSeries.monomial n a ^ k = MvPowerSeries.monomial (k • n) (a ^ k) := by
-  induction k with
-  | zero => simp [MvPowerSeries.monomial_zero_one]
-  | succ k ih => rw [pow_succ, ih, MvPowerSeries.monomial_mul_monomial, succ_nsmul, pow_succ]
-
 theorem coeff_pow (S : ℂ_[p]) (ut : H → ℂ_[p]) (κ : ZV H N0 N1 →₀ ℕ) (d : ℕ) :
     MvPowerSeries.coeff κ ((∑ j : JI H N0 N1, MvPowerSeries.monomial (eJ j) (-(S * ut j.1))) ^ d) =
       if (∀ t a b, κ ((false, t), a, b) = κ ((true, t), a, b)) ∧ ∑ j, κ (vX true j) = d then
@@ -1171,7 +1165,7 @@ theorem coeff_pow (S : ℂ_[p]) (ut : H → ℂ_[p]) (κ : ZV H N0 N1 →₀ ℕ
         MvPowerSeries.monomial (eK k)
           ((Nat.multinomial Finset.univ k : ℂ_[p]) * ∏ j, (-(S * ut j.1)) ^ k j) := by
     intro k
-    simp only [monomial_pow_lemma]
+    simp only [MvPowerSeries.monomial_pow]
     rw [prod_monomial', sum_eJ, hn]
 
   rw [Finset.sum_pow_eq_sum_piAntidiag, map_sum]
