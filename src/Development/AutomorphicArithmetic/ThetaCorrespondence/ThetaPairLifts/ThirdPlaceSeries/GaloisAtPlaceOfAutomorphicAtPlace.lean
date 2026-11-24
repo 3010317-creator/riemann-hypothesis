@@ -113,8 +113,6 @@ import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AbsNormPrimeIffI
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.FrameGal
@@ -1012,7 +1010,6 @@ section -- clump:auto
 
 section
 section
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.FrameGal
 section Side
