@@ -273,10 +273,18 @@ def runner_checks():
     return module
 
 
+def report_max_map_count():
+    """Run ci-runner.py's job-start report. Nothing here stops the job, including a failure to load that file."""
+    try:
+        runner_checks().report_max_map_count()
+    except Exception as error:
+        print(f"Skipped the vm.max_map_count report: {type(error).__name__}: {error}", flush=True)
+
+
 def prepare(args):
     # First, before any download: log this host's vm.max_map_count, and warn if it is low. A low value
     # otherwise shows up only hours into the build, as "failed to read file". The job goes on either way.
-    runner_checks().report_max_map_count()
+    report_max_map_count()
     trusted = Path(args.trusted).resolve()
     settings.require_baseline()
     state = preparation_state(args.state)
