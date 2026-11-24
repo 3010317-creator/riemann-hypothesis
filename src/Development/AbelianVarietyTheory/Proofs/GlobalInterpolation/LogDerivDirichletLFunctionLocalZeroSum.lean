@@ -128,40 +128,72 @@ theorem mellin_summatory (s : ℂ) :
   · intro t ht
     rw [summatory_eq_zero (not_le.1 ht.2), smul_zero]
 
-theorem differentiableAt_mellin_summatory (hC : ∀ n, ‖∑ k ∈ Finset.Icc 1 n, f k‖ ≤ C)
-    {s : ℂ} (hs : 0 < s.re) :
+/-- Power growth of the summatory function gives a Mellin transform to the right of its
+exponent. The exponent need not be nonnegative. -/
+theorem differentiableAt_mellin_summatory_of_rpow {a : ℝ}
+    (hC : ∀ t : ℝ, 1 ≤ t → ‖summatory f t‖ ≤ C * t ^ a)
+    {s : ℂ} (hs : a < s.re) :
     DifferentiableAt ℂ (fun z => mellin (summatory f) (-z)) s := by
+  have hmajorant : Continuous (fun t : ℝ => C * (max 1 t) ^ a) := by
+    refine continuous_const.mul ((continuous_const.max continuous_id).rpow_const ?_)
+    intro t
+    exact Or.inl (ne_of_gt (lt_of_lt_of_le zero_lt_one (le_max_left 1 t)))
   have h : DifferentiableAt ℂ (mellin (summatory f)) (-s) := by
-    refine mellin_differentiableAt_of_isBigO_rpow (a := 0) (b := -s.re - 1) ?_ ?_ ?_ ?_ ?_
+    refine mellin_differentiableAt_of_isBigO_rpow (a := -a) (b := -s.re - 1) ?_ ?_ ?_ ?_ ?_
     · refine LocallyIntegrable.locallyIntegrableOn ?_ _
-      refine (locallyIntegrable_const C).mono (measurable_summatory f).aestronglyMeasurable ?_
-      exact Eventually.of_forall fun t => (hC _).trans (Real.le_norm_self C)
-    · refine IsBigO.of_bound C (Eventually.of_forall fun t => ?_)
-      simpa [summatory] using hC ⌊t⌋₊
-    · simpa using hs
+      refine hmajorant.locallyIntegrable.mono (measurable_summatory f).aestronglyMeasurable ?_
+      refine Eventually.of_forall fun t => ?_
+      rcases lt_or_ge t 1 with ht | ht
+      · rw [summatory_eq_zero ht, norm_zero]
+        exact norm_nonneg _
+      · exact (hC t ht).trans (by rw [max_eq_right ht]; exact Real.le_norm_self _)
+    · refine IsBigO.of_bound C ?_
+      filter_upwards [eventually_ge_atTop (1 : ℝ)] with t ht
+      simpa [Real.norm_of_nonneg (Real.rpow_nonneg (by linarith : 0 ≤ t) a)] using hC t ht
+    · simp only [neg_re]
+      linarith
     · refine IsBigO.of_bound 0 ?_
       filter_upwards [mem_nhdsWithin_of_mem_nhds (Iio_mem_nhds (zero_lt_one' ℝ))] with t ht
       simp [summatory_eq_zero ht]
     · simp
   exact h.comp s differentiableAt_id.neg
 
-theorem norm_mellin_summatory_le (hC : ∀ n, ‖∑ k ∈ Finset.Icc 1 n, f k‖ ≤ C)
-    {s : ℂ} (hs : 0 < s.re) :
-    ‖mellin (summatory f) (-s)‖ ≤ C / s.re := by
+/-- The denominator is the distance from the growth exponent to the real part of `s`. -/
+theorem norm_mellin_summatory_le_of_rpow {a : ℝ}
+    (hC : ∀ t : ℝ, 1 ≤ t → ‖summatory f t‖ ≤ C * t ^ a)
+    {s : ℂ} (hs : a < s.re) :
+    ‖mellin (summatory f) (-s)‖ ≤ C / (s.re - a) := by
   rw [mellin_summatory]
-  have hlt : -(s.re + 1) < -1 := by linarith
-  refine (norm_integral_le_of_norm_le (g := fun t : ℝ => C * t ^ (-(s.re + 1)))
+  have hlt : a - (s.re + 1) < -1 := by linarith
+  refine (norm_integral_le_of_norm_le (g := fun t : ℝ => C * t ^ (a - (s.re + 1)))
     ((integrableOn_Ioi_rpow_of_lt hlt zero_lt_one).const_mul C) ?_).trans ?_
   · refine (ae_restrict_iff' measurableSet_Ioi).2 (Eventually.of_forall fun t ht => ?_)
     have ht0 : 0 < t := zero_lt_one.trans ht
     rw [norm_mul, norm_cpow_eq_rpow_re_of_pos ht0]
     simp only [neg_re, add_re, one_re]
-    exact mul_le_mul_of_nonneg_right (hC _) (Real.rpow_nonneg ht0.le _)
+    calc _ ≤ (C * t ^ a) * t ^ (-(s.re + 1)) :=
+          mul_le_mul_of_nonneg_right (hC t ht.le) (Real.rpow_nonneg ht0.le _)
+      _ = C * t ^ (a - (s.re + 1)) := by rw [sub_eq_add_neg, Real.rpow_add ht0]; ring
   · rw [integral_const_mul, integral_Ioi_rpow_of_lt hlt zero_lt_one, Real.one_rpow]
     refine le_of_eq ?_
-    have : -(s.re + 1) + 1 = -s.re := by ring
+    have : a - (s.re + 1) + 1 = -(s.re - a) := by ring
     rw [this]
     field_simp
+
+theorem differentiableAt_mellin_summatory (hC : ∀ n, ‖∑ k ∈ Finset.Icc 1 n, f k‖ ≤ C)
+    {s : ℂ} (hs : 0 < s.re) :
+    DifferentiableAt ℂ (fun z => mellin (summatory f) (-z)) s := by
+  apply differentiableAt_mellin_summatory_of_rpow (f := f) (C := C) (a := 0) (s := s) _ hs
+  intro t _
+  simpa [summatory] using hC ⌊t⌋₊
+
+theorem norm_mellin_summatory_le (hC : ∀ n, ‖∑ k ∈ Finset.Icc 1 n, f k‖ ≤ C)
+    {s : ℂ} (hs : 0 < s.re) :
+    ‖mellin (summatory f) (-s)‖ ≤ C / s.re := by
+  have h := norm_mellin_summatory_le_of_rpow (f := f) (C := C) (a := 0) (s := s) (by
+    intro t _
+    simpa [summatory] using hC ⌊t⌋₊) hs
+  simpa using h
 
 end General
 
