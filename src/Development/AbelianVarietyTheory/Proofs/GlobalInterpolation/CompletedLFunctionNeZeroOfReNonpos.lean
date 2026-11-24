@@ -248,6 +248,25 @@ private lemma zeros_eq_primitiveCharacter_of_re_neg {q : ℕ} [NeZero q]
     rw [analyticOrderAt_congr hev, analyticOrderAt_mul hLa hEa,
       analyticOrderAt_eq_zero.mpr (.inr hEn), add_zero]
 
+/-- In the open left half-plane, the zeros of any Dirichlet L-function are exactly
+those of its Gamma factor. Primitivity is not needed away from the boundary. -/
+theorem LFunction_eq_zero_iff_of_re_neg {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q)
+    {s : ℂ} (hs : s.re < 0) : LFunction χ s = 0 ↔ gammaFactor χ s = 0 := by
+  have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+  have hs0 : s ≠ 0 := by intro h; simp [h] at hs
+  have hparity : χ.primitiveCharacter.Even ↔ χ.Even := by
+    change χ.primitiveCharacter (-1) = 1 ↔ χ (-1) = 1
+    have h := χ.primitiveCharacter_apply_of_isCoprime (a := -1) ⟨-1, 0, by ring⟩
+    simp only [Int.cast_neg, Int.cast_one] at h
+    rw [h]
+  rw [(zeros_eq_primitiveCharacter_of_re_neg χ hs).1,
+    DirichletCharacter.LFunction_eq_zero_iff_of_re_nonpos χ.primitiveCharacter_isPrimitive hs.le]
+  have hg : gammaFactor χ.primitiveCharacter s = gammaFactor χ s := by
+    unfold gammaFactor
+    rw [hparity]
+  rw [hg]
+  simp [hs0]
+
 /-- Strictly to the left of the imaginary axis, all Dirichlet L-function zeros
 are simple and at negative integers, even for imprimitive characters. -/
 theorem LFunction_zero_of_re_neg {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q)
