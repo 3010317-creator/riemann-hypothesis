@@ -17,6 +17,49 @@ lake build --no-build
 The cached files were compiled elsewhere, so Lean does not re-check them. To check the proof
 itself, follow [Checking the proof yourself](README.md#checking-the-proof-yourself).
 
+## Pull requests
+
+Don't open a pull request until the change is finished and you have checked that it compiles.
+If you open one before then, open it as a draft (`gh pr create --draft`) and mark it ready for
+review once it is done. A draft stays out of the maintainers' review queue.
+
+To check that it compiles, bring your branch up to date with `main`, fetch the cache and run
+`lake build`. Lake rebuilds the files you changed and every file that imports them, so this also
+catches a lemma you removed that is still used somewhere else. It must finish without errors.
+
+Keep each pull request to one change. Small pull requests are quicker to review and easier to
+combine into a batch than one large one.
+
+Titles follow [Mathlib's convention](https://leanprover-community.github.io/contribute/commit.html):
+
+```
+<type>(<optional-scope>): <subject>
+```
+
+The type is one of `feat`, `fix`, `doc`, `style`, `refactor`, `test`, `chore`, `perf` and `ci`.
+The scope, if you give one, is the directory or file the change is in, without `src/`. Write the
+subject in the imperative, start it with a lowercase letter and don't end it with a full stop.
+For example:
+
+```
+refactor: reuse Mathlib lemmas in the primitive-character reflection proof
+perf(GroundTheory/ArithmeticGeometry): speed up the acyclic Čech comparison in RelativeSerre
+doc: document the Schrödinger and metaplectic representations over ℝ
+```
+
+Use this for the description:
+
+```markdown
+<What the pull request changes and why, in a few sentences. Name any declarations it
+removes, renames or moves.>
+
+---
+
+- [ ] depends on: #123
+```
+
+Drop the part from `---` on if the pull request depends on no other.
+
 ## Do not
 
 - change the Comparator challenge files: `src/Challenge.lean`, `comparator.json`,
@@ -26,4 +69,6 @@ itself, follow [Checking the proof yourself](README.md#checking-the-proof-yourse
 - add axioms or `sorry`. `src/Main.lean` may use only `propext`, `Quot.sound` and
   `Classical.choice`.
 - rewrite the proof along a substantially different path, or add files the proof does not need.
-- report the results of your own builds or Comparator runs in a pull request.
+- report the results of your own builds or Comparator runs in a pull request. Check that your
+  change compiles, but don't write that it builds on your machine; maintainers build pull
+  requests themselves.
