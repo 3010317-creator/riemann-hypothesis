@@ -116,7 +116,6 @@ structure IsAutOn (K : Subgroup (GAd σ J)) (φ : GAd σ J → ℂ) : Prop where
   growth : ∃ N : ℕ, ∀ l : List (ℝ → GAd σ J), (∀ γ ∈ l, IsRealLine σ J γ) →
     ∃ C : ℝ, ∀ g, ‖l.foldr lineDer φ g‖ ≤ C * (height σ J g : ℝ) ^ N
   kfin : FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k : K => fun g => φ (g * k)))
-  zfin : FiniteDimensional ℂ (Submodule.span ℂ {f | ∃ z, IsCentral σ J z ∧ f = dop z φ})
 
 def IsConstAlong (φ c : GAd σ J → ℂ) : Prop :=
   ∀ (μ : Measure (unip σ J X S)) (𝓕 : Set (unip σ J X S)), μ.IsHaarMeasure →
@@ -172,11 +171,6 @@ omit [NumberField E] in
 @[simp] theorem levi_empty : levi σ J X Y ∅ = ⊤ := by simp [levi]
 
 @[simp] theorem leviOne_empty : leviOne σ J X Y ∅ = ⊤ := by simp [leviOne]
-
-theorem isAutOn_empty {K : Subgroup (GAd σ J)} {φ : GAd σ J → ℂ} : IsAutOn σ J X Y ∅ K φ ↔ IsAut σ J K φ :=
-  ⟨fun h => ⟨⟨fun γ hγ => h.leftM γ hγ (by simp), h.level, h.cont, h.smooth, h.growth⟩, h.kfin, h.zfin⟩,
-    fun h => ⟨fun u hu g => by rw [unip_empty, Subgroup.mem_bot] at hu; rw [hu, one_mul], fun γ hγ _ => h.mod.left γ hγ,
-      h.mod.level, h.mod.cont, h.mod.smooth, h.mod.growth, h.kfin, h.zfin⟩⟩
 
 theorem isSqIntOn_empty {φ : GAd σ J → ℂ} : IsSqIntOn σ J X Y ∅ φ ↔ IsSqInt σ J φ := by
   let P : Subgroup (GAd σ J) → Prop := fun H =>
