@@ -135,7 +135,9 @@ theorem exists_decomp_of_mem_dpowSpan {ξ : AInf K p} (hξ : RingHom.ker θ = Id
     · refine ⟨0, zero_mem _, 0, Ring.inverse (n.factorial : 𝔸) *
         algebraMap (AInf K p) 𝔸 ξ ^ (n - m), by simp, ?_⟩
       rw [zero_add, show dpow n ξ = Ring.inverse (n.factorial : 𝔸) * algebraMap (AInf K p) 𝔸 ξ ^ n
-        from rfl, map_pow, ← mul_assoc, mul_comm (algebraMap (AInf K p) 𝔸 ξ ^ m),
+        from (dpow_eq_iff n ξ _).2 (by
+          rw [← mul_assoc, Ring.mul_inverse_cancel _ (isUnit_natCast (Nat.factorial_ne_zero n)), one_mul]),
+        map_pow, ← mul_assoc, mul_comm (algebraMap (AInf K p) 𝔸 ξ ^ m),
         mul_assoc, ← pow_add, Nat.add_sub_cancel' (not_lt.1 hn)]
   | zero => exact ⟨0, zero_mem _, 0, 0, by simp, by simp⟩
   | add x z _ _ hx hz =>
@@ -396,7 +398,8 @@ theorem span_p_le_comap_iotaZero (m : ℕ) :
 
 variable (K p) in
 def embedding₂ (m : ℕ) : ACris (K := K) (p := p) →+* acrisQ K p m :=
-  AdicCompletion.extendRingHom _ _ (iotaZero K p m) (span_p_le_comap_iotaZero m)
+  AdicCompletion.extendRingHom (Ideal.span {(p : ACrisZero K p)})
+    (Ideal.span {(p : acrisQ K p m)}) (iotaZero K p m) (span_p_le_comap_iotaZero m)
 
 variable (K p) in
 def iotaQ (m : ℕ) : ACris (K := K) (p := p) →+* 𝔸 ⧸ kerAway K p ^ m :=
@@ -404,7 +407,7 @@ def iotaQ (m : ℕ) : ACris (K := K) (p := p) →+* 𝔸 ⧸ kerAway K p ^ m :=
 
 theorem iotaQ_of (m : ℕ) (y : ACrisZero (K := K) (p := p)) :
     iotaQ K p m (_root_.AdicCompletion.of _ _ y) = Ideal.Quotient.mk (kerAway K p ^ m) (y : 𝔸) := by
-  rw [iotaQ, RingHom.comp_apply, embedding₂, AdicCompletion.extendRingHom_of]
+  erw [iotaQ, RingHom.comp_apply, embedding₂, AdicCompletion.extendRingHom_of]
   rfl
 
 def acrisQFactor {m n : ℕ} (hle : m ≤ n) : acrisQ K p n →+* acrisQ K p m :=
@@ -443,13 +446,12 @@ theorem iota_of (y : ACrisZero (K := K) (p := p)) :
     iota K p (_root_.AdicCompletion.of _ _ y) = toBDeRhamPlus (normInteger K) p (y : 𝔸) := by
   apply _root_.AdicCompletion.ext_evalₐ
   intro m
-  rw [evalₐ_iota, iotaQ_of]
+  erw [evalₐ_iota, iotaQ_of]
   exact (_root_.AdicCompletion.evalₐ_of _ m (y : 𝔸)).symm
 
 theorem iota_algebraMap (w : AInf K p) :
     iota K p (algebraMap (AInf K p) (ACris (K := K) (p := p)) w) = wittToBDeRhamPlus (normInteger K) p w := by
-  rw [AdicCompletion.algebraMap_apply, iota_of]
-  rfl
+  exact iota_of (algebraMap (AInf K p) (ACrisZero K p) w)
 
 end Iota
 

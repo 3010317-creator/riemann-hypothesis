@@ -12,47 +12,6 @@ noncomputable section
 
 namespace GroundTheory.PAdicHodge
 
-section ExtGeneric
-
-variable {A B : Type*} [CommRing A] [CommRing B]
-
-theorem AdicCompletion.map_mem_span_pow_of_evalₐ_eq_zero {a : A} {b : B}
-    (F : AdicCompletion (Ideal.span {a}) A →+* B)
-    (hF : F (algebraMap A _ a) ∈ Ideal.span {b}) (n : ℕ) {z : AdicCompletion (Ideal.span {a}) A}
-    (hz : AdicCompletion.evalₐ (Ideal.span {a}) n z = 0) :
-    F z ∈ Ideal.span {b} ^ n := by
-  have hz' : z ∈ (Ideal.span {a} ^ n).map (algebraMap A (AdicCompletion (Ideal.span {a}) A)) := by
-    rw [← ker_adicCompletion_evalₐ (Submodule.fg_span_singleton _) n, RingHom.mem_ker]
-    exact hz
-  rw [Ideal.span_singleton_pow, Ideal.map_span, Set.image_singleton, Ideal.mem_span_singleton]
-    at hz'
-  obtain ⟨c, rfl⟩ := hz'
-  rw [map_mul, map_pow, map_pow]
-  exact Ideal.mul_mem_right _ _ (Ideal.pow_mem_pow hF n)
-
-theorem AdicCompletion.ringHom_ext_span {a : A} {b : B} [IsHausdorff (Ideal.span {b}) B]
-    {F G : AdicCompletion (Ideal.span {a}) A →+* B}
-    (hF : F (algebraMap A _ a) ∈ Ideal.span {b}) (hG : G (algebraMap A _ a) ∈ Ideal.span {b})
-    (h : ∀ y : A, F (algebraMap A _ y) = G (algebraMap A _ y)) : F = G := by
-  ext x
-  rw [IsHausdorff.eq_iff_smodEq (I := Ideal.span {b})]
-  intro n
-  rw [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top]
-  obtain ⟨y, hy⟩ := Ideal.Quotient.mk_surjective (AdicCompletion.evalₐ (Ideal.span {a}) n x)
-  have h1 : AdicCompletion.evalₐ (Ideal.span {a}) n
-      (algebraMap A (AdicCompletion (Ideal.span {a}) A) y) = Ideal.Quotient.mk _ y := by
-    rw [AdicCompletion.algebraMap_apply, Algebra.algebraMap_self, RingHom.id_apply,
-      AdicCompletion.evalₐ_of]
-  have hz : AdicCompletion.evalₐ (Ideal.span {a}) n
-      (x - algebraMap A (AdicCompletion (Ideal.span {a}) A) y) = 0 := by
-    rw [map_sub, h1, hy, sub_self]
-  have e : F x - G x = F (x - algebraMap A _ y) - G (x - algebraMap A _ y) := by
-    rw [map_sub, map_sub, h y]; ring
-  rw [e]
-  exact sub_mem (AdicCompletion.map_mem_span_pow_of_evalₐ_eq_zero F hF n hz)
-    (AdicCompletion.map_mem_span_pow_of_evalₐ_eq_zero G hG n hz)
-
-end ExtGeneric
 
 namespace ACris
 
@@ -64,12 +23,8 @@ variable {p : ℕ} [hp : Fact p.Prime] [IsPerfectoidField K p]
 theorem ringHom_ext {B : Type*} [CommRing B] [IsHausdorff (Ideal.span {(p : B)}) B]
     {F G : ACris (K := K) (p := p) →+* B}
     (h : ∀ y : ACrisZero (K := K) (p := p), F (AdicCompletion.of _ _ y) = G (AdicCompletion.of _ _ y)) :
-    F = G := by
-  refine AdicCompletion.ringHom_ext_span (b := (p : B)) ?_ ?_ fun y => ?_
-  · rw [map_natCast, map_natCast]; exact Ideal.mem_span_singleton_self _
-  · rw [map_natCast, map_natCast]; exact Ideal.mem_span_singleton_self _
-  · rw [AdicCompletion.algebraMap_apply, Algebra.algebraMap_self, RingHom.id_apply]
-    exact h y
+    F = G :=
+  Reformulated.AutPerF.Acris.hom_ext h
 
 theorem span_p_le_comap_endo (f : ACrisZero (K := K) (p := p) →+* ACrisZero (K := K) (p := p)) :
     Ideal.span {(p : ACrisZero (K := K) (p := p))} ≤ (Ideal.span {(p : ACris (K := K) (p := p))}).comap
@@ -86,13 +41,12 @@ theorem extendEndo_of (f : ACrisZero (K := K) (p := p) →+* ACrisZero (K := K) 
   AdicCompletion.extendRingHom_of _ _ _ _ y
 
 theorem extendEndo_id : extendEndo (RingHom.id (ACrisZero (K := K) (p := p))) = RingHom.id (ACris (K := K) (p := p)) :=
-  ringHom_ext fun y => by rw [extendEndo_of, RingHom.id_apply, RingHom.id_apply]
+  ringHom_ext fun y => by erw [extendEndo_of, RingHom.id_apply, RingHom.id_apply]
 
 theorem extendEndo_comp (f g : ACrisZero (K := K) (p := p) →+* ACrisZero (K := K) (p := p)) :
     (extendEndo f).comp (extendEndo g) = extendEndo (f.comp g) :=
   ringHom_ext fun y => by
-    rw [RingHom.comp_apply, extendEndo_of g y, extendEndo_of f (g y), extendEndo_of (f.comp g) y,
-      RingHom.comp_apply]
+    erw [RingHom.comp_apply, extendEndo_of g y, extendEndo_of f (g y)]
 
 theorem phi_eq_extendEndo : phi (K := K) (p := p) = extendEndo (phiZero (K := K) (p := p)) :=
   rfl
@@ -141,6 +95,7 @@ theorem gal_smul_mem_ker (σ : Gal(PadicAlgCl p/K)) {x : AInf ℂ_[p] p} (hx : x
 
 theorem galAway_mem (σ : Gal(PadicAlgCl p/K)) {y : 𝔸} (hy : y ∈ ACrisZero (K := ℂ_[p]) (p := p)) :
     galAway σ y ∈ ACrisZero (K := ℂ_[p]) (p := p) := by
+  rw [acrisZero_eq_adjoin_dpow] at hy
   induction hy using Algebra.adjoin_induction with
   | mem y hy =>
     obtain ⟨n, x, hx, rfl⟩ := hy
@@ -220,15 +175,15 @@ theorem gal_smul_def (σ : Gal(PadicAlgCl p/K)) (x : ACris (K := ℂ_[p]) (p := 
   rfl
 
 theorem gal_smul_of (σ : Gal(PadicAlgCl p/K)) (y : ACrisZero (K := ℂ_[p]) (p := p)) :
-    σ • AdicCompletion.of (Ideal.span {(p : ACrisZero (K := ℂ_[p]) (p := p))}) _ y =
-      AdicCompletion.of _ _ (σ • y) :=
+    σ • algebraMap (ACrisZero ℂ_[p] p) (ACris ℂ_[p] p) y =
+      algebraMap (ACrisZero ℂ_[p] p) (ACris ℂ_[p] p) (σ • y) :=
   galCris_of σ y
 
 theorem gal_smul_algebraMap (σ : Gal(PadicAlgCl p/K)) (x : AInf ℂ_[p] p) :
     σ • algebraMap (AInf ℂ_[p] p) (ACris (K := ℂ_[p]) (p := p)) x =
       algebraMap (AInf ℂ_[p] p) (ACris (K := ℂ_[p]) (p := p)) (σ • x) := by
-  rw [AdicCompletion.algebraMap_apply, AdicCompletion.algebraMap_apply, gal_smul_of,
-    gal_smul_algebraMap_zero]
+  simp only [IsScalarTower.algebraMap_apply (AInf ℂ_[p] p) (ACrisZero ℂ_[p] p) (ACris ℂ_[p] p),
+    gal_smul_of, gal_smul_algebraMap_zero]
 
 theorem phiAway_galAway (σ : Gal(PadicAlgCl p/K)) (y : 𝔸) :
     phiAway (K := ℂ_[p]) (p := p) (galAway σ y) = galAway σ (phiAway (K := ℂ_[p]) (p := p) y) := by
