@@ -26,8 +26,10 @@ name: batch queue
 #
 # The batches are the branches this workflow starts, named after the time they were started:
 # `batch/2026-11-23-041230`, with `-2` and so on after it if that name was taken. A `batch/...`
-# branch under another name, such as one a maintainer assembled by hand, is left alone: nothing
-# is merged into it, its pull request cannot be frozen and its text is not rewritten.
+# branch under another name, such as one a maintainer assembled by hand, is never added to and
+# its text is not rewritten. It can still be frozen, by a `freeze` comment or a dispatched build
+# like the others. The sync job then relabels `building` each pull request labelled
+# `batch queue` whose head commit is in that branch, and records them in a comment there.
 #
 # Only a comment whose whole text is one of these counts, letter case and surrounding blank space
 # aside: `batch` or `b`, `batch <commit>` or `b <commit>`, `-batch` or `-b`, `freeze`, and `aa`.
@@ -159,14 +161,13 @@ jobs:
           fi
 
           if [ "$text" = freeze ]; then
-            # Only a batch can be frozen: an open pull request from a branch of this repository
-            # that the sync job started, `batch/` and a time. The label is the record that it is
-            # frozen.
+            # Only a batch can be frozen: an open pull request from a `batch/...` branch of this
+            # repository, whether the sync job started it or a maintainer assembled it by hand.
+            # The label is the record that it is frozen.
             head=$(gh api "repos/$REPO/pulls/$PR" --jq '(.head.repo.full_name // "-") + " " + .head.ref + " " + .state')
             read -r home ref state <<< "$head"
-            own='^batch/[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6}(-[0-9]+)?$'
-            if [ "$home" != "$REPO" ] || [ "$state" != open ] || ! [[ "$ref" =~ $own ]]; then
-              echo "Pull request $PR is not an open batch pull request of this workflow: nothing to freeze."
+            if [ "$home" != "$REPO" ] || [ "$state" != open ] || [[ "$ref" != batch/?* ]]; then
+              echo "Pull request $PR is not an open batch pull request: nothing to freeze."
               exit 0
             fi
             gh api -X POST "repos/$REPO/issues/$PR/labels" -f "labels[]=$FROZEN" --silent
@@ -281,13 +282,12 @@ jobs:
             echo "No pull request number in the run name: nothing to do."
             exit 0
           fi
-          # Only a batch the sync job started: a branch of this repository named `batch/` and a
-          # time. A batch assembled by hand under another name is not frozen.
+          # Only a batch: a `batch/...` branch of this repository, whether the sync job started
+          # it or a maintainer assembled it by hand.
           head=$(gh api "repos/$REPO/pulls/$number" --jq '(.head.repo.full_name // "-") + " " + .head.ref + " " + .state')
           read -r home ref state <<< "$head"
-          own='^batch/[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6}(-[0-9]+)?$'
-          if [ "$home" != "$REPO" ] || [ "$state" != open ] || ! [[ "$ref" =~ $own ]]; then
-            echo "Pull request $number is not an open batch pull request of this workflow: nothing to freeze."
+          if [ "$home" != "$REPO" ] || [ "$state" != open ] || [[ "$ref" != batch/?* ]]; then
+            echo "Pull request $number is not an open batch pull request: nothing to freeze."
             exit 0
           fi
           gh api -X POST "repos/$REPO/issues/$number/labels" -f "labels[]=$FROZEN" --silent
