@@ -81,9 +81,6 @@ import Mathlib.RingTheory.TotallySplit
 import Mathlib.Tactic.Monotonicity.Lemmas
 import Mathlib.Topology.Sheaves.Presheaf
 
--- These parent projections have an undetermined `O` and make failing instance searches explode.
-attribute [-instance] UpperTheory.V.Pr.IsCD.toIsDomain UpperTheory.V.Pr.IsCD.toIsDiscreteValuationRing
-
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.StableField, Development.AutomorphicArithmetic.AutomorphicVarieties.CurveDVRSpecialization.StableOf, Development.AutomorphicArithmetic.AutomorphicVarieties.CurveDVRSpecialization.ThickAlg, Development.AutomorphicArithmetic.AutomorphicVarieties.CurveDVRSpecialization.ThickOf, Development.AutomorphicArithmetic.AutomorphicVarieties.CurveDVRSpecialization.SecondThirdPrimeConditionTransfer
 
