@@ -129,7 +129,7 @@ section -- clump:auto
 
 noncomputable section
 
-open NumberField IsDedekindDomain Filter Topology GlobalTheory.CuspRep GlobalTheory.JSW GlobalTheory.HeckeGal.Model
+open NumberField IsDedekindDomain Filter Topology GlobalTheory.CuspRep GlobalTheory.HeckeGal.Model
 
 theorem GlobalTheory.JSW.jacquetShalikaRigidity_holds : GlobalTheory.Published.JacquetShalikaRigidity :=
   UpperTheory.Gal.Int.Inp.js
