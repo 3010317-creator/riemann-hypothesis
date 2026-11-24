@@ -50,7 +50,7 @@ CLUMP_MARK = "-- This file was produced by scripts/clump.py from the modules lis
 PROTECTED_LIBS = {"Main", "Challenge"}
 
 IMPORT_RE = re.compile(
-    r"^((?:(?:public|private|meta)\s+)*)import\s+((?:all\s+)?)(\S+)(?:\s+--.*)?\s*$")
+    r"^((?:(?:public|private|meta)\s+)*)import\s+((?:all\s+)?)(\S+?)(?:\s*--.*)?\s*$")
 
 
 def lib_of(mod):
@@ -72,12 +72,16 @@ class Module:
         self.name = name
         self.path = path
         lines = text.split("\n")
+        # The header ends after the last `module` or `import` line and the blank lines that
+        # follow it. Comment lines between imports are passed over, so they stay in the header;
+        # comment lines after the last import belong to the body. A clump file has its marker
+        # and its first member's records there, and they must not be taken for header.
         h = 0
         imports = []  # (module, public: bool)
         exotic = False
         for i, l in enumerate(lines):
             s = l.strip()
-            if s == "" or s == "module" or s.startswith("--"):
+            if s == "" or s.startswith("--"):
                 continue
             m = IMPORT_RE.match(s)
             if m:
@@ -85,11 +89,11 @@ class Module:
                 if m.group(2) or "meta" in mods:
                     exotic = True
                 imports.append((m.group(3), "public" in mods))
-                continue
-            h = i
-            break
-        else:
-            h = len(lines)
+            elif s != "module":
+                break
+            h = i + 1
+        while h < len(lines) and lines[h].strip() == "":
+            h += 1
         self.header = "\n".join(lines[:h]) + ("\n" if h < len(lines) else "")
         self.body = "\n".join(lines[h:])
         self.imports = imports

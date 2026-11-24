@@ -5,9 +5,11 @@ import contextlib
 import io
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import clump
 
 
@@ -42,6 +44,40 @@ class ClumpTests(unittest.TestCase):
                 self.assertEqual(mod.exotic, exotic)
                 self.assertEqual(mod.header, header)
                 self.assertEqual(mod.body, body)
+
+    def test_comments_after_the_last_import_stay_in_the_body(self):
+        header = "module\n\n-- dependency\nimport Core\n\n"
+        body = "-- about the first declaration\ntheorem sample : True := trivial\n"
+        mod = clump.Module("Lemmata.A", "src/Lemmata/A.lean", header + body)
+        self.assertEqual((mod.header, mod.body), (header, body))
+
+    def test_comment_glued_to_an_import(self):
+        mod = clump.Module("Lemmata.A", "src/Lemmata/A.lean", "module\nimport A.B--note\n\ndef a := 1\n")
+        self.assertEqual(mod.imports, [("A.B", False)])
+
+    def test_clump_records_are_not_part_of_the_header(self):
+        """A caller's header is rebuilt from its imports by collapse_wrappers.py, so a clump
+        file's marker and first member records must be in its body, or `unclump` skips it."""
+        with tempfile.TemporaryDirectory() as root:
+            root = Path(root)
+            subprocess.run(["git", "init", "-q", str(root)], check=True)
+            texts = {
+                "L.A": "module\n\npublic import Mathlib.Init\n\ndef a := 1\n",
+                "L.R": "module\n\npublic import L.A\n\ndef r := a\n",
+            }
+            for name, text in texts.items():
+                path = root / "src" / (name.replace(".", "/") + ".lean")
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(text, encoding="utf-8")
+            subprocess.run(["git", "-C", str(root), "add", "-A"], check=True)
+            with contextlib.redirect_stdout(io.StringIO()):
+                clump.apply(str(root), {"L.R": ["L.A", "L.R"]})
+            text = (root / "src/L/R.lean").read_text(encoding="utf-8")
+            mod = clump.Module("L.R", "src/L/R.lean", text)
+            self.assertEqual(mod.header, "module\n\npublic import Mathlib.Init\n\n")
+            self.assertTrue(mod.body.startswith(clump.CLUMP_MARK))
+            self.assertEqual(mod.body.count(clump.SEAM_BEGIN), 2)
+            self.assertEqual(mod.header + mod.body, text)
 
     def test_commented_import_all_still_prevents_clumping(self):
         texts = {
