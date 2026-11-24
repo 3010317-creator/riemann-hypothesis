@@ -120,8 +120,7 @@ theorem fock_jets_moved : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ : In
       rw [GlobalTheory.FunObj.period, GlobalTheory.AdTh.Fock.norm_embedding_hostFormConstant_eq, div_eq_mul_inv]
     have hprod : (k.prod fun v n => GlobalTheory.FunObj.period δ v.1 ^ n) =
         (δ * (((Real.sqrt (2 * Real.pi * Formalism.L2.Pj.xiR D) : ℝ) : ℂ)⁻¹)) ^ (k.sum fun _ n => n) := by
-      simp only [hper, Finsupp.prod, Finsupp.sum]
-      exact Finset.prod_pow_eq_pow_sum _ _ _
+      simpa only [hper, Finsupp.prod, Finsupp.sum] using Finset.prod_pow_eq_pow_sum _ _ _
     rw [hprod, mul_pow]
     ring
 
@@ -156,8 +155,7 @@ theorem intertwining_mem_ne_zero {D : D7} {δ t0 : ℂ} (hC : Formalism.MainNoti
   have hK2 : Formalism.MainNotions.StandardLatticesGL3.KLat D (Formalism.MainNotions.TaylorLogMetric.tor0 D D.host.ccK δ) (Formalism.MainNotions.TaylorLogMetric.La D (Formalism.MainNotions.TaylorLogMetric.tor0 D D.host.ccK δ) L L') :=
     Or.inr ⟨L, L', hL, hL', rfl⟩
   have hne : ∃ z, Θ z ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hΘ0 (funext h)
   have hS := Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.IO.semiChar_of_ne_zero _ hΘ hne
   have hI := Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.IO.Iop_mem_ThSp _ hS he0.1

@@ -137,8 +137,7 @@ theorem line_mp {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOrthogonal
       exact congrArg _ (Finset.sum_congr rfl fun k _ => by ring)
     have h2 : (pairA D.host.F 0 α) ⊗ₜ[D.host.F] (a * u p) ∈ GlobalTheory.SeeSaw.idV I v :=
       AddSubgroup.subset_closure ⟨α, hα, hαv, _, hI a ha _ (hu p), rfl⟩
-    rw [← e] at h2
-    exact h2
+    rwa [← e] at h2
   have h1 := hr 0 (Pi.single p 1)
   rw [← col_eq, Pi.single_eq_same] at h1
   simp only [one_mul] at h1
@@ -185,8 +184,7 @@ theorem embedding_line_mem_lattice_iff : ∀ {D : D7} {A B : HSp D} {c : ℕ} {�
     have := h 1 rfl z hz
     rwa [one_mul] at this
   · intro a ha b hb; exact FractionalIdeal.mul_mem_mul ha hb
-  · intro C h h' z hz
-    exact FractionalIdeal.mul_induction_on hz h h'
+  · exact fun C h h' z hz => FractionalIdeal.mul_induction_on hz h h'
 
 end GlobalTheory.AscFin.UnitaryEmbeddingLine
 

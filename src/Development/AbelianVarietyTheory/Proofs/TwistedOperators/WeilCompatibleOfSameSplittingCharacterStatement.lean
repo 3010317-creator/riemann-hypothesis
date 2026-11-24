@@ -292,15 +292,13 @@ theorem avgForm_ne_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdCh
   obtain ⟨ℓ', hℓ', s, hs', hℓs⟩ : ∃ ℓ' : (WO V' W → ℂ) →ₗ[ℂ] ℂ, (∀ u, IsHalf (cA D e) u → ∀ f,
       IsThetaFunO ψ V' W f → ℓ' (heisO ψ V' W u f) = ℓ' f) ∧
       ∃ s, IsHalf e s ∧ ℓ' (heisO ψ V' W s (res V V' W C B μ 𝓨 f₁)) ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hres₁ (GlobalTheory.ThetaStalk.eq_zero_of_invariant_forms D ψ hψ V' W e he _ (hR.1 f₁ hf₁).2.1 h)
   have hf₂ : IsThetaFunO ψ V W (heisO ψ V W (midPart V V' W B s) f₁) := hth hf₁ _
   have h0 : ℓ' (res V V' W C B μ 𝓨 (heisO ψ V W (midPart V V' W B s) f₁)) ≠ 0 := by
     rw [(hR.1 f₁ hf₁).2.2.1 s]; exact hℓs
   refine ⟨ℓ', fun u hu f hf => hℓ' u hu f hf, ?_⟩
-  by_contra hall
-  push Not at hall
+  by_contra! hall
   obtain ⟨L, Kc, hL, hKc, hz, hloc⟩ := GlobalTheory.T.thetaRestriction_complement_translates_locallyConstant D ψ hψ V V' W r C B hs μ 𝓨 hμ K hKC hKB e he _ hf₂
   obtain ⟨L', hL', hL'L, hsep⟩ := GlobalTheory.T.exists_open_subgroup_half_characters_separate D ψ hψ W r e he L hL
   have hφ := _root_.GlobalTheory.fourier_uniqueness_of_openSubgroup (haarHalf (cA D e) W.rank r)
@@ -534,8 +532,7 @@ theorem exists_decomp_one (V V' : HSp D) {r : ℕ} (C : Matrix (Fin V.rank) (Fin
   have hPiB : Pi * B = 0 := hs.orth
   have hBC : adj D B * G * C = 0 := by
     have h := congrArg (adj D) hs.orth
-    rw [adj_mul, adj_mul, adj_adj, adj_gram, adj_zero, ← Matrix.mul_assoc] at h
-    exact h
+    rwa [adj_mul, adj_mul, adj_adj, adj_gram, adj_zero, ← Matrix.mul_assoc] at h
   have hPmC : Pm * C = 0 := by
     simp only [Pm, Matrix.mul_assoc] at hBC ⊢
     rw [hBC, Matrix.mul_zero]

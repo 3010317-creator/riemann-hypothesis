@@ -226,8 +226,7 @@ theorem hasProd_dLoc (D : D7) (Sb : Finset (HeightOneSpectrum (𝓞 D.host.F))) 
   rw [hd]
   refine hinv.prod_fiberwise fun v => ?_
   have := hasProd_fintype (fun c : Finset.Ioc D.R.t D.R.nV => (1 - quadTerm D v.1 c.1)⁻¹)
-  rw [Finset.prod_coe_sort (Finset.Ioc D.R.t D.R.nV) (fun i => (1 - quadTerm D v.1 i)⁻¹)] at this
-  exact this
+  rwa [Finset.prod_coe_sort (Finset.Ioc D.R.t D.R.nV) (fun i => (1 - quadTerm D v.1 i)⁻¹)] at this
 
 theorem hasProd_LvTw_div_dLoc : ∀ (D : D7) (Sb : Finset (HeightOneSpectrum (𝓞 D.host.F))) (B : Fam D.host.E) (χ : (AE D)ˣ →* Circle), Converges (above D.host.E (Sb : Set (HeightOneSpectrum (𝓞 D.host.F)))) (twist B (val χ)⁻¹) ((1 + (D.R.t : ℂ)) / 2) → HasProd (fun v : {v : HeightOneSpectrum (𝓞 D.host.F) // v ∉ Sb} => LvTw B (val χ) v.1 ((1 + (D.R.t : ℂ)) / 2) / (dLoc D v.1 : ℂ)) (LSD D Sb B χ ((1 + (D.R.t : ℂ)) / 2) / (dOff D Sb : ℂ)) := by
   intro D Sb B χ h
@@ -237,8 +236,7 @@ theorem hasProd_LvTw_div_dLoc : ∀ (D : D7) (Sb : Finset (HeightOneSpectrum (�
   obtain ⟨h2, h3⟩ := hasProd_dLoc D Sb
   have h4 := (h2.map Complex.ofRealHom Complex.continuous_ofReal).inv₀
     (by simpa using h3 : Complex.ofRealHom (dOff D Sb) ≠ 0)
-  have h5 := h1.mul h4
-  simpa [div_eq_mul_inv, Function.comp_def] using h5
+  simpa [div_eq_mul_inv, Function.comp_def] using h1.mul h4
 
 end GlobalTheory.FinZeta
 
@@ -360,8 +358,7 @@ theorem stepMap_mem (T : Finset ι) (v : ι) (x : offSet p K J H T × (L v ⧸ K
     stepMap e p K J H he T v x ∈ offSet p K J H (insert v T) := by
   refine (mem_offSet_mk hJH hJ _ _).2 fun u hu => ?_
   rw [Finset.mem_insert, not_or] at hu
-  simp only [map_mul, p_shift_ne hpe' hu.1, hpe' u v hu.1, mul_one]
-  exact x.1.2 u hu.2
+  simpa only [map_mul, p_shift_ne hpe' hu.1, hpe' u v hu.1, mul_one] using x.1.2 u hu.2
 
 theorem stepMap_injective (T : Finset ι) (v : ι) (hv : v ∉ T) :
     Function.Injective (stepMap e p K J H he T v) := by
@@ -482,8 +479,7 @@ theorem hasSum_base {E : Type} [AddCommMonoid E] [TopologicalSpace E] (f : G →
     (f := ({((1 : H) : H ⧸ J.subgroupOf H)} : Set (H ⧸ J.subgroupOf H)).indicator
       fun y => f ((y.out : H) : G))
     ((1 : H) : H ⧸ J.subgroupOf H) (fun b hb => Set.indicator_of_notMem (Set.mem_singleton_iff.not.2 hb) _)
-  rw [Set.indicator_of_mem (Set.mem_singleton _), inv_out hJH f hf] at this
-  exact this
+  rwa [Set.indicator_of_mem (Set.mem_singleton _), inv_out hJH f hf] at this
 
 include hpe hpe' he
 
@@ -608,8 +604,7 @@ theorem hasSum_cosets_smaller_level_relIndex_mul : ∀ {G : Type} [Group G] (K J
   have hfmk : ∀ g : Γ, f (mk g) = Ψ (g : G) := by
     intro g
     obtain ⟨j, hj⟩ := QuotientGroup.mk_out_eq_mul (J.subgroupOf Γ) g
-    simp only [hf, hj, Subgroup.coe_mul]
-    exact hinv _ g.2 _ (Subgroup.mem_subgroupOf.mp j.2)
+    simpa only [hf, hj, Subgroup.coe_mul] using hinv _ g.2 _ (Subgroup.mem_subgroupOf.mp j.2)
 
   let ι : H ⧸ J.subgroupOf H → Γ ⧸ J.subgroupOf Γ := fun y => mk (Subgroup.inclusion hHΓ y.out)
   have hιmk : ∀ a : H, ι (mk a) = mk (Subgroup.inclusion hHΓ a) := by
@@ -617,8 +612,7 @@ theorem hasSum_cosets_smaller_level_relIndex_mul : ∀ {G : Type} [Group G] (K J
     obtain ⟨j, hj⟩ := QuotientGroup.mk_out_eq_mul (J.subgroupOf H) a
     show (mk (Subgroup.inclusion hHΓ (mk a : H ⧸ J.subgroupOf H).out) : Γ ⧸ J.subgroupOf Γ) = _
     rw [hj, QuotientGroup.eq]
-    simp [Subgroup.mem_subgroupOf]
-    exact Subgroup.mem_subgroupOf.mp j.2
+    simpa [Subgroup.mem_subgroupOf] using Subgroup.mem_subgroupOf.mp j.2
   have hιinj : Function.Injective ι := by
     intro x y hxy
     induction x using QuotientGroup.induction_on with | H a => ?_
@@ -809,15 +803,13 @@ theorem conj_LvTw_div_dLoc : ∀ (D : D7) (B : Fam D.host.E) (m : HeightOneSpect
       ((B w).map fun b : ℂˣ => (1 - (b : ℂ)⁻¹ * μ * X)⁻¹).prod := by
     rw [map_multiset_prod, Multiset.map_map]
     have := prod_map_conj_eq (B w) hstar (fun z => (1 - z * μ * X)⁻¹)
-    simp only [Function.comp_def, map_inv₀, map_sub, map_one, map_mul, hμc', hX]
-    exact this
+    simpa only [Function.comp_def, map_inv₀, map_sub, map_one, map_mul, hμc', hX] using this
   have hc2 : starRingEnd ℂ ((B w).map fun b : ℂˣ => (1 - (b : ℂ)⁻¹ * μ * X)⁻¹).prod =
       ((B w).map fun b : ℂˣ => (1 - (b : ℂ) * μ⁻¹ * X)⁻¹).prod := by
     rw [map_multiset_prod, Multiset.map_map]
     have := prod_map_conj_eq (B w) hstar (fun z => (1 - z⁻¹ * μ⁻¹ * X)⁻¹)
     simp only [inv_inv] at this
-    simp only [Function.comp_def, map_inv₀, map_sub, map_one, map_mul, hμc, hX]
-    exact this
+    simpa only [Function.comp_def, map_inv₀, map_sub, map_one, map_mul, hμc, hX] using this
   have hstarμ : ((star (m w) : ℂˣ) : ℂ) = μ⁻¹ := by rw [Units.coe_star, ← hμc]; rfl
   have hr1 : eulerFac ((B w).map (star (m w) * ·)) X = ((B w).map fun b : ℂˣ => (1 - (b : ℂ) * μ⁻¹ * X)⁻¹).prod := by
     rw [eulerFac_eq_prod, Multiset.map_map]
@@ -1071,8 +1063,7 @@ theorem hasSum_localZeta : GlobalTheory.Published.UnramifiedDoublingGL → ∀ (
       have := (hB w' h').2 β⁻¹ (hB' ▸ Multiset.mem_map_of_mem _ hβ)
       have e2 : (qV D.host.E w : ℝ) = ((Ideal.absNorm w'.asIdeal : ℕ) : ℝ) := by
         rw [hN', ← hN]; rfl
-      rw [e2]
-      exact this
+      rwa [e2]
     have hsum := GlobalTheory.T.unramified_zeta_sum_GL_cosets hG D.host.E w V.rank D.R.t hrt (star (val χ w)) _ hnz hk X
       (ρ.comp e.symm.toMonoidHom) x (B w) hsat hbd ℓ ⟨C, fun g => hC _⟩
     rw [_root_.GlobalTheory.LocZetaSplit.conj_LvTw_div_dLoc D B (val χ) v w w' hne hall hN hN' hB' hs hm (norm_val χ w) ((_root_.GlobalTheory.QuadSignLocal.quadSign_split_inert D v).1 w w' hne hall),
@@ -1218,8 +1209,7 @@ theorem mem_levG_datWp (P : LevelP C.Pg D.R.r ℂ) (κ : GA D (Wc D i)) :
       finE (Wc D i) κ ∈ parLev D.sp.cm (Wc D i).gram (C.βW i) (C.datWp i C.triv) ∧
       rTup (C.βW i) (C.datWp i C.triv) (finE (Wc D i) κ) ∈ P.H := by
   rw [levG, Formalism.IndefR.Lev.mem_levA]
-  refine and_congr_right fun _ => ?_
-  exact Iff.rfl
+  exact and_congr_right fun _ => Iff.rfl
 
 def blkHom (P : LevelP C.Pg D.R.r ℂ) : levG (Wc D i) (C.βW i) (C.datWp i P) →* G0 C.Pg D.R.r where
   toFun κ := rTup (C.βW i) (C.datWp i C.triv) (finE (Wc D i) κ.1)
@@ -1239,8 +1229,7 @@ theorem ker_blkHom (P : LevelP C.Pg D.R.r ℂ) :
   rw [MonoidHom.mem_ker, Subgroup.mem_subgroupOf, mem_levG_datWp C i C.triv]
   obtain ⟨hG, hpar, -⟩ := (mem_levG_datWp C i P κ.1).1 κ.2
   constructor
-  · intro h1
-    exact ⟨hG, hpar, Subgroup.mem_bot.2 h1⟩
+  · exact fun h1 => ⟨hG, hpar, Subgroup.mem_bot.2 h1⟩
   · rintro ⟨-, -, hb⟩
     exact Subgroup.mem_bot.1 hb
 
@@ -1258,8 +1247,7 @@ theorem range_blkHom {μ0 : T0} (hC : C.Is μ0) (P : LevelP C.Pg D.R.r ℂ) : (b
       (Finset.disjoint_empty_right _) g
     have hmem : κ ∈ levG (Wc D i) (C.βW i) (C.datWp i P) := by
       refine (mem_levG_datWp C i P κ).2 ⟨hG, hpar, ?_⟩
-      rw [hred]
-      exact hg
+      rwa [hred]
     exact ⟨⟨κ, hmem⟩, hred⟩
 
 theorem levidx : ∀ (D : D7) (T0 : Type) (C : LevCh D T0) (μ0 : T0), C.Is μ0 → ∀ (Z : Finset (Pl D.host.E)) (e : AE D), IsIdemSum e Z → C.Pg ⊆ Z → ∀ (i : Fin D.R.m) (P : LevelP C.Pg D.R.r ℂ), levG (Wc D i) (C.βW i) (C.datWp i C.triv) ≤ levG (Wc D i) (C.βW i) (C.datWp i P) ∧ (levG (Wc D i) (C.βW i) (C.datWp i C.triv)).relIndex (levG (Wc D i) (C.βW i) (C.datWp i P)) = Nat.card P.H ∧ Nat.card P.H ≠ 0 := by
@@ -1578,8 +1566,7 @@ theorem finiteZetaL : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Pub
   obtain ⟨x, hx, hx0⟩ := (Submodule.ne_bot_iff _).1 hne
   have hU0 : (R.HW i σ).e x ≠ 0 := fun h => hx0 ((hC.models.HW i σ).1 (h.trans (map_zero _).symm))
   obtain ⟨v₀, hv₀⟩ : ∃ v₀, (R.HW i σ).e x v₀ ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hU0 (MultilinearMap.ext h)
   obtain ⟨m1, m2⟩ := mult_values hP hC.models.inf hx.1 v₀
   obtain ⟨B, hB, hb⟩ := GlobalTheory.T.exists_satake_parameters_bounded_eigenfunction D (Wc D i) _ _ (finS R t) hs _ m1 hv₀ m2 ev (part_eigen hx v₀)

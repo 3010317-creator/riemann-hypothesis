@@ -403,8 +403,7 @@ theorem bargmann_repr : ∀ (ι : Type) [Fintype ι] (a b : ℕ) (c : ι → ℝ
       rw [← hcm]
       simp only [F]
       ring
-    rw [e, mul_assoc]
-    exact this
+    rwa [e, mul_assoc]
   have hnorm : ∀ m z, ‖F m z‖ = (m.prod fun k n => (‖(c k.1 : ℂ) * z₀ k.1 k.2.1 k.2.2‖ * ‖z k.1 k.2.1 k.2.2‖) ^ n / (n.factorial : ℝ)) * (Real.exp (-gq c z) * ‖G z‖) := by
     intro m z
     have e1 : F m z = (coef m * conjMono m z) * ((Real.exp (-gq c z) : ℂ) * G z) := by simp only [F]; ring
@@ -415,8 +414,7 @@ theorem bargmann_repr : ∀ (ι : Type) [Fintype ι] (a b : ℕ) (c : ι → ℝ
     rw [norm_div, norm_pow, norm_mul, Complex.norm_natCast, RCLike.norm_conj]
   have hnsum : ∀ z, HasSum (fun m => ‖F m z‖) (Real.exp (∑ k : DVar ι a b, ‖(c k.1 : ℂ) * z₀ k.1 k.2.1 k.2.2‖ * ‖z k.1 k.2.1 k.2.2‖) * (Real.exp (-gq c z) * ‖G z‖)) := by
     intro z
-    simp only [hnorm]
-    exact (expand_real (DVar ι a b) _).mul_right _
+    simpa only [hnorm] using (expand_real (DVar ι a b) _).mul_right _
   have hGc : Continuous G := hG.continuous
   have hFc : ∀ m, Continuous (F m) := by
     intro m
@@ -543,8 +541,7 @@ theorem omF_eq {S T : HSp D} (A : GlobalTheory.ChainFr.Fr S) (B : GlobalTheory.C
 
 theorem cplxO_smulC' {m n : ℕ} (s : Matrix (Fin n) (Fin n) ℂ) (t : Matrix (Fin m) (Fin m) ℂ) (c : ℂ)
     (x : Matrix (Fin m) (Fin n) ℂ) : cplxO s t (c • x) = c • cplxO s t x := by
-  simp only [cplxO, Matrix.mul_smul, Matrix.smul_mul]
-  exact smul_comm _ _ _
+  simpa only [cplxO, Matrix.mul_smul, Matrix.smul_mul] using smul_comm _ _ _
 
 theorem cplxO_sum' {m n p q : ℕ} (s : Matrix (Fin n) (Fin n) ℂ) (t : Matrix (Fin m) (Fin m) ℂ)
     (x : Fin p → Fin q → Matrix (Fin m) (Fin n) ℂ) :
@@ -610,8 +607,7 @@ theorem omF_I_I {S T : HSp D} (A : GlobalTheory.ChainFr.Fr S) (B : GlobalTheory.
   rw [omF_I, smul_smul, I_mul_I, neg_one_smul, omF_eq, omF_eq]
   have : fmR A B (-e) = -fmR A B e := by
     have h := fmR_smul A B (-1) e
-    rw [neg_one_smul, neg_one_smul] at h
-    exact h
+    rwa [neg_one_smul, neg_one_smul] at h
   rw [this, map_neg, neg_neg]
 
 variable {ι : Type} [Fintype ι] {a b : ℕ}

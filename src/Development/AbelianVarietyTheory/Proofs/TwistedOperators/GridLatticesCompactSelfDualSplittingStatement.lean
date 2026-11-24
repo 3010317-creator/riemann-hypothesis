@@ -358,8 +358,7 @@ theorem isSelfDualC_comap {Λ : Submodule (𝓞 D.host.E) (Fin S.rank → D.host
     ext y
     rw [hmem, Submodule.mem_map]
     constructor
-    · intro hy
-      exact ⟨_, hy, hq y⟩
+    · exact fun hy => ⟨_, hy, hq y⟩
     · rintro ⟨x, hx, rfl⟩
       exact hP x hx
   refine ⟨?_, fun y => ?_⟩
@@ -389,8 +388,7 @@ theorem mulVec_col_eq_zero {n k c r : ℕ} {q : Matrix (Fin k) (Fin n) D.host.E}
   simp only [Matrix.mul_apply, colsOf, Matrix.zero_apply] at h1
   have h2 : s p * (q *ᵥ (fun i => a i (f p))) i = 0 := by
     rw [← h1]
-    simp only [mulVec, dotProduct, Finset.mul_sum]
-    exact Finset.sum_congr rfl fun k _ => by ring
+    simpa only [mulVec, dotProduct, Finset.mul_sum] using Finset.sum_congr rfl fun k _ => by ring
   exact (mul_eq_zero.mp h2).resolve_left hs
 
 theorem wittCoreProjection_kills_offMiddle_auxiliaryVectors {A : HSp D} {c : ℕ} (a : HermitianOrthogonalExtensionData A S c (-1)) (h : IsAuxiliaryVectorWittDec a d) (hc : c = 2 * ρ + 1) (p : Fin c) (hp : p.1 ≠ ρ) :
@@ -407,8 +405,7 @@ theorem wittCoreProjection_kills_offMiddle_auxiliaryVectors {A : HSp D} {c : ℕ
   rw [he'] at hqe'
   rcases lt_or_gt_of_ne hp with hlt | hgt
   · have := GlobalTheory.AscFin.CoreSelfDual.mulVec_col_eq_zero hqe (p := ⟨p.1, hlt⟩) (pow_ne_zero _ (neg_ne_zero.2 GlobalTheory.ChiGrid.cmHost_imaginaryGenerator_ne_zero))
-    rw [show p = Fin.castLE (by omega) (⟨p.1, hlt⟩ : Fin ρ) from Fin.ext rfl]
-    exact this
+    rwa [show p = Fin.castLE (by omega) (⟨p.1, hlt⟩ : Fin ρ) from Fin.ext rfl]
   · have hk : 2 * ρ - p.1 < ρ := by omega
     have hsk : s ⟨2 * ρ - p.1, hk⟩ ≠ 0 := by
       intro h0
@@ -570,8 +567,7 @@ theorem isSelfDualC_line : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts}
   have h1 := congrFun (congrFun G.sp.dec0.gram 0) 0
   have h2 : star (fun i => G.sp.dec0.a i 0) ⬝ᵥ (HSpace.gram (G.V (Node.core 0)) *ᵥ (fun i => G.sp.dec0.a i 0)) = 1 := by
     have h3 : antiDiagonalSignGramMatrix 1 (1 : D.host.E) 0 0 = 1 := by simp [antiDiagonalSignGramMatrix]
-    rw [h3, Matrix.mul_assoc] at h1
-    exact h1
+    rwa [h3, Matrix.mul_assoc] at h1
   rw [← hF.zB, star_mulVec, ← dotProduct_mulVec, mulVec_mulVec, mulVec_mulVec, F.oz.isoB] at h2
   rw [negSp_gram, neg_mulVec, dotProduct_neg]
   exact congrArg Neg.neg h2

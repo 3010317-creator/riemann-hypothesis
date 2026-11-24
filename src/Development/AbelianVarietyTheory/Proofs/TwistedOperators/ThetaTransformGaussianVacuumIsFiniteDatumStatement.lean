@@ -103,8 +103,7 @@ theorem actsD_eq_zero {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
   choose x hx using fun i => evI_surj (F := F) (y i)
   have h1 := hA _ hR x
   simp only [hconst] at h1
-  have h2 := h1.unique (hasDerivAt_const _ _)
-  simpa [tens, hx] using h2
+  simpa [tens, hx] using h1.unique (hasDerivAt_const _ _)
 
 end GlobalTheory.HeisDerivZero
 end -- clump:auto
@@ -159,7 +158,6 @@ theorem rInt_eq_one {κ : Type} (z : κ → AF F) (hz : ∀ i, (z i).2 = 0) : rI
   · intro i _ v
     show (z i).2 v ∈ v.adicCompletionIntegers F
     rw [hz i]
-    show (0 : FiniteAdeleRing (𝓞 F) F) v ∈ v.adicCompletionIntegers F
     exact zero_mem (v.adicCompletionIntegers F)
 
 theorem rest_rInt {κ : Type} [Fintype κ] (g : SInf F κ) :
@@ -170,8 +168,7 @@ theorem rest_rInt {κ : Type} [Fintype κ] (g : SInf F κ) :
     let c : AF F := ((0 : InfiniteAdeleRing F), (1 : FiniteAdeleRing (𝓞 F) F))
     have hc : evI F c = 0 := map_zero _
     have h3 : c * z i = 0 := congrFun (hz c hc) i
-    have h4 := congrArg Prod.snd h3
-    exact (one_mul _).symm.trans h4
+    exact (one_mul _).symm.trans (congrArg Prod.snd h3)
   unfold rInt
   congr 1
   funext i
@@ -390,8 +387,7 @@ theorem zero_off (θ : InfFam D) (hθ : IsInfFam θ) (ε : Bool) (S X : HSp D) {
           (Matrix.mul_nonsing_inv_cancel_right _ _ (det_ne ε S τ')).symm
       _ = 0 := by rw [h, Matrix.zero_mul]
   ext i j
-  have h4 := congrFun (congrFun h0 (e.symm j)) i
-  simpa using h4
+  simpa using congrFun (congrFun h0 (e.symm j)) i
 
 theorem submatrix_triple_mul_of_triangular {n d k : ℕ} (e : Fin k ≃ Fin d) (V : Matrix (Fin n) (Fin n) ℂ) (U : Matrix (Fin n) (Fin d) ℂ)
     (b : Matrix (Fin k) (Fin k) ℂ) :
@@ -419,13 +415,11 @@ theorem at_place (θ : InfFam D) (hθ : IsInfFam θ) (ε : Bool) (S X : HSp D) (
   have hdet : IsUnit G.det := det_ne ε S τ
   have h1 : ((cS.symm (lineAt θ τ z 1)).map φ)ᵀ.submatrix e id * G = z.map (starRingEnd ℂ) := by
     have h := read_line θ hθ ε S X e cS hcS τ τ φ hφ z
-    rw [ite_eq_left rfl] at h
-    exact h
+    rwa [ite_eq_left rfl] at h
   have h2 : ((cS.symm (lineAt θ τ (cplxO ((frSgn ε A).cart τ) (B.cart τ) z) 1)).map φ)ᵀ.submatrix e id * G =
       (cplxO ((frSgn ε A).cart τ) (B.cart τ) z).map (starRingEnd ℂ) := by
     have h := read_line θ hθ ε S X e cS hcS τ τ φ hφ (cplxO ((frSgn ε A).cart τ) (B.cart τ) z)
-    rw [ite_eq_left rfl] at h
-    exact h
+    rwa [ite_eq_left rfl] at h
   have hP : ∀ M N : Matrix (Fin S.rank) (Fin d) ℂ, Mᵀ.submatrix e id = Nᵀ.submatrix e id → M = N := by
     intro M N h; ext i j; have h5 := congrFun (congrFun h (e.symm j)) i; simpa using h5
   have hC : ∀ M N : Matrix (Fin X.rank) (Fin S.rank) ℂ, M * G = N * G → M = N := by
@@ -603,8 +597,7 @@ theorem actsD_zero_of_neg {F E : Type} [Field F] [NumberField F] [Field E] [Numb
     · have e1 := _root_.GlobalTheory.HeisDerivFormula.heisLine_deriv_eq M B.ψ hB.std g f u hu hf y
       have e2 := _root_.GlobalTheory.HeisDerivFormula.heisLine_deriv_eq M B.ψ hB.std g f' u' hu' hf' y
       have e3 : f' y = Complex.I * f y := by rw [hff]; rfl
-      rw [e1, e2] at e3
-      exact e3
+      rwa [e1, e2] at e3
     · have hform := M.co.form u u'
       have hev : evI F (GlobalTheory.WeilM.symp (cA σ) (-1) (incM F X.J) (incM F W.J) u u') = a₁ ⬝ᵥ b₂ - a₂ ⬝ᵥ b₁ := by
         let evH : AF F →+* mixedEmbedding.mixedSpace F :=
@@ -619,8 +612,7 @@ theorem actsD_zero_of_neg {F E : Type} [Field F] [NumberField F] [Field E] [Numb
       rw [hev, map_sub] at hneg
       have c1 : (ell b₂) a₁ = Algebra.trace ℝ (mixedEmbedding.mixedSpace F) (a₁ ⬝ᵥ b₂) := rfl
       have c2 : (ell b₁) a₂ = Algebra.trace ℝ (mixedEmbedding.mixedSpace F) (a₂ ⬝ᵥ b₁) := rfl
-      rw [c1, c2]
-      exact hneg
+      rwa [c1, c2]
   exact _root_.GlobalTheory.HeisDerivZero.actsD_eq_zero M B.ψ g h v hD (Or.inl hg0)
 
 end GlobalTheory.GaussCancel

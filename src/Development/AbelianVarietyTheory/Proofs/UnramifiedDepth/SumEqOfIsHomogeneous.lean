@@ -476,8 +476,7 @@ theorem _root_.GlobalTheory.newtonBound_pos_and_newtonStep : _root_.Formalism.L2
     nlinarith [mul_lt_mul_of_pos_left key hpos]
   · unfold _root_.Formalism.L2.FormalSeriesBounds.P7
     intro C _ v S a hS ha0 hpos Y0
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hadd : ∀ x y : C, 0 < v x → 0 < v y → 0 < v (x + y) := fun x y hx hy =>
       lt_of_lt_of_le (lt_min hx hy) (v.map_add x y)
     have hsub : ∀ x y : C, 0 < v x → 0 < v y → 0 < v (x - y) := fun x y hx hy => by
@@ -827,8 +826,7 @@ theorem form_add (φ ψ : (σ →₀ ℕ) → C) (P : MvPolynomial σ C) :
 
 theorem form_mul_left (c : C) (φ : (σ →₀ ℕ) → C) (P : MvPolynomial σ C) :
     form (fun A => c * φ A) P = c * form φ P := by
-  simp only [form_eq_sum, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun _ _ => by ring
+  simpa only [form_eq_sum, Finset.mul_sum] using Finset.sum_congr rfl fun _ _ => by ring
 
 theorem form_rename {τ : Type} (e : σ → τ) (φ : (τ →₀ ℕ) → C) (P : MvPolynomial σ C) :
     form φ (MvPolynomial.rename e P) = form (fun A => φ (A.mapDomain e)) P := by
@@ -1494,8 +1492,7 @@ theorem pair_self [CharZero C] (n x : ℕ) :
     ∑ A ∈ (cayDet n C ^ x).support, AddMonoidAlgebra.coeff (cayDet n C ^ x) A * (A.prod fun _ e => (e.factorial : C)) *
       AddMonoidAlgebra.coeff (cayDet n C ^ x) A = (capNat n x : C) := by
   obtain ⟨h1, h2, -, -⟩ := GlobalTheory.CayleyCapelli.main.2 C n x
-  rw [h2, GlobalTheory.CayleyCapelli.detL_eq, ← map_pow, jetAt0_rename _ Sum.inl_injective] at h1
-  exact h1
+  rwa [h2, GlobalTheory.CayleyCapelli.detL_eq, ← map_pow, jetAt0_rename _ Sum.inl_injective] at h1
 
 theorem hP_eq (l i n : ℕ) (h1 : MvPowerSeries (PVar n) C) :
     hP C l i n h1 = ((∑ q : Fin n × Fin n, MvPolynomial.C (-((l : C) ^ expE l i)⁻¹) *
@@ -1593,8 +1590,7 @@ theorem main : CoefficientExpansionLambda := by
     rw [eq_div_of_mul_eq (hcap _) h4]
     ring
   · have := _root_.GlobalTheory.DetPairingBound.main C v l hl hv i n0 s (Q s) hs hn (hQv s hs hn)
-    rw [pair_self] at this
-    exact this
+    rwa [pair_self] at this
 
 end GlobalTheory.OddBlock.BinomialValue
 
@@ -1717,8 +1713,7 @@ namespace GlobalTheory.OddBlock.BlockContent
 variable {C : Type} [Field C] (v : AddValuation C (WithTop ℝ))
 
 theorem val_coprime_le {l m : ℕ} (hv : v (l : C) = 1) (h : Nat.Coprime l m) : v (m : C) ≤ 0 := by
-  by_contra hm
-  push Not at hm
+  by_contra! hm
   have hb : (1 : ℤ) = l * Nat.gcdA l m + m * Nat.gcdB l m := by
     have := Nat.gcd_eq_gcd_ab l m
     rw [h] at this

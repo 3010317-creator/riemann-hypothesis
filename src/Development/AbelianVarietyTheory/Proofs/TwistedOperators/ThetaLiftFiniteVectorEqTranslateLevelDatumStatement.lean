@@ -157,8 +157,7 @@ theorem congr_of_isAA : ∀ (D : D7) {k : ℕ} (Λ ΛT : Lt D.host.E k) (P : Ide
       exact Finset.sum_congr rfl fun i _ => by rw [mul_comm]; exact hb i
     exact RingOfIntegers.ext this
   obtain ⟨i, hi⟩ : ∃ i, b i ∉ P := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hP.ne_top
     rw [Ideal.eq_top_iff_one, ← hb1]
     exact Ideal.sum_mem _ fun i _ => hcon i
@@ -289,14 +288,12 @@ theorem finE_mem_St_of_isMov : ∀ (D : D7) (V : HSp D) (L : Lt D.host.E V.rank)
   have hk' : ∀ u, u ∈ hatV L ↔ ∃ u₀ ∈ hatV L, u = (finHom V k).1 *ᵥ u₀ := hk
   intro y
   constructor
-  · intro hy
-    exact (hk' _).2 ⟨y, hy, rfl⟩
+  · exact fun hy => (hk' _).2 ⟨y, hy, rfl⟩
   · intro hy
     obtain ⟨u₀, hu₀, e⟩ := (hk' _).1 hy
     have e2 : y = u₀ := by
       have := congrArg (fun z => ((finHom V k)⁻¹).1 *ᵥ z) e
-      simp only [Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec] at this
-      exact this
+      simpa only [Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec] using this
     rw [e2]; exact hu₀
 
 end GlobalTheory.LevMov
@@ -362,8 +359,7 @@ variable {D : D7}
 
 theorem one_mem_intAf : (1 : Af D.host.F) ∈ intAf D.host.F := by
   intro v
-  simp only [map_one]
-  exact one_mem _
+  simpa only [map_one] using one_mem _
 
 theorem toAf_mem_hatV {k : ℕ} {L : Lt D.host.E k} {x : Fin k → D.host.E} (hx : x ∈ L) :
     toAf (D := D) x ∈ hatV L :=
@@ -428,8 +424,7 @@ theorem mem_of_smul {r : ℕ} (Λ : Lt D.host.E r) (𝔪 I : Ideal (𝓞 D.host.
   refine Submodule.smul_induction_on ht ?_ ?_
   · intro p hp y hy
     have h1 : m *ᵥ toAf (D := D) y ∈ hatV Λ := (hmov _).2 ⟨_, toAf_mem_hatV hy, rfl⟩
-    rw [fsmul]
-    rw [smul_sub]
+    rw [fsmul, smul_sub]
     refine sub_mem (smul_mem_hatV p (fun x hx => Submodule.smul_mem_smul (h𝔪I hp) hx) h1) ?_
     rw [← toAf_smul]; exact toAf_mem_hatV (Submodule.smul_mem_smul (h𝔪I hp) hy)
   · intro x y hx hy; rw [fadd]; exact add_mem hx hy
@@ -789,8 +784,7 @@ theorem heisO_fix {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1))
   have hc : ∀ w, symplO S T r w = 0 → ∀ g, heisO ψ S T r (heisO ψ S T w g) = heisO ψ S T w (heisO ψ S T r g) :=
     fun w hw g => by
       have := GlobalTheory.PlaceModel.heisL_comm S T ψ r w g
-      rw [hw, AddChar.map_zero_eq_one, one_smul] at this
-      exact this
+      rwa [hw, AddChar.map_zero_eq_one, one_smul] at this
   have h' : IsPlaceModel ψ (symplO S T) (heisO ψ S T) a (latO S T ΛS ΛT fun _ => True) 1 f₀
       ((GlobalTheory.PlaceModel.heisL S T ψ r).comp Tm) :=
     { trans := fun Φ hΦ x hxa => by
@@ -1138,8 +1132,7 @@ theorem thP_vec_eq_translate : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (om : GA
     GlobalTheory.DatumFock.isFockVacAt_thPVec C.ψ C.θ S T _ _ _ _ βS βT Pg Q ξ f₀ f hfc hfth τ
   have hu2 : C.IsFock B (C.uVec Lv hn f') := by
     have h := (((GlobalTheory.Ker.WeakMove.om_move D S T C om hom k₀⁻¹ 1 f hfth).2 B hB).1 hfF)
-    rw [hmvB, ← hu, hinv'] at h
-    exact h
+    rwa [hmvB, ← hu, hinv'] at h
   have hu3 : C.uVec Lv hn f' ≠ 0 := fun h0 => hf0 (by rw [← hu, h0, map_zero])
   refine ⟨Lv, Ideal.absNorm Lv.𝔪, f', k₀, hw2, ?_, Ideal.absNorm_mem Lv.𝔪, hbase, hk₀, hu.symm, hu1, hu2, hu3,
     GlobalTheory.T.hermitianThetaLevelGroup_stabilizes_selfDualLatticeFrame D S T C Lv ΛT hsd hAA βT hβT Pg hmP hJ⟩

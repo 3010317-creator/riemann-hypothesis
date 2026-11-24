@@ -113,12 +113,10 @@ theorem mixCoS_spec : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G :
     refine ⟨ofMaps t e (x₁, x₂), ⟨?_, ?_⟩, ?_⟩
     · show IsHalf _ (mapA t e _)
       rw [k₁]
-      intro a b
-      exact atPl_one_mul w _
+      exact fun a b => atPl_one_mul w _
     · show IsHalf _ (mapB e _)
       rw [k₂]
-      intro a b
-      exact atPl_one_mul w _
+      exact fun a b => atPl_one_mul w _
     · rw [mixCoS_eq, k₁, k₂, m₁, m₂, hy₁, hy₂, transpose_transpose, fromCols_toCols]
   · have k₁ : mapA t e (ofMaps t e (atPl w 1 • mapA t e u, atPl w 1 • mapB e u)) = atPl w 1 • mapA t e u := mapA_ofMaps t e _
     have k₂ : mapB e (ofMaps t e (atPl w 1 • mapA t e u, atPl w 1 • mapB e u)) = atPl w 1 • mapB e u := mapB_ofMaps t e _
@@ -573,8 +571,7 @@ theorem exists_scalar_datum : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Cons
     have := sub_mem hR.2 hτ
     rwa [← Prod.mk.eta (p := Finset.sum _ _), Prod.mk_sub_mk, ← hfst, sub_self] at this)
   have := congrFun (sub_eq_zero.1 this) u
-  rw [Prod.snd_sum, Finset.sum_apply] at this
-  exact this
+  rwa [Prod.snd_sum, Finset.sum_apply] at this
 
 end GlobalTheory.SmallPlaces
 

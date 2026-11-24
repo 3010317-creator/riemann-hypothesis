@@ -200,8 +200,7 @@ theorem coord_int {D : D7} {S : HSp D} (L : Lat S) (Φ : (Fin S.rank → D.host.
   rw [extV_gen, smul_pairA] at e
   have hb : Φ z • (1 : Af D.host.F) = β := congrArg Prod.snd e
   apply int_of_intAf
-  rw [Algebra.algebraMap_eq_smul_one, hb]
-  exact hβ
+  rwa [Algebra.algebraMap_eq_smul_one, hb]
 
 theorem mem_of_mem_latV : ∀ (D : D7) (S : HSp D) (L : Lat S), Submodule.IsFullLattice D.host.E L → ∀ z : Fin S.rank → D.host.E, (fun i => pairA D.host.F 0 1 ⊗ₜ[D.host.F] z i) ∈ latV S L (fun _ => True) → z ∈ L := by
   intro D S L hL z hz
@@ -231,8 +230,7 @@ theorem mem_of_mem_latV : ∀ (D : D7) (S : HSp D) (L : Lat S), Submodule.IsFull
     rw [Submodule.span_eq] at hs
     refine ⟨a, nonZeroDivisors.coe_ne_zero ⟨a, ha⟩, ?_⟩
     show a • v ∈ L
-    rw [← IsScalarTower.algebraMap_smul (𝓞 D.host.E) a v]
-    exact hs
+    rwa [← IsScalarTower.algebraMap_smul (𝓞 D.host.E) a v]
   obtain ⟨m, g, Φ, hg, hΦ, hid⟩ := dual_gens (K := D.host.F) M hMfg hden
   rw [hid z]
   refine Submodule.sum_mem _ fun k _ => ?_

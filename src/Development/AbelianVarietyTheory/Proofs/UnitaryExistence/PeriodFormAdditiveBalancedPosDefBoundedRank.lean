@@ -114,9 +114,7 @@ theorem real_pos_of_int_pos {ι : Type} [Fintype ι] (M : ι → ι → ℤ) (hs
     intro y
     have hdr : DenseRange (Pi.map (fun (_ : ι) (q : ℚ) => (q : ℝ))) :=
       DenseRange.piMap fun _ => Rat.denseRange_cast
-    refine hdr.induction_on y (isClosed_le continuous_const (by fun_prop)) ?_
-    intro q
-    exact hQ q
+    exact hdr.induction_on y (isClosed_le continuous_const (by fun_prop)) (fun q => hQ q)
   have hform : ∀ y : ι → ℝ, star y ⬝ᵥ ((Matrix.of M).map (Int.cast : ℤ → ℝ)) *ᵥ y =
       ∑ i, ∑ k, y i * y k * (M i k : ℝ) := by
     intro y
@@ -155,8 +153,7 @@ theorem real_pos_of_discrete {X ι : Type} [AddCommGroup X] [Fintype ι] (b : Mo
     intro z y
     have := map_sum (AddMonoidHom.mk' (fun a => β a y) (fun a a' => hadd a a' y))
       (fun i => z i • b i) Finset.univ
-    simp only [map_zsmul, AddMonoidHom.mk'_apply, zsmul_eq_mul] at this
-    exact this
+    simpa only [map_zsmul, AddMonoidHom.mk'_apply, zsmul_eq_mul] using this
   have key := real_pos_of_int_pos (fun i k => n (b i) (b k)) (fun i k => by
       have h := hs (b i) (b k)
       rw [hn, hn] at h
@@ -261,8 +258,7 @@ open Formalism.MainNotions.DIV.Cons
 variable {C : Type} [NormedField C] [IsUltrametricDist C]
 
 theorem norm_le_one_of_integral {x : C} (hx : IsIntegral ℤ x) : ‖x‖ ≤ 1 := by
-  by_contra h
-  push Not at h
+  by_contra! h
   obtain ⟨q, hq, hqx⟩ := hx
   have hx0 : 0 < ‖x‖ := one_pos.trans h
   rw [Polynomial.eval₂_eq_sum_range, Finset.sum_range_succ, hq.coeff_natDegree, map_one, one_mul] at hqx
@@ -375,8 +371,7 @@ theorem rank_le_of_dvr {E : Type} [Field E] [NumberField E] [IsCMField E] {H : R
       refine Eq.trans ?_ P.ext
       rw [← A.fac, ← Category.assoc]
       exact congrArg (· ≫ A.ι) (Spec.map_comp (CommRingCat.ofHom A.f) (CommRingCat.ofHom (intO F).subtype))
-    rw [e]
-    exact hn
+    rwa [e]
   let τ₀ : 𝓞 E →+* F := (IsAlgClosed.lift (R := ℚ) (S := E) (M := F)).toRingHom.comp (algebraMap _ E)
   have h₀ : Function.Injective τ₀ :=
     (IsAlgClosed.lift (R := ℚ) (S := E) (M := F)).injective.comp RingOfIntegers.coe_injective

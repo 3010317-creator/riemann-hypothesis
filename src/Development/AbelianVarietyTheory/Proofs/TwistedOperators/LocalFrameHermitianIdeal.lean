@@ -216,8 +216,7 @@ theorem read_gen {A K : Type} [CommRing A] [CommRing K] (S : Subring A) (φ : S 
 
 theorem resS_natCast {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (PP : Pl E) (g : ℕ)
     (hg : (g : 𝓞 E) ∈ PP.asIdeal) : resS F PP (g : Formalism.L2.Herm.intAf F E) = 0 := by
-  rw [map_natCast, ← map_natCast (Ideal.Quotient.mk PP.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
-  exact hg
+  rwa [map_natCast, ← map_natCast (Ideal.Quotient.mk PP.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
 
 theorem redV_of {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n : ℕ}
     (β : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (PP : Pl E) (v : Fin n → E ⊗[F] Formalism.L2.Herm.Af F) (j : Fin n)
@@ -272,8 +271,7 @@ theorem coef_read : ∀ {D : D7} (g : ℕ) (e0 f0 : Fin D.R.rS → VA (II D)) (z
   have hfin := read_gen (Formalism.L2.Herm.intAf D.host.F D.host.E) (resS D.host.F PP) (β⁻¹).val u _ _ _ _ _ z hu' p hui hC hGi
     hCo hoi hgI hzi hδ (fun i => second hF hL u i (hCo i)) hg0
   have hR := redV_of β PP u p hui
-  rw [hR]
-  exact hfin
+  rwa [hR]
 
 end GlobalTheory.SeeConjGroup.CoefRead
 end -- clump:auto
@@ -459,8 +457,7 @@ theorem ZAt_neg {PP : Pl E} {c : E ⊗[F] Formalism.L2.Herm.Af F} (h : ZAt PP (-
   intro hc
   have := h (neg_mem hc)
   have e : (⟨-c, neg_mem hc⟩ : Formalism.L2.Herm.intAf F E) = -⟨c, hc⟩ := rfl
-  rw [e, (resS F PP).map_neg, neg_eq_zero] at this
-  exact this
+  rwa [e, (resS F PP).map_neg, neg_eq_zero] at this
 
 theorem ZAt_mul {PP : Pl E} {a c : E ⊗[F] Formalism.L2.Herm.Af F} (ha : a ∈ Formalism.L2.Herm.intAf F E)
     (hc : c ∈ Formalism.L2.Herm.intAf F E) (h : ZAt PP a) : ZAt PP (a * c) := by
@@ -595,24 +592,21 @@ theorem cong_of_pairs (h : FH I g e0 f0 z0 bw bwd ew) {x : I.Gf} (hx : x ∈ I.K
       (hP _ hm.2.1 _ (hm.1 a).1 (h3 a).1 (h3 a).2)
       (fun i _ => hP _ (hm.2.2 i).2 _ (hm.1 a).1 (h4 a i).1 (h4 a i).2)
       (fun i => hP _ (hm.2.2 i).1 _ (hm.1 a).1 (h5 a i).1 (h5 a i).2)
-    rw [Set.image_empty, Set.union_empty] at this
-    exact this
+    rwa [Set.image_empty, Set.union_empty] at this
   · have := GlobalTheory.T.mem_span_add_smul_lattice_of_frame_coeffs_zmod I g e0 f0 z0 bw bwd ew h _ (K_sub_mv I hx hm.2.1) Set.univ ∅
       (fun c hc => absurd (Set.mem_univ c) hc)
       (fun c => hP _ (hm.1 c).1 _ hm.2.1 (h3 c).2 (h3 c).1)
       (hP _ hm.2.1 _ hm.2.1 h6 h6)
       (fun i _ => hP _ (hm.2.2 i).2 _ hm.2.1 (h7 i).1 (h7 i).2)
       (fun i => hP _ (hm.2.2 i).1 _ hm.2.1 (h8 i).1 (h8 i).2)
-    rw [Set.image_empty, Set.union_empty, Set.image_univ] at this
-    exact this
+    rwa [Set.image_empty, Set.union_empty, Set.image_univ] at this
   · have := GlobalTheory.T.mem_span_add_smul_lattice_of_frame_coeffs_zmod I g e0 f0 z0 bw bwd ew h _ (K_sub_mv I hx (hm.2.2 i).1) Set.univ {j | j.1 < i.1}
       (fun c hc => absurd (Set.mem_univ c) hc)
       (fun c => hP _ (hm.1 c).1 _ (hm.2.2 i).1 (h5 c i).2 (h5 c i).1)
       (hP _ hm.2.1 _ (hm.2.2 i).1 (h8 i).2 (h8 i).1)
       (fun j hj => hP _ (hm.2.2 j).2 _ (hm.2.2 i).1 (h9 i j (not_lt.1 hj)).1 (h9 i j (not_lt.1 hj)).2)
       (fun j => hP _ (hm.2.2 j).1 _ (hm.2.2 i).1 (h10 j i) (h10 i j))
-    rw [Set.image_univ] at this
-    exact this
+    rwa [Set.image_univ] at this
 
 end Gen
 

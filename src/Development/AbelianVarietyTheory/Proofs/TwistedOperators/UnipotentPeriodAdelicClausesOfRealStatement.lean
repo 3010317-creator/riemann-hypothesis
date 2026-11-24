@@ -184,8 +184,7 @@ theorem isClosedEmbedding_unitaryEmbedding (d : HermitianOrthogonalExtensionData
     constructor
     · rintro ⟨h, rfl⟩
       exact GlobalTheory.UnitaryEmbeddingGroup.unitaryEmbedding_fixes_vectors d h
-    · intro hg
-      exact GlobalTheory.UnitaryEmbeddingGroup.mem_range_of_fix d hε g hg
+    · exact fun hg => GlobalTheory.UnitaryEmbeddingGroup.mem_range_of_fix d hε g hg
   have hcl : IsClosed (Set.range (stabilizerEmbedding d)) := by
     rw [hrange]
     haveI : T2Space (AE D) := (Formalism.IndefR.Eqv.ae_facts D).2.1
@@ -280,10 +279,8 @@ theorem smul_mem_of_mem_smul (Λ : Submodule (𝓞 E) (Fin n → E)) (𝔪 : Ide
   · obtain ⟨c, hc⟩ := ha m hm
     have e : a • (m • y) = c • y := by
       rw [← algebraMap_smul E m y, ← algebraMap_smul E c y, smul_smul, hc, mul_comm]
-    simp only [e]
-    exact Λ.smul_mem c hy
-  · simp only [smul_add]
-    exact Λ.add_mem hu hv
+    simpa only [e] using Λ.smul_mem c hy
+  · simpa only [smul_add] using Λ.add_mem hu hv
 
 theorem smul_mem_hatL (Λ : Submodule (𝓞 E) (Fin n → E)) (𝔪 : Ideal (𝓞 E)) (a : E)
     (ha : ∀ m ∈ 𝔪, ∃ c : 𝓞 E, algebraMap (𝓞 E) E c = algebraMap (𝓞 E) E m * a)
@@ -315,7 +312,6 @@ theorem eq_zero_of_mem_hatL_bot (z : Fin n → E ⊗[F] Formalism.L2.Herm.Af F)
     have hx0 : x = 0 := (Submodule.mem_bot _).1 hx
     subst hx0
     funext i
-    show (0 : E) ⊗ₜ[F] (1 : Formalism.L2.Herm.Af F) = 0
     exact TensorProduct.zero_tmul _ _
   | zero => rfl
   | add u v _ _ hu hv => rw [hu, hv, add_zero]
@@ -454,8 +450,7 @@ theorem map_mulVec_ratV {V : HSp D} (g : GA D V) {y y' : Fin V.rank → D.host.E
     (mt V g).map φ *ᵥ (fun i => φ (incA D (y i))) = fun i => φ (incA D (y' i)) := by
   funext i
   have := congrArg (fun v => φ (v i)) h
-  rw [RingHom.map_mulVec] at this
-  exact this
+  rwa [RingHom.map_mulVec] at this
 
 theorem finE_mulVec {V : HSp D} (g : GA D V) {y y' : Fin V.rank → D.host.E} (h : mt V g *ᵥ ratV y = ratV y') :
     (Lev.finE V g).1 *ᵥ (fun i => y i ⊗ₜ[D.host.F] (1 : Formalism.L2.Herm.Af D.host.F)) =
@@ -614,8 +609,7 @@ variable {D : D7}
 theorem mulVec_sub_mem_of_triple_product_fixing {n : ℕ} {R : Type} [CommRing R] (A B C : Matrix (Fin n) (Fin n) R) (u0 u1 : Fin n → R) (H : Set (Fin n → R))
     (hk : (A * B * C) *ᵥ u0 - u0 ∈ H) (hC : C *ᵥ u0 = u0) (hB : B *ᵥ u0 = u1) (hA : A *ᵥ u0 = u0) : A *ᵥ (u1 - u0) ∈ H := by
   rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, hC, hB] at hk
-  rw [Matrix.mulVec_sub, hA]
-  exact hk
+  rwa [Matrix.mulVec_sub, hA]
 
 
 

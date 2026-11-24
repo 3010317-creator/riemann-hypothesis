@@ -128,15 +128,13 @@ theorem latHat_eq_hat_and_gram :
     have hx : x ∈ Submodule.span D.host.E (V.L0 : Set V.V) := by
       rw [hspan]; trivial
     have := Submodule.mem_map_of_mem (f := V.frame.equivFun.toLinearMap) hx
-    rw [Submodule.map_span] at this
-    exact this
+    rwa [Submodule.map_span] at this
   · intro h
     apply IsCMField.complexConj_ne_one D.host.E
     refine AlgEquiv.ext fun x => ?_
     have hx : cF D x = x := by rw [h]; rfl
     exact hx
-  · intro a b
-    exact V.herm.eq _ _
+  · exact fun a b => V.herm.eq _ _
   · intro x y
     rw [hT_symm_equivFun]
     simp only [herm, Matrix.neg_apply, mul_neg, neg_mul, Finset.sum_neg_distrib, neg_neg]

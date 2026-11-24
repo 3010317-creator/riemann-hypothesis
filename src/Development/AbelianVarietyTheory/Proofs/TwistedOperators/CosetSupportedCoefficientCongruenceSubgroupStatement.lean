@@ -460,8 +460,7 @@ theorem read_gen {V : HSp D} {Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.h
       (Lev.finE V g).1 * (toEAf D e • (1 - a₂.map (toEAf D))) := by
     rw [actO, inv_one, _root_.GlobalTheory.BesselCompare.mt_one, Matrix.mul_one] at heq
     have h := congrArg (fun N : Mx D V.rank V.rank => N.map (toEAf D)) heq
-    rw [map_smul_one_sub, Matrix.map_mul, map_smul_one_sub] at h
-    exact h
+    rwa [map_smul_one_sub, Matrix.map_mul, map_smul_one_sub] at h
   have hc : ∀ A : Matrix (Fin V.rank) (Fin V.rank) (EAf D),
       toEAf D e • (1 - (β⁻¹).1 * A * β.1) = (β⁻¹).1 * (toEAf D e • (1 - A)) * β.1 := by
     intro A
@@ -661,8 +660,7 @@ theorem act_le_std (D : D7) (S T : HSp D) (g : GA D T) : ∃ N : ℕ, 0 < N ∧
   · rw [Matrix.smul_apply, nsmul_eq_mul, RingHom.map_mul, map_natCast, hact, map_sum, Finset.mul_sum]
     refine sum_mem fun k _ => ?_
     have h3 := mul_mem (h' i k) (hden u hu k j)
-    rw [Matrix.map_apply, mul_mul_mul_comm, ← Nat.cast_mul, ← RingHom.map_mul] at h3
-    exact h3
+    rwa [Matrix.map_apply, mul_mul_mul_comm, ← Nat.cast_mul, ← RingHom.map_mul] at h3
 
 end GlobalTheory.AnnSum
 
@@ -879,8 +877,7 @@ theorem ann_depLat : All fun {D} _ _ _ {G} W _ => ∀ i, i < D.R.m → ∀ e : A
   intro D hq T L μ0 hL sc G W M hM i hi e he y hy h u hu
   have hee : e * e = e := GlobalTheory.PlaceVec.idemSum_mul_self he
   have h1 := h (e • u) (hu.2 e he)
-  rw [smul_smul, hee, symplO_smul_half _ _ e u y hy] at h1
-  exact h1
+  rwa [smul_smul, hee, symplO_smul_half _ _ e u y hy] at h1
 
 
 
@@ -915,8 +912,7 @@ theorem cosDual : All fun {D} _ _ _ {G} W _ => ∀ i, i < D.R.m → ∀ x₀, Is
       rw [← GlobalTheory.SymplOInv.symplO_actO D _ _ 1 g (e • v) (actO _ _ 1 g⁻¹ y), actO_inv]
       exact h3)
     have H := hyp y hy hA hB
-    rw [← hXdef] at H
-    rw [← GlobalTheory.SymplOInv.symplO_actO D _ _ 1 g X (actO _ _ 1 g⁻¹ y), actO_inv] at H
+    rw [← hXdef, ← GlobalTheory.SymplOInv.symplO_actO D _ _ 1 g X (actO _ _ 1 g⁻¹ y), actO_inv] at H
     have hsum : X = Z + actO (G.pS (.core i)) (G.pT (.core i)) 1 g X := by
       rw [hZdef]; abel
     have hs : symplO (G.pS (.core i)) (G.pT (.core i)) X y =

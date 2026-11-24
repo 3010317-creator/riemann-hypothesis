@@ -75,9 +75,7 @@ variable {R : Ranks} {H : _root_.Formalism.BasicNotions.Host R} (T : Frame H)
 
 theorem sigma_conj (σ : H.E ≃ₐ[ℚ] H.E) (x : H.E) : σ (H.conj x) = H.conj (σ x) := by
   apply H.φ₀.injective
-  have h1 := H.conjE_apply (H.φ₀.comp (σ : H.E →+* H.E)) x
-  have h2 := H.conjE_apply H.φ₀ (σ x)
-  exact h1.trans h2.symm
+  exact (H.conjE_apply (H.φ₀.comp (σ : H.E →+* H.E)) x).trans (H.conjE_apply H.φ₀ (σ x)).symm
 
 theorem galE_sigmaOf (g : R.GG) : H.galE (H.sigmaOf g) = g :=
   (H.gal).apply_symm_apply g

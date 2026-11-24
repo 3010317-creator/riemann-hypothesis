@@ -80,8 +80,7 @@ theorem unit_eq_one_of_localHom {W Ω : Type} [CommRing W] [IsLocalRing W] [Fiel
     (by rw [← map_pow, ← Units.val_pow_eq_pow_val, h, Units.val_one, map_one]) nat.symm
   apply Units.ext
   apply (Scheme.ΓSpecIso (CommRingCat.of W)).commRingCatIsoToRingEquiv.injective
-  rw [Units.val_one, map_one]
-  exact h1
+  rwa [Units.val_one, map_one]
 
 theorem IsCPMap.cubWeil_iff {S S' : Scheme.{0}} {f : S' ⟶ S} {G : Over S} [GrpObj G] [IsCommMonObj G] {G' : Over S'}
     [GrpObj G'] [IsCommMonObj G'] {P : CP G} {P' : CP G'} {F : G'.left ⟶ G.left} {hw} {w}
@@ -139,8 +138,7 @@ theorem cubWeil_one_iff_closedFibre : AllSet fun {V} _ _ _ {A} {G} _ _ s => ∀ 
   constructor
   · intro h
     have := h.comp ρ
-    rw [e, e', map_one] at this
-    exact this
+    rwa [e, e', map_one] at this
   · intro h
     obtain ⟨ζ, hζ, -⟩ := existsUnique_cubWeil s.P.c hy hy'
     have c := hζ.comp ρ

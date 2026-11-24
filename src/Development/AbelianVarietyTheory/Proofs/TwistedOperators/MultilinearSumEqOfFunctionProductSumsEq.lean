@@ -97,9 +97,7 @@ lemma exists_finset_ker_eq_bot {X : Type} (V : Submodule ℂ (X → ℂ)) (W : S
       rw [LinearMap.mem_ker] at this
       have := congrFun this ⟨x, Finset.mem_insert_self x P⟩
       exact hx (by simpa [restr_apply] using this)
-  have hlt := Submodule.finrank_lt_finrank_of_lt hle
-  have hmin := Nat.find_min hex (hP ▸ hlt)
-  exact hmin ⟨insert x P, rfl⟩
+  exact (Nat.find_min hex (hP ▸ (Submodule.finrank_lt_finrank_of_lt hle))) ⟨insert x P, rfl⟩
 
 theorem main : ∀ {X : Type} (V : Submodule ℂ (X → ℂ)) (W : Submodule ℂ ↥V) [FiniteDimensional ℂ ↥W],
     ∃ (P : Finset X) (e : X → ↥V), ∀ w ∈ W, w = ∑ x ∈ P, (↑w : X → ℂ) x • e x := by
@@ -187,8 +185,7 @@ theorem funProd_multilinear_sum_eq : ∀ {ι κ Δ : Type} [Fintype ι] [Decidab
         M (fun i => e i (x i)) (fun j => e' j (y j)) *
           ((∏ i, (F d i : X i → ℂ) (x i)) * ∏ j, (G d j : Y j → ℂ) (y j)) := by
       intro d hd
-      rw [funSub_multilinear_expand M P e (F d) (fun i => hP i _ (hF d hd i))]
-      rw [sum_apply]
+      rw [funSub_multilinear_expand M P e (F d) (fun i => hP i _ (hF d hd i)), sum_apply]
       refine Finset.sum_congr rfl (fun x _ => ?_)
       rw [smul_apply,
         funSub_multilinear_expand (M fun i => e i (x i)) Q e' (G d) (fun j => hQ j _ (hG d hd j)),

@@ -102,8 +102,7 @@ theorem exists_residueChar {ψ : AddChar k Circle} (hψ : HasConductor ψ 1) {ϖ
       φ (IsLocalRing.residue 𝒪[k] x) = ψ (((ϖ⁻¹ : kˣ) : k) * (x : k)) := by
   have hsurj : Function.Surjective (IsLocalRing.residue 𝒪[k]) := IsLocalRing.residue_surjective
   have h1 : ∀ y : k, valuation k y ≤ 1 → ψ y = 1 := by
-    intro y hy
-    exact (hψ 1).2 (by simp) y (by simpa using hy)
+    exact fun y hy => (hψ 1).2 (by simp) y (by simpa using hy)
   have key : ∀ x y : 𝒪[k], IsLocalRing.residue 𝒪[k] x = IsLocalRing.residue 𝒪[k] y →
       ψ (((ϖ⁻¹ : kˣ) : k) * (x : k)) = ψ (((ϖ⁻¹ : kˣ) : k) * (y : k)) := by
     intro x y hxy
@@ -262,8 +261,7 @@ theorem deltaR_eq {J : Subgroup (GL (n ⊕ Fin c) k)} {h : GL (n ⊕ Fin c) k}
     rw [e4]
     exact mul_mem hj' (inv_mem hj)
   have h2 := deltaR_mul (c := c) g' (g'⁻¹ * g)
-  rw [H _ h1, mul_inv_cancel_left, mul_one] at h2
-  exact h2
+  rwa [H _ h1, mul_inv_cancel_left, mul_one] at h2
 
 end
 
@@ -826,13 +824,11 @@ theorem isCO_prX_Cgrp (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
   have hconj : {x : GL (n ⊕ Fin c) k | h⁻¹ * x * h ∈ J} = (fun y => h * y * h⁻¹) '' (J : Set _) := by
     ext x
     constructor
-    · intro hx
-      exact ⟨h⁻¹ * x * h, hx, by group⟩
+    · exact fun hx => ⟨h⁻¹ * x * h, hx, by group⟩
     · rintro ⟨y, hy, rfl⟩
       show h⁻¹ * (h * y * h⁻¹) * h ∈ J
       have e : h⁻¹ * (h * y * h⁻¹) * h = y := by group
-      rw [e]
-      exact hy
+      rwa [e]
   have hCset : (Cgrp J h : Set (GL (n ⊕ Fin c) k)) =
       {x : GL (n ⊕ Fin c) k | h⁻¹ * x * h ∈ J} ∩ (R k n c 1 : Set _) := by
     ext x
@@ -853,8 +849,7 @@ theorem isCO_prX_Cgrp (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     refine GlobalTheory.StepData.mem_prX.mpr ⟨1, one_mem _, GlobalTheory.StepData.mem_Cgrp.mpr ⟨?_, ?_⟩⟩
     · rw [one_mul]
       exact Subgroup.mem_sup_left (MonoidHom.mem_range.mpr ⟨g, rfl⟩)
-    · rw [one_mul]
-      exact hg
+    · rwa [one_mul]
   have hblk : ∀ {A : GL (n ⊕ Fin c) k → Matrix (n ⊕ Fin c) (n ⊕ Fin c) k}, Continuous A →
       Continuous (fun r => (A r).toBlocks₁₁) :=
     fun hA => continuous_pi fun i => continuous_pi fun j => hA.matrix_elem _ _
@@ -982,8 +977,7 @@ theorem _root_.GlobalTheory.CosetQuotInt.isQuotInt_cosetFn (k : Type) [Field k] 
       · rw [ite_eq_left hy, ite_eq_left (QuotientGroup.eq.2 hy).symm]
       · rw [ite_eq_right hy, ite_eq_right (fun (he : (y : GL (n ⊕ Fin c) k ⧸ J) = h) =>
           hy (QuotientGroup.eq.1 he.symm))]
-    rw [hFq]
-    exact hSB
+    rwa [hFq]
   · by_cases hx : DoubleCoset.mk (_root_.GlobalTheory.RootEx.R k n c 1) J h =
         DoubleCoset.mk (_root_.GlobalTheory.RootEx.R k n c 1) J x
     · obtain ⟨p, hp, j, hj, rfl⟩ := (@DoubleCoset.eq _ _ _ _ _ _).1 hx

@@ -258,8 +258,7 @@ theorem datum_placesA : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G
     have := sub_mem hR.2 hτ
     rwa [← Prod.mk.eta (p := Finset.sum _ _), Prod.mk_sub_mk, ← hfst, sub_self] at this)
   have := congrFun (sub_eq_zero.1 this) u
-  rw [Prod.snd_sum, Finset.sum_apply] at this
-  exact this
+  rwa [Prod.snd_sum, Finset.sum_apply] at this
 
 end GlobalTheory.FlipMatch
 
@@ -482,8 +481,7 @@ theorem isGauss_smul {τ} {f₀ : SInf F (Fin n × Fin d)} (h : M.IsGauss ψ τ 
     have := (hf r ⟨hr.1, by rw [e]; exact Submodule.smul_mem _ _ hr.2⟩ x).const_mul s⁻¹
     have e' : ∀ y Φ, M.heisLine ψ u y (s • Φ) x = s * M.heisLine ψ u y Φ x := fun y Φ => mul_left_comm _ _ _
     simp only [e, e', inv_mul_cancel_left₀ hs] at this
-    rw [e]
-    exact this
+    rwa [e]
   refine ⟨ε, fun u u' hu hu' e f f' hf hf' => ?_⟩
   have := h u u' hu hu' e _ _ (key u f hf) (key u' f' hf')
   rw [smul_comm] at this
@@ -643,8 +641,7 @@ theorem exists_tiedBoth (hL : L.Is μ₀) (W : G.Weil) (t : T) (i j : Fin D.R.m)
     ⟨h.ψ, h.JW, h.JW₁, h.JWW, h.cart, h.α, h.β, h.μW, rfl⟩,
     ⟨hT.base, ⟨hT.geo.lt, hT.geo.even, hT.geo.kappa, hT.geo.eBig, hT.geo.aBig, hT.geo.hV, hV', hT.geo.hW, hT.geo.hM, hMo⟩,
       hT.chars, hT.weil, ?_⟩, hti, rfl⟩
-  rw [h.α, h.β]
-  exact hom
+  rwa [h.α, h.β]
 
 theorem exists_finPart {n d : ℕ} {X : Spc D.host.F D.host.E n} {Y : Spc D.host.F D.host.E d} {M : Model D.sp.cm.sig X Y} {ψ}
     (hM : M.IsGood ψ) {S : Finset (Pl D.host.E)} {S' : Finset (Pl D.host.F)}

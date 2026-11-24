@@ -207,8 +207,7 @@ theorem resS_cP (PP : Pl D.host.E) (s : Formalism.L2.Herm.intAf D.host.F D.host.
 
 theorem exists_addChar_ne_one (k : Type) [Field k] [Finite k] : ∃ ψ : AddChar k ℂ, ψ ≠ 1 := by
   have h1 : Multiplicative.ofAdd (1 : k) ≠ 1 := by
-    intro h
-    exact one_ne_zero (congrArg Multiplicative.toAdd h)
+    exact fun h => one_ne_zero (congrArg Multiplicative.toAdd h)
   obtain ⟨φ, hφ⟩ := CommGroup.exists_apply_ne_one_of_hasEnoughRootsOfUnity (Multiplicative k) ℂ h1
   let ψ : AddChar k ℂ :=
     { toFun := fun x => ((φ (Multiplicative.ofAdd x) : ℂˣ) : ℂ)
@@ -757,11 +756,9 @@ theorem eq_of_kill {R : Type} [CommRing R] (PP : Pl D.host.E) (f : Formalism.L2.
   have hle : idS D.host.F PP.asIdeal ≤ RingHom.ker f := by
     unfold idS
     rw [Ideal.map_le_iff_le_comap]
-    intro p hp
-    exact hf p hp
+    exact fun p hp => hf p hp
   have := hle hb
-  rw [RingHom.mem_ker, map_sub, sub_eq_zero] at this
-  exact this
+  rwa [RingHom.mem_ker, map_sub, sub_eq_zero] at this
 
 theorem ext_oToS {R : Type} [CommRing R] (PP : Pl D.host.E) (f g : Formalism.L2.Herm.intAf D.host.F D.host.E →+* R)
     (hfg : ∀ a, f (oToS D.host.F D.host.E a) = g (oToS D.host.F D.host.E a))
@@ -805,8 +802,7 @@ theorem resT_cjA (PP : Pl D.host.E) (z : EAf D) :
       rw [resS_oToS, Ideal.Quotient.eq_zero_iff_mem.2 hp, map_zero]
     have hfin := ext_oToS PP f1 f2 hO hg ⟨z, hz⟩
     have e : (⟨GlobalTheory.IndefiniteRowSideFullHecke.FlatSpaceComponents.cjA D z, hz'⟩ : Formalism.L2.Herm.intAf D.host.F D.host.E) = cjS D ⟨z, hz⟩ := Subtype.ext rfl
-    rw [e]
-    exact hfin
+    rwa [e]
   · have hz' : GlobalTheory.IndefiniteRowSideFullHecke.FlatSpaceComponents.cjA D z ∉ Formalism.L2.Herm.intAf D.host.F D.host.E :=
       fun h => hz (GlobalTheory.AdIsom.cjA_mem_iff.1 h)
     rw [resT, dite_eq_right hz', resT, dite_eq_right hz, map_zero]

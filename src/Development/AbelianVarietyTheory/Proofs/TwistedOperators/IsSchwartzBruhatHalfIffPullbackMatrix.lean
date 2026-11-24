@@ -136,8 +136,7 @@ theorem isSBHalf_iff_pull : ∀ (D : D7) (S T : HSp D) (v : FinPl D) (m n : ℕ)
       · have h' : ¬ IsHalf a (t + (p ^ N) • u) := by
           intro hc
           apply htH
-          have hc' := isHalf_sub hc (isHalf_nsmul hhu (p ^ N))
-          simpa using hc'
+          simpa using isHalf_sub hc (isHalf_nsmul hhu (p ^ N))
         simp only [pull, ite_eq_right htH, ite_eq_right h']
     · have htH : IsHalf a t := by
         by_contra hh
@@ -146,8 +145,7 @@ theorem isSBHalf_iff_pull : ∀ (D : D7) (S T : HSp D) (v : FinPl D) (m n : ℕ)
       obtain ⟨s, ⟨hsΛ, hsH⟩, hs⟩ := hN2 (κ t) (subset_tsupport Φ hΦt)
       have hk : IsHalf a ((p ^ N) • t) := isHalf_nsmul htH _
       have hst : s = (p ^ N) • t := hbij.injOn hsH hk (by rw [hs, hns])
-      rw [← hst]
-      exact hsΛ
+      rwa [← hst]
   · unfold IsSBHalf at hΨ
     obtain ⟨hsupp, k, hk0, hinv, hΛ⟩ := hΨ
 

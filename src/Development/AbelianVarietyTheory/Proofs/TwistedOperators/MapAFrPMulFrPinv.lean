@@ -80,8 +80,7 @@ theorem reW_reWi (x : WO S T) : reW S T b (reWi S T b x) = x := by
 theorem reWi_reW (x : WO (reS S b) T) : reWi S T b (reW S T b x) = x := by
   have h := Matrix.mul_assoc (show Matrix (Fin T.rank) (Fin S.rank) (AE D) from x) ((frPinv S b).map (incA D))
     ((frP S b).map (incA D))
-  rw [mapA_frPinv_mul_frP, Matrix.mul_one] at h
-  exact h
+  rwa [mapA_frPinv_mul_frP, Matrix.mul_one] at h
 
 theorem reW_add (x y : WO (reS S b) T) : reW S T b (x + y) = reW S T b x + reW S T b y :=
   Matrix.add_mul _ _ _
@@ -107,8 +106,7 @@ theorem isHalf_reW_iff (e : AE D) (x : WO (reS S b) T) : IsHalf e (reW S T b x) 
     have : HMul.hMul (α := Matrix (Fin T.rank) (Fin S.rank) (AE D)) (reW S T b x) ((frP S b).map (incA D)) = x :=
       reWi_reW S T b x
     rwa [this] at h2
-  · intro h
-    exact key x _ h
+  · exact fun h => key x _ h
 
 theorem heisO_reF (ψ : AddChar (AF D.host.F) ℂ)
     (hs : ∀ x y, symplO (reS S b) T x y = symplO S T (reW S T b x) (reW S T b y))

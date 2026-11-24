@@ -149,8 +149,7 @@ theorem exists_isCoverIt : ∀ (p q r s : ℕ) (T₀ : GrpData (p * r + q * s) (
     rintro _ ⟨k, rfl⟩
     exact ⟨_, Submodule.subset_span ⟨k, rfl⟩, (hsrc _ y _).symm⟩
   · intro y hy
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     haveI := R₁.nontriv
     obtain ⟨x, hx⟩ := exists_ne (0 : R₁.U.H)
     have hz : (fun v : F.H => inner ℂ v (Tm x y)) = fun _ => 0 := by
@@ -172,8 +171,7 @@ theorem exists_isCoverIt : ∀ (p q r s : ℕ) (T₀ : GrpData (p * r + q * s) (
           (fun t : ℝ => F.π (T₁.expt (t • Z), 1) (F.ι P)) := by
       funext t
       rw [hB, Function.comp_apply, hsrc]
-    rw [e, hB]
-    exact hc
+    rwa [e, hB]
   · intro Z hZ P y
     have hone : T₂.expt ((0 : ℝ) • Z) = 1 := by
       have h := T₂.expt_add Z hZ 0 0
@@ -201,8 +199,7 @@ theorem exists_isCoverIt : ∀ (p q r s : ℕ) (T₀ : GrpData (p * r + q * s) (
         -(ContinuousLinearMap.adjoint (Tm.flip y)) (F.ι (fockAct2 p q r s Z P)) := by
       rw [neg_one_smul, map_neg]
       rfl
-    rw [e, hB, ← hval]
-    exact hc
+    rwa [e, hB, ← hval]
 
 end GlobalTheory.Chain.CoverContr
 

@@ -117,8 +117,7 @@ theorem exists_mul_involution_add_one_mem_pow (O : Type) [CommRing O] (s : O →
     have h2' : (2 : O ⧸ P) ≠ 0 := by
       intro h
       apply h2
-      rw [← Ideal.Quotient.eq_zero_iff_mem, map_ofNat]
-      exact h
+      rwa [← Ideal.Quotient.eq_zero_iff_mem, map_ofNat]
     obtain ⟨w, hw⟩ := exists_mul_involution_eq_neg_one (k := O ⧸ P) σ hσ hne' h2'
     obtain ⟨z, rfl⟩ := Ideal.Quotient.mk_surjective w
     refine ⟨z, ?_, fun h => absurd rfl h⟩
@@ -135,8 +134,7 @@ theorem exists_mul_involution_add_one_mem_pow (O : Type) [CommRing O] (s : O →
         rw [h1e]
         exact P.neg_mem hi
       have h1' : s y * 2 - 1 ∈ P := by
-        have h1s := hsP _ h1
-        simpa [map_sub, map_mul, map_ofNat] using h1s
+        simpa [map_sub, map_mul, map_ofNat] using hsP _ h1
       have h3 : 2 * (y + s y - 1) ∈ P := by
         have h3e : 2 * (y + s y - 1) = (y * 2 - 1) + (s y * 2 - 1) := by ring
         rw [h3e]
@@ -148,8 +146,7 @@ theorem exists_mul_involution_add_one_mem_pow (O : Type) [CommRing O] (s : O →
     · have hse : s e = e := by rw [he_def, map_add (f := _), map_mul, hs, map_one]; ring
       have key : (z0 + y * z0 * e) * s (z0 + y * z0 * e) + 1
           = e * (1 - (y + s y) + (y + s y) * e) + e * (e * (y * z0 * s y * s z0)) := by
-        rw [map_add (f := _), map_mul, map_mul, hse]
-        rw [he_def]
+        rw [map_add (f := _), map_mul, map_mul, hse, he_def]
         ring
       rw [key, pow_succ]
       refine Ideal.add_mem _ (Ideal.mul_mem_mul he ?_)

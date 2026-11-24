@@ -143,14 +143,11 @@ theorem rowDer_X (z : Fin p × Fin r → σ) (hz : Function.Injective z) (a b c 
     · subst h
       simp
     · rw [ite_eq_right h, Pi.single_apply, ite_eq_right, mul_zero]
-      intro h'
-      exact h (congrArg Prod.fst (hz h'))
+      exact fun h' => h (congrArg Prod.fst (hz h'))
   · intro k' _ hk'
     rw [Pi.single_apply, ite_eq_right, mul_zero]
-    intro h'
-    exact hk' (congrArg Prod.snd (hz h')).symm
-  · intro h
-    exact absurd (Finset.mem_univ k) h
+    exact fun h' => hk' (congrArg Prod.snd (hz h')).symm
+  · exact fun h => absurd (Finset.mem_univ k) h
 
 def lead (z : Fin p × Fin r → σ) {n : ℕ} (hp : n ≤ p) (hr : n ≤ r) : MvPolynomial σ ℂ :=
   (Matrix.of fun a b : Fin n =>
@@ -212,10 +209,8 @@ theorem rowDer_lead_self (z : Fin p × Fin r → σ) (hz : Function.Injective z)
       exact Matrix.updateRow_eq_self _ _
     · intro j _ hj
       rw [ite_eq_right]
-      intro h
-      exact hj (Fin.ext (show (j : ℕ) = a from congrArg Fin.val h))
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+      exact fun h => hj (Fin.ext (show (j : ℕ) = a from congrArg Fin.val h))
+    · exact fun h => absurd (Finset.mem_univ _) h
   · rw [ite_eq_right ha, zero_smul]
     refine Finset.sum_eq_zero fun i _ => ?_
     rw [ite_eq_right]
@@ -285,9 +280,7 @@ theorem lead_ne_zero (z : Fin p × Fin r → σ) (hz : Function.Injective z) {n 
       rintro ⟨k, hk⟩
       have e := hz hk
       simp only [Prod.mk.injEq] at e
-      have e1 := congrArg Fin.val e.1
-      have e2 := congrArg Fin.val e.2
-      exact hij (Fin.ext (e1.symm.trans e2))
+      exact hij (Fin.ext ((congrArg Fin.val e.1).symm.trans (congrArg Fin.val e.2)))
   have h1 := congrArg (MvPolynomial.eval f) h
   rw [map_zero] at h1
   unfold lead at h1
@@ -349,8 +342,7 @@ theorem minorPoly_highest : ∀ (σ : Type) [DecidableEq σ] (p r : ℕ) (z : Fi
   · have hmem : minorPoly z α ∈ supported ℂ (Set.range z) := by
       rw [hP]
       exact Subalgebra.prod_mem _ fun i _ => Subalgebra.pow_mem _ (lead_mem z (hp i) (hr i)) _
-    intro v hv
-    exact (MvPolynomial.mem_supported.mp hmem) hv
+    exact fun v hv => (MvPolynomial.mem_supported.mp hmem) hv
   · unfold BlockHW
     exact ⟨hr1, fun k l hkl => by rw [hcol]; exact hc1 k l hkl, hr2,
       fun k => by rw [hcol]; exact hc2 k⟩

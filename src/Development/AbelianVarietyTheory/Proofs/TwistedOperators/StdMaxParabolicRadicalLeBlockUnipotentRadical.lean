@@ -111,13 +111,11 @@ theorem unipRad_le_of_parab_le [Nontrivial R] {e : (Σ a, m a) ≃ n} {e' : (Σ 
     (h : parab R e ≤ parab R e') : unipRad R e' ≤ unipRad R e := by
   intro g hg
   rw [mem_unipRad_entries] at hg ⊢
-  intro i j hij
-  exact hg i j (fun hlt => hij (blk_lt_of_parab_le h hlt))
+  exact fun i j hij => hg i j (fun hlt => hij (blk_lt_of_parab_le h hlt))
 
 theorem stdMaxRad_le_unipRad : ∀ (F : Type) [Field F] {r a b s : ℕ} (h : a + b = r) (d : Fin s → ℕ)
     (hd : ∑ i, d i = r),
     parab F (stdBlocks d hd) ≤ stdMaxParab F h → stdMaxRad F h ≤ unipRad F (stdBlocks d hd) := by
-  intro F _ r a b s h d hd hle
-  exact unipRad_le_of_parab_le hle
+  exact fun F _ r a b s h d hd hle => unipRad_le_of_parab_le hle
 
 end GlobalTheory.RadRev

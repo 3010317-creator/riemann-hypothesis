@@ -697,8 +697,7 @@ theorem unipotent_character_trivial_at_S0 : OnStd fun {D} _ _ {sc} {G} W F => �
       have h3 := r2 a ha
       rw [Matrix.smul_apply, smul_eq_mul] at h3
       have e4 : e * s * a = e * N i j * (idem D (· = v) * a) := by rw [hsdef]; ring
-      rw [e4, (mem_idAt_iff _ a).1 (hsupp a ha)]
-      exact h3
+      rwa [e4, (mem_idAt_iff _ a).1 (hsupp a ha)]
 
   have e5 : 2 * (σ + 1) + 1 - 1 - j.1 = 2 * σ + 2 - 1 - i.1 := by omega
   have q1 : 𝔟W1 * 𝔟V⁻¹ = dI D * ((G.pl.modul sc : Ideal (𝓞 D.host.E)) : FI D)⁻¹ := by
@@ -910,8 +909,7 @@ theorem pcFB_vac : OnStd fun {D} _ _ {sc} {G} W F => ∀ σ (h : 2 * (σ + 1) + 
     rw [e] at h2
     have h3 := GlobalTheory.FinPl.ColSplitA.mulVec_mem_latA (F.dB σ h').p0
       (fun z hz => GlobalTheory.FinPl.ExtZeroAt.wittProjectionZero_mem_latticeCompletion_of_splits _ sdT.1 (fun v _ => monoB v) hz) h2
-    rw [Matrix.mulVec_mulVec, HypDec.p0_j0, Matrix.one_mulVec] at h3
-    exact h3
+    rwa [Matrix.mulVec_mulVec, HypDec.p0_j0, Matrix.one_mulVec] at h3
 
 end GlobalTheory.AscFin.PcFBVac
 
@@ -978,9 +976,7 @@ theorem finLat_comap {m n m' n' : ℕ} {Γ : AddSubgroup (Mx D m' n')} (hΓ : Fi
     exact hgM _ (hΓ.fin _ ha)
   · haveI : T2Space (Mx D m' n') := (GlobalTheory.MixModel.lattice_Mx D m' n').2.2.2.1
     have hc : IsClosed ((Γ.comap f : AddSubgroup _) : Set (Mx D m n)) := hΓ.cpt.isClosed.preimage hf
-    refine (hΓ.cpt.image hg).of_isClosed_subset hc ?_
-    intro a ha
-    exact ⟨f a, ha, hgf a⟩
+    exact (hΓ.cpt.image hg).of_isClosed_subset hc (fun a ha => ⟨f a, ha, hgf a⟩)
   · obtain ⟨U, hU, h0, hUΓ⟩ := hΓ.opn
     exact ⟨f ⁻¹' U, hU.preimage hf, by simpa using h0, fun a ha hA => hUΓ _ ha (hfM a hA)⟩
 

@@ -74,13 +74,11 @@ theorem isKTypeOf_lowKSub_iff {n : ℕ} {ε : Fin n → Bool} {lam : Fin n → �
   · rintro ⟨S, hS, huniq⟩
     have hset : {S' : Submodule ℂ H | IsKTypeOf ε σ (lowK ε lam) S'} = {S} := by
       ext S'
-      simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
-      exact ⟨huniq S', fun h => h ▸ hS⟩
+      simpa only [Set.mem_setOf_eq, Set.mem_singleton_iff] using ⟨huniq S', fun h => h ▸ hS⟩
     have hEq : lowKSub ε lam σ = S := by
       show sSup {S' : Submodule ℂ H | IsKTypeOf ε σ (lowK ε lam) S'} = S
       rw [hset, sSup_singleton]
-    rw [hEq]
-    exact hS
+    rwa [hEq]
 
 theorem discreteSeriesLowestKType_iff :
     DiscreteSeriesLowestKType ↔ GlobalTheory.Dec.LowKMultOne ∧ DiscreteSeriesUpqUnique := by

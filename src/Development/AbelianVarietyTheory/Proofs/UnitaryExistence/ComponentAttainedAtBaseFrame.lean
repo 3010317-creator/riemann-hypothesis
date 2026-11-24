@@ -191,8 +191,7 @@ theorem comp_latG (D : D7) (V : HSp D) :
       obtain ⟨x, hx, hx₀⟩ :=
         Submodule.exists_mem_ne_zero_of_ne_bot (LinearMap.ker_ne_bot_of_finrank_lt (f := g) hdim)
       have hsmul (a : D.host.E) : a • e x ∈ V.L0 := by
-        rw [← V.baseLattice_isUnimodular]
-        rw [Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
+        rw [← V.baseLattice_isUnimodular, Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
         intro y hy
         have hxy : V.hT (e x) y = 0 :=
           congrArg (fun f : Module.Dual D.host.E W => f ⟨y, Submodule.subset_span hy⟩) (LinearMap.mem_ker.mp hx)
@@ -209,8 +208,7 @@ theorem comp_latG (D : D7) (V : HSp D) :
           (FaithfulSMul.algebraMap_injective _ _) (Field.toIsField _))
     have h := congrArg (Submodule.map (V.frame.equivFun : V.V →ₗ[D.host.E] (Fin V.rank → D.host.E)))
       hfull
-    rw [Submodule.map_span, Submodule.map_top, LinearEquiv.range] at h
-    exact h
+    rwa [Submodule.map_span, Submodule.map_top, LinearEquiv.range] at h
   have hhat : latHat V = AdLat.hat D.host.F (L : Set (Fin V.rank → D.host.E)) := by
     unfold latHat AdLat.hat
     congr 1

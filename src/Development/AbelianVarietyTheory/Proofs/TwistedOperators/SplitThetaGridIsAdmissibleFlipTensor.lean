@@ -309,8 +309,7 @@ theorem invFourierSum_comp_fromBlocks {k : Type} [Field k] [ValuativeRel k] [Top
       pairCols P Y T = trace (T.submatrix id eP * (Y.submatrix id Sum.inr)ᵀ) := by
     intro T Y
     simp only [pairCols, trace, Matrix.mul_apply, diag_apply, transpose_apply, submatrix_apply, id]
-    refine Finset.sum_congr rfl fun i _ => ?_
-    exact (Equiv.sum_comp eP (fun j => T i j * Y i j)).symm
+    exact Finset.sum_congr rfl fun i _ => (Equiv.sum_comp eP (fun j => T i j * Y i j)).symm
   have hTN : ∀ T : Matrix A P k, (T * Nk).submatrix id eP = T.submatrix id eP * (invT M₂).val := by
     intro T; ext i j
     simp only [submatrix_apply, id, Matrix.mul_apply]
@@ -372,8 +371,7 @@ theorem invFourierSum_comp_fromBlocks {k : Type} [Field k] [ValuativeRel k] [Top
       · refine FourierDepth.mem_matLat_smul_blockLat.2 ⟨fun i j hj => ?_, fun i j hj => ?_⟩
         · simpa [setCols, hj] using hcZ' i ⟨j, hj⟩
         · simp [setCols, hj]
-    simp only [step]
-    exact GlobalTheory.ColSubst.sum_liftRes_mul hϖ e N N' hNN F hF
+    simpa only [step] using GlobalTheory.ColSubst.sum_liftRes_mul hϖ e N N' hNN F hF
   · have hXM : ¬ ∀ i, ∀ j ∈ P, (X * M) i j ∈ 𝒪[k] := by
       intro h'
       apply hX
@@ -1234,8 +1232,7 @@ theorem squareFlip_const_mul {A A' D : Type} [Fintype A] [DecidableEq A] [Fintyp
     squareFlip μ σ ψ ν ϖ e P (fun Z => c * Φ Z) X = c * squareFlip μ σ ψ ν ϖ e P Φ X := by
   have hs : ∀ (Ψ : Matrix A' D k → ℂ) (Y : Matrix A' D k), smallF μ ν (c • Ψ) Y = c * smallF μ ν Ψ Y := by
     intro Ψ Y
-    simp only [smallF, Pi.smul_apply, smul_eq_mul, mul_assoc]
-    exact integral_const_mul c _
+    simpa only [smallF, Pi.smul_apply, smul_eq_mul, mul_assoc] using integral_const_mul c _
   have hf : ∀ (Ψ : Matrix A' D k → ℂ) (Y : Matrix A D k), fFun μ σ ν (c • Ψ) Y = c * fFun μ σ ν Ψ Y := by
     intro Ψ Y
     unfold fFun
@@ -1390,8 +1387,7 @@ theorem isAdmissible_flip : ∀ {k : Type} [Field k] [ValuativeRel k] [Topologic
     · subst hXW
       simp only [Grid.PiLocalization₂.flip, Grid.flipLevel, Function.update_self]
       exact ⟨isOpen_KO, le_rfl⟩
-    · simp only [Grid.PiLocalization₂.flip, Grid.flipLevel, Function.update_of_ne hXW]
-      exact hlev X
+    · simpa only [Grid.PiLocalization₂.flip, Grid.flipLevel, Function.update_of_ne hXW] using hlev X
   · simp only [Grid.PiLocalization₂.flip] at hX hu ⊢
     obtain ⟨hX1, hX2⟩ := _root_.GlobalTheory.SplitFlip.mem_innerVertices_flipPath hpath hpt X hX
     have huK : u ∈ KO k _ := by

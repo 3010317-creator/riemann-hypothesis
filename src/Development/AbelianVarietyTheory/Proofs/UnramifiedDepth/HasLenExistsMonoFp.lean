@@ -137,8 +137,7 @@ private theorem hasLen_mono {C : Type} [Field C] {v : Valuation C NNReal} {R : T
   obtain ⟨w, hw⟩ := Ideal.mem_span_singleton'.1 hdet
   have hle := hv.le_of_dvd (⟨w, by rw [← hw, mul_comm]⟩ : ∏ t : Fin r, q t ∣ ∏ i, c i)
   rw [map_prod, map_prod, map_prod, map_prod] at hle
-  rw [← hzc, ← hzq]
-  exact hle
+  rwa [← hzc, ← hzq]
 
 private theorem fp_quot {C : Type} [Field C] {v : Valuation C NNReal} {O : Type} [CommRing O]
     [Algebra O C] (hv : v.Integers O) (n : ℕ) (M N : Submodule O (Fin n → O)) (hM : M.FG)

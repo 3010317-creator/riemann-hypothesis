@@ -684,8 +684,7 @@ theorem finPart_es_mem {es : AE D} {PP : Formalism.L2.DIV.Pl D.host.E} (h : Form
   have hmax : (conjI PP.asIdeal).IsMaximal := by
     rw [GlobalTheory.LiftIdeal.conjI_eq_map D]; exact GlobalTheory.LiftIdeal.isMaximal_map D PP
   obtain ⟨s, hs, hsP⟩ : ∃ s ∈ conjI PP.asIdeal, s ∉ PP.asIdeal := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hne (hmax.eq_of_le PP.isPrime.ne_top hc)
   have hs0 : s ≠ 0 := fun e => hsP (e ▸ PP.asIdeal.zero_mem)
   have hsE : (s : D.host.E) ≠ 0 := fun e => hs0 (RingOfIntegers.coe_eq_zero_iff.1 e)
@@ -1465,8 +1464,7 @@ theorem partAt_off_mem : ∀ (D : D7) (S T : HSp D) (e : AE D) (SS : Finset (For
       rw [map_add (f := _), mul_add, add_smul]
       exact add_mem hx hy
   rw [map_one, mul_one] at key
-  rw [GlobalTheory.LiftLevel.partAt_eq_smul]
-  exact key
+  rwa [GlobalTheory.LiftLevel.partAt_eq_smul]
 
 end GlobalTheory.OffIdemLat
 end -- clump:auto
@@ -1872,8 +1870,7 @@ namespace GlobalTheory.LiftLevel
 theorem isLattice_stdL (E : Type) [Field E] [NumberField E] (n : ℕ) :
     Submodule.IsLattice E (stdL E n) := by
   refine ⟨Submodule.fg_span (Set.finite_range _), ?_⟩
-  intro s hs hli
-  exact (LinearIndependent.iff_fractionRing _ _).mp hli
+  exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
 theorem isFullLattice_stdL (E : Type) [Field E] [NumberField E] (n : ℕ) :
     Submodule.IsFullLattice E (stdL E n) := by
   letI := isLattice_stdL E n

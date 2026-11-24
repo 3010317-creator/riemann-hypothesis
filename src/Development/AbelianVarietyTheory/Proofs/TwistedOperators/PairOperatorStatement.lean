@@ -297,8 +297,7 @@ theorem Gs_mul_GsStar (hχ : χ ≠ 1) :
     intro h0
     apply hu
     ext
-    have : ((u⁻¹ : 𝓀[k]ˣ) : 𝓀[k]) = 1 := by
-      exact h0.symm
+    have : ((u⁻¹ : 𝓀[k]ˣ) : 𝓀[k]) = 1 := h0.symm
     simpa using this
   · simp
 
@@ -551,8 +550,7 @@ theorem operatorIdentities [Fintype n] (hχ : χ ≠ 1) : OperatorIdentities k n
     sign_FFStar_sign_FF := by
       have e := unit_FFStar_FF (n := n) (M := M) q χ (-1)
       have hm : ((-1 : 𝓀[k]ˣ))⁻¹ = -1 := by simp
-      rw [hm] at e
-      exact e
+      rwa [hm] at e
     sign_ram φ h := by
       have e := LinearMap.congr_fun (unit_FFStar_FF q χ (-1)) φ
       have hm : ((-1 : 𝓀[k]ˣ))⁻¹ = -1 := by simp
@@ -704,8 +702,7 @@ theorem adjointIdentities [Fintype n] {ψ : AddChar k Circle} (hψ : HasConducto
   have hadj : IsAdj (n := n) (FF q (resChar ψ hψ q)) (FFStar q (resChar ψ hψ q)) := by
     unfold FF FFStar
     refine Model.isAdj_sumOp _ _ _ _ (fun P Q => ?_) fun P Q _ => ?_
-    · simp only [mem_withLat, mem_withKer]
-      exact eq_comm
+    · simpa only [mem_withLat, mem_withKer] using eq_comm
     · rw [conj_resChar, neg_neg]
   have hq : ((resCard k : ℂ) ^ Fintype.card n) ≠ 0 := pow_ne_zero _ resCard_ne_zero
   have hqr : (starRingEnd ℂ) ((resCard k : ℂ) ^ Fintype.card n) = (resCard k : ℂ) ^ Fintype.card n := by simp
@@ -739,8 +736,7 @@ theorem adjointIdentities [Fintype n] {ψ : AddChar k Circle} (hψ : HasConducto
     exact isAdj_sum _ _ _ _ _ (fun c => by rw [conj_resChar, neg_neg]) fun c => isAdj_dia c
   · unfold U D Da
     refine Model.isAdj_sumOp _ _ _ _ (fun P Q => ?_) fun _ _ _ => by simp
-    simp only [Finset.mem_filter, mem_withKer, mem_withLat]
-    exact and_congr eq_comm Iff.rfl
+    simpa only [Finset.mem_filter, mem_withKer, mem_withLat] using and_congr eq_comm Iff.rfl
   · have e := (hunit (-1)).1
     rwa [hm] at e
   · have e := (hunit (-1)).2

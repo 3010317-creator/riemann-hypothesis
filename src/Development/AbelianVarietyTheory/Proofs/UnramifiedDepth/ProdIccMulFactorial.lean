@@ -86,8 +86,7 @@ theorem pair_diffOp [CharZero C] (B : σ →₀ ℕ) (P Q : MvPolynomial σ C) :
     · intro a _ ha
       split_ifs with hma
       · rw [coeff_monomial, ite_eq_right]
-        intro hB
-        exact ha (by rw [← hB, tsub_add_cancel_of_le hma])
+        exact fun hB => ha (by rw [← hB, tsub_add_cancel_of_le hma])
       · simp
     · intro hQ
       rw [notMem_support_iff] at hQ

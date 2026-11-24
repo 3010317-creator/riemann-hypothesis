@@ -72,8 +72,7 @@ theorem card_res_pow (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] 
   rw [← Nat.card_eq_fintype_card]
   have hne : IsLocalRing.maximalIdeal 𝒪[k] ≠ ⊥ := IsDiscreteValuationRing.not_a_field _
   have hq := cardQuot_pow_of_prime (P := IsLocalRing.maximalIdeal 𝒪[k]) hne (i := e)
-  rw [Submodule.cardQuot_apply, Submodule.cardQuot_apply] at hq
-  exact hq
+  rwa [Submodule.cardQuot_apply, Submodule.cardQuot_apply] at hq
 
 theorem fourierSum_invFourierSum : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (A : Type) [Fintype A] [DecidableEq A] (C : Type) [Fintype C] [DecidableEq C] (ψ : AddChar k Circle) (ϖ : kˣ) (n : ℕ) (P : Finset C), IsUnif ϖ → HasConductor ψ 1 →
     ∀ Ξ : Matrix A C k → ℂ, HasDepth ϖ n (blockLat ϖ n P) Ξ → fourierSum ψ ϖ n P (invFourierSum ψ ϖ n P Ξ) = Ξ := by
@@ -127,7 +126,6 @@ theorem fourierSum_invFourierSum : ∀ (k : Type) [Field k] [ValuativeRel k] [To
       rw [← pow_mul, ← mul_assoc, inv_mul_cancel₀ (pow_ne_zero _ hq)]
     rw [← hM, hinv, card_res_pow, Nat.cast_pow, ← mul_assoc, hc, one_mul]
   · symm
-    refine hΞ.1 Y fun h => hY ?_
-    exact (GlobalTheory.SplitFlip.FourierDepth.mem_matLat_blockLat.1 h).1
+    exact hΞ.1 Y fun h => hY (GlobalTheory.SplitFlip.FourierDepth.mem_matLat_blockLat.1 h).1
 
 end GlobalTheory.FlipMatch.FourierInv

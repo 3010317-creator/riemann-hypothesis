@@ -175,12 +175,10 @@ theorem isIntegersLattice_iff (hp : 0 < p) (h2 : Module.finrank ℚ K = 2) {x : 
     · rintro ⟨⟨y, rfl⟩, hz⟩
       have hy : IsIntegral ℤ y :=
         (isIntegral_algHom_iff ψ (algebraMap K ℂ).injective).mp hz
-      refine ⟨y, ?_, rfl⟩
-      exact (FractionalIdeal.mem_one_iff _).mpr ⟨⟨y, hy⟩, rfl⟩
+      exact ⟨y, ((FractionalIdeal.mem_one_iff _).mpr ⟨⟨y, hy⟩, rfl⟩), rfl⟩
     · rintro ⟨y, hy, rfl⟩
       obtain ⟨r, rfl⟩ := (FractionalIdeal.mem_one_iff _).mp hy
-      refine ⟨⟨_, rfl⟩, ?_⟩
-      exact (isIntegral_algHom_iff ψ (algebraMap K ℂ).injective).mpr r.isIntegral_coe
+      exact ⟨⟨_, rfl⟩, (isIntegral_algHom_iff ψ (algebraMap K ℂ).injective).mpr r.isIntegral_coe⟩
   unfold IsIntegersLattice IsIdealLattice
   constructor
   · intro h

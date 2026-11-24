@@ -189,10 +189,8 @@ theorem continuous_fwd {V W : HSp D} (e : Fin V.rank ≃ Fin W.rank) (h : V.gram
   have hi : Continuous fun g : GA D V => ((matHom V g)⁻¹).1 :=
     Units.continuous_coe_inv.comp continuous_subtype_val
   refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
-  · show Continuous fun g : GA D V => (((matHom V g)⁻¹).1ᵀ).submatrix e.symm e.symm
-    exact hi.matrix_transpose.matrix_submatrix _ _
-  · show Continuous fun g : GA D V => ((matHom V g).1ᵀ).submatrix e.symm e.symm
-    exact hv.matrix_transpose.matrix_submatrix _ _
+  · exact hi.matrix_transpose.matrix_submatrix _ _
+  · exact hv.matrix_transpose.matrix_submatrix _ _
 
 theorem fwd_GQ {V W : HSp D} (e : Fin V.rank ≃ Fin W.rank) (h : V.gram⁻¹ = -(W.gramᵀ.submatrix e e))
     (γ : GA D V) (hγ : γ ∈ GQ V) : fwd e h γ ∈ GQ W := by

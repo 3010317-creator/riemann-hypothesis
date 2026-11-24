@@ -211,8 +211,7 @@ theorem toFrac_injective : Function.Injective (toFrac O F O') := by
     induction x with
     | tmul a x => rfl
     | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
-  intro x y hxy
-  exact h (by rw [← e, ← e, hxy])
+  exact fun x y hxy => h (by rw [← e, ← e, hxy])
 
 end Transport
 section Objects
@@ -335,8 +334,7 @@ theorem eTh_isLatIn (Sg : Set (Y.Dat i j b))
       refine ⟨(algebraMap (X.O i) (FractionRing (X.O i)) n)⁻¹ • x, Submodule.smul_mem (Formalism.MainNotions.IntegralHeckeForms.V0 Y i j b) _ hx, ?_⟩
       simp only [LinearMap.smul_apply, LinearMap.id_apply]
       rw [← algebraMap_smul (FractionRing (X.O i)) n, smul_inv_smul₀ hn0]
-  rw [← isLatIn_map_iff _ hinj, e1, e2, ← isLatIn_iff]
-  exact h
+  rwa [← isLatIn_map_iff _ hinj, e1, e2, ← isLatIn_iff]
 
 variable (E : Formalism.MainNotions.IntegralHeckeForms.ExpDat Y)
 
@@ -629,8 +627,7 @@ theorem Reads.lix_le [StarRing K] {v : HeightOneSpectrum (𝓞 K)} {e : V →ₗ
   · have := h2 O' hi hf _ l0
     rw [← Set.image_congr fun y _ => up_eq Y i j b O' k y, sIdx_eq (X.l i) _ ((eTh Y i j b (SgJ Y E i j b)).baseChange O'),
       signedLength, sub_self, Int.cast_zero, zero_div, zero_add] at this
-    rw [eΘ, eX, sIdx_map _ (toFrac_injective _ _ _), ← hl]
-    exact this
+    rwa [eΘ, eX, sIdx_map _ (toFrac_injective _ _ _), ← hl]
 
 end Export
 

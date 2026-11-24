@@ -195,16 +195,14 @@ theorem omE_mem_homog {l l' : Ln p q r s} (h : linePos l = linePos l') {d : ℕ}
       simp only [raiB, lowB, hl, hl', Bool.false_eq_true, ite_false]
       refine Submodule.neg_mem _ ?_
       have := ((isHomogeneous_X ℂ l').mul hP').pderiv (i := l)
-      rw [show 1 + d - 1 = d by omega] at this
-      exact this
+      rwa [show 1 + d - 1 = d by omega] at this
     · have hl' : linePos l' = true := h ▸ hl
       simp only [raiB, lowB, hl, hl', ite_true]
       show (X l * pderiv l' P).IsHomogeneous d
       rcases d with _ | d
       · rw [pderiv_eq_zero_of_deg_zero hP', mul_zero]; exact isHomogeneous_zero _ _ _
       · have := (isHomogeneous_X ℂ l).mul (hP'.pderiv (i := l'))
-        rw [show 1 + (d + 1 - 1) = d + 1 by omega] at this
-        exact this
+        rwa [show 1 + (d + 1 - 1) = d + 1 by omega] at this
   · split_ifs
     · exact Submodule.smul_mem _ _ hP
     · exact Submodule.zero_mem _
@@ -255,8 +253,7 @@ theorem upOp_mem (M : Matrix (Ln p q r s) (Ln p q r s) ℂ) (d : ℕ) (P : Pol p
   rw [upOp_apply]
   refine Submodule.sum_mem _ fun l _ => Submodule.sum_mem _ fun l' _ => Submodule.smul_mem _ _ ?_
   have := ((isHomogeneous_X ℂ l).mul (isHomogeneous_X ℂ l')).mul hP
-  rw [show 1 + 1 + d = d + 2 by omega] at this
-  exact this
+  rwa [show 1 + 1 + d = d + 2 by omega] at this
 
 theorem downOp_mem (M : Matrix (Ln p q r s) (Ln p q r s) ℂ) (d : ℕ) (P : Pol p q r s)
     (hP : P ∈ homog (Ix p q × Ix r s) d) : downOp M P ∈ homog (Ix p q × Ix r s) (d - 2) := by

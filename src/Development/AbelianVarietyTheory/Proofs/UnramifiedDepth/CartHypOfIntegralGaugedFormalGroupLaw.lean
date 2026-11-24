@@ -192,8 +192,7 @@ theorem hAt_order (Y : RawChart C d I κ)
         · simp
         · intro p _ hp
           rw [ite_eq_right, mul_zero]
-          intro h
-          exact hp (Prod.ext (bexp_inj h).1.symm (bexp_inj h).2.symm)
+          exact fun h => hp (Prod.ext (bexp_inj h).1.symm (bexp_inj h).2.symm)
         · simp
       · push Not at h
         rw [Finset.sum_eq_zero fun p _ => by rw [ite_eq_right (h _ _), mul_zero]]

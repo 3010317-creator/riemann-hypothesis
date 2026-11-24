@@ -264,18 +264,14 @@ theorem isPushout_level {R W : Type} [CommRing R] [CommRing W] (f : R →+* W) (
       intro y hy
       have h := congrArg (fun φ => φ.hom y) s.condition
       change s.inl.hom (f y) = s.inr.hom (Ideal.Quotient.mk _ y) at h
-      rw [Ideal.Quotient.eq_zero_iff_mem.mpr hy, map_zero] at h
-      exact h
+      rwa [Ideal.Quotient.eq_zero_iff_mem.mpr hy, map_zero] at h
     exact this ha
   refine ⟨⟨w⟩, ⟨PushoutCocone.IsColimit.mk w
     (fun s => CommRingCat.ofHom (Ideal.Quotient.lift _ s.inl.hom (hk s))) (fun s => rfl)
     (fun s => ?_) (fun s m h _ => ?_)⟩⟩
   · apply CommRingCat.hom_ext
-    apply Ideal.Quotient.ringHom_ext
-    exact congrArg CommRingCat.Hom.hom s.condition
-  · apply CommRingCat.hom_ext
-    apply Ideal.Quotient.ringHom_ext
-    exact congrArg CommRingCat.Hom.hom h
+    exact Ideal.Quotient.ringHom_ext (congrArg CommRingCat.Hom.hom s.condition)
+  · exact CommRingCat.hom_ext (Ideal.Quotient.ringHom_ext (congrArg CommRingCat.Hom.hom h))
 
 theorem isPullback_level {R W : Type} [CommRing R] [CommRing W] (f : R →+* W) (I : Ideal R) (e : ℕ) :
     IsPullback (adicLevelι (I.map f) (e + 1)) (Spec.map (CommRingCat.ofHom (levelHom f I (e + 1))))
@@ -409,8 +405,7 @@ theorem card_roots (W F : Type) [CommRing W] [Field F] [IsAlgClosed F] (φ : W �
     obtain ⟨w, hw⟩ := h _ hz
     have hw1 : w ^ N = 1 := hφ (by rw [map_pow, hw, hz, map_one])
     refine ⟨rootsOfUnity.mkOfPowEq w hw1, Subtype.ext (Units.ext ?_)⟩
-    rw [restrictRootsOfUnity_coe_apply]
-    exact hw
+    rwa [restrictRootsOfUnity_coe_apply]
 
 theorem card_hom_torsion (X W : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] [CommRing W] (N : ℕ) :
     Nat.card (powMonoidHom N : (Multiplicative X →* Wˣ) →* _).ker =
@@ -520,8 +515,7 @@ theorem GlobalTheory.UU.cubWeil_nondegenerate_generic :
     obtain ⟨ζ, hζ, -⟩ := existsUnique_cubWeil s.P.c hy hy'
     have h1 := (GlobalTheory.T.cubicalWeilPairing_eq_abelianPart_image V A G s t a W hW hloc N y y' (ρ y) (ρ y') ζ (hρ y) (hρ y') (hρN y hy) (hρN y' hy') hζ).comp σ
     have h2 := hζ.comp σ
-    rw [h1.unique h] at h2
-    exact h2
+    rwa [h1.unique h] at h2
   have hτN : ∀ y : SW ⟶ G, y ^ N = 1 → τ y ^ N = 1 := fun y hy => by rw [← map_pow, hy, map_one]
   obtain ⟨y, hy, rfl⟩ := hs x hx
   have hmem := GlobalTheory.UU.mem_of_cubWeil_orthogonal hL V A G s F N hN
@@ -603,8 +597,7 @@ theorem exists_gen_of_inK {S : Scheme.{0}} {B : Over S} [GrpObj B] {L : LB B.lef
   refine GlobalTheory.TwistTranslate.gen_of_pull_top hLB _ (fun z => ?_) c hc
   have e : ∀ p q : Spec (CommRingCat.of K), p = q := fun p q => Subsingleton.elim p q
   change (fst (Over.mk t) B).left z ∈ V
-  rw [e ((fst (Over.mk t) B).left z) (IsLocalRing.closedPoint K)]
-  exact hpV
+  rwa [e ((fst (Over.mk t) B).left z) (IsLocalRing.closedPoint K)]
 
 theorem kTriv_alg : (∀ (k : Type) [Field k] [IsAlgClosed k] (B : Over (Sp k)) [GrpObj B] (g n : ℕ), IsAbelianScheme B → SmoothOfRelativeDimension g B.hom → (n : k) ≠ 0 → Nat.card {x : (𝟙_ (Over (Sp k)) ⟶ B) // x ^ n = 1} = n ^ (2 * g)) → Laws → AllSet fun s => ∀ (t : Tower s) (a : t.Alg), KTriv a.B a.M.L.L := by
   intro hc laws V _ _ _ A G _ _ s t a

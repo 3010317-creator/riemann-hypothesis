@@ -84,8 +84,7 @@ theorem latO_empty {LS : Set (Fin S.rank → D.host.E)} {LT : Set (Fin T.rank �
     rintro x ⟨α, -, h0, a, -, s, -, t, -, rfl⟩
     have hα : α = 0 := RestrictedProduct.ext _ _ fun v => h0 v (hP v)
     subst hα
-    refine AddSubgroup.mem_bot.2 (Matrix.ext fun i j => ?_)
-    exact TensorProduct.zero_tmul _ _
+    exact AddSubgroup.mem_bot.2 (Matrix.ext fun i j => (TensorProduct.zero_tmul _ _))
   exact AddSubgroup.mem_bot.1 (h hu)
 
 theorem wAt_lineAt (hθ : IsInfFam θ) (τ : D.what₂.Tau) (z : Matrix (Fin T.rank) (Fin S.rank) ℂ) (t : ℝ) :
@@ -128,8 +127,7 @@ theorem isFockVacAt_heisO (hθ : IsInfFam θ) {τ : D.what₂.Tau} {w : WO S T} 
   intro z
   have h := congrArg (GlobalTheory.SplitScalar.heisL ψ S T w) (hf z)
   rw [annih, map_add (f := _), map_smul, map_zero] at h
-  rw [annih, dRho_heisO hθ hw, dRho_heisO hθ hw]
-  exact h
+  rwa [annih, dRho_heisO hθ hw, dRho_heisO hθ hw]
 
 theorem heis_stable : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S T : HSp D) (sS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ) (sT : D.what₂.Tau → Matrix (Fin T.rank) (Fin T.rank) ℂ) (ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)) (ΛT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)), IsStdChar D ψ (-1) → IsInfFam θ → ∀ f : WO S T → ℂ, IsThetaFunO ψ S T f → (∀ (q : Place D) (w : WO S T), wAt q w = 0 → VacAt ψ θ S T sS sT ΛS ΛT q f → VacAt ψ θ S T sS sT ΛS ΛT q (heisO ψ S T w f)) ∧ ∀ (p : Place D), IsLocal ψ θ S T sS sT ΛS ΛT p f → (∀ w : WO S T, IsLocal ψ θ S T sS sT ΛS ΛT p (heisO ψ S T (wAt p w) f)) ∧ (∀ (c : ℂ) g, IsLocal ψ θ S T sS sT ΛS ΛT p g → IsLocal ψ θ S T sS sT ΛS ΛT p (c • f + g)) ∧ ∀ τ : D.what₂.Tau, p = .inr τ → ∀ z, IsLocal ψ θ S T sS sT ΛS ΛT p (Formalism.IndefR.Datum.dRho (heisO ψ S T) θ τ z f) := by
   intro D ψ θ S T sS sT ΛS ΛT hψ hθ f hf

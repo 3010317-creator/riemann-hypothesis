@@ -91,8 +91,7 @@ theorem mem_place_iff (hε : IsPlaceIdem D v ε) (u : WO S T) :
     u ∈ (latO S T LS LT fun w => w = v) ↔
       u ∈ (latO S T LS LT fun _ => True) ∧ algebraMap (AF D.host.F) (AE D) ε • u = u := by
   constructor
-  · intro hu
-    exact ⟨GlobalTheory.PlaceModel.latO_le_top _ hu, idem_smul_eq hε hu⟩
+  · exact fun hu => ⟨GlobalTheory.PlaceModel.latO_le_top _ hu, idem_smul_eq hε hu⟩
   · rintro ⟨hu, he⟩
     have := GlobalTheory.PlaceModel.placeIdem_smul_mem hε hu
     rwa [he] at this
@@ -132,8 +131,7 @@ theorem om_fixes_vacuum : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : H
     · rintro ⟨h1, h2⟩
       refine ⟨(hlat u).2 h1, ?_⟩
       apply act_injective g h
-      rw [hc]
-      exact h2
+      rwa [hc]
   · intro u hu
     obtain ⟨a, ha, h2a⟩ := GlobalTheory.FinWeilO.exists_half_of_nonSplit hns
     have hu' := (mem_place_iff hε u).1 hu

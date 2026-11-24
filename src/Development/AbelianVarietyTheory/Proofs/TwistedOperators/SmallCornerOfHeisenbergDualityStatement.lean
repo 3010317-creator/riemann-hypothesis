@@ -108,8 +108,7 @@ theorem hermJ_mulVec (g : GU σ N) (x y : Fin N → L) :
         conv_rhs => rw [Finset.sum_comm]
         refine Finset.sum_congr rfl fun l _ => ?_
         rw [Finset.sum_comm]
-        refine Finset.sum_congr rfl fun k _ => ?_
-        exact Finset.sum_congr rfl fun i _ => by ring
+        exact Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun i _ => by ring
     _ = ∑ k : Fin N, σ (x k) * y k.rev := by
         refine Finset.sum_congr rfl fun k _ => ?_
         simp only [hinner, Matrix.one_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ,
@@ -117,8 +116,7 @@ theorem hermJ_mulVec (g : GU σ N) (x y : Fin N → L) :
 
 theorem sigma_mem_intL {x : L} (hσ : ∀ x, Valued.v (σ x) = Valued.v x) (h : x ∈ intL L) : σ x ∈ intL L := by
   change Valued.v (σ x) ≤ 1
-  rw [hσ]
-  exact h
+  rwa [hσ]
 
 theorem hermJ_int {ϖ : L} (hσ : ∀ x, Valued.v (σ x) = Valued.v x) (hϖ : σ ϖ = ϖ) (e : ℕ) (x : Fin N → L)
     (h : ∀ i, ϖ ^ e * x i ∈ intL L) : ϖ ^ (2 * e) * hermJ σ x x ∈ intL L := by
@@ -169,8 +167,7 @@ theorem smallCorner_of_heis_dual : Heis → Dual → SmallCorner := by
     simp only [hi, map_neg, hσσ, neg_neg]
   obtain ⟨h₁, h₂⟩ := (hD L ϖ σ q N hU g₀ U V C hF r b (ϖ ^ e) hrb).1 hr
   refine ⟨u, hu, hur, ?_, ?_⟩
-  · rw [hur]
-    exact hr
+  · rwa [hur]
   · rw [hur, hcol, huc, ← hb₁, add_sub_cancel_left]
     have hϖint : ϖ ∈ intL L := by
       change Valued.v ϖ ≤ 1

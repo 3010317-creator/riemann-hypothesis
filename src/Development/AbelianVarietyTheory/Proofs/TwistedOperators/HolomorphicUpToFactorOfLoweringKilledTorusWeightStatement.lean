@@ -162,8 +162,7 @@ theorem hasStrict_exp_entry (a c : Fin r) :
     LinearMap.toContinuousLinearMap (Matrix.entryLinearMap ℝ ℂ a c)
   have h0 : HasStrictFDerivAt (NormedSpace.exp : Matrix (Fin r) (Fin r) ℂ → _) (1 : _ →L[ℝ] _) (i 0) := by
     rw [map_zero]; exact hasStrictFDerivAt_exp_zero
-  have h := p.hasStrictFDerivAt.comp 0 (h0.comp 0 i.hasStrictFDerivAt)
-  exact h
+  exact p.hasStrictFDerivAt.comp 0 (h0.comp 0 i.hasStrictFDerivAt)
 
 theorem hasStrict_expFr : HasStrictFDerivAt (expFr : Frame Ψ r → Frame Ψ r) (ContinuousLinearMap.id ℝ _) 0 := by
   refine hasStrictFDerivAt_pi'.2 fun τ => hasStrictFDerivAt_pi'.2 fun a => hasStrictFDerivAt_pi'.2 fun c => ?_
@@ -526,8 +525,7 @@ theorem torProd_spec : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (B : C.Bas), C.I
     obtain ⟨h1, h2⟩ := H (Finset.univ : Finset D.what₂.Tau).toList (Finset.nodup_toList _)
     refine ⟨h1, fun ρ => ?_⟩
     have := h2 ρ
-    rw [ite_eq_left (Finset.mem_toList.2 (Finset.mem_univ _))] at this
-    exact this
+    rwa [ite_eq_left (Finset.mem_toList.2 (Finset.mem_univ _))] at this
   intro l hl
   induction l with
   | nil =>
@@ -603,8 +601,7 @@ theorem GlobalTheory.AdSpan.ConjHol.ToLie.toLieC_spec : ∀ (D : D7) (S T : HSp 
     intro ρ
     have hW := GlobalTheory.AdSpan.ConjHol.ToLie.conj_mem_sgn _ ?_ _ (hZ (C.m.e ρ))
     · have hB' : (B ρ)ᴴ * gramAt D T ρ * B ρ = diagonal fun (a : Fin T.rank) => ((sgn C.X.p0 (a : ℕ) : ℝ) : ℂ) := hB ρ
-      have hL := conj_mem_lie (isUnit_det_B C hB ρ) hB' hW
-      exact conj_eq_of_mem_lie (R.1 ρ).2 hL
+      exact conj_eq_of_mem_lie (R.1 ρ).2 (conj_mem_lie (isUnit_det_B C hB ρ) hB' hW)
     · intro a; simp
   refine ⟨fun ρ => ?_, ?_⟩
   · show ((HolRead.AdExt.toLie R B fun ρ => C.m.e ρ) (conjL Z) ρ).1 = _
@@ -1103,8 +1100,7 @@ theorem trace_mat_eq_zero_of_add_I {D : D7} {S T : HSp D} (C : Ctx S T) (ρ : D.
     · exfalso; simp at h2
     · exact h2
   refine ⟨?_, hy⟩
-  rw [hy, mul_zero, add_zero] at e0
-  exact e0
+  rwa [hy, mul_zero, add_zero] at e0
 
 theorem trLin_toLieC_of_trace {D : D7} {S T : HSp D} (C : Ctx S T) (R : GlobalTheory.SmoothForms.RealPoints C.θ T) (B : C.Bas)
     (hB : C.IsB B) (m : D.what₂.Tau → ℤ) (W : Frame C.X.Ψ T.rank) (hW : ∀ σ, trace (mat W σ) = 0) :

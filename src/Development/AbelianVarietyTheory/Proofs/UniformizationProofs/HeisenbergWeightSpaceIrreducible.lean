@@ -147,12 +147,7 @@ theorem heisenberg_weightSpace_irreducible : ∀ (F : Type) [Field F] [IsAlgClos
       { toFun := fun t => (e t a : F)
         map_one' := by simp [he1]
         map_mul' := fun s t => by simp [hel] }
-    have hψ : ψ ≠ 1 := by
-      intro h
-      apply ha
-      intro t
-      apply Units.ext
-      exact DFunLike.congr_fun h t
+    have hψ : ψ ≠ 1 := fun h => ha (fun t => Units.ext (DFunLike.congr_fun h t))
     have := sum_hom_units_eq_zero ψ hψ
     have h2 : ∑ t : T, (e t a : F) = 0 := this
     rw [h2, mul_zero, zero_smul]

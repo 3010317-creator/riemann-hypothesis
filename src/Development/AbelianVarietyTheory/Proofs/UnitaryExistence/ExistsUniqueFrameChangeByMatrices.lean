@@ -62,8 +62,7 @@ theorem existsUnique_comb_matrix {S N : Type} [CommRing S] [AddCommGroup N] [Mod
   obtain ⟨a, ha, hu⟩ := h
   refine ⟨Matrix.vecMul a g⁻¹, ?_, fun a' ha' => ?_⟩
   · show m = _
-    rw [key, Matrix.vecMul_vecMul, Matrix.nonsing_inv_mul g hg, Matrix.vecMul_one]
-    exact ha
+    rwa [key, Matrix.vecMul_vecMul, Matrix.nonsing_inv_mul g hg, Matrix.vecMul_one]
   · have h1 := hu (Matrix.vecMul a' g) (Eq.trans ha' (key a'))
     rw [← h1, Matrix.vecMul_vecMul, Matrix.mul_nonsing_inv g hg, Matrix.vecMul_one]
 
@@ -113,8 +112,7 @@ theorem existsUnique_frChg (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     have e2 : u' = fun τ i => v (∑ j, g τ i j • b τ j) := by
       funext τ i
       have := hu τ i
-      rw [hbu τ, hcomb] at this
-      exact this
+      rwa [hbu τ, hcomb] at this
     subst e1 e2
     rfl
 

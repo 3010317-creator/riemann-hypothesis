@@ -92,15 +92,13 @@ theorem isSelfDualC_latPi {S : HSp D} (hg : S.gram = -1) {I : FractionalIdeal (�
     · simp
   have hIeq : I = J⁻¹ := eq_inv_of_mul_eq_one_left hII
   obtain ⟨a0, ha0, ha00⟩ : ∃ a ∈ I, a ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hI (by
       ext x
       rw [FractionalIdeal.mem_zero_iff]
       exact ⟨hcon x, fun h => h ▸ Submodule.zero_mem (I : Submodule (𝓞 D.host.E) D.host.E)⟩)
   refine ⟨⟨Submodule.fg_pi fun _ => FractionalIdeal.fg_of_isNoetherianRing le_rfl _, ?_⟩, fun y => ⟨fun hy x hx => ?_, fun h => ?_⟩⟩
-  · intro s _ hs
-    exact (LinearIndependent.iff_fractionRing (𝓞 D.host.E) D.host.E).mp hs
+  · exact fun s _ hs => (LinearIndependent.iff_fractionRing (𝓞 D.host.E) D.host.E).mp hs
   · rw [hpair]
     have hy' := mem_latPi.1 hy
     have hx' := mem_latPi.1 hx

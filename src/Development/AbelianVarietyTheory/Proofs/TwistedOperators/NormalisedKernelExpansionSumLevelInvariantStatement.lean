@@ -220,8 +220,7 @@ variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {
 theorem negGA_mem_fin (V : HSp D) {g : GA D V} (hg : g ∈ GfC V) : negGA V g ∈ GfC (negSp V) := by
   have e : matHom (negSp V) (negGA V g) = matHom V g := Units.ext (mt_negGA V g)
   simp only [GfC, MonoidHom.mem_ker, infHom, MonoidHom.comp_apply] at hg ⊢
-  rw [e]
-  exact hg
+  rwa [e]
 
 theorem fockComp_mul_right (B : VertexFrames G) (i : ℕ) (hi : (Pair.chi i D.R.m : Pair T).InRange D.R.m)
     {f : WO (G.pS (.chi i D.R.m : Pair T)) (G.pT (.chi i D.R.m : Pair T)) → ℂ} (hf : IsThetaFunO W.ψ _ _ f)
@@ -338,18 +337,14 @@ theorem pairPts_last_invariant (S : GridChoice W U) {t : T} {Φ : G.Datum} {β :
     intro d hd j
     by_cases hj : j = lastIx D
     · subst hj
-      simp only [huc, Function.update_self]
-      exact colShift_theta S t _ ((hth d hd).1 _)
-    · simp only [huc, Function.update_of_ne hj]
-      exact (hth d hd).1 j
+      simpa only [huc, Function.update_self] using colShift_theta S t _ ((hth d hd).1 _)
+    · simpa only [huc, Function.update_of_ne hj] using (hth d hd).1 j
   have thr : ∀ d ∈ τ.support, ∀ i, IsThetaFunO W.ψ _ _ (ur d i) := by
     intro d hd i
     by_cases hi : i = lastIx D
     · subst hi
-      simp only [hur, Function.update_self]
-      exact rowShift_theta S k ((hth d hd).2 _)
-    · simp only [hur, Function.update_of_ne hi]
-      exact (hth d hd).2 i
+      simpa only [hur, Function.update_self] using rowShift_theta S k ((hth d hd).2 _)
+    · simpa only [hur, Function.update_of_ne hi] using (hth d hd).2 i
   have lhs : pairPts S τ (Function.update x D.R.m (x D.R.m * finEmb G.sp.topDec k)) (Function.update y D.R.m (y D.R.m * k))
       (Ψ (x 0)) (F (y 0)) = τ.sum fun d a => a * M (fun j => toTh W _ (uc d j)) (fun i => toTh W _ (ur d i)) := by
     simp only [pairPts, Finsupp.sum, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul]
@@ -847,8 +842,7 @@ theorem flatTensor_moveEnd {Γ : Grid k} (hs : 1 ≤ Γ.s) (ψ : AddChar k Circl
       rcases eq_or_ne j 0 with rfl | h
       · have hgv : (embX (Γ.m - 2 - 0 + 1) κ).val = fromBlocks κ.val 0 0 1 := rfl
         have h1 := congrFun (congrFun (H (e ⟨0, hj⟩)) r) (.inr s)
-        rw [hgv, GlobalTheory.RootEx.OpELevi.right_inr, ← hc0, ← hΦ0] at h1
-        exact h1
+        rwa [hgv, GlobalTheory.RootEx.OpELevi.right_inr, ← hc0, ← hΦ0] at h1
       · rw [hΦo e ⟨j, hj⟩ h]
         exact congrArg (fun z => stepPt z (e ⟨j, hj⟩) r (.inr s)) (hcol j h).symm
     have hrow : ∀ j r, rowVar x e (j + 1) r = rowVar x' (Φ e) (j + 1) r := fun j r => by
@@ -1109,8 +1103,7 @@ theorem tflip_end {μ₀ : T} (hL : L.Is μ₀) (W : G.Weil) (B : Frames G) (t :
     (hbase.trans (one_smul _ _).symm)
   change (locGrid G t w).pathAct .one (flipStage t w B W Φ).path _ (flipStage t w B W Φ).tensor =
     _ • (flipStage t w B W Φ).tensor at key
-  rw [(flipStage_path_level t w B W Φ).1, one_smul] at key
-  exact key
+  rwa [(flipStage_path_level t w B W Φ).1, one_smul] at key
 
 theorem fn_invariant (S : GridChoice W U) {t μ₀ : T} (hL : L.Is μ₀) (hde : Nat.Coprime D.host.pde (D.host.QS * D.host.q) ∧ Nat.Coprime D.host.pde' (D.host.QS * D.host.q))
     (hc : ∀ P ∈ L.Q t, ((Ideal.absNorm D.host.ccK : ℕ) : 𝓞 D.host.E) ∉ P.asIdeal) (ht : t ∈ U) {Φ : G.Datum}

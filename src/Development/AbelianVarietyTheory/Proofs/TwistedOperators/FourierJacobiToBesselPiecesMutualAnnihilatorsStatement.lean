@@ -124,7 +124,6 @@ theorem continuous_smul_mx {m n : ℕ} (c : AF D.host.F) : Continuous fun x : Mx
   haveI : ContinuousSMul (AF D.host.F) (AE D) :=
     IsModuleTopology.toContinuousSMul (AF D.host.F) (AE D)
   refine continuous_pi fun i => continuous_pi fun j => ?_
-  show Continuous fun x : Mx D m n => c • x i j
   exact (continuous_const (y := c)).smul (continuous_id.matrix_elem i j)
 
 def annSet (ψ : AddChar (AF D.host.F) ℂ) {S T : HSp D} (Γ : AddSubgroup (WO S T)) : Set (WO S T) :=
@@ -216,8 +215,7 @@ theorem annRow_isCompact : All fun {D} _ _ {sc} {G} W _ => ∀ i, i < D.R.m → 
       obtain ⟨c, hc⟩ := hL.βY 0 (Nat.lt_of_le_of_lt (Nat.zero_le i) hi)
       have hY := Formalism.IndefR.Eqv.KerDiag.isSelfDualC_of_base hc
       show IsSelfDualC (G.node (.grid 0 0)).sp (G.node (.grid 0 0)).lat
-      rw [G.node_zero_zero]
-      exact hY
+      rwa [G.node_zero_zero]
     ·
       refine (G.isV (X := .grid k 0) ⟨hk, Nat.zero_le _⟩ ?_).sd
       intro j hj
@@ -268,8 +266,7 @@ theorem latRow_zero_le_latBig : All fun {D} _ _ _ {G} _ _ => 0 < D.R.m → latRo
       ∀ e : AE D, IsIdemSum e G.pl.W0 → e • u ∈ hatMx (G.modul • homLat (G.Λ (.grid (0 + 1) 0)) (G.Λ (.grid 0 0))) := hu
   have key := GlobalTheory.T.completedHomLattice_modulus_depth_mem_shift hq μ0 hL G (G.Λ (.grid (0 + 1) 0)) 1 (G.Λ (.grid 0 0)) hS (by rw [h1]; exact hT)
     (by rw [one_mul]; exact hsh) u (by rw [h1]; exact GlobalTheory.RowLoc.mem_latO_negSp.1 hu'.1) ⟨e, he, by rw [h1]; exact hu'.2 e he⟩
-  rw [one_mul] at key
-  exact key
+  rwa [one_mul] at key
 
 end GlobalTheory.RowBig
 
@@ -581,8 +578,7 @@ theorem latRow_ann_open : All fun {D} _ _ {sc} {G} W _ => ∀ i, i < D.R.m → �
       · exact Matrix.inv_eq_left_inv (by rw [neg_mul_neg, Matrix.nonsing_inv_mul A h])
       · have h' : ¬ IsUnit (-A).det := by
           rw [Matrix.det_neg]
-          intro hu
-          exact h (isUnit_of_mul_isUnit_right hu)
+          exact fun hu => h (isUnit_of_mul_isUnit_right hu)
         rw [Matrix.nonsing_inv_apply_not_isUnit _ h, Matrix.nonsing_inv_apply_not_isUnit _ h', neg_zero]
     simp only [symplO, hO, negSp_gram, hinv, Matrix.neg_apply, map_neg, neg_mul, mul_neg, Finset.sum_neg_distrib]
   rw [e, AddChar.map_neg_eq_inv] at key
@@ -738,8 +734,7 @@ theorem pieces_dualA (dW : HypDec W W₀ σ) (Γ₂ : AddSubgroup (WO V W))
   · obtain ⟨U, hU, h0, hUm⟩ := ho
     refine ⟨(fun a' => d.extY W a') ⁻¹' U, hU.preimage (continuous_id.matrix_mul continuous_const), ?_, ?_⟩
     · show d.extY W 0 ∈ U
-      rw [map_zero]
-      exact h0
+      rwa [map_zero]
     · intro a' ha' hfin
       refine ⟨hfin, fun b hb' => ?_⟩
       have := hUm _ ha' (mxAt_mul hfin _) _ hb'

@@ -87,8 +87,7 @@ theorem exists_nhds_zero_add_eq {X : Type} [TopologicalSpace X] [AddCommGroup X]
   have hcov : tsupport g ⊆ ⋃ x : X, (fun y => y - x) ⁻¹' interior (V x) := by
     intro x _
     refine Set.mem_iUnion.2 ⟨x, ?_⟩
-    simp only [Set.mem_preimage, sub_self]
-    exact mem_interior_iff_mem_nhds.2 (hV0 x)
+    simpa only [Set.mem_preimage, sub_self] using mem_interior_iff_mem_nhds.2 (hV0 x)
   obtain ⟨t, ht⟩ := hc.isCompact.elim_finite_subcover (fun x => (fun y => y - x) ⁻¹' interior (V x))
     (fun x => isOpen_interior.preimage (continuous_id.sub continuous_const)) hcov
   refine ⟨⋂ x ∈ t, V x, (Filter.biInter_finset_mem t).2 fun x _ => hV0 x, fun y u hu => ?_⟩

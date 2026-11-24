@@ -214,8 +214,7 @@ theorem exists_isom (S : Subring A) (σ : A →+* A) (hσ : ∀ x, σ (σ x) = x
     · intro x x' hxx
       have := congrArg j'.mulVec hxx
       rwa [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, h2, Matrix.one_mulVec, Matrix.one_mulVec] at this
-    · intro x'
-      exact ⟨j'.mulVec x', by rw [Matrix.mulVec_mulVec, h1, Matrix.one_mulVec]⟩
+    · exact fun x' => ⟨j'.mulVec x', by rw [Matrix.mulVec_mulVec, h1, Matrix.one_mulVec]⟩
   · rw [hJ, hj, cT_mul_twisted_operators, cT_mul_twisted_operators]
     simp only [Matrix.mul_assoc]
     rw [hu2, hy2]
@@ -509,8 +508,7 @@ theorem image_iff {A : Type} [CommRing A] {m n : ℕ} {j : Matrix (Fin m) (Fin n
     constructor
     · rintro ⟨x, hx, rfl⟩
       exact hf x hx
-    · intro hy
-      exact ⟨j'.mulVec y, hb y hy, by rw [Matrix.mulVec_mulVec, h1, Matrix.one_mulVec]⟩
+    · exact fun hy => ⟨j'.mulVec y, hb y hy, by rw [Matrix.mulVec_mulVec, h1, Matrix.one_mulVec]⟩
 
 theorem bij_of_inv {A : Type} [CommRing A] {m n : ℕ} {j : Matrix (Fin m) (Fin n) A} {j' : Matrix (Fin n) (Fin m) A}
     (h1 : j * j' = 1) (h2 : j' * j = 1) : Function.Bijective j.mulVec := by
@@ -518,8 +516,7 @@ theorem bij_of_inv {A : Type} [CommRing A] {m n : ℕ} {j : Matrix (Fin m) (Fin 
   · intro x y hxy
     have := congrArg j'.mulVec hxy
     rwa [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, h2, Matrix.one_mulVec, Matrix.one_mulVec] at this
-  · intro y
-    exact ⟨j'.mulVec y, by rw [Matrix.mulVec_mulVec, h1, Matrix.one_mulVec]⟩
+  · exact fun y => ⟨j'.mulVec y, by rw [Matrix.mulVec_mulVec, h1, Matrix.one_mulVec]⟩
 
 theorem isom_map {A B : Type} [CommRing A] [CommRing B] {m n : ℕ} (ψ : A →+* B) (σ : A →+* A) (τ : B →+* B)
     (h : ψ.comp σ = τ.comp ψ) {j : Matrix (Fin m) (Fin n) A} {J : Matrix (Fin n) (Fin n) A} {J' : Matrix (Fin m) (Fin m) A}

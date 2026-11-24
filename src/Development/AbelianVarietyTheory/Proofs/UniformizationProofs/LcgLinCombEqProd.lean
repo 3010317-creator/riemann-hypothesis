@@ -67,8 +67,7 @@ lemma boxGen_overlap_le {X X' Y : Scheme.{0}} (L : LB X) {J K : Type} [Fintype J
     intro c y hy
     simp only [LB.wchart, LB.pull, LB.LinComb, TopologicalSpace.Opens.mem_mk, Set.mem_iInter,
       Set.mem_preimage, SetLike.mem_coe] at hy ⊢
-    intro k _
-    exact hy k i
+    exact fun k _ => hy k i
   exact inf_le_inf (key a) (key b)
 
 lemma lcg_linComb_eq_prod {X X' Y : Scheme.{0}} (L : LB X) {J K : Type} [Fintype J] [Fintype K]
@@ -100,8 +99,7 @@ theorem isGen_boxGen {X X' Y : Scheme.{0}} (L : LB X) {J K : Type} [Fintype J] [
   apply GlobalTheory.BoxCubical.isGen_boxGen <;> assumption
 
 theorem boxIsLB (S : Scheme.{0}) : BoxIsLBSt (S := S) := by
-  intro G' G _ _ j p L hL
-  exact ReciprocityTheory.ChartRestriction.G.DVR.linComb_isLB L hL _ _
+  exact fun G' G _ _ j p L hL => ReciprocityTheory.ChartRestriction.G.DVR.linComb_isLB L hL _ _
 
 theorem boxRigIsGen (S : Scheme.{0}) : BoxRigIsGenSt (S := S) := by
   intro G' G _ _ _ _ j p L r hL hr

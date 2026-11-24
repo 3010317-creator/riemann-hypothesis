@@ -225,8 +225,7 @@ theorem cplx_pairS {W : G.Weil} {M : Vol G} {t : T} {i j : Fin D.R.m} {e : Num G
       exact cartan_comm cW₁
     have := algV e _ _ _ _ _ _ hX hs
     simp only [neg_neg] at this
-    rw [compAt_mapA W.θ W.θ_is, compAt_mapA W.θ W.θ_is]
-    exact this
+    rwa [compAt_mapA W.θ W.θ_is, compAt_mapA W.θ W.θ_is]
   · have := algW e _ _ _ _ _ _ hX (cartan_comm cV₁)
     rw [compAt_mapB W.θ W.θ_is, compAt_mapB W.θ W.θ_is, this]
     show _ = Complex.I • (_ * _ * _)
@@ -350,13 +349,11 @@ theorem exists_vacS (hL : L.Is μ₀) (h : IsTripleOf W M t i j e Bs Γ X) (hT :
         intro h0
         apply (hGood.vac v).2.1
         funext ξ'
-        rw [Subsingleton.elim ξ' default]
-        exact h0
+        rwa [Subsingleton.elim ξ' default]
       rw [div_mul_cancel₀ _ hv0]
     obtain ⟨c, hc0, hcb⟩ := GlobalTheory.LatBound.locCo_latAtV_bounded Γ.V' Γ.W v Γ.M'.co hT.geo.hV'.lat.toIsLattice hT.geo.hW.lat.toIsLattice
     have hsdl := GlobalTheory.LatVac.DualLoc.map_selfDual v Γ.M'.co W.ψ (latPtS t e v) (fun γ hγ => hγ.1) ((hsd v).2)
     have hcont : Continuous (GlobalTheory.LatVac.psiAt W.ψ v) := by
-      show Continuous (fun x => W.ψ (GlobalTheory.LatVac.liftV v x))
       exact hstd.1.comp (continuous_const.prodMk (GlobalTheory.AdelicU.continuous_singleFin v))
     have hne1 : GlobalTheory.LatVac.psiAt W.ψ v ≠ 1 := by
       intro h1
@@ -411,12 +408,10 @@ theorem vac_datumB : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : 
   refine ⟨f, ?_, ?_, ?_, ?_⟩
   · rintro rfl
     obtain ⟨x₁, hx₁⟩ : ∃ x : HomA G t i j, ρ.vT i j x ≠ 0 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact GlobalTheory.BigDat.vac_ne_zero h₁ (funext hc)
     obtain ⟨x₂, hx₂⟩ : ∃ x : HomB G i j, ρ.vX i j x ≠ 0 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact GlobalTheory.BigDat.vac_ne_zero h₂ (funext hc)
     have h0 : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (0 : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SInf _ _) Γ.M'.vac =
         (0 : ℂ) • GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (0 : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SInf _ _) Γ.M'.vac := by

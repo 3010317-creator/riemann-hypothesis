@@ -105,8 +105,7 @@ theorem hasSum_coefficients (G : Type) [AddCommGroup G] [TopologicalSpace G] [Is
     simp only [S, hperχ _ γ hγ]
   have horth : ∀ d, d ≠ 0 → ∫ x in 𝓕, χ d x ∂μ = 0 := fun d hd => by
     obtain ⟨x₀, hx₀⟩ : ∃ x₀, χ d x₀ ≠ 1 := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       exact hd (hinj d hcon)
     have e := GlobalTheory.HeisOrtho.setIntegral_add_right Γ μ 𝓕 h𝓕 (χ d) (hperχ d) x₀
     simp only [hx, integral_mul_const] at e
@@ -136,8 +135,7 @@ theorem hasSum_coefficients (G : Type) [AddCommGroup G] [TopologicalSpace G] [Is
     have key := hasSum_integral_of_summable_integral_norm hF hsum
     have e2 : (fun x => ∑' a, c a * χ (b + -a) x) = fun x => χ b x * S x := by
       funext x
-      simp only [S, ← tsum_mul_left, ha]
-      exact tsum_congr fun a => by ring
+      simpa only [S, ← tsum_mul_left, ha] using tsum_congr fun a => by ring
     rw [e2] at key
     refine key.unique ?_
     have e3 : (fun a => ∫ x in 𝓕, c a * χ (b + -a) x ∂μ) = fun a => if a = b then c b else 0 := by
@@ -181,8 +179,7 @@ theorem summable_norm_of_lattice {Y : Type} {n : ℕ} (T : Y → ℂ) (ℓ : Y �
     by_cases hk : k = 0
     · simp [g, hk]
     · have hpos : 0 < (k : ℝ) ^ 2 := by positivity
-      simp only [g, hk, ite_false, add_zero, sq_abs]
-      exact inv_anti₀ hpos (by linarith)
+      simpa only [g, hk, ite_false, add_zero, sq_abs] using inv_anti₀ hpos (by linarith)
   let b : (Fin n → ℤ) → ℝ := fun k => ∏ i, g (k i)
   have hb0 : ∀ k, 0 ≤ b k := fun k => Finset.prod_nonneg fun i _ => hg0 _
   have hb : Summable b := by
@@ -296,8 +293,7 @@ theorem dLine_heisO (hθ : IsInfFam θ) (hψ : IsStdChar D ψ (-1)) {L : ℝ →
     rw [heisO_comm, hc, Pi.smul_apply, smul_eq_mul]
     rfl
   have h1 : HasDerivAt (fun t : ℝ => Complex.exp (t * c)) c 0 := by
-    have h := ((Complex.ofRealCLM.hasDerivAt (x := (0 : ℝ))).mul_const c).cexp
-    simpa using h
+    simpa using ((Complex.ofRealCLM.hasDerivAt (x := (0 : ℝ))).mul_const c).cexp
   have h2 := hasDerivAt_heisO hθ hψ hL hf (w + u) 0
   rw [map_zero, heisO_zero] at h2
   have h3 := h1.mul (h2.const_mul (ψ (symplOH V W w u)))
@@ -429,8 +425,7 @@ theorem exists_coords (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (-1
     have h1 : ∀ i, Λ (lam i) = 0 := fun i => by
       have := congrFun hyy i
       show omO S T (z (y - y')) (z (lam i)) = 0
-      rw [map_sub, map_sub, LinearMap.sub_apply, sub_eq_zero]
-      exact this
+      rwa [map_sub, map_sub, LinearMap.sub_apply, sub_eq_zero]
     have h2 : ∀ i, Λ (e i) = 0 := fun i => by
       have := h1 i
       simp only [lam, map_nsmul, nsmul_eq_mul] at this
@@ -438,8 +433,7 @@ theorem exists_coords (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (-1
     have h3 : Λ.toRatLinearMap = 0 := e.ext fun i => h2 i
     have h4 : ∀ l, Λ l = 0 := fun l => LinearMap.congr_fun h3 l
     obtain ⟨i, j, hij⟩ : ∃ i j, (y - y') i j ≠ 0 := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       exact hd (Matrix.ext hcon)
     obtain ⟨_, ⟨g, rfl⟩, hγ⟩ := GlobalTheory.RatAnnih.exists_symplO_eq S T (rat (y - y')) i j ((y - y') i j)⁻¹
     have h5 : symplO S T (rat (y - y')) (rat g) = algebraMap D.host.F (AF D.host.F) 2 := by
@@ -465,8 +459,7 @@ theorem exists_coords (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (-1
     exact h12 (by simpa using h8)
   · intro y hy i
     have hv : fpart (lam i) ∈ U := by
-      simp only [lam, map_nsmul]
-      exact hNU i
+      simpa only [lam, map_nsmul] using hNU i
     have h1 := hy _ hv (hfin _)
     obtain ⟨a, ha⟩ := GlobalTheory.SymplecticOrthogonalSesquilinear.symplO_rat D S T (lam i) y
     have h2 : ψ (symplO S T (ratW T S (lam i)) (ratW T S y)) = 1 := (congrArg ψ ha).trans (hψ.1.2.2.1 a)
@@ -602,8 +595,7 @@ theorem core (D : D7) (V V' W S : HSp D) (hS : S.gram = 1) (C C' : Matrix (Fin V
     ⟨hAc.comp (hb i).1, fun t => isoPart_map_eq_zero (finPart D) V W C ((hb i).2 t)⟩
   have hc : ∀ y i (t : ℝ), ψ (symplO V W (L i t) (u y)) =
       Complex.exp (t * (2 * Real.pi * Complex.I * (ℓ y i : ℝ))) := fun y i t => by
-    refine Eq.trans ?_ (hchar y i t)
-    exact congrArg ψ (hpair _ y)
+    exact Eq.trans (congrArg ψ (hpair _ y)) (hchar y i t)
   have hrel : ∀ i g y, IsThetaFunO ψ V W g → |ℓ y i| * ‖T y g‖ ≤ ‖T y (dLine ψ V W (L i) g)‖ := fun i g y hg => by
     have h := coef_rel (μ.restrict 𝓨) (isoPart V W C) hθ hψ (hL i) hAc hg (u y) _ (hc y i)
       (fun g' hg' t => hinv g' hg' (b i t))
@@ -626,8 +618,7 @@ theorem core (D : D7) (V V' W S : HSp D) (hS : S.gram = 1) (C C' : Matrix (Fin V
     have h := coef_level (μ.restrict 𝓨) (isoPart V W C) hψ hf (u y) (isoPart V W C v) hfix (fun g hg => hinv g hg v)
     have h' : ψ (symplO V W (u y) (isoPart V W C v)) = 1 :=
       mul_right_cancel₀ hy (by rw [one_mul]; exact h.symm)
-    rw [symplO_skew (isoPart V W C v) (u y), hpair, AddChar.map_neg_eq_inv, inv_eq_one] at h'
-    exact h'
+    rwa [symplO_skew (isoPart V W C v) (u y), hpair, AddChar.map_neg_eq_inv, inv_eq_one] at h'
   have hsum : Summable fun y => ‖T y f‖ := summable_norm_of_lattice _ ℓ hinj hsupp Cb hCb
   let χ : Matrix (Fin W.rank) (Fin S.rank) D.host.E → Mx D W.rank S.rank → ℂ :=
     fun y a => ψ (symplO S W a (ratW W S y))
@@ -686,8 +677,7 @@ theorem core (D : D7) (V V' W S : HSp D) (hS : S.gram = 1) (C C' : Matrix (Fin V
   have hA0 : isoPart V W C 0 = 0 := Ah.map_zero
   simp only [hA0] at hF
   have hr : ∀ y, res V V' W C B μ 𝓨 (heisO ψ V W (isoPart V W C' (Matrix.map y (incA D))) f) 0 = T y f := fun y => hres _
-  simp only [hr]
-  exact ⟨hsum, by simpa only [hterm] using hF⟩
+  simpa only [hr] using ⟨hsum, by simpa only [hterm] using hF⟩
 
 theorem value_zero_eq_sum_restrictions : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C C' : Matrix (Fin V.rank) (Fin r) D.host.E) (B : Matrix (Fin V.rank) (Fin V'.rank) D.host.E), IsIsoSplit V V' C B → adj D C * V.gram * C' = 1 → adj D C' * V.gram * C' = 0 → adj D C' * V.gram * B = 0 → ∀ ψ : AddChar (AF D.host.F) ℂ, IsStdChar D ψ (-1) → ∀ (μ : Measure (Mx D W.rank r)) (𝓨 : Set (Mx D W.rank r)), IsCovolOne (ratMx D W.rank r) μ 𝓨 → ∀ f, IsThetaFunO ψ V W f → Summable (fun y : Matrix (Fin W.rank) (Fin r) D.host.E => ‖res V V' W C B μ 𝓨 (heisO ψ V W (isoPart V W C' (Matrix.map y (incA D))) f) 0‖) ∧ HasSum (fun y : Matrix (Fin W.rank) (Fin r) D.host.E => res V V' W C B μ 𝓨 (heisO ψ V W (isoPart V W C' (Matrix.map y (incA D))) f) 0) (f 0) := by
   intro D V V' W r C C' B hs h1 _ _ ψ hψ μ 𝓨 hcov f hf

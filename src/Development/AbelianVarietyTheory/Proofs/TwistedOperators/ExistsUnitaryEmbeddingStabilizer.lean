@@ -89,12 +89,10 @@ theorem map_inj {m n : ℕ} : Function.Injective (fun M : Matrix (Fin m) (Fin n)
 
 theorem mem_GfC_iff (V : HSp D) (g : GA D V) : g ∈ GfC V ↔
     (matHom V g).1.map (Algebra.TensorProduct.map (fstA D.host.F) (AlgHom.id D.host.F D.host.E)).toRingHom = 1 := by
-  show infHom V g = 1 ↔ _
   exact Units.ext_iff
 
 theorem mem_GinfC_iff (V : HSp D) (g : GA D V) : g ∈ GinfC V ↔
     (matHom V g).1.map (Algebra.TensorProduct.map (sndA D.host.F) (AlgHom.id D.host.F D.host.E)).toRingHom = 1 := by
-  show finHom V g = 1 ↔ _
   exact Units.ext_iff
 
 section Dec
@@ -191,8 +189,7 @@ theorem mem_rational_of_embedding_rational (h : GA D A) (hg : stabilizerEmbeddin
       A.gram.map (incA D)
     rw [Matrix.map_mul, Matrix.map_mul, ← GlobalTheory.AutFunCounterexample.cT_map_gen, hA1]
     exact h.2
-  refine Subgroup.mem_subgroupOf.2 ⟨M, hu, Units.ext ?_⟩
-  exact hA1
+  exact Subgroup.mem_subgroupOf.2 ⟨M, hu, Units.ext hA1⟩
 
 theorem unitaryEmbedding_fixes_vectors (h : GA D A) : mt B (stabilizerEmbedding d h) * d.a.map (incA D) = d.a.map (incA D) := by
   obtain ⟨-, a2⟩ := (embRel_iff d h _).2 rfl

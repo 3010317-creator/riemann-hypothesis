@@ -189,8 +189,7 @@ theorem vanish {n : Type} [Fintype n] [DecidableEq n] {c p : ℕ} (h1 : 1 ≤ p)
     by_cases ht : t = r
     · subst ht
       rw [map_div₀, le_div_iff₀ hs] at hy
-      rw [Pi.single_eq_same, map_mul, map_div₀, div_mul_eq_mul_div, div_le_iff₀ hu, one_mul]
-      exact hy
+      rwa [Pi.single_eq_same, map_mul, map_div₀, div_mul_eq_mul_div, div_le_iff₀ hu, one_mul]
     · simp [Pi.single_eq_of_ne ht])
   have hy' : simpleSum g = y := by
     rw [hsum, Finset.sum_eq_single r]
@@ -220,8 +219,7 @@ theorem ball_eq (s : kˣ) : {x : k | valuation k x ≤ valuation k (s : k)} = s 
 
 theorem meas_ball (s : kˣ) : MeasurableSet {x : k | valuation k x ≤ valuation k (s : k)} := by
   rw [ball_eq]
-  refine (IsOpen.smul ?_ s).measurableSet
-  exact Valuation.isOpen_integer
+  exact (IsOpen.smul Valuation.isOpen_integer s).measurableSet
 
 theorem vol_ball (ν : Measure k) (hν : IsUnitVol ν) (s : kˣ) :
     ν {x : k | valuation k x ≤ valuation k (s : k)} = ENNReal.ofReal (nabs k s) := by

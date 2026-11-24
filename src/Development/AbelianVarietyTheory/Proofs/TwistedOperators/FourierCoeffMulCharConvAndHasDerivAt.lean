@@ -102,8 +102,7 @@ theorem _root_.GlobalTheory.fourierCoeff_mul_char_conv_and_hasDerivAt :
         ext y
         simp only [Set.mem_preimage, Set.mem_vadd_set, vadd_eq_add]
         constructor
-        · intro h
-          exact ⟨_, h, add_neg_cancel_left z y⟩
+        · exact fun h => ⟨_, h, add_neg_cancel_left z y⟩
         · rintro ⟨w, hw, rfl⟩
           simpa using hw
       rw [hset]
@@ -145,8 +144,7 @@ theorem _root_.GlobalTheory.fourierCoeff_mul_char_conv_and_hasDerivAt :
           congr 1
           rw [show L s = L t + L (s - t) by rw [← map_add (f := _)]; congr 1; ring]
           abel
-        rw [e]
-        exact h
+        rwa [e]
       exact h'.mul_const _)
   simpa using key.2
 

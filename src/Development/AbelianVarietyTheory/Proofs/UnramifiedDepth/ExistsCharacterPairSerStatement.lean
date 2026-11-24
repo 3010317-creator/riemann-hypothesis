@@ -377,8 +377,7 @@ private theorem pair_up (h1 : ∀ n, (p ^ (n + 1)) • τ n = 0) (h2 : ∀ n, τ
       (by rw [mul_comm, ← smul_smul, hx, nsmul_zero]) hy
     have h3 := B.pairing_mul _ _ _ _ _ hx hy hz'
     rw [← map_nsmul, ← h2] at h3
-    rw [B.pairing_unique _ _ _ _ _ ih h3, pow_succ p (m + 1)]
-    exact hz'
+    rwa [B.pairing_unique _ _ _ _ _ ih h3, pow_succ p (m + 1)]
 
 private def PVal (p : ℕ) (τ : ℕ → B.G O) {R : LAlg R₀} (s : LHom O R) (x : B.G R) (z : (R : Type)ˣ) : Prop :=
   ∃ n, B.IsPairing (p ^ (n + 1)) x (B.map s (τ n)) z
@@ -432,8 +431,7 @@ theorem exists_character_pairSer : ∀ (R₀ : Type) [CommRing R₀] (B : BX R�
   intro R₀ _ B O g F Y hY p hp hc τ h1 h2
   classical
   have hI : Ideal.span {(p : (O : Type))} ≤ IsLocalRing.maximalIdeal (O : Type) := by
-    rw [Ideal.span_singleton_le_iff_mem]
-    exact hp
+    rwa [Ideal.span_singleton_le_iff_mem]
   have hI' : Ideal.span {(p : (O : Type))} ≠ ⊤ := by
     rwa [Ne, Ideal.span_singleton_eq_top]
   have hex : ∀ (R : LAlg R₀) (s : LHom O R) (a : Fin g → (R : Type)), IsNilpotent (p : (R : Type)) →

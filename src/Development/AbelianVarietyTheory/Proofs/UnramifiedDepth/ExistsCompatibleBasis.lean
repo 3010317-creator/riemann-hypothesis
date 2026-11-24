@@ -641,8 +641,7 @@ theorem exists_basis : ∃ gb : Module.Basis (Fin g) R₀ B.gg, ∀ w : B.gg,
   have h4 : ∀ k, (Module.Basis.ofEquivFun (LinearEquiv.ofBijective L hL)).repr w k = θ w k := fun k => by
     rw [Module.Basis.ofEquivFun_repr_apply]
     rfl
-  simp only [h4]
-  exact hθ w
+  simpa only [h4] using hθ w
 
 end Coord
 
@@ -651,10 +650,8 @@ theorem mem_max_iff {R K : LAlg R₀} (hK : maximalIdeal (K : Type) = ⊥) (ρ :
   constructor
   · intro ha
     have : ρ.1 a ∈ maximalIdeal (K : Type) := fun h => ha (ρ.2.map_nonunit a h)
-    rw [hK] at this
-    exact this
-  · intro ha
-    exact (hρ.2 a ha).not_isUnit
+    rwa [hK] at this
+  · exact fun ha => (hρ.2 a ha).not_isUnit
 
 theorem nil_of_mem_span {S : Type} [CommRing S] {g : ℕ} {a b : Fin g → S} (ha : ∀ i, IsNilpotent (a i))
     (hb : ∀ i, IsNilpotent (b i)) {c : S} (hc : c ∈ Ideal.span (Set.range a ∪ Set.range b)) :
@@ -752,8 +749,7 @@ theorem exists_formalChart :
       have h : (i : (R : Type)) * i ∈ RingHom.ker π.1 ^ 2 := by
         rw [pow_two]
         exact Ideal.mul_mem_mul i.2 i.2
-      rw [hπ.2] at h
-      exact h
+      rwa [hπ.2] at h
     have hR : IsLocalHom (algebraMap R₀ (R : Type)) := ⟨fun a h => hKl.map_nonunit a (by
       rw [← ρ.1.commutes]
       exact h.map ρ.1)⟩
@@ -969,8 +965,7 @@ lemma finOf_split (B : BX R₀) (p : ℕ) [Module.Free (O : Type) A] [Module.Fin
       rw [map_mul, hi, hj, map_zero, _root_.mul_one] at h4
       exact one_ne_zero h4
     subst hji
-    refine ⟨rfl, heq_of_eq (Subtype.ext ?_)⟩
-    exact Ideal.Quotient.algHom_ext R₀ (h3.trans hψφ.symm)
+    exact ⟨rfl, heq_of_eq (Subtype.ext (Ideal.Quotient.algHom_ext R₀ (h3.trans hψφ.symm)))⟩
   · obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective f
     have h0 : a * ε i = 0 := by
       refine hsep _ fun φ => ?_
@@ -1139,14 +1134,12 @@ private theorem finSplit_exists {O A : Type} [CommRing O] [IsLocalRing O] [CommR
       by_contra hne
       obtain ⟨N, hN, hle⟩ := Ideal.exists_le_maximal _ hne
       have e1 := finSplit_max_eq φ N hN (le_sup_left.trans hle)
-      have e2 := finSplit_max_eq ψ N hN (le_sup_right.trans hle)
-      exact hψ (e2.symm.trans (e1.trans hφ))
+      exact hψ ((finSplit_max_eq ψ N hN (le_sup_right.trans hle)).symm.trans (e1.trans hφ))
     have h1 : (1 : A) ∈ RingHom.ker φ ⊔ RingHom.ker ψ := htop ▸ Submodule.mem_top
     obtain ⟨a, ha, b, hb, hab⟩ := Submodule.mem_sup.1 h1
     refine ⟨b, fun _ _ => ⟨?_, RingHom.mem_ker.1 hb⟩⟩
     have hφab := congrArg φ hab
-    rw [map_add (f := _), RingHom.mem_ker.1 ha, zero_add, map_one] at hφab
-    exact hφab
+    rwa [map_add (f := _), RingHom.mem_ker.1 ha, zero_add, map_one] at hφab
   choose x hx using key
   refine ⟨1 - ∏ φ ∈ Finset.univ.filter (fun φ : A →ₐ[O] O => (maximalIdeal O).comap φ = M),
       (1 - ∏ ψ ∈ Finset.univ.filter (fun ψ : A →ₐ[O] O => (maximalIdeal O).comap ψ ≠ M), x φ ψ),
@@ -1161,8 +1154,7 @@ private theorem finSplit_exists {O A : Type} [CommRing O] [IsLocalRing O] [CommR
     apply Finset.prod_eq_one
     intro φ hφ
     rw [map_sub, map_one, map_prod, sub_eq_self]
-    apply Finset.prod_eq_zero (i := φ0) (by simp [h0])
-    exact (hx φ φ0 (Finset.mem_filter.1 hφ).2 h0).2
+    exact Finset.prod_eq_zero (i := φ0) (by simp [h0]) (hx φ φ0 (Finset.mem_filter.1 hφ).2 h0).2
 
 theorem finite_algebra_split_local :
   (∀ (O A : Type) [CommRing O] [IsLocalRing O] [CommRing A] [Algebra O A] [Module.Finite O A] [Finite (A →ₐ[O] O)],
@@ -1224,10 +1216,8 @@ theorem finite_algebra_split_local :
     · simp
     · intro b _ hb
       rw [ite_eq_right]
-      intro h
-      exact hb (Subtype.ext h.symm)
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+      exact fun h => hb (Subtype.ext h.symm)
+    · exact fun h => absurd (Finset.mem_univ _) h
   · obtain ⟨φ0, hφ0⟩ := (eqv i).2
     replace hφ0 : (maximalIdeal O).comap φ0 = (eqv i).1 := hφ0
     have hmem : ∀ ψ : A →ₐ[O] O,
@@ -1236,13 +1226,11 @@ theorem finite_algebra_split_local :
       rw [Ideal.mem_comap, map_sub, map_one, hval]
       split_ifs with h
       · simp [h]
-      · simp only [sub_zero, h, iff_false]
-        exact hone
+      · simpa only [sub_zero, h, iff_false] using hone
     have hJM : Ideal.span {1 - e (eqv i).1} ≤ (eqv i).1 := by
       rw [Ideal.span_le, Set.singleton_subset_iff]
       have h := (hmem φ0).2 hφ0
-      rw [hφ0] at h
-      exact h
+      rwa [hφ0] at h
     have hMtop : (eqv i).1 ≠ ⊤ := by
       rw [← hφ0]
       intro h
@@ -1549,8 +1537,7 @@ private lemma gram_limit {p : ℕ} [Fact p.Prime] (k : ℕ → ℕ)
     cases i with
     | zero => simp
     | succ n =>
-      have h := (Nat.modEq_iff_dvd.1 (hk n))
-      simpa using h
+      simpa using (Nat.modEq_iff_dvd.1 (hk n))
   have key := PadicInt.toZModPow_ofIntSeq_of_pow_dvd_sub (fun i : ℕ => (k (i - 1) : ℤ)) p hi
   refine ⟨_, fun n => (key (n + 1)).trans ?_⟩
   simp only [Nat.add_sub_cancel, Int.cast_natCast]
@@ -1608,14 +1595,11 @@ theorem tateBasis_gram :
     rw [map_neg, hE, hE]
     exact eq_neg_of_add_eq_zero_left h1
   refine ⟨Matrix.of E, ⟨?_, fun i => ?_⟩, ?_, fun i j n => ?_⟩
-  · apply Matrix.ext
-    intro i j
-    exact hanti i j
+  · exact Matrix.ext (fun i j => hanti i j)
   · exact self_eq_neg.1 (hanti i i)
   · by_contra hu
     have hd : (Matrix.of E).det ∈ RingHom.ker (PadicInt.toZMod (p := p)) := by
-      rw [PadicInt.ker_toZMod]
-      exact hu
+      rwa [PadicInt.ker_toZMod]
     rw [RingHom.mem_ker, RingHom.map_det] at hd
     obtain ⟨s, hs0, hs⟩ := Matrix.exists_vecMul_eq_zero_iff.2 hd
     have ht0 : ∀ i, p • τ i 0 = 0 := fun i => by simpa using htors i 0
@@ -1634,8 +1618,7 @@ theorem tateBasis_gram :
         refine Eq.trans (Finset.sum_congr rfl fun i _ => ?_) (congrFun hs j)
         rw [Nat.cast_mul, ZMod.natCast_zmod_val, mul_comm, ← gram_toZMod _ _ (hE i j 0)]
         rfl
-      rw [h2, zero_add, pow_one] at h1
-      exact h1
+      rwa [h2, zero_add, pow_one] at h1
     have hx : ptOf B τ s = 0 := by
       refine hnd _ (hpt s) fun y hy => ?_
       obtain ⟨t, rfl, -⟩ := hbasis y hy
@@ -1727,8 +1710,7 @@ theorem teichmuller_quot :
   · have hK := ((a0 p C v O hv).2.2.1 ϖ hϖ).2.2
     have hm : WittVector.teichmuller p c ∈
         Ideal.span {(p : WittVector p (PreTilt O p)), WittVector.teichmuller p ϖ} := by
-      rw [← hK, RingHom.mem_ker, RingHom.comp_apply, Ideal.Quotient.eq_zero_iff_mem]
-      exact hc
+      rwa [← hK, RingHom.mem_ker, RingHom.comp_apply, Ideal.Quotient.eq_zero_iff_mem]
     obtain ⟨x, y, hxy⟩ := Ideal.mem_span_pair.mp hm
     have h := congrArg (WittVector.constantCoeff (p := p) (R := PreTilt O p)) hxy
     rw [map_add (f := _), map_mul, map_mul, map_natCast, CharP.cast_eq_zero, mul_zero, zero_add] at h

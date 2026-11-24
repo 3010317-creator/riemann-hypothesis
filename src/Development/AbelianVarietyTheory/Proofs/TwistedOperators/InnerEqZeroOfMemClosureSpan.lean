@@ -143,8 +143,7 @@ theorem exists_isHilbertSchmidt_orthonormal_apply : ∀ (H K : Type) [NormedAddC
   let L : H →ₗ[ℂ] K :=
     { toFun := fun v => ∑' j, ⟪u j, v⟫_ℂ • w j
       map_add' := fun v v' => by
-        simp only [inner_add_right, add_smul]
-        exact (hs v).tsum_add (hs v')
+        simpa only [inner_add_right, add_smul] using (hs v).tsum_add (hs v')
       map_smul' := fun c v => by
         simp only [inner_smul_right, mul_smul, RingHom.id_apply]
         exact (hs v).tsum_const_smul c }
@@ -398,8 +397,7 @@ theorem inner_eq_zero_of_mem_closure_span {S : Set H} {a : H} (h : ∀ x ∈ S, 
   have hle : (Submodule.span ℂ S).topologicalClosure ≤ (ℂ ∙ a)ᗮ := by
     refine Submodule.topologicalClosure_minimal _ ?_ (Submodule.isClosed_orthogonal _)
     rw [Submodule.span_le]
-    intro y hy
-    exact Submodule.mem_orthogonal_singleton_iff_inner_left.2 (h y hy)
+    exact fun y hy => Submodule.mem_orthogonal_singleton_iff_inner_left.2 (h y hy)
   exact Submodule.mem_orthogonal_singleton_iff_inner_left.1 (hle hx)
 
 variable {W : Type} [AddCommGroup W] [Module ℂ W]
@@ -507,8 +505,7 @@ theorem hasTrace_finiteRank_tensor : ∀ (ι : Type) [Fintype ι] [DecidableEq �
     have hzz : ∀ j, β (z j) (z j) = 1 := fun j => by
       have := orthonormal_iff_ite.1 hon j j
       simp only at this
-      rw [beta_eq hβ hu]
-      exact this
+      rwa [beta_eq hβ hu]
     have hAw : ∀ w, A w = ∑ j, β w (z j) • A (z j) := by
       intro w
       have hperp : ∀ k, ⟪evalAt T u (z k), evalAt T u (w - ∑ j, β w (z j) • z j)⟫_ℂ = 0 := by

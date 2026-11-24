@@ -194,8 +194,7 @@ theorem proj_sum {E R : Type} [Field E] [CommRing R] {w v : ℕ} (ι : E →+* R
     simp only [Matrix.single_apply, ite_and, apply_ite ι, map_one, map_zero, ite_mul, one_mul, zero_mul]
     rw [Fintype.sum_eq_single p (fun p' hp' => by simp [hp']), Fintype.sum_eq_single q (fun q' hq' => by simp [hq'])]
     simp
-  rw [h3, Finset.sum_comm, sub_eq_self]
-  rw [← h2]
+  rw [h3, Finset.sum_comm, sub_eq_self, ← h2]
   exact Finset.sum_congr rfl fun q' _ => Finset.sum_congr rfl fun p' _ => by ring
 
 theorem proj_ker {E : Type} [Field E] {w v a b : ℕ} (A : Matrix (Fin a) (Fin w) E) (C : Matrix (Fin v) (Fin b) E)
@@ -324,8 +323,7 @@ theorem core (ι : E →+* R) (P : Matrix (Fin w) (Fin a) E) (Q : Matrix (Fin b)
       ext pq pq'
       have := smat_mulVec (RingHom.id E) B P Q (cc pq') (yy pq') pq.1 pq.2
       simp only [map_id_eq] at this
-      rw [← hcy pq'] at this
-      exact this
+      rwa [← hcy pq'] at this
     have hfx : (A' * A).map ι * x * (C * C').map ι = 0 := by
       calc (A' * A).map ι * x * (C * C').map ι = A'.map ι * (A.map ι * x * C.map ι) * C'.map ι := by
             rw [Matrix.map_mul, Matrix.map_mul]; simp only [Matrix.mul_assoc]
@@ -577,8 +575,7 @@ theorem ratCompl : ∀ (D : D7) (V W : HSp D) (a b : ℕ) (P : Matrix (Fin W.ran
     obtain ⟨z, y, hxy⟩ := hdec x (T_zero_of_orth V W P Q x hx)
     refine ⟨(Matrix.of fun (_ : Fin 1) (i : Fin k) => z i : Mx D 1 k), y, ?_⟩
     rw [hce]
-    simp only [Matrix.of_apply]
-    exact hxy
+    simpa only [Matrix.of_apply] using hxy
   · intro z y h
     rw [hce] at h
     obtain ⟨h1, h2⟩ := huniq (fun i => z 0 i) y h
@@ -979,8 +976,7 @@ theorem decay_real_coords : ∀ (D : D7) (V W : HSp D) (a b : ℕ) (P : Matrix (
     simp only [ℓ, zι, ite_true, ite_false, Bool.false_eq_true]
     rw [hs, hs]
     have := norm_le_re (c τ) (compAt θ τ y k l) (hc τ)
-    rw [add_comm]
-    exact this
+    rwa [add_comm]
   have hS : ∀ y : Mx D a b, (∑ τ, ∑ i, ∑ j, ‖θ τ (infPart D (y i j))‖) ≤ ∑ i, ℓ i y := by
     intro y
     simp only [Fintype.sum_prod_type]
@@ -1395,8 +1391,7 @@ theorem mean_scalar : ∀ (D : D7) (V W : HSp D) (a b : ℕ) (P : Matrix (Fin W.
         (GlobalTheory.ThetaClosed.isThetaFunO_heisO_all hψ q.2.1 _) (GlobalTheory.ThetaClosed.isThetaFunO_heisO_all hψ p.2.1 _)
       rwa [hωx _ q.2.1 _ q.2.2, hωx _ p.2.1 _ p.2.2, hfx _ _ q.2.2, hfx _ _ p.2.2] at e)
   refine ⟨⟨c, ?_⟩, fun f hf x hx => ?_⟩
-  · show c ∈ Metric.sphere (0 : ℂ) 1
-    exact mem_sphere_zero_iff_norm.2 hc
+  · exact mem_sphere_zero_iff_norm.2 hc
   · have e := congrFun hcf ⟨(f, x), hf, hx⟩
     simp only [Pi.smul_apply, smul_eq_mul] at e
     exact (hint (ω (g, h) f) x hx).trans (e.trans (congrArg _ (hint f x hx).symm))

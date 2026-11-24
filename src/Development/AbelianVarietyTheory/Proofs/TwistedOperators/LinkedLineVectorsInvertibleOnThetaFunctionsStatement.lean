@@ -107,9 +107,7 @@ theorem lnk_simil {L L' : HSp D} {ζ : Fin L.rank → D.host.E} {ζ' : Fin L'.ra
   rw [Subsingleton.elim i default, Subsingleton.elim j default]
   have a : star ζ' default ≠ 0 := left_ne_zero_of_mul h2
   have b : ζ' default ≠ 0 := right_ne_zero_of_mul (right_ne_zero_of_mul h2)
-  have c := mul_left_cancel₀ a e
-  have c' := mul_right_cancel₀ b c
-  exact c'
+  exact mul_right_cancel₀ b (mul_left_cancel₀ a e)
 
 theorem link_inv_theta : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (L L' S : HSp D) (ζ : Fin L.rank → D.host.E) (ζ' : Fin L'.rank → D.host.E), IsLineVec L ζ → IsLineVec L' ζ' → ∀ l : Lnk L ζ L' ζ', l.τᴴ ⬝ (L.gram ⬝ l.τ) = (D.host.xi0 * star D.host.xi0) • L'.gram ∧ ∀ Φ₀, IsThetaFunO ψ S L' Φ₀ → ∃ Ξ, IsThetaFunO ψ L S Ξ ∧ Φ₀ = fun w => star (Ξ (l.κ S w)) := by
   intro D ψ hψ L L' S ζ ζ' hL hL' l
@@ -169,8 +167,7 @@ theorem link_inv_theta : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdCha
     have := hΦ.smooth k (A.comp M) (gcont.comp h1) h3 (g x)
     have heq : (fun t => Φ₀ (g (x + M t))) = fun t => Φ₀ (g x + A (M t)) :=
       funext fun t => congrArg Φ₀ (gadd x (M t))
-    have h4 := (congrArg (ContDiff ℝ _) heq).mpr this
-    exact Complex.conjCLE.contDiff.comp h4
+    exact Complex.conjCLE.contDiff.comp ((congrArg (ContDiff ℝ _) heq).mpr this)
   · funext w
     show Φ₀ w = star (star (Φ₀ (g (l.κ S w))))
     rw [hgk, star_star]

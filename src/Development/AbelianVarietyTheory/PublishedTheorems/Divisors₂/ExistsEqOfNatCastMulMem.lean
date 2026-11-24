@@ -146,8 +146,7 @@ theorem ComplexMultiplicationJSt.hilbertClassFieldJ (h : ComplexMultiplicationJS
       rintro x rfl
       exact Subtype.ext e
     · intro hc
-      rw [hc, map_one] at e
-      exact e
+      rwa [hc, map_one] at e
   obtain rfl := hgen 1 L₀ hL₀
   have hrange : Set.range (fun g : K⟮(latticeCurve L₀).j⟯ ≃ₐ[K] K⟮(latticeCurve L₀).j⟯ =>
       (g (IntermediateField.AdjoinSimple.gen K (latticeCurve L₀).j) : ℂ)) = idealInvariants K := by
@@ -308,8 +307,7 @@ theorem exists_natCast_mul_mem {𝔞 : FractionalIdeal (𝓞 K)⁰ K} (h𝔞 : �
   obtain ⟨e, he⟩ := Ideal.mem_span_singleton'.1 (Ideal.absNorm_mem (Ideal.span {b * c}))
   refine ⟨Ideal.absNorm (Ideal.span {b * c}), by simp [hb0, hc0], ?_⟩
   have := (𝔞 : Submodule (𝓞 K) K).smul_mem (e * r) hc
-  rw [← map_natCast (algebraMap (𝓞 K) K), ← he]
-  rw [← FractionalIdeal.mem_coe]
+  rw [← map_natCast (algebraMap (𝓞 K) K), ← he, ← FractionalIdeal.mem_coe]
   convert this using 1
   simp only [Algebra.smul_def, map_mul]
   field_simp

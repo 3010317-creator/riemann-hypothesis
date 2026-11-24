@@ -122,8 +122,7 @@ theorem hasDerivAt_apply {F : Type*} [AddCommGroup F] [Module ℂ F] [FiniteDime
     rfl
   have := HasDerivAt.fun_sum (u := Finset.univ) fun i _ => (hA (b i)).fun_mul (hc (b.coord i))
   have e1 : (fun t => A t (c t)) = fun t => ∑ i, A t (b i) * b.coord i (c t) := funext fun t => e _ _
-  rw [e1, e A' (c 0), e (A 0) c', ← Finset.sum_add_distrib]
-  exact this
+  rwa [e1, e A' (c 0), e (A 0) c', ← Finset.sum_add_distrib]
 
 theorem equivariant_of_generator : ∀ (σ Z H : Type) [Finite σ] [AddCommGroup H] [Module ℂ H] (pt : MvPolynomial σ ℂ →ₗ[ℂ] (Z → ℂ)) (R : ℝ → Module.End ℂ (Z → ℂ)) (L : Module.End ℂ (MvPolynomial σ ℂ)) (U : ℝ → Module.End ℂ H) (B : MvPolynomial σ ℂ →ₗ[ℂ] H) (Λ : Set (H →ₗ[ℂ] ℂ)), Function.Injective pt → R 0 = 1 → (∀ s t, R (s + t) = R s * R t) → (∀ t φ, ∃ ψ, ψ.totalDegree ≤ φ.totalDegree ∧ R t (pt φ) = pt ψ) → (∀ φ z, HasDerivAt (fun t : ℝ => R t (pt φ) z) (pt (L φ) z) 0) → U 0 = 1 → (∀ s t, U (s + t) = U s * U t) → (∀ x, (∀ l ∈ Λ, l x = 0) → x = 0) → (∀ l ∈ Λ, ∀ t, l ∘ₗ U t ∈ Λ) → (∀ l ∈ Λ, ∀ φ, HasDerivAt (fun t : ℝ => l (U t (B φ))) (l (B (L φ))) 0) → ∀ φ φ', pt φ' = R 1 (pt φ) → B φ' = U 1 (B φ) := by
   intro σ Z H _ _ _ pt R L U B Λ hpt hR0 hR hdeg hder hU0 hU hsep hΛ hB φ φ' hφ
@@ -150,8 +149,7 @@ theorem equivariant_of_generator : ∀ (σ Z H : Type) [Finite σ] [AddCommGroup
       have h3 : HasDerivAt (fun t : ℝ => l (U t (B x))) (l (B (L x))) (-0) := by
         rw [neg_zero]; exact hB l hl x
       have h4 := h3.scomp (0 : ℝ) (hasDerivAt_neg (0 : ℝ))
-      rw [neg_one_smul] at h4
-      exact h4
+      rwa [neg_one_smul] at h4
     have h5 := hasDerivAt_apply _ _ _ _ h2 h1
     simp only [LinearMap.comp_apply, Submodule.subtype_apply, LinearMap.neg_apply, hρ0, neg_zero, hU0,
       Module.End.one_apply, neg_add_cancel] at h5
@@ -462,8 +460,7 @@ theorem pderiv_mul_mem (x y : σ) :
   intro P
   have e : ((pderiv y).toLinearMap * LinearMap.mulLeft ℂ (X x : MvPolynomial σ ℂ) :
       Module.End ℂ (MvPolynomial σ ℂ)) P = pderiv y (X x * P) := rfl
-  rw [e]
-  rw [Derivation.leibniz, smul_eq_mul, smul_eq_mul]
+  rw [e, Derivation.leibniz, smul_eq_mul, smul_eq_mul]
   refine (totalDegree_add _ _).trans (max_le (totalDegree_X_mul_pderiv x y P) ?_)
   by_cases h : x = y
   · subst h; rw [pderiv_X_self, mul_one]
@@ -1092,26 +1089,21 @@ theorem inv_tgt (hθ : IsInfFam θ) (h : GlobIt M M' aS aT It I) (τ : D.what₂
   rw [← h1] at e ⊢
   let A : ℝ → Module.End ℂ (⨂[ℂ] τ, M'.H τ) := fun t => actT M' τ (NormedSpace.exp (t • X))
   have A0 : A 0 = LinearMap.id := by
-    simp only [A, zero_smul, NormedSpace.exp_zero]
-    exact T'.one τ
+    simpa only [A, zero_smul, NormedSpace.exp_zero] using T'.one τ
   have Aadd : ∀ s t, A (s + t) = A s ∘ₗ A t := fun s t => by
-    simp only [A, exp_add_smul]
-    exact T'.mul τ _ (hm s) _ (hm t)
+    simpa only [A, exp_add_smul] using T'.mul τ _ (hm s) _ (hm t)
   let ev : (∀ τ, M.H τ) × (⨂[ℂ] τ, M'.H τ) → ((⨂[ℂ] τ, M'.H τ) →ₗ[ℂ] ⨂[ℂ] τ, M.H τ) →ₗ[ℂ] ℂ :=
     fun p => ellT M p.1 ∘ₗ LinearMap.applyₗ p.2
   have key : I φ' = I φ ∘ₗ A (-1) := by
     refine GlobalTheory.T.equivariant_of_generator_oneParameterGroup _ _ _ (ptL ψ θ M M' f) (fun t : ℝ => ω (1, atTau θ W τ (NormedSpace.exp (t • X))))
       (tgtOp M M' τ (aS τ) X) (fun t : ℝ => LinearMap.lcomp ℂ _ (A (-t))) I (Set.range ev) hinj
       ?_ ?_ ?_ (lie_tgt hL hX) ?_ ?_ ?_ ?_ ?_ φ φ' e
-    · simp only [zero_smul, NormedSpace.exp_zero]
-      exact om_tgt_one hθ τ
+    · simpa only [zero_smul, NormedSpace.exp_zero] using om_tgt_one hθ τ
     · intro s t
-      simp only [exp_add_smul]
-      exact om_tgt_mul hθ τ _ (hm s) _ (hm t)
+      simpa only [exp_add_smul] using om_tgt_mul hθ τ _ (hm s) _ (hm t)
     · intro t P
       obtain ⟨k', hk', e'⟩ := hK t
-      simp only [e']
-      exact cpt_tgt hθ hC k' hk' P
+      simpa only [e'] using cpt_tgt hθ hC k' hk' P
     · refine LinearMap.ext fun B => ?_
       show B ∘ₗ A (-0) = B
       rw [neg_zero, A0, LinearMap.comp_id]
@@ -1125,8 +1117,7 @@ theorem inv_tgt (hθ : IsInfFam θ) (h : GlobIt M M' aS aT It I) (τ : D.what₂
     · rintro _ ⟨⟨w, y⟩, rfl⟩ P
       have d := HasDerivAt.scomp (0 : ℝ) (h := fun t : ℝ => -t) (by rw [neg_zero]; exact h.tgt τ X hX P y w)
         (hasDerivAt_neg (0 : ℝ))
-      rw [neg_smul, one_smul, neg_neg] at d
-      exact d
+      rwa [neg_smul, one_smul, neg_neg] at d
   show I φ' (A 1 x) = I φ x
   rw [key, LinearMap.comp_apply, ← LinearMap.comp_apply (A (-1)), ← Aadd, neg_add_cancel, A0, LinearMap.id_apply]
 

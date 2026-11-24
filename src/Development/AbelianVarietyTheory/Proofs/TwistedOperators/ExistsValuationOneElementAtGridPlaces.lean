@@ -83,10 +83,8 @@ theorem exists_valuation_one_element_at_grid_places : ∀ {D : D7} {T : Type} {L
     have hc : ((Ideal.absNorm D.host.ccK : ℕ) : 𝓞 D.host.F) ∈ ((G.pl.w v).under (𝓞 D.host.F)).asIdeal := by
       show ((Ideal.absNorm D.host.ccK : ℕ) : 𝓞 D.host.F) ∈
         Ideal.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) (G.pl.w v).asIdeal
-      rw [Ideal.mem_comap, map_natCast]
-      exact hin
-    rw [G.pl.under_w hv] at hc
-    exact hc
+      rwa [Ideal.mem_comap, map_natCast]
+    rwa [G.pl.under_w hv] at hc
   refine ⟨_, _root_.Formalism.L2.Pj.normK_mem_AA D, ?_⟩
   have key := (HeightOneSpectrum.valuation_eq_one_iff_notMem (K := D.host.E) (v := G.pl.w v)).mpr hN
   rw [map_natCast] at key

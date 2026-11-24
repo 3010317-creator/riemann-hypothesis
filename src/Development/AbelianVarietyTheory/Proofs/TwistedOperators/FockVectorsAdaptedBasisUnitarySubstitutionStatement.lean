@@ -97,8 +97,7 @@ theorem lsub_homog (M : Matrix σ σ ℂ) {d : ℕ} {P : MvPolynomial σ ℂ} (h
   have key := h.eval₂ (algebraMap ℂ (MvPolynomial σ ℂ)) _ (fun r => MvPolynomial.isHomogeneous_C _ r) hg
   rw [one_mul] at key
   unfold lsub
-  rw [MvPolynomial.aeval_def]
-  exact key
+  rwa [MvPolynomial.aeval_def]
 
 variable [DecidableEq σ]
 
@@ -130,8 +129,7 @@ theorem unitary_mix {N : Matrix σ σ ℂ} (h : N * Nᴴ = 1) (e e' : σ → Boo
   · cases hb : e w with
     | true =>
       have hb' : e w' = true := by rw [← hw]; exact hb
-      simp only [hb', ite_true]
-      exact hww
+      simpa only [hb', ite_true] using hww
     | false =>
       have hb' : e w' = false := by rw [← hw]; exact hb
       simp only [hb', Bool.false_eq_true, ite_false, star_star]
@@ -424,8 +422,7 @@ theorem ptAt_basis : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam 
   have hT1 : ∀ a a', ∑ i, uT a i * star (uT a' i) = if a = a' then 1 else 0 := by
     intro a a'
     have hTT : uT * uTᴴ = 1 := mul_eq_one_comm.mp huT
-    have key := congrFun (congrFun hTT a) a'
-    simpa [Matrix.mul_apply, Matrix.one_apply] using key
+    simpa [Matrix.mul_apply, Matrix.one_apply] using congrFun (congrFun hTT a) a'
   have hS1 : ∀ b b', ∑ j, uS⁻¹ j b * star (uS⁻¹ j b') = if b = b' then 1 else 0 := by
     intro b b'
     rw [hinv]

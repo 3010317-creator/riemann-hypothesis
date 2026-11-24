@@ -270,8 +270,7 @@ theorem subst_pderiv_hAt (X : RawChart C d I κ) {τ : Type} {A : κ → MvPower
       have := (Prod.ext_iff.1 h).2
       simp only at this
       rw [this]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem pderiv_subst_eq_zero {σ τ : Type} [Fintype σ] {a : σ → MvPowerSeries τ C}
     (ha : ∀ s, constantCoeff (a s) = 0) {t : τ} (h : ∀ s, pderiv (R := C) t (a s) = 0) (f : MvPowerSeries σ C) :
@@ -392,8 +391,7 @@ theorem intS_cocycle {X : RawChart C d I κ} {V : VF C} (h : RLaw X V) {τ : Typ
 theorem intS_iff {V : VF C} {f : PowerSeries C} :
     IntS V (σ := Unit) f ↔ ∀ n, V.Ge 0 (PowerSeries.coeff n f) := by
   constructor
-  · intro h n
-    exact h (Finsupp.single () n)
+  · exact fun h n => h (Finsupp.single () n)
   · intro h μ
     rw [Finsupp.unique_single μ]
     exact h _

@@ -382,11 +382,9 @@ theorem exists_split_of_suppAt {D : D7} (V : HSp D) {e : AE D} {P : Pl D.host.E}
   · have hent : ∀ i j, (α ⊗ₜ[D.host.F] (1 : D.host.E)) * ((finHom V a).1 - 1) i j = ((finHom V a).1 - 1) i j := by
       intro i j
       have h4 := congrArg (finPart D) (ha i j)
-      rw [h3, (finPart D).map_mul, map_sub_one (finPart D)] at h4
-      exact h4
+      rwa [h3, (finPart D).map_mul, map_sub_one (finPart D)] at h4
     have := smul_mulVec_eq _ _ hent u
-    rw [TensorProduct.sub_tmul]
-    exact this
+    rwa [TensorProduct.sub_tmul]
 
 
 
@@ -851,8 +849,7 @@ theorem exists_frBor_of_dictLat {D : D7} {H : ReciprocityTheory.ChartRestriction
           funext i
           exact (TensorProduct.tmul_sub _ _ _).trans (congrArg _ (map_nsmul (TensorProduct.mk D.host.F (Af D.host.F) D.host.E 1) (p * p') _)))
       obtain ⟨b, hb⟩ : w ∈ LinearMap.range jm := by
-        rw [← hlat, GlobalTheory.Member.LatMove.mem_lat_iff, hw]
-        exact hs
+        rwa [← hlat, GlobalTheory.Member.LatMove.mem_lat_iff, hw]
       refine ⟨gm (x - b), (φ _).injective (Subtype.ext ?_)⟩
       have h5 : (φ _ (F.t (ik (dict (h * a)).1) v) : Fin V.rank → D.host.E) =
           δ.1 *ᵥ ((p * p') • (φ _ (F.t (ik (dict h).1) v) : Fin V.rank → D.host.E) + l.M • jm b) := by

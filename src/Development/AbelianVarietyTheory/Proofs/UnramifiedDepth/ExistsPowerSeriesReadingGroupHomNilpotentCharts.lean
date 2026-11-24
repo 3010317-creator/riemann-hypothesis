@@ -85,8 +85,7 @@ private theorem exists_coord {R : Type} [CommRing R] {G : Over (Spec (CommRingCa
     have h2 : RingHom.ker ρ ≤ J.comap τ := fun y hy => by
       have h3 := mem_dbl.1 y.2
       have h4 : y.1.1 = 0 := hy
-      rw [h4, zero_sub, neg_mem_iff] at h3
-      exact h3
+      rwa [h4, zero_sub, neg_mem_iff] at h3
     have h5 := Ideal.le_comap_pow τ (n + 1) (Ideal.pow_right_mono h2 (n + 1) hx)
     rw [pow_succ, hn, zero_mul] at h5
     exact Subtype.ext (Prod.ext h1 h5)
@@ -140,8 +139,7 @@ theorem exists_reads : ∀ (R : Type) [CommRing R] (G : Over (Spec (CommRingCat.
   have h1 : b R 0 h0 = 0 := h'.inj R _ _ (hb R 0 h0) (fun _ => IsNilpotent.zero) (by
     rw [← hX, h.zero, h'.zero, MonObj.one_comp])
   have h2 := hφ j R 0 (fun _ => IsNilpotent.zero)
-  have h3 : c j R 0 = 0 := by
-    exact (dite_eq_left h0).trans (congrFun h1 j)
+  have h3 : c j R 0 = 0 := (dite_eq_left h0).trans (congrFun h1 j)
   have h4 := (Ideal.span_le.2 (by rintro _ ⟨i, rfl⟩; simp) : Ideal.span _ ≤ (⊥ : Ideal R))
     (evBasic_nEval_sub_coeff_mem (φ j) (0 : Fin 1 × Fin d → R) (fun _ => IsNilpotent.zero))
   rw [← h2, h3] at h4

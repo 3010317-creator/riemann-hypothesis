@@ -78,8 +78,7 @@ theorem IsExp.prod {σ α : Type} (s : Finset α) {y : α → σ → C} {F : α 
   induction s using Finset.induction_on with
   | empty => simpa using IsExp.one
   | insert a s ha ih =>
-    simp only [Finset.prod_insert ha, Finset.sum_insert ha]
-    exact (h a).mul ih
+    simpa only [Finset.prod_insert ha, Finset.sum_insert ha] using (h a).mul ih
 
 theorem IsExp.subst {σ τ : Type} [Fintype σ] [Finite τ] {y : σ → C} {F : MvPowerSeries σ C}
     (h : IsExp y F) (e : σ → τ) :
@@ -90,8 +89,7 @@ theorem IsExp.subst {σ τ : Type} [Fintype σ] [Finite τ] {y : σ → C} {F : 
   constructor
   · have := rename_eq_subst (R := C) (f := e) (p := F)
     have h2 := constantCoeff_rename (R := C) (f := e) F
-    rw [this, h.1] at h2
-    exact h2
+    rwa [this, h.1] at h2
   · intro w
     rw [Formalism.G.LogCR.pderiv_subst (by simp), Finset.sum_smul]
     refine Finset.sum_congr rfl fun j _ => ?_

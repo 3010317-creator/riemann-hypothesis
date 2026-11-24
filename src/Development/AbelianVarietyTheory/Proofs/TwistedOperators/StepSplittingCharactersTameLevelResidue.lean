@@ -163,8 +163,7 @@ theorem tameOn_step : ∀ (D : D7) (T0 : Type) (L : LevCh D T0) (μ0 : T0), L.Is
       · exact h2 ⟨PP', (hP PP').2 (Or.inl ((hL.Pg PP').2 ⟨k, h⟩)), hc⟩
     · intro PP h
       by_cases hg : PP ∈ L.Pg
-      · simp only [ite_eq_left hg]
-        exact hL.chi j PP hg
+      · simpa only [ite_eq_left hg] using hL.chi j PP hg
       · simp only [ite_eq_right hg]
         have hQ := ((hP PP).1 h).resolve_left hg
         exact isRes_one_of_unrAt _ _ (hM.unr PP fun k hk => (hoff k PP hk).1 hQ)
@@ -183,8 +182,7 @@ theorem tameOn_step : ∀ (D : D7) (T0 : Type) (L : LevCh D T0) (μ0 : T0), L.Is
         rcases (hL.Q_ram t PP).1 hn with h | h
         · exact (hPg PP hg).1 h
         · exact (hPg PP hg).2 h
-      · simp only [ite_eq_right hg]
-        exact hL.xiR t PP (((hP PP).1 h).resolve_left hg)
+      · simpa only [ite_eq_right hg] using hL.xiR t PP (((hP PP).1 h).resolve_left hg)
   have t3 : TameOn L.eta e P (fun _ => 1) :=
     GlobalTheory.T.tameHecke_integralUnits_eq_residueCharProduct D _ L.C.eta e P _ hL.eta (fun PP x hx _ => L.C.isEta.unr PP x hx) he
       (fun PP _ _ => L.C.isEta.unr PP) (fun PP _ => isRes_one_of_unrAt _ _ (L.C.isEta.unr PP))
@@ -197,8 +195,7 @@ theorem tameOn_step : ∀ (D : D7) (T0 : Type) (L : LevCh D T0) (μ0 : T0), L.Is
       by_cases hg : PP ∈ L.Pg
       · simp only [ite_eq_left hg, mul_one]
       · simp only [ite_eq_right hg, one_mul]
-    rw [hc] at h
-    exact h
+    rwa [hc] at h
   exact ⟨t4, t4.mul_inv_one t3⟩
 
 end GlobalTheory.StepLaw

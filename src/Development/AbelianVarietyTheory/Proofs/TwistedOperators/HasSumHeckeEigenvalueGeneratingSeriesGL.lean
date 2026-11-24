@@ -121,8 +121,7 @@ theorem isIrreducible_quoRep (σ : Representation ℂ G V) {M : Submodule ℂ V}
   have hy0 : M.mkQ y ≠ 0 := by rwa [Ne, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
   refine { exists_pair_ne := ⟨⊥, ⊤, fun e => hy0 ?_⟩, eq_bot_or_eq_top := fun T => ?_ }
   · have h1 : M.mkQ y ∈ (⊤ : Subrepresentation (quoRep σ M hM)).toSubmodule := Submodule.mem_top
-    rw [← e] at h1
-    exact h1
+    rwa [← e] at h1
   · have hst : ∀ g, ∀ v ∈ T.toSubmodule.comap M.mkQ, σ g v ∈ T.toSubmodule.comap M.mkQ := fun g v hv =>
       T.apply_mem_toSubmodule g hv
     by_cases hyT : y ∈ T.toSubmodule.comap M.mkQ
@@ -142,8 +141,7 @@ theorem isIrreducible_quoRep (σ : Representation ℂ G V) {M : Submodule ℂ V}
       obtain ⟨u, rfl⟩ := M.mkQ_surjective v
       have : u ∈ M := e ▸ (show u ∈ T.toSubmodule.comap M.mkQ from hv)
       show M.mkQ u ∈ (⊥ : Submodule ℂ (V ⧸ M))
-      rw [Submodule.mem_bot, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-      exact this
+      rwa [Submodule.mem_bot, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
 
 variable [TopologicalSpace G] [IsTopologicalGroup G]
 
@@ -398,8 +396,7 @@ theorem hasSum_hecke_eigenvalues : GlobalTheory.Published.UnramifiedDoublingGL �
     funext e
     rw [hc2 e.1, cpow_term hXq _ (Finset.sum_nonneg fun _ _ => abs_nonneg _)]
     ring
-  rw [hfun]
-  exact hsum
+  rwa [hfun]
 
 end Main
 

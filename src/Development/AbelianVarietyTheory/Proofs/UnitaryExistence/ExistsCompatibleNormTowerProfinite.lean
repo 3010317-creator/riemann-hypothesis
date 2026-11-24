@@ -114,8 +114,7 @@ theorem exists_sq_sub_mul_sq {p : ℕ} (hp : p.Prime) (hp2 : p ≠ 2) (h0 : (p :
     have := hab ⟨J, hm⟩
     rw [← hx, ← hy] at this
     rw [← Ideal.Quotient.eq_zero_iff_mem]
-    simp only [map_sub, map_mul, map_pow]
-    exact sub_eq_zero.2 this
+    simpa only [map_sub, map_mul, map_pow] using sub_eq_zero.2 this
   obtain ⟨μ, hμ⟩ := hν.exists_right_inv
   obtain ⟨k, hk⟩ := hnil
   set e := μ * (x ^ 2 - D * y ^ 2 - ν) with he
@@ -184,8 +183,7 @@ theorem exists_isUnit_neg (σ : R →+* R) (htop : Ideal.span {a | σ a = -a} = 
   obtain ⟨P, hmax, hmem⟩ := exists_max_ideal_of_mem_nonunits hu
   refine hmax.ne_top (top_le_iff.1 ?_)
   rw [← htop, Ideal.span_le]
-  intro a ha
-  exact hP P hmax.isPrime hmem a (by simpa using ha)
+  exact fun a ha => hP P hmax.isPrime hmem a (by simpa using ha)
 
 theorem exists_norm_eq (σ : R →+* R) (htop : Ideal.span {a | σ a = -a} = ⊤) {p : ℕ} (hp : p.Prime)
     (hp2 : p ≠ 2) (h0 : (p : R) = 0) {ν : R} (hν : IsUnit ν) (hfix : σ ν = ν) :
@@ -221,8 +219,7 @@ theorem span_sub_bar : Ideal.span (Set.range fun b : 𝓞 E => b - H.bar b) = �
   haveI := H.unram
   let σ := IsCMField.ringOfIntegersComplexConj E
   have hσ : ∀ a, σ a = H.bar a := fun a => by
-    apply RingOfIntegers.ext
-    exact (IsCMField.coe_ringOfIntegersComplexConj E a).trans (H.bar_eq a).symm
+    exact RingOfIntegers.ext ((IsCMField.coe_ringOfIntegersComplexConj E a).trans (H.bar_eq a).symm)
   let L : 𝓞 E ⊗[𝓞 (maximalRealSubfield E)] 𝓞 E →ₐ[𝓞 (maximalRealSubfield E)] 𝓞 E :=
     Algebra.TensorProduct.lift (AlgHom.id _ _) (σ : 𝓞 E →ₐ[_] 𝓞 E) fun _ _ => Commute.all _ _
   have hL : ∀ x y, L (x ⊗ₜ y) = x * H.bar y := fun x y => by simp [L, hσ]

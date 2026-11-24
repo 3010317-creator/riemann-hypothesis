@@ -98,8 +98,7 @@ theorem fr_half (hx : IsHalf e x) (i : Fin T.V.rank) (j : Fin S.V.rank) :
     fr T.β S.β (x.map (toEAf D)) i j = toEAf D e * fr T.β S.β (x.map (toEAf D)) i j := by
   have h1 : fr T.β S.β (x.map (toEAf D)) i j = fr T.β S.β (toEAf D e • x.map (toEAf D)) i j := by
     rw [← half_map hx]
-  rw [fr_smul, Matrix.smul_apply, smul_eq_mul] at h1
-  exact h1
+  rwa [fr_smul, Matrix.smul_apply, smul_eq_mul] at h1
 
 variable {S T : GlobalTheory.Grid.Node D}
 

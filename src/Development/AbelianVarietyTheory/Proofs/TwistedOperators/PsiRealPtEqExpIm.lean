@@ -167,8 +167,7 @@ theorem complete (V : HSp D) (b : Matrix (Fin V.rank) (Fin V.rank) D.host.E) (hb
     simp only [Matrix.of_apply, Finset.sum_mul]
   have h3 : b * (Matrix.of fun a j => ∑ k, star (b k a) * V.gram k j) = 1 := mul_eq_one_comm.1 h1
   have h2 := congrFun (congrFun h3 n) j
-  rw [Matrix.one_apply, Matrix.mul_apply] at h2
-  exact h2
+  rwa [Matrix.one_apply, Matrix.mul_apply] at h2
 
 theorem cols_iff_moved (V W : HSp D) (b : Matrix (Fin V.rank) (Fin V.rank) D.host.E) (hb : IsONLatBasis V b) (y : GA D W)
     (Y : Matrix (Fin W.rank) (Fin V.rank) D.host.E) :
@@ -212,8 +211,7 @@ theorem moved_iff (V W : HSp D) (y : GA D W) (u : WO V W) :
   have h1 : ∀ z ∈ hat D.host.F (GlobalTheory.Member.latC V : Set (Fin V.rank → D.host.E)),
       Matrix.mulVec (finHom V 1).1 z ∈ hat D.host.F (GlobalTheory.Member.latC V : Set (Fin V.rank → D.host.E)) := by
     intro z hz
-    rw [map_one, Units.val_one, Matrix.one_mulVec]
-    exact hz
+    rwa [map_one, Units.val_one, Matrix.one_mulVec]
   constructor
   · exact GlobalTheory.MovedLat.actO_mem V W 1 y⁻¹ _ _ _ _ h1 (GlobalTheory.MovedLat.bwd W y) u
   · intro h
@@ -367,8 +365,7 @@ theorem GlobalTheory.DictLatPin.lat_of_frAt : ∀ (D : D7) (G : Type) [Group G] 
     convert hw' using 1
     funext m
     simp
-  · intro hv
-    exact ⟨_, hv, funext fun m => by simp⟩
+  · exact fun hv => ⟨_, hv, funext fun m => by simp⟩
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

@@ -246,8 +246,7 @@ theorem partAt_finW_off_mem_hatA : ∀ (D : D7) (S T : HSp D) (Pg Q : Finset (Fo
     have hex : ∀ PP ∈ Pg ∪ Q, ∃ s : 𝓞 D.host.F,
         algebraMap (𝓞 D.host.F) (𝓞 D.host.E) s ∈ PP.asIdeal ∧ s ∉ w.asIdeal := by
       intro PP hPP
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       apply hw PP hPP
       have hle : (HeightOneSpectrum.under (𝓞 D.host.F) PP).asIdeal ≤ w.asIdeal := fun s hs => hcon s hs
       exact HeightOneSpectrum.ext ((HeightOneSpectrum.isMaximal _).eq_of_le w.isPrime.ne_top hle)
@@ -472,8 +471,7 @@ theorem rowRed_eq_zero_iff : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (hn : T.ra
     rw [hred] at h6
     funext j
     have h7 := congrFun (congrFun h6 i0) j
-    rw [hy0] at h7
-    exact h7
+    rwa [hy0] at h7
 
 end GlobalTheory.LiftDat.RowKer
 end -- clump:auto
@@ -582,8 +580,7 @@ theorem frMapAdj_partAt_actO_finW : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (hn
     simp only [GlobalTheory.LiftLevel.partAt, Matrix.map_apply, ← mul_assoc, hcc]
   rw [hcomm, hmov.2.2 _ hx]
   unfold GlobalTheory.LiftLevel.adjA frMapAdj
-  rw [C.m.gS]
-  rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, Units.mul_inv, Matrix.one_mul]
+  rw [C.m.gS, ← Matrix.mul_assoc, ← Matrix.mul_assoc, Units.mul_inv, Matrix.one_mul]
   have hi : ((1 : Matrix (Fin S.rank) (Fin S.rank) D.host.E)⁻¹).map (incA D) = 1 := by
     rw [inv_one]; exact Matrix.map_one (incA D) (map_zero _) (map_one _)
   rw [hi, Matrix.one_mul]
@@ -736,14 +733,11 @@ theorem conjI_inj {P P' : Ideal (𝓞 D.host.E)} (h : conjI P = conjI P') : P = 
 theorem mem_liftI {Pg Q : Finset (Formalism.L2.DIV.Pl D.host.E)} {x : 𝓞 D.host.E} :
     x ∈ liftI Pg Q ↔ ∀ PP ∈ Pg ∪ Q, GlobalTheory.SW.Lev.bar x ∈ PP.asIdeal := by
   constructor
-  · intro hx PP hPP
-    exact GlobalTheory.SW.Lev.mem_conjI.1 (liftI_le hPP hx)
+  · exact fun hx PP hPP => GlobalTheory.SW.Lev.mem_conjI.1 (liftI_le hPP hx)
   · intro h
     unfold liftI
     rw [Ideal.prod_eq_iInf_of_pairwise_isCoprime]
-    · simp only [Submodule.mem_iInf]
-      intro PP hPP
-      exact GlobalTheory.SW.Lev.mem_conjI.2 (h PP hPP)
+    · simpa only [Submodule.mem_iInf] using fun PP hPP => GlobalTheory.SW.Lev.mem_conjI.2 (h PP hPP)
     · intro PP _ PP' _ hne
       have hne' : conjI PP.asIdeal ≠ conjI PP'.asIdeal := fun e =>
         hne (HeightOneSpectrum.ext (conjI_inj e))
@@ -1002,8 +996,7 @@ theorem mem_liftI (D : D7) (Pg Q : Finset (Formalism.L2.DIV.Pl D.host.E)) (x : �
     (hx : ∀ PP ∈ Pg ∪ Q, x ∈ conjI PP.asIdeal) : x ∈ GlobalTheory.LiftLevel.liftI Pg Q := by
   unfold GlobalTheory.LiftLevel.liftI
   rw [Ideal.prod_eq_iInf_of_pairwise_isCoprime]
-  · simp only [Submodule.mem_iInf]
-    exact hx
+  · simpa only [Submodule.mem_iInf] using hx
   · intro PP _ PP' _ hne
     have hne' : conjI PP.asIdeal ≠ conjI PP'.asIdeal := fun h => hne (conjI_inj D h)
     rw [Function.onFun, Ideal.isCoprime_iff_sup_eq]
@@ -1363,8 +1356,7 @@ theorem level_datum_eq : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (hn : T.rank �
     | empty => simp
     | insert j s hj ih =>
       have hm : ∑ j ∈ s, c j • u j + v ∈ C.X.Λ := add_mem (sum_mem fun j _ => Submodule.smul_mem _ _ (hu j)) hv
-      rw [Finset.sum_insert hj, add_assoc]
-      rw [show c j • u j = ((c j : D.host.E)) • u j from rfl]
+      rw [Finset.sum_insert hj, add_assoc, show c j • u j = ((c j : D.host.E)) • u j from rfl]
       rw [(Ilin PP (u j) _ (Iint _ (hu j)) (Iint _ hm) (c j)).2, ih]
       funext l
       rw [Finset.sum_insert hj]
@@ -1458,16 +1450,14 @@ theorem level_datum_eq : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (hn : T.rank �
       obtain ⟨p, hp, q, hq, hpq⟩ := Submodule.mem_sup.1 (hsp (hrow i))
       obtain ⟨c, hc⟩ := (Submodule.mem_span_range_iff_exists_fun _).1 hp
       refine ⟨c, ?_⟩
-      rw [hc, ← hpq, add_sub_cancel_left]
-      exact hq
+      rwa [hc, ← hpq, add_sub_cancel_left]
     choose c hc using hdec
     refine GlobalTheory.T.levelDatum_conjugatePlacesLevel_eq_characters D S T C hn Pg Q ξ h1 h2 h3 h4 β hβΛ hsp Lv0 hind y c hc _ ?_
     intro PP hPP i j
     rw [Irow]
     have hw : y i - ∑ j, c i j • β j ∈ C.X.Λ := sub_mem (hrow i) (sum_mem fun j _ => Submodule.smul_mem _ _ (hβΛ j))
     have h := hexp PP hPP (c i) _ hw j
-    rw [add_sub_cancel, (Iker _ hw).2 (hc i) PP hPP, Pi.zero_apply, add_zero] at h
-    exact h
+    rwa [add_sub_cancel, (Iker _ hw).2 (hc i) PP hPP, Pi.zero_apply, add_zero] at h
 
 end GlobalTheory.LiftDat
 

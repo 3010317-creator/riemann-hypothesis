@@ -108,8 +108,7 @@ theorem const_of_connected {Z : Scheme.{0}} (g : Z ⟶ Sp ℂ) [Smooth g] [Conne
       show Spec.map (CommRingCat.ofHom φ) ≫ Spec.map c = 𝟙 _ ↔ _
       rw [← Spec.map_comp, ← Spec.map_id, Spec.map_injective.eq_iff]
       constructor
-      · intro h a
-        exact congrArg (fun f : CommRingCat.of ℂ ⟶ CommRingCat.of ℂ => f.hom a) h
+      · exact fun h a => congrArg (fun f : CommRingCat.of ℂ ⟶ CommRingCat.of ℂ => f.hom a) h
       · intro h
         ext a
         exact h a
@@ -125,8 +124,7 @@ theorem const_of_connected {Z : Scheme.{0}} (g : Z ⟶ Sp ℂ) [Smooth g] [Conne
     have hdisc : IsDiscrete (Set.range fun n : ℕ => (n : ℂ)) :=
       by
         have h0 : Topology.IsEmbedding (fun n : ℕ => (n : ℂ)) := by
-          have h := Complex.isometry_ofReal.isEmbedding.comp Nat.isClosedEmbedding_coe_real.isEmbedding
-          exact h
+          exact Complex.isometry_ofReal.isEmbedding.comp Nat.isClosedEmbedding_coe_real.isEmbedding
         exact h0.isDiscrete_range
     have := isPreconnected_univ.constant_of_mapsTo hdisc hcont.continuousOn (fun s _ => ⟨_, rfl⟩)
       (x := { φ with commutes' := (halg φ).1 hp }) (y := { ψ with commutes' := (halg ψ).1 hq }) trivial trivial
@@ -211,8 +209,7 @@ theorem exists_descent {K L : IntermediateField ℚ ℂ} (hKL : K ≤ L) {X : Sc
     show Spec.map (CommRingCat.ofHom ψ) ≫ Spec.map c = _ ↔ _
     rw [← Spec.map_comp, Spec.map_injective.eq_iff]
     constructor
-    · intro h a
-      exact congrArg (fun f : CommRingCat.of K ⟶ CommRingCat.of F => f.hom a) h
+    · exact fun h a => congrArg (fun f : CommRingCat.of K ⟶ CommRingCat.of F => f.hom a) h
     · intro h
       ext a
       exact h a

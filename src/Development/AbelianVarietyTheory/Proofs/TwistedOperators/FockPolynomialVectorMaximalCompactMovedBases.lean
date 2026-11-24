@@ -158,12 +158,10 @@ theorem pureTensorO_fockSub : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ 
         exact hw (by rw [isKMat_inv_zero hkS hc, mul_zero])
       by_cases hc : (i.val < pT τ ↔ j.val < pS τ)
       · have hd : decide (b.1.val < pT τ ↔ b.2.val < pS τ) = true := by
-          rw [decide_eq_true_iff, h1, ← h2]
-          exact hc
+          rwa [decide_eq_true_iff, h1, ← h2]
         rw [ite_eq_left hd, ite_eq_left hc]
       · have hd : ¬ decide (b.1.val < pT τ ↔ b.2.val < pS τ) = true := by
-          rw [decide_eq_true_iff, h1, ← h2]
-          exact hc
+          rwa [decide_eq_true_iff, h1, ← h2]
         rw [ite_eq_right hd, ite_eq_right hc]
   have key := GlobalTheory.FockSubst.pure_subst (ι := FVar D T.rank S.rank) (X := WO S T) (κ := Fin T.rank × Fin S.rank)
     (A := fun k => aPlus (heisO ψ S T) θ k.1 (cplxO (sS k.1) (sT k.1)) (unitMap (BS k.1) (BT k.1) k.2.1 k.2.2))
@@ -189,8 +187,7 @@ theorem pureTensorO_fockSub : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ 
       dsimp only
       by_cases hρ : ρ = τ
       · subst hρ
-        simp only [ite_true]
-        exact hτ i j g hg
+        simpa only [ite_true] using hτ i j g hg
       · obtain ⟨h1, h2⟩ := hne ρ hρ
         simp [hρ, h1, h2, ite_smul])
     hf P

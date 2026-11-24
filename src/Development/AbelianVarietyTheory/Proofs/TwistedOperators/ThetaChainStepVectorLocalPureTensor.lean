@@ -223,8 +223,7 @@ theorem omegaG_eq_prod_gLoc : ∀ (D : D7) (a b : ℕ) (L : Formalism.L2.DIV.Lev
             ((L.cg (i + 1) PP.1 (Formalism.L2.DIV.dBlk (Formalism.L2.DIV.blkOf L.r L.t) (i + 1) (hall PP).2.choose) : ℂˣ) : ℂ)) *
           (((χ PP.1 (Matrix.GeneralLinearGroup.det (hall PP).2.choose)) : ℂˣ) : ℂ)⁻¹ := fun PP => by
       rw [gLoc, dite_eq_left (hall PP)]
-    rw [Finset.prod_congr rfl fun PP _ => hloc PP]
-    rw [Finset.prod_mul_distrib, Finset.prod_mul_distrib]
+    rw [Finset.prod_congr rfl fun PP _ => hloc PP, Finset.prod_mul_distrib, Finset.prod_mul_distrib]
     have hx' : (fun PP => Formalism.L2.DIV.upperLeftBlock L.hr (hG.2.choose PP)) ∈ (Formalism.L2.DIV.LevelP.ofLocal Hl cl).H := by
       rw [← hP]; exact hG.2.choose_spec.2.2
     congr 1
@@ -357,8 +356,7 @@ theorem locDatum_eq_viaRed : ∀ (D : D7) (v : FinPl D) (φ : SplitProj D v) (PP
     funext i j
     apply Subtype.ext
     have h1 := congrFun (congrFun hk i) j
-    rw [Matrix.submatrix_apply, hinl] at h1
-    exact h1
+    rwa [Matrix.submatrix_apply, hinl] at h1
 
   have hred : ∀ k : GL (Fin a) (v.adicCompletionIntegers D.host.F), (k : Matrix (Fin a) (Fin a) _) = K →
       ((Matrix.GeneralLinearGroup.map r k : GL (Fin a) (Formalism.L2.DIV.kP PP)) : Matrix (Fin a) (Fin a) _) = topL a y ∧
@@ -425,8 +423,7 @@ theorem locDatum_eq_viaRed : ∀ (D : D7) (v : FinPl D) (φ : SplitProj D v) (PP
       rfl
     · intro i j
       rw [hinr]
-      refine ⟨hint _ _, (hr.2.1 ⟨Y _ j, hint _ _⟩).1 ?_⟩
-      exact hlow ⟨a + i.val, by omega⟩ j (by simp) j.2
+      exact ⟨hint _ _, (hr.2.1 ⟨Y _ j, hint _ _⟩).1 (hlow ⟨a + i.val, by omega⟩ j (by simp) j.2)⟩
   · rfl
 
 end GlobalTheory.StepVec
@@ -507,8 +504,7 @@ theorem prod_locFn_half : ∀ (D : D7) (S T : HSp D) (βS : GL (Fin S.rank) (EAf
       simp only [Subring.coe_mul, frMapO_smul, Matrix.smul_apply, smul_eq_mul]
     rw [heq, map_mul, h1, one_mul]
   · have hex : ∃ PP ∈ s, ¬ IsIntM (frMapO S T βS βT (es PP • t)) := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       apply hN
       intro i j
       have ht : t = (∑ PP ∈ s, es PP) • t := by
@@ -625,8 +621,7 @@ theorem GlobalTheory.StepVec.onHalf_viaRed_eq_locFn : ∀ (D : D7) (v : FinPl D)
       have h3 := (hchart.2.2.2 a).2 h2
       have h4 := GlobalTheory.PlaceCoord.toEAf_mem h3
       rwa [map_mul, ha, hfix] at h4
-    · intro h i j
-      exact (hr.2.2.2 (N i j) (h i j)).1
+    · exact fun h i j => (hr.2.2.2 (N i j) (h i j)).1
   unfold viaRed
   by_cases hI : IsIntM N
   · rw [dite_eq_left (hiff.2 hI), ite_eq_left ⟨hh, hI⟩]
@@ -924,8 +919,7 @@ theorem stepVecLocal : ∀ D : D7, StepVecLocal D := by
       · rw [ite_eq_left ⟨ht', hI⟩, ite_eq_left hI]
         exact hprod _
       · rw [ite_eq_right fun h => hI h.2, ite_eq_right hI]
-    · intro t' ht'
-      exact ite_eq_right fun h => ht' h.1
+    · exact fun t' ht' => ite_eq_right fun h => ht' h.1
 
 end GlobalTheory.StepVec
 

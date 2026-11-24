@@ -81,8 +81,7 @@ theorem exists_esymm_eq (n : ℕ) (a : ℕ → ℂ) (h0 : a 0 = 1) (hn : a n ≠
     · subst h
       simp [hp, hq]
     · rw [hpc 0 h]
-      simp only [hc, Nat.sub_zero]
-      exact mul_ne_zero (pow_ne_zero _ (by norm_num)) hn
+      simpa only [hc, Nat.sub_zero] using mul_ne_zero (pow_ne_zero _ (by norm_num)) hn
   have hne : ∀ r ∈ p.roots, r ≠ 0 := by
     intro r hr h0
     subst h0
@@ -195,8 +194,7 @@ theorem heckeVec_Tj_zero (ρ : Representation ℂ (GL (Fin n) (w.adicCompletion 
     by_cases hg : g ∈ KGL w (n := n)
     · rw [ite_eq_left hg, ite_eq_left]
       · rfl
-      · simp only [Set.mem_setOf_eq]
-        exact ⟨g, hg, 1, one_mem _, by simp [hd]⟩
+      · simpa only [Set.mem_setOf_eq] using ⟨g, hg, 1, one_mem _, by simp [hd]⟩
     · rw [ite_eq_right hg, ite_eq_right]
       simp only [Set.mem_setOf_eq]
       rintro ⟨a, ha, b, hb, hab⟩
@@ -299,8 +297,7 @@ theorem exists_hasSatGL (E : Type) [Field E] [NumberField E] (w : HeightOneSpect
     have h3 : ρ z⁻¹ (ρ z x0) = x0 := by
       first
       | (rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply])
-    rw [h3, map_zero] at h2
-    exact h2
+    rwa [h3, map_zero] at h2
   set A : ℕ → ℂ := fun j => c j / (qV E w : ℂ) ^ (((j : ℂ) * ((n : ℂ) - j)) / 2) with hA
   obtain ⟨B, hB, hBe⟩ := exists_esymm_eq n A (by simp [hA, hc0]) (by simp [hA, hcn])
   refine ⟨B, hs, fun x hx hx0' => ⟨hx0', hx, hB, fun ϖ hϖ j hj => ?_⟩⟩

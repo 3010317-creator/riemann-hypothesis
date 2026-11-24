@@ -64,8 +64,7 @@ theorem isDerivAt0_comp_linear_iff {g g' : ℕ} {X : Scheme.{0}} (e : (Fin g →
     have hmem : (0 : Fin g → ℂ) ∈ {b ∈ (Set.univ : Set (Fin g → ℂ)) | ⊤ ≤ e b ⁻¹ᵁ U} := by
       refine ⟨trivial, ?_⟩
       rw [← h0]
-      intro x _
-      exact hU (Set.mem_univ _)
+      exact fun x _ => hU (Set.mem_univ _)
     have hd : DifferentiableAt ℂ (fun z => valAt' (e z) U f) 0 :=
       ((he U f).2 0 hmem).differentiableAt ((he U f).1.mem_nhds hmem)
     let L' := LinearMap.toContinuousLinearMap L
@@ -108,8 +107,7 @@ theorem ex_eq_of_der {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Hos
     have d3 : IsDerivAt0 (fun z => (e₁ (h z)).left) (Pi.single a 1) v := by
       convert d2 using 2 with z
       rw [hh]; rfl
-    have d4 := (isDerivAt0_comp_linear_iff _ he₁.2.2.1 h.toLinearMap _ v).1 d3
-    exact huniq _ _ v d4 h1
+    exact huniq _ _ v ((isDerivAt0_comp_linear_iff _ he₁.2.2.1 h.toLinearMap _ v).1 d3) h1
   have hlin : h.toLinearMap = LinearMap.id :=
     LinearMap.pi_ext' fun a => LinearMap.ext_ring (by simpa using hid a)
   have hid' : ∀ z, h z = z := fun z => LinearMap.congr_fun hlin z

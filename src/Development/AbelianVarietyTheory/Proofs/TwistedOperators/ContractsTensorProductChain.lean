@@ -112,8 +112,7 @@ private theorem factor_dual_lemma {X Y : Type} [AddCommGroup X] [Module ℂ X] [
   have h0 : p (x - s (p x)) = 0 := by rw [map_sub, hps, sub_self]
   have h1 := hl _ h0
   rw [map_sub, sub_eq_zero] at h1
-  rw [LinearMap.comp_apply]
-  exact h1
+  rwa [LinearMap.comp_apply]
 
 private theorem lTensor_ker_lemma_2 {Q N P : Type} [AddCommGroup Q] [Module ℂ Q] [AddCommGroup N] [Module ℂ N]
     [AddCommGroup P] [Module ℂ P] (g : N →ₗ[ℂ] P) (hg : Function.Surjective g)
@@ -230,7 +229,6 @@ theorem contracts_chain : ∀ (m : ℕ) (G : Fin (m + 1) → Type) [∀ j, Monoi
         | add u₁ u₂ h₁ h₂ => simp only [map_add (f := _), TensorProduct.tmul_add, h₁, h₂]
       have hx' : π' (LinearMap.lTensor _ π₀ (ψ x)) = 0 := hx
       have h1 := hk' L' hD _ hx'
-      rw [← hL', hL, LinearEquiv.symm_apply_apply] at h1
-      exact h1
+      rwa [← hL', hL, LinearEquiv.symm_apply_apply] at h1
 
 end GlobalTheory.OneFunctional

@@ -60,10 +60,8 @@ private theorem pb_eq_of_omPins (hL : R.toLevCh.Is A.μ0) (fw : FWTie T R κ v�
 
 private theorem jEvExists_and_jEvBar_of_isEmpty (hm : IsEmpty (Fin D.R.m)) : JEvExists T R κ v₀ ∧ JEvBar T R κ := by
   constructor
-  · intro i
-    exact hm.elim i
-  · intro i
-    exact hm.elim i
+  · exact fun i => hm.elim i
+  · exact fun i => hm.elim i
 
 theorem jEvExists_and_jEvBar (hL : R.toLevCh.Is A.μ0) (hM : R.IsModels) (fw : FWTie T R κ v₀)
     (hO : ∀ i, OMPins T R κ v₀ O i) : JEvExists T R κ v₀ ∧ JEvBar T R κ := by

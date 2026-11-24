@@ -167,8 +167,7 @@ theorem hO_eq_trace (V : HSp D) (x y : WO V T) :
     Finset.sum_mul]
   refine Finset.sum_congr rfl fun a _ => ?_
   refine (Finset.sum_congr rfl fun b _ => Finset.sum_comm).trans ?_
-  refine Finset.sum_comm.trans ?_
-  exact Finset.sum_congr rfl fun d _ => Finset.sum_comm
+  exact Finset.sum_comm.trans (Finset.sum_congr rfl fun d _ => Finset.sum_comm)
 
 theorem inv_gram_re : ((reS S b).gram⁻¹ : Matrix (Fin S.rank) (Fin S.rank) D.host.E) =
     frPinv S b * S.gram⁻¹ * Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) (frPinv S b) := by
@@ -229,8 +228,7 @@ theorem mem_ratL_reW (x : WO (reS S b) T) : reW S T b x ∈ ratL T S ↔ x ∈ r
     refine ⟨γ * frP S b, ?_⟩
     have h1 : reWinv S T b (ratW T S γ) = x := by
       rw [← reWinv_reW S T b x]; exact congrArg (reWinv S T b) hγ
-    rw [reWinv_ratW] at h1
-    exact h1
+    rwa [reWinv_ratW] at h1
   · rintro ⟨γ, hγ⟩
     refine ⟨HMul.hMul (α := Matrix (Fin T.rank) (Fin S.rank) D.host.E) γ (frPinv S b), ?_⟩
     have h1 : reW S T b (ratW T (reS S b) γ) = reW S T b x := congrArg (reW S T b) hγ
@@ -338,8 +336,7 @@ theorem isThetaFunO_of_reF (ψ : AddChar (AF D.host.F) ℂ) (f : WO S T → ℂ)
   have e : reF (reS S b) T S.frame (reF S T b f) = f := by
     funext x
     exact congrArg f (reW_reWinv S T b x)
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 section Meas
 
@@ -383,8 +380,7 @@ theorem setLIntegral_reW (μ : Measure (WO (reS S b) T)) (𝓕 : Set (WO (reS S 
     ext w
     show reWinv S T b (reW S T b w) ∈ 𝓕 ↔ w ∈ 𝓕
     rw [reWinv_reW]
-  rw [hpre] at e1
-  exact e1
+  rwa [hpre] at e1
 
 end Meas
 

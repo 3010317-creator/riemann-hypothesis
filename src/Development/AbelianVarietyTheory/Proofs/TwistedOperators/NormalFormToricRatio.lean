@@ -118,8 +118,7 @@ theorem ratio_algebraic (hTR : GlobalTheory.IndefiniteRowSideFullHecke.ToricSymb
     if h : ∃ P ∈ GlobalTheory.SqTop.twPl G t, P.under (𝓞 D.host.F) = q then h.choose else G.pl.w G.pl.v0
   have hPq : ∀ q ∈ Q, Pq q ∈ GlobalTheory.SqTop.twPl G t ∧ (Pq q).under (𝓞 D.host.F) = q := fun q hq => by
     have h := hex q hq
-    simp only [Pq, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [Pq, dite_eq_left h] using h.choose_spec
   have hov : ∀ q ∈ Q, Over (Pq q) q := fun q hq =>
     (show Over (Pq q) ((Pq q).under (OF D.host.E)) from rfl).trans (congrArg HeightOneSpectrum.asIdeal (hPq q hq).2)
 
@@ -141,19 +140,16 @@ theorem ratio_algebraic (hTR : GlobalTheory.IndefiniteRowSideFullHecke.ToricSymb
     have a := GlobalTheory.CMVal.OrderUnits.finPart_eq_one D.host.E D.what₂.Tau (cmPhi D) hφ s (kap D sc.cGap i j s)
       (condF G.pl) Q (nuH G t i j) hU hbc hQaux hvt u hu
     have hle : condQ (condF G.pl) Q ≤ condQ (condF G.pl) ∅ := by
-      simp only [condQ, Finset.prod_empty, mul_one]
-      exact Ideal.mul_le_left
+      simpa only [condQ, Finset.prod_empty, mul_one] using Ideal.mul_le_left
     have b := GlobalTheory.CMVal.OrderUnits.finPart_eq_one D.host.E D.what₂.Tau (cmPhi D) hφ s (kap D sc.cGap i j s)
       (condF G.pl) ∅ (nuH G μ₀ i j) hU hbc (fun q hq => absurd hq (Finset.notMem_empty q)) hv0 u
       (hatOUnits_mono hle hu)
-    rw [hnu, finPart_mul, b, one_mul] at a
-    exact a
+    rwa [hnu, finPart_mul, b, one_mul] at a
   have hker : princ ⊔ hatOUnits (condQ (condF G.pl) Q) ≤ (finPart (Lc.xiH t)).ker := by
     refine sup_le ?_ fun u hu' => hu u hu'
     rintro _ ⟨a, rfl⟩
     have := finPart_mul_inf (Lc.xiH t) a
-    rw [hinf a, mul_one] at this
-    exact this
+    rwa [hinf a, mul_one] at this
   let ψ : PicO (condQ (condF G.pl) Q) →* ℂˣ := QuotientGroup.lift _ (finPart (Lc.xiH t)) hker
 
   haveI : Nonempty D.what₂.Tau := Fintype.card_pos_iff.1 (by have := hfd.2.2.2.2.2.1; omega)
@@ -196,7 +192,6 @@ theorem inNF_ratios (hTR : GlobalTheory.IndefiniteRowSideFullHecke.ToricSymbols.
   haveI : Finite S := hS.to_subtype
   refine ⟨IntermediateField.adjoin ℚ S, IntermediateField.finiteDimensional_adjoin fun z hz => (hSa z hz).isIntegral,
     fun i j t Λ Λ₀ hΛ hΛ₀ s h1 h2 _ => ⟨⟨Λ s / Λ₀ s, IntermediateField.subset_adjoin ℚ S ?_⟩, rfl⟩⟩
-  simp only [S, Set.mem_iUnion, Set.mem_setOf_eq]
-  exact ⟨i, j, t, s, ⟨h1, h2⟩, Λ, Λ₀, hΛ, hΛ₀, rfl⟩
+  simpa only [S, Set.mem_iUnion, Set.mem_setOf_eq] using ⟨i, j, t, s, ⟨h1, h2⟩, Λ, Λ₀, hΛ, hΛ₀, rfl⟩
 
 end GlobalTheory.RowEx.RatioField

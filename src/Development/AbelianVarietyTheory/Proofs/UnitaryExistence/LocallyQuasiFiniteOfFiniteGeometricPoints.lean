@@ -109,8 +109,7 @@ theorem finite_fiber_of_finite_ker {C : Type*} [Category C] [CartesianMonoidalCa
   refine Finite.of_injective (β := {x : T ⟶ Ga // x ≫ p = 1})
     (fun x ↦ ⟨x₀⁻¹ * x.1, by
       rw [MonObj.mul_comp, GrpObj.inv_comp, hx₀, x.2, inv_mul_cancel]⟩) ?_
-  intro a b hab
-  exact Subtype.ext (mul_left_cancel (congrArg Subtype.val hab))
+  exact fun a b hab => Subtype.ext (mul_left_cancel (congrArg Subtype.val hab))
 
 theorem locallyQuasiFinite_of_finite_geometric_ker :
     ∀ (S : Scheme.{0}) (Ga G : Over S) [GrpObj Ga] [GrpObj G] (p : Ga ⟶ G), IsMonHom p →
@@ -125,7 +124,6 @@ theorem locallyQuasiFinite_of_finite_geometric_ker :
     (fun x ↦ ⟨Over.homMk x.1 (by
       change x.1 ≫ Ga.hom = y ≫ G.hom
       rw [← Over.w p, ← Category.assoc, x.2]), Over.OverMorphism.ext x.2⟩) ?_
-  intro a b hab
-  exact Subtype.ext (congrArg (fun z ↦ z.1.left) hab)
+  exact fun a b hab => Subtype.ext (congrArg (fun z ↦ z.1.left) hab)
 
 end GlobalTheory

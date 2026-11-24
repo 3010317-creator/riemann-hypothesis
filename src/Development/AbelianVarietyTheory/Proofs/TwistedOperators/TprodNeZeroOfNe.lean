@@ -81,8 +81,7 @@ theorem exists_isContr {Tm : H₁ →ₗ[ℂ] H₂ →ₗ[ℂ] FF} (hI : IsIsoBi
     simp only [f, ContinuousLinearMap.adjoint_inner_right]
     rfl
   refine ⟨LinearMap.mk₂'ₛₗ (RingHom.id ℂ) (starRingEnd ℂ) f ?_ ?_ ?_ ?_, hf⟩
-  · intro a b y
-    exact ext_inner_left ℂ fun x => by simp only [inner_add_right, hf]
+  · exact fun a b y => ext_inner_left ℂ fun x => by simp only [inner_add_right, hf]
   · intro c a y
     exact ext_inner_left ℂ fun x => by simp only [inner_smul_right, hf, RingHom.id_apply]
   · intro a y z
@@ -108,8 +107,7 @@ theorem tprod_ne_zero_of_ne {ι : Type} [Fintype ι] {B : ι → Type} [∀ τ, 
     [∀ τ, Module ℂ (B τ)] (w : ∀ τ, B τ) (hw : ∀ τ, w τ ≠ 0) : PiTensorProduct.tprod ℂ w ≠ 0 := by
   classical
   have : ∀ τ, ∃ f : Module.Dual ℂ (B τ), f (w τ) ≠ 0 := fun τ => by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hw τ ((Module.forall_dual_apply_eq_zero_iff ℂ (w τ)).1 hc)
   choose f hf using this
   intro h
@@ -157,8 +155,7 @@ theorem contrTensor : ContrTensor := by
     simpa using this
   refine ⟨It, hT, fun hne h0 => ?_⟩
   have : ∀ τ, ∃ P v, Itl τ P v ≠ 0 := fun τ => by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hne τ (LinearMap.ext fun P => LinearMap.ext fun v => hc P v)
   choose P v hPv using this
   apply tprod_ne_zero_of_ne _ hPv

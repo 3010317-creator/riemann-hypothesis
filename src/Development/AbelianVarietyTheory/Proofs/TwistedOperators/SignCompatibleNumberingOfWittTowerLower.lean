@@ -138,8 +138,7 @@ private theorem card_add_card_add_card_le_of_gram_frames {n : ℕ} {m₁ m₂ k 
     (hCi : ∀ x, C *ᵥ x = 0 → x = 0) (hN : Nᴴ * G * N = -1) :
     Fintype.card m₁ + Fintype.card m₂ + Fintype.card k ≤ n := by
   have hCA : Cᴴ * G * A = 0 := by
-    have h := congrArg Matrix.conjTranspose hAC
-    simpa [Matrix.conjTranspose_mul, hG, Matrix.mul_assoc] using h
+    simpa [Matrix.conjTranspose_mul, hG, Matrix.mul_assoc] using congrArg Matrix.conjTranspose hAC
   let f : ((m₁ → ℂ) × (m₂ → ℂ)) × (k → ℂ) →ₗ[ℂ] (Fin n → ℂ) :=
     (A.mulVecLin.coprod C.mulVecLin).coprod N.mulVecLin
   have hf : Function.Injective f := by
@@ -200,8 +199,7 @@ theorem hasSignature_of_isWittLower {D : D7} {T T' : HSp D} {i : ℕ} (h : IsWit
   let c : Fin i → T.V := fun k => T.frame.equivFun.symm (fun j => C j k)
   have hrc : ∀ k j, T.frame.repr (c k) j = C j k := fun k j => by
     have h1 := congrFun (T.frame.equivFun.apply_symm_apply (fun j => C j k)) j
-    rw [Module.Basis.equivFun_apply] at h1
-    exact h1
+    rwa [Module.Basis.equivFun_apply] at h1
   have hcc : ∀ k l, T.hT (c k) (c l) = 0 := by
     intro k l
     rw [_root_.GlobalTheory.AutFunCounterexample.hT_coord]
@@ -294,8 +292,7 @@ theorem hasSignature_of_isWittLower {D : D7} {T T' : HSp D} {i : ℕ} (h : IsWit
   simp only [Fintype.card_fin] at c1 c2 hcard hcard'
   have hP : P' = p + i := by omega
   have hQ : Q' = q + i := by omega
-  rw [hP, hQ] at hGs
-  exact hGs
+  rwa [hP, hQ] at hGs
 
 theorem signCompat_of_isWittLower : ∀ (D : D7) (T T' : HSp D) (i : ℕ) (τ : D.what₂.Tau) (fr : Mn T.rank) (ε : Fin T.rank → Bool) (fr' : Mn T'.rank) (ε' : Fin T'.rank → Bool) (r s : ℕ) (e : Ix r s ≃ Fin T.rank), IsWittLower T T' i → frᴴ * Formalism.REAL.Jm ε * fr = gramAt D T τ → IsUnit fr → fr'ᴴ * Formalism.REAL.Jm ε' * fr' = gramAt D T' τ → IsUnit fr' → SignCompat ε e → i ≤ r ∧ i ≤ s ∧ ∃ e' : Ix (r - i) (s - i) ≃ Fin T'.rank, SignCompat ε' e' := by
   intro D T T' i τ fr ε fr' ε' r s e hW hfr hfru hfr' hfr'u hse

@@ -107,9 +107,7 @@ theorem hom_ext_torus (hG : GlobalFnsSt) (f₁ f₂ : thickObj R I e G' ⟶ thic
           rw [hσ, MonObj.mul_comp, Category.assoc, hi]
         have k₂ : a ≫ f₂ = (σ ≫ g'.i ≫ f₂) * (b ≫ f₂) := by
           rw [hσ, MonObj.mul_comp, Category.assoc]
-        rw [k₁, k₂, hb, mul_left_comm] at ha
-        rw [mul_left_comm] at ha
-        rw [mul_left_comm (a ≫ τ ≫ g.i)] at ha
+        rw [k₁, k₂, hb, mul_left_comm, mul_left_comm, mul_left_comm (a ≫ τ ≫ g.i)] at ha
         exact (mul_right_cancel (mul_left_cancel ha)).symm
       rw [← FunDescent.comp_appTop_apply, ← FunDescent.comp_appTop_apply, ← Over.comp_left,
         ← Over.comp_left, e₁]
@@ -190,8 +188,7 @@ theorem act_comm_of_isPullUnif_id : GlobalFnsSt → ∀ (R : Type) [CommRing R] 
       (hI ▸ IsLocalRing.maximalIdeal_le_jacobson ⊥) G').2 G _ _ fun e => ?_
     obtain ⟨h, hf, ⟨hp, ht⟩, -⟩ := H e
     obtain rfl : h = ((Over.pullback (thick R I e)).map φ).left := by
-      rw [← cancel_mono (pullback.fst G.hom (thick R I e)), P, eφ]
-      exact hf
+      rwa [← cancel_mono (pullback.fst G.hom (thick R I e)), P, eφ]
     have hq : (Over.pullback (thick R I e)).map φ ≫ (U.gt e).q =
         (U'.gt e).q ≫ (Over.pullback (thick R I e)).map ψ := by
       refine Over.OverMorphism.ext ?_

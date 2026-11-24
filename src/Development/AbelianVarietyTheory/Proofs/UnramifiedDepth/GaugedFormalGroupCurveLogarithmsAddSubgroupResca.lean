@@ -84,8 +84,7 @@ theorem alongCv_congr {σ : Type} [Finite σ] {a b : σ → PowerSeries C}
     rw [map_pow, map_pow, hq]
   rw [Ideal.Quotient.eq, hJ, Ideal.mem_span_singleton, PowerSeries.X_pow_dvd_iff] at hp
   have := hp m hm
-  rw [map_sub, sub_eq_zero] at this
-  exact this
+  rwa [map_sub, sub_eq_zero] at this
 
 theorem alongCv_low {σ : Type} [Finite σ] {a : σ → PowerSeries C}
     (ha : ∀ i, PowerSeries.constantCoeff (a i) = 0) {n : ℕ}
@@ -137,8 +136,7 @@ theorem coeff_lg_low (H : RLaw X V) {γ : κ → PowerSeries C} {n : ℕ} (hn : 
     by_cases hji : j = i
     · rw [hji, ite_eq_left rfl, ite_eq_left rfl]
     · rw [ite_eq_right hji, ite_eq_right]
-      intro h
-      exact hji (Finsupp.single_left_injective one_ne_zero h)
+      exact fun h => hji (Finsupp.single_left_injective one_ne_zero h)
   rw [coeff_alongCv_low hn hγ (lg_const H i)]
   simp only [hlg1, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
@@ -263,8 +261,7 @@ theorem rescale_mem (g : Fin 2) (s : C) (hs : V.Ge 0 s) : ∀ a ∈ Cv X V g,
       exact (hs.pow n).mul_int ((hδ i).2 n)
   have hal : ∀ f, alongCv (fun i => PowerSeries.rescale s (γ i)) f = PowerSeries.rescale s (alongCv γ f) := by
     intro f
-    simp only [PowerSeries.rescale_eq_subst]
-    exact alongCv_repar (fun i => (hγ i).1) hτ f
+    simpa only [PowerSeries.rescale_eq_subst] using alongCv_repar (fun i => (hγ i).1) hτ f
   refine ⟨fun i => PowerSeries.rescale s (γ i), fun q => PowerSeries.rescale s (lam q), hcv γ hγ, hcv lam hlam, ?_, ?_⟩
   · intro i
     rw [hal, h1 i]

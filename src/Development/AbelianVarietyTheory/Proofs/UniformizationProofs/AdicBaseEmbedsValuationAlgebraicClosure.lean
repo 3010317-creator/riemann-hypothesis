@@ -132,8 +132,7 @@ theorem exists_valuation_pow_eq_of_isAlgebraic {K F : Type*} [Field K] [Field F]
   obtain ⟨p, hp0, hp⟩ := hx
   let g : ℕ → F := fun i => algebraMap K F (p.coeff i) * x ^ i
   have hsum : ∑ i ∈ p.support, g i = 0 := by
-    rw [Polynomial.aeval_def, Polynomial.eval₂_eq_sum, Polynomial.sum_def] at hp
-    exact hp
+    rwa [Polynomial.aeval_def, Polynomial.eval₂_eq_sum, Polynomial.sum_def] at hp
   have hc : ∀ i ∈ p.support, w (algebraMap K F (p.coeff i)) ≠ 0 := fun i hi => by
     simpa using hi
   have hw : w x ≠ 0 := by simpa using hx0
@@ -159,8 +158,7 @@ theorem exists_valuation_pow_eq_of_isAlgebraic {K F : Type*} [Field K] [Field F]
     · exact aux i hi j hj.1 h e.symm
     · exact aux j hj.1 i hi h e
   have hgi : w (g i) ≠ 0 := by
-    simp only [g, map_mul, map_pow]
-    exact mul_ne_zero (hc i hi) (pow_ne_zero i hw)
+    simpa only [g, map_mul, map_pow] using mul_ne_zero (hc i hi) (pow_ne_zero i hw)
   have := w.map_sum_eq_of_lt hi hlt
   rw [hsum, map_zero] at this
   exact hgi this.symm

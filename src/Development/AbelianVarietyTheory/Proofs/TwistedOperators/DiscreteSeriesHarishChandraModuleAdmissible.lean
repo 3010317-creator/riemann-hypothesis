@@ -177,16 +177,14 @@ theorem inner_map (hadd : ∀ x y, U (x + y) = U x + U y) (hs : ∀ (z : ℂ) x,
   have hre : ∀ w x : H, (⟪U w, U x⟫_ℂ).re = (⟪w, x⟫_ℂ).re := fun w x => by
     have h1 := re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two (𝕜 := ℂ) (U w) (U x)
     have h2 := re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two (𝕜 := ℂ) w x
-    rw [← hadd, hn, hn, hn, ← h2] at h1
-    exact h1
+    rwa [← hadd, hn, hn, hn, ← h2] at h1
   have h1 := hre w x
   have h2 := hre w (Complex.I • x)
   rw [hs, inner_smul_right, inner_smul_right] at h2
   cases cj
   · apply Complex.ext <;> simp_all [cjc]
   · apply Complex.ext
-    · simp only [cjc, ite_true, Complex.conj_re]
-      exact h1
+    · simpa only [cjc, ite_true, Complex.conj_re] using h1
     · simp only [cjc, ite_true, Complex.conj_im] at h2 ⊢
       simpa using h2
 
@@ -682,8 +680,7 @@ theorem exists_universal (M : GKMod r s) (a : Mat p q →ₗ[ℂ] Module.End ℂ
     have h' : N.mkQ (Finsupp.single v P) = 0 := h
     rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at h'
     have := hNL h'
-    rw [LinearMap.mem_ker, hL] at this
-    exact this
+    rwa [LinearMap.mem_ker, hL] at this
 
 theorem pairNo_of_tensNo : ∀ (p q r s : ℕ) (T₁ : GrpData p q) (σ : Type) (a₁ : Mat p q →ₗ[ℂ] Module.End ℂ (MvPolynomial σ ℂ)) (a₂ : Mat r s →ₗ[ℂ] Module.End ℂ (MvPolynomial σ ℂ)) (R₁ : DSRep T₁), IsGK a₁ → IsGK a₂ → (∀ Y Z, a₁ Y * a₂ Z = a₂ Z * a₁ Y) → AdmGK R₁.HK → TensNo a₁ a₂ R₁ → PairNo a₁ R₁ := by
   intro p q r s T₁ σ a₁ a₂ R₁ h₁ h₂ hc hA hT U _ _ B hB
@@ -1188,8 +1185,7 @@ theorem tIntw_swap {W : Type} [AddCommGroup W] [Module ℂ W] (a₁ : Mat p q �
 theorem comm_comp_inj {W A B : Type} [AddCommGroup W] [Module ℂ W] [AddCommGroup A] [Module ℂ A]
     [AddCommGroup B] [Module ℂ B] {f g : W →ₗ[ℂ] A ⊗[ℂ] B}
     (h : (TensorProduct.comm ℂ A B).toLinearMap ∘ₗ f = (TensorProduct.comm ℂ A B).toLinearMap ∘ₗ g) : f = g := by
-  refine LinearMap.ext fun x => ?_
-  exact (TensorProduct.comm ℂ A B).injective (LinearMap.congr_fun h x)
+  exact LinearMap.ext fun x => (TensorProduct.comm ℂ A B).injective (LinearMap.congr_fun h x)
 
 theorem range_swap {W A B C : Type} [AddCommGroup W] [Module ℂ W] [AddCommGroup A] [Module ℂ A]
     [AddCommGroup B] [Module ℂ B] [AddCommGroup C] [Module ℂ C] (f : W →ₗ[ℂ] A ⊗[ℂ] B) (j : C →ₗ[ℂ] B)
@@ -1376,8 +1372,7 @@ theorem L2UnitaryRepresentationData.comp {G : Mn n} {pt : MvPolynomial ι ℂ �
   exact
   { mem := fun P => by rw [hς]; exact h.mem _
     pt_lin := fun z P Q => by
-      simp only [hς, map_add (f := _), map_smul]
-      exact h.pt_lin z (ς P) (ς Q)
+      simpa only [hς, map_add (f := _), map_smul] using h.pt_lin z (ς P) (ς Q)
     ip_lin := h.ip_lin
     ip_symm := h.ip_symm
     ip_pos := h.ip_pos
@@ -1392,9 +1387,7 @@ theorem L2UnitaryRepresentationData.comp {G : Mn n} {pt : MvPolynomial ι ℂ �
       exact h.der X hX _ _ ((hd X P P').1 hPP) E hE }
 
 theorem Graded.trans {κ : MvPolynomial ι ℂ ≃ₗ[ℂ] MvPolynomial ι' ℂ} {w : MvPolynomial ι' ℂ ≃ₗ[ℂ] MvPolynomial σ ℂ}
-    (h : Graded κ) (h' : Graded w) : Graded (κ.trans w) := by
-  intro d P
-  exact (h' d (κ P)).trans (h d P)
+    (h : Graded κ) (h' : Graded w) : Graded (κ.trans w) := fun d P => (h' d (κ P)).trans (h d P)
 
 def swp (α β : Type) : MvPolynomial (α × β) ℂ ≃ₗ[ℂ] MvPolynomial (β × α) ℂ :=
   (MvPolynomial.renameEquiv ℂ (Equiv.prodComm α β)).toLinearEquiv

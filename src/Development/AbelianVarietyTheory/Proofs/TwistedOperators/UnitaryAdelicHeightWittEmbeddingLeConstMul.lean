@@ -87,8 +87,7 @@ theorem bc_inv_aff {R R' : Type} [CommRing R] [CommRing R'] (φ : R →+* R') (A
     (h : ((X⁻¹ : GL n R) : Matrix n n R) = A + B * ((x⁻¹ : GL m R) : Matrix m m R) * C) :
     (((bc φ X)⁻¹ : GL n R') : Matrix n n R') =
       A.map φ + B.map φ * (((bc φ x)⁻¹ : GL m R') : Matrix m m R') * C.map φ := by
-  simp only [← map_inv]
-  exact bc_val_aff φ A B C h
+  simpa only [← map_inv] using bc_val_aff φ A B C h
 
 theorem map_aff {R R' : Type} [CommRing R] [CommRing R'] (φ : R →+* R') (A : Matrix n n R) (B : Matrix n m R)
     (C : Matrix m n R) (y : Matrix m m R) : (A + B * y * C).map φ = A.map φ + B.map φ * y.map φ * C.map φ := by
@@ -183,8 +182,7 @@ theorem exists_heightGL_aff_le (A : Matrix n n (AF F ⊗[F] E)) (B : Matrix n m 
     have h := ((eventually_normFin_rect_le_one F A).and (eventually_normFin_rect_le_one F B)).and
       (eventually_normFin_rect_le_one F C)
     refine (Filter.eventually_cofinite.1 h).subset fun v hv hv' => hv ?_
-    refine max_eq_left (max_le hv'.1.1 ?_)
-    exact mul_le_one' hv'.1.2 hv'.2
+    exact max_eq_left (max_le hv'.1.1 (mul_le_one' hv'.1.2 hv'.2))
   refine ⟨(∏ w, cw w) * ∏ᶠ v, cv v, fun X x h1 h2 => ?_⟩
   unfold heightGL
   rw [mul_mul_mul_comm, ← Finset.prod_mul_distrib,

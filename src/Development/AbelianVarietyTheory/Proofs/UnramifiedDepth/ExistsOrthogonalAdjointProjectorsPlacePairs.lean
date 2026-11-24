@@ -98,8 +98,7 @@ theorem exists_orth_proj : ∀ (C : Type) [Field C] [CharZero C] (V : VF C) (O :
         by_cases h : p = q
         · simp [h]
         · rw [ite_eq_right, ite_eq_right h]
-          intro h'
-          exact h (Finsupp.single_left_injective one_ne_zero h')
+          exact fun h' => h (Finsupp.single_left_injective one_ne_zero h')
       have hX2 : ∀ (p q : Fin 2 × Fin dd), MvPowerSeries.coeff (Finsupp.single p 1)
           (MvPowerSeries.X q : MvPowerSeries (Fin 2 × Fin dd) C) = if p = q then 1 else 0 := by
         intro p q
@@ -107,8 +106,7 @@ theorem exists_orth_proj : ∀ (C : Type) [Field C] [CharZero C] (V : VF C) (O :
         by_cases h : p = q
         · simp [h]
         · rw [ite_eq_right, ite_eq_right h]
-          intro h'
-          exact h (Finsupp.single_left_injective one_ne_zero h')
+          exact fun h' => h (Finsupp.single_left_injective one_ne_zero h')
 
       have h1 : MvPowerSeries.coeff (Finsupp.single ((1 : Fin 2), j) 1) (G.F i) = if j = i then 1 else 0 := by
         have h := congrArg (MvPowerSeries.coeff (Finsupp.single ((0 : Fin 1), j) 1)) (G.unit i)

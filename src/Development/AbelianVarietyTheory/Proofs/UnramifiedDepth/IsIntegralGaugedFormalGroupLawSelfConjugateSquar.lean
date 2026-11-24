@@ -297,14 +297,12 @@ theorem lg_law {a b : Fin dd → MvPowerSeries τ C} (ha : Zc a) (hb : Zc b) (i 
 theorem ex_lg {a : Fin dd → MvPowerSeries τ C} (ha : Zc a) (i : Fin dd) :
     sb ![fun x => sb ![a] (Y.lg x)] (Y.ex i) = a i := by
   have e := congrArg (sb ![a]) (congrFun Y.ex_lg i)
-  rw [comp1, substPointsPowerSeries_eval_one (zc1 ha) (zc_lg Y), sb_pt (zc1 ha)] at e
-  exact e
+  rwa [comp1, substPointsPowerSeries_eval_one (zc1 ha) (zc_lg Y), sb_pt (zc1 ha)] at e
 
 theorem lg_ex {a : Fin dd → MvPowerSeries τ C} (ha : Zc a) (i : Fin dd) :
     sb ![fun x => sb ![a] (Y.ex x)] (Y.lg i) = a i := by
   have e := congrArg (sb ![a]) (congrFun Y.lg_ex i)
-  rw [comp1, substPointsPowerSeries_eval_one (zc1 ha) Y.ex_const, sb_pt (zc1 ha)] at e
-  exact e
+  rwa [comp1, substPointsPowerSeries_eval_one (zc1 ha) Y.ex_const, sb_pt (zc1 ha)] at e
 
 theorem sb_exp {n : ℕ} {a : Fin n → Fin dd → MvPowerSeries τ C} (ha : ∀ j, Zc (a j)) {f : PS C n dd}
     (hf : constantCoeff f = 0) : sb a (FB.expS C f) = PowerSeries.subst (sb a f) (PowerSeries.exp C) :=

@@ -92,8 +92,7 @@ variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {
 theorem colPt_mem_GfC (S : GridChoice W U) (t : T) (g : FinPt G (.top D.R.m)) :
     (colPt S t g).1 ∈ GfC _ ∧ (colPt S t g).2 ∈ GfC _ := by
   refine ⟨?_, ?_⟩
-  · show (1 : GA D _) ∈ GfC _
-    exact one_mem _
+  · exact one_mem _
   · exact (topLast ((S.N.u (.top D.R.m))⁻¹ * g * S.N.u (.top D.R.m))).2
 
 theorem latMove (S : GridChoice W U) (t : T) (g : FinPt G (.top D.R.m))
@@ -108,8 +107,7 @@ theorem latMove (S : GridChoice W U) (t : T) (g : FinPt G (.top D.R.m))
     exact this.symm
   · rintro ⟨u₀, hu₀, rfl⟩
     refine (hlat _).1 ?_
-    rw [GlobalTheory.WeilVacMove.actO_inv_actO]
-    exact hu₀
+    rwa [GlobalTheory.WeilVacMove.actO_inv_actO]
 
 theorem om_vac_top (S : GridChoice W U) (t : T) (j : Fin D.R.m)
     (q : GA D (G.V (.top (j : ℕ))) × GA D (G.V (.top ((j : ℕ) + 1)))) (hq1 : q.1 ∈ GfC _) (hq2 : q.2 ∈ GfC _)
@@ -917,13 +915,11 @@ theorem om_model (S : GridChoice W U) {p : Pair T} (hp : DefPair D.R.m p) (hIn :
     · rw [ite_eq_left ((and_congr (hlat x) (GlobalTheory.SchrMove.isHalf_actO_iff _ _ _)).2 h), ite_eq_left h]
     · rw [ite_eq_right (fun h' => h ((and_congr (hlat x) (GlobalTheory.SchrMove.isHalf_actO_iff _ _ _)).1 h')), ite_eq_right h]
   have hc : W.om p (q.1, q.2) (S.Z.vac p) = c • Tm (fun x => halfInd e (stdLat S p) (actO _ _ q.1⁻¹ q.2⁻¹ x)) := by
-    rw [hind, hT.vac, Prod.mk.eta]
-    exact heig
+    rwa [hind, hT.vac, Prod.mk.eta]
   have := GlobalTheory.SplitLinear.om_model_of_base D W.ψ _ _ _ _ (W.om p) (S.N.latS p) (S.N.latT p) e (S.Z.vac p) Tm (W.om_is p hIn)
     (selfDual_std S hp).1 (selfDual_std S hp).2 (GlobalTheory.PlaceDatum.idemSum_mul_self he) (GlobalTheory.PlaceDatum.infPart_idemSum he)
     (S.Z.vac_is p hp).2.theta hT q.1 q.2 c hc Φ hΦ
-  rw [Prod.mk.eta] at this
-  exact this
+  rwa [Prod.mk.eta] at this
 
 end GlobalTheory.LastVertexTensor
 
@@ -971,15 +967,13 @@ theorem productFn_invariant : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Cons
     intro j
     obtain ⟨f, hf⟩ := (hvec d₀ hd₀).1 j
     have h1 := hf.1
-    rw [((hdat d₀ hd₀).1 j).2.1] at h1
-    exact h1
+    rwa [((hdat d₀ hd₀).1 j).2.1] at h1
   have hTr : ∀ i : Fin D.R.m, ∃ Tm, IsPlaceModel W.ψ (symplO _ _) (heisO W.ψ _ _) e (stdLat S (.chi i D.R.m)) 1
       (S.Z.vac (.chi i D.R.m)) Tm := by
     intro i
     obtain ⟨f, hf⟩ := (hvec d₀ hd₀).2 i
     have h1 := hf.1
-    rw [((hdat d₀ hd₀).2 i).2.1] at h1
-    exact h1
+    rwa [((hdat d₀ hd₀).2 i).2.1] at h1
   choose Tc hTc using hTc
   choose Tr hTr using hTr
   have hvc : ∀ d ∈ τ.support, ∀ j, S.Z.vec (d.1 j) = Tc j (d.1 j).fn := fun d hd j =>

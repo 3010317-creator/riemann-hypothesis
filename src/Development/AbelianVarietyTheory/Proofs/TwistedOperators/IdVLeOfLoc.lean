@@ -184,8 +184,7 @@ theorem exists_modul {T : Type} {L : LevCh D T} (P : Places L) (sc : Consts) {v 
   classical
   have hu : ∀ u ∈ P.S0, ∃ t : 𝓞 D.host.F, t ∈ u.asIdeal ∧ t ∉ v.asIdeal := by
     intro u hu
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have e : u = v := IsDedekindDomain.HeightOneSpectrum.ext
       (u.isMaximal.eq_of_le v.isPrime.ne_top hcon)
     exact hv (e ▸ hu)
@@ -202,8 +201,7 @@ theorem exists_modul {T : Type} {L : LevCh D T} (P : Places L) (sc : Consts) {v 
     have : tu u ∈ ((P.w u).under (𝓞 D.host.F)).asIdeal := by rw [e]; exact htu u hu
     exact this
   have hfix : D.host.conj • algebraMap (𝓞 D.host.F) (𝓞 D.host.E) t = algebraMap (𝓞 D.host.F) (𝓞 D.host.E) t := by
-    apply Subtype.ext
-    exact (D.host.conjE_mem_hostF_iff _).1 (t : D.host.F).2
+    exact Subtype.ext ((D.host.conjE_mem_hostF_iff _).1 (t : D.host.F).2)
   have hbar : algebraMap (𝓞 D.host.F) (𝓞 D.host.E) t ∈ P.modulBar sc := by
     rw [← hfix]
     exact Ideal.smul_mem_pointwise_smul _ _ _ hmod

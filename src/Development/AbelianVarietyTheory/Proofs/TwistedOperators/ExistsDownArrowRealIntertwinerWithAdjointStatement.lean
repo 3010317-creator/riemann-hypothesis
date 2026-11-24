@@ -145,8 +145,7 @@ theorem mem_negS {S : SPar} {c y : ℚ} : y ∈ negS S c ↔ (c - y, false) ∈ 
   constructor
   · rintro ⟨⟨x, b⟩, ⟨h, rfl⟩, rfl⟩
     simpa using h
-  · intro h
-    exact ⟨(c - y, false), ⟨h, rfl⟩, by ring⟩
+  · exact fun h => ⟨(c - y, false), ⟨h, rfl⟩, by ring⟩
 
 theorem mem_dualPar_signed {l₁ l₂ : List ℚ} {c x : ℚ} {b : Bool} :
     (x, b) ∈ dualPar (signed l₁ l₂ (-c)) ↔ (b = true ∧ c - x ∈ l₁) ∨ (b = false ∧ c - x ∈ l₂) := by
@@ -306,8 +305,7 @@ theorem cen_bounds (D : D7) (τ : D.what₂.Tau) {i : ℕ} (hi : i < D.R.m) :
     (GlobalTheory.Grid.grid D τ).a (D.R.m - i - 1) = (GlobalTheory.Grid.grid D τ).a (D.R.m - i) + (GlobalTheory.Grid.gap D : ℚ) := by
   have hc := cen_near D τ (by omega : 1 ≤ D.R.m - i) (by omega)
   rw [abs_le] at hc
-  refine ⟨by linarith [hc.1], by linarith [hc.2], ?_⟩
-  exact (GlobalTheory.Grid.grid D τ).a_pred (by omega)
+  exact ⟨by linarith [hc.1], by linarith [hc.2], (GlobalTheory.Grid.grid D τ).a_pred (by omega)⟩
 
 theorem mem_next (D : D7) (τ : D.what₂.Tau) {i : ℕ} (hi : i < D.R.m) (x : ℚ) (b : Bool) :
     (x, b) ∈ (GlobalTheory.Grid.grid D τ).parPi (i + 1) ↔
@@ -690,8 +688,7 @@ theorem params : ∀ (D : D7) (i : ℕ), i < D.R.m → ∀ τ : D.what₂.Tau, �
     rcases hy with ⟨h, _⟩ | ⟨h, _⟩ <;> exact h
   have hminus : ∀ y ∈ [] ++ desc (negS S c), (c - y, false) ∈ S := by
     intro y hy
-    simp only [List.nil_append, mem_desc, mem_negS] at hy
-    exact hy
+    simpa only [List.nil_append, mem_desc, mem_negS] using hy
   have hent : ∀ y ∈ desc (lowS S c) ++ desc (highS S c) ++ [] ++ desc (negS S c), ∃ b, (c - y, b) ∈ S := by
     intro y hy
     rw [List.append_assoc] at hy
@@ -786,8 +783,7 @@ theorem params : ∀ (D : D7) (i : ℕ), i < D.R.m → ∀ τ : D.what₂.Tau, �
         rw [abs_of_nonneg (by linarith)]
         linarith
       · have := abs_le_of_mem_block h
-        rw [sLen_sub_one] at this
-        rw [abs_le] at this
+        rw [sLen_sub_one, abs_le] at this
         rw [abs_of_nonneg (by linarith)]
         linarith
     · rw [mem_desc, mem_negS] at h
@@ -884,8 +880,7 @@ theorem eq_zero_of_ellT_smooth {W : HSp D} {S' : D.what₂.Tau → SPar} (M' : D
       rw [key]
       exact hu fun τ => (o τ (i τ) : M'.sm τ)
     change b.repr y i = b.repr 0 i
-    rw [map_zero b.repr, Finsupp.zero_apply]
-    exact h1
+    rwa [map_zero b.repr, Finsupp.zero_apply]
   rw [hy, map_zero]
 
 end GlobalTheory.AdjSmooth
@@ -976,8 +971,7 @@ theorem exists_adj_glue {V W : HSp D} {S S' : D.what₂.Tau → SPar} (M : DSMod
     rw [← hb, ← hKB τ (Ps τ, v τ, (w τ : M.H τ)), inv_mul_cancel_left₀ (hK τ)]
   have e3 : ellT M (fun τ => (w τ : M.H τ)) (inclT M (It (glue Ps) (PiTensorProduct.tprod ℂ v))) =
       c * ∏ τ, ((K τ)⁻¹ * ⟪(b τ : M'.H τ), (v τ : M'.H τ)⟫_ℂ) := by
-    rw [← Finset.prod_congr rfl fun τ _ => e2 τ]
-    exact e1
+    rwa [← Finset.prod_congr rfl fun τ _ => e2 τ]
   rw [e3, map_smul, map_smul, inclT, PiTensorProduct.map_tprod, ellT_pure]
   simp [Finset.prod_mul_distrib, map_prod, inner_conj_symm, mul_assoc]
 
@@ -1298,8 +1292,7 @@ theorem isIntw_transport {V W : HSp D} {S S' : D.what₂.Tau → SPar} {X Y P P'
     apply h.ne
     apply LinearMap.ext
     intro φ
-    have hφ := congrArg (fun L => L (e.symm φ)) h0
-    simpa using hφ
+    simpa using congrArg (fun L => L (e.symm φ)) h0
   · intro φ w
     exact h.bdd (e φ) w
   · intro τ g hg φ φ' hφ v
@@ -1380,8 +1373,7 @@ theorem GlobalTheory.AdjTr.downArrow_transport : ∀ {D : D7} (S T : GlobalTheor
     apply hvv.ne
     funext x
     have := congrFun h0 (adjO T.V S.V x)
-    simp only [dag, GlobalTheory.AdjLawPf.adj_invol, Pi.zero_apply, map_eq_zero] at this
-    exact this
+    simpa only [dag, GlobalTheory.AdjLawPf.adj_invol, Pi.zero_apply, map_eq_zero] using this
   · refine isIntw_transport θ T.M S.M ω.swap (adjRep ω) (GlobalTheory.Grid.fock ψ θ true S T f)
       (ptOf ψ θ T.M S.M (dag S.V T.V (GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.cj id f))) (swapEquiv A B).toLinearEquiv (adjO S.V T.V) It
       (fun φ => ?_) (fun p F => ?_) ((GlobalTheory.Grid.isIntw_iff θ T.M S.M _ _ It).2 hIt)
@@ -1485,8 +1477,7 @@ theorem down_intertwiner_adj : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] 
     ⟨χ₀, χ₀, hω₀, fun τ => ⟨hχ₀ τ _ (hexp τ), hχ₀ τ _ (hexp τ)⟩⟩
   have hI := hIt ω₀ f₀ hωe hf₀
   obtain ⟨Tp, hTp⟩ := GlobalTheory.T.realIntertwiner_adjoint_smoothValues (G.P i).M (G.P (i + 1)).M R.θ R.ψ _ _ ω₀ f₀ It hDC hHC hθ hP hωe hf₀ hI
-  refine ⟨It ∘ₗ e.toLinearMap, Tp.comp e.toLinearMap, htr It hI, fun P v w => ?_⟩
-  exact hTp (e P) v w
+  exact ⟨It ∘ₗ e.toLinearMap, Tp.comp e.toLinearMap, htr It hI, fun P v w => (hTp (e P) v w)⟩
 
 end GlobalTheory.DownArrow
 end -- clump:auto

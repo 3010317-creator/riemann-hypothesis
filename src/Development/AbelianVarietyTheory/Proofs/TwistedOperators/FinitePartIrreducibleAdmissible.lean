@@ -108,8 +108,7 @@ theorem cast_apply_eq {i j : ι} (e : p i = p j) (h : i = j) :
 
 theorem comb_inl (hp : Function.Injective p) (i : ι) : comb p A y0 z (.inl (p i)) = A i (z i) := by
   have h : ∃ j, p j = p i := ⟨i, rfl⟩
-  simp only [comb, dite_eq_left h]
-  exact cast_apply_eq h.choose_spec (hp h.choose_spec)
+  simpa only [comb, dite_eq_left h] using cast_apply_eq h.choose_spec (hp h.choose_spec)
 
 theorem comb_inl_of_not (a : α) (h : ¬ ∃ i, p i = a) : comb p A y0 z (.inl a) = y0 (.inl a) := by
   simp only [comb, dite_eq_right h]
@@ -238,8 +237,7 @@ theorem mem_span_of_mem_span {ι K : Type} {N : ι → Type} [∀ i, AddCommGrou
     · have hji : j ≠ i := fun e => hj (e ▸ Set.mem_insert i T)
       rw [hoff j (fun h => hj (Set.mem_insert_of_mem i h)), Function.update_of_ne hji]
     · rcases hj with rfl | hj
-      · rw [hoff j hi, Function.update_self]
-        exact hx
+      · rwa [hoff j hi, Function.update_self]
       · exact hon j hj
 
 end Expand
@@ -382,8 +380,7 @@ theorem finiteDimensional_homDS_span (hπ : IsIrrUnitary π) (hds : HasDSComp M 
   choose k hk using hk
   have hagree : ∀ v, y0 k (.inr v) = y' (.inr v) := fun v => by
     by_cases h : v ∈ Sb
-    · simp only [y0, dite_eq_left h]
-      exact (hk ⟨v, h⟩).symm
+    · simpa only [y0, dite_eq_left h] using (hk ⟨v, h⟩).symm
     · simp only [y0, dite_eq_right h]
       by_cases hv : y (.inr v) ≠ ξ (.inr v)
       · have := hy'T (.inr v) ⟨v, Or.inr hv, rfl⟩
@@ -478,8 +475,7 @@ theorem exists_finset_sum_translate_fixed {G X : Type} [Group G] [TopologicalSpa
   have hf : ∀ y ∈ F, f y ∈ K ∧ ρ (f y) x = y := by
     intro y hy
     have h := (hFmem y).1 hy
-    simp only [f, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [f, dite_eq_left h] using h.choose_spec
   refine ⟨F.image f, ?_, ?_, ?_⟩
   · intro g hg
     obtain ⟨y, hy, rfl⟩ := Finset.mem_image.1 hg
@@ -502,10 +498,8 @@ theorem exists_finset_sum_translate_fixed {G X : Type} [Group G] [TopologicalSpa
     · intro y hy
       obtain ⟨k', hk', rfl⟩ := (hFmem y).1 hy
       exact (hFmem _).2 ⟨k⁻¹ * k', K.mul_mem (K.inv_mem hk) hk', hmul _ _ _⟩
-    · intro y _
-      exact hinv k y
-    · intro y _
-      exact hinv' k y
+    · exact fun y _ => hinv k y
+    · exact fun y _ => hinv' k y
 
 end GlobalTheory
 end -- clump:auto
@@ -760,15 +754,12 @@ theorem span_values_dense : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar
   rcases hπ.irred.2 _ hsub with h | h
   · exfalso
     obtain ⟨Φ, hΦ, hΦ0⟩ : ∃ Φ ∈ N.toSubmodule, Φ ≠ 0 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hN (Subrepresentation.toSubmodule_injective (eq_bot_iff.2 fun Φ hΦ => (Submodule.mem_bot ℂ).2 (hc Φ hΦ)))
     have : ((Φ : homDS M π ⊤) : ContinuousMultilinearMap ℂ M.H H) ≠ 0 := by
-      intro e
-      exact hΦ0 (Subtype.ext (Subtype.ext e))
+      exact fun e => hΦ0 (Subtype.ext (Subtype.ext e))
     obtain ⟨y, hy⟩ : ∃ y, ((Φ : homDS M π ⊤) : ContinuousMultilinearMap ℂ M.H H) y ≠ 0 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact this (ContinuousMultilinearMap.ext hc)
     have hmem : ((Φ : homDS M π ⊤) : ContinuousMultilinearMap ℂ M.H H) y ∈ W.topologicalClosure :=
       W.le_topologicalClosure (Submodule.subset_span ⟨Φ, hΦ, y, rfl⟩)
@@ -872,8 +863,7 @@ theorem admissible (hF : GlobalTheory.Published.FlathFactorisation) (hπ : IsIrr
   have hKpeq : ∀ v ∉ S0, Kp v = Kv V v := fun v hv => inf_eq_right.2 fun k hk => by
     have h := hS0 (emb_mem_levelOff hv hk)
     change toFin V (embV V v k) ∈ K at h
-    rw [toFin_embV] at h
-    exact h
+    rwa [toFin_embV] at h
   have hKpo : ∀ v, IsOpen (Kp v : Set (Gv V v)) := fun v =>
     (hKo.preimage (continuous_locFin' v)).inter (isOpen_stabLoc _ _ _ v)
   have hKpc : ∀ v, IsCompact (Kp v : Set (Gv V v)) := fun v =>
@@ -954,8 +944,7 @@ theorem irreducible [CompleteSpace H] (hπ : IsIrrUnitary π) (hD : HasDSComp M 
 
   have hne : ∃ w : smoothPart (finPartDS M hU), w ≠ 0 := by
     obtain ⟨T, -, -, hTd⟩ := GlobalTheory.T.irreducibleUnitaryRep_eq_finiteSmoothPart_tensor_discreteSeries D V S M H π hπ hD hU
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have h0 : Submodule.span ℂ {v | ∃ w y, v = T w y} = ⊥ := by
       rw [Submodule.span_eq_bot]
       rintro _ ⟨w, y, rfl⟩
@@ -1004,8 +993,7 @@ theorem irreducible [CompleteSpace H] (hπ : IsIrrUnitary π) (hD : HasDSComp M 
   rw [hEhd] at hpm
   obtain ⟨n0, hn0E, hn0⟩ := hpm
   have horth : ev (Φ - n0) ∈ Ehᗮ := by
-    rw [map_sub, hn0]
-    exact hpo
+    rwa [map_sub, hn0]
   have hΦ1fix : ∀ k ∈ K, finPartDSSm M hU k (Φ - n0) = Φ - n0 := fun k hk => by
     have h1 : finPartDSSm M hU k Φ = Φ := hKΦ k hk
     have h2 : finPartDSSm M hU k n0 = n0 := mem_fixed_iff.1 (hEK _ hn0E) k hk

@@ -228,8 +228,7 @@ theorem upSum_single {ρ : ℕ} {i j : Fin ρ} (hj : j.1 = i.1 + 1) (c : AE D) :
   · rw [ite_eq_left hj, Matrix.single_apply, ite_eq_left ⟨rfl, rfl⟩]
   · intro b _ hb
     rw [ite_eq_right]
-    intro h
-    exact hb (Fin.ext (by omega))
+    exact fun h => hb (Fin.ext (by omega))
   · intro h; exact absurd (Finset.mem_univ _) h
   · intro b _ hb
     refine Finset.sum_eq_zero fun k _ => ?_
@@ -297,8 +296,7 @@ theorem shift_int : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D �
       exact fun a b => GlobalTheory.FinPl.InvStep.mat_mem_idAt (xZero dW) _ dV.pX (mxAt_single i j hro) a b
     · have h2 := (hG.cols i _ (Ideal.mul_mem_right _ _ hro)).1 (hRo _ (((hG.monoV y).1 hy).1 j))
       rw [← mul_single_mulVec, Matrix.mulVec_mulVec] at h2
-      rw [HypDec.extX_apply]
-      exact h2
+      rwa [HypDec.extX_apply]
   have h3 := hsh (Matrix.single i j (r * t.1 i i * o))
     (mxAt_single i j (Ideal.mul_mem_right _ _ (Ideal.mul_mem_right _ _ hr)))
     (fun a b hab => by
@@ -478,8 +476,7 @@ theorem cond_red : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V₀ W W₀ : 
   · intro N hN hup hmem
     have hU := mem_UX.1 (inv_mem hu')
     have h1 : MxAt P ((u'⁻¹).1 ⬝ N) := fun i j => by
-      simp only [Matrix.mul_apply]
-      exact Ideal.sum_mem _ fun k _ => Ideal.mul_mem_left _ _ (hN k j)
+      simpa only [Matrix.mul_apply] using Ideal.sum_mem _ fun k _ => Ideal.mul_mem_left _ _ (hN k j)
     have h2 : ∀ i j, j ≤ i → ((u'⁻¹).1 ⬝ N) i j = 0 := by
       intro i j hij
       simp only [Matrix.mul_apply]

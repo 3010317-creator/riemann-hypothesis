@@ -294,8 +294,7 @@ theorem BesP₂ (ch : Choice R) : BesP ch := by
       coreMat_iA_bes (ch.G.rowDec j hjm) hc2
     rw [e1]
     erw [Matrix.mul_apply, Matrix.mul_apply]
-    refine Finset.sum_congr rfl fun y _ => ?_
-    exact congrArg₂ (· * ·) (hpr _).symm rfl
+    exact Finset.sum_congr rfl fun y _ => congrArg₂ (· * ·) (hpr _).symm rfl
   · refine ((E r).2 q ⟨q.val, by omega⟩ rfl).trans ?_
     have hd : (besAt ch.G hM j σ hj vN).d.e r i = (ch.G.rowDec j hjm).a r ⟨q.val, by omega⟩ * D.host.xi0 ^ i.val := by
       show (((ch.G.rowDec j hjm).iso σ (by omega) * diagonal (GlobalTheory.RowChain.lam σ) :
@@ -330,8 +329,7 @@ theorem BesP₂ (ch : Choice R) : BesP ch := by
     have hs : ∀ n : ℕ, star (D.host.xi0 ^ n) = (-D.host.xi0) ^ n := fun n => by
       rw [star_pow, GlobalTheory.DualPairCheck.star_purely_imaginary_eq_neg]
     rw [hd, hz, hpr, hxi, hs, hs, frameSign, ite_eq_left (by first | omega | (simp only; omega))]
-    simp only [map_mul, map_neg, map_pow, map_inv₀]
-    exact alg_e' _ _ hx0 σ i.val i.2
+    simpa only [map_mul, map_neg, map_pow, map_inv₀] using alg_e' _ _ hx0 σ i.val i.2
 
 end Main
 
@@ -736,8 +734,7 @@ theorem dblP_big : Big fun ch => ChrP ch → ArrP ch → LocP ch → BesP ch →
     unfold conAt
     rw [dite_eq_right h0]
     exact dite_eq_left hj'
-  rw [E v (h * r₀), E f (h * r)]
-  rw [hv1, hv2, hf1, hf2]
+  rw [E v (h * r₀), E f (h * r), hv1, hv2, hf1, hf2]
   have hz : ∀ (S' : Finset I), (∀ q₁ q₂, ∑ i ∈ S', x i * ((Ξ₁ i).1 q₁ * (Ξ₂ i).1 q₂) = 0) → ∀ q,
       GlobalTheory.LocFlat.contr (psiAt ch.W w) (unitVol w) (GlobalTheory.LocFlat.flCol (psiAt ch.W w) (unitVol w) ((D.R.m - 4 - j) / 2 + 1 + 1)
         (0 : SB (Matrix (Fin (topRank (locGrid ch.G t w) (j + 1)) ⊕ Fin (2 * ((D.R.m - 4 - j) / 2) + 1 + 1))
@@ -1093,15 +1090,13 @@ theorem up_mem_latO_iff {S T : HSp D} {ΛS : Submodule (𝓞 D.host.E) (Fin S.ra
   refine ⟨fun h a b => ?_, fun h a b => ?_⟩
   · have := (mem_OA_iff _).1 (h a b) w
     rw [hval, dite_eq_left rfl] at this
-    rw [Valuation.mem_integer_iff, (Good.isEquiv_Kw w).le_one_iff_le_one]
-    exact this
+    rwa [Valuation.mem_integer_iff, (Good.isEquiv_Kw w).le_one_iff_le_one]
   · refine (mem_OA_iff _).2 fun Q => ?_
     rw [hval]
     split_ifs with hQ
     · subst hQ
       have := h a b
-      rw [Valuation.mem_integer_iff, (Good.isEquiv_Kw Q).le_one_iff_le_one] at this
-      exact this
+      rwa [Valuation.mem_integer_iff, (Good.isEquiv_Kw Q).le_one_iff_le_one] at this
     · exact zero_mem _
 
 theorem big_latP : Big fun ch => LatP ch := by
@@ -1239,8 +1234,7 @@ theorem big_jacP : Big fun ch => JacP ch := by
         intro n X Y h
         have := congrArg (fun Z => Z.map p.π) h
         simp only [Matrix.map_mul, Matrix.map_map] at this
-        rw [hδa]
-        exact this
+        rwa [hδa]
       exact ⟨key _ _ e0, key _ _ e1, key _ _ e2⟩
   have hfl : ∀ {a c b : ℕ} (h : a + c = b) (x : Fin a), ((frame h (Sum.inl x)) : ℕ) = x := by intros; simp [frame]
   have hfr : ∀ {a c b : ℕ} (h : a + c = b) (q : Fin c), ((frame h (Sum.inr q)) : ℕ) = a + q := by intros; simp [frame]
@@ -1382,8 +1376,7 @@ theorem exists_heis (p : Place D k) (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsSt
     unfold Place.down Place.up
     rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, FT.βγ, Matrix.one_mul, Matrix.mul_assoc, FS.βγ, Matrix.mul_one]
     ext i j
-    simp only [Matrix.map_apply, Matrix.smul_apply, smul_eq_mul]
-    exact p.ι_π _
+    simpa only [Matrix.map_apply, Matrix.smul_apply, smul_eq_mul] using p.ι_π _
   have hsum : y + p.up FS FT x = u := by
     rw [hux]
     ext i j

@@ -118,8 +118,7 @@ private lemma isHomF_map {R S : Type} [CommRing R] [CommRing S] (β : R →+* S)
   simp only [ev_eq] at this ⊢
   rw [map_subst_single β _ hF, map_sub_pair_eq_sub_map_of_constantCoeff_eq_zero β _ _ (fun i => constCoeff_subst_single _ (cc_pt _) _ (h0 i))
     (fun i => constCoeff_subst_single _ (cc_pt _) _ (h0 i))] at this
-  simp only [map_subst_single β _ (cc_pt _), map_pt] at this
-  exact this
+  simpa only [map_subst_single β _ (cc_pt _), map_pt] using this
 
 private lemma lin_map {R S : Type} [CommRing R] [CommRing S] (β : R →+* S) {d e : ℕ} (φ : Fin e → PS R 1 d) :
     lin (fun j => MvPowerSeries.map β (φ j)) = (lin φ).map β := by

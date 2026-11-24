@@ -295,8 +295,7 @@ theorem exists_subgroup_elem_localComponents_subset {V : HSp D} {P : Finset (Pl 
   classical
   intro Q
   refine Finset.induction_on Q ?_ ?_
-  · intro _
-    exact ⟨1, H.one_mem, suppAt_one, by simp, fun u _ _ => by rw [map_one, map_one]⟩
+  · exact fun _ => ⟨1, H.one_mem, suppAt_one, by simp, fun u _ _ => by rw [map_one, map_one]⟩
   · intro w Q hwQ ih hQ
     obtain ⟨y, hy, sy, ly, oy⟩ := ih ((Finset.subset_insert _ _).trans hQ)
     obtain ⟨h, hh, sh, lh, oh⟩ := hw w (hQ (Finset.mem_insert_self _ _))
@@ -346,8 +345,7 @@ theorem mem_of_loc : ∀ {D : D7} (V : HSp D) (P : Finset (Pl D.host.E)) (e : AE
     · exact .inr (ly w hw).symm
     · exact .inl (e2 w hw)
   have hry : r = y := Subtype.ext (Units.ext (eq_of_halves hr sy k (smul_conj k)))
-  rw [hry]
-  exact hy
+  rwa [hry]
 
 end GlobalTheory.RowAssemble
 
@@ -766,8 +764,7 @@ theorem mem_jacGrp_of_hasLoc : Big fun {D} _ _ _ _ _ _ _ _ _ _ _ ch => ∀ t j �
     (rank_vertex ch.G t w.1 (X := (D.R.m, j)) ⟨le_rfl, hj⟩)
     (by have := topRank_add (G := locGrid ch.G t w.1) one_le_sLen j; have hm' : (locGrid ch.G t w.1).m = D.R.m := rfl; rw [hm'] at this; omega)
     q (fun x => (hqpr x).trans rfl) (h w) (hqe ▸ hh1 w) ?_
-  rw [inBasis_congr _ _ _ e1]
-  exact hm
+  rwa [inBasis_congr _ _ _ e1]
 
 end GlobalTheory.RowLift
 end -- clump:auto

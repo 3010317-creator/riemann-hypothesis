@@ -75,8 +75,7 @@ theorem cosetIntegral_holds : CosetIntegral := by
     rwa [mul_inv_cancel_left] at this
   have hself : ∀ g : G, g ∈ A (QuotientGroup.mk g) := fun g => rfl
   have hdisj : Pairwise (Function.onFun Disjoint A) := by
-    intro x y hxy
-    exact (Set.disjoint_singleton.mpr hxy).preimage _
+    exact fun x y hxy => (Set.disjoint_singleton.mpr hxy).preimage _
   set S := Function.support f with hSdef
   have hS : S.Countable := hZ.summable.countable_support
   haveI : Countable S := hS.to_subtype
@@ -102,8 +101,7 @@ theorem cosetIntegral_holds : CosetIntegral := by
   have hzero : ∀ g ∉ Set.iUnion B, F g = 0 := by
     intro g hg
     have hnot : (QuotientGroup.mk g : G ⧸ K) ∉ S := by
-      intro hm
-      exact hg (Set.mem_iUnion.mpr ⟨⟨_, hm⟩, hself g⟩)
+      exact fun hm => hg (Set.mem_iUnion.mpr ⟨⟨_, hm⟩, hself g⟩)
     rw [hconst _ g (hself g)]
     simpa [hSdef] using hnot
   have hInt : Integrable F μ := hU.integrable_of_forall_notMem_eq_zero hzero

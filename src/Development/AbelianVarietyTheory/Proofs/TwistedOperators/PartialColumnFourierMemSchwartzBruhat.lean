@@ -90,8 +90,7 @@ theorem continuous_setCols_pair (P : Finset C) :
   by_cases h : j ∈ P
   · simp only [setCols, of_apply, dite_eq_left h]
     exact (continuous_apply (⟨i, ⟨j, h⟩⟩ : (Σ _ : A, P))).comp continuous_snd
-  · simp only [setCols, of_apply, dite_eq_right h]
-    exact continuous_fst.matrix_elem i j
+  · simpa only [setCols, of_apply, dite_eq_right h] using continuous_fst.matrix_elem i j
 
 omit [DecidableEq C] in
 theorem continuous_pairCols_pair (P : Finset C) :

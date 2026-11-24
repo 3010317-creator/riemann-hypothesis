@@ -66,8 +66,7 @@ theorem gauss_ode (c : ℝ → ℂ) (a : ℂ) (h : ∀ s : ℝ, HasDerivAt c ((s
     intro s
     have e1 : HasDerivAt (fun x : ℂ => -(a * (x * x) / 2)) (-(a * (1 * (s : ℂ) + (s : ℂ) * 1) / 2)) (s : ℂ) :=
       ((((hasDerivAt_id (s : ℂ)).mul (hasDerivAt_id (s : ℂ))).const_mul a).div_const 2).neg
-    have e3 := (e1.cexp.comp_ofReal).mul (h s)
-    exact e3.congr_deriv (by ring)
+    exact ((e1.cexp.comp_ofReal).mul (h s)).congr_deriv (by ring)
   have hc := is_const_of_deriv_eq_zero (fun s => (key s).differentiableAt) (fun s => (key s).deriv) 1 0
   simp only [Complex.ofReal_one, Complex.ofReal_zero, mul_one, mul_zero, zero_div, neg_zero,
     Complex.exp_zero, one_mul] at hc
@@ -211,15 +210,12 @@ private theorem flow_lemma {μ : Measure (WO S T)} {𝓕 : Set (WO S T)} (hψ : 
           unfold heisO
           rw [Pi.smul_apply, Pi.smul_apply, smul_eq_mul, smul_eq_mul, mul_left_comm, e1]
         · exact hDJh.cont.const_smul Complex.I
-        · intro k L h1 h2 w
-          exact contDiff_const.mul (hDJh.smooth k L h1 h2 w)
+        · exact fun k L h1 h2 w => contDiff_const.mul (hDJh.smooth k L h1 h2 w)
       rw [((U (Dz h) g hDzh hg).2.2.2.1 _ hsmul).1,
         ((U (DJ h) g hDJh hg).2.2.1 Complex.I).1]
     rw [cA, ((U h g hh hg).2.2.1 _).1, hp (L 1) s, hp (L' 1) s] at e4
     linear_combination (-1 / 2 : ℂ) * e4 + (1 / 2 : ℂ) * hXs - (Complex.I / 2) * hYs - (1 / 2 : ℂ) * e3
-  have hfin := gauss_ode _ _ key
-  simp only [map_zero, GlobalTheory.WeilVacMove.heisO_zero] at hfin
-  exact hfin
+  simpa only [map_zero, GlobalTheory.WeilVacMove.heisO_zero] using gauss_ode _ _ key
 
 theorem compress : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S T : HSp D) (μ : Measure (WO S T)) (𝓕 : Set (WO S T)), IsStdChar D ψ (-1) → IsInfFam θ → IsCovolOne (ratL T S) μ 𝓕 → ∀ (τ : D.what₂.Tau) (sS : Matrix (Fin S.rank) (Fin S.rank) ℂ) (sT : Matrix (Fin T.rank) (Fin T.rank) ℂ), IsCartanInv (gramAt D S τ) sS → IsCartanInv (gramAt D T τ) sT → ∀ w : WO S T, ∃ γ : ℂ, ∀ f g : WO S T → ℂ, IsThetaFunO ψ S T f → IsThetaFunO ψ S T g → IsFockVacAt (heisO ψ S T) θ τ (cplxO sS sT) f → IsFockVacAt (heisO ψ S T) θ τ (cplxO sS sT) g → ipO μ 𝓕 g (heisO ψ S T (wAt (.inr τ) w) f) = γ * ipO μ 𝓕 g f := by
   intro D ψ θ S T μ 𝓕 hψ hθ hμ τ sS sT _ _ w

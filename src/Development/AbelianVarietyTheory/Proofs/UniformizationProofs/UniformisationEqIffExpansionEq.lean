@@ -91,8 +91,7 @@ theorem eq_iff_comb_eq_zero {R : Type} [CommRing R] [IsDomain R] {X Y Y' : Schem
       ← neg_smul, neg_mul, mul_comm (algebraMap R (FractionRing R) r')]
   have main : t = t' ↔ r' • τ + (-r) • τ' = 0 := by
     constructor
-    · intro h
-      exact hi _ (by rw [key, h, sub_self, smul_zero])
+    · exact fun h => hi _ (by rw [key, h, sub_self, smul_zero])
     · intro h
       rw [h, map_zero] at key
       exact sub_eq_zero.1 ((smul_eq_zero_iff_right (mul_ne_zero ha ha')).1 key.symm)
@@ -100,8 +99,7 @@ theorem eq_iff_comb_eq_zero {R : Type} [CommRing R] [IsDomain R] {X Y Y' : Schem
   · rw [Fin.sum_univ_two]
     exact congrArg (chartFun π _ j) h
   · have := h j
-    rw [Fin.sum_univ_two] at this
-    exact this
+    rwa [Fin.sum_univ_two] at this
 
 end ExpansionFunction
 
@@ -137,9 +135,7 @@ theorem eq_iff_expansion_eq : ∀ (R : Type) [CommRing R] [IsDomain R] (I : Idea
   have hc : ∀ α (i : Fin 2), (![f, f'] i) α = ![f α, f' α] i := fun α i => by fin_cases i <;> rfl
   simp only [hc] at H
   constructor
-  · intro h
-    exact DVR.fam_ext fun α j => by rw [(hF α).2 (H.1 (hs.1 h) α)]
-  · intro h
-    exact hs.2 (H.2 hG fun α => (hF α).1 (by rw [h]))
+  · exact fun h => DVR.fam_ext fun α j => by rw [(hF α).2 (H.1 (hs.1 h) α)]
+  · exact fun h => hs.2 (H.2 hG fun α => (hF α).1 (by rw [h]))
 
 end GlobalTheory

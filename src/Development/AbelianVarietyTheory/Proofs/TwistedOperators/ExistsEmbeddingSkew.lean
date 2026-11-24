@@ -156,8 +156,7 @@ theorem exists_embedding_skew : GlobalTheory.Published.CuspDecaySobolev → ∀ 
     funext g
     by_contra hne
     have hg : g ∈ {g | φ g ≠ 0} := hne
-    rw [hempty] at hg
-    exact hg
+    rwa [hempty] at hg
   · intro τ X hX φ φ' h1 h2 h3 h4
     rw [inner_eq (hE _ (hmem _ h3)) (hE _ (hmem _ h2)), inner_eq (hE _ (hmem _ h1)) (hE _ (hmem _ h4))]
     obtain ⟨c1, B1, b1⟩ := conj_mul h3.1.cont h2.1.cont (bounded hP hθ h3) (bounded hP hθ h2)
@@ -181,8 +180,7 @@ theorem exists_embedding_skew : GlobalTheory.Published.CuspDecaySobolev → ∀ 
         (fun s : ℝ => (starRingEnd ℂ) (φ (g * oneP θ V τ X s)) * φ' (g * oneP θ V τ X s))
         ((starRingEnd ℂ) (Rder θ V τ X φ (g * oneP θ V τ X t)) * φ' (g * oneP θ V τ X t) +
           (starRingEnd ℂ) (φ (g * oneP θ V τ X t)) * Rder θ V τ X φ' (g * oneP θ V τ X t)) t := by
-      intro g t
-      exact ((key φ h1.2.1 g t).star).mul (key φ' h2.2.1 g t)
+      exact fun g t => ((key φ h1.2.1 g t).star).mul (key φ' h2.2.1 g t)
     exact GlobalTheory.Mem.IntByParts.setIntegral_deriv_eq_zero (GQ V) μ h𝓕 hfin
       (Φ := fun g => (starRingEnd ℂ) (φ g) * φ' g)
       (Φ' := fun g => (starRingEnd ℂ) (Rder θ V τ X φ g) * φ' g + (starRingEnd ℂ) (φ g) * Rder θ V τ X φ' g)

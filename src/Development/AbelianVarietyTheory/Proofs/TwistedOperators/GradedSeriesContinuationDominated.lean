@@ -70,8 +70,7 @@ theorem gradedSeries_regroup {ι : Type} (deg : ι → ℕ) (c : ι → ℂ) (x 
     rintro ⟨i, hi⟩
     simp only [mem_preimage, mem_singleton_iff] at hi
     simp [hi]
-  rw [e]
-  exact h1
+  rwa [e]
 
 theorem gradedSeries_continue {ι : Type} (deg : ι → ℕ) (c : ι → ℂ) (δ ρ : ℝ) (Q : ℂ → ℂ)
     (hδ : 0 < δ) (hQ : DifferentiableOn ℂ Q (ball 0 ρ))
@@ -132,8 +131,7 @@ theorem gradedSeries_continue {ι : Type} (deg : ι → ℕ) (c : ι → ℂ) (�
     rw [edist_zero_right]
     exact ENNReal.coe_lt_coe.2 (by rw [← NNReal.coe_lt_coe, coe_nnnorm]; change ‖X‖ < (‖X‖ + ρ) / 2; linarith)
   have := hC.hasSum hXm
-  simp only [p, FormalMultilinearSeries.ofScalars_apply_eq, smul_eq_mul, zero_add] at this
-  exact this
+  simpa only [p, FormalMultilinearSeries.ofScalars_apply_eq, smul_eq_mul, zero_add] using this
 
 theorem gradedSeries_continuation_dominated : ∀ {ι : Type} (deg : ι → ℕ),
     (∀ k, {i | deg i = k}.Finite) → ∀ (a : ι → ℂ) (b : ι → ℝ) (C δ ρ : ℝ) (P P' : ℂ → ℂ),
@@ -170,7 +168,6 @@ theorem gradedSeries_continuation_dominated : ∀ {ι : Type} (deg : ι → ℕ)
   refine ⟨?_, hsb⟩
   have h3 := hsa.hasSum
   have h4 := (gradedSeries_regroup deg a X _ h3).unique hA
-  rw [h4] at h3
-  exact h3
+  rwa [h4] at h3
 
 end GlobalTheory

@@ -193,8 +193,7 @@ theorem coef_comp (X X' : Fr V) (Y Y' : Fr W) (hX : ∀ τ, X'.cart τ = X.cart 
   have hU : ∀ c d, (∑ b, (X.fr ρ * (X'.fr ρ)⁻¹) c b * (X'.fr ρ * (X.fr ρ)⁻¹) b d) = if c = d then 1 else 0 := by
     intro c d
     have := congrFun (congrFun (fr_mul_inv_mul X X' ρ) c) d
-    rw [Matrix.mul_apply, Matrix.one_apply] at this
-    exact this
+    rwa [Matrix.mul_apply, Matrix.one_apply] at this
   have hprod : (∑ p : Fin W.rank × Fin V.rank, ((Y'.fr ρ * (Y.fr ρ)⁻¹) p.1 i * (X.fr ρ * (X'.fr ρ)⁻¹) j p.2) *
       ((Y.fr ρ * (Y'.fr ρ)⁻¹) q.1 p.1 * (X'.fr ρ * (X.fr ρ)⁻¹) p.2 q.2)) = if q = (i, j) then 1 else 0 := by
     rw [Fintype.sum_prod_type]
@@ -222,8 +221,7 @@ theorem coef_comp (X X' : Fr V) (Y Y' : Fr W) (hX : ∀ τ, X'.cart τ = X.cart 
       rw [h1, ← h2]
       split_ifs <;> simp [map_mul]
   by_cases hs : Y.ε ρ i = X.ε ρ j
-  · simp only [hterm, hs, ite_true]
-    exact hprod
+  · simpa only [hterm, hs, ite_true] using hprod
   · simp only [hterm, hs, ite_false]
 
     rw [← map_sum, hprod]
@@ -243,8 +241,7 @@ theorem sub_comp (X X' : Fr V) (Y Y' : Fr W) (hX : ∀ τ, X'.cart τ = X.cart �
     _ = ∑ q : Fin W.rank × Fin V.rank, (∑ p : Fin W.rank × Fin V.rank,
           coef X' X Y' Y (ρ, i, j) p * coef X X' Y Y' (ρ, p.1, p.2) q) •
             (MvPolynomial.X (ρ, q.1, q.2) : PolF D W.rank V.rank) := by
-        simp only [Finset.smul_sum, smul_smul, Finset.sum_smul]
-        exact Finset.sum_comm
+        simpa only [Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
     _ = ∑ q : Fin W.rank × Fin V.rank, (if q = (i, j) then (1 : ℂ) else 0) •
             (MvPolynomial.X (ρ, q.1, q.2) : PolF D W.rank V.rank) := by
         simp only [coef_comp X X' Y Y' hX hY (ρ, i, j)]

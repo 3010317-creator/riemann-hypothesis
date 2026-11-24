@@ -136,8 +136,6 @@ theorem weil_conjRep_of_neg : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T
         rw [← hz2, hℓ u hu (cj id f') ((thS (cj id f')).2 (by rwa [cj_id_cj_id]))]) (cj id f) ((thS f).1 hf)
     rw [cj_id_cj_id, ← key ω (g, h) f] at h1
     rw [splitFacO_inv]
-    have h2 := congrArg (starRingEnd ℂ) h1
-    simp only [map_mul, Complex.conj_conj, Complex.conj_ofReal] at h2
-    exact h2
+    simpa only [map_mul, Complex.conj_conj, Complex.conj_ofReal] using congrArg (starRingEnd ℂ) h1
 
 end GlobalTheory.ConjWeilBack

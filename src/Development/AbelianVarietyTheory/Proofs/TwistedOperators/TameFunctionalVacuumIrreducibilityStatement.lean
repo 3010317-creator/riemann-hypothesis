@@ -226,8 +226,7 @@ theorem rat_eq_zero_of_fin {x : WO S T} (hx : x ∈ ratL T S) (h0 : ∀ i j, fin
   have e : m i j = 0 := by
     apply Algebra.TensorProduct.includeRight_injective (R := D.host.F) (A := Af D.host.F) (B := D.host.E)
       (algebraMap D.host.F (Af D.host.F)).injective
-    rw [map_zero]
-    exact h
+    rwa [map_zero]
   show incA D (m i j) = 0
   rw [e, map_zero]
 
@@ -238,8 +237,7 @@ theorem rat_eq_zero_of_inf {x : WO S T} (hx : x ∈ ratL T S) (h0 : ∀ i j, inf
   have e : m i j = 0 := by
     apply Algebra.TensorProduct.includeRight_injective (R := D.host.F) (A := Ainf D.host.F) (B := D.host.E)
       (algebraMap D.host.F (Ainf D.host.F)).injective
-    rw [map_zero]
-    exact h
+    rwa [map_zero]
   show incA D (m i j) = 0
   rw [e, map_zero]
 
@@ -252,8 +250,7 @@ theorem chiR_eq_zero {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F �
     refine (chi_ker hψ _).1 fun δ => ?_
     have h1 := h ((-c) • (δ : WO S T))
     simp only [chiR, chi, GlobalTheory.FinTranslate.symplOH_smul_left] at h1 ⊢
-    rw [symplOH_skew' (δ : WO S T) (γ : WO S T), mul_neg, ← neg_mul]
-    exact h1
+    rwa [symplOH_skew' (δ : WO S T) (γ : WO S T), mul_neg, ← neg_mul]
   have h1 : GlobalTheory.FinTranslate.eInf D • (γ : WO S T) = 0 :=
     rat_eq_zero_of_fin (hall _) fun i j => GlobalTheory.ThetaClosed.finPart_eInf_smul _
   have h2 : (1 - GlobalTheory.FinTranslate.eInf D) • (γ : WO S T) = 0 :=
@@ -328,17 +325,14 @@ theorem sum_coef_mul_translate : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), 
   have hsJ : Summable J := by
     have h2 : Summable fun γ : ratL T S => J (-γ) := by
       refine Summable.of_norm ?_
-      simp only [hnorm]
-      exact hs
+      simpa only [hnorm] using hs
     exact (Equiv.neg (ratL T S)).summable_iff.1 h2
   have hinv := GlobalTheory.SeparatingCharacters.tsum_coefficients_eq_value_zero (WO S T) (ratL T S) K hK hcov
     (ratL T S) (chiR ψ S T) lc lx la l0 ln lker (fun a ha => chiR_eq_zero hψ.1 a ha) μ 𝓕 hμ h𝓕 h1 Φ
     (hFc.comp (continuous_id.add continuous_const)) (fun γ hγ z => by simp only [hΦdef, add_assoc, hFp γ hγ]) hsJ
   simp only [hkey]
   have hre : ∑' γ : ratL T S, J (-γ) = ∑' a, J a := by
-    have e := (Equiv.neg (ratL T S)).tsum_eq J
-    simp only [Equiv.neg_apply] at e
-    exact e
+    simpa only [Equiv.neg_apply] using (Equiv.neg (ratL T S)).tsum_eq J
   rw [tsum_mul_left, hre, show (∑' a, J a) = Φ 0 from hinv]
   simp only [hΦdef, hFdef, zero_add]
   ring
@@ -384,8 +378,7 @@ theorem integrable_of_tsum_translate_norm_le
       ∑' γ : Γ, ‖c ((γ : G) + w)‖ ≤ C) : Integrable c μ := by
   haveI : VAddInvariantMeasure Γ G μ := ⟨fun g s _ => measure_preimage_add μ (g : G) s⟩
   refine ⟨hc.aestronglyMeasurable, ?_⟩
-  rw [hasFiniteIntegral_iff_enorm]
-  rw [h𝓕.lintegral_eq_tsum'' (fun x => ‖c x‖ₑ)]
+  rw [hasFiniteIntegral_iff_enorm, h𝓕.lintegral_eq_tsum'' (fun x => ‖c x‖ₑ)]
   rw [← lintegral_tsum (f := fun (γ : Γ) x => ‖c (γ +ᵥ x)‖ₑ) fun γ : Γ =>
     ((hc.comp (continuous_const_vadd (γ : G))).measurable.enorm).aemeasurable]
   have hpt : ∀ x, ∑' γ : Γ, ‖c (γ +ᵥ x)‖ₑ ≤ ENNReal.ofReal C := by
@@ -1003,8 +996,7 @@ theorem unfold_integral_fundamentalDomain (G : Type) [AddCommGroup G] [Topologic
     simp only [AddSubgroup.vadd_def, vadd_eq_add] at this
     rw [← this]
     exact hcg.2.ne
-  simp only [AddSubgroup.vadd_def, vadd_eq_add]
-  exact (integral_tsum hmeas hfin).symm
+  simpa only [AddSubgroup.vadd_def, vadd_eq_add] using (integral_tsum hmeas hfin).symm
 
 end GlobalTheory
 end -- clump:auto

@@ -535,8 +535,7 @@ theorem GlobalTheory.AscFin.psiE_superdiag_S0 : OnStd fun {D} _ _ {sc} {G} W F =
     Ideal.mul_mem_right _ _ (GlobalTheory.FinPlLoc.idem_mem_idAt _)
   have hψ := ((GlobalTheory.T.fractionalIdealCompletion_properties_at_place D W.ψ W.ψ_std v).2.2.2.2.1 _ hxA).1 hx o ho
   have ho' : GlobalTheory.FinPlLoc.idem D (· = v) * o = o := (GlobalTheory.FinPlLoc.mem_idAt_iff _ o).1 ho.1
-  rw [← ho']
-  rw [← hψ]
+  rw [← ho', ← hψ]
   congr 1
   ring
 
@@ -922,9 +921,7 @@ theorem exists_unit_mem_span : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Con
       ((G.pl.modul sc : Ideal (𝓞 D.host.E)) : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) :=
     (FractionalIdeal.mem_coeIdeal _).2 ⟨_, hum, rfl⟩
   rw [← key] at hmem
-  have h := mem_span_of_mem_mul (fun x hx => (hAAc x).1 hx) hB hmem
-  simp only [hs] at h
-  exact h
+  simpa only [hs] using mem_span_of_mem_mul (fun x hx => (hAAc x).1 hx) hB hmem
 
 end GlobalTheory.StairUnit
 end -- clump:auto
@@ -1027,23 +1024,18 @@ theorem pairing_mem (S : HSp D) (L : GlobalTheory.FinPl.Lat S) (hL : IsSelfDualC
       refine AddSubgroup.subset_closure ⟨β * α, fun v => ?_, b, rfl⟩
       rw [map_mul]; exact mul_mem (hβi v) (hαi v)
     | zero =>
-      simp only [Pi.zero_apply, map_zero, zero_mul, Finset.sum_const_zero]
-      exact intAt_zero P
+      simpa only [Pi.zero_apply, map_zero, zero_mul, Finset.sum_const_zero] using intAt_zero P
     | add w₁ w₂ _ _ h₁ h₂ =>
       simp only [Pi.add_apply, map_add (f := _), add_mul, Finset.sum_add_distrib]
       exact intAt_add h₁ h₂
     | neg w _ h =>
-      simp only [Pi.neg_apply, map_neg, neg_mul, Finset.sum_neg_distrib]
-      exact intAt_neg h
+      simpa only [Pi.neg_apply, map_neg, neg_mul, Finset.sum_neg_distrib] using intAt_neg h
   | zero =>
-    simp only [Pi.zero_apply, mul_zero, Finset.sum_const_zero]
-    exact intAt_zero P
+    simpa only [Pi.zero_apply, mul_zero, Finset.sum_const_zero] using intAt_zero P
   | add z₁ z₂ _ _ h₁ h₂ =>
-    simp only [Pi.add_apply, mul_add, Finset.sum_add_distrib]
-    exact intAt_add h₁ h₂
+    simpa only [Pi.add_apply, mul_add, Finset.sum_add_distrib] using intAt_add h₁ h₂
   | neg z _ h =>
-    simp only [Pi.neg_apply, mul_neg, Finset.sum_neg_distrib]
-    exact intAt_neg h
+    simpa only [Pi.neg_apply, mul_neg, Finset.sum_neg_distrib] using intAt_neg h
 
 theorem pairing_mem_at : ∀ (D : D7) (S : HSp D) (L : GlobalTheory.FinPl.Lat S), IsSelfDualC S L → ∀ (v : GlobalTheory.FinPl.Pl D) (z w : Fin S.rank → AE D), z ∈ latV S L (· = v) → w ∈ latV S L (· = v) → (∑ k, ∑ l, cA D (w k) * incA D (S.gram k l) * z l) ∈ intAt D (· = v) :=
   fun _ S L hL v z w hz hw => pairing_mem S L hL (· = v) z w hz hw

@@ -285,8 +285,7 @@ theorem exists_edge {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum 
     rw [hvt, WithZero.exp_le_exp]
     omega
   obtain ⟨s, hs1, hs⟩ : ∃ s : v.adicCompletion F, Valued.v s ≤ 1 ∧ χ (t₀ * s) ≠ 1 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hnot ((hn t₀).1 h)
   refine ⟨t₀ * s, hs, fun m hm => ?_⟩
   have hm' := _root_.GlobalTheory.Proof.IntegralPowerExpansion.le_exp_neg_one_of_lt_one hm
@@ -327,8 +326,7 @@ theorem exists_dual_elt : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ), IsStdCh
   have hne : ∃ a, χ a ≠ 1 := by
     obtain ⟨y, hy⟩ := GlobalTheory.StdCharLocal.psiV_ne_one D ψ hψ v
     refine ⟨(comp he (incA D D.host.xi0))⁻¹ * y, ?_⟩
-    rw [hχa, trace_generator_split_section he, mul_inv_cancel_left₀ hκ]
-    exact hy
+    rwa [hχa, trace_generator_split_section he, mul_inv_cancel_left₀ hκ]
   obtain ⟨c₀, hc₀, hc₀m⟩ := exists_edge v χ hχ hne
   refine ⟨toEAf D (GlobalTheory.FinPl.SplitPoint.sec D v e c₀), ?_, ?_⟩
   · intro Z hZ r hr hZr
@@ -345,12 +343,10 @@ theorem exists_dual_elt : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ), IsStdCh
     have hcomp : comp he Z = c₀ * comp he (lift D (r : Formalism.IndefR.Datum.EAf D)) := by
       rw [hZ', RingHom.map_mul, comp_sec he]
     have h := hc₀m _ (val_lt_one PP hI he r hr)
-    rw [← hcomp, hχa, hsec] at h
-    exact h
+    rwa [← hcomp, hχa, hsec] at h
   · intro Z hZ hZc
     have hZ' : Z = GlobalTheory.FinPl.SplitPoint.sec D v e c₀ := eq_of_toEAf hZ (infPart_sec c₀) hZc
-    rw [hZ', ← hχa]
-    exact hc₀
+    rwa [hZ', ← hχa]
 
 end GlobalTheory.SplitDualElt
 end -- clump:auto
@@ -445,8 +441,7 @@ theorem psi_trace_split (ψ : AddChar (AF D.host.F) ℂ) (a Z Z₁ : AE D) :
 
 theorem redM_apply_of_mem (PP : Pl D.host.E) {b a : ℕ} (N : Matrix (Fin b) (Fin a) (Datum.EAf D)) (i : Fin b) (j : Fin a)
     (h : N i j ∈ Formalism.L2.Herm.intAf D.host.F D.host.E) : redM PP N i j = resS D.host.F PP ⟨N i j, h⟩ := by
-  simp only [redM]
-  exact dite_eq_left h
+  simpa only [redM] using dite_eq_left h
 
 
 set_option maxHeartbeats 800000 in
@@ -475,8 +470,7 @@ theorem local_dual_unit (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (
         mul_assoc])
     intro hc
     apply h2 Z₁ hZ₁ hZ₁c
-    rw [psi_trace_split ψ _ Z Z₁, h0, mul_one] at hc
-    exact hc
+    rwa [psi_trace_split ψ _ Z Z₁, h0, mul_one] at hc
 
 
 set_option maxHeartbeats 800000 in
@@ -511,8 +505,7 @@ theorem trace_mul_single {m n : ℕ} (M : Matrix (Fin m) (Fin n) (Datum.EAf D)) 
   · simp [Matrix.mul_apply, Matrix.single_apply]
   · intro j _ hj
     simp [Matrix.mul_apply, Ne.symm hj]
-  · intro h
-    exact absurd (Finset.mem_univ a) h
+  · exact fun h => absurd (Finset.mem_univ a) h
 
 end GlobalTheory.HalfDuality
 

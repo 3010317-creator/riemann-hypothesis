@@ -99,8 +99,7 @@ theorem mem_range_emb_of_conjU_mem_UAt {D : D7} (V : HSp D) (Y : GlobalTheory.In
   rw [h1', ← map_sub, ← hsm] at hij
   have hinj : (M - 1) i j - ε • (M - 1) i j = 0 := by
     have := congrArg (Formalism.L2.Theta.cA D) hij
-    rw [Formalism.L2.Theta.cA_cA, map_zero, sub_smul, one_smul] at this
-    exact this
+    rwa [Formalism.L2.Theta.cA_cA, map_zero, sub_smul, one_smul] at this
   rw [sub_eq_zero] at hinj
   rw [← Algebra.smul_def]
   exact hinj.symm
@@ -202,10 +201,8 @@ theorem exists_datum_comb_mem_So_at : ∀ {D : D7} {T : Type} {L : LevCh D T} {s
     (fun k => GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU _ (-1) h.JW₁ k.1) ν α hν ι hι
     (fun g => by obtain ⟨k, hk1, hk2⟩ := hact ι hι g; exact ⟨⟨k, hk1⟩, hk2⟩) f φ φ₀ hSB hvac h₀ P Λ c hφ₀
   refine ⟨_, hD, zS.mapDomain Subtype.val, ?_, ?_, ?_⟩
-  · rw [zdeg, Finsupp.sum_mapDomain_index (by simp) (by simp)]
-    exact hz
-  · rw [Finsupp.sum_mapDomain_index (by simp) (fun _ _ _ => add_smul _ _ _)]
-    exact hS
+  · rwa [zdeg, Finsupp.sum_mapDomain_index (by simp) (by simp)]
+  · rwa [Finsupp.sum_mapDomain_index (by simp) (fun _ _ _ => add_smul _ _ _)]
   · intro b hb
     obtain ⟨k, -, rfl⟩ := Finset.mem_image.1 (Finsupp.mapDomain_support hb)
     exact k.2

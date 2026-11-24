@@ -212,8 +212,7 @@ theorem GlobalTheory.SiegelSet.lintegral_cone_modulus_lt_top : ∀ (F : Type) [F
     rw [Measure.restrict_apply MeasurableSet.univ]
     change Measure.pi (fun _ : Fin 0 => (volume : Measure ℝ)) _ < ⊤
     rw [Measure.pi_of_empty]
-    simp only [Set.univ_inter]
-    exact measure_lt_top _ _
+    simpa only [Set.univ_inter] using measure_lt_top _ _
   | succ m =>
     set f := Module.finrank ℚ F with hfdef
     set a : ℕ → ℝ := fun i => (f : ℝ) * d - 2 * f * ((n : ℝ) - 2 * i - 1) with hadef
@@ -239,8 +238,7 @@ theorem GlobalTheory.SiegelSet.lintegral_cone_modulus_lt_top : ∀ (F : Type) [F
       ← ENNReal.ofReal_prod_of_nonneg (fun i _ => Real.rpow_nonneg (hpos i).le _)]
     congr 1
     unfold GlobalTheory.SiegelSet.modulus
-    rw [← hfdef]
-    rw [← Finset.prod_mul_distrib, ← Finset.prod_inv_distrib, ← Finset.prod_mul_distrib]
+    rw [← hfdef, ← Finset.prod_mul_distrib, ← Finset.prod_inv_distrib, ← Finset.prod_mul_distrib]
     refine Finset.prod_congr rfl fun i _ => ?_
     have hti := hpos i
     rw [← Real.rpow_natCast, ← Real.rpow_intCast,

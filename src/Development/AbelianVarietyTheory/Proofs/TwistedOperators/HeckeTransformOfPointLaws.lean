@@ -248,8 +248,7 @@ theorem isCombAt_iff {x : Sp T ⟶ Xo.X} {m : ℕ} (a : Fin m → (tEps x ⟶ Xo
   · rintro ⟨u, hu, h⟩
     obtain rfl : u = fun i => scaleAt x (cf i) ≫ a i := funext fun i => Over.OverMorphism.ext (hu i)
     exact Over.OverMorphism.ext h
-  · intro h
-    exact ⟨_, fun _ => rfl, congrArg (·.left) h⟩
+  · exact fun h => ⟨_, fun _ => rfl, congrArg (·.left) h⟩
 
 variable {x x' : Sp T ⟶ Xo.X} {Ψ : Gx x ⟶ Gx x'}
 
@@ -1210,8 +1209,7 @@ theorem hkVal_frBor : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
       (frMap_unique_refl_iff E H Dw l Xo c Ω Ω (AlgHom.id c.F Ω) z').2.1 (hF Ω (⟨y.x, xo', u', tan', eig', bas', s', gen'⟩ : FrPt Xo c Ω) C z' _ hz' hP)
     exact (algebraic_laws lawsFieldsSeparately.2.1 E H Dw l Xo c).2.2.2.2.2.2 Ω inferInstance a n f hf t z _ hB'
   unfold hkVal
-  refine (finsum_congr key).trans ?_
-  exact (mul_finsum _ _).symm
+  exact (finsum_congr key).trans (mul_finsum _ _).symm
 
 end GlobalTheory.HeckeWeight
 end -- clump:auto
@@ -1377,8 +1375,7 @@ theorem evR_scale_of_isReduced (hL : GlobalTheory.Reg.EvLaws Xo c) {a : (E →+*
   have h1 : FrMap k u z' := by
     refine ((_root_.GlobalTheory.Frames.frChg_calculus E H Dw l Xo c B).2.2.1 _ k M _ u₀ u z z' hchg h0).2 ?_
     have e : k (algebraMap R B (MvPolynomial.X none)) = (g : T) := by rw [hk]; simp [k₀, v, R]
-    rw [e, show (fun τ => (M τ).map k) = G from funext hMk]
-    exact hG
+    rwa [e, show (fun τ => (M τ).map k) = G from funext hMk]
   let t : Ix Dw → Bˣ := fun i => i.elim hu.unit fun _ => 1
   have hbu : FrBor t u₀ u :=
     ((_root_.GlobalTheory.Frames.frChg_calculus E H Dw l Xo c B).2.2.2 t u₀ u).2 ⟨M, fun τ i => by simp [t, hM1], hM2, hchg⟩
@@ -1439,8 +1436,7 @@ theorem evR_of_secBC_mul : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       have hz0 : ∀ i, zs.f i = 0 := fun i => by rw [hz i, h0, show Formalism.L2.Pj.scal (spMap χ.toRingHom ≫ z₀.x) (0 : Ω) i = 0 from fibreSectionScale_zero _ i, MulZeroClass.zero_mul]
       obtain ⟨b, -, hb⟩ := zgen zs
       have e0 := hb 0 (fun i => by rw [hz0 i, MulZeroClass.mul_zero])
-      have e1 := hb 1 (fun i => by rw [hz0 i, MulZeroClass.mul_zero])
-      exact zero_ne_one (e0.trans e1.symm)
+      exact zero_ne_one (e0.trans (hb 1 (fun i => by rw [hz0 i, MulZeroClass.mul_zero])).symm)
     have hcalc' := GlobalTheory.Frames.SecCalc.sec_calc E H Dw l Xo Ω Ω Ω (RingHom.id Ω) (RingHom.id Ω)
       (spMap χ.toRingHom ≫ z₀.x) (spMap χ.toRingHom ≫ z₀.x) (spMap χ.toRingHom ≫ z₀.x)
       (by simp [spMap]) (by simp [spMap])
@@ -1619,8 +1615,7 @@ theorem exists_term (hA : admitted l P p) (hT : TotalAt Xo c P p i) (Z : Corr Xo
         exact ⟨k, fun j => by rw [hk, ← ChgBC.spMap_comp_ring, Category.assoc]; rfl⟩) hs₀
     refine ⟨T, inferInstance, inferInstance, inferInstance, inferInstance, b', hsm, ?_, fun Ω _ _ _ χ => ?_⟩
     · obtain ⟨q'', rfl⟩ : q' ∈ Set.range (PrimeSpectrum.comap (algebraMap T' T)) := by
-        rw [PrimeSpectrum.localization_away_comap_range T g]
-        exact hg
+        rwa [PrimeSpectrum.localization_away_comap_range T g]
       exact ⟨q'', by rw [IsScalarTower.algebraMap_eq B T' T]; rfl⟩
     · have hm : FrMap χ yT (bc Ω (χ.comp (IsScalarTower.toAlgHom c.F B T))) := by
         obtain ⟨w, hw⟩ := bc_exists χ yT
@@ -1762,8 +1757,7 @@ theorem exists_qmatch (hσ : Formalism.L2.PjFree.GoodEmb c σ) (hU : Formalism.L
     obtain ⟨h1, h2⟩ := hu hx hx'
     refine ⟨a, h, b, hb, hxb, h1, fun ⟨τ, i⟩ => ?_⟩
     have := h2 (e τ) i (by rw [e.symm_apply_apply]; exact i.2)
-    rw [e.symm_apply_apply, hAt] at this
-    exact this
+    rwa [e.symm_apply_apply, hAt] at this
   · exact (_root_.GlobalTheory.AntiIsom.not_antiIsometry E r _ _ hΨ hp hr a hiso (fun τ => Dw.mult (e.symm τ)) m1 m2 x.1 x.2 x'.1 x'.2
       (fun τ => A (e.symm τ)) (fun τ => hA0 _) hrel).elim
 

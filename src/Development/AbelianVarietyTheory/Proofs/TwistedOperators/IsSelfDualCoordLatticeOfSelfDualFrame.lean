@@ -101,8 +101,7 @@ theorem isSelfDualC_of_isSDFrame : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank
   swap
   · have e : Formalism.L2.Herm.dualL D.sp.cm V Λ = Λ := hdual
     have key := mem_dualL_iff V Λ y
-    rw [e] at key
-    exact key
+    rwa [e] at key
   · let f : (Fin V.rank → D.host.E) →ₗ[𝓞 D.host.E] V.V :=
       V.frame.equivFun.symm.toLinearMap.restrictScalars (𝓞 D.host.E)
     have hf : ∀ x, f x = ∑ i, x i • V.frame i := fun x => by simp [f]
@@ -118,8 +117,7 @@ theorem isSelfDualC_of_isSDFrame : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank
       intro x hx
       have h1 := hout x hx
       rw [Nat.cast_smul_eq_nsmul] at h1
-      rw [hf]
-      exact h1
+      rwa [hf]
     have hfg : Λ.FG := by
       refine Submodule.fg_of_fg_map_injective (f ∘ₗ s) (hfinj.comp hsinj) (Submodule.FG.of_le hL.fg ?_)
       rintro _ ⟨x, hx, rfl⟩

@@ -450,8 +450,7 @@ theorem GlobalTheory.RowShape.latV_grid_iff_rowN_zero : ∀ {D : D7} {T : Type} 
   have hpow : ∀ r : 𝓞 D.host.F, r ∉ v.asIdeal → r ^ (D.R.m - 1 - 0) ∉ v.asIdeal :=
     fun r hr h => hr (v.isPrime.mem_of_pow_mem _ h)
   have h1 := latV_le_of_smul _ _ _ (hpow s' hs') hA
-  have h2 := latV_le_of_smul _ _ _ (hpow s hs) hB
-  exact ⟨fun h => h1 h, fun h => h2 h⟩
+  exact ⟨fun h => h1 h, fun h => (latV_le_of_smul _ _ _ (hpow s hs) hB) h⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatticeOffS0LastLevelIff =====

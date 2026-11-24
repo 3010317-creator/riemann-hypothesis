@@ -160,9 +160,7 @@ theorem exists_ideal_character_of_unitary_hchar : ∀ (K : Type) [Field K] [Numb
         intro T
         induction T using Finset.induction_on with
         | empty =>
-          simp only [Finset.prod_empty]
-          intro hd
-          exact (P.prime.not_dvd_one hd).elim
+          simpa only [Finset.prod_empty] using fun hd => (P.prime.not_dvd_one hd).elim
         | @insert Q T hQT ih =>
           simp only [Finset.prod_insert hQT]
           intro hd
@@ -174,8 +172,7 @@ theorem exists_ideal_character_of_unitary_hchar : ∀ (K : Type) [Field K] [Numb
       have h1 : Q.asIdeal ≤ P.asIdeal := Ideal.le_of_dvd (P.prime.dvd_of_dvd_pow hQP)
       have h2 : Q = P := HeightOneSpectrum.ext (Q.isMaximal.eq_of_le P.isPrime.ne_top h1)
       exact h2 ▸ hQ
-    · intro h
-      exact Ideal.le_of_dvd ((dvd_pow_self _ (Nat.succ_ne_zero _)).trans (hdvd P h))
+    · exact fun h => Ideal.le_of_dvd ((dvd_pow_self _ (Nat.succ_ne_zero _)).trans (hdvd P h))
   have hm0 : m ≠ ⊥ := Finset.prod_ne_zero_iff.2 fun P _ => pow_ne_zero _ P.ne_bot
   obtain ⟨X, h0, h1, hmul, hnorm, hz, hP⟩ := GlobalTheory.exists_multiplicative_ideal_extension K m
     (fun P => ((χ.val P : ℂˣ) : ℂ)) (fun P _ => hχ _)

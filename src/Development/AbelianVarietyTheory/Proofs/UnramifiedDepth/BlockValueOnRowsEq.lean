@@ -154,8 +154,7 @@ lemma kill_monomial (S : σ → Prop) [DecidablePred S] (m : σ →₀ ℕ) (c :
     congr 1
     refine Finsupp.prod_congr fun x hx => ?_
     rw [ite_eq_right]
-    intro hS
-    exact (Finsupp.mem_support_iff.1 hx) (h x hS)
+    exact fun hS => (Finsupp.mem_support_iff.1 hx) (h x hS)
   · push Not at h
     obtain ⟨x, hS, hx⟩ := h
     rw [Finsupp.prod, Finset.prod_eq_zero (Finsupp.mem_support_iff.2 hx), mul_zero]
@@ -249,8 +248,7 @@ private lemma diag_single_sum_apply (n0 n Y : ℕ) (ρ c : Fin n) :
       · simp [hc]
     · intro b _ hb
       simp [hb]
-    · intro h
-      exact absurd (Finset.mem_filter.2 ⟨Finset.mem_univ ρ, hρ⟩) h
+    · exact fun h => absurd (Finset.mem_filter.2 ⟨Finset.mem_univ ρ, hρ⟩) h
   · rw [ite_eq_right (fun h => hρ h.1)]
     refine Finset.sum_eq_zero fun b hb => ?_
     have hb' : b ≠ ρ := fun h => hρ (h ▸ (Finset.mem_filter.1 hb).2)
@@ -307,8 +305,7 @@ lemma coeff_mul_split {C : Type} [Field C] {σ : Type} (p : σ → Prop)
           by_contra h0; exact hpx (ha x (Finsupp.mem_support_iff.2 h0))
         omega
     exact Prod.ext (Finsupp.ext fun x => (key x).1) (Finsupp.ext fun x => (key x).2)
-  · intro h
-    exact (h (by simp)).elim
+  · exact fun h => (h (by simp)).elim
 
 lemma det_homog {C : Type} [Field C] {σ : Type} {n : ℕ} (w : σ → ℕ) (f : Fin n → Fin n → σ)
     (r : Fin n → ℕ) (h : ∀ b c, w (f b c) = r b) :
@@ -372,8 +369,7 @@ lemma diagMon_inl (n0 n L y : ℕ) (ρ c : Fin n) :
       · simp [hc]
     · intro b _ hb
       simp [hb]
-    · intro h
-      exact absurd (Finset.mem_filter.2 ⟨Finset.mem_univ ρ, hρ⟩) h
+    · exact fun h => absurd (Finset.mem_filter.2 ⟨Finset.mem_univ ρ, hρ⟩) h
   · rw [ite_eq_right (fun h => hρ h.1)]
     refine Finset.sum_eq_zero fun b hb => ?_
     have hb' : b ≠ ρ := fun h => hρ (h ▸ (Finset.mem_filter.1 hb).2)
@@ -416,8 +412,7 @@ lemma mfact_diagMon {n0 n : ℕ} (L y : ℕ) :
         · simp [hρ]
         · intro c _ hc
           simp [hc]
-        · intro h
-          exact absurd (Finset.mem_univ ρ) h
+        · exact fun h => absurd (Finset.mem_univ ρ) h
       · simp [hρ]
     rw [Finset.prod_congr rfl (fun ρ _ => hrow ρ), ← Finset.prod_filter, Finset.prod_const, hcard]
   rw [mfact, Finsupp.prod_fintype _ _ (fun _ => Nat.factorial_zero), Fintype.prod_sum_type,
@@ -919,8 +914,7 @@ private lemma lead_single_of_linear_coeff_eq_X {ι : Type} {π : σ → κ} {v :
     rintro rfl
     apply hm
     rw [hlin 0 (by simp)]
-    simp [MvPowerSeries.coeff_X]
-    exact (Finsupp.single_ne_zero.2 one_ne_zero).symm
+    simpa [MvPowerSeries.coeff_X] using (Finsupp.single_ne_zero.2 one_ne_zero).symm
   have hdeg : 1 ≤ m.degree := Nat.one_le_iff_ne_zero.2 ((Finsupp.degree_eq_zero_iff m).not.2 hpos)
   rw [hmap, hd]
   refine ⟨by rw [Finsupp.single_le_iff]; simpa using hdeg, fun h => ?_⟩
@@ -1008,8 +1002,7 @@ theorem _root_.GlobalTheory.blockValue_rows : _root_.Formalism.L2.FormalSeriesBo
         obtain ⟨c, rfl⟩ := ht'.1 m hm x hx
         exact hρ'
       · intro m hm x hx
-        rw [hrow m hm x hx]
-        exact hρ'
+        rwa [hrow m hm x hx]
   have hL : _root_.GlobalTheory.BlockValue.Lead (_root_.GlobalTheory.BlockValue.sideRow n) (_root_.Formalism.UnitaryBoundIntegral.diagMon n0 n (l ^ i) y)
       (∏ ρ : Fin n, (if (ρ : ℕ) < n0 then 1 else t ρ ^ (l ^ i * y) * t' ρ ^ y * _root_.Formalism.IncomingBounds.mvExp (hr ρ))) := by
     have hX : _root_.Formalism.UnitaryBoundIntegral.diagMon n0 n (l ^ i) y = ∑ ρ : Fin n, (if (ρ : ℕ) < n0 then 0 else

@@ -58,9 +58,7 @@ theorem smul_eq_of_adj {R : Type} [CommRing R] {n : Type} [Fintype n] [Decidable
   have h2 : X * H * (A * G) = 1 := mul_eq_one_comm.1 h1
   have h3 : A * G * (c • X) = A * G * (c • X') := by
     rw [Matrix.mul_smul, Matrix.mul_smul, Matrix.mul_assoc, Matrix.mul_assoc, h, ← Matrix.smul_mul, e, Matrix.smul_mul, h']
-  have h4 := congrArg (X * H * ·) h3
-  simp only [← Matrix.mul_assoc (X * H) (A * G), h2, Matrix.one_mul] at h4
-  exact h4
+  simpa only [← Matrix.mul_assoc (X * H) (A * G), h2, Matrix.one_mul] using congrArg (X * H * ·) h3
 
 theorem eq_of_halves {R : Type} [CommRing R] {n : Type} [DecidableEq n] {a b : R} {X X' : Matrix n n R}
     (h : ∀ i j, (a + b) * (X - 1) i j = (X - 1) i j) (h' : ∀ i j, (a + b) * (X' - 1) i j = (X' - 1) i j)
@@ -128,8 +126,7 @@ theorem exists_indicator (P : Finset (Pl D.host.E)) :
 theorem stair_off (t : T) {w : Pl D.host.E} (hw : w ∉ G.pl.W0) (j : ℕ) :
     stair (locGrid G t w) (unifAt w) (cosExp G w) j = 1 := by
   rw [(depthAt_of_notMem G hw).1, stair]
-  simp only [zero_mul, pow_zero]
-  exact Units.ext diagonal_one
+  simpa only [zero_mul, pow_zero] using Units.ext diagonal_one
 
 theorem supp_base (B : Frames G) {t : T} {r : GA D (G.V (.grid D.R.m 0))}
     (h : HasLoc t B (Nat.zero_le _) r fun w => (stair (locGrid G t w.1) (unifAt w.1) (cosExp G w.1) 0)⁻¹) {e₀ : AE D}

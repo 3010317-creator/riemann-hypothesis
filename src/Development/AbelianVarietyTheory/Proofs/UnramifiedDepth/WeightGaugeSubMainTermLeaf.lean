@@ -303,8 +303,7 @@ theorem linPull_coord_weight_nonneg : ∀ (C : Type) [Field C] [CharZero C] (V :
   have hco : ∀ (h : I ⊕ J → C) (w : ℝ), (∀ k, V.Ge w (h (Sum.inl k))) → ∀ b, V.Ge w (S.co h b) := by
     intro h w hh b
     have hs := VF.Ge.sum (s := Finset.univ) (fun k _ => VF.Ge.mul (hh k) (hU k b))
-    rw [add_zero] at hs
-    exact hs
+    rwa [add_zero] at hs
 
   obtain ⟨z, hze, hzi⟩ : ∃ z : I → Fin N → C,
       (∀ j x, e j x = ∑ b, z b j * S.tan b x) ∧ ∀ b j, V.Ge 0 (z b j) := by
@@ -503,8 +502,7 @@ theorem weight_gauge_sub_main : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [N
       refine wtNonneg_rename V.v Function.Embedding.inl ρ
         (1 / ((V.l : ℝ) ^ 2 - 1) + 3 / (8 * (V.l : ℝ) ^ i)) (fun _ => rfl) F fun μ => ?_
       have := hF μ
-      rw [le_add_coe_iff, radius_one _ _ hl0, zero_sub] at this
-      exact this
+      rwa [le_add_coe_iff, radius_one _ _ hl0, zero_sub] at this
     obtain ⟨γ, hγ, hd⟩ := _root_.GlobalTheory.GaugeDeriv.pderiv_hM C V d I J X hA g a i hi hid S t ht (Fin N) (Fin M) e v' he hv hv' b
     have hE : MvPowerSeries.pderiv (R := C) (Sum.inr b)
         (X.hM g a i e v' - mainM V i (fun b c => ∑ κ : J g, ∑ k : I (1 - g), Φt c κ * X.pair g κ k * v' b k)) =
@@ -549,8 +547,7 @@ theorem weight_gauge_sub_main : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [N
           refine wtNonneg_rename V.v Function.Embedding.inr ρ (1 / ((V.l : ℝ) - 1)) (fun _ => rfl) _ fun μ => ?_
           have := _root_.GlobalTheory.MainTerm.linPull_coord_weight_nonneg C V d _ _ (X.G (1 - g)) (S _) (t _) (ht _) M v' hv x μ
           unfold VF.Ge at this
-          rw [mul_one_div]
-          exact this
+          rwa [mul_one_div]
     · by_cases hκ : (X.G g).ty (Sum.inr κ) = a + (i : ZMod d)
       · exact wtNonneg_smul V ρ (VF.Ge.sum fun k _ => (X.pair_int g κ k).mul_int (hv b k))
           (hinl _ (hZ κ hκ))

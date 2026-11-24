@@ -103,8 +103,7 @@ theorem exists_common_denominator {E : Type} [inst : Field E] [NumberField E] [S
     push_cast
     linear_combination (-(e : E)) * h
   | zero =>
-    intro i
-    exact ⟨0, by simp⟩
+    exact fun i => ⟨0, by simp⟩
   | add x y _ _ hx hy =>
     intro i
     obtain ⟨c1, h1⟩ := hx i

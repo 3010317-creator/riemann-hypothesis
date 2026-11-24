@@ -94,8 +94,7 @@ theorem cosetAvg_pos [BorelSpace G] [SecondCountableTopology G] (H : Subgroup G)
     (hψc : HasCompactSupport ψ) (hψ0 : ∀ x, 0 ≤ ψ x) {g : G} (hg : ψ g ≠ 0) : 0 < cosetAvg H ν ψ g := by
   have C : Continuous (fun u : H => ψ ((u : G)⁻¹ * g)) := by fun_prop
   apply (integral_pos_iff_support_of_nonneg (fun u => hψ0 _) ?_).2
-  · apply C.isOpen_support.measure_pos ν
-    exact ⟨1, by simpa using hg⟩
+  · exact C.isOpen_support.measure_pos ν ⟨1, by simpa using hg⟩
   · apply C.integrable_of_hasCompactSupport
     refine HasCompactSupport.intro (hH.isClosedEmbedding_subtypeVal.isCompact_preimage
       ((show IsCompact (tsupport ψ) from hψc).image (f := fun k => g * k⁻¹) (by fun_prop))) ?_
@@ -214,7 +213,6 @@ theorem integral_mul_eq_zero_of_coset_integral_eq_zero : ∀ (G : Type) [Group G
     rw [integral_div, hzero g, zero_div]
   have key := integral_cosetAvg_mul_eq H hH ν μ ψ₀.continuous hψc
     (fun g => by rw [abs_le]; constructor <;> linarith [(hψ01 g).1, (hψ01 g).2]) hF hFc hw hinv
-  simp only [hFJ, hFH, mul_zero, integral_zero] at key
-  exact key
+  simpa only [hFJ, hFH, mul_zero, integral_zero] using key
 
 end GlobalTheory.CosetIntegralZero

@@ -298,10 +298,8 @@ def orth {σ : Type} (K : Submodule ℂ (MvPolynomial σ ℂ)) : Submodule ℂ (
 theorem mem_orth {σ : Type} {K : Submodule ℂ (MvPolynomial σ ℂ)} {v : MvPolynomial σ ℂ} :
     v ∈ orth K ↔ ∀ m ∈ K, fockF v m = 0 := by
   constructor
-  · intro h m hm
-    exact LinearMap.mem_ker.1 ((Submodule.mem_iInf _).1 h ⟨m, hm⟩)
-  · intro h
-    exact (Submodule.mem_iInf _).2 fun m => LinearMap.mem_ker.2 (h m m.2)
+  · exact fun h m hm => LinearMap.mem_ker.1 ((Submodule.mem_iInf _).1 h ⟨m, hm⟩)
+  · exact fun h => (Submodule.mem_iInf _).2 fun m => LinearMap.mem_ker.2 (h m m.2)
 
 private theorem fockF_sum_smul_right {σ ι : Type} (s : Finset ι) (c : ι → ℂ) (b : ι → MvPolynomial σ ℂ)
     (v : MvPolynomial σ ℂ) :
@@ -360,8 +358,7 @@ theorem exists_stable_disjoint (n n' : ℕ) (M : Submodule ℂ (MvPolynomial (Fi
       ∀ p : GL (Fin n) ℂ × GL (Fin n') ℂ, ∀ v ∈ N, matRep n n' p v ∈ N := by
   classical
   obtain ⟨p, hp⟩ : ∃ p, p ∉ M := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hM (eq_top_iff.2 fun x _ => hc x)
 
   let U := restrictTotalDegree (Fin n' × Fin n) ℂ p.totalDegree
@@ -604,8 +601,7 @@ theorem outerTensor_intertwining_eq_zero_of_left :
       rw [e1, e2, Representation.tprod_apply]
       exact key _
     have h0 := h (f.intertwiningMap_of_isIntertwiningMap ρ ρ' hf)
-    have hv := congrArg (fun ψ : ρ.IntertwiningMap ρ' => ψ v) h0
-    simpa [f] using hv
+    simpa [f] using congrArg (fun ψ : ρ.IntertwiningMap ρ' => ψ v) h0
   apply Representation.IntertwiningMap.ext
   apply TensorProduct.ext'
   intro v w
@@ -693,8 +689,7 @@ theorem pairLmul_hw {n n' k : ℕ} (hn : k ≤ n) (hn' : k ≤ n') (ν : Fin k �
   · intro b _ hb
     rw [ite_eq_right]
     · simp
-    · intro e
-      exact hb (Fin.ext (by simpa using e.symm))
+    · exact fun e => hb (Fin.ext (by simpa using e.symm))
   · simp
 
 theorem pairing_equivariant_and_ne_zero : ∀ (n n' k : ℕ) (T : MvPolynomial (Fin n × Fin k) ℂ →ₗ[ℂ] MvPolynomial (Fin n' × Fin k) ℂ →ₗ[ℂ] MvPolynomial (Fin n' × Fin n) ℂ), (∀ (φ : MvPolynomial (Fin n × Fin k) ℂ) (f : MvPolynomial (Fin n' × Fin k) ℂ) (x : Matrix (Fin n') (Fin n) ℂ), eval (fun v => x v.1 v.2) (T φ f) = fockF φ (map (starRingEnd ℂ) (aeval (fun v : Fin n' × Fin k => ∑ t : Fin n, C (x v.1 t) * (X (t, v.2) : MvPolynomial (Fin n × Fin k) ℂ)) f))) → (∀ (g : GL (Fin n) ℂ) (h : GL (Fin n') ℂ) (φ : MvPolynomial (Fin n × Fin k) ℂ) (f : MvPolynomial (Fin n' × Fin k) ℂ), T (rowAct ℂ (g : Matrix (Fin n) (Fin n) ℂ)ᵀ φ) (rowAct ℂ (h : Matrix (Fin n') (Fin n') ℂ)ᵀ f) = matRep n n' (g, h) (T φ f)) ∧ ∀ (hn : k ≤ n) (hn' : k ≤ n') (ν : Fin k → ℕ), T (hw ℂ hn ν) (hw ℂ hn' ν) ≠ 0 := by
@@ -772,8 +767,7 @@ theorem rowDiv_eq_zero_of_matRep_unipotent_fixed : ∀ (n n' : ℕ) (v : MvPolyn
         exact lt_irrefl _ hab
       simp [hgv, Matrix.transvection, Matrix.single, hne']
     have hg := hv g hbt hdiag
-    rw [matRep_one_left, hgv] at hg
-    exact hg
+    rwa [matRep_one_left, hgv] at hg
   have hconst : rowGen ℂ a b v = Polynomial.C v := by
     rw [← sub_eq_zero]
     apply Polynomial.eq_zero_of_infinite_isRoot
@@ -1071,8 +1065,7 @@ theorem sqRep_topVec_diag {m : ℕ} (r : ℕ) (a : Part m) (t : Fin r → ℂˣ)
   have h := (factSqHighestWeight ℂ r (pad r a)).1 t
   have e : ((∏ i, t i ^ (pad r a).w i : ℂˣ) : ℂ) = ∏ i, (t i : ℂ) ^ rowNu (r := r) a.1 i := by
     simp [pad]
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem exists_intertwining_piece (n n' : ℕ) (a : Part (min n n')) :
     ∃ φ : (pieceRep (MonoidHom.id (GL (Fin n) ℂ)) (MonoidHom.id (GL (Fin n') ℂ)) a).IntertwiningMap
@@ -1163,8 +1156,7 @@ theorem exists_highest_of_stable (n n' : ℕ) (N : Submodule ℂ (MvPolynomial (
     intro u hu f hf
     refine ⟨?_, dualWeylRowStable ℂ n' n ν u f hf.2⟩
     have h1 := hst (1, unitaryIncl n' (Matrix.UnitaryGroup.transpose ⟨u, hu⟩)) f hf.1
-    rw [matRep_one_left] at h1
-    exact h1
+    rwa [matRep_one_left] at h1
   obtain ⟨w, hw, hw0, hk⟩ := exists_killed_of_rowDivClosed _
     (rowDivClosed_of_rowAct_stable _ (rowAct_mem_of_unitary_stable _ hU))
     (fun e => hv0 ((Submodule.eq_bot_iff _).1 e v ⟨hv, hvd⟩))

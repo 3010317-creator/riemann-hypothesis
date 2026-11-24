@@ -138,8 +138,7 @@ theorem primes_finite {d : ℕ} (hd : 2 ≤ d) : {P : Ideal (A K hd) | P.IsPrime
     refine Set.disjoint_left.mp hdisj (?_ : x ∈ primeTo (d : 𝓞 K)) hx
     intro I hI hdI hxI
     apply hn
-    simp only [Set.mem_iUnion]
-    exact ⟨I, by simpa using ⟨hI, hdI⟩, hxI⟩
+    simpa only [Set.mem_iUnion] using ⟨I, by simpa using ⟨hI, hdI⟩, hxI⟩
   by_cases hb : Q = ⊥
   · exact Or.inl hb
   have hmax : Q.IsMaximal := hQ.isMaximal hb
@@ -149,8 +148,7 @@ theorem primes_finite {d : ℕ} (hd : 2 ≤ d) : {P : Ideal (A K hd) | P.IsPrime
   have hI' : I.IsMaximal ∧ (d : 𝓞 K) ∈ I := by simpa using hI
   have : Q = I := hmax.eq_of_le hI'.1.ne_top hle
   right
-  rw [this]
-  exact hI'
+  rwa [this]
 
 theorem isPID {d : ℕ} (hd : 2 ≤ d) : IsPrincipalIdealRing (A K hd) := by
   have : IsDedekindDomain (A K hd) :=
@@ -348,8 +346,7 @@ theorem exists_basis_in_lattice {n : ℕ} (Λ : Submodule (𝓞 K) (Fin n → K)
     rw [Submodule.map_span, ← Set.range_comp] at h
     have e : (Λ.subtype (c • (⟨w, hw⟩ : Λ))) = (c : K) • w := by
       simp [algebraMap_smul]
-    rw [e] at h
-    exact h
+    rwa [e] at h
   have hcK : (c : K) ≠ 0 := by exact_mod_cast hc0
   have hspanK : ⊤ ≤ Submodule.span K (Set.range x') := by
     rw [← hΛ.span_eq_top, Submodule.span_le]
@@ -410,8 +407,7 @@ theorem exists_onto_mod {n n' : ℕ} (hnn : n ≤ n') (Λ : Submodule (𝓞 K) (
     rw [Submodule.span_le]
     rintro _ ⟨i, rfl⟩
     show ψ (b i) ∈ Λ'
-    simp only [ψ, Module.Basis.constr_basis]
-    exact hb' _
+    simpa only [ψ, Module.Basis.constr_basis] using hb' _
   refine ⟨LinearMap.toMatrix' (((u * c' : 𝓞 K) : K) • φ), fun w hw => ?_,
     LinearMap.toMatrix' ((c : K) • ψ), fun w hw => ?_, u * c * c' - 1, ?_, ?_⟩
   · rw [LinearMap.toMatrix'_mulVec, LinearMap.smul_apply]
