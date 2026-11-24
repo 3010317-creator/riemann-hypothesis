@@ -16,6 +16,7 @@ not silently fall back: a matching receipt with corrupt bytes is an error.
 import argparse
 import gzip
 import hashlib
+import http.client
 import importlib.util
 import io
 import json
@@ -149,9 +150,9 @@ def fetch(key, maximum=MAX_JSON):
                 return None
             if error.code < 500 or attempt == 5:
                 raise
-        except (urllib.error.URLError, TimeoutError, ConnectionError):
+        except (urllib.error.URLError, TimeoutError, ConnectionError, http.client.HTTPException) as error:
             if attempt == 5:
-                raise
+                raise ValueError(f"could not fetch {key}: {error}") from error
         time.sleep(2 ** attempt)
     if len(data) > maximum:
         raise ValueError(f"public metadata exceeds size limit: {key}")
@@ -265,11 +266,34 @@ def validated_blobs(record, identity, fetcher=fetch):
     return contents, shas, modules
 
 
-def registered(cache):
-    """Input hashes already registered in this cache (outputs/<scope>/<hash>.json)."""
+def published(artifact):
+    """True/False if the public cache does/doesn't have the artifact; None if that is unclear."""
+    request = urllib.request.Request(f"{PUBLIC_BASE}/artifacts/{REPOSITORY}/{artifact[:-5]}.art", method="HEAD",
+                                     headers={"User-Agent": USER_AGENT})
+    try:
+        with urllib.request.urlopen(request, timeout=30):
+            return True
+    except urllib.error.HTTPError as error:
+        return False if error.code == 404 else None
+    except (urllib.error.URLError, TimeoutError, ConnectionError, http.client.HTTPException, ValueError):
+        return None
+
+
+def registered(cache, entries):
+    """Map entries already registered in this cache with the same artifact
+    (outputs/<scope>/<hash>.json naming it). Others are (re)written by `lake cache add`."""
+    wanted = dict(entries)
     have = set()
-    for _, _, files in os.walk(cache / "outputs"):
-        have.update(name[:-5] for name in files if name.endswith(".json"))
+    for directory, _, files in os.walk(cache / "outputs"):
+        for name in files:
+            input_hash = name[:-5]
+            if name.endswith(".json") and input_hash in wanted and input_hash not in have:
+                try:
+                    text = (Path(directory) / name).read_text()
+                except (OSError, UnicodeDecodeError):
+                    continue
+                if wanted[input_hash][:-5] in text:
+                    have.add(input_hash)
     return have
 
 
@@ -368,7 +392,7 @@ def consume(root, cache, record, identity, workers=24, fetcher=fetch):
     env["RUST_MIN_STACK"] = str(max(int(env.get("RUST_MIN_STACK", "0")), 8388608))
     service = tomllib.loads((root / "lakefile.toml").read_text()).get("cache", {}).get("defaultService")
     entries = [decode(line) for line in contents.splitlines()[1:]]
-    have = registered(cache)
+    have = registered(cache, entries)
     fresh = [entry for entry in entries if entry[0] not in have]
     print(f"Fetching successful CI cache {record['candidate_head']} for current build inputs: "
           f"{len(entries)} modules, {len(fresh)} not yet registered...", flush=True)
@@ -386,7 +410,15 @@ def consume(root, cache, record, identity, workers=24, fetcher=fetch):
         finally:
             code = downloads.wait()
     if code:
-        raise ValueError("some cached artifacts could not be downloaded and verified; rerun lake exe cache get")
+        missing = sorted({artifact for _, artifact in entries if not (cache / "artifacts" / artifact).is_file()})
+        absent = [artifact for artifact in missing[:20] if published(artifact) is False]
+        shown = ", ".join(missing[:20]) + (f" and {len(missing) - 20} more" if len(missing) > 20 else "")
+        if absent:
+            raise ValueError(f"{len(missing)} artifacts of the selected CI receipt are not in the public cache"
+                             f" (HTTP 404: {', '.join(absent)}); rerunning will not help, please report it."
+                             f" Missing or unverified: {shown}")
+        raise ValueError(f"{len(missing)} cached artifacts could not be downloaded and verified ({shown});"
+                         " if this was a network problem, rerun lake exe cache get")
     if current_identity(root) != identity:
         raise ValueError("project inputs changed before restoration")
     jobs = unpack_jobs(root, cache, modules)
