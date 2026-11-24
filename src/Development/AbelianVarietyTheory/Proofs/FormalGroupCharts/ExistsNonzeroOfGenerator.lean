@@ -1,6 +1,6 @@
 module
 
-import Mathlib.Algebra.Category.AlgCat.Monoidal
+import Mathlib
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 public import Formalism.LocalToGlobal.ProjectiveLattices.ThProps
 public import Formalism.LocalToGlobal.ProjectiveLattices.ThGerm

@@ -37,10 +37,51 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.VnRed
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.KummerCupProducts.CupLeib
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.KummerCupProducts.EvExt
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.KummerCupProducts.FirstChernClassFamily
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Order.CompletePartialOrder
-import Mathlib.CategoryTheory.Abelian.FreydMitchell
+import Mathlib
+import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.TypeStar
+import Mathlib.Tactic.Linter.Style
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AcrisZeroImageDividedPower, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChernClassCompatibleSystem, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChernClassUniqueOfLiftAndLog, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EdgeCupOfSteps, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EdgeUniqOf, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsKumPow, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KapOneEqTwGen, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LcCover, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LcMorCup, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LiftEx, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LineBC, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocSplit, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MapNsmulTwGen, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MulEvCongr, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PullCZsmul, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RedResMor, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RedRootOfRep, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RepBasic, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RepConcOfInputs, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RepOp, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResGenRes, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResLoc, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResSplit, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResZero, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SecMapRes, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SecResMap, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SecSubsingleton, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SignCancel, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StAdd, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StCol, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StExOfStCol, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StTopOfStCol, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StUniq, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StairCupFirst, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwUgCompAlgebraMap, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UntiltIterateSymmEpsilon, Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.KummerCupProducts.EtaleChernClassEqKummerClass
