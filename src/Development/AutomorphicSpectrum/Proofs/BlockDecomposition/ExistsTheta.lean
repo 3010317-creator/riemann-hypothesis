@@ -70,7 +70,6 @@ import Std.Tactic.BVDecide.Normalize.Prop
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.CompanionTheory.SurjectionOntoH4.ThetaUnique
 open CrystallineSemistableComparison.Onto GlobalTheory.CompanionTheory.SurjectionOntoH4
@@ -228,7 +227,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.CompanionTheory.SurjectionOntoH4.ThetaEmpty
 open CrystallineSemistableComparison.Onto GlobalTheory.CompanionTheory.SurjectionOntoH4
@@ -272,7 +270,6 @@ section -- clump:auto
 
 open CrystallineSemistableComparison.Onto GlobalTheory.CompanionTheory.SurjectionOntoH4
 
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.CompanionTheory.SurjectionOntoH4.ThetaLoc
 
@@ -434,7 +431,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.CompanionTheory.SurjectionOntoH4
 open CrystallineSemistableComparison.Onto
@@ -791,7 +787,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.CompanionTheory.SurjectionOntoH4.ThetaOne
 open CrystallineSemistableComparison.Onto GlobalTheory.CompanionTheory.SurjectionOntoH4
@@ -989,7 +984,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.CompanionTheory.SurjectionOntoH4.FreeOm
 open CrystallineSemistableComparison.Onto GlobalTheory.CompanionTheory.SurjectionOntoH4
@@ -1110,7 +1104,6 @@ section -- clump:auto
 
 open CrystallineSemistableComparison.Onto GlobalTheory.CompanionTheory.SurjectionOntoH4
 
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.CompanionTheory.SurjectionOntoH4.OmlInj
 open scoped TensorProduct
@@ -1197,7 +1190,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 namespace GlobalTheory.CompanionTheory.SurjectionOntoH4
 open CrystallineSemistableComparison.Onto
 
@@ -1262,7 +1254,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.CompanionTheory.SurjectionOntoH4.Exc
 open CrystallineSemistableComparison.Onto GlobalTheory.CompanionTheory.SurjectionOntoH4
@@ -1461,7 +1452,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.CompanionTheory.SurjectionOntoH4.ExFlat
 open CrystallineSemistableComparison.Onto GlobalTheory.CompanionTheory.SurjectionOntoH4 TensorProduct
@@ -1611,7 +1601,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 open CrystallineSemistableComparison.Onto GlobalTheory.CompanionTheory.SurjectionOntoH4
 
@@ -1727,7 +1716,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.CompanionTheory.SurjectionOntoH4.BasisW
 open CrystallineSemistableComparison.Onto GlobalTheory.CompanionTheory.SurjectionOntoH4
@@ -1785,8 +1773,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CrystallineSemistableComparison.Onto GlobalTheory.CompanionTheory.SurjectionOntoH4
@@ -1833,7 +1819,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.CompanionTheory.SurjectionOntoH4
 open CrystallineSemistableComparison.Onto

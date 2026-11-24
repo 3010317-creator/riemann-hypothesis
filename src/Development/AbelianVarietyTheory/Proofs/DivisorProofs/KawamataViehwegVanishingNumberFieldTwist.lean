@@ -58,8 +58,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.RadicalPowers
 open GlobalTheory.HSCore GlobalTheory.QCoh
 open GlobalTheory
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.HSCore.VanishNumberField

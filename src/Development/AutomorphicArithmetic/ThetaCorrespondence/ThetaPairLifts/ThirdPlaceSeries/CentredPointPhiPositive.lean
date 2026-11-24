@@ -494,8 +494,6 @@ open GlobalTheory.FlagMod (FlagCover)
 open GlobalTheory.FlagTan (dimFlag)
 open GlobalTheory.HSApp
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.GenTrait
@@ -579,7 +577,6 @@ open GlobalTheory GlobalTheory.CechPic GlobalTheory.Vanishing GlobalTheory.HermT
 open GlobalTheory.FlagMod (FlagCover)
 open GlobalTheory.FlagTan (dimFlag)
 open GlobalTheory.HSApp
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.UnifTrait
 end GlobalTheory.UnifTrait
@@ -743,8 +740,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.LeastExponentCompare
@@ -895,7 +890,6 @@ open GlobalTheory GlobalTheory.CechPic GlobalTheory.Vanishing GlobalTheory.HermT
 open GlobalTheory.FlagMod (FlagCover)
 open GlobalTheory.FlagTan (dimFlag)
 open GlobalTheory.HSApp
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.PeriodMinPos
 theorem period_minimum_phi_pos : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} (T : Formalism.L2.Pj.CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (φ : ℝ), GlobalTheory.SlopeRec.HasPhi y φ → ∀ (G : SAB H (Sp T.V)) (t' : SAB H (Sp T.Fr)) (_ : letI := io.toAlgebra; SABMap t' Xo.univ.t y.1.x) (_ : SABMap t' G (spMap (algebraMap T.V T.Fr))), (IsLocalRing.closedPoint T.V : Sp T.V) ∉ abLocus G.G → 0 < φ := by
@@ -963,7 +957,6 @@ open GlobalTheory GlobalTheory.CechPic GlobalTheory.Vanishing GlobalTheory.HermT
 open GlobalTheory.FlagMod (FlagCover)
 open GlobalTheory.FlagTan (dimFlag)
 open GlobalTheory.HSApp
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.DegVal
 theorem degree_valuation_phi_pos (hP : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems) {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E}
@@ -1060,7 +1053,6 @@ open GlobalTheory GlobalTheory.CechPic GlobalTheory.Vanishing GlobalTheory.HermT
 open GlobalTheory.FlagMod (FlagCover)
 open GlobalTheory.FlagTan (dimFlag)
 open GlobalTheory.HSApp
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.DegVal
 end GlobalTheory.DegVal
