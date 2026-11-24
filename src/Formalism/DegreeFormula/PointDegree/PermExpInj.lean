@@ -59,12 +59,8 @@ theorem permExp_inj {ι : Type} [Fintype ι] {N : ℕ} (σ ρ : ι → Equiv.Per
   omega
 
 theorem sum_delta (N : ℕ) : ∑ i : Fin N, (N - 1 - (i : ℕ)) = N * (N - 1) / 2 := by
-  rw [← Finset.sum_range_id]
-  rw [← Fin.sum_univ_eq_sum_range]
-  refine Fintype.sum_equiv Fin.revPerm _ _ ?_
-  intro i
-  simp [Fin.val_rev]
-  omega
+  rw [Fin.sum_univ_eq_sum_range (fun j => N - 1 - j) N,
+    Finset.sum_range_reflect (fun j => j) N, Finset.sum_range_id]
 
 end Formalism.DegreeFormula.PermutationPointDegree
 
