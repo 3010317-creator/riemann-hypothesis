@@ -316,11 +316,8 @@ theorem divT_setDiv : ∀ {B : Base} {f : Fr B.toPre} {T : TwDat B} (w : ColW B 
   refine ⟨{
     Qp := d.Qp
     chr := { d.chr with }
-    loc := ?_
     inK := d.inK
     geo := geoTiedP_divTr w Z N h d.geo }⟩
-  obtain ⟨h1, h2⟩ := d.loc
-  exact ⟨h1, { h2 with }⟩
 
 end GlobalTheory.Mem.Top.Bl.WitTr
 
