@@ -2,6 +2,7 @@ module
 
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.NumberTheory.LSeries.DirichletContinuation
+public import Mathlib.NumberTheory.Harmonic.ZetaAsymp
 public import Mathlib.Analysis.Analytic.Order
 public import Mathlib.NumberTheory.LSeries.RiemannZeta
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LogDerivRiemannZetaLocalZeroSum
@@ -201,5 +202,66 @@ theorem neg_re_logDeriv_le : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q] (σ
   rw [hLsplit, hlog]
   simp only [Complex.add_re, Complex.sub_re]
   nlinarith
+
+/-- The logarithmic derivative of a removed Euler factor at one. -/
+lemma logDeriv_factor_one {p : ℕ} (hp : p.Prime) :
+    logDeriv (fun z : ℂ => 1 - (p : ℂ) ^ (-z)) 1 = Complex.log p / (p - 1) := by
+  have hp0 : (p : ℂ) ≠ 0 := by exact_mod_cast hp.ne_zero
+  have hp1 : (p : ℂ) - 1 ≠ 0 := sub_ne_zero.mpr (by exact_mod_cast hp.ne_one)
+  rw [logDeriv_apply, (hasDerivAt_factor hp 1).deriv, cpow_neg_one]
+  field_simp
+
+private lemma LFunctionTrivChar₁_eq_eulerProduct (q : ℕ) [NeZero q] :
+    LFunctionTrivChar₁ q = fun s =>
+      (∏ p ∈ q.primeFactors, (1 - (p : ℂ) ^ (-s))) * riemannZeta₁ s := by
+  funext s
+  by_cases hs : s = 1
+  · simp [hs, LFunctionTrivChar₁, cpow_neg_one]
+  · rw [LFunctionTrivChar₁, Function.update_of_ne hs,
+      LFunctionTrivChar_eq_mul_riemannZeta hs, riemannZeta_eq_inv_sub_mul hs]
+    field_simp
+
+/-- The regularized principal logarithmic derivative at one is Euler's constant
+plus the logarithmic derivatives of the finitely many removed Euler factors. -/
+theorem logDeriv_LFunctionTrivChar₁_one (q : ℕ) [NeZero q] :
+    logDeriv (LFunctionTrivChar₁ q) 1 = (Real.eulerMascheroniConstant : ℂ) +
+      ∑ p ∈ q.primeFactors, Complex.log p / (p - 1) := by
+  let E : ℂ → ℂ := fun s => ∏ p ∈ q.primeFactors, (1 - (p : ℂ) ^ (-s))
+  have hd : ∀ p ∈ q.primeFactors, DifferentiableAt ℂ (fun z : ℂ => 1 - (p : ℂ) ^ (-z)) 1 :=
+    fun p hp => (hasDerivAt_factor (Nat.prime_of_mem_primeFactors hp) 1).differentiableAt
+  have hn : ∀ p ∈ q.primeFactors, (1 - (p : ℂ) ^ (-(1 : ℂ))) ≠ 0 :=
+    fun p hp => one_sub_ne_zero (Nat.prime_of_mem_primeFactors hp) (by simp)
+  rw [LFunctionTrivChar₁_eq_eulerProduct]
+  rw [logDeriv_fun_mul (f := E) (g := riemannZeta₁) 1
+    (Finset.prod_ne_zero_iff.mpr hn) (by simp)
+    (DifferentiableAt.fun_finsetProd hd) differentiable_riemannZeta₁.differentiableAt]
+  change logDeriv (fun s : ℂ => ∏ p ∈ q.primeFactors, (1 - (p : ℂ) ^ (-s))) 1 + _ = _
+  rw [logDeriv_fun_prod (f := fun (p : ℕ) (z : ℂ) => 1 - (p : ℂ) ^ (-z)) hn hd]
+  simp only [logDeriv_apply riemannZeta₁, deriv_riemannZeta₁_one, riemannZeta₁_one, div_one]
+  rw [add_comm]
+  congr 1
+  exact Finset.sum_congr rfl fun p hp => logDeriv_factor_one (Nat.prime_of_mem_primeFactors hp)
+
+/-- The constant term of the principal logarithmic derivative at its pole. -/
+theorem logDeriv_LFunction_one_near_one (q : ℕ) [NeZero q] :
+    ∃ g : ℂ → ℂ, AnalyticAt ℂ g 1 ∧
+      g 1 = (Real.eulerMascheroniConstant : ℂ) +
+        ∑ p ∈ q.primeFactors, Complex.log p / (p - 1) ∧
+      ∀ᶠ s in nhdsWithin (1 : ℂ) {1}ᶜ,
+        deriv (LFunction (1 : DirichletCharacter ℂ q)) s /
+          LFunction (1 : DirichletCharacter ℂ q) s = -1 / (s - 1) + g s := by
+  have ha := (differentiable_LFunctionTrivChar₁ q).analyticAt 1
+  have hn := LFunctionTrivChar₁_apply_one_ne_zero q
+  refine ⟨logDeriv (LFunctionTrivChar₁ q), ha.deriv.div ha hn,
+    logDeriv_LFunctionTrivChar₁_one q, ?_⟩
+  filter_upwards [nhdsWithin_le_nhds (ha.continuousAt.eventually_ne hn),
+    self_mem_nhdsWithin] with s hs hs1
+  have hL : LFunction (1 : DirichletCharacter ℂ q) s ≠ 0 := by
+    rw [LFunctionTrivChar₁, Function.update_of_ne hs1] at hs
+    exact (mul_ne_zero_iff.mp hs).2
+  rw [logDeriv_apply, deriv_LFunctionTrivChar₁_apply_of_ne_one q hs1,
+    LFunctionTrivChar₁, Function.update_of_ne hs1]
+  field_simp [sub_ne_zero.mpr hs1]
+  <;> ring
 
 end GlobalTheory.PrincipalLogDeriv
