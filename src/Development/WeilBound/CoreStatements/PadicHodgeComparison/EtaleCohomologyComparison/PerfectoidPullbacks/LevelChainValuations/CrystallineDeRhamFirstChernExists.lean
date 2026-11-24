@@ -1393,8 +1393,8 @@ theorem rho_lin'_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m
 theorem rho_fil_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m x f, rhoK S hS hC a j m x f → ∀ n r : ℕ, n ≤ m →
     (dat Amp).fil a j n x → ∀ φ : Module.Dual K (HdR M.q j), (∀ h ∈ FilR M.q j (r + 1), φ h = 0) →
       f φ ∈ pdP (S.L m).γB (n - r) := by
-  intro M a hM j m x f hρ₁ n r hnm hfil φ hφ
-  obtain ⟨_, s₀, h⟩ := hρ₁
+  intro M a hM j m x f hf n r hnm hfil φ hφ
+  obtain ⟨s₀, h⟩ := rhoK_witness S hS hC hf
   obtain ⟨U⟩ := cov_sm_pf M hM
   have hU : ∀ α, U.d α + (m + 1) ≤ max s₀ (Finset.univ.sup U.d + (m + 1)) := fun α => by
     have := Finset.le_sup (f := U.d) (Finset.mem_univ α)
