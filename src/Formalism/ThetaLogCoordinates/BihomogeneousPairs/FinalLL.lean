@@ -1,8 +1,13 @@
 module
 
-public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
-public import Mathlib.Basic.Real.Basic
-public import Mathlib.Data.Fintype.Basic
+public import Formalism.ThetaLogCoordinates.BihomogeneousPairs.LetterChainEmbeddings.PairStep
+public import Formalism.ThetaLogCoordinates.BihomogeneousPairs.LetterChainEmbeddings.LatticeEqualHolds
+public import Formalism.ThetaLogCoordinates.BihomogeneousPairs.LetterChainEmbeddings.LatticeLinearHolds
+import Formalism.ThetaLogCoordinates.BihomogeneousPairs.LetterChainEmbeddings.LevelLatticeOf
+import Formalism.ThetaLogCoordinates.BihomogeneousPairs.LetterChainEmbeddings.PlusOp
+public import Formalism.ThetaLogCoordinates.BihomogeneousPairs.LetterChainEmbeddings.PstScalMem
+import Formalism.ThetaLogCoordinates.BihomogeneousPairs.LetterChainEmbeddings.StepPlus
+import Formalism.ThetaLogCoordinates.BihomogeneousPairs.LetterChainEmbeddings.StepTie
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,25 +47,15 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.CasimirCoefficients.IsClosedEmbeddingToM
 
 @[expose] public section
 
-noncomputable section
+namespace Formalism.InvariantFactorPaths.KP.Top
 
-open Finset Matrix MeasureTheory
-open scoped InnerProductSpace
+open Formalism.InvariantFactorPaths.KP.LL
 
-namespace ReciprocityTheory.ChartRestriction.DS.G2
+theorem stepTie : JoinCondition := StepTie_of _root_.Formalism.InvariantFactorPaths.KP.LL.pair_induction_holds _root_.Formalism.InvariantFactorPaths.KP.LL.lattice_equal_holds _root_.Formalism.InvariantFactorPaths.KP.LL.lattice_linear_holds _root_.Formalism.InvariantFactorPaths.KP.LL.comm_lattice_holds _root_.Formalism.InvariantFactorPaths.KP.LL.param_lattice_holds
+theorem stepPlus : PlusCondition := StepPlus_of _root_.Formalism.InvariantFactorPaths.KP.LL.pair_induction_holds _root_.Formalism.InvariantFactorPaths.KP.LL.lattice_plus_holds _root_.Formalism.InvariantFactorPaths.KP.LL.lattice_linear_holds _root_.Formalism.InvariantFactorPaths.KP.LL.comm_lattice_holds _root_.Formalism.InvariantFactorPaths.KP.LL.param_lattice_holds
+theorem levelLattice : Formalism.GM.M.LevelLattice := LevelLattice_of _root_.Formalism.InvariantFactorPaths.KP.LL.middle_top_holds _root_.Formalism.InvariantFactorPaths.KP.LL.middle_p_eq_holds stepTie stepPlus
 
-open ReciprocityTheory.ChartRestriction.DS.S7
-
-variable {n : ℕ}
-
-def Dvec (n : ℕ) : Fin n → ℝ := fun a => ((n : ℝ) - 1) - ((a : ℕ) : ℝ)
-
-def lamT (lam : Fin n → ℝ) (t : ℕ) : Fin n → ℝ := lam + (t : ℝ) • Dvec n
-
-def Vand (lam : Fin n → ℝ) : ℝ := ∏ a : Fin n, ∏ b ∈ univ.filter (fun b : Fin n => a < b), (lam a - lam b)
-
-end ReciprocityTheory.ChartRestriction.DS.G2
+end Formalism.InvariantFactorPaths.KP.Top
