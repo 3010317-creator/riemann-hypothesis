@@ -897,7 +897,7 @@ theorem fdc_cd {ε : Fin n → Bool} (hp : 1 ≤ pOf ε) (hq : 1 ≤ qOf ε) {la
   choose m hm hP using fun t => fdc_model hp hq (hct t) (hgt t) hh (T t)
   have hsg : ∀ t, StdGap ε (lamT lam t) := fun t => fdc_stdGap (hct t) (hgt t) hh
   have hDS : ∀ t, Formalism.MainNotions.S.IsDS ε (lamT lam t) (sigLam ε (PsiM (T t) (m t)) (T t).w) :=
-    fun t => isDS_sigLam (hsg t) (hP t) (fdc_w_ne (T t))
+    fun t => isDS_sigLam (hsg t) (hP t) (_root_.ReciprocityTheory.ChartRestriction.DS.HW.KType.w_ne_zero (T t))
   choose j hj1 hj2 hj3 hj4 using fun t => anyF (hDS t) (hsg t) (hP t)
   refine thmFD Lap.Base.b3 hp hq hlam hgap hh (fdcD ε) (fdc_step hp hq hh)
     (fun t => ↥(Hlam ε (PsiM (T t) (m t)) (T t).w)) (fun t => sigLam ε (PsiM (T t) (m t)) (T t).w) T j ?_ ?_ ?_
