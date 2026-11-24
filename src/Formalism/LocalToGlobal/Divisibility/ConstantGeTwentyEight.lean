@@ -97,8 +97,8 @@ def boundBR (P : IndefCoreR Df0 Df1 Dc Sp N) (LG E3 : ℝ) (E2 : Bs.J → ℝ) :
   (∑ j, N.l3 j) + 2 * FoOfR P + LG + (∑ j, (N.E1 j + E2 j)) + E3
 
 /-- Arithmetic input data for the local divisibility estimates. In particular, `nP` and
-`nKcb` bound the operator norms along the column chain; the local valuation, error and
-passage bounds provide independent inputs to the slope estimate. -/
+`nKcb` bound the operator norms along the column chain; the finite-place base-slope estimates and numerical
+error and passage budgets provide independent inputs to the slope estimate. -/
 structure DivInputs0R {Pl : Type} [Fintype Pl] [DecidableEq Pl] (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl)
     (u : Dc.Mem) (Nu : Submodule (𝓞 K) (Fin (Dc.a u) → K)) (sg : HeightOneSpectrum (𝓞 K) → ℝ) where
 
@@ -197,7 +197,7 @@ abbrev DivNormR {Pl : Type} [Fintype Pl] [DecidableEq Pl] (P : IndefCoreR Df0 Df
         (Formalism.HN.dualFrame P.cols.XE) v (P.cols.col.B u) ^ 2 ≤ cu v) ∧
     (1 / (Formalism.HN.nPl K : ℝ)) * ∑ v, Real.log (cu v) = R.hu - meanLog P.cols.κ)
 
-/-- The slope estimate after subtracting the common height and finite-place terms. -/
+/-- The normalized column slope plus the height budget, minus twice the finite-place sum. -/
 abbrev DivSlopeR {Pl : Type} [Fintype Pl] [DecidableEq Pl] (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl) : Prop :=
   P.cols.muCC - meanLog P.cols.κ + R.hu - 2 * FoOfR P ≤ R.rhs
 
@@ -339,33 +339,33 @@ theorem divNormR_of [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintype
   · exact divNormR_of_zero wf0 P R u hne
   · exact divNormR_of_nonzero wf0 wf1 P R u hne I.X0 I.base_matrix_det_unit I.ch I.hn I.nP I.cb I.nKcb I.eig6
 
-/-- The slope estimate uses the base slope, the passage bound and the numerical
-divisor inequality, without the additional local valuation estimate. -/
-theorem divSlopeR_of [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintype Pl] [DecidableEq Pl] (wf0 : Df0.WF)
-    (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl) (u : Dc.Mem) (Nu : Submodule (𝓞 K) (Fin (Dc.a u) → K))
-    (sg : HeightOneSpectrum (𝓞 K) → ℝ) (I : DivInputs0R P R u Nu sg) : DivSlopeR P R := by
+/-- Once the normalized base slope is bounded, only the numerical error and
+passage budgets are needed for the final slope inequality. -/
+theorem divSlopeR_of_base_bound [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintype Pl] [DecidableEq Pl]
+    (wf0 : Df0.WF) (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl)
+    (LG E3 El3 Q : ℝ) (E2 : Bs.J → ℝ)
+    (hbase : P.base.muCC - meanLog P.base.κ ≤ boundBR P LG E3 E2)
+    (hL3 : ∑ j, N.l3 j ≤ (∑ j, ∑ ρ, R.pq j * R.w j ρ * R.logOm) + El3)
+    (herr : El3 + LG + (∑ j, (N.E1 j + E2 j)) + E3 ≤ R.errB)
+    (hde0 : 0 ≤ N.de) (hdeQ : 3 * N.de * Q ≤ 1) (hQ1 : 1 ≤ Q)
+    (hQb : boundBR P LG E3 E2 + N.hh + 28 * N.la ≤ Q)
+    (hla : N.la ≤ R.lam0) (h28 : 28 ≤ R.C0) : DivSlopeR P R := by
   have : Nonempty Bs.Ix := nonempty_Ix wf0 P.base.pos
-  have hB := P.base.boundsMu _root_.Formalism.DivisorInequality.slope_bounds specDet reduction_lemma_zero latticeGlue ramBasic wf0 P.extra.untw I.eb I.heb
-    I.Sy I.Sy_tw I.G0 I.LG I.E3 I.E2 I.gy I.ηy I.bi I.bLG I.biv I.borderedMinorImage I.twisted_third_sum_le
-  have de0 : 0 ≤ N.de := I.de0
-  have deQ : 3 * N.de * I.Q ≤ 1 := I.deQ
-  have de3 : N.de ≤ 1 / 3 := by nlinarith [I.Q1]
+  have de0 : 0 ≤ N.de := hde0
+  have deQ : 3 * N.de * Q ≤ 1 := hdeQ
+  have de3 : N.de ≤ 1 / 3 := by nlinarith [hQ1]
   have hp := (P.extra.passage de0 de3 _ P.extra.fun0).2
   have hκ : P.cols.κ = P.base.κ := P.extra.level.2.1.symm
   set mu0 : ℝ := P.base.muCC - meanLog P.base.κ with hmu0def
-  have hmu0 : mu0 ≤ boundBR P I.LG I.E3 I.E2 := by
-    have : P.base.muCC ≤ meanLog P.base.κ + (∑ j, N.l3 j) +
-        2 * (∑ j, ∑ y ∈ P.base.Tw, lw y * ((ramw y : ℝ) * N.F0 y j)) + I.LG +
-        (∑ j, (N.E1 j + I.E2 j)) + I.E3 := hB
-    simp only [boundBR, FoOfR, hmu0def]
-    linarith
+  have hmu0 : mu0 ≤ boundBR P LG E3 E2 := by
+    simpa only [hmu0def] using hbase
   have hpass : 3 * N.de * (mu0 + N.hh + 28 * N.la) + 28 * N.la ≤ 1 + R.C0 * (R.m * R.lam0) := by
-    have h1 : 3 * N.de * (mu0 + N.hh + 28 * N.la) ≤ 3 * N.de * I.Q :=
-      mul_le_mul_of_nonneg_left (by linarith [I.Qb]) (by linarith)
+    have h1 : 3 * N.de * (mu0 + N.hh + 28 * N.la) ≤ 3 * N.de * Q :=
+      mul_le_mul_of_nonneg_left (by linarith [hQb]) (by linarith)
     have h2 : 28 * R.lam0 ≤ R.C0 * (R.m * R.lam0) := by
       have h3 : R.lam0 ≤ R.m * R.lam0 := by nlinarith [R.p14, R.p35]
-      nlinarith [I.constant_ge_twenty_eight, R.p35, R.c1]
-    linarith [I.la_le]
+      nlinarith [h28, R.p35, R.c1]
+    linarith [hla]
   have hC : P.cols.muCC - meanLog P.cols.κ ≤ mu0 + (3 * N.de * (mu0 + N.hh + 28 * N.la) + 28 * N.la) := by
     rw [hκ, hmu0def]
     have : P.cols.muCC ≤ P.base.muCC + 3 * N.de * (P.base.muCC + (N.hh - meanLog P.base.κ) + 28 * N.la) +
@@ -375,11 +375,28 @@ theorem divSlopeR_of [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintyp
     rw [e] at this
     linarith
   have hM : mu0 ≤ (∑ j, ∑ ρ, R.pq j * R.w j ρ * R.logOm) + 2 * FoOfR P +
-      (I.El3 + I.LG + (∑ j, (N.E1 j + I.E2 j)) + I.E3) := by
-    have h1 := I.L3main
-    have h2 : boundBR P I.LG I.E3 I.E2 = (∑ j, N.l3 j) + 2 * FoOfR P + I.LG + (∑ j, (N.E1 j + I.E2 j)) + I.E3 := rfl
+      (El3 + LG + (∑ j, (N.E1 j + E2 j)) + E3) := by
+    have h1 := hL3
+    have h2 : boundBR P LG E3 E2 = (∑ j, N.l3 j) + 2 * FoOfR P + LG + (∑ j, (N.E1 j + E2 j)) + E3 := rfl
     linarith
-  exact R.divIneq _ mu0 (FoOfR P) _ _ hC hM hpass I.errB
+  exact R.divIneq _ mu0 (FoOfR P) _ _ hC hM hpass herr
+
+/-- Bound the normalized base slope using the local bases, valuation estimates
+and error sums, then apply the numerical passage estimate. -/
+theorem divSlopeR_of [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintype Pl] [DecidableEq Pl] (wf0 : Df0.WF)
+    (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl) (u : Dc.Mem) (Nu : Submodule (𝓞 K) (Fin (Dc.a u) → K))
+    (sg : HeightOneSpectrum (𝓞 K) → ℝ) (I : DivInputs0R P R u Nu sg) : DivSlopeR P R := by
+  have : Nonempty Bs.Ix := nonempty_Ix wf0 P.base.pos
+  have hB := P.base.boundsMu _root_.Formalism.DivisorInequality.slope_bounds specDet reduction_lemma_zero latticeGlue ramBasic wf0 P.extra.untw I.eb I.heb
+    I.Sy I.Sy_tw I.G0 I.LG I.E3 I.E2 I.gy I.ηy I.bi I.bLG I.biv I.borderedMinorImage I.twisted_third_sum_le
+  have hbase : P.base.muCC - meanLog P.base.κ ≤ boundBR P I.LG I.E3 I.E2 := by
+    have : P.base.muCC ≤ meanLog P.base.κ + (∑ j, N.l3 j) +
+        2 * (∑ j, ∑ y ∈ P.base.Tw, lw y * ((ramw y : ℝ) * N.F0 y j)) + I.LG +
+        (∑ j, (N.E1 j + I.E2 j)) + I.E3 := hB
+    simp only [boundBR, FoOfR]
+    linarith
+  exact divSlopeR_of_base_bound wf0 P R I.LG I.E3 I.El3 I.Q I.E2 hbase I.L3main I.errB
+    I.de0 I.deQ I.Q1 I.Qb I.la_le I.constant_ge_twenty_eight
 
 /-- Assemble the three arithmetic clauses consumed by the per-word bridge.
 Only the integrality clause needs the additional valuation estimate in `DivInputsR`. -/
