@@ -1,6 +1,8 @@
 module
 
-public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.DivisorReduction.FieldBaseChangeCompatibility
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.DivisorReduction.SmoothBaseChangeOnDivisor
+public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionDescent.IsoBlowupRemovalBaseChange
+public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionDescent.PullbackBlowupSequenceIsomorphism
 public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.DivisorReduction.BoundaryComponentsInOrderLocus
 import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.SupportsAlongSequence
 import Development.ResolutionOfSingularities.Foundations.Schemes.IdealSheafData
@@ -54,47 +56,6 @@ namespace FunctorialResolution.EmbeddedResolution
 
 namespace DivisorReduction
 
-private theorem sameNontrivialBoundary_take_eraseIdx_comap {X Y : Scheme.{u}} (p : Y ⟶ X)
-    (B : List X.IdealSheafData) (E' : List Y.IdealSheafData) (j : ℕ)
-    (hBE : MarkedIdealWithBoundary.SameNontrivialBoundary (List.map (fun D => D.comap p) B) E')
-    (htake : List.take (j + 1) E' = List.take (j + 1) (List.map (fun D => D.comap p) B))
-    (hj : j < B.length) (hjE : j < E'.length) :
-    MarkedIdealWithBoundary.SameNontrivialBoundary (List.take (E'.length - 1) (E'.eraseIdx j))
-      (List.map (fun D => D.comap p) (List.take (B.length - 1) (B.eraseIdx j))) := by
-  have hE : List.take (E'.length - 1) (E'.eraseIdx j) = E'.eraseIdx j :=
-    List.take_of_length_le (le_of_eq (List.length_eraseIdx_of_lt hjE))
-  have hB : List.take (B.length - 1) (B.eraseIdx j) = B.eraseIdx j :=
-    List.take_of_length_le (le_of_eq (List.length_eraseIdx_of_lt hj))
-  rw [hE, hB, ← List.eraseIdx_map]
-  exact hBE.symm.eraseIdx j htake
-
-private theorem isClosed_setOf_connectedComponent_subset {X : Type u} [TopologicalSpace X]
-    (hop : ∀ x : X, IsOpen (connectedComponent x)) (P : Set X) :
-    IsClosed {x : X | connectedComponent x ⊆ P} := by
-  rw [← isOpen_compl_iff, isOpen_iff_forall_mem_open]
-  intro x hx
-  refine ⟨connectedComponent x, ?_, hop x, mem_connectedComponent⟩
-  intro y hy
-  simp only [Set.mem_compl_iff, Set.mem_ofPred_eq] at hx ⊢
-  intro hsub
-  apply hx
-  rw [connectedComponent_eq hy]
-  exact hsub
-
-theorem lowerBoundaryWithoutBlowup_baseChange_sameNontrivialBoundary (T : MarkedIdealWithBoundary.{u}) (j : ℕ)
-    (hj : j < T.boundary.length) (K : Type u) [Field K] [CharZero K] (f : T.base →+* K)
-    (E' : List (T.baseChange K f).scheme.IdealSheafData)
-    (hBE : MarkedIdealWithBoundary.SameNontrivialBoundary (T.baseChange K f).boundary E')
-    (htake : List.take (j + 1) E' = List.take (j + 1) (T.baseChange K f).boundary)
-    (hjE : j < E'.length) :
-    MarkedIdealWithBoundary.SameNontrivialBoundary
-      (List.take (E'.length - 1)
-        ((lowerBoundaryWithoutBlowup ((T.baseChange K f).withBoundary E')).eraseIdx j))
-      (List.map (fun D => D.comap (fieldBaseChangeProjection T K f))
-        (List.take (T.boundary.length - 1) ((lowerBoundaryWithoutBlowup T).eraseIdx j))) := by
-  rw [lowerBoundaryWithoutBlowup_eq ((T.baseChange K f).withBoundary E'), lowerBoundaryWithoutBlowup_eq T]
-  exact sameNontrivialBoundary_take_eraseIdx_comap (fieldBaseChangeProjection T K f) T.boundary E' j hBE htake hj hjE
-
 theorem preimageSupportEqComponentsInOrderLocus_of_isAdmissible (T : MarkedIdealWithBoundary.{u}) (hV : T.IsAdmissible) (j : ℕ)
     (hj : j < T.boundary.length) : PreimageSupportEqComponentsInOrderLocus T j hj := by
   intro h
@@ -109,8 +70,7 @@ theorem preimageSupportEqComponentsInOrderLocus_of_isAdmissible (T : MarkedIdeal
     intro V _ _
     exact TopologicalSpace.NoetherianSpace.isCompact _
   have hclosed : IsClosed (boundaryComponentsInOrderLocus T j hj) :=
-    isClosed_setOf_connectedComponent_subset
-      (fun x => Blowup.isOpen_connectedComponent_of_noetherianSpace _ x) _
+    TopologicalSpace.NoetherianSpace.isClosed_setOf_connectedComponent_subset _ _
   have hinj : Function.Injective ⇑(T.boundary.get ⟨j, hj⟩).subschemeι :=
     (Scheme.Hom.isClosedEmbedding (T.boundary.get ⟨j, hj⟩).subschemeι).injective
   have himg : IsClosed (⇑(T.boundary.get ⟨j, hj⟩).subschemeι '' boundaryComponentsInOrderLocus T j hj) :=
