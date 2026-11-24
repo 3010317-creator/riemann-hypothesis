@@ -133,6 +133,13 @@ def IsIrrSmoothOf [TopologicalSpace F] [TopologicalSpace W] (ψ : AddChar F ℂ)
 
 end Heisenberg
 
+/-- **Stone--von Neumann Uniqueness Theorem for Heisenberg Groups**.
+
+Let $F$ be a local field with non-trivial additive character $\psi$, and let $(W, B)$ be a non-degenerate
+symplectic space over $F$. Up to isomorphism, there exists a unique irreducible smooth representation
+of the Heisenberg group $\operatorname{Heis}(W, B)$ with central character $\psi$.
+
+Reference: [vonNeumann1931]. -/
 def StoneVonNeumann : Prop :=
   ∀ (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F], (2 : F) ≠ 0 →
   ∀ (W : Type) [AddCommGroup W] [Module F W] [FiniteDimensional F W] [TopologicalSpace W] [IsModuleTopology F W]
