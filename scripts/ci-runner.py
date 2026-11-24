@@ -37,6 +37,8 @@ DEFAULT_DIRECTORY = Path.home() / ".local/share/riemann-build-runner"
 MINIMUM_MAX_MAP_COUNT = 1048576
 # A limit raised with `sysctl -w` alone is lost at reboot; this drop-in keeps it (issue #73).
 MAX_MAP_COUNT_CONF = "/etc/sysctl.d/60-rh-ci-max-map-count.conf"
+# Jobs keep the caches and build work here unless RH_CI_STATE_DIR is set (build-pr.yml, ci-build.py).
+DEFAULT_STATE_DIRECTORY = "~/.local/share/riemann-build-state"
 # Exit status of doctor's offline probe when a connection attempt was not refused as unreachable.
 PROBE_NOT_OFFLINE = 2
 IDENTITY_FILES = (".runner", ".credentials", ".credentials_rsaparams")
@@ -132,16 +134,20 @@ def failed_checks(report, minimum_disk_gib, minimum_max_map_count):
     # A missing bwrap is already named above; report the probe only when it actually ran.
     if report["commands"].get("bwrap") and not report["offline_bwrap"]:
         if report.get("bwrap_exit") == PROBE_NOT_OFFLINE:
-            # bwrap ran and the sandbox still had a route out: the failure that matters most.
-            failed.append("offline_bwrap probe failed: the bwrap sandbox was not offline "
+            # bwrap ran, and the probe's connection succeeded or failed with some other error. The
+            # sandbox may have a route out; a local firewall's EPERM or EACCES also ends up here.
+            failed.append("offline_bwrap probe failed: the bwrap sandbox may not be offline "
                           "(a connection attempt inside it was not refused as unreachable)")
         else:
             failed.append("offline_bwrap probe failed: see bwrap_error")
     if report["free_disk_gib"] < minimum_disk_gib:
-        # Only one filesystem is measured; a small /home beside a large data disk is not the whole host.
+        # doctor measures one filesystem, but jobs write to the build state directory, wherever that is.
+        # A volunteer with a small /home and a large /data has to move that directory, not just rerun doctor.
         measured = report.get("free_disk_path")
-        where = f" on the filesystem holding {measured} (--work-directory)" if measured else ""
-        failed.append(f"free_disk_gib is {report['free_disk_gib']}{where}, need at least {minimum_disk_gib}")
+        where = f" on the filesystem holding {measured}" if measured else ""
+        failed.append(f"free_disk_gib is {report['free_disk_gib']}{where}, need at least {minimum_disk_gib} "
+                      f"for the build state directory (to move it from {DEFAULT_STATE_DIRECTORY}, set "
+                      "RH_CI_STATE_DIR in the runner's environment and pass the same directory as --work-directory)")
     count = report["max_map_count"]
     if (count or 0) < minimum_max_map_count:
         failed.append(f"max_map_count is {'unreadable' if count is None else count}, need at least "

@@ -221,16 +221,18 @@ class RunnerChecks(unittest.TestCase):
                          [f"max_map_count is 65530, need at least {minimum} (sysctl vm.max_map_count, set on the host)"])
         self.assertEqual(check(max_map_count=None),
                          [f"max_map_count is unreadable, need at least {minimum} (sysctl vm.max_map_count, set on the host)"])
-        self.assertEqual(check(free_disk_gib=120.5), ["free_disk_gib is 120.5, need at least 250"])
+        # The disk reason names what needs the space and how to move it, not just which option doctor read.
+        state = ("for the build state directory (to move it from ~/.local/share/riemann-build-state, set "
+                 "RH_CI_STATE_DIR in the runner's environment and pass the same directory as --work-directory)")
+        self.assertEqual(check(free_disk_gib=120.5), [f"free_disk_gib is 120.5, need at least 250 {state}"])
         self.assertEqual(check(uid=0), ["uid is 0: use a dedicated unprivileged account"])
         self.assertEqual(check(offline_bwrap=False), ["offline_bwrap probe failed: see bwrap_error"])
-        # The probe's own exit status means bwrap ran and the sandbox still had a route out.
+        # The probe's own exit status: bwrap ran, and the connection was not refused as unreachable.
         self.assertEqual(check(offline_bwrap=False, bwrap_exit=runner.PROBE_NOT_OFFLINE),
-                         ["offline_bwrap probe failed: the bwrap sandbox was not offline "
+                         ["offline_bwrap probe failed: the bwrap sandbox may not be offline "
                           "(a connection attempt inside it was not refused as unreachable)"])
         self.assertEqual(check(free_disk_gib=120.5, free_disk_path="/home/rh-ci"),
-                         ["free_disk_gib is 120.5 on the filesystem holding /home/rh-ci (--work-directory), "
-                          "need at least 250"])
+                         [f"free_disk_gib is 120.5 on the filesystem holding /home/rh-ci, need at least 250 {state}"])
         # A missing bwrap also leaves offline_bwrap false; it is named once, as the missing command.
         self.assertEqual(check(commands=commands | {"bwrap": None, "elan": None}, offline_bwrap=False),
                          ["command not found: bwrap", "command not found: elan"])
@@ -270,9 +272,10 @@ class RunnerChecks(unittest.TestCase):
         self.assertEqual((report["failed"], report["ready"], error), ([], True, None))
         self.assertNotIn("bwrap_error", report)
 
-        # The probe prints nothing when the sandbox is not offline, so the report must not point at "".
+        # The probe prints nothing when its connection is not refused as unreachable, so the report must
+        # not point at "".
         report, error, _ = doctor(probe=(runner.PROBE_NOT_OFFLINE, ""))
-        self.assertEqual(report["failed"], ["offline_bwrap probe failed: the bwrap sandbox was not offline "
+        self.assertEqual(report["failed"], ["offline_bwrap probe failed: the bwrap sandbox may not be offline "
                                             "(a connection attempt inside it was not refused as unreachable)"])
         self.assertEqual(report["bwrap_error"], f"exit status {runner.PROBE_NOT_OFFLINE} with no error output")
         self.assertFalse(report["ready"])
@@ -285,7 +288,9 @@ class RunnerChecks(unittest.TestCase):
         report, error, measured = doctor(free_gib=120.5, map_count=65530)
         self.assertEqual(report["free_disk_path"], measured)
         self.assertEqual(report["failed"], [
-            f"free_disk_gib is 120.5 on the filesystem holding {measured} (--work-directory), need at least 250",
+            f"free_disk_gib is 120.5 on the filesystem holding {measured}, need at least 250 for the build state "
+            "directory (to move it from ~/.local/share/riemann-build-state, set RH_CI_STATE_DIR in the runner's "
+            "environment and pass the same directory as --work-directory)",
             f"max_map_count is 65530, need at least {runner.MINIMUM_MAX_MAP_COUNT} "
             "(sysctl vm.max_map_count, set on the host)"])
         self.assertEqual(report["ready"], not report["failed"])
