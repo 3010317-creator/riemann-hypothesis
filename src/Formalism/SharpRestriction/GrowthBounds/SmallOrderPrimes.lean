@@ -99,28 +99,6 @@ def adm1 (D : D7) (L : SizeData₂ D) (X : Inst D L) (Ce : ℝ) : Prop :=
 
 
 open Classical in
-def primesResidueBelow (D : D7) (y : ℝ) : Finset ℕ :=
-  (Finset.range ⌈y⌉₊).filter (fun p => p.Prime ∧ (p : ℝ) < y ∧ IsResidueClassZero D p)
-
-
-open Classical in
-def BTT (D : D7) (L : SizeData₂ D) (X : Inst D L) : ℝ :=
-  ∑ p ∈ (primesResidueBelow D L.sc.X').filter (fun p => L.sc.x ^ (L.sc.eps / 4) ≤ (addOrderOf (hP D p) : ℝ)),
-    Real.log p / p * ((D.host.TT.filter (fun t => ¬ Good X p (X.bs (stepP D p) t))).card : ℝ)
-
-def adm2 (D : D7) (L : SizeData₂ D) (X : Inst D L) : Prop :=
-  ((D.R.n : ℝ) * L.sc.delta1 / 2 ≤ (D.host.TT.card : ℝ) ∧ (D.host.TT.card : ℝ) ≤ 2 * (D.R.n : ℝ) * L.sc.delta1) ∧
-  BTT D L X ≤ (D.host.TT.card : ℝ) * L.sc.x ^ (-2 + L.sc.eps)
-
-
-open Classical in
-def adm3 (D : D7) (L : SizeData₂ D) : Prop :=
-  ∑ p ∈ (primesResidueBelow D (L.sc.X'' D.R.n)).filter
-      (fun p => (addOrderOf (hP D p) : ℝ) < L.sc.x ^ (L.sc.eps / 4)), Real.log p / p ≤
-    L.sc.x ^ (-hG L.sc + L.sc.eps)
-
-
-open Classical in
 def ArchimedeanSignatureMatching (D : D7) (L : SizeData₂ D) (K : Consts) : Prop :=
   rho D K L.sc ≤ L.sc.x ^ (-2 : ℝ) ∧
   ∑ p ∈ (Finset.range ⌈L.sc.X'⌉₊).filter (fun p => p.Prime ∧ InBand0 D K L.sc p), Real.log p / p ≤
@@ -253,7 +231,7 @@ structure AConsts where
   δ : ℝ
 
 def admitted (D : D7) (L : SizeData₂ D) (X : Inst D L) (Y : LatInst D) (K : Consts) (A : AConsts) : Prop :=
-  adm1 D L X A.C31 ∧ adm2 D L X ∧ adm3 D L ∧ ArchimedeanSignatureMatching D L K ∧ adm5 D L K A.δ ∧ adm6 D L K ∧
+  adm1 D L X A.C31 ∧ ArchimedeanSignatureMatching D L K ∧ adm5 D L K A.δ ∧ adm6 D L K ∧
   adm7 D L X K ∧ adm8 D L X K A.Cm ∧ adm9 D L X A.Ce ∧ unitBoundAtTwistedPlaces D L X Y K ∧ admG1 D L X Y K ∧
   TypePrimeSizeConds D L K
 

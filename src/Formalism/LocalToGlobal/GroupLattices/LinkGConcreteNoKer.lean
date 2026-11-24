@@ -1457,7 +1457,7 @@ theorem vKge_zero (Y : LatInst D) (hm : 1 ≤ D.R.m) (u : D.what₂.Word) (w : D
   exact Submodule.zero_mem _
 
 theorem admissible_family_no_kernel {eps : ℝ} (Fm : FamP eps)
-    (h1 : Adm1F Fm) (h2 : Adm2F Fm) (h3 : Adm3F Fm) (h4 : Adm4F Fm) (h5 : Adm5F Fm) (h6 : Adm6F Fm) (h7 : Adm7F Fm)
+    (h1 : Adm1F Fm) (h4 : Adm4F Fm) (h5 : Adm5F Fm) (h6 : Adm6F Fm) (h7 : Adm7F Fm)
     (h8 : Adm8F Fm) (h9 : Adm9F Fm)
     (hE : Ev Fm fun x i => TrivialStabiliserFiniteClasses (Fm.D x i)) (hY : Ev Fm fun x i => OperatorsPreserveLattices (Fm.D x i))
     (hLP : Ev Fm fun x i => CornerGLContinuity.OrbitLatticeBounds (Fm.D x i) (Fm.L x i) (Fm.Gx x i) (Fm.Gy x i) Fm.GK)
@@ -1484,22 +1484,22 @@ theorem admissible_family_no_kernel {eps : ℝ} (Fm : FamP eps)
     obtain ⟨Cm, hCm, h8⟩ := h8
     obtain ⟨Ce, hCe, h9⟩ := h9
     refine ⟨C31, Ce, Cm, hC31, hCe, hCm, fun δ hδ => ?_⟩
-    obtain ⟨x0, h⟩ := ((((((((((h1.and h2).and h3).and h4).and (h5 δ hδ)).and h6).and h7).and h8).and h9).and
+    obtain ⟨x0, h⟩ := ((((((((h1.and h4).and (h5 δ hδ)).and h6).and h7).and h8).and h9).and
       hG1).and (eventually_sizes_admitted Fm))
     refine ⟨max x0 2, lt_of_lt_of_le one_lt_two (le_max_right _ _), fun x hx i => ?_⟩
-    obtain ⟨⟨⟨⟨⟨⟨⟨⟨⟨⟨a1, a2⟩, a3⟩, a4⟩, a5⟩, a6⟩, a7⟩, a8⟩, a9⟩, aU, aG⟩, aS⟩ :=
+    obtain ⟨⟨⟨⟨⟨⟨⟨⟨a1, a4⟩, a5⟩, a6⟩, a7⟩, a8⟩, a9⟩, aU, aG⟩, aS⟩ :=
       h x (le_trans (le_max_left _ _) hx) i
-    exact ⟨a1, a2, a3, a4, a5, a6, a7, a8, a9, aU, aG, aS⟩
+    exact ⟨a1, a4, a5, a6, a7, a8, a9, aU, aG, aS⟩
   exact ⟨hA, hG1⟩
 
 theorem linkG_without_kernels {eps : ℝ} (Fm : FamP eps)
-    (h1 : Adm1F Fm) (h2 : Adm2F Fm) (h3 : Adm3F Fm) (h4 : Adm4F Fm) (h5 : Adm5F Fm) (h6 : Adm6F Fm) (h7 : Adm7F Fm)
+    (h1 : Adm1F Fm) (h4 : Adm4F Fm) (h5 : Adm5F Fm) (h6 : Adm6F Fm) (h7 : Adm7F Fm)
     (h8 : Adm8F Fm) (h9 : Adm9F Fm)
     (hE : Ev Fm fun x i => TrivialStabiliserFiniteClasses (Fm.D x i)) (hY : Ev Fm fun x i => OperatorsPreserveLattices (Fm.D x i))
     (hLP : Ev Fm fun x i => CornerGLContinuity.OrbitLatticeBounds (Fm.D x i) (Fm.L x i) (Fm.Gx x i) (Fm.Gy x i) Fm.GK)
     (hEp : Ev Fm fun x i => CornerGLContinuity.LatticeSandwich (Fm.D x i) (Fm.L x i) (Fm.Gx x i))
     (hd : NPDescF Fm) : LinkG Fm := by
-  obtain ⟨hA, hG1⟩ := admissible_family_no_kernel Fm h1 h2 h3 h4 h5 h6 h7 h8 h9 hE hY hLP hEp hd
+  obtain ⟨hA, hG1⟩ := admissible_family_no_kernel Fm h1 h4 h5 h6 h7 h8 h9 hE hY hLP hEp hd
   obtain ⟨C, δ, hδ, hP'⟩ := AuxBlock8.Pf.stmtF Fm Fm.GK Fm.GK_nonneg Fm.Gx _ hA
   have hP'' : Ev Fm fun x i => AuxBlock8.Conclusion₂ (Fm.D x i) (Fm.L x i) (Fm.Gx x i) Fm.GK C ((Fm.L x i).sc.b ^ δ x) := hP'
   obtain ⟨x0, h⟩ := (((((hP''.and hG1).and (servedGIdx_ev Fm)).and (svBound_ev Fm)).and (nuServed_ev Fm)).and
@@ -1512,14 +1512,13 @@ theorem linkG_without_kernels {eps : ℝ} (Fm : FamP eps)
 theorem linkG_fam_noKer {eps : ℝ} (Fm : FamP eps) (h14 : SecondTheoremAtFamily Fm) (h13 : FirstTheoremAtFamily Fm)
     (hLa : 0 < Fm.GK.La) (hCe : 1 ≤ Fm.cX.Ce) (hCb : Ev Fm fun x i => CbLarge Fm.GK (Fm.L x i).sc)
     (hE : Ev Fm fun x i => TrivialStabiliserFiniteClasses (Fm.D x i)) (hS : Ev Fm fun x i => Joints.StdSubAt (Fm.D x i))
-    (h2 : Adm2F Fm) (hd : NPDescF Fm) (hCN : CornerGLContinuity.FamilyWindowLogBound Fm) : LinkG Fm := by
+    (hd : NPDescF Fm) (hCN : CornerGLContinuity.FamilyWindowLogBound Fm) : LinkG Fm := by
   obtain ⟨C, hC0, a1, a2, a3, a4, a5, a6, hp14⟩ := h14
   obtain ⟨CH, C', b0, b1, b2, b3, b4, b5, b6, hp13⟩ := h13
   have h6 := family_second_bound_of_theorem Fm C hC0 a1 a2 a3 a4 a5 a6 hp14
   have h7 := family_kappa_bound Fm (kapIDefF Fm)
   have h8 := family_first_bound_of_theorem Fm CH C' (kapIDefF Fm) b0 b1 b2 b3 b4 b5 b6 hp13
   have hCe0 : 0 ≤ Fm.cX.Ce := le_trans zero_le_one hCe
-  have hO : CornerGLContinuity.FamilyGlobalOrderEstimate Fm 100 := fun x i => UnusedSlot33.generic_frames_letters (Fm.D x i)
   have h9 : Adm9F Fm := by
     obtain ⟨x1, hx1⟩ := Ev.x1 Fm
     exact ⟨Fm.cX.Ce, hCe0, x1, fun x hx i => Joints.weyl_sandwich_of_factors _ _ _ Fm.cX.Ce hCe0 (Fm.ex x (hx1 x hx i) i).ep_def
@@ -1535,21 +1534,21 @@ theorem linkG_fam_noKer {eps : ℝ} (Fm : FamP eps) (h14 : SecondTheoremAtFamily
   have hEp : Ev Fm fun x i => CornerGLContinuity.LatticeSandwich (Fm.D x i) (Fm.L x i) (Fm.Gx x i) := by
     obtain ⟨Ce, _, x0, h⟩ := id h9
     exact ⟨x0, fun x hx i => TopChoiceBounds.sandwich_of_exponent_clause _ Ce (Fm.gatT x i) (h x hx i)⟩
-  exact linkG_without_kernels Fm (family_first_lemma Fm) h2 (family_orders_first_part Fm 100 (TopChoiceBounds.family_order_bound_holds Fm 100) hO)
+  exact linkG_without_kernels Fm (family_first_lemma Fm)
     (family_orders_bound_of_lemma Fm (TopChoiceBounds.family_band_ratio_holds Fm) hCN) (family_sizes_bound Fm hLa) h6 h7 h8 h9 hE
     ⟨0, fun x _ i u w hg => Model.operators_preserve_lattices _ _⟩ hLP hEp hd
 
 theorem link_of_local_closed (𝒞 : FamClass) (h : Loc)
     (hE : Closed 𝒞 fun Fm _ => Ev Fm fun x i => TrivialStabiliserFiniteClasses (Fm.D x i))
     (hS : Closed 𝒞 fun Fm _ => Ev Fm fun x i => Joints.StdSubAt (Fm.D x i))
-    (h2 : Closed 𝒞 fun Fm _ => Adm2F Fm) (hd : Closed 𝒞 fun Fm _ => NPDescF Fm) :
+    (hd : Closed 𝒞 fun Fm _ => NPDescF Fm) :
     Closed 𝒞 fun Fm _ => LinkG Fm :=
-  ((((((((((second_theorem_closed_form 𝒞 (second_theorem_absolute_constant (extremal_projector_tools_of_loc h) (local_model_results h))).and
+  (((((((((second_theorem_closed_form 𝒞 (second_theorem_absolute_constant (extremal_projector_tools_of_loc h) (local_model_results h))).and
     (first_theorem_closed_form 𝒞 (first_theorem_threshold_functions (extremal_projector_tools_of_loc h)
       (loc8All_of (extremal_projector_tools_of_loc h) (local_model_results h) (local_flatness_results h))))).and (signs_closed 𝒞)).and
-    (ones_closed 𝒞)).and (cb_closed 𝒞)).and hE).and hS).and h2).and hd).and (TopChoiceBounds.family_log_bound_closed 𝒞)).imp
-    fun Fm _ _ h => linkG_fam_noKer Fm h.1.1.1.1.1.1.1.1.1 h.1.1.1.1.1.1.1.1.2 h.1.1.1.1.1.1.1.2.1
-      h.1.1.1.1.1.1.2.2.2 h.1.1.1.1.1.2 h.1.1.1.1.2 h.1.1.1.2 h.1.1.2 h.1.2 h.2
+    (ones_closed 𝒞)).and (cb_closed 𝒞)).and hE).and hS).and hd).and (TopChoiceBounds.family_log_bound_closed 𝒞)).imp
+    fun Fm _ _ h => linkG_fam_noKer Fm h.1.1.1.1.1.1.1.1 h.1.1.1.1.1.1.1.2 h.1.1.1.1.1.1.2.1
+      h.1.1.1.1.1.2.2.2 h.1.1.1.1.2 h.1.1.1.2 h.1.1.2 h.1.2 h.2
 
 theorem loc_proved : Loc := by
   exact ⟨fun D => Formalism.MainNotions.G.criterion_restricted_of_closed D (Formalism.MainNotions.TraceSpectra.stmtE D)⟩
@@ -1648,14 +1647,14 @@ theorem npDescF_of_tied {eps : ℝ} (Fm : FamP eps) (h : GroupCompatibilityFamil
     exact Cmp.CmpTied.valRat G.cmp⟩
 
 theorem linkG_concrete_noKer (𝒞 : FamClass) (h : Loc)
-    (hT : Closed 𝒞 fun Fm _ => GroupCompatibilityFamily Fm) (h2 : Closed 𝒞 fun Fm _ => Adm2F Fm) :
+    (hT : Closed 𝒞 fun Fm _ => GroupCompatibilityFamily Fm) :
     Closed 𝒞 fun Fm _ => LinkG Fm :=
   link_of_local_closed 𝒞 h (hT.imp fun Fm _ _ ht => gatEF_of_tied Fm ht) (hT.imp fun Fm _ _ ht => stdSubF_of_tied Fm ht)
-    h2 (hT.imp fun Fm _ _ ht => npDescF_of_tied Fm ht)
+    (hT.imp fun Fm _ _ ht => npDescF_of_tied Fm ht)
 
-theorem linkG_concrete5 (𝒞 : FamClass) (hT : Closed 𝒞 fun Fm _ => GroupCompatibilityFamily Fm) (h2 : Closed 𝒞 fun Fm _ => Adm2F Fm) :
+theorem linkG_concrete5 (𝒞 : FamClass) (hT : Closed 𝒞 fun Fm _ => GroupCompatibilityFamily Fm) :
     Closed 𝒞 fun Fm _ => LinkG Fm :=
-  linkG_concrete_noKer 𝒞 loc_proved hT h2
+  linkG_concrete_noKer 𝒞 loc_proved hT
 
 end Formalism.L2.G
 end -- clump:auto

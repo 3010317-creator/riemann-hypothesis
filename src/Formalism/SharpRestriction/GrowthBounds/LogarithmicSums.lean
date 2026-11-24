@@ -637,7 +637,7 @@ theorem rest0 {eps : ℝ} (Fm : FamP eps) : FamilyAskBounds Fm := by
   intro K _ C31 Ce Cm _ _ _ X Y hA
   obtain ⟨x0, h⟩ := eventually_adm_of_admFam Fm hA
   refine ⟨x0, fun x hx i => ?_⟩
-  obtain ⟨-, -, -, -, -, -, -, -, -, -, -, hSz⟩ := (h x hx).2 i
+  obtain ⟨-, -, -, -, -, -, -, -, -, hSz⟩ := (h x hx).2 i
   exact As.asksAll_of (X x i) hSz.2.2
 
 theorem remainingCountingStatement_of_restStar {eps : ℝ} (Fm : FamP eps) (hS : RestStar Fm) : RemainingCountingStatement Fm := by
@@ -654,7 +654,7 @@ theorem remainingCountingStatement_of_restStar {eps : ℝ} (Fm : FamP eps) (hS :
   obtain ⟨x2, h2⟩ := eventually_adm_of_admFam Fm hA
   refine ⟨max x1 x2, fun x hx i => ?_⟩
   obtain ⟨hxp, hadm⟩ := h2 x (le_trans (le_max_right _ _) hx)
-  obtain ⟨-, -, -, -, -, -, -, -, a9, -, -, aSz⟩ := hadm i
+  obtain ⟨-, -, -, -, -, -, a9, -, -, aSz⟩ := hadm i
   have hN : GainBoundConstants K (Ce + 1) C1 ((Fm.L x i).sc.b ^ (x ^ (-(eps / 2)))) :=
     ⟨h3, hd1, hd2, bo_nonneg _ _⟩
   have hP := gain_bound_all_of_star (Fm.params x hxp i) (X x i) K hK Ce C1 _ hCe hN a9

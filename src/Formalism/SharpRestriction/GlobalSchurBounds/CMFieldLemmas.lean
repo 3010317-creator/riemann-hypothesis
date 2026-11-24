@@ -105,23 +105,6 @@ def PointsLemma (D : D7) : Prop :=
         (D.R.h h ≠ 0 → Even (addOrderOf h)))
 
 
-open Classical in
-def Conclusion4 (D : D7) (C : ℝ) : Prop :=
-  (∀ l : ℕ, l.Prime → l ≠ 2 → ∀ j : ℕ, j ≤ D.R.e →
-    ((2 ^ j : ℕ) • hOf D.R.e l = 0 ↔
-      ((l : ZMod (4 * 2 ^ D.R.e / 2 ^ j)) = 1 ∨ (l : ZMod (4 * 2 ^ D.R.e / 2 ^ j)) = -1))) ∧
-  (∀ J : ℝ, 1 ≤ J → ∀ l : ℕ, l.Prime → l ≠ 2 → (ordH (hOf D.R.e l) : ℝ) ≤ J →
-    4 * ((2 ^ D.R.e : ℕ) : ℝ) / J - 1 ≤ l) ∧
-  (∀ J : ℝ, 1 ≤ J → ∀ S : Finset ℕ,
-    (∀ l ∈ S, l.Prime ∧ l ≠ 2 ∧ (ordH (hOf D.R.e l) : ℝ) ≤ J) →
-    ∑ l ∈ S, Real.log l / (l : ℝ) ^ 2 ≤
-      C * J ^ 2 * Real.log ((2 ^ D.R.e : ℕ) : ℝ) / ((2 ^ D.R.e : ℕ) : ℝ) ^ 2) ∧
-  (∀ J : ℝ, 1 ≤ J → ∀ Y : ℝ,
-    ∑ l ∈ (Finset.range (⌊Y⌋₊ + 1)).filter
-        (fun l => l.Prime ∧ l ≠ 2 ∧ (ordH (hOf D.R.e l) : ℝ) ≤ J),
-      Real.log l / (l : ℝ) ≤
-      C * J * Real.log (((2 ^ D.R.e : ℕ) : ℝ) * Y) ^ 2 / ((2 ^ D.R.e : ℕ) : ℝ))
-
 def transl {φ : Formalism.HC.Frame} (T : Finset ℕ) (u₀ : φ.A) : Set φ.A := {x | ∃ s ∈ T, x = φ.dig s + u₀}
 
 def coset {G : Type} [AddCommGroup G] (t h : G) : Set G := {x | ∃ i : ℤ, x = t + i • h}
