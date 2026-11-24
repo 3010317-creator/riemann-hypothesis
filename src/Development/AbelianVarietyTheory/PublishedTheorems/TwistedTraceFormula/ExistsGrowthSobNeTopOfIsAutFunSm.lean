@@ -55,6 +55,11 @@ open scoped ENNReal NNReal Topology
 
 namespace GlobalTheory.Published
 
+/-- **Borel Sobolev embedding bounds for automorphic forms**: smooth automorphic forms
+of moderate growth satisfy uniform Sobolev decay estimates on fundamental domains of arithmetic subgroups.
+
+Proposed reference:
+[A. Borel, *Introduction aux groupes arithm\'etiques*][borel1969arithmetic]. -/
 def CuspDecaySobolev : Prop :=
   ∀ (D : D7) (θ : InfFam D), IsInfFam θ →
     ∀ (V : HSp D) (U : Subgroup (GA D V)), IsOpen (U : Set (GA D V)) → ∀ N M : ℕ,
