@@ -338,7 +338,7 @@ def added(gh, batch, main_sha, stop=None, limit=400):
     return merged
 
 
-def recall(gh, batch, main_sha):
+def recall(gh, batch, main_sha, under=None):
     """What is known about a batch: {"merged": {number: commit}, "refused": {...}, "seen": {...},
     "base": ...}.
 
@@ -346,7 +346,9 @@ def recall(gh, batch, main_sha):
     written for the batch's present head. Otherwise `merged` is read again from the branch.
     `base` is the batch it is built on, as {number, sha, start}: the head of that batch it was
     last brought up to date with, and the commit its own branch was started from. It is None
-    for a batch built on main.
+    for a batch built on main. Without a note, as while the batch has no pull request, the walk
+    back through the branch stops at `under` instead, the head of the batch it should be built
+    on, in case it was started there.
     """
     state = {"merged": {}, "refused": {}, "seen": {}, "base": None}
     match = STATE.search(batch["body"])
@@ -361,7 +363,7 @@ def recall(gh, batch, main_sha):
     if note.get("head") == batch["sha"] and isinstance(note.get("merged"), dict):
         state["merged"], state["refused"] = note["merged"], dict(note.get("refused") or {})
     else:
-        state["merged"] = added(gh, batch, main_sha, (state["base"] or {}).get("start"))
+        state["merged"] = added(gh, batch, main_sha, (state["base"] or {}).get("start") or under)
     return state
 
 
@@ -593,10 +595,16 @@ def restack(gh, batch, state, base, main_sha, log):
     is already in this one, and needs nothing. Nothing is done when GitHub does not say whether
     one commit is in another, or when this batch was frozen meanwhile.
 
+    A batch with no note, as while it has no pull request, whose branch already holds the head
+    of `base` is taken to have been started there.
+
     Returns False when this batch turned out to be frozen.
     """
     have = state.get("base")
     if base is None and have is None:
+        return True
+    if base and have is None and contains(gh, batch["sha"], base["sha"]):
+        state["base"] = {"number": base["number"], "sha": base["sha"], "start": base["sha"]}
         return True
     if base and have and base["number"] == have.get("number"):
         if base["sha"] == have.get("sha"):
@@ -809,7 +817,7 @@ def sync(gh, now=None):
     # The batch being assembled takes each commit a maintainer queued.
     assembling = sorted((item for item in found if not item["frozen"]), key=lambda item: item["ref"])
     batch = assembling[-1] if assembling else None
-    state = recall(gh, batch, main_sha) if batch else {"merged": {}, "refused": {}, "seen": {}, "base": None}
+    state = recall(gh, batch, main_sha, base and base["sha"]) if batch else {"merged": {}, "refused": {}, "seen": {}, "base": None}
     members, refused, unapproved, stopped, before = [], [], [], False, len(log)
     if batch and not restack(gh, batch, state, base, main_sha, log):
         log.append(f"batch #{batch['number']} was frozen during this run: stopped adding to it")

@@ -1096,6 +1096,22 @@ class StackedOnABatchByHand(unittest.TestCase):
         sync(gh, hours=2)
         self.assertLessEqual({new, sha("head14")}, gh.inside[gh.refs["batch/2026-11-23-061230"]])
 
+    def test_without_a_pull_request_it_is_not_rebuilt_on_every_run(self):
+        gh = Fake()
+        gh.allow_pulls = False  # so it has no note in a pull request's text
+        queue(gh, 11, 12, 13)
+        by_hand(gh, 11, 12)
+        freeze(gh, 1018)
+        with self.assertRaises(batch.Refused):
+            sync(gh)
+        for hours in (1, 2):
+            gh.reads, gh.writes = [], []
+            with self.assertRaises(batch.Refused):
+                sync(gh, hours=hours)
+            self.assertEqual((resets(gh), merges(gh)), ([], []))
+            self.assertNotIn(f"git/commits/{sha('kim')}", gh.reads)
+        self.assertIn(sha("head13"), gh.inside[gh.refs[FIRST]])
+
     def test_a_build_dispatched_just_now_stops_a_rebuild(self):
         gh = Fake()
         queue(gh, 11, 12, 13)
