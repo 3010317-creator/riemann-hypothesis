@@ -182,12 +182,8 @@ theorem kap_one_le_norm (l : ℕ) [Fact l.Prime] (d : ℕ) (hj : jacobiSym (-(d 
 theorem kap_norm_ratCast (l : ℕ) [Fact l.Prime] (ι : ℂ ≃+* ℂ_[l]) (q : ℚ) : ‖ι (q : ℂ)‖ = ‖(q : ℚ_[l])‖ := by
   rw [map_ratCast, ← kap_coe_rat, PadicComplex.norm_extends']
 
-theorem kap_le_one (l : ℕ) [Fact l.Prime] (ι : ℂ ≃+* ℂ_[l]) (z : ℂ) (hz : IsIntegral ℤ z) : ‖ι z‖ ≤ 1 := by
-  obtain ⟨p, hp, hpz⟩ := hz
-  apply _root_.Bl.general_b_fact_left_ter.goal1 p hp
-  have h : (ι.toRingHom) (p.eval₂ (algebraMap ℤ ℂ) z) = 0 := by rw [hpz, map_zero]
-  rw [Polynomial.hom_eval₂, RingHom.ext_int (ι.toRingHom.comp (algebraMap ℤ ℂ)) (Int.castRingHom _)] at h
-  exact h
+theorem kap_le_one (l : ℕ) [Fact l.Prime] (ι : ℂ ≃+* ℂ_[l]) (z : ℂ) (hz : IsIntegral ℤ z) : ‖ι z‖ ≤ 1 :=
+  PI.UnitaryGroupMassFormula.UnitDetRoot.norm_iota_le_one_of_isIntegral l ι hz
 
 theorem kap_unit (l : ℕ) [Fact l.Prime] (ι : ℂ ≃+* ℂ_[l]) (k : ℕ) (hk : ¬ l ∣ k) {x w : ℂ} (hx : IsIntegral ℤ x)
     (hw : IsIntegral ℤ w) (hm : (k : ℂ) = x * w) : ‖ι x‖ = 1 := by
