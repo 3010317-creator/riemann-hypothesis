@@ -1328,8 +1328,8 @@ theorem unit_bound_of_sum_over_primes (D : D7) (L : SizeData₂ D) (X : Inst D L
   have hP := hS.1 _ _ Y5 hA
   have hfr : IsFractionRing (D.gat u w hg).O (D.gat u w hg).Kf :=
     ((D.gat u w hg).P.setting (Y.vOf u w hg 0)).frac_O
-  exact ⟨hF, std, vp, unif, eO, eO_spec, dG, dG_spec, om, Y5, hP.2.2.2.2.2.1, hA.2.2.2.2.2.2.2.2.2.2.2.2,
-    hP.2.2.2.2.2.2.2.2.2.2, IsFractionRing.injective _ _, Fn, h1, h2⟩
+  exact ⟨hF, std, vp, unif, eO, eO_spec, dG, dG_spec, om, Y5, hP.2.1, hA.2.2.2.2.2.2.2.2.2.2.2.2,
+    hP.2.2.2.2.2, IsFractionRing.injective _ _, Fn, h1, h2⟩
 
 end Formalism.MainNotions.G.Joints
 end -- clump:auto
