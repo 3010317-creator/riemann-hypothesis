@@ -546,7 +546,7 @@ private theorem isUnit_of_neg (τ : F →+* ℝ) (ha : τ a < 0) (hb : τ b < 0)
       ring
   exact ⟨⟨x, _, e1, e2⟩, rfl⟩
 
-private theorem central [CharZero F] (ha : a ≠ 0) (hb : b ≠ 0) : Algebra.IsCentral F ℍ[F,a,0,b] := by
+private theorem central [CharZero F] (ha : a ≠ 0) : Algebra.IsCentral F ℍ[F,a,0,b] := by
   refine ⟨fun x hx => ?_⟩
   rw [Subalgebra.mem_center_iff] at hx
   have h1 := hx ⟨0, 1, 0, 0⟩
@@ -638,7 +638,7 @@ theorem UpperTheory.V.Af.defQuatExists :
   choose jc hjc using hc
   exact ⟨{
     D := ℍ[F,-1,0,b]
-    central := central _ _ (by simp) hb0
+    central := central _ _ (by simp)
     rank := QuaternionAlgebra.finrank_eq_four _ _ _
     definite := fun σ => definite _ _ σ (hm σ) (hb σ)
     jf := ((spl p q (by simp) hpq).restrictScalars F).comp (bc (Af F) (-1) b)
