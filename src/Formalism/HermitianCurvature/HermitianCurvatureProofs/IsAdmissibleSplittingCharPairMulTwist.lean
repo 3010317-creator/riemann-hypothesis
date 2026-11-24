@@ -78,23 +78,6 @@ import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.BitVec
 import Std.Tactic.BVDecide.Normalize.Prop
 
-attribute [-instance]
-  NormedSpace.toModule NormedAlgebra.toAlgebra
-  Subalgebra.normedCommRing Subalgebra.seminormedRing
-  Subalgebra.seminormedCommRing Subalgebra.normedRing
-  Submodule.normedSpace Submodule.seminormedAddCommGroup
-  Submodule.normedAddCommGroup SubalgebraClass.toNormedAlgebra
-  Subalgebra.isScalarTower_left Subalgebra.isScalarTower_mid
-  Submonoid.instIsScalarTowerSubtypeMem Submonoid.instSMulCommClassSubtypeMem_1
-  Subalgebra.smulCommClass_right Subalgebra.smulCommClass_left
-  MulSemiringAction.toDistribMulAction
-  RingHomClass.toLinearMapClassNNRat RingHomClass.toLinearMapClassRat
-  NonUnitalAlgHomClass.instLinearMapClass
-  NonUnitalAlgHomClass.instSemilinearMapClassOfNonUnitalAlgSemiHomClassOfClassRingHom
-  Algebra.TensorProduct.instNonUnitalSemiring Algebra.TensorProduct.instNonUnitalRing
-attribute [local instance high]
-  Submodule.module TensorProduct.leftModule Algebra.TensorProduct.leftAlgebra
-
 @[expose] public section
 
 section S_T1
