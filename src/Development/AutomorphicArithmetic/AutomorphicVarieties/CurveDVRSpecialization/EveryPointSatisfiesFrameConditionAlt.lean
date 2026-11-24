@@ -97,14 +97,12 @@ private theorem key {n : ℕ} {A K F : Type} [CommRing A] [Field K] [Field F] (f
     exact Matrix.aeval_self_charpoly _
   rw [hCH, mul_zero] at hint
   have hfc : Mf.charpoly = (X - C c) ^ n := by
-    rw [hMf, RingHom.mapMatrix_apply, Matrix.charpoly_map]
-    exact hM
+    rwa [hMf, RingHom.mapMatrix_apply, Matrix.charpoly_map]
   set Nl := Mf - algebraMap K (Matrix (Fin n) (Fin n) K) c with hNl
   have hnil : IsNilpotent Nl := by
     refine ⟨n, ?_⟩
     have h0 := Matrix.aeval_self_charpoly Mf
-    rw [hfc, map_pow, map_sub, aeval_X, aeval_C] at h0
-    exact h0
+    rwa [hfc, map_pow, map_sub, aeval_X, aeval_C] at h0
   set s : K := (f x - 1) * c with hs
   have hs0 : s ≠ 0 := mul_ne_zero (sub_ne_zero.mpr hx) hc
   have hunitF : IsUnit (aeval (f x • Mf) (p.map f)) := by

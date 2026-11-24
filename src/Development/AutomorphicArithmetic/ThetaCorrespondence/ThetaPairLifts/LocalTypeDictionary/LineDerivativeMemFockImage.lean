@@ -113,8 +113,7 @@ theorem rest_transfer : ∀ (F : Type) [Field F] [NumberField F] {κ : Type} [Fi
     intro x; funext i; simp only [Pi.add_apply, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI, ha₀]; rw [hz1]
   have hAt : ∀ x, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.At (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI F) (zz x) := by
     intro x u hu
-    have hu1 : u.1 = 0 := by
-      exact (InfiniteAdeleRing.ringEquiv_mixedSpace F).map_eq_zero_iff.mp hu
+    have hu1 : u.1 = 0 := (InfiniteAdeleRing.ringEquiv_mixedSpace F).map_eq_zero_iff.mp hu
     funext i
     show ((u.1 * ((x₀ i).1 - (x i).1), u.2 * 0) : InfiniteAdeleRing F × FiniteAdeleRing (𝓞 F) F) = (0, 0)
     rw [hu1]; simp
@@ -194,8 +193,7 @@ theorem oneParam_eq_exp_lieU {n : ℕ} (G : Matrix (Fin n) (Fin n) ℂ) (u : ℝ
       intro t
       have hE := hasDerivAt_exp_smul_const' (𝕂 := ℝ) (-Y) t
       have := (hder t).mul hE
-      rw [Matrix.neg_mul, Matrix.mul_neg, Matrix.mul_assoc, add_neg_cancel] at this
-      exact this
+      rwa [Matrix.neg_mul, Matrix.mul_neg, Matrix.mul_assoc, add_neg_cancel] at this
     have hvc : ∀ t, v t = v 0 := fun t =>
       is_const_of_deriv_eq_zero (fun s => (hvd s).differentiableAt) (fun s => (hvd s).deriv) t 0
     have hv0 : v 0 = 1 := by simp [hv, h0]
@@ -267,9 +265,7 @@ theorem toUX_surj (D : D7) (X : HSp D) {J : Matrix (Fin X.rank) (Fin X.rank) D.h
   have e : (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.incM X.gramᵀ)ᵀ = GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.incM X.gram := rfl
   rw [e, ← hm] at h3
   refine ⟨⟨u.1, h3⟩, ?_⟩
-  apply Subtype.ext
-  apply Units.ext
-  exact GlobalTheory.TripleRead.toUX_val X (Equiv.refl _) hJ _
+  exact Subtype.ext (Units.ext (GlobalTheory.TripleRead.toUX_val X (Equiv.refl _) hJ _))
 
 
 
@@ -451,10 +447,8 @@ theorem line_deriv : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam 
       rwa [one_smul] at h
     have h3' : HasFDerivAt (fun Y : GlobalTheory.SmoothForms.LieN X => φ (1 * GlobalTheory.SmoothForms.expInf θ X Y))
         (fderiv ℝ (fun Y : GlobalTheory.SmoothForms.LieN X => φ (1 * GlobalTheory.SmoothForms.expInf θ X Y)) 0) ((0 : ℝ) • V) := by
-      rw [zero_smul]
-      exact h3
-    have h5 := HasFDerivAt.comp_hasDerivAt (0 : ℝ) h3' h4
-    simpa only [Function.comp_def, one_mul] using h5
+      rwa [zero_smul]
+    simpa only [Function.comp_def, one_mul] using HasFDerivAt.comp_hasDerivAt (0 : ℝ) h3' h4
   have hτ : ∀ τ, fderiv ℝ (fun Y : GlobalTheory.SmoothForms.LieN X => φ (1 * GlobalTheory.SmoothForms.expInf θ X Y)) 0
       (Pi.single τ (L τ) : GlobalTheory.SmoothForms.LieN X) =
       ptF (V := sgn ε M) ψ θ (frSgn ε A) B f₀ (GlobalTheory.RealQuot.actT ε A B eS τ (L τ).1 P) z := by
@@ -594,8 +588,7 @@ theorem thO_zero' {m k d : ℕ} {D : D7} {Y : GlobalTheory.IndefiniteRowSideFull
     GlobalTheory.TripleRead.thO Mo ψ G e 0 = 0 := by
   funext x
   simp only [GlobalTheory.TripleRead.thO, GlobalTheory.WeilM.thetaSum, Pi.zero_apply]
-  refine (tsum_congr fun ξ => ?_).trans tsum_zero
-  exact mul_zero _
+  exact (tsum_congr fun ξ => (mul_zero _)).trans tsum_zero
 
 theorem conjU_one' {D : D7} (V : HSp D) {J : Matrix (Fin V.rank) (Fin V.rank) D.host.E} (c : D.host.E)
     (h : J = c • V.gram) : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU V c h 1 = 1 := by
@@ -693,8 +686,7 @@ theorem GlobalTheory.ThetaInterchange.hasDerivAt_theta_integral_interchange : _r
   have hΦ' : Φ' = GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI D.host.F) f₁ r :=
     funext fun y => (hpt y).unique (hD r hr y)
   have := hth (GlobalTheory.TripleRead.ptO G e x)
-  rw [hΦ'] at this
-  exact this
+  rwa [hΦ'] at this
 end
 end
 
@@ -744,8 +736,7 @@ theorem line_derivative_mem_fock_image : _root_.GlobalTheory.FunPr.ThetaLocalInp
   set Q := ∑ t, GlobalTheory.RealQuot.actT ε A B eS t (Y t) P with hQ
   have hQN : Q ∈ N := Submodule.sum_mem _ fun t _ => hN ⟨(t, Y t), hY t⟩ P hPN
   have hne : ∃ x, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI D.host.F) (Φ 1) r x ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h0 : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI D.host.F) (Φ 1) r = 0 := funext hc
     have h1 := (hΦ 1).2
     rw [h0, thO_zero', ptF_one'] at h1

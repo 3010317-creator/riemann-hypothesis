@@ -126,8 +126,7 @@ theorem UpperTheory.V.Ws.Lab.choice :
     (hK.char _ hs) hsep'
   rcases hor with h0 | h2
   · refine ⟨false, fun h => absurd h (by decide), ?_⟩
-    rw [wM_false_mul]
-    exact h0
+    rwa [wM_false_mul]
   · refine ⟨true, fun _ s hs' => ?_, ?_⟩
     · have hc := choice_col (maximalIdeal 𝔞.V) (r s) u (fun i => 𝔞.a c ((D.ps i s : (c.O)ˣ) : c.O))
         (𝔞.a c ((D.ps 0 s : (c.O)ˣ) : c.O)) (hredg s) hK.sp (hK.flag s hs') (hK.char s hs' 0) h2
@@ -144,8 +143,7 @@ theorem UpperTheory.V.Ws.Lab.choice :
       apply mul_right_cancel₀ hx
       rw [one_mul, ← map_mul, ← Units.val_mul, ← hth]
       simpa using hres.symm
-    · rw [wM_true_mul]
-      exact h2
+    · rwa [wM_true_mul]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.FlagsAndDiagonals.Choice =====
@@ -247,8 +245,7 @@ theorem UpperTheory.V.Ws.normal :
     intro i j
     have := congrFun (congrFun hkey i) j
     rw [adj_diag'] at this
-    simp only [Matrix.smul_apply, smul_eq_mul, Matrix.mul_diagonal, Matrix.diagonal_mul] at this
-    exact this
+    simpa only [Matrix.smul_apply, smul_eq_mul, Matrix.mul_diagonal, Matrix.diagonal_mul] using this
   have hdd : ∀ i, d i.rev * d i = ν := by
     intro i
     have h0 : (adj u * u) i i * (d i.rev * d i - ν) = 0 := by
@@ -380,8 +377,7 @@ theorem UpperTheory.V.Ws.normal :
     have hent2 : ∀ i j, sg C i * u i j * sg C j = u i j * t' j := by
       intro i j
       have := congrFun (congrFun ht' i) j
-      simp only [hS, Matrix.mul_diagonal, Matrix.diagonal_mul] at this
-      exact this
+      simpa only [hS, Matrix.mul_diagonal, Matrix.diagonal_mul] using this
     have ht'1 : ∀ j, t' j = 1 := by
       intro j
       have h := hent2 j j
@@ -506,19 +502,16 @@ theorem UpperTheory.V.Ws.Lab.exNorm :
     rw [hu', hu_eq, hwmap, adj_map, Matrix.map_mul]
   set ν₁ := (adj r₀ * r₀) 0 0 with hν₁def
   have hE : (adj r₀ * r₀).map f = ν • (1 : M4 𝔞.V) := by
-    rw [Matrix.map_mul, ← adj_map, ← hr_eq]
-    exact hr
+    rwa [Matrix.map_mul, ← adj_map, ← hr_eq]
   have hν₁ : f ν₁ = ν := by
     have := congrFun (congrFun hE 0) 0
     simpa using this
   have hr₀ : IsGSp ν₁ r₀ := by
     apply gspDown
-    rw [hν₁, ← hr_eq]
-    exact hr
+    rwa [hν₁, ← hr_eq]
   have hu₁ : IsGSp 1 u₁ := by
     apply gspDown
-    rw [map_one, ← hu_eq]
-    exact hu
+    rwa [map_one, ← hu_eq]
   have h2S : IsUnit (2 : S) := (unitS 2).mp (by rw [map_ofNat]; exact h2)
   have hνS : IsUnit ν₁ := (unitS ν₁).mp (hν₁ ▸ hν)
   have hadjw₁ : IsGSp 1 (adj w₁) := gspAdj 1 w₁ isUnit_one (wM_sp pr)
@@ -529,8 +522,7 @@ theorem UpperTheory.V.Ws.Lab.exNorm :
     intro i j hij
     rw [memS]
     have := hoff i j hij
-    rw [hXmap] at this
-    exact this
+    rwa [hXmap] at this
   have hd₁ : ∀ i j, i ≠ j → IsUnit ((adj w₁ * r₀ * w₁) i i - (adj w₁ * r₀ * w₁) j j) := by
     intro i j hij
     rw [← unitS]
@@ -561,8 +553,7 @@ theorem UpperTheory.V.Ws.Lab.exNorm :
     exact (IsLocalRing.mem_maximalIdeal b).mp hb' hb
   have h00₁ : IsUnit ((adj w₁ * u₁) 0 0) := by
     rw [← unitS]
-    rw [hu'map] at h00
-    exact h00
+    rwa [hu'map] at h00
   have hdet₁ : IsUnit ((adj w₁ * u₁) 0 0 * (adj w₁ * u₁) 1 1 - (adj w₁ * u₁) 0 1 * (adj w₁ * u₁) 1 0) := by
     rw [← unitS]
     rw [hu'map] at hdet
@@ -584,13 +575,11 @@ theorem UpperTheory.V.Ws.Lab.exNorm :
     rw [h, one_smul]
   have hright : p₁ * adj p₁ = 1 := by
     have h : adj (adj p₁) * adj p₁ = (1 : S) • (1 : M4 S) := gspAdj 1 p₁ isUnit_one hp₁
-    rw [adj_adj, one_smul] at h
-    exact h
+    rwa [adj_adj, one_smul] at h
   let r₂ : Γ →* M4 S :=
     { toFun := fun g => adj p₁ * P₁.r g * p₁
       map_one' := by
-        simp only [map_one, mul_one]
-        exact hleft
+        simpa only [map_one, mul_one] using hleft
       map_mul' := by
         intro a b
         simp only [map_mul]
@@ -608,8 +597,7 @@ theorem UpperTheory.V.Ws.Lab.exNorm :
     rwa [map_one] at this
   · intro i j
     have := (memS _).mp (hcg i j)
-    rw [map_sub, ← hone] at this
-    exact this
+    rwa [map_sub, ← hone] at this
   · intro g
     show (adj p₁ * P₁.r g * p₁).map f = _
     rw [hr_eq g, hwmap, ← Matrix.map_mul, adj_map, Matrix.map_mul, Matrix.map_mul]
@@ -658,8 +646,7 @@ private theorem up_mul {R : Type} [CommRing R] {X Y : M4 R} (hX : IsUp X) (hY : 
 
 private theorem up_mul_diag {R : Type} [CommRing R] {X Y : M4 R} (hX : IsUp X) (hY : IsUp Y) (i : Fin 4) :
     (X * Y : M4 R) i i = X i i * Y i i := by
-  rw [Matrix.mul_apply]
-  rw [Finset.sum_eq_single i]
+  rw [Matrix.mul_apply, Finset.sum_eq_single i]
   · intro k _ hk
     rcases lt_or_gt_of_ne hk with h | h
     · rw [hX i k h, zero_mul]
@@ -842,12 +829,9 @@ theorem UpperTheory.V.Ws.Lab.pairOf :
     · rw [hPr g, hK.unr A hA g hgA hr, mul_one, sp_adj_mul hMsp]
     · rw [hPr g, hK.atP p hp g hgp, mul_one, sp_adj_mul hMsp]
   · exact hdiag
-  · intro w
-    exact hlow
-  · intro w s hs'
-    exact (hflag s hs').1
-  · intro w s hs'
-    exact absurd hs' (Set.notMem_empty s)
+  · exact fun w => hlow
+  · exact fun w s hs' => (hflag s hs').1
+  · exact fun w s hs' => absurd hs' (Set.notMem_empty s)
   · intro s hs' i
     have hs'' : s ∈ D.Gp l := Ine_le_Dec (F := ℚ) (D.pl l) hs'
     show (adj (P.n ()) * P.r s * P.n ()) i i = _
@@ -959,8 +943,7 @@ namespace UpperTheory.V.Ws.Lab
 private theorem span_entry {K n Γ : Type} [Field K] [Fintype n] [DecidableEq n] (f : Γ → Matrix n n K) (a m : Matrix n n K)
     (h : a * m = 1) (hf : Submodule.span K (Set.range f) = ⊤) (i j : n) : ∃ g, (a * f g * m) i j ≠ 0 := by
   classical
-  by_contra hall
-  push_neg at hall
+  by_contra! hall
   let L : Matrix n n K →ₗ[K] K :=
     { toFun := fun X => (a * X * m) i j
       map_add' := by intro X Y; simp [Matrix.mul_add, Matrix.add_mul]
@@ -1177,8 +1160,7 @@ theorem UpperTheory.V.Ws.labels :
     have h2 := hcg g0 j j
     simp only [Matrix.diagonal_apply_eq] at h1 h2
     have h3 := (maximalIdeal 𝔞.V).sub_mem h1 h2
-    rw [sub_sub_sub_comm] at h3
-    exact h3
+    rwa [sub_sub_sub_comm] at h3
   obtain ⟨P, v, b, hsm, hv, hv1, hPr, hdg, hlow, hb, hbup, hfac⟩ := Lab.exNorm 𝔞 (G ℚ Ω) r u pr g0
     (𝔞.a c ((D.th g0 : (c.O)ˣ) : c.O)) hK.small (𝔞.unit_two c hD.l_odd) ((D.th g0).isUnit.map _)
     (hK.mult g0) hK.sp _ _ rfl rfl hoff hdiff hunit hminor

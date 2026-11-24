@@ -130,23 +130,19 @@ theorem img_lies_over : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fin
   have hne : ∀ k : NonPluckerBlocks M'.blk, z ⟨k.1, F'.c k⟩ ≠ 0 := fun k => coord_ne (q := ⟨k, F'.c k⟩) (hg'.1 k)
   have hc : ∀ k, c k ≠ 0 := fun k => by
     by_cases h : ∀ p, M'.blk p ≠ some k
-    · simp only [c, dif_pos h]
-      exact inv_ne_zero (hne ⟨k, h⟩)
-    · simp only [c, dif_neg h]
-      exact one_ne_zero
+    · simpa only [c, dite_eq_left h] using inv_ne_zero (hne ⟨k, h⟩)
+    · simpa only [c, dite_eq_right h] using one_ne_zero
   let z₁ : (Σ k, ι' k) → ℂ := fun p => c p.1 * z p
   have h1 : SameOrbit z₁ z := ⟨c, hc, rfl⟩
   have hz₁ : z₁ ∈ mcPts (mCoordIdeal y') := mcPts_smul hA'.2.1.2.1 c hc hz
   have hn : ∀ k, basePart M'.blk z₁ ⟨k, F'.c k⟩ = 1 := fun k => by
     show c k.1 * z ⟨k.1, F'.c k⟩ = 1
     have hk : ∀ p, M'.blk p ≠ some k.1 := k.2
-    simp only [c, dif_pos hk]
-    exact inv_mul_cancel₀ (hne k)
+    simpa only [c, dite_eq_left hk] using inv_mul_cancel₀ (hne k)
   have hb₁ := P'.1 z₁ hz₁
   have ho := sameOrbit_basePart M'.blk h1
   have hgood : M'.GoodAt F' (mCoordIdeal (basePart M'.blk z₁)) := by
-    rw [mCoordIdeal_eq ho]
-    exact hg'
+    rwa [mCoordIdeal_eq ho]
   obtain ⟨h, hh⟩ := (P'.2.2 F' hF' z₁ hb₁ hgood hn).1 hz₁
   obtain ⟨F, hF, hg⟩ := P.2.1 _ (comp_mem_mcPts Cv.block Cv.φ Cv.x_eq hb₁)
   obtain ⟨z₀, a, b, -⟩ := hI z₁ h1 F' F hF' hF hgood hg h hh

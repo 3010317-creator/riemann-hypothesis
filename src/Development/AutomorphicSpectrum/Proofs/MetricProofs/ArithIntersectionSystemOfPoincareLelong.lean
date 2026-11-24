@@ -176,8 +176,7 @@ theorem natCast_charOf_mem (W : Ideal (MRing ι)) : ((charOf W : ℕ) : MRing ι
     · rw [← h]; exact hg
     · have e : (g.natAbs : ℤ) = -g := by linarith
       rw [e, map_neg]; exact W.neg_mem hg
-  rw [← map_natCast (C : ℤ →+* MRing ι) g.natAbs]
-  exact h
+  rwa [← map_natCast (C : ℤ →+* MRing ι) g.natAbs]
 
 theorem ker_redMap_le {p : ℕ} {W : Ideal (MRing ι)} (hp : ((p : ℕ) : MRing ι) ∈ W) :
     RingHom.ker (redMap ι p) ≤ W := by
@@ -230,8 +229,7 @@ theorem isProjVarF_map_redMap {p : ℕ} [Fact p.Prime] {W : Ideal (MRing ι)} {n
   obtain ⟨hWp, hWh, hWr⟩ := hW
   refine ⟨⟨?_, isMultiHomogIdeal_map_redMap hWh, isRelevant_map_redMap hp hWr⟩, ?_⟩
   · exact Ideal.map_isPrime_of_surjective (redMap_surjective p) (ker_redMap_le hp)
-  · rw [← ringKrullDim_eq_of_ringEquiv (quotRedEquiv hp)]
-    exact hdim
+  · rwa [← ringKrullDim_eq_of_ringEquiv (quotRedEquiv hp)]
 
 theorem fibreComp : ReciprocityTheory.ChartRestriction.G.AI.I2.FibreCompStatement := by
   intro K _ ι _ P n A s W hP hs hW hv

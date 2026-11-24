@@ -57,9 +57,7 @@ private theorem mul_inv_lt_mul_inv_mul_inv_of_le_of_lt_one {G : Type} [LinearOrd
   have h1 : ux⁻¹ ≤ g⁻¹ := inv_anti₀ hg hgx
   have h2 : ua * ux⁻¹ ≤ ua * g⁻¹ := by gcongr
   have h3 : 1 < p⁻¹ := one_lt_inv₀ (zero_lt_iff.mpr hp0) |>.mpr hp
-  have h4 : 0 < ua * g⁻¹ := by
-    apply zero_lt_iff.mpr
-    exact mul_ne_zero hua (inv_ne_zero hg.ne')
+  have h4 : 0 < ua * g⁻¹ := zero_lt_iff.mpr (mul_ne_zero hua (inv_ne_zero hg.ne'))
   calc ua * ux⁻¹ ≤ ua * g⁻¹ := h2
     _ = ua * g⁻¹ * 1 := (mul_one _).symm
     _ < ua * g⁻¹ * p⁻¹ := mul_lt_mul_of_pos_left h3 h4
@@ -74,8 +72,7 @@ theorem UpperTheory.V.Af.Smo.locDual :
     UpperTheory.V.Af.Smo.LocDual := by
   intro E _ _ w ψ hψ V hV
   obtain ⟨a, ha⟩ : ∃ a, ψ a ≠ 1 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hψ (AddChar.ext _ _ fun x => by simpa using h x)
   have ha0 : a ≠ 0 := by
     rintro rfl
@@ -120,8 +117,7 @@ theorem UpperTheory.V.Af.Smo.locDual :
   · intro x hx
     by_contra hxV
     have hxg : (γ : _) ≤ Valued.v.restrict x := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hxV (hγ h)
     have hx0 : x ≠ 0 := by
       rintro rfl

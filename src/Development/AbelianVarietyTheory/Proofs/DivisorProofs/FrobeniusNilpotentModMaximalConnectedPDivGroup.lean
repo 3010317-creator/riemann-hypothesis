@@ -123,8 +123,7 @@ theorem aeval_mem_span {A R : Type} [CommRing A] [CommRing R] [Algebra R A] {d :
     rintro rfl
     exact (MvPolynomial.mem_support_iff.1 hm) (by rwa [MvPolynomial.constantCoeff_eq] at h0)
   obtain ⟨i, hi⟩ : ∃ i, m i ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hm0 (Finsupp.ext h)
   refine Ideal.mul_mem_left _ _ ?_
   have hdvd : x i ∣ ∏ j ∈ m.support, x j ^ m j :=
@@ -161,7 +160,7 @@ theorem aug_nil : ∀ (p : ℕ) (O : Type) [CommRing O] (G : PDivGroup p O) (d :
   have hR : (p : G.A 1) ∣ c.ev 1 (f - (P : MvPowerSeries (Fin d) O)) := by
     have h := hN₁ (f - P) (fun α hα => ?_)
     · simpa using h
-    rw [map_sub, MvPolynomial.coeff_coe, coeff_trunc', if_pos, sub_self]
+    rw [map_sub, MvPolynomial.coeff_coe, coeff_trunc', ite_eq_left, sub_self]
     intro i
     have : α i ≤ α.degree := by
       rw [Finsupp.degree]
@@ -174,7 +173,7 @@ theorem aug_nil : ∀ (p : ℕ) (O : Type) [CommRing O] (G : PDivGroup p O) (d :
       MvPolynomial.algHom_ext fun i => by simp [(c.isEval 1).1 i]
     exact congrArg (fun φ => φ P) this
   have hP0 : MvPolynomial.constantCoeff P = 0 := by
-    rw [MvPolynomial.constantCoeff_eq, hPdef, coeff_trunc', if_pos (zero_le')]
+    rw [MvPolynomial.constantCoeff_eq, hPdef, coeff_trunc', ite_eq_left (zero_le')]
     simpa using hf
   have ha := dvd_pow_of_mem_span (c.x 1) (p : G.A 1) N₀ hx _ (aeval_mem_span (c.x 1) P hP0)
   rw [← hP] at ha
@@ -399,7 +398,7 @@ theorem isBasis_map : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgCl
       rw [h1, Pi.single_apply]
       split_ifs <;> simp
     have s1 : x l' = ∑ l, x l * F.θ (∑ m, M l m * N m l') := by
-      simp only [e1, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [e1, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have s2 : ∑ l, x l * F.θ (∑ m, M l m * N m l') = ∑ m, y m * F.θ (N m l') := by
 
       simp only [hydef, map_sum, map_mul, Finset.mul_sum, Finset.sum_mul]
@@ -475,8 +474,7 @@ theorem isLie_add_smul {p : ℕ} {G : PDivGroup p O} (c : QLog.Chart G d)
   refine ⟨s + a • s', ?_, fun w φ hφ => ?_⟩
   · rw [defect_add_smul c.isLaw.const, ← hs, ← hs']
     have := (intMap (d := d) (O := O) (E := E)).map_add s (a • s')
-    rw [LinearMap.map_smul] at this
-    exact this
+    rwa [LinearMap.map_smul] at this
   · have := dvd_add (H w φ hφ) (dvd_mul_of_dvd_right (H' w φ hφ) a)
     rw [LinearMap.add_apply, LinearMap.smul_apply, map_add (f := _), map_smul, map_add (f := _), map_smul,
       smul_eq_mul, smul_eq_mul]
@@ -1283,8 +1281,7 @@ theorem isNil_frobenius_chart : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C
     intro w
     have h := (QLogDefect.main p F.B O F.Q F.θ F.frame d μ' hlift ⊤ _ (hQL w) p).1
     choose b _ hb using h
-    refine ⟨(fun α => b α : MvPowerSeries (Fin d) F.B), MvPowerSeries.ext fun α => ?_⟩
-    exact (hb α).symm
+    exact ⟨(fun α => b α : MvPowerSeries (Fin d) F.B), MvPowerSeries.ext fun α => (hb α).symm⟩
   choose A hA using hlf
   let δ : (Fin d ⊕ Fin k → F.B) → G.A 1 := fun w => c.ev 1 (map F.θ (A w))
   set I := Ideal.span (algebraMap O (G.A 1) '' {o | ¬IsUnit o}) with hI

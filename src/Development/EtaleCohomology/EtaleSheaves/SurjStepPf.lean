@@ -187,9 +187,7 @@ theorem glue (hM : MV) (hH : Hyp) (q : ℕ) {Y : Scheme.{0}} (f : Y ⟶ X) (p : 
     (resO p (le_sup_left : V ≤ V ⊔ W)) (resO p (le_sup_right : W ≤ V ⊔ W)) (cover (f ≫ p) V W) (cover p V W)
     (fO f p V) (fO f p W) (fO f p (V ⊔ W)) (fO_res f p le_sup_left) (fO_res f p le_sup_right) m
     (pull _ (sch.map (phi p V W)) _ _ u)
-  rw [← pc, phi_nat, pc, hu, ← pc, phi_psi] at hn
-  rw [CategoryTheory.Functor.map_id, pull_id] at hn
-  rw [hw'] at hn
+  rw [← pc, phi_nat, pc, hu, ← pc, phi_psi, CategoryTheory.Functor.map_id, pull_id, hw'] at hn
   refine ⟨x0 - δ _ _ m (pull _ (sch.map (phi p V W)) _ _ u), ?_⟩
   rw [map_sub, ← hn, sub_sub_cancel]
 

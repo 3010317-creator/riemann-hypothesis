@@ -268,11 +268,11 @@ private theorem laws_lemma_7 {D : D7} {V W : HSp D} {ψ : AddChar (AF D.host.F) 
           (if k = l then ((ε' k.1 * ε k.2 : ℝ) : ℂ) else 0)))).re : ℝ)) : ℂ) := by
     intro α β k l
     unfold GlobalTheory.IndefiniteRowSideFullHecke.HermitianSymplecticScalars.commScalar GlobalTheory.IndefiniteRowSideFullHecke.HermitianSymplecticScalars.symplAt GlobalTheory.IndefiniteRowSideFullHecke.HermitianSymplecticScalars.hermAt
-    rw [if_pos rfl, htr]
+    rw [ite_eq_left rfl, htr]
   have kap0 : ∀ (α β : ℂ) (k l : Fin W.rank × Fin V.rank), k ≠ l →
       GlobalTheory.IndefiniteRowSideFullHecke.HermitianSymplecticScalars.commScalar V W τ τ (α • unitMap B B' k.1 k.2) (β • unitMap B B' l.1 l.2) = 0 := by
     intro α β k l hkl
-    rw [kap, if_neg hkl]
+    rw [kap, ite_eq_right hkl]
     simp
   have kapI : ∀ k : Fin W.rank × Fin V.rank,
       GlobalTheory.IndefiniteRowSideFullHecke.HermitianSymplecticScalars.commScalar V W τ τ (unitMap B B' k.1 k.2) ((Complex.I * ((ε' k.1 * ε k.2 : ℝ) : ℂ)) • unitMap B B' k.1 k.2) =
@@ -280,7 +280,7 @@ private theorem laws_lemma_7 {D : D7} {V W : HSp D} {ψ : AddChar (AF D.host.F) 
     intro k
     have e := kap 1 (Complex.I * ((ε' k.1 * ε k.2 : ℝ) : ℂ)) k k
     rw [one_smul] at e
-    rw [e, if_pos rfl]
+    rw [e, ite_eq_left rfl]
     have h2 : (tauE D τ D.host.xi0 * (1 * ((starRingEnd ℂ) (Complex.I * ((ε' k.1 * ε k.2 : ℝ) : ℂ)) * ((ε' k.1 * ε k.2 : ℝ) : ℂ)))).re =
         (tauE D τ D.host.xi0).im := by
       have e2 : (1 : ℂ) * ((starRingEnd ℂ) (Complex.I * ((ε' k.1 * ε k.2 : ℝ) : ℂ)) * ((ε' k.1 * ε k.2 : ℝ) : ℂ)) =
@@ -374,14 +374,14 @@ private theorem laws_lemma_7 {D : D7} {V W : HSp D} {ψ : AddChar (AF D.host.F) 
     simp only [hA, hBo, L]
     by_cases hkl : k = l
     · subst hkl
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       funext x
       have e2 := Cm (unitMap B B' k.1 k.2) ((Complex.I * ((ε' k.1 * ε k.2 : ℝ) : ℂ)) • unitMap B B' k.1 k.2) g hg x
       rw [kapI k] at e2
       simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
       linear_combination ((-((fockScale D τ : ℂ)⁻¹ * Complex.I)) * (-(fockScale D τ : ℂ)⁻¹ - (fockScale D τ : ℂ)⁻¹)) * e2 + (g x) * hcinv +
         (-(8 * Real.pi) * (fockScale D τ : ℂ)⁻¹ * (fockScale D τ : ℂ)⁻¹ * ((tauE D τ D.host.xi0).im : ℂ) * g x) * Complex.I_mul_I
-    · rw [if_neg hkl]
+    · rw [ite_eq_right hkl]
       funext x
       have k1 := kap0 1 1 k l hkl
       rw [one_smul, one_smul] at k1
@@ -411,13 +411,11 @@ private theorem laws_lemma_7 {D : D7} {V W : HSp D} {ψ : AddChar (AF D.host.F) 
   have haa : ∀ i j (g : GlobalTheory.VacuumFockLaws.thetaSub V W ψ), a i (a j g) = a j (a i g) := by
     intro i j g
     apply Subtype.ext
-    simp only [ha']
-    exact ccr1 i j g g.2
+    simpa only [ha'] using ccr1 i j g g.2
   have hba : ∀ i j (g : GlobalTheory.VacuumFockLaws.thetaSub V W ψ), b i (a j g) = a j (b i g) + (@ite ℂ (i = j) (Classical.propDecidable (i = j)) 1 0) • g := by
     intro i j g
     apply Subtype.ext
-    simp only [ha', hb', Submodule.coe_add, Submodule.coe_smul]
-    exact ccr2 i j g g.2
+    simpa only [ha', hb', Submodule.coe_add, Submodule.coe_smul] using ccr2 i j g g.2
   have hv : ∀ z, Formalism.IndefR.Datum.annih (heisO ψ V W) θ τ (cplxO s s') z f = 0 := hvac
   have hfb : ∀ i, b i ⟨f, hf⟩ = 0 := by
     intro i
@@ -445,13 +443,10 @@ private theorem laws_lemma_7 {D : D7} {V W : HSp D} {ψ : AddChar (AF D.host.F) 
     have sk : ∀ z F H, IsThetaFunO ψ V W F → IsThetaFunO ψ V W H → ipO μ 𝓕 (Formalism.IndefR.Datum.dRho (heisO ψ V W) θ τ z F) H = -ipO μ 𝓕 F (Formalism.IndefR.Datum.dRho (heisO ψ V W) θ τ z H) :=
       fun z F H hF hH => (hsk τ z).2.2 μ 𝓕 hμ h𝓕 F H hF hH
     apply R.2 (ipO μ 𝓕)
-    · intro x y z
-      exact GlobalTheory.Size.ipO_add_left hψ hμ h𝓕 x.2 y.2 z.2
-    · intro c x z
-      exact GlobalTheory.Size.ipO_smul_left (μ := μ) (𝓕 := 𝓕) c x z
+    · exact fun x y z => GlobalTheory.Size.ipO_add_left hψ hμ h𝓕 x.2 y.2 z.2
+    · exact fun c x z => GlobalTheory.Size.ipO_smul_left (μ := μ) (𝓕 := 𝓕) c x z
     · intro x
-      have e := GlobalTheory.Size.ipO_smul_right (μ := μ) (𝓕 := 𝓕) (0 : ℂ) x 0
-      simpa using e
+      simpa using GlobalTheory.Size.ipO_smul_right (μ := μ) (𝓕 := 𝓕) (0 : ℂ) x 0
     · intro i x y
       have hx : IsThetaFunO ψ V W (x : WO V W → ℂ) := x.2
       have hy : IsThetaFunO ψ V W (y : WO V W → ℂ) := y.2

@@ -81,16 +81,14 @@ private theorem gr_nak {B A : Type} [CommRing B] [CommRing A] [Algebra B A] (�
     · rw [hp]
       exact (DirectSum.decompose 𝒜 e j).2
     · have hf' : f ∈ m • (⊤ : Submodule B A) := by
-        rw [Ideal.smul_top_eq_map]
-        exact hf
+        rwa [Ideal.smul_top_eq_map]
       have hmem := Submodule.mem_map_of_mem (f := p) hf'
       rw [Submodule.map_smul''] at hmem
       refine Submodule.smul_mono le_rfl (fun z hz => ?_) hmem
       obtain ⟨a, -, rfl⟩ := hz
       rw [hp]
       exact (DirectSum.decompose 𝒜 a j).2
-  intro y hy
-  exact (Submodule.le_of_le_smul_of_le_jacobson_bot hfg hm key hy).1
+  exact fun y hy => (Submodule.le_of_le_smul_of_le_jacobson_bot hfg hm key hy).1
 
 private theorem w_ge {n : ℕ} (hn : n = 2 ∨ n = 3) (i j : Fin n) : -2 ≤ w n i - w n j := by
   rcases hn with rfl | rfl <;> fin_cases i <;> fin_cases j <;> simp [w]

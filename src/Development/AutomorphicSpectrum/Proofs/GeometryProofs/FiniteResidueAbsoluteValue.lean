@@ -56,10 +56,8 @@ theorem mem_range_of_valV_le_one {V K' : Type} [CommRing V] [IsDomain V] [IsDisc
     [Algebra V K'] [IsFractionRing V K'] {x : K'} (h : valV V x ≤ 1) : x ∈ (algebraMap V K').range := by
   refine HeightOneSpectrum.mem_integers_of_valuation_le_one K' x fun v => ?_
   have hv : v = IsDiscreteValuationRing.maximalIdeal V := by
-    apply HeightOneSpectrum.ext
-    exact IsLocalRing.eq_maximalIdeal v.isMaximal
-  rw [hv]
-  exact h
+    exact HeightOneSpectrum.ext (IsLocalRing.eq_maximalIdeal v.isMaximal)
+  rwa [hv]
 
 theorem valV_algebraMap_le_one {V K' : Type} [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [Field K']
     [Algebra V K'] [IsFractionRing V K'] (a : V) : valV V (algebraMap V K' a) ≤ 1 :=

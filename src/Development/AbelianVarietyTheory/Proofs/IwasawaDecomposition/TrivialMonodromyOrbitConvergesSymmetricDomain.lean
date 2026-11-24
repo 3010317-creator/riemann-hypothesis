@@ -69,7 +69,7 @@ theorem exists_tendsto_norm_lt {T h c : ℝ} (hh : 0 < h) {f : ℂ → ℂ} (hd 
     ∃ L, Tendsto f imTop (𝓝 L) ∧ ‖L‖ < c := by
   classical
   let g : ℂ → ℂ := fun w => if T < w.im then f w else 0
-  have hg : ∀ w : ℂ, T < w.im → g w = f w := fun w hw => if_pos hw
+  have hg : ∀ w : ℂ, T < w.im → g w = f w := fun w hw => ite_eq_left hw
   have hgp : Function.Periodic g h := fun w => by
     by_cases hw : T < w.im
     · rw [hg w hw, hg _ (by simpa using hw), hp w hw]
@@ -212,8 +212,7 @@ theorem graph_limit {N p : ℕ} (hp : p ≤ N) {T h : ℝ} (hh : 0 < h) {Y : ℂ
   have h1 : (Matrix.of Y₀).submatrix (Fin.castLE hp) id = 1 := by
     ext i j
     refine tendsto_nhds_unique (hY (Fin.castLE hp i) j) (tendsto_const_nhds.congr' ((eventually_imTop T).mono ?_))
-    intro w hw
-    exact (congrFun (congrFun (hG w hw).1 i) j).symm
+    exact fun w hw => (congrFun (congrFun (hG w hw).1 i) j).symm
   refine ⟨Matrix.of Y₀, ⟨h1, (posDef_iff hp _).2 fun v hv => ?_⟩, hY⟩
   rw [h1, one_mulVec]
   refine nsq_lim_lt (T := T) hh (u := fun w => Y w *ᵥ v) (fun a => ?_) (fun w hw => by simp only [hper w hw])
@@ -239,9 +238,7 @@ theorem det_extend {N p : ℕ} {hp : p ≤ N} {Y : Matrix (Fin N) (Fin p) ℂ} (
       · subst b
         simpa [one_apply] using this
       · have hab' : (⟨a, ha⟩ : Fin p) ≠ ⟨b, hb⟩ := by
-          intro heq
-          apply hab
-          exact Fin.ext (congrArg (fun x : Fin p => x.val) heq)
+          exact fun heq => hab (Fin.ext (congrArg (fun x : Fin p => x.val) heq))
         simpa [one_apply, hab, hab'] using this
     · rfl
   rw [det_of_isLowerTriangular _ fun a b hab => by

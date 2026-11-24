@@ -68,8 +68,7 @@ theorem imageSieve_smul' {F G : Scheme.{0}ᵒᵖ ⥤ ModuleCat.{1} (ULift.{1} R)
 theorem imageSieve_zero' {F G : Scheme.{0}ᵒᵖ ⥤ ModuleCat.{1} (ULift.{1} R)} (f : F ⟶ G) {T : Scheme.{0}} :
     Presheaf.imageSieve f (0 : G.obj (op T)) = ⊤ := by
   ext V g
-  simp only [Sieve.top_apply, iff_true]
-  exact ⟨0, by rw [map_zero, map_zero]⟩
+  simpa only [Sieve.top_apply, iff_true] using ⟨0, by rw [map_zero, map_zero]⟩
 
 theorem pcok_π_apply (R : Type) [CommRing R] {A' B' A B : PSh} (i' : A' ⟶ B') (i : A ⟶ B) (a : A' ⟶ A)
     (b : B' ⟶ B) (w : i' ≫ b = a ≫ i) (V : Scheme.{0}ᵒᵖ) (m : ((freeP R).obj B').obj V) :

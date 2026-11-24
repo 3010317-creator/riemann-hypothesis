@@ -74,8 +74,7 @@ theorem fib_finite (v : HeightOneSpectrum (𝓞 F)) :
     {P : HeightOneSpectrum (𝓞 E) | P.asIdeal.LiesOver v.asIdeal}.Finite := by
   refine ((IsDedekindDomain.primesOver_finite v.asIdeal (𝓞 E)).preimage
     (Set.injOn_of_injective (fun a b h => HeightOneSpectrum.ext h))).subset ?_
-  intro P hP
-  exact ⟨P.isPrime, hP⟩
+  exact fun P hP => ⟨P.isPrime, hP⟩
 
 noncomputable def fib (v : HeightOneSpectrum (𝓞 F)) : Finset (HeightOneSpectrum (𝓞 E)) :=
   (fib_finite F E v).toFinset
@@ -139,8 +138,7 @@ theorem local_factor (h2 : Module.finrank F E = 2) (v : HeightOneSpectrum (𝓞 
     have h := Ideal.sum_ramification_inertia (𝓞 E) F E hp0
     rw [← hmapfib, Finset.sum_map] at h
     rw [← h2, ← h]
-    refine Finset.sum_congr rfl fun P hP => ?_
-    exact inertiaDeg_eq_ramIdx_mul_of_ramIdx_eq_one p P (he P hP)
+    exact Finset.sum_congr rfl fun P hP => inertiaDeg_eq_ramIdx_mul_of_ramIdx_eq_one p P (he P hP)
   have hnorm : ∀ P ∈ fib F E v,
       Ideal.absNorm P.asIdeal = Ideal.absNorm p ^ p.inertiaDeg' P.asIdeal := by
     intro P hP
@@ -165,8 +163,7 @@ theorem local_factor (h2 : Module.finrank F E = 2) (v : HeightOneSpectrum (𝓞 
       rw [ha]
       exact Finset.mem_singleton_self a
     have haf : p.inertiaDeg' a.asIdeal = 2 := by
-      rw [ha, Finset.sum_singleton] at hsum
-      exact hsum
+      rwa [ha, Finset.sum_singleton] at hsum
     have hmapa : Ideal.map (algebraMap (𝓞 F) (𝓞 E)) p = a.asIdeal := by
       haveI := hlies a hamem
       have hle : Ideal.map (algebraMap (𝓞 F) (𝓞 E)) p ≤ a.asIdeal :=
@@ -179,16 +176,14 @@ theorem local_factor (h2 : Module.finrank F E = 2) (v : HeightOneSpectrum (𝓞 
         Nat.pos_of_ne_zero (by rwa [Ne, Ideal.absNorm_eq_zero_iff])
       have hJ1 : Ideal.absNorm J = 1 := by
         have h' : Ideal.absNorm p ^ 2 * 1 = Ideal.absNorm p ^ 2 * Ideal.absNorm J := by
-          rw [mul_one]
-          exact hn
+          rwa [mul_one]
         exact (Nat.eq_of_mul_eq_mul_left (by positivity) h').symm
-      rw [Ideal.absNorm_eq_one_iff.mp hJ1, Ideal.mul_top] at hJ
-      exact hJ
+      rwa [Ideal.absNorm_eq_one_iff.mp hJ1, Ideal.mul_top] at hJ
     have hfield : IsField (TensorProduct F (HeightOneSpectrum.adicCompletion F v) E) :=
       GlobalTheory.InertField.isField_of_inert F E h2 v (by rw [hmapa]; exact a.isPrime)
     have heSp : PositivityTheory.SiegelWeilFormula.Gen.eSp E v = -1 := by
       unfold PositivityTheory.SiegelWeilFormula.Gen.eSp
-      exact if_pos hfield
+      exact ite_eq_left hfield
     rw [ha, Finset.prod_singleton, hnorm a hamem, haf, heSp, natCast_pow_cpow]
     ring
   · obtain ⟨a, b, hab, hfab⟩ := Finset.card_eq_two.mp hc
@@ -208,7 +203,7 @@ theorem local_factor (h2 : Module.finrank F E = 2) (v : HeightOneSpectrum (𝓞 
     have hnf := GlobalTheory.SplitPlace.not_isField_of_split F E h2 v hsplit
     have heSp : PositivityTheory.SiegelWeilFormula.Gen.eSp E v = 1 := by
       unfold PositivityTheory.SiegelWeilFormula.Gen.eSp
-      exact if_neg hnf
+      exact ite_eq_right hnf
     rw [hfab, Finset.prod_pair hab, hnorm a hamem, hnorm b hbmem, ha1, hb1, heSp, pow_one]
     ring
 

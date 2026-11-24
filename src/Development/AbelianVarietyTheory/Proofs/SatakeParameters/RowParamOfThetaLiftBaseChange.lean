@@ -181,8 +181,7 @@ theorem isBCV_of_perm {i : N.Loc} {P : A.AV i} {Pa Pa' : List (Part A.CG)} (h : 
   refine ⟨fun p hp => h1 p (h.mem_iff.2 hp), (h.map _).nodup_iff.1 h2, ?_, fun w hw => ?_,
     fun w hw => ?_, fun τ => ?_⟩
   · unfold rankIso at h3 ⊢
-    rw [← (h.map _).sum_eq]
-    exact h3
+    rwa [← (h.map _).sum_eq]
   · rw [← isoLoc_perm N A h]
     exact h4 w hw
   · rw [← isoLoc_perm N A h]
@@ -248,7 +247,6 @@ theorem param_of_theta (D : D7) (h0 : SumRepresentations.tie0 D) (h3 : SumRepres
             twistIso D.nd D.naut [muPart D.nd D.naut i] D.naut.etaTinv from List.map_append ..,
         twistIso_eta_inv D.nd D.naut hLP hC hAN L (fun p hp => (hL p hp).1)]
       rfl
-    rw [e]
-    exact hB'
+    rwa [e]
 
 end GlobalTheory.RowThetaParam

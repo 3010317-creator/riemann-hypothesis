@@ -277,8 +277,7 @@ theorem differentiableAt_readsZ {V : Unf Xo c σ r} (hσ : GoodEmb c σ) (hU : I
   have d₂ : DifferentiableAt ℂ (fun b => ev _ σ _ (u i) (s b)) b₀ :=
     (hd _ (u i)).differentiableAt ((ho _).mem_nhds ⟨hb₀, hi⟩)
   have n₂ : ev _ σ _ (u i) (s b₀) ≠ 0 := by
-    rw [← hu i _ hz Q₀ hO hQ₀]
-    exact hg0
+    rwa [← hu i _ hz Q₀ hO hQ₀]
   refine (d₁.mul (d₂.inv n₂)).congr_of_eventuallyEq ?_
   filter_upwards [d₂.continuousAt.eventually_ne n₂] with b hb
   exact (mul_inv_cancel_right₀ hb _).symm
@@ -350,7 +349,7 @@ theorem tw_of_dec {V : Unf Xo c σ r} (hσ : GoodEmb c σ) (hU : IsUnf V) (κ : 
   set a : (E →+* ℂ) × ℕ → ℕ := fun x => if x.2 < D.mult x.1 then (G.1 x + (M + 1)).toNat else 0 with ha
   have haZ : ∀ (τ : E →+* ℂ) (i : ℕ), i < D.mult τ → (a (τ, i) : ℤ) = G.1 (τ, i) + (M + 1) := fun τ i hi => by
     show ((if i < D.mult τ then (G.1 (τ, i) + (M + 1)).toNat else 0 : ℕ) : ℤ) = _
-    rw [if_pos hi, Int.toNat_of_nonneg (by linarith [hMb τ i hi])]
+    rw [ite_eq_left hi, Int.toNat_of_nonneg (by linarith [hMb τ i hi])]
   have hDa : Dom a (2 * ((M + 1) * m)) := by
     refine ⟨fun τ i j hij => ?_, even_two_mul _⟩
     simp only [ha]
@@ -363,8 +362,7 @@ theorem tw_of_dec {V : Unf Xo c σ r} (hσ : GoodEmb c σ) (hU : IsUnf V) (κ : 
     funext i
     rcases i with _ | ⟨τ, i⟩
     · simp only [exZ, wtZ, Prod.snd_add, hG, zero_add]
-    · simp [exZ, wtZ]
-      exact haZ τ i i.2
+    · simpa [exZ, wtZ] using haZ τ i i.2
   have hκ : toC (evR Xo c (κ.ρ : Rul Xo c) y) ≠ 0 := fun hz => by
     have e₁ : evR Xo c (κ.ρ : Rul Xo c) y * evR Xo c ((κ.ρ⁻¹ : (Rul Xo c)ˣ) : Rul Xo c) y = 1 := by
       rw [← evR_mul', Units.mul_inv]
@@ -425,11 +423,9 @@ theorem exists_residue_eval : ∀ (F : Type) [Field F] (Y : Scheme.{0}) (p : Y �
       ext q
       simp only [Set.mem_preimage, Set.mem_singleton_iff]
       constructor
-      · intro hq
-        exact hU.fromSpec.isOpenEmbedding.injective (hq.trans hfx.symm)
+      · exact fun hq => hU.fromSpec.isOpenEmbedding.injective (hq.trans hfx.symm)
       · rintro rfl; exact hfx
-    rw [h2] at h1
-    exact h1
+    rwa [h2] at h1
   have hmax : x0.asIdeal.IsMaximal := (PrimeSpectrum.isClosed_singleton_iff_isMaximal _).1 hcl
   let P := x0.asIdeal
   letI : Field (Γ(Y, U) ⧸ P) := Ideal.Quotient.field P
@@ -487,8 +483,7 @@ theorem exists_residue_eval : ∀ (F : Type) [Field F] (Y : Scheme.{0}) (p : Y �
       have hpt : (Spec.map (CommRingCat.ofHom φ)) (IsLocalRing.closedPoint ℂ) = x0 := by
         apply PrimeSpectrum.ext
         change Ideal.comap φ (IsLocalRing.maximalIdeal ℂ) = P
-        rw [IsLocalRing.maximalIdeal_eq_bot]
-        exact hker
+        rwa [IsLocalRing.maximalIdeal_eq_bot]
       change hU.fromSpec ((Spec.map (CommRingCat.ofHom φ)) (IsLocalRing.closedPoint ℂ)) = z
       rw [hpt, hfx]
     · rw [secVal_apply, ← ev_res hUi (ofHom_mem hU φ hφ), ev_ofHom]
@@ -576,8 +571,7 @@ theorem linIndep_descent : ∀ (F : Type) [Field F] (σ : F →+* ℂ) (J : Type
         simp only [Finset.mul_sum, Finset.sum_mul]
         rw [Finset.sum_comm]
         exact Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun l _ => by ring)
-    intro k
-    exact congrFun this k
+    exact fun k => congrFun this k
   have hc0 : ∀ k, (fun l => B.repr ⟨d l, hmem l⟩ k) = 0 := fun k => hv _ fun j => hx j k
   funext l
   rw [hdc l, Pi.zero_apply]
@@ -660,8 +654,7 @@ theorem vanish_descent : ∀ (F : Type) [Field F] (Y : Scheme.{0}) (p : Y ⟶ Sp
         obtain ⟨a, ha0, ha⟩ := H
         have hes : ∀ j, e j (∑ l, algX p ⊤ (a l) • b l) = 0 := fun j => by
 
-          simp only [map_sum, he_smul]
-          exact ha0 j
+          simpa only [map_sum, he_smul] using ha0 j
         have hsO : nonzeroLocus (∑ l, algX p ⊤ (a l) • b l) ≤ O := by
           by_contra h
           obtain ⟨z, hzc, hzs, hzO⟩ := exists_closed_mem_notMem F Y p hp _ O h
@@ -733,7 +726,7 @@ theorem DifferentiableLines.holomorphic_extension_sections : ∀ (E : Type) [Fie
   rw [hR x hx i y hz Q t rfl hQ ht, hs, Finset.mul_sum]
   refine Finset.sum_congr rfl fun j _ => ?_
   have a : rdU V (ruleTop T.X e (GlobalTheory.Vanishing.H0.ofSec (flagStr T.X) ⊤ (ss j))) k x =
-      toC (evR Xo c (ruleTop T.X e (GlobalTheory.Vanishing.H0.ofSec (flagStr T.X) ⊤ (ss j))) (V.un k ⟨x, hx⟩)) := dif_pos hx
+      toC (evR Xo c (ruleTop T.X e (GlobalTheory.Vanishing.H0.ofSec (flagStr T.X) ⊤ (ss j))) (V.un k ⟨x, hx⟩)) := dite_eq_left hx
   have b : GlobalTheory.CxPts.secVal (flagStr T.X) σ (ss j) i y = _ := GlobalTheory.CxPts.ev_eq hy _
   have d := evR_ruleTop (GlobalTheory.Vanishing.H0.ofSec (flagStr T.X) ⊤ (ss j)) hO hQ ht
   have f := GlobalTheory.Vanishing.H0.val_ofSec (p := flagStr T.X) (O := ⊤) (B := T.X.LL e) (T.X.ptY (V.un k ⟨x, hx⟩)) i le_top hz (ss j)
@@ -926,8 +919,7 @@ theorem differentiableAt_of_lines {k : ℕ} {U O : Set (Fin k → ℂ)} {g f : (
   obtain ⟨t₁, ht₁, hgt₁⟩ := hne (r / 2) (by linarith)
   set v : Fin k → ℂ := t₁ - τ₀ with hvdef
   have hv : ‖v‖ < r / 2 := by
-    rw [hvdef, ← dist_eq_norm]
-    exact ht₁
+    rwa [hvdef, ← dist_eq_norm]
   have hline : ∀ τ ∈ ball τ₀ (r / 4), ∀ z : ℂ, ‖z‖ < 3 / 2 → τ + z • v ∈ U := by
     intro τ hτ z hz
     apply hrU
@@ -1219,7 +1211,7 @@ theorem tendsto_arc_readsZ {V : Unf Xo c σ r} (hσ : GoodEmb c σ) (hU : IsUnf 
   have hb0 : (0 : ℂ) ∈ Metric.ball (0 : ℂ) ρ := Metric.mem_ball_self hρ
   let ψ : ℂ → (A →+* ℂ) := fun u => if hu : u ∈ Metric.ball (0 : ℂ) ρ then
     GlobalTheory.FlagMod.ev (s u).1 W (hsW u hu) else GlobalTheory.FlagMod.ev (s 0).1 W (hsW 0 hb0)
-  have hψ : ∀ u (hu : u ∈ Metric.ball (0 : ℂ) ρ), ψ u = GlobalTheory.FlagMod.ev (s u).1 W (hsW u hu) := fun u hu => dif_pos hu
+  have hψ : ∀ u (hu : u ∈ Metric.ball (0 : ℂ) ρ), ψ u = GlobalTheory.FlagMod.ev (s u).1 W (hsW u hu) := fun u hu => dite_eq_left hu
   have hψq : ∀ u ∈ Metric.ball (0 : ℂ) ρ, spMap (ψ u) ≫ q = (s u).1 := fun u hu => by
     rw [hψ u hu]
     exact GlobalTheory.FlagMod.spMap_ev (s u).1 hW _
@@ -1297,8 +1289,7 @@ theorem tendsto_arc_readsZ {V : Unf Xo c σ r} (hσ : GoodEmb c σ) (hU : IsUnf 
   have hu := hT w hw
   have e₁ : P (xx w) = chr ee t * h i (s (eTwoPi w)) :=
     hR (xx w) hd i _ (hi _ hu) Q t (GlobalTheory.FlagMod.FlagCover.eq_ptY (hQ.lies.frBor ht)).symm hQ ht
-  rw [chr_of_some ht1, hee, zpow_zero, one_mul] at e₁
-  exact e₁
+  rwa [chr_of_some ht1, hee, zpow_zero, one_mul] at e₁
 
 end ThetaShiftProofs
 
@@ -1332,8 +1323,7 @@ theorem holoOn_bdZ {V : Unf Xo c σ r} (hσ : GoodEmb c σ) (hU : IsUnf V) (T : 
   obtain ⟨g, hgO, hpg⟩ := hW.exists_basicOpen_le (V := flagOpen T.X) ⟨p, hpO⟩ hpW
   have hg : g ≠ 0 := by
     rintro rfl
-    rw [Scheme.basicOpen_zero] at hpg
-    exact hpg
+    rwa [Scheme.basicOpen_zero] at hpg
   let s : (Fin d → ℂ) → GlobalTheory.CxPts (flagStr T.X) σ := fun b => C.e.symm (L.symm b)
   have ho : ∀ {S}, IsOpen S → IsOpen (L.symm ⁻¹' (C.e.target ∩ C.e.symm ⁻¹' S)) := fun hS =>
     (GlobalTheory.ChartGlue.isOpen_over C.e hS).preimage L.symm.continuous
@@ -1359,8 +1349,7 @@ theorem holoOn_bdZ {V : Unf Xo c σ r} (hσ : GoodEmb c σ) (hU : IsUnf V) (T : 
         fun f => DifferentiableOn.comp (g := fun b => ev _ σ W f (s b)) (f := fun u : ℂ => τ + u • w) (hd f)
           hline.differentiableOn fun u hu => (hb u hu).1
       have b₃ : s (τ + (0 : ℂ) • w) ∉ ptsIn _ σ (flagOpen T.X) := by
-        rw [zero_smul, add_zero]
-        exact hout
+        rwa [zero_smul, add_zero]
       have b₄ : ∀ u ∈ Metric.ball (0 : ℂ) ρ, u ≠ 0 → s (τ + u • w) ∈ ptsIn _ σ (flagOpen T.X) :=
         fun u hu hu0 => ((hb u hu).2 hu0).2.2
       exact tendsto_arc_readsZ hσ hU T hee hP hR hZ i hW hWi (fun z => s (τ + z • w)) hρ b₁ b₂ b₃ b₄
@@ -1537,8 +1526,7 @@ theorem cusp_form_extension_vanishing : ∀ (D : D7) (T : Core D) (j : ℕ) (Y :
   obtain ⟨k, y⟩ := w
   obtain ⟨hd, hl⟩ := hw
   have h := evR_eq_of_sec₀_eq TF.X Z ⟨f, hfs⟩ ⟨g.1, GlobalTheory.CompHS.cusp_le_secZ Z Y.U u g.2⟩ (hsf.symm.trans hg.symm) _ hl
-  simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, dif_pos hd]
-  exact congrArg _ h
+  simpa only [rdU, LinearMap.coe_mk, AddHom.coe_mk, dite_eq_left hd] using congrArg _ h
 
 end ModelDimension
 end -- clump:auto
@@ -1660,8 +1648,7 @@ theorem norm_small_le (hU : ∀ σ, GoodEmb c σ → IsUnf (U σ))
     (bergCusp_le_iff (sq_nonneg _)).2 hcusp
   have hBO : bergOn (U (goodOf c σ)) (V (goodOf c σ)) (dict (goodOf c σ)) Z G ⟨F.k, F.z⟩ ≤
       ENNReal.ofReal ((F.fac x G * S) ^ 2) := by
-    rw [← bergCusp_eq_bergOn (hd _ hgood) (hspan _ hgood) ⟨F.k, F.z⟩ hmem]
-    exact hB
+    rwa [← bergCusp_eq_bergOn (hd _ hgood) (hspan _ hgood) ⟨F.k, F.z⟩ hmem]
   have hsm := hf.2 _ hgood ⟨F.k, F.z⟩ hmem
   have hfs : (f : Rul Xo c) ∈ secZ Xo c (exZ Dw (τ • G)) := cuspW_le_secZ _ f.2.1
   have e1 : homN (U (goodOf c σ)) x (τ • G) f ⟨F.k, F.z.1⟩ = F.fac x G ^ τ * ‖ρ (genVal Z (f : Rul Xo c))‖ := by

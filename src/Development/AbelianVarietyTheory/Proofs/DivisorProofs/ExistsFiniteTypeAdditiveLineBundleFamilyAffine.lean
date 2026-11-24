@@ -120,8 +120,7 @@ theorem exists_lb_stage (X : Over (Sp R)) [QuasiCompact X.hom] [QuasiSeparated X
   have hc : IsLimit (schemeConeOfFamily _ ρ w) := Spread.isLimitBcCone X.hom C
   obtain ⟨s, M, hM, hiso, -⟩ := LBLimit.exists_lb_of_isLimit _ ρ w hc N hN
   refine ⟨s.unop, M, hM, ?_⟩
-  rw [whiskerLeft_toStage_left]
-  exact hiso
+  rwa [whiskerLeft_toStage_left]
 
 
 open GlobalTheory.CechPic in
@@ -195,8 +194,7 @@ theorem exists_fam_stage (A : Over (Sp R)) [GrpObj A] [QuasiCompact A.hom] [Quas
     simp only [D, map_sub, map_zero, pull_evc, MonObj.comp_mul, ← Category.assoc, whiskerLeft_fst,
       whiskerLeft_snd] at e
     simp only [lift_fst, lift_snd] at e
-    rw [sub_sub, sub_eq_zero] at e
-    exact e
+    rwa [sub_sub, sub_eq_zero] at e
   · rw [same_iff hN hN₀, H2, Category.assoc, toStage_stageMap, ← H1, Category.comp_id]
 
 end GlobalTheory.DualApprox
@@ -233,7 +231,6 @@ theorem exists_fam_finiteType : ∀ (R : Type) [CommRing R] [IsNoetherianRing R]
   rw [pull_evc, pull_evc, whiskerLeft_fst, ← Category.assoc, whiskerLeft_snd, Category.comp_id, H,
     Category.assoc, Iso.hom_inv_id, Category.comp_id, ← Category.assoc, whiskerLeft_snd,
     Category.assoc] at k
-  rw [Category.comp_id]
-  exact k
+  rwa [Category.comp_id]
 
 end GlobalTheory.DualApprox

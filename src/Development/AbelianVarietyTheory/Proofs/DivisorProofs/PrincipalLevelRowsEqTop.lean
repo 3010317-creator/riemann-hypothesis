@@ -95,8 +95,7 @@ theorem theta_base_forms_mem_principal_good_part {K : Type} [Field K] [NumberFie
   obtain ⟨x, hx⟩ := mem_range_toF_full (A3.A.fam.R A3.A.fam.μ0) A3.A.fam.X (X.zs.Z A3.A.fam.μ0) z hz h1.2
   refine ⟨cpt A3.A.v0.embedding x, ?_⟩
   have h3 := GlobalTheory.OneForm.iC_cpt X (crdOf3 A3 ⊥ 1 P1 ψ1 Dc Sp Zsc) false A3.A.fam.μ0 x
-  refine h3.trans ?_
-  exact congrArg (fun y => X.Θ A3.A.fam.μ0 (X.jR A3.A.fam.μ0 y)) hx
+  exact h3.trans (congrArg (fun y => X.Θ A3.A.fam.μ0 (X.jR A3.A.fam.μ0 y)) hx)
 
 end GlobalTheory.PrincipalRows
 
@@ -134,8 +133,7 @@ theorem principal_level_rows_eq_top : ∀ {D : D7} {G : Type} [Group G] [Fintype
       show Tw.map _ (R.Th A3.A.fam.μ0) (LinearMap.adjoint (Tw.map _ (R.Th A3.A.fam.μ0)) _) = _
       rw [Tw.adjoint_map]
       exact congrArg (Tw.mk (twAt D.what₂.embLL A3.A.v0)) key
-    rw [h4] at h3
-    exact h3
+    rwa [h4] at h3
   rw [eq_top_iff]
   intro e0 _
   have hx : Tw.out (s := twAt D.what₂.embLL A3.A.v0) (E := R.HE.H) e0 ∈ ⨆ p, R.EEp3 p := by rw [hTop]; exact Submodule.mem_top

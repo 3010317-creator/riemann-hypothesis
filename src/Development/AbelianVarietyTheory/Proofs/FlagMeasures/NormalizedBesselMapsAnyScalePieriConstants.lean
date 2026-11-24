@@ -67,16 +67,14 @@ theorem bessel_move_gap : GlobalTheory.GapIn.Hyp → ∀ (k r : ℕ) (Wp : Type)
       _ = h * t⁻¹ := by rw [← hc h hh, imc ht]
   refine ⟨⟨s1, s2, s3, s4, hW, haar_conj ht hN hμN, hG, ?_⟩, fun R hR => ⟨fun B => ⟨fun hB => ?_, fun hB => ?_⟩, ?_⟩⟩
   · have := quot_conj ht hG hq
-    rw [← muS_conj ht hW hμN hc] at this
-    exact this
+    rwa [← muS_conj ht hW hμN hc] at this
   · exact bessel_transport hR ht (fun n hn => (hN n).mp hn) hc hψ hB
   · have h := bessel_transport (ψ' := psi k r z c) hR (inv_mem ht) (fun n hn => by rw [hti]; exact hN' n hn) hc'
       (fun n hn => by rw [hti, hψ _ (hN' n hn), hcan]) hB
     have e : (fun v => B (R.σ t (R.σ t⁻¹ v))) = B := by
       funext v
       rw [← sig_mul hR ht (inv_mem ht), mul_inv' ht, sig_one hR]
-    rw [e] at h
-    exact h
+    rwa [e] at h
   · intro l₁ hl x hx v hv
     haveI := hW.1
     haveI := hμN.1

@@ -184,8 +184,7 @@ theorem exists_vacG_lineLat_zero : OnStd fun {D} _ _ _ {G} W F => ∃ Φ₀, Vac
       refine Matrix.ext fun i j => ?_
       have := congrFun hF.zB i
       simp only [Matrix.mulVec, dotProduct] at this
-      simp only [Matrix.mul_apply, B, Matrix.of_apply, Matrix.submatrix_apply, id, f]
-      exact this
+      simpa only [Matrix.mul_apply, B, Matrix.of_apply, Matrix.submatrix_apply, id, f] using this
     have hB : Bᴴ * F.Lz.gram * B = 1 := by
       rw [← F.oz.isoB]
       have e : Bᴴ * (F.oz.iBᴴ * (G.V (.core 0)).gram * F.oz.iB) * B =
@@ -408,13 +407,11 @@ theorem lastLat_rankZero (hψ : IsStdChar D ψ (-1)) (J : JacL D 0) {X T L'' : H
   · have hu' : J.d.ext0 T (wittCoreRestrictionHom J.d T u) ∈ Γ := by rw [back]; exact hu
     have := hw.1 _ (mA _ hu')
     rw [o.symplO_resT, map_nsmul (o.resT J.W₀), AddEquiv.apply_symm_apply, Prod.smul_snd, nsmul_zero, s0, add_zero] at this
-    rw [← back u, ← map_nsmul, wittExtensionByZero_symplectic_form_eq]
-    exact this
+    rwa [← back u, ← map_nsmul, wittExtensionByZero_symplectic_form_eq]
   · have hu' : J.d.ext0 T (wittCoreRestrictionHom J.d T u) ∈ Γ := by rw [back]; exact hu
     have := hw.2 e he _ (mA _ hu') (hA e _ (isHalf_mul_right _ hh))
     rw [o.symplO_resT, AddEquiv.apply_symm_apply, s0, add_zero] at this
-    rw [← back u, wittExtensionByZero_symplectic_form_eq]
-    exact this
+    rwa [← back u, wittExtensionByZero_symplectic_form_eq]
   · have := hw.1 _ (mB u hu)
     rwa [o.symplO_resT, map_nsmul (o.resT J.W₀), AddEquiv.apply_symm_apply, Prod.smul_fst, nsmul_zero, s0, zero_add] at this
   · have := hw.2 e he _ (mB u hu) (hB e u hh)

@@ -140,8 +140,7 @@ theorem hostHalfRoot_add_conj_eq_one {E : Type} [Field E] [NumberField E] [IsCMF
     simpa using this
   have htw : 2 * (H.w0 : E) = 1 + H.rt := by
     have := congrArg (algebraMap (𝓞 E) E) H.two_weight_eq_one_add_root
-    rw [map_mul, map_add (f := _), map_one, map_ofNat] at this
-    exact this
+    rwa [map_mul, map_add (f := _), map_one, map_ofNat] at this
   have hz : φ (H.rt : E) ^ 2 = -(H.d : ℂ) := by
     simpa using congrArg φ hrt
   have hzc : conj (φ (H.rt : E)) = -φ (H.rt : E) := by
@@ -163,12 +162,10 @@ theorem hostHalfRoot_add_conj_eq_one {E : Type} [Field E] [NumberField E] [IsCMF
     · linear_combination h
   have hw : 2 * φ (H.w0 : E) = 1 + φ (H.rt : E) := by
     have := congrArg φ htw
-    rw [map_mul, map_add (f := _), map_one, map_ofNat] at this
-    exact this
+    rwa [map_mul, map_add (f := _), map_one, map_ofNat] at this
   have hwc : 2 * conj (φ (H.w0 : E)) = 1 + conj (φ (H.rt : E)) := by
     have := congrArg conj hw
-    rw [map_mul, map_add (f := _), map_one, map_ofNat] at this
-    exact this
+    rwa [map_mul, map_add (f := _), map_one, map_ofNat] at this
   apply φ.injective
   rw [map_add (f := _), map_one, hcc]
   linear_combination (hw + hwc + hzc) / 2

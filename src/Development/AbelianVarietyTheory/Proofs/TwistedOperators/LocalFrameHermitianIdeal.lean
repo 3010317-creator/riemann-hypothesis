@@ -111,7 +111,7 @@ theorem sum_flagV {M : Type} [AddCommMonoid M] (ρ k n : ℕ) (hn : n = 2 * ρ +
     unfold flagV
     have := a.2
     simp only [Fin.val_cast, Fin.val_natAdd]
-    rw [dite_eq_right (by omega), dite_eq_right (by omega), dite_eq_right (by omega), dif_pos (by omega)]
+    rw [dite_eq_right (by omega), dite_eq_right (by omega), dite_eq_right (by omega), dite_eq_left (by omega)]
     congr 1
     ext
     simp [Fin.val_rev]
@@ -145,7 +145,7 @@ theorem ew_int {D : D7} {g : ℕ} {e0 f0 : Fin D.R.rS → VA (II D)} {z0 : VA (I
     {ew : (II D).E ⊗[(II D).F] Af (II D).F} (hF : Formalism.L2.SG.Pf.BunEx.Unip.FH (II D) g e0 f0 z0 bw bwd ew) (i : Fin D.R.k) :
     ew ∈ IntAf (II D).F (II D).E := by
   obtain ⟨t, ht, e⟩ := hF.dual i i
-  simp only [if_true] at e
+  simp only [ite_true] at e
   have h1 : hA (II D) (bwd i) (bw i) ∈ IntAf (II D).F (II D).E := hA_int (II D) (hF.mem.2.2 i).2 (hF.mem.2.2 i).1
   have h2 : ((g : ℕ) : (II D).E ⊗[(II D).F] Af (II D).F) * t ∈ IntAf (II D).F (II D).E :=
     Subring.mul_mem _ (natCast_mem _ g) ht
@@ -184,11 +184,11 @@ theorem Rc_flag {D : D7} (e0 f0 : Fin D.R.rS → VA (II D)) (z0 : VA (II D)) (bw
   rw [sum_flagV _ _ _ (rank_val D)]
   unfold Rc
   cases w
-  · simp only [basisOrRevDual, dualOrRevBasis, Bool.false_eq_true, if_false, hA_neg_left', neg_smul]
+  · simp only [basisOrRevDual, dualOrRevBasis, Bool.false_eq_true, ite_false, hA_neg_left', neg_smul]
     rw [show (∑ x : Fin D.R.k, hA (II D) (bw x.rev) u • bwd x.rev) = ∑ x, hA (II D) (bw x) u • bwd x from
       Equiv.sum_comp Fin.revPerm (fun i => hA (II D) (bw i) u • bwd i)]
     abel
-  · simp only [basisOrRevDual, dualOrRevBasis, if_true, hA_neg_left', neg_smul]
+  · simp only [basisOrRevDual, dualOrRevBasis, ite_true, hA_neg_left', neg_smul]
     abel
 
 theorem key_gen {A : Type} [CommRing A] (S : Subring A) {n ι κ : Type} [Fintype n] [DecidableEq n] [Fintype ι] [Fintype κ]
@@ -212,16 +212,15 @@ theorem read_gen {A K : Type} [CommRing A] [CommRing K] (S : Subring A) (φ : S 
   rw [key_gen S M u c G d o gg z hu p hup hc hG hd ho hg hz, map_add (f := _), map_add (f := _), map_sum, map_sum, map_mul, hg0, zero_mul,
   add_zero]
   simp only [map_mul, hd0, zero_mul, Finset.sum_const_zero, add_zero, hδ, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
 
 theorem resS_natCast {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (PP : Pl E) (g : ℕ)
     (hg : (g : 𝓞 E) ∈ PP.asIdeal) : resS F PP (g : Formalism.L2.Herm.intAf F E) = 0 := by
-  rw [map_natCast, ← map_natCast (Ideal.Quotient.mk PP.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
-  exact hg
+  rwa [map_natCast, ← map_natCast (Ideal.Quotient.mk PP.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
 
 theorem redV_of {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n : ℕ}
     (β : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (PP : Pl E) (v : Fin n → E ⊗[F] Formalism.L2.Herm.Af F) (j : Fin n)
-    (h : ((β⁻¹).val *ᵥ v) j ∈ Formalism.L2.Herm.intAf F E) : redV β PP v j = resS F PP ⟨_, h⟩ := dif_pos h
+    (h : ((β⁻¹).val *ᵥ v) j ∈ Formalism.L2.Herm.intAf F E) : redV β PP v j = resS F PP ⟨_, h⟩ := dite_eq_left h
 
 
 open Formalism.L2.SG.Pf.unitaryCongruence Formalism.L2.SG.Pf.BunEx.Unip in
@@ -272,8 +271,7 @@ theorem coef_read : ∀ {D : D7} (g : ℕ) (e0 f0 : Fin D.R.rS → VA (II D)) (z
   have hfin := read_gen (Formalism.L2.Herm.intAf D.host.F D.host.E) (resS D.host.F PP) (β⁻¹).val u _ _ _ _ _ z hu' p hui hC hGi
     hCo hoi hgI hzi hδ (fun i => second hF hL u i (hCo i)) hg0
   have hR := redV_of β PP u p hui
-  rw [hR]
-  exact hfin
+  rwa [hR]
 
 end GlobalTheory.SeeConjGroup.CoefRead
 end -- clump:auto
@@ -381,23 +379,23 @@ variable {M : Type} [Zero M] {ρ k n : ℕ} (e f : Fin ρ → M) (b : Fin k → 
 theorem flag_e (p : Fin n) (a : Fin ρ) (h : p.1 = a.1) : flagV ρ k n e f b z p = e a := by
   have := a.2
   unfold flagV
-  rw [dif_pos (by omega)]
+  rw [dite_eq_left (by omega)]
   exact congrArg e (Fin.ext h)
 
 theorem flag_b (p : Fin n) (i : Fin k) (h : p.1 = ρ + i.1) : flagV ρ k n e f b z p = b i := by
   have := i.2
   unfold flagV
-  rw [dite_eq_right (by omega), dif_pos (by omega)]
+  rw [dite_eq_right (by omega), dite_eq_left (by omega)]
   exact congrArg b (Fin.ext (by show p.1 - ρ = i.1; omega))
 
 theorem symmetricFlagBasisVectors_eq_centre (p : Fin n) (h : p.1 = ρ + k) : flagV ρ k n e f b z p = z := by
   unfold flagV
-  rw [dite_eq_right (by omega), dite_eq_right (by omega), dif_pos h]
+  rw [dite_eq_right (by omega), dite_eq_right (by omega), dite_eq_left h]
 
 theorem flag_f (p : Fin n) (a : Fin ρ) (h : p.1 = 2 * ρ + k - a.1) : flagV ρ k n e f b z p = f a := by
   have := a.2
   unfold flagV
-  rw [dite_eq_right (by omega), dite_eq_right (by omega), dite_eq_right (by omega), dif_pos (by omega)]
+  rw [dite_eq_right (by omega), dite_eq_right (by omega), dite_eq_right (by omega), dite_eq_left (by omega)]
   exact congrArg f (Fin.ext (by show 2 * ρ + k - p.1 = a.1; omega))
 
 theorem flag_mem (S : Set M) (hn : n = 2 * ρ + k + 1) (he : ∀ a, e a ∈ S) (hf : ∀ a, f a ∈ S) (hb : ∀ i, b i ∈ S)
@@ -437,8 +435,8 @@ theorem entry_zero {κ : Type} [CommRing κ] {n r ρ k : ℕ} (h : n = r) (hr : 
   obtain ⟨⟨h1, h2⟩, h3⟩ := hN
   rw [← e]
   by_cases hp : p = q
-  · rw [if_pos hp, hp]; exact h2 q
-  · rw [if_neg hp]
+  · rw [ite_eq_left hp, hp]; exact h2 q
+  · rw [ite_eq_right hp]
     rcases hpq with hpq | ⟨a, b, c⟩
     · exact h1 (show q.1 < p.1 from lt_of_le_of_ne hpq (fun h => hp (Fin.ext h.symm)))
     · exact h3 p q a b c
@@ -459,8 +457,7 @@ theorem ZAt_neg {PP : Pl E} {c : E ⊗[F] Formalism.L2.Herm.Af F} (h : ZAt PP (-
   intro hc
   have := h (neg_mem hc)
   have e : (⟨-c, neg_mem hc⟩ : Formalism.L2.Herm.intAf F E) = -⟨c, hc⟩ := rfl
-  rw [e, (resS F PP).map_neg, neg_eq_zero] at this
-  exact this
+  rwa [e, (resS F PP).map_neg, neg_eq_zero] at this
 
 theorem ZAt_mul {PP : Pl E} {a c : E ⊗[F] Formalism.L2.Herm.Af F} (ha : a ∈ Formalism.L2.Herm.intAf F E)
     (hc : c ∈ Formalism.L2.Herm.intAf F E) (h : ZAt PP a) : ZAt PP (a * c) := by
@@ -562,7 +559,7 @@ variable {I : AutInst} {g : ℕ} {r k : ℕ} {e0 f0 : Fin r → VA I} {z0 : VA I
 
 theorem ew_int (h : FH I g e0 f0 z0 bw bwd ew) (i : Fin k) : ew ∈ IntAf I.F I.E := by
   obtain ⟨t, ht, e⟩ := h.dual i i
-  rw [if_pos rfl] at e
+  rw [ite_eq_left rfl] at e
   have e' : ew = hA I (bwd i) (bw i) - (g : I.E ⊗[I.F] Af I.F) * t := by
     rw [← e]; exact (sub_sub_cancel _ _).symm
   rw [e']
@@ -595,24 +592,21 @@ theorem cong_of_pairs (h : FH I g e0 f0 z0 bw bwd ew) {x : I.Gf} (hx : x ∈ I.K
       (hP _ hm.2.1 _ (hm.1 a).1 (h3 a).1 (h3 a).2)
       (fun i _ => hP _ (hm.2.2 i).2 _ (hm.1 a).1 (h4 a i).1 (h4 a i).2)
       (fun i => hP _ (hm.2.2 i).1 _ (hm.1 a).1 (h5 a i).1 (h5 a i).2)
-    rw [Set.image_empty, Set.union_empty] at this
-    exact this
+    rwa [Set.image_empty, Set.union_empty] at this
   · have := GlobalTheory.T.mem_span_add_smul_lattice_of_frame_coeffs_zmod I g e0 f0 z0 bw bwd ew h _ (K_sub_mv I hx hm.2.1) Set.univ ∅
       (fun c hc => absurd (Set.mem_univ c) hc)
       (fun c => hP _ (hm.1 c).1 _ hm.2.1 (h3 c).2 (h3 c).1)
       (hP _ hm.2.1 _ hm.2.1 h6 h6)
       (fun i _ => hP _ (hm.2.2 i).2 _ hm.2.1 (h7 i).1 (h7 i).2)
       (fun i => hP _ (hm.2.2 i).1 _ hm.2.1 (h8 i).1 (h8 i).2)
-    rw [Set.image_empty, Set.union_empty, Set.image_univ] at this
-    exact this
+    rwa [Set.image_empty, Set.union_empty, Set.image_univ] at this
   · have := GlobalTheory.T.mem_span_add_smul_lattice_of_frame_coeffs_zmod I g e0 f0 z0 bw bwd ew h _ (K_sub_mv I hx (hm.2.2 i).1) Set.univ {j | j.1 < i.1}
       (fun c hc => absurd (Set.mem_univ c) hc)
       (fun c => hP _ (hm.1 c).1 _ (hm.2.2 i).1 (h5 c i).2 (h5 c i).1)
       (hP _ hm.2.1 _ (hm.2.2 i).1 (h8 i).2 (h8 i).1)
       (fun j hj => hP _ (hm.2.2 j).2 _ (hm.2.2 i).1 (h9 i j (not_lt.1 hj)).1 (h9 i j (not_lt.1 hj)).2)
       (fun j => hP _ (hm.2.2 j).1 _ (hm.2.2 i).1 (h10 j i) (h10 i j))
-    rw [Set.image_univ] at this
-    exact this
+    rwa [Set.image_univ] at this
 
 end Gen
 
@@ -658,14 +652,14 @@ theorem core (h : FH (II D) g e0 f0 z0 bw bwd ew) (hβ : IsFrame β (II D).L) (h
     intro i
     obtain ⟨hm', e⟩ := hl.2.2.2 i q
     unfold redV
-    exact (dif_pos hm').trans e
+    exact (dite_eq_left hm').trans e
   have e5 : redV β PP (((II D).fmat y - 1) *ᵥ s) p + redV β PP s p =
       (((redFn β PP M : GL _ (kP PP)) : Matrix _ _ (kP PP)) *ᵥ redV β PP s) p := by
     rw [← e2, ← e3]
     exact (congrFun e1 p).symm
   have e6 : (((redFn β PP M : GL _ (kP PP)) : Matrix _ _ (kP PP)) *ᵥ redV β PP s) p =
       ((redFn β PP M : GL _ (kP PP)) : Matrix _ _ (kP PP)) p q := by
-    simp only [Matrix.mulVec, dotProduct, e4, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [Matrix.mulVec, dotProduct, e4, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [e6, entry_zero (rank_Y D) _ _ hu p q hpq, e4] at e5
   exact add_eq_right.1 e5
 

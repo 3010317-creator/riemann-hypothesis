@@ -90,7 +90,7 @@ theorem valuation_term_le_sum_of_distinct {Ω Γ : Type} [Field Ω] [LinearOrder
   by_cases hall : ∀ i ∈ s, f i = 0
   · rw [hall j hj, map_zero]
     exact zero_le'
-  push_neg at hall
+  push Not at hall
   obtain ⟨i0, hi0, hfi0⟩ := hall
   obtain ⟨k, hk, hkmax⟩ := s.exists_max_image (fun i => v (f i)) ⟨i0, hi0⟩
   have hk0 : v (f k) ≠ 0 := by
@@ -130,8 +130,7 @@ theorem exists_integral_poly_of_primitiveRoot_totally_ramified :
     apply hvl0
     rw [← hζv, h, zero_pow he.ne']
   have hγ1 : γ < 1 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h1 : 1 ≤ γ ^ e := one_le_pow₀ hc
     rw [hζv] at h1
     exact absurd hl (not_lt.2 h1)
@@ -152,8 +151,7 @@ theorem exists_integral_poly_of_primitiveRoot_totally_ramified :
     exact Polynomial.natDegree_modByMonic_lt _ hΦ hΦ1
   set R2 := R1.comp (Polynomial.X + Polynomial.C 1) with hR2_def
   have hR2 : R2.natDegree < e := by
-    rw [hR2_def, Polynomial.natDegree_comp, Polynomial.natDegree_X_add_C, mul_one]
-    exact hR1
+    rwa [hR2_def, Polynomial.natDegree_comp, Polynomial.natDegree_X_add_C, mul_one]
   set f := T.subtype with hf_def
   have hΦζ : Φ.eval₂ f ζ = 0 := by
     rw [← Polynomial.eval_map, hΦ_def, Polynomial.map_cyclotomic]
@@ -210,8 +208,7 @@ theorem exists_integral_poly_of_primitiveRoot_totally_ramified :
     rw [Finset.mem_range] at hi
     have hi' : (i : ℤ) < e := by exact_mod_cast hi
     have hk0 : 0 ≤ k := by
-      by_contra hneg
-      push_neg at hneg
+      by_contra! hneg
       have h1 : v (c i * w ^ i) = γ ^ ((e : ℤ) * k + i) := by
         rw [Valuation.map_mul, Valuation.map_pow, hk, zpow_add₀ hγ0, zpow_natCast]
       have h2 : (e : ℤ) * k + i < 0 := by
@@ -298,7 +295,6 @@ theorem exists_poly_of_fixed : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field �
   have : IsScalarTower ℚ K Ω := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
   set L : IntermediateField ℚ Ω := (IntermediateField.adjoin K {ζ}).restrictScalars ℚ with hL
   have hKL : K ≤ L := fun x hx => by
-    show x ∈ IntermediateField.adjoin K {ζ}
     exact (IntermediateField.adjoin K {ζ}).algebraMap_mem ⟨x, hx⟩
   have hζL : ζ ∈ L := IntermediateField.mem_adjoin_simple_self K ζ
 
@@ -310,8 +306,7 @@ theorem exists_poly_of_fixed : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field �
       have hle : IntermediateField.fixedField C.toSubgroup ≤ K := by
         intro x hx
         rw [IntermediateField.mem_fixedField_iff] at hx ⊢
-        intro f hf
-        exact hx f (I.le_topologicalClosure hf)
+        exact fun f hf => hx f (I.le_topologicalClosure hf)
       have h1 : s ∈ K.fixingSubgroup := IntermediateField.fixingSubgroup_antitone hKL hs
       have h2 := IntermediateField.fixingSubgroup_antitone hle h1
       rwa [InfiniteGalois.fixingSubgroup_fixedField C] at h2
@@ -319,15 +314,12 @@ theorem exists_poly_of_fixed : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field �
     set E : IntermediateField ℚ Ω := IntermediateField.adjoin ℚ {u, ζ} with hE
     have : FiniteDimensional ℚ E := by
       rw [hE]
-      refine IntermediateField.finiteDimensional_adjoin ?_
-      intro x _
-      exact Algebra.IsIntegral.isIntegral x
+      exact IntermediateField.finiteDimensional_adjoin (fun x _ => Algebra.IsIntegral.isIntegral x)
     have hopen : IsOpen ((E.fixingSubgroup : Subgroup (G ℚ Ω)) : Set (G ℚ Ω)) := E.fixingSubgroup_isOpen
     have hopen' : IsOpen {x : G ℚ Ω | s⁻¹ * x ∈ E.fixingSubgroup} :=
       hopen.preimage (continuous_const.mul continuous_id)
     have hsmem : s ∈ {x : G ℚ Ω | s⁻¹ * x ∈ E.fixingSubgroup} := by
-      simp only [Set.mem_ofPred_eq, inv_mul_cancel]
-      exact one_mem _
+      simpa only [Set.mem_ofPred_eq, inv_mul_cancel] using one_mem _
     rw [← SetLike.mem_coe, Subgroup.topologicalClosure_coe] at hsC
     obtain ⟨i, hi1, hi2⟩ := mem_closure_iff.1 hsC _ hopen' hsmem
     simp only [Set.mem_ofPred_eq] at hi1
@@ -341,11 +333,9 @@ theorem exists_poly_of_fixed : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field �
       rw [this, AlgEquiv.mul_apply, hζ', hsζ]
     have hiu : i u = u := hu i hi2 (cycMod_eq_one_of_fix l Ω m ζ hζ i hiζ)
     have : i = s * (s⁻¹ * i) := by group
-    rw [this, AlgEquiv.mul_apply, hu'] at hiu
-    exact hiu
+    rwa [this, AlgEquiv.mul_apply, hu'] at hiu
   have huL : u ∈ L := by
-    rw [← InfiniteGalois.fixedField_fixingSubgroup L, IntermediateField.mem_fixedField_iff]
-    exact hfix
+    rwa [← InfiniteGalois.fixedField_fixingSubgroup L, IntermediateField.mem_fixedField_iff]
   have huK : u ∈ IntermediateField.adjoin K {ζ} := huL
   have hζint : IsIntegral K ζ := (Algebra.IsIntegral.isIntegral (R := ℚ) ζ).tower_top
   rw [← IntermediateField.mem_toSubalgebra, IntermediateField.adjoin_simple_toSubalgebra_of_isAlgebraic hζint.isAlgebraic,
@@ -356,8 +346,7 @@ theorem exists_poly_of_fixed : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field �
     obtain ⟨n, -, rfl⟩ := Polynomial.mem_coeffs_iff.1 hx
     rw [Polynomial.coeff_map]
     exact ((IntermediateField.mem_fixedField_iff _ _).1 (P.coeff n).2) s hs
-  · rw [Polynomial.eval_map_algebraMap]
-    exact hP
+  · rwa [Polynomial.eval_map_algebraMap]
 
 end GlobalTheory.InertiaCycFixed
 end -- clump:auto

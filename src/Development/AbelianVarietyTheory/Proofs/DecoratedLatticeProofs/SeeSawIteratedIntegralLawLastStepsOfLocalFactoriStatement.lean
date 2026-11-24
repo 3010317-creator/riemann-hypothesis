@@ -453,7 +453,7 @@ theorem kernel_eq_sum : ∀ (D : D7) (c : Comm D) (v : VCom c) χ (Q : QAt v χ)
   have b₁ : flatBF s₁ (T₁ Φα) = U₁ Ψα := hfl Φα Ψα rfl
   have b₁' : flatBF s₁ (T₁ O₁) = U₁ O₁' := hfl O₁ O₁' (by
     have := (GlobalTheory.LocFlat.flat_contr_intIndicator Q.k Q.ψk Q.ν Q.cond Q.unitVol (Q.X (Q.s + 1)) (Q.X Q.s) Unit 0 (0 + 1)).1
-    rw [if_neg (by omega)] at this
+    rw [ite_eq_right (by omega)] at this
     exact this.symm)
   have b₂ := hext Φ₂ Y₂ hY₂
   have b₂' := hext O₂ O₂' fun x => by
@@ -752,13 +752,12 @@ theorem lastOne : ∀ (D : D7) (c : Comm D) (v : VCom c) χ (Q : QAt v χ), c.Is
     intro yb hyb
     obtain ⟨y₀, hy₀⟩ := Q.cos_cov yb ((hmemS yb).1 hyb)
     rw [Finset.sum_eq_single y₀]
-    · rw [if_pos hy₀]
+    · rw [ite_eq_left hy₀]
       exact GlobalTheory.T.doubleThetaLift_lastSteps_couplingCoset_orbit_invariant D c v χ Q hc hv h hr hτ s₁ hχ oma omb hoa hob c₁ c₂ hc₁ hc₂ Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ α u y₀ yb hy₀
         (d₁ yb) (d₂ yb) (hd₁ yb) (hd₂ yb)
     · intro y _ hy
-      rw [if_neg]
-      intro h'
-      exact hy (Q.cos_inj y y₀ (htrans _ _ _ h' (hsymm _ _ hy₀)))
+      rw [ite_eq_right]
+      exact fun h' => hy (Q.cos_inj y y₀ (htrans _ _ _ h' (hsymm _ _ hy₀)))
     · intro h'; exact absurd (Finset.mem_univ _) h'
   rw [Finset.sum_congr rfl hterm, Finset.sum_comm]
   refine Finset.sum_congr rfl fun y _ => ?_
@@ -772,8 +771,7 @@ theorem lastOne : ∀ (D : D7) (c : Comm D) (v : VCom c) χ (Q : QAt v χ), c.Is
     rw [hset, Nat.card_coe_set_eq, Set.ncard_coe_finset, Nat.cast_smul_eq_nsmul]
   · have hempty : (S.filter fun yb => SameOrb (Q.T.lev (Q.s + 1) 0 rfl).J (box _ Q.c₂) (Q.cos y) yb) = ∅ := by
       rw [Finset.filter_eq_empty_iff]
-      intro yb hyb h'
-      exact hy (hstab yb ((hmemS yb).1 hyb) _ (hsymm _ _ h'))
+      exact fun yb hyb h' => hy (hstab yb ((hmemS yb).1 hyb) _ (hsymm _ _ h'))
     have hnot : Q.cos y ∉ S := fun h' => hy ((hmemS _).1 h')
 
     have hz : biComb c.ψ _ _ _ (Q.dL Q.s α y) (Q.dL (Q.s + 1) y u) C = 0 := by
@@ -795,8 +793,7 @@ theorem lastOne : ∀ (D : D7) (c : Comm D) (v : VCom c) χ (Q : QAt v χ), c.Is
         refine Finset.sum_congr rfl fun yb hyb => ?_
         have e : yb ≠ Q.cos y := fun e => hnot (e ▸ hyb)
         rw [Function.update_of_ne e, Function.update_of_ne e]
-      rw [h3] at h2
-      rw [← hC] at h2
+      rw [h3, ← hC] at h2
       have h4 := congrArg (fun F => F - ∑ yb ∈ S, biComb c.ψ _ _ _ (d₁ yb) (d₂ yb) C) h2
       simp only [sub_self, add_sub_cancel_right] at h4
       exact h4.symm
@@ -1418,8 +1415,7 @@ theorem alg_of_core : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VT
   have htop : ∀ i u, (F.Q i).wt (j + 1 + 1) u = (F.Q i).idx (j + 1 + 1) := by
     intro i
     have h1 := (F.Q i).wt_top
-    rw [hs i] at h1
-    exact h1
+    rwa [hs i] at h1
   set E := conv (List.ofFn fun i => (F.Q i).εL j (F.eqv j α i)) with hE
   set P := ∏ i, (F.Q i).wt j (F.eqv j α i) with hP
   set Z := fun g => t.om j (g, 1) (comb c.ψ _ _ (w.eQ j) Ψ₁) with hZ
@@ -1504,8 +1500,7 @@ theorem qLast_of_pin : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : V
     refine Finset.prod_eq_one fun i _ => ?_
     have hs : (F.Q i).s = j := by have := (F.Q i).hs; omega
     have h1 := (F.Q i).one
-    rw [hs] at h1
-    exact h1
+    rwa [hs] at h1
   have hβ : ∀ β, (w.cQ j * ∫ h' in c.volT.𝓕, trc (w.εT (j + 1 + 1) h β) f h' *
       (∑ α, ∑ γ, c.bl j (t.kom j) (t.kom (j + 1)) (φ α) (biComb c.ψ _ _ _ (w.dQ j α γ) (w.dQ (j + 1) γ β)
         (c.lst j h (v.τ j h) (t.sBF j 0 h) Ψ₁ Ψ₂))) (E (h', 1)) ∂c.volT.μ) =

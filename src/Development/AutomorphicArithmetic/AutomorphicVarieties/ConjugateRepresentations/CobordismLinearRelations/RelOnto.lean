@@ -246,8 +246,7 @@ private theorem term_sz {V W F : Type} [NormedAddCommGroup V] [NormedSpace ℝ V
   have s1 : ContDiffAt ℝ ∞ (fun y => u (τ y)) p := hu.comp p hτ
   have h2 := (appSz V ℂ (F →L[ℝ] F) k p).2.1 L _ _ s1 h1
   have s2 : ContDiffAt ℝ ∞ (fun y => L (u (τ y))) p := L.contDiff.contDiffAt.comp p s1
-  have h3 := (appSz V F F k p).1 _ Θ _ _ s2 hΘ h2 ht
-  exact h3.mono (le_of_eq (by ring))
+  exact ((appSz V F F k p).1 _ Θ _ _ s2 hΘ h2 ht).mono (le_of_eq (by ring))
 
 private theorem val_sz (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ)
     (U : Subgroup (GL (Fin a) (Af E))) (Ξ : AlgRep E a)
@@ -319,8 +318,7 @@ theorem UpperTheory.V.Lit.Geo.Cs.hkSz :
   have a5 := (appSz V _ _ k p).1 _ _ _ _ s4 s3 a4 a3
   have e : 2 ^ k * (C₂ * |C₁|) * (2 ^ k * (‖L‖ * C₃) * |c|) * b =
       2 ^ k * (C₂ * |C₁|) * (2 ^ k * (‖L‖ * (C₃ * b)) * |c|) := by ring
-  rw [e]
-  exact a5
+  rwa [e]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.LieGeometryGrowth.CsHkSz =====
@@ -475,8 +473,7 @@ theorem UpperTheory.V.Lit.Geo.Cs.pbSz :
   have hprod := (appSz V (V [⋀^Fin q]→L[ℝ] F) (V [⋀^Fin q]→L[ℝ] F) k p).1 _ _ _ _
     (hAcd.contDiffAt.comp p hF2) (hw.comp p hF1) hf hg
   have e : 2 ^ k * (C3 * max C2 0) * C1 * b = 2 ^ k * (C3 * max C2 0) * (C1 * b) := by ring
-  rw [e]
-  exact hprod
+  rwa [e]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.LieGeometryGrowth.CsPbSz =====
@@ -648,8 +645,7 @@ theorem UpperTheory.V.Lit.Geo.Cs.descFun :
     rw [map_one, one_mul, ← hc, pt, ← mul_assoc, ← map_mul] at hl
     have hs : ∀ p : HV E a, r • sand g p = sand (c * g) p := fun p => by
       rw [map_mul, ContinuousLinearMap.mul_apply, hp]
-    rw [hs, hΦ, hΦ]
-    exact hl
+    rwa [hs, hΦ, hΦ]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -732,8 +728,8 @@ theorem UpperTheory.V.Lit.Geo.Cs.geoCut :
           ((hη s).mono (fun x (hx : x ∈ G.Y ∩ (G.Y ∩ Φ s ⁻¹' Set.Ioi R)) => ⟨hx.2.1, hx.2.2⟩))
       refine hsm.congr (fun x hx => ?_)
       have hx' : x ∈ G.Y ∧ R < Φ s x := ⟨hx.2.1, hx.2.2⟩
-      simp only [f, if_pos hx']
-    · push_neg at hR
+      simp only [f, ite_eq_left hx']
+    · push Not at hR
       refine ⟨G.Y ∩ Φ s ⁻¹' Set.Iio (R + 1 / 2),
         (hΦ.1 s).continuousOn.isOpen_inter_preimage G.isOpen isOpen_Iio,
         ⟨hp, show Φ s p < R + 1 / 2 by linarith⟩, ?_⟩
@@ -758,21 +754,21 @@ theorem UpperTheory.V.Lit.Geo.Cs.geoCut :
       by_cases hR : R < Φ s p
       · have h1 : G.ρ γ⁻¹ p ∈ G.Y ∧ R < Φ (G.σ γ⁻¹ s) (G.ρ γ⁻¹ p) := ⟨hp', by rw [hΦ']; exact hR⟩
         have h2 : p ∈ G.Y ∧ R < Φ s p := ⟨hp, hR⟩
-        simp only [f, if_pos h1, if_pos h2]
+        simp only [f, ite_eq_left h1, ite_eq_left h2]
         rw [hΦ', map_smul, hinv γ s p hp hR]
       · have h1 : ¬ (G.ρ γ⁻¹ p ∈ G.Y ∧ R < Φ (G.σ γ⁻¹ s) (G.ρ γ⁻¹ p)) := by
           rw [hΦ']
           exact fun h => hR h.2
         have h2 : ¬ (p ∈ G.Y ∧ R < Φ s p) := fun h => hR h.2
-        simp only [f, if_neg h1, if_neg h2, map_zero]
+        simp only [f, ite_eq_right h1, ite_eq_right h2, map_zero]
     · have hp' : G.ρ γ⁻¹ p ∉ G.Y := fun h => hp (by simpa [hρ] using G.maps γ _ h)
       have h1 : ¬ (G.ρ γ⁻¹ p ∈ G.Y ∧ R < Φ (G.σ γ⁻¹ s) (G.ρ γ⁻¹ p)) := fun h => hp' h.1
       have h2 : ¬ (p ∈ G.Y ∧ R < Φ s p) := fun h => hp h.1
-      simp only [f, if_neg h1, if_neg h2, map_zero]
+      simp only [f, ite_eq_right h1, ite_eq_right h2, map_zero]
   · intro s p hp h1
     have h2 : p ∈ G.Y ∧ R < Φ s p := ⟨hp, by linarith⟩
     show f s p = η s p
-    simp only [f, if_pos h2, hχ1 _ h1, one_smul]
+    simp only [f, ite_eq_left h2, hχ1 _ h1, one_smul]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.LieGeometryGrowth.CsGeoCut =====
@@ -867,8 +863,7 @@ theorem UpperTheory.V.Lit.Geo.Cs.geoSum :
     intro s p hp hR
     obtain ⟨N, hN, b, hb, hbd⟩ := hsz 0 s p hp hR
     refine Summable.of_norm_bounded hb (fun j => ?_)
-    have h0 := hbd j p (mem_of_mem_nhds hN) 0 le_rfl
-    simpa using h0
+    simpa using hbd j p (mem_of_mem_nhds hN) 0 le_rfl
   obtain ⟨z, hzinv, hz⟩ := geoCut Γ V S d G Φ hΦ R q
     (fun s p => -∑' j, (y j : S → V → V [⋀^Fin q]→L[ℝ] (Fin d → ℂ)) s p)
     (fun s => (hsm s).1.neg) (by
@@ -1085,8 +1080,7 @@ theorem UpperTheory.V.Lit.Geo.Cs.rapidAll :
   have hK' := hK g₁
   have hq : qht g = qht (E := E) (a := a) g₁.1 := by
     have := hq2 1 (lam g) g₁.1
-    rw [map_one, one_mul, hs] at this
-    exact this
+    rwa [map_one, one_mul, hs] at this
   have ha := UpperTheory.V.Lit.Bor.aInv E a _ _ he (lam g) g₁.1
   rw [hs] at ha
   rw [← hq] at hK'
@@ -1094,8 +1088,7 @@ theorem UpperTheory.V.Lit.Geo.Cs.rapidAll :
     (le_trans (mul_le_mul_of_nonneg_right (norm_le_pi_norm _ j) (pow_nonneg (zero_le_one.trans (hq1 g)) _)) hK')
   have hb' : ‖((l.map (lie E a)).prod (Bor.cmp j (α X))).1 g₁.1‖ ≤
       K * Real.exp (A * C) * Real.exp (-(A * f g)) := by
-    rw [← hv]
-    exact hb
+    rwa [← hv]
   have hc : ‖Complex.exp (-(r : ℂ) * (lam g : ℂ))‖ ≤ Real.exp (|r| * |lam g|) := by
     rw [Complex.norm_exp, Real.exp_le_exp, ← abs_mul]
     simpa using neg_le_abs (r * lam g)

@@ -70,8 +70,7 @@ theorem ksEquiv_spec (hK : B'.Ks.map B'.embLL.toRatAlgHom = B.Ks.map B.embLL.toR
       IntermediateField.equivOfEq (F := ℚ) (E := ℂ) (S := B.Ks.map B.embLL.toRatAlgHom) (T := B'.Ks.map B'.embLL.toRatAlgHom) hK.symm (B.Ks.equivMap B.embLL.toRatAlgHom x) := by
     exact (B'.Ks.equivMap B'.embLL.toRatAlgHom).apply_symm_apply _
   have h4 := congrArg Subtype.val h3
-  rw [IntermediateField.coe_equivMap_apply] at h4
-  rw [RingHom.toRatAlgHom_apply] at h4
+  rw [IntermediateField.coe_equivMap_apply, RingHom.toRatAlgHom_apply] at h4
   rw [h4]
   change ((B.Ks.equivMap B.embLL.toRatAlgHom x : B.Ks.map B.embLL.toRatAlgHom) : ℂ) = _
   rw [IntermediateField.coe_equivMap_apply]
@@ -102,8 +101,7 @@ theorem coefficientFieldEnlarge_mem_larger_fixedField (hR : Set.range B.embLL �
     enlEmb hR x ∈ B'.LL0 := by
   obtain ⟨x', hx', he⟩ : B.embLL x ∈ B'.embLL '' (B'.LL0 : Set B'.LL) := hL ⟨x, hx, rfl⟩
   have : enlEmb hR x = x' := B'.embLL.injective (by rw [enlEmb_spec, he])
-  rw [this]
-  exact hx'
+  rwa [this]
 
 end EnlAux2
 

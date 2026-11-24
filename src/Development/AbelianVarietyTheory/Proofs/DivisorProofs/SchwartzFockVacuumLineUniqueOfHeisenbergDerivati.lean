@@ -76,8 +76,7 @@ theorem vacLine_of_derEx (hD : DerEx) : VacLine := by
     have := congrArg (fun g : SInf F κ => g x) key
     simp only [SchwartzMap.smul_apply, smul_eq_mul] at this
     rw [hDx u hu, hDx u' hu'] at this
-    rw [← h', ← h0]
-    exact this
+    rwa [← h', ← h0]
   set g₀ := Φ (PiTensorProduct.tprod ℂ fun _ => 1) with hg₀
   have hg0 : g₀ ≠ 0 := fun h => vac_ne_zero (hΦ.1 (h.trans (map_zero Φ).symm))
   have hg : ∀ y x, fderiv ℝ g₀ x (J y).1 - 2 * Real.pi * Complex.I * (trPair F κ x (J y).2 : ℝ) * g₀ x =
@@ -90,8 +89,7 @@ theorem vacLine_of_derEx (hD : DerEx) : VacLine := by
     have := congrArg (fun g : SInf F κ => g x) e1
     simp only [SchwartzMap.smul_apply, smul_eq_mul] at this
     rw [hDx u hu, hDx u₁ hu₁] at this
-    rw [← h1, ← h0]
-    exact this
+    rwa [← h1, ← h0]
   obtain ⟨z, hz⟩ := _root_.GlobalTheory.VacCore.schwartz_vacuum_eq_smul (trPair F κ) (fun y h => _root_.GlobalTheory.VacLn.trPair_nondeg y h) J e e' hJ he hJe he1 he2 f₀ g₀ hg0 hg hf
   exact ⟨z, hz⟩
 

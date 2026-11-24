@@ -154,12 +154,10 @@ theorem sandwich : ∀ (D : D7) (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin
     constructor
     · intro hx
       refine ⟨V.frame.equivFun.symm x, ?_, V.frame.equivFun.apply_symm_apply x⟩
-      rw [V.frame.equivFun_symm_apply]
-      exact hx
+      rwa [V.frame.equivFun_symm_apply]
     · rintro ⟨y, hy, rfl⟩
       change ∑ i, V.frame.equivFun y i • V.frame i ∈ V.L0
-      rw [V.frame.sum_equivFun]
-      exact hy
+      rwa [V.frame.sum_equivFun]
   refine sandwich_of_fg Λ (e ▸ V.standardTuple_isLattice.fg.map _) ?_
   have hs : (Λ : Set (Fin V.rank → D.host.E)) = V.frame.equivFun.toLinearMap '' (V.L0 : Set V.V) := by
     rw [e]; rfl

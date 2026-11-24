@@ -104,9 +104,9 @@ private theorem inv_supp {O : Type} [CommRing O] {ι X : Type} [Fintype ι] [Dec
           rw [mul_assoc, mul_assoc, Matrix.mul_nonsing_inv _ hd, mul_one]
       _ = E * Φ.J⁻¹ := by rw [e, ← mul_assoc, Matrix.nonsing_inv_mul _ hd, one_mul]
   have e3 := congrFun (congrFun e2 a) c
-  simp only [E, E', diagonal_mul, mul_diagonal, and_self, if_true, one_mul] at e3
+  simp only [E, E', diagonal_mul, mul_diagonal, and_self, ite_true, one_mul] at e3
   by_contra n
-  rw [if_neg n, mul_zero] at e3
+  rw [ite_eq_right n, mul_zero] at e3
   exact h e3.symm
 
 section Good
@@ -164,10 +164,8 @@ theorem UpperTheory.V.Alg.hh_section :
   let h0 : S → Matrix ι ι A := fun s => Matrix.of fun a b => if Φ.blk a = Φ.blk b then y a b s else 0
   have g0 : ∀ a b, Good (maximalIdeal A) W (w a - w b) fun s => h0 s a b := fun a b => by
     by_cases e : Φ.blk a = Φ.blk b
-    · simp only [h0, of_apply, if_pos e]
-      exact ⟨y1 a b, y2 a b⟩
-    · simp only [h0, of_apply, if_neg e]
-      exact good_zero _
+    · simpa only [h0, of_apply, ite_eq_left e] using ⟨y1 a b, y2 a b⟩
+    · simpa only [h0, of_apply, ite_eq_right e] using good_zero _
   have b1 : ∀ s, (h0 s).map p = h s := fun s => by
     ext a b
     by_cases e : Φ.blk a = Φ.blk b
@@ -198,11 +196,10 @@ theorem UpperTheory.V.Alg.hh_section :
     simp only [Matrix.add_apply, of_apply]
     refine good_add (g0 a b) ?_
     by_cases e : Φ.blk a = Φ.blk b
-    · simp only [if_pos e, ← map_neg]
+    · simp only [ite_eq_left e, ← map_neg]
       simp only [Matrix.mul_apply (M := Φ.J⁻¹.map (algebraMap O A)), Matrix.smul_apply, smul_eq_mul]
       exact good_sum _ fun c => good_mul (gK a c) (good_mul (good_const (-u)) (gE c b) (zero_add _)) (by abel)
-    · simp only [if_neg e]
-      exact good_zero _
+    · simpa only [ite_eq_right e] using good_zero _
   exact ⟨_, fun s => (key s).1, fun a b => (g1 a b).1, fun s a b => (g1 a b).2 s, fun s => (key s).2⟩
 end -- clump:auto
 end -- clump:auto
@@ -222,11 +219,11 @@ private theorem wcomp_of_mem_ite {O : Type} [CommRing O] {σ X : Type} [AddCommG
   rw [coeff_wcomp]
   by_cases h : i = j
   · subst h
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     split_ifs with hn
     · rfl
     · exact (hf n hn).symm
-  · rw [if_neg h, map_zero]
+  · rw [ite_eq_right h, map_zero]
     split_ifs with hn
     · exact hf n (fun hi => h (hi.symm.trans hn))
     · rfl
@@ -311,7 +308,7 @@ theorem UpperTheory.V.Alg.ker_coef :
     have hfw : ∀ v, wcomp O W.wt (wf u) (f v) = if wf v = wf u then f v else 0 :=
       fun v => wcomp_of_mem_ite W.wt (hf v)
 
-    rw [map_sub, map_sum, wcomp_of_mem_ite W.wt hg, if_neg hj] at hh
+    rw [map_sub, map_sum, wcomp_of_mem_ite W.wt hg, ite_eq_right hj] at hh
     simp only [map_smul, hfw] at hh
     have hrel0 : ∑ v, (if wf v = wf u then a v else 0) • ε v = 0 := by
       have h2 := RingHom.mem_ker.1 hh
@@ -323,8 +320,7 @@ theorem UpperTheory.V.Alg.ker_coef :
       split_ifs with hv
       · rw [map_smul, hfε]
       · rw [smul_zero, map_zero, zero_smul]
-    have h5 := hrel _ hrel0 u
-    simpa using h5
+    simpa using hrel _ hrel0 u
   · intro x hx
     obtain ⟨a, ha⟩ := hrep x hx
     exact ⟨a, fun u => (hco x a ha u).symm, ha⟩
@@ -345,8 +341,7 @@ private theorem inf_pow_bot (R : Type) [CommRing R] [IsLocalRing R] [IsNoetheria
   refine ⟨k + 1, fun x hxI hxN => ?_⟩
   have hx : x ∈ (maximalIdeal R ^ (k + 1) • ⊤ ⊓ I : Submodule R R) := by
     refine ⟨?_, hxI⟩
-    rw [smul_eq_mul, Ideal.mul_top]
-    exact hxN
+    rwa [smul_eq_mul, Ideal.mul_top]
   rw [hk (k + 1) (by omega), show k + 1 - k = 1 by omega, pow_one] at hx
   have hle : (maximalIdeal R • (maximalIdeal R ^ k • ⊤ ⊓ I) : Submodule R R) ≤ maximalIdeal R * I :=
     Submodule.smul_mono le_rfl inf_le_right
@@ -359,8 +354,7 @@ private theorem lc_of_cont (R Γ : Type) [CommRing R] [IsLocalRing R] [IsNoether
     (hy : AdicCont (maximalIdeal R) y) (hI : ∀ g, x g - y g ∈ I) : IsLocallyConstant fun g => x g - y g := by
   obtain ⟨N, hN⟩ := inf_pow_bot R I h
   have hc : IsLocallyConstant fun g => Ideal.Quotient.mk (maximalIdeal R ^ N) (x g - y g) := by
-    have h1 := (hx N).comp₂ (hy N) (fun u v => u - v)
-    simpa [map_sub] using h1
+    simpa [map_sub] using (hx N).comp₂ (hy N) (fun u v => u - v)
   rw [IsLocallyConstant.iff_exists_open]
   intro g
   obtain ⟨U, hU, hgU, hUc⟩ := (IsLocallyConstant.iff_exists_open _).mp hc g
@@ -447,10 +441,9 @@ private theorem square_zero_extension_ring (O R S X : Type) [CommRing O] [IsLoca
       have hcF : ∀ j ∈ F, c j • τ j = τ j * algebraMap R S (if h : j ∈ F then (x.snd ⟨j, h⟩ : R) else 0) := by
         intro j hj
         have hne : j ≠ x0 := fun h => hF (h ▸ hj)
-        simp only [c, if_neg hne, Algebra.smul_def]
+        simp only [c, ite_eq_right hne, Algebra.smul_def]
         ring
-      rw [Finset.sum_congr rfl hcF, hc0, Algebra.smul_def, h0, mul_one]
-      rw [← Finset.sum_coe_sort F]
+      rw [Finset.sum_congr rfl hcF, hc0, Algebra.smul_def, h0, mul_one, ← Finset.sum_coe_sort F]
       simpa [g] using hx
     have hz := (linearIndependent_iff'.mp hτ) _ c hsum
     apply TrivSqZeroExt.ext
@@ -459,7 +452,7 @@ private theorem square_zero_extension_ring (O R S X : Type) [CommRing O] [IsLoca
     · funext e
       have := hz e (Finset.mem_insert_of_mem e.2)
       have hne : (e : X) ≠ x0 := fun h => hF (h ▸ e.2)
-      simp only [c, if_neg hne, dif_pos e.2] at this
+      simp only [c, ite_eq_right hne, dite_eq_left e.2] at this
       exact Subtype.ext this
   · change g (TrivSqZeroExt.inl x) = algebraMap R S x
     simp [g]
@@ -486,8 +479,7 @@ private theorem ker_span (O X R R' : Type) [CommRing O] [IsLocalRing O] [IsNoeth
   · exact (RingHom.mem_ker).mp (hfk i)
   · obtain ⟨F, rfl⟩ := W.surj u
     have hF : F ∈ Ideal.span (Set.range f) := by
-      rw [← hJ, RingHom.mem_ker]
-      exact hu
+      rwa [← hJ, RingHom.mem_ker]
     obtain ⟨g, hg⟩ := (Ideal.mem_span_range_iff_exists_fun).mp hF
     choose o ho using fun i => IsCO.res_surj (O := O) (W.π (g i))
     refine ⟨o, ?_⟩
@@ -521,8 +513,7 @@ private theorem torus_data (O X R : Type) [CommRing O] [IsLocalRing O] [AddCommG
         simp [T, MvPowerSeries.constantCoeff_map, h1 j]
       rw [hc]
       exact not_isUnit_zero
-    rw [← res_eq_zero_iff O, map_sub, map_one, sub_eq_zero] at hm
-    exact hm
+    rwa [← res_eq_zero_iff O, map_sub, map_one, sub_eq_zero] at hm
   · rw [linearIndependent_iff']
     intro s g hg j hj
     apply h2 R s g _ j hj
@@ -628,14 +619,12 @@ private theorem hh_of_inj {O ι X : Type} [CommRing O] [IsLocalRing O] [Fintype 
   · change φ.mapMatrix (h.transpose * Φ.JR A * h) = φ.mapMatrix (Φ.JR A)
     rw [map_mul, map_mul]
     change (h.transpose).map φ * (Φ.JR A).map φ * h.map φ = (Φ.JR A).map φ
-    rw [hJ, Matrix.transpose_map]
-    exact h1
+    rwa [hJ, Matrix.transpose_map]
   · apply hφ
     rw [map_zero]
     exact h2 a b hab
   · ext a b
-    have h4 := congrFun (congrFun h3 a) b
-    simpa [res_map] using h4
+    simpa [res_map] using congrFun (congrFun h3 a) b
 
 private theorem inH_map {O ι X Γ : Type} [CommRing O] [IsLocalRing O] [Fintype ι] [DecidableEq ι] [AddCommGroup X]
     {w : ι → X} (Φ : FormData O w) [Group Γ] [TopologicalSpace Γ] {rbar : Γ →* Matrix ι ι (ResidueField O)}
@@ -847,8 +836,7 @@ private theorem exists_grpTop (Γ : Type) [Group Γ] (T : TopologicalSpace Γ) :
     letI : TopologicalSpace (Equiv.Perm (Γ ⧸ K.1)) := ⊥
     haveI : DiscreteTopology (Equiv.Perm (Γ ⧸ K.1)) := ⟨rfl⟩
     rw [@IsLocallyConstant.iff_continuous Γ _ T']
-    apply continuous_iInf_dom (i := K)
-    exact continuous_induced_dom
+    exact continuous_iInf_dom (i := K) continuous_induced_dom
   constructor
   · intro hφ
     let K : Subgroup Γ := φ.ker
@@ -930,8 +918,7 @@ theorem UpperTheory.V.Alg.loc_graded_top :
       obtain ⟨r1, hr1, hL1, hm1⟩ := hL.lift S S' q hq hk (tr U.down T hb s) hs hLs
       refine ⟨tr T U.down hf r1, hr1, ?_, ?_⟩
       · exact (congrArg (L S) (Lift.ext rfl : tr U.down T hb (tr T U.down hf r1) = r1)).mpr hL1
-      · have e := congrArg (@Lift.hom O _ _ Γ ι _ T _ _ rbar S' _ _ _) hm1
-        exact Lift.ext e
+      · exact Lift.ext (congrArg (@Lift.hom O _ _ Γ ι _ T _ _ rbar S' _ _ _) hm1)
     · intro S S' _ _ _ _ _ _ q hq hk r1 r2 hr1 hr2 hm hL1
       have e := congrArg (@Lift.hom O _ _ Γ ι _ U.down _ _ rbar S' _ _ _) hm
       exact hL.tangent S S' q hq hk (tr U.down T hb r1) (tr U.down T hb r2) hr1 hr2 (Lift.ext e) hL1
@@ -1218,8 +1205,7 @@ theorem UpperTheory.V.Alg.obs_cocycle :
     have n1 : (t * u)⁻¹ * s⁻¹ = (s * (t * u))⁻¹ := by group
     have n2 : u * (s * (t * u))⁻¹ = (s * t)⁻¹ := by group
     rw [n2] at e2
-    rw [n1]
-    exact e2
+    rwa [n1]
   · show _ * rbar (s * t)⁻¹ * _ = _
     rw [mul_assoc, rinv, mul_one]
   · have := x3 q s
@@ -1310,8 +1296,7 @@ private theorem rbar_lc {O : Type} [CommRing O] [IsLocalRing O] {Γ ι : Type} [
   intro s
   have : ∀ a b, ∀ᶠ t in nhds s, rbar t a b = rbar s a b := fun a b => by
     filter_upwards [(r.cont a b 1).eventually_eq s] with t ht
-    rw [Ideal.Quotient.eq, pow_one, ← res_eq_zero_iff O, map_sub, r.red, r.red, sub_eq_zero] at ht
-    exact ht
+    rwa [Ideal.Quotient.eq, pow_one, ← res_eq_zero_iff O, map_sub, r.red, r.red, sub_eq_zero] at ht
   filter_upwards [Filter.eventually_all.2 fun a => Filter.eventually_all.2 (this a)] with t ht
   ext a b
   exact ht a b
@@ -1375,8 +1360,7 @@ theorem UpperTheory.V.Alg.obs_correct :
     have := s3 _ _ (t1 s) (Tg (-h s)) (Tp _)
     rw [hf]
     simp only
-    rw [sub_mul, Tr, r0res, mul_assoc, inv1, mul_one, sub_eq_add_neg, ← map_neg]
-    exact this
+    rwa [sub_mul, Tr, r0res, mul_assoc, inv1, mul_one, sub_eq_add_neg, ← map_neg]
   have fmul : ∀ s t, f (s * t) = f s * f t := fun s t => by
     have e := x1 s t
     rw [b3, sub_eq_iff_eq_add] at e
@@ -1421,8 +1405,7 @@ theorem UpperTheory.V.Alg.obs_correct :
   · refine ((hL q).tangent A R p hp hs (rq q) (r'.comap (F.ψ q) (F.hψ q)) (q1 q) (fun s => ?_) ?_ (q2 q)).2
       fun n hn => ?_
     · have := fH (F.ψ q s)
-      rw [← map_inv] at this
-      exact this
+      rwa [← map_inv] at this
     · rw [q3, ← r'p]
       rfl
     · have e := x3 q n
@@ -1473,8 +1456,7 @@ private theorem ac_map {O S R R' : Type} [CommRing O] [IsLocalRing O] [Topologic
   have hle : maximalIdeal R ^ N ≤ (maximalIdeal R' ^ N).comap (f : R →+* R') := by
     refine le_trans (Ideal.pow_right_mono (fun y hy => ?_) N) (Ideal.le_comap_pow _ N)
     show f y ∈ maximalIdeal R'
-    rw [← res_eq_zero_iff O, res_map, res_eq_zero_iff]
-    exact hy
+    rwa [← res_eq_zero_iff O, res_map, res_eq_zero_iff]
   exact (hx N).comp (Ideal.quotientMap _ (f : R →+* R') hle)
 
 private theorem hmul {O ι X R : Type} [CommRing O] [Fintype ι] [AddCommGroup X] [CommRing R] [Algebra O R]
@@ -1582,7 +1564,7 @@ theorem UpperTheory.V.Alg.obs_class :
     haveI : DiscreteTopology F.T := ⟨rfl⟩
     obtain ⟨β, b1, -, b3, b4⟩ := hh_section O ι X w Φ h2 A R p hp hs W hz F.T α hα
       (fun a b n => IsLocallyConstant.of_discrete _) hw3
-    refine ⟨fun v => if v = F.v0 then 1 else β v, fun v => ?_, fun v => ?_, fun v => ?_, if_pos rfl⟩
+    refine ⟨fun v => if v = F.v0 then 1 else β v, fun v => ?_, fun v => ?_, fun v => ?_, ite_eq_left rfl⟩
     · beta_reduce
       split_ifs
       · exact (hh_group O ι X w Φ A).1
@@ -1598,8 +1580,7 @@ theorem UpperTheory.V.Alg.obs_class :
       · exact b4 v
   have hhom : IsHomog O W.wt (RingHom.ker (p.comp W.π)) := by
     have := (homog_span O A X W κ (fun u => ⟨ε u, W.part_le_A (hε u)⟩) wf hε).1
-    rw [← hK] at this
-    exact this
+    rwa [← hK] at this
   choose rq q1 q2 q3 q4 using fun q => loc_graded_top O ι X w Φ h2 (F.Gq q) (rbar.comp (F.ψ q))
     (r0.comap (F.ψ q) (F.hψ q)) (norm_comp hbar _) (norm_comp h0 _) (F.N q) (L q) (hL q) A R p hp hs W hz hhom
     (r.comap (F.ψ q) (F.hψ q)) (fun s => by simpa [Lift.comap] using hr (F.ψ q s)) (hrL q) (fun s => hw2 _)
@@ -1637,8 +1618,7 @@ theorem UpperTheory.V.Alg.obs_class :
       rw [← hc, ← Submodule.mkQ_apply, map_sum]
       rfl
 
-    rw [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap, map_sum] at h1
-    exact h1
+    rwa [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap, map_sum] at h1
   obtain ⟨μ, m1, m2⟩ := ex_mu (O := O) η hη
   have pp : ∀ x, p'' (p' x) = p x := fun x => DFunLike.congr_fun hpp x
   have key : ∀ x, p x = 0 → p' x = μ (∑ u : {u // wf u = j}, residue O (c u) * co u x) := fun x hx => by
@@ -1703,11 +1683,9 @@ theorem UpperTheory.V.Alg.obs_class :
     rfl
   · have := keyM _ _ (fun u => (z j u).2.1 v s) _ (d2 v s) fun u => z2 j u v s
     rw [mmap, mmap] at this
-    rw [Prod.snd_sum, Prod.fst_sum, Finset.sum_apply, Finset.sum_apply]
-    exact this
+    rwa [Prod.snd_sum, Prod.fst_sum, Finset.sum_apply, Finset.sum_apply]
   · have := keyM _ _ (fun u => (z j u).2.2 q s) _ (d3 q s) fun u => z3 j u q s
-    rw [Prod.snd_sum, Prod.snd_sum, Finset.sum_apply, Finset.sum_apply]
-    exact this
+    rwa [Prod.snd_sum, Prod.snd_sum, Finset.sum_apply, Finset.sum_apply]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ObsClass =====

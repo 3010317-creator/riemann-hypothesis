@@ -158,8 +158,7 @@ theorem locFin (hW : WedgeF) (hM : MulF) (hP : PairF) {K K' : Type} [NormedField
     rw [hQdef]
     have := Matrix.map_mul (L := V') (M := Y' * U') (f := (ψ : K' →+* K))
     ext i j
-    have h := congrFun (congrFun this i) j
-    simpa using h
+    simpa using congrFun (congrFun this i) j
   have hpair : (Q.map ψ)ᵀ * (D * P) = (U'.map ψ)ᵀ * D * U := by
     rw [hQmap]; exact pair_mod _ V _ U D _ _ h1 h2 h3
   have p1 := hP K (Fin n) (Fin b) (Q.map ψ) (D * P)
@@ -275,8 +274,7 @@ theorem sum_bound {P Q : Type} [Fintype P] (π : Equiv.Perm Q) (b L : ℝ)
   have a2 : ∑ w ∈ T, cf w ≤ b * ∑ w ∈ T, Sf w + (∑ w ∈ T, Ff w - ∑ w ∈ T, Gf w) +
       (∑ w ∈ T, Ff w - ∑ w ∈ T, Gf w) := by
     have := Finset.sum_le_sum (s := T) fun w _ => h2 w
-    simp only [Finset.sum_add_distrib, ← Finset.mul_sum, Finset.sum_sub_distrib, eF, eG] at this
-    exact this
+    simpa only [Finset.sum_add_distrib, ← Finset.mul_sum, Finset.sum_sub_distrib, eF, eG] using this
   nlinarith [a1, a2]
 
 theorem exists_leftInv' {K κ : Type} [Field K] [Fintype κ] [DecidableEq κ] {n : ℕ} (M : Matrix (Fin n) κ K)
@@ -561,8 +559,7 @@ theorem deg_pair (hWF : WedgeF) (hWI : WedgeI) (hMF : MulF) (hMI : MulI) (hPF : 
     have h := locFin hWF hMF hPF (ψ w) (hψn w) (V.map (cW w)) (U.map (cW w)) (V.map (cW (π w)))
       (U.map (cW (π w))) (Δ.map (cW w)) q1 q2 q3 (b2 w) (hnz w) (b2 (π w)) (hnz (π w))
       (by rw [hdc]; exact hc0)
-    rw [hdc, ← hmap, ← hmap] at h
-    exact h
+    rwa [hdc, ← hmap, ← hmap] at h
 
 theorem arith_big (n K S : ℝ) (hn : 0 ≤ n) (hK : 0 ≤ K) (hS : 0 ≤ S) :
     n * (K + S) ≤ n * (K + 1) * (1 + S) := by

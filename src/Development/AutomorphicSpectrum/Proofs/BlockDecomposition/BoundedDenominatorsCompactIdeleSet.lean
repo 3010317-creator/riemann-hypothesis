@@ -144,9 +144,9 @@ theorem exists_bound {D : Set (AF F)ˣ} (hD : IsCompact D) (S : Finset (HeightOn
     · have a : Valued.v (algebraMap F (Fv F v) t * (u : AF F).2 v) ≤ 1 := h2 v hv
       exact a.trans (le_max_right _ _)
   by_cases hvT : v ∈ T₀ ∪ S
-  · rw [if_pos hvT, hval]
+  · rw [ite_eq_left hvT, hval]
     exact mul_le_mul' hfirst (hB v u hu)
-  · rw [if_neg hvT, hval]
+  · rw [ite_eq_right hvT, hval]
     have hvS : v ∉ S := fun h => hvT (Finset.mem_union_right _ h)
     have hvT₀ : v ∉ T₀ := fun h => hvT (Finset.mem_union_left _ h)
     have a1 : Valued.v (algebraMap F (Fv F v) t * (u : AF F).2 v) ≤ 1 := h2 v hvS
@@ -168,13 +168,11 @@ theorem exists_nat_mul_le_one (v : HeightOneSpectrum (𝓞 F)) (A : WithZero (Mu
     simpa using h
   obtain ⟨k, hk⟩ := exists_pow_lt₀ hlt (Units.mk0 _ (inv_ne_zero hA))
   have hpos : 0 < Ideal.absNorm v.asIdeal := by
-    refine Nat.pos_of_ne_zero fun h => v.ne_bot ?_
-    exact Ideal.absNorm_eq_zero_iff.mp h
+    exact Nat.pos_of_ne_zero fun h => v.ne_bot (Ideal.absNorm_eq_zero_iff.mp h)
   refine ⟨Ideal.absNorm v.asIdeal ^ k, pow_pos hpos k, ?_⟩
   have h3 : v.valuation F (((Ideal.absNorm v.asIdeal ^ k : ℕ)) : F) < A⁻¹ := by
     push_cast
-    rw [map_pow]
-    exact hk
+    rwa [map_pow]
   calc v.valuation F (((Ideal.absNorm v.asIdeal ^ k : ℕ)) : F) * A ≤ A⁻¹ * A :=
         mul_le_mul' h3.le le_rfl
     _ = 1 := inv_mul_cancel₀ hA
@@ -192,7 +190,7 @@ theorem common_denominator (F : Type) [Field F] [NumberField F] (D : Set (AF F)�
   rw [coe_mem_adicCompletionIntegers_iff, map_mul]
   have ht := hA u hu t h1 h2 v
   by_cases hv : v ∈ T
-  · rw [if_pos hv] at ht
+  · rw [ite_eq_left hv] at ht
     obtain ⟨m, hm⟩ := Finset.dvd_prod_of_mem n hv
     have hN : v.valuation F (((∏ v ∈ T, n v : ℕ)) : F) ≤ v.valuation F (n v : F) := by
       rw [hm]
@@ -200,7 +198,7 @@ theorem common_denominator (F : Type) [Field F] [NumberField F] (D : Set (AF F)�
       rw [map_mul]
       simpa using mul_le_mul' (le_refl (v.valuation F (n v : F))) (valuation_natCast_le_one v m)
     exact (mul_le_mul' hN ht).trans (hn v)
-  · rw [if_neg hv] at ht
+  · rw [ite_eq_right hv] at ht
     simpa using mul_le_mul' (valuation_natCast_le_one v (∏ v ∈ T, n v)) ht
 
 end GlobalTheory.CompanionTheory.BasePsi.Den

@@ -175,7 +175,7 @@ theorem ae_simple_col {n N : ℕ} (U : Set (EuclideanSpace ℂ (Fin n))) (hU : I
     have : S (A y) y = S t y + (y - colProj j0 t) := by
       ext k
       simp only [hS, hA, Pi.add_apply, colInc_apply, add_mul, Finset.sum_add_distrib, ite_mul, zero_mul,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true, PiLp.add_apply]
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true, PiLp.add_apply]
       field_simp
     simp only [hG, hπA, this]
     simp only [hA, map_add (f := _)]
@@ -467,8 +467,7 @@ theorem subset_closure_forall_ne_zero {E : Type*} [NormedAddCommGroup E] [Normed
     rw [Set.not_nonempty_iff_eq_empty] at hemp
     have hnot : ∀ y ∈ O, y ∉ W j := fun y hy hyW => by
       have : y ∈ O ∩ W j := ⟨hy, hyW⟩
-      rw [hemp] at this
-      exact this
+      rwa [hemp] at this
     obtain ⟨y, hy⟩ := hOne
     have hyc : y ∈ closure U := by
       by_contra h

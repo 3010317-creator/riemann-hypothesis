@@ -76,8 +76,7 @@ theorem eq_det_smul_one (hV : finrank ℂ V = 1) (f : Module.End ℂ V) :
   obtain ⟨t, ht⟩ : ∃ t : ℂ, f = t • (1 : Module.End ℂ V) := by
     refine ⟨-f.charpoly.coeff 0, ?_⟩
     rw [h1, map_add (f := _), aeval_X, aeval_C, Algebra.algebraMap_eq_smul_one] at h2
-    rw [neg_smul, eq_neg_iff_add_eq_zero]
-    exact h2
+    rwa [neg_smul, eq_neg_iff_add_eq_zero]
   subst ht
   rw [LinearMap.det_smul, hV, pow_one]
   simp
@@ -115,8 +114,7 @@ theorem pow_of_mul_eq_pow {p q : ℂ[X]} {m n : ℕ} (hp : p.Monic) (hq : q.Moni
     obtain ⟨i, -, hi⟩ := (dvd_prime_pow (prime_X_sub_C (1 : ℂ)) _).1 hd
     have h1 := eq_of_monic_of_associated hr ((monic_X_sub_C (1 : ℂ)).pow i) hi
     have h2 : r.natDegree = i := by rw [h1, natDegree_pow, natDegree_X_sub_C, mul_one]
-    rw [h2]
-    exact h1
+    rwa [h2]
   subst hpd hqd
   exact ⟨key hp (Dvd.intro _ h), key hq (Dvd.intro_left _ h)⟩
 

@@ -112,8 +112,7 @@ theorem li_of_adjoint {i : Ω →+* Ω'} (j : V →+ V') (jd : Module.Dual Ω V 
   classical
   refine Fintype.linearIndependent_iff.2 fun c hc l => ?_
   obtain ⟨u, hu⟩ := exists_forms_eq hb l
-  have h1 := LinearMap.congr_fun hc (j u)
-  simpa [LinearMap.sum_apply, h, hu] using h1
+  simpa [LinearMap.sum_apply, h, hu] using LinearMap.congr_fun hc (j u)
 
 end Lemmas
 
@@ -137,9 +136,7 @@ theorem exists_adjoint {Ω Ω' : Type} [Field Ω] [Field Ω'] {V V' : Type} [Add
 
     rw [map_sum]
     exact Finset.sum_congr rfl fun k _ => hj.1 _ _
-  have hli : LinearIndependent Ω' fun k => j (v k) := by
-    have h0 := hj.2 _ v v.linearIndependent
-    exact h0
+  have hli : LinearIndependent Ω' fun k => j (v k) := hj.2 _ v v.linearIndependent
   have hsp : ⊤ ≤ Submodule.span Ω' (Set.range fun k => j (v k)) := by
     rw [← hs]
     refine Submodule.span_le.2 ?_

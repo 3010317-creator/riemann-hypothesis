@@ -85,8 +85,7 @@ lemma twistMap_support {Ω Ω' : Type} [Field Ω] [Field Ω'] (s : Ω →+* Ω')
     (h : HahnSeries ℚ Ω) : (twistMap s χ h).support ⊆ h.support := by
   intro r hr
   simp only [HahnSeries.mem_support, twistMap_coeff, ne_eq] at hr ⊢
-  intro h0
-  exact hr (by rw [h0, map_zero, mul_zero])
+  exact fun h0 => hr (by rw [h0, map_zero, mul_zero])
 
 noncomputable def twistHom {Ω Ω' : Type} [Field Ω] [Field Ω'] (s : Ω →+* Ω') (χ : ℚ → Ω')
     (h0 : χ 0 = 1) (hadd : ∀ r r', χ (r + r') = χ r * χ r') :
@@ -134,8 +133,7 @@ theorem GlobalTheory.FNTwist.exists_scale_twist_ringHom : ∀ (Ω Ω' : Type) [F
     simpa [AddMonoidHom.coe_mulRight, hl.ne'] using hab
   have hmono : ∀ g g' : ℚ, AddMonoidHom.mulRight l g ≤ AddMonoidHom.mulRight l g' ↔ g ≤ g' := by
     intro g g'
-    simp only [AddMonoidHom.coe_mulRight]
-    exact mul_le_mul_iff_of_pos_right hl
+    simpa only [AddMonoidHom.coe_mulRight] using mul_le_mul_iff_of_pos_right hl
   refine ⟨(HahnSeries.embDomainRingHom (AddMonoidHom.mulRight l) hinj hmono).comp
     (GlobalTheory.FNTwist.twistHom s χ h0 hadd), fun h r => ?_⟩
   rw [RingHom.comp_apply, HahnSeries.embDomainRingHom_apply]

@@ -155,8 +155,7 @@ private theorem vanish (a₀ : U4 → ℂ) (ν μ₀ : Fin (2 + 2) → ℤ) (ι 
     rw [hψ, e]
     ring
   · have hx : ∃ m, a₀ (ι m)⁻¹ ≠ 0 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact hI (by simp [hcon])
     obtain ⟨m, hm⟩ := hx
     apply mul_right_cancel₀ hm
@@ -475,21 +474,17 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.ext4 :
     have key : (fun k => Φ (w4 * k)) = 0 := by
       refine hI _ (hΦ.comp (continuous_const.mul continuous_id)) ?_ ?_ ?_ ?_
       · intro g
-        have h := hR (w4 * g)
-        simpa only [mul_assoc] using h
+        simpa only [mul_assoc] using hR (w4 * g)
       · intro N Q hN l k
-        have h := h2 N Q hN l (w4 * k)
-        simpa only [← mul_assoc w4, hwb, ← mul_assoc (bd _ _) w4] using h
+        simpa only [← mul_assoc w4, hwb, ← mul_assoc (bd _ _) w4] using h2 N Q hN l (w4 * k)
       · intro N Q hN l k
-        have h := h1 N Q hN l (w4 * k)
-        simpa only [← mul_assoc w4, hwb, ← mul_assoc (bd _ _) w4] using h
+        simpa only [← mul_assoc w4, hwb, ← mul_assoc (bd _ _) w4] using h1 N Q hN l (w4 * k)
       · intro a b
         show Φ (w4 * bd a b) = 0
         rw [hwb]
         exact h0 b a
     funext k
-    have h := congrFun key (w4 * k)
-    simpa only [← mul_assoc, hww, one_mul, Pi.zero_apply] using h
+    simpa only [← mul_assoc, hww, one_mul, Pi.zero_apply] using congrFun key (w4 * k)
   · refine ⟨_, hcc (((KT.normSqInt n q : ℝ) : ℂ)⁻¹ * ((KT.normSqInt n' q' : ℝ) : ℂ)⁻¹) w4, hsc _ w4, ?_⟩
     intro a b
     have e : w4 * (bd a b * w4) = bd b a := by

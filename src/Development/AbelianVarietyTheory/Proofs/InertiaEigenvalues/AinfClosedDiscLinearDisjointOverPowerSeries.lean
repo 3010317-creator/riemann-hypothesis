@@ -82,11 +82,9 @@ theorem linDisjoint_disc (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (A 
   have key : ∀ i, g * toDisc l (X : bk.S) bk.ρ₀ (TB.c i x) = f * toDisc l (X : bk.S) bk.ρ₀ (TB.c i y) := by
     intro i
     have e := congrArg (cD i) h
-    rw [mul_comm, mul_comm (toDisc l (sA X) bk.ρ₀ y), hc2, hc2, hc1, hc1] at e
-    exact e
+    rwa [mul_comm, mul_comm (toDisc l (sA X) bk.ρ₀ y), hc2, hc2, hc1, hc1] at e
   obtain ⟨i₀, hi₀⟩ : ∃ i₀, TB.c i₀ y ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hy (hz y hc)
   refine ⟨TB.c i₀ y, TB.c i₀ x, hi₀, ?_⟩
   rw [← sub_eq_zero]

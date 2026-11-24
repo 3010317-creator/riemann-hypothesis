@@ -69,8 +69,7 @@ theorem exists_nat_eq_mul {E : Type} [Field E] [NumberField E] {a : 𝓞 E} (ha 
     ∃ (k : ℕ) (b : 𝓞 E), k ≠ 0 ∧ (k : 𝓞 E) = b * a := by
   obtain ⟨b, hb⟩ := Ideal.mem_span_singleton'.1 (Ideal.absNorm_mem (Ideal.span {a}))
   refine ⟨Ideal.absNorm (Ideal.span {a}), b, ?_, hb.symm⟩
-  rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-  exact ha
+  rwa [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
 
 theorem exists_embedding : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (Λ : Type) [AddCommGroup Λ] [Module (𝓞 E) Λ] [Module.Free ℤ Λ] [Module.Finite ℤ Λ], ∃ N : ℕ, Module.finrank ℚ E * N = Module.finrank ℤ Λ ∧ ∃ e : Λ →+ (Fin N → E), Function.Injective e ∧ (∀ (a : 𝓞 E) x, e (a • x) = (a : E) • e x) ∧ ∀ v : Fin N → E, ∃ (k : ℕ) (x : Λ), k ≠ 0 ∧ e x = k • v := by
   intro E _ _ _ Λ _ _ _ _
@@ -98,8 +97,7 @@ theorem exists_embedding : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   let g := (Module.finBasis E (E ⊗[𝓞 E] Λ)).equivFun
   refine ⟨Module.finrank E (E ⊗[𝓞 E] Λ), hrank,
     AddMonoidHom.mk' (fun x => g (f x)) (fun x y => by simp only [map_add (f := _)]), ?_, ?_, ?_⟩
-  · refine (injective_iff_map_eq_zero _).2 fun x hx => htors x ?_
-    exact g.map_eq_zero_iff.1 hx
+  · exact (injective_iff_map_eq_zero _).2 fun x hx => htors x (g.map_eq_zero_iff.1 hx)
   · intro a x
     change g (f (a • x)) = (a : E) • g (f x)
     rw [map_smul, ← map_smul g]

@@ -61,11 +61,9 @@ theorem idAt_mul_idOff {D : D7} (P : Pl D → Prop) (a b : AE D) (ha : a ∈ idA
     intro w
     by_cases hw : P w
     · have := h2 ⟨w, hw⟩
-      rw [RingHom.mem_ker] at this
-      exact this
+      rwa [RingHom.mem_ker] at this
     · have := hfin ⟨w, hw⟩
-      rw [RingHom.mem_ker] at this
-      exact this
+      rwa [RingHom.mem_ker] at this
 
 end GlobalTheory.FinPl.FlatUnitPf
 

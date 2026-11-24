@@ -249,7 +249,6 @@ def basicUnit {X : Scheme.{0}} {D : X.Opens} (e : Γ(X, D)) : Γ(X, X.basicOpen 
 theorem gm_basicUnit_val {X : Scheme.{0}} {D : X.Opens} (e : Γ(X, D)) (x : X) (hx : x ∈ X.basicOpen e) :
     (gm (𝟙 X) x _ (basicUnit e)).val = (X.presheaf.germ D x (X.basicOpen_le e hx)).hom e := by
   rw [gm_id_val_germ x _ hx]
-  show (X.presheaf.germ (X.basicOpen e) x hx).hom ((X.presheaf.map (homOfLE (X.basicOpen_le e)).op).hom e) = _
   exact TopCat.Presheaf.germ_res_apply X.presheaf _ x hx e
 
 theorem exists_locGen_of_secFam : ∀ (X : Scheme.{0}) (L : LB X), L.IsLB → ∀ (J : Type) (D : J → X.Opens) (k : J → L.ι) (hD : ∀ j, D j ≤ L.U (k j)) (e : ∀ j, Γ(X, D j)), GlobalTheory.Pinch.IsSecFam L D k hD e → ∃ (V : X.Opens) (a : ∀ i, Γ(X, V ⊓ L.U i)ˣ), (∀ j (x : X) (h : x ∈ D j), IsUnit ((X.presheaf.germ (D j) x h).hom (e j)) → x ∈ V) ∧ GlobalTheory.Pinch.LocGen L V a := by
@@ -354,8 +353,7 @@ theorem secFam_unit_at_finite : ∀ (X : Scheme.{0}) (L : LB X) (W : X.Opens) (J
   ·
     have hr : ∀ j z (hz : z ∈ D j) (s : Γ(X, W)),
         (X.presheaf.germ (D j) z hz).hom (r j s) = (X.presheaf.germ W z (hDW j hz)).hom s := by
-      intro j z hz s
-      exact TopCat.Presheaf.germ_res_apply X.presheaf (homOfLE (hDW j)) z hz s
+      exact fun j z hz s => TopCat.Presheaf.germ_res_apply X.presheaf (homOfLE (hDW j)) z hz s
     intro j j' z hz hz'
 
     simp only [map_sum, map_mul, Finset.mul_sum]
@@ -383,8 +381,7 @@ theorem secFam_unit_at_finite : ∀ (X : Scheme.{0}) (L : LB X) (W : X.Opens) (J
         have hxF : x ∈ F := hF.mem_toFinset.mp (Finset.mem_erase.mp hx).2
         refine Ideal.mul_mem_right _ _ ?_
         rw [hr, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-        intro hu'
-        exact hsep x hxF y hy (Ne.symm hxy) ((X.mem_basicOpen (a x) y hyW).mpr hu')
+        exact fun hu' => hsep x hxF y hy (Ne.symm hxy) ((X.mem_basicOpen (a x) y hyW).mpr hu')
       exact (IsLocalRing.mem_maximalIdeal _).mp hmem hu
 
 end GlobalTheory.Pinch
@@ -474,8 +471,7 @@ theorem exists_locGen_near_finite : ∀ (X : Scheme.{0}) (L : LB X), L.IsLB → 
       (hF.subset fun y hy => hy.1) ⟨x, hx, specializes_rfl⟩
     refine ⟨i, ⟨hi.1.1, fun y hy hiy => ?_⟩, hi.1.2⟩
     have h1 : closure ({y} : Set X) ⊆ closure {i} := specializes_iff_closure_subset.1 hiy
-    have h2 := hi.2 ⟨hy, hi.1.2.trans hiy⟩ h1
-    exact ((specializes_iff_closure_subset.2 h2).antisymm hiy).eq
+    exact ((specializes_iff_closure_subset.2 (hi.2 ⟨hy, hi.1.2.trans hiy⟩ h1)).antisymm hiy).eq
   obtain ⟨a, ha, ha'⟩ := exists_separating X W hW F' hF'fin (hF'F.trans hFW)
     (fun x hx y hy hyx => (hy.2 x hx.1 hyx).symm)
   have hE : ∀ x : X, ∃ e : ∀ j, Γ(X, X.basicOpen (f j)), x ∈ W →

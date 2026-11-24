@@ -127,10 +127,8 @@ omit [NumberField E] in
 theorem mem_stabVec (x : Fin M → E) (k : HA (Af F) σ J) :
     k ∈ stabVec σ J x ↔ actVec σ J k (ratVec F x) = ratVec F x := by
   constructor
-  · intro h
-    exact congrFun (MulAction.mem_stabilizer_iff.1 h) 0
-  · intro h
-    exact MulAction.mem_stabilizer_iff.2 (funext fun _ => h)
+  · exact fun h => congrFun (MulAction.mem_stabilizer_iff.1 h) 0
+  · exact fun h => MulAction.mem_stabilizer_iff.2 (funext fun _ => h)
 
 end Basic₂
 

@@ -109,8 +109,7 @@ private theorem coprime_absNorm_of_isCoprime_span {K : Type} [Field K] [NumberFi
     haveI : Fintype (𝓞 K ⧸ J) := Fintype.ofFinite _
     haveI := Fact.mk hp
     have hcard : p ∣ Fintype.card (𝓞 K ⧸ J) := by
-      rw [← Nat.card_eq_fintype_card, ← Submodule.cardQuot_apply, ← Ideal.absNorm_apply]
-      exact hpc
+      rwa [← Nat.card_eq_fintype_card, ← Submodule.cardQuot_apply, ← Ideal.absNorm_apply]
     obtain ⟨x, hx⟩ := exists_prime_addOrderOf_dvd_card p hcard
     have hpx : ((p : ℕ) : 𝓞 K ⧸ J) * x = 0 := by
       rw [← nsmul_eq_mul, ← hx, addOrderOf_nsmul_eq_zero]
@@ -297,8 +296,7 @@ theorem gval_of_movesTo {D : D7} {T T' : D.host.E} {F00 F : LFlag (D.sp.Y 0) D.R
       (fun a c hac => by simp [Matrix.conjTranspose_apply, (hU c a).1 hac])
       (fun a => by simp [Matrix.conjTranspose_apply, (hU a a).2 rfl])
       (fun d b hbd => (hU' d b).1 hbd) (fun b => (hU' b b).2 rfl) l
-    rw [← hZ] at this
-    exact this
+    rwa [← hZ] at this
   simp only [Gval, Gflag, hD]
 
 theorem G_eq_gval {D : D7} {X : HidaSetting D} {Y : Full X} {u u' : D.what₂.Word} (t : TauC Y u u') :

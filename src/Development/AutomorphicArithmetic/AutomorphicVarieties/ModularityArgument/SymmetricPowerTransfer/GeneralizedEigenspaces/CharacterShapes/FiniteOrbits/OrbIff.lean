@@ -62,8 +62,7 @@ private theorem orb_iff {G : Type} [Group G] (U : Subgroup G) (a : G) (p : G ⧸
     dsimp only
     rw [key, ← QuotientGroup.out_eq' p, h]
     refine QuotientGroup.eq.mpr ?_
-    rw [inv_mul_cancel_left]
-    exact hu'
+    rwa [inv_mul_cancel_left]
 
 private theorem dcF_sum {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V] (U : Subgroup G) (a : G)
     [Fintype (MulAction.orbit U (a : G ⧸ U))] (φ : G → V) (g : G) :
@@ -83,8 +82,7 @@ private theorem quotient_out_mem_dc_iff {G : Type} [Group G] (U : Subgroup G) (c
   constructor
   · intro hx
     simpa using mul_mem_dc_of_mem_subgroup U c _ i⁻¹ hx (U.inv_mem hi)
-  · intro hx
-    exact mul_mem_dc_of_mem_subgroup U c x i hx hi
+  · exact fun hx => mul_mem_dc_of_mem_subgroup U c x i hx hi
 
 theorem UpperTheory.V.Z.Sym.So.uFMul :
     UpperTheory.V.Z.Sym.So.UFMul := by

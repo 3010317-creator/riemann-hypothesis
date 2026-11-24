@@ -417,8 +417,7 @@ theorem residue_liftStalk_eq_iff (σ : X.functionField →+* X.functionField) (h
     have : m = liftStalk σ h s - s := IsFractionRing.injective (X.presheaf.stalk x) X.functionField (by
       rw [e, map_sub, algebraMap_liftStalk])
     subst this
-    rw [← IsLocalRing.residue_eq_zero_iff, map_sub, sub_eq_zero] at hm
-    exact hm
+    rwa [← IsLocalRing.residue_eq_zero_iff, map_sub, sub_eq_zero] at hm
 
 end GlobalTheory.CharIndepAt
 
@@ -462,7 +461,7 @@ theorem GlobalTheory.CharIndepAt.main : ∀ (X : Scheme.{0}) [IsIntegral X] (U :
     ext a
     exact RingHom.congr_fun this (g a)
   by_contra hne
-  push_neg at hne
+  push Not at hne
   have hsum : ∀ a : Γ(X, U), ∑ i, res (t i) * χ i a = 0 := by
     intro a
     by_contra hz
@@ -752,8 +751,7 @@ theorem eq_of_mem_closure [Finite Γ] (ρ : Γ →* Aut X) (γ : Γ) (x : X)
     | zero => exact h1
     | succ k ih =>
       have e := ih.map (ρ γ).asIso.hom.continuous
-      rw [← hs, ← hs] at e
-      exact e
+      rwa [← hs, ← hs] at e
   have hge : ∀ k, a (k + 1) ⤳ a 1 := fun k => by
     induction k with
     | zero => exact specializes_rfl
@@ -804,8 +802,7 @@ theorem exists_invariant_isEqn : ∀ (F : Type) [Field F] [CharZero F] (X W : Sc
   let u : ι → X.functionField := fun i => (g : X.functionField) / sig ρ i.1 g
   have hu (i : ι) : UnitAt x (u i) := by
     have := (hg.iff_unitAt.1 (hgs i.1 i.2)).inv
-    rw [fnAct_val, inv_div] at this
-    exact this
+    rwa [fnAct_val, inv_div] at this
   have hnat (n : ℕ) (hn : n ≠ 0) : UnitAt x (n : X.functionField) := by
     let φF := (Scheme.ΓSpecIso (CommRingCat.of F)).inv ≫ s.appTop ≫ X.presheaf.germ ⊤ x trivial
     refine ⟨(n : X.presheaf.stalk x), ?_, map_natCast _ n⟩

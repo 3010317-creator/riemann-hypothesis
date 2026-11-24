@@ -78,8 +78,7 @@ theorem extSh.sec_res (φ : R →+* S) (F : Shv R) {V U : Scheme.{0}} (g : V ⟶
   have e2 := (ModuleCat.extendRestrictScalarsAdj.{1, 1, 1} (uliftHom φ)).unit.naturality (F.obj.map g.op)
   have h1 := LinearMap.congr_fun (congrArg ModuleCat.Hom.hom e1)
     (((ModuleCat.extendRestrictScalarsAdj.{1, 1, 1} (uliftHom φ)).unit.app (F.obj.obj (op U))).hom a)
-  have h2 := LinearMap.congr_fun (congrArg ModuleCat.Hom.hom e2) a
-  exact h1.symm.trans (congrArg _ h2.symm)
+  exact h1.symm.trans (congrArg _ (LinearMap.congr_fun (congrArg ModuleCat.Hom.hom e2) a).symm)
 
 theorem extSh.sec_map (φ : R →+* S) {F G : Shv R} (f : F ⟶ G) (U : Scheme.{0}) (a : Sec F U) :
     Sec.map ((extSh φ).map f) (extSh.sec φ F U a) = extSh.sec φ G U (Sec.map f a) := by
@@ -88,8 +87,7 @@ theorem extSh.sec_map (φ : R →+* S) {F G : Shv R} (f : F ⟶ G) (U : Scheme.{
   have e2 := (ModuleCat.extendRestrictScalarsAdj.{1, 1, 1} (uliftHom φ)).unit.naturality (f.hom.app (op U))
   have h1 := LinearMap.congr_fun (congrArg ModuleCat.Hom.hom e1)
     (((ModuleCat.extendRestrictScalarsAdj.{1, 1, 1} (uliftHom φ)).unit.app (F.obj.obj (op U))).hom a)
-  have h2 := LinearMap.congr_fun (congrArg ModuleCat.Hom.hom e2) a
-  exact h1.symm.trans (congrArg _ h2.symm)
+  exact h1.symm.trans (congrArg _ (LinearMap.congr_fun (congrArg ModuleCat.Hom.hom e2) a).symm)
 
 abbrev extCx (φ : R →+* S) (I : Cx R) : Cx S := ((extSh φ).mapHomologicalComplex _).obj I
 

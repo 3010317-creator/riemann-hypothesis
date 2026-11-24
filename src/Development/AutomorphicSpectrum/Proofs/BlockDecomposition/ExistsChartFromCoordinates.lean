@@ -370,8 +370,7 @@ theorem top_le_fromSpec (hV : IsAffineOpen V) : ⊤ ≤ hV.fromSpec ⁻¹ᵁ V :
 
 theorem top_le_specMap (hV : IsAffineOpen V) {B : Type} [CommRing B] (g : Γ(X, V) →+* B) :
     ⊤ ≤ (Spec.map (CommRingCat.ofHom g) ≫ hV.fromSpec) ⁻¹ᵁ V := by
-  intro x _
-  exact top_le_fromSpec hV (show _ ∈ (⊤ : (Spec Γ(X, V)).Opens) from trivial)
+  exact fun x _ => top_le_fromSpec hV (show _ ∈ (⊤ : (Spec Γ(X, V)).Opens) from trivial)
 
 theorem evalAt_specMap (hV : IsAffineOpen V) {B : Type} [CommRing B] (g : Γ(X, V) →+* B)
     (y : Spec (CommRingCat.of B) ⟶ X) (e : y = Spec.map (CommRingCat.ofHom g) ≫ hV.fromSpec)
@@ -405,8 +404,7 @@ theorem fromSpec_comp (q : X ⟶ Spec (CommRingCat.of O)) (hV : IsAffineOpen V) 
   have e : strV q V = ψ := by
     refine RingHom.ext fun a => ?_
     have := evalAt_base (B := Γ(X, V)) q (RingHom.id O) ψ hV.fromSpec hψ (top_le_fromSpec hV) a
-    rw [evalAt_fromSpec] at this
-    exact this
+    rwa [evalAt_fromSpec] at this
   rw [e, hψ, RingHom.comp_id]
 
 end Sch

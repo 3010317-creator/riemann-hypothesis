@@ -234,8 +234,7 @@ theorem sqRep_intertwines_of_unitary : ∀ (n : ℕ) (lam : DomWeight n) (ι : T
     have h1 := key (GlobalTheory.Branching.unitaryIncl n ⟨u, hu⟩)
     have h2 := congrFun (hU ⟨u, hu⟩ v) k
     rw [h2, sub_self, mul_zero] at h1
-    rw [hQd]
-    exact h1
+    rwa [hQd]
   have h3 := key B
   rw [← hQd, Q0, map_zero] at h3
   have hx := hdet B
@@ -290,21 +289,20 @@ theorem hwScal_transpose {n : ℕ} (ν : Fin n → ℕ) (hν : Antitone ν) (B :
   have hf : ∀ s, f (s + 1) ≤ f s := by
     intro s
     by_cases h : s + 1 < n
-    · simp only [hfd, dif_pos h, dif_pos (show s < n by omega)]
+    · simp only [hfd, dite_eq_left h, dite_eq_left (show s < n by omega)]
       exact hν (show (⟨s, by omega⟩ : Fin n) ≤ ⟨s + 1, h⟩ from Fin.mk_le_mk.mpr (by omega))
-    · simp only [hfd, dif_neg h]
-      exact Nat.zero_le _
+    · simpa only [hfd, dite_eq_right h] using Nat.zero_le _
   have hinner : ∀ s : Fin n, (∏ a : Fin (s.val + 1),
       B.transpose (Fin.castLE (by omega) a) (Fin.castLE (by omega) a)) = ∏ k ∈ Finset.range (s.val + 1), d k := by
     intro s
     rw [← Fin.prod_univ_eq_prod_range]
     refine Finset.prod_congr rfl fun a _ => ?_
     have ha : a.val < n := by omega
-    simp only [hd, dif_pos ha, Matrix.transpose_apply]
+    simp only [hd, dite_eq_left ha, Matrix.transpose_apply]
     rfl
   have hexp : ∀ s : Fin n, ν s - Formalism.GradedWeylDivisibility.nuNext ν s = f s.val - f (s.val + 1) := by
     intro s
-    simp only [hfd, dif_pos s.2, Formalism.GradedWeylDivisibility.nuNext]
+    simp only [hfd, dite_eq_left s.2, Formalism.GradedWeylDivisibility.nuNext]
   unfold Formalism.BasicNotions.Examples₂.NZ.hwScal
   simp_rw [hinner, hexp]
   rw [Fin.prod_univ_eq_prod_range (fun s => (∏ k ∈ Finset.range (s + 1), d k) ^ (f s - f (s + 1))) n]
@@ -313,7 +311,7 @@ theorem hwScal_transpose {n : ℕ} (ν : Fin n → ℕ) (hν : Antitone ν) (B :
   rw [hfn, pow_zero, mul_one] at ht
   rw [ht, ← Fin.prod_univ_eq_prod_range (fun k => d k ^ f k) n]
   refine Finset.prod_congr rfl fun i _ => ?_
-  simp only [hd, hfd, dif_pos i.2]
+  simp only [hd, hfd, dite_eq_left i.2]
 
 theorem exists_hw_upper : ∀ (n : ℕ) (lam : DomWeight n), ∃ v : nablaSq ℂ n lam, v ≠ 0 ∧
     ∀ B : GL (Fin n) ℂ, (B : Matrix (Fin n) (Fin n) ℂ).BlockTriangular id →
@@ -341,7 +339,7 @@ theorem exists_hw_upper : ∀ (n : ℕ) (lam : DomWeight n), ∃ v : nablaSq ℂ
     have hle : lam.detShift ≤ lam.w i := by
       unfold DomWeight.detShift
       have hn : 0 < n := Fin.pos i
-      rw [dif_pos hn]
+      rw [dite_eq_left hn]
       exact lam.anti (Fin.mk_le_mk.mpr (by omega) : i ≤ ⟨n - 1, by omega⟩)
     simp only [DomWeight.natW]
     omega
@@ -423,8 +421,7 @@ theorem exists_pair_ne_zero {G V W : Type} [Group G] [AddCommGroup V] [Module �
       ext w
       have h2 : w ∈ K.toSubmodule := by rw [h1]; exact Submodule.mem_top
       have h3 : B (ρ 1 w) y = 0 := h2 1
-      rw [map_one] at h3
-      exact h3
+      rwa [map_one] at h3
     rcases hσ.eq_bot_or_eq_top K' with h' | h'
     · have h3 : K'.toSubmodule = ⊥ := congrArg Subrepresentation.toSubmodule h'
       rw [h3] at hyK
@@ -490,8 +487,7 @@ theorem pair_ext {W : Type} [AddCommGroup W] [Module ℂ W] {ρ : Representation
       a.ρ ((GlobalTheory.WeightRealExt.ratPt (E := L) (n := n)) γ₀) (b.equivFun.symm c) := by
     rw [hM, LinearEquiv.symm_apply_eq]
     have := LinearMap.toMatrix_mulVec_repr b b (a.ρ ((GlobalTheory.WeightRealExt.ratPt (E := L) (n := n)) γ₀)) (b.equivFun.symm c)
-    rw [← b.equivFun_apply, ← b.equivFun_apply, LinearEquiv.apply_symm_apply] at this
-    exact this
+    rwa [← b.equivFun_apply, ← b.equivFun_apply, LinearEquiv.apply_symm_apply] at this
   have e2 : ρ ((GlobalTheory.WeightRealExt.ratPt (E := L) (n := n)) γ₀) (R (γ * k)⁻¹ w) = w := by
     rw [_root_.mul_inv_rev, map_mul, hfin _ ((finU (E := L) (n := n)).inv_mem hk), one_mul, ← hR, ← Module.End.mul_apply, ← map_mul,
       mul_inv_cancel, map_one, Module.End.one_apply]
@@ -517,8 +513,7 @@ theorem phi_mem {F : FinIso L n} {π : NG.AutRep L n} {U : Submodule ℂ (UA L n
     obtain ⟨x, rfl⟩ := F.onto y hy
     rw [Pi.sub_apply, GlobalTheory.FormDictEx.phi_j F R hfin, sub_eq_zero]
     exact (congrFun hue x).symm
-  rw [sub_eq_zero.1 h0]
-  exact hu
+  rwa [sub_eq_zero.1 h0]
 
 theorem weight_agree : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) (F : FinIso L n) (π : NG.AutRep L n)
     (U : Submodule ℂ (UA L n → ℂ)), Dict F π U → ∀ (a : NG.AlgWt L n), π.toAlgWt.IsDual a → ∀ τ : L →+* ℂ,
@@ -584,8 +579,7 @@ theorem weight_agree : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n
       apply hγ
       have h1 := congrFun (LinearMap.congr_fun h0 v₀) (F.j ((γ : GAf L n) * x₀))
       change GlobalTheory.FormDictEx.phi F R f (B.flip (b.equivFun.symm (M v₀))) _ = 0 at h1
-      rw [GlobalTheory.FormDictEx.phi_j F R hfin, (π.irrS.1.le hf).1] at h1
-      exact h1
+      rwa [GlobalTheory.FormDictEx.phi_j F R hfin, (π.irrS.1.le hf).1] at h1
     · change GlobalTheory.FormDictEx.phi F R f (B.flip (b.equivFun.symm (M (GlobalTheory.Branching.sqRep ℂ n lam (cEmb τ (x : UA L n)) v)))) =
         RU L n (x : UA L n) (GlobalTheory.FormDictEx.phi F R f (B.flip (b.equivFun.symm (M v))))
       rw [GlobalTheory.FormDictEx.RU_phi, GlobalTheory.FormDictEx.fy_inf F (Subgroup.mem_inf.1 x.2).1, GlobalTheory.FormDictEx.rt_one, hM, hΦx]
@@ -674,8 +668,7 @@ theorem isLoc_unique_of_isSplitAt : ∀ (E : Type) [Field E] [NumberField E] [Is
     refine ⟨⟨f.codRestrict U.V hf, fun y => LinearMap.ext fun v => Subtype.ext ?_⟩, fun e0 => h0 ?_⟩
     · have h3 := h2 (e.symm y) v
       have hy : ((cLoc w).comp (locU n w).subtype) (e.symm y) = y := hs y
-      rw [hy] at h3
-      exact h3
+      rwa [hy] at h3
     · exact LinearMap.ext fun v => congrArg Subtype.val (DFunLike.congr_fun e0 v)
   obtain ⟨f, hf⟩ := key σ h
   obtain ⟨f', hf'⟩ := key σ' h'
@@ -895,8 +888,7 @@ theorem locComp_agree : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (
   let f : τ.V →ₗ[ℂ] (UA L n → ℂ) := U.subtype ∘ₗ eR.symm.toLinearMap ∘ₗ T'.codRestrict _ hT'mem
   have hfU : ∀ a, f a ∈ U := fun a => (eR.symm _).2
   have hf : ∀ a y, f a (F.j y) = lam (T a y) := fun a y => by
-    have h1 := congrArg Subtype.val (eR.apply_symm_apply ⟨T' a, hT'mem a⟩)
-    exact congrFun h1 y
+    exact congrFun (congrArg Subtype.val (eR.apply_symm_apply ⟨T' a, hT'mem a⟩)) y
   have hcomp : IsCompAlong U (locU n s.w) ((cLoc s.w).comp (locU n s.w).subtype) τ.ρ := by
     refine ⟨τ.irr, f, fun h => hlam ?_, hfU, fun x a => ?_⟩
     · have h1 := hf a0 g0

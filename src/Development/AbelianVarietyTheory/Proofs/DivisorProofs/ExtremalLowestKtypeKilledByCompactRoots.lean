@@ -118,16 +118,14 @@ theorem orth_of_not_cdom (hσ : IsURepOn (UJset ε) σ) {Λ μ : Fin n → ℝ} 
     · have h3 := S.starProjection_inner_eq_zero w x hx
       rwa [h0, sub_zero] at h3
     · exact absurd (hmax μ _ (by rw [Submodule.starProjection_apply]; exact Submodule.coe_mem _) h0 hp) hμ
-  intro x hx
-  exact Submodule.mem_orthogonal_singleton_iff_inner_right.mp (hle hx)
+  exact fun x hx => Submodule.mem_orthogonal_singleton_iff_inner_right.mp (hle hx)
 
 theorem stable_sSup {Λ : Fin n → ℝ} : IsKStableOn ε σ (sSup {S | IsKTypeOf ε σ Λ S}) := by
   intro g hg v hv
   have hle : sSup {S | IsKTypeOf ε σ Λ S} ≤
       (sSup {S | IsKTypeOf ε σ Λ S}).comap (σ g : H →ₗ[ℂ] H) := by
     apply sSup_le
-    intro S hS x hx
-    exact (le_sSup hS : S ≤ sSup {S | IsKTypeOf ε σ Λ S}) (hS.2.1 g hg x hx)
+    exact fun S hS x hx => (le_sSup hS : S ≤ sSup {S | IsKTypeOf ε σ Λ S}) (hS.2.1 g hg x hx)
   exact hle hv
 
 private theorem sum_index_mul_root_eq_sub (x y : Fin n) :
@@ -195,8 +193,7 @@ theorem inner_dRep {S : Submodule ℂ H} (hS : IsKStableOn ε σ S) {w v : H} (h
     have h5 : HasDerivAt (fun _ : ℝ => (0 : ℂ))
         (((innerSL ℂ w).restrictScalars ℝ) (deriv (fun t : ℝ => σ (NormedSpace.exp (t • X)) v) 0)) 0 :=
       h3.congr_of_eventuallyEq (Filter.Eventually.of_forall fun t => by simp [hz t])
-    have h6 := h5.unique (hasDerivAt_const (0 : ℝ) (0 : ℂ))
-    simpa using h6
+    simpa using h5.unique (hasDerivAt_const (0 : ℝ) (0 : ℂ))
   · rw [deriv_zero_of_not_differentiableAt hd, inner_zero_right]
 
 theorem Jm_inv : (Formalism.REAL.Jm ε)⁻¹ = Formalism.REAL.Jm ε := Matrix.inv_eq_left_inv (Formalism.REAL.Jm_mul_self ε)
@@ -217,8 +214,8 @@ private theorem single_ct_lemma (a c : Fin n) : (Matrix.single a c (1 : ℂ))ᴴ
   ext i j
   simp only [Matrix.conjTranspose_apply, Matrix.single, Matrix.of_apply]
   by_cases h : c = i ∧ a = j
-  · rw [if_pos ⟨h.2, h.1⟩, if_pos h, star_one]
-  · rw [if_neg (fun h' => h ⟨h'.2, h'.1⟩), if_neg h, star_zero]
+  · rw [ite_eq_left ⟨h.2, h.1⟩, ite_eq_left h, star_one]
+  · rw [ite_eq_right (fun h' => h ⟨h'.2, h'.1⟩), ite_eq_right h, star_zero]
 
 theorem conjH_single {a c : Fin n} (h : ε a = ε c) :
     conjH (Formalism.REAL.Jm ε) (Matrix.single a c 1) = -Matrix.single c a 1 := by
@@ -281,7 +278,7 @@ theorem dRepC_diag (hσ : IsURepOn (UJset ε) σ) {μ : Fin n → ℝ} {v : H} (
         · simp [Matrix.single, hia, Ne.symm hia]
       · rw [Matrix.diagonal_apply_ne _ hij]
         simp only [Matrix.smul_apply, Matrix.single, Matrix.of_apply]
-        rw [if_neg (fun h' => hij (h'.1.symm.trans h'.2))]
+        rw [ite_eq_right (fun h' => hij (h'.1.symm.trans h'.2))]
         simp
     rw [hs, Matrix.exp_diagonal]
     congr 1

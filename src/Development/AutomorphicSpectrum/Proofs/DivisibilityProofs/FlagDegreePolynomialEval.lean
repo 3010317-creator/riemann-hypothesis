@@ -320,9 +320,8 @@ theorem eq_linForm (k₀ : K) (hK : ∀ a : K, a = k₀) {f : MRingOver F ι}
     subst hk
     by_cases hb : b = a
     · subst hb; simp [ha]
-    · rw [h0 b hb, Finsupp.single_apply, if_neg]
-      intro h
-      exact hb (sigma_mk_injective h).symm
+    · rw [h0 b hb, Finsupp.single_apply, ite_eq_right]
+      exact fun h => hb (sigma_mk_injective h).symm
   ext m
   rw [linForm_apply, coeff_sum]
   simp only [MvPolynomial.coeff_smul, coeff_X', smul_eq_mul, mul_ite, mul_one, mul_zero]
@@ -331,9 +330,8 @@ theorem eq_linForm (k₀ : K) (hK : ∀ a : K, a = k₀) {f : MRingOver F ι}
     rw [Finset.sum_eq_single q]
     · simp
     · intro b _ hb
-      rw [if_neg]
-      intro h
-      exact hb (Finsupp.single_left_injective one_ne_zero h)
+      rw [ite_eq_right]
+      exact fun h => hb (Finsupp.single_left_injective one_ne_zero h)
     · simp
   · rw [notMem_support_iff.1 hm]
     symm
@@ -391,8 +389,7 @@ theorem ptDeg_eq_one [DecidableEq (Σ k, ι k)] (k₀ : K) (hK : ∀ a : K, a = 
 theorem exists_single_notMem [DecidableEq (Σ k, ι k)] (U : Submodule F ((Σ k, ι k) → F))
     (hd : 0 < Module.finrank F (((Σ k, ι k) → F) ⧸ U)) :
     ∃ q : Σ k, ι k, (Pi.single q (1 : F) : (Σ k, ι k) → F) ∉ U := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have htop : U = ⊤ := by
     refine (Submodule.eq_top_iff').2 fun c => ?_
     rw [eq_sum_single c]
@@ -541,7 +538,7 @@ theorem pivotRatio_algebraicIndependent (F : Type) [Field F] (Ψ : Type) (n : �
       simp only [δ, incl, Fin.val_castLE] at this
       have := q.2.2.2
       omega
-    simp only [Function.comp_apply, hne, if_false]
+    simp only [Function.comp_apply, hne, ite_false]
     rfl
   exact hrat ▸ hz.comp incl hincl
 
@@ -674,8 +671,7 @@ theorem isArithVar_pPart (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) (K 
       refine flag_mem_of_le ℚ (genMatFr ℚ Ψ N (j k).1) _ (hL _) (j k).2 (fun a b ha hb => ?_) _
       obtain ⟨k', hk'⟩ := hj.down k ((j k).1, a) rfl ha
       have h := hT k' b (by rw [hk']; exact hb)
-      rw [hk'] at h
-      exact h
+      rwa [hk'] at h
     exact isAlgebraic_algebraMap (⟨_, hm⟩ : IntermediateField.adjoin ℚ (Set.range t))
   exact CoordConeArithVar.full K (PIdx j) (ΩFl Ψ N) (yPart j) c (cellDim j) t ‹_› hc hind hmem halg
 
@@ -821,15 +817,14 @@ theorem ptsIntegral_bot (II : IntersectionSystem) (hII : IsIntersectionSystem II
     have hg : geoNum n (Ideal.span {C ((2 : ℕ) : ℤ)} : Ideal (MRing ι)) (fun j => ((fun _ : Fin n => L) j).a) = 1 :=
       geoNum_span 2 k₀ hk σ L.a ha
     unfold vertR
-    rw [divSupp_bot 2 k₀ hk σ, finsum_mem_singleton, if_neg (Inter.Conservation.not_horizontal Nat.prime_two hW),
+    rw [divSupp_bot 2 k₀ hk σ, finsum_mem_singleton, ite_eq_right (Inter.Conservation.not_horizontal Nat.prime_two hW),
       Inter.Conservation.charOf_eq Nat.prime_two hW, bot_sup_eq, ReciprocityTheory.ChartRestriction.G.AI.I1.inh_multAt_self, hg]
     simp
   rw [h1, hv] at h2
   have hlog : Real.log ((2 : ℕ) : ℝ) ≠ 0 := (Real.log_pos (by norm_num)).ne'
   have h3 : Real.log ((2 : ℕ) : ℝ) * 1 =
       Real.log ((2 : ℕ) : ℝ) * ptsIntegral (⊥ : Ideal (MRing ι)) (pot fun _ : Fin n => L) (fun _ => 1) := by
-    rw [mul_one]
-    exact h2
+    rwa [mul_one]
   exact (mul_left_cancel₀ hlog h3).symm
 
 end Proj
@@ -850,8 +845,7 @@ theorem pPart_eq_bot (τ : Ψ) (h : 0 < N - 1) (k₀ : K) (hk : ∀ a : K, a = k
     have hAB : A = B := by
       refine Subtype.ext (funext fun x => ?_)
       have hx : x = ⟨0, Nat.succ_pos _⟩ := Fin.ext (by have := x.2; simp [j] at this ⊢)
-      rw [hx]
-      exact h3
+      rwa [hx]
     rw [hAB]
   have hy : ∀ p, yPart j p = algebraMap (MvPolynomial (Ψ × Fin N × Fin N) ℚ) (ΩFl Ψ N) (X (emb p)) := by
     intro p
@@ -900,8 +894,7 @@ theorem ptsIntegral_first : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : �
     obtain ⟨k, hk'⟩ := hj.down k₀ ((j k₀).1, ⟨0, h⟩) rfl (Nat.zero_le _)
     funext a
     rw [hk k] at hk'
-    rw [hk a]
-    exact hk'
+    rwa [hk a]
   have hN : N - 1 + 1 = N := by omega
   rw [pPart_eq_bot τ h k₀ hk]
   refine ptsIntegral_bot II hII.1 k₀ hk (n := N - 1)
@@ -955,8 +948,7 @@ theorem imageZ_drop [Fintype K] [DecidableEq K] (j : K → FlBlock Ψ N) (k₀ :
   show mConeMap (yPart j) (rename (dropV j k₀) f) = 0 ↔ _
   rw [key]
   constructor
-  · intro h
-    exact rename_injective _ Subtype.val_injective (by rw [h, map_zero])
+  · exact fun h => rename_injective _ Subtype.val_injective (by rw [h, map_zero])
   · intro h
     have h' : mConeMap (yPart (dropJ j k₀)) f = 0 := h
     rw [h', map_zero]
@@ -1021,7 +1013,7 @@ theorem lex_sum_Ico {σ : Type*} [LinearOrder σ] [WellFoundedGT σ] {n : ℕ} (
     rw [hdegX, MonomialOrder.degree_lt_iff hzero]
     intro c hc
     obtain ⟨s, hs, hcs⟩ := Finset.mem_biUnion.mp (MvPolynomial.support_sum hc)
-    rw [X, support_monomial, if_neg one_ne_zero, Finset.mem_singleton] at hcs
+    rw [X, support_monomial, ite_eq_right one_ne_zero, Finset.mem_singleton] at hcs
     rw [hcs]
     exact hlt s (Finset.mem_Ioo.mp hs).1
   rw [← Finset.Ioo_insert_left hab, Finset.sum_insert (by simp)]
@@ -1058,7 +1050,6 @@ theorem coeff_rhoM_gapDelta (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) 
       exact Prod.ext (e.injective h1) h2)
   haveI : WellFoundedGT (Ψ × Fin N) := Finite.to_wellFoundedGT
   have hv : ∀ τ : Ψ, StrictMono (fun s : Fin N => (τ, s)) := fun τ s t hst => by
-    show toLex (e τ, s) < toLex (e τ, t)
     exact Prod.Lex.toLex_lt_toLex.mpr (Or.inr ⟨rfl, hst⟩)
   have key := CoeffDelta.degree_prod_monic (MonomialOrder.lex : MonomialOrder (Ψ × Fin N))
     Finset.univ
@@ -1068,8 +1059,7 @@ theorem coeff_rhoM_gapDelta (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) 
       CoeffDelta.degree_prod_monic _ _ _ _ fun b hb =>
         CoeffDelta.lex_sum_Ico (fun s => (τ, s)) (hv τ) (Finset.mem_Ioi.mp hb))
   have h2 := key.2
-  rw [MonomialOrder.leadingCoeff, key.1, rhoM_eq_sum] at h2
-  exact h2
+  rwa [MonomialOrder.leadingCoeff, key.1, rhoM_eq_sum] at h2
 
 end GlobalTheory.CompanionTheory.Ar.Top.FlDeg
 end -- clump:auto
@@ -1097,12 +1087,12 @@ theorem prod_range_sub_eq_factorial (i n : ℕ) :
     · obtain ⟨t, rfl⟩ : ∃ t, n = i + 1 + t := ⟨n - (i + 1), by omega⟩
       have e1 : i + 1 + t - 1 - i = t := by omega
       have e2 : i + 1 + t + 1 - 1 - i = t + 1 := by omega
-      rw [if_pos h, e1, e2, Nat.factorial_succ]
+      rw [ite_eq_left h, e1, e2, Nat.factorial_succ]
       push_cast
       ring
     · have e1 : n - 1 - i = 0 := by omega
       have e2 : n + 1 - 1 - i = 0 := by omega
-      rw [if_neg h, e1, e2]
+      rw [ite_eq_right h, e1, e2]
       simp
 
 theorem prod_rhoM_factorial (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) :
@@ -1343,9 +1333,7 @@ theorem fsHerm_smooth {K : Type} [Fintype K] (ι : K → Type) [∀ k, Fintype (
   rw [← sq_rpow_half (Real.sqrt_nonneg _), Real.sq_sqrt h0]
 
 theorem constLine_smooth {K : Type} [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] :
-    IsSmoothHerm (constLine ι) := by
-  show ContDiffOn ℝ _ (fun _ => Real.exp (-(-1))) _
-  exact contDiffOn_const
+    IsSmoothHerm (constLine ι) := contDiffOn_const
 
 theorem ptsIntegral_neg_one {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] (P : Ideal (MRing ι)) {e : ℕ}
     (φ : Fin e → ((Σ k, ι k) → ℂ) → ℝ) :
@@ -1425,7 +1413,7 @@ theorem isPull_unit [Fintype K] [DecidableEq K] (j : K → FlBlock Ψ N) (k₀ :
     show (if k' = k.1 then (1 : ℤ) else 0) = Function.extend _ _ _ k'
     by_cases h : k' = k₀
     · subst h
-      rw [Function.extend_apply' _ _ _ (by rintro ⟨x, hx⟩; exact x.2 hx), if_neg (Ne.symm k.2)]
+      rw [Function.extend_apply' _ _ _ (by rintro ⟨x, hx⟩; exact x.2 hx), ite_eq_right (Ne.symm k.2)]
       rfl
     · rw [show k' = ((⟨k', h⟩ : {k // k ≠ k₀}) : K) from rfl, Subtype.val_injective.extend_apply]
       show _ = if (⟨k', h⟩ : {k // k ≠ k₀}) = k then (1 : ℤ) else 0
@@ -1439,8 +1427,7 @@ theorem isPull_unit [Fintype K] [DecidableEq K] (j : K → FlBlock Ψ N) (k₀ :
     have h2 : (fun k' : {k // k ≠ k₀} => if k'.1 = k.1 then (1 : ℤ) else 0) = fun k' => if k' = k then 1 else 0 := by
       funext k'
       simp [Subtype.ext_iff]
-    rw [h2] at h1
-    exact h1
+    rwa [h2] at h1
 
 theorem isPull_const [Fintype K] [DecidableEq K] (j : K → FlBlock Ψ N) (k₀ : K) :
     IsPullHerm (Subtype.val : {k // k ≠ k₀} → K) (dropV j k₀) (constLine (PIdx (dropJ j k₀))) (constLine (PIdx j)) := by
@@ -1630,8 +1617,7 @@ theorem tower (hIn : PB.Inputs) (II : IntersectionSystem) (hII : IsFullIntersect
           Fin.append (fun i => unitLine j (w₀ i).1) (fun _ : Fin (N - 1 - ((j k₀).2 : ℕ)) => unitLine j k₀) := by
         funext i
         refine Fin.addCases (fun i => ?_) (fun i => ?_) i <;> simp
-      rw [hfun]
-      exact hs
+      rwa [hfun]
 
 theorem alg_const (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) (D : ℕ)
     (a : (Fin D → Ψ × Fin N) → ℝ) (c : ℝ) (w₀ : Fin D → Ψ × Fin N)
@@ -1657,8 +1643,7 @@ theorem degFl_vand (hIn : PB.Inputs) (II : IntersectionSystem) (hII : IsFullInte
   obtain ⟨d, hd⟩ : ∃ d, d + 1 = antisymDegree Ψ N := ⟨antisymDegree Ψ N - 1, by omega⟩
   have harith : IsArithVar (mCoordIdeal (yFl Ψ N)) (d + 2) := by
     have := _root_.GlobalTheory.CompanionTheory.Ar.PB.pFl_isArithVar Ψ N hN
-    rw [← hd] at this
-    exact this
+    rwa [← hd] at this
   have hdim : d + 1 = 0 + Fintype.card Ψ * (N.choose 2 + (N - N).choose 2) := by
     simpa [antisymDegree] using hd
   obtain ⟨FA, -⟩ := PositivityTheory.Xgp.t_c_fl_an _ _ _ (yFl Ψ N) Ψ N N M 0 d BM harith hdim hbd

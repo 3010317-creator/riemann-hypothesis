@@ -89,8 +89,7 @@ theorem cpt_U : IsCompact {A : SpecialLinearGroup (Fin N) ℂ |
     rw [this]
     exact isClosed_eq (cont_val.matrix_mul cont_val.matrix_conjTranspose)
       continuous_const
-  · intro A hA i j
-    exact entry_norm_bound_of_unitary hA i j
+  · exact fun A hA i j => entry_norm_bound_of_unitary hA i j
 
 theorem cpt_KS : IsCompact (KS (ι := ι) (N := N)) := by
   have : KS (ι := ι) (N := N) = Set.univ.pi (fun _ =>
@@ -122,8 +121,7 @@ theorem cpt_Om [Fintype ι] (M : ℝ) : IsCompact (OmG (ι := ι) (N := N) M) :=
         isClosed_le continuous_const (cont_mt w i i).norm
     · exact isClosed_iInter fun i =>
         isClosed_eq (continuous_finsetProd _ fun w _ => (cont_mt w i i).norm) continuous_const
-  · intro p hp
-    exact hp.2.1
+  · exact fun p hp => hp.2.1
 
 theorem cont_dg : Continuous fun s : {s : Fin N → ℝ // ∑ i, s i = 0} => (dg s.1 s.2 : G ι N) := by
   refine continuous_pi fun w => Matrix.SpecialLinearGroup.isClosedEmbedding_val.isInducing.continuous_iff.2 ?_
@@ -152,8 +150,7 @@ theorem cpt_S (T : ℝ) (m : Fin N → ℤ) : IsCompact
           (isClosed_le (continuous_apply i) continuous_const)
       exact hc1.inter hc2
     · intro s hs
-      simp only [Set.mem_pi, Set.mem_univ, Set.mem_Icc, true_implies]
-      exact hs.2
+      simpa only [Set.mem_pi, Set.mem_univ, Set.mem_Icc, true_implies] using hs.2
   exact hemb.isCompact_preimage hbox
 
 theorem cpt_X {P : Set (G ι N)} (hP : IsCompact P) (T : ℝ) (m : Fin N → ℤ) : IsCompact (Xb P T m) := by

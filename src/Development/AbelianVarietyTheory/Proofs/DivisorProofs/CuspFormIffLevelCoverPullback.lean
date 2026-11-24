@@ -321,8 +321,7 @@ theorem mem_SS_of_isom (X X' : Data E r) (a : GL (Fin r) E) (hψ : X.Ψ = X'.Ψ)
     field_simp
   · rw [fjI_zero, le_div_iff₀ (BoundedSectionAlgebra.nfac_pos X' hx' la')]
     have hT := hC _ (flow_real_mem_dom X' hξ'iso.2.1 s _ hx')
-    rw [BoundedSectionAlgebra.pnorm_eq, BoundedSectionAlgebra.nfac_flow_real X' hξ'iso.2.1] at hT
-    exact hT
+    rwa [BoundedSectionAlgebra.pnorm_eq, BoundedSectionAlgebra.nfac_flow_real X' hξ'iso.2.1] at hT
 
 end Isom
 
@@ -395,8 +394,7 @@ theorem cusp_iff_pull : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.ChartRestr
     obtain ⟨π, δ, N, hN, hcomp, hsum, t, ht, hrd⟩ :=
       _root_.GlobalTheory.LevModel.levCover_model D j H Dw l Xo c U dict d U₂ dict₂ hL hL₂ hlev σ₂ hσ₂
     refine ⟨π, fun k => ?_, fun k₂ => ?_⟩
-    · by_contra hne
-      push_neg at hne
+    · by_contra! hne
       haveI : IsEmpty {k₂ // π k₂ = k} := ⟨fun x => hne x.1 x.2⟩
       have h0 := hsum k
       rw [finsum_of_isEmpty] at h0
@@ -441,8 +439,7 @@ theorem cusp_iff_pull : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.ChartRestr
     refine ⟨hg, fun σ₂ hσ₂ => ?_⟩
     obtain ⟨π, -, hk⟩ := key σ₂ hσ₂ _ rfl
     have hf' := (mem_holSub_iff _ _ _).1 (h _ (good_eF d σ₂ hσ₂))
-    refine (mem_holSub_iff _ _ _).2 fun k₂ => ?_
-    exact (hk k₂).2 (hf' (π k₂))
+    exact (mem_holSub_iff _ _ _).2 fun k₂ => (hk k₂).2 (hf' (π k₂))
 
 end GlobalTheory.LevCusp
 end -- clump:auto

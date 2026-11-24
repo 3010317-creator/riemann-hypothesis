@@ -340,8 +340,7 @@ theorem HasWeight.conj {Or : CptOrigin Y S₀ Dc Hd} {w : (Σ k, J k) → ℂ} {
   have hc := GlobalTheory.CompanionTheory.Ar.CoordConj.centre_and_coords_conj Or.𝔐.X Ω Or.𝔐.ξ K J Dc.y z w
   refine ⟨_, hc.2 hz, ?_, hx.conj⟩
   show centre _ ∈ _
-  rw [hc.1]
-  exact hi
+  rwa [hc.1]
 
 theorem exists_cuspWeight : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsAbelianGalois ℚ E] (H : Host E) (D : Datum H) (Xo : ∀ l : Tor.Level H, Moduli D l) (l : Tor.Level H) (c : Coeff l) (Y : Model (Xo l) c (algebraMap (𝓞 c.F) c.F)) (II : IntersectionSystem) (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (Ω : Type) [Field Ω] [Algebra ℚ Ω] (W : CMType H → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module Ω (W τ)] (Dc : ComponentData II (CMType H) K J Ω W) (Hd : HodgeData Dc) (S₀ : Finset ℕ) (Or : CptOrigin Y S₀ Dc Hd), ∃ U : ((Σ k, J k) → ℂ) → ℝ, Or.𝔐.IsCuspWeight Or.sm U ∧ (∀ w, 0 ≤ U w) ∧ (∀ w (a : K → ℂ), (∀ k, a k ≠ 0) → U (torusSmul a w) = U w) ∧ (∀ w, U (conjVec w) = U w) ∧ ∀ U', Or.𝔐.IsCuspWeight Or.sm U' → ∀ w ∈ Dc.Xo, U' w = U w := by
   intro hG E _ _ _ _ H D Xo l c Y II K _ J _ Ω _ _ W _ _ Dc Hd S₀ Or
@@ -349,10 +348,9 @@ theorem exists_cuspWeight : Top.Given → ∀ (E : Type) [Field E] [NumberField 
   let U : ((Σ k, J k) → ℂ) → ℝ := fun w => if h : ∃ x, HasWeight Or w x then h.choose else 0
   have hU : ∀ {w x}, HasWeight Or w x → U w = x := fun {w x} h => by
     have hex : ∃ x, HasWeight Or w x := ⟨x, h⟩
-    simp only [U, dif_pos hex]
-    exact hex.choose_spec.unique h
+    simpa only [U, dite_eq_left hex] using hex.choose_spec.unique h
   have hU0 : ∀ {w}, (¬ ∃ x, HasWeight Or w x) → U w = 0 := fun {w} h => by
-    simp only [U, dif_neg h]
+    simp only [U, dite_eq_right h]
   have hw : ∀ {z : Sp ℂ ⟶ Or.𝔐.X} {w} {g : ℕ} {Λ : Type} [AddCommGroup Λ] [Module (𝓞 E) Λ] (R : RiemLat E g Λ)
       {σ : CMType H → (𝓞 E →+* ℂ)}, CoordsAt Or.𝔐.ξ Dc.y z w → Or.𝔐.Interior z → FibreLat Or.𝔐.t z R →
       Or.𝔐.LabVal z Or.sm σ → HasWeight Or w (R.cuspW σ) := by
@@ -467,8 +465,7 @@ theorem continuousAt_of_holoOn {e : ℕ} {X : Type} [TopologicalSpace X] (A : Re
   obtain ⟨j, hj⟩ := A.cover x
   have hmem : A.chart j x ∈ (A.chart j).target ∩ (A.chart j).symm ⁻¹' U := by
     refine ⟨(A.chart j).map_source hj, ?_⟩
-    simp only [Set.mem_preimage, (A.chart j).left_inv hj]
-    exact hx
+    simpa only [Set.mem_preimage, (A.chart j).left_inv hj] using hx
   have h1 : ContinuousAt (g ∘ (A.chart j).symm) (A.chart j x) := (hg j _ hmem).continuousAt
   have h2 : ContinuousAt ((g ∘ (A.chart j).symm) ∘ A.chart j) x :=
     h1.comp ((A.chart j).continuousAt hj)
@@ -500,14 +497,11 @@ theorem cxModel_of_res {P : Ideal (MRing J)} {d : ℕ} (R : AnLogRes P ⊤ d) (h
   have hproj : ∀ z ∈ mcPts P, ReciprocityTheory.ChartRestriction.G.Geo.SameOrbit (R.lift (proj z) (proj z)) z := by
     intro z hz
     have h := hex z hz
-    simp only [proj, dif_pos h]
-    exact h.choose_spec
+    simpa only [proj, dite_eq_left h] using h.choose_spec
   have hproj_eq : ∀ z ∈ mcPts P, ∀ x, ReciprocityTheory.ChartRestriction.G.Geo.SameOrbit (R.lift x x) z → proj z = x := by
-    intro z hz x hx
-    exact hinj _ _ (orb_trans (hproj z hz) (orb_symm hx))
+    exact fun z hz x hx => hinj _ _ (orb_trans (hproj z hz) (orb_symm hx))
   have hlift : ∀ x y, y ∈ R.U x → proj (R.lift x y) = y := by
-    intro x y hy
-    exact hproj_eq _ (R.mem x y hy) y (R.compat y x y ⟨R.mem_U y, hy⟩)
+    exact fun x y hy => hproj_eq _ (R.mem x y hy) y (R.compat y x y ⟨R.mem_U y, hy⟩)
   have hcont : ContinuousOn proj (mcPts P) := by
     intro z hz
     show Tendsto proj (𝓝[mcPts P] z) (𝓝 (proj z))
@@ -515,8 +509,7 @@ theorem cxModel_of_res {P : Ideal (MRing J)} {d : ℕ} (R : AnLogRes P ⊤ d) (h
       (Filter.Eventually.of_forall fun _ => Set.mem_univ _) ?_
     intro xs _ hxs
     have hG : (𝓝[mcPts P] z ⊓ comap proj (𝓝 xs)).NeBot := by
-      rw [← Filter.map_neBot_iff proj, Filter.push_pull, inf_comm]
-      exact hxs
+      rwa [← Filter.map_neBot_iff proj, Filter.push_pull, inf_comm]
     have hpx : Tendsto proj (𝓝[mcPts P] z ⊓ comap proj (𝓝 xs)) (𝓝 xs) :=
       tendsto_comap.mono_left inf_le_right
     have hid : Tendsto id (𝓝[mcPts P] z ⊓ comap proj (𝓝 xs)) (𝓝 z) :=
@@ -524,10 +517,8 @@ theorem cxModel_of_res {P : Ideal (MRing J)} {d : ℕ} (R : AnLogRes P ⊤ d) (h
     have hlim : ReciprocityTheory.ChartRestriction.G.Geo.SameOrbit (R.lift xs xs) z := by
       refine orb_limit (F := 𝓝[mcPts P] z ⊓ comap proj (𝓝 xs))
         (a := fun w => R.lift xs (proj w)) (b := fun w => w) ?_ ?_ ?_ (hmemU xs).1 hz.1
-      · intro p
-        exact (continuousAt_of_holoOn R.A (R.holo xs p) (R.mem_U xs)).tendsto.comp hpx
-      · intro p
-        exact ((continuous_apply p).tendsto z).comp hid
+      · exact fun p => (continuousAt_of_holoOn R.A (R.holo xs p) (R.mem_U xs)).tendsto.comp hpx
+      · exact fun p => ((continuous_apply p).tendsto z).comp hid
       · have hU : ∀ᶠ w in 𝓝[mcPts P] z ⊓ comap proj (𝓝 xs), proj w ∈ R.U xs :=
           hpx ((R.isOpen_U xs).mem_nhds (R.mem_U xs))
         have hM : ∀ᶠ w in 𝓝[mcPts P] z ⊓ comap proj (𝓝 xs), w ∈ mcPts P :=
@@ -698,8 +689,7 @@ theorem limsup_add_tendsto {α : Type} {l : Filter α} [l.NeBot] {q g : α → �
   · have := limsup_add_le hq.isBoundedUnder_ge hq.isBoundedUnder_le g2 g1
     rwa [hq.limsup_eq] at this
   · have := le_limsup_add g1 g2 hq.isBoundedUnder_le hq.isBoundedUnder_ge
-    rw [hq.liminf_eq, add_comm, add_comm g q] at this
-    exact this
+    rwa [hq.liminf_eq, add_comm, add_comm g q] at this
 
 theorem abs_limsup_le {α : Type} {l : Filter α} [l.NeBot] {g : α → ℝ} {C : ℝ}
     (hg : ∀ᶠ x in l, |g x| ≤ C) : |limsup g l| ≤ C :=
@@ -787,8 +777,7 @@ theorem limsup_invol {X : Type} [TopologicalSpace X] {σ : X → X} (hσ : Conti
   have he : map σ (𝓝[Y] x) = 𝓝[Y] (σ x) := by
     refine le_antisymm (ht x) ?_
     have h1 := map_mono (m := σ) (ht (σ x))
-    rw [Filter.map_map, show σ ∘ σ = id from funext hi, Filter.map_id, hi] at h1
-    exact h1
+    rwa [Filter.map_map, show σ ∘ σ = id from funext hi, Filter.map_id, hi] at h1
   rw [← he, ← limsup_comp]
   exact limsup_congr (eventually_nhdsWithin_of_forall hg)
 
@@ -1004,8 +993,8 @@ theorem ph_conj (hL : LogHom D ref.a w) (hr : IsConjInvariantH ref) (hO : ConjOf
   rw [← cj_proj M hz]
   unfold ph
   by_cases h : M.proj z ∈ Yo M
-  · rw [if_pos h, if_pos ((hY _).2 h), hg _ h]
-  · rw [if_neg h, if_neg fun h' => h ((hY _).1 h'),
+  · rw [ite_eq_left h, ite_eq_left ((hY _).2 h), hg _ h]
+  · rw [ite_eq_right h, ite_eq_right fun h' => h ((hY _).1 h'),
       limsup_invol (continuous_cj M) hi (fun x hx => (hY x).2 hx) hg]
 
 end LevelTowerAlt.Bdd
@@ -1037,14 +1026,14 @@ theorem LevelTowerAlt.potential_charts_regular_bound : ∀ (K : Type) [Fintype K
       (fun v hv => (hloc j v hv).1.continuousWithinAt)
       (_root_.GlobalTheory.CompanionTheory.AnForm.PshLocal.isPsh_of_locally _ _ _ ((P.chart j).open_target.sdiff (ReciprocityTheory.AnForm.A.PlurisubharmonicExtension.coordDiv_closed _))
         fun v hv => (hloc j v hv).2)
-      (fun v hv => if_pos ((symm_mem_Yo M P hA j hv.1).2 hv.2)) fun v hv hS => ?_
+      (fun v hv => ite_eq_left ((symm_mem_Yo M P hA j hv.1).2 hv.2)) fun v hv hS => ?_
     show ph M ref w ((P.chart j).symm v) = _
     unfold ph
-    rw [if_neg fun h => (symm_mem_Yo M P hA j hv).1 h hS, ← map_nhds_Yo M P hA j hv]
+    rw [ite_eq_right fun h => (symm_mem_Yo M P hA j hv).1 h hS, ← map_nhds_Yo M P hA j hv]
     rfl
   · show ph M ref w (M.proj z) = _
     unfold ph
-    rw [if_pos ((proj_mem_Yo M hz.2).2 hz.1.2), relative_weight_projection M hL hz.1]
+    rw [ite_eq_left ((proj_mem_Yo M hz.2).2 hz.1.2), relative_weight_projection M hL hz.1]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.PlurisubharmonicCones.PotentialChartsRegularBound =====
@@ -1076,8 +1065,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.exists_conj_invariant_mollifie
     MeasureTheory.Integrable.of_integral_ne_zero (by rw [hcomp]; norm_num)
   refine ⟨⟨fun v => (ρ.toFun v + ρ.toFun (star v)) / 2, ?_, ?_, ?_, ?_, ?_⟩, ?_⟩
   · exact (ρ.contDiff.add (ρ.contDiff.comp hsm)).div_const 2
-  · intro w
-    exact div_nonneg (add_nonneg (ρ.nonneg _) (ρ.nonneg _)) two_pos.le
+  · exact fun w => div_nonneg (add_nonneg (ρ.nonneg _) (ρ.nonneg _)) two_pos.le
   · intro w hw
     by_contra h
     have h1 : ρ.toFun w = 0 := by
@@ -1142,8 +1130,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.exists_cutoff_family_symmetric
     obtain ⟨hsrc, hmid, -, hch⟩ := hS3 (κ j) z hz
     rw [hκ] at hsrc hmid hch
     have hx : M.proj z ∈ P.mid (κ j) := by
-      rw [hzx]
-      exact ht2
+      rwa [hzx]
     have hx' : M.proj (conjVec z) ∈ P.mid j := hmid.2 hx
     have hxs : M.proj z ∈ (P.chart (κ j)).source := P.closure_mid _ (subset_closure hx)
     have hx's : M.proj (conjVec z) ∈ (P.chart j).source := P.closure_mid _ (subset_closure hx')
@@ -1154,8 +1141,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.exists_cutoff_family_symmetric
     · rw [← heq]
       exact (P.chart j).map_source hx's
     · show (P.chart j).symm (star t) ∈ P.mid j
-      rw [← heq, (P.chart j).left_inv hx's]
-      exact hx'
+      rwa [← heq, (P.chart j).left_inv hx's]
   let g : Fin P.N → (Fin D.n → ℂ) → ℝ := fun j t => (g0 j t + g0 (κ j) (star t)) / 2
   have hsm : ∀ j, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (g j) := fun j =>
     ((hg0s j).add ((hg0s (κ j)).comp (LevelTowerAlt.contDiff_star _))).div_const 2
@@ -1419,8 +1405,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Cusp.breg_margin_tendsto (C : ℝ) :
   have h0 : Tendsto (fun t : ℝ => t) (𝓝[>] 0) (𝓝 0) := tendsto_id.mono_left nhdsWithin_le_nhds
   have h1 : Tendsto (fun t : ℝ => C / Real.log t⁻¹) (𝓝[>] 0) (𝓝 0) :=
     tendsto_const_nhds.div_atTop (Real.tendsto_log_atTop.comp tendsto_inv_nhdsGT_zero)
-  have h2 := h0.max (h1.add (h0.const_mul C))
-  simpa using h2
+  simpa using h0.max (h1.add (h0.const_mul C))
 
 
 

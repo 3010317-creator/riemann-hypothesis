@@ -65,12 +65,10 @@ theorem ae_eval₂_ne_zero_of_countable (K : Type) [Field K] [Countable K] (σ :
   by_cases hQ : Q = 0
   · exact Filter.Eventually.of_forall fun t h => absurd hQ h
   · have hm : MvPolynomial.map σ Q ≠ 0 := by
-      intro h
-      exact hQ (MvPolynomial.map_injective σ σ.injective (by rw [h, map_zero]))
+      exact fun h => hQ (MvPolynomial.map_injective σ σ.injective (by rw [h, map_zero]))
     have h := ReciprocityTheory.MultiplicativeHeights.ae_eval_ne_zero_linear (volume : Measure (ι → ℂ))
       (LinearEquiv.refl ℂ (ι → ℂ)) _ hm
     filter_upwards [h] with t ht _
-    rw [MvPolynomial.eval₂_eq_eval_map]
-    exact ht
+    rwa [MvPolynomial.eval₂_eq_eval_map]
 
 end GlobalTheory

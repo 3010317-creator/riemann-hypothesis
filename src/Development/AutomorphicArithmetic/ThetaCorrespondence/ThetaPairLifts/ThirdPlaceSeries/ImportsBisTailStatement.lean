@@ -755,7 +755,7 @@ theorem exists_finset_of_bdd (d : ℕ) (hd : 0 < d) (S : Set (GAf L n))
         (a.1 : Matrix (Fin n) (Fin n) (AL L)) k l = (d : AL L) * y := by
       intro k l
       have e := congrFun (congrFun hab k) l
-      simp only [cls, dif_pos (hS a ha k l).1, dif_pos (hS b hb k l).1] at e
+      simp only [cls, dite_eq_left (hS a ha k l).1, dite_eq_left (hS b hb k l).1] at e
       obtain ⟨z, hz⟩ := hc _ _ e.symm
       refine ⟨z.1, z.2, ?_⟩
       have hz' := congrArg Subtype.val hz
@@ -785,7 +785,7 @@ theorem exists_finset_of_bdd (d : ℕ) (hd : 0 < d) (S : Set (GAf L n))
   let rep : (Fin n → Fin n → Q) → GAf L n := fun t => if h : t ∈ T then h.choose else 1
   refine ⟨hT.toFinset.image rep, fun κ hκ => ?_⟩
   have ht : cls κ ∈ T := ⟨κ, hκ, rfl⟩
-  have hr : rep (cls κ) = ht.choose := dif_pos ht
+  have hr : rep (cls κ) = ht.choose := dite_eq_left ht
   refine ⟨rep (cls κ), Finset.mem_image.2 ⟨cls κ, hT.mem_toFinset.2 ht, rfl⟩, ?_⟩
   rw [hr]
   exact key _ ht.choose_spec.1 _ hκ ht.choose_spec.2
@@ -1051,8 +1051,7 @@ open Formalism.IndefR.Bridge
 
 theorem reps_inj {G Γ' : Type} [Group G] [Group Γ'] {ι : Γ' →* G} {J : Subgroup G} {I : Type} {y : I → G}
     (hy : IsReps ι J y) : Function.Injective y := by
-  intro i i' h
-  exact (hy (y i)).unique ⟨1, 1, by simp⟩ ⟨1, 1, by simp [h]⟩
+  exact fun i i' h => (hy (y i)).unique ⟨1, 1, by simp⟩ ⟨1, 1, by simp [h]⟩
 
 theorem transport {G G' Γ' : Type} [Group G] [Group G'] [Group Γ'] (Γ : Subgroup G) (ι : Γ' →* G')
     (hι : Function.Injective ι) (φ : G →* G') (hφ : Function.Bijective φ) (a : G)
@@ -1145,8 +1144,7 @@ namespace GlobalTheory.VFormCls
 theorem adForms_right {G Γ W : Type} [Group G] [Group Γ] {ι : Γ →* G} [NormedAddCommGroup W] [InnerProductSpace ℂ W]
     {ρ : Γ →* Module.End ℂ W} {J : Subgroup G} {χ : J →* ℂˣ} {F : G → W}
     (hF : F ∈ Formalism.IndefR.Bridge.AdForms ι ρ J χ) (g : G) (k : J) : F (g * k) = (χ k : ℂ) • F g := by
-  have h0 := hF 1 g k
-  simpa using h0
+  simpa using hF 1 g k
 
 end GlobalTheory.VFormCls
 
@@ -1180,8 +1178,7 @@ theorem inner_eq {D : D7} {cf : CharFrame D} {nch : NChoice D} {tp : TupTied D c
   choose hx hhx using hex
   refine ⟨fun x => (X.R.HV j (X.tupT μ)).e (hx x), fun x => ?_, fun x => hhx x, fun x y => ?_⟩
   · have h := LinearMap.mem_range_self (X.R.HV j (X.tupT μ)).e (hx x)
-    rw [hHV.2.1] at h
-    exact h
+    rwa [hHV.2.1] at h
   · have hmt := X.recR.tied.lift.mt μ hμ j x y
     rw [hmt]
     refine Eq.trans (ipA_eq X.R X.F X.tupT X.hm X.hTop X.hinj μ j (X.fn hμ j x) (X.fn hμ j y)) ?_

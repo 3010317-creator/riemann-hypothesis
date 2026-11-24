@@ -332,9 +332,9 @@ theorem finrank_symm_comm_le (E : Type) [Field E] [NumberField E] [IsCMField E] 
     rw [NumberField.Embeddings.card] at h3
     change Fintype.card T ≤ _ - Fintype.card T at h1
     omega
-  have hp : ∀ τ : T, Module.finrank ℂ (Eig F τ.1) = p := fun τ => by rw [hdim', if_pos τ.2]
+  have hp : ∀ τ : T, Module.finrank ℂ (Eig F τ.1) = p := fun τ => by rw [hdim', ite_eq_left τ.2]
   have hq : ∀ τ : T, Module.finrank ℂ (Eig F (ComplexEmbedding.conjugate τ.1)) = q :=
-    fun τ => by rw [hdim', if_neg (hne τ.1 τ.2)]
+    fun τ => by rw [hdim', ite_eq_right (hne τ.1 τ.2)]
   let b : ∀ τ : T, Module.Basis (Fin p) ℂ (Eig F τ.1) := fun τ => Module.finBasisOfFinrankEq ℂ _ (hp τ)
   let Ψ : S →ₗ[ℂ] (∀ τ : T, Fin p → Eig F (ComplexEmbedding.conjugate τ.1)) :=
     { toFun := fun Θ τ i => ⟨Θ.1.mulVec (star (b τ i : Fin g → ℂ)), theta_mem F τ.1 Θ.1 (hS Θ.1 Θ.2).2 _ (b τ i).2⟩
@@ -590,8 +590,7 @@ theorem dbar_mul {f f' : E → ℂ} {z : E} (h : DifferentiableAt ℝ f z) (h' :
 
 private lemma hasFDerivAt_finset_sum {ι : Type*} (s : Finset ι) {A : ι → E → ℂ}
     {A' : ι → E →L[ℝ] ℂ} {x : E} (h : ∀ i ∈ s, HasFDerivAt (A i) (A' i) x) :
-    HasFDerivAt (fun y => ∑ i ∈ s, A i y) (∑ i ∈ s, A' i) x := by
-  exact HasFDerivAt.fun_sum h
+    HasFDerivAt (fun y => ∑ i ∈ s, A i y) (∑ i ∈ s, A' i) x := HasFDerivAt.fun_sum h
 
 theorem dbar_sum {ι : Type*} (s : Finset ι) {f : ι → E → ℂ} {z : E}
     (h : ∀ i ∈ s, DifferentiableAt ℝ (f i) z) (u : E) :
@@ -808,8 +807,7 @@ theorem symm_of_cocycle (g : ℕ) (Λ : Submodule ℤ (Fin g → ℂ)) (hd : Dis
   have hPC : ∀ a, ContDiff ℝ 1 (P a) := by
     intro a
     rw [contDiff_iff_contDiffAt]
-    intro z
-    exact (hWA (ch z) a z (hch z)).congr_of_eventuallyEq (hPloc a (ch z) z (hch z))
+    exact fun z => (hWA (ch z) a z (hch z)).congr_of_eventuallyEq (hPloc a (ch z) z (hch z))
   have s1 : ∀ a c, ∑ m, (2 * θ m a) * (2 * h m c) = 4 * ∑ m, θ m a * h m c := by
     intro a c
     rw [Finset.mul_sum]
@@ -890,9 +888,7 @@ theorem logDeriv_translate {g : ℕ} {U : Set (Fin g → ℂ)} (hU : IsOpen U) {
         + a (z + l) * (e * (cexp (π * (z ⬝ᵥ w)) * (π * w m))) := by
     rw [hD]
     simp [hL]
-  have hEz : e * cexp (π * (z ⬝ᵥ w)) ≠ 0 := by
-    intro h0
-    exact ha0 z hz (by rw [hf z hz, h0, zero_mul])
+  have hEz : e * cexp (π * (z ⬝ᵥ w)) ≠ 0 := fun h0 => ha0 z hz (by rw [hf z hz, h0, zero_mul])
   have he : e ≠ 0 := left_ne_zero_of_mul hEz
   have hX : cexp (π * (z ⬝ᵥ w)) ≠ 0 := Complex.exp_ne_zero _
   rw [hD', hf z hz]
@@ -992,8 +988,7 @@ theorem exists_frame_on_family (hL₀ : L₀.IsLB) (m : A₀.left ⟶ X) (L : LB
     intro i j z hi hj
     have h := PowUnif.val_linComb_g (u.ex z).left L (fun _ : PUnit => m) (fun _ => i) (fun _ => j)
       ((_root_.GlobalTheory.top_le_preimage_inf _ _ _).2 ⟨hJ i z hi, hJ j z hj⟩)
-    rw [Fintype.prod_unique] at h
-    exact h
+    rwa [Fintype.prod_unique] at h
 
   have indep : ∀ (i : L.ι) (z : Fin g → ℂ) (b b' : L₀.ι), ⊤ ≤ ((u.ex z).left ≫ m) ⁻¹ᵁ L.U i →
       ⊤ ≤ (u.ex z).left ⁻¹ᵁ L₀.U b → ⊤ ≤ (u.ex z).left ⁻¹ᵁ L₀.U b' →
@@ -1085,7 +1080,7 @@ theorem exists_frame_on_family (hL₀ : L₀.IsLB) (m : A₀.left ⟶ X) (L : LB
 private theorem valAt'_mul_of_whole_le_preimage {X : Scheme.{0}} (y : Sp ℂ ⟶ X) {W : X.Opens} (hW : ⊤ ≤ y ⁻¹ᵁ W)
     (f f' : Γ(X, W)) : valAt' y W (f * f') = valAt' y W f * valAt' y W f' := by
   unfold valAt'
-  simp only [dif_pos hW]
+  simp only [dite_eq_left hW]
   unfold valAt
   simp only [map_mul]
 
@@ -1160,8 +1155,7 @@ theorem isSymm_of_lift : ∀ (P₀ : Out.PolAV (Sp ℂ)) (u : HolUnif P₀.A P�
     (by
       intro i j l z hz
       have hzW : z ∈ dom u m (L.U i ⊓ L.U j) := by
-        rw [hdom]
-        exact hz
+        rwa [hdom]
       have hs := hks.per l (L.U i ⊓ L.U j) (L.g i j).val z hzW
       show s (z + l) (L.U i ⊓ L.U j) (L.g i j).val / fn u m (L.U i ⊓ L.U j) (L.g i j).val (z + l) = _
       rw [hs, hfnper]
@@ -1359,8 +1353,7 @@ theorem comm_of_endo : ∀ (P₀ : Out.PolAV (Sp ℂ)) (u : HolUnif P₀.A P₀.
     · intro W a hz
       have hz' : F (z + l) ∈ dom u m W := by
         show ⊤ ≤ ((u.ex (F (z + l))).left ≫ m) ⁻¹ᵁ W
-        rw [hexF z l hl]
-        exact hz
+        rwa [hexF z l hl]
       rw [hw (z + l) (Set.mem_univ _) W a hz', map_add (f := _), fderiv_fn_add_lattice u m W a (F z) (F l) hFl']
     · intro W a hz
       have hzf : z ∈ dom u m (f ⁻¹ᵁ W) := (hdom W z).2 hz
@@ -1392,8 +1385,7 @@ theorem comm_of_endo : ∀ (P₀ : Out.PolAV (Sp ℂ)) (u : HolUnif P₀.A P₀.
     have h1 : cA v = ∑ j, cA (v j • fun k => if j = k then 1 else 0) := by
       conv_lhs => rw [pi_eq_sum_univ v]
       exact map_sum cA _ _
-    refine h1.trans (Finset.sum_congr rfl fun j _ => ?_)
-    exact hc_smul (v j) _
+    exact h1.trans (Finset.sum_congr rfl fun j _ => (hc_smul (v j) _))
 
   have hwdiff : Differentiable ℂ w := differentiableOn_univ.1 hwd
   have hzero : ∀ i j, cA (fun k => if j = k then 1 else 0) i = 0 := by
@@ -1707,9 +1699,7 @@ theorem ks_unique : ∀ (P₀ : Out.PolAV (Sp ℂ)) (u : HolUnif P₀.A P₀.L P
   ext i j
   have key := GlobalTheory.entire_antilinear_periods_const P₀.g u.Λ hdisc hspan (fun z => w z i) ((Θ - Θ') i)
     (differentiable_pi.mp hwd' i) (fun l z => congrFun (hper l z) i)
-  have hij := congrFun key.1 j
-  simp only [Matrix.sub_apply, Pi.zero_apply, sub_eq_zero] at hij
-  exact hij
+  simpa only [Matrix.sub_apply, Pi.zero_apply, sub_eq_zero] using congrFun key.1 j
 
 end GlobalTheory.KS.Uniq
 end -- clump:auto
@@ -1749,8 +1739,7 @@ theorem ksRel_add {D D' : R → ℂ} {Θ Θ' : Matrix (Fin g) (Fin g) ℂ}
       simp only [(h.der z).res W W' hle hW', (h'.der z).res W W' hle hW']
   · intro z r
     simp only [h.base, h'.base]
-  · intro W f
-    exact (h.hol W f).add (h'.hol W f)
+  · exact fun W f => (h.hol W f).add (h'.hol W f)
   · intro l W f z hz
     simp only [h.per l W f z hz, h'.per l W f z hz, Matrix.add_mulVec, map_add (f := _)]
     ring
@@ -1771,8 +1760,7 @@ theorem ksRel_smul (c : ℂ) {D : R → ℂ} {Θ : Matrix (Fin g) (Fin g) ℂ}
       simp only [(h.der z).res W W' hle hW']
   · intro z r
     simp only [h.base]
-  · intro W f
-    exact (h.hol W f).const_mul c
+  · exact fun W f => (h.hol W f).const_mul c
   · intro l W f z hz
     simp only [h.per l W f z hz, Matrix.smul_mulVec, map_smul, smul_eq_mul]
     ring
@@ -1876,8 +1864,7 @@ theorem finrank_derivation_le : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0})
     (by
       rintro _ ⟨d, rfl⟩
       exact ⟨(hD d).1, fun c => (hD d).2 (act.act c) (act₀.act c) (F c) (hc c) (hF c)⟩)
-  rw [LinearMap.finrank_range_of_inj hκ] at hle
-  exact hle
+  rwa [LinearMap.finrank_range_of_inj hκ] at hle
 
 end GlobalTheory.PelTan
 end -- clump:auto

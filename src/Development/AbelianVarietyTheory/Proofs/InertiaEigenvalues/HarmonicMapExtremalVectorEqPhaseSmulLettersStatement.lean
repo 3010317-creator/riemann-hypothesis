@@ -143,8 +143,7 @@ theorem GlobalTheory.AdTh.CoefC.coefMap_complex_core : ∀ (D : D7) (G : Type) [
   have hE : ∀ v : VsV D i D.what₂.LL, c0 (CoefExt.up D.what₂.embLL (lamV D i) v) = c0L i v := by
     intro v
     obtain ⟨w, hw', h⟩ := hC v
-    rw [show CoefExt.up D.what₂.embLL (lamV D i) v = w from Subtype.ext hw'.symm]
-    exact h
+    rwa [show CoefExt.up D.what₂.embLL (lamV D i) v = w from Subtype.ext hw'.symm]
   obtain ⟨h1, h2, h3⟩ := hT'.mapL i
 
   have hli : ∀ (m : ℕ) (b : Fin m → VsV D i ℂ), LinearIndependent ℂ b → LinearIndependent ℂ fun j => c0 (b j) :=
@@ -152,8 +151,7 @@ theorem GlobalTheory.AdTh.CoefC.coefMap_complex_core : ∀ (D : D7) (G : Type) [
   have hinj : Function.Injective c0 := by
     classical
     let B := (bVV ℂ (lamV D i)).reindex (Fintype.equivFin _)
-    refine injective_of_basis (lamV D i) B c0 ?_
-    exact hli _ _ B.linearIndependent
+    exact injective_of_basis (lamV D i) B c0 (hli _ _ B.linearIndependent)
   refine ⟨?_, ?_, ?_, fun m b hb => hli m _ (up_linearIndependent _ _ b hb), hinj⟩
   ·
     have hn := GlobalTheory.StdFrame.neg_eq_false_of_vStd D i hstd
@@ -179,8 +177,7 @@ theorem GlobalTheory.AdTh.CoefC.coefMap_complex_core : ∀ (D : D7) (G : Type) [
     have hi' : inner ℂ (c0L i v : (R.cV i).W) (c0L i v : (R.cV i).W) = 1 := hi
     rw [inner_self_eq_norm_sq_to_K] at hi'
     have h4 : ‖(c0L i v : (R.cV i).W)‖ ^ 2 = 1 := by
-      have h5 := congrArg norm hi'
-      simpa using h5
+      simpa using congrArg norm hi'
     exact (pow_eq_one_iff_of_nonneg (norm_nonneg _) two_ne_zero).1 h4
   ·
     intro γ γE hγ v
@@ -195,8 +192,7 @@ theorem GlobalTheory.AdTh.CoefC.coefMap_complex_core : ∀ (D : D7) (G : Type) [
       intro x
       apply D.what₂.embLL.injective
       have e1 := RingHom.congr_fun (embV_spec (σ' := RingHom.id ℂ) D.what₂.embLL (by rfl) τ) x
-      have e2 := RingHom.congr_fun hres (embF T.Q.c (tauE D τ) x)
-      exact e2.trans e1.symm
+      exact (RingHom.congr_fun hres (embF T.Q.c (tauE D τ) x)).trans e1.symm
     have hu : IsUnit (γE.val).det := (Matrix.isUnit_iff_isUnit_det γE.val).1 γE.isUnit
     have hγE : Matrix.nonsingInvUnit γE.val hu = γE := Units.ext rfl
     rw [hup, hup, rhoM, dite_eq_left hu, hγE, CoefExt.up_rhoVr, hlab]
@@ -278,8 +274,7 @@ theorem coord_mem_fieldRange {ι K J : Type} [Field K] [Fintype J] (σ : K →+*
     have := congrArg (MvPolynomial.map σ) hsum
 
     simpa [map_sum, MvPolynomial.smul_eq_C_mul, MvPolynomial.map_C] using this
-  have h3 := Fintype.linearIndependent_iff.1 hli _ h2 j
-  exact hπ ((map_eq_zero σ).1 h3)
+  exact hπ ((map_eq_zero σ).1 (Fintype.linearIndependent_iff.1 hli _ h2 j))
 
 end GlobalTheory.SerLetters
 
@@ -393,9 +388,9 @@ theorem io_eq_phase_smul_letters : ∀ (D : D7) (G : Type) [Group G] [Fintype G]
     refine toF_pG T.Q.c hl hty i1 _ _ _ _ _ (fun τ => by rw [hsig, d1]) (fun τ => by rw [hsig, d2]) (fun τ k hk => ?_)
       fun τ k hk => ?_
     · rw [d1] at hk
-      exact (w3 τ k).1.trans ((dif_pos hk).trans ((hT.kap i τ).1 ⟨k, hk⟩))
+      exact (w3 τ k).1.trans ((dite_eq_left hk).trans ((hT.kap i τ).1 ⟨k, hk⟩))
     · rw [d2] at hk
-      exact (w3 τ k).2.trans ((dif_pos hk).trans ((hT.kap i τ).2.1 ⟨k, hk⟩))
+      exact (w3 τ k).2.trans ((dite_eq_left hk).trans ((hT.kap i τ).2.1 ⟨k, hk⟩))
   have hne : PT (B₀ (c0' hw)) ≠ 0 := fun h => by
     rw [hB₀, map_eq_zero_iff _ hinj, map_eq_zero_iff _ (toF_injective T.Q.c hl hty), map_eq_zero_iff _ i2] at h
     rw [h, map_zero, norm_zero] at n1'
@@ -526,8 +521,7 @@ theorem io_eq_phase_smul_harmLetters : ∀ (D : D7) (G : Type) [Group G] [Fintyp
     have hli' : LinearIndependent ℂ fun j => MvPolynomial.map k.subtype (eK j) := by
       have h2 := hli.map' (Submodule.subtype _) (Submodule.ker_subtype _)
       have e2 : (fun j => MvPolynomial.map k.subtype (eK j)) = (Submodule.subtype _) ∘ b := funext hmap
-      rw [e2]
-      exact h2
+      rwa [e2]
     have hsum : (∑ j, a j • MvPolynomial.map k.subtype (eK j)) =
         ((∑ j, a j • b j : VsV D i ℂ) : Formalism.L2.DIV.Pol ℂ D.what₂.Tau (Vc D i).rank) := by
       rw [Submodule.coe_sum]

@@ -113,9 +113,7 @@ theorem modK_units : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace
     have hχ : distribHaarChar E w = distribHaarChar E u := by
       apply distribHaarChar_eq_of_measure_smul_eq_mul hO0 hOt
       rw [← hw, distribHaarChar_mul M.mu u]
-      have h := hpre (u • (M.L.O : Set E))
-      simp only [ENNReal.smul_def, smul_eq_mul, hc, one_mul] at h
-      exact h
+      simpa only [ENNReal.smul_def, smul_eq_mul, hc, one_mul] using hpre (u • (M.L.O : Set E))
     rw [show M.L.cj (u : E) = (w : E) from rfl, hmodK, hmodK, hχ]
   · rintro x hx ⟨y, hy, hxy⟩
     let u : Eˣ := ⟨x, y, hxy, by rw [mul_comm]; exact hxy⟩
@@ -127,8 +125,7 @@ theorem modK_units : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace
       · intro h
         have h' := M.L.O.mul_mem hx h
         rwa [← mul_assoc, hxy, one_mul] at h'
-      · intro h
-        exact M.L.O.mul_mem hy h
+      · exact fun h => M.L.O.mul_mem hy h
     have h1 : distribHaarChar E u = 1 :=
       distribHaarChar_eq_of_measure_smul_eq_mul hO0 hOt (by rw [hset]; simp)
     rw [show x = (u : E) from rfl, hmodK, h1]

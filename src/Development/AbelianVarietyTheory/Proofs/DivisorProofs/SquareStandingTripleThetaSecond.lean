@@ -159,8 +159,7 @@ theorem exists_nat_conj {w : Pl D.host.E}
     have e : star (((Ideal.absNorm D.host.ccK * Ideal.absNorm D.host.𝔟 : ℕ) : D.host.E) * a) =
         star (r : D.host.E) * (Ideal.absNorm D.host.ccK : ℕ) := by
       rw [show (r : D.host.E) = _ from hr, Nat.cast_mul, mul_assoc, star_mul', star_natCast, mul_comm a, mul_comm]
-    rw [e]
-    exact h7
+    rwa [e]
 
 theorem inv_nat_mem {w : Pl D.host.E} {m : ℕ} (hm : (m : 𝓞 D.host.E) ∉ w.asIdeal) :
     (m : Fv D.host.F (w.under (𝓞 D.host.F))) ≠ 0 ∧
@@ -212,7 +211,7 @@ theorem sympS_ptB (e : Num G i j) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.
     ext a b
     obtain ⟨a | a, rfl⟩ := e.surjective a <;> obtain ⟨b | b, rfl⟩ := e.surjective b <;>
       simp [GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.blk, GlobalTheory.Doubling.blkMat]
-  · rw [if_neg Bool.false_ne_true, one_smul]
+  · rw [ite_eq_right Bool.false_ne_true, one_smul]
     rfl
 
 theorem heisS_ptB (e : Num G i j) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.Geo G i j) (hW : Γ.V'.J = (-1 : D.host.E) • (spW₁ G i j).gram)
@@ -370,8 +369,7 @@ theorem vac_fixed_half {W : G.Weil} {M : Vol G} {t : T} {e : Num G i j} {Bs : Ba
     linear_combination (γ p q * GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM D.host.F Γ.V'.J p k * GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM D.host.F Γ.W.J q l *
       cA D (γ k l)) * hb
   unfold GlobalTheory.WeilM.symp at h1
-  rw [h0, mul_zero, map_zero, mul_zero, AddChar.map_zero_eq_one, one_smul, h.ψ] at h1
-  exact h1
+  rwa [h0, mul_zero, map_zero, mul_zero, AddChar.map_zero_eq_one, one_smul, h.ψ] at h1
 
 theorem halves (e : Num G i j) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.Geo G i j) (hW : Γ.V'.J = (-1 : D.host.E) • (spW₁ G i j).gram)
     (hWW : Γ.W.J = GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.skewGram (spV G i j) (spV₁ G i j) e) {ψ : AddChar (AF D.host.F) ℂ} (hstd : IsStdChar D ψ (-1))
@@ -479,7 +477,7 @@ theorem isDatum_linB : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : GlobalTheor
     · rw [Set.indicator_of_mem ((hH u).2 hu), Finset.prod_congr rfl fun w hw =>
         (congrArg _ (hco w u).symm).trans ((hv w hw).2 _ ((hh w hw).2.2.2.2 u).1)]
       by_cases hl : ptB e u ∈ homLatB G i j
-      · rw [if_pos ⟨hl, hu⟩, mul_one]
+      · rw [ite_eq_left ⟨hl, hu⟩, mul_one]
         refine Finset.prod_congr rfl fun w hw => Set.indicator_of_mem ?_ _
         exact ⟨(hh w hw).1 _ ((hh w hw).2.2.2.2 u).1, ((hh w hw).2.2.2.2 u).2.2 hl⟩
       · have : ∃ w ∈ locPl G t, ptB e (cA D (atPl w 1) • u) ∉ homLatB G i j := by
@@ -487,13 +485,12 @@ theorem isDatum_linB : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : GlobalTheor
           refine hl (GlobalTheory.SmallPlaces.mem_of_sum_smul (P := locPl G t) (a := fun w => cA D (atPl w 1)) ?_
             fun w hw => (congrArg (· ∈ homLatB G i j) (ptB_smul e _ u)).mp (hall w hw))
 
-          rw [← map_sum, ← hεs]
-          exact hu
+          rwa [← map_sum, ← hεs]
         obtain ⟨w, hw, hn⟩ := this
-        rw [if_neg fun h' => hl h'.1, mul_zero]
+        rw [ite_eq_right fun h' => hl h'.1, mul_zero]
         refine Finset.prod_eq_zero hw (Set.indicator_of_notMem ?_ _)
         exact fun h' => hn h'.2
-    · rw [Set.indicator_of_notMem (mt (hH u).1 hu), if_neg fun h' => hu h'.2, mul_zero]
+    · rw [Set.indicator_of_notMem (mt (hH u).1 hu), ite_eq_right fun h' => hu h'.2, mul_zero]
   have hR := GlobalTheory.InductLagr.rel_of_vac Γ.M' W.ψ hstd hG (locPl G t) (fun w => w.under (𝓞 D.host.F)) (Good.under_injOn hL G t) _
     (fun w => {u | IsHalf (cA D (atPl w 1)) (ptB e u)}) (fun w => {u | IsHalf (atPl w 1) (ptB e u)})
     (fun w u => linB B t i j w (ptB e u)) I H R (c • f)
@@ -526,10 +523,9 @@ theorem isDatum_linB : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : GlobalTheor
     rw [ptE_apply, prodB]
     dsimp only
     by_cases hu : IsHalf (cA D ε) (ptB e u)
-    · rw [if_pos hu]
-      rw [Set.indicator_of_mem ((hH u).2 hu)]
+    · rw [ite_eq_left hu, Set.indicator_of_mem ((hH u).2 hu)]
       exact Finset.prod_congr rfl fun w hw => congrFun (hΨ w hw) _
-    · rw [if_neg hu]
+    · rw [ite_eq_right hu]
       exact Set.indicator_of_notMem (mt (hH u).1 hu) _
   refine ⟨r1, fun u => ?_⟩
   rw [hall T₁ hT₁, ← hg]

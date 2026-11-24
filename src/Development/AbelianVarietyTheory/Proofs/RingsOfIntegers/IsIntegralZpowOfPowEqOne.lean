@@ -108,7 +108,7 @@ theorem datum_isIntegral : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     obtain ⟨-, htrans, adj, -, hadj⟩ := GlobalTheory.HalfPairing.halves_free_and_adjoint E H Dw l Xo c n d hd
     let pad : (Fin n → LaJ Xo c d) → Fin (Dw.p + Dw.q) → LaJ Xo c d :=
       fun z i => if h : i.val < n then z ⟨i.val, h⟩ else 0
-    have hpadv : ∀ z i (h : i.val < n), pad z i = z ⟨i.val, h⟩ := fun z i h => dif_pos h
+    have hpadv : ∀ z i (h : i.val < n), pad z i = z ⟨i.val, h⟩ := fun z i h => dite_eq_left h
     have hpad : ∀ z : Fin n → LaJ Xo c d, Submodule.span (𝓞 E) (z '' {b | b.val < Dw.p + Dw.q}) = ⊤ →
         Submodule.span (𝓞 E) (Set.range (pad z)) = ⊤ := by
       intro z hz
@@ -143,8 +143,7 @@ theorem datum_isIntegral : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       refine (isIntegral_int_ringHom_apply d.eF.toRingHom (hph x)).mul ?_
       exact GlobalTheory.PlaceInt.isIntegral_zpow_of_pow_eq_one hpd
         (GlobalTheory.DatumInverseCharacter.root_pow d.c₂ (Dvd.intro_left _ hM.symm)) _
-    have hb := isIntegral_int_ringHom_apply d.eF.symm.toRingHom he
-    simpa using hb
+    simpa using isIntegral_int_ringHom_apply d.eF.symm.toRingHom he
   exact isIntegral_int_ringHom_apply d.eF.toRingHom (hz.mul hφ)
 
 end GlobalTheory.PlaceInt

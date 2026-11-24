@@ -246,7 +246,7 @@ theorem not_iso (X : Data E r) (hp : X.p0 = 0 ∨ X.p0 = r) (ξ : Fin r → E) :
   have hsum : hermC τ X.Gm u u = e * ∑ a, v a * conj (v a) := by
     rw [← hPv, hermC_mulVec, hg]
     simp only [Matrix.diagonal_apply, hsg, mul_ite, ite_mul, mul_zero, zero_mul, Finset.sum_ite_eq,
-      Finset.mem_univ, if_true, Finset.mul_sum]
+      Finset.mem_univ, ite_true, Finset.mul_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     ring
   have hv : v = 0 := by
@@ -605,10 +605,10 @@ theorem gapsPairing_deMul' {E : Type} [Field E] [NumberField E] [IsCMField E] {r
     have hj' : ((j : ℕ) : ℤ) = (i : ℕ) + 1 := by exact_mod_cast hj
     simp only [Pi.sub_apply, deMul, kapW, hj']
     by_cases hi : (i : ℕ) < X.p0
-    · rw [if_pos (e.2 hi), if_pos hi]; omega
-    · rw [if_neg (mt e.1 hi), if_neg hi]; omega
+    · rw [ite_eq_left (e.2 hi), ite_eq_left hi]; omega
+    · rw [ite_eq_right (mt e.1 hi), ite_eq_right hi]; omega
   · simp only [Pi.sub_apply, deMul, kapW, h0', h1', hk]
-    rw [if_pos h0, if_neg (by omega)]
+    rw [ite_eq_left h0, ite_eq_right (by omega)]
     have hr : ((r - 1 : ℕ) : ℤ) = (r : ℤ) - 1 := by omega
     rw [hr]
     push_cast
@@ -645,10 +645,10 @@ theorem orbit_interp_small : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   · have e : ((j : ℕ) < X.p0 ↔ (i : ℕ) < X.p0) := by omega
     simp only [deMul]
     by_cases hi : (i : ℕ) < X.p0
-    · rw [if_pos (e.2 hi), if_pos hi]
-    · rw [if_neg (mt e.1 hi), if_neg hi]
+    · rw [ite_eq_left (e.2 hi), ite_eq_left hi]
+    · rw [ite_eq_right (mt e.1 hi), ite_eq_right hi]
   · simp only [deMul]
-    rw [if_pos (by omega), if_neg (by omega)]
+    rw [ite_eq_left (by omega), ite_eq_right (by omega)]
     omega
 
 end GlobalTheory.Up.OrbitInterpSmall
@@ -706,10 +706,10 @@ theorem large : ∀ (r : ℕ) (X : Data E r) (G : Subgroup (GL (Fin r) E)) (x0 :
   · have e : ((j : ℕ) < X.p0 ↔ (i : ℕ) < X.p0) := by omega
     simp only [deMul]
     by_cases hi : (i : ℕ) < X.p0
-    · rw [if_pos (e.2 hi), if_pos hi]
-    · rw [if_neg (mt e.1 hi), if_neg hi]
+    · rw [ite_eq_left (e.2 hi), ite_eq_left hi]
+    · rw [ite_eq_right (mt e.1 hi), ite_eq_right hi]
   · simp only [deMul]
-    rw [if_pos (by omega), if_neg (by omega)]
+    rw [ite_eq_left (by omega), ite_eq_right (by omega)]
     omega
 
 theorem orbit_interp_deMul : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r),
@@ -871,7 +871,7 @@ theorem comp_interp {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
     refine ⟨P, hP, hP0, fun γ hγ hγ' => absurd ?_ hγ'⟩
     rw [h1 γ hγ]
     exact X.Γ.one_mem
-  · push_neg at hdef
+  · push Not at hdef
     have hp0 : 0 < X.p0 := Nat.pos_of_ne_zero hdef.1
     have hp1 : X.p0 < r := lt_of_le_of_ne X.p0_le hdef.2
     obtain ⟨x0, h0, ⟨b, hb, rfl⟩, hFB⟩ := _root_.GlobalTheory.FreeBallAt.freeBall_at E r X G g hg hgr hΓG hL' hΛ hU x hx hNC
@@ -909,8 +909,7 @@ theorem exists_form_one_lift : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   have hx' : castFrame hΨ.symm x ∈ (M.comp c).dom := by
     have := castFrame_mem_GG hΨ M.Gm M.p0 x hx
     show castFrame hΨ.symm x ∈ GG (M.comp c).Ψ (M.comp c).Gm (M.comp c).p0
-    rw [M.comp_Gm c, M.comp_basePoint c]
-    exact this
+    rwa [M.comp_Gm c, M.comp_basePoint c]
   have hsb' : 2 * r + 50 * r ^ 2 * ((M.comp c).Ψ.card * ((M.comp c).p0 * (r - (M.comp c).p0))) + 1 ≤ s := by
     rw [hΨ, M.comp_basePoint c]; exact hsb
   obtain ⟨P, hP, hP0, hPγ⟩ := comp_interp (M.comp c) (M.χ_one c) G g hg hgr hΓG
@@ -923,11 +922,9 @@ theorem exists_form_one_lift : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     · subst hc
       have e : (fun y => u c' (castFrame (M.comp_Ψ c') y)) = P := by
         funext y
-        simp only [u, if_pos rfl]
-        exact congrArg P (castFrame_symm_cast _ y)
+        simpa only [u, ite_eq_left rfl] using congrArg P (castFrame_symm_cast _ y)
       rw [e, castWt_deMul]
-      rw [M.comp_basePoint c'] at hP
-      exact hP
+      rwa [M.comp_basePoint c'] at hP
     · have e : (fun y => u c' (castFrame (M.comp_Ψ c') y)) = 0 := by
         funext y
         simp [u, hc]
@@ -937,7 +934,7 @@ theorem exists_form_one_lift : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   · intro h hh
     unfold TwoLevels.pull
     by_cases hc : h • c = c
-    · simp only [u, hc, if_pos rfl]
+    · simp only [u, hc, ite_eq_left rfl]
       rw [castFrame_lact]
       refine hPγ _ ((hG _).2 ⟨h, hc, 1, (M.comp c).Γ.one_mem, by simp⟩) fun hm => hh ?_
       exact M.tr_faithful h c hc hm
@@ -1032,8 +1029,7 @@ variable {U C : Type} [Group U] [MulAction U C] (M : TwoLevels E r U C)
 theorem domOfComp (c : C) {x : Frame (M.comp c).Ψ r} (hx : x ∈ (M.comp c).dom) :
     castFrame (M.comp_Ψ c) x ∈ M.dom := by
   have h := castGG (M.comp_Ψ c) hx
-  rw [M.comp_Gm c, M.comp_basePoint c] at h
-  exact h
+  rwa [M.comp_Gm c, M.comp_basePoint c] at h
 
 theorem domToComp (c : C) {x : Frame M.Ψ r} (hx : x ∈ M.dom) :
     castFrame (M.comp_Ψ c).symm x ∈ (M.comp c).dom := by
@@ -1048,8 +1044,7 @@ theorem ssLact {la : Wt M.Ψ r} {F : C → Frame M.Ψ r → ℂ} (hF : F ∈ M.S
     {γ : GL (Fin r) E} (hγ : γ ∈ (M.comp c).Γ) {x : Frame M.Ψ r} (hx : x ∈ M.dom) :
     F c (lact γ x) = F c x := by
   have h1 := (hF c).1.1.2.2 γ hγ (castFrame (M.comp_Ψ c).symm x) (domToComp M c hx)
-  rw [M.χ_one c _ γ hγ, one_mul] at h1
-  exact h1
+  rwa [M.χ_one c _ γ hγ, one_mul] at h1
 
 theorem ssZero (la : Wt M.Ψ r) : (0 : C → Frame M.Ψ r → ℂ) ∈ M.SS la := by
   intro c
@@ -1093,8 +1088,7 @@ theorem detNeAt [Fintype U] [DecidableEq U] {la : Wt M.Ψ r} {u u0 : C → Frame
     exact inv_mem_iff.mp h
   have ha : M.pull 1 u c0 x0 ≠ 0 := by
     simp only [TwoLevels.pull, one_smul]
-    rw [ssLact M hu c0 ht1 hx0]
-    exact hne
+    rwa [ssLact M hu c0 ht1 hx0]
   have entry : ∀ g : U, M.pull g u0 (k • c0) (lact (M.tr k c0) x0) = M.pull (g * k) u c0 x0 := by
     intro g
     have hzd : lact (M.tr g (k • c0)) (lact (M.tr k c0) x0) ∈ M.dom :=
@@ -1124,8 +1118,8 @@ theorem detNeAt [Fintype U] [DecidableEq U] {la : Wt M.Ψ r} {u u0 : C → Frame
     rw [Matrix.of_apply, entry, Matrix.submatrix_apply, id, Matrix.smul_apply, Matrix.one_apply,
       smul_eq_mul]
     by_cases e : h * h' * k = 1
-    · rw [if_pos ((key h h').1 e), e, mul_one]
-    · rw [if_neg (fun e' => e ((key h h').2 e')), mul_zero]
+    · rw [ite_eq_left ((key h h').1 e), e, mul_one]
+    · rw [ite_eq_right (fun e' => e ((key h h').2 e')), mul_zero]
       exact hz _ e
   unfold TwoLevels.detTr
   rw [hmat, Matrix.det_permute, Matrix.det_smul, Matrix.det_one, mul_one]

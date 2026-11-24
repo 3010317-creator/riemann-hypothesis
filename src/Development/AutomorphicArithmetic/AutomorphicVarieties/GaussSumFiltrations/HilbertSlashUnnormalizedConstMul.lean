@@ -66,18 +66,16 @@ theorem det_inv_apply (v : InfinitePlace F) (h : GL (Fin 2) (InfinitePlace F →
 theorem denom_cmp_mul (v : InfinitePlace F) (h h' : GL (Fin 2) (InfinitePlace F → ℝ)) (hh' : Pos h') (z : ℍ) :
     denom (cmp v h * cmp v h') z = denom (cmp v h) ((cmp v h' • z : ℍ) : ℂ) * denom (cmp v h') z := by
   have hp : 0 < ((cmp v h').det : ℝ) := by rw [cmp_det]; exact hh' v
-  rw [denom_cocycle_σ, σ, if_pos hp]
+  rw [denom_cocycle_σ, σ, ite_eq_left hp]
   rfl
 
 theorem act_mul (h h' : GL (Fin 2) (InfinitePlace F → ℝ)) (z : Hn F) : act (h * h') z = act h (act h' z) := by
   funext v
-  simp only [act, map_mul]
-  exact mul_smul _ _ _
+  simpa only [act, map_mul] using mul_smul _ _ _
 
 theorem act_one (z : Hn F) : act (1 : GL (Fin 2) (InfinitePlace F → ℝ)) z = z := by
   funext v
-  simp only [act, map_one]
-  exact one_smul _ _
+  simpa only [act, map_one] using one_smul _ _
 
 theorem hilbertSlashUnnormalized_mul (k : ℕ) (h h' : GL (Fin 2) (InfinitePlace F → ℝ)) (hh' : Pos h') (f : Hn F → ℂ) :
     sl0 k (h * h') f = sl0 k h' (sl0 k h f) := by

@@ -92,8 +92,7 @@ theorem stab_closure (Op : Set (Module.End ℂ M)) (Rel : Submodule ℂ M) (S : 
     Stab Op (stabClosure Op Rel S) := by
   intro g hg x hx
   rw [stabClosure, Submodule.mem_sInf] at hx ⊢
-  intro N hN
-  exact hN.2.1 g hg x (hx N hN)
+  exact fun N hN => hN.2.1 g hg x (hx N hN)
 
 theorem closure_le {Op : Set (Module.End ℂ M)} {Rel N : Submodule ℂ M} {S : Set M}
     (h1 : Rel ≤ N) (h2 : Stab Op N) (h3 : S ⊆ N) : stabClosure Op Rel S ≤ N :=
@@ -115,13 +114,11 @@ theorem exists_finset_generating (Op : Set (Module.End ℂ M)) (Rel : Submodule 
       (↑F : Set M) ⊆ ↑N → N = ⊤ := by
   classical
   obtain ⟨L, hL⟩ := hL
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hx : ∀ F : Finset M, ∃ x, x ∉ stabClosure Op Rel (F : Set M) := by
     intro F
     obtain ⟨N, h1, h2, h3, h4⟩ := hne F
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact h4 (eq_top_iff.2 fun x _ => closure_le h1 h2 h3 (h x))
   choose pick hpick using hx
   have hD : StrictMono fun n => stabClosure Op Rel (↑(chainSet pick n) : Set M) := by
@@ -131,8 +128,7 @@ theorem exists_finset_generating (Op : Set (Module.End ℂ M)) (Rel : Submodule 
       apply hpick (chainSet pick n)
       have hmem : pick (chainSet pick n) ∈ stabClosure Op Rel (↑(chainSet pick (n + 1)) : Set M) :=
         subset_closure Op Rel _ (by simp [chainSet])
-      rw [← h] at hmem
-      exact hmem
+      rwa [← h] at hmem
   have := hL (L + 1) (fun j => stabClosure Op Rel (↑(chainSet pick j) : Set M))
     (fun a b hab => hD hab) (fun j => ⟨rel_le_closure _ _ _, stab_closure _ _ _⟩)
   omega
@@ -288,8 +284,7 @@ theorem position_mem_of_maximal_stable : ∀ {ι : Type} [DecidableEq ι] {M₀ 
     fun j h hh => hN'st _ (Or.inr ⟨piOp j h, ⟨j, h, hh, rfl⟩, rfl⟩)
   have key := _root_.GlobalTheory.TensHead.le_ker_of_simple_commuting (Op i) Rel K φ act B hlen hmax hK hKst ?_ ?_ ?_ ?_
   · have h0 := key hx
-    rw [LinearMap.mem_ker, hφ, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at h0
-    exact h0
+    rwa [LinearMap.mem_ker, hφ, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at h0
   · intro z hz
     rw [LinearMap.mem_ker, hφ, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
     exact hRel z hz x₀ y
@@ -600,17 +595,15 @@ theorem tens_maxStab_contains_left_ker : ∀ {M₀ V : Type} [AddCommGroup M₀]
     if hs : N' ≤ N'.comap (TensorProduct.map LinearMap.id h) then
       N'.mapQ N' (TensorProduct.map LinearMap.id h) hs else 0
   have hsg : ∀ g ∈ Op₀, N' ≤ N'.comap (TensorProduct.map g LinearMap.id) := by
-    intro g hg z hz
-    exact hN'st _ (Or.inl ⟨g, hg, rfl⟩) z hz
+    exact fun g hg z hz => hN'st _ (Or.inl ⟨g, hg, rfl⟩) z hz
   have hsh : ∀ h ∈ B, N' ≤ N'.comap (TensorProduct.map LinearMap.id h) := by
-    intro h hh z hz
-    exact hN'st _ (Or.inr ⟨h, hh, rfl⟩) z hz
+    exact fun h hh z hz => hN'st _ (Or.inr ⟨h, hh, rfl⟩) z hz
   have hactg : ∀ g ∈ Op₀, ∀ z, act g (N'.mkQ z) = N'.mkQ (TensorProduct.map g LinearMap.id z) := by
     intro g hg z
-    simp only [act, dif_pos (hsg g hg), Submodule.mapQ_apply, Submodule.mkQ_apply]
+    simp only [act, dite_eq_left (hsg g hg), Submodule.mapQ_apply, Submodule.mkQ_apply]
   have hbacth : ∀ h ∈ B, ∀ z, bAct h (N'.mkQ z) = N'.mkQ (TensorProduct.map LinearMap.id h z) := by
     intro h hh z
-    simp only [bAct, dif_pos (hsh h hh), Submodule.mapQ_apply, Submodule.mkQ_apply]
+    simp only [bAct, dite_eq_left (hsh h hh), Submodule.mapQ_apply, Submodule.mkQ_apply]
   let φ : M₀ →ₗ[ℂ] (M₀ ⊗[ℂ] V) ⧸ N' := N'.mkQ ∘ₗ (TensorProduct.mk ℂ M₀ V).flip y
   have hφ : ∀ x, φ x = N'.mkQ (x ⊗ₜ[ℂ] y) := fun x => rfl
   have key := _root_.GlobalTheory.TensHead.le_ker_of_simple_commuting Op₀ Rel₀ K₀ φ act (bAct '' B) hlen hmax hK hKs
@@ -651,8 +644,7 @@ theorem tens_maxStab_contains_left_ker : ∀ {M₀ V : Type} [AddCommGroup M₀]
         rw [← Submodule.map_comap_eq_of_surjective hsurj U, h1, Submodule.map_top,
           LinearMap.range_eq_top.2 hsurj])
   have := key hx
-  rw [LinearMap.mem_ker, hφ, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at this
-  exact this
+  rwa [LinearMap.mem_ker, hφ, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at this
 
 end GlobalTheory.TensHead
 end -- clump:auto
@@ -711,7 +703,7 @@ theorem tensor_eq_top_or_le_ker_map : ∀ {ι : Type} [Fintype ι] [DecidableEq 
       exact MultilinearMap.map_coord_zero _ i (by simp [hpi])
     intro t _
     rw [LinearMap.mem_ker, hmap, TensorProduct.map_zero_right, LinearMap.zero_apply]
-  push_neg at hi
+  push Not at hi
   by_cases hN : N = ⊤
   · exact Or.inl hN
   have hSimple₀ : SimpleOver Op₀ (LinearMap.ker p₀) := fun U hU hKU => by
@@ -732,8 +724,7 @@ theorem tensor_eq_top_or_le_ker_map : ∀ {ι : Type} [Fintype ι] [DecidableEq 
       (fun i x hx x₀ y => hNU (hNi i x hx x₀ y)) hU ?_
     intro x₀ hx₀ y hy
     apply hGU
-    simp only [G, Finset.coe_image]
-    exact ⟨(x₀, y), by simp [hx₀, hy], rfl⟩
+    simpa only [G, Finset.coe_image] using ⟨(x₀, y), by simp [hx₀, hy], rfl⟩
   obtain ⟨N', hNN', hS', hN'top, hmax⟩ := _root_.GlobalTheory.TensHead.exists_maximal_stab_of_finset _ N G hgen N le_rfl hS hN
   have h0' := _root_.GlobalTheory.TensHead.tens_maxStab_contains_left_ker Op₀ (piOps Op) Rel₀ (LinearMap.ker p₀) hL₀ hloc₀ h0 hK₀ N'
     (fun x hx y => hNN' (hN₀ x hx y)) hS' hmax
@@ -997,8 +988,7 @@ theorem UpperTheory.Lit.HoweDuality.nakAll :
           exact (le_iSup₂ (f := fun l (_ : l ∈ S) => part M₀ l (K l)) l hl)
             ((UpperTheory.Lit.HoweDuality.partStable l (K l)).2.2 i hne g t ht)
         exact fun t ht => hle ht
-      · rw [Finset.iSup_insert, sup_comm (part M₀ i (K i)), ← sup_assoc] at h
-        exact h
+      · rwa [Finset.iSup_insert, sup_comm (part M₀ i (K i)), ← sup_assoc] at h
   apply key Finset.univ
   simpa using hsup
 end -- clump:auto

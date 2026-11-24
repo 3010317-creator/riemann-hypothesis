@@ -293,8 +293,7 @@ theorem genPath_scaling : ∀ (k K E : Type) [Field k] [IsAlgClosed k] [CharZero
   have hξ'U : ⊤ ≤ (spMap (sc p u) ≫ ζ) ⁻¹ᵁ U₀ := top_le_comp_preimage _ _ hζU
   have hξ'path : IsPath G 2 xE (spMap (sc p u) ≫ ζ) := by
     have := (_root_.GlobalTheory.Nef.paths_bc.1 C G p.O E φ 2 u b ζ hζ).1
-    rw [map_ofNat, hbx] at this
-    exact this
+    rwa [map_ofNat, hbx] at this
 
   have hxEf : ⊤ ≤ xE ⁻¹ᵁ Vf := top_le_comp_preimage _ _ hxf
   have hxE0 : ⊤ ≤ xE ⁻¹ᵁ V₀ := hxEf.trans (Scheme.Hom.preimage_mono xE h₀)
@@ -656,16 +655,14 @@ theorem exists_annihilator (N : ℕ) (hN : ∀ n, N ≤ n → hankel c n = 0) :
     · rw [show q0 * C (q0.leadingCoeff)⁻¹ * X ^ j = (q0.leadingCoeff)⁻¹ • (q0 * X ^ j) by
         rw [smul_eq_C_mul]; ring, map_smul, smul_eq_mul]
   refine ⟨q, hqm.ne_zero, ?_⟩
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hs : ev c (q * X ^ Nat.find hne) ≠ 0 := Nat.find_spec hne
   have hlt : ∀ j < Nat.find hne, ev c (q * X ^ j) = 0 := fun j hj => by
     by_contra h; exact Nat.find_min hne hj h
   generalize Nat.find hne = s at hs hlt
   generalize Nat.find hex = d at hmin hqd hdN
   have hNs : N < s := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hs
     rw [hqe, hq0 s h, mul_zero]
   obtain ⟨r, hr0, hrd, hr⟩ := exists_kill c s (hN s hNs.le)
@@ -681,9 +678,7 @@ theorem exists_annihilator (N : ℕ) (hN : ∀ n, N ≤ n → hankel c n = 0) :
   by_cases h1 : r1 = 0
   · subst h1
     rw [mul_zero, add_zero] at hr0 hrd hr
-    apply hmin r0 hr0 (hqd ▸ natDegree_lt_natDegree hr0 hr0deg)
-    intro j hj
-    exact hr j (by omega)
+    exact hmin r0 hr0 (hqd ▸ natDegree_lt_natDegree hr0 hr0deg) (fun j hj => hr j (by omega))
   · have hdeg : d + r1.natDegree ≤ s := by
       rw [← hqd, ← natDegree_mul hqm.ne_zero h1]
       have : q * r1 = r0 + q * r1 - r0 := by ring
@@ -722,11 +717,11 @@ theorem isRat_of_ann (φ : PowerSeries F) (q : F[X]) (hq : q ≠ 0)
     have := congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p 0) h0
     simp only [R, Polynomial.finsetSum_coeff, coeff_C_mul_X_pow, coeff_zero] at this
     rw [Finset.sum_eq_single q.natDegree] at this
-    · simp only [Nat.sub_self, if_true] at this
+    · simp only [Nat.sub_self, ite_true] at this
       exact hq (leadingCoeff_eq_zero.1 this)
     · intro k hk hkd
       have := Finset.mem_range.1 hk
-      rw [if_neg (by omega)]
+      rw [ite_eq_right (by omega)]
     · intro hk; exact absurd (Finset.self_mem_range_succ _) hk
   · ext n
     rw [Polynomial.coeff_coe, PowerSeries.coeff_trunc]
@@ -743,7 +738,7 @@ theorem isRat_of_ann (φ : PowerSeries F) (q : F[X]) (hq : q ≠ 0)
       rw [hR, Finset.sum_mul, map_sum, ← h m, ev_X_pow_mul]
       refine Finset.sum_congr rfl fun k hk => ?_
       have hk' := Finset.mem_range.1 hk
-      rw [mul_assoc, PowerSeries.coeff_C_mul, PowerSeries.coeff_X_pow_mul', if_pos (by omega)]
+      rw [mul_assoc, PowerSeries.coeff_C_mul, PowerSeries.coeff_X_pow_mul', ite_eq_left (by omega)]
       rw [show m + q.natDegree - (q.natDegree - k) = m + k by omega]
 
 end GlobalTheory.Nef.Kron
@@ -875,15 +870,11 @@ theorem isRat_of_adelic : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k
   have sC : Function.support (fun v => ord v (c v)) ⊆ (T : Set (Place k F)) := by
     intro v hv
     simp only [T, Finset.coe_union, Set.Finite.coe_toFinset]
-    refine Or.inl (Or.inr ?_)
-    intro h
-    exact hv (ord_of_eq_one v (hcunit v h))
+    exact Or.inl (Or.inr (fun h => hv (ord_of_eq_one v (hcunit v h))))
   have sH : Function.support (fun v => ord v H) ⊆ (T : Set (Place k F)) := by
     intro v hv
     simp only [T, Finset.coe_union, Set.Finite.coe_toFinset]
-    refine Or.inr ?_
-    intro h
-    exact hv (ord_of_eq_one v h)
+    exact Or.inr (fun h => hv (ord_of_eq_one v h))
   rw [finsum_eq_sum_of_support_subset _ sH] at hHsum
   rw [finsum_eq_sum_of_support_subset _ sC] at hδ
   rw [finsum_eq_sum_of_support_subset _ sU] at hD
@@ -898,8 +889,7 @@ theorem isRat_of_adelic : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k
   push_cast at hsum
   have h6 : (n + 1 : ℤ) * (n * D - 2 * δ) ≤ 0 := by linarith [hsum]
   have h7 : (n : ℤ) * D - 2 * δ ≤ 0 := by
-    by_contra h8
-    push_neg at h8
+    by_contra! h8
     have : (0 : ℤ) < (n + 1 : ℤ) * (n * D - 2 * δ) := mul_pos (by positivity) h8
     linarith
   have h9 : (n : ℤ) ≤ n * D := by nlinarith [(Nat.cast_nonneg n : (0 : ℤ) ≤ n)]
@@ -950,8 +940,7 @@ theorem isRatPath_of_integral_at_places : ∀ (k K E : Type) [Field k] [IsAlgClo
   choose b ζ hb hpath hξ using hloc
   have hFF : IsFF k E := (_root_.GlobalTheory.Nef.isFF_main k K (_root_.GlobalTheory.Nef.CurveFF.isFF_of_isGenOver k K C x hx)).2 E
   obtain ⟨p₀, -⟩ : ∃ p, ord p (u p) ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     rw [finsum_eq_zero_of_forall_eq_zero hc] at hpos
     exact lt_irrefl _ hpos
   apply _root_.GlobalTheory.Nef.isRatPath_of_isRat E G.left ξ
@@ -964,8 +953,7 @@ theorem isRatPath_of_integral_at_places : ∀ (k K E : Type) [Field k] [IsAlgClo
       rw [hξ p₀, ← Category.assoc, spMap_comp_spMap, constantCoeff_comp_sc, ← spMap_comp_spMap, Category.assoc,
         (hpath p₀).zero]
     have h3 : (spMap (PowerSeries.constantCoeff (R := E)) ≫ ξ) q ∈ U := h trivial
-    rw [h2] at h3
-    exact h3
+    rwa [h2] at h3
   have hfinb := _root_.GlobalTheory.Nef.finite_centre_not_mem k K E C x hx V hVne
   have hUp : ∀ p, ⊤ ≤ (spMap (sc p (u p)) ≫ ζ p) ⁻¹ᵁ U := fun p => hξ p ▸ h
   choose e ψ he0 he1 heq using fun p => _root_.GlobalTheory.Nef.den_along_path k E p (u p) G.left (ζ p) U (hUp p) f
@@ -1187,8 +1175,7 @@ variable {F : Type} [Field F]
 theorem alg_C (a : F) : algebraMap (RatFunc F) (LaurentSeries F) (RatFunc.C a) =
     algebraMap (PowerSeries F) (LaurentSeries F) (PowerSeries.C a) := by
   have h := (RatFunc.coe_coe (Polynomial.C a)).symm
-  rw [Polynomial.coe_C] at h
-  exact h
+  rwa [Polynomial.coe_C] at h
 
 theorem alg_X : algebraMap (RatFunc F) (LaurentSeries F) RatFunc.X =
     algebraMap (PowerSeries F) (LaurentSeries F) PowerSeries.X := by
@@ -1543,14 +1530,12 @@ theorem unitSec_chi {S : Scheme.{0}} (X : Type) [AddCommGroup X] (a : X) :
   rw [SplitTorus.val_eq] at h
   have e : (1 : 𝟙_ (Over S) ⟶ splitTorus S X) = η[splitTorus S X] := by
     rw [Hom.one_def]; simp
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem sqr_chi {S : Scheme.{0}} (X : Type) [AddCommGroup X] (a : X) :
     (sqr (splitTorus S X)).appTop.hom (Rosenlicht.chi X a) = Rosenlicht.chi X a * Rosenlicht.chi X a := by
   have h := SplitTorus.val_mul (𝟙 (splitTorus S X)) (𝟙 _) a
-  rw [SplitTorus.val_eq, SplitTorus.val_id] at h
-  exact h
+  rwa [SplitTorus.val_eq, SplitTorus.val_id] at h
 
 end SplitTorusRigid
 
@@ -1571,8 +1556,7 @@ theorem splitTorus_ratRigid : ∀ (Ω : Type) [Field Ω] [CharZero Ω] (X : Type
       exact (isRat_iff_exists_ratFunc Ω (φ a)).2 ⟨_, h⟩
     · have h := congrArg (fun g => (Scheme.ΓSpecIso (CommRingCat.of Ω)).hom.hom
         (g.appTop.hom (Rosenlicht.chi X a))) hξ.zero
-      rw [appTop_comp_apply, appTop_comp_apply, gamma_spMap, unitSec_chi, map_one, map_one] at h
-      exact h
+      rwa [appTop_comp_apply, appTop_comp_apply, gamma_spMap, unitSec_chi, map_one, map_one] at h
     · have h := congrArg (fun g => (Scheme.ΓSpecIso (CommRingCat.of (PowerSeries Ω))).hom.hom
         (g.appTop.hom (Rosenlicht.chi X a))) hξ.scale
       rw [appTop_comp_apply, appTop_comp_apply, gamma_spMap, sqr_chi, map_mul, map_mul] at h
@@ -1796,8 +1780,7 @@ theorem tan_triv_eq_zero : ∀ (k K E : Type) [Field k] [IsAlgClosed k] [CharZer
     have hs' : ∑ j, g j • resM W hV (s j) = 0 := by
       apply QCoh.injective_app_of_mono i V'
 
-      simp only [map_sum, map_zero, Scheme.Modules.Hom.app_smul, Twist.app_resM]
-      exact hl
+      simpa only [map_sum, map_zero, Scheme.Modules.Hom.app_smul, Twist.app_resM] using hl
     have hli := (hs.basis hV).linearIndependent
     rw [hs.coe_basis hV, Fintype.linearIndependent_iff] at hli
     exact hli g hs'
@@ -1836,8 +1819,7 @@ theorem linesLE_zero_of_sub_lie : ∀ (k K : Type) [Field k] [IsAlgClosed k] [Ch
   intro k K _ _ _ _ _ C _ x hx G _ hG W r i hi V₀ s g hV₀ hs hg hloc
   intro E _ _ _ _ _ ρ hρ w hw
   simp only [zero_mul]
-  by_contra hpos
-  push_neg at hpos
+  by_contra! hpos
   have hpos' : 0 < degLine (pullAd ρ g) w := by exact_mod_cast hpos
   haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap k E).injective
   letI : Algebra ℚ E := DivisionRing.toRatAlgebra

@@ -107,14 +107,12 @@ theorem eW_rep_o (T : FormsTiedSym D u Ch chOf) (o : FrP D) (z : (D.mem u).P.Wro
   have hQ0' : Q0 ∈ CSpan (D.fm u).sg := by
     have := CSpan_shW (D.fm u).sg (fun _ => ((D.R.m * (D.R.t + 1) / 2 : ℕ) : ℤ))
     unfold sgT at hQ0
-    rw [this] at hQ0
-    exact hQ0
+    rwa [this] at hQ0
   have he : T.valP.eW z c = fnOf _ (shiftOf (sgT u)) 1 Q0 := by
     rw [hfn, ← hres]; rfl
   have hM : ∀ τ, IsUnit ((o.1 τ)⁻¹).det := fun τ => by
     rw [Matrix.det_nonsing_inv]; exact (o.2 τ).ringInverse
-  refine ⟨_, ?_, he.trans (fnOf_change _ _ _ _ hM Q0)⟩
-  exact Submodule.smul_mem _ _ (blkRow_mem _ _ hQ0')
+  exact ⟨_, Submodule.smul_mem _ _ (blkRow_mem _ _ hQ0'), he.trans (fnOf_change _ _ _ _ hM Q0)⟩
 
 theorem nfAll_zero (n : ℕ) (lam : D.what₂.Tau → DomWeight n) : nfAll lam 0 0 = 0 := by
   simp [nfAll, Formalism.REAL.fockF]

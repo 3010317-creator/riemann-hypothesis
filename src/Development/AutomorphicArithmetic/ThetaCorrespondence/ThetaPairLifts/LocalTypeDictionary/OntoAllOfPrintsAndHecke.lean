@@ -227,7 +227,6 @@ theorem coefSupp : ∀ D : D7, CoefSupp D := by
   have hPg : s.L.Pg = c.Pg := by rw [hL]; rfl
   have hrank : s.V.rank ≤ s'.V.rank := by
     rw [hs.rank, hs'.rank]
-    show D.R.r + k * D.R.t ≤ D.R.r + (k + 1) * D.R.t
     exact Nat.add_le_add_left (Nat.mul_le_mul_right _ (Nat.le_succ k)) _
   have hint : ∀ v, (∀ PP ∈ s.L.Pg, (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) ≠ v) →
       GlobalTheory.AdelicU.proj D.sp.cm.sig s.V.gram v g ∈ GlobalTheory.AdelicU.stabLoc D.sp.cm.sig s.V.gram s.Λ v := by
@@ -334,8 +333,7 @@ theorem parIndep : ∀ D : D7, ParIndep D := by
   intro t a hsum i₀ hi₀
   obtain ⟨hne0, _⟩ := hpar i₀
   obtain ⟨v, hv⟩ : ∃ v, PiLocalization₂.val (x i₀) v ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hne0
     apply Subtype.ext
     apply LinearMap.ext
@@ -354,8 +352,7 @@ theorem parIndep : ∀ D : D7, ParIndep D := by
       have h1 := (hpar i.1).2 v i.2
       unfold ParFun at h1
       exact (hlat _ _).1 h1
-    · intro i i' hii'
-      exact hB i.1 i'.1 (fun h => hii' (Subtype.ext h))
+    · exact fun i i' hii' => hB i.1 i'.1 (fun h => hii' (Subtype.ext h))
   rw [linearIndependent_iff'] at hli
   have hsum' : ∀ g, ∑ i ∈ t, a i * PiLocalization₂.val (x i) v g = 0 := by
     intro g
@@ -657,8 +654,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem exists_tprod_ne_zero_of_cc {D : D7} {c : Com D} {s : PiLocalization₂ D} (z : s.CC c) (hz : z ≠ 0) :
     ∃ v : s.M.Vec, PiTensorProduct.tprod ℂ v ≠ 0 := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   apply hz
   apply Subtype.ext
   show (z : SmT s.M →ₗ[ℂ] (GA D s.V → ℂ)) = 0
@@ -689,9 +685,7 @@ theorem thetaChain_upward_induction_fixed_metric {D : D7} (hMet : MetEx D) (hSU 
       ∀ ipD ip, IsMet c s ipD ip → ∃ x : s.CC c, (∀ y, ip y x = ip₀ (Θ y) u) ∧ IsPar x (chainPar c B k) := by
   induction hR with
   | zero =>
-    intro _
-    refine ⟨hs₀, fun ipD ip h => ⟨u, fun y => ?_, hu⟩⟩
-    exact ip_unique h h₀ u hu.1 y u
+    exact fun _ => ⟨hs₀, fun ipD ip h => ⟨u, fun y => (ip_unique h h₀ u hu.1 y u), hu⟩⟩
   | @step k s Θ _ s' hs' p hp ih =>
     intro hk
     obtain ⟨hsk, ih⟩ := ih (by omega)
@@ -703,8 +697,7 @@ theorem thetaChain_upward_induction_fixed_metric {D : D7} (hMet : MetEx D) (hSU 
     refine ⟨x', fun y => ?_, ?_⟩
     · rw [hx', hx]
       rfl
-    · rw [chainPar_succ]
-      exact hx'p
+    · rwa [chainPar_succ]
 
 theorem reach_is {D : D7} {c : Com D} {s₀ : PiLocalization₂ D} (hs₀ : s₀.Is c 0) {k : ℕ} {s : PiLocalization₂ D} {Θ : s.CC c →ₗ[ℂ] s₀.CC c}
     (hR : Reach c s₀ k s Θ) : s.Is c k := by
@@ -807,8 +800,7 @@ theorem stepLevLawT (D : D7) (c : Com D) (hc : c.Is) (k : ℕ) (hk : k < D.R.m) 
   have hcg : (Lev.datY s'.V.rank D.R.r D.R.t (k + 1) hr' c.Pg ∅ c.P c.chi ξ2 Lev.Frm.B).cg = c.chi := by simp [Lev.datY]
   have hP : (fun PP : ↥c.Pg => upperLeftBlock hr' (H PP.1)) ∈ c.P.H := by
     have := hlev.2
-    rw [hPeq] at this
-    exact this
+    rwa [hPeq] at this
   have hBT : ∀ PP ∈ c.Pg, H PP ∈ blockTri (blkOf D.R.r D.R.t) := fun PP hPP => parLev_g hlev.1 hPP
   have h1' : ω (1, κ) f₀ = ((∏ PP ∈ c.Pg, (c.chi (k + 1) PP (GeneralLinearGroup.det (H PP)))⁻¹ : ℂˣ) : ℂ) • f₀ := by
     rw [h1]
@@ -829,12 +821,12 @@ theorem stepLevLawT (D : D7) (c : Com D) (hc : c.Is) (k : ℕ) (hk : k < D.R.m) 
           fun H' => GlobalTheory.SplitHecke.isHalf_actO _ _ H'⟩
       by_cases hx : IsHalf e x ∧ IsIntM (frMapO s.V s'.V s.β s'.β x)
       · beta_reduce
-        rw [if_pos hx, if_pos ⟨i0.2 hx.1, i1.2 hx.2⟩, funext (i2 hx.2), StepLevLaw.omegaQ_empty, StepLevLaw.omegaQ_empty,
+        rw [ite_eq_left hx, ite_eq_left ⟨i0.2 hx.1, i1.2 hx.2⟩, funext (i2 hx.2), StepLevLaw.omegaQ_empty, StepLevLaw.omegaQ_empty,
           mul_one, mul_one]
         simp only [map_one, redFn_one, Units.val_one, Matrix.mul_one]
         exact hoT (fun PP => redM PP (frMapO s.V s'.V s.β s'.β x))
       · beta_reduce
-        rw [if_neg hx, if_neg fun H' => hx ⟨i0.1 H'.1, i1.1 H'.2⟩, mul_zero])
+        rw [ite_eq_right hx, ite_eq_right fun H' => hx ⟨i0.1 H'.1, i1.1 H'.2⟩, mul_zero])
   rw [h2]
   congr 1
   have hchi : (Lev.datY s'.V.rank D.R.r D.R.t (k + 1) hr' c.Pg ∅ c.P c.chi ξ2 Lev.Frm.B).P.chi ⟨_, hlev.2⟩ =
@@ -988,11 +980,9 @@ theorem ontoAll_of_chainUp : ∀ D : D7, FinDim D → MetEx D → EigSpan D → 
     refine hInd c hc k hk s hs ι x B hx ?_
     intro i i' hii'
     have := hne i i' hii'
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact this hcon
-  · intro u B hu
-    exact hadj ipD₀ ip₀ ipD ip hm₀ hm u B hu
+  · exact fun u B hu => hadj ipD₀ ip₀ ipD ip hm₀ hm u B hu
 
 end GlobalTheory.ChainOnto
 end -- clump:auto

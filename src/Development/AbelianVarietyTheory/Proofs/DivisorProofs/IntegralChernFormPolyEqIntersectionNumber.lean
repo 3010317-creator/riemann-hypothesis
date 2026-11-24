@@ -366,8 +366,7 @@ theorem dbar_form_mem {v : V n} {θ : Fin n → V n → ℂ} (hθ : ∀ a, ContD
     differentiableAt_dbar_apply (hθ p.1) _
   change IsClosedAt v _
   refine ⟨fun S => ?_, ?_⟩
-  · simp only [e]
-    exact differentiableAt_sum_smul hd _ S
+  · simpa only [e] using differentiableAt_sum_smul hd _ S
   · simp only [e]
     rw [dbarAt_sum_smul hd]
     simp only [Fintype.sum_prod_type]
@@ -1176,16 +1175,14 @@ theorem integral_evalF_c1W_eq_interPoly : GlobalTheory.Published.ChernDegree →
       congr 2
     have e2 : X.interPoly Δ (GlobalTheory.ArInt.lin (fun i => (n i : ℝ)) ^ X.dim) = (X.inter fun _ => ∑ a, n a • Δ a : ℝ) := by
       have := Var.interPoly_prod_sum X Δ (fun _ a => n a)
-      rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin] at this
-      exact this
+      rwa [Finset.prod_const, Finset.card_univ, Fintype.card_fin] at this
     rw [e1, e2, HolAtlas.integral, _root_.GlobalTheory.ChernCalc.TopPow.part_c1W_pow F σ X L' ψ' hci, _root_.GlobalTheory.ChernCalc.TopPow.part_c1W_pow F σ X L' ψ' hci,
       ← (hCD F X σ _ L' r' hpr ψ' hci).2]
     simp only [Weight.chernInt, Measure.restrict_univ, integral_const, smul_eq_mul, mul_one]
   | zero =>
     rw [map_zero]
     have := hsmul 0 0
-    rw [zero_smul, zero_mul] at this
-    exact this
+    rwa [zero_smul, zero_mul] at this
   | add x y _ _ hx hy =>
     rw [map_add (f := _), hadd, hx, hy]
   | smul t x _ hx =>
@@ -1268,8 +1265,7 @@ theorem eq_homogeneousComponent {κ R : Type} [AddCommGroup R] (f : MvPolynomial
   conv_lhs => rw [← sum_homogeneousComponent P]
 
   rw [map_sum, Finset.sum_eq_single D]
-  · intro b _ hb
-    exact hf b hb _ (homogeneousComponent_isHomogeneous b P)
+  · exact fun b _ hb => hf b hb _ (homogeneousComponent_isHomogeneous b P)
   · intro hD
     rw [Finset.mem_range, not_lt] at hD
     rw [homogeneousComponent_eq_zero _ _ (by omega), map_zero]

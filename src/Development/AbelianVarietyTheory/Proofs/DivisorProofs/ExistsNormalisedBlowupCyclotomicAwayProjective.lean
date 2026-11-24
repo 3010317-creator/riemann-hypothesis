@@ -110,8 +110,7 @@ theorem dense_preimage_of_blowup {Z X' : Scheme.{0}} (J : Z.IdealSheafData) (b :
   obtain ⟨y, hyO, hy⟩ := hD'.inter_open_nonempty O hO hne
   have hyU : y ∈ b ⁻¹ᵁ Uc := by
     change b y ∉ J.support
-    intro h
-    exact hy ((GlobalTheory.ProjBlowup.mem_support_comap J b y).2 h)
+    exact fun h => hy ((GlobalTheory.ProjBlowup.mem_support_comap J b y).2 h)
   let O' : (b ⁻¹ᵁ Uc).toScheme.Opens := (b ⁻¹ᵁ Uc).ι ⁻¹ᵁ ⟨O, hO⟩
   have hopen : IsOpen (((b ⁻¹ᵁ Uc).ι ≫ b) '' (O' : Set (b ⁻¹ᵁ Uc).toScheme)) :=
     ((b ⁻¹ᵁ Uc).ι ≫ b).isOpenEmbedding.isOpenMap _ O'.isOpen
@@ -145,8 +144,7 @@ theorem exists_normBl : ∀ (n : ℕ) (Z : Scheme.{0}) (z : Z ⟶ Sp (cycAway n)
     rw [← morphismRestrict_ι]; infer_instance
   haveI : GlobalTheory.IsNormalScheme Z := .of_pred hZ
   haveI hN : GlobalTheory.IsNormalScheme V.toScheme := .of_isOpenImmersion (V.ι ≫ b)
-  haveI : IsReduced V.toScheme := by
-    exact inferInstance
+  haveI : IsReduced V.toScheme := inferInstance
   haveI hfin : IsFinite V.ι.fromNormalization :=
     isFinite_fromNormalization_int_of_isReduced (o := CommRingCat.of (cycAway n)) V.ι (b ≫ z)
       fun x _ => (LocallyOfFiniteType.stalkMap V.ι x).residueFieldMap

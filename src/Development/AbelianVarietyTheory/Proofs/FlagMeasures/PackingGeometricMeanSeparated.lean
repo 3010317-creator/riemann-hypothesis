@@ -101,8 +101,7 @@ theorem packing_geometric_mean_separated : ∀ (ι : Type) [Fintype ι] [Nonempt
       (F.card : ℝ) ≤ (1 + 2 * G / la) ^ (N * k) := by
     intro F hF
     have hbound := card_le_of_separated_in_ball (F.image φ) G la hGpos.le hla ?_ ?_
-    · rw [Finset.card_image_of_injective _ hφinj, hdimPi] at hbound
-      exact hbound
+    · rwa [Finset.card_image_of_injective _ hφinj, hdimPi] at hbound
     · intro y hy
       obtain ⟨s, hs, rfl⟩ := Finset.mem_image.mp hy
       have hsA := hF hs

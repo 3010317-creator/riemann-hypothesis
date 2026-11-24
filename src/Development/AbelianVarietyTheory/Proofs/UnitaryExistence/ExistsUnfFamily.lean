@@ -98,8 +98,7 @@ theorem exists_unf_family : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     · obtain ⟨U, -⟩ := _root_.GlobalTheory.exists_unf_nonempty_comp E H Dw l Xo c hpq σ
       exact ⟨U, fun h => absurd h hσ⟩
   choose U hU using key
-  have h₀ : Formalism.L2.PjFree.GoodEmb c (c.F.val : c.F →+* ℂ) := by
-    exact rfl
+  have h₀ : Formalism.L2.PjFree.GoodEmb c (c.F.val : c.F →+* ℂ) := rfl
   refine ⟨U, hU, _root_.GlobalTheory.cuspForms_finiteDimensional_of_isUnf hB E H Dw l Xo c _ U _ h₀ (hU _ h₀).1,
     GlobalTheory.CuspProduct.cuspMul_holds E H Dw l Xo c _ U,
     _root_.GlobalTheory.supNorm_definite_on_cusp E H Dw l Xo c _ U (fun σ h => (hU σ h).1), fun hg => ?_⟩

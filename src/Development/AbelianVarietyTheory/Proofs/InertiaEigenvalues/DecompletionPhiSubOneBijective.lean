@@ -176,8 +176,7 @@ theorem decW_of_matrix (S : Sit) (E : S.Comparison₂)
     intro v
     rw [memH]
     constructor
-    · intro hv i g hg
-      exact congrFun (hinj _ _ ((hact g hg v).symm.trans (hv g hg))) i
+    · exact fun hv i g hg => congrFun (hinj _ _ ((hact g hg v).symm.trans (hv g hg))) i
     · intro hv g hg
       rw [hact g hg v]
       exact Finset.sum_congr rfl fun i _ => by rw [hv i g hg]
@@ -201,8 +200,7 @@ theorem decW_of_matrix (S : Sit) (E : S.Comparison₂)
     constructor
     · rintro ⟨x, hx⟩
       rw [hexp] at hx
-      have hv := hinj _ _ hx
-      exact fun i => ⟨bD.repr x i, (congrFun hv i).symm⟩
+      exact fun i => ⟨bD.repr x i, (congrFun (hinj _ _ hx) i).symm⟩
     · intro hv
       choose e he using hv
       refine ⟨∑ i, e i • bD i, ?_⟩
@@ -217,8 +215,7 @@ theorem decW_of_matrix (S : Sit) (E : S.Comparison₂)
     obtain ⟨z, hzH, hz⟩ := h1 v ((hinv v).1 hy)
     refine ⟨∑ i, z i • E.jD T (bD i), (hinv z).2 hzH, ?_⟩
     rw [hφ z, ← Finset.sum_sub_distrib, ← Finset.sum_sub_distrib]
-    simp only [← sub_smul]
-    exact (hrng _).2 hz
+    simpa only [← sub_smul] using (hrng _).2 hz
   · obtain ⟨u, rfl⟩ := hsurj z
     have hu := (hinv u).1 hz
     rw [hφ u, ← Finset.sum_sub_distrib] at hφz
@@ -259,7 +256,7 @@ theorem powerSeries_exists_sum {O : Type} [CommRing O] (a : ℕ → PowerSeries 
       | zero => rfl
       | succ d ih =>
         rw [show n + 1 + (d + 1) = n + 1 + d + 1 by omega, Finset.sum_range_succ, map_add (f := _), ih,
-          PowerSeries.coeff_X_pow_mul', if_neg (by omega), add_zero]
+          PowerSeries.coeff_X_pow_mul', ite_eq_right (by omega), add_zero]
     have := key (m - (n + 1))
     rw [show n + 1 + (m - (n + 1)) = m by omega] at this
     exact this.symm
@@ -325,8 +322,7 @@ private theorem ioE_closed_lemma (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI :
   obtain ⟨hE, -⟩ := _root_.GlobalTheory.Decompl.near_ioE l P AI K s LL h W E
   have hext : ∀ a, E.tie.ioE (algebraMap (LetA ↥(OL LL) (Module.finrank ℚ_[l] ↥(K0 K))) W.EE a) =
       inclR LL (E.tie.io a) := by
-    intro a
-    exact E.tie.ioE_ext a
+    exact fun a => E.tie.ioE_ext a
   have ht : inclR LL (E.tie.io letπ) = piR AI LL s := by
     rw [E.tie.io_π]
     rfl
@@ -338,8 +334,7 @@ private theorem ioE_closed_lemma (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI :
     (E.tie.ioE : W.EE →+* RW LL) l letπ (piR AI LL s) hext ht letA_exists_sum hsep hE x hx
 
 theorem ioE_closed : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (K : FinExt l) (s : ℕ) (LL : FinExt l) (h : Good K s LL) (W : Wach P K LL) (E : EtSit P AI K s LL h W) (x : RW LL), (∀ m, ∃ e, NearPi AI LL s m (x - E.tie.ioE e)) → ∃ e r, x - E.tie.ioE e = (l : RW LL) * r := by
-  intro l _ P AI K s LL h W E x hx
-  exact ioE_closed_lemma l P AI K s LL h W E x hx
+  exact fun l _ P AI K s LL h W E x hx => ioE_closed_lemma l P AI K s LL h W E x hx
 
 end GlobalTheory.Decompl
 end -- clump:auto
@@ -529,8 +524,7 @@ theorem εroot_pow {P : LocPrime l} (AI : LocAinf l P) (k : ℕ) : AI.εroot k ^
   induction k with
   | zero => simp [LocAinf.εroot]
   | succ k ih =>
-    rw [LocAinf.εroot, Function.iterate_succ_apply', pow_succ', pow_mul, frobeniusEquiv_symm_pow_p]
-    exact ih
+    rwa [LocAinf.εroot, Function.iterate_succ_apply', pow_succ', pow_mul, frobeniusEquiv_symm_pow_p]
 
 def rightW (LL : FinExt l) : WCb l →+* RW LL :=
   (Algebra.TensorProduct.includeRight : WCb l →ₐ[ℤ_[l]] RW LL).toRingHom

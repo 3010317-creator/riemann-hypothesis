@@ -83,8 +83,7 @@ theorem detIm_ne_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (w : 
     conv_lhs => rw [← d.bs.sum_repr e]
     simp [Fin.sum_univ_two, Algebra.smul_def, map_add (f := _), map_mul]
   obtain ⟨e, he⟩ : ∃ e : E, (τ e).im ≠ 0 := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     have hc : (InfinitePlace.mk τ).IsComplex := IsTotallyComplex.isComplex _
     rw [InfinitePlace.isComplex_mk_iff] at hc
     apply hc
@@ -137,14 +136,12 @@ theorem realLinearCoordinates_injective (d : _root_.PositivityTheory.SiegelWeilF
       have h := congrFun (congrFun (congrFun hr0 w) a) j
       have h' : star (∑ i, ((R.fr w)⁻¹).1 a i * Z i j) = 0 := h
       rw [star_eq_zero] at h'
-      rw [Matrix.mul_apply]
-      exact h'
+      rwa [Matrix.mul_apply]
     have h2 : Z = 0 := by
       have e : Z = (R.fr w).1 * (((R.fr w)⁻¹).1 * Z) := by
         rw [← Matrix.mul_assoc, Units.mul_inv, Matrix.one_mul]
       rw [e, h1, Matrix.mul_zero]
-    intro i j
-    exact congrFun (congrFun h2 i) j
+    exact fun i j => congrFun (congrFun h2 i) j
   funext k
   obtain ⟨i, j, l⟩ := k
   refine Prod.ext (funext fun v => ?_) (funext fun v => ?_)

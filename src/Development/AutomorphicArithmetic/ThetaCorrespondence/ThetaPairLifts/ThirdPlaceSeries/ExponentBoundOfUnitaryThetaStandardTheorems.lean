@@ -242,8 +242,7 @@ theorem lIncl_of_models : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] 
   have hWI := Formalism.CohomologicalDescent.ShortWeightBounds.weight_inputs_of_linkage_holds P hH hL ι (reFr W fr cj) hW' _ (X i) hl hR.1 hLk
   have h := (Formalism.CohomologicalDescent.Top.inclusion_w_seven_real_holds P hH hL ι (reFr W fr cj) hW' _ (X i) hl hu hR.1 hWI).1
   unfold reFr at h
-  rw [hEq] at h
-  exact h
+  rwa [hEq] at h
 
 end GlobalTheory.ExpTie
 end -- clump:auto
@@ -278,8 +277,7 @@ theorem jexpU_le_jrec7 (hcut : Formalism.CohomologicalDescent.E.ExCut) {K : Type
   · obtain ⟨fr, cj, I, X, hc, hX⟩ := hin hR
     have h1 := _root_.GlobalTheory.ExpTie.lIncl_of_models K G Pl0 B ℓ Z w ι P W hN hp hR fr cj I X hc hX
     have h2 := (_root_.GlobalTheory.ExpTie.jexpU_le_of_lIncl K G Pl0 B ℓ Z w _ h1).2
-    rw [hrec.2 hR] at h2
-    exact h2
+    rwa [hrec.2 hR] at h2
   · have h2 := (_root_.GlobalTheory.ExpTie.jexpU_le_of_lIncl K G Pl0 B ℓ Z w _ (hoff hR)).2
     exact h2.trans (by exact_mod_cast hrec.1 hR)
 
@@ -308,8 +306,7 @@ theorem hasExpBound_at (hcut : Formalism.CohomologicalDescent.E.ExCut) {c : OnCo
   refine ⟨fun j l => ((Wj j).Jrec7 (Pj j) l : ℝ), ?_, ?_⟩
   · intro j
     constructor
-    · intro l
-      exact Nat.cast_nonneg _
+    · exact fun l => Nat.cast_nonneg _
     intro Q hQ
     obtain ⟨hHyp, hLarge, hOk, X', A, hRows, hBig⟩ := hN j
     have hcard : Fintype.card D.what₂.Tau = (Pj j).f := by rw [← Nat.card_eq_fintype_card]; exact (hD j).card
@@ -320,8 +317,7 @@ theorem hasExpBound_at (hcut : Formalism.CohomologicalDescent.E.ExCut) {c : OnCo
     have hb : O.b = (Pj j).b := by rw [(hD j).b]; show Real.exp O.xe = _; rw [hxe, (hD j).log]; rfl
     have hm' : O.m = ((Pj j).m : ℝ) := by rw [hm, (hD j).m]
     show _ ≤ 30 * (O.T2 : ℝ) * O.m * O.b * O.xe ^ 2 + 2 * O.m * O.b
-    rw [hxe, hb, hm']
-    exact h
+    rwa [hxe, hb, hm']
   · intro w hw j
     have hle := jexpU_le_jrec7 hcut (blk p j (p.R.mu w)) (lvlL p) (subZ p j (p.R.mu w)) w (Pj j) (Wj j) (hN j)
       (fun _ => hS j _ w) (fun hR => hM j w hw hR)
@@ -614,8 +610,7 @@ theorem wts_U_le_h0_of_large : ∀ {D : Formalism.BasicNotions.D7} (L : Formalis
       unfold LevelStarExponents.rhoP at hr
       have hLa : 0 < L.LaG := by
         have h := P5.S_le
-        by_contra hc'
-        push_neg at hc'
+        by_contra! hc'
         have : L.LaG * L.sc.b' / D.R.k ≤ 0 :=
           div_nonpos_of_nonpos_of_nonneg (mul_nonpos_of_nonpos_of_nonneg hc' hb0.le) (by positivity)
         linarith
@@ -763,7 +758,7 @@ theorem valsAt_of_isLamPrime : ∀ {D : Formalism.BasicNotions.D7} (L : Formalis
       Formalism.IndefR.IndefiniteWeightData.WeightData.r] at hq
     split_ifs at hq with c1 c2 <;> try omega
     have c3 : D.R.k + ↑j + s + 1 ≤ D.R.k + ((j : ℕ) + 1) - 1 + D.R.t := by omega
-    simp only [c3, if_true] at hq
+    simp only [c3, ite_true] at hq
     rw [hp, hmj] at hq
     have hQ : (((lamL j τ).w ⟨_, hal⟩ : ℤ) : ℚ) + ((Vc D j).rank : ℚ) / 2 - ((D.R.k + j + s : ℕ) : ℚ) =
         -(D.hc τ).e ⟨(j : ℕ) + 1 - 1, hj.2⟩ + ((D.R.t : ℚ) - 1) / 2 - s := by
@@ -785,7 +780,7 @@ theorem valsAt_of_isLamPrime : ∀ {D : Formalism.BasicNotions.D7} (L : Formalis
       Formalism.IndefR.IndefiniteWeightData.WeightData.r] at hq
     split_ifs at hq with c1 c2 <;> try omega
     have c3 : ¬ (D.R.k - 1 + (i : ℕ) + D.R.t + 1 ≤ D.R.k + ((j : ℕ) + 1) - 1 + D.R.t) := by omega
-    simp only [c3, if_false] at hq
+    simp only [c3, ite_false] at hq
     rw [show D.R.m - ((j : ℕ) + 1) + 1 - (D.R.m - ((j : ℕ) + 1) + 1 - (D.R.k - 1 + (i : ℕ) + D.R.t + 1 - (D.R.k + ((j : ℕ) + 1) - 1) - D.R.t))
         = (i : ℕ) - j by omega] at hq
     rw [show (j : ℕ) + 1 + ((i : ℕ) - j) = (i : ℕ) + 1 by omega, hp, hmj] at hq
@@ -832,13 +827,11 @@ theorem low_dist : ∀ {D : Formalism.BasicNotions.D7} (L : Formalism.BasicNotio
     · refine ⟨⟨a - (D.R.k - 1), by omega⟩, ?_⟩
       have h := hv.2.1 ⟨a - (D.R.k - 1), by omega⟩ (by simp only [Fin.le_def]; omega)
       have ha' : D.R.k - 1 + (a - (D.R.k - 1)) = a := by omega
-      simp only [ha'] at h
-      exact h
+      simpa only [ha'] using h
     · refine ⟨⟨a - (D.R.k - 1) - D.R.t, by omega⟩, ?_⟩
       have h := hv.2.2.2 ⟨a - (D.R.k - 1) - D.R.t, by omega⟩ (by simp only [Fin.lt_def]; omega)
       have ha' : D.R.k - 1 + (a - (D.R.k - 1) - D.R.t) + D.R.t = a := by omega
-      simp only [ha'] at h
-      exact h
+      simpa only [ha'] using h
   have he : (wts L j).e τ = (((D.hc τ).e j : ℚ) : ℝ) := by
     show wj D ((j : ℕ) + 1) τ = _
     unfold wj
@@ -901,8 +894,7 @@ theorem other_of_not_thick (L : Formalism.BasicNotions.SizeData₂ D) (P5 : Form
   have hnt : (D.eTau τ : D.R.GG) ∉ D.host.thickPlaces := by
     intro h
     apply hT
-    simp only [wts, Finset.mem_filter, Finset.mem_univ, true_and]
-    exact h
+    simpa only [wts, Finset.mem_filter, Finset.mem_univ, true_and] using h
   have he : (GlobalTheory.ExpTie.Lift.wts L j).e τ = wj D ((j : ℕ) + 1) τ := rfl
   by_cases htop : (D.eTau τ : D.R.GG) ∈ D.host.topPlaces
   · left
@@ -920,8 +912,7 @@ theorem other_of_not_thick (L : Formalism.BasicNotions.SizeData₂ D) (P5 : Form
     have hLa : 0 < L.LaG := by
       have h1 := P5.S_le
       have h2 := L.Sc_pos
-      by_contra hn
-      push_neg at hn
+      by_contra! hn
       have : L.LaG * L.sc.b' / D.R.k ≤ 0 :=
         div_nonpos_of_nonpos_of_nonneg (mul_nonpos_of_nonpos_of_nonneg hn hb0.le) hk0.le
       linarith
@@ -1006,9 +997,7 @@ theorem thick_of_mem (L : Formalism.BasicNotions.SizeData₂ D) (j : Fin D.R.m) 
   refine ⟨?_, ?_⟩
   · show (parOf L j).b ≤ wj D ((j : ℕ) + 1) τ ∧ wj D ((j : ℕ) + 1) τ ≤ (parOf L j).b + L.etaSz + 1
     rw [hb]; exact h1
-  · have hfl : ((wts L j).xp τ : ℝ) ≤ cT j τ + L.Sc := by
-      show ((⌊cT j τ + L.Sc⌋ : ℤ) : ℝ) ≤ cT j τ + L.Sc
-      exact Int.floor_le _
+  · have hfl : ((wts L j).xp τ : ℝ) ≤ cT j τ + L.Sc := Int.floor_le _
     have hc' : cT j τ ≤ wj D D.R.m τ + ((D.R.t : ℝ) - 1) / 2 := hc
     have ht : (0 : ℝ) ≤ D.R.t := Nat.cast_nonneg _
     show ((wts L j).xp τ : ℝ) ≤ (parOf L j).b + L.Sc + L.etaSz + (D.R.t : ℝ) + 1
@@ -1246,8 +1235,7 @@ theorem locIncl_of_equiv {K : Type} [Field K] [NumberField K] {V V' : Type} [Add
   obtain ⟨y, hy, hye⟩ := hsD
   have hinj : Function.Injective f := e.injective
   have : y = s • a • v := hinj (by rw [hye, map_smul, map_smul])
-  rw [← this]
-  exact hy
+  rwa [← this]
 
 theorem cutLat_locIncl {K : Type} [Field K] [NumberField K] [StarRing K] (S : Formalism.L2.DIV.CSD K) {d : ℕ}
     (E : Matrix (Fin S.dim) (Fin d) K) (p : Ideal (𝓞 K)) [p.IsPrime] (a : 𝓞 K)
@@ -1284,7 +1272,7 @@ theorem exZ_res_eq_natW (n : ℕ) (lam : Formalism.BasicNotions.DomWeight n) (f 
     exact a.elim0
   · let m : Fin n := ⟨n - 1, by omega⟩
     have hds : lam.detShift = lam.w m := by
-      simp only [Formalism.BasicNotions.DomWeight.detShift, dif_pos hn]
+      simp only [Formalism.BasicNotions.DomWeight.detShift, dite_eq_left hn]
       rfl
     have hres : res n f = fun a => lam.natW a + f m := by
       funext a

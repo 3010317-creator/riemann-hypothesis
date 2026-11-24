@@ -69,8 +69,7 @@ theorem inStrictNormalCrossingPositionAt_comap_iso {X X₀ : Scheme.{u}} {k : Ty
     ⟨e.hom ⁻¹ᵁ U, hmem, m,
       ⟨e.hom.resLE U (e.hom ⁻¹ᵁ U) le_rfl ≫ c.map, ?_, inferInstance⟩, a, ?_, ?_, ?_⟩
   · rw [Category.assoc, c.comp_struct, ← Category.assoc, Scheme.Hom.resLE_comp_ι, Category.assoc]
-  · intro i hi j hj t hit hjt
-    exact h1 i (by simpa using hi) j (by simpa using hj) t hit hjt
+  · exact fun i hi j hj t hit hjt => h1 i (by simpa using hi) j (by simpa using hj) t hit hjt
   · intro i hi hnone
     have hi' : i < E.length := by simpa using hi
     have hget : (E.map (fun D => D.comap e.hom))[i]'hi = (E[i]'hi').comap e.hom := by simp
@@ -86,8 +85,7 @@ theorem inStrictNormalCrossingPositionAt_comap_iso {X X₀ : Scheme.{u}} {k : Ty
       rw [restrictIdeal_comap_eq_comap_resLE_restrictIdeal e.hom (E[i]'hi') U (e.hom ⁻¹ᵁ U) le_rfl,
         h3 i hi' t hit, EtaleChart.coordIdeal_eq_comap_coordSubspaceIdeal, ← Scheme.IdealSheafData.comap_comp]
     have hget : (E.map (fun D => D.comap e.hom))[i]'hi = (E[i]'hi').comap e.hom := by simp
-    rw [hget]
-    exact key
+    rwa [hget]
 
 theorem inStrictNormalCrossingPosition_comp_iso_hom {X X₀ : Scheme.{u}} {k : Type u} [Field k]
     (p : X ⟶ Spec (CommRingCat.of k)) (e : X₀ ≅ X) (E : List X.IdealSheafData)
@@ -158,8 +156,7 @@ theorem inStrictNormalCrossingPosition_boundary [AlgebraicGeometry.Smooth p] (s 
       (s.toSequenceOfBlowups.transitionMapSucc n) (s.toSequenceOfBlowups.center n) (s.boundary n)
       (s.toSequenceOfBlowups.isBlowupAlongIdealSheaf_blowupMorphism n hn) (ih (le_of_lt hn))
       (s.hasStrictNormalCrossingsWith_center n hn)
-    rw [structureMorphism_succ, s.boundary_succ_eq_map_strictTransform_append n hn]
-    exact key
+    rwa [structureMorphism_succ, s.boundary_succ_eq_map_strictTransform_append n hn]
 
 theorem isNoetherian_schemeAt [AlgebraicGeometry.IsNoetherian X] (s : IdealBlowupSequence p I E) (i : ℕ)
     (hi : i ≤ s.toSequenceOfBlowups.length) :

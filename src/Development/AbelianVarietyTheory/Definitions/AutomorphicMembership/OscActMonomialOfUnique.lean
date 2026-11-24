@@ -144,8 +144,7 @@ theorem exists_cover_tensor_hom :
     · rw [map_mul, (hf x).1, (hf y).1, ← map_mul]
       simp
     · rw [map_mul, (hf x).2, (hf y).2]
-      simp only [Prod.fst_mul, Prod.snd_mul, map_mul, mul_pow]
-      exact mul_mul_mul_comm _ _ _ _
+      simpa only [Prod.fst_mul, Prod.snd_mul, map_mul, mul_pow] using mul_mul_mul_comm _ _ _ _
   · show ((T0.cov (f (g, h)) : GL _ ℂ) : Mat (p * r + q * s) (p * s + q * r)) = _
     rw [(hf (g, h)).1]
     rfl
@@ -215,7 +214,7 @@ theorem unitOp_inr_inr (i j : Fin Q) (f : OscPol P Q) :
     unitOp (.inr i) (.inr j) f = -(X (.inr j) * pderiv (.inr i) f) - if i = j then (1 / 2 : ℂ) • f else 0 := by
   by_cases h : i = j
   · subst h
-    simp only [unitOp, rai, low, Sum.isLeft_inr, Bool.false_eq_true, if_false, if_true]
+    simp only [unitOp, rai, low, Sum.isLeft_inr, Bool.false_eq_true, ite_false, ite_true]
     change -(pderiv (.inr i) ((X (.inr i) : OscPol P Q) * f)) + (1 / 2 : ℂ) • f = _
     rw [Derivation.leibniz, pderiv_X_self, smul_eq_mul, smul_eq_mul, mul_one]
     module
@@ -264,12 +263,12 @@ theorem inner_X_mul (h : IsFockIP ι) (l : σ) (f g : MvPolynomial σ ℂ) :
       simp only [map_smul, inner_smul_left, inner_smul_right, h _ _, ← FockSeq.mfact_cast]
       by_cases hβ : Finsupp.single l 1 + α = β
       · subst hβ
-        rw [if_pos rfl, if_pos (by simp), add_comm, mfact_add_single]
+        rw [ite_eq_left rfl, ite_eq_left (by simp), add_comm, mfact_add_single]
         simp; ring
-      · rw [if_neg hβ]
+      · rw [ite_eq_right hβ]
         by_cases h0 : β l = 0
         · simp [h0]
-        · rw [if_neg]
+        · rw [ite_eq_right]
           · simp
           · rintro rfl
             apply hβ

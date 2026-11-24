@@ -54,8 +54,7 @@ private theorem op_add_of (hRp : RpBasic) (hOp : RpOp) {q : ℕ} {i n : ℤ} {Z 
   have h2 := hOp (ZMod q) (ZMod q) τ' n x a ha
   have h3 := hOp (ZMod q) (ZMod q) σ n x a ha
   have hS := (hRp (ZMod q) (res (ZMod q) (tw q i)) S n).2.2.1
-  have h4 := (hS _ _ _ _ h1 h2).2.2.1
-  exact (hS _ _ _ _ h3 h4).2.1 (h a)
+  exact (hS _ _ _ _ h3 ((hS _ _ _ _ h1 h2).2.2.1)).2.1 (h a)
 
 private theorem op_smul_of (hRp : RpBasic) (hOp : RpOp) {q : ℕ} {i n : ℤ} {Z S : Scheme.{0}} {p : Z ⟶ S} (d : ℤ)
     (τ σ : Fam p (res (ZMod q) (tw q i)) (res (ZMod q) (tw q i)))
@@ -66,8 +65,7 @@ private theorem op_smul_of (hRp : RpBasic) (hOp : RpOp) {q : ℕ} {i n : ℤ} {Z
   have h1 := hOp (ZMod q) (ZMod q) τ n x a ha
   have h3 := hOp (ZMod q) (ZMod q) σ n x a ha
   have hS := (hRp (ZMod q) (res (ZMod q) (tw q i)) S n).2.2.1
-  have h4 := (hS _ _ _ _ h1 h1).2.2.2 d
-  exact (hS _ _ _ _ h3 h4).2.1 (h a)
+  exact (hS _ _ _ _ h3 ((hS _ _ _ _ h1 h1).2.2.2 d)).2.1 (h a)
 
 private theorem op_id_of (hRp : RpBasic) (hOp : RpOp) {q : ℕ} {i n : ℤ} {S : Scheme.{0}} (d : ℤ)
     (σ : Fam (𝟙 S) (res (ZMod q) (tw q i)) (res (ZMod q) (tw q i)))
@@ -77,8 +75,7 @@ private theorem op_id_of (hRp : RpBasic) (hOp : RpOp) {q : ℕ} {i n : ℤ} {S :
   obtain ⟨a, ha⟩ := ((hRp (ZMod q) (res (ZMod q) (tw q i)) S n).1) x
   have h3 := hOp (ZMod q) (ZMod q) σ n x a ha
   have hS := (hRp (ZMod q) (res (ZMod q) (tw q i)) S n).2.2.1
-  have h4 := (hS _ _ _ _ ha ha).2.2.2 d
-  exact (hS _ _ _ _ h3 h4).2.1 (h a)
+  exact (hS _ _ _ _ h3 ((hS _ _ _ _ ha ha).2.2.2 d)).2.1 (h a)
 
 theorem UpperTheory.Gal.TranscendenceTraces.trLin_of :
     TrChar → FamLin → WtLin → RpBasic → RpOp → TrLin := by

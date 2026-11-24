@@ -179,8 +179,7 @@ theorem map_mem_KGL_iff {s : SplitPlace L} {c : s.v.adicCompletion L⁺ ≃+* s.
 theorem isUnifV_map {s : SplitPlace L} {c : s.v.adicCompletion L⁺ ≃+* s.w.adicCompletion L} (hc : Continuous c) (hcL : ∀ x : L, c (s.i x) = algebraMap L (s.w.adicCompletion L) x)
     {ϖ : s.v.adicCompletion L⁺} (hϖ : IsUnif L s.v ϖ) : Formalism.UG.IsUnifV L s.w (c ϖ) := by
   show Valued.v (c ϖ) = _
-  rw [GlobalTheory.SplitConjVal.valuation_eq s c hc hcL]
-  exact hϖ
+  rwa [GlobalTheory.SplitConjVal.valuation_eq s c hc hcL]
 
 theorem coe_glMap {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) {n : ℕ} (g : GL (Fin n) A) :
     ((Matrix.GeneralLinearGroup.map f g : GL (Fin n) B) : Matrix (Fin n) (Fin n) B) = (g : Matrix (Fin n) (Fin n) A).map f :=
@@ -537,8 +536,7 @@ theorem main_alt_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7
       rw [iSup_neg (show Q ∉ {P | D.naut.ptV i P = some x} from h), Submodule.mem_bot] at this
       exact hQ this
   obtain ⟨Q0, hQ0⟩ : ∃ Q, g Q ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hf0
     rw [← hgsum, show g = 0 from Finsupp.ext h, Finsupp.sum_zero_index]
   set G : D.naut.AV i → (GAf D.host.E D.R.nV → (P.M.loc i).wt.W) := fun Q => (P.M.loc i).real (g Q) with hGdef
@@ -548,15 +546,13 @@ theorem main_alt_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7
   have hGiso : ∀ Q ∈ g.support, G Q ∈ NG.isoTyp (P.M.loc i).wt.ρ (P.H.av.S i Q) := by
     intro Q hQ
     have hy := (hg' Q (Finsupp.mem_support_iff.1 hQ)).2
-    rw [P.H.av.typeV] at hy
-    exact hy
+    rwa [P.H.av.typeV] at hy
   have hind := isoTyp_indep (P.M.loc i).wt (P.H.av.S i) (P.H.av.irr i) (P.H.av.inj i)
   have hQ0s : Q0 ∈ g.support := Finsupp.mem_support_iff.2 hQ0
   refine ⟨Q0, (hg' Q0 hQ0).1, G Q0, hGiso Q0 hQ0s, ?_, ?_, ?_⟩
   · rw [← (P.M.loc i).real_range]
     exact ⟨g Q0, rfl⟩
-  · intro h
-    exact hQ0 ((P.M.loc i).real_inj (h.trans (map_zero (P.M.loc i).real).symm))
+  · exact fun h => hQ0 ((P.M.loc i).real_inj (h.trans (map_zero (P.M.loc i).real).symm))
   · intro ϖ hϖ k hk
     set Dk := Formalism.AUTREP.tSet D.host.E D.R.nV sp ϖ k
     set t : D.naut.AV i → (GAf D.host.E D.R.nV → (P.M.loc i).wt.W) :=
@@ -794,8 +790,7 @@ theorem exists_integralSection_splitPlace_componentMap_cast {E : Type} [Field E]
     by_cases h : w = sp.v
     · subst h
       have e : (singleV (maximalRealSubfield E) sp.v t) sp.v = t := RestrictedProduct.single_eq_same _ _ _
-      rw [e]
-      exact ht
+      rwa [e]
     · have e : (singleV (maximalRealSubfield E) sp.v t) w = 0 := RestrictedProduct.single_eq_of_ne _ _ h
       rw [e]
       exact zero_mem _
@@ -815,7 +810,6 @@ theorem exists_integralSection_splitPlace_componentMap_cast {E : Type} [Field E]
       exact neg_mem hy
   · intro x
     rw [hc, hp]
-    show sp.i x * 1 = sp.i x
     exact mul_one _
 
 theorem proj_tensCast_section : ∀ (D : D7) (sp : SplitPlace D.host.E) (hF : D.host.F = maximalRealSubfield D.host.E),
@@ -1059,8 +1053,7 @@ theorem conj_eq_glint_mul_mul :
       Matrix (Fin n) (Fin n) (v.adicCompletion F)) *ᵥ w) hEq
     simp only [Matrix.mulVec_mulVec, Matrix.mul_assoc, ha1x, hb2, Matrix.mul_one] at hL
     have hi := congrFun hL i
-    rw [Matrix.mulVec_single_one, Matrix.col_apply] at hi
-    rw [← Matrix.mulVec_mulVec] at hi
+    rw [Matrix.mulVec_single_one, Matrix.col_apply, ← Matrix.mulVec_mulVec] at hi
     simp only [Formalism.UG.diagPow, Matrix.mul_diagonal, Matrix.mulVec_diagonal, Matrix.add_apply,
       Matrix.one_apply_ne hij, hE, Matrix.single_apply_same, zero_add, one_mul] at hi
     exact le_of_zpow_eq hϖ (mulVec_entries_mem O hbe hz' i) hi
@@ -1280,8 +1273,7 @@ theorem glint_mul_frame_basis : ∀ {D : D7} (hF : D.host.F = maximalRealSubfiel
   rw [hε', hε', mv, mv, hε', mv, hzφ, hM] at E
   have E2 := congrArg (fun w => (β'.map φ).mulVec w) E
   simp only [Matrix.mulVec_mulVec, ← Matrix.mul_assoc, hβ, Matrix.one_mul] at E2
-  simp only [Matrix.mulVec_mulVec, ← Matrix.mul_assoc]
-  exact E2
+  simpa only [Matrix.mulVec_mulVec, ← Matrix.mul_assoc] using E2
 
 end GlobalTheory.SplitFrameLattice
 end -- clump:auto
@@ -1604,7 +1596,7 @@ theorem finsum_cosets {G W ι : Type} [Group G] [AddCommGroup W] (J : Subgroup G
   rw [finsum_eq_sum_of_support_subset _ hsupp, Finset.sum_image]
   · refine Finset.sum_congr rfl fun γ hγ => ?_
     have hc : ∃ y ∈ T, (y : G ⧸ J) = (x γ : G ⧸ J) := ⟨x γ, h1 γ hγ, rfl⟩
-    rw [dif_pos hc]
+    rw [dite_eq_left hc]
     obtain ⟨hy, he⟩ := hc.choose_spec
     exact (hF _ hy _ (h1 γ hγ) (QuotientGroup.eq.1 he) g).symm
   · intro γ hγ γ' hγ' e
@@ -1717,8 +1709,7 @@ theorem transport_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL → ∀ 
   let xi : Formalism.L2.Theta.GA D (Formalism.IndefR.Links.Vc D j) → Formalism.AUTREP.GAf D.host.E D.R.nV := fun γ =>
     if hγ : γ ∈ Formalism.L2.Theta.GfC (Formalism.IndefR.Links.Vc D j) then ((A.PV j).onto γ hγ).choose else 1
   have hxi : ∀ γ ∈ GlobalTheory.Hk3.rep (Formalism.IndefR.Links.Vc D j) sp.w (List.replicate k 1 ++ List.replicate (D.R.nV - k) 0), (A.PV j).ψ (xi γ) = γ := fun γ hγ => by
-    simp only [xi, dif_pos (hGf γ hγ)]
-    exact ((A.PV j).onto γ (hGf γ hγ)).choose_spec
+    simpa only [xi, dite_eq_left (hGf γ hγ)] using ((A.PV j).onto γ (hGf γ hγ)).choose_spec
   have hT : ∀ x ∈ Formalism.AUTREP.tSet D.host.E D.R.nV sp ϖ k, TrivOutside {sp.v} x := fun x hx => hx.1
   suffices key : ∀ (m : ℕ) (e : j.1 + 1 = m) (p1 : 1 ≤ m) (p2 : m ≤ D.R.m),
       (∀ κ : Formalism.AUTREP.GAf D.host.E D.R.nV, TrivOutside {sp.v} κ →
@@ -1774,8 +1765,7 @@ theorem transport_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL → ∀ 
     intro y hy y' hy' hm g0
     have ht := triv_mul (triv_inv (hT _ hy)) (hT _ hy')
     have := hinv _ hm ((hJ _ ht).2 hm) (g0 * y)
-    rw [mul_assoc, mul_inv_cancel_left] at this
-    exact this
+    rwa [mul_assoc, mul_inv_cancel_left] at this
   rw [Pi.smul_apply, hF g]
   calc ∑ γ ∈ GlobalTheory.Hk3.rep (Formalism.IndefR.Links.Vc D j) sp.w (List.replicate k 1 ++ List.replicate (D.R.nV - k) 0), (P.M (D.nd.mu i) (j.1 + 1) p1 p2).real f (g * xi γ)
       = ∑ γ ∈ GlobalTheory.Hk3.rep (Formalism.IndefR.Links.Vc D j) sp.w (List.replicate k 1 ++ List.replicate (D.R.nV - k) 0),

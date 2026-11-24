@@ -96,8 +96,7 @@ private lemma lk_hasSum_succ (m : ℕ) : ∀ x : ℂ, ‖x‖ < 1 →
     have hf : (fun e : ℕ => ((e : ℂ) + 1) ^ 0 * x ^ (e + 1)) = fun i => x * x ^ i := by
       funext e
       ring
-    rw [hf]
-    exact hg
+    rwa [hf]
   | succ m ih =>
     intro x hx
     have h1 : x ≠ 1 := by
@@ -119,8 +118,7 @@ private lemma lk_hasSum_succ (m : ℕ) : ∀ x : ℂ, ‖x‖ < 1 →
     let g : ℕ → ℂ → ℂ := fun e y => ((e : ℂ) + 1) ^ m * y ^ (e + 1)
     let g' : ℕ → ℂ → ℂ := fun e y => ((e : ℂ) + 1) ^ m * (((e + 1 : ℕ) : ℂ) * y ^ (e + 1 - 1))
     have hgd : ∀ (e : ℕ), ∀ y ∈ Metric.ball (0 : ℂ) r, HasDerivAt (g e) (g' e y) y := by
-      intro e y _
-      exact (hasDerivAt_pow (e + 1) y).const_mul _
+      exact fun e y _ => (hasDerivAt_pow (e + 1) y).const_mul _
     have hbd : ∀ (e : ℕ), ∀ y ∈ Metric.ball (0 : ℂ) r, ‖g' e y‖ ≤ ((e : ℝ) + 1) ^ (m + 1) * r ^ e := by
       intro e y hy
       rw [Metric.mem_ball, dist_zero_right] at hy
@@ -140,8 +138,7 @@ private lemma lk_hasSum_succ (m : ℕ) : ∀ x : ℂ, ‖x‖ < 1 →
           ≤ ((e : ℝ) + 1) ^ m * (((e : ℝ) + 1) * r ^ e) := by gcongr
         _ = ((e : ℝ) + 1) ^ (m + 1) * r ^ e := by ring
     have hxb : x ∈ Metric.ball (0 : ℂ) r := by
-      rw [Metric.mem_ball, dist_zero_right]
-      exact hxr
+      rwa [Metric.mem_ball, dist_zero_right]
     have hD := hasDerivAt_tsum_of_isPreconnected hu Metric.isOpen_ball (convex_ball (0 : ℂ) r).isPreconnected
       hgd hbd hxb (ih x hx).summable hxb
     have heq : (fun z => Lk (m + 1) z) =ᶠ[𝓝 x] (fun z => ∑' e, g e z) := by
@@ -160,8 +157,7 @@ private lemma lk_hasSum_succ (m : ℕ) : ∀ x : ℂ, ‖x‖ < 1 →
       simp only [g', Nat.add_sub_cancel]
       push_cast
       ring
-    rw [hf]
-    exact hfin
+    rwa [hf]
 
 private lemma lk_hasSum (k : ℕ) (hk : 2 ≤ k) (x : ℂ) (hx : ‖x‖ < 1) :
     HasSum (fun e : ℕ => (e : ℂ) ^ (k - 1) * x ^ e) (Lk k x) := by
@@ -357,8 +353,7 @@ private lemma reindex (N k : ℕ) [NeZero N] (hk : 3 ≤ k) (b : ℤ) (z : ℍ) 
   have hN : (N : ℤ) ≠ 0 := Nat.cast_ne_zero.2 (NeZero.ne N)
   have hs : Summable fun v : ℤ × ℤ => ((v.1 : ℂ) * (z : ℂ) + (v.2 : ℂ)) ^ (-(k : ℤ)) := by
     have := (EisensteinSeries.summable_norm_eisSummand (k := k) (by exact_mod_cast hk) z).of_norm
-    rw [← (finTwoArrowEquiv ℤ).symm.summable_iff] at this
-    exact this
+    rwa [← (finTwoArrowEquiv ℤ).symm.summable_iff] at this
   let g : ℤ × ℤ → {v : ℤ × ℤ // (v.1 : ZMod N) = 0 ∧ (v.2 : ZMod N) = (b : ZMod N)} :=
     fun c => ⟨(N * c.1, b + N * c.2), by simp⟩
   have hg : Function.Bijective g := by
@@ -392,11 +387,11 @@ private lemma expansion (N k : ℕ) [NeZero N] (hk : 3 ≤ k) (b : ℤ) (hb : (b
     refine (reindex N k hk b z).prod_fiberwise fun m => ?_
     by_cases hm : 0 ≤ m
     · lift m to ℕ using hm
-      simpa only [g, Nat.cast_nonneg, if_true, Int.toNat_natCast] using row N k hk2 b hb z m
+      simpa only [g, Nat.cast_nonneg, ite_true, Int.toNat_natCast] using row N k hk2 b hb z m
     · obtain ⟨m, rfl⟩ : ∃ m' : ℕ, m = -(m' : ℤ) := ⟨(-m).toNat, by omega⟩
       have h := (row N k hk2 (-b) (by simpa using hb) z m).mul_left ((-1) ^ k)
       rw [← (Equiv.neg ℤ).hasSum_iff] at h
-      simp only [g, if_neg hm, neg_neg, Int.toNat_natCast]
+      simp only [g, ite_eq_right hm, neg_neg, Int.toNat_natCast]
       rw [Int.cast_neg] at h
       refine (congrArg (fun F => HasSum F _) (funext fun j => ?_)).mpr (h)
       have : (((N * -(m : ℤ) : ℤ)) : ℂ) * (z : ℂ) + ((b + N * j : ℤ) : ℂ) =
@@ -412,11 +407,11 @@ private lemma expansion (N k : ℕ) [NeZero N] (hk : 3 ≤ k) (b : ℤ) (hb : (b
       simpa [g] using this
     · refine (congrArg (fun F => HasSum F _) (funext fun n => ?_)).mpr (hT1.mul_left ((-1) ^ k))
       have : ¬ (0 : ℤ) ≤ -((n : ℤ) + 1) := by omega
-      simp only [g, if_neg this, neg_neg]
+      simp only [g, ite_eq_right this, neg_neg]
       rfl
   rw [h1.unique h2, add_assoc, ← hasSum_nat_add_iff' 1]
-  simp only [Finset.range_one, Finset.sum_singleton, if_true, pow_zero, smul_eq_mul, mul_one, add_sub_cancel_left,
-    Nat.succ_ne_zero, if_false]
+  simp only [Finset.range_one, Finset.sum_singleton, ite_true, pow_zero, smul_eq_mul, mul_one, add_sub_cancel_left,
+    Nat.succ_ne_zero, ite_false]
   refine (congrArg (fun F => HasSum F _) (funext fun n => ?_)).mpr (hS2.add (hT2.mul_left ((-1) ^ k)))
   rw [← mul_assoc, ← add_mul, Finset.mul_sum, ← Finset.sum_add_distrib]
   congr 1
@@ -436,7 +431,7 @@ theorem UpperTheory.V.Sd.eisCoef :
     (fun τ => by rw [hf]; exact UpperTheory.V.Sd.expansion N k hk b ha τ)
   rw [hf] at h
   refine ⟨(h 0).symm, fun n hn => ?_⟩
-  rw [UpperTheory.V.Af.coef, ← h n, if_neg (by omega)]
+  rw [UpperTheory.V.Af.coef, ← h n, ite_eq_right (by omega)]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.IdeleGenerators.HolomorphicIrreducibility.EisCoef =====

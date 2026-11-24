@@ -111,13 +111,11 @@ theorem linearIndependent_values {Ω C E EC : Type} [Field Ω] [Field C] [AddCom
     intro i j
     have hexp : ∑ j, (∑ k, a i k * d k j) • c j = c i := by
       conv_rhs => rw [← ha i]
-      simp only [← hd, Finset.smul_sum, Finset.sum_smul, mul_smul]
-      exact Finset.sum_comm
+      simpa only [← hd, Finset.smul_sum, Finset.sum_smul, mul_smul] using Finset.sum_comm
     have hz : ∑ j, (((∑ k, a i k * d k j : A) : Ω) - if i = j then 1 else 0) • c j = 0 := by
       simp only [sub_smul, Finset.sum_sub_distrib, ite_smul, one_smul, zero_smul,
-        Finset.sum_ite_eq, Finset.mem_univ, if_true]
-      rw [sub_eq_zero]
-      exact hexp
+        Finset.sum_ite_eq, Finset.mem_univ, ite_true]
+      rwa [sub_eq_zero]
     have := Fintype.linearIndependent_iff.1 hc _ hz j
     apply Subtype.ext
     rw [sub_eq_zero] at this
@@ -128,8 +126,7 @@ theorem linearIndependent_values {Ω C E EC : Type} [Field Ω] [Field C] [AddCom
     obtain ⟨he, hev⟩ := hw i
     rw [← hev]
     have hmem : ∑ k : S, a i k • b k ∈ Submodule.span A (Set.range b) := by
-      rw [ha i]
-      exact he
+      rwa [ha i]
     rw [← hcomb (fun k : S => (k : Fin g)) (a i) hmem]
     congr 2
     exact (ha i).symm
@@ -138,8 +135,7 @@ theorem linearIndependent_values {Ω C E EC : Type} [Field Ω] [Field C] [AddCom
   have hk : ∀ k : S, ∑ i, l i * ρ (a i k) = 0 := by
     refine Fintype.linearIndependent_iff.1 hvS _ ?_
     rw [← hl]
-    simp only [hwexp, Finset.smul_sum, Finset.sum_smul, mul_smul]
-    exact Finset.sum_comm
+    simpa only [hwexp, Finset.smul_sum, Finset.sum_smul, mul_smul] using Finset.sum_comm
   calc l j = ∑ i, l i * ρ (∑ k, a i k * d k j) := by
         simp only [hdelta]
         simp [apply_ite ρ]

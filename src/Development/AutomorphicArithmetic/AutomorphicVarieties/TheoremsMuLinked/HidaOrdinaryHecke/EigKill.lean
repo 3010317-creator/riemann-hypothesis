@@ -62,8 +62,7 @@ theorem UpperTheory.V.Th.AnnihilatorQuotientFinite.eigKill :
   have hinj : ∀ z ∈ S, φ z = 0 → z = 0 := by
     intro z hz h0
     have hz0 : z ∈ φ.eigenspace 0 := by
-      rw [Module.End.mem_eigenspace_iff, zero_smul]
-      exact h0
+      rwa [Module.End.mem_eigenspace_iff, zero_smul]
     exact Submodule.disjoint_def.1 hdisj z hz0 hz
   have hpow : ∀ n : ℕ, ∀ z ∈ S, (φ ^ n) z = 0 → z = 0 := by
     intro n
@@ -78,8 +77,7 @@ theorem UpperTheory.V.Th.AnnihilatorQuotientFinite.eigKill :
   rw [iSup_split_single _ (0 : K)] at hF
   obtain ⟨y, hy, z, hz, rfl⟩ := Submodule.mem_sup.1 hF
   have hy' : φ y = 0 := by
-    rw [Module.End.mem_eigenspace_iff, zero_smul] at hy
-    exact hy
+    rwa [Module.End.mem_eigenspace_iff, zero_smul] at hy
   cases k with
   | zero =>
     have h0 : y + z = 0 := by simpa using hk

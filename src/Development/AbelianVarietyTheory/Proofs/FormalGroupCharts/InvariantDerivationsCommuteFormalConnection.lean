@@ -69,8 +69,7 @@ def vf (c : τ → MvPowerSeries τ k) (G : MvPowerSeries τ k) : MvPowerSeries 
 theorem vf_sum {ι : Type} (s : Finset ι) (c : τ → MvPowerSeries τ k) (f : ι → MvPowerSeries τ k) :
     vf c (∑ i ∈ s, f i) = ∑ i ∈ s, vf c (f i) := by
 
-  simp only [vf, map_sum, Finset.mul_sum]
-  exact Finset.sum_comm
+  simpa only [vf, map_sum, Finset.mul_sum] using Finset.sum_comm
 
 theorem vf_C (c : τ → MvPowerSeries τ k) (a : k) : vf c (C a) = 0 := by
   simp [vf]
@@ -110,8 +109,7 @@ theorem vf_vf (c c' : τ → MvPowerSeries τ k) (G : MvPowerSeries τ k) :
     rw [Derivation.leibniz, smul_eq_mul, smul_eq_mul]
     ring
   have hR : vf (fun t => vf c (c' t)) G = ∑ s, ∑ t, c s * pderiv s (c' t) * pderiv t G := by
-    simp only [vf, Finset.sum_mul]
-    exact Finset.sum_comm
+    simpa only [vf, Finset.sum_mul] using Finset.sum_comm
   rw [hL, hR, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun s _ => ?_
   rw [← Finset.sum_add_distrib]
@@ -178,9 +176,8 @@ theorem coeff_F_y (c i : Fin d) : coeff (Finsupp.single ((1 : Fin 2), i) 1) (G.F
   rw [h, coeff_X]
   by_cases hci : c = i
   · subst hci; simp
-  · rw [if_neg, if_neg hci]
-    intro he
-    exact hci (congrArg Prod.snd (Finsupp.single_left_injective one_ne_zero he)).symm
+  · rw [ite_eq_right, ite_eq_right hci]
+    exact fun he => hci (congrArg Prod.snd (Finsupp.single_left_injective one_ne_zero he)).symm
 
 theorem cc_jac' (c i : Fin d) : constantCoeff (Jac G c i) = if c = i then 1 else 0 := by
   rw [← coeff_zero_eq_constantCoeff_apply, Jac, coeff_ev_zero_right, Finsupp.embDomain_zero, coeff_pderiv]
@@ -214,7 +211,7 @@ theorem T_eq (b i j : Fin d) :
 
   simp only [d_F, map_sum, ev_sum cz1, Derivation.leibniz, smul_eq_mul, ev_add cz1, ev_mul cz1, ezF, d_y, ez_y,
   ez_Ar, ez_dF, C_cc_jac, ite_mul, one_mul, zero_mul, Finset.sum_add_distrib, Finset.sum_ite_eq',
-  Finset.mem_univ, if_true] at h
+  Finset.mem_univ, ite_true] at h
   have hs : ∑ c, Jac G c b * pderiv ((0 : Fin 1), c) (Jac G j i) =
       ∑ c, pderiv ((0 : Fin 1), c) (Jac G j i) * Jac G c b := Finset.sum_congr rfl fun c _ => mul_comm _ _
   rw [hs, h, add_comm]
@@ -324,8 +321,7 @@ def lawK (B : FB R d O) : FGLaw k d where
     exact h
 
 theorem invariantDerivations_commute_formal_connection : GE.DofCommSt := by
-  intro R _ d O _ _ k _ _ _ B u v g
-  exact dof_comm_law (lawK k B) u v g
+  exact fun R _ d O _ _ k _ _ _ B u v g => dof_comm_law (lawK k B) u v g
 
 end Transfer
 

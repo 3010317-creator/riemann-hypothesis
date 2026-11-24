@@ -65,8 +65,7 @@ private theorem exists_one_parameter_exp {E : Type} [Field E] [NumberField E] {a
   · simp only [hinv, hc]
     exact hv.comp continuous_neg
   · have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) Y 0
-    rw [zero_smul, NormedSpace.exp_zero, one_mul] at h
-    exact h
+    rwa [zero_smul, NormedSpace.exp_zero, one_mul] at h
 
 theorem UpperTheory.V.Lit.Bor.oneParam :
     UpperTheory.V.Lit.Bor.OneParam := by

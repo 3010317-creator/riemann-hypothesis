@@ -100,8 +100,7 @@ theorem inv_row (h2 : 2 * m ≤ n) (hG : GramShape m G) (hGW : G * W = 1) (a q :
         rw [Fin.val_rev] at h3
         omega
       rw [hz, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ a) h
+    · exact fun h => absurd (Finset.mem_univ a) h
   rw [hGW] at key
   rw [← key] at hne
   by_contra hcon
@@ -131,8 +130,7 @@ theorem inv_col (h2 : 2 * m ≤ n) (hG : GramShape m G) (hWG : W * G = 1) (a q :
           omega
         · exact hG.mid _ _ hbo hc hout
       rw [hz, mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ q) h
+    · exact fun h => absurd (Finset.mem_univ q) h
   rw [hWG] at key
   rw [← key] at hne
   by_contra hcon
@@ -188,8 +186,7 @@ private theorem col_lemma_2 {u v r : ℕ} {Q : Matrix (Fin u) (Fin u) ℂ} {Z : 
 private theorem conjTranspose_mul_mul_apply_eq_zero_of_mulVec {u v : ℕ} {K Q : Matrix (Fin u) (Fin u) ℂ} {Z : Matrix (Fin u) (Fin v) ℂ} (i : Fin u)
     (h : (Zᴴ * K) *ᵥ (fun k => Q k i) = 0) (j : Fin v) : (Zᴴ * K * Q) j i = 0 := by
   have h3 := congrFun h j
-  rw [Matrix.mul_apply]
-  exact h3
+  rwa [Matrix.mul_apply]
 
 theorem gramShape (hH : Hᴴ = H) (hxx : Xcᴴ * H * Xc = 0) (hyy : Ycᴴ * H * Yc = 0) (hxy : Xcᴴ * H * Yc = 1) (h2 : 2 * m ≤ n)
     (colX : ∀ (i : Fin n) (j : Fin m), i.val = j.val → ∀ k, P k i = Xc k j)
@@ -198,8 +195,7 @@ theorem gramShape (hH : Hᴴ = H) (hxx : Xcᴴ * H * Xc = 0) (hyy : Ycᴴ * H * 
     (perpY : ∀ i : Fin n, m ≤ i.val → i.val + m < n → (Ycᴴ * H) *ᵥ (fun k => P k i) = 0) :
     GramShape m (Pᴴ * H * P) := by
   have hyx : Ycᴴ * H * Xc = 1 := by
-    have h3 := congrArg Matrix.conjTranspose hxy
-    simpa [Matrix.conjTranspose_mul, hH, Matrix.mul_assoc] using h3
+    simpa [Matrix.conjTranspose_mul, hH, Matrix.mul_assoc] using congrArg Matrix.conjTranspose hxy
   have hGs : ∀ i b : Fin n, (Pᴴ * H * P) i b = star ((Pᴴ * H * P) b i) := by
     intro i b
     have hA : (Pᴴ * H * P)ᴴ = Pᴴ * H * P := by
@@ -216,39 +212,39 @@ theorem gramShape (hH : Hᴴ = H) (hxx : Xcᴴ * H * Xc = 0) (hyy : Ycᴴ * H * 
     · rw [conjTranspose_mul_mul_apply_eq_of_col_eq H P i ⟨i.val, hi⟩ (colX i ⟨i.val, hi⟩ rfl) b]
       by_cases hb1 : b.val < m
       · rw [col_lemma_2 (Xcᴴ * H) b ⟨b.val, hb1⟩ (colX b ⟨b.val, hb1⟩ rfl), hxx, Matrix.zero_apply,
-          if_neg (show ¬ (i.val + b.val + 1 = n) by omega)]
+          ite_eq_right (show ¬ (i.val + b.val + 1 = n) by omega)]
       · by_cases hb2 : n ≤ b.val + m
         · have hj : n - 1 - b.val < m := by omega
           rw [col_lemma_2 (Xcᴴ * H) b ⟨n - 1 - b.val, hj⟩
             (columnBlock b ⟨n - 1 - b.val, hj⟩ (show b.val + (n - 1 - b.val) + 1 = n by omega)), hxy, Matrix.one_apply]
           by_cases hc : i.val + b.val + 1 = n
-          · rw [if_pos hc, if_pos (Fin.ext (show i.val = n - 1 - b.val by omega))]
-          · rw [if_neg hc, if_neg (fun h => hc (by have h4 := Fin.mk.inj h; omega))]
-        · rw [conjTranspose_mul_mul_apply_eq_zero_of_mulVec b (perpX b (by omega) (by omega)), if_neg (show ¬ (i.val + b.val + 1 = n) by omega)]
+          · rw [ite_eq_left hc, ite_eq_left (Fin.ext (show i.val = n - 1 - b.val by omega))]
+          · rw [ite_eq_right hc, ite_eq_right (fun h => hc (by have h4 := Fin.mk.inj h; omega))]
+        · rw [conjTranspose_mul_mul_apply_eq_zero_of_mulVec b (perpX b (by omega) (by omega)), ite_eq_right (show ¬ (i.val + b.val + 1 = n) by omega)]
     · have hj : n - 1 - i.val < m := by omega
       rw [conjTranspose_mul_mul_apply_eq_of_col_eq H P i ⟨n - 1 - i.val, hj⟩
         (columnBlock i ⟨n - 1 - i.val, hj⟩ (show i.val + (n - 1 - i.val) + 1 = n by omega)) b]
       by_cases hb1 : b.val < m
       · rw [col_lemma_2 (Ycᴴ * H) b ⟨b.val, hb1⟩ (colX b ⟨b.val, hb1⟩ rfl), hyx, Matrix.one_apply]
         by_cases hc : i.val + b.val + 1 = n
-        · rw [if_pos hc, if_pos (Fin.ext (show n - 1 - i.val = b.val by omega))]
-        · rw [if_neg hc, if_neg (fun h => hc (by have h4 := Fin.mk.inj h; omega))]
+        · rw [ite_eq_left hc, ite_eq_left (Fin.ext (show n - 1 - i.val = b.val by omega))]
+        · rw [ite_eq_right hc, ite_eq_right (fun h => hc (by have h4 := Fin.mk.inj h; omega))]
       · by_cases hb2 : n ≤ b.val + m
         · have hj2 : n - 1 - b.val < m := by omega
           rw [col_lemma_2 (Ycᴴ * H) b ⟨n - 1 - b.val, hj2⟩
             (columnBlock b ⟨n - 1 - b.val, hj2⟩ (show b.val + (n - 1 - b.val) + 1 = n by omega)), hyy, Matrix.zero_apply,
-            if_neg (show ¬ (i.val + b.val + 1 = n) by omega)]
-        · rw [conjTranspose_mul_mul_apply_eq_zero_of_mulVec b (perpY b (by omega) (by omega)), if_neg (show ¬ (i.val + b.val + 1 = n) by omega)]
+            ite_eq_right (show ¬ (i.val + b.val + 1 = n) by omega)]
+        · rw [conjTranspose_mul_mul_apply_eq_zero_of_mulVec b (perpY b (by omega) (by omega)), ite_eq_right (show ¬ (i.val + b.val + 1 = n) by omega)]
   refine ⟨?_, ?_, ?_⟩
   · intro i b hi hne
     rw [hrow i b hi] at hne
     by_contra hc
-    exact hne (if_neg hc)
+    exact hne (ite_eq_right hc)
   · intro i b hi hne hb
     apply hne
-    rw [hGs i b, hrow b i hb, if_neg (show ¬ (b.val + i.val + 1 = n) by unfold Outer at hi hb; omega), star_zero]
+    rw [hGs i b, hrow b i hb, ite_eq_right (show ¬ (b.val + i.val + 1 = n) by unfold Outer at hi hb; omega), star_zero]
   · intro i b hi hc
-    rw [hrow i b hi, if_pos hc]
+    rw [hrow i b hi, ite_eq_left hc]
 
 private theorem valuation_single_one_le_one {u : ℕ} (A B : Matrix (Fin u) (Fin u) ℂ) (q p a b : Fin u) :
     (A * Matrix.single q p (1 : ℂ) * B : Matrix (Fin u) (Fin u) ℂ) a b = A a q * B p b := by
@@ -257,13 +253,11 @@ private theorem valuation_single_one_le_one {u : ℕ} (A B : Matrix (Fin u) (Fin
     · simp
     · intro y _ hy
       simp [Ne.symm hy]
-    · intro h
-      exact absurd (Finset.mem_univ q) h
+    · exact fun h => absurd (Finset.mem_univ q) h
   · intro x _ hx
     rw [Matrix.mul_apply]
     simp [Ne.symm hx]
-  · intro h
-    exact absurd (Finset.mem_univ p) h
+  · exact fun h => absurd (Finset.mem_univ p) h
 
 theorem conj_entry (H P : Matrix (Fin n) (Fin n) ℂ) (p q a b : Fin n) :
     (P⁻¹ * (-(H⁻¹ * (P * Matrix.single p q 1 * P⁻¹)ᴴ * H)) * P : Matrix (Fin n) (Fin n) ℂ) a b =
@@ -343,8 +337,7 @@ theorem conj_strict : ∀ (D : D7) (V : HSp D) (m : ℕ) (X Y : Matrix (Fin V.ra
     intro r Z i h
     funext j
     have h3 := congrArg (tauE D τ) (congrFun h j)
-    rw [RingHom.map_mulVec, Pi.zero_apply, map_zero, Matrix.map_mul, hcT] at h3
-    exact h3
+    rwa [RingHom.map_mulVec, Pi.zero_apply, map_zero, Matrix.map_mul, hcT] at h3
   have hGS := gramShape (H := gramAt D V τ) (P := C.1.map (tauE D τ)) (Xc := X.map (tauE D τ))
     (Yc := Y.map (tauE D τ)) hH hxx hyy hxy hA.le
     (fun i j h k => by simp only [Matrix.map_apply, hA.colX i j h k])

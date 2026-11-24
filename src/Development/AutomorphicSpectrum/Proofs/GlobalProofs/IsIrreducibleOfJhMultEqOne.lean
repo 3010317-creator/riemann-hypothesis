@@ -109,8 +109,7 @@ theorem two_le_jhMult {s N : ℕ} {d : Fin s → ℕ} (e : (Σ a, Fin (d a)) ≃
   have h4 : jhMult τ (jac e (subQuot ⊤ S)) ≠ 0 := jhMult_ne_zero_iff.2 h2
   rw [hadd]
   have h5 := ENat.one_le_iff_ne_zero.2 h3
-  have h6 := ENat.one_le_iff_ne_zero.2 h4
-  exact (by norm_num : (2 : ℕ∞) = 1 + 1).le.trans (add_le_add h5 h6)
+  exact (by norm_num : (2 : ℕ∞) = 1 + 1).le.trans (add_le_add h5 (ENat.one_le_iff_ne_zero.2 h4))
 
 theorem isIrreducible_of_jhMult_eq_one {s N : ℕ} {d : Fin s → ℕ} (e : (Σ a, Fin (d a)) ≃ Fin N)
     {B : Representation ℂ (GL (Fin N) k) V} (hB : IsSmooth B)
@@ -133,8 +132,7 @@ theorem isIrreducible_of_jhMult_eq_one {s N : ℕ} {d : Fin s → ℕ} (e : (Σ 
     have : x ∈ (⊤ : Subrepresentation B).toSubmodule := trivial
     rw [← h] at this
     exact hx this
-  by_contra hS
-  push_neg at hS
+  by_contra! hS
   obtain ⟨hS0, hS1⟩ := hS
   have n1 : Nontrivial S.toSubmodule := by
     by_contra hn
@@ -198,8 +196,7 @@ theorem occurs_of_embedding (hG : GeometricLemma) (hBZ : BernsteinZelevinskyFini
     obtain ⟨v, hv⟩ := exists_ne (0 : Q.V)
     have h1 : φ v ≠ 0 := fun h => hv (hφ (by rw [h, map_zero]))
     obtain ⟨g, hg⟩ : ∃ g, (φ v).1.1 g ≠ 0 := by
-      by_contra hn
-      push_neg at hn
+      by_contra! hn
       exact h1 (Subtype.ext (Subtype.ext (funext hn)))
     refine ⟨Submodule.Quotient.mk (Q.π g v), fun h => hg ?_⟩
     have h2 : (φ (Q.π g v)).1.1 1 = 0 := h
@@ -262,8 +259,7 @@ theorem occurs_of_prod₂ (hG : GeometricLemma) (hBZ : BernsteinZelevinskyFinite
   intro i
   refine Fin.cases ?_ (fun j => ?_) i
   · exact hF₀
-  · refine Fin.cases ?_ (fun l => l.elim0) j
-    exact hF₁
+  · exact Fin.cases hF₁ (fun l => l.elim0) j
 
 theorem isIrreducible_multiProd_of_prod₂ {n : Type} [Fintype n] [DecidableEq n] (d : Fin 2 → ℕ)
     (σ : ∀ i, Irr k (d i)) (h2 : (prod₂ (σ 0).π (σ 1).π).IsIrreducible) (e : (Σ i, Fin (d i)) ≃ n) :

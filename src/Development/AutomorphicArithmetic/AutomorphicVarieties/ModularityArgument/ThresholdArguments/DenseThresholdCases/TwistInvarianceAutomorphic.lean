@@ -107,11 +107,9 @@ private theorem chiInf_pos {χ : HChar E} {n : (E →+* ℂ) → ℤ} (h : IsAlg
   rintro _ ⟨hk, k, rfl⟩
   have h1 := h k fun φ => by
     have h2 := hk (InfinitePlace.mk (Complex.ofRealHom.comp φ))
-    have h3 := diagR_mk (Complex.ofRealHom.comp φ) (k : E)
-    exact h2.trans_eq (Complex.ofReal_injective h3)
+    exact h2.trans_eq (Complex.ofReal_injective (diagR_mk (Complex.ofRealHom.comp φ) (k : E)))
   rw [HChar.inf, MonoidHom.comp_apply, infDiag_eqR] at h1
-  refine h1.trans (Finset.prod_congr rfl fun φ _ => ?_)
-  exact congrArg (· ^ n φ) (diagR_mk φ (k : E)).symm
+  exact h1.trans (Finset.prod_congr rfl fun φ _ => (congrArg (· ^ n φ) (diagR_mk φ (k : E)).symm))
 private theorem expo_intR {χ : HChar E} {n : (E →+* ℂ) → ℤ} (h : IsAlgPos χ n) (v : InfinitePlace E) :
     ∃ k : ℤ, TR.expo χ v = k := by
   classical

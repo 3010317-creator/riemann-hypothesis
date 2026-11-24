@@ -102,8 +102,7 @@ theorem exists_local_factor {B S D : Type*} [CommRing B] [HenselianLocalRing B] 
     rw [← H _ hm, ← one_sub_mem_iff_notMem_of_isIdempotentElem he, Ideal.mem_comap,
       Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.mem_span_singleton_self _)]
     exact zero_mem _
-  rw [← notMem_maximalIdeal, ← Ideal.mem_comap, h, Ideal.mem_comap, notMem_maximalIdeal]
-  exact hr
+  rwa [← notMem_maximalIdeal, ← Ideal.mem_comap, h, Ideal.mem_comap, notMem_maximalIdeal]
 
 theorem bijective_of_complete_quotient {T C A R : Type*} [CommRing T] [IsLocalRing T]
     [IsNoetherianRing T] [CommRing C] [Algebra T C] [CommRing A] [IsLocalRing A]
@@ -153,8 +152,7 @@ theorem bijective_of_complete_quotient {T C A R : Type*} [CommRing T] [IsLocalRi
       rw [Ideal.mem_comap, RingHom.comp_apply, RingHom.comp_apply,
         Algebra.TensorProduct.includeLeftRingHom_apply, hT, ← hβ]
       apply hβm
-      rw [IsLocalization.AtPrime.to_map_mem_maximal_iff A 𝔫, ← Ideal.mem_comap, h𝔫]
-      exact ht
+      rwa [IsLocalization.AtPrime.to_map_mem_maximal_iff A 𝔫, ← Ideal.mem_comap, h𝔫]
     · refine RingHom.ext fun t => ?_
       simp only [RingHom.comp_apply, Algebra.TensorProduct.includeLeftRingHom_apply, hT, hC]
   have h₂ : ∀ x, χ (ψ (π x)) = π x := by
@@ -179,8 +177,7 @@ theorem exists_ringEquiv_completion_prod : ∀ (T C A : Type) [CommRing T] [IsLo
     intro t ht
     rw [Ideal.mem_comap, AdicCompletion.maximalIdeal_eq_map]
     refine Ideal.mem_map_of_mem _ (?_ : algebraMap C A (algebraMap T C t) ∈ maximalIdeal A)
-    rw [IsLocalization.AtPrime.to_map_mem_maximal_iff A 𝔫, ← Ideal.mem_comap, h𝔫]
-    exact ht
+    rwa [IsLocalization.AtPrime.to_map_mem_maximal_iff A 𝔫, ← Ideal.mem_comap, h𝔫]
   obtain ⟨α, hα, -⟩ := exists_extend_adicCompletion (g.comp (algebraMap T C)) (maximalIdeal T)
     (maximalIdeal _) (k := 1) (by rw [pow_one, Ideal.map_le_iff_le_comap]; exact hg)
   obtain ⟨φ, hφa, hφc⟩ : ∃ φ : (AdicCompletion (maximalIdeal T) T ⊗[T] C) →+*

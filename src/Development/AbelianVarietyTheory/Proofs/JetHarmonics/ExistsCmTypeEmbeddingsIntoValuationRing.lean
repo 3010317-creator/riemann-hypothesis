@@ -81,8 +81,7 @@ theorem exists_types_valuationRing : ∀ (E : Type) [Field E] [NumberField E] [I
     · intro h
       have h1 : embK c τ a = embK c τ' a := by
         apply Subtype.ext
-        rw [embK_coe, embK_coe]
-        exact h
+        rwa [embK_coe, embK_coe]
       have h2 : σV τ a = σV τ' a := hinj (by rw [hσV', hσV', h1])
       rw [h2]
     · intro h
@@ -91,8 +90,7 @@ theorem exists_types_valuationRing : ∀ (E : Type) [Field E] [NumberField E] [I
       exact congrArg (fun z : c.F => (z : ℂ)) h1
   refine ⟨σV, hσV', hT, ?_, fun τ τ' => key τ τ' H.rt, fun τ a => ?_⟩
   · intro τ τ' h
-    refine IsFractionRing.ringHom_ext (A := 𝓞 E) fun a => ?_
-    exact (key τ τ' a).2 (RingHom.congr_fun h a)
+    exact IsFractionRing.ringHom_ext (A := 𝓞 E) fun a => (key τ τ' a).2 (RingHom.congr_fun h a)
   · have h : embK c (ComplexEmbedding.conjugate τ) a = embK c τ (H.bar a) := by
       apply Subtype.ext
       rw [embK_coe, embK_coe, ComplexEmbedding.conjugate_coe_eq, H.bar_eq,

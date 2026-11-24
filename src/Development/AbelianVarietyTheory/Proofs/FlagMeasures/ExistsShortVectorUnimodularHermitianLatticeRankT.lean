@@ -122,8 +122,7 @@ theorem posDef_map {K : Type} [Field K] [StarRing K] {n : ℕ} (σ : K →+* ℂ
   have hk : G.map σ *ᵥ w = 0 := (hpsdM.dotProduct_mulVec_zero_iff).1 h0.symm
   have hdet : (G.map σ).det = 0 := Matrix.exists_mulVec_eq_zero_iff.1 ⟨w, hw, hk⟩
   have hdσ : σ G.det = 0 := by
-    rw [RingHom.map_det]
-    exact hdet
+    rwa [RingHom.map_det]
   obtain ⟨y, hy, hGy⟩ := Matrix.exists_mulVec_eq_zero_iff.2 ((map_eq_zero σ).1 hdσ)
   have := h y hy
   simp [hGy] at this
@@ -344,8 +343,7 @@ theorem exists_short_vector : ∀ (E : Type) [Field E] [NumberField E] [StarRing
     rw [hspan, finrank_top, Module.finrank_fin_fun]
   obtain ⟨v, hv⟩ : ∃ v : Fin 2 → (Fin 2 → E), IsFrame E Λ v := by
     have := exists_isFrame (K := E) Λ hfg
-    rw [hrank] at this
-    exact this
+    rwa [hrank] at this
   set f := InfinitePlace.nrComplexPlaces E with hfdef
   have hfin : Module.finrank ℚ E = 2 * f := IsTotallyComplex.finrank E
   have hf : 0 < f := by
@@ -469,7 +467,6 @@ theorem exists_short_vector : ∀ (E : Type) [Field E] [NumberField E] [StarRing
     exact hy0 (map_zero _)
   refine ⟨x, hxS.1, hx0, fun φ => ?_⟩
   have h3 : Real.sqrt (h.form φ x x).re ≤ R := hxS.2 φ
-  rw [Real.sqrt_le_left hR0.le, hR2] at h3
-  exact h3
+  rwa [Real.sqrt_le_left hR0.le, hR2] at h3
 
 end GlobalTheory.ShortVec

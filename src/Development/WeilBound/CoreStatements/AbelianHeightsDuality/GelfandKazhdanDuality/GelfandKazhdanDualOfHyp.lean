@@ -172,8 +172,7 @@ theorem lieS_dual (i j : Fin a) (x : Cinf E) (φ : Sm E a) :
     rw [Matrix.transpose_single]
     rfl
   change lie E a _ _ = dual E a (lie E a (toL (-(Matrix.of (toL (Matrix.single i j x)))ᵀ)) φ) at h
-  rw [e, map_neg, LinearMap.neg_apply, map_neg] at h
-  exact h
+  rwa [e, map_neg, LinearMap.neg_apply, map_neg] at h
 
 theorem Eop_dual (τ : E →+* ℂ) (i j : Fin a) (φ : Sm E a) :
     Eop τ i j (dual E a φ) = dual E a ((-Eop (ComplexEmbedding.conjugate τ) j i) φ) := by
@@ -280,8 +279,7 @@ theorem isAutForm_dual {φ : Sm E a} (h : IsAutForm φ) : IsAutForm (dual E a φ
       rw [dual_apply, map_mul, GlobalTheory.CompanionTheory.DualAct.invT_infGL]
     have h2 := h1 (invT a (Cinf E) y)
     rw [height_invT] at h2
-    rw [e, norm_star]
-    exact h2
+    rwa [e, norm_star]
 
 
 omit [_root_.NumberField.IsTotallyComplex E] in

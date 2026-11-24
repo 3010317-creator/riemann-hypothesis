@@ -168,8 +168,7 @@ theorem crd_Dcris (hρ : ∀ g x, ρ g x = x) {ι : Type} [Fintype ι] (b : Basi
   intro g
   have hg : actVB PD ρ g x = x := by
     have := (Submodule.mem_iInf _).1 hx g
-    rw [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.id_apply, sub_eq_zero] at this
-    exact this
+    rwa [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.id_apply, sub_eq_zero] at this
   rw [← actVB_triv PD hρ g x b i, hg]
 
 theorem crd_DdR (hρ : ∀ g x, ρ g x = x) {ι : Type} [Fintype ι] (b : Basis ι Qp V) {x : V ⊗[Qp] BdR}
@@ -178,8 +177,7 @@ theorem crd_DdR (hρ : ∀ g x, ρ g x = x) {ι : Type} [Fintype ι] (b : Basis 
   intro g
   have hg : actVdR PD ρ g x = x := by
     have := (Submodule.mem_iInf _).1 hx g
-    rw [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.id_apply, sub_eq_zero] at this
-    exact this
+    rwa [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.id_apply, sub_eq_zero] at this
   rw [← actVdR_triv PD hρ g x b i, hg]
 
 end Period
@@ -354,8 +352,7 @@ theorem hodgeExact_at (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l 
     exact (GlobalTheory.TrivCrys.triv_crys_jump_zero l P AI hT K LL T.V T.ρ hT').2 τ a hj
 
 theorem hodge_crystalline_sequences : ∀ D : D7, Formalism.MainNotions.WachCoordinates.adm14 D := by
-  intro D l _ K LL
-  exact hodgeExact_at l (D.loc l) (D.locA l) (D.locT l) K LL
+  exact fun D l _ K LL => hodgeExact_at l (D.loc l) (D.locA l) (D.locT l) K LL
 
 end GlobalTheory.HodgeCrysSeq
 end -- clump:auto

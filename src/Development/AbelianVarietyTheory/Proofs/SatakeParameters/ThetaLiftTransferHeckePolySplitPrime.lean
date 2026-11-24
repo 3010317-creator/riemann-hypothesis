@@ -71,8 +71,7 @@ theorem locK_eq_val {L : Type} [Field L] [NumberField L] (χ : HChar L) (Q : Hei
     show Valued.v _ = _
     rw [Units.val_mul, Units.val_inv_eq_inv_val, map_mul, map_inv₀, h1, h2, mul_inv_cancel₀ WithZero.exp_ne_zero]
   have h4 := hu _ h3
-  rw [map_mul, map_inv, mul_inv_eq_one] at h4
-  exact h4
+  rwa [map_mul, map_inv, mul_inv_eq_one] at h4
 
 theorem exists_unif {L : Type} [Field L] [NumberField L] (Q : HeightOneSpectrum (𝓞 L)) :
     ∃ ϖ : 𝓞 L, ϖ ∈ Q.asIdeal ∧ ϖ ∉ Q.asIdeal ^ 2 ∧ Q.valuation L (ϖ : L) = WithZero.exp (-1 : ℤ) := by
@@ -87,11 +86,11 @@ theorem poly_id (q r t : ℕ) (u v : ℂ) (a : ℕ → ℂ) :
       (if j ≤ k then (q : ℂ) ^ ((r - j) * (k - j)) * (gaussBin q t (k - j) : ℂ) * u⁻¹ ^ k * v ^ j else 0) * a j) =
     (heckePolyOf r q a).comp (C (u⁻¹ * v) * X) * blockPoly (u⁻¹ * (q : ℂ) ^ r) q t := by
   have key := GlobalTheory.KerRangeCount.card_ker_and_heckePolyOf_conv.2 ℂ q r t (fun j => if j ≤ r then a j else 0) u⁻¹ (u⁻¹ * v)
-    (fun j hj => if_neg (by omega))
+    (fun j hj => ite_eq_right (by omega))
   have h1 : heckePolyOf r q (fun j => if j ≤ r then a j else 0) = heckePolyOf r q a := by
     unfold heckePolyOf
     refine Finset.sum_congr rfl fun j hj => ?_
-    simp only [if_pos (show j ≤ r by simpa [Nat.lt_succ_iff] using hj)]
+    simp only [ite_eq_left (show j ≤ r by simpa [Nat.lt_succ_iff] using hj)]
   rw [h1] at key
   rw [← key]
   congr 1
@@ -113,8 +112,7 @@ theorem not_isConjPl {P : Pl D.host.E} (h : conjPl P ≠ P) : ¬ Formalism.Indef
   refine Ideal.map_le_iff_le_comap.2 fun c hcP => ?_
   obtain ⟨c', hc', he⟩ := hc c hcP
   have : Formalism.DivisionValues.cO D.host.E c = c' := RingOfIntegers.ext he.symm
-  rw [Ideal.mem_comap, this]
-  exact hc'
+  rwa [Ideal.mem_comap, this]
 
 theorem unrPl_mul_inv {P : Pl D.host.E} {a b : (AE D)ˣ →* Circle} (ha : UnrPl P a) (hb : UnrPl P b) : UnrPl P (a * b⁻¹) := by
   intro e f h x h1 h2 h3

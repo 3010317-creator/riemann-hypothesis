@@ -534,7 +534,7 @@ theorem normSq_eq [_root_.NumberField.IsTotallyComplex K] (h2 : Module.finrank �
   haveI : Subsingleton (InfinitePlace K) := ⟨place_unique h2⟩
   have hprod := InfinitePlace.prod_eq_abs_norm (x : K)
   rw [Fintype.prod_subsingleton _ (InfinitePlace.mk φ), InfinitePlace.apply,
-    InfinitePlace.mult, if_neg (InfinitePlace.not_isReal_iff_isComplex.2
+    InfinitePlace.mult, ite_eq_right (InfinitePlace.not_isReal_iff_isComplex.2
       (IsTotallyComplex.isComplex _))] at hprod
   rw [hprod, Ideal.absNorm_span_singleton, Nat.cast_natAbs, Int.cast_abs,
     ← Algebra.coe_norm_int]
@@ -799,8 +799,7 @@ theorem exists_equiv (f₁ f₂ e₁ e₂ : ℂ) (hf : ((starRingEnd ℂ) f₁ *
   have key := Equiv.apply_ofInjective_symm (comb_injective e₁ e₂ he)
     (Set.equivOfEq hr (Equiv.ofInjective _ (comb_injective f₁ f₂ hf) v))
   simp only [Set.equivOfEq_apply, Equiv.ofInjective_apply] at key
-  simp only [Equiv.trans_apply, Set.equivOfEq_apply, Equiv.ofInjective_apply]
-  exact key.symm
+  simpa only [Equiv.trans_apply, Set.equivOfEq_apply, Equiv.ofInjective_apply] using key.symm
 
 variable {K : Type} [Field K] [NumberField K]
 
@@ -818,8 +817,7 @@ theorem unit_eq_one [_root_.NumberField.IsTotallyComplex K] (h2 : Module.finrank
   have ht1 : 1 ≤ ‖φ ((t : 𝓞 K) : K)‖ ^ 2 := by
     rw [normSq_eq h2 φ t]
     have : Ideal.absNorm (Ideal.span {t}) ≠ 0 := by
-      rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-      exact ht0
+      rwa [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
     exact_mod_cast Nat.one_le_iff_ne_zero.mpr this
   have he : φ ((u : 𝓞 K) : K) - 1 = φ ((t : 𝓞 K) : K) * M := by
     have := congrArg (fun z : 𝓞 K => φ (z : K)) ht
@@ -941,8 +939,7 @@ theorem aRay_eq_ncard_qForm : ∀ (K : Type) [Field K] [NumberField K] (d M : �
   set e₁ : ℂ := φ (((e 0 : 𝓞 K)) : K) with he₁
   set e₂ : ℂ := φ (((e 1 : 𝓞 K)) : K) with he₂
   have hBn0 : Ideal.absNorm B ≠ 0 := by
-    rw [Ne, Ideal.absNorm_eq_zero_iff]
-    exact hB0
+    rwa [Ne, Ideal.absNorm_eq_zero_iff]
   set Nr : ℝ := (Ideal.absNorm B : ℝ) with hNr
   have hNrpos : 0 < Nr := by
     rw [hNr]
@@ -996,8 +993,7 @@ theorem aRay_eq_ncard_qForm : ∀ (K : Type) [Field K] [NumberField K] (d M : �
     have hdvd := Ideal.absNorm_dvd_absNorm_of_le
       ((Ideal.span_singleton_le_iff_mem _).mpr hyB)
     have hne : Ideal.absNorm (Ideal.span {y}) ≠ 0 := by
-      rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-      exact hy0
+      rwa [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
     have hle := Nat.le_of_dvd (Nat.pos_of_ne_zero hne) hdvd
     rw [map_mul, hNnorm] at hle
     rw [← hyf, normSq_eq h2 φ y, hNr]
@@ -1285,8 +1281,7 @@ theorem theta_qForm : ∀ α γ l θ₁ θ₂ t : ℝ, 0 < α → 0 < γ → 0 <
     rw [div_div, div_mul_div_comm, div_mul_div_comm]
     congr 1
     linear_combination -t ^ 2 * hs
-  rw [e1, e2]
-  exact h
+  rwa [e1, e2]
 
 end GlobalTheory.Hk
 end -- clump:auto
@@ -1363,15 +1358,13 @@ theorem rayCountTheta : ∀ (K : Type) [Field K] [NumberField K] (d M : ℕ) (x 
   · have h94 := _root_.GlobalTheory.Hk.qForm_count α γ l θ₁ θ₂ y hα hγ hy
     have hsum : ∑ n ∈ Finset.Icc 1 ⌊y⌋₊, aRay D g n =
         (({v : ℤ × ℤ | qForm α γ l θ₁ θ₂ v ≤ y}.ncard : ℕ) : ℝ) := by
-      simp only [ha]
-      exact rayCountTheta_fibre_count (qForm α γ l θ₁ θ₂) q hq1 hq y hy h94.1
+      simpa only [ha] using rayCountTheta_fibre_count (qForm α γ l θ₁ θ₂) q hq1 hq y hy h94.1
     rw [hsum, ← hC]
     exact h94.2
   · have h96 := _root_.GlobalTheory.Hk.theta_qForm α γ l θ₁ θ₂ t (by linarith) (by linarith) ht0
     have htsum : ∑' n : ℕ, aRay D g n * Real.exp (-(t * n)) =
         ∑' v : ℤ × ℤ, Real.exp (-(t * qForm α γ l θ₁ θ₂ v)) := by
-      simp only [ha]
-      exact rayCountTheta_fibre_tsum (qForm α γ l θ₁ θ₂) q hq t h96.1
+      simpa only [ha] using rayCountTheta_fibre_tsum (qForm α γ l θ₁ θ₂) q hq t h96.1
     rw [htsum, ← hC]
     refine le_trans h96.2 ?_
     have hA : α ≤ α * γ := le_mul_of_one_le_right (by linarith) hγ

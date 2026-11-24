@@ -81,22 +81,21 @@ theorem evalV_indA_of_mem {s : Finset (HeightOneSpectrum (𝓞 F))} {v : HeightO
     evalV F v (indA F s) = 1 := by
   classical
   show ((if v ∈ s then (1 : v.adicCompletionIntegers F) else 0 : v.adicCompletionIntegers F) : v.adicCompletion F) = 1
-  rw [if_pos h]
+  rw [ite_eq_left h]
   rfl
 
 theorem evalV_indA_of_notMem {s : Finset (HeightOneSpectrum (𝓞 F))} {v : HeightOneSpectrum (𝓞 F)} (h : v ∉ s) :
     evalV F v (indA F s) = 0 := by
   classical
   show ((if v ∈ s then (1 : v.adicCompletionIntegers F) else 0 : v.adicCompletionIntegers F) : v.adicCompletion F) = 0
-  rw [if_neg h]
+  rw [ite_eq_right h]
   rfl
 
 theorem af_ext {a b : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F} (h : ∀ v, evalV F v a = evalV F v b) : a = b := Subtype.ext (funext fun v => h v)
 
 theorem indA_mem (s : Finset (HeightOneSpectrum (𝓞 F))) : indA F s ∈ Formalism.UG.intAd F := by
   classical
-  refine fun v => ?_
-  exact (if v ∈ s then (1 : v.adicCompletionIntegers F) else 0).2
+  exact fun v => (if v ∈ s then (1 : v.adicCompletionIntegers F) else 0).2
 
 theorem indA_mul_self (s : Finset (HeightOneSpectrum (𝓞 F))) : indA F s * indA F s = indA F s := by
   apply af_ext F
@@ -145,7 +144,7 @@ theorem tendsto_indA : Tendsto (indA F) atTop (𝓝 1) := by
     intro v
     apply tendsto_const_nhds.congr'
     filter_upwards [Filter.eventually_ge_atTop {v}] with s hs
-    rw [if_pos (hs (Finset.mem_singleton_self v))]
+    rw [ite_eq_left (hs (Finset.mem_singleton_self v))]
   have h2 := ((continuous_intFam F).tendsto _).comp hp
   rw [h1] at h2
   convert h2 using 1
@@ -317,7 +316,6 @@ private theorem infComponent_idemE_eq_zero (s : Finset (HeightOneSpectrum (𝓞 
   show (Algebra.TensorProduct.map (fstA D.host.F) (AlgHom.id D.host.F D.host.E))
     ((pairA D.host.F 0 (indA D.host.F s)) ⊗ₜ[D.host.F] (1 : D.host.E)) = 0
   rw [Algebra.TensorProduct.map_tmul]
-  show (0 : Ainf D.host.F) ⊗ₜ[D.host.F] _ = 0
   exact TensorProduct.zero_tmul _ _
 
 theorem cutAt_mem_GfC (V : HSp D) (g : GA D V) (s : Finset (HeightOneSpectrum (𝓞 D.host.F))) :
@@ -375,8 +373,7 @@ theorem tendsto_cutAt (V : HSp D) {g : GA D V} (hg : g ∈ GfC V) : Tendsto (cut
     intro h hh
     have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
     have := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
-    simp only [mt_cutAt]
-    exact tendsto_mix tendsto_idemE _ (one_fin_supp V hh)
+    simpa only [mt_cutAt] using tendsto_mix tendsto_idemE _ (one_fin_supp V hh)
   have hinv : ∀ s, (cutAt V g s)⁻¹ = cutAt V g⁻¹ s := by
     intro s
     rw [inv_eq_iff_mul_eq_one]
@@ -390,8 +387,7 @@ theorem tendsto_cutAt (V : HSp D) {g : GA D V} (hg : g ∈ GfC V) : Tendsto (cut
   rw [hind.tendsto_nhds_iff]
   refine Tendsto.prodMk_nhds (key g hg) ?_
   refine (MulOpposite.continuous_op.tendsto _).comp ?_
-  simp only [hinv]
-  exact key g⁻¹ (inv_mem hg)
+  simpa only [hinv] using key g⁻¹ (inv_mem hg)
 
 theorem exists_local_approx : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)), ∀ g ∈ GfC V, finE V g ∈ St β → ∃ γ : Finset (HeightOneSpectrum (𝓞 D.host.F)) → GA D V, Filter.Tendsto γ Filter.atTop (nhds g) ∧ ∀ s, γ s ∈ Subgroup.closure {k : GA D V | k ∈ GfC V ∧ finE V k ∈ St β ∧ ∃ v ε, IsPlaceIdem D v ε ∧ SuppPl ε V k} ∧ ∀ v ∈ s, ∀ ε, IsPlaceIdem D v ε → ∀ i j, algebraMap (AF D.host.F) (AE D) ε * Formalism.L2.Theta.mt V (γ s) i j = algebraMap (AF D.host.F) (AE D) ε * Formalism.L2.Theta.mt V g i j := by
   intro D V β g hg hst

@@ -159,11 +159,11 @@ theorem tri_M {p q : ℕ} {M M' : Matrix (Fin p) (Fin (p + q)) ℂ} {g g' T : Ma
     simp only [hM', mul_ite, mul_one, mul_zero]
     by_cases hc : (c : ℕ) < q
     · rw [hT (show c < ι a from by show (c : ℕ) < q + a; omega)]
-      exact (Finset.sum_eq_zero fun b _ => if_neg (by omega)).symm
+      exact (Finset.sum_eq_zero fun b _ => ite_eq_right (by omega)).symm
     · let b : Fin p := ⟨c - q, by have := c.2; omega⟩
       have hb : c = ι b := Fin.ext (by show (c : ℕ) = q + (c - q); omega)
-      rw [Finset.sum_eq_single b (fun b' _ hb' => if_neg fun h => hb' (Fin.ext (by show (b' : ℕ) = c - q; omega)))
-        (fun h => absurd (Finset.mem_univ _) h), if_pos (by show (c : ℕ) = q + (c - q); omega)]
+      rw [Finset.sum_eq_single b (fun b' _ hb' => ite_eq_right fun h => hb' (Fin.ext (by show (b' : ℕ) = c - q; omega)))
+        (fun h => absurd (Finset.mem_univ _) h), ite_eq_left (by show (c : ℕ) = q + (c - q); omega)]
       show T (ι a) c = T (ι a) (ι b)
       rw [← hb]
   have := congrArg (· * g'⁻¹) key
@@ -185,7 +185,7 @@ theorem tri_Q {p q : ℕ} {Q Q' : Matrix (Fin q) (Fin (p + q)) ℂ} {L L' : Matr
       perMat Q L a (ι i) = (sigForm (p + q) p a : ℂ) * Q i a := fun Q L a i => by
     have hi := i.2
     have h1 : ((ι i : Fin (p + q)) : ℕ) < q := by show q - 1 - (i : ℕ) < q; omega
-    simp only [perMat, Matrix.of_apply, dif_pos h1]
+    simp only [perMat, Matrix.of_apply, dite_eq_left h1]
     congr 2
     exact Fin.ext (by show q - 1 - (q - 1 - (i : ℕ)) = i; omega)
   have hinj : Function.Injective ι := fun a b h => by
@@ -275,19 +275,15 @@ theorem perMat_of : PerCoord → MatStep → PerMat := by
     have hk : ∀ τ j, k (x τ j t') = ∑ i, U τ i j • x τ i t := fun τ j => by
       have h := B.constr_basis ℂ (Sum.elim (fun a : Ψ × Fin p => ∑ i, U a.1 i a.2 • x a.1 i t)
         fun a : Ψ × Fin q => ∑ i, U' a.1 i a.2 • x' a.1 i t) (.inl (τ, j))
-      rw [Module.Basis.mk_apply] at h
-      exact h
+      rwa [Module.Basis.mk_apply] at h
     have hk' : ∀ τ j, k (x' τ j t') = ∑ i, U' τ i j • x' τ i t := fun τ j => by
       have h := B.constr_basis ℂ (Sum.elim (fun a : Ψ × Fin p => ∑ i, U a.1 i a.2 • x a.1 i t)
         fun a : Ψ × Fin q => ∑ i, U' a.1 i a.2 • x' a.1 i t) (.inr (τ, j))
-      rw [Module.Basis.mk_apply] at h
-      exact h
+      rwa [Module.Basis.mk_apply] at h
     have hf : ∀ τ m, flagStep ℂ (fun i => k (x τ i t')) m = flagStep ℂ (fun i => x τ i t) m := fun τ m => by
-      simp only [hk]
-      exact flagStep_eq _ _ (hU τ) (hUd τ) m
+      simpa only [hk] using flagStep_eq _ _ (hU τ) (hUd τ) m
     have hf' : ∀ τ m, flagStep ℂ (fun i => k (x' τ i t')) m = flagStep ℂ (fun i => x' τ i t) m := fun τ m => by
-      simp only [hk']
-      exact flagStep_eq _ _ (hU' τ) (hUd' τ) m
+      simpa only [hk'] using flagStep_eq _ _ (hU' τ) (hUd' τ) m
     have hsurj : Function.Surjective k := by
       rw [← LinearMap.range_eq_top, eq_top_iff, ← (hall t ht.1).2.2.2, Submodule.span_le]
       have hr : ∀ {m : ℕ} (y : Fin m → Fin g → ℂ), flagStep ℂ (fun i => k (y i)) m ≤ LinearMap.range k := fun y =>

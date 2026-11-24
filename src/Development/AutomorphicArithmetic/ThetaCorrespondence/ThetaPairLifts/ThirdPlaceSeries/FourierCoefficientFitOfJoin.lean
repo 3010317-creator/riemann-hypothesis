@@ -861,7 +861,7 @@ theorem ker_mulVecLin_eq_U_of_formulaAt {p : PtAt ex Csz} (hp : p.PointCondition
     obtain ⟨i, hi⟩ : ∃ i, psiK a.ch i (p.R.Th p.P.A3.fam3.base3.μ0
         (p.R.jX p.P.A3.fam3.base3.μ0 (eV0 p p.P.A3.fam3.base3.μ0 y))) ≠ 0 := by
       by_contra hall
-      push_neg at hall
+      push Not at hall
       exact hne (hI _ hall)
     exact FormulaAt.ne_zero ⟨hz, hf⟩ hc (_root_.GlobalTheory.BigTop.Fun.eV0_mem_goodF_alt p hp _ y) hi
   ext y
@@ -1094,8 +1094,7 @@ theorem GlobalTheory.BigTop.Fun.oneSq_of_log_derivative_bound_thA (hS : _root_.G
   · have h := (key w ij).2
     have hd2 : 2 * GlobalTheory.FunObj.SqNum.halfRank D ij.1 ij.2 = d.O.dd ij := by
       rw [E' ij]; exact (hev ij).symm
-    rw [hd2, E' ij] at h
-    exact h
+    rwa [hd2, E' ij] at h
 end
 end
 end -- clump:auto
@@ -1172,7 +1171,7 @@ theorem leaves_of_sum {K : Type} [Field K] [NumberField K] [StarRing K] {Bs : De
     have e2 : (O.ee C b O.sv0 : ℝ) * Real.log (O.qq O.sv0) ≤ O.PPF C b + Real.log (O.qq O.sv0) := by
       have h := Nat.floor_le (div_nonneg hP0 hlq.le)
       rw [le_div_iff₀ hlq] at h
-      simp only [FunData.ee, if_true]
+      simp only [FunData.ee, ite_true]
       push_cast
       linarith
     rw [e1]
@@ -1578,8 +1577,7 @@ theorem htLe_one_zero {K : Type} [Field K] [NumberField K] [StarRing K] {B : ℝ
   refine ⟨?_, ?_⟩
   · rw [e]
     simp
-  · rw [e, finsum_zero]
-    exact hB
+  · rwa [e, finsum_zero]
 
 end GlobalTheory.BigTop.Fun.ThbTie
 

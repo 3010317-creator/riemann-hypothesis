@@ -101,10 +101,8 @@ theorem isCMFam_of_labVal (Or : CptOrigin Y S₀ Dc Hd) {z : Spec (CommRingCat.o
   obtain ⟨h1, h2, -⟩ := hcm (RingHom.id ℂ)
   have he : σ = fun τ => σ₀ (Or.sm τ) := funext hs
   rcases Or.side with ⟨-, h, -⟩ | ⟨-, h, -⟩
-  · rw [he, h]
-    exact h2
-  · rw [he, h]
-    exact h1
+  · rwa [he, h]
+  · rwa [he, h]
 
 theorem eq_cuspW_of_fibre (Or : CptOrigin Y S₀ Dc Hd) {U : ((Σ k, J k) → ℂ) → ℝ} (hU : Or.𝔐.IsCuspWeight Or.sm U)
     {z : Spec (CommRingCat.of ℂ) ⟶ Or.𝔐.X} {w : (Σ k, J k) → ℂ} (hw : CoordsAt Or.𝔐.ξ Dc.y z w) (hz : Or.𝔐.Interior z)

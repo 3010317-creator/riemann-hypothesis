@@ -96,8 +96,7 @@ theorem ActsAs.unique
     rw [h1] at h2
     simpa using congrArg Prod.fst h2
   have hm : P.map (toFr O) = P'.map (toFr O) := by
-    apply Matrix.toLin'.injective
-    exact LinearMap.ext fun v => by simpa [Matrix.toLin'_apply] using hv v
+    exact Matrix.toLin'.injective (LinearMap.ext fun v => by simpa [Matrix.toLin'_apply] using hv v)
   ext i j
   apply IsFractionRing.injective O (FractionRing O)
   have := congrFun (congrFun hm i) j
@@ -141,8 +140,7 @@ theorem exists_block_action {Γ X O : Type} [Group Γ] [CommRing O] [IsDomain O]
       then h.choose.2 j else 0, ?_, ?_⟩
   · intro a ha u
     have hex := hact (a π) (eval_mem_span ha π)
-    simp only [dif_pos hex]
-    exact hex.choose_spec u
+    simpa only [dite_eq_left hex] using hex.choose_spec u
   · intro P
     have hP : P ∈ Submodule.span O (Set.range (mat ρ)) := hspan ▸ Submodule.mem_top
     obtain ⟨m, c, g, hsum⟩ := Submodule.mem_span_set'.mp hP
@@ -160,7 +158,7 @@ theorem exists_block_action {Γ X O : Type} [Group Γ] [CommRing O] [IsDomain O]
       have hex : ∃ p : Matrix (Fin r) (Fin r) O × (Fin t → O),
           ActsAs e ((∑ k, c k • (fun x => mat (rep x) (γ k))) π) p.1 p.2 :=
         ⟨(∑ k, c k • mat ρ (γ k), fun j => ∑ k, c k * ((χ ((j : ℕ) + 1) (γ k) : Oˣ) : O)), hA⟩
-      simp only [dif_pos hex]
+      simp only [dite_eq_left hex]
       rw [ActsAs.unique hex.choose_spec hA, ← hsum]
       simp only [hγ]
 

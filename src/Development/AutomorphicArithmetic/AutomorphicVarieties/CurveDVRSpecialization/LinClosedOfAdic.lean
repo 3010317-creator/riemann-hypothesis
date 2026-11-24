@@ -92,14 +92,12 @@ theorem UpperTheory.V.Pr.linClosedOfAdic :
     intro h
     apply hg0
     show f ((a g0).map j) = 0
-    rw [hy]
-    exact h
+    rwa [hy]
   have hbot := Ideal.iInf_pow_smul_eq_bot_of_isLocalRing (R := A)
     (M := (Fin n × Fin n → A) ⧸ K) (maximalIdeal A) (maximalIdeal.isMaximal A).ne_top
   obtain ⟨N, hN⟩ : ∃ N : ℕ, K.mkQ (y g0) ∉
       (maximalIdeal A ^ N • ⊤ : Submodule A ((Fin n × Fin n → A) ⧸ K)) := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hK
     have hm : K.mkQ (y g0) ∈
         (⨅ i : ℕ, maximalIdeal A ^ i • ⊤ : Submodule A ((Fin n × Fin n → A) ⧸ K)) :=
@@ -115,18 +113,16 @@ theorem UpperTheory.V.Pr.linClosedOfAdic :
       intro p
       have hp := Set.mem_iInter.mp hg p
       simp only [Set.mem_setOf_eq] at hp
-      rw [← Ideal.Quotient.eq]
-      exact hp
+      rwa [← Ideal.Quotient.eq]
     have h0 : K.mkQ (y g) = 0 := by
       rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
       show f (e (y g)) = 0
-      rw [← hy]
-      exact hgS
+      rwa [← hy]
     have hsum : y g - y g0 = ∑ p, (y g p - y g0 p) • Pi.single p (1 : A) := by
       funext q
       rw [Finset.sum_apply]
       simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul, Pi.single_apply, mul_ite, mul_one,
-        mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have hmem : K.mkQ (y g - y g0) ∈
         (maximalIdeal A ^ N • ⊤ : Submodule A ((Fin n × Fin n → A) ⧸ K)) := by
 
@@ -136,7 +132,5 @@ theorem UpperTheory.V.Pr.linClosedOfAdic :
       exact Submodule.smul_mem_smul (hd p) Submodule.mem_top
     rw [map_sub, h0, zero_sub] at hmem
     exact neg_mem_iff.mp hmem
-  · apply isOpen_iInter_of_finite
-    intro p
-    exact (ha p.1 p.2 N).isOpen_fiber _
+  · exact isOpen_iInter_of_finite (fun p => (ha p.1 p.2 N).isOpen_fiber _)
   · exact Set.mem_iInter.mpr fun p => rfl

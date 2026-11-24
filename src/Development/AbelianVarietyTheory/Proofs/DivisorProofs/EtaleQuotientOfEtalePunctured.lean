@@ -72,10 +72,8 @@ theorem etale_quotient_of_etale_punctured :
     obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective x
     have hr : r ∈ maximalIdeal R := by
       rw [mem_maximalIdeal, mem_nonunits_iff]
-      intro hu
-      exact (mem_maximalIdeal _).1 hx (hu.map _)
-    rw [← h] at hr
-    exact hr
+      exact fun hu => (mem_maximalIdeal _).1 hx (hu.map _)
+    rwa [← h] at hr
   haveI := H p hp
   let φ : Localization.AtPrime p →+* T := Localization.localRingHom p P (algebraMap R S) rfl
   letI : Algebra (Localization.AtPrime p) T := φ.toAlgebra

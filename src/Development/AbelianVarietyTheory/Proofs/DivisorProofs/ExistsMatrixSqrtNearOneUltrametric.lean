@@ -157,8 +157,7 @@ theorem exists_sqrt [CompleteSpace K] [CharZero K] (σ : K →+* K) (hσ : Conti
   set u : Matrix (Fin n) (Fin n) K := (4 : K)⁻¹ • (s - 1) with hu
   have hs1 : ‖s - 1‖ < ‖(4 : K)‖ := (Matrix.norm_lt_iff h4p).2 fun i j => by simpa using hs i j
   have hc : ‖u‖ < 1 := by
-    rw [hu, norm_smul, norm_inv, inv_mul_lt_iff₀ h4p, mul_one]
-    exact hs1
+    rwa [hu, norm_smul, norm_inv, inv_mul_lt_iff₀ h4p, mul_one]
   have hcs : CauchySeq (iter u) := cauchySeq_of_le_geometric ‖u‖ ‖u‖ hc fun k => by
     rw [dist_eq_norm, norm_sub_rev]; exact norm_iter_diff_le hc k
   obtain ⟨y, hy⟩ := cauchySeq_tendsto_of_complete hcs
@@ -211,7 +210,6 @@ theorem matrix_sqrt_near_one_ultrametric :
     simp only [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
       isOpen_lt ((continuous_id.matrix_elem i j).sub continuous_const).norm continuous_const
-  · intro s hs
-    exact MatSqrtNearOne.exists_sqrt σ hσ s hs
+  · exact fun s hs => MatSqrtNearOne.exists_sqrt σ hσ s hs
 
 end GlobalTheory

@@ -77,8 +77,7 @@ theorem exists_frame_inter : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : S
     apply le_antisymm
     · rintro _ ⟨w, rfl⟩
       exact HT.LatBasic.eigProj_mem ρ σ w
-    · intro w hw
-      exact ⟨w, HT.LatBasic.eigProj_of_mem hw⟩
+    · exact fun w hw => ⟨w, HT.LatBasic.eigProj_of_mem hw⟩
   have hidem : HT.eigProj ρ σ ∘ₗ HT.eigProj ρ σ = HT.eigProj ρ σ :=
     LinearMap.ext fun w => HT.LatBasic.eigProj_of_mem (HT.LatBasic.eigProj_mem ρ σ w)
   have hVB : L.IsVBOn {x} (Module.finrank Ω V) ⊤ := fun q _ => by
@@ -134,8 +133,7 @@ theorem matrix_eq_of_linearIndependent {Ω M : Type} [Field Ω] [AddCommGroup M]
 theorem sum_smul_sum_smul {Ω M : Type} [Field Ω] [AddCommGroup M] [Module Ω M]
     {n : ℕ} (w : Fin n → M) (C D : Matrix (Fin n) (Fin n) Ω) (i : Fin n) :
     ∑ j, C i j • ∑ k, D j k • w k = ∑ k, (C * D) i k • w k := by
-  simp only [Finset.smul_sum, smul_smul, Matrix.mul_apply, Finset.sum_smul]
-  exact Finset.sum_comm
+  simpa only [Finset.smul_sum, smul_smul, Matrix.mul_apply, Finset.sum_smul] using Finset.sum_comm
 
 theorem det_eq_unit_mul : ∀ (Ω M : Type) [Field Ω] [AddCommGroup M] [Module Ω M] (R : Subring Ω) (n : ℕ) (u : Fin n → M) (A B : Matrix (Fin n) (Fin n) Ω), LinearIndependent Ω u → LinearIndependent Ω (fun i => ∑ j, A i j • u j) → LinearIndependent Ω (fun i => ∑ j, B i j • u j) → Submodule.span R (Set.range fun i => ∑ j, A i j • u j) = Submodule.span R (Set.range fun i => ∑ j, B i j • u j) → ∃ c : Ω, c ∈ R ∧ c⁻¹ ∈ R ∧ c ≠ 0 ∧ B.det = c * A.det := by
   intro Ω M _ _ _ R n u A B hu ha _ hspan

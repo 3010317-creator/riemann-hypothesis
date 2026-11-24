@@ -305,8 +305,7 @@ private theorem cm_of_sq (F M : Type) [Field F] [NumberField F] [IsTotallyReal F
       have := hφ (α * β)
       simp only [RingHom.comp_apply, map_mul] at this
       simpa using this
-    intro x
-    exact (DFunLike.congr_fun hfg x).symm
+    exact fun x => (DFunLike.congr_fun hfg x).symm
   haveI : IsTotallyReal K := ⟨fun w => by
     rw [← InfinitePlace.mk_embedding w, InfinitePlace.isReal_mk_iff]
     exact ComplexEmbedding.isReal_iff.2 (RingHom.ext (hreal w.embedding))⟩
@@ -523,8 +522,7 @@ theorem UpperTheory.V.Z.Win.splitCM :
   obtain ⟨ε, -, e0, he, -⟩ := UpperTheory.exists_quadratic_sign_character F E Ω l hE
   have c1 := card_bad (resG F E Ω) ε he.1 he.2 e0 δ hδi (fun i => (hδ i).2) _ hr
   obtain ⟨i, hi⟩ : ∃ i, ¬ RepIso (r.comp (resG F E Ω)) (tw (r.comp (resG F E Ω)) ((δ i).comp (resG F E Ω))) := by
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     rw [Finset.filter_true_of_mem fun i _ => hall i, Finset.card_univ, Fintype.card_fin] at c1
     omega
   have hne : (IsScalarTower.toAlgHom F E Ω).fieldRange ≠ (Q i).K := fun heq => hi (by
@@ -549,8 +547,7 @@ theorem UpperTheory.V.Z.Win.splitCM :
   obtain ⟨s', hs'⟩ := hr'
   have := hst s' u hu
   simp only [MonoidHom.comp_apply] at this
-  rw [hs'] at this
-  exact this
+  rwa [hs'] at this
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PAdicTorsionHoms.SplitCM =====
@@ -657,8 +654,7 @@ private theorem selfTw : Sd.SelfTwGal := by
       (Filter.eventually_cofinite.1 hw) (f := fun s => δ (res F Ω E s)) (f' := fun _ => 1)
       (hδc.comp (continuous_restrictScalarsHom F E Ω)) continuous_const fun v hv _ A hA σ hσ => by
         have h := ((not_not.1 hv : CharEig _ _ _ _) A hA).2 σ hσ
-        rw [map_eq_one_iff _ ι.injective, map_inv, Units.val_eq_one, inv_eq_one] at h
-        exact h
+        rwa [map_eq_one_iff _ ι.injective, map_inv, Units.val_eq_one, inv_eq_one] at h
     exact MonoidHom.ext fun s => congrFun key s
 
 private theorem upCycle : Sd.UpCyc := by
@@ -681,16 +677,14 @@ private theorem upCycle : Sd.UpCyc := by
     · have h := hreg (τ.comp (algebraMap F E))
       have hm : π.HasInfChar (τ.comp (algebraMap F E)) ((CG.mk π).infChar (τ.comp (algebraMap F E))) :=
         ParLaws.hasInfChar_infChar (CG.mk π) _
-      rw [CG.HasInfChar.infChar_eq (π := CG.mk P) (hinf τ _ hm)]
-      exact h
+      rwa [CG.HasInfChar.infChar_eq (π := CG.mk P) (hinf τ _ hm)]
     · filter_upwards [hbc, (underTendsto (K := F) (K' := E)).eventually hatt.2] with w h1 h2
       obtain ⟨B, hB, hPw⟩ := h1 _ (_root_.GlobalTheory.DelEps.WeilRes.normV_eq_pow (K := F) w)
       obtain ⟨B', hB', hF⟩ := h2
       obtain rfl := hB.unique hB'
       refine ⟨_, hPw, ?_⟩
       have h3 := (UpperTheory.frobenius_power_compatibility F E Ω l ι w _ (_root_.GlobalTheory.DelEps.WeilRes.normV_eq_pow (K := F) w)).1 n r _ hF
-      rw [← satPow, ← _root_.GlobalTheory.DelEps.WeilRes.normV_eq_pow] at h3
-      exact h3
+      rwa [← satPow, ← _root_.GlobalTheory.DelEps.WeilRes.normV_eq_pow] at h3
 
 private theorem quadGalois (K L : Type) [Field K] [NumberField K] [Field L] [NumberField L] [Algebra K L]
     (h : Module.finrank K L = 2) : IsGalois K L := by

@@ -123,5 +123,4 @@ theorem UpperTheory.V.Lit.Geo.Pf.twLie :
     rw [this]
     exact Submodule.add_mem _ hA hB
   · rw [smAdj, adj_apply]
-    refine Submodule.sub_mem _ (Submodule.sub_mem _ hB hA) ?_
-    exact Submodule.smul_of_tower_mem _ _ hx
+    exact Submodule.sub_mem _ (Submodule.sub_mem _ hB hA) (Submodule.smul_of_tower_mem _ _ hx)

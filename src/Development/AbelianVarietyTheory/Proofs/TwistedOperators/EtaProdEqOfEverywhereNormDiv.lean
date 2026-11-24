@@ -97,8 +97,7 @@ private theorem exists_basis_one_sqrt_nonsquare_of_finrank_two (K L : Type) [Fie
     ∃ (e : Module.Basis (Fin 2) K L) (δ : K), e 0 = 1 ∧ e 1 * e 1 = algebraMap K L δ ∧
       ¬ IsSquare δ := by
   obtain ⟨θ, hθ⟩ : ∃ θ : L, θ ∉ Set.range (algebraMap K L) := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have hbot : (⊥ : Subalgebra K L) = ⊤ :=
       eq_top_iff.mpr fun x _ => Algebra.mem_bot.mpr (hcon x)
     have := Subalgebra.bot_eq_top_iff_finrank_eq_one.mp hbot
@@ -153,8 +152,7 @@ private theorem exists_place_notMem_not_isSquare (F : Type) [Field F] [NumberFie
     (hδ0 : δ ≠ 0) (hδ : ¬ IsSquare δ) (S₀ : Finset (HeightOneSpectrum (𝓞 F))) :
     ∃ v, v ∉ S₀ ∧ ¬ IsSquare (algebraMap F (v.adicCompletion F) δ) := by
   classical
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   set d : Fˣ := Units.mk0 δ hδ0 with hd
   have hidx := (_root_.GlobalTheory.QNorm.two_pow_le_index_locNorm F δ S₀ hδ0).1
   haveI : (_root_.GlobalTheory.QNorm.locNorm F δ S₀).FiniteIndex := ⟨hidx⟩
@@ -208,8 +206,7 @@ theorem _root_.GlobalTheory.QuadSymbol.exists_almostNorm_etaProd_eq_neg_one :
   obtain ⟨x, hx0, hx⟩ := _root_.GlobalTheory.QNorm.exists_local_nonnorm K v _
     ((map_ne_zero _).mpr hδ0) hv
   have hnot : Units.mk0 x hx0 ∉ _root_.GlobalTheory.QuadSymbol.normGroup K L (v.adicCompletion K) := by
-    rw [_root_.GlobalTheory.QuadSymbol.mem_normGroup_iff_form e he0 he1]
-    exact hx
+    rwa [_root_.GlobalTheory.QuadSymbol.mem_normGroup_iff_form e he0 he1]
   refine ⟨Pi.mulSingle v (Units.mk0 x hx0), 1, ?_, ?_⟩
   · unfold _root_.GlobalTheory.QuadSymbol.AlmostNorm
     refine (Set.finite_singleton v).subset fun v' hv' => ?_
@@ -221,8 +218,7 @@ theorem _root_.GlobalTheory.QuadSymbol.exists_almostNorm_etaProd_eq_neg_one :
     rw [finprod_eq_single _ v]
     · rw [Pi.mulSingle_eq_same, _root_.GlobalTheory.QuadSymbol.eta_eq_neg_one_iff.mpr hnot,
         Finset.prod_eq_one, mul_one]
-      intro w _
-      exact _root_.GlobalTheory.QuadSymbol.eta_eq_one_iff.mpr (Subgroup.one_mem _)
+      exact fun w _ => _root_.GlobalTheory.QuadSymbol.eta_eq_one_iff.mpr (Subgroup.one_mem _)
     · intro v' hv'
       rw [Pi.mulSingle_eq_of_ne hv']
       exact _root_.GlobalTheory.QuadSymbol.eta_eq_one_iff.mpr (Subgroup.one_mem _)

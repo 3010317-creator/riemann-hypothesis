@@ -424,8 +424,7 @@ theorem UpperTheory.V.Base.h2Ab :
     apply Subtype.ext
     apply Subtype.ext
     funext p
-    have hp := congrArg Subtype.val (congrFun e p)
-    exact hp
+    exact congrArg Subtype.val (congrFun e p)
   calc Module.length R (H2 σ) ≤ _ := h1
     _ ≤ _ := h2
     _ ≤ _ := h3
@@ -584,8 +583,7 @@ private theorem exists_ext (ρ : Representation R G M) (hρ : ContAction ρ) {U'
         exact hR1 u g
       rw [hfun]
       exact (continuous_const.add (continuous_of_discreteTopology.comp z.2.1)).continuousAt
-    simp only [map_one, mul_one] at key
-    exact key
+    simpa only [map_one, mul_one] using key
   · show y0 (Subgroup.inclusion h u * g) - y0 1 = z.1 u + ρ u (y0 g - y0 1)
     rw [hL0, map_sub, hc1]
     abel
@@ -632,8 +630,7 @@ private theorem exists_infl (ρ : Representation R G M) {U' U : Subgroup G} [U'.
       _ = F a b := hFl a b v
   have hN : ∀ a b : U,
       F a b ∈ Representation.invariants ((ρ.comp U.subtype).comp (U'.subgroupOf U).subtype) := by
-    intro a b v
-    exact hinv a b ⟨(v : U), Subgroup.mem_subgroupOf.mp v.2⟩
+    exact fun a b v => hinv a b ⟨(v : U), Subgroup.mem_subgroupOf.mp v.2⟩
   have hWF : ∀ a b : U,
       F (QuotientGroup.mk a : U ⧸ U'.subgroupOf U).out (QuotientGroup.mk b : U ⧸ U'.subgroupOf U).out
         = F a b := by
@@ -686,8 +683,7 @@ private theorem mem_range_resU (ρ : Representation R G M) {U' U : Subgroup G} (
     (e : ∀ a b : U, ρ a (c b) - c (a * b) + c a = ρ a (y b) - y (a * b) + y a) :
     Submodule.Quotient.mk z ∈ LinearMap.range (resU ρ h) := by
   have hz1 : (z : U' → M) 1 = 0 := by
-    have h0 := z.2.2 1 1
-    simpa using h0
+    simpa using z.2.2 1 1
   have hy1 : y 1 = 0 := by
     have h0 := hz 1
     rw [map_one] at h0
@@ -766,8 +762,7 @@ theorem length_restriction_coker_le_H2 (ρ : Representation R G M) (hρ : ContAc
     obtain ⟨y, hy, hy1, hL, hR⟩ := hex
     obtain ⟨w, hw⟩ := exists_infl ρ h z.1 y hL hR
     refine ⟨⟨(z, y, w), hz', hy, fun u => ?_, hw⟩, ?_⟩
-    · have e := hR u 1
-      simpa [hy1] using e
+    · simpa [hy1] using hR u 1
     · exact congrArg q2 (Subtype.ext hz)
   have hker : LinearMap.ker g ≤ LinearMap.ker f := by
     intro x hx
@@ -862,8 +857,7 @@ theorem UpperTheory.V.Base.selLocal :
   have key0 : ∀ x ∈ X, ∀ D' ∈ 𝒟, resU ρ (le_trans inf_le_left h : U' ⊓ D' ≤ U) x = 0 := by
     intro x hx D' hD'
     have e := (mem_locSel.mp (Submodule.mem_comap.mp hx)) D' hD'
-    rw [resU_resU] at e
-    exact e
+    rwa [resU_resU] at e
   have key : ∀ x ∈ X, ∀ D' ∈ 𝒟,
       resU ρ (inf_le_inf_right D' h) (resU ρ (inf_le_left : U ⊓ D' ≤ U) x) = 0 := by
     intro x hx D' hD'
@@ -953,11 +947,7 @@ private theorem length_addMonoidHom_le_of_card_eq {R A B C X : Type} [CommRing R
   gcongr
   · let φ : LinearMap.ker g →ₗ[R] LinearMap.range f :=
       (j.comp (LinearMap.ker g).subtype).codRestrict (LinearMap.range f) (fun x => h x x.2)
-    have hφ : Function.Injective φ := by
-      intro a b hab
-      apply Subtype.ext
-      apply hj
-      exact congrArg Subtype.val hab
+    have hφ : Function.Injective φ := fun a b hab => Subtype.ext (hj (congrArg Subtype.val hab))
     calc Module.length R (LinearMap.ker g) ≤ Module.length R (LinearMap.range f) :=
           Module.length_le_of_injective φ hφ
       _ ≤ Module.length R A := Module.length_le_of_surjective f.rangeRestrict f.surjective_rangeRestrict
@@ -981,11 +971,7 @@ theorem UpperTheory.V.Base.selDown :
   let g : selEig ρ U' h𝒟 U 1 →ₗ[R] resCoker ρ h :=
     (Submodule.mkQ _).comp (LinearMap.codRestrict (invariantsUnderSubgroupH1 ρ U U') j hinv)
   let A := Submodule.comap (resU ρ h) (LocSel ρ U' 𝒟)
-  have hj : Function.Injective j := by
-    intro a b hab
-    apply Subtype.ext
-    apply Subtype.ext
-    exact hab
+  have hj : Function.Injective j := fun a b hab => Subtype.ext (Subtype.ext hab)
   have hker : ∀ x, g x = 0 → j x ∈ LinearMap.range ((resU ρ h).comp A.subtype) := by
     intro x hx
     have hx' := (Submodule.Quotient.mk_eq_zero _).mp hx
@@ -1014,8 +1000,7 @@ private theorem relIndex_inf_dvd {G : Type} [Group G] (U' U D : Subgroup G) [U'.
     unfold Subgroup.relIndex
     congr 1
     ext x
-    simp only [Subgroup.mem_subgroupOf, Subgroup.mem_inf]
-    exact ⟨fun h => h.1, fun h => ⟨h, x.2.2⟩⟩
+    simpa only [Subgroup.mem_subgroupOf, Subgroup.mem_inf] using ⟨fun h => h.1, fun h => ⟨h, x.2.2⟩⟩
   rw [e]
   have k : ∀ K : Subgroup G, U'.relIndex K = Nat.card (K.map (QuotientGroup.mk' U')) := fun K => by
     rw [← Subgroup.relIndex_ker, QuotientGroup.ker_mk']
@@ -1222,8 +1207,7 @@ theorem UpperTheory.V.HV.redAll :
     | H x => rw [← QuotientGroup.mk_pow, ZMod.pow_totient, QuotientGroup.mk_one]
   have hfr := (Chr.levGal E N H hH).2.1
   have key := (Chr.reduction_to_dirichletChar_any_level_of_le E c.O D Ω hH hl2 he T (N' := N) (NeZero.ne N)).1 hT
-  rw [hfr] at key
-  exact key
+  rwa [hfr] at key
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.HeightAndVanishing.RedAll =====
@@ -1248,9 +1232,9 @@ private theorem sum_split {ι : Type} (T : ℕ → Finset ι) (O : Finset ι) (v
           apply Finset.sum_le_sum
           intro i hi
           by_cases hO : i ∈ O
-          · rw [if_pos hO]
+          · rw [ite_eq_left hO]
             linarith
-          · rw [if_neg hO]
+          · rw [ite_eq_right hO]
             rcases h1 e he i hi with h | h
             · exact absurd h hO
             · linarith [mul_comm (v i e) L]
@@ -1329,8 +1313,7 @@ theorem UpperTheory.V.HV.sumIn :
   have hlp : (l : ℕ).Prime := l.2
   have hl2 : (l : ℕ) ≠ 2 := (prime_of_mem_Bchi hl).2
   have hlB : (l : ℕ) ∈ Bchi h.chi := by
-    rw [hχ]
-    exact hl
+    rwa [hχ]
   have hbf := bchiFacts h t hBig
   have hlq1 : (l : ℕ) < h.q1 := (hbf.1 _ hlB).1
   have hld : (l : ℕ) < h.d := (hbf.1 _ hlB).2

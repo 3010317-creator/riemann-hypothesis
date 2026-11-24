@@ -197,8 +197,7 @@ theorem hasDerivAt_A (K : (I → ℝ) × (I → ℝ) → (V →L[ℂ] V)) (S : �
       (Γ * deriv S s * K (path o s v) + Γ * S s * fderiv ℝ K (path o s v) (v - o, 0)) s :=
     (hS.hasDerivAt.const_mul Γ).mul hKP
   have ht := trL.hasFDerivAt.comp_hasDerivAt s hm
-  rw [map_add (f := _)] at ht
-  exact ht
+  rwa [map_add (f := _)] at ht
 
 set_option maxHeartbeats 1000000 in
 theorem fderiv_b (K : (I → ℝ) × (I → ℝ) → (V →L[ℂ] V)) (A : V →L[ℂ] V) (c : I → (V →L[ℂ] V))

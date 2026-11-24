@@ -96,22 +96,22 @@ theorem blockKeep_mul (a b : Fin n) (A B : Matrix (Fin n) (Fin n) R) (hA : ∀ i
   ext i j
   by_cases hi : a ≤ i ∧ i ≤ b
   · by_cases hj : a ≤ j ∧ j ≤ b
-    · simp only [blockKeep, Matrix.mul_apply, if_pos (And.intro hi hj)]
+    · simp only [blockKeep, Matrix.mul_apply, ite_eq_left (And.intro hi hj)]
       refine Finset.sum_congr rfl fun k _ => ?_
       by_cases hk : a ≤ k ∧ k ≤ b
-      · rw [if_pos ⟨hi, hk⟩, if_pos ⟨hk, hj⟩]
-      · rw [if_neg (fun h => hk h.2), Matrix.one_apply_ne (by rintro rfl; exact hk hi), zero_mul]
+      · rw [ite_eq_left ⟨hi, hk⟩, ite_eq_left ⟨hk, hj⟩]
+      · rw [ite_eq_right (fun h => hk h.2), Matrix.one_apply_ne (by rintro rfl; exact hk hi), zero_mul]
         rcases not_and_or.1 hk with h | h
         · rw [hA i k (lt_of_lt_of_le (not_le.1 h) hi.1), zero_mul]
         · rw [hB k j (lt_of_le_of_lt hj.2 (not_le.1 h)), mul_zero]
-    · have hcol : ∀ k, blockKeep a b B k j = (1 : Matrix (Fin n) (Fin n) R) k j := fun k => if_neg (fun h => hj h.2)
+    · have hcol : ∀ k, blockKeep a b B k j = (1 : Matrix (Fin n) (Fin n) R) k j := fun k => ite_eq_right (fun h => hj h.2)
       rw [Matrix.mul_apply]
-      simp only [hcol, Matrix.one_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
-      simp only [blockKeep, hi, hj, and_false, if_false, true_and, Matrix.one_apply]
-  · have hrow : ∀ k, blockKeep a b A i k = (1 : Matrix (Fin n) (Fin n) R) i k := fun k => if_neg (fun h => hi h.1)
+      simp only [hcol, Matrix.one_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
+      simp only [blockKeep, hi, hj, and_false, ite_false, true_and, Matrix.one_apply]
+  · have hrow : ∀ k, blockKeep a b A i k = (1 : Matrix (Fin n) (Fin n) R) i k := fun k => ite_eq_right (fun h => hi h.1)
     rw [Matrix.mul_apply]
-    simp only [hrow, Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
-    simp only [blockKeep, hi, false_and, if_false, Matrix.one_apply]
+    simp only [hrow, Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
+    simp only [blockKeep, hi, false_and, ite_false, Matrix.one_apply]
 
 end BlockKeep
 
@@ -144,8 +144,8 @@ theorem blockKeepGL_mem_GU [Valued L (WithZero (Multiplicative ℤ))] {σ : L �
   unfold blockKeep
   simp only [key]
   by_cases h : (a ≤ i ∧ i ≤ a.rev) ∧ (a ≤ j ∧ j ≤ a.rev)
-  · rw [if_pos h, if_pos h.symm, hG]
-  · rw [if_neg h, if_neg (fun h' => h h'.symm), Matrix.one_apply, Matrix.one_apply, apply_ite σ, map_one, map_zero]
+  · rw [ite_eq_left h, ite_eq_left h.symm, hG]
+  · rw [ite_eq_right h, ite_eq_right (fun h' => h h'.symm), Matrix.one_apply, Matrix.one_apply, apply_ite σ, map_one, map_zero]
     simp only [Fin.rev_inj, eq_comm (a := j)]
 
 theorem blockKeep_eq_self (a b : Fin n) (A : Matrix (Fin n) (Fin n) L) (h1 : ∀ i j, j < i → A i j = 0)
@@ -230,8 +230,7 @@ theorem relIndex_eq_of_mul {c : L} (hc : c ≠ 0) {A B A' B' : AddSubgroup L}
   have e1 : A = A'.comap (AddMonoidHom.mulLeft c) := AddSubgroup.ext hA
   have e2 : B = B'.comap (AddMonoidHom.mulLeft c) := AddSubgroup.ext hB
   rw [e1, AddSubgroup.relIndex_comap, e2, AddSubgroup.map_comap_eq_self_of_surjective]
-  intro y
-  exact ⟨c⁻¹ * y, mul_inv_cancel_left₀ hc y⟩
+  exact fun y => ⟨c⁻¹ * y, mul_inv_cancel_left₀ hc y⟩
 
 theorem le_exp_neg_one_of_lt_one {y : WithZero (Multiplicative ℤ)} (h : y < 1) : y ≤ WithZero.exp (-1 : ℤ) := by
   induction y using WithZero.recZeroCoe with
@@ -262,8 +261,7 @@ theorem relIndex_ball {ϖ : L} {σ : L →+* L} {q : ℕ} (hU : IsUnramInv ϖ σ
     constructor
     · rintro ⟨y, -, rfl⟩
       exact (Valuation.mem_valuationSubring_iff _ _).1 y.2
-    · intro h
-      exact ⟨⟨x, (Valuation.mem_valuationSubring_iff _ _).2 h⟩, trivial, rfl⟩
+    · exact fun h => ⟨⟨x, (Valuation.mem_valuationSubring_iff _ _).2 h⟩, trivial, rfl⟩
   rw [← e2, ← AddSubgroup.relIndex_comap, ← e1, AddSubgroup.relIndex_top_right, AddSubgroup.index_eq_card]
   exact hcard
 
@@ -363,8 +361,7 @@ theorem measure_eq_relIndex_mul {G : Type} [Group G] [TopologicalSpace G] [IsTop
     constructor
     · rintro ⟨y, hy, rfl⟩
       exact hy
-    · intro hx
-      exact ⟨⟨x, hle hx⟩, hx, rfl⟩
+    · exact fun hx => ⟨⟨x, hle hx⟩, hx, rfl⟩
   rw [e1, e2] at key
   exact key.symm
 
@@ -611,10 +608,8 @@ theorem shell_measure' : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplic
     rw [memH, WithZero.exp_zero, Subgroup.mem_subgroupOf, ← SetLike.mem_coe, LFun.IntPtsUnitary.coe_KU,
       LFun.IntPtsUnitary.coe_GLint]
     constructor
-    · intro h
-      exact ⟨hint u h, hint u⁻¹ (by rwa [hinv, Valuation.map_neg])⟩
-    · intro h
-      exact h.1 a a.rev
+    · exact fun h => ⟨hint u h, hint u⁻¹ (by rwa [hinv, Valuation.map_neg])⟩
+    · exact fun h => h.1 a a.rev
   have hfin := measure_chain μ H (q := q) (by omega) hm hle hi (by rw [hH0]; exact hμ) j
   have hmj := hm j
   rw [hset] at hfin hmj
@@ -743,8 +738,7 @@ theorem shiftCore (L : Type) [Field L] [Valued L (WithZero (Multiplicative ℤ))
     (Matrix.transvection_mul_transvection_same a a' hne (-c) c).trans (by rw [neg_add_cancel, Matrix.transvection_zero])⟩
   have hTapp : ∀ (d : L) (i j : Fin n), Matrix.transvection a a' d i j =
       (if i = j then 1 else 0) + (if i = a ∧ j = a' then d else 0) := by
-    intro d i j
-    exact transvection_apply' a a' d i j
+    exact fun d i j => transvection_apply' a a' d i j
   have hT : ∀ i j, (T : Matrix (Fin n) (Fin n) L) i j =
       (if i = j then 1 else 0) + (if i = a ∧ j = a' then c else 0) := hTapp c
   have hTi : ∀ i j, ((T⁻¹ : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) i j =
@@ -810,8 +804,7 @@ theorem shiftCore (L : Type) [Field L] [Valued L (WithZero (Multiplicative ℤ))
         rw [h0, mul_zero, zero_mul]
       rcases lt_trichotomy (Equiv.swap a a' i) (Equiv.swap a a' j) with h | h | h
       · obtain ⟨h1, h2⟩ := swap_inversion haa h (by rwa [Equiv.swap_apply_self, Equiv.swap_apply_self])
-        rw [h1, h2]
-        exact hNa
+        rwa [h1, h2]
       · exact absurd ((Equiv.injective _) h) (ne_of_lt hji).symm
       · exact ((mem_unipB L).1 hNB).1 _ _ h
     have hbd : ∀ i, ((b : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) i i = 1 := by
@@ -829,8 +822,7 @@ theorem shiftCore (L : Type) [Field L] [Valued L (WithZero (Multiplicative ℤ))
       fun w => by group
     have key := hφ b (y⁻¹ * (⟨T, hTG⟩ * u) * g) hbB
     rw [hchi, one_mul] at key
-    rw [e ⟨T, hTG⟩]
-    exact key
+    rwa [e ⟨T, hTG⟩]
 
 theorem shiftEven (L : Type) [Field L] [Valued L (WithZero (Multiplicative ℤ))] (σ : L →+* L) (q : ℕ) (n : ℕ)
     (k : Fin (n / 2)) (hk : ¬ k.val + 1 < n / 2) (hn : Even n) {m : ℕ} (α : Fin m → ℂ) (φ : GU σ n → ℂ)

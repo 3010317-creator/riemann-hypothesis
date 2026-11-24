@@ -67,8 +67,7 @@ theorem mem_fixed_iff {α : Representation ℂ G X} {K : Subgroup G} {x : X} :
 private theorem finiteDimensional_fixed_of_exact_lemma {α : Representation ℂ G X}
     {β : Representation ℂ G Y} (i : α.IntertwiningMap β) (g : G) (x : X) :
     i (α g x) = β g (i x) := by
-  have h := LinearMap.congr_fun (i.isIntertwining' g) x
-  simpa [LinearMap.comp_apply] using h
+  simpa [LinearMap.comp_apply] using LinearMap.congr_fun (i.isIntertwining' g) x
 
 theorem finiteDimensional_fixed_of_exact {α : Representation ℂ G X} {β : Representation ℂ G Y}
     {γ : Representation ℂ G Z} (i : α.IntertwiningMap β) (p : β.IntertwiningMap γ)
@@ -208,8 +207,7 @@ theorem isAdmissible_of_hasFiniteLength : ∀ {G V : Type} [Group G] [Topologica
   have hfl' : IsFiniteLength (MonoidAlgebra ℂ G) V := hfl
   have h := @isAdmissible_of_hasFiniteLength_lemma_4 G _ _ K V _ instA hfl' _ instT
     (fun W _ _ σ hσ h => hirr W σ (hρ ▸ hσ) h) hKo hKc
-  rw [hρ] at h
-  exact h
+  rwa [hρ] at h
 
 end GlobalTheory.CompanionTheory.AdmFL
 

@@ -161,8 +161,7 @@ theorem main : ∀ {O X : Type} [CommRing O] (T : Subalgebra O (X → O)) (n : �
       have h := Algebra.adjoin_eq_span (R := MvPolynomial (Fin m) O)
         (s : Set (X → Matrix (Fin n) (Fin n) (MvPolynomial (Fin m) O)))
       rw [Submonoid.closure_eq] at h
-      rw [← h]
-      exact hF
+      rwa [← h]
     obtain ⟨N, c, b, hsum⟩ := Submodule.mem_span_set'.mp hF'
     choose b' hb' hbe using fun j => Submonoid.mem_map.mp (b j).2
     refine ⟨N, c, b', fun j => hb' j, ?_⟩
@@ -212,7 +211,6 @@ theorem main : ∀ {O X : Type} [CommRing O] (T : Subalgebra O (X → O)) (n : �
     intro x
     ext pa qb
     simp [Matrix.sum_apply]
-  simp only [h6] at h5
-  exact h5
+  simpa only [h6] using h5
 
 end GlobalTheory.BlockDetPoly

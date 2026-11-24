@@ -204,8 +204,7 @@ theorem residue_core : ∀ (p : ℕ) [Fact p.Prime] (O Ω : Type) [CommRing O] [
       show ((w : Ω) * π) / π ∈ _
       rw [mul_div_cancel_right₀ _ hπ0]
       exact w.2
-    · intro h
-      exact ⟨⟨(z : Ω) / π, h⟩, Subtype.ext (div_mul_cancel₀ _ hπ0)⟩
+    · exact fun h => ⟨⟨(z : Ω) / π, h⟩, Subtype.ext (div_mul_cancel₀ _ hπ0)⟩
   have hvI : ∀ z : Algebra.adjoin O (T : Set Ω), z ∈ I → v z < 1 := by
     intro z hz
     obtain ⟨w, rfl⟩ := Ideal.mem_span_singleton'.1 hz
@@ -241,8 +240,7 @@ theorem residue_core : ∀ (p : ℕ) [Fact p.Prime] (O Ω : Type) [CommRing O] [
       rw [← Ideal.Quotient.eq_zero_iff_mem, map_sub, map_add (f := _), hab, map_one, sub_self]
     have hv1 := hvI _ hxy
     have key : v x = 1 ∨ v y = 1 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       have hx' : v x < 1 := lt_of_le_of_ne (hint _ x.2) hcon.1
       have hy' : v y < 1 := lt_of_le_of_ne (hint _ y.2) hcon.2
       have e1 : (1 : Ω) = ((x : Ω) + y) - ((x + y - 1 : Algebra.adjoin O (T : Set Ω)) : Ω) := by
@@ -447,7 +445,7 @@ theorem not_pow_mod_max : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [A
     have h2 : v (y ^ p - algebraMap (O0 p) Ω (qO p)) ^ m < 1 :=
       lt_of_le_of_lt ((div_le_one₀ hvp0).1 h1) hvp1
     by_contra hc
-    push_neg at hc
+    push Not at hc
     exact absurd h2 (not_lt.2 (one_le_pow₀ hc))
   obtain ⟨b, hb⟩ := hres y hyB (qO p) hvq
   have hbv : v (algebraMap (O0 p) Ω b) ≤ 1 := (hv _).2 isIntegral_algebraMap

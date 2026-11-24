@@ -125,15 +125,14 @@ theorem exists_half_redM_frMapO : ∀ (D : D7) (S T : HSp D) (βS : GL (Fin S.ra
       ← Units.val_mul, inv_mul_cancel, Units.val_one, Matrix.one_mul, Matrix.mul_assoc, ← Units.val_mul,
       inv_mul_cancel, Units.val_one, Matrix.mul_one]
     ext i j
-    simp only [Matrix.smul_apply, smul_eq_mul, z, Matrix.of_apply]
-    exact hNe i j
+    simpa only [Matrix.smul_apply, smul_eq_mul, z, Matrix.of_apply] using hNe i j
   refine ⟨u, fun i j => ?_, ?_, fun PP hPP => ?_⟩
   · show e * (e * incA D (ϖ : D.host.E)⁻¹ * w i j) = e * incA D (ϖ : D.host.E)⁻¹ * w i j
     rw [← mul_assoc, ← mul_assoc, hee]
   · rw [key]; exact fun i j => hN i j
   · rw [key]
     funext i j
-    exact (dif_pos (hN i j)).trans (hNr i j PP hPP)
+    exact (dite_eq_left (hN i j)).trans (hNr i j PP hPP)
 
 end GlobalTheory.HalfFrameLift
 end -- clump:auto
@@ -297,8 +296,7 @@ theorem half_int_iff : ∀ (D : D7) (S T : HSp D) (βS : GL (Fin S.rank) (EAf D)
         rw [dite_eq_left (hN i j), Matrix.zero_apply] at h3
         convert h3 using 3)
     have e1 := hinv i j
-    rw [e1] at key
-    exact key
+    rwa [e1] at key
 
 end GlobalTheory.HalfUniInt
 end -- clump:auto
@@ -452,14 +450,12 @@ theorem factor_prim : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (Q : Finset 
       calc e * incA D ((ϖ : D.host.E)⁻¹) * (incA D (ϖ : D.host.E) * m)
           = (incA D ((ϖ : D.host.E)⁻¹) * incA D (ϖ : D.host.E)) * (e * m) := by ring
         _ = m := by rw [hinv, one_mul, m.2.1]
-    rw [h2] at h1
-    exact h1
+    rwa [h2] at h1
   have hker : ∀ m : supG D e ϖ, (∀ PP ∈ Q, resG D e ϖ PP m = 0) →
       ((chiA D ψ).compAddMonoidHom (supG D e ϖ).subtype) m = 1 := by
     intro m hm
     have h1 := (H m m.2.1).1 ((hdiv m).2 hm) e hee heI
-    rw [mul_comm (m : AE D) e, m.2.1] at h1
-    exact h1
+    rwa [mul_comm (m : AE D) e, m.2.1] at h1
   have hlift : ∀ Y : ∀ PP : Pl D.host.E, kP PP, ∃ m : supG D e ϖ, ∀ PP ∈ Q, resG D e ϖ PP m = Y PP := by
     intro Y
     obtain ⟨N, hN, hNe, hNY⟩ := GlobalTheory.T.exists_integral_lift_residues_idempotentSum D Q es hes hc' Y
@@ -471,8 +467,7 @@ theorem factor_prim : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (Q : Finset 
           = (incA D ((ϖ : D.host.E)⁻¹) * incA D (ϖ : D.host.E)) * (e * w) := by ring
         _ = e * w := by rw [hinv, one_mul]
     have hm2 : toEAf D (incA D (ϖ : D.host.E) * (e * incA D ((ϖ : D.host.E)⁻¹) * w)) = N := by
-      rw [hm0, map_mul, hw, hsum]
-      exact hNe
+      rwa [hm0, map_mul, hw, hsum]
     refine ⟨⟨_, hm1, hm2 ▸ hN⟩, fun PP hP => ?_⟩
     rw [← hNY PP hP]
     show resS D.host.F PP ⟨_, _⟩ = resS D.host.F PP ⟨N, hN⟩
@@ -490,8 +485,7 @@ theorem factor_prim : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (Q : Finset 
       exact one_ne_zero h3
     obtain ⟨Z', hZ'e, hZ'I, hne⟩ : ∃ Z' : AE D, e * Z' = Z' ∧ toEAf D Z' ∈ Formalism.L2.Herm.intAf D.host.F D.host.E ∧
         ψ (Algebra.trace (AF D.host.F) (AE D) (incA D D.host.xi0 * ((m1 : AE D) * Z'))) ≠ 1 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact hnI ((H m1 m1.2.1).2 hcon)
     let m2 : supG D e ϖ := ⟨(m1 : AE D) * Z', by rw [← mul_assoc, m1.2.1],
       by rw [← mul_assoc, map_mul]; exact mul_mem m1.2.2 hZ'I⟩
@@ -644,8 +638,7 @@ theorem int_iff_dual : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp 
     obtain ⟨l, hl, hlZ⟩ := exists_half_frMapO S T βS βT hee (Matrix.single j₀ i₀ (toEAf D Z')) (hsingle j₀ i₀ Z' hZ')
     rw [← hval l Z' hl hZ' (by rw [hlZ, Matrix.single_apply_same])]
     refine h l ((GlobalTheory.T.mem_completedLattice_half_iff_frameMatrix_integral D S T ΛS ΛT βS βT hS hT hfS hfT Q e he hQ l hl).2 ?_) hl
-    rw [hlZ, hint]
-    exact hZi
+    rwa [hlZ, hint]
   · intro h l hlm hl
     have hI := (GlobalTheory.T.mem_completedLattice_half_iff_frameMatrix_integral D S T ΛS ΛT βS βT hS hT hfS hfT Q e he hQ l hl).1 hlm
     obtain ⟨Y, -, hY⟩ := GlobalTheory.HalfDuality.exists_lift (D := D) (frMapO S T βS βT l j₀ i₀)
@@ -713,7 +706,7 @@ theorem resS_trace_mul {D : D7} (PP : Pl D.host.E) {a b : ℕ} (A : Matrix (Fin 
 
   simp only [map_sum, map_mul, Matrix.trace, Matrix.diag_apply, Matrix.mul_apply]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  simp only [redM, dif_pos (hA i j), dif_pos (hB j i)]
+  simp only [redM, dite_eq_left (hA i j), dite_eq_left (hB j i)]
 
 theorem inv_isPrimitive {R : Type} [CommRing R] (χ : AddChar R ℂ) (h : χ.IsPrimitive) : (χ⁻¹).IsPrimitive := by
   intro a ha h1
@@ -1063,7 +1056,7 @@ theorem lift_eq_model_flat : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
     have hi : IsIntM (frMapO (Vc D i) (Wc D i) (R.βV i) (R.βW i) ((-u).map fun w => incA D (ϖ : D.host.E) * w)) := by
       rw [F2, LiftFlatModel.frMapO_neg]
       exact LiftFlatModel.isIntM_neg (hRs u hu').2
-    rw [if_pos ⟨hh, hi⟩]
+    rw [ite_eq_left ⟨hh, hi⟩]
     apply LiftFlatModel.omegaFlat_congr
     intro PP hPP
     rw [dite_eq_left hPP, F2, LiftFlatModel.frMapO_neg, redM_neg _ (hRs u hu').2]
@@ -1089,26 +1082,25 @@ theorem lift_eq_model_flat : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
           (hiii x hxh u huR).2 ⟨hx.2, fun PP hPP => by rw [hured ⟨PP, hPP⟩, neg_neg]⟩
         have hhalf : IsHalf eQ (x + u) := (LiftFlatModel.isHalf_add_iff (hRs u huR).1).2 hxh
         rw [show halfInd eQ (latO (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) fun _ => True) (x + u) = 1 from
-          if_pos ⟨hmem, hhalf⟩, mul_one, hPsiNeg u huR, if_pos hx]
+          ite_eq_left ⟨hmem, hhalf⟩, mul_one, hPsiNeg u huR, ite_eq_left hx]
         apply LiftFlatModel.omegaFlat_congr
         intro PP hPP
         rw [dite_eq_left hPP]
         show _ = -(redM PP (frMapO (Vc D i) (Wc D i) (R.βV i) (R.βW i) (u.map fun w => incA D (ϖ : D.host.E) * w)))
         rw [hured ⟨PP, hPP⟩, neg_neg]
       · intro u' hu' hne
-        rw [show halfInd eQ (latO (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) fun _ => True) (x + u') = 0 from if_neg ?_,
+        rw [show halfInd eQ (latO (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) fun _ => True) (x + u') = 0 from ite_eq_right ?_,
           mul_zero]
         rintro ⟨hmem, -⟩
         obtain ⟨-, hred⟩ := (hiii x hxh u' hu').1 hmem
         exact hne (huniq u' ⟨hu', fun PP => by
           show _ = -(redM PP.1 (frMapO (Vc D i) (Wc D i) (R.βV i) (R.βW i) (x.map fun w => incA D (ϖ : D.host.E) * w)))
           rw [hred PP.1 PP.2, neg_neg]⟩)
-      · intro h
-        exact absurd huR h
-    · rw [if_neg hx]
+      · exact fun h => absurd huR h
+    · rw [ite_eq_right hx]
       symm
       refine Finset.sum_eq_zero fun u hu' => ?_
-      rw [show halfInd eQ (latO (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) fun _ => True) (x + u) = 0 from if_neg ?_,
+      rw [show halfInd eQ (latO (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) fun _ => True) (x + u) = 0 from ite_eq_right ?_,
         mul_zero]
       rintro ⟨hmem, hhalf⟩
       have hxh : IsHalf eQ x := (LiftFlatModel.isHalf_add_iff (hRs u hu').1).1 hhalf
@@ -1125,8 +1117,8 @@ theorem lift_eq_model_flat : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
     intro x
     by_cases hx : x ∈ latO (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) (fun _ => True) ∧ IsHalf (cA D eQ) x
     · have hint := (hiv x hx.2).1 hx.1
-      rw [if_pos ⟨hx.2, hint⟩, show halfInd (cA D eQ) (latO (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) fun _ => True) x = 1 from
-        if_pos hx, one_mul, hfin, Finset.mul_sum]
+      rw [ite_eq_left ⟨hx.2, hint⟩, show halfInd (cA D eQ) (latO (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) fun _ => True) x = 1 from
+        ite_eq_left hx, one_mul, hfin, Finset.mul_sum]
       symm
       refine Finset.sum_bij (fun u _ => fun PP : ↥(R.Q t) => redM PP.1 (frMapO (Vc D i) (Wc D i) (R.βV i) (R.βW i)
           (u.map fun w => incA D (ϖ : D.host.E) * w))) (fun _ _ => Finset.mem_univ _) ?_ ?_ ?_
@@ -1138,8 +1130,8 @@ theorem lift_eq_model_flat : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
       · intro u hu'
         rw [hPsiNeg u hu', hv x hx.2 hint u hu', ← Finset.univ_eq_attach]
         ring
-    · rw [show halfInd (cA D eQ) (latO (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) fun _ => True) x = 0 from if_neg hx,
-        zero_mul, if_neg]
+    · rw [show halfInd (cA D eQ) (latO (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) fun _ => True) x = 0 from ite_eq_right hx,
+        zero_mul, ite_eq_right]
       rintro ⟨hh, hint⟩
       exact hx ⟨(hiv x hh).2 hint, hh⟩
   have hθ := GlobalTheory.T.thetaLiftVector_isThetaFunction_twoStepModel D G Pl0 T0 A Ks R F hC hQG i t eg eQ fg heg heQ hfg
@@ -1157,8 +1149,7 @@ theorem lift_eq_model_flat : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
     rw [hA x, Finset.mul_sum]
     exact Finset.sum_congr rfl fun u _ => by ring
   refine ⟨Gc, hGc, LiftFlatModel.isSBHalf_of_sum (fun u hu' => (hRs u hu').1) hΨ hk, fun Tm hTm => ?_⟩
-  rw [LiftFlatModel.placeModel_sum hTm (fun u hu' => (hRs u hu').1) hΨ]
-  exact hvP
+  rwa [LiftFlatModel.placeModel_sum hTm (fun u hu' => (hRs u hu').1) hΨ]
 
 end GlobalTheory.LiftFlatModel
 end -- clump:auto

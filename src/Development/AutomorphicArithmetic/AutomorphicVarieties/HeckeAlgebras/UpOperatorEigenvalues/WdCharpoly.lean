@@ -131,8 +131,7 @@ private theorem cong_roots {K : Type} [NormedField K] [IsUltrametricDist K] {N :
     ext k
     have := h k
     rw [e, e, coeff_map, coeff_map, ← map_sub] at this
-    rw [coeff_map, coeff_map, ← sub_eq_zero, ← map_sub, hm]
-    exact this
+    rwa [coeff_map, coeff_map, ← sub_eq_zero, ← map_sub, hm]
   have h6 := congrArg Polynomial.roots h5
   rw [e', e', roots_multiset_prod_X_sub_C, roots_multiset_prod_X_sub_C] at h6
   rw [Multiset.map_injective inj h6]

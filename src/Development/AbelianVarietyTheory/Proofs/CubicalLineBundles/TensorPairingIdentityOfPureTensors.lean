@@ -66,12 +66,9 @@ theorem lamEq_of_tmul : ∀ (S : Scheme.{0}) (O : Type) [CommRing O] (G A : Over
     · refine isTensor_induction t'
         (P := fun y => LBIso (cubeLB B ![(u ≫ t.tmul m) ≫ f₁, y ≫ f₂] L)
           (cubeLB B' ![(u ≫ t.tmul m) ≫ g₁, y ≫ g₂] L')) y (fun m' v => ?_) (fun y y' hy hy' => ?_)
-      · simp only [Category.assoc]
-        exact lbIso_of_lamEq (h m m') u v
-      · simp only [MonObj.mul_comp]
-        exact lbIso_cubeLB_mul_right_of hL hL' hT hT' hy hy'
-    · simp only [MonObj.mul_comp]
-      exact lbIso_cubeLB_mul_left_of hL hL' hT hT' hx hx'
+      · simpa only [Category.assoc] using lbIso_of_lamEq (h m m') u v
+      · simpa only [MonObj.mul_comp] using lbIso_cubeLB_mul_right_of hL hL' hT hT' hy hy'
+    · simpa only [MonObj.mul_comp] using lbIso_cubeLB_mul_left_of hL hL' hT hT' hx hx'
   exact key _ (fst A A') (snd A A')
 
 end GlobalTheory.LamCalc

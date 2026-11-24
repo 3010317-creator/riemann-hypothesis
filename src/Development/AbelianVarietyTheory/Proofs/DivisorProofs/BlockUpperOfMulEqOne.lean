@@ -153,9 +153,7 @@ theorem blockJ_mem_iff_blockSet : ∀ (D : D7) (𝔪 : Ideal (𝓞 D.host.E)) (a
     h ∈ GlobalTheory.BotPairSmall.blockJ D 𝔪 a N ↔ h ∈ GlobalTheory.BotPairSmall.blockSet D 𝔪 a N := by
   intro D 𝔪 a N h
   constructor
-  · intro hh
-    exact (Subgroup.closure_le (blockLevelSub D 𝔪 a N)).2 (fun _ hx => hx) hh
-  · intro hh
-    exact Subgroup.subset_closure hh
+  · exact fun hh => (Subgroup.closure_le (blockLevelSub D 𝔪 a N)).2 (fun _ hx => hx) hh
+  · exact fun hh => Subgroup.subset_closure hh
 
 end GlobalTheory.BotPairSmall

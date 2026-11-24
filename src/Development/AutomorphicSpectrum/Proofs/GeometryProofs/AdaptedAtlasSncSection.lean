@@ -120,9 +120,7 @@ theorem exists_adaptedAtlas : ∀ {e : ℕ} {X : Type} [TopologicalSpace X] [Com
       exact (han.continuousAt.norm.log (by simpa using hv0 _ (φ.map_target hzt))).continuousWithinAt
     have hG : ContinuousOn (fun z => L.φ x (φ.symm z)) (Metric.closedBall (0 : Fin e → ℂ) 2) := by
       have h := contDiffOn_compat hφc (L.isOpen_U x) (hL.1 x)
-      refine h.continuousOn.mono ?_
-      intro z hz
-      exact ⟨hball hz, hsrcU (φ.map_target (hball hz))⟩
+      exact h.continuousOn.mono (fun z hz => ⟨hball hz, hsrcU (φ.map_target (hball hz))⟩)
     obtain ⟨C₁, hC₁⟩ := hK.exists_bound_of_continuousOn hF
     obtain ⟨C₂, hC₂⟩ := hK.exists_bound_of_continuousOn hG
     refine ⟨2 * C₁ + 2 * C₂ + ∑ i ∈ S, (μ i : ℝ) * Real.log 4, hμ, hbd, ?_⟩

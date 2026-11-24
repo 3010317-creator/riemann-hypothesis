@@ -93,8 +93,7 @@ theorem locK_eq_one {χ : HChar L} {v : HeightOneSpectrum (𝓞 L)} (h : χ.Tame
       rw [hk]
     have h2 : Valued.v (algebraMap L (v.adicCompletion L) (algebraMap (𝓞 L) L (a - 1))) =
         v.valuation L (algebraMap (𝓞 L) L (a - 1)) := HeightOneSpectrum.valuedAdicCompletion_eq_valuation' v _
-    rw [h1, h2, v.valuation_of_algebraMap, v.intValuation_le_pow_iff_mem, pow_one]
-    exact ha
+    rwa [h1, h2, v.valuation_of_algebraMap, v.intValuation_le_pow_iff_mem, pow_one]
 
 theorem exists_lift_mem (χ : HChar L) (Λ : Subgroup ℂˣ) (S : Finset (HeightOneSpectrum (𝓞 L))) (ht : ∀ v, χ.TameAt v)
     (hi : ∀ k, χ.inf k = 1) (hu : ∀ v, v ∉ S → χ.UnrAt v) (hv : ∀ v, v ∉ S → χ.val v ∈ Λ)
@@ -106,7 +105,7 @@ theorem exists_lift_mem (χ : HChar L) (Λ : Subgroup ℂˣ) (S : Finset (Height
     (fun v _ => v.prime) (fun v _ w _ h h' => h (HeightOneSpectrum.ext h')) (fun v => if v.1 = P then b else 1)
   have hua : (u : 𝓞 L ⧸ P.asIdeal) = Ideal.Quotient.mk _ a := by
     have h1 := ha P hP
-    rw [if_pos rfl, pow_one] at h1
+    rw [ite_eq_left rfl, pow_one] at h1
     rw [← hb]
     exact (Ideal.Quotient.eq.2 h1).symm
   have : Nontrivial (𝓞 L ⧸ P.asIdeal) := Ideal.Quotient.nontrivial_iff.2 P.isPrime.ne_top
@@ -118,7 +117,7 @@ theorem exists_lift_mem (χ : HChar L) (Λ : Subgroup ℂˣ) (S : Finset (Height
   have h := productRule χ S hu (Units.mk0 _ ha0)
   rw [hi, one_mul, Finset.prod_eq_single_of_mem P hP (fun v hvS hvP => locK_eq_one (ht v) _ a rfl (by
     have h1 := ha v hvS
-    rwa [if_neg hvP, pow_one] at h1))] at h
+    rwa [ite_eq_right hvP, pow_one] at h1))] at h
   rw [eq_inv_of_mul_eq_one_left h]
   refine Λ.inv_mem (finprod_induction (· ∈ Λ) Λ.one_mem (fun _ _ => Λ.mul_mem) fun v => ?_)
   exact finprod_induction (· ∈ Λ) Λ.one_mem (fun _ _ => Λ.mul_mem) fun hvS => Λ.zpow_mem (hv v hvS) _
@@ -185,8 +184,7 @@ theorem val_sq_eq_one (hc : Formalism.BasicNotions.CMData F E) {χ : HChar E} (h
   obtain ⟨f, hf⟩ := exists_norm hc a
   have hfE : algebraMap F E (f : F) = (a : E) * (cO E a : 𝓞 E) := by
     have := congrArg (algebraMap (𝓞 E) E) hf
-    rw [map_mul] at this
-    exact this
+    rwa [map_mul] at this
   have hf0 : (f : F) ≠ 0 := fun h0 => by
     rw [h0, map_zero] at hfE
     exact mul_ne_zero (hne a ha2) (hne _ hb2) hfE.symm
@@ -315,8 +313,7 @@ theorem chiVal_of_chiW (hW : R.grp_chiW) : ChiVal R := by
   rw [hW, MulEquiv.apply_symm_apply, Finset.prod_eq_single (⟨PP, hPP⟩ : R.Pg), Pi.mulSingle_eq_same, hg]
   · intro b _ hb
     rw [Pi.mulSingle_eq_of_ne hb, map_one, map_one, Units.val_one]
-  · intro hb
-    exact absurd (Finset.mem_univ _) hb
+  · exact fun hb => absurd (Finset.mem_univ _) hb
 
 theorem conjP_conjP (P : Pl D.host.E) : conjPrime₂ (conjPrime₂ P) = P :=
   HeightOneSpectrum.ext (Ideal.ext fun a => by rw [mem_conjP, mem_conjP, cO_cO])
@@ -363,8 +360,7 @@ theorem xiR_mem (hL : R.toLevCh.Is A.μ0) (hon : R.fam_pl_onto) (hmu : R.fam_muV
   obtain ⟨n, hn, ho⟩ := hL.xi_fin t
   obtain ⟨a, k, hk, hx, hm⟩ := TypeValues.exists_lift_mem (R.xiH t) _ (T ∪ T.image conjPrime₂) (hL.xi_tame t)
     (TypeValues.inf_eq_one _ hn ho) hu hv (Finset.mem_union_left _ (hQ PP hPP)) x
-  rw [hL.xiR t PP hPP a k x hk hx]
-  exact hm
+  rwa [hL.xiR t PP hPP a k x hk hx]
 
 theorem placeEx (i : Fin D.R.m) {K' : Type} [Field K'] (jL : D.what₂.LL →+* K') (σ' : K' →+* ℂ) (t : T0)
     {Cl : Type} [Fintype Cl] (h : Cl → GA D (Vc D i)) (c0' : VsV D i K' →ₛₗ[σ'] (R.cV i).W) {gramR c0R c0L}

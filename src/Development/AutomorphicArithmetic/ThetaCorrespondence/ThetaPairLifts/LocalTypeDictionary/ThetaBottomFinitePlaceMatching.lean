@@ -112,8 +112,7 @@ namespace GlobalTheory.BotFinRef
 theorem exists_dual_eq_one {M : Type} [AddCommGroup M] [Module ℂ M] {a : M} (ha : a ≠ 0) :
     ∃ φ : M →ₗ[ℂ] ℂ, φ a = 1 := by
   obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual ℂ M, φ a ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact ha ((Module.forall_dual_apply_eq_zero_iff ℂ a).1 h)
   exact ⟨(φ a)⁻¹ • φ, by rw [LinearMap.smul_apply, smul_eq_mul, inv_mul_cancel₀ hφ]⟩
 
@@ -126,8 +125,7 @@ theorem exists_smul_of_tmul_eq {M N : Type} [AddCommGroup M] [Module ℂ M] [Add
   obtain ⟨φ, hφ⟩ := exists_dual_eq_one ha
   refine ⟨φ c, ?_⟩
   have := congrArg (fun z => (TensorProduct.lid ℂ N) (φ.rTensor N z)) h
-  simp only [contract_tmul, hφ, one_smul] at this
-  exact this
+  simpa only [contract_tmul, hφ, one_smul] using this
 
 theorem tensor_eq_zero_of_subsingleton {M N : Type} [AddCommGroup M] [Module ℂ M] [AddCommGroup N] [Module ℂ N]
     [Subsingleton M] (z : M ⊗[ℂ] N) : z = 0 := by
@@ -160,9 +158,7 @@ theorem exists_smul_of_factor {Q Q' Pr Pf Pi : Type} [AddCommGroup Q] [Module �
   · have h2 : q P ⊗ₜ[ℂ] x = q' P' ⊗ₜ[ℂ] (κ • x') := by
       apply e.injective
       rw [← ha, h1, ha', ← LinearEquiv.map_smul, TensorProduct.tmul_smul]
-    have hy : q P ≠ 0 := by
-      intro h
-      exact h0 (by rw [ha, h, TensorProduct.zero_tmul, map_zero])
+    have hy : q P ≠ 0 := fun h => h0 (by rw [ha, h, TensorProduct.zero_tmul, map_zero])
     obtain ⟨l, hl⟩ := exists_smul_of_tmul_eq hy h2
     exact ⟨l * κ, by rw [hl, smul_smul]⟩
 
@@ -339,8 +335,7 @@ theorem _root_.GlobalTheory.BotUniqT.bottomLevel_ker_right : GlobalTheory.Publis
     have hm : Φ₀D ∈ KD := (hKD _).2 ⟨hΦ₀D, hpm⟩
     rw [h2] at hm
     obtain ⟨_, Φ₁, _, hD₁, h0⟩ := (hK _).1 hm
-    rw [IsDatum.fun_eq Γ.M' ψ cB cB.surjective hD hD₁]
-    exact h0
+    rwa [IsDatum.fun_eq Γ.M' ψ cB cB.surjective hD hD₁]
 end GlobalTheory.SquareAgree
 end
 section
@@ -367,8 +362,7 @@ private theorem exists_equiv_of_same_kernel {V P₀ P : Type} [AddCommGroup V] [
     exact ⟨⟨x, hx⟩, rfl⟩
   have hker : LinearMap.ker (p₀.domRestrict S) = LinearMap.ker (p.domRestrict S) := by
     ext x
-    simp only [LinearMap.mem_ker, LinearMap.domRestrict_apply]
-    exact hk x.1 x.2
+    simpa only [LinearMap.mem_ker, LinearMap.domRestrict_apply] using hk x.1 x.2
   let E : P₀ ≃ₗ[ℂ] P := ((p₀.domRestrict S).quotKerEquivOfSurjective s₀).symm.trans
     ((Submodule.quotEquivOfEq _ _ hker).trans ((p.domRestrict S).quotKerEquivOfSurjective s))
   refine ⟨E, fun x hx => ?_⟩

@@ -220,8 +220,7 @@ namespace GlobalTheory.AmpleGen
 
 theorem zpow_two_var {G : Type*} [CommGroup G] (x y : G) (a b c d a' b' : ℤ) :
     (x ^ a * y ^ b) ^ a' * (x ^ c * y ^ d) ^ b' = x ^ (a * a' + c * b') * y ^ (b * a' + d * b') := by
-  simp only [mul_zpow, ← zpow_mul, zpow_add]
-  exact _root_.mul_mul_mul_comm _ _ _ _
+  simpa only [mul_zpow, ← zpow_mul, zpow_add] using _root_.mul_mul_mul_comm _ _ _ _
 
 theorem comp_zpow_hom {C : Type*} [Category C] [CartesianMonoidalCategory C] {G X Y : C} [GrpObj G]
     (f : X ⟶ Y) (g : Y ⟶ G) (n : ℤ) : f ≫ g ^ n = (f ≫ g) ^ n := by
@@ -563,8 +562,7 @@ theorem exists_finFree_app_of_finitePresentation {y : Y} {U : Y.Opens} (hy : y �
     H (isPushout_app f hV (hV.basicOpen r) (Y.basicOpen_le r)) (Y.toRingedSpace.isUnit_res_basicOpen r)⟩
   have e := hV.fromSpec_primeIdealOf ⟨y, hyV⟩
   have h₁ : hV.primeIdealOf ⟨y, hyV⟩ ∈ hV.fromSpec ⁻¹ᵁ Y.basicOpen r := by
-    rw [hV.fromSpec_preimage_basicOpen]
-    exact hr
+    rwa [hV.fromSpec_preimage_basicOpen]
   exact (congrArg (· ∈ Y.basicOpen r) e).mp h₁
 
 theorem le_iSup_freeOpen (V : Y.Opens) : V ≤ ⨆ W : FreeOpen f V, W.1 := fun _ hx => by
@@ -583,8 +581,7 @@ theorem finrank_app_of_finrank (r : ℕ) (hr : ∀ y, f.finrank y = r) (V : Y.Op
   haveI : Module.Finite Γ(Y, V) Γ(X, f ⁻¹ᵁ V) := hF.1
   obtain ⟨p⟩ : Nonempty (PrimeSpectrum Γ(Y, V)) := inferInstance
   have e := (GlobalTheory.AbelianMulFin.affine_finite_projective_rankAtStalk f r hr V hV).2.2.2 p
-  rw [Module.rankAtStalk_eq_finrank_of_free] at e
-  exact e
+  rwa [Module.rankAtStalk_eq_finrank_of_free] at e
 
 theorem exists_trFun (V : Y.Opens) (b : Γ(X, f ⁻¹ᵁ V)) : ∃ a : Γ(Y, V), ∀ W : FreeOpen f V,
     resG Y W.2.2.1 a = tr (f.app W.1).hom (resG X (f.preimage_mono W.2.2.1) b) :=
@@ -805,8 +802,7 @@ theorem cechLB_retract (r : ℕ) (hr : ∀ y, f.finrank y = r) (hu : IsUnit (r :
     (L : LB Y) {κ : Type} [LinearOrder κ] (D : κ → Y.Opens) :
     cechPull f q L D ≫ (cechTr f q L D ≫ cechSMul q (hu.unit⁻¹).val L D) = 𝟙 (cechLB q L D) := by
   have e := congrArg (cechFunctor κ R).map (pullCube_trCube_inv f q r hr hu L D)
-  rw [Functor.map_comp, Functor.map_comp, CategoryTheory.Functor.map_id] at e
-  exact e
+  rwa [Functor.map_comp, Functor.map_comp, CategoryTheory.Functor.map_id] at e
 
 theorem cechLB_retract_and_exactAt (r : ℕ) (hr : ∀ y, f.finrank y = r) (hu : IsUnit (r : Γ(Y, ⊤)))
     (L : LB Y) {κ : Type} [LinearOrder κ] (D : κ → Y.Opens) :
@@ -1544,8 +1540,7 @@ theorem coboundary_of_exact {κ : Type} [LinearOrder κ] (W : κ → X.Opens)
       SecOnR.restrict f M (le_inf (hle (by simp)) (hle (by simp))) (Φ k l) := by
     intro k l hkl
     have hn : ({k, l} : Finset κ).Nonempty := by simp
-    simp only [x, dif_pos hn]
-    exact hcongr (by simp [hkl.le]) (by simp [hkl.le]) _ _
+    simpa only [x, dite_eq_left hn] using hcongr (by simp [hkl.le]) (by simp [hkl.le]) _ _
   have hE := (cechComplex_exactAt_succ_iff (secCube f M W) 0).1 hW
   have hd : Cube.d (secCube f M W) (0 + 2) (fun s => x s.1) = 0 := by
     funext t
@@ -1939,8 +1934,7 @@ theorem secBaseChange_relAmple : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (A
   have hlD : ∀ y, l y ∈ D := fun y => by
     obtain ⟨x, hx, e⟩ := y.2
     have : t₀ (l y) = t₀ x := (congrArg (fun Q => Q y) hl).trans e.symm
-    rw [t₀.isOpenEmbedding.injective this]
-    exact hx
+    rwa [t₀.isOpenEmbedding.injective this]
   let hD : overRes (T := baseOver S) (t₀ ''ᵁ D) ⟶ Over.mk t₀ := Over.homMk l (hl.trans (Category.comp_id _).symm)
   choose b hb using fun i => exists_pullSec A L (a : ℤ) hD (b₀ i)
   refine ⟨t₀ ''ᵁ D, ⟨q, hq, rfl⟩, m, b, fun R' _ t b' hb' => ?_⟩

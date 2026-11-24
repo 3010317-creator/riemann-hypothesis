@@ -416,7 +416,7 @@ theorem crd_basis (bV : Module.Basis (Fin d) F V) (r j : Fin d) :
   rw [crd_tmul, Module.Basis.coord_apply, Module.Basis.repr_self]
   by_cases h : r = j
   · subst h; simp
-  · rw [Finsupp.single_apply, if_neg (Ne.symm h), if_neg h, zero_smul]
+  · rw [Finsupp.single_apply, ite_eq_right (Ne.symm h), ite_eq_right h, zero_smul]
 
 end GlobalTheory.CrisCoord
 
@@ -436,8 +436,7 @@ theorem sum_lat (T : Submodule ℤ_[l] V) (b : Module.Basis (Fin d) ℤ_[l] T) (
 
   rw [map_sum] at h
   simp only [map_smul, Submodule.subtype_apply] at h
-  simp only [algebraMap_smul]
-  exact h.symm
+  simpa only [algebraMap_smul] using h.symm
 
 theorem span_lat (T : Submodule ℤ_[l] V) (hT : Submodule.span ℚ_[l] (T : Set V) = ⊤)
     (b : Module.Basis (Fin d) ℤ_[l] T) : ⊤ ≤ Submodule.span ℚ_[l] (Set.range fun i => (b i : V)) := by
@@ -661,7 +660,7 @@ theorem exists_lattice_generators : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) 
         intro a
         show algebraMap (Per.BdRp l) (Per.BdR l) (aDp l (Per.zA l (y j' a))) * v j' a r *
           (if j' = j' then algebraMap (Per.BdRp l) (Per.BdR l) (inv ⟨j', a⟩) * c j' a else 0) = _
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         have hu : algebraMap (Per.BdRp l) (Per.BdR l) (aDp l (Per.zA l (y j' a))) *
             algebraMap (Per.BdRp l) (Per.BdR l) (inv ⟨j', a⟩) = 1 := by
           rw [← map_mul, show aDp l (Per.zA l (y j' a)) * inv ⟨j', a⟩ = 1 from
@@ -674,8 +673,7 @@ theorem exists_lattice_generators : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) 
       rw [Finset.sum_apply] at h2
       simp only [Pi.smul_apply, smul_eq_mul] at h2
       rw [← h2, Pi.single_apply, Matrix.one_apply]
-    · intro j _ hj
-      exact Finset.sum_eq_zero fun a _ => by simp [G, hj]
+    · exact fun j _ hj => Finset.sum_eq_zero fun a _ => by simp [G, hj]
     · intro h; exact absurd (Finset.mem_univ j') h
 
 end GlobalTheory.BdRLatticeGens
@@ -718,7 +716,7 @@ theorem li_of_frac {B : Type} [CommRing B] [IsDomain B] {d : ℕ} {ι G F : Type
     intro c hcard hc
     by_contra hne
     obtain ⟨i0, hi0⟩ : ∃ i0, c i0 ≠ 0 := by
-      by_contra h; push_neg at h; exact hne (funext h)
+      by_contra h; push Not at h; exact hne (funext h)
     have hσ : ∀ g, ∑ i, σ g (c i) • v i = 0 := by
       intro g
       have e1 : (fun r => σ g ((∑ i, c i • v i) r)) = ∑ i, σ g (c i) • (fun r => σ g (v i r)) := by

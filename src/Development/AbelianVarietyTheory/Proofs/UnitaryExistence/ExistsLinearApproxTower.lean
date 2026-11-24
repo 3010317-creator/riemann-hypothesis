@@ -92,8 +92,7 @@ lemma exists_div {M : Submodule (𝓞 E) (Fin n → E)}
   have h2 : fv F ((N : E)⁻¹ • (x : Fin n → E)) = u := by
     apply nsmul_cancel hN
     rw [← fv_nsmul, h1, h]
-  refine ⟨⟨_, (hM _).1 (h2 ▸ hu)⟩, Subtype.ext ?_⟩
-  exact h1.symm
+  exact ⟨⟨_, (hM _).1 (h2 ▸ hu)⟩, Subtype.ext h1.symm⟩
 
 lemma projective_of_fg (L : Submodule (𝓞 E) (Fin n → E)) (hL : L.FG) :
     Module.Projective (𝓞 E) L := by
@@ -140,13 +139,11 @@ theorem GlobalTheory.AdLat.exists_linear_approx_tower : ∀ (F E : Type) [Field 
     exact ⟨u, hu, rfl⟩
   have hfrom : ∀ z ∈ hat F (Λ : Set (Fin n → E)), ∃ u ∈ hat F (L : Set (Fin n → E)), G *ᵥ u = z := by
     intro z hz
-    rw [← SetLike.mem_coe, hhat] at hz
-    exact hz
+    rwa [← SetLike.mem_coe, hhat] at hz
   have hinj : ∀ u u' : Fin n → RA F E, G *ᵥ u = G *ᵥ u' → u = u' := by
     intro u u' h
     have := congrArg (fun t => ((g⁻¹ : GL (Fin n) (RA F E)) : Matrix (Fin n) (Fin n) (RA F E)) *ᵥ t) h
-    simp only [hG, Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec] at this
-    exact this
+    simpa only [hG, Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec] using this
   haveI := projective_of_fg L hL
   have key : ∀ N : ℕ, ∃ f : L →ₗ[𝓞 E] Λ, 0 < N → ∀ a : L, ∃ w ∈ hat F (L : Set (Fin n → E)),
       fv F (f a : Fin n → E) = G *ᵥ (fv F (a : Fin n → E) + N • w) := by

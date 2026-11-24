@@ -66,8 +66,7 @@ theorem theta_action_local_at_archimedean_place : _root_.GlobalTheory.FunPr.Thet
     have hs0 : ∀ G : (Fin n × Fin d → AF F) → ℂ, schr ψ (u • (-y), u • (0 : Fin n × Fin d → AF F)) G =
         fun w => G (w + u • (-y)) := by
       intro G; funext w; simp [schr]
-    rw [hs0, hs0] at e
-    exact e
+    rwa [hs0, hs0] at e
   set Φ₁ := tens (evI F) (f : (Fin n × Fin d → mixedEmbedding.mixedSpace F) → ℂ) r with hΦ₁
   set Φ₂ : (Fin n × Fin d → AF F) → ℂ := r y • (fun w => Φ₀ (w + u • (-y))) with hΦ₂
   have hm₂ : Φ₂ ∈ schA F _ := Submodule.smul_mem _ _ (GlobalTheory.SchwartzTranslation.schA_add_const _ _ hm₀)
@@ -76,8 +75,7 @@ theorem theta_action_local_at_archimedean_place : _root_.GlobalTheory.FunPr.Thet
     have := congrArg Prod.snd (congrFun (hz u hu0) i)
     change (u * z i).2 = (0 : AF F).2 at this
     have e : (u * z i).2 = (z i).2 := one_mul _
-    rw [e] at this
-    exact this
+    rwa [e] at this
   have hvan : ∀ z, At (evI F) z → (Φ₁ - Φ₂) (y + z) = 0 := by
     intro z hz
     have e1 : r (y + z) = r y := hr.1 y z hz

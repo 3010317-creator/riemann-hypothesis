@@ -68,10 +68,7 @@ theorem partialDeriv_map_of_mem
     partialDeriv k ι S₁ i (φ f)
       = coord k ι S₁ s * φ (partialDeriv k ι S i f) := by
   let _ : Algebra S S₁ := φ.toRingHom.toAlgebra
-  have : IsScalarTower k S S₁ := by
-    refine IsScalarTower.of_algebraMap_eq fun x => ?_
-    show algebraMap k S₁ x = φ (algebraMap k S x)
-    exact (φ.commutes x).symm
+  have : IsScalarTower k S S₁ := IsScalarTower.of_algebraMap_eq fun x => (φ.commutes x).symm
   have hsmul : ∀ (a : S) (z : S₁), a • z = φ a * z := fun _ _ => rfl
   let L₁ : S →ₗ[k] S₁ := (partialDeriv k ι S₁ i).toLinearMap.comp φ.toLinearMap
   let L₂ : S →ₗ[k] S₁ :=
@@ -98,15 +95,15 @@ theorem partialDeriv_map_of_mem
     · by_cases hjs : j = s
       · subst hjs
         rw [hs]
-        simp only [partialDeriv_coord, if_neg his, map_zero, mul_zero]
+        simp only [partialDeriv_coord, ite_eq_right his, map_zero, mul_zero]
       · rw [hin j hjT hjs, (partialDeriv k ι S₁ i).leibniz]
-        simp only [smul_eq_mul, partialDeriv_coord, if_neg his, mul_zero, zero_add]
+        simp only [smul_eq_mul, partialDeriv_coord, ite_eq_right his, mul_zero, zero_add]
         by_cases hij : i = j
         · simp [hij]
         · simp [hij]
     · rw [hout j hjT]
       have hij : i ≠ j := by rintro rfl; exact hjT hiT
-      simp only [partialDeriv_coord, if_neg hij, map_zero, mul_zero]
+      simp only [partialDeriv_coord, ite_eq_right hij, map_zero, mul_zero]
   exact DFunLike.congr_fun hD f
 
 theorem partialDeriv_map_of_notMem
@@ -202,27 +199,19 @@ theorem coord_mul_partialDeriv_map_eq_map_sum
     { toFun := fun x => coord k ι S₁ s * partialDeriv k ι S₁ s (φ x)
       map_add' := by
         intro x y
-        show coord k ι S₁ s * partialDeriv k ι S₁ s (φ (x + y))
-          = coord k ι S₁ s * partialDeriv k ι S₁ s (φ x)
-            + coord k ι S₁ s * partialDeriv k ι S₁ s (φ y)
         rw [map_add (f := _), map_add (f := _), mul_add]
       map_smul' := by
         intro c x
-        show coord k ι S₁ s * partialDeriv k ι S₁ s (φ (c • x))
-          = c • (coord k ι S₁ s * partialDeriv k ι S₁ s (φ x))
+        dsimp only [RingHom.id_apply]
         rw [map_smul, Derivation.map_smul, mul_smul_comm] }
   let L₂ : S →ₗ[k] S₁ :=
     { toFun := fun x => φ (∑ i ∈ T, coord k ι S i * partialDeriv k ι S i x)
       map_add' := by
         intro x y
-        show φ (∑ i ∈ T, coord k ι S i * partialDeriv k ι S i (x + y))
-          = φ (∑ i ∈ T, coord k ι S i * partialDeriv k ι S i x)
-            + φ (∑ i ∈ T, coord k ι S i * partialDeriv k ι S i y)
         rw [hsum_add, map_add (f := _)]
       map_smul' := by
         intro c x
-        show φ (∑ i ∈ T, coord k ι S i * partialDeriv k ι S i (c • x))
-          = c • φ (∑ i ∈ T, coord k ι S i * partialDeriv k ι S i x)
+        dsimp only [RingHom.id_apply]
         rw [hsum_smul, map_smul] }
   have hleib1 : ∀ a b : S, L₁ (a * b) = a • L₁ b + b • L₁ a := by
     intro a b
@@ -248,40 +237,25 @@ theorem coord_mul_partialDeriv_map_eq_map_sum
           = if i = j then coord k ι S j else 0 := by
         intro i _
         rw [partialDeriv_coord]
-        by_cases h : i = j
-        · subst h
-          simp
-        · simp [h]
+        by_cases h : i = j <;> simp [h]
       rw [Finset.sum_congr rfl hterm]
-      by_cases hj : j ∈ T
-      · rw [Finset.sum_eq_single j]
-        · simp [hj]
-        · intro i _ hij
-          rw [if_neg hij]
-        · intro h
-          exact absurd hj h
-      · rw [if_neg hj]
-        refine Finset.sum_eq_zero fun i hi => ?_
-        have hij : i ≠ j := by
-          rintro rfl
-          exact hj hi
-        rw [if_neg hij]
+      simp
     rw [hsum]
     by_cases hjs : j = s
     · subst hjs
-      rw [hs, if_pos hsT, hs, partialDeriv_coord_self, mul_one]
+      rw [hs, ite_eq_left hsT, hs, partialDeriv_coord_self, mul_one]
     · by_cases hjT : j ∈ T
       · have h1 : partialDeriv k ι S₁ s (coord k ι S₁ s) = 1 :=
           partialDeriv_coord_self k ι S₁ s
         have h2 : partialDeriv k ι S₁ s (coord k ι S₁ j) = 0 :=
           partialDeriv_coord_of_ne k ι S₁ s j (Ne.symm hjs)
-        rw [if_pos hjT, hin j hjT hjs, Derivation.leibniz, h1, h2]
+        rw [ite_eq_left hjT, hin j hjT hjs, Derivation.leibniz, h1, h2]
         simp only [smul_eq_mul]
         ring
       · have hne : s ≠ j := by
           rintro rfl
           exact hjT hsT
-        rw [if_neg hjT, map_zero, hout j hjT,
+        rw [ite_eq_right hjT, map_zero, hout j hjT,
           partialDeriv_coord_of_ne k ι S₁ s j hne, mul_zero]
   exact DFunLike.congr_fun hD f
 
@@ -474,8 +448,7 @@ theorem map_derivIdealIterate_le_span_pow_mul [Fintype ι]
     induction r with
     | zero =>
         intro _
-        rw [derivIdealIterate_zero k J, derivIdealIterate_zero k J₁, Nat.sub_zero]
-        exact hJ
+        rwa [derivIdealIterate_zero k J, derivIdealIterate_zero k J₁, Nat.sub_zero]
     | succ r ih =>
         intro hr
         have hrm : r ≤ m := Nat.le_of_succ_le hr
@@ -484,8 +457,7 @@ theorem map_derivIdealIterate_le_span_pow_mul [Fintype ι]
           (derivIdealIterate k r J) (derivIdealIterate k r J₁) (m - r) h1 (ih hrm)
         have hmm : m - r - 1 = m - (r + 1) := by omega
         rw [hmm] at hstep
-        rw [derivIdealIterate_succ k r J, derivIdealIterate_succ k r J₁]
-        exact hstep
+        rwa [derivIdealIterate_succ k r J, derivIdealIterate_succ k r J₁]
   exact key j hj
 
 end EtaleCoordinates

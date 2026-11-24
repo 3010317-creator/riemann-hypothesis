@@ -180,8 +180,7 @@ theorem injective_of_charZero (E : Type) [Field E] [NumberField E] (K : Type) [F
   rw [eq_bot_iff]
   intro n hn
   rw [Ideal.mem_comap, RingHom.mem_ker, eq_intCast, map_intCast, Int.cast_eq_zero] at hn
-  rw [Ideal.mem_bot]
-  exact hn
+  rwa [Ideal.mem_bot]
 
 theorem sum_repr_smul_dual (E : Type) [Field E] [NumberField E] {ι : Type} [Fintype ι]
     [DecidableEq ι] (b : Basis ι ℤ (𝓞 E)) (B D : Basis ι ℚ E)
@@ -208,7 +207,7 @@ theorem sum_repr_smul_dual (E : Type) [Field E] [NumberField E] {ι : Type} [Fin
 
     rw [hrepr, Algebra.traceForm_apply, mul_comm (algebraMap (𝓞 E) E a) (D l), mul_assoc, hB' k,
     Finset.mul_sum, map_sum]
-    simp only [hterm, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [hterm, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   calc ∑ k, ((b.repr (a * b k) l : ℤ) : E) * D k
       = ∑ k, D.repr (algebraMap (𝓞 E) E a * D l) k • D k := by
         refine Finset.sum_congr rfl fun k _ => ?_
@@ -350,8 +349,7 @@ theorem value_span : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] [IsCommMonObj 
         (⟨inc (σ a), hreg _⟩ : regAt ξ ⟨centre z, h⟩) • (⟨b i, hbl i⟩ : M.lat ⟨centre z, h⟩) := Subtype.ext h3
     have h5 : ρz a (ev ⟨b i, hbl i⟩) = βF (σ a) • ev ⟨b i, hbl i⟩ := by
       rw [← h2]
-      refine (congrArg ev h4).trans ?_
-      exact hsmul _ _ _ (hinc _)
+      exact (congrArg ev h4).trans (hsmul _ _ _ (hinc _))
     exact h5
   · intro w hw
     have hw' := mem_eigSp_iff.1 hw
@@ -573,8 +571,7 @@ theorem exchange {F W : Type} [Field F] [AddCommGroup W] [Module F W] {n : ℕ} 
   have hu : LinearIndependent F u := by
     rw [linearIndependent_iff_card_eq_finrank_span]
     have := linearIndependent_iff_card_eq_finrank_span.1 ht
-    rw [Set.finrank, ← h]
-    exact this
+    rwa [Set.finrank, ← h]
   refine ⟨hu, ?_⟩
   have h1 : ∀ i, ∃ c : Fin n → F, ∑ k, c k • u k = t i := fun i =>
     (Submodule.mem_span_range_iff_exists_fun F).1 (h ▸ Submodule.subset_span ⟨i, rfl⟩)

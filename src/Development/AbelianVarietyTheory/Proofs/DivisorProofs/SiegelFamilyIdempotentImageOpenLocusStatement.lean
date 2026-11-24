@@ -180,8 +180,7 @@ theorem torsFamily_eq_isOpen : ∀ (m M : ℕ) (S' : Scheme.{0}) [IsLocallyNoeth
   have hu : IsUnit (M : Γ(S', ⊤)) := by
     have h1 : IsUnit (M : cycAway M) := isUnit_natCast (by omega)
     have h2 := h1.map (Scheme.ΓSpecIso (CommRingCat.of (cycAway M))).inv.hom
-    have h3 := h2.map t.appTop.hom
-    simpa using h3
+    simpa using h2.map t.appTop.hom
   haveI := hA.smooth
   haveI : Etale (𝟙 A ^ M).left := GlobalTheory.GrpTangent.etale_id_pow A hu
   have hpow : ∀ z : 𝟙_ (Over S') ⟶ A, z ^ M = 1 →
@@ -201,8 +200,7 @@ theorem torsFamily_eq_isOpen : ∀ (m M : ℕ) (S' : Scheme.{0}) [IsLocallyNoeth
         exact hU1 i V (hVi i))) a
     have := congrArg Over.Hom.left key
     rwa [Over.comp_left, Over.comp_left, Over.toUnit_left] at this
-  · intro T g hg
-    exact Set.subset_iInter fun i => hU2 i T g (hg _)
+  · exact fun T g hg => Set.subset_iInter fun i => hU2 i T g (hg _)
 
 end GlobalTheory
 end -- clump:auto
@@ -426,8 +424,7 @@ theorem range_subset_iff_pt {k : Type} [Field k] {X : Scheme.{0}} (y : Sp k ⟶ 
   rw [Set.range_subset_iff]
   refine ⟨fun H => H _, fun H p => ?_⟩
   have : p = (⊥ : PrimeSpectrum k) := Subsingleton.elim (α := Sp k) p (⊥ : PrimeSpectrum k)
-  rw [this]
-  exact H
+  rwa [this]
 
 theorem torsion_hom_ext {S : Scheme.{0}} {G : Over S} [GrpObj G] {M : ℕ} {X : Over S} (u v : X ⟶ torsion G M)
     (h : u ≫ torsion.ι G M = v ≫ torsion.ι G M) : u = v :=
@@ -488,8 +485,7 @@ theorem exists_open_levSurj : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (M : 
       rw [range_subset_iff_pt]
       have : p = (⊥ : PrimeSpectrum k) :=
         @Subsingleton.elim (Sp k) (inferInstanceAs (Subsingleton (PrimeSpectrum k))) p (⊥ : PrimeSpectrum k)
-      rw [← this]
-      exact hpU
+      rwa [← this]
     obtain ⟨w⟩ := (key k x₀).1 hr
     let y := w ≫ i
     have hy : Set.range y.left.base ⊆ (C : Set (torsion G M).left) := (hV _ y).2 ⟨w, rfl⟩
@@ -505,17 +501,13 @@ theorem exists_open_levSurj : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (M : 
       show y ≫ 𝟙 _ = y ≫ toUnit _ ≫ ℓ _
       rw [Category.comp_id, ← Category.assoc, toUnit_unique (y ≫ toUnit _) (toUnit _), ← hy']
     have h1 := (range_subset_iff_pt _ _).1 hy
-    have h2 := (range_subset_iff_pt _ _).1 hin
-    exact h1 (Set.mem_iUnion.2 ⟨⟨q a, a, rfl⟩, h2⟩)
+    exact h1 (Set.mem_iUnion.2 ⟨⟨q a, a, rfl⟩, ((range_subset_iff_pt _ _).1 hin)⟩)
   · intro k' _ _ x hx g hg
     let y := GlobalTheory.TorsionFamily.torsionLift G g M hg
     have hnC : ¬ Set.range y.left.base ⊆ (C : Set (torsion G M).left) := by
       intro H
       obtain ⟨w, -⟩ := (hV _ y).1 H
-      have hr := (key k' x).2 ⟨w⟩
-      have h1 := (range_subset_iff_pt _ _).1 hr
-      have h2 := (range_subset_iff_pt _ _).1 hx
-      exact h2 h1
+      exact ((range_subset_iff_pt _ _).1 hx) ((range_subset_iff_pt _ _).1 ((key k' x).2 ⟨w⟩))
     rw [range_subset_iff_pt] at hnC
     have hZ : y.left.base (⊥ : PrimeSpectrum k') ∈ Zs := not_not.1 hnC
     obtain ⟨c, hc⟩ := Set.mem_iUnion.1 hZ
@@ -620,8 +612,7 @@ theorem GlobalTheory.levTriv_locus_open : ∀ (S : Scheme.{0}) [IsLocallyNoether
   have hpick : ∀ a, A a = A (pick (q a)) := fun a => by
     have hc : ∃ a', q a' = q a := ⟨a, rfl⟩
     refine hAq _ _ ?_
-    simp only [pick, dif_pos hc]
-    exact hc.choose_spec.symm
+    simpa only [pick, dite_eq_left hc] using hc.choose_spec.symm
   refine ⟨⟨⋂ c, A (pick c), isOpen_iInter_of_finite fun c => hAo _⟩, ?_, ?_⟩
   · rintro _ ⟨p, rfl⟩
     simp only [TopologicalSpace.Opens.coe_mk, Set.mem_iInter]
@@ -634,8 +625,7 @@ theorem GlobalTheory.levTriv_locus_open : ∀ (S : Scheme.{0}) [IsLocallyNoether
     have h1 := hx ⟨p, rfl⟩
     simp only [TopologicalSpace.Opens.coe_mk, Set.mem_iInter] at h1
     have h2 : x.base p ∈ A a := by rw [hpick]; exact h1 _
-    rw [HU _ (hpow a) k' x, range_subset_iff_mem _ _ p]
-    exact h2
+    rwa [HU _ (hpow a) k' x, range_subset_iff_mem _ _ p]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -821,10 +811,8 @@ theorem weil_open : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (M : ℕ) (t : 
       · intro E β' z hβ' hz
         obtain rfl : β = β' := spMap_inj' (hβ.symm.trans hβ')
         obtain rfl : z = Units.map β.toMonoidHom ζu := Units.ext (hz.trans hzβ.symm)
-        rw [← hu, ← E]
-        exact hW'
-      · intro H
-        exact GlobalTheory.CommutatorPairing.weilIs_unique hG hA hD hW' (hu ▸ H β _ hβ hzβ)
+        rwa [← hu, ← E]
+      · exact fun H => GlobalTheory.CommutatorPairing.weilIs_unique hG hA hD hW' (hu ▸ H β _ hβ hzβ)
   have e1 : ∀ a c, lev (a + M • c) = lev a := fun a c => by
     rw [ladd, add_map_nsmul ladd, ltors, _root_.mul_one]
   have inv : ∀ (k : Type) [Field k] [IsAlgClosed k] (g : Sp k ⟶ S) (a a' c₁ c₂ : Fin h ⊕ Fin h → ℤ),
@@ -1659,12 +1647,10 @@ theorem siegPB_of_zRel_actPB : ∀ (h h' M : ℕ) (B : Type) [CommRing B] (ζ : 
       apply ActUnr.left_hom_ext
       · rw [Category.assoc, sψ.1, ← Category.assoc, f₂]
         simp only [Category.assoc]
-        rw [f₁]
-        rw [← Category.assoc (ActUnr.sqMap hw), sq, Category.assoc, K1]
+        rw [f₁, ← Category.assoc (ActUnr.sqMap hw), sq, Category.assoc, K1]
       · rw [Category.assoc, sψ.2, ← Category.assoc, g₂]
         simp only [Category.assoc]
-        rw [g₁]
-        rw [← Category.assoc (ActUnr.sqMap hw), sq', Category.assoc, K1]
+        rw [g₁, ← Category.assoc (ActUnr.sqMap hw), sq', Category.assoc, K1]
     have l₂ := GlobalTheory.TChart.AbLevel.lbIso_comp w₁.isLB w₂.isLB c₂.isLB lψ L₂
     have hN := pull_isLB c₁.isLB (ActUnr.sqMap hw)
     have l₁ := GlobalTheory.TChart.AbLevel.lbIso_comp w₁.isLB c₁.isLB hN L₁ ((GlobalTheory.CechPic.cls_eq_iff hN hN).1 rfl)

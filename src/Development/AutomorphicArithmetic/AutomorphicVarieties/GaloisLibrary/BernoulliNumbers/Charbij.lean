@@ -55,15 +55,13 @@ theorem UpperTheory.V.Bern.b_charbij :
     ext u
     simp only [MonoidHom.mem_ker, Units.ext_iff, MulChar.coe_toUnitHom, Units.val_one, MulChar.ringHomComp_apply]
     constructor
-    · intro h
-      exact hf (h.trans (map_one f).symm)
+    · exact fun h => hf (h.trans (map_one f).symm)
     · intro h
       rw [h, map_one]
   refine ⟨?_, ?_, ?_⟩
   · intro χ hχ
     simp only [charSet, Set.mem_setOf_eq] at hχ ⊢
-    rw [hker]
-    exact hχ
+    rwa [hker]
   · intro χ₁ _ χ₂ _ h
     ext u
     have h' := congrArg (fun ψ : DirichletCharacter Ω N => ψ u) h
@@ -88,5 +86,4 @@ theorem UpperTheory.V.Bern.b_charbij :
       simp
     refine ⟨MulChar.ofUnitHom ψ, ?_, hcomp⟩
     simp only [charSet, Set.mem_setOf_eq] at hχ' ⊢
-    rw [← hker, hcomp]
-    exact hχ'
+    rwa [← hker, hcomp]

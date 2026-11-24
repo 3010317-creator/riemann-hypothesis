@@ -194,8 +194,7 @@ theorem hfChar : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW), Loc
   · obtain ⟨-, x, hx⟩ :=
       ((hT 0 (chiLat D i w hw 1) (hr _) (act_eq D i w hw 0 (Or.inl rfl))).2.2 rfl f).1 hf
     refine ⟨x, fun g hg => hx g ?_⟩
-    rw [hI i w hw] at hg
-    exact hg
+    rwa [hI i w hw] at hg
 
 end GlobalTheory.HfCharProof
 
@@ -259,7 +258,7 @@ theorem jumpDual_main : StepJumpDual := by
         · rw [abs_le] at h; unfold cen at h
           constructor <;> linarith [h.1, h.2]
         · unfold cloud cen at h; rw [hsg] at h
-          simp only [Bool.false_eq_true, if_false] at h; push_cast at h
+          simp only [Bool.false_eq_true, ite_false] at h; push_cast at h
           constructor <;> linarith [h.1, h.2]
       have k1 : b ≤ (eta : ℤ) + D.R.t := by exact_mod_cast key.1
       have k2 : -((s : ℤ) + S) - 1 ≤ b := by exact_mod_cast key.2
@@ -306,7 +305,7 @@ theorem stepJumpDirect_holds : StepJumpDirect := by
           constructor <;> linarith
         · rw [abs_le] at h; unfold cen at h
           constructor <;> linarith [h.1, h.2]
-        · unfold cloud cen at h; rw [hsg] at h; simp only [if_true] at h; push_cast at h
+        · unfold cloud cen at h; rw [hsg] at h; simp only [ite_true] at h; push_cast at h
           constructor <;> linarith [h.1, h.2]
       have k1 : -((eta : ℤ) + D.R.t + 1) - 1 < u := by exact_mod_cast key.1
       have k2 : u ≤ (s : ℤ) + S := by exact_mod_cast key.2
@@ -557,8 +556,7 @@ theorem jumpsInV_of_isSubFam : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K 
   obtain ⟨a, x, p, hp, hinj⟩ := hW
   refine GlobalTheory.SubSumJumps.jumpsInV_of_isSubOfSums (P.PD K) W.ρ Ms τ U ⟨a, x, LinearMap.pi p, ?_, ?_⟩ hU
   · rw [injective_iff_map_eq_zero]
-    intro v hv
-    exact hinj v fun j => congrFun hv j
+    exact fun v hv => hinj v fun j => congrFun hv j
   · intro g v
     funext j
     exact hp j g v
@@ -1180,8 +1178,7 @@ theorem stepType_alt : _root_.GlobalTheory.Pass.stepType_proof_tyz := by
         ((P.lz k).lab_spec τ).2.1, (monic_X_sub_C _).natDegree_pow, natDegree_X_sub_C, mul_one]
       rfl
     have h := key _ (D.naut.plGw_over k v) (GlobalTheory.FixedPlaceSplit.isSplitPl_plGw D k v) (hnc _ (Or.inl rfl)) hm0 hdeg (by rw [hlab]; exact hroot0)
-    rw [hlab] at h
-    exact h
+    rwa [hlab] at h
   · obtain ⟨hw, hs⟩ := conj_over_split D (D.naut.plGw_over k v) (GlobalTheory.FixedPlaceSplit.isSplitPl_plGw D k v) hc
     obtain ⟨hm, hdeg, hroots⟩ := hconj w hc
     have h := key w hw hs (hnc w (Or.inr hc)) hm hdeg (by
@@ -1189,8 +1186,7 @@ theorem stepType_alt : _root_.GlobalTheory.Pass.stepType_proof_tyz := by
       intro y hy
       obtain ⟨z, hz, rfl⟩ := Multiset.mem_map.1 hy
       exact inv_ne_zero (hroot0 z hz))
-    rw [hroots] at h
-    exact h
+    rwa [hroots] at h
 end UpperTheory.GalS
 end
 end

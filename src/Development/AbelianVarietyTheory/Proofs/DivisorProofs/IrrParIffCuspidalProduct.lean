@@ -107,8 +107,7 @@ theorem spanRep_asSubmodule (τ : Representation ℂ G V) (ρ : Representation �
       Submodule.mem_iSup_of_mem f ⟨w, rfl⟩
     have h1 := key ((IntertwiningMap.equivLinearMapAsModule ρ τ).symm (m.subtype ∘ₗ e.symm.toLinearMap)) (e ⟨v, hv⟩)
     have h2 : (m.subtype ∘ₗ e.symm.toLinearMap) (e ⟨v, hv⟩) = v := by simp
-    rw [← h2]
-    exact h1
+    rwa [← h2]
 
 theorem isotypic_iff [Finite G] (τ : Representation ℂ G V) (ρ : Representation ℂ G W) (hρ : ρ.IsIrreducible) :
     BlockProductIsomorphism.IsIsotypicOf τ ρ ↔ IsIsotypicOfType (MonoidAlgebra ℂ G) τ.asModule ρ.asModule := by
@@ -188,8 +187,7 @@ theorem exists_type {P : Type} [Group P] [Finite G] (σ : Representation ℂ P V
     have h2 : v ∈ U.toSubmodule :=
       Submodule.mem_iSup_of_mem (⟨S.toSubmodule.subtype, fun _ => rfl⟩ : IntertwiningMap S.toRepresentation τ)
         ⟨⟨v, hv⟩, rfl⟩
-    rw [h] at h2
-    exact h2
+    rwa [h] at h2
   · exact congrArg Subrepresentation.toSubmodule h
 
 end General
@@ -298,8 +296,7 @@ theorem exists_factor [Finite F] {b : Fin r → ℕ} {σ : Representation ℂ (b
       rw [map_mul, ← hg, ← map_mul, mul_inv_cancel, map_one, one_mul, mul_one]
     · rw [diagBlock_emb_ne b c e he, one_mul, mul_one]
   refine ⟨W, i1, i2, ρ, hρ, rfl, ?_⟩
-  rw [blockHom_eq b c rfl h]
-  exact H
+  rwa [blockHom_eq b c rfl h]
 
 theorem isoGL_iff_sameFactor [Finite F] [Nontrivial V] [Nontrivial V'] {b b' : Fin r → ℕ}
     {σ : Representation ℂ (blockTri (κ := F) b) V} {σ' : Representation ℂ (blockTri (κ := F) b') V'} {c c' d d' : ℕ}

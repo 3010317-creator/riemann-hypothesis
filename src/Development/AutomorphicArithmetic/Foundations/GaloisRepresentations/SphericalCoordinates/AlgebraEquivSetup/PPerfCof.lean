@@ -108,8 +108,7 @@ theorem UpperTheory.Gal.W2.Seed.pPerfCof :
       · subst h
         simp
       · simp [h]
-    intro z
-    exact LinearMap.congr_fun hlin z
+    exact fun z => LinearMap.congr_fun hlin z
   have hdual : ∀ f : 𝓞 E →ₗ[ℤ] ℤ, ∃ x : 𝓞 E, ∀ z,
       A.trd (x * z) = ((y.natAbs * y.natAbs : ℕ) : ℤ) * f z := by
     intro f
@@ -125,8 +124,7 @@ theorem UpperTheory.Gal.W2.Seed.pPerfCof :
     exact A.c_ne (by rw [h]; rfl)
   have hN0 : 0 < Ideal.absNorm (Ideal.span {A.c}) := by
     refine Nat.pos_of_ne_zero ?_
-    rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-    exact hc0
+    rwa [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
   obtain ⟨c', hc'⟩ := Ideal.mem_span_singleton.mp (Ideal.absNorm_mem (Ideal.span {A.c}))
   refine ⟨y.natAbs * y.natAbs * Ideal.absNorm (Ideal.span {A.c}), Nat.mul_pos hDpos hN0,
     fun q hq => ⟨_, hq, fun f => ?_, ⟨c' * ((y.natAbs * y.natAbs : ℕ) : 𝓞 E), ?_⟩⟩⟩

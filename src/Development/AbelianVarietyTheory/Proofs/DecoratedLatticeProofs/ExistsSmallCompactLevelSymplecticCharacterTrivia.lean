@@ -78,7 +78,6 @@ theorem exists_open_subgroup (F : Type) [Field F] [NumberField F] (V : Set (Af F
 theorem infPart_smul_eq_zero {D : D7} (y : Af D.host.F) (x : AE D) : infPart D (pairA D.host.F 0 y • x) = 0 := by
   rw [Algebra.smul_def, map_mul]
   have : infPart D (algebraMap (AF D.host.F) (AE D) (pairA D.host.F 0 y)) = 0 := by
-    show (0 : Ainf D.host.F) ⊗ₜ[D.host.F] (1 : D.host.E) = 0
     exact TensorProduct.zero_tmul _ _
   rw [this, zero_mul]
 
@@ -103,8 +102,7 @@ theorem exists_closed_level (D : D7) (m n : ℕ) (N : Set (Mx D m n)) (hN : N �
     exact h1.smul continuous_const
   have h0 : Φ 0 = 0 := by
     funext i j
-    refine Finset.sum_eq_zero fun k _ => ?_
-    exact zero_smul (AF D.host.F) (B k)
+    exact Finset.sum_eq_zero fun k _ => zero_smul (AF D.host.F) (B k)
   have h1 : Φ ⁻¹' N ∈ 𝓝 0 := hΦ.continuousAt.preimage_mem_nhds (h0 ▸ hN)
   rw [nhds_pi, Filter.mem_pi] at h1
   obtain ⟨I, -, t, ht, hsub⟩ := h1
@@ -177,8 +175,7 @@ theorem exists_small_level : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsSt
     Prod.ext ((one_mul _).symm.trans (congrArg Prod.fst h3)) rfl
   rw [h4]
   have h5 := hPQ (Set.mk_mem_prod (hKN hu).2.1 (hKN hu').2.2)
-  rw [Set.mem_preimage, Set.mem_setOf_eq] at h5
-  exact h5
+  rwa [Set.mem_preimage, Set.mem_setOf_eq] at h5
 
 end GlobalTheory.SmallLevel
 

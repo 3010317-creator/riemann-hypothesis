@@ -92,10 +92,10 @@ theorem sum_symElem {r : ℕ} (β : LinearMap.BilinForm ℤ (Fin r → ℤ)) (h�
     LinearMap.add_apply, smul_eq_mul]
   simp only [ite_bil_apply, elem_apply, Pi.single_apply, mul_add, Finset.sum_add_distrib, mul_ite, ite_mul, mul_zero, zero_mul]
   simp only [← ite_and]
-  rw [Fintype.sum_eq_single i (fun x hx => Fintype.sum_eq_zero _ (fun y => if_neg (by tauto))),
-    Fintype.sum_eq_single j (fun x hx => Fintype.sum_eq_zero _ (fun y => if_neg (by tauto))),
-    Fintype.sum_eq_single j (fun y hy => if_neg (by tauto)),
-    Fintype.sum_eq_single i (fun y hy => if_neg (by tauto))]
+  rw [Fintype.sum_eq_single i (fun x hx => Fintype.sum_eq_zero _ (fun y => ite_eq_right (by tauto))),
+    Fintype.sum_eq_single j (fun x hx => Fintype.sum_eq_zero _ (fun y => ite_eq_right (by tauto))),
+    Fintype.sum_eq_single j (fun y hy => ite_eq_right (by tauto)),
+    Fintype.sum_eq_single i (fun y hy => ite_eq_right (by tauto))]
   rcases le_or_gt i j with h | h
   · simp [h, not_lt.2 h]
   · simp [h, not_le.2 h, hβ (Pi.single i 1)]
@@ -236,12 +236,9 @@ theorem coords_eq_of_match : ∀ {o W : Type} [CommRing o] [CommRing W] [IsLocal
       (φ.symm (e₂.symm c)) (e₂.symm c) hχ u hun (TF (R := V) F) p₁.g.b z J J₀ hJ hJ₀
     rw [← hA.1] at a₄
     rw [hχ] at a₁
-    have hk : k₁ = k₂ := by
-      apply gm_unitOn_inj z
-      exact cancel_four a₁ a₂ a₃ a₄
+    have hk : k₁ = k₂ := gm_unitOn_inj z (cancel_four a₁ a₂ a₃ a₄)
     have := congrArg Units.val hk
-    rw [hk₁, hk₂, hχ, e₂.apply_symm_apply] at this
-    exact this
+    rwa [hk₁, hk₂, hχ, e₂.apply_symm_apply] at this
   simp only [hε₀] at key
   have hx := _root_.GlobalTheory.SymMono.eq_of_prod_zpow_eq F T.r I ε₀ (fun i => f (s₁ i)) (fun i => f (s₂ i))
     (fun i => (map_ne_zero_iff f hf).2 (hs₁ i)) (fun i => (map_ne_zero_iff f hf).2 (hs₂ i)) (fun a b => key a b)

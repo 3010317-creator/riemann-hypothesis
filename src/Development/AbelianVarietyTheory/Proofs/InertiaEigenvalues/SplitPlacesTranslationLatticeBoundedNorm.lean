@@ -104,8 +104,7 @@ theorem cong_one_of_suppAt : ∀ (D : D7) (V : HSp D) (Q : Finset (Pl D.host.E))
       refine Matrix.ext fun i j => ?_
       change ev P ((mt V hQ - 1) i j) = 0
       rw [← hs i j, map_mul, hu, zero_mul]
-    rw [map_sub, map_one, sub_eq_zero] at this
-    exact this
+    rwa [map_sub, map_one, sub_eq_zero] at this
   have hinv : ∀ P, (ev P).mapMatrix (mt V hQ) * (ev P).mapMatrix (mt V hQ⁻¹) = 1 := fun P => by
     rw [← map_mul, show mt V hQ * mt V hQ⁻¹ = 1 by unfold Formalism.L2.Theta.mt; rw [map_inv]; exact Units.mul_inv _, map_one]
   have hB1 : ∀ P, P ∉ Q → GlobalTheory.IdemSupport.cP P ∉ Q → (ev P).mapMatrix (mt V hQ⁻¹) = 1 := fun P hP hP' => by
@@ -319,8 +318,7 @@ theorem nsmul_mulVec_eq {R : Type*} [CommRing R] {n : ℕ} (N m : ℕ) (g w : Ma
     N • (g *ᵥ y) = N • y + m • (w *ᵥ y) := by
   have e1 : (N : R) • (g - 1) = (m : R) • w := by
     ext i j
-    simp only [Matrix.smul_apply, Matrix.sub_apply, smul_eq_mul]
-    exact hwe i j
+    simpa only [Matrix.smul_apply, Matrix.sub_apply, smul_eq_mul] using hwe i j
   have e2 : ((N : R) • (g - 1)) *ᵥ y = N • (g *ᵥ y) - N • y := by
     rw [Matrix.smul_mulVec, Matrix.sub_mulVec, Matrix.one_mulVec, Nat.cast_smul_eq_nsmul, smul_sub]
   have e3 : ((m : R) • w) *ᵥ y = m • (w *ᵥ y) := by
@@ -373,8 +371,7 @@ theorem latAt_translate_bounded : ∀ (D : D7) (ρ : Setup D.ntw), ρ.Good → �
   · rw [GlobalTheory.LatAtHLat.mem_latAt_iff_hat] at hx ⊢
     have hst := step _ a _ hs1 hs2 _ (fun i j => (hc i j).1) hx
     rw [Matrix.mulVec_mulVec, ← hmul'] at hst
-    rw [ev x, Matrix.mulVec_smul]
-    exact hst
+    rwa [ev x, Matrix.mulVec_smul]
 
 end GlobalTheory.LatCmpQ
 end -- clump:auto

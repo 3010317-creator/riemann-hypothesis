@@ -298,7 +298,7 @@ theorem qf_smul {n : ℕ} (c : ℂ) (A : Matrix (Fin n) (Fin n) ℂ) (w : V n) :
 
 theorem qf_one {n : ℕ} (w : V n) : qf (1 : Matrix (Fin n) (Fin n) ℂ) w = ((‖w‖ ^ 2 : ℝ) : ℂ) := by
   rw [EuclideanSpace.norm_sq_eq]
-  simp only [qf, Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [qf, Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   push_cast
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [Complex.mul_conj, Complex.normSq_eq_norm_sq]; push_cast; ring
@@ -1006,9 +1006,7 @@ theorem meas_integral_in_chart : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [I
   have hfm : AEMeasurable f (volume.restrict (c.e '' S)) := by
     refine (ENNReal.measurable_ofReal.comp_aemeasurable ?_)
     refine ContinuousOn.aemeasurable ?_ hSm
-    refine (ω.cont c).comp (c.e.continuousOn_symm.mono hSt) ?_
-    intro v hv
-    exact c.e.map_target (hSt hv)
+    exact (ω.cont c).comp (c.e.continuousOn_symm.mono hSt) (fun v hv => c.e.map_target (hSt hv))
   rw [hrest, integral_map haem hF.aestronglyMeasurable, hν,
     integral_withDensity_eq_integral_toReal_smul₀ hfm (Eventually.of_forall fun _ => ENNReal.ofReal_lt_top)]
   refine setIntegral_congr_fun hSm fun v hv => ?_
@@ -1090,11 +1088,8 @@ theorem integral_over_chart_le_l2 {D : ℕ} (hX : IsArithVar p D) (hs : GenSmoot
     rw [hSdef, C.e.image_source_inter_eq']
     ext v
     refine ⟨fun hv => ?_, fun hv => ⟨hTt hv, ?_⟩⟩
-    · have h := hv.2
-      simp only [Set.mem_preimage, C.e.right_inv hv.1] at h
-      exact h
-    · simp only [Set.mem_preimage, C.e.right_inv (hTt hv)]
-      exact hv
+    · simpa only [Set.mem_preimage, C.e.right_inv hv.1] using hv.2
+    · simpa only [Set.mem_preimage, C.e.right_inv (hTt hv)] using hv
   have h1 := (_root_.GlobalTheory.HSAmp.VolDens.meas_integral_in_chart k X p D hX σ (ω σ) C S _ hSo.measurableSet hSs hcont).2
   rw [hST] at h1
   rw [← h1]
@@ -1200,8 +1195,7 @@ theorem local_bound {D : ℕ} (hX : IsArithVar p D) (hs : GenSmooth p D) (P : Pa
   rw [hid _ (hrU hy.2), hI, hdet, C.e.left_inv hy.1] at h0
   have hmin' : (ω σ).dens C (C.e.symm v₀) ≤ (ω σ).dens C y := by
     have := hmin hy.2
-    simp only [Set.mem_setOf_eq, C.e.left_inv hy.1] at this
-    exact this
+    simpa only [Set.mem_setOf_eq, C.e.left_inv hy.1] using this
   set I := ∫ w in Metric.ball (C.e y) δ, cmb (vals P m 1 f) c σ (C.e.symm w) * (ω σ).dens C (C.e.symm w)
   have hM : 0 ≤ (m : ℝ) ^ D * I := mul_nonneg (by positivity) hInn
   have h3 : (ω σ).dens C y * cmb (vals P m 1 f) c σ y ≤

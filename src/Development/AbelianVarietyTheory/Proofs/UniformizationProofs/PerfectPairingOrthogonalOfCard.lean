@@ -151,12 +151,8 @@ theorem one_side (E : A →* (A →* Fˣ)) (hE : ∀ a, (∀ b, E a b = 1) → a
     intro x
     rw [MonoidHom.mem_ker]
     constructor
-    · intro hx h hh
-      exact DFunLike.congr_fun hx ⟨h, hh⟩
-    · intro hx
-      apply MonoidHom.ext
-      intro h
-      exact hx h h.2
+    · exact fun hx h hh => DFunLike.congr_fun hx ⟨h, hh⟩
+    · exact fun hx => MonoidHom.ext (fun h => hx h h.2)
   have hle : T ≤ R.ker := fun t ht => (hR t).mpr (hTH t ht)
   have hHpos : 0 < Nat.card H := Nat.card_pos
   have hTpos : 0 < Nat.card T := Nat.card_pos

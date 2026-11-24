@@ -424,8 +424,7 @@ theorem charpoly_push_complex (B : AbVar ℂ) (f : B ⟶ B) [Module.Finite ℂ (
     (fun j q => by
       obtain ⟨z, rfl⟩ := u.ex_onto q
       constructor
-      · intro h
-        exact ⟨⟨_, (u.ker _).1 ((hpow _ z).trans h)⟩, congrArg u.ex (hc' j z)⟩
+      · exact fun h => ⟨⟨_, (u.ker _).1 ((hpow _ z).trans h)⟩, congrArg u.ex (hc' j z)⟩
       · rintro ⟨x, hx⟩
         have hx' : u.ex (((2 : ℂ) ^ j)⁻¹ • (x : Fin B.dim → ℂ)) = u.ex z := hx
         change u.ex z ^ (2 ^ j) = 1
@@ -521,8 +520,7 @@ theorem charpoly_push_eq_map_charpoly (k : Type) [Field k] [IsAlgClosed k]
     exact _root_.GlobalTheory.DeRhamCharpolyP.charpoly_push p k B f
   · subst h
     have : CharZero k := CharP.charP_to_charZero k
-    have hcharpoly := GlobalTheory.DeRhamCharpolyZero.charpoly_push k B f
-    exact hcharpoly
+    exact GlobalTheory.DeRhamCharpolyZero.charpoly_push k B f
 
 theorem charpoly_push_eq : ∀ (k : Type) [Field k] [IsAlgClosed k] (A : Over (Sp k)) [GrpObj A] [IsCommMonObj A], IsAbelianScheme A →
     ∀ (f : A ⟶ A) [IsMonHom f] (L : Type) [AddCommGroup L] [Module.Free ℤ L] [Module.Finite ℤ L]

@@ -133,8 +133,7 @@ theorem _root_.GlobalTheory.ShFam.Hor.LogCh.exists_const_coords (n g r : ℕ) (B
   let F : (Fin n → ℂ) → Fin r → ℤ := fun b => if hb : b ∈ B then (hex b hb).choose else 0
   have hF : ∀ b ∈ B, ζ b = ∑ j, F b j • lam b j := by
     intro b hb
-    simp only [F, dite_eq_left hb]
-    exact (hex b hb).choose_spec
+    simpa only [F, dite_eq_left hb] using (hex b hb).choose_spec
   have hloc : ∀ b₁ ∈ B, ∀ᶠ b in 𝓝[B] b₁, F b = F b₁ := by
     intro b₁ hb₁
     obtain ⟨δ, hδ, hkey⟩ := exists_pos_int_combination_eq_zero_near_of_linearIndependent (hbas b₁ hb₁).1
@@ -149,8 +148,7 @@ theorem _root_.GlobalTheory.ShFam.Hor.LogCh.exists_const_coords (n g r : ℕ) (B
         ((hζ b₁ hb₁).sub (hcomb.continuousAt.comp_continuousWithinAt (hlam b₁ hb₁))).norm
       refine hc.eventually (eventually_lt_nhds ?_)
       show ‖ζ b₁ - ∑ j, F b₁ j • lam b₁ j‖ < δ
-      rw [← hF b₁ hb₁, sub_self, norm_zero]
-      exact hδ
+      rwa [← hF b₁ hb₁, sub_self, norm_zero]
     filter_upwards [h1, h2, self_mem_nhdsWithin] with b hb1 hb2 hbB
     have hdiff : ∑ j, (F b - F b₁) j • lam b j = ζ b - ∑ j, F b₁ j • lam b j := by
       rw [hF b hbB]

@@ -331,13 +331,11 @@ theorem UpperTheory.V.Pa.BC.ss_descend :
     refine ⟨n, ?_⟩
     have hz' := hpow _ (h1 t) n
     rw [hbot, Submodule.mem_bot] at hz'
-    rw [smul_eq_mul]
-    exact hz'
+    rwa [smul_eq_mul]
   have hy : (1 : κ') ⊗ₜ[κ] x = 0 := by
     have hm : (1 : κ') ⊗ₜ[κ] x ∈ Submodule.span (κ' ⊗[κ] E) {(1 : κ') ⊗ₜ[κ] x} :=
       Submodule.mem_span_singleton_self _
-    rw [hL, Submodule.mem_bot] at hm
-    exact hm
+    rwa [hL, Submodule.mem_bot] at hm
   apply Algebra.TensorProduct.includeRight_injective (R := κ) (A := κ') (B := E)
     (algebraMap κ κ').injective
   rw [Algebra.TensorProduct.includeRight_apply, map_zero, hy]
@@ -357,8 +355,7 @@ private theorem span_map_mem {A B : Type} [Ring A] [Ring B] (F : A →+* B) (I :
     (hx : x ∈ TwoSidedIdeal.span I) : F x ∈ TwoSidedIdeal.span (F '' I) := by
   have h : TwoSidedIdeal.span I ≤ TwoSidedIdeal.comap F (TwoSidedIdeal.span (F '' I)) := by
     rw [TwoSidedIdeal.span_le]
-    intro a ha
-    exact (TwoSidedIdeal.mem_comap F).2 (TwoSidedIdeal.subset_span ⟨a, ha, rfl⟩)
+    exact fun a ha => (TwoSidedIdeal.mem_comap F).2 (TwoSidedIdeal.subset_span ⟨a, ha, rfl⟩)
   exact (TwoSidedIdeal.mem_comap F).1 (h hx)
 
 private theorem fin_quot {R κ G : Type} [CommRing R] [Field κ] [Group G] (I : Set (MonoidAlgebra R G))
@@ -394,7 +391,6 @@ private theorem fin_quot {R κ G : Type} [CommRing R] [Field κ] [Group G] (I : 
     rw [map_sub, map_sum] at h1
     simp only [MonoidAlgebra.mapRingHom_single, map_one] at h1
     have h2 : π (MonoidAlgebra.single g 1) = π (∑ g ∈ s, MonoidAlgebra.single g (ψ (c g))) := by
-      show J.ringCon.mk' _ = J.ringCon.mk' _
       exact J.ringCon.eq.2 ((TwoSidedIdeal.rel_iff J _ _).2 h1)
 
     rw [h2, map_sum]

@@ -77,8 +77,7 @@ theorem latC_full_lattice : ∀ (E : Type) [Field E] [NumberField E] [StarRing E
     constructor
     · rintro ⟨y, hy, rfl⟩
       simpa using hy
-    · intro h
-      exact ⟨_, h, W.frame.equivFun.apply_symm_apply x⟩
+    · exact fun h => ⟨_, h, W.frame.equivFun.apply_symm_apply x⟩
   · have h : Submodule.span E (W.L0 : Set W.V) = ⊤ := by
       let U := Submodule.span E (W.L0 : Set W.V)
       change U = ⊤
@@ -251,11 +250,9 @@ theorem exists_isVolMeasF : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     obtain ⟨C', h3, -⟩ := (hA i).2.2 _ (hA' i)
     have : b = u i * e1 (e0 h).1 i * (u i)⁻¹ := by
       apply hinj
-      have h5 := congrArg (· * C') (hbe.trans h2.symm)
-      simpa only [Matrix.mul_assoc, h3, Matrix.mul_one] using h5
+      simpa only [Matrix.mul_assoc, h3, Matrix.mul_one] using congrArg (· * C') (hbe.trans h2.symm)
     exact this ▸ hb
-  · intro hb
-    exact ⟨_, hb, h2⟩
+  · exact fun hb => ⟨_, hb, h2⟩
 
 end GlobalTheory.Mem.VolExists
 end -- clump:auto

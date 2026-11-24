@@ -135,8 +135,7 @@ lemma isField_ult : IsField (Ult U K) := by
   refine ⟨mk U (fun i => (a i)⁻¹), ?_⟩
   rw [← map_mul, ← map_one (mk U), mk_eq_mk_iff]
   have : ∀ᶠ i in (U : Filter ι), a i ≠ 0 := by
-    have h := (not_congr (mk_eq_zero_iff U)).1 hx
-    exact Ultrafilter.eventually_not.2 h
+    exact Ultrafilter.eventually_not.2 ((not_congr (mk_eq_zero_iff U)).1 hx)
   filter_upwards [this] with i hi
   simp [hi]
 
@@ -282,7 +281,7 @@ lemma exists_family {Q : ∀ i, (B →+* A i) → Prop}
   classical
   refine ⟨fun i => if hx : ∃ p : B →+* A i, Q i p then ⇑hx.choose else 0, ?_⟩
   filter_upwards [H] with i hi
-  exact ⟨hi.choose, by simp [dif_pos hi], hi.choose_spec⟩
+  exact ⟨hi.choose, by simp [dite_eq_left hi], hi.choose_spec⟩
 
 lemma ae_eq_of_fg [Algebra.FiniteType ℤ B] {h h' : ∀ i, B → A i} (hh : IsAEHom U h)
     (hh' : IsAEHom U h') (H : ∀ b, mk U (fun i => h i b) = mk U (fun i => h' i b)) :
@@ -295,8 +294,7 @@ lemma ae_eq_of_fg [Algebra.FiniteType ℤ B] {h h' : ∀ i, B → A i} (hh : IsA
     refine AlgHom.ext_of_adjoin_eq_top hS ?_
     intro s hs
     have := hi s hs
-    rw [← hp, ← hq] at this
-    exact this
+    rwa [← hp, ← hq] at this
   rw [← hp, ← hq]
   ext b
   exact DFunLike.congr_fun this b
@@ -323,8 +321,7 @@ lemma exists_rep [Algebra.FinitePresentation ℤ B] (g : B →+* Ult U A) :
     refine (Filter.eventually_all_finset S).2 fun s hs => ?_
     have hs' : s ∈ RingHom.ker π.toRingHom := hS ▸ Ideal.subset_span hs
     have := key' s
-    rw [show π s = 0 from hs', map_zero, mk_eq_zero_iff] at this
-    exact this
+    rwa [show π s = 0 from hs', map_zero, mk_eq_zero_iff] at this
   refine ⟨fun i b => e i (Function.surjInv hπ b), ?_, ?_⟩
   · filter_upwards [h1] with i hi
     have hk : RingHom.ker π.toRingHom ≤ RingHom.ker (e i) := by
@@ -396,8 +393,7 @@ lemma exists_pt_of_isLocalRing {A : Type} [CommRing A] [IsLocalRing A]
 
 lemma exists_of_finite {α : Type} {S : Set α} (hS : S.Finite) {Q : α → ι → Prop}
     (H : ∀ᶠ i in (U : Filter ι), ∃ W ∈ S, Q W i) : ∃ W ∈ S, ∀ᶠ i in (U : Filter ι), Q W i := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have : ∀ᶠ i in (U : Filter ι), ∀ W ∈ S, ¬ Q W i :=
     (Filter.eventually_all_finite hS).2 fun W hW => hcon W hW
   obtain ⟨i, ⟨W, hW, h1⟩, h2⟩ := (H.and this).exists
@@ -704,8 +700,7 @@ theorem ae_exists_lift [CompactSpace X] [Algebra.FiniteType ℤ R₀]
   have hb : p.comp (baseHom f₀ W₂) = (β i).comp (ψ i) := by
     refine RingHom.ext fun r => ?_
     have := congrFun d1 r
-    rw [← hp] at this
-    exact this
+    rwa [← hp] at this
   refine ⟨pullback.lift (pt W₂ p) (Spec.map (CommRingCat.ofHom (β i)))
     (by rw [pt_comp, hb, spec_comp]), ?_, pullback.lift_snd _ _ _⟩
   apply pullback.hom_ext
@@ -886,7 +881,7 @@ lemma exists_limit_hom {R₀ R : Type} [CommRing R₀] [CommRing R] (φ : R₀ �
     exact Algebra.subset_adjoin (Or.inr (by simpa using hF))
   let h : ∀ F, R → V F := fun F r => if hr : r ∈ lvl φ S₀ F then β F ⟨r, hr⟩ else 0
   have hv : ∀ (F : Finset R) (r : R) (hr : r ∈ lvl φ S₀ F), h F r = β F ⟨r, hr⟩ :=
-    fun F r hr => dif_pos hr
+    fun F r hr => dite_eq_left hr
   refine ⟨ofFamily U h ?_ ?_ ?_, fun r => ?_⟩
   · filter_upwards [hmem 1] with F h1
     rw [hv F 1 h1]
@@ -925,13 +920,11 @@ theorem properSpreads : GlobalTheory.SpreadingModels.Spreads (fun _ _ f => IsPro
     obtain ⟨F, hF⟩ := h
     exact ⟨lvl φ S₀ F, inferInstance, lvlHom φ hS₀ F, (lvl φ S₀ F).val.toRingHom, rfl,
       finiteType_lvl φ hS₀f F, hF⟩
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hS : ∀ F, ∃ S : ValuativeCommSq (pullback.snd f₀ (Spec.map (CommRingCat.ofHom
       (lvlHom φ hS₀ F)))), ¬ Nonempty (Unique S.commSq.LiftStruct) := by
     intro F
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hcon F
     rw [IsProper.eq_valuativeCriterion]
     exact ⟨⟨⟨h, inferInstance⟩, inferInstance⟩, inferInstance⟩

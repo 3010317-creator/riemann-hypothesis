@@ -403,7 +403,7 @@ theorem integral_thetaSum_schr_diag : ∀ (F : Type) [Field F] [NumberField F] (
       have : ∀ y, e 0 y = 1 := fun y => by simp [he, hemb]
       simp_rw [this]; rw [setIntegral_const]; simp
     · obtain ⟨i, hi⟩ : ∃ i, ζ i ≠ 0 := by
-        by_contra h; push_neg at h; exact hζ (funext h)
+        by_contra h; push Not at h; exact hζ (funext h)
       haveI : Countable (GlobalTheory.ThetaParseval.ratVec F κ) := by
         refine Function.Surjective.countable (f := fun ρ : κ → F => (⟨emb ρ, ?_⟩ : GlobalTheory.ThetaParseval.ratVec F κ)) ?_
         · exact (GlobalTheory.ThetaParseval.mem_ratVec_iff _).2 ⟨ρ, by rw [hemb]⟩
@@ -437,13 +437,13 @@ theorem integral_thetaSum_schr_diag : ∀ (F : Type) [Field F] [NumberField F] (
   rw [← hinj.tsum_eq, ← tsum_mul_left]
   · refine tsum_congr fun η => ?_
     have hd0 : d (Sum.elim η η) = 0 := by rw [hd]; funext i; simp
-    rw [if_pos hd0, ha]
+    rw [ite_eq_left hd0, ha]
     dsimp only
     congr 2
     funext s; cases s <;> simp
   · intro ξ hξ
     have h0 : d ξ = 0 := by
-      by_contra h; exact hξ (if_neg h)
+      by_contra h; exact hξ (ite_eq_right h)
     refine ⟨ξ ∘ Sum.inl, ?_⟩
     funext s
     cases s with
@@ -640,9 +640,7 @@ theorem integral_fundamentalDomain_eq_iterated (Γ₁ : AddSubgroup V) [Countabl
       show μ.prod μ ((g +ᵥ (𝓕₁ ×ˢ 𝓕₁)) ∩ (g' +ᵥ (𝓕₁ ×ˢ 𝓕₁))) = 0
       rw [hset g, hset g', Set.prod_inter_prod, Measure.prod_prod]
       by_cases h1 : (g : V × V).1 = (g' : V × V).1
-      · have h2 : (g : V × V).2 ≠ (g' : V × V).2 := by
-          intro h2
-          exact hne (Subtype.ext (Prod.ext h1 h2))
+      · have h2 : (g : V × V).2 ≠ (g' : V × V).2 := fun h2 => hne (Subtype.ext (Prod.ext h1 h2))
         have := h𝓕₁.aedisjoint (i := ⟨(g : V × V).2, ((hΓ _).1 g.2).2⟩)
           (j := ⟨(g' : V × V).2, ((hΓ _).1 g'.2).2⟩) (fun h' => h2 (congrArg Subtype.val h'))
         rw [show μ _ = 0 from this, mul_zero]

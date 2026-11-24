@@ -46,9 +46,7 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 namespace GlobalTheory.HeightCounting.Up
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 theorem lowerLeftValuation_eq_zero_all_stages_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → AllSt fun _ _ _ _ _ _ x => ValLL0 (Dof x) (cfOf x) := by
-  intro _
-  refine StepW.of_all fun K B f T w _ _ _ P x => ?_
-  exact valLL0_colW w x.o.Z
+  exact fun _ => StepW.of_all fun K B f T w _ _ _ P x => valLL0_colW w x.o.Z
 end GlobalTheory.HeightCounting.Up
 end
 end

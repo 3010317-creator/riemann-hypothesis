@@ -160,8 +160,7 @@ theorem key {R A : Type} [CommRing R] [CommRing A] [Algebra R A] (I : Ideal A) {
     Ideal.Quotient.mk_surjective (1 ⊗ₜ ω')).mp h0
   obtain ⟨a, rfl⟩ := Ideal.toCotangent_surjective _ t
   rw [kerCotangentToTensor_toCotangent] at ht
-  have haI : (a : A) ∈ I := by
-    exact Ideal.Quotient.eq_zero_iff_mem.mp a.2
+  have haI : (a : A) ∈ I := Ideal.Quotient.eq_zero_iff_mem.mp a.2
   have hdiff : ω' - D R A a ∈ I • (⊤ : Submodule A Ω[A⁄R]) := by
     have h1 : (1 : A ⧸ I) ⊗ₜ[A] (ω' - D R A a) = 0 := by rw [tmul_sub, ← ht, sub_self]
     have := congrArg (TensorProduct.quotTensorEquivQuotSMul Ω[A⁄R] I) h1

@@ -172,8 +172,7 @@ theorem derivFormula_of_series : ∀ (E : Type) [Field E] [NumberField E] (I : T
       rw [hiter g hg l 0 (zero_mem_polydisc I), hκ]
     have hTκ : T κ 0 = risingFactor k κ *
         ∑' q : modUnits L, ∏ i, ((φ i q.1.out)⁻¹ ^ (k + κ i) * (starRingEnd ℂ (φ i q.1.out)) ^ κ i) := by
-      simp only [hT, dTerm_origin]
-      exact tsum_mul_left
+      simpa only [hT, dTerm_origin] using tsum_mul_left
     refine ⟨?_, ?_⟩
     · intro S hS
       have hS0 := hS.2 0 (by
@@ -236,7 +235,7 @@ theorem fderiv_eq_sum_wirt' (h : (Φ → ℂ) → ℂ) (y u : Φ → ℂ) :
   rw [map_sum]
   refine Finset.sum_congr rfl fun τ _ => ?_
   rw [map_add (f := _), map_smul, map_smul]
-  simp only [wirt, Bool.false_eq_true, if_false, if_true, real_smul]
+  simp only [wirt, Bool.false_eq_true, ite_false, ite_true, real_smul]
   set A := fderiv ℝ h y (Pi.single τ 1)
   set B := fderiv ℝ h y (Pi.single τ I)
   have hc : (starRingEnd ℂ) (u τ) = (u τ).re - (u τ).im * I := by
@@ -552,8 +551,7 @@ theorem riemannCl_linInd (ξ : E) (hξ : ξ ≠ 0) :
     funext j
     have := LinearMap.congr_fun hc (Module.finBasis ℚ E j)
     simpa [Matrix.vecMul, dotProduct, Gc, gram_apply, riemannCl_apply] using this
-  by_contra h
-  push_neg at h
+  by_contra! h
   obtain ⟨i, hi⟩ := h
   exact hdet (Matrix.exists_vecMul_eq_zero_iff.mp ⟨c, fun h0 => hi (by simp [h0]), hv⟩)
 
@@ -726,8 +724,7 @@ theorem exists_equiv (E : Type) [Field E] [NumberField E] [IsCMField E] (I : Typ
     have h2 : InfinitePlace.mk (ψ i) = InfinitePlace.mk fc := by
       rw [← hplace, hmk]
       have := (IsCMField.equivInfinitePlace E).apply_symm_apply (InfinitePlace.mk fc)
-      rw [IsCMField.equivInfinitePlace_apply] at this
-      exact this
+      rwa [IsCMField.equivInfinitePlace_apply] at this
     have h3 : ψ i = fc := by
       rcases InfinitePlace.mk_eq_iff.mp h2 with h | h
       · exact h
@@ -1024,8 +1021,7 @@ theorem hasSum_defTerm : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   have key : (fun q : modUnits L => defTerm φ 2 z σ q.1.out) ∘ g =
       fun c => (homFac z)⁻¹ ^ 2 * Complex.exp (-σ * logFac z) * eisClass 𝔞 𝔟 2 σ (modPt φ e θ z) c := by
     funext c
-    simp only [Function.comp_apply]
-    exact key1 c
+    simpa only [Function.comp_apply] using key1 c
   rw [key]
   exact hS.mul_left _
 
@@ -1059,7 +1055,7 @@ theorem wirt_false_eq_lineDeriv {I : Type} [Fintype I] [DecidableEq I] (i : I) (
   rw [hd.lineDeriv_eq_fderiv]
   unfold wirt
   rw [hd.fderiv_restrictScalars ℝ]
-  simp only [ContinuousLinearMap.coe_restrictScalars', Bool.false_eq_true, if_false]
+  simp only [ContinuousLinearMap.coe_restrictScalars', Bool.false_eq_true, ite_false]
   rw [clm_single_I]
   have e : ∀ a b : ℂ, a = b → (a + -Complex.I * (Complex.I * a)) / 2 = b := by
     rintro a b rfl
@@ -1083,9 +1079,7 @@ theorem iterD_holo_and_eq {I : Type} [Fintype I] [DecidableEq I] (U : Set (I →
     obtain ⟨hd, heq⟩ := ih
     have hat : ∀ z ∈ U, DifferentiableAt ℂ (iterD l g) z := fun z hz => hd.differentiableAt (hU.mem_nhds hz)
     have hpart : Set.EqOn (iterD (i :: l) g) (fun z => fderiv ℂ (iterD l g) z (Pi.single i 1)) U := by
-      intro z hz
-      show lineDeriv ℂ (iterD l g) z (Pi.single i 1) = _
-      exact (hat z hz).lineDeriv_eq_fderiv
+      exact fun z hz => (hat z hz).lineDeriv_eq_fderiv
     refine ⟨?_, ?_⟩
     · have hf : DifferentiableOn ℂ (fun z => fderiv ℂ (iterD l g) z (Pi.single i 1)) U :=
         ((GlobalTheory.SCV.analyticOnNhd_of_differentiableOn hU hd).fderiv.differentiableOn).clm_apply
@@ -1104,8 +1098,7 @@ theorem iterD_holo_and_eq {I : Type} [Fintype I] [DecidableEq I] (U : Set (I →
 theorem iterD_eq_wirtWord : ∀ (I : Type) [Fintype I] [DecidableEq I] (U : Set (I → ℂ)) (g : (I → ℂ) → ℂ),
     IsOpen U → DifferentiableOn ℂ g U → ∀ (l : List I), ∀ z ∈ U,
       iterD l g z = wirtWord (l.map fun i => (i, false)) g z := by
-  intro I _ _ U g hU hg l z hz
-  exact (iterD_holo_and_eq U g hU hg l).2 hz
+  exact fun I _ _ U g hU hg l z hz => (iterD_holo_and_eq U g hU hg l).2 hz
 
 end GlobalTheory.HoloWirt
 end -- clump:auto
@@ -1401,7 +1394,7 @@ theorem dualForm_values (E : Type) [Field E] [NumberField E] [IsCMField E] (ξ :
       refine Finset.sum_congr rfl fun σ _ => ?_
       simp [IsCMField.complexEmbedding_complexConj, ComplexEmbedding.conjugate_coe_eq]
     rw [h2] at h1
-    simp only [c, sub_mul, Finset.sum_sub_distrib, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [c, sub_mul, Finset.sum_sub_distrib, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [sub_eq_zero]
     have h3 : ∑ τ₁, ∑ τ₂, τ₁ ξ * τ₂ ξ * b (ComplexEmbedding.conjugate τ₁) (ComplexEmbedding.conjugate τ₂) *
         (τ₁ x * τ₂ y) = ∑ σ : E →+* ℂ, σ ξ * σ x * ComplexEmbedding.conjugate σ y := by
@@ -1422,16 +1415,15 @@ theorem dualForm_values (E : Type) [Field E] [NumberField E] [IsCMField E] (ξ :
   simp only [c, b, hcc] at hc
   constructor
   · rintro rfl
-    rw [hcc, if_pos rfl] at hc
+    rw [hcc, ite_eq_left rfl] at hc
     have h0 := hz (ComplexEmbedding.conjugate ρ)
     have h4 : ComplexEmbedding.conjugate ρ ξ *
         (ρ ξ * B ρ.toRatAlgHom.toLinearMap (ComplexEmbedding.conjugate ρ).toRatAlgHom.toLinearMap - 1) = 0 := by
       linear_combination hc
-    have h5 := (mul_eq_zero.1 h4).resolve_left h0
-    exact eq_inv_of_mul_eq_one_right (sub_eq_zero.1 h5)
+    exact eq_inv_of_mul_eq_one_right (sub_eq_zero.1 ((mul_eq_zero.1 h4).resolve_left h0))
   · intro hne
     have hne' : ComplexEmbedding.conjugate ρ' ≠ ρ := fun h => hne (by rw [← h, hcc])
-    rw [if_neg hne', sub_zero] at hc
+    rw [ite_eq_right hne', sub_zero] at hc
     exact (mul_eq_zero.1 hc).resolve_left (mul_ne_zero (hz _) (hz _))
 
 end GlobalTheory.DualFormValues
@@ -1635,7 +1627,7 @@ theorem series_weightTwo : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     dzbar_apply, smul_eq_mul]
   rw [Finset.sum_eq_single i (fun j _ hj => by simp [Pi.single_apply, hj]) (by simp),
     Finset.sum_eq_single i (fun j _ hj => by simp [Pi.single_apply, hj]) (by simp)]
-  simp only [Pi.single_eq_same, map_one, Complex.conj_I, Bool.false_eq_true, if_false]
+  simp only [Pi.single_eq_same, map_one, Complex.conj_I, Bool.false_eq_true, ite_false]
   linear_combination (eTerm φ (m + Pi.single i 1) σ z q.1.out / 2 -
     eTerm φ m σ z q.1.out * (-σ * φ i q.1.out / starRingEnd ℂ (defCoord φ z q.1.out i)) / 2) * Complex.I_mul_I
 
@@ -1739,8 +1731,7 @@ theorem derivFormula_two (hH : HeckeWeightTwo) (E : Type) [Field E] [NumberField
       intro z hz
       obtain ⟨h1, h2⟩ := series_weightTwo E I φ hφ c y hc σ hσ (fun j => l.count j) z hz
       have h3 := wirtWord_congr hP ih [(i, false)] z hz
-      rw [List.map_cons, wirtWord_cons, count_cons_eq, ← h2 i, ← wirt_const_mul i false cw h1]
-      exact h3
+      rwa [List.map_cons, wirtWord_cons, count_cons_eq, ← h2 i, ← wirt_const_mul i false cw h1]
   rw [_root_.GlobalTheory.HoloWirt.iterD_eq_wirtWord I _ g hP hgd l 0 h0, wirtWord_congr hP (hagree g hg) _ 0 h0, ← risingS_zero]
   refine eq_at_zero (f := fun σ => wirtWord (l.map fun i => (i, false)) (fun z' => cw * K σ z') 0)
     (g := fun σ => cw * risingS σ κ * S σ) (hchain cw _ 0 h0)

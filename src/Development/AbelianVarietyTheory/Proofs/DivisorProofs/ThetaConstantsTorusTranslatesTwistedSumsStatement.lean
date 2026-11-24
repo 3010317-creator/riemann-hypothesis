@@ -1083,8 +1083,7 @@ theorem UMem.const_term_sub_mem : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W
   rw [div_mul_cancel₀ _ hd.1, ← hr, TwistSum₂.val_stalkHom] at e
   have e' : 𝔪.yK ⟨X₁.S.th (lab c), X₁.S.th_mem _⟩ =
       algebraMap V (FractionRing V) (ev r) * 𝔪.yK ⟨X₁.S.th x₀, X₁.S.th_mem x₀⟩ := by
-    rw [𝔪.yK_eq, 𝔪.yK_eq]
-    exact e
+    rwa [𝔪.yK_eq, 𝔪.yK_eq]
   have hS := sum_terms_universal_member 𝔪 hT c
   rw [e'] at hS
   have hI := TwistSum₂.sumI_of_sumF_mul (fun χ => T (𝔪.e₈.symm χ) c) (ev r) _ hθ hS
@@ -1154,9 +1153,8 @@ theorem twist_resid : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (F
     · subst h0
       have ha : a ∈ X₁.S.HH X₁.M z₁ := (GlobalTheory.T.dividingThetaConstants_generate_integral_torsion_labels g n F W Z i X₁ z₁ act x₀ hx₀ V ev Y m t δ 𝔪 a).2 h
       have h1 : eStd X₁.S.g _ τ a = 0 := hτ a ha
-      simp only [wt', if_pos rfl, h1, smul_zero]
-    · simp only [wt', if_neg h0]
-      exact hwt a mu h
+      simp only [wt', ite_eq_left rfl, h1, smul_zero]
+    · simpa only [wt', ite_eq_right h0] using hwt a mu h
   have hh : X₁.M.stalkHom z₁ (s * u * r) = algebraMap X₁.o₁ X₁.Ω₁ (X₁.S.ζ ^ e) * X₁.S.th (lab c + τ) / X₁.S.th x₀ := by
     rw [map_mul, map_mul, hs, hu, hr]
     field_simp [hcd.1, hx₀.1]
@@ -1290,8 +1288,7 @@ theorem pow_eq_iff_cast (X₁ : Setup F W i) (a b : ℕ) :
   constructor
   · intro h
     apply X₁.S.prim.pow_inj (Nat.mod_lt _ hpos) (Nat.mod_lt _ hpos)
-    rw [hord, pow_mod_orderOf, pow_mod_orderOf]
-    exact h
+    rwa [hord, pow_mod_orderOf, pow_mod_orderOf]
   · intro h
     calc X₁.S.ζ ^ a = X₁.S.ζ ^ (a % orderOf X₁.S.ζ) := (pow_mod_orderOf _ _).symm
       _ = X₁.S.ζ ^ (b % orderOf X₁.S.ζ) := by rw [← hord, h]
@@ -1422,8 +1419,7 @@ theorem twistSum_indep : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix
     have h0 : (⟨s - s', hmem⟩ : M) = 0 := by
       rw [Ideal.jacobson_bot] at hI
       have hK := Ideal.iInf_pow_smul_eq_bot_of_le_jacobson (M := M) I hI
-      rw [← Submodule.mem_bot R, ← hK, Submodule.mem_iInf]
-      exact hpow
+      rwa [← Submodule.mem_bot R, ← hK, Submodule.mem_iInf]
     exact sub_eq_zero.mp (congrArg Subtype.val h0)
   have hE := unique_sum (IsLocalRing.jacobson_eq_maximalIdeal ⊥ bot_ne_top).ge hA hB
   rw [map_mul, map_mul] at hE

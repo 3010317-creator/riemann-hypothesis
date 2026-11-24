@@ -95,16 +95,15 @@ theorem exists_minimal_ge_of_disjoint {R : Type} [CommRing R] [IsReduced R] [IsN
     intro a ha
     have hnz : a ∉ nonZeroDivisors R := fun h => Set.disjoint_left.1 hP ha h
     rw [mem_nonZeroDivisors_iff] at hnz
-    push_neg at hnz
+    push Not at hnz
     obtain ⟨b, hba, hb⟩ : ∃ b, b * a = 0 ∧ b ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       obtain ⟨x, hx, hx0⟩ := hnz (fun x hx => h x (by rw [mul_comm]; exact hx))
       exact hx0 (h x hx)
     have hb' : b ∉ sInf (minimalPrimes R) := by
       rw [sInf_minimalPrimes_eq_bot]; exact hb
     rw [Ideal.mem_sInf] at hb'
-    push_neg at hb'
+    push Not at hb'
     obtain ⟨q, hq, hbq⟩ := hb'
     have hqp : q.IsPrime := Ideal.minimalPrimes_isPrime hq
     have haq : a ∈ q := (hqp.mem_or_mem (hba ▸ q.zero_mem)).resolve_left hbq
@@ -135,8 +134,7 @@ theorem exists_annihilator_of_minimal {R : Type} [CommRing R] [IsReduced R] [IsN
     · subst hIq; exact I.mul_mem_left s ha
     · have hIt : I ∈ t.erase q := Finset.mem_erase.2 ⟨hIq, by rw [← Finset.mem_coe, ht]; exact hI⟩
       exact I.mul_mem_right a (Finset.inf_le (f := fun I : Ideal R => I) hIt hs)
-  rw [sInf_minimalPrimes_eq_bot] at this
-  exact this
+  rwa [sInf_minimalPrimes_eq_bot] at this
 
 theorem mem_of_dense_of_disjoint {R : Type} [CommRing R] [IsReduced R] [IsNoetherianRing R]
     (D : Set (PrimeSpectrum R)) (hDo : IsOpen D) (hD : Dense D) (P : PrimeSpectrum R)

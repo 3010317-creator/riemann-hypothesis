@@ -554,11 +554,8 @@ theorem finite_thetaData (Xo : Moduli Dw l) (c : Coeff l) (g j : ℕ) (hbig : 81
       · obtain ⟨φ, hφ, -⟩ := (_root_.GlobalTheory.thetaPtDetermines_and_endDeterminedOnTorsion).1 g 3 2 j 81 (3 ^ j * 81) Nat.prime_three (by decide) le_rfl
           (by norm_num) rfl hbig K h3 P₀ P hg₀ hg ze lev₀ lev v hθ₀ hθ
         exact ⟨φ.hom.left ≫ α, polFib_transport Xo.univ.t.PP.isLB φ hφ hpb hPL⟩
-    · intro y₁ h₁ y₂ h₂ h
-      exact pullback.hom_ext h (h₁.1.trans h₂.1.symm)
-  · apply Set.Finite.subset Set.finite_empty
-    intro y hy
-    exact False.elim (hne ⟨y, hy⟩)
+    · exact fun y₁ h₁ y₂ h₂ h => pullback.hom_ext h (h₁.1.trans h₂.1.symm)
+  · exact Set.Finite.subset Set.finite_empty (fun y hy => False.elim (hne ⟨y, hy⟩))
 
 end GlobalTheory.UMin.QF
 

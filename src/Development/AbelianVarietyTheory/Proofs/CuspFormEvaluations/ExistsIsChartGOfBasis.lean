@@ -233,7 +233,7 @@ private theorem pj_aeval (m : ℕ) (a : σ → MvPowerSeries τ R) (q : MvPolyno
     by_cases h : e = 0
     · subst h
       simp
-    · rw [if_neg h, if_neg (Ne.symm h)]
+    · rw [ite_eq_right h, ite_eq_right (Ne.symm h)]
   | add p q hp hq => rw [map_add (f := _), map_add (f := _), pj_add, hp, hq]
   | mul_X p s hp => rw [map_mul, map_mul, pj_mul', hp, MvPolynomial.aeval_X, MvPolynomial.aeval_X]
 
@@ -348,8 +348,7 @@ theorem exists_ptJ (y : ∀ m, sp (R₀ := R) (JetR R (Fin n × Fin d) m) ⟶ G)
     · rw [← AlgHom.comp_assoc, (hψ m).1, jetAug_comp_jetTruncR_eq_jetAug_succ hx]
     · rw [jet_spMap_square_comm, Category.assoc, hx.1 m, (hψ m).2]
   have hz : ∀ j m, jetTruncR R (Fin n × Fin d) m (ψ (m + 1) (zR (m + 1) j)) = ψ m (zR m j) := by
-    intro j m
-    exact congrArg (fun φ => φ (zR (m + 1) j)) (hc m)
+    exact fun j m => congrArg (fun φ => φ (zR (m + 1) j)) (hc m)
   choose P hP using fun j => exists_pj (fun m => ψ m (zR m j)) (hz j)
   have hP0 : ∀ j, constantCoeff (P j) = 0 := by
     intro j
@@ -439,15 +438,13 @@ theorem exists_series [IsCommMonObj G] {O : Type} [CommRing O] (a : Geo.Tor.OAct
     have E : A0 (c₁ + c₂) = op F0 (A0 c₁) (A0 c₂) :=
       ptJ_inj hx fun m => by rw [hA0, hop, hA0, hA0, a.add, MonObj.comp_mul]
     have h := congrArg Subtype.val E
-    rw [op_val] at h
-    exact h
+    rwa [op_val] at h
   case mul =>
     intro c₁ c₂
     have E : A0 (c₁ * c₂) = ac (A0 c₁) (A0 c₂) :=
       ptJ_inj hx fun m => by rw [hA0, hac, hA0, Category.assoc, ← a.mul c₂ c₁, _root_.mul_comm c₂ c₁]
     have h := congrArg Subtype.val E
-    rw [ac_val] at h
-    exact h
+    rwa [ac_val] at h
   case one =>
     have E : A0 1 = (gen 0 : Q R d 1) :=
       ptJ_inj hx fun m => by rw [hA0, a.one, Category.comp_id]
@@ -795,8 +792,7 @@ theorem jetCoord_unique (R : Type) [CommRing R] (G : Over (Spec (CommRingCat.of 
           rw [AlgHom.comp_apply, AlgHom.comp_apply, ← map_sub]
           exact Ideal.mem_map_of_mem _ (ih j))
         (by rw [← spMap_comp, ← spMap_comp, Category.assoc, Category.assoc, h])
-      intro j
-      exact Ideal.Quotient.eq.1 (AlgHom.congr_fun e (zR m j)).symm
+      exact fun j => Ideal.Quotient.eq.1 (AlgHom.congr_fun e (zR m j)).symm
   refine jet_ext fun j => ?_
   have := main m j
   rw [hN, Ideal.mem_bot] at this
@@ -875,8 +871,8 @@ theorem mk_psTrunc {S : Type} [CommRing S] {κ : Type} [Fintype κ] [DecidableEq
   have co : ∀ e : κ →₀ ℕ, e.degree < m + 1 → (psTrunc m f).coeff e = MvPowerSeries.coeff e f := fun e he => by
     have hm : e ∈ degLE m := Finset.mem_filter.2 ⟨Finset.mem_image.2
       ⟨fun i => ⟨e i, lt_of_le_of_lt (Finsupp.le_degree i e) he⟩, Finset.mem_univ _, by ext i; simp⟩, Nat.le_of_lt_succ he⟩
-    rw [psTrunc, MvPolynomial.coeff_sum, Finset.sum_eq_single e (fun b _ hb => by rw [MvPolynomial.coeff_monomial, if_neg hb])
-      (fun h => absurd hm h), MvPolynomial.coeff_monomial, if_pos rfl]
+    rw [psTrunc, MvPolynomial.coeff_sum, Finset.sum_eq_single e (fun b _ hb => by rw [MvPolynomial.coeff_monomial, ite_eq_right hb])
+      (fun h => absurd hm h), MvPolynomial.coeff_monomial, ite_eq_left rfl]
   have c0 : MvPolynomial.constantCoeff (psTrunc m f) = 0 := (co 0 (by simp)).trans hf
   rw [c0, map_zero, sub_zero]
   exact ChartJet.pj_eq_mk.2 fun e he => (co e he).symm
@@ -985,8 +981,8 @@ theorem exists_isChartG_of_basis : ∀ (E : Type) [Field E] [NumberField E] [IsC
         (MvPolynomial.X ((0 : Fin 1), i)) = _
       rw [MvPolynomial.aeval_X]
       by_cases hij : i = j
-      · subst hij; rw [if_pos rfl, Pi.single_eq_same]; rfl
-      · rw [if_neg (fun h => hij (Prod.ext_iff.1 h).2), Pi.single_eq_of_ne hij, TrivSqZeroExt.inr_zero]
+      · subst hij; rw [ite_eq_left rfl, Pi.single_eq_same]; rfl
+      · rw [ite_eq_right (fun h => hij (Prod.ext_iff.1 h).2), Pi.single_eq_of_ne hij, TrivSqZeroExt.inr_zero]
     have e₂ : Chart.spMap T ≫ ChartJet.ptJ x 1 (gen 0) = v j := by
       rw [hxv, ← e₁, ← Chart.spMap_comp, Category.assoc]; rfl
     exact (Category.assoc _ _ _).symm.trans (congrArg (fun q => q.left ≫ φ) e₂)

@@ -122,8 +122,7 @@ private theorem char_triv {l : ℕ} [hl : Fact l.Prime] {D : Type} [CommRing D] 
     have hq1 : Ideal.Quotient.mk I (ψ g) ^ q = 1 := by
       have h2 := congrArg (fun z : f.range => ((z : (D ⧸ I)ˣ) : D ⧸ I)) hχ
       simp only [MonoidHom.coe_rangeRestrict, OneMemClass.coe_one, Units.val_one] at h2
-      rw [hfv, map_pow] at h2
-      exact h2
+      rwa [hfv, map_pow] at h2
     have hl1 : Ideal.Quotient.mk I (ψ g) ^ (l ^ N) = 1 := by
       rw [← map_pow]
       exact hmem _ hg
@@ -132,8 +131,7 @@ private theorem char_triv {l : ℕ} [hl : Fact l.Prime] {D : Type} [CommRing D] 
     exact hgcd
   have hbot := Ideal.iInf_pow_eq_bot_of_isLocalRing (maximalIdeal D) (maximalIdeal.isMaximal D).ne_top
   have hmem : ψ g - 1 ∈ ⨅ i, (maximalIdeal D) ^ i := Ideal.mem_iInf.2 key
-  rw [hbot, Ideal.mem_bot, sub_eq_zero] at hmem
-  exact hmem
+  rwa [hbot, Ideal.mem_bot, sub_eq_zero] at hmem
 
 section
 
@@ -234,8 +232,7 @@ private theorem lam_le (hF : F.Ok C₀) (hn : n = 2 ∨ n = 3) (S : Space O F n)
       simpa [ψQ] using h2)
     (fun A _ _ hA χ ho hχ => H v A hA χ ho hχ g hgI)
   show S.ψB v i g - 1 ∈ Q
-  rw [← Ideal.Quotient.eq, map_one]
-  exact key
+  rwa [← Ideal.Quotient.eq, map_one]
 
 private theorem dim_B (hF : F.Ok C₀) (hn : n = 2 ∨ n = 3) (S : Space O F n) (I : Ideal S.B) (hI : S.FinLam I)
     (v : F.V) (i j : Fin n) (hij : i ≠ j) (p : Ideal S.B) (hp : I ≤ p)
@@ -325,8 +322,7 @@ theorem UpperTheory.V.Fr.l52 :
     intro g hg
     have h := hcoin g hg
     show L.ι (S.inc (S.ψB v i g - S.ψB v j g)) ∈ P
-    rw [map_sub, map_sub]
-    exact h
+    rwa [map_sub, map_sub]
   obtain ⟨m, hm1, hm2⟩ := dim_B hF hn S I hI v i j hij (L.π P) hIP hc
   have key : ringKrullDim (L.R ⧸ P) + F.dv v ≤ ((m + 1 + F.dv v : ℕ) : WithBot ℕ∞) := by
     calc ringKrullDim (L.R ⧸ P) + F.dv v ≤ ((m : WithBot ℕ∞) + ((1 : ℕ) : WithBot ℕ∞)) + F.dv v :=

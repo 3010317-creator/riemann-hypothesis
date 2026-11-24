@@ -76,8 +76,7 @@ theorem val_one_sub_pow_lt {Ω Γ : Type*} [Field Ω] [LinearOrderedCommGroupWit
     have e : 1 - u ^ (i + 1) = (1 - u) + u * (1 - u ^ i) := by ring
     rw [e]
     refine v.map_add_lt h ?_
-    rw [map_mul, hu, one_mul]
-    exact ih
+    rwa [map_mul, hu, one_mul]
 
 theorem eq_of_pow_eq_one_of_valuation_sub_lt_one {Ω : Type u_1} [inst : Field Ω]
     (A : ValuationSubring Ω) (m : ℕ) {ζ ζ' : Ω} (h1 : ζ ^ m = 1) (h2 : ζ' ^ m = 1)
@@ -102,8 +101,7 @@ theorem eq_of_pow_eq_one_of_valuation_sub_lt_one {Ω : Type u_1} [inst : Field �
   have vu : A.valuation u = 1 := by rw [hu, map_div₀, v1, v2, div_one]
   have v1u : A.valuation (1 - u) < 1 := by
     have e : 1 - u = (ζ - ζ') / ζ := by rw [hu, sub_div, div_self hz]
-    rw [e, map_div₀, v1, div_one]
-    exact h
+    rwa [e, map_div₀, v1, div_one]
   have hs : ∑ i ∈ Finset.range m, u ^ i = 0 := by
     have g := geom_sum_mul u m
     rw [hum, sub_self] at g

@@ -459,8 +459,7 @@ theorem conductor_prod_fst (R S' S : Type) [CommRing R] [CommRing S'] [CommRing 
     rw [map_mul, hΘ, hΘ] at hs2
     have hu := hg b'
     have hcs := IsLocalization.mk'_spec (FractionRing R) a b
-    rw [← hu.mul_left_inj, hs2]
-    rw [hgx, hgx]
+    rw [← hu.mul_left_inj, hs2, hgx, hgx]
     simp only [b', RingEquiv.apply_symm_apply, Prod.mk_mul_mk, map_zero, map_one, mul_one]
     rw [hcs]
   have hf : Function.Surjective ((RingHom.fst R S').comp e.toRingHom) :=
@@ -564,8 +563,7 @@ theorem quasiFinite_of_isUnit_coeff {R T : Type*} [CommRing R] [CommRing T] (φ 
   have h1 : (eval₂RingHom φ' t).QuasiFinite := RingHom.QuasiFinite.of_comp
     (g := mapRingHom (algebraMap R (Localization.Away c))) (hι ▸ h)
   have hG' : eval₂ φ' t (G.map (algebraMap R (Localization.Away c))) = 0 := by
-    have h5 := DFunLike.congr_fun hι G
-    simpa [hG] using h5
+    simpa [hG] using DFunLike.congr_fun hι G
   have h2 : φ'.QuasiFinite := quasiFinite_of_eval₂_eq_zero φ' t h1 _ hG' k (by
     rw [coeff_map]; exact IsLocalization.Away.algebraMap_isUnit c)
   have h3 : (algebraMap R (Localization.Away c)).QuasiFinite :=
@@ -736,8 +734,7 @@ theorem exists_coeff_map_eq_C {K : Type*} [Field K] {n : ℕ} (φ : ℤ →+* K)
   obtain ⟨a, ha, hE⟩ := MvPolynomial.isUnit_iff_eq_C_of_isReduced.mp hU
   refine ⟨2 + f.totalDegree, (finSuccEquiv K n (shear K n (2 + f.totalDegree) f)).natDegree, a,
     ha.ne_zero, ?_⟩
-  rw [← Polynomial.coeff_map, map_finSuccEquiv, map_shear, ← hf]
-  exact hE
+  rwa [← Polynomial.coeff_map, map_finSuccEquiv, map_shear, ← hf]
 
 theorem exists_primitive_of_aeval_eq_zero {S : Type*} [CommRing S] [IsDomain S] [CharZero S]
     {n : ℕ} (y : Fin n → S) (g : MvPolynomial (Fin n) ℤ) (hg0 : g ≠ 0)
@@ -759,7 +756,7 @@ theorem exists_primitive_of_aeval_eq_zero {S : Type*} [CommRing S] [IsDomain S] 
   have hc' : ∀ v, v ∉ g.support → g₀.coeff v = 0 := by
     intro v hv
     simp only [g₀, MvPolynomial.coeff_sum, MvPolynomial.coeff_monomial]
-    exact Finset.sum_eq_zero fun w hw => if_neg (fun h : w = v => hv (h ▸ hw))
+    exact Finset.sum_eq_zero fun w hw => ite_eq_right (fun h : w = v => hv (h ▸ hw))
   have hgd : g = MvPolynomial.C d * g₀ := by
     ext v
     rw [MvPolynomial.coeff_C_mul]
@@ -771,8 +768,7 @@ theorem exists_primitive_of_aeval_eq_zero {S : Type*} [CommRing S] [IsDomain S] 
       rw [hgd, map_mul] at hg
       simpa using hg
     exact (mul_eq_zero.mp h1).resolve_left (by exact_mod_cast hd0)
-  · by_contra hall
-    push_neg at hall
+  · by_contra! hall
     obtain ⟨l, hl⟩ := (IsPrincipalIdealRing.principal I).principal
     have hdvd : l ∣ g.support.gcd b := Finset.dvd_gcd fun v hv => by
       have := hall v
@@ -803,7 +799,7 @@ theorem exists_quasiFiniteAt_of_not_injective {S : Type*} [CommRing S] [IsDomain
 
   obtain ⟨g, hg0, hg⟩ : ∃ g : MvPolynomial (Fin (n + 1)) ℤ, g ≠ 0 ∧ aeval y g = 0 := by
     rw [injective_iff_map_eq_zero] at hy
-    push_neg at hy
+    push Not at hy
     obtain ⟨g, h1, h2⟩ := hy
     exact ⟨g, h2, h1⟩
   let L := algebraMap S (Localization.AtPrime q)
@@ -986,8 +982,7 @@ theorem integralClosure_of_fractions (P A : Type) [CommRing P] [IsDomain P] [IsN
     intro x hx
     have hxP : IsIntegral P x := isIntegral_trans x hx
     exact (IsIntegralClosure.isIntegral_iff (A := B)).mp hxP
-  · intro x y h
-    exact hinj (congrArg Subtype.val h)
+  · exact fun x y h => hinj (congrArg Subtype.val h)
   · have hne : ∀ b : B, b ∈ ((maximalIdeal A).comap (algebraMap B A)).primeCompl →
         IsUnit (algebraMap B A b) := by
       intro b hb
@@ -995,9 +990,7 @@ theorem integralClosure_of_fractions (P A : Type) [CommRing P] [IsDomain P] [IsN
       exact hb ((mem_maximalIdeal _).mpr hu)
     refine ⟨fun y => hne y.1 y.2, fun a => ?_, fun {x y} h => ⟨1, ?_⟩⟩
     · obtain ⟨b, t, hb, ht, hu, hab⟩ := hloc a
-      refine ⟨(⟨b, hb⟩, ⟨⟨t, ht⟩, ?_⟩), hab⟩
-      intro hmem
-      exact (mem_maximalIdeal _).mp hmem hu
+      exact ⟨(⟨b, hb⟩, ⟨⟨t, ht⟩, fun hmem => (mem_maximalIdeal _).mp hmem hu⟩), hab⟩
     · have : x = y := Subtype.val_injective h
       rw [this]
 
@@ -1018,8 +1011,7 @@ theorem GlobalTheory.normal_local_is_localisation_of_finite_over_polynomial :
     by_contra hu
     exact hs ((mem_maximalIdeal _).mpr hu)
   have hM : M ≤ 𝔮.primeCompl := by
-    intro m hm hmem
-    exact (mem_maximalIdeal _).mp hmem (IsLocalization.map_units A ⟨m, hm⟩)
+    exact fun m hm hmem => (mem_maximalIdeal _).mp hmem (IsLocalization.map_units A ⟨m, hm⟩)
   haveI hat : IsLocalization 𝔮.primeCompl A :=
     IsLocalization.of_le M _ hM (fun s hs => hunit s hs)
   haveI : CharZero S₀ := (algebraMap S₀ A).charZero

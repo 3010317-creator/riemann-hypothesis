@@ -119,10 +119,7 @@ theorem eq_add_halves (p : SplitPt D k) {S T : HSp D} {LS : Set (Fin S.rank → 
 
 theorem smul_conj_zero (e e' : AE D) (h : e' * cA D e' = 0) {S T : HSp D} (u : WO S T) (hu : e' • u = u) :
     cA D e' • (e • u) = 0 := by
-  rw [← hu, smul_smul, smul_smul]
-  rw [mul_comm (cA D e') e]
-  rw [mul_assoc]
-  rw [mul_comm (cA D e') e']
+  rw [← hu, smul_smul, smul_smul, mul_comm (cA D e') e, mul_assoc, mul_comm (cA D e') e']
   rw [h, mul_zero, zero_smul]
 
 theorem isHalf_add {S T : HSp D} {e : AE D} {a b : WO S T} (ha : IsHalf e a) (hb : IsHalf e b) : IsHalf e (a + b) :=
@@ -157,8 +154,8 @@ theorem latVac_image : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topol
     show halfInd p.e Λ' (t + x) = halfInd p.e Λ' t
     unfold halfInd
     by_cases h : t ∈ Λ' ∧ IsHalf p.e t
-    · rw [if_pos (hc.2 h), if_pos h]
-    · rw [if_neg (fun h' => h (hc.1 h')), if_neg h]
+    · rw [ite_eq_left (hc.2 h), ite_eq_left h]
+    · rw [ite_eq_right (fun h' => h (hc.1 h')), ite_eq_right h]
   have hY : ∀ y ∈ Λ', IsHalf (cA D p.e) y → heisO ψ S T y (Tm (halfInd p.e Λ')) = Tm (halfInd p.e Λ') := by
     intro y hy hh
     rw [← hTm.modul _ hΦ₀ y hh]

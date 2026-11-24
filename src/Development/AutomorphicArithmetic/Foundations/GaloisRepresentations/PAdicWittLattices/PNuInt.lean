@@ -126,8 +126,7 @@ theorem pNuInt : NuInt := by
       have e := GlobalTheory.T.harrisTaylor_action_form_eq_similitude_mul p D G L h (inAf D x) (inAf D y)
       have e' : mul h * ((D.EF x y : ℤ) : AfP p) = fAf D (L.actG h (inAf D x)) (L.actG h (inAf D y)) := by
         rw [← form_inAf]; exact e.symm
-      simp only [e']
-      exact dvdInt_form D g hdvd _ _ (hh _ (inAf_mem D x)) (hh _ (inAf_mem D y))
+      simpa only [e'] using dvdInt_form D g hdvd _ _ (hh _ (inAf_mem D x)) (hh _ (inAf_mem D y))
     | zero => simpa using DvdInt.zero g
     | add a b _ _ ha hb =>
       push_cast
@@ -145,8 +144,7 @@ theorem pNuInt : NuInt := by
     have h2 : IsUnit (algebraMap ℚ (AfP p) (g : ℚ)) := (IsUnit.mk0 _ this).map _
     simpa using h2
   have : mul h = w := hu.mul_left_cancel (by rw [mul_comm]; exact e)
-  rw [this]
-  exact hw
+  rwa [this]
 
 end UpperTheory.Gal.G3
 

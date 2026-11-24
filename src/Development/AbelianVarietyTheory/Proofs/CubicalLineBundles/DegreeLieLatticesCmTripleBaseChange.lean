@@ -127,13 +127,11 @@ private lemma linearIndependent_map_of_linearIndependent (h : _root_.Reciprocity
   obtain ⟨s⟩ : Nonempty (K' →+* ℂ) := inferInstance
   rw [Fintype.linearIndependent_iff]
   intro c hc
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hpd := h.posDef (s.comp j) r v hv
   have hx : (fun a => s (c a)) ≠ 0 := by
     obtain ⟨a, ha⟩ := hne
-    intro h0
-    exact ha (s.injective (by simpa using congrFun h0 a))
+    exact fun h0 => ha (s.injective (by simpa using congrFun h0 a))
   have hpos := hpd.dotProduct_mulVec_pos hx
   have hz : (Matrix.of fun a b => h.form (s.comp j) (v a) (v b)).mulVec (fun a => s (c a)) = 0 := by
     ext a
@@ -179,8 +177,7 @@ private lemma isFrame_span_image_map (h : _root_.ReciprocityTheory.GeometryOfNum
     rw [Submodule.span_le]
     rintro _ ⟨x, hx, rfl⟩
     exact map_mem_span_range_map_of_mem_span j (hsub hx)
-  intro y hy
-  exact hle hy
+  exact fun y hy => hle hy
 
 open NumberField Module in
 open scoped nonZeroDivisors in
@@ -378,8 +375,7 @@ private lemma log_relIndex_map_lemma_4 (h : _root_.ReciprocityTheory.GeometryOfN
       intro x hx
       have hx1 : x ∈ Submodule.span K (Set.range v) ⊓ (LinearMap.ker f).restrictScalars K :=
         ⟨hsub hx.1, hx.2⟩
-      rw [span_range_inf_ker_eq_span_range_castSucc h0 h1] at hx1
-      exact hx1
+      rwa [span_range_inf_ker_eq_span_range_castSucc h0 h1] at hx1
     have hIH := ih hCfg hCfr
     have hsplit := relIndex_eq_relIndex_map_mul_relIndex_inf_ker hAB f
     rw [hA1, span_range_inf_ker_eq_span_range_castSucc h0 h1] at hsplit
@@ -480,8 +476,7 @@ theorem _root_.GlobalTheory.deg_span_image_eq :
     intro s
     unfold _root_.ReciprocityTheory.GeometryOfNumbersTheory.HermFam.gram
     ext a b
-    simp only [Matrix.of_apply]
-    exact hermFam_form_map_eq_of_eq_on_basis j h h' hf s _ _
+    simpa only [Matrix.of_apply] using hermFam_form_map_eq_of_eq_on_basis j h h' hf s _ _
   simp only [hg]
   have hm := _root_.GlobalTheory.meanLog_comp j (fun σ => (h.gram σ v).det.re)
   unfold _root_.ReciprocityTheory.GeometryOfNumbersTheory.meanLog at hm

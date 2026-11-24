@@ -93,10 +93,9 @@ theorem UpperTheory.eisenstein_norm_eq_abs_pow :
       have := (InfinitePlace.Completion.isometryEquivRealOfIsReal (IsTotallyReal.isReal w)).symm.isometry.dist_eq (y.val w) 0
       have e0 : (InfinitePlace.Completion.isometryEquivRealOfIsReal (IsTotallyReal.isReal w)).symm 0 = 0 :=
         map_zero (InfinitePlace.Completion.ringEquivRealOfIsReal (IsTotallyReal.isReal w)).symm
-      rw [e0, dist_zero_right, dist_zero_right, Real.norm_of_nonneg (hy w).le] at this
-      exact this
+      rwa [e0, dist_zero_right, dist_zero_right, Real.norm_of_nonneg (hy w).le] at this
     rw [logNorm, h1, logFin_one, sub_zero, logInf, h2]
-    simp only [h3, InfinitePlace.mult, IsTotallyReal.isReal, if_true, Nat.cast_one, one_mul]
+    simp only [h3, InfinitePlace.mult, IsTotallyReal.isReal, ite_true, Nat.cast_one, one_mul]
     rw [← Real.log_prod (fun w _ => (hy w).ne'), Real.rpow_def_of_pos (Finset.prod_pos fun w _ => hy w),
       Complex.ofReal_exp, Complex.ofReal_mul, mul_comm]
   · refine (H.2.1 w).trans ?_
@@ -118,8 +117,7 @@ open UpperTheory.V.Sd.Eis
 private theorem exists_addChar_fourier_coeff_ne_zero_of_ne_zero {α : Type} [AddCommGroup α] [Fintype α] (F : α → ℂ) (hF : F ≠ 0) :
     ∃ ψ : AddChar α ℂ, ∑ a, F a * ψ (-a) ≠ 0 := by
   classical
-  by_contra h
-  push_neg at h
+  by_contra! h
   apply hF
   funext x
   have key : ∑ ψ : AddChar α ℂ, ∑ a, F a * ψ (x - a) = (Fintype.card α : ℂ) * F x := by
@@ -155,8 +153,7 @@ theorem UpperTheory.exists_character_separation :
     apply ht
     have := congrFun h0 (Additive.ofMul (QuotientGroup.mk t))
     simp only [F, toMul_ofMul, Pi.zero_apply] at this
-    rw [inv_out U₀ f₀ hinv t] at this
-    exact this
+    rwa [inv_out U₀ f₀ hinv t] at this
   obtain ⟨ψ, hψ⟩ := exists_addChar_fourier_coeff_ne_zero_of_ne_zero F hF
   let χ : T →* ℂˣ :=
     { toFun := fun t => ⟨ψ (Additive.ofMul (QuotientGroup.mk t : T ⧸ U₀)),
@@ -291,10 +288,8 @@ theorem UpperTheory.exists_character_separation :
     Submodule.subset_span ⟨U, f, s, hU, hf, rfl⟩
   have h0 : L ((fun t => f (t * s)) - (χ s : ℂ) • f) = 0 := by
     have := Submodule.mem_map_of_mem (f := L) hmemK
-    rw [hLK, Submodule.mem_bot] at this
-    exact this
-  rw [map_sub, map_smul, smul_eq_mul, sub_eq_zero] at h0
-  exact h0
+    rwa [hLK, Submodule.mem_bot] at this
+  rwa [map_sub, map_smul, smul_eq_mul, sub_eq_zero] at h0
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.ExistsCharacterSeparation =====
@@ -447,10 +442,10 @@ private theorem core {K : Type} [Field K] (A : ValuationSubring K) (p : Kˣ) (π
       rw [Units.val_mul, aff_val, aff_val]
       ext i j
       fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_succ]
-    rw [if_pos hc, sum1, e, hD, ← add_smul] at this
+    rw [ite_eq_left hc, sum1, e, hD, ← add_smul] at this
     exact (canc h1 this).symm
   · intro hc
-    simp only [if_neg hc, add_zero] at hU
+    simp only [ite_eq_right hc, add_zero] at hU
     by_cases hl : lam = 0
     · exact Or.inl hl
     right

@@ -111,9 +111,7 @@ theorem GlobalTheory.ValPt.exists_dvr_factor : ∀ (o Ω : Type) [CommRing o] [F
   let e := RingEquiv.ofBijective j.rangeRestrict ⟨fun a b h => hj (congrArg Subtype.val h), j.rangeRestrict_surjective⟩
   let φ' : M.Z.presheaf.stalk x →+* W := e.symm.toRingHom.comp (ψ.codRestrict j.range hψW)
   have hjφ' : ∀ s, j (φ' s) = ψ s := by
-    intro s
-    have h := e.apply_symm_apply (ψ.codRestrict j.range hψW s)
-    exact congrArg Subtype.val h
+    exact fun s => congrArg Subtype.val (e.apply_symm_apply (ψ.codRestrict j.range hψW s))
   have hjO : ∀ w, j w ∈ OO p := fun w => (mem_OO_iff _).2 ((hW _).2 ⟨w, rfl⟩)
   let iV : W →+* OO p := j.codRestrict (OO p) hjO
   have hiVloc : IsLocalHom iV := by

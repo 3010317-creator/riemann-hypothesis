@@ -76,8 +76,7 @@ theorem exists_fundamentalDomain_subset [SecondCountableTopology G] (Γ : Subgro
     have hex : ∃ n, ∃ g : Γ, c g = n ∧ (g⁻¹ * d) • x ∈ K := by
       obtain ⟨γ, hγ, h⟩ := hcov x
       refine ⟨_, d * (⟨γ, hγ⟩ : Γ)⁻¹, rfl, ?_⟩
-      rw [_root_.mul_inv_rev, inv_inv, inv_mul_cancel_right]
-      exact h
+      rwa [_root_.mul_inv_rev, inv_inv, inv_mul_cancel_right]
     obtain ⟨g, hg, hgK⟩ := Nat.find_spec hex
     refine ⟨g⁻¹ * d, (hS _).2 ⟨hgK, g, ?_, fun h hh hK' => ?_⟩, fun k hk => ?_⟩
     · rw [smul_smul, mul_inv_cancel_left]; exact hd
@@ -91,8 +90,7 @@ theorem exists_fundamentalDomain_subset [SecondCountableTopology G] (Γ : Subgro
       rcases hle.eq_or_lt with h | h
       · rw [ek, hc (hg.trans h)]
       · refine (h2 g (hg ▸ h) ?_).elim
-        rw [smul_smul, mul_assoc, e]
-        exact hgK
+        rwa [smul_smul, mul_assoc, e]
 
 
 open Pointwise in
@@ -103,8 +101,7 @@ theorem measure_ne_top_of_cocompact (Γ : Subgroup G) [Countable Γ] {K : Set G}
     intro g hg
     obtain ⟨γ, hγ, hk⟩ := hcov g
     refine Set.mem_iUnion.2 ⟨(⟨γ, hγ⟩ : Γ)⁻¹, ?_, hg⟩
-    rw [Set.mem_inv_smul_set_iff]
-    exact hk
+    rwa [Set.mem_inv_smul_set_iff]
   refine ne_of_lt ?_
   calc μ F ≤ μ (⋃ γ : Γ, ((γ • K) ∩ F)) := measure_mono hsub
     _ ≤ ∑' γ : Γ, μ ((γ • K) ∩ F) := measure_iUnion_le _

@@ -251,8 +251,7 @@ theorem pow_smul_mem_om_of_overlap : ∀ (E : Type) [Field E] [NumberField E] [I
     obtain ⟨r, hr⟩ := (ho ((b : Ω))⁻¹).2 ⟨1, b, hb, by simp⟩
     rw [← hr]
     exact Subalgebra.algebraMap_mem _ r
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   let I : Ideal (chartRing ℤ (mseg y) t.1) :=
     { carrier := {a | (a : Ω) • w ∈ (Dc t).om}
       add_mem' := fun {u v} hu hv => by
@@ -295,8 +294,7 @@ theorem pow_smul_mem_om_of_overlap : ∀ (E : Type) [Field E] [NumberField E] [I
     by_cases hr0 : (r : Ω) = 0
     · apply hcon 0
       rw [pow_zero, one_smul, hfam.om_iff t w]
-      intro q' _ hq'
-      exact absurd (hq' r hr (fun hu => hu.1 hr0)) hrp
+      exact fun q' _ hq' => absurd (hq' r hr (fun hu => hu.1 hr0)) hrp
     have hrT : (r : chartRing ℤ (mseg y) t.1) ∈ T :=
       ⟨r, 0, hrp', hr0, by simp⟩
     have hu := not_not.1 (mt (hqP (r : chartRing ℤ (mseg y) t.1)).2 (notP _ hrT))
@@ -595,8 +593,7 @@ theorem shape_M (P : L →ₗ[Ω] L) {r : ℕ} (b₀ : Fin r → L) (hb₀ : Lin
         · intro k _ hk
           rw [LinearMap.smul_apply, h0 k.rev j (by rintro rfl; simp at hk), smul_zero]
         · simp
-      have h := this hx
-      simpa [sub_eq_zero] using h
+      simpa [sub_eq_zero] using this hx
     ext x
     rw [← hw, LinearMap.comp_apply, hw, key _ (hP x), LinearMap.sum_apply]
     refine Finset.sum_congr rfl fun a' _ => ?_
@@ -710,8 +707,7 @@ theorem exists_point {κ : Type} {x : κ → Ω} (tie : CoordTie ℤ ξ x) (c : 
   have hg : genPt ξ ∈ U := (hUm _).2 ⟨specializes_rfl, hc, fun c' => hreg _⟩
   let ψ : Γ(X, U) →+* Ω := secMap ξ U hg
   have hψ : ∀ (q : Cpt ξ) (hq : q.1 ∈ U) (f : Γ(X, U)), genMap ξ q ((X.presheaf.germ U q.1 hq).hom f) = ψ f := by
-    intro q hq f
-    exact genMap_germ q U hq hg f
+    exact fun q hq f => genMap_germ q U hq hg f
   have hψA : ∀ f, ψ f ∈ A := by
     intro f
     have h1 : ψ f ∈ Algebra.adjoin ℤ (Set.range fun j => x j / x c) :=
@@ -945,8 +941,7 @@ theorem span_flag (Fl : 𝔐.Flag) (s : CMType H ⊕ CMType H) :
   have h2 : 𝔐.V s q = _ := (hb' q trivial hU').2
   have h3 := congrArg (fun N : Submodule (regAt 𝔐.ξ q) 𝔐.Li => Submodule.span Ω (N : Set 𝔐.Li)) (h1.symm.trans h2)
   simp only [Submodule.span_span_of_tower] at h3
-  rw [← flagStep_top, ← hF, flagStep_top, h3]
-  exact hV
+  rwa [← flagStep_top, ← hF, flagStep_top, h3]
 
 theorem li_flag (Fl : 𝔐.Flag) (s : CMType H ⊕ CMType H) : LinearIndependent Ω (Fl.b s) := by
   obtain ⟨_, _, -, -, -, h, -⟩ := Fl.generic
@@ -1218,7 +1213,7 @@ theorem chartMon_ne_zero {t : ∀ k, J k} (ht : mseg y t ≠ 0) (a : K → ℤ) 
   Finset.prod_ne_zero_iff.2 fun k hk => zpow_ne_zero _ (Finset.prod_ne_zero_iff.1 ht k hk)
 
 theorem rootIdx_left (τ : CMType H) (a : Fin D.p) :
-    HodgeCpt.rootIdx D (τ, Fin.castAdd D.q a) = ⟨.inl τ, a⟩ := dif_pos a.2
+    HodgeCpt.rootIdx D (τ, Fin.castAdd D.q a) = ⟨.inl τ, a⟩ := dite_eq_left a.2
 
 theorem rootIdx_right (τ : CMType H) (a : Fin D.q) :
     HodgeCpt.rootIdx D (τ, Fin.natAdd D.p a.rev) = ⟨.inr τ, a⟩ := by
@@ -1260,7 +1255,7 @@ theorem chart_flag_bases : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       fun x => (off_facts hds (chart_le hp.out ho hq hz) hz hf).2 _⟩)
     (fun q hq (a : Fin D.p) u hu => by
       have h1 := (hroot (τ, Fin.castAdd D.q a)).2 q trivial t.1 hq
-      have h2 : HodgeCpt.rootSgn D (τ, Fin.castAdd D.q a) = 1 := if_pos a.2
+      have h2 : HodgeCpt.rootSgn D (τ, Fin.castAdd D.q a) = 1 := ite_eq_left a.2
       unfold HodgeCpt.Flag.rootLat at h1
       rw [rootIdx_left, h2] at h1
       have h3 := tens_gen _ q 1 (Or.inl rfl) u _ hu h1
@@ -1274,7 +1269,7 @@ theorem chart_flag_bases : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       (off_facts hds (chart_le hp.out ho hq hz) hz hf).2⟩)
     (fun q hq (a : Fin D.q) u hu => by
       have h1 := (hroot (τ, Fin.natAdd D.p a.rev)).2 q trivial t.1 hq
-      have h2 : HodgeCpt.rootSgn D (τ, Fin.natAdd D.p a.rev) = -1 := if_neg (by simp)
+      have h2 : HodgeCpt.rootSgn D (τ, Fin.natAdd D.p a.rev) = -1 := ite_eq_right (by simp)
       unfold HodgeCpt.Flag.rootLat at h1
       rw [rootIdx_right, h2] at h1
       have h3 := tens_gen _ q (-1) (Or.inr rfl) u _ hu h1
@@ -1313,10 +1308,8 @@ theorem cancel_gram {Ω : Type} [Field Ω] (L : Subring Ω) {N : ℕ} (G H Z : M
   · intro l
     simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
     refine L.sub_mem ?_ (L.mul_mem hQ ?_)
-    · simp only [Matrix.vecMul, dotProduct]
-      exact L.sum_mem fun i _ => L.mul_mem (hζ i) (hH i l)
-    · simp only [Matrix.vecMul, dotProduct]
-      exact L.sum_mem fun i _ => L.mul_mem (hr i) (hZ i l)
+    · simpa only [Matrix.vecMul, dotProduct] using L.sum_mem fun i _ => L.mul_mem (hζ i) (hH i l)
+    · simpa only [Matrix.vecMul, dotProduct] using L.sum_mem fun i _ => L.mul_mem (hr i) (hZ i l)
   · have h1 : Matrix.vecMul r (G * H) = Matrix.vecMul r 1 + Matrix.vecMul r ((P * Q) • Z) := by
       rw [e, Matrix.vecMul_add]
     rw [← Matrix.vecMul_vecMul, h, Matrix.smul_vecMul, Matrix.vecMul_one, Matrix.vecMul_smul] at h1
@@ -1611,7 +1604,7 @@ theorem trivflag_charts : ∀ (o : Type) [CommRing o] (Ω : Type) [Field Ω] [Al
   refine ⟨fun s => if h : mseg y s ≠ 0 then
     ((g ⟨s, h⟩).map (fun a => (a : Ω))).submatrix id finSumFinEquiv.symm else 0, fun s hs => ?_,
     fun s t hs ht => ?_⟩
-  · simp only [dif_pos hs]
+  · simp only [dite_eq_left hs]
     refine ⟨fun a a' => (g ⟨s, hs⟩ _ _).2, ?_⟩
     obtain ⟨h, r, e⟩ := (hfe ⟨s, hs⟩).2 _ (hg ⟨s, hs⟩)
     refine ⟨h, h.2, r, r.2, ?_⟩
@@ -1619,7 +1612,7 @@ theorem trivflag_charts : ∀ (o : Type) [CommRing o] (Ω : Type) [Field Ω] [Al
     rw [map_mul, AlgHom.map_det] at this
     rw [hϖ, Matrix.submatrix_map]
     simpa using this
-  · simp only [dif_pos hs, dif_pos ht, hϖ]
+  · simp only [dite_eq_left hs, dite_eq_left ht, hϖ]
     haveI := hfr ⟨t, ht⟩
     have hu := div_mem_chartRing (o := o) (mseg y) t s
     have hu0 : mseg y s / mseg y t ≠ 0 := div_ne_zero hs ht

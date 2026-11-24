@@ -68,8 +68,7 @@ theorem finiteDimensional_of_roots_of_eigenspaces {M : Type} [AddCommGroup M] [M
     intro V _ hker _
     have hbot : V = ⊥ := by
       rw [eq_bot_iff]
-      intro v hv
-      exact (Submodule.mem_bot ℂ).mpr (by simpa using hker v hv)
+      exact fun v hv => (Submodule.mem_bot ℂ).mpr (by simpa using hker v hv)
     subst hbot
     infer_instance
   | cons a s ih =>
@@ -90,8 +89,7 @@ theorem finiteDimensional_of_roots_of_eigenspaces {M : Type} [AddCommGroup M] [M
         aeval T ((s.map fun b => (X - C b : ℂ[X])).prod) w = 0 := by
       rintro w ⟨v, hv, rfl⟩
       have h := hker v hv
-      rw [Multiset.map_cons, Multiset.prod_cons, mul_comm, map_mul] at h
-      exact h
+      rwa [Multiset.map_cons, Multiset.prod_cons, mul_comm, map_mul] at h
     have hW3 : ∀ c : ℂ, FiniteDimensional ℂ
         (Submodule.span ℂ {v | v ∈ V.map f ∧ T v = c • v}) := by
       intro c
@@ -109,8 +107,7 @@ theorem finiteDimensional_of_roots_of_eigenspaces {M : Type} [AddCommGroup M] [M
         apply Submodule.subset_span
         refine ⟨hv, ?_⟩
         have h0 : f v = 0 := hk
-        rw [hfv, sub_eq_zero] at h0
-        exact h0
+        rwa [hfv, sub_eq_zero] at h0
       haveI := Submodule.finiteDimensional_of_le hle
       exact Module.Finite.iff_fg.mp inferInstance
 

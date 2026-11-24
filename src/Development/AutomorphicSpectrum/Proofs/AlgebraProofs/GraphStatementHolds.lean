@@ -144,19 +144,17 @@ theorem i2bdeg_single {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (
   obtain ⟨k₀, i₀⟩ := p
   by_cases h : k₀ = k
   · subst h
-    simp only [i2bdeg, if_true]
+    simp only [i2bdeg, ite_true]
     rw [Finset.sum_eq_single i₀]
     · simp
     · intro b _ hb
-      rw [Finsupp.single_apply, if_neg]
-      intro e
-      exact hb (by simpa using e.symm)
+      rw [Finsupp.single_apply, ite_eq_right]
+      exact fun e => hb (by simpa using e.symm)
     · simp
-  · simp only [i2bdeg, if_neg h]
+  · simp only [i2bdeg, ite_eq_right h]
     refine Finset.sum_eq_zero fun i _ => ?_
-    rw [Finsupp.single_apply, if_neg]
-    intro e
-    exact h (congrArg Sigma.fst e)
+    rw [Finsupp.single_apply, ite_eq_right]
+    exact fun e => h (congrArg Sigma.fst e)
 
 theorem isMultiHomog_X_single {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
     (p : Σ k, ι k) : IsMultiHomog (X p : MRing ι) (i2bdeg (Finsupp.single p 1)) := by
@@ -277,20 +275,20 @@ theorem coeff_graphLift_i2comp {g : (Σ k, ι₂ k) → MRing ι} {δ : K₂ →
     rw [i2comp_of_homog hm, em, coeff_monomial]
     by_cases hd : i2bdeg m = c
     · subst hd
-      rw [if_pos rfl, em, coeff_monomial]
+      rw [ite_eq_left rfl, em, coeff_monomial]
       by_cases hb : b = expDeg (i2bdeg m)
       · subst hb
         simp only [↓reduceIte, i2comp_self hnh]
       · simp [hb, Ne.symm hb]
-    · rw [if_neg hd, map_zero, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
+    · rw [ite_eq_right hd, map_zero, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
       by_cases hb : b = expDeg c
       · subst hb
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         by_cases he : expDeg (i2bdeg m) = expDeg c
-        · rw [if_pos he, i2comp_of_homog hnh, if_neg]
+        · rw [ite_eq_left he, i2comp_of_homog hnh, ite_eq_right]
           exact fun h' => hd (deg_injective he h')
-        · rw [if_neg he, i2comp_zero]
-      · rw [if_neg hb]
+        · rw [ite_eq_right he, i2comp_zero]
+      · rw [ite_eq_right hb]
 
 theorem i2comp_mem_graphIdeal {P : Ideal (MRing ι)} (hP : IsMultiHomogIdeal P)
     {g : (Σ k, ι₂ k) → MRing ι} {δ : K₂ → K → ℕ} (hg : ∀ q, IsMultiHomog (g q) (δ q.1))
@@ -350,8 +348,7 @@ theorem isRelevant_graphIdeal {P : Ideal (MRing ι)} (hP : IsRelevant P) [P.IsPr
     have h' : (X ⟨k, i⟩ : MRing ι) ∈ imageZ inlV (graphIdeal P g) := by
       rw [imageZ, Ideal.mem_comap]
       change rename inlV (X ⟨k, i⟩) ∈ graphIdeal P g
-      rw [rename_X]
-      exact h
+      rwa [rename_X]
     rwa [imageZ_graphIdeal] at h'
   · obtain ⟨j, hj⟩ := hne k
     refine ⟨j, fun h => hj ?_⟩
@@ -649,8 +646,7 @@ theorem rel_fibre (G : GenFibre inlV (graphIdeal P g)) (k : K₂) (j j' : ι₂ 
   rw [← G.genericFibre_ker_target, RingHom.mem_ker] at h
   rw [fibreIdeal, RingHom.mem_ker]
   change aeval (xf G) _ = 0
-  rw [← hJ, aeval_J]
-  exact h
+  rwa [← hJ, aeval_J]
 
 theorem mem_fibre_iff (G : GenFibre inlV (graphIdeal P g)) (f : MvPolynomial (FV ι ι₂) G.Φ) :
     f ∈ fibreIdeal (Sum.inl : K → K ⊕ K₂) G ↔ aeval (xf G) f = 0 := by
@@ -705,8 +701,7 @@ theorem aeval_cpt_fibre (G : GenFibre inlV (graphIdeal P g))
   have h1 : aeval G.x' F = 0 := by
     rw [← aeval_J, ← e, map_mul, (mem_fibre_iff G f).1 hf, mul_zero]
   have h2 : F ∈ graphIdeal P g := by
-    rw [← G.genericFibre_ker_target, RingHom.mem_ker]
-    exact h1
+    rwa [← G.genericFibre_ker_target, RingHom.mem_ker]
   have h3 : graphMap P g F = 0 := (RingHom.mem_ker).1 h2
   have h4 : aeval (cpt G T) (J G F) = 0 := by
     rw [aeval_cpt_J G hP, h3, map_zero]
@@ -726,8 +721,7 @@ theorem chartIdeal_eq (G : GenFibre inlV (graphIdeal P g))
     apply av_ne G hP hg
     intro h0
     apply hi (fb k)
-    rw [mem_fibre_iff, aeval_X]
-    exact h0
+    rwa [mem_fibre_iff, aeval_X]
   have hX : ∀ q : FV ι ι₂, X q - C (cpt G T q) ∈ chartIdeal (fibreIdeal Sum.inl G) i := by
     intro q
     rw [← fib_unfib q]
@@ -775,8 +769,7 @@ theorem chartIdeal_eq (G : GenFibre inlV (graphIdeal P g))
     rcases k with ⟨k | k₂, h⟩
     · exact (h ⟨k, rfl⟩).elim
     · have hc : cpt G T ⟨⟨Sum.inr k₂, h⟩, i ⟨Sum.inr k₂, h⟩⟩ = 1 := mul_inv_cancel₀ (hne k₂)
-      simp only [SetLike.mem_coe, RingHom.mem_ker, map_sub, aeval_X, map_one, sub_eq_zero]
-      exact hc
+      simpa only [SetLike.mem_coe, RingHom.mem_ker, map_sub, aeval_X, map_one, sub_eq_zero] using hc
   · intro f h
     have h0 : aeval (cpt G T) f = 0 := (RingHom.mem_ker).1 h
     have := hf f

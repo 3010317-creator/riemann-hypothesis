@@ -421,8 +421,7 @@ theorem unit_on_product_eq_one {K : Type} [Field K] [IsAlgClosed K] {X : Scheme}
       exact this.symm
   have h1 : i.appTop u = 1 := by
     apply (Scheme.ΓSpecIso (.of (A ⊗[K] A))).commRingCatIsoToRingEquiv.injective
-    rw [map_one]
-    exact hu'
+    rwa [map_one]
   have : Nonempty (Spec (.of (A ⊗[K] A))) := inferInstanceAs (Nonempty (PrimeSpectrum _))
   have : IsOpenImmersion i := inferInstance
   have hd : Dense (Set.range i) := i.isOpenEmbedding.isOpen_range.dense (Set.range_nonempty _)
@@ -431,8 +430,7 @@ theorem unit_on_product_eq_one {K : Type} [Field K] [IsAlgClosed K] {X : Scheme}
   obtain ⟨x, hx, y, rfl⟩ := hd.inter_open_nonempty _ ((pullback f f).basicOpen (u - 1)).isOpen
     (TopologicalSpace.Opens.ne_bot_iff_nonempty _ |>.mp hne)
   have hy : y ∈ i ⁻¹ᵁ (pullback f f).basicOpen (u - 1) := hx
-  rw [Scheme.preimage_basicOpen_top, map_sub, h1, map_one, sub_self, Scheme.basicOpen_zero] at hy
-  exact hy
+  rwa [Scheme.preimage_basicOpen_top, map_sub, h1, map_one, sub_self, Scheme.basicOpen_zero] at hy
 
 end GlobalTheory.PrimitiveUnitProduct
 end -- clump:auto

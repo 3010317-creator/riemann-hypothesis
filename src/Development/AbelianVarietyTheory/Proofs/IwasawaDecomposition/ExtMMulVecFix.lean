@@ -77,7 +77,7 @@ theorem extM_mul_incl (g : Matrix (Fin n) (Fin n) A) (M : Matrix (Fin N) (Fin n)
   rw [e1]
   refine Fin.lastCases ?_ (fun i => ?_) b
   · have h3 : ∀ l : Fin n, Fin.last n ≠ Br.iC (rfl : n + 1 = n + 1) l := fun l => (Fin.castSucc_lt_last l).ne'
-    simp only [hM, h3, if_false, zero_mul, Finset.sum_const_zero]
+    simp only [hM, h3, ite_false, zero_mul, Finset.sum_const_zero]
     exact extM_last_castSucc g j
   · have h3 : ∀ l : Fin n, (i.castSucc = Br.iC (rfl : n + 1 = n + 1) l) ↔ i = l := fun l => Fin.castSucc_inj
     simp only [hM, h3]
@@ -142,8 +142,7 @@ theorem exists_ka_tw (u : B.Word) (a : I.ι) {Ch : Type} {chOf : (I.stp u a B.R.
   have hgam : (I.stp u a B.R.m).gam (I.perIn u a).b0 κ0 = 1 := map_one (ufGL B.fields.E (B.R.N B.R.m))
   have hempty : ∀ p : (I.stp u a B.R.m).D (I.perIn u a).b0, p.1.2 = ∅ := fun p => by
     have h := p.2
-    rw [congrArg (fun y => y.ys p.1.1.deco.1.N) (ysAt_m B.R I.sel (I.tup a) (I.cst a))] at h
-    exact h
+    rwa [congrArg (fun y => y.ys p.1.1.deco.1.N) (ysAt_m B.R I.sel (I.tup a) (I.cst a))] at h
   have hact : ((I.stp u a B.R.m).act (I.perIn u a).b0 κ0 ((I.stp u a B.R.m).rep ((I.perIn u a).tilC c))).1.1 =
       (((m.1 : UF B.fields.E (B.R.N B.R.m))⁻¹, 1, 1) :
         UF B.fields.E (B.R.N B.R.m) × GLG (E := B.fields.E) (n := B.R.N B.R.m) (SG := (B.primes X).vGs) × GLQ B.fields.E (B.R.N B.R.m) (I.Q a)) •
@@ -171,8 +170,7 @@ theorem exists_ka_tw (u : B.Word) (a : I.ι) {Ch : Type} {chOf : (I.stp u a B.R.
   have hxk : y ((I.perIn u a).tilC c) * x * k (chOf ((I.perIn u a).tilC c)) = ratAd B.host.F (m.1 : UF B.fields.E (B.R.N B.R.m))⁻¹ * (extGL (N_m_succ B.R) y' * k (chOf ((I.perIn u a).tilC c))) := by
     rw [hx]; group
   have hq : PtOf (y ((I.perIn u a).tilC c) * x * k (chOf ((I.perIn u a).tilC c))) ((I.stp u a B.R.m).act (I.perIn u a).b0 κ0 ((I.stp u a B.R.m).rep ((I.perIn u a).tilC c))).1.1 := by
-    rw [hxk, hact]
-    exact hp'
+    rwa [hxk, hact]
   have hxU : x ∈ U (chOf ((I.perIn u a).tilC c)) := (hR.lev ((I.perIn u a).tilC c) x _ hq).2 ⟨κ0, hgam, rfl, hcos⟩
   have hchr := hR.chr ((I.perIn u a).tilC c) ⟨x, hxU⟩ κ0 hgam hq
   refine ⟨⟨x, hxU⟩⁻¹, ?_, ?_⟩
@@ -184,8 +182,7 @@ theorem exists_ka_tw (u : B.Word) (a : I.ι) {Ch : Type} {chOf : (I.stp u a B.R.
     show _ = extGL (N_m_succ B.R) y' * x⁻¹
     rw [hx, e]
     group
-  · rw [map_inv, inv_inv]
-    exact hchr
+  · rwa [map_inv, inv_inv]
 
 theorem til_lat_eq_tw (hI : I.Ok) (l : I.Laws) (Z : TC.Later B (I.cols l))
     (hiX : ∀ x j, iXc (I.rec7 l Z) x j = if h : j.1 < B.R.N B.R.m - 1 then x ⟨j.1, h⟩ else 0) (u : B.Word) (a : I.ι) (c : (I.stX a).Cl) :
@@ -283,8 +280,7 @@ theorem til_fv_eq_tw (hI : I.Ok) (l : I.Laws) (Z : TC.Later B (I.cols l))
       (Ideal.Quotient.mk v.1.asIdeal s : Res v.1) • pv := by
     rw [hpv]
     have h2a := h2
-    rw [hresv] at h2a
-    exact h2a
+    rwa [hresv] at h2a
   have h9 : ((I.atIn u a).A B.R.m).fv v ((I.perIn u a).tilC c) ((Ideal.Quotient.mk v.1.asIdeal s : Res v.1) • pv) =
       Ideal.Quotient.mk v.1.asIdeal (s * rv) := by
     exact (congrArg (fun w => ((I.atIn u a).A B.R.m).fv v ((I.perIn u a).tilC c) w) (h2'.symm.trans h1)).trans (h3.trans h8)
@@ -340,10 +336,10 @@ theorem til_tw (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I.co
     refine ⟨extM_mul_incl hN g' _ fun b j => ?_, extM_mulVec_fix hN g' _ fun b hb => ?_⟩
     · refine (congrArg φ (TilX.iXm_apply hiX hN b j)).trans ?_
       by_cases h : b = Br.iC hN j
-      · rw [if_pos h]
-        exact (congrArg φ (if_pos h)).trans φ.map_one
-      · rw [if_neg h]
-        exact (congrArg φ (if_neg h)).trans φ.map_zero
+      · rw [ite_eq_left h]
+        exact (congrArg φ (ite_eq_left h)).trans φ.map_one
+      · rw [ite_eq_right h]
+        exact (congrArg φ (ite_eq_right h)).trans φ.map_zero
     · show φ (TC.z0 X u b) = 0
       have e : TC.z0 X u = z0v B X u := rfl
       rw [e, lastCoordinateUniformizerVector_eq_single, Pi.single_eq_of_ne hb]
@@ -395,8 +391,7 @@ theorem til_tw (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I.co
           refine TilX.eq_extM_of_ext hN (inclE (F := B.host.F) (FiniteAdeleRing (𝓞 B.host.F) B.host.F)) hpi0
             (TilX.iXm_apply hiX hN) hg'.1 ?_
           have h2 := hg'.2
-          rw [show (z0v B X u) = _ from lastCoordinateUniformizerVector_eq_single u] at h2
-          exact h2
+          rwa [show (z0v B X u) = _ from lastCoordinateUniformizerVector_eq_single u] at h2
         have e' : g = extGL hN (K.y c).1 := Units.ext e
         rw [e']
         exact hka1 c }
@@ -417,8 +412,7 @@ theorem til_tw (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I.co
     (fun τ => (congrFun hy1 τ).symm.trans ((hs τ).trans (congrArg₂ (· * ·) (hemb τ) (congrFun hy2 τ))))
   have e2 := trFr_apply B.fields.emb B.embLL ((I.stp u a B.R.m).gam _ ((I.stp u a B.R.m).mv (I.perIn u a).b0 ((I.perIn u a).tilPt c)))
     ((I.stp u a B.R.m).chr _ ((I.stp u a B.R.m).mv (I.perIn u a).b0 ((I.perIn u a).tilPt c))) (φ ((I.perIn u a).tilC c)) s
-  rw [e1, ← hka2 c] at e2
-  exact e2
+  rwa [e1, ← hka2 c] at e2
 
 end GlobalTheory.Mem.Col2.TwP
 

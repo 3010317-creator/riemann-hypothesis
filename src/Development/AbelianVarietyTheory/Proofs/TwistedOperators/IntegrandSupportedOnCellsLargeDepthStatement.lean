@@ -295,8 +295,7 @@ theorem exists_subgroup_elem_localComponents_subset {V : HSp D} {P : Finset (Pl 
   classical
   intro Q
   refine Finset.induction_on Q ?_ ?_
-  · intro _
-    exact ⟨1, H.one_mem, suppAt_one, by simp, fun u _ _ => by rw [map_one, map_one]⟩
+  · exact fun _ => ⟨1, H.one_mem, suppAt_one, by simp, fun u _ _ => by rw [map_one, map_one]⟩
   · intro w Q hwQ ih hQ
     obtain ⟨y, hy, sy, ly, oy⟩ := ih ((Finset.subset_insert _ _).trans hQ)
     obtain ⟨h, hh, sh, lh, oh⟩ := hw w (hQ (Finset.mem_insert_self _ _))
@@ -346,8 +345,7 @@ theorem mem_of_loc : ∀ {D : D7} (V : HSp D) (P : Finset (Pl D.host.E)) (e : AE
     · exact .inr (ly w hw).symm
     · exact .inl (e2 w hw)
   have hry : r = y := Subtype.ext (Units.ext (eq_of_halves hr sy k (smul_conj k)))
-  rw [hry]
-  exact hy
+  rwa [hry]
 
 end GlobalTheory.RowAssemble
 
@@ -660,10 +658,10 @@ theorem mem_jac {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace
     · rintro (a | i | i)
       · rfl
       · show (if i.val < σ then i.val + 1 else i.val + 2) = i.val + 1
-        rw [if_pos i.isLt]
+        rw [ite_eq_left i.isLt]
       · show (if 2 * σ - 1 - i.val < σ then 2 * σ - 1 - i.val + 1 else 2 * σ - 1 - i.val + 2) = 2 * σ - i.val + 1
         have := i.isLt
-        rw [if_neg (by omega)]
+        rw [ite_eq_right (by omega)]
         omega
     · intro r s hrs
       have hq' : GlobalTheory.RootEx.InN p' q := hq
@@ -766,8 +764,7 @@ theorem mem_jacGrp_of_hasLoc : Big fun {D} _ _ _ _ _ _ _ _ _ _ _ ch => ∀ t j �
     (rank_vertex ch.G t w.1 (X := (D.R.m, j)) ⟨le_rfl, hj⟩)
     (by have := topRank_add (G := locGrid ch.G t w.1) one_le_sLen j; have hm' : (locGrid ch.G t w.1).m = D.R.m := rfl; rw [hm'] at this; omega)
     q (fun x => (hqpr x).trans rfl) (h w) (hqe ▸ hh1 w) ?_
-  rw [inBasis_congr _ _ _ e1]
-  exact hm
+  rwa [inBasis_congr _ _ _ e1]
 
 end GlobalTheory.RowLift
 end -- clump:auto
@@ -1077,7 +1074,7 @@ namespace GlobalTheory.RowVal
 theorem eltAt {k : Type} [Field k] {Gr : GlobalTheory.SplitFlip.Grid k} {hs : 1 ≤ Gr.s} {J : Gr.Level} (ρ : Reps hs J)
     (β : Cosets hs J) (i : ℕ) (hi : i < Gr.m - 2) : ρ.elt β (Gr.m, i + 1) = ρ.rep ⟨i, hi⟩ (β ⟨i, hi⟩) := by
   rw [Reps.elt, onColumn_apply]
-  simp only [dif_pos hi]
+  simp only [dite_eq_left hi]
 
 
 
@@ -1261,13 +1258,13 @@ theorem suppOn_of_cover (s : ℤˣ) (hC : CoverAt ch s) (hF : FlatAt ch s) (hO :
   have hp : IsRealPt p := by
     refine ⟨fun j => ?_, fun j hj => by simp [p, hj]⟩
     by_cases hj : j ∈ idx D
-    · simp only [p, if_pos hj]; exact ha' j hj
-    · simp only [p, if_neg hj]; exact one_mem _
+    · simp only [p, ite_eq_left hj]; exact ha' j hj
+    · simp only [p, ite_eq_right hj]; exact one_mem _
   have hmove : tot ch.W hM P τ (colFn ch a) (formTop ch t y) h = tot ch.W hM P τ (colFn ch a) (formTop ch t y) (p * b β) := by
     refine biInv_eq_of_cells (idx D) (hI t a τ hτ M hM P y) h (p * b β) (fun j hj => ?_) (fun j hj => ?_)
     · simp [p, hj, h1 j hj, (hb β).1 j hj]
     · refine ⟨r j, hr j hj, k j, hk j hj, ?_⟩
-      simp only [Pi.mul_apply, p, if_pos hj, e j hj, mul_assoc]
+      simp only [Pi.mul_apply, p, ite_eq_left hj, e j hj, mul_assoc]
   rw [hmove]
 
   have hexp : ch.S.IsExpansion t (ch.Phi a) β 0 := by

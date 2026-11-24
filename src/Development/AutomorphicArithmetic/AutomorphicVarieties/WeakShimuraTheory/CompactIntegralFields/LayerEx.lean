@@ -74,8 +74,7 @@ private theorem le_iff {k Ω : Type} [Field k] [Field Ω] [Algebra k Ω] [Normal
       rw [AlgEquiv.restrictNormalHom_apply, AlgEquiv.one_apply]
       exact (IntermediateField.mem_fixingSubgroup_iff F _).1 (h a' b') x x.2
     simp only [map_mul, map_inv] at key
-    rw [mul_inv_eq_one, mul_inv_eq_iff_eq_mul] at key
-    exact key
+    rwa [mul_inv_eq_one, mul_inv_eq_iff_eq_mul] at key
 
 private theorem le_field {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (H : Subgroup (G ℚ Ω))
     (ho : IsOpen (H : Set (G ℚ Ω))) (hc : ∀ a b : G ℚ Ω, a * b * a⁻¹ * b⁻¹ ∈ H)
@@ -137,8 +136,7 @@ private theorem le_compact {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopol
     {l : ℕ} [Fact l.Prime] (χ : Γ →* ℤ_[l]ˣ) (hχ : Continuous χ) (H U : Subgroup Γ) (hH : IsClosed (H : Set Γ))
     (hU : IsOpen (U : Set Γ)) (h : ∀ g ∈ H, χ g = 1 → g ∈ U) :
     ∃ m, ∀ g ∈ H, χ g ∈ KStar.TotallyRealRoots.princ l m → g ∈ U := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   let t : ℕ → Set Γ := fun m =>
     ((H : Set Γ) ∩ (U : Set Γ)ᶜ) ∩ χ ⁻¹' (KStar.TotallyRealRoots.princ l m : Set ℤ_[l]ˣ)
   have hcl : ∀ m, IsClosed (t m) := fun m =>
@@ -199,8 +197,7 @@ theorem UpperTheory.V.Ws.layerEx :
         rfl
       rw [this]
       show cycZ ℚ Ω l (g ^ (l - 1)) = 1
-      rw [map_pow, ← hχ']
-      exact h1
+      rwa [map_pow, ← hχ']
     show (D.ψ ^ ((l - 1) * mk)) g = 1
     rw [MonoidHom.pow_apply, pow_mul, ← map_pow, ← hres]
     exact hkc g1 hcyc)
@@ -225,8 +222,7 @@ theorem UpperTheory.V.Ws.layerEx :
   have hfar : ∀ t, ∃ M, 0 < t → χ' (s ^ t) ∉ KStar.TotallyRealRoots.princ l M := by
     intro t
     by_cases ht : 0 < t
-    · by_contra hall
-      push_neg at hall
+    · by_contra! hall
       exact hnt t ht (le_one _ fun M => (hall M).2)
     · exact ⟨0, fun h => absurd h ht⟩
   choose f hf using hfar
@@ -270,8 +266,7 @@ theorem UpperTheory.V.Ws.layerEx :
       have h1 := NumberField.ComplexEmbedding.isReal_iff.1
         (NumberField.IsTotallyReal.complexEmbedding_isReal (φ.comp T.F.val.toRingHom))
       have h2 := RingHom.congr_fun h1 ⟨x, hx⟩
-      rw [NumberField.ComplexEmbedding.conjugate_coe_eq] at h2
-      exact h2
+      rwa [NumberField.ComplexEmbedding.conjugate_coe_eq] at h2
     · have h2 : cycZ ℚ Ω l σ ^ 2 = 1 := by rw [sq, ← map_mul, hsq, map_one]
       obtain ⟨r, hr⟩ := hlp.even_sub_one hl2
       rw [hr, ← two_mul, pow_mul, h2, one_pow]
@@ -315,8 +310,7 @@ theorem UpperTheory.V.Ws.layerEx :
     rw [hHm] at hg
     have hmemU : resQ T'.F g ∈ U :=
       hm0 _ hg.1 (KStar.TotallyRealRoots.princ_anti hm0' (by rw [hχ']; exact hg.2))
-    rw [MonoidHom.mem_ker, MonoidHom.pow_apply] at hmemU
-    exact hmemU
+    rwa [MonoidHom.mem_ker, MonoidHom.pow_apply] at hmemU
   · show n ≤ Module.finrank ℚ T'.F
     rw [hFF]
     haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ

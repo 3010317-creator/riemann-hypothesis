@@ -73,8 +73,7 @@ private theorem map_val : Measure.map (Units.val : ℝˣ → ℝ) Ad3.mulR =
     constructor
     · rintro ⟨u, rfl⟩
       simp
-    · intro hx
-      exact ⟨Units.mk0 x hx, rfl⟩
+    · exact fun hx => ⟨Units.mk0 x hx, rfl⟩
   have hac : (volume.withDensity fun x : ℝ => ENNReal.ofReal |x|⁻¹) ≪ volume :=
     withDensity_absolutelyContinuous _ _
   have h0 : (volume.withDensity fun x : ℝ => ENNReal.ofReal |x|⁻¹) {0} = 0 := hac (by simp)
@@ -119,13 +118,13 @@ private theorem iy_rv (a : (InfiniteAdeleRing ℚ)ˣ) : iy (rv a) = PE.symm (a, 
   have h0 : rv a ≠ 0 := (Ad3.GP.aR a).ne_zero
   apply Units.ext
   refine Prod.ext ?_ ?_
-  · simp only [iy, dif_neg h0]
+  · simp only [iy, dite_eq_right h0]
     change (1 : InfiniteAdeleRing ℚ) - TR.infEq ℚ 1 + TR.infEq ℚ (fun _ => rv a) = (a : InfiniteAdeleRing ℚ)
     rw [map_one, sub_self, zero_add]
     funext w
     rw [Subsingleton.elim w Ad3.GP.wR]
     exact (Ad3.GP.eR.symm_apply_apply _)
-  · simp only [iy, dif_neg h0]
+  · simp only [iy, dite_eq_right h0]
     change (1 : FiniteAdeleRing (𝓞 ℚ) ℚ) - 0 + 0 = 1
     rw [sub_zero, add_zero]
 
@@ -141,9 +140,7 @@ private def TF (L : ℕ) : Set (FiniteAdeleRing (𝓞 ℚ) ℚ)ˣ := (fun u => P
 private def ev (v : H.P ℚ) (u : (FiniteAdeleRing (𝓞 ℚ) ℚ)ˣ) : H.Kv v := H.cp v ((PE.symm (1, u) : IdeleGroup ℚ) : A ℚ)
 
 private theorem continuous_ev (v : H.P ℚ) : Continuous (ev v) := by
-  have hf : Continuous (H.cp v) := by
-    show Continuous (fun x => pLoc ℚ v (pFin ℚ x))
-    exact (RestrictedProduct.continuous_eval v).comp continuous_snd
+  have hf : Continuous (H.cp v) := (RestrictedProduct.continuous_eval v).comp continuous_snd
   exact hf.comp (Units.continuous_val.comp (PE.symm.continuous.comp (Continuous.prodMk_right 1)))
 
 private theorem mem_TF {L : ℕ} {u : (FiniteAdeleRing (𝓞 ℚ) ℚ)ˣ} :
@@ -152,8 +149,7 @@ private theorem mem_TF {L : ℕ} {u : (FiniteAdeleRing (𝓞 ℚ) ℚ)ˣ} :
   · rintro ⟨⟨_, h1⟩, h2⟩ v
     refine ⟨h1 v, ?_⟩
     have := h2 v
-    rw [Dv, map_sub, map_one] at this
-    exact this
+    rwa [Dv, map_sub, map_one] at this
   · intro h
     refine ⟨⟨rfl, fun v => (h v).1⟩, fun v => ?_⟩
     rw [Dv, map_sub, map_one]
@@ -224,8 +220,7 @@ private theorem core {L : ℕ} (hL : 0 < L) (p : IdeleGroup ℚ) (f : IdeleGroup
   constructor
   · refine (emb.integrable_map_iff (g := (WW L).indicator fun z => f (z * p))).2 ?_
     have := (hG.mul_prod hI)
-    refine this.congr (Eventually.of_forall fun q => ?_)
-    exact (key q).symm
+    exact this.congr (Eventually.of_forall fun q => (key q).symm)
   · rw [integral_ideleMeasure]
     simp_rw [key]
     rw [integral_prod_mul (fun a => f (iy (rv a) * p)) ind, integral_rv (fun r => f (iy r * p)), mul_comm]
@@ -243,8 +238,7 @@ private theorem iy_mul_mem_WW {L : ℕ} {r : ℝ} (hr : r ≠ 0) {τ : (A ℚ)ˣ
     rw [iy_rv, ← h2, ← map_mul, Prod.mk_mul_mk, mul_one, one_mul, h2]
   rw [h3, symm_mem_WW]
   show PE.symm (1, (PE τ).2) ∈ TT L
-  rw [h2]
-  exact hτ
+  rwa [h2]
 
 private theorem exists_of_mem_WW {L : ℕ} {z : IdeleGroup ℚ} (hz : z ∈ WW L) :
     ∃ (r : ℝ) (τ : (A ℚ)ˣ), r ≠ 0 ∧ τ ∈ TT L ∧ z = iy r * τ := by

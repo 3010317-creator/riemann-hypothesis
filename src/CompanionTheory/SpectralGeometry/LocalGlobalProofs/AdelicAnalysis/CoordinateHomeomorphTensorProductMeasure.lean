@@ -101,8 +101,7 @@ theorem shuffle_mp {A B C D : Type} [MeasurableSpace A] [MeasurableSpace B] [Mea
   have h3 : MeasurePreserving (Prod.map Prod.swap id) ((b.prod c).prod d) ((c.prod b).prod d) :=
     (Measure.measurePreserving_swap).prod (MeasurePreserving.id d)
   have h4 := measurePreserving_prodAssoc c b d
-  have h5 := (MeasurePreserving.id a).prod (h4.comp (h3.comp h2))
-  exact h5.comp h1
+  exact ((MeasurePreserving.id a).prod (h4.comp (h3.comp h2))).comp h1
 
 theorem splitE_mp {R K : Type} [MeasurableSpace R] [MeasurableSpace K] (lam : Measure R) (κ : Measure K)
     [SigmaFinite lam] [SigmaFinite κ] (n : ℕ) :
@@ -146,10 +145,10 @@ theorem hermMat_mem (hσ : IsCMExt F E σ) (n : ℕ) (c : Coords R (R ⊗[F] E) 
     hermMat R σ n c ∈ HermR R σ n := by
   intro a b
   rcases lt_trichotomy a b with h | h | h
-  · simp only [hermMat, dif_pos h, dif_neg (not_lt_of_gt h)]
+  · simp only [hermMat, dite_eq_left h, dite_eq_right (not_lt_of_gt h)]
     exact GlobalTheory.GaussMean.OneVec.sigR_sigR R hσ _
   · subst h
-    simp only [hermMat, lt_irrefl, dif_neg, not_false_eq_true]
+    simp only [hermMat, lt_irrefl, dite_eq_right, not_false_eq_true]
     exact GlobalTheory.GaussMean.OneVec.sigR_algebraMap R _
   · simp [hermMat, h, not_lt_of_gt h]
 
@@ -194,12 +193,12 @@ def chartH (hσ : IsCMExt F E σ) (htr : Continuous (Algebra.trace R (R ⊗[F] E
   continuous_invFun := by
     refine Continuous.subtype_mk (continuous_pi fun i => continuous_pi fun j => ?_) _
     by_cases h : i < j
-    · simp only [hermMat, dif_pos h]
+    · simp only [hermMat, dite_eq_left h]
       exact (continuous_apply _).comp continuous_snd
     · by_cases h' : j < i
-      · simp only [hermMat, dif_neg h, dif_pos h']
+      · simp only [hermMat, dite_eq_right h, dite_eq_left h']
         exact hsig.comp ((continuous_apply _).comp continuous_snd)
-      · simp only [hermMat, dif_neg h, dif_neg h']
+      · simp only [hermMat, dite_eq_right h, dite_eq_right h']
         exact (continuous_algebraMapK R).comp ((continuous_apply i).comp continuous_fst)
 
 theorem hermMat_zero_zero (n : ℕ) (q : R × (Fin n → R ⊗[F] E) × Coords R (R ⊗[F] E) n) :
@@ -209,22 +208,22 @@ theorem hermMat_zero_zero (n : ℕ) (q : R × (Fin n → R ⊗[F] E) × Coords R
 theorem hermMat_zero_succ (n : ℕ) (q : R × (Fin n → R ⊗[F] E) × Coords R (R ⊗[F] E) n) (j : Fin n) :
     hermMat R σ (n + 1) ((splitE R (R ⊗[F] E) n).symm q) 0 j.succ = q.2.1 j := by
   have h : (0 : Fin (n + 1)) < j.succ := Fin.succ_pos j
-  simp only [hermMat, dif_pos h]
+  simp only [hermMat, dite_eq_left h]
   exact splitE_symm_snd_inl q j
 
 theorem hermMat_succ_succ (n : ℕ) (q : R × (Fin n → R ⊗[F] E) × Coords R (R ⊗[F] E) n) (i j : Fin n) :
     hermMat R σ (n + 1) ((splitE R (R ⊗[F] E) n).symm q) i.succ j.succ = hermMat R σ n q.2.2 i j := by
   by_cases h : i < j
   · have h1 : i.succ < j.succ := Fin.succ_lt_succ_iff.2 h
-    simp only [hermMat, dif_pos h, dif_pos h1]
+    simp only [hermMat, dite_eq_left h, dite_eq_left h1]
     exact splitE_symm_snd_inr q ⟨(i, j), h⟩
   · have h1 : ¬ i.succ < j.succ := fun hh => h (Fin.succ_lt_succ_iff.1 hh)
     by_cases h' : j < i
     · have h2 : j.succ < i.succ := Fin.succ_lt_succ_iff.2 h'
-      simp only [hermMat, dif_neg h, dif_neg h1, dif_pos h', dif_pos h2]
+      simp only [hermMat, dite_eq_right h, dite_eq_right h1, dite_eq_left h', dite_eq_left h2]
       exact congrArg _ (splitE_symm_snd_inr q ⟨(j, i), h'⟩)
     · have h2 : ¬ j.succ < i.succ := fun hh => h' (Fin.succ_lt_succ_iff.1 hh)
-      simp only [hermMat, dif_neg h, dif_neg h1, dif_neg h', dif_neg h2]
+      simp only [hermMat, dite_eq_right h, dite_eq_right h1, dite_eq_right h', dite_eq_right h2]
       exact congrArg _ (splitE_symm_fst_succ q i)
 
 end Chart
@@ -258,8 +257,7 @@ theorem herm_split : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   · exact hermMat_zero_zero (σ := σ) R n _
   · exact hermMat_zero_succ (σ := σ) R n _ j
   · refine (hermMat_succ_succ (σ := σ) R n _ i j).trans ?_
-    have h := congrArg Subtype.val ((chart R hσ n).left_inv p.2.2)
-    exact congrFun (congrFun h i) j
+    exact congrFun (congrFun (congrArg Subtype.val ((chart R hσ n).left_inv p.2.2)) i) j
   · have hmp := splitE_mp lam (coordK R b lam) n
     have hmp2 : MeasurePreserving (C n).symm ((Measure.pi fun _ : Fin n => lam).prod
         (Measure.pi fun _ : Pairs n => coordK R b lam)) (((Measure.pi fun _ : Fin n => lam).prod

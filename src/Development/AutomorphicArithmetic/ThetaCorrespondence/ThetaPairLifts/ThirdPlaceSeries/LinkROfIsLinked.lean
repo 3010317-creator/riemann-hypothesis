@@ -1019,8 +1019,7 @@ theorem GlobalTheory.V0_map_iota_eq_top_of_definite : ∀ (D : D7) (G : Type) [G
     (fun x => (hD.sharp.forms A3.A.μ0).op_eq x)
     (fun F => Formalism.L2.G.ServJoint.level_operator_fixes_image hs Ps ψs (A3.fam3.toSub2 Zs) A3.A.μ0 F)
     hPq hι (fun F => hD.sharp.iota A3.A.μ0 F)
-  rw [hD.tup.mu0] at key
-  exact key
+  rwa [hD.tup.mu0] at key
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.V0MapIotaEqTopDefinite =====
@@ -1499,7 +1498,7 @@ theorem sEEofTT_apply {M : DSModel (D.sp.Y 0) S} {μ : Measure (GA D (D.sp.Y 0))
     {t : GA D (D.sp.Y 0)} {c : ℝ} (hE : EvalTieT M μ 𝓕 E St Gd ι t c) (T : E) :
     sEEofTT M μ 𝓕 E St Gd ι t c T = conjHH St Gd (hE.choose_spec.2.choose T) := by
   unfold sEEofTT
-  simp only [dif_pos hE]
+  simp only [dite_eq_left hE]
   rfl
 
 theorem norm_sq_sEEofTT {M : DSModel (D.sp.Y 0) S} {μ : Measure (GA D (D.sp.Y 0))} {𝓕 : Set (GA D (D.sp.Y 0))}
@@ -1568,14 +1567,13 @@ theorem seeIso_row : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : T
     rw [Submodule.coe_smul]
     refine Submodule.smul_mem _ _ ?_
     unfold sEEofTT
-    rw [dif_pos hE]
+    rw [dite_eq_left hE]
     exact (mem_EEC X Gd _).1 (hE.choose_spec.2.choose _).2
   · refine (GlobalTheory.Mem.SJ.RowIso.finrank_of_evalTieT hE).trans ?_
     refine Eq.symm ((GlobalTheory.Mem.SJ.RowIso.finrank_twSub (E := R.HE.H) (twAt D.what₂.embLL A3.A.v0)
       ((R.toRealDat.EEat (R.toRealDat.levR F.lv2 true)).comap R.HE.e)).trans ?_)
     refine GlobalTheory.Mem.SJ.RowIso.finrank_comap_of_le_range _ hHE.1 _ ?_
-    rw [hHE.2.1]
-    exact hle
+    rwa [hHE.2.1]
 
 end GlobalTheory.Twist.SeeIsoRow
 end -- clump:auto

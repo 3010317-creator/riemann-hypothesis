@@ -101,16 +101,14 @@ theorem finE_unitary (V : HSp D) (g : GA D V) :
         Formalism.UG.cT (cjA D) (M.map ((swapAE D).comp (finPart D))) := by
     intro M
     ext i j
-    simp only [Formalism.UG.cT, Matrix.map_apply, Matrix.transpose_apply]
-    exact fin_cA (M j i)
+    simpa only [Formalism.UG.cT, Matrix.map_apply, Matrix.transpose_apply] using fin_cA (M j i)
   have hJ : (V.gram.map (incA D)).map ((swapAE D).comp (finPart D)) = V.gram.map (inc D) := by
     rw [Matrix.map_map]
     congr 1
   have hfin : ((finE V g).val : Matrix (Fin V.rank) (Fin V.rank) (EAf D)) =
       (g.1 : Matrix (Fin V.rank) (Fin V.rank) (AE D)).map ((swapAE D).comp (finPart D)) := rfl
   rw [hcT, hJ] at key
-  rw [hfin]
-  exact key
+  rwa [hfin]
 
 theorem carries_iff {n : ℕ} (g : GL (Fin n) (EAf D)) (Λ Λ' : Submodule (𝓞 D.host.E) (Fin n → D.host.E)) :
     Formalism.L2.Herm.Carries g Λ Λ' ↔ ∀ y, y ∈ hat Λ' ↔ (g⁻¹).val *ᵥ y ∈ hat (D := D) Λ := by

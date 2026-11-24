@@ -93,8 +93,7 @@ theorem mem_one_iff (a : E) : a ∈ (1 : Submodule (𝓞 E) E) ↔ IsIntegral �
   constructor
   · rintro ⟨r, rfl⟩
     exact r.isIntegral_coe
-  · intro h
-    exact ⟨⟨a, h⟩, rfl⟩
+  · exact fun h => ⟨⟨a, h⟩, rfl⟩
 
 theorem selfDual_of_mem_genus {M : Submodule (𝓞 E) (Fin n → E)} (hM : M ∈ genus (stdForm E n) (stdLat E n))
     (y : Fin n → E) : y ∈ M ↔ ∀ x ∈ M, IsIntegral ℤ (∑ i, star (x i) * y i) := by
@@ -140,8 +139,7 @@ theorem mass_stdLat_le :
     refine ⟨R, h3.trans ?_, fun L hfg hsd => ?_⟩
     · have h := bound_le (fdeg E) n ClassCount.fdeg_pos (one_le_rootDiscr (E := E))
       rw [← ShortVectors.finrank_eq] at h
-      rw [rdE_eq, ← ShortVectors.finrank_eq]
-      exact h
+      rwa [rdE_eq, ← ShortVectors.finrank_eq]
     · obtain ⟨L₀, hL₀, γ, hγ, hm⟩ := h2 L ⟨hfg, fun y => by
         simp only [isIntegral_herm_iff]; exact hsd y⟩
       exact ⟨L₀, hL₀, γ, mul_conjTranspose_eq_one _ hγ, hm⟩
@@ -169,8 +167,7 @@ theorem mass_stdLat_le :
     · rintro ⟨z, hz, e⟩
       rw [← e]
       exact (hm z).1 hz
-    · intro hx
-      exact ⟨x, (hm x).2 hx, rfl⟩
+    · exact fun hx => ⟨x, (hm x).2 hx, rfl⟩
   choose! f hf g hg hfg using key
   have hcard : s.card ≤ R.card := by
     refine Finset.card_le_card_of_injOn f (fun M hM => hf M hM) fun M hM N hN e => ?_

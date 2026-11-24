@@ -129,9 +129,7 @@ theorem hom_ext_of_hf_X : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K
     intro x
     have hr : Ideal.Quotient.mk bk.prism.I x = bk.prism.str (bk.str.symm (Ideal.Quotient.mk _ x)) :=
       (bk.str.apply_symm_apply _).symm
-    have h1 := g.f_str _ x hr
-    have h2 := g'.f_str _ x hr
-    exact Ideal.Quotient.eq.1 (h1.trans h2.symm)
+    exact Ideal.Quotient.eq.1 ((g.f_str _ x hr).trans (g'.f_str _ x hr).symm)
   have hH : IsHausdorff (JJ C) C.A := C.complete.toIsHausdorff
 
   have hCC : (BK.hf g).comp (PowerSeries.C (R := Wq l bk.a)) = (BK.hf g').comp PowerSeries.C :=
@@ -145,8 +143,7 @@ theorem hom_ext_of_hf_X : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K
         simp only [RingHom.comp_apply, Polynomial.coeToPowerSeries.ringHom_apply, Polynomial.coe_C]
         exact RingHom.congr_fun hCC a)
       (by simp only [RingHom.comp_apply, Polynomial.coeToPowerSeries.ringHom_apply, Polynomial.coe_X]; exact hX)
-    intro p
-    exact RingHom.congr_fun h p
+    exact fun p => RingHom.congr_fun h p
 
   have hXe : ∃ q : bk.S, (X : bk.S) ^ bk.Ep.natDegree = bk.E - (l : bk.S) * q := by
     have hd : Polynomial.C (l : Wq l bk.a) ∣ bk.Ep - Polynomial.X ^ bk.Ep.natDegree := by
@@ -154,9 +151,9 @@ theorem hom_ext_of_hf_X : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K
       intro i
       rw [Polynomial.coeff_sub, Polynomial.coeff_X_pow]
       rcases lt_trichotomy i bk.Ep.natDegree with h | h | h
-      · rw [if_neg h.ne, sub_zero]; exact bk.dvd_coeff i h
-      · rw [if_pos h, h, bk.monic.coeff_natDegree, sub_self]; exact dvd_zero _
-      · rw [if_neg h.ne', sub_zero, Polynomial.coeff_eq_zero_of_natDegree_lt h]; exact dvd_zero _
+      · rw [ite_eq_right h.ne, sub_zero]; exact bk.dvd_coeff i h
+      · rw [ite_eq_left h, h, bk.monic.coeff_natDegree, sub_self]; exact dvd_zero _
+      · rw [ite_eq_right h.ne', sub_zero, Polynomial.coeff_eq_zero_of_natDegree_lt h]; exact dvd_zero _
     obtain ⟨q, hq⟩ := hd
     refine ⟨(q : bk.S), ?_⟩
     have h := congrArg (fun p : Polynomial (Wq l bk.a) => (p : bk.S)) hq
@@ -174,7 +171,7 @@ theorem hom_ext_of_hf_X : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K
     intro N f
     obtain ⟨h, hh⟩ := (PowerSeries.X_pow_dvd_iff (n := N)
       (φ := f - ((trunc N f : Polynomial (Wq l bk.a)) : bk.S))).2 (fun m hm => by
-        rw [map_sub, Polynomial.coeff_coe, coeff_trunc, if_pos hm, sub_self])
+        rw [map_sub, Polynomial.coeff_coe, coeff_trunc, ite_eq_left hm, sub_self])
     exact ⟨_, h, by rw [← hh]; ring⟩
   apply Hom.ext'
   refine RingHom.ext fun f => ?_
@@ -274,7 +271,7 @@ theorem mk_eval₂_trunc_coe {W C : Type} [CommRing W] [CommRing C] (ω : W →+
   have hdvd : (Polynomial.X : Polynomial W) ^ K ∣ p - PowerSeries.trunc K (p : W⟦X⟧) := by
     rw [Polynomial.X_pow_dvd_iff]
     intro d hd
-    rw [Polynomial.coeff_sub, PowerSeries.coeff_trunc, if_pos hd, Polynomial.coeff_coe, sub_self]
+    rw [Polynomial.coeff_sub, PowerSeries.coeff_trunc, ite_eq_left hd, Polynomial.coeff_coe, sub_self]
   obtain ⟨q, hq⟩ := hdvd
   generalize PowerSeries.trunc K (p : W⟦X⟧) = t at hq ⊢
   have hp : p = t + Polynomial.X ^ K * q := by
@@ -671,7 +668,7 @@ theorem X_pow_dvd_sub_trunc' {R : Type} [CommRing R] (x : R⟦X⟧) (n : ℕ) :
     (X : R⟦X⟧) ^ n ∣ x - (trunc n x : R⟦X⟧) := by
   rw [PowerSeries.X_pow_dvd_iff]
   intro m hm
-  rw [map_sub, Polynomial.coeff_coe, coeff_trunc, if_pos hm, sub_self]
+  rw [map_sub, Polynomial.coeff_coe, coeff_trunc, ite_eq_left hm, sub_self]
 
 end GlobalTheory.TruncationDivisibility
 
@@ -792,8 +789,7 @@ theorem span_singleton_closed_of_bounded_torsion (l : ℕ) [Fact l.Prime] (A : T
     rw [SModEq.sub_mem, sub_zero, hsm]
     have h2 : z (2 * (n + N + 1)) - L ∈ (Ideal.span {(l : A)} ⊔ Ideal.span {d}) ^ n := by
       have h3 := hL n
-      rw [SModEq.sub_mem, hsm] at h3
-      exact h3
+      rwa [SModEq.sub_mem, hsm] at h3
     have e : x - d * L = (x - d * z (2 * (n + N + 1))) + d * (z (2 * (n + N + 1)) - L) := by ring
     rw [e]
     exact Ideal.add_mem _ (Ideal.pow_le_pow_right (by omega) (hz _)) (Ideal.mul_mem_left _ _ h2)
@@ -824,9 +820,9 @@ theorem BK.X_pow_eq_sub {l : ℕ} [Fact l.Prime] {K : FinExt l} (bk : BK K) :
     intro i
     rw [Polynomial.coeff_sub, Polynomial.coeff_X_pow]
     rcases lt_trichotomy i bk.Ep.natDegree with hi | rfl | hi
-    · rw [if_neg hi.ne, sub_zero]; exact bk.dvd_coeff i hi
-    · rw [if_pos rfl, bk.monic.coeff_natDegree, sub_self]; exact dvd_zero _
-    · rw [if_neg hi.ne', sub_zero, Polynomial.coeff_eq_zero_of_natDegree_lt hi]; exact dvd_zero _
+    · rw [ite_eq_right hi.ne, sub_zero]; exact bk.dvd_coeff i hi
+    · rw [ite_eq_left rfl, bk.monic.coeff_natDegree, sub_self]; exact dvd_zero _
+    · rw [ite_eq_right hi.ne', sub_zero, Polynomial.coeff_eq_zero_of_natDegree_lt hi]; exact dvd_zero _
   obtain ⟨q, hq⟩ := h
   refine ⟨(q : bk.S), ?_⟩
   have := congrArg (Polynomial.coeToPowerSeries.ringHom (R := Wq l bk.a)) hq
@@ -861,8 +857,7 @@ theorem isHausdorff_quot {l : ℕ} [Fact l.Prime] {R : Type} [CommRing R] (P : O
   refine ⟨-z, ?_⟩
   have e : x - d * -z = y := by linear_combination hz
   rw [e]
-  rw [JJ, hd] at hy
-  exact hy
+  rwa [JJ, hd] at hy
 
 theorem exists_lift_coeff_zero {l : ℕ} [Fact l.Prime] {k B : Type} [CommRing k] [CharP k l] [PerfectRing k l]
     [CommRing B] (f0 : WittVector l k →+* B) (hl : f0 (l : WittVector l k) = 0) :
@@ -969,9 +964,7 @@ theorem exists_hom_of_frame : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : 
   have h' : Ideal.Quotient.mk (Ideal.span {bk.E}) a = bk.str r := h
   have h2 := RingHom.congr_fun heq a
   rw [hτ] at h2
-  refine h2.trans ?_
-  show P.str (bk.str.symm (Ideal.Quotient.mk (Ideal.span {bk.E}) a)) = P.str r
-  exact congrArg P.str ((congrArg bk.str.symm h').trans (bk.str.symm_apply_apply r))
+  exact h2.trans (congrArg P.str ((congrArg bk.str.symm h').trans (bk.str.symm_apply_apply r)))
 
 end GlobalTheory.BSP
 end -- clump:auto
@@ -1243,8 +1236,7 @@ theorem quot_bdd_of_mem {A : Type} [CommRing A] (q : A) (N : ℕ)
   have hm' : (l : A) ^ m * y ∈ Ideal.span {q} := by
     rw [← Ideal.Quotient.eq_zero_iff_mem, map_mul, map_pow, map_natCast]; exact hm
   have h2 := h y m hm'
-  rw [← Ideal.Quotient.eq_zero_iff_mem, map_mul, map_pow, map_natCast] at h2
-  exact h2
+  rwa [← Ideal.Quotient.eq_zero_iff_mem, map_mul, map_pow, map_natCast] at h2
 
 theorem pow_mul_mem_of_pow_mul_mem {A : Type} [CommRing A] (I : Ideal A) (N : ℕ)
     (h : ∀ x : A ⧸ I, (∃ m : ℕ, (l : A ⧸ I) ^ m * x = 0) → (l : A ⧸ I) ^ N * x = 0) :

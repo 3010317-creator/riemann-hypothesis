@@ -312,8 +312,7 @@ theorem grid_hbe : ∀ l, 1 ≤ l → l ≤ (grid D τ).m → (((grid D τ).t : 
   intro l h1 h2
   obtain ⟨l, rfl⟩ : ∃ l0, l = l0 + 1 := ⟨l - 1, by omega⟩
   have := (D.hc τ).gap_be ⟨l, by change _ ≤ D.R.m at h2; omega⟩
-  rw [hb, he] at this
-  exact this
+  rwa [hb, he] at this
 
 theorem grid_heb : ∀ l, 1 ≤ l → l + 1 ≤ (grid D τ).m →
     (((grid D τ).t : ℚ) + 3) / 2 ≤ (grid D τ).b (l + 1) - (grid D τ).e l := by
@@ -321,8 +320,7 @@ theorem grid_heb : ∀ l, 1 ≤ l → l + 1 ≤ (grid D τ).m →
   intro l h1 h2
   obtain ⟨l, rfl⟩ : ∃ l0, l = l0 + 1 := ⟨l - 1, by omega⟩
   have := (D.hc τ).gap_eb ⟨l, by change _ ≤ D.R.m at h2; omega⟩ (by change _ ≤ D.R.m at h2; simp only; omega)
-  rw [hb, he] at this
-  exact this
+  rwa [hb, he] at this
 
 theorem grid_hbb (hS : GlobalTheory.IndefiniteRowSideFullHecke.CuspAlongSmoothLifts.Sizes D) : ∀ l, 1 ≤ l → l + 1 ≤ (grid D τ).m →
     2 * (bigN D : ℚ) ^ 3 < (grid D τ).b (l + 1) - (grid D τ).b l := by
@@ -330,8 +328,7 @@ theorem grid_hbb (hS : GlobalTheory.IndefiniteRowSideFullHecke.CuspAlongSmoothLi
   intro l h1 h2
   obtain ⟨l, rfl⟩ : ∃ l0, l = l0 + 1 := ⟨l - 1, by omega⟩
   have := hS.2 τ l (by change _ ≤ D.R.m at h2; omega)
-  rw [hb, hb] at this
-  exact this
+  rwa [hb, hb] at this
 
 theorem grid_hga : 2 * (bigN D : ℚ) ^ 3 + (grid D τ).s + 2 ≤ (grid D τ).ga := by
   have h := (isLeast_gap D).1.2.1

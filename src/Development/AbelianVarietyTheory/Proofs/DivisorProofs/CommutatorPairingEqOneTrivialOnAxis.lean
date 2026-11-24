@@ -98,8 +98,7 @@ theorem weilIs_eq_one : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonO
     (cls_eq_iff hP (pull_isLB hP _)).2 hsym
   have hsw : ∀ (T : Over S) (x y : T ⟶ A), pc hP x y = pc hP y x := fun T x y => by
     have h := congrArg (pull (lift x y).left) hS
-    rw [← pull_comp, ← Over.comp_left, comp_lift, lift_snd, lift_fst] at h
-    exact h
+    rwa [← pull_comp, ← Over.comp_left, comp_lift, lift_snd, lift_fst] at h
   let T : Over S := Over.mk x₀
   have e : ∀ g : T ⊗ A ⟶ A, pull g.left (cls _ hD) = pc hP g g := fun g => by
     rw [cls_pull hP, ← pull_comp, ← Over.comp_left, comp_lift, Category.comp_id]
@@ -123,8 +122,7 @@ theorem weilIs_eq_one : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonO
     have z' := congrArg (pull (β_ T A).hom.left) z
     rw [← pull_comp, ← Over.comp_left, comp_lift, braiding_hom_snd_assoc, braiding_hom_fst, map_zero] at z'
     unfold pc
-    rw [← MonObj.comp_mul, ← pow_two]
-    exact z'
+    rwa [← MonObj.comp_mul, ← pow_two]
   obtain ⟨φ, hφ⟩ : ∃ φ : LB.Gen (Out.thetaLB A (P.pull (lift (𝟙 A) (𝟙 A)).left) 1 a), φ.IsGen := by
     refine (cls_eq_zero_iff (LB.isLB_linComb hD _ _)).1 ?_
     rw [cls_linComb hD, Fin.sum_univ_two]
@@ -142,7 +140,6 @@ theorem weilIs_eq_one : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonO
   rw [inv_one, ← hb] at h1'
   have hc'' : Out.WeilIs A (P.pull (lift (𝟙 A) (𝟙 A)).left) ((1 : ℤ) * (m : ℕ)) b a c⁻¹ := by
     rw [_root_.one_mul]; exact hc'
-  have key := PairingLevels.weilIs_value_eq hG hA hD ht hc'' h1'
-  exact inv_eq_one.1 key
+  exact inv_eq_one.1 (PairingLevels.weilIs_value_eq hG hA hD ht hc'' h1')
 
 end GlobalTheory.WeilSqKer

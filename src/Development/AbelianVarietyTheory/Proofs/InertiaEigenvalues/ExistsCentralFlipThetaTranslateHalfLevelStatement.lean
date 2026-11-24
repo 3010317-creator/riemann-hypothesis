@@ -225,10 +225,10 @@ theorem char_flipDet {D : D7} (c : (AE D)ˣ →* Circle) (χ : HChar D.host.E) (
       Valued.v (GlobalTheory.CharLocProd.evalAt R (ι (finPart D x)) - _) ≤ _
     rw [← hev]
     by_cases hR : R ∈ T
-    · simp only [if_pos hR]
+    · simp only [ite_eq_left hR]
       rw [hxT R hR, sub_self, map_zero, GlobalTheory.CharLocProd.val_algebraMap]
       exact ⟨rfl, zero_le'⟩
-    · simp only [if_neg hR]
+    · simp only [ite_eq_right hR]
       rw [hxT' R hR, Units.val_one, map_one, map_one, map_one, sub_self, map_zero]
       exact ⟨rfl, zero_le'⟩
   · intro R hR
@@ -237,8 +237,8 @@ theorem char_flipDet {D : D7} (c : (AE D)ˣ →* Circle) (χ : HChar D.host.E) (
     rw [← hev, hxT' R hR.1, map_one]
     exact ⟨rfl, fun h => hR.2 (hfin.mem_toFinset.2 (Ideal.dvd_span_singleton.2 h))⟩
   rw [key, ← Finset.prod_subset Finset.subset_union_left
-    (fun R _ hR => by rw [if_neg hR, map_one, Units.val_one])]
-  exact Finset.prod_congr rfl fun R hR => by rw [if_pos hR]
+    (fun R _ hR => by rw [ite_eq_right hR, map_one, Units.val_one])]
+  exact Finset.prod_congr rfl fun R hR => by rw [ite_eq_left hR]
 
 end GlobalTheory.FlipScalUnit
 
@@ -272,8 +272,7 @@ theorem GlobalTheory.LevelSeries.flipScal_mem_valRing_of_unit : ∀ (D : D7) (ψ
   have hA' : ∀ x : 𝓞 k, A.valuation (σ (x : k)) < 1 ↔ x ∈ la.asIdeal := hA
   have hpA : (l : ℂ) ∈ A.nonunits := by
     rw [ValuationSubring.mem_nonunits_iff]
-    have h1 := (hA' (l : 𝓞 k)).2 hla
-    simpa using h1
+    simpa using (hA' (l : 𝓞 k)).2 hla
   choose bW hbW using hpair.expW
   have hval : ∀ R ∈ T, ((χ.val R : ℂˣ) : ℂ) * ((Real.sqrt (Ideal.absNorm R.asIdeal) : ℝ) : ℂ) ∈ O := by
     intro R hR
@@ -303,7 +302,7 @@ theorem GlobalTheory.LevelSeries.flipScal_mem_valRing_of_unit : ∀ (D : D7) (ψ
     have e1 : ((mU : D.host.Eˣ) : D.host.E) = algebraMap (𝓞 D.host.E) D.host.E ((pd : ℕ) : 𝓞 D.host.E) := by
       rw [hmU, Units.val_mk0, map_natCast]
     unfold Formalism.L2.Host.ordF
-    rw [e1, HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_def, if_neg h0, WithZero.log_exp,
+    rw [e1, HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_def, ite_eq_right h0, WithZero.log_exp,
       neg_neg]
   have hx' : (x : AE D) * (eT * incA D ((mU ^ V.rank : D.host.Eˣ) : D.host.E) + (1 - eT)) = 1 := by
     have h := hx
@@ -682,7 +681,7 @@ theorem exists_approx : ∀ (E : Type) [Field E] [NumberField E] (χ : Formalism
   have hT : ∀ v ∈ T, v.valuation E ((y : E) - ((M₀ : ℕ) : E)) ≤ WithZero.exp (-((m v : ℤ) + n v + 1)) := by
     intro v hv
     have h1 := (v.intValuation_le_pow_iff_mem _ _).2 (hy v (Finset.mem_union_left _ hv))
-    simp only [hv, if_true] at h1
+    simp only [hv, ite_true] at h1
     have e : (y : E) - ((M₀ : ℕ) : E) = ((y - ((M₀ : ℕ) : 𝓞 E) : 𝓞 E) : E) := by push_cast; rfl
     rw [e, hvz]
     convert h1 using 2
@@ -692,7 +691,7 @@ theorem exists_approx : ∀ (E : Type) [Field E] [NumberField E] (χ : Formalism
     intro v hv hvT
     have h1 := (v.intValuation_le_pow_iff_mem _ _).2
       (hy v (Finset.mem_union_right _ (hfin.mem_toFinset.2 hv)))
-    simp only [hvT, if_false] at h1
+    simp only [hvT, ite_false] at h1
     have e : (y : E) - 1 = ((y - 1 : 𝓞 E) : E) := by push_cast; rfl
     rw [e, hvz]
     convert h1 using 2
@@ -853,8 +852,7 @@ theorem exists_pow_mul_mem_of_mem_fieldRange (z : ℂ) (l : ℕ) (hl : l.Prime) 
     rcases Int.natAbs_eq m with hm | hm
     · rw [hm] at h2; simpa [zsmul_eq_mul] using h2
     · rw [hm] at h2
-      have h3 := h2.neg
-      simpa [zsmul_eq_mul, neg_mul] using h3
+      simpa [zsmul_eq_mul, neg_mul] using h2.neg
 
 theorem flipScal_pow_mem : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (V W : HSp D) (χV χW : (AE D)ˣ →* Circle) (om : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)) (ΛV : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)) (ΛW : Submodule (𝓞 D.host.E) (Fin W.rank → D.host.E)) (sW : D.what₂.Tau → Matrix (Fin W.rank) (Fin W.rank) ℂ) (f₀ : WO V W → ℂ), VacPair ψ θ V W χV χW om ΛV ΛW sW f₀ → Odd W.rank → ∀ (χ : Formalism.L2.Host.HChar D.host.E) (M₀ l : ℕ), ChiData χW χ M₀ → l.Prime → M₀ ≠ 0 → ∀ (T : Finset (Formalism.L2.DIV.Pl D.host.E)), ∃ c : ℕ, ∀ (eT : AE D) (x : (AE D)ˣ), IsIdemSum eT T → (∀ PP ∈ T, ((M₀ : ℕ) : 𝓞 D.host.E) ∈ PP.asIdeal) → IsFlipDet V eT M₀ x → ∀ (k : Type) [Field k] [NumberField k] (σ : k →+* ℂ) (la : HeightOneSpectrum (𝓞 k)) (O : Subring ℂ), ((l : ℕ) : 𝓞 k) ∈ la.asIdeal → ValRing σ la O → ConjIn D σ → χ.ValuesIn (-1 / 2) σ → Odd M₀ → Nat.Coprime M₀ (GlobalTheory.Tow.badN D) → (l : ℂ) ^ c * flipScal χW V W T M₀ x ∈ O := by
   intro D ψ θ V W χV χW om ΛV ΛW sW f₀ hVP hW χ M₀ l hχ hl hM T
@@ -1208,8 +1206,7 @@ theorem exists_flip_theta : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : 
     rw [← smul_smul, map_smul, hF₂eq, ← smul_smul, map_smul, hF₁eq]
   have := GlobalTheory.T.thetaKernel_fockVector_eq_of_finite_point_move D ψ θ V W χV χW om ΛV ΛW sW f₀ hP (zOf T₀ * z₁) (mul_mem (hzG T₀) hz₁G) e e₂ l₂.M O f _ _ hf
     (Submodule.smul_mem _ _ (hsub hF₂)) hom BW Q s g
-  rw [← mul_assoc] at this
-  exact this
+  rwa [← mul_assoc] at this
 
 end GlobalTheory.LevelSeries
 

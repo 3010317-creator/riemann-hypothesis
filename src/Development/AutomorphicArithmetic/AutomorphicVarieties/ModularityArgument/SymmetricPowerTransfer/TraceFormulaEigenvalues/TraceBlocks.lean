@@ -245,7 +245,7 @@ theorem finsum_sig {I : Type} {A : I → Type} (F : (Σ i, A i) → ℂ) (h : (F
   · intro i hi
     obtain ⟨x, hx⟩ : ∃ x, F ⟨i, x⟩ ≠ 0 := by
       by_contra hc
-      push_neg at hc
+      push Not at hc
       exact hi (by simp [hc])
     exact Finset.mem_coe.mpr (Finset.mem_image.mpr ⟨⟨i, x⟩, by simpa [s] using hx, rfl⟩)
 

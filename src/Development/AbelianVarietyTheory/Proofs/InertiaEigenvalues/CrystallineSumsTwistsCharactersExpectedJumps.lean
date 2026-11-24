@@ -221,8 +221,7 @@ theorem ddRE_ne_bot [Algebra.IsSeparable Qp K] (hs : ∃ s ∈ PD.Fil (-1), PD.�
         rw [actVdR_twist PD 1 ν g (χ g) (fun x => by simp [hν]), actVdR_act, hy, ← LinearMap.smul_apply,
           ← map_smul, ← actVdR_char PD ν g (χ g) (hν g), hi]) y hy
       have h2 := this.1
-      rw [h0] at h2
-      exact h2
+      rwa [h0] at h2
     have : y = act LL (AlgHom.id LL LL) (1 : LL ⊗[Qp] BdR) y := by rw [map_one]; rfl
 
     rw [Submodule.mem_bot, this, h1, map_sum, LinearMap.sum_apply]
@@ -242,8 +241,7 @@ include T
 theorem exists_inverse_fontaineElement_mem_fil_neg_one : ∃ s ∈ (P.PD K).Fil (-1), (P.PD K).ι (P.PD K).t * s = 1 := by
   obtain ⟨s, hs, h⟩ := GlobalTheory.ThetaTie.exists_inverse_fontaineElement_mem_fil_neg_one T
   refine ⟨s, ?_, by rw [P.PD_ι, P.period_datum_t_eq, h]⟩
-  rw [← SetLike.mem_coe, P.PD_Fil K (Formalism.MainNotions.LocalSituation.botExt l)]
-  exact hs
+  rwa [← SetLike.mem_coe, P.PD_Fil K (Formalism.MainNotions.LocalSituation.botExt l)]
 
 theorem isDR {V : Type} [AddCommGroup V] [Module ↥LL.1 V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] ↥LL.1 V]
     [FiniteDimensional ↥LL.1 V] (ρ : Representation ↥LL.1 ↥(GK K) V) (h : IsCrys (P.PD K) ρ) :
@@ -366,8 +364,7 @@ theorem crysCalc {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : LocAinf l P) (h
     refine ⟨(GlobalTheory.Survey.SlowDecayFunctions.continuous_cyc P S.K S.LL).congr fun g => (hε g).symm, ?_⟩
     have := crysWith_inv T _ _ S.emb _ (fun _ => ((1 : ℕ) : ℤ))
       (crysWith_cyc T S.K S.LL S.emb (cycLL (P.PD S.K) ↥S.LL.1)⁻¹ 1 (by simp))
-    rw [inv_inv, ← e] at this
-    exact this
+    rwa [inv_inv, ← e] at this
   · obtain ⟨h1, h2⟩ := _root_.GlobalTheory.UnramifiedRep.isCrys_and_jump_eq_zero l P AI T S.K S.LL (charLat ℚ_[l] Subtype.val_injective μ hc)
       (fun g hg x => by
         change (chiLL ↥S.LL.1 μ g : ↥S.LL.1) • x = x

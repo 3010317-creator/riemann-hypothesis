@@ -236,8 +236,7 @@ theorem genRd_cubical (cub : CubicalStr A L) (x : Fin 3 → Fin g → ℂ) :
       PrimeSpectrum.ext (by rw [Ideal.eq_bot_of_prime p.asIdeal, Ideal.eq_bot_of_prime q.asIdeal])
     obtain ⟨i, hi⟩ := exists_chart L.isLB ((Φ.e 0).left.base (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum ℂ))
     refine ⟨i, fun pt _ => ?_⟩
-    rw [hsub pt ⟨⊥, Ideal.isPrime_bot⟩]
-    exact hi
+    rwa [hsub pt ⟨⊥, Ideal.isPrime_bot⟩]
   obtain ⟨j, hj⟩ := hj0
   have hq0 : (tri Φ (colsEquiv 3 g 0)).left = (lift (Φ.e 0) (Φ.e 0)).left ≫ (faceMap A 0).left := by
     rw [map_zero, origin_face]
@@ -268,8 +267,7 @@ theorem genRd_cubical (cub : CubicalStr A L) (x : Fin 3 → Fin g → ℂ) :
     exact h2.symm
   have hx' := hv ((colsEquiv 3 g).symm x)
   simp only [LinearEquiv.apply_symm_apply, LinearMap.comp_apply, LinearEquiv.coe_coe] at hx'
-  rw [hv1] at hx'
-  exact hx'
+  rwa [hv1] at hx'
 
 end GlobalTheory.CubeReading
 

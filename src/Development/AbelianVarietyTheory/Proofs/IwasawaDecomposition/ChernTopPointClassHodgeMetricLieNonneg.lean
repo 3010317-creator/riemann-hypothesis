@@ -366,8 +366,7 @@ theorem isNegSq_curv_of_changeFrame_comp {n m r : ℕ} (G : V n → Matrix (Fin 
   have hK2 : MContDiffAt 2 (fun u => (W u)ᵀ * domGram m r (Z u) * (W u)ᴴᵀ) v :=
     (hW2.transpose.mul hH2).mul hW2.conjTranspose.transpose
   have hKu : IsUnit ((W v)ᵀ * domGram m r (Z v) * (W v)ᴴᵀ).det := by
-    simp only [det_mul, det_transpose, det_conjTranspose]
-    exact (hWu.mul hDu).mul hWu.star
+    simpa only [det_mul, det_transpose, det_conjTranspose] using (hWu.mul hDu).mul hWu.star
   refine ⟨S * W v, T ∘ₗ (fderiv ℂ Z v).toLinearMap, by rw [det_mul]; exact hS.mul hWu, fun ξ η => ?_⟩
   rw [curv_congr hG, curv_smul (f := fun _ => κ) contDiffAt_const hκ.ne' hK2 hKu, leviForm_const,
     curv_changeFrame (H := fun x => domGram m r (Z x)) hH2 hDu hW2 hWu hW0,
@@ -598,7 +597,7 @@ theorem coords_holomorphic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   let L := EuclideanSpace.equiv (Fin d) ℂ
   let x : (Fin d → ℂ) → (U.X k).dom := fun b =>
     if h : G (L.symm b) ∈ (U.X k).dom then ⟨G (L.symm b), h⟩ else ⟨G u₀, h₀⟩
-  have hxb : ∀ b (h : G (L.symm b) ∈ (U.X k).dom), x b = ⟨G (L.symm b), h⟩ := fun b h => dif_pos h
+  have hxb : ∀ b (h : G (L.symm b) ∈ (U.X k).dom), x b = ⟨G (L.symm b), h⟩ := fun b h => dite_eq_left h
   let P : (Fin d → ℂ) → ((F.Di (ik k)).La →+ (Fin g → ℂ)) := fun b => Pm k (x b)
   let p : (Fin d → ℂ) → (Sp ℂ ⟶ Xo.XF c) := fun b => GlobalTheory.AllWt.ptF (S := CAt σ) (U.un k (x b))
   have hu : ∀ b, F.u (ik k) (P b) =
@@ -614,8 +613,7 @@ theorem coords_holomorphic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   have hBo : IsOpen B := hB₀o.preimage L.symm.continuous
   have hb₀ : L u₀ ∈ B := by
     show L.symm (L u₀) ∈ B₀
-    rw [ContinuousLinearEquiv.symm_apply_apply]
-    exact hu₀
+    rwa [ContinuousLinearEquiv.symm_apply_apply]
   have hPd : ∀ a, DifferentiableOn ℂ (fun b => P b a) B := fun a => differentiableOn_pi.2 fun j =>
     (TrueCx.TorHolo.differentiableOn_perFr (U.X k) (x := fun b => G (L.symm b)) (fun b hb => (hB₀ _ hb).1)
       (fun τ' a' c' b hb => (((hB₀ _ hb).2 τ' a' c').comp b L.symm.differentiableAt).differentiableWithinAt)
@@ -657,7 +655,7 @@ theorem coords_holomorphic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
       obtain ⟨w, hw, -⟩ := hExp.2.2 _ ht
       exact ⟨w, (hgF τ i) ▸ hw⟩
     have hW : IsDerivAt0 (Ex b) (Wd i b) (spMap (dualMap (ev' b)) ≫ fR.v τ i) := by
-      have e0 : Wd i b = hex.choose := dif_pos hex
+      have e0 : Wd i b = hex.choose := dite_eq_left hex
       rw [e0]
       exact hex.choose_spec
     refine ⟨hW, ?_⟩
@@ -668,8 +666,7 @@ theorem coords_holomorphic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
       rw [hwa]
       have hi : ∀ j j' : Fin (Dw.mult τ), e.symm ⟨τ, j⟩ = e.symm ⟨τ, j'⟩ ↔ j = j' := fun j j' => by simp
       simp [Finset.sum_apply, Pi.single_apply, hi]
-    rw [hfa, ← hgF τ i]
-    exact ha
+    rwa [hfa, ← hgF τ i]
   have ht : Tendsto L.symm (𝓝 (L u₀)) (𝓝 u₀) := by
     simpa using L.symm.continuous.tendsto (L u₀)
   refine ⟨fun u a i => Wd i (L u) (e.symm ⟨τ, a⟩), fun a i => ?_, ?_⟩
@@ -960,7 +957,7 @@ theorem exists_holo_coord_frameAt : ∀ (E : Type) [Field E] [NumberField E] [Is
   classical
   let ev : V X.dim → (Γ(X.X, W) →+* ℂ) := fun u =>
     if h : c'.e.symm u ∈ ptsIn X.str (σ.comp e.toRingHom) W then evHom h else evHom hyW
-  have hev : ∀ u (h : c'.e.symm u ∈ ptsIn X.str (σ.comp e.toRingHom) W), ev u = evHom h := fun u h => dif_pos h
+  have hev : ∀ u (h : c'.e.symm u ∈ ptsIn X.str (σ.comp e.toRingHom) W), ev u = evHom h := fun u h => dite_eq_left h
   set S : Set (V X.dim) := c'.e.target ∩ c'.e.symm ⁻¹' ptsIn X.str (σ.comp e.toRingHom) W with hSdef
   have hSo : IsOpen S := c'.e.continuousOn_symm.isOpen_inter_preimage c'.e.open_target (isOpen_ptsIn _)
   have hu0 : c'.e y ∈ S := ⟨c'.e.map_source hyc, by show c'.e.symm (c'.e y) ∈ ptsIn X.str (σ.comp e.toRingHom) W; rw [c'.e.left_inv hyc]; exact hyW⟩
@@ -1305,7 +1302,7 @@ theorem isHol_chart_framePt : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   · obtain ⟨x₀, hx₀⟩ := hne
     let sf : Frame (U.X k).Ψ (Dw.p + Dw.q) → (U.X k).dom := fun x =>
       if h : x ∈ (U.X k).dom then ⟨x, h⟩ else ⟨x₀, hx₀⟩
-    have hsf : ∀ x (h : x ∈ (U.X k).dom), sf x = ⟨x, h⟩ := fun x h => dif_pos h
+    have hsf : ∀ x (h : x ∈ (U.X k).dom), sf x = ⟨x, h⟩ := fun x h => dite_eq_left h
     have h1 := BdArc.Leave.isHolTo_ptC (U := U.toPj) hU' k sf fun x h => by rw [hsf x h]
     have h2 := LocLift.isHolTo_comp_hom h1 T.Z.jQ
     have hψ : DifferentiableOn ℂ ψ W :=
@@ -1329,7 +1326,7 @@ theorem isHol_chart_framePt : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       if h : ∃ y' ∈ c'.e.source, cxOf e σ hj y' = P w then h.choose else c'.e.symm 0
     have hq : ∀ w, (∃ y' ∈ c'.e.source, cxOf e σ hj y' = P w) →
         q w ∈ c'.e.source ∧ cxOf e σ hj (q w) = P w := fun w h => by
-      simp only [q, dif_pos h]
+      simp only [q, dite_eq_left h]
       exact h.choose_spec
     refine ⟨q, ?_, fun w _ h hex => ?_, ?_⟩
     · rw [hS]
@@ -1389,8 +1386,7 @@ theorem exists_un : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
   have hxF : xF ≫ T.Z.jQ = y.1 := IsOpenImmersion.lift_fac _ _ _
   have hs : xF ≫ Limits.pullback.snd _ _ = spMap (algebraMap c.F (CAt σ)) := by
     have h2 := y.2
-    rw [← hxF, Category.assoc, T.Z.jQ_over] at h2
-    exact h2
+    rwa [← hxF, Category.assoc, T.Z.jQ_over] at h2
   have hover : (xF ≫ Limits.pullback.fst _ _) ≫ Xo.s = sOf c (CAt σ) := by
     rw [Category.assoc, Limits.pullback.condition, ← Category.assoc, hs]
     exact GlobalTheory.ShFam.OpenReg.spMap_comp _ _
@@ -1425,9 +1421,7 @@ theorem exists_holo_frame_chart : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       (cancel_mono T.Z.jQ).1 (congrArg Subtype.val h)
     rw [← ptF_fst z, h1, ptF_fst]
   have hcxinj : Function.Injective (cxOf e σ hj) := by
-    intro y1 y2 h
-    apply Subtype.ext
-    exact (cancel_mono j).1 (congrArg Subtype.val h)
+    exact fun y1 y2 h => Subtype.ext ((cancel_mono j).1 (congrArg Subtype.val h))
   have hya : cxOf e σ hj y = cxPt T.Z (U.un k ⟨ψ a, hψd a haW⟩) := hx₀.symm.trans (cxPt_congr (hψa _).symm)
   have haO : a ∈ {w | w ∈ W ∧ ∃ h : ψ w ∈ (U.X k).dom, ∃ y' ∈ c'.e.source, cxOf e σ hj y' = cxPt T.Z (U.un k ⟨ψ w, h⟩)} := ⟨haW, hψd a haW, y, hyc, hya⟩
   have hqa : q a = y := hcxinj ((hq a haW _ ⟨y, hyc, hya⟩).2.trans hya.symm)

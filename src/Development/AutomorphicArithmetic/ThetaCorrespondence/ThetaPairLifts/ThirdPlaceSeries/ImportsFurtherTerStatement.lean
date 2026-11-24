@@ -94,8 +94,7 @@ theorem embU_iff (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (𝓞 D.host.E))
     · rintro ⟨τ₁, h1, h2⟩
       have : τ₁ = τ₀ := AlgHom.ext fun x => C.inc.injective ((h2 x).symm.trans (hτ₀ x))
       exact this ▸ h1
-    · intro h1
-      exact ⟨τ₀, h1, hτ₀⟩
+    · exact fun h1 => ⟨τ₀, h1, hτ₀⟩
   obtain ⟨g', key, hU⟩ := GlobalTheory.HTW.exists_letter_of_local_embedding D i w hw τ₀
   have hemb : ∀ x, D.what₂.embLL (D.embE (D.host.sigmaOf g' x)) = D.host.emb g' x := fun x =>
     DFunLike.congr_fun D.embE_φ₀ (D.host.sigmaOf g' x)
@@ -127,8 +126,7 @@ theorem embU_iff (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (𝓞 D.host.E))
       have hy' : y = D.embE (D.host.sigmaOf g' x) :=
         (D.nd.embK i).injective ((Br.toLLK (D.nbr i w hw)).injective (hy.trans (key x)))
       rw [hy', hemb]
-  · simp only [EmbeddingTypes.EmbTypeUe, if_true, AdmissibleParameterJ.TypeU, iff_true]
-    exact hU
+  · simpa only [EmbeddingTypes.EmbTypeUe, ite_true, AdmissibleParameterJ.TypeU, iff_true] using hU
 
 theorem ppm_int (D : D7) (hd : AdmissibleParameterJ.AdmDict D) (i : D.nd.Loc)
     (τ₀ : D.host.E →+* Qbar (D.nd.l i)) (g : D.R.GG) (ρ : D.what₂.Tau)
@@ -200,8 +198,7 @@ theorem mem_floorImg (S : Set ℚ) (hS : S.Finite) (hint : ∀ q ∈ S, ∃ n : 
     rw [Set.Finite.mem_toFinset] at hq
     obtain ⟨n, rfl⟩ := hint q hq
     rw [Int.floor_intCast]; exact hq
-  · intro ha
-    exact ⟨a, (Set.Finite.mem_toFinset hS).2 ha, Int.floor_intCast a⟩
+  · exact fun ha => ⟨a, (Set.Finite.mem_toFinset hS).2 ha, Int.floor_intCast a⟩
 
 theorem card_floorImg (S : Set ℚ) (hS : S.Finite) (hint : ∀ q ∈ S, ∃ n : ℤ, q = n) :
     (hS.toFinset.image (fun q : ℚ => ⌊q⌋)).card = S.ncard := by
@@ -333,8 +330,8 @@ theorem shape (D : D7) (L : SizeData₂ D) (hP : AdmissibleParameterJ.AdmPar L) 
         tauto
     show (if (a : ℚ) ∈ AdmissibleParameterJ.JJ D up j ρ then (1 : ℤ) else 0) = _
     by_cases h : (a : ℚ) ∈ AdmissibleParameterJ.JJ D up j ρ
-    · rw [if_pos h, if_pos (hiff.1 h)]
-    · rw [if_neg h, if_neg (mt hiff.2 h)]
+    · rw [ite_eq_left h, ite_eq_left (hiff.1 h)]
+    · rw [ite_eq_right h, ite_eq_right (mt hiff.2 h)]
 
 end GlobalTheory.JumpShapeAt
 end -- clump:auto
@@ -357,8 +354,7 @@ theorem main_alt_alt : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : P
   have hR : GoodR D.nd i (X.r i) := S.canon.fam.good i
   have hA := S.facts.toCore.admA
   have hg : D.nd.l i ∉ TwistedPlaces.gset D := by
-    simp only [TwistedPlaces.gset, Finset.mem_insert, Finset.mem_singleton, not_or]
-    exact ⟨h0, h1⟩
+    simpa only [TwistedPlaces.gset, Finset.mem_insert, Finset.mem_singleton, not_or] using ⟨h0, h1⟩
   have hChi := _root_.GlobalTheory.ChiOneNoPt.main_alt_alt_alt hPr.font D hA.1 hA.2.2.2.1 hA.2.2.2.2.2.2 S.facts.block S.facts.muUnr i hg
   have hG2 := S.facts.g2.1 i (X.r i) hR
   have hcr : ∀ x, IsCrys (Br.PD D.loc D.nbr i w hw) (matRep (TruncatedSeriesCountingIdentities.locC C (rO D.nd i (X.r i) x))) :=
@@ -375,8 +371,8 @@ theorem main_alt_alt : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : P
   refine ⟨Cl, Lo, fun x => ?_⟩
   have hsg : (if EmbeddingTypes.EmbU C ep τ then (1 : ℤ) else -1) = (if decide (AdmissibleParameterJ.TypeU D ep g) then 1 else -1) := by
     by_cases hT : AdmissibleParameterJ.TypeU D ep g
-    · rw [if_pos ((embU_iff D i w hw C τ ep g ρ hRd).2 hT), decide_eq_true hT]; rfl
-    · rw [if_neg (mt (embU_iff D i w hw C τ ep g ρ hRd).1 hT), decide_eq_false hT]; rfl
+    · rw [ite_eq_left ((embU_iff D i w hw C τ ep g ρ hRd).2 hT), decide_eq_true hT]; rfl
+    · rw [ite_eq_right (mt (embU_iff D i w hw C τ ep g ρ hRd).1 hT), decide_eq_false hT]; rfl
   rw [hsg]
   convert hS using 1
   funext a

@@ -121,12 +121,10 @@ theorem rep_lift (hV : IsAffineOpen V) (B : CommRingCat.{0}) (y' : PtOver X q κ
       rw [← h2, ← Category.assoc, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
     have h4 : φ'.comp (Ideal.Quotient.mk _) = f := by
       refine hfu _ ⟨?_, fun r z hz => ?_⟩
-      · refine RingHom.ext fun r => ?_
-        exact RingHom.congr_fun h1 (Ideal.Quotient.mk I r)
+      · exact RingHom.ext fun r => RingHom.congr_fun h1 (Ideal.Quotient.mk I r)
       · rw [h3]
         exact congrArg φ' hz
-    apply Ideal.Quotient.ringHom_ext
-    exact h4
+    exact Ideal.Quotient.ringHom_ext h4
 
 variable (γ : DividedPowers I) (p : ℕ) (δ : DividedPowers (I.map 𝓛.i)) (hδ : IsDPMorphism γ δ 𝓛.i)
   (hadm : (p ≠ 0 → IsNilpotent (p : 𝓛.D)) ∧ (p = 0 → IsNilpotent (I.map 𝓛.i))) (hV : IsAffineOpen V)

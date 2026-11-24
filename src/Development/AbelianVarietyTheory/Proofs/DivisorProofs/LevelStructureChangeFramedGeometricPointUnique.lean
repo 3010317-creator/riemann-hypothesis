@@ -80,8 +80,7 @@ theorem map_sub_two_pow_mul_mem {R : Type} [CommRing R] (m : Ideal R) (φ : R �
     ∀ y ∈ m ^ (n + 1), φ y - 2 ^ (n + 1) * y ∈ m ^ (n + 2) := by
   have hφ : ∀ x ∈ m, φ x ∈ m := fun x hx => by
     have h1 := Ideal.pow_le_self (two_ne_zero) (h x hx)
-    have h2 := m.add_mem h1 (m.mul_mem_left 2 hx)
-    simpa using h2
+    simpa using m.add_mem h1 (m.mul_mem_left 2 hx)
   induction n with
   | zero =>
     intro y hy
@@ -99,8 +98,7 @@ theorem map_sub_two_pow_mul_mem {R : Type} [CommRing R] (m : Ideal R) (φ : R �
       · have := Ideal.mul_mem_mul (ih a ha) (hφ b hb)
         rwa [← pow_succ] at this
       · have := Ideal.mul_mem_mul (Ideal.mul_mem_left _ (2 ^ (n + 1)) ha) (h b hb)
-        rw [← pow_add] at this
-        exact this
+        rwa [← pow_add] at this
     · intro a b ha hb
       have e : φ (a + b) - 2 ^ (n + 1 + 1) * (a + b) =
           (φ a - 2 ^ (n + 1 + 1) * a) + (φ b - 2 ^ (n + 1 + 1) * b) := by
@@ -150,8 +148,7 @@ theorem map_eq_zero_of_commute_doubling {k RA RB : Type} [Field k] [CharZero k] 
       rwa [e2] at h7
   have hinf := Ideal.iInf_pow_eq_bot_of_isLocalRing (maximalIdeal RA) (Ideal.IsPrime.ne_top inferInstance)
   have : ψ x ∈ (⨅ i : ℕ, maximalIdeal RA ^ i) := by
-    refine (Submodule.mem_iInf _).2 fun i => ?_
-    exact Ideal.pow_le_pow_right (by omega) (key i x hx)
+    exact (Submodule.mem_iInf _).2 fun i => Ideal.pow_le_pow_right (by omega) (key i x hx)
   rw [hinf] at this
   simpa using this
 
@@ -593,8 +590,7 @@ theorem move_unique : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
       exact funext e₁
     have e₃ := congrArg (fun z => z.left) e₂
     have e₄ : ((List.ofFn u).prod).left ≫ ν.φ = ((List.ofFn u).prod).left ≫ ν'.φ := e₃
-    rw [hu2] at e₄
-    exact e₄
+    rwa [hu2] at e₄
   have hs := sections_eq Xo.univ.t.semi ν.cart ν'.cart y.x hx ht
   have tl : (toUnit (Over.mk y.x)).left = y.x := by simpa using Over.w (toUnit (Over.mk y.x))
   have hη : ∀ a, toUnit (Over.mk y.x) ≫ Xo.univ.eta (lift g a) = toUnit (Over.mk y.x) ≫ Xo.univ.eta (lift g' a) := by

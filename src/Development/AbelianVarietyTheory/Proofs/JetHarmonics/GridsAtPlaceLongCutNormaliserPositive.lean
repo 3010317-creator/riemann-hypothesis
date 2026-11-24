@@ -514,8 +514,7 @@ theorem main : ∀ (C b c : ℝ) (P : M.Par) (l : ℕ) (lam : Fin (2 * P.r + P.k
     obtain ⟨t, rfl⟩ : ∃ t, s = t + 1 := ⟨s - 1, by omega⟩
     have ht : t < n := by omega
     have h := hv ⟨t, ht⟩ hsk
-    rw [← hlamN ⟨t, ht⟩] at h
-    exact h
+    rwa [← hlamN ⟨t, ht⟩] at h
   have hmain := GlobalTheory.two_brackets_le_pow_mul_prod_entries P.k P.r l b c y lamN P.u P.u' hl hlk hc hcb
     hkb hu hu'
     (by
@@ -602,8 +601,7 @@ private theorem exists_qw_eq_mul_pos_real_of_five_le_dist {S : Type} (q : ℂ �
   intro u
   induction u with
   | nil =>
-    intro _
-    exact ⟨1, one_pos, by simp, by simp [_root_.Formalism.FourierDecayAlt.Wd.qw]⟩
+    exact fun _ => ⟨1, one_pos, by simp, by simp [_root_.Formalism.FourierDecayAlt.Wd.qw]⟩
   | cons l w ih =>
     intro h
     obtain ⟨ρ, hρ, hρ1, hρeq⟩ := ih (fun l' hl' => h l' (List.mem_cons_of_mem _ hl'))
@@ -618,7 +616,7 @@ private theorem exists_qw_eq_mul_pos_real_of_five_le_dist {S : Type} (q : ℂ �
           exact_mod_cast (show (t : ℝ) - y - 1 ≠ 0 by intro h1; apply this; linarith)
         have hz' : (t : ℂ) - 1 - y ≠ 0 := by
           intro h1; apply hz; linear_combination h1
-        simp only [_root_.Formalism.FourierDecayAlt.Wd.qw, hl, Bool.false_eq_true, if_false, hρeq, ht]
+        simp only [_root_.Formalism.FourierDecayAlt.Wd.qw, hl, Bool.false_eq_true, ite_false, hρeq, ht]
         push_cast
         rw [show (t : ℂ) - 1 - y = (t : ℂ) - y - 1 by ring]
         field_simp
@@ -630,7 +628,7 @@ private theorem exists_qw_eq_mul_pos_real_of_five_le_dist {S : Type} (q : ℂ �
       · have hz : (y : ℂ) - t ≠ 0 := by
           have : y - t ≠ 0 := by intro h0; have := hplus hl; rw [h0, abs_zero] at this; norm_num at this
           exact_mod_cast this
-        simp only [_root_.Formalism.FourierDecayAlt.Wd.qw, hl, if_true, hρeq, ht]
+        simp only [_root_.Formalism.FourierDecayAlt.Wd.qw, hl, ite_true, hρeq, ht]
         push_cast
         field_simp
 
@@ -781,13 +779,11 @@ private theorem exists_grid_of_layout_lemma {P : _root_.Formalism.FourierDecayAl
           exact List.mem_map_of_mem hla
         refine ⟨(w.get a).2, rfl, fun hp => ?_, fun hm => ?_⟩
         · have hp' : (w.get a).1 = true := hp
-          have : base (w.get a) = (w.get a).2 := if_pos hp'
-          rw [this] at hfar'
-          exact hfar'
+          have : base (w.get a) = (w.get a).2 := ite_eq_left hp'
+          rwa [this] at hfar'
         · have hm' : (w.get a).1 = false := hm
-          have : base (w.get a) = (w.get a).2 - 1 := if_neg (by rw [hm']; decide)
-          rw [this, abs_sub_comm] at hfar'
-          exact hfar'
+          have : base (w.get a) = (w.get a).2 - 1 := ite_eq_right (by rw [hm']; decide)
+          rwa [this, abs_sub_comm] at hfar'
       obtain ⟨ρ, hρ, hρ1, hρeq⟩ := exists_qw_eq_mul_pos_real_of_five_le_dist (_root_.Formalism.FourierDecayAlt.M.qC P) y (_root_.Formalism.FourierDecayAlt.D.positionted w) hcond
       rw [hposition_len] at hρ1
       have hre : (_root_.Formalism.FourierDecayAlt.Wd.qw (_root_.Formalism.FourierDecayAlt.M.qC P) (_root_.Formalism.FourierDecayAlt.D.positionted w) (y : ℂ)).re = (_root_.Formalism.FourierDecayAlt.M.qC P (y : ℂ)).re * ρ := by
@@ -795,8 +791,7 @@ private theorem exists_grid_of_layout_lemma {P : _root_.Formalism.FourierDecayAl
       have hnum : 0 < nn y * nn (y + 1) := mul_pos (hnn _) (hnn _)
       have hqy := hq y hy
       have hqpos : 0 < (_root_.Formalism.FourierDecayAlt.M.qC P (y : ℂ)).re := by
-        by_contra hle
-        push_neg at hle
+        by_contra! hle
         nlinarith [sq_nonneg Λ₀]
       rw [hre]
       have hden : 0 < (_root_.Formalism.FourierDecayAlt.M.qC P (y : ℂ)).re * ρ := mul_pos hqpos hρ

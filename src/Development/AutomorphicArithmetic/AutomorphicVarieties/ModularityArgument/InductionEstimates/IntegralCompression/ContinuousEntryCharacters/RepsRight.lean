@@ -60,15 +60,12 @@ private theorem simp_int {X E : Type} [MeasurableSpace X] [NormedAddCommGroup E]
     funext k
     rw [Finset.sum_eq_single (s k)]
     · simp
-    · intro b _ hb
-      exact Set.indicator_of_notMem (by simpa using fun h => hb h.symm) _
-    · intro h
-      exact absurd (s.mem_range_self k) h
+    · exact fun b _ hb => Set.indicator_of_notMem (by simpa using fun h => hb h.symm) _
+    · exact fun h => absurd (s.mem_range_self k) h
   rw [h, integral_finsetSum]
   · refine Finset.sum_congr rfl fun x _ => ?_
     rw [integral_indicator_const _ (s.measurableSet_preimage _)]
-  · intro x _
-    exact (integrable_const (F x)).indicator (s.measurableSet_preimage _)
+  · exact fun x _ => (integrable_const (F x)).indicator (s.measurableSet_preimage _)
 
 private theorem simp_lim {X E : Type} [TopologicalSpace X] [CompactSpace X] [MeasurableSpace X] [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     (ν : Measure X) [IsFiniteMeasure ν] (s : ℕ → SimpleFunc X X) (hs : ∀ k, Tendsto (fun i => s i k) atTop (𝓝 k)) (G : X → E) (hG : Continuous G) :

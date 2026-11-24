@@ -93,9 +93,9 @@ theorem mp_hc (A : Module.End ℂ (MvPolynomial σ ℂ)) (P : MvPolynomial σ �
     simp
   unfold minusPart
   rw [map_finsum _ hfin, finsum_eq_single _ d]
-  · rw [hc_hc, if_pos rfl]
+  · rw [hc_hc, ite_eq_left rfl]
   · intro e he
-    rw [hc_hc, if_neg (Ne.symm he)]
+    rw [hc_hc, ite_eq_right (Ne.symm he)]
 
 theorem mp_comm (T A B : Module.End ℂ (MvPolynomial σ ℂ))
     (hT : ∀ e P, homogeneousComponent e (T P) = T (homogeneousComponent e P))
@@ -260,8 +260,7 @@ theorem mem_harm1_iff (g : Pol p q r s) : g ∈ harm1 p q r s ↔
     | zero => exact minusPart_zero _
     | add x y _ _ hx hy => rw [mp_add_right, hx, hy, add_zero]
     | smul c x _ hx => rw [mp_smul_right, hx, smul_zero]
-  · intro h
-    exact Submodule.subset_span ⟨fun _ => h, fun h' => absurd h' Bool.false_ne_true⟩
+  · exact fun h => Submodule.subset_span ⟨fun _ => h, fun h' => absurd h' Bool.false_ne_true⟩
 
 private theorem minusPart_fockAct2_eq_zero_iff_lowOp (g : Pol p q r s) :
     (∀ Y : Mat r s, IsPC Y → minusPart (fockAct2 p q r s Y) g = 0) ↔
@@ -269,8 +268,7 @@ private theorem minusPart_fockAct2_eq_zero_iff_lowOp (g : Pol p q r s) :
   constructor
   · intro h c d hcd
     have h1 := h (Eab c d) (isPC_Eab hcd)
-    rw [minusPart_second_action_Eab hcd, neg_eq_zero] at h1
-    exact h1
+    rwa [minusPart_second_action_Eab hcd, neg_eq_zero] at h1
   · intro h Y hY
     rw [PI.FockOneDegW.minus2_eq Y hY, neg_eq_zero]
     refine Finset.sum_eq_zero (fun c _ => Finset.sum_eq_zero (fun d _ => ?_))
@@ -293,8 +291,7 @@ private theorem mem_jHarm_iff' (g : Pol p q r s) : g ∈ jHarm p q r s ↔
     | smul c x _ hx =>
       exact ⟨fun Z hZ => by rw [mp_smul_right, hx.1 Z hZ, smul_zero],
         fun Y hY => by rw [mp_smul_right, hx.2 Y hY, smul_zero]⟩
-  · intro h
-    exact Submodule.subset_span ⟨h.1, h.2⟩
+  · exact fun h => Submodule.subset_span ⟨h.1, h.2⟩
 
 theorem mem_jHarm_iff (g : Pol p q r s) : g ∈ jHarm p q r s ↔ g ∈ harm1 p q r s ∧
     ∀ c d : Ix r s, ¬ sameBlock c d → PI.FockOneDegW.lowOp (p := p) (q := q) c d g = 0 := by
@@ -305,8 +302,7 @@ private theorem minusPart_apply_eq_zero_of_commutator {σ : Type} (T A B : Modul
     (h : T * A - A * T = B) {x : MvPolynomial σ ℂ} (hA : minusPart A x = 0) (hB : minusPart B x = 0) :
     minusPart A (T x) = 0 := by
   have h1 := mp_comm T A B hT h x
-  rw [hA, hB, map_zero, zero_sub, neg_eq_zero] at h1
-  exact h1
+  rwa [hA, hB, map_zero, zero_sub, neg_eq_zero] at h1
 
 theorem harmonic_stable_first_action : KSt (units (fockAct1 p q r s)) (harm1 p q r s) := by
   unfold KSt units
@@ -339,14 +335,14 @@ theorem jHarmonic_stable_second_action : KSt (units (fockAct2 p q r s)) (jHarm p
 theorem homogeneous_stable_first_action (d : ℕ) : KSt (units (fockAct1 p q r s)) (homog (Ix p q × Ix r s) d) := by
   unfold KSt units
   intro a b hab P hP
-  have hP' : P = homogeneousComponent d P := by rw [homogeneousComponent_of_mem hP, if_pos rfl]
+  have hP' : P = homogeneousComponent d P := by rw [homogeneousComponent_of_mem hP, ite_eq_left rfl]
   rw [hP', ← homogComponent_comm_first_action hab]
   exact homogeneousComponent_mem _ _
 
 theorem homogeneous_stable_second_action (d : ℕ) : KSt (units (fockAct2 p q r s)) (homog (Ix p q × Ix r s) d) := by
   unfold KSt units
   intro a b hab P hP
-  have hP' : P = homogeneousComponent d P := by rw [homogeneousComponent_of_mem hP, if_pos rfl]
+  have hP' : P = homogeneousComponent d P := by rw [homogeneousComponent_of_mem hP, ite_eq_left rfl]
   rw [hP', ← homogComponent_comm_second_action hab]
   exact homogeneousComponent_mem _ _
 
@@ -407,14 +403,14 @@ theorem low_homog (c d : Ix r s) {e : ℕ} {g : Pol p q r s} (hg : g ∈ homog (
     PI.FockOneDegW.lowOp (p := p) (q := q) c d g ∈ homog (Ix p q × Ix r s) e := by
   have h1 : PI.FockOneDegW.lowOp (p := p) (q := q) c d g =
       homogeneousComponent e (PI.FockOneDegW.lowOp (p := p) (q := q) c d g) := by
-    rw [PI.FockOneDegW.RedOps.hc_lowOp, homogeneousComponent_of_mem hg, if_pos rfl]
+    rw [PI.FockOneDegW.RedOps.hc_lowOp, homogeneousComponent_of_mem hg, ite_eq_left rfl]
   rw [h1]
   exact homogeneousComponent_mem _ _
 
 theorem low_homog_small (c d : Ix r s) {e : ℕ} (he : e < 2) {g : Pol p q r s}
     (hg : g ∈ homog (Ix p q × Ix r s) e) : PI.FockOneDegW.lowOp (p := p) (q := q) c d g = 0 := by
   refine hc_ext fun n => ?_
-  rw [PI.FockOneDegW.RedOps.hc_lowOp, homogeneousComponent_of_mem hg, if_neg (by omega), map_zero, map_zero]
+  rw [PI.FockOneDegW.RedOps.hc_lowOp, homogeneousComponent_of_mem hg, ite_eq_right (by omega), map_zero, map_zero]
 
 private theorem omE_add_pderiv_pderiv_eq_X_mul_X_of_not_sameBlock {c d : Ix r s} (hcd : ¬ sameBlock c d) (a : Ix p q) (P : Pol p q r s) :
     omE (a, c) (a, d) P +
@@ -445,14 +441,12 @@ private theorem Eab_commutator (a b c d : Ix r s) :
     split_ifs with h
     · subst h
       simp only [Eab, Matrix.single_mul_single_same, mul_one]
-    · simp only [Eab]
-      exact Matrix.single_mul_single_of_ne _ _ _ _ h _
+    · simpa only [Eab] using Matrix.single_mul_single_of_ne _ _ _ _ h _
   have e2 : Eab c d * Eab a b = if d = a then Eab c b else 0 := by
     split_ifs with h
     · subst h
       simp only [Eab, Matrix.single_mul_single_same, mul_one]
-    · simp only [Eab]
-      exact Matrix.single_mul_single_of_ne _ _ _ _ h _
+    · simpa only [Eab] using Matrix.single_mul_single_of_ne _ _ _ _ h _
   rw [e1, e2]
 
 theorem low_comm {a b c d : Ix r s} (hab : sameBlock a b) (hcd : ¬ sameBlock c d) (g : Pol p q r s) :

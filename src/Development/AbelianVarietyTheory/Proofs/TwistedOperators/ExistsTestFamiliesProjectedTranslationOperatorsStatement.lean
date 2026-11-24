@@ -144,13 +144,11 @@ theorem fixed_of_forall_finLoc_mem : ∀ (D : D7) (V : HSp D) (W : Type) [AddCom
         · by_cases h : v = a
           · subst h
             simp [k', map_mul, fl_self]
-          · simp only [k', map_mul, fl_ne v a h, one_mul]
-            exact hk v
+          · simpa only [k', map_mul, fl_ne v a h, one_mul] using hk v
         · by_cases h : v = a
           · subst h
             simp [k', map_mul, fl_self]
-          · simp only [k', map_mul, fl_ne v a h, one_mul]
-            exact h1 v hv (by simp [h, hvT])
+          · simpa only [k', map_mul, fl_ne v a h, one_mul] using h1 v hv (by simp [h, hvT])
       have hkk : k = locFin V a (finLoc V a k) * k' := by
         simp [k', ← mul_assoc, ← map_mul]
       rw [hkk, map_mul, Module.End.mul_apply, hfix]
@@ -791,8 +789,7 @@ theorem exists_idemFam : ∀ (D : D7) (V : HSp D) (T : TypeDataG V) (U : Auxilia
           exact GlobalTheory.T.smoothRepIntegratedOperator_normalizedIndicator_fixed _ (μf a) _ ho ((isCompact_stabLoc _ _ _ a).of_isClosed_subset
             (Subgroup.isClosed_of_isOpen _ ho) hle) W _ hloc x (hxlev a)
         rw [hPB, LinearMap.comp_apply, hBx]
-        rw [LinearMap.comp_apply, hB'x] at hB'
-        exact hB'
+        rwa [LinearMap.comp_apply, hB'x] at hB'
     intro h0
     have hx := key T.S (Finset.Subset.refl _) P hP
     subst h0
@@ -940,8 +937,7 @@ theorem test_families : ∀ (D : D7) (V : HSp D) (T : TypeDataG V) (U : Auxiliar
       · rw [Function.update_of_ne hv']
         exact hffF.1 v
       · filter_upwards [hffF.2, eventually_cofinite_ne U.u] with v hv hv'
-        rw [Function.update_of_ne hv']
-        exact hv
+        rwa [Function.update_of_ne hv']
       · intro v hv hvu k hk k' hk' x
         haveI := hμf v
         simp only [Function.update_of_ne hvu]

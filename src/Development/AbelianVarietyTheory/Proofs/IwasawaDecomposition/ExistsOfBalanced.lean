@@ -96,14 +96,13 @@ theorem exists_of_balanced
     rw [dite_eq_left hex, ha w hex.choose hex.choose_spec]
   have hval : ∀ w, valAt w b = valAt w a := fun w => by
     have h1 : ∀ v, v ≠ w.under (𝓞 F) → valAt w (locF (L := L) F v (unif v) ^ m v) = 1 := fun v hv => by
-      rw [map_zpow, valAt_locF, if_neg hv.symm, one_zpow]
+      rw [map_zpow, valAt_locF, ite_eq_right hv.symm, one_zpow]
     simp only [b]
     rw [map_prod]
     by_cases hw : w.under (𝓞 F) ∈ T
-    · rw [Finset.prod_eq_single_of_mem _ hw (fun v _ hv => h1 v hv), map_zpow, valAt_locF, if_pos rfl, hu,
+    · rw [Finset.prod_eq_single_of_mem _ hw (fun v _ hv => h1 v hv), map_zpow, valAt_locF, ite_eq_left rfl, hu,
         ordF_unif_self, ← WithZero.exp_zsmul, hm]
-      simp only [smul_eq_mul, mul_neg, neg_neg, mul_one]
-      exact WithZero.exp_log (valAt_ne_zero w a)
+      simpa only [smul_eq_mul, mul_neg, neg_neg, mul_one] using WithZero.exp_log (valAt_ne_zero w a)
     · rw [Finset.prod_eq_one (fun v hv => h1 v (fun e => hw (e ▸ hv)))]
       by_contra hne
       exact hw (Finset.mem_image_of_mem _ (by simpa using fun e => hne e.symm))
@@ -121,14 +120,12 @@ theorem exists_nat_val_lt (w : HeightOneSpectrum (𝓞 L)) {γ : WithZero (Multi
     ∃ n : ℕ, 0 < n ∧ w.valuation L (n : L) < γ := by
   have h1 : w.valuation L ((Ideal.absNorm w.asIdeal : ℕ) : L) < 1 := by
     have := (w.valuation_lt_one_iff_mem (K := L) ((Ideal.absNorm w.asIdeal : ℕ) : 𝓞 L)).2 (Ideal.absNorm_mem _)
-    rw [← map_natCast (algebraMap (𝓞 L) L)]
-    exact this
+    rwa [← map_natCast (algebraMap (𝓞 L) L)]
   obtain ⟨k, hk⟩ := exists_pow_lt₀ h1 (Units.mk0 γ h)
   refine ⟨Ideal.absNorm w.asIdeal ^ k, pow_pos (Nat.pos_of_ne_zero ?_) k, ?_⟩
   · rw [Ne, Ideal.absNorm_eq_zero_iff]
     exact w.ne_bot
-  · rw [Nat.cast_pow, map_pow]
-    exact hk
+  · rwa [Nat.cast_pow, map_pow]
 
 end General
 

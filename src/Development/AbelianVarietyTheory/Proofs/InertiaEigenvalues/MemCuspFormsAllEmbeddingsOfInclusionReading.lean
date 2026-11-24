@@ -347,9 +347,8 @@ theorem exists_sec_ne_zero (Xo : Moduli Dw l) (c : Coeff l) : ∃ m : ℕ, ∀ (
   have hv := (GlobalTheory.EtaForm.etaValAt_evR_of_fromTest E H Dw l Xo c 3 hR _ _ _ _ f hrule (CAt σ) (U.un k ⟨x₀, hx₀⟩)
     (hT _ _)).1
   have h0 := hne 0 _ hv
-  have e1 : rdU U f k x₀ = toC (evR Xo c f (U.un k ⟨x₀, hx₀⟩)) := dif_pos hx₀
-  rw [e1]
-  exact h0
+  have e1 : rdU U f k x₀ = toC (evR Xo c f (U.un k ⟨x₀, hx₀⟩)) := dite_eq_left hx₀
+  rwa [e1]
 
 theorem rd_pow {σ : c.F →+* ℂ} (U : Unf Xo c σ r) (f : Rul Xo c) (n : ℕ) : rdU U (f ^ (n + 1)) = rdU U f ^ (n + 1) := by
   induction n with
@@ -404,7 +403,7 @@ theorem la_shift {σ : c.F →+* ℂ} {U : Unf Xo c σ r} (hσ : GoodEmb c σ) (
     have := (hp _).2 h
     rw [Function.invFun_eq (hb.2 _), ← (hU.2.1 j).2] at this
     exact ((U.X j).cmType τ.1).1 τ.2 this
-  simp only [laU, shift, Pi.add_apply, h1, h2, if_pos p1, if_neg p2]
+  simp only [laU, shift, Pi.add_apply, h1, h2, ite_eq_left p1, ite_eq_right p2]
   split_ifs with h
   · have := ha _ p1 (i - (U.X j).p0) (by have := hU.1; have := (hU.2.1 j).1; have := i.2; omega)
     push_cast [this]
@@ -466,18 +465,18 @@ theorem mem_cusp_of_span (hf : 1 < Module.finrank ℚ E / 2) (U : ∀ σ : c.F �
   have eW : Even nW := eA.add ((even_two_mul _).mul_left _)
   have e2 : ∀ {n'}, Even n' → Even (n' + 2 * k) := fun h => h.add (even_two_mul _)
   have hAge : ∀ τ, InPsi H τ → ∀ i < Dw.p, 2 * k + 1 ≤ A (τ, i) := fun τ hτ i hi => by
-    have hmu : Dw.mult τ = Dw.p := if_pos hτ
+    have hmu : Dw.mult τ = Dw.p := ite_eq_left hτ
     have h1 := hl τ hτ (by omega)
     have h2 : a (τ, Dw.mult τ - 1) ≤ a (τ, i) := hd.1 τ (by omega : i ≤ Dw.mult τ - 1)
     exact Nat.le_mul_of_pos_right _ (by omega)
   have lA : LastPos Dw A := fun τ hτ h => by
-    have hmu : Dw.mult τ = Dw.p := if_pos hτ
+    have hmu : Dw.mult τ = Dw.p := ite_eq_left hτ
     have := hAge τ hτ (Dw.mult τ - 1) (by omega)
     omega
   have lS : LastPos Dw (shift H k A) := fun τ hτ h => by
-    have hmu : Dw.mult τ = Dw.p := if_pos hτ
+    have hmu : Dw.mult τ = Dw.p := ite_eq_left hτ
     have := hAge τ hτ (Dw.mult τ - 1) (by omega)
-    simp only [shift, if_pos hτ]
+    simp only [shift, ite_eq_left hτ]
     omega
   have dS : ∀ n', Even n' → Dom (shift H k A) (n' + 2 * k) := fun n' h => dom_shift (dA _ h) (e2 h) k
   have hdet : ∀ (r : ℕ) (X : Data E r), ∀ γ ∈ X.Γ, (γ : Matrix (Fin r) (Fin r) E).det ^ (k : ℤ) = 1 :=
@@ -507,8 +506,7 @@ theorem mem_cusp_of_span (hf : 1 < Module.finrank ℚ E / 2) (U : ∀ σ : c.F �
     have h2 := ss_mul _ hf h1 (isSec_pow _ h1.1.1 (2 * k - 1))
     rw [la_smul _ _ hd.2, rd_pow]
     have e : 2 * k - 1 + 1 = 2 * k := by omega
-    rw [e, ← pow_succ', ← succ_nsmul'] at h2
-    exact h2
+    rwa [e, ← pow_succ', ← succ_nsmul'] at h2
   choose D hD using fun i => ss σ₀ g₀ _ (down σ₀ g₀ _ eW _ (rdm (hb i) σ₀ g₀))
   choose D' hD' using fun j => sb σ₀ g₀ _ (up σ₀ g₀ _ eW _ (rdm (hs j) σ₀ g₀))
   choose B hB using fun j => sb σ hσ _ (up σ hσ _ eW _ (rdm (hs j) σ hσ))
@@ -558,8 +556,7 @@ theorem mem_cusp_of_span (hf : 1 < Module.finrank ℚ E / 2) (U : ∀ σ : c.F �
     have := ss_mul _ hf ((mem_holSub _ _ _).1 hF0.1 j)
       ((hU σ₀ g₀).2.2.2.2.1 0 _ ⟨fun _ _ _ _ => le_rfl, ev⟩ _ hηL j)
     rw [← la_add _ _ _ eA ev, add_zero] at this
-    rw [_root_.GlobalTheory.AllWt.rdU_mul]
-    exact this
+    rwa [_root_.GlobalTheory.AllWt.rdU_mul]
   obtain ⟨et, het⟩ := sb σ₀ g₀ _ ht0
   have R4 : ∑ _u : Unit, α 1 • rdU (U σ) (F * η ^ (L + 1)) = ∑ i, α (et i) • rdU (U σ) (b i) :=
     tr _ _ (dA _ eW) (fun _ : Unit => F * η ^ (L + 1)) b (fun _ => hts) (fun i => cs (hb i)) (fun _ => 1) et

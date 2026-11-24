@@ -411,7 +411,7 @@ theorem ioHarm_holds (D : D7) : IoHarm D := by
         simp at a
         linarith
     unfold parAt kapAt
-    rw [hlab, if_pos (hlabE ρ)]
+    rw [hlab, ite_eq_left (hlabE ρ)]
     rfl
   obtain ⟨x₁, x₂, x₃, hx⟩ := wts i (funext fun τ => (hpar τ).symm) M' hord
   have hact := GlobalTheory.T.weil_maximalCompact_fock_substitution_character D ψ θ (Vc D i) (Wc D i) _ _ ω _ M' BV hω hθ
@@ -450,8 +450,7 @@ theorem ioHarm_holds (D : D7) : IoHarm D := by
     refine ⟨GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.fockT τ (A.ε τ) (B.ε τ) (B.fr τ * X * (B.fr τ)⁻¹) (RealDat.Delta (D := D) i) +
       (((-(D.hc τ).e i : ℚ) : ℂ) * X.trace) • RealDat.Delta (D := D) i, fun z => ?_, ?_⟩
     · have := hLF.2 X hX (RealDat.Delta (D := D) i) z
-      rw [hptF] at this
-      exact this
+      rwa [hptF] at this
     · rw [htr, mul_zero, zero_smul, add_zero]
       refine fockT_hom τ _ (fun _ => rfl) _ _ (fun a b hab => offdiag (M'.fr_unit τ) hcX a b hab) _ d hd ?_
       intro a b ha hb
@@ -488,8 +487,7 @@ theorem ioHarm_holds (D : D7) : IoHarm D := by
       w ∈ N.comap (io (PiTensorProduct.tprod ℂ v₀)))
     have hm : w₀ ∈ N.comap (io (PiTensorProduct.tprod ℂ v₀)) := by
       show io (PiTensorProduct.tprod ℂ v₀) w₀ ∈ N
-      rw [e₀]
-      exact hbase
+      rwa [e₀]
     rw [h0, Submodule.mem_bot] at hm
     rw [hm, norm_zero] at hw₀
     exact zero_ne_one hw₀
@@ -515,8 +513,7 @@ theorem ioHarm_holds (D : D7) : IoHarm D := by
           have : M'.fr ρ * ((M'.fr ρ)⁻¹ * k * M'.fr ρ) * (M'.fr ρ)⁻¹ = k := by
             calc _ = (M'.fr ρ * (M'.fr ρ)⁻¹) * k * (M'.fr ρ * (M'.fr ρ)⁻¹) := by simp only [Matrix.mul_assoc]
               _ = k := by rw [hfr, Matrix.one_mul, Matrix.mul_one]
-          rw [this]
-          exact hk
+          rwa [this]
         · rw [hs.2.2 ρ hρ, Matrix.mul_one, hfr]
           exact _root_.GlobalTheory.Dec.FormF.one_K _
       obtain ⟨-, b⟩ := hact 1 (one_mem _) h hs.1 hcomp

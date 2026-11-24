@@ -131,8 +131,7 @@ theorem rel_of_mkC_eq (θ : G →* G) {x y : G} (h : mkC θ x = mkC θ y) : ∃ 
 theorem mkC_eq (θ : G →* G) {x y : G} (g : G) (h : y = g⁻¹ * x * θ g) : mkC θ x = mkC θ y :=
   Quot.sound (r := fun a b : G => ∃ g, b = g⁻¹ * a * θ g) ⟨g, h⟩
 
-theorem mkC_rep (θ : G →* G) (c : TwCl θ) : mkC θ c.rep = c := by
-  exact Quot.out_eq c
+theorem mkC_rep (θ : G →* G) (c : TwCl θ) : mkC θ c.rep = c := Quot.out_eq c
 
 def clPair (θ : G →* G) (θ' : G' →* G') (c : TwCl (θ.prodMap θ')) : TwCl θ × TwCl θ' :=
   (mkC θ c.rep.1, mkC θ' c.rep.2)
@@ -207,8 +206,7 @@ theorem nrmL_charpoly_twConj (n : ℕ) (w : Pl E) (g y : GLw n w) :
   unfold nrmL
   unfold thL at hinv ⊢
   split_ifs at hinv ⊢ with hs
-  · simp only [MonoidHom.id_apply]
-    exact charpoly_conj g y
+  · simpa only [MonoidHom.id_apply] using charpoly_conj g y
   · have key : g⁻¹ * y * thetaGL n (cj w) g * thetaGL n (cj w) (g⁻¹ * y * thetaGL n (cj w) g) =
         g⁻¹ * (y * thetaGL n (cj w) y) * g := by
       simp only [map_mul, map_inv, hinv]

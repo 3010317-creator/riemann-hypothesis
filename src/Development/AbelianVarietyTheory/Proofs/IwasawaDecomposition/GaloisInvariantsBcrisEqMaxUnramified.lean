@@ -168,8 +168,7 @@ theorem mem_range (hu : ∀ c : U, ι (u c) = O c) (hφ : ∀ c : U, φ (u c) = 
     rfl
   · intro i hi hi0
     rw [eval_prod, Finset.prod_eq_zero (Finset.mem_erase.2 ⟨hi0, hi⟩) (by simp), map_zero, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_range.2 hN) h
+  · exact fun h => absurd (Finset.mem_range.2 hN) h
 
 end Abstract
 

@@ -257,8 +257,7 @@ theorem bddSec_pow_succ_and_constTerm_pow_succ
       X.fj ((m + 1) • la) ξ 0 (P ^ (m + 1)) x = X.fj la ξ 0 P x ^ (m + 1) := by
   induction m with
   | zero =>
-    simp only [zero_add, one_smul, pow_one]
-    exact ⟨hP, fun _ _ _ _ => trivial⟩
+    simpa only [zero_add, one_smul, pow_one] using ⟨hP, fun _ _ _ _ => trivial⟩
   | succ m ih =>
     have h := bddSec_mul_and_constTerm_mul E r X ((m + 1) • la) la (P ^ (m + 1)) P ih.1 hP
     rw [succ_nsmul la (m + 1), pow_succ P (m + 1)]
@@ -300,8 +299,7 @@ theorem multiset_prod_mem_cuspForms {E : Type} [Field E] [NumberField E] [IsCMFi
     · subst h0
       simpa using hw a
     · have h := (siegelSpaceAlgebra_holds (E := E) r X (s.card • la) la 0).2.1 _ (ih h0) _ (hw a).1
-      rw [Multiset.map_cons, Multiset.prod_cons, Multiset.card_cons, succ_nsmul, mul_comm]
-      exact h
+      rwa [Multiset.map_cons, Multiset.prod_cons, Multiset.card_cons, succ_nsmul, mul_comm]
 
 theorem eval_isHomogeneous_mem_cuspForms :
     ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r),
@@ -470,7 +468,7 @@ theorem cusp_of_integral_of_dom : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   have key : ∀ f, Formalism.L2.PjFree.rdU (U σ) f j x = evHom ((U σ).un j ⟨x, hx⟩) hy f := by
     intro f
     unfold Formalism.L2.PjFree.rdU
-    simp only [LinearMap.coe_mk, AddHom.coe_mk, dif_pos hx]
+    simp only [LinearMap.coe_mk, AddHom.coe_mk, dite_eq_left hx]
     rfl
   simp only [key]
   have h3 := congrArg (evHom ((U σ).un j ⟨x, hx⟩) hy) heq

@@ -165,10 +165,7 @@ theorem idem_factor [IsLocalRing O] {ι : Type} [Fintype ι] [DecidableEq ι] (P
   haveI : Module.Projective O (LinearMap.range (Matrix.mulVecLin P)) := by
     refine Module.Projective.of_split (LinearMap.range (Matrix.mulVecLin P)).subtype
       (Matrix.mulVecLin P).rangeRestrict ?_
-    apply LinearMap.ext
-    intro x
-    apply Subtype.ext
-    exact hfix _ x.2
+    exact LinearMap.ext (fun x => Subtype.ext (hfix _ x.2))
   haveI : Module.Free O (LinearMap.range (Matrix.mulVecLin P)) := Module.free_of_flat_of_isLocalRing
   set b := Module.finBasis O (LinearMap.range (Matrix.mulVecLin P)) with hb
   have hmul : ∀ c : Fin _ → O, (Matrix.of fun x i => (b i : ι → O) x) *ᵥ c =

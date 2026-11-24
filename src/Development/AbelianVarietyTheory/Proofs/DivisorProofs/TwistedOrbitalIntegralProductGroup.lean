@@ -178,8 +178,7 @@ theorem map_conj_self {G : Type} [Group G] (H : Subgroup G) {h : G} (hh : h ∈ 
   constructor
   · rintro ⟨a, ha, rfl⟩
     exact H.mul_mem (H.mul_mem hh ha) (H.inv_mem hh)
-  · intro hy
-    exact ⟨h⁻¹ * y * h, H.mul_mem (H.mul_mem (H.inv_mem hh) hy) hh, by group⟩
+  · exact fun hy => ⟨h⁻¹ * y * h, H.mul_mem (H.mul_mem (H.inv_mem hh) hy) hh, by group⟩
 
 section Top
 
@@ -213,10 +212,8 @@ theorem cptPart_prod (T : Subgroup G) (T' : Subgroup G') :
     rw [Subgroup.mem_prod] at ht
     rw [SetLike.mem_coe, Subgroup.mem_prod]
     refine ⟨Subgroup.subset_closure ⟨ht.1, ?_⟩, Subgroup.subset_closure ⟨ht.2, ?_⟩⟩
-    · have h := cpt_map (MonoidHom.fst G G') continuous_fst hc
-      simpa only [MonoidHom.coe_fst] using h
-    · have h := cpt_map (MonoidHom.snd G G') continuous_snd hc
-      simpa only [MonoidHom.coe_snd] using h
+    · simpa only [MonoidHom.coe_fst] using cpt_map (MonoidHom.fst G G') continuous_fst hc
+    · simpa only [MonoidHom.coe_snd] using cpt_map (MonoidHom.snd G G') continuous_snd hc
   · have h1 : (cptPart T).map (MonoidHom.inl G G') ≤ cptPart (T.prod T') := by
       rw [cptPart, MonoidHom.map_closure, cptPart, Subgroup.closure_le]
       rintro _ ⟨t, ⟨ht, hc⟩, rfl⟩

@@ -103,8 +103,7 @@ theorem exists_pow_mul (v : HeightOneSpectrum (𝓞 F)) {D : Ideal (𝓞 F)} (hD
     ∃ (m : ℕ) (B : Ideal (𝓞 F)), D = v.asIdeal ^ m * B ∧ ¬ B ≤ v.asIdeal := by
   have hv : v.asIdeal ≠ ⊤ := v.isPrime.ne_top
   have hex : ∃ m : ℕ, ¬ D ≤ v.asIdeal ^ (m + 1) := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hD
     have h' : D ≤ ⨅ i : ℕ, v.asIdeal ^ i := by
       refine le_iInf fun i => ?_
@@ -118,7 +117,7 @@ theorem exists_pow_mul (v : HeightOneSpectrum (𝓞 F)) {D : Ideal (𝓞 F)} (hD
     rcases Nat.eq_zero_or_pos (Nat.find hex) with h0 | hpos
     · simp [h0]
     · have h1 := Nat.find_min hex (Nat.sub_lt hpos Nat.one_pos)
-      push_neg at h1
+      push Not at h1
       have e : Nat.find hex - 1 + 1 = Nat.find hex := by omega
       rwa [e] at h1
   obtain ⟨B, hB⟩ := Ideal.dvd_iff_le.mpr hle
@@ -128,8 +127,7 @@ theorem exists_pow_mul (v : HeightOneSpectrum (𝓞 F)) {D : Ideal (𝓞 F)} (hD
 
 theorem exists_mem_pow_not_mem {v w : HeightOneSpectrum (𝓞 F)} (hw : w ≠ v) (k : ℕ) :
     ∃ e ∈ v.asIdeal ^ k, e ∉ w.asIdeal := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   have hle : v.asIdeal ^ k ≤ w.asIdeal := fun e he => h e he
   have hvw : v.asIdeal ≤ w.asIdeal := w.isPrime.le_of_pow_le hle
   exact hw (HeightOneSpectrum.ext (v.isMaximal.eq_of_le w.isPrime.ne_top hvw).symm)
@@ -210,8 +208,7 @@ theorem locMem_v_iff {I : Ideal (𝓞 F)} {v : HeightOneSpectrum (𝓞 F)} (hI :
     have h3 : v.valuation F (algebraMap (𝓞 F) F s * t) = v.valuation F (algebraMap (𝓞 F) F y) := by
       exact congrArg (v.valuation F) h
     rw [map_mul, h2, one_mul] at h3
-    rw [h3]
-    exact h1
+    rwa [h3]
   · intro ht
     obtain ⟨s0, hs0I, hs0v⟩ := SetLike.not_le_iff_exists.mp hI
     obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := 𝓞 F) t
@@ -248,8 +245,7 @@ theorem locMem_v_iff {I : Ideal (𝓞 F)} {v : HeightOneSpectrum (𝓞 F)} (hI :
       field_simp
       linear_combination -this
     have hvr : v.valuation F (algebraMap (𝓞 F) F r) ≤ WithZero.exp (-(k : ℤ)) := by
-      rw [← hrF, map_mul, val_eq_one_of_not_mem v hcv, one_mul]
-      exact ht
+      rwa [← hrF, map_mul, val_eq_one_of_not_mem v hcv, one_mul]
     have hrk : r ∈ v.asIdeal ^ k := mem_pow_of_val_le v hvr
     refine ⟨s0 * c, fun hm => (v.isPrime.mem_or_mem hm).elim hs0v hcv, s0 * r,
       Ideal.mul_mem_mul hs0I hrk, ?_⟩
@@ -458,10 +454,8 @@ theorem cosetOff_empty_eq_latCoset (F : Type) [Field F] [NumberField F] (ι : Ty
   ext x
   simp only [GlobalTheory.CompanionTheory.Equi.cosetOff, GlobalTheory.CompanionTheory.Equi.latCoset, Set.mem_setOf_eq]
   constructor
-  · intro h i
-    exact (forall_locMem_iff_exists_mem_ideal I (x i - x0 i)).mp fun v => h v (by simp) i
-  · intro h v _ i
-    exact (forall_locMem_iff_exists_mem_ideal I (x i - x0 i)).mpr (h i) v
+  · exact fun h i => (forall_locMem_iff_exists_mem_ideal I (x i - x0 i)).mp fun v => h v (by simp) i
+  · exact fun h v _ i => (forall_locMem_iff_exists_mem_ideal I (x i - x0 i)).mpr (h i) v
 
 end GlobalTheory.CompanionTheory.Equi
 end -- clump:auto
@@ -494,8 +488,7 @@ theorem locMem_top_iff (v : HeightOneSpectrum (𝓞 F)) (z : F) :
   constructor
   · rintro ⟨s, hs, y, -, h⟩
     have h1 : v.valuation F (s : F) = 1 := by
-      rw [HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_eq_one_iff]
-      exact hs
+      rwa [HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_eq_one_iff]
     have h2 : v.valuation F (s : F) * v.valuation F z = v.valuation F (y : F) := by
       rw [← map_mul, h]
     rw [h1, one_mul] at h2
@@ -503,8 +496,7 @@ theorem locMem_top_iff (v : HeightOneSpectrum (𝓞 F)) (z : F) :
     exact HeightOneSpectrum.valuation_le_one v y
   · intro hz
     have hmem : z ∈ HeightOneSpectrum.valuationSubringAtPrime F v := by
-      rw [HeightOneSpectrum.valuationSubringAtPrime_eq_valuationSubring]
-      exact hz
+      rwa [HeightOneSpectrum.valuationSubringAtPrime_eq_valuationSubring]
     obtain ⟨a, s, hs, h⟩ := hmem
     refine ⟨s, hs, a, Submodule.mem_top, ?_⟩
     have hs0 : (s : F) ≠ 0 := by
@@ -586,8 +578,7 @@ theorem existsUnique_sub_mem_infDomain (y : Ainf F) :
     abel
   refine ⟨a, ?_, fun b hb => ?_⟩
   · show infToMixed F (y - algebraMap F (Ainf F) (a : F)) ∈ ZSpan.fundamentalDomain (mixedEmbedding.latticeBasis F)
-    rw [key, ha, neg_neg]
-    exact hv
+    rwa [key, ha, neg_neg]
   · have hw := huniq ⟨-mixedEmbedding F (b : F), neg_mem (mem_lattice F b)⟩ (by
       show -mixedEmbedding F (b : F) + infToMixed F y ∈ ZSpan.fundamentalDomain (mixedEmbedding.latticeBasis F)
       rw [← key]
@@ -608,8 +599,7 @@ theorem exists_isCompact_superset_infDomain :
   refine ⟨coord F ⁻¹' (g '' closure (ZSpan.fundamentalDomain (mixedEmbedding.latticeBasis F))), ?_, ?_⟩
   · rw [← coordHomeo_coe]
     exact (coordHomeo F).isCompact_preimage.2 (hC.image hg)
-  · intro y hy
-    exact ⟨infToMixed F y, subset_closure hy, rfl⟩
+  · exact fun y hy => ⟨infToMixed F y, subset_closure hy, rfl⟩
 
 theorem measure_infDomain (li : Measure (Ainf F)) (hl : IsStdInf li) : li (infDomain F) = 1 := by
   have hfd := ZSpan.fundamentalDomain_measurableSet (mixedEmbedding.latticeBasis F)
@@ -819,8 +809,7 @@ theorem main : ∀ (G : Type) [AddCommGroup G] [TopologicalSpace G] [IsTopologic
     have hfin := finite_lattice_points μ hD hK hDK hD1 R Λ ht x0 (C := T ε⁻¹ '' tsupport φ)
       (IsCompact.image hφs (hcont _ (inv_pos.2 hε)))
     refine summable_of_hasFiniteSupport (hfin.subset ?_)
-    intro l hl
-    exact ⟨T ε (x0 + l), subset_tsupport _ hl, (hinv ε hε _).1⟩
+    exact fun l hl => ⟨T ε (x0 + l), subset_tsupport _ hl, (hinv ε hε _).1⟩
   refine ⟨hsummable, ?_⟩
   obtain ⟨W, hWc, hW⟩ := exists_compact_mem_nhds (0 : G)
   set C : Set G := (fun p : G × G => p.1 - p.2) '' (tsupport φ ×ˢ W) with hC
@@ -1062,9 +1051,7 @@ theorem tile_pi (H : AddSubgroup O) (j : O →+ A) (hj : Function.Injective j) (
   choose a ha hau using fun i => hD (y i)
   refine ⟨(fun i => j (rep (q (a i))), fun i => j (a i - rep (q (a i)))), ⟨?_, ?_, ?_⟩, ?_⟩
   · exact Finset.mem_image.2 ⟨fun i => q (a i), Finset.mem_univ _, rfl⟩
-  · intro i _
-    refine AddSubgroup.mem_map.2 ⟨a i - rep (q (a i)), ?_, rfl⟩
-    exact (hq _ _).1 (hrep _).symm
+  · exact fun i _ => AddSubgroup.mem_map.2 ⟨a i - rep (q (a i)), (hq _ _).1 (hrep _).symm, rfl⟩
   · intro i _
     have : y i - j (rep (q (a i))) - j (a i - rep (q (a i))) = y i - j (a i) := by
       rw [map_sub]; abel
@@ -1128,8 +1115,7 @@ theorem GlobalTheory.CompanionTheory.Equi.lat_sum : ∀ (F : Type) [Field F] [Nu
     exact this.to_subtype
   haveI : Countable Λ := by
     refine Function.Injective.countable (f := fun (l : Λ) (i : ι) => (⟨l.1 i, l.2 i (Set.mem_univ i)⟩ : H.map j)) ?_
-    intro l l' h
-    exact Subtype.ext (funext fun i => congrArg Subtype.val (congrFun h i))
+    exact fun l l' h => Subtype.ext (funext fun i => congrArg Subtype.val (congrFun h i))
   have hcard : ((reps (ι := ι) j rep).card : ℝ) = (Ideal.absNorm I : ℝ) ^ Fintype.card ι := by
     rw [card_reps j hj (Ideal.Quotient.mk I) rep hrep, Nat.cast_pow, Ideal.absNorm_apply,
       Submodule.cardQuot_apply, Nat.card_eq_fintype_card]
@@ -1177,8 +1163,7 @@ theorem GlobalTheory.CompanionTheory.Equi.lat_sum : ∀ (F : Type) [Field F] [Nu
     constructor
     · intro x x' h
       refine Subtype.ext (funext fun i => ?_)
-      have h1 := hg (congrFun (congrArg Subtype.val h) i)
-      exact sub_left_injective h1
+      exact sub_left_injective (hg (congrFun (congrArg Subtype.val h) i))
     · rintro ⟨l, hl⟩
       have hy : ∀ i, ∃ y ∈ I, j y = l i := fun i => by
         obtain ⟨y, hy, e⟩ := AddSubgroup.mem_map.1 (hl i (Set.mem_univ i))
@@ -1199,8 +1184,7 @@ theorem GlobalTheory.CompanionTheory.Equi.lat_sum : ∀ (F : Type) [Field F] [Nu
   constructor
   · intro ε hε
     have h1 := (e.summable_iff (f := fun l : Λ => φ (T ε ((fun i => algebraMap F (Ainf F) (x0 i)) + l)))).2 (key.1 ε hε)
-    refine h1.congr fun x => ?_
-    exact (hterm ε x).symm
+    exact h1.congr fun x => (hterm ε x).symm
   · refine key.2.congr fun ε => ?_
     congr 1
     rw [← e.tsum_eq]
@@ -1309,8 +1293,7 @@ theorem measure_translate_ballV : ∀ (F : Type) [Field F] [NumberField F] (v : 
       change _ ↔ _ ≤ Valued.v a
       rw [ha, ← GlobalTheory.HaarLatticeScale.lt_one_iff_le_exp]
       exact Valuation.mem_maximalIdeal_iff _ _
-    rw [pow_one, ← e] at h
-    exact h
+    rwa [pow_one, ← e] at h
   open scoped Pointwise ENNReal NNReal in
   have modu_finite (x : Fv F v)
       (hx : x ≠ 0) : (distribHaarChar (Fv F v) hx.isUnit.unit : ℝ) = ‖x‖ := by
@@ -1407,18 +1390,15 @@ theorem small_box (v : HeightOneSpectrum (𝓞 F)) (ι : Type) [Fintype ι] {U :
     refine ⟨max a b, fun y hy i hi => ?_, fun y hy i hi => ?_⟩
     · exact GlobalTheory.CompanionTheory.Mass.MeanV.Sandwich.antitone_ballV v (le_max_left a b) (hy i hi)
     · exact GlobalTheory.CompanionTheory.Mass.MeanV.Sandwich.antitone_ballV v (le_max_right a b) (hy i hi)
-  · intro k
-    exact isCompact_univ_pi fun _ => isCompact_ball v k
-  · intro k
-    exact isClosed_set_pi fun _ _ => isClosed_ball v k
+  · exact fun k => isCompact_univ_pi fun _ => isCompact_ball v k
+  · exact fun k => isClosed_set_pi fun _ _ => isClosed_ball v k
   · rw [mem_nhdsSet_iff_forall]
     intro y hy
     have : y = 0 := by
       funext i
       have h : y i ∈ ⋂ n, GlobalTheory.CompanionTheory.Mass.MeanV.Sandwich.ballV (F := F) v n :=
         Set.mem_iInter.2 fun n => (Set.mem_iInter.1 hy n) i (Set.mem_univ i)
-      rw [GlobalTheory.CompanionTheory.Mass.MeanV.Sandwich.iInter_ballV] at h
-      exact h
+      rwa [GlobalTheory.CompanionTheory.Mass.MeanV.Sandwich.iInter_ballV] at h
     rw [this]; exact hU
 
 theorem exists_k_unif (v : HeightOneSpectrum (𝓞 F)) (ι : Type) [Fintype ι]
@@ -1480,8 +1460,8 @@ theorem pointwise (v : HeightOneSpectrum (𝓞 F)) (ι : Type) [Fintype ι] (k :
       by_cases hne : c' = c
       · subst hne
         simp [boxInd, hcy]
-      · rw [if_neg hne]
-        refine if_neg fun h' => hne (hdisj c' hc' c hc fun i => ?_)
+      · rw [ite_eq_right hne]
+        refine ite_eq_right fun h' => hne (hdisj c' hc' c hc fun i => ?_)
         simpa using add_mem_ball v k (hcy i) (neg_mem_ball v k (h' i))
     have s1 : ∑ c' ∈ C, ψ c' * boxInd v k c' y = ψ c := by
       rw [Finset.sum_congr rfl fun c' hc' => by rw [key c' hc']]
@@ -1493,7 +1473,7 @@ theorem pointwise (v : HeightOneSpectrum (𝓞 F)) (ι : Type) [Fintype ι] (k :
     exact hunif y c hcy
   · have hz : ∀ c ∈ C, boxInd v k c y = 0 := by
       intro c hc
-      exact if_neg fun h' => h ⟨c, hc, h'⟩
+      exact ite_eq_right fun h' => h ⟨c, hc, h'⟩
     have hy : ψ y = 0 := by
       by_contra h0
       exact h (hcov y h0)
@@ -1522,7 +1502,7 @@ theorem boxInd_eq (v : HeightOneSpectrum (𝓞 F)) {ι : Type} (k : ℕ) (c : ι
   · rw [Set.indicator_of_mem ((mem_boxS v k c y).2 h)]
     simp [boxInd, h]
   · rw [Set.indicator_of_notMem (fun h' => h ((mem_boxS v k c y).1 h'))]
-    exact if_neg h
+    exact ite_eq_right h
 
 theorem real_boxS {v : HeightOneSpectrum (𝓞 F)} {lam : Measure (Fv F v)} (hstd : IsStdV v lam)
     {ι : Type} [Fintype ι] (k : ℕ) (c : ι → Fv F v) :
@@ -1736,7 +1716,7 @@ theorem indicator_box {ι : Type} {A A' : Set (ι → F)} {v : HeightOneSpectrum
     · have hA' : x ∉ A' := fun e => hA ((h x).2 e).1
       simp [Set.indicator, hA, hA']
   · have hA' : x ∉ A' := fun e => hb ((h x).2 e).2
-    have hz : boxInd v k c (yV v x) = 0 := by simp only [boxInd, yV]; rw [if_neg hb]
+    have hz : boxInd v k c (yV v x) = 0 := by simp only [boxInd, yV]; rw [ite_eq_right hb]
     simp [Set.indicator, hA', hz]
 
 theorem est {ι : Type} (θ : ℝ →+* Ainf F) {S : Finset (HeightOneSpectrum (𝓞 F))} {v : HeightOneSpectrum (𝓞 F)} (hv : v ∉ S)

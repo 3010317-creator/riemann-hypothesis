@@ -99,15 +99,13 @@ theorem rows_of_pageFix : ∀ (eps : ℝ) (Fm : FamP eps), DC.PageFix Fm → 100
     rw [hCPeq]
     have hr : x ≤ ((Fm.D x i).R.r : ℝ) := by
       have h := scale_le_rank hS
-      rw [hLx] at h
-      exact h
+      rwa [hLx] at h
     have hr0 : (0 : ℝ) ≤ ((Fm.D x i).R.r : ℝ) := Nat.cast_nonneg _
     have h1 : ((Fm.D x i).R.r : ℝ) ≤ (Fm.D x i).R.f * (Fm.D x i).R.r := le_mul_of_one_le_left hr0 hf
     have h2 : ((Fm.D x i).R.f : ℝ) * (Fm.D x i).R.r ≤ (Fm.D x i).R.f * (Fm.D x i).R.r * (Fm.L x i).sc.L :=
       le_mul_of_one_le_right (by positivity) (by linarith)
     linarith [le_trans (le_max_right _ _) hx₁]
-  · intro hJ
-    exact hF (hJ.2.2.2.2 _ hH)
+  · exact fun hJ => hF (hJ.2.2.2.2 _ hH)
 
 end GlobalTheory.FinalRows
 

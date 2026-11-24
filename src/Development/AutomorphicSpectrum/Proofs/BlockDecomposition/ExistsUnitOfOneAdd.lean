@@ -159,8 +159,7 @@ theorem dg_mem_integralGL (i₀ : Fin n) (e : (𝒪[F])ˣ) :
     by_cases hi : i = i₀
     · subst hi; simp
     · simp [Pi.mulSingle_eq_of_ne hi]
-  rw [e'] at h
-  exact h
+  rwa [e'] at h
 
 def sc (s : Fˣ) : GL (Fin (0 + 1)) F := diagGL F (0 + 1) fun _ => s
 
@@ -180,8 +179,7 @@ theorem image_sc (s : Fˣ) (a b : ℕ)
   ext y
   constructor
   · rintro ⟨x, hx, rfl⟩ i
-    simp only [sc_mulVec]
-    exact (h _).2 (hx i)
+    simpa only [sc_mulVec] using (h _).2 (hx i)
   · intro hy
     refine ⟨fun i => ((s⁻¹ : Fˣ) : F) * y i, fun i => (h _).1 ?_, ?_⟩
     · simpa using hy i
@@ -311,8 +309,7 @@ theorem proj (hψ : PsiOK ψ) {ρ : Representation ℂ (GL (Fin n) F) V} (B : V 
   simp only [LinearMap.map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul] at h
   have hc : ψ (-(ξ ⬝ᵥ x)) = starRingEnd ℂ (ψ (ξ ⬝ᵥ x)) := by
     rw [AddChar.map_neg_eq_inv, Complex.inv_eq_conj (hψ.2.2 _)]
-  simp only [hc]
-  exact h
+  simpa only [hc] using h
 
 theorem orth (B : V →ₗ⋆[ℂ] V →ₗ[ℂ] ℂ) {ρ : Representation ℂ (GL (Fin n) F) V}
     (hU : ∀ x u u', B (ρ (col n 0 x) u) (ρ (col n 0 x) u') = B u u')

@@ -205,8 +205,7 @@ theorem exists_ampleDiv_symm : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [Gr
   obtain ⟨i₀, h₀⟩ := exists_chart hL' (genericPoint A.left)
   refine ⟨ofLB hL' i₀ h₀, ?_, ?_⟩
   · have e : LBIso L' (toLB (ofLB hL' i₀ h₀)) := (presents_ofLB hL' i₀ h₀).lbIso (presents_toLB _)
-    have hT := isLB_toLB (ofLB hL' i₀ h₀)
-    exact (ampleDiv_iff_isAmpleLB _ _).2 (hamL'.of_lbIso hT e.symm)
+    exact (ampleDiv_iff_isAmpleLB _ _).2 (hamL'.of_lbIso (isLB_toLB (ofLB hL' i₀ h₀)) e.symm)
   · have e : LBIso L' (toLB (ofLB hL' i₀ h₀)) := (presents_ofLB hL' i₀ h₀).lbIso (presents_toLB _)
     have hT := isLB_toLB (ofLB hL' i₀ h₀)
     have hs : LBIso (L'.pull σ) L' := GlobalTheory.SymLB.pull_inv_symm_iso _ A L hL
@@ -269,7 +268,7 @@ theorem finite_mult (D : CartierDiv Y) (U : Set Y) [NoetherianSpace U] :
   have hi' : IsIrreducible ((Subtype.val : U → Y) '' T) :=
     (hi T hT).image _ continuous_subtype_val.continuousOn
   refine ⟨T, hT, ?_⟩
-  simp only [dif_pos hi']
+  simp only [dite_eq_left hi']
   have hg := hi'.isGenericPoint_genericPoint_closure
   have h₁ : z ≤ hi'.genericPoint := hg.specializes (subset_closure ⟨_, hzT, rfl⟩)
   have hsub : closure ((Subtype.val : U → Y) '' T) ⊆ D.supp :=
@@ -321,7 +320,7 @@ theorem exists_mult_eq (hY : ∀ y : Y, UniqueFactorizationMonoid (Y.presheaf.st
         · exact ⟨h, by simpa [h] using hz⟩
         · simp [h] at hz)
       fun z hz => h1 z fun h => hz (by simp [h])
-    exact ⟨E, fun z hz => by rw [hE z, if_pos hz]⟩
+    exact ⟨E, fun z hz => by rw [hE z, ite_eq_left hz]⟩
   choose E hE using hE
   let D : CartierDiv Y := show cartierGroup Y from ⟨fun y => (E y).germ y, fun y => by
     obtain ⟨U, hU, g, hg⟩ := (E y).exists_isEqn_nhds y
@@ -343,7 +342,7 @@ theorem GlobalTheory.Desc.exists_cartierDiv_closure : ∀ (Y V X : Scheme.{0}) [
   have : GlobalTheory.IsNormalScheme Y := ⟨fun x => inferInstance, fun x => by have := hY x; infer_instance⟩
   choose e he using fun v : V => D.exists_isEqn (φ v)
   let c : Y → ℤ := fun z => if h : z ∈ Set.range i then Scheme.ord (θ (e h.choose)) z else 0
-  have h0 : ∀ z, z ∉ Set.range i → c z = 0 := fun z hz => dif_neg hz
+  have h0 : ∀ z, z ∉ Set.range i → c z = 0 := fun z hz => dite_eq_right hz
   have h1 : ∀ z, c z ≠ 0 → Order.coheight z = 1 := fun z hz => by
     by_contra h
     apply hz
@@ -356,7 +355,7 @@ theorem GlobalTheory.Desc.exists_cartierDiv_closure : ∀ (Y V X : Scheme.{0}) [
     have hv : i v ∈ Set.range i := ⟨v, rfl⟩
     have e₀ : hv.choose = v := i.isOpenEmbedding.injective hv.choose_spec
     have hu := (unitAt_map i φ θ hθ v (hg.iff_unitAt.1 (he v))).ord_eq_zero
-    simp only [c, dif_pos hv, e₀]
+    simp only [c, dite_eq_left hv, e₀]
     rw [← div_mul_cancel₀ (e v : X.functionField) g.ne_zero, map_mul,
       Scheme.ord_mul ((map_ne_zero θ).2 (div_ne_zero (e v).ne_zero g.ne_zero))
         ((map_ne_zero θ).2 g.ne_zero), hu, zero_add]
@@ -494,7 +493,6 @@ theorem chart_part : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing 
     IsUnit.mk0 _ ((map_ne_zero_iff _ (IsFractionRing.injective C.R K)).mpr hρf)
   letI : Algebra Rf K := (Localization.awayLift (algebraMap C.R K) (ρ f) hu).toAlgebra
   haveI : IsScalarTower C.R Rf K := IsScalarTower.of_algebraMap_eq fun r => by
-    show algebraMap C.R K r = Localization.awayLift (algebraMap C.R K) (ρ f) hu (algebraMap C.R Rf r)
     exact (IsLocalization.Away.lift_eq (ρ f) hu r).symm
   haveI : IsFractionRing Rf K :=
     IsFractionRing.isFractionRing_of_isDomain_of_isLocalization (Submonoid.powers (ρ f)) Rf K
@@ -595,8 +593,7 @@ theorem isPullback_of_fac_mono {C : Type*} [Category C] {P V G S T : C} {p : P �
     (fun s => H.lift (s.fst ≫ i) s.snd (by rw [Category.assoc]; exact s.condition)) ?_ ?_ ?_⟩⟩
   · intro s
     rw [← cancel_mono i, Category.assoc, hl, H.lift_fst]
-  · intro s
-    exact H.lift_snd _ _ _
+  · exact fun s => H.lift_snd _ _ _
   · intro s m h1 h2
     apply H.hom_ext
     · rw [H.lift_fst, ← h1, Category.assoc, hl]
@@ -610,10 +607,8 @@ theorem isPullback_of_comp_mono {C : Type*} [Category C] {P X Y W Z : C} {p : P 
   refine ⟨⟨w⟩, ⟨PullbackCone.IsLimit.mk _
     (fun s => H.lift s.fst s.snd (by
       rw [← Category.assoc, ← Category.assoc, s.condition])) ?_ ?_ ?_⟩⟩
-  · intro s
-    exact H.lift_fst _ _ _
-  · intro s
-    exact H.lift_snd _ _ _
+  · exact fun s => H.lift_fst _ _ _
+  · exact fun s => H.lift_snd _ _ _
   · intro s m h1 h2
     apply H.hom_ext
     · rw [H.lift_fst, h1]
@@ -656,8 +651,7 @@ theorem exists_isPullback_generic :
     (IsOpenImmersion.lift V.ι _ hr) (IsOpenImmersion.lift_fac _ _ _)
   have h2 := h1.paste_horiz hP
   refine isPullback_of_comp_mono (GlobalTheory.Desc.awayMap f) ?_
-  rw [hg]
-  exact h2
+  rwa [hg]
 
 end GlobalTheory.GenericFibreChart
 end -- clump:auto
@@ -689,8 +683,7 @@ theorem isDominant_of_gen {X V : Scheme.{0}} [IsIntegral X] (φ : V ⟶ X) (v : 
 theorem gp_apply {X : Scheme.{0}} [IsIntegral X] (q : Sp X.functionField) : gp X q = genericPoint X := by
   have h1 : gp X q ⤳ genericPoint X := by
     have : gp X q ∈ Set.range (X.fromSpecStalk (genericPoint X)) := ⟨q, rfl⟩
-    rw [Scheme.range_fromSpecStalk] at this
-    exact this
+    rwa [Scheme.range_fromSpecStalk] at this
   exact (h1.antisymm (genericPoint_specializes _)).eq
 
 theorem ffm_comp {X Y : Scheme.{0}} [IsIntegral X] [IsIntegral Y] {V : Y.Opens} [IsIntegral V.toScheme]
@@ -1049,8 +1042,7 @@ theorem Chart.nonempty_restrict {X S X' S' : Scheme.{0}} [IrreducibleSpace S'] [
   refine ⟨{ R := C.R, complete := C.complete, charZero := C.charZero, ξ := ξ', centre := ?_, etc := he, unr := hu,
             G := C.G, semi := C.semi, y := y', hy := hy', α := _,
             gen := ReciprocityTheory.ChartRestriction.G.Chart.isGrpPullback_factor k y' (C.gen.congr hk rfl) }⟩
-  apply i.isOpenEmbedding.injective
-  exact (congrArg (fun q => q (closedPoint C.R)) hξ).trans C.centre
+  exact i.isOpenEmbedding.injective ((congrArg (fun q => q (closedPoint C.R)) hξ).trans C.centre)
 
 theorem hasExt_opensRange (X S : Scheme.{0}) [AlgebraicGeometry.IsNoetherian S]
     (hS : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme S) (j : X ⟶ S) [IsOpenImmersion j] [IsDominant j]
@@ -1114,8 +1106,7 @@ theorem hasExt_opensRange (X S : Scheme.{0}) [AlgebraicGeometry.IsNoetherian S]
     (isSemiAbelian_of_isAbelianScheme _ (isAbelianScheme_pullback_obj _ A hA)) ((Over.pullback k).obj A) _
     (ReciprocityTheory.ChartRestriction.G.Chart.isGrpPullback_factor _ l ((isGrpPullback_pullback A k).congr hl.symm rfl))
     (HasExt.of_comp _ i.isoOpensRange.inv _ ?_)
-  rw [Category.assoc, hcomp]
-  exact hext
+  rwa [Category.assoc, hcomp]
 
 theorem exists_hasExt_near : ∀ (X S : Scheme.{0}) [AlgebraicGeometry.IsNoetherian S], ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme S → ∀ (j : X ⟶ S) [IsOpenImmersion j], IsDominant j → ∀ (A : Over X) [GrpObj A], IsAbelianScheme A → ∀ L : LB A.left, L.IsLB → RelAmple A L → (∀ x : S, Nonempty (Chart j A x)) → ∀ s : S, ∃ U : S.Opens, s ∈ U ∧ HasExt (j ∣_ U) ((Over.pullback (j ⁻¹ᵁ U).ι).obj A) := by
   intro X S _ hS j _ hj A _ hA L hL hamp hC s

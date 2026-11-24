@@ -328,8 +328,7 @@ private theorem fss_alg {n : ℕ} {k E : Type} [Field k] [IsAlgClosed k] [Ring E
     rw [not_finite_iff_infinite] at hinf
     let e := Infinite.natEmbedding S
     refine fss_count h (fun i => m (e i)) (fun i => hm _) fun i j hij => e.injective (Subtype.ext ?_)
-    rw [← hm', ← hm']
-    exact hij
+    rwa [← hm', ← hm']
   haveI : ∀ P, IsSimpleModule E (E ⧸ m P) := fun i => isSimpleModule_iff_isCoatom.2 (hm i)
   haveI : ∀ P, Module.Finite k (E ⧸ m P) := fun i => fss_fin h
   let f : E →ₗ[k] ∀ P : S, Module.End k (E ⧸ m P) :=
@@ -418,8 +417,7 @@ private theorem dm_transv (S : Type) [CommRing S] [Algebra k S] {i j : ι} (hij 
 private theorem dm_diag_prod (S : Type) [CommRing S] [Algebra k S] (d : ι → S) :
     F S (Matrix.diagonal d) = ∏ i, F S (Matrix.diagonal (Pi.mulSingle i (d i))) := by
   have := map_prod ((F S).comp (Matrix.diagonalRingHom ι S).toMonoidHom) (fun i => Pi.mulSingle i (d i)) Finset.univ
-  rw [Finset.univ_prod_mulSingle] at this
-  exact this
+  rwa [Finset.univ_prod_mulSingle] at this
 
 include nat in
 private theorem dm_single (S : Type) [CommRing S] [Algebra k S] (i : ι) (s : S) :
@@ -443,8 +441,7 @@ private theorem dm_swap (S : Type) [CommRing S] [Algebra k S] (i j : ι) (s : S)
 include hom in
 private theorem dm_X : ∏ i : ι, F k[X] (Matrix.diagonal (Pi.mulSingle i X)) = X ^ n := by
   have := hom k[X] X 1
-  rw [map_one, mul_one, Matrix.smul_one_eq_diagonal, dm_diag_prod] at this
-  exact this
+  rwa [map_one, mul_one, Matrix.smul_one_eq_diagonal, dm_diag_prod] at this
 
 include nat hom in
 private theorem dm_diag [Nonempty ι] : ∃ m, n = m * Fintype.card ι ∧
@@ -495,8 +492,7 @@ private theorem dm_main [Nonempty ι] : ∃ m, n = m * Fintype.card ι ∧
   have hM : G.map (MvPolynomial.aeval fun p : ι × ι => M p.1 p.2 : R →ₐ[k] S) = M := by
     ext a b
     simp [G, R]
-  rw [AlgHom.mapMatrix_apply, hM] at h
-  exact h
+  rwa [AlgHom.mapMatrix_apply, hM] at h
 
 private theorem dm_rep (S : Type) [CommRing S] [Algebra k S] (y : S ⊗[k] Matrix ι ι k) :
     matrixEquivTensor ι k S (Det.repS (AlgHom.id k _) S y) = y := by

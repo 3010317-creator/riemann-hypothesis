@@ -79,8 +79,7 @@ theorem sqPt_psum {n : ℕ} (xs : Fin n → (t.G ⊗ t.G ⟶ t.G)) (I : Finset (
   apply fib_ext
   rw [sqPt_left_fst]
   refine Eq.symm (psum_push (isGrpPullback_pullback t.G x) _ xs (sqU t x) (fun i => ?_) I)
-  apply Over.OverMorphism.ext
-  exact sqPt_left_fst t x (xs i)
+  exact Over.OverMorphism.ext (sqPt_left_fst t x (xs i))
 
 theorem sqPt_fst : sqPt t x (fst t.G t.G) = fst (GF t x) (GF t x) := by
   apply fib_ext

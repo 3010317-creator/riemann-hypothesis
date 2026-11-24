@@ -80,8 +80,7 @@ theorem adAt_inv {P : HeightOneSpectrum (𝓞 E)} {g : GL (Fin n) (AfE F E)} {γ
   have h2 : ((γ⁻¹ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E).map (algebraMap E (P.adicCompletion E)) * M = 1 := by
     rw [hM', ← Matrix.map_mul, ← Units.val_mul, inv_mul_cancel, Units.val_one]
     exact Matrix.map_one _ (map_zero _) (map_one _)
-  have e := (Matrix.inv_eq_left_inv h1).symm.trans (Matrix.inv_eq_left_inv h2)
-  exact congrFun (congrFun e r) s
+  exact congrFun (congrFun ((Matrix.inv_eq_left_inv h1).symm.trans (Matrix.inv_eq_left_inv h2)) r) s
 
 variable [StarRing E]
 
@@ -123,8 +122,7 @@ theorem glEquiv_mem_iff {P : HeightOneSpectrum (𝓞 E)} {g : GL (Fin n) (AfE F 
           hmem i
 
         simp only [h, ← map_mul, ← map_sum] at h2
-        rw [hA, Matrix.mul_apply]
-        exact h2
+        rwa [hA, Matrix.mul_apply]
       have e3 : f.symm (glEquiv γ x) = A *ᵥ x := by
         funext i
         rw [← mat_mulVec, hA, ← Matrix.mulVec_mulVec, glEquiv_apply]
@@ -158,14 +156,14 @@ theorem exists_isPtOf_of_rat : ∀ {F E : Type} [Field F] [NumberField F] [Field
     rw [← hN] at hv
     rw [← hd]
     simp only [decoRaw]
-    rw [if_pos (le_locP _ _ hv), e]
+    rw [ite_eq_left (le_locP _ _ hv), e]
     exact hasRes_redA _ ((mem_globLat g v).1 hv i)
   · change v ∈ p₀.deco.1.N at hv
     change HasRes P.1 _ (p₀.deco.1.be P v i)
     rw [← hN] at hv
     rw [← hd]
     simp only [decoRaw]
-    rw [if_pos (le_locP _ _ hv)]
+    rw [ite_eq_left (le_locP _ _ hv)]
     exact hasRes_redA _ ((mem_globLat g v).1 hv i)
   · show _ = algebraMap E _ (glEquiv (γ P.1) (Pi.single j 1) i)
     rw [glEquiv_single]

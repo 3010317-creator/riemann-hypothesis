@@ -192,8 +192,7 @@ theorem prod_X_sub_C_eq_X_pow_add_sum {δ : ℕ} (r : Fin δ → ℂ) :
     rw [natDegree_prod_of_monic _ _ fun j _ => monic_X_sub_C _]
     simp
   have := hm.as_sum
-  rw [hd, Finset.sum_range] at this
-  exact this
+  rwa [hd, Finset.sum_range] at this
 
 theorem exists_measurable_roots_enumeration :
     ∀ δ : ℕ, ∃ ρ : (Fin δ → ℂ) → (Fin δ → ℂ), Measurable ρ ∧ ∀ c : Fin δ → ℂ,
@@ -250,12 +249,11 @@ theorem exists_measurable_roots_enumeration :
   have hc : V (r ∘ Tuple.sort (e ∘ r)) = c := by
     funext i
     simp only [V]
-    rw [hp, coeff_add, coeff_X_pow, if_neg i.2.ne, zero_add, Polynomial.finsetSum_coeff]
+    rw [hp, coeff_add, coeff_X_pow, ite_eq_right i.2.ne, zero_add, Polynomial.finsetSum_coeff]
     simp only [coeff_C_mul_X_pow]
     rw [Finset.sum_eq_single i]
     · simp
-    · intro j _ hj
-      exact if_neg fun h => hj (Fin.ext h.symm)
+    · exact fun j _ hj => ite_eq_right fun h => hj (Fin.ext h.symm)
     · simp
   have : ρ c = r ∘ Tuple.sort (e ∘ r) := by
     rw [← hc]
@@ -360,8 +358,7 @@ theorem finite_zeros_poles_of_trdeg_one :
     intro x hx
     induction hx using Algebra.adjoin_induction with
     | mem x hx =>
-      rw [Set.mem_singleton_iff.mp hx]
-      exact hwt
+      rwa [Set.mem_singleton_iff.mp hx]
     | algebraMap r =>
       by_cases hr : r = 0
       · rw [hr, map_zero]; exact zero_mem _
@@ -419,8 +416,7 @@ private lemma isAlgebraic_adjoin_adjoin_preimage {k L : Type} [Field k] [Field L
     constructor
     · rintro ⟨y, hy, rfl⟩
       exact hy
-    · intro hz
-      exact ⟨⟨z, IntermediateField.subset_adjoin k s hz⟩, hz, rfl⟩
+    · exact fun hz => ⟨⟨z, IntermediateField.subset_adjoin k s hz⟩, hz, rfl⟩
   have hmem : ∀ x : E, x ∈ IntermediateField.adjoin k s' := by
     intro x
     have hmap : (IntermediateField.adjoin k s').map E.val = E := by
@@ -491,8 +487,7 @@ private lemma case_two_finite_lemma
     rw [← trdeg_eq_zero_iff, hFΩ]
     exact one_ne_zero
   obtain ⟨t, ht⟩ : ∃ t : Ω, Transcendental F t := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hnalg ⟨fun a => not_not.1 (h a)⟩
   have htinv : Transcendental F t⁻¹ := fun h => ht (by simpa using h.inv)
   refine ((H2 F Ω t hfgF hFΩ ht g hg).union (H2 F Ω t⁻¹ hfgF hFΩ htinv g hg)).subset ?_
@@ -521,7 +516,7 @@ private lemma case_two_finite_lemma
   · right
     refine ⟨hdisc, hF, ?_, hvg⟩
     rw [v.map_inv]
-    push_neg at hvt
+    push Not at hvt
     exact withTop_int_neg_nonneg_of_neg hvt
 
 open NumberField in
@@ -537,8 +532,7 @@ private lemma exists_algebraicIndependent_fin_of_trdeg_adjoin_eq {k L : Type} [F
     constructor
     · rintro ⟨y, hy, rfl⟩
       exact hy
-    · intro hz
-      exact ⟨⟨z, IntermediateField.subset_adjoin k s hz⟩, hz, rfl⟩
+    · exact fun hz => ⟨⟨z, IntermediateField.subset_adjoin k s hz⟩, hz, rfl⟩
   have hmem : ∀ x : E, x ∈ IntermediateField.adjoin k s' := by
     intro x
     have hmap : (IntermediateField.adjoin k s').map E.val = E := by
@@ -618,8 +612,7 @@ private lemma polynomial_value_over_prime_lemma_4 {K Ω : Type} [Field K] [Numbe
     refine sum_mem fun m _ => mul_mem ?_ ?_
     · rw [mem_vRing_iff_nonneg]; exact addValuation_algebraMap_ringOfIntegers_nonneg v _
     · rw [mem_vRing_iff_nonneg]; exact hmono m
-  · by_contra hnot
-    push_neg at hnot
+  · by_contra! hnot
     obtain ⟨m, hm⟩ := hnot
     set a := p.coeff m
     have ha0 : v (algebraMap K Ω a) = 0 :=
@@ -681,8 +674,7 @@ theorem _root_.GlobalTheory.finite_support_admissible :
           fun i => IsLocalRing.residue (_root_.ReciprocityTheory.ChartRestriction.G.T0.vRing v) ⟨r (σ i) j0, hx i⟩ := by
         have hfun : (fun i => IsLocalRing.residue (_root_.ReciprocityTheory.ChartRestriction.G.T0.vRing v) ⟨r (σ i) j0, hx i⟩) = y :=
           funext fun i => by rw [hyσ i]
-        rw [hfun]
-        exact hind
+        rwa [hfun]
       unfold _root_.ReciprocityTheory.ChartRestriction.G.T0.IsOver at hla
       exact polynomial_value_over_prime_lemma_4 v la hla _ hx hind'
     · right
@@ -695,8 +687,7 @@ theorem _root_.GlobalTheory.finite_support_admissible :
           fun i => IsLocalRing.residue (_root_.ReciprocityTheory.ChartRestriction.G.T0.vRing v) ⟨r (σ i) j0, hx i⟩ := by
         have hfun : (fun i => IsLocalRing.residue (_root_.ReciprocityTheory.ChartRestriction.G.T0.vRing v) ⟨r (σ i) j0, hx i⟩) = y :=
           funext fun i => by rw [hyσ i]
-        rw [hfun]
-        exact hind
+        rwa [hfun]
       have hxK : AlgebraicIndependent K fun i => r (σ i) j0 :=
         _root_.ReciprocityTheory.MultiplicativeHeights.algebraicIndependent_of_residue_lift (_root_.ReciprocityTheory.ChartRestriction.G.T0.vRing v) (fun i => ⟨r (σ i) j0, hx i⟩) hind'
       refine Set.mem_iUnion.2 ⟨⟨(j0, σ), hxK⟩, hdisc, hvg, ?_, hx, hind'⟩
@@ -865,8 +856,7 @@ theorem finite_places {R Ω : Type} [CommRing R] [IsDomain R] [Field Ω] [CharZe
   haveI : Finite (HeightOneSpectrum (integralClosure O Ω)) := by
     refine Finite.of_injective (fun v => (⟨v.asIdeal, v.isMaximal⟩ :
       {I : Ideal (integralClosure O Ω) | I.IsMaximal})) ?_
-    intro v v' h
-    exact HeightOneSpectrum.ext (congrArg Subtype.val h)
+    exact fun v v' h => HeightOneSpectrum.ext (congrArg Subtype.val h)
   obtain ⟨e, -⟩ := ValPl.placesOver_bij O F Ω
   have hfin : (ValPl.PlacesOver O Ω).Finite := Set.finite_coe_iff.1 (Finite.of_equiv _ e)
   refine hfin.subset ?_
@@ -897,8 +887,7 @@ theorem finite_vertical_gauss_valuations : ∀ (K Ω : Type) [Field K] [NumberFi
     · rw [VerticalGauss.mem_extPrime, ← (h₀ r).2]
       change 0 < v₀ (φ r)
       rw [hr]; simp
-    · simp only [φ, MvPolynomial.eval₂Hom_C]
-      exact (map_ne_zero_iff _ hι).2 ha0
+    · simpa only [φ, MvPolynomial.eval₂Hom_C] using (map_ne_zero_iff _ hι).2 ha0
   letI : Algebra (𝓞 K) Ω := ι.toAlgebra
   haveI : IsScalarTower (𝓞 K) K Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   haveI : FaithfulSMul (𝓞 K) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hι
@@ -1215,9 +1204,7 @@ lemma contDiff_evalFun {d : ℕ} (p : Polynomial (MvPolynomial (Fin d) ℂ)) :
     rw [Polynomial.eval_eq_sum_range' (Nat.lt_succ_of_le Polynomial.natDegree_map_le)]
     simp [Polynomial.coeff_map]
   rw [h]
-  apply ContDiff.sum
-  intro i _
-  exact (contDiff_mvEval _).mul (contDiff_snd.pow i)
+  exact ContDiff.sum (fun i _ => (contDiff_mvEval _).mul (contDiff_snd.pow i))
 
 theorem main : ∀ {d : ℕ} (p : Polynomial (MvPolynomial (Fin d) ℂ)) (x₀ : Fin d → ℂ) (a : ℂ),
     Polynomial.eval a (Polynomial.map (MvPolynomial.eval x₀) p) = (0 : ℂ) →
@@ -1508,8 +1495,7 @@ theorem exists_local_families (K Ω : Type) [Field K] [CharZero K] [Countable K]
     refine continuous_pi fun q => ?_
     obtain ⟨i, j⟩ := q
     refine Fin.cases ?_ (fun k => ?_) i
-    · simp only [F, Fin.cons_zero]
-      exact continuous_const
+    · simpa only [F, Fin.cons_zero] using continuous_const
     · simp only [F, Fin.cons_succ]
       fun_prop
   let G : Set (TVar D N → ℂ) :=
@@ -1613,8 +1599,7 @@ theorem kap_divFin_stLoc_dataOf : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       refine ReciprocityTheory.ChartRestriction.G.T0.ValuationResidueLemmas.ratio_eq (valC_ne_zero (hjc Z)) ?_
       unfold dataOf valG valC
       simp [div_mul_cancel₀ _ (hjc Z)]
-    rw [key] at hZ
-    exact hZ
+    rwa [key] at hZ
 
 
 end GlobalTheory.Reg

@@ -167,8 +167,7 @@ theorem val_mul (x y : T ⟶ splitTorus S X) (a : X) : val (x * y) a = val x a *
     Over.homMk (z.left ≫ torusFst S X) (specULiftZIsTerminal.hom_ext _ _)
   have h := mul_left_comp_fst (splitTorusAff ZU X) (toZ S) x y (p x) (p y) rfl rfl
   have e := aff_mul (p x) (p y) (AddMonoidAlgebra.isGroupLikeElem_single_one (R := ZU.{u}) (A := ZU.{u}) a)
-  rw [h] at e
-  exact e
+  rwa [h] at e
 
 theorem val_one (a : X) : val (1 : T ⟶ splitTorus S X) a = 1 := by
   have h := val_mul (1 : T ⟶ splitTorus S X) 1 a
@@ -347,7 +346,7 @@ theorem isGroupLikeElem_iff [Nontrivial A] (hA : ∀ e : A, IsIdempotentElem e �
     have h1 := (hA _ (isIdempotentElem_coeff hu x)).resolve_left hx
     refine ⟨x, eq_single_of_coeff_eq_zero hu x fun y hy => ?_⟩
     have := coeff_mul_coeff hu y x
-    rwa [h1, _root_.mul_one, if_neg hy] at this
+    rwa [h1, _root_.mul_one, ite_eq_right hy] at this
   · rintro ⟨x, rfl⟩
     exact AddMonoidAlgebra.isGroupLikeElem_single_one x
 
@@ -469,8 +468,7 @@ theorem isGroupLikeElem_ev {u : Γ((splitTorus S X).left, ⊤)} (hu : IsUnit u)
     have h1 := hm' (1 : Over.mk (Spec.map (CommRingCat.ofHom (algebraMap A A)) ≫ t) ⟶ _) 1
     rw [_root_.mul_one] at h1
     have h2 := (hu.map _).mul_left_cancel (h1.symm.trans (_root_.mul_one _).symm)
-    rw [← e, pull_ptOf] at h2
-    exact h2
+    rwa [← e, pull_ptOf] at h2
   · let B : CommRingCat.{u} := .of (AddMonoidAlgebra A X ⊗[A] AddMonoidAlgebra A X)
     have e : ptOf (B := B) t _ (hs (Bialgebra.comulAlgHom A (AddMonoidAlgebra A X))) =
         ptOf (B := B) t _ (hs Algebra.TensorProduct.includeLeft) *

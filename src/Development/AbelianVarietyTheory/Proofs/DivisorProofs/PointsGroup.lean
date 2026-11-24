@@ -123,8 +123,7 @@ theorem shear (R A B : Type) [CommRing R] [CommRing A] [CommRing B] [HopfAlgebra
       simp [RingHom.mem_ker]
     have h1 : Ideal.Quotient.mk I (f b) = algebraMap R _ (Coalgebra.counit b) := by
       have h2 := Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.mem_map_of_mem (f : B →ₐ[R] A) hb)
-      rw [map_sub, map_sub, sub_eq_zero, AlgHom.commutes] at h2
-      exact h2
+      rwa [map_sub, map_sub, sub_eq_zero, AlgHom.commutes] at h2
     rw [h1]
     exact (Algebra.TensorProduct.includeRight : (A ⧸ I) →ₐ[R] A ⊗[R] (A ⧸ I)).commutes _
   let g : A →ₐ[S] A ⊗[R] (A ⧸ I) :=
@@ -144,8 +143,7 @@ theorem shear (R A B : Type) [CommRing R] [CommRing A] [CommRing B] [HopfAlgebra
       have h2 : (l⁻¹ * r).ofConv (f b) = algebraMap R _ (Coalgebra.counit b) :=
         congrArg (fun x => x.ofConv b) h
       have h3 : Coalgebra.counit (R := R) b = 0 := hb
-      rw [h3, map_zero] at h2
-      exact h2
+      rwa [h3, map_zero] at h2
     exact fun a ha => this ha
   let k : (A ⧸ I) →ₐ[R] A ⊗[S] A := Ideal.Quotient.liftₐ I (l⁻¹ * r).ofConv hk
   let Ψ : A ⊗[R] (A ⧸ I) →ₐ[A] A ⊗[S] A :=

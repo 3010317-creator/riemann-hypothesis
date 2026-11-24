@@ -88,8 +88,7 @@ theorem scLat_isLattice {n : ℕ} {𝔞 : FractionalIdeal (𝓞 E)⁰ E} (h𝔞 
       obtain ⟨r, hr⟩ := (FractionalIdeal.mem_one_iff _).mp hca
       rw [smul_smul, ← hr, algebraMap_smul]
       exact Λ.smul_mem r hy
-    intro s hs hli
-    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+    exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
 theorem prod_span_eq_top {a b : ℕ} {M : Submodule (𝓞 E) (Fin a → E)} {N : Submodule (𝓞 E) (Fin b → E)}
     (hM : Submodule.IsFullLattice E M) (hN : Submodule.IsFullLattice E N) :
     Submodule.span E ((M.prod N : Submodule (𝓞 E) ((Fin a → E) × (Fin b → E))) : Set ((Fin a → E) × (Fin b → E))) = ⊤ := by
@@ -122,8 +121,7 @@ theorem pairLat_isLattice {a b d : ℕ} {M : Submodule (𝓞 E) (Fin a → E)} {
     rfl
   rw [hφ]
   refine ⟨Submodule.FG.map _ (Submodule.FG.prod hM.fg hN.fg), ?_⟩
-  intro s hs hli
-  exact (LinearIndependent.iff_fractionRing _ _).mp hli
+  exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
 
 end GlobalTheory.SkewLat.PairLatLattice
 

@@ -228,8 +228,7 @@ theorem expShape_of_integralClass : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (g2 g3
     exact Finset.sum_eq_zero fun x _ => Formalism.L2.Th1.D.Pair.constantCoeff_inVar_eq_zero x hm0
   have hg0 : MvPowerSeries.constantCoeff g = 0 := by
     have h := h50
-    rw [map_sub, hf0, sub_zero] at h
-    exact h
+    rwa [map_sub, hf0, sub_zero] at h
   have hng0 : MvPowerSeries.constantCoeff (-g) = 0 := by rw [map_neg, hg0, neg_zero]
   have hnf0 : MvPowerSeries.constantCoeff (-f) = 0 := by rw [map_neg, hf0, neg_zero]
 
@@ -334,7 +333,7 @@ theorem nP_eq_one_of_hP_eq_zero (D : D7) (p : ℕ) (hC : IsResidueClassZero D p)
     rw [hC] at hs
     exact absurd hs (by decide)
   unfold nP
-  rw [if_neg hS, h0, addOrderOf_zero]
+  rw [ite_eq_right hS, h0, addOrderOf_zero]
 
 theorem thetaExpansionRealPlaces_stdSer_of_adm : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (B : Formalism.L2.Ker.Base D cc δ) (χ : IdE D → ℂ) (p : ℕ) [Fact p.Prime] (lam : Qbar →+* ℂ_[p]), HostAt B χ p lam → 5 ≤ p → IsResidueClassZero D p → hP D p = 0 → ∀ (N N' : ℕ) (L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)) (L' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)) (P : D.what₂.Tau → Matrix (Fin N) (Fin N) D.host.E) (P' : D.what₂.Tau → Matrix (Fin N') (Fin N') D.host.E), admitted D N N' L L' → StdBases D lam L P → StdBases D lam L' P' → ∀ G, IsComb D B.tor (B.eNat χ) lam L L' G → OrbitPlaces.ThetaExpansionRealPlaces D p (stdSer D lam (fun _ => 1) P P' G) := by
   intro D cc δ B χ p _ lam hHost h5 hC hP0 N N' L L' P P' hAdm hS hS' G hG
@@ -364,8 +363,7 @@ theorem isHerm_iff_gram {ι : Type*} [Fintype ι] (h : Sesq R M) (b : Module.Bas
   constructor
   · intro hh
     ext i j
-    simp only [gram, Matrix.conjTranspose_apply, Matrix.of_apply]
-    exact (hh (b j) (b i)).symm
+    simpa only [gram, Matrix.conjTranspose_apply, Matrix.of_apply] using (hh (b j) (b i)).symm
   · intro hG x y
     have hb : ∀ i j, star (h (b i) (b j)) = h (b j) (b i) := fun i j => by
       have := congrFun (congrFun hG j) i
@@ -647,8 +645,7 @@ private lemma naddlt {a b : K} {r : ℝ} (ha : ‖a‖ < r) (hb : ‖b‖ < r) :
 private lemma norm_one_of_close {a b : K} (hb : ‖b‖ = 1) (h : ‖a - b‖ < 1) : ‖a‖ = 1 := by
   have := IsUltrametricDist.norm_add_eq_max_of_norm_ne_norm (x := a - b) (y := b)
     (by rw [hb]; exact h.ne)
-  rw [sub_add_cancel, hb, max_eq_right h.le] at this
-  exact this
+  rwa [sub_add_cancel, hb, max_eq_right h.le] at this
 
 private lemma sqrt_near [CompleteSpace K] (h2 : ‖(2 : K)‖ = 1) (w : K) (hw : ‖w‖ < 1) :
     ∃ t : K, ‖t‖ < 1 ∧ t ^ 2 + 2 * t = w := by
@@ -959,8 +956,7 @@ private lemma main [CompleteSpace K] [CharZero K] (hU : UnrOK K l σ) (ζ : K)
     fix_even (by rw [(hP r a).2]) k
   refine ⟨fun r => ∑ a, P r a * om a, ⟨fun r => ⟨n1 r, sig_iter_le hU _ (n1 r)⟩, fun r => ?_⟩,
     by rw [Fintype.card_fin], fun r r' => ?_⟩
-  · simp only [← RingHom.coe_pow]
-    exact ⟨f1 r, hfi (f1 r)⟩
+  · simpa only [← RingHom.coe_pow] using ⟨f1 r, hfi (f1 r)⟩
   · rw [tr_eq, ← hPH r r', ← RingHom.coe_pow]
 
     simp only [H, Matrix.of_apply, tr, map_sum, map_mul, hPi, hPs, fix_even (hP _ _).2,
@@ -1078,8 +1074,7 @@ private theorem linOL_eq {K τ : Type} [NormedField K] {i : ℕ} [NeZero i] (hi 
   obtain ⟨m, hm⟩ := hi
   have hs := ZMod.val_lt s
   have hk1 : k ≤ 1 := by
-    by_contra hc'
-    push_neg at hc'
+    by_contra! hc'
     nlinarith
   have hit : σ^[(s + (i : ZMod (2 * i))).val + i] c = σ^[s.val] c := by
     interval_cases k
@@ -1151,8 +1146,7 @@ private theorem diag (K : Type) [NormedField K] [IsUltrametricDist K] [CharZero 
     rw [mul_sub, ← mul_assoc, ← map_mul, Nat.cast_ofNat, inv_mul_cancel₀ two_ne_zero, map_one, one_mul]
   unfold Formalism.InvariantFactorPaths.G7.Simeq at hlam ⊢
   rw [sub_zero] at hlam
-  rw [key]
-  exact hlam
+  rwa [key]
 
 private theorem map_logS {K K' Lt β : Type} [Field K] [Field K'] [DecidableEq Lt] [DecidableEq β] (j : K →+* K') (l i : ℕ)
     (pos : Lt → ℕ → Lt) (v : Lt × β) : map j (logS (K := K) l i pos v) = logS (K := K') l i pos v := by
@@ -1167,8 +1161,7 @@ private theorem cc_logS {K Lt β : Type} [Field K] [DecidableEq Lt] [DecidableEq
   rw [← MvPowerSeries.coeff_zero_eq_constantCoeff_apply, MvPowerSeries.coeff_apply]
   simp only [logS, Formalism.DworkPowerSeriesWeights.genLog]
   simp only [map_zero, zero_add, Finset.sum_range_one, pow_zero, Function.iterate_zero, id_eq, ite_eq_right_iff]
-  intro h0
-  exact absurd h0.symm (Finsupp.single_ne_zero.mpr one_ne_zero)
+  exact fun h0 => absurd h0.symm (Finsupp.single_ne_zero.mpr one_ne_zero)
 
 end UpperTheory.G2.ConjugatePartitionShape
 
@@ -1246,8 +1239,7 @@ private theorem diagJ (K0 K : Type) [NormedField K0] [IsUltrametricDist K0] [Cha
       congr 2
       funext s
       exact map_logS j l i pos (pos r s.val, b)
-    rw [e1, e2] at hm
-    exact hm
+    rwa [e1, e2] at hm
 
 end UpperTheory.G2.ConjugatePartitionShape
 
@@ -1386,8 +1378,7 @@ theorem UpperTheory.integral_mvExp_sum_logS_of_odd_period :
     exact Finset.sum_eq_zero fun e _ => Pair.cc_ps (hy0 e) hph0
   have hQ2c : constantCoeff Q2 = 0 := by
     have := hQ.1
-    rw [map_sub, hQc, zero_sub, neg_eq_zero] at this
-    exact this
+    rwa [map_sub, hQc, zero_sub, neg_eq_zero] at this
   obtain ⟨-, hsymm, -, -, -⟩ := Formalism.InvariantFactorPaths.G7.Top.simeqRules ℂ_[p] (Lt × β)
   have hQ' := hsymm _ _ hQ
   refine ⟨mvExp Q * subst y G * mvExp (Q2 - Q), Formalism.InvariantFactorPaths.G7.LogarithmEquivalence.integral_mul' hW hQ'.2, ?_⟩
@@ -1525,8 +1516,7 @@ theorem frobeniusConjugation_conditions_adaptedKernelDatum_alt : Formalism.L2.Ke
       _root_.GlobalTheory.KerStd.stdBases_of_basR D _ (t.ent.lam w) _ _ _ ((t.O u μ).lat (i + 1) c').2.1 (fun τ => hB (i + 1) hi c' τ)
         (fun τ τ' h => hConj (i + 1) hi c' τ τ' h)
     have key := hQ hHA h5 _ _ _ _ hAdm hS hS' _ hComb
-    rw [hTh i hi c c', _root_.GlobalTheory.atLin_adCoef_eq_stdSer]
-    exact key
+    rwa [hTh i hi c c', _root_.GlobalTheory.atLin_adCoef_eq_stdSer]
   refine ⟨fun u μ w hLF hC hP0 i hi _ c c' => ?_, fun u μ w hLF hC i hi _ c c' => ?_⟩
   · exact main u μ w hLF hC i hi c c' (OrbitPlaces.ThetaExpansionRealPlaces D (D.what₂.places.resChar w)) fun hHA h5 =>
       _root_.GlobalTheory.KerStd.thetaExpansionRealPlaces_stdSer_of_adm D t.cc t.δ t.B t.χ (D.what₂.places.resChar w) (t.ent.lam w) hHA h5 hC hP0 _ _
@@ -1536,7 +1526,7 @@ theorem frobeniusConjugation_conditions_adaptedKernelDatum_alt : Formalism.L2.Ke
         have h2 : D.host.cls (D.what₂.places.resChar w) = PrimeClass.signal := h
         rw [h1] at h2; cases h2
       unfold nP
-      rw [if_neg hs]
+      rw [ite_eq_right hs]
       exact hC.2.1
     exact main u μ w hLF hC.1 i hi c c' (OrbitPlaces.EvenConditionsAllReal D (D.what₂.places.resChar w)) fun hHA h5 =>
       UpperTheory.lattice_pairs_odd_degree_isometric D t.cc t.δ t.B t.χ (D.what₂.places.resChar w) (t.ent.lam w) hHA h5 hC.1 hodd _ _

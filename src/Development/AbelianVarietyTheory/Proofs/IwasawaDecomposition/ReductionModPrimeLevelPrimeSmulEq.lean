@@ -112,8 +112,7 @@ theorem proj_ker (h : localization₂ P.asIdeal A = localization₂ P.asIdeal M)
       exact (mem_locP P _ _).2 ⟨t, ht, by rw [smul_comm]; exact Submodule.smul_mem_smul hr hty⟩
     obtain ⟨t, ht, h3⟩ := (mem_locP P _ _).1 (key h2)
     refine mem_smul_of_loc z.2 (s := t * s) (fun hm => (P.isPrime.mem_or_mem hm).elim ht hs) ?_
-    rw [mul_smul]
-    exact h3
+    rwa [mul_smul]
   · intro hz
     have key : ∀ y ∈ P.asIdeal • A, y ∈ A ∧ redL M P y = 0 := by
       intro y hy
@@ -185,8 +184,7 @@ theorem f_eq_zero_iff (hd : d.Ok) (ha : SepElt ST a) (P : ST) {z : Fin n → E} 
     have : z = t • (s • z) + p • z := by rw [← mul_smul, ← add_smul, e, one_smul]
     rw [this]
     exact Submodule.add_mem_sup (Submodule.smul_mem _ t hsz) (Submodule.smul_mem_smul hp hz)
-  · intro h
-    exact ((hd.mem_locP_L P z).1 (sup_le_locP hd ha P h)).2
+  · exact fun h => ((hd.mem_locP_L P z).1 (sup_le_locP hd ha P h)).2
 
 theorem reductionModPrime_levelPrime_smul_eq (hd : d.Ok) (P : ST) (hne : conjPrime₂ P.1 ≠ P.1) {q : 𝓞 E} (hq : q ∈ P.1.asIdeal) {z e : Fin n → E}
     (hz : z ∈ d.at P.1) (hfz : d.f P z = 1) (he : e ∈ d.N) (hfe : d.f P e = 1) (t : d.dnN P) (ht : t.1 = q • e) :
@@ -267,7 +265,6 @@ theorem GlobalTheory.Mem.Col2.TC.exists_level_projections : ∀ {B : Base} {X : 
     fun v c => proj_smul (h2 v c), fun v c => proj_ker (h2 v c) (hPv v), fun v c z hz h => ?_⟩,
     fun v c z h => proj_mk (h1 v c) z h, fun v c z h => proj_mk (h2 v c) z h⟩
   · have e := f_eq_zero_iff (hd c) ha v (z := z.1) (hD c ▸ z.2)
-    rw [← hK v c, ← hf v c z] at e
-    exact e
+    rwa [← hK v c, ← hf v c z] at e
   · obtain ⟨t, ⟨e, he, hfe, ht⟩, hte⟩ := te_mk hl v c
     exact (reductionModPrime_levelPrime_smul_eq (hd c) v (hne v) (hT v) ((hd c).Lsh_le_at ha v (hD c ▸ z.2)) ((hf v c z).symm.trans hz) he hfe t ht).trans hte

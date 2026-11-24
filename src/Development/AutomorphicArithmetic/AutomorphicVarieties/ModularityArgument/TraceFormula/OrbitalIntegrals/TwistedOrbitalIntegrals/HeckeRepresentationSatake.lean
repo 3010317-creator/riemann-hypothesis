@@ -85,8 +85,7 @@ theorem UpperTheory.V.Z.Tf.Orb.gLTop :
       ext g
       simp only [Set.mem_setOf_eq, Set.mem_preimage, Units.embedProduct_apply, Set.mem_prod,
         MulOpposite.op_injective.mem_set_image]
-    rw [e]
-    exact h
+    rwa [e]
   refine ⟨Units.isClosedEmbedding_embedProduct.locallyCompactSpace,
     Units.isEmbedding_embedProduct.secondCountableTopology, inferInstance, ?_, hlast⟩
   let O : Subring E := (valuation E).integer
@@ -118,8 +117,7 @@ theorem UpperTheory.V.Z.Tf.Orb.gLTop :
         {x : E | valuation E x ≤ 1}) := by
       ext A
       exact ⟨fun hA i _ j _ => hA i j, fun hA i j => hA i trivial j trivial⟩
-    rw [e]
-    exact h
+    rwa [e]
   let K : Subgroup (GL (Fin n) E) :=
     { carrier := {g : GL (Fin n) E | (g : Matrix (Fin n) (Fin n) E) ∈ M ∧
         ((g⁻¹ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E) ∈ M}

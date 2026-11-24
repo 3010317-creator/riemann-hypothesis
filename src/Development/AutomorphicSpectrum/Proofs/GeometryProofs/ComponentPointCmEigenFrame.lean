@@ -289,12 +289,9 @@ theorem lat_eq_iSup (Z : CptOver Y U) (hβ : Function.Injective β)
     intro s t h
     ext x
     have h1 := congrArg (fun m : E →+* Z.Ω => m x) h
-    have h2 := Z.inc.injective h1
-    exact congrArg (fun z : c.F => (z : ℂ)) h2
+    exact congrArg (fun z : c.F => (z : ℂ)) (Z.inc.injective h1)
   have hσ : Function.Injective σ := by
-    intro s t h
-    refine hφ (IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E)) ?_)
-    exact h
+    exact fun s t h => hφ (IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E)) h)
   have hcard : Fintype.card (E →+* ℂ) = Module.finrank ℚ E := Embeddings.card E ℂ
   have hVB : Z.M.lat.IsVBOn Z.genFib (Module.finrank Z.Ω Z.V) ⊤ := fun p _ => by
     obtain ⟨W, h, b, hb, hf⟩ := lat_isVB_of_smooth Y.t.semi.smooth Z.M p (Set.mem_univ _)
@@ -317,8 +314,7 @@ theorem lat_eq_iSup (Z : CptOver Y U) (hβ : Function.Injective β)
 
 theorem exists_ne_tauIn {F : Type} [Field F] (βF : c.F →+* F) (s t : E →+* ℂ) (h : s ≠ t) :
     ∃ a : 𝓞 E, βF (tauIn c s a) ≠ βF (tauIn c t a) := by
-  by_contra hn
-  push_neg at hn
+  by_contra! hn
   refine h (IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E)) ?_)
   ext a
   exact congrArg (fun z : c.F => (z : ℂ)) (βF.injective (hn a))
@@ -371,8 +367,7 @@ theorem valFam_eigFrame : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     simp_rw [hS] at h1
     rw [Submodule.iSup_span, ← Set.image_iUnion] at h1
     have h2 := Submodule.span_le_restrictScalars (regAt ξ x) Z.Ω _ h1
-    by_contra hn
-    push_neg at hn
+    by_contra! hn
     refine hcli.notMem_span_image (s := ⋃ s, (S s : Set (Fin g))) (x := i) ?_ h2
     simpa using hn
   have hfin : Module.finrank F ER = g := by
@@ -416,8 +411,7 @@ theorem valFam_eigFrame : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     · refine Submodule.span_le.2 ?_
       rintro _ ⟨k, rfl⟩
       exact (hmemE _).2 (hEig σ (bL k) (hbmem k))
-    · intro w hw
-      exact sp w ((hmemE w).1 hw)
+    · exact fun w hw => sp w ((hmemE w).1 hw)
   choose v hv using fun k => exists_sameVec_left Y y (MR.pt (ev (bL k)))
   exact ⟨v, fun k => ⟨_, hval (bL k), hv k⟩, isEigFrame_of_sameVec Y y _ v _ hv final⟩
 

@@ -167,8 +167,7 @@ theorem univChart_baseChange (G : Over (Spec (CommRingCat.of R))) [GrpObj G] (n 
     have _ : IsScalarTower R R' A := IsScalarTower.of_algebraMap_eq fun _ => rfl
     have h1 := congrArg (pushR G) h
     rw [hpush, hpush] at h1
-    have h2 := SqZero.chart_inj j h1
-    exact Algebra.TensorProduct.ext (Subsingleton.elim _ _) h2
+    exact Algebra.TensorProduct.ext (Subsingleton.elim _ _) (SqZero.chart_inj j h1)
 
 theorem exists_standardSmooth_chart (X : Over (Spec (CommRingCat.of R))) (n : ℕ)
     (h : SmoothOfRelativeDimension n X.hom) (x : X.left) :
@@ -190,8 +189,7 @@ theorem exists_standardSmooth_chart (X : Over (Spec (CommRingCat.of R))) (n : �
     exact (q : PrimeSpectrum B).2.ne_top (top_le_iff.1 (hs ▸ Ideal.span_le.2 hc))
   have hq' : (q : PrimeSpectrum B) ∈
       Set.range (PrimeSpectrum.comap (algebraMap B (Localization.Away t))) := by
-    rw [PrimeSpectrum.localization_away_comap_range (Localization.Away t) t]
-    exact htq
+    rwa [PrimeSpectrum.localization_away_comap_range (Localization.Away t) t]
   obtain ⟨q', hq'⟩ := hq'
   have Ht := H t hts
   rw [CommRingCat.hom_ofHom, ← IsScalarTower.algebraMap_eq,

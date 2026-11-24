@@ -201,8 +201,7 @@ theorem vanish_of_le (f : ℕ → ℝ → ℂ) (B D : ℝ) (hB : 0 ≤ B) (hD : 
         ring
       rw [he, abs_div, abs_of_pos hm, div_le_iff₀ hm]
       linarith
-    have h := step f B D hB hD hd hb _ (ih _ ht0) _ hs k
-    simpa using h
+    simpa using step f B D hB hD hd hb _ (ih _ ht0) _ hs k
 
 theorem inner_eq_zero_of_factorial_bounds (H : Type) [NormedAddCommGroup H]
     [InnerProductSpace ℂ H] (F : ℕ → ℝ → H) (M C : ℝ) (u : H)
@@ -234,8 +233,7 @@ theorem inner_eq_zero_of_factorial_bounds (H : Type) [NormedAddCommGroup H]
       _ = (‖u‖ * M) * (max |C| 1) ^ k * k.factorial := by ring
   obtain ⟨m, hm⟩ := exists_nat_ge (|t| * (4 * max |C| 1))
   have ht : |t| ≤ m * (1 / (4 * max |C| 1)) := by
-    rw [mul_one_div, le_div_iff₀ (by positivity)]
-    exact hm
+    rwa [mul_one_div, le_div_iff₀ (by positivity)]
   exact vanish_of_le (fun k t => inner ℂ u (F k t)) (‖u‖ * M) (max |C| 1) (by positivity) hD hfd hfb
     h0 m t ht 0
 
@@ -432,8 +430,7 @@ end Bnd
 
 lemma quad_step {x y A B : ℝ} (hx : 0 ≤ x) (hy : 0 ≤ y) (hA : 0 ≤ A) (hB : 0 ≤ B)
     (h : x ^ 2 ≤ y * (A * y + B * x)) : x ≤ (√A + B) * y := by
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have hs0 := Real.sqrt_nonneg A
   have hss : √A * √A * (y * y) = A * (y * y) := by rw [Real.mul_self_sqrt hA]
   have hx1 : √A * y ≤ x := by nlinarith [mul_nonneg hB hy]
@@ -828,8 +825,7 @@ theorem mem_span_basis {W Y : Submodule ℂ (Sm E a)} (hYW : Y ≤ W) {m : ℕ} 
   simp only [Submodule.coe_sum, Submodule.coe_smul] at h
   have e : (⟨φ, hYW hφ⟩ : W) = ∑ f, b.repr ⟨φ, hφ⟩ f • (⟨(b f).1, hYW (b f).2⟩ : W) := by
     apply Subtype.ext
-    simp only [Submodule.coe_sum, Submodule.coe_smul]
-    exact h.symm
+    simpa only [Submodule.coe_sum, Submodule.coe_smul] using h.symm
   rw [e]
   exact Submodule.sum_mem _ fun f _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨f, rfl⟩)
 
@@ -1025,7 +1021,7 @@ theorem single_mem {S : Subgroup (GL n (ι → ℂ))}
     · intro i j
       by_cases h : i = j
       · subst h
-        simp only [Matrix.diagonal_apply_eq, if_true]
+        simp only [Matrix.diagonal_apply_eq, ite_true]
         have h1 : HasDerivAt (fun t : ℝ => (t : ℂ) * Complex.log (D i)) (Complex.log (D i)) 0 := by
           simpa using (Complex.ofRealCLM.hasDerivAt (x := (0 : ℝ))).mul_const (Complex.log (D i))
         simpa using h1.cexp
@@ -1193,8 +1189,7 @@ theorem irred_module : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberFi
       (fun e => hψ0 (Subtype.ext e)) ?_
     have : h'.toL2 ∈ (classes W μ).topologicalClosure :=
       Submodule.le_topologicalClosure _ (toL2_mem_classes hψ h')
-    rw [h0] at this
-    exact this
+    rwa [h0] at this
   exact _root_.GlobalTheory.CompanionTheory.IrredMod.mem_of_toL2_mem E a μ H hH hi W hs (fun ψ hψ => ⟨(hW ψ hψ).1.1, (hW ψ hψ).2.2⟩) hcl φ hφ.1 h hh
 
 end GlobalTheory.CompanionTheory.CuspIrred

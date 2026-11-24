@@ -82,8 +82,7 @@ theorem _root_.GlobalTheory.ZeroDetect.sum_trunc_conv (a f : ℕ → ℂ)
     · intro n hn
       simp only [Finset.mem_filter] at hn
       exact Nat.mul_div_cancel' hn.2
-    · intro m _
-      exact Nat.mul_div_cancel_left m hd1
+    · exact fun m _ => Nat.mul_div_cancel_left m hd1
     · intro n hn
       simp only [Finset.mem_filter, Finset.mem_Ioc] at hn
       obtain ⟨⟨h0, _⟩, k, rfl⟩ := hn
@@ -111,12 +110,10 @@ theorem _root_.GlobalTheory.ZeroDetect.sum_initial (f : ℕ → ℂ) (D : ℕ) (
   · intro n hn hn1
     have hfil : n.divisors.filter (fun d => d ≤ D) = n.divisors := by
       apply Finset.filter_true_of_mem
-      intro d hd
-      exact (Nat.divisor_le hd).trans (Finset.mem_Ioc.1 hn).2
-    rw [hfil, hsum, if_neg hn1]
+      exact fun d hd => (Nat.divisor_le hd).trans (Finset.mem_Ioc.1 hn).2
+    rw [hfil, hsum, ite_eq_right hn1]
     simp
-  · intro h
-    exact absurd (Finset.mem_Ioc.2 ⟨zero_lt_one, hD⟩) h
+  · exact fun h => absurd (Finset.mem_Ioc.2 ⟨zero_lt_one, hD⟩) h
 
 open Complex DirichletCharacter ArithmeticFunction MeasureTheory in
 theorem _root_.GlobalTheory.ZeroDetect.rpow_bound {Q y σ : ℝ} (hQ : 1024 ≤ Q) (hy : Q ^ 6 ≤ 2 * y)
@@ -222,8 +219,7 @@ theorem _root_.GlobalTheory.ZeroDetect.zero_detect : ∃ Q₀ : ℕ, ∀ Q : ℕ
     have hN : 1 ≤ Q ^ 6 / d := (Nat.le_div_iff_mul_le hd1).2 (by omega)
     have hP : ‖∑ m ∈ Finset.Icc 1 (Q ^ 6 / d), f m‖ ≤ C * ((Q ^ 6 / d : ℕ) : ℝ) ^ (-ρ.re) := by
       have := _root_.GlobalTheory.DirichletTail.norm_LFunction_sub_sum_le q χ hχ ρ hσ0 (Q ^ 6 / d) hN
-      rw [hL, zero_sub, norm_neg] at this
-      exact this
+      rwa [hL, zero_sub, norm_neg] at this
     have ha : ‖a d‖ ≤ 1 := by
       simp only [a]
       rw [Complex.norm_intCast]

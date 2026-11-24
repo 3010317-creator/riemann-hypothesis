@@ -75,8 +75,7 @@ theorem sec_eq_zero_of_chart {X : Scheme.{0}} [IsIntegral X] (N : LB X) (s : LB.
     have h := s.compat i j
     rw [hj, map_zero, mul_zero] at h
     apply map_injective_of_isIntegral X (homOfLE (inf_le_left : N.U i ⊓ N.U j ≤ N.U i))
-    rw [map_zero]
-    exact h
+    rwa [map_zero]
   · have : N.U i = ⊥ := by
       ext1
       simpa using Set.not_nonempty_iff_eq_empty.1 hi
@@ -115,8 +114,7 @@ theorem sec_eq_zero_of_dvd_pow_uniformiser :
     N.U j ≤ G.hom ⁻¹ᵁ ⊤)).op).le h).2
   have h3 : x ∈ G.hom ⁻¹ᵁ (Spec (CommRingCat.of V)).basicOpen
       ((Scheme.ΓSpecIso (CommRingCat.of V)).inv π) := by
-    rw [Scheme.preimage_basicOpen]
-    exact h2
+    rwa [Scheme.preimage_basicOpen]
   rw [basicOpen_eq_of_affine] at h3
   have h4 : G.hom x ∈ PrimeSpectrum.basicOpen π := h3
   rw [hx] at h4

@@ -178,8 +178,7 @@ theorem rho_jet_mem : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → T
   obtain ⟨y, hy⟩ := hJ.exists_eq (a := a) (u := u) (N := N) (N' := N') (c := cB) (x := (r q).1) (e := e) hi
     ⟨hN, hN', hB, Dvd.intro_left _ rfl, divLat_mul_of cA cB _ (r q).2⟩ he
   rw [mul_left_comm]
-  refine Subfield.mul_mem _ (RingHom.mem_fieldRange_self _ _) ?_
-  exact ⟨y, hy⟩
+  exact Subfield.mul_mem _ (RingHom.mem_fieldRange_self _ _) ⟨y, hy⟩
 
 end GlobalTheory.Mem.Col2.TC
 end -- clump:auto
@@ -664,12 +663,11 @@ theorem det_sumE {E : Type} [Field E] {n : ℕ} (r : ℕ) (hr : r ≤ n) (j : Sp
   set A := Matrix.of fun s t : Fin (r + m + 1 - r) =>
     Loc.atN ((sumE (rfl : r + m + 1 = r + m + 1) j 1).toLinearMap (Loc.eN E (r + m + 1) (r + t.1))) (r + s.1) with hA
   rw [← Matrix.det_submatrix_equiv_self (finCongr hm).symm A]
-  rw [← Matrix.det_submatrix_equiv_self (finCongr hm').symm]
-  rw [Matrix.det_succ_row _ (Fin.last m)]
+  rw [← Matrix.det_submatrix_equiv_self (finCongr hm').symm, Matrix.det_succ_row _ (Fin.last m)]
   rw [Finset.sum_eq_single (Fin.last m)]
   · have e1 : A.submatrix (finCongr hm).symm (finCongr hm).symm (Fin.last m) (Fin.last m) = 1 := by
       show Loc.atN ((sumE rfl j 1) (Loc.eN E (r + m + 1) (r + m))) (r + m) = 1
-      rw [atN_sumE_last, if_pos rfl]
+      rw [atN_sumE_last, ite_eq_left rfl]
     rw [e1, Fin.succAbove_last, Fin.val_last, ← two_mul, pow_mul, neg_one_sq, one_pow, one_mul, one_mul]
     congr 1
     ext s t
@@ -680,10 +678,9 @@ theorem det_sumE {E : Type} [Field E] {n : ℕ} (r : ℕ) (hr : r ≤ n) (j : Sp
     have hb' : b.1 < m := Fin.val_lt_last hb
     have e1 : A.submatrix (finCongr hm).symm (finCongr hm).symm (Fin.last m) b = 0 := by
       show Loc.atN ((sumE rfl j 1) (Loc.eN E (r + m + 1) (r + b.1))) (r + m) = 0
-      rw [atN_sumE_last, if_neg (by omega)]
+      rw [atN_sumE_last, ite_eq_right (by omega)]
     rw [e1, mul_zero, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem lamQB_sumE : ∀ {E K : Type} [Field E] [NumberField E] [StarRing E] [Field K] (P : HeightOneSpectrum (𝓞 E)) (ξ : (𝓞 E ⧸ P.asIdeal)ˣ →* Kˣ) {N n : ℕ} (hN : N = n + 1) (r : ℕ), r ≤ n → ∀ j : Sp E n ≃ₗ[E] Sp E n, LocE.lamQB ξ r N (sumE hN j 1).toLinearMap = LocE.lamQB ξ r n j.toLinearMap := by
   intro E K _ _ _ _ P ξ N n hN r hr j
@@ -785,7 +782,7 @@ theorem levGTop_rPsymF_eq_twLt : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (C
   rw [levGTop_PsymF]
   show _ = colLevSym Ch R.m w
   unfold colLevSym
-  rw [if_neg (by have := R.two_le_m; omega), dite_eq_right (by omega), dite_eq_right (by omega)]
+  rw [ite_eq_right (by have := R.two_le_m; omega), dite_eq_right (by omega), dite_eq_right (by omega)]
   rfl
 
 end GlobalTheory
@@ -817,19 +814,16 @@ theorem stabStd_eq_stabSet {B : Base} {X : PreX B.toPre} (I : TC B X) (l : I.Law
   · rintro ⟨s, rfl⟩
     have hs : _ = _ := s.2
     refine ⟨s.1, congrArg (fun p => p.1.1) hs, congrArg (fun p => p.1.2) hs, ?_⟩
-    refine Prod.ext ?_ rfl
-    exact GlobalTheory.KerJ.ufGL_val s.1.1
+    exact Prod.ext (GlobalTheory.KerJ.ufGL_val s.1.1) rfl
   · rintro ⟨b, hb, hq, rfl⟩
-    refine ⟨⟨b, Subtype.ext (Prod.ext hb hq)⟩, ?_⟩
-    refine Prod.ext ?_ rfl
-    exact (GlobalTheory.KerJ.ufGL_val b.1).symm
+    exact ⟨⟨b, Subtype.ext (Prod.ext hb hq)⟩, Prod.ext (GlobalTheory.KerJ.ufGL_val b.1).symm rfl⟩
 
 theorem rep_coset_empty {B : Base} {X : PreX B.toPre} (I : TC B X) (u : B.Word) (a : I.ι) (i : ℕ) (hi : i + 1 ≠ B.R.m)
     (c : (I.stp u a i).Cl) : ((I.stp u a i).rep c).1.2 = ∅ := by
   have key : ∀ y : Ys B.fields (B.R.N i), y = Ys.triv _ _ → ∀ s N, s ∈ y.ys N → s = ∅ := by
     rintro y rfl s N hs
     exact hs
-  exact key _ (by unfold ysAt; exact if_neg hi) _ _ ((I.stp u a i).rep c).2
+  exact key _ (by unfold ysAt; exact ite_eq_right hi) _ _ ((I.stp u a i).rep c).2
 
 theorem stabStd_eq_stabSet_triv {B : Base} {X : PreX B.toPre} (I : TC B X) (l : I.Laws) (Z : TC.Later B (I.cols l))
     (u : B.Word) (a : I.ι) (i : ℕ) (hi : i + 1 ≠ B.R.m) (c : ((I.rec7 l Z).chTw u a).cls i) :

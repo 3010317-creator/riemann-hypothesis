@@ -64,10 +64,8 @@ theorem parab_eq_blockTri (b : Fin r → Fin s) :
     parab K b = blockTri (κ := K) (fun i => (b i : ℕ)) := by
   ext g
   constructor
-  · intro hg
-    exact hg.1
-  · intro hg
-    exact ⟨hg, (blockTri (κ := K) (fun i => (b i : ℕ))).inv_mem hg⟩
+  · exact fun hg => hg.1
+  · exact fun hg => ⟨hg, (blockTri (κ := K) (fun i => (b i : ℕ))).inv_mem hg⟩
 
 
 omit [Fintype K] [DecidableEq K] in
@@ -119,13 +117,13 @@ theorem sum_unipRadical_eq_zero (b : Fin r → Fin s) (c : Fin s) (τ : FDRep �
     · rw [hu.2 _ _ hkl]
       by_cases e : k = l
       · subst e; simp
-      · rw [if_neg (fun h => e (F.symm.injective h)), Matrix.one_apply_ne e, sub_zero]
-    · have hk : ¬ c' k ≤ c' i0 := fun hk => hkl (by rw [hb, hb, if_pos hk, if_pos (hlk.trans hk)])
+      · rw [ite_eq_right (fun h => e (F.symm.injective h)), Matrix.one_apply_ne e, sub_zero]
+    · have hk : ¬ c' k ≤ c' i0 := fun hk => hkl (by rw [hb, hb, ite_eq_left hk, ite_eq_left (hlk.trans hk)])
       have hl : c' l ≤ c' i0 := by
         by_contra hl
-        exact hkl (by rw [hb, hb, if_neg hk, if_neg hl])
+        exact hkl (by rw [hb, hb, ite_eq_right hk, ite_eq_right hl])
       have hlt : bb (F.symm l) < bb (F.symm k) := by
-        rw [hb, hb, if_neg hk, if_pos hl]; decide
+        rw [hb, hb, ite_eq_right hk, ite_eq_left hl]; decide
       have ekl : k ≠ l := fun e => hkl (by rw [e])
       rw [hu.1.1 _ _ hlt, Matrix.one_apply_ne ekl, sub_zero]
   have := hv ⟨u', hmem⟩

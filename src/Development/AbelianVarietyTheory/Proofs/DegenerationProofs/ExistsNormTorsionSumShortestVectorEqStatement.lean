@@ -406,13 +406,11 @@ theorem exists_secsOver : Laws → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Al
   · have h := isValueAt_move hp τ hτ hL₀ hL₁ (hx' a).symm (He a) hth (ρ.th_val a)
     have q := sv_of_isValueAt h (𝟙 _) z hJ
     rw [Category.id_comp, spMap_appTop_fn] at q
-    rw [ThetaGeom.val_powFrame, Nat.cast_one, zpow_one]
-    exact q
+    rwa [ThetaGeom.val_powFrame, Nat.cast_one, zpow_one]
   · have h := isValueAt_move hp τ hτ hL₀ hL₁ (hx' a).symm (ThetaGeom.genThrough_pow τ (He a) S.N) (hs i)
       (ρ.ev_val i a)
     have q := sv_of_isValueAt h (𝟙 _) z hJ
-    rw [Category.id_comp, spMap_appTop_fn] at q
-    exact q
+    rwa [Category.id_comp, spMap_appTop_fn] at q
   · obtain ⟨θ, hθ, H⟩ := ClassWeight.symLift_act_move hp τ hτ hw hL₀ hL₁ (hx' _).symm (hN a) (ρ.U_sym a)
       (fun l i => fn (algebraMap o S.R (S.ρ a l i))) (fun l i => cF u.V (y₀ (algebraMap o S.R (S.ρ a l i))))
       (fun l i => spMap_appTop_fn y₀ _) hs (ρ.U_act a)
@@ -487,8 +485,7 @@ theorem exists_val_le_of_sumV_characters : ∀ (F : Type) [Field F] (v : AddValu
     rw [Finset.sum_congr rfl fun t _ => inv_mul_cancel₀ (hne t)]
     simp
   have e2 : ∑ t, (χ t α)⁻¹ * (∑ β ∈ U, χ t β * cf β) = ∑ β ∈ U, (∑ t, (χ t α)⁻¹ * χ t β) * cf β := by
-    simp only [Finset.mul_sum, Finset.sum_mul, mul_assoc]
-    exact Finset.sum_comm
+    simpa only [Finset.mul_sum, Finset.sum_mul, mul_assoc] using Finset.sum_comm
   have e : ((Fintype.card T : ℕ) : F) * cf α =
       (∑ t, (χ t α)⁻¹ * (ζ t * w t)) +
         (-(∑ t, (χ t α)⁻¹ * (ζ t * w t - ∑ β ∈ U, χ t β * cf β)) +
@@ -1040,8 +1037,7 @@ theorem exists_origin (hLL : LL) (hT : TwistBCSpanStatement) (hVR : TWM.VRatioGt
   · refine (hg.2 χ y J hJ).trans ?_
     rw [CoefBasic.cst_eq]
     exact map_one _
-  · rw [e₀] at hl
-    exact hl
+  · rwa [e₀] at hl
 
 
 
@@ -1124,8 +1120,7 @@ theorem exists_norm_FF_eq : Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [Co
           ((((CoefVal.main hLL hT hVR hTW hUU u.V u.complete ϖ hϖ u.D Q hQ (PadicAlgCl p) v hv g).2.2.2.2.2.2
             S.N hN0 w₁ Φ hw₁.1).2 _ 0 0 hgv hwv hΦ β))
         have : (0 : ℚ) < S.N := by exact_mod_cast hN0
-        simp only [zero_add, add_zero]
-        exact div_lt_div_of_pos_right (by exact_mod_cast hlt) this
+        simpa only [zero_add, add_zero] using div_lt_div_of_pos_right (by exact_mod_cast hlt) this
       · left
         refine Eq.trans (Finset.sum_congr rfl fun t _ => ?_) (GlobalTheory.T.thetaSystem_sum_character_orthogonal_eq_zero o Ω S _ _ hζ l.yy.ker a hk)
         rw [← hτv t a _ ha, ofAdd_sub, map_div, Units.val_div_eq_div_val, div_eq_inv_mul])

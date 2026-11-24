@@ -153,7 +153,7 @@ private theorem eisF_shift {K : Type} [Field K] [CharZero K] (j M : ℕ) (ζ : K
     · have : ζ ^ (a₂ + e * a₁) = ζ ^ a₂ :=
         zpow_cg hM hζ (Int.ModEq.symm ((Int.modEq_iff_dvd).2 (by simpa using hd.mul_left e)))
       rw [this]
-    · simp only [if_neg hd]
+    · simp only [ite_eq_right hd]
   · unfold coefPos
     rw [Finset.mul_sum]
     refine Finset.sum_congr rfl fun d hd => ?_
@@ -621,8 +621,7 @@ private theorem siegel_function_root_power_eq {K : Type} [Field K] [CharZero K] 
     simp [mul_comm]
   have h2 := Int.ModEq.mul_left' (c := (N : ℤ)) h1
   simp only [mul_zero, add_zero]
-  rw [Nat.cast_mul N, mul_left_comm]
-  exact h2
+  rwa [Nat.cast_mul N, mul_left_comm]
 
 theorem UpperTheory.pieceT_det_fiber_eq_pieceT_root_pow :
     ∀ {K : Type} [Field K] [CharZero K] (l : ℕ) [Fact l.Prime] (N m k : ℕ) (c d xt t : ℤ) (ζ : K) (β : ℕ) (z₀ : ZMod (l ^ m)), 0 < N → 1 ≤ m → ζ ^ (N * l ^ m) = 1 → IsUnit z₀ → (β : ZMod (l ^ m)) = z₀ → ∀ r : ℕ, pieceT N l m m k (1 : DirichletCharacter K (l ^ m)) c d (xt, 0) (t, 0) ζ ((unitSet l m).filter fun γ : GL (Fin 2) (ZMod (l ^ m)) => (((γ : Matrix (Fin 2) (Fin 2) (ZMod (l ^ m))).det.val : ℕ) : ZMod (l ^ m)) = z₀) r = pieceT N l m m k (1 : DirichletCharacter K (l ^ m)) c d (xt, 0) (t, 0) (ζ ^ β) ((unitSet l m).filter fun γ => (γ : Matrix (Fin 2) (Fin 2) (ZMod (l ^ m))).det = 1) r := by
@@ -685,8 +684,7 @@ theorem UpperTheory.repM_apply_zt_eq_pow_redTop :
   haveI : NeZero (l ^ (m + n)) := ⟨hl0⟩
   have h1 : zt ε l (m + n) ^ (l ^ (m + n)) = 1 := by
     have h := (isPrimitiveRoot_eOm ε hl0).pow_eq_one
-    rw [Nat.cast_pow] at h
-    exact h
+    rwa [Nat.cast_pow] at h
   have hd : l ^ (m + n) ∣ topM l n m (N * N) := Dvd.intro _ rfl
   have h2 : zt ε l (m + n) ^ topM l n m (N * N) = 1 := by
     obtain ⟨k, hk⟩ := hd
@@ -727,8 +725,7 @@ theorem UpperTheory.sum_levelSubgroupMod_eq_smul_sum_reps :
   obtain ⟨hsub, huniq⟩ := hR
   have key : ∑ p ∈ R ×ˢ Finset.range M, f p.1 = ∑ γ ∈ Gs N l M, f γ := by
     refine Finset.sum_bij (fun p _ => p.1 * Tm M p.2) ?_ ?_ ?_ ?_
-    · intro p hp
-      exact mul_Tm_mem N l M (hsub (Finset.mem_product.1 hp).1) _
+    · exact fun p hp => mul_Tm_mem N l M (hsub (Finset.mem_product.1 hp).1) _
     · intro p hp q hq hpq
       have hp' := Finset.mem_product.1 hp
       have hq' := Finset.mem_product.1 hq
@@ -737,8 +734,7 @@ theorem UpperTheory.sum_levelSubgroupMod_eq_smul_sum_reps :
     · intro γ hγ
       obtain ⟨p, ⟨h1, h2, h3⟩, -⟩ := huniq γ hγ
       exact ⟨p, Finset.mem_product.2 ⟨h1, Finset.mem_range.2 h2⟩, h3.symm⟩
-    · intro p hp
-      exact (hf _ (Finset.mem_product.1 hp).1 _).symm
+    · exact fun p hp => (hf _ (Finset.mem_product.1 hp).1 _).symm
   rw [← key, Finset.sum_product, Finset.smul_sum]
   refine Finset.sum_congr rfl fun γ _ => ?_
   simp
@@ -856,8 +852,7 @@ private theorem exists_rd_eq (M : ℕ) (γ : SL(2, ZMod M)) : ∃ g : SL(2, ℤ)
   have h1 : (a : ZMod M) * d0 - b * c0 = 1 := by
     have := γ.det_coe
     rw [Matrix.det_fin_two] at this
-    rw [ha, hb, hc0, hd0]
-    exact this
+    rwa [ha, hb, hc0, hd0]
   obtain ⟨s, hs⟩ : (M : ℤ) ∣ a * d0 - b * c0 - 1 := by
     rw [← ZMod.intCast_zmod_eq_zero_iff_dvd]
     push_cast
@@ -894,8 +889,7 @@ private theorem exists_rd_eq (M : ℕ) (γ : SL(2, ZMod M)) : ∃ g : SL(2, ℤ)
   have h1' : (a : ZMod M) * d - b * c = 1 := by
     have := γ.det_coe
     rw [Matrix.det_fin_two] at this
-    rw [ha, hb, hc, hd]
-    exact this
+    rwa [ha, hb, hc, hd]
   have h2 : (v : ZMod M) * d + u * c = 1 := by
     have := congrArg (fun x : ℤ => (x : ZMod M)) huv
     push_cast at this
@@ -1046,14 +1040,12 @@ private theorem sum_gs_red_eq_card_smul_sum_lower_zero (l : ℕ) [Fact l.Prime] 
                 have := congrArg (fun z : SL(2, ZMod N) => z i j) E
                 simpa only [rd_apply] using this
               rw [CongruenceSubgroup.Gamma1_mem] at hg0 ⊢
-              rw [e, e, e]
-              exact hg0
+              rwa [e, e, e]
             · rw [CongruenceSubgroup.Gamma0_mem]
               have := congrArg
                 (fun z : SL(2, ZMod (l ^ k)) => ZMod.castHom (dvd_pow_self l hk) (ZMod l) (z 1 0)) hx1
               simp only [rd_apply, map_intCast] at this
-              rw [this]
-              exact hδ
+              rwa [this]
           · dsimp only
             rw [red_rd_eq_rd_of_dvd, red_rd_eq_rd_of_dvd, hx1, hx2]
         · intro _ _
@@ -1394,8 +1386,7 @@ private theorem sum_key {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
         repM (topM l n m (N * N)) y (kz ζ l (m + n) N x c d w (gm r₀ * liftSL _ γ) r)) =
       ∑ γ ∈ R, ∑ r₀ : (ZMod l)ˣ, Ψ (gm r₀ * liftSL _ γ) := by
 
-    simp only [map_sum]
-    exact swap4 A Fy Finset.univ R _
+    simpa only [map_sum] using swap4 A Fy Finset.univ R _
   have hΦ : ∑ h ∈ Finset.univ.filter (fun h : SL(2, ZMod (l ^ (m + n))) => ¬ l ∣ (h 0 0).val ∧ ¬ l ∣ (h 1 0).val), Φ h =
       (Nat.totient (N * N)) • ∑ h ∈ Finset.univ.filter (fun h : SL(2, ZMod (l ^ (m + n))) => ¬ l ∣ (h 0 0).val ∧ ¬ l ∣ (h 1 0).val), ∑ a ∈ A,
         kg ζ l (m + n) N (c : ℤ) (d : ℤ) w ((x.val : ℤ) * a₀ * (topT l (m + n) N : ℤ), 0) (a₀ * (topT l (m + n) N : ℤ), 0) (tw h (a * z)) r := by
@@ -1468,7 +1459,7 @@ theorem UpperTheory.Kd.L.arith :
     repM (topM l n m (N * N)) y (E r₀ γ) with hS2
   have hF : Fsum ε l n m N x c d w gm R z (i : ℚ) = (N : Ω) ^ 3 * ((l : Ω) ^ ((m + n) * w) * S1 + (l : Ω) ^ n * S2) := by
     unfold Fsum
-    rw [if_pos (by simp)]
+    rw [ite_eq_left (by simp)]
     congr 1
     simp only [hS1, hS2, Finset.mul_sum, ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun y _ => Finset.sum_congr rfl fun r₀ _ => Finset.sum_congr rfl fun γ hγ => ?_
@@ -1508,8 +1499,7 @@ theorem UpperTheory.Kd.L.arith :
     have h1 : (l : ZMod N) ^ (m + n) * (topT l (m + n) N : ZMod N) = 1 := by
       unfold topT
       rw [ZMod.natCast_zmod_val]
-      have h := ZMod.coe_mul_inv_eq_one (l ^ (m + n)) hcp
-      simpa using h
+      simpa using ZMod.coe_mul_inv_eq_one (l ^ (m + n)) hcp
     have h2 : (l : ZMod N) ^ m * (t : ZMod N) = 1 := by
       have h := (ZMod.intCast_eq_intCast_iff _ _ N).2 ht
       push_cast at h
@@ -1549,7 +1539,7 @@ theorem UpperTheory.Kd.L.arith :
     have hdiv : l ^ (m + n) * i = l ^ n * (l ^ m * i) := by rw [pow_add]; ring
     rw [hdiv]
     unfold vp
-    rw [if_pos (dvd_mul_right _ _), Nat.mul_div_cancel_left _ (pow_pos hl.pos n)]
+    rw [ite_eq_left (dvd_mul_right _ _), Nat.mul_div_cancel_left _ (pow_pos hl.pos n)]
   rw [hvp] at down
   set Ks : Ω := ∑ γ ∈ ((unitSet l (m + n)).filter fun γ : GL (Fin 2) (ZMod (l ^ (m + n))) => (((γ : Matrix (Fin 2) (Fin 2) (ZMod (l ^ (m + n)))).det.val : ℕ) : ZMod (l ^ m)) = z₀),
     kg ζ l (m + n) N (c : ℤ) (d : ℤ) w ((x.val : ℤ) * a₀ * (topT l (m + n) N : ℤ), 0) (a₀ * (topT l (m + n) N : ℤ), 0) γ (l ^ (m + n) * i) with hKs

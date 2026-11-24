@@ -184,7 +184,6 @@ theorem tw_lift : ∀ (p : ℕ) [Fact p.Prime] (O : Type) [CommRing O] (L L' : T
             hw1, hw2, smul_add]
           abel
         zero_mem' := by
-          show ∃ w : ℤ_[p] ⊗[ℤ] L', _
           exact ⟨0, by simp⟩
         smul_mem' := by
           rintro c z ⟨w, hw⟩
@@ -207,8 +206,7 @@ theorem tw_lift : ∀ (p : ℕ) [Fact p.Prime] (O : Type) [CommRing O] (L L' : T
     refine ⟨fun k => (LinearMap.fst O L' L).comp ((G k).subtype.comp (h k)), fun k x => ?_⟩
     have h2 : (h k x : L' × L).2 = x := LinearMap.congr_fun (hh k) x
     have hmem := (hG k _).mp (h k x).prop
-    rw [h2] at hmem
-    exact hmem
+    rwa [h2] at hmem
   refine ⟨⟨a, ?_, ?_, ?_, ?_⟩⟩
   · intro k x
     constructor
@@ -603,8 +601,7 @@ theorem tw_g_xi : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (bar : 
     have h3 : ((x - bar x : 𝓞 E) : E) / c * β * a = (m : ℚ) • (η * a) := by
       have h4 : ((bar c0 * b : 𝓞 E) : E) * m = ((x - bar x : 𝓞 E) : E) * β := by
         have := congrArg (algebraMap (𝓞 E) E) hβ
-        rw [map_mul _ (bar c0 * b), map_intCast, map_mul _ _ β] at this
-        exact this
+        rwa [map_mul _ (bar c0 * b), map_intCast, map_mul _ _ β] at this
       rw [← hy, Int.cast_smul_eq_zsmul, zsmul_eq_mul, div_mul_eq_mul_div, ← h4]
       ring
     rw [h3, map_smul, hη]
@@ -1213,8 +1210,7 @@ theorem tw_g_padic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (bar
       IsUnit (t - Algebra.TensorProduct.map (AlgHom.id ℤ_[p] ℤ_[p]) bar.toRingHom.toIntAlgHom t) := by
     refine ⟨1 ⊗ₜ θ, padic_unit p _ _ ?_⟩
     have := hθ.map (Algebra.TensorProduct.includeRight (R := ℤ) (A := ℤ_[p]) (B := 𝓞 E)).toRingHom
-    rw [map_natCast, map_sub] at this
-    exact this
+    rwa [map_natCast, map_sub] at this
   obtain ⟨e, he⟩ := tw_g_std ℤ_[p] _ _ hσ lam l1 l2 _ (tw_g_semi p _ _ hσ hu _) ψ ψ' a1 a2 a3 b1 b2 b3
   refine ⟨φ ≪≫ₗ e.restrictScalars ℤ_[p] ≪≫ₗ φ'.symm, fun a x => ?_, fun u v => ?_⟩
   · apply φ'.injective

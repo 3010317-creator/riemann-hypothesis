@@ -85,8 +85,7 @@ private theorem card_sigma_fibre {Y Z : Scheme.{0}} (s : Y ⟶ Z) (I : Type) (K 
     · rintro ⟨y, hy⟩
       obtain ⟨i, y', rfl⟩ := exists_sigma_point K y
       refine ⟨⟨i, y', ?_⟩, rfl⟩
-      rw [Category.assoc, Sigma.ι_desc] at hy
-      exact hy
+      rwa [Category.assoc, Sigma.ι_desc] at hy
   rw [← Nat.card_congr (Equiv.ofBijective F hF), Nat.card_prod]
 
 theorem UpperTheory.Gal.G3.pSigmaFEt :
@@ -104,8 +103,7 @@ theorem UpperTheory.Gal.G3.pSigmaFEt :
       rw [Sigma.ι_desc, ← Category.assoc]
       erw [Sigma.ι_reindex_hom (f := fun _ : Fin n => Y) e i]
       rw [Sigma.ι_desc]
-    rw [h3]
-    exact h2
+    rwa [h3]
   have hfac : (Sigma.desc fun _ : I => s) = (Sigma.desc fun _ : I => 𝟙 Y) ≫ s := by
     refine Sigma.hom_ext (f := fun _ : I => Y) _ _ fun i => ?_
     simp

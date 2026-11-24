@@ -67,7 +67,7 @@ variable {d : ℕ} {E : Frame Φ (d + 1)} (Q : Poly Φ) (σ : ∀ T : C, E.D ⟶
 theorem tau_sec_Pmap (i : Fin d) {T T' : C} (φ : T ⟶ T') :
     E.τ i.succ (Cut.sec Q ⟨T, σ T⟩ ≫ Cut.Pmap Q (X := ⟨T, σ T⟩) (Y := ⟨T', σ T'⟩) φ) (Cut.sec Q ⟨T', σ T'⟩) =
       (Φ.A.map (Q.j T')).hom (E.τ i.succ (σ T ≫ φ) (σ T')) := by
-  rw [Cut.τ_sec, if_neg (Fin.succ_ne_zero i), neg_zero, zero_add]
+  rw [Cut.τ_sec, ite_eq_right (Fin.succ_ne_zero i), neg_zero, zero_add]
   have e : σ T ≫ Q.j T ≫ Cut.Pmap Q (X := ⟨T, σ T⟩) (Y := ⟨T', σ T'⟩) φ = (σ T ≫ φ) ≫ Q.j T' := by
     have := Cut.Pmap_j Q (X := ⟨T, σ T⟩) (Y := ⟨T', σ T'⟩) φ
     simp only at this
@@ -76,7 +76,7 @@ theorem tau_sec_Pmap (i : Fin d) {T T' : C} (φ : T ⟶ T') :
   rw [e, E.add i.succ _ (σ T' ≫ Q.j T') _, E.nat]
   have h := Cut.sec_spec Q (E := E) ⟨T', σ T'⟩ i.succ
   simp only at h
-  rw [h, if_neg (Fin.succ_ne_zero i), add_zero]
+  rw [h, ite_eq_right (Fin.succ_ne_zero i), add_zero]
 
 theorem factor {T₀ T₁ T₂ : C} (i : Fin d) (b : T₀ ⟶ T₁) (a : T₁ ⟶ T₂) :
     (Φ.A.map (Cut.Pmap Q (X := ⟨T₁, σ T₁⟩) (Y := ⟨T₂, σ T₂⟩) a)).hom
@@ -123,8 +123,7 @@ theorem form_sub_mem (hF : IsFil Φ Fil) (hc : E.GrConst Fil) (j q : ℕ) (r : �
   refine hF.mul j (q + 1) _ ((Fil j).map_mem _ hP) ?_
   have := hc q u v hx
   have e : ((q + 1 : ℕ) : ℤ) = (q : ℤ) + 1 := by push_cast; rfl
-  rw [e]
-  exact this
+  rwa [e]
 
 theorem gr_pull {R : Type} [CommRing R] {C : Type 1} [Category.{0} C] {Φ : PDF R C} (Q : Poly Φ) {Fil : ℤ → IdF Φ.A}
     (hF : IsFil Φ Fil) {d : ℕ} (E : Frame Φ (d + 1)) (σ : ∀ T : C, E.D ⟶ T) (hc : E.GrConst Fil) (j q : ℕ) (r : ℤ) (hr : r = j + q)

@@ -117,8 +117,7 @@ theorem unitBallMaxIdeal_isMaximal : (unitBallMaxIdeal E).IsMaximal := by
     have hinv : ‖(x : E)⁻¹‖ ≤ 1 := by rw [norm_inv, hn, inv_one]
     have hmem := J.mul_mem_left ⟨(x : E)⁻¹, hinv⟩ hxJ
     convert hmem using 1
-    apply Subtype.ext
-    exact (inv_mul_cancel₀ hx0).symm
+    exact Subtype.ext (inv_mul_cancel₀ hx0).symm
 
 end Residue
 
@@ -285,8 +284,7 @@ theorem exists_pow_close [LocallyCompactSpace E] (y : Matrix (Fin n) (Fin n) E)
     rw [mem_closedBall_zero_iff, pi_norm_le_iff_of_nonneg zero_le_one]
     intro i
     rw [pi_norm_le_iff_of_nonneg zero_le_one]
-    intro j
-    exact integ_pow hy k i j
+    exact fun j => integ_pow hy k i j
   obtain ⟨x, -, φ, hφ, hlim⟩ := hs.tendsto_subseq hf
   obtain ⟨N, hN⟩ := Metric.cauchySeq_iff.mp hlim.cauchySeq 1 one_pos
   refine ⟨φ N, φ (N + 1), hφ (Nat.lt_succ_self N), ?_⟩
@@ -1313,8 +1311,7 @@ private theorem exists_star_fixed_uniformizer (F E : Type) [NontriviallyNormedFi
     ?_, ?_, ?_⟩ <;> rw [norm_algebraMap', ← ha]
   · exact hy0.trans_le hyw
   · exact hw1
-  · intro z hz
-    exact hmax (by simpa using hz)
+  · exact fun z hz => hmax (by simpa using hz)
 
 open Matrix in
 private theorem mul_inv_mul_conj_eq_one_of_norm_quotient {B : Type} [CommRing B] (τ : B → B)
@@ -1381,21 +1378,18 @@ private theorem mul_inv_quotient_mem_twistedCentralizerGL_lemma_3 {E : Type} [Fi
     rw [_root_.GlobalTheory.Tw.CentralizerAdjoin.adj_mul' hδ]
     exact hcomm _ (hτA h.1 h.2).1 _ (hτA g.1 g.2).1
   have hτ0 : _root_.GlobalTheory.Tw.adj δ 0 = 0 := by
-    have h := _root_.GlobalTheory.Tw.CentralizerAdjoin.adj_semi δ 1 0 0
-    simpa using h
+    simpa using _root_.GlobalTheory.Tw.CentralizerAdjoin.adj_semi δ 1 0 0
   have hτadd : ∀ g h : A, τA (g + h) = τA g + τA h := by
     intro g h
     apply Subtype.ext
     show _root_.GlobalTheory.Tw.adj δ (g.1 + h.1) =
       _root_.GlobalTheory.Tw.adj δ g.1 + _root_.GlobalTheory.Tw.adj δ h.1
-    have e := _root_.GlobalTheory.Tw.CentralizerAdjoin.adj_semi δ 1 g.1 h.1
-    simpa using e
+    simpa using _root_.GlobalTheory.Tw.CentralizerAdjoin.adj_semi δ 1 g.1 h.1
   have hτsmul : ∀ (r : E) (g : A), τA (r • g) = star r • τA g := by
     intro r g
     apply Subtype.ext
     show _root_.GlobalTheory.Tw.adj δ (r • g.1) = star r • _root_.GlobalTheory.Tw.adj δ g.1
-    have e := _root_.GlobalTheory.Tw.CentralizerAdjoin.adj_semi δ r g.1 0
-    simpa [hτ0] using e
+    simpa [hτ0] using _root_.GlobalTheory.Tw.CentralizerAdjoin.adj_semi δ r g.1 0
   have hτone : τA 1 = 1 := Subtype.ext (_root_.GlobalTheory.Tw.CentralizerAdjoin.adj_one' hδ)
   have hτpow : ∀ (g : A) (k : ℕ), τA (g ^ k) = τA g ^ k := by
     intro g k
@@ -1658,9 +1652,9 @@ theorem eq_twCent_mul_KGL : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   have hcs : cj w = starRingEnd (w.adicCompletion E) := RingHom.ext fun _ => rfl
   have hth : ∀ h : GLw n w, (thL n w h).val = GlobalTheory.Tw.theta h.val := by
     intro h
-    rw [thL, if_neg hs, hcs, thetaGL_val]
+    rw [thL, ite_eq_right hs, hcs, thetaGL_val]
   have hnr : (nrmL n w y).val = GlobalTheory.Tw.nrm y.val := by
-    rw [nrmL, if_neg hs, Units.val_mul, hcs, thetaGL_val]; rfl
+    rw [nrmL, ite_eq_right hs, Units.val_mul, hcs, thetaGL_val]; rfl
 
   have hmem (O : Subring (w.adicCompletion E)) (h : GLw n w) :
       h ∈ GLint (Fin n) O ↔

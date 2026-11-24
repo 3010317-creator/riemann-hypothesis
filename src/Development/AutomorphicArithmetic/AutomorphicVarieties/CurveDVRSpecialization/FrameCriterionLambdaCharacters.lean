@@ -81,8 +81,7 @@ theorem UpperTheory.frame_criterion_lambda_characters :
         ext y
         rfl
       have hgd : g ∈ Dec (F := L) A := by
-        rw [← galEmb_mem_Dec (k := ℚ), hg]
-        exact hdec
+        rwa [← galEmb_mem_Dec (k := ℚ), hg]
       exact ⟨⟨g, hgd⟩, hg⟩
   let m : Dec (F := L) A ≃* Φ.Gv v :=
     (MonoidHom.ofInjective he1).trans ((MulEquiv.subgroupCongr hrange).trans (MonoidHom.ofInjective he2).symm)
@@ -101,5 +100,4 @@ theorem UpperTheory.frame_criterion_lambda_characters :
   have hfwd : Continuous m := by
     have := hinv.continuous_symm_of_equiv_compact_to_t2 (f := m.symm.toEquiv)
     simpa using this
-  refine ⟨{ m with continuous_toFun := hfwd, continuous_invFun := hinv }, fun g => ?_⟩
-  exact hm g
+  exact ⟨{ m with continuous_toFun := hfwd, continuous_invFun := hinv }, fun g => (hm g)⟩

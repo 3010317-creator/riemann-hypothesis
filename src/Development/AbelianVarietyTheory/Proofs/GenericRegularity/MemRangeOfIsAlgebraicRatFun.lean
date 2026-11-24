@@ -163,8 +163,7 @@ theorem exists_finset_roots (F : Type*) [Field F] [CharZero F] [Algebra.EssFinit
     refine hs.mem_range_of_isRoot (S := Ω) ((minpoly.monic hi).map _).ne_zero ?_
     rw [Polynomial.map_map, Subsingleton.elim (RingHom.comp _ _) (algebraMap ℚ Ω), IsRoot.def, eval_map_algebraMap, aeval_algHom_apply, minpoly.aeval, map_zero]
   have hle : (⊤ : IntermediateField ℚ L) ≤ (ψ.toRatAlgHom.fieldRange).comap g := by
-    rw [← hθ, adjoin_simple_le_iff]
-    exact hr
+    rwa [← hθ, adjoin_simple_le_iff]
   exact hle (x := ⟨x, mem_algebraicClosure_iff'.2 hx⟩) trivial
 
 end Fields
@@ -302,8 +301,7 @@ theorem compNe_and_exists_fnAlgClosed : ∀ (E : Type) [Field E] [NumberField E]
   have hr' : IsIntegral ℚ r := isIntegral_trans r hr
   let p : Xo.XF c'' ⟶ Xo.X := pullback.fst _ _
   haveI : Flat (spMap (IntermediateField.inclusion c''.le).toRingHom) := by
-    refine (HasRingHomProperty.Spec_iff (P := @Flat)).2 ?_
-    exact flat_of_field _
+    exact (HasRingHomProperty.Spec_iff (P := @Flat)).2 (flat_of_field _)
   have hp : p (genPt Z) ∈ genericPoints Xo.X := apply_mem_genericPoints p Z.1 Z.2
   obtain ⟨k, hk⟩ := mem_range_of_isIntegral (p.residueFieldMap (genPt Z)).hom (algebraMap c''.F (kap Z))
     (fun S h₁ h₂ => residueField_generated Xo.s _ (genPt Z) S h₁ h₂)

@@ -286,11 +286,11 @@ lemma gram_sq (k r : ℕ) : Hpk k r * Hpk k r = 1 := by
   have hi := i.isLt
   have hj := j.isLt
   rw [Matrix.mul_apply, Finset.sum_eq_single (partner k r i)]
-  · rw [gram_apply, gram_apply, Matrix.one_apply, if_pos rfl]
+  · rw [gram_apply, gram_apply, Matrix.one_apply, ite_eq_left rfl]
     unfold partner
     split_ifs <;> simp only [Fin.ext_iff] at * <;> first | omega | (simp; done) | (split_ifs <;> first | omega | simp)
   · intro b _ hb
-    rw [gram_apply k r i b, if_neg hb, zero_mul]
+    rw [gram_apply k r i b, ite_eq_right hb, zero_mul]
   · simp
 
 end GlobalTheory.BesselUnitary
@@ -683,8 +683,7 @@ theorem _root_.GlobalTheory.gfPow_smul_comp_polyOp_eigenSum :
       rw [hfun, show e = (Finset.range p₀).card * (2 * r + 2) + dA by rw [he, Finset.card_range]; ring]
       exact _root_.Formalism.FourierDecayAlt.P.PartialDerivativeAlgebra.pd_mul hG (hc i)
     have h2 := isEigenSum_poly_smul lam 0 e A₀ _ hpoly _ (fun s t h => by rw [zero_add]; exact hgap s t h) h0
-    rw [zero_add] at h2
-    exact h2
+    rwa [zero_add] at h2
   exact _root_.GlobalTheory.capelli_eigenSum_linearCombination k r Wp Wq' lam e (A₀ - e) (Fin n₁) Finset.univ (fun _ => 1)
     (fun i g => (((_root_.Formalism.QuantumDeterminants.Gf k r z z' g ^ p₀ : ℝ) : ℂ) * c i g) • (f g).comp (L i)) _
     (fun i _ => ⟨e, A₀ - e, le_rfl, le_rfl, hpiece i⟩)
@@ -802,8 +801,7 @@ theorem clause_bdd (D : RealPlaceData k r Wp Wq) {A : ℝ} (hA : 0 ≤ A) (hCC :
       calc gN g ^ A * ‖G g‖ = ‖f₂ g‖ * (gN g ^ A * ‖f₁ g‖) := by rw [hGn]; ring
         _ ≤ ‖Lp D p‖ * K₂ * K₁ := mul_le_mul (hb₂ g hg) h1 h0 ((norm_nonneg _).trans (hb₂ g hg)))
     have hint : Integrable (fun g : Mt k r => G (Matrix.of g)) D.μG := ⟨hGm, hfin⟩
-    refine hint.norm.congr (Filter.Eventually.of_forall fun g => ?_)
-    exact hGn _
+    exact hint.norm.congr (Filter.Eventually.of_forall fun g => (hGn _))
 
 theorem gv_stable (D : RealPlaceData k r Wp Wq) : IsStableOpen D (GV k r) :=
   ⟨⟨Set.univ, isOpen_univ, (Set.univ_inter _).symm⟩,
@@ -1078,8 +1076,7 @@ theorem levelZero_energy_le_of_eigen_sum :
     (fun l => nn l.2) ?_ ?_ ?_
   · unfold C7.principalHermitianLattice
     rw [e1, e2]
-    simp only [star_one, mul_one, one_mul, hcast]
-    exact key
+    simpa only [star_one, mul_one, one_mul, hcast] using key
   · intro S
     have e3 := GlobalTheory.beta_finset_sum_smul_of_bessel hXi k r Wp Wq D A (Fin N₀) S S (fun _ => 1) (fun _ => 1) Fi
       (fun g => ∑ i ∈ S, (1 : ℂ) • Fi i g) (fun g => ∑ i ∈ S, (1 : ℂ) • Fi i g) hA h5
@@ -1134,8 +1131,7 @@ theorem ckOn_group_finset_sum {k r : ℕ} {E : Type} [NormedAddCommGroup E] [Nor
   refine ⟨⋂ i ∈ s, U i, fun g => ∑ i ∈ s, f i g, isOpen_biInter_finset fun i _ => hU i,
     Set.mem_iInter₂.2 fun i _ => hgU i, ?_, ?_⟩
   · exact ContDiffOn.sum fun i hi => (hf i).mono fun g hg => Set.mem_iInter₂.1 hg i hi
-  · intro g hg hG
-    exact Finset.sum_congr rfl fun i hi => hff i g (Set.mem_iInter₂.1 hg i hi) hG
+  · exact fun g hg hG => Finset.sum_congr rfl fun i hi => hff i g (Set.mem_iInter₂.1 hg i hi) hG
 
 theorem levelZero_form_le_normC_of_eigen_sum : GlobalTheory.HCXi.BesselXiIntegrable → ∀ (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (P : M.Par) (p : KB.Pl P Wp Wq) (lam : Fin (2 * P.r + P.k + 1) → ℝ) (d : ℕ) (A : ℝ) (nn : ℝ → ℝ) (F : B.Mat P.k P.r → (Wq →L[ℂ] Wp)) (Y : Finset ℝ) (N : ℕ), B.AB P.k P.r ≤ A → (∃ (N₀ : ℕ) (Fi : Fin N₀ → B.Mat P.k P.r → (Wq →L[ℂ] Wp)) (ν : Fin N₀ → Fin (2 * P.r + P.k + 1) → ℤ), (∀ i s, |ν i s| ≤ ((d : ℕ) : ℤ)) ∧ (∀ i, (B.CkOn ⊤ (B.GV P.k P.r) (Fi i) ∧ ∀ m : ℕ, B.InCC (A) m (Fi i))) ∧ (∀ i, (∀ Y : ℝ, ∀ g ∈ B.GV P.k P.r, Q.CV P.k P.r (Y : ℂ) (Fi i) g = ((∏ s, (Y + lam s + (ν i s : ℝ)) : ℝ) : ℂ) • (Fi i) g)) ∧ ∀ g ∈ B.GV P.k P.r, (F) g = ∑ i, Fi i g) → (∀ y : ℝ, ∏ t, (|y + lam t| + (d : ℝ)) ≤ nn y) → ∀ w, TBB.AdmW P p.l0 Y w → w.length ≤ N → (p.RR F 0 w [] []).re ≤ TBB.normC nn w * (B.beta p.T.base F F).re := by
   intro hXi Wp Wq _ _ _ _ _ _ P p lam d A nn F Y N hA hF hnn w hw _

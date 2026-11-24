@@ -88,8 +88,7 @@ theorem exists_modulBar_notMem (G : GridData L sc) {v : GlobalTheory.FinPl.Pl D}
       apply FaithfulSMul.algebraMap_injective (𝓞 D.host.E) D.host.E
       rw [Formalism.L2.Pj.algebraMap_conj_smul, ← RingOfIntegers.coe_eq_algebraMap, ← RingOfIntegers.coe_eq_algebraMap,
         GlobalTheory.IdemSupport.cO_coe, bridge_star_holds D.R D.host]
-    rw [e]
-    exact hc₀'
+    rwa [e]
 
 theorem v_le_of_mem_shiftId (G : GridData L sc) {v : GlobalTheory.FinPl.Pl D} (hv : v ∈ G.pl.S0) {a : D.host.E}
     (ha : a ∈ shiftId G) :
@@ -114,8 +113,7 @@ theorem v_le_of_mem_shiftId (G : GridData L sc) {v : GlobalTheory.FinPl.Pl D} (h
     exact le_antisymm ((G.pl.w v).intValuation_le_one c)
       (not_lt.1 fun h => hcw (((G.pl.w v).intValuation_lt_one_iff_mem c).1 h))
   rw [hoe, map_mul, h2, one_mul] at h1
-  rw [(depthAt_w G hv).1, Good.valued_alg]
-  exact h1
+  rwa [(depthAt_w G hv).1, Good.valued_alg]
 
 end GlobalTheory.DepthBig
 
@@ -244,7 +242,7 @@ theorem GlobalTheory.DepthBig.smul_mem_hatMx_of_mem_latBig : All fun {D} _ _ _ {
   have hV : ∀ X : Node, X.InRange D.R.m → IsSelfDualC (G.V X) (G.Λ X) := fun X hX => by
     by_cases h0 : ∀ j, X ≠ .grid 0 j
     · exact (G.isV hX h0).sd
-    · push_neg at h0
+    · push Not at h0
       obtain ⟨j, rfl⟩ := h0
       exact (GlobalTheory.ChiGrid.colY_isV D T L μ0 hL j hX.2).sd
   have hS := hV (.grid (i + 1) 0) ⟨hi, Nat.zero_le _⟩
@@ -306,8 +304,7 @@ theorem GlobalTheory.DepthBig.smul_mem_hatMx_of_mem_latBig : All fun {D} _ _ _ {
       (algebraMap (𝓞 D.host.E) D.host.E a)⁻¹ hy' 
     change (algebraMap (𝓞 D.host.E) D.host.E a)⁻¹ •
       ((algebraMap (𝓞 D.host.E) D.host.E a) • y) ∈ _ at this
-    rw [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
-    exact this
+    rwa [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
   obtain ⟨βS, hβS⟩ := GlobalTheory.latticeFrame.exists_frame D.host.F D.host.E _ _ (hfull _ _ hS)
   obtain ⟨βT, hβT⟩ := GlobalTheory.latticeFrame.exists_frame D.host.F D.host.E _ _ (hfull _ _ hT)
   obtain ⟨e0, e1, e2⟩ := Comparison₂.cpt_idemSum he

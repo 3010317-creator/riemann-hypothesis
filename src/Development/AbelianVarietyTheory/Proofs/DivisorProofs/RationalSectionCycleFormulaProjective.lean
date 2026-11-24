@@ -89,8 +89,7 @@ theorem GlobalTheory.ratSec_cycle_formula : ∀ (κ : Type) [Field κ] (X : Sche
     intro E' hE'
     obtain ⟨s, hs, e⟩ := GlobalTheory.RatSecCycle.exists_sec_divOfSec_eq E' hE'
     have := _root_.GlobalTheory.SecCycle.interNum_cons_eq_finsum_mult κ X hp n hn (toLB E') (isLB_toLB E') P hP s hs
-    rw [e] at this
-    exact this
+    rwa [e] at this
   have hv := diffVanish_chiPic_of_isProjOver (algebraMap_eq_strHom κ X) (structureModule X) hp
     (d := n + 1) (by rw [QCoh.suppDim_structureModule]; exact hn)
   have hc : CechPic.cls (toLB (D + E)) (isLB_toLB (D + E)) =
@@ -104,7 +103,6 @@ theorem GlobalTheory.ratSec_cycle_formula : ∀ (κ : Type) [Field κ] (X : Sche
   have e2 : (∑ᶠ w, (D + E).mult w * interNumRed κ (⟨closure {w}, isClosed_closure⟩ : Closeds _) P) =
       (∑ᶠ w, D.mult w * interNumRed κ (⟨closure {w}, isClosed_closure⟩ : Closeds _) P) +
         ∑ᶠ w, E.mult w * interNumRed κ (⟨closure {w}, isClosed_closure⟩ : Closeds _) P := by
-    simp only [mult_add, add_mul]
-    exact finsum_add_distrib (hfin D) (hfin E)
+    simpa only [mult_add, add_mul] using finsum_add_distrib (hfin D) (hfin E)
   rw [e2] at ha
   linarith

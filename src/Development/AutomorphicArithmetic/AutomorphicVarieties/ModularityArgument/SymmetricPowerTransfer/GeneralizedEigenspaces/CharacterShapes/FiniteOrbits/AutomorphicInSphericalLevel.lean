@@ -396,14 +396,13 @@ theorem UpperTheory.V.Z.Sym.So.weakOne :
     apply mem_Uc w (c w)
     have hA := ha w (Finset.mem_union_left _ hw)
     have hB := ha (ub w) (Finset.mem_union_right _ (Finset.mem_image_of_mem ub hw))
-    simp only [hw, hnS, if_true, if_false, inv_one, Units.val_one, mul_one] at hA hB
+    simp only [hw, hnS, ite_true, ite_false, inv_one, Units.val_one, mul_one] at hA hB
     have hB' : Valued.v (algebraMap L (Kw w) (cj a) - 1) < WithZero.exp (-(E : ℤ)) := by
       have e1 : algebraMap L (Kw w) (cj a) - 1 = algebraMap L (Kw w) (cj ((a : L) - 1)) := by
         simp [map_sub]
       rw [e1, PI.FinOrdValD.WA.val_alg, ← hconj (cj ((a : L) - 1))]
       change HeightOneSpectrum.valuation L (ub w) (cj (cj ((a : L) - 1))) < _
-      rw [IsCMField.complexConj_apply_apply, ← PI.FinOrdValD.WA.val_alg, map_sub, map_one]
-      exact hB
+      rwa [IsCMField.complexConj_apply_apply, ← PI.FinOrdValD.WA.val_alg, map_sub, map_one]
     have hexp : WithZero.exp (-(E : ℤ)) ≤ WithZero.exp (-((c w : ℕ) : ℤ)) := by
       have hcw : c w ≤ E := Finset.single_le_sum (fun _ _ => Nat.zero_le _) hw
       rw [WithZero.exp_le_exp]
@@ -483,8 +482,7 @@ private theorem diagonal_conj_upper_elementary (D : GL (Fin 2) K →* G) (t : K)
   have e : t * y = y + x := by rw [hy]; field_simp; ring
   have h := congrArg D (hom_trivial_on_upper_elementary t h0 y)
   rw [map_mul, map_mul, e, upper_elementary_add, map_mul, mul_comm (D (dt t h0))] at h
-  have h2 := mul_right_cancel h
-  simpa using h2
+  simpa using mul_right_cancel h
 
 private theorem hom_trivial_on_lower_elementary (D : GL (Fin 2) K →* G) (t : K) (h0 : t ≠ 0) (h1 : t ≠ 1) (x : K) : D (e21 x) = 1 := by
   have hs : t - 1 ≠ 0 := sub_ne_zero.2 h1
@@ -492,8 +490,7 @@ private theorem hom_trivial_on_lower_elementary (D : GL (Fin 2) K →* G) (t : K
   have e : y * t = y + x := by rw [hy]; field_simp; ring
   have h := congrArg D (diagonal_conj_lower_elementary t h0 y)
   rw [map_mul, map_mul, e, lower_elementary_add, map_mul, mul_comm (D (dt t h0))] at h
-  have h2 := mul_right_cancel h
-  simpa using h2
+  simpa using mul_right_cancel h
 
 private theorem D_ne (D : GL (Fin 2) K →* G) (t : K) (h0 : t ≠ 0) (h1 : t ≠ 1) (g : GL (Fin 2) K)
     (hd : (g.val).det = 1) (hc : g.val 1 0 ≠ 0) : D g = 1 := by
@@ -525,8 +522,7 @@ private theorem D_one (D : GL (Fin 2) K →* G) (t : K) (h0 : t ≠ 0) (h1 : t �
       rw [Units.val_mul, Matrix.det_mul, hd, mul_one]
       simp [e21, Matrix.det_fin_two]) (by
       simpa [e21, Matrix.mul_apply, Fin.sum_univ_two, hc] using ha)
-    rw [map_mul, hom_trivial_on_lower_elementary D t h0 h1, one_mul] at h
-    exact h
+    rwa [map_mul, hom_trivial_on_lower_elementary D t h0 h1, one_mul] at h
   · exact D_ne D t h0 h1 g hd hc
 
 end Comm
@@ -638,8 +634,7 @@ theorem UpperTheory.V.Z.Sym.So.translate :
     refine hinf _ b hb ?_
     have e : a * f * b = γ * f := by
       rw [hab, mul_assoc, mul_assoc, (hfkc f hf b hb).eq]
-    rw [e, hφ.left γ hγr]
-    exact hf0
+    rwa [e, hφ.left γ hγr]
   set h : ∀ w : Plc L, (Kw w)ˣ := fun w => Units.map (algebraMap L (Kw w) : L →* Kw w) δ / (GeneralLinearGroup.det (cLoc w f))⁻¹ with hh
   have hH : ∀ w ∈ S, h w ∈ (VL w).H := fun w hw => (VL w).le (hδS w hw)
   have hdaf : ∀ w, GeneralLinearGroup.det (cLoc w (a * f)) = h w := by
@@ -664,8 +659,7 @@ theorem UpperTheory.V.Z.Sym.So.translate :
     exact (VL w).dg_mem (hHe w hw)
   set y : UA L 2 := a * f * u with hy
   have hy0 : φ y ≠ 0 := by
-    rw [hy, hφ.level u huL]
-    exact haf
+    rwa [hy, hφ.level u huL]
   have hufin : u ∈ finU (E := L) (n := 2) := hu1 _ fun w hw => (Subgroup.mem_inf.1 ((hsec w (hSp w hw)).1 _)).1
   have hyfin : y ∈ finU (E := L) (n := 2) := mul_mem (mul_mem ha hf) hufin
   have hdy : ∀ w ∈ S, ((cLoc w y).val).det = 1 := by
@@ -687,8 +681,7 @@ theorem UpperTheory.V.Z.Sym.So.translate :
       have := (hsec w (hSp w hw)).2.2.2 c hc
       rwa [hcu w rfl] at this
     rw [map_mul, map_inv, hs2 w hw v hv, ← e, hcu v hv, inv_mul_cancel]
-  · rw [mul_inv_cancel_left]
-    exact hy0
+  · rwa [mul_inv_cancel_left]
 
 end
 end -- clump:auto
@@ -793,7 +786,7 @@ private theorem off_on_comm {L : Type} [Field L] [NumberField L] [IsCMField L] (
   refine h5 _ _ (fun u => ?_) (fun τ => ?_)
   · by_cases h : ∀ w ∈ S, un u ≠ un w
     · rw [map_mul, map_mul, ha.2 u h, one_mul, mul_one]
-    · push_neg at h
+    · push Not at h
       obtain ⟨w, hw, hu⟩ := h
       rw [map_mul, map_mul, hoff w hw u hu, one_mul, mul_one]
   · rw [map_mul, map_mul, ((h6 x).1).1 hx τ, ((h6 a).1).1 ha.1 τ]
@@ -929,7 +922,7 @@ private theorem op0 {L : Type} [Field L] [NumberField L] [IsCMField L] {B : Brid
   classical
   have hfull : Full (Kall (L := L) 2) S := ⟨le_rfl, fun _ _ => inf_le_right⟩
   have hd : ∃ d : ∀ w : Plc L, Fin 2 → (Kw w)ˣ, ∀ w h, d w = fun i => iu T w h (SD.dS t (un w) i) :=
-    ⟨fun w => if h : IsSplitAt w then fun i => iu T w h (SD.dS t (un w) i) else 1, fun w h => dif_pos h⟩
+    ⟨fun w => if h : IsSplitAt w then fun i => iu T w h (SD.dS t (un w) i) else 1, fun w h => dite_eq_left h⟩
   refine hd.elim fun d hd => ?_
   have h3 : ∀ w ∈ S, cLoc w x = Sig.dg (d w) := fun w hw => (h2 w hw (hF.pl.split w hw)).trans (congrArg _ (hd w _).symm)
   have hp := prodEig L 2 _ S VL hF.pl hfull d x h1 h3

@@ -111,8 +111,7 @@ theorem sm_of_weak_deriv_closed : ∀ (V : Type) [NormedAddCommGroup V] [NormedS
       simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply,
         ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.smulRight_apply]
       have a1 := h.2.2.2 (D z)
-      have a2 := h.2.2.2 f
-      exact a1.sub ((om.continuous.clm_apply continuous_const).smul (a2.const_smul _))
+      exact a1.sub ((om.continuous.clm_apply continuous_const).smul ((h.2.2.2 f).const_smul _))
     · intro x v
       obtain ⟨a, x', hx⟩ := h3 x v
       have e : (fun w => l x (ρ w f)) =
@@ -145,7 +144,6 @@ theorem sm_of_weak_deriv_closed : ∀ (V : Type) [NormedAddCommGroup V] [NormedS
       simp only [(hF _).fderiv, ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply,
         ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.smulRight_apply]
       exact (ih _ (hD z)).sub ((om.contDiff.clm_apply contDiff_const).smul ((ih f hf).const_smul _))
-  intro f hf
-  exact contDiff_infty.2 fun n => ind n f hf
+  exact fun f hf => contDiff_infty.2 fun n => ind n f hf
 
 end GlobalTheory.RealWeil

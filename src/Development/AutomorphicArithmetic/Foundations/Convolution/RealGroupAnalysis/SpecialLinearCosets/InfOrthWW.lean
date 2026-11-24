@@ -196,8 +196,7 @@ theorem UpperTheory.ConvolutionTheory.R2.I.invFn :
         fun p => (fun p : (Fin 2 → Kv v) × (Fin 2 → Kv v) => a.1 (cols p.1 p.2)) (p + colsH.symm y) := by
       funext p
       have hy : cols (colsH.symm y).1 (colsH.symm y).2 = y := colsH.apply_symm_apply y
-      simp only [cols_add, hy]
-      exact h _
+      simpa only [cols_add, hy] using h _
     simp only [IM]
     rw [e]
     exact integral_add_right_eq_self (μ := (μ2 v).prod (μ2 v)) (fun p : (Fin 2 → Kv v) × (Fin 2 → Kv v) => a.1 (cols p.1 p.2)) (colsH.symm y)

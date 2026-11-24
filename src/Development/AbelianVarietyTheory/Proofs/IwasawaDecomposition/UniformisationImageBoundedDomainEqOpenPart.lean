@@ -64,9 +64,7 @@ theorem GlobalTheory.UnifImage.image_domFlat_eq_ptsIn_openPart : ∀ (E : Type) 
       y ∈ ptsIn X.str (σ.comp e.toRingHom) (openPart j) ↔ ¬ LiesIn (cxOf e σ hj y) (genBd T.Z) := by
     intro y
     constructor
-    · intro h hb
-      have h1 := h (show IsLocalRing.closedPoint ℂ ∈ (⊤ : (Sp ℂ).Opens) from trivial)
-      exact h1 hb
+    · exact fun h hb => (h (show IsLocalRing.closedPoint ℂ ∈ (⊤ : (Sp ℂ).Opens) from trivial)) hb
     · intro h pt _
       obtain rfl : pt = IsLocalRing.closedPoint ℂ := Subsingleton.elim _ _
       exact h
@@ -86,8 +84,7 @@ theorem GlobalTheory.UnifImage.image_domFlat_eq_ptsIn_openPart : ∀ (E : Type) 
     obtain ⟨k', x', t, hB⟩ := hU.2.2.1 q
     have hq' : cxPt T.Z (U.un k' x') = cxOf e σ hj y := (cxPt_congr hB.1.symm).trans hq
     have hyχ : y.1 ≫ j ≫ genStr T.Z = spMap σ := by
-      have h2 := (cxOf e σ hj y).2
-      simpa [cxOf, Category.assoc] using h2
+      simpa [cxOf, Category.assoc] using (cxOf e σ hj y).2
     obtain ⟨p, hp⟩ := GlobalTheory.FlagCptBase.exists_pt_over_base E H Dw l Xo c O β T.Z F e σ (Dw.p + Dw.q) U Φ k X j hjo hj f hfj
       (_root_.GlobalTheory.FlagFibre.carries_every E H Dw l Xo c O β T.Z F e σ (Dw.p + Dw.q) U Φ)
       (fun i K _ χ p h => GlobalTheory.CarryAll.carry_some E H Dw l Xo c O β T.Z F e (Φ.C i) K χ p h) ℂ σ y.1 hyχ

@@ -226,13 +226,11 @@ namespace OffTest
 theorem combAt_single_zero (P : Pl D → Prop) {S T : HSp D} (c : ℂ) : CombAt P (Finsupp.single (0 : WO S T) c) := by
   intro u hu
   rw [Finset.mem_singleton.1 (Finsupp.support_single_subset hu)]
-  intro i j
-  exact Submodule.zero_mem _
+  exact fun i j => Submodule.zero_mem _
 
 theorem comb_single_zero (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (f : WO S T → ℂ) :
     comb ψ S T (Finsupp.single 0 1) f = f := by
-  simp [comb]
-  exact GlobalTheory.MixPer.heisO_zero ψ S T f
+  simpa [comb] using GlobalTheory.MixPer.heisO_zero ψ S T f
 
 end OffTest
 

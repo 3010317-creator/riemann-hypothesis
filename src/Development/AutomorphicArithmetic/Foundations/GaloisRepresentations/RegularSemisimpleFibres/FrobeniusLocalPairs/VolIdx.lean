@@ -66,8 +66,7 @@ private lemma haar_measure_open_subgroup_index {T : Type} [Group T] [Topological
     · intro hx
       refine ⟨QuotientGroup.mk ⟨x, hx⟩, ?_⟩
       have h1 := QuotientGroup.eq.mp (QuotientGroup.out_eq' (QuotientGroup.mk ⟨x, hx⟩ : C' ⧸ H'.subgroupOf C'))
-      rw [Subgroup.mem_subgroupOf, Subgroup.coe_mul, Subgroup.coe_inv] at h1
-      exact h1
+      rwa [Subgroup.mem_subgroupOf, Subgroup.coe_mul, Subgroup.coe_inv] at h1
     · rintro ⟨q, hq⟩
       have h2 := C'.mul_mem (hr q) (hHC hq)
       rwa [mul_inv_cancel_left] at h2
@@ -96,8 +95,7 @@ theorem volIdx :
   have eH : {t : T | (t : G) ∈ H} = ((H.subgroupOf T : Subgroup T) : Set T) := rfl
   have eC : {t : T | (t : G) ∈ C} = ((C.subgroupOf T : Subgroup T) : Set T) := rfl
   have hHo : IsOpen ((H.subgroupOf T : Subgroup T) : Set T) := by
-    rw [← eH]
-    exact hH
+    rwa [← eH]
   have hCc : IsCompact ((C.subgroupOf T : Subgroup T) : Set T) := by
     rw [← eC]
     exact hT.isClosedEmbedding_subtypeVal.isCompact_preimage hC

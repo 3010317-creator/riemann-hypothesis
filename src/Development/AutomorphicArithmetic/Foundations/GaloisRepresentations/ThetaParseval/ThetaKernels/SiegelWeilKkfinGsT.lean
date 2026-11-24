@@ -142,8 +142,7 @@ theorem psi_line_deriv_k (s : AF F) : HasDerivAt (fun t : ℝ => d.B.ψ (realAd 
   have h1 : HasDerivAt (fun t : ℝ => ((t * c : ℝ) : ℂ)) (c : ℂ) 0 := by
     have := ((hasDerivAt_id (0 : ℝ)).mul_const c).ofReal_comp
     simpa using this
-  have h2 := (h1.const_mul (-(2 * Real.pi * Complex.I))).cexp
-  simpa using h2
+  simpa using (h1.const_mul (-(2 * Real.pi * Complex.I))).cexp
 theorem rho_add_fn_k (w : Matrix (Fin d.m) (Fin d.n ⊕ Fin d.n) (AE F E)) (Φ Ψ : d.Fn) :
     d.dd.rho d.B.ψ w (Φ + Ψ) = d.dd.rho d.B.ψ w Φ + d.dd.rho d.B.ψ w Ψ := funext fun _ => mul_add _ _ _
 theorem rho_smul_fn_k (w : Matrix (Fin d.m) (Fin d.n ⊕ Fin d.n) (AE F E)) (c : ℂ) (Φ : d.Fn) :
@@ -175,8 +174,7 @@ theorem l_D_k {Ψ : d.Fn} (hΨ : Ψ ∈ d.sch) {u : Matrix (Fin d.m) (Fin d.n �
     exact hD ha S
   | zero =>
     have : ∀ t : ℝ, schr d.B.ψ (realAd F t • w) (0 : d.Fn) = 0 := fun t => funext fun _ => mul_zero _
-    simp only [this, map_zero, Box.D, Box.DP_zero]
-    exact hasDerivAt_const _ _
+    simpa only [this, map_zero, Box.D, Box.DP_zero] using hasDerivAt_const _ _
   | add x y hx hy ix iy =>
     have : ∀ t : ℝ, schr d.B.ψ (realAd F t • w) (x + y) = schr d.B.ψ (realAd F t • w) x + schr d.B.ψ (realAd F t • w) y :=
       fun t => funext fun _ => mul_add _ _ _
@@ -205,8 +203,7 @@ theorem rho_D_k {Φ : d.Fn} (hΦ : Φ ∈ d.sch) {u : Matrix (Fin d.m) (Fin d.n 
   funext z
   have h1 : HasDerivAt (fun t : ℝ => d.dd.rho d.B.ψ v (d.dd.rho d.B.ψ (realAd F t • u) Φ) z)
       (d.dd.rho d.B.ψ v (Box.D (d.dd.e u) Φ) z) 0 := by
-    simp only [Darboux.rho, schr, map_smul]
-    exact (Box.hasD d.ok.good.std hw hΦ _).const_mul _
+    simpa only [Darboux.rho, schr, map_smul] using (Box.hasD d.ok.good.std hw hΦ _).const_mul _
   have h2 : HasDerivAt (fun t : ℝ => d.dd.rho d.B.ψ v (d.dd.rho d.B.ψ (realAd F t • u) Φ) z)
       ((-(2 * Real.pi * Complex.I) * (Algebra.trace ℝ (mixedEmbedding.mixedSpace F) (evI F (_root_.PositivityTheory.SiegelWeilFormula.KK.sp_k d v u)) : ℂ)) *
         d.dd.rho d.B.ψ v Φ z + 1 * Box.D (d.dd.e u) (d.dd.rho d.B.ψ v Φ) z) 0 := by
@@ -269,14 +266,12 @@ theorem at_snd_k {u : Matrix (Fin d.m) (Fin d.n ⊕ Fin d.n) (AE F E)} (hu : At 
 theorem eq_zero_of_nf_k {u : Matrix (Fin d.m) (Fin d.n ⊕ Fin d.n) (AE F E)} (hu : At (evI F) u)
     (h1 : Box.nf (d.dd.e u).1 = 0) (h2 : Box.nf (d.dd.e u).2 = 0) : u = 0 := by
   have e : d.dd.e u = 0 := Prod.ext (_root_.PositivityTheory.SiegelWeilFormula.KK.vec_eq_zero_k (_root_.PositivityTheory.SiegelWeilFormula.KK.at_fst_k hu) h1) (_root_.PositivityTheory.SiegelWeilFormula.KK.vec_eq_zero_k (_root_.PositivityTheory.SiegelWeilFormula.KK.at_snd_k hu) h2)
-  rw [← d.dd.e.map_eq_zero_iff]
-  exact e
+  rwa [← d.dd.e.map_eq_zero_iff]
 theorem exists_at'_k (ξ : d.κ → mixedEmbedding.mixedSpace F) :
     ∃ v : Matrix (Fin d.m) (Fin d.n ⊕ Fin d.n) (AE F E), At (evI F) v ∧ d.dd.e v = (Dense.pt ξ 0, 0) := by
   refine ⟨d.dd.e.symm (Dense.pt ξ 0, 0), fun s hs => ?_, LinearEquiv.apply_symm_apply _ _⟩
   rw [← map_smul, LinearEquiv.map_eq_zero_iff]
-  refine Prod.ext ?_ (by simp)
-  exact Box.at_pt ξ s hs
+  exact Prod.ext (Box.at_pt ξ s hs) (by simp)
 theorem td_at_mul_k {p : Type} [Fintype p] {Z : Matrix (Fin d.m) p (AE F E)} (hZ : At (evI F) Z) {q : Type}
     (N : Matrix p q (AE F E)) : At (evI F) (Z * N) := fun c hc => by rw [← Matrix.smul_mul, hZ c hc, Matrix.zero_mul]
 theorem incM_diagCols_k : incM F (diagCols (Fin d.n) : Matrix (Fin d.n ⊕ Fin d.n) (Fin d.n) E) = _root_.PositivityTheory.SiegelWeilFormula.KK.dg_k d := by
@@ -330,8 +325,7 @@ theorem hasDerivAt_character_quadratic (s : AF F) : HasDerivAt (fun t : ℝ => d
   have h1 : HasDerivAt (fun t : ℝ => ((t * (t * c) : ℝ) : ℂ)) 0 0 := by
     have := ((hasDerivAt_id (0 : ℝ)).mul ((hasDerivAt_id (0 : ℝ)).mul_const c)).ofReal_comp
     simpa using this
-  have h2 := (h1.const_mul (-(2 * Real.pi * Complex.I))).cexp
-  simpa using h2
+  simpa using (h1.const_mul (-(2 * Real.pi * Complex.I))).cexp
 theorem nfe_add_k (u v : Matrix (Fin d.m) (Fin d.n ⊕ Fin d.n) (AE F E)) :
     Box.nf (d.dd.e (u + v)).1 = Box.nf (d.dd.e u).1 + Box.nf (d.dd.e v).1 := by
   rw [map_add (f := _), Prod.fst_add, Box.nf_add]
@@ -406,7 +400,7 @@ theorem T_D_dg_k {Φ : d.Fn} (hΦ : Φ ∈ d.sch) {Z : Mx F E d.m d.n} (hZ : At 
     rw [map_add (f := _), Box.D_add_left, _root_.PositivityTheory.SiegelWeilFormula.KK.td_T_add_k] at E
     simp only [_root_.PositivityTheory.SiegelWeilFormula.KK.mZ_k]
     linear_combination E
-  push_neg at hB hC
+  push Not at hB hC
   have hz := _root_.PositivityTheory.SiegelWeilFormula.KK.all_zero_k (d := d) hB hC
   have hu := _root_.PositivityTheory.SiegelWeilFormula.KK.td_at_mul_k hZ (_root_.PositivityTheory.SiegelWeilFormula.KK.dg_k d)ᵀ
   have hu0 : Z * (_root_.PositivityTheory.SiegelWeilFormula.KK.dg_k d)ᵀ = 0 := _root_.PositivityTheory.SiegelWeilFormula.KK.eq_zero_of_nf_k hu ha (hz _)
@@ -450,7 +444,7 @@ theorem hasDerivAt_translate_secondColumns {Φ : d.Fn} (hΦ : Φ ∈ d.sch) {Z :
     simp only [_root_.PositivityTheory.SiegelWeilFormula.KK.mZ_k]
     push_cast
     ring
-  push_neg at hB
+  push Not at hB
   have hsp : ∀ v, At (evI F) v → _root_.PositivityTheory.SiegelWeilFormula.KK.sp_k d (Z * (_root_.PositivityTheory.SiegelWeilFormula.KK.secondFrameColumns d)ᵀ) v = 0 := by
     intro v hv
     obtain ⟨Z₁, Z₂, h1, h2, rfl⟩ := _root_.PositivityTheory.SiegelWeilFormula.KK.split_arch_k hv

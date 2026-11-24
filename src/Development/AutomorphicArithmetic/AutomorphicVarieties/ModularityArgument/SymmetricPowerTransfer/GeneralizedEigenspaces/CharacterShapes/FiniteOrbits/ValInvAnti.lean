@@ -139,8 +139,7 @@ private theorem dom_mul' {k : Type} [Field k] [ValuativeRel k] {n : ℕ} {x y : 
     (hx : Dom x) (hy : Dom y) : Dom (x * y) := by
   unfold Dom at *
   intro i j hij
-  simp only [Pi.mul_apply, Units.val_mul, map_mul]
-  exact mul_le_mul' (hx i j hij) (hy i j hij)
+  simpa only [Pi.mul_apply, Units.val_mul, map_mul] using mul_le_mul' (hx i j hij) (hy i j hij)
 
 private theorem valuation_monotone_of_dom_fin_three {k : Type} [Field k] [ValuativeRel k] {x : Fin 3 → kˣ} (hx : Dom x) :
     valuation k (x 0 : k) ≤ valuation k (x 1 : k) ∧ valuation k (x 1 : k) ≤ valuation k (x 2 : k) := by
@@ -177,8 +176,7 @@ private theorem valuation_mul_unif_pow_inv_le_one_of_lt_sq (k : Type) [Field k] 
     (div_lt_one₀ (pow_pos hπ0 2)).mpr h
   have h2 := ValuativeRel.le_uniformizer_iff.mpr h1
   have h3 := (div_le_iff₀ (pow_pos hπ0 2)).mp h2
-  rw [← div_eq_mul_inv, div_le_one₀ (pow_pos hπ0 3), pow_succ']
-  exact h3
+  rwa [← div_eq_mul_inv, div_le_one₀ (pow_pos hπ0 3), pow_succ']
 
 private theorem valuation_div_le_valuation_div_of_le {k : Type} [Field k] [ValuativeRel k] {a b c : kˣ}
     (h : valuation k (a : k) ≤ valuation k (b : k)) :
@@ -190,14 +188,12 @@ private theorem valuation_div_le_one_of_le {k : Type} [Field k] [ValuativeRel k]
     (h : valuation k (a : k) ≤ valuation k (b : k)) :
     valuation k ((a / b : kˣ) : k) ≤ 1 := by
   have h1 := valuation_div_le_valuation_div_of_le (c := b) h
-  rw [div_self', Units.val_one, map_one] at h1
-  exact h1
+  rwa [div_self', Units.val_one, map_one] at h1
 
 private theorem one_le_valuation_inv_of_le_one {k : Type} [Field k] [ValuativeRel k] {a : kˣ}
     (h : valuation k (a : k) ≤ 1) : 1 ≤ valuation k ((a⁻¹ : kˣ) : k) := by
   have h1 := valuation_div_le_valuation_div_of_le (a := a) (b := 1) (c := a) (by rw [Units.val_one, map_one]; exact h)
-  rw [div_self', one_div, Units.val_one, map_one] at h1
-  exact h1
+  rwa [div_self', one_div, Units.val_one, map_one] at h1
 
 open UpperTheory.V.Z.Sym.So.CS in
 theorem UpperTheory.V.Z.Sym.So.charShape :
@@ -287,8 +283,7 @@ theorem UpperTheory.V.Z.Sym.So.charShape :
     apply dom_of_valuation_monotone_fin_three
     · simpa [hhat, hv, hpp] using h1
     · have h3 := (one_le_inv₀ (hπ v).1).mpr (hπ v).2.le
-      simp [hhat, hv]
-      exact h2.trans h3
+      simpa [hhat, hv] using h2.trans h3
   refine ⟨(χ (e1 pp) ^ 2)⁻¹ * ∑ y ∈ A.Ys, χ (M y), fun t => χ (e1 t), ?_, ?_, ?_⟩
   · intro t t' ht ht'
     show χ (e1 (t * t')) = χ (e1 t) * χ (e1 t')
@@ -371,8 +366,7 @@ theorem UpperTheory.V.Z.Sym.So.charShape :
         intro v hv
         obtain ⟨h01, h12⟩ := valuation_monotone_of_dom_fin_three (hd v hv)
         subst hx hw
-        refine ⟨valuation_div_le_valuation_div_of_le h01, ?_⟩
-        exact valuation_div_le_one_of_le h12
+        exact ⟨valuation_div_le_valuation_div_of_le h01, valuation_div_le_one_of_le h12⟩
       obtain ⟨X, hX⟩ : ∃ X : ParN F 3, ∀ v, X v = ![x v, w v, 1] := ⟨_, fun _ => rfl⟩
       obtain ⟨T, hT⟩ : ∃ T : ParN F 3, ∀ v, T v = ![w v, w v, 1] := ⟨_, fun _ => rfl⟩
       obtain ⟨N, hN⟩ : ∃ N : ParN F 3, ∀ v, N v = ![1, 1, (w v)⁻¹] := ⟨_, fun _ => rfl⟩
@@ -457,8 +451,7 @@ theorem UpperTheory.V.Z.Sym.So.charShape :
           ext
           push_cast
           field_simp
-        rw [e]
-        exact h
+        rwa [e]
       obtain ⟨φ, hφ⟩ : ∃ φ : ((v : A.Sg) → (Kv v.1)ˣ) → ((v : A.Sg) → (Kv v.1)ˣ),
           ∀ y w, φ y w = rep w (z0 w.1 * y w) := ⟨_, fun _ _ => rfl⟩
       obtain ⟨ψ, hψ⟩ : ∃ ψ : ((v : A.Sg) → (Kv v.1)ˣ) → ((v : A.Sg) → (Kv v.1)ˣ),
@@ -472,8 +465,7 @@ theorem UpperTheory.V.Z.Sym.So.charShape :
         funext w
         rw [hφ, hψ]
         have := hinv w (z0 w.1)⁻¹ (y w) (Fintype.mem_piFinset.mp hy w)
-        rw [inv_inv] at this
-        exact this
+        rwa [inv_inv] at this
       have ψφ : ∀ y ∈ A.Ys, ψ (φ y) = y := by
         intro y hy
         funext w
@@ -490,12 +482,11 @@ theorem UpperTheory.V.Z.Sym.So.charShape :
           have e : L v = z0 v * y ⟨v, hv⟩ / (rep ⟨v, hv⟩ (z0 v * y ⟨v, hv⟩) *
               sq ⟨v, hv⟩ (z0 v * y ⟨v, hv⟩) ^ 2) := by
             rw [hL]
-            simp only [Pi.mul_apply, Pi.inv_apply, hhat, hSq, dif_pos hv, hφ]
+            simp only [Pi.mul_apply, Pi.inv_apply, hhat, hSq, dite_eq_left hv, hφ]
             ext
             push_cast
             field_simp
-          rw [e]
-          exact h
+          rwa [e]
         have hLlev : χ (sc L) = 1 := by
           apply hlev
           intro v hv i
@@ -587,8 +578,7 @@ private theorem trTheta_nil {Λ M : Type} [AddCommGroup M] [Module ℂ M] [Finit
       obtain ⟨m, hm⟩ := hn c
       intro x hx
       obtain ⟨y, _, g, hg, rfl⟩ := step m x hx
-      rw [hm, LinearMap.zero_apply, zero_add]
-      exact hg
+      rwa [hm, LinearMap.zero_apply, zero_add]
   let F : ℕ → Submodule ℂ M := fun j => Nat.rec ⊤ (fun _ P => ⨆ b, P.map (n b)) j
   have Fsucc : ∀ j, F (j + 1) = ⨆ b, (F j).map (n b) := fun j => rfl
   have F0 : F 0 = ⊤ := rfl
@@ -653,14 +643,12 @@ private theorem trTheta_proj {ι M : Type} [AddCommGroup M] [Module ℂ M] {V : 
       exact le_sup_left
     · exact le_sup_of_le_right (le_iSup₂_of_le j hj le_rfl)
   refine ⟨(V i).subtype ∘ₗ (V i).projectionOnto _ hcompl, ?_, ?_, ?_⟩
-  · intro x hx
-    exact congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hcompl ⟨x, hx⟩)
+  · exact fun x hx => congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hcompl ⟨x, hx⟩)
   · intro j hj x hx
     exact congrArg Subtype.val
       (Submodule.linearProjOfIsCompl_apply_right hcompl
         ⟨x, (le_iSup₂_of_le (f := fun j (_ : j ≠ i) => V j) j hj le_rfl : V j ≤ ⨆ j, ⨆ (_ : j ≠ i), V j) hx⟩)
-  · intro x
-    exact ((V i).projectionOnto _ hcompl x).2
+  · exact fun x => ((V i).projectionOnto _ hcompl x).2
 
 theorem UpperTheory.V.Z.Sym.Tf.trTheta :
     UpperTheory.V.Z.Sym.Tf.TrTheta := by
@@ -718,8 +706,7 @@ theorem UpperTheory.V.Z.Sym.Tf.trTheta :
         simpa using hψ
       have hx0 : x = 0 := by
         have hx' := hx
-        rw [hb, Submodule.mem_bot] at hx'
-        exact hx'
+        rwa [hb, Submodule.mem_bot] at hx'
       subst hx0
       simp
   have hPΘ : ∀ χ, Set.MapsTo (P χ * Θ) (V χ) (V χ) := fun χ x _ => hP3 χ (Θ x)
@@ -803,18 +790,18 @@ theorem UpperTheory.V.Z.Sym.Tf.trTheta :
       · intro ψ
         by_cases h : ψ = χ
         · subst h
-          rw [if_pos rfl]
+          rw [ite_eq_left rfl]
           exact nfix ψ hfix
-        · rw [if_neg h]
+        · rw [ite_eq_right h]
           exact fun e => h e.symm
       · intro ψ x hx
         by_cases h : ψ = χ
         · subst h
-          rw [if_pos rfl]
+          rw [ite_eq_left rfl]
           show u a (Θ (P ψ x)) ∈ V _
           rw [hP1 ψ x hx]
           exact uV a _ _ (ΘV ψ _ (fun b => rfl) x hx)
-        · rw [if_neg h]
+        · rw [ite_eq_right h]
           show u a (Θ (P χ x)) ∈ V χ
           rw [hP2 χ ψ h x hx, map_zero, map_zero]
           exact zero_mem _
@@ -854,8 +841,7 @@ private theorem dom_rev {d : Fin 3 → kˣ} (h : Dom d) : Dom ![(d 2)⁻¹, (d 1
 
 private theorem dom_mul {n : ℕ} {a b : Fin n → kˣ} (ha : Dom a) (hb : Dom b) : Dom (a * b) := by
   intro i j hij
-  simp only [Pi.mul_apply, Units.val_mul, map_mul]
-  exact mul_le_mul' (ha i j hij) (hb i j hij)
+  simpa only [Pi.mul_apply, Units.val_mul, map_mul] using mul_le_mul' (ha i j hij) (hb i j hij)
 
 private theorem dom_of_val {n : ℕ} {a : Fin n → kˣ} (h : ∀ i, valuation k (a i : k) = 1) : Dom a := by
   intro i j _
@@ -901,10 +887,9 @@ theorem UpperTheory.V.Z.Sym.So.gSpec :
     fun χ hχ => (Tf.eigVec _ ↥B.Forms uΛ hcomm χ).1 (hX χ hχ).1
   let ext : ({d : ParN F 3 // A.DomS d} → ℂ) → ParN F 3 → ℂ :=
     fun χ d => if h : A.DomS d then χ ⟨d, h⟩ else 0
-  have hext : ∀ χ (d : ParN F 3) (h : A.DomS d), ext χ d = χ ⟨d, h⟩ := fun χ d h => dif_pos h
+  have hext : ∀ χ (d : ParN F 3) (h : A.DomS d), ext χ d = χ ⟨d, h⟩ := fun χ d h => dite_eq_left h
   have hlevdom : ∀ d : ParN F 3, (∀ v ∈ A.Sg, ∀ i, d v i ∈ (A.V v).H) → A.DomS d := by
-    intro d hd v hv
-    exact dom_of_val (fun i => (A.V v).H_le (hd v hv i))
+    exact fun d hd v hv => dom_of_val (fun i => (A.V v).H_le (hd v hv i))
   have hcancel : ∀ (w : ↥B.Forms), w ≠ 0 → ∀ (x y : ℂ), x • w = y • w → x = y := by
     intro w hw x y h
     by_contra hxy
@@ -941,15 +926,14 @@ theorem UpperTheory.V.Z.Sym.So.gSpec :
       exact (hX χ hχ).2 ⟨d, hd⟩
   choose b β hβm hβs hβe using key
   refine ⟨{χ // χ ∈ X}, Finset.univ, fun i => c i.1 * b i, β, ?_, ?_, ?_⟩
-  · intro i _ t t' ht ht'
-    exact hβm i t t' ht ht'
+  · exact fun i _ t t' ht ht' => hβm i t t' ht ht'
   · intro t ht
     have hdG : ∀ y ∈ A.Ys, A.DomS (A.dG t y) := by
       intro y hy v hv
       have hyv : y ⟨v, hv⟩ ∈ A.Ry v := Fintype.mem_piFinset.1 hy ⟨v, hv⟩
       have hr := (hA.ry v hv).1 _ hyv
       show Dom ![t v * (unif (Kv v))⁻¹, if h : v ∈ A.Sg then y ⟨v, h⟩ else 1, (unif (Kv v))⁻¹]
-      rw [dif_pos hv]
+      rw [dite_eq_left hv]
       exact dom_cone (ht v hv) hr.1 hr.2
 
     rw [hO.tr t ht, map_sum]

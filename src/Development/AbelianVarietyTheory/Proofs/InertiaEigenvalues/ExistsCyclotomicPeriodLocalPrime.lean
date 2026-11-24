@@ -297,8 +297,7 @@ theorem exists_adic_limit {A : Type} [CommRing A] (I : Ideal A) [IsPrecomplete I
   have h1 := tele r (N' r) m (fun k hk => hN r k (le_trans (hN'ge r) hk)) hm
   have h2 : s (N' r) - L ∈ I ^ r := by
     have := hL r
-    rw [SModEq.sub_mem, hsm] at this
-    exact this
+    rwa [SModEq.sub_mem, hsm] at this
   have := (I ^ r).add_mem h1 h2
   convert this using 1
   ring
@@ -737,10 +736,8 @@ theorem GlobalTheory.LTPeriod.main : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime 
     rw [T.fil, hC.ι]
   refine ⟨T.eB.symm x, hu.map T.eB.symm, T.eB.injective ?_, ?_, ?_, fun j hj0 hjn => ?_⟩
   · rw [hit, RingEquiv.apply_symm_apply, hφ, map_mul, map_natCast, RingEquiv.apply_symm_apply]
-  · rw [hfil, RingEquiv.apply_symm_apply]
-    exact h1
-  · rw [hfil, RingEquiv.apply_symm_apply]
-    exact h2
+  · rwa [hfil, RingEquiv.apply_symm_apply]
+  · rwa [hfil, RingEquiv.apply_symm_apply]
   · rw [hfil, hfil, hit, RingEquiv.apply_symm_apply]
     exact hj j hj0 hjn
 end -- clump:auto

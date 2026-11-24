@@ -271,8 +271,7 @@ theorem GlobalTheory.EmbTwo.exists_gal_eq : ∀ (l : ℕ) [Fact l.Prime] (K : Fi
   let g : GQ l := g₁.restrictScalars ℚ_[l]
   have hgK : g ∈ GK K := by
     rw [GK, IntermediateField.mem_fixingSubgroup_iff]
-    intro x hx
-    exact g₀.commutes ⟨x, hx⟩
+    exact fun x hx => g₀.commutes ⟨x, hx⟩
   have hg : ∀ z : Om l, σ₁ (g z) = σ₂ z := hg₀
   have c1 : ∀ y : OC l, (∃ z : Om l, (y : ℂ_[l]) = (z : ℂ_[l])) → θ₂ y = θ₁ (Per.σO g y) := by
     rintro y ⟨z, hz⟩
@@ -358,8 +357,7 @@ theorem wmap_ev_eq : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (O 
     (fun w => ?_) ?_ fun x hx => ?_) s
   · simp only [RingHom.comp_apply, bk.ev_C]
     refine WittVector.ext fun n => ?_
-    simp only [wA, AlgHom.coe_mk, WittVector.map_coeff]
-    exact hval _
+    simpa only [wA, AlgHom.coe_mk, WittVector.map_coeff] using hval _
   · rw [hX, RingHom.comp_apply, bk.ev_X, WittVector.map_teichmuller, hflat]
   · rw [hX] at hx
     refine IsHausdorff.haus' (I := Ideal.span {WittVector.teichmuller l (ψ bk.flat)}) x fun n => ?_
@@ -437,8 +435,7 @@ theorem exists_galK_fixFlat_of_tilt_maps_agree : ∀ (l : ℕ) [Fact l.Prime] (K
     exact (hinj₁ h).symm
   · have hext := _root_.GlobalTheory.ringHom_eq_of_perfect_of_dvd_sub l (OCb l) O (ψ bk.flat) bk.Ep.natDegree bk.deg_pos hc.toIsHausdorff
       ψ' (ψ.comp (Per.σF (g : GQ l))) fun y => ?_
-    · intro y
-      exact RingHom.congr_fun hext y
+    · exact fun y => RingHom.congr_fun hext y
     · have hmk := hl (Per.θ l (WittVector.teichmuller l y))
       rw [← GlobalTheory.RingBasics.θ_σA, hθ₁, hθ₂] at hmk
       have e2 : Per.σA (g : GQ l) (WittVector.teichmuller l y) =
@@ -473,8 +470,7 @@ variable {l : ℕ} [hl : Fact l.Prime]
 theorem dvd_pow_of_ne_zero {π b : OCb l} (hπ : IsHausdorff (Ideal.span {π}) (OCb l)) (hb : b ≠ 0) :
     ∃ n : ℕ, b ∣ π ^ n := by
   haveI := GlobalTheory.FrobInt.valuationRing_tilt l
-  by_contra h
-  push_neg at h
+  by_contra! h
   apply hb
   refine hπ.haus b fun n => ?_
   obtain ⟨c, hc⟩ : π ^ n ∣ b := by

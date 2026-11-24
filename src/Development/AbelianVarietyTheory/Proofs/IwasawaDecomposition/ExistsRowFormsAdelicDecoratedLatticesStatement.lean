@@ -158,9 +158,7 @@ theorem opEq (X : Stages) {px : PreX X.B.toPre} (I : Col2.ColIn X.B px) (hX : X.
   have e3 := hN _ (fun e => m ((((Formalism.L2.Col.mtildeKGSD X.B.wts I.Ch I.sel t.1).res (Formalism.L2.Col.mtildeKOk _ _ _ _ hX)).symm f).1 e)) g
   refine e1.trans ?_
   refine (congrArg m e2).trans ?_
-  refine (map_sum m _ _).trans ?_
-  refine e3.symm.trans ?_
-  exact (Finset.sum_congr rfl (fun a _ => hm f (g * a))).symm
+  exact (map_sum m _ _).trans (e3.symm.trans (Finset.sum_congr rfl (fun a _ => hm f (g * a))).symm)
 
 theorem chi_eq_one {D : D7} (V : HSp D) (β : GL (Fin V.rank) (Formalism.IndefR.Lev.EAf D)) (L : LevDat D.host.E ℂ V.rank) (Q : Pl D.host.E)
     (hQc : Formalism.L2.Col.conjPrime₂ Q = Q) (hoff : ∀ PP, PP ∈ L.Pg ∨ PP ∈ L.Q → PP ≠ Q) (j : (levEnv V β L).J)
@@ -204,8 +202,7 @@ theorem off_level (X : Stages) {px : PreX X.B.toPre} (I : ColIn X.B px) {U : Set
   · have h' : Q.1 ∈ L.Pg := h
     rw [hL.Pg] at h'
     exact Q.2.2.2 (Or.inr h')
-  · refine (hL.is.Q_pl t _ h).2 _ h ?_
-    exact GlobalTheory.InertNbr.isConjPl_self (D := X.toD7) Q.2.1
+  · exact (hL.is.Q_pl t _ h).2 _ h (GlobalTheory.InertNbr.isConjPl_self (D := X.toD7) Q.2.1)
 
 theorem inert_neighbours (X : Stages) {px : PreX X.B.toPre} (I : ColIn X.B px) {U : Set I.ι}
     {L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)} (hI : I.Ok) (hL : LevOf X I U L) (t : TupU I U) (Q : PlI X.B px)
@@ -226,8 +223,7 @@ theorem inert_neighbours (X : Stages) {px : PreX X.B.toPre} (I : ColIn X.B px) {
       exact (LiftBrg.castGL_mem_UA_one X.toD7.sp.cm (rank_X' X).symm x).symm)
     (one_mem _) (one_mem _) s hs
   simp only [inv_one, one_mul, mul_one] at key
-  rw [hβ]
-  exact key
+  rwa [hβ]
 
 theorem exists_inertTie : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (hX : X.B.fields.Ok) (U : Set I.ι) (Xg : Finset (Gc X.B px → X.B.LL)) (tr : TrI X.B px) (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)) (eG : Gc X.B px ≃* G0 L.Pg X.toD7.R.r), I.Ok → ValsIn I → LevOf X I U L → IsPlacewiseIdentity X (px := px) eG → ∀ (cX : CoefA X.toD7.sp.X') (gramR : Matrix (Fin X.toD7.sp.X'.rank) (Fin X.toD7.sp.X'.rank) X.toD7.host.E)
     (c0R : VV X.toD7.what₂.LL (fun τ => Bridge.lamRdef (Ptw X.toD7) τ) →ₛₗ[X.toD7.what₂.embLL] cX.W),
@@ -247,18 +243,15 @@ theorem exists_inertTie : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn
     hx := fun q => if hq : Formalism.L2.Col.InertTypeOk X.toD7.sp.X'.rank q.2 then (hN q hq).choose else 1
     hA := fun q => if hq : Formalism.L2.Col.InertTypeOk X.toD7.sp.X'.rank q.2 then (hN q hq).choose_spec.choose else ∅
     hx_ok := fun q hq => by
-      simp only [dif_pos hq]
-      exact (hN q hq).choose_spec.choose_spec.1
+      simpa only [dite_eq_left hq] using (hN q hq).choose_spec.choose_spec.1
     hA_loc := fun q hq => by
-      simp only [dif_pos hq]
-      exact (hN q hq).choose_spec.choose_spec.2.1
+      simpa only [dite_eq_left hq] using (hN q hq).choose_spec.choose_spec.2.1
     chi_loc := fun q _ j hj => chi_eq_one X.toD7.sp.X' L.βX (L.datXt t) (q.1.1 : PlI X.B px).1 (q.1.1 : PlI X.B px).2.1
       (off_level X I hL t (q.1.1 : PlI X.B px)) j hj
     hDC := fun q hq => by
-      simp only [dif_pos hq]
-      exact (hN q hq).choose_spec.choose_spec.2.2.1
+      simpa only [dite_eq_left hq] using (hN q hq).choose_spec.choose_spec.2.2.1
     op_eq := fun q hq f => by
-      simp only [dif_pos hq]
+      simp only [dite_eq_left hq]
       exact opEq X I hX U Xg tr t cX P hP q _ (hN q hq).choose_spec.choose_spec.2.2.2 f }⟩
 
 end GlobalTheory.Mem.R3.RowAd.Inert
@@ -422,9 +415,7 @@ theorem act_tie : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px)
     show eG.symm (rTupQ X.toD7.sp.X' L.βX (L.datXt t) q) = g
     rw [e, MulEquiv.symm_apply_apply]
   · intro q
-    have e := rTupQ_eq_one_iff X.toD7.sp.X' L.βX (L.datXt t) q
-    show eG.symm (rTupQ X.toD7.sp.X' L.βX (L.datXt t) q) = 1 ↔ _
-    exact (MulEquiv.map_eq_one_iff eG.symm).trans e
+    exact (MulEquiv.map_eq_one_iff eG.symm).trans (rTupQ_eq_one_iff X.toD7.sp.X' L.βX (L.datXt t) q)
   · intro g κ hκ f
     obtain ⟨m, hm⟩ := hRD
     obtain ⟨u, hdeco, hch⟩ := _root_.GlobalTheory.Mem.R3.RowDeco.deco_tie X px I hX U L eG hI hV hL hG t κ
@@ -703,8 +694,7 @@ theorem loc_data (hG : V.gram = 1) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank �
     constructor
     · rintro ⟨h1, h2⟩
       exact (hJ u ((hLc u).1 h2)).1 h1
-    · intro hu
-      exact ⟨(hJ u (hKvOff u hu)).2 hu, (hLc u).2 (hKvOff u hu)⟩
+    · exact fun hu => ⟨(hJ u (hKvOff u hu)).2 hu, (hLc u).2 (hKvOff u hu)⟩
   have hmemR : ∀ a, a ∈ R.map Φ.toEquiv.toEmbedding → ∃ u ∈ R, a = Φ u := by
     intro a ha
     obtain ⟨u, hu, e⟩ := Finset.mem_map.1 ha
@@ -783,10 +773,8 @@ theorem op_eq_of_bij (X : Stages) {px : PreX X.B.toPre} (I : Col2.ColIn X.B px) 
   have hP1 := Formalism.L2.Col.conjIdeal_ne_bot hP0
   symm
   refine Finset.sum_nbij (fun a => RowAd.decoAd X I t (g * a)) ?_ ?_ ?_ ?_
-  · intro a ha
-    exact (Formalism.L2.Col.DecoSet.mem_heckeNb hP0 hP1 _ _ _).2 ((hB g).mapsTo ha)
-  · intro a ha b hb hab
-    exact (hB g).injOn ha hb hab
+  · exact fun a ha => (Formalism.L2.Col.DecoSet.mem_heckeNb hP0 hP1 _ _ _).2 ((hB g).mapsTo ha)
+  · exact fun a ha b hb hab => (hB g).injOn ha hb hab
   · intro d hd
     have hd' := (Formalism.L2.Col.DecoSet.mem_heckeNb hP0 hP1 _ _ _).1 hd
     obtain ⟨a, ha, rfl⟩ := (hB g).surjOn hd'
@@ -821,8 +809,7 @@ theorem hecke_tie : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B p
       (datX_sub X I U L hL t) (fun P : PlS X.B px => (P.1 : Pl X.toD7.host.E)) ((famR X I hX U Xg tr).A.ok t) x x.1.2
       (gramX'_one X I hI) L.ΛX hβ hx.2
     refine ⟨hx', hA, h1, h2, ?_, fun f => op_eq_of_bij X I hX U Xg tr cX t x hA h4 P hR f⟩
-    rw [hL.beta.2]
-    exact h3
+    rwa [hL.beta.2]
   choose! hxf hAf hxok hAloc hDC hop using key
   exact ⟨⟨hxf, hAf, hxok, hAloc, fun x _ j hj => chi_loc X.toD7.sp.X' (L.datXt t) (sgL X I U t) (datX_sub X I U L hL t)
     (fun P : PlS X.B px => (P.1 : Pl X.toD7.host.E)) ((famR X I hX U Xg tr).A.ok t) x x.1.2 L.βX j hj, hDC, hop⟩⟩

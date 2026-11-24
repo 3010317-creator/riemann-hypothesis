@@ -254,8 +254,7 @@ theorem eq_unit_mul_zpow : ∀ {L : Type} [Field L] (cL : ℂ →+* L) (Q : Subr
         (IsNoetherian.noetherian _) (IsLocalRing.maximalIdeal_le_jacobson ⊥) ?_
       rw [← hm, Ideal.span_le, Set.insert_subset_iff, Set.singleton_subset_iff]
       refine ⟨Submodule.mem_sup_left (Ideal.subset_span rfl), Submodule.mem_sup_right ?_⟩
-      rw [hm, smul_eq_mul, ← pow_two]
-      exact h2
+      rwa [hm, smul_eq_mul, ← pow_two]
     have heq : IsLocalRing.maximalIdeal Q = Ideal.span {t} :=
       le_antisymm hle ((Ideal.span_singleton_le_iff_mem _).2 htm)
     have h1 : (IsLocalRing.maximalIdeal Q).spanFinrank ≤ 1 := by
@@ -441,9 +440,7 @@ theorem residuePlace_of_locModel : ∀ {L K : Type} [Field L] [Field K] (cL : �
   let F : Place cK :=
     ⟨V, hconst, hdvrV, hcomp ▸ hQ.essFiniteType.comp (RingHom.FiniteType.of_surjective φV hφVs).essFiniteType⟩
   refine ⟨F, hmemR, fun us hus => ?_⟩
-  have h1 : ψ us = ((φV u : V) : K) := by
-    show ψ us = ψ (φ₀ u)
-    exact congrArg ψ (Subtype.ext hus)
+  have h1 : ψ us = ((φV u : V) : K) := congrArg ψ (Subtype.ext hus)
   have hmV : IsLocalRing.maximalIdeal V = Ideal.span {φV u} := hmR
   have hirr : Irreducible (φV u) := (IsDiscreteValuationRing.irreducible_iff_uniformizer _).2 hmV
   rw [h1]
@@ -724,8 +721,7 @@ theorem isFreeGen_dForm_regularPair_cons : ∀ {L : Type} [Field L] (cL : ℂ �
       obtain ⟨a, ha⟩ := hs (g 0)
       obtain ⟨b, hb⟩ := hs (g (Fin.succ 0))
       have hg' : (1 : (ResidueField Q)) ⊗ₜ[Q] D ℂ Q (a * t + b * u) = 0 := by
-        rw [hpair, ha, hb]
-        exact hg
+        rwa [hpair, ha, hb]
       have hmem : a * t + b * u ∈ RingHom.ker (algebraMap Q (ResidueField Q)) := by
         rw [hker]
         exact add_mem (Ideal.mul_mem_left _ _ htm) (Ideal.mul_mem_left _ _ hum)
@@ -894,8 +890,7 @@ theorem trBasis_cons : ∀ {L K : Type} [Field L] [Field K] (cL : ℂ →+* L) (
     exact (MvPolynomial.finSuccEquiv ℂ m).injective (by rw [← hQ, hQ0, map_zero])
   unfold TrBasis
   refine hind.isTranscendenceBasis_of_trdeg_le_of_finite ?_
-  rw [Cardinal.mk_fin]
-  exact htr
+  rwa [Cardinal.mk_fin]
 
 end GlobalTheory.FieldPair.ResidueTrBasis
 end -- clump:auto
@@ -1170,8 +1165,7 @@ theorem exists_basis_D_cons (k V : Type) [Field k] [CharZero k] [CommRing V] [Is
       rcases smul_eq_zero.mp hg with h | h
       · exact h
       · exact absurd h (one_tmul_D_ne_zero k ht)
-    intro i
-    exact Fin.cases h0 hs i
+    exact fun i => Fin.cases h0 hs i
   have hsp := hli.span_eq_top_of_card_eq_finrank' (by
     rw [Fintype.card_fin, Module.finrank_eq_card_basis (b₀.baseChange κ), Fintype.card_fin])
   haveI : Module.Free V Ω[V⁄k] := Module.Free.of_basis b₀
@@ -1217,8 +1211,7 @@ theorem residue_dForm : ∀ {L K : Type} [Field L] [Field K] (cL : ℂ →+* L) 
     intro P hP
     by_contra hu
     have hm : MvPolynomial.eval₂ (algebraMap ℂ S.ring) v P ∈ RingHom.ker ψ := by
-      rw [hker]
-      exact hu
+      rwa [hker]
     rw [RingHom.mem_ker, MvPolynomial.hom_eval₂, hcomp] at hm
     have hind : AlgebraicIndependent ℂ (fun i => ψ (v i)) := hvK.1
     exact hP ((algebraicIndependent_iff.1 hind) P hm)
@@ -1248,8 +1241,7 @@ theorem residue_dForm : ∀ {L K : Type} [Field L] [Field K] (cL : ℂ →+* L) 
   have hML : dForm cL (Fin.cons (f : L) (fun i => (w i : L)) : Fin (n + 1) → L) =
       (M.det : L) • dForm cL (Fin.cons (t : L) (fun i => (v i : L)) : Fin (n + 1) → L) := by
     have := congrArg (S.toRat (n + 1)) hM
-    rw [map_smulₛₗ, hz, htoRat, htoRat] at this
-    exact this
+    rwa [map_smulₛₗ, hz, htoRat, htoRat] at this
   have hHM : H = (M.det : L) := by
     have hne := S.toRat_ne_zero hω
     rw [hz, htoRat] at hne
@@ -1342,8 +1334,7 @@ theorem pos_ord_iff {P : Place cL} {Q : Subring L} (hP : P.Contains Q) {x : Q} (
     omega
   · intro h
     have h0 : 0 ≤ P.ord x := (P.ord_nonneg_iff hx).2 (hP x x.2)
-    refine lt_of_le_of_ne h0 fun e => h ?_
-    exact isUnit_of_ord_eq_zero P (y := ⟨x, hP x x.2⟩) hx e.symm
+    exact lt_of_le_of_ne h0 fun e => h (isUnit_of_ord_eq_zero P (y := ⟨x, hP x x.2⟩) hx e.symm)
 
 theorem ring_le {P P' : Place cL} {Q : Subring L} (hP : P.IsPrimeOf Q) (hP' : P'.Contains Q)
     (h : primeOf P' Q hP' ≤ primeOf P Q hP.1) : P.ring ≤ P'.ring := by
@@ -1403,8 +1394,7 @@ theorem eq_span_of_mem_of_not_mem {R : Type} [CommRing R] [IsLocalRing R] [IsNoe
   refine Submodule.add_mem_sup (Ideal.mul_mem_left _ c (Ideal.mem_span_singleton_self t)) ?_
   have huM : u ∈ IsLocalRing.maximalIdeal R := hm ▸ Ideal.subset_span (by simp)
   have := Submodule.smul_mem_smul huM hd
-  rw [mul_comm]
-  exact this
+  rwa [mul_comm]
 
 end GlobalTheory.FieldPair.LocModelTwo
 
@@ -1438,8 +1428,7 @@ theorem ring_eq_and_ord_eq_zero : ∀ {L : Type} [Field L] (cL : ℂ →+* L) (Q
   refine ⟨fun P P' hP hP' hPt hP't => ?_, fun P hP => ?_⟩
   · have e := (hB P hP hPt).trans (hB P' hP' hP't).symm
     exact le_antisymm (ring_le hP hP'.1 e.ge) (ring_le hP' hP.1 e.le)
-  · by_contra h
-    push_neg at h
+  · by_contra! h
     have hpos : ∀ x : Q, P.ord (x : L) ≠ 0 → x ∈ primeOf P Q hP.1 := by
       intro x hx
       have hx0 : (x : L) ≠ 0 := fun e => hx (by rw [e, ord_zero])
@@ -1531,8 +1520,7 @@ theorem disc_residue_eq : ∀ {L K : Type} [Field L] [Field K] (cL : ℂ →+* L
   have htv : (Fin.cons (ts : L) (fun i => (v i : L)) : Fin (m + 2) → L) =
       (Fin.cons (t : L) (Fin.cons (u : L) (fun i => (z i : L)) : Fin (m + 1) → L) : Fin (m + 2) → L) := by
     funext i
-    refine Fin.cases rfl (fun j => ?_) i
-    exact Fin.cases rfl (fun _ => rfl) j
+    exact Fin.cases rfl (fun j => (Fin.cases rfl (fun _ => rfl) j)) i
   set Ω0 := (dForm cL (Fin.cons (t : L) (Fin.cons (u : L) (fun i => (z i : L)) : Fin (m + 1) → L) : Fin (m + 2) → L)) with hΩ0
   set η := dForm cL (Fin.cons (f : L) (fun i => (w i : L)) : Fin (m + 1 + 1) → L) with hη
   have hfreeL := (_root_.GlobalTheory.FieldPair.formOrd_api cL (m + 2) _ hzT).1
@@ -1585,8 +1573,7 @@ theorem disc_residue_eq : ∀ {L K : Type} [Field L] [Field K] (cL : ℂ →+* L
   have hφs : ∀ g ∈ (Finsupp.single h 1 - θ).support, ψ g ≠ 0 := by
     intro g hg
     rcases Finset.mem_union.1 (Finsupp.support_sub hg) with hg | hg
-    · rw [Finset.mem_singleton.1 (Finsupp.support_single_subset hg)]
-      exact hψh
+    · rwa [Finset.mem_singleton.1 (Finsupp.support_single_subset hg)]
     · exact hθ g hg
   have hmc : Finsupp.mapDomain (fun g : S.ring => (g : L)) (Finsupp.single h 1 - θ) =
       Finsupp.single (h : L) 1 - θ' := by

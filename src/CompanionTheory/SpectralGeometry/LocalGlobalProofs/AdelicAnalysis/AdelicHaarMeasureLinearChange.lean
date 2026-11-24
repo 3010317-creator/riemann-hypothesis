@@ -30,8 +30,7 @@ theorem image_mulVec_eq_preimage (M N : Matrix ι ι R) (h1 : M * N = 1) (h2 : N
   constructor
   · rintro ⟨x, hx, rfl⟩
     simpa [Matrix.mulVec_mulVec, h2] using hx
-  · intro hy
-    exact ⟨N *ᵥ y, hy, by simp [Matrix.mulVec_mulVec, h1]⟩
+  · exact fun hy => ⟨N *ᵥ y, hy, by simp [Matrix.mulVec_mulVec, h1]⟩
 
 theorem pi_image_mul (lf : Measure R) [SigmaFinite lf] (u v : ι → R) (huv : ∀ i, u i * v i = 1)
     (c : ι → ℝ≥0)
@@ -172,8 +171,7 @@ theorem pi_scale : ∀ (F : Type) [Field F] [NumberField F], ∀ [MeasurableSpac
         rfl
       · intro i
         rw [← map_mul, mul_inv_cancel₀ (hD' i), map_one]
-      · intro i t ht
-        exact hF (D i) (hD' i) t ht
+      · exact fun i t ht => hF (D i) (hD' i) t ht
     · intro t s hs
       have hdet : t.toMatrix.det = 1 := t.det
       have hinv : Bf t.toMatrix * Bf (transvection t.i t.j (-t.c)) = 1 := by

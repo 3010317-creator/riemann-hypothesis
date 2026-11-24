@@ -127,9 +127,7 @@ theorem lowKSub_stable (ε : Fin n → Bool) (lam : Fin n → ℝ) (σ : Matrix 
     IsKStableOn ε σ (lowKSub ε lam σ) := by
   intro g hg v hv
   have : lowKSub ε lam σ ≤ (lowKSub ε lam σ).comap (σ g : H →ₗ[ℂ] H) := by
-    refine sSup_le fun S hS => ?_
-    intro x hx
-    exact (le_sSup hS : S ≤ lowKSub ε lam σ) (hS.2.1 g hg x hx)
+    exact sSup_le fun S hS => fun x hx => (le_sSup hS : S ≤ lowKSub ε lam σ) (hS.2.1 g hg x hx)
   exact this hv
 
 theorem dWord_mem {ε : Fin n → Bool} {lam : Fin n → ℝ} {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)}

@@ -108,8 +108,7 @@ theorem GlobalTheory.InertHomIdx.idx_latF_moved : ∀ (D : D7) (S T : HSp D) (v 
   have hoff := smul_actO (off_smul_mt_place hg) (off_smul_mt_place hk)
   have hmat : (mt T (embV T v g)).map (GlobalTheory.InertHomIdx.compW D w) = (locMat D.sp.cm.sig T.gram h g).1 := by
     have e := finMat_map_compAt D.sp.cm.sig T.gram h (embV T v g)
-    rw [proj_emb_self] at e
-    exact e
+    rwa [proj_emb_self] at e
   refine GlobalTheory.InertHomIdx.relIndex_map_of_proj (latF S T (frameLat S) (frameLat T)).toAddSubgroup
     (rhoF S T (1, embV T v g)).toAddMonoidHom (mulF S T (algebraMap (AF D.host.F) (AE D) ε)).toAddMonoidHom
     (GlobalTheory.InertHomIdx.matW S T w) (GlobalTheory.InertHomIdx.lmul (locMat D.sp.cm.sig T.gram h g).1) ?_ ?_ ?_ ?_
@@ -130,7 +129,6 @@ theorem GlobalTheory.InertHomIdx.idx_latF_moved : ∀ (D : D7) (S T : HSp D) (v 
   · intro a _
     refine XF.ext ?_
     have := hoff (a : WO S T)
-    rw [sub_smul, sub_smul, one_smul, one_smul] at this
-    exact this
+    rwa [sub_smul, sub_smul, one_smul, one_smul] at this
 
 end

@@ -189,9 +189,7 @@ theorem nrm_surj_adjoin : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] 
   have hEq : (N.range : Set (unitsIn B)) = W := by
     apply Set.eq_of_subset_of_ncard_le hRW
     · rw [← Nat.card_coe_set_eq, ← Nat.card_coe_set_eq, hVR]; rfl
-  have hmem : (⟨incl F F' n γ, Algebra.subset_adjoin rfl⟩ : unitsIn B) ∈ W := by
-    show galAct F F' n s (incl F F' n γ) = incl F F' n γ
-    exact (hfix _).2 ⟨γ, rfl⟩
+  have hmem : (⟨incl F F' n γ, Algebra.subset_adjoin rfl⟩ : unitsIn B) ∈ W := (hfix _).2 ⟨γ, rfl⟩
   rw [← hEq] at hmem
   obtain ⟨δ, hδ⟩ := hmem
   exact ⟨δ, δ.2, congrArg Subtype.val hδ⟩

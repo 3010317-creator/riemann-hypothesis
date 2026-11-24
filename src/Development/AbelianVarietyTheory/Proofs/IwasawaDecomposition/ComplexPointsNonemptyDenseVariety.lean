@@ -118,8 +118,7 @@ theorem exists_param [GeometricallyIntegral p] [LocallyOfFiniteType p] {U : X.Op
   · have hf' : ((1 : ℂ) ⊗ₜ[F] f) ≠ 0 := (map_ne_zero_iff _ hinj).2 hf
     refine (GlobalTheory.AffinePoints.dense_nonvanishing hf').mono fun q hq => ?_
     refine (mem_ptsIn_basicOpen (hsU q) f).2 ?_
-    rw [hsv]
-    exact hq
+    rwa [hsv]
 
 theorem exists_ne_zero_basicOpen_le [IsIntegral X] {U W : X.Opens} (hU : IsAffineOpen U)
     (hne : (U : Set X).Nonempty) (hW : (W : Set X).Nonempty) :
@@ -128,8 +127,7 @@ theorem exists_ne_zero_basicOpen_le [IsIntegral X] {U W : X.Opens} (hU : IsAffin
   obtain ⟨f, hfW, hf⟩ := hU.exists_basicOpen_le (V := W) ⟨x, hxW⟩ hxU
   refine ⟨f, ?_, hfW⟩
   rintro rfl
-  rw [Scheme.basicOpen_zero] at hf
-  exact hf
+  rwa [Scheme.basicOpen_zero] at hf
 
 theorem nonempty_and_dense_of_geometricallyIntegral [GeometricallyIntegral p] [LocallyOfFiniteType p] :
     Nonempty (CxPts p σ) ∧ ∀ W : X.Opens, (W : Set X).Nonempty → Dense (ptsIn p σ W) := by

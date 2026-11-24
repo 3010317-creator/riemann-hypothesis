@@ -360,8 +360,7 @@ theorem approxRoot_fix_tower : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field �
       · exact ((Basic.mem_gn T n _).1 (hg n)).1
       · exact ((Basic.mem_gn T n _).1 (hg n)).2
     have := hle hx
-    rw [AlgHom.mem_equalizer] at this
-    exact this
+    rwa [AlgHom.mem_equalizer] at this
 
   set θ := v (T.ζ 1 - 1) with hθ
   have hz1 := _root_.GlobalTheory.K5.ZetaNonvanishing₂.valuation_zeta_sub_one p Ω hp2 T v hp1 1 le_rfl
@@ -504,10 +503,8 @@ theorem fix_top (H : Subgroup (Gal p Ω)) :
     Fix Ω (⊤ : Subgroup H) = Fix Ω H := by
   ext x
   constructor
-  · intro hx g
-    exact hx ⟨g, Subgroup.mem_top g⟩
-  · intro hx g
-    exact hx g.1
+  · exact fun hx g => hx ⟨g, Subgroup.mem_top g⟩
+  · exact fun hx g => hx g.1
 
 end GlobalTheory.ValuationAlmostSeparation
 

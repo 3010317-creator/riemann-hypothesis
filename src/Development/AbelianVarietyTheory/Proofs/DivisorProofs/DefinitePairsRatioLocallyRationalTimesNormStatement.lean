@@ -148,7 +148,7 @@ theorem isIntB_of_trace_mem :
 
     simp only [map_smul, Finsupp.smul_apply, smul_eq_mul, map_sum, Finset.sum_apply', Module.Basis.repr_self, Finsupp.single_apply, hdet] at h1
     rw [Finset.sum_eq_single j (fun k _ hk => by simp [hk]) (by simp)] at h1
-    simp only [if_true, mul_one] at h1
+    simp only [ite_true, mul_one] at h1
     have hne : algebraMap ℚ Q (Algebra.discr ℚ bL) ≠ 0 := (map_ne_zero _).2 hd
     rw [← h1, ← mul_assoc, inv_mul_cancel₀ hne, one_mul]
   show B.repr E j ∈ v.adicCompletionIntegers ℚ
@@ -299,8 +299,7 @@ theorem isIntB_of_isIntB_conj : ∀ (C : Type) [Ring C] [Algebra ℚ C] [FiniteD
     Algebra.TensorProduct.map (AlgHom.id (v.adicCompletion ℚ) (v.adicCompletion ℚ)) ι
   have hF : ∀ x, F x = Algebra.TensorProduct.map (AlgHom.id ℚ (v.adicCompletion ℚ)) ι x := fun x => rfl
   have hinj : Function.Injective (F.restrictScalars (v.adicCompletionIntegers ℚ)) := by
-    intro x y hxy
-    exact map_id_injective (v.adicCompletion ℚ) ι hι (by simpa [hF] using hxy)
+    exact fun x y hxy => map_id_injective (v.adicCompletion ℚ) ι hι (by simpa [hF] using hxy)
   have hE'' : IsIntegral (v.adicCompletionIntegers ℚ) E :=
     (isIntegral_algHom_iff (F.restrictScalars (v.adicCompletionIntegers ℚ)) hinj).1 (by simpa [hF] using hE')
   refine h₃ v hv3 E fun i => mem_of_isIntegral v ?_
@@ -739,7 +738,7 @@ theorem finiteRing_sq_sub_mul_sq_eq_of_card (n : ℕ) : ∀ (S : Type) [CommRing
 
   obtain ⟨x, hx0, hx2⟩ : ∃ x : S, x ≠ 0 ∧ x ^ 2 = 0 := by
     rw [isReduced_iff] at hred
-    push_neg at hred
+    push Not at hred
     obtain ⟨y, ⟨k, hk⟩, hy⟩ := hred
     classical
     have hex : ∃ m, y ^ m = 0 := ⟨k, hk⟩
@@ -1204,12 +1203,10 @@ theorem ratio_local_norm_dpair : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (�
     rfl
   have hXg : IsIntB v (Module.finBasis ℚ G.C) (↑X * ((1 : K) ⊗ₜ[ℚ] (P₁.γ : G.C)) * ↑X⁻¹) := by
     have h := (hS1 w hv1 ⟨_, hxΩ, rfl⟩).1
-    rw [key P x t hx, hγ] at h
-    exact h
+    rwa [key P x t hx, hγ] at h
   have hX₁g : IsIntB v (Module.finBasis ℚ G.C) (↑X₁ * ((1 : K) ⊗ₜ[ℚ] (P₁.γ : G.C)) * ↑X₁⁻¹) := by
     have h := (hS2 w hv2 ⟨_, rfl, rfl⟩).1
-    rw [key P₁ x₁ t₁ hx₁] at h
-    exact h
+    rwa [key P₁ x₁ t₁ hx₁] at h
 
   obtain ⟨m, hm1, hm2⟩ := hS4 v hv4 X X₁ hXg hX₁g
   obtain ⟨hmul, hstar⟩ := hS3 v hv3
@@ -1235,8 +1232,7 @@ theorem ratio_local_norm_dpair : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (�
     have e2 : Algebra.TensorProduct.map (AfP.eval w) (AlgHom.id ℚ G.C) (algebraMap (AfP p) (AfP p ⊗[ℚ] G.C) s) =
         algebraMap K (K ⊗[ℚ] G.C) (AfP.eval w (s : AfP p)) := by
       simp [Algebra.TensorProduct.algebraMap_apply, Algebra.TensorProduct.map_tmul]
-    rw [e1, e2] at h
-    exact h
+    rwa [e1, e2] at h
   have h1 : (X : K ⊗[ℚ] G.C) * (ιv ((1 : K) ⊗ₜ[ℚ] a) * β₁v) * (starT G.star K X).unop =
       algebraMap K (K ⊗[ℚ] G.C) (T : K) := by
     rw [hiota_a]; exact htriv P x t hx

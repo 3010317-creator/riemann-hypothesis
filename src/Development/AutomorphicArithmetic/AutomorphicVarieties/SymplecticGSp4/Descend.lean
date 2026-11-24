@@ -100,8 +100,7 @@ private theorem exists_down {rbar : Γ →* Matrix ι ι (ResidueField O)} {rb :
   · subst hb
     obtain ⟨g, rfl⟩ := hφ.surjective g'
     have hr := ρ.red g a b
-    rw [← hh] at hr
-    exact hr
+    rwa [← hh] at hr
 
 private theorem exists_up {rbar : Γ →* Matrix ι ι (ResidueField O)} {rb : Γ' →* Matrix ι ι (ResidueField O)}
     (φ : Γ →* Γ') (hφ : Continuous φ) (hb : rb.comp φ = rbar) (r : Lift O rb R) :
@@ -242,10 +241,7 @@ private theorem ns_le {M : Type} [Monoid M] (f : G ℚ Ω →* M) (hc : IsClosed
   intro g hg
   simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_compl_iff, exists_prop] at hg
   obtain ⟨v, hv, A, hA, hgA⟩ := hg
-  have hAw : Raw.Away D.S A := by
-    intro p hp hlt
-    apply hv
-    exact ⟨p, hp, (val_iff hA p).mp hlt⟩
+  have hAw : Raw.Away D.S A := fun p hp hlt => hv ⟨p, hp, (val_iff hA p).mp hlt⟩
   exact h A hAw hgA
 
 private theorem toGS_ine {A : ValuationSubring Ω} (hA : Raw.Away D.S A) {g : G ℚ Ω} (hg : g ∈ Ine (F := ℚ) A) :
@@ -311,7 +307,7 @@ private theorem kill_iff (hD : D.Good) {M : Type} [Monoid M] (f : D.Gam →* M) 
     by_cases hS : Raw.Away D.S A
     · rw [toGS_ine D hS hg, map_one]
     · unfold Raw.Away at hS
-      push_neg at hS
+      push Not at hS
       obtain ⟨p, hpS, hpA⟩ := hS
       have hpT : p ∉ D.T := fun hpT => hA p hpT hpA
       have hpr : Nat.Prime p := hD.S_prime p hpS
@@ -412,8 +408,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.descend :
         ∀ g, IsGSp (algebraMap ↥c.O R ((D.th g : (↥c.O)ˣ) : ↥c.O)) (ρ.hom g)
       rw [hρ]
       constructor
-      · intro h g
-        exact (key g).mp (h _)
+      · exact fun h g => (key g).mp (h _)
       · intro h s
         obtain ⟨g, rfl⟩ := QuotientGroup.mk_surjective s
         exact (key g).mpr (h g)
@@ -424,8 +419,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.descend :
         obtain ⟨hg1, -⟩ := Subgroup.mem_inf.mp hg
         have hgD : g ∈ D.Gp q := Ine_le_Dec _ hg1
         exact h ⟨q, hq⟩ ⟨g, hgD⟩ (Subgroup.mem_subgroupOf.mpr hg)
-      · intro h q n hn
-        exact h q.1 q.2 n.1 (Subgroup.mem_subgroupOf.mp hn)
+      · exact fun h q n hn => h q.1 q.2 n.1 (Subgroup.mem_subgroupOf.mp hn)
   · have hle : NS Ω D.SP ≤ ρ.hom.ker := by
       refine ns_le D ρ.hom (closed_ker ρ) ?_
       intro A hA g hg

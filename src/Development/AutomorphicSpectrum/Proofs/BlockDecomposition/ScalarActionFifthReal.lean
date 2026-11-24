@@ -91,24 +91,21 @@ theorem qdetNext : ∀ (A : Type) [Ring A] [Algebra ℂ A] (m : ℕ) (E : Fin (m
       simp
     · intro σ _ hσ
       obtain ⟨k, hk⟩ : ∃ k, σ k ≠ k := by
-        by_contra hne
-        push_neg at hne
+        by_contra! hne
         exact hσ (Equiv.ext hne)
-      rw [hc1 σ, Finset.prod_eq_zero (mem_univ k) (if_neg hk), zero_smul, mul_zero]
-    · intro h1
-      exact absurd (mem_univ _) h1
+      rw [hc1 σ, Finset.prod_eq_zero (mem_univ k) (ite_eq_right hk), zero_smul, mul_zero]
+    · exact fun h1 => absurd (mem_univ _) h1
   · simp only
     rw [Finset.sum_eq_single (1 : Equiv.Perm (Fin (m + 1)))]
     · rw [hc0 1]
       simp only [Equiv.Perm.sign_one, Units.val_one, Int.cast_one, one_mul, Equiv.Perm.coe_one,
-        id_eq, if_true, ite_self, prod_const_one, one_smul]
+        id_eq, ite_true, ite_self, prod_const_one, one_smul]
       rw [sum_add_distrib, add_comm]
       congr 1
       simp only [Algebra.algebraMap_eq_smul_one, ← sum_smul]
     · intro σ _ hσ
       obtain ⟨k₀, hk₀⟩ : ∃ k, σ k ≠ k := by
-        by_contra hne
-        push_neg at hne
+        by_contra! hne
         exact hσ (Equiv.ext hne)
       rw [hc0 σ]
       have hz : ∀ k, (∏ j, (if j = k then (1 : ℂ) else (if σ j = j then (1 : ℂ) else 0))) = 0 := by
@@ -121,8 +118,7 @@ theorem qdetNext : ∀ (A : Type) [Ring A] [Algebra ℂ A] (m : ℕ) (E : Fin (m
           have h2 : σ (σ k) ≠ σ k := fun e => hk (σ.injective e)
           simp [hk, h2]
       simp [hz]
-    · intro h1
-      exact absurd (mem_univ _) h1
+    · exact fun h1 => absurd (mem_univ _) h1
   · unfold Formalism.REAL.qdet Formalism.REAL.qminor
     rw [Finset.sum_congr rfl fun σ _ => by rw [hc σ u]]
     simp_rw [mul_sum, mul_smul_comm]
@@ -203,7 +199,7 @@ theorem coeff_prod_top {A : Type} [CommRing A] [Nontrivial A] {κ : Type} (S : F
   have hd : (∏ a ∈ S, (X + C (f a))).natDegree = S.card := by
     rw [natDegree_prod_of_monic _ _ hm]; simp
   have hc : S.card ≠ 0 := (Finset.card_pos.2 hS).ne'
-  rw [nextCoeff, if_neg (by rw [hd]; exact hc), hd] at h1
+  rw [nextCoeff, ite_eq_right (by rw [hd]; exact hc), hd] at h1
   rw [h1]
   exact Finset.sum_congr rfl fun a _ => nextCoeff_X_add_C _
 
@@ -266,8 +262,7 @@ theorem split2 {A : Type} [CommRing A] [IsLocalRing A] {κ : Type} [DecidableEq 
           · subst hb
             simp [ha]
           · simp [hb]
-        rw [this]
-        exact e2
+        rwa [this]
     · have hfu : IsUnit (f.eval x) := isUnit_of_mul_isUnit_left h2
       obtain ⟨g1, rfl⟩ := hroot g (hfu.mul_right_eq_zero.1 hz)
       have hg1 : g1.Monic := hlm.of_mul_monic_left hg
@@ -310,8 +305,7 @@ theorem splitLocal : ∀ (A : Type) [CommRing A] [IsLocalRing A] (κ : Type) [De
     refine ⟨fun a => if a ∈ S1 then j else π0 a, fun a ha => ?_, fun i hi => ?_⟩
     · by_cases haS : a ∈ S1
       · simp [haS]
-      · simp only [haS, if_false]
-        exact mem_insert_of_mem (h1 a (Finset.mem_sdiff.2 ⟨ha, haS⟩))
+      · simpa only [haS, ite_false] using mem_insert_of_mem (h1 a (Finset.mem_sdiff.2 ⟨ha, haS⟩))
     · rcases Finset.mem_insert.1 hi with rfl | hiJ
       · have : S.filter (fun a => (if a ∈ S1 then i else π0 a) = i) = S1 := by
           ext a
@@ -319,12 +313,10 @@ theorem splitLocal : ∀ (A : Type) [CommRing A] [IsLocalRing A] (κ : Type) [De
           constructor
           · rintro ⟨haS, hq⟩
             by_contra hn
-            simp only [hn, if_false] at hq
+            simp only [hn, ite_false] at hq
             exact hj (hq ▸ h1 a (Finset.mem_sdiff.2 ⟨haS, hn⟩))
-          · intro ha
-            exact ⟨hs ha, by simp [ha]⟩
-        rw [this]
-        exact e1
+          · exact fun ha => ⟨hs ha, by simp [ha]⟩
+        rwa [this]
       · have hne : j ≠ i := fun e => hj (e ▸ hiJ)
         have : S.filter (fun a => (if a ∈ S1 then j else π0 a) = i) = (S \ S1).filter (fun a => π0 a = i) := by
           ext a
@@ -350,8 +342,7 @@ theorem polyTopLocal {n : ℕ} (L : Fin n → ℝ) (hL : StrictAnti L) (lev : Fi
     rw [← map_sub]
     refine IsUnit.map ψ (isUnit_iff_ne_zero.2 ?_)
     rw [sub_ne_zero]
-    intro h
-    exact hab (hL.injective (Complex.ofReal_injective h))
+    exact fun h => hab (hL.injective (Complex.ofReal_injective h))
   obtain ⟨π, hπ, hQ⟩ := splitLocal A (Fin n) (fun a => ψ (L a : ℂ)) _ Q univ hu (fun j hj => (hm j hj).1) hp
   obtain ⟨π', hπ', hQ'⟩ := splitLocal A (Fin n) (fun a => ψ (L a : ℂ)) _ Q' univ hu (fun j hj => (hm' j hj).1) hp'
   have hnot : ∀ (ρ : Fin n → ℕ), (∀ a ∈ (univ : Finset (Fin n)), ρ a ∈ univ.image lev) → ∀ j, j ∉ univ.image lev →
@@ -367,8 +358,7 @@ theorem polyTopLocal {n : ℕ} (L : Fin n → ℝ) (hL : StrictAnti L) (lev : Fi
     intro ρ P hρ hP hPe j
     by_cases hj : j ∈ univ.image lev
     · have := (hP j hj).2
-      rw [hPe j hj, natDegree_prod_lin] at this
-      exact this
+      rwa [hPe j hj, natDegree_prod_lin] at this
     · rw [hnot ρ hρ j hj, hblk0 j hj]
   have hc := hcard π Q hπ hm hQ
   have hc' := hcard π' Q' hπ' hm' hQ'
@@ -437,8 +427,7 @@ theorem polyTop {n : ℕ} (L : Fin n → ℝ) (hL : StrictAnti L) (lev : Fin n �
   have h3 : (∏ a ∈ blk lev j, (X + C ((φ.comp (algebraMap ℂ B)) (L a : ℂ))) : A[X]) =
       (∏ a ∈ blk lev j, (X + C (algebraMap ℂ B (L a : ℂ)))).map φ := by
     rw [Polynomial.map_prod]; simp [Polynomial.map_add (f := _)]
-  rw [h3, coeff_map] at h2
-  exact h2
+  rwa [h3, coeff_map] at h2
 
 theorem coeffs_zero {V : Type*} [AddCommGroup V] [Module ℂ V] (N : ℕ) (d : ℕ → V)
     (h : ∀ Y : ℂ, ∑ i ∈ range N, Y ^ i • d i = 0) : ∀ i ∈ range N, d i = 0 := by
@@ -535,7 +524,7 @@ theorem capPoly {R : Type} [CommRing R] [Nontrivial R] [Algebra ℂ R] {A : Type
   have hdeg : r.degree < t := by
     rw [degree_lt_iff_coeff_zero]
     intro m hm
-    rw [hcoef, if_neg (by omega)]
+    rw [hcoef, ite_eq_right (by omega)]
   refine ⟨X ^ t + r, monic_X_pow_add hdeg, by rw [natDegree_add_eq_left_of_degree_lt (by rwa [degree_X_pow]), natDegree_X_pow], fun u => ?_, fun k hk => ?_⟩
   · rw [hq u, Finset.sum_range_succ, h1, eval_add, eval_pow, eval_X, map_add (f := _), map_pow, add_comm]
     congr 1
@@ -714,7 +703,7 @@ theorem capComm : ∀ (n : ℕ) (lev : Fin n → ℕ) (H : Type) [AddCommGroup H
         have := congrArg lev e; rwa [lev_blkE lev, lev_blkE lev] at this)
       have hne2 : blkE lev j' d ≠ blkE lev j a := fun e => hjj (by
         have := congrArg lev e; rw [lev_blkE lev, lev_blkE lev] at this; exact this.symm)
-      rw [if_neg hne1, if_neg hne2, sub_zero] at h
+      rw [ite_eq_right hne1, ite_eq_right hne2, sub_zero] at h
       exact sub_eq_zero.1 h
   refine ⟨same F1 fun a b c d h1 h2 => (hF a b c d h1 h2).1, same F2 fun a b c d h1 h2 => (hF a b c d h1 h2).2.1, ?_⟩
   rw [capS_eq, capS_eq]

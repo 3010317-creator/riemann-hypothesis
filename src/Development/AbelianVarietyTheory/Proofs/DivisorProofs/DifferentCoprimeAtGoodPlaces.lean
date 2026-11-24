@@ -126,13 +126,11 @@ theorem not_le_differentIdeal_of_psiUnr {F : Type} [Field F] [NumberField F] {ψ
           by_cases hw : w = v
           · subst hw
             change Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV _ w (GlobalTheory.AdelicU.singleFin w y) ∈ _
-            rw [GlobalTheory.AdelicU.evalV_singleFin_self]
-            exact hy
+            rwa [GlobalTheory.AdelicU.evalV_singleFin_self]
           · change Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV _ w (GlobalTheory.AdelicU.singleFin v y) ∈ _
             rw [GlobalTheory.AdelicU.evalV_singleFin_ne hw]
             exact zero_mem _)
-        rw [e] at this
-        exact this
+        rwa [e] at this
     rw [k1, ← h, mem_adelicIdeal_iff codiff_ne_zero]
     constructor
     · intro H
@@ -141,8 +139,7 @@ theorem not_le_differentIdeal_of_psiUnr {F : Type} [Field F] [NumberField F] {ψ
     · intro H w
       by_cases hw : w = v
       · subst hw
-        rw [hαv]
-        exact H
+        rwa [hαv]
       · rw [hαw w hw, map_zero]
         exact zero_le
   set c := FractionalIdeal.count F v (codiff F) with hc
@@ -154,8 +151,7 @@ theorem not_le_differentIdeal_of_psiUnr {F : Type} [Field F] [NumberField F] {ψ
     omega
 
   have hc1 : 0 ≤ c := by
-    by_contra hneg
-    push_neg at hneg
+    by_contra! hneg
     obtain ⟨π, hπ⟩ := HeightOneSpectrum.valuation_exists_uniformizer F v
     have hπ0 : π ≠ 0 := by
       rintro rfl

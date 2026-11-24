@@ -115,8 +115,7 @@ theorem projE_lt_one (D : D7) (hF : D.host.F = maximalRealSubfield D.host.E) (s 
   induction hz using Submodule.span_induction with
   | mem x hx =>
     obtain ⟨y, hy, rfl⟩ := hx
-    rw [Formalism.L2.DIV.oToS_coe, projE_tmul_one]
-    exact hy
+    rwa [Formalism.L2.DIV.oToS_coe, projE_tmul_one]
   | zero => simp
   | add x y _ _ hx hy =>
     rw [Subring.coe_add, map_add (f := _)]
@@ -155,8 +154,7 @@ theorem resS_adeleEquiv_eq_natCast : ∀ (D : D7) (hF : D.host.F = maximalRealSu
       ring
     rw [e]
     exact lt_of_le_of_lt (Valuation.map_sub _ _ _) (max_lt hm h1)
-  rw [← hb, ← map_natCast (Ideal.Quotient.mk s.w.asIdeal) m, Ideal.Quotient.eq]
-  exact h2
+  rwa [← hb, ← map_natCast (Ideal.Quotient.mk s.w.asIdeal) m, Ideal.Quotient.eq]
 
 end GlobalTheory.SplitRes
 

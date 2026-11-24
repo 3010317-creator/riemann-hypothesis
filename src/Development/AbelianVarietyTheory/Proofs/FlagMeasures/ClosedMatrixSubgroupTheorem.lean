@@ -98,8 +98,7 @@ theorem exp_smul_mem_of_tendsto {S : Set 𝔸} (hc : IsClosed S) (h1 : (1 : 𝔸
         show t - ‖y n‖ ≤ _
         nlinarith
       · have h := Nat.floor_le (div_nonneg ht (hpos n).le)
-        rw [le_div_iff₀ (hpos n)] at h
-        exact h
+        rwa [le_div_iff₀ (hpos n)] at h
     have hlim := (NormedSpace.exp_continuous.tendsto _).comp (hk.smul hu)
     refine hc.mem_of_tendsto hlim (Eventually.of_forall fun n => ?_)
     have e : (((⌊t / ‖y n‖⌋₊ : ℕ) : ℝ) * ‖y n‖) • ‖y n‖⁻¹ • y n = (⌊t / ‖y n‖⌋₊ : ℕ) • y n := by
@@ -119,7 +118,7 @@ theorem eventually_eq_zero [FiniteDimensional ℝ 𝔸] {S : Set 𝔸} (hc : IsC
   by_contra hcon
   rw [not_eventually] at hcon
   obtain ⟨y, hy0, hy⟩ := exists_seq_forall_of_frequently hcon
-  push_neg at hy
+  push Not at hy
   haveI : ProperSpace 𝔸 := FiniteDimensional.proper ℝ 𝔸
   have hsph : ∀ n, ‖y n‖⁻¹ • y n ∈ Metric.sphere (0 : 𝔸) 1 := fun n => by
     rw [mem_sphere_zero_iff_norm, norm_smul, norm_inv, norm_norm, inv_mul_cancel₀ (norm_ne_zero_iff.2 (hy n).2.2)]
@@ -148,8 +147,7 @@ theorem map_exp_mul_exp (p : 𝔸 →L[ℝ] 𝔸) :
     refine h3.congr_fderiv ?_
     ext z
     simp [NormedSpace.exp_zero]
-  have h5 := h4.map_nhds_eq_of_equiv
-  simpa [NormedSpace.exp_zero] using h5
+  simpa [NormedSpace.exp_zero] using h4.map_nhds_eq_of_equiv
 
 theorem eventually_exists_exp [FiniteDimensional ℝ 𝔸] {S : Set 𝔸} (hc : IsClosed S) (h1 : (1 : 𝔸) ∈ S)
     (hm : ∀ a ∈ S, ∀ b ∈ S, a * b ∈ S) (hi : ∀ Z : 𝔸, NormedSpace.exp Z ∈ S → NormedSpace.exp (-Z) ∈ S)

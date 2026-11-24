@@ -94,8 +94,7 @@ theorem col_eq_sum {T : Type} {m : T → ℕ} {g : ℕ} (e : Fin g ≃ Σ τ : T
     · simp
     · intro j _ hj
       rw [Pi.single_eq_of_ne, mul_zero]
-      intro h
-      exact hj (sigma_mk_injective (β := fun τ => Fin (m τ)) (e.symm.injective h)).symm
+      exact fun h => hj (sigma_mk_injective (β := fun τ => Fin (m τ)) (e.symm.injective h)).symm
     · intro h; exact absurd (Finset.mem_univ _) h
   · have h0 : A (e.symm ⟨τ', i'⟩) (e.symm ⟨τ, i⟩) = 0 := by
       by_contra hne
@@ -105,8 +104,7 @@ theorem col_eq_sum {T : Type} {m : T → ℕ} {g : ℕ} (e : Fin g ≃ Σ τ : T
     rw [h0]
     refine Finset.sum_eq_zero fun j _ => ?_
     rw [Pi.single_eq_of_ne, mul_zero]
-    intro h
-    exact hτ (congrArg Sigma.fst (e.symm.injective h))
+    exact fun h => hτ (congrArg Sigma.fst (e.symm.injective h))
 
 theorem normConst_ne_zero {E : Type} [Field E] {g : ℕ} (ty : Fin g → (E →+* ℂ)) {ξ₀ : E} (h : ξ₀ ≠ 0) :
     (normConst ty ξ₀ : ℂ) ≠ 0 := by

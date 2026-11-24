@@ -122,8 +122,8 @@ theorem Aff.sum {ι : Type*} (s : Finset ι) {f : ι → V → k} (h : ∀ i, Af
 
 theorem Aff.ite (p : Prop) [Decidable p] {f : V → k} (h : Aff O S f) : Aff O S fun v => if p then f v else 0 := by
   by_cases hp : p
-  · simpa only [if_pos hp] using h
-  · simpa only [if_neg hp] using Aff.const 0
+  · simpa only [ite_eq_left hp] using h
+  · simpa only [ite_eq_right hp] using Aff.const 0
 
 theorem Aff.quad {f : V → k} (h : Aff O S f) : Quad O S f := by
   obtain ⟨a, ha, -⟩ := h
@@ -156,8 +156,8 @@ theorem Quad.sum {ι : Type*} (s : Finset ι) {f : ι → V → k} (h : ∀ i, Q
 
 theorem Quad.ite (p : Prop) [Decidable p] {f : V → k} (h : Quad O S f) : Quad O S fun v => if p then f v else 0 := by
   by_cases hp : p
-  · simpa only [if_pos hp] using h
-  · simpa only [if_neg hp] using (Aff.const 0).quad
+  · simpa only [ite_eq_left hp] using h
+  · simpa only [ite_eq_right hp] using (Aff.const 0).quad
 
 end General
 
@@ -170,16 +170,15 @@ theorem aff_stepPt (j : Fin (G.m - 1)) (x₀ : Matrix (Fin (topRank G (j + 1))) 
     Aff O (intVars O G) fun e : Vars G => stepPt x₀ (e j) r s := by
   by_cases h : Free ((G.m - 2 - j) / 2 + 1) (r, s) ∨ Kept (r, s)
   · refine ⟨fun l => l j ⟨(r, s), h⟩, fun v l => ?_, fun l hl => hl j _⟩
-    simp only [stepPt, Matrix.add_apply, Matrix.of_apply, dif_pos h, Pi.add_apply, add_assoc]
+    simp only [stepPt, Matrix.add_apply, Matrix.of_apply, dite_eq_left h, Pi.add_apply, add_assoc]
   · refine ⟨fun _ => 0, fun v l => ?_, fun _ _ => zero_mem _⟩
-    simp only [stepPt, Matrix.add_apply, Matrix.of_apply, dif_neg h, add_zero]
+    simp only [stepPt, Matrix.add_apply, Matrix.of_apply, dite_eq_right h, add_zero]
 
 theorem aff_rowVar (x : ColArgs G) (j : ℕ) (s) : Aff O (intVars O G) fun e : Vars G => rowVar x e j s := by
   by_cases h : j < G.m - 1
-  · simp only [rowVar, dif_pos h]
+  · simp only [rowVar, dite_eq_left h]
     exact Aff.sum _ fun l => Aff.ite _ (aff_stepPt O ⟨j, h⟩ (x j) _ _)
-  · simp only [rowVar, dif_neg h]
-    exact Aff.const _
+  · simpa only [rowVar, dite_eq_right h] using Aff.const _
 
 theorem quad_phase (x : ColArgs G) : Quad O (intVars O G) fun e : Vars G => phase x e := by
   unfold phase
@@ -260,8 +259,7 @@ theorem absNorm_eq_plc_pow {K : Type} [Field K] [NumberField K] (P : HeightOneSp
   letI : Fintype (𝓞 K ⧸ P.asIdeal) := Fintype.ofFinite _
   obtain ⟨n, -, hn⟩ := FiniteField.card (𝓞 K ⧸ P.asIdeal) (ringChar (𝓞 K ⧸ P.asIdeal))
   refine ⟨n, ?_⟩
-  rw [Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card]
-  exact hn
+  rwa [Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card]
 
 theorem vw_resCard_eq_zero : ∀ {D : D7} (P : Pl D.host.E) (w : PlL D),
     ((Formalism.EigenvalueLevelCeiling.plc P : ℕ) : 𝓞 D.what₂.LL) ∉ w.asIdeal →
@@ -533,7 +531,7 @@ theorem coset_integral [MeasurableSpace X] [OpensMeasurableSpace X] [MeasurableA
     simp only [Measure.real, hvol, Complex.real_smul]
     ring
   · left
-    push_neg at h
+    push Not at h
     obtain ⟨u, hu, hne⟩ := h
     have hc0 : g c ≠ 0 := by
       intro h0
@@ -548,8 +546,7 @@ theorem coset_integral [MeasurableSpace X] [OpensMeasurableSpace X] [MeasurableA
       by_cases hy : y ∈ S
       · rw [Set.indicator_of_mem hy, Set.indicator_of_mem (hiff.2 hy)]
         have := hg c u hu _ ((hmem y).1 hy)
-        rw [add_neg_cancel_left, show c + u + (-c + y) = u + y by abel] at this
-        exact this
+        rwa [add_neg_cancel_left, show c + u + (-c + y) = u + y by abel] at this
       · rw [Set.indicator_of_notMem hy, Set.indicator_of_notMem (fun h => hy (hiff.1 h)), zero_mul, mul_zero]
     have h1 : (∫ y, S.indicator g y ∂μ) * g c = g (c + u) * ∫ y, S.indicator g y ∂μ := by
       conv_lhs => rw [← integral_add_left_eq_self (μ := μ) (S.indicator g) u]
@@ -582,8 +579,8 @@ theorem integral_eq_sum_twisted : ∀ {X : Type} [AddCommGroup X] [TopologicalSp
         g y = if c = (y : X ⧸ U) then g y else 0 := by
       intro c
       by_cases h : c = (y : X ⧸ U)
-      · rw [if_pos h, Set.indicator_of_mem (show y ∈ (fun x => -(Quotient.out c) + x) ⁻¹' (U : Set X) from (hind c y).2 h)]
-      · rw [if_neg h, Set.indicator_of_notMem (show y ∉ (fun x => -(Quotient.out c) + x) ⁻¹' (U : Set X) from fun hm => h ((hind c y).1 hm))]
+      · rw [ite_eq_left h, Set.indicator_of_mem (show y ∈ (fun x => -(Quotient.out c) + x) ⁻¹' (U : Set X) from (hind c y).2 h)]
+      · rw [ite_eq_right h, Set.indicator_of_notMem (show y ∉ (fun x => -(Quotient.out c) + x) ⁻¹' (U : Set X) from fun hm => h ((hind c y).1 hm))]
     simp only [key]
     rw [Finset.sum_ite_eq']
     split_ifs with hmem
@@ -670,9 +667,8 @@ theorem stairElt_diag (G : Grid k) (hs : 1 ≤ G.s) (ϖ : kˣ) (e : ℕ) (J : G.
       | zero => exact h2 0
       | succ j =>
         have : ¬ j < G.m - 2 := by omega
-        simp only [dif_neg this]
-        exact h1 _
-  · rw [Reps.elt, onColumn, dif_neg hi]
+        simpa only [dite_eq_right this] using h1 _
+  · rw [Reps.elt, onColumn, dite_eq_right hi]
     exact h1 _
 
 theorem valuation_fill_sub_le (G : Grid k) (hs : 1 ≤ G.s) (ϖ : kˣ) (n : ℕ) (x : ColArgs G) (y : RowArgs G)
@@ -684,8 +680,7 @@ theorem valuation_fill_sub_le (G : Grid k) (hs : 1 ≤ G.s) (ϖ : kˣ) (n : ℕ)
     · simp only [Matrix.reindex_apply, Matrix.submatrix_apply, stepPt, Matrix.add_apply, Matrix.of_apply,
         add_sub_add_left_eq_sub]
       split_ifs
-      · simp only [Pi.add_apply, add_sub_cancel_left]
-        exact hl ⟨j, h⟩ _
+      · simpa only [Pi.add_apply, add_sub_cancel_left] using hl ⟨j, h⟩ _
       · simp
     · simp
     · simp
@@ -923,8 +918,7 @@ theorem moved_loss : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : T
   have hb : β P ∈ unfSupport (psiAt ch.W P.1) (unitVol P.1) false
       (Reps.through one_le_sLen (givenLevel ch.G t P) (stair (locGrid ch.G t P) (unifAt P.1) e)) (Tflip ch.W ch.S.B t Φ P) := by
     have := hβ P
-    rw [hkeep] at this
-    exact this
+    rwa [hkeep] at this
   have hβ' := funext (hO _ hb)
   have hdet : ∀ X, ∃ a : ℕ, gdet ((repsAt ch.G t P).elt (β P) X) = unifAt P.1 ^ a ∧
       a ≤ (locGrid ch.G t P).rank X * (e * D.R.m) := fun X => by
@@ -1181,7 +1175,7 @@ theorem GlobalTheory.MovedTwist.moved_lossLe : ∀ {D : D7} {Γ : Type} [Group �
     classical
     simp [keepAt, hP]
   have hg := unitIn_prod _ _ (hedge ((repsAt ch.G t P).elt (β P)))
-  simp only [moved, Grid.pathAct, hk, if_true, one_mul]
+  simp only [moved, Grid.pathAct, hk, ite_true, one_mul]
   exact lossLe_unit_mul hw hg.1 hg.2 (hT _)
 
 end
@@ -1508,8 +1502,7 @@ theorem datum_loss {large₂ : SizeData₂ D} {F : Face D A} {CF b : ℝ} (hS : 
       rw [this]; exact ⟨0, map_zero _, Or.inl rfl⟩
     · have hψ := GlobalTheory.T.coeffValuationLossLe_addChar_neg_unfoldingPhase ch large₂ F CF b hS hIs hSc hF t Φ β hβ P X Y v h0 hv w
       have := lossLe_mul' (hK (fill one_le_sLen X Y v)) hψ
-      rw [add_zero] at this
-      exact this
+      rwa [add_zero] at this
   have hint : ∀ (n : ℕ) (K1 : ℝ), (∀ v, ∀ u ∈ varLat (locGrid ch.G t P) (unifAt P.1) n,
       ∀ u' ∈ varLat (locGrid ch.G t P) (unifAt P.1) n, f (v + u + u') * f v = f (v + u) * f (v + u')) →
       (∀ v, LossLe w (f v) (c + K1)) →
@@ -1534,8 +1527,7 @@ theorem datum_loss {large₂ : SizeData₂ D} {F : Face D A} {CF b : ℝ} (hS : 
     have hb : β P ∈ unfSupport (psiAt ch.W P.1) (unitVol P.1) false
         (Reps.through one_le_sLen (givenLevel ch.G t P) (stair (locGrid ch.G t P) (unifAt P.1) e)) (Tflip ch.W ch.S.B t Φ P) := by
       have := hβ P
-      rw [hkeep] at this
-      exact this
+      rwa [hkeep] at this
     have hβ' := funext (hO _ hb)
     have hSeq : S = moved (locGrid ch.G t P) (keepAt ch.G P)
         ((Reps.through one_le_sLen (givenLevel ch.G t P) (stair (locGrid ch.G t P) (unifAt P.1) e)).elt
@@ -1584,8 +1576,7 @@ theorem datum_loss {large₂ : SizeData₂ D} {F : Face D A} {CF b : ℝ} (hS : 
       have e2 : ∀ y, f (y + u') = f y := hn hu'
       rw [e2, e1, e2]
     have hmov := GlobalTheory.T.movedTensorFactor_coeffValuationLossLe_awayPrime ch large₂ F CF b hS hIs hSc hF t Φ β hβ P hW w hw c hc hT
-    have h1 := hint n 0 hrel (hval 0 fun z => by simpa using hmov z)
-    simpa [he0, hv0] using h1
+    simpa [he0, hv0] using hint n 0 hrel (hval 0 fun z => by simpa using hmov z)
 
 end Main
 

@@ -124,8 +124,7 @@ theorem isMonHom_pullbackComp (s : S'' ⟶ S') (p : S' ⟶ S) (G : Over S) [GrpO
   have : (Over.pullbackComp s p).hom.app G = e.hom := by
     apply pullback_pullback_hom_ext
     rw [hc, pullbackComp_hom_fst_fst]
-  rw [this]
-  exact he
+  rwa [this]
 
 private theorem isMonHom_iff_of_conj_iso {C : Type*} [Category C] [MonoidalCategory C] {M M' N N' : C}
     [MonObj M] [MonObj M'] [MonObj N] [MonObj N'] (a : M ⟶ M') (b : N ⟶ N') [IsIso a] [IsIso b]
@@ -200,8 +199,7 @@ theorem exists_lift {A : Type} [CommRing A] (J : Ideal A) (hJ : IsNilpotent J) (
   · apply preimage_eq_top_of_surjective
       (pullback.fst (splitTorus (Spec (CommRingCat.of A)) X).hom
         (Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk J))))
-    rw [hf]
-    exact hg
+    rwa [hf]
   · apply hom_ext_fst
     rw [map_left_fst, hf]
 
@@ -403,7 +401,6 @@ theorem main : ∀ (A : Type) [CommRing A] [IsLocalRing A] (J : Ideal A), IsNilp
   open CategoryTheory.GrpObj in
   have key := GlobalTheory.splitTorus_hom_eq_one_of_nilpotent A J hJ X G (i * f'⁻¹) hmon hmap
   open CategoryTheory.GrpObj in
-  rw [← Hom.one_def, mul_inv_eq_one] at key
-  exact key
+  rwa [← Hom.one_def, mul_inv_eq_one] at key
 
 end GlobalTheory.TorusLift

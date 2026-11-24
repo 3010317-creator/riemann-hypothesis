@@ -204,8 +204,7 @@ theorem isCompact_relax' (hW : _root_.GlobalTheory.Fam.AllFamilyConditions W) (J
       · show (_root_.GlobalTheory.LevProd.localHomProduct J j hj x)⁻¹ * _root_.GlobalTheory.LevProd.localHomProduct J j hj (x * y) = _root_.GlobalTheory.LevProd.localHomProduct J j hj y
         rw [map_mul, inv_mul_cancel_left]
       · show _root_.GlobalTheory.LevProd.localHomProduct J j hj (F (x, _root_.GlobalTheory.LevProd.localHomProduct J j hj y)) ∈ Kp
-        rw [hFy]
-        exact hK
+        rwa [hFy]
     · rintro ⟨⟨x, z⟩, ⟨⟨hx, -⟩, hK⟩, rfl⟩
       show F (x, z) ∈ _root_.GlobalTheory.LevProd.relaxedLevelSubgroup J j hj α
       refine Subgroup.mem_inf.2 ⟨Subgroup.mem_inf.2 ⟨?_, ?_⟩, Subgroup.mem_comap.2 hK⟩
@@ -408,8 +407,7 @@ theorem mem_lev_of_rat {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B 
       exact one_mem _
   let κ : (I.stp u a j).G c.1 := (1, 1, ⟨cc, hcc⟩)
   have hPu : P.1 ∈ uSG (B.primes X).vGs I.SQ := by
-    simp only [uSG, Finset.mem_union]
-    exact Or.inr (ColIn.Q_subset_SQ I a hPQ)
+    simpa only [uSG, Finset.mem_union] using Or.inr (ColIn.Q_subset_SQ I a hPQ)
   have key := GlobalTheory.Mem.Col2.LevLiftPt.core B.sp.cm hp hx hpk.uni _ P.1 hv hoff g hgI (fun r s => by
       have e : bc (prV (E := B.host.E) (P.1.under (𝓞 B.host.F))) ((A.kb j (A.chOf j c))⁻¹ * x * A.kb j (A.chOf j c)) =
           bc (prV (E := B.host.E) (P.1.under (𝓞 B.host.F))) x := by
@@ -432,8 +430,7 @@ theorem mem_lev_of_rat {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B 
   refine (hR.lev c x _ hq).2 ⟨κ, map_one (ufGL B.fields.E (B.R.N j)), rfl, ?_⟩
   have h0 : ∀ p : PtAt B.R I.sel (I.tup a) (I.cst a) u j, p.1.2 = ∅ := fun p => by
     have := p.2
-    rw [ysAt_ys_of_ne I.sel (I.tup a) (I.cst a) (by omega)] at this
-    exact this
+    rwa [ysAt_ys_of_ne I.sel (I.tup a) (I.cst a) (by omega)] at this
   funext P'
   simp only [cosetIn, h0, Set.mem_empty_iff_false, false_and, exists_false]
 
@@ -456,8 +453,7 @@ theorem grpAt_empty {D : D7} (V : HSp D) {P : Pl D → Prop} (hP : ∀ w, ¬ P w
   rw [GlobalTheory.FinPlLoc.mt_one]
   ext i j
   have := GlobalTheory.FinPlLoc.eq_zero_of_comp _ (hn i j).1 (fun w => (hn i j).2 w (hP w))
-  rw [Matrix.sub_apply, sub_eq_zero] at this
-  exact this
+  rwa [Matrix.sub_apply, sub_eq_zero] at this
 
 
 open GlobalTheory.FinPl in
@@ -545,8 +541,7 @@ theorem onePlace_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I : T
       refine adAt_eq_of_pr (J.G i).q (J.P i).1 hidem
         (mt _ (gl (GlobalTheory.VolBridge.locHom ((J.G i).q.pr.comp (incA (I.rec7 l Z))) e' y))
           ((finCongr (rankN (I.rec7 l Z) j hj')).symm (e' r)) ((finCongr (rankN (I.rec7 l Z) j hj')).symm (e' s))) _ ?_
-      rw [ee, ee]
-      exact h1
+      rwa [ee, ee]
   have hn' : n = gl (_root_.GlobalTheory.LevProd.localHomProduct J j hj n i) :=
     hglu n _ ((GlobalTheory.LocGl.supp_iff _ _).2 hn) ((GlobalTheory.LevIdx.eq_locHom_iff _ _ _ _ _).2 rfl)
   have hK : gl (_root_.GlobalTheory.LevProd.localHomProduct J j hj n i) ∈ GlobalTheory.ClassSumLevel.levG ((I.rec7 l Z).sp.X j) (rankN (I.rec7 l Z) j hj')
@@ -681,8 +676,7 @@ theorem mem_levQ {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) {u : B.W
   obtain ⟨κ, hκ1, hκq, -⟩ := (hR.lev c x q hq).1 hxU
   have hκ : κ.1 = 1 := by
     have h1 : toGLm B.fields.E (B.R.N i) κ.1.1 = toGLm B.fields.E (B.R.N i) 1 := by
-      rw [map_one]
-      exact hκ1
+      rwa [map_one]
     exact Subtype.ext ((toGLm B.fields.E (B.R.N i)).injective h1)
   have h2 : locM P.1 (y c * x * k (chOf c)) = ratM P.1 (q.fr P) := Matrix.ext fun r s => hq.fr P r s
   have h3 : q.fr P = κ.1.1 * ((I.stp u a i).rep c).1.1.fr P * ((κ.2.2.1 P)⁻¹).1 := by
@@ -884,8 +878,7 @@ theorem mem_prCat_of_pr_eq (hW : _root_.GlobalTheory.Fam.AllFamilyConditions W) 
         (I.rec7 l Z).R.f (J.A.bad j)) (x : TC.GA B (B.R.N j)), x ∈ S.U → x ∈ Formalism.L2.Herm.UstdAf B.sp.cm (B.R.N j) := by
       intro S x hx
       have h := ((S.U_eq x).1 hx).1
-      rw [hgram] at h
-      exact h
+      rwa [hgram] at h
     exact huni _ κ.1 κ.2
   have hloc : ∀ PP i, J.pl i = PP →
       GlobalTheory.Mem.ColAd.locM (F := (I.rec7 l Z).host.F) (E := (I.rec7 l Z).host.E) PP κ.1 = GlobalTheory.Mem.ColAd.ratM PP (y i) := by
@@ -912,8 +905,7 @@ theorem mem_prCat_of_pr_eq (hW : _root_.GlobalTheory.Fam.AllFamilyConditions W) 
     rfl
   rw [hb, hL.grpQ, Subgroup.mem_subgroupOf, e'] at hκ'
   have hPi : J.P i = ⟨J.pl i, Finset.mem_union_right _ hmem⟩ := Subtype.ext (hJ.eq i)
-  rw [hPi]
-  exact hκ'
+  rwa [hPi]
 end GlobalTheory.LevProd.Fwd
 namespace GlobalTheory.LevProd
 open GlobalTheory.LevProd.Fwd
@@ -932,14 +924,12 @@ theorem phi_mem_H_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I : 
       (hJ.rep i j ((J.G i).s - j) (Nat.add_sub_cancel' (_root_.GlobalTheory.LevProd.step_index_le_s_alt J i hj)) (by omega) (J.ι j α)) (e₀ i) (fun r => he i r)
   have hHo : ∀ i, IsOpen (_root_.GlobalTheory.LevProd.levelSubgroupAtPlace J j hj α i : Set (GL (XIx (Fin (I.rec7 l Z).R.k) (Fin (I.rec7 l Z).R.t) j) (J.G i).k)) := fun i => by
     have h := (key i).1
-    rw [hJ.sec j hjm α i] at h
-    exact h
+    rwa [hJ.sec j hjm α i] at h
   have hHr : ∀ i y, y ∈ Formalism.L2.Col.prCat (Pr := B.primes X) (I.cst (W.P.I.tup t)).sharp j (J.P i).1
       ((I.idx (W.P.I.tup t)).h j ((J.A.b0 j (J.ι j α)).get (show j < B.R.m by omega)) (J.P i)) →
       GlobalTheory.VolBridge.locHom ((J.G i).q.pr.comp (incA (I.rec7 l Z))) (e₀ i) y ∈ _root_.GlobalTheory.LevProd.levelSubgroupAtPlace J j hj α i := fun i y hy => by
     have h := ((key i).2 y).1 hy
-    rw [hJ.sec j hjm α i] at h
-    exact h
+    rwa [hJ.sec j hjm α i] at h
   have hUo := (GlobalTheory.ChartReps.twDat_reps I hW.tr.ok hP l Z u _ _ J.A hJ.is j hjm (J.ι j α)).1.opn
   have hgl := fun i : Fin J.r => GlobalTheory.LocEmb.exists_gl _ _ (J.G i).q ((I.rec7 l Z).sp.X j)
     (XIx (Fin (I.rec7 l Z).R.k) (Fin (I.rec7 l Z).R.t) j) ((J.G i).FX j (by have := _root_.GlobalTheory.LevProd.step_index_le_s_alt J i hj; omega))
@@ -1040,8 +1030,7 @@ theorem prV_comm (v : GlobalTheory.FinPl.Pl D) (z : Af ↥D.host.F ⊗[↥D.host
       Algebra.TensorProduct.map_tmul, AlgHom.id_apply, Algebra.TensorProduct.comm_tmul]
     rfl
   | add a b ha hb =>
-    simp only [map_add (f := _)]
-    exact congrArg₂ (· + ·) ha hb
+    simpa only [map_add (f := _)] using congrArg₂ (· + ·) ha hb
 
 theorem prV_toEAf_congr (v : GlobalTheory.FinPl.Pl D) {y y' : AE D} (h : GlobalTheory.FinPl.compAt D v y = GlobalTheory.FinPl.compAt D v y') :
     Formalism.UG.prV (E := D.host.E) v (toEAf D y) = Formalism.UG.prV (E := D.host.E) v (toEAf D y') := by
@@ -1084,7 +1073,7 @@ theorem cutAt_mem (V : HSp D) (v : GlobalTheory.FinPl.Pl D) (g : GA D V) : cutAt
 theorem compAt_cutAt (V : HSp D) (v : GlobalTheory.FinPl.Pl D) (g : GA D V) (i j) :
     GlobalTheory.FinPl.compAt D v (Formalism.L2.Theta.mt V (cutAt V v g) i j) = GlobalTheory.FinPl.compAt D v (Formalism.L2.Theta.mt V g i j) := by
   rw [mt_cutG, Matrix.add_apply, Matrix.smul_apply, Matrix.smul_apply, smul_eq_mul, smul_eq_mul, RingHom.map_add (f := _), RingHom.map_mul,
-    RingHom.map_mul, RingHom.map_sub, RingHom.map_one, (parts_idemQ {v}).2 v, if_pos (Finset.mem_singleton_self v), sub_self,
+    RingHom.map_mul, RingHom.map_sub, RingHom.map_one, (parts_idemQ {v}).2 v, ite_eq_left (Finset.mem_singleton_self v), sub_self,
     zero_mul, one_mul, add_zero]
 
 theorem grpAt_mono (V : HSp D) {P Q : GlobalTheory.FinPl.Pl D → Prop} (h : ∀ v, P v → Q v) : grpAt V P ≤ grpAt V Q := fun g hg =>
@@ -1232,8 +1221,7 @@ theorem mem_lev_iff (hI : I.Ok) (hTw : I.IsTw) (hPr : (B.primes X).Ok) (u : B.Wo
   have hcos : ∀ p p' : PtAt B.R I.sel (I.tup a) (I.cst a) u j, cosetIn p = cosetIn p' := fun p p' => by
     have key : ∀ p : PtAt B.R I.sel (I.tup a) (I.cst a) u j, p.1.2 = ∅ := fun p => by
       have := p.2
-      rw [ysAt_ys_of_ne I.sel (I.tup a) (I.cst a) (by omega)] at this
-      exact this
+      rwa [ysAt_ys_of_ne I.sel (I.tup a) (I.cst a) (by omega)] at this
     funext P
     unfold cosetIn
     rw [key p, key p']
@@ -1731,8 +1719,7 @@ theorem onto_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I : TC B 
       · rw [Pi.mulSingle_eq_of_ne h]
         refine locHom_eq_one (J.G i).q (J.G i').q _ _ _ (hglp i (x i)).1 fun hv => h ?_
         exact hJ.inj (_root_.GlobalTheory.LevOnto.pl_eq_of_quadratic_data_same_place hW ha hTr J hJ J hJ i' i hv.symm)
-    simp only [Function.comp_def, hphi]
-    exact list_prod_mulSingle x
+    simpa only [Function.comp_def, hphi] using list_prod_mulSingle x
 end GlobalTheory.LevOnto
 end
 end -- clump:auto

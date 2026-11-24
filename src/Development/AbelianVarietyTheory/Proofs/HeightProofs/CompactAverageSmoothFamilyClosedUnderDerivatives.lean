@@ -101,9 +101,7 @@ theorem hasDerivAt_avg (hθ : IsInfFam θ) {τ : D.what₂.Tau} {X : Matrix (Fin
     (integrable_const C)
     (Filter.Eventually.of_forall fun k t _ =>
       GlobalTheory.Mem.Lift.hasDerivAt_oneP hθ hX (GlobalTheory.Mem.Lift.hasDerivAt_Rder (hF k) hX) g t)
-  have e := key.2
-  simp only [GlobalTheory.Mem.Lift.oneP_zero hθ, mul_one] at e
-  exact e
+  simpa only [GlobalTheory.Mem.Lift.oneP_zero hθ, mul_one] using key.2
 
 end Compact
 

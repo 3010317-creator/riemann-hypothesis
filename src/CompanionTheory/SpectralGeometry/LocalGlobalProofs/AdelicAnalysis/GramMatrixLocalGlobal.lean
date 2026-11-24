@@ -67,8 +67,7 @@ variable {F : Type} [Field F] [NumberField F] {E : Type} [Field E] [Algebra F E]
 
 theorem adele_ext (x y : AF F) (h1 : fstA F x = fstA F y)
     (h2 : ∀ v, evalV F v (sndA F x) = evalV F v (sndA F y)) : x = y := by
-  refine Prod.ext h1 ?_
-  exact Subtype.ext (funext h2)
+  exact Prod.ext h1 (Subtype.ext (funext h2))
 
 theorem tensor_ext [Module.Finite F E] (z w : AF F ⊗[F] E)
     (h1 : bcE E (fstA F) z = bcE E (fstA F) w)
@@ -97,8 +96,7 @@ theorem gram_local : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
       fun a b => bcE E (evalV F v) (bcE E (sndA F) (gramR (AF F) σ J X a b)) := by
     intro v
     have := bcE_gramR (evalV F v) σ J (projFin X : Fin n → Fin M → Af F ⊗[F] E)
-    rw [hFin] at this
-    exact this
+    rwa [hFin] at this
   refine ⟨⟨fun h => ⟨?_, fun v => ?_⟩, fun h => ?_⟩, fun Y => gramR_ratTup σ J Y⟩
   · rw [hInf, h]
     funext a b

@@ -65,8 +65,7 @@ private theorem absPow_map {E : Type} [Field E] [ValuativeRel E] [TopologicalSpa
     rw [Units.val_mul, hx, map_mul, hσ, Units.val_inv_eq_inv_val, map_inv₀, mul_inv_cancel₀]
     exact (Valuation.ne_zero_iff _).2 x.ne_zero
   have h2 := isUnram_absPow E s _ h1
-  rw [map_mul, map_inv, mul_inv_eq_one] at h2
-  exact h2
+  rwa [map_mul, map_inv, mul_inv_eq_one] at h2
 
 private theorem deltaHalf_map {E : Type} [Field E] [ValuativeRel E] [TopologicalSpace E]
     [IsNonarchimedeanLocalField E] {n : ℕ} {σ : E ≃+* E} (hσ : Isom σ) (t : Fin n → Eˣ) :
@@ -76,8 +75,7 @@ private theorem deltaHalf_map {E : Type} [Field E] [ValuativeRel E] [Topological
       GeneralLinearGroup.det ((leviTorus E (Fin n) u) a) = u a :=
     fun u a => congrFun ((leviTorus E (Fin n)).symm_apply_apply u) a
   rw [deltaHalf_apply, deltaHalf_apply]
-  simp only [hdet]
-  exact Finset.prod_congr rfl (fun a _ => absPow_map hσ _ _)
+  simpa only [hdet] using Finset.prod_congr rfl (fun a _ => absPow_map hσ _ _)
 
 end UpperTheory.Gal.LocD
 

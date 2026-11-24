@@ -110,11 +110,9 @@ theorem InCodiff.mul_different_pow {x : E} (hx : InCodiff x) (h : ℕ) :
     rw [pow_succ] at ha
     refine Submodule.mul_induction_on ha (fun u hu v hv => ?_) (fun u v hu hv => ?_)
     · have := (ih u hu).mul (hx.mul_different hv)
-      rw [RingOfIntegers.coe_eq_algebraMap, map_mul, pow_succ, mul_mul_mul_comm]
-      exact this
+      rwa [RingOfIntegers.coe_eq_algebraMap, map_mul, pow_succ, mul_mul_mul_comm]
     · have := hu.add hv
-      rw [RingOfIntegers.coe_eq_algebraMap, map_add (f := _), add_mul]
-      exact this
+      rwa [RingOfIntegers.coe_eq_algebraMap, map_add (f := _), add_mul]
 
 theorem exists_discr_pow_mul_isIntegral [IsGalois ℚ E] :
     ∃ h : ℕ, 0 < h ∧ ∀ x : E, InCodiff x →
@@ -253,7 +251,7 @@ theorem exists_letters (D : D7) : ∃ (S : Finset ℕ) (dl : ℕ → ℝ), Lette
     simp only [hinj] at h2
     simp only [coordV, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Matrix.single_apply]
     by_cases hst : k.2.1 = s ∧ k.2.2 = t
-    · simp only [hst, and_self, if_true, and_true]
+    · simp only [hst, and_self, ite_true, and_true]
       exact h2.symm
     · have : ¬ (τ = k.1 ∧ s = k.2.1 ∧ t = k.2.2) := fun h => hst ⟨h.2.1.symm, h.2.2.symm⟩
       simp [hst, this]
@@ -270,8 +268,7 @@ theorem d_le_rd_sq (D : D7) : (D.host.d : ℝ) ≤ D.host.rdE ^ 2 ∧ 0 ≤ D.ho
   have h2 : Real.sqrt (D.host.d : ℝ) ≤ D.host.rdE :=
     (le_mul_of_one_le_left (Real.sqrt_nonneg _) h1).trans h.1
   have h3 := Real.sq_sqrt hd
-  have h4 := pow_le_pow_left₀ (Real.sqrt_nonneg _) h2 2
-  exact ⟨h3 ▸ h4, (Real.sqrt_nonneg _).trans h2⟩
+  exact ⟨h3 ▸ (pow_le_pow_left₀ (Real.sqrt_nonneg _) h2 2), (Real.sqrt_nonneg _).trans h2⟩
 
 end GlobalTheory.NormSum.Denom
 

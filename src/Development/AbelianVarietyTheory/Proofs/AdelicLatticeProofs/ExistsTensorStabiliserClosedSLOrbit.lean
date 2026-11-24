@@ -155,8 +155,7 @@ lemma vanC_sup_eq_top {Γ : Set (Matrix ι ι ℂ)} (hΓ : IsQGroup Γ) {y : Mat
   set z : Matrix ι ι ℂ := Matrix.of fun i j => x (i, j) with hz
   have key : ∀ f ∈ vanC Γ ⊔ vanC ((fun g => g * y) '' Γ), evC f z = 0 := by
     intro f hf
-    have h1 := (MvPolynomial.mem_vanishingIdeal_singleton_iff x f).1 (hle hf)
-    simpa [evC, hz] using h1
+    simpa [evC, hz] using (MvPolynomial.mem_vanishingIdeal_singleton_iff x f).1 (hle hf)
   have hzΓ : z ∈ Γ := mem_of_forall_vanC hΓ fun f hf => key f (Ideal.mem_sup_left hf)
   have hyy : y * y.adjugate = 1 := by rw [Matrix.mul_adjugate, hy, one_smul]
   have hyy' : y.adjugate * y = 1 := by rw [Matrix.adjugate_mul, hy, one_smul]
@@ -208,8 +207,7 @@ theorem exists_isInv_evC_one_ne : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] 
   have e3 : evC (Rey a) y = 1 := by
     have h := congrArg (fun f => evC f y) hsum
     simp only [evC] at h e2 ⊢
-    rw [map_add (f := _), e2, add_zero, map_one] at h
-    exact h
+    rwa [map_add (f := _), e2, add_zero, map_one] at h
   rw [e1, e3]
   exact zero_ne_one
 
@@ -251,8 +249,7 @@ theorem isInv_iff (Γ : Set (Matrix ι ι ℂ)) (f : MvPolynomial (ι × ι) ℂ
     apply MvPolynomial.funext
     intro x
     have := h g hg (Matrix.of fun i j => x (i, j))
-    rw [← evC_ltr] at this
-    exact this
+    rwa [← evC_ltr] at this
   · intro h g hg y
     rw [← evC_ltr, h g hg]
 
@@ -262,8 +259,7 @@ theorem ltr_homog (g : Matrix ι ι ℂ) {f : MvPolynomial (ι × ι) ℂ} {n : 
   have := hf.aeval (fun ij : ι × ι => ∑ k, MvPolynomial.C (g ij.1 k) * (MvPolynomial.X (k, ij.2) : MvPolynomial (ι × ι) ℂ))
     (n := 1) (fun ij => IsHomogeneous.sum _ _ _ fun k _ => by
       simpa using (isHomogeneous_C (ι × ι) (g ij.1 k)).mul (isHomogeneous_X ℂ (k, ij.2)))
-  rw [one_mul] at this
-  exact this
+  rwa [one_mul] at this
 
 omit [DecidableEq ι] in
 theorem ltr_comp (g : Matrix ι ι ℂ) (f : MvPolynomial (ι × ι) ℂ) (n : ℕ) :
@@ -299,7 +295,7 @@ theorem hilbert_finiteness : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (Γ :
       intro f hf hn
       rcases Nat.eq_zero_or_pos n with rfl | hpos
       · have : f = C (AddMonoidAlgebra.coeff f 0) := by
-          rw [← homogeneousComponent_zero, homogeneousComponent_of_mem hn, if_pos rfl]
+          rw [← homogeneousComponent_zero, homogeneousComponent_of_mem hn, ite_eq_left rfl]
         rw [this]
         exact Subalgebra.algebraMap_mem _ _
       · have hmem : f ∈ Submodule.span (MvPolynomial (ι × ι) ℂ) (s : Set (MvPolynomial (ι × ι) ℂ)) := by
@@ -312,7 +308,7 @@ theorem hilbert_finiteness : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (Γ :
           refine Finset.sum_congr rfl fun F hF => ?_
           rw [smul_eq_mul, mul_comm, hR.mul _ _ (hsS hF).1]
         have h2 : f = homogeneousComponent n f := by
-          rw [homogeneousComponent_of_mem hn, if_pos rfl]
+          rw [homogeneousComponent_of_mem hn, ite_eq_left rfl]
 
         rw [h2, h1, map_sum]
         refine Subalgebra.sum_mem _ fun F hF => ?_
@@ -655,8 +651,7 @@ theorem exists_evC_eq_of_relations [Fintype ι] [DecidableEq ι] (Γ : Set (Matr
     have h3 : ∀ k, ∃ P : MvPolynomial κ ℂ, aeval Φ P = Rey (a k) := by
       intro k
       have := hgen _ (hR.inv (a k))
-      rw [Algebra.adjoin_range_eq_range_aeval] at this
-      exact this
+      rwa [Algebra.adjoin_range_eq_range_aeval] at this
     choose P hP using h3
     have h4 := hz (∑ k, (X k - C (z k)) * P k - 1) (by
 
@@ -762,8 +757,7 @@ theorem exists_tensor_stabiliser_closed_orbit : ∀ (ι : Type) [Fintype ι] [De
         z = fun k => evC (MvPolynomial.map (algebraMap ℚ ℂ) (Φ k)) y} := by
       ext z
       simp only [orb, hev]
-    rw [this]
-    exact hcl
+    rwa [this]
 
 end GlobalTheory.ClassFin
 end -- clump:auto

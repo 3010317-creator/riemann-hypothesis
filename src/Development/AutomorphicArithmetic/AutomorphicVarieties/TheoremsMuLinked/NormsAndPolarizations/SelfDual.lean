@@ -190,11 +190,9 @@ private lemma smith_step [IsUltrametricDist K] {b : Type*} [Fintype b] [Decidabl
   let D : Matrix b b K := Matrix.of fun i j => N (Sum.inr i) (Sum.inr j) -
     N (Sum.inr i) (Sum.inl ()) * N (Sum.inl ()) (Sum.inr j) / x
   have hC : Small C := fun i j => by
-    simp only [C, Matrix.of_apply, norm_div]
-    exact (div_le_one hpos).mpr (hN _ _)
+    simpa only [C, Matrix.of_apply, norm_div] using (div_le_one hpos).mpr (hN _ _)
   have hB : Small B := fun i j => by
-    simp only [B, Matrix.of_apply, norm_div]
-    exact (div_le_one hpos).mpr (hN _ _)
+    simpa only [B, Matrix.of_apply, norm_div] using (div_le_one hpos).mpr (hN _ _)
   have key : N = fromBlocks 1 0 C 1 * fromBlocks (diagonal fun _ => x) 0 0 D
       * fromBlocks 1 B 0 1 := by
     simp only [Matrix.fromBlocks_multiply, Matrix.one_mul, Matrix.mul_one, Matrix.zero_mul,
@@ -225,8 +223,7 @@ private lemma smith_fin [IsUltrametricDist K] (n : ℕ) :
     have h := smith_step ih (M.submatrix f.symm g.symm) (fun i j => by
       simp only [Matrix.submatrix_apply, hf, hg]
       exact hpq (_, _))
-    have h2 := smith_submatrix h f g
-    simpa using h2
+    simpa using smith_submatrix h f g
 
 private lemma good_gl {n : ℕ} {A : Matrix (Fin n) (Fin n) K} (hA : Good A) :
     ∃ U : GL (Fin n) K, (↑U : Matrix (Fin n) (Fin n) K) = A ∧

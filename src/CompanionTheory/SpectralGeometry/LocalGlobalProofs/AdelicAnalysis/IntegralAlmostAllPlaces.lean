@@ -18,8 +18,7 @@ theorem eventually_le_one {F : Type} [Field F] [NumberField F] (x : F) :
     ∀ᶠ v : HeightOneSpectrum (𝓞 F) in Filter.cofinite, v.valuation F x ≤ 1 := by
   have h := HeightOneSpectrum.Support.finite (𝓞 F) x
   rw [Filter.eventually_cofinite]
-  refine h.subset fun v hv => ?_
-  exact not_le.mp hv
+  exact h.subset fun v hv => not_le.mp hv
 
 theorem eventually_eq_one {F : Type} [Field F] [NumberField F] (x : F) (hx : x ≠ 0) :
     ∀ᶠ v : HeightOneSpectrum (𝓞 F) in Filter.cofinite, v.valuation F x = 1 := by

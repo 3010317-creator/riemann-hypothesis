@@ -83,9 +83,7 @@ private theorem presheaf_map_comp_eq {T : Type u} [TopologicalSpace T]
   exact presheaf_map_eq F _ c
 
 private theorem top_le_ι_preimage {Y : Scheme.{u}} (W : Y.Opens) :
-    (⊤ : W.toScheme.Opens) ≤ W.ι ⁻¹ᵁ W := by
-  intro x _
-  exact x.2
+    (⊤ : W.toScheme.Opens) ≤ W.ι ⁻¹ᵁ W := fun x _ => x.2
 
 private theorem top_le_preimage_top {Y Y₁ : Scheme.{u}} (g : Y₁ ⟶ Y) :
     (⊤ : Y₁.Opens) ≤ g ⁻¹ᵁ (⊤ : Y.Opens) := by
@@ -130,8 +128,7 @@ private theorem appLE_topIso_hom_apply {Y Y₁ : Scheme.{u}} (f : Y₁ ⟶ Y)
   have h2 : (W.topIso.hom ≫ f.appLE W V hV).hom y
       = ((f.resLE W V hV).appTop ≫ V.topIso.hom).hom y := by
     rw [topIso_hom_comp_appLE f W V hV]
-  rw [comp_hom_apply, comp_hom_apply] at h2
-  exact h2
+  rwa [comp_hom_apply, comp_hom_apply] at h2
 
 private theorem topIso_inv_appLE_apply {Y Y₁ : Scheme.{u}} (f : Y₁ ⟶ Y) (W : Y.Opens)
     (V : Y₁.Opens) (hV : V ≤ f ⁻¹ᵁ W) (a : Γ(Y, W)) :
@@ -139,8 +136,7 @@ private theorem topIso_inv_appLE_apply {Y Y₁ : Scheme.{u}} (f : Y₁ ⟶ Y) (W
       = ((f.resLE W V hV).appTop).hom (W.topIso.inv.hom a) := by
   have h := appLE_topIso_inv_comp f W V hV
   have h2 := congrArg (fun φ : Γ(Y, W) ⟶ Γ(V.toScheme, ⊤) => CommRingCat.Hom.hom φ a) h
-  rw [comp_hom_apply, comp_hom_apply] at h2
-  exact h2
+  rwa [comp_hom_apply, comp_hom_apply] at h2
 
 theorem restrictIdeal_comap (B : BlowupChart π c S s) (D : X.IdealSheafData) :
     restrictIdeal (D.comap π) B.domain =
@@ -242,8 +238,7 @@ theorem appLE_coord_of_not_mem (B : BlowupChart π c S s) (i : Fin m) (hi : i �
         = ((c.map).appTop ≫ (π.resLE U B.domain B.domain_le).appTop).hom
           (AffineSpace.coord (Spec (CommRingCat.of k)) (ULift.up i : ULift.{u} (Fin m))) := by
       rw [hcomm]
-    rw [comp_hom_apply, comp_hom_apply] at h2
-    exact h2
+    rwa [comp_hom_apply, comp_hom_apply] at h2
   rw [coordBlowupSubstMap_appTop_coord_of_notMem k m S s i hi] at hx
   simp only [EtaleChart.coord_def]
   rw [hx]
@@ -253,9 +248,9 @@ theorem appLE_coord (B : BlowupChart π c S s) (i : Fin m) :
     (π.appLE U B.domain B.domain_le).hom (c.coord i) =
       if i ∈ S ∧ i ≠ s then B.chart.coord i * B.chart.coord s else B.chart.coord i := by
   by_cases h : i ∈ S ∧ i ≠ s
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     exact B.appLE_coord_of_mem i h.1 h.2
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     by_cases hi : i ∈ S
     · have hieq : i = s := by
         by_contra hne
@@ -296,9 +291,9 @@ theorem coordEvalHom_coordRelation (B : BlowupChart π c S s) (i : Fin m) :
     B.coordEvalHom (B.coordRelation i) = 0 := by
   rw [coordRelation_def]
   by_cases h : i ∈ S ∧ i ≠ s
-  · rw [if_pos h, map_sub, map_mul, coordEvalHom_X, coordEvalHom_X, coordEvalHom_C, B.appLE_coord i,
-      if_pos h, sub_self]
-  · rw [if_neg h, map_sub, coordEvalHom_X, coordEvalHom_C, B.appLE_coord i, if_neg h, sub_self]
+  · rw [ite_eq_left h, map_sub, map_mul, coordEvalHom_X, coordEvalHom_X, coordEvalHom_C, B.appLE_coord i,
+      ite_eq_left h, sub_self]
+  · rw [ite_eq_right h, map_sub, coordEvalHom_X, coordEvalHom_C, B.appLE_coord i, ite_eq_right h, sub_self]
 
 theorem coordEvalHom_eq_zero_of_mem_span (B : BlowupChart π c S s)
     (a : MvPolynomial (ULift.{u} (Fin m)) Γ(X, U))
@@ -426,8 +421,7 @@ private theorem coordBlowupSubstMap_appTop_affineSpaceFinToSpec (t : Γ(Spec (Co
       = ((affineSpaceFinToSpec k m).appTop).hom t :=
     congrArg (fun φ : affineSpaceFin k m ⟶ Spec (CommRingCat.of k) => (φ.appTop).hom t)
       (coordBlowupSubstMap_comp_affineSpaceFinToSpec k m S s)
-  rw [comp_appTop_apply] at h
-  exact h
+  rwa [comp_appTop_apply] at h
 
 private theorem chart_appTop_coordBlowupSubstMap_apply (B : BlowupChart π c S s) (z : Γ(affineSpaceFin k m, ⊤)) :
     (B.chart.map.appTop).hom (((coordBlowupSubstMap k m S s).appTop).hom z)
@@ -435,8 +429,7 @@ private theorem chart_appTop_coordBlowupSubstMap_apply (B : BlowupChart π c S s
   have h : ((B.chart.map ≫ coordBlowupSubstMap k m S s).appTop).hom z
       = ((π.resLE U B.domain B.domain_le ≫ c.map).appTop).hom z :=
     congrArg (fun φ : B.domain.toScheme ⟶ affineSpaceFin k m => (φ.appTop).hom z) B.comm
-  rw [comp_appTop_apply, comp_appTop_apply] at h
-  exact h
+  rwa [comp_appTop_apply, comp_appTop_apply] at h
 
 private theorem etaleChart_appTop_affineSpaceFinToSpec_apply {Y : Scheme.{u}} {q : Y ⟶ Spec (CommRingCat.of k)}
     {W : Y.Opens} (d : EtaleChart q W m) (t : Γ(Spec (CommRingCat.of k), ⊤)) :
@@ -539,8 +532,7 @@ private theorem mk_eq_mk_C_coord (B : BlowupChart π c S s) (j : Fin m) :
         (MvPolynomial.C (c.coord j)) := by
   have h : Ideal.Quotient.mk (Ideal.span (Set.range B.coordRelation)) (B.coordRelation j) = 0 :=
     Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.subset_span ⟨j, rfl⟩)
-  rw [coordRelation_def, map_sub, sub_eq_zero] at h
-  exact h
+  rwa [coordRelation_def, map_sub, sub_eq_zero] at h
 
 private theorem appTop_comp_affineSectionsToCoordRelationQuotient (B : BlowupChart π c S s) :
     (coordBlowupSubstMap k m S s).appTop ≫ affineSectionsToCoordRelationQuotient B = c.map.appTop ≫ openSectionsToCoordRelationQuotient B := by
@@ -554,17 +546,14 @@ private theorem appTop_comp_affineSectionsToCoordRelationQuotient (B : BlowupCha
       · subst hjs
         rw [coordBlowupSubstMap_appTop_coord_self, affineSectionsToCoordRelationQuotient_coord]
         have hrel := mk_eq_mk_C_coord B j
-        rw [if_neg (by simp)] at hrel
-        exact hrel
+        rwa [ite_eq_right (by simp)] at hrel
       · rw [coordBlowupSubstMap_appTop_coord_of_mem k m S s j hjS hjs, map_mul, affineSectionsToCoordRelationQuotient_coord,
           affineSectionsToCoordRelationQuotient_coord, ← map_mul]
         have hrel := mk_eq_mk_C_coord B j
-        rw [if_pos ⟨hjS, hjs⟩] at hrel
-        exact hrel
+        rwa [ite_eq_left ⟨hjS, hjs⟩] at hrel
     · rw [coordBlowupSubstMap_appTop_coord_of_notMem k m S s j hjS, affineSectionsToCoordRelationQuotient_coord]
       have hrel := mk_eq_mk_C_coord B j
-      rw [if_neg (by tauto)] at hrel
-      exact hrel
+      rwa [ite_eq_right (by tauto)] at hrel
 
 private theorem bijective_coordEvalQuotientHom_of_isPullback (B : BlowupChart π c S s)
     (hU : IsAffineOpen U)
@@ -588,14 +577,12 @@ private theorem bijective_coordEvalQuotientHom_of_isPullback (B : BlowupChart π
   have hinl' : ∀ z, Δ.hom ((B.chart.map.appTop).hom z) = (affineSectionsToCoordRelationQuotient B).hom z := by
     intro z
     have h := congrArg (fun φ => CommRingCat.Hom.hom φ z) hinl
-    rw [comp_hom_apply] at h
-    exact h
+    rwa [comp_hom_apply] at h
   have hinr' : ∀ y, Δ.hom (((π.resLE U B.domain B.domain_le).appTop).hom y)
       = (openSectionsToCoordRelationQuotient B).hom y := by
     intro y
     have h := congrArg (fun φ => CommRingCat.Hom.hom φ y) hinr
-    rw [comp_hom_apply] at h
-    exact h
+    rwa [comp_hom_apply] at h
   have hbeta : Δ ≫ CommRingCat.ofHom B.coordEvalQuotientHom = B.domain.topIso.hom := by
     refine HP.hom_ext ?_ ?_
     · rw [← Category.assoc, hinl]
@@ -615,8 +602,7 @@ private theorem bijective_coordEvalQuotientHom_of_isPullback (B : BlowupChart π
   have hbeta' : ∀ z, B.coordEvalQuotientHom (Δ.hom z) = B.domain.topIso.hom.hom z := by
     intro z
     have h := congrArg (fun φ => CommRingCat.Hom.hom φ z) hbeta
-    rw [comp_hom_apply] at h
-    exact h
+    rwa [comp_hom_apply] at h
   have hring : (Δ.hom).comp ((B.domain.topIso.inv.hom).comp B.coordEvalQuotientHom)
       = RingHom.id _ := by
     refine Ideal.Quotient.ringHom_ext ?_
@@ -630,8 +616,7 @@ private theorem bijective_coordEvalQuotientHom_of_isPullback (B : BlowupChart π
         hinl', affineSectionsToCoordRelationQuotient_coord]
   have halpha : ∀ q, Δ.hom (B.domain.topIso.inv.hom (B.coordEvalQuotientHom q)) = q := by
     intro q
-    have h := RingHom.congr_fun hring q
-    simpa only [RingHom.comp_apply, RingHom.id_apply] using h
+    simpa only [RingHom.comp_apply, RingHom.id_apply] using RingHom.congr_fun hring q
   refine ⟨fun x y hxy => ?_, fun y => ⟨Δ.hom (B.domain.topIso.inv.hom y), ?_⟩⟩
   · rw [← halpha x, ← halpha y, hxy]
   · rw [hbeta', iso_hom_inv_apply]

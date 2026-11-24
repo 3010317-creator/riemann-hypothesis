@@ -113,8 +113,7 @@ open Formalism Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.Weakl
 namespace GlobalTheory.FontaineAdmissible
 
 theorem fontaineProperties_all_places : ∀ D : D7, Formalism.MainNotions.PairedCharacterCondition.FontaineAtPlacesOverL (D := D) := by
-  intro D l _ K LL
-  exact GlobalTheory.FontaineAll.fontaineAt_all D l K LL
+  exact fun D l _ K LL => GlobalTheory.FontaineAll.fontaineAt_all D l K LL
 
 end GlobalTheory.FontaineAdmissible
 end -- clump:auto
@@ -679,11 +678,11 @@ theorem main_alt_alt : ∀ (D : D7) (P : Pend D), GlobalTheory.TypeLeaf.SerLoc D
       rw [P.eSer_eq k, atPlace_sum, onMt_sum _ _ _ _ hc, LinearMap.sum_apply] at h1
       obtain ⟨τ, -, hτ⟩ := Finset.exists_ne_zero_of_sum_ne_zero h1
       by_cases hlab : (P.lz k).lab τ = s ⟨k, v⟩
-      · rw [if_pos hlab] at hτ
+      · rw [ite_eq_left hlab] at hτ
         exact ⟨τ, (P.kty_spec i PI k v τ).2 ⟨F, hF, hτ⟩, hlab⟩
       · exfalso
         apply hτ
-        rw [if_neg hlab, atPlace_zero]
+        rw [ite_eq_right hlab, atPlace_zero]
         unfold NTypes.onMt
         rw [dite_eq_left (Subalgebra.zero_mem _)]
         have e0 : (⟨0, Subalgebra.zero_mem _⟩ : ↥(Subalgebra.center ℂ (MonoidAlgebra ℂ (G0g D.nd)))) = 0 := rfl
@@ -816,8 +815,7 @@ theorem exists_separating (S : Finset (I →* LLˣ)) (a : I →* LLˣ) :
     ∃ e : I →₀ LL, ∀ b ∈ S, (e.sum fun g c => c * (b g : LL)) = if b = a then 1 else 0 := by
   have h1 : LinearIndependent LL (fun b : S => fun g : I => ((b.1 g : LLˣ) : LL)) := by
     refine (linearIndependent_monoidHom I LL).comp (fun b : S => (Units.coeHom LL).comp b.1) ?_
-    intro b b' h
-    exact Subtype.ext (MonoidHom.ext fun g => Units.ext (DFunLike.congr_fun h g))
+    exact fun b b' h => Subtype.ext (MonoidHom.ext fun g => Units.ext (DFunLike.congr_fun h g))
   have h2 := span_flip_eq_top_iff_linearIndependent.2 h1
   obtain ⟨e, he⟩ := Finsupp.mem_span_range_iff_exists_finsupp.1
     (h2 ▸ Submodule.mem_top : (fun b : S => if b.1 = a then (1 : LL) else 0) ∈ _)
@@ -1183,8 +1181,7 @@ theorem closing_at_record : ∀ D : D7, DualJumpL D.loc ∧ PotDRL D.loc ∧ Pcr
     fun l _ => ⟨D.locT l⟩
   refine ⟨GlobalTheory.DualJump.dualJumpL D.loc D.locA hT, GlobalTheory.Pass.potDRL_of_tied D.loc D.locA hT,
     GlobalTheory.PcrisTwist.pcrisTensorL_of_tied D.loc D.locA hT, ?_, GlobalTheory.BridgeInertia.inertEq D⟩
-  intro i w hw
-  exact GlobalTheory.bridge_degW D.nbr i w hw
+  exact fun i w hw => GlobalTheory.bridge_degW D.nbr i w hw
 
 end GlobalTheory.Closing
 end -- clump:auto
@@ -1475,8 +1472,7 @@ theorem conclusion_of_typeLocus_alt {D : D7} (P : Pend D) (CT : ℕ)
   have hQ := hl5 i k k' hkk' hl r ρ hr hdec eta s S sg U h1 h2 h3 h4 h5 h7 h8
   have hc := hcut i k hl
   choose! Xs β b hcb using hc
-  refine ⟨Xs, β, b, fun π hπ => ⟨(hcb π hπ).1, ?_⟩⟩
-  exact hQ π hπ (Xs π) (hcb π hπ).1.1 (hcb π hπ).2
+  exact ⟨Xs, β, b, fun π hπ => ⟨(hcb π hπ).1, hQ π hπ (Xs π) (hcb π hπ).1.1 (hcb π hπ).2⟩⟩
 theorem admT_of_adm5_eigSpan_tieInePoly : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (D : D7) (P : Pend D) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (C : ℝ) (CT : ℕ), 8 * (CT : ℝ) ≤ C → SumRepresentations.adm5 D → EigSpan P → TieInePoly D → admT (D := D) CT → LocalPushoutProposition (D := D) → ResidualAbsIrreducible (D := D) → TypePrimeChoiceLemmas (D := D) → admDZ P → _root_.Formalism.MainNotions.PairedCharacterCondition.GaloisFamilyConditions' (D := D) → admG5 (D := D) → admG6 (D := D) → GlobalTheory.TypeLeaf.SerLoc D → admTB (D := D) HW F → admBK (D := D) → admBC (D := D) → _root_.Formalism.MainNotions.PairedCharacterCondition.LocalGlobalCompatibility' (D := D) → SumRepresentations.tie0 D → tieChi (D := D) → _root_.Formalism.MainNotions.PairedCharacterCondition.PairedCharacterConditionAlt (D := D) C CT := by
   intro hGAR D P HW F C CT hC hadm5 hEig hTie hT hLOC hRbar hN5g hDZ hG14 hG5 hG6 hSer hTB hBK hBC hLGC htie0 htieChi
   have hSteps : _root_.GlobalTheory.Pass.NoCutStatement := _root_.GlobalTheory.Pass.stepsNoCut_of_artin_alt hGAR

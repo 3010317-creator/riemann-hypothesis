@@ -91,8 +91,7 @@ theorem exists_ideal_of_locally {R : Type} [CommRing R]
     fun R' _ y => ⟨fun hy r hr => hr R' y hy, fun hy => ?_⟩⟩
   · intro a b ha hb R' _ y hy
     rw [map_add (f := _), ha R' y hy, hb R' y hy, add_zero]
-  · intro R' _ y _
-    exact map_zero y
+  · exact fun R' _ y _ => map_zero y
   · intro c a ha R' _ y hy
     rw [smul_eq_mul, map_mul, ha R' y hy, mul_zero]
   refine loc R' y fun q hq => ?_
@@ -115,8 +114,7 @@ theorem exists_ideal_of_locally {R : Type} [CommRing R]
     refine hy _ fun R'' _ y' hy' => ?_
     by_contra hne
     have hann : (Submodule.span R'' {y' (f p ^ s.sup j * n)}).annihilator ≠ ⊤ := by
-      rw [Ne, Submodule.annihilator_eq_top_iff, Submodule.span_singleton_eq_bot]
-      exact hne
+      rwa [Ne, Submodule.annihilator_eq_top_iff, Submodule.span_singleton_eq_bot]
     obtain ⟨m, hm, hle⟩ := Ideal.exists_le_maximal _ hann
     have hex : ∃ i ∈ s, y' (f i) ∉ m := by
       by_contra hc
@@ -302,8 +300,7 @@ theorem exists_ideal_hasTh_iff : Out.Laws → Out.Laws2 → ∀ (o : Type) [Comm
     obtain ⟨u, hu⟩ := exists_unit_of_minors (span_map_eq_top (z.comp (algebraMap R L)) hv) (span_map_eq_top z hw)
       fun a c => by
         have := hM (Ideal.subset_span ⟨a, c, rfl⟩)
-        rw [RingHom.mem_ker, map_sub, map_mul, map_mul, sub_eq_zero] at this
-        exact this
+        rwa [RingHom.mem_ker, map_sub, map_mul, map_mul, sub_eq_zero] at this
     rw [funext hu]
     exact hasTh_unit_mul t u H'
 

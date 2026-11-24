@@ -198,8 +198,7 @@ theorem exists_prime_le (P : Ideal ℤ) [P.IsPrime] :
     exact lt_irrefl _ this
   have hmp : Prime m := (Ideal.span_singleton_prime hm0).1 (hmM ▸ hM.isPrime)
   refine ⟨m.natAbs, Int.prime_iff_natAbs_prime.1 hmp, fun r hr hrP => hr ?_⟩
-  rw [Ideal.mem_span_singleton, Int.natAbs_dvd]
-  rw [← Ideal.mem_span_singleton, hmM]
+  rw [Ideal.mem_span_singleton, Int.natAbs_dvd, ← Ideal.mem_span_singleton, hmM]
   exact hPM hrP
 
 theorem isAmpleLB_tens_of_nefFib : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → ∀ L A : HermLB p, NefFib L → IsAmpleLB A.B → IsAmpleLB (L.tens A).B := by
@@ -229,8 +228,7 @@ theorem isAmpleLB_tens_of_nefFib : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) 
     (Int.castRingHom (ZMod l)) hfrac hFib
   have hrl : r ∉ Ideal.span {(l : ℤ)} := by
     rw [Ideal.mem_span_singleton]
-    intro h
-    exact hr ((ZMod.intCast_zmod_eq_zero_iff_dvd r l).2 h)
+    exact fun h => hr ((ZMod.intCast_zmod_eq_zero_iff_dvd r l).2 h)
   let U : (Spec (CommRingCat.of ℤ)).Opens := PrimeSpectrum.basicOpen r
   haveI : IsAffine U.toScheme := IsAffineOpen.Spec_basicOpen (R := CommRingCat.of ℤ) r
   exact ⟨U, hlP r hrl, AmpleFibres.relAmple_restrict U (Over.mk s) hM hA'⟩

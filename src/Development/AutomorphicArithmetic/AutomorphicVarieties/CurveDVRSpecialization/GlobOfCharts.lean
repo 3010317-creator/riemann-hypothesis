@@ -56,16 +56,14 @@ theorem UpperTheory.V.Pr.globOfCharts :
     rintro P ⟨y, hy, hyT⟩
     obtain ⟨z, hzT, hz⟩ := mem_closure_iff.mp hy _ hTI hyT
     rw [Set.mem_singleton_iff] at hz
-    rw [← hz]
-    exact hzT
+    rwa [← hz]
   refine ⟨?_, ?_, ?_⟩
   · intro hD Y Y' hY hY' hxY hxY' hYg
     obtain ⟨P, hPm, rfl⟩ := hC.onto Y hY.1 hxY
     obtain ⟨P', hP'm, rfl⟩ := hC.onto Y' hY'.1 hxY'
     have hPG : P ∈ L.Good := (eG P).mpr (hYg (subset_closure (Set.mem_singleton _)))
     have hPT : P ∈ L.TI := (eT P).mpr (hmeet P hY.2)
-    have h' := hConcl P hPG hPT (hD P hPm) P' ((eT P').mpr (hmeet P' hY'.2)) hP'm
-    exact hsub P' ((eG P').mp h')
+    exact hsub P' ((eG P').mp (hConcl P hPG hPT (hD P hPm) P' ((eT P').mpr (hmeet P' hY'.2)) hP'm))
   · intro hall
     refine ⟨irreducibleComponent x, ⟨irreducibleComponent_mem_irreducibleComponents x, ?_⟩,
       mem_irreducibleComponent⟩
@@ -88,8 +86,7 @@ theorem UpperTheory.V.Pr.globOfCharts :
         (PrimeSpectrum.le_iff_mem_closure P I).mp hpI
       obtain ⟨z, hzT, hz⟩ := mem_closure_iff.mp hcl _ hopen hIT
       rw [Set.mem_singleton_iff] at hz
-      rw [← hz]
-      exact hzT
+      rwa [← hz]
     have hPG := hConcl I hIG hIT hID P hPT hPmin
     exact ⟨closure {f P}, ⟨hC.min P hPmin, f P, subset_closure (Set.mem_singleton _), (eT P).mp hPT⟩,
       hsub P ((eG P).mp hPG)⟩

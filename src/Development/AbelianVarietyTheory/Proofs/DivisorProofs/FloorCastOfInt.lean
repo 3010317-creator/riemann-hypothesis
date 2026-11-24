@@ -142,13 +142,11 @@ theorem rows_sizes : ∀ (D : D7) (j : ℕ), 1 ≤ j → j ≤ D.R.m → ∀ τ 
   · intro a b hab
     have hb : b.1 < D.R.k + j - 1 := b.2
     exact Nat.floor_le_floor (aPlusQ_anti D j τ (show a.1 ≤ b.1 from hab) (by omega))
-  · intro i
-    exact Nat.le_floor (by simpa using one_le_aPlusQ D j h1 h2 τ i)
+  · exact fun i => Nat.le_floor (by simpa using one_le_aPlusQ D j h1 h2 τ i)
   · intro a b hab
     have hab' : a.1 ≤ b.1 := hab
     exact Nat.floor_le_floor (aMinusQ_mono D j τ (by omega) (hM a))
-  · intro i
-    exact Nat.le_floor (by simpa using one_le_aMinusQ D j h1 τ _ (hM i))
+  · exact fun i => Nat.le_floor (by simpa using one_le_aMinusQ D j h1 τ _ (hM i))
   · rw [eP]
     exact aPlus_le D j h1 h2 τ L hL i
   · rw [eM]

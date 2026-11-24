@@ -186,12 +186,12 @@ theorem finsum_apply_eq (ι : H →* G) (ρ : Representation ℂ H V) (K : Subgr
       Finset.sum_congr rfl (g := fun _ => φ y) ?_, Finset.sum_const, ← Nat.card_eq_card_finite_toFinset]
     intro h hh
     rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hh
-    rw [if_pos hh, ← hφ.1 h x, ← hφ.2 _ hh (ι h * x), mul_inv_cancel_left]
+    rw [ite_eq_left hh, ← hφ.1 h x, ← hφ.2 _ hh (ι h * x), mul_inv_cancel_left]
   · intro h hh
     rw [Function.mem_support] at hh
     rw [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
     by_contra hc
-    exact hh (if_neg hc)
+    exact hh (ite_eq_right hc)
 
 theorem card_eq (ι : H →* G) (hι : Function.Injective ι) (K : Subgroup G) (x : G) (h₀ : H) {k₀ : G}
     (hk₀ : k₀ ∈ K) :
@@ -242,7 +242,7 @@ theorem secM_self (ι : H →* G) (hι : Function.Injective ι) (ρ : Representa
 theorem secM_off (ι : H →* G) (ρ : Representation ℂ H V) (K : Subgroup G) (x y : G) (v : V)
     (hy : ∀ h : H, (ι h * x)⁻¹ * y ∉ K) : secM ι ρ K x v y = 0 := by
   rw [secM_apply']
-  simp only [hy, if_false, finsum_zero, LinearMap.zero_apply, smul_zero]
+  simp only [hy, ite_false, finsum_zero, LinearMap.zero_apply, smul_zero]
 
 end GlobalTheory.BCT.TraceBlocks.Decomp
 
@@ -258,14 +258,12 @@ theorem GlobalTheory.BCT.TraceBlocks.eqvM_eq_finsum_secM : ∀ (G H V : Type) [G
     obtain ⟨h₀, rfl⟩ := hg
     haveI := hS (Quotient.out (DoubleCoset.mk ι.range K' y))
     have key := secM_self ι hι ρ K' hφ (Quotient.out (DoubleCoset.mk ι.range K' y)) h₀ hk₀
-    rw [← hy] at key
-    exact key
+    rwa [← hy] at key
   · intro q _ hq
     refine secM_off ι ρ K' _ y _ fun h hh => hq ?_
     refine (DoubleCoset.out_eq' q).symm.trans ((@DoubleCoset.eq _ _ _ _ _ _).mpr
       ⟨ι h, ⟨h, rfl⟩, _, hh, (mul_inv_cancel_left _ _).symm⟩)
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EquivariantFunctionEqFinsumDoubleCosetSections =====
@@ -576,10 +574,8 @@ theorem levOp_secM_apply_self : ∀ (G H V : Type) [Group G] [Group H] [AddCommG
     split_ifs with e
     · rw [← e, hout, smul_comm]
     · simp only [LinearMap.zero_apply, smul_zero]
-  rw [Finset.sum_congr rfl this, Finset.sum_ite_eq]
-  rw [if_pos]
-  simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq, hout]
-  exact hh
+  rw [Finset.sum_congr rfl this, Finset.sum_ite_eq, ite_eq_left]
+  simpa only [Set.Finite.mem_toFinset, Set.mem_setOf_eq, hout] using hh
 
 end GlobalTheory.BCT.TraceBlocks
 end -- clump:auto
@@ -738,8 +734,7 @@ theorem trOn_eqvM (ι : H →* G) (hι : Function.Injective ι) (ρ : Representa
   have hfin := GlobalTheory.T.finite_rationalPoints_conj_in_support G H ι hι K' F hR hsupp (x q) (hst _)
   have hsub : ∀ {β : Type} [AddCommMonoid β] (g : H → β), (∀ h, F ((x q)⁻¹ * ι h * x q) = 0 → g h = 0) →
       Function.support g ⊆ hfin.toFinset := fun g hg h hh => by
-    simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
-    exact fun h0 => hh (hg h h0)
+    simpa only [Set.Finite.coe_toFinset, Set.mem_setOf_eq] using fun h0 => hh (hg h h0)
   have hA : e q ∘ₗ T.restrict hmaps ∘ₗ s q = ((K'.relIndex K : ℕ) : ℂ)⁻¹ • ((stabCard ι K' (x q) : ℂ))⁻¹ •
       ∑ h ∈ hfin.toFinset, F ((x q)⁻¹ * ι h * x q) • ρ h := by
     ext v
@@ -786,8 +781,7 @@ theorem finPtHom_range : (finPtHom (E := E) (n := n)).range = ratFinU E n := by
     exact (congrArg Subtype.val this).symm
   · rintro ⟨g, hg, he⟩
     refine ⟨⟨g, hg⟩, Subtype.ext (Subtype.ext ?_)⟩
-    rw [finPtHom_apply, FinPtLoc.finPt_eq]
-    exact he
+    rwa [finPtHom_apply, FinPtLoc.finPt_eq]
 
 end GlobalTheory.BCT.TraceBlocks
 

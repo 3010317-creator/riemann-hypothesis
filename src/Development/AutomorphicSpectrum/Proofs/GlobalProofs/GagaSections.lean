@@ -256,8 +256,7 @@ theorem exists_tendsto {R : Type} [CommRing R] (p : X ⟶ Sp R) [IsProper p] (σ
     have h₄ := valR_spMap_comp (algebraMap (V 𝒰) (K 𝒰)) l W hl f
     rw [hl₁, h₂] at h₄
     have h₅ : ((valR l W f : V 𝒰) : K 𝒰) = gm 𝒰 e W f := h₄.symm
-    rw [h₅] at h₃
-    exact h₃
+    rwa [h₅] at h₃
 
 theorem compactSpace_of_isProper {R : Type} [CommRing R] (p : X ⟶ Sp R) [IsProper p] (σ : R →+* ℂ) :
     CompactSpace (PtsOver p (spMap σ)) :=
@@ -630,15 +629,12 @@ theorem isHolTo_chart (c : AlgChart s (RingHom.id ℂ) D) (W : X.Opens)
   refine ⟨?_, ?_⟩
   · have ho := (c.e.isOpen_inter_preimage_symm
       ((isOpen_ptsIn (p := s) (σ := RingHom.id ℂ) W).inter (isOpen_ptsIn U))).preimage ψ.continuous
-    rw [hset] at ho
-    exact ho
+    rwa [hset] at ho
   · have hd := (c.holo U f).comp
       (ψ.differentiableOn : DifferentiableOn ℂ ψ {b | b ∈ ψ ⁻¹' (c.e.target ∩ c.e.symm ⁻¹' ptsIn s (RingHom.id ℂ) W) ∧
         ⊤ ≤ (Opens.map (c.e.symm (ψ b)).1.base).obj U})
       (fun b hb => ⟨hb.1.1, hb.2⟩)
-    refine hd.congr ?_
-    intro b _
-    exact valAt'_eq_ev U f _
+    exact hd.congr (fun b _ => valAt'_eq_ev U f _)
 
 theorem exists_mem_holSec : ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (D : ℕ), SmoothOfRelativeDimension D s → ∀ (R : AnRead s (RingHom.id ℂ) D), ∀ (L : LB X), L.IsLB → ∀ h : L.ι → (Sp ℂ ⟶ X) → ℂ, (∀ (i : L.ι) (m : ℕ) (B : Set (Fin m → ℂ)) (y : (Fin m → ℂ) → (Sp ℂ ⟶ X)), IsOpen B → IsHolTo B y → (∀ b ∈ B, y b ≫ s = 𝟙 _ ∧ ⊤ ≤ y b ⁻¹ᵁ L.U i) → DifferentiableOn ℂ (fun b => h i (y b)) B) → (∀ (i j : L.ι) (x : Sp ℂ ⟶ X), x ≫ s = 𝟙 _ → ⊤ ≤ x ⁻¹ᵁ (L.U i ⊓ L.U j) → h i x = valAt' x (L.U i ⊓ L.U j) (L.g i j).val * h j x) → ∃ σ ∈ R.holSec L, ∀ (i : L.ι), ∀ y ∈ ptsIn s (RingHom.id ℂ) (L.U i), σ i y = h i y.1 := by
   intro X s D _ R L _ h hhol hcoc
@@ -648,11 +644,11 @@ theorem exists_mem_holSec : ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (D : ℕ), S
   · refine ⟨⟨?_, ?_⟩, ?_⟩
     · intro i j y hi hj
       have hij : y ∈ ptsIn s (RingHom.id ℂ) (L.U i ⊓ L.U j) := mem_ptsIn_inf.2 ⟨hi, hj⟩
-      simp only [if_pos hi, if_pos hj]
+      simp only [ite_eq_left hi, ite_eq_left hj]
       rw [hcoc i j y.1 (comp_eq_id y) hij, valAt'_eq_ev]
       rfl
     · intro i y hy
-      simp only [if_neg hy]
+      simp only [ite_eq_right hy]
     · intro i k
       have hB : IsOpen (ψ ⁻¹' ((R.chart k).e.target ∩
           (R.chart k).e.symm ⁻¹' ptsIn s (RingHom.id ℂ) (L.U i))) :=
@@ -669,7 +665,7 @@ theorem exists_mem_holSec : ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (D : ℕ), S
       have hv2 : (R.chart k).e.symm v ∈ ptsIn s (RingHom.id ℂ) (L.U i) := hv.2
       simp [Function.comp, hv2]
   · intro i y hy
-    simp only [if_pos hy]
+    simp only [ite_eq_left hy]
 
 end GlobalTheory.CompanionTheory.Gaga
 end -- clump:auto
@@ -698,8 +694,7 @@ theorem gagaSections_pure : ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (D : ℕ), I
   let y : CxPts s (RingHom.id ℂ) := ⟨x, hx'⟩
   have hy : y ∈ ptsIn s (RingHom.id ℂ) (L.U i) := hU
   have h1 := e i y hy
-  rw [← ht] at h1
-  exact h1
+  rwa [← ht] at h1
 
 end GlobalTheory.CompanionTheory.Gaga
 end -- clump:auto
@@ -778,8 +773,7 @@ theorem exists_clopen_smoothOfRelativeDimension :
       obtain ⟨D', hD'⟩ := Opens.mem_iSup.1 hx
       have := hdis D'.2
       have hm : x ∈ W D'.1 ⊓ W D := ⟨hD', hxD⟩
-      rw [this] at hm
-      exact hm
+      rwa [this] at hm
   rw [← isOpen_compl_iff, hc]
   exact Opens.isOpen _
 
@@ -886,8 +880,7 @@ theorem exists_factor {X : Scheme.{0}} (W : ℕ → X.Opens) (hc : ⨆ D, W D = 
   obtain ⟨D, hD⟩ := Opens.mem_iSup.1 hy
   have hr : Set.range x ⊆ Set.range (W D).ι := by
     rintro _ ⟨q, rfl⟩
-    rw [Subsingleton.elim q p, Scheme.Opens.range_ι]
-    exact hD
+    rwa [Subsingleton.elim q p, Scheme.Opens.range_ι]
   exact ⟨D, IsOpenImmersion.lift (W D).ι x hr, IsOpenImmersion.lift_fac _ _ _⟩
 
 theorem gagaSections : GlobalTheory.CompanionTheory.Ar.Flat.GagaSections := by

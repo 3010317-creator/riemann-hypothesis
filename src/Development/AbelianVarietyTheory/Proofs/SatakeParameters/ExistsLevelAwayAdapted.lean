@@ -55,8 +55,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {a : ℕ}
 
 theorem apart_of_apart_not_apart {w w₀ u : HeightOneSpectrum (𝓞 E)} (hw : Apart w w₀) (hu : ¬ Apart u w₀) : Apart u w := by
   unfold Apart at *
-  intro h
-  exact hw (h.symm.trans (not_not.1 hu))
+  exact fun h => hw (h.symm.trans (not_not.1 hu))
 
 theorem mem_levelOf_iff_of_locU {w₀ w : HeightOneSpectrum (𝓞 E)} {H : HeightOneSpectrum (𝓞 E) → Subgroup (UA E a)}
     (hle : ∀ w, H w ≤ locU a w) (hfib : ∀ w u, ¬ Apart w u → H w = H u) (hw : Apart w w₀) {x : UA E a}
@@ -65,8 +64,7 @@ theorem mem_levelOf_iff_of_locU {w₀ w : HeightOneSpectrum (𝓞 E)} {H : Heigh
   constructor
   · intro h
     obtain ⟨y, hy, e⟩ := (mem_levelOf.1 h).2.2 w hw
-    rw [← eq_of_cLoc_eq (hle w hy) hx e]
-    exact hy
+    rwa [← eq_of_cLoc_eq (hle w hy) hx e]
   · intro h
     refine mem_levelOf.2 ⟨hx'.1, fun u hu => hx'.2 u (apart_of_apart_not_apart hw hu), fun w' hw' => ?_⟩
     by_cases hw'w : Apart w' w
@@ -136,8 +134,7 @@ theorem fixed_ne_bot_of_fix {U : Submodule ℂ (UA E a → ℂ)} (hU : IsAutRepU
   refine (Submodule.ne_bot_iff _).2 ⟨v, GlobalTheory.LGrp.mem_fixed.2 ?_, hv0⟩
   rintro _ ⟨x, hx, rfl⟩
   have := hv ⟨x, hL hx⟩ hx
-  rw [one_smul] at this
-  exact this
+  rwa [one_smul] at this
 
 theorem KGL_le_map {w : HeightOneSpectrum (𝓞 E)} (hw : IsSplitAt w) :
     GlobalTheory.LFun.KGL w (n := a) ≤ (intU a w).map (cLoc w) := by

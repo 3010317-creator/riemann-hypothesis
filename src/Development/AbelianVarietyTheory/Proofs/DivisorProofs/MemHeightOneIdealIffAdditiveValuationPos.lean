@@ -87,8 +87,7 @@ theorem plEq_conj (D : D7) (w : D.what₂.places.Pl) :
   change _ ↔ x ∈ (D.plEq w).asIdeal.map (Formalism.DivisionValues.cO D.what₂.LL)
   rw [Ideal.mem_map_of_equiv]
   constructor
-  · intro h
-    exact ⟨_, h, Formalism.DivisionValues.ValuationRepresentative.cO_cO x⟩
+  · exact fun h => ⟨_, h, Formalism.DivisionValues.ValuationRepresentative.cO_cO x⟩
   · rintro ⟨y, hy, rfl⟩
     rwa [Formalism.DivisionValues.ValuationRepresentative.cO_cO]
 
@@ -127,10 +126,8 @@ theorem sum_half (D : D7) (p : ℕ) (hp : p.Prime) (S : Finset D.what₂.places.
     · intro w hw
       rw [hS] at hw ⊢
       rw [resChar_conj, hw]
-    · intro w _
-      exact D.what₂.places.conj_conj w
-    · intro w _
-      exact D.what₂.places.conj_conj w
+    · exact fun w _ => D.what₂.places.conj_conj w
+    · exact fun w _ => D.what₂.places.conj_conj w
     · intro w _
       rw [logWeight_conj, additiveValuation_conj_place_eq_star]
   have hm := factEtaMean D p hp S hS

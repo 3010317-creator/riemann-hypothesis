@@ -144,12 +144,10 @@ theorem exists_cover_nonzeroLocus : ∀ (K : Type) [Field K] [IsAlgClosed K] (B 
   have hD : ((((snd T B).left ⁻¹ᵁ B.left.basicOpen (s.f j)) : (T ⊗ B).left.Opens) : Set (T ⊗ B).left).Nonempty := by
     obtain ⟨d, hd⟩ : ((B.left.basicOpen (s.f j) : B.left.Opens) : Set B.left).Nonempty := by
       rw [Set.nonempty_iff_ne_empty]
-      intro h
-      exact hj ((basicOpen_eq_bot_iff _).1 (SetLike.coe_injective h))
+      exact fun h => hj ((basicOpen_eq_bot_iff _).1 (SetLike.coe_injective h))
     refine ⟨e.left d, ?_⟩
     show (snd T B).left (e.left d) ∈ B.left.basicOpen (s.f j)
-    rw [← Scheme.Hom.comp_apply, ← Over.comp_left, he]
-    exact hd
+    rwa [← Scheme.Hom.comp_apply, ← Over.comp_left, he]
   have key : ∀ (x : T ⟶ B) (p : T.left), ∃ t : LB.Sec (pw L.L (2 * k : ℕ)), x.left p ∈ nonzeroLocus t := by
     intro x p
     have hq : x ≫ q = 𝟙 T := Over.OverMorphism.ext (Over.w x)
@@ -159,8 +157,7 @@ theorem exists_cover_nonzeroLocus : ∀ (K : Type) [Field K] [IsAlgClosed K] (B 
       refine unitAt_of_pw s _ _ j ?_
       have E : x ≫ e ≫ translPt B a = ptSecT B (a * x) ≫ snd T B := by
         simp [e, ptSecT, NoBasePoint.translPt_eq, MonObj.comp_mul, reassoc_of% hq]
-      rw [← Scheme.Hom.comp_apply, ← Over.comp_left, ← Over.comp_left, E]
-      exact ha
+      rwa [← Scheme.Hom.comp_apply, ← Over.comp_left, ← Over.comp_left, E]
     obtain ⟨a, h₁, h₂⟩ := NoBasePoint.exists_two_points (𝟙 _) _ hD x x
     have sq := unitAt_of_triv L.isLB (Square.triv_square c a a⁻¹) e.left k (x.left p)
     have e1 : translPt B (1 : T ⟶ B) = snd _ _ := by
@@ -193,8 +190,7 @@ theorem exists_cover_nonzeroLocus : ∀ (K : Type) [Field K] [IsAlgClosed K] (B 
   refine ⟨F.card, Fin.cons (secZero _) (fun i => (F.equivFin.symm i).1), top_unique fun z _ => ?_⟩
   obtain ⟨t, ht, hz⟩ := Set.mem_iUnion₂.1 (hF (Set.mem_univ z))
   refine TopologicalSpace.Opens.mem_iSup.2 ⟨(F.equivFin ⟨t, ht⟩).succ, ?_⟩
-  rw [Fin.cons_succ, Equiv.symm_apply_apply]
-  exact hz
+  rwa [Fin.cons_succ, Equiv.symm_apply_apply]
 
 end GlobalTheory.CubeFree
 end

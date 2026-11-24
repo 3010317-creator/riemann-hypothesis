@@ -130,8 +130,7 @@ theorem yoneda_spec_isoWidePullback (A B T : Type) [CommRing A] [CommRing B] [Co
     · ext x
       refine (H s x).unique (fun j => ?_) (H s x).exists.choose_spec
       have h := ConcreteCategory.congr_hom (hm (some j)) x
-      rw [ConcreteCategory.comp_apply] at h
-      exact h
+      rwa [ConcreteCategory.comp_apply] at h
   exact ⟨hc.conePointUniqueUpToIso (limit.isLimit _), fun j =>
     hc.conePointUniqueUpToIso_hom_comp (limit.isLimit _) (some j)⟩
 

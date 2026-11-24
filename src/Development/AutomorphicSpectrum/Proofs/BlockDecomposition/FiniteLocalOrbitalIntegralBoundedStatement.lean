@@ -346,8 +346,7 @@ theorem twisted_integral_finite_coset_combination_bound :
     have himg : {y : X | y - a ∈ L} = (fun x => x + a) '' (L : Set X) := by
       ext y
       constructor
-      · intro hy
-        exact ⟨y - a, hy, by simp⟩
+      · exact fun hy => ⟨y - a, hy, by simp⟩
       · rintro ⟨x, hx, rfl⟩
         simpa using hx
     rw [himg]
@@ -493,8 +492,7 @@ theorem weyl_sq_compact_open : ∀ (X : Type) [AddCommGroup X] [TopologicalSpace
       have ht : I = ∫ y in (L : Set X), q (x' + y) ∂m := by
         refine setIntegral_translate_of_iff m hCm hLm x' (fun y => ?_) q
         have e : x' + y - x₀ = (x' - x₀) + y := by abel
-        simp only [hCdef, Set.mem_setOf_eq, e, SetLike.mem_coe]
-        exact L.add_mem_cancel_left hx''
+        simpa only [hCdef, Set.mem_setOf_eq, e, SetLike.mem_coe] using L.add_mem_cancel_left hx''
       rw [ht, ← integral_const_mul]
       refine integral_congr_ae (Filter.Eventually.of_forall fun y => ?_)
       beta_reduce
@@ -521,8 +519,7 @@ theorem weyl_sq_compact_open : ∀ (X : Type) [AddCommGroup X] [TopologicalSpace
     have ht : J y = ∫ x in C, B (l + x) y ∂m := by
       refine setIntegral_translate_of_iff m hCm hCm l (fun x => ?_) (fun x => B x y)
       have e : l + x - x₀ = l + (x - x₀) := by abel
-      simp only [hCdef, Set.mem_setOf_eq, e]
-      exact L.add_mem_cancel_left hl
+      simpa only [hCdef, Set.mem_setOf_eq, e] using L.add_mem_cancel_left hl
     have h2 : J y = B l y * J y := by
       conv_lhs => rw [ht]
       simp only [hJ, hB1, integral_const_mul]
@@ -536,7 +533,7 @@ theorem weyl_sq_compact_open : ∀ (X : Type) [AddCommGroup X] [TopologicalSpace
   have hcut : ∫ y in (L : Set X), q y * J y ∂m = ∫ y in S, q y * J y ∂m := by
     refine setIntegral_eq_of_subset_of_forall_diff_eq_zero hLm hSL fun y hy => ?_
     have : ¬ ∀ l ∈ L, B l y = 1 := fun h => hy.2 ⟨hy.1, h⟩
-    push_neg at this
+    push Not at this
     obtain ⟨l, hl, hne⟩ := this
     simp [hJ0 y l hl hne]
   have hbound : ‖∫ y in S, q y * J y ∂m‖ ≤ (m (L : Set X)).toReal * (m S).toReal := by
@@ -545,8 +542,7 @@ theorem weyl_sq_compact_open : ∀ (X : Type) [AddCommGroup X] [TopologicalSpace
     simpa [Measure.real] using this
   have hsq : ‖I‖ ^ 2 = ‖I * (starRingEnd ℂ) I‖ := by
     rw [norm_mul, RCLike.norm_conj, sq]
-  rw [hsq, hstep, hcut]
-  exact hbound
+  rwa [hsq, hstep, hcut]
 
 end GlobalTheory.CompanionTheory.SiegelND.Integ.Weyl
 end -- clump:auto
@@ -613,10 +609,8 @@ theorem latN_isOpen_isCompact : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
       constructor
       · rintro ⟨z, hz, rfl⟩
         show (↑u⁻¹ : Af F) * ((N : Af F) * z) ∈ Oh F
-        rw [← hu, ← mul_assoc, Units.inv_mul, one_mul]
-        exact hz
-      · intro hy
-        exact ⟨(↑u⁻¹ : Af F) * y, hy, by rw [← hu, ← mul_assoc, Units.mul_inv, one_mul]⟩
+        rwa [← hu, ← mul_assoc, Units.inv_mul, one_mul]
+      · exact fun hy => ⟨(↑u⁻¹ : Af F) * y, hy, by rw [← hu, ← mul_assoc, Units.mul_inv, one_mul]⟩
     rw [hpre]
     exact (AfTop.isOpen_Oh F).preimage (continuous_const_mul _)
   have hSc : IsCompact {y : Af F | ∃ z ∈ Oh F, y = (N : Af F) * z} := by
@@ -707,8 +701,7 @@ theorem exists_cube_subset_of_mem_nhds_zero {ι X : Type*} [Finite ι] [Topologi
   rw [nhds_pi, Filter.mem_pi] at hV
   obtain ⟨I, -, t, ht, hsub⟩ := hV
   refine ⟨⋂ i, t i, Filter.iInter_mem.mpr (fun i => by simpa using ht i), fun Y hY => hsub ?_⟩
-  intro i _
-  exact Set.mem_iInter.mp (hY i) i
+  exact fun i _ => Set.mem_iInter.mp (hY i) i
 
 theorem latN_small : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (n M : ℕ),
@@ -886,7 +879,7 @@ theorem pair_single : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
       simpa [Matrix.mulVec, dotProduct] using h1
     unfold hR Formalism.UG.hform
     rw [Finset.sum_eq_single i₀]
-    · simp only [if_true, JR, ratTuple, Matrix.map_apply]
+    · simp only [ite_true, JR, ratTuple, Matrix.map_apply]
       rw [← hv]
 
       simp only [map_mul, map_sum, Finset.mul_sum]
@@ -1488,8 +1481,7 @@ theorem traceDual_clear_by_integer : ∀ (F : Type) [Field F] [NumberField F], �
   obtain ⟨a, ha, hint⟩ := (FractionalIdeal.dual ℤ ℚ (1 : FractionalIdeal (nonZeroDivisors (𝓞 F)) F)).isFractional
   have ha0 : a ≠ 0 := nonZeroDivisors.ne_zero ha
   refine ⟨Ideal.absNorm (Ideal.span {a}), ?_, ?_⟩
-  · rw [Nat.pos_iff_ne_zero, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-    exact ha0
+  · rwa [Nat.pos_iff_ne_zero, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
   · intro f hf
     have hmem : f ∈ FractionalIdeal.dual ℤ ℚ (1 : FractionalIdeal (nonZeroDivisors (𝓞 F)) F) := by
       rw [FractionalIdeal.mem_dual (one_ne_zero' (FractionalIdeal (nonZeroDivisors (𝓞 F)) F))]
@@ -1637,8 +1629,7 @@ theorem finite_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
       have hmem : ∀ l ∈ L, B l (ratTuple J s₂ fun i => (φ i).out - (φ' i).out) = 1 := by
         intro l hl
         have : ratTuple (F := F) J s₂ (fun i => (φ i).out - (φ' i).out) = v - u := by
-          rw [hρ, sub_eq_sub_iff_add_eq_add, add_comm v]
-          exact huv
+          rwa [hρ, sub_eq_sub_iff_add_eq_add, add_comm v]
         rw [this]
         exact hdiff u hu v hv l hl
       have hK : (φ i₀).out - (φ' i₀).out ∈ Kc c' := by
@@ -1649,7 +1640,7 @@ theorem finite_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
               intro a i
               by_cases h : a = c₀ ∧ i = i₀
               · simpa [h] using hx
-              · simp only [h, if_false]
+              · simp only [h, ite_false]
                 exact (latN b n M N).zero_mem a i)
             rw [hB, hbc, GlobalTheory.T.pairing_on_rational_tuple_formula F E σ M J hJ n (psiFin F ψ) c c₀ i₀ x s₂ _] at h1
             exact h1)

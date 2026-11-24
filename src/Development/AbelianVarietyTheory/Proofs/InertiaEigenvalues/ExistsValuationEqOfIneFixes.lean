@@ -163,18 +163,14 @@ theorem ramificationIdx_eq_one {K Ω L : Type} [Field K] [NumberField K] [Field 
     obtain ⟨σ, hσ, hστ⟩ := exists_mem_Ine_lift_int A M τ fun y => by
       have := (mem_primeUnder A M _).1 (hτ y)
       have e : ((τ • y - y : 𝓞 M) : M) = τ (y : M) - (y : M) := rfl
-      rw [← map_sub, ← e]
-      exact this
+      rwa [← map_sub, ← e]
     apply (algebraMap M Ω).injective
     rw [← hστ, ← IsScalarTower.algebraMap_apply, hI σ hσ x]
   let f : P.toAddSubgroup.inertia (M ≃ₐ[K] M) → P.toAddSubgroup.inertia (M ≃ₐ[L] M) := fun τ =>
     ⟨{ (τ : M ≃ₐ[K] M).toRingEquiv with commutes' := hfix τ τ.2 }, fun y => τ.2 y⟩
   have hf : Function.Injective f := by
     intro a b hab
-    apply Subtype.ext
-    apply AlgEquiv.ext
-    intro y
-    exact DFunLike.congr_fun (congrArg Subtype.val hab) y
+    exact Subtype.ext (AlgEquiv.ext (fun y => DFunLike.congr_fun (congrArg Subtype.val hab) y))
   have h4 := Nat.card_le_card_of_injective f hf
   rw [h1, h2, h3] at h4
   have hpos : 0 < P.ramificationIdx (𝓞 K) := h1 ▸ Nat.card_pos
@@ -188,8 +184,7 @@ theorem ramificationIdx_eq_one {K Ω L : Type} [Field K] [NumberField K] [Field 
     rw [h0] at hpos
     simp at hpos
   have hle : w.asIdeal.ramificationIdx (𝓞 K) ≤ 1 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have : 2 * P.ramificationIdx (𝓞 L) ≤ w.asIdeal.ramificationIdx (𝓞 K) * P.ramificationIdx (𝓞 L) :=
       Nat.mul_le_mul_right _ hc
     omega

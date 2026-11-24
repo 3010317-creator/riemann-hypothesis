@@ -52,8 +52,7 @@ theorem kModExists (h1 : SmMod) (h2 : KFinSm) (h3 : KFinStab) (h4 : StabLink) (h
     constructor
     · rintro ⟨x, hx, rfl⟩
       exact (hV x).1 hx
-    · intro hv
-      exact ⟨⟨v, hsm v hv⟩, (hV _).2 hv, rfl⟩
+    · exact fun hv => ⟨⟨v, hsm v hv⟩, (hV _).2 hv, rfl⟩
   have hDS : D ≤ S := fun v hv => hsm v ((hmem v).1 hv)
   let ι : D →ₗ[ℂ] S := Submodule.inclusion hDS
   have hι : Function.Injective ι := Submodule.inclusion_injective hDS
@@ -74,8 +73,7 @@ theorem kModExists (h1 : SmMod) (h2 : KFinSm) (h3 : KFinStab) (h4 : StabLink) (h
     have f2 : FiniteDimensional ℂ (T.comap D.subtype) :=
       (Submodule.comapSubtypeEquivOfLe hTD).symm.finiteDimensional
     have hk : KStab ε E (T.comap S.subtype) := by
-      rw [h4 n ε H σ S E hσ hS _ f1, Submodule.map_comap_subtype, inf_eq_right.2 hTS]
-      exact hs
+      rwa [h4 n ε H σ S E hσ hS _ f1, Submodule.map_comap_subtype, inf_eq_right.2 hTS]
     exact ⟨T.comap D.subtype, f2, fun a b hab v hv => hk a b hab (ι v) hv, hx⟩
   · intro μ T hty
     have hTD := hT T hty.1 hty.2.1

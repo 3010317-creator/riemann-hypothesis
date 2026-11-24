@@ -135,8 +135,7 @@ private lemma indep (T : Finset ℝ) : ∀ (P : ℝ → ℂ[X]),
           rw [Finset.sum_insert ht0, hz, add_zero] at e
           simpa [Complex.exp_ne_zero] using e
         exact zero_case P hP0 hP
-    intro P hP
-    exact main _ P (Nat.lt_succ_self _) hP
+    exact fun P hP => main _ P (Nat.lt_succ_self _) hP
 
 private lemma extend {T S : Finset ℝ} (hTS : T ⊆ S) (a : ℝ → ℂ) (s : ℂ) :
     ∑ t ∈ S, (if t ∈ T then a t else 0) * Complex.exp (t * s) = ∑ t ∈ T, a t * Complex.exp (t * s) := by
@@ -148,15 +147,14 @@ theorem expIndep : ExpIndep := by
   classical
   rintro p q U V ⟨T, a, hU⟩ ⟨T', b, hV⟩ hU0 h
   obtain ⟨t, htT, hat⟩ : ∃ t ∈ T, a t ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hU0 (funext fun s => by
       rw [hU, Pi.zero_apply]
       exact Finset.sum_eq_zero fun t ht => by rw [hc t ht, zero_mul])
   have key := indep (T ∪ T')
     (fun t => C (if t ∈ T then a t else 0) * p - C (if t ∈ T' then b t else 0) * q)
     (fun s => ?_) t (Finset.mem_union_left _ htT)
-  · rw [if_pos htT] at key
+  · rw [ite_eq_left htT] at key
     exact ⟨a t, _, hat, sub_eq_zero.mp key⟩
   · have e1 := extend (Finset.subset_union_left : T ⊆ T ∪ T') a s
     have e2 := extend (Finset.subset_union_right : T' ⊆ T ∪ T') b s

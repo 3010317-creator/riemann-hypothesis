@@ -128,8 +128,7 @@ theorem θ_comp_c₀ (σ : Setup) (x : Sp σ.R) :
       _ = gp _ ≫ (σ.C x).G.hom ≫ spMap (σ.ρ x) := by rw [← Category.assoc l, hl₁]
       _ = spMap ((cst (σ.C x).G.hom).comp (σ.ρ x)) := by
           rw [← Category.assoc, gp_comp]; simp only [spMap, CommRingCat.ofHom_comp, Spec.map_comp]
-  have e' := congrArg CommRingCat.Hom.hom (Spec.map_inj.1 e)
-  simpa using e'
+  simpa using congrArg CommRingCat.Hom.hom (Spec.map_inj.1 e)
 
 theorem zeroAt_cst {R : Type} [CommRing R] {Y : Scheme.{0}} [IsIntegral Y] (h : Y ⟶ Sp R) (r : R) (z : Y)
     (hz : r ∈ (h z).asIdeal) : ZeroAt z (cst h r) := by
@@ -162,14 +161,12 @@ theorem exists_pow_mul_mem_codimOne_regular_chart : ∀ (σ : Setup) (x : Sp σ.
   have hF : F.Finite := hS.biUnion fun t _ => Set.Subsingleton.finite fun a ha b hb => ha.eq hb
   have hPt : ∀ t ∈ S, (t : Set (σ.C x).G.left) ⊆ P := fun t ht => by
     have : t ≤ sSup S := le_sSup ht
-    rw [← hPS] at this
-    exact this
+    rwa [← hPS] at this
   let C : TopologicalSpace.Closeds (σ.C x).G.left :=
     ⟨⋃ t ∈ S, (t : Set _), hS.isClosed_biUnion fun t _ => t.isClosed⟩
   have hPC : P ⊆ (C : Set _) := by
     have : sSup S ≤ C := sSup_le fun t ht y hy => Set.mem_iUnion₂.2 ⟨t, ht, hy⟩
-    rw [← hPS] at this
-    exact this
+    rwa [← hPS] at this
   have key : ∀ z, Vert (σ.C x).G.hom (σ.ρ x σ.f) z → z ∈ P → z ∈ F := by
     intro z hz hzP
     obtain ⟨t, ht, hzt⟩ := Set.mem_iUnion₂.1 (hPC hzP)
@@ -193,7 +190,7 @@ theorem exists_pow_mul_mem_codimOne_regular_chart : ∀ (σ : Setup) (x : Sp σ.
   by_cases hzP : z ∈ P
   · have hle : N z ≤ hF.toFinset.sup N := Finset.le_sup (hF.mem_toFinset.2 (key z hz hzP))
     have hN : RegAt z (g ^ N z * v) := by
-      simp only [N, dif_pos hz]; exact Classical.choose_spec (hpt z hz)
+      simp only [N, dite_eq_left hz]; exact Classical.choose_spec (hpt z hz)
     rw [← Nat.sub_add_cancel hle, pow_add, _root_.mul_assoc]
     exact (regAt_pow hgz _).mul hN
   · exact (regAt_pow hgz _).mul (not_not.1 hzP)

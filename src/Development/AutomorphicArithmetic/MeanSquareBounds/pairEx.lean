@@ -90,9 +90,7 @@ theorem ind_drop :
     intro n hn
     have h := DirichletCharacter.changeLevel_eq_cast_of_dvd' ξ.primitiveCharacter
       ξ.conductor_dvd_level (a := (n : ℤ)) (Nat.isCoprime_iff_coprime.2 hn)
-    rw [DirichletCharacter.changeLevel_primitiveCharacter] at h
-    rw [Int.cast_natCast, Int.cast_natCast] at h
-    exact h
+    rwa [DirichletCharacter.changeLevel_primitiveCharacter, Int.cast_natCast, Int.cast_natCast] at h
   have heq := ind_unique N (ξ.conductor * q) (M * N₀ * q) χ ψ
     (mul_ne_zero (mul_ne_zero hM hN₀.ne') hq.ne_zero) hχp hψ (fun n hn => by
       rw [hind n (Nat.Coprime.coprime_dvd_right (Dvd.intro (N₀ * q) (by ring)) hn), hψeq]
@@ -341,10 +339,8 @@ private theorem kappa4_loglog : ∃ C l₀ : ℝ, 1 ≤ l₀ ∧ ∀ (Q : ℝ) (
   have hPle : ‖P‖ ≤ Real.log z + 2 := by
     have hM : ∑ n ∈ Icc 1 ⌊z⌋₊, (ArithmeticFunction.vonMangoldt n : ℝ) / (n : ℝ) ≤ Real.log z + 2 := by
       refine le_trans (Finset.sum_le_sum_of_subset_of_nonneg ?_ ?_) (Deduction.mertens_upper z hz1)
-      · intro n hn
-        exact Finset.mem_range.mpr (Nat.lt_succ_of_le (Finset.mem_Icc.mp hn).2)
-      · intro n _ _
-        exact div_nonneg ArithmeticFunction.vonMangoldt_nonneg (Nat.cast_nonneg n)
+      · exact fun n hn => Finset.mem_range.mpr (Nat.lt_succ_of_le (Finset.mem_Icc.mp hn).2)
+      · exact fun n _ _ => div_nonneg ArithmeticFunction.vonMangoldt_nonneg (Nat.cast_nonneg n)
     refine le_trans (norm_sum_le _ _) (le_trans ?_ hM)
     refine Finset.sum_le_sum (fun n hn => ?_)
     have hn1 : (1 : ℝ) ≤ n := by exact_mod_cast (Finset.mem_Icc.mp hn).1
@@ -435,10 +431,8 @@ private theorem chineseRemainder_finiteCover (M : ℕ) (h : Nat.Coprime 2 M) : �
     intro d
     rw [← Nat.modEq_zero_iff_dvd]
     constructor
-    · intro hd
-      exact Nat.ModEq.add_right_cancel' 1 (hd.trans hc3.symm)
-    · intro hd
-      exact (hd.add_right 1).trans hc3
+    · exact fun hd => Nat.ModEq.add_right_cancel' 1 (hd.trans hc3.symm)
+    · exact fun hd => (hd.add_right 1).trans hc3
   have hcM : Nat.Coprime c M := by
     have hdvd : M ∣ c + 1 := Nat.modEq_zero_iff_dvd.mp hc3
     have hcc : Nat.Coprime c (c + 1) := by
@@ -643,8 +637,7 @@ theorem stage2 :
     · rw [Real.log_exp]
       have hlm := log_oddM z q hzpos.le hqp.pos
       have hlq : Real.log q ≤ z := by
-        rw [Real.log_le_iff_le_exp (by exact_mod_cast hqp.pos)]
-        exact hqle'
+        rwa [Real.log_le_iff_le_exp (by exact_mod_cast hqp.pos)]
       have h16 : Real.log 16 = 4 * Real.log 2 := by
         rw [show (16:ℝ) = 2 ^ 4 by norm_num, Real.log_pow]
         norm_num
@@ -679,8 +672,7 @@ theorem stage2 :
     · unfold oddM at h
       rcases (Nat.Prime.dvd_mul hp).mp h with h | h
       · right
-        rw [(Nat.prime_dvd_prime_iff_eq hp hqp).mp h]
-        exact hqK
+        rwa [(Nat.prime_dvd_prime_iff_eq hp hqp).mp h]
       · left
         obtain ⟨r, hr, hpr⟩ := (Prime.dvd_finsetProd_iff hp.prime _).mp h
         simp only [Finset.mem_filter, Finset.mem_Icc] at hr
@@ -1014,8 +1006,7 @@ namespace QH
 private theorem pairEx_lift {N L : ℕ} [NeZero L] (h : N ∣ L) (ξ : DirichletCharacter ℂ N) (n : ℕ) (hn : n.Coprime L) :
     DirichletCharacter.changeLevel h ξ (n : ZMod L) = ξ (n : ZMod N) := by
   have ha : IsCoprime (n : ℤ) (L : ℤ) := Nat.isCoprime_iff_coprime.mpr hn
-  have key := DirichletCharacter.changeLevel_eq_cast_of_dvd' ξ h ha
-  simpa using key
+  simpa using DirichletCharacter.changeLevel_eq_cast_of_dvd' ξ h ha
 
 private theorem pairEx_box (M : ℕ) (hM : 0 < M) (C τ Y X z z' : ℝ) (q d : ℕ) (hR : Rows z z' q d) (hq : 8 * M < q)
     (hQ : GoodQ (8 * M) C τ Y X z q) (hD : GoodD (8 * M) C τ Y X z z' q d)
@@ -1064,7 +1055,7 @@ private theorem pairEx_box (M : ℕ) (hM : 0 < M) (C τ Y X z z' : ℝ) (q d : �
 private theorem pairEx_g {N : ℕ} [NeZero N] (χ : DirichletCharacter ℂ N) (h : χ ≠ 1) (y : ℝ) :
     Formalism.HC.An.gChi χ y = Gchi χ y := by
   unfold Formalism.HC.An.gChi
-  rw [if_neg h]
+  rw [ite_eq_right h]
   unfold Formalism.HC.An.sumLamChi Gchi
   congr 1
   apply Finset.sum_congr rfl
@@ -1141,8 +1132,7 @@ theorem pairEx :
   refine ⟨q, d, ?_, ?_, ?_, ?_⟩
   · refine ⟨hR.q_prime, hR.q_mod, hR.q_gt, hR.q_le, hR.d_prime, hR.d_mod, hR.d_gt, hR.d_le, ?_, ?_⟩
     · exact Nat.dvd_of_mod_eq_zero (hR.d_class q hR.q_prime hq2 (Or.inr rfl))
-    · intro p hp hp2 hpl
-      exact Nat.dvd_of_mod_eq_zero (hR.d_class p hp hp2 (Or.inl hpl))
+    · exact fun p hp hp2 hpl => Nat.dvd_of_mod_eq_zero (hR.d_class p hp hp2 (Or.inl hpl))
   · have hqM : ¬ q ∣ M := fun h => by
       have := Nat.le_of_dvd hM h
       omega

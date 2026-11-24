@@ -127,10 +127,8 @@ theorem Sorts.set_eq {e : Fin P ⊕ Fin Q ≃ Fin n} (h : Sorts ε e) (A : Set (
   constructor
   · rintro ⟨a, ha, hg⟩
     rw [← h.umat_equiv] at hg
-    rw [Set.mem_preimage, ← umat_injective hg]
-    exact ha
-  · intro hg
-    exact ⟨_, hg, rfl⟩
+    rwa [Set.mem_preimage, ← umat_injective hg]
+  · exact fun hg => ⟨_, hg, rfl⟩
 
 theorem Sorts.exists_conj {e e' : Fin P ⊕ Fin Q ≃ Fin n} (h : Sorts ε e) (h' : Sorts ε e') :
     ∃ u : UpqT P Q, ∀ g, h'.equiv g = h.equiv (u * g * u⁻¹) := by

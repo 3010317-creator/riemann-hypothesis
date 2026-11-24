@@ -102,8 +102,7 @@ theorem exists_glue (M : Model R A) (N : Model R A') (f : A ⟶ A') (U : M.Y.lef
   have := N.sep
   have hc : TopologicalSpace.IsOpenCover U := by
     rw [TopologicalSpace.IsOpenCover, eq_top_iff]
-    intro y _
-    exact TopologicalSpace.Opens.mem_iSup.2 ⟨y, hU y⟩
+    exact fun y _ => TopologicalSpace.Opens.mem_iSup.2 ⟨y, hU y⟩
   let 𝒰 := M.Y.left.openCoverOfIsOpenCover U hc
   have hgl : ∀ x y, pullback.fst (U x).ι (U y).ι ≫ g x = pullback.snd (U x).ι (U y).ι ≫ g y := by
     intro x y
@@ -192,8 +191,7 @@ theorem _root_.GlobalTheory.SS.existsUnique_extension_of_forall_defAt :
   choose U g hyU hg using hdef
   have hcov : TopologicalSpace.IsOpenCover U := by
     rw [TopologicalSpace.IsOpenCover, eq_top_iff]
-    intro y _
-    exact TopologicalSpace.Opens.mem_iSup.mpr ⟨y, hyU y⟩
+    exact fun y _ => TopologicalSpace.Opens.mem_iSup.mpr ⟨y, hyU y⟩
   have key : ∀ x y, pullback.fst (U x).ι (U y).ι ≫ g x = pullback.snd (U x).ι (U y).ι ≫ g y := by
     intro x y
     refine eq_of_openImmersion_of_eq_on_genericFibre M N (pullback.fst (U x).ι (U y).ι ≫ (U x).ι)
@@ -227,8 +225,7 @@ theorem _root_.GlobalTheory.SS.existsUnique_extension_of_forall_defAt :
   have hex : M.j ≫ G = f.left ≫ N.j := by
     have hcovA : TopologicalSpace.IsOpenCover (fun y => M.j ⁻¹ᵁ U y) := by
       rw [TopologicalSpace.IsOpenCover, eq_top_iff]
-      intro a _
-      exact TopologicalSpace.Opens.mem_iSup.mpr ⟨M.j a, hyU _⟩
+      exact fun a _ => TopologicalSpace.Opens.mem_iSup.mpr ⟨M.j a, hyU _⟩
     refine (A.left.openCoverOfIsOpenCover _ hcovA).hom_ext _ _ fun y => ?_
     change (M.j ⁻¹ᵁ U y).ι ≫ M.j ≫ G =
       (M.j ⁻¹ᵁ U y).ι ≫ f.left ≫ N.j

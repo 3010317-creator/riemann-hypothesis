@@ -77,8 +77,7 @@ theorem projV_add (v : HeightOneSpectrum (𝓞 F)) (X Y : Fin n → Fin M → Af
 theorem latV_add (v : HeightOneSpectrum (𝓞 F)) {Y Z : Fin n → Fin M → Fv F v ⊗[F] E}
     (hY : Y ∈ latV b v) (hZ : Z ∈ latV b v) : Y + Z ∈ latV b v := by
   intro a i k
-  simp only [Pi.add_apply, map_add (f := _), Finsupp.add_apply]
-  exact add_mem (hY a i k) (hZ a i k)
+  simpa only [Pi.add_apply, map_add (f := _), Finsupp.add_apply] using add_mem (hY a i k) (hZ a i k)
 
 variable (Φv : ∀ v : HeightOneSpectrum (𝓞 F), (Fin n → Fin M → Fv F v ⊗[F] E) → ℂ)
 
@@ -174,9 +173,7 @@ theorem hasCompactSupport_finprod (hSB : ∀ v, IsSB (Φv v))
   have hv := factor_ne_zero b Φv hae X h
   refine ⟨fun i j k => crd b (Af F) (X i j) k, ?_, ?_⟩
   · simp only [Box, Set.mem_pi, Set.mem_univ, true_implies]
-    intro i j k v
-    refine Or.inl ⟨projV v X, subset_tsupport _ (hv v), ?_⟩
-    exact crd_projV b X v i j k
+    exact fun i j k v => Or.inl ⟨projV v X, subset_tsupport _ (hv v), crd_projV b X v i j k⟩
   · funext i j
     exact (eq_sum_crd b (Af F) (X i j)).symm
 

@@ -78,13 +78,11 @@ theorem hf_sum_right {ι : Type} [Fintype ι] (Hm : Matrix (Fin g) (Fin g) ℂ) 
 
 theorem beta_sum_left {ι : Type} [Fintype ι] (d : ℕ) (Hm : Matrix (Fin g) (Fin g) ℂ) (z : ι → ℂ) (x : ι → Fin g → ℂ)
     (w : Fin g → ℂ) : beta d Hm (∑ i, z i • x i) w = ∑ i, z i * beta d Hm (x i) w := by
-  simp only [beta, hf_sum_left, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun i _ => by ring
+  simpa only [beta, hf_sum_left, Finset.mul_sum] using Finset.sum_congr rfl fun i _ => by ring
 
 theorem beta_sum_right {ι : Type} [Fintype ι] (d : ℕ) (Hm : Matrix (Fin g) (Fin g) ℂ) (z : ι → ℂ) (x : ι → Fin g → ℂ)
     (w : Fin g → ℂ) : beta d Hm w (∑ i, z i • x i) = ∑ i, conj (z i) * beta d Hm w (x i) := by
-  simp only [beta, hf_sum_right, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun i _ => by ring
+  simpa only [beta, hf_sum_right, Finset.mul_sum] using Finset.sum_congr rfl fun i _ => by ring
 
 section
 variable {d : ℕ} {Hm : Matrix (Fin g) (Fin g) ℂ} {x : Fin g → Fin g → ℂ} {a : Fin g → ℕ}

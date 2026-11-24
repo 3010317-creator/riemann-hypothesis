@@ -124,8 +124,7 @@ theorem qLevel_of_torsion_labels : AllVC fun {V} _ _ _ {D} {A} {G} _ _ U {C} _ _
     apply Prod.ext
     · show q'.1.1 ^ k = Multiplicative.ofAdd (k • Multiplicative.toAdd q'.1.1)
       rw [ofAdd_nsmul, ofAdd_toAdd]
-    · show q'.1.2 ^ k = N.io (Multiplicative.toAdd q'.1.1)
-      exact (N.mem_QT).1 q'.2
+    · exact (N.mem_QT).1 q'.2
   refine ⟨p, q, ⟨hζ, ?_, ?_, ?_, ?_⟩, fun a => ⟨hq a, (hf1 _ _).2 (hp a).symm⟩⟩
   · intro a b
     obtain ⟨p'', hp''⟩ := hQ2 (q a * q b)
@@ -150,8 +149,7 @@ theorem qLevel_of_torsion_labels : AllVC fun {V} _ _ _ {D} {A} {G} _ _ U {C} _ _
   · intro i j
     have h := hw i j
     rw [← hp, ← hp] at h
-    have h' := (hf5 _ _ (ζ ^ stdSymp g i j)).2 h
-    exact Units.ext ((hWp _ _ _ _ _ (hq _) (hq _)).1 h').symm
+    exact Units.ext ((hWp _ _ _ _ _ (hq _) (hq _)).1 ((hf5 _ _ (ζ ^ stdSymp g i j)).2 h)).symm
 
 end GlobalTheory.MBLow
 end

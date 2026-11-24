@@ -66,9 +66,9 @@ theorem tele_tail (L : ℕ → ℝ) (p : ℕ) : ∀ r : ℕ, p ≤ r →
   | base =>
     rw [sub_self]
     refine Finset.sum_eq_zero fun i hi => ?_
-    rw [if_pos (Finset.mem_range.1 hi), zero_mul]
+    rw [ite_eq_left (Finset.mem_range.1 hi), zero_mul]
   | succ n hn ih =>
-    rw [Finset.sum_range_succ, ih, if_neg (not_lt.2 hn)]
+    rw [Finset.sum_range_succ, ih, ite_eq_right (not_lt.2 hn)]
     ring
 
 theorem phla_blockWt_cpt {r : ℕ} (X : Data E r) (x0 : Frame X.Ψ r) (ho : IsOrth X x0)
@@ -79,15 +79,15 @@ theorem phla_blockWt_cpt {r : ℕ} (X : Data E r) (x0 : Frame X.Ψ r) (ho : IsOr
   set x := cpt X x0 z
   let L' : ℕ → ℝ := fun k => if h : k < r + 1 then IW.Lm X x τ ⟨k, h⟩ else 0
   have h1 : ∀ i : Fin r, IW.Lm X x τ i.succ = L' (i + 1) := fun i => by
-    simp only [L', dif_pos (Nat.succ_lt_succ i.isLt)]; rfl
+    simp only [L', dite_eq_left (Nat.succ_lt_succ i.isLt)]; rfl
   have h2 : ∀ i : Fin r, IW.Lm X x τ i.castSucc = L' i := fun i => by
-    simp only [L', dif_pos (Nat.lt_succ_of_lt i.isLt)]; rfl
+    simp only [L', dite_eq_left (Nat.lt_succ_of_lt i.isLt)]; rfl
   have hk : ∀ i : Fin r, ((blockWt X τ i : ℤ) : ℝ) = if (i : ℕ) < X.p0 then (0 : ℝ) else 1 :=
     fun i => by unfold blockWt; split_ifs <;> simp
   have hLr : L' r = 0 := by
-    simp only [L', dif_pos (Nat.lt_succ_self r)]; exact IW.Lm_last_cpt X x0 ho z τ
+    simp only [L', dite_eq_left (Nat.lt_succ_self r)]; exact IW.Lm_last_cpt X x0 ho z τ
   have hLp : L' X.p0 = Real.log ‖dmin X.Gm x τ ⟨X.p0, Nat.lt_succ_of_le X.p0_le⟩‖ := by
-    simp only [L', dif_pos (Nat.lt_succ_of_le X.p0_le)]; rfl
+    simp only [L', dite_eq_left (Nat.lt_succ_of_le X.p0_le)]; rfl
   simp_rw [h1, h2, hk]
   rw [Fin.sum_univ_eq_sum_range
     (fun i => (if i < X.p0 then (0 : ℝ) else 1) * (L' (i + 1) - L' i)) r, tele_tail L' X.p0 r X.p0_le,
@@ -109,10 +109,10 @@ theorem coeff_cases (p : ℕ) {a b : ℕ} (h : b < a) (u v : ℝ) :
     (b < p ∧ p ≤ a ∧ sgn p a * sgn p b * (v - u) = u - v) := by
   unfold sgn
   by_cases ha : a < p
-  · left; refine ⟨ha, ?_⟩; rw [if_pos ha, if_pos (h.trans ha)]; ring
+  · left; refine ⟨ha, ?_⟩; rw [ite_eq_left ha, ite_eq_left (h.trans ha)]; ring
   · by_cases hb : b < p
-    · right; right; refine ⟨hb, not_lt.1 ha, ?_⟩; rw [if_neg ha, if_pos hb]; ring
-    · right; left; refine ⟨not_lt.1 hb, ?_⟩; rw [if_neg ha, if_neg hb]; ring
+    · right; right; refine ⟨hb, not_lt.1 ha, ?_⟩; rw [ite_eq_right ha, ite_eq_left hb]; ring
+    · right; left; refine ⟨not_lt.1 hb, ?_⟩; rw [ite_eq_right ha, ite_eq_right hb]; ring
 
 theorem curv_and_margin :
     (∀ (r : ℕ) (X : Data E r) (la : Wt X.Ψ r) (x : Frame X.Ψ r), IsOrth X x → ∀ ξ : Fin (nd X) → ℂ, leviM X (phla X la) x 0 ξ = ∑ e : Ent X, sgn X.p0 e.2.1.1 * sgn X.p0 e.2.1.2 * ((la e.1 e.2.1.2 : ℝ) - (la e.1 e.2.1.1 : ℝ)) * ‖ξ (Fintype.equivFin (Ent X) e)‖ ^ 2) →
@@ -128,12 +128,9 @@ theorem curv_and_margin :
     obtain ⟨h1, h2, h3⟩ := hd τ
     have hab' : (b : ℕ) < a := hab
     rcases coeff_cases X.p0 hab' (la τ a : ℝ) (la τ b : ℝ) with ⟨h, e⟩ | ⟨h, e⟩ | ⟨h, h', e⟩
-    · refine le_of_le_of_eq ?_ e.symm
-      exact sub_nonneg.2 (Int.cast_le.2 (h1 b a (le_of_lt hab) h))
-    · refine le_of_le_of_eq ?_ e.symm
-      exact sub_nonneg.2 (Int.cast_le.2 (h2 b a h (le_of_lt hab)))
-    · refine le_of_le_of_eq ?_ e.symm
-      exact sub_nonneg.2 (Int.cast_le.2 (h3 b a h h'))
+    · exact le_of_le_of_eq (sub_nonneg.2 (Int.cast_le.2 (h1 b a (le_of_lt hab) h))) e.symm
+    · exact le_of_le_of_eq (sub_nonneg.2 (Int.cast_le.2 (h2 b a h (le_of_lt hab)))) e.symm
+    · exact le_of_le_of_eq (sub_nonneg.2 (Int.cast_le.2 (h3 b a h h'))) e.symm
   · obtain ⟨x1, D, ho, hinj, hD⟩ := htr r X x0 z hz
     show 0 < leviM X (phla X la) x0 z ξ
     rw [hD, hdiag r X la x1 ho]
@@ -144,20 +141,16 @@ theorem curv_and_margin :
       obtain ⟨h1, h2, h3⟩ := hd τ
       have hab' : (b : ℕ) < a := hab
       rcases coeff_cases X.p0 hab' (la τ a : ℝ) (la τ b : ℝ) with ⟨h, e⟩ | ⟨h, e⟩ | ⟨h, h', e⟩
-      · refine lt_of_lt_of_eq ?_ e.symm
-        exact sub_pos.2 (Int.cast_lt.2 (h1 b a hab h))
-      · refine lt_of_lt_of_eq ?_ e.symm
-        exact sub_pos.2 (Int.cast_lt.2 (h2 b a h hab))
-      · refine lt_of_lt_of_eq ?_ e.symm
-        exact sub_pos.2 (Int.cast_lt.2 (h3 b a h h'))
+      · exact lt_of_lt_of_eq (sub_pos.2 (Int.cast_lt.2 (h1 b a hab h))) e.symm
+      · exact lt_of_lt_of_eq (sub_pos.2 (Int.cast_lt.2 (h2 b a h hab))) e.symm
+      · exact lt_of_lt_of_eq (sub_pos.2 (Int.cast_lt.2 (h3 b a h h'))) e.symm
     have hne : D ξ ≠ 0 := fun h => hξ (hinj (h.trans (map_zero D).symm))
     obtain ⟨k, hk⟩ := Function.ne_iff.1 hne
     refine Finset.sum_pos' (fun e _ => mul_nonneg (hpos e).le (by positivity))
       ⟨(Fintype.equivFin (Ent X)).symm k, Finset.mem_univ _, mul_pos (hpos _) ?_⟩
     have hkk : (Fintype.equivFin (Ent X)) ((Fintype.equivFin (Ent X)).symm k) = k :=
       Equiv.apply_symm_apply (Fintype.equivFin (Ent X)) k
-    refine pow_pos (norm_pos_iff.2 fun h => hk ?_) 2
-    exact (congrArg (D ξ) hkk).symm.trans h
+    exact pow_pos (norm_pos_iff.2 fun h => hk ((congrArg (D ξ) hkk).symm.trans h)) 2
   · intro r X la m h1 h2 h3 x0 ho z hz ξ
     obtain ⟨x1, D, ho1, -, hD⟩ := htr r X x0 z hz
     rw [leviRh_eq X x0 ho hz, leviO, hD, hD, hdiag r X la x1 ho1, hdiag r X _ x1 ho1,

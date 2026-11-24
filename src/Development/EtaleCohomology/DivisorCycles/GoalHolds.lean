@@ -743,8 +743,7 @@ theorem step (a : ι → V →ₗ[K] V) (b : ι → U →ₗ[K] U) (hV : SS a) (
   · have hle : LinearMap.ker (E + H) ≤ LinearMap.ker E := fun x hx => by
       rw [LinearMap.mem_ker, LinearMap.add_apply] at hx
       have := congrArg E hx
-      rw [map_add (f := _), hEi, hEH, add_zero, map_zero] at this
-      exact this
+      rwa [map_add (f := _), hEi, hEH, add_zero, map_zero] at this
     refine lt_of_le_of_ne hle (fun heq => ?_)
     have hRne : ∃ c ∈ Cc, M c ≠ 0 := by
       by_contra hc
@@ -780,8 +779,7 @@ theorem main (a : ι → V →ₗ[K] V) (b : ι → U →ₗ[K] U) (hV : SS a) (
     intro d
     induction d with
     | zero =>
-      intro E hE hi _ hd
-      exact fin E hE hi (Submodule.finrank_eq_zero.mp (by omega))
+      exact fun E hE hi _ hd => fin E hE hi (Submodule.finrank_eq_zero.mp (by omega))
     | succ d ih =>
       intro E hE hi hc hd
       by_cases hk : LinearMap.ker E = ⊥
@@ -1224,13 +1222,11 @@ theorem Rep_of : Rep := by
   let r : Γ →* GL (Fin n) C := f.toHomUnits
   have hcol : ∀ k, ∃ v : Fin N → C, p k *ᵥ v = v ∧ v ≠ 0 := by
     intro k
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hp.2 k
     ext x c
     have h1 := hcon (p k *ᵥ Pi.single c 1) (by rw [Matrix.mulVec_mulVec, (hp.1.idem k).eq])
-    have h2 := congrFun h1 x
-    simpa [Matrix.mulVec_single_one] using h2
+    simpa [Matrix.mulVec_single_one] using congrFun h1 x
   choose v hv using hcol
   let w0 := ∑ k, v k
   have hw : ∀ k, p k *ᵥ w0 = v k := by
@@ -1264,8 +1260,7 @@ theorem Rep_of : Rep := by
     split_ifs with h
     · rw [hw, hu, h, Matrix.one_apply_eq]
     · rw [Matrix.zero_mulVec, dotProduct_zero, Matrix.one_apply_ne h]
-  · intro g
-    exact intertw hp hM (hρ g) w0
+  · exact fun g => intertw hp hM (hρ g) w0
   · intro Z hZ
     have hZE : ∀ j, Z * E j (bb E j) = 0 := by
       intro j
@@ -1459,8 +1454,7 @@ theorem plus_of (hSpec : SpecLie) (hDeg : DegAll) (hStruct : Struct) (hKey : Key
   obtain ⟨r, A, B, hsub⟩ := hRep Γ K N n ρ R p E hsys hE hR
   obtain ⟨h1, h2, h3, h4⟩ := hSub Γ K N n ρ r A B hsub hss
   have hc : Continuous (fun g => (r g : Mat K n)) := by
-    simp only [h3]
-    exact (continuous_const.matrix_mul hρ).matrix_mul continuous_const
+    simpa only [h3] using (continuous_const.matrix_mul hρ).matrix_mul continuous_const
   obtain ⟨ho, hD⟩ := hFD Γ K n r hc fun U hU hf g => by
     obtain ⟨m, hm, hE⟩ := (key U hU hf g).1
     exact hDA Γ K N n ρ r A B hsub U g m hm hE

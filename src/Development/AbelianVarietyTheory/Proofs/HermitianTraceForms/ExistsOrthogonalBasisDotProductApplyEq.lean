@@ -153,8 +153,7 @@ theorem exists_orthogonal_basis (h2 : (2 : E) ≠ 0) {B : V →ₗ[E] V →ₛ�
     ∃ v : Basis n E V, ∀ i j, i ≠ j → B (v i) (v j) = 0 := by
   obtain ⟨v, hv⟩ := exists_orthogonal_basis_fin h2 _ B hB hn
   refine ⟨v.reindex (Fintype.equivFin n).symm, fun i j hij => ?_⟩
-  simp only [Basis.reindex_apply]
-  exact hv _ _ (fun h => hij ((Equiv.injective _) h))
+  simpa only [Basis.reindex_apply] using hv _ _ (fun h => hij ((Equiv.injective _) h))
 
 theorem exists_orthogonal_basis_apply_eq (h2 : (2 : E) ≠ 0) {B : V →ₗ[E] V →ₛₗ[c] E}
     (hB : ∀ x y, c (B x y) = B y x) (hn : finrank E V = Fintype.card n) {x : V}
@@ -172,8 +171,7 @@ theorem exists_orthogonal_basis_apply_eq (h2 : (2 : E) ≠ 0) {B : V →ₗ[E] V
   have he : e i₀ = 0 := by simp [e]
   refine ⟨v.reindex e.symm, ?_, fun i j hij => ?_⟩
   · rw [Basis.reindex_apply, Equiv.symm_symm, he, hv0]
-  · simp only [Basis.reindex_apply]
-    exact hv _ _ (fun h => hij ((Equiv.injective _) h))
+  · simpa only [Basis.reindex_apply] using hv _ _ (fun h => hij ((Equiv.injective _) h))
 
 end Abstract
 

@@ -82,12 +82,11 @@ theorem geoNum_polar {σ : Type} [Fintype σ] (n : ℕ) (V : Ideal (MRing ι)) (
   | zero =>
     have h : ∀ a a' : Fin 0 → K → ℤ, geoNum 0 V a = geoNum 0 V a' := fun a a' => by
       rw [Subsingleton.elim a a']
-    simp only [Fintype.sum_unique, Finset.univ_eq_empty, Finset.prod_empty, one_mul]
-    exact h _ _
+    simpa only [Fintype.sum_unique, Finset.univ_eq_empty, Finset.prod_empty, one_mul] using h _ _
   | succ n ih =>
     by_cases hV : IsRelevant V
     · rw [← (Fin.snocEquiv (fun _ => σ)).sum_comp, Fintype.sum_prod_type]
-      simp only [geoNum, dif_pos hV]
+      simp only [geoNum, dite_eq_left hV]
       have hin : ∀ (a : σ) (w' : Fin n → σ),
           Fin.init (fun r => b ((Fin.snocEquiv (fun _ => σ)) (a, w') r)) = fun r => b (w' r) := by
         intro a w'
@@ -118,7 +117,7 @@ theorem geoNum_polar {σ : Type} [Fintype σ] (n : ℕ) (V : Ideal (MRing ι)) (
       rw [Finset.sum_comm]
       refine Finset.sum_congr rfl fun w _ => Finset.sum_congr rfl fun W _ => ?_
       ring
-    · have e : ∀ a, geoNum (n + 1) V a = 0 := fun a => by simp only [geoNum, dif_neg hV]
+    · have e : ∀ a, geoNum (n + 1) V a = 0 := fun a => by simp only [geoNum, dite_eq_right hV]
       simp [e]
 
 theorem degSum_polar {σ : Type} [Fintype σ] (e : ℕ) (S : Set (Ideal (MRing ι))) (hS : S.Finite)
@@ -194,7 +193,7 @@ theorem deg_abel (lam : Ψ × Fin N → ℤ) (q : FlBlock Ψ N) :
       simp [yDeg, Fin.ext_iff, eq_comm]
     · simp [yDeg, ht, Ne.symm ht]
   simp only [hx, hy, mul_sub, Finset.sum_sub_distrib, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   simp [gapZ, hi]
 
 theorem deg_abel_smul (lam : Ψ × Fin N → ℤ) :
@@ -240,7 +239,6 @@ theorem flLines_polys : Inputs → ∀ (II : IntersectionSystem), IsFullIntersec
         ptsIntegral (PFl Ψ N) (pot fun r => yLineFl Ψ N (w r)) (fun _ => 1) =
           ∑ᶠ V ∈ S, m V * (geoNum _ V (fun r => yDeg Ψ N (w r)) : ℝ) :=
       fun w => hD _ fun _ => hsm _
-    simp only [ex, ey]
-    exact h1
+    simpa only [ex, ey] using h1
 
 end GlobalTheory.CompanionTheory.Ar.PB

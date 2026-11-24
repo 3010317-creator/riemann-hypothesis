@@ -52,8 +52,7 @@ private theorem eq_finGL {E : Type} [Field E] [NumberField E] [IsCMField E] {n :
   have hinf : cInf g = 1 := MonoidHom.mem_ker.1 (Subgroup.mem_inf.1 hg).1
   refine ga_ext (hinf.trans (pInf_finGL k).symm) ?_
   rw [pFin_finGL]
-  refine Units.ext (GlobalTheory.SplitPts.matAf_ext fun u => ?_)
-  exact congrArg Units.val (hk u)
+  exact Units.ext (GlobalTheory.SplitPts.matAf_ext fun u => (congrArg Units.val (hk u)))
 
 private theorem cLoc_off {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ} {w u : Plc E} {g : UA E n}
     (hg : g ∈ locU n w) (hu : u.under (𝓞 (maximalRealSubfield E)) ≠ w.under (𝓞 (maximalRealSubfield E))) :
@@ -86,8 +85,7 @@ theorem UpperTheory.detCharacter_eq_localDet_split_nonsplit :
       change ν.1 (localIdele E w' (Matrix.GeneralLinearGroup.det (cLoc w' g))) =
         ν.1 (localIdele E w (Matrix.GeneralLinearGroup.det (cLoc w g)))
       have h3 := GlobalTheory.ThetaPull.thetaChar_apply ν (localIdele E w' (Matrix.GeneralLinearGroup.det (cLoc w' g)))
-      rw [hν, GlobalTheory.ThetaPull.conjAd_localIdele, hd, map_inv, map_inv, inv_inv] at h3
-      exact h3
+      rwa [hν, GlobalTheory.ThetaPull.conjAd_localIdele, hd, map_inv, map_inv, inv_inv] at h3
     rw [e, map_mul, map_mul, CuspSub.chiDet_locGL, CuspSub.chiDet_locGL, h2]
     rfl
   · have e : (g : GA E n) = finGL E n (locGL E n w (cLoc w g)) := by

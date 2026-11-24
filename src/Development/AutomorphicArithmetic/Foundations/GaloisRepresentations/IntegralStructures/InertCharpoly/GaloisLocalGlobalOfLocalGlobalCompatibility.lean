@@ -152,8 +152,7 @@ theorem mem_of_induces {A : ValuationSubring Ω} {w : HeightOneSpectrum (𝓞 E)
     [Algebra ℤ_[l] O] [TopologicalSpace O] (Bw : LocBridge l E Ω (Dec (F := E) A) O) (hj : Pst.Induces Bw) :
     ((l : ℕ) : 𝓞 E) ∈ w.asIdeal := by
   refine (hA _).1 ?_
-  have h := valuation_natCast_lt_one_of_induces Bw hj
-  simpa [map_natCast] using h
+  simpa [map_natCast] using valuation_natCast_lt_one_of_induces Bw hj
 
 end GlobalTheory.GalCut
 end -- clump:auto
@@ -181,8 +180,7 @@ theorem exists_unlinked_isL : ∀ (k : Type) [Field k] [ValuativeRel k] [Topolog
     _root_.GlobalTheory.RgGu.Holds.genericUnlinkedGL_holds k x.1 _ x.rep x.2.rep.smooth x.2.rep.irr hg
   refine ⟨c, Δ, hun, c, y, hd, ⟨Δ, ⟨?_, ?_⟩, hL⟩, (isCosocle_self x.2.rep.irr).of_equiv (.refl _) e⟩
   · exact Fin.univ_val_map Δ
-  · intro i j hij hP
-    exact hun i j (ne_of_lt hij) hP.1
+  · exact fun i j hij hP => hun i j (ne_of_lt hij) hP.1
 
 end GlobalTheory.GenericLDatum
 end -- clump:auto
@@ -371,8 +369,7 @@ theorem hasSupport_first_of_isL_len_one : ∀ (k : Type) [Field k] [ValuativeRel
     have m2 := Multiset.map_map Segment.first Δ Finset.univ.val
     simp only [Function.comp_def] at m1 m2
     rw [← m1, ← m2, hmap, e2]
-  rw [e] at hs
-  exact hs
+  rwa [e] at hs
 
 end GlobalTheory.LocGL.LenOneSupport
 end -- clump:auto
@@ -617,8 +614,7 @@ theorem st5 : St5 := by
     · exact congrArg Subrepresentation.toSubmodule h
   rw [htop, top_le_iff] at hST
   show Subsingleton (_ ⧸ twKer π.ρ (unipRad k e) 1)
-  rw [Submodule.Quotient.subsingleton_iff]
-  exact hST
+  rwa [Submodule.Quotient.subsingleton_iff]
 
 end PositivityTheory.Rg.DzCount
 
@@ -746,8 +742,7 @@ theorem st4 : St4 := by
   obtain ⟨ω, hω, hωc⟩ := exists_isTameLift ω₀ (val_unif4 hϖ) c
   have hE : ExtendsCentral ω τ := hω.extendsCentral hω₀
   obtain ⟨w₀, hw₀⟩ : ∃ w₀ : W, w₀ ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     haveI := hτ
     exact (bot_ne_top : (⊥ : Subrepresentation τ) ≠ ⊤) (Subrepresentation.ext (Submodule.ext fun w => by
       rw [hcon w]; exact ⟨fun _ => Submodule.zero_mem _, fun _ => Submodule.zero_mem _⟩))
@@ -829,8 +824,7 @@ theorem st4 : St4 := by
       refine (hτ.eq_bot_or_eq_top K).resolve_right fun h => ?_
       have : w₀ ∈ K.toSubmodule := by rw [h]; exact Submodule.mem_top
       have h2 : j w₀ = 0 := LinearMap.mem_ker.1 this
-      apply hx₁M
-      exact (Submodule.Quotient.mk_eq_zero M).1 h2
+      exact hx₁M ((Submodule.Quotient.mk_eq_zero M).1 h2)
     have : LinearMap.ker j = ⊥ := congrArg Subrepresentation.toSubmodule hK
     exact LinearMap.ker_eq_bot.1 this
   refine ⟨⟨U ⧸ M, ρQ, hsm, hirr⟩, ω, j, ?_, hωc, hjinj, hj⟩
@@ -876,10 +870,8 @@ theorem mem_fixed_iff {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V] {ρ
   change (∀ h : H, ρ h v = ((1 : H →* ℂˣ) h : ℂ) • v) ↔ _
   simp only [MonoidHom.one_apply, Units.val_one, one_smul]
   constructor
-  · intro hv h hh
-    exact hv ⟨h, hh⟩
-  · intro hv h
-    exact hv h h.2
+  · exact fun hv h hh => hv ⟨h, hh⟩
+  · exact fun hv h => hv h h.2
 
 theorem map_fixed {G V W : Type} [Group G] [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W]
     {ρ : Representation ℂ G V} {σ : Representation ℂ G W} (φ : ρ.Equiv σ) (H : Subgroup G) :
@@ -923,8 +915,7 @@ theorem transfer {W W' V V' : Type} [AddCommGroup W] [Module ℂ W] [AddCommGrou
     intro w
     have h1 := congrArg Subtype.val ((LinearEquiv.ofInjective j' hj'.1).apply_symm_apply
       ((LinearEquiv.ofEq _ _ hm) ((φ.toLinearEquiv.submoduleMap _) ((LinearEquiv.ofInjective j hj.1) w))))
-    rw [LinearEquiv.ofInjective_apply] at h1
-    exact h1
+    rwa [LinearEquiv.ofInjective_apply] at h1
   refine ⟨e, fun g v => ?_⟩
   obtain ⟨g', rfl⟩ := GlobalTheory.LocGL.redK_surjective g
   apply hj'.1
@@ -953,7 +944,7 @@ theorem st8a : St4 → St5 → St6 → St7 → St8a := by
     if hP : P ∈ Lab 𝓀[k] n then ⟨n, Quotient.mk _ (π P hP)⟩ else ⟨n, Quotient.mk _ d⟩
   have hF : ∀ P (hP : P ∈ Lab 𝓀[k] n), F P = ⟨n, Quotient.mk _ (π P hP)⟩ := by
     intro P hP
-    simp only [F, dif_pos hP]
+    simp only [F, dite_eq_left hP]
   have hfix : ∀ P (hP : P ∈ Lab 𝓀[k] n),
       fixed (π P hP).ρ (KOne k (Fin n)) = LinearMap.range (j P hP) := by
     intro P hP
@@ -1071,8 +1062,7 @@ theorem exists_eq_pow_of_aeval {K F : Type*} [Field K] [Fintype K] [Field F] [Al
     · exact absurd H (hlt i j h hj)
     · exact h
     · exact absurd H.symm (hlt j i h hi)
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   set S := (Finset.range n).image (fun i : ℕ => w ^ (Nat.card K) ^ i) with hS
   have hcardS : S.card = n := by
     rw [hS, Finset.card_image_of_injOn hinj, Finset.card_range]
@@ -1136,8 +1126,7 @@ theorem st3a : St3a := by
     have hex : ∃ j : ℕ, ζ ^ j = z := by
       obtain ⟨i, -, hi⟩ := hζ.eq_pow_of_pow_eq_one hzN
       exact ⟨i, hi⟩
-    simp only [jOf, dif_pos hex]
-    exact hex.choose_spec
+    simpa only [jOf, dite_eq_left hex] using hex.choose_spec
   have hint : ∀ x : AlgebraicClosure K, IsIntegral K x := fun x => Algebra.IsIntegral.isIntegral x
   have hper : ∀ (j m : ℕ), (ζ ^ j) ^ (Nat.card K) ^ m = ζ ^ j ↔
       (ω ^ j) ^ (Nat.card K) ^ m = ω ^ j := by
@@ -1178,8 +1167,7 @@ theorem st3a : St3a := by
       exact minpoly.aeval K _
     obtain ⟨i, hi⟩ := exists_eq_pow_of_aeval n hn _ _ hw hw1 hw2 hP
     refine ⟨i, ?_⟩
-    rw [← hzj', ← hzj, ← pow_mul, htr, pow_mul]
-    exact hi
+    rwa [← hzj', ← hzj, ← pow_mul, htr, pow_mul]
 
 end PositivityTheory.Rg.DzCount
 
@@ -1311,8 +1299,7 @@ theorem tor_of_fix {y : WD h} (ht : IsTameWD y) {γ : G E Ω} (hγ : TameGenAt A
     rw [ha.conj_eq_pow hγ.1 deg_frob, ← Nat.sub_add_cancel hq, pow_succ, p1, one_mul]
   have c1 : Commute (u (frob h)) (u g) := by
     have e : u (frob h * g * (frob h)⁻¹) = u g := Units.ext p2
-    rw [map_mul, map_mul, map_inv, mul_inv_eq_iff_eq_mul] at e
-    exact e
+    rwa [map_mul, map_mul, map_inv, mul_inv_eq_iff_eq_mul] at e
   have cen : ∀ x : (End ℂ (Fin n → ℂ))ˣ, Commute x (u g) → ∀ σ, Commute x (u (ineIncl h σ)) := fun x hx σ =>
     Subgroup.mem_centralizer_singleton_iff.1
       (mem_of_gen ha hγ (Subgroup.centralizer {x}) (Subgroup.mem_centralizer_singleton_iff.2 hx.symm) σ) |>.symm

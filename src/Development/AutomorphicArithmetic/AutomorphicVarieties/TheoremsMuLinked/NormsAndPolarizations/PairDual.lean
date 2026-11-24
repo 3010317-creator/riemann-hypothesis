@@ -88,8 +88,7 @@ theorem UpperTheory.V.Th.Nm.homMu :
   have hcomm : ∀ x ∈ commutator G, d x = 0 := by
     intro x hx
     have := Abelianization.commutator_subset_ker f hx
-    rw [MonoidHom.mem_ker] at this
-    exact this
+    rwa [MonoidHom.mem_ker] at this
   have hcl : ∀ x ∈ (commutator G).topologicalClosure, d x = 0 := by
     intro x hx
     have hmemN : ∀ N : ℕ, d x ∈ (maximalIdeal c.O) ^ N := by

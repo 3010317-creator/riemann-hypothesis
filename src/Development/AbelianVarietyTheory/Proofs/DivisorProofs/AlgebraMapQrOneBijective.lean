@@ -217,8 +217,7 @@ theorem triv_of_idem {R : Type*} [Ring R] (σ : R →+* Rᵐᵒᵖ) (e B Bi : R)
     have h3 : f * (X * (f * Y)) = f := by rw [← mul_assoc X, ← hfz X, mul_assoc, hXY, mul_one, hff]
     simp only [mul_add, add_mul, mul_assoc]
     rw [h1, h2, h3, hee]
-    simp only [add_zero, zero_add]
-    exact hef'
+    simpa only [add_zero, zero_add] using hef'
   refine ⟨inv B Bi hBi, inv Bi B hBi', ?_⟩
   rw [map_add (f := _), map_mul, MulOpposite.unop_add, MulOpposite.unop_mul, hσe, hB, hσf]
   have k2 : e * (B * e) = B * e := by rw [← mul_assoc, he B, mul_assoc, hee]
@@ -356,8 +355,7 @@ theorem atp_of_bijective (G : HTGroup p) (hb : Function.Bijective G.localization
   set q0 := (dg G.C p (y₀ : G.Cˣ × ℚˣ)).2 with hq0
   have hd : d * phiP G q0 = phiP G q0 * d := by
     apply (inclG_one_bijective G).1
-    rw [map_mul, map_mul, ← psiP_eq, ← formGroupToPadicPointsDegreeOne_eq_unitaryPoints]
-    exact hc
+    rwa [map_mul, map_mul, ← psiP_eq, ← formGroupToPadicPointsDegreeOne_eq_unitaryPoints]
   obtain ⟨h, hh⟩ := hb.2 (conjW G X d)
   have hy : ((q0.1 : (ℚ_[p] ⊗[ℚ] G.C)ˣ) : ℚ_[p] ⊗[ℚ] G.C) * inC G ℚ_[p] β *
       (starT G.star ℚ_[p] ((q0.1 : (ℚ_[p] ⊗[ℚ] G.C)ˣ) : ℚ_[p] ⊗[ℚ] G.C)).unop =
@@ -370,8 +368,7 @@ theorem atp_of_bijective (G : HTGroup p) (hb : Function.Bijective G.localization
         algebraMap ℚ_[p] (ℚ_[p] ⊗[ℚ] G.C) (algebraMap ℚ ℚ_[p] y₀.1.2) := by
       rw [← IsScalarTower.algebraMap_apply]
       exact (Algebra.TensorProduct.includeRight : G.C →ₐ[ℚ] ℚ_[p] ⊗[ℚ] G.C).commutes _
-    rw [e1, e2] at h'
-    exact h'
+    rwa [e1, e2] at h'
   have hmem0 : (X * q0.1 * X⁻¹, q0.2) ∈ UPts G.star ℚ_[p] :=
     conj_mul_star (starT G.star ℚ_[p]) (inC G ℚ_[p] β) X q0.1 (1 : ℚ_[p]ˣ) _ hX hy
   let H0 : G.GQp := ⟨(X * q0.1 * X⁻¹, q0.2), hmem0⟩

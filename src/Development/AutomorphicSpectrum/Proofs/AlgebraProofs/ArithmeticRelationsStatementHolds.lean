@@ -191,8 +191,7 @@ theorem pow_mul_mem {O Ω : Type} [CommRing O] [Field Ω] [Algebra O Ω] {K : Ty
     have h : (mseg x s / mseg x t) ^ 1 * (mseg x u / mseg x s) = mseg x u / mseg x t := by
       rw [pow_one, mul_comm, div_mul_div_cancel₀ hs]
     have h2 := div_mem_chartRing (o := O) (mseg x) t u
-    rw [← h] at h2
-    exact h2
+    rwa [← h] at h2
   | algebraMap r => exact ⟨0, by rw [pow_zero, one_mul]; exact Subalgebra.algebraMap_mem _ r⟩
   | add a b _ _ ha hb =>
     obtain ⟨m, hm⟩ := ha
@@ -513,8 +512,7 @@ theorem span_line {O Ω : Type} [CommRing O] [Field Ω] [Algebra O Ω] (R R' : S
     obtain ⟨r, hr, rfl⟩ := hin he
     exact ⟨a * r, R'.mul_mem ha hr, by simp only [smul_eq_mul]; ring⟩
   constructor
-  · intro hw
-    exact hout hw
+  · exact fun hw => hout hw
   · rintro ⟨r, hr, rfl⟩
     have hm : m • v l₀ ∈ spanOver R (Set.range fun l => m • v l) :=
       AddSubgroup.subset_closure ⟨1, R.one_mem, m • v l₀, ⟨l₀, rfl⟩, by simp⟩
@@ -533,8 +531,7 @@ theorem chartMon_join {Ω : Type} [Field Ω] {K K' : Type} [Fintype K] [Fintype 
   · simp
   · intro b _ hb
     simp [hb]
-  · intro h
-    exact absurd (Finset.mem_univ j) h
+  · exact fun h => absurd (Finset.mem_univ j) h
 
 end PositivityTheory.Xgn.A_flatten_lines
 
@@ -556,8 +553,7 @@ theorem PositivityTheory.Xgn.t_flatten_lines : ∀ (O : Type) [CommRing O] [IsDo
   choose a M v hv using key
   have hnz : ∀ j, ∃ l, v j l ≠ 0 := by
     intro j
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     apply ((hΓ j).2 c0 hm0).1
     rw [hv j c0 hm0, eq_bot_iff]
     unfold spanOver
@@ -594,8 +590,7 @@ theorem PositivityTheory.Xgn.t_flatten_lines : ∀ (O : Type) [CommRing O] [IsDo
     have h := PositivityTheory.Xgn.A_chart_noeth_frac.ratio_eq (joinCoord x z) c hc (Sum.inr j) l
     have hmem : mseg (joinCoord x z) (Function.update c (Sum.inr j) l) / mseg (joinCoord x z) c ∈
         chartRing O (mseg (joinCoord x z)) c := Algebra.subset_adjoin ⟨_, rfl⟩
-    rw [h] at hmem
-    exact hmem
+    rwa [h] at hmem
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.XFlattenLines =====
@@ -892,8 +887,7 @@ theorem gens_step (τ : Sg) (i : Fin n)
     rw [h3, add_zero] at h2
     refine ⟨y.1, ?_⟩
     change (y.1, v.2) ∈ _
-    rw [← h2]
-    exact hy
+    rwa [← h2]
   · refine AddSubgroup.mem_comap.2 (AddSubgroup.mem_sup_left ?_)
     simpa using hm
 
@@ -973,8 +967,7 @@ theorem PositivityTheory.Xgn.t_fam_good2 : ∀ (O : Type) [CommRing O] [IsDomain
   · have h := hfree (.inr (.inr (.inl (τ, ⟨min i n, by omega⟩)))) c hc
     change LocFree _ (Module.finrank Ω (Fin (r τ) → Ω)) _ at h
     rw [Module.finrank_fin_fun] at h
-    rw [← kk_min, (e2 τ).1]
-    exact h
+    rwa [← kk_min, (e2 τ).1]
   · rw [(e2 τ).2]
     have h := hfree (.inr (.inr (.inr (.inl (τ, i))))) c hc
     have e := map_spanOver (chartRing O (mseg (joinCoord x z)) c)
@@ -986,8 +979,7 @@ theorem PositivityTheory.Xgn.t_fam_good2 : ∀ (O : Type) [CommRing O] [IsDomain
   · have h := hfree (.inr (.inr (.inr (.inr τ)))) c hc
     change LocFree _ (Module.finrank Ω (Fin (s τ) → Ω)) _ at h
     rw [Module.finrank_fin_fun] at h
-    rw [e3]
-    exact h
+    rwa [e3]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.SmulMemSpan =====
@@ -1102,8 +1094,7 @@ theorem locFree_of_bot {r : ℕ} {L : AddSubgroup E} (hL : ∀ a ∈ R, ∀ v �
     constructor
     · rintro ⟨_, ⟨w, hw, rfl⟩, rfl⟩
       simpa [e] using hw
-    · intro hv
-      exact ⟨_, ⟨v, hv, rfl⟩, by simp [e]⟩
+    · exact fun hv => ⟨_, ⟨v, hv, rfl⟩, by simp [e]⟩
   rwa [h2, span_self R hL] at this
 
 theorem mulLat_std (c : Ω) (J : Type) [Fintype J] [DecidableEq J] :
@@ -1330,8 +1321,7 @@ theorem ckRelations_descend : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscre
   have hc : k - 1 ≤ d := by omega
   have hQ' : Q.IsHomogeneous (d - (k - 1)) := by
     have e : d - (k - 1) = d + 1 - k := by omega
-    rw [e]
-    exact hQ
+    rwa [e]
   have TL := fun τ => _root_.GlobalTheory.CompanionTheory.Ar.CkPullBirat.main O Ω K ι x d hx (r τ) (VL τ) (Lie τ) (W τ) (hsame τ).1 K' ι' z hxz hfn
     (Lie' τ) (W' τ) (hpull τ).1 (hpull τ).2.1
   have TO := fun τ => _root_.GlobalTheory.CompanionTheory.Ar.CkPullBirat.main O Ω K ι x d hx (s τ) (VO τ) (Om τ) (OmHT τ) (hsame τ).2 K' ι' z hxz hfn
@@ -1424,8 +1414,7 @@ theorem exists_span (R : Subalgebra O Ω) [h : Module.Finite R (integralClosure 
     exact sum_mem fun e he => AddSubgroup.subset_closure ⟨f e, (f e).2, e, he, rfl⟩
   · exact (isIntegral_of_mem ha).mul hv
   · have he' : e ∈ Submodule.span R (S : Set Ω) := Submodule.subset_span he
-    rw [hS] at he'
-    exact he'
+    rwa [hS] at he'
 
 theorem isIntegrallyClosedIn (R R' : Subalgebra O Ω) {u : Ω} (hu0 : u ≠ 0) (hu : IsIntegral R u)
     (h1 : ∀ a, IsIntegral R a → u⁻¹ * a ∈ R') (h2 : ∀ a ∈ R', ∃ n : ℕ, IsIntegral R (u ^ n * a)) :
@@ -1488,8 +1477,7 @@ theorem PositivityTheory.Xgn.t_normal_join : ∀ (O : Type) [CommRing O] [IsDoma
     · rintro (k | k)
       · exact hx0 k
       · exact hz
-    · rw [hf htop, ← htop]
-      exact hT
+    · rwa [hf htop, ← htop]
   · obtain ⟨hc, hR⟩ := hle c' hc'
     have hj : ∀ t : ∀ k : K ⊕ Unit, Sum.elim ι (fun _ => Fin M) k,
         mseg (joinCoord x z) t = mseg x (restrictChart t) * v (t (.inr ())) := by
@@ -1550,8 +1538,7 @@ theorem PositivityTheory.Xgn.t_normal_join : ∀ (O : Type) [CommRing O] [IsDoma
         have h := (((hw (c' (.inr ()))).pow n₂).mul h₁).add (((hw (c' (.inr ()))).pow n₁).mul h₂)
         have e : ∀ u : Ω, u ^ (n₁ + n₂) * (b₁ + b₂) = u ^ n₂ * (u ^ n₁ * b₁) + u ^ n₁ * (u ^ n₂ * b₂) :=
           fun u => by ring
-        rw [e]
-        exact h
+        rwa [e]
       | mul b₁ b₂ _ _ h₁ h₂ =>
         obtain ⟨n₁, h₁⟩ := h₁
         obtain ⟨n₂, h₂⟩ := h₂
@@ -1774,7 +1761,7 @@ theorem sum_allOne (q : ℕ) (F : (Fin q →₀ ℕ) → ℤ) :
     ∑ μ ∈ (monomial (allOne q) (1 : ℤ) : MvPolynomial (Fin q) ℤ).support,
       (monomial (allOne q) (1 : ℤ) : MvPolynomial (Fin q) ℤ).coeff μ * F μ = F (allOne q) := by
   classical
-  rw [support_monomial, if_neg one_ne_zero, Finset.sum_singleton, coeff_monomial, if_pos rfl, one_mul]
+  rw [support_monomial, ite_eq_right one_ne_zero, Finset.sum_singleton, coeff_monomial, ite_eq_left rfl, one_mul]
 
 theorem classNum_perm {K : Type} [DecidableEq K] {ι : K → Type} {O : Type} [CommRing O] [IsDomain O]
     [IsDiscreteValuationRing O] {σ : Type} (cls : σ → K → ℤ) (H : MvPolynomial σ ℤ)

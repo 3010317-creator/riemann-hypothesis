@@ -306,8 +306,7 @@ theorem setLIntegral_tsum_unfold (G : Type) [Group G] [TopologicalSpace G] [IsTo
       simp only [e0, mul_smul]
       rfl
     rw [h3, Set.inter_comm]
-    refine lintegral_congr fun x => ?_
-    exact hinv _ (l⁻¹).2 x
+    exact lintegral_congr fun x => hinv _ (l⁻¹).2 x
   rw [lintegral_tsum (f := fun (t : T) g => f (t.1.1 * g)) (fun t : T => (hf.comp (measurable_const_mul t.1.1)).aemeasurable),
     hF.setLIntegral_eq_tsum f D, ← (Equiv.ofBijective e0 hbij).tsum_eq, ENNReal.tsum_prod']
   exact tsum_congr h1
@@ -362,7 +361,6 @@ theorem witt_spherical_section_left_invariant_rational_parabolic (l : Lvl V) (hl
   have hγ' := Subgroup.mem_inf.1 hγ
   have e : iwAbs (absDet d) l.K (((⟨γ, hγ'.1⟩ : stab d) : GA D V) * g) = iwAbs (absDet d) l.K g := by
     rw [hI.iwAbs_left, absDet_rat d _ hγ'.2, one_mul]
-  show npow (iwAbs (absDet d) l.K (γ * g)) _ = npow (iwAbs (absDet d) l.K g) _
   exact congrArg (fun t => npow t (s + (rhoH V r : ℂ))) e
 
 end GlobalTheory.AnisotropicResidueNonvanishing
@@ -464,8 +462,7 @@ theorem dict : ∀ (D : D7) (V V₀ : HSp D) (r : ℕ) (d : HypDec V V₀ (r + 1
     · rintro ⟨δ, hδ⟩
       have : (γ * t⁻¹ : GQ V) = δ := by rw [← hδ]; group
       rw [this]; exact δ.2
-    · intro h
-      exact ⟨⟨γ * t⁻¹, h⟩, by simp⟩
+    · exact fun h => ⟨⟨γ * t⁻¹, h⟩, by simp⟩
   refine ⟨⟨isCMExt_host D, GlobalTheory.Doubling.isHermND_gram V, GlobalTheory.WittFrameOfDec.isWittFrame_of_hypDec D V V₀ _ d hA, hl.1,
     fun g => ?_, fun p β e k hk => ?_⟩, ?_, fun T hT g s => ?_⟩
   · obtain ⟨q, k, hk, rfl⟩ := hIw g
@@ -487,8 +484,7 @@ theorem dict : ∀ (D : D7) (V V₀ : HSp D) (r : ℕ) (d : HypDec V V₀ (r + 1
         have e' := (hmk _ _).1 e
         obtain ⟨u, -, hu⟩ := hT t'
         have h1 := hu t' ⟨ht', (hiff _).2 (by simp)⟩
-        have h2 := hu t ⟨ht, (hiff _).2 e'⟩
-        exact Subtype.ext (h2.trans h1.symm)
+        exact Subtype.ext ((hu t ⟨ht, (hiff _).2 e'⟩).trans h1.symm)
       · intro q
         induction q using Quotient.inductionOn with
         | h γ =>
@@ -610,8 +606,7 @@ theorem two_mul_le_and_exists_ratPts_swap : ∀ (F E : Type) [Field F] [NumberFi
       have h2 := hp q
       rw [hpq] at h1
       exact Prod.ext (h1.1.symm.trans h2.1) (h1.2.symm.trans h2.2)
-    have h := LinearMap.finrank_le_finrank_of_injective hf
-    simpa [Module.finrank_prod, two_mul] using h
+    simpa [Module.finrank_prod, two_mul] using LinearMap.finrank_le_finrank_of_injective hf
   set u := X - Y with hu
   set v := Formalism.UG.cT (σ : E →+* E) u * J with hv
   have hvy : v * Y = 1 := by
@@ -671,8 +666,7 @@ namespace GlobalTheory.Published.SiegelSectionIwasawa
 variable {D : D7}
 
 private theorem isFullLattice_of_good {V : HSp D} {l : Lvl V} (hl : l.Good) :
-    Submodule.IsFullLattice D.host.E l.L := by
-  exact hl.1
+    Submodule.IsFullLattice D.host.E l.L := hl.1
 
 def relat (V : HSp D) (l : Lvl V) (hl : l.Good) : HSp D :=
   { V with
@@ -869,8 +863,7 @@ theorem frame_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     obtain ⟨π, hπ⟩ := hperm γ hγ
     have : ∀ i : T, f ε (i.1.1 * (γ * g)) = f ε ((π i).1.1 * g) := fun i => by
       simp only [f, hπ i g]
-    simp only [Φ, this]
-    exact π.tsum_eq fun t : T => f ε (t.1.1 * g)
+    simpa only [Φ, this] using π.tsum_eq fun t : T => f ε (t.1.1 * g)
   have hint : ∀ ε : ℝ, 0 < ε → ε ≤ 1 → ENNReal.ofReal ε * ∫⁻ g in GlobalTheory.AutomorphicL2Unitary.stdDom (ratPts σ J), Φ ε g ∂μ ≤ 2 * B₀ := by
     intro ε h0 h1
     have hu := _root_.GlobalTheory.ResLine.setLIntegral_tsum_unfold (GAd σ J) μ (ratPts σ J) Λ T _ _ inferInstance inf_le_left hrep h𝓕 hDom _ (hf ε)
@@ -902,7 +895,7 @@ theorem frame_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
           have := mul_le_mul_of_nonneg_left ht hM0.le
           rwa [mul_inv_cancel₀ hM0.ne'] at this
         linarith
-      rw [if_pos ht, if_pos hle, ← ENNReal.ofReal_mul hc₀0.le]
+      rw [ite_eq_left ht, ite_eq_left hle, ← ENNReal.ofReal_mul hc₀0.le]
       refine ENNReal.ofReal_le_ofReal ?_
       have hp := hht.pos t.1.1
       have hq := hht.pos (t.1.1 * u)
@@ -915,7 +908,7 @@ theorem frame_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
       have h7 : 0 < m ^ (d + 1) := by positivity
       rw [hc₀, inv_mul_le_iff₀ h7]
       exact h4.trans (mul_le_mul_of_nonneg_right h5 h6)
-    · rw [if_neg ht]; simp
+    · rw [ite_eq_right ht]; simp
   have hB₁ : ∀ ε : ℝ, 0 < ε → ε ≤ 1 → ENNReal.ofReal ε * (μ U * (ENNReal.ofReal c₀ * ∑' t : T, ENNReal.ofReal (b ε t))) ≤ 2 * B₀ := by
     intro ε h0 h1
     refine le_trans (mul_le_mul_right ?_ _) (hint ε h0 h1)
@@ -1029,8 +1022,7 @@ theorem height_bound : ∀ (D : D7) (r : ℕ), ∃ H' : G D (r + 1) → ℝ≥0,
     · rintro ⟨δ, hδ⟩
       have : (v * u⁻¹ : GF D (r + 1)) = δ := by rw [← hδ]; group
       rw [this]; exact δ.2
-    · intro h
-      exact ⟨⟨v * u⁻¹, h⟩, by simp⟩
+    · exact fun h => ⟨⟨v * u⁻¹, h⟩, by simp⟩
   let T : Set (ratPts D.sp.cm.sig (dblSp A).gram) := Set.range t
   have hκt : ∀ (γ : ratPts D.sp.cm.sig (dblSp A).gram) (q : GlobalTheory.Eis.Cosets (P D (r + 1)) (GF D (r + 1))),
       κ ((γ * (t q)⁻¹ : ratPts D.sp.cm.sig (dblSp A).gram) : GA D (dblSp A)) = κ γ.1 * ((q.out : GF D (r + 1)) : G D (r + 1))⁻¹ := by

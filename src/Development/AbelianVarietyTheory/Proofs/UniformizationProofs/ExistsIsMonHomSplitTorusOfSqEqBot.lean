@@ -288,8 +288,7 @@ theorem exists_affinization (Z : Over (Spec (CommRingCat.of A))) :
     unfold GlobalTheory.Diag.charVal at h1
     rw [SplitTorus.val_comp, SplitTorus.val_eq]
     change (Z.left.toSpecΓ.appTop).hom _ = _
-    rw [Scheme.toSpecΓ_appTop]
-    exact h1
+    rwa [Scheme.toSpecΓ_appTop]
   · intro J s hs j hj
     show Z.hom.appTop.hom ((Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom j) = 0
     rw [hs, Scheme.Hom.comp_appTop, CommRingCat.hom_comp, RingHom.comp_apply,
@@ -306,8 +305,7 @@ theorem exists_inv_univ : ∃ r : splitTorus (Spec (CommRingCat.of A)) X ⟶ sp 
   have h1 : spMap α ≫ univ A X = spMap (AlgHom.id A (AddMonoidAlgebra A X)) ≫ univ A X := by
     rw [spMap_id, Category.id_comp, ← hα, Category.assoc, Category.assoc, hφ, ha', Category.comp_id]
   have h2 : α = AlgHom.id A _ := algHom_ext' fun x => by
-    have h3 := congrArg (fun w => charVal w x) h1
-    simpa only [charVal_univ] using h3
+    simpa only [charVal_univ] using congrArg (fun w => charVal w x) h1
   rw [hα, h2, spMap_id]
 
 theorem mul_comp_of_pullback {S S' : Scheme.{0}} (i : S' ⟶ S) {G H : Over S} [GrpObj G] [GrpObj H]

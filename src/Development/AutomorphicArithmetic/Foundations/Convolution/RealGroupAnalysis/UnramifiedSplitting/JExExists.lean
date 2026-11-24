@@ -49,14 +49,12 @@ open UpperTheory.ConvolutionTheory.R2 UpperTheory.ConvolutionTheory.R2.H
 open scoped Classical
 
 private theorem sg_zero' {K : Type} [Field K] [NumberField K] (v : P K) : sg v 0 = 0 := by
-  have h := (sgLaws K v).1 0 0
-  simpa using h
+  simpa using (sgLaws K v).1 0 0
 
 private theorem sg_mul' {K : Type} [Field K] [NumberField K] (v : P K) (x y : Kv v) :
     sg v x * sg v y = sg v (x * y) := by
   have h := (sgLaws K v).2.1 (sg v x) y
-  rw [(sgLaws K v).2.2.1] at h
-  exact h
+  rwa [(sgLaws K v).2.2.1] at h
 
 private theorem lc_entry {K : Type} [Field K] [NumberField K] (v : P K)
     (x : Matrix.SpecialLinearGroup (Fin 2) (Kv v)) (i k : Fin 2) :
@@ -104,8 +102,7 @@ theorem UpperTheory.ConvolutionTheory.R2.H.jEx :
   refine ⟨jEx_exists v, fun j hj => ?_⟩
   have hent : ∀ x i k, (j x) i k = (1 : Matrix (Fin 2) (Fin 2) (A K)) i k + sg v (x i k - (1 : Matrix (Fin 2) (Fin 2) (Kv v)) i k) := by
     intro x i k
-    have h := congrArg (fun g : GL (Fin 2) (A K) => g.val i k) (hj x)
-    exact h.trans (lc_entry v x i k)
+    exact (congrArg (fun g : GL (Fin 2) (A K) => g.val i k) (hj x)).trans (lc_entry v x i k)
   have hsg := (sgLaws K v).2.2.2.2.2.2.2.1
   have hcsg := (sgLaws K v).2.2.2.2.2.2.2.2.2
   refine ⟨?_, ?_, ?_, hent⟩

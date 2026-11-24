@@ -213,15 +213,13 @@ theorem ibp_of (hL : LgFacts) (hU : Unimod) : IBP := by
     have e1 : (fun s : ℝ => f (y.val * c X s)) = fun s : ℝ => f (y.val + s • (y.val * X)) := by
       funext s; rw [mul_c]
     show HasDerivAt (fun s : ℝ => f (y.val * c X s)) (fderiv ℝ f (y.val * c X t) (y.val * X)) t
-    rw [e1, mul_c]
-    exact this
+    rwa [e1, mul_c]
   · intro y hy
     exact hR _ (hmem y 0 (Metric.mem_closedBall_self hε.le)) (hfar y hy 0 (Metric.mem_closedBall_self hε.le))
   · intro t ht y hy
     have ht' := Metric.ball_subset_closedBall ht
     simp only [fderiv_eq_zero_far hL hR (hmem y t ht') (hfar y hy t ht'), ContinuousLinearMap.zero_apply]
-  · intro t ht y hy
-    exact hCb (y, t) ⟨hy, Metric.ball_subset_closedBall ht⟩
+  · exact fun t ht y hy => hCb (y, t) ⟨hy, Metric.ball_subset_closedBall ht⟩
   · intro t ht
     have h0 := integral_mul_right_eq_self (μ := μ) (fun y : G n => f y.val) (toG (hball t ht))
     simpa [toG, Matrix.GeneralLinearGroup.mkOfDetNeZero, Matrix.GeneralLinearGroup.mk', Matrix.unitOfDetInvertible, c_zero] using h0

@@ -116,8 +116,7 @@ theorem pulled_end_comm : ∀ {R R' : Type} [CommRing R] [IsDomain R] [CommRing 
   apply inj
   apply pullback.hom_ext
   · simp only [Category.assoc]
-    rw [hfst, key U' E', pf, hE, pf0, key U E, pf0]
-    rw [reassoc_of% hfst]
+    rw [hfst, key U' E', pf, hE, pf0, key U E, pf0, reassoc_of% hfst]
   · simp only [Category.assoc]
     rw [ws U, Over.w E.aA, hgA.1.w, ← Category.assoc, Over.w E'.aA]
 
@@ -169,8 +168,7 @@ theorem qkToAkU_pullback_common_field : ∀ {V V' : Type} [CommRing V] [IsDomain
   have hcomp : algebraMap (FractionRing V) F' = (algebraMap (FractionRing V') F').comp (fracMap hj) := by
     apply IsLocalization.ringHom_ext (nonZeroDivisors V)
     ext r
-    simp only [RingHom.comp_apply, fracMap_algebraMap]
-    exact hF r
+    simpa only [RingHom.comp_apply, fracMap_algebraMap] using hF r
 
   have P := GlobalTheory.UT.EndBaseChange.points GlobalTheory.firstFiveLaws.1.globalFns hD D.tau_bimult D'.tau_bimult F' hF
   obtain ⟨g', hg', -⟩ := P.1 p₁.g
@@ -337,8 +335,7 @@ theorem val_spMap_comp_field' {o Ω : Type} [CommRing o] [Field Ω] [Algebra o �
     [Field K] (σ : k →+* K) (p : Sp k ⟶ M.Z) (y : Ω) : M.val (spMap σ ≫ p) y = σ (M.val p y) := by
   by_cases hy : y ∈ M.O (p (IsLocalRing.closedPoint k))
   · have := RatModel.val_spMap_comp σ p specializes_rfl ⟨y, hy⟩
-    rw [RatModel.valLoc_eq_val] at this
-    exact this
+    rwa [RatModel.valLoc_eq_val] at this
   · rw [RatModel.val_of_notMem (y := p) (IsLocalRing.closedPoint k) hy, map_zero,
       RatModel.val_of_notMem (y := spMap σ ≫ p) (IsLocalRing.closedPoint K)
         (fun h' => hy (by convert h' using 2; exact (GlobalTheory.FlagBundle.spMap_comp_apply_field σ p _ _).symm))]

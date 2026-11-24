@@ -73,8 +73,7 @@ theorem UpperTheory.RealTr.wtDec :
     refine OrthogonalFamily.independent (OrthogonalFamily.of_pairwise fun μ ν hne => ?_)
     show (wsp F μ ⊓ S) ⟂ (wsp F ν ⊓ S)
     rw [Submodule.isOrtho_iff_inner_eq]
-    intro x hx y hy
-    exact wsp_orth hF hne hx.1 hy.1
+    exact fun x hx y hy => wsp_orth hF hne hx.1 hy.1
   let T : Fin n → Module.End ℂ S := fun a => (F a a).restrict (fun x hx => hS a a x hx)
   have hT : ∀ a, (T a).IsSymmetric := by
     intro a x y
@@ -84,13 +83,8 @@ theorem UpperTheory.RealTr.wtDec :
     intro a b hab
     have h0 : F a a * F b b = F b b * F a a := by
       have := hF.gl a a b b
-      rw [if_neg hab, if_neg (Ne.symm hab), sub_zero, sub_eq_zero] at this
-      exact this
-    apply LinearMap.ext
-    intro x
-    apply Subtype.ext
-    show F a a (F b b (x : V)) = F b b (F a a (x : V))
-    exact LinearMap.congr_fun h0 (x : V)
+      rwa [ite_eq_right hab, ite_eq_right (Ne.symm hab), sub_zero, sub_eq_zero] at this
+    exact LinearMap.ext (fun x => Subtype.ext (LinearMap.congr_fun h0 (x : V)))
   have htop := LinearMap.IsSymmetric.iSup_iInf_eq_top_of_commute hT hcomm
   have hkey : ∀ χ : Fin n → ℂ, ∀ v : S, v ∈ (⨅ i, Module.End.eigenspace (T i) (χ i)) →
       (v : V) ∈ wsp F (fun i => (χ i).re) ⊓ S := by
@@ -116,8 +110,7 @@ theorem UpperTheory.RealTr.wtDec :
       refine iSup_le fun χ => ?_
       rintro _ ⟨v, hv, rfl⟩
       exact le_iSup (fun μ : Wt n => wsp F μ ⊓ S) (fun i => (χ i).re) (hkey χ v hv)
-    rw [htop, Submodule.map_top, Submodule.range_subtype] at hle
-    exact hle
+    rwa [htop, Submodule.map_top, Submodule.range_subtype] at hle
   have hfin : Set.Finite {μ : Wt n | wsp F μ ⊓ S ≠ ⊥} := by
     let W' : Wt n → Submodule ℂ S := fun μ => (wsp F μ).comap S.subtype
     have hind' : iSupIndep W' := by

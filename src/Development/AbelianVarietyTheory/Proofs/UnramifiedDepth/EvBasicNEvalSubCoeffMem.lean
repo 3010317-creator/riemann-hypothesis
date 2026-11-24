@@ -66,10 +66,8 @@ lemma evBasic_tEval_eq_sum (N : ℕ) (f : MvPowerSeries ι R₀) (a : ι → S) 
   unfold tEval
   refine Finset.sum_bij' (fun e _ => fun i => (e i : ℕ))
     (fun e he => fun i => ⟨e i, Finset.mem_range.mp (Fintype.mem_piFinset.mp he i)⟩) ?_ ?_ ?_ ?_ ?_
-  · intro e _
-    exact Fintype.mem_piFinset.mpr fun i => Finset.mem_range.mpr (e i).isLt
-  · intro e _
-    exact Finset.mem_univ _
+  · exact fun e _ => Fintype.mem_piFinset.mpr fun i => Finset.mem_range.mpr (e i).isLt
+  · exact fun e _ => Finset.mem_univ _
   · intro e _
     rfl
   · intro e _

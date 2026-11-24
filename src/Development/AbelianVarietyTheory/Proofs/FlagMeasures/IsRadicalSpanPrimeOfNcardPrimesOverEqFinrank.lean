@@ -61,8 +61,7 @@ theorem isRadical_of_squarefree {S : Type} [CommRing S] [IsDedekindDomain S] {I 
   intro x hx
   obtain ⟨n, hn⟩ := hx
   have h1 : I ∣ Ideal.span {x} ^ n := by
-    rw [Ideal.dvd_iff_le, Ideal.span_singleton_pow, Ideal.span_singleton_le_iff_mem]
-    exact hn
+    rwa [Ideal.dvd_iff_le, Ideal.span_singleton_pow, Ideal.span_singleton_le_iff_mem]
   have h2 : I ∣ Ideal.span {x} := hI.isRadical n _ h1
   exact (Ideal.span_singleton_le_iff_mem I).1 (Ideal.dvd_iff_le.1 h2)
 

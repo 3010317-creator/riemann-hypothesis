@@ -252,8 +252,7 @@ theorem baseLat_le_realBase {ρ : Setup D.ntw} {hρ : ρ.Good} {ν : ℂ} {rd : 
       rw [map_smul, ← ho]
   obtain ⟨g, hg, hm⟩ := key P (hgen h P hd.mem)
   have e : f = g := hinj (hf.trans hg.symm)
-  rw [e]
-  exact hm
+  rwa [e]
 
 end Point
 
@@ -596,8 +595,7 @@ theorem translate_all {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T0 : Type} 
     (by rw [MultilinearMap.sub_apply, hat, sub_self])
   intro w
   have := key w
-  rw [MultilinearMap.sub_apply, sub_eq_zero, hLf, hRt] at this
-  exact this
+  rwa [MultilinearMap.sub_apply, sub_eq_zero, hLf, hRt] at this
 
 end GlobalTheory.TraceRatPf
 
@@ -627,9 +625,9 @@ theorem traceRat : TraceRat := by
     translate_all R F hcore hU i v₀ hext hker h y u hu x hx g v, LinearMap.smul_apply, smul_smul, ← map_mul]
   congr 2
   by_cases hg : g ∈ U
-  · simp only [c', dif_pos hg]
+  · simp only [c', dite_eq_left hg]
     rw [← Units.val_mul, mul_assoc, inv_mul_cancel, mul_one]
-  · simp only [c', dif_neg hg, zero_mul, map_zero]
+  · simp only [c', dite_eq_right hg, zero_mul, map_zero]
 
 end GlobalTheory.TraceRatPf
 end -- clump:auto
@@ -846,8 +844,7 @@ theorem readExt_eq_smul_of_read
       rw [h1, sub_self]
     exact sub_eq_zero.1 (Fintype.linearIndependent_iff.1 (hF _ v v.linearIndependent) _ e1 k)
   obtain ⟨k, hk⟩ : ∃ k, c k ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     apply h0
     have h2 : eL (algebraMap O L d) • R s = 0 := by
       rw [← hsm, es, hsum]
@@ -1057,10 +1054,8 @@ theorem traceOfAt_alt : _root_.GlobalTheory.BigOn.Exp.SerBase.TraceAt' := by
   · exact key.symm
   · intro g Q hQ hQ' a c
     have e := hpin.grp ((Fm.ex x hx i).nch.twI w) j ((Fm.ex x hx i).nch.sd w) ((p.R.eG.trans p.cG) g) Q hQ hQ' a c
-    rw [MulEquiv.trans_apply, MulEquiv.symm_apply_apply] at e
-    exact e
-  · intro g
-    exact mem_level_iff hM.2.2 hlev _ j _ g
+    rwa [MulEquiv.trans_apply, MulEquiv.symm_apply_apply] at e
+  · exact fun g => mem_level_iff hM.2.2 hlev _ j _ g
   · intro u hu
     refine (level_chi hM.2.2 hρ hlev _ j _ u hu).1.trans ?_
     rw [MonoidHom.inv_apply, Units.val_inv_eq_inv_val, map_inv₀]

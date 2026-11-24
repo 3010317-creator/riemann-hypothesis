@@ -208,7 +208,7 @@ theorem finite_support (d s : ℕ) {I : Type} [Fintype I] (κ : I → ℕ) (𝔣
   have hcv : c_vp 𝔣 l = 0 := by
     have hd : ¬ l ∣ (discr E).natAbs := fun h => hlB (Finset.mem_union_right _
       (Nat.mem_primeFactors.2 ⟨hl, h, by simpa using discr_ne_zero E⟩))
-    rw [c_vp, if_neg (fun ⟨v, h1, h2⟩ => hv v h1 h2), delta_vp]
+    rw [c_vp, ite_eq_right (fun ⟨v, h1, h2⟩ => hv v h1 h2), delta_vp]
     simp [padicValInt, padicValNat.eq_zero_of_not_dvd hd]
   have hcE : cE_vp l z = 0 := by
     rw [cE_vp, ← bot_eq_zero, Finset.sup_eq_bot_iff]
@@ -790,8 +790,7 @@ theorem core (hTD : GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBo
     if h : ∃ P ∈ GlobalTheory.SqTop.twPl G t, P.under (𝓞 D.host.F) = q then h.choose else G.pl.w G.pl.v0
   have hPq : ∀ q ∈ Q, Pq q ∈ GlobalTheory.SqTop.twPl G t ∧ (Pq q).under (𝓞 D.host.F) = q := fun q hq => by
     have h := hex q hq
-    simp only [Pq, dif_pos h]
-    exact h.choose_spec
+    simpa only [Pq, dite_eq_left h] using h.choose_spec
   have hov : ∀ q ∈ Q, Over (Pq q) q := fun q hq =>
     (_root_.GlobalTheory.CMVal.Euler.over_under (Pq q)).trans (congrArg HeightOneSpectrum.asIdeal (hPq q hq).2)
   have htor := GlobalTheory.ToricSumValue.toricSum_eq GlobalTheory.Published.HeckeEntire_holds D.host.E D.what₂.Tau (cmPhi D) hφ s
@@ -807,13 +806,11 @@ theorem core (hTD : GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBo
     have a := GlobalTheory.CMVal.OrderUnits.finPart_eq_one D.host.E D.what₂.Tau (cmPhi D) hφ s (kap D sc.cGap i j s)
       (condF G.pl) Q (nuH G t i j) hU hbc hQaux hQval u hu
     have hle : condQ (condF G.pl) Q ≤ condQ (condF G.pl) ∅ := by
-      simp only [condQ, Finset.prod_empty, mul_one]
-      exact Ideal.mul_le_left
+      simpa only [condQ, Finset.prod_empty, mul_one] using Ideal.mul_le_left
     have b := GlobalTheory.CMVal.OrderUnits.finPart_eq_one D.host.E D.what₂.Tau (cmPhi D) hφ s (kap D sc.cGap i j s)
       (condF G.pl) ∅ (nuH G μ₀ i j) hU hbc (fun q hq => absurd hq (Finset.notMem_empty q)) hx.1 u
       (hatOUnits_mono hle hu)
-    rw [hnu, finPart_mul, b, one_mul] at a
-    exact a
+    rwa [hnu, finPart_mul, b, one_mul] at a
 
   obtain ⟨zc, hzc, H⟩ := hTD D.host.E D.what₂.Tau D.host.d (cmPhi D) s hfd hs1
   have hV := ((H (kap D sc.cGap i j s) (condF G.pl) Λl (nuH G μ₀ i j) hbc hΛl hx.1) l hl Q hQaux hQpr).2
@@ -836,7 +833,7 @@ theorem core (hTD : GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBo
     exact G.pl.levelPlace_ne_basePlace t P hP' e
   have hram0 : ¬ (nuH G t i j).UnrAt (G.pl.w G.pl.v0) := by
     have h1 := (hQval.2.2.2 G.pl.v0 (G.pl.w G.pl.v0) ((_root_.GlobalTheory.CMVal.Euler.over_under _).trans (congrArg HeightOneSpectrum.asIdeal (G.pl.w_over _ (Finset.mem_insert_self _ _))))).2 hv0
-    rw [GlobalTheory.FunObj.SqNum.Model.expIn_condF, if_pos (G.pl.mem_S0_of_sum_eq.2 (Or.inl rfl)), condExp, if_pos rfl] at h1
+    rw [GlobalTheory.FunObj.SqNum.Model.expIn_condF, ite_eq_left (G.pl.mem_S0_of_sum_eq.2 (Or.inl rfl)), condExp, ite_eq_left rfl] at h1
     exact h1.not_unrAt one_ne_zero
   have hΛs : Λ s ≠ 0 := GlobalTheory.HeckePartial.IsHeckeL.ne_zero_of_one_le hQval.1
     (GlobalTheory.HeckeOne.not_isNormPow_of_not_unrAt hram0) hΛ (by simpa using (by exact_mod_cast hs1 : (1 : ℝ) ≤ s))
@@ -953,7 +950,7 @@ theorem meanInf_log_norm_embedding (K : Type) [Field K] [NumberField K] [_root_.
   unfold Formalism.PairingDivisionLocalBalance.meanInf
   have hprod := InfinitePlace.prod_eq_abs_norm (K := K) a
   have hmult : ∀ v : InfinitePlace K, v.mult = 2 := fun v => by
-    rw [InfinitePlace.mult, if_neg (InfinitePlace.not_isReal_iff_isComplex.mpr (IsTotallyComplex.isComplex v))]
+    rw [InfinitePlace.mult, ite_eq_right (InfinitePlace.not_isReal_iff_isComplex.mpr (IsTotallyComplex.isComplex v))]
   have hpos : ∀ v : InfinitePlace K, 0 < v a := fun v => by
     rw [InfinitePlace.pos_iff]; exact ha
   have hsum : Real.log |((Algebra.norm ℚ a : ℚ) : ℝ)| = ∑ v : InfinitePlace K, 2 * Real.log (v a) := by
@@ -1153,9 +1150,7 @@ theorem height_meanVal [StarRing K] [_root_.NumberField.IsTotallyComplex K] (σ 
       have h12 : (12 * d : ℝ)⁻¹ ≠ 0 := by positivity
       ext w; simp only [Function.mem_support, ne_eq, mul_eq_zero, h12, false_or]
   refine ⟨hsupp ▸ HC.1, ?_⟩
-  rw [← mul_finsum]
-  rw [inv_mul_le_iff₀ (by positivity)]
-  exact hmain
+  rwa [← mul_finsum, inv_mul_le_iff₀ (by positivity)]
 
 theorem lw_nonneg [StarRing K] (w : Formalism.PairingDivisionLocalBalance.Pl K) : 0 ≤ lw w := by
   unfold lw
@@ -1337,8 +1332,7 @@ theorem exists_char (t : Ainf F →+ ℂ) (hc : Continuous t) (hre : ∀ x, (t x
   have hap : ∀ y : Af F, ∃ a : F, y - algebraMap F (Af F) a ∈ intAf F := fun y => by
     obtain ⟨a, β, hβ, h⟩ := (GlobalTheory.AdLat.strong_approximation_mod_nat F 1 one_pos).1 y
     refine ⟨a, ?_⟩
-    rw [h, one_smul, add_sub_cancel_left]
-    exact hβ
+    rwa [h, one_smul, add_sub_cancel_left]
   choose ap hap using hap
   let c : ℂ := 2 * Real.pi * Complex.I
   let f : AF F → ℂ := fun x => Complex.exp (c * (((Algebra.trace ℚ F (ap x.2) : ℚ) : ℂ) - t x.1))

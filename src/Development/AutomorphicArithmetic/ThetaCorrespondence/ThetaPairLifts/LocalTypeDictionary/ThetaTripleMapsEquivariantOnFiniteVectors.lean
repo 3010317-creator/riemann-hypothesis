@@ -173,8 +173,7 @@ theorem acts_comb {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ] 
     have := congrFun key (fun i => GlobalTheory.LatVac.liftV v (y i))
     simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens, GlobalTheory.LatVac.evFin_liftV, hRz] at this
     exact mul_right_cancel₀ hR0 this
-  rw [← hχe]
-  exact hχ
+  rwa [← hχe]
 
 theorem exists_localOp : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (a a' : ℕ)
     (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base F E) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo σ a a') (Xc : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars F E)
@@ -347,9 +346,7 @@ theorem smul_eq_zero_of_fst (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     (hu : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.At (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI F) u) : u • x = 0 := by
   let e : AF F := ((1, 0) : Ainf F × Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F)
   let f : AF F := ((0, 1) : Ainf F × Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F)
-  have hf : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI F f = 0 := by
-    show InfiniteAdeleRing.ringEquiv_mixedSpace F (0 : Ainf F) = 0
-    exact map_zero _
+  have hf : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI F f = 0 := map_zero _
   have h0 : f • u = 0 := hu f hf
   have hef : e + f = 1 := by
     refine Prod.ext ?_ ?_
@@ -598,7 +595,6 @@ theorem GlobalTheory.TripleAssembly.vac_fixed_of_pure_fixed : ∀ (F E : Type) [
     unfold GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure
     have e1 : (fun i : Fin n × Fin d => GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI F ((0 : Fin n × Fin d → AF F) i)) = 0 := by
       funext i
-      show InfiniteAdeleRing.ringEquiv_mixedSpace F ((0 : Fin n × Fin d → AF F) i).1 = 0
       exact map_zero _
     have e2 : ∀ w : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F), Function.update ind v (fun _ => 1) w
         (fun i => GlobalTheory.AdelicU.evFin F w ((0 : Fin n × Fin d → AF F) i)) = 1 := by
@@ -610,10 +606,8 @@ theorem GlobalTheory.TripleAssembly.vac_fixed_of_pure_fixed : ∀ (F E : Type) [
           (fun i => GlobalTheory.AdelicU.evFin F w ((0 : Fin n × Fin d → AF F) i)) = 1
         rw [Set.indicator_of_mem]
         · rfl
-        · simp only [Set.mem_setOf_eq, Pi.zero_apply, map_zero]
-          exact fun _ => zero_mem _
-    rw [e1, finprod_congr e2, finprod_one, mul_one]
-    exact hf
+        · simpa only [Set.mem_setOf_eq, Pi.zero_apply, map_zero] using fun _ => zero_mem _
+    rwa [e1, finprod_congr e2, finprod_one, mul_one]
   funext y
   have hz : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.At (GlobalTheory.AdelicU.evFin F v) (fun i => GlobalTheory.EmbChart.atPlace v (y i)) := by
     intro u hu
@@ -707,14 +701,13 @@ theorem om_list_prod_pure : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
         φ' v = Set.indicator {x | ∀ i, x i ∈ v.adicCompletionIntegers F} 1 := by
       filter_upwards [hstd, (List.finite_toSet t).compl_mem_cofinite] with v hv1 hv2
       have hvt : v ∉ t := hv2
-      simp only [hφ', if_neg hvt]
-      exact hv1
+      simpa only [hφ', ite_eq_right hvt] using hv1
     have hSB' : ∀ v, φ' v ∈ GlobalTheory.WeilM.SB (Fin n × Fin d → Fv F v) := by
       intro v
       by_cases h : v ∈ t
-      · simp only [hφ', if_pos h]; exact hφ₁ v
-      · simp only [hφ', if_neg h]; exact hφ v
-    have hat : φ' a = φ a := by simp only [hφ', if_neg hl.1]
+      · simp only [hφ', ite_eq_left h]; exact hφ₁ v
+      · simp only [hφ', ite_eq_right h]; exact hφ v
+    have hat : φ' a = φ a := by simp only [hφ', ite_eq_right hl.1]
 
     obtain ⟨r, hr, htens⟩ := GlobalTheory.PureFactor.exists_rest_factor a f φ' hstd'
     have hfac : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ' = GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens (GlobalTheory.AdelicU.evFin F a) (φ a) r := by
@@ -820,7 +813,7 @@ theorem side {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [A
   have hidem_at : ∀ w v (u : AF F), At (evFin F w) u → w ≠ v → u * idem F v = 0 := by
     intro w v u hu hwv
     apply mul_idem_of_evFin
-    rw [← idem_mul_of_at hu, map_mul, evFin_idem, if_neg (Ne.symm hwv), zero_mul]
+    rw [← idem_mul_of_at hu, map_mul, evFin_idem, ite_eq_right (Ne.symm hwv), zero_mul]
   have key : ∀ v ∉ S, φ₁ v = φ v := by
     intro v hv
     have hA := hφ₁Act v
@@ -863,8 +856,8 @@ theorem side {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [A
     congr 1
     funext v
     by_cases hv : v ∈ S
-    · rw [if_pos (Finset.mem_toList.2 hv)]
-    · rw [if_neg (mt Finset.mem_toList.1 hv), key v hv]
+    · rw [ite_eq_left (Finset.mem_toList.2 hv)]
+    · rw [ite_eq_right (mt Finset.mem_toList.1 hv), key v hv]
 
 end GlobalTheory.PlacePureFin
 end
@@ -1001,8 +994,7 @@ theorem exists_factor {V Q P : Type} [AddCommGroup V] [Module ℂ V] [AddCommGro
     (pD : V →ₗ[ℂ] P) : ∃ q : Q →ₗ[ℂ] P, ∀ Ψ ∈ S, q (T Ψ) = pD Ψ := by
   have hinj : Function.Injective (T ∘ₗ S.subtype) := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-    intro x hx
-    exact Subtype.ext (hT x.1 x.2 hx)
+    exact fun x hx => Subtype.ext (hT x.1 x.2 hx)
   let eq := LinearEquiv.ofInjective (T ∘ₗ S.subtype) hinj
   obtain ⟨g, hg⟩ := LinearMap.exists_extend ((pD ∘ₗ S.subtype) ∘ₗ eq.symm.toLinearMap)
   refine ⟨g, fun Ψ hΨ => ?_⟩
@@ -1180,8 +1172,7 @@ theorem theta_triple_maps_equivariant_on_finite_vectors : GlobalTheory.Published
       have d1 := dA _ s1
       have d2 := dA Ψ hΨ
       have x1 := congrArg (GlobalTheory.TripleAssembly.mapA ψ e Bs Γ R Rf) e1.symm
-      have x2 := congrArg (LinearMap.lTensor R.Pi T₀) d2.symm
-      exact x1.trans (d1.trans (s2.trans x2))
+      exact x1.trans (d1.trans (s2.trans (congrArg (LinearMap.lTensor R.Pi T₀) d2.symm)))
     · have st := GlobalTheory.TripleAssembly.EqFin.darbAlg_stable Γ.M' Bs.ψ Bs.emb gM' R.p' Rf.p' (GlobalTheory.TripleAssembly.vacIm Γ Rf) hsB
         (om' (1, GlobalTheory.TripleRead.toUX X e h.JX g)) T₀ (fun f φ hφ hφv => by
           obtain ⟨φ₁, h1, h1v, hAct, hO⟩ := fB f φ hφ hφv

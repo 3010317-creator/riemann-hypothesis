@@ -92,8 +92,7 @@ theorem jetD_twist {S : Type} [CommRing S] [Algebra c.F S] [Algebra ℚ S] [Star
         (eL y C.d C.x C.B.A.act C.e C.wP m)) := by
     have h2 := ReciprocityTheory.ChartRestriction.G.DVR.corr_mulGen
       (ExpTieGerm.corr_refl (L := Xo.univ.t.PP.L) (LB.pullGen Xo.univ.t.PP.L _ _ C.wP (C.x m).left)) h1
-    rw [mulGen_scale_right] at h2
-    exact h2
+    rwa [mulGen_scale_right] at h2
   set U : (Jet S (Fin 1 × Fin C.d) m)ˣ := Units.map (GermD.sL m (C.B.A.act H.w0)).toMonoidHom u with hU
   set w : Γ(Sp (Jet S (Fin 1 × Fin C.d) m), ⊤)ˣ := unitΓ U with hw
   have hG : LB.Gen.Corr Xo.univ.t.PP.L _ _ _ _ (genPow _ _ (eL y C.d C.x C.B.A.act e' C.wP m) k)
@@ -119,8 +118,7 @@ theorem jetD_twist {S : Type} [CommRing S] [Algebra c.F S] [Algebra ℚ S] [Star
     rw [hw']
     show _ = toΓ _ _ * toΓ _ _
     rw [← map_mul, FBIdJet.psJet_mul, hinv]
-  rw [hv]
-  exact hV'
+  rwa [hv]
 
 theorem jetD_unique {S : Type} [CommRing S] [Algebra c.F S] (y : FrPt Xo c S) (d : ℕ)
     (x : ∀ m, jO y d m 1 ⟶ Xo.univ.t.G) (act : 𝓞 E → Fin d → MvPowerSeries (Fin 1 × Fin d) S)

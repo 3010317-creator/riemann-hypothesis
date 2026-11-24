@@ -95,8 +95,7 @@ theorem not_isUnit_of_toSubscheme_eq_zero (Y : X.IdealSheafData) {y : X} (hy : y
   obtain ⟨V, hV, u, rfl⟩ := (idealModule Y).presheaf.exists_germ_eq u
   intro hu
   refine notMem_support_of_mem_basicOpen Y u ((X.mem_basicOpen _ y hV).2 ?_) hy
-  rw [← structureModuleStalkEquiv_germ, ← stalkLinear_germ]
-  exact hu
+  rwa [← structureModuleStalkEquiv_germ, ← stalkLinear_germ]
 
 theorem exists_mem_nonzeroLocus {M : LB X} (hM : M.IsLB) {J : X.Modules}
     (j : J ⟶ structureModule X) (Y : X.IdealSheafData) {y : X} (hY : (Y.support : Set X) = {y})

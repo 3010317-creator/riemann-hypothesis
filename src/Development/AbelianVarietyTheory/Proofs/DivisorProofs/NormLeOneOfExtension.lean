@@ -85,9 +85,7 @@ theorem exists_extension {A B K : Type} [CommRing A] [CommRing B] [Field K] [IsA
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  refine ⟨f.toRingHom.comp (Ideal.Quotient.mk Q), fun a => ?_⟩
-  have h := f.commutes (Ideal.Quotient.mk _ a)
-  exact h
+  exact ⟨f.toRingHom.comp (Ideal.Quotient.mk Q), fun a => (f.commutes (Ideal.Quotient.mk _ a))⟩
 
 theorem norm_le_one_of_extension {p : ℕ} [Fact p.Prime] {A B : Type} [CommRing A] [CommRing B]
     [Algebra A B] [Algebra.IsIntegral A B] (ev : A →+* PadicAlgCl p) (h : ∀ a, ‖ev a‖ ≤ 1)
@@ -102,8 +100,7 @@ theorem norm_le_one_of_extension {p : ℕ} [Fact p.Prime] {A B : Type} [CommRing
     Polynomial.eval₂_X_pow, Polynomial.eval₂_finsetSum] at hq'
   simp only [Polynomial.eval₂_mul, Polynomial.eval₂_C, Polynomial.eval₂_X_pow] at hq'
   set y := ev' b
-  by_contra hy
-  push_neg at hy
+  by_contra! hy
   have hxn : y ^ q.natDegree = -∑ i ∈ Finset.range q.natDegree, ev (q.coeff i) * y ^ i :=
     eq_neg_of_add_eq_zero_left hq'
   rcases Nat.eq_zero_or_pos q.natDegree with h0 | hn
@@ -119,8 +116,7 @@ theorem norm_le_one_of_extension {p : ℕ} [Fact p.Prime] {A B : Type} [CommRing
           mul_le_mul (h _) (pow_le_pow_right₀ hy1 (by omega)) (pow_nonneg (norm_nonneg _) _) zero_le_one
       _ = ‖y‖ ^ (q.natDegree - 1) := one_mul _
   have h1 : ‖y‖ ^ q.natDegree ≤ ‖y‖ ^ (q.natDegree - 1) := by
-    rw [← norm_pow, hxn, norm_neg]
-    exact hle
+    rwa [← norm_pow, hxn, norm_neg]
   have h2 : ‖y‖ ^ (q.natDegree - 1) < ‖y‖ ^ q.natDegree := pow_lt_pow_right₀ hy (by omega)
   linarith
 

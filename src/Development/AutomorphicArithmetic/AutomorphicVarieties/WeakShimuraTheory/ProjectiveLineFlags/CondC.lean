@@ -80,8 +80,7 @@ theorem UpperTheory.V.Ws.P1.condC :
   have hmain : η' = 1 := by
     refine hfit.1.g3' η' ?_ ?_ ?_
     · rw [pow_two]
-      refine MonoidHom.ext fun g => ?_
-      exact Units.ext (hff _)
+      exact MonoidHom.ext fun g => Units.ext (hff _)
     · intro g hom
       have hq : resQ T.F (g : G T.F Ω) = resQ T.L (e.symm g) := by rw [← hxg]; exact (hres _).1
       rw [hq] at hom
@@ -123,8 +122,7 @@ theorem UpperTheory.V.Ws.P1.condC :
   obtain ⟨x, rfl⟩ := hsurj y
   have h1 : f x = 1 := by
     have hm := congrArg (fun θ => ((θ (e x) : (ResidueField c.O)ˣ) : ResidueField c.O)) hmain
-    rw [show f x = f (e.symm (e x)) by rw [e.symm_apply_apply]]
-    exact hm
+    rwa [show f x = f (e.symm (e x)) by rw [e.symm_apply_apply]]
   apply Units.ext
   rw [← hf x, h1, map_one]
   rfl

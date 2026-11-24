@@ -512,8 +512,7 @@ theorem UpperTheory.ConvolutionTheory.L1.twTrace :
   obtain ⟨c, hc, htr⟩ := UpperTheory.ConvolutionTheory.L1.jointTrace Γ G H π V m ι E A U hS y hfin'
   refine ⟨c, hc, ?_, fun i₀ S h1 h2 => (hdiag i₀ S h1).trans (htr i₀ S h1 h2)⟩
   have h := (hdiag 0 1 fun _ _ _ => rfl).trans (htr 0 1 (fun _ _ _ => rfl) fun _ _ _ _ => rfl)
-  rw [trOn_one] at h
-  exact h
+  rwa [trOn_one] at h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.Convolution.IntegrableConvolution.TwTrace =====
@@ -600,8 +599,7 @@ private theorem lev_step (T : Ty σ n q w₀) (p : Pl F) (D : Split (incFin E p)
       rw [hc, h1]
       by_cases e : k = j + 1
       · subst e
-        rw [Pi.mulSingle_eq_same]
-        exact hg
+        rwa [Pi.mulSingle_eq_same]
       · rw [Pi.mulSingle_eq_of_ne e, map_one]
         exact one_mem _).1 (w j)
     rwa [hc, h2, h1, Pi.mulSingle_eq_same] at h3
@@ -769,8 +767,7 @@ theorem UpperTheory.ConvolutionTheory.L1.twistY :
           rw [List.map_ofFn] at hy
           obtain ⟨i, rfl⟩ := (List.mem_ofFn' _ _).1 hy
           have := mem_prodM _ hcomm i (FreeGroup.of (.inl (compA D n i ⟨A, Subgroup.mem_top A⟩)))
-          rw [FreeGroup.lift_apply_of, gen, hposition] at this
-          exact this
+          rwa [FreeGroup.lift_apply_of, gen, hposition] at this
         obtain ⟨g, hg⟩ := Submonoid.mul_mem _ ha hx
         obtain ⟨c, hc⟩ := restScalar E n μ V hV T.J T.χ hco hcof On (fun u hu => by
           by_cases hS : u.under (𝓞 F) ∈ T.S

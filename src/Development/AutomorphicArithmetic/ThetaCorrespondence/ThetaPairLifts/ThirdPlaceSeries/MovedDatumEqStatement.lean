@@ -273,8 +273,7 @@ theorem foldr_comb_ne_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsSt
     intro l
     induction l with
     | nil =>
-      intro _
-      exact ⟨hF0, fun j _ => GlobalTheory.GSuppComb.vac_mono (fun _ _ => trivial) hF⟩
+      exact fun _ => ⟨hF0, fun j _ => GlobalTheory.GSuppComb.vac_mono (fun _ _ => trivial) hF⟩
     | cons a l ih =>
       intro hl
       obtain ⟨ha, hl'⟩ := List.nodup_cons.1 hl
@@ -666,8 +665,7 @@ theorem isHalf_mul {D : D7} {S T : HSp D} (e : AE D) (A : Matrix (Fin T.rank) (F
   have hy' : e • (y : Matrix (Fin T.rank) (Fin S.rank) (AE D)) = (y : Matrix (Fin T.rank) (Fin S.rank) (AE D)) :=
     Matrix.ext fun i j => hy i j
   have := congrFun (congrFun (congrArg (fun M : Matrix (Fin T.rank) (Fin S.rank) (AE D) => HMul.hMul (HMul.hMul A M) B) hy') i) j
-  simp only [Matrix.mul_smul, Matrix.smul_mul, Matrix.smul_apply, smul_eq_mul] at this
-  exact this
+  simpa only [Matrix.mul_smul, Matrix.smul_mul, Matrix.smul_apply, smul_eq_mul] using this
 
 theorem isHalf_actO_iff {D : D7} (S T : HSp D) (g : GA D S) (h : GA D T) (e : AE D) (x : WO S T) :
     IsHalf e (actO S T g h x) ↔ IsHalf e x := by
@@ -679,8 +677,7 @@ theorem isHalf_actO_iff {D : D7} (S T : HSp D) (g : GA D S) (h : GA D T) (e : AE
         _root_.GlobalTheory.MixModel.mt_inv_mul, Matrix.mul_one]
     rw [e1]
     exact isHalf_mul e _ _ _ hx
-  · intro hx
-    exact isHalf_mul e _ _ _ hx
+  · exact fun hx => isHalf_mul e _ _ _ hx
 
 variable {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 variable {Y Y' : Type} [Fintype Y] [DecidableEq Y] [Fintype Y'] [DecidableEq Y'] {S T : HSp D}
@@ -734,8 +731,7 @@ theorem GlobalTheory.IntPlaces.mem_of_idem_sum {R : Type} [CommRing R] {n : ℕ}
     | empty =>
       intro z hz _
       rw [Finset.sum_empty, zero_mul] at hz
-      rw [← hz]
-      exact hS0
+      rwa [← hz]
     | insert a s ha ih =>
       intro z hz hzi
       rw [Finset.sum_insert ha] at hz
@@ -780,8 +776,7 @@ theorem GlobalTheory.IntPlaces.mem_intAf_of_split : ∀ (D : D7) (n : ℕ) (k : 
     (fun i j hij => by rw [← RingHom.map_mul, horth i j hij, RingHom.map_zero]) (fun i z => π' i z ∈ 𝒪[k i])
     hint (fun i j z hij hz => ?_) z0 (by rw [show (∑ i, Formalism.IndefR.Datum.toEAf D (q i).e) = Formalism.IndefR.Datum.toEAf D (∑ i, (q i).e) from
       (map_sum (Formalism.IndefR.Datum.toEAf D).toAddMonoidHom (fun i => (q i).e) Finset.univ).symm]; exact hz0) hzi0
-  rw [RingHom.map_mul, RingHom.map_sub, RingHom.map_one, hpr i j hij, sub_zero, one_mul]
-  exact hz
+  rwa [RingHom.map_mul, RingHom.map_sub, RingHom.map_one, hpr i j hij, sub_zero, one_mul]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralFiniteAdeleOfSplitPlaceComponents =====
@@ -1118,7 +1113,7 @@ theorem moved_datum_eq_prod_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies
   choose eb heb mT using fun i => hGR.frame i (j + 1) (a i) (by have := ha i; omega)
   have hC := fun i => _root_.GlobalTheory.MovedDat.phi_down_eq_alt D L hT Gi Gl Kc Yd cX ex W f v (G i) (π' i) (hπ i) j (a i) (ha i) (ea i) (eb i) (mS i) (mT i) x
   by_cases hx : IsHalf (∑ i, (G i).q.e) x
-  · rw [if_pos hx]
+  · rw [ite_eq_left hx]
     have hx' := (isHalf_actO_iff _ _ (f.g.b j)⁻¹ (f.g.b (j + 1))⁻¹ _ x).2 hx
     have hQ : ∀ y : ∀ PP : Formalism.L2.DIV.Pl D.host.E, Matrix (Fin (Yc D (j + 1)).rank) (Fin (Yc D j).rank) (Formalism.L2.DIV.kP PP),
         omegaQ (∅ : Finset (Formalism.L2.DIV.Pl D.host.E)) (datY _ D.R.r D.R.t j (r_le_Y j) (_root_.GlobalTheory.Fam.pk_z W).Pg ∅ (_root_.GlobalTheory.Fam.complexLevelStructure W) (_root_.GlobalTheory.Fam.pk_z W).chi
@@ -1126,14 +1121,14 @@ theorem moved_datum_eq_prod_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies
       rw [omegaQ, dite_eq_left (by simp)]; simp
     by_cases hI : IsIntM (frMapO (Yc D j) (Yc D (j + 1)) ((_root_.GlobalTheory.Fam.pk_z W).βY j) ((_root_.GlobalTheory.Fam.pk_z W).βY (j + 1))
       (actO _ _ (f.g.b j)⁻¹ (f.g.b (j + 1))⁻¹ x))
-    · rw [if_pos ⟨hx, hI⟩, hQ, mul_one, _root_.GlobalTheory.MovedDat.locF_prod_level_alt D L hT Gi Gl Kc Yd cX ex W u f v n G pl hGR j]
+    · rw [ite_eq_left ⟨hx, hI⟩, hQ, mul_one, _root_.GlobalTheory.MovedDat.locF_prod_level_alt D L hT Gi Gl Kc Yd cX ex W u f v n G pl hGR j]
       refine Finset.prod_congr rfl fun i _ => ?_
       rw [hC i, GlobalTheory.LocMod.StepVec.redM_eq_map (pl i).1 hI, GlobalTheory.T.seeSaw_local_factor_eq_iterated_chain_datum D f.c v (G i) (pl i).1 (π' i) (hπ i) (hred i) (_root_.GlobalTheory.Fam.pk_z W).chi j
         (fun c hc => _root_.GlobalTheory.T.reduction_at_level_place_alt D L hT Gi Gl Kc Yd cX ex W hP (G i).k (G i).q (pl i).1 (pl i).2 (hGR.idem i).1 (π' i) (hπ i) (hred i)
           (c + 1) (by omega) (by omega) _ ((G i).S.tame _) (hGR.mu i (c + 1) (by omega) (by omega)))
         _ _ (r_le_Y j) (ea i) (eb i) (hea i) (heb i)]
       rfl
-    · rw [if_neg (fun h => hI h.2)]
+    · rw [ite_eq_right (fun h => hI h.2)]
       symm
       by_contra hne
       apply hI
@@ -1148,7 +1143,7 @@ theorem moved_datum_eq_prod_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies
         rw [hC i] at h1
         have h2 := GlobalTheory.StepData.TypeDatum.intM_of_Phi_ne_zero _ _ h1 ((ixSucc _ _ j).symm ((eb i).symm r)) ((ea i).symm s)
         simpa using h2
-  · rw [if_neg (fun h => hx h.1), if_neg hx]
+  · rw [ite_eq_right (fun h => hx h.1), ite_eq_right hx]
 end GlobalTheory.MovedDat
 end
 end

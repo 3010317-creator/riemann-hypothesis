@@ -156,8 +156,7 @@ theorem value_of_qVal {R : Type} [CommRing R] [IsDomain R] [IsDiscreteValuationR
       exact (Scheme.Hom.appLE_comp_appLE _ _ _ _ _ _ _).symm
     have e2 := Scheme.ΓSpecIso_naturality (CommRingCat.ofHom f)
     have e3 := congrArg (fun q => q.hom ((x.appLE U ⊤ h).hom a.val)) e2
-    rw [e1]
-    exact e3
+    rwa [e1]
   obtain ⟨e, -, c, hc, hC⟩ := genHasVal_units _ _ _ _ _ _ h
   obtain ⟨C, hCv, hCt⟩ := hC (fun _ => j)
   let g : R →+* F := (algebraMap (FractionRing R) F).comp (algebraMap R _)
@@ -217,8 +216,7 @@ theorem psi_value (a : ArcIn D l β O' b) {R : Type} [CommRing R] [IsDomain R] [
       exact (Scheme.Hom.appLE_comp_appLE _ _ _ _ _ _ _).symm
     have e2 := Scheme.ΓSpecIso_naturality (CommRingCat.ofHom f)
     have e3 := congrArg (fun q => q.hom ((x.appLE U ⊤ h).hom a.val)) e2
-    rw [e1]
-    exact e3
+    rwa [e1]
   obtain ⟨hp, hv⟩ := (genRel_iff w _ _ _ z).1 hG
   let g : R →+* F := (algebraMap (FractionRing R) F).comp (algebraMap R _)
   let x : Sp R ⟶ P.P.A.left := (P.c χ).left
@@ -241,8 +239,7 @@ theorem psi_value (a : ArcIn D l β O' b) {R : Type} [CommRing R] [IsDomain R] [
   obtain ⟨u₁, hu₁⟩ := GlobalTheory.ThetaShiftProofs.exists_unit_gm_spMap g x _ ht (w.s (fun _ => j₀, j)) z
   have hpt : spMap f (cpt R) ∈ (a.D₀.c y).left ⁻¹ᵁ a.D₀.P.L.U j₀ := by
     have h1 : (x ≫ φ) (cpt R) ∈ a.D₀.P.L.U j₀ := hj₀
-    rw [hc] at h1
-    exact h1
+    rwa [hc] at h1
   obtain ⟨_, ⟨V, hV, rfl⟩, hpV, hVle⟩ := (Sp O').isBasis_affineOpens.exists_subset_of_mem_open hpt
     ((a.D₀.c y).left ⁻¹ᵁ a.D₀.P.L.U j₀).isOpen
   have hle : Out.jK O' ⁻¹ᵁ V ≤ LB.wchart a.D₀.P.L (K := PUnit) (fun _ => Out.ptK (a.D₀.c y)) (fun _ => j₀) :=
@@ -256,8 +253,7 @@ theorem psi_value (a : ArcIn D l β O' b) {R : Type} [CommRing R] [IsDomain R] [
     exact RingHom.ext hF
   have hzV : Out.jK O' (Out.jFK (R := O') F z) ∈ V := by
     have h1 : (spMap g ≫ spMap f) z ∈ V := htV (show spMap g z ∈ (⊤ : (Sp R).Opens) from trivial)
-    rw [← hcomp] at h1
-    exact h1
+    rwa [← hcomp] at h1
   have hr' : pullU (Out.jK O') V r = res hle ((a.D₀.psi y).s (fun _ => j₀)) := Units.ext hr
   rw [← hcomp, ← gm_pull _ _ _ _ hzV, hr'] at hu₀
   replace hu₀ := (congrArg Units.val (gm_res (Out.jFK (R := O') F) z hle hzV _)).symm.trans hu₀
@@ -536,8 +532,7 @@ theorem exists_finite_normal_containing : ∀ (R₁ : Type) [CommRing R₁] [IsD
   · intro F _ _ ga
     haveI : Algebra.IsAlgebraic K₂ L := Algebra.IsAlgebraic.tower_top (K := K) K₂
     obtain ⟨σ, hσ⟩ := exists_extend_of_isAlgebraic (A := K₂) (B := L) (ga.comp (e.symm : K₂ →+* FractionRing R₂))
-    refine ⟨σ, fun x => (hσ (e x)).trans ?_⟩
-    exact congrArg ga (e.symm_apply_apply x)
+    exact ⟨σ, fun x => (hσ (e x)).trans (congrArg ga (e.symm_apply_apply x))⟩
 
 end GlobalTheory.OneBasis
 end -- clump:auto
@@ -632,8 +627,7 @@ theorem exists_det_ne_zero {k J : Type} [Field k] {r : ℕ} (v : J → Fin r →
   have hl : LinearIndependent k (Matrix.of fun i j => v (f i) j).row := by
     have := hli.comp e e.injective
     have e2 : (Matrix.of fun i j => v (f i) j).row = Subtype.val ∘ e := funext fun i => hf i
-    rw [e2]
-    exact this
+    rwa [e2]
   exact ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_rows_iff_isUnit.1 hl)).ne_zero
 
 theorem exists_det_unit {F J : Type} [Field F] (O : ValuationSubring F) {r : ℕ} (v : J → Fin r → F)
@@ -786,8 +780,7 @@ theorem exists_basis_all_places : ∀ (K : Type) [Field K] (r : ℕ) (T : Tab K 
   let M : Matrix (Fin r) (Fin r) K := Matrix.of fun i j => (f j).1 i
   let Em : Matrix (Fin r) (Fin r) K := Matrix.of fun i j => (g i).1 j
   have hM₀ : O₀.valuation (B₀ * M.map σ₀).det = 1 := by
-    rw [← Matrix.det_transpose]
-    exact hf
+    rwa [← Matrix.det_transpose]
 
   have hval : ∀ (K' : Type) [Field K'] (σ : K →+* K') (O : ValuationSubring K') (B : Matrix (Fin r) (Fin r) K')
       (p : Fin r → K'), B.det ≠ 0 → (∀ i, p i ≠ 0) → O.valuation ((∏ i, p i) ^ d) = O.valuation (σ κ) →
@@ -1234,8 +1227,7 @@ theorem basis_up (hF : IsPullback F G.hom G₀.hom π) (hw : w.IsGen) (hL₀ : L
   · intro H W r z J₀ hJ₀
     obtain ⟨J, hJ⟩ := exists_good' hL z
     have := (lin_at_iff hc hb hs (r ≫ Ψ) z hJ₀ hJ _).2 (H W (r ≫ Ψ) z J hJ)
-    rw [Category.assoc r Ψ Φ', i₁, Category.comp_id, Category.assoc r Ψ, c₁] at this
-    exact this
+    rwa [Category.assoc r Ψ Φ', i₁, Category.comp_id, Category.assoc r Ψ, c₁] at this
 
 theorem exists_allBasis : Laws → Laws2 → ∀ (Z : Scheme.{0}) (G₀ : Over Z) [GrpObj G₀] (L₀ : LB G₀.left), L₀.IsLB → ∀ (K : Type) [Field K] (x : Sp K ⟶ Z) (A : PolAV (Sp K)) (φ : A.A.left ⟶ G₀.left) (w : LB.Iso A.L (L₀.pull φ)), IsGrpPullback A.A G₀ x φ → w.IsGen → ∀ k : ℕ, 1 ≤ k → ∃ (r : ℕ) (τ : Fin r → LB.Sec (LPow G₀ L₀ (k : ℤ) (Over.mk x))), AllBasis G₀ L₀ k x τ := by
   intro hL _ Z G₀ _ L₀ hL₀ K _ x A φ w gp hw k hk
@@ -1514,8 +1506,7 @@ theorem transport {X₀ : Type} [AddCommGroup X₀] {q₀ : X₀ → ℤ} {Q : X
     simp only [h.2.1 i i' ⟨_, h1⟩]
   · obtain ⟨i, z, hz⟩ := h.2.2.1 (e α)
     refine ⟨i, e.symm z, e.injective ?_⟩
-    simp only [map_add (f := _), map_nsmul, e.apply_symm_apply]
-    exact hz
+    simpa only [map_add (f := _), map_nsmul, e.apply_symm_apply] using hz
   · rw [← h.2.2.2 i₀]
     simp only [e.symm.injective.eq_iff]
 

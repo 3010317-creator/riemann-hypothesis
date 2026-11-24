@@ -91,8 +91,7 @@ theorem exists_local (v : HeightOneSpectrum (𝓞 D.host.F)) (τ : D.host.E →�
       algebraMap (AF D.host.F) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := D.host.F) (E := D.host.E)) (GlobalTheory.LatVac.liftV v c)) = 0
     rw [Algebra.smul_def, mul_left_comm, ← map_mul, h0, map_zero, mul_zero]
   · have h := GlobalTheory.SrcHalfOne.piW_cA_plcC τ c
-    rw [GlobalTheory.SrcHalfOne.piW_cA] at h
-    exact h
+    rwa [GlobalTheory.SrcHalfOne.piW_cA] at h
 
 theorem coBar_onto (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo D.sp.cm.sig a a')
     (hV' : Γ.V'.J.det ≠ 0) (hW : Γ.W.J.det ≠ 0) (Y : Matrix (Fin a') (Fin (a + a')) (Fv D.host.F Bs.v₁)) :
@@ -145,8 +144,7 @@ theorem bd_sub : ∀ {D : D7} {a a' : ℕ} (Bs : GlobalTheory.IndefiniteRowSideF
   have h1 := hYh (x' + x) hat (by rw [Matrix.map_add _ (map_add _), hx'0, hx0, add_zero])
     (by rw [GlobalTheory.VacShape.coBar_add, hx'Y, hxh]) u hu hu0
   have h2 := hY x' hx' hx'0 hx'Y u hu hu0
-  rw [symp_add_left', AddChar.map_add_eq_mul, h2, one_mul] at h1
-  exact h1
+  rwa [symp_add_left', AddChar.map_add_eq_mul, h2, one_mul] at h1
 
 end GlobalTheory.VacShapeBd
 

@@ -73,8 +73,7 @@ theorem gen_pull3 {X Y Z Z' Y' : Scheme.{0}} (L : LB X) (a : Y ⟶ X) (b : Z ⟶
     apply (mem_wchart_pu ((L.pull a).pull b) h _ z).2
     apply (mem_wchart_pu (L.pull a) b j _).2
     apply (mem_wchart_pu L a _ _).2
-    rw [hb z]
-    exact h1
+    rwa [hb z]
   refine exists_gen_transfer (L := ((L.pull a).pull b).pull h) (L' := (L.pull c).pull e)
     (fun j => fun _ => j) (fun j z hz => hmem j z hz) ?_ h1
   intro i j y hy
@@ -127,8 +126,7 @@ def down (V : S'.Opens) {T : Over V.toScheme} (x : T ⟶ (Over.pullback V.ι).ob
 
 theorem down_mul (V : S'.Opens) {T : Over V.toScheme} (x y : T ⟶ (Over.pullback V.ι).obj G) :
     down G V (x * y) = down G V x * down G V y := by
-  apply Over.OverMorphism.ext
-  exact ((isGrpPullback V.ι G).2 T x y (down G V x) (down G V y) rfl rfl).symm
+  exact Over.OverMorphism.ext ((isGrpPullback V.ι G).2 T x y (down G V x) (down G V y) rfl rfl).symm
 
 theorem down_injective (V : S'.Opens) {T : Over V.toScheme} (x y : T ⟶ (Over.pullback V.ι).obj G)
     (h : down G V x = down G V y) : x = y := by

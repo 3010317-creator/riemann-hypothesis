@@ -283,8 +283,7 @@ theorem isClosedImmersion_surjective_preimage : ∀ {B₀ : Scheme.{0}} (𝒰 : 
       have := key2 (V := ⟨V, hV⟩) y ⟨x, hxV⟩ (hy.trans (hj' ⟨V, hV⟩ ⟨x, hxV⟩))
       have h2 : y.1 = x := this
       exact h2 ▸ y.2
-    · intro hx
-      exact ⟨_, (hj' U ⟨x, hx⟩).symm⟩
+    · exact fun hx => ⟨_, (hj' U ⟨x, hx⟩).symm⟩
   refine ⟨?_, ⟨?_⟩, hpre⟩
   · rw [IsZariskiLocalAtTarget.iff_of_openCover (P := @IsClosedImmersion)
       (Scheme.IsLocallyDirected.openCover F)]
@@ -518,8 +517,7 @@ theorem isLocallyDirected_of_basis : ∀ {B₀ : Scheme.{0}} (𝒰 : Set B₀.Op
   obtain ⟨y, rfl⟩ := hsurj V y
   have h' : F.map f (e U x) = F.map g (e V y) := h
   rw [hnat', hnat'] at h'
-  have h'' := congrArg Subtype.val (hinj _ h')
-  exact key x y (by simpa using h'')
+  exact key x y (by simpa using (congrArg Subtype.val (hinj _ h')))
 
 end GlobalTheory.ThickGlue
 end -- clump:auto
@@ -850,8 +848,7 @@ theorem exists_pushout_data : ∀ (Y₀ Y₁ Y₂ : Scheme.{0}) (i₁ : Y₀ ⟶
     obtain ⟨U, hU, hxU, -, hUO⟩ := hbas₀ U₀ hU₀ ((i₁ ≫ j₁) ⁻¹ᵁ O) x hx₀ hy
     refine ⟨_, ⟨⟨U, hU⟩, rfl⟩, ?_, ?_⟩
     · show x ∈ (i₁ ≫ j₁) ⁻¹ᵁ (colimit.ι F ⟨U, hU⟩).opensRange
-      rw [h0 ⟨U, hU⟩]
-      exact hxU
+      rwa [h0 ⟨U, hU⟩]
     · intro z hz
       obtain ⟨x', rfl⟩ := (i₁ ≫ j₁).surjective z
       have hx' : x' ∈ (i₁ ≫ j₁) ⁻¹ᵁ (colimit.ι F ⟨U, hU⟩).opensRange := hz
@@ -931,8 +928,7 @@ lemma appLE_res {X Y : Scheme.{0}} (g : X ⟶ Y) {U U' : Y.Opens} {V V' : X.Open
     (g.appLE U' V' e').hom ((Y.presheaf.map (homOfLE hU).op).hom b) =
       (X.presheaf.map (homOfLE hV).op).hom ((g.appLE U V e).hom b) := by
   have h1 := congrArg (fun φ => φ.hom b) (g.map_appLE e' (homOfLE hU).op)
-  have h2 := congrArg (fun φ => φ.hom b) (g.appLE_map e (homOfLE hV).op)
-  exact h1.trans h2.symm
+  exact h1.trans (congrArg (fun φ => φ.hom b) (g.appLE_map e (homOfLE hV).op)).symm
 
 lemma res_res (X : Scheme.{0}) {U V W : X.Opens} (i : V ⟶ U) (j : W ⟶ V) (k : W ⟶ U) (s : Γ(X, U)) :
     (X.presheaf.map j.op).hom ((X.presheaf.map i.op).hom s) = (X.presheaf.map k.op).hom s := by

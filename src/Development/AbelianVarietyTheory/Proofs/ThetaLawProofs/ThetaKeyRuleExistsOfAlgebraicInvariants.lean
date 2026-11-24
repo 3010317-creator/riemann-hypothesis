@@ -135,10 +135,10 @@ theorem exists_isSymm_mulVec_add_diag_mod_two :
       by_cases hi : i = p
       · subst hi
         simp only [Matrix.mulVec, dotProduct, Matrix.of_apply, add_mul, Finset.sum_add_distrib,
-          if_true, hm', h2, hk]
+          ite_true, hm', h2, hk]
         exact ⟨m + n' i * k + n' i, by ring⟩
       · simp only [Matrix.mulVec, dotProduct, Matrix.of_apply, add_mul, Finset.sum_add_distrib,
-          if_neg hi, h2, hk, zero_mul, Finset.sum_const_zero]
+          ite_eq_right hi, h2, hk, zero_mul, Finset.sum_const_zero]
         exact ⟨n' i * k, by ring⟩
 
 end GlobalTheory
@@ -388,7 +388,7 @@ theorem exists_block_basis {G' G : Over (Sp R)} [GrpObj G'] [IsCommMonObj G'] [G
             (finProdFinEquiv (i', k'))) ≫ u (finProdFinEquiv (i', k'))) =
           sc (if i = i' then M k k' else 0) ≫ v k' := fun k' => by
         change (sc _ ≫ u _) ≫ p.pr i' = _
-        rw [Category.assoc, hu', if_pos rfl]
+        rw [Category.assoc, hu', ite_eq_left rfl]
         congr 2
         simp [e, Matrix.blockDiagonal_apply]
       rw [Finset.prod_congr rfl fun k' _ => h₁ k']
@@ -398,7 +398,7 @@ theorem exists_block_basis {G' G : Over (Sp R)} [GrpObj G'] [IsCommMonObj G'] [G
     · intro i'' _ hi
       refine Finset.prod_eq_one fun k' _ => ?_
       change (sc _ ≫ u _) ≫ p.pr i' = _
-      rw [Category.assoc, hu', if_neg hi, comp_one]
+      rw [Category.assoc, hu', ite_eq_right hi, comp_one]
     · simp
   · rw [Matrix.det_reindex_self, Matrix.det_blockDiagonal]
     simp
@@ -438,8 +438,7 @@ theorem isKeyPow_change : ∀ (K : Type) [Field K] (P : Out.PolAV (Sp K)) (hg ri
     rintro rfl
     obtain ⟨x, -, hx⟩ := hth' (default : PrimeSpectrum K)
     obtain ⟨i, hi⟩ := TopologicalSpace.Opens.mem_iSup.1 hx
-    rw [ha i, constFn, map_zero, map_zero, zero_mul, Scheme.basicOpen_zero] at hi
-    exact hi
+    rwa [ha i, constFn, map_zero, map_zero, zero_mul, Scheme.basicOpen_zero] at hi
   haveI := y.P.isAb.comm
   haveI := P.isAb.comm
   obtain ⟨w, M', hw, hw', hM', hdet⟩ := exists_block_basis p.toIsPowGrp hj hv hv' M hM y.v h₃
@@ -524,8 +523,7 @@ theorem exists_rule_sq (hinv : Key.Chi.InversionStatement) {g c M : ℕ}
       rw [h] at hq'
       exact pow_ne_zero 2 (div_ne_zero (pow_ne_zero 4 hM) (pow_ne_zero 8 hc)) (by rw [← hq']; simp)
     have := ha (sq ℂ x) _ M'' c' (hdim hx hy) hc' hM'' (by simpa [Pi.zero_def] using hn')
-    rw [hq', ← pow_mul] at this
-    exact this
+    rwa [hq', ← pow_mul] at this
   refine ⟨fun K _ _ x => ka K (sq K x), ⟨?_, ?_, ?_, hval.holo⟩, hval⟩
   · intro K _ _ P hg rig hr th hth v hv th' hth' v' hv' a Mx hP h₁ h₂
     have hy := hsq K ⟨P, hg, rig, hr, th, hth, v, hv⟩
@@ -537,8 +535,7 @@ theorem exists_rule_sq (hinv : Key.Chi.InversionStatement) {g c M : ℕ}
     dsimp only
     rw [indep K ⟨P, hg, rig, hr, th', hth', v', hv'⟩ _ hP hp]
     rw [hd, ← pow_mul, ← pow_mul] at key
-    rw [show 8 * (2 * c) = 2 * (8 * c) by ring, show 4 * (2 * c) = 2 * (4 * c) by ring]
-    exact key
+    rwa [show 8 * (2 * c) = 2 * (8 * c) by ring, show 4 * (2 * c) = 2 * (4 * c) by ring]
   · intro K K' _ _ _ _ f x x' hx h
     exact hF K K' f _ _ (hdim hx (hsq K x)) (keyPB_of_isKeyPow K K' f x _ x' _ 2 h (hsq K x) (hsq K' x'))
   · intro R K _ _ _ _ _ _ _ x xK hx hM h

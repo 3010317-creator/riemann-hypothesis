@@ -86,10 +86,10 @@ theorem dI_eq_sum {p q : ℕ} (x : Ix p q → ℝ) : dI x = ∑ j, ((x j : ℂ) 
   by_cases hab : a = b
   · subst hab
     simp
-  · rw [if_neg hab, eq_comm]
+  · rw [ite_eq_right hab, eq_comm]
     apply Finset.sum_eq_zero
     intro j _
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨rfl, rfl⟩
     exact hab rfl
 
@@ -136,8 +136,7 @@ private theorem a_Eab_diag_of_dI_add_trace_smul {p q : ℕ} {V : Type} [AddCommG
     · simp
     · intro b _ hb
       simp [hb]
-    · intro hj
-      exact absurd (Finset.mem_univ j) hj
+    · exact fun hj => absurd (Finset.mem_univ j) hj
   have h1 := h (Pi.single j (1 : ℝ) : Ix p q → ℝ)
   have htr : (Eab j j).trace = 1 := by
     unfold Eab
@@ -203,8 +202,7 @@ theorem side_of {ι σ Z G : Type} [Monoid G] {n p q : ℕ} (ρ : G →* Module.
     constructor
     · intro hP
       have : pt P' = pt P'' := funext fun z => (hP z).unique (h0 z)
-      rw [hpt this]
-      exact h1
+      rwa [hpt this]
     · intro hk
       have : P' = P'' := κ.injective (hk.trans h1.symm)
       subst this
@@ -275,8 +273,7 @@ theorem bar_mem {p q : ℕ} {Y : Mat p q} (hY : Y ∈ upq p q) : Y.map (starRing
   have := congrArg Matrix.transpose hY'
   rw [Matrix.transpose_add, Matrix.transpose_mul, Matrix.transpose_mul, h2, hJ, Matrix.transpose_zero] at this
   show (Y.map (starRingEnd ℂ))ᴴ * Jm p q + Jm p q * Y.map (starRingEnd ℂ) = 0
-  rw [h1, add_comm]
-  exact this
+  rwa [h1, add_comm]
 
 theorem phi_mem {p q n : ℕ} {ε : Fin n → Bool} {e : Ix p q ≃ Fin n} (h : SignCompat ε e) (br : Bool)
     {Y : Mat p q} (hY : Y ∈ upq p q) : (phi br e Y)ᴴ * Formalism.REAL.Jm ε + Formalism.REAL.Jm ε * phi br e Y = 0 := by

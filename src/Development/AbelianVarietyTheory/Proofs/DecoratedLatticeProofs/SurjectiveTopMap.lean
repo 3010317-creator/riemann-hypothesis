@@ -83,8 +83,7 @@ theorem real_induction (hθ : IsInfFam θ) (P : GA D V → Prop) (h1 : P 1) (hmu
     induction s using Finset.induction_on with
     | empty =>
       intro a ha h
-      rw [R.2.2.1 a ha 1 (one_mem _) fun τ => by rw [h τ (Finset.notMem_empty τ), infMat_one]]
-      exact h1
+      rwa [R.2.2.1 a ha 1 (one_mem _) fun τ => by rw [h τ (Finset.notMem_empty τ), infMat_one]]
     | insert τ s hτ ih =>
       intro a ha h
       have hg := GlobalTheory.FockCompare.RealAction.infMat_mem_UH hθ V a τ
@@ -101,8 +100,7 @@ theorem real_induction (hθ : IsInfFam θ) (P : GA D V → Prop) (h1 : P 1) (hmu
         rwa [hb.2.1] at this
       · have := hi ρ
         rw [hb.2.2 ρ c] at this
-        rw [h ρ (by simp [c, hρ])]
-        exact this
+        rwa [h ρ (by simp [c, hρ])]
   exact fun a ha => key Finset.univ a ha fun τ h => absurd (Finset.mem_univ τ) h
 
 theorem multT_rel {M : DSModel V S} {J : Set (GA D V)} {χ : GA D V → ℂ} (v v' : M.Vec) (x x' : GA D V) (c : ℂ)
@@ -134,8 +132,7 @@ theorem exists_ratPt (hθ : IsInfFam θ) {n : ℕ} (hn : V.rank = n) (δ : GL (F
   have hm : Formalism.UG.bc (incA D) δ ∈ Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HR (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF D.host.F) D.sp.cm.sig V.gram :=
     unit_transfer (Equiv.refl _) (incA D) (D.sp.cm.sig : D.host.E →+* D.host.E) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR _ D.sp.cm.sig)
       (fun _ => rfl) V.gram _ (fun _ _ => rfl) δ.1 _ (fun _ _ => rfl) hδ
-  refine ⟨⟨_, hm⟩, ⟨δ, hδ, rfl⟩, rfl, fun τ => ?_⟩
-  exact Matrix.ext fun i j => (hθ τ).1 _
+  exact ⟨⟨_, hm⟩, ⟨δ, hδ, rfl⟩, rfl, fun τ => (Matrix.ext fun i j => (hθ τ).1 _)⟩
 
 theorem infN_eq {n : ℕ} (hn : V.rank = n) (γ : GA D V) (τ : D.what₂.Tau) :
     (infN θ V hn (Equiv.refl _) γ τ : Matrix (Fin n) (Fin n) ℂ) =

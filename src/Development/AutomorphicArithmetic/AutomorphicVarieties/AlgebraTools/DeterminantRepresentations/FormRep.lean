@@ -111,8 +111,7 @@ theorem UpperTheory.V.AlgebraTools.Det.formRep :
       rw [Matrix.transpose_smul, Matrix.smul_mul, key, Matrix.mul_smul, smul_smul]
   have hu : ∀ (B : Type) [CommRing B] [Algebra R B],
       IsUnit ((P : Matrix (Fin a) (Fin a) R).map (algebraMap R B)) := by
-    intro B _ _
-    exact (P.isUnit.map (algebraMap R B).mapMatrix)
+    exact fun B _ _ => (P.isUnit.map (algebraMap R B).mapMatrix)
   refine ⟨h1, ?_, ?_⟩
   · intro y hy
     have := h1 R y
@@ -124,5 +123,4 @@ theorem UpperTheory.V.AlgebraTools.Det.formRep :
   · intro B _ _ _ _ y
     have := congrArg Matrix.det (h1 B y)
     rw [Matrix.det_mul, Matrix.det_mul, Matrix.det_transpose, mul_comm] at this
-    have hd := (Matrix.isUnit_iff_isUnit_det _).mp (hu B)
-    exact (hd.mul_left_cancel this).symm
+    exact (((Matrix.isUnit_iff_isUnit_det _).mp (hu B)).mul_left_cancel this).symm

@@ -147,10 +147,8 @@ theorem incl_mapFactor_kOp (h : KSm M) (τ : D.what₂.Tau) (k : Matrix (Fin V.r
 theorem kFinTensor : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S) (τ : D.what₂.Tau) (h : KSm M), Function.Injective (inclK h) ∧ (∀ a : Matrix (Fin V.rank) (Fin V.rank) ℂ → Module.End ℂ (kFin M τ), IsKAct M τ a → ∀ X ∈ lieAt V τ, ∀ x : KT M, DerT M τ X (inclK h x) (inclK h (intersection_update_fsHerm_neg_one τ (a X) x))) ∧ ∀ (k : Matrix (Fin V.rank) (Fin V.rank) ℂ) (hk : k ∈ maxCpt M τ) (x : KT M), inclT M (inclK h (intersection_update_fsHerm_neg_one τ (kOp M τ hk) x)) = actT M τ k (inclT M (inclK h x)) := by
   intro D V S M τ h
   refine ⟨inclK_injective h, ?_, ?_⟩
-  · intro a ha X hX x
-    exact derT_mapFactor h τ a ha X hX x
-  · intro k hk x
-    exact incl_mapFactor_kOp h τ k hk x
+  · exact fun a ha X hX x => derT_mapFactor h τ a ha X hX x
+  · exact fun k hk x => incl_mapFactor_kOp h τ k hk x
 
 end GlobalTheory.Chain.IoLift.FinTensor
 

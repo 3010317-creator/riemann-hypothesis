@@ -163,9 +163,9 @@ theorem frameM_coef_eq_chgB : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lm : Taylor
     rw [Fintype.sum_prod_type]
   rw [hJ, Fintype.sum_sigma]
   simp only [GlobalTheory.DFrame.coef, GlobalTheory.DFrame.gc, GlobalTheory.DFrame.pc]
-  simp only [mul_ite, ite_mul, mul_zero, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [mul_ite, ite_mul, mul_zero, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [Finset.sum_eq_single x.1 (fun z _ hz => by simp [hz]) (by simp)]
-  simp only [if_true, GlobalTheory.DFrame.vecF, GlobalTheory.DFrame.mat, GlobalTheory.DFrame.colR, GlobalTheory.DFrame.rowL, Matrix.of_apply, map_mul, RingEquiv.coe_toRingHom]
+  simp only [ite_true, GlobalTheory.DFrame.vecF, GlobalTheory.DFrame.mat, GlobalTheory.DFrame.colR, GlobalTheory.DFrame.rowL, Matrix.of_apply, map_mul, RingEquiv.coe_toRingHom]
   have hsum' := hsum x.1 (s.iT i.1)
   simp only [hι] at hsum'
   have e : ∀ k, ι (TaylorLogMetric.embT D (s.iT i.1) (a x.1 k)) *
@@ -178,7 +178,7 @@ theorem frameM_coef_eq_chgB : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lm : Taylor
       (r x.1 k * ι (TaylorLogMetric.embT D (s.iT i.1) (a x.1 k))) := fun k => by ring
   rw [Finset.sum_congr rfl fun k _ => e k, ← Finset.mul_sum, hsum']
   by_cases h : s.iT i.1 = tauPl D x.1
-  · rw [if_pos h, TaylorLogMetric.chgB, if_pos h.symm]
+  · rw [ite_eq_left h, TaylorLogMetric.chgB, ite_eq_left h.symm]
     simp only [h]
     set tp := tauPl D x.1 with htp
     have hm : ∀ {m : ℕ} (Q : Matrix (Fin m) (Fin m) D.host.E),
@@ -196,7 +196,7 @@ theorem frameM_coef_eq_chgB : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lm : Taylor
     simp only [Matrix.map_apply, RingHom.comp_apply, RingEquiv.coe_toRingHom]
     rw [← htp] at h1 h2 ⊢
     field_simp
-  · rw [if_neg h, TaylorLogMetric.chgB, if_neg (fun e => h e.symm)]
+  · rw [ite_eq_right h, TaylorLogMetric.chgB, ite_eq_right (fun e => h e.symm)]
     simp
 
 end GlobalTheory.DFrame
@@ -235,7 +235,7 @@ theorem hOK_vecF : ∀ (D : D7) (X : Fields) (s : Seam D X) (L : PeriodPair) (Λ
     unfold Formalism.L2.Th1.GD.hOK Formalism.L2.AlgTh.hSc
     show ((Formalism.L2.Th1.F.area L : ℝ) : ℂ) * ∑ i, ∑ j, _ = _
     simp only [Matrix.diagonal_apply, mul_ite, mul_zero, ite_mul, zero_mul, Finset.sum_ite_eq,
-      Finset.mem_univ, if_true, Finset.mul_sum]
+      Finset.mem_univ, ite_true, Finset.mul_sum]
     rw [Fintype.sum_prod_type]
     refine Finset.sum_congr rfl fun τ _ => ?_
 
@@ -246,8 +246,7 @@ theorem hOK_vecF : ∀ (D : D7) (X : Fields) (s : Seam D X) (L : PeriodPair) (Λ
     push_cast
     field_simp
 
-  rw [hL, map_sum]
-  rw [← Equiv.sum_comp s.iT.symm]
+  rw [hL, map_sum, ← Equiv.sum_comp s.iT.symm]
   simp only [Equiv.apply_symm_apply]
   rw [← (Equiv.ofBijective _ hbij).sum_comp]
   rfl
@@ -322,7 +321,7 @@ theorem pair_value_eq {D : D7} {p : ℕ} [Fact p.Prime] {ι : ℂ ≃+* ℂ_[p]}
     · rw [norm_div, norm_mul, h₂, one_mul]
       exact div_le_one_of_le₀ hc (norm_nonneg _)
     · subst hX
-      simp only [hab, if_true, mul_one, map_mul]
+      simp only [hab, ite_true, mul_one, map_mul]
       field_simp
       ring
   · refine ⟨0, by simp, ?_⟩
@@ -463,8 +462,7 @@ theorem sigmaOf_sqrt_pos (g : R.GG) (h : g.1.2 = 1) : H.sigmaOf g H.sqrtMinusD =
   rw [this]
   simp
 
-theorem sqrt_sq : H.sqrtMinusD ^ 2 = -(H.d : H.E) := by
-  exact H.sqd_sq
+theorem sqrt_sq : H.sqrtMinusD ^ 2 = -(H.d : H.E) := H.sqd_sq
 
 theorem emb_sigmaOf (g h : R.GG) (x : H.E) : H.emb g (H.sigmaOf h x) = H.emb (g * h) x := by
   unfold Host.emb
@@ -527,7 +525,7 @@ theorem tauSg_tauPl (D : D7) (b : Bool) (t : HH D) : TaylorLogMetric.tauSg D (ta
     cases b <;> refine Prod.ext (Prod.ext ?_ ?_) ?_ <;> simp [plGG, Formalism.HC.Frame.tau1, Formalism.HC.Frame.tau2, TaylorLogMetric.sgm]
   have hmem : (D.eTau (tauPl D (b, t)) : D.R.GG) * TaylorLogMetric.sgm D ∈ D.R.Psi := by
     rw [eTau_tauPl, hm]; exact plGG_mem_Psi D _
-  rw [show TaylorLogMetric.tauSg D (tauPl D (b, t)) = D.eTau.symm ⟨_, hmem⟩ from dif_pos hmem]
+  rw [show TaylorLogMetric.tauSg D (tauPl D (b, t)) = D.eTau.symm ⟨_, hmem⟩ from dite_eq_left hmem]
   refine (Equiv.symm_apply_eq _).2 (Subtype.ext ?_)
   simp only [eTau_tauPl, hm]
 
@@ -769,8 +767,7 @@ theorem norm_le_one : ∀ (D : D7) (p : ℕ) [Fact p.Prime], p = D.host.d → �
       simp at h1
     · rw [hmem, show ((x * y : 𝓞 D.host.E) : D.host.E) = (x : D.host.E) * y from rfl, map_mul,
         norm_mul] at hxy
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       rw [hmem, hmem, not_lt, not_lt] at hc
       have := mul_le_mul hc.1 hc.2 zero_le_one (norm_nonneg _)
       linarith
@@ -823,8 +820,7 @@ theorem congr_at_d : ∀ (D : D7) (p : ℕ) [Fact p.Prime], p = D.host.d → ∀
   have hnth : ‖th‖ = ‖(p : ℂ_[p])‖ ^ (1 / 2 : ℝ) := by
     rw [← Real.sqrt_eq_rpow, ← hnorm2, Real.sqrt_sq (norm_nonneg _)]
   refine ⟨⟨?_, ?_⟩, ?_⟩
-  · by_contra h
-    push_neg at h
+  · by_contra! h
     have : 1 < ‖th‖ ^ 2 := by nlinarith
     linarith
   · intro h
@@ -845,8 +841,7 @@ theorem congr_at_d : ∀ (D : D7) (p : ℕ) [Fact p.Prime], p = D.host.d → ∀
     have htrue : rho D ι (true, t) (y : D.host.E) = rho D ι (false, t) (s (D.host.conj (y : D.host.E))) := by
       show ι (TaylorLogMetric.embT D (tauPl D (true, t)) (y : D.host.E)) = ι (TaylorLogMetric.embT D (tauPl D (false, t)) _)
       rw [hpair t, hcE]
-    rw [htrue, hnth]
-    exact h2
+    rwa [htrue, hnth]
 
 end GlobalTheory.DFrame
 end -- clump:auto
@@ -1045,10 +1040,10 @@ theorem eigenframe_at_d : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ), 
         · rw [zero_mul]
       simp only [h1]
       rw [Finset.sum_eq_single τ]
-      · simp only [if_true, ← Finset.mul_sum]
+      · simp only [ite_true, ← Finset.mul_sum]
         have := hsum τ (tauPl D ρ)
         rw [htauR] at this
-        rw [this, if_neg (fun h => hne (hbij.1 h)), mul_zero]
+        rw [this, ite_eq_right (fun h => hne (hbij.1 h)), mul_zero]
       · intro b _ hb; simp [hb]
       · intro h; exact absurd (Finset.mem_univ τ) h
     have hd1 := (_root_.GlobalTheory.DFrame.dual_local_bases_pair D p ι _ hth0 hcong P σ hσ hdualP).1
@@ -1083,8 +1078,8 @@ theorem eigenframe_at_d : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ), 
         intro i'
         simp only [act, LinearMap.coe_mk, AddHom.coe_mk, Pi.single_apply, mul_ite, mul_one, mul_zero]
       simp only [hfr, Formalism.L2.Th1.GD.mapVec, hact]
-      rw [Finset.sum_eq_single i (fun b _ hb => by rw [if_neg (Ne.symm hb), map_zero, zero_mul])
-        (fun h => absurd (Finset.mem_univ i) h), if_pos rfl]
+      rw [Finset.sum_eq_single i (fun b _ hb => by rw [ite_eq_right (Ne.symm hb), map_zero, zero_mul])
+        (fun h => absurd (Finset.mem_univ i) h), ite_eq_left rfl]
       by_cases h : tauPl D x.1 = s.iT i.1
       · rw [← h]; rfl
       · simp [TaylorLogMetric.chgB, h]
@@ -1245,8 +1240,7 @@ theorem analytic_U (B : Base D cc δ) (t : TaylorLogMetric.VC D N N') {G : Taylo
       (Real.pi : ℂ) * TaylorLogMetric.Hf D B.tor t t / 2)) := by
     funext z
     simp only [TaylorLogMetric.U, h3, Pi.mul_apply]
-  rw [e]
-  exact h5
+  rwa [e]
 
 abbrev jetS (a₀ : ℕ) (b₀ : ℤ) (dK : ℕ) (ha : 0 < a₀) (hd : 0 < dK) (lam : ℂ) (hlam : lam ≠ 0) (p : ℕ) [Fact p.Prime]
     (ι : ℂ ≃+* ℂ_[p]) : ℂ_[p] :=
@@ -1285,8 +1279,7 @@ theorem term_shape (hIn : GlobalTheory.ThLoc.Inputs) (hcc : TaylorLogMetric.IsCu
     have e : (B.eNat χ N N' L₁ L₁') = (fun z => B.eNat χ N N' L₁ L₁' (s.flatV N N' z)) ∘ (fun w : TaylorLogMetric.VC D N N' => (s.flatV N N').symm w) := by
       funext w
       simp
-    rw [e]
-    exact h2
+    rwa [e]
   have hGan := analytic_U B t hEan
   have hCo : TaylorLogMetric.CoefIn D (TaylorLogMetric.U D B.tor t (B.eNat χ N N' L₁ L₁')) TaylorLogMetric.Qbar :=
     hIn.algT D cc δ B χ hcc hδ hχ N N' L₁ L₁' hA₁ t ⟨M₀, hM0, hMm⟩
@@ -1348,8 +1341,7 @@ theorem norm_bound {p : ℕ} [Fact p.Prime] {x : ℂ_[p]} (h : ‖x‖ ≤ ‖(p
   have e : (p : ℂ_[p]) = algebraMap ℚ_[p] ℂ_[p] (p : ℚ_[p]) := (map_natCast _ p).symm
   have e2 : ‖(p : ℂ_[p])‖ = (p : ℝ)⁻¹ := by
     rw [e, norm_algebraMap', Padic.norm_p]
-  rw [e2, Real.inv_rpow hp.le, Real.rpow_neg hp.le, inv_inv] at h
-  exact h
+  rwa [e2, Real.inv_rpow hp.le, Real.rpow_neg hp.le, inv_inv] at h
 
 theorem atLin_comb {σ ν κ : Type} [Finite σ] [Fintype ν] [Fintype κ] {p : ℕ} [Fact p.Prime] (M : σ → ν → ℂ_[p]) (r : κ → ℂ_[p])
     (G : κ → MvPowerSeries σ ℂ_[p]) :
@@ -1402,8 +1394,7 @@ theorem GlobalTheory.Proof.shape_normalisedThetaCombinations_dualBases_at_d.shap
   have hbound : ‖GlobalTheory.Proof.shape_normalisedThetaCombinations_dualBases_at_d.jetS a₀ b₀ D.host.d ha hd lam hlam p ι‖ ≤ (p : ℝ) ^ ((1 : ℝ) / 2) := by
     refine GlobalTheory.Proof.shape_normalisedThetaCombinations_dualBases_at_d.norm_bound ?_
     have e3 : ((D.host.d : ℕ) : ℂ_[p]) = (p : ℂ_[p]) := congrArg _ hpd.symm
-    rw [e3] at hb
-    exact hb
+    rwa [e3] at hb
   obtain ⟨m, r, t, L₁, L₁', hr, ht, hL1, rfl⟩ := hF
   have hk := fun k => (hterm (L₁ k) (L₁' k) (hL1 k).1 (hL1 k).2.1 (hL1 k).2.2 (t k) (ht k)).2
   choose sg hsg he using hk

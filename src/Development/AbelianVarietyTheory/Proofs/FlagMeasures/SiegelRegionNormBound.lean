@@ -99,8 +99,7 @@ namespace GlobalTheory.SgInf.LduBound
 theorem norm_det_le {ι : Type} [Fintype ι] [DecidableEq ι] (A : Matrix ι ι ℂ) (B : ℝ)
     (h : ∀ i j, ‖A i j‖ ≤ B) : ‖A.det‖ ≤ (Fintype.card ι).factorial * B ^ Fintype.card ι := by
   have := Matrix.det_le (A := A) (abv := NormedField.toAbsoluteValue ℂ) (x := B) h
-  rw [nsmul_eq_mul] at this
-  exact this
+  rwa [nsmul_eq_mul] at this
 
 theorem det_minor {n : ℕ} (L R : Matrix (Fin n) (Fin n) ℂ) (hL : IsLoUni L)
     (hR : ∀ a b, b < a → R a b = 0) (i j : Fin n) :
@@ -125,19 +124,16 @@ theorem det_minor {n : ℕ} (L R : Matrix (Fin n) (Fin n) ℂ) (hL : IsLoUni L)
       · simp
       · intro b _ hb
         have : b.1 ≠ j := fun h => hb (Subtype.ext h)
-        simp only [Matrix.submatrix_apply, if_neg this]
-        exact (hL _ _).2 rfl
+        simpa only [Matrix.submatrix_apply, ite_eq_right this] using (hL _ _).2 rfl
       · simp
     · intro a b hab
       have hab' : a.1 < b.1 := hab
       have : a.1 ≠ j := ne_of_lt (lt_of_lt_of_le hab' b.2)
-      simp only [Matrix.submatrix_apply, if_neg this]
-      exact (hL _ _).1 hab'
+      simpa only [Matrix.submatrix_apply, ite_eq_right this] using (hL _ _).1 hab'
   · rw [Matrix.det_of_upperTriangular]
     · simp only [Matrix.submatrix_apply]
       exact (Finset.prod_subtype (Finset.Iic j) (fun k => Finset.mem_Iic) (fun k => R k k)).symm
-    · intro a b hab
-      exact hR _ _ hab
+    · exact fun a b hab => hR _ _ hab
 
 theorem norm_lower_le {n : ℕ} (L U : Matrix (Fin n) (Fin n) ℂ) (t : Fin n → ℂ) (B δ : ℝ)
     (hL : IsLoUni L) (hU : IsUpUni U) (hB : 1 ≤ B) (hδ : 0 < δ)
@@ -275,8 +271,7 @@ theorem prod_castLE {n : ℕ} (t : Fin n → ℂ) (l : Fin n) :
     rw [Finset.mem_Iic, Fin.le_def]
     have := i.isLt
     simp only [Fin.val_castLE]; omega
-  · intro i _ j _ h
-    exact Fin.castLE_injective _ h
+  · exact fun i _ j _ h => Fin.castLE_injective _ h
   · intro j hj
     rw [Finset.mem_Iic, Fin.le_def] at hj
     exact ⟨⟨j.val, by omega⟩, Finset.mem_univ _, Fin.ext rfl⟩
@@ -294,8 +289,7 @@ theorem exists_ldu {n : ℕ} (Z : Matrix (Fin n) (Fin n) ℂ) (hZ : ∀ l, mnr Z
     unfold mnr
     rw [this, det_of_upperTriangular, ← prod_castLE (fun i => b i i) l]
     · rfl
-    · intro i j hij
-      exact h3 _ _ hij
+    · exact fun i j hij => h3 _ _ hij
   have ht : ∀ l, b l l ≠ 0 := fun l => by
     have := hZ l
     rw [hm l, Finset.prod_ne_zero_iff] at this
@@ -328,8 +322,7 @@ theorem upUni_mul {n : ℕ} {A B : Matrix (Fin n) (Fin n) ℂ} (hA : IsUpUni A) 
 
 theorem loUni_iff {n : ℕ} {A : Matrix (Fin n) (Fin n) ℂ} : IsLoUni A ↔ IsUpUni Aᴴ := by
   constructor
-  · intro h i j
-    exact ⟨fun hh => by simp [(h j i).1 hh], fun hh => by simp [(h j i).2 hh.symm]⟩
+  · exact fun h i j => ⟨fun hh => by simp [(h j i).1 hh], fun hh => by simp [(h j i).2 hh.symm]⟩
   · intro h i j
     exact ⟨fun hh => by simpa using (h j i).1 hh, fun hh => by
       have := congrArg star ((h j i).2 hh.symm)
@@ -381,8 +374,7 @@ theorem uni_bound (m : ℕ) (B0 δ : ℝ) (hB0 : 1 ≤ B0) (hδ : 0 < δ) (hδ1 
     rw [← eP] at this
     simpa using this
   · have := _root_.GlobalTheory.LatticeFactsFlagMeasures.main U⁻¹ (U * Q) _ _ (fun i j => (H1 i j).2.2.2) (fun i j => (H0 i j).2.1) i j
-    rw [← eQ, mul_comm (c * _) _] at this
-    exact this
+    rwa [← eQ, mul_comm (c * _) _] at this
 
 theorem eucl_eq {N : ℕ} (v : Fin N → ℂ) : eucl v = ‖(WithLp.toLp 2 v : EuclideanSpace ℂ (Fin N))‖ := by
   rw [EuclideanSpace.norm_eq]

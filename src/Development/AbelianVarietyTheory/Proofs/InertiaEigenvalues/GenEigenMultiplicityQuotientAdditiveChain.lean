@@ -80,8 +80,7 @@ theorem fin_map (A S : Submodule k U) (h : FiniteDimensional k (↥A ⧸ S.submo
   have e := quotEquiv A S S le_rfl
   have h2 : (S.map S.mkQ).submoduleOf (A.map S.mkQ) = ⊥ := by
     rw [map_self]; simp [Submodule.submoduleOf]
-  have e2 := e.trans (Submodule.quotEquivOfEqBot _ h2)
-  exact e2.finiteDimensional
+  exact (e.trans (Submodule.quotEquivOfEqBot _ h2)).finiteDimensional
 
 theorem finrank_quot (A B S : Submodule k U) (hSB : S ≤ B) (hBA : B ≤ A)
     [FiniteDimensional k (A.map S.mkQ)] :
@@ -153,8 +152,7 @@ theorem gen_sup (N : Module.End k U) (P Q S : Submodule k U) (hSQ : S ≤ Q) (hQ
     convert h' using 2
     rw [pow_add, Module.End.mul_apply]
   · refine sup_le (inf_le_inf_left _ (iSup_mono fun m => Submodule.comap_mono hSQ)) (le_inf hQP ?_)
-    intro y hy
-    exact (mem_gen N Q hQ y).2 ⟨0, by simpa using hy⟩
+    exact fun y hy => (mem_gen N Q hQ y).2 ⟨0, by simpa using hy⟩
 
 theorem main : ∀ {k U : Type} [Field k] [AddCommGroup U] [Module k U] (T : Module.End k U) (P Q S : Submodule k U), S ≤ Q → Q ≤ P → (∀ x ∈ P, T x ∈ P) → (∀ x ∈ Q, T x ∈ Q) → (∀ x ∈ S, T x ∈ S) → FiniteDimensional k (↥P ⧸ S.submoduleOf P) → ∀ x : k, gmult T P S x = gmult T P Q x + gmult T Q S x := by
   intro k U _ _ _ T P Q S hSQ hQP _ hQ hS hfin x

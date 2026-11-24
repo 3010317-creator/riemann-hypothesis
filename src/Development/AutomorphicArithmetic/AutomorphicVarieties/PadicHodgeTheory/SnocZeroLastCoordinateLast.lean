@@ -78,9 +78,8 @@ private theorem ch_step {ρ : Representation E G V} {S : Set (G →* Eˣ)} {U : 
   rcases Nat.lt_succ_iff_lt_or_eq.1 hi with h | rfl
   · have h1 : i ≤ n := h.le
     have h2 : i + 1 ≤ n := h
-    simp only [h1, h2, if_true]
-    exact hF i h
-  · simp only [le_refl, if_true, Nat.add_one_le_iff, lt_irrefl, if_false, hn]
+    simpa only [h1, h2, ite_true] using hF i h
+  · simp only [le_refl, ite_true, Nat.add_one_le_iff, lt_irrefl, ite_false, hn]
     exact ⟨le_sup_left, κ, hκ, x, rfl, hx⟩
 
 private theorem ch_step2 [FiniteDimensional E V] {ρ : Representation E G V} {S : Set (G →* Eˣ)}
@@ -98,8 +97,7 @@ private theorem ch_step2 [FiniteDimensional E V] {ρ : Representation E G V} {S 
       have h1 := ih fun x hx => h x (Finset.mem_insert_of_mem hx)
       have h2 := ch_step h1 hκ a fun g =>
         Submodule.mem_sup_left (hx a (h a (Finset.mem_insert_self _ _)) g)
-      rw [Finset.coe_insert, Submodule.span_insert, sup_comm (Submodule.span E {a}), ← sup_assoc]
-      exact h2
+      rwa [Finset.coe_insert, Submodule.span_insert, sup_comm (Submodule.span E {a}), ← sup_assoc]
   have := key t fun x hx => ht ▸ Submodule.subset_span hx
   rwa [ht, sup_eq_right.2 hUW] at this
 
@@ -150,8 +148,7 @@ private theorem filt_tri {A : Type} [CommRing A] [Algebra E A] [Module.Finite E 
       intro _
       have : U 0 = ⊥ := by
         rw [eq_bot_iff]
-        intro x hx
-        exact funext fun j => hx j (Nat.zero_le _)
+        exact fun x hx => funext fun j => hx j (Nat.zero_le _)
       rw [this]
       exact ⟨0, fun _ => ⊥, rfl, rfl, fun i hi => absurd hi (Nat.not_lt_zero _)⟩
     | succ i ih =>
@@ -170,8 +167,7 @@ private theorem filt_tri {A : Type} [CommRing A] [Algebra E A] [Module.Finite E 
           · exact a j h
           · have : j = i' := Fin.ext h.symm
             rw [this]; exact b
-        · intro a
-          exact ⟨fun j hj => a j (Nat.le_of_succ_le hj), a i' le_rfl⟩
+        · exact fun a => ⟨fun j hj => a j (Nat.le_of_succ_le hj), a i' le_rfl⟩
       have hW0 : W 0 = U (i + 1) := by simp [W]
       obtain ⟨κ, hκ, hκψ⟩ := hψ i'
       have step : ∀ k, Ch ρ S (W (k + 1)) → Ch ρ S (W k) := by
@@ -193,10 +189,8 @@ private theorem filt_tri {A : Type} [CommRing A] [Algebra E A] [Module.Finite E 
   have := key n le_rfl
   have hn : U n = ⊤ := by
     rw [eq_top_iff]
-    intro x _ j hj
-    exact absurd j.2 (not_lt.2 hj)
-  rw [hn] at this
-  exact this
+    exact fun x _ j hj => absurd j.2 (not_lt.2 hj)
+  rwa [hn] at this
 
 end Filt
 
@@ -262,8 +256,7 @@ private theorem isCr_of_top {l : ℕ} [Fact l.Prime] {G A V : Type} [Group G] [C
       (resCoef ℚ_[l] (ρ.comp (⊤ : Subgroup G).subtype : Representation A (⊤ : Subgroup G) V)) =
       Dcr φ (resCoef ℚ_[l] ρ) := by
     ext x
-    simp only [Dcr, Submodule.mem_iInf]
-    exact ⟨fun h g => h ⟨g, trivial⟩, fun h g => h g.1⟩
+    simpa only [Dcr, Submodule.mem_iInf] using ⟨fun h g => h ⟨g, trivial⟩, fun h g => h g.1⟩
   unfold CrOn IsCr
   rw [h1, h2]
 
@@ -312,8 +305,7 @@ private theorem key (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime] {G : 
       · intro g x y
         simp [chRep, twist, smul_smul, mul_comm]
       · rw [eq_top_iff]
-        intro x _
-        exact Submodule.subset_span ⟨(1, x), by simp⟩
+        exact fun x _ => Submodule.subset_span ⟨(1, x), by simp⟩
     have hπc : ∀ σ, π (cycA l l A σ : A) = (cycA l l E σ : E) := fun σ => by
       simp only [cycA, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe]
       rw [IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] A, IsScalarTower.algebraMap_apply ℚ_[l] E A,

@@ -143,14 +143,12 @@ theorem finrank_h1f_no_invariants [IsDomain O] (P : LocPrime l) {m : ℕ} (r : �
   have hA : IsDR (P.PD Bw.Kw) A.ρ := by
     change Module.finrank ↥Bw.LL.1 ↥(DdR (P.PD Bw.Kw) (Bw.rep r)) =
       Module.finrank ℚ_[l] ↥Bw.Kw.1 * Module.finrank ↥Bw.LL.1 (Fin m → ↥Bw.LL.1)
-    rw [Module.finrank_fin_fun]
-    exact hdR
+    rwa [Module.finrank_fin_fun]
   have key := hBK _ _ hG A hA
   have h0 : Module.finrank ↥Bw.LL.1 ↥(H0V A.ρ) = 0 := by
     have : H0V A.ρ = ⊥ := localGaloisRep_invariants_from_fractionRing Bw r h
     rw [this, finrank_bot]
-  rw [h0, Nat.cast_zero, zero_add] at key
-  exact key
+  rwa [h0, Nat.cast_zero, zero_add] at key
 
 end Bridge
 

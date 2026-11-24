@@ -279,8 +279,7 @@ theorem _root_.GlobalTheory.CuspFormsCompare.mem_holSub_iff_forall_SS {r : ℕ} 
     | zero => exact fun k => zero_mem_SS_unitary_existence (X k) (la k)
     | add Q R _ _ hQ hR => exact fun k => add_mem_SS (X k) (la k) (hQ k) (hR k)
     | smul a Q _ hQ => exact fun k => smul_mem_SS (X k) (la k) a (hQ k)
-  · intro hP
-    exact _root_.Formalism.L2.PjFree.holCusp_mem_holSub X la hP
+  · exact fun hP => _root_.Formalism.L2.PjFree.holCusp_mem_holSub X la hP
 
 variable {H : Host E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {r : ℕ}
 
@@ -418,8 +417,7 @@ theorem exists_basis_over_embedding (K : Type) [Field K] (σ₀ : K →+* ℂ) (
     funext b
     refine hli ?_ b
     apply Subtype.ext
-    simp only [Submodule.coe_sum, Submodule.coe_smul, hs, Submodule.coe_zero]
-    exact ht
+    simpa only [Submodule.coe_sum, Submodule.coe_smul, hs, Submodule.coe_zero] using ht
   · intro i
     have h := congrArg (Subtype.val : V → ℂ) (B.sum_repr ⟨a i, ha i⟩)
     simp only [Submodule.coe_sum, Submodule.coe_smul, hs] at h
@@ -451,8 +449,7 @@ theorem exists_regroup_vectors {K : Type} [Field K] (σ₀ : K →+* ℂ) {M : T
   · intro r hadd hsm
     have hs : ∀ b, r (∑ i, c i b • F i) = ∑ i, σ₀ (c i b) * r (F i) := fun b => by
       have := map_sum (AddMonoidHom.mk' r hadd) (fun i => c i b • F i) Finset.univ
-      simp only [AddMonoidHom.mk'_apply, hsm] at this
-      exact this
+      simpa only [AddMonoidHom.mk'_apply, hsm] using this
     simp only [hs, ha, Finset.sum_mul, Finset.mul_sum]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun i _ => by ring
@@ -528,8 +525,7 @@ theorem mggOnto_of_rdOnto : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ), In
         φ = fun F => cfOf d.yF d.μ d.jj F.1) ?_ ?_ hR
     · rintro K₁ _ _ _ φ ⟨d, hd, rfl⟩
       exact ⟨isLinearMap_cfOf h.toLawsCore j ka K₁ d, _root_.GlobalTheory.ArcCM.kill_comb_rec D T h j hj ka CR Tt cc K₁ d hd⟩
-    · intro F hF
-      exact hD hlt F fun K₁ _ _ _ d hd => hF K₁ _ ⟨d, hd, rfl⟩
+    · exact fun F hF => hD hlt F fun K₁ _ _ _ d hd => hF K₁ _ ⟨d, hd, rfl⟩
   · have hρ : WeightFamilies.rho D j = 0 := by
       unfold WeightFamilies.rho Ranks.sigW
       exact Nat.sub_eq_zero_of_le (not_lt.1 hlt)

@@ -665,8 +665,7 @@ theorem relations_lift_vanishing : (∀ (R R' ν : Type) [CommRing R] [CommRing 
         ((MvPolynomial.C : R' →+* MvPolynomial ν R').comp (algebraMap R R'))
         = (algebraMap R' C').comp (algebraMap R R') := by
       ext x; simp
-    rw [this, ← hker]
-    exact hπ
+    rwa [this, ← hker]
   obtain ⟨G, hG, hGe⟩ := (Ideal.mem_map_iff_of_surjective _ hsurj).1 hmem
   obtain ⟨H, hH0, hHG⟩ := hH R R' ν c hc G hG
   refine ⟨F₀ - H, ?_, ?_⟩
@@ -762,13 +761,11 @@ theorem exists_sub_one_mem_mul_ker_le :
     have hfx : f x = 0 := by
       have h1 : f (i + x) = 0 := hG
       have h2 : f i = 0 := hI hi
-      rw [map_add (f := _), h2, zero_add] at h1
-      exact h1
+      rwa [map_add (f := _), h2, zero_add] at h1
     exact Submodule.add_mem_sup hi (mem_map_mul_ker_of_flat f hf J hx hfx)
   obtain ⟨r, hr1, hr⟩ := Submodule.exists_sub_one_mem_and_smul_le_of_fg_of_le_sup
     (IsNoetherian.noetherian (RingHom.ker f)) le_rfl hle
-  refine ⟨r, hr1, fun G hG => ?_⟩
-  exact hr (Submodule.smul_mem_pointwise_smul G r _ hG)
+  exact ⟨r, hr1, fun G hG => (hr (Submodule.smul_mem_pointwise_smul G r _ hG))⟩
 
 end GlobalTheory.Pinch
 end -- clump:auto
@@ -811,8 +808,7 @@ theorem ker_aeval_zero_eq_span (D κ : Type) [CommRing D] :
   · intro p hp
     rw [← Set.image_univ, MvPolynomial.mem_ideal_span_X_image]
     intro m hm
-    by_contra h
-    push_neg at h
+    by_contra! h
     have hm0 : m = 0 := by ext i; simpa using h i (Set.mem_univ i)
     subst hm0
     rw [RingHom.mem_ker] at hp
@@ -924,8 +920,7 @@ theorem unit_lift_near_fibre : ∀ (X X' Z Z' : Scheme.{0}) (p : X' ⟶ X) (i : 
       show p (i' z') ∈ W₀
       rw [hz'1, hy]; exact hxW₀
     have : z' ∈ i' ⁻¹ᵁ X'.basicOpen t := by
-      rw [Scheme.preimage_basicOpen, ht, Scheme.basicOpen_of_isUnit _ hu0]
-      exact hz'W
+      rwa [Scheme.preimage_basicOpen, ht, Scheme.basicOpen_of_isUnit _ hu0]
     rw [← hz'1]; exact this
   have hle' : p ⁻¹ᵁ W' ≤ p ⁻¹ᵁ W₀ := hsub.trans (X'.basicOpen_le t)
   have hunit : IsUnit ((X'.presheaf.map (homOfLE hle').op).hom t) := by
@@ -1022,8 +1017,7 @@ theorem iso_gm {X' Z Z' : Scheme.{0}} {i' : Z' ⟶ X'} {p' : Z' ⟶ Z} {L' : LB 
   have g1 := gm_pull_g N p' (𝟙 Z') x (fun _ ↦ l) (fun _ ↦ l') hp.1 hq.1
   have g2 := gm_pull_g L' i' (𝟙 Z') x (fun _ ↦ k) (fun _ ↦ k') hp.2 hq.2
   rw [Category.id_comp] at g1 g2
-  rw [d, g1, g2] at e
-  exact e
+  rwa [d, g1, g2] at e
 
 theorem exists_ratio_unit : ∀ (X' Z Z' : Scheme.{0}) (i' : Z' ⟶ X') (p' : Z' ⟶ Z) (L' : LB X') (N : LB Z), L'.IsLB → N.IsLB → ∀ (w : LB.Iso (L'.pull i') (N.pull p')), w.IsGen → ∀ (V' : X'.Opens) (V : Z.Opens) (a : ∀ k, Γ(X', V' ⊓ L'.U k)ˣ) (b : ∀ l, Γ(Z, V ⊓ N.U l)ˣ), GlobalTheory.Pinch.LocGen L' V' a → GlobalTheory.Pinch.LocGen N V b → ∀ O : Z'.Opens, O ≤ i' ⁻¹ᵁ V' → O ≤ p' ⁻¹ᵁ V → ∃ u : Γ(Z', O)ˣ, ∀ (z : Z') (k : L'.ι) (l : N.ι), z ∈ O → i' z ∈ L'.U k → p' z ∈ N.U l → gm p' z (V ⊓ N.U l) (b l) = gm (𝟙 Z') z ((N.pull p').U (fun _ ↦ l) ⊓ (L'.pull i').U (fun _ ↦ k)) (w.s (fun _ ↦ l, fun _ ↦ k)) * (gm (𝟙 Z') z O u * gm i' z (V' ⊓ L'.U k) (a k)) := by
   intro X' Z Z' i' p' L' N hL' hN w hw V' V a b ha hb O hO hO'
@@ -1197,8 +1191,7 @@ theorem mem_span_of_eval_eq_zero (R R' D E ν σ : Type) [CommRing R] [CommRing 
     have h : φ.comp (MvPolynomial.map (Ideal.Quotient.mk c)) = mkJ.comp (MvPolynomial.map a) := by
       apply MvPolynomial.ringHom_ext
       · intro r
-        simp only [RingHom.comp_apply, MvPolynomial.map_C]
-        exact hφC r
+        simpa only [RingHom.comp_apply, MvPolynomial.map_C] using hφC r
       · intro s
         simp [φ]
     exact RingHom.congr_fun h P
@@ -1226,18 +1219,15 @@ theorem mem_span_of_eval_eq_zero (R R' D E ν σ : Type) [CommRing R] [CommRing 
   have hinl : ∀ x : D, desc.hom (ψ x) = dA x := fun x => by
     have := congrArg (fun f => f.hom x) (hpo.inl_desc (CommRingCat.ofHom dA)
       (CommRingCat.ofHom (mkJ.comp (MvPolynomial.C : R' →+* MvPolynomial ν R'))) w)
-    simp only [CommRingCat.hom_comp, CommRingCat.hom_ofHom, RingHom.comp_apply] at this
-    exact this
+    simpa only [CommRingCat.hom_comp, CommRingCat.hom_ofHom, RingHom.comp_apply] using this
   have hinr : ∀ x : R', desc.hom (χ x) = mkJ (MvPolynomial.C x) := fun x => by
     have := congrArg (fun f => f.hom x) (hpo.inr_desc (CommRingCat.ofHom dA)
       (CommRingCat.ofHom (mkJ.comp (MvPolynomial.C : R' →+* MvPolynomial ν R'))) w)
-    simp only [CommRingCat.hom_comp, CommRingCat.hom_ofHom, RingHom.comp_apply] at this
-    exact this
+    simpa only [CommRingCat.hom_comp, CommRingCat.hom_ofHom, RingHom.comp_apply] using this
   have hΦ : desc.hom.comp (MvPolynomial.eval₂Hom χ (fun s ↦ ψ (ζ s))) = mkJ := by
     apply MvPolynomial.ringHom_ext
     · intro x
-      simp only [RingHom.comp_apply, MvPolynomial.eval₂Hom_C]
-      exact hinr x
+      simpa only [RingHom.comp_apply, MvPolynomial.eval₂Hom_C] using hinr x
     · intro s
       simp only [RingHom.comp_apply, MvPolynomial.eval₂Hom_X']
       rw [hinl, ← hqX, hdA]
@@ -1709,11 +1699,9 @@ theorem pinched_spec : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (R' : Ty
     ⟨spMap τ y, ?_⟩, ?_, fun T a a' h ↦ ?_⟩
   · exact (HasRingHomProperty.Spec_iff (P := @SmoothOfRelativeDimension g)).2
       (RingHom.locally_of RingHom.isStandardSmoothOfRelativeDimension_respectsIso _ hε)
-  · rw [← cmp]
-    exact q1
+  · rwa [← cmp]
   · rw [← Scheme.Hom.comp_apply, f1]
-  · rw [Category.id_comp]
-    exact q2
+  · rwa [Category.id_comp]
   · have w : (a ≫ spMap (algebraMap C' (Localization.Away t))) ≫ spMap (φ.comp (algebraMap R R')) =
         (a' ≫ spMap δ) ≫ spMap (Ideal.Quotient.mk c) := by
       have w1 : spMap α ≫ spMap ε = spMap ((algebraMap C' (Localization.Away t)).comp φ) ≫

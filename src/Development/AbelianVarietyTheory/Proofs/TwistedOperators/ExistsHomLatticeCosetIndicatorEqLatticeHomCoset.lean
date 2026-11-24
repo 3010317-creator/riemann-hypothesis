@@ -98,8 +98,7 @@ theorem fr_half (hx : IsHalf e x) (i : Fin T.V.rank) (j : Fin S.V.rank) :
     fr T.β S.β (x.map (toEAf D)) i j = toEAf D e * fr T.β S.β (x.map (toEAf D)) i j := by
   have h1 : fr T.β S.β (x.map (toEAf D)) i j = fr T.β S.β (toEAf D e • x.map (toEAf D)) i j := by
     rw [← half_map hx]
-  rw [fr_smul, Matrix.smul_apply, smul_eq_mul] at h1
-  exact h1
+  rwa [fr_smul, Matrix.smul_apply, smul_eq_mul] at h1
 
 variable {S T : GlobalTheory.Grid.Node D}
 
@@ -225,8 +224,8 @@ theorem cosetInd_eq_of {P : Finset (Pl D.host.E)} {I : Ideal (𝓞 D.host.E)} (h
     ⟨fun ⟨h1, h2⟩ => ⟨h1, (key h1).1 h2⟩, fun ⟨h1, h2⟩ => ⟨h1, (key h1).2 h2⟩⟩
   unfold GlobalTheory.Grid.cosetInd GlobalTheory.ChiGrid.cosInd
   by_cases h : x ∈ cosSet e κ
-  · rw [if_pos (hiff.2 h), Set.indicator_of_mem h]; rfl
-  · rw [if_neg (fun h' => h (hiff.1 h')), Set.indicator_of_notMem h]
+  · rw [ite_eq_left (hiff.2 h), Set.indicator_of_mem h]; rfl
+  · rw [ite_eq_right (fun h' => h (hiff.1 h')), Set.indicator_of_notMem h]
 
 theorem cosInd_eq_cosetInd : ∀ {D : D7} (S T : GlobalTheory.Grid.Node D) (e : AE D) (P : Finset (Formalism.L2.DIV.Pl D.host.E)) (d : Formalism.L2.DIV.Pl D.host.E → ℕ), Formalism.L2.DIV.IsFrame S.β S.Λ → Formalism.L2.DIV.IsFrame T.β T.Λ → IsIdemSum e P → ∀ κ : GlobalTheory.ChiGrid.Cos S.Λ T.Λ (∏ w ∈ P, w.asIdeal ^ d w), ∃ c : GlobalTheory.Grid.Coset S T (∏ w ∈ P, w.asIdeal ^ d w), GlobalTheory.Grid.cosetInd S T e (∏ w ∈ P, w.asIdeal ^ d w) c = GlobalTheory.ChiGrid.cosInd e κ := by
   intro D S T e P d hS hT he κ

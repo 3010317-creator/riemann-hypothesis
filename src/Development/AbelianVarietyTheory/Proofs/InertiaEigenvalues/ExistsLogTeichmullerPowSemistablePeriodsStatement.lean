@@ -217,10 +217,9 @@ theorem exists_kummer_flat : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : B
   classical
   refine ⟨fun g => if bk.FixFlat g then 0 else (good g).choose, fun g m => ?_, fun g hg => by simp [hg]⟩
   by_cases hg : bk.FixFlat g
-  · simp only [hg, if_true, map_zero, ZMod.val_zero, pow_zero, one_mul]
+  · simp only [hg, ite_true, map_zero, ZMod.val_zero, pow_zero, one_mul]
     rw [show Per.σF (g : GQ l) bk.flat = bk.flat from hg]
-  · simp only [hg, if_false]
-    exact (good g).choose_spec m
+  · simpa only [hg, ite_false] using (good g).choose_spec m
 
 end GlobalTheory.FlatKummer
 
@@ -391,9 +390,7 @@ theorem good_logDefect (n : ℕ) : Good n (logDefect n) := by
 theorem logDefect_coeff_dvd : ∀ (n i j : ℕ), n ≤ i + j → ∃ d : ℤ,
     ((i.factorial * j.factorial : ℕ) : ℤ) *
         AddMonoidAlgebra.coeff (GlobalTheory.LogU.logDefect n) (Finsupp.single 0 i + Finsupp.single 1 j) =
-      ((n.factorial * ((n - 1) / 2).factorial : ℕ) : ℤ) * d := by
-  intro n i j h
-  exact good_logDefect n i j h
+      ((n.factorial * ((n - 1) / 2).factorial : ℕ) : ℤ) * d := fun n i j h => good_logDefect n i j h
 
 end GlobalTheory.LogUIntg
 end -- clump:auto
@@ -1038,13 +1035,11 @@ theorem GlobalTheory.BSP.approxRoot_gal_sub_mem_fil : ∀ (l : ℕ) [Fact l.Prim
   have hY : Polynomial.eval₂ f (h q) (bk.Ep.scaleRoots ((l : Wq l bk.a) ^ M)) ∈ Per.FilP l n := by
     refine mem_filtration_of_dvd n (bk.ev bk.E) hE _ ?_
     have h1 := map_dvd h hroot
-    rw [Polynomial.hom_eval₂, map_pow] at h1
-    exact h1
+    rwa [Polynomial.hom_eval₂, map_pow] at h1
   have hY' : Polynomial.eval₂ f (h' q) (bk.Ep.scaleRoots ((l : Wq l bk.a) ^ M)) ∈ Per.FilP l n := by
     refine mem_filtration_of_dvd n (Per.σA (g : GQ l) (bk.ev bk.E)) hE' _ ?_
     have h1 := map_dvd h' hroot
-    rw [Polynomial.hom_eval₂, map_pow, hf'] at h1
-    exact h1
+    rwa [Polynomial.hom_eval₂, map_pow, hf'] at h1
   set s : Per.BdRp l := f ((l : Wq l bk.a) ^ M) with hs
   have hs' : s = (l : Per.BdRp l) ^ M := by rw [hs, map_pow, map_natCast]
   have hsu : IsUnit s := hs' ▸ (isUnit_l_BdRp l).pow M
@@ -1077,9 +1072,7 @@ theorem GlobalTheory.BSP.approxRoot_gal_sub_mem_fil : ∀ (l : ℕ) [Fact l.Prim
     rw [Polynomial.derivative_map, Polynomial.eval_map, Polynomial.hom_eval₂, hθy, hf, ← RingHom.comp_assoc,
       show Per.θD l (h X) = ((Per.θD l).comp h) X from rfl, ← Polynomial.hom_eval₂, Polynomial.eval₂_C_X_eq_coe,
       RingHom.comp_apply, hθh]
-    intro h0
-    apply GlobalTheory.BKLim.ZNotRoot.theta_deriv_ne bk
-    exact Subtype.ext h0
+    exact fun h0 => GlobalTheory.BKLim.ZNotRoot.theta_deriv_ne bk (Subtype.ext h0)
   have key := sub_mem_of_eval_mem (Per.FilP l n) (bk.Ep.map f) (r * h q) (r * h' q) (hroot' _ hY) (hroot' _ hY')
     (fun k => hP.2.2.1 _ (by
       rw [map_add (f := _), map_mul, ← mul_sub, map_mul, hθdiff, mul_zero, mul_zero, add_zero]; exact hder))
@@ -1275,9 +1268,7 @@ theorem exists_truncLog_gal_mod_fil : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l
   refine ⟨m + N * m, s, ?_, fun g => ?_⟩
   · rw [hsdef]
     apply Dvd.dvd.mul_left
-    apply Finset.dvd_sum
-    intro j _
-    exact ((hE.pow (Nat.succ_ne_zero j)).mul_left _).mul_right _
+    exact Finset.dvd_sum (fun j _ => ((hE.pow (Nat.succ_ne_zero j)).mul_left _).mul_right _)
 
   set R := Per.AinfP l ⧸ Per.kerP l ^ m
   let qm : Per.AinfP l →+* R := Ideal.Quotient.mk _
@@ -1463,8 +1454,7 @@ theorem dvd_of_norm_untilt_le {a b : OCb l} (hb : b ≠ 0)
       ‖((PreTilt.untilt (φ^[n] a) : Per.OC l) : ℂ_[l])‖ ≤ ‖((PreTilt.untilt (φ^[n] b) : Per.OC l) : ℂ_[l])‖ := by
     intro n
     have hpn : l ^ n ≠ 0 := pow_ne_zero _ (Fact.out : l.Prime).ne_zero
-    rw [← pow_le_pow_iff_left₀ (norm_nonneg _) (norm_nonneg _) hpn, hnorm, hnorm]
-    exact h
+    rwa [← pow_le_pow_iff_left₀ (norm_nonneg _) (norm_nonneg _) hpn, hnorm, hnorm]
   have hstep : ∀ (x : OCb l) (n : ℕ), PreTilt.untilt (φ^[n + 1] x) ^ l = PreTilt.untilt (φ^[n] x) := by
     intro x n
     rw [Function.iterate_succ_apply', ← map_pow, frobeniusEquiv_symm_pow_p]
@@ -1537,8 +1527,7 @@ theorem norm_pow_natDegree_eq_of_eisenstein {R : Type*} [CommRing R] (P : Polyno
     rw [hzpow, norm_neg]
     refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le hc0.le hSl)
   have hzlt : ‖z‖ < 1 := by
-    by_contra hge
-    push_neg at hge
+    by_contra! hge
     have : 1 ≤ ‖z‖ ^ (m + 1) := one_le_pow₀ hge
     rw [norm_pow] at hup
     linarith
@@ -1680,8 +1669,7 @@ theorem rootT_cocycle_of_pow_eq_mul : ∀ (l : ℕ) [Fact l.Prime] (C : Core l) 
   have h2 : rootT C.ε m ^ B * (rootT ϖ m * rootT ((Per.σF g) x) m) =
       rootT C.ε m ^ B * (rootT ϖ m * (rootT C.ε m ^ Cc * rootT x m)) := by
     rw [pow_add] at h1; linear_combination -h1
-  have h3 := mul_left_cancel₀ (hζ0 B) h2
-  exact mul_left_cancel₀ hϖm h3
+  exact mul_left_cancel₀ hϖm (mul_left_cancel₀ (hζ0 B) h2)
 
 theorem rootT_σF_tilt_l : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (C : Core l), C.ζ = P.ζQ → ∀ ϖ : Per.Fl l,
     (∀ m : ℕ, (rootT ϖ m : ℂ_[l]) = algebraMap (Om l) ℂ_[l] (lRoot l m)) → ∀ (g : GQ l) (m : ℕ),

@@ -251,8 +251,7 @@ private theorem finitePlace_coe_ringOfIntegers_le_one (v : FinitePlace K) (x : �
   obtain ⟨P, hP⟩ := v.2
   have h := FinitePlace.norm_le_one K P x
   have : v (x : K) = place (FinitePlace.embedding P) (x : K) := by rw [hP]; rfl
-  rw [this]
-  exact h
+  rwa [this]
 
 set_option autoImplicit false in
 open MvPolynomial NumberField Module in
@@ -386,7 +385,7 @@ private theorem frameNorm_toMatrix_map_mul_eq_of_isFrame {Nm : (K →+* ℂ) →
       have h2 := hre j k a
       rw [Complex.mul_re, h1, mul_zero, zero_sub, neg_eq_zero] at h2
       exact Complex.ext h1 ((mul_eq_zero.1 h2).resolve_left ha)
-    · push_neg at hreal
+    · push Not at hreal
       have hσ : (starRingEnd ℂ).comp σ = σ := by
         ext a; simp [Complex.ext_iff, hreal a]
       have hPr : ∀ u : Fin N → ℂ, star (P.map σ *ᵥ u) = P.map σ *ᵥ star u := by
@@ -398,8 +397,7 @@ private theorem frameNorm_toMatrix_map_mul_eq_of_isFrame {Nm : (K →+* ℂ) →
       have hc2 : ∀ x, _root_.GlobalTheory.ChowHt.frameNorm (A σ) (star x) = _root_.GlobalTheory.ChowHt.frameNorm (A σ) x := by
         intro x
         have := h.conj σ x
-        rw [hσ] at this
-        exact this
+        rwa [hσ] at this
       have hc1 : ∀ x, _root_.GlobalTheory.ChowHt.frameNorm (P.map σ * A' σ) (star x) =
           _root_.GlobalTheory.ChowHt.frameNorm (P.map σ * A' σ) x := by
         intro x
@@ -410,8 +408,7 @@ private theorem frameNorm_toMatrix_map_mul_eq_of_isFrame {Nm : (K →+* ℂ) →
         rw [hσ] at this
         conv_lhs => rw [← hx]
         conv_rhs => rw [← hx]
-        rw [hPr, hB, hB]
-        exact this
+        rwa [hPr, hB, hB]
       have hcf : ∀ x y : Fin N → ℂ, star x = y →
           (star y ⬝ᵥ H *ᵥ y).re = (star x ⬝ᵥ H *ᵥ x).re := by
         intro x y hxy; rw [← hxy, hdiff, hdiff, hc1, hc2]

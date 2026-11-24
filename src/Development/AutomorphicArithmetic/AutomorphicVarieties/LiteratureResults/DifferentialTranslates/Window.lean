@@ -63,14 +63,12 @@ private theorem exists_compact_open_exhaustion_of_isOpen {V : Type} [NormedAddCo
       (∀ n, K n ⊆ O n) ∧ (∀ n, O n ⊆ K (n+1)) ∧ ∀ p ∈ Y, ∃ n, p ∈ K n := by
   refine ⟨fun n => Metric.closedBall (0:V) n \ Metric.thickening (1/((n:ℝ)+1)) Yᶜ,
     fun n => Metric.ball (0:V) ((n:ℝ)+1) \ Metric.cthickening (1/((n:ℝ)+2)) Yᶜ, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · intro n
-    exact (isCompact_closedBall _ _).diff Metric.isOpen_thickening
+  · exact fun n => (isCompact_closedBall _ _).diff Metric.isOpen_thickening
   · intro n x hx
     dsimp only at hx
     by_contra h
     exact hx.2 (Metric.self_subset_thickening (by positivity) _ h)
-  · intro n
-    exact Metric.isOpen_ball.sdiff Metric.isClosed_cthickening
+  · exact fun n => Metric.isOpen_ball.sdiff Metric.isClosed_cthickening
   · intro n x hx
     dsimp only at hx ⊢
     refine ⟨?_, fun h => hx.2 (Metric.cthickening_subset_thickening' (by positivity)
@@ -88,8 +86,7 @@ private theorem exists_compact_open_exhaustion_of_isOpen {V : Type} [NormedAddCo
       push_cast
       linarith
     · have e : (((n+1 : ℕ) : ℝ) + 1) = (n:ℝ) + 2 := by push_cast; ring
-      rw [e] at h
-      exact h
+      rwa [e] at h
   · intro p hp
     obtain ⟨ε, hε, hb⟩ := Metric.isOpen_iff.mp hY p hp
     obtain ⟨n, hn⟩ := exists_nat_gt (max ‖p‖ (1/ε))
@@ -155,12 +152,10 @@ theorem windowOne : WindowOne := by
     have hA : ∀ᶠ x in 𝓝 q, x ∈ O n := (hOo n).mem_nhds hq'.1
     have hB : ∀ᶠ x in 𝓝 q, ∀ m ∈ Set.Iio n, ¬ ∃ γ, G.ρ γ x ∈ K m := by
       rw [Filter.eventually_all_finite (Set.finite_Iio n)]
-      intro m hm
-      exact hsat (K m) (hKY m) (hKc m) q (hOY n hq'.1) (hq'.2 m hm)
+      exact fun m hm => hsat (K m) (hKY m) (hKc m) q (hOY n hq'.1) (hq'.2 m hm)
     filter_upwards [hA, hB] with x hx1 hx2
     exact Set.mem_iUnion.mpr ⟨n, hx1, fun m hm => hx2 m hm⟩
-  · show W0 ⊆ G.Y
-    exact Set.iUnion_subset (fun n q hq => hOY n hq.1)
+  · exact Set.iUnion_subset (fun n q hq => hOY n hq.1)
   · obtain ⟨n, γ, hγ, hm⟩ := hmin p hp
     refine ⟨γ⁻¹, ?_⟩
     show G.ρ γ⁻¹⁻¹ p ∈ W0
@@ -176,8 +171,7 @@ theorem windowOne : WindowOne := by
     rintro δ ⟨x, ⟨hx1, hx2⟩, hxW⟩
     obtain ⟨k, hk1, hk2⟩ := Set.mem_iUnion.mp hxW
     have hkn : k ≤ n + 1 := by
-      by_contra hlt
-      push_neg at hlt
+      by_contra! hlt
       refine hk2 (n+1) hlt ⟨γ * δ, ?_⟩
       rw [hmul, ← hmul δ δ⁻¹ x, mul_inv_cancel, map_one, ContinuousLinearMap.one_apply]
       exact hOK n hx2
@@ -259,8 +253,7 @@ theorem window : Window := by
       exact hrr _ _
     refine ⟨δ * h.1, ?_⟩
     beta_reduce
-    rw [h1, if_pos h2, mul_inv_rev, map_mul]
-    exact hh
+    rwa [h1, ite_eq_left h2, mul_inv_rev, map_mul]
   · obtain ⟨δ, hδ⟩ := hr s
     obtain ⟨N, hN, hfin⟩ := (hW (r s)).2.2 () _ (G.maps δ⁻¹ p hp)
     refine ⟨G.ρ δ⁻¹ ⁻¹' N, (G.ρ δ⁻¹).continuous.continuousAt.preimage_mem_nhds hN,
@@ -276,8 +269,7 @@ theorem window : Window := by
       refine ⟨⟨_, h2⟩, ⟨_, hx, ?_⟩, by simp⟩
       rw [h1] at hγ
       change G.ρ (δ⁻¹ * γ)⁻¹ (G.ρ δ⁻¹ x) ∈ W (r s) ()
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_rev, inv_inv, mul_inv_cancel_right]
-      exact hγ
+      rwa [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_rev, inv_inv, mul_inv_cancel_right]
     · exact hγ.elim
 
 end UpperTheory.V.Lit.Dr

@@ -118,8 +118,7 @@ theorem exists_hol_away {A : Type} [CommRing A] (ψ : ℂ → (A →+* ℂ)) (V 
     if h : u ∈ V then IsLocalization.Away.lift a (g := ψ u) (Ne.isUnit (ha u h))
     else IsLocalization.Away.lift a (g := ψ u₀) (Ne.isUnit (ha u₀ h₀))
   have hev : ∀ u ∈ V, (ev u).comp (algebraMap A _) = ψ u := fun u hu => by
-    simp only [ev, dif_pos hu]
-    exact IsLocalization.Away.lift_comp a _
+    simpa only [ev, dite_eq_left hu] using IsLocalization.Away.lift_comp a _
   refine ⟨ev, hev, fun t => ?_⟩
   obtain ⟨n, b, hb⟩ := IsLocalization.Away.surj a t
   refine (((hψ b).div ((hψ a).pow n) fun u hu => pow_ne_zero n (ha u hu))).congr fun u hu => ?_
@@ -217,8 +216,7 @@ theorem countable_eq_of_differentiableOn_of_ne {g : ℕ} {U : Set ℂ} {f f' : �
 theorem exists_const_substitution_of_holomorphic_families :
     ∀ (L D : Type) [Countable D] (g : ℕ) (act : D → L → L) (U : Set ℂ) (s s' : ℂ → L → Fin g → ℂ), IsOpen U → IsPreconnected U → U.Nonempty → (∀ a, DifferentiableOn ℂ (fun w => s w a) U) → (∀ a, DifferentiableOn ℂ (fun w => s' w a) U) → (∀ w ∈ U, ∃ δ, ∀ a, s' w a = s w (act δ a)) → ∃ δ, ∀ w ∈ U, ∀ a, s' w a = s w (act δ a) := by
   intro L D _ g act U s s' hU hc hne hs hs' h
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   choose w hw a ha using hcon
   have hcount : ∀ δ, {z | z ∈ U ∧ s' z (a δ) = s z (act δ (a δ))}.Countable := fun δ =>
     countable_eq_of_differentiableOn_of_ne hU hc (hs' (a δ)) (hs (act δ (a δ)))
@@ -266,7 +264,7 @@ variable {A P : Matrix (Fin r) (Fin r) ℂ}
 theorem inv_mul_mixCol (hA : A.det ≠ 0) {j : Fin r} (hj : p j) (i : Fin r) :
     (A⁻¹ * mixCol p A P) i j = (1 : Matrix (Fin r) (Fin r) ℂ) i j := by
   have h : (A⁻¹ * mixCol p A P) i j = (A⁻¹ * A) i j := by
-    simp only [Matrix.mul_apply, mixCol, Matrix.of_apply, if_pos hj]
+    simp only [Matrix.mul_apply, mixCol, Matrix.of_apply, ite_eq_left hj]
   rw [h, Matrix.nonsing_inv_mul A (isUnit_iff_ne_zero.mpr hA)]
 
 theorem det_mixRow_ne_zero (hA : A.det ≠ 0) (hQ : (mixCol p A P).det ≠ 0) : (mixRow p A P).det ≠ 0 := by
@@ -278,13 +276,13 @@ theorem det_mixRow_ne_zero (hA : A.det ≠ 0) (hQ : (mixCol p A P).det ≠ 0) : 
   have hS : ∀ a, p a → v a = 0 := by
     intro a ha
     have e : (mixRow p A P *ᵥ v) a = ((1 : Matrix (Fin r) (Fin r) ℂ) *ᵥ v) a := by
-      simp only [Matrix.mulVec, dotProduct, mixRow, Matrix.of_apply, if_pos ha]
+      simp only [Matrix.mulVec, dotProduct, mixRow, Matrix.of_apply, ite_eq_left ha]
     rw [Matrix.one_mulVec, hv] at e
     exact e.symm
   have hT : ∀ a, ¬ p a → ((A⁻¹ * mixCol p A P) *ᵥ v) a = 0 := by
     intro a ha
     have e : (mixRow p A P *ᵥ v) a = ((A⁻¹ * mixCol p A P) *ᵥ v) a := by
-      simp only [Matrix.mulVec, dotProduct, mixRow, Matrix.of_apply, if_neg ha]
+      simp only [Matrix.mulVec, dotProduct, mixRow, Matrix.of_apply, ite_eq_right ha]
     rw [← e, hv]
     rfl
   have hfix : ∀ w : Fin r → ℂ, (∀ b, ¬ p b → w b = 0) → (A⁻¹ * mixCol p A P) *ᵥ w = w := by
@@ -312,9 +310,8 @@ theorem det_mixRow_ne_zero (hA : A.det ≠ 0) (hQ : (mixCol p A P).det ≠ 0) : 
 private theorem mix_apply_eq_one_apply_of_mem (hA : A.det ≠ 0) {j : Fin r} (hj : p j) (a : Fin r) :
     mixRow p A P a j = (1 : Matrix (Fin r) (Fin r) ℂ) a j := by
   by_cases ha : p a
-  · simp only [mixRow, Matrix.of_apply, if_pos ha]
-  · simp only [mixRow, Matrix.of_apply, if_neg ha]
-    exact inv_mul_mixCol p hA hj a
+  · simp only [mixRow, Matrix.of_apply, ite_eq_left ha]
+  · simpa only [mixRow, Matrix.of_apply, ite_eq_right ha] using inv_mul_mixCol p hA hj a
 
 theorem mix_col_eq (hA : A.det ≠ 0) (hQ : (mixCol p A P).det ≠ 0) {j : Fin r} (hj : p j) (k : Fin r) :
     (mixCol p A P * (mixRow p A P)⁻¹) k j = A k j := by
@@ -333,7 +330,7 @@ theorem mix_inv_row_eq (hA : A.det ≠ 0) (hQ : (mixCol p A P).det ≠ 0) {a : F
   have hR := det_mixRow_ne_zero p hA hQ
   rw [Matrix.mul_inv_rev, Matrix.nonsing_inv_nonsing_inv _ (isUnit_iff_ne_zero.mpr hR)]
   have e : (mixRow p A P * (mixCol p A P)⁻¹) a k = (A⁻¹ * mixCol p A P * (mixCol p A P)⁻¹) a k := by
-    simp only [Matrix.mul_apply, mixRow, Matrix.of_apply, if_neg ha]
+    simp only [Matrix.mul_apply, mixRow, Matrix.of_apply, ite_eq_right ha]
   rw [e, Matrix.mul_assoc, Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.mpr hQ), Matrix.mul_one]
 
 theorem differentiableOn_det {B : Set ℂ} {M : ℂ → Matrix (Fin r) (Fin r) ℂ}
@@ -352,10 +349,8 @@ theorem differentiableOn_inv {B : Set ℂ} {M : ℂ → Matrix (Fin r) (Fin r) �
     intro k l
     by_cases hk : k = j
     · subst hk
-      simp only [Matrix.updateRow_self]
-      exact differentiableOn_const _
-    · simp only [Matrix.updateRow_ne hk]
-      exact hM k l
+      simpa only [Matrix.updateRow_self] using differentiableOn_const _
+    · simpa only [Matrix.updateRow_ne hk] using hM k l
   have e : (fun w => (M w)⁻¹ i j) = fun w => ((M w).det)⁻¹ * (M w).adjugate i j := by
     funext w
     rw [Matrix.inv_def, Matrix.smul_apply, Ring.inverse_eq_inv, smul_eq_mul]
@@ -370,16 +365,16 @@ theorem differentiableOn_mix {B : Set ℂ} {A : ℂ → Matrix (Fin r) (Fin r) �
   have hQd : ∀ k l, DifferentiableOn ℂ (fun w => mixCol p (A w) P k l) B := by
     intro k l
     by_cases hl : p l
-    · simp only [mixCol, Matrix.of_apply, if_pos hl]
+    · simp only [mixCol, Matrix.of_apply, ite_eq_left hl]
       exact hc l hl k
-    · simp only [mixCol, Matrix.of_apply, if_neg hl]
+    · simp only [mixCol, Matrix.of_apply, ite_eq_right hl]
       exact differentiableOn_const _
   have hRd : ∀ k l, DifferentiableOn ℂ (fun w => mixRow p (A w) P k l) B := by
     intro k l
     by_cases hk : p k
-    · simp only [mixRow, Matrix.of_apply, if_pos hk]
+    · simp only [mixRow, Matrix.of_apply, ite_eq_left hk]
       exact differentiableOn_const _
-    · simp only [mixRow, Matrix.of_apply, if_neg hk, Matrix.mul_apply]
+    · simp only [mixRow, Matrix.of_apply, ite_eq_right hk, Matrix.mul_apply]
       exact DifferentiableOn.fun_sum fun m _ => (hr k hk m).mul (hQd m l)
   have hRi := differentiableOn_inv (M := fun w => mixRow p (A w) P) hRd
     (fun w hw => det_mixRow_ne_zero p (hA w hw) (hQ w hw))
@@ -459,7 +454,7 @@ theorem det_mixCol_ne_zero {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) {P 
   have hWW : (hermC τ.1 X.Gm W W).re = -∑ i, Complex.normSq (γ i) := by
     rw [hW, hermC_quad]
     simp only [hg, Matrix.diagonal_apply, mul_ite, ite_mul, mul_zero, zero_mul,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [Complex.re_sum, ← Finset.sum_neg_distrib]
     refine Finset.sum_congr rfl fun i _ => ?_
     by_cases hi : (i : ℕ) < X.p0
@@ -562,7 +557,7 @@ theorem exists_holomorphic_frames : ∀ (E : Type) [Field E] [NumberField E] [Is
       DifferentiableOn ℂ (fun w => mat (x₁ w) τ k a) B := by
     intro τ a ha k
     have h := hall (fun b => cc (X.Gm⁻¹ b k)) τ a
-    simp only [GlobalTheory.GenericFrames.pc, if_pos ha,
+    simp only [GlobalTheory.GenericFrames.pc, ite_eq_left ha,
       GlobalTheory.PeriodLift.hermC_emb_inv_col τ.1 X.Gm X.Gm_det] at h
     exact h
   have hrowD : ∀ τ : X.Ψ, ∀ a : Fin r, ¬ (a : ℕ) < X.p0 → ∀ k,
@@ -576,10 +571,9 @@ theorem exists_holomorphic_frames : ∀ (E : Type) [Field E] [NumberField E] [Is
       · simp [Data.emb, hj]
     have hv : ∀ w, GlobalTheory.GenericFrames.pc X (x₁ w) (Pi.single k 1) τ a = (mat (x₁ w) τ)⁻¹ a k := by
       intro w
-      simp only [GlobalTheory.GenericFrames.pc, if_neg ha, he]
+      simp only [GlobalTheory.GenericFrames.pc, ite_eq_right ha, he]
       simp [Matrix.mulVec, dotProduct, Pi.single_apply]
-    have h := hall (Pi.single k 1) τ a
-    simpa only [hv] using h
+    simpa only [hv] using hall (Pi.single k 1) τ a
   choose P hPdet hP using X.signature
   have hdetA : ∀ w ∈ B, ∀ τ, (mat (x₁ w) τ).det ≠ 0 :=
     fun w hw τ => ((Data.mem_dom_iff X _).mp (hdom w hw) τ).1
@@ -626,9 +620,9 @@ theorem exists_holomorphic_frames : ∀ (E : Type) [Field E] [NumberField E] [Is
           col (mat (x₁ w) τ) a := by
         funext k
         exact hcolEq τ a ha k
-      simp only [GlobalTheory.GenericFrames.pc, if_pos ha]
+      simp only [GlobalTheory.GenericFrames.pc, ite_eq_left ha]
       rw [hcol]
-    · simp only [GlobalTheory.GenericFrames.pc, if_neg ha, Matrix.mulVec, dotProduct, hrowEq τ a ha]
+    · simp only [GlobalTheory.GenericFrames.pc, ite_eq_right ha, Matrix.mulVec, dotProduct, hrowEq τ a ha]
 
 end GlobalTheory.HolFrameLift
 end -- clump:auto
@@ -684,7 +678,7 @@ theorem exists_unipotent_of_pc_eq : ∀ (E : Type) [Field E] [NumberField E] [Is
         (by intros; simp [hermC, Data.emb, Finset.mul_sum, mul_left_comm])
         (by intros; simp [hermC, Data.emb, Finset.mul_sum, mul_left_comm])
         (by simp)
-        (fun v hv => by simpa only [GlobalTheory.GenericFrames.pc, ha, if_true] using h v hv τ a)
+        (fun v hv => by simpa only [GlobalTheory.GenericFrames.pc, ha, ite_true] using h v hv τ a)
         (fun b => cc (X.Gm⁻¹ b k))
       simpa only [GlobalTheory.PeriodLift.hermC_emb_inv_col τ.1 X.Gm X.Gm_det, col] using this
     · intro a ha k
@@ -697,7 +691,7 @@ theorem exists_unipotent_of_pc_eq : ∀ (E : Type) [Field E] [NumberField E] [Is
         (by intros; simp [Matrix.mulVec, dotProduct, Data.emb, Finset.mul_sum, mul_left_comm])
         (by intros; simp [Matrix.mulVec, dotProduct, Data.emb, Finset.mul_sum, mul_left_comm])
         (by simp)
-        (fun v hv => by simpa only [GlobalTheory.GenericFrames.pc, ha, if_false] using h v hv τ a)
+        (fun v hv => by simpa only [GlobalTheory.GenericFrames.pc, ha, ite_false] using h v hv τ a)
         (Pi.single k 1)
       simpa [Matrix.mulVec, dotProduct, Data.emb, Pi.single_apply, apply_ite τ.1] using this
   refine ⟨fun τ => ((mat x τ)⁻¹ * mat x' τ : Matrix (Fin r) (Fin r) ℂ), fun τ => ⟨?_, fun a c hca => ?_⟩,
@@ -880,19 +874,16 @@ theorem Adp.comp {y : FrPt Xo c (CAt σ)} {k : Fin F.n} {P : (F.Di k).La →+ (F
     obtain ⟨a1, a2, a3, a4, Hm, a5, a6, a7⟩ := hP
     refine ⟨fun a x i => ?_, a2.comp δ.injective, ?_, by rw [hr, a4], Hm, a5, a6, fun x y => ?_⟩
     · have := a1 a (δ x) i
-      rw [← map_smul] at this
-      exact this
+      rwa [← map_smul] at this
     · have : (P.comp δ.toLinearMap.toAddMonoidHom).range = P.range := SetLike.coe_injective hr
-      rw [this]
-      exact a3
+      rwa [this]
     · rw [← h1]
       exact a7 _ _
   obtain ⟨-, hu, hex⟩ := GlobalTheory.FamRigid.ex_eq_of_level_group GlobalTheory.latMinkowski E H Dw l Xo _ g _ F k _ P δ 1 hQ hP h1 h2 h3
     (fun a => by rw [Matrix.one_mulVec]; rfl)
   refine ⟨hQ, hx.trans hu.symm, fun τ i => ?_⟩
   simp only [Matrix.one_mulVec] at hex
-  simp only [← hex]
-  exact hd τ i
+  simpa only [← hex] using hd τ i
 
 theorem Adp.exists_lev {y : FrPt Xo c (CAt σ)} {k : Fin F.n} {P P' : (F.Di k).La →+ (Fin g → ℂ)} (hP : Adp F y k P)
     (hP' : Adp F y k P') : ∃ δ : Lev (F.Di k) l, ∀ a, P' a = P (δ.1 a) := by
@@ -945,8 +936,7 @@ theorem exists_adp_local {R : Type} [CommRing R] (xR : Sp R ⟶ Xo.X)
     rw [(hy b (hsub hb)).2] at this
     have hmap : dualMap (ev b) =
         ReciprocityTheory.ChartRestriction.G.Chart.dualMapR (ev b) := RingHom.ext fun _ => rfl
-    rw [← hmap]
-    exact this
+    rwa [← hmap]
   have hVd : ∀ i j, DifferentiableAt ℂ (fun b => V b i j) b :=
     HolFrameMatrix.differentiableAt_of_mul_eq_one V (fun b => Matrix.of fun i j => w b j i) b
       (fun i j => differentiableAt_pi.1 (hwd j) i) (by
@@ -1030,8 +1020,7 @@ theorem exists_pow_mem {E : Type} [Field E] [NumberField E] [IsCMField E] {H : R
     constructor
     · rintro ⟨a, rfl⟩
       exact (φ a).2
-    · intro hy
-      exact ⟨φ.symm ⟨y, hy⟩, by simp [φ']⟩
+    · exact fun hy => ⟨φ.symm ⟨y, hy⟩, by simp [φ']⟩
   have hspan : Submodule.span E (Set.range φ') = ⊤ := by rw [hrange]; exact X.Λ_span
   obtain ⟨γ, hγ⟩ := GlobalTheory.FrameFibre.exists_gl φ' (fun a b hab => φ.injective (Subtype.ext hab)) hspan δ
   have hn : ∀ (n : ℕ) a, ((γ ^ n : GL (Fin r) E) : Matrix (Fin r) (Fin r) E) *ᵥ φ' a = φ' ((δ ^ n) a) := by

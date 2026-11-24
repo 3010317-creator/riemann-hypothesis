@@ -162,8 +162,7 @@ theorem mem_doubleCoset_of_subElem :
       simp [Algebra.smul_def]
     rw [hval] at hxi
     have hx' : x i = ϖ ^ (1 - a i) := by
-      rw [zpow_sub₀ hϖ0, zpow_one, eq_div_iff (zpow_ne_zero (a i) hϖ0), mul_comm]
-      exact hxi
+      rwa [zpow_sub₀ hϖ0, zpow_one, eq_div_iff (zpow_ne_zero (a i) hϖ0), mul_comm]
     rw [← sub_nonneg, ← zpow_mem_iff w hϖ, ← hx', ← hc]
     exact c.2
   have h01 : ∀ i, a i = 0 ∨ a i = 1 := fun i => by
@@ -320,8 +319,7 @@ theorem heckeVec_Tj_eq_sum {n : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
       rw [← glMap_mul, mul_inv_cancel, glMap_one]
     · intro h
       rw [← h, ← glMap_mul, inv_mul_cancel, glMap_one]
-  refine ⟨γ, ⟨hγ, (hmem γ).2 e⟩, fun γ' ⟨hγ', h'⟩ => hs.injOn hγ' hγ ?_⟩
-  exact ((hmem γ').1 h').trans e.symm
+  exact ⟨γ, ⟨hγ, (hmem γ).2 e⟩, fun γ' ⟨hγ', h'⟩ => hs.injOn hγ' hγ (((hmem γ').1 h').trans e.symm)⟩
 
 end GlobalTheory.SatHecke
 

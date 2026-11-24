@@ -265,8 +265,7 @@ theorem exists_supp_lift_adj : ∀ (D : D7) (S T : HSp D) (βS : GL (Fin S.rank)
     · rw [RingHom.map_mul, resS_oToS, Ideal.Quotient.eq_zero_iff_mem.2 hy, mul_zero]
     · have e1 : ((w * oToS D.host.F D.host.E y : Formalism.L2.Herm.intAf D.host.F D.host.E) : Formalism.IndefR.Lev.EAf D) =
           finSw D (e + cA D e) := hw
-      rw [e1]
-      exact hsf
+      rwa [e1]
   · have hG : (Formalism.IndefR.Fin.LevelGroupLemmas.Lat.frG S βS κ).val.map φ =
         h.val.map (algebraMap (GlobalTheory.SplitHecke.Ov D v) (Fv D.host.F v)) := by
       rw [← hY]
@@ -322,12 +321,10 @@ theorem finsum_char_det_fix_hyperplane_eq_zero :
   set S : Set (GL (Fin r) k) :=
     {g : GL (Fin r) k | ∀ v, a ⬝ᵥ v = 0 → (g : Matrix (Fin r) (Fin r) k).mulVec v = v} with hS
   obtain ⟨c, hc⟩ : ∃ c : kˣ, ξ c ≠ 1 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hξ (MonoidHom.ext h)
   obtain ⟨i, hi⟩ : ∃ i, a i ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact ha (funext h)
   set v₀ : Fin r → k := Pi.single i (a i)⁻¹ with hv₀
   have hav₀ : a ⬝ᵥ v₀ = 1 := by
@@ -365,8 +362,7 @@ theorem finsum_char_det_fix_hyperplane_eq_zero :
     rw [Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec]
   have hbij : Set.BijOn (fun g => h₀ * g) S S := by
     refine ⟨fun g hg => hmulS g hg, fun x _ y _ hxy => mul_left_cancel hxy, ?_⟩
-    intro g hg
-    exact ⟨h₀⁻¹ * g, hinvS g hg, by simp⟩
+    exact fun g hg => ⟨h₀⁻¹ * g, hinvS g hg, by simp⟩
   set F : GL (Fin r) k → ℂ := fun g => ((ξ (Matrix.GeneralLinearGroup.det g) : ℂˣ) : ℂ) with hF
   have hFmul : ∀ g, F (h₀ * g) = ((ξ c : ℂˣ) : ℂ) * F g := by
     intro g
@@ -375,9 +371,7 @@ theorem finsum_char_det_fix_hyperplane_eq_zero :
     finsum_mem_eq_of_bijOn (fun g => h₀ * g) hbij (fun x _ => rfl)
   simp_rw [hFmul] at key
   rw [← mul_finsum_mem] at key
-  have hc' : ((ξ c : ℂˣ) : ℂ) ≠ 1 := by
-    intro h
-    exact hc (Units.ext h)
+  have hc' : ((ξ c : ℂˣ) : ℂ) ≠ 1 := fun h => hc (Units.ext h)
   have : (((ξ c : ℂˣ) : ℂ) - 1) * ∑ᶠ g ∈ S, F g = 0 := by
     rw [sub_mul, key, one_mul, sub_self]
   rcases mul_eq_zero.mp this with h | h
@@ -567,7 +561,7 @@ theorem mem_span_sum (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuation
         simp [Matrix.map_one]
       have hg' := (diag_mem_ball_iff hϖ (lift g) w).1 hg
       rw [hl] at hg'
-      rw [Finset.sum_eq_single g, if_pos hg, mul_one,
+      rw [Finset.sum_eq_single g, ite_eq_left hg, mul_one,
         H0 w (Matrix.GeneralLinearGroup.det g)⁻¹ hg'.2]
       · simp
       · have := congrArg Matrix.det hg'.1
@@ -575,7 +569,7 @@ theorem mem_span_sum (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuation
         rw [Units.val_inv_eq_inv_val, Matrix.GeneralLinearGroup.val_det_apply]
         exact (eq_inv_of_mul_eq_one_right this).symm
       · intro g' _ hne
-        rw [if_neg, mul_zero]
+        rw [ite_eq_right, mul_zero]
         intro h'
         have h2 := ((diag_mem_ball_iff hϖ (lift g') w).1 h').1
         rw [hl] at h2
@@ -583,7 +577,7 @@ theorem mem_span_sum (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuation
         ext1
         exact Matrix.left_inv_eq_left_inv h2 hg'.1
       · simp
-    · rw [Finset.sum_eq_zero (fun g _ => by rw [if_neg (fun h => hy ⟨g, h⟩), mul_zero])]
+    · rw [Finset.sum_eq_zero (fun g _ => by rw [ite_eq_right (fun h => hy ⟨g, h⟩), mul_zero])]
       by_contra h0
       obtain ⟨w, rfl, h2, h1⟩ := H1 y (Ne.symm h0)
       obtain ⟨g, hg⟩ := (Matrix.isUnit_iff_isUnit_det _).2 h1
@@ -683,8 +677,7 @@ theorem parahoric_schwartz_mem_span_datum_translates : ∀ (O K : Type) [CommRin
         h'.val.map (algebraMap O K) * x.submatrix e.symm id := by
       intro x
       rw [hv, ← Matrix.submatrix_map, Matrix.submatrix_mul_equiv]
-    simp only [hmul]
-    exact H3 h' (lowZero_of_toBlocks _ hh) _ _
+    simpa only [hmul] using H3 h' (lowZero_of_toBlocks _ hh) _ _
 
 end GlobalTheory
 end -- clump:auto
@@ -906,8 +899,7 @@ theorem omegaQ_single {D : D7} {a b : ℕ} (PP : Pl D.host.E) (r : ℕ) (ξ : �
   · intro x _ hx
     exfalso
     exact hx (Subtype.ext (Finset.mem_singleton.1 x.2))
-  · intro hx
-    exact absurd (Finset.mem_attach _ _) hx
+  · exact fun hx => absurd (Finset.mem_attach _ _) hx
 
 theorem omegaQ_ne_zero {D : D7} {a b : ℕ} (PP : Pl D.host.E) (r : ℕ) (ξ : ∀ PP : Pl D.host.E, (kP PP)ˣ →* ℂˣ)
     (k : ℤ) (y : ∀ PP : Pl D.host.E, Matrix (Fin b) (Fin a) (kP PP)) (h : omegaQ {PP} r ξ k y ≠ 0) :
@@ -965,7 +957,7 @@ theorem mem_span_translT : ∀ (D : D7) (S T : HSp D) (βS : GL (Fin S.rank) (Fo
       rw [hu, ← hxR, det_topL_mapE ι]
     show adjDat S T βS βT e ω x = _
     unfold adjDat
-    rw [if_pos ⟨hxH, hxI⟩, hω, omegaQ_single PP T.rank ξ _ hLZ
+    rw [ite_eq_left ⟨hxH, hxI⟩, hω, omegaQ_single PP T.rank ξ _ hLZ
       (Units.map (ι.symm : IsLocalRing.ResidueField (GlobalTheory.SplitHecke.Ov D v) ≃+* kP PP).toMonoidHom u)]
     · rfl
     · simp [← hdet]
@@ -1005,9 +997,9 @@ theorem mem_span_translT : ∀ (D : D7) (S T : HSp D) (βS : GL (Fin S.rank) (Fo
       rw [mem_blockTri]
       intro i j hij
       have hj : j.val < T.rank := by
-        by_contra hj; simp only [blk2, if_neg hj] at hij; split_ifs at hij <;> omega
+        by_contra hj; simp only [blk2, ite_eq_right hj] at hij; split_ifs at hij <;> omega
       have hi : T.rank ≤ i.val := by
-        by_contra hi; simp only [blk2, if_pos (Nat.lt_of_not_le hi)] at hij; omega
+        by_contra hi; simp only [blk2, ite_eq_left (Nat.lt_of_not_le hi)] at hij; omega
       have h1 := congrFun (congrFun hrκ i) j
       simp only [Matrix.map_apply] at h1
       have h4 := hLZ i j hi hj
@@ -1053,7 +1045,7 @@ theorem mem_span_translT : ∀ (D : D7) (S T : HSp D) (βS : GL (Fin S.rank) (Fo
         rw [GlobalTheory.SplitHecke.actO_inv_actO] at this
         exact hx this
       unfold adjDat
-      rw [if_neg (fun h' => hgH h'.1)]
+      rw [ite_eq_right (fun h' => hgH h'.1)]
 
 end GlobalTheory.DownLift.ConjHalfGen
 end

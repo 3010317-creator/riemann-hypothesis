@@ -283,8 +283,7 @@ theorem exists_mem_notMem_coeIdeal_mul {R K : Type} [CommRing R] [IsDedekindDoma
     [Algebra R K] [IsFractionRing R K] (c : FractionalIdeal (nonZeroDivisors R) K) (hc : c ≠ 0)
     (P : Ideal R) (hP : P ≠ ⊤) :
     ∃ b : K, b ∈ c ∧ b ∉ (P : FractionalIdeal (nonZeroDivisors R) K) * c := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   have h1 : c ≤ (P : FractionalIdeal (nonZeroDivisors R) K) * c := fun b hb => h b hb
   have h2 : c * c⁻¹ ≤ (P : FractionalIdeal (nonZeroDivisors R) K) * c * c⁻¹ := by
     gcongr
@@ -387,28 +386,25 @@ theorem exists_add_mul_notMem_of_maximal_ge {R : Type*} [CommRing R] [IsDedekind
   refine ⟨s, fun p hp hJp hmem => ?_⟩
   have h1 := Ideal.Quotient.eq.1 (hs ⟨p, hp, hJp⟩)
   by_cases hx : x ∈ p
-  · simp only [hx, if_true] at h1
+  · simp only [hx, ite_true] at h1
     have h2 : n * s ∈ p := by simpa using p.sub_mem hmem hx
     have h3 : n ∈ p := by
       have := p.sub_mem h2 (p.mul_mem_left n h1)
       have e : n * s - n * (s - 1) = n := by ring
       rwa [e] at this
     exact h p hp hJp h3 hx
-  · simp only [hx, if_false, sub_zero] at h1
+  · simp only [hx, ite_false, sub_zero] at h1
     apply hx
     simpa using p.sub_mem hmem (p.mul_mem_left n h1)
 
 theorem exists_unimodular_lift_of_unimodular_mod :
     ∀ (F : Type) [Field F] [NumberField F] (b : FractionalIdeal (nonZeroDivisors (𝓞 F)) F), b ≠ 0 → ∀ (n x₀ : 𝓞 F) (y₀ : F), n ≠ 0 → y₀ ∈ b → (∀ p : Ideal (𝓞 F), p.IsMaximal → n ∈ p → ¬ (x₀ ∈ p ∧ y₀ ∈ (p : FractionalIdeal (nonZeroDivisors (𝓞 F)) F) * b)) → ∃ (s : 𝓞 F) (t : F), t ∈ b ∧ ∀ p : Ideal (𝓞 F), p.IsMaximal → ¬ (x₀ + n * s ∈ p ∧ y₀ + (n : F) * t ∈ (p : FractionalIdeal (nonZeroDivisors (𝓞 F)) F) * b) := by
   intro F _ _ b hb n x₀ y₀ hn hy₀ H
-  have hnF : (n : F) ≠ 0 := by
-    intro e
-    exact hn (RingOfIntegers.ext e)
+  have hnF : (n : F) ≠ 0 := fun e => hn (RingOfIntegers.ext e)
   obtain ⟨t, ht, hy⟩ : ∃ t : F, t ∈ b ∧ y₀ + (n : F) * t ≠ 0 := by
     by_cases h0 : y₀ = 0
     · obtain ⟨t, ht, ht0⟩ : ∃ t : F, t ∈ b ∧ t ≠ 0 := by
-        by_contra hcon
-        push_neg at hcon
+        by_contra! hcon
         exact hb (FractionalIdeal.eq_zero_iff.2 hcon)
       exact ⟨t, ht, by rw [h0, zero_add]; exact mul_ne_zero hnF ht0⟩
     · exact ⟨0, b.zero_mem, by simpa using h0⟩
@@ -474,8 +470,7 @@ theorem fractionalIdeal_restrictScalars_isLattice_of_tower (F E : Type) [Field F
   · exact (FractionalIdeal.fg_of_isNoetherianRing le_rfl c).restrictScalars
   · obtain ⟨x, hxc, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot (p := (c : Submodule (𝓞 E) E))
       (by rwa [Ne, FractionalIdeal.coeToSubmodule_eq_bot])
-    intro s hs hli
-    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+    exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
 theorem exists_basis_latSpanV_eq_of_finrank_two (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E]
     [Algebra F E] (hE : Module.finrank F E = 2) (c : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) (hc : c ≠ 0) :
     ∃ (e : Fin 2 → E) (b : FractionalIdeal (nonZeroDivisors (𝓞 F)) F), LinearIndependent F e ∧ b ≠ 0 ∧
@@ -567,8 +562,7 @@ theorem basis_repr_mem_of_mem_map_mul_two {F E : Type} [Field F] [NumberField F]
     obtain ⟨q, hq', rfl⟩ := (FractionalIdeal.mem_coeIdeal _).mp hu
     exact hq q hq' z hz
   · intro x y hx hy
-    simp only [map_add (f := _), Finsupp.add_apply]
-    exact T.add_mem hx hy
+    simpa only [map_add (f := _), Finsupp.add_apply] using T.add_mem hx hy
 
 theorem mem_map_mul_of_basis_repr_mem_two {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E]
     [Algebra F E] (B : Module.Basis (Fin 2) F E) (C : Fin 2 → FractionalIdeal (nonZeroDivisors (𝓞 F)) F)
@@ -714,8 +708,7 @@ private lemma mem_map_comap_of_star_fixed {F E : Type} [Field F] [NumberField F]
   obtain ⟨a, ha⟩ := exists_of_fixed hc z hz
   rw [← ha]
   apply Ideal.mem_map_of_mem
-  rw [Ideal.mem_comap, ha]
-  exact hzQ
+  rwa [Ideal.mem_comap, ha]
 
 theorem le_map_comap_of_le_conj (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E]
     [StarRing E] [Algebra F E] (hc : Formalism.BasicNotions.CMData F E) (P Q : Ideal (𝓞 E)) (hQ : Q.IsMaximal)
@@ -735,8 +728,7 @@ theorem le_map_comap_of_le_conj (F E : Type) [Field F] [NumberField F] [Field E]
     obtain ⟨θ, t, ht, hθ⟩ := hU M hM
     have htθ : t = RingOfIntegers.mapRingHom (starRingEnd E) θ := by
       ext
-      rw [RingOfIntegers.mapRingHom_apply, starRingEnd_apply]
-      exact ht
+      rwa [RingOfIntegers.mapRingHom_apply, starRingEnd_apply]
     subst htθ
     exact hθ (hDM (Ideal.subset_span ⟨θ, rfl⟩))
   intro x hx
@@ -839,8 +831,7 @@ theorem exists_ideal_coprime_conj_mul_eq_spanSingleton :
       intro x hx
       apply hPQ (Ideal.mem_sup_right _)
       show RingOfIntegers.mapRingHom (starRingEnd E) (RingOfIntegers.mapRingHom (starRingEnd E) x) ∈ P
-      rw [hσσ]
-      exact hx
+      rwa [hσσ]
     have h3 := _root_.GlobalTheory.UnramifiedConj.le_map_comap_of_le_conj F E hcm P Q hQm h1 h2
     have hpm : (Q.comap (algebraMap (𝓞 F) (𝓞 E))).IsMaximal :=
       Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := 𝓞 F) Q
@@ -901,21 +892,18 @@ theorem exists_primitive_norm_neg : ∀ (F E : Type) [Field F] [NumberField F] [
   have hTne : (T : 𝓞 E) ≠ 0 := by
     intro h
     apply hT
-    have h' := congrArg (fun r : 𝓞 E => (r : E)) h
-    simpa using h'
+    simpa using congrArg (fun r : 𝓞 E => (r : E)) h
 
   obtain ⟨P, hP0, hPP, ⟨t, p0, hp0, htp⟩, α, hα⟩ := _root_.GlobalTheory.exists_ideal_coprime_conj_mul_eq_spanSingleton F E hcm c hc (T : 𝓞 E) hTne
   have htpE : (t : E) * (T : E) + (p0 : E) = 1 := by
-    have h' := congrArg (fun r : 𝓞 E => (r : E)) htp
-    simpa using h'
+    simpa using congrArg (fun r : 𝓞 E => (r : E)) htp
 
   obtain ⟨p, hp, q, hq, hpq⟩ := Submodule.mem_sup.1
     (show (1 : 𝓞 E) ∈ P ⊔ P.comap (RingOfIntegers.mapRingHom (starRingEnd E)) by
       rw [hPP]; exact Submodule.mem_top)
   have hq' : RingOfIntegers.mapRingHom (starRingEnd E) q ∈ P := Ideal.mem_comap.1 hq
   have hpqE : (p : E) + (q : E) = 1 := by
-    have h' := congrArg (fun r : 𝓞 E => (r : E)) hpq
-    simpa using h'
+    simpa using congrArg (fun r : 𝓞 E => (r : E)) hpq
   set w : 𝓞 E := p * x + RingOfIntegers.mapRingHom (starRingEnd E) q *
     RingOfIntegers.mapRingHom (starRingEnd E) x with hw
   have hwP : w ∈ P := P.add_mem (P.mul_mem_right _ hp) (P.mul_mem_right _ hq')
@@ -945,8 +933,7 @@ theorem exists_primitive_norm_neg : ∀ (F E : Type) [Field F] [NumberField F] [
   have hα0 : α ≠ 0 := by
     obtain ⟨r, hr, hr0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hP0
     obtain ⟨s, hs, hs0⟩ : ∃ s ∈ c, s ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       apply hc
       ext y
       simp only [FractionalIdeal.mem_zero_iff]
@@ -1083,8 +1070,7 @@ theorem gapBig_of_comparison (h : PI.ScGapBig.ScGapBig) (D : Formalism.BasicNoti
   exact ⟨t, hto, ht5, ht1801, hgap⟩
 
 theorem gapBigOfGapHyp : ∀ D : D7, GapBigOfGapHyp D := by
-  intro D
-  exact gapBig_of_comparison _root_.PI.UnitaryGroupMassFormula.ScGapBig.scGapBig_main D
+  exact fun D => gapBig_of_comparison _root_.PI.UnitaryGroupMassFormula.ScGapBig.scGapBig_main D
 
 end GlobalTheory.GapAtRealPlaces
 end -- clump:auto
@@ -1193,8 +1179,7 @@ theorem measure_le_of_cover [Countable Γ] [μ.IsMulLeftInvariant] {s : Set K}
   calc μ s ≤ μ (⋃ g : Γ, g • toMeasurable μ C ∩ s) := by
           refine measure_mono fun m hm => ?_
           obtain ⟨γ, hγ, k, hk, rfl⟩ := hcov m
-          refine Set.mem_iUnion.2 ⟨⟨γ, hγ⟩, ?_, hm⟩
-          exact ⟨k, subset_toMeasurable μ C hk, rfl⟩
+          exact Set.mem_iUnion.2 ⟨⟨γ, hγ⟩, ⟨k, subset_toMeasurable μ C hk, rfl⟩, hm⟩
       _ ≤ ∑' g : Γ, μ (g • toMeasurable μ C ∩ s) := measure_iUnion_le _
       _ = μ (toMeasurable μ C) := (hs.measure_eq_tsum _).symm
       _ = μ C := measure_toMeasurable C
@@ -1695,8 +1680,7 @@ theorem rescaleStep3 :
     · show amb (mw u).μHinf = _
       rw [hHinf u]; exact h.2
   · exact ⟨fun u => ⟨hOm u, hCov u⟩, hBc⟩
-  · intro w v
-    exact hLoc w v
+  · exact fun w v => hLoc w v
 
 end GlobalTheory.St.Rescale
 end -- clump:auto

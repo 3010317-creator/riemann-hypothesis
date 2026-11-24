@@ -123,8 +123,7 @@ theorem tens_eq_pureA (f : (κ → mixedEmbedding.mixedSpace F) → ℂ) {r : (�
 theorem mem_SB_of_pureA_mem {f : SInf F κ} (hf : f ≠ 0) {g : (κ → Af F) → ℂ} (h : pureA F f g ∈ schA F κ) :
     g ∈ SB (κ → Af F) := by
   obtain ⟨a, ha⟩ : ∃ a, f a ≠ 0 := by
-    by_contra h0
-    push_neg at h0
+    by_contra! h0
     exact hf (SchwartzMap.ext h0)
   let L : ((κ → AF F) → ℂ) →ₗ[ℂ] ((κ → Af F) → ℂ) := LinearMap.funLeft ℂ ℂ (ptAt a)
   have hle : schA F κ ≤ (SB (κ → Af F)).comap L := by
@@ -194,13 +193,11 @@ theorem actsLaws : ActsLaws := by
         exact (h.unique (hasDerivAt_const 0 (0 : ℂ)))
       subst hf₁
       rw [hzeroT]
-      simp only [hT0, Pi.zero_apply]
-      exact hasDerivAt_const 0 (0 : ℂ)
+      simpa only [hT0, Pi.zero_apply] using hasDerivAt_const 0 (0 : ℂ)
     · have hg : (fun y => r (fun i => ((0 : Ainf F), y i))) ∈ SB (κ → Af F) :=
         mem_SB_of_pureA_mem hf (tens_eq_pureA (⇑f) hr.1 ▸ hr.2)
       have h := hSD _ hg _ (eval_mem_adm x)
-      rw [tens_eq_pureA (⇑f) hr.1, tens_eq_pureA (⇑f₁) hr.1]
-      exact h
+      rwa [tens_eq_pureA (⇑f) hr.1, tens_eq_pureA (⇑f₁) hr.1]
   · intro T hT0 hSA r hr
     by_cases hf : f = 0
     · subst hf
@@ -227,9 +224,7 @@ theorem actsLaws : ActsLaws := by
     exact congrFun e (ptAt a 0)
   · intro T h₁ h₂
     refine hext _ _ fun a => ?_
-    have e₁ := h₁ g₀ hg₀ _ (eval_mem_adm (ptAt a 0))
-    have e₂ := h₂ g₀ hg₀ _ (eval_mem_adm (ptAt a 0))
-    exact e₁.unique e₂
+    exact (h₁ g₀ hg₀ _ (eval_mem_adm (ptAt a 0))).unique (h₂ g₀ hg₀ _ (eval_mem_adm (ptAt a 0)))
 
 end Main
 

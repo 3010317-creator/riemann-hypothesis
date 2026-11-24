@@ -100,14 +100,14 @@ theorem cw_root {r s : ℕ} {ν La : Ix r s → ℚ} {a b : Ix r s} (hab : a ≠
     ν a = La a - 1 ∧ ν b = La b + 1 ∧ ∀ x, x ≠ a → x ≠ b → ν x = La x := by
   refine ⟨?_, ?_, ?_⟩
   · have := h a
-    rw [if_pos rfl, if_neg hab] at this
+    rw [ite_eq_left rfl, ite_eq_right hab] at this
     linarith
   · have := h b
-    rw [if_neg (Ne.symm hab), if_pos rfl] at this
+    rw [ite_eq_right (Ne.symm hab), ite_eq_left rfl] at this
     linarith
   · intro x hxa hxb
     have := h x
-    rw [if_neg hxa, if_neg hxb] at this
+    rw [ite_eq_right hxa, ite_eq_right hxb] at this
     linarith
 
 theorem cw_init {r p : ℕ} (hp : p ≤ r) (c : ℚ) :
@@ -132,7 +132,7 @@ theorem casW_eq {r s : ℕ} (μ : Ix r s → ℚ) : casW μ = ∑ x, μ x ^ 2 + 
   unfold casW
   congr 1
   simp only [Fintype.sum_sum_type, posC, rho2]
-  simp only [if_false, Finset.sum_const_zero, add_zero, zero_add]
+  simp only [ite_false, Finset.sum_const_zero, add_zero, zero_add]
   rw [cw_blk, cw_blk]
 
 theorem casW_root {r s : ℕ} {ν La : Ix r s → ℚ} {a b : Ix r s} (hab : a ≠ b) (h : RootTo ν a b La) :
@@ -323,10 +323,10 @@ theorem shape_pos {p q r s n m : ℕ} (hp : p ≤ r) (hq : q ≤ s) (hn : 0 < n)
     · funext x
       rcases x with i | j
       · simp only [shiftNu, ofBlocks, List.length_replicate, List.length_nil, Nat.sub_self,
-          getD_pad_left, i.isLt, if_true]
+          getD_pad_left, i.isLt, ite_true]
         rw [h1]; push_cast; ring
       · simp only [shiftNu, ofBlocks, List.length_replicate, List.length_nil, Nat.sub_self,
-          getD_pad_left, j.isLt, if_true]
+          getD_pad_left, j.isLt, ite_true]
         rw [h2]; push_cast; ring
     · simp only [List.length_replicate, List.length_nil, Nat.sub_zero]
       exact shift_pos_eq p q r s n m
@@ -369,12 +369,12 @@ theorem shape_neg {p q r s n m : ℕ} (hq : q ≤ r) (hp : p ≤ s) (hn : 0 < n)
       · simp only [shiftNu, ofBlocks, List.length_replicate, List.length_nil, Nat.sub_self,
           Nat.sub_zero]
         have e := getD_pad_right p p i (-(m : ℤ)) le_rfl i.isLt
-        rw [Nat.sub_self, if_pos (by omega)] at e
+        rw [Nat.sub_self, ite_eq_left (by omega)] at e
         rw [e, h1]; push_cast; ring
       · simp only [shiftNu, ofBlocks, List.length_replicate, List.length_nil, Nat.sub_self,
           Nat.sub_zero]
         have e := getD_pad_right q q j (-(n : ℤ)) le_rfl j.isLt
-        rw [Nat.sub_self, if_pos (by omega)] at e
+        rw [Nat.sub_self, ite_eq_left (by omega)] at e
         rw [e, h2]; push_cast; ring
     · simp only [List.length_replicate, List.length_nil, Nat.sub_zero]
       exact shift_neg_eq p q r s n m hq hp
@@ -419,8 +419,7 @@ theorem top_idx {N : ℕ} (f g : Fin N → ℚ) (i : Fin N) (hdom : ∀ i', i' <
   have hpos : 0 < (i : ℕ) := Nat.pos_of_ne_zero hne
   have hN : 0 < N := lt_of_le_of_lt (Nat.zero_le _) i.isLt
   have h0 : (⟨0, hN⟩ : Fin N) < i := by
-    rw [Fin.lt_def]
-    exact hpos
+    rwa [Fin.lt_def]
   have e1 := hdom _ h0
   have e2 := hg' ⟨0, hN⟩ (ne_of_lt h0)
   have e3 := hf _ h0
@@ -486,16 +485,12 @@ theorem extreme {r s : ℕ} {ν La : Ix r s → ℚ} (hD : Dom ν) :
     obtain ⟨ea, eb, eo⟩ := cw_root hne hR
     have h0 : (i : ℕ) = 0 := by
       refine top_idx (fun k => La (.inl k)) (fun k => ν (.inl k)) i ?_ eb ?_ hi
-      · intro i' hi'
-        exact hD (.inl i') (.inl i) hi'
-      · intro i' hi'
-        exact eo _ Sum.inl_ne_inr (fun e => hi' (Sum.inl_injective e))
+      · exact fun i' hi' => hD (.inl i') (.inl i) hi'
+      · exact fun i' hi' => eo _ Sum.inl_ne_inr (fun e => hi' (Sum.inl_injective e))
     have h1 : (j : ℕ) + 1 = s := by
       refine bot_idx (fun k => La (.inr k)) (fun k => ν (.inr k)) j ?_ ea ?_ hj
-      · intro j' hj'
-        exact hD (.inr j) (.inr j') hj'
-      · intro j' hj'
-        exact eo _ (fun e => hj' (Sum.inr_injective e)) Sum.inr_ne_inl
+      · exact fun j' hj' => hD (.inr j) (.inr j') hj'
+      · exact fun j' hj' => eo _ (fun e => hj' (Sum.inr_injective e)) Sum.inr_ne_inl
     have h0' : ((i : ℕ) : ℚ) = 0 := by exact_mod_cast h0
     have h1' : ((j : ℕ) : ℚ) + 1 = s := by exact_mod_cast h1
     simp only [rho2]
@@ -505,16 +500,12 @@ theorem extreme {r s : ℕ} {ν La : Ix r s → ℚ} (hD : Dom ν) :
     obtain ⟨ea, eb, eo⟩ := cw_root hne hR
     have h0 : (j : ℕ) = 0 := by
       refine top_idx (fun k => La (.inr k)) (fun k => ν (.inr k)) j ?_ eb ?_ hj
-      · intro j' hj'
-        exact hD (.inr j') (.inr j) hj'
-      · intro j' hj'
-        exact eo _ Sum.inr_ne_inl (fun e => hj' (Sum.inr_injective e))
+      · exact fun j' hj' => hD (.inr j') (.inr j) hj'
+      · exact fun j' hj' => eo _ Sum.inr_ne_inl (fun e => hj' (Sum.inr_injective e))
     have h1 : (i : ℕ) + 1 = r := by
       refine bot_idx (fun k => La (.inl k)) (fun k => ν (.inl k)) i ?_ ea ?_ hi
-      · intro i' hi'
-        exact hD (.inl i) (.inl i') hi'
-      · intro i' hi'
-        exact eo _ (fun e => hi' (Sum.inl_injective e)) Sum.inl_ne_inr
+      · exact fun i' hi' => hD (.inl i) (.inl i') hi'
+      · exact fun i' hi' => eo _ (fun e => hi' (Sum.inl_injective e)) Sum.inl_ne_inr
     have h0' : ((j : ℕ) : ℚ) = 0 := by exact_mod_cast h0
     have h1' : ((i : ℕ) : ℚ) + 1 = r := by exact_mod_cast h1
     simp only [rho2]
@@ -551,62 +542,58 @@ theorem comb_pos {p q r s n m : ℕ} (hp : p ≤ r) (hq : q ≤ s) (hn : 0 < n) 
       show (if (k : ℕ) < p then (n : ℚ) else 0) + cPair p q - cPair p q = _
       ring
     have hk : p ≤ (k : ℕ) := by
-      by_contra hk
-      push_neg at hk
-      rw [sa, if_pos hk, abs_pos_down hn] at hBeq
+      by_contra! hk
+      rw [sa, ite_eq_left hk, abs_pos_down hn] at hBeq
       norm_num at hBeq
     have hl : (l' : ℕ) < q := by
-      by_contra hl
-      push_neg at hl
+      by_contra! hl
       have h5 : ν (Sum.inr l') + cPair p q ≤ 0 := hS.2.1 l' hl
       have e : ν (Sum.inr l') = (if (l' : ℕ) < q then (m : ℚ) else 0) - cPair p q + 1 := eb
-      rw [if_neg (not_lt.mpr hl)] at e
+      rw [ite_eq_right (not_lt.mpr hl)] at e
       linarith
     refine (extreme hD).2 k l' hR ?_ ?_ ?_
     · intro j' hj'
       have hj'' : (j' : ℕ) < q := lt_trans (Fin.lt_def.mp hj') hl
       show (if (j' : ℕ) < q then (m : ℚ) else 0) - cPair p q =
         (if (l' : ℕ) < q then (m : ℚ) else 0) - cPair p q
-      rw [if_pos hj'', if_pos hl]
+      rw [ite_eq_left hj'', ite_eq_left hl]
     · intro i' hi'
       have hi'' : ¬ ((i' : ℕ) < p) := not_lt.mpr (le_trans hk (le_of_lt (Fin.lt_def.mp hi')))
       show (if (i' : ℕ) < p then (n : ℚ) else 0) + cPair p q =
         (if (k : ℕ) < p then (n : ℚ) else 0) + cPair p q
-      rw [if_neg hi'', if_neg (not_lt.mpr hk)]
+      rw [ite_eq_right hi'', ite_eq_right (not_lt.mpr hk)]
     · show (0 : ℚ) < ((if (l' : ℕ) < q then (m : ℚ) else 0) - cPair p q) -
         ((if (k : ℕ) < p then (n : ℚ) else 0) + cPair p q)
-      rw [if_pos hl, if_neg (not_lt.mpr hk)]
+      rw [ite_eq_left hl, ite_eq_right (not_lt.mpr hk)]
       linarith
   · have sa : shiftNu (cPair p q) (laPos p q r s n m) (Sum.inr l) =
         (if (l : ℕ) < q then (m : ℚ) else 0) := by
       show (if (l : ℕ) < q then (m : ℚ) else 0) - cPair p q + cPair p q = _
       ring
     have hl : q ≤ (l : ℕ) := by
-      by_contra hl
-      push_neg at hl
-      rw [sa, if_pos hl, abs_pos_down hm] at hBeq
+      by_contra! hl
+      rw [sa, ite_eq_left hl, abs_pos_down hm] at hBeq
       norm_num at hBeq
     have hk : (k' : ℕ) < p := by
-      by_contra hk
-      push_neg at hk
+      by_contra! hk
       have h5 : ν (Sum.inl k') - cPair p q ≤ 0 := hS.1 k' hk
       have e : ν (Sum.inl k') = (if (k' : ℕ) < p then (n : ℚ) else 0) + cPair p q + 1 := eb
-      rw [if_neg (not_lt.mpr hk)] at e
+      rw [ite_eq_right (not_lt.mpr hk)] at e
       linarith
     refine (extreme hD).1 k' l hR ?_ ?_ ?_
     · intro i' hi'
       have hi'' : (i' : ℕ) < p := lt_trans (Fin.lt_def.mp hi') hk
       show (if (i' : ℕ) < p then (n : ℚ) else 0) + cPair p q =
         (if (k' : ℕ) < p then (n : ℚ) else 0) + cPair p q
-      rw [if_pos hi'', if_pos hk]
+      rw [ite_eq_left hi'', ite_eq_left hk]
     · intro j' hj'
       have hj'' : ¬ ((j' : ℕ) < q) := not_lt.mpr (le_trans hl (le_of_lt (Fin.lt_def.mp hj')))
       show (if (j' : ℕ) < q then (m : ℚ) else 0) - cPair p q =
         (if (l : ℕ) < q then (m : ℚ) else 0) - cPair p q
-      rw [if_neg hj'', if_neg (not_lt.mpr hl)]
+      rw [ite_eq_right hj'', ite_eq_right (not_lt.mpr hl)]
     · show (0 : ℚ) < ((if (k' : ℕ) < p then (n : ℚ) else 0) + cPair p q) -
         ((if (l : ℕ) < q then (m : ℚ) else 0) - cPair p q)
-      rw [if_pos hk, if_neg (not_lt.mpr hl)]
+      rw [ite_eq_left hk, ite_eq_right (not_lt.mpr hl)]
       linarith
   · exact absurd trivial hab
 
@@ -642,14 +629,13 @@ theorem comb_neg {p q r s n m : ℕ} (hq : q ≤ r) (hp : p ≤ s) (hn : 0 < n) 
       ring
     have hl : ¬ (s ≤ (l' : ℕ) + p) := by
       intro hl
-      rw [sb, if_pos hl, abs_neg_up hm] at hAeq
+      rw [sb, ite_eq_left hl, abs_neg_up hm] at hAeq
       norm_num at hAeq
     have hk : r ≤ (k : ℕ) + q := by
-      by_contra hk
-      push_neg at hk
+      by_contra! hk
       have h5 : 0 ≤ ν (Sum.inl k) - cPair p q := hS.2.2.1 k hk
       have e : ν (Sum.inl k) = (if r ≤ (k : ℕ) + q then -(n : ℚ) else 0) + cPair p q - 1 := ea
-      rw [if_neg (not_le.mpr hk)] at e
+      rw [ite_eq_right (not_le.mpr hk)] at e
       linarith
     refine (extreme hD).2 k l' hR ?_ ?_ ?_
     · intro j' hj'
@@ -658,17 +644,17 @@ theorem comb_neg {p q r s n m : ℕ} (hq : q ≤ r) (hp : p ≤ s) (hn : 0 < n) 
         omega
       show (if s ≤ (j' : ℕ) + p then -(m : ℚ) else 0) - cPair p q =
         (if s ≤ (l' : ℕ) + p then -(m : ℚ) else 0) - cPair p q
-      rw [if_neg hj'', if_neg hl]
+      rw [ite_eq_right hj'', ite_eq_right hl]
     · intro i' hi'
       have hi'' : r ≤ (i' : ℕ) + q := by
         have := Fin.lt_def.mp hi'
         omega
       show (if r ≤ (i' : ℕ) + q then -(n : ℚ) else 0) + cPair p q =
         (if r ≤ (k : ℕ) + q then -(n : ℚ) else 0) + cPair p q
-      rw [if_pos hi'', if_pos hk]
+      rw [ite_eq_left hi'', ite_eq_left hk]
     · show (0 : ℚ) < ((if s ≤ (l' : ℕ) + p then -(m : ℚ) else 0) - cPair p q) -
         ((if r ≤ (k : ℕ) + q then -(n : ℚ) else 0) + cPair p q)
-      rw [if_neg hl, if_pos hk]
+      rw [ite_eq_right hl, ite_eq_left hk]
       linarith
   · have sb : shiftNu (cPair p q) (laNeg p q r s n m) (Sum.inl k') =
         (if r ≤ (k' : ℕ) + q then -(n : ℚ) else 0) := by
@@ -676,14 +662,13 @@ theorem comb_neg {p q r s n m : ℕ} (hq : q ≤ r) (hp : p ≤ s) (hn : 0 < n) 
       ring
     have hk : ¬ (r ≤ (k' : ℕ) + q) := by
       intro hk
-      rw [sb, if_pos hk, abs_neg_up hn] at hAeq
+      rw [sb, ite_eq_left hk, abs_neg_up hn] at hAeq
       norm_num at hAeq
     have hl : s ≤ (l : ℕ) + p := by
-      by_contra hl
-      push_neg at hl
+      by_contra! hl
       have h5 : 0 ≤ ν (Sum.inr l) + cPair p q := hS.2.2.2 l hl
       have e : ν (Sum.inr l) = (if s ≤ (l : ℕ) + p then -(m : ℚ) else 0) - cPair p q - 1 := ea
-      rw [if_neg (not_le.mpr hl)] at e
+      rw [ite_eq_right (not_le.mpr hl)] at e
       linarith
     refine (extreme hD).1 k' l hR ?_ ?_ ?_
     · intro i' hi'
@@ -692,17 +677,17 @@ theorem comb_neg {p q r s n m : ℕ} (hq : q ≤ r) (hp : p ≤ s) (hn : 0 < n) 
         omega
       show (if r ≤ (i' : ℕ) + q then -(n : ℚ) else 0) + cPair p q =
         (if r ≤ (k' : ℕ) + q then -(n : ℚ) else 0) + cPair p q
-      rw [if_neg hi'', if_neg hk]
+      rw [ite_eq_right hi'', ite_eq_right hk]
     · intro j' hj'
       have hj'' : s ≤ (j' : ℕ) + p := by
         have := Fin.lt_def.mp hj'
         omega
       show (if s ≤ (j' : ℕ) + p then -(m : ℚ) else 0) - cPair p q =
         (if s ≤ (l : ℕ) + p then -(m : ℚ) else 0) - cPair p q
-      rw [if_pos hj'', if_pos hl]
+      rw [ite_eq_left hj'', ite_eq_left hl]
     · show (0 : ℚ) < ((if r ≤ (k' : ℕ) + q then -(n : ℚ) else 0) + cPair p q) -
         ((if s ≤ (l : ℕ) + p then -(m : ℚ) else 0) - cPair p q)
-      rw [if_neg hk, if_pos hl]
+      rw [ite_eq_right hk, ite_eq_left hl]
       linarith
   · exact absurd trivial hab
 
@@ -765,12 +750,12 @@ theorem la_eq {D : RealData} (h : D.Hyp) :
   rcases x with k | l
   · simp only [laNeg, laPos, cPair]
     by_cases hk : (k : ℕ) < D.P
-    · rw [if_pos hk, if_neg (by omega)]; linarith
-    · rw [if_neg hk, if_pos (by omega)]; linarith
+    · rw [ite_eq_left hk, ite_eq_right (by omega)]; linarith
+    · rw [ite_eq_right hk, ite_eq_left (by omega)]; linarith
   · simp only [laNeg, laPos, cPair]
     by_cases hk : (l : ℕ) < D.Q
-    · rw [if_pos hk, if_neg (by omega)]; linarith
-    · rw [if_neg hk, if_pos (by omega)]; linarith
+    · rw [ite_eq_left hk, ite_eq_right (by omega)]; linarith
+    · rw [ite_eq_right hk, ite_eq_left (by omega)]; linarith
 
 theorem combV {D : RealData} (h : D.Hyp) :
     CombOK D.P D.Q ((D.κ : ℚ) / 2) 0 (laPos D.P D.Q D.R D.S (nD D) (mD D)) := by

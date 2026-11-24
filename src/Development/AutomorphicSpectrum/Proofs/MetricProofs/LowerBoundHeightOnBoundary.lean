@@ -397,14 +397,13 @@ theorem assemble {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)] 
   choose w hwh hwe using hwex
   let Qf : ((Σ k, J k) → ℂ) → ℝ := fun z => ∑ q, ‖MvPolynomial.eval z (GG q)‖ ^ 2 / nd (aa q) z
   have hQt : ∀ z (c : K → ℂ), (∀ k, c k ≠ 0) → Qf (fun p => c p.1 * z p) = Qf z := by
-    intro z c hc
-    exact Finset.sum_congr rfl fun q _ => term_smul (hGGh q) hc z
+    exact fun z c hc => Finset.sum_congr rfl fun q _ => term_smul (hGGh q) hc z
   have hQsame : ∀ z z', SameOrbit z z' → Qf z = Qf z' := by
     rintro z z' ⟨c, hc, rfl⟩
     exact hQt z' c hc
   have hQconj : ∀ z, Qf (fun p => starRingEnd ℂ (z p)) = Qf z := by
     intro z
-    simp only [Qf, Fintype.sum_prod_type, Fintype.sum_bool, GG, aa, if_true, if_false,
+    simp only [Qf, Fintype.sum_prod_type, Fintype.sum_bool, GG, aa, ite_true, ite_false,
       Bool.false_eq_true, nd_conj]
     refine Finset.sum_congr rfl fun j _ => ?_
     have e1 : MvPolynomial.eval (fun p => starRingEnd ℂ (z p)) (MvPolynomial.map (starRingEnd ℂ) (G j)) =
@@ -592,8 +591,7 @@ theorem assemble {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)] 
       (hSpos _ (hjt x) z (hOsub hzO).1).ne', Real.log_pow]
     push_cast
     ring
-  · intro x
-    exact holoOn_mono _ (holoOn_locMono Rb.A (hψc _) (σ _)) (hVs _)
+  · exact fun x => holoOn_mono _ (holoOn_locMono Rb.A (hψc _) (σ _)) (hVs _)
   · rintro x x' y ⟨hy, hy'⟩
     rw [hnorm x y hy, hnorm x' y hy',
       hQsame _ _ (Rb.compat (jb x) (jb x') y ⟨hVU _ hy, hVU _ hy'⟩)]
@@ -647,8 +645,7 @@ theorem assemble {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)] 
     · intro h
       have := htor _ h (fun k => (c k)⁻¹) (fun k => inv_ne_zero (hc k))
       simpa [inv_mul_cancel_left₀ (hc _)] using this
-    · intro h
-      exact htor _ h c hc
+    · exact fun h => htor _ h c hc
   · intro p p' horb
     have hq : Qf (Rb.lift (jb p') p') = Qf (Rb.lift (jb p) p) := by
       rw [show Qf (Rb.lift (jb p') p') = Qf (Rb.lift p' p') from hNf p' p' (Rb.mem_U p'),
@@ -687,13 +684,11 @@ theorem padExp_apply (p : (k : K) → ι k) (T : ℕ) (m : (Σ k, ι k) →₀ �
   · rw [Finsupp.single_apply]
     by_cases h : i = p k
     · subst h; simp
-    · rw [if_neg, if_neg h]
-      intro e
-      exact h (eq_of_heq (Sigma.mk.inj_iff.1 e).2).symm
+    · rw [ite_eq_right, ite_eq_right h]
+      exact fun e => h (eq_of_heq (Sigma.mk.inj_iff.1 e).2).symm
   · intro b _ hb
-    rw [Finsupp.single_apply, if_neg]
-    intro e
-    exact hb (Sigma.mk.inj_iff.1 e).1
+    rw [Finsupp.single_apply, ite_eq_right]
+    exact fun e => hb (Sigma.mk.inj_iff.1 e).1
   · simp
 
 theorem blkDeg_padExp (p : (k : K) → ι k) (T : ℕ) (m : (Σ k, ι k) →₀ ℕ) (k : K) :
@@ -703,7 +698,7 @@ theorem blkDeg_padExp (p : (k : K) → ι k) (T : ℕ) (m : (Σ k, ι k) →₀ 
   simp only [padExp_apply]
   rw [Finset.sum_eq_single (p k)]
   · simp [blkDeg]
-  · intro b _ hb; rw [if_neg hb]
+  · intro b _ hb; rw [ite_eq_right hb]
   · simp
 
 theorem blkDeg_le_totalDegree {Q : MvPolynomial (Σ k, ι k) ℂ} {m : (Σ k, ι k) →₀ ℕ} (hm : m ∈ Q.support)
@@ -753,8 +748,8 @@ theorem exists_homogenize (p : (k : K) → ι k) (Q : MvPolynomial (Fin (Fintype
     rw [Fintype.prod_sigma, Fintype.prod_sigma, Fintype.prod_sigma]
     have hpad : ∀ k, ∏ i, z ⟨k, i⟩ ^ padExp p T m ⟨k, i⟩ = z ⟨k, p k⟩ ^ (T - blkDeg m k) := fun k => by
       rw [Finset.prod_eq_single (p k)]
-      · rw [padExp_apply, if_pos rfl]
-      · intro b _ hb; rw [padExp_apply, if_neg hb, pow_zero]
+      · rw [padExp_apply, ite_eq_left rfl]
+      · intro b _ hb; rw [padExp_apply, ite_eq_right hb, pow_zero]
       · simp
     simp only [hpad, ReciprocityTheory.AnForm.R.affCoord, div_pow]
     have hden : ∀ k, ∏ i, z ⟨k, p k⟩ ^ m ⟨k, i⟩ = z ⟨k, p k⟩ ^ blkDeg m k := fun k => by
@@ -776,7 +771,7 @@ theorem exists_homogenize (p : (k : K) → ι k) (Q : MvPolynomial (Fin (Fintype
     refine Finset.sum_eq_zero fun m hm => ?_
     rw [eval_monomial, Finsupp.prod_fintype _ _ (fun _ => pow_zero _)]
     refine mul_eq_zero_of_right _ (Finset.prod_eq_zero (Finset.mem_univ ⟨k, p k⟩) ?_)
-    rw [hk, Finsupp.coe_add, Pi.add_apply, padExp_apply, if_pos rfl]
+    rw [hk, Finsupp.coe_add, Pi.add_apply, padExp_apply, ite_eq_left rfl]
     exact zero_pow (by have := hlt m hm k; omega)
 
 end
@@ -976,12 +971,11 @@ theorem exists_res {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι 
     intro k l
     by_cases h : ∃ l, d.σ l = some k
     · have hc0 := Classical.choose_spec h
-      simp only [σ', dif_pos h, Option.some.injEq]
+      simp only [σ', dite_eq_left h, Option.some.injEq]
       constructor
       · rintro rfl; exact hc0
-      · intro hl
-        exact d.σ_injOn (hJ' _ _ hc0) (hJ' _ _ hl) (by rw [hc0, hl])
-    · simp only [σ', dif_neg h]
+      · exact fun hl => d.σ_injOn (hJ' _ _ hc0) (hJ' _ _ hl) (by rw [hc0, hl])
+    · simp only [σ', dite_eq_right h]
       constructor
       · intro h'; cases h'
       · intro hl; exact absurd ⟨l, hl⟩ h
@@ -1073,7 +1067,7 @@ theorem exists_res {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι 
     · intro z hz
       by_cases h0 : ∃ k, z ⟨k, E.symm (idx x₀) k⟩ = 0
       · exact hG0 z h0
-      push_neg at h0
+      push Not at h0
       rw [hG1 z h0]
       refine mul_eq_zero_of_right _ ?_
       obtain ⟨N, hN⟩ := d.mem_bd
@@ -1106,8 +1100,7 @@ theorem exists_res {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι 
       rw [map_pow] at h5
       by_contra hne
       exact pow_ne_zero N hne h5
-    · intro j z hz
-      exact hA'.1 (idx x₀) d.h j z ⟨hz.1, (hψs hz.2).2⟩
+    · exact fun j z hz => hA'.1 (idx x₀) d.h j z ⟨hz.1, (hψs hz.2).2⟩
     · have hys : y ∈ src _ (E.symm (idx x₀)) := (hψs hy).2
       have hl : (fun q => eval (R.coord (idx x₀) y) (R.lift (idx x₀) q)) =
           ReciprocityTheory.AnForm.R.affCoord (E.symm (idx x₀)) (rep y) :=
@@ -1179,7 +1172,7 @@ theorem eq_zero_of_eval_torus {F : MvPolynomial K ℂ}
     rw [map_mul, map_zero, map_prod]
     by_cases hc : ∀ k, c k ≠ 0
     · rw [h c hc, zero_mul]
-    · push_neg at hc
+    · push Not at hc
       obtain ⟨k, hk⟩ := hc
       rw [Finset.prod_eq_zero (Finset.mem_univ k) (by simp [hk]), mul_zero]
   rcases mul_eq_zero.1 h2 with h3 | h3
@@ -1238,8 +1231,7 @@ theorem cond_of_bd {Ω : Type} [Field Ω] [CharZero Ω] {x : (Σ k, J k) → Ω}
   have hwP : w ∈ mcPts (mCoordIdeal x) := by
     refine ⟨fun k => ⟨c k, ?_⟩, fun f hf => ?_⟩
     · have h1 : ρS ⟨k, c k⟩ = 1 := Subtype.ext (div_self (hc k))
-      simp only [w, h1, map_one]
-      exact one_ne_zero
+      simpa only [w, h1, map_one] using one_ne_zero
     · rw [← aeval_eq_eval_map, ← hval]
       have h1 : MvPolynomial.aeval ρS f = 0 := Subtype.ext (by rw [hsub]; exact aeval_ratio_eq_zero c hf)
       rw [h1, map_zero]
@@ -1289,8 +1281,7 @@ theorem exists_homogIdeal {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintyp
   · intro hIP
     obtain ⟨m, f, a, -, -, hsum, hl⟩ := hs c hc
     obtain ⟨l, hfl⟩ : ∃ l, f l ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       rw [Finset.sum_eq_zero fun l _ => by rw [h l, mul_zero]] at hsum
       exact zero_ne_one hsum
     obtain ⟨-, z, n', -, hli, -, hq⟩ := hl l hfl _ rfl
@@ -1300,7 +1291,7 @@ theorem exists_homogIdeal {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintyp
       rw [Ideal.mem_bot] at hzi
       exact hli.ne_zero i (by rw [hzi, map_zero])
     rw [← hbot] at hR
-    push_neg at hR
+    push Not at hR
     obtain ⟨g, hg, s, hs1, hs2⟩ := hR
     have hs3 : (s : Ω) ≠ 0 := fun h0 => hs2 ((Ideal.mem_bot).2 (Subtype.ext h0))
     rw [hs1] at hs3
@@ -1312,8 +1303,7 @@ theorem exists_homogIdeal {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintyp
     refine ⟨hsm, z, n', hn', hli, hsp, fun q hqp => ?_⟩
     rw [← hq q hqp]
     constructor
-    · intro h g hg s hs'
-      exact h g (hle hg) s hs'
+    · exact fun h g hg s hs' => h g (hle hg) s hs'
     · intro h
       have hfin : (insert (f l)⁻¹ (Set.range fun p : Σ k, J k => x p / x ⟨p.1, c' p.1⟩)).Finite :=
         (Set.finite_range _).insert _

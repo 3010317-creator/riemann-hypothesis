@@ -72,12 +72,10 @@ theorem fg_span_comap {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup
   · refine Submodule.fg_of_fg_map_of_fg_inf_ker (f.restrictScalars O) ?_ ?_
     · have : (H.restrictScalars O ⊓ L.comap (f.restrictScalars O)).map (f.restrictScalars O) = L :=
         SetLike.coe_injective him
-      rw [this]
-      exact hfg
+      rwa [this]
     · have : (H.restrictScalars O ⊓ L.comap (f.restrictScalars O)) ⊓ LinearMap.ker (f.restrictScalars O) = ⊥ := by
         rw [eq_bot_iff]
-        intro x hx
-        exact hinj x hx.1.1 hx.2
+        exact fun x hx => hinj x hx.1.1 hx.2
       rw [this]
       exact Submodule.fg_bot
   · have hle : Submodule.span ℂ ((H.restrictScalars O ⊓ L.comap (f.restrictScalars O) : Submodule O V) : Set V) ≤ H :=
@@ -88,8 +86,7 @@ theorem fg_span_comap {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup
       exact Submodule.mem_map_of_mem hx
     obtain ⟨y, hy, e⟩ := this
     have h0 : x - y = 0 := hinj _ (sub_mem hx (hle hy)) (by rw [map_sub, e, sub_self])
-    rw [sub_eq_zero.1 h0]
-    exact hy
+    rwa [sub_eq_zero.1 h0]
 
 variable {D : D7} {n : ℕ}
 

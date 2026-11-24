@@ -394,18 +394,14 @@ theorem UpperTheory.V.AlgebraTools.st_coi_lift :
       intro j hj
       rw [Finset.sum_mul, Finset.sum_eq_single j]
       · exact (hid j hj).eq
-      · intro i hi hij
-        exact hor i hi j hj hij
-      · intro h
-        exact absurd hj h
+      · exact fun i hi hij => hor i hi j hj hij
+      · exact fun h => absurd hj h
     have hr : ∀ j ∈ s, ep j * (∑ i ∈ s, ep i) = ep j := by
       intro j hj
       rw [Finset.mul_sum, Finset.sum_eq_single j]
       · exact (hid j hj).eq
-      · intro i hi hij
-        exact hor j hj i hi (Ne.symm hij)
-      · intro h
-        exact absurd hj h
+      · exact fun i hi hij => hor j hj i hi (Ne.symm hij)
+      · exact fun h => absurd hj h
     refine ⟨?_, fun j hj => ⟨hl j hj, hr j hj⟩⟩
     show (∑ i ∈ s, ep i) * (∑ i ∈ s, ep i) = ∑ i ∈ s, ep i
     rw [Finset.mul_sum]
@@ -433,12 +429,10 @@ theorem UpperTheory.V.AlgebraTools.st_coi_lift :
         exact Finset.sum_congr rfl (fun i hi => (hp i hi).2.2)
       have hl : (1 - ∑ i ∈ s, Matrix.single i i (1 : F)) * Matrix.single a a 1 = Matrix.single a a 1 := by
         rw [sub_mul, one_mul, Finset.sum_mul, Finset.sum_eq_zero, sub_zero]
-        intro i hi
-        exact Matrix.single_mul_single_of_ne _ _ _ _ (hne i hi) _
+        exact fun i hi => Matrix.single_mul_single_of_ne _ _ _ _ (hne i hi) _
       have hr : Matrix.single a a (1 : F) * (1 - ∑ i ∈ s, Matrix.single i i (1 : F)) = Matrix.single a a 1 := by
         rw [mul_sub, mul_one, Finset.mul_sum, Finset.sum_eq_zero, sub_zero]
-        intro i hi
-        exact Matrix.single_mul_single_of_ne _ _ _ _ (hne i hi).symm _
+        exact fun i hi => Matrix.single_mul_single_of_ne _ _ _ _ (hne i hi).symm _
       have hey : r (1 - ∑ i ∈ s, ep i) * r (y a) * r (1 - ∑ i ∈ s, ep i) = r (y a) := by
         rw [hre, hy a, hl, hr]
       obtain ⟨f, hf, hsf, hef, hfe, hrf⟩ :=
@@ -480,9 +474,9 @@ theorem UpperTheory.V.AlgebraTools.st_coi_lift :
     by_cases h : a = b
     · subst h
       simp
-    · simp only [h, if_false]
+    · simp only [h, ite_false]
       refine Finset.sum_eq_zero (fun x _ => ?_)
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨rfl, rfl⟩
       exact h rfl
   have hr0 : r (1 - ∑ i, ep i) = 0 := by
@@ -557,8 +551,7 @@ theorem UpperTheory.V.AlgebraTools.units_exist :
     have h1 := hα1 i
     rw [RingHom.mem_ker, map_sub, map_one, sub_eq_zero] at h1
     have h := congrArg (algebraMap B F) (Units.inv_mul (α i))
-    rw [map_mul, map_one, h1, mul_one] at h
-    exact h
+    rwa [map_mul, map_one, h1, mul_one] at h
   have hinv : ∀ i, (↑(α i)⁻¹ : B) * ↑(α i)⁻¹ * b i = 1 := by
     intro i
     rw [← hα, sq, mul_assoc, ← mul_assoc (↑(α i)⁻¹ : B) (↑(α i)) (↑(α i)), Units.inv_mul, one_mul,
@@ -567,24 +560,24 @@ theorem UpperTheory.V.AlgebraTools.units_exist :
     ?_, ?_, ?_, ?_⟩, rfl, ?_⟩
   · intro i
     by_cases h : o i = i
-    · rw [if_pos h, h, idem, idem]
-    · rw [if_neg h, mul_smul_comm, smul_mul_assoc, hz_mem]
+    · rw [ite_eq_left h, h, idem, idem]
+    · rw [ite_eq_right h, mul_smul_comm, smul_mul_assoc, hz_mem]
   · intro i
-    rw [if_pos (ho i)]
+    rw [ite_eq_left (ho i)]
   · intro i
     by_cases h : o i = i
-    · rw [if_pos h, hst, idem, h]
-    · rw [if_neg h, map_smul, smul_mul_assoc, mul_smul_comm, smul_smul, hzst, hbb, smul_smul, hinv,
+    · rw [ite_eq_left h, hst, idem, h]
+    · rw [ite_eq_right h, map_smul, smul_mul_assoc, mul_smul_comm, smul_smul, hzst, hbb, smul_smul, hinv,
         one_smul]
   · intro i
     by_cases h : o i = i
-    · rw [if_pos h, hst, idem]
-    · rw [if_neg h, map_smul, smul_mul_assoc, mul_smul_comm, smul_smul, hb', smul_smul, hinv, one_smul]
+    · rw [ite_eq_left h, hst, idem]
+    · rw [ite_eq_right h, map_smul, smul_mul_assoc, mul_smul_comm, smul_smul, hb', smul_smul, hinv, one_smul]
   · intro i
     dsimp only
     by_cases h : o i = i
-    · rw [if_pos h, hre, h]
-    · rw [if_neg h, map_smul, hrz, ← algebraMap_smul (A := F), hαinvF, one_smul]
+    · rw [ite_eq_left h, hre, h]
+    · rw [ite_eq_right h, map_smul, hrz, ← algebraMap_smul (A := F), hαinvF, one_smul]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.UnitsExist =====
@@ -664,12 +657,12 @@ private theorem oB_oB {n a : ℕ} (h1 : 1 ≤ a) (h2 : a ≤ n) (i : Fin n) : oB
   unfold oB at key ⊢
   by_cases hi : (i : ℕ) < a
   · have : ((if (i : ℕ) < a then (⟨0, by omega⟩ : Fin n) else ⟨n - 1, by omega⟩ : Fin n) : ℕ) < a := key.2 hi
-    simp only [hi, if_true] at this ⊢
-    simp only [this, if_true]
+    simp only [hi, ite_true] at this ⊢
+    simp only [this, ite_true]
   · have : ¬ ((if (i : ℕ) < a then (⟨0, by omega⟩ : Fin n) else ⟨n - 1, by omega⟩ : Fin n) : ℕ) < a :=
       fun h => hi (key.1 h)
-    simp only [hi, if_false] at this ⊢
-    simp only [this, if_false]
+    simp only [hi, ite_false] at this ⊢
+    simp only [this, ite_false]
 
 private theorem single_mem {F : Type} [Field F] {n a : ℕ} (p q : Fin n) (h : (p : ℕ) < a ↔ (q : ℕ) < a) :
     (single p q 1 : Matrix (Fin n) (Fin n) F) ∈ Ev F F n a := by

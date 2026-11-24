@@ -186,12 +186,9 @@ private theorem flat_finsum {α : Type} {β γ : α → Type} (n : ∀ a, β a �
         ((fun d : β a × γ a => (⟨a, d⟩ : Σ a, β a × γ a)) ⁻¹' (S : Set (Σ a, β a × γ a))) := by
       intro d _ d' _ h
       simpa using h
-    refine (S.finite_toSet.preimage hinj).subset ?_
-    intro d hd
-    exact hS ⟨a, d⟩ (right_ne_zero_of_mul hd)
+    exact (S.finite_toSet.preimage hinj).subset (fun d hd => hS ⟨a, d⟩ (right_ne_zero_of_mul hd))
   rw [finsum_curry _ hfin]
-  refine finsum_congr fun b => ?_
-  exact mul_finsum _ _
+  exact finsum_congr fun b => mul_finsum _ _
 
 theorem cxFlat_of : CxFlat := by
   intro p _ G v c K f S hS
@@ -515,8 +512,7 @@ theorem UpperTheory.Gal.LocalSmoothExtension.eigOf_of :
     have := LinearMap.congr_fun h2 ⟨u b z, hu⟩
     simpa [mul_apply_eq_comp] using this
   obtain ⟨x, hx0, hx⟩ := common_eig (S b) (hS b) θ _ hy hyG
-  refine ⟨(x : W b), fun h => hx0 (Subtype.ext h), fun j => ?_⟩
-  exact congrArg Subtype.val (hx j)
+  exact ⟨(x : W b), fun h => hx0 (Subtype.ext h), fun j => (congrArg Subtype.val (hx j))⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.LefschetzSigmaSums.PEigOf =====
@@ -1124,10 +1120,10 @@ theorem UpperTheory.Gal.LocalSmoothExtension.schWConj_of :
     rfl
   · have h0 : schW lam χ = 0 := by
       unfold schW
-      exact dif_neg h
+      exact dite_eq_right h
     have h1 : schW (conjWt σ lam) χ = 0 := by
       unfold schW
-      exact dif_neg h
+      exact dite_eq_right h
     rw [h0, h1, map_zero]
 end -- clump:auto
 end -- clump:auto
@@ -1149,8 +1145,7 @@ theorem UpperTheory.Gal.LocalSmoothExtension.testOf_of :
   refine ⟨⟨Subgroup.Commensurable.refl K, ?_, ?_, S, ?_⟩, hinv⟩
   · rintro x ⟨y, hy, rfl⟩
     exact hy
-  · intro k hk g
-    exact hinv _ (K.inv_mem hk) _ hk g
+  · exact fun k hk g => hinv _ (K.inv_mem hk) _ hk g
   · intro g hg
     obtain ⟨s, hs, a, b, rfl⟩ := hS g hg
     exact ⟨s, hs, a, a.2, b, b.2, rfl⟩
@@ -1244,7 +1239,7 @@ theorem UpperTheory.Gal.LocalSmoothExtension.traceSemi_of :
       rintro ⟨t, ⟨c⟩⟩
       obtain ⟨c', -⟩ := exists_basis (semi_symm h) c
       exact H ⟨_, ⟨c'.reindexFinsetRange⟩⟩
-    simp only [LinearMap.trace, dif_neg H, dif_neg H', LinearMap.zero_apply, map_zero]
+    simp only [LinearMap.trace, dite_eq_right H, dite_eq_right H', LinearMap.zero_apply, map_zero]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.LefschetzSigmaSums.PTraceSemi =====

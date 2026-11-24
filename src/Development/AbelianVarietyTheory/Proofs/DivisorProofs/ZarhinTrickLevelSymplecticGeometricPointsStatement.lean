@@ -193,8 +193,7 @@ theorem weilIs_decomp : ∀ (h M₁ : ℕ) {Bt : Type} [CommRing Bt] (ζ : Bt) (
   have r := GlobalTheory.DiagPairing.weilIs_mul_left hG hAA c.isLB (GlobalTheory.CommPairing.weilIs_symm c.isLB sA)
     (GlobalTheory.CommPairing.weilIs_symm c.isLB sB)
   rw [GlobalTheory.DiagSqAxes.lift_mul_lift₂, GlobalTheory.DiagSqAxes.lift_mul_lift₂] at r
-  simp only [_root_.mul_one, _root_.one_mul, inv_one, inv_inv] at r
-  exact r
+  simpa only [_root_.mul_one, _root_.one_mul, inv_one, inv_inv] using r
 
 theorem lift_pow_eq_one {S : Scheme.{0}} {A B : Over S} [GrpObj A] [GrpObj B] {T : Over S} (u : T ⟶ A) (v : T ⟶ B)
     (n : ℕ) (hu : u ^ n = 1) (hv : v ^ n = 1) : lift u v ^ n = 1 := by
@@ -232,8 +231,7 @@ theorem weilIs_axes_lev : ∀ (h M : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp (cycAwa
     rw [← _root_.GlobalTheory.HeckePoint.unitOn_pow, ← zpow_natCast, ← zpow_mul, mul_comm, zpow_mul, zpow_natCast, hzM, one_zpow, _root_.GlobalTheory.HeckePoint.unitOn_one]
   have key : E = unitOn (z ^ omegaStd p q) := by
     rw [root E hEM, root _ hu, hsq, ← _root_.GlobalTheory.ToricData.unitOn_mul, ← zpow_add, two_mul]
-  rw [← key]
-  exact hE
+  rwa [← key]
 
 theorem weilIs_poincare_lev : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp (cycAway M)) (c : SiegPre h M (zetaAway M) t) (B : Over S) [GrpObj B] [IsCommMonObj B] (Q : LB (c.A ⊗ B).left) (la : c.A ⟶ B) (mu : B ⟶ c.A) (hZ : GlobalTheory.ZarhinFam.ZData c d B Q la mu), Odd M → ∀ (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ S) (β : cycAway M →+* k) (z : kˣ), x ≫ t = spMap β → (z : k) = β (zetaAway M) → ∀ p q p' q' : Fin h ⊕ Fin h → ℤ, Out.WeilIs (c.A ⊗ B) Q M (lift (toUnit (Over.mk x) ≫ c.lev p) (toUnit (Over.mk x) ≫ c.lev q ≫ la)) (lift (toUnit (Over.mk x) ≫ c.lev p') (toUnit (Over.mk x) ≫ c.lev q' ≫ la)) (unitOn (z ^ (omegaStd p q' + omegaStd q p'))) := by
   intro h M d S t c B _ _ Q la mu hZ hMo k _ _ x β z hxt hz p q p' q'
@@ -274,8 +272,7 @@ theorem weilIs_poincare_lev : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp (
   have hval : unitOn (z ^ (omegaStd p q' + omegaStd q p')) =
       unitOn (z ^ omegaStd p q') * (unitOn (z ^ omegaStd p' q))⁻¹ := by
     rw [anti, ← sub_eq_add_neg, zpow_sub, _root_.GlobalTheory.ToricData.unitOn_mul, unitOn_inv'']
-  rw [hval, ← hu]
-  exact he
+  rwa [hval, ← hu]
 
 theorem cls_diag_zP : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp (cycAway M)) (c : SiegPre h M (zetaAway M) t) (B : Over S) [GrpObj B] [IsCommMonObj B] (Q : LB (c.A ⊗ B).left) (la : c.A ⟶ B) (mu : B ⟶ c.A) (hZ : GlobalTheory.ZarhinFam.ZData c d B Q la mu) (hL : ((GlobalTheory.ZarhinFam.zP c.A B c.isLB hZ.2.1.isLB d mu).pull (lift (𝟙 (GlobalTheory.ZarhinFam.Zob c.A B)) (𝟙 (GlobalTheory.ZarhinFam.Zob c.A B))).left).IsLB), GlobalTheory.CechPic.cls _ hL = (∑ i, GlobalTheory.CechPic.pull (lift (GlobalTheory.ZarhinFam.pa c.A B i) (GlobalTheory.ZarhinFam.pa c.A B i ≫ la)).left (GlobalTheory.CechPic.cls Q hZ.2.1.isLB)) + (∑ i, ∑ j, (2 * GlobalTheory.ZarhinFam.quat d j i) • GlobalTheory.CechPic.pull (lift (GlobalTheory.ZarhinFam.pa c.A B i) (GlobalTheory.ZarhinFam.pb c.A B j)).left (GlobalTheory.CechPic.cls Q hZ.2.1.isLB)) + ∑ j, GlobalTheory.CechPic.pull (lift (GlobalTheory.ZarhinFam.pb c.A B j ≫ mu) (GlobalTheory.ZarhinFam.pb c.A B j)).left (GlobalTheory.CechPic.cls Q hZ.2.1.isLB) := by
   intro h M d S t c B _ _ Q la mu hZ hL
@@ -413,8 +410,7 @@ theorem weilIs_formZ : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp (cycAway
     rw [map_prod]
     refine Finset.prod_congr rfl fun i _ => ?_
     simp only [zpow_mul, map_zpow]
-  rw [← he']
-  exact he
+  rwa [← he']
 
 end GlobalTheory.ZarhinWeil
 end -- clump:auto
@@ -501,7 +497,7 @@ theorem inc_act_pa {T : Over S} (d : ℕ) (la : A ⟶ B) (mu : B ⟶ A) (y : T �
     y ≫ incZ A B ≫ actZ A B d la mu (oMat d k) ≫ pa A B i = if sig k = Sum.inl i then y else 1 := by
   rw [actZ, mkZ_pa]
   simp only [oMat_apply, Fin.prod_univ_four, comp_mul, GrpObj.comp_zpow, ← Category.assoc, incZ_pa]
-  simp only [true_and, if_true, Category.comp_id, reduceCtorEq, false_and, if_false, zpow_zero,
+  simp only [true_and, ite_true, Category.comp_id, reduceCtorEq, false_and, ite_false, zpow_zero,
     Sum.inl.injEq, Fin.reduceEq, comp_one]
   split_ifs <;> simp
 
@@ -509,7 +505,7 @@ theorem inc_act_pb {T : Over S} (d : ℕ) (la : A ⟶ B) (mu : B ⟶ A) (y : T �
     y ≫ incZ A B ≫ actZ A B d la mu (oMat d k) ≫ pb A B j = if sig k = Sum.inr j then y ≫ la else 1 := by
   rw [actZ, mkZ_pb]
   simp only [oMat_apply, Fin.prod_univ_four, comp_mul, GrpObj.comp_zpow, ← Category.assoc, incZ_pa, incZ_pb]
-  simp only [true_and, if_true, Category.comp_id, reduceCtorEq, false_and, if_false, zpow_zero,
+  simp only [true_and, ite_true, Category.comp_id, reduceCtorEq, false_and, ite_false, zpow_zero,
     Sum.inl.injEq, Fin.reduceEq, comp_one]
   split_ifs <;> simp
 
@@ -768,8 +764,7 @@ theorem geom_levZ : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp (cycAway M)
       have : 2 * formZ d h (fun k => κ k a) (fun k => κ k b) = 2 * omegaStd a b + (M : ℤ) * (2 * m) := by
         linear_combination 2 * hm
       rw [this, zpow_add, zpow_mul z (M : ℤ), zpow_natCast, hzM, one_zpow, _root_.mul_one]
-    rw [e] at W
-    exact W
+    rwa [e] at W
 
 end GlobalTheory.ZarhinFam
 end -- clump:auto

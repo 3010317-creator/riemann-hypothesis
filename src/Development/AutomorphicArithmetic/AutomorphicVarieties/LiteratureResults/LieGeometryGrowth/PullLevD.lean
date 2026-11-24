@@ -55,12 +55,10 @@ theorem UpperTheory.V.Lit.Geo.levD :
   have hom := omGood _ _ _ _ (geo ho U Ξ) 0 (isFlow_zero _) q
   refine ⟨?_, fun β hβ => ?_⟩
   · obtain ⟨α', hc', hl⟩ := (levGood E a ho U Ξ (q + 1)).2 _ (hom.1 w hg).2
-    rw [(corrUniq E a ho U Ξ (q + 1)).1 _ _ _ (corrD E a ho U Ξ q α w hc) hc']
-    exact hl
+    rwa [(corrUniq E a ho U Ξ (q + 1)).1 _ _ _ (corrD E a ho U Ξ q α w hc) hc']
   · obtain ⟨w', hc', hg'⟩ := (levGood E a ho U Ξ q).1 β hβ
     obtain ⟨γ, hc'', hl⟩ := (levGood E a ho U Ξ q).2 _ (hom.2.1 w w' hg hg')
     have hs : Corr U Ξ (α - β) (w - w').1 := fun g x X => by
       rw [AlternatingMap.sub_apply, map_sub, Pi.sub_apply, Matrix.mulVec_sub, ← hc g x X, ← hc' g x X]
       rfl
-    rw [(corrUniq E a ho U Ξ q).1 _ _ _ hs hc'']
-    exact hl
+    rwa [(corrUniq E a ho U Ξ q).1 _ _ _ hs hc'']

@@ -115,8 +115,7 @@ private theorem zmod_extend {A B : Type*} [AddCommGroup A] [Module (ZMod N) A] [
     ((LinearMap.ker φ).liftQ φ le_rfl)
     (LinearMap.ker_eq_bot.mp (Submodule.ker_liftQ_eq_bot _ _ _ le_rfl))
     ((LinearMap.ker φ).liftQ c (fun a ha => h a ha))
-  refine ⟨t, fun a => ?_⟩
-  exact LinearMap.congr_fun ht (Submodule.Quotient.mk a)
+  exact ⟨t, fun a => (LinearMap.congr_fun ht (Submodule.Quotient.mk a))⟩
 
 theorem exists_form_ne_zero (I : Submodule (ZMod N) M) {z : M} (hz : z ∉ I) :
     ∃ f : M →ₗ[ZMod N] ZMod N, (∀ x ∈ I, f x = 0) ∧ f z ≠ 0 := by
@@ -140,7 +139,6 @@ theorem exists_form_ne_zero (I : Submodule (ZMod N) M) {z : M} (hz : z ∉ I) :
     rw [LinearMap.comp_apply, this, map_zero]
   · have := ht 1
     rw [LinearMap.toSpanSingleton_apply, LinearMap.toSpanSingleton_apply, one_smul, one_smul] at this
-    rw [LinearMap.comp_apply, this]
-    exact hw0
+    rwa [LinearMap.comp_apply, this]
 
 end KStar.Selmer

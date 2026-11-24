@@ -151,8 +151,7 @@ theorem GlobalTheory.EtC.CechPts.main : ∀ (R : Type) [CommRing R] (F : Shv R) 
     change ((toSheafify Scheme.etaleTopology ((freeP R).obj _) ≫ (GlobalTheory.EtC.FreeHom.desc _ F φ hφ).hom).app (op U)).hom (ModuleCat.freeMk (ULift.up v)) = _
     have hd : toSheafify Scheme.etaleTopology ((freeP R).obj ((cech f).obj (op ⦋k⦌))) ≫ (GlobalTheory.EtC.FreeHom.desc _ F φ hφ).hom = GlobalTheory.EtC.FreeHom.descP _ F φ hφ := by
       have ht := ((sheafificationAdjunction Scheme.etaleTopology.{0} (ModuleCat.{1} (ULift.{1} R))).homEquiv _ _).apply_symm_apply (GlobalTheory.EtC.FreeHom.descP _ F φ hφ)
-      rw [Adjunction.homEquiv_unit] at ht
-      exact ht
+      rwa [Adjunction.homEquiv_unit] at ht
     rw [hd]
     change (ModuleCat.freeDesc _).hom (ModuleCat.freeMk (ULift.up v)) = _
     erw [ModuleCat.freeDesc_apply]
@@ -186,8 +185,7 @@ theorem GlobalTheory.EtC.CechPts.main : ∀ (R : Type) [CommRing R] (F : Shv R) 
       apply (e Z).1
       change ((cech f).obj (op ⦋k⦌)).map (c Z _).op (cechPt f k x y h) =
         ((cech f).obj (op ⦋k⦌)).map (𝟙 Z).op (cechPt f k x y h)
-      rw [hc' Z, op_id]
-      rw [CategoryTheory.Functor.map_id]
+      rw [hc' Z, op_id, CategoryTheory.Functor.map_id]
       rfl
     rw [h2]
     simp [Sec.res]

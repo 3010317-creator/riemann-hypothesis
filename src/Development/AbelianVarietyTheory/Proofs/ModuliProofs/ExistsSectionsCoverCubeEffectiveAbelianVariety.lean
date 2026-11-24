@@ -117,8 +117,7 @@ theorem exists_sections_cube_cover :
   have hD : (((snd T P.A).left ⁻¹ᵁ Out.nonzeroLocus s : (T ⊗ P.A).left.Opens) : Set (T ⊗ P.A).left).Nonempty := by
     obtain ⟨d, hd⟩ : ((P.A.left.basicOpen (s.f j) : P.A.left.Opens) : Set P.A.left).Nonempty := by
       rw [Set.nonempty_iff_ne_empty]
-      intro h
-      exact hj ((basicOpen_eq_bot_iff _).1 (SetLike.coe_injective h))
+      exact fun h => hj ((basicOpen_eq_bot_iff _).1 (SetLike.coe_injective h))
     refine ⟨(lift π (𝟙 _)).left d, ?_⟩
     show (snd T P.A).left ((lift π (𝟙 _)).left d) ∈ Out.nonzeroLocus s
     rw [← Scheme.Hom.comp_apply, ← Over.comp_left, lift_snd]
@@ -133,8 +132,7 @@ theorem exists_sections_cube_cover :
     refine unitAt_pull s _ y ?_
     have e : x ≫ ((π ≫ a) * 𝟙 P.A) = Out.ptSecT P.A (a * x) ≫ snd T P.A := by
       simp [Out.ptSecT, MonObj.comp_mul, reassoc_of% hxπ]
-    rw [← hx, ← Scheme.Hom.comp_apply, ← Over.comp_left, e]
-    exact ha
+    rwa [← hx, ← Scheme.Hom.comp_apply, ← Over.comp_left, e]
   obtain ⟨a, ha, -⟩ := NoBasePoint.exists_two_points (𝟙 (Sp K)) _ hD x x
   obtain ⟨b, hb, hc⟩ := NoBasePoint.exists_two_points (𝟙 (Sp K)) _ hD x (a⁻¹ * x)
   rw [← _root_.mul_assoc] at hc

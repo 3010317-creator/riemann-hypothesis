@@ -262,14 +262,12 @@ theorem nested_vanish : ∀ (ι : Type) [DecidableEq ι] (H : ι → Type) [∀ 
         refine Finset.sum_congr rfl fun t _ => ?_
         congr 1
         have := (hI (Function.update x i (a * t.1))).1 r hr
-        rw [Function.update_of_ne hji, Function.update_comm hji.symm] at this
-        exact this
+        rwa [Function.update_of_ne hji, Function.update_comm hji.symm] at this
       · intro k hk
         refine Finset.sum_congr rfl fun t _ => ?_
         congr 1
         have := (hI (Function.update x i (a * t.1))).2 k hk
-        rw [Function.update_of_ne hji, Function.update_comm hji.symm] at this
-        exact this
+        rwa [Function.update_of_ne hji, Function.update_comm hji.symm] at this
     · intro x hx hne
       obtain ⟨t, -, ht⟩ := Finset.exists_ne_zero_of_sum_ne_zero hne
       have hq : q (Function.update x i (a * t.1)) ≠ 0 := right_ne_zero_of_mul ht
@@ -348,8 +346,7 @@ theorem nested_vanish : ∀ (ι : Type) [DecidableEq ι] (H : ι → Type) [∀ 
         by_cases hj : j = i
         · subst hj; simp
         · simp [Function.update_of_ne hj, a'']
-      rw [e]
-      exact hlin
+      rwa [e]
 
 end GlobalTheory.NestVan
 end -- clump:auto
@@ -485,8 +482,7 @@ theorem niter_cellSum_at (ι : Type) [DecidableEq ι] (H : ι → Type) [∀ i, 
           have e1 := dcos_eq_of_mem hgβ
           have e2 := dcos_eq_of_mem hgβ'
           have hm : b β' j ∈ dcos (R j) (K j) (b β' j) := ⟨1, Subgroup.one_mem _, 1, Subgroup.one_mem _, by simp⟩
-          rw [← e2, e1] at hm
-          exact hm
+          rwa [← e2, e1] at hm
         · obtain ⟨r, hr, a, ha, k, hk, e⟩ := hc j hj'
           refine ⟨r, hr, a, ha, k, hk, ?_⟩
           simpa [Function.update_of_ne (hne j hj')] using e
@@ -499,8 +495,7 @@ theorem niter_cellSum_at (ι : Type) [DecidableEq ι] (H : ι → Type) [∀ i, 
           rwa [Function.update_of_ne hji] at this) hq0
         refine ⟨β, Finset.mem_filter.2 ⟨hβ, ?_⟩, ?_⟩
         · have := hc i (by simp)
-          rw [cellBot_iff, hgi] at this
-          exact this
+          rwa [cellBot_iff, hgi] at this
         · intro j hj
           obtain ⟨r, hr, a, ha, k, hk, e⟩ := hc j (List.mem_cons_of_mem _ hj)
           refine ⟨r, hr, a, ha, k, hk, ?_⟩
@@ -604,10 +599,8 @@ theorem cellVan_holds : CellVan := by
       exact hb i
   · intro i hi h
     constructor
-    · intro r hr
-      exact Finset.sum_congr rfl fun n _ => by rw [(hinv n i hi h).1 r hr]
-    · intro k hk
-      exact Finset.sum_congr rfl fun n _ => by rw [(hinv n i hi h).2 k hk]
+    · exact fun r hr => Finset.sum_congr rfl fun n _ => by rw [(hinv n i hi h).1 r hr]
+    · exact fun k hk => Finset.sum_congr rfl fun n _ => by rw [(hinv n i hi h).2 k hk]
   · intro h h1 hne
     obtain ⟨n, -, hn⟩ := Finset.exists_ne_zero_of_sum_ne_zero hne
     obtain ⟨β, hβ, hc⟩ := hsupp n h h1 (right_ne_zero_of_mul hn)
@@ -625,7 +618,7 @@ theorem cellVan_holds : CellVan := by
     have hbb : ∀ n β (hβ : β ∈ S n), bb n β = fun i => ⟨b n β i, (hw n β hβ).2.1 i⟩ := by
       intro n β hβ
       funext i
-      exact dif_pos _
+      exact dite_eq_left _
     let qn : Fin 2 → (∀ j : Subtype p, B j.1) → ℂ := fun n g => q n fun i => a i * (extPt (H := fun i => ↥(B i)) p 1 g i).1
     have hg1 : ∀ (g : ∀ j : Subtype p, B j.1) i, i ∉ l → a i * (extPt (H := fun i => ↥(B i)) p 1 g i).1 = 1 := by
       intro g i hi
@@ -669,8 +662,7 @@ theorem cellVan_holds : CellVan := by
         dsimp only at e'
         simp only [Subgroup.coe_mul, mul_one] at e'
         rw [hv β' hβ', hv β hβ] at e'
-        rw [mul_one]
-        exact e'
+        rwa [mul_one]
       · intro j _ g
         have hgj : ∀ x : B j.1, (fun i => a i * (extPt (H := fun i => ↥(B i)) p 1 (Function.update g j x) i).1) =
             Function.update (fun i => a i * (extPt (H := fun i => ↥(B i)) p 1 g i).1) j.1 (a j.1 * x.1) := by
@@ -689,8 +681,7 @@ theorem cellVan_holds : CellVan := by
           rw [hgj]
           have hx : a j.1 * (r * g j).1 = r.1 * (a j.1 * (extPt (H := fun i => ↥(B i)) p 1 g j.1).1) := by
             rw [hj1, Subgroup.coe_mul, ← mul_assoc, ← mul_assoc, (hS j.1 j.2).comm _ (ha j.1) _ r.2]
-          rw [hx]
-          exact this
+          rwa [hx]
         · intro k hk
           have := (hinv n j.1 j.2 (fun i => a i * (extPt (H := fun i => ↥(B i)) p 1 g i).1)).2 k.1
             (Subgroup.mem_subgroupOf.1 hk)
@@ -698,8 +689,7 @@ theorem cellVan_holds : CellVan := by
           rw [hgj]
           have hx : a j.1 * (g j * k).1 = (a j.1 * (extPt (H := fun i => ↥(B i)) p 1 g j.1).1) * k.1 := by
             rw [hj1, Subgroup.coe_mul, mul_assoc]
-          rw [hx]
-          exact this
+          rwa [hx]
       · intro g _ hne
         obtain ⟨β, hβ, hc⟩ := hsupp n _ (hg1 g) hne
         refine ⟨β, hβ, fun j _ => ?_⟩
@@ -731,8 +721,7 @@ theorem cellVan_holds : CellVan := by
     have ht := niter_sub p ρ' μ' (fun bb : ∀ i, B i => ∑ n ∈ Finset.univ, α n * q n fun i => a i * (bb i).1) 1 l.attach 1 0 hlin
     have e1 : extPt p (1 : ∀ i, B i) (1 : ∀ j : Subtype p, B j.1) = 1 := by
       funext i; simp [extPt]
-    rw [e1, List.attach_map_subtype_val] at ht
-    exact ht
+    rwa [e1, List.attach_map_subtype_val] at ht
 
 end GlobalTheory.RowVal
 end -- clump:auto

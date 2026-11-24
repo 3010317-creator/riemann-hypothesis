@@ -143,8 +143,7 @@ private theorem latticePoint_eq_of_sub_mem_lattice {z w : ℂ} (h : z - w ∈ L.
     rw [_root_.GlobalTheory.latticePoint_of_notMem L hz, _root_.GlobalTheory.latticePoint_of_notMem L hw]
     have e1 : ℘[L] z = ℘[L] w := by simpa using weierstrassP_add_coe L w ⟨z - w, h⟩
     have e2 : ℘'[L] z = ℘'[L] w := by simpa using derivWeierstrassP_add_coe L w ⟨z - w, h⟩
-    simp only [WeierstrassCurve.Affine.Point.some.injEq]
-    exact ⟨e1, by rw [e2]⟩
+    simpa only [WeierstrassCurve.Affine.Point.some.injEq] using ⟨e1, by rw [e2]⟩
 
 open Filter PeriodPair WeierstrassCurve in
 open scoped Topology in
@@ -168,7 +167,7 @@ private theorem weierstrassP_add_and_deriv_add_of_ne {z w : ℂ} (hz : z ∉ L.l
     · rw [h2]
       field_simp
       ring
-  push_neg at hw' hz'
+  push Not at hw' hz'
   have h2w : w + w ∈ L.lattice := (_root_.GlobalTheory.derivWeierstrassP_eq_zero_iff L hw).mp hw'
   have h2z : z + z ∈ L.lattice := (_root_.GlobalTheory.derivWeierstrassP_eq_zero_iff L hz).mp hz'
   have hzw : z + w ∉ L.lattice := fun h => hne ((_root_.GlobalTheory.weierstrassP_eq_iff L hz hw).mpr (Or.inr h))
@@ -277,12 +276,10 @@ theorem _root_.GlobalTheory.latticePoint_add (z w : ℂ) :
       refine (((_root_.GlobalTheory.countable_periodLattice L).union ?_).union
         (_root_.GlobalTheory.countable_add_mem_periodLattice L z)).union (_root_.GlobalTheory.countable_add_mem_periodLattice L (-z))
       refine ((_root_.GlobalTheory.countable_periodLattice L).image (fun x => x / 2)).mono ?_
-      intro u hu
-      exact ⟨u + u, hu, by ring⟩
+      exact fun u hu => ⟨u + u, hu, by ring⟩
     obtain ⟨u, hu⟩ : ∃ u, u ∉ ({u : ℂ | u ∈ L.lattice} ∪ {u | u + u ∈ L.lattice} ∪
         {u | u + z ∈ L.lattice} ∪ {u | u + -z ∈ L.lattice}) := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact not_countable_complex (hc.mono fun u _ => h u)
     simp only [Set.mem_union, Set.mem_setOf_eq, not_or] at hu
     obtain ⟨⟨⟨hu1, hu2⟩, hu3⟩, hu4⟩ := hu

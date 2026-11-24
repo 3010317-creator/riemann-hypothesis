@@ -103,8 +103,7 @@ theorem squareWeil₁ : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G
     have e2 := hx.2 x
     have e3 := he.2 x
     show L.mu0 ((j : ℕ) + 1) _ * L.xi t _ * (L.eta ^ _) _ = 1
-    rw [MonoidHom.pow_apply]
-    rw [e1, e2, e3]
+    rw [MonoidHom.pow_apply, e1, e2, e3]
     simp
   have hβ : GlobalTheory.LFun.IsHecke D.host.F D.host.E (beta G i j) := by
     have hc := (G.ch.chi_eq (D.R.m - (i : ℕ)) (by omega) (by omega)).1

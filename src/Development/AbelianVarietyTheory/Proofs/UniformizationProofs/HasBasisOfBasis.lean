@@ -120,8 +120,7 @@ theorem HasBasis.transfer {A : LB Y'} {B : LB Y} (hA : A.IsLB) (hB : B.IsLB) (σ
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [hRel _ _ (hβ' i) Y' (𝟙 Y') y a j hy hy']
       exact mul_left_comm _ _ _
-  simp only [key]
-  exact hβ t
+  simpa only [key] using hβ t
 
 theorem exists_inv_iso {A B : LB X} (w : LB.Iso A B) (hw : w.IsGen) : ∃ w' : LB.Iso B A, w'.IsGen ∧
     ∀ (Z : Scheme.{0}) (r : Z ⟶ X) (z : Z) (a : A.ι) (b : B.ι), r z ∈ A.U a ⊓ B.U b →
@@ -165,8 +164,7 @@ theorem exists_pull_gs {L : LB X} {K : Type} [Fintype K] {φ : K → (Y ⟶ X)} 
   refine ⟨s', fun Z r z j hz => ?_⟩
   have le : LB.wchart L φ' j ≤ h ⁻¹ᵁ LB.wchart L φ j := fun y hy => Set.mem_iInter.2 fun k => by
     have := Set.mem_iInter.1 hy k
-    rw [← e] at this
-    exact this
+    rwa [← e] at this
   rw [hs' j le]
   exact (gs_res r z le hz _).trans (gs_pull r h z _ (le hz) _)
 
@@ -178,8 +176,7 @@ theorem HasBasis.pull {L : LB X} (hL : L.IsLB) {K : Type} [Fintype K] {φ : K �
   have mem : ∀ (Z : Scheme.{0}) (r : Z ⟶ Y') (z : Z) (b : K → L.ι), (r ≫ σ) z ∈ LB.wchart L φ b →
       r z ∈ LB.wchart L φ' b := fun Z r z b hb => Set.mem_iInter.2 fun k => by
     have := Set.mem_iInter.1 hb k
-    rw [← e]
-    exact this
+    rwa [← e]
   refine H.transfer (linComb_isLB L hL _ _) (linComb_isLB L hL _ _) σ τ h₁ p p' hp
     (fun Z r z a b => trF φ' ε r z a b) _ (fun _ _ h => h) (fun t => ?_) (fun s => ?_)
   · obtain ⟨s, hs⟩ := exists_pull_gs t σ φ' e

@@ -178,9 +178,7 @@ theorem realises_unitPow (F : FinExt l) {T J : Type} [AddCommGroup T] [Module �
   refine ⟨hAinf, ?_, ?_, ?_⟩
   · exact SemiBC.comp_equiv (semiBC_piMap ((inclW l).comp (ainfId F).toRingHom) J)
       (β.baseChange (WCb l)).equivFun.symm
-  · intro d hd x m k h
-    exact unitPowMap_frob F β d.1 hd x m k h
-  · intro g x
-    exact unitPowMap_gal F β g (ρ g) (hρ g) x
+  · exact fun d hd x m k h => unitPowMap_frob F β d.1 hd x m k h
+  · exact fun g x => unitPowMap_gal F β g (ρ g) (hρ g) x
 
 end GlobalTheory.BKReal

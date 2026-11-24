@@ -101,8 +101,7 @@ theorem eig_descends : ∀ (D : D7) (M : Formalism.L2.MtFam D) (B : Formalism.L2
         map_add' := fun y y' => by
           have := hadd 1 (Mw.real y) (Mw.real y')
           rw [one_smul, one_smul] at this
-          simp only [map_add (f := _)]
-          exact this
+          simpa only [map_add (f := _)] using this
         map_smul' := fun c y => by
           have := hadd c (Mw.real y) 0
           rw [add_zero, htN0, add_zero] at this
@@ -115,8 +114,7 @@ theorem eig_descends : ∀ (D : D7) (M : Formalism.L2.MtFam D) (B : Formalism.L2
           Mw.real ((bC.constr ℂ fun a => D.what₂.jMt (D.what₂.muTw w) j (B.hL j w v k (b a))) (bC a))
         rw [e, hbC a]
         exact (B.hL_def j w h1 h2 v k s ϖ hvk hc hu (b a)).symm
-      intro x
-      exact LinearMap.congr_fun hLt x
+      exact fun x => LinearMap.congr_fun hLt x
     have hty : tC y = φ (κ v k) • y := by
       apply Mw.real_inj
       rw [← hagree, heig, map_smul]

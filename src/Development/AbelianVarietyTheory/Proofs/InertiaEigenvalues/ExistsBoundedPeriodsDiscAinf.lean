@@ -173,16 +173,14 @@ theorem seed_coeff_recurrence : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk 
     apply seedRec_ev_injective bk TB
     rw [map_zero]
     apply (toDisc_injective_of_topBasis l K bk (Ainf l) bk.ev ι TB bk.ρ₀ h0 h1).1
-    rw [map_zero]
-    exact h
+    rwa [map_zero]
   have hlam : (l : bk.DA bk.ρ₀) ^ (s.c₁ + s.c₂) * bk.iS (frobS l bk.a bk.E) ^ s.N ≠ 0 :=
     mul_ne_zero (pow_ne_zero _ (isUnit_l_disc l (bk.ev X) bk.ρ₀).ne_zero) (pow_ne_zero _ hE0)
   have hab := congrFun (congrFun heq a) b
   rw [Matrix.smul_apply, Matrix.smul_apply, smul_eq_mul, smul_eq_mul] at hab
   have h2 := mul_left_cancel₀ hlam hab
   rw [Matrix.smul_apply, smul_eq_mul] at h2
-  rw [← h2]
-  exact stepA
+  rwa [← h2]
 
 end GlobalTheory.BSP
 end -- clump:auto
@@ -249,8 +247,7 @@ theorem exists_bounded_periods : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk
     by_cases e : ab = ab'
     · subst e
       refine ⟨i₁, fun hm => hq ?_, rfl⟩
-      simp only [c, if_pos rfl]
-      exact Ideal.mem_map_of_mem _ hm
+      simpa only [c, ite_eq_left rfl] using Ideal.mem_map_of_mem _ hm
     · exact (hq (by simp [c, e])).elim
   have hj0c : Continuous j0 :=
     AddMonoidHomClass.continuous_of_bound j0 1 fun y => (hj0d.norm_le y).trans (one_mul _).ge
@@ -302,8 +299,7 @@ theorem exists_bounded_periods : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk
         (l : bk.DA bk.ρ₀) ^ k * (bk.iA τ ^ (2 * s.N) • (1 : Matrix (Fin d) (Fin d) (bk.DA bk.ρ₀))) a b := by
       rw [Matrix.smul_apply, Matrix.one_apply, smul_eq_mul]
       split_ifs <;> simp
-    rw [hf, hval]
-    exact hs
+    rwa [hf, hval]
 
 end GlobalTheory.BSP
 end -- clump:auto

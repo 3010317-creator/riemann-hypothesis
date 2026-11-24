@@ -248,8 +248,7 @@ theorem exists_mem_closure_sub_mem_maximalIdeal_pow
     intro j
     induction j with
     | zero =>
-      intro x _
-      exact (memC _ _).2 ⟨inc (ev x), incP _, by simp, by simpa using hker x⟩
+      exact fun x _ => (memC _ _).2 ⟨inc (ev x), incP _, by simp, by simpa using hker x⟩
     | succ j ih =>
       rw [pow_succ]
       refine Ideal.mul_le.2 fun y hy w hw => ?_
@@ -269,8 +268,7 @@ theorem exists_mem_closure_sub_mem_maximalIdeal_pow
     obtain ⟨p, hp, hfp⟩ := ih
     obtain ⟨q, hq, -, hqe⟩ := (memC _ _).1 (hCj k hfp)
     refine ⟨p + q, P.add_mem hp hq, ?_⟩
-    rw [show f - (p + q) = f - p - q by ring]
-    exact hqe
+    rwa [show f - (p + q) = f - p - q by ring]
 
 end GlobalTheory
 end -- clump:auto
@@ -602,8 +600,7 @@ theorem degree_eq_one {n : ℕ} {D : Fin n →₀ ℕ} (h : D.degree = 1) : ∃ 
   have hsum := h
   rw [Finsupp.degree_eq_sum] at hsum
   obtain ⟨s, hs⟩ : ∃ s, D s ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     simp [hc] at hsum
   refine ⟨s, ?_⟩
   have hle : ∀ t, t ≠ s → D s + D t ≤ 1 := fun t ht => by
@@ -616,7 +613,7 @@ theorem degree_eq_one {n : ℕ} {D : Fin n →₀ ℕ} (h : D.degree = 1) : ∃ 
     simp only [Finsupp.single_eq_same]
     omega
   · have := hle t ht
-    simp only [Finsupp.single_apply, if_neg (Ne.symm ht)]
+    simp only [Finsupp.single_apply, ite_eq_right (Ne.symm ht)]
     omega
 
 section Rel
@@ -1153,7 +1150,7 @@ def evHom (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) : Γ(X, U) �
 theorem valR_eq_evHom (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) (f : Γ(X, U)) :
     valR x U f = evHom x U h f := by
   unfold valR
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   rfl
 
 theorem top_le_spMap {A' : Type} [CommRing A'] (ψ : A →+* A') (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) :
@@ -1172,7 +1169,7 @@ theorem valR_fromSpecStalk {x : X} {U : X.Opens} (hU : x ∈ U) (a : Γ(X, U)) :
     exact congrArg (_ ≫ ·) ((congrArg (_ ≫ ·) ((Spec (X.presheaf.stalk x)).presheaf.map_id _)).trans
       (Category.comp_id _))
   unfold valR
-  refine (dif_pos h).trans ?_
+  refine (dite_eq_left h).trans ?_
   change ((X.fromSpecStalk x).appLE U ⊤ h ≫ (Scheme.ΓSpecIso _).hom).hom a = _
   rw [e, Category.assoc, Iso.inv_hom_id, Category.comp_id]
 
@@ -1409,10 +1406,8 @@ theorem spMap_fromSpecStalk_le_preimage_iff (X : Scheme.{0}) (x : X) (Ω : Type)
     have hm : (spMap ψ ≫ X.fromSpecStalk x) p ∈ O := h (x := p) trivial
     rw [Scheme.Hom.comp_apply] at hm
     have e : (spMap ψ) p = (closedPoint (X.presheaf.stalk x) : ↥(Spec (X.presheaf.stalk x))) := by
-      show PrimeSpectrum.comap ψ (closedPoint Ω) = _
       exact IsLocalRing.comap_closedPoint ψ
-    rw [e, Scheme.fromSpecStalk_closedPoint] at hm
-    exact hm
+    rwa [e, Scheme.fromSpecStalk_closedPoint] at hm
   · intro hx w _
     have : X.fromSpecStalk x (spMap ψ w) ∈ Set.range (X.fromSpecStalk x) := ⟨_, rfl⟩
     rw [Scheme.range_fromSpecStalk] at this

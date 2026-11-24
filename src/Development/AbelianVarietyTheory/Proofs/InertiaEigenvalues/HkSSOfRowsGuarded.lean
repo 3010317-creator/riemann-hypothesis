@@ -550,8 +550,7 @@ theorem baseChange_inj {Ks K M : Type} [Field Ks] [Field K] [Algebra Ks K] [AddC
     apply h0
     simpa using hy
   ext x
-  apply hinj
-  exact LinearMap.congr_fun h ((1 : K) ⊗ₜ[Ks] x)
+  exact hinj (LinearMap.congr_fun h ((1 : K) ⊗ₜ[Ks] x))
 
 end GlobalTheory.HkKs
 
@@ -577,14 +576,12 @@ theorem opK_comm : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Typ
     rw [H.cHk_pow]; exact pow_ne_zero _ (H.cHk_unit i b P).ne_zero
   have hkE : ∀ k P, HkIdx i k P → ∀ x, Y.eF i j b h1 h2 (D.nexp.hkF i j b k P x) =
       H.cHk i b k P • hkFR S i j b (H.hL j) (H.hs j h1 h2) k P (Y.eF i j b h1 h2 x) := by
-    intro k P hP x
-    exact H.hkEq i j b h1 h2 k P x hP.2.2.2 hP.2.2.1 hP.2.1
+    exact fun k P hP x => H.hkEq i j b h1 h2 k P x hP.2.2.2 hP.2.2.1 hP.2.1
   constructor
   · have hcm := comm_of_conj (Y.eF i j b h1 h2) (D.nexp.hkF i j b k P) (D.nexp.hkF i j b k' P') _ _ _ _
       (hc k P) (hc k' P') (hkE k P hP) (hkE k' P' hP') (hHk i hi j hj b k P k' P' hP hP').eq
     apply baseChange_inj (K := KB S i b)
-    rw [map_mul, map_mul]
-    exact hcm
+    rwa [map_mul, map_mul]
   · intro g
     have hne : (show FractionRing (D.ntw.O i) from (readLL0 S i b (chiL S j (Y.chi j h1 h2) (S.eG.symm (S.eG g))))⁻¹) ≠ 0 := by
       refine inv_ne_zero ((_root_.map_ne_zero _).2 fun h0 => ?_)
@@ -603,8 +600,7 @@ theorem opK_comm : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Typ
     rw [MulEquiv.symm_apply_apply] at hcm
     symm
     apply baseChange_inj (K := KB S i b)
-    rw [map_mul, map_mul]
-    exact hcm
+    rwa [map_mul, map_mul]
 
 end GlobalTheory.HkKs
 end -- clump:auto
@@ -657,8 +653,7 @@ theorem rows_algebraMap_linearIndependent {L0 L : Type} [Field L0] [Field L] [Al
       (TensorProduct.piScalarRight L0 L L (Fin n)).toLinearMap ∘ fun a => (1 : L) ⊗ₜ[L0] v a := by
     funext a b
     simp [TensorProduct.piScalarRight_apply, Algebra.smul_def]
-  rw [he]
-  exact h2
+  rwa [he]
 
 theorem ksForm_tensor_linearIndependent : ∀ (Ks L0 L WL : Type) [Field Ks] [Field L0] [Field L] [Algebra Ks L0] [Algebra L0 L] [Algebra Ks L]
     [IsScalarTower Ks L0 L] [AddCommGroup WL] [Module L WL] [Module Ks WL] [IsScalarTower Ks L WL]
@@ -787,8 +782,7 @@ theorem minpoly_separable_of_normal : ∀ (K V H : Type) [Field K] [AddCommGroup
       rintro _ ⟨x, rfl⟩
       rw [SetLike.mem_coe, Submodule.mem_comap, ← hT x]
       exact Submodule.subset_span ⟨T x, rfl⟩
-    intro u hu
-    exact hle hu
+    exact fun u hu => hle hu
   have hinj : ∀ v : V, j v = 0 → v = 0 := by
     intro v hv
     by_contra hne
@@ -798,8 +792,7 @@ theorem minpoly_separable_of_normal : ∀ (K V H : Type) [Field K] [AddCommGroup
       obtain rfl : i = 0 := Subsingleton.elim _ _
       simp only [Fin.sum_univ_one] at hg
       exact (smul_eq_zero.mp hg).resolve_right hne
-    have h1 := hlin 1 (fun _ => v) hli
-    exact h1.ne_zero 0 (by simpa using hv)
+    exact (hlin 1 (fun _ => v) hli).ne_zero 0 (by simpa using hv)
   have htr : ∀ (p : Polynomial K) (x : V),
       j (Polynomial.aeval T p x) = Polynomial.aeval S (p.map φ) (j x) := by
     intro p
@@ -1060,15 +1053,13 @@ theorem hL_separable_good : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I
     have h := hX.tie i0 k P hPs hoffP ⟨i, hP0⟩ h2P hk2 α R hα hRd (inWL S ((i0 : ℕ) + 1) z.1) (hfix z.1 z.2)
     rw [hjm, hjm]
     show (Rl.HW i0 σ0).e ((Rl.FW i0).j σ0 ((Y.fi i0).e (inWL S ((i0 : ℕ) + 1) (T0 z.1)))) = _
-    rw [hT0w]
-    exact h
+    rwa [hT0w]
   have htie' : ∀ z : ↥V, (Rl.HW i0 σ0).e (jm (T' z)) = c' • Formalism.IndefR.Mult.heckeOn (Rl.MW i0 σ0) R' ((Rl.HW i0 σ0).e (jm z)) := by
     intro z
     have h := hX.tie i0 k P' hP's hoffP' ⟨i, hP'0⟩ h2P' hk2 α' R' hα' hRd' (inWL S ((i0 : ℕ) + 1) z.1) (hfix z.1 z.2)
     rw [hjm, hjm]
     show (Rl.HW i0 σ0).e ((Rl.FW i0).j σ0 ((Y.fi i0).e (inWL S ((i0 : ℕ) + 1) (T0' z.1)))) = _
-    rw [hT0w']
-    exact h
+    rwa [hT0w']
   set SS : Module.End ℂ (Rl.HW i0 σ0).H := c • S0 with hSS
   set SS' : Module.End ℂ (Rl.HW i0 σ0).H := (starRingEnd ℂ c) • S1 with hSS'
   have hSj : ∀ z : ↥V, SS (jm z) = jm (T z) := by
@@ -1085,8 +1076,7 @@ theorem hL_separable_good : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I
   haveI : IsScalarTower S.Ks ↥D.LL0 D.what₂.LL := IsScalarTower.of_algebraMap_eq fun x => (S.kKs_spec x).symm
   haveI : Module.Finite S.Ks (FmK S ((i0 : ℕ) + 1)) := by
     have h := FiniteDimensional.span_of_finite S.Ks (Set.finite_range bs)
-    rw [hspan] at h
-    exact h
+    rwa [hspan] at h
   haveI : FiniteDimensional ↥D.LL0 ↥V := inferInstance
   have hind : ∀ (n : ℕ) (x : Fin n → ↥V), LinearIndependent ↥D.LL0 x → LinearIndependent ℂ (fun a => jm (x a)) := by
     intro n x hx
@@ -1317,8 +1307,7 @@ theorem charpoly_split_kills_span : ∀ (O V B : Type) [CommRing O] [IsDomain O]
       rw [Submodule.span_le]
       rintro _ ⟨b, rfl⟩
       simp only [SetLike.mem_coe, LinearMap.mem_ker, key, LinearMap.aeval_self_charpoly, LinearMap.zero_apply, map_zero]
-    intro x hx
-    exact hle hx
+    exact fun x hx => hle hx
 
 end GlobalTheory
 end -- clump:auto
@@ -1402,8 +1391,7 @@ theorem hkSS_of_rows_guarded {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T
   unfold Eigsp
   refine le_iInf fun k => le_iInf fun P => le_iInf fun h => ?_
   refine (iInf_le _ ⟨(k, P), h⟩).trans ?_
-  simp only [dif_pos h]
-  exact le_rfl
+  simpa only [dite_eq_left h] using le_rfl
 
 end GlobalTheory.GoodSpan
 end -- clump:auto

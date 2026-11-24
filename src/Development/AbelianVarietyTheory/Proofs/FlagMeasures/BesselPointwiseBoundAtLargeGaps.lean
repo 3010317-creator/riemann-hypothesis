@@ -322,7 +322,7 @@ theorem weightFrom_swap (k r : ℕ) (hk : 1 ≤ k) (T T' GG : ℝ) (bs : List (�
     rw [hrec]
     congr 1
     by_cases hc : s = 1 ∧ x + 1 = r + 1
-    · rw [if_pos hc, if_pos ⟨by omega, hc.1⟩]
+    · rw [ite_eq_left hc, ite_eq_left ⟨by omega, hc.1⟩]
       have hnil : bs = [] := by
         cases bs with
         | nil => rfl
@@ -333,7 +333,7 @@ theorem weightFrom_swap (k r : ℕ) (hk : 1 ≤ k) (T T' GG : ℝ) (bs : List (�
           omega
       subst hnil
       rw [h3 (t, s) rfl]
-    · rw [if_neg hc, if_neg (by omega), one_mul, ← zpow_natCast]
+    · rw [ite_eq_right hc, ite_eq_right (by omega), one_mul, ← zpow_natCast]
       congr 1
       unfold Ml C.Mlev
       have e1 : x + 1 + s - 1 = x + s := by omega
@@ -753,32 +753,28 @@ theorem plExists : PlExists := by
         cases j with
         | zero =>
           have h0 := T.z_lev 0 hj
-          rw [ez] at h0
-          exact h0
+          rwa [ez] at h0
         | succ n => exact (T.z_lev (n + 1) hj).trans ez
       z'_lev := by
         intro j hj
         cases j with
         | zero =>
           have h0 := T.z'_lev 0 hj
-          rw [ez'] at h0
-          exact h0
+          rwa [ez'] at h0
         | succ n => exact (T.z'_lev (n + 1) hj).trans ez'
       π_lev := by
         intro j hj y
         cases j with
         | zero =>
           have h0 := T.π_lev 0 hj y
-          rw [eπ] at h0
-          exact h0
+          rwa [eπ] at h0
         | succ n => exact (T.π_lev (n + 1) hj y).trans (congrFun eπ _)
       π'_lev := by
         intro j hj y
         cases j with
         | zero =>
           have h0 := T.π'_lev 0 hj y
-          rw [eπ'] at h0
-          exact h0
+          rwa [eπ'] at h0
         | succ n => exact (T.π'_lev (n + 1) hj y).trans (congrFun eπ' _) }
   have hT'n : D.TowerNormalised T' := by
     intro j hj
@@ -920,11 +916,10 @@ theorem pointwiseBound_at_place_of_locBessel : ThmBpDS → ∀ Ch : ℝ, ∃ C�
   refine ⟨U, U', p, if ∀ i ∈ Finset.Icc 1 D.R.k, U i = U' i then 30 * (D.R.rS + 1) ^ 2 + 6 else 0, hstd,
     by split_ifs <;> omega, ?_⟩
   refine h Cg hCg ⟨D.R.k, D.R.rS, Tz D.R.k D.R.rS L.z, Tz D.R.k D.R.rS L.z', U, U'⟩ L.Wp L.Wq p lam0 L.lam ka b _ _
-    ⟨L.Hs, L.σ⟩ f ?_ hg ?_ ?_ (fun e => if_pos e) (fun e => if_neg e) ?_ ?_
+    ⟨L.Hs, L.σ⟩ f ?_ hg ?_ ?_ (fun e => ite_eq_left e) (fun e => ite_eq_right e) ?_ ?_
   · show StdHyp Ch Cg D.R.k D.R.rS _ lam0 (fun i : Fin D.R.k => U (i.val + 1))
       (fun i : Fin D.R.k => U' (i.val + 1)) _ _ ka b
-    rw [hu, hu', ← he]
-    exact hS
+    rwa [hu, hu', ← he]
   · show BranchingSupport.Rep.IsDS (k := D.R.k) (r := D.R.rS) ⟨L.Hs, L.σ⟩ (PI.BesselPeriodGGP.eps48 D.R.k D.R.rS) L.lam
     rw [← he]
     exact ⟨L.hlam, v1.1 L.hσ⟩

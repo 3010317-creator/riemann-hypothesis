@@ -60,7 +60,7 @@ theorem injective_of_charZero {o K : Type} [CommRing o] [IsDedekindDomain o] [Al
     (ψ : o →+* K) : Function.Injective ψ := by
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   by_contra hne
-  push_neg at hne
+  push Not at hne
   obtain ⟨a, ha, ha0⟩ := hne
   have hP : (RingHom.ker ψ).IsPrime := RingHom.ker_isPrime ψ
   have hbot : RingHom.ker ψ ≠ ⊥ := fun h => ha0 (by
@@ -92,8 +92,7 @@ theorem exists_finite_point_rat {X : Scheme.{0}} (s : X ⟶ Sp ℚ) [LocallyOfFi
     (x := y (default : PrimeSpectrum (PadicAlgCl p))) trivial
   have hr : Set.range y ⊆ Set.range hU.fromSpec := by
     rintro _ ⟨q, rfl⟩
-    rw [hU.range_fromSpec, Subsingleton.elim (α := PrimeSpectrum (PadicAlgCl p)) q default]
-    exact hy
+    rwa [hU.range_fromSpec, Subsingleton.elim (α := PrimeSpectrum (PadicAlgCl p)) q default]
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (IsOpenImmersion.lift hU.fromSpec y hr)
   obtain ⟨a, ha⟩ := Spec.map_surjective (hU.fromSpec ≫ s)
   have hft : a.hom.FiniteType := by

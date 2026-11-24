@@ -154,8 +154,7 @@ lemma map_cc_mul {r : ℕ} (A B : Matrix (Fin r) (Fin r) E) :
   Matrix.map_mul (f := ccHom E)
 
 lemma exists_ne_zero_cc_eq_neg : ∃ β : E, β ≠ 0 ∧ cc β = -β := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   apply IsCMField.complexConj_ne_one E
   refine AlgEquiv.ext fun x => ?_
   have h1 : cc (x - cc x) = -(x - cc x) := by
@@ -201,8 +200,7 @@ theorem traceForm_nondegenerate : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   have hQG : Q * Gᵀ = 1 := nonsing_inv_mul _ hGTu
   have hGmap : Gᵀ.map cc = G := by
     ext a b
-    simp only [map_apply, transpose_apply]
-    exact hG b a
+    simpa only [map_apply, transpose_apply] using hG b a
   have hQmap : G * Q.map cc = 1 := by
     have h1 : Q.map cc * G = 1 := by
       rw [← hGmap, ← map_cc_mul, hQG]
@@ -380,16 +378,14 @@ theorem linearIndependent_of_skew {ι : Type} [Fintype ι] (G : Matrix (Fin r) (
     simp only [mul_smul, ← Finset.smul_sum, hc, smul_zero]) j
   have h2 : 2 * (cc (c j) * c j) = 0 := by
     rw [← h]; simp [cc]; ring
-  simp [cc] at h2
-  exact h2
+  simpa [cc] using h2
 
 theorem finrank_ker_trace (K : Type) [Field K] (r : ℕ) :
     Module.finrank K (LinearMap.ker (Matrix.traceLinearMap (Fin (r + 1)) K K)) = (r + 1) ^ 2 - 1 := by
   have h := LinearMap.finrank_range_add_finrank_ker (Matrix.traceLinearMap (Fin (r + 1)) K K)
   have hs : LinearMap.range (Matrix.traceLinearMap (Fin (r + 1)) K K) = ⊤ := by
     rw [LinearMap.range_eq_top]
-    intro a
-    exact ⟨Matrix.single 0 0 a, by simp⟩
+    exact fun a => ⟨Matrix.single 0 0 a, by simp⟩
   rw [hs, finrank_top, Module.finrank_self, Module.finrank_matrix] at h
   simp only [Fintype.card_fin, Module.finrank_self, mul_one] at h
   rw [sq]; omega
@@ -926,8 +922,7 @@ theorem abs_norm_gram_eq_index : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     · rintro ⟨y, hy, rfl⟩
       refine ⟨y.2.1, y.2.2, fun X hX => ?_⟩
       have := hy ⟨X, hX.1, hX.2.1⟩ hX
-      rw [← isIntegral_coe_iff, hB, trForm_apply] at this
-      exact this
+      rwa [← isIntegral_coe_iff, hB, trForm_apply] at this
   have I2 : (Submodule.span (𝓞 (maximalRealSubfield E)) (Set.range e)).toAddSubgroup.relIndex (lieLat G Λ) =
       (Submodule.span (𝓞 (maximalRealSubfield E)) (Set.range b)).toAddSubgroup.relIndex L' := by
     rw [← AddSubgroup.relIndex_map_map_of_injective _ _ hf, hLmap]

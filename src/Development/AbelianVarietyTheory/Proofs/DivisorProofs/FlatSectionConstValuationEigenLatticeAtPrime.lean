@@ -132,8 +132,7 @@ theorem exists_leftInv {K : Type} [Field K] {n g : ℕ} (b : Fin n → Fin g →
     rw [← this, ← LinearMap.comp_apply, hf, LinearMap.id_apply]
   have h3 : (Matrix.mulVec (LinearMap.toMatrix' f) (b j)) = f (b j) := by
     rw [← Matrix.toLin'_apply, Matrix.toLin'_toMatrix']
-  have h2 := congrFun (h3.trans h1) i
-  simpa [Matrix.mulVec, dotProduct, Pi.single_apply] using h2
+  simpa [Matrix.mulVec, dotProduct, Pi.single_apply] using congrFun (h3.trans h1) i
 
 theorem vV_algebraMap_unit (V : Type) {K' : Type} [CommRing V] [IsDomain V] [IsDiscreteValuationRing V]
     [Field K'] [Algebra V K'] [IsFractionRing V K'] {u : V} (hu : IsUnit u) :
@@ -241,7 +240,7 @@ theorem det_vV_add_eq_zero : ∀ (K : Type) [Field K] [NumberField K] (𝔓 : He
     have hk : ∑ i, algebraMap T.V T.Fr (q i) * (∑ j, C i j • fun k => iK (u j k)) k = iK (b l k) := by
       rw [← congrFun hq k, Finset.sum_apply]
       simp only [Pi.smul_apply, Algebra.smul_def]
-    simp only [Finset.sum_mul, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [Finset.sum_mul, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [Finset.sum_comm]
     calc ∑ i, ∑ m, algebraMap T.V T.Fr (q i) * P i m * B m k
         = ∑ i, algebraMap T.V T.Fr (q i) * (∑ j, C i j • fun k => iK (u j k)) k := by
@@ -339,8 +338,7 @@ theorem vV_eq_mul_vAdd (K : Type) [Field K] [NumberField K] (𝔓 : HeightOneSpe
     refine lt_of_le_of_ne hle1 fun heq => ?_
     have h3 : v1 ϖ⁻¹ ≤ 1 := by rw [map_inv₀, heq, inv_one]
     have h4 := (hle ϖ⁻¹).1 h3
-    rw [map_inv₀, hϖ, ← WithZero.exp_neg, neg_neg] at h4
-    rw [← WithZero.exp_zero, WithZero.exp_le_exp] at h4
+    rw [map_inv₀, hϖ, ← WithZero.exp_neg, neg_neg, ← WithZero.exp_zero, WithZero.exp_le_exp] at h4
     norm_num at h4
   have ha : 0 < vV T.V (iK ϖ) := by
     have h5 : WithZero.log (v1 ϖ) < WithZero.log 1 := (WithZero.log_lt_log hv1ϖ0 one_ne_zero).2 hlt
@@ -415,8 +413,8 @@ theorem exOf_flatWt_some (τ : Psi H) (σ : E →+* ℂ) (i : Fin (Dw.mult σ)) 
       · intro e'; apply Subtype.ext; show conjEmb σ = τ.1; rw [e', conjEmb_conjEmb]
     by_cases e : σ = conjEmb τ.1
     · have h2 := hiff.2 e
-      rw [if_neg hne, if_pos e]
-      simp only [flatWt, parWt, if_pos h2]
+      rw [ite_eq_right hne, ite_eq_left e]
+      simp only [flatWt, parWt, ite_eq_left h2]
       norm_num
     · have : (⟨conjEmb σ, h'⟩ : Psi H) ≠ τ := fun e' => e (hiff.1 e')
       simp [flatWt, parWt, this, e, hne]
@@ -431,17 +429,16 @@ theorem flatWt_char (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Reci
       (∏ i : Fin (Dw.mult τ.1), t (some ⟨τ.1, i⟩))⁻¹ * ∏ j : Fin (Dw.mult (conjEmb τ.1)), t (some ⟨conjEmb τ.1, j⟩) := by
     rw [Fintype.prod_option, Fintype.prod_sigma]
     have h0 : exOf Dw (flatWt Dw τ) 0 none = 0 := rfl
-    rw [h0, zpow_zero, one_mul]
-    rw [Fintype.prod_eq_mul τ.1 (conjEmb τ.1) hne ?_]
+    rw [h0, zpow_zero, one_mul, Fintype.prod_eq_mul τ.1 (conjEmb τ.1) hne ?_]
     · congr 1
       · rw [← Finset.prod_inv_distrib]
         refine Finset.prod_congr rfl fun i _ => ?_
-        rw [exOf_flatWt_some, if_pos rfl, zpow_neg_one]
+        rw [exOf_flatWt_some, ite_eq_left rfl, zpow_neg_one]
       · refine Finset.prod_congr rfl fun i _ => ?_
-        rw [exOf_flatWt_some, if_neg hne.symm, if_pos rfl, zpow_one]
+        rw [exOf_flatWt_some, ite_eq_right hne.symm, ite_eq_left rfl, zpow_one]
     · rintro σ ⟨h1, h2⟩
       refine Finset.prod_eq_one fun i _ => ?_
-      rw [exOf_flatWt_some, if_neg h1, if_neg h2, zpow_zero]
+      rw [exOf_flatWt_some, ite_eq_right h1, ite_eq_right h2, zpow_zero]
   rw [key, ← Units.coe_prod, ← Units.coe_prod, ← Units.val_mul]
   congr 1
   rw [mul_comm, mul_inv_cancel_left]
@@ -612,8 +609,7 @@ theorem exists_isLieBasis_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   intro E _ _ _ H K _ _ B F 𝔓 T iK hiK ρV hρV G n
   obtain ⟨N, r, M, hr, hM, -, hloc⟩ := _root_.GlobalTheory.CM.LieGlue.exists_cover_lieLat K B.pol F
   obtain ⟨i, hi⟩ : ∃ i, r i ∉ 𝔓.asIdeal := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     refine 𝔓.isPrime.ne_top ?_
     rw [eq_top_iff, ← hr]
     exact Ideal.span_le.2 (by rintro _ ⟨j, rfl⟩; exact h j)
@@ -935,8 +931,7 @@ theorem isLieComb_of_match {K : Type} [Field K] [NumberField K] {B : GlobalTheor
   obtain ⟨w', hw'⟩ := ((GlobalTheory.LieComb.lieComb_algebra T.Fr t'.G _ v' hv'.1).1 (fun k => iK (c k))).exists
   have hpb := IsGrpPullback.comp n'.cart m2.cart
   have hid : spMap (RingHom.id T.Fr) = 𝟙 _ := by
-    simp only [spMap, CommRingCat.ofHom_id]
-    exact Spec.map_id _
+    simpa only [spMap, CommRingCat.ofHom_id] using Spec.map_id _
   have key := GlobalTheory.LamT.LetterInt.comb_match hpb F.fib.2.1 (RingHom.id T.Fr) iK
     (by rw [hid, Category.id_comp]) (v₁ := v') (v₂ := F.v)
     (fun k => by rw [spMap_dualMap_id, Category.id_comp]; exact hv'φ k) (c₁ := fun k => iK (c k)) (c₂ := c)
@@ -1496,7 +1491,7 @@ lemma clear_last_column {n : ℕ} (A : Matrix (Fin (n+1)) (Fin (n+1)) F) :
   by_cases hz : ∀ i, A i (Fin.last n) = 0
   · refine ⟨1, by simp, fun i => ?_⟩
     simp [hz]
-  push_neg at hz
+  push Not at hz
   obtain ⟨i1, hi1⟩ := hz
   obtain ⟨i0, hmax⟩ := exists_max_val V F (fun i => A i (Fin.last n))
   have h0 : A i0 (Fin.last n) ≠ 0 := by
@@ -1521,8 +1516,8 @@ lemma clear_last_column {n : ℕ} (A : Matrix (Fin (n+1)) (Fin (n+1)) F) :
       simp [E, hne, hb]
   · rw [Matrix.map_mul, Matrix.mul_assoc, permMatrix_map, Matrix.mul_apply,
       Fintype.sum_eq_add i.castSucc (Fin.last n) (Fin.castSucc_lt_last i).ne]
-    · simp only [permMatrix_mul_apply, E, Matrix.map_apply, Matrix.of_apply, if_true,
-        (Fin.castSucc_lt_last i).ne, if_false, map_one, map_neg, hq]
+    · simp only [permMatrix_mul_apply, E, Matrix.map_apply, Matrix.of_apply, ite_true,
+        (Fin.castSucc_lt_last i).ne, ite_false, map_one, map_neg, hq]
       have : σ (Fin.last n) = i0 := by simp [hσ]
       rw [this]
       field_simp

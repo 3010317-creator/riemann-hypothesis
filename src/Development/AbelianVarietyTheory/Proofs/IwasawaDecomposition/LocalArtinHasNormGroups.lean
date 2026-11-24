@@ -237,7 +237,7 @@ theorem res_art_eq_art_norm (E E' Ω : Type) [Field E] [NumberField E] [Field Ω
   obtain ⟨a, hap, hapos⟩ := _root_.GlobalTheory.FinPlaceApproxPos.exists_approx_totally_positive E' TSK (fun u => if u = w' then (y : E') else 1) (P0 + m)
   have haW : w'.valuation E' (a - y) ≤ WithZero.exp (-((P0 : ℤ) + m)) := by
     have := hap w' hWT
-    rw [if_pos rfl] at this
+    rw [ite_eq_left rfl] at this
     exact valuation_le_of_exponent_le w' this (by push_cast; omega)
   have hz : w'.valuation E' (a / y - 1) ≤ WithZero.exp (-(P0 : ℤ)) :=
     valuation_div_sub_one_le w' y.ne_zero le_rfl haW
@@ -251,7 +251,7 @@ theorem res_art_eq_art_norm (E E' Ω : Type) [Field E] [NumberField E] [Field Ω
   have hauy : au = y * zu := by simp [zu]
   have hoth : ∀ u ∈ TSK, u ≠ w' → u.valuation E' (a - 1) ≤ WithZero.exp (-(P0 : ℤ)) := fun u hu hne => by
     have := hap u hu
-    rw [if_neg hne] at this
+    rw [ite_eq_right hne] at this
     exact valuation_le_of_exponent_le u this (by push_cast; omega)
 
   have F1 : ψ1 (locUnit E' w' au) = ψ1 (locUnit E' w' y) := by
@@ -296,19 +296,16 @@ theorem res_art_eq_art_norm (E E' Ω : Type) [Field E] [NumberField E] [Field Ω
       au (fun φ => hapos φ) (TK ∪ TSK) fun u hu => by
         rw [Finset.mem_union, not_or] at hu
         exact hTK2 u hu.1 fun v' hv' e => hu.2 ((hTSK u).mpr ⟨v', hv', e⟩)
-    rw [Finset.prod_union hdisj, Finset.prod_eq_single_of_mem w' hWT F3] at h
-    exact h
+    rwa [Finset.prod_union hdisj, Finset.prod_eq_single_of_mem w' hWT F3] at h
   have hPE : (∏ v' ∈ TE, ψ2 (locUnit E v' (NK au))) * ψ2 (locUnit E w (NK au)) = 1 := by
     have hdisj : Disjoint TE SE := by
       rw [Finset.disjoint_left]
-      intro v' h1 h2
-      exact hTE1 v' h1 h2
+      exact fun v' h1 h2 => hTE1 v' h1 h2
     have h := GlobalTheory.ProdLocUnitPos.prod_locUnit_eq_one_of_pos E (Gab E Ω ⧸ U) ψ2 ho2 (fun k => by simp [ψ2, hdE]) (fun z hz => by simp [ψ2, hiE z hz])
       (NK au) (fun φ => GlobalTheory.norm_pos_of_totallyPositive E E' a ha0 hapos φ) (TE ∪ SE) fun v' hv' => by
         rw [Finset.mem_union, not_or] at hv'
         exact hTE2 v' hv'.1 hv'.2
-    rw [Finset.prod_union hdisj, Finset.prod_eq_single_of_mem w hwSE F4] at h
-    exact h
+    rwa [Finset.prod_union hdisj, Finset.prod_eq_single_of_mem w hwSE F4] at h
   have key : ψ1 (locUnit E' w' au) = ψ2 (locUnit E w (NK au)) := by
     rw [← hprod] at hPE
     exact mul_left_cancel (hPK.trans hPE.symm)
@@ -388,8 +385,7 @@ theorem exists_fixing_subgroup : ∀ (E Ω : Type) [Field E] [NumberField E] [Fi
     obtain ⟨χ', -, e⟩ := ha.factor _ hs
     apply hχ
     have : χ (r σ) = χ' (a σ) := DFunLike.congr_fun e σ
-    rw [MonoidHom.mem_ker.1 hσ, map_one] at this
-    exact this
+    rwa [MonoidHom.mem_ker.1 hσ, map_one] at this
 
 theorem exists_place {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω]
     {A : ValuationSubring Ω} {w : HeightOneSpectrum (𝓞 E)} (h : IsPlaceOver A w) (L : Type) [Field L] [NumberField L]

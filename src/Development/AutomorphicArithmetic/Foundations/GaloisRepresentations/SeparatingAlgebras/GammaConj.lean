@@ -72,9 +72,7 @@ theorem UpperTheory.Gal.Gen.gammaConj_pf :
     apply Units.ext
     rw [Cartan.coe_diagPow, Iwasawa.coe_torusPow]
   have hl' : Antitone (fun i : Fin n => -l (Fin.rev i)) := by
-    intro i j hij
-    show -l (Fin.rev j) ≤ -l (Fin.rev i)
-    exact neg_le_neg (hl (Fin.rev_le_rev.mpr hij))
+    exact fun i j hij => neg_le_neg (hl (Fin.rev_le_rev.mpr hij))
   have hinv : (k₁ * Cartan.diagPow F n l * k₂)⁻¹ =
       k₂⁻¹ * Iwasawa.torusPow F n (-l) * k₁⁻¹ := by
     rw [Iwasawa.torusPow_neg, ← htp]

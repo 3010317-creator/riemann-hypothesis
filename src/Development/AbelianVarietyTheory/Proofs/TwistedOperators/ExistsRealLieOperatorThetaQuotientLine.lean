@@ -73,8 +73,7 @@ theorem actsD_zero' (L : ℝ → Module.End ℂ ((κ → AF F) → ℂ)) :
   intro r _ x
   have e : tens (evI F) (⇑(0 : SInf F κ)) r = 0 := by funext y; simp [tens]
   rw [e]
-  simp only [map_zero, Pi.zero_apply]
-  exact hasDerivAt_const _ _
+  simpa only [map_zero, Pi.zero_apply] using hasDerivAt_const _ _
 
 
 open scoped Classical in
@@ -92,8 +91,7 @@ theorem actsD_comb (L : ℝ → Module.End ℂ ((κ → AF F) → ℂ)) (c : ℂ
     have hfun : (fun t => L t (c • tens (evI F) ⇑f r + tens (evI F) ⇑g r) x) =
         (fun t => c * L t (tens (evI F) ⇑f r) x) + (fun t => L t (tens (evI F) ⇑g r) x) := by
       funext t; simp [map_add (f := _), map_smul]
-    rw [hfun, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
-    exact h
+    rwa [hfun, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
 
   set g₀ : (κ → Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F) → ℂ := (intPts F κ).indicator 1 with hg₀def
   have hg₀ : g₀ ∈ SB (κ → Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F) := indicator_intPts_mem_SB
@@ -122,8 +120,7 @@ theorem actsD_comb (L : ℝ → Module.End ℂ ((κ → AF F) → ℂ)) (c : ℂ
       rw [htens₀, pureA_ptAt, hg₀0, mul_one] at h'
       simpa using h'
     rw [h0, hz, hzeroT]
-    simp only [map_zero, Pi.zero_apply]
-    exact hasDerivAt_const _ _
+    simpa only [map_zero, Pi.zero_apply] using hasDerivAt_const _ _
   · have hR : (fun y => r (fun i => ((0 : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F), y i))) ∈ SB (κ → Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F) :=
       mem_SB_of_pureA_mem h0 (tens_eq_pureA _ hr.1 ▸ hr.2)
     have hrest : ∀ φ : SInf F κ, Rest (evI F) ⇑φ r := fun φ =>

@@ -156,13 +156,10 @@ theorem UpperTheory.V.Z.Win.A4.exists_frob_nonvanishing_with_sha_bound :
     refine hco _ p l ((Nat.coprime_primes hp hl.out).2 hlp.symm) hB ?_
     have h1 := (hw ((l : ℕ) : 𝓞 ℚ)).2 h
     have e : algebraMap ℚ Ω (((l : ℕ) : 𝓞 ℚ) : ℚ) = (l : Ω) := by simp
-    rw [e] at h1
-    exact h1
+    rwa [e] at h1
   have hχ : (((chiO ℚ Ω l c.O σ : c.Oˣ) : c.O) : PadicAlgCl l) = (p : PadicAlgCl l) := by
     have hz : (cycZ ℚ Ω l σ : ℤ_[l]) = (p : ℤ_[l]) := by
-      apply PadicInt.ext_of_toZModPow.mp
-      intro n
-      exact cycZ_toZModPow_eq hlw hw hσ.2 n
+      exact PadicInt.ext_of_toZModPow.mp (fun n => cycZ_toZModPow_eq hlw hw hσ.2 n)
     simp only [chiO, MonoidHom.comp_apply, Units.coe_map]
     rw [hz]
     simp
@@ -404,8 +401,7 @@ theorem UpperTheory.V.Th.sp4Main_alt :
       rcases hcase with ⟨a, b, d⟩ | ⟨a, b, d, g⟩
       · refine Or.inl ⟨a, ?_, d⟩
         unfold EV
-        rw [← chHom_chiP f hf, chHom_ord f hf]
-        exact b
+        rwa [← chHom_chiP f hf, chHom_ord f hf]
       · exact Or.inr ⟨a, b, (chHom_ord f hf ψ).symm ▸ d, fun h0 => g ((map_eq_one_iff _ (chHom_inj f hf)).1 h0)⟩
     have hV := hC h hχ t ht Ω l c' e hl2 he0 het _ hψ' hcase'
       (e2.symm ▸ HasEnoughRootsOfUnity.of_dvd c'.O (pow_dvd_pow 2 (Nat.le_add_right _ (h.nIII l ψ))))
@@ -467,13 +463,13 @@ private theorem revM_mul (M : Matrix (Fin n) (Fin n) k) : revM k n * M = M.subma
   ext i j
   rw [Matrix.mul_apply]
   simp only [revM, Matrix.submatrix_apply, id, Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
 
 private theorem mul_revM (M : Matrix (Fin n) (Fin n) k) : M * revM k n = M.submatrix id Fin.rev := by
   ext i j
   rw [Matrix.mul_apply]
   simp only [revM, Matrix.submatrix_apply, id, Matrix.one_apply, Fin.rev_eq_iff, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
 
 private theorem revM_sq : revM k n * revM k n = 1 := by
   rw [revM_mul]
@@ -535,8 +531,7 @@ section Gal
 
 private theorem pow_flag {U : Type} [CommGroup U] (x y : U) (m : ℤ) (k : ℕ) (h : (x * y ^ (-m)) ^ k = 1) :
     x ^ k = (y ^ m) ^ k := by
-  rw [mul_pow, zpow_neg, inv_pow, mul_inv_eq_one] at h
-  exact h
+  rwa [mul_pow, zpow_neg, inv_pow, mul_inv_eq_one] at h
 
 private theorem pow_dual {U : Type} [CommGroup U] (x y : U) (b m : ℤ) (a : ℕ) (h : x ^ a = (y ^ m) ^ a) :
     (y ^ b * x⁻¹) ^ a = (y ^ (b - m)) ^ a := by
@@ -587,8 +582,7 @@ private theorem range_iff (γ : G (W.Lp L) Ω) :
   constructor
   · rintro ⟨u, rfl⟩
     refine AlgEquiv.ext fun x => (algebraMap L Ω).injective ?_
-    have h := AlgEquiv.restrictNormal_commutes (W.resP L Ω u) L x
-    exact h.trans (u.commutes x)
+    exact (AlgEquiv.restrictNormal_commutes (W.resP L Ω u) L x).trans (u.commutes x)
   · intro h
     refine ⟨AlgEquiv.ofRingEquiv (f := γ.toRingEquiv) fun y => ?_, AlgEquiv.ext fun _ => rfl⟩
     have h1 : γ.restrictNormal L = 1 := h
@@ -651,8 +645,7 @@ private theorem FlagAt.smul {ρ : G L Ω →* GL (Fin n) (Qbar l)} {A : Valuatio
   · have h1 := hp i (f s) ((UpperTheory.V.Two.ineConj L Ω g).1 A s hs)
     have e1 : ((f s : ↥(Dec (F := L) A)) : G L Ω) = g⁻¹ * s * g := rfl
     have e : cycBar L Ω l (f s : ↥(Dec (F := L) A)) = cycBar L Ω l s := by rw [e1, char_conj]
-    rw [e] at h1
-    exact h1
+    rwa [e] at h1
 
 private theorem FlagAt.dual {ρ : G L Ω →* GL (Fin n) (Qbar l)} {A : ValuationSubring Ω} {m : Fin n → ℤ}
     (c : G (W.Lp L) Ω) (a₀ : ℤ) (P : GL (Fin n) (Qbar l)) (hP : IsPairing c ρ (cycBar L Ω l ^ a₀) P)
@@ -683,8 +676,7 @@ private theorem FlagAt.dual {ρ : G L Ω →* GL (Fin n) (Qbar l)} {A : Valuatio
     group
   · have hs' : ((f s : ↥(Dec (F := L) A)) : G L Ω) ∈ Ine (F := L) A := by
       have h1 := (UpperTheory.V.Two.ineConj (W.Lp L) Ω c).1 A (W.resP L Ω s) hs
-      rw [← ht] at h1
-      exact h1
+      rwa [← ht] at h1
     have h2 := hp (Fin.rev i) (f s) hs'
     have e : cycBar L Ω l (f s : ↥(Dec (F := L) A)) = cycBar L Ω l s := by
       change cycBar (W.Lp L) Ω l (W.resP L Ω (t s)) = cycBar (W.Lp L) Ω l (W.resP L Ω s)
@@ -810,8 +802,7 @@ theorem UpperTheory.V.Ws.hida_modular_ideal_map :
     haveI := (UpperTheory.V.Base.dvrFacts l c'.O).2.2.1
     have h1 : ((l : ℕ) : ℤ_[l]) ∈ maximalIdeal ℤ_[l] := by
       rw [PadicInt.maximalIdeal_eq_span_p]; exact Ideal.mem_span_singleton_self _
-    have h2 := map_nonunit (algebraMap c'.O B.B) _ (map_nonunit (algebraMap ℤ_[l] c'.O) _ h1)
-    simpa using h2
+    simpa using map_nonunit (algebraMap c'.O B.B) _ (map_nonunit (algebraMap ℤ_[l] c'.O) _ h1)
   have stab : ∀ γ : K.V.frame.G₀ →* B.Bˣ, TwCh K.V.frame γ → ∃ τ : B.B →ₐ[c'.O] B.B,
       TwMap B (RingHom.id B.B) (τ : B.B →+* B.B) γ ∧ ∀ b ∈ J₀, τ b ∈ J₀ := fun γ hγ => by
     obtain ⟨τ, hτ⟩ := twMapEx B (AlgHom.id c'.O B.B) γ hγ
@@ -944,8 +935,7 @@ theorem UpperTheory.V.Ws.Pt.ptIrr :
         refine MonoidHom.ext fun g => Units.ext ?_
         rw [Af.tw_val]
         exact K.rho_val n r g
-      rw [e]
-      exact h2
+      rwa [e]
     · intro g
       obtain ⟨s, hs⟩ := exists_resLe T g.1 g.2.1
       have hz : cycZ T.F Ω l g.1 = 1 := g.2.2

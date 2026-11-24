@@ -129,15 +129,12 @@ lemma range_eq_univ [IsAlgClosed K] [GrpObj Ga] [GrpObj G] (p : Ga ⟶ G) [IsMon
     · rintro ⟨a, ha⟩
       refine hy.1 ((mem_range_iff_factors p x).mpr ⟨a⁻¹, ?_⟩)
       rw [GrpObj.inv_comp, ha, inv_inv]
-    · rw [Set.mem_preimage, mulRight_apply, mul_inv_cancel]
-      exact hone
+    · rwa [Set.mem_preimage, mulRight_apply, mul_inv_cancel]
   have hc : Uᶜ = V := by
     ext y
     constructor
-    · intro hy
-      exact ((hcov ▸ Set.mem_univ y : y ∈ U ∪ V)).resolve_left hy
-    · intro hy hyU
-      exact (hdisj ▸ ⟨hyU, hy⟩ : y ∈ (∅ : Set G.left))
+    · exact fun hy => ((hcov ▸ Set.mem_univ y : y ∈ U ∪ V)).resolve_left hy
+    · exact fun hy hyU => (hdisj ▸ ⟨hyU, hy⟩ : y ∈ (∅ : Set G.left))
   have hcl : IsClopen U := ⟨isOpen_compl_iff.mp (hc ▸ hVo), hUo⟩
   exact hcl.eq_univ ⟨_, hone⟩
 

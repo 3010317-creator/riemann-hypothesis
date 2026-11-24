@@ -237,15 +237,13 @@ theorem torsion_eq_and_weilIs_of_isHolTo_anyLB : ∀ (X : Scheme.{0}) (s : X ⟶
         show z w ≫ pullback.snd q q ≫ p = _
         rw [← Category.assoc, (hzb w hw).2, (hab' w hw).1])
       have := GlobalTheory.CommPairing.weilIs_pull hG hA hLB h he
-      rw [e₁, e₂] at this
-      exact this
+      rwa [e₁, e₂] at this
     have e₀ : Units.map (z b₀).appTop.hom.toMonoidHom e = unitOn c :=
       GlobalTheory.CommutatorPairing.weilIs_unique hG hA hLB (hpull b₀ hb₀) h₀
     have e₁ : Units.map (z b).appTop.hom.toMonoidHom e = Units.map (z b₀).appTop.hom.toMonoidHom e :=
       Units.ext ((val_map_appTop (z b) e.val).trans
         ((congrArg _ (valAt'_eq_of_pow_eq_one hz hB hk hek hb₀ hb)).trans (val_map_appTop (z b₀) e.val).symm))
     have := hpull b hb
-    rw [e₁, e₀] at this
-    exact this
+    rwa [e₁, e₀] at this
 
 end GlobalTheory

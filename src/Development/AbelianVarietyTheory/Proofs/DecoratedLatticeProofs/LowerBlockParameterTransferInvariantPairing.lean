@@ -171,7 +171,7 @@ theorem genVal_add_segL : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
     simp only [hF, genVal, esymm_eq_zero_of_lt _ (hBc ▸ hj), mul_zero]
   have hFk : ∀ j, n₀ < j → F j = 0 := by
     intro j hj
-    simp only [hF, if_neg (show ¬ j ≤ n₀ by omega), zero_mul]
+    simp only [hF, ite_eq_right (show ¬ j ≤ n₀ by omega), zero_mul]
   have hR : ∑ j ∈ Finset.range (N + 1), F j = ∑ j ∈ Finset.range (n₀ + 1), F j := by
     rw [Finset.sum_subset (Finset.range_mono (show N + 1 ≤ N + n₀ + 1 by omega))
         (fun j _ hn => hFa j (by simp at hn; omega)),
@@ -181,7 +181,7 @@ theorem genVal_add_segL : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
   refine Finset.sum_congr rfl fun j hj => ?_
   have hjk : j ≤ n₀ := Nat.lt_succ_iff.1 (Finset.mem_range.1 hj)
   rw [esymm_map_mul_C, esymm_string Q s zS hs hsQ t]
-  simp only [hF, if_pos hjk, genVal]
+  simp only [hF, ite_eq_left hjk, genVal]
   by_cases hjN : j ≤ N
   · by_cases hat : n₀ - j ≤ t
     · have hsI : s ^ (r * n₀ + n₀ * (N + t - n₀)) * s ^ (-(((n₀ - j : ℕ) : ℤ) * ((t : ℤ) - ((n₀ - j : ℕ) : ℤ)))) =
@@ -262,7 +262,7 @@ theorem card_above_range_eq_sum : ∀ (κ : Type) [Field κ] [Finite κ] (U U' :
     Finset.sum_subset (Finset.range_mono (by omega)) fun n _ hn => by
       rw [Finset.mem_range] at hn
       simp only [hg]
-      rw [if_neg (by omega), zero_mul]
+      rw [ite_eq_right (by omega), zero_mul]
   have h3 : ∑ n ∈ Finset.range (Module.finrank κ U + 1), g n =
       ∑ n ∈ Finset.range (e + Module.finrank κ U + 1), g n :=
     Finset.sum_subset (Finset.range_mono (by omega)) fun n _ hn => by
@@ -273,7 +273,7 @@ theorem card_above_range_eq_sum : ∀ (κ : Type) [Field κ] [Finite κ] (U U' :
   refine Finset.sum_congr rfl fun n hn => ?_
   rw [Finset.mem_range] at hn
   simp only [hg]
-  rw [if_pos (by omega), show e + 1 - 1 - n = e - n by omega, show e - (e - n) = n by omega]
+  rw [ite_eq_left (by omega), show e + 1 - 1 - n = e - n by omega, show e - (e - n) = n by omega]
   ring
 
 end GlobalTheory.RangeKerCount
@@ -340,8 +340,7 @@ theorem exists_gl_map_eq (O : Type) [CommRing O] [IsLocalRing O] (D : Type) [Fin
   have hu : IsUnit (Matrix.of A).det := by
     rw [← IsLocalRing.residue_ne_zero_iff_isUnit, RingHom.map_det]
     change ((Matrix.of A).map (IsLocalRing.residue O)).det ≠ 0
-    rw [hAM]
-    exact hM
+    rwa [hAM]
   obtain ⟨g, hg⟩ := (Matrix.isUnit_iff_isUnit_det _).2 hu
   refine ⟨g, ?_⟩
   rw [hg, hAM, ← he]
@@ -355,8 +354,7 @@ def projE (F : Type) [Field F] (s : Finset D) : Matrix D D F := diagonal fun i =
 
 theorem rank_projE (F : Type) [Field F] (s : Finset D) : (projE F s).rank = s.card := by
   classical
-  rw [projE, rank_diagonal]
-  rw [Fintype.card_subtype]
+  rw [projE, rank_diagonal, Fintype.card_subtype]
   congr 1
   ext i
   by_cases h : i ∈ s <;> simp [h]
@@ -401,9 +399,9 @@ theorem int_mul_torus_iff {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformizer k
   rw [mul_diagonal, mul_diagonal]
   by_cases h : j ∈ s
   · have := div_mem_iff hϖ (M i j)
-    simp only [indic, h, Pi.neg_apply, if_true, _root_.zpow_neg, zpow_one, mul_one, map_apply, Matrix.zero_apply]
+    simp only [indic, h, Pi.neg_apply, ite_true, _root_.zpow_neg, zpow_one, mul_one, map_apply, Matrix.zero_apply]
     exact this
-  · simp only [indic, h, Pi.neg_apply, if_false, neg_zero, zpow_zero, mul_one, mul_zero, map_apply, Matrix.zero_apply, iff_true]
+  · simp only [indic, h, Pi.neg_apply, ite_false, neg_zero, zpow_zero, mul_one, mul_zero, map_apply, Matrix.zero_apply, iff_true]
     exact (M i j).2
 
 omit [DecidableEq D] [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
@@ -414,8 +412,7 @@ theorem int_mul {m n : Type} {A : Matrix m D k} {B : Matrix D n k} (hA : ∀ i j
 
 theorem int_of_KO {g : GL D k} (hg : g ∈ KO k D) : ∀ i j, g.1 i j ∈ 𝒪[k] := by
   obtain ⟨κ, rfl⟩ := hg
-  intro i j
-  exact (κ.1 i j).2
+  exact fun i j => (κ.1 i j).2
 
 theorem KO_of_int {g : GL D k} (hg : ∀ i j, g.1 i j ∈ 𝒪[k]) (hg' : ∀ i j, (g⁻¹).1 i j ∈ 𝒪[k]) : g ∈ KO k D := by
   let A : Matrix D D 𝒪[k] := fun i j => ⟨_, hg i j⟩
@@ -522,7 +519,7 @@ theorem sum_intInd_cosets : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
   constructor
   · intro hy
     refine Finset.sum_eq_zero fun g hgR => ?_
-    rw [ParHecke.intInd, if_neg]
+    rw [ParHecke.intInd, ite_eq_right]
     intro h
     apply hy
     have e : g = incG (κ ⟨g, hgR⟩) * g₀ * κ' ⟨g, hgR⟩ := hg ⟨g, hgR⟩
@@ -632,8 +629,7 @@ theorem exists_gl_map_eq (O : Type) [CommRing O] [IsLocalRing O] (n : Type) [Fin
   have hu : IsUnit (Matrix.of A).det := by
     rw [← IsLocalRing.residue_ne_zero_iff_isUnit, RingHom.map_det]
     change ((Matrix.of A).map (IsLocalRing.residue O)).det ≠ 0
-    rw [hAM]
-    exact hM
+    rwa [hAM]
   obtain ⟨g, hg⟩ := (Matrix.isUnit_iff_isUnit_det _).2 hu
   refine ⟨g, ?_⟩
   rw [hg, hAM, ← he]
@@ -653,8 +649,7 @@ def projE (F : Type) [Field F] (s : Finset n) : Matrix n n F := diagonal fun i =
 
 theorem rank_projE (F : Type) [Field F] (s : Finset n) : (projE F s).rank = s.card := by
   classical
-  rw [projE, rank_diagonal]
-  rw [Fintype.card_subtype]
+  rw [projE, rank_diagonal, Fintype.card_subtype]
   congr 1
   ext i
   by_cases h : i ∈ s <;> simp [h]
@@ -713,9 +708,9 @@ theorem torus_inv_mul_int_iff {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformiz
   rw [diagonal_mul, diagonal_mul]
   by_cases h : i ∈ s
   · have := inv_mul_mem_iff hϖ (M i j)
-    simp only [indic, h, Pi.neg_apply, if_true, _root_.zpow_neg, zpow_one, one_mul, map_apply, Matrix.zero_apply]
+    simp only [indic, h, Pi.neg_apply, ite_true, _root_.zpow_neg, zpow_one, one_mul, map_apply, Matrix.zero_apply]
     exact this
-  · simp only [indic, h, Pi.neg_apply, if_false, neg_zero, zpow_zero, one_mul, zero_mul, map_apply, Matrix.zero_apply, iff_true]
+  · simp only [indic, h, Pi.neg_apply, ite_false, neg_zero, zpow_zero, one_mul, zero_mul, map_apply, Matrix.zero_apply, iff_true]
     exact (M i j).2
 
 omit [DecidableEq n] [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
@@ -726,8 +721,7 @@ theorem int_mul {a b : Type} {A : Matrix a n k} {B : Matrix n b k} (hA : ∀ i j
 
 theorem int_of_KO {g : GL n k} (hg : g ∈ KO k n) : ∀ i j, g.1 i j ∈ 𝒪[k] := by
   obtain ⟨κ, rfl⟩ := hg
-  intro i j
-  exact (κ.1 i j).2
+  exact fun i j => (κ.1 i j).2
 
 theorem KO_of_int {g : GL n k} (hg : ∀ i j, g.1 i j ∈ 𝒪[k]) (hg' : ∀ i j, (g⁻¹).1 i j ∈ 𝒪[k]) : g ∈ KO k n := by
   let A : Matrix n n 𝒪[k] := fun i j => ⟨_, hg i j⟩
@@ -847,7 +841,7 @@ theorem GlobalTheory.ParHecke.CosetSubL.sum_intInd_cosets_up : ∀ (k : Type) [F
   constructor
   · intro hy
     refine Finset.sum_eq_zero fun g hgR => ?_
-    rw [ParHecke.intInd, if_neg]
+    rw [ParHecke.intInd, ite_eq_right]
     intro h
     apply hy
     have hgi : ∀ i j, g.1 i j ∈ 𝒪[k] := by
@@ -1025,8 +1019,7 @@ theorem omTwo_datum_inv : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
       exact det_cong hj
     have t2 : ξ (Units.mk0 _ hs.det_ne) = ξ (u * Units.mk0 _ hy.det_ne) := by
       refine tame_eq hξ (by rw [Units.val_mul, map_mul, hu, Units.val_mk0, Units.val_mk0, hy.2.1, h11, mul_one]) ?_
-      rw [Units.val_mul, Units.val_mk0, Units.val_mk0]
-      exact hc
+      rwa [Units.val_mul, Units.val_mk0, Units.val_mk0]
     rw [dite_eq_left hs, dite_eq_left hy, MonoidHom.inv_apply, MonoidHom.inv_apply, inv_inv, inv_inv, t1, t2, map_mul, map_mul]
     simp only [Units.val_mul]
     ring
@@ -1067,8 +1060,7 @@ theorem omTwo_torusLeft : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
   have hvj : valuation k ((GeneralLinearGroup.det j : kˣ) : k) = 1 := (nabs_eq_one_iff _).1 hnj
   have hξ : μS (GeneralLinearGroup.det j) = ξ (GeneralLinearGroup.det j) := by
     have := hu _ hvj
-    rw [MonoidHom.mul_apply, MonoidHom.inv_apply, mul_inv_eq_one] at this
-    exact this
+    rwa [MonoidHom.mul_apply, MonoidHom.inv_apply, mul_inv_eq_one] at this
   have hdm : GeneralLinearGroup.det (mtor ϖ (indic s) : GL (A ⊕ D') k) = ϖ ^ (s.card : ℤ) := by
     rw [GlobalTheory.ChainStepCoef.det_mtor, sum_indic]
   have hnm : nabs k (GeneralLinearGroup.det (mtor ϖ (indic s) : GL (A ⊕ D') k)) = (resCard k : ℝ) ^ (-(s.card : ℤ)) := by
@@ -1323,8 +1315,7 @@ theorem torusRight : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace
   have hv1 : valuation k ((GeneralLinearGroup.det j : kˣ) : k) = 1 := (nabs_eq_one_iff _).1 hn1
   have hxi : μT (GeneralLinearGroup.det j) = ξ (GeneralLinearGroup.det j) := by
     have := hun _ hv1
-    rw [MonoidHom.mul_apply, MonoidHom.inv_apply, mul_inv_eq_one] at this
-    exact this
+    rwa [MonoidHom.mul_apply, MonoidHom.inv_apply, mul_inv_eq_one] at this
   have hdet : GeneralLinearGroup.det (j * mtor ϖ (-indic s)) =
       GeneralLinearGroup.det j * ϖ ^ (-(s.card : ℤ)) := by
     rw [map_mul, det_mtor', sum_neg_indic]
@@ -1541,7 +1532,7 @@ theorem card_filter_eq : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
     fun j hj => by
       have hY : (c * j)⁻¹ ∈ parahoric k A D' := inv_mem (mul_mem hc hj)
       have h := (hRK.2 _ (inv_mem (lowerDiagonalBlockAsGL_mem_integralGeneralLinear hY))).exists
-      simp only [pick, dif_pos h]; exact h.choose_spec
+      simp only [pick, dite_eq_left h]; exact h.choose_spec
   have uniq : ∀ j ∈ parahoric k A D', ∀ g ∈ RK, g⁻¹ * ((lowerDiagonalBlockAsGL ((c * j)⁻¹))⁻¹ * T) ∈ KO k D' → pick j = g :=
     fun j hj g hg h => (hRK.2 _ (inv_mem (lowerDiagonalBlockAsGL_mem_integralGeneralLinear (inv_mem (mul_mem hc hj))))).unique (spec j hj) ⟨hg, h⟩
   apply Finset.card_nbij pick
@@ -1703,7 +1694,7 @@ open Classical in
 theorem coset_term : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (A D D' : Type) [Fintype A] [DecidableEq A] [Fintype D] [DecidableEq D] [Fintype D'] [DecidableEq D'] (ϖ : kˣ), valuation k (ϖ : k) = uniformizer k → ∀ (ξ : kˣ →* ℂˣ), IsTame ξ → ∀ (s : Finset D') (j : GL (A ⊕ D') k), j ∈ parahoric k A D' → ∀ d : kˣ, (d : k) = j.1.toBlocks₂₂.det → ∀ x : Matrix (A ⊕ D') (A ⊕ D) k, (InSupp (((j * mtor ϖ (indic s))⁻¹).1 * x) → ((ξ d * (ξ (GeneralLinearGroup.det j))⁻¹ : ℂˣ) : ℂ) * datum ξ (((j * mtor ϖ (indic s))⁻¹).1 * x) = datum ξ x) ∧ (¬ InSupp (((j * mtor ϖ (indic s))⁻¹).1 * x) → datum ξ (((j * mtor ϖ (indic s))⁻¹).1 * x) = 0) := by
   intro k _ _ _ _ A D D' _ _ _ _ _ _ ϖ hϖ ξ hξ s j hj d hd x
   set y := ((j * mtor ϖ (indic s))⁻¹).1 * x with hydef
-  refine ⟨fun hW => ?_, fun hW => by simp only [datum, dif_neg hW]⟩
+  refine ⟨fun hW => ?_, fun hW => by simp only [datum, dite_eq_right hW]⟩
   set T := torusElt k D' ϖ (indic s) with hT
   have hg0 : (mtor (A := A) ϖ (indic s)).val = fromBlocks (1 : Matrix A A k) 0 0 T.val := by
     rw [mtor_eq_dg, val_dg]
@@ -1726,9 +1717,8 @@ theorem coset_term : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace
   have t2 : ξ (Units.mk0 _ hs.det_ne) = ξ (Units.mk0 _ hW.det_ne * u₁) := by
     refine GlobalTheory.DatumEigen.tame_eq hξ (by rw [Units.val_mul, map_mul, Units.val_mk0, hW.2.1, one_mul]; exact h11) ?_
     show valuation k (x.toBlocks₁₁.det - y.toBlocks₁₁.det * j.val.toBlocks₁₁.det) < 1
-    rw [mul_comm (y.toBlocks₁₁.det)]
-    exact hc
-  simp only [datum, dif_pos hs, dif_pos hW]
+    rwa [mul_comm (y.toBlocks₁₁.det)]
+  simp only [datum, dite_eq_left hs, dite_eq_left hW]
   rw [t1, t2, ← Units.val_mul]
   congr 1
   simp only [map_mul]
@@ -1771,7 +1761,7 @@ theorem sum_reps_datum_eq : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
     Finset.sum_const, Finset.sum_const]
   by_cases hx : InSupp x
   · rw [GlobalTheory.T.card_filter_parahoric_cosets_eq_schur_count k A D D' ϖ hϖ s R d hR RK hRK x hx]
-  · have h0 : datum ξ x = 0 := by simp only [datum, dif_neg hx]
+  · have h0 : datum ξ x = 0 := by simp only [datum, dite_eq_right hx]
     simp [h0]
 
 end GlobalTheory.ParHeckeTarget
@@ -1890,8 +1880,7 @@ theorem transfer : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k
     congr 1
     have hN := GlobalTheory.ParHecke.StringEig.genVal_add_segL k ϖ hϖ (Fintype.card A) (Fintype.card D) t s.card B (μS ϖ) (μT ϖ) hx2
       (by rw [← hD']; exact Finset.card_le_univ s)
-    rw [show Fintype.card D' = Fintype.card D + t from hD']
-    rw [hN, Finset.mul_sum, Finset.mul_sum]
+    rw [show Fintype.card D' = Fintype.card D + t from hD', hN, Finset.mul_sum, Finset.mul_sum]
     refine Finset.sum_congr rfl fun n _ => ?_
     simp only [hC, hcn, hden, hD']
     ring

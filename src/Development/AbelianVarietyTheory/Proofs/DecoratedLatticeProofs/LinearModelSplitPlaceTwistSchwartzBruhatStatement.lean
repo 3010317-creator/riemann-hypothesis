@@ -102,8 +102,7 @@ theorem GlobalTheory.VarySplitFactor.exists_linearMap_pure : ∀ (D : D7) (ψ : 
         simp only [xf, Function.update_self]
         rw [honHalf]
         exact hsplit.1.mapsTo u.2
-      · simp only [xf, Function.update_of_ne hp]
-        exact hx.1.1 p
+      · simpa only [xf, Function.update_of_ne hp] using hx.1.1 p
     · apply (hx.1.2.union (Set.finite_singleton (Sum.inl v : Place D))).subset
       intro p hp
       by_cases h : p = .inl v
@@ -299,8 +298,7 @@ theorem fockPure_any {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {
       unfold aPlusAll
       exact GlobalTheory.FockPureTensor.isPure_aPlus hb hμ z _ _ _ _ _ h) hP (x := x) (by rw [h1]; exact hx)
     (fun τ => by rw [h1]; exact hx0 τ) Finset.univ
-  simp only [Finset.mem_univ, if_true] at key
-  exact key
+  simpa only [Finset.mem_univ, ite_true] using key
 
 theorem pureTensorO_eq_sum {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S T : HSp D)
     (sS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ) (sT : D.what₂.Tau → Matrix (Fin T.rank) (Fin T.rank) ℂ)
@@ -506,8 +504,7 @@ theorem datum_eq_of_near (ξ : kˣ →* ℂˣ) (hξ : GlobalTheory.SplitWeil.IsT
   have h1 : ξ (Units.mk0 (y.toBlocks₁₁.det / x.toBlocks₁₁.det) (div_ne_zero hy.det_ne hx.det_ne)) = 1 := by
     apply hξ
     simp only [Units.val_mk0]
-    rw [div_sub_one hx.det_ne, map_div₀, hx.2.1, div_one]
-    exact hd
+    rwa [div_sub_one hx.det_ne, map_div₀, hx.2.1, div_one]
   rw [hq, map_mul, h1, mul_one]
 
 end Datum
@@ -547,8 +544,7 @@ theorem datum_hasCompactSupport (ξ : (p.adicCompletion F)ˣ →* ℂˣ) :
     intro hs
     apply hx
     simp only [Set.mem_pi, Set.mem_univ, true_implies, Set.mem_ofPred_eq]
-    intro i j
-    exact (mem_O_iff p _).1 (hs.1 i j)
+    exact fun i j => (mem_O_iff p _).1 (hs.1 i j)
 
 end Fv
 end GlobalTheory.Reidx
@@ -1049,8 +1045,7 @@ theorem GlobalTheory.TwistLinModel.linearModel_at_twist : ∀ D : D7, ForStepQ D
     rw [e1, e2] at h4
     change ipO m X (p.ω (g, 1) (pureTensorO c.ψ c.θ s.V s'.V (cart s.M) (cart s'.M) (onb s.M) (onb s'.M) (T₀ (R u)) P))
       (pureTensorO c.ψ c.θ s.V s'.V (cart s.M) (cart s'.M) (onb s.M) (onb s'.M) (T₀ (R u')) P) = _
-    rw [key, hx₁v, hx₂v]
-    rw [← h4, ← h3, ← mul_assoc, div_mul_cancel₀ C₁ hvol]
+    rw [key, hx₁v, hx₂v, ← h4, ← h3, ← mul_assoc, div_mul_cancel₀ C₁ hvol]
     rfl
 end -- clump:auto
 end -- clump:auto

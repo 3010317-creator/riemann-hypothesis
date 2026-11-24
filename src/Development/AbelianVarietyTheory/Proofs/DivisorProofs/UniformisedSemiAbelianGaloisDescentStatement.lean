@@ -319,8 +319,7 @@ theorem splitTorus_hom_eq_of_nilpotent : ∀ (A κ : Type) [CommRing A] [IsLocal
       · simp only [Over.pullback_map_left, pullback.lift_fst]
         exact congrArg CommaMorphism.left ht1
       · simp only [Over.pullback_map_left, pullback.lift_snd])
-  rw [← Hom.one_def, mul_inv_eq_one] at key
-  exact key
+  rwa [← Hom.one_def, mul_inv_eq_one] at key
 
 end GlobalTheory
 end -- clump:auto
@@ -440,8 +439,7 @@ theorem exists_baseChange {S S' : Scheme.{0}} {f : S' ⟶ S} {X : Type} [AddComm
   refine ⟨q', i', sq, e₁, isMonHom_of_over_isMonHom hF hB q q' hq, hi.isMonHom hF, ?_⟩
   have k₀ : IsPullback i.left (splitTorus S X).hom q.left (η[B]).left := by
     have := H.map (Over.forget S)
-    rw [← Rosenlicht.toUnit_left]
-    exact this
+    rwa [← Rosenlicht.toUnit_left]
   have k₁ := (isPullback_bcMap f X).paste_horiz k₀
   have e₂ := eSec_comp_of_isGrpPullback hB
   have w' : i'.left ≫ q'.left = (splitTorus S' X).hom ≫ (η[B']).left := by
@@ -1268,8 +1266,7 @@ theorem exists_descent (hM : M.IsLB) (hL : L.IsLB) (hL' : L'.IsLB) {w : LB.Iso L
       rw [he] at this
       rw [this, gs_eq _ y ⊤ trivial, map_one, map_one, Units.val_one]
     have s1 : s = 1 := Units.ext (ha.symm.trans ((congrArg _ a1).trans (map_one _)))
-    intro j i
-    exact mul_inv_eq_one.1 ((hs (j, i)).symm.trans ((congrArg _ s1).trans (map_one _)))
+    exact fun j i => mul_inv_eq_one.1 ((hs (j, i)).symm.trans ((congrArg _ s1).trans (map_one _)))
   have desc : ∀ j i, ∃ v : Γ(Y, ch M L f j i)ˣ, pullU β _ v = u j i := by
     intro j i
     obtain ⟨a, ha⟩ := (hfun _).2 (u j i).val fun σ _ => congrArg Units.val (inv σ j i)

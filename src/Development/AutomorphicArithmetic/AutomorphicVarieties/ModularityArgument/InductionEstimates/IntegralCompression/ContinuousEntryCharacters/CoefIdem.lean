@@ -69,8 +69,7 @@ private theorem chi_mul_conj (ν : Fin (2 + 2) → ℤ) (θ : Fin (2 + 2) → �
 private theorem int_zero {μ : Measure U4} (hH : Haar4 μ) {ν ν' : Fin (2 + 2) → ℤ} (hne : ν ≠ ν') (F : U4 → ℂ)
     (hF : ∀ θ h, chi ν' θ * F (dg θ * h) = chi ν θ * F h) : ∫ h, F h ∂μ = 0 := by
   obtain ⟨θ, hθ⟩ : ∃ θ, chi ν θ ≠ chi ν' θ := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hne (u4.2.2.2.2.2.2.2.2.2.2.1 ν ν' hc)
   have hT : ∫ h, F (dg θ * h) ∂μ = ∫ h, F h ∂μ :=
     (hH.left (dg θ)).integral_comp (Homeomorph.mulLeft (dg θ)).measurableEmbedding F
@@ -91,8 +90,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.coefIdem :
   have hψc : Continuous ψ := ha0 ▸ (hcont j₀).1
   have hψ1 : ψ 1 = 1 := by
     have h := hC.res 1 1
-    rw [u4.2.2.1, KT.psi_one, KT.psi_one, mul_one] at h
-    exact h
+    rwa [u4.2.2.1, KT.psi_one, KT.psi_one, mul_one] at h
   have hint : ∀ f : U4 → ℂ, Continuous f → Integrable f μ := fun f hf =>
     hf.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hinv : Continuous fun h : U4 => h⁻¹ := continuous_inv
@@ -131,8 +129,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.coefIdem :
       rw [_root_.mul_inv_rev, u4.2.2.2.2.2.2.2.2.2.1, hψdg, (hw j (-θ) h⁻¹).1]
       have := chi_mul_neg (ν j) θ
       linear_combination (chi (wt n q n' q') θ * ψ h * a j h⁻¹) * this
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   have key2 : ∀ g, ∫ k, conj (ψ k) * ψ (g * k) ∂μ = c * ψ g := fun g => by
     have e1 : ∀ k, conj (ψ k) * ψ (g * k) = ∑ j, a j g * (conj (ψ k) * b j k) := fun k => by
       rw [hexp, Finset.mul_sum]
@@ -152,8 +149,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.coefIdem :
       rw [hψdg, (hw j θ k).2.2, map_mul]
       have := chi_mul_conj (wt n q n' q') θ
       linear_combination (conj (ψ k) * chi (ν j) θ * b j k) * this
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   have heOf : ∀ k, eOf μ ψ k = (c : ℂ)⁻¹ * conj (ψ k) := fun k => rfl
   refine ⟨hψc, hψ1, ⟨?_, ?_, ?_⟩, ?_⟩
   · exact continuous_const.mul (Complex.continuous_conj.comp hψc)

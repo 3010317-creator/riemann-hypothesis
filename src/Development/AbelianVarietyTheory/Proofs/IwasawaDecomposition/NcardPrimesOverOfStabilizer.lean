@@ -79,16 +79,14 @@ theorem ncard_placesOver (E : Type) [Field E] [NumberField E] {p : ℕ} (hp : p.
       refine ⟨hPp, ⟨hmax.eq_of_le (Ideal.IsPrime.under ℤ v.asIdeal).ne_top ?_⟩⟩
       rw [Ideal.span_le, Set.singleton_subset_iff]
       show algebraMap ℤ (𝓞 E) ((p : ℕ) : ℤ) ∈ v.asIdeal
-      rw [map_natCast]
-      exact hv
+      rwa [map_natCast]
     · rintro ⟨h1, h2⟩
       refine ⟨⟨P, h1, Ideal.ne_bot_of_liesOver_of_ne_bot hp0 P⟩, ?_, rfl⟩
       have h3 : (p : ℤ) ∈ P.under ℤ := by
         rw [← Ideal.over_def P (Ideal.span {(p : ℤ)})]
         exact Ideal.mem_span_singleton_self _
       have h4 : algebraMap ℤ (𝓞 E) ((p : ℕ) : ℤ) ∈ P := h3
-      rw [map_natCast] at h4
-      exact h4
+      rwa [map_natCast] at h4
   rw [← himg, Set.ncard_image_of_injective _ (fun v w hvw => HeightOneSpectrum.ext hvw)]
 
 theorem ncard_primesOver_of_stabilizer (E : Type) [Field E] [NumberField E] [IsGalois ℚ E] (p : ℕ)
@@ -150,6 +148,6 @@ theorem split_of_one_mod : ∀ (R : Ranks) (H : Host R) (p : ℕ), p.Prime → p
     obtain ⟨k, ρ, hρ, rfl⟩ := Formalism.FrobeniusOrbits.Decomp.stab_eq_inertia_mul p P 1 σ h1 hσ
     rw [(hI ρ).1 hρ, one_pow, mul_one]
   · unfold Host.cls primeClass
-    rw [if_neg hp2, if_neg hpq, if_neg hpd, if_pos jd]
+    rw [ite_eq_right hp2, ite_eq_right hpq, ite_eq_right hpd, ite_eq_left jd]
 
 end GlobalTheory.HostSplit

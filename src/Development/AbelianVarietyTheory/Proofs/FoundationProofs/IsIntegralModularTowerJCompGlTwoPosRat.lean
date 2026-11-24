@@ -142,8 +142,7 @@ theorem jK_sl_isIntegral : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClo
     rintro _ ⟨γ, rfl⟩
     refine ⟨red γ, ?_⟩
     have h : ∃ γ', red γ' = red γ := ⟨γ, rfl⟩
-    simp only [F, dif_pos h]
-    exact hred _ _ h.choose_spec
+    simpa only [F, dite_eq_left h] using hred _ _ h.choose_spec
   let T := hSfin.toFinset
   have hT : ∀ y, y ∈ T ↔ y ∈ S := fun y => Set.Finite.mem_toFinset hSfin
   let P : Tw.K[X] := ∏ y ∈ T, (X - C y)
@@ -199,8 +198,7 @@ theorem jK_sl_isIntegral : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClo
     _root_.GlobalTheory.KZ.LevelOne.mem_adjoin_j ε Tw hε ⟨φ, hφ, hjφ⟩ (P.coeff n) (fun δ => hinv δ n) (hhol n)
   have hlift : P ∈ lifts (algebraMap (Algebra.adjoin Ω {Tw.jK}) Tw.K) := by
     rw [lifts_iff_coeff_lifts]
-    intro n
-    exact ⟨⟨_, hA n⟩, rfl⟩
+    exact fun n => ⟨⟨_, hA n⟩, rfl⟩
   obtain ⟨q, hqmap, -, hqmon⟩ := lifts_and_natDegree_eq_and_monic hlift hPmon
   exact ⟨q, hqmon, by rw [eval₂_eq_eval_map, hqmap, hPf]⟩
 

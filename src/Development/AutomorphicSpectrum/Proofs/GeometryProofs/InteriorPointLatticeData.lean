@@ -179,8 +179,7 @@ theorem conj_rt_iff (H : Host E) (s : E →+* ℂ) :
     ((starRingEnd ℂ).comp s) (H.rt : E) = H.rt0 ↔ ¬ s (H.rt : E) = H.rt0 := by
   have hdpos : (0 : ℝ) < H.d := by exact_mod_cast H.d_prime.pos
   have h2 : s (H.rt : E) ^ 2 = -(H.d : ℂ) := by
-    have h := congrArg (fun a : 𝓞 E => s (a : E)) H.rt_sq
-    simpa using h
+    simpa using congrArg (fun a : 𝓞 E => s (a : E)) H.rt_sq
   have h0 := H.sqrt_neg_disc_sq
   have hre : H.rt0.re = 0 := by
     have hi := congrArg Complex.im h0
@@ -204,9 +203,7 @@ theorem conj_rt_iff (H : Host E) (s : E →+* ℂ) :
     rcases mul_eq_zero.1 this with h | h
     · exact Or.inl (sub_eq_zero.1 h)
     · exact Or.inr (eq_neg_of_add_eq_zero_left h)
-  have hneg : -H.rt0 ≠ H.rt0 := by
-    intro h
-    exact hne (by linear_combination -(1 / 2 : ℂ) * h)
+  have hneg : -H.rt0 ≠ H.rt0 := fun h => hne (by linear_combination -(1 / 2 : ℂ) * h)
   rcases hpm with h | h
   · simp only [RingHom.comp_apply, h, hconj]
     simpa using hneg
@@ -238,8 +235,8 @@ theorem period_lattice_fibre_and_conj : ∀ (E : Type) [Field E] [NumberField E]
       finrank_eigSp_conj R.B (s.comp (algebraMap (𝓞 E) E))
     rw [h1, hrk, (FU.sig i).1, (FU.sig i).2]
     by_cases h : s (H.rt : E) = H.rt0
-    · rw [if_pos h, if_neg (fun h' => (conj_rt_iff H s).1 h' h)]
-    · rw [if_neg h, if_pos ((conj_rt_iff H s).2 h)]
+    · rw [ite_eq_left h, ite_eq_right (fun h' => (conj_rt_iff H s).1 h' h)]
+    · rw [ite_eq_right h, ite_eq_left ((conj_rt_iff H s).2 h)]
 
 end GlobalTheory.CompanionTheory.Ar.Cusp.FamEx
 end -- clump:auto
@@ -268,8 +265,7 @@ theorem fibreLat_of_isOver : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   have h2 := hB.1 (hA.2 hF)
   apply hC.2
   have hj : x ≫ Y.j = z ≫ 𝔐.f := hxj
-  rw [← hj]
-  exact h2
+  rwa [← hj]
 
 end GlobalTheory.CompanionTheory.Ar.Cusp.FamEx
 end -- clump:auto

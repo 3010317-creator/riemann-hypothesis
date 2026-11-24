@@ -157,14 +157,14 @@ theorem exists_frameFam {E : Type} [Field E] [NumberField E] [IsCMField E] {H : 
   have h0 : e.symm (e y₀) ∈ ptsIn (genStr Z) σ V.1 := by rw [e.left_inv hy₀]; exact hy₀V
   let a : (Fin n → ℂ) → CxFr Z σ := fun b =>
     if h : e.symm b ∈ ptsIn (genStr Z) σ V.1 then ⟨e.symm b, fr _ h⟩ else ⟨e.symm (e y₀), fr _ h0⟩
-  have ha : ∀ b (h : e.symm b ∈ ptsIn (genStr Z) σ V.1), a b = ⟨e.symm b, fr _ h⟩ := fun b h => dif_pos h
+  have ha : ∀ b (h : e.symm b ∈ ptsIn (genStr Z) σ V.1), a b = ⟨e.symm b, fr _ h⟩ := fun b h => dite_eq_left h
   let B : Set (Fin n → ℂ) := e.target ∩ e.symm ⁻¹' ptsIn (genStr Z) σ V.1
   have hB : IsOpen B := e.continuousOn_symm.isOpen_inter_preimage e.open_target (isOpen_ptsIn _)
   have hBt : B ⊆ e.target := Set.inter_subset_left
   have hyB : IsHolTo B (fun b => (e.symm b).1) := LocLift.isHolTo_mono hex.2.2.1 hB hBt
   let ev : (Fin n → ℂ) → (Γ(gen Z, V.1) →+* ℂ) := fun b =>
     if h : e.symm b ∈ ptsIn (genStr Z) σ V.1 then evHom h else evHom h0
-  have hev : ∀ b (h : e.symm b ∈ ptsIn (genStr Z) σ V.1), ev b = evHom h := fun b h => dif_pos h
+  have hev : ∀ b (h : e.symm b ∈ ptsIn (genStr Z) σ V.1), ev b = evHom h := fun b h => dite_eq_left h
   have : IsOpenImmersion (LogKS.chart V) := IsAffineOpen.isOpenImmersion_fromSpec V.2
   have hd : ∀ r : Γ(gen Z, V.1), DifferentiableOn ℂ (fun b => ev b r) B := fun r b hb =>
     (HolLieFrame.differentiableAt_ev hyB (LogKS.chart V) ev
@@ -391,8 +391,7 @@ theorem constForm : ∀ (n a g r₀ : ℕ) (K : (Fin n → ℂ) → Set (Fin g �
         hEd.differentiableOn hEm (hlamDi i) (hlamDi j) (fun b hb => ⟨hmem b hb i, hmem b hb j⟩) hs₀ hs h1
       have h3 := hpair N _ _ hN (hmem s hs i) (hmem s hs j)
       have h4 := congrArg Units.val (huniq _ _ _ _ _ _ h3 h2)
-      simp only [Units.val_mk0, hm', hM₀, Complex.ofReal_intCast] at h4
-      exact h4
+      simpa only [Units.val_mk0, hm', hM₀, Complex.ofReal_intCast] using h4
     rw [hm', key]
   have hζc : ContinuousOn ζ (Metric.ball 0 1) := hζan.continuousOn
   have hζEc : ∀ i, ContinuousOn (fun s => ζ (logExp a s) i) (logDom n a) := fun i =>
@@ -681,15 +680,13 @@ theorem exists_logExp_eq (n a : ℕ) (z : Fin n → ℂ) (hz : z ∈ Metric.ball
   refine ⟨fun k => if (k : ℕ) < a then Complex.log (z k) else z k, fun k => ?_, funext fun k => ?_⟩
   · have hk1 : ‖z k‖ < 1 := (pi_norm_lt_iff one_pos).1 (mem_ball_zero_iff.1 hz) k
     by_cases hk : (k : ℕ) < a
-    · simp only [hk, if_true]
+    · simp only [hk, ite_true]
       rw [Complex.log_re]
       exact Real.log_neg (norm_pos_iff.2 (hnz k hk)) hk1
-    · simp only [hk, if_false]
-      exact hk1
+    · simpa only [hk, ite_false] using hk1
   · by_cases hk : (k : ℕ) < a
-    · simp only [logExp, hk, if_true]
-      exact Complex.exp_log (hnz k hk)
-    · simp only [logExp, hk, if_false]
+    · simpa only [logExp, hk, ite_true] using Complex.exp_log (hnz k hk)
+    · simp only [logExp, hk, ite_false]
 
 theorem exists_riemann_period_chart : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (T : TorModel Y) (σ : c.F →+* ℂ) (U : Formalism.L2.PjFree.Unf Xo c σ (Dw.p + Dw.q)), Formalism.L2.PjFree.GoodEmb c σ → Formalism.L2.PjFree.IsUnf U → ∀ x₀ : GlobalTheory.CxPts (genStr T.Z) σ, ∃ (n a : ℕ) (ha : a ≤ n) (g rk : ℕ) (τ₀ : (Fin n → ℂ) → Matrix (Fin g) (Fin g) ℂ) (B : Fin a → Matrix (Fin g) (Fin g) ℤ) (ch₀ : OpenPartialHomeomorph (GlobalTheory.CxPts (genStr T.Z) σ) (Fin n → ℂ)) (ex : ExpMaps T.Z σ g) (d : ℝ), GlobalTheory.IndefiniteRowSideFullHecke.HodgePeriodGram.IsPeriodChart rk τ₀ B ∧ IsExpChart ch₀ ex ∧ x₀ ∈ ch₀.source ∧ ch₀ x₀ = 0 ∧ Fintype.card ((Σ τ : E →+* ℂ, Fin (Dw.mult τ))) = g ∧ 0 < d ∧ (∀ x ∈ ch₀.source, Inner x ↔ ∀ i : Fin a, ch₀ x (Fin.castLE ha i) ≠ 0) ∧ ∀ x ∈ ch₀.source, Inner x → ((((d : ℝ) : ℂ) • (GlobalTheory.IndefiniteRowSideFullHecke.HodgePeriodGram.hodgeGram ha τ₀ B (ch₀ x))⁻¹).IsHermitian ∧ (∀ u : Fin g → ℂ, u ≠ 0 → 0 < (hermForm (((d : ℝ) : ℂ) • (GlobalTheory.IndefiniteRowSideFullHecke.HodgePeriodGram.hodgeGram ha τ₀ B (ch₀ x))⁻¹) u u).re) ∧ (∀ v w : Fin g → ℂ, ex x v = 1 → ex x w = 1 → ∃ m : ℤ, (hermForm (((d : ℝ) : ℂ) • (GlobalTheory.IndefiniteRowSideFullHecke.HodgePeriodGram.hodgeGram ha τ₀ B (ch₀ x))⁻¹) v w).im = m) ∧ ∀ (k : ℕ) (v w : Fin g → ℂ) (ζ : ℂˣ), 0 < k → ex x v = 1 → ex x w = 1 → (ζ : ℂ) = Complex.exp (-(2 * Real.pi * Complex.I) * ((hermForm (((d : ℝ) : ℂ) • (GlobalTheory.IndefiniteRowSideFullHecke.HodgePeriodGram.hodgeGram ha τ₀ B (ch₀ x))⁻¹) v w).im : ℂ) / k) → GlobalTheory.UU.CubWeil T.Z.t.cub k (ex x ((k : ℂ)⁻¹ • v)) (ex x ((k : ℂ)⁻¹ • w)) (unitOn ζ)) := by
   intro E _ _ _ H Dw l Xo c O _ β Y T σ U hσ hU x₀
@@ -731,8 +728,7 @@ theorem exists_riemann_period_chart : ∀ (E : Type) [Field E] [NumberField E] [
       Metric.isOpen_ball hHol fun z hz => hExpAt _ (hsymm z hz)
   have hB0 : IsLatBasis (K 0) (ζ 0) := by
     show IsLatBasis {w | ex (e.symm 0) w = 1} (ζ 0)
-    rw [h0]
-    exact hζB
+    rwa [h0]
   have hP1 : ∀ N z v w c c', Pair N z v w c → Pair N z v w c' → c = c' := fun N z v w c c' h h' =>
     unitOn_injective (h.unique h')
   have hP2 : ∀ (m N : ℕ) (B : Set (Fin m → ℂ)) (φ : (Fin m → ℂ) → Fin n → ℂ) (v w : (Fin m → ℂ) → Fin g → ℂ)
@@ -766,8 +762,7 @@ theorem exists_riemann_period_chart : ∀ (E : Type) [Field E] [NumberField E] [
     intro N hN
     have hsl : IsHolTo Set.univ (fun w => (ex x₀ w).left) := by
       have := hslice 0 hmem0
-      rw [h0] at this
-      exact this
+      rwa [h0] at this
     obtain ⟨Tt, hT1, hT2, hTc⟩ := GlobalTheory.T.exists_toricTorsion_cubicalWeil_one_complexPoint E H T.Z.X T.Z.t (x₀.1 ≫ genι T.Z) g N (ex x₀) hN (hExpAt x₀ hx₀) hsurj hsl
     obtain ⟨S, hSc, hS⟩ := GlobalTheory.T.torsion_count_through_exponential_lattice_kernel _ g r₀ N (ex x₀) (ζ 0) Tt hN (hadd x₀ hx₀) hsurj hζB hT1 hTc
     refine ⟨S, hSc, fun u u' hu => ?_⟩
@@ -786,14 +781,12 @@ theorem exists_riemann_period_chart : ∀ (E : Type) [Field E] [NumberField E] [
       intro k
       have hk := hsD k
       by_cases h : (k : ℕ) < a
-      · simp only [h, if_true] at hk
-        simp only [logExp, h, if_true, Complex.norm_exp]
-        exact Real.exp_lt_one_iff.2 hk
-      · simp only [h, if_false] at hk
-        simpa only [logExp, h, if_false] using hk
+      · simp only [h, ite_true] at hk
+        simpa only [logExp, h, ite_true, Complex.norm_exp] using Real.exp_lt_one_iff.2 hk
+      · simp only [h, ite_false] at hk
+        simpa only [logExp, h, ite_false] using hk
     have hnz : ∀ k : Fin n, (k : ℕ) < a → logExp a s k ≠ 0 := fun k hk => by
-      simp only [logExp, hk, if_true]
-      exact Complex.exp_ne_zero _
+      simpa only [logExp, hk, ite_true] using Complex.exp_ne_zero _
     obtain ⟨Hm, hH, hpos, -, hint, hw⟩ := hP3 _ hz1 hnz
     refine ⟨Hm, hH, hpos, fun s' hs' he => hMv s' hs' Hm ?_ ?_⟩
     · rw [he]; exact hint
@@ -839,8 +832,7 @@ theorem exists_riemann_period_chart : ∀ (E : Type) [Field E] [NumberField E] [
     obtain ⟨s, hsD, hsz⟩ := exists_logExp_eq n a (e x) hz1 hnz
     have hsl : IsHolTo Set.univ (fun w => (ex x w).left) := by
       have := hslice (e x) hz1
-      rw [e.left_inv hxe] at this
-      exact this
+      rwa [e.left_inv hxe] at this
     obtain ⟨-, Hm, hH, hpos, -, hint, hweil⟩ :=
       GlobalTheory.ShFam.Hor.LogCh.kernel_lattice_of_isUnf E H Dw l Xo c O β T.Z σ U hσ hU g x (ex x) hin (hExpAt x hxe) hsl
     have hKz : ∀ w, w ∈ K (logExp a s) ↔ ex x w = 1 := fun w => by
@@ -941,8 +933,8 @@ theorem exists_diag_im {U : Formalism.L2.PjFree.Unf Xo c σ r} (hσ : Formalism.
   obtain ⟨hbij, hrt, -, -⟩ := GlobalTheory.Relab.relab_good E H l c σ hσ
   obtain ⟨f, hf⟩ := FrameUnif.exists_letter_equiv (U.X k).Ψ (U.X k).cmType Dw.p Dw.q r hU.1
     (Formalism.L2.PjFree.relab c σ) hbij Dw.mult
-    (fun τ h => by unfold Datum.mult; rw [if_pos ((hrt τ).1 ((hty _).1 h))])
-    (fun τ h => by unfold Datum.mult; rw [if_neg (fun h' => h ((hty _).2 ((hrt τ).2 h')))])
+    (fun τ h => by unfold Datum.mult; rw [ite_eq_left ((hrt τ).1 ((hty _).1 h))])
+    (fun τ h => by unfold Datum.mult; rw [ite_eq_right (fun h' => h ((hty _).2 ((hrt τ).2 h')))])
   rw [← hp0] at hf
   have hper (v) : W.Pm k x v = perVec (U.X k) (W.e.trans f) x.1 (W.φ k v : Fin r → E) := funext fun j => by
     rw [W.Pm_eq, perVec, Equiv.trans_apply]
@@ -951,17 +943,17 @@ theorem exists_diag_im {U : Formalism.L2.PjFree.Unf Xo c σ r} (hσ : Formalism.
     obtain ⟨⟨τ, hτ⟩, ⟨n, hn⟩⟩ := t
     dsimp only at h ⊢
     rcases h with ⟨a, rfl, rfl⟩ | ⟨a, rfl, rfl, d⟩
-    · rw [if_neg (by omega), Formalism.L2.PjFree.perFr, dite_eq_left a, dite_eq_left hn]
-    · rw [if_pos (by omega), Formalism.L2.PjFree.perFr, dite_eq_right a,
+    · rw [ite_eq_right (by omega), Formalism.L2.PjFree.perFr, dite_eq_left a, dite_eq_left hn]
+    · rw [ite_eq_left (by omega), Formalism.L2.PjFree.perFr, dite_eq_right a,
         dite_eq_left (show conjEmb (Formalism.L2.PjFree.relab c σ (W.e j).1) ∈ (U.X k).Ψ from hτ), dite_eq_left hn]
       rfl
   refine ⟨diagXi (U.X k) (W.e.trans f), fun τ j => ?_, fun v w => ?_⟩
   · rw [diagXi, Equiv.trans_apply, Equiv.apply_symm_apply]
     rcases hf ⟨τ, j⟩ with ⟨a, h1, -⟩ | ⟨a, h1, -, -⟩
     · rw [h1]
-      simp only [riemConst, if_pos a]
+      simp only [riemConst, ite_eq_left a]
     · rw [h1]
-      simp only [riemConst, if_neg a]
+      simp only [riemConst, ite_eq_right a]
   · rw [hper, hper, im_diag_ortho _ _ _ hx, ← W.iso]
     simp
 
@@ -1028,7 +1020,7 @@ theorem GlobalTheory.HodgeSmooth.exists_diag_riem_orth : ∀ (E : Type) [Field E
       by_cases hp : ∃ j, W.e.symm ⟨τ, j⟩ = p'
       · obtain ⟨j, rfl⟩ := hp
         rw [hD τ j]
-      · push_neg at hp
+      · push Not at hp
         have : (∑ j, T j b • (Pi.single (W.e.symm ⟨τ, j⟩) 1 : Fin W.g → ℂ)) p' = 0 := by
           rw [Finset.sum_apply]
           exact Finset.sum_eq_zero fun j _ => by rw [Pi.smul_apply, Pi.single_eq_of_ne (hp j).symm, smul_zero]
@@ -1052,11 +1044,10 @@ theorem GlobalTheory.HodgeSmooth.exists_diag_riem_orth : ∀ (E : Type) [Field E
         rw [Finset.sum_apply]
         refine Finset.sum_eq_zero fun j'' _ => ?_
         rw [Pi.smul_apply, Pi.single_eq_of_ne, smul_zero]
-        intro he
-        exact hne (congrArg Sigma.fst (W.e.symm.injective he))
+        exact fun he => hne (congrArg Sigma.fst (W.e.symm.injective he))
       rw [this]
       simp
-    · push_neg at hq
+    · push Not at hq
       have : (∑ j, T' j b' • (Pi.single (W.e.symm ⟨τ', j⟩) 1 : Fin W.g → ℂ)) q = 0 := by
         rw [Finset.sum_apply]
         exact Finset.sum_eq_zero fun j _ => by rw [Pi.smul_apply, Pi.single_eq_of_ne (hq j).symm, smul_zero]
@@ -1120,7 +1111,7 @@ theorem GlobalTheory.HodgeInteriorGram.gram_eq_riem : ∀ (E : Type) [Field E] [
   have hexf : ∃ g₀, IsHodgeFrame (unfFam U) x g₀ := by
     rw [← hkx]; exact ⟨_, isHodgeFrame_cxFrame (U := unfFam U) hσ hx'⟩
   have hg : ∀ τ, (hodgeMet Z U).gram x f τ =
-      ((2 * Real.pi : ℝ) : ℂ) • ((hexf.choose.co f τ)ᴴ * hexf.choose.co f τ) := fun τ => dif_pos hexf
+      ((2 * Real.pi : ℝ) : ℂ) • ((hexf.choose.co f τ)ᴴ * hexf.choose.co f τ) := fun τ => dite_eq_left hexf
   obtain ⟨k'', x'', hx'', hkx'', hv⟩ := GlobalTheory.HodgeSmooth.hodgeFrame_comp hσ hexf.choose_spec
   have hk : k'' = k := by
     apply hinj
@@ -1198,8 +1189,7 @@ theorem GlobalTheory.HodgeInteriorGram.gram_eq_riem : ∀ (E : Type) [Field E] [
       congr 2
       field_simp
   · have h2 := (hmat q.1 p.1).2 hpq q.2 p.2
-    rw [hpull, ← hLc', ← hLc', Lc.apply_symm_apply, Lc.apply_symm_apply] at h2
-    exact h2
+    rwa [hpull, ← hLc', ← hLc', Lc.apply_symm_apply, Lc.apply_symm_apply] at h2
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HodgeMetricFrameEqRiemannFormAtInteriorPoint =====
@@ -1274,7 +1264,7 @@ theorem isPreconnected_polydisc_first_coords_ne_zero :
         · exact this.1
         · exact this
       · have := h (Fin.castLE ha i)
-        rw [if_pos (by simp)] at this
+        rw [ite_eq_left (by simp)] at this
         exact this.2
   rw [hS]
   apply isPreconnected_univ_pi
@@ -1448,8 +1438,7 @@ theorem hodgeMet_eq_riem_chart : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     have := GlobalTheory.HolPeriods.isHolTo_comp (φ := fun w : Fin g → ℂ => (ch₀ x, w)) hjoint isOpen_univ
       ((differentiableOn_const (ch₀ x)).prodMk differentiableOn_id) fun w _ => Set.mk_mem_prod hmem (Set.mem_univ w)
     dsimp only at this
-    rw [ch₀.left_inv hx] at this
-    exact this
+    rwa [ch₀.left_inv hx] at this
   obtain ⟨hg, ho⟩ := GlobalTheory.T.hodgeMetric_frame_eq_riemannForm_at_interior_point E H Dw l Xo c O β T.Z σ U hσ hU W hinj d hdpos hd g x (ex x) hI hExpAt hslice _ x' hx'o hx'
     Hm hHm.2.2.1 hHm.2.2.2 f Wd hW
   refine ⟨fun τ => ?_, ho⟩
@@ -1461,7 +1450,7 @@ theorem hodgeMet_eq_riem_chart : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   · have hpos := hdpos _ x' hx'o τ (Nat.pos_of_ne_zero hm)
     have e : d (comp (ch₀ x)) τ = d (comp z₁) τ := by rw [hk]
     rw [e] at hpos ⊢
-    simp only [if_pos hpos]
+    simp only [ite_eq_left hpos]
 
 end GlobalTheory.HodgeChart
 end -- clump:auto

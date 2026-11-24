@@ -308,8 +308,7 @@ private theorem round_cycle {m : ℕ} {P : Fin (m + 1) → Prop} (h : ∀ i, P (
     | succ t ih =>
       intro i hi
       refine ih i (h _ ?_)
-      rw [Nat.cast_succ, ← add_assoc] at hi
-      exact hi
+      rwa [Nat.cast_succ, ← add_assoc] at hi
   refine key (j - k).val k ?_
   rw [Fin.cast_val_eq_self]
   simpa using hj
@@ -319,8 +318,7 @@ private theorem mem_fixL {K : Type} [Field K] [NumberField K] {n : ℕ} {μ : Me
     f ∈ fixL μ w J ↔ ∀ g ∈ J, rhoL μ w g f = f := by
   simp only [fixL, fixF, Submodule.mem_iInf, LinearMap.mem_eqLocus, ContinuousLinearMap.coe_coe, LinearMap.id_apply]
   constructor
-  · intro h g hg
-    exact h _ ⟨g, hg, rfl⟩
+  · exact fun h g hg => h _ ⟨g, hg, rfl⟩
   · rintro h _ ⟨g, hg, rfl⟩
     exact h g hg
 
@@ -372,8 +370,7 @@ theorem UpperTheory.ConvolutionTheory.Sph.sphConj :
     have hQ : Q (e k) := round_cycle (P := fun i => Q (e i)) hstep j k (by
       rw [hj]
       exact h)
-    rw [hk] at hQ
-    exact hQ
+    rwa [hk] at hQ
   · have := (T.places F E hp).2.2.2.1 _ hs u u'
     have hw : w' = w := congrArg Subtype.val this
     subst hw
@@ -420,10 +417,8 @@ theorem UpperTheory.ConvolutionTheory.Sph.down :
   have hAt₁ : At μE S₀ V' Λ t₁ := by
     refine ⟨hAt.1, fun u hu => ?_⟩
     by_cases h : u.under (𝓞 F) = v
-    · simp only [t₁, if_pos h]
-      exact hb u h
-    · simp only [t₁, if_neg h]
-      exact hAt.2 u fun h' => hu ⟨h', h⟩
+    · simpa only [t₁, ite_eq_left h] using hb u h
+    · simpa only [t₁, ite_eq_right h] using hAt.2 u fun h' => hu ⟨h', h⟩
   have hAE₁ : AtAE μE V' Λ t₁ := ⟨S₀, hS₀, hAt₁⟩
   obtain ⟨V₀, Λ₀, t₀, hV₀, hAt₀, hΛ, ht, hv₀, -⟩ := Sph.descAt ci Sph.gm F E σ hσ hp n hn μE μF θ hθ V' Λ t₁ S₀
     hV'.summand hst hS₀ hAt₁ (hOff _ _ hAE₁) v hv (fun u hu h => h.2 hu)
@@ -553,8 +548,7 @@ theorem UpperTheory.ConvolutionTheory.Sph.liftAt (hCI : UpperTheory.ConvolutionT
     rw [Amp.A, ContinuousLinearMap.comp_apply, h𝔣.2.2.2.1, prj_of_mem _ hfix, oinf_congr μF _ νF h𝔣.1, h𝔣.2.1]
     intro h
     refine hb4 (pow_zero_of _ m v₀ ?_)
-    rw [← s1, ← s4]
-    exact h
+    rwa [← s1, ← s4]
   obtain ⟨x, hx, hxe⟩ := (ampFin F n hn μF 𝔣.toAmp).2 V hV ⟨v₀, hv1, hne0⟩
   have hfS : ∀ v ∉ 𝔣.S, v ∉ S₀ := fun v h => (hS1 v fun h' => h ((h𝔣.2.2.1 v).2 (Or.inl (hLS ▸ h')))).1
   have hoff : OffFam F n 𝔢.S 𝔣.S (bcInf Λ) (bcSat t) := by

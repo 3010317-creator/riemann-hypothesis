@@ -83,8 +83,7 @@ theorem exists_functional {q : ℕ} [NeZero q] {M : Type 1} [AddCommGroup M] [Mo
     intro r hr
     have h1 : r.val • g = 0 := by
       have h2 : (ULift.up r : ULift.{1} (ZMod q)) • g = 0 := hr
-      have h4 := ulift_smul_eq (M := M) (ULift.up r : ULift.{1} (ZMod q)) g
-      exact h4.symm.trans h2
+      exact (ulift_smul_eq (M := M) (ULift.up r : ULift.{1} (ZMod q)) g).symm.trans h2
     have h3 := hg _ h1
     rw [← ZMod.natCast_zmod_val r]
     exact (ZMod.natCast_eq_zero_iff _ _).2 h3
@@ -164,8 +163,7 @@ theorem LateralTheory.EtaleFoundations.etale_tate_twist_generator_map_injective_
         (fun p => Sec ((sgl (tw q i)).X p.1.1) V ⊗[ULift.{1} (ZMod q)] Sec ((sgl (tw q j)).X p.1.2) V)
         ⟨(0, 0), rfl⟩ (c • (Sec.map (sglι _) (twGen i ζ) ⊗ₜ Sec.map (sglι _) (twGen j ζ)))
     have hx : μ.lift V 0 x = 0 := by
-      simp only [x, Pair.lift, DirectSum.toModule_lof, map_nsmul, TensorProduct.lift.tmul]
-      exact h1
+      simpa only [x, Pair.lift, DirectSum.toModule_lof, map_nsmul, TensorProduct.lift.tmul] using h1
     refine hlb.2.1 V _ _ (hμ.2 V 0 x hx) fun W h hW => ?_
     have hW' : c • (Sec.res h (Sec.map (sglι _) (twGen i ζ)) ⊗ₜ[ULift.{1} (ZMod q)]
         Sec.res h (Sec.map (sglι _) (twGen j ζ))) = 0 := by

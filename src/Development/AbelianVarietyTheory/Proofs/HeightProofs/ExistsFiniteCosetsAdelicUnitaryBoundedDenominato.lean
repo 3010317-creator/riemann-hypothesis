@@ -62,8 +62,7 @@ theorem exists_finset_of_compact {G : Type} [Group G] [TopologicalSpace G] [IsTo
   obtain ⟨W, hW, hWU⟩ := isOpen_induced_iff.1 hU
   have h1 : (1 : G) ∈ W := by
     have : (1 : H) ∈ (U : Set H) := U.one_mem
-    rw [← hWU] at this
-    exact this
+    rwa [← hWU] at this
   have hc : Continuous fun p : G × G => p.1⁻¹ * p.2 := by fun_prop
   have h2 : (fun p : G × G => p.1⁻¹ * p.2) ⁻¹' W ∈ 𝓝 ((1, 1) : G × G) :=
     (hW.preimage hc).mem_nhds (by simpa using h1)
@@ -88,8 +87,7 @@ theorem exists_finset_of_compact {G : Type} [Group G] [TopologicalSpace G] [IsTo
     change _ ∈ (U : Set H)
     rw [← hWU]
     change _ ∈ W
-    rw [← h4]
-    exact h3
+    rwa [← h4]
 
 theorem isCompact_GL {A : Type} [CommRing A] [TopologicalSpace A] [IsTopologicalRing A] [T2Space A] {n : ℕ}
     (C : Fin n → Fin n → Set A) (hC : ∀ i j, IsCompact (C i j)) :

@@ -570,8 +570,7 @@ theorem sec_unit (hB : BaseFacts S M U₀ EE) (Q : Clos ρ M U₀ EE) {l : Q.Λ}
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [smul_dotProduct, Subalgebra.smul_def, smul_eq_mul, mul_div_assoc]
   rw [e] at hu
-  by_contra hn
-  push_neg at hn
+  by_contra! hn
   refine (IsLocalRing.mem_maximalIdeal _).1 (Ideal.sum_mem _ fun k _ => Ideal.mul_mem_left _ _ ?_) hu
   exact (IsLocalRing.mem_maximalIdeal _).2 (hn k)
 
@@ -616,15 +615,13 @@ theorem val_gen (hB : BaseFacts S M U₀ EE) (Q : Clos ρ M U₀ EE) {l : Q.Λ} 
 
   simp only [e, map_mul, map_sum, RatModel.valHom_apply]
   congr 1
-  refine Finset.sum_congr rfl fun j _ => ?_
-  exact congrArg (_ * ·) (ha ⟨_, S.ev_mem h j⟩).symm
+  exact Finset.sum_congr rfl fun j _ => congrArg (_ * ·) (ha ⟨_, S.ev_mem h j⟩).symm
 
 theorem ker_eq (t : ρ.GeoTest p y₀) : t.τ.yy.ker = t.l.yy.ker := by
   obtain ⟨e, -, he⟩ := t.mt
   ext a
   have := he a 0
-  rw [map_zero] at this
-  exact this
+  rwa [map_zero] at this
 
 theorem big (ρ : S.Real) (h : S.Big) : Big S.g S.N (S.r * S.N) := by
   refine ⟨?_, h.1, h.2.1⟩
@@ -756,8 +753,7 @@ abbrev mb (tm : Q.TMap t c) : Matrix S.J S.J (kb p) :=
 
 theorem isUnit_det_mb (tm : Q.TMap t c) : IsUnit (mb tm).det := by
   have h := tm.unit.map ((IsLocalRing.residue (OO p)).comp t.u.j)
-  rw [RingHom.map_det] at h
-  exact h
+  rwa [RingHom.map_det] at h
 
 theorem crd_image (tm : Q.TMap t c) (x₀ : Sp (kb p) ⟶ t.mod.Φ.G.left) (hx : x₀ ≫ t.mod.Φ.G.hom = 𝟙 _)
     (v : S.J → kb p) (hv : Crd (t.mod.Φ.H 1) t.mod.F x₀ v) :
@@ -821,8 +817,7 @@ theorem image_special_fibre_iff : GlobalTheory.UT.LL → ∀ (o Ω : Type) [Comm
     rw [← Category.assoc]
     refine ⟨(GlobalTheory.T.le_preimage_openPart_iff_testCoordinates o Ω S ρ M U₀ EE hB Q p y y₀ t c tm hS _ v hov hcr).2 k₁,
       InFibChart.inFib_of_chart o Ω S ρ M U₀ EE hB Q _ tm.l _ _ hcr ?_⟩
-    rw [hov]
-    exact k₂
+    rwa [hov]
   · rintro ⟨hG, hF⟩
     obtain ⟨x', rfl⟩ : ∃ x' : Sp (kb p) ⟶ (Q.P.hom ⁻¹ᵁ Q.W tm.l).toScheme, x' ≫ (Q.P.hom ⁻¹ᵁ Q.W tm.l).ι = x := by
       refine ⟨IsOpenImmersion.lift _ x ?_, IsOpenImmersion.lift_fac _ _ _⟩
@@ -939,8 +934,7 @@ theorem GlobalTheory.ZH.Clos.Ext.hasTests_and_indep : GlobalTheory.UT.LL → ∀
   obtain ⟨c', hc', hf⟩ := (hτ' _ (hx.trans hr)).2 ((hτ _ hx).1 ⟨c, hc, rfl⟩)
   refine ⟨c', hc', ?_⟩
   have : Mono ex.core.G.ι := inferInstance
-  rw [← cancel_mono ex.core.G.ι, Category.assoc, Category.assoc]
-  exact hf
+  rwa [← cancel_mono ex.core.G.ι, Category.assoc, Category.assoc]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ClosureTestsExistAndReductionIndependent =====
@@ -1164,8 +1158,7 @@ theorem exists_hom_spec_of_le_ringOn :
   ext a
   have e : (M.sectionsEquiv U hU (ψ a) : Ω) = a :=
     congrArg Subtype.val ((M.sectionsEquiv U hU).apply_symm_apply _)
-  rw [coe_sectionsEquiv, ← he, valF_eq_valR, valR_eq _ U h] at e
-  exact e
+  rwa [coe_sectionsEquiv, ← he, valF_eq_valR, valR_eq _ U h] at e
 
 end GlobalTheory.ZH.RatModel
 end
@@ -1580,8 +1573,7 @@ theorem nonempty_clos : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [F
   have hval : ∀ (K : Type) [Field K] (x : Sp K ⟶ N.Z) (v : S.J → K) (k : S.J),
       Crd (LPow ρ.P.A ρ.P.L (↑S.N) (baseOver (Sp S.R))) ρ.s (x ≫ a) v → N.Div t k (x (IsLocalRing.closedPoint K)) →
       v k ≠ 0 ∧ ∀ j, v j = N.val x (t j / t k) * v k := by
-    intro K _ x v k hv hk
-    exact hcrd hv (hmem_pt x hk)
+    exact fun K _ x v k hv hk => hcrd hv (hmem_pt x hk)
   have hchN := _root_.GlobalTheory.ZH.RatModel.projChart_of_isPullback o Ω M Ω' φ N U₀ _ _ _ u₀ a _ _ _ ρ.s t hpb hN himm ht hdiv
   obtain ⟨W₀, hW₀, hz₀, hle₀⟩ := exists_isAffineOpen_mem_and_subset (U := U₀) hne.some_mem
   obtain ⟨ht0, htop⟩ := (hchN W₀ hle₀ hW₀ ⟨_, hz₀⟩).closure_eq_top hN ⟨_, hz₀⟩
@@ -1640,8 +1632,7 @@ theorem nonempty_clos : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [F
     proper := IsProper.of_comp f M.s
     proj := by
       show IsProjOver (f ≫ M.s)
-      rw [hf.inducedModelMorphism_comp_structureMap]
-      exact hproj
+      rwa [hf.inducedModelMorphism_comp_structureMap]
     a₀ := a₀
     cart := hcart
     O1 := O1

@@ -166,8 +166,7 @@ theorem exists_labVal : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     have he : algebraMap (𝓞 c.F) Ω (IsIntegralClosure.mk' (𝓞 c.F) _ hint) = 𝔐.emb s a := by
       show 𝔐.cst (algebraMap (𝓞 c.F) c.F (IsIntegralClosure.mk' (𝓞 c.F) _ hint)) = 𝔐.cst (labelEmb c s a)
       rw [hm]
-    rw [he, ← hκ, hm] at h
-    exact h
+    rwa [he, ← hκ, hm] at h
   let σ : CMType H ⊕ CMType H → (𝓞 E →+* L) := fun s => κ.comp (labelEmb c s)
   have hinj : ∀ {L' : Type} [Field L'] (κ' : c.F →+* L'),
       Function.Injective fun s : CMType H ⊕ CMType H => κ'.comp (labelEmb c s) := fun κ' s t h =>
@@ -182,8 +181,7 @@ theorem exists_labVal : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   refine ⟨σ, hval, fun σ' h' => ?_, bijective_of_injective H σ (hinj κ), fun s => injective_of_charZero _, ?_,
     fun e => ?_⟩
   · funext s
-    refine RingHom.ext fun a => ?_
-    exact valAt_unique 𝔐.ξ 𝔐.tie.gen z hsp (h' s a) (hval s a)
+    exact RingHom.ext fun a => valAt_unique 𝔐.ξ 𝔐.tie.gen z hsp (h' s a) (hval s a)
   · have h := (LabelCount.labels_injective_card E H l c c.F (RingHom.id _)).2
     rw [Fintype.card_sum] at h
     omega

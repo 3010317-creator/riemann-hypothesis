@@ -123,8 +123,7 @@ theorem SerreHolomorphicSections.bijective_valC (h : SerreHolomorphicSections) {
     refine LinearMap.eqOn_span' (f := cval (RingHom.id ℂ) ∘ₗ L) (g := pullVal r m B ∘ₗ SecC.val)
       (s := range (SecC.of p σ)) ?_ (SecC.span_range_of.ge Submodule.mem_top)
     rintro _ ⟨s, rfl⟩
-    simp only [LinearMap.comp_apply, hL, SecC.val_of]
-    exact cval_pullChart_ofSec hm H.w s
+    simpa only [LinearMap.comp_apply, hL, SecC.val_of] using cval_pullChart_ofSec hm H.w s
   refine ⟨(injective_iff_map_eq_zero _).2 fun x hx => ?_, fun s => ?_⟩
   · have h₀ : L x = 0 := by
       obtain ⟨t, ht⟩ := H0.bijective_ofSec_top.2 (L x)

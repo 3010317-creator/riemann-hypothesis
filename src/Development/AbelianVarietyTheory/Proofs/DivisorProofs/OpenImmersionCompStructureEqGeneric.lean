@@ -342,12 +342,11 @@ theorem exists_nat_mul_mem : ∀ (A : Type) [CommRing A] [IsDomain A] [IsIntegra
       obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible L
       obtain ⟨k, u, hu⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hyL hϖ
       have hd : ϖ ∣ (n : L) := by
-        rw [← Ideal.mem_span_singleton, ← hϖ.maximalIdeal_eq]
-        exact hn
+        rwa [← Ideal.mem_span_singleton, ← hϖ.maximalIdeal_eq]
       refine ⟨n ^ k, pow_pos hn0 k, ?_⟩
       rw [hu, map_mul, map_natCast, Nat.cast_pow, Units.mul_left_dvd]
       exact (pow_dvd_pow_of_dvd hd k).mul_right _
-    · push_neg at hn
+    · push Not at hn
       obtain ⟨T, iT, h1, h2⟩ := GlobalTheory.HeightOneCompletion.exists_cdvr_of_height_eq_one A p hp
       have hα : Function.Injective (iT.comp (algebraMap A L)) := h1.comp hinj
       have hα' : Function.Injective ((algebraMap T.V T.Fr).comp (iT.comp (algebraMap A L))) :=
@@ -487,8 +486,7 @@ theorem exists_change {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Re
       ((spMap (dualMap ι.toRingHom) ≫ w j) ≫ Y.m.φ) := fun j => by
     have := GlobalTheory.LocM.Cht.FlagBase.isCombAtG_bc Y.t ι.toRingHom (hw3 j)
     rw [sp_sp] at this
-    rw [← bcV_bcV, Category.assoc]
-    exact this
+    rwa [← bcV_bcV, Category.assoc]
   have hM : M' = Matrix.of a * M.map ι := by
     ext1 i
     refine funext_iff.1 ?_
@@ -632,8 +630,7 @@ theorem images_eigenBasis {E : Type} [Field E] [NumberField E] [IsCMField E] {H 
     have hv5 : (fun j => (u' j ≫ k.φ) ≫ n₁.φ) = y₀.1.u σ := by
       funext j
       rw [Category.assoc, hk1, hm1', hu1]
-    rw [hv5, hn₁, ← Category.assoc w₂, hw₂', Category.id_comp, ← hx] at h5
-    exact h5
+    rwa [hv5, hn₁, ← Category.assoc w₂, hw₂', Category.id_comp, ← hx] at h5
 
 end GlobalTheory.FlatDenom
 
@@ -746,8 +743,7 @@ theorem isTanBasis_of_chart {A : Type} [CommRing A] (x : Sp A ⟶ X) {G₁ : Ove
   refine ⟨fun j => ?_, fun S' _ φ w hw => ?_⟩
   · obtain ⟨xc, hx, hv⟩ := exists_univChart_pullback t x h hy
     have h1 := LieLocBasis.vec_tan hx (Pi.single j 1)
-    rw [hv] at h1
-    exact h1
+    rwa [hv] at h1
   let _ : Algebra A S' := φ.toAlgebra
   obtain ⟨y', hy', e'⟩ := LieChart.univChart_baseChange_of_chart (R' := S') G₁ C n y hy
   obtain ⟨xc', hx', hv⟩ := exists_univChart_pullback t (spMap φ ≫ x)
@@ -942,8 +938,7 @@ theorem exists_lift_frPt {hle : c.F ≤ c'.F} (hr : r ≫ pullback.snd _ _ = pul
   have h1 : z₁ ≫ pullback.fst _ _ = z := pullback.lift_fst _ _ _
   have h2 : Y.jQ q = z₁ p₀ := by
     apply (pullback.fst Y.s (spMap (algebraMap (𝓞 c'.F) c'.F))).isEmbedding.injective
-    rw [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, h1]
-    exact hq
+    rwa [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, h1]
   have hrg : Set.range z₁ ⊆ Set.range Y.jQ := by
     rintro _ ⟨p, rfl⟩
     exact ((hsp p).map z₁.continuous).mem_open Y.jQ.isOpenEmbedding.isOpen_range ⟨q, h2⟩
@@ -965,8 +960,7 @@ theorem exists_lift_frPt {hle : c.F ≤ c'.F} (hr : r ≫ pullback.snd _ _ = pul
     rw [h5]
     refine ((hsp p).map (yy ≫ r).continuous).mem_open
       (CompSplitPfB.cspB_isClopen (CompSplitPfD.cspD_comp_disj Xo c) Z).isOpen ?_
-    rw [Scheme.Hom.comp_apply, h6]
-    exact hqZ
+    rwa [Scheme.Hom.comp_apply, h6]
 
 
 include ν in
@@ -1034,8 +1028,7 @@ theorem exists_change {R : Type} [CommRing R] {ξ : Sp R ⟶ Y.X} {g : ℕ}
       ((spMap (dualMap ι.toRingHom) ≫ w j) ≫ Y.m.φ) := fun j => by
     have := GlobalTheory.LocM.Cht.FlagBase.isCombAtG_bc Y.t ι.toRingHom (hw3 j)
     rw [sp_sp] at this
-    rw [← bcV_bcV, Category.assoc]
-    exact this
+    rwa [← bcV_bcV, Category.assoc]
   have hM : M' = Matrix.of a * M.map ι := by
     ext1 i
     refine funext_iff.1 ?_
@@ -1190,8 +1183,7 @@ theorem images_eigenBasis (σ : E →+* ℂ) (T : CDVR) (io : c.F →+* T.Fr) (y
     have hv5 : (fun j => (u' j ≫ k.φ) ≫ n₁.φ) = y₀.1.u σ := by
       funext j
       rw [Category.assoc, hk1, hm1', hu1]
-    rw [hv5, hn₁, ← Category.assoc w₂, hw₂', Category.id_comp, ← hx] at h5
-    exact h5
+    rwa [hv5, hn₁, ← Category.assoc w₂, hw₂', Category.id_comp, ← hx] at h5
 
 
 open GlobalTheory.LocM.BaseMdl in

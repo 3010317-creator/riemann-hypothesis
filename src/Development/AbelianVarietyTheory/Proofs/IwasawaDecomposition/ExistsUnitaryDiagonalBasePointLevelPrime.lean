@@ -97,8 +97,7 @@ theorem exists_unit (hc : Formalism.BasicNotions.CMData F E) {π : 𝓞 E} (h0 :
     intro P hP hP'
     exact false_of_mem_of_conj_mem_of_isCoprime hcp P (hmem hP) ((mem_conjP P π).1 (hmem hP'))
   have hc0 : (algebraMap (𝓞 E) E (cO E π)) ≠ 0 := by
-    intro h
-    exact h1 ((map_eq_zero_iff _ (FaithfulSMul.algebraMap_injective (𝓞 E) E)).1 h)
+    exact fun h => h1 ((map_eq_zero_iff _ (FaithfulSMul.algebraMap_injective (𝓞 E) E)).1 h)
   have hst : star (algebraMap (𝓞 E) E (cO E π)) = algebraMap (𝓞 E) E π := by
     change star (starRingEnd E (algebraMap (𝓞 E) E π)) = _
     rw [starRingEnd_apply, star_star]
@@ -137,7 +136,7 @@ theorem exists_unit (hc : Formalism.BasicNotions.CMData F E) {π : 𝓞 E} (h0 :
       exact valued_inv_algebraMap_le_one_of_not_mem P π (fun h => false_of_mem_of_conj_mem_of_isCoprime hcp P h ((mem_conjP P π).1 (hmem hw')))
     · rw [map_one]
   · intro P hP
-    rw [ha', if_pos hP]
+    rw [ha', ite_eq_left hP]
   · intro w hw
     rw [ha]
     split_ifs with h2 h3
@@ -219,8 +218,7 @@ theorem exists_base (hc : Formalism.BasicNotions.CMData F E) {π : 𝓞 E} {T : 
           apply hv
           rw [← hwv]
           change algebraMap (𝓞 F) (𝓞 E) (T : 𝓞 F) ∈ w.asIdeal
-          rw [map_natCast, ← hπ]
-          exact hmw
+          rwa [map_natCast, ← hπ]
         rw [map_sub, hw w hnot, map_one, sub_self])
       rwa [map_sub, map_one, sub_eq_zero] at h
     apply Units.ext
@@ -238,11 +236,11 @@ theorem exists_base (hc : Formalism.BasicNotions.CMData F E) {π : 𝓞 E} {T : 
     unfold HasRes
     by_cases hj : j = r
     · subst hj
-      rw [Matrix.diagonal_apply_eq, if_pos rfl]
-      simp only [d', if_pos hr]
+      rw [Matrix.diagonal_apply_eq, ite_eq_left rfl]
+      simp only [d', ite_eq_left hr]
       rw [hP P.1 P.2]
       exact ⟨cO E π, rfl, by rw [sub_self, map_zero]; exact zero_lt_one⟩
-    · rw [Matrix.diagonal_apply_ne _ (Ne.symm hj), if_neg hj, map_zero]
+    · rw [Matrix.diagonal_apply_ne _ (Ne.symm hj), ite_eq_right hj, map_zero]
       exact ⟨0, map_zero _, by rw [map_zero, map_zero, sub_self, map_zero]; exact zero_lt_one⟩
 
 end General

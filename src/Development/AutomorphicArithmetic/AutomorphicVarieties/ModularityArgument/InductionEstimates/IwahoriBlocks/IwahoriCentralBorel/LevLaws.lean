@@ -80,7 +80,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.levLaws 
   · intro U hU
     obtain ⟨ho, hc, hi, -⟩ := UpperTheory.levF_isOpen_isCompact_le_integral K n
       (fun v => if v ∈ S then U v else GLnLocal.integralGL (v.adicCompletion K) n) S
-      (fun v hv => by simpa only [if_pos hv] using And.intro (hU v).1.2 (hU v).2) (fun v hv => if_neg hv)
+      (fun v hv => by simpa only [ite_eq_left hv] using And.intro (hU v).1.2 (hU v).2) (fun v hv => ite_eq_right hv)
     exact ⟨⟨hc, ho⟩, hi⟩
   · intro U U' hU hU'
     refine ⟨fun v => ⟨⟨(hU v).1.1.inter_right (Subgroup.isClosed_of_isOpen _ (hU' v).1.2),
@@ -92,34 +92,32 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.levLaws 
       refine ⟨fun v => ?_, fun v => ?_⟩
       · have h' := h v
         by_cases hv : v ∈ S
-        · rw [if_pos hv] at h' ⊢
+        · rw [ite_eq_left hv] at h' ⊢
           exact (Subgroup.mem_inf.1 h').1
-        · rw [if_neg hv] at h' ⊢
+        · rw [ite_eq_right hv] at h' ⊢
           exact h'
       · have h' := h v
         by_cases hv : v ∈ S
-        · rw [if_pos hv] at h' ⊢
+        · rw [ite_eq_left hv] at h' ⊢
           exact (Subgroup.mem_inf.1 h').2
-        · rw [if_neg hv] at h' ⊢
+        · rw [ite_eq_right hv] at h' ⊢
           exact h'
     · rintro ⟨h₁, h₂⟩ v
       have a := h₁ v
       have b := h₂ v
       by_cases hv : v ∈ S
-      · rw [if_pos hv] at a b ⊢
+      · rw [ite_eq_left hv] at a b ⊢
         exact Subgroup.mem_inf.2 ⟨a, b⟩
-      · rw [if_neg hv] at a b ⊢
+      · rw [ite_eq_right hv] at a b ⊢
         exact a
-  · intro k h
-    exact (MultiplicityOne.finProj_mul_archProj_comm h _).symm
+  · exact fun k h => (MultiplicityOne.finProj_mul_archProj_comm h _).symm
   · exact continuous_archP.comp continuous_subtype_val
   · have hcl : IsClosed (archCompact K n : Set (archGroup K n)) :=
       (isCompact_maxCompact (K := K) (n := n)).isClosed.preimage continuous_infEmb
     have hg : Continuous fun z : AdelicGLn.AdelicGL K n => archEquiv K n (AdelicGLn.prodEquiv K n z).1 :=
       (archEquiv K n).continuous.comp (continuous_fst.comp (AdelicGLn.prodEquiv K n).continuous)
     refine isCompact_iff_compactSpace.1 (((isCompact_maxCompact (K := K) (n := n)).image hg).of_isClosed_subset hcl ?_)
-    intro x hx
-    exact ⟨infEmb K n x, hx, by simp [prodEquiv_infEmb]⟩
+    exact fun x hx => ⟨infEmb K n x, hx, by simp [prodEquiv_infEmb]⟩
   · intro r w ι hinj hι hS U hU g
     obtain ⟨-, -, hout, -⟩ := (embEx n w hinj).2 ι hι
     refine ⟨fun v => U v ⊓ cj (GM.cf v (ι g)) (U v), fun v => ?_, fun u hu => ?_⟩
@@ -133,8 +131,8 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.levLaws 
       have hu' := (hmem _ _).1 hu v
       rw [hcf]
       by_cases hv : v ∈ S
-      · rw [if_pos hv] at hu' ⊢
+      · rw [ite_eq_left hv] at hu' ⊢
         exact mem_cj.1 (Subgroup.mem_inf.1 hu').2
-      · rw [if_neg hv] at hu' ⊢
+      · rw [ite_eq_right hv] at hu' ⊢
         rw [hout g v (hS ▸ hv)]
         simpa using hu'

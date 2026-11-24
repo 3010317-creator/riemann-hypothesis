@@ -367,15 +367,13 @@ theorem GlobalTheory.Mem.R3.Rw.read_of_moved : ∀ (B : Base) (f : Fr B.toPre) (
       let v := (tieA true t).j x
       have h₁ := h1X _ h (e.symm v)
       have h₂ := congrArg ((m.t.ch true).jX (m.y.tup t)) (e.apply_symm_apply v)
-      have h₃ := (m.t.ch true).top t ((hU _).1 h) x
-      exact h₁.trans (h₂.trans h₃)
+      exact h₁.trans (h₂.trans ((m.t.ch true).top t ((hU _).1 h) x))
     topRead0 := fun t h x => by
       let e := (q.p.ch false).multTop (m.y.tup t)
       let v := (tieA false t).j x
       have h₁ := h0X _ h (e.symm v)
       have h₂ := congrArg ((m.t.ch false).jX (m.y.tup t)) (e.apply_symm_apply v)
-      have h₃ := (m.t.ch false).top t ((hU _).1 h) x
-      exact h₁.trans (h₂.trans h₃)
+      exact h₁.trans (h₂.trans ((m.t.ch false).top t ((hU _).1 h) x))
     mtRead := fun i t h x => by
       have h₁ := hMt _ h i ((tieL i t).j (eMt i t x))
       have h₂ := congrArg (m.t.lf.jMt (m.y.tup t) i) (cast_apply (m.t.hL i t) (tieL i t) x)
@@ -383,8 +381,7 @@ theorem GlobalTheory.Mem.R3.Rw.read_of_moved : ∀ (B : Base) (f : Fr B.toPre) (
     mj := mj
     mjRead := fun i v => by
       have h₁ := (hMj i v).trans (m.t.lf.jMj_read i v)
-      have h₂ := congrArg (fun u => PiTensorProduct.lift ((m.z.R.HW i _).e u)) (hEW i v).symm
-      exact h₁.trans h₂
+      exact h₁.trans (congrArg (fun u => PiTensorProduct.lift ((m.z.R.HW i _).e u)) (hEW i v).symm)
     stable := fun μ => by exact (m.t.tA true μ).stable
     stable0 := fun μ => by exact (m.t.tA false μ).stable
     eE := by exact eE

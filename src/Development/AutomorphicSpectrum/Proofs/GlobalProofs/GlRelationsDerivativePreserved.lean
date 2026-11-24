@@ -255,7 +255,7 @@ theorem monic_relations_along_block : ∀ (W Q : Type) [AddCommGroup W] [Module 
     · refine GlobalTheory.CompanionTheory.CTFin.CapComm.commute_qdet_of (fun a b => ?_) u
       have := hX (GlobalTheory.SmGL.stdBlocks n h ⟨j, p⟩) (GlobalTheory.SmGL.stdBlocks n h ⟨j, q⟩)
         (GlobalTheory.SmGL.stdBlocks n h ⟨i, a⟩) (GlobalTheory.SmGL.stdBlocks n h ⟨i, b⟩)
-      rw [if_neg (hne _ _ _ _ hji), if_neg (hne _ _ _ _ (Ne.symm hji)), sub_self] at this
+      rw [ite_eq_right (hne _ _ _ _ hji), ite_eq_right (hne _ _ _ _ (Ne.symm hji)), sub_self] at this
       exact sub_eq_zero.1 this
   have hSR : ∀ x ∈ Sm, ∀ i u, Commute x (Rr i u) := fun x hx i u =>
     commute_of_mem_adjoin (hTR i u) hx
@@ -293,16 +293,14 @@ theorem monic_relations_along_block : ∀ (W Q : Type) [AddCommGroup W] [Module 
     have e2 : x ((List.ofFn fun i => Rr i (u + sh i)).prod F) =
         (List.ofFn fun i => Rr i (u + sh i)).prod (x F) :=
       LinearMap.congr_fun (hSB x hx u).eq F
-    rw [map_sub, map_sub, sub_eq_zero, e1, e2]
-    exact h1
+    rwa [map_sub, map_sub, sub_eq_zero, e1, e2]
   have hBs : ∀ u : ℂ, ∃ s : ℂ, ∀ F ∈ W₀,
       (List.ofFn fun i => Rr i (u + sh i)).prod F - s • F ∈ I := by
     intro u
     obtain ⟨s, hs'⟩ := hs (u + ((N : ℂ) - 1) / 2)
     refine ⟨s, fun F hF => ?_⟩
     have := I.neg_mem (hDB u F (hW0 hF))
-    rw [hs' F hF, neg_sub] at this
-    exact this
+    rwa [hs' F hF, neg_sub] at this
   choose a ha1 haspan hform using fun i : Fin c =>
     GlobalTheory.CompanionTheory.CTFin.QdetCoeff.qdet_shift_coeff (Module.End ℂ W) (n i)
       (fun p q : Fin (n i) => Xf (GlobalTheory.SmGL.stdBlocks n h ⟨i, p⟩) (GlobalTheory.SmGL.stdBlocks n h ⟨i, q⟩)) 0

@@ -195,8 +195,7 @@ theorem fibre_dense_affine_chart_primes : ∀ (X T : Scheme.{0}) (p : X ⟶ T) (
       PrimeSpectrum.comap (p.appLE V U e).hom P = hV.primeIdealOf ⟨p (f P), e (hmemU P)⟩ := by
     intro P
     have := IsAffineOpen.comap_primeIdealOf_appLE (f := p) V hV U hU e (hmemU P)
-    rw [hprime P] at this
-    exact this
+    rwa [hprime P] at this
   set A : Set X := (W : Set X) ∩ p ⁻¹' {p (f q)} with hA
   have hq : q ∈ closure (f ⁻¹' A) := by
     rw [← hemb.isOpenMap.preimage_closure_eq_closure_preimage hemb.continuous]
@@ -302,8 +301,7 @@ theorem fibre_going_down_tensor : ∀ (S A C : Type) [CommRing S] [CommRing A] [
     have hsym : (iso₁.symm wP).1 = u₁ := hw
     have key : iso₁.symm Qb ≤ iso₁.symm wP := by
       show (iso₁.symm Qb).1 ≤ (iso₁.symm wP).1
-      rw [hsym, iso₁.symm_apply_apply]
-      exact hle
+      rwa [hsym, iso₁.symm_apply_apply]
     exact (iso₁.symm.le_iff_le.mp key : Qb ≤ wP)
   obtain ⟨P, hPle, hPprime, hPover⟩ :=
     Ideal.exists_ideal_le_liesOver_of_le (p := Qb.asIdeal) (q := w) ue hwle
@@ -405,8 +403,7 @@ theorem of_model (hN : (∀ (A B : Type) [CommRing A] [IsNoetherianRing A] [Comm
     · intro s hs
       have : algebraMap S B₁ s ∈ u₁.asIdeal := hQ₁u hs
       show e (algebraMap S (A ⊗[S] B₁) s) ∈ u.asIdeal
-      rw [← (Algebra.TensorProduct.includeRight : B₁ →ₐ[S] A ⊗[S] B₁).commutes]
-      exact this
+      rwa [← (Algebra.TensorProduct.includeRight : B₁ →ₐ[S] A ⊗[S] B₁).commutes]
     · intro s hs
       apply hQ₁.1.2
       apply Ideal.mem_map_of_mem
@@ -445,8 +442,7 @@ theorem of_model (hN : (∀ (A B : Type) [CommRing A] [IsNoetherianRing A] [Comm
       rw [← hQT1]
       have := hQQ' hx
       have h2 : e.symm (e (1 ⊗ₜ x)) ∈ QT := this
-      rw [AlgEquiv.symm_apply_apply] at h2
-      exact h2
+      rwa [AlgEquiv.symm_apply_apply] at h2
   have := hJ hgQ₁
   rw [← hg]; exact this
 
@@ -635,7 +631,7 @@ theorem mem_of_mul_mem {B : Type} [CommRing B] (u : Ideal B) [u.IsPrime] (I₀ :
     exact Ideal.mul_mem_right _ _ h3
   by_contra hyJ
   rw [← hJrad.radical, ← Ideal.sInf_minimalPrimes, Ideal.mem_sInf] at hyJ
-  push_neg at hyJ
+  push Not at hyJ
   obtain ⟨P, hP, hyP⟩ := hyJ
   haveI : P.IsPrime := hP.1.1
   have hgP : algebraMap B L g ∈ P := ((Ideal.IsPrime.mem_or_mem inferInstance (hP.1.2 hy)).resolve_right hyP)

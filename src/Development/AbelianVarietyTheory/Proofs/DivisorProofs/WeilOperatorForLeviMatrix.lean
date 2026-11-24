@@ -184,8 +184,7 @@ theorem hasOp_levi : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF 
     simp only [LinearMap.funLeft_apply, Pi.zero_apply] at this
     have hx : A⁻¹.map (algebraMap F (Fv F v)) *ᵥ (homeo (algebraMap F (Fv F v)) A hA).symm x = x :=
       (homeo (algebraMap F (Fv F v)) A hA).apply_symm_apply x
-    rw [hx] at this
-    exact this
+    rwa [hx] at this
   · intro v w φ _
     exact schr_levi (GlobalTheory.LatVac.psiAt ψ v) A hA w φ
   · filter_upwards [eventually_int A, eventually_int A⁻¹] with v hA1 hA2
@@ -198,8 +197,7 @@ theorem hasOp_levi : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF 
           ((homeo (algebraMap F (Fv F v)) A hA).symm_apply_apply x).symm
         rw [e]
         exact mulVec_mem A hA1 _ h i
-      · intro h i
-        exact mulVec_mem A⁻¹ hA2 x h i
+      · exact fun h i => mulVec_mem A⁻¹ hA2 x h i
     show Set.indicator _ _ _ = Set.indicator _ _ _
     by_cases hx : ∀ i, x i ∈ v.adicCompletionIntegers F
     · rw [Set.indicator_of_mem (show _ ∈ {x : κ → Fv F v | ∀ i, x i ∈ v.adicCompletionIntegers F} from hiff.2 hx),

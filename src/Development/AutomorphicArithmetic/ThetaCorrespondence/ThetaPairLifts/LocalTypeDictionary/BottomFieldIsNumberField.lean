@@ -268,7 +268,7 @@ theorem exists_cong_fix_vac (hW : IsWeilDatumO ψ S T χS χT om)
         actO S T 1 x u ∈
           (latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True) := by
     by_contra hne
-    push_neg at hne
+    push Not at hne
     choose k hk hkc u hu hu' using hne
     have ht := GlobalTheory.SplitCharTrivial.tendsto_one_of_finCong hk hkc
     obtain ⟨n, hn⟩ := (ht.eventually hev').exists
@@ -299,7 +299,7 @@ theorem exists_cong_fix_vac (hW : IsWeilDatumO ψ S T χS χT om)
     (hW.om_cont _ hvac.2.theta w₀).comp (continuous_const.prodMk continuous_id)
   have key : ∃ n : ℕ, ∀ k ∈ GfC T, GlobalTheory.Member.FinCong T (n₁.factorial * n.factorial) k → om (1, k) f₀ = f₀ := by
     by_contra hne
-    push_neg at hne
+    push Not at hne
     choose k hk hkc hkne using hne
     have hpow : ∀ n, ∃ m : ℕ, ∃ c : ℂ, om (1, k n ^ m) f₀ = c • f₀ ∧ ¬ ‖c - 1‖ ≤ 1 / 2 := by
       intro n
@@ -308,7 +308,7 @@ theorem exists_cong_fix_vac (hW : IsWeilDatumO ψ S T χS χT om)
         rintro rfl
         exact hkne n (by rw [hc, one_smul])
       by_contra h
-      push_neg at h
+      push Not at h
       exact hc1 (GlobalTheory.Doubling.eq_one_of_forall_norm_pow_sub_one_le (A := ℂ) fun m =>
         h m (c ^ m) (GlobalTheory.VacFixTarget.om_pow_eq_snd _ (k n) _ c hc m))
     choose m c hmc hc using hpow
@@ -326,7 +326,7 @@ theorem exists_cong_fix_vac (hW : IsWeilDatumO ψ S T χS χT om)
     obtain ⟨n, hn⟩ := (h2.eventually (Metric.ball_mem_nhds _ hpos)).exists
     rw [hmc n, Pi.smul_apply, smul_eq_mul, dist_eq_norm, ← sub_one_mul, norm_mul] at hn
     have := hc n
-    push_neg at this
+    push Not at this
     nlinarith [norm_nonneg (f₀ w₀)]
   obtain ⟨n, hn⟩ := key
   exact ⟨_, Nat.mul_pos n₁.factorial_pos n.factorial_pos, hn⟩
@@ -375,7 +375,7 @@ theorem eventually_fix (hW : IsWeilDatumO ψ S T χS χT om)
 theorem exists_cong_of_eventually {P : GA D T → Prop} (h : ∀ᶠ k in 𝓝 (1 : GA D T), k ∈ GfC T → P k) :
     ∃ N : ℕ, 0 < N ∧ ∀ k ∈ GfC T, GlobalTheory.Member.FinCong T N k → P k := by
   by_contra hne
-  push_neg at hne
+  push Not at hne
   choose k hk hkc hP using fun n : ℕ => hne n.factorial n.factorial_pos
   obtain ⟨n, hn⟩ := ((GlobalTheory.SplitCharTrivial.tendsto_one_of_finCong hk hkc).eventually h).exists
   exact hP n (hn (hk n))
@@ -454,12 +454,12 @@ theorem scalar_exists (hX : IsBottomTri W i j X) (t : T) (τ₀ : D.what₂.Tau)
     intro τ
     by_cases hτ : τ = τ₀
     · subst hτ
-      simp only [hζdef, if_pos rfl, h1]
-    · simp only [hζdef, if_neg hτ, h2 τ hτ, one_smul]
+      simp only [hζdef, ite_eq_left rfl, h1]
+    · simp only [hζdef, ite_eq_right hτ, h2 τ hτ, one_smul]
   have hζn : ∀ τ, ‖ζ τ‖ = 1 := fun τ => by
     by_cases hτ : τ = τ₀
-    · simp only [hζdef, if_pos hτ, he]
-    · simp only [hζdef, if_neg hτ, norm_one]
+    · simp only [hζdef, ite_eq_left hτ, he]
+    · simp only [hζdef, ite_eq_right hτ, norm_one]
   have hf : IsThetaFunO W.ψ A' WW (X.f' t) := (theta_snd hX t)
   have hfock := fock_snd hX t
   have cS : ∀ τ, IsCartanInv (gramAt D A' τ) (X.rA'.s τ) := fun τ => (hI.rigA'.2.2 τ).1
@@ -491,9 +491,9 @@ theorem scalar_exists (hX : IsBottomTri W i j X) (t : T) (τ₀ : D.what₂.Tau)
         (fun τ => Or.inl (hsW τ)) (X.f' t) hf ζ hζn k, smul_smul]
     congr 2
     rw [Finset.prod_eq_single τ₀]
-    · simp only [hζdef, if_pos rfl, hw]
+    · simp only [hζdef, ite_eq_left rfl, hw]
     · intro ρ _ hρ
-      simp only [hζdef, if_neg hρ, inv_one, ite_self, one_pow]
+      simp only [hζdef, ite_eq_right hρ, inv_one, ite_self, one_pow]
     · simp
   refine ⟨C, w, by rw [hw]; split_ifs; exacts [Or.inr rfl, Or.inl rfl], fun k h => ?_⟩
   set φ := pureTensorO W.ψ W.θ A' WW X.rA'.s X.rW.s X.rA'.B X.rW.B (X.f' t) (MvPolynomial.monomial k 1) with hφ
@@ -731,7 +731,7 @@ theorem twistedClassSums_span_bottom : ∀ {D : D7} {T : Type} [Finite T] {L : L
     · exact hcM b
     · exact zero_mem _
   rw [e1, Finset.sum_eq_single_of_mem h₀ hh₀ (fun b _ hb => by simp [hb])]
-  simp only [if_true]
+  simp only [ite_true]
   calc ∑ k' ∈ c.support, c.coeff k' * X.I' W.ψ W.θ t (MvPolynomial.monomial k' 1) h₀
       = ∑ k' ∈ c.support ∪ K, c.coeff k' * X.I' W.ψ W.θ t (MvPolynomial.monomial k' 1) h₀ :=
         Finset.sum_subset Finset.subset_union_left fun k' _ hk' => by

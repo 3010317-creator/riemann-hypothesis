@@ -209,16 +209,14 @@ theorem GlobalTheory.EtC.classVanishesAwayNZD : ∀ (q : ℕ) (R : Type) [CommRi
     rwa [map_natCast] at this
   have h2 : pull _ (spMap (toFrac (idx1 : Idx R))) _ _
       (pull _ (spMap (algebraMap R (Localization.Away (idx1 : Idx R).val))) _ _ x) = 0 := by
-    rw [← pull_comp, ← spMap_comp, toFrac_comp]
-    exact hx
+    rwa [← pull_comp, ← spMap_comp, toFrac_comp]
   obtain ⟨k, f, hk⟩ := hB1 idx1 (pull _ (spMap (algebraMap R (Localization.Away (idx1 : Idx R).val))) _ _ x) hq1 h2
   have hf : (idx1 : Idx R).val ∣ k.val := leOfHom f
   refine ⟨k.val, k.mem, ?_⟩
   have e : algebraMap R (Localization.Away k.val) =
       (tr hf).comp (algebraMap R (Localization.Away (idx1 : Idx R).val)) := by
     rw [tr_comp]
-  rw [e, spMap_comp, pull_comp]
-  exact hk
+  rwa [e, spMap_comp, pull_comp]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -286,8 +284,7 @@ theorem ht_subsingleton_pi (q : ℕ) (n i : ℤ) (ι : Type) [Finite ι] : ∀ (
     have := ih (fun a => R (e a)) (fun a => hR (e a))
     exact ht_subsingleton_of_ringEquiv q (RingEquiv.piCongrLeft R e) n i
   | h_empty =>
-    intro R _ _
-    exact ht_subsingleton_of_subsingleton q _ n i
+    exact fun R _ _ => ht_subsingleton_of_subsingleton q _ n i
   | h_option ih =>
     intro R _ hR
     have h1 := hR none
@@ -368,8 +365,7 @@ theorem exists_isAlgebraic_ratFunc_of_ringHom (k B : Type) [Field k] [CommRing B
     Algebra.TensorProduct.lift (Algebra.ofId F K) (IsScalarTower.toAlgHom B A' K)
       (fun _ _ => Commute.all _ _)
   have hA : ∀ a : A', IsIntegral F (algebraMap A' K a) := fun a => by
-    have h1 := (Algebra.IsIntegral.isIntegral (R := F) ((1 : F) ⊗ₜ[B] a)).map ψ
-    simpa [ψ] using h1
+    simpa [ψ] using (Algebra.IsIntegral.isIntegral (R := F) ((1 : F) ⊗ₜ[B] a)).map ψ
   have hAR : ∀ a : A', π (ι (algebraMap A' R a)) = algebraMap A' K a := fun a => rfl
   have hf' : f ∈ nonZeroDivisors B := mem_nonZeroDivisors_of_ne_zero hf
   have hR : ∀ x : R, IsIntegral F (π (ι x)) := by
@@ -450,8 +446,7 @@ theorem span_singleton_eq_maximalIdeal_pow {L : Type} [CommRing L] [IsLocalRing 
   classical
   have hK := Ideal.iInf_pow_eq_bot_of_isLocalRing (maximalIdeal L) (maximalIdeal.isMaximal L).ne_top
   have hex : ∃ n, x ∉ maximalIdeal L ^ (n + 1) := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hx
     have : x ∈ ⨅ i, maximalIdeal L ^ i := by
       rw [Ideal.mem_iInf]; intro i
@@ -464,7 +459,7 @@ theorem span_singleton_eq_maximalIdeal_pow {L : Type} [CommRing L] [IsLocalRing 
     rcases Nat.eq_zero_or_pos (Nat.find hex) with h0 | hpos
     · rw [h0]; simp
     · have := Nat.find_min hex (show Nat.find hex - 1 < Nat.find hex by omega)
-      push_neg at this
+      push Not at this
       rwa [Nat.sub_add_cancel hpos] at this
   clear hex
   refine ⟨n, ?_⟩
@@ -600,8 +595,7 @@ theorem mem_minimalPrimes_of_disjoint_nonZeroDivisors {R : Type} [CommRing R] [I
     rw [mem_nonZeroDivisors_iff_right] at hx'
     push Not at hx'
     obtain ⟨y, hxy, hy⟩ := hx'
-    have hrad : (⊥ : Ideal R).radical = ⊥ := by
-      exact nilradical_eq_zero R
+    have hrad : (⊥ : Ideal R).radical = ⊥ := nilradical_eq_zero R
     have : x ∈ ⋃ q ∈ (⊥ : Ideal R).minimalPrimes, (q : Set R) := by
       rw [Ideal.iUnion_minimalPrimes]
       refine ⟨y, ?_, ?_⟩
@@ -1075,8 +1069,7 @@ theorem excision_natural : ∀ (q : ℕ) (A A' : Type) [CommRing A] [CommRing A'
     rw [hz', map_zero] at h
     have hid : cpull (exMap (ZMod q) φ f).τ₃ (res (ZMod q) (tw q i)) (n + 1) (d _ hS n z) = d _ hS n z :=
       ZcFun.cpull_id _ _ _ _
-    rw [hid] at h
-    exact h
+    rwa [hid] at h
 
 end GlobalTheory.EtC.ExcisionNat
 end -- clump:auto

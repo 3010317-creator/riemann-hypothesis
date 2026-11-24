@@ -54,8 +54,7 @@ theorem trace_hform (s : A →+* A) (hs : ∀ (r : R) (a : A), s (r • a) = r �
   unfold hform coord gramB dotProduct Matrix.mulVec dotProduct
 
   simp only [map_sum, term, Fintype.sum_prod_type, Finset.mul_sum]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  exact Finset.sum_comm
+  exact Finset.sum_congr rfl fun i _ => Finset.sum_comm
 
 theorem coord_mulVec (β : Module.Basis (Fin d) R A) (H : Matrix (Fin M) (Fin M) A)
     (g : Matrix (Fin M × Fin d) (Fin M × Fin d) R)
@@ -188,8 +187,7 @@ theorem gramB_det (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {M d : ℕ}
         · simp [Pi.single_eq_of_ne hj]
       rw [h3, single_dotProduct]
     rw [h2] at h1
-    rw [Algebra.traceForm_apply, mul_comm]
-    exact h1
+    rwa [Algebra.traceForm_apply, mul_comm]
   have hy : y = 0 := Matrix.eq_zero_of_mulVec_eq_zero hJ.2 hz
   apply hv0
   funext p

@@ -78,8 +78,7 @@ theorem IsExp.prod {σ α : Type} (s : Finset α) {y : α → σ → C} {F : α 
   induction s using Finset.induction_on with
   | empty => simpa using IsExp.one
   | insert a s ha ih =>
-    simp only [Finset.prod_insert ha, Finset.sum_insert ha]
-    exact (h a).mul ih
+    simpa only [Finset.prod_insert ha, Finset.sum_insert ha] using (h a).mul ih
 
 theorem IsExp.subst {σ τ : Type} [Fintype σ] [Finite τ] {y : σ → C} {F : MvPowerSeries σ C}
     (h : IsExp y F) (e : σ → τ) :
@@ -90,8 +89,7 @@ theorem IsExp.subst {σ τ : Type} [Fintype σ] [Finite τ] {y : σ → C} {F : 
   constructor
   · have := rename_eq_subst (R := C) (f := e) (p := F)
     have h2 := constantCoeff_rename (R := C) (f := e) F
-    rw [this, h.1] at h2
-    exact h2
+    rwa [this, h.1] at h2
   · intro w
     rw [Formalism.G.LogCR.pderiv_subst (by simp), Finset.sum_smul]
     refine Finset.sum_congr rfl fun j _ => ?_
@@ -166,7 +164,7 @@ theorem isExp_mvExp [CharZero C] {σ : Type} [Fintype σ] (y : σ → C) :
       Finset.sum_range_succ', Finset.mul_sum, add_mul, Finset.sum_mul]
     have h0 : MvPowerSeries.coeff (m + Finsupp.single w 1)
         ((∑ x, y x • (X x : MvPowerSeries σ C)) ^ 0) = 0 := by
-      rw [pow_zero, coeff_one, if_neg]
+      rw [pow_zero, coeff_one, ite_eq_right]
       intro h
       have := DFunLike.congr_fun h w
       simp at this
@@ -255,7 +253,7 @@ theorem core (X : RowData C V d I J) (g : Fin 2) (a : ZMod d) (ha : X.big g a) {
         (((u : ℝ) * b : ℝ) : WithTop ℝ) := by
     intro b hb
     simp only [Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-      if_true] at hb
+      ite_true] at hb
     rw [AddValuation.map_pow, ← nsmul_eq_mul, WithTop.coe_nsmul]
     exact nsmul_le_nsmul_right hb u
   refine ⟨fun g => stdSys (X.G g), t, ht, _, hy _ t ht, fun h => ?_, fun h => ?_⟩

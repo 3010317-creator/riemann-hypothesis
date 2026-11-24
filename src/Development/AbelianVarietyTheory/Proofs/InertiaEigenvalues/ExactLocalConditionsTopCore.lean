@@ -133,8 +133,7 @@ theorem quot_equiv_iff (L₁ L₂ : Lattice (O := O) ρ) (act : G → E → E) (
       have h3 : latRep L₁ g y = ⟨ρ g y, L₁.stable g y y.2⟩ := Subtype.ext (latRep_apply L₁ g y)
       simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, Submodule.mkQ_apply]
       rw [h3, ← he g x y h1, LinearEquiv.symm_apply_apply, ← hx]
-      simp only [Φ, LinearMap.quotKerEquivOfSurjective_apply_mk]
-      exact hact g x
+      simpa only [Φ, LinearMap.quotKerEquivOfSurjective_apply_mk] using hact g x
     · intro y
       simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, Submodule.mkQ_apply,
         LinearEquiv.map_eq_zero_iff, Submodule.Quotient.mk_eq_zero, Submodule.mem_comap,
@@ -216,8 +215,7 @@ private theorem mapLattice_quotient_of_equivariant_equiv {G LL O V W M : Type} [
     rw [LinearMap.comp_apply, LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply, hqk, hsx]
     change (x : V) ∈ L₂.T ↔ e x ∈ L₂.T.map ((e.restrictScalars O : V ≃ₗ[O] W) : V →ₗ[O] W)
     constructor
-    · intro h
-      exact ⟨x, h, rfl⟩
+    · exact fun h => ⟨x, h, rfl⟩
     · rintro ⟨z, hz, hze⟩
       have hzx : z = (x : V) := e.injective hze
       rwa [← hzx]
@@ -259,8 +257,7 @@ theorem resPoly_eq {V : Type} [AddCommGroup V] [Module LL V] [FiniteDimensional 
   · intro c _
     simp only [Finset.mem_Icc]
     omega
-  · intro a _ b _ hab
-    exact Fin.ext (by simpa using hab)
+  · exact fun a _ b _ hab => Fin.ext (by simpa using hab)
   · intro b hb
     simp only [Finset.mem_Icc] at hb
     exact ⟨⟨b - 1, by omega⟩, Finset.mem_univ _, by simp only; omega⟩
@@ -349,8 +346,7 @@ theorem admissible_quotientExtension_iff_admissible_ext' : ∀ {l : ℕ} [Fact l
   have h := GlobalTheory.FullCharpoly.admissibleQuotient_iff_admissible_module S jT hj _ _ (tableLineDegreeTwo.actExt L X S.Γ.χ₁ z)
     (Ea (latRep L) S.Γ.χ₁ ha ⟨z, hz⟩) (redExt L X (S.Γ.lam ^ a)) (redExt_surjective L X _)
     (redExt_actExt L X S.Γ.χ₁ ha z hz)
-  rw [ker_redExt L X S.Γ.lam a] at h
-  exact h
+  rwa [ker_redExt L X S.Γ.lam a] at h
 
 end GlobalTheory.AdmQuotExt
 end -- clump:auto
@@ -640,8 +636,7 @@ theorem nonempty_equiv_of_free {O K : Type} [CommRing O] [IsDomain O] [Field K] 
       convert this using 1
       ext k
       fin_cases k <;> rfl
-    have h2 := LinearIndependent.pair_iff.1 hli d (-a) hrel
-    exact hd0 h2.1
+    exact hd0 (LinearIndependent.pair_iff.1 hli d (-a) hrel).1
   haveI hne : Nonempty (Module.Free.ChooseBasisIndex O T) := by
     by_contra h
     rw [not_nonempty_iff] at h
@@ -804,7 +799,7 @@ def ofWindow {n r : ℕ} (t : ℕ) (h η : ZMod n → ℕ) (typ : ZMod n → Boo
     have hi' : typ i = false := by by_contra hn; simp at hn; simp [hn] at hi
     rw [Multiset.mem_filter] at hu
     have := hu.2
-    simp only [InWin, hi', Bool.false_eq_true, if_false, not_le] at this
+    simp only [InWin, hi', Bool.false_eq_true, ite_false, not_le] at this
     exact this
 
 theorem exists_topData (l n t r : ℕ) (h η : ZMod n → ℕ) (typ : ZMod n → Bool) (w : ZMod n → ℤ)
@@ -839,8 +834,7 @@ theorem exists_topData (l n t r : ℕ) (h η : ZMod n → ℕ) (typ : ZMod n →
     have he : (ofWindow t h η typ w U hh hη ht hc hU hB).cloudRes i u =
         if typ i then u else (h i : ℤ) - u := by
       cases hi : typ i <;> simp [TopData.cloudRes, ofWindow, hi]
-    rw [he]
-    exact this
+    rwa [he]
 
 end GlobalTheory.TopWindow
 end -- clump:auto

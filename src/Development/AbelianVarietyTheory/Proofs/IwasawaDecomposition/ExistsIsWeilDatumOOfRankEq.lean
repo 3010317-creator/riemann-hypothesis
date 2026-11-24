@@ -78,11 +78,9 @@ theorem exists_isWeilDatumO_of_rank_eq : ∀ (D : D7) (ψ : AddChar (AF D.host.F
     exact hom' _ Φ'
   · obtain ⟨Φ, rfl⟩ := hsurj f hf
     rw [hom']
-    simp only [map_zero]
-    exact hw.aut γ hγ γ' hγ' Φ
+    simpa only [map_zero] using hw.aut γ hγ γ' hγ' Φ
   · obtain ⟨Φ, rfl⟩ := hsurj f hf
-    simp only [hom']
-    exact hw.cont Φ (e w)
+    simpa only [hom'] using hw.cont Φ (e w)
   · obtain ⟨Φ, rfl⟩ := hsurj f hf
     rw [hom']
     obtain ⟨i1, i2, i3, i4, i5, K, hK, hcov⟩ := GlobalTheory.AdelicMatrixLattice.lattice D W V
@@ -94,24 +92,20 @@ theorem exists_isWeilDatumO_of_rank_eq : ∀ (D : D7) (ψ : AddChar (AF D.host.F
     refine lintegral_eq_of_integral_eq (ratL W V) hK hcov (hTh _).cont (hTh _).cont (norm_periodic hψ (hTh _))
       (norm_periodic hψ (hTh _)) hμ h𝓕 ?_
     rw [← hint, ← hint]
-    simp only [e.apply_symm_apply]
-    exact hw.unit ν _ hν hF p Φ
+    simpa only [e.apply_symm_apply] using hw.unit ν _ hν hF p Φ
   · obtain ⟨r, hr0, hℓ⟩ := hw.split ε hε g h hg hh x y hx hy
     refine ⟨r, hr0, fun ℓ hinv f hf => ?_⟩
     obtain ⟨Φ, rfl⟩ := hsurj f hf
     have := hℓ (ℓ ∘ₗ E.toLinearMap ∘ₗ (ThS ψ V W).subtype) (fun u hu Ψ Ψ' hΨ => ?_) Φ
     · rw [hom']
       unfold splitFac at this
-      rw [if_pos hr] at this
-      exact this
+      rwa [ite_eq_left hr] at this
     · have hu' : cA D ε • e.symm u = e.symm u := by
         apply e.injective
         rw [hsm, e.apply_symm_apply]
         exact Matrix.ext hu
       have := hinv (e.symm u) (fun i j => congrFun (congrFun hu' i) j) _ (hTh Ψ)
-      rw [hheis, e.apply_symm_apply, ← hΨ] at this
-      exact this
-  · simp only [← he]
-    exact hom' p Φ
+      rwa [hheis, e.apply_symm_apply, ← hΨ] at this
+  · simpa only [← he] using hom' p Φ
 
 end GlobalTheory.Mem.WeilOriented

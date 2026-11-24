@@ -100,8 +100,7 @@ theorem coord_mem_idS {β : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)} {Λ : 
             (fun i => Formalism.UG.inclE (F := F) (Formalism.L2.Herm.Af F) (x₂ i)) := by
         funext k; simp
       rw [e, Matrix.mulVec_add, Pi.add_apply, Subring.coe_add, e₁, e₂]
-  · intro i
-    exact ⟨0, Ideal.zero_mem _, by simp⟩
+  · exact fun i => ⟨0, Ideal.zero_mem _, by simp⟩
   · intro a c _ _ ha hc i
     obtain ⟨s₁, hs₁, e₁⟩ := ha i
     obtain ⟨s₂, hs₂, e₂⟩ := hc i
@@ -189,8 +188,7 @@ theorem col_cong (D : D7) (V : HSp D) (L : Lt D.host.E V.rank) (β : GL (Fin V.r
   have eb : GlobalTheory.LevSplit.swp D.host.F D.host.E ((1 : Af D.host.F) ⊗ₜ[D.host.F] (b : D.host.E)) =
       ((oToS D.host.F D.host.E b : Formalism.L2.Herm.intAf D.host.F D.host.E) : Lev.EAf D) := by
     rw [GlobalTheory.LevSplit.swp_tmul, oToS_coe]
-  rw [map_smul_sub (GlobalTheory.LevSplit.swp D.host.F D.host.E) _ _ eb (fmt V k) u w hc] at h1
-  exact h1
+  rwa [map_smul_sub (GlobalTheory.LevSplit.swp D.host.F D.host.E) _ _ eb (fmt V k) u w hc] at h1
 
 theorem redFn_eq_one_of_cong (D : D7) (V : HSp D) (L : Lt D.host.E V.rank) (β : GL (Fin V.rank) (Lev.EAf D))
     (hβ : Formalism.L2.DIV.IsFrame β L) (k : GA D V) (hk : Lev.finE V k ∈ Formalism.L2.DIV.St β)

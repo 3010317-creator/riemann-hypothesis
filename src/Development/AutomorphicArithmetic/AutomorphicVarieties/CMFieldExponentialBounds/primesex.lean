@@ -74,8 +74,7 @@ private theorem finrank_quadratic_splitting_field (p : ℕ) (hp : 0 < p) (L : Ty
     decide
   obtain ⟨α, hα⟩ := hspl.exists_eval_eq_zero hdeg0
   have haeval : aeval α f = 0 := by
-    rw [aeval_def, ← eval_map]
-    exact hα
+    rwa [aeval_def, ← eval_map]
   have hmin : f = minpoly ℚ α := minpoly.eq_of_irreducible_of_monic hirr haeval hmon
   have hint : IsIntegral ℚ α := ⟨f, hmon, by rw [← aeval_def]; exact haeval⟩
   have hfin : Module.finrank ℚ (IntermediateField.adjoin ℚ {α}) = 2 := by
@@ -107,7 +106,6 @@ private theorem finrank_quadratic_splitting_field (p : ℕ) (hp : 0 < p) (L : Ty
 
 open Polynomial in
 private theorem finrank_kstar (p : ℕ) (hp : 0 < p) : Module.finrank ℚ (Kstar p) = 2 := by
-  show Module.finrank ℚ (SplittingField (X ^ 2 + C (p : ℚ))) = 2
   exact @finrank_quadratic_splitting_field p hp _ _ _ (Polynomial.IsSplittingField.splittingField _)
 
 theorem UpperTheory.V.pK_pOne_prime_conditions :
@@ -141,5 +139,4 @@ theorem UpperTheory.V.pK_pOne_prime_conditions :
     intro h
     have := Nat.le_of_dvd hm h
     omega
-  have h2 := Nat.sInf_mem hne2
-  exact ⟨h1, h2, finrank_kstar _ h1.1.pos⟩
+  exact ⟨h1, (Nat.sInf_mem hne2), finrank_kstar _ h1.1.pos⟩

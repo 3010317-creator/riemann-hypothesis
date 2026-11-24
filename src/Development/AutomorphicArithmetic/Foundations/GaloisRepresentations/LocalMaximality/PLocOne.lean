@@ -92,8 +92,7 @@ private theorem locOne_nak {L : Type} [Field L] [Algebra ℂ L] (B O : Subalgebr
           convert h4 using 1
           simp [Subalgebra.smul_def]
         have h3 := Submodule.smul_mem G (↑u⁻¹ : O) h2
-        rw [← hu, smul_smul, Units.inv_mul, one_smul] at h3
-        exact h3
+        rwa [← hu, smul_smul, Units.inv_mul, one_smul] at h3
       · rw [hG, Submodule.span_le]
         rintro _ ⟨b, _, rfl⟩
         exact Submodule.subset_span ⟨⟨b, hBO b.2⟩, rfl⟩
@@ -124,8 +123,7 @@ private theorem locOne_nak {L : Type} [Field L] [Algebra ℂ L] (B O : Subalgebr
     · exact Submodule.mem_sup_left (Submodule.smul_mem _ _ (Submodule.subset_span ⟨l, rfl⟩))
     · apply Submodule.mem_sup_right
       apply Submodule.smul_mem_smul
-      · show ev (t l) = 0
-        exact ht l
+      · exact ht l
       · exact Submodule.subset_span ⟨a l, rfl⟩
 
 theorem UpperTheory.Gal.productCup_of_system.locOne_of :

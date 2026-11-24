@@ -152,13 +152,10 @@ theorem GlobalTheory.UnitLemma.Unr.dual_iff : ∀ (K K' : UQ) (d : ℕ) (φ : K.
   · intro h z₀ hz₀
     by_contra hw
     have hv : val K'.O ((overExt φ B ψ hψ hσ).herm x y z₀) < 0 := by
-      by_contra hle
-      push_neg at hle
+      by_contra! hle
       obtain ⟨b, hb⟩ := mem_range_of_val_nonneg K' _ hle
       exact hw ⟨b, hb⟩
-    have hw0 : (overExt φ B ψ hψ hσ).herm x y z₀ ≠ 0 := by
-      intro h0
-      exact hw ⟨0, by rw [h0, map_zero]⟩
+    have hw0 : (overExt φ B ψ hψ hσ).herm x y z₀ ≠ 0 := fun h0 => hw ⟨0, by rw [h0, map_zero]⟩
     obtain ⟨u, a, ha, hua⟩ := _root_.GlobalTheory.UnitLemma.Unr.exists_trace_unit K K' d φ hU
     obtain ⟨π, hπ⟩ := (IsDiscreteValuationRing.maximalIdeal K.O).valuation_exists_uniformizer K.E
     have hπv : val K.O π = 1 := by
@@ -346,8 +343,7 @@ theorem isLat_overExt_iff : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsU
 
     rw [hO', ha, map_sum]
     simp only [map_mul, hO, hO']
-  · intro e
-    exact ⟨φ e, by rw [hE', hψ]⟩
+  · exact fun e => ⟨φ e, by rw [hE', hψ]⟩
   · intro z
     obtain ⟨e, b, hb⟩ := exists_eq_base_mul_int hU z
     exact ⟨e, b, by rw [hE', hO', ← hψ, ← map_mul, ← hb]⟩
@@ -407,8 +403,7 @@ theorem isIntegral_overExt_iff (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E) (hU :
       simp
     haveI : Algebra.IsIntegral K.O K'.O := Algebra.IsIntegral.of_finite K.O K'.O
     exact isIntegral_trans (R := K.O) (A := K'.O) a h
-  · intro h
-    exact h.tower_top
+  · exact fun h => h.tower_top
 
 end GlobalTheory.UnitLemma.Unr
 end -- clump:auto

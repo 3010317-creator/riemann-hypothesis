@@ -390,8 +390,8 @@ theorem idx_cases (i : Fin N) : (∃ a : Fin (d 0), i = stdBlocks d h ⟨0, a⟩
 
 theorem blk_two (i : Fin N) : blk (stdBlocks d h) i = if (i : ℕ) < d 0 then 0 else 1 := by
   rcases idx_cases d h i with ⟨a, rfl⟩ | ⟨a, rfl⟩
-  · rw [blk_apply, stdBlocks_zero_val, if_pos a.2]
-  · rw [blk_apply, stdBlocks_one_val, if_neg (by omega)]
+  · rw [blk_apply, stdBlocks_zero_val, ite_eq_left a.2]
+  · rw [blk_apply, stdBlocks_one_val, ite_eq_right (by omega)]
 
 theorem mem_unipRad_iff {g : GL (Fin N) k} :
     g ∈ unipRad k (stdBlocks d h) ↔
@@ -586,8 +586,7 @@ theorem derChar_secEmb (ψ : AddChar k Circle) (u : unipB k (Fin (d 1)))
     rw [stdBlocks_one_val, stdBlocks_one_val] at h1
     simp only
     omega
-  · intro q _
-    exact (secEmb_one_one d h _ q.1 q.2).symm
+  · exact fun q _ => (secEmb_one_one d h _ q.1 q.2).symm
 
 theorem deltaHalf_secondEmb {u : GL (Fin (d 1)) k} (hu : u ∈ unipB k (Fin (d 1))) :
     deltaHalf k (fun a => Fin (d a)) (secondEmb d u) = 1 := by
@@ -699,8 +698,7 @@ theorem exists_injective_of_subQuot_bot {G V W : Type} [Group G] [AddCommGroup V
     refine (injective_iff_map_eq_zero _).2 fun x hx => ?_
     rcases eq_bot_or_eq_top (p.comp f).ker with h | h
     · have : x ∈ (p.comp f).ker := hx
-      rw [h] at this
-      exact this
+      rwa [h] at this
     · exfalso
       refine hf (LinearMap.ext fun y => ?_)
       have hy : y ∈ (p.comp f).ker := by rw [h]; trivial
@@ -713,12 +711,10 @@ theorem exists_irr_sub : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
   intro k _ _ _ _ ψ _ d X _ _ J hs hfl hnt
   obtain ⟨hgt, hlt⟩ := (hasFiniteLength_iff_wellFounded J).1 hfl
   have hbotImg : whitImg ψ d J ⊥ = ⊥ := by
-    apply Subrepresentation.toSubmodule_injective
-    exact Submodule.map_bot _
+    exact Subrepresentation.toSubmodule_injective (Submodule.map_bot _)
   have htop : whitImg ψ d J ⊤ ≠ ⊥ := by
     intro h
     have h1 : (whitImg ψ d J ⊤).toSubmodule = ⊤ := by
-      show (⊤ : Subrepresentation J).toSubmodule.map (whitKer ψ d J).mkQ = ⊤
       exact (Submodule.map_top _).trans (Submodule.range_mkQ _)
     rw [h] at h1
     obtain ⟨x, hx⟩ := exists_ne (0 : X ⧸ whitKer ψ d J)
@@ -728,8 +724,7 @@ theorem exists_irr_sub : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
     {T | whitImg ψ d J T ≠ ⊥} ⟨⊤, htop⟩
   have hbot : (⊥ : Subrepresentation J) < T := by
     refine bot_lt_iff_ne_bot.2 fun h => hT ?_
-    rw [h]
-    exact hbotImg
+    rwa [h]
   obtain ⟨T', hT', hmax⟩ := (wellFounded_gt (α := Subrepresentation J)).has_min
     {B | B < T} ⟨⊥, hbot⟩
   have hcov : T' ⋖ T := ⟨hT', fun C hBC hCA => hmax C hCA hBC⟩
@@ -749,12 +744,10 @@ theorem exists_irr_sub : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
     have hx' : (⟨x, hx⟩ : (whitImg ψ d J T).toSubmodule) ∈
         (whitImg ψ d J T').toSubmodule.comap (whitImg ψ d J T).toSubmodule.subtype := by
       rw [h]; trivial
-    rw [Submodule.mem_comap, hImg'] at hx'
-    exact hx'
+    rwa [Submodule.mem_comap, hImg'] at hx'
   obtain ⟨f, hf⟩ : ∃ f : (s 0).ρ.IntertwiningMap (subQuot (whitImg ψ d J T) (whitImg ψ d J T')),
       f.toLinearMap ≠ 0 := by
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     have : (⨆ f : (s 0).ρ.IntertwiningMap (subQuot (whitImg ψ d J T) (whitImg ψ d J T')),
         LinearMap.range f.toLinearMap) = ⊥ := by
       refine le_antisymm (iSup_le fun f => ?_) bot_le
@@ -797,8 +790,7 @@ theorem isSubquotient_sub_or_quot :
     rw [Submodule.mem_map] at hw ⊢
     obtain ⟨s, hs, rfl⟩ := hw
     have hs' : ((s : B.toSubmodule) : V) ∈ A.toSubmodule := hs
-    refine ⟨S.toRepresentation g s, A.apply_mem_toSubmodule g hs', ?_⟩
-    exact f.isIntertwining _ _ g s
+    exact ⟨S.toRepresentation g s, A.apply_mem_toSubmodule g hs', f.isIntertwining _ _ g s⟩
   let N : Subrepresentation σ := ⟨P.map f.toLinearMap, hNinv⟩
   let Z : Subrepresentation σ := ⟨⊥, by
     intro g w hw
@@ -879,8 +871,7 @@ theorem isSubquotient_sub_or_quot :
     have hAB' : A.toSubmodule ≤ B.toSubmodule := fun x hx => hAB hx
     have hS'inv : ∀ (g : G) ⦃a : A.toSubmodule⦄, a ∈ S.toSubmodule.comap (Submodule.inclusion hAB') →
         A.toRepresentation g a ∈ S.toSubmodule.comap (Submodule.inclusion hAB') := by
-      intro g a ha
-      exact S.apply_mem_toSubmodule g ha
+      exact fun g a ha => S.apply_mem_toSubmodule g ha
     let S' : Subrepresentation A.toRepresentation := ⟨S.toSubmodule.comap (Submodule.inclusion hAB'), hS'inv⟩
     let r : (S.toSubmodule.comap (Submodule.inclusion hAB')) →ₗ[ℂ] S.toSubmodule :=
       (Submodule.inclusion hAB').restrict (fun a ha => ha)
@@ -958,8 +949,7 @@ theorem equiv_of_isSubquotient (G : Type) [Group G] (V Y W : Type) [AddCommGroup
     first
       | rfl
   have h : isotypicComponent (MonoidAlgebra ℂ G) R.asModule ρ.asModule = ⊤ := by
-    rw [← GlobalTheory.CuspFactor.spanRep_asSubmodule R ρ hρ]
-    exact htop
+    rwa [← GlobalTheory.CuspFactor.spanRep_asSubmodule R ρ hρ]
   obtain ⟨S, f, hf⟩ := hsq
   let j := Representation.IntertwiningMap.equivLinearMapAsModule _ _
     (GlobalTheory.CompanionTheory.IsoSub.inclusion S)
@@ -1199,8 +1189,7 @@ theorem deriv_irr_sub (ψ : AddChar k Circle) (hc : Continuous ψ) (n j : ℕ) {
   obtain ⟨S, f, hf⟩ := _root_.GlobalTheory.CompanionTheory.BZNuPair.WhitSub.exists_irr_sub k ψ hc ![n, j + 1] _ _ hJs hJf hnt'
   let χ := detChar (Fin n) (absPow k (((j : ℂ) + 1) / 2))
   have hχ : IsSmoothChar χ := (isSmoothChar_absPow _).detChar
-  refine ⟨irrTwist S χ hχ, E.symm.toIntertwiningMap.comp (twistMap f χ), ?_⟩
-  exact E.symm.injective.comp hf
+  exact ⟨irrTwist S χ hχ, E.symm.toIntertwiningMap.comp (twistMap f χ), E.symm.injective.comp hf⟩
 
 theorem deriv_jm (ψ : AddChar k Circle) (hc : Continuous ψ) (n j : ℕ) {V : Type} [AddCommGroup V] [Module ℂ V]
     (π : Representation ℂ (GL (Fin (n + j + 1)) k) V) (hs : IsSmooth π) (hi : π.IsIrreducible)

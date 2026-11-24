@@ -121,8 +121,7 @@ theorem chart_holTo_of_isHolFam {Y : Scheme.{0}} {N : ℕ} {e : (Fin N → ℂ) 
     IsHolTo Set.univ e := by
   intro U f
   obtain ⟨h1, h2⟩ := h U f
-  simp only [Set.mem_univ, true_and]
-  exact ⟨h1, h2⟩
+  simpa only [Set.mem_univ, true_and] using ⟨h1, h2⟩
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
   {Xo : Moduli Dw l} {c : Coeff l} [Algebra c.F ℂ]
@@ -197,7 +196,7 @@ theorem AnPt.chart_tan (j0 : Fin g) (vt : Sp (DualNumber ℂ) ⟶ Xo.univ.t.G.le
   have hone : ∀ j, j ≠ j0 → u j = 1 := by
     intro j hj
     ext1
-    simp only [u, v, if_neg hj, Over.comp_left, epsHom, Over.homMk_left, Formalism.L2.Pj.homAt, AnPt.chart_jx_left]
+    simp only [u, v, ite_eq_right hj, Over.comp_left, epsHom, Over.homMk_left, Formalism.L2.Pj.homAt, AnPt.chart_jx_left]
     rw [← Category.assoc, spMap_epsMul_zero_jetTan, Category.assoc, jetPt_aug, one_left'']
     show spMap _ ≫ (Φ.e 0).left = (spMap (algebraMap ℂ (DualNumber ℂ)) ≫ y.x) ≫ _
     rw [Φ.chart_e_zero, one_left'', Category.assoc]
@@ -463,9 +462,9 @@ theorem sameSum_of_jetMap {n : ℕ} (m : ℕ) {K K' J : Type} [Fintype K] [Finty
     else spMap (algebraMap ℂ _) ≫ (Φ.e 0).left
   refine sameSum_of_factor φ ε φ' ε' F σ σ' (fun k => ?_) (fun k => ?_) hc
   · obtain ⟨hol, e⟩ := h k
-    simp only [F, dif_pos hol]; exact e
+    simp only [F, dite_eq_left hol]; exact e
   · obtain ⟨hol, e⟩ := h' k
-    simp only [F, dif_pos hol]; exact e
+    simp only [F, dite_eq_left hol]; exact e
 
 end General
 
@@ -515,8 +514,7 @@ theorem pe_jetRd (e : ∀ m, FrTy y g Φ.jx m) (he : Φ.IsAnE e) (m : ℕ) {n : 
       · exact hT
       · exact hT.symm
       · exact absurd rfl hab
-  rw [hΛ] at h
-  exact h
+  rwa [hΛ] at h
 
 theorem jet_triple_points_eq_jet_exponentials (m : ℕ) {n : ℕ} (a b d : jO y g m n ⟶ Xo.univ.t.G)
     (Λa Λb Λd : (Fin n → Fin g → ℂ) →ₗ[ℂ] (Fin g → ℂ)) (ha : Φ.toAnFr.JetMap m a.left Λa)
@@ -540,8 +538,7 @@ theorem cub_jetRd (m : ℕ) :
   have h := GlobalTheory.T.cubical_reading_one_analyticFrame E H Dw l Xo c y g ty el Φ (colsOf 3 g v 0) (colsOf 3 g v 1) (colsOf 3 g v 2)
   have hv : ![colsOf 3 g v 0, colsOf 3 g v 1, colsOf 3 g v 2] = colsOf 3 g v := by
     funext i; fin_cases i <;> rfl
-  rw [hv] at h
-  exact h
+  rwa [hv] at h
 
 theorem scaleGen_one {Y : Scheme.{0}} {K : Type} [Fintype K] (φ : K → (Y ⟶ Xo.univ.t.G.left)) (ε : K → ℤ)
     (t : LB.Gen (LB.LinComb Xo.univ.t.PP.L φ ε)) : Formalism.L2.Pj.scaleGen φ ε 1 t = t := by
@@ -1444,12 +1441,12 @@ theorem filter_col_toMultiset {T : Type} [Fintype T] {r : T → ℕ} {n : ℕ}
   rw [Multiset.count_filter]
   by_cases h : c = b
   · subst h
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     have := Multiset.count_map_eq_count' _ (Finsupp.toMultiset (Finsupp.equivFunOnFinite.symm
         fun ℓ : (Σ τ : T, Fin (r τ)) => m ⟨ℓ.1, ℓ.2, c⟩)) hinj ⟨τ, i⟩
     rw [this]
     simp [Finsupp.count_toMultiset]
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     symm
     rw [Multiset.count_eq_zero, Multiset.mem_map]
     rintro ⟨x, -, hx⟩
@@ -1554,8 +1551,7 @@ theorem harm_nab_eq_polyDeriv : ChartIndepSt2 → ∀ (E : Type) [Field E] [Numb
   have hg : ∀ b, IsGerm y C.d C.x C.B.A.act C.e C.wP k (F b) (tay (θ b) 0) := fun b => by
     have h := hgerm k (F b) (θ b) (hθ b)
     have e : (fun p : Fin 1 × Fin C.d => (p.1, Fin.cast (rfl : C.d = C.d).symm p.2)) = id := rfl
-    simp only [e, MvPowerSeries.rename_id, AlgHom.id_apply] at h
-    exact h
+    simpa only [e, MvPowerSeries.rename_id, AlgHom.id_apply] using h
   have h := hC E H Dw l Xo c hnab.1 ℂ y C₁ C k n F f₁ (fun b => tay (θ b) 0) hf₁ hg a _ hNP
   unfold chartVal at h
   rw [sum_support_natCast_smul N P hs, sum_support_natCast_smul N P hs] at h

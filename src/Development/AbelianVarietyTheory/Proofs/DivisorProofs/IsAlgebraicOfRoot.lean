@@ -200,8 +200,7 @@ theorem eq_smul_of_conj (hU : Rl.toRealDat.LUnif) (hW : Rl.toRealDat.models_HW)
   choose r hr using hr
   have hexp : ∀ d : Fin n → ℂ, ∑ l, d l • evW YS v₀ j (g l).val =
       ∑ a, (∑ l, d l * Formalism.L2.Host.embLL0 D (r (g l) a)) • φ a := fun d => by
-    simp only [hr, Finset.smul_sum, smul_smul, Finset.sum_smul]
-    exact Finset.sum_comm
+    simpa only [hr, Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
   rw [hA, smul_inv_smul₀ hν, hexp] at h1
   rw [hA', hexp, smul_smul, smul_smul, Finset.smul_sum] at h2
   simp only [smul_smul] at h2
@@ -345,8 +344,7 @@ theorem twLat_le (hU : p.R.toRealDat.LUnif) (hW : p.R.toRealDat.models_HW) (hv :
       rw [map_smulₛₗ, e1, hρ.ek_e, ho]
       exact (map_smul _ (a : ℂ) P₁).symm
   obtain ⟨z, hz, hm⟩ := key P (hgen ρ hρ hp h P hd.mem)
-  rw [hinj (hy.trans hz.symm)]
-  exact hm
+  rwa [hinj (hy.trans hz.symm)]
 
 end Point
 

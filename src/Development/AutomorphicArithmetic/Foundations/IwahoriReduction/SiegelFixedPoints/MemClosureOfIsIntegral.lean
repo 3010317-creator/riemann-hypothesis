@@ -290,10 +290,9 @@ lemma const_j (hp2 : p ≠ 2) {N : ℕ} (hN : 0 < N) (hpN : ¬ p ∣ N) (n m : �
   refine ⟨-(((N : K)⁻¹) ^ (m + 1) * (p * y3 * (N : K)⁻¹ - p * y4 * 2⁻¹ + y1)),
     neg_mem (mul_mem (inv_pow_nat_mem hpN _) (add_mem (sub_mem (mul_mem (mul_mem (natCast_mem _ _) hy3)
       (inv_nat_mem hpN)) (mul_mem (mul_mem (natCast_mem _ _) (intCast_mem _ _)) h2)) hy1)), ?_⟩
-  simp only [const0, if_neg (show m + 2 ≠ 1 by omega), f]
+  simp only [const0, ite_eq_right (show m + 2 ≠ 1 by omega), f]
   have hZ := (eq_div_iff (pow_ne_zero (m + 1) (mul_ne_zero hN0 (pow_ne_zero (n + 1) hp0)))).2 ((mul_comm _ _).trans E1)
-  rw [hZ, E3, E4]
-  rw [pow_mul]
+  rw [hZ, E3, E4, pow_mul]
   have hQ : (p : K) ^ n ≠ 0 := pow_ne_zero _ hp0
   simp only [pow_succ (p : K) n]
   generalize (p : K) ^ n = Q at hQ ⊢
@@ -372,7 +371,7 @@ lemma const_congr_gen (hp2 : p ≠ 2) {N : ℕ} (hN : 0 < N) (hpN : ¬ p ∣ N) 
   have f2 : frc (N * p ^ (n + 1)) (c * a₁) = ((N * (c * α) + s₂ * (p : ℤ) ^ (n + 1) : ℤ) : ℚ) /
       ((N : ℚ) * (p : ℚ) ^ (n + 1)) := by
     unfold frc; rw [hs₂]; push_cast; ring
-  simp only [smF, eisF, ↓reduceIte, const0, if_neg d1, if_neg d2, f1, f2]
+  simp only [smF, eisF, ↓reduceIte, const0, ite_eq_right d1, ite_eq_right d2, f1, f2]
   push_cast
   have hQ : (p : K) ^ n ≠ 0 := pow_ne_zero _ hp0
   simp only [pow_succ (p : K) n]
@@ -442,8 +441,7 @@ theorem smF_congr_gen : ∀ (p : ℕ) [Fact p.Prime] (N n j : ℕ) (K : Type) [F
       (p : K) ^ ((n + 1) * (m + 1)) * smF c (m + 2) (N * p ^ (n + 1)) ζ a₁ a₂ r = (p : K) ^ n * y by
     obtain ⟨y, ⟨D, hD, hy⟩, E⟩ := H
     refine ⟨D, hD, ?_⟩
-    rw [E, mul_left_comm, mul_div_cancel_left₀ _ (pow_ne_zero _ hp0)]
-    exact hy
+    rwa [E, mul_left_comm, mul_div_cancel_left₀ _ (pow_ne_zero _ hp0)]
   rcases eq_or_ne r 0 with rfl | hr
   · exact const_congr_gen hp2 hN hpN n m ζ hc a₂ h0 h1 ha
   have hc0 : (c : K) ≠ 0 := by
@@ -458,7 +456,7 @@ theorem smF_congr_gen : ∀ (p : ℕ) [Fact p.Prime] (N n j : ℕ) (K : Type) [F
   have hz1 : (c : K) ^ ((2 : ℤ) - ((1 : ℕ) : ℤ)) = c := by norm_num
   refine ⟨p * ((c : K) ^ 2 * y1 - ((c : K)⁻¹) ^ m * y2), mul_mem (natCast_mem _ _)
     (sub_mem (mul_mem (pow_mem (intCast_mem _ _) _) hy1) (mul_mem (pow_mem (inv_int_mem hc) m) hy2)), ?_⟩
-  simp only [smF, eisF, if_neg hr, hz, hz1]
+  simp only [smF, eisF, ite_eq_right hr, hz, hz1]
   have hcm : ((c : K)⁻¹) ^ m * ((c * α : ℤ) : K) ^ (m + 1) = c * (α : K) ^ (m + 1) := by
     push_cast; rw [inv_pow]; field_simp; ring
   linear_combination (c : K) ^ 2 * E1 - ((c : K)⁻¹) ^ m * E2 +
@@ -672,8 +670,7 @@ private theorem cong_step (ε : Ω →+* ℂ) (l : ℕ) [Fact l.Prime] (N : ℕ)
       (mul_mem (pow_mem (natCast_mem _ _) _) ?_)) (pow_mem (natCast_mem _ _) _))
     · exact smF_mem _ _ _ _ N _ _ _ _ h₂ hF
     · exact smF_mem _ _ _ _ N _ _ _ _ h₂ hF
-  · rw [← mul_div_assoc]
-    exact hint
+  · rwa [← mul_div_assoc]
 
 private theorem comb (ε : Ω →+* ℂ) (l : ℕ) [Fact l.Prime] (L n w m : ℕ) (hnL : n < L) (A₁ A₂ B : ℕ → Ω)
     (α u : ℤ) (e : ℕ) (he : (e : ℤ) = α ^ w + (l : ℤ) ^ n * u)
@@ -702,7 +699,7 @@ private theorem coefQ_nat (M : ℕ) (f : ℕ → Ω) (i : ℕ) : coefQ M f (i : 
     push_cast
     ring
   unfold coefQ
-  rw [e, if_pos ⟨Nat.cast_nonneg _, Rat.den_natCast _⟩, Rat.num_natCast, Int.toNat_natCast]
+  rw [e, ite_eq_left ⟨Nat.cast_nonneg _, Rat.den_natCast _⟩, Rat.num_natCast, Int.toNat_natCast]
 
 private theorem ex_eq (l n L w : ℕ) [Fact l.Prime] (hnL : n < L) (g : SL(2, ℤ)) :
     ∃ u : ℤ, ((ex l n w g : ℕ) : ℤ) = (en g 0 0 % (l : ℤ) ^ L) ^ w + (l : ℤ) ^ n * u := by

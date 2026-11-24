@@ -124,15 +124,12 @@ theorem card_finMulAntidiag_eq_zeta_pow (k n : ℕ) :
     · intro f hf
       simp only [mem_coe, Nat.mem_finMulAntidiag, Fin.prod_univ_succ] at hf
       simp only [mem_coe, mem_sigma, Nat.mem_divisorsAntidiagonal, Nat.mem_finMulAntidiag]
-      refine ⟨hf, trivial, ?_⟩
-      intro h
-      exact hf.2 (by rw [← hf.1, h, mul_zero])
+      exact ⟨hf, trivial, (fun h => hf.2 (by rw [← hf.1, h, mul_zero]))⟩
     · rintro ⟨⟨a, b⟩, g⟩ hy
       simp only [mem_coe, mem_sigma, Nat.mem_divisorsAntidiagonal, Nat.mem_finMulAntidiag] at hy
       simp only [mem_coe, Nat.mem_finMulAntidiag, Fin.prod_univ_succ, Fin.cons_zero, Fin.cons_succ]
       rw [hy.2.1]; exact hy.1
-    · intro f _
-      exact Fin.cons_self_tail f
+    · exact fun f _ => Fin.cons_self_tail f
     · rintro ⟨⟨a, b⟩, g⟩ hy
       simp only [mem_coe, mem_sigma, Nat.mem_divisorsAntidiagonal, Nat.mem_finMulAntidiag] at hy
       simp only [Fin.cons_zero, Fin.cons_succ, hy.2.1]
@@ -213,7 +210,7 @@ theorem ncard_ideal_absNorm_eq_le {n : ℕ} (hn : n ≠ 0) :
           rw [Multiset.count_cons_self, hN, hp.factorization_pow, Finsupp.single_eq_same]
           ring
         · rw [Multiset.count_cons_of_ne (Ne.symm hQP), H, hq.factorization_pow,
-            Finsupp.single_apply, if_neg, zero_add]
+            Finsupp.single_apply, ite_eq_right, zero_add]
           rintro rfl
           exact hQP (hc q hq Q P hQ hP hqQ hpP hcol)
       · rw [Multiset.filter_cons_of_neg (p := fun Q => c Q = c P) s hcol]

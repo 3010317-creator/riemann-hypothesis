@@ -92,9 +92,7 @@ theorem contraMap_incl_surjective
   · exact invariant_of_fixed ⟨l, hlK⟩ h hh w
   · have hwK : (w : V) ∈ fixed π K :=
       mem_fix.2 fun h hh => congrArg Subtype.val (mem_fix.1 hw h hh)
-    have e1 := h2 ⟨w, hwK⟩
-    have e2 := LinearMap.congr_fun hl₀ w
-    exact e1.trans e2
+    exact (h2 ⟨w, hwK⟩).trans (LinearMap.congr_fun hl₀ w)
 
 theorem contraMap_injective {Y : Type} [AddCommGroup Y] [Module ℂ Y] {σ : Representation ℂ G X}
     {τ : Representation ℂ G Y} (f : σ.IntertwiningMap τ) (hf : Function.Surjective f) :

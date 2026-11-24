@@ -77,7 +77,7 @@ theorem UpperTheory.V.Two.extTwo :
     simpa only [Subgroup.mem_subgroupOf, Subgroup.coe_mul] using this
   have hσi : σ⁻¹ ∉ U := fun hh => hσU (by simpa using U.inv_mem hh)
   let Φ : Γ → ZMod 2 := fun g => if hg : g ∈ U then φ ⟨g, hg⟩ else 0
-  have hΦ : ∀ g (hg : g ∈ U), Φ g = φ ⟨g, hg⟩ := fun g hg => dif_pos hg
+  have hΦ : ∀ g (hg : g ∈ U), Φ g = φ ⟨g, hg⟩ := fun g hg => dite_eq_left hg
   have hΦadd : ∀ a b, a ∈ U → b ∈ U → Φ (a * b) = Φ a + Φ b := by
     intro a b ha hb
     rw [hΦ a ha, hΦ b hb, hΦ _ (U.mul_mem ha hb), ← hadd]
@@ -97,8 +97,8 @@ theorem UpperTheory.V.Two.extTwo :
     exact hinv _ _ rfl
   have hΦσ : Φ (σ * σ) = 0 := by rw [hΦ _ h2, hσσ]
   let ψ : V → ZMod 2 := fun v => if v.1 ∈ U then Φ v.1 else Φ (v.1 * σ)
-  have hψU : ∀ v : V, v.1 ∈ U → ψ v = Φ v.1 := fun v hv => if_pos hv
-  have hψN : ∀ v : V, v.1 ∉ U → ψ v = Φ (v.1 * σ) := fun v hv => if_neg hv
+  have hψU : ∀ v : V, v.1 ∈ U → ψ v = Φ v.1 := fun v hv => ite_eq_left hv
+  have hψN : ∀ v : V, v.1 ∉ U → ψ v = Φ (v.1 * σ) := fun v hv => ite_eq_right hv
   have hψadd : ∀ a b : V, ψ (a * b) = ψ a + ψ b := by
     intro a b
     have hk := key a.1 b.1 a.2 b.2
@@ -131,23 +131,20 @@ theorem UpperTheory.V.Two.extTwo :
     refine ⟨(fun y => x⁻¹ * y) ⁻¹' ((U.subgroupOf V : Set V) ∩ Subtype.val ⁻¹' O),
       hW.preimage (continuous_const.mul continuous_id), ?_, ?_⟩
     · have h1 : (1 : U) ∈ Subtype.val ⁻¹' O := by rw [hOe]; exact hφ1
-      simp only [Set.mem_preimage, inv_mul_cancel]
-      exact ⟨(U.subgroupOf V).one_mem, h1⟩
+      simpa only [Set.mem_preimage, inv_mul_cancel] using ⟨(U.subgroupOf V).one_mem, h1⟩
     · rintro y ⟨hy1, hy2⟩
       have hy1' : (x⁻¹ * y).1 ∈ U := hy1
       have h0 : (⟨_, hy1'⟩ : U) ∈ Subtype.val ⁻¹' O := hy2
       rw [hOe] at h0
       have h0' : ψ (x⁻¹ * y) = 0 := by
-        rw [hψU _ hy1', hΦ _ hy1']
-        exact h0
+        rwa [hψU _ hy1', hΦ _ hy1']
       have := hψadd x (x⁻¹ * y)
       rwa [mul_inv_cancel_left, h0', add_zero] at this
   · intro v hv
     have hvU := hS _ hv v.2
     rw [hψU v hvU, hΦ _ hvU]
     exact hoff _ hv
-  · rw [hψN _ hσU]
-    exact hΦσ
+  · rwa [hψN _ hσU]
   · intro u
     rw [hψU _ u.2]
     exact hΦ _ u.2
@@ -217,7 +214,7 @@ theorem UpperTheory.V.Two.invTwo :
     by_cases hex : ∃ φ : P, val φ ≠ 0
     · obtain ⟨φ, hφ⟩ := hex
       exact ⟨φ, fun _ _ => (two _).resolve_left hφ⟩
-    · push_neg at hex
+    · push Not at hex
       exact ⟨⟨0, fun _ _ _ => rfl⟩, fun φ h => absurd (hex φ) h⟩
   let χ : P → U → ZMod 2 := fun φ =>
     if val φ = 0 then (φ.1 : U → ZMod 2) else (φ.1 : U → ZMod 2) + (φ0.1 : U → ZMod 2)
@@ -272,7 +269,7 @@ theorem UpperTheory.V.Two.invTwo :
   · have h' := hbranch.mp h
     simpa [h, h'] using hχ
   · have h' : ¬ val φ' = 0 := fun h' => h (hbranch.mpr h')
-    simp only [h, h', if_false] at hχ
+    simp only [h, h', ite_false] at hχ
     exact add_right_cancel hχ
 end -- clump:auto
 end -- clump:auto
@@ -453,8 +450,7 @@ theorem UpperTheory.V.Two.quadStep :
     exact hq.2.2.1.preimage continuous_subtype_val
   · rw [Subgroup.inf_relIndex_right]
     exact (Subgroup.relIndex_dvd_index_of_normal _ _).trans hidx
-  · intro v _ s hs
-    exact (ineConj ℚ Ω v).2.2 N s hs
+  · exact fun v _ s hs => (ineConj ℚ Ω v).2.2 N s hs
   · intro s hs hsV
     refine Subgroup.mem_inf.2 ⟨?_, hsV⟩
     obtain ⟨B, hB, hsB⟩ := hs

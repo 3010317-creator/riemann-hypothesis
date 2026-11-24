@@ -69,8 +69,7 @@ theorem tr_add {G : Type} [Group G] [Fintype G] (a : MonoidAlgebra ℂ G) (f h :
 
 theorem tr_mul_const {G : Type} [Group G] [Fintype G] (a : MonoidAlgebra ℂ G) (f : G → ℂ) (c : ℂ) :
     tr a (fun x => f x * c) = tr a f * c := by
-  simp only [tr, Finset.sum_mul]
-  exact Finset.sum_congr rfl fun x _ => by ring
+  simpa only [tr, Finset.sum_mul] using Finset.sum_congr rfl fun x _ => by ring
 
 theorem tr_tr_list_nat {G H : Type} [Group G] [Fintype G] [Group H] [Fintype H]
     (a : MonoidAlgebra ℂ G) (b : MonoidAlgebra ℂ H) (ha : a * a = a) (hb : b * b = b) :
@@ -79,8 +78,7 @@ theorem tr_tr_list_nat {G H : Type} [Group G] [Fintype G] [Group H] [Fintype H]
   intro L
   induction L with
   | nil =>
-    intro _
-    exact ⟨0, by simp [tr]⟩
+    exact fun _ => ⟨0, by simp [tr]⟩
   | cons p L ih =>
     intro hL
     obtain ⟨m, hm⟩ := ih (fun q hq => hL q (List.mem_cons_of_mem _ hq))
@@ -139,9 +137,9 @@ theorem wh_der_zero (g : ℕ) [Fact g.Prime] (ψ : AddChar (ZMod g) ℂ) (N : �
         refine ⟨fun i j hj _ => absurd hj (Nat.not_lt_zero _), Subsingleton.elim _ _, ?_⟩
         funext i j
         simp [br, entN]
-      rw [if_pos this]
+      rw [ite_eq_left this]
     · intro x _ hx
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨_, _, hb⟩
       apply hx
       apply Units.ext
@@ -214,8 +212,7 @@ theorem coeff_mul_eSerC {g : ℕ} [Fact g.Prime] (L : LabelDatum g) {N : ℕ} (f
   unfold eSerC
   rw [finsum_mem_eq_finite_toFinset_sum _ hfin, Finset.mul_sum]
   simp only [MonoidAlgebra.coeff_sum, Finsupp.finsetSum_apply]
-  refine Finset.sum_congr rfl fun χ _ => ?_
-  exact ((GlobalTheory.GLq.trIdem (Gn g N) a χ).2.2)
+  exact Finset.sum_congr rfl fun χ _ => ((GlobalTheory.GLq.trIdem (Gn g N) a χ).2.2)
 
 theorem re_coeff_mul_eSerC {g : ℕ} [Fact g.Prime] (L : LabelDatum g) {N : ℕ} (f : (ZMod g)[X])
     (a : MonoidAlgebra ℂ (Gn g N))

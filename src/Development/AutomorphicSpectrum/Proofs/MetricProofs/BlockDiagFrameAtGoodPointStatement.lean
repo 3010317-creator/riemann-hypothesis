@@ -77,8 +77,7 @@ theorem _root_.GlobalTheory.T.block_diag_frame_at_good_point : ∀ (K : Type) [F
   have hflag : M.IsFlagOf F z₀ H := by
     refine ⟨fun k => ?_, hH, fun p k hp => ?_⟩
     · show c k.1 * w ⟨k.1, F.c k⟩ = 1
-      simp only [c, dite_eq_left k.2]
-      exact inv_mul_cancel₀ (hne k)
+      simpa only [c, dite_eq_left k.2] using inv_mul_cancel₀ (hne k)
     · obtain ⟨a, ha, hw⟩ := hP p k hp
       refine ⟨a, ha, fun m => ?_⟩
       have hk : ¬ ∀ p, M.blk p ≠ some k := fun h => h p hp
@@ -87,8 +86,7 @@ theorem _root_.GlobalTheory.T.block_diag_frame_at_good_point : ∀ (K : Type) [F
       rw [hw m, CovMap.LocImg.plk]
       simp only [hval]
   have hG₀ : M.GoodAt F (mCoordIdeal (basePart M.blk z₀)) := by
-    rw [hI]
-    exact hG
+    rwa [hI]
   have hz₀ : z₀ ∈ mcPts (mCoordIdeal y) :=
     ((_root_.GlobalTheory.CompanionTheory.Ar.PB.CPts.main K ι Φ y Ψ N j M).2.2 F hF z₀ hb₀ hG₀ hflag.1).mpr
       ⟨H, hflag⟩

@@ -304,7 +304,7 @@ theorem levS_flat_gen (Q : Finset (Pl D.host.E)) (hr : D.R.r ≤ (Yc D 0).rank)
     simp [blkOf, hi, hj] at hij
   refine levS_congr _ _ _ fun x => ?_
   show (x ∈ parLev _ _ _ _ ∧ _) ↔ (x ∈ parLev _ _ _ _ ∧ _)
-  simp only [LevCh.dat0, Lev.datY, if_true, parLev, Subgroup.mem_inf, Subgroup.mem_iInf, mem_parah]
+  simp only [LevCh.dat0, Lev.datY, ite_true, parLev, Subgroup.mem_inf, Subgroup.mem_iInf, mem_parah]
   constructor
   · rintro ⟨⟨⟨⟨hU, hSt⟩, hPg⟩, -⟩, hT⟩
     refine ⟨⟨⟨⟨hU, hSt⟩, fun i hi => hPg i (Finset.mem_union_left _ hi)⟩, fun i hi => absurd hi (Finset.notMem_empty _)⟩, ?_⟩
@@ -413,11 +413,9 @@ theorem rowPar_of_chain : GlobalTheory.Published.CuspRapidDecay → ∀ {D : D7}
   · obtain ⟨u, hu, hu0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
     set y : s'.CC (comR R t) := ⟨PiTensorProduct.lift u, hCC u hu⟩ with hydef
     have hl0 : (y : SmT s'.M →ₗ[ℂ] (GA D s'.V → ℂ)) ≠ 0 := by
-      intro h
-      exact hu0 (PiTensorProduct.lift.injective (h.trans (map_zero _).symm))
+      exact fun h => hu0 (PiTensorProduct.lift.injective (h.trans (map_zero _).symm))
     obtain ⟨w, hw⟩ : ∃ w, PiLocalization₂.val y w ≠ 0 := by
-      by_contra hh
-      push_neg at hh
+      by_contra! hh
       exact hl0 (LinearMap.ext hh)
     obtain ⟨hl, hh, hb⟩ := hkey y (hy u hu) w
     have hne' : (fun g => conj (PiLocalization₂.val y w g)) ≠ 0 := by
@@ -428,8 +426,7 @@ theorem rowPar_of_chain : GlobalTheory.Published.CuspRapidDecay → ∀ {D : D7}
     obtain ⟨B, hB, -⟩ := GlobalTheory.FinZeta.ParamBound.exists_param_bounded D s'.V _ _ (comR R t).S hsph' _ hb hne' hl c hh
     refine ⟨B, (hiff y (hy u hu) w B hw).1 ?_⟩
     unfold ParFun
-    rw [hlat]
-    exact hB
+    rwa [hlat]
   · have hu' : PiTensorProduct.lift u ∈ (stY R t 0).CC (comR R t) := by
       refine (mem_multT _ _ _ _ _).2 ?_
       erw [LinearEquiv.symm_apply_apply]

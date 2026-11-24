@@ -62,8 +62,7 @@ theorem comm_root (σ τ : GQ l) (n : ℕ) (y : Om l) (hy : y ^ l ^ n = 1) : σ 
     have hw0 : w ≠ 0 := by rintro rfl; simp [zero_pow hpos.ne'] at hw
     let u : rootsOfUnity (l ^ n) (Om l) := ⟨Units.mk0 w hw0, by
       rw [mem_rootsOfUnity]; ext; simpa using hw⟩
-    have h1 := congrArg (fun v : rootsOfUnity (l ^ n) (Om l) => ((v : (Om l)ˣ) : Om l)) (hm u)
-    simpa [u] using h1
+    simpa [u] using congrArg (fun v : rootsOfUnity (l ^ n) (Om l) => ((v : (Om l)ˣ) : Om l)) (hm u)
   have hτ : (τ y) ^ l ^ n = 1 := by rw [← map_pow, hy, map_one]
   rw [hr _ hτ, hr _ hy, map_zpow₀]
 
@@ -176,7 +175,7 @@ theorem fixed_twist (ϖ : PiSys l e) (H : Subgroup (GQ l))
   by_cases hA : ∀ σ ∈ H, ∀ (n : ℕ) (y : Om l), y ^ l ^ n = 1 → σ y = y
   · exact ⟨1, 0, by simp, fun σ hσ => by rw [mul_one]; exact hfix σ hσ (hA σ hσ) 1⟩
   have hex : ∃ N : ℕ, ∃ σ ∈ H, ∃ y : Om l, y ^ l ^ N = 1 ∧ σ y ≠ y := by
-    push_neg at hA
+    push Not at hA
     obtain ⟨σ, hσ, n, y, hy, hne⟩ := hA
     exact ⟨n, σ, hσ, y, hy, hne⟩
   set N := Nat.find hex with hN
@@ -283,8 +282,7 @@ theorem fixed_twist (ϖ : PiSys l e) (H : Subgroup (GQ l))
 theorem exists_move (a : ℕ) [NeZero a] (ϖ : PiSys l e) :
     ∃ g : GQ l, g ∈ GK (ϖ.field a) ∧ (∀ (n : ℕ) (y : Om l), y ^ l ^ n = 1 → g y = y) ∧
       ∃ n, g (ϖ.seq n) ≠ ϖ.seq n := by
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   have h0 : ∀ σ ∈ GK (ϖ.field a), σ (ϖ.seq 0) = ϖ.seq 0 := fun σ hσ => ϖ.gal_pi a ⟨σ, hσ⟩
   have hcomm : ∀ σ ∈ GK (ϖ.field a), ∀ τ ∈ GK (ϖ.field a), ∀ n : ℕ, σ (τ (ϖ.seq n)) = τ (σ (ϖ.seq n)) := by
     intro σ hσ τ hτ n

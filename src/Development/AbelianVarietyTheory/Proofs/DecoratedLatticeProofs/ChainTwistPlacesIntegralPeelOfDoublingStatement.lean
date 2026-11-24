@@ -150,8 +150,7 @@ theorem loc_eq_of_isRes {D : D7} {H H' : Formalism.L2.Host.HChar D.host.E} {PP :
   have hkv : Valued.v ((Formalism.L2.Host.atFin PP kb : (PP.adicCompletion D.host.E)ˣ) : PP.adicCompletion D.host.E) = 1 := hbv
   have hyu : Formalism.L2.Host.IsUnitAt PP y := by
     show Valued.v ((y : (PP.adicCompletion D.host.E)ˣ) : PP.adicCompletion D.host.E) = 1
-    rw [hy, Units.val_mul, Units.val_inv_eq_inv_val, map_mul, map_inv₀, hkv, inv_one, mul_one]
-    exact hx
+    rwa [hy, Units.val_mul, Units.val_inv_eq_inv_val, map_mul, map_inv₀, hkv, inv_one, mul_one]
   have hy1 : Valued.v ((y : PP.adicCompletion D.host.E) - 1) ≤ WithZero.exp (-((1 : ℕ) : ℤ)) := by
     have hk0 : ((Formalism.L2.Host.atFin PP kb : (PP.adicCompletion D.host.E)ˣ) : PP.adicCompletion D.host.E) =
         algebraMap D.host.E (PP.adicCompletion D.host.E) (b : D.host.E) := rfl
@@ -161,8 +160,7 @@ theorem loc_eq_of_isRes {D : D7} {H H' : Formalism.L2.Host.HChar D.host.E} {PP :
       have hne : algebraMap D.host.E (PP.adicCompletion D.host.E) (b : D.host.E) ≠ 0 := by
         rw [← hk0]; exact Units.ne_zero _
       rw [hy, Units.val_mul, Units.val_inv_eq_inv_val, hk0, sub_mul, mul_inv_cancel₀ hne]
-    rw [e, map_mul, map_inv₀, hbv, inv_one, mul_one]
-    exact hb
+    rwa [e, map_mul, map_inv₀, hbv, inv_one, mul_one]
   have hxy : x = Formalism.L2.Host.atFin PP kb * y := by rw [hy, mul_left_comm, mul_inv_cancel, mul_one]
   rw [hxy, map_mul, map_mul, ht y hyu hy1, ht' y hyu hy1, mul_one, mul_one]
   exact e1.symm.trans e2
@@ -1028,8 +1026,8 @@ theorem integral_split_place : ∀ (D : D7) (A : HSp D) (m : Measure (GA D A)), 
       (measurable_snd.mul (hcm.comp measurable_fst) : Measurable fun p : GA D A × GlobalTheory.FinZeta.Gv A v => p.2 * c p.1)
       (Filter.Eventually.of_forall fun x => ?_)
     by_cases hx : GlobalTheory.AdelicU.proj D.sp.cm.sig A.gram v x ∈ J
-    · simp only [c, if_pos hx]; exact hright _ hx
-    · simp only [c, if_neg hx, mul_one, Measure.map_id']
+    · simp only [c, ite_eq_left hx]; exact hright _ hx
+    · simp only [c, ite_eq_right hx, mul_one, Measure.map_id']
   let g0 : GA D A × GlobalTheory.FinZeta.Gv A v → ℂ := fun q => (E ∩ {g : GA D A | GlobalTheory.AdelicU.proj D.sp.cm.sig A.gram v g ∈ J}).indicator F q.1 * ζ q.2
   have hg0 : Integrable g0 (m.prod μ) := Integrable.mul_prod ((integrable_indicator_iff hUm).2 hFi) hζ
   let f : GA D A × GlobalTheory.FinZeta.Gv A v → ℂ := fun q => (E ∩ {g : GA D A | GlobalTheory.AdelicU.proj D.sp.cm.sig A.gram v g ∈ J}).indicator (fun x => F (GlobalTheory.AdelicU.emb D.sp.cm.sig A.gram v q.2 * x)) q.1
@@ -1037,7 +1035,7 @@ theorem integral_split_place : ∀ (D : D7) (A : HSp D) (m : Measure (GA D A)), 
     funext q
     by_cases hx : q.1 ∈ (E ∩ {g : GA D A | GlobalTheory.AdelicU.proj D.sp.cm.sig A.gram v g ∈ J})
     · have hx2 : GlobalTheory.AdelicU.proj D.sp.cm.sig A.gram v q.1 ∈ J := hx.2
-      simp only [f, g0, Function.comp_apply, c, if_pos hx2]
+      simp only [f, g0, Function.comp_apply, c, ite_eq_left hx2]
       rw [Set.indicator_of_mem hx, Set.indicator_of_mem hx, key q.1 hx]
     · simp only [f, g0, Function.comp_apply, Set.indicator_of_notMem hx, zero_mul]
   have hf : Integrable f (m.prod μ) := by
@@ -1288,7 +1286,6 @@ theorem supp_at_principal : ∀ D : D7, ForStepQ D fun c w _ s s' p => ∀ m X, 
     have h1 : s.V.rank = D.R.rankY k := hfl.rank
     have h2 : s'.V.rank = D.R.rankY (k + 1) := hfl'.rank
     rw [h1, h2]
-    show D.R.r + k * D.R.t ≤ D.R.r + (k + 1) * D.R.t
     exact Nat.add_le_add_left (Nat.mul_le_mul_right _ (Nat.le_succ k)) _
   obtain ⟨f₀, hvec⟩ := hp.vec
   have hthf : IsThetaFunO c.ψ s.V s'.V p.f := GlobalTheory.VecTheta.isThetaFunO_stepVec hvec

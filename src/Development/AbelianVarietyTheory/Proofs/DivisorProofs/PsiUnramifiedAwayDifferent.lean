@@ -93,13 +93,11 @@ theorem psiUnr_of_not_le : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddCha
         by_cases hw : w = v
         · subst hw
           change Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV _ w (GlobalTheory.AdelicU.singleFin w y) ∈ _
-          rw [GlobalTheory.AdelicU.evalV_singleFin_self]
-          exact hy
+          rwa [GlobalTheory.AdelicU.evalV_singleFin_self]
         · change Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV _ w (GlobalTheory.AdelicU.singleFin v y) ∈ _
           rw [GlobalTheory.AdelicU.evalV_singleFin_ne hw]
           exact zero_mem _)
-      rw [e] at this
-      exact this
+      rwa [e] at this
   rw [key, ← h, mem_adelicIdeal_iff codiff_ne_zero, HeightOneSpectrum.mem_adicCompletionIntegers]
   constructor
   · intro H
@@ -108,8 +106,7 @@ theorem psiUnr_of_not_le : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddCha
   · intro H w
     by_cases hw : w = v
     · subst hw
-      rw [hc, neg_zero, exp_zero, hαv]
-      exact H
+      rwa [hc, neg_zero, exp_zero, hαv]
     · rw [hαw w hw, map_zero]
       exact zero_le
 

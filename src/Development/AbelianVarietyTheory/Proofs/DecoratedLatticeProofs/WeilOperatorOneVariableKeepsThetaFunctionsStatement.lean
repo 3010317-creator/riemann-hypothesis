@@ -231,10 +231,8 @@ theorem isSobForm_slice {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} (hθ : 
     {χ χ' : (AE D)ˣ →* Circle} {om : Om A T} (hom : IsWeilDatumO ψ A T χ χ' om) (p : GA D A × GA D T) :
     IsSobForm ψ θ S T (fun f => om p (fun u => f ((o.resS T).symm (u, 0))) 0) := by
   refine ⟨?_, ?_, ?_⟩
-  · intro f g _ _
-    exact congrFun ((om p).map_add (slA o f) (slA o g)) 0
-  · intro c f _
-    exact congrFun ((om p).map_smul c (slA o f)) 0
+  · exact fun f g _ _ => congrFun ((om p).map_add (slA o f) (slA o g)) 0
+  · exact fun c f _ => congrFun ((om p).map_smul c (slA o f)) 0
   · intro U hU
     have hψ := hom.std
     let U' : AddSubgroup (WO A T) := U.comap (extA o T)
@@ -334,8 +332,7 @@ theorem continuous_shiftA {S A B : HSp D} (o : OrthDec S A B) (T : HSp D) (g : G
   have h1 : Continuous fun w : WO S T => (o.resS T w).1 := continuous_fst.comp (o.continuous_resS T)
   have h2 : Continuous fun w : WO S T => (o.resS T w).2 := continuous_snd.comp (o.continuous_resS T)
   refine (o.continuous_resS_symm T).comp (Continuous.prodMk ?_ h2)
-  simp only [actO_eq]
-  exact (continuous_const.matrix_mul h1).matrix_mul continuous_const
+  simpa only [actO_eq] using (continuous_const.matrix_mul h1).matrix_mul continuous_const
 
 theorem shiftA_fin {S A B : HSp D} (o : OrthDec S A B) (T : HSp D) (g : GA D A) (h : GA D T) (w : WO S T)
     (hw : w.map (finPart D) = 0) : (shiftA o T g h w).map (finPart D) = 0 := by
@@ -394,8 +391,7 @@ theorem half (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S A B T : HSp D) (o : Or
       funext u
       have hb' : (o.resS T).symm (0, (o.resS T (ratW T S γ)).2) ∈ ratL T S := by
         refine (o.mem_ratL_resS T _).2 ?_
-        simp only [AddEquiv.apply_symm_apply]
-        exact ⟨zero_mem _, hb⟩
+        simpa only [AddEquiv.apply_symm_apply] using ⟨zero_mem _, hb⟩
       obtain ⟨δ, hδ⟩ := hb'
       have hδ' : ratW T S δ = (o.resS T).symm (0, (o.resS T (ratW T S γ)).2) := hδ
       have e : (o.resS T).symm (u, (o.resS T (ratW T S γ)).2) = ratW T S δ + (o.resS T).symm (u, 0) := by

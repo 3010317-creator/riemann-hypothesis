@@ -197,8 +197,7 @@ theorem exists_dual_sep {G : Type} [AddCommGroup G] {χ : G → G → ℂ} (h : 
   · have huW : u ∈ W := (memW u).2 ⟨hL hu, h1 u hu⟩
     rw [← hψ ⟨u, huW⟩]
     exact hψL _ ⟨⟨u, huW⟩, AddSubgroup.mem_addSubgroupOf.2 hu, rfl⟩
-  · rw [← hψ ⟨x, hxW⟩]
-    exact hψx
+  · rwa [← hψ ⟨x, hxW⟩]
 
 section Frame
 
@@ -235,8 +234,7 @@ theorem isLattice_of_isFrame {β : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)}
     exact Submodule.subset_span ⟨x, hx, rfl⟩
 
   have hle : Λ ≤ Formalism.UG.CS.globLat (F := F) β (Formalism.BasicNotions.Examples₂.stdLat (E := E) n) := by
-    intro x hx
-    exact hstd _ ((hβ _).1 (hgen x hx))
+    exact fun x hx => hstd _ ((hβ _).1 (hgen x hx))
   exact Submodule.IsLattice.of_fg E (hL'.fg.of_le hle)
 
 end Frame
@@ -288,8 +286,7 @@ theorem smul_eq_of_half {u : WO S T} (h : IsHalf a u) : a • u = u := by
   exact h i j
 
 theorem half_of_smul_eq {u : WO S T} (h : a • u = u) : IsHalf a u := by
-  intro i j
-  exact congrArg (fun M : WO S T => M i j) h
+  exact fun i j => congrArg (fun M : WO S T => M i j) h
 
 theorem half_smul {e : AE D} (h : a * e = e) (u : WO S T) : IsHalf a (e • u) := by
   intro i j
@@ -345,9 +342,9 @@ theorem halfInd_dualLat (hc : a * cA D a = 0) : halfInd a (dualLat ψ a Λ) = ha
   by_cases ht : IsHalf a t
   · have e := mem_dualLat_half (ψ := ψ) (Λ := Λ) hc ht
     by_cases h : t ∈ Λ
-    · rw [if_pos ⟨e.2 h, ht⟩, if_pos ⟨h, ht⟩]
-    · rw [if_neg (fun h' => h (e.1 h'.1)), if_neg (fun h' => h h'.1)]
-  · rw [if_neg (fun h' => ht h'.2), if_neg (fun h' => ht h'.2)]
+    · rw [ite_eq_left ⟨e.2 h, ht⟩, ite_eq_left ⟨h, ht⟩]
+    · rw [ite_eq_right (fun h' => h (e.1 h'.1)), ite_eq_right (fun h' => h h'.1)]
+  · rw [ite_eq_right (fun h' => ht h'.2), ite_eq_right (fun h' => ht h'.2)]
 
 theorem isPlaceModel_dualLat (hc : a * cA D a = 0) {f₀ : WO S T → ℂ} {Tm : (WO S T → ℂ) →ₗ[ℂ] (WO S T → ℂ)}
     (h : IsPlaceModel ψ (symplO S T) (heisO ψ S T) a Λ 1 f₀ Tm) :
@@ -494,7 +491,7 @@ theorem latO_bidual (hψ : IsStdChar D ψ (-1)) (hS : Submodule.IsFullLattice D.
     have hnot : ¬ ∀ y ∈ (latO S T (GlobalTheory.PlaceModel.latFrame S : Set (Fin S.rank → D.host.E))
         (GlobalTheory.PlaceModel.latFrame T : Set (Fin T.rank → D.host.E)) fun _ => True), IsHalf (cA D a) y →
           ψ (symplO S T ((M1 * M2) • x) y) = 1 := fun h => hxM ⟨hbid _ (hXo _ hMx) h, hMx⟩
-    push_neg at hnot
+    push Not at hnot
     obtain ⟨y, hyL, hyY, hy1⟩ := hnot
     refine ⟨(M1 * M2) • y, ?_, ?_, ?_⟩
     · exact (GlobalTheory.PlaceModel.isHalf_iff S T).2 (AddSubgroup.nsmul_mem _ ((GlobalTheory.PlaceModel.isHalf_iff S T).1 hyY) _)
@@ -502,8 +499,7 @@ theorem latO_bidual (hψ : IsStdChar D ψ (-1)) (hS : Submodule.IsFullLattice D.
       rw [← symplO_nsmul_left_eq_nsmul_right]
       exact hpair _ (by rw [hmul]; exact AddSubgroup.nsmul_mem _ (h1 u hu) _)
         (hXo _ (AddSubgroup.nsmul_mem _ (hXi u hua) _)) y hyL
-    · rw [← symplO_nsmul_left_eq_nsmul_right]
-      exact hy1
+    · rwa [← symplO_nsmul_left_eq_nsmul_right]
 
 private theorem isThetaFunO_zero_twisted_operators : IsThetaFunO ψ S T (0 : WO S T → ℂ) := by
   constructor
@@ -562,8 +558,7 @@ theorem isTheta_placeModel (hψ : IsStdChar D ψ (-1)) (hS : Submodule.IsFullLat
   refine GlobalTheory.SchrTheta.placeModel_induction ψ (e := a) (dualLat ψ a (latO S T ΛS ΛT fun _ => True))
     ?_ ?_ ?_ ?_ hTd (fun f => IsThetaFunO ψ S T f) isThetaFunO_zero_twisted_operators (fun f g hf hg => isThetaFunO_add_twisted_operators hf hg)
     (fun c f hf => isThetaFunO_smul_twisted_operators c hf) ?_ ?_ hf₀ hΦd
-  · intro u hu y hy
-    exact dualLat_isotropic ha hu.1 hy.1
+  · exact fun u hu y hy => dualLat_isotropic ha hu.1 hy.1
   · intro x hx h
     have hxh : IsHalf a x := (GlobalTheory.PlaceModel.isHalf_iff S T).2 hx
     refine ⟨(mem_dualLat_half (ψ := ψ) hc hxh).2 ?_, hx⟩
@@ -607,8 +602,7 @@ theorem resS_mul_eq_zero {x y : AE D} (hx : toEAf D x ∈ Formalism.L2.Herm.intA
     show toEAf D x * toEAf D y = 0
     rw [← map_mul, h, map_zero]
   have h2 := congrArg (resS D.host.F Q) hxy
-  rw [map_mul, map_zero, h1, one_mul] at h2
-  exact h2
+  rwa [map_mul, map_zero, h1, one_mul] at h2
 
 private theorem isIdemAt_eq_or_mul_eq_zero {f : AE D} {Q : Pl D.host.E} (hf : Formalism.L2.NTheta.IsIdemAt f Q)
     (he : Formalism.L2.NTheta.IsIdemAt e PP) : (Q = PP → f = e) ∧ (Q ≠ PP → f * e = 0) := by
@@ -633,10 +627,8 @@ theorem idemSum_mul (ha : IsIdemSum a P) (hP : PP ∈ P) (he : Formalism.L2.NThe
   rw [hsum, Finset.sum_mul, Finset.sum_eq_single PP]
   · rw [(isIdemAt_eq_or_mul_eq_zero (hes PP hP) he).1 rfl]
     exact he.1.1
-  · intro Q hQ hne
-    exact (isIdemAt_eq_or_mul_eq_zero (hes Q hQ) he).2 hne
-  · intro h
-    exact absurd hP h
+  · exact fun Q hQ hne => (isIdemAt_eq_or_mul_eq_zero (hes Q hQ) he).2 hne
+  · exact fun h => absurd hP h
 
 private theorem exists_int_resS_eq_one_mul_idem_eq_zero_of_ne (ha : IsIdemSum a P) (hP : PP ∈ P) (he : Formalism.L2.NTheta.IsIdemAt e PP)
     {Q : Pl D.host.E} (hQ : Q ∈ P) (hne : PP ≠ Q) :

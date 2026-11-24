@@ -343,8 +343,7 @@ theorem mem_locR_iff (w : HeightOneSpectrum (𝓞 K)) (k : K) :
   constructor
   · rintro ⟨a, rfl⟩
     rw [Subring.smul_def, smul_eq_mul, mul_one]; exact a.2
-  · intro hk
-    exact ⟨⟨k, hk⟩, by rw [Subring.smul_def, smul_eq_mul, mul_one]⟩
+  · exact fun hk => ⟨⟨k, hk⟩, by rw [Subring.smul_def, smul_eq_mul, mul_one]⟩
 
 end NumberField
 
@@ -386,8 +385,7 @@ theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommG
   constructor
   · rintro ⟨a, ha⟩
     rw [← ha]; exact a.2
-  · intro hk
-    exact ⟨⟨_, hk⟩, rfl⟩
+  · exact fun hk => ⟨⟨_, hk⟩, rfl⟩
 
 end GlobalTheory.MassOrth
 end -- clump:auto
@@ -425,8 +423,7 @@ theorem form_eq_sum (h : V →ₗ⋆[K] V →ₗ[K] K) (e : Module.Basis ι K V)
   · rw [map_smul, smul_eq_mul, mul_comm]
   · intro l _ hl
     rw [map_smul, he i l hl.symm, smul_zero]
-  · intro hi
-    exact absurd (Finset.mem_univ i) hi
+  · exact fun hi => absurd (Finset.mem_univ i) hi
 
 theorem det_gram [DecidableEq ι] (h : V →ₗ⋆[K] V →ₗ[K] K) (e b : Module.Basis ι K V)
     (he : ∀ i l, i ≠ l → h (e i) (e l) = 0) :
@@ -521,8 +518,7 @@ theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommG
     · simp
     · intro l _ hl
       simp [hl.symm]
-    · intro hi
-      exact absurd (Finset.mem_univ i) hi
+    · exact fun hi => absurd (Finset.mem_univ i) hi
   have hd0 : ∀ i, h (e i) (e i) ≠ 0 := fun i h0 =>
     e.ne_zero i (hnd.1 _ fun y => by rw [hrow, h0, zero_mul])
   have hv0 : ∀ i, v (h (e i) (e i)) ≠ 0 := fun i => (Valuation.ne_zero_iff _).2 (hd0 i)
@@ -589,7 +585,7 @@ theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommG
         rwa [map_sub, map_smul, map_smul, Finsupp.sub_apply, Finsupp.smul_apply, Finsupp.smul_apply,
           e.repr_self, Finsupp.single_apply, smul_eq_mul, smul_eq_mul] at this
       have h1 := hco i
-      rw [if_pos rfl, mul_one] at h1
+      rw [ite_eq_left rfl, mul_one] at h1
       have h2 : 1 < v (h (e i) (e i))⁻¹ := by
         rw [map_inv₀, one_lt_inv₀ (zero_lt_iff.2 (hv0 i))]
         exact lt_of_le_of_ne (hd1 i) hi
@@ -613,7 +609,7 @@ theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommG
       refine ⟨by rw [hn3, WithZero.exp_inj]; omega, by rw [hn2, ← WithZero.exp_zero, WithZero.exp_inj]; omega,
         fun l hl hl1 => ?_⟩
       have h5 := hco l
-      rw [if_neg hl.symm, mul_zero, zero_sub, Valuation.map_neg, map_mul, map_mul, map_inv₀, hxx, hl1, mul_one,
+      rw [ite_eq_right hl.symm, mul_zero, zero_sub, Valuation.map_neg, map_mul, map_mul, map_inv₀, hxx, hl1, mul_one,
         hn1, ← WithZero.exp_neg, ← WithZero.exp_add, ← WithZero.exp_zero, WithZero.exp_le_exp] at h5
       omega
     obtain ⟨i, hi⟩ := not_forall.1 (mt hU.2 hb.2)
@@ -622,8 +618,7 @@ theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommG
       · intro l _ hl
         by_contra hl1
         exact (key i hi).2.2 l hl (key l hl1).2.1
-      · intro hi
-        exact absurd (Finset.mem_univ i) hi
+      · exact fun hi => absurd (Finset.mem_univ i) hi
     rintro ⟨c, hc0, h1, h2⟩
     obtain ⟨n1, hn1⟩ : ∃ n : ℤ, v c = WithZero.exp n :=
       ⟨_, (WithZero.exp_log ((Valuation.ne_zero_iff _).2 hc0)).symm⟩

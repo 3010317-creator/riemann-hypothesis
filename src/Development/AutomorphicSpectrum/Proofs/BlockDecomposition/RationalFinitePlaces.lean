@@ -384,8 +384,7 @@ theorem finite_torsion_centralizer : ∀ (E : Type) [Field E] [NumberField E] (n
     have h1 : F g ^ k = 1 := by
       rw [hFpow, hgk]; simp [F, hBB, Matrix.map_one]
     rw [eq_diagonal_of_commute hz (hFc g hg), diagonal_pow] at h1
-    have h2 := congrFun (congrFun h1 i) i
-    simpa [φ] using h2
+    simpa [φ] using congrFun (congrFun h1 i) i
   · rintro g ⟨hg, -⟩ g' ⟨hg', -⟩ e
     have h1 : F g = F g' := by
       rw [eq_diagonal_of_commute hz (hFc g hg), eq_diagonal_of_commute hz (hFc g' hg')]
@@ -690,8 +689,7 @@ theorem twCent_ratF_comm : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       (algebraMap E (Af E) ∘ v)).det := by
     have h1 := (IsUnit.mk0 _ hv).map (algebraMap E (Af E))
     rw [RingHom.map_det, RingHom.mapMatrix_apply, GlobalTheory.ClassParam.krylov_map] at h1
-    rw [GlobalTheory.MassNorm.thF_ratF, ← map_mul]
-    exact h1
+    rwa [GlobalTheory.MassNorm.thF_ratF, ← map_mul]
   have hc : ∀ g ∈ twCent (thF E n) (ratF E n δ),
       Commute g.val (ratF E n δ * thF E n (ratF E n δ)).val := fun g hg => by
     change g.val * _ = _ * g.val
@@ -866,11 +864,9 @@ theorem mem_twCent_ratF_iff : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       (algebraMap E (Af E) ∘ v)).det := by
     have h1 := (IsUnit.mk0 _ hv).map (algebraMap E (Af E))
     rw [RingHom.map_det, RingHom.mapMatrix_apply, GlobalTheory.ClassParam.krylov_map] at h1
-    rw [hNorm]
-    exact h1
+    rwa [hNorm]
   have := mem_twCent_iff_mem_UJ _ hc (ratF E n δ) J (by rw [hNorm, hJ]; exact hU') _ hv' g
-  rw [hNorm, hJ] at this
-  exact this
+  rwa [hNorm, hJ] at this
 
 end Global
 
@@ -931,8 +927,7 @@ theorem exists_toGLH (H : Matrix (Fin n) (Fin n) E) (y : GL (Fin n) (Af E))
     exact Matrix.ext fun i j => (finAdEquiv (Fr E) E).symm_apply_apply _
   have hm : GeneralLinearGroup.map A' y ∈ Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HR (AFr E) (sg E) H := by
     have h := herm_map A' _ (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR (AFr E) (sg E)) AEq_symm_sig _ _ hy'
-    rw [hJ] at h
-    exact h
+    rwa [hJ] at h
   exact ⟨⟨_, hm⟩, Units.ext (Matrix.ext fun i j => (finAdEquiv (Fr E) E).apply_symm_apply _)⟩
 
 theorem toGLH_rat (H : Matrix (Fin n) (Fin n) E) (t : HH H)
@@ -956,8 +951,7 @@ theorem exists_rat (H : Matrix (Fin n) (Fin n) E) (γ : GL (Fin n) E)
     rfl
   have hm : Formalism.UG.bc (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (AFr E)) γ ∈ Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HR (AFr E) (sg E) H := by
     exact herm_map (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (AFr E)) _ (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR (AFr E) (sg E)) hs _ _ hu
-  refine ⟨⟨_, hm⟩, ⟨γ, hγ, rfl⟩, Units.ext (Matrix.ext fun i j => ?_)⟩
-  exact AEq_inclR _
+  exact ⟨⟨_, hm⟩, ⟨γ, hγ, rfl⟩, Units.ext (Matrix.ext fun i j => (AEq_inclR _))⟩
 
 theorem emb_hform (H : Matrix (Fin n) (Fin n) E) (φ : E →+* ℂ) (x : Fin n → E) :
     φ (hform ((sg E : E →ₐ[Fr E] E) : E →+* E) H x x) =
@@ -1120,8 +1114,7 @@ theorem selberg {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
   let rep : G → G := fun f => if h : ∃ γ ∈ Γ, γ⁻¹ * n₀ * γ = f then h.choose else 1
   have hrep : ∀ f, (∃ γ ∈ Γ, γ⁻¹ * n₀ * γ = f) → rep f ∈ Γ ∧ (rep f)⁻¹ * n₀ * rep f = f := by
     intro f h
-    simp only [rep, dif_pos h]
-    exact h.choose_spec
+    simpa only [rep, dite_eq_left h] using h.choose_spec
   refine ⟨⋃ f ∈ (Γ : Set G) ∩ _, (fun c => rep f * c) '' C, hF.isCompact_biUnion fun f _ =>
     hC.image (by fun_prop), ?_⟩
   intro t ht hcomm
@@ -1159,8 +1152,7 @@ theorem ratF_mem_UJ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ)
   have hv : (ratF E n γ).val = γ.val.map (algebraMap E (Af E)) := rfl
   have hcT : cT (conjFin (IsCMField.complexConj E).toRingEquiv) (γ.val.map (algebraMap E (Af E))) =
       (cT (IsCMField.complexConj E).toRingEquiv.toRingHom γ.val).map (algebraMap E (Af E)) := by
-    refine Matrix.ext fun i j => ?_
-    exact conjFin_algebraMap _ _
+    exact Matrix.ext fun i j => conjFin_algebraMap _ _
   change cT _ (ratF E n γ).val * _ * (ratF E n γ).val = _ ↔ cT _ γ.val * H * γ.val = H
   rw [hv, hcT, ← Matrix.map_mul, ← Matrix.map_mul]
   exact ⟨fun h => Matrix.map_injective hi h, fun h => by rw [h]⟩

@@ -113,16 +113,14 @@ theorem adjoin_primitive_eq_top : ∀ (p : ℕ) [Fact p.Prime] (K H : Type) [Fie
       ∑ i, l i • y i ∈ RingHom.ker ε ^ 2 → l = 0 := by
     intro l hl
     have h1 : AugCot.d ε (∑ i, l i • y i) = 0 := by
-      rw [AugCot.d_of_mem _ (hmem _), Ideal.toCotangent_eq_zero]
-      exact hl
+      rwa [AugCot.d_of_mem _ (hmem _), Ideal.toCotangent_eq_zero]
     rw [hsum] at h1
     funext i
     exact Fintype.linearIndependent_iff.1 b.linearIndependent l h1 i
   have : IsNoetherianRing H := isNoetherian_of_tower K inferInstance
   have hnil : IsNilpotent (RingHom.ker ε) := by
     rw [Ideal.FG.isNilpotent_iff_le_nilradical (IsNoetherian.noetherian _)]
-    intro f hf
-    exact ⟨p, hpow f hf⟩
+    exact fun f hf => ⟨p, hpow f hf⟩
   have hsurj := GlobalTheory.HeightOneHopf.aeval_surjective_of_span_cotangent ε hnil y hy hspan
   obtain ⟨δ, hδ, hδx⟩ := GlobalTheory.HeightOneHopf.exists_isPtDer_dual y hy hind
 

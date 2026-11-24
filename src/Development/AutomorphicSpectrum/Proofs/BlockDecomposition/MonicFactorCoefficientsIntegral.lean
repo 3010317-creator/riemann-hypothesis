@@ -108,8 +108,7 @@ theorem isIntegral_coeff_of_monic_dvd (A : Type) [CommRing A] [Algebra ℂ A] (F
     (f := algebraMap (integralClosure ℂ A) A) (p := F)
     ((lifts_iff_coeff_lifts F).mpr fun n => ⟨⟨F.coeff n, h n⟩, rfl⟩) hF
   have hd' : G ∣ q.map (algebraMap (integralClosure ℂ A) A) := by
-    rw [hq]
-    exact hd
+    rwa [hq]
   exact isIntegral_trans _ (isIntegral_coeff_of_dvd q G hqm hG hd' k)
 
 end GlobalTheory.CompanionTheory.IntFac

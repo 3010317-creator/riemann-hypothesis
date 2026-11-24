@@ -98,8 +98,7 @@ private theorem exists_open_forall_mem_regAt' {X : Scheme.{0}} {Ω : Type} [Fiel
   have key : ∀ (y : X) (hy : y ∈ W) (h : genPt ξ ⤳ y),
       X.presheaf.germ W y hy ≫ X.presheaf.stalkSpecializes h ≫ Scheme.stalkClosedPointTo ξ =
         X.presheaf.germ W (genPt ξ) (h.mem_open W.isOpen hy) ≫ Scheme.stalkClosedPointTo ξ := by
-    intro y hy h
-    exact TopCat.Presheaf.germ_stalkSpecializes_assoc X.presheaf hy h _
+    exact fun y hy h => TopCat.Presheaf.germ_stalkSpecializes_assoc X.presheaf hy h _
   simp only [genMap]
   rw [← CommRingCat.comp_apply, ← CommRingCat.comp_apply]
   erw [key q'.1 hq' q'.2, key q.1 hq q.2]
@@ -117,8 +116,7 @@ private theorem exists_mul_eq_one_of_dedekind_ideal_ne_bot {Ω : Type} [Field Ω
     obtain ⟨o, ho⟩ := Ideal.mem_span_singleton'.mp hmem
     refine ⟨o, ?_⟩
     rw [← mul_div_assoc, ← map_mul, ← ho, map_mul, mul_div_cancel_right₀ _ hσx]
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   let C : O → Prop := fun y => ∃ h : σ y / σ x ∈ R, (⟨_, h⟩ : R) ∈ IsLocalRing.maximalIdeal R
   have hx : x ∈ 𝔡 * 𝔞 := h𝔞 ▸ Ideal.mem_span_singleton_self x
   have hC : C x := by
@@ -240,7 +238,7 @@ theorem sum_apply_smul_preDualBasis {Ω : Type} [Field Ω] {V : Type} [AddCommGr
     by_cases h : i = j
     · subst h
       simp
-    · rw [if_neg h, if_neg (Ne.symm h)]
+    · rw [ite_eq_right h, ite_eq_right (Ne.symm h)]
   conv_rhs => rw [← (preDualBasis B).sum_repr v]
   refine Finset.sum_congr rfl (fun i _ => ?_)
   rw [← Module.Basis.coord_apply, hc]
@@ -269,11 +267,10 @@ theorem Lat.predualIn_isFrameAt {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Sp
       rw [LinearMap.sum_apply]
       simp only [LinearMap.smul_apply, apply_preDualBasis]
       rw [Finset.sum_eq_single j]
-      · rw [if_pos rfl, Subring.smul_def, smul_eq_mul, _root_.mul_one]
+      · rw [ite_eq_left rfl, Subring.smul_def, smul_eq_mul, _root_.mul_one]
       · intro b _ hb
-        rw [if_neg hb, smul_zero]
-      · intro hj0
-        exact absurd (Finset.mem_univ j) hj0
+        rw [ite_eq_right hb, smul_zero]
+      · exact fun hj0 => absurd (Finset.mem_univ j) hj0
     rw [← hj, hj']
     exact (c j).2
   refine ⟨(preDualBasis B).linearIndependent.map' V.subtype (Submodule.ker_subtype V), ?_⟩
@@ -297,7 +294,6 @@ theorem Lat.predualIn_isFrameAt {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Sp
     exact Submodule.smul_mem _ _ (Submodule.subset_span (Set.mem_range_self i))
   · rw [Submodule.span_le]
     rintro _ ⟨j, rfl⟩
-    show (preDualBasis B j : Li) ∈ V ∧ ∀ w ∈ L q, w (preDualBasis B j : Li) ∈ regAt ξ q
     exact ⟨(preDualBasis B j).2, fun w hwL => hw w hwL j⟩
 
 theorem Lat.predualIn_isVBOn : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X) (Li : Type) [AddCommGroup Li]
@@ -448,8 +444,7 @@ theorem hodgeLattices_isVB : Out.WeilSt → ∀ (E : Type) [Field E] [NumberFiel
         exact HcVb.lat_stable M (t.act.act a) (ρ a) (hact a) p e he)
       (fun p _ s' a => hreg _ p a)
       (fun p hp => HcVb.unitAt_discr fun r hr hd => not_not.1 (hp r (hdisc r hr hd)))).1 s
-    rw [hrk s] at h
-    exact h
+    rwa [hrk s] at h
 
   have hDual : ∀ p ∈ S, ∀ (T : Set (Cpt ξ)) (s' : CMType H ⊕ CMType H),
       (M.htDual t.PP.L (p ^ R p) ρ (σ s')).IsVBOn T (labelRk D s') (eigSp ρ (σ s')) := by
@@ -510,8 +505,7 @@ theorem hodgeLattices_isVB : Out.WeilSt → ∀ (E : Type) [Field E] [NumberFiel
     · have h' : ∀ p ∈ S, ¬ InFibre ξ p q := fun p hp hf => h ⟨p, hp, hf⟩
       rw [Lat.patch_of_not S _ _ h', hL0 q h']
   show (Lat.patch S (M.eigLat ρ (σ s)) fun p => htLabel M t.PP.L (p ^ R p) ρ σ s).IsVB (labelRk D s) (eigSp ρ (σ s))
-  rw [e]
-  exact hL
+  rwa [e]
 
 end GlobalTheory.CompanionTheory.Ar
 end -- clump:auto

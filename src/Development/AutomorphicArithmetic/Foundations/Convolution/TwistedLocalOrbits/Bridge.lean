@@ -121,13 +121,11 @@ private theorem ram_one (h : IsUnramifiedLoc k E) : (_root_.Ideal.ramificationId
     exact ⟨fun h => lt_of_le_of_ne x.2 h, fun h => h.ne⟩
   have hπk : π ∈ 𝒪[k] := (GroundTheory.LocalField.algebraMap_mem_integer_iff k E π).1 hπ.le
   have hm : (⟨π, hπk⟩ : 𝒪[k]) ∈ IsLocalRing.maximalIdeal 𝒪[k] := by
-    intro hu
-    exact (key _).2 hπ (hu.map (algebraMap 𝒪[k] 𝒪[E]))
+    exact fun hu => (key _).2 hπ (hu.map (algebraMap 𝒪[k] 𝒪[E]))
   rw [← GroundTheory.LocalField.isUnramified_iff, ← GroundTheory.LocalField.map_maximalIdeal_eq_iff]
   refine le_antisymm ?_ fun x hx => ?_
   · rw [Ideal.map_le_iff_le_comap]
-    intro y hy hu
-    exact hy (isUnit_of_map_unit _ _ hu)
+    exact fun y hy hu => hy (isUnit_of_map_unit _ _ hu)
   · have hd : algebraMap 𝒪[k] 𝒪[E] ⟨π, hπk⟩ ∣ x :=
       (Valuation.integer.integers (valuation E)).dvd_of_le (hmax _ ((key x).1 hx))
     exact Ideal.mem_of_dvd _ hd (Ideal.mem_map_of_mem _ hm)

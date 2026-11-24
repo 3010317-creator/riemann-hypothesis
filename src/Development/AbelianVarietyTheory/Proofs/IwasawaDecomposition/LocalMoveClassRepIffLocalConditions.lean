@@ -298,8 +298,7 @@ theorem conds_of_pts {g s : GL (Fin n) (AfE F E)} {p : DecoF E n ST SG Q} {h : G
   · obtain ⟨A, hA⟩ := exists_isRed_inv hs w.1
     have e := eq_red hg (m := s⁻¹) (by rwa [inv_inv]) w hA
     have h1 := hA r j
-    rw [e] at h1
-    exact h1
+    rwa [e] at h1
   · set φ : Matrix (Fin n) (Fin n) (AfE F E) →+* Matrix (Fin n) (Fin n) (P.1.adicCompletion E) := (adAt F P.1).mapMatrix
     set T : Matrix (Fin n) (Fin n) (P.1.adicCompletion E) :=
       Matrix.of fun k j => algebraMap E _ ((((θ P)⁻¹ : ↥(GLint E n P.1)).1) (Pi.single j 1) k)
@@ -341,12 +340,10 @@ theorem pt_of_conds {g s : GL (Fin n) (AfE F E)} {p : DecoF E n ST SG Q} {h : GL
     have e : ((A : Matrix (Fin n) (Fin n) (𝓞 E ⧸ P.1.asIdeal)) *ᵥ c) r = c r := by
       simp [Matrix.mulVec, dotProduct, eA]
     have e2 : c r = p.deco.1.f P x := (hc r).unique (hg.f P x hx r hr)
-    rw [e, e2] at k1
-    exact k1
+    rwa [e, e2] at k1
   · rw [smul_N] at hx
     have k1 := hasRes_pullV (g := g) (m := s⁻¹) (A := (h w).1) (h4 w) (hg.be w x hx) r
-    rw [inv_inv] at k1
-    exact k1
+    rwa [inv_inv] at k1
 
   · rw [Units.val_mul, Matrix.mul_apply, map_sum, fr_smul, adAt_mul_fr hg θ P i j]
     refine Finset.sum_congr rfl fun k _ => ?_

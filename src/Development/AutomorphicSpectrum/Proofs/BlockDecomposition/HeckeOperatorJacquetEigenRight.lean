@@ -141,8 +141,7 @@ theorem exists_udl (v : Valuation k Γ) {r : Γ} (hr : r < 1) (n : ℕ)
         Cong v r (a.map v.integer.subtype) := by
     intro a ha i j
     have := (hImem _).1 (ha i j)
-    rw [AddSubgroupClass.coe_sub, hone'] at this
-    exact this
+    rwa [AddSubgroupClass.coe_sub, hone'] at this
   refine ⟨u.map v.integer.subtype, d.map v.integer.subtype, l.map v.integer.subtype,
     back u hu.1, back l hl.1, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro i j hij
@@ -168,8 +167,8 @@ theorem up_split (v : Valuation k Γ) {r : Γ} (hr : r < 1) {n : ℕ} (β : Fin 
       (∀ i j, β i ≠ β j → m i j = 0) ∧ u = a * m := by
   classical
   let m : Matrix (Fin n) (Fin n) k := fun i j => if β i = β j then u i j else 0
-  have hmb : ∀ i j, β i ≠ β j → m i j = 0 := fun i j h => if_neg h
-  have hmu : ∀ i j, β i = β j → m i j = u i j := fun i j h => if_pos h
+  have hmb : ∀ i j, β i ≠ β j → m i j = 0 := fun i j h => ite_eq_right h
+  have hmu : ∀ i j, β i = β j → m i j = u i j := fun i j h => ite_eq_left h
   have hm0 : ∀ i j, j < i → m i j = 0 := by
     intro i j h
     by_cases hb : β i = β j
@@ -295,10 +294,8 @@ theorem factor (v : Valuation k Γ) {r : Γ} (hr : r < 1) {n : ℕ} (β : Fin n 
     rw [Matrix.transpose_apply, hbb j i hij, ← Matrix.transpose_apply (1 : Matrix (Fin n) (Fin n) k) j i, Matrix.transpose_one]
   · rw [hlev]
     refine blockDiag_mul β (blockDiag_mul β hmb ?_) ?_
-    · intro i j hij
-      exact hd0 i j (fun e => hij (by rw [e]))
-    · intro i j hij
-      exact hcb j i hij.symm
+    · exact fun i j hij => hd0 i j (fun e => hij (by rw [e]))
+    · exact fun i j hij => hcb j i hij.symm
 
 theorem iwahori_block_upper_levi_lower : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (N : ℕ) (ϖ : k) (m : ℕ) (β : Fin N → ℕ), ϖ ≠ 0 → ValuativeRel.valuation k (ϖ) < 1 → (∀ x : k, ValuativeRel.valuation k (x) < 1 → ValuativeRel.valuation k (x) ≤ ValuativeRel.valuation k (ϖ)) → 1 ≤ m → Monotone β → ∀ g ∈ {g : GL (Fin N) k | ∀ i j, ValuativeRel.valuation k ((g : Matrix (Fin N) (Fin N) k) i j - (1 : Matrix (Fin N) (Fin N) k) i j) ≤ ValuativeRel.valuation k (ϖ ^ m)}, ∃ nm ∈ {g : GL (Fin N) k | ∀ i j, ValuativeRel.valuation k ((g : Matrix (Fin N) (Fin N) k) i j - (1 : Matrix (Fin N) (Fin N) k) i j) ≤ ValuativeRel.valuation k (ϖ ^ m)}, ∃ l ∈ {g : GL (Fin N) k | ∀ i j, ValuativeRel.valuation k ((g : Matrix (Fin N) (Fin N) k) i j - (1 : Matrix (Fin N) (Fin N) k) i j) ≤ ValuativeRel.valuation k (ϖ ^ m)}, ∃ np ∈ {g : GL (Fin N) k | ∀ i j, ValuativeRel.valuation k ((g : Matrix (Fin N) (Fin N) k) i j - (1 : Matrix (Fin N) (Fin N) k) i j) ≤ ValuativeRel.valuation k (ϖ ^ m)}, (∀ i j, β i ≤ β j → (nm : Matrix (Fin N) (Fin N) k) i j = (1 : Matrix (Fin N) (Fin N) k) i j) ∧ (∀ i j, β i ≠ β j → (l : Matrix (Fin N) (Fin N) k) i j = 0) ∧ (∀ i j, β j ≤ β i → (np : Matrix (Fin N) (Fin N) k) i j = (1 : Matrix (Fin N) (Fin N) k) i j) ∧ g = np * l * nm := by
   intro k _ _ _ _ N ϖ m β _ hϖ _ hm hβ g hg
@@ -399,8 +396,7 @@ theorem val_le_unif (x : k) (hx : valuation k x < 1) :
   let y : 𝒪[k] := ⟨x, hx.le⟩
   have hy : y ∈ IsLocalRing.maximalIdeal 𝒪[k] := by
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-    intro hu
-    exact hx.ne (hint.isUnit_iff_valuation_eq_one.1 hu)
+    exact fun hu => hx.ne (hint.isUnit_iff_valuation_eq_one.1 hu)
   rw [(IsDiscreteValuationRing.irreducible_iff_uniformizer _).1 Zls.irreducible_unif,
     Ideal.mem_span_singleton] at hy
   exact hint.le_of_dvd hy
@@ -440,8 +436,7 @@ theorem mem_Km_iff (N : ℕ) {m : ℕ} (hm : 1 ≤ m) (g : GL (Fin N) k) :
     have e2 : algebraMap 𝒪[k] k (Zls.unif k ^ m) = ((Zls.unifU k : kˣ) : k) ^ m := by
       rw [map_pow]
       rfl
-    rw [e1, ← e2]
-    exact h2
+    rwa [e1, ← e2]
   · intro hg
     have hginv := GlobalTheory.CompanionTheory.PrincipalCongruence.inv_congr (g : Matrix (Fin N) (Fin N) k)
       ((g⁻¹ : GL (Fin N) k) : Matrix (Fin N) (Fin N) k) (by simp) htlt hg
@@ -529,7 +524,7 @@ theorem conj_mem_Km {N m : ℕ} (hm : 1 ≤ m) (a : ℕ) {z : GL (Fin N) k} (hz 
   by_cases hi : (i : ℕ) < a <;> by_cases hj : (j : ℕ) < a
   · have e : ((Zls.unifU k ^ (-(Zls.omegaVec N a i)) : kˣ) : k) * (z : Matrix (Fin N) (Fin N) k) i j *
         ((Zls.unifU k ^ (Zls.omegaVec N a j) : kˣ) : k) = (z : Matrix (Fin N) (Fin N) k) i j := by
-      simp only [Zls.omegaVec, hi, hj, if_true, zpow_neg_one, zpow_one, Units.val_inv_eq_inv_val]
+      simp only [Zls.omegaVec, hi, hj, ite_true, zpow_neg_one, zpow_one, Units.val_inv_eq_inv_val]
       field_simp
     rw [e]
     exact hz i j

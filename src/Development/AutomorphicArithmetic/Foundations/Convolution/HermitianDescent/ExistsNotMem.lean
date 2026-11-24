@@ -91,9 +91,8 @@ private theorem exists_notMem {σ : T ≃ₐ[S] T} {q : ℕ} (h : IsGal σ q) (a
     rw [this, Finset.sum_eq_single 0]
     · rw [hxy 0 h.pos]; simp [c]
     · intro j hj hj0
-      rw [hxy j (Finset.mem_range.1 hj), if_neg hj0, mul_zero]
-    · intro h0
-      exact absurd (Finset.mem_range.2 h.pos) h0
+      rw [hxy j (Finset.mem_range.1 hj), ite_eq_right hj0, mul_zero]
+    · exact fun h0 => absurd (Finset.mem_range.2 h.pos) h0
   by_contra hcon
   push Not at hcon
   apply hP
@@ -138,8 +137,7 @@ private theorem finite_max (k S : Type) [CommRing k] [IsLocalRing k] [CommRing S
   · have := m.isMaximal
     exact (IsLocalRing.eq_maximalIdeal
       (Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := k) m.asIdeal)).symm
-  · intro m m' hm
-    exact MaximalSpectrum.ext (congrArg Subtype.val hm)
+  · exact fun m m' hm => MaximalSpectrum.ext (congrArg Subtype.val hm)
 
 theorem h90 : H90 := by
   intro k R _ _ _ _ S T _ _ _ _ _ σ q h a ha

@@ -67,8 +67,7 @@ theorem isCompact_of_integral_open (D : D7) (V : HSp D) (Λ : Submodule (𝓞 D.
 
   have hopen : IsOpen ((K.subgroupOf (GfC V)) : Set (GfC V)) := by
     refine Subgroup.isOpen_mono (H₁ := U.subgroupOf (GfC V)) ?_ ?_
-    · intro x hx
-      exact Subgroup.mem_subgroupOf.2 (hUK _ (Subgroup.mem_subgroupOf.1 hx) x.2)
+    · exact fun x hx => Subgroup.mem_subgroupOf.2 (hUK _ (Subgroup.mem_subgroupOf.1 hx) x.2)
     · exact hUo.preimage continuous_subtype_val
   have hcl : IsClosed ((K.subgroupOf (GfC V)) : Set (GfC V)) := Subgroup.isClosed_of_isOpen _ hopen
   have hKcl : IsClosed (K : Set (GA D V)) := by
@@ -82,7 +81,6 @@ theorem isCompact_of_integral_open (D : D7) (V : HSp D) (Λ : Submodule (𝓞 D.
   intro k hk
   refine GlobalTheory.AdelicU.mem_levelFin.2 ⟨?_, hKi k hk⟩
   have := hKf hk
-  rw [GlobalTheory.AdelicU.GfC_eq] at this
-  exact this
+  rwa [GlobalTheory.AdelicU.GfC_eq] at this
 
 end GlobalTheory.ChainOnto

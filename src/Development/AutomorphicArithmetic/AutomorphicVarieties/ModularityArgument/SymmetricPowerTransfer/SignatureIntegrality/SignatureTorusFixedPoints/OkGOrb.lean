@@ -298,8 +298,7 @@ private theorem id1K (hs : s * s = Δ) (hd : IsDat c d m) (h : Models c d m δ �
       ((quo t).re • (1 : Matrix (Fin 3) (Fin 3) K) + (quo t).im • (eU hs (δ * theta Δ δ) : Matrix (Fin 3) (Fin 3) K)) *
       ((eU hs (δ * theta Δ δ) : Matrix (Fin 3) (Fin 3) K) - 1) := by
   have h1 := congrArg (proj hs).mapMatrix (id1 hd h t)
-  rw [map_mul, map_mul, map_sub, map_add (f := _), pm_smul, pm_smul, map_one, pm_coe, pm_coe] at h1
-  exact h1
+  rwa [map_mul, map_mul, map_sub, map_add (f := _), pm_smul, pm_smul, map_one, pm_coe, pm_coe] at h1
 
 private theorem id2K (hs : s * s = Δ) (hd : IsDat c d m) (h : Models c d m δ ι Q) (t : (Etau K τ)ˣ) :
     (eU hs (ι t) : Matrix (Fin 3) (Fin 3) K) * ((eU hs (δ * theta Δ δ) : Matrix (Fin 3) (Fin 3) K) * (eU hs (δ * theta Δ δ) : Matrix (Fin 3) (Fin 3) K) -
@@ -307,8 +306,7 @@ private theorem id2K (hs : s * s = Δ) (hd : IsDat c d m) (h : Models c d m δ �
       (eU hs (δ * theta Δ δ) : Matrix (Fin 3) (Fin 3) K) * (eU hs (δ * theta Δ δ) : Matrix (Fin 3) (Fin 3) K) -
         τ • (eU hs (δ * theta Δ δ) : Matrix (Fin 3) (Fin 3) K) + 1 := by
   have h1 := congrArg (proj hs).mapMatrix (id2 hd h t)
-  rw [map_mul, map_add (f := _), map_sub, map_mul, pm_smul, map_one, pm_coe, pm_coe] at h1
-  exact h1
+  rwa [map_mul, map_add (f := _), map_sub, map_mul, pm_smul, map_one, pm_coe, pm_coe] at h1
 
 end Proj
 
@@ -427,8 +425,7 @@ theorem UpperTheory.V.Z.Sym.Sig.fixG : UpperTheory.V.Z.Sym.Sig.FixG := by
   have hDC : ∀ {a b g : GL (Fin 3) k}, a ∈ V.J 3 → b ∈ V.J 3 → (a * g * b ∈ V.DC d ↔ g ∈ V.DC d) := by
     intro a b g ha hb
     refine ⟨fun h => ?_, hmul ha hb⟩
-    have h2 := hmul ((V.J 3).inv_mem ha) ((V.J 3).inv_mem hb) h
-    simpa [mul_assoc] using h2
+    simpa [mul_assoc] using hmul ((V.J 3).inv_mem ha) ((V.J 3).inv_mem hb) h
   have hL : y⁻¹ * (dg ![x₁, y₁, z₁] * Phi k) * th k 3 y * (Phi k)⁻¹ = y⁻¹ * dg ![x₁, y₁, z₁] * th' k y := by
     rw [hth]
     group
@@ -453,8 +450,7 @@ theorem UpperTheory.V.Z.Sym.Sig.fixG : UpperTheory.V.Z.Sym.Sig.FixG := by
       group
     rw [e1, hDC ((V.J 3).inv_mem hj) (hF.2.1 j hj), diagDC k V 3 d _ hdom]
     constructor
-    · intro h
-      exact ⟨by simpa using h 0, by simpa using h 1, by simpa using h 2⟩
+    · exact fun h => ⟨by simpa using h 0, by simpa using h 1, by simpa using h 2⟩
     · rintro ⟨h0, h1, h2⟩ i
       fin_cases i
       · simpa using h0
@@ -590,14 +586,12 @@ private theorem supp_iff (V : Lev k) (d : Fin 3 → kˣ) (hd : SDom d) (x y z : 
     rw [QuotientGroup.eq]
     rw [← hj'] at hj
     have := inv_mem hj
-    rw [_root_.mul_inv_rev, inv_inv] at this
-    exact this
+    rwa [_root_.mul_inv_rev, inv_inv] at this
   · rintro ⟨u, hq, h1, h2, h3⟩
     rw [QuotientGroup.eq] at hq
     refine ⟨u, (g₀ * dg u)⁻¹ * w, ?_, ?_, h1, h2, h3⟩
     · have := inv_mem hq
-      rw [_root_.mul_inv_rev, inv_inv] at this
-      exact this
+      rwa [_root_.mul_inv_rev, inv_inv] at this
     · rw [_root_.mul_inv_rev, mul_assoc, mul_inv_cancel_left]
 
 end
@@ -619,8 +613,7 @@ private theorem cd_act (V : Lev k) (d : Fin 3 → kˣ) (x y z a : kˣ) (u : Fin 
     simp [Pi.mul_apply, mul_mul_mul_comm]
   have e1 : (![a, 1, a⁻¹] * u) 1 = u 1 := by simp [Pi.mul_apply]
   unfold Cd
-  rw [e0, e1]
-  exact h
+  rwa [e0, e1]
 
 end
 
@@ -633,8 +626,7 @@ theorem orbital_integral_over_base_group : UnitaryHyperbolicOrbitCount := by
       ∃ u, q = ((g₀ * dg u : GL (Fin 3) k) : GL (Fin 3) k ⧸ V.J 3) ∧ Cd V d x₁ y₁ z₁ u := by
     intro q
     have h := supp_iff V d hd x₁ y₁ z₁ hv g₀ q.out
-    rw [QuotientGroup.out_eq'] at h
-    exact h
+    rwa [QuotientGroup.out_eq'] at h
   have hact : ∀ (s : T) (u : Fin 3 → kˣ), s • ((g₀ * dg u : GL (Fin 3) k) : GL (Fin 3) k ⧸ V.J 3) =
       ((g₀ * dg (![r s, 1, (r s)⁻¹] * u) : GL (Fin 3) k) : GL (Fin 3) k ⧸ V.J 3) := by
     intro s u
@@ -664,7 +656,7 @@ theorem orbital_integral_over_base_group : UnitaryHyperbolicOrbitCount := by
     rw [← Subgroup.relIndex_mul_relIndex _ _ _ FF.2.2.1 FF.2.1, h0, zero_mul]
   unfold orb
   by_cases hc : x₁ / z₁ / (d 0 / d 2) ∈ V.H ∧ ∃ s, y₁ / (d 1 * s ^ 2) ∈ V.H
-  · rw [if_pos hc]
+  · rw [ite_eq_left hc]
     obtain ⟨hxz, s0, hs0⟩ := hc
     haveI : (V.H.subgroupOf V.H2).FiniteIndex := ⟨hne⟩
     let U : ↥V.H2 → Fin 3 → kˣ := fun v => ![x₁ / d 0, s0 * (v : kˣ), 1]
@@ -769,7 +761,7 @@ theorem orbital_integral_over_base_group : UnitaryHyperbolicOrbitCount := by
       (f := fun q : GL (Fin 3) k ⧸ V.J 3 => V.unitaryDoubleCosetIndicator d (q.out⁻¹ * δ * th k 3 q.out))
       (n := V.H.relIndex (Uo k)) Ψ hinj hrng hone
     exact ⟨hfin, hsum.trans rfl⟩
-  · rw [if_neg hc]
+  · rw [ite_eq_right hc]
     have hzero : ∀ q : GL (Fin 3) k ⧸ V.J 3, V.unitaryDoubleCosetIndicator d (q.out⁻¹ * δ * th k 3 q.out) = 0 := by
       intro q
       by_contra h
@@ -852,8 +844,7 @@ private theorem finOrb_of (ι : T →* G) (θ : G →* G) (U : Subgroup G) (f : 
       calc (ι t * y * u)⁻¹ * δ * (θ (ι t) * θ y * θ u)
           = u⁻¹ * (y⁻¹ * ((ι t)⁻¹ * δ * θ (ι t)) * θ y) * θ u := by group
         _ = _ := by rw [hδ]
-    rw [e, hf u hu]
-    exact hy
+    rwa [e, hf u hu]
   · rw [hs', map_inv]
     group
 
@@ -862,8 +853,7 @@ private theorem finOrb_sum {I : Type} (ι : T →* G) (θ : G →* G) (U : Subgr
     (hδ : ∀ t, (ι t)⁻¹ * δ * θ (ι t) = δ) (h : ∀ i ∈ S, OrbSupp ι θ U (f i) δ) :
     FinOrb ι θ U (fun g => ∑ i ∈ S, f i g) δ := by
   refine finOrb_of ι θ U _ δ ?_ hδ ?_
-  · intro u hu x
-    exact Finset.sum_congr rfl fun i hi => hf i hi u hu x
+  · exact fun u hu x => Finset.sum_congr rfl fun i hi => hf i hi u hu x
   · letI : MulAction T (G ⧸ U) := MulAction.compHom _ ι
     change {o : orbitRel.Quotient T (G ⧸ U) | (∑ i ∈ S, f i (o.out.out⁻¹ * δ * θ o.out.out)) ≠ 0}.Finite
     have hU : (⋃ i ∈ (S : Set I),
@@ -921,8 +911,7 @@ theorem UpperTheory.V.Z.Sym.Sig.orbital_integral_over_extended_group :
     · exact ht1.trans hinv
     · exact hau.trans_lt hinv
   have hinvar : ∀ a ∈ Ry, ∀ u ∈ V.J 3, ∀ g, V.unitaryDoubleCosetIndicator (d a) (u⁻¹ * g * θ u) = V.unitaryDoubleCosetIndicator (d a) g := by
-    intro a _ u hu g
-    exact ((eqG k V 1 Ry Ry x z (d a)).1 u⁻¹ ((V.J 3).inv_mem hu) u hu g).1
+    exact fun a _ u hu g => ((eqG k V 1 Ry Ry x z (d a)).1 u⁻¹ ((V.J 3).inv_mem hu) u hu g).1
   have h0 := fun a (ha : a ∈ Ry) => orbital_integral_over_base_group k V T r hr g₀ ι hι (d a) (hSD a ha) x y z hxz
   have hfun : V.unitaryHeckeTestSum Ry t = fun g => ∑ a ∈ Ry, V.unitaryDoubleCosetIndicator (d a) g := rfl
   rw [hfun]
@@ -935,14 +924,13 @@ theorem UpperTheory.V.Z.Sym.Sig.orbital_integral_over_extended_group :
     rw [e]
     unfold Glob.one
     by_cases hP : x / z / t ∈ V.H
-    · rw [if_pos ⟨hP, hq₀⟩, if_pos hP, mul_one]
-    · rw [if_neg (fun hh => hP hh.1), if_neg hP, mul_zero]
+    · rw [ite_eq_left ⟨hP, hq₀⟩, ite_eq_left hP, mul_one]
+    · rw [ite_eq_right (fun hh => hP hh.1), ite_eq_right hP, mul_zero]
   · intro b hb hne
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨_, hq⟩
     exact hne (huniq b ⟨hb, hq⟩)
-  · intro hn
-    exact absurd ha₀ hn
+  · exact fun hn => absurd ha₀ hn
 
 end
 end -- clump:auto
@@ -989,8 +977,7 @@ private theorem uc_relIndex (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
   intro h
   apply h1
   have := Subgroup.relIndex_dvd_of_le_left (Uo k) hle
-  rw [h, zero_dvd_iff] at this
-  exact this
+  rwa [h, zero_dvd_iff] at this
 
 end UpperTheory.V.Z.Sym.Sig
 
@@ -1024,8 +1011,7 @@ private theorem relIndex_comap_stabilizer_ne_zero {k : Type} [Field k] [Valuativ
   intro h0
   apply hidx
   have := Subgroup.relIndex_dvd_of_le_left (Subgroup.comap r (Uo k)) hle
-  rw [h0, zero_dvd_iff] at this
-  exact this
+  rwa [h0, zero_dvd_iff] at this
 
 open ValuativeRel UpperTheory.V.Hi UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Loc UpperTheory.V.Z.Sym.Glob in
 theorem UpperTheory.V.Z.Sym.Sig.okGOrb :
@@ -1054,29 +1040,25 @@ theorem UpperTheory.V.Z.Sym.Sig.okGOrb :
       V.unitaryHeckeTestSum Ry t (u⁻¹ * g * Sig.th k 3 u) = V.unitaryHeckeTestSum Ry t g := by
     intro u hu g
     unfold Sig.Lev.unitaryHeckeTestSum
-    refine Finset.sum_congr rfl fun e _ => ?_
-    exact ((Sig.eqG k V χ Ry Ry t t _).1 u⁻¹ (inv_mem hu) u hu g).1
+    exact Finset.sum_congr rfl fun e _ => ((Sig.eqG k V χ Ry Ry t t _).1 u⁻¹ (inv_mem hu) u hu g).1
   have hnorm : (Cint O (((t * h : kˣ) : k) + ((t * h : kˣ)⁻¹ : kˣ))).Normal := Subgroup.normal_of_isMulCommutative _
   have hOM := Sig.orbMap _ _ _ (Sig.eU hs) hbij ι (Cint O _) (theta Δ) (Sig.th k 3) hcomm (V.J 3)
     (V.unitaryHeckeTestSum Ry t) δ hfinv hfix hnorm
   have hxz1 : valuation k ((x / z : kˣ) : k) < 1 := by
-    rw [hxz]
-    exact hva
+    rwa [hxz]
   have hG := Sig.orbital_integral_over_extended_group k V Ry hRy t ht _ _ hsurj g₀ ((Sig.eU hs).comp ι) (fun s => hι s) x y z hxz1
   rw [← hδ, ← hC] at hG
   refine ⟨hOM.2.1.mpr hG.1, hOM.1.trans (hG.2.trans ?_), fun _ yq => ?_⟩
   · have hm : x / z / t ∈ V.H := by
-      rw [hxz, mul_div_cancel_left]
-      exact hH
-    rw [show Glob.one (x / z / t ∈ V.H) = 1 from if_pos hm,
-      show Glob.one (Ind S.H (((t * h : kˣ) : k) + ((t * h : kˣ)⁻¹ : kˣ)) t) = 1 from if_pos hI']
+      rwa [hxz, mul_div_cancel_left]
+    rw [show Glob.one (x / z / t ∈ V.H) = 1 from ite_eq_left hm,
+      show Glob.one (Ind S.H (((t * h : kˣ) : k) + ((t * h : kˣ)⁻¹ : kˣ)) t) = 1 from ite_eq_left hI']
     show _ = (((V.H.relIndex (Uo k) : ℝ) * (V.H.relIndex V.H2 : ℝ) : ℝ) : ℂ) * 1
     push_cast
     rfl
   · obtain ⟨w, rfl⟩ := QuotientGroup.mk_surjective yq
     have key := relIndex_comap_stabilizer_ne_zero V _ hsurj ((Sig.eU hs).comp ι) g₀ (Sig.eU hs w) (fun s => hι s)
-    rw [← hOM.2.2 w, ← hC] at key
-    exact key
+    rwa [← hOM.2.2 w, ← hC] at key
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.SignatureIntegrality.SignatureTorusFixedPoints.OkGOrb =====

@@ -173,8 +173,7 @@ theorem limit_period : ∀ (n a g : ℕ) (ha : a ≤ n) (U : Set (Fin n → ℂ)
     intro m
     have := sq_mul_sum_sq_le _ hc (hY _ (hpU m) (l' m) (hl' m)) (fun k => (v m k : ℝ))
     simp only [im_period _ (u m)] at this
-    rw [← hpw m] at this
-    exact this
+    rwa [← hpw m] at this
   have hcont : Continuous fun x : Fin g → ℂ => ∑ k, (x k).im ^ 2 := by fun_prop
   obtain ⟨M, hM⟩ := ((hcont.tendsto w).comp hw').bddAbove_range
   have hfin : ∀ m, v m ∈ {v : Fin g → ℤ | ∑ k, (v k : ℝ) ^ 2 ≤ M / c ^ 2} := by
@@ -206,8 +205,7 @@ theorem limit_period : ∀ (n a g : ℕ) (ha : a ≤ n) (U : Set (Fin n → ℂ)
         (𝓝 (∏ j, z (Fin.castLE ha j) ^ (v0 ⬝ᵥ (B j *ᵥ v0)))) := by
       refine tendsto_finsetProd _ fun j _ => ?_
       obtain ⟨b, hb⟩ := Int.eq_ofNat_of_zero_le (pair_nonneg (hB j) v0)
-      simp only [hb, zpow_natCast]
-      exact (hzj j).pow b
+      simpa only [hb, zpow_natCast] using (hzj j).pow b
     refine tendsto_nhds_unique ((c1.tendsto w).comp hw2)
       ((((c2.tendsto _).comp hτ2).mul t3).congr fun m => ?_)
     simp only [Function.comp]

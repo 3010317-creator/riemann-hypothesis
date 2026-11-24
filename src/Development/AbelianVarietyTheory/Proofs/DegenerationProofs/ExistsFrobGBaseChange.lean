@@ -142,8 +142,7 @@ theorem Q.pow {X : Scheme.{0}} {F : End X} {q m : ℕ} {U : X.Opens} {f : Γ(X, 
   | zero => simpa only [Nat.mul_zero, pow_zero, End.one_asHom] using Q.id U f
   | succ j ih =>
     have := a.comp ih
-    rw [Nat.mul_succ, pow_add, pow_add, mul_comm (q ^ (m * j))]
-    exact this
+    rwa [Nat.mul_succ, pow_add, pow_add, mul_comm (q ^ (m * j))]
 
 def Good {X : Scheme.{0}} (F : End X) (q : ℕ) (U : X.Opens) (f : Γ(X, U)) : Prop :=
   ∃ m, 1 ≤ m ∧ Q (F ^ m).asHom (q ^ m) U f

@@ -130,8 +130,7 @@ theorem psiOn_generic {W : (Spec (CommRingCat.of R)).Opens} (ψ : PsiOn D W) (χ
       (isPullback_morphismRestrict (jK R) W).lift_snd _ _ _,
       (isPullback_morphismRestrict (jK R) W).lift_fst _ _ _⟩
   have e := (val_pull hJ _ _ _).symm.trans ((val_corr hJ (ψ.psi_eq χ) lam).trans (val_pull hJ _ _ _))
-  rw [l₁, l₂] at e
-  exact e
+  rwa [l₁, l₂] at e
 
 theorem psiOn_agree {W W' : (Spec (CommRingCat.of R)).Opens} (ψ : PsiOn D W) (ψ' : PsiOn D W') (χ : D.X)
     {Z : Scheme.{0}} (r : Z ⟶ W.toScheme) (r' : Z ⟶ W'.toScheme) (h : r ≫ W.ι = r' ≫ W'.ι) {z : Z} {J}
@@ -158,8 +157,7 @@ theorem psiOn_agree {W W' : (Spec (CommRingCat.of R)).Opens} (ψ : PsiOn D W) (�
         (psiOn_generic ψ' χ _ (jK R ⁻¹ᵁ (W ⊓ W')).ι (by rw [Category.assoc, f₂, morphismRestrict_ι]) hI).symm)
     Z ρ z J hJ
   have k' := (val_pull hJ _ _ _).symm.trans (key.trans (val_pull hJ _ _ _))
-  rw [r₁, r₂] at k'
-  exact k'
+  rwa [r₁, r₂] at k'
 
 theorem pmaps_psiOn {g : R →+* R'} (hD : IsPullDeg g D D') {Wo : (Spec (CommRingCat.of R)).Opens} (ψ : PsiOn D Wo)
     {Y : Scheme.{0}} (s : Y ⟶ (TK R').left) (zo : Y ⟶ (TW Wo).left) (hz : zo ≫ Wo.ι = s ≫ jK R' ≫ specOf g)
@@ -412,8 +410,7 @@ theorem exists_partner (hG : GlobalFnsSt) (W : ArcWit Y a I f u χ) {F : Type} [
       exact (hψ F v hF hv).1 χ
     · rw [be_half, zpow_add, zpow_add]
   · have := hdn 1 q₀.g
-    simp only [Nat.cast_one, _root_.one_mul] at this
-    exact this
+    simpa only [Nat.cast_one, _root_.one_mul] using this
 
 end ThetaShiftProofs
 

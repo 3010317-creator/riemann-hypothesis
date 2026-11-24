@@ -64,18 +64,16 @@ theorem continuousOn_uMat_apply {T : Type} [TopologicalSpace T] {n : ℕ} {s : S
     (hd : ∀ t ∈ s, ∀ c : Fin n, (blk (M t) c).det ≠ 0) (j c : Fin n) :
     ContinuousOn (fun t => uMat (M t) j c) s := by
   by_cases hjc : j = c
-  · simp only [uMat, Matrix.of_apply, if_pos hjc]
-    exact continuousOn_const
+  · simpa only [uMat, Matrix.of_apply, ite_eq_left hjc] using continuousOn_const
   by_cases h : j < c
   · have hB : Continuous fun t => blk (M t) c := by
       unfold blk
       exact hM.matrix_submatrix _ _
     have hinv := fun m k => continuousOn_inv_apply hB (fun t ht => hd t ht c) m k
-    simp only [uMat, Matrix.of_apply, if_neg hjc, dif_pos h, Matrix.vecMul, dotProduct, rowc]
+    simp only [uMat, Matrix.of_apply, ite_eq_right hjc, dite_eq_left h, Matrix.vecMul, dotProduct, rowc]
     refine ContinuousOn.neg (continuousOn_finsetSum _ fun m _ => ContinuousOn.mul ?_ (hinv m _))
     exact (hM.matrix_elem c _).continuousOn
-  · simp only [uMat, Matrix.of_apply, if_neg hjc, dif_neg h]
-    exact continuousOn_const
+  · simpa only [uMat, Matrix.of_apply, ite_eq_right hjc, dite_eq_right h] using continuousOn_const
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
@@ -113,8 +111,7 @@ theorem continuousOn_sOf {r : ℕ} (X : Data E r) (τ : X.Ψ) (k : Fin r) :
   refine Complex.continuous_ofReal.comp_continuousOn (ContinuousOn.inv₀ ?_ ?_)
   · exact Real.continuous_sqrt.comp_continuousOn (continuous_abs.comp_continuousOn
       (Complex.continuous_re.comp_continuousOn (continuousOn_dOf X τ k)))
-  · intro x hx
-    exact (Real.sqrt_pos.2 (abs_re_pos X hx τ k)).ne'
+  · exact fun x hx => (Real.sqrt_pos.2 (abs_re_pos X hx τ k)).ne'
 
 theorem continuousOn_bOf {r : ℕ} (X : Data E r) : ContinuousOn (bOf X) X.dom := by
   refine continuousOn_pi.2 fun τ => ?_
@@ -125,7 +122,6 @@ theorem continuousOn_bOf {r : ℕ} (X : Data E r) : ContinuousOn (bOf X) X.dom :
 theorem exists_continuous_gramSchmidt :
     (∀ (r : ℕ) (X : Data E r), ∃ β : Frame X.Ψ r → Frame X.Ψ r, ContinuousOn β X.dom ∧
       ∀ x ∈ X.dom, β x ∈ Bor X.Ψ r ∧ IsOrth X (rmul x (β x))) := by
-  intro r X
-  exact ⟨bOf X, continuousOn_bOf X, fun x hx => ⟨bOf_mem X hx, ortho_bOf X hx⟩⟩
+  exact fun r X => ⟨bOf X, continuousOn_bOf X, fun x hx => ⟨bOf_mem X hx, ortho_bOf X hx⟩⟩
 
 end GlobalTheory.GramSchmidtCont

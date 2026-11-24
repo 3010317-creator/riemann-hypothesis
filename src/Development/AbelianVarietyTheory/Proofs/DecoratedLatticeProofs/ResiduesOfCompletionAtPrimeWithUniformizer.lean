@@ -121,8 +121,7 @@ theorem mem_P_iff (h : IsCompl P q ι ϖ) (hu : GlobalTheory.IndefiniteRowSideFu
     · intro a b hab
       rw [mem_vI, mem_vI, ← hu, ← hu] at *
       rw [coe_mul', map_mul, map_mul] at hab
-      by_contra hn
-      push_neg at hn
+      by_contra! hn
       have ha : valuation k (ι (a : E)) = 1 := le_antisymm (v_int_le_one h a) hn.1
       have hb : valuation k (ι (b : E)) = 1 := le_antisymm (v_int_le_one h b) hn.2
       rw [ha, hb, one_mul] at hab; exact lt_irrefl _ hab
@@ -209,8 +208,7 @@ theorem v_lt_one_iff_red (h : IsCompl P q ι ϖ) (hu : GlobalTheory.IndefiniteRo
     have e := congrArg (fun y => valuation k (ι y)) hsa
     simp only [map_mul] at e
     have e2 : valuation k (ι (algebraMap (𝓞 E) E s)) = 1 := v_eq_one_of_not_mem h hs
-    rw [e2, one_mul] at e
-    exact e
+    rwa [e2, one_mul] at e
   rw [hv, ← mem_P_iff h hu, ← Ideal.Quotient.eq_zero_iff_mem, ← hspec]
   constructor
   · intro h0; exact (mul_eq_zero.mp h0).resolve_left hs0
@@ -248,8 +246,7 @@ theorem q_prime_char (h : IsCompl P q ι ϖ) (hu : GlobalTheory.IndefiniteRowSid
   have hv0 : 0 < valuation k (ι (p : E)) := by
     rw [zero_lt_iff, Ne, map_eq_zero, map_eq_zero]; exact_mod_cast hp.ne_zero
   have hle : valuation k (ι (p : E)) ^ 1 ≤ valuation k (ι (p : E)) ^ (n : ℕ) := by
-    rw [pow_one, ← map_pow, ← map_pow, ← Nat.cast_pow, ← hqp, ← h.unif, ← hu]
-    exact hv
+    rwa [pow_one, ← map_pow, ← map_pow, ← Nat.cast_pow, ← hqp, ← h.unif, ← hu]
   have hn1 : (n : ℕ) ≤ 1 := (pow_le_pow_iff_right_of_lt_one₀ hv0 hv).mp hle
   have hn : (n : ℕ) = 1 := le_antisymm hn1 n.pos
   rw [hn, pow_one] at hqp

@@ -351,13 +351,11 @@ theorem UpperTheory.V.Loc.pr6Bar :
       refine ⟨g, hg, fun e => hne ?_⟩
       rw [← hkf, ← hkf, dualIncl_fst, dualIncl_fst]
       have e2 := congrArg ι e
-      rw [map_mul] at e2
-      exact e2
+      rwa [map_mul] at e2
   have := z1fCoef φ (adGL s) (adGL r) (L.val.toLinearMap.mapMatrix)
     (continuous_matrix fun a b => continuous_subtype_val.comp (continuous_id.matrix_elem a b)) had z key
   have e : y = fun g => (z g).map ι := funext fun g => (hz g).symm
-  rw [e]
-  exact this
+  rwa [e]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.DualInclUnit =====

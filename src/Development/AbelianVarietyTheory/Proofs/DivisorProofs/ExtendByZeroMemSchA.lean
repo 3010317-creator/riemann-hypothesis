@@ -93,10 +93,8 @@ theorem continuous_extend {M : Type} [TopologicalSpace M] [Zero M] (hj : Functio
   refine continuous_pi fun i => ?_
   by_cases h : ∃ a, j a = i
   · obtain ⟨a, rfl⟩ := h
-    simp only [hj.extend_apply]
-    exact continuous_apply a
-  · simp only [Function.extend_apply' _ _ _ h]
-    exact continuous_const
+    simpa only [hj.extend_apply] using continuous_apply a
+  · simpa only [Function.extend_apply' _ _ _ h] using continuous_const
 
 theorem isClosedEmbedding_extend {M : Type} [TopologicalSpace M] [Zero M] [T2Space M] (hj : Function.Injective j) :
     Topology.IsClosedEmbedding (fun y : κ₁ → M => Function.extend j y 0) :=

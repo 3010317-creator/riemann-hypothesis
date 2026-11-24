@@ -69,11 +69,9 @@ theorem mem_span_of_forall_prime {A : Type} [CommRing A] [IsDedekindDomain A] (x
     exact ha ⟨J, hJp, hJb⟩ (hJ (Ideal.mem_span_singleton_self x))
   obtain ⟨n, hn⟩ := hrad
   have hd : (Ideal.span {x} : Ideal A) ∣ (Ideal.span {a}) ^ n := by
-    rw [Ideal.span_singleton_pow, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-    exact hn
+    rwa [Ideal.span_singleton_pow, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   have h2 := hsf.isRadical n _ hd
-  rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem] at h2
-  exact h2
+  rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem] at h2
 
 theorem zmod_of_forall_resS_eq_zero : ∀ (I : AutInst) (g : ℕ), g ≠ 0 →
     (∀ Q : Pl I.E, (g : 𝓞 I.E) ∈ Q.asIdeal → (g : 𝓞 I.E) ∉ Q.asIdeal ^ 2) →

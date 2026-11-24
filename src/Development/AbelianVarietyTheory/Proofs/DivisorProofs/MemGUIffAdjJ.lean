@@ -192,8 +192,7 @@ theorem _root_.GlobalTheory.BorelUMod.mem_GU_iff_adjJ (σ : L →+* L) (g : GL (
   · intro h
     ext i j
     exact h i j
-  · intro h i j
-    exact congrFun (congrFun h i) j
+  · exact fun h i j => congrFun (congrFun h i) j
 
 variable {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))] {n : ℕ} in
 theorem _root_.GlobalTheory.BorelUMod.adjJ_mem_upLat {σ : L →+* L}
@@ -279,8 +278,7 @@ theorem _root_.GlobalTheory.BorelUMod.exists_trace_one {ϖ : L} {σ : L →+* L}
       rw [e, Valuation.map_zero] at ht
       exact zero_ne_one ht
     refine ⟨x / (x + σ x), ?_, ?_⟩
-    · rw [map_div₀, ht, div_one]
-      exact hx1
+    · rwa [map_div₀, ht, div_one]
     · rw [map_div₀, map_add (f := _), hinv, add_comm (σ x) x, ← add_div, div_self ht0]
   · refine ⟨1 / 2, ?_, ?_⟩
     · rw [map_div₀, Valuation.map_one, h2, div_one]

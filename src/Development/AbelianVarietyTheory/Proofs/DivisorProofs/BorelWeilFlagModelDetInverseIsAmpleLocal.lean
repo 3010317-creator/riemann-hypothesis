@@ -225,8 +225,7 @@ theorem indep_of_plk_ne_zero (K : Type) [Field K] (N k : ℕ) (u : Fin k → Fin
   set r := GlobalTheory.FlagEmb.plE N k q
   have hdet : (Matrix.of fun l l' => u l (r l')).det ≠ 0 := hq
   have hA := Matrix.linearIndependent_rows_of_det_ne_zero hdet
-  refine LinearIndependent.of_comp (LinearMap.funLeft K K r) ?_
-  exact hA
+  exact LinearIndependent.of_comp (LinearMap.funLeft K K r) hA
 
 theorem plk_ne_zero_of_indep (K : Type) [Field K] (N k : ℕ) (u : Fin k → Fin (N + 1) → K)
     (h : LinearIndependent K u) : plk u id ≠ 0 := by
@@ -273,8 +272,7 @@ theorem main : ∀ (K : Type) [Field K] (N k : ℕ) (u u' : Fin k → Fin (N + 1
     have h2 : (fun l => ∑ j, (Matrix.of c) l j • u j) = u' := funext hc
     rw [h2] at h1
     have hd : (Matrix.of c).det ≠ 0 := by
-      intro h0
-      exact plk_ne_zero_of_indep K N k u' hu' (by rw [h1, h0, zero_smul])
+      exact fun h0 => plk_ne_zero_of_indep K N k u' hu' (by rw [h1, h0, zero_smul])
     exact ⟨Units.mk0 _ hd, h1⟩
   · rintro ⟨r, hr⟩
     have h0 := plk_ne_zero_of_indep K N k u hu
@@ -469,8 +467,7 @@ theorem det_submatrix_mul_tri {R : Type} [CommRing R] {n p m : ℕ} (A : Matrix 
     rw [h0, mul_zero]
   rw [e, Matrix.det_mul, Matrix.det_of_upperTriangular (M := B.submatrix (Fin.castLE h) (Fin.castLE h))]
   · rfl
-  · intro i l hil
-    exact hB (show Fin.castLE h l < Fin.castLE h i from hil)
+  · exact fun i l hil => hB (show Fin.castLE h l < Fin.castLE h i from hil)
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
   {Xo : Moduli Dw l} {c : Coeff l} {O : Type} [CommRing O] {β : O →+* c.F} {Y : Model Xo c β}
@@ -522,7 +519,7 @@ theorem prod_zpow_neg_ind {G : Type} [CommGroup G] (σ : E →+* ℂ) (m : Fin (
     · simp [ind]
     · have : ind σ m (some ⟨τ, j⟩) = 0 := by
         simp only [ind, Option.elim]
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro ⟨rfl, hj⟩
         exact hb ⟨⟨j, Nat.lt_succ_of_le hj⟩, rfl⟩
       rw [this, zpow_zero]
@@ -628,8 +625,7 @@ theorem exists_sum_minors_eq_one {R : Type} [CommRing R] {n k d : ℕ} (hd : d �
       Matrix.submatrix_one _ (Fin.castLE_injective _)]
   refine ⟨fun r => ∏ a, B (Fin.castLE hd a) (r a), ?_⟩
   have := congrArg Matrix.det e
-  rw [_root_.GlobalTheory.DeterminantProductExpansion.det_mul_expand, Matrix.det_one] at this
-  exact this
+  rwa [_root_.GlobalTheory.DeterminantProductExpansion.det_mul_expand, Matrix.det_one] at this
 
 end GlobalTheory.FlagPlucker
 
@@ -683,8 +679,7 @@ theorem exists_mem_basicOpen_plkMinor (F : Frames Y π) (Mc : MChart Y) (k : F.J
     ∃ r, z ∈ Z.basicOpen (plkMinor F Mc k σ m r) := by
   obtain ⟨B, hB⟩ := exists_mul_plkU_eq_one F Mc k σ
   obtain ⟨cf, hc⟩ := exists_sum_minors_eq_one (d := (m : ℕ) + 1) m.2 _ B hB
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   have hmax : (Z.presheaf.germ _ z hz).hom (∑ r, cf r * plkMinor F Mc k σ m r) ∈
       IsLocalRing.maximalIdeal (Z.presheaf.stalk z) := by
 
@@ -769,9 +764,7 @@ theorem isAmpleLB_LL_flagModel : ∀ {E : Type} [Field E] [NumberField E] [IsCMF
     refine ⟨V, hzV, hV, ?_⟩
     have hg : ⊤ ≤ ((X.π ⁻¹ᵁ V).ι ≫ X.π) ⁻¹ᵁ (X.F.M k0).toMChart.U := fun p _ => hVM (by
       show X.π ((X.π ⁻¹ᵁ V).ι p) ∈ V
-      have : (X.π ⁻¹ᵁ V).ι p ∈ X.π ⁻¹ᵁ V := by
-        have h := Scheme.Opens.range_ι (X.π ⁻¹ᵁ V)
-        exact (h.le ⟨p, rfl⟩ : _)
+      have : (X.π ⁻¹ᵁ V).ι p ∈ X.π ⁻¹ᵁ V := ((Scheme.Opens.range_ι (X.π ⁻¹ᵁ V)).le ⟨p, rfl⟩ : _)
       exact this)
     have hf : IsProper ((X.π ∣_ V) ≫ hV.isoSpec.hom) := inferInstance
     choose t ht using fun (p : Σ σ : E →+* ℂ, Fin (Dw.mult σ)) (q : Fin (plkNum (X.F.M k0).toMChart p.2 + 1)) =>

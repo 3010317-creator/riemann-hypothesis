@@ -233,8 +233,7 @@ theorem specializes_lift_closedFibre_stalkBaseChange : ∀ {X Y : Scheme.{0}} (�
   let b := (π.fiberHomeo z).symm ⟨y, hy⟩
   have hb : π.fiberι z b = y := π.fiberι_fiberHomeo_symm z ⟨y, hy⟩
   have hab : h u ⤳ b := by
-    rw [← (π.fiberι z).isEmbedding.toIsInducing.specializes_iff, hfa, hb]
-    exact hsp
+    rwa [← (π.fiberι z).isEmbedding.toIsInducing.specializes_iff, hfa, hb]
   refine ⟨g b, ?_, ?_⟩
   · rw [← hga]
     exact hab.map g.continuous
@@ -490,8 +489,7 @@ theorem GlobalTheory.FibreCorr.exists_correction : ∀ (o Ω : Type) [CommRing o
   · rw [← hGb]; simp
   · have hm : Ideal.span {c : M₁.O z | ¬ IsUnit c} = maximalIdeal (M₁.O z) :=
       Ideal.span_eq (maximalIdeal (M₁.O z))
-    rw [hm]
-    exact hb
+    rwa [hm]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsChevalleyCorrectionOverProperFibre =====
@@ -577,8 +575,7 @@ theorem generates_of_close : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra 
     have hc0 : (y₀ ≫ π) (cPt p) = π x := by rw [Scheme.Hom.comp_apply, hy.1]
     have h1 := (RatModel.norm_val_lt_one_iff hc0 c.2).2 hc
     rw [← Category.assoc, ← hydef, e] at h1
-    rw [← NNReal.coe_lt_coe, coe_nnnorm, NNReal.coe_one, hv_apply]
-    exact h1
+    rwa [← NNReal.coe_lt_coe, coe_nnnorm, NNReal.coe_one, hv_apply]
 
   haveI : IsDedekindDomain o := ArithBase.ded (Ω := Ω)
   haveI := M₁.lft
@@ -617,8 +614,7 @@ theorem generates_of_close : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra 
       exact hbk.le
     · rw [← hGb']
       refine (IsUltrametricDist.nnnorm_add_le_max _ _).trans (max_le le_rfl ?_)
-      by_contra h
-      push_neg at h
+      by_contra! h
       have := (IsUltrametricDist.nnnorm_add_le_max (M.val y G) (M.val y b)).trans
         (max_le h.le le_rfl)
       rw [hGb'] at this
@@ -704,8 +700,7 @@ theorem _root_.GlobalTheory.T.generates_of_close_localEquation_classicalPoint :
     have hc0 : (y₀ ≫ π) (cPt p) = π x := by rw [Scheme.Hom.comp_apply, hy.1]
     have h1 := (RatModel.norm_val_lt_one_iff hc0 c.2).2 hc
     rw [← Category.assoc, ← hydef, e] at h1
-    rw [← NNReal.coe_lt_coe, coe_nnNorm, NNReal.coe_one, hv_apply]
-    exact h1
+    rwa [← NNReal.coe_lt_coe, coe_nnNorm, NNReal.coe_one, hv_apply]
 
   have : IsDedekindDomain o := ArithBase.ded (Ω := Ω)
   have := M₁.lft

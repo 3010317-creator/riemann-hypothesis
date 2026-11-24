@@ -96,8 +96,7 @@ def rootN (N : ℕ) : ℂ := Complex.exp (2 * Real.pi * Complex.I / N)
 
 theorem rootN_isAlgebraic (N : ℕ) : IsAlgebraic ℚ (rootN N) := by
   rcases Nat.eq_zero_or_pos N with rfl | hN
-  · simp only [rootN, Nat.cast_zero, div_zero, Complex.exp_zero]
-    exact isAlgebraic_one
+  · simpa only [rootN, Nat.cast_zero, div_zero, Complex.exp_zero] using isAlgebraic_one
   · have h : rootN N ^ N = 1 := (Complex.isPrimitiveRoot_exp N hN.ne').pow_eq_one
     exact (IsIntegral.of_pow hN (by rw [h]; exact isIntegral_one)).isAlgebraic
 
@@ -137,14 +136,12 @@ theorem overN_finite {E : Type} [Field E] [NumberField E] {n : ℕ} (hn : n ≠ 
     exact_mod_cast hn
   refine (Ideal.finite_factors hne).subset fun Q hQ => ?_
   simp only [overN, Set.mem_setOf_eq] at hQ ⊢
-  rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-  exact hQ
+  rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
 
 theorem exists_ram {F E K : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [Field K] {σ : K →+* ℂ}
     {μ : Chr F E K} {ξ : Formalism.L2.Host.HChar E} (h : Reads σ μ ξ) {v : HeightOneSpectrum (𝓞 F)} (hv : v ∈ Qprime μ) :
     ∃ Q : HeightOneSpectrum (𝓞 E), Q.under (𝓞 F) = v ∧ ¬ ξ.UnrAt Q := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   simp only [Qprime, Set.mem_setOf_eq] at hv
   apply hv
   intro x hx
@@ -174,8 +171,7 @@ theorem exists_ram {F E K : Type} [Field F] [NumberField F] [Field E] [NumberFie
         have h : afIso F E ((finAf F E a : AfE F E) * (((finAf F E a)⁻¹ : (AfE F E)ˣ) : AfE F E)) P = 1 := by
           rw [Units.mul_inv, map_one]
           rfl
-        rw [map_mul] at h
-        exact h
+        rwa [map_mul] at h
       have hv' : Valued.v (afIso F E (finAf F E a : AfE F E) P) *
           Valued.v (afIso F E (((finAf F E a)⁻¹ : (AfE F E)ˣ) : AfE F E) P) = 1 := by
         rw [← map_mul, hprod, map_one]
@@ -213,8 +209,7 @@ theorem GlobalTheory.Mem.Col2.exists_roots_valsIn : ∃ Sv : ∀ P : Pre, Set (F
   intro B px I hI hS
   refine ⟨?_, ?_⟩
   ·
-    intro a P _
-    exact ⟨_, (hI.xi_reads a _).symm⟩
+    exact fun a P _ => ⟨_, (hI.xi_reads a _).symm⟩
   · intro a P hP
     obtain ⟨v, hv, hsel, -⟩ := I.exists_of_mem_Q hP
     obtain ⟨Q, hQv, hQ⟩ := exists_ram (hI.xi_reads a) hv
@@ -228,8 +223,7 @@ theorem GlobalTheory.Mem.Col2.exists_roots_valsIn : ∃ Sv : ∀ P : Pre, Set (F
         exact Ideal.absNorm_mem _
       have h3 : ((Ideal.absNorm Q.asIdeal : ℕ) : 𝓞 B.fields.F) ∈
           Ideal.comap (algebraMap (𝓞 B.fields.F) (𝓞 B.fields.E)) P.asIdeal := h2
-      rw [Ideal.mem_comap, map_natCast] at h3
-      exact h3
+      rwa [Ideal.mem_comap, map_natCast] at h3
     have hQ0 : Ideal.absNorm Q.asIdeal ≠ 0 := fun h0 => Q.ne_bot (Ideal.absNorm_eq_zero_iff.1 h0)
     have hN : Nat.card (kP P) ≠ 0 := by
       have hP0 : Ideal.absNorm P.asIdeal ≠ 0 := fun h0 => P.ne_bot (Ideal.absNorm_eq_zero_iff.1 h0)
@@ -337,8 +331,7 @@ theorem core (B0 : Base) (px0 : PreX B0.toPre) (I0 : Col2.ColIn B0 px0) (B : Bas
   have hXi' := eq_of_heq hXi
   obtain ⟨a0, ha0⟩ : ∃ a0, I0.xi a0 = I.xi a := by
     have h : I.xi a ∈ Set.range I.xi := ⟨a, rfl⟩
-    rw [hXi'] at h
-    exact h
+    rwa [hXi'] at h
   have hQ : I.Q a = I0.Q a0 := by
     rw [← hQa, ← qC_xi hI0 a0, ha0]
     exact congrFun (eq_of_heq hq) _
@@ -346,8 +339,7 @@ theorem core (B0 : Base) (px0 : PreX B0.toPre) (I0 : Col2.ColIn B0 px0) (B : Bas
     refine hxr.inj ?_
     intro x
     rw [← ha0]
-    refine (hI0.xi_reads a0 x).trans ?_
-    exact (hι' _).symm
+    exact (hI0.xi_reads a0 x).trans (hι' _).symm
   have hchi' := eq_of_heq hchi
   have hch : ∀ (j : Fin P.R.m) w, I.Ch.chi j w = (Units.map ι.toMonoidHom).comp (I0.Ch.chi j w) := by
     intro j w
@@ -358,8 +350,7 @@ theorem core (B0 : Base) (px0 : PreX B0.toPre) (I0 : Col2.ColIn B0 px0) (B : Bas
     have hu' : hu.unit = u := Units.ext (by rw [IsUnit.unit_spec]; exact hy)
     have h1 := congrFun (congrFun (congrFun hchi' j) w.1) y
     rw [hchiA j w y hu, chiC_apply I0 j w y hu, hu'] at h1
-    refine h1.trans ?_
-    exact (hι' _).symm
+    exact h1.trans (hι' _).symm
   let B0' : Base := ⟨P, LL', embLL', hcx', embE', hφ', LL0', g0, Ks', k1, k2, k3, k4, k5, k6, k7, k8⟩
   have hQ' : QE I.sel (I.tup a).1 = QE I0.sel (I0.tup a0).1 := hQ
   have hca : ∀ w s, chiAt I.Ch w s = (Units.map ι.toMonoidHom).comp (chiAt I0.Ch w s) := by
@@ -551,8 +542,7 @@ theorem finite_piG (P : Pre) :
     {x | IsIntegral ℤ x ∧ ∀ φ : P.host.E →+* ℂ, ‖φ x‖ ≤ (P.host.g i : ℝ) + 1}) fun i =>
       (NumberField.Embeddings.finite_of_norm_le P.host.E ℂ _).preimage
         RingOfIntegers.coe_injective.injOn).subset ?_
-  intro g hg i _
-  exact ⟨RingOfIntegers.isIntegral_coe _, hg i⟩
+  exact fun g hg i _ => ⟨RingOfIntegers.isIntegral_coe _, hg i⟩
 
 
 open Classical in
@@ -627,8 +617,7 @@ theorem qC_subset {B : Base} {px : PreX B.toPre} (I : Col2.ColIn B px) (h : I.Ok
   split_ifs with hx
   · have hr : Qprime (I.tup hx.choose : Chr B.fields.F B.fields.E B.fields.K) = ramPl (P := B.toPre) ξ := by
       have := qprime_eq_of_reads (h.xi_reads hx.choose)
-      rw [hx.choose_spec] at this
-      exact this
+      rwa [hx.choose_spec] at this
     intro Q hQ
     have hQ' : Q ∈ Formalism.L2.Col.QE I.sel (I.tup hx.choose : Chr B.fields.F B.fields.E B.fields.K) := hQ
     unfold Formalism.L2.Col.QE at hQ'
@@ -636,7 +625,7 @@ theorem qC_subset {B : Base} {px : PreX B.toPre} (I : Col2.ColIn B px) (h : I.Ok
     · obtain ⟨v, hv, rfl⟩ := Finset.mem_image.1 hQ'
       rw [Set.Finite.mem_toFinset] at hv
       unfold qBound
-      rw [if_pos (hr ▸ hfin)]
+      rw [ite_eq_left (hr ▸ hfin)]
       exact ⟨v, hr ▸ hv, h.sel_ok v⟩
     · simp at hQ'
   · simp

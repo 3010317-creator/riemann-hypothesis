@@ -68,10 +68,8 @@ theorem setIntegral_comp_aut {G : Type} [AddCommGroup G] [TopologicalSpace G] [I
   have hmp : MeasurePreserving m ν (ν.map e) := ⟨he.measurable, rfl⟩
   have hT : IsAddFundamentalDomain Γ (m.symm ⁻¹' 𝓕) (ν.map e) := by
     refine h𝓕.preimage_of_equiv hmp.symm.quasiMeasurePreserving (e := fun γ : Γ => (⟨e γ, hΓ _ γ.2⟩ : Γ)) ⟨?_, ?_⟩ ?_
-    · intro a b hab
-      exact Subtype.ext (e.injective (congrArg Subtype.val hab))
-    · intro a
-      exact ⟨⟨e.symm a, hΓ' _ a.2⟩, Subtype.ext (e.apply_symm_apply _)⟩
+    · exact fun a b hab => Subtype.ext (e.injective (congrArg Subtype.val hab))
+    · exact fun a => ⟨⟨e.symm a, hΓ' _ a.2⟩, Subtype.ext (e.apply_symm_apply _)⟩
     · intro γ x
       show e.symm (e γ + x) = γ + e.symm x
       rw [map_add (f := _), e.symm_apply_apply]
@@ -85,8 +83,7 @@ theorem setIntegral_comp_aut {G : Type} [AddCommGroup G] [TopologicalSpace G] [I
   have h1 : ν 𝓕 ≠ ⊤ := (GlobalTheory.measure_addFundamentalDomain_lt_top_of_cocompact Γ hK hcov ν h𝓕).ne
   have e1 : ν.map e (m.symm ⁻¹' 𝓕) = ν 𝓕 := by
     have := m.map_apply (μ := ν) (m.symm ⁻¹' 𝓕)
-    rw [hpre] at this
-    exact this
+    rwa [hpre] at this
   have hc1 : (c : ENNReal) = 1 := by
     have e2 := hT.measure_eq hF'
     rw [e1, hc, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at e2

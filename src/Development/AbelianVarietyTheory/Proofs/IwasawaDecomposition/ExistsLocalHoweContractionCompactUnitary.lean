@@ -110,7 +110,7 @@ theorem sum_castLE {M : Type*} [AddCommMonoid M] {k m : ℕ} (hk : k ≤ m) (f :
 theorem prod_pow_ite {k m : ℕ} (hk : k ≤ m) (c : Fin m → ℂ) :
     ∏ i, c i ^ (if (i : ℕ) < k then 1 else 0) = ∏ i : Fin k, c (Fin.castLE hk i) :=
   (Fintype.prod_of_injective (Fin.castLE hk) (Fin.castLE_injective hk) _ _
-    (fun i hi => by rw [if_neg (not_lt.2 (not_range_castLE hk i hi)), pow_zero])
+    (fun i hi => by rw [ite_eq_right (not_lt.2 (not_range_castLE hk i hi)), pow_zero])
     fun i => by simp).symm
 
 def block (hn : n ≤ N) {k : ℕ} (hk : k ≤ n) : Matrix (Fin k) (Fin k) (MvPolynomial (Fin N × Fin n) ℂ) :=
@@ -129,8 +129,7 @@ theorem det_lead {k m : ℕ} (hk : k ≤ m) (g : Matrix (Fin m) (Fin m) ℂ) (hg
     (g.submatrix (Fin.castLE hk) (Fin.castLE hk)).det = ∏ i : Fin k, g (Fin.castLE hk i) (Fin.castLE hk i) := by
   rw [Matrix.det_of_upperTriangular]
   · rfl
-  · intro i j hij
-    exact hg _ _ hij
+  · exact fun i j hij => hg _ _ hij
 
 theorem isBorelVec_det (hn : n ≤ N) {k : ℕ} (hk : k ≤ n) :
     IsBorelVec hn (fun b => if (b : ℕ) < k then 1 else 0) (block hn hk).det := by
@@ -254,8 +253,7 @@ theorem raising_eq_zero {k : ℕ} {W : Type} [NormedAddCommGroup W] [InnerProduc
     intro Z hZ
     have h1 : HasDerivAt (fun t : ℝ => fun i j => NormedSpace.exp ((t : ℂ) • Z) i j) (fun i j => Z i j) 0 :=
       hasDerivAt_pi.2 fun i => hasDerivAt_pi.2 fun j => hasDerivAt_exp_line Z i j
-    have h2 := (hD.restrictScalars ℝ).comp_hasDerivAt_of_eq 0 h1 (by simp)
-    exact (hE Z hZ).unique h2
+    exact (hE Z hZ).unique ((hD.restrictScalars ℝ).comp_hasDerivAt_of_eq 0 h1 (by simp))
   have hall : ∀ Z : Matrix (Fin k) (Fin k) ℂ, Φ Z = Ψ Z := by
     intro Z
     have e : Z = (1 / 2 : ℂ) • (Z - Zᴴ) + (-Complex.I / 2) • (Complex.I • (Z + Zᴴ)) := by
@@ -331,8 +329,7 @@ theorem exists_lie_map {V₁ V₂ : Type} [AddCommGroup V₁] [Module ℂ V₁] 
     have hc1 : (0 : V₁) = c • v₁ := congrArg Prod.fst hc
     have hc2 : y = c • v₂ := congrArg Prod.snd hc
     rw [(smul_eq_zero.1 hc1.symm).resolve_right hv₁, zero_smul] at hc2
-    rw [hyz, hc2, zero_add]
-    exact hz
+    rwa [hyz, hc2, zero_add]
   let T : Submodule ℂ (V₁ × V₂) := S ⊓ Kᗮ.comap (LinearMap.snd ℂ V₁ V₂)
   have hT : ∀ a b, ∀ x ∈ T, E a b x ∈ T := fun a b x hx => ⟨hS a b x hx.1, hK' a b _ hx.2⟩
   have hvT : (v₁, v₂) ∈ T := ⟨hvS, hv₂⟩
@@ -513,8 +510,7 @@ theorem exists_intertwiner_of_embedding (k : ℕ) (κ : Type) (ν : Fin k → �
     · intro g hg v
       rw [@norm_eq_sqrt_re_inner ℂ, @norm_eq_sqrt_re_inner ℂ _ _ _ _ v, hin, hin, hjπ, fischer_rowSubst,
         rowSubst_mul, mem_UJset_allPos hg, rowSubst_one]
-    · intro v
-      exact (hdiff v).continuous.continuousOn
+    · exact fun v => (hdiff v).continuous.continuousOn
   obtain ⟨L, hL, v, hv⟩ := _root_.GlobalTheory.HighestWeightMap.exists_intertwiner k (fun a => (ν a : ℝ)) H τ E π D hτ hK hrep (fun w => hdiff w _)
     (fun h => hD (by rw [h, map_zero]))
     (by

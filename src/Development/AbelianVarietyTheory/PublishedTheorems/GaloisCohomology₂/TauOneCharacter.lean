@@ -92,8 +92,7 @@ theorem _root_.GlobalTheory.Published.GreenModel.ev_inj :
   have h' : (x : _root_.GlobalTheory.GLq.Mt g 1) 0 0 = (y : _root_.GlobalTheory.GLq.Mt g 1) 0 0 :=
     (algebraMap (ZMod g) (_root_.Formalism.CyclotomicNorms.Fbar g)).injective h
   refine Units.ext (Matrix.ext fun i j => ?_)
-  rw [Subsingleton.elim i 0, Subsingleton.elim j 0]
-  exact h'
+  rwa [Subsingleton.elim i 0, Subsingleton.elim j 0]
 
 open Polynomial CategoryTheory in
 variable {g : ℕ} [hg : Fact g.Prime] in
@@ -238,29 +237,27 @@ theorem _root_.GlobalTheory.Published.GreenModel.green_one (L : _root_.GlobalThe
   refine ⟨fun P => if h : _root_.GlobalTheory.GLq.IsPrimeLab 1 P then
       ⇑(_root_.GlobalTheory.Published.GreenModel.th L (hlab h)) else fun _ => 0, ?_, ?_, ?_⟩
   · intro P hP
-    simp only [dif_pos hP]
+    simp only [dite_eq_left hP]
     refine ⟨⟨hP, ⟨one_pos, _root_.GlobalTheory.Published.GreenModel.isIrr_hom _,
       fun a ha ha' => absurd ha' (by omega)⟩, ?_⟩, by simp⟩
     intro x hx y _ z hz
     have hPe := _root_.GlobalTheory.Published.GreenModel.lab_eq hP
     have hx' : x = algebraMap (ZMod g) (_root_.Formalism.CyclotomicNorms.Fbar g) (-P.coeff 0) := by
       unfold _root_.Formalism.CyclotomicNorms.rootsBar at hx
-      rw [hPe, Polynomial.map_sub, map_X, map_C, roots_X_sub_C, Multiset.mem_singleton] at hx
-      exact hx
+      rwa [hPe, Polynomial.map_sub, map_X, map_C, roots_X_sub_C, Multiset.mem_singleton] at hx
     have hcp : (y : Matrix (Fin 1) (Fin 1) (ZMod g)).charpoly =
         X - C ((y : Matrix (Fin 1) (Fin 1) (ZMod g)) 0 0) := by
       rw [Matrix.charpoly, Matrix.det_fin_one, Matrix.charmatrix_apply_eq]
     have hz' : z = _root_.GlobalTheory.Published.GreenModel.ev y := by
       unfold _root_.Formalism.CyclotomicNorms.rootsBar at hz
-      rw [hcp, Polynomial.map_sub, map_X, map_C, roots_X_sub_C, Multiset.mem_singleton] at hz
-      exact hz
+      rwa [hcp, Polynomial.map_sub, map_X, map_C, roots_X_sub_C, Multiset.mem_singleton] at hz
     subst hx' hz'
     simp only [Nat.sub_self, pow_zero, one_mul, Finset.sum_range_one, pow_one]
     rfl
   · intro P P' hP hP' he
     obtain ⟨c, hc, y0, -, hy0⟩ := exists_ne_zero_gn_one_ev_eq_gen_one L
     have h1 := congrFun he y0
-    simp only [dif_pos hP, dif_pos hP'] at h1
+    simp only [dite_eq_left hP, dite_eq_left hP'] at h1
     have key : ∀ {b : ZMod g} (hb : b ≠ 0), _root_.GlobalTheory.Published.GreenModel.th L hb y0 =
         L.teich (algebraMap (ZMod g) (_root_.Formalism.CyclotomicNorms.Fbar g) b) := by
       intro b hb
@@ -294,8 +291,7 @@ theorem _root_.GlobalTheory.Published.GreenModel.green_one (L : _root_.GlobalThe
         rw [← map_pow, ← map_one L.teich] at h
         have := L.teich_inj _ _ (pow_ne_zero _ hgen0) one_ne_zero h
         refine pow_ne_one_of_lt_orderOf hl.ne' ?_ this
-        rw [L.gen_order 1 one_pos]
-        exact hl'
+        rwa [L.gen_order 1 one_pos]
     have hy0pow : y0 ^ (g ^ 1 - 1) = 1 := _root_.GlobalTheory.Published.GreenModel.ev_inj (by
       rw [map_pow, hy0, (isPrimitiveRoot_gen_one L).pow_eq_one, map_one])
     haveI : NeZero (g ^ 1 - 1) := ⟨pow_one_sub_one_pos.ne'⟩
@@ -308,7 +304,7 @@ theorem _root_.GlobalTheory.Published.GreenModel.green_one (L : _root_.GlobalThe
       natDegree_X_sub_C _⟩
     refine ⟨X - C (c ^ k), hP, ?_⟩
     funext y
-    simp only [dif_pos hP]
+    simp only [dite_eq_left hP]
     obtain ⟨n, hn⟩ := _root_.GlobalTheory.Published.GreenModel.ev_eq L y
     have hy : y = y0 ^ n := _root_.GlobalTheory.Published.GreenModel.ev_inj (by rw [hn, map_pow, hy0])
     change χ y = _root_.GlobalTheory.GLq.thetaOf L 1

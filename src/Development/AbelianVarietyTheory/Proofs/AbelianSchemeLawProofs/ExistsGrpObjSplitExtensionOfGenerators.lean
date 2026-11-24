@@ -392,8 +392,7 @@ theorem gm_char (t : W ⟶ splitTorus S X) (z : W.left) (χ : X) : gm t.left z �
 theorem hom_ext_basis {κ M : Type} [CommGroup M] (b : Module.Basis κ ℤ X) {f g : Multiplicative X →* M}
     (h : ∀ k, f (Multiplicative.ofAdd (b k)) = g (Multiplicative.ofAdd (b k))) : f = g := by
   apply (AddMonoidHom.toMultiplicativeLeft (α := X) (β := M)).symm.injective
-  apply AddMonoidHom.toIntLinearMap_injective
-  exact b.ext fun k => congrArg Additive.ofMul (h k)
+  exact AddMonoidHom.toIntLinearMap_injective (b.ext fun k => congrArg Additive.ofMul (h k))
 
 theorem constr_basis {κ M : Type} [CommGroup M] (b : Module.Basis κ ℤ X) (a : κ → M) (k : κ) :
     AddMonoidHom.toMultiplicativeLeft (b.constr ℤ fun k => Additive.ofMul (a k)).toAddMonoidHom
@@ -487,8 +486,7 @@ theorem unit_norm [IsMonHom q] (h : nv O q u η[G] = 1) (k : κ) (z : (𝟙_ (Ov
   have hq : eSec G ≫ q.left = eSec B := congrArg (·.left) (IsMonHom.one_hom q)
   have : cv O q u k _ (eSec G) z J * rv O k _ (𝟙 (𝟙_ (Over S)).left) z J = 1 := congrFun (congrFun (congrFun h k) z) ⟨J, hJ⟩
   unfold cv rv at this
-  rw [hq, val_of _ _ z J (fun _ => J (eSec B)) fun _ => by rw [Category.id_comp]] at this
-  exact this
+  rwa [hq, val_of _ _ z J (fun _ => J (eSec B)) fun _ => by rw [Category.id_comp]] at this
 
 end Chart
 

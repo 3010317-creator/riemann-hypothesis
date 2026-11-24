@@ -61,8 +61,7 @@ theorem map_mem_span_of_constantCoeff_eq_zero {σ R S : Type} [Finite σ] [CommR
     (ψ : MvPowerSeries σ R →+* S) (g : MvPowerSeries σ R) (hg : MvPowerSeries.constantCoeff g = 0) :
     ψ g ∈ Ideal.span (Set.range fun j => ψ (MvPowerSeries.X j)) := by
   have h3 : g ∈ Ideal.span (Set.range (MvPowerSeries.X : σ → MvPowerSeries σ R)) := by
-    rw [← germIdeal_eq_span]
-    exact hg
+    rwa [← germIdeal_eq_span]
   have h4 := Ideal.mem_map_of_mem ψ h3
   rwa [Ideal.map_span, ← Set.range_comp] at h4
 
@@ -120,8 +119,7 @@ theorem exists_pow_span_X_le_span_matV : ∀ (V : Type) [CommRing V] [IsDomain V
   rintro _ ⟨_, ⟨j, rfl⟩, rfl⟩
   have h2 := Ideal.mem_map_of_mem (MvPowerSeries.map (σ := Fin n × Fin d) (residue V)) (hA b j)
   rw [Ideal.map_span, ← Set.range_comp] at h2
-  rw [SetLike.mem_coe, hθ]
-  exact h2
+  rwa [SetLike.mem_coe, hθ]
 
 end GlobalTheory.PlaceInt
 end -- clump:auto

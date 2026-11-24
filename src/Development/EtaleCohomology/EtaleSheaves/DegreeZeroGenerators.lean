@@ -127,8 +127,7 @@ theorem free_etale_sheaf_zmod_representable_generates : EtaleSheafMapZeroOfLocal
     rw [← n]
     have n2 := ConcreteCategory.congr_hom (t.hom.naturality a.op) (gen U)
     simp only [ConcreteCategory.comp_apply] at n2
-    rw [← n2, ← gen_nat a]
-    exact h3
+    rwa [← n2, ← gen_nat a]
   have := Sheaf.isSeparated H' U S hS _ 0 key
   simp only [NatTrans.app_zero]
   exact this

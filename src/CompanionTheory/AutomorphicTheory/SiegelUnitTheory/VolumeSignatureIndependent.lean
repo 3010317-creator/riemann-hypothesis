@@ -257,8 +257,7 @@ theorem hasProd_ofReal {ι : Type*} {a : ι → ℝ} {p : ℝ} (hp : HasProd a p
     HasProd (fun i => ENNReal.ofReal (a i)) (ENNReal.ofReal p) := by
   have h := (ENNReal.continuous_ofReal.tendsto p).comp hp
   refine h.congr fun s => ?_
-  simp only [Function.comp_apply]
-  exact ENNReal.ofReal_prod_of_nonneg fun i _ => h0 i
+  simpa only [Function.comp_apply] using ENNReal.ofReal_prod_of_nonneg fun i _ => h0 i
 
 theorem hasProd_of_tail {ι : Type} (L : ι → ℝ≥0∞) (a : ι → ℝ) (S : Finset ι) (hL : ∀ v, L v ≠ ⊤)
     (ha0 : ∀ v, 0 ≤ a v) (hoff : ∀ v, v ∉ S → L v = ENNReal.ofReal (a v))
@@ -380,8 +379,7 @@ theorem GlobalTheory.CompanionTheory.SW.EulerPos.euler_pos : ∀ (F E : Type) [F
       · simp [Set.indicator_of_mem hX]
       · simp [Set.indicator_of_notMem hX]
     rw [hLB v, hc1 v hv, hφv, lintegral_indicator_one hl]
-    simp only [ENNReal.coe_one, one_mul, a]
-    exact (ENNReal.ofReal_toReal (hfin v).ne).symm
+    simpa only [ENNReal.coe_one, one_mul, a] using (ENNReal.ofReal_toReal (hfin v).ne).symm
   have hHP := GlobalTheory.CompanionTheory.SW.EulerPos.hasProd_of_tail (fun v => ∫⁻ X, φ v X ∂(c v • m v)) a S hLfin
     (fun _ => ENNReal.toReal_nonneg) hoff hsum
   refine ⟨?_, hHP.multipliable, ?_⟩
@@ -485,8 +483,7 @@ theorem GlobalTheory.CompanionTheory.SW.QTie.fib_eq_gramFib : ∀ (F E : Type) [
     simp only [Set.mem_setOf_eq]
     rw [hgf X, hdet, hq]
   have hUnull : μ ({X | IsUnit (gramR R σ J X).det}ᶜ) = 0 := by
-    rw [hU]
-    exact hμu
+    rwa [hU]
   have hemb : MeasurableEmbedding (hermScal R σ) := (OneHerm.hermHomeo R hσ).measurableEmbedding
   have hν' : (ν.map (hermScal R σ)).IsAddHaarMeasure :=
     (QTie.hermAdd hσ R).isAddHaarMeasure_map ν (OneHerm.continuous_hermScal R σ) (OneHerm.continuous_hermHalf R σ)
@@ -494,12 +491,12 @@ theorem GlobalTheory.CompanionTheory.SW.QTie.fib_eq_gramFib : ∀ (F E : Type) [
     if IsUnit (OneHerm.hermHalf R σ S) then fib (OneHerm.hermHalf R σ S) else 0
   have hm'u : ∀ s : R, IsUnit s → m' (hermScal R σ s) = fib s := by
     intro s hs
-    simp only [m', OneHerm.hermHalf_hermScal R hσ, hs, if_true]
+    simp only [m', OneHerm.hermHalf_hermScal R hσ, hs, ite_true]
   have hm' : IsGramFib R σ J 1 μ (ν.map (hermScal R σ)) m' := by
     refine ⟨?_, ?_, ?_⟩
     · intro S
       by_cases hS : IsUnit (OneHerm.hermHalf R σ S)
-      · have : m' S = fib (OneHerm.hermHalf R σ S) := by simp only [m', hS, if_true]
+      · have : m' S = fib (OneHerm.hermHalf R σ S) := by simp only [m', hS, ite_true]
         rw [this]
         refine measure_mono_null ?_ (hf1 (OneHerm.hermHalf R σ S))
         intro X hX hX'
@@ -509,29 +506,26 @@ theorem GlobalTheory.CompanionTheory.SW.QTie.fib_eq_gramFib : ∀ (F E : Type) [
         · change gramR R σ J X = (S : Matrix (Fin 1) (Fin 1) (R ⊗[F] E))
           rw [hgf X, hgq X, hqX, OneHerm.hermScal_hermHalf R hσ]
         · change IsUnit (gramR R σ J X).det
-          rw [hgf X, hdet, ← hq, hqX]
-          exact hS
-      · have : m' S = 0 := by simp only [m', hS, if_false]
+          rwa [hgf X, hdet, ← hq, hqX]
+      · have : m' S = 0 := by simp only [m', hS, ite_false]
         rw [this]
         rfl
     · intro φ hφ
       rw [hemb.lintegral_map]
       have h1 : ∫⁻ v in {X | IsUnit (gramR R σ J X).det}, φ v ∂μ = ∫⁻ v in Set.univ, φ v ∂μ := by
-        rw [Measure.restrict_univ]
-        rw [Measure.restrict_eq_self_of_ae_mem]
+        rw [Measure.restrict_univ, Measure.restrict_eq_self_of_ae_mem]
         exact measure_eq_zero_iff_ae_notMem.mp hUnull |>.mono fun x hx => by simpa using hx
       rw [h1, hf2 φ hφ]
       refine lintegral_congr_ae ?_
       have hae : ∀ᵐ s ∂ν, IsUnit s := by
-        rw [ae_iff]
-        exact hνu
+        rwa [ae_iff]
       filter_upwards [hae] with s hs
       rw [hm'u s hs]
     · intro φ hφ hφc hφs
       obtain ⟨hi, hcont⟩ := hf3 φ hφ hφc (Set.subset_univ _)
       refine ⟨fun S hS => ?_, ?_⟩
       · have hS' : IsUnit (OneHerm.hermHalf R σ S) := (hdet S).mp hS
-        have : m' S = fib (OneHerm.hermHalf R σ S) := by simp only [m', hS', if_true]
+        have : m' S = fib (OneHerm.hermHalf R σ S) := by simp only [m', hS', ite_true]
         rw [this]
         exact hi _ hS'
       · have hmaps : Set.MapsTo (OneHerm.hermHalf R σ) {S : HermR R σ 1 | IsUnit (S : Matrix (Fin 1) (Fin 1) (R ⊗[F] E)).det} {c | IsUnit c} :=
@@ -539,7 +533,7 @@ theorem GlobalTheory.CompanionTheory.SW.QTie.fib_eq_gramFib : ∀ (F E : Type) [
         refine (hcont.comp (OneHerm.continuous_hermHalf R σ).continuousOn hmaps).congr ?_
         intro S hS
         have hS' : IsUnit (OneHerm.hermHalf R σ S) := (hdet S).mp hS
-        have : m' S = fib (OneHerm.hermHalf R σ S) := by simp only [m', hS', if_true]
+        have : m' S = fib (OneHerm.hermHalf R σ S) := by simp only [m', hS', ite_true]
         simp only [this, Function.comp]
   have := GlobalTheory.CompanionTheory.SW.GramFib.fibre_unique F E σ hσ M J hJ R hR 1 μ (ν.map (hermScal R σ)) m hμ hν' hm m' hm'
     (hermScal R σ c)
@@ -658,8 +652,7 @@ theorem sw1b2 (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [
     constructor
     · rintro ⟨-, h⟩
       funext a b
-      rw [Subsingleton.elim a 0, Subsingleton.elim b 0]
-      exact h
+      rwa [Subsingleton.elim a 0, Subsingleton.elim b 0]
     · intro h
       have h0 : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.hE σ J (x 0) (x 0) = algebraMap F E β := congrFun (congrFun h 0) 0
       refine ⟨fun hx => hβE ?_, h0⟩

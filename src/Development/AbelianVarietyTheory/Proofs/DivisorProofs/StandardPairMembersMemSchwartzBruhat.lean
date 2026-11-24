@@ -89,8 +89,7 @@ theorem det_sub_le {n : ℕ} (A B : Matrix (Fin n) (Fin n) k) (hA : ∀ i j, A i
   have h2 : B'.det - A'.det ∈ Ideal.span {p} := by
     rw [← Ideal.Quotient.eq, RingHom.map_det, RingHom.map_det, key]
   rw [Ideal.mem_span_singleton, ← hdvd] at h2
-  rw [hA', hB', ← RingHom.map_det, ← RingHom.map_det]
-  exact h2
+  rwa [hA', hB', ← RingHom.map_det, ← RingHom.map_det]
 
 
 open Classical in
@@ -119,8 +118,7 @@ theorem stable {ν : kˣ →* ℂˣ} {ϖ : kˣ} {c : ℕ} (hϖ : GlobalTheory.Sp
     simp only [Units.val_pow_eq_pow_val, map_pow]
     exact pow_le_pow_right_of_le_one' hu.le (le_max_left _ _)
   have hγ1 : valuation k ((ϖ ^ max c 1 : kˣ) : k) < 1 := by
-    simp only [Units.val_pow_eq_pow_val, map_pow]
-    exact pow_lt_one₀ zero_le' hu (by omega)
+    simpa only [Units.val_pow_eq_pow_val, map_pow] using pow_lt_one₀ zero_le' hu (by omega)
   have hA'int : ∀ i j, A' i j ∈ 𝒪[k] := by
     intro i j
     have h1 : valuation k (A i j) ≤ 1 := hAint i j
@@ -193,8 +191,7 @@ theorem integral_of_ne {ν : kˣ →* ℂˣ} {ϖ : kˣ} {c : ℕ} (hϖ : GlobalT
   refine ⟨hA, fun i j => ?_⟩
   rw [Valuation.mem_integer_iff]
   refine (show valuation k (B i j) ≤ valuation k ((ϖ ^ c : kˣ) : k) from hB i j).trans ?_
-  simp only [Units.val_pow_eq_pow_val, map_pow]
-  exact pow_le_one₀ zero_le' hu.le
+  simpa only [Units.val_pow_eq_pow_val, map_pow] using pow_le_one₀ zero_le' hu.le
 
 end Local
 

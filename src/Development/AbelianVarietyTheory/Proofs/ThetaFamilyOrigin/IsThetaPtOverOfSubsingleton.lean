@@ -423,8 +423,7 @@ theorem exists_unit_isValueAt (hG : GlobalFnsSt) (hA : IsAbelianScheme A) (hL : 
   have b₆ : sv A th (lift (𝟙 T) ((Y * UZ.pt) ^ (r * m))).left z J =
       gs (𝟙 T.left) z ⊤ ρ * sv A th' (lift (𝟙 T) ((Y * UZ.pt) ^ (r * m))).left z J := by
     have := ThetaAct.sv_smul ρ (SecM.ofSec A th') (lift (𝟙 T) ((Y * UZ.pt) ^ (r * m))).left z hJ
-    rw [← hρ, lift_fst_left] at this
-    exact this
+    rwa [← hρ, lift_fst_left] at this
   rw [Category.id_comp, ← mul_pow, b₂, ← pow_mul, b₆] at b₁
   rw [Category.id_comp, _root_.mul_one, b₄] at b₃
   rw [Category.id_comp, b₃] at b₅
@@ -504,12 +503,10 @@ theorem exists_symLift_act_pull (hL : L.IsLB) {n : ℕ} (h : T' ⟶ T) {x : T �
     fun T₀ π p => by rw [← Over.comp_left, lift_whiskerRight]
   refine ⟨θ', symLift_of_tval hL (e.trans (by rw [H.pt_eq])) hν' (fun T₀ π z J hJ p => ?_) (fun T₀ π z J hJ p => ?_),
     fun s s' hs => isTwistPull_of_sv A hL θ'.isGen fun z J hJ => ?_⟩
-  · simp only [v _ _ z J hJ, e₀, ← Category.assoc]
-    exact prod_tval H _ hJ p
+  · simpa only [v _ _ z J hJ, e₀, ← Category.assoc] using prod_tval H _ hJ p
   · have q := val_corr hJ hs (lift (π ≫ h) p).left
     rw [GlobalLift.val_symGen _ _ _ hJ, val_one, lift_translT, lift_negT, H.pt_eq, GrpObj.comp_inv] at q
-    simp only [v _ _ z J hJ, w _ _ z J hJ, e₀, ← Category.assoc]
-    exact q
+    simpa only [v _ _ z J hJ, w _ _ z J hJ, e₀, ← Category.assoc] using q
   · have q := v _ (lift (fst T' A) (snd T' A)).left z J hJ
     rw [SymLiftOdd.id_eq_lift, lift_translT, sv_pullS A k h _ _ z hJ, sv_pullS A k h _ _ z hJ, e₀, e₀,
       sv_act rfl hs _ hJ]

@@ -97,8 +97,7 @@ theorem sum_pad {n p : ℕ} (f : Fin p → ℤ) (hf : ∀ i : Fin p, n ≤ i →
   apply sum_range_eq_sum_range_of_eventually_zero
   · intro j hj
     by_cases h : j < p
-    · simp only [h, dite_true]
-      exact hf ⟨j, h⟩ hj
+    · simpa only [h, dite_true] using hf ⟨j, h⟩ hj
     · simp [h]
   · intro j hj
     simp [not_lt.mpr hj]
@@ -120,8 +119,7 @@ private theorem sum_filter_lt_eq_sum_range_min (n i : ℕ) (G : ℕ → ℤ) :
   rw [sum_filter_lt_eq_sum_range (fun k : Fin n => G k) i]
   have hs : Finset.range (min n i) = (Finset.range i).filter (fun j => j < n) := by
     ext j
-    simp only [Finset.mem_filter, Finset.mem_range, lt_min_iff]
-    exact And.comm
+    simpa only [Finset.mem_filter, Finset.mem_range, lt_min_iff] using And.comm
   rw [hs, Finset.sum_filter]
   exact Finset.sum_congr rfl fun j _ => by split_ifs <;> rfl
 
@@ -142,12 +140,12 @@ private theorem sum_filter_not_lt_eq_sum_range_sub (n i : ℕ) (G : ℕ → ℤ)
     have hj' := Finset.mem_range.mp hj
     have e1 : ¬ (n - 1 - j < i) := by omega
     have e2 : n - 1 - (n - 1 - j) = j := by omega
-    rw [if_pos e1, e2]
+    rw [ite_eq_left e1, e2]
   · intro j hj hj'
     have h1 := Finset.mem_range.mp hj
     have h2 : ¬ j < n - i := fun h => hj' (Finset.mem_range.mpr h)
     have e1 : n - 1 - j < i := by omega
-    rw [if_neg (not_not.mpr e1)]
+    rw [ite_eq_right (not_not.mpr e1)]
 
 theorem sum_filter_pad_rev' {n q : ℕ} (b : Fin q → ℕ) (hb : ∀ i : Fin q, n ≤ i → b i = 0)
     (i : ℕ) :
@@ -417,7 +415,7 @@ theorem harmonic_rowOp {σ I I' J : Type} [Fintype J] (z : I × J → σ) (y : I
       X (z (a, k)) * pderiv (z (i, t)) (pderiv (y (j, t)) (pderiv (z (b, k)) Q)) +
         (if i = a ∧ t = k then pderiv (y (j, t)) (pderiv (z (b, k)) Q) else 0) := by
     intro t k
-    rw [pderiv_X_mul', if_neg (fun h => hzy _ _ h.symm), add_zero, pderiv_X_mul']
+    rw [pderiv_X_mul', ite_eq_right (fun h => hzy _ _ h.symm), add_zero, pderiv_X_mul']
     congr 1
     simp only [hz.eq_iff, Prod.mk.injEq]
   have hA : ∑ t, ∑ k, X (z (a, k)) * pderiv (z (i, t)) (pderiv (y (j, t)) (pderiv (z (b, k)) Q))
@@ -435,7 +433,7 @@ theorem harmonic_rowOp {σ I I' J : Type} [Fintype J] (z : I × J → σ) (y : I
   have hB : ∑ t, ∑ k, (if i = a ∧ t = k then pderiv (y (j, t)) (pderiv (z (b, k)) Q) else 0)
       = 0 := by
     by_cases hia : i = a
-    · simp only [hia, true_and, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    · simp only [hia, true_and, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       rw [← hQ b j]
       exact Finset.sum_congr rfl fun t _ => pderiv_swap _ _ _
     · simp [hia]
@@ -473,15 +471,14 @@ theorem commute_euler {σ : Type} {k n : ℕ} (z : Fin k × Fin n → σ) (hz : 
   show (∑ i, rowOp ℂ z i i) * rowOp ℂ z a b = rowOp ℂ z a b * ∑ i, rowOp ℂ z i i
   rw [← sub_eq_zero, Finset.sum_mul, Finset.mul_sum, ← Finset.sum_sub_distrib]
   simp only [rowOp_lie z hz, Finset.sum_sub_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true, sub_self]
+    Finset.mem_univ, ite_true, sub_self]
 
 theorem weight_nat {σ : Type} {k n : ℕ} (z : Fin k × Fin n → σ) (v : MvPolynomial σ ℂ)
     (hv : v ≠ 0) (a : Fin k → ℤ) (ha : ∀ i, rowOp ℂ z i i v = (a i : ℂ) • v) :
     ∃ a' : Fin k → ℕ, ∀ i, (a' i : ℤ) = a i := by
   classical
   have hne : v.support.Nonempty := by
-    rw [Finset.nonempty_iff_ne_empty, Ne, MvPolynomial.support_eq_empty]
-    exact hv
+    rwa [Finset.nonempty_iff_ne_empty, Ne, MvPolynomial.support_eq_empty]
   obtain ⟨m, hm⟩ := hne
   refine ⟨fun i => ∑ t, m (z (i, t)), fun i => ?_⟩
   have h := (rowOp_eq_smul_iff z i v (a i : ℂ)).1 (ha i) m hm
@@ -655,8 +652,7 @@ theorem column_degrees (σ : Type) [Fintype σ] [DecidableEq σ] (k l n : ℕ)
       rw [hQ]
       refine mul_ne_zero (Finset.prod_ne_zero_iff.2 fun D hD => sub_ne_zero.2 ?_)
         (mem_support_iff.1 hm0)
-      intro h
-      exact (Finset.mem_erase.1 hD).1 (by exact_mod_cast h.symm)
+      exact fun h => (Finset.mem_erase.1 hD).1 (by exact_mod_cast h.symm)
     have hQ0 : Q ≠ 0 := fun h => hQm0 (by simp [h])
     have hEQ : E Q = (zdeg m0 : ℂ) • Q := by
       ext m
@@ -745,8 +741,7 @@ theorem sum_Ici_sub_succ {n : ℕ} (α : ℕ → ℕ) (hα : Antitone α) (h0 : 
   · intro i hi
     rw [Finset.mem_Ici, Fin.le_def] at hi
     exact Finset.mem_Ico.2 ⟨hi, i.2⟩
-  · intro i _ j _ h
-    exact Fin.ext h
+  · exact fun i _ j _ h => Fin.ext h
   · intro b hb
     rw [Finset.mem_Ico] at hb
     exact ⟨⟨b, hb.2⟩, Finset.mem_Ici.2 (Fin.le_def.2 hb.1), rfl⟩
@@ -1093,14 +1088,14 @@ theorem sum_range_extZero {p : ℕ} (a : Fin p → ℕ) (i : ℕ) :
         simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_insert, Fin.ext_iff]
         omega
       rw [hset, Finset.sum_insert (by simp), add_comm]
-      simp only [extZero, dif_pos h]
+      simp only [extZero, dite_eq_left h]
     · have hset : Finset.univ.filter (fun b : Fin p => (b : ℕ) < n + 1) =
           Finset.univ.filter (fun b : Fin p => (b : ℕ) < n) := by
         ext b
         simp only [Finset.mem_filter, Finset.mem_univ, true_and]
         omega
       rw [hset]
-      simp only [extZero, dif_neg h, add_zero]
+      simp only [extZero, dite_eq_right h, add_zero]
 
 theorem partial_sum_le {σ : Type} [DecidableEq σ] {p r : ℕ} (z : Fin p × Fin r → σ)
     (hz : Function.Injective z) (P : MvPolynomial σ ℂ) (a : Fin p → ℕ) (a' : Fin r → ℕ)
@@ -1115,8 +1110,7 @@ theorem partial_sum_le {σ : Type} [DecidableEq σ] {p r : ℕ} (z : Fin p × Fi
     have hw : Function.Injective (fun k : Fin r => z (c, k)) :=
       fun k l h => congrArg Prod.snd (hz h)
     have huw : ∀ k l : Fin r, z (b, k) ≠ z (c, l) := by
-      intro k l h
-      exact (ne_of_lt hbc) (congrArg Prod.fst (hz h))
+      exact fun k l h => (ne_of_lt hbc) (congrArg Prod.fst (hz h))
     have hT := GlobalTheory.rowAdd_invariant_iff (K := ℂ) (fun k : Fin r => z (b, k))
       (fun k : Fin r => z (c, k)) hw huw P
     have h0 : ∑ k, X (z (b, k)) * pderiv (z (c, k)) P = 0 := by
@@ -1132,8 +1126,7 @@ theorem partial_sum_le {σ : Type} [DecidableEq σ] {p r : ℕ} (z : Fin p × Fi
     intro k m hm
     exact_mod_cast (GlobalTheory.JointHarm.colOp_eq_smul_iff z k P _).mp (ha' k) m hm
   obtain ⟨m, hm⟩ : P.support.Nonempty := by
-    rw [Finset.nonempty_iff_ne_empty, Ne, MvPolynomial.support_eq_empty]
-    exact hP
+    rwa [Finset.nonempty_iff_ne_empty, Ne, MvPolynomial.support_eq_empty]
   have key := GlobalTheory.column_degree_le z hz P a hrowdeg hinv
     (Finset.univ.filter (fun k : Fin r => (k : ℕ) < i)) m hm
   have hcard : (Finset.univ.filter (fun k : Fin r => (k : ℕ) < i)).card ≤ i := by
@@ -1146,8 +1139,7 @@ theorem partial_sum_le {σ : Type} [DecidableEq σ] {p r : ℕ} (z : Fin p × Fi
           simp only [Finset.mem_map, Finset.mem_filter, Finset.mem_univ, true_and,
             Fin.valEmbedding_apply] at hx
           obtain ⟨k, hk, hkx⟩ := hx
-          rw [Finset.mem_range, ← hkx]
-          exact hk
+          rwa [Finset.mem_range, ← hkx]
       _ = i := Finset.card_range i
   rw [sum_range_extZero, sum_range_extZero]
   calc ∑ k ∈ Finset.univ.filter (fun k : Fin r => (k : ℕ) < i), a' k
@@ -1192,9 +1184,9 @@ theorem row_col_weights_agree : ∀ (σ : Type) [DecidableEq σ] (p r : ℕ) (z 
   · intro i j hij
     unfold extZero
     by_cases hj : j < p
-    · rw [dif_pos hj, dif_pos (lt_of_le_of_lt hij hj)]
+    · rw [dite_eq_left hj, dite_eq_left (lt_of_le_of_lt hij hj)]
       exact hanti (Fin.mk_le_mk.mpr hij)
-    · rw [dif_neg hj]
+    · rw [dite_eq_right hj]
       exact Nat.zero_le _
   · intro i hi
     by_cases hp : p ≤ i
@@ -1340,7 +1332,7 @@ theorem IsSide.homog_of_type [DecidableEq σ] {H : Type} [NormedAddCommGroup H]
   obtain ⟨W, hfin, hPW, hst, hμ⟩ := ht
   have kc : ∀ a b : Ix p q, sameBlock a b → IsKC (Eab a b) := by
     intro a b hab c d hcd
-    rw [Eab, Matrix.single_apply, if_neg]
+    rw [Eab, Matrix.single_apply, ite_eq_right]
     rintro ⟨rfl, rfl⟩
     exact hcd hab
   let W₁ := W ⊓ (harmSub (zA e) (zB e) ⊓ harmSub (zC e) (zD e))

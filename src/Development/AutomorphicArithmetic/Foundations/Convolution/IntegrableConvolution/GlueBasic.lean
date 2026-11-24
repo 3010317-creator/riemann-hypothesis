@@ -73,8 +73,7 @@ private theorem glue_comp (x : GL (Fin n) S) : D.glue n (fun i => D.comp n i x) 
   apply Units.ext
   ext a b
   show D.e.symm (fun i => (D.comp n i x : Matrix (Fin n) (Fin n) R) a b) = _
-  simp only [comp_apply]
-  exact D.e.symm_apply_apply _
+  simpa only [comp_apply] using D.e.symm_apply_apply _
 
 private theorem comp_inj {x y : GL (Fin n) S} (h : ∀ i, D.comp n i x = D.comp n i y) : x = y := by
   rw [← glue_comp D n x, ← glue_comp D n y]
@@ -120,9 +119,7 @@ private theorem comp_twNorm (θ : Monoid.End (GL (Fin n) S)) (hθ : ∀ x, θ x 
     simp only [Fin.cast_val_eq_self]
   rw [hh, ofFn_range (m + 1) (fun k : ℕ => D.comp n (j + (k : Fin (m + 1))) δ), twNorm, map_list_prod, List.map_map]
   congr 1
-  apply List.map_congr_left
-  intro k _
-  exact comp_pow D n θ hθ k δ j
+  exact List.map_congr_left (fun k _ => comp_pow D n θ hθ k δ j)
 
 private theorem entry {T : Type} [CommRing T] [TopologicalSpace T] (a b : Fin n) :
     Continuous fun x : GL (Fin n) T => (x : Matrix (Fin n) (Fin n) T) a b :=
@@ -152,40 +149,26 @@ theorem UpperTheory.ConvolutionTheory.L1.glueBasic :
     UpperTheory.ConvolutionTheory.L1.GlueBasic := by
   intro R S _ _ _ _ _ _ ι s m D n
   refine ⟨comp_glue D n, glue_comp D n, ?_, ?_, ?_, comp_diag D n, comp_shift D n, ?_⟩
-  · intro g h
-    apply comp_inj D n
-    intro i
+  · refine fun g h => comp_inj D n fun i => ?_
     rw [map_mul, comp_glue, comp_glue, comp_glue]
     rfl
-  · refine Units.continuous_iff.mpr ⟨?_, ?_⟩
-    · refine continuous_matrix fun a b => ?_
-      exact D.cont_symm.comp (continuous_pi fun i => (entry n a b).comp (continuous_apply i))
-    · refine continuous_matrix fun a b => ?_
-      exact D.cont_symm.comp (continuous_pi fun i => (entryInv n a b).comp (continuous_apply i))
+  · refine Units.continuous_iff.2 ⟨continuous_matrix fun a b => ?_, continuous_matrix fun a b => ?_⟩
+    · exact D.cont_symm.comp (continuous_pi fun i => (entry n a b).comp (continuous_apply i))
+    · exact D.cont_symm.comp (continuous_pi fun i => (entryInv n a b).comp (continuous_apply i))
   · intro i
-    refine Units.continuous_iff.mpr ⟨?_, ?_⟩
-    · refine continuous_matrix fun a b => ?_
-      exact (continuous_apply i).comp (D.cont.comp (entry n a b))
-    · refine continuous_matrix fun a b => ?_
-      have : (fun x : GL (Fin n) S => (((D.comp n i x)⁻¹ : GL (Fin n) R) : Matrix (Fin n) (Fin n) R) a b) =
-          fun x => D.e (((x⁻¹ : GL (Fin n) S) : Matrix (Fin n) (Fin n) S) a b) i := by
-        funext x
-        rw [← map_inv, comp_apply]
-      show Continuous (fun x : GL (Fin n) S => (((D.comp n i x)⁻¹ : GL (Fin n) R) : Matrix (Fin n) (Fin n) R) a b)
-      rw [this]
-      exact (continuous_apply i).comp (D.cont.comp (entryInv n a b))
+    refine Units.continuous_iff.2 ⟨continuous_matrix fun a b => ?_, continuous_matrix fun a b => ?_⟩
+    · exact (continuous_apply i).comp (D.cont.comp (entry n a b))
+    · refine ((continuous_apply i).comp (D.cont.comp (entryInv n a b))).congr fun x => ?_
+      simp [← map_inv, comp_apply]
   · intro δ γ
-    constructor
-    · intro h
-      have N : ∀ j : Fin (m + 1), (List.ofFn fun i => D.comp n (j + i) δ).prod = γ := fun j => by
+    refine ⟨fun h => ?_, ?_⟩
+    · have N : ∀ j : Fin (m + 1), (List.ofFn fun i => D.comp n (j + i) δ).prod = γ := fun j => by
         rw [← comp_twNorm D n (mapGL n s) (fun _ => rfl), h, comp_diag]
       refine ⟨fun i => ?_, ?_, N⟩
       · have e := norm_shift (fun i => D.comp n i δ) i
         rw [N, N] at e
-        rw [Subgroup.mem_centralizer_singleton_iff]
-        exact e.symm
+        exact Subgroup.mem_centralizer_singleton_iff.2 e.symm
       · simpa using N 0
     · rintro ⟨-, -, N⟩
-      apply comp_inj D n
-      intro j
+      refine comp_inj D n fun j => ?_
       rw [comp_twNorm D n (mapGL n s) (fun _ => rfl), N, comp_diag]

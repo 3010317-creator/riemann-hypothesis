@@ -67,8 +67,7 @@ theorem UpperTheory.V.Af.Smo.schOfClosed :
       rw [Nat.cast_succ, contDiff_succ_iff_fderiv]
       refine ⟨(hA f hf).2.1, by simp, ?_⟩
       rw [contDiff_clm_apply_iff]
-      intro v
-      exact ih _ ((hA f hf).2.2.1 v)
+      exact fun v => ih _ ((hA f hf).2.2.1 v)
   have hinf : ∀ f ∈ A, ContDiff ℝ ∞ f := fun f hf => contDiff_infty.2 fun n => hsm n f hf
   have hx : ∀ x : X, ‖x‖ ≤ ∑ i, ‖b i‖ * ‖c i x‖ := by
     intro x
@@ -144,5 +143,4 @@ theorem UpperTheory.V.Af.Smo.schOfClosed :
         _ ≤ ∑ i, ‖L i‖ * C i := by
             gcongr with i
             exact hC i x
-  intro f hf
-  exact ⟨⟨f, hinf f hf, fun k n => hd n k f hf⟩, rfl⟩
+  exact fun f hf => ⟨⟨f, hinf f hf, fun k n => hd n k f hf⟩, rfl⟩

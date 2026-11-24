@@ -235,8 +235,7 @@ theorem adjoin_fRatio_eq_top {S : Scheme.{0}} (p : S ⟶ Sp ℂ) (ι : S ⟶ PSp
   obtain ⟨s, rfl⟩ := hsurj a
   have h1 : ψ s ∈ (Algebra.adjoin ℂ (Set.range fun l => frac (grading ℂ N) (Proj.basicOpen (grading ℂ N) g)
       (MvPolynomial.X l) g (X_mem ℂ N l) hg le_rfl)).map ψ := Subalgebra.mem_map.2 ⟨s, mem_adjoin_frac hg s, rfl⟩
-  rw [AlgHom.map_adjoin, ← Set.range_comp] at h1
-  exact h1
+  rwa [AlgHom.map_adjoin, ← Set.range_comp] at h1
 
 end GlobalTheory.EtProj.RatSpan
 
@@ -280,16 +279,14 @@ theorem lin_mem (c : Fin (N + 1) → ℂ) : lin c ∈ ProjSpace.grading ℂ N 1 
 
 theorem exists_X_notMem (z : PSpace ℂ N) :
     ∃ l, (MvPolynomial.X l : MvPolynomial (Fin (N + 1)) ℂ) ∉ z.asHomogeneousIdeal.toIdeal := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   have hle : Ideal.span (Set.range (MvPolynomial.X : Fin (N + 1) → MvPolynomial (Fin (N + 1)) ℂ)) ≤
       z.asHomogeneousIdeal.toIdeal := by
     rw [Ideal.span_le]
     rintro _ ⟨l, rfl⟩
     exact h l
   apply ProjectiveSpectrum.not_irrelevant_le z
-  intro x hx
-  exact hle (ProjSpace.irrelevant_le_span_X ℂ N hx)
+  exact fun x hx => hle (ProjSpace.irrelevant_le_span_X ℂ N hx)
 
 theorem exists_finite_gen {Y : Scheme.{0}} [NoetherianSpace Y] (Z : Set Y) (hZ : IsClosed Z) :
     ∃ T : Set Y, T.Finite ∧ T ⊆ Z ∧ ∀ x ∈ Z, ∃ t ∈ T, t ⤳ x := by
@@ -398,8 +395,7 @@ theorem ev_ratio_eq_zero_iff {X : Scheme.{0}} {p : X ⟶ Sp ℂ} {N n : ℕ} (ι
   have h1 := CxPts.mem_ptsIn_basicOpen hz (fRatio ι f g hf hg)
   rw [e, CxPts.mem_ptsIn_inf, CxPts.ev_eq hz] at h1
   constructor
-  · intro h0 hf'
-    exact (h1.1 ⟨hz, hf'⟩) h0
+  · exact fun h0 hf' => (h1.1 ⟨hz, hf'⟩) h0
   · intro hn
     by_contra h0
     exact hn (h1.2 h0).2
@@ -470,8 +466,7 @@ theorem ratio_sq_mem {X : Scheme.{0}} {p : X ⟶ Sp ℂ} {N : ℕ} (ι : X ⟶ P
   have hle : f₀ ∈ grading ℂ N m * grading ℂ N m := by
     have e : ∀ k, grading ℂ N k = grading ℂ N 1 ^ k := fun k =>
       (MvPolynomial.homogeneousSubmodule_one_pow _ k).symm
-    rw [e m, ← pow_add, ← e]
-    exact hf₀
+    rwa [e m, ← pow_add, ← e]
   have hK : ∀ b (hb : b ∈ grading ℂ N m),
       fRatio ι (q * b) f₀ (SetLike.mul_mem_graded hq hb) hf₀ ∈ RingHom.ker (CxPts.evHom hy) := by
     intro b hb
@@ -575,8 +570,7 @@ theorem exists_lin_sep {X : Scheme.{0}} (p : X ⟶ Sp ℂ) {N : ℕ} (ι : X ⟶
     | mem _ h =>
       obtain ⟨l, rfl⟩ := h
       rw [← hr, hI]
-      intro h
-      exact ((basicOpen_app_frac ι _ (hL l) hg le_rfl).le h).2 (hLx l)
+      exact fun h => ((basicOpen_app_frac ι _ (hL l) hg le_rfl).le h).2 (hLx l)
     | algebraMap c => rw [he, sub_self]; exact I.zero_mem
     | add a b _ _ ha hb =>
       rw [map_add (f := _), map_add (f := _)]
@@ -790,8 +784,7 @@ theorem jet_range (hp : ι ≫ PSpace.str ℂ N = p) (d : ℕ) [SmoothOfRelative
       rw [map_sum]
       simpa only [map_smul, map_zero] using hb
     have h2 := (hq _ _).1 this
-    rw [sub_zero] at h2
-    exact h2
+    rwa [sub_zero] at h2
   refine ⟨?_, ?_, hmem⟩
   · rw [hspan]
     exact FiniteDimensional.span_of_finite ℂ (Set.finite_range _)
@@ -916,8 +909,7 @@ theorem exists_jet_forms : ∀ (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp ℂ
           exact hgen i
       · have hxZ : x ∈ Z := Set.mem_iInter.2 fun i => by
           have := hxi i.castSucc
-          rw [Fin.snoc_castSucc] at this
-          exact this
+          rwa [Fin.snoc_castSucc] at this
         have hx' : x ∉ fOpen ι c'.1 := by
           have := hxi (Fin.last k)
           rwa [Fin.snoc_last] at this
@@ -960,8 +952,7 @@ theorem exists_jet_forms : ∀ (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp ℂ
       · obtain ⟨y, hy, rfl⟩ := htS
         exact hx ⟨y, hy, eq_of_specializes y htx⟩
       have htq : t ∈ fOpen ι (q.1 * q.1) := by
-        intro hmem
-        exact hq ⟨t, ht, htS⟩ (((ι.base t).isPrime.mem_or_mem hmem).elim id id)
+        exact fun hmem => hq ⟨t, ht, htS⟩ (((ι.base t).isPrime.mem_or_mem hmem).elim id id)
       have hxh : z.1 (IsLocalRing.closedPoint ℂ) ∉ fOpen ι (q.1 * q.1) := fun h => hzh (CxPts.mem_ptsIn.2 h)
       have h2 := Generic.coheight_step htx _ (fOpen ι (q.1 * q.1)).isOpen htq hxh
       have h3 := hZ t htS (fun i => Set.mem_iInter.1 (hTZ ht) i)
@@ -970,8 +961,7 @@ theorem exists_jet_forms : ∀ (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp ℂ
       norm_cast at this
       omega
     obtain ⟨y, hy, e⟩ := hx
-    rw [pt_inj e]
-    exact hy
+    rwa [pt_inj e]
   · intro y hy f₀ hf₀ hyf
     refine ⟨ratio_sq_mem ι hqm hh hf₀ hyf (hqS y hy), ?_⟩
     · have hya := haS y hy
@@ -995,8 +985,7 @@ theorem exists_jet_forms : ∀ (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp ℂ
           rfl
         rw [Submodule.mkQ_apply, Submodule.mkQ_apply, Submodule.Quotient.eq] at e1
         have e2 := neg_mem e1
-        rw [neg_sub] at e2
-        exact e2
+        rwa [neg_sub] at e2
       have e : u = (u - ∑ j, b j • r j) + ∑ j, b j • r j := (sub_add_cancel _ _).symm
       rw [e]
       refine Ideal.add_mem _ (Ideal.mem_sup_right h2) (Ideal.mem_sup_left ?_)

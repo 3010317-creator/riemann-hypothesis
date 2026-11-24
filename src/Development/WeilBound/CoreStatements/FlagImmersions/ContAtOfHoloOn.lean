@@ -104,8 +104,7 @@ theorem analytic_off {A : FinHolAtlas e X} {B : FinHolAtlas e Y} {h : Y → X} {
     exact hc.localInverse_apply_image hL hn
   have hri : ∀ᶠ t in 𝓝 q, φ (ψ t) = t := by
     have := (hc.hasStrictFDerivAt' hL hn).eventually_right_inverse
-    rw [hφp] at this
-    exact this
+    rwa [hφp] at this
   have hfa : AnalyticAt ℂ (f ∘ (B.chart j).symm) (ψ q) := by
     rw [hψq]
     refine hf j p ⟨hpt, ?_⟩
@@ -213,8 +212,7 @@ theorem descend : Descend := by
   intro e X Y _ _ _ _ _ _ A B h S U f hh hd hU hf
   classical
   rcases isEmpty_or_nonempty Y with hY | hY
-  · refine ⟨0, fun k => ?_, fun y => isEmptyElim y⟩
-    exact analyticOnNhd_const
+  · exact ⟨0, fun k => analyticOnNhd_const, fun y => isEmptyElim y⟩
   have hex : ∀ x, ∃ y, x ∉ S → h ⁻¹' {x} = {y} := fun x => by
     by_cases hx : x ∈ S
     · exact ⟨hY.some, fun h' => (h' hx).elim⟩

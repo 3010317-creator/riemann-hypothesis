@@ -245,12 +245,10 @@ theorem smE_prod {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] :
   induction k with
   | zero =>
     intro F _ σ a b
-    simp only [List.ofFn_zero, List.prod_nil]
-    exact contDiff_const
+    simpa only [List.ofFn_zero, List.prod_nil] using contDiff_const
   | succ k ih =>
     intro F hF
-    simp only [List.ofFn_succ, List.prod_cons]
-    exact SmE.mul (hF 0) (ih _ fun i => hF i.succ)
+    simpa only [List.ofFn_succ, List.prod_cons] using SmE.mul (hF 0) (ih _ fun i => hF i.succ)
 
 theorem smooth_of_holFn {Hm : ι → Mt n} {q : ι → ℕ} {x₀ : ι → Mt n} {w : ι → Fin n → ℤ}
     (h : ∀ τ, OrthFr (Hm τ) (q τ) (x₀ τ)) {f : (ι → Mt n) → ℂ} (hf : HolFn Hm q x₀ w f) : SmFn Hm f := by
@@ -265,8 +263,7 @@ theorem smooth_of_holFn {Hm : ι → Mt n} {q : ι → ℕ} {x₀ : ι → Mt n}
     · subst hσ
       simp only [Pi.mulSingle_eq_same]
       exact (contDiff_exp_entry (Xs i) a b).comp (contDiff_apply ℝ (fun _ => ℝ) i)
-    · simp only [Pi.mulSingle_eq_of_ne hσ]
-      exact contDiff_const
+    · simpa only [Pi.mulSingle_eq_of_ne hσ] using contDiff_const
   have h2 : SmE (fun t : Fin k → ℝ => u * (List.ofFn fun i => (Pi.mulSingle (τs i) (NormedSpace.exp (t i • Xs i)) : ι → Mt n)).prod) :=
     SmE.mul (F := fun _ => u) (fun _ _ _ => contDiff_const) h1
   have hsm : SmE (fun t : Fin k → ℝ => u * (List.ofFn fun i => (Pi.mulSingle (τs i) (NormedSpace.exp (t i • Xs i)) : ι → Mt n)).prod * x₀) :=

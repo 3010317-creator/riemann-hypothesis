@@ -270,8 +270,7 @@ theorem eq_zero_of_joint {K V ι : Type*} [Field K] [AddCommGroup V] [Module K V
     intro y _ _ hs
     have : {z : V | ∃ μ ∈ (∅ : Finset (ι → K)), ∀ t, p t → T t z = μ t • z} = ∅ := by
       ext z; simp
-    rw [this, Submodule.span_empty, Submodule.mem_bot] at hs
-    exact hs
+    rwa [this, Submodule.span_empty, Submodule.mem_bot] at hs
   | insert μ0 M _ ih =>
     intro y hne hy hs
     obtain ⟨t0, hp0, hμ0⟩ := hne μ0 (Finset.mem_insert_self _ _)
@@ -364,8 +363,7 @@ theorem sig_all_of_sideB : ∀ (D : D7) (cf : CharFrame D) (Rw : RowSide D) (low
   classical
   refine EigModel.sig_all_of hN hM hC ?_
   rintro i j hj b ev ⟨y, hyV, hy0, hyE⟩
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   apply hy0
   refine eq_zero_of_joint (fun t : ℕ × PlE D.host => D.nexp.hkF i j b t.1 t.2) (fun t => HkIdx i t.1 t.2)
     (fun t => ev t.1 t.2) _ y ?_ (fun t ht => hyE t.1 t.2 ht) (good_part_le_span_triple_eigenvectors Bs hF i j hj b hyV)
@@ -566,8 +564,7 @@ theorem fk_zero (t : RowsT K w Z Wt p0) (v : B.places.Pl) (hv : v ∉ Wt) (j : F
   refine ⟨j, _, Or.inl rfl, Or.inr (Or.inr ?_)⟩
   have e : (w.D Z).plEq.symm ((w.D Z).plEq v) = v := Equiv.symm_apply_apply _ _
   show FK K.s (w.D Z) (j.1 + 1) ((w.D Z).what₂.places.resChar ((w.D Z).plEq.symm ((w.D Z).plEq v))) ≠ 0
-  rw [e]
-  exact h
+  rwa [e]
 
 section Idx
 
@@ -606,7 +603,7 @@ theorem type_mem (t : RowsT K w Z Wt p0) (v : B.places.Pl) (i : Fin 2) (hv : B.p
   have hm : 0 < B.R.m := by have := B.R.two_le_m; omega
   have z := fk_zero t v h ⟨0, hm⟩
   unfold FK at z
-  rw [if_pos ⟨i, hv⟩] at z
+  rw [ite_eq_left ⟨i, hv⟩] at z
   exact fTypeG_ne t.r.Y.kap 1 le_rfl hm z
 
 end GlobalTheory.Mem.Top.Bl.Model3
@@ -744,8 +741,7 @@ theorem transport_alt {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {D' : D7} {c
   refine ⟨Sb, hS0, fun Rw hRw => ?_, hO⟩
   have e5 : Rw.locR = Rw0.locR := (eq_of_heq hRw).trans (eq_of_heq hR0).symm
   unfold GlobalTheory.TwInputs.EigTrue at hT ⊢
-  rw [e5]
-  exact hT
+  rwa [e5]
 end GlobalTheory.GalLoc.EigLoc
 namespace GlobalTheory.GalLoc.EigLoc
 end GlobalTheory.GalLoc.EigLoc
@@ -834,8 +830,7 @@ theorem hkFR_act (i : D.ntw.Tw) (j : ℕ) (b : Bool) (hL : ℕ → PlE D.host �
     (hc : ∀ g x, hL k P ((S.A j).ρ g x) = (S.A j).ρ g (hL k P x)) (g : G0g D.nd) (z : Fm S i j b) :
     hkFR S i j b hL hs k P (actG S i j b hst hχ g z) = actG S i j b hst hχ g (hkFR S i j b hL hs k P z) := by
   have hcomm : hLr S j hL hs k P * rhoKG S j hst (S.eG.symm g) = rhoKG S j hst (S.eG.symm g) * hLr S j hL hs k P := by
-    refine LinearMap.ext fun x => Subtype.ext ?_
-    exact hc (S.eG.symm g) (show ↥(S.A j).WK from x).1
+    exact LinearMap.ext fun x => Subtype.ext (hc (S.eG.symm g) (show ↥(S.A j).WK from x).1)
   have h2 := LinearMap.congr_fun (congrArg (Module.End.baseChangeHom S.Ks (KB S i b) (FmK S j)) hcomm) z
   rw [map_mul, map_mul] at h2
   change Module.End.baseChangeHom S.Ks (KB S i b) (FmK S j) (hLr S j hL hs k P) ((readLL0 S i b (chiL S j hχ (S.eG.symm g)))⁻¹ •
@@ -1069,8 +1064,7 @@ theorem commAll_fullAll_raw (hR : Rl.Char3 F) (hU : Rl.toRealDat.LUnif) (hI : Rl
         rw [algebraMap_smul]
         exact Submodule.subset_span hm
       have := Submodule.smul_mem _ (algebraMap (D.ntw.O i) (FractionRing (D.ntw.O i)) c)⁻¹ hm'
-      rw [inv_smul_smul₀ hc0'] at this
-      exact this
+      rwa [inv_smul_smul₀ hc0'] at this
     refine eq_top_iff.2 fun t _ => ?_
     have ht : e t ∈ Submodule.span (FractionRing (D.ntw.O i)) (Bsup S i ((i' : ℕ) + 1) b : Set (Fm S i ((i' : ℕ) + 1) b)) := by
       rw [hB]; exact Submodule.mem_top
@@ -1170,8 +1164,7 @@ theorem galoisRep_field_of_definition_at_place_alt : _root_.GlobalTheory.HeightC
   refine ⟨?_, F.roots, F.star⟩
   have v : ValLL0 (w.D Z) t.r.z.R.C := F.vals
   have e : t.r.z.R.C = TC.cf w.I w.l Z := t.r.z.lev.C
-  rw [← e]
-  exact v
+  rwa [← e]
 end GlobalTheory.GalLoc.FieldAt
 end
 section

@@ -103,11 +103,9 @@ theorem eq_zero_of_geometric {P : Scheme.{0}} [IsReduced P] (s : Γ(P, ⊤))
   have h2 : (default : Sp K) ∈ y ⁻¹ᵁ P.basicOpen s := by
     change y default ∈ P.basicOpen s
     have : y default = x := by
-      simp only [y, Scheme.Hom.comp_apply]
-      exact Scheme.fromSpecResidueField_apply _ _
+      simpa only [y, Scheme.Hom.comp_apply] using Scheme.fromSpecResidueField_apply _ _
     rwa [this]
-  rw [h1] at h2
-  exact h2
+  rwa [h1] at h2
 
 theorem hom_ext_of_geometric {P Y : Scheme.{0}} [IsReduced P] [IsAffine Y] (u v : P ⟶ Y)
     (h : ∀ (K : Type) [Field K] [IsAlgClosed K] (y : Sp K ⟶ P), y ≫ u = y ≫ v) : u = v := by
@@ -118,8 +116,7 @@ theorem hom_ext_of_geometric {P Y : Scheme.{0}} [IsReduced P] [IsAffine Y] (u v 
   have := congrArg (fun q => fnAt q r) (h K y)
   simp only [fnAt_comp] at this
   unfold fnAt at this ⊢
-  rw [map_sub, map_sub, sub_eq_zero]
-  exact this
+  rwa [map_sub, map_sub, sub_eq_zero]
 
 theorem exists_glue {X : Scheme.{0}} [IsReduced X] {ι : Type} (A : ι → Type) [∀ i, CommRing (A i)]
     (j : ∀ i, Sp (A i) ⟶ X) [∀ i, IsOpenImmersion (j i)] (hcov : ∀ x : X, ∃ i, x ∈ Set.range (j i))

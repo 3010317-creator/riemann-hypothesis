@@ -163,7 +163,7 @@ theorem UpperTheory.continuous_GL2BaseChange_diagUnit_infiniteIdele :
       · exact continuous_pi fun _ => (Real.continuous_exp.inv₀ Real.exp_ne_zero)
     have he : (fun t : ℝ => iy (Real.exp t)) = fun t => TR.infId ℚ (u t) := by
       funext t
-      simp only [iy, dif_neg (Real.exp_ne_zero t)]
+      simp only [iy, dite_eq_right (Real.exp_ne_zero t)]
       rfl
     rw [he]
     exact (TR.continuous_infId ℚ).comp hu
@@ -488,8 +488,7 @@ private theorem den_of {Q : Set (FiniteAdeleRing (𝓞 ℚ) ℚ)} (hQ : IsCompac
   rw [← map_mul] at h1
   have h2 : algebraMap (𝓞 ℚ) ℚ D * q ∈
       ((1 : (FractionalIdeal (𝓞 ℚ)⁰ ℚ)ˣ) : FractionalIdeal (𝓞 ℚ)⁰ ℚ) := by
-    rw [← algebraMap_mem_idealFiniteAdeles_iff, ← SetLike.mem_coe, idealFiniteAdeles_one]
-    exact h1
+    rwa [← algebraMap_mem_idealFiniteAdeles_iff, ← SetLike.mem_coe, idealFiniteAdeles_one]
   rw [Units.val_one] at h2
   obtain ⟨r, hr⟩ := (FractionalIdeal.mem_one_iff _).mp h2
   have hn : ((Rat.ringOfIntegersEquiv r : ℤ) : ℚ) = (z : ℚ) * q := by
@@ -838,9 +837,7 @@ private lemma gen {ι : Type*} (R : Set ι) (f : ι → ℝ) (hf : ∀ x, 0 ≤ 
     (K : ℝ) (hK : 0 ≤ K) (hb : ∀ x ∈ R, f x ≤ K * w (τ x)) :
     Summable (R.indicator f) ∧ ∑' x, R.indicator f x ≤ K * ∑' x, w x := by
   classical
-  have hinj' : Function.Injective (fun x : R => τ x.1) := by
-    intro a b h
-    exact Subtype.ext (hinj a.2 b.2 h)
+  have hinj' : Function.Injective (fun x : R => τ x.1) := fun a b h => Subtype.ext (hinj a.2 b.2 h)
   have hs : Summable (fun x : R => w (τ x.1)) := hw.comp_injective hinj'
   have hs2 : Summable (fun x : R => f x.1) :=
     Summable.of_nonneg_of_le (fun x => hf _) (fun x => hb x.1 x.2) (hs.mul_left K)
@@ -1274,8 +1271,7 @@ theorem UpperTheory.norm_thetaSeries_siegelSet_le_exp :
       rw [re_mul, re_add, re_mul, re_rat, re_rat, re_inv, abs_mul, abs_inv, div_eq_mul_inv]
     by_cases hξ : ξ ∈ R
     · rw [Set.indicator_of_mem hξ]
-      rw [e0, e1] at h1
-      exact h1
+      rwa [e0, e1] at h1
     · rw [Set.indicator_of_notMem hξ, mul_zero]
       have h0 : (Φ fun j => (iy (Real.exp t) : A ℚ) * (Yv b' a' ξ.1 ᵥ* k.val) j) = 0 := by
         by_contra h

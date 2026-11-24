@@ -88,8 +88,7 @@ private theorem oneStep {G H : Type} [Group G] [TopologicalSpace G] [IsTopologic
   have hconv : Convex ℝ C := by
     rw [hC]
     refine Convex.inter ?_ (convex_iInter₂ fun u _ => convex_closedBall _ _)
-    intro a ha b hb s t _ _ _
-    exact Y.add_mem (Y.smul_mem (s : ℂ) ha) (Y.smul_mem (t : ℂ) hb)
+    exact fun a ha b hb s t _ _ _ => Y.add_mem (Y.smul_mem (s : ℂ) ha) (Y.smul_mem (t : ℂ) hb)
   have hvC : v ∈ C := by
     refine (hmem v).2 ⟨hvY, fun u hu => ?_⟩
     have : ‖π u v - v‖ < r := hKU hu
@@ -189,7 +188,6 @@ theorem UpperTheory.exists_compactOpen_family_inf_fixed_ne_bot :
   have hw : w ∈ Z ⊓ ⨅ i, fixU (π i) (U i) := by
     refine Submodule.mem_inf.mpr ⟨hwZ, ?_⟩
     rw [Submodule.mem_iInf]
-    intro i
-    exact mem_fixU.mpr (hwf i (Finset.mem_univ i))
+    exact fun i => mem_fixU.mpr (hwf i (Finset.mem_univ i))
   rw [hbot] at hw
   simpa using hw

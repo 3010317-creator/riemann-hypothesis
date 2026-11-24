@@ -213,7 +213,6 @@ theorem typePoly : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (a
   refine ⟨q, hm, hd, fun φ hφ => Subtype.ext (funext fun g => ?_)⟩
   have h := congrFun (hq g φ ((hN φ).2 hφ)) 1
   change (TR.cptRep F a 1 _).1 g = 0 at h
-  rw [map_one] at h
-  exact h
+  rwa [map_one] at h
 
 end UpperTheory.V.Af.CuspFin

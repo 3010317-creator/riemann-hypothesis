@@ -86,8 +86,7 @@ lemma incH_injective : Function.Injective (incH V) := by
   intro x y h
   ext r
   have := congrArg (fun z => z.coeff r) h
-  simp only [incH_coeff] at this
-  exact this
+  simpa only [incH_coeff] using this
 
 lemma mem_range_incH (x : HahnSeries ℚ Ω) : x ∈ (incH V).range ↔ ∀ r, x.coeff r ∈ V := by
   constructor
@@ -97,8 +96,7 @@ lemma mem_range_incH (x : HahnSeries ℚ Ω) : x ∈ (incH V).range ↔ ∀ r, x
     refine ⟨⟨fun r => ⟨x.coeff r, h r⟩, x.isPWO_support.mono ?_⟩, ?_⟩
     · intro r hr
       rw [HahnSeries.mem_support]
-      intro h0
-      exact hr (Subtype.ext h0)
+      exact fun h0 => hr (Subtype.ext h0)
     · ext r
       rfl
 
@@ -206,16 +204,16 @@ lemma redA_const (v : V) :
   funext r
   rw [redA_coeff, algS, HahnSeries.coeff_single]
   by_cases hr : r = 0
-  · rw [if_pos hr]
+  · rw [ite_eq_left hr]
     congr 1
     apply Subtype.ext
     show (e (algebraMap Ω K v)).coeff r = v
-    rw [coeff_const, if_pos hr]
-  · rw [if_neg hr]
+    rw [coeff_const, ite_eq_left hr]
+  · rw [ite_eq_right hr]
     have h0 : (⟨(e (algebraMap Ω K v)).coeff r, (mem_intA V e _).1 (const_mem V e v v.2) r⟩ : V) = 0 := by
       apply Subtype.ext
       show (e (algebraMap Ω K v)).coeff r = 0
-      rw [coeff_const, if_neg hr]
+      rw [coeff_const, ite_eq_right hr]
     rw [h0, map_zero]
 
 theorem exists_dom (j : K) (hj1 : (e j).coeff (-1) = 1) (hj2 : ∀ r : ℚ, r < -1 → (e j).coeff r = 0)
@@ -275,8 +273,7 @@ theorem exists_dom (j : K) (hj1 : (e j).coeff (-1) = 1) (hj2 : ∀ r : ℚ, r < 
           1 * W.valuation (algebraMap Ω K a⁻¹) := by gcongr
       rw [h5, one_mul] at h6
       exact absurd (lt_of_le_of_lt h6 h3) (lt_irrefl 1)
-    · intro ha
-      exact hA ⟨_, const_mem V e a ha⟩
+    · exact fun ha => hA ⟨_, const_mem V e a ha⟩
   · rintro P hP ⟨i0, hne, hi0, hi0'⟩
     have hjA : j ∈ intA V e := (mem_intA V e j).2 hj3
     obtain ⟨P', hP'⟩ : ∃ P' : Polynomial V, P'.map V.subtype = P :=
@@ -293,9 +290,7 @@ theorem exists_dom (j : K) (hj1 : (e j).coeff (-1) = 1) (hj2 : ∀ r : ℚ, r < 
     have hc : (redA V e).comp ι =
         (algebraMap (IsLocalRing.ResidueField V) (HahnSeries ℚ (IsLocalRing.ResidueField V))).comp
           (IsLocalRing.residue V) := by
-      apply RingHom.ext
-      intro v
-      exact redA_const V e v
+      exact RingHom.ext (fun v => redA_const V e v)
     rw [hc, ← Polynomial.eval₂_map, ← Polynomial.aeval_def] at hk
     set J := redA V e ⟨j, hjA⟩ with hJdef
     have hJ : J.orderTop = ((-1 : ℚ) : WithTop ℚ) := by

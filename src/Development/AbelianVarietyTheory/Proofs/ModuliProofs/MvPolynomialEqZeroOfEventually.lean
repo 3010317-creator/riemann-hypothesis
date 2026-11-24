@@ -148,8 +148,7 @@ theorem _root_.GlobalTheory.CountableFibres.exists_injective_fderiv {E F : Type}
     have : x - y ∈ K := by
       simp only [K, LinearMap.mem_ker, ContinuousLinearMap.coe_coe, ContinuousLinearMap.comp_apply,
         map_sub, hxy, sub_self]
-    rw [hK, Submodule.mem_bot, sub_eq_zero] at this
-    exact this
+    rwa [hK, Submodule.mem_bot, sub_eq_zero] at this
   have hcc : K.ClosedComplemented := (P.comp L).ker_closedComplemented_of_finiteDimensional_range
   let D : ImplicitFunctionData ℂ E W K := {
     leftFun := fun x => P (f x)
@@ -171,12 +170,10 @@ theorem _root_.GlobalTheory.CountableFibres.exists_injective_fderiv {E F : Type}
     rw [sub_self, map_zero]
   have htarget : (P (f z₀), (0 : K)) ∈ Ψ.target := by
     have h := D.map_pt_mem_toOpenPartialHomeomorph_target
-    rw [← ImplicitFunctionData.prodFun_apply, hp] at h
-    exact h
+    rwa [← ImplicitFunctionData.prodFun_apply, hp] at h
   have hψ0 : ψ 0 = z₀ := by
     have h := Ψ.left_inv D.pt_mem_toOpenPartialHomeomorph_source
-    rw [D.toOpenPartialHomeomorph_coe, hp] at h
-    exact h
+    rwa [D.toOpenPartialHomeomorph_coe, hp] at h
   have htend : Tendsto (fun t : K => (P (f z₀), t)) (𝓝 0) (𝓝 (P (f z₀), 0)) :=
     tendsto_const_nhds.prodMk_nhds tendsto_id
   have hψc : ContinuousAt ψ 0 :=
@@ -188,15 +185,13 @@ theorem _root_.GlobalTheory.CountableFibres.exists_injective_fderiv {E F : Type}
   have hlev : ∀ᶠ t in 𝓝 (0 : K), P (f (ψ t)) = P (f z₀) := by
     filter_upwards [hinv'] with t ht
     have h := congrArg Prod.fst ht
-    rw [D.toOpenPartialHomeomorph_apply] at h
-    exact h
+    rwa [D.toOpenPartialHomeomorph_apply] at h
   have hinv : ∀ᶠ t in 𝓝 (0 : K), (Ψ (ψ t)).2 = t :=
     hinv'.mono fun _ ht => congrArg Prod.snd ht
   have hdiff : ∀ᶠ t in 𝓝 (0 : K), DifferentiableAt ℂ ψ t := by
     have hl : ContDiffAt ℂ 1 D.leftFun D.pt :=
       (P.contDiff.contDiffAt).comp z₀ (hf z₀ hz₀)
     have hr : ContDiffAt ℂ 1 D.rightFun D.pt := by
-      show ContDiffAt ℂ 1 (fun x => (Classical.choose hcc) (x - z₀)) z₀
       exact ((Classical.choose hcc).contDiff.comp (contDiff_id.sub contDiff_const)).contDiffAt
     have hp : D.prodFun D.pt = (P (f z₀), 0) := by
       rw [ImplicitFunctionData.prodFun_apply]
@@ -267,8 +262,7 @@ theorem _root_.GlobalTheory.CountableFibres.exists_independent_ratios :
   have hAn : ∀ a, AnalyticOnNhd ℂ (fun z => θ z a) B := fun a => hO d B _ hB (hdiff a)
   obtain ⟨z₁, hz₁⟩ := hBne
   obtain ⟨a₀, ha₀⟩ : ∃ a₀, θ z₁ a₀ ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact (hfib z₁ hz₁).1 (funext h)
   set U := B ∩ (fun z => θ z a₀) ⁻¹' {0}ᶜ
   have hUo : IsOpen U := (hAn a₀).continuousOn.isOpen_inter_preimage hB isOpen_compl_singleton
@@ -314,8 +308,7 @@ theorem _root_.GlobalTheory.CountableFibres.exists_independent_ratios :
     · let T : (Fin d → ℂ) →ₗ[ℂ] κ → ℂ := LinearMap.pi fun k => v (c k)
       have hT : Function.Injective T := by
         rw [← LinearMap.ker_eq_bot, Submodule.eq_bot_iff]
-        intro y hy
-        exact hkill y fun k => congrFun hy k
+        exact fun y hy => hkill y fun k => congrFun hy k
       have := LinearMap.finrank_le_finrank_of_injective hT
       rwa [Module.finrank_fin_fun, Module.finrank_fintype_fun_eq_card] at this
   set e := Fintype.equivFinOfCardEq hcard

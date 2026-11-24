@@ -65,8 +65,7 @@ theorem normV_prime (v : Pl) : (normV v).Prime := by
     obtain ⟨n, rfl⟩ := Rat.ringOfIntegersEquiv.symm.surjective x
     exact ⟨(n : ZMod _), by simp⟩
   have hb := Nat.card_eq_of_bijective _ ⟨RingHom.injective _, hs⟩
-  rw [normV, ← hb, Nat.card_zmod]
-  exact hp
+  rwa [normV, ← hb, Nat.card_zmod]
 
 theorem normV_mem (v : Pl) : ((normV v : ℕ) : 𝓞 ℚ) ∈ v.asIdeal := by
   have h : Nat.card (𝓞 ℚ ⧸ v.asIdeal) = Ideal.absNorm v.asIdeal := by

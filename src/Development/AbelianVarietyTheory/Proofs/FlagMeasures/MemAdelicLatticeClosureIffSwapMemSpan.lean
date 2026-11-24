@@ -53,12 +53,10 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
   {n : ℕ} (L : Submodule (𝓞 E) (Fin n → E))
 
 private lemma mem_intAf_of_mem_intAd {a : Af F} (ha : a ∈ Formalism.UG.intAd F) : a ∈ Formalism.MainNotions.StandardLattice.intAf F := by
-  intro v
-  exact ha v
+  exact fun v => ha v
 
 private lemma mem_intAd_of_mem_intAf {a : Af F} (ha : a ∈ Formalism.MainNotions.StandardLattice.intAf F) : a ∈ Formalism.UG.intAd F := by
-  intro v
-  exact ha v
+  exact fun v => ha v
 
 private lemma intAf_mul_mem {a b : Af F} (ha : a ∈ Formalism.MainNotions.StandardLattice.intAf F) (hb : b ∈ Formalism.MainNotions.StandardLattice.intAf F) :
     a * b ∈ Formalism.MainNotions.StandardLattice.intAf F := by

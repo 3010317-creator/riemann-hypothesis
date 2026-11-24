@@ -86,8 +86,7 @@ theorem exists_ne_zero_of_isVacO {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D
     {sS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ} {sT : D.what₂.Tau → Matrix (Fin T.rank) (Fin T.rank) ℂ}
     {LS : Set (Fin S.rank → D.host.E)} {LT : Set (Fin T.rank → D.host.E)} {f : WO S T → ℂ}
     (hf : IsVacO ψ θ S T sS sT LS LT f) : ∃ w, f w ≠ 0 := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   obtain ⟨⟨p, hp⟩, hn⟩ := hf.2.norm
   have := hn p hp
   have h0 : f = 0 := funext h
@@ -138,8 +137,7 @@ theorem isOpen_map_levelGroup (V : HSp D) {N : ℕ} (hN : 0 < N) :
       (AddSubgroup.closure (S : Set (Fin V.rank → D.host.E)) : AddSubgroup (Fin V.rank → D.host.E)) := by
     intro x hx
     have hx' : x ∈ Submodule.span ℤ (S : Set (Fin V.rank → D.host.E)) := by rw [hS]; exact hx
-    rw [← Submodule.span_int_eq_addSubgroupClosure]
-    exact hx'
+    rwa [← Submodule.span_int_eq_addSubgroupClosure]
   have hU : (⋂ x ∈ S, {k : Bridge.Gf V | ∃ y ∈ latHat V,
       ((k : GL (Fin V.rank) (Af D.host.F ⊗[D.host.F] D.host.E)) :
         Matrix (Fin V.rank) (Fin V.rank) (Af D.host.F ⊗[D.host.F] D.host.E)) *ᵥ GlobalTheory.AdLat.fv D.host.F x -

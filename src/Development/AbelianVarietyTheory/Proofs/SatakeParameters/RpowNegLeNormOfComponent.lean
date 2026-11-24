@@ -328,12 +328,10 @@ theorem ncard_subElem [Finite (ResidueField O)] (L : Lat O K r) (j : ℕ) :
     fun W => ⟨toLat L W.1, ⟨hle W.1, by rw [hidx, W.2]⟩, hlow W.1⟩
   have hf : Function.Bijective f := by
     constructor
-    · intro W W' h
-      exact Subtype.ext (toLat_injective L (congrArg (fun x => x.1) h))
+    · exact fun W W' h => Subtype.ext (toLat_injective L (congrArg (fun x => x.1) h))
     · rintro ⟨M, ⟨h1, h2⟩, h3⟩
       have hC : (maximalIdeal O • ⊤ : Submodule O L.1) ≤ M.1.comap L.1.subtype := by
-        rw [← Submodule.map_le_iff_le_comap, map_subtype_smul_top]
-        exact h3
+        rwa [← Submodule.map_le_iff_le_comap, map_subtype_smul_top]
       obtain ⟨W, hW⟩ := exists_pull L.1 _ hC
       have hM : toLat L W = M := by
         apply Subtype.ext
@@ -421,7 +419,7 @@ theorem one_sub_mul_geom (c : ℂ) :
   | zero => simp
   | succ n =>
     rw [sub_mul, one_mul, map_sub, mul_assoc, PowerSeries.coeff_C_mul, PowerSeries.coeff_succ_X_mul,
-      PowerSeries.coeff_mk, PowerSeries.coeff_mk, PowerSeries.coeff_one, if_neg (Nat.succ_ne_zero n),
+      PowerSeries.coeff_mk, PowerSeries.coeff_mk, PowerSeries.coeff_one, ite_eq_right (Nat.succ_ne_zero n),
       pow_succ]
     ring
 
@@ -515,8 +513,7 @@ theorem ncard_subIdx_eq (r : ℕ) : ∀ (n : ℕ) (L : Lat O K r),
       (subElem_finite _ L), ← elem_coeff r L (k + 1), smul_eq_mul, nsmul_eq_mul]
     ring
   have hsum := Finset.sum_congr rfl hterm
-  rw [Finset.sum_range_succ'] at hid
-  rw [hsum] at hid
+  rw [Finset.sum_range_succ', hsum] at hid
   have hrel := coeff_relation (qRes O) r n hn
   rw [Finset.sum_range_succ'] at hrel
   have h0 := elem_coeff r L 0
@@ -555,8 +552,7 @@ namespace GlobalTheory
 
 theorem norm_le_of_recurrence_growth : ∀ (β : Multiset ℂ) (a : ℕ → ℂ) (C B : ℝ) (m : ℕ), 0 < B → a 0 = 1 → (∀ n, 1 ≤ n → ∑ k ∈ Finset.range (n + 1), (-1 : ℂ) ^ k * β.esymm k * a (n - k) = 0) → (∀ n, ‖a n‖ ≤ C * ((n : ℝ) + 1) ^ m * B ^ n) → ∀ b ∈ β, ‖b‖ ≤ B := by
   intro β a C B m hB ha0 hrec hgrow b hb
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have hb0 : b ≠ 0 := by
     intro h; rw [h, norm_zero] at hlt; linarith
   set X : ℂ := b⁻¹ with hX
@@ -703,8 +699,8 @@ theorem main : ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRi
   have hd : ∀ k L, heckeElem k φ L = d k • φ L := by
     intro k L
     by_cases hk : k ≤ r
-    · rw [hT k hk L, hd_def]; simp only [hk, if_true]
-    · rw [heckeElem_eq_zero (by omega), hd_def]; simp only [hk, if_false, zero_smul]
+    · rw [hT k hk L, hd_def]; simp only [hk, ite_true]
+    · rw [heckeElem_eq_zero (by omega), hd_def]; simp only [hk, ite_false, zero_smul]
   have hlin : ∀ (c : ℂ) k L, heckeElem k (fun M => c • φ M) L = (c * d k) • φ L := by
     intro c k L
     rw [heckeElem_eq_sum, ← Finset.smul_sum, ← heckeElem_eq_sum, hd, smul_smul]
@@ -742,7 +738,7 @@ theorem main : ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRi
     intro k
     rw [hβ_def, esymm_map_mul, hs_def, hd_def]
     by_cases hk : k ≤ r
-    · simp only [hk, if_true]
+    · simp only [hk, ite_true]
       have hreal : c ^ k = (qRes O : ℝ) ^ (k * (k - 1) / 2) *
           (qRes O : ℝ) ^ ((k : ℝ) * ((r : ℝ) - k) / 2) := by
         rw [hc_def, ← Real.rpow_natCast, ← Real.rpow_mul hq0.le, ← Real.rpow_natCast (qRes O : ℝ),
@@ -755,7 +751,7 @@ theorem main : ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRi
           Complex.ofReal_natCast]
       rw [hcomp]
       ring
-    · simp only [hk, if_false, mul_zero]
+    · simp only [hk, ite_false, mul_zero]
       rw [Multiset.esymm, Multiset.powersetCard_eq_empty _ (by rw [hcard]; omega)]
       simp
   have hrel : ∀ n, 1 ≤ n → ∑ k ∈ Finset.range (n + 1), (-1 : ℂ) ^ k * β.esymm k * a (n - k) = 0 := by
@@ -851,8 +847,7 @@ theorem satake_bound_of_isometric_spherical : ∀ (O K : Type) [CommRing O] [IsD
   refine _root_.GlobalTheory.SatakeBound.main O K r V φ α ‖v‖ hcard ?_ ?_ ?_
   · intro h
     exact hv (by rw [← hstd, h]; rfl)
-  · intro L
-    exact (hnorm _ _).le
+  · exact fun L => (hnorm _ _).le
   · intro k hk L
 
     have h0 : heckeElem k φ (std O K r)

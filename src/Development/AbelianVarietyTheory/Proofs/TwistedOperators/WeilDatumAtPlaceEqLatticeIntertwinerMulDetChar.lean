@@ -211,8 +211,7 @@ theorem nu_eq_one (hψ : IsStdChar D ψ (-1)) (hW : IsWeilDatumO ψ S T χS χT 
       ∀ u ∈ (latO S T ΛS ΛT fun w => w = v), heisO ψ S T u f = f := by
     obtain ⟨f, f0, hf⟩ := GlobalTheory.FinWeilForm.exists_theta hψ S T
     obtain ⟨e, he, e0⟩ : ∃ e, Fixes (opF hψ.1 S T w₀) (latF S T ΛS ΛT) e ∧ e ≠ 0 := by
-      by_contra hn
-      push_neg at hn
+      by_contra! hn
       have : (⊤ : Submodule ℂ (thetaSub ψ S T)) ≤ ⊥ := by
         rw [← hL.span, Submodule.span_le]
         rintro _ ⟨x, e, he, rfl⟩
@@ -314,12 +313,10 @@ theorem conjPl_eq_of_inert {v : HeightOneSpectrum (𝓞 D.host.F)} {w : HeightOn
   have h1 : w.asIdeal ≤ (GlobalTheory.IdemSupport.cP w).asIdeal := by
     rw [← hi]
     refine Ideal.map_le_iff_le_comap.2 ?_
-    have h2 := congrArg HeightOneSpectrum.asIdeal ((GlobalTheory.IdemSupport.under_cP w).trans h)
-    exact h2.ge
+    exact (congrArg HeightOneSpectrum.asIdeal ((GlobalTheory.IdemSupport.under_cP w).trans h)).ge
   have h3 : w.asIdeal = (GlobalTheory.IdemSupport.cP w).asIdeal := w.isMaximal.eq_of_le (GlobalTheory.IdemSupport.cP w).isPrime.ne_top h1
   refine GlobalTheory.IdemSupport.eq_of_le (Ideal.map_le_iff_le_comap.2 fun x hx => ?_)
-  rw [h3] at hx
-  exact hx
+  rwa [h3] at hx
 
 theorem exists_nonSplit_of_inert {v : HeightOneSpectrum (𝓞 D.host.F)} {w : HeightOneSpectrum (𝓞 D.host.E)}
     (hi : IsInertAt D.host.F D.host.E v w) (h : w.under (𝓞 D.host.F) = v) :
@@ -339,8 +336,7 @@ theorem compAt_finPart_det (V : HSp D) {v : HeightOneSpectrum (𝓞 D.host.F)} {
     compAt D.host.F w (finPart D (Formalism.L2.Theta.mt V g).det) =
       (locMat D.sp.cm.sig V.gram h (proj D.sp.cm.sig V.gram v g)).1.det := by
   rw [← finMat_map_compAt D.sp.cm.sig V.gram h g]
-  have e := RingHom.map_det ((compAt D.host.F w).comp (finPart D)) (Formalism.L2.Theta.mt V g)
-  exact e
+  exact RingHom.map_det ((compAt D.host.F w).comp (finPart D)) (Formalism.L2.Theta.mt V g)
 
 theorem compAt_cut {w : HeightOneSpectrum (𝓞 D.host.E)} {e : AE D} (hf : finPart D e = singleAt D.host.F w 1) (d : AE D) :
     compAt D.host.F w (finPart D (e * d + (1 - e))) = compAt D.host.F w (finPart D d) := by
@@ -376,8 +372,7 @@ theorem weilDatum_at_place : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T 
     have hc := scalar_split hψ hW hL hsq he.1 hsu hy (hν _ hk)
     have e3 := isDetAt_eq_locIdele h hP he.1.1 a hy
     have e6 := hν _ hk f.1 f.2
-    rw [hc, e3] at e6
-    exact e6
+    rwa [hc, e3] at e6
   · obtain ⟨ε, hns, hp⟩ := exists_nonSplit_of_inert hi h
     have hsu : SuppPl ε T (embV T v a) := (Supp.suppF_iff_of_isPrimeIdem T hp h _).2 ⟨a, rfl⟩
     have hk : embV T v a ∈ GfC T :=
@@ -385,8 +380,7 @@ theorem weilDatum_at_place : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T 
     have e1 := nu_eq_one hψ hW (isSelfDualC_frameLat S) (isSelfDualC_frameLat T) hL hν hns
       (unramAt_of_unrAt hp uS) (unramAt_of_unrAt hp uT) hsu
     have e2 := hν _ hk f.1 f.2
-    rw [e1, Circle.coe_one, one_smul] at e2
-    exact e2
+    rwa [e1, Circle.coe_one, one_smul] at e2
 
 end GlobalTheory.WeilAtPlace
 

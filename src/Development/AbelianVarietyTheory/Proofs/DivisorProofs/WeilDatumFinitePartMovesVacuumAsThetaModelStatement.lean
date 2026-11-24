@@ -212,11 +212,11 @@ theorem phase_eq : ∀ D : D7, ∃ w : 𝓞 D.host.E, w + GlobalTheory.FinWeil.s
     have hR : GlobalTheory.LatVac.hRat S T X X = n := by
       rw [GlobalTheory.LatVac.hRat, hset.gS, hset.gT, inv_one]
       simp only [Matrix.one_apply, ite_mul, one_mul, zero_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
-        Finset.mem_univ, if_true]
+        Finset.mem_univ, ite_true]
       have e : ∀ x, (∑ x_1, ∑ x_2, if x = x_1 then star (X x_2 x_1) * X x_2 x else 0) =
           ∑ x_2, star (X x_2 x) * X x_2 x := fun x => by
         rw [Finset.sum_comm]
-        simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       rw [Finset.sum_congr rfl fun x _ => e x, Finset.sum_comm]
     have hs : symplOH S T (GlobalTheory.FinWeilO.intA D b • finPt (S := S) (T := T) rfl rfl r z)
         (finPt (S := S) (T := T) rfl rfl r z) = pairA D.host.F 0
@@ -231,8 +231,7 @@ theorem phase_eq : ∀ D : D7, ∃ w : 𝓞 D.host.E, w + GlobalTheory.FinWeil.s
     have hneg : -(pairA D.host.F 0 (algebraMap D.host.F (Af D.host.F) q)) =
         pairA D.host.F 0 (algebraMap D.host.F (Af D.host.F) (-q)) := by
       refine Prod.ext ?_ ?_
-      · show -(0 : Ainf D.host.F) = 0
-        exact neg_zero
+      · exact neg_zero
       · show -(algebraMap D.host.F (Af D.host.F) q) = _
         rw [map_neg]
         rfl
@@ -619,9 +618,7 @@ theorem splitWeil_eq : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsSt
     ring
   let μ : GA D S × GA D T →* Circle := ν * (c.comp (MonoidHom.fst _ _)) * (d.comp (MonoidHom.snd _ _))⁻¹
   have hμ : ∀ p, μ p = ν p * c p.1 * (d p.2)⁻¹ := fun p => rfl
-  have hμc : Continuous μ := by
-    show Continuous fun p : GA D S × GA D T => ν p * c p.1 * (d p.2)⁻¹
-    exact (hνc.mul (c1.comp continuous_fst)).mul (d1.comp continuous_snd).inv
+  have hμc : Continuous μ := (hνc.mul (c1.comp continuous_fst)).mul (d1.comp continuous_snd).inv
   have hl := GlobalTheory.LocalGlobalChar.eq_one_of_local D S (μ.comp (MonoidHom.inl _ _)) (hμc.comp (Continuous.prodMk_left 1))
     (fun g hg => by
       show μ (g, 1) = 1
@@ -661,8 +658,7 @@ theorem splitWeil_eq : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsSt
     rw [mul_comm, mul_inv_cancel_right]
   have e := hν (g₀, h₀) f₀.1 f₀.2
   dsimp only at e
-  rw [proj_of_suppAt hε hg₀, proj_of_suppAt hε hh₀, hνp] at e
-  exact e
+  rwa [proj_of_suppAt hε hg₀, proj_of_suppAt hε hh₀, hνp] at e
 
 end GlobalTheory.SplitWeilDict
 end -- clump:auto
@@ -1029,8 +1025,7 @@ theorem exists_half_det {ε : AE D} (hε : GlobalTheory.RatAut.IsHalfIdem D ε) 
     rw [hdet, e5] at e2
     have e3 : ∀ z : (Formalism.MainNotions.StandardLatticesGL3.AE D)ˣ, (Formalism.MainNotions.StandardLatticesGL3.sgU D z : Formalism.MainNotions.StandardLatticesGL3.AE D) = Formalism.MainNotions.StandardLatticesGL3.sgA D z := fun _ => rfl
     have e4 : ((Units.map (finQ D).toMonoidHom u : (Formalism.MainNotions.StandardLatticesGL3.AE D)ˣ) : Formalism.MainNotions.StandardLatticesGL3.AE D) = finQ D u := rfl
-    rw [Units.val_mul, Matrix.GeneralLinearGroup.val_det_apply, e3, e4]
-    exact e2
+    rwa [Units.val_mul, Matrix.GeneralLinearGroup.val_det_apply, e3, e4]
 
 theorem isSelfDualC_of_sd (V : HSp D) (gV : V.gram = 1) {L : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)}
     (hL : Formalism.MainNotions.StandardLatticesGL3.SD D L) : IsSelfDualC V L := by
@@ -1471,8 +1466,7 @@ theorem inert_vacuum_reads : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ :
     (isClosed_stab _ _ fun w => (hc w).comp (Continuous.prodMk_right 1))
     (fun v ε hv k hk sk => loc v ε hv 1 (one_mem _) k hk (s1 S ε) sk) (mem_congrGroup hset.gT hh sy iy)
   have hp : (g, h) = ((g, 1) : GA D S × GA D T) * (1, h) := Prod.ext (mul_one _).symm (one_mul _).symm
-  rw [W.inert x y ix iy sx sy, hp, map_mul, Module.End.mul_apply, h2, h1]
-  exact hf₀
+  rwa [W.inert x y ix iy sx sy, hp, map_mul, Module.End.mul_apply, h2, h1]
 
 end GlobalTheory.VacInertMove
 

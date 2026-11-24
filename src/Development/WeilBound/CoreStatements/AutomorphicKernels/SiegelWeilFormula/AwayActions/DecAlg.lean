@@ -83,8 +83,7 @@ theorem upper_block_rank_one_update (M : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin
   simp only [jF, fromBlocks_transpose, fromBlocks_map, fromBlocks_multiply, fromBlocks_inj] at hM'
   have h := hM'.1
   simp only [Matrix.mul_zero, Matrix.mul_one, Matrix.mul_smul, Matrix.smul_mul, zero_add, add_zero] at h
-  rw [add_comm]
-  exact h
+  rwa [add_comm]
 
 theorem blkUpper (A B D : Matrix (Fin n) (Fin n) R) (hM : (fromBlocks A B 0 D)ᵀ * jF n ε * (fromBlocks A B 0 D).map c = jF n ε) :
     Aᵀ * D.map c = 1 ∧ Bᵀ * D.map c + (ε : R) • (Dᵀ * B.map c) = 0 := by
@@ -105,8 +104,7 @@ theorem det_idem_sum {ι : Type} [Fintype ι] (f : ι → R) (hf : ∀ i, f i * 
       · rw [smul_smul, hf]
       · intro j _ hj
         rw [smul_smul, ho i j (Ne.symm hj), zero_smul]
-      · intro h
-        exact absurd (Finset.mem_univ i) h
+      · exact fun h => absurd (Finset.mem_univ i) h
     have hd : ∀ i (Y : Matrix (Fin (m + 1)) (Fin (m + 1)) R), (f i • Y).det = f i * Y.det := by
       intro i Y
       rw [Matrix.det_smul, Fintype.card_fin, IsIdempotentElem.pow_succ_eq m (hf i)]
@@ -207,8 +205,7 @@ theorem cond_b (hc : ∀ z, c (c z) = z) (A B D : Matrix (Fin n) (Fin n) R) (hA 
       Matrix.map_one c (map_zero c) (map_one c), Matrix.transpose_one] at h1'
     exact h1'
   have hDi : (A.map c)⁻¹ = Dᵀ := Matrix.inv_eq_left_inv hD
-  rw [Matrix.transpose_mul, Matrix.map_mul, Matrix.transpose_nonsing_inv, hT, ← hinv, hDi]
-  exact h2
+  rwa [Matrix.transpose_mul, Matrix.map_mul, Matrix.transpose_nonsing_inv, hT, ← hinv, hDi]
 
 end PositivityTheory.SiegelWeilFormula.KAway
 

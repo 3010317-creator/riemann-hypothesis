@@ -217,8 +217,7 @@ theorem dense_bigCell : ∀ n : ℕ, Dense {y : GR n | ((mR y).toBlocks₂₁).d
   filter_upwards [nhdsWithin_le_nhds hnh, self_mem_nhdsWithin] with t h1 h2
   show ((mR (y * lowG t)).toBlocks₂₁).det ≠ 0
   rw [lower_mul_lowG, ← eval_detPoly]
-  intro h3
-  exact h1 ⟨h3, h2⟩
+  exact fun h3 => h1 ⟨h3, h2⟩
 
 end GlobalTheory.CompanionTheory.BigCell
 end -- clump:auto
@@ -267,10 +266,8 @@ theorem dense_bigCell₂₂ : ∀ n : ℕ, Dense {y : GR n | ((mR y).toBlocks₂
     ext y
     simp only [Set.mem_ofPred_eq, Set.mem_preimage, lower_mul_JG, Matrix.det_neg]
     constructor
-    · intro h
-      exact mul_ne_zero (pow_ne_zero _ (by norm_num)) h
-    · intro h h0
-      exact h (by rw [h0, mul_zero])
+    · exact fun h => mul_ne_zero (pow_ne_zero _ (by norm_num)) h
+    · exact fun h h0 => h (by rw [h0, mul_zero])
   rw [hset]
   exact (dense_bigCell n).preimage (isOpenMap_mul_right _)
 

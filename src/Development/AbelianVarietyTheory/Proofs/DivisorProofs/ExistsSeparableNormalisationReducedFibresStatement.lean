@@ -246,8 +246,7 @@ theorem reduced_fibres_almost_all_sep : ∀ (k A : Type) [Field k] [IsAlgClosed 
     rw [hpdef, Ideal.span_le, Set.singleton_subset_iff]; exact hXQ
   have heq : p = Q.comap (algebraMap k[X] A) :=
     hpmax.eq_of_le (hQ.isPrime.comap _).ne_top hle
-  rw [← heq, hpdef, Ideal.mem_span_singleton, dvd_iff_isRoot] at hδQ
-  exact hδQ
+  rwa [← heq, hpdef, Ideal.mem_span_singleton, dvd_iff_isRoot] at hδQ
 
 end GlobalTheory
 end -- clump:auto
@@ -326,7 +325,7 @@ theorem aeval_injective_of_finite_of_not_isField : ∀ (k A : Type) [Field k] [C
   intro k A _ _ _ _ y hy hA
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   by_contra hne
-  push_neg at hne
+  push Not at hne
   obtain ⟨p, hp, hp0⟩ := hne
   have hyi : IsIntegral k y := (show IsAlgebraic k y from ⟨p, hp0, hp⟩).isIntegral
   set B : Subalgebra k A := (Polynomial.aeval (R := k) y).range with hB
@@ -358,8 +357,7 @@ theorem exists_D_algebraMap_fractionRing_ne_zero : ∀ (k A : Type) [Field k] [C
     ∃ a : A, D k (FractionRing A) (algebraMap A (FractionRing A) a) ≠ 0 := by
   intro k A _ _ _ _ _
   have hnt := kaehlerDifferential_nontrivial (k := k) (K := FractionRing A)
-  by_contra h
-  push_neg at h
+  by_contra! h
   have hall : ∀ x : FractionRing A, D k (FractionRing A) x = 0 := by
     intro x
     obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := A) x

@@ -201,8 +201,7 @@ theorem stepY_ok (hX : X.Ok) (hI : ∀ b P, (Θ b P).H.FiniteIndex)
     unit b g := by
       have h : Formalism.UG.cT (starRingEnd X.E) (toGLm X.E n g.1.1 : Matrix (Fin n) (Fin n) X.E) * (1 : Matrix (Fin n) (Fin n) X.E) *
         (toGLm X.E n g.1.1 : Matrix (Fin n) (Fin n) X.E) = 1 := toGLm_mem_UJ g.1
-      rw [Matrix.mul_one] at h
-      exact h
+      rwa [Matrix.mul_one] at h
     root b g := by
       have h1 : IsOfFinOrder ((Λ b).chr g.2.1) := MonoidHom.isOfFinOrder _ (isOfFinOrder_of_finite _)
       have h2 : IsOfFinOrder ((Θ b).chr g.2.2) := by
@@ -369,8 +368,7 @@ theorem tdatY_tied (hP : ∀ P : ST, MoveHyp ST SG P)
       have hd := p.1.1.deco.2
       refine ⟨hd.lat, hd.uni, hd.f_add, hd.f_smul, hd.f_off, hd.f_ne, ?_, ?_, ?_, ?_, ?_⟩
       all_goals
-        intro w
-        exact (Finset.notMem_empty _ w.2).elim
+        exact fun w => (Finset.notMem_empty _ w.2).elim
     Lsh_eq _ _ := rfl
     dnN_eq _ _ _ := rfl
     ker_eq _ _ _ := rfl
@@ -526,8 +524,7 @@ theorem tilH_Lsh (hpi : ∀ P : ST, pi ∈ P.1.asIdeal) (hdvd : ∀ r : 𝓞 E, 
   · have e : hStd E (n + 1) (z0 E n (algebraMap (𝓞 E) E pi)) x = star (pi : E) * x (Br.iL rfl) := hermStd_lastVector_apply pi x
     rw [mem_dual, ← e]
     constructor
-    · intro H
-      exact H _ (Submodule.mem_span_singleton_self _)
+    · exact fun H => H _ (Submodule.mem_span_singleton_self _)
     · intro H z hz
       obtain ⟨c, rfl⟩ := Submodule.mem_span_singleton.1 hz
       rw [hStd_osmul_left, LinearMap.map_smul_of_tower]

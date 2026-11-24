@@ -159,8 +159,7 @@ private theorem span_fixed_eq_whole_of_semilinear_injective {K E : Type} [Field 
   set W : ℕ → Submodule K E := fun i => U ⊔ Submodule.span K (Set.range fun j : Fin i => w j)
     with hW
   have hex : ∃ r, w r ∈ W r := by
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     have hmono : ∀ i, i ≤ Module.finrank K (W i) := by
       intro i
       induction i with
@@ -215,7 +214,7 @@ private theorem span_fixed_eq_whole_of_semilinear_injective {K E : Type} [Field 
     rw [← hsum, ← Fin.sum_univ_eq_sum_range (fun i => a' i • w i) (s + 1)]
     congr 1
     refine Finset.sum_congr rfl (fun i _ => ?_)
-    simp only [ha', dif_pos i.2, Fin.eta]
+    simp only [ha', dite_eq_left i.2, Fin.eta]
   let Xs : ℕ → Polynomial K := fun n => Nat.rec (Polynomial.C (a' 0) * Polynomial.X ^ p)
     (fun i P => P ^ p + Polynomial.C (a' (i + 1)) * Polynomial.X ^ p) n
   have hXs0 : Xs 0 = Polynomial.C (a' 0) * Polynomial.X ^ p := rfl
@@ -314,8 +313,7 @@ private theorem span_fixed_eq_whole_of_semilinear_injective {K E : Type} [Field 
     abel
   apply hyU
   have hyz : y + z ∈ U := Submodule.subset_span hfix
-  have h4 := U.sub_mem hyz hzU
-  simpa using h4
+  simpa using U.sub_mem hyz hzU
 
 private theorem exists_matrix_frob_map_eq_mul {K : Type} [Field K] [IsAlgClosed K] (p : ℕ) [Fact p.Prime]
     [CharP K p] (d : ℕ) (N : Matrix (Fin d) (Fin d) K) (hN : IsUnit N.det) :
@@ -361,8 +359,7 @@ private theorem exists_matrix_frob_map_eq_mul {K : Type} [Field K] [IsAlgClosed 
   have heS : ∀ j, ψ (e j) = e j := by
     intro j
     have : (e j : Fin d → K) ∈ b := by
-      simp only [e, B, Module.Basis.reindex_apply, Module.Basis.mk_apply]
-      exact Subtype.mem _
+      simpa only [e, B, Module.Basis.reindex_apply, Module.Basis.mk_apply] using Subtype.mem _
     exact hbS this
   refine ⟨Matrix.of fun i j => e j i, ?_, ?_⟩
   · have hli : LinearIndependent K (fun j => Matrix.transpose (Matrix.of fun i j => e j i) j) := by
@@ -385,8 +382,7 @@ theorem UpperTheory.Kd.C7.pLangR :
   obtain ⟨hdom, hprime, hcompl, hfrob, hperf⟩ := hσ
   have hpnu : ¬ IsUnit (p : R) := hprime.not_unit
   have hItop : Ideal.span {(p : R)} ≠ ⊤ := by
-    rw [Ne, Ideal.span_singleton_eq_top]
-    exact hpnu
+    rwa [Ne, Ideal.span_singleton_eq_top]
   haveI hmax : (Ideal.span {(p : R)}).IsMaximal := by
     refine ⟨⟨hItop, fun J hJ => ?_⟩⟩
     obtain ⟨x, hxJ, hxI⟩ := SetLike.exists_of_lt hJ
@@ -421,8 +417,7 @@ theorem UpperTheory.Kd.C7.pLangR :
     intro V hV
     refine hu _ fun hmem => hV.ne_zero ?_
     have h0 : π V.det = 0 := Ideal.Quotient.eq_zero_iff_mem.mpr hmem
-    rw [RingHom.map_det, RingHom.mapMatrix_apply] at h0
-    exact h0
+    rwa [RingHom.map_det, RingHom.mapMatrix_apply] at h0
   have hNb : IsUnit (N.map π).det := by
     rw [← RingHom.mapMatrix_apply, ← RingHom.map_det]
     exact hN.map π
@@ -531,8 +526,7 @@ theorem UpperTheory.Kd.C7.pLangR :
       exact neg_mem (hcauchy m k i j))
     refine ⟨L, fun n => ?_⟩
     have h := hL n
-    rw [SModEq.sub_mem, hIpow] at h
-    exact h
+    rwa [SModEq.sub_mem, hIpow] at h
   choose L hL using hlim
   have hmulmem : ∀ (q : R) (A M : Matrix (Fin d) (Fin d) R), (∀ i j, M i j ∈ Ideal.span {q}) →
       ∀ i j, (A * M) i j ∈ Ideal.span {q} := by
@@ -552,8 +546,7 @@ theorem UpperTheory.Kd.C7.pLangR :
       simp only [Matrix.map_apply, Matrix.of_apply]
       rw [eq_comm, Ideal.Quotient.eq]
       simpa using hL i j 1
-    rw [h1]
-    exact hVb
+    rwa [h1]
   · rw [← sub_eq_zero]
     ext i j
     rw [Matrix.zero_apply]
@@ -622,8 +615,7 @@ private theorem transpose_leftMulMatrix_mul_structure_mul_eq {l : ℕ} [Fact (Na
       Matrix.of (fun k m => e.repr (e k * e m) i) := by
   have hsum : ∀ (y : S) (k' : Fin d), ∑ k, Algebra.leftMulMatrix e y k k' • e k = y * e k' := by
     intro y k'
-    simp only [Algebra.leftMulMatrix_eq_repr_mul]
-    exact e.sum_repr _
+    simpa only [Algebra.leftMulMatrix_eq_repr_mul] using e.sum_repr _
   ext k' m'
   simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply]
   have h1 : ∀ m, ∑ k, Algebra.leftMulMatrix e a k k' * e.repr (e k * e m) i = e.repr (a * e k' * e m) i := by

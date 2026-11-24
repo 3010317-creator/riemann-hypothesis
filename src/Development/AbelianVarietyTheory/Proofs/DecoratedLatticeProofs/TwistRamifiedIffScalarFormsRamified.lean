@@ -404,8 +404,7 @@ theorem GlobalTheory.AdForm.rd_trTo : ∀ {B : Base} {X : PreX B.toPre} (I : TC 
   have hFa : F af =
       bc (inclE (F := B.host.F) (FiniteAdeleRing (𝓞 B.host.F) B.host.F)) ((I.stp u a j).gam c.1 ((I.stp u a j).mv c.1 d)) := by
     have e : F α = _ := Units.ext hαf
-    rw [hα, map_mul, hFi, one_mul] at e
-    exact e
+    rwa [hα, map_mul, hFi, one_mul] at e
   have hFκ : F
       ((A.h j (A.chOf j ((I.stp u a j).cl c.1 d)) ⟨(I.stp u a j).cl c.1 d, rfl⟩)⁻¹ * af⁻¹ * x) = x₀.1 := by
     rw [map_mul, map_mul, map_inv, map_inv, hFx, hFh, hFa, hz]
@@ -660,8 +659,7 @@ theorem frame_trivial_off : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok
       have h1 : (((B.primes X).T u : ℕ) : 𝓞 B.host.F) ∈ (w.under (𝓞 B.host.F)).asIdeal := by
         rw [hwv]
         show algebraMap _ (𝓞 B.fields.E) _ ∈ v.1.asIdeal
-        rw [map_natCast]
-        exact hTv
+        rwa [map_natCast]
       have h2 : algebraMap _ (𝓞 B.fields.E) (((B.primes X).T u : ℕ) : 𝓞 B.host.F) ∈ w.asIdeal := h1
       rwa [map_natCast] at h2
     rcases hw with h | h | ⟨h, hwne⟩
@@ -769,8 +767,7 @@ theorem row_of_smul_eq {n : ℕ} (Q : GlobalTheory.LatPair.Pair k (Fin n)) (b b'
     simp only [y, Pi.single_apply]
     split_ifs <;> simp
   have hx2 : (g • Q).HasVal (b' *ᵥ Pi.single m 1) ((s : 𝓀[k]) * residue 𝒪[k] (sc * y r₀)) := by
-    rw [hg, GlobalTheory.LatPair.Pair.dia_hasVal, Units.inv_mul_cancel_left]
-    exact hx
+    rwa [hg, GlobalTheory.LatPair.Pair.dia_hasVal, Units.inv_mul_cancel_left]
   have hx3 := GlobalTheory.LatPair.Pair.smul_hasVal.1 hx2
   obtain ⟨y', hy', sc', hsc', h3⟩ := (hQ _ _).1 hx3
   have hss : sc' = sc := Subtype.ext (hsc'.trans hsc.symm)
@@ -789,7 +786,7 @@ theorem row_of_smul_eq {n : ℕ} (Q : GlobalTheory.LatPair.Pair k (Fin n)) (b b'
   by_cases h : m = r₀
   · subst h
     simp
-  · rw [if_neg (Ne.symm h), if_neg h]
+  · rw [ite_eq_right (Ne.symm h), ite_eq_right h]
     simp
 
 end GlobalTheory.AdForm.RowModPrime
@@ -877,7 +874,7 @@ theorem GlobalTheory.AdForm.lastRow_inv_frame : ∀ {B : Base} {X : PreX B.toPre
   convert h using 2
   by_cases h' : r' = r
   · subst h'; simp
-  · rw [if_neg h', if_neg (fun h'' => h' (e.symm.injective h'')), map_zero]
+  · rw [ite_eq_right h', ite_eq_right (fun h'' => h' (e.symm.injective h'')), map_zero]
 
 end
 end -- clump:auto
@@ -974,11 +971,11 @@ theorem decoratedLattice_unitScale_functional_keeps_frames {X : Formalism.L2.Col
   by_cases h : (∀ (P₁ : Q) (x : Formalism.L2.Col.Sp X.E n), p.1.1.1.2 P₁ x ∈ (Formalism.L2.Col.DecoSet.dia1 P c p.1.1.deco).1.at P₁.1 ↔
       x ∈ Formalism.L2.Col.stdAt X.E n P₁.1) ∧ p.1.2 ∈ y.ys (Formalism.L2.Col.DecoSet.dia1 P c p.1.1.deco).1.N
   · have e : p.mv (Formalism.L2.Col.DecoSet.dia1 P c p.1.1.deco) =
-        ⟨(⟨(Formalism.L2.Col.DecoSet.dia1 P c p.1.1.deco, p.1.1.1.2), h.1⟩, p.1.2), h.2⟩ := dif_pos h
+        ⟨(⟨(Formalism.L2.Col.DecoSet.dia1 P c p.1.1.deco, p.1.1.1.2), h.1⟩, p.1.2), h.2⟩ := dite_eq_left h
     rw [e]
     unfold ptFr
     rfl
-  · have e : p.mv (Formalism.L2.Col.DecoSet.dia1 P c p.1.1.deco) = p := dif_neg h
+  · have e : p.mv (Formalism.L2.Col.DecoSet.dia1 P c p.1.1.deco) = p := dite_eq_right h
     rw [e]
 
 theorem ptOf_gl_dia : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)) (u : B.Word) (a : I.ι) (Ch : ℕ → Type) (A : TwDat I l Z u a Ch), A.Is → ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (ι : Type)
@@ -1340,7 +1337,7 @@ theorem rd_continuous : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok →
       rw [continuousOn_iff_continuous_restrict]
       have e : (fun x : O => G x.1) = fun x : O => ((A.chi j b ⟨GlobalTheory.AdForm.RdLaw.pf V (g0⁻¹ * x.1), x.2⟩ : ℂˣ) : ℂ) := by
         funext x
-        exact dif_pos x.2
+        exact dite_eq_left x.2
       show Continuous fun x : O => G x.1
       rw [e]
       exact hchi.comp ((hpc.comp continuous_subtype_val).subtype_mk _)
@@ -1392,7 +1389,7 @@ theorem rd_continuous : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok →
   rw [show A.rd θ j hj b φ y g = _ from (congrArg (A.rd θ j hj b φ y) eg).trans key]
   have e1 : (⟨κ * GlobalTheory.AdForm.RdLaw.pf V (g0⁻¹ * g), mul_mem hκ hU⟩ : A.U j b) =
       ⟨κ, hκ⟩ * ⟨GlobalTheory.AdForm.RdLaw.pf V (g0⁻¹ * g), hU⟩ := rfl
-  have e2 : G g = ((A.chi j b ⟨GlobalTheory.AdForm.RdLaw.pf V (g0⁻¹ * g), hU⟩ : ℂˣ) : ℂ) := dif_pos hU
+  have e2 : G g = ((A.chi j b ⟨GlobalTheory.AdForm.RdLaw.pf V (g0⁻¹ * g), hU⟩ : ℂˣ) : ℂ) := dite_eq_left hU
   have e3 : Φ g = φ c.1 y' := congrFun hP ⟨M g, hMu g⟩
   rw [e1, map_mul, Units.val_mul, e2, e3, mul_assoc]
 

@@ -50,8 +50,7 @@ universe u v
 
 private lemma etale_specMap (D E : Type) [CommRing D] [CommRing E] [Algebra D E] [Algebra.Etale D E] :
     Etale (Spec.map (CommRingCat.ofHom (algebraMap D E))) := by
-  apply HasRingHomProperty.Spec_iff.mpr
-  exact RingHom.etale_algebraMap.mpr ‹_›
+  exact HasRingHomProperty.Spec_iff.mpr (RingHom.etale_algebraMap.mpr ‹_›)
 
 theorem UpperTheory.Gal.G3.pAlgIsoPts :
     IsoPts → AlgIsoPts := by
@@ -75,8 +74,7 @@ theorem UpperTheory.Gal.G3.pAlgIsoPts :
       ext e
       have hx : (Spec.preimage w).hom.comp (algebraMap D E) = (Spec.preimage z).hom := by
         have h2 : Spec.map (φ ≫ Spec.preimage w) = Spec.map (Spec.preimage z) := by
-          rw [Spec.map_comp, Spec.map_preimage, Spec.map_preimage]
-          exact hw
+          rwa [Spec.map_comp, Spec.map_preimage, Spec.map_preimage]
         have h3 := Spec.map_injective h2
         ext d
         exact congrArg (fun f => (CommRingCat.Hom.hom f) d) h3

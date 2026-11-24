@@ -87,7 +87,6 @@ private theorem urIndex_avg {k Γ M : Type} [Field k] [Group Γ] [AddCommGroup M
   have hc' : ∀ (h : Γ) (x : Γ ⧸ N), c' (h • x) = c h + ρ h (c' x) := by
     intro h x
     obtain ⟨g, rfl⟩ := QuotientGroup.mk_surjective x
-    show c (h * g) = c h + ρ h (c g)
     exact hc h g
   let S := ∑ x : Γ ⧸ N, c' x
   have hS : ∀ h, S = Fintype.card (Γ ⧸ N) • c h + ρ h S := by
@@ -127,8 +126,7 @@ theorem UpperTheory.V.X.urIndex :
     have hidx : ((N.subgroupOf I).index : k) ≠ 0 := by
       have e : (N.subgroupOf I).index = N.relIndex I := rfl
       rw [e]
-      intro h
-      exact hl ((CharP.cast_eq_zero_iff k l _).1 h)
+      exact fun h => hl ((CharP.cast_eq_zero_iff k l _).1 h)
     obtain ⟨m', hm'⟩ := urIndex_avg (ρ.comp I.subtype) (N.subgroupOf I) hidx cI hcI h0
     refine ⟨m + m', fun j hj => ?_⟩
     have h := hm' ⟨j, hj⟩

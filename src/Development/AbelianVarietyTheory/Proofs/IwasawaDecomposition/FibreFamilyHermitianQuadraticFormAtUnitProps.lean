@@ -84,8 +84,7 @@ theorem finite_on_compacts [T2Space V] [LocallyCompactSpace V] [BorelSpace V]
     exists_continuous_one_zero_of_isCompact hK isClosed_empty (Set.disjoint_empty _)
   have hi := (h.2.2 φ φ.continuous hc (Set.subset_univ _)).1 β hβ
   refine lt_of_le_of_lt (measure_mono ?_) (hi.measure_ge_lt_top (ε := 1) one_pos)
-  intro v hv
-  exact (h1 hv).ge
+  exact fun v hv => (h1 hv).ge
 
 theorem eq_at [T2Space V] [LocallyCompactSpace V] [SecondCountableTopology V] [BorelSpace V]
     [BorelSpace X] [SigmaFinite ν] [ν.IsOpenPosMeasure]

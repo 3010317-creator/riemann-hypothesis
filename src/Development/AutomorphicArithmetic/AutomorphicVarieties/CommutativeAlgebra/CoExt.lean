@@ -54,11 +54,9 @@ theorem UpperTheory.V.Alg.co_ext :
     rintro t (ht | ⟨b, hb, rfl⟩)
     · exact ⟨hs t ht, hS ht⟩
     · refine ⟨DFunLike.congr_fun hi b, ?_⟩
-      rw [← res_eq_zero_iff O, res_map, res_eq_zero_iff]
-      exact hb
+      rwa [← res_eq_zero_iff O, res_map, res_eq_zero_iff]
   have hm' : maximalIdeal R ≤ Ideal.span (S ∪ i '' (maximalIdeal B : Set B)) ⊔ maximalIdeal R ^ 2 := by
-    rw [Ideal.span_union]
-    exact hm
+    rwa [Ideal.span_union]
   have key : ∀ g : R →ₐ[O] R', (∀ x ∈ maximalIdeal R ^ n, g x ∈ I) →
       ∀ k : ℕ, ∀ x ∈ maximalIdeal R ^ (n * k), g x ∈ I ^ k := by
     intro g hg k x hx

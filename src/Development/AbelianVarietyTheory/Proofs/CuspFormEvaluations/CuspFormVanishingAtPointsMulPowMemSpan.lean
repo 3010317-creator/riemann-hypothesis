@@ -126,8 +126,7 @@ def integrand (s : Fin n → V n → ℂ) (ph : V n → ℝ) (t : ℝ) (G : V n 
 
 theorem holo_val {f : V n → ℂ} (hf : DifferentiableOn ℂ f U) :
     Holo n (Subtype.val : U → V n) (fun x => f x.1) := by
-  intro e he
-  exact (hf.mono (HE.target_sub he)).congr (HE.comp_symm_eqOn f he)
+  exact fun e he => (hf.mono (HE.target_sub he)).congr (HE.comp_symm_eqOn f he)
 
 theorem normSq_continuousOn {s : Fin n → V n → ℂ} (hs : ∀ k, DifferentiableOn ℂ (s k) U) :
     ContinuousOn (fun z => ∑ k, ‖s k z‖ ^ 2) U := by
@@ -416,7 +415,7 @@ theorem inAt_iffG (Xa : ArchInM X) (Fl : FlatM X Xa) (G : Wt X.Ψ r) (x0 : Frame
   have hdp := OntoB.densF_pos hz
   have hka : 0 < kaF X x0 bb z := Real.exp_pos _
   simp only [Pi.mul_apply]
-  rw [if_pos hdom, ENNReal.ofReal_rpow_of_pos hw, ENNReal.ofReal_rpow_of_pos hsp,
+  rw [ite_eq_left hdom, ENNReal.ofReal_rpow_of_pos hw, ENNReal.ofReal_rpow_of_pos hsp,
     ← ENNReal.ofReal_mul (Real.exp_pos _).le,
     ← ENNReal.ofReal_mul (mul_nonneg (Real.exp_pos _).le (Real.rpow_nonneg hw.le _)),
     Real.rpow_def_of_pos hw, Real.rpow_def_of_pos hsp, ← Real.exp_add, ← Real.exp_add,
@@ -480,11 +479,11 @@ theorem Wfree_of_mem {x : Frame X.Ψ r} (hx : x ∈ X.dom) :
       ENNReal.ofReal (∑ k, ‖Xa.w k x‖ ^ 2) ^ (-(1 / 2 : ℝ)) *
       ENNReal.ofReal (∑ k, ‖Fl.s k x‖ ^ 2) ^ (-((n : ℝ) - 1 / 2)) := by
   unfold Wfree
-  rw [if_pos hx]
+  rw [ite_eq_left hx]
 
 theorem Wfree_of_notMem {x : Frame X.Ψ r} (hx : x ∉ X.dom) : Wfree Xa Fl G n x = 0 := by
   unfold Wfree
-  rw [if_neg hx]
+  rw [ite_eq_right hx]
 
 theorem Wfree_eq_exp {x : Frame X.Ψ r} (hx : x ∈ X.dom) (hs : ∃ k, Fl.s k x ≠ 0) :
     Wfree Xa Fl G n x = ENNReal.ofReal (Real.exp (-(phla X G x +
@@ -700,7 +699,6 @@ theorem exists_s_ne_zero {Xa : ArchInM X} (Fl : FlatM X Xa) {x0 : Frame X.Ψ r} 
   rw [hev.fderiv_eq, fderiv_fun_const]
   have h2 := Xa.n_ge
   have : Nonempty (Fin (nd X)) := ⟨⟨0, by omega⟩⟩
-  show LinearMap.det (0 : V (nd X) →ₗ[ℂ] V (nd X)) = 0
   exact LinearMap.det_zero' (EuclideanSpace.basisFun (Fin (nd X)) ℂ).toBasis
 
 end DivLeviPf
@@ -805,8 +803,7 @@ theorem isOpen_cell {r : ℕ} (X : Data E r) {x1 : Frame X.Ψ r} (ho : IsOrth X 
     · rintro ⟨y, hy, b, hb, rfl⟩
       obtain ⟨h1, h2, -⟩ := huniq y (hNO hy) b hb
       refine ⟨⟨OntoS.dom_rmul X (hNO hy) hb, h1⟩, ?_⟩
-      rw [Set.mem_preimage, h2]
-      exact hy
+      rwa [Set.mem_preimage, h2]
     · rintro ⟨⟨hx, hd⟩, hzN⟩
       obtain ⟨-, h2, h3⟩ := hsplit x hx hd
       exact ⟨zOf x, hzN, bOf x, h2, h3⟩
@@ -1117,8 +1114,7 @@ theorem real_bound {e F G w s K C : ℝ} {a b : ℂ} {n : ℕ} (hn : 1 ≤ n) (h
     rw [hF, hG]
     nlinarith [mul_le_mul_of_nonneg_left h4 he]
   have h5 : G * w ^ (-(n : ℝ)) ≤ C := by
-    rw [Real.rpow_neg hw.le, Real.rpow_natCast, mul_inv_le_iff₀ (pow_pos hw n)]
-    exact hC
+    rwa [Real.rpow_neg hw.le, Real.rpow_natCast, mul_inv_le_iff₀ (pow_pos hw n)]
   have hKp := Real.rpow_pos_of_pos hK0 ((n : ℝ) - 1 / 2)
   calc e * ‖a - b‖ ^ 2 * w ^ (-(1 / 2 : ℝ)) * s ^ (-((n : ℝ) - 1 / 2))
       ≤ (2 * F + 2 * G) * w ^ (-(1 / 2 : ℝ)) * (K ^ ((n : ℝ) - 1 / 2) * w ^ (-((n : ℝ) - 1 / 2))) := by
@@ -1160,7 +1156,7 @@ theorem Wfree_of_mem (n : ℕ) {x : Frame X.Ψ r} (hx : x ∈ X.dom) :
       ENNReal.ofReal (∑ k, ‖Xa.w k x‖ ^ 2) ^ (-(1 / 2 : ℝ)) *
       ENNReal.ofReal (∑ k, ‖Fl.s k x‖ ^ 2) ^ (-((n : ℝ) - 1 / 2)) := by
   unfold Wfree
-  rw [if_pos hx]
+  rw [ite_eq_left hx]
 
 theorem Wfree_eq_pnorm (n : ℕ) {x : Frame X.Ψ r} (hx : x ∈ X.dom) :
     Wfree Xa Fl G n x = ENNReal.ofReal (Real.exp (-phla X (G + n • Xa.L) x)) *
@@ -1287,8 +1283,7 @@ theorem localW_int {n : ℕ} (hn : 1 ≤ n) (h : Frame X.Ψ r → ℂ) {y : Fram
   have hO : IsOpen (OmF X y) := ReciprocityTheory.ChartRestriction.G.AR.Up.ExF.isOpen_OmF X y
   have h0 : (0 : V (nd X)) ∈ OmF X y := by
     show cpt X y 0 ∈ X.dom
-    rw [ReciprocityTheory.ChartRestriction.G.AR.Up.IW.cpt_zero X y]
-    exact hy
+    rwa [ReciprocityTheory.ChartRestriction.G.AR.Up.IW.cpt_zero X y]
   have hwc : ContinuousOn (fun z => ∑ k, ‖Xa.w k (cpt X y z)‖ ^ 2) (OmF X y) :=
     continuousOn_finsetSum _ fun k _ =>
       ((((Xa.w_van k).1.1.1.1.continuousOn).comp
@@ -1667,8 +1662,7 @@ theorem vanishing_division : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (h
       (Function.update (fun _ => 0) c p) (fun c' => by
         by_cases hc : c' = c
         · subst hc
-          rw [Function.update_self, hwt]
-          exact hp
+          rwa [Function.update_self, hwt]
         · rw [Function.update_of_ne hc]
           exact (siegelSpaceAlgebra_holds _ _ _ 0 0).2.2.1.1.1)
     obtain ⟨cc, hcc⟩ := (Submodule.mem_span_range_iff_exists_fun ℂ).1 (hb h1)

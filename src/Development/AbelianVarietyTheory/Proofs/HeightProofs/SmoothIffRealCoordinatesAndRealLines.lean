@@ -55,15 +55,13 @@ theorem smooth_iff_sm_and_real_lines : ∀ (D : D7) (θ : InfFam D) (σ : (D.wha
     have h2 := h1.comp e.contDiff
     have h3 : (fun x : RW V W => f (w + iotaW σ V W x)) = fun x => f (w + iotaW σ V W (e.symm (e x))) := by
       funext x; rw [e.symm_apply_apply]
-    rw [h3]
-    exact h2
+    rwa [h3]
   · let M : (Fin k → ℝ) →L[ℝ] RW V W :=
       ((piW θ V W).comp L).toRealLinearMap ((continuous_pi' h.inf V W).comp hL)
     have h2 := (H w).comp M.contDiff
     have h3 : (fun t => f (w + L t)) = fun t => f (w + iotaW σ V W (piW θ V W (L t))) := by
       funext t; rw [h.iota_pi (hL0 t)]
-    rw [h3]
-    exact h2
+    rwa [h3]
   · let M : ℝ →L[ℝ] RW V W :=
       ((piW θ V W).comp L).toRealLinearMap ((continuous_pi' h.inf V W).comp hL.1)
     have h2 : M (t • (1 : ℝ)) = t • M 1 := M.map_smul t 1

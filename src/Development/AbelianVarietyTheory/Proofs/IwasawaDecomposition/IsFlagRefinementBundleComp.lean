@@ -86,7 +86,6 @@ theorem val_chain {M' : RatModel F Ω'} {M'' : RatModel F Ω''} {φ : Ω →ₐ[
   congr 1
   funext τ
   ext i j
-  show M''.val q (φ' ((A' * (A.map φ)⁻¹) τ i j)) = M'.val (q ≫ f') ((A' * (A.map φ)⁻¹) τ i j)
   exact (hf'.val_comp q (IsLocalRing.closedPoint K) ((h1 τ).1 i j)).symm
 
 theorem Refines.comp {M : RatModel F Ω} {M' : RatModel F Ω'} {M'' : RatModel F Ω''} {φ : Ω →ₐ[F] Ω'}

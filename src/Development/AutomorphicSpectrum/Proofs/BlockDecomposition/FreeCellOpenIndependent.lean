@@ -97,8 +97,7 @@ theorem linearIndependent_of_yPart (X : Fin (n + 1) → Fin (M + 2) → K)
     simp only [h1, zero_mul, Finset.sum_const_zero, add_zero] at this
     calc g 0 = g 0 * X 0 0 * Ring.inverse (X 0 0) := by rw [mul_assoc, hinv, mul_one]
       _ = 0 := by rw [this, zero_mul]
-  intro i
-  exact Fin.cases h0 h1 i
+  exact fun i => Fin.cases h0 h1 i
 
 end Alg
 
@@ -315,7 +314,6 @@ theorem freeCell_props : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     fun x a s Y hu hY => ?_,
     measurable_chartS R σ ksig.measurable (measurable_ringInverse hU) J⟩
   refine ⟨by simpa [chartS] using hu, ?_⟩
-  rw [yPart_chartS R σ J x a s Y hu]
-  exact hY
+  rwa [yPart_chartS R σ J x a s Y hu]
 
 end GlobalTheory.CompanionTheory.WeilSiegel.HypStage.Cell

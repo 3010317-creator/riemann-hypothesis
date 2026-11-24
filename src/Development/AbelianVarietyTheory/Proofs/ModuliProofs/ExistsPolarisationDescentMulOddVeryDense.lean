@@ -121,8 +121,7 @@ theorem kTriv_of_locally {S : Scheme.{0}} {A : Over S} [GrpObj A] {L : LB A.left
     (PolBaseChange.lbIso_refl (LB.isLB_pull hL _)) hK t x hx g ((pullback t f).isoSpec.inv ≫ pullback.snd t f)
     (by rw [Category.assoc, Category.assoc, pullback.condition])
   have e' : pullback.fst t f ≫ x.left = pullback.fst t f ≫ (1 : Over.mk t ⟶ A).left := by
-    rw [← cancel_epi (pullback t f).isoSpec.inv, ← Category.assoc, ← Category.assoc]
-    exact e
+    rwa [← cancel_epi (pullback t f).isoSpec.inv, ← Category.assoc, ← Category.assoc]
   refine ⟨(pullback.fst t f).opensRange, ?_, ?_⟩
   · show p ∈ Set.range (pullback.fst t f)
     rw [Scheme.Pullback.range_fst]
@@ -170,8 +169,7 @@ theorem exists_polarisation_of_veryDense : Out.Laws → Out.Laws2 → ∀ (R : T
     H (Localization.Away f) (algebraMap R _) _ _ (IsLocalization.Away.algebraMap_isUnit f)
       (isGrpPullback_pullback A _)⟩
   have : s ∈ Set.range (PrimeSpectrum.comap (algebraMap R (Localization.Away f))) := by
-    rw [PrimeSpectrum.localization_away_comap_range (Localization.Away f) f]
-    exact hfs
+    rwa [PrimeSpectrum.localization_away_comap_range (Localization.Away f) f]
   exact this
 
 end GlobalTheory.MulDescent

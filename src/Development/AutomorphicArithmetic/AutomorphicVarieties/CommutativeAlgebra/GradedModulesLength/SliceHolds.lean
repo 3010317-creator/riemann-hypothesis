@@ -104,8 +104,7 @@ private theorem et_unram (O K C : Type) [CommRing O] [Field K] [Algebra O K] [Co
       rwa [Ne, Submodule.Quotient.mk_eq_zero]
     obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual (C ⧸ m) (Ω[C⁄O] ⧸ m • (⊤ : Submodule C Ω[C⁄O])),
         φ (Submodule.Quotient.mk x) ≠ 0 := by
-      by_contra hall
-      push_neg at hall
+      by_contra! hall
       exact hq ((Module.forall_dual_apply_eq_zero_iff (C ⧸ m) _).mp hall)
     let f : Ω[C⁄O] →ₗ[C] C ⧸ m := (φ.restrictScalars C).comp (m • (⊤ : Submodule C Ω[C⁄O])).mkQ
     let D : Derivation O C (C ⧸ m) := f.compDer (KaehlerDifferential.D O C)
@@ -128,8 +127,7 @@ private theorem et_unram (O K C : Type) [CommRing O] [Field K] [Algebra O K] [Co
       intro c
       simpa [D] using hDz c
     apply hφ
-    have h2 := LinearMap.congr_fun hf x
-    simpa [f] using h2
+    simpa [f] using LinearMap.congr_fun hf x
   have hfg : (⊤ : Submodule C Ω[C⁄O]).FG := Module.finite_def.mp inferInstance
   have hann : Module.annihilator C Ω[C⁄O] = ⊤ := by
     by_contra hne
@@ -429,8 +427,7 @@ theorem UpperTheory.V.Alg.M.slice_holds :
       simp only [s, Algebra.smul_def, map_mul, map_pow, mul_pow]
       rw [Ideal.Quotient.mk_algebraMap]
       ring
-    rw [heq]
-    exact hm
+    rwa [heq]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.GradedModulesLength.SliceHolds =====

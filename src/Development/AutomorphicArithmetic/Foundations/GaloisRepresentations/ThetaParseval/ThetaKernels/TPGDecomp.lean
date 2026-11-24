@@ -398,9 +398,7 @@ theorem UpperTheory.TP.decomp_k :
         Submodule.exists_mem_ne_zero_of_ne_bot (LinearMap.ker_ne_bot_of_finrank_lt (f := g) hdim)
       let y : Fin n → E := fun i => σ (z i)
       have hy₀ : y ≠ 0 := by
-        intro hy
-        apply hz₀
-        exact funext fun i => σ.injective ((congrFun hy i).trans (map_zero σ).symm)
+        exact fun hy => hz₀ (funext fun i => σ.injective ((congrFun hy i).trans (map_zero σ).symm))
       have hJ : X.Jᵀ.map σ = X.J := Matrix.ext hX.herm
       -- Self-duality puts every scalar multiple of an orthogonal vector in the lattice.
       have hline (a : E) : a • y ∈ X.L := (hX.dual _).2 fun x hx => by

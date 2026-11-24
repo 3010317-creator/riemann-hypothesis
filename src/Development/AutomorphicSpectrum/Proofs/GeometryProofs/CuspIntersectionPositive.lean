@@ -251,8 +251,7 @@ theorem det_bound (B : Matrix (Fin m) (Fin N) ℤ) (hB : (B * Bᵀ).det ≠ 0) (
   obtain ⟨Br, hBr⟩ : ∃ Br, Br = B.map (Int.castRingHom ℝ) := ⟨_, rfl⟩
   have hdet : ((B * Bᵀ).det : ℝ) = (Br * Brᵀ).det := by
     have := (Int.castRingHom ℝ).map_det (B * Bᵀ)
-    rw [RingHom.mapMatrix_apply, Matrix.map_mul, Matrix.transpose_map, ← hBr] at this
-    exact this
+    rwa [RingHom.mapMatrix_apply, Matrix.map_mul, Matrix.transpose_map, ← hBr] at this
   rw [← hBr]
   have hpsd : (Br * Brᵀ).PosSemidef := by
     have := posSemidef_self_mul_conjTranspose Br
@@ -546,8 +545,7 @@ theorem eigComp_eq_sum : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
         simp only [h]
     _ = ∑ i, c i • ∑ t : E →+* ℂ, t (algebraMap (𝓞 E) E (a i)) •
           eigComp R.B (t.comp (algebraMap (𝓞 E) E)) z := by
-        simp only [Finset.sum_smul, Finset.smul_sum, mul_smul]
-        exact Finset.sum_comm
+        simpa only [Finset.sum_smul, Finset.smul_sum, mul_smul] using Finset.sum_comm
     _ = ∑ i, c i • R.B (a i) z := by simp only [hz]
 
 end GlobalTheory.CompanionTheory.Ar.Cusp.EigFormula
@@ -639,11 +637,9 @@ theorem differentiableOn_det {m n : ℕ} {A : (Fin n → ℂ) → Matrix (Fin m)
     intro s
     induction s using Finset.induction_on with
     | empty =>
-      simp only [Finset.prod_empty]
-      exact differentiableOn_const _
+      simpa only [Finset.prod_empty] using differentiableOn_const _
     | insert a s ha ih =>
-      simp only [Finset.prod_insert ha]
-      exact (hA _ _).fun_mul ih
+      simpa only [Finset.prod_insert ha] using (hA _ _).fun_mul ih
   exact hs Finset.univ
 
 theorem exists_complement {k g' : ℕ} (v : Fin k → Fin (k + g') → ℂ)
@@ -699,10 +695,8 @@ theorem exists_holomorphic_quotient (g' k g n : ℕ) (U : Set (Fin n → ℂ))
     intro i j
     obtain ⟨s, rfl⟩ := finSumFinEquiv.surjective j
     rcases s with a | c
-    · simp only [finSumFinEquiv_apply_left, hMc]
-      exact (differentiableOn_pi.1 (he a)) i
-    · simp only [finSumFinEquiv_apply_right, hMn]
-      exact differentiableOn_const _
+    · simpa only [finSumFinEquiv_apply_left, hMc] using (differentiableOn_pi.1 (he a)) i
+    · simpa only [finSumFinEquiv_apply_right, hMn] using differentiableOn_const _
   have hdet : DifferentiableOn ℂ (fun t => (M t).det) U := differentiableOn_det hMent
   let V : Set (Fin n → ℂ) := U ∩ (fun t => (M t).det) ⁻¹' {0}ᶜ
   have hVo : IsOpen V := hdet.continuousOn.isOpen_inter_preimage hU isOpen_compl_singleton
@@ -716,10 +710,8 @@ theorem exists_holomorphic_quotient (g' k g n : ℕ) (U : Set (Fin n → ℂ))
       refine differentiableOn_det fun a b => ?_
       by_cases h : a = j
       · subst h
-        simp only [Matrix.updateRow_self]
-        exact differentiableOn_const _
-      · simp only [Matrix.updateRow_ne h]
-        exact (hMent a b).mono hVU
+        simpa only [Matrix.updateRow_self] using differentiableOn_const _
+      · simpa only [Matrix.updateRow_ne h] using (hMent a b).mono hVU
     simpa [Matrix.inv_def, Ring.inverse_eq_inv'] using h1.fun_mul h2
   let q : (Fin n → ℂ) → (Fin (k + g') → ℂ) →ₗ[ℂ] (Fin g' → ℂ) := fun t =>
     LinearMap.funLeft ℂ ℂ (Fin.natAdd k) ∘ₗ ((M t)⁻¹).mulVecLin
@@ -888,8 +880,7 @@ theorem log_gram_frame_change : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   obtain ⟨φ, hφ⟩ := LinearMap.exists_leftInverse_of_injective _ hinj
   have hφb : ∀ i, φ (b i t₀) = Pi.single i 1 := by
     intro i
-    have h1 := LinearMap.congr_fun hφ (Pi.single i 1)
-    simpa [Fintype.linearCombination_apply_single] using h1
+    simpa [Fintype.linearCombination_apply_single] using LinearMap.congr_fun hφ (Pi.single i 1)
   have hφd : ∀ u : (Fin n → ℂ) → Fin g → ℂ, DifferentiableOn ℂ u W →
       ∀ j, DifferentiableOn ℂ (fun t => φ (u t) j) W := by
     intro u hu j
@@ -933,18 +924,15 @@ theorem log_gram_frame_change : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
       DifferentiableOn.fun_inv (hdB.mono Set.inter_subset_left) fun t ht => ht.2
     exact (hdC.mono Set.inter_subset_left).mul hinv
   have hqd : DifferentiableOn ℂ q V₁ := by
-    have h1 := hfd.mul_const f₀⁻¹
-    simpa only [q, div_eq_mul_inv] using h1
+    simpa only [q, div_eq_mul_inv] using hfd.mul_const f₀⁻¹
   let V : Set (Fin n → ℂ) := V₁ ∩ q ⁻¹' Metric.ball 1 1
   have hVo : IsOpen V := hqd.continuousOn.isOpen_inter_preimage hV₁ Metric.isOpen_ball
   have hq0 : q t₀ = 1 := by
-    simp only [q, f₀, hB0, det_one, div_one]
-    exact div_self hf₀
+    simpa only [q, f₀, hB0, det_one, div_one] using div_self hf₀
   have hslit : ∀ t ∈ V, q t ∈ Complex.slitPlane := by
     intro t ht
     have h1 : ‖q t - 1‖ < 1 := by simpa [dist_eq_norm] using ht.2
-    have h2 := Complex.mem_slitPlane_of_norm_lt_one h1
-    simpa using h2
+    simpa using Complex.mem_slitPlane_of_norm_lt_one h1
   refine ⟨V, hVo, ⟨⟨ht₀, by simp [hB0]⟩, by simp [hq0]⟩, fun t ht => ht.1.1,
     fun t => 2 * Complex.log (q t) + 2 * ((Real.log ‖f₀‖ : ℝ) : ℂ), ?_, ?_⟩
   · exact (((hqd.mono Set.inter_subset_left).clog hslit).const_mul 2).add_const _
@@ -1263,8 +1251,7 @@ theorem hol_apply {n g g' : ℕ} {V : Set (Fin n → ℂ)} {q : (Fin n → ℂ) 
     funext t
     exact LinearMap.pi_apply_eq_sum_univ (q t) (z t)
   rw [e]
-  refine DifferentiableOn.fun_sum fun i _ => ?_
-  exact ((differentiableOn_pi.1 hz) i).smul (hq _)
+  exact DifferentiableOn.fun_sum fun i _ => ((differentiableOn_pi.1 hz) i).smul (hq _)
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {g : ℕ} {Λ : Type} [AddCommGroup Λ] [Module (𝓞 E) Λ]
   {n : ℕ}
@@ -1551,8 +1538,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.log_det_eigen_frame_plurisubha
     have h := hb.2 t ht τ
     have e : Module.finrank ℂ (Submodule.span ℂ (Set.range fun i => b τ i t)) = m := by
       rw [finrank_span_eq_card h.1, Fintype.card_fin]
-    rw [h.2] at e
-    exact e
+    rwa [h.2] at e
   have hL : ReciprocityTheory.AnForm.A.IsPsh U (fun t => (R t).logDet (fun τ i => b τ i t)) :=
     psh_sum Finset.univ fun τ _ =>
       (GlobalTheory.CompanionTheory.Relay.holomorphic_family_smooth_entries E g Λ Ψ n U R hU hH).2.2 m (b τ) (hb.1 τ) (fun t ht => (hb.2 t ht τ).1)
@@ -1681,7 +1667,7 @@ theorem unit_factor (a : Fin Dc.nCharts) (t₀ : Fin (Fintype.card (CMType H) * 
         Real.log (‖valAt Dc.y d.u ((Dc.chart a).γ t)‖ * ∏ k, ‖(Dc.chart a).γ t ⟨k, d.c k⟩‖ ^ Hd.aMu k) = (G t).re := by
   have hex : ∃ v, IsValueAt Dc.y d.u ((Dc.chart a).γ t₀) v := by
     by_contra hn
-    exact hv0 (dif_neg hn)
+    exact hv0 (dite_eq_right hn)
   obtain ⟨v₀, dg, pg, ph, hpg, hph, hne, heq, hhne, hv₀⟩ := hex
   have hq : ∀ p, AnalyticAt ℂ (fun t => (Dc.chart a).γ t p) t₀ := fun p =>
     ((ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : (Σ k, J k) => ℂ) p).analyticAt _).comp
@@ -1831,7 +1817,7 @@ theorem near_all (hG : Top.Given) (Or : CptOrigin Y S₀ Dc Hd) {U : ((Σ k, J k
     exact ⟨fun i => i.elim0, fun k _ => (pi_norm_lt_iff one_pos).1 (mem_ball_zero_iff.1 hu') k⟩
   let R : (Fin (Fintype.card (CMType H) * Dc.j * (Dc.N - Dc.j)) → ℂ) → RiemLat E g Λ := fun u =>
     if h : u ∈ logCover L.a_le then L.riem u h else L.riem 0 (hlc 0 h0)
-  have hR : ∀ u (h : u ∈ logCover L.a_le), R u = L.riem u h := fun u h => dif_pos h
+  have hR : ∀ u (h : u ∈ logCover L.a_le), R u = L.riem u h := fun u h => dite_eq_left h
   have hHol : IsHolFam (ball 0 1) R := by
     refine ⟨fun t ht t' ht' => ?_, fun x => ?_⟩
     · rw [hR t (hlc t ht), hR t' (hlc t' ht')]
@@ -1845,8 +1831,7 @@ theorem near_all (hG : Top.Given) (Or : CptOrigin Y S₀ Dc Hd) {U : ((Σ k, J k
       rw [hR t (hlc t ht)]
       show L.B (expCover 0 t) = L.B t
       rw [he]
-    simp only [e]
-    exact hb.2 t ht τ
+    simpa only [e] using hb.2 t ht τ
   obtain ⟨p1, p2, p3⟩ := _root_.GlobalTheory.CompanionTheory.Relay.log_det_eigen_frame_plurisubharmonic E g Λ (CMType H) _ (ball 0 1) R σ (Dc.N - Dc.j) b isOpen_ball hHol hσ hEig
   have c1 := logDet_cont hHol (fun τ i => (hb.1 τ i).continuousOn) fun t ht τ => (hb.2 t ht τ).1
   have key : ∀ u ∈ ball (0 : Fin (Fintype.card (CMType H) * Dc.j * (Dc.N - Dc.j)) → ℂ) r,
@@ -1857,8 +1842,7 @@ theorem near_all (hG : Top.Given) (Or : CptOrigin Y S₀ Dc Hd) {U : ((Σ k, J k
     have := hw u (hlc u hu1) (by rw [he]; exact hu')
       (by rw [he]; exact ⟨hu1, fun i hi => absurd hi (Nat.not_lt_zero _)⟩)
     rw [he] at this
-    rw [hR u (hlc u hu1)]
-    exact this
+    rwa [hR u (hlc u hu1)]
   refine ⟨loc_of_formula t₀ hρ hr π p1 c1 hGd fun u hu' => (key u hu').1,
     loc_of_formula t₀ hρ hr π p2 (c1.add p3) hGd fun u hu' => ?_⟩
   simp only [corrW, (key u hu').1, (key u hu').2]

@@ -86,8 +86,7 @@ theorem lastDat_lin (hM : M.Is t) (j : ℕ) (hj : j + 2 * 0 + 2 = D.R.m) (vN : G
   have h3 : IsThetaFunO W.ψ _ _ (c • s.om (g, 1) Φ) := GlobalTheory.LocMod.LinSpace.isThetaFunO_smul c h1
   have e1 : (s.om (g, 1)) (c • Φ + Φ') = c • (s.om (g, 1)) Φ + (s.om (g, 1)) Φ' := by
     have := (s.om (g, 1)).map_add (c • Φ) Φ'
-    have h' := (s.om (g, 1)).map_smul c Φ
-    exact this.trans (congrArg (· + (s.om (g, 1)) Φ') h')
+    exact this.trans (congrArg (· + (s.om (g, 1)) Φ') ((s.om (g, 1)).map_smul c Φ))
   have key : GlobalTheory.Unf.flatBF s (s.om (g, 1) (c • Φ + Φ')) =
       c • GlobalTheory.Unf.flatBF s (s.om (g, 1) Φ) + GlobalTheory.Unf.flatBF s (s.om (g, 1) Φ') := by
     rw [e1, (GlobalTheory.FlatLin.flatBF_linear D (GlobalTheory.Unf.Flat.flatLaw D) _ _ _ _ s _ _ c h3 h2).1,
@@ -282,7 +281,7 @@ theorem contrLin_left : Big fun ch => ContrLin ch 0 := by
   have hin : (Pair.mu t D.R.m a : Pair T).InRange D.R.m := show D.R.m ≤ D.R.m ∧ a + 1 ≤ D.R.m from ⟨le_rfl, by omega⟩
   have hin' : (Pair.mu t D.R.m (a + 1) : Pair T).InRange D.R.m :=
     show D.R.m ≤ D.R.m ∧ a + 1 + 1 ≤ D.R.m from ⟨le_rfl, by omega⟩
-  simp only [conAt, dif_neg h1, fockD]
+  simp only [conAt, dite_eq_right h1, fockD]
   simp (disch := simp) only [Function.update_self, Function.update_of_ne]
   simp only [h2, ↓reduceDIte]
   · rw [fock_comb ch.W (Pair.mu t D.R.m a) c hφ hφ' (P ⟨a, ha'⟩), map_add (f := _), map_smul]

@@ -235,8 +235,7 @@ theorem doubling_inverse : ∀ᶠ x in 𝓝 (0 : V), m (ε x, ε x) = x := by
   have := h.hasStrictFDerivAt_doubling.eventually_right_inverse
   rw [show m (0, 0) = 0 from h.map_zero] at this
   filter_upwards [this, h.eventuallyEq_halving hε] with x h1 h2
-  rw [h2]
-  exact h1
+  rwa [h2]
 
 theorem analyticAt_inverse : AnalyticAt ℂ ε 0 := by
   have := ((h.analyticAt_doubling.contDiffAt (n := ⊤)).to_localInverse h.hasFDerivAt_doubling
@@ -455,8 +454,7 @@ theorem localExp_add :
   have t2 : Tendsto (fun p : V × V => p.2) (𝓝 0) (𝓝 0) := continuous_snd.tendsto 0
   filter_upwards [h.isLocalCommGroupLaw.logChart_symm_add,
     ((t0.comp t1).prodMk_nhds (t0.comp t2)).eventually h.symm_chartLaw] with p h1 h2
-  rw [localExp_apply, h1]
-  exact h2
+  rwa [localExp_apply, h1]
 
 noncomputable def exp : V →+ A :=
   (exists_addMonoidHom_eventuallyEq h.localExp_add).choose
@@ -477,8 +475,7 @@ theorem map_exp_nhds_zero : map h.exp (𝓝 0) = 𝓝 0 := by
 theorem log_exp : ∀ᶠ v in 𝓝 (0 : V), h.log (φ (h.exp v)) = v := by
   filter_upwards [h.exp_eventuallyEq,
     h.localExp.eventually_left_inverse h.zero_mem_localExp_source] with v h1 h2
-  rw [h1]
-  exact h2
+  rwa [h1]
 
 theorem exp_log : ∀ᶠ a in 𝓝 (0 : A), h.exp (h.log (φ a)) = a := by
   rw [← h.map_exp_nhds_zero, eventually_map]

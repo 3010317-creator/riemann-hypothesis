@@ -118,8 +118,7 @@ theorem inertFullEigenspaceSum_le_maxGenEigenspace {K : Type} [Field K] [NumberF
   unfold InertDat3.inertTypeEigenspaceSum Formalism.L2.Col.eigSum
   refine iSup₂_le fun x hx => ?_
   have h := Formalism.L2.Col.eigAt_le Dd.opAll x (Sum.inr k)
-  rw [hx.2 k] at h
-  exact h
+  rwa [hx.2 k] at h
 
 theorem maxGen_zero_top {K V : Type} [Field K] [AddCommGroup V] [Module K V] :
     (0 : Module.End K V).maxGenEigenspace 0 = ⊤ := by
@@ -134,7 +133,7 @@ namespace GlobalTheory.InertRowsEig
 theorem hkF_single_of_not_lab {D : D7} (V : HSp D) {W : Type} [AddCommGroup W] [Module ℂ W] (P : Pl D.host.E) (e : List ℤ)
     (he : ¬ IsLab V P e) (F : Bridge.Gf V → W) : hkF V P (Finsupp.single e 1) F = 0 := by
   funext h
-  simp [hkF, GlobalTheory.Hk3.rep, dif_neg he]
+  simp [hkF, GlobalTheory.Hk3.rep, dite_eq_right he]
 
 theorem hkF_eq_sum {D : D7} (V : HSp D) {W : Type} [AddCommGroup W] [Module ℂ W] (P : Pl D.host.E) (c : List ℤ →₀ ℂ)
     (F : Bridge.Gf V → W) : hkF V P c F = c.sum fun e z => z • hkF V P (Finsupp.single e 1) F := by
@@ -178,7 +177,7 @@ theorem evC_congr {D : D7} (V : HSp D) (P : Pl D.host.E) (a a' : List ℤ → �
 theorem evC_single_dual {D : D7} (V : HSp D) (P : Pl D.host.E) (a : List ℤ → ℂ) (d : List ℤ) (hd : IsLab V P d)
     (hs : dualLab d = d) : evC V P (fun d => a (dualLab d)) (Finsupp.single d 1) = a d := by
   unfold evC
-  rw [Finsupp.sum_single_index (by simp), if_pos hd, one_mul]
+  rw [Finsupp.sum_single_index (by simp), ite_eq_left hd, one_mul]
   show a (dualLab d) = a d
   rw [hs]
 
@@ -392,8 +391,8 @@ theorem comb_apply {M X : Type} [AddCommGroup M] [Module ℂ M] [AddCommGroup X]
     · obtain ⟨h1, h2⟩ := labIn_tyOf (hlab d hd)
       have := heig _ h1
       rw [← h2] at this
-      rw [if_pos hd, this]
-    · rw [if_neg hd, zero_smul]
+      rw [ite_eq_left hd, this]
+    · rw [ite_eq_right hd, zero_smul]
       apply he
       rw [hh, hT0 d hd, map_zero]
   apply he
@@ -408,8 +407,8 @@ theorem evC_congr (V : HSp D) (P : Pl D.host.E) {a b : List ℤ → ℂ} (hab : 
   simp only [evC, Finsupp.sum]
   refine Finset.sum_congr rfl fun d _ => ?_
   by_cases hd : IsLab V P d
-  · rw [if_pos hd, if_pos hd, hab d hd]
-  · rw [if_neg hd, if_neg hd]
+  · rw [ite_eq_left hd, ite_eq_left hd, hab d hd]
+  · rw [ite_eq_right hd, ite_eq_right hd]
 
 section Main
 
@@ -590,26 +589,25 @@ theorem sep_extend {α κ K : Type} [Field K] [CharZero K] (S : Finset α) (C : 
     intro b hb hCb b' hb' hCb' h
     have hbU : b ∈ U := Finset.mem_filter.2 ⟨hb, hCb⟩
     have hbU' : b' ∈ U := Finset.mem_filter.2 ⟨hb', hCb'⟩
-    simp only [idx, dif_pos hbU, dif_pos hbU'] at h
+    simp only [idx, dite_eq_left hbU, dite_eq_left hbU'] at h
     have := U.equivFin.injective (Fin.ext h)
     exact congrArg Subtype.val this
   have hnot : ∀ n, (e n : K) ∉ Ex := fun n => (e n).2
   by_cases h1 : C a
   · have h2 : ¬ C a' := fun h2 => hC ⟨h1, h2⟩
-    simp only [if_pos h1, if_neg h2]
+    simp only [ite_eq_left h1, ite_eq_right h2]
     intro h
     have hm : f a k0 ∈ Ex := Finset.mem_image.2 ⟨a, Finset.mem_filter.2 ⟨ha, h1⟩, rfl⟩
     rw [h] at hm
     exact hnot _ hm
   · by_cases h2 : C a'
-    · simp only [if_neg h1, if_pos h2]
+    · simp only [ite_eq_right h1, ite_eq_left h2]
       intro h
       have hm : f a' k0 ∈ Ex := Finset.mem_image.2 ⟨a', Finset.mem_filter.2 ⟨ha', h2⟩, rfl⟩
       rw [← h] at hm
       exact hnot _ hm
-    · simp only [if_neg h1, if_neg h2]
-      intro h
-      exact hne (hidx a ha h1 a' ha' h2 (e.injective (Subtype.ext h)))
+    · simp only [ite_eq_right h1, ite_eq_right h2]
+      exact fun h => hne (hidx a ha h1 a' ha' h2 (e.injective (Subtype.ext h)))
 
 end GlobalTheory.TrPass
 
@@ -647,7 +645,7 @@ theorem exists_inert_passage : HoweUnram → ∀ {D : D7} {G : Type} [Group G] [
   have hf : ∀ j a (h : Cons j a) (Q : A3.okI A3.A.μ0) y,
       f j a (Q.1, y) = h.choose_spec.choose_spec.choose (Sum.inr (Q, y)) := by
     intro j a h Q y
-    simp only [f, dif_pos h, dif_pos Q.2]
+    simp only [f, dite_eq_left h, dite_eq_left Q.2]
   have hspec : ∀ j a (h : Cons j a),
       Wit j h.choose h.choose_spec.choose h.choose_spec.choose_spec.choose ∧ h.choose.1.2 = a :=
     fun j a h => h.choose_spec.choose_spec.choose_spec
@@ -673,8 +671,7 @@ theorem exists_inert_passage : HoweUnram → ∀ {D : D7} {G : Type} [Group G] [
   · intro j p hp p' hp' hk
     obtain ⟨k0, hk0⟩ := hk
     by_cases hC : Cons j p.2 ∧ Cons j p'.2
-    · by_contra hcon
-      push_neg at hcon
+    · by_contra! hcon
       obtain ⟨hw, ha⟩ := hspec j _ hC.1
       obtain ⟨hw', ha'⟩ := hspec j _ hC.2
       have := (key j _ _ _ _ _ _ hw hw' k0.1).2 (fun y => by

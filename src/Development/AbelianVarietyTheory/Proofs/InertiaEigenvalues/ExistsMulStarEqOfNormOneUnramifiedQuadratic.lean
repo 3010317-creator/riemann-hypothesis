@@ -162,8 +162,7 @@ theorem exists_point_mod [LocallyCompactSpace K] (s t c : K) (hs : ‖s‖ ≤ 1
     have h4 := totalDegree_C_mul_X_mul_X (-π Cc) 2 2
     have := (totalDegree_add _ _).trans (max_le ((totalDegree_add _ _).trans (max_le
       ((totalDegree_add _ _).trans (max_le h1 h2)) h3)) h4)
-    simp only [Fintype.card_fin]
-    exact lt_of_le_of_lt this (by norm_num)
+    simpa only [Fintype.card_fin] using lt_of_le_of_lt this (by norm_num)
   have hdvd := char_dvd_card_solutions p hdeg
   have hpos : 0 < Fintype.card {x : Fin 3 → k // eval x f = 0} :=
     Fintype.card_pos_iff.2 ⟨⟨0, by simp [f]⟩⟩
@@ -222,8 +221,7 @@ theorem exists_sqrt_mod [LocallyCompactSpace K] (t : K) (ht : ‖t‖ ≤ 1) (h2
   refine ⟨l, norm_le_one K l, ?_⟩
   have h0 : Ideal.Quotient.mk (maxIdeal K) (l * l - T) = 0 := by
     rw [map_sub, map_mul, ← hy, sub_self]
-  have hm := (mem_maxIdeal K _).1 ((Ideal.Quotient.eq_zero_iff_mem).1 h0)
-  simpa [sq, T] using hm
+  simpa [sq, T] using (mem_maxIdeal K _).1 ((Ideal.Quotient.eq_zero_iff_mem).1 h0)
 
 end GlobalTheory.NormUnits
 end -- clump:auto
@@ -251,8 +249,7 @@ theorem norm_eq_of_norm_sub_lt {K : Type} [NormedField K] [IsUltrametricDist K] 
   · calc ‖x‖ = ‖(x - y) + y‖ := by rw [sub_add_cancel]
       _ ≤ max ‖x - y‖ ‖y‖ := IsUltrametricDist.norm_add_le_max _ _
       _ = ‖y‖ := max_eq_right h.le
-  · by_contra hlt
-    push_neg at hlt
+  · by_contra! hlt
     have : ‖y‖ ≤ max ‖x‖ ‖x - y‖ := by
       calc ‖y‖ = ‖x - (x - y)‖ := by rw [sub_sub_cancel]
         _ ≤ max ‖x‖ ‖x - y‖ := norm_sub_le_max' _ _
@@ -274,12 +271,11 @@ theorem exists_far_unit (F E : Type) [NontriviallyNormedField F] [NontriviallyNo
     intro b
     by_cases hb : ‖b‖ ≤ ‖y‖
     · exact hmin (mem_closedBall_zero_iff.2 hb)
-    · push_neg at hb
+    · push Not at hb
       have h0 : g b₀ ≤ g 0 := hmin (by simp)
       refine h0.trans ?_
       simp only [g, map_zero, sub_zero]
-      by_contra hlt
-      push_neg at hlt
+      by_contra! hlt
       have : ‖algebraMap F E b‖ ≤ max ‖y‖ ‖y - algebraMap F E b‖ := by
         calc ‖algebraMap F E b‖ = ‖y - (y - algebraMap F E b)‖ := by rw [sub_sub_cancel]
           _ ≤ _ := norm_sub_le_max' _ _
@@ -465,8 +461,7 @@ theorem norm_onto_units : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivi
       rw [star_div₀, hU.star_fix, div_mul_div_comm, hw]
       simp only [map_div₀, map_sub, map_mul, map_pow, map_add (f := _)]
       field_simp
-    rw [e1, norm_algebraMap', norm_div, norm_pow, hz1, one_pow, div_one]
-    exact hQ
+    rwa [e1, norm_algebraMap', norm_div, norm_pow, hz1, one_pow, div_one]
 
   let f : E → ℝ := fun v => ‖v * star v - algebraMap F E u‖
   have hf : Continuous f := continuous_norm.comp ((continuous_id.mul hsc).sub continuous_const)

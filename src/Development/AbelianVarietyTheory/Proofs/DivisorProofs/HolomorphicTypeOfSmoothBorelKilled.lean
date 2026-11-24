@@ -248,10 +248,10 @@ lemma decomp {H x : Mt n} {q : ℕ} (h : OrthFr H q x) (Z : Mt n) :
     ext a c
     simp only [hX, Matrix.add_apply, mul_diagonal, diagonal_mul, conjTranspose_apply, of_apply, Matrix.zero_apply]
     rcases lt_trichotomy a c with hac | hac | hac
-    · rw [if_pos hac, if_neg (not_lt.2 hac.le), if_pos hac]
+    · rw [ite_eq_left hac, ite_eq_right (not_lt.2 hac.le), ite_eq_left hac]
       linear_combination (-(s c * star (Y c a))) * hs2 a
     · subst hac; simp
-    · rw [if_neg (not_lt.2 hac.le), if_pos hac, if_pos hac, star_neg, star_mul, star_mul, star_star, hs3, hs3]
+    · rw [ite_eq_right (not_lt.2 hac.le), ite_eq_left hac, ite_eq_left hac, star_neg, star_mul, star_mul, star_star, hs3, hs3]
       linear_combination (-(s a * Y a c)) * hs2 c
   refine ⟨x * X * x⁻¹, ?_, Y - X, ?_, ?_⟩
   · change (x * X * x⁻¹)ᴴ * H + H * (x * X * x⁻¹) = 0
@@ -377,8 +377,7 @@ lemma hasDerivAt_exp_entry (X : Mt n) (i j : Fin n) :
     have := L.hasFDerivAt.comp_hasDerivAt (0 : ℝ) h1
     have e : NormedSpace.exp ((0 : ℝ) • X) * X = X := by simp
     have e2 : X i j = (NormedSpace.exp ((0 : ℝ) • X) * X) i j := by rw [e]
-    rw [e2]
-    exact this
+    rwa [e2]
   exact h2
 
 lemma upT_tri {b : Mt n} (hb : UpT b) : b.BlockTriangular id := fun _ _ h => hb.2 _ _ h
@@ -451,8 +450,7 @@ lemma chi_deriv (w : Fin n → ℤ) (B : Mt n) :
     have h4 : HasDerivAt (fun z : ℂ => (1 + z * B a a) ^ w a) (B a a * w a) ((0 : ℝ) : ℂ) := by
       simpa [mul_comm, Function.comp_def] using h3
     simpa using h4.comp_ofReal
-  have h := HasDerivAt.fun_finsetProd (u := Finset.univ) fun a _ => h1 a
-  simpa using h
+  simpa using HasDerivAt.fun_finsetProd (u := Finset.univ) fun a _ => h1 a
 
 variable {Hm : ι → Mt n} {q : ι → ℕ} {x₀ : ι → Mt n} {w : ι → Fin n → ℤ}
 
@@ -566,8 +564,7 @@ lemma cd_det {g : E → Mt n} (hg : ∀ a c, ContDiffOn ℝ ∞ (fun x => g x a 
 
 lemma cd_mulM {g g' : E → Mt n} (hg : ∀ a c, ContDiffOn ℝ ∞ (fun x => g x a c) U)
     (hg' : ∀ a c, ContDiffOn ℝ ∞ (fun x => g' x a c) U) (a c : Fin n) : ContDiffOn ℝ ∞ (fun x => (g x * g' x) a c) U := by
-  simp only [Matrix.mul_apply]
-  exact ContDiffOn.sum fun k _ => (hg _ _).mul (hg' _ _)
+  simpa only [Matrix.mul_apply] using ContDiffOn.sum fun k _ => (hg _ _).mul (hg' _ _)
 
 lemma cd_inv {g : E → Mt n} (hg : ∀ a c, ContDiffOn ℝ ∞ (fun x => g x a c) U) (h0 : ∀ x ∈ U, (g x).det ≠ 0) (a c : Fin n) :
     ContDiffOn ℝ ∞ (fun x => (g x)⁻¹ a c) U := by

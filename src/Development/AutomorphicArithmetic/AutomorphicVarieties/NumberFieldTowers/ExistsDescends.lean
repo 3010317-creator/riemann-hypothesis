@@ -130,7 +130,7 @@ private theorem exists_qz_ne_zero_annihilators_of_ne_zero (l : ℕ) [Fact l.Prim
     · rw [hdec _ a a0] at ha ⊢
       have hle : r ≤ a.valuation := Nat.find_min' hex ha
       rw [← Nat.add_sub_cancel' hle, pow_add, mul_comm, mul_smul, hx, smul_zero]
-  · push_neg at hex
+  · push Not at hex
     obtain ⟨ι, hinj, hrange, hlin⟩ := zmodToQZ l 1
     haveI : Fact (1 < l ^ 1) := ⟨by rw [pow_one]; exact hl1⟩
     have hι0 : ι 0 = 0 := by simpa using hlin 0 0
@@ -158,8 +158,7 @@ theorem UpperTheory.V.Tower.qzSep :
   have h1 := hh (K.mkQ 1)
   simp only [f, g, Submodule.mkQ_apply, Submodule.liftQ_apply, LinearMap.toSpanSingleton_apply,
     one_smul] at h1
-  rw [h1]
-  exact hx0
+  rwa [h1]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.NumberFieldTowers.QzSep =====
@@ -184,8 +183,7 @@ private theorem le_dual (l : ℕ) [Fact l.Prime] (N : Type) [AddCommGroup N] [Mo
   · intro φ hφ
     rw [LinearMap.mem_ker] at hφ ⊢
     ext ⟨x, hx⟩
-    have h := LinearMap.congr_fun hφ ⟨x, hle hx⟩
-    simpa using h
+    simpa using LinearMap.congr_fun hφ ⟨x, hle hx⟩
   · intro heq
     have hm0 : (OrderDual.ofDual b).mkQ m ≠ 0 := by
       rwa [Ne, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
@@ -294,8 +292,7 @@ theorem UpperTheory.V.Tower.lenDual :
       rw [e1, e2, ih, Module.length_eq_one (R := ℤ_[l]) (M := M' ⧸ N),
         Module.length_eq_one (R := ℤ_[l]) (M := (M' ⧸ N) →ₗ[ℤ_[l]] QZ l), add_comm]
   · have h1 : Module.length ℤ_[l] M = ⊤ := by
-      rw [← not_ne_iff, Module.length_ne_top_iff]
-      exact hM
+      rwa [← not_ne_iff, Module.length_ne_top_iff]
     have h2 := le_dual l M
     rw [h1, top_le_iff] at h2
     rw [h1, h2]
@@ -347,7 +344,7 @@ theorem UpperTheory.V.Tower.existsGen :
         rw [Subgroup.map_le_iff_le_comap]
         intro x hx
         have hx' := h hx
-        simp only [gamU, levU, qExp, if_pos hl, Subgroup.mem_inf] at hx'
+        simp only [gamU, levU, qExp, ite_eq_left hl, Subgroup.mem_inf] at hx'
         exact hx'.2
     · exact Or.inl hl
   obtain ⟨γ', hγ', hle⟩ := UpperTheory.V.Kum.existsGen l (U.map (cycZ k Ω l)) hclosed hc
@@ -385,8 +382,7 @@ theorem UpperTheory.V.Tower.genGal :
         exact h g
       · intro h g
         have h' : cycZ k Ω 2 (galEmb k L Ω g) ∈ KStar.TotallyRealRoots.princ 2 2 := (h ⟨g, rfl⟩).2
-        rw [hχ] at h'
-        exact h'
+        rwa [hχ] at h'
     · exact ⟨fun _ => Or.inl h, fun _ => Or.inl h⟩
   exact ⟨hcl, hiff, fun h => UpperTheory.V.Tower.existsGen k Ω l _ hcl (hiff.1 h)⟩
 end -- clump:auto
@@ -422,8 +418,7 @@ theorem ideal_norm_class_congr {I J : (Ideal (𝓞 K'))⁰} (h : ClassGroup.mk0 
   refine ⟨Algebra.intNorm (𝓞 K) (𝓞 K') x, Algebra.intNorm (𝓞 K) (𝓞 K') y, fun h => hx (Algebra.intNorm_eq_zero.1 h),
     fun h => hy (Algebra.intNorm_eq_zero.1 h), ?_⟩
   have := congrArg (Ideal.relNorm (𝓞 K)) h
-  rw [map_mul, map_mul, Ideal.relNorm_singleton, Ideal.relNorm_singleton] at this
-  exact this
+  rwa [map_mul, map_mul, Ideal.relNorm_singleton, Ideal.relNorm_singleton] at this
 
 def nFun (c : ClassGroup (𝓞 K')) : ClassGroup (𝓞 K) :=
   ClassGroup.mk0 (idNorm K (ClassGroup.mk0_surjective c).choose)
@@ -502,8 +497,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 private theorem exists_level_pow_dvd_of_not_finOrder (l : ℕ) [hl : Fact l.Prime] (u : ℤ_[l]ˣ) (hu : ¬ IsOfFinOrder u) (a : ℕ) :
     ∃ j : ℕ, ∀ m : ℤ, PadicInt.toZModPow j ((u ^ m : ℤ_[l]ˣ) : ℤ_[l]) = 1 → (l : ℤ) ^ (a + 1) ∣ m := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   apply hu
   have hK : 0 < l ^ a * (l - 1) :=
     Nat.mul_pos (pow_pos hl.out.pos a) (Nat.sub_pos_of_lt hl.out.one_lt)
@@ -532,12 +526,10 @@ private theorem exists_level_pow_dvd_of_not_finOrder (l : ℕ) [hl : Fact l.Prim
     · simp only [pow_zero, Nat.totient_one, Nat.dvd_one] at hcard
       rw [hcard]
       exact one_dvd _
-    · rw [Nat.totient_prime_pow_succ hl.out] at hcard
-      rw [← Nat.dvd_gcd_mul_iff_dvd_mul] at hcard
+    · rw [Nat.totient_prime_pow_succ hl.out, ← Nat.dvd_gcd_mul_iff_dvd_mul] at hcard
       obtain ⟨b, -, hb⟩ := (Nat.dvd_prime_pow hl.out).mp (Nat.gcd_dvd_right (orderOf w) (l ^ i))
       have hba : b ≤ a := by
-        by_contra hba
-        push_neg at hba
+        by_contra! hba
         apply hnd
         have h1 : (l : ℤ) ^ b ∣ m := by
           have : l ^ b ∣ orderOf w := hb ▸ Nat.gcd_dvd_left _ _
@@ -577,8 +569,7 @@ private theorem exists_open_subgroup_cycZ_trivial_mod_pow (F Ω : Type) [Field F
     simpa using h1
   rw [pow_eq_pow_iff_modEq, ← hu.eq_orderOf] at h1'
   have h2 := (ZMod.natCast_eq_natCast_iff _ _ _).mpr h1'.symm
-  rw [ZMod.natCast_val, ZMod.cast_id', id, Nat.cast_one] at h2
-  exact h2
+  rwa [ZMod.natCast_val, ZMod.cast_id', id, Nat.cast_one] at h2
 
 theorem UpperTheory.V.Kum.vanishCyc :
     ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime] (M : Type) [AddCommGroup M] (φ : Uinf F Ω l → M) (γ : G F Ω), IsLocallyConstant φ → (∀ a b, φ (a * b) = φ a + φ b) → (∀ m : M, ∃ k : ℕ, l ^ k • m = 0) → ¬ IsOfFinOrder (cycZ F Ω l γ) →
@@ -593,8 +584,7 @@ theorem UpperTheory.V.Kum.vanishCyc :
   obtain ⟨W, hWo, hWeq⟩ := isOpen_induced_iff.mp (hφ.isOpen_fiber 0)
   have hW1 : (1 : G F Ω) ∈ W := by
     have : (1 : Uinf F Ω l) ∈ Subtype.val ⁻¹' W := by
-      rw [hWeq]
-      exact h1
+      rwa [hWeq]
     exact this
   obtain ⟨E, hE, hEW⟩ := (krullTopology_mem_nhds_one_iff F Ω W).mp (hWo.mem_nhds hW1)
   haveI := hE
@@ -602,8 +592,7 @@ theorem UpperTheory.V.Kum.vanishCyc :
   have hNφ : ∀ y : Uinf F Ω l, y.1 ∈ E.fixingSubgroup → φ y = 0 := by
     intro y hy
     have : y ∈ Subtype.val ⁻¹' W := hEW hy
-    rw [hWeq] at this
-    exact this
+    rwa [hWeq] at this
   haveI : Finite (G F Ω ⧸ E.fixingSubgroup) := Subgroup.quotient_finite_of_isOpen _ hN
   obtain ⟨d, hd0, -, hdN⟩ := Subgroup.exists_pow_mem_of_index_ne_zero (Subgroup.index_ne_zero_of_finite (H := E.fixingSubgroup)) γ
   obtain ⟨a, d', hd'l, hdd⟩ := Nat.exists_eq_pow_mul_and_not_dvd hd0.ne' l hl.out.ne_one
@@ -615,8 +604,7 @@ theorem UpperTheory.V.Kum.vanishCyc :
     simp only [Set.mem_preimage, inv_mul_cancel, Set.mem_inter_iff, SetLike.mem_coe]
     exact ⟨one_mem _, one_mem _⟩
   have hx' : x.1 ∈ closure ((Subgroup.zpowers γ : Subgroup (G F Ω)) : Set (G F Ω)) := by
-    rw [← Subgroup.topologicalClosure_coe]
-    exact hx
+    rwa [← Subgroup.topologicalClosure_coe]
   obtain ⟨g, hgo, hgz⟩ := mem_closure_iff.mp hx' _ ho hxo
   obtain ⟨m, rfl⟩ := Subgroup.mem_zpowers_iff.mp hgz
   obtain ⟨hνN, hνH⟩ := hgo
@@ -789,9 +777,7 @@ theorem UpperTheory.V.Kum.extCocycle :
     exact isClosed_singleton.preimage (continuous_cycZ F Ω l)
   have hCc := Subgroup.isClosed_topologicalClosure (Subgroup.zpowers γ)
   have hmemU : ∀ x : G F Ω, cycZ F Ω l x = 1 → x ∈ Uinf F Ω l := by
-    intro x hx
-    show x ∈ (⊤ ⊓ (cycZ F Ω l).ker : Subgroup (G F Ω))
-    exact Subgroup.mem_inf.mpr ⟨Subgroup.mem_top x, MonoidHom.mem_ker.mpr hx⟩
+    exact fun x hx => Subgroup.mem_inf.mpr ⟨Subgroup.mem_top x, MonoidHom.mem_ker.mpr hx⟩
   have hCU : ∀ g : G F Ω, ∃ p : (Subgroup.zpowers γ).topologicalClosure × Uinf F Ω l,
       p.1.1 * p.2.1 = g := by
     intro g
@@ -811,8 +797,7 @@ theorem UpperTheory.V.Kum.extCocycle :
     intro g u u' h
     apply hconj g u u'
     intro x
-    have h3 := congrArg (fun e : G F Ω => e x) h
-    simpa [AlgEquiv.mul_apply] using h3
+    simpa [AlgEquiv.mul_apply] using congrArg (fun e : G F Ω => e x) h
   have hv : ∀ x : Uinf F Ω l, x.1 ∈ (Subgroup.zpowers γ).topologicalClosure → φ x = 0 :=
     fun x hx => vanishCyc F Ω l M φ γ hloc hadd htors hnf x hx
   exact ext_of_prod ρ _ _ hCc hUc hCU φ hρ htr hloc.continuous hadd heq hv
@@ -887,16 +872,14 @@ private theorem UpperTheory.V.Kum.decCob {F Ω : Type} [Field F] [NumberField F]
       rw [this]
       exact isClosed_eq (continuous_zpow (-e)) continuous_const
     have hzK : Subgroup.zpowers γ' ≤ K := by
-      rw [Subgroup.zpowers_le, MonoidHom.mem_ker, zpowGroupHom_apply, ← hγχ]
-      exact h1
+      rwa [Subgroup.zpowers_le, MonoidHom.mem_ker, zpowGroupHom_apply, ← hγχ]
     have hmem := Subgroup.topologicalClosure_minimal _ hzK hK (hgen' (Subgroup.mem_map_of_mem _ hg))
     rw [MonoidHom.mem_ker, zpowGroupHom_apply] at hmem
     exact hg1 hmem
   have hsurj : Function.Surjective fun m => ρ ⟨γ, hγ⟩ m - m := by
     intro y
     have hu : ((cycZ F Ω l γ ^ (-e) : ℤ_[l]ˣ) : ℤ_[l]) - 1 ≠ 0 := by
-      intro h0'
-      exact hne (Units.val_eq_one.mp (sub_eq_zero.mp h0'))
+      exact fun h0' => hne (Units.val_eq_one.mp (sub_eq_zero.mp h0'))
     obtain ⟨x, hx⟩ := (qzBasic l).1 _ hu y
     refine ⟨x, ?_⟩
     simp only [ρ, MonoidHom.comp_apply, Subgroup.coe_subtype, qzG_apply]
@@ -928,8 +911,7 @@ theorem UpperTheory.V.Kum.resInfOnto :
       ∀ u : Uinf F Ω l, (u : G F Ω) ∈ Dec A → φ u = 0 := hX.2.2.2
   have hmemU : ∀ g : G F Ω, cycZ F Ω l g = 1 → g ∈ Uinf F Ω l := by
     intro g hg
-    simp only [Uinf, cycU, Subgroup.mem_inf, MonoidHom.mem_ker]
-    exact ⟨Subgroup.mem_top g, hg⟩
+    simpa only [Uinf, cycU, Subgroup.mem_inf, MonoidHom.mem_ker] using ⟨Subgroup.mem_top g, hg⟩
   have htriv : ∀ u ∈ Uinf F Ω l, ∀ m, qzG F Ω l e u m = m := by
     intro u hu m
     simp only [Uinf, cycU, Subgroup.mem_inf, MonoidHom.mem_ker] at hu
@@ -940,8 +922,7 @@ theorem UpperTheory.V.Kum.resInfOnto :
     intro g m
     rw [qzTw_comp_toGS]
   have hz' : z ∈ Z1 ((qzTw D e).comp (toGS Ω (D.S : Set (HeightOneSpectrum (𝓞 F))))) := by
-    rw [qzTw_comp_toGS]
-    exact hz
+    rwa [qzTw_comp_toGS]
   have hsha := shaInfl F Ω D.S D.A D.hA ℤ_[l] (QZ l) (qzTw D e) (contTw F Ω l D e).1
   have hmk : (Submodule.Quotient.mk ⟨z, hz'⟩ : H1 ((qzTw D e).comp (toGS Ω (D.S : Set (HeightOneSpectrum (𝓞 F)))))) ∈
       ShaAbs ((qzTw D e).comp (toGS Ω (D.S : Set (HeightOneSpectrum (𝓞 F))))) (D.S : Set (HeightOneSpectrum (𝓞 F))) := by
@@ -977,8 +958,7 @@ theorem UpperTheory.V.Kum.resInfOnto :
   funext u
   have h1 := hm u
   rw [hρ', htriv u u.2, sub_self, Submodule.coe_sub, Pi.sub_apply, sub_eq_zero] at h1
-  rw [resInf_mk, ← hzφ u]
-  exact h1
+  rwa [resInf_mk, ← hzφ u]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.KummerTheory.ResInfOnto =====
@@ -1029,8 +1009,7 @@ private theorem dt_mem {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algeb
   · simp only [Function.comp_apply, map_mul, h2]
   · exact h3 (A.comap σ.toRingHom) _ (dt_ine (hA A) (h u) hu)
   · refine h4 (A.comap σ.toRingHom) ?_ _ (dt_dec (hA A) (h u) hu)
-    rw [dt_val_lt_one (hA A), map_natCast]
-    exact hN
+    rwa [dt_val_lt_one (hA A), map_natCast]
 
 theorem UpperTheory.V.Tower.dinfTransport :
     ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (F' Ω' : Type) [Field F'] [NumberField F'] [Field Ω'] [Algebra F' Ω'] [IsAlgClosure F' Ω'] (f : F →+* F') (σ : Ω ≃+* Ω'), (∀ x, σ (algebraMap F Ω x) = algebraMap F' Ω' (f x)) →
@@ -1086,16 +1065,14 @@ theorem UpperTheory.V.Tower.desc :
     constructor
     · rintro ⟨g, hg, rfl⟩
       refine Subgroup.mem_inf.2 ⟨?_, ?_⟩
-      · intro x
-        exact g.commutes x
+      · exact fun x => g.commutes x
       · rw [MonoidHom.mem_ker, hcycE]
         exact (Subgroup.mem_inf.1 hg).2
     · intro hσ
       obtain ⟨hσG, hσK⟩ := Subgroup.mem_inf.1 hσ
       obtain ⟨h, rfl⟩ := hlift σ hσG
       refine ⟨h, Subgroup.mem_inf.2 ⟨Subgroup.mem_top _, ?_⟩, rfl⟩
-      rw [MonoidHom.mem_ker, ← hcycE]
-      exact hσK
+      rwa [MonoidHom.mem_ker, ← hcycE]
   obtain ⟨Ψ, hΨ⟩ := dinfTransport k Ω L Ω (algebraMap k L) (RingEquiv.refl Ω)
     (fun x => IsScalarTower.algebraMap_apply k L Ω x) (galEmb k L Ω) (fun g x => rfl)
     l l U ⊤ hmap
@@ -1280,9 +1257,7 @@ theorem UpperTheory.V.Tower.dinfTors :
     · rw [Submodule.mem_torsionBy_iff] at hx ⊢
       rw [← LinearMap.map_smul, hx, map_zero]
     · intro a b hab
-      apply Subtype.ext
-      apply Submodule.inclusion_injective hmono
-      exact congrArg Subtype.val hab
+      exact Subtype.ext (Submodule.inclusion_injective hmono (congrArg Subtype.val hab))
   · intro _ e g hg
     have hc : cycZ k Ω l g = 1 := hg.2
     have hd : dRep l N U g = 1 := LinearMap.ext fun φ => hconj g hg φ

@@ -60,9 +60,7 @@ theorem scalar (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] 
       apply b.repr.injective
       ext k
       exact congrFun hxy k
-    · intro e he k _
-      refine ⟨inclR (AF F) e, he, ?_⟩
-      exact repr_inclR (AF F) b e k
+    · exact fun e he k _ => ⟨inclR (AF F) e, he, repr_inclR (AF F) b e k⟩
   · refine ⟨fun hK => hnc.noncompact_univ ?_⟩
     have hsurj : Function.Surjective fun y => φ y ⟨0, hd⟩ := by
       intro r
@@ -86,8 +84,7 @@ theorem main : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
     have hS : ∀ a i, {e : E | inclR (AF F) e ∈ (fun Y : Fin n → Fin M → AF F ⊗[F] E => Y a i) '' C}.Finite :=
       fun a i => hfin _ (hCc.image (hcont a i))
     refine (Set.Finite.pi fun a => Set.Finite.pi (hS a)).subset ?_
-    intro X hX a _ i _
-    exact ⟨ratTup (AF F) X, hX, rfl⟩
+    exact fun X hX a _ i _ => ⟨ratTup (AF F) X, hX, rfl⟩
   · intro hn hM
     refine ⟨fun hK => hnc.noncompact_univ ?_⟩
     have hsurj : Function.Surjective fun Y : Fin n → Fin M → AF F ⊗[F] E => Y ⟨0, hn⟩ ⟨0, hM⟩ :=

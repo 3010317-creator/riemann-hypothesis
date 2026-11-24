@@ -208,8 +208,7 @@ theorem exists_linear_of_char {g : ℕ} (Λ : Submodule ℤ (Fin g → ℂ)) [Di
     have h := Complex.norm_mul_exp_arg_mul_I (ρ (b j))
     rw [hn, Complex.ofReal_one, _root_.one_mul] at h
     exact h.symm
-  intro l
-  exact htop (Submodule.mem_top : l ∈ ⊤)
+  exact fun l => htop (Submodule.mem_top : l ∈ ⊤)
 
 end GlobalTheory.SemicharShift
 
@@ -441,10 +440,8 @@ theorem exists_nsmul_mem_of_dual {g : ℕ} {Hm : Matrix (Fin g) (Fin g) ℂ} (hH
     rw [hsum]
     exact Submodule.sum_mem _ fun j _ => Submodule.smul_mem _ _ (b j).2
   rcases Int.natAbs_eq G.det with h | h
-  · rw [h, natCast_zsmul] at hdx
-    exact hdx
-  · rw [h, neg_smul, natCast_zsmul, neg_mem_iff] at hdx
-    exact hdx
+  · rwa [h, natCast_zsmul] at hdx
+  · rwa [h, neg_smul, natCast_zsmul, neg_mem_iff] at hdx
 
 end GlobalTheory.Overlattice
 
@@ -585,8 +582,7 @@ variable {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {g : ℕ} (u : HolUnif A
 
 theorem ex_eq_of_sub_mem {z w : Fin g → ℂ} (h : z - w ∈ u.Λ) : u.ex z = u.ex w := by
   have e := u.ex_add (z - w) w
-  rw [sub_add_cancel, (u.ker _).2 h, _root_.one_mul] at e
-  exact e
+  rwa [sub_add_cancel, (u.ker _).2 h, _root_.one_mul] at e
 
 theorem exists_ex_apply_eq [LocallyOfFiniteType A.hom] (x : A.left) (hx : IsClosed ({x} : Set A.left)) :
     ∃ z, (u.ex z).left (IsLocalRing.closedPoint ℂ) = x := by

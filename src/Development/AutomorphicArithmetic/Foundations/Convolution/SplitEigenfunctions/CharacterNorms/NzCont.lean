@@ -93,16 +93,14 @@ theorem contOn_iy : ContinuousOn iy ({0}ᶜ : Set ℝ) := by
       exact iy_coe y.2
     change Continuous fun y : ({0}ᶜ : Set ℝ) => ((iy y : (A ℚ)ˣ) : A ℚ)
     rw [e]
-    refine continuous_const.add (cont_sInf.comp ?_)
-    exact continuous_pi fun _ => continuous_subtype_val
+    exact continuous_const.add (cont_sInf.comp (continuous_pi fun _ => continuous_subtype_val))
   · have e : (fun y : ({0}ᶜ : Set ℝ) => (((iy y)⁻¹ : (A ℚ)ˣ) : A ℚ)) = fun y : ({0}ᶜ : Set ℝ) => 1 - TR.sInf ℚ 1 + TR.sInf ℚ fun _ => (y : ℝ)⁻¹ := by
       funext y
       exact iy_inv_coe y.2
     change Continuous fun y : ({0}ᶜ : Set ℝ) => (((iy y)⁻¹ : (A ℚ)ˣ) : A ℚ)
     rw [e]
     refine continuous_const.add (cont_sInf.comp ?_)
-    refine continuous_pi fun _ => ?_
-    exact continuous_subtype_val.inv₀ fun y => y.2
+    exact continuous_pi fun _ => continuous_subtype_val.inv₀ fun y => y.2
 
 theorem contOn_curve : ContinuousOn (fun p : ℝ × ℝ => em E (aE (iy p.1) * rot p.2)) (({0}ᶜ : Set ℝ) ×ˢ Set.univ) := by
   refine cont_em.comp_continuousOn (ContinuousOn.mul (continuous_aE.comp_continuousOn ?_) (cont_rot.comp continuous_snd).continuousOn)

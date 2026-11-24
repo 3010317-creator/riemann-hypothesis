@@ -78,8 +78,7 @@ theorem exists_avg (H : Subgroup G) (σ : Representation ℂ H Z) (L : Subgroup 
   obtain ⟨ι, _, r, c, h1, h2⟩ := GlobalTheory.CompanionTheory.TwAvgInd.exists_finite_average (cInd H σ)
     (GlobalTheory.CompanionTheory.BZFun.isSmooth_cInd H σ) hL θ hθ f
   refine ⟨_, h1, h2, fun x hx => ?_⟩
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   apply hx
   let E : cIndSpace H σ →ₗ[ℂ] Z := (GlobalTheory.CompanionTheory.TwAvgInd.evalAt H σ x) ∘ₗ (cIndSpace H σ).subtype
   have hz : ∀ i, E (GlobalTheory.CompanionTheory.TwistedAverage.twOrbit (cInd H σ) L θ f (r i)) = 0 := by
@@ -230,7 +229,7 @@ theorem uEl_mem_HPG (i t : ℕ) (c : Fin (i + 1) → k) : uEl k i t c 0 ∈ HPG 
   by_cases hy : y = Fin.last (i + 1)
   · subst hy
     rw [ePG_false_last]
-    simp only [colMat, if_true, Fin.lastCases_castSucc, Fin.append_right, Pi.zero_apply]
+    simp only [colMat, ite_true, Fin.lastCases_castSucc, Fin.append_right, Pi.zero_apply]
   · obtain ⟨y', rfl⟩ := Fin.exists_castSucc_eq.2 hy
     rw [ePG_false_eq]
     simp [colMat, Fin.castSucc_ne_last]
@@ -276,7 +275,7 @@ theorem pgProj_uEl (i t : ℕ) (c : Fin (i + 1) → k) :
     have h0 : colMat k ((i + 1) + (t + 1)) (Fin.append c 0) (Fin.castSucc (Fin.natAdd (i + 1) a))
         (Fin.castSucc (Fin.natAdd (i + 1) b)) = 0 := by
       unfold colMat
-      exact if_neg (Fin.castSucc_ne_last _)
+      exact ite_eq_right (Fin.castSucc_ne_last _)
     rw [h0, add_zero]
     by_cases hab : a = b
     · subst hab; simp
@@ -317,8 +316,7 @@ theorem sigX_uEl (c : Fin (i + 1) → k) :
     show ((σ.tw _).ρ 1) b = b
     rw [map_one]
     rfl
-  refine e1.trans ?_
-  exact congrArg₂ (fun (x : τ.V) (y : σ.V) => (x ⊗ₜ[ℂ] y : τ.V ⊗[ℂ] σ.V)) e3 e4
+  exact e1.trans (congrArg₂ (fun (x : τ.V) (y : σ.V) => (x ⊗ₜ[ℂ] y : τ.V ⊗[ℂ] σ.V)) e3 e4)
 
 end Grp
 
@@ -410,8 +408,7 @@ theorem evX_cInd (w : XS τ σ) (g x : Mir k ((i + 1) + t + 1)) :
 theorem evX_left (w : XS τ σ) (c : Fin (i + 1) → k) (x : Mir k ((i + 1) + t + 1)) :
     evX w (uEl k i t c 0 * x) = rU τ σ (Multiplicative.ofAdd c) (evX w x) := by
   have := (w : smoothPart (ind (HPG k (i + 1) (t + 1)) (sigX τ σ))).1.2 ⟨_, uEl_mem_HPG i t c⟩ x
-  rw [sigX_uEl] at this
-  exact this
+  rwa [sigX_uEl] at this
 
 theorem dEmb_mul_uEl (c : Fin (i + 1) → k) (d d₁ : Fin (t + 1) → k) :
     dEmb k i t d * 1 * uEl k i t c d₁ = uEl k i t c 0 * (dEmb k i t (d + d₁) * 1) := by
@@ -624,8 +621,7 @@ theorem vanish_of_eigen (ψ : AddChar k Circle) (hτ : IsSmooth τ.ρ) (hσ : Is
     convert this using 1
     ext x
     constructor
-    · intro hx
-      exact ⟨Multiplicative.ofAdd x, hx, rfl⟩
+    · exact fun hx => ⟨Multiplicative.ofAdd x, hx, rfl⟩
     · rintro ⟨y, hy, rfl⟩
       exact hy
   have hvol : (((muD k (t + 1) D).toReal : ℝ) : ℂ) ≠ 0 := by

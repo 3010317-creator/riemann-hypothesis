@@ -690,8 +690,7 @@ theorem isLevelFn_datumFn {B : Base S T} (hB : B.Good) {Q : Finset (Pl D.host.E)
     have c1 := left_ne_zero_of_mul ht
     have c2 := right_ne_zero_of_mul ht
     have d1 := (ite_ne_right_iff.1 c1).1
-    have d2 := (ite_ne_right_iff.1 c2).1
-    exact ⟨(hlat t d1.1).2 ⟨d1.2, d2.2⟩, d1.1⟩
+    exact ⟨(hlat t d1.1).2 ⟨d1.2, ((ite_ne_right_iff.1 c2).1).2⟩, d1.1⟩
   · obtain ⟨i1, i2⟩ := (hlat u hue).1 hu
     have e1 : frMapAdj S T B.F.βS B.F.βT (t + N • u) = frMapAdj S T B.F.βS B.F.βT t + N • frMapAdj S T B.F.βS B.F.βT u := by
       rw [_root_.GlobalTheory.PlaceVec.frMapAdj_add, GlobalTheory.RefDatumLev.frMapAdj_nsmul']
@@ -971,8 +970,7 @@ theorem placeIn_unique : ∀ (Λ : Subring ℂ) [IsDiscreteValuationRing Λ] (l 
     exact Λ.mul_mem (hint a) hw'
   have hsub : ∀ x : L, ι x ∈ Λ → la.valuation L x ≤ 1 := by
     intro x hx
-    by_contra hv
-    push_neg at hv
+    by_contra! hv
     have hx0 : x ≠ 0 := by rintro rfl; simp at hv
     have hy : la.valuation L x⁻¹ < 1 := by rw [map_inv₀]; exact inv_lt_one_of_one_lt₀ hv
     obtain ⟨a, s, h⟩ := la.exists_primeCompl_mul_eq_of_integer (K := L) x⁻¹ hy.le
@@ -1143,7 +1141,7 @@ theorem exists_sum_fibres {T : CoreJ D} {j : Fin D.R.m} {C : Cover T ((j : ℕ) 
   refine ⟨_, sum_mem_intForms' C _ _ _ _ fun a' => intForms_fibre hRF hT hU hray hu hQ a' _ _ _ (hφ (a - a')), fun g => ?_⟩
   change (∑ a', _ : GA D _ → ℂ) g = φ _ g
   rw [Finset.sum_apply, Finset.sum_eq_single (Multiplicative.toAdd (detChar _ (u.delQ Q) g))
-    (fun a' _ ha' => by rw [if_neg (Ne.symm ha'), zero_mul]) (fun h0 => absurd (Finset.mem_univ _) h0), if_pos rfl, one_mul]
+    (fun a' _ ha' => by rw [ite_eq_right (Ne.symm ha'), zero_mul]) (fun h0 => absurd (Finset.mem_univ _) h0), ite_eq_left rfl, one_mul]
 
 section Main
 
@@ -1262,8 +1260,7 @@ theorem xi_int_of_ties (hRF : GlobalTheory.NT.RayField) (hSI : GlobalTheory.Inde
   have hω' : IsWeilDatumO Rl.ψ (Vc D j) (Wc D j) (Lift.chrTh (Lift.tup Rl.mu0 (ρ.B i j b).de.chi) Rl.eta ((j : ℕ) + 1)).1
       (Lift.chrTh (Lift.tup Rl.mu0 (ρ.B i j b).de.chi) Rl.eta ((j : ℕ) + 1)).2 (ρ.om i j b 1) := by
     have h1 := hω
-    rw [Base.IsWeil, mul_one, Base.mu, hpin.psi, hpin.mu0, hpin.eta] at h1
-    exact h1
+    rwa [Base.IsWeil, mul_one, Base.mu, hpin.psi, hpin.mu0, hpin.eta] at h1
   obtain ⟨_, ⟨z, rfl⟩, ⟨mz, hmz, hz⟩, xi, hxi, hθ⟩ := theta_twist (R := Rl.toRealDat) hcore.lev hcore.thP j C.σ₂ hG.2.2.1.1 htw hω' h
   have hzi : la.valuation _ z ≤ 1 := (hla z).1 (mem_of_pow_eq_one hmz hz (hΛ _ (hLe ⟨z, rfl⟩)))
   have hTC : GlobalTheory.IndefiniteRowSideFullHecke.TwistSeries.IsTowerCover T j (D.ntw.l i) C := ⟨hG.1, hG.2.2.1.2.1, hcl, hG.2.2.1.2.2.2.2⟩
@@ -1276,8 +1273,7 @@ theorem xi_int_of_ties (hRF : GlobalTheory.NT.RayField) (hSI : GlobalTheory.Inde
       rw [MvPolynomial.coeff_map]
       exact hL0 (hvc m)
     have h2 := zsmul_mem h1 r
-    rw [← MvPolynomial.coeff_smul] at h2
-    exact h2
+    rwa [← MvPolynomial.coeff_smul] at h2
 
   let k : Subring ℂ := C.σ₂.range ⊓ Λ
   have hk : ∀ {H : Type} [Group H] [Finite H] (f : H →* ℂˣ) (x : H), ((f x : ℂˣ) : ℂ) ∈ C.σ₂.fieldRange →
@@ -1323,12 +1319,10 @@ theorem xi_int_of_ties (hRF : GlobalTheory.NT.RayField) (hSI : GlobalTheory.Inde
           exact hN P0 (Or.inl hP0)
         · exact hN P1 (Or.inr h1)
       · rw [Formalism.L2.Theta.cA_cA, hM]
-        rw [hpin.latS, hpin.latT] at hd1
-        exact hd1
+        rwa [hpin.latS, hpin.latT] at hd1
       · rw [Formalism.L2.Theta.cA_cA]
         unfold Frame.lat at hth
-        rw [hpin.psi, hpin.latS, hpin.latT, hpin.vac] at hth
-        exact hth
+        rwa [hpin.psi, hpin.latS, hpin.latT, hpin.vac] at hth
     obtain ⟨φ, hφ, hφg⟩ := hc₂ C hTC hG.2.1 hFB {la} (fun q hq => by rw [Set.mem_singleton_iff.1 hq]; exact hl1) xi hxi _ _ hLV
       (fun t => by
         obtain ⟨⟨y, hy⟩, h2⟩ := hd2 t
@@ -1356,8 +1350,7 @@ theorem xi_int_of_ties (hRF : GlobalTheory.NT.RayField) (hSI : GlobalTheory.Inde
         (((xi (Matrix.GeneralLinearGroup.det (finHom (Wc D j) g)) : ℂˣ) : ℂ) * GlobalTheory.IndefiniteRowSideFullHecke.TwistSeries.series Rl.toRealDat j u h
           ((ρ.B i j b).vecFam (half (ρ.ch i) (admissibleConjugatePairPlaces D.ntw i Q M))
           (Base.univFam (univOf D.nexp i (admissibleConjugatePairPlaces D.ntw i Q M) M ρ.rc) (ρ.β j)) a') w g))) hv')
-    rw [Pi.smul_apply, Pi.smul_apply, e3, smul_eq_mul, smul_eq_mul]
-    rw [e2]
+    rw [Pi.smul_apply, Pi.smul_apply, e3, smul_eq_mul, smul_eq_mul, e2]
     ring
 
   have hsum : ∃ φ ∈ C.intForms (wtA (κ j)) (κ j).n {la}, castDict hV φ =
@@ -1374,8 +1367,7 @@ theorem xi_int_of_ties (hRF : GlobalTheory.NT.RayField) (hSI : GlobalTheory.Inde
     rw [(hti.kap j τ).1 k]
     exact GlobalTheory.LiftWeight.kapTop_lastPos D j τ k hk
   have hn : 8 * D.R.f * D.R.r + 4 ≤ (κ j).n := by
-    rw [(hti.kap j (D.eTau.symm 1)).2.2]
-    exact hnV
+    rwa [(hti.kap j (D.eTau.symm 1)).2.2]
   have hspan : Formalism.L2.Pj.holSub0 (T.U ((j : ℕ) + 1) T.σ₀).X (laU (T.U ((j : ℕ) + 1) T.σ₀) (wtA (κ j)) (κ j).n) ≤
       Submodule.span ℂ (rdU (T.U ((j : ℕ) + 1) T.σ₀) '' {f | f ∈ sec (T.Q.Xo ((j : ℕ) + 1)) T.Q.c (wtA (κ j)) (κ j).n ∧
         rdU (T.U ((j : ℕ) + 1) T.σ₀) f ∈ Formalism.L2.Pj.holSub0 (T.U ((j : ℕ) + 1) T.σ₀).X
@@ -1784,8 +1776,7 @@ theorem exists_framed (hP : GlobalTheory.Published.CuspRapidDecay) (X : RealSide
       all := Y.all }
   refine ⟨X', Y', ⟨hF.galois, hF.star, hF.vals, hF.ray, hF.roots, hF.split⟩, hfr,
     fun i j b => (ratRow_move kap lam Y.YS hw hst X.geo.v₀ Y.Z.good i j b).1, fun h => ?_⟩
-  rw [← rd_move kap lam hw hst Y.Z]
-  exact h
+  rwa [← rd_move kap lam hw hst Y.Z]
 
 end GlobalTheory.Unframe
 

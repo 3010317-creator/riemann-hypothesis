@@ -307,10 +307,8 @@ theorem exists_herm_at (D : D7) (n : ℕ) (v : Pl D) (τ : D.host.E →ₐ[D.hos
     ext i j
     change cA D (tensAt D.host.E v (M j i)) = tensAt D.host.E v (M i j)
     rw [cA_tensAt, hs]
-  · intro w i j
-    exact compInf_tensAt_eq_zero w v _
-  · intro v' hv i j
-    exact compFin_tensAt_ne_place hv _
+  · exact fun w i j => compInf_tensAt_eq_zero w v _
+  · exact fun v' hv i j => compFin_tensAt_ne_place hv _
   · refine Matrix.ext fun i j => ?_
     change splitProj τ (cv D v (tensAt D.host.E v (M i j))) = X i j
     rw [hc, p1]
@@ -425,7 +423,6 @@ theorem main : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (v : Pl D), GoodPsi
         rw [← hadd]
         exact hwd _ _ (by rw [hg, map_add (f := _), hg, hg]) }
   have hψ₀ : ∀ c, ψ₀ (IsLocalRing.residue (Ov D v) c) = f c := fun c => by
-    show f (g _) = f c
     exact hwd _ _ (hg _)
   refine ⟨ψ₀, ?_, ?_⟩
   · obtain ⟨b, hb⟩ := hψ.2 ϖ hϖ
@@ -435,10 +432,8 @@ theorem main : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (v : Pl D), GoodPsi
     rw [hψ₀] at e1
     have e : ((w⁻¹ : (Lv D v)ˣ) : Lv D v) * algebraMap (Ov D v) (Lv D v) b = (b : Fv D.host.F v) / (ϖ : Fv D.host.F v) := by
       rw [Units.val_inv_eq_inv_val, hw, div_eq_inv_mul]; rfl
-    rw [← e]
-    exact e1
-  · intro c
-    exact (hψ₀ c).symm
+    rwa [← e]
+  · exact fun c => (hψ₀ c).symm
 
 end GlobalTheory.CompanionTheory.Jp.ResChar
 
@@ -493,14 +488,10 @@ theorem mem_of_dual_integral : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (v 
   intro D ψ v hψ n T hT i j
   by_contra hx
   set O := v.adicCompletionIntegers D.host.F with hO
-  have hx0 : T i j ≠ 0 := by
-    intro h
-    exact hx (h ▸ O.zero_mem)
+  have hx0 : T i j ≠ 0 := fun h => hx (h ▸ O.zero_mem)
   have hy : (T i j)⁻¹ ∈ O := (O.mem_or_inv_mem (T i j)).resolve_left hx
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
-  have hϖ0 : (ϖ : v.adicCompletion D.host.F) ≠ 0 := by
-    intro h
-    exact hϖ.ne_zero (Subtype.ext h)
+  have hϖ0 : (ϖ : v.adicCompletion D.host.F) ≠ 0 := fun h => hϖ.ne_zero (Subtype.ext h)
   have hw : (T i j)⁻¹ / (ϖ : v.adicCompletion D.host.F) ∈ O := by
     rcases O.mem_or_inv_mem ((T i j)⁻¹ / (ϖ : v.adicCompletion D.host.F)) with h | h
     · exact h
@@ -875,8 +866,7 @@ theorem rank_residue_map_le_rank_fraction_map :
     rw [← hres, h, map_zero]
   have hL : ((T.map (algebraMap O L)).submatrix S τ).det ≠ 0 := by
     rw [← hfrac]
-    intro h
-    exact hO (IsFractionRing.injective O L (h.trans (map_zero _).symm))
+    exact fun h => hO (IsFractionRing.injective O L (h.trans (map_zero _).symm))
   calc (T.map (IsLocalRing.residue O)).rank
       = ((T.map (algebraMap O L)).submatrix S τ).rank := by
         rw [Matrix.rank_of_isUnit _ ((Matrix.isUnit_iff_isUnit_det _).mpr (isUnit_iff_ne_zero.mpr hL)),
@@ -940,8 +930,7 @@ theorem coY_sum_mul_eq_zero : ∀ (k : Type) [Field k] [Fintype k] (n : ℕ) (ψ
   have hχ : χ ≠ 1 := by
     have hA : T - β ≠ 0 := sub_ne_zero.mpr hne
     obtain ⟨i, j, hij⟩ : ∃ i j, (T - β) i j ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hA (Matrix.ext h)
     obtain ⟨a, ha⟩ := (AddChar.ne_one_iff).1 hψ
     refine (AddChar.ne_one_iff).2 ⟨Matrix.single j i (a / (T - β) i j), ?_⟩
@@ -949,8 +938,7 @@ theorem coY_sum_mul_eq_zero : ∀ (k : Type) [Field k] [Fintype k] (n : ℕ) (ψ
       rw [Matrix.trace_single_mul]
       exact div_mul_cancel₀ a hij
     change ψ₀ (Matrix.trace (Matrix.single j i (a / (T - β) i j) * (T - β))) ≠ 1
-    rw [htr]
-    exact ha
+    rwa [htr]
   have hterm : ∀ Y : Matrix (Fin n) (Fin n) k,
       coY ψ₀ β Y * ψ₀ (Matrix.trace (Y * T)) = ((Fintype.card k : ℂ) ^ (n * n))⁻¹ * χ Y := by
     intro Y
@@ -1041,8 +1029,7 @@ theorem mem_level_square_congruence_iff {O : Type} [CommRing O] [IsLocalRing O] 
 theorem isOpen_ideal (D : D7) (v : Pl D) (ϖ : Ov D v) (h : ϖ ≠ 0) :
     IsOpen {x : Lv D v | ∃ y ∈ Ideal.span {ϖ ^ 2}, algebraMap (Ov D v) (Lv D v) y = x} := by
   have hc : algebraMap (Ov D v) (Lv D v) (ϖ ^ 2) ≠ 0 := by
-    intro e
-    exact pow_ne_zero 2 h (Subtype.val_injective (by simpa using e))
+    exact fun e => pow_ne_zero 2 h (Subtype.val_injective (by simpa using e))
   set c := algebraMap (Ov D v) (Lv D v) (ϖ ^ 2) with hcdef
   have hO : IsOpen ((Valued.v.valuationSubring : ValuationSubring (Lv D v)) : Set (Lv D v)) :=
     Valued.isOpen_valuationSubring _
@@ -1122,8 +1109,7 @@ theorem exists_rho (D : D7) (n : ℕ) (v : Pl D) (τ : D.host.E →ₐ[D.host.F]
         obtain ⟨y, hy, e⟩ := h i j
         have hA : Function.Injective (algebraMap (Ov D v) (Lv D v)) := Subtype.val_injective
         have e' := hA e
-        rw [← e']
-        exact hy
+        rwa [← e']
     rw [hs]
     refine IsOpen.measurableSet (isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => hU.preimage ?_)
     exact (continuous_entry D n v τ i j).sub continuous_const

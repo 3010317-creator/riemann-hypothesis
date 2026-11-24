@@ -122,8 +122,7 @@ theorem comap_ne_bot_iff {f : M →ₗ[ℂ] N} (hf : Function.Injective f) (A : 
   rw [inf_comm, ← Submodule.map_comap_eq, not_iff_not]
   constructor
   · intro h; rw [h, Submodule.map_bot]
-  · intro h
-    exact Submodule.map_injective_of_injective hf (by rw [h, Submodule.map_bot])
+  · exact fun h => Submodule.map_injective_of_injective hf (by rw [h, Submodule.map_bot])
 
 theorem iSupIndep_comap {ι : Type} {f : M →ₗ[ℂ] N} (hf : Function.Injective f) {A : ι → Submodule ℂ N}
     (hA : iSupIndep A) : iSupIndep (fun i => (A i).comap f) := by
@@ -229,8 +228,7 @@ theorem chiMu_frob_all_alt : ∀ (hArt : GlobalTheory.Published.GlobalArtinRecip
     have h1 := hv x hx
     have h2 := cf.isEta.unr v x hx
     change (tp.tup (X.nd.mu i) j).loc v x * (cf.eta.loc v x)⁻¹ = 1 at h1
-    rw [h2, inv_one, mul_one] at h1
-    exact h1
+    rwa [h2, inv_one, mul_one] at h1
   have hval : ∀ v, ((X.nd.l i : ℕ) : 𝓞 D.host.E) ∉ v.asIdeal → (tp.tup (X.nd.mu i) j * cf.eta⁻¹).UnrAt v →
       ∀ (A' : ValuationSubring X.nd.Om) (τ : G D.host.E X.nd.Om), IsPlaceOver A' v → IsFrob (F := D.host.E) A' (normV v) τ →
       ι ((r τ : (Qbar (X.nd.l i))ˣ) : Qbar (X.nd.l i)) =
@@ -271,9 +269,9 @@ theorem chiMu_frob_all_alt : ∀ (hArt : GlobalTheory.Published.GlobalArtinRecip
     have hdel : (cf.delAt (X.nd.l i)).UnrAt w := by
       unfold CharFrame.delAt
       split_ifs with h
-      · rw [if_pos h] at hd
+      · rw [ite_eq_left h] at hd
         exact cf.isDel'.unr w hd
-      · rw [if_neg h] at hd
+      · rw [ite_eq_right h] at hd
         exact cf.isDel.unr w hd
     have hmem : i ∈ X.nd.locs (X.nd.j i) (X.nd.w i) := (X.nd.locs_mem _ _ i).2 ⟨rfl, rfl⟩
     have hQ : X.nd.Q i = C.Q (X.nd.w i) := (Sp.Q_eq _ _ i hmem).trans (Sp.Qc_eq _ _)
@@ -385,8 +383,7 @@ theorem chiOne_read_alt : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E →+* Q
     show (cf.mu0 j * tp.xi (X.nd.mu i) * cf.eta⁻¹).1 _ = 1
     rw [hxi]
     simp only [Subgroup.coe_mul, Subgroup.coe_inv, MonoidHom.mul_apply, MonoidHom.inv_apply] at e1 e2 ⊢
-    rw [e2, mul_one]
-    exact e1
+    rwa [e2, mul_one]
   refine ⟨hunr, fun σ hσF => ?_⟩
   have hϖ : IsUnifAt P (atFin P (unif P)) := unif_spec P
   have hαv : α = ((cf.mu0 j).val P : ℂ) * ((cf.delAt (X.nd.l i)).val P : ℂ) * ((cf.eta.val P : ℂˣ) : ℂ)⁻¹ := by
@@ -468,8 +465,8 @@ theorem tupEtaInv_unrAt_splitOut_alt : ∀ (D : D7) (cf : CharFrame D) (jE : D.h
     rw [X.nd.w_l i]
     unfold CharFrame.delAt
     split_ifs with h
-    · exact cf.isDel'.unr w (fun hp => hS' (Or.inr (Or.inr (by rw [if_pos h]; exact hp))))
-    · exact cf.isDel.unr w (fun hp => hS' (Or.inr (Or.inr (by rw [if_neg h]; exact hp))))
+    · exact cf.isDel'.unr w (fun hp => hS' (Or.inr (Or.inr (by rw [ite_eq_left h]; exact hp))))
+    · exact cf.isDel.unr w (fun hp => hS' (Or.inr (Or.inr (by rw [ite_eq_right h]; exact hp))))
   have hxi : (tp.xi (X.nd.mu i)).UnrAt w := by
     rw [X.nd.mu_w i, tp.xi_tw]
     exact HChar.UnrAt.mul hdel hpsi

@@ -101,8 +101,7 @@ private theorem equiv_prinSeries {k : Type} [Field k] [ValuativeRel k] [Topologi
     haveI : IsSimpleOrder (Subrepresentation ρ) := hρ
     rcases eq_bot_or_eq_top F.ker with h | h
     · have : x ∈ F.ker := hx
-      rw [h] at this
-      exact this
+      rwa [h] at this
     · have : v.1 ∈ F.ker := by rw [h]; trivial
       exact absurd this hy
   

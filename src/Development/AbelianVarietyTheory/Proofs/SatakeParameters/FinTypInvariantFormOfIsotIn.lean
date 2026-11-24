@@ -48,8 +48,7 @@ theorem finTyp_invariant_form_of_isotIn : ∀ (D : D7) (n : ℕ) (A : Type) [Add
   intro D n A _ _ ρ C B hlin hherm hpos _hstab hinv π hne
 
   obtain ⟨Φ, ⟨hΦe, hΦC⟩, hΦne⟩ : ∃ Φ : π.S →ₗ[ℂ] A, (IsEqvA ρ π Φ ∧ LinearMap.range Φ ≤ C) ∧ LinearMap.range Φ ≠ ⊥ := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hne
     unfold isotIn
     refine iSup_eq_bot.2 fun Φ => iSup_eq_bot.2 fun hΦ => hcon Φ hΦ
@@ -83,12 +82,9 @@ theorem finTyp_invariant_form_of_isotIn : ∀ (D : D7) (n : ℕ) (A : Type) [Add
       exact (Submodule.mem_bot ℂ).2 hk'
   refine ⟨fun x y => B (Φ x) (Φ y), ?_, ?_, ?_, ?_⟩
   · intro x y z c
-    simp only [map_add (f := _), map_smul]
-    exact hlin _ (hmemC x) _ (hmemC y) _ (hmemC z) c
-  · intro x y
-    exact hherm _ (hmemC x) _ (hmemC y)
-  · intro x hx
-    exact hpos _ (hmemC x) (fun h0 => hx (hinj x h0))
+    simpa only [map_add (f := _), map_smul] using hlin _ (hmemC x) _ (hmemC y) _ (hmemC z) c
+  · exact fun x y => hherm _ (hmemC x) _ (hmemC y)
+  · exact fun x hx => hpos _ (hmemC x) (fun h0 => hx (hinj x h0))
   · intro h x y x' y' hx hy
     have ex : x' = ⟨rt D.host.E n h x, π.stable h x x.2⟩ := Subtype.ext hx
     have ey : y' = ⟨rt D.host.E n h y, π.stable h y y.2⟩ := Subtype.ext hy

@@ -254,8 +254,7 @@ theorem unitPart : ∀ (k : Type) [Field k] (R : Type) [CommRing R] (P : PolAV (
   have hagr : ∀ i i', rsT (ab i).1 (m₀ ⁻¹ᵁ V i ⊓ m₀ ⁻¹ᵁ V i') = rsT (ab i').1 (m₀ ⁻¹ᵁ V i ⊓ m₀ ⁻¹ᵁ V i') := by
     intro i i'
     have hOC : m₀ ⁻¹ᵁ V i ⊓ m₀ ⁻¹ᵁ V i' ≤ j ⁻¹ᵁ (C i ⊓ C i') := by
-      intro x hx
-      exact ⟨(hWC i) (hOj i _ le_rfl hx.1), (hWC i') (hOj i' _ le_rfl hx.2)⟩
+      exact fun x hx => ⟨(hWC i) (hOj i _ le_rfl hx.1), (hWC i') (hOj i' _ le_rfl hx.2)⟩
     rw [← hmod i _ inf_le_left, ← hmod i' _ inf_le_right,
       pbT_rsT j (hWC i) ((hOj i _ inf_le_left)), pbT_rsT j (hWC i') ((hOj i' _ inf_le_right))]
     have hr := congrArg (fun u : Γ(B'.left, C i ⊓ C i')ˣ => pbT j u.val (m₀ ⁻¹ᵁ V i ⊓ m₀ ⁻¹ᵁ V i')) (hw (c i, c i) (c i', c i'))
@@ -532,10 +531,8 @@ theorem GlobalTheory.KS.TwoPull.exists_locDerK_of_two_pullbacks : ∀ (k : Type)
     have h4 : (m₀.app W).hom f = a := by
       rw [Scheme.Hom.app_eq_appLE]
       refine h1.trans ?_
-      rw [h3, zero_mul, add_zero]
-      exact h2
-    rw [h4]
-    exact hab
+      rwa [h3, zero_mul, add_zero]
+    rwa [h4]
   choose d hd using ex
   have hee : ∀ O : B'.left.Opens, constFn B'.hom O DualNumber.eps * constFn B'.hom O DualNumber.eps = 0 := fun O => by
     rw [const_eq, ← map_mul, DualNumber.eps_mul_eps, map_zero]
@@ -549,7 +546,7 @@ theorem GlobalTheory.KS.TwoPull.exists_locDerK_of_two_pullbacks : ∀ (k : Type)
     simp only [map_add (f := _), map_mul]
     linear_combination (pr.app _).hom (d W f) * (pr.app _).hom (d W f') * hee _
   · have h0 : m₀ ⁻¹ᵁ W' ≤ m₀ ⁻¹ᵁ W := fun _ hy => h hy
-    rw [show rsT (d W f) (m₀ ⁻¹ᵁ W') = resG _ h0 (d W f) from dif_pos h0]
+    rw [show rsT (d W f) (m₀ ⁻¹ᵁ W') = resG _ h0 (d W f) from dite_eq_left h0]
     refine uniq _ ((m₀.app W').hom (resG _ h f)) _ ((m₀.app W').hom (resG _ h f)) _ ?_
     have h0' : pr ⁻¹ᵁ (m₀ ⁻¹ᵁ W') ≤ pr ⁻¹ᵁ (m₀ ⁻¹ᵁ W) := fun _ hy => h hy
     have h1 := congrArg (resG _ h0') (hd W f)
@@ -568,7 +565,7 @@ theorem GlobalTheory.KS.TwoPull.exists_locDerK_of_two_pullbacks : ∀ (k : Type)
     show pbT π₁ f (pr ⁻¹ᵁ (m₀ ⁻¹ᵁ W)) = pbT (pr ≫ m₀) f (pr ⁻¹ᵁ (m₀ ⁻¹ᵁ W)) +
       constFn B'.hom (pr ⁻¹ᵁ (m₀ ⁻¹ᵁ W)) DualNumber.eps * pbT pr (d W f) (pr ⁻¹ᵁ (m₀ ⁻¹ᵁ W))
     unfold pbT
-    rw [dif_pos (hW W).le, dif_pos le_rfl, dif_pos (show pr ⁻¹ᵁ (m₀ ⁻¹ᵁ W) ≤ (pr ≫ m₀) ⁻¹ᵁ W from le_rfl), hd W f, Scheme.Hom.app_eq_appLE, Scheme.Hom.app_eq_appLE,
+    rw [dite_eq_left (hW W).le, dite_eq_left le_rfl, dite_eq_left (show pr ⁻¹ᵁ (m₀ ⁻¹ᵁ W) ≤ (pr ≫ m₀) ⁻¹ᵁ W from le_rfl), hd W f, Scheme.Hom.app_eq_appLE, Scheme.Hom.app_eq_appLE,
       _root_.GlobalTheory.KS.EpsDer.pull_pull pr m₀ (pr ≫ m₀) rfl]
 
 end
@@ -692,8 +689,7 @@ theorem isGen_rel {B X : Scheme.{0}} (L : LB X) (π₁ π₂ : B ⟶ X) (w : LB.
   have hI := rsT_inv_mul ((L.pull π₁).g (fun _ => a) (fun _ => b))
     (le_inf (hQa.trans inf_le_right) (hQb.trans inf_le_right))
   rw [hN] at hI
-  rw [hM]
-  rw [show ∀ x y z t : Γ(B, Q), x * y * z * t = x * z * (y * t) from fun _ _ _ _ => by ring]
+  rw [hM, show ∀ x y z t : Γ(B, Q), x * y * z * t = x * z * (y * t) from fun _ _ _ _ => by ring]
   erw [hI]
   exact _root_.mul_one _
 
@@ -1228,8 +1224,7 @@ theorem core {R : Type} [CommRing R] {k : Type} [Field k] [CharZero k] (A : Over
     erw [gs_pbT x π₁ z (le12 (LB.wchart L fam t)) hxz] at h
     rw [gs_add _ _ _ hxz, gs_mul _ _ _ hxz] at h
     erw [gs_pbT x π₂ z le_rfl hxz, gs_pbT x pr z (le2p (LB.wchart L fam t)) hxz] at h
-    rw [GlobalTheory.KS.DlogPol.gs_constFn _ _ _ _ hxz, gs_cstD] at h
-    exact h
+    rwa [GlobalTheory.KS.DlogPol.gs_constFn _ _ _ _ hxz, gs_cstD] at h
 
   have hPG := (isGen_iff w).1 hw
   have p2 : ∀ j, (xs j ≫ π₂) z = ((x ≫ π₂) ≫ fam j) z := fun j => by rw [(hxs j).2.1]
@@ -1242,8 +1237,7 @@ theorem core {R : Type} [CommRing R] {k : Type} [Field k] [CharZero k] (A : Over
       show (xs j ≫ π₁) z ∈ L.U (t j); rw [p1]; exact hVU _ (hi j)
     have := hPG Z (xs j) z (J (xs j ≫ π₂)) (t j) (fun _ => J (xs j ≫ π₁)) (fun _ => t j) (hJ _)
       (by show (xs j ≫ π₂) z ∈ L.U (t j); rw [p2]; exact hVU _ (hi j)) (mem_pull.2 (hJ _)) (mem_pull.2 h4)
-    rw [gm_pull_g π₁ (xs j) z _ _ (hJ _) h4] at this
-    exact this
+    rwa [gm_pull_g π₁ (xs j) z _ _ (hJ _) h4] at this
   have hK : ∀ j, (gw w (xs j) z (t j) (fun _ => t j)).val = cstD (x ≫ B'.hom) z κ.val *
       (1 + E * gs ((x ≫ pr) ≫ T j) z (m₀ ⁻¹ᵁ V (i j)) (pb (i j))) := fun j => by
     have hx : xs j z ∈ π₂ ⁻¹ᵁ V (i j) := by show (xs j ≫ π₂) z ∈ V (i j); rw [p2]; exact hi j
@@ -1255,8 +1249,7 @@ theorem core {R : Type} [CommRing R] {k : Type} [Field k] [CharZero k] (A : Over
     rw [gs_mul _ _ _ hx, GlobalTheory.KS.DlogPol.gs_constFn _ _ _ _ hx,
       gs_add _ _ _ hx, gs_one _ _ _ hx, gs_mul _ _ _ hx, GlobalTheory.KS.DlogPol.gs_constFn _ _ _ _ hx] at h
     erw [gs_pbT (xs j) pr z (le2p _) hx] at h
-    rw [(hxs j).2.2, hxpr j, gs_cstD, gs_cstD] at h
-    exact h
+    rwa [(hxs j).2.2, hxpr j, gs_cstD, gs_cstD] at h
 
   set O : A₀.left.Opens := m₀ ⁻¹ᵁ LB.wchart L fam t ⊓ T 0 ⁻¹ᵁ (m₀ ⁻¹ᵁ V (i 0)) ⊓ T 1 ⁻¹ᵁ (m₀ ⁻¹ᵁ V (i 1)) ⊓
     T 2 ⁻¹ᵁ (m₀ ⁻¹ᵁ V (i 2)) ⊓ T 3 ⁻¹ᵁ (m₀ ⁻¹ᵁ V (i 3)) with hO
@@ -1296,8 +1289,7 @@ theorem core {R : Type} [CommRing R] {k : Type} [Field k] [CharZero k] (A : Over
     rw [e1, gs_mul _ _ _ hxO, gs_mul _ _ _ hxO, gs_ofNat _ _ _ hxO, gs_natCast _ _ _ hxO, gs_add _ _ _ hxO, e3,
       gs_mul _ _ _ hxO, e2, gs_add _ _ _ hxO, gs_sum _ _ _ hxO,
       GlobalTheory.KS.DlogPol.gs_constFn _ _ _ _ hxO, hc, gs_spMap, gs_cstD] at h
-    simp only [hterm] at h
-    exact h
+    simpa only [hterm] using h
 
   set φ := cstD (x ≫ B'.hom) z with hφ
   have key : ∀ f g : Z ⟶ A.left, f = g → ∀ b : L.ι, gm f z (L.U (J f) ⊓ L.U b) (L.g (J f) b) =
@@ -1313,8 +1305,7 @@ theorem core {R : Type} [CommRing R] {k : Type} [Field k] [CharZero k] (A : Over
     rw [← map_pow]; rfl
   set Ej : Fin 4 → (Z.presheaf.stalk z)ˣ := fun j => κu⁻¹ * gw w (xs j) z (t j) (fun _ => t j) with hEjd
   have hEj : ∀ j, (Ej j).val = 1 + E * a j := fun j => by
-    rw [hEjd]
-    rw [Units.val_mul, hK j]
+    rw [hEjd, Units.val_mul, hK j]
     have h1 : (κu⁻¹).val * κu.val = 1 := Units.inv_mul κu
     have h2 : κu.val = φ κ.val := rfl
     rw [← h2]
@@ -1344,8 +1335,7 @@ theorem core {R : Type} [CommRing R] {k : Type} [Field k] [CharZero k] (A : Over
   rw [gs_cstD, gs_cstD, sa, sb, sc, hA', hFz]
   simp only [hgw]
   rw [prod3, htr1, htr2, Units.val_mul, Units.val_mul, hKprod, map_mul, map_add (f := _), map_one, hinr, hinr]
-  simp only [map_neg]
-  exact final_alg _ _ _ _ _ _ _ _ _ _ _ hU hH hEE
+  simpa only [map_neg] using final_alg _ _ _ _ _ _ _ _ _ _ _ hU hH hEE
 
 end GlobalTheory.HeatUConn
 

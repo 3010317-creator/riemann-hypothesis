@@ -67,8 +67,7 @@ theorem exists_mem_one_sub_loc_dvd {R : Type} [CommRing R] [IsDedekindDomain R] 
   have h2 : (1 : R) ∈ I ⊔ (⨅ P ∈ S, P.asIdeal) := h1 ▸ Submodule.mem_top
   obtain ⟨s0, hs0, π, hπ, hsum⟩ := Submodule.mem_sup.1 h2
   have hπ' : ∀ P ∈ S, π ∈ P.asIdeal := by
-    intro P hP
-    exact (Submodule.mem_iInf _).1 ((Submodule.mem_iInf _).1 hπ P) hP
+    exact fun P hP => (Submodule.mem_iInf _).1 ((Submodule.mem_iInf _).1 hπ P) hP
   have key : ∃ i j : ℕ, i < j ∧ Ideal.Quotient.mk (Ideal.span {c}) (π ^ i) = Ideal.Quotient.mk (Ideal.span {c}) (π ^ j) := by
     obtain ⟨i, j, hij, h⟩ := Finite.exists_ne_map_eq_of_infinite
       (fun i : ℕ => Ideal.Quotient.mk (Ideal.span {c}) (π ^ i))
@@ -183,8 +182,7 @@ theorem finite_divLat_quot_mulLat_homAt_of_isLattice :
       intro g
       have h := congrFun (congrArg Subtype.val (LinearMap.mem_ker.mp hx)) g
       have h2 : (cA : E) • (x : HomE E a b) g = 0 := by
-        rw [Nat.cast_smul_eq_nsmul, ← Nat.cast_smul_eq_nsmul (𝓞 E)]
-        exact h
+        rwa [Nat.cast_smul_eq_nsmul, ← Nat.cast_smul_eq_nsmul (𝓞 E)]
       exact (smul_eq_zero.mp h2).resolve_left hA'
     have hxN : ∀ y ∈ N, (x : HomE E a b) y = 0 := by
       intro y hy
@@ -203,8 +201,7 @@ theorem finite_divLat_quot_mulLat_homAt_of_isLattice :
         exact hs (this ▸ P.asIdeal.zero_mem)
       have h := hxN _ hsy
       rw [LinearMap.map_smul_of_tower] at h
-      have h' : (s : E) • (x : HomE E a b) y = 0 := by
-        exact h
+      have h' : (s : E) • (x : HomE E a b) y = 0 := h
       exact (smul_eq_zero.mp h').resolve_left hs0
     apply LinearMap.mem_ker.mpr
     change Submodule.Quotient.mk (Submodule.inclusion hZD x) = 0

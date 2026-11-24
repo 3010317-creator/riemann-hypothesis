@@ -171,8 +171,7 @@ theorem genV_of_pow : AllDV fun {V} _ _ _ {ϖ} hϖ D Q {F} _ _ {v} hv => ∀ (n 
   have hx' : ∀ z J, Good D.toPre.P.L z J → (val w (𝟙 _) z J).val =
       cst (R := V) F z x * (val t₀ (TWM.ιS hϖ hv).left z J).val := fun z J hJ => by
     have e := hx _ (𝟙 _) z J hJ
-    rw [val_pull hJ] at e
-    exact e
+    rwa [val_pull hJ] at e
   refine ⟨TWM.lineφO hϖ hv m, hl, t₀, ht₀, x, ?_, hx'⟩
   obtain ⟨e, c, he, hc, hce⟩ := SectionScalarValuation.exists_val_genHasVal (hQ p.y)
   obtain ⟨u, hu, eu⟩ := exists_ratio_zero hϖ hv hL (fun U _ h => by
@@ -290,8 +289,7 @@ theorem partial_sum_convolution {F : Type} [Field F] (v : AddValuation F (WithTo
     simp only [Finset.sum_sub_distrib, mul_sub, ← Finset.sum_mul]
     rw [e2]
     ring
-  rw [e]
-  exact h8
+  rwa [e]
 
 theorem partial_sum_convolution_pow {F : Type} [Field F] (v : AddValuation F (WithTop ℚ)) {X : Type}
     [AddCommGroup X] {a : X → F} {c : ℕ → X → F} (h0 : c 0 = a) (hn : ∀ j, NullV v (c j))
@@ -344,8 +342,7 @@ theorem sumV_root_of_convolution_pow : ∀ (F : Type) [Field F] [IsAlgClosed F] 
       have h2 := le_v_sum_sub_sum v q hT' (x := a) fun i hi =>
         not_lt.1 fun h => hi (hT ((Set.Finite.mem_toFinset _).2 h))
       have h3 := v.map_le_add h2 (not_le.1 hlt).le
-      rw [sub_add_sub_cancel, v.map_sub_swap] at h3
-      exact h3
+      rwa [sub_add_sub_cancel, v.map_sub_swap] at h3
     · exact ⟨0, fun h => absurd h hr⟩
   choose qf hqf using hfar
   obtain ⟨Q, hQ⟩ := (p.roots.toFinset.image qf).finite_toSet.bddAbove

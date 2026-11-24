@@ -111,18 +111,17 @@ theorem exists_top_add (φ : (Fin n → ℤ) →+ ℤ) (f g : LP n) (hf : f ≠ 
     simp only [Finsupp.sum]
     rw [Finset.sum_eq_single a]
     · rw [Finset.sum_eq_single b]
-      · rw [if_pos rfl]
+      · rw [ite_eq_left rfl]
       · intro y _ hne
-        rw [if_neg]
-        intro he
-        exact hne (add_left_cancel he)
+        rw [ite_eq_right]
+        exact fun he => hne (add_left_cancel he)
       · intro h
         rw [Finsupp.notMem_support_iff.1 h]
         simp
     · intro x hx hne
       apply Finset.sum_eq_zero
       intro y hy
-      rw [if_neg]
+      rw [ite_eq_right]
       intro he
       have h1 : D x < D a := lt_of_le_of_ne (hamax x hx) (hD.ne hne)
       have h2 : D y ≤ D b := hbmax y hy
@@ -154,7 +153,7 @@ theorem Bd.mul {φ : (Fin n → ℤ) →+ ℤ} {f g : LP n} {B C : ℤ} (hf : Bd
   by_cases he : x + y = ν
   · rw [← he, map_add (f := _)]
     exact add_le_add (hf x (Finsupp.mem_support_iff.1 hx)) (hg y (Finsupp.mem_support_iff.1 hy))
-  · exact absurd (if_neg he) hy'
+  · exact absurd (ite_eq_right he) hy'
 
 theorem Bd.add {φ : (Fin n → ℤ) →+ ℤ} {f g : LP n} {B : ℤ} (hf : Bd φ f B) (hg : Bd φ g B) :
     Bd φ (f + g) B := by
@@ -176,7 +175,7 @@ theorem bd_single (φ : (Fin n → ℤ) →+ ℤ) (m : Fin n → ℤ) (r : ℂ) 
   rw [AddMonoidAlgebra.coeff_single, Finsupp.single_apply] at hν
   by_cases h : m = ν
   · rw [h]
-  · exact absurd (if_neg h) hν
+  · exact absurd (ite_eq_right h) hν
 
 theorem Bd.sum {ι : Type*} {φ : (Fin n → ℤ) →+ ℤ} (s : Finset ι) (F : ι → LP n) {B : ℤ}
     (h : ∀ i ∈ s, Bd φ (F i) B) : Bd φ (∑ i ∈ s, F i) B := by
@@ -207,8 +206,7 @@ theorem bd_altL (w m : Fin n → ℤ) (hw : Antitone w) (hm : Antitone m) :
   unfold altL
   refine Bd.sum _ _ fun σ _ => ?_
   refine Bd.smul _ ((bd_single _ _ _).mono ?_)
-  simp only [phw_apply]
-  exact Monovary.sum_mul_comp_perm_le_sum_mul (Antitone.monovary hw hm)
+  simpa only [phw_apply] using Monovary.sum_mul_comp_perm_le_sum_mul (Antitone.monovary hw hm)
 
 theorem phw_single_sub (w : Fin n → ℤ) (a b : Fin n) :
     phw w (Pi.single a 1 - Pi.single b 1) = w a - w b := by
@@ -244,7 +242,7 @@ theorem coeff_altL_delZ : (altL (delZ n)).coeff (delZ n) = 1 := by
   · simp
   · intro σ _ hσ
     rw [AddMonoidAlgebra.coeff_smul, Finsupp.smul_apply, AddMonoidAlgebra.coeff_single, Finsupp.single_apply,
-      if_neg, smul_zero]
+      ite_eq_right, smul_zero]
     intro he
     apply hσ
     ext i
@@ -303,11 +301,11 @@ theorem range_sums (k N : ℕ) :
   | succ N ih =>
     rw [Finset.sum_range_succ, Finset.sum_range_succ, ih.1, ih.2]
     by_cases hN : N < k
-    · rw [if_pos hN, min_eq_left hN.le, min_eq_left (Nat.succ_le_of_lt hN)]
+    · rw [ite_eq_left hN, min_eq_left hN.le, min_eq_left (Nat.succ_le_of_lt hN)]
       push_cast
       constructor <;> ring
-    · rw [if_neg hN]
-      push_neg at hN
+    · rw [ite_eq_right hN]
+      push Not at hN
       rw [min_eq_right hN, min_eq_right (by omega)]
       simp
 
@@ -356,7 +354,7 @@ theorem domLE_of_mul_eq : ∀ {n : ℕ} (lam : Fin n → ℤ), Antitone lam → 
     exact Finset.sum_congr rfl fun a _ => by simp only [wk]; split_ifs <;> simp
   have hm0 : ∀ a, m0 lam a = ((2 * lam a + ((n : ℤ) - 1 - 2 * ((a : ℕ) : ℤ)) : ℤ) : ℝ) := by
     intro a; simp only [m0]; push_cast; ring
-  have hw1 : ∀ a : Fin n, wk n a = 1 := fun a => if_pos a.isLt
+  have hw1 : ∀ a : Fin n, wk n a = 1 := fun a => ite_eq_left a.isLt
   have htot : ∑ a : Fin n, ((n : ℤ) - 1 - 2 * ((a : ℕ) : ℤ)) = 0 := by
     have := sum_max_eq (n := n) n
     simp only [hw1, sub_self, max_self, Finset.sum_const_zero, one_mul] at this
@@ -523,8 +521,7 @@ theorem exists_weight {χ : (Fin n → Circle) → ℂ} {v : E.V}
         · simp only [Pi.mulSingle_eq_same]; exact continuous_id'
         · simpa [Pi.mulSingle_eq_of_ne h] using continuous_const
       refine Units.continuous_iff.2 ⟨?_, ?_⟩
-      · show Continuous fun z => χ (Pi.mulSingle a z)
-        exact hcont.comp hs
+      · exact hcont.comp hs
       have : (fun z => (((f z)⁻¹ : ℂˣ) : ℂ)) = fun z => χ (Pi.mulSingle a z⁻¹) := by
         funext z; rw [← map_inv]; rfl
       rw [this]; exact hcont.comp (hs.comp continuous_inv)
@@ -1015,7 +1012,7 @@ theorem topeG : ∀ {n : ℕ} (lam : Fin n → ℤ), Antitone lam → ∀ (E : K
   have hmem : ∀ μ, wtDual E μ ≠ ⊥ → μ ∈ s := fun μ h => by simpa [hs] using h
   obtain ⟨h1, -⟩ := _root_.GlobalTheory.CompanionTheory.RealCount.Tope.Ident.lefK_laurent_ident lam E T hT hspan hind s hmem
   refine ⟨hspan, fun μ hμ => _root_.GlobalTheory.CompanionTheory.RealCountG.DomA.domLE_of_mul_eq lam hlam _ h1 μ ?_⟩
-  rw [cPoly_coeff, if_pos (hmem μ hμ), trOn_dualT_id]
+  rw [cPoly_coeff, ite_eq_left (hmem μ hμ), trOn_dualT_id]
   have : Module.finrank ℂ (wtDual E μ) ≠ 0 := fun h0 => hμ (Submodule.finrank_eq_zero.1 h0)
   exact_mod_cast this
 

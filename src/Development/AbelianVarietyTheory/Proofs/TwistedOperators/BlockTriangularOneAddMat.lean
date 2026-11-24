@@ -140,7 +140,7 @@ theorem mul_mat {A : Matrix n n R} (hA : A.BlockTriangular (blk e)) (x : Idx e �
   ext i j
   by_cases h : blk e i < blk e j
   · simp [mat, h, ent]
-  · simp only [mat, of_apply, h, dif_neg, not_false_eq_true, Matrix.mul_apply]
+  · simp only [mat, of_apply, h, dite_eq_right, not_false_eq_true, Matrix.mul_apply]
     refine Finset.sum_eq_zero fun l _ => ?_
     by_cases h' : blk e l < blk e j
     · rw [hA (h'.trans_le (not_lt.1 h)), zero_mul]
@@ -212,8 +212,7 @@ theorem det_lmat {A : Matrix n n R} (hA : A.BlockTriangular (blk e)) (D : ∀ a,
   · simp only [card_blk]
   · intro p q h
     simp [lmat, hA h]
-  · intro a x y
-    exact if_congr Subtype.ext_iff.symm (hD a x.1 y.1) rfl
+  · exact fun a x y => if_congr Subtype.ext_iff.symm (hD a x.1 y.1) rfl
 
 theorem det_rmat (g : Levi R m) :
     (rmat e (leviEmb R e g : Matrix n n R)).det =
@@ -227,8 +226,7 @@ theorem det_rmat (g : Levi R m) :
     obtain ⟨⟨b, j'⟩, rfl⟩ := e.surjective j'
     have : b < a := by simpa using h
     simp [rmat, leviEmb_apply_ne R e g this.ne]
-  · intro a x y
-    exact if_congr Subtype.ext_iff.symm (leviEmb_apply_same R e g a y.1 x.1) rfl
+  · exact fun a x y => if_congr Subtype.ext_iff.symm (leviEmb_apply_same R e g a y.1 x.1) rfl
 
 theorem unipEquiv_mul (u : unipRad R e) (x : Idx e → R) :
     unipEquiv e (u * (unipEquiv e).symm x) =
@@ -276,9 +274,9 @@ def unipHomeo : unipRad R e ≃ₜ (Idx e → R) where
     have h : Continuous fun x : Idx e → R => 1 + mat e x := by
       refine continuous_const.add (continuous_matrix fun i j => ?_)
       by_cases h : blk e i < blk e j
-      · simp only [mat, of_apply, h, dif_pos]
+      · simp only [mat, of_apply, h, dite_eq_left]
         exact continuous_apply _
-      · simp only [mat, of_apply, h, dif_neg, not_false_eq_true]
+      · simp only [mat, of_apply, h, dite_eq_right, not_false_eq_true]
         exact continuous_const
     refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨h, h.matrix_adjugate.congr fun x => ?_⟩) _
     rw [Matrix.coe_units_inv, Matrix.inv_def]

@@ -150,8 +150,7 @@ private theorem PiH_eq (i : ι) (n : ℕ) (q : ℤ) (v : H) : PiH C ρ i n q v =
 private theorem PiH_int (i : ι) (n : ℕ) (q : ℤ) (v : H) :
     Integrable (fun m => T n q m • ρ (C.un i m) v) μK := by
   refine KT.integrable_of_continuous ((T_cont n q).smul ?_)
-  simp only [← sg_kC]
-  exact KT.continuous_orbit_K (sg C ρ i) v
+  simpa only [← sg_kC] using KT.continuous_orbit_K (sg C ρ i) v
 
 private theorem PiH_mem (i : ι) (n : ℕ) (q : ℤ) (τ : Submodule ℂ H) (hc : IsClosed (τ : Set H))
     (hi : ∀ g, ∀ v ∈ τ, ρ g v ∈ τ) (v : H) (hv : v ∈ τ) : PiH C ρ i n q v ∈ τ :=
@@ -172,8 +171,7 @@ private theorem part1 (i : ι) (n : ℕ) (q : ℤ) : ∃ P : H →L[ℂ] H, (∀
   have hP : ∀ v, KT.PL (sg C ρ i) n q v = PiH C ρ i n q v := fun v => (PiH_eq C ρ i n q v).symm
   refine ⟨KT.PL (sg C ρ i) n q, hP, ?_, ?_, ?_, ?_, ?_⟩
   · rw [ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric]
-    intro x y
-    exact KT.inner_P_left (sg C ρ i) n q x y
+    exact fun x y => KT.inner_P_left (sg C ρ i) n q x y
   · ext1 v
     exact KT.P_P (sg C ρ i) n q v
   · intro a b
@@ -185,8 +183,7 @@ private theorem part1 (i : ι) (n : ℕ) (q : ℤ) : ∃ P : H →L[ℂ] H, (∀
     simpa only [KT.P_P, sg_apply] using key
   · intro h hh
     ext1 v
-    simp only [ContinuousLinearMap.mul_apply, hP]
-    exact PiH_comm C ρ i n q h hh v
+    simpa only [ContinuousLinearMap.mul_apply, hP] using PiH_comm C ρ i n q h hh v
   · intro τ hc hi v hv
     rw [hP]
     exact PiH_mem C ρ i n q τ hc hi v hv

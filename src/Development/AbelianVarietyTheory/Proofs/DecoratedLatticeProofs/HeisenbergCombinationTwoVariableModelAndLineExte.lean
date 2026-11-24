@@ -76,8 +76,7 @@ theorem comb_resS_slice (ψ : AddChar (AF D.host.F) ℂ) {V A L S : HSp D} (o : 
   classical
   have hinj : Function.Injective fun w : WO A S => (o.resS S).symm (w, 0) := fun a b h => by
     have := congrArg (o.resS S) h
-    simp only [AddEquiv.apply_symm_apply, Prod.mk.injEq, and_true] at this
-    exact this
+    simpa only [AddEquiv.apply_symm_apply, Prod.mk.injEq, and_true] using this
   simp only [comb, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
   rw [Finsupp.mapDomain_support_of_injective hinj, Finset.sum_image (fun a _ b _ h => hinj h)]
   refine Finset.sum_congr rfl fun w _ => ?_
@@ -90,8 +89,7 @@ theorem comb_resT_slice (ψ : AddChar (AF D.host.F) ℂ) {V A L S : HSp D} (o : 
   classical
   have hinj : Function.Injective fun w : WO S A => (o.resT S).symm (w, 0) := fun a b h => by
     have := congrArg (o.resT S) h
-    simp only [AddEquiv.apply_symm_apply, Prod.mk.injEq, and_true] at this
-    exact this
+    simpa only [AddEquiv.apply_symm_apply, Prod.mk.injEq, and_true] using this
   simp only [comb, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
   rw [Finsupp.mapDomain_support_of_injective hinj, Finset.sum_image (fun a _ b _ h => hinj h)]
   refine Finset.sum_congr rfl fun w _ => ?_

@@ -120,7 +120,6 @@ variable {A : ValuationSubring Ω}
 
 theorem resG_mem_Dec {σ : G L Ω} (hσ : σ ∈ Dec (F := L) A) : resG K σ ∈ Dec (F := K) A := by
   have h1 : σ • A = A := hσ
-  show (resG K σ) • A = A
   exact h1
 
 theorem resG_mem_Ine {σ : G L Ω} (hσ : σ ∈ Ine (F := L) A) : resG K σ ∈ Ine (F := K) A :=
@@ -132,8 +131,7 @@ theorem actsAs_resG {q f a b : ℕ} {σ : G L Ω} (hσ : ActsAs A (q ^ f) σ a b
   have e1 : (q ^ f) ^ b = q ^ (f * b) := (pow_mul q f b).symm
   have e2 : (q ^ f) ^ a = q ^ (f * a) := (pow_mul q f a).symm
   have := hσ.2 x hx
-  rw [e1, e2] at this
-  exact this
+  rwa [e1, e2] at this
 
 variable {v : HeightOneSpectrum (𝓞 K)} {v' : HeightOneSpectrum (𝓞 L)}
 

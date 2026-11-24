@@ -283,20 +283,20 @@ theorem nusOf_eq_nuN {D : D7} (B : WeightFamilies.Prov D) {j : ℕ} (w : WeightF
     rw [← hch, mul_div_assoc]
     congr 1
     by_cases e0 : resCharOf la = D.host.g 0
-    · rw [if_pos e0, e0]
-    · rw [if_neg e0]
+    · rw [ite_eq_left e0, e0]
+    · rw [ite_eq_right e0]
       have e1 : resCharOf la = D.host.g 1 := by
         generalize Classical.choose hc = i at hch
         fin_cases i
         · exact absurd hch e0
         · exact hch
-      rw [if_pos e1, e1]
+      rw [ite_eq_left e1, e1]
   · rw [dite_eq_right hc]
     have e0 : ¬ resCharOf la = D.host.g 0 := fun e =>
       hc ⟨0, (H1algLink.prime_mem_iff la (D.host.g_prime 0)).2 e⟩
     have e1 : ¬ resCharOf la = D.host.g 1 := fun e =>
       hc ⟨1, (H1algLink.prime_mem_iff la (D.host.g_prime 1)).2 e⟩
-    rw [if_neg e0, if_neg e1]
+    rw [ite_eq_right e0, ite_eq_right e1]
     congr 2
     unfold DepPage.cP DepPage.IsRam
     rw [hq1, hdd, hvd, hsm, show ringChar (𝓞 B.KO ⧸ la.asIdeal) = resCharOf la from rfl]
@@ -304,17 +304,17 @@ theorem nusOf_eq_nuN {D : D7} (B : WeightFamilies.Prov D) {j : ℕ} (w : WeightF
       (UpperTheory.cmDatum_natCast_mem_heightOneSpectrum_iff D.host.toHostRaw B.KO la).1
     simp only [hS, H1algLink.prime_mem_iff la hq, H1algLink.prime_mem_iff la hd]
     by_cases a2 : resCharOf la ∈ D.host.small
-    · rw [if_pos a2, if_pos (Or.inl a2)]
+    · rw [ite_eq_left a2, ite_eq_left (Or.inl a2)]
       unfold c2 vdOf
-      rw [if_pos a2, Int.ceil_toNat, ← Nat.cast_mul, Nat.ceil_natCast]
-    · rw [if_neg a2]
+      rw [ite_eq_left a2, Int.ceil_toNat, ← Nat.cast_mul, Nat.ceil_natCast]
+    · rw [ite_eq_right a2]
       by_cases b : resCharOf la = D.host.q ∨ resCharOf la = D.host.d
-      · rw [if_pos b, if_pos (Or.inr b)]
+      · rw [ite_eq_left b, ite_eq_left (Or.inr b)]
         unfold Formalism.MainNotions.DIV.Cons.cHalf vdOf
-        rw [if_neg a2, Int.ceil_toNat]
+        rw [ite_eq_right a2, Int.ceil_toNat]
         congr 2
         ring
-      · rw [if_neg b, if_neg (fun h => h.elim a2 b)]
+      · rw [ite_eq_right b, ite_eq_right (fun h => h.elim a2 b)]
         simp
 
 theorem nusOf_eq_ram_mul_nuStarAt : ∀ (D : D7) (L : SizeData₂ D) (Pm : ParameterChoice' D L) (Tp : ParamsT D L Pm) (hK : DV.KapDef D) (T : Top D) (h : LawsP T) (EX : ErrX D) (j : ℕ), InR D j → letI := T.Q.H.starRing; ∀ la : HeightOneSpectrum (𝓞 T.Q.c.F), nusOf (recB h.toLawsCore) (lR Tp hK j) (fun la' => (nuW (T.Q.Xo j) T.Q.c la' T.Q.l.M (wtA (lR Tp hK j)) Tp.nWn).toReal / (ramOverZ la' : ℝ)) la = (ramOverZ la : ℝ) * nuStarAt (Xo := T.Q.Xo j) (c := T.Q.c) (depOf T.toCore EX Tp hK) la j := by
@@ -687,8 +687,7 @@ theorem emb_Thc_le (X : WeightAlgebra.PJ D B P6 j) (s : 𝓞 B.KO) (w : WeightFa
       sc (s * ((D.host.g 0 * D.host.g 1 : ℕ) : 𝓞 B.KO) ^ (D.R.f * D.R.r * w.n)) (X.emb w (X.shortTh w)) := by
   rintro _ ⟨_, ⟨_, ⟨y, hy, rfl⟩, rfl⟩, rfl⟩
   refine mem_sc.2 ⟨_, ⟨y, hy, rfl⟩, ?_⟩
-  simp only [LinearMap.smul_apply, LinearMap.id_apply, map_smul, mul_smul]
-  exact smul_comm _ _ _
+  simpa only [LinearMap.smul_apply, LinearMap.id_apply, map_smul, mul_smul] using smul_comm _ _ _
 
 theorem nnW_eq (B : WeightFamilies.Prov D) (hinj : Function.Injective D.what₂.OtoLL) (EX : ErrX D)
     {ka wL wF : WeightFamilies.Wt D j} {T n : ℕ} (h : WeightAlgebra.IsF' ka wL wF T n) :
@@ -712,8 +711,7 @@ theorem nnW_eq (B : WeightFamilies.Prov D) (hinj : Function.Injective D.what₂.
 theorem nnW_ne_zero (B : WeightFamilies.Prov D) (hinj : Function.Injective D.what₂.OtoLL) (EX : ErrX D)
     (w : WeightFamilies.Wt D j) : nnW B hinj EX w ≠ 0 := by
   have hn : ∀ i, EX.piG i * piBarO EX i = (D.host.g i : 𝓞 D.host.E) := fun i => by
-    apply Subtype.ext
-    exact EX.piG_norm i
+    exact Subtype.ext (EX.piG_norm i)
   have hn' : ∀ i, iE D hinj B (EX.piG i) * iE D hinj B (piBarO EX i) ≠ 0 := fun i => by
     rw [← map_mul, hn, map_natCast]
     exact_mod_cast (D.host.g_prime i).ne_zero
@@ -779,8 +777,7 @@ theorem scaledSpan_clauses : ∀ (D : D7) (B : WeightFamilies.Prov D) (P6 : Modu
   obtain ⟨hσ, hsig⟩ := _root_.GlobalTheory.ScaledSpan.theta_le_sigma_smul D B P6 j X hinj EX p ka wL wF T hF hn hD
   have hle := Formalism.MainNotions.Gaps.T0.theta_le_msup X _ h2 hF rfl hn hD
   have hσK : (((sigRec B hinj EX ka wL wF T : 𝓞 B.KO) : B.KO)) ≠ 0 := by
-    intro h0
-    exact hσ (RingOfIntegers.coe_eq_zero_iff.1 h0)
+    exact fun h0 => hσ (RingOfIntegers.coe_eq_zero_iff.1 h0)
   refine ⟨?_, ?_, ?_, ?_⟩
   · rw [h.Th_eq, h.Ms_eq]
     refine Submodule.span_mono (Set.image_mono fun F hFm => ?_)
@@ -790,8 +787,7 @@ theorem scaledSpan_clauses : ∀ (D : D7) (B : WeightFamilies.Prov D) (P6 : Modu
   · intro g
     rw [h.Th_eq, spanK, Submodule.map_span, Submodule.span_le]
     rintro _ ⟨_, ⟨F, hFm, rfl⟩, rfl⟩
-    refine Submodule.subset_span ⟨act g F, hact g F hFm, ?_⟩
-    exact (h.rho_eq g F).symm
+    exact Submodule.subset_span ⟨act g F, hact g F hFm, (h.rho_eq g F).symm⟩
   · rw [h.σ_eq]
     exact (map_ne_zero_iff _ (algebraMap B.KO K).injective).2 hσK
   · rw [h.Th_eq, spanK, Submodule.span_le]
@@ -876,8 +872,7 @@ theorem spanK_isLatIn (z : (Fin n → K) ≃ₗ[K] K ⊗[F] C) (M : Submodule (�
       | mem x hx => exact Submodule.subset_span (Submodule.subset_span ⟨x, hx, rfl⟩)
       | zero => simp
       | add x y _ _ hx hy =>
-        simp only [TensorProduct.tmul_add, map_add (f := _)]
-        exact Submodule.add_mem _ hx hy
+        simpa only [TensorProduct.tmul_add, map_add (f := _)] using Submodule.add_mem _ hx hy
       | smul r x _ hx =>
         rw [coord_one_tmul_smul]
         exact Submodule.smul_mem _ _ hx
@@ -967,8 +962,7 @@ theorem span_spanK_eq_top (s : Set C) (hs : Submodule.span F s = ⊤) :
     | mem x hx => exact Submodule.subset_span (Submodule.subset_span ⟨x, hx, rfl⟩)
     | zero => simp
     | add x y _ _ hx hy =>
-      simp only [TensorProduct.tmul_add, map_add (f := _)]
-      exact Submodule.add_mem _ hx hy
+      simpa only [TensorProduct.tmul_add, map_add (f := _)] using Submodule.add_mem _ hx hy
     | smul a x _ hx =>
       rw [TensorProduct.tmul_smul, ← algebraMap_smul K, map_smul]
       exact Submodule.smul_mem _ _ hx
@@ -1022,8 +1016,7 @@ theorem theta_spans_isLatIn : ∀ (D : D7) (B : WeightFamilies.Prov D) (P6 : Mod
     have hm : X.inc ka (a • (b • f)) ∈ X.Theta (scalOfP B hinj EX p ka wL wF T) ka wL wF T := by
       apply (le_sup_right : X.emb ka (X.Thc a ka) ≤ X.Theta (scalOfP B hinj EX p ka wL wF T) ka wL wF T)
       apply Submodule.mem_map.2
-      refine ⟨a • (b • f), ?_, rfl⟩
-      exact Submodule.mem_map.2 ⟨b • f, Submodule.mem_map.2 ⟨f, hf, rfl⟩, rfl⟩
+      exact ⟨a • (b • f), (Submodule.mem_map.2 ⟨b • f, Submodule.mem_map.2 ⟨f, hf, rfl⟩, rfl⟩), rfl⟩
     have hs := Submodule.subset_span (R := B.KO) (s := {F | X.inc ka F ∈ X.Theta (scalOfP B hinj EX p ka wL wF T) ka wL wF T}) hm
     have he : a • (b • f) = ((a : B.KO) * (b : B.KO)) • f := by
       rw [← algebraMap_smul B.KO a (b • f), ← algebraMap_smul B.KO b f, smul_smul]
@@ -1505,8 +1498,7 @@ theorem runsHold_of_ties : ∃ CK x₁ : ℝ, ∀ (D : D7) (G : Type) [Group G] 
     · exact hc.field₁
   refine H D _ h hinj EX (ownAt D v) ?_ L Pm Tp hK h1 h2 h3 h4 h5 h6 hc.small
   refine GlobalTheory.FinalJoin2.liftIndexParameterConditions_of_coreAndShortLaws D J _ EX _ hl.j h hl.sh rfl hc.canon hF hc.halfEX ?_
-  intro j hj n
-  exact ⟨hl.lvA j hj n, hown v j n hj⟩
+  exact fun j hj n => ⟨hl.lvA j hj n, hown v j n hj⟩
 
 end GlobalTheory.BigOn
 end -- clump:auto

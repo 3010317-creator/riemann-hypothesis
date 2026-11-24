@@ -174,7 +174,6 @@ theorem _root_.GlobalTheory.SW.Dict.exists_den_symm : ∃ D : ℕ, 0 < D ∧
       rw [map_zsmul, Finsupp.smul_apply, smul_comm]
       simpa [zsmul_eq_mul] using (isIntegral_algebraMap (R := ℤ) (A := ℚ) (x := a)).mul (hy j)
   refine ⟨D, hD, fun x hx k p => ?_⟩
-  show IsIntegral ℤ (D • (Module.finBasis ℚ E).repr (x k p.1) p.2)
   exact key _ ((mem_span_integralBasis E).mpr ⟨⟨x k p.1, hx k p.1⟩, rfl⟩) p.2
 
 open Matrix Complex NumberField Filter Topology in
@@ -234,8 +233,7 @@ theorem _root_.GlobalTheory.SW.Dict.sum_type {Ψ : Finset (E →+* ℂ)}
   have hconj : ∑ τ : Ψ, f (ComplexEmbedding.conjugate τ.1) = ∑ σ ∈ Ψᶜ, f σ := by
     rw [Finset.sum_coe_sort Ψ (fun σ => f (ComplexEmbedding.conjugate σ))]
     refine Finset.sum_nbij' ComplexEmbedding.conjugate ComplexEmbedding.conjugate ?_ ?_ ?_ ?_ ?_
-    · intro a ha
-      exact Finset.mem_compl.mpr ((hΨ a).mp ha)
+    · exact fun a ha => Finset.mem_compl.mpr ((hΨ a).mp ha)
     · intro a ha
       have := (hΨ (ComplexEmbedding.conjugate a)).mpr
       rw [hc] at this
@@ -433,8 +431,7 @@ theorem _root_.GlobalTheory.SW.Dict.tauOf_mem (hΨ : _root_.GlobalTheory.SW.IsTy
     · rw [hv]; simp
     · exact (hpos τ hv).le
   have hex : ∃ τ : Ψ, v τ ≠ 0 := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     have hall : ∀ σ : E →+* ℂ, ∀ a, ∑ j, σ (Module.finBasis ℚ E j) * m (a, j) = 0 := by
       intro σ a
       by_cases hσ : σ ∈ Ψ

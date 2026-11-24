@@ -129,7 +129,7 @@ namespace GlobalTheory.DiaTheta
 theorem decoratedPoint_move_diamondOperator_eq {X : Fields} {n : ℕ} {ST SG Q : Finset (HeightOneSpectrum (𝓞 X.E))} {y : Ys X n} (p : PtY ST SG Q y) (P : ST)
     (a : (𝓞 X.E ⧸ P.1.asIdeal)ˣ) :
     p.mv (DecoSet.dia1 P a p.1.1.deco) = ⟨(⟨(DecoSet.dia1 P a p.1.1.deco, p.1.1.1.2), p.1.1.2⟩, p.1.2), p.2⟩ :=
-  dif_pos ⟨p.1.1.2, p.2⟩
+  dite_eq_left ⟨p.1.1.2, p.2⟩
 
 theorem xiAt_dia {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars X Pr R.m)
     (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ}
@@ -1053,8 +1053,7 @@ theorem exists_compactOpen_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toP
       (GlobalTheory.HeckeCharacterRestriction.resEta_even hL t ⟨j, hj⟩ (even_rankX (j + 1) hj))
   classical
   refine ⟨fun t j => if h : j < B.R.m then (key t j h).choose else 1, fun t j hj => ?_⟩
-  simp only [dif_pos hj]
-  exact (key t j hj).choose_spec
+  simpa only [dite_eq_left hj] using (key t j hj).choose_spec
 end GlobalTheory.Fam.KomExist
 end
 end -- clump:auto
@@ -1168,8 +1167,7 @@ theorem mem_levS_datY_single : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank) (L
       exact one_mem _
     · intro PP' hP'
       by_cases e : PP' = PP
-      · rw [e]
-        exact hP
+      · rwa [e]
       · rw [hQoff hSt PP' hP' e]
         exact one_mem _
     · rw [hrt hSt]
@@ -1299,8 +1297,7 @@ theorem GlobalTheory.LevChr.lam_eq_inv_xi : ∀ (E : Type) [Field E] [NumberFiel
     show valuation k (D.val p p' - ι (Z (e (.inr p)) (e (.inr p')) : E)) < 1
     rw [hDe]; exact h
   have hB : IntM ((ι.comp (algebraMap (𝓞 E) E)).mapMatrix Zf) := fun p p' => by
-    have h := sub_mem (hA p p') (hM.intM p p')
-    simpa using h
+    simpa using sub_mem (hA p p') (hM.intM p p')
   have hlt := GlobalTheory.LevChr.det_sub_lt hA hB hM
   rw [← RingHom.map_det] at hlt
   have hlt' : valuation k (((Matrix.GeneralLinearGroup.det D : kˣ) : k) - ι (Zf.det : E)) < 1 := by
@@ -1624,8 +1621,7 @@ theorem _root_.GlobalTheory.T.true_geometry_twist_scalar_alt : ∀ {B : GlobalTh
   have hred := GlobalTheory.TopLevQ.red_eq_zero_iff (a.Q PP ⟨t, hP⟩).q PP hidem (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).sp.X' (_root_.GlobalTheory.Fam.pk_z W).βX a.g.bT g _ _ hmv' hM
   constructor
   · rintro ⟨-, ⟨hSt, -, hQt⟩, -⟩
-    refine ⟨hx, hord.1 fun i j hij => (hred hSt i j).1 ?_⟩
-    exact (hQt PP hP) hij
+    exact ⟨hx, hord.1 fun i j hij => (hred hSt i j).1 ((hQt PP hP) hij)⟩
   · rintro ⟨hx', hmax⟩
     have hSt : Lev.finE (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).sp.X' (a.g.bT⁻¹ * g * a.g.bT) ∈ Formalism.L2.DIV.St (_root_.GlobalTheory.Fam.pk_z W).βX := hStIff.2 hx'
     have hone : ∀ PP' : Formalism.L2.DIV.Pl (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).host.E, PP'.under (𝓞 (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).host.F) ≠ PP.under (𝓞 (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).host.F) →
@@ -1636,8 +1632,7 @@ theorem _root_.GlobalTheory.T.true_geometry_twist_scalar_alt : ∀ {B : GlobalTh
       exact Subgroup.one_mem _
     · by_cases hPe : PP' = PP
       · subst hPe
-        intro i j hij
-        exact (hred hSt i j).2 (hord.2 hmax i j hij)
+        exact fun i j hij => (hred hSt i j).2 (hord.2 hmax i j hij)
       · rw [hone PP' fun hu => hPe (hW.pk.sel PP' PP ⟨t, hPP'⟩ ⟨t, hP⟩ hu)]
         exact Subgroup.one_mem _
     · have h1 : Formalism.L2.DIV.rTup (_root_.GlobalTheory.Fam.pk_z W).βX (datXP (_root_.GlobalTheory.Fam.pk_z W) (_root_.GlobalTheory.Fam.complexLevelStructure W) t) (Lev.finE (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).sp.X' (a.g.bT⁻¹ * g * a.g.bT)) = 1 := by
@@ -1674,8 +1669,7 @@ theorem qLev_of_reads_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {
   refine ⟨?_, ?_, ?_⟩
   · refine ⟨Equiv.ofBijective (fun i => ⟨J.pl (Fin.cast h i), J.mem _⟩) ⟨?_, ?_⟩, fun i => ?_⟩
     · intro i i' e
-      have e' := hJ.inj (congrArg Subtype.val e)
-      exact Fin.ext (by simpa using congrArg Fin.val e')
+      exact Fin.ext (by simpa using congrArg Fin.val (hJ.inj (congrArg Subtype.val e)))
     · rintro ⟨PP, hPP⟩
       obtain ⟨i, hi⟩ := hJ.surj PP hPP
       exact ⟨Fin.cast h.symm i, Subtype.ext (by simp [hi])⟩
@@ -1743,8 +1737,7 @@ theorem GlobalTheory.Fam.colSide_alt : GlobalTheory.Published.DiscreteSeriesCove
       refine Finset.prod_eq_one fun i _ => ?_
       have h1 := ((J t).E i).one
       have h2 : ((J t).G i).s + 1 + 1 = B.R.m := ((J t).G i).hs
-      rw [h2] at h1
-      exact h1
+      rwa [h2] at h1
     exact Fintype.card_eq_one_iff.1 hc1
   choose β₀ hβ₀ using hone
   let cQf : W.P.T → ℕ → ℂ := fun t j => ∏ i, ((((J t).E i).idx (j + 1) : ℂ) * (((J t).E i).idx (j + 1 + 1) : ℂ))⁻¹
@@ -1775,7 +1768,7 @@ theorem GlobalTheory.Fam.colSide_alt : GlobalTheory.Published.DiscreteSeriesCove
           rw [← h1, ← h2]
           ring
         ram := fun j _ φ => Iff.rfl
-        rdq := fun j hj β φ y => dif_pos hj }
+        rdq := fun j hj β φ y => dite_eq_left hj }
   refine ⟨col, w₀, w, F, ⟨a.c₀, haT.pinX, fun t => ⟨⟨(J t).Ch₀, (J t).A, (J t).ι, hPinCh t⟩, ?_⟩⟩, ?_⟩
   · obtain ⟨UT, hUT1, hUT2⟩ := (hV t (J t) (hJ t)).2
     refine ⟨UT, s t B.R.m (β₀ t) * (J t).wt B.R.m (β₀ t),
@@ -1792,7 +1785,7 @@ theorem GlobalTheory.Fam.colSide_alt : GlobalTheory.Published.DiscreteSeriesCove
       ring
   have hdQ : ∀ t j α γ, j < B.R.m → (w t).dQ j α γ = (J t).dQ (s t) j α γ := fun t j α γ hj => by
     show _ • (if j < B.R.m then _ else 0) = _
-    rw [if_pos hj]
+    rw [ite_eq_left hj]
     rfl
   have hpl := fun t => _root_.GlobalTheory.Fam.QJPlaces.places_under_alt W hW u a ha haT t (J t) (hJ t)
   have hQ : ∀ t p, p ∈ (w₀ t).Q ↔ ∃ PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Q t, p = PP.under (𝓞 (I.rec7 l Z).host.F) := fun t p => by
@@ -1814,17 +1807,16 @@ theorem GlobalTheory.Fam.colSide_alt : GlobalTheory.Published.DiscreteSeriesCove
       mid := fun j σ h => ⟨(_root_.GlobalTheory.Fam.pk_z W).eta⁻¹, ((hrow t).sBF j (σ + 1) h).2.2.1, ((hrow t).sBF j (σ + 1) h).2.2.2,
         ((hrow t).sFB j σ h).2.2.1, ((hrow t).sFB j σ h).2.2.2⟩
       lastc := fun j h => ((hrow t).sBF j 0 h).2.2.2
-      eQ := fun j hj => if_pos hj
+      eQ := fun j hj => ite_eq_left hj
       eQT := fun j h => rfl
-      dQ := fun j hj α γ => if_pos hj
-      ε := fun j ρ' h α => if_pos (Or.inl ⟨ρ', h⟩)
+      dQ := fun j hj α γ => ite_eq_left hj
+      ε := fun j ρ' h α => ite_eq_left (Or.inl ⟨ρ', h⟩)
       εT := fun n h β => rfl
       FY := fun j _ f hf => hf
       cQ := fun j _ => rfl }
   have hbT : a.g.bT ∈ GfC (I.rec7 l Z).sp.X' := by
     have h1 := ha.vis.bT
-    rw [((ha.tie row col).1.bT).1] at h1
-    exact h1
+    rwa [((ha.tie row col).1.bT).1] at h1
   have hOK : (a.fam row col).ColOK :=
     { kom := fun t j hj => hkom t j hj
       ker := fun t j hj α γ => by
@@ -1856,7 +1848,7 @@ theorem GlobalTheory.Fam.colSide_alt : GlobalTheory.Published.DiscreteSeriesCove
         obtain rfl : σ' = σ := by omega
         rfl
       show (if h' : ∃ σ, j + 2 * (σ + 1) + 2 = B.R.m then _ else _) = _
-      rw [dif_pos hex, hk]
+      rw [dite_eq_left hex, hk]
       rfl
     · have hex : ¬ ∃ σ, j + 2 * (σ + 1) + 2 = B.R.m := fun ⟨σ, h'⟩ => by omega
       show (if h' : ∃ σ, j + 2 * (σ + 1) + 2 = B.R.m then _ else _) = _

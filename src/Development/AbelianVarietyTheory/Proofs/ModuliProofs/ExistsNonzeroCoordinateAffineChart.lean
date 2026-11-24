@@ -74,8 +74,7 @@ private theorem isIso_restrict_lemma {X Z Y : Scheme.{0}} (x : X ⟶ Z) [Mono x]
     have e : x (s y) = V.ι y := by rw [← Scheme.Hom.comp_apply, hs]
     rw [e]
     have hm : V.ι y ∈ Set.range V.ι := ⟨y, rfl⟩
-    rw [Scheme.Opens.range_ι] at hm
-    exact hm
+    rwa [Scheme.Opens.range_ι] at hm
   let s' := IsOpenImmersion.lift (x ⁻¹ᵁ V).ι s hr
   have h1 : s' ≫ (x ⁻¹ᵁ V).ι = s := IsOpenImmersion.lift_fac _ _ _
   refine ⟨⟨s', ?_, ?_⟩⟩
@@ -101,8 +100,7 @@ theorem spMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A 
 
 theorem spMap_inj {A B : Type} [CommRing A] [CommRing B] {f g : A →+* B} (h : spMap f = spMap g) :
     f = g := by
-  have e := congrArg CommRingCat.Hom.hom (Spec.map_injective h)
-  simpa using e
+  simpa using congrArg CommRingCat.Hom.hom (Spec.map_injective h)
 
 theorem exists_spMap {A B : Type} [CommRing A] [CommRing B] (y : Sp B ⟶ Sp A) :
     ∃ f : A →+* B, y = spMap f := by
@@ -205,8 +203,7 @@ theorem exists_chart : ∀ (R σ : Type) [CommRing R] (I : Ideal (MvPolynomial �
         exact (hψX a).symm
     have hrange := PrimeSpectrum.localization_away_comap_range (Localization.Away (v' i)) (v' i)
     have hpm : p ∈ Set.range (PrimeSpectrum.comap (algebraMap R' (Localization.Away (v' i)))) := by
-      rw [hrange]
-      exact hp
+      rwa [hrange]
     obtain ⟨p', hp'⟩ := hpm
     refine ⟨Localization.Away (v' i), inferInstance, ψ, ?_, p', ?_⟩
     · rw [e1, ← e2]

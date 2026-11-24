@@ -272,8 +272,7 @@ theorem exists_kernel_basis (E : Type) [Field E] [NumberField E] [_root_.NumberF
       AutomorphicForm.uAction (CuspidalSpectrum.uJ (K := E) (n := a) 0 (Fin.tail fun _ => j)) ψ = ψ := fun ψ => by
     rw [CuspidalSpectrum.uJ, map_one]
     rfl
-  rw [e0]
-  exact e2
+  rwa [e0]
 
 theorem hasCompactSupport_sum {G ι : Type*} [TopologicalSpace G] (s : Finset ι) (c : ι → ℂ) (D : ι → G → ℂ)
     (h : ∀ j, HasCompactSupport (D j)) : HasCompactSupport fun y => ∑ j ∈ s, c j * D j y := by

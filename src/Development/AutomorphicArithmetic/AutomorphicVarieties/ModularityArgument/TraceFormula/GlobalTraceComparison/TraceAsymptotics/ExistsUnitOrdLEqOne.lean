@@ -158,11 +158,9 @@ private theorem UpperTheory.prod_lt_of_strictMono {Γ ι : Type} [LinearOrderedC
   have hc' : (S \ T).card = (T \ S).card := Finset.card_sdiff_comm hc
   have hS : (S \ T).Nonempty := by
     rw [Finset.sdiff_nonempty]
-    intro hsub
-    exact hne (Finset.eq_of_subset_of_card_le hsub hc.ge)
+    exact fun hsub => hne (Finset.eq_of_subset_of_card_le hsub hc.ge)
   have hT' : (T \ S).Nonempty := by
-    rw [← Finset.card_pos, ← hc', Finset.card_pos]
-    exact hS
+    rwa [← Finset.card_pos, ← hc', Finset.card_pos]
   obtain ⟨c, hcm, hcmax⟩ := Finset.exists_max_image (S \ T) id hS
   have key : ∏ i ∈ S \ T, f i < ∏ i ∈ T \ S, f i := by
     calc ∏ i ∈ S \ T, f i ≤ ∏ _i ∈ S \ T, f c :=
@@ -601,7 +599,6 @@ theorem UpperTheory.Reformulated.B.DoubleCosetSeparation.dcosSep :
       have := (Valuation.vle_one_iff (valuation _)).2 hz
       exact (Valuation.vle_one_iff (Valued.v)).1 this
     let φ : 𝒪[w.adicCompletion E] →+* Formalism.UG.Ov E w := (Subring.subtype _).codRestrict _ hO
-    show _ ∈ Formalism.UG.GLint (Fin n) (Formalism.UG.Ov E w)
     exact ⟨GeneralLinearGroup.map φ h, Units.ext rfl⟩
   · exact supp (G := GL (Fin n) (w.adicCompletion E)) _ hc (GlobalTheory.BCT.tdiag ϖ x) _ fun y hy => (hne _ y).1 hy
   · intro k hk y
@@ -778,8 +775,7 @@ private theorem UpperTheory.Reformulated.B.trace_eq_twisted_trace_of_fixed.supp_
     (Function.support fun q : G ⧸ H ↦ f (Quotient.out q)).Finite := by
   haveI : DiscreteTopology (G ⧸ H) := QuotientGroup.discreteTopology hH
   refine (hC.image (QuotientGroup.continuous_mk (N := H))).finite_of_discrete.subset ?_
-  intro q hq
-  exact ⟨_, hf _ hq, QuotientGroup.out_eq' q⟩
+  exact fun q hq => ⟨_, hf _ hq, QuotientGroup.out_eq' q⟩
 
 private theorem UpperTheory.Reformulated.B.trace_eq_twisted_trace_of_fixed.relIndex_ne {G : Type} [Group G] [TopologicalSpace G]
     [IsTopologicalGroup G] (K I : Subgroup G) (hK : IsCompact (K : Set G))
@@ -1071,12 +1067,12 @@ private theorem levOp_eq (ρ : Representation ℂ G V) (K I : Subgroup G) (x : G
   have h2 : (∑ᶠ q : G ⧸ I, f q.out • (ρ q.out ∘ₗ LinearMap.id)) = ∑ q ∈ hx'.toFinset, ρ q.out := by
     rw [finsum_eq_sum_of_support_subset (s := hx'.toFinset)]
     · refine Finset.sum_congr rfl fun q hq => ?_
-      rw [hf, if_pos ((hmem q).1 (hx'.mem_toFinset.1 hq)), one_smul]
+      rw [hf, ite_eq_left ((hmem q).1 (hx'.mem_toFinset.1 hq)), one_smul]
       rfl
     · intro q hq
       rw [Finset.mem_coe, hx'.mem_toFinset, hmem]
       by_contra hn
-      exact hq (by show f q.out • _ = 0; rw [hf, if_neg hn, zero_smul])
+      exact hq (by show f q.out • _ = 0; rw [hf, ite_eq_right hn, zero_smul])
   unfold levOp
   rw [h2, h1, LinearMap.smul_apply, LinearMap.sum_apply]
 
@@ -1147,8 +1143,7 @@ private theorem exists_hk_trace {V : Type} [AddCommGroup V] [Module ℂ V] (ρ :
   have hT : IsUnit T := hunit hq _ (dom_pow hϖ hx₀.antitone)
   have hsa : ∀ j : ℕ, 1 ≤ j → StrictAnti (j • x₀) := fun j hj a b h => by
     have h1 := hx₀ h
-    simp only [Pi.smul_apply, nsmul_eq_mul]
-    exact mul_lt_mul_of_pos_left h1 (by exact_mod_cast hj)
+    simpa only [Pi.smul_apply, nsmul_eq_mul] using mul_lt_mul_of_pos_left h1 (by exact_mod_cast hj)
   have hpow : ∀ j : ℕ, hk ρ (iwC k n ⊤) (diagT k (Fin n) fun i => ϖ ^ ((j + 1) • x₀) i) = T ^ (j + 1) := by
     intro j
     induction j with
@@ -1166,8 +1161,7 @@ private theorem exists_hk_trace {V : Type} [AddCommGroup V] [Module ℂ V] (ρ :
   obtain ⟨j, hj, hne⟩ := exists_pow_trace T hT
   obtain ⟨j, rfl⟩ : ∃ i, j = i + 1 := ⟨j - 1, by omega⟩
   refine ⟨(j + 1) • x₀, hsa _ hj, ?_⟩
-  rw [hpow]
-  exact hne
+  rwa [hpow]
 
 end Loc
 
@@ -1199,8 +1193,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.dcosTr :
   have hfd : FiniteDimensional ℂ (fixed τ.ρ I) :=
     (PositivityTheory.PfBern.Props1.irrSmoothAdmissible_holds _ _ _ τ.ρ τ.smooth τ.irred).2 _ hIo hIc
   haveI hfd' : FiniteDimensional ℂ (UpperTheory.V.Hi.fixd τ.ρ I) := by
-    rw [← fixed_eq]
-    exact hfd
+    rwa [← fixed_eq]
   haveI hnt : Nontrivial (UpperTheory.V.Hi.fixd τ.ρ I) := by
     rw [Submodule.nontrivial_iff_ne_bot, ← fixed_eq]
     intro hb
@@ -1208,8 +1201,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.dcosTr :
     have hvI : v ∈ fixed τ.ρ I := by
       rw [GlobalTheory.TwTrLevel.mem_fixed_iff] at hv ⊢
       exact fun k hk => hv k (hIK hk)
-    rw [hb] at hvI
-    exact hvI
+    rwa [hb] at hvI
   have hv : valuation (w.adicCompletion E) (ϖ : w.adicCompletion E) < 1 :=
     GlobalTheory.CjInv.lt_one_iff _ |>.2 (v_lt_one hϖ)
   obtain ⟨x, hx, hne⟩ := exists_hk_trace τ.ρ hI hv

@@ -301,8 +301,7 @@ theorem con_of_not_precedes {s : T → T} (hs : Function.Injective s)
       · refine ⟨k + (j + 1 + i), lt_max_iff.2 (Or.inr (by omega)), ?_⟩
         exact (by rw [hΘs]; exact Function.iterate_add_apply s k (j + 1 + i) Γ.start :
           s^[k + (j + 1 + i)] Γ.start = s^[k] Θ.start)
-  · intro hsub
-    exact hu (mem_word.2 ((memC Θ u).1 (hsub ((memC Γ u).2 ⟨i, by omega, hiu⟩))))
+  · exact fun hsub => hu (mem_word.2 ((memC Θ u).1 (hsub ((memC Γ u).2 ⟨i, by omega, hiu⟩))))
   · intro hsub
     obtain ⟨k, hk, hk'⟩ := (memC Γ _).1 (hsub ((memC Θ _).2 (mem_word.1 hv)))
     rw [← hiu, ← Function.iterate_add_apply] at hk'
@@ -397,8 +396,7 @@ theorem count_le (s : T → T) (hs : Function.Injective s)
         rest.countP (fun Γ => decide (Con s u e (Γ.dec s))) := by
       intro e
       have := ih hB2 (P.map Prod.snd) hP2 hsnd u e
-      rw [List.countP_map] at this
-      exact this
+      rwa [List.countP_map] at this
     have hfst : ∀ p ∈ P, ∀ y ∈ p.1, y ∈ Γ1.dec s := fun p hpm y hy =>
       shuffle_mem hP1 (List.mem_map.2 ⟨p, hpm, rfl⟩) hy
     have hnd1 : (Γ1.dec s).Nodup := by
@@ -412,8 +410,7 @@ theorem count_le (s : T → T) (hs : Function.Injective s)
     by_cases hΓ : Con s u d (Γ1.dec s)
     · have huniq : P.countP (fun p => decide (s^[d] u ∈ p.1)) ≤ 1 := by
         have := shuffle_unique hP1 hnd1 (s^[d] u)
-        rw [List.countP_map] at this
-        exact this
+        rwa [List.countP_map] at this
       have h1 : P.countP (fun p => decide (Con s u d (p.1 ++ p.2))) ≤
           P.countP (fun p => decide (Con s u d p.2)) +
             P.countP (fun p => decide (s^[d] u ∈ p.1)) := by
@@ -489,8 +486,7 @@ theorem rank_le (s : T → T) (hs : Function.Injective s)
     (fun x hx => by
       obtain ⟨Δ, _, rfl⟩ := List.mem_map.1 hx
       exact ⟨Δ.start, Δ.len, dec_eq_word s Δ⟩) u d
-  rw [List.countP_map, List.countP_reverse] at h
-  exact h
+  rwa [List.countP_map, List.countP_reverse] at h
 
 def wd (d : ℕ) : ℕ := if d = 0 then 1 else 2
 
@@ -498,7 +494,7 @@ theorem sum_wd (l : ℕ) : ∑ d ∈ Finset.range (l + 1), wd d = 2 * l + 1 := b
   induction l with
   | zero => simp [wd]
   | succ l ih =>
-    rw [Finset.sum_range_succ, ih, wd, if_neg (Nat.succ_ne_zero l)]
+    rw [Finset.sum_range_succ, ih, wd, ite_eq_right (Nat.succ_ne_zero l)]
     ring
 
 theorem sum_sub_wd (l : ℕ) : ∑ d ∈ Finset.range l, (l - d) * wd d = l ^ 2 := by
@@ -540,8 +536,7 @@ theorem sum_pairs {s : T → T} (hs : Function.Injective s)
   unfold pairs
   rw [Finset.sum_image]
   · rw [Finset.sum_sigma]
-    simp only [Finset.sum_const, Finset.card_range, smul_eq_mul]
-    exact sum_sub_wd Δ.len
+    simpa only [Finset.sum_const, Finset.card_range, smul_eq_mul] using sum_sub_wd Δ.len
   · rintro ⟨d, i⟩ _ ⟨d', i'⟩ _ h
     simp only [Prod.mk.injEq] at h
     obtain ⟨h1, h2⟩ := h
@@ -567,9 +562,9 @@ theorem sqLen_eq {s : T → T} (hs : Function.Injective s)
       unfold rank
       rw [Multiset.countP_cons]
       by_cases hc : Con s q.1 q.2 (Δ.dec s)
-      · rw [if_pos hc, if_pos hc]
+      · rw [ite_eq_left hc, ite_eq_left hc]
         ring
-      · rw [if_neg hc, if_neg hc]
+      · rw [ite_eq_right hc, ite_eq_right hc]
         ring
     have hfil : ∑ q ∈ P, (if Con s q.1 q.2 (Δ.dec s) then wd q.2 else 0) = Δ.len ^ 2 := by
       rw [← Finset.sum_filter, ← sum_pairs hs hp Δ]
@@ -614,8 +609,7 @@ theorem mem_of_rank {s : T → T} (hs : Function.Injective s)
   have hi0 : i = 0 := by omega
   subst hi0
   have : Γ = Δ := aseg_eq hst (by omega)
-  rw [← this]
-  exact hΓ
+  rwa [← this]
 
 theorem eq_of_rank {s : T → T} (hs : Function.Injective s)
     (hp : ∀ (t : T) (j : ℕ), 0 < j → s^[j] t ≠ t) : ∀ (k : ℕ) (n m : Multiset (ASeg T)),

@@ -80,12 +80,10 @@ theorem isTangent_iff_tanS (r : R) (y : epsR (Localization.Away r) ⟶ Chart.Gs 
   constructor
   · intro h
     have := congrArg (Chart.pushR G) h
-    rw [Chart.pushR_spMap, Chart.pushR_one] at this
-    exact this
+    rwa [Chart.pushR_spMap, Chart.pushR_one] at this
   · intro h
     apply Chart.pushR_inj G
-    rw [Chart.pushR_spMap, Chart.pushR_one]
-    exact h
+    rwa [Chart.pushR_spMap, Chart.pushR_one]
 
 theorem scale_left (c : R) (v : epsR R ⟶ G) :
     Geo.Tor.spMap (epsScaleR c) ≫ v.left = (Chart.spMap (Chart.scaleS (S := R) c) ≫ v).left := by
@@ -231,8 +229,7 @@ theorem lie_away {R O O' : Type} [CommRing R] [CommRing O] [CommRing O'] (G : Ov
       refine ⟨fun m₁ m₂ e => ?_, fun m => ⟨(↑u⁻¹ : Localization.Away r) • m, ?_⟩⟩
       · rw [hx, hx] at e
         have := congrArg (fun z => (↑u⁻¹ : Localization.Away r) • z) e
-        simp only [smul_smul, Units.inv_mul, one_smul] at this
-        exact this
+        simpa only [smul_smul, Units.inv_mul, one_smul] using this
       · rw [hx, smul_smul, Units.mul_inv, one_smul]
     · have hy : Chart.TanS (Chart.pushR G y.hom) := (isTangent_iff_tanS r y.hom).mp y.isTangent
       obtain ⟨N, w, hw, he⟩ := tan_away_lift r hr hy

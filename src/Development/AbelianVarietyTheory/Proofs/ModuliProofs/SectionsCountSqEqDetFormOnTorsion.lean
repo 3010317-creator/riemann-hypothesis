@@ -239,8 +239,7 @@ theorem exists_det_polynomial {R K : Type*} [CommRing R] [CommRing K] (φ : R �
     refine MvPolynomial.IsHomogeneous.sum _ _ _ fun σ _ => ?_
     have h1 := MvPolynomial.IsHomogeneous.prod Finset.univ (fun i => M (σ i) i) (fun _ => 1)
       fun i _ => hM _ _
-    have h2 := h1.C_mul (((Equiv.Perm.sign σ : ℤˣ) : ℤ) : K)
-    simpa using h2
+    simpa using h1.C_mul (((Equiv.Perm.sign σ : ℤˣ) : ℤ) : K)
   · rw [RingHom.map_det, RingHom.map_det]
     congr 1
     ext j k
@@ -314,8 +313,7 @@ theorem norm_det_eq_norm_index (l : ℕ) [Fact (Nat.Prime l)] {κ : Type} [Finty
   set N := LinearMap.range M.mulVecLin with hN
   have hinj : Function.Injective M.mulVecLin := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-    intro v hv
-    exact Matrix.eq_zero_of_mulVec_eq_zero hM hv
+    exact fun v hv => Matrix.eq_zero_of_mulVec_eq_zero hM hv
   let e : (κ → ℤ_[l]) ≃ₗ[ℤ_[l]] N := LinearEquiv.ofInjective _ hinj
   let b : Basis κ ℤ_[l] (κ → ℤ_[l]) := Pi.basisFun _ _
   have h : finrank ℤ_[l] N = finrank ℤ_[l] (κ → ℤ_[l]) := e.symm.finrank_eq
@@ -430,8 +428,7 @@ theorem exists_tower (l : ℕ) [hl : Fact l.Prime] (m : ℕ) (Q : Type) [AddComm
       ((nsmulAddMonoidHom (α := Q) l).comp (T (l ^ (j + 1))).subtype).codRestrict _ fun y => by
         have := (hT _ _).1 y.2
         change l ^ j • l • (y : Q) = 0
-        rw [smul_smul, ← pow_succ]
-        exact this
+        rwa [smul_smul, ← pow_succ]
     have hφ : ∀ y, (φ y : Q) = l • (y : Q) := fun y => rfl
     have hk : Nat.card φ.ker = l ^ m := by
       rw [← hc1]
@@ -767,8 +764,7 @@ theorem upper {R : ι → Subalgebra K F} {γ : ι → F} {R' : ι → Subalgebr
     refine mem_piece.2 fun i => ?_
     obtain ⟨w, hw, hfw⟩ := hg i _ (mem_piece.1 hf i)
     have hfw' : (γ i ^ e) • f = ∑ l, w l • g i l := by
-      rw [Algebra.smul_def, map_pow, mul_comm]
-      exact hfw
+      rwa [Algebra.smul_def, map_pow, mul_comm]
     have h1 : γ i ^ e * b.repr f j = ∑ l, w l * b.repr (g i l) j := by
       have := congrArg (fun x => b.repr x j) hfw'
 
@@ -943,8 +939,7 @@ theorem tendsto_of_sandwich (h h' : ℕ → ℕ) (D g c c' : ℕ) (δ : ℝ)
       atTop (𝓝 (D * δ)) := by
     have := ((hh.comp (tendsto_add_atTop_nat (c + c'))).const_mul (D : ℝ)).mul
       ((hr c').comp (tendsto_add_atTop_nat c))
-    rw [mul_one] at this
-    exact this
+    rwa [mul_one] at this
   refine tendsto_of_tendsto_of_tendsto_of_le_of_le' hL hU ?_ ?_
   · filter_upwards [eventually_ge_atTop 1] with e he
     have he0 : (0 : ℝ) < e := by exact_mod_cast he
@@ -1240,9 +1235,8 @@ theorem PolyHom.sq {n : ℕ} {D : ℤ[X] → ℚ} (h : PolyHom n D) : PolyHom (2
     rw [Finset.sum_eq_single (⟨i + j, by omega⟩ : Fin (2 * r))]
     · simp [monomial_mul_monomial]
     · intro k _ hk
-      rw [if_neg, map_zero]
-      intro h'
-      exact hk (Fin.ext h'.symm)
+      rw [ite_eq_right, map_zero]
+      exact fun h' => hk (Fin.ext h'.symm)
     · simp
   show D _ = _
   rw [e, hD b]
@@ -1273,7 +1267,7 @@ theorem PolyHom.exists_shift {n : ℕ} {D : ℤ[X] → ℚ} (h : PolyHom n D) (F
     · rw [Finset.sum_eq_single 0]
       · simp
       · intro k _ hk
-        rw [if_neg hk, map_zero]
+        rw [ite_eq_right hk, map_zero]
       · simp
   rw [e, hD, ← Polynomial.coe_evalRingHom, MvPolynomial.aeval_def, MvPolynomial.eval₂_comp_left,
     MvPolynomial.eval₂_eq_eval_map]
@@ -1378,8 +1372,7 @@ theorem exists_matrix (hL : Out.Laws) (hL2 : Out.Laws2) (P : Out.PolAV (Sp K)) (
   · rw [hU1 F (Finite.of_equiv _ (eq F).symm), Nat.card_congr (eq F)]
   · refine (GlobalTheory.PrimePowerTorsion.dense_torsion_and_eq_one hL hL2 K P l hp hl).2 _ fun j x hx => ?_
     have := hU2 F hF j (Additive.ofMul x) hx
-    rw [hact] at this
-    exact this
+    rwa [hact] at this
   · refine hU3 j (fun i => Additive.ofMul (pt i)) Mat (fun i => hb.pow_eq_one i) (fun y hy => ?_) (fun i => ?_)
     · have := hb.existsUnique (y := y.toMul) hy
       simp only [← linComb_eq]

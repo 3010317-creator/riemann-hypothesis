@@ -83,8 +83,7 @@ theorem cpt_sg_mem_integers : ∀ {D : D7} (Q : Pl D.host.E) (z : Lev.EAf D),
   have hez : e * z ∈ OA D := (mem_OA_iff _).2 fun P => by
     by_cases hP : P = Q
     · subst hP
-      rw [map_mul, he1, one_mul]
-      exact hz
+      rwa [map_mul, he1, one_mul]
     · rw [map_mul, h0 P hP, zero_mul]
       exact zero_mem _
   have hs : cpt (GlobalTheory.IdemSupport.cP Q) (sg D e) = 1 := by
@@ -151,8 +150,7 @@ theorem frame_change {n : ℕ} {β β' : GL (Fin n) (Lev.EAf D)} {Λ : Submodule
     · exact one_mem _
     · exact zero_mem _
   have h2 := (h _).1 h1 i
-  rw [Matrix.mulVec_mulVec, Matrix.mulVec_single_one] at h2
-  exact h2
+  rwa [Matrix.mulVec_mulVec, Matrix.mulVec_single_one] at h2
 
 theorem dual_frame {V : HSp D} {β : GL (Fin V.rank) (Lev.EAf D)} {Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)}
     (hβ : IsFrame β Λ) (hd : Formalism.L2.Herm.dualL D.sp.cm V Λ = Λ) :
@@ -250,8 +248,7 @@ theorem inBasis_conjPl_mem_KO : ∀ {D : D7} (V : HSp D) (β : GL (Fin V.rank) (
     (entries_of_mem_GLint _ hw a b).1
   have hC' : ∀ a b, cpt w ((β⁻¹ * x⁻¹ * β).val a b) ∈ w.adicCompletionIntegers D.host.E := fun a b => by
     have := (entries_of_mem_GLint _ hw a b).2
-    rw [← map_inv] at this
-    exact this
+    rwa [← map_inv] at this
   refine GlobalTheory.FunObj.mem_GLint_of_entries _ _ (fun i j => ?_) (fun i j => ?_)
   · rw [GlobalTheory.FunObj.inBasis_apply, conj_formula _ β β' x h1 (hu x hx)]
     exact cpt_conj_mem w _ _ _ hP hM hC' _ _

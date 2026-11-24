@@ -83,8 +83,7 @@ theorem quot_smul_top_span_card {R N : Type} [CommRing R] [IsDomain R] [AddCommG
         Submodule.restrictScalars_top]
     have h2 := congrArg (Submodule.map (TensorProduct.quotTensorEquivQuotSMul N I).toLinearMap) h1
     rw [Submodule.map_span, Submodule.map_top, LinearEquiv.range] at h2
-    rw [Set.range_comp]
-    exact h2
+    rwa [Set.range_comp]
   · rw [← Nat.card_congr (TensorProduct.quotTensorEquivQuotSMul N I).toEquiv,
       Nat.card_congr b.equivFun.toEquiv, Nat.card_fun, Nat.card_eq_fintype_card (α := Fin _), Fintype.card_fin]
 
@@ -152,10 +151,8 @@ theorem relIndex_le : ∀ (K V : Type) [Field K] [NumberField K] [AddCommGroup V
       (Submodule.Quotient.eq _).1 (LinearMap.congr_fun hst ⟨x, hx⟩).symm
     have h2 : (t : V ≃ₗ[K] V) x - (s : V ≃ₗ[K] V) x ∈ 𝔪 • M := by
       have := Submodule.mem_map_of_mem (f := M.subtype) h1
-      rw [Submodule.map_smul'', Submodule.map_top, Submodule.range_subtype] at this
-      exact this
-    have h3 := hmem' _ (s⁻¹).2 _ h2
-    simpa using h3
+      rwa [Submodule.map_smul'', Submodule.map_top, Submodule.range_subtype] at this
+    simpa using hmem' _ (s⁻¹).2 _ h2
   let Ψ : G ⧸ B.subgroupOf G → _ := fun q => Φ q.out
   have hΨ : Function.Injective Ψ := by
     intro q q' h

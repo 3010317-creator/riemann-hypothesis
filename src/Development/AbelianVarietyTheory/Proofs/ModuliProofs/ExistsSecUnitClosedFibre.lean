@@ -131,8 +131,7 @@ theorem exists_sec_unit_closed_fibre (V : Type) [CommRing V] [IsDomain V] [IsDis
       rw [hj'] at hz
       simpa [LB.pull, LB.LinComb, LB.wchart] using hz
     have h1 := hu z (j PUnit.unit) hz'
-    rw [← hj'] at h1
-    rw [gs_id_eq_germ_moduli _ _ z hz] at h1
+    rw [← hj', gs_id_eq_germ_moduli _ _ z hz] at h1
     refine Eq.trans ?_ (map_zero _).symm
     change ((pullback G.hom (jK V)).presheaf.germ _ z hz).hom (s.f j) = 0
     rw [h1]
@@ -204,8 +203,7 @@ theorem thetaNZ_of_polAt : Laws → Laws2 → ∀ (E : Type) [Field E] [NumberFi
   obtain ⟨k, hk⟩ := hθ' (gen.inv.left g) i (by rwa [hgy])
   have hk0 : θ'.f k ≠ 0 := by
     intro h0
-    rw [h0, Scheme.basicOpen_zero] at hk
-    exact hk
+    rwa [h0, Scheme.basicOpen_zero] at hk
 
   obtain ⟨σ, l, x, hx, hxc⟩ := exists_sec_unit_closed_fibre V t.G t.PP.L hLt θ' k hk0
 

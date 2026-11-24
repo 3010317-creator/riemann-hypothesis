@@ -160,8 +160,7 @@ theorem rows_zero {k r : ℕ} {X : Mat k r} (hX : Xᴴ * Hpk k r + Hpk k r * X =
         split_ifs with a b c d <;> first | rfl | (exfalso; omega)
       rw [this, zero_mul]
     · simp
-  rw [Matrix.add_apply, h1, h2, zero_add] at h
-  exact h
+  rwa [Matrix.add_apply, h1, h2, zero_add] at h
 
 theorem mem_lieOf_UWb (k r : ℕ) (X : Mat k r) :
     X ∈ lieOf (Formalism.FourierDecayAlt.B2.UWb k r) ↔ (Xᴴ * Hpk k r + Hpk k r * X = 0 ∧ ∀ i j : Fin (2 * r + k + 1),
@@ -216,7 +215,6 @@ theorem lie_entries : ∀ (k r : ℕ) (x : EuclideanSpace ℝ (Fin (2 * r + k + 
   intro k r x
   have h2 := mem_lieE_iff (S := Formalism.FourierDecayAlt.B2.UWb k r) (skewSub (Hpk k r) ⊓ midSub k r) (mem_lieOf_UWb k r) x
   refine ⟨mem_lieE_iff (skewSub (Hpk k r)) (mem_lieOf_UH _ (hpkFacts k r).2.1) x, h2, fun hx => ?_⟩
-  have h := (mem_lieOf_UWb k r _).2 (h2.1 hx) 1
-  simpa using h
+  simpa using (mem_lieOf_UWb k r _).2 (h2.1 hx) 1
 
 end GlobalTheory.CellLieAlg

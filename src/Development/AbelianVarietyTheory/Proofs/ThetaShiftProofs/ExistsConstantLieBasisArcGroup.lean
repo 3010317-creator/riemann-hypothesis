@@ -146,8 +146,7 @@ theorem exists_tr_down (hG : GlobalFnsSt) (gp : IsGrpPullback D.P.A D₀.P.A (sp
     (fun y => by have := hc (e.symm y); rwa [AddEquiv.apply_symm_apply] at this) h hh g₀
   refine ⟨g, fun x => ?_⟩
   have := hg (e x)
-  rw [show e.symm.toAddMonoidHom (e x) = x from e.symm_apply_apply x] at this
-  exact this
+  rwa [show e.symm.toAddMonoidHom (e x) = x from e.symm_apply_apply x] at this
 
 theorem exists_tr_up (hG : GlobalFnsSt) (gp : IsGrpPullback D.P.A D₀.P.A (spMap f) φ) (hw : w.IsGen)
     (e : D₀.X ≃+ D.X) (hc : ∀ y, (D.c (e y)).left ≫ φ = spMap f ≫ (D₀.c y).left) {T : Over (Sp R)}
@@ -397,8 +396,7 @@ theorem genRelR_of_tr {R R₀ S : Type} [CommRing R] [IsDomain R] [CommRing R₀
     refine (val_pull hJ (g₀.s x) _ _).trans ?_
     rw [val_pull hJ']
     simp only [Category.id_comp]
-    rw [h₂ _ _ J' hJ']
-    exact v
+    rwa [h₂ _ _ J' hJ']
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
   {Xo : Moduli Dw l} {c : Coeff l} {O : Type} [CommRing O] {β : O →+* c.F} {Y : Model Xo c β} {A : Type} [CommRing A]

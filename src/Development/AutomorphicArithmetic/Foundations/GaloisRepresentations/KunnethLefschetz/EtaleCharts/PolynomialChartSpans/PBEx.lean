@@ -143,9 +143,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.G.PX.locMatComp :
   let U₂ : V.Opens := U ⊓ U' ⊓ (p ≫ i) ⁻¹ᵁ N₂
   have hUl : U₂ ≤ U := fun y hy => hy.1.1
   have hUl' : U₂ ≤ U' := fun y hy => hy.1.2
-  have hU₂ : ⊤ ≤ (U₂.ι ≫ p ≫ i) ⁻¹ᵁ N₂ := by
-    intro y _
-    exact y.2.2
+  have hU₂ : ⊤ ≤ (U₂.ι ≫ p ≫ i) ⁻¹ᵁ N₂ := fun y _ => y.2.2
   refine ⟨U₂, N₂, ⟨⟨hx, hx'⟩, hxN₂⟩, hA, hl₁.trans h₁, hl₂.trans h₂', hU₂,
     G'.map (Z.presheaf.map (homOfLE hl₂).op).hom * G.map (Z.presheaf.map (homOfLE hl₁).op).hom,
     ?_, ?_⟩
@@ -255,16 +253,12 @@ theorem UpperTheory.Gal.KunnethLefschetz.G.PX.locMatExists :
   choose G hG using fun x => trExists B α β (hNa x) (h₁ x) (h₂ x)
   let U : V → V.Opens := fun x => (p ≫ i) ⁻¹ᵁ N x
   have hxU : ∀ x, x ∈ U x := hNx
-  have hU : ∀ x, ⊤ ≤ ((U x).ι ≫ p ≫ i) ⁻¹ᵁ N x := by
-    intro x y _
-    exact y.2
+  have hU : ∀ x, ⊤ ≤ ((U x).ι ≫ p ≫ i) ⁻¹ᵁ N x := fun x y _ => y.2
   let Mx : ∀ x, Matrix (Fin d) (Fin d) Γ((U x : Scheme.{0}), ⊤) := fun x =>
     (G x).map (((U x).ι ≫ p ≫ i).appLE (N x) ⊤ (hU x)).hom
   have hL : ∀ x, LocMat B α β ((U x).ι ≫ p) (Mx x) := by
     intro x y
-    have hT : ⊤ ≤ ((⊤ : (U x : Scheme.{0}).Opens).ι ≫ ((U x).ι ≫ p) ≫ i) ⁻¹ᵁ N x := by
-      intro z _
-      exact z.1.2
+    have hT : ⊤ ≤ ((⊤ : (U x : Scheme.{0}).Opens).ι ≫ ((U x).ι ≫ p) ≫ i) ⁻¹ᵁ N x := fun z _ => z.1.2
     refine ⟨⊤, N x, trivial, hNa x, h₁ x, h₂ x, hT, G x, hG x, ?_⟩
     ext a b
     exact appTop_appLE _ _ _ (by simp) _ _ _ _
@@ -308,8 +302,7 @@ private theorem mem_V (B : Blow q i π D d) {U : Scheme.{0}} {p : U ⟶ W} {α :
   subst h
   have h₁ : (c y).1 ∈ oW B α := (c y).2
   have h₂ : i (c y).1 ∈ B.V α := h₁
-  rw [Scheme.Hom.comp_apply, Scheme.Hom.comp_apply]
-  exact h₂
+  rwa [Scheme.Hom.comp_apply, Scheme.Hom.comp_apply]
 
 private theorem exists_loc (B : Blow q i π D d) {V : Scheme.{0}} (a b : V ⟶ WP B)
     (h : a ≫ cP B = b ≫ cP B) (x : V) :
@@ -446,8 +439,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.G.PX.gMatUnique :
   have h₂ := locMatNat B α β s' _ _ hL'
   rw [map_restrict M s hs, ← Category.assoc, hs] at h₁
   rw [map_restrict M' s' hs', ← Category.assoc, hs'] at h₂
-  have e := locMatUnique B α β _ _ _ h₁ h₂
-  exact ⟨U ⊓ U', ⟨hx, hx'⟩, congrFun (congrFun e m) l⟩
+  exact ⟨U ⊓ U', ⟨hx, hx'⟩, congrFun (congrFun (locMatUnique B α β _ _ _ h₁ h₂) m) l⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.KunnethLefschetz.EtaleCharts.FlatSectionExtension.GMatUnique =====
@@ -670,8 +662,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.G.PX.homExt :
   choose W hxW hW using h
   have hcov : TopologicalSpace.IsOpenCover W := by
     refine TopologicalSpace.IsOpenCover.mk (eq_top_iff.mpr ?_)
-    intro x _
-    exact TopologicalSpace.Opens.mem_iSup.mpr ⟨x, hxW x⟩
+    exact fun x _ => TopologicalSpace.Opens.mem_iSup.mpr ⟨x, hxW x⟩
   exact (V.openCoverOfIsOpenCover W hcov).hom_ext _ _ hW
 end -- clump:auto
 end -- clump:auto
@@ -990,8 +981,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.G.PX.chartLift :
     have := hf (MvPolynomial.X m)
     simp only [ψ, φ, MvPolynomial.coe_eval₂Hom, MvPolynomial.eval₂_X] at this
     unfold uV
-    rw [hy']
-    exact this
+    rwa [hy']
   exact gen _ hyj _
 end -- clump:auto
 end -- clump:auto
@@ -1006,8 +996,7 @@ open CategoryTheory Limits AlgebraicGeometry GlobalTheory.EtC CrystallineSemista
 
 private theorem exists_basicOpen_of_span {V : Scheme.{0}} {d : ℕ} (v : Fin d → Γ(V, ⊤))
     (h : Ideal.span (Set.range v) = ⊤) (x : V) : ∃ k, x ∈ V.basicOpen (v k) := by
-  by_contra hn
-  push_neg at hn
+  by_contra! hn
   let φ : Γ(V, ⊤) →+* V.presheaf.stalk x := (V.presheaf.germ ⊤ x trivial).hom
   have hle : Ideal.span (Set.range v) ≤ (IsLocalRing.maximalIdeal (V.presheaf.stalk x)).comap φ := by
     rw [Ideal.span_le]
@@ -1025,9 +1014,7 @@ private theorem isUnit_restrict {V : Scheme.{0}} (s : Γ(V, ⊤)) (U : V.Opens) 
     IsUnit (U.ι.appTop.hom s) := by
   have h0 : IsUnit ((V.presheaf.map (homOfLE (V.basicOpen_le s)).op).hom s) :=
     RingedSpace.isUnit_res_basicOpen _ _
-  have hle : ⊤ ≤ U.ι ⁻¹ᵁ V.basicOpen s := by
-    intro z _
-    exact hU z.2
+  have hle : ⊤ ≤ U.ι ⁻¹ᵁ V.basicOpen s := fun z _ => hU z.2
   have h1 : U.ι.appTop = V.presheaf.map (homOfLE (V.basicOpen_le s)).op ≫ U.ι.appLE (V.basicOpen s) ⊤ hle := by
     rw [Scheme.Hom.map_appLE]
     exact Scheme.Hom.app_eq_appLE U.ι
@@ -1062,8 +1049,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.G.PX.ontoField :
     rintro _ ⟨z, rfl⟩
     rw [Scheme.Opens.range_ι]
     have hz : (y ≫ j) z ∈ (B.c α).C k := hy (Set.mem_univ z)
-    rw [Scheme.Hom.comp_apply] at hz
-    exact hz
+    rwa [Scheme.Hom.comp_apply] at hz
   let y₁ : (U : Scheme.{0}) ⟶ (oT B j (α, k) : Scheme.{0}) := IsOpenImmersion.lift (oT B j (α, k)).ι y hrange
   have hy₁ : y₁ ≫ (oT B j (α, k)).ι = y := IsOpenImmersion.lift_fac _ _ _
   obtain ⟨h', hv', -, hrho⟩ := pieceFacts B j r hsq.w v hv (α, k) y₁
@@ -1123,8 +1109,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.G.PX.tCover :
     have hy : (tI B j p ≫ eP B j) y = x := by
       rw [hc]
       rfl
-    rw [← Scheme.Hom.comp_apply]
-    exact hy
+    rwa [← Scheme.Hom.comp_apply]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.KunnethLefschetz.EtaleCharts.FlatSectionExtension.TCover =====
@@ -1146,8 +1131,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.G.PX.wCover :
   · have hx : i x ∈ ⨆ α, B.V α := B.cover (Set.mem_univ x)
     obtain ⟨α, hα⟩ := (TopologicalSpace.Opens.mem_iSup).1 hx
     obtain ⟨y, hy⟩ : x ∈ Set.range (oW B α).ι := by
-      rw [Scheme.Opens.range_ι]
-      exact hα
+      rwa [Scheme.Opens.range_ι]
     have h : wI B α ≫ cP B = (oW B α).ι := by
       simp [wI, cP]
     refine ⟨wI B α y, ?_⟩

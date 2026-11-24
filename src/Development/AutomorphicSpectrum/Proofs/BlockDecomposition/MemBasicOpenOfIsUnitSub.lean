@@ -65,11 +65,9 @@ theorem mem_basicOpen_prod {U : Scheme.{0}} {ι : Type} (t : Finset ι) (s : ι 
 
 theorem exists_notMem_basicOpen {U : Scheme.{0}} {ι : Type} (t : Finset ι) (s : ι → Γ(U, ⊤))
     (h : ∏ a ∈ t, s a = 0) (u : U) : ∃ a ∈ t, u ∉ U.basicOpen (s a) := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   have hm := mem_basicOpen_prod t s u hc
-  rw [h, Scheme.basicOpen_zero] at hm
-  exact hm
+  rwa [h, Scheme.basicOpen_zero] at hm
 
 theorem mem_basicOpen_of_isUnit_sub {U : Scheme.{0}} (x y : Γ(U, ⊤)) (h : IsUnit (x - y)) (u : U)
     (hx : u ∉ U.basicOpen x) : u ∈ U.basicOpen y := by
@@ -129,8 +127,7 @@ theorem exists_isPow (hP : PrimAlg) (q : ℕ) [NeZero q] (U : Scheme.{0}) (ζ : 
         and_true, SetLike.mem_coe]
       rw [hf0_iff]
       constructor
-      · intro ha b hb
-        exact huniq u a b (Ne.symm hb) ha
+      · exact fun ha b hb => huniq u a b (Ne.symm hb) ha
       · intro h ha
         obtain ⟨a', ha'⟩ := hex u
         by_cases heq : a' = a
@@ -150,10 +147,8 @@ theorem exists_isPow (hP : PrimAlg) (q : ℕ) [NeZero q] (U : Scheme.{0}) (ζ : 
   rw [← Finset.mul_prod_erase Finset.univ _ (Finset.mem_univ a)] at hprodV
   have hu : IsUnit (∏ b ∈ Finset.univ.erase a, (g.appTop.hom r - g.appTop.hom ζ.1 ^ b.val)) := by
     refine Finset.prod_induction _ IsUnit (fun x y hx hy => hx.mul hy) isUnit_one (fun b hb => ?_)
-    have h1 := hunitb b (Finset.ne_of_mem_erase hb)
-    simpa only [map_sub, map_pow] using h1
+    simpa only [map_sub, map_pow] using hunitb b (Finset.ne_of_mem_erase hb)
   have h0 : g.appTop.hom r - g.appTop.hom ζ.1 ^ a.val = 0 := hu.mul_left_eq_zero.mp hprodV
-  show g.appTop.hom r = (g.appTop.hom ζ.1) ^ a.val
   exact sub_eq_zero.mp h0
 
 theorem rootPow : CrystallineSemistableComparison.E.PrimAlg → CrystallineSemistableComparison.E.RootPow := by
@@ -173,9 +168,7 @@ theorem rootPow : CrystallineSemistableComparison.E.PrimAlg → CrystallineSemis
     set m := a.val with hm
     have hq : 0 < q := Nat.pos_of_ne_zero (NeZero.ne q)
     have ha' : a = (m : ZMod q) := (ZMod.natCast_zmod_val a).symm
-    have hcop : ¬ m.Coprime q := by
-      intro hc
-      exact hna (ha' ▸ (ZMod.isUnit_iff_coprime m q).2 hc)
+    have hcop : ¬ m.Coprime q := fun hc => hna (ha' ▸ (ZMod.isUnit_iff_coprime m q).2 hc)
     set g := Nat.gcd m q with hgdef
     have hg1 : g ≠ 1 := hcop
     have hgpos : 0 < g := Nat.gcd_pos_of_pos_right m hq
@@ -193,8 +186,7 @@ theorem rootPow : CrystallineSemistableComparison.E.PrimAlg → CrystallineSemis
     have hunit : IsUnit (ξ.1 ^ k - 1) := by
       have hne : ((k : ℕ) : ZMod q) ≠ 0 := by
         rw [Ne, ZMod.natCast_eq_zero_iff]
-        intro hd
-        exact absurd (Nat.le_of_dvd hkpos hd) (by omega)
+        exact fun hd => absurd (Nat.le_of_dvd hkpos hd) (by omega)
       have hu := (hP q _ ξ).2.1 (k : ZMod q) 0 hne
       rwa [ZMod.val_natCast_of_lt hklt, ZMod.val_zero, pow_zero] at hu
     have hdvd : ξ.1 - ζ.1 ^ m ∣ ξ.1 ^ k - 1 := by

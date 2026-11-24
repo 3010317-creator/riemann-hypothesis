@@ -301,13 +301,11 @@ theorem exists_stage_insert (hδ : ∀ i, IsIrrUnitary (δ i)) (hρ : IsUnitaryR
     ∃ Φ ∈ stage e δ ρ (insert σ s), Φ ≠ 0 := by
   have hnt : ∀ i, Nontrivial (Hs i) := fun i => (hδ i).irred.1
   obtain ⟨x0, hx0⟩ : ∃ x, S x ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hS0 (ContinuousLinearMap.ext h)
 
   obtain ⟨Φ, hΦ, y, hy⟩ : ∃ Φ ∈ stage e δ ρ s, ∃ y, ⟪S x0, Φ y⟫_ℂ ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have h1 : vals e δ ρ s ≤ (ℂ ∙ S x0)ᗮ :=
       Submodule.topologicalClosure_minimal _ (Submodule.span_le.2 (by
         rintro _ ⟨Φ, hΦ, y, rfl⟩
@@ -379,8 +377,7 @@ theorem exists_stage_insert (hδ : ∀ i, IsIrrUnitary (δ i)) (hρ : IsUnitaryR
     rw [insertMap_apply, Function.update_self, Function.update_idem, ← hy0c σ hσ, Function.update_eq_self, hBy0]
   rw [h0, ContinuousMultilinearMap.zero_apply] at h1
   have h2 := Submodule.starProjection_inner_eq_zero (S x0) (Φ y0) (hmemF Φ hΦ)
-  rw [← h1, sub_zero] at h2
-  exact h2
+  rwa [← h1, sub_zero] at h2
 
 end Step
 
@@ -396,8 +393,7 @@ theorem exists_ne_zero_homPi (hδ : ∀ i, IsIrrUnitary (δ i)) (hρ : IsIrrUnit
   haveI : Nontrivial K := hρ.irred.1
   haveI : ∀ i, Nontrivial (Hs i) := fun i => (hδ i).irred.1
   have hne : ∀ Φ : ContinuousMultilinearMap ℂ Hs K, Φ ≠ 0 → ∃ y, Φ y ≠ 0 := fun Φ hΦ0 => by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hΦ0 (ContinuousMultilinearMap.ext h)
   have key : ∀ s : Finset ι, vals e δ ρ s = ⊤ := by
     intro s
@@ -411,8 +407,7 @@ theorem exists_ne_zero_homPi (hδ : ∀ i, IsIrrUnitary (δ i)) (hρ : IsIrrUnit
       · obtain ⟨y, hy⟩ := hne Φ hΦ0
         exact absurd ((Submodule.mem_bot ℂ).1 (h ▸ apply_mem_vals hΦ y)) hy
       · exact h
-  by_contra h
-  push_neg at h
+  by_contra! h
   have h1 : vals e δ ρ Finset.univ ≤ ⊥ :=
     Submodule.topologicalClosure_minimal _ (Submodule.span_le.2 (by
       rintro _ ⟨Φ, hΦ, y, rfl⟩
@@ -575,8 +570,7 @@ theorem exists_smooth_ne_zero : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → 
     exact hv (norm_le_zero_iff.1 (by linarith))
   have hRconv : Convex ℝ (Set.range f) := by
     have h1 := ((LinearMap.range (f : homDS M π ⊤ →ₗ[ℂ] H)).restrictScalars ℝ).convex
-    rw [Submodule.coe_restrictScalars, LinearMap.coe_range, ContinuousLinearMap.coe_coe] at h1
-    exact h1
+    rwa [Submodule.coe_restrictScalars, LinearMap.coe_range, ContinuousLinearMap.coe_coe] at h1
   have hOR : O ⊆ Set.range f := by
     rintro _ ⟨k, rfl⟩
     exact ⟨finPartDS M hU k Φ, hequiv _ _⟩

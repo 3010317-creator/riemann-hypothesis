@@ -153,8 +153,8 @@ theorem monomial_of_pt {z z' : Fin (2 * r + k + 1) → ℂ} {g : MatKR k r} (hg 
   ext a b
   simp only [C2.monoP, conjTranspose_apply, Matrix.of_apply]
   by_cases e : a = permOf p b
-  · rw [if_pos e, if_pos (by rw [e, permOf_invol]), e]
-  · rw [if_neg e, if_neg (fun e' => e (by rw [e', permOf_invol])), star_zero]
+  · rw [ite_eq_left e, ite_eq_left (by rw [e, permOf_invol]), e]
+  · rw [ite_eq_right e, ite_eq_right (fun e' => e (by rw [e', permOf_invol])), star_zero]
 
 
 open GlobalTheory.ThA.OrbSq P.Dx1.Rel in
@@ -308,8 +308,7 @@ theorem haar_conj {g : MatKR k r} (hg : g ∈ UH (Hpk k r)) {μ : Measure (Mt k 
     apply hx
     refine ⟨?_, ?_⟩
     · have := hx'.2
-      rw [hii] at this
-      exact this
+      rwa [hii] at this
     · have e := conj_inv_conj hg x
       unfold conjM at e
       rw [hii] at e
@@ -437,8 +436,7 @@ theorem amp_at_monomial : ∀ (D : D7) τ w w' θ (W : LocW D.R.k D.R.rS) (hW : 
     (by
       have : μ₀ {x | Matrix.of x ∉ C6.Rset g⁻¹} = 0 := by
         unfold C6.Rset
-        rw [hii]
-        exact h0
+        rwa [hii]
       rw [hμ, Measure.smul_apply, this, smul_zero])
     (by
       have hrm : Measurable (rootCoords D.R.k D.R.rS W.z' q) := by
@@ -446,8 +444,7 @@ theorem amp_at_monomial : ∀ (D : D7) τ w w' θ (W : LocW D.R.k D.R.rS) (hW : 
         by_cases hi : ((a : Fin (D.R.rS + 1) × Fin (D.R.rS + 1)).1 : ℕ) < D.R.rS
         · simp only [rootCoords, flagMat, hi, dite_true, Matrix.mulVec, dotProduct, Matrix.of_apply]
           fun_prop
-        · simp only [rootCoords, flagMat, hi, dite_false]
-          exact continuous_const
+        · simpa only [rootCoords, flagMat, hi, dite_false] using continuous_const
       rw [hμ, Measure.map_smul _ hrm.aemeasurable, h1, smul_smul])
   obtain ⟨ν, hν⟩ := exists_orbQuot L ENNReal.ofReal_ne_top hg hH (by positivity) hI
   have hR := haar_conj hg hH

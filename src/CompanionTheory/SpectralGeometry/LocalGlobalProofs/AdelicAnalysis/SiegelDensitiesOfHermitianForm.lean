@@ -37,9 +37,7 @@ theorem rescale_tprod {ι : Type} (a : ℝ≥0) (r : ι → ℝ≥0) (h1 : ∀�
     intro t z
     rw [hφ, NNReal.smul_def, Complex.real_smul]
   have hfin' : (Function.mulSupport fun v => φ (r v)).Finite := by
-    refine hfin.subset ?_
-    intro v hv hv'
-    exact hv (by simp [hv'])
+    exact hfin.subset (fun v hv hv' => hv (by simp [hv']))
   have hm : Multipliable fun v => φ (r v) := multipliable_of_hasFiniteMulSupport hfin'
   simp only [hs]
   refine ⟨hm.mul hx, ?_⟩

@@ -64,10 +64,10 @@ private theorem ent_le {E : Type} [NormedField E] {a n : ℕ} (e : Fin a ↪ Fin
       obtain ⟨l, rfl⟩ := hj
       simp only [matrixExtendByZero_apply, Matrix.sub_apply, Matrix.one_apply, e.injective.eq_iff, add_sub_cancel]
       exact h k l
-    · push_neg at hj
+    · push Not at hj
       rw [matrixExtendByZero_apply_of_outside_col e _ i hj, add_zero]
       exact hone i j
-  · push_neg at hi
+  · push Not at hi
     rw [extendByZero_apply_eq_zero_of_row_not_mem e _ hi, add_zero]
     exact hone i j
 
@@ -97,10 +97,8 @@ theorem UpperTheory.height_blockEmbedding_le :
   simp only [hfin, hinf]
   apply mul_le_mul
   · apply Finset.prod_le_prod₀
-    · intro w _
-      exact pow_nonneg (locHeight_pos _).le _
-    · intro w _
-      exact pow_le_pow_left₀ (locHeight_pos _).le (loc_le e _) _
+    · exact fun w _ => pow_nonneg (locHeight_pos _).le _
+    · exact fun w _ => pow_le_pow_left₀ (locHeight_pos _).le (loc_le e _) _
   · have h1 := finite_mulSupport_locHeight_finAt (emb e g)
     have h2 := finite_mulSupport_locHeight_finAt g
     simp only [hfin] at h1
@@ -109,9 +107,7 @@ theorem UpperTheory.height_blockEmbedding_le :
       finprod_eq_prod_of_mulSupport_subset _ (s := h1.toFinset ∪ h2.toFinset)
         (by intro x hx; simp [hx])]
     apply Finset.prod_le_prod₀
-    · intro v _
-      exact (locHeight_pos _).le
-    · intro v _
-      exact loc_le e _
+    · exact fun v _ => (locHeight_pos _).le
+    · exact fun v _ => loc_le e _
   · exact finprod_nonneg fun v => (locHeight_pos _).le
   · exact (zero_lt_one.trans_le (one_le_prod_locHeight g)).le

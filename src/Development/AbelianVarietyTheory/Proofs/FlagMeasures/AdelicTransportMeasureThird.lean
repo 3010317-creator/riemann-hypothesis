@@ -142,8 +142,7 @@ theorem contDiff_oneP (hθ : IsInfFam θ) {τ : D.what₂.Tau} {X : Matrix (Fin 
     simp only [(isAtTau_oneP hθ hX _).2.1]
     have h2 : ContDiff ℝ ∞ fun t : ℝ => fun _ : Fin 1 => t := contDiff_pi.2 fun _ => contDiff_id
     simpa [Function.comp_def] using (GlobalTheory.GardingVec.contDiff_expProd fun _ : Fin 1 => X).comp h2
-  · simp only [(isAtTau_oneP hθ hX _).2.2 τ' c]
-    exact contDiff_const
+  · simpa only [(isAtTau_oneP hθ hX _).2.2 τ' c] using contDiff_const
 
 theorem smFam_oneP (hθ : IsInfFam θ) {τ : D.what₂.Tau} {X : Matrix (Fin V.rank) (Fin V.rank) ℂ}
     (hX : X ∈ lieAt V τ) {k : ℕ} (i : Fin k) : SmFam θ fun t : Fin k → ℝ => oneP θ V τ X (t i) := fun τ' => by
@@ -368,8 +367,7 @@ theorem smooth (hθ : IsInfFam θ) (he : IsEquiv θ Φ) (hs : IsSob Φ) (hc : �
   refine _root_.GlobalTheory.DerClosedSmooth.smooth_of_closed D θ V hθ (Set.range Φ) ?_ _ ⟨u, rfl⟩ k τs Xs hX g
   rintro _ ⟨v, rfl⟩
   refine ⟨hc v, fun τ => ⟨fun X => Rder θ V τ X (Φ v), fun X hX => ?_, fun a X hX Y hY => ?_⟩⟩
-  · simp only [rder_apply he hs τ v hX]
-    exact ⟨⟨_, rfl⟩, hasDerivAt_apply he hs τ v hX⟩
+  · simpa only [rder_apply he hs τ v hX] using ⟨⟨_, rfl⟩, hasDerivAt_apply he hs τ v hX⟩
   · haveI : CompleteSpace (M.H τ) := (M.ds τ).1
     obtain ⟨h1, h2⟩ := GlobalTheory.SmVecLinear.dRep_linear _ _ _ _ _ _ (M.fr_unit τ) (M.fr_gram τ) (M.ds τ).2.2.1 _
       ((MultGelf.mem_sm M τ).1 (v τ).2)
@@ -452,8 +450,7 @@ theorem hasDerivAt_switch (he : IsEquiv θ Φ) (hs : IsSob Φ) (τ : D.what₂.T
     {Y : Matrix (Fin V.rank) (Fin V.rank) ℂ} (hY : Y ∈ lieAt V τ) {G : Type} [Group G] (T : GA D V ≃* G) (c : ℝ → G)
     (hc : ∀ t, T (oneP θ V τ Y t) = c t) (y : G) :
     HasDerivAt (fun t : ℝ => Φ u (T.symm (y * c t))) (Φ (Function.update u τ (der u τ hY)) (T.symm y)) 0 := by
-  simp only [← hc, map_mul, T.symm_apply_apply]
-  exact hasDerivAt_apply he hs τ u hY (T.symm y)
+  simpa only [← hc, map_mul, T.symm_apply_apply] using hasDerivAt_apply he hs τ u hY (T.symm y)
 
 end Inst
 

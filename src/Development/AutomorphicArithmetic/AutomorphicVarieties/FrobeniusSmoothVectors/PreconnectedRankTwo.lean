@@ -110,8 +110,7 @@ private theorem isLocallyConstant_psi_restrict_of_isOpen_ker {l : ℕ} [Fact l.P
   constructor
   · intro e
     rw [e, inv_mul_cancel]
-  · intro e
-    exact (inv_mul_eq_one.mp e).symm
+  · exact fun e => (inv_mul_eq_one.mp e).symm
 
 private theorem rep_ex {l : ℕ} [Fact l.Prime] {k : Type} [Field k] [CharP k l] {F : Frame l k} {C₀ : ℕ}
     (hF : F.Ok C₀) (Q : Type) [CommRing Q] [Algebra k Q] {a : F.G0 → Q} (ha : a ∈ F.strS Q) :
@@ -236,8 +235,7 @@ private theorem pt_mem {Q : Type} [CommRing Q] [Algebra (ResidueField O) Q] {ξ 
     rintro _ ⟨g, i, j, hij, rfl⟩
     rw [NRep.map_r]
     exact RingHom.mem_ker.mp (t (Ideal.subset_span ⟨g, i, j, hij, rfl⟩))
-  have h2 := framePoint_fiber_nonempty hF Q (NRep.map ξ S.u) H.1 htri H.2.1
-  simpa only [NRep.map_r] using h2
+  simpa only [NRep.map_r] using framePoint_fiber_nonempty hF Q (NRep.map ξ S.u) H.1 htri H.2.1
 
 private theorem line {K : Type} [Field K] [Algebra (ResidueField O) K] {A : F.G0 → Polynomial K}
     (h : A ∈ F.strS (Polynomial K)) :
@@ -269,8 +267,7 @@ theorem UpperTheory.V.Fr.preconnected_rank_two :
   obtain ⟨ξb, hbF, hbt, hbv⟩ := pt_ex hF S (ResidueField O) hb
   let qb : PrimeSpectrum S.A := ⟨RingHom.ker ξb, RingHom.ker_isPrime ξb⟩
   have hnz : ∃ g, b g ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hb0 (funext hc)
   obtain ⟨g1, hg1⟩ := hnz
   have hqb : qb ∈ S.BB := by

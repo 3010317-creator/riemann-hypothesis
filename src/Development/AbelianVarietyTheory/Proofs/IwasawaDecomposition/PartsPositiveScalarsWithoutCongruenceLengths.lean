@@ -279,10 +279,8 @@ theorem inner_theta_rat_eq_lam : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (
     have h3 := GlobalTheory.Mem.LiftTheta.levelFormCoordinateMap_levelZero F.lv2 hOk (A3.fam3.toSub2 (zsOf R F)) i t c
     have h3' : ((crdOf3 A3 F.P0 F.ψ0 F.P1 F.ψ1 F.Dc F.Sp F.Zsc).toL (R.toCx3 F).zs false i t) c = liftForm A3.A F.P0 F.ψ0 i t (lZ0 D A3.A F.P0 F.ψ0 (A3.fam3.toSub2 (zsOf R F)) i t *ᵥ c) := h3.symm
     rw [hP.phs i, one_smul]
-    show R.thG i t (R.jV i t (((crdOf3 A3 F.P0 F.ψ0 F.P1 F.ψ1 F.Dc F.Sp F.Zsc).toL (R.toCx3 F).zs false i t) c)) = _
     exact congrArg (fun z => R.thG i t (R.jV i t z)) h3'
   have hW : (R.toCx3 F).tC (crdOf3 A3 F.P0 F.ψ0 F.P1 F.ψ1 F.Dc F.Sp F.Zsc) false i t (cpt A3.fam3.base3.v0.embedding a) ∈ (R.toCx3 F).Wp i p := by
-    show Tw.out (s := twAt D.what₂.embLL A3.A.v0) (E := (R.HW i (sg0 D A3.A)).H) ((R.toCx3 F).tC (crdOf3 A3 F.P0 F.ψ0 F.P1 F.ψ1 F.Dc F.Sp F.Zsc) false i t (cpt A3.fam3.base3.v0.embedding a)) ∈ R.Wp3 i p
     exact (congrArg (· ∈ R.Wp3 i p) (hT a)).mpr hyp
   have hA := hR.lifts0.2 i t p a hW b
   have hL : ⟪(R.toCx3 F).tC (crdOf3 A3 F.P0 F.ψ0 F.P1 F.ψ1 F.Dc F.Sp F.Zsc) false i t (cpt A3.fam3.base3.v0.embedding a), (R.toCx3 F).tC (crdOf3 A3 F.P0 F.ψ0 F.P1 F.ψ1 F.Dc F.Sp F.Zsc) false i t (cpt A3.fam3.base3.v0.embedding b)⟫_ℂ = cj (twAt D.what₂.embLL A3.A.v0) ⟪Y.mj.eW i (D.what₂.thetaP (Y.tup t) ((i : ℕ) + 1) (D.what₂.jMt (Y.tup t) ((i : ℕ) + 1) (Y.eMt i t (lZ0 D A3.A F.P0 F.ψ0 (A3.fam3.toSub2 (zsOf R F)) i t *ᵥ a)))), Y.mj.eW i (D.what₂.thetaP (Y.tup t) ((i : ℕ) + 1) (D.what₂.jMt (Y.tup t) ((i : ℕ) + 1) (Y.eMt i t (lZ0 D A3.A F.P0 F.ψ0 (A3.fam3.toSub2 (zsOf R F)) i t *ᵥ b))))⟫_ℂ := by
@@ -435,8 +433,7 @@ theorem mem_span_part : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T 
         rw [hk, ← hcon a]
         exact Submodule.subset_span ⟨Φ (u a), ⟨u a, ⟨a, hy', rfl⟩, rfl⟩, rfl⟩)
     rw [(R.toCx3 F).finrank_WpK F.cr false hR.h4pos hR.kForm hR.ewNorm hR.types0 h5 hR.ratTh hR.liftHyp0.h3W hR.partsW i p] at hle
-    have heq := Submodule.eq_of_le_of_finrank_le (inf_le_inf_right _ hSpW) hle
-    exact heq.symm.le.trans inf_le_left
+    exact (Submodule.eq_of_le_of_finrank_le (inf_le_inf_right _ hSpW) hle).symm.le.trans inf_le_left
   have hspan : ∀ c : Fin ((A3.A.fam.L i t).dZ (A3.A.fam.lvlA F.P0 F.ψ0) ((A3.fam3.toSub2 (zsOf R F)).Zl i t)) → ℂ, Φ (∑ k, c k • u (Pi.single k 1)) ∈ R.Wp3 i p →
       Φ (∑ k, c k • u (Pi.single k 1)) ∈ Submodule.span ℂ (Φ '' {y | ∃ a, Φ (u a) ∈ R.Wp3 i p ∧ u a = y}) := by
     intro c hc
@@ -449,8 +446,7 @@ theorem mem_span_part : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T 
     rw [← Submodule.map_span] at h1
     obtain ⟨w, hw, hwe⟩ := Submodule.mem_map.1 h1
     have hwe' : w = Φ (∑ k, c k • u (Pi.single k 1)) := hwe
-    rw [← hwe']
-    exact hw
+    rwa [← hwe']
   exact mem_span_rat u Φ (R.Wp3 i p) hinj hspan x hx hW
 
 end GlobalTheory.Mem.R3.PartSpan.L0
@@ -581,8 +577,7 @@ theorem eigenvalue_eq_of_label : GlobalTheory.Published.WeilRepresentationUnitar
   have key := GlobalTheory.Mem.R3.LamMetric.L0.inner_theta_eq_lam h1 h2 h3 h4 D G Pl0 I0 T A3 Ks R F cG X0 Y Z hP hH hD i t p hU (K.starProjection x)
     (K.starProjection_apply_mem x) hW
   have := adj_eig θ (R.lam3 i t p A3.A.v0) _ key
-  rw [he] at this
-  exact this
+  rwa [he] at this
 
 end GlobalTheory.Mem.R3.LamLab.L0
 
@@ -631,8 +626,7 @@ theorem finiteTypes_of_full_heckeAlgebra_eigensystems : GlobalTheory.Published.W
   refine Submodule.eq_of_le_of_finrank_eq hle ?_
   rw [dim i c, ← cnt c, Formalism.IndefR.Cx.finrank_iSup_eq_sum _ hind]
   rw [Finset.sum_subtype (Finset.univ.filter (fun σ => cOf σ = c)) (p := fun σ => cOf σ = c) (by simp)]
-  refine Finset.sum_congr rfl fun σ _ => ?_
-  exact hIR ((i : ℕ) + 1) (by omega) (by omega) σ.1
+  exact Finset.sum_congr rfl fun σ _ => hIR ((i : ℕ) + 1) (by omega) (by omega) σ.1
 
 end GlobalTheory.Mem.R3.L0
 
@@ -659,8 +653,7 @@ theorem span_all : GlobalTheory.Published.WeilRepresentationUnitaryPair → Glob
       rfl
     apply_fun (Tw.out (s := twAt D.what₂.embLL A3.A.v0))
     case inj =>
-      intro a b h
-      exact congrArg (Tw.mk (twAt D.what₂.embLL A3.A.v0)) h
+      exact fun a b h => congrArg (Tw.mk (twAt D.what₂.embLL A3.A.v0)) h
     rw [h1]
     change Tw.out (∑ k, A3.A.v0.embedding (y k) • (R.toCx3 F).eW false i ((R.toCx3 F).bW false i A3.A.v0 k)) = _
     change (∑ k, Tw.out (s := twAt D.what₂.embLL A3.A.v0) (E := (R.HW i (sg0 D A3.A)).H) (A3.A.v0.embedding (y k) • (R.toCx3 F).eW false i ((R.toCx3 F).bW false i A3.A.v0 k))) =
@@ -737,8 +730,7 @@ theorem span_all : GlobalTheory.Published.WeilRepresentationUnitaryPair → Glob
   have h6 : (⨆ p, ((R.toCx3 F).Wp i p ⊓ LinearMap.range ((R.toCx3 F).w0C false i)).map outL) ≤ S.map (Y.mj.eW i) :=
     iSup_le fun p => (hUT p) ▸ h5 p
   obtain ⟨x', hx', hxx⟩ := h6 h4
-  rw [← hinj hxx]
-  exact hx'
+  rwa [← hinj hxx]
 
 end GlobalTheory.IsotSum.L0
 
@@ -813,8 +805,7 @@ theorem main : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTh
     have h2 : ((‖θ x‖ ^ 2 : ℝ) : ℂ) = ((c * ‖x‖ ^ 2 : ℝ) : ℂ) := by
       first | (push_cast; exact h)
     exact Complex.ofReal_injective h2
-  by_contra hcn
-  push_neg at hcn
+  by_contra! hcn
   nlinarith [sq_nonneg ‖x‖, sq_pos_of_pos hyn]
 
 end GlobalTheory.NRows.LamUsedProof.L0

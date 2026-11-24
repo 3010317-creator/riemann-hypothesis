@@ -298,12 +298,9 @@ theorem of_length_eq_zero {S X : Scheme.{u}} (j : S ⟶ X) [IsClosedImmersion j]
   · intro i hi
     infer_instance
   · simp
-  · intro i hi
-    exact absurd hi (by omega)
-  · intro i hi
-    exact absurd hi (by omega)
-  · intro i hi
-    exact absurd hi (by omega)
+  · exact fun i hi => absurd hi (by omega)
+  · exact fun i hi => absurd hi (by omega)
+  · exact fun i hi => absurd hi (by omega)
 
 end IsPushforwardBlowupSeq
 

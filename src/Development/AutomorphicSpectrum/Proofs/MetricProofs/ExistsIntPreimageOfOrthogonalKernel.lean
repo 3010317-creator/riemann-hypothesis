@@ -122,10 +122,8 @@ theorem exists_smul_eq_mulVec (g : ℕ) (S : Matrix (Fin g) (Fin g) ℤ) (hS : S
       map_add' := fun a b => dotProduct_add uq a b
       map_smul' := fun r a => by simp [dotProduct_smul] }
   have hφ : φ ∈ LinearMap.range f.dualMap := by
-    rw [LinearMap.range_dualMap_eq_dualAnnihilator_ker]
-    rw [Submodule.mem_dualAnnihilator]
-    intro w hw
-    exact hker w (by simpa [f] using hw)
+    rw [LinearMap.range_dualMap_eq_dualAnnihilator_ker, Submodule.mem_dualAnnihilator]
+    exact fun w hw => hker w (by simpa [f] using hw)
   obtain ⟨ψ, hψ⟩ := hφ
   let c : Fin g → ℚ := fun i => ψ (Pi.single i 1)
   have hψc : ∀ w, ψ w = c ⬝ᵥ w := by

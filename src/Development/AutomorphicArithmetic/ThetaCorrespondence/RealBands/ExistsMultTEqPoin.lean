@@ -230,13 +230,11 @@ theorem unfolding_cover_bound (G H : Type) [Group G] [Group H] [MeasurableSpace 
     subst hq
     have h2 : ι ((δ₁:H)⁻¹) = ι ((δ₂:H)⁻¹) := mul_left_cancel hv
     have h3 : (δ₁:H)⁻¹ = (δ₂:H)⁻¹ := hι h2
-    simp only [Prod.mk.injEq, true_and]
-    exact Subtype.ext (inv_injective h3)
+    simpa only [Prod.mk.injEq, true_and] using Subtype.ext (inv_injective h3)
   calc ∑' q : Γ ⧸ ι.range.subgroupOf Γ, ∫⁻ h, F ((q.out : Γ) * ι h) ∂μ
       ≤ ∑' q : Γ ⧸ ι.range.subgroupOf Γ, ∑' δ : Γ.comap ι,
           ∫⁻ k in Kc, F (((φ (q, δ)) : G) * ι k) ∂μ := by
-        refine ENNReal.tsum_le_tsum fun q => ?_
-        exact step _
+        exact ENNReal.tsum_le_tsum fun q => step _
     _ = ∑' p, ∫⁻ k in Kc, F ((φ p : G) * ι k) ∂μ := ENNReal.tsum_prod.symm
     _ = ∫⁻ k in Kc, ∑' p, F ((φ p : G) * ι k) ∂μ :=
         (lintegral_tsum fun p => (hF _).aemeasurable).symm
@@ -327,7 +325,7 @@ theorem GlobalTheory.PoinAut.partialSum_bdd : ∀ (D : D7) (θ : InfFam D), IsIn
         C * P * ∏ τ, ((1 + hsn (cmp θ τ (c * (γ : GA D V) * x))) ^ N)⁻¹ := by
     intro γ hγ
     unfold coef
-    rw [if_pos (Finset.mem_filter.1 hγ).2]
+    rw [ite_eq_left (Finset.mem_filter.1 hγ).2]
     have := hCb (c * (γ : GA D V) * x) 1
     rwa [mul_one] at this
   have hx0 : 0 ≤ height V x := (height_pos V x).le
@@ -339,7 +337,7 @@ theorem GlobalTheory.PoinAut.partialSum_bdd : ∀ (D : D7) (θ : InfFam D), IsIn
           ‖coef θ M K v (fun τ => (a τ : M.H τ)) (c * (γ : GA D V) * x)‖ := by
         refine (Finset.sum_filter_of_ne fun γ _ h => ?_).symm
         by_contra hn
-        exact h (by unfold coef; rw [if_neg hn, norm_zero])
+        exact h (by unfold coef; rw [ite_eq_right hn, norm_zero])
     _ ≤ ∑ γ ∈ s.filter (fun γ : GQ V => Lev.finE V (c * (γ : GA D V) * x) ∈ K),
           C * P * ∏ τ, ((1 + hsn (cmp θ τ (c * (γ : GA D V) * x))) ^ N)⁻¹ := Finset.sum_le_sum hterm
     _ = C * P * ∑ γ ∈ s.filter (fun γ : GQ V => Lev.finE V (c * (γ : GA D V) * x) ∈ K),
@@ -393,8 +391,7 @@ theorem poincare_sum_bound : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (
   have hP : ∀ x : GA D V, 0 < ∏ τ, ((1 + hsn (cmp θ τ x)) ^ (2 * V.rank ^ 2 + 1))⁻¹ := fun x =>
     Finset.prod_pos fun τ _ => inv_pos.2 (pow_pos (add_pos_of_pos_of_nonneg zero_lt_one (Real.sqrt_nonneg _)) _)
   have hC0 : 0 ≤ C := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have := hle 1
     have := hu 1
     have := mul_neg_of_neg_of_pos h (hP 1)
@@ -468,8 +465,7 @@ attribute [local instance] Matrix.frobeniusNormedAddCommGroup Matrix.frobeniusNo
 theorem hsn_eq_norm {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ) : hsn A = ‖A‖ := by
   rw [hsn, Matrix.frobenius_norm_def, Real.sqrt_eq_rpow]
   congr 1
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  exact (Real.rpow_natCast _ 2).symm
+  exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => (Real.rpow_natCast _ 2).symm
 
 theorem hsn_mul_le {n : ℕ} (A B : Matrix (Fin n) (Fin n) ℂ) : hsn (A * B) ≤ hsn A * hsn B := by
   rw [hsn_eq_norm, hsn_eq_norm, hsn_eq_norm]
@@ -588,10 +584,10 @@ theorem hasDerivAt_coef_oneP : ∀ (D : D7), GlobalTheory.Published.HarishChandr
   swap
   · have e : (fun s : ℝ => coef θ M K v b (x * oneP θ V τ X s)) = fun _ => 0 := by
       funext s
-      simp only [coef, hfin s, hK, if_false]
+      simp only [coef, hfin s, hK, ite_false]
     rw [e]
     have e2 : coef θ M K v (Function.update b τ (dRep (M.rep τ) X (b τ))) x = 0 := by
-      simp only [coef, hK, if_false]
+      simp only [coef, hK, ite_false]
     rw [e2]
     exact hasDerivAt_const _ _
   haveI : CompleteSpace (M.H τ) := (M.ds τ).1
@@ -604,7 +600,7 @@ theorem hasDerivAt_coef_oneP : ∀ (D : D7), GlobalTheory.Published.HarishChandr
   have hfun : ∀ s : ℝ, coef θ M K v b (x * oneP θ V τ X s) =
       c * ⟪v τ, M.rep τ (cmp θ τ x) (M.rep τ (NormedSpace.exp (s • X)) (b τ))⟫_ℂ := by
     intro s
-    simp only [coef, hfin s, hK, if_true, coefR]
+    simp only [coef, hfin s, hK, ite_true, coefR]
     rw [← Finset.prod_erase_mul _ _ (Finset.mem_univ τ)]
     congr 1
     · refine Finset.prod_congr rfl fun τ' hτ' => ?_
@@ -618,7 +614,7 @@ theorem hasDerivAt_coef_oneP : ∀ (D : D7), GlobalTheory.Published.HarishChandr
       rfl
   have hval : coef θ M K v (Function.update b τ (dRep (M.rep τ) X (b τ))) x =
       c * ⟪v τ, M.rep τ (cmp θ τ x) (dRep (M.rep τ) X (b τ))⟫_ℂ := by
-    simp only [coef, hK, if_true, coefR]
+    simp only [coef, hK, ite_true, coefR]
     rw [← Finset.prod_erase_mul _ _ (Finset.mem_univ τ), Function.update_self]
     congr 1
     refine Finset.prod_congr rfl fun τ' hτ' => ?_
@@ -777,7 +773,7 @@ theorem poin_smooth_growth_deriv : GlobalTheory.Published.HarishChandraModules �
     obtain ⟨C, hC0, hC⟩ := termBound θ hθ M K v hv b hb
     refine ⟨C * C₀, fun g => ?_⟩
     refine hB (fun x => ‖coef θ M K v b x‖) C (fun _ => norm_nonneg _) (fun x hx => ?_) hC g
-    simp only [coef, if_neg hx, norm_zero]
+    simp only [coef, ite_eq_right hx, norm_zero]
   have grow : ∀ b : ∀ τ, M.H τ, (∀ τ, b τ ∈ GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ) → ModGrowthExp V A (poin θ M K v c b) := by
     intro b hb
     obtain ⟨C, hC⟩ := hsum b hb
@@ -806,7 +802,7 @@ theorem poin_smooth_growth_deriv : GlobalTheory.Published.HarishChandraModules �
       simp only [hu]; split_ifs
       · exact mul_nonneg (mul_nonneg hC'0 hL0) (hprod x)
       · exact le_rfl
-    have huK : ∀ x, Lev.finE V x ∉ K → u x = 0 := fun x hx => by simp only [hu, if_neg hx]
+    have huK : ∀ x, Lev.finE V x ∉ K → u x = 0 := fun x hx => by simp only [hu, ite_eq_right hx]
     have huC : ∀ x, u x ≤ (C' * L) * ∏ τ', ((1 + hsn (cmp θ τ' x)) ^ (2 * V.rank ^ 2 + 1))⁻¹ := fun x => by
       simp only [hu]; split_ifs
       · exact le_rfl
@@ -816,12 +812,12 @@ theorem poin_smooth_growth_deriv : GlobalTheory.Published.HarishChandraModules �
       by_cases hx : Lev.finE V x ∈ K
       · have h1 := hC' (x * oneP θ V τ X y)
         have h2 := hL x y (abs_lt.2 ⟨hy.1, hy.2⟩)
-        simp only [hu, if_pos hx]
+        simp only [hu, ite_eq_left hx]
         calc _ ≤ _ := h1
           _ ≤ C' * (L * ∏ τ', ((1 + hsn (cmp θ τ' x)) ^ (2 * V.rank ^ 2 + 1))⁻¹) := mul_le_mul_of_nonneg_left h2 hC'0
           _ = _ := by ring
       · have : coef θ M K v b' (x * oneP θ V τ X y) = 0 := by
-          simp only [coef, finE_mul_oneP, if_neg hx]
+          simp only [coef, finE_mul_oneP, ite_eq_right hx]
         rw [this, norm_zero]
         exact hu0 x
     have hS := (hB u (C' * L) hu0 huK huC g).1

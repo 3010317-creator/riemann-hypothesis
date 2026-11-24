@@ -104,9 +104,7 @@ theorem isFunForm_map {K : Type} [Field K] (φ : K →+* ℂ) (σ : ι → DomWe
     IsFunForm σ ⟨map φ F.1, GlobalTheory.Proof.TensorMapDescent.map_mem_VV φ σ _ F.2⟩
       ⟨map φ f.1, GlobalTheory.Proof.TensorMapDescent.map_mem_VV φ _ _ f.2⟩ := by
   unfold IsFunForm at h ⊢
-  have h1 := congrArg (map φ) h
-  simp only [map_mul, map_prod, map_pow, map_frDet, map_dualSubst] at h1
-  exact h1
+  simpa only [map_mul, map_prod, map_pow, map_frDet, map_dualSubst] using congrArg (map φ) h
 
 theorem covOf_eq (σ : ι → DomWeight n) (f : VV ℂ fun τ => (σ τ).dual) : covOf σ f = (funEquiv σ).symm f := by
   have hex : ∃ φ : (VV ℂ fun τ => (σ τ).dual) →ₗ[ℂ] VV ℂ σ, ∀ f, IsFunForm σ (φ f) f :=

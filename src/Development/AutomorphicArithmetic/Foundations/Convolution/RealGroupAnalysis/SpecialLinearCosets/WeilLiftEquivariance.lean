@@ -54,8 +54,7 @@ private theorem nu_mul' {F E : Type} [Field F] [NumberField F] [Field E] [Number
 
 private theorem nu_gl' {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (b : A E) : nu F (gl (nU b)) = 1 := by
-  have h : Matrix.GeneralLinearGroup.det (gl (nU b)) = 1 := by
-    exact Units.ext (nU b).2
+  have h : Matrix.GeneralLinearGroup.det (gl (nU b)) = 1 := Units.ext (nU b).2
   simp only [nu, h, map_one]
 
 private theorem dM_mul' {F : Type} [Field F] [NumberField F] (s t : (A F)ˣ) :

@@ -124,9 +124,9 @@ theorem exists_upper_transvection_upper : ∀ (N j : ℕ) (ca cb : Fin N) (C : M
     rw [hC'a]
     by_cases ha : C ca ca = 0
     · have hx' := hx ha
-      rw [hs, if_pos ha, ha, neg_neg, inv_mul_cancel₀ hx']
+      rw [hs, ite_eq_left ha, ha, neg_neg, inv_mul_cancel₀ hx']
       simp
-    · rw [hs, if_neg ha]
+    · rw [hs, ite_eq_right ha]
       simpa using ha
   set t : ℂ := C' cb ca / C' ca ca with ht
   set U : Matrix (Fin N) (Fin N) ℂ := Matrix.transvection cb ca (-t) * C' with hU
@@ -159,20 +159,20 @@ theorem exists_upper_transvection_upper : ∀ (N j : ℕ) (ca cb : Fin N) (C : M
   · intro a b hab
     rw [Matrix.transvection, Matrix.add_apply, Matrix.one_apply, Matrix.single_apply]
     have hab' : a ≠ b := fun h => hab (by rw [h])
-    rw [if_neg hab']
+    rw [ite_eq_right hab']
     by_cases h : ca = a ∧ cb = b
     · obtain ⟨rfl, rfl⟩ := h
       exact absurd hblk hab
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       simp
   · intro r c hrc
     change c < r at hrc
     rw [Matrix.transvection, Matrix.add_apply, Matrix.one_apply, Matrix.single_apply,
-      if_neg (ne_of_gt hrc)]
+      ite_eq_right (ne_of_gt hrc)]
     have h : ¬ (ca = r ∧ cb = c) := by
       rintro ⟨rfl, rfl⟩
       exact absurd (lt_trans hrc hlt) (lt_irrefl _)
-    rw [if_neg h]
+    rw [ite_eq_right h]
     simp
   · rw [Matrix.det_transvection_of_ne _ _ hne]
     exact one_ne_zero
@@ -184,8 +184,7 @@ theorem exists_upper_transvection_upper : ∀ (N j : ℕ) (ca cb : Fin N) (C : M
     · rw [hUo a b ha, hC'blk a b hab]
   · intro c
     have hp : ∏ i, U i i ≠ 0 := by
-      rw [← Matrix.det_of_upperTriangular hUtri, hdetU]
-      exact hdet
+      rwa [← Matrix.det_of_upperTriangular hUtri, hdetU]
     exact Finset.prod_ne_zero_iff.mp hp c (Finset.mem_univ c)
   · change C = Matrix.transvection ca cb s * Matrix.transvection cb ca t * U
     rw [hU, hC', Matrix.mul_assoc (Matrix.transvection ca cb s), ← Matrix.mul_assoc (Matrix.transvection cb ca t),
@@ -232,42 +231,42 @@ theorem upper_of_steps : ∀ (N j : ℕ) (a b ca cb : Fin N) (C : Matrix (Fin N)
   · obtain ⟨i, hi⟩ : ∃ i : Fin N, (i : ℕ) = c - (N - j) := ⟨⟨(c : ℕ) - (N - j), by omega⟩, rfl⟩
     by_cases hia : i = a
     · have hai : (a : ℕ) = c - (N - j) := by rw [← hia]; exact hi
-      rw [if_pos (by omega)] at hca
+      rw [ite_eq_left (by omega)] at hca
       have hcc : c = ca := Fin.ext (by omega)
       have hrcb : (r : ℕ) ≠ cb := fun h => hne ⟨Fin.ext h, hcc⟩
       refine hv b ⟨by omega, by omega⟩ hba r c ?_ ?_
       · simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [if_pos (by omega)]
+        rw [ite_eq_left (by omega)]
         omega
       · simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [if_pos (by omega)]
+        rw [ite_eq_left (by omega)]
         omega
     · refine hv i ⟨by omega, by omega⟩ hia r c ?_ ?_
       · simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [if_pos (by omega)]
+        rw [ite_eq_left (by omega)]
         omega
       · simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [if_pos (by omega)]
+        rw [ite_eq_left (by omega)]
         omega
   · obtain ⟨i, hi⟩ : ∃ i : Fin N, (i : ℕ) = j + c := ⟨⟨j + (c : ℕ), by omega⟩, rfl⟩
     by_cases hia : i = a
     · have hai : (a : ℕ) = j + c := by rw [← hia]; exact hi
-      rw [if_neg (by omega)] at hca
+      rw [ite_eq_right (by omega)] at hca
       have hcc : c = ca := Fin.ext (by omega)
       have hrcb : (r : ℕ) ≠ cb := fun h => hne ⟨Fin.ext h, hcc⟩
       refine hv b ⟨by omega, by omega⟩ hba r c ?_ ?_
       · simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [if_neg (by omega)]
+        rw [ite_eq_right (by omega)]
         omega
       · simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [if_neg (by omega)]
+        rw [ite_eq_right (by omega)]
         omega
     · refine hv i ⟨by omega, by omega⟩ hia r c ?_ ?_
       · simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [if_neg (by omega)]
+        rw [ite_eq_right (by omega)]
         omega
       · simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [if_neg (by omega)]
+        rw [ite_eq_right (by omega)]
         omega
 
 end GlobalTheory.CompanionTheory.Ar.PB.StepShape
@@ -343,11 +342,11 @@ theorem cols_ne_empty {N j : ℕ} (hj : j ≤ N) (i : Fin N) : stepCols N j i �
   have hi := i.2
   by_cases h : (i : ℕ) + 1 ≤ j
   · have : (⟨N - j, by omega⟩ : Fin N) ∈ stepCols N j i := by
-      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, if_pos h]
+      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, ite_eq_left h]
       omega
     simp [e] at this
   · have : (⟨0, by omega⟩ : Fin N) ∈ stepCols N j i := by
-      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, if_neg h]
+      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, ite_eq_right h]
       omega
     simp [e] at this
 
@@ -358,7 +357,7 @@ theorem minor_one_ne {N : ℕ} {I J : Finset (Fin N)} (h : I ≠ J) :
 theorem minor_one_same {N : ℕ} (I : Finset (Fin N)) :
     minorIJ (1 : Matrix (Fin N) (Fin N) ℂ) I I = 1 := by
   unfold minorIJ
-  rw [dif_pos rfl, Matrix.submatrix_one _ (I.orderEmbOfFin rfl).injective, Matrix.det_one]
+  rw [dite_eq_left rfl, Matrix.submatrix_one _ (I.orderEmbOfFin rfl).injective, Matrix.det_one]
 
 theorem det_submatrix_eq_zero {N : ℕ} (C : Matrix (Fin N) (Fin N) ℂ) (S : Finset (Fin N))
     (f : Fin S.card → Fin N) (hf : Function.Injective f)
@@ -396,14 +395,13 @@ theorem quot_vanish : ∀ (N j : ℕ) (i : Fin N) (h₁ h₂ : Matrix (Fin N) (F
   let e := S.orderEmbOfFin rfl
   obtain ⟨t, ht⟩ : ∃ t, e t = c := by
     have h2 : c ∈ Set.range e := by
-      rw [Finset.range_orderEmbOfFin]
-      exact hc
+      rwa [Finset.range_orderEmbOfFin]
     exact h2
   let D : Matrix (Fin S.card) (Fin S.card) ℂ := C.submatrix e e
   have hD : D.det ≠ 0 := by
     have h1 := hq S
     rw [minor_one_same, mul_one] at h1
-    have h2 : minorIJ C S S = D.det := dif_pos rfl
+    have h2 : minorIJ C S S = D.det := dite_eq_left rfl
     rw [← h2]
     intro h0
     rw [h0, mul_zero] at h1
@@ -439,8 +437,7 @@ theorem quot_vanish : ∀ (N j : ℕ) (i : Fin N) (h₁ h₂ : Matrix (Fin N) (F
       · subst ha
         simp [f, D, v, Matrix.updateRow_self]
       · simp [f, D, Matrix.updateRow_ne ha, Function.update_of_ne ha]
-    rw [e2]
-    exact h2
+    rwa [e2]
   have hcr : Dᵀ.cramer v = 0 := by
     funext u
     rw [Matrix.cramer_transpose_apply]
@@ -451,8 +448,7 @@ theorem quot_vanish : ∀ (N j : ℕ) (i : Fin N) (h₁ h₂ : Matrix (Fin N) (F
     have := congrFun h3 t
     simpa using this.symm
   have h5 : v t = 0 := (mul_eq_zero.1 h4).resolve_left hD
-  rw [← ht]
-  exact h5
+  rwa [← ht]
 
 end GlobalTheory.CompanionTheory.Ar.PB.PlVanish
 end -- clump:auto
@@ -501,8 +497,7 @@ theorem snd_mem {k₀ : K} {P' : Ideal (MRing (fun o : Option K => ι (o.getD k�
   · rw [← hI] at hf
     have h0 := hz.2 _ hf
     have h1 : eval z (map (Int.castRingHom ℂ) (rename (v₁ k₀) f)) = 0 := h0
-    rw [eval_rename_block] at h1
-    exact h1
+    rwa [eval_rename_block] at h1
 
 theorem snd_fst_ne {k₀ k : K} (hk : k ≠ k₀) (z : (Σ o : Option K, ι (o.getD k₀)) → ℂ) (m : ι k) :
     sndPt k₀ z ⟨k, m⟩ = fstPt k₀ z ⟨k, m⟩ := by
@@ -625,7 +620,7 @@ theorem step_pl {F : FrameData ι Ψ N M.Ω M.blk} (hF : M.IsFrame F) {zb : (Σ 
         · subst e; simp
         · simp [e, Ne.symm e]
       · have e : I ≠ I₀ := fun e => hI (e ▸ hI₀)
-        rw [off I hI, if_neg e, mul_zero]
+        rw [off I hI, ite_eq_right e, mul_zero]
     calc _ = ∑ I, (∑ m : ι k, val (vA I₀ ⟨k, m⟩) * val (uA ⟨k, m⟩ I)) * minorIJ A I (stepCols N j p.2) := by
           simp only [Finset.mul_sum, Finset.sum_mul]
           rw [Finset.sum_comm]
@@ -805,7 +800,7 @@ theorem back {τ : Ψ} {a b ca cb : Fin N} {k₀ : K} (hb : (b : ℕ) = a + 1) (
           exact (mul_div_cancel₀ _ hxc).symm
         · rw [hρc, show val ⟨_, _, hv m⟩ = _ from regVal_eq hzb _ (hv m), hzc, div_one, one_mul]
           rfl
-      · push_neg at hkb
+      · push Not at hkb
         obtain ⟨p, hp⟩ := hkb
         obtain ⟨α, hα, hz⟩ := H.2.2 p k hp
         have hUp : (∏ c ∈ stepCols N j p.2, U p.1 c c) ≠ 0 := Finset.prod_ne_zero_iff.2 fun c _ => (hU p.1).2.2 c

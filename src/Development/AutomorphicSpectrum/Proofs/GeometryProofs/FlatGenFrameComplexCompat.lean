@@ -95,8 +95,7 @@ theorem exists_row {R M I : Type} [CommRing R] [IsDomain R] [AddCommGroup M] [Mo
     | none => exact ho h0
     | some m => exact ho (this m)
   refine ⟨c none, fun m => - c (some m), hn, ?_⟩
-  simp only [neg_smul, Finset.sum_neg_distrib]
-  exact eq_neg_of_add_eq_zero_left hsum
+  simpa only [neg_smul, Finset.sum_neg_distrib] using eq_neg_of_add_eq_zero_left hsum
 
 theorem lifts_change {p q g : ℕ} (T T' : (Fin g → ℂ) → (Fin g → ℂ)) (V : Fin p → Fin g → ℂ) (W : Fin q → Fin g → ℂ)
     (π π₀ : Fin p ⊕ Fin q → Fin g → ℂ) (S S₀ Tm : Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ)
@@ -326,13 +325,13 @@ theorem isComb_single {G : Over S} [GrpObj G] {x : Sp R ⟶ S} {n : ℕ} (w : Fi
     by_cases hij : i = j
     · subst hij
       simp [epsMul_one_eq, spMap]
-    · rw [if_neg hij, Pi.single_eq_of_ne hij, epsMul_zero_eq]
+    · rw [ite_eq_right hij, Pi.single_eq_of_ne hij, epsMul_zero_eq]
       have h1 := comp_one_over (M := G)
         (Over.homMk (Spec.map (CommRingCat.ofHom (algebraMap R (DualNumber R)))) rfl :
           GlobalTheory.CompanionTheory.Ar.epsAt x ⟶ Over.mk x)
       rw [← h1, Over.comp_left, ← hw i]
       simp [spMap]
-  · rw [prod_ofFn_single _ j fun i hi => if_neg hi, if_pos rfl]
+  · rw [prod_ofFn_single _ j fun i hi => ite_eq_right hi, ite_eq_left rfl]
 
 end Comb
 
@@ -389,8 +388,7 @@ theorem ratio_at {U : Set (Xo.XF c)} {τ : E →+* ℂ} {φ φ₀ : FrameFn Xo c
     (j : k →+* ℂ) (hj : j.comp β₀ = algebraMap c.F ℂ) : j (φ k y₀ v₀ w₀) = a * j (φ₀ k y₀ v₀ w₀) := by
   obtain ⟨v', w', hfr, hv', hw'⟩ := hb ℂ j
   have hfr' : IsFramed U τ (algebraMap c.F ℂ) (spMap j ≫ y₀) v' w' := by
-    rw [← hj]
-    exact hfr
+    rwa [← hj]
   have e := ha _ v' w' hfr'
   rw [hφ.nat k ℂ j β₀ y₀ v₀ w₀ _ v' w' h₀ rfl hv' hw',
     hφ₀.nat k ℂ j β₀ y₀ v₀ w₀ _ v' w' h₀ rfl hv' hw'] at e

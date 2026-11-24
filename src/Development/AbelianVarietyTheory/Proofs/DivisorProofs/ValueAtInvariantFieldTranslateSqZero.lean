@@ -115,8 +115,7 @@ theorem evalPt_tvE_mul : ∀ {R : Type} [CommRing R] {G : Over (Sp R)} [GrpObj G
       rw [← Spec.map_comp, ← CommRingCat.ofHom_comp, hτa, CommRingCat.ofHom_id, Spec.map_id]
     refine ⟨Over.homMk (spMap (GlobalTheory.SqZero.dualTo (AlgHom.id R B) t ht).toRingHom) ?_, rfl, ?_, ?_⟩
     · show spMap _ ≫ spMap (algebraMap B (DualNumber B)) ≫ z.left ≫ G.hom = _
-      rw [← Category.assoc, hsp, Category.id_comp]
-      exact hz
+      rwa [← Category.assoc, hsp, Category.id_comp]
     · apply Over.OverMorphism.ext
       show spMap _ ≫ spMap (algebraMap B (DualNumber B)) ≫ z.left = z.left
       rw [← Category.assoc, hsp, Category.id_comp]
@@ -156,8 +155,7 @@ theorem evalPt_tvE_mul : ∀ {R : Type} [CommRing R] {G : Over (Sp R)} [GrpObj G
     have hfh : (GlobalTheory.SqZero.dualTo (AlgHom.id R B) (0 : B) (mul_zero 0)).toRingHom =
         (TrivSqZeroExt.fstHom B B B).toRingHom := RingHom.ext fun a => by
       simp [GlobalTheory.SqZero.dualTo_apply]
-    rw [← hfh]
-    exact this
+    rwa [← hfh]
   have hw : ⊤ ≤ (g' * v').left ⁻¹ᵁ O := by
     intro p _
     obtain ⟨q, rfl⟩ := spMap_fstHom_surjective B p
@@ -168,8 +166,7 @@ theorem evalPt_tvE_mul : ∀ {R : Type} [CommRing R] {G : Over (Sp R)} [GrpObj G
     rw [hp, Over.comp_left, hkl]
   have h' : ⊤ ≤ ((Chart.spMap (GlobalTheory.SqZero.epsTo R e he) ≫ tvE u) * z).left ⁻¹ᵁ O := by
     rw [hpl]
-    intro q _
-    exact hw (Set.mem_univ _)
+    exact fun q _ => hw (Set.mem_univ _)
   refine ⟨h', fun f => ?_⟩
   have hval : valR (g' * v').left O f = evalPt (g' * v').left O hw f := by
     unfold valR; rw [dite_eq_left hw]; rfl

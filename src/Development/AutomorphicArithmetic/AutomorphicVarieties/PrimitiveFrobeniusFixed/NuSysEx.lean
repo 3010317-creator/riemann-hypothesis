@@ -179,8 +179,7 @@ private theorem di_gen {l F r : ℕ} (τ : ℕ → G ℚ Ω) (P : G ℚ Ω → P
     (∀ g ∈ fixMu ℚ Ω (F * L.prod), P g) → (∀ q ∈ L, P (τ q)) → ∀ g ∈ fixMu ℚ Ω F, P g := by
   induction L with
   | nil =>
-    intro _ _ hbig _ g hg
-    exact hbig g (by simpa using hg)
+    exact fun _ _ hbig _ g hg => hbig g (by simpa using hg)
   | cons q L ih =>
     intro hL hτ hbig hP
     have hL' : AdmL l F r L := ⟨hL.1.of_cons, fun p hp => hL.2 p (List.mem_cons_of_mem _ hp)⟩
@@ -194,8 +193,7 @@ private theorem di_gen {l F r : ℕ} (τ : ℕ → G ℚ Ω) (P : G ℚ Ω → P
     intro g hg
     apply hbig
     have e : F * (q :: L).prod = F * L.prod * q := by rw [List.prod_cons]; ring
-    rw [e]
-    exact hg
+    rwa [e]
 
 private theorem di_step {l M F r : ℕ} (hF : F ≠ 0) (hM : M ∣ F) {x : ℕ → Ω} {s : ℕ → ℕ → ℕ} (hS : Sys l F r x s)
     (τ : ℕ → G ℚ Ω) (q : ℕ) (L : List ℕ) (hL : AdmL l F r (q :: L)) (hτ : IsTau q (τ q))
@@ -277,8 +275,7 @@ theorem UpperTheory.V.ML.derInv :
   suffices key : ∀ n (L : List ℕ), L.length = n → AdmL l F r L → (∀ q ∈ L, IsTau q (τ q)) →
       ∀ g ∈ fixMu ℚ Ω F, ∃ z : Ω, (∀ h ∈ fixMu ℚ Ω (F * L.prod), h z = z) ∧
         z ^ M = g (der τ L (x L.prod)) / der τ L (x L.prod) by
-    intro L hL hτ
-    exact key _ L rfl hL hτ
+    exact fun L hL hτ => key _ L rfl hL hτ
   intro n
   induction n with
   | zero =>
@@ -323,10 +320,8 @@ theorem UpperTheory.V.ML.derInv :
       have hprod : L.prod = q * (L.erase q).prod := by rw [hp.prod_eq, List.prod_cons]
       have hder : der τ L (x L.prod) = der τ (q :: L.erase q) (x L.prod) := DB.2.2.2.2.2.2.2.1 _ hp
       refine ⟨z, ?_, ?_⟩
-      · rw [hprod]
-        exact hz1
-      · rw [hder, hprod]
-        exact hz2
+      · rwa [hprod]
+      · rwa [hder, hprod]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PrimitiveFrobeniusFixed.DerInv =====
@@ -385,12 +380,10 @@ private theorem ordv_prime (r : ℕ) (hr : r.Prime) (v : HeightOneSpectrum (𝓞
   have hspan : v.asIdeal = Ideal.span {(r : 𝓞 ℚ)} := by
     have hP : (Ideal.span {(r : 𝓞 ℚ)}).IsPrime := (Ideal.span_singleton_prime hne).mpr hpr
     have hbot : Ideal.span {(r : 𝓞 ℚ)} ≠ ⊥ := by
-      rw [Ne, Ideal.span_singleton_eq_bot]
-      exact hne
+      rwa [Ne, Ideal.span_singleton_eq_bot]
     have hmax := hP.isMaximal hbot
     have hle : Ideal.span {(r : 𝓞 ℚ)} ≤ v.asIdeal := by
-      rw [Ideal.span_le, Set.singleton_subset_iff]
-      exact hv
+      rwa [Ideal.span_le, Set.singleton_subset_iff]
     exact (hmax.eq_of_le v.isPrime.ne_top hle).symm
   have hint : v.intValuation (r : 𝓞 ℚ) = WithZero.exp (-1 : ℤ) := v.intValuation_singleton hne hspan
   have hval : ((v.valuationOfNeZero a : Multiplicative ℤ) : WithZero (Multiplicative ℤ)) = WithZero.exp (-1 : ℤ) := by
@@ -458,8 +451,7 @@ theorem UpperTheory.V.ML.ineRad :
     simp only [SubgroupClass.coe_pow, Units.val_pow_eq_pow_val, hχ, OneMemClass.coe_one,
       Units.val_one] at h1
     rw [div_pow, div_eq_one_iff_eq (pow_ne_zero _ hρ0)] at h1
-    rw [map_pow]
-    exact h1
+    rwa [map_pow]
   obtain ⟨v, hvA, -, hvr⟩ := pb.2.2.2.2.2.2.2.2.1 A r hr hA
   let a : ℚˣ := Units.mk0 (r : ℚ) (by exact_mod_cast hr.ne_zero)
   have ha1 : UpperTheory.V.Kum.ordv v a = 1 := ordv_prime r hr v hvr a rfl
@@ -488,8 +480,7 @@ theorem UpperTheory.V.ML.ineRad :
   obtain ⟨g, hg⟩ := hu
   refine ⟨g, g.2, ?_⟩
   have h2 := congrArg Units.val hg
-  rw [hχ, Units.val_mk0, div_eq_iff hρ0] at h2
-  exact h2
+  rwa [hχ, Units.val_mk0, div_eq_iff hρ0] at h2
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PrimitiveFrobeniusFixed.IneRad =====
@@ -607,11 +598,9 @@ theorem UpperTheory.V.ML.kolInit :
     unfold opP
     rw [map_div₀, map_pow, hyfix h hh]
     congr 1
-    have h2 := congrArg δ (hyfix _ (hconj h δ hh))
-    simpa [AlgEquiv.mul_apply] using h2
+    simpa [AlgEquiv.mul_apply] using congrArg δ (hyfix _ (hconj h δ hh))
   have hXt : t (σ (opP δ a y)) = σ (opP δ a y) := by
-    have h2 := congrArg σ (hPfix _ hg)
-    simpa [AlgEquiv.mul_apply] using h2
+    simpa [AlgEquiv.mul_apply] using congrArg σ (hPfix _ hg)
   set e := W / ρ ^ (k c) with he
   have heM : e ^ M = σ (opP δ a y) / (r : Ω) ^ (k c) := by
     rw [he, div_pow, hWM, ← zpow_natCast (ρ ^ k c) M, ← zpow_mul, mul_comm, zpow_mul, zpow_natCast, hρ]
@@ -635,8 +624,7 @@ theorem UpperTheory.V.ML.kolInit :
     exact div_self hX0
   have hin : A₀.valuation (t e - e) < 1 := ht.2 e hve.le
   have hte1 : A₀.valuation (t e / e - 1) < 1 := by
-    rw [div_sub_one he0, map_div₀, hve, div_one]
-    exact hin
+    rwa [div_sub_one he0, map_div₀, hve, div_one]
   have hte : t e = e := by
     have h3 := pb.2.2.2.2.2.1 A₀ M (t e / e) hnotM hteM hte1
     rwa [div_eq_one_iff_eq he0] at h3
@@ -682,16 +670,14 @@ private theorem pr_mul {A : ValuationSubring Ω} {u v : Ω} (hu : Pr A u) (hv : 
   unfold Pr
   rw [e]
   refine Valuation.map_add_lt _ ?_ hu
-  rw [map_mul, pr_val hu, one_mul]
-  exact hv
+  rwa [map_mul, pr_val hu, one_mul]
 
 private theorem pr_of_sub {A : ValuationSubring Ω} {u v : Ω} (hv : A.valuation v = 1) (h : A.valuation (u - v) < 1) :
     Pr A (u / v) := by
   have h0 : v ≠ 0 := fun h0 => by simp [h0] at hv
   have e : u / v - 1 = (u - v) / v := by field_simp
   unfold Pr
-  rw [e, map_div₀, hv, div_one]
-  exact h
+  rwa [e, map_div₀, hv, div_one]
 
 private theorem pr_div {A : ValuationSubring Ω} {u v : Ω} (hu : Pr A u) (hv : Pr A v) : Pr A (u / v) := by
   refine pr_of_sub (pr_val hv) ?_
@@ -722,8 +708,7 @@ private theorem der_prod (τ : ℕ → G ℚ Ω) (L : List ℕ) (S : Finset ℕ)
   induction L with
   | nil => rfl
   | cons q L ih =>
-    simp only [der, ih, der1, map_prod, ← Finset.prod_pow]
-    exact Finset.prod_comm
+    simpa only [der, ih, der1, map_prod, ← Finset.prod_pow] using Finset.prod_comm
 
 private theorem fix_mul {m q : ℕ} (h : q.Coprime m) {g : G ℚ Ω} (hm : g ∈ fixMu ℚ Ω m) (hq : g ∈ fixMu ℚ Ω q)
     (h0 : m * q ≠ 0) : g ∈ fixMu ℚ Ω (m * q) := by
@@ -1003,8 +988,7 @@ private theorem cg_of (A : ValuationSubring Ω) {u v : Ω} (hu : A.valuation u =
   have h1 : A.valuation (-(u - v)) < A.valuation u := by rw [Valuation.map_neg, hu]; exact h
   have h2 := A.valuation.map_add_eq_of_lt_left h1
   have h3 : u + -(u - v) = v := by ring
-  rw [h3, hu] at h2
-  exact h2
+  rwa [h3, hu] at h2
 
 private theorem cg_mul {A : ValuationSubring Ω} {u v u' v' : Ω} (h : Cg A u v) (h' : Cg A u' v') :
     Cg A (u * u') (v * v') := by
@@ -1104,8 +1088,7 @@ theorem UpperTheory.V.ML.sysOfLax :
     ring
   refine ⟨fun d hd => ?_, fun d hd g hg => ?_, fun d hd A hA => ?_, fun d q hq hd => ?_,
     fun d q hq hd τ hτ hgen φ hφ => ?_, fun d q hq hd φ hφ A hA => ?_⟩
-  · refine pow_ne_zero _ (div_ne_zero ?_ (pow_ne_zero _ (hX.ne d hd)))
-    exact (map_ne_zero δ).2 (hX.ne d hd)
+  · exact pow_ne_zero _ (div_ne_zero ((map_ne_zero δ).2 (hX.ne d hd)) (pow_ne_zero _ (hX.ne d hd)))
   · rw [map_pow, map_opP δ g a _ (hcomm d hd g δ), hX.fix d hd g hg]
   · rw [map_pow, opP, map_div₀, map_pow, hδu d hd A hA, hX.unit d hd A hA]
     simp
@@ -1134,8 +1117,7 @@ theorem UpperTheory.V.ML.sysOfLax :
     rw [opP_mul, mul_pow, hζ _ ζ h1, one_mul, opP_pow, ← pow_mul] at c4
     rw [map_pow, map_opP δ φ⁻¹ a _ (hcomm d (admissible_of_integral_conj_le hd) _ δ), ← pow_mul]
     have e : 2 * N₀ * d * (q * s d q) = s d q * (2 * N₀ * (q * d)) := by ring
-    rw [e]
-    exact c4
+    rwa [e]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PrimitiveFrobeniusFixed.SysOfLax =====
@@ -1245,8 +1227,7 @@ theorem UpperTheory.V.ML.nuIs :
     have hmem : (σ t)⁻¹ * g * σ t ∈ Ine (F := ℚ) ((σ t)⁻¹ • A) := by
       rw [(pb A (σ t)⁻¹).2.1]
       have e : (σ t)⁻¹⁻¹ * ((σ t)⁻¹ * g * σ t) * (σ t)⁻¹ = g := by group
-      rw [e]
-      exact hg
+      rwa [e]
     rw [hunr _ hA' _ hmem, ZMod.val_zero, zero_smul]
 end -- clump:auto
 end -- clump:auto
@@ -1341,8 +1322,7 @@ private theorem isUnit_add_pow_mul_of_isUnit_of_one_le (l : ℕ) [Fact l.Prime] 
     rw [h2] at h4
     exact lt_irrefl _ h4
   have h1 : u + (l : O) ^ m * y ∈ IsLocalRing.maximalIdeal O := by
-    rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-    exact h
+    rwa [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
   have h5 : (l : O) ^ m * y ∈ IsLocalRing.maximalIdeal O := by
     obtain ⟨j, rfl⟩ := Nat.exists_eq_add_of_le hm
     rw [pow_add, pow_one, mul_assoc]
@@ -1387,8 +1367,7 @@ theorem UpperTheory.V.ML.nuSysEx :
   let τ : ℕ → G ℚ Ω := fun q => if h : q.Prime then Classical.choose (ineTau Ω q h).2 else 1
   have hτ : ∀ q, q.Prime → IsTau q (τ q) := by
     intro q hq
-    simp only [τ, dif_pos hq]
-    exact Classical.choose_spec (ineTau Ω q hq).2
+    simpa only [τ, dite_eq_left hq] using Classical.choose_spec (ineTau Ω q hq).2
   have hkol : ∀ L, AdmL l F r L → ∃ κ : G ℚ Ω → ZMod (l ^ m), IsKol (l ^ m) F L.prod ζ g0 (a0 : ZMod (l ^ m)).val (der τ L ((fun d => opP g0 (a0 : ZMod (l ^ m)).val (X d) ^ (2 * N₀ * d)) L.prod)) κ := by
     intro L hL
     obtain ⟨hAdm, hprod0, -, -⟩ := isCrys_isDR_prod l F r L hL
@@ -1398,8 +1377,7 @@ theorem UpperTheory.V.ML.nuSysEx :
   let κ : List ℕ → G ℚ Ω → ZMod (l ^ m) := fun L => if h : AdmL l F r L then Classical.choose (hkol L h) else 0
   have hκ : ∀ L (h : AdmL l F r L), IsKol (l ^ m) F L.prod ζ g0 (a0 : ZMod (l ^ m)).val (der τ L ((fun d => opP g0 (a0 : ZMod (l ^ m)).val (X d) ^ (2 * N₀ * d)) L.prod)) (κ L) := by
     intro L h
-    simp only [κ, dif_pos h]
-    exact Classical.choose_spec (hkol L h)
+    simpa only [κ, dite_eq_left h] using Classical.choose_spec (hkol L h)
   have hchiO : ∀ (g : G ℚ Ω) (k : ℕ), Pows (l ^ m) k g → ∃ e : O, ((chiO ℚ Ω l O g : Oˣ) : O) = k + (l : O) ^ m * e := by
     intro g k hg
     obtain ⟨e, he⟩ := exists_cycZ_eq_add_pow_mul_of_pows Ω l m k g hg
@@ -1484,8 +1462,7 @@ theorem UpperTheory.V.ML.nuSysEx :
     simp only [List.prod_nil] at hAdm1 hx0 hxfix hK0
     have hrcop : r.Coprime F := by
       have := hrF.gcd_eq
-      rw [Nat.gcd_one_left] at this
-      exact this
+      rwa [Nat.gcd_one_left] at this
     have hMr : (l ^ m).Coprime r := (Nat.Coprime.coprime_dvd_right hMF hrcop).symm
     obtain ⟨ρ, hρ⟩ := IsAlgClosed.exists_pow_nat_eq (r : Ω) (pow_pos hl.pos m)
     obtain ⟨t, htI, htρ⟩ := ineRad Ω r (l ^ m) hr hMr A₀ hA₀ ρ ζ hρ hζ.pow_eq_one

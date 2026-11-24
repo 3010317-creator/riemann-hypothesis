@@ -143,7 +143,7 @@ theorem phiP_independent : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   have hne : (FA true).eigLat (X.A true).t.act τ ≠ ⊥ := by
     intro h0
     have h1 := hrank (Sum.inl a, τ)
-    rw [if_pos (by simpa using hτ)] at h1
+    rw [ite_eq_left (by simpa using hτ)] at h1
     change latRank K (((FA true).eigLat (X.A true).t.act τ).map ((M (Sum.inl a)).restrictScalars (𝓞 K))) = 1 at h1
     rw [h0] at h1
     have hb : Submodule.span K (((⊥ : Submodule (𝓞 K) (Fin (FA true).P₀.g → K)).map
@@ -536,16 +536,12 @@ theorem flat_surjective_spMap_ringOfIntegers (K K' : Type) [Field K] [NumberFiel
     Flat (spMap (RingOfIntegers.mapRingHom j)) ∧ Surjective (spMap (RingOfIntegers.mapRingHom j)) := by
   letI : Algebra (𝓞 K) (𝓞 K') := (RingOfIntegers.mapRingHom j).toAlgebra
   have hinj : Function.Injective (algebraMap (𝓞 K) (𝓞 K')) := by
-    intro a b h
-    apply RingOfIntegers.coe_injective
-    apply j.injective
-    exact congrArg ((↑) : 𝓞 K' → K') h
+    exact fun a b h => RingOfIntegers.coe_injective (j.injective (congrArg ((↑) : 𝓞 K' → K') h))
   haveI : FaithfulSMul (𝓞 K) (𝓞 K') := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
   haveI : Module.Flat (𝓞 K) (𝓞 K') := inferInstance
   haveI : Algebra.IsIntegral (𝓞 K) (𝓞 K') := by
     constructor
-    intro x
-    exact IsIntegral.tower_top (R := ℤ) (Algebra.IsIntegral.isIntegral (R := ℤ) x)
+    exact fun x => IsIntegral.tower_top (R := ℤ) (Algebra.IsIntegral.isIntegral (R := ℤ) x)
   refine ⟨Flat.SpecMap_iff.mpr (RingHom.flat_algebraMap_iff.mpr inferInstance), ⟨fun p => ?_⟩⟩
   let p' : PrimeSpectrum (𝓞 K) := p
   obtain ⟨Q, hQ, hQp⟩ := Ideal.exists_ideal_over_prime_of_isIntegral_of_isDomain (S := 𝓞 K') p'.asIdeal (by
@@ -640,8 +636,7 @@ theorem eq_pow_of_baseChange_eq_pow : ∀ (E : Type) [Field E] [NumberField E] [
     haveI := hepi (𝟙 A'.t.G ^ n) hA'fl hA'su
     rw [← cancel_epi (𝟙 A'.t.G ^ n), MonObj.pow_comp, MonObj.pow_comp, Category.id_comp, Category.id_comp, hwn]
   refine ⟨ψ, hlin, hψn, ?_⟩
-  rw [← hwf]
-  exact hwc
+  rwa [← hwf]
 
 end GlobalTheory
 end -- clump:auto
@@ -802,12 +797,10 @@ theorem exists_prod_act_comp_eq_one_of_pure : ∀ (E : Type) [Field E] [NumberFi
     FB.toLinearMap ∘ₗ diagMul tyB (s : E) ∘ₗ FB.symm.toLinearMap
   have hGA : ∀ s z, uA.ex (GA s z) = uA.ex z ≫ A.t.act.act s := fun s z => by
     have e := hactA s (FA.symm z)
-    rw [FA.apply_symm_apply] at e
-    exact e
+    rwa [FA.apply_symm_apply] at e
   have hGB : ∀ s z, uB.ex (GB s z) = uB.ex z ≫ B.t.act.act s := fun s z => by
     have e := hactB s (FB.symm z)
-    rw [FB.apply_symm_apply] at e
-    exact e
+    rwa [FB.apply_symm_apply] at e
   have hGPA : ∀ s a, GA s (FA (PeA a)) = FA (PeA (s • a)) := fun s a => by
     simp only [GA, LinearMap.comp_apply, LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply]
     congr 1
@@ -1137,9 +1130,7 @@ theorem eigLat_le_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     _root_.GlobalTheory.CM.TenPair.exists_isTen_pair E H K ρ (X.A true) X.B 1 p X.ρ_sq X.typeP X.typeB
   obtain ⟨n, f', g', hf', hg', hfg⟩ := _root_.GlobalTheory.CM.isTen_retract_of_rank_one E H _ ω C A' B' DA DB hA hB rA tA tB
   have hj : Function.Injective (RingOfIntegers.mapRingHom j) := fun a b h => by
-    apply RingOfIntegers.ext
-    apply j.injective
-    exact congrArg (fun x : 𝓞 K' => (x : K')) h
+    exact RingOfIntegers.ext (j.injective (congrArg (fun x : 𝓞 K' => (x : K')) h))
   have hφ : ∀ a, Serre.IsLinearHom (X.A true).t.act X.B.t.act (phiP X a) := fun a => X.lin (Sum.inl a)
   choose φ' hφ' eφ using fun a => exists_linear_over mA mB (hφ a)
   have key : ∀ i, ∃ f : (X.A true).t.G ⟶ X.B.t.G, Serre.IsLinearHom (X.A true).t.act X.B.t.act f ∧

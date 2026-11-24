@@ -75,8 +75,7 @@ theorem UpperTheory.V.GC.levelS :
     intro v hv B hB g hg hgK
     rw [← MonoidHom.mem_ker, h.ker]
     refine Subgroup.le_topologicalClosure _ (Subgroup.subset_normalClosure ?_)
-    simp only [Set.mem_iUnion]
-    exact ⟨v, hv, B, hB, hg, hgK⟩
+    simpa only [Set.mem_iUnion] using ⟨v, hv, B, hB, hg, hgK⟩
   have hcl : IsClosed (π.ker : Set (G F Ω)) := isClosed_singleton.preimage h.cont
   have hNS : NS Ω ((S ∪ T : Finset _) : Set (HeightOneSpectrum (𝓞 F))) ≤ π.ker := by
     refine Subgroup.topologicalClosure_minimal _ (Subgroup.normalClosure_le_normal ?_) hcl
@@ -119,8 +118,7 @@ theorem UpperTheory.V.GC.levelS :
       · have h1 : toGS Ω ((S ∪ T : Finset _) : Set (HeightOneSpectrum (𝓞 F))) g = 1 := by
           refine (QuotientGroup.eq_one_iff g).2 ?_
           refine Subgroup.le_topologicalClosure _ (Subgroup.subset_normalClosure ?_)
-          simp only [Set.mem_iUnion]
-          exact ⟨v, hvS, B, hB, hg⟩
+          simpa only [Set.mem_iUnion] using ⟨v, hvS, B, hB, hg⟩
         show toGS Ω _ g ∈ N
         rw [h1]
         exact N.one_mem

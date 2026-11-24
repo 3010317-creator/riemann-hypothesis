@@ -108,8 +108,7 @@ theorem partPar : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, ForStage
   refine ⟨fun hu0 => ?_, second⟩
   have hu1 : (u : SmT s.M →ₗ[ℂ] (GA D s.V → ℂ)) ≠ 0 := fun h => hu0 (Subtype.ext h)
   obtain ⟨v, hv⟩ : ∃ v, PiLocalization₂.val u v ≠ 0 := by
-    by_contra hh
-    push_neg at hh
+    by_contra! hh
     exact hu1 (LinearMap.ext hh)
   obtain ⟨C, hC⟩ := (hval u v).2.1
   have hbdd : (fun g => conj (PiLocalization₂.val u v g)) ∈ GlobalTheory.FinZeta.bddAut s.V := by
@@ -120,8 +119,7 @@ theorem partPar : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, ForStage
     _ hbdd (hne v hv) (hlev v) (fun P d => conj (e P d)) (hhk v)
   have hpf : ParFun c s (PiLocalization₂.val u v) B := by
     unfold ParFun
-    rw [hlat]
-    exact hB
+    rwa [hlat]
   exact ⟨B, second v B hv hpf⟩
 
 end GlobalTheory.ChainOnto

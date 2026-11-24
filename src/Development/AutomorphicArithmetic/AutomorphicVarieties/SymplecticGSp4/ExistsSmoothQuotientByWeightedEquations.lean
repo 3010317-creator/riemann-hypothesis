@@ -153,7 +153,7 @@ private theorem cc_coeff_X [DecidableEq σ] (i j : σ) :
   rw [coeff_X]
   by_cases h : i = j
   · simp [h]
-  · rw [if_neg h, if_neg]
+  · rw [ite_eq_right h, ite_eq_right]
     exact fun h' => h (Finsupp.single_left_injective one_ne_zero h')
 
 private theorem cc_expand [Fintype σ] (g : MvPowerSeries σ E) :
@@ -330,8 +330,7 @@ private theorem exists_columns_det_ne_zero_of_rows_linearIndependent {E τ κ : 
 
 private theorem exists_perm_diag_ne_zero_of_det_ne_zero {E κ : Type} [Field E] [Fintype κ] [DecidableEq κ]
     (M : Matrix κ κ E) (hM : M.det ≠ 0) : ∃ π : Equiv.Perm κ, ∀ k, M (π k) k ≠ 0 := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   apply hM
   rw [Matrix.det_apply]
   refine Finset.sum_eq_zero fun π _ => ?_
@@ -450,7 +449,7 @@ private theorem cc_series {E τ κ Y : Type} [Field E] [Fintype τ] [Fintype κ]
       simp only [hz', Finset.smul_sum, smul_smul]
       rw [Finset.sum_comm]
       simp only [← Finset.sum_smul, h, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq,
-        Finset.mem_univ, if_true]
+        Finset.mem_univ, ite_true]
 
     rw [hzz, map_sum]
     simp [map_smul, hψz]
@@ -579,8 +578,7 @@ theorem UpperTheory.V.Alg.chart_cut :
     obtain ⟨f, hf1, hf2⟩ := hφ.onto (t i')
     have key := hψlin1 (φ f) i' hf2
     refine ⟨p f, ?_, ?_⟩
-    · rw [hφ', key i']
-      exact hf1
+    · rwa [hφ', key i']
     · intro i'' hne
       rw [hφ', key i'']
       exact hf2 _ (fun h => hne (ht h))
@@ -653,8 +651,7 @@ private lemma order_of_mem {K τ : Type} [CommRing K] (n : ℕ) :
     · refine le_trans ?_ le_order_mul
       push_cast
       exact add_le_add (ih a ha) (one_le_order_iff_constCoeff_eq_zero.2 hb)
-    · intro a b ha hb
-      exact le_trans (le_min ha hb) min_order_le_add
+    · exact fun a b ha hb => le_trans (le_min ha hb) min_order_le_add
 
 private lemma coeff_map_zero {O K σ τ : Type} [CommRing O] [CommRing K] [Algebra O K] [Fintype σ]
     (ψ : MvPowerSeries σ O →ₐ[O] MvPowerSeries τ K)
@@ -704,13 +701,12 @@ private lemma homog_ker {O K σ τ X : Type} [CommRing O] [CommRing K] [Algebra 
 
     rw [map_sub, map_sum]
     simp only [coeff_wcomp]
-    rw [Finset.sum_ite_eq, if_pos hm', sub_self]) n (Nat.lt_succ_self _)
+    rw [Finset.sum_ite_eq, ite_eq_left hm', sub_self]) n (Nat.lt_succ_self _)
 
   rw [map_sub, hf, zero_sub, map_neg, neg_eq_zero, map_sum, map_sum,
   Finset.sum_eq_single_of_mem j (Finset.mem_insert_self _ _)] at h1
   · exact h1
-  · intro i _ hi
-    exact hg i _ (wcomp_mem O w i f) n (fun h => hi (h.symm.trans hn))
+  · exact fun i _ hi => hg i _ (wcomp_mem O w i f) n (fun h => hi (h.symm.trans hn))
 
 theorem UpperTheory.V.Alg.chart_ker :
     ∀ (O X R : Type) [CommRing O] [IsDomain O] [AddCommGroup X] [DecidableEq X] [CommRing R] [Algebra O R] (W : WPres O X R) (h : W.HasOrigin) (τ : Type) [Fintype τ] (wt : τ → X) (φ : R →ₐ[O] MvPowerSeries τ (FractionRing O)), IsChart W.part (W.origin h) wt φ →
@@ -760,8 +756,7 @@ theorem UpperTheory.V.Alg.chart_ker :
       refine ⟨c, hc, ?_⟩
       rw [← map_smul]
       have h1 : RingHom.ker (W.origin h) ≤ (RingHom.ker x').comap p := fun g hg => by
-        rw [Ideal.mem_comap, RingHom.mem_ker, hx1]
-        exact hg
+        rwa [Ideal.mem_comap, RingHom.mem_ker, hx1]
       exact Ideal.le_comap_pow (K := RingHom.ker x') p 2 (Ideal.pow_right_mono h1 2 hcf)
 end -- clump:auto
 end -- clump:auto
@@ -901,20 +896,17 @@ theorem UpperTheory.exists_smooth_quotient_by_weighted_equations :
     have e : RingHom.ker (p.comp W.π) = Ideal.comap W.π (Ideal.span (Set.range fun k => g k)) := by
       ext f
       simp [p, Ideal.Quotient.eq_zero_iff_mem, hI]
-    rw [e]
-    exact hhom
+    rwa [e]
   obtain ⟨h1, ho1, hpart1⟩ := quot_facts W h p hp hh1 x' hx'
   set W1 := W.quot p hp hh1 with hW1
   have hc1 : IsChart W1.part (W1.origin h1) wt' φ' := by
-    rw [ho1, hpart1]
-    exact hc'
+    rwa [ho1, hpart1]
   obtain ⟨hprime, hhom1, hkle, hdk, hdesc⟩ := chart_ker O X (P ⧸ I) W1 h1 τ' wt' φ' hc1
   set J : Ideal (P ⧸ I) := RingHom.ker φ' with hJ
   have hJx : ∀ a ∈ J, x' a = 0 := by
     intro a ha
     have := hkle ha
-    rw [ho1] at this
-    exact this
+    rwa [ho1] at this
   let p2 : P ⧸ I →ₐ[O] (P ⧸ I) ⧸ J := Ideal.Quotient.mkₐ O J
   have hp2 : Function.Surjective p2 := Ideal.Quotient.mkₐ_surjective O J
   let x'' : (P ⧸ I) ⧸ J →ₐ[O] O := Ideal.Quotient.liftₐ J x' hJx
@@ -932,13 +924,11 @@ theorem UpperTheory.exists_smooth_quotient_by_weighted_equations :
     have e : RingHom.ker (p2.comp W1.π) = RingHom.ker (φ'.comp W1.π) := by
       ext f
       simp [p2, Ideal.Quotient.eq_zero_iff_mem, hJ]
-    rw [e]
-    exact hhom1
+    rwa [e]
   obtain ⟨h2, ho2, hpart2⟩ := quot_facts W1 h1 p2 hp2 hh2 x'' hx''
   set W2 := W1.quot p2 hp2 hh2 with hW2
   have hc3 : IsChart W2.part (W2.origin h2) wt' φ'' := by
-    rw [ho2, hpart2]
-    exact hc2
+    rwa [ho2, hpart2]
   have hgr := chart_gr O X ((P ⧸ I) ⧸ J) W2 h2 τ' wt' φ'' hc3
   haveI : J.IsPrime := hprime
   let q : P →ₐ[O] (P ⧸ I) ⧸ J := p2.comp p

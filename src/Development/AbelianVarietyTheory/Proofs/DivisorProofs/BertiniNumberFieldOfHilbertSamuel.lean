@@ -281,8 +281,7 @@ theorem exists_elim_form_of_field : ∀ (F : Type) [Field F] [CharZero F] (D N d
         have := h' _ (Or.inr (Or.inl ⟨i, rfl⟩))
         simpa using this)
   obtain ⟨j0, hj0⟩ : ∃ j0, y j0 ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact hy (funext hcon)
   let z : Fin N → K := fun j => if j = j0 then (y j0)⁻¹ else 0
   let x0 : (Fin D × Fin N) ⊕ (Fin N ⊕ Fin N) → K := Sum.elim (fun p => s p.1 p.2) (Sum.elim y z)
@@ -430,8 +429,7 @@ theorem exists_local_fun {Y : Scheme.{0}} [IrreducibleSpace Y] (Z : TopologicalS
   obtain ⟨a, ha, hz⟩ := IsAffineOpen.exists_basicOpen_le hW (V := Z.compl) ⟨z, hzZ⟩ hzW
   refine ⟨W, a, hy, ?_, fun w hw => ha hw⟩
   rintro rfl
-  rw [Scheme.basicOpen_zero] at hz
-  exact hz
+  rwa [Scheme.basicOpen_zero] at hz
 
 theorem exists_form_vanishing : ∀ (F : Type) [Field F] [NumberField F] (T : Tuple F), T.IsGeometric → T.Birational →
     ∃ (d : ℕ) (g : MvPolynomial (Fin T.N) F), g.IsHomogeneous d ∧ g ∉ T.imageIdeal ∧
@@ -506,8 +504,7 @@ theorem etale_of_finrank_le_card_algHom_algebraicClosure : ∀ (E R : Type) [Fie
     simp [hs, hc]
   have hinj : Function.Injective φ.toLinearMap := by
     have hle' : Module.finrank Ω S ≤ Module.finrank Ω (ι → Ω) := by
-      rw [Module.finrank_fintype_fun_eq_card, ← Nat.card_eq_fintype_card, hcard, hrank]
-      exact hle
+      rwa [Module.finrank_fintype_fun_eq_card, ← Nat.card_eq_fintype_card, hcard, hrank]
     have hge : Module.finrank Ω (ι → Ω) ≤ Module.finrank Ω S := by
       have h := LinearMap.finrank_range_le φ.toLinearMap
       rwa [LinearMap.range_eq_top.mpr hsurj, finrank_top] at h
@@ -588,9 +585,9 @@ theorem homogeneous_components_of_integral_equation (F K : Type) [Field F] [Fiel
       = MvPolynomial.eval₂ φ w (homogeneousComponent (e * (m - k)) (b k)) * τ ^ (k : ℕ) := by
     intro k
     have hle : e * (k : ℕ) ≤ e * m := Nat.mul_le_mul_left e k.is_lt.le
-    rw [hpow, ← mul_assoc, Polynomial.coeff_mul_X_pow', if_pos hle, Polynomial.coeff_mul_C,
+    rw [hpow, ← mul_assoc, Polynomial.coeff_mul_X_pow', ite_eq_left hle, Polynomial.coeff_mul_C,
       ← Nat.mul_sub, coeff_eval₂_C_mul_X]
-  rw [hpow, Polynomial.coeff_C_mul_X_pow, if_pos rfl] at hc
+  rw [hpow, Polynomial.coeff_C_mul_X_pow, ite_eq_left rfl] at hc
   simpa only [hterm] using hc
 
 end GlobalTheory
@@ -734,8 +731,7 @@ namespace GlobalTheory.ConeOnto
 theorem exists_pt_of_mem_cone_of_isAlgClosed : ∀ (F : Type) [Field F] (S : LinSys F), S.IsVariety → S.BasePointFree → ∀ (K : Type) [Field K] [Algebra F K] [IsAlgClosed K] (y : Fin S.N → K), y ≠ 0 → (∀ g ∈ S.imageIdeal, aeval y g = 0) → ∃ (x : S.Pt K) (c : K), c ≠ 0 ∧ S.coords x.1 = c • y := by
   intro F _ S hS hb K _ _ _ y hy hI
   classical
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   have hT : (S.baseChange K).IsVariety := hS.baseChange K
   have hbT : (S.baseChange K).BasePointFree := hb.baseChange K
   obtain ⟨i₀, hi₀⟩ := Function.ne_iff.1 hy
@@ -745,8 +741,7 @@ theorem exists_pt_of_mem_cone_of_isAlgClosed : ∀ (F : Type) [Field F] (S : Lin
     simp [u, sub_mul, Finset.sum_sub_distrib, Pi.single_apply]
 
   have hcov : ∀ z : (S.baseChange K).Y, ∃ j, z ∈ nonzeroLocus ((S.baseChange K).comb (u j)) := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     obtain ⟨z, hz⟩ := hc
     have := hT.smooth
     have : Smooth (S.baseChange K).str := SmoothOfRelativeDimension.smooth (S.baseChange K).D _
@@ -953,8 +948,7 @@ theorem simpleAt_of_noSquare : ∀ (F : Type) [Field F] [NumberField F] (T : Tup
     hrepinj.bijective_of_nat_card_le (by rw [Nat.card_fin]; show Nat.card P ≤ _; omega)
   refine ⟨⟨⟨hfs, etale_of_algebraEtale _ _ hfs (hI.2.2 ?_)⟩, hopen⟩, ?_, ?_, c, hc, ?_⟩
   · omega
-  · rw [← Nat.card_coe_set_eq]
-    exact hPδ
+  · rwa [← Nat.card_coe_set_eq]
   · intro x hx x' hx' a ha h
     obtain ⟨q, hq⟩ := hbij.2 ⟨x, hx⟩
     obtain ⟨q', hq'⟩ := hbij.2 ⟨x', hx'⟩
@@ -1009,8 +1003,7 @@ theorem subset_of_forall_pt_mem : ∀ (k : Type) [Field k] (S : LinSys k), S.IsV
   have hφ : (S.baseHom (resPt y)).IsIntegral := by
     have : IsIntegralHom (Spec.map (Spec.preimage (resPt y ≫ S.str))) := by
       rw [Spec.map_preimage]; infer_instance
-    rw [IsIntegralHom.SpecMap_iff] at this
-    exact this
+    rwa [IsIntegralHom.SpecMap_iff] at this
   letI : Algebra k (S.Y.residueField y) := (S.baseHom (resPt y)).toAlgebra
   haveI : Algebra.IsIntegral k (S.Y.residueField y) := ⟨hφ⟩
   let τ : S.Y.residueField y →ₐ[k] Ω := (by
@@ -1058,13 +1051,11 @@ theorem finite_of_finite_pts {k : Type} [Field k] (S : LinSys k) (hS : S.IsVarie
     refine subset_of_forall_pt_mem k S hS Ω {y} hy ∅ isOpen_empty (fun x hx => hne ⟨x, ?_, hx⟩) rfl
     have e : ptOf x.1 = y := hx
     change ptOf x.1 ∈ Z
-    rw [e]
-    exact hyZ
+    rwa [e]
   have hc : IsClosed (Z ∩ closedPoints S.Y) := by
     rw [← Set.biUnion_of_singleton (Z ∩ closedPoints S.Y)]
     exact hf.isClosed_biUnion fun y hy => hy.2
-  rw [← JacobsonSpace.closure_inter_closedPoints hZ, hc.closure_eq]
-  exact hf
+  rwa [← JacobsonSpace.closure_inter_closedPoints hZ, hc.closure_eq]
 
 theorem exists_finite_lines {K : Type} [Field K] [IsAlgClosed K] {N : ℕ} {G : MvPolynomial (Fin 1 × Fin N) K}
     (hG : G ≠ 0) : ∃ R : Set (Fin N → K), R.Finite ∧ ∀ y : Fin N → K, y ≠ 0 →
@@ -1077,8 +1068,7 @@ theorem exists_finite_lines {K : Type} [Field K] [IsAlgClosed K] {N : ℕ} {G : 
     have e : (fun p : Fin 1 × Fin N => x (0, p.2)) = x := by
       funext ⟨i, j⟩
       rw [Subsingleton.elim i 0]
-    have h1 := hz (fun j => x (0, j)) (by rwa [HyperplaneFactor.eval_lin] at hx)
-    simpa only [e] using h1
+    simpa only [e] using hz (fun j => x (0, j)) (by rwa [HyperplaneFactor.eval_lin] at hx)
   obtain ⟨q, hq, ha⟩ := UniqueFactorizationMonoid.exists_mem_factors_of_dvd hG irr (irr.prime.dvd_of_dvd_pow hn)
   obtain ⟨a, ha⟩ := ha.symm
   obtain ⟨t, -, ht⟩ := isUnit_iff_eq_C_of_isReduced.1 a.isUnit
@@ -1203,8 +1193,7 @@ private theorem irreducible_rename_of_injective' {σ τ K : Type} [Field K] (g :
     rw [hab, degreeOf_mul_eq ha hb] at h1
     exact mem_vars_iff_degreeOf_ne_zero.1 (Finset.mem_coe.1 hi) (by omega)
   refine irreducible_iff.2 ⟨?_, ?_⟩
-  · intro hu
-    exact (irreducible_iff.1 hf).1 (by simpa [hk] using hu.map (killCompl hg))
+  · exact fun hu => (irreducible_iff.1 hf).1 (by simpa [hk] using hu.map (killCompl hg))
   · intro a b hab
     obtain ⟨a', rfl⟩ := hvars a ⟨b, hab⟩
     obtain ⟨b', rfl⟩ := hvars b ⟨rename g a', by rw [hab, mul_comm]⟩
@@ -1312,8 +1301,7 @@ theorem noSquare_spec_of_disc_ne_zero : ∀ (F K : Type) [Field F] [Field K] [Al
   have hres : (line s a b f).resultant (Polynomial.derivative (line s a b f)) δ (δ - 1) ≠ 0 := hdisc
   have hc : (line s a b f).coeff δ ≠ 0 := coeff_ne_zero_of_resultant_ne_zero hδ _ hdeg hres
   have hspec0 : eval (fun p : Fin 1 × Fin N => b p.2) (spec s f) ≠ 0 := by
-    rw [eval_spec, ← hcoeff]
-    exact hc
+    rwa [eval_spec, ← hcoeff]
   refine ⟨fun h0 => hspec0 (by rw [h0, map_zero]), fun y _ hdvd => ?_⟩
   obtain ⟨q, hq⟩ := hdvd
   by_cases hβ : ∑ j, b j * y j = 0
@@ -1390,7 +1378,7 @@ theorem line_natDegree_le_and_coeff (F R : Type) [CommRing F] [CommRing R] [Alge
   have hdeg : ∀ p, (v p).natDegree ≤ w p := by
     rintro ⟨i, j⟩
     refine Fin.lastCases ?_ (fun i => ?_) i
-    · simp only [hv, w, join, if_true, Fin.lastCases_last]
+    · simp only [hv, w, join, ite_true, Fin.lastCases_last]
       rw [add_comm]
       exact Polynomial.natDegree_linear_le
     · simp [hv, w, join]
@@ -1544,9 +1532,9 @@ theorem coeffDeg_line {D N δ : ℕ} (f : MvPolynomial (Fin (D + 1) × Fin N) F)
         (fun j => Polynomial.C (C (ξ₀ j)) + Polynomial.C (C (ξ₁ j)) * Polynomial.X) p) := by
     rintro ⟨i, j⟩
     refine Fin.lastCases ?_ (fun i => ?_) i
-    · simp only [join, Fin.lastCases_last, if_true]
+    · simp only [join, Fin.lastCases_last, ite_true]
       exact (coeffDeg_C (totalDegree_C _).le).add ((coeffDeg_C (e := 0) (totalDegree_C _).le).mul coeffDeg_X)
-    · simp only [join, Fin.lastCases_castSucc, if_neg (Fin.castSucc_ne_last i)]
+    · simp only [join, Fin.lastCases_castSucc, ite_eq_right (Fin.castSucc_ne_last i)]
       exact coeffDeg_C (totalDegree_X _).le
   refine (hc.mul (coeffDeg_prod Finset.univ _ _ fun p _ => (hw p).pow (d p))).mono (le_of_eq ?_)
   rw [zero_add, Fintype.sum_prod_type, Fin.sum_univ_castSucc]
@@ -1591,8 +1579,7 @@ theorem resultant_derivative_ne_zero : ∀ (σ F : Type) [Fintype σ] [Field F] 
   have h2 := Polynomial.resultant_ne_zero _ _ h1.separable
   rw [Polynomial.natDegree_derivative, Polynomial.natDegree_map_eq_of_injective hinj, hp, Polynomial.derivative_map,
     Polynomial.resultant_map_map] at h2
-  intro h
-  exact h2 (by rw [h, map_zero])
+  exact fun h => h2 (by rw [h, map_zero])
 
 theorem exists_specialise_ne_zero : ∀ (F S T : Type) [Field F] [Infinite F] (R : MvPolynomial (S ⊕ T) F), R ≠ 0 → ∃ v : T → F, MvPolynomial.aeval (Sum.elim (fun i => (MvPolynomial.X i : MvPolynomial S F)) fun k => MvPolynomial.C (v k)) R ≠ 0 := by
   intro F S T _ _ R hR

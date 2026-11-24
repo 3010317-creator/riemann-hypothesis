@@ -55,8 +55,7 @@ namespace GlobalTheory.EisM
 theorem norm_trm_le (j : ℕ) (s : ℝ) (hj : j ≠ 0) (z : ℂ) : ‖trm j s z‖ ≤ ‖z‖ ^ (-((j : ℝ) + 2 * s)) := by
   by_cases hz : z = 0
   · subst hz
-    simp only [trm, zero_pow hj, inv_zero, zero_mul, norm_zero]
-    exact Real.rpow_nonneg le_rfl _
+    simpa only [trm, zero_pow hj, inv_zero, zero_mul, norm_zero] using Real.rpow_nonneg le_rfl _
   · have h0 : 0 < ‖z‖ := norm_pos_iff.mpr hz
     unfold trm
     rw [norm_mul, norm_inv, norm_pow, Complex.norm_real, Real.norm_of_nonneg (Real.rpow_nonneg h0.le _),
@@ -74,8 +73,7 @@ theorem lat_eq_tsum_of_kills : ∀ (j L : ℕ) (s : ℝ) (v : ℤ × ℤ) (Φ : 
     have h2 : Summable (fun x : Fin 2 → ℤ => ‖trm j s ((x 0 : ℂ) * τ + x 1)‖) :=
       Summable.of_nonneg_of_le (fun x => norm_nonneg _)
         (fun x => (norm_trm_le j s (by omega) _).trans (EisensteinSeries.summand_bound τ (by linarith) x)) h1
-    have h3 := ((finTwoArrowEquiv ℤ).symm.summable_iff).mpr h2
-    exact h3.congr fun p => by simp
+    exact (((finTwoArrowEquiv ℤ).symm.summable_iff).mpr h2).congr fun p => by simp
   obtain ⟨h1s, h1e⟩ := _root_.GlobalTheory.EisM.kills_sum_dif_eq L v Φ _ hL hΦ hK hG
   obtain ⟨_, h2e⟩ := _root_.GlobalTheory.EisM.kills_sum_dif_eq L v Φ _ hL hΦ hK h1s
   refine ⟨hG, ?_⟩

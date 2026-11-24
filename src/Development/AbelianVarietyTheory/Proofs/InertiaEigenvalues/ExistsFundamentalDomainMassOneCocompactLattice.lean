@@ -71,8 +71,7 @@ theorem exists_fundamentalDomain_mass_one : ∀ (G : Type) [AddCommGroup G] [Top
   have hV₀o : IsOpen V₀ := isOpen_interior
   have hV₀0 : (0 : G) ∈ V₀ := by
     rw [hV₀, mem_interior_iff_mem_nhds]
-    refine Filter.inter_mem hV ?_
-    exact continuous_neg.continuousAt.preimage_mem_nhds (by simpa using hV)
+    exact Filter.inter_mem hV (continuous_neg.continuousAt.preimage_mem_nhds (by simpa using hV))
   have hsub : ∀ a ∈ V₀, ∀ b ∈ V₀, a - b ∈ U := by
     intro a ha b hb
     have ha' := (interior_subset ha).1
@@ -109,8 +108,7 @@ theorem exists_fundamentalDomain_mass_one : ∀ (G : Type) [AddCommGroup G] [Top
       exact ⟨⟨(δ : G) + γ, Γ.add_mem δ.2 hγ⟩, by simpa [add_assoc] using hδ⟩
     · rintro ⟨δ, hδ⟩
       refine ⟨⟨(δ : G) - γ, Γ.sub_mem δ.2 hγ⟩, ?_⟩
-      rw [show (δ : G) - γ + (γ + x) = δ + x by abel]
-      exact hδ
+      rwa [show (δ : G) - γ + (γ + x) = δ + x by abel]
 
   have hcov : ∀ y ∈ K, ∃ n, y ∈ W n := by
     intro y hy

@@ -79,12 +79,11 @@ theorem polDY_colSub (D : D7) {N N' : ℕ} (hN : N ≤ N') (s : D.what₂.Tau �
     have hc : (c : ℕ) < N' := lt_of_lt_of_le c.2 hN
     have h1 : ∀ r : Fin N, (r : ℕ) < N' := fun r => lt_of_lt_of_le r.2 hN
 
-    simp only [AlgHom.comp_apply, aeval_X, colSub, dif_pos (h1 _), map_sum, map_mul, MvPolynomial.mapAlgHom_apply,
+    simp only [AlgHom.comp_apply, aeval_X, colSub, dite_eq_left (h1 _), map_sum, map_mul, MvPolynomial.mapAlgHom_apply,
     map_X, map_C, algHom_C, Matrix.submatrix_apply]
 
     simp only [RingHom.coe_coe, aeval_C, aeval_X, map_sum, map_mul, algebraMap_eq, Finset.mul_sum, Finset.sum_mul]
-    rw [Finset.sum_comm]
-    rw [sum_castLE_of_vanish hN]
+    rw [Finset.sum_comm, sum_castLE_of_vanish hN]
     · refine Finset.sum_congr rfl fun r _ => Finset.sum_congr rfl fun b _ => ?_
       simp only [Fin.castLE, MvPolynomial.algebraMap_apply, algebraMap_eq]
       ring
@@ -111,11 +110,10 @@ theorem wt_polDY_framePol : ∀ (D : D7) {N N' : ℕ}, N ≤ N' → ∀ (s : D.w
       refine Fintype.prod_of_injective (Fin.castLE hN) (Fin.castLE_injective hN) _ _ ?_ ?_
       · intro r hr
         have hr' : ¬ (r : ℕ) < N := fun h => hr ⟨⟨r, h⟩, rfl⟩
-        simp only [extNu, dif_neg hr', pow_zero]
+        simp only [extNu, dite_eq_right hr', pow_zero]
       · intro r
-        simp only [extNu, Matrix.submatrix_apply, Fin.coe_castLE, dif_pos r.2]
-    rw [e3]
-    exact e1
+        simp only [extNu, Matrix.submatrix_apply, Fin.coe_castLE, dite_eq_left r.2]
+    rwa [e3]
   refine ⟨hc, fun Θ => ?_⟩
   unfold framePol
   refine Submodule.sum_mem _ fun α _ => ?_

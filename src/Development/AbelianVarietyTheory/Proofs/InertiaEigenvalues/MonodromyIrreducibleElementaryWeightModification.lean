@@ -212,7 +212,7 @@ theorem abstract {F B R n : Type} [Field F] [CommRing B] [Algebra F B] [CommRing
 
     rw [Matrix.mul_apply, Fintype.sum_prod_type, Finset.sum_comm, map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
-    simp only [hp, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, map_mul, hfix _ _ (hA₀ _ _)]
+    simp only [hp, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, map_mul, hfix _ _ (hA₀ _ _)]
   have hZ : ∀ (i : n) (m : Fin r) (c : n × Fin r), (D * p) (i, m) c = (φ ^ (m : ℕ)) (w c.2 * a c.1 i) := by
     intro i m c
     have hinner : ∀ x : n, ∑ k : Fin r, D (i, m) (x, k) * p (x, k) c =
@@ -223,7 +223,7 @@ theorem abstract {F B R n : Type} [Field F] [CommRing B] [Algebra F B] [CommRing
       · intro k hk
         rw [hDdef, Matrix.blockDiagonal_apply_ne _ _ _ (Ne.symm hk), zero_mul]
     rw [Matrix.mul_apply, Fintype.sum_prod_type]
-    simp only [hinner, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, map_mul]
+    simp only [hinner, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, map_mul]
     rw [mul_comm]
   have hZY : D * p = p * (A₀ : Matrix (n × Fin r) (n × Fin r) B) * Gm := by
     ext ⟨i, m⟩ c
@@ -368,8 +368,7 @@ theorem extract : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (r : ℕ) (ω : 
         fun jk => ω jk.2 • a jk.1 := by
       funext jk i
       rw [Pi.smul_apply, Algebra.smul_def]
-    rw [e4]
-    exact hsp
+    rwa [e4]
   have hAι : (A₀ : Matrix (n × Fin r) (n × Fin r) P.R.B).map ι =
       ((pGL⁻¹ : GL (n × Fin r) P.R.B) : Matrix (n × Fin r) (n × Fin r) P.R.B).map ι *
         Matrix.blockDiagonal (fun m => (U m : Matrix n n P.R.BdR)) *
@@ -564,9 +563,7 @@ theorem exists_frFixed_tower_basis : ∀ (l : ℕ) [Fact l.Prime] (r : ℕ) (ω 
   intro l _ r ω hω hli hsp M _ _ _ _ n _ _ v hv hst
   let E := frFixed l r
   let ω' : Fin r → E := fun k => ⟨ω k, hω k⟩
-  have hli' : LinearIndependent ℚ_[l] ω' := by
-    apply LinearIndependent.of_comp (E.val.toLinearMap)
-    exact hli
+  have hli' : LinearIndependent ℚ_[l] ω' := LinearIndependent.of_comp (E.val.toLinearMap) hli
   have hsp' : ⊤ ≤ Submodule.span ℚ_[l] (Set.range ω') := by
     rintro ⟨c, hc⟩ _
     obtain ⟨a, ha⟩ := hsp c hc
@@ -752,7 +749,7 @@ theorem eq_zero_of_sum_kd_mul_U0_mem_fil : ∀ (l : ℕ) [Fact l.Prime] (P : Loc
       intro a
       rw [hU0]
       simp only [Matrix.mul_apply, Matrix.blockDiagonal_apply, Matrix.map_apply, Fintype.sum_prod_type, mul_ite,
-        mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.mul_sum, mul_assoc]
+        mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Finset.mul_sum, mul_assoc]
     rw [Finset.sum_congr rfl fun a _ => step a, Finset.sum_comm]
     refine Finset.sum_congr rfl fun j _ => ?_
 
@@ -974,8 +971,7 @@ theorem mem_span_colv : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (r : ℕ),
     funext i
     have h0 := sum_fr_mul_eq_iter P hr ω hω a ha u hpu 0 i
     simp only [fr_zero, Function.iterate_zero, id] at h0
-    rw [← h0, ← hAq]
-    rw [Finset.sum_apply]
+    rw [← h0, ← hAq, Finset.sum_apply]
     simp only [Pi.smul_apply]
     simp only [Algebra.smul_def, hcq, colv, Matrix.mulVec, dotProduct, Finset.mul_sum]
     rw [Finset.sum_comm]
@@ -1068,8 +1064,7 @@ theorem colv_latC_and_linearIndependent : ∀ (l : ℕ) [Fact l.Prime] (P : LocP
     have hv0 : (fun c => algebraMap ℚ_[l] P.R.B (g c)) = 0 := by
       have := congrArg (Matrix.mulVec (Ymat P ω A₀)⁻¹) hY
       rwa [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hdetY, Matrix.one_mulVec, Matrix.mulVec_zero] at this
-    intro c
-    exact (algebraMap ℚ_[l] P.R.B).injective (by simpa using congrFun hv0 c)
+    exact fun c => (algebraMap ℚ_[l] P.R.B).injective (by simpa using congrFun hv0 c)
 
 end GlobalTheory.PMon.ResR
 end -- clump:auto
@@ -1183,7 +1178,7 @@ theorem splits_of_stable_rat_subspace : ∀ (l : ℕ) [Fact l.Prime] (n : Type) 
   have hW'0 : W' ≠ ⊥ := by
     obtain ⟨c, hcW, hc0⟩ : ∃ c ∈ W, c ≠ 0 := by
       by_contra h
-      push_neg at h
+      push Not at h
       exact hW0 ((AddSubgroup.eq_bot_iff_forall W).2 h)
     obtain ⟨c', rfl⟩ := lift c (hWE c hcW)
     intro h
@@ -1447,8 +1442,7 @@ theorem modStep_holds : ModStep := by
     obtain ⟨a, ha, ha'⟩ := hval 1 one_ne_zero
     exact ha' (by simpa using hmul a 1 1 1 ha h)
   have hcol : ∃ i, (U x.1 : Matrix n n P.R.BdR) i x.2 ∉ Fil P 1 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have hinv : (((U x.1)⁻¹ : GL n P.R.BdR) : Matrix n n P.R.BdR) * (U x.1 : Matrix n n P.R.BdR) = 1 := by
       rw [← Units.val_mul, inv_mul_cancel, Units.val_one]
     have he := congrFun (congrFun hinv x.2) x.2

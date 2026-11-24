@@ -117,7 +117,7 @@ theorem xi_pickIxTw {B : Base} {px : PreX B.toPre} (I : Col2.ColIn B px) {χ : F
     (h : χ ∈ Set.range I.xi) : I.xi (pickIxTw I χ) = χ := by
   have h' : ∃ a, I.xi a = χ := h
   unfold pickIxTw
-  rw [dif_pos h']
+  rw [dite_eq_left h']
   exact h'.choose_spec
 
 theorem plc_eq_of_natCast_mem {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) {p : ℕ} (hp : p.Prime)
@@ -164,8 +164,7 @@ theorem plEq_conjPl (D : D7) (w : D.what₂.places.Pl) :
   change _ ↔ x ∈ (D.plEq w).asIdeal.map (Formalism.DivisionValues.cO D.what₂.LL)
   rw [Ideal.mem_map_of_equiv]
   constructor
-  · intro h
-    exact ⟨_, h, Formalism.DivisionValues.ValuationRepresentative.cO_cO x⟩
+  · exact fun h => ⟨_, h, Formalism.DivisionValues.ValuationRepresentative.cO_cO x⟩
   · rintro ⟨y, hy, rfl⟩
     rwa [Formalism.DivisionValues.ValuationRepresentative.cO_cO]
 
@@ -187,8 +186,8 @@ theorem GlobalTheory.Mem.R3.tupL_of_twisted : ∀ (X : Stages) (px : PreX X.B.to
     if h : w ∈ Wt then ⟨I.tup (pickIxTw I (T.xiTw I.C w)), Or.inr ((tup_mem_tuOf I).2 (hpickU w h))⟩
     else mu0F (X := X.B.fields) (tuOf I (usedOf I T Wt))
   have muP_in : ∀ w (h : w ∈ Wt), muP w = ⟨I.tup (pickIxTw I (T.xiTw I.C w)), Or.inr ((tup_mem_tuOf I).2 (hpickU w h))⟩ :=
-    fun w h => dif_pos h
-  have muP_of_notMem : ∀ w, w ∉ Wt → muP w = mu0F (X := X.B.fields) (tuOf I (usedOf I T Wt)) := fun w h => dif_neg h
+    fun w h => dite_eq_left h
+  have muP_of_notMem : ∀ w, w ∉ Wt → muP w = mu0F (X := X.B.fields) (tuOf I (usedOf I T Wt)) := fun w h => dite_eq_right h
   have ix_in : ∀ w ∈ Wt, ixOf I (usedOf I T Wt) (muP w) = pickIxTw I (T.xiTw I.C w) := fun w h => by
     rw [muP_in w h]; exact ixOf_eq I rfl
   have hcc : ∀ w, X.B.places.conj (X.B.places.conj w) = w := fun w => by
@@ -215,13 +214,12 @@ theorem GlobalTheory.Mem.R3.tupL_of_twisted : ∀ (X : Stages) (px : PreX X.B.to
       · rintro ⟨w', hw', e⟩
         rw [X.toD7.plEq.injective e] at hw'
         exact (Set.Finite.mem_toFinset hWf).1 hw'
-      · intro h
-        exact ⟨w, (Set.Finite.mem_toFinset hWf).2 h, rfl⟩
+      · exact fun h => ⟨w, (Set.Finite.mem_toFinset hWf).2 h, rfl⟩
     · show I.xi (ixOf I (usedOf I T Wt) (muP (X.toD7.plEq.symm (X.toD7.plEq w)))) = _
       rw [hss]
       by_cases h : w ∈ Wt
-      · rw [if_pos h, ix_in w h, xi_pickIxTw I (hmemR w h)]
-      · rw [if_neg h, muP_of_notMem w h, ixOf_mu0F]
+      · rw [ite_eq_left h, ix_in w h, xi_pickIxTw I (hmemR w h)]
+      · rw [ite_eq_right h, muP_of_notMem w h, ixOf_mu0F]
         exact hI.trueColumnChoices_heckeChar_reference_eq_one
   · intro Xg tr
     have hμ0 : (famR X I hX (usedOf I T Wt) Xg tr).A.μ0 = mu0F (X := X.B.fields) (tuOf I (usedOf I T Wt)) := rfl
@@ -231,8 +229,7 @@ theorem GlobalTheory.Mem.R3.tupL_of_twisted : ∀ (X : Stages) (px : PreX X.B.to
       · rintro ⟨w', hw', rfl⟩
         rw [Equiv.symm_apply_apply]
         exact (Set.Finite.mem_toFinset hWf).1 hw'
-      · intro h
-        exact ⟨_, (Set.Finite.mem_toFinset hWf).2 h, Equiv.apply_symm_apply _ _⟩
+      · exact fun h => ⟨_, (Set.Finite.mem_toFinset hWf).2 h, Equiv.apply_symm_apply _ _⟩
     refine ⟨?_, ?_, ?_, ?_, ?_⟩
     · intro v hv
       rw [hμ0]
@@ -301,8 +298,7 @@ theorem models_seed : GlobalTheory.Published.DiscreteSeriesExists → ∀ D : D7
     ∀ (Ks : Type) [Field Ks] [Algebra Ks D.what₂.LL], (∀ x : D.host.E, ∃ y : Ks, algebraMap Ks D.what₂.LL y = D.embE x) →
       ∃ MW : ∀ (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), DSModel (Wc D i) (parAt (Wc D i) σ),
         Formalism.IndefR.Seed.ModWAt D.what₂.embLL MW ∧ GlobalTheory.RealGeo.FrameKs Ks MW := by
-  intro h D _
-  exact exists_models h D
+  exact fun h D _ => exists_models h D
 
 end GlobalTheory.ChainModels
 end -- clump:auto
@@ -366,8 +362,7 @@ theorem psiV_int (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (-1)) (v
   · show evalV D.host.F w (singleV D.host.F v y) ∈ _
     by_cases hw : w = v
     · subst hw
-      rw [GlobalTheory.SplitIdem.evalV_singleV_same]
-      exact hy
+      rwa [GlobalTheory.SplitIdem.evalV_singleV_same]
     · rw [GlobalTheory.SplitIdem.evalV_singleV_ne _ v _ hw]
       exact zero_mem _
 
@@ -534,12 +529,11 @@ theorem edgeSum_eq_supSum {κ : Type} [CommRing κ] {r : ℕ} (g : GL (Fin r) κ
   refine Finset.sum_congr rfl fun i _ => ?_
   split_ifs with h
   · rw [Finset.sum_eq_single ⟨i.1 + 1, h⟩]
-    · exact if_pos (show supEdge i ⟨i.1 + 1, h⟩ from rfl)
-    · intro j _ hj
-      exact if_neg (fun hj' => hj (Fin.ext hj'))
+    · exact ite_eq_left (show supEdge i ⟨i.1 + 1, h⟩ from rfl)
+    · exact fun j _ hj => ite_eq_right (fun hj' => hj (Fin.ext hj'))
     · intro hn; exact absurd (Finset.mem_univ _) hn
   · refine Finset.sum_eq_zero fun j _ => ?_
-    refine if_neg (fun hj => ?_)
+    refine ite_eq_right (fun hj => ?_)
     have := j.2
     unfold supEdge at hj
     omega

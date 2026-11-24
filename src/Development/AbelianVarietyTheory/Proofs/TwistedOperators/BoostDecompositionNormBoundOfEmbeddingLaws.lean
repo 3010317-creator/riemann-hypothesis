@@ -166,9 +166,7 @@ theorem boost_exists : ∀ (m : ℕ) (ε : Fin m → Bool) (a b : Fin m → ℂ)
       rw [← Complex.mul_conj']
       congr 1
       have := congrFun (congrFun hherm j) i
-      rw [conjTranspose_apply] at this
-      show _ = A j i
-      exact this
+      rwa [conjTranspose_apply] at this
     rw [htr] at this
     exact_mod_cast this
   have hab2 : ∑ i, ‖a i + b i‖ ^ 2 = c2 + nb := by
@@ -177,8 +175,7 @@ theorem boost_exists : ∀ (m : ℕ) (ε : Fin m → Bool) (a b : Fin m → ℂ)
     cases h : ε i <;> simp [ha i, hb i, h]
   refine ⟨A, hU, fun i => ?_, ?_⟩
   · have := congrFun hAa i
-    rw [Pi.smul_apply, Pi.add_apply, smul_eq_mul] at this
-    exact this
+    rwa [Pi.smul_apply, Pi.add_apply, smul_eq_mul] at this
   · have h0 : 0 ≤ ∑ i, ∑ j, ‖A i j‖ ^ 2 := Finset.sum_nonneg fun i _ => Finset.sum_nonneg fun j _ => sq_nonneg _
     unfold hsn
     rw [Real.sq_sqrt h0, hT, hab2]
@@ -225,14 +222,14 @@ theorem exists_unitary_col (m : ℕ) (ε : Fin m → Bool) (z : Fin m) (u : Fin 
     by_cases h : u z = 0
     · simp [hφdef, h]
     · have htn : (t : ℂ) ≠ 0 := by simp [ht, h]
-      simp only [hφdef, h, if_false, star_div₀, Complex.star_def, Complex.conj_ofReal]
+      simp only [hφdef, h, ite_false, star_div₀, Complex.star_def, Complex.conj_ofReal]
       rw [div_mul_div_comm, Complex.conj_mul', ← ht]
       field_simp
   have hφt : star φ * u z = (t : ℂ) := by
     by_cases h : u z = 0
     · simp [hφdef, h, ht]
     · have htn : (t : ℂ) ≠ 0 := by simp [ht, h]
-      simp only [hφdef, h, if_false, star_div₀, Complex.star_def, Complex.conj_ofReal]
+      simp only [hφdef, h, ite_false, star_div₀, Complex.star_def, Complex.conj_ofReal]
       rw [div_mul_eq_mul_div, Complex.conj_mul', ← ht]
       field_simp
   have hφ' : (starRingEnd ℂ) φ * φ = 1 := by rw [← Complex.star_def]; exact hφ
@@ -251,7 +248,7 @@ theorem exists_unitary_col (m : ℕ) (ε : Fin m → Bool) (z : Fin m) (u : Fin 
   have hev : star e ⬝ᵥ v = (t : ℂ) := by
     simp [he, dotProduct, Pi.single_apply, hv, hφt']
   have hve : star v ⬝ᵥ e = (t : ℂ) := by
-    simp only [he, dotProduct, Pi.star_apply, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [he, dotProduct, Pi.star_apply, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     simp only [hv]
     rw [hφt]; simp
   set c : ℂ := ((1 / (1 + t) : ℝ) : ℂ) with hcdef
@@ -301,14 +298,13 @@ theorem exists_unitary_col (m : ℕ) (ε : Fin m → Bool) (z : Fin m) (u : Fin 
     have hez : e z = 1 := by simp [he]
     have hvz : v z = (t : ℂ) := by simp [hv, hφt']
     have hTz : T i z = v i := by
-      rw [hTe, hez, hvz]
-      rw [show star ((1 : ℂ) + (t : ℂ)) = 1 + (t : ℂ) by simp, star_one, mul_one]
+      rw [hTe, hez, hvz, show star ((1 : ℂ) + (t : ℂ)) = 1 + (t : ℂ) by simp, star_one, mul_one]
       have : c * ((e i + v i) * (1 + (t : ℂ))) = e i + v i := by rw [mul_comm (e i + v i), ← mul_assoc, hc, one_mul]
       rw [this]
       by_cases h : i = z
       · subst h; simp [he]; ring
       · simp [he, h, one_apply_ne h]; ring
-    simp only [hk, mul_diagonal, hTz, hd, if_true, hv]
+    simp only [hk, mul_diagonal, hTz, hd, ite_true, hv]
     calc star φ * u i * φ = (star φ * φ) * u i := by ring
       _ = u i := by rw [hφ, one_mul]
 
@@ -444,8 +440,8 @@ theorem col_inv_norm {n : ℕ} (e : Option (Fin n) ≃ Fin (n + 1)) (ε : Fin (n
     ∑ i, (if ε i then (1 : ℝ) else -1) * ‖g⁻¹ i (e none)‖ ^ 2 = 1 := by
   have h : (g⁻¹)ᴴ * Jm ε * g⁻¹ = Jm ε := inv_mem hg
   have h2 := congrFun (congrFun h (e none)) (e none)
-  simp only [Matrix.mul_apply, Jm, Matrix.diagonal_apply, Matrix.conjTranspose_apply, hz, if_true] at h2
-  simp only [mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h2
+  simp only [Matrix.mul_apply, Jm, Matrix.diagonal_apply, Matrix.conjTranspose_apply, hz, ite_true] at h2
+  simp only [mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h2
   have h3 : ((∑ i, (if ε i then (1 : ℝ) else -1) * ‖g⁻¹ i (e none)‖ ^ 2 : ℝ) : ℂ) = 1 := by
     rw [← h2]; push_cast
     refine Finset.sum_congr rfl fun i _ => ?_

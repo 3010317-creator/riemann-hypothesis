@@ -77,8 +77,7 @@ theorem UpperTheory.Gal.W2.Seed.pAvgK :
   by_cases hfin : (Function.support F).Finite
   · have hG : Function.HasFiniteSupport (fun p : (X ⧸ K) × (K ⧸ K₀.subgroupOf K) => F p.1) := by
       refine (hfin.prod (Set.finite_univ (α := K ⧸ K₀.subgroupOf K))).subset ?_
-      intro p hp
-      exact ⟨hp, trivial⟩
+      exact fun p hp => ⟨hp, trivial⟩
     rw [finsum_curry _ hG, smul_finsum]
     refine finsum_congr fun a => ?_
     show ∑ᶠ _ : K ⧸ K₀.subgroupOf K, Ψ a.out = _
@@ -88,6 +87,4 @@ theorem UpperTheory.Gal.W2.Seed.pAvgK :
     apply finsum_of_infinite_support
     intro hG
     apply hfin
-    refine (hG.image Prod.fst).subset ?_
-    intro a ha
-    exact ⟨(a, ((1 : K) : K ⧸ K₀.subgroupOf K)), ha, rfl⟩
+    exact (hG.image Prod.fst).subset (fun a ha => ⟨(a, ((1 : K) : K ⧸ K₀.subgroupOf K)), ha, rfl⟩)

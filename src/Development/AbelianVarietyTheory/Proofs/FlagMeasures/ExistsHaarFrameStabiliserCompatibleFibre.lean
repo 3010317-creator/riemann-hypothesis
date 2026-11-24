@@ -458,8 +458,7 @@ theorem extend_frame : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
       simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Z, Matrix.vecMul, dotProduct,
         Finset.mul_sum, Pi.zero_apply] at this
       simp only [Matrix.vecMul, dotProduct, w, Finset.sum_mul, Pi.zero_apply]
-      rw [Finset.sum_comm]
-      rw [← this]
+      rw [Finset.sum_comm, ← this]
       exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun l _ => by ring
     have hv : w = 0 := by
       have := congrArg (fun u => Matrix.vecMul u (JR (F := F) (Fv F v) J)⁻¹) hv0
@@ -539,7 +538,7 @@ theorem extend_frame : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     simp only [gramE, tupH, Fin.append_left, Fin.append_right, F0]
     refine Fin.lastCases ?_ (fun a => ?_) i
     · rw [Fin.snoc_last, ← hE_swap hinv hJ.1 P.z (P.f b), hfz, map_zero]
-      exact (if_neg (Fin.castSucc_ne_last b).symm).symm
+      exact (ite_eq_right (Fin.castSucc_ne_last b).symm).symm
     · rw [Fin.snoc_castSucc, hef]
       simp only [Fin.castSucc_inj]
   funext i j
@@ -652,8 +651,7 @@ theorem map_mulVec_eq_of_preserves_form {A : Type} [CommRing A] [TopologicalSpac
   have e2 : (phi Xu : (Fin k → A) → (Fin k → A)) = Matrix.mulVec X := by
     funext v
     rfl
-  rw [e2] at e
-  exact e
+  rwa [e2] at e
 
 theorem map_lin_eq_of_stableRankOne (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M : ℕ) (J : Matrix (Fin M) (Fin M) E)
@@ -839,10 +837,8 @@ theorem fibre_invariant : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
         rw [← Set.mem_preimage, hU] at this
         exact this)
       refine ⟨fun b hb => (integrable_map_equiv Tm φ).mpr (h3.1 b hb), ?_⟩
-      refine h3.2.congr fun b _ => ?_
-      exact MeasureTheory.integral_map_equiv Tm φ
+      exact h3.2.congr fun b _ => MeasureTheory.integral_map_equiv Tm φ
   have hu := GlobalTheory.LocalFibreUnique.fibre_family_unique F E σ hCM n J hJ v a μ ν hμ hν fib hfib fib' hfib'
-  show (fib S).map Tm = fib S
   exact (congrFun hu S).symm
 
 end GlobalTheory.LocalFibreInvariant
@@ -933,8 +929,7 @@ theorem weil_formula : ∀ (G X : Type) [Group G] [TopologicalSpace G] [IsTopolo
     · rintro ⟨g, rfl⟩
       exact ⟨(g : G ⧸ H), rfl⟩
   have hae : ∀ᵐ y ∂ν, y ∈ Set.range φ := by
-    rw [hrange]
-    exact hν0
+    rwa [hrange]
   have hmap : (ν.comap φ).map φ = ν := by
     rw [hφ.map_comap, Measure.restrict_eq_self_of_ae_mem hae]
   have hrad : GlobalTheory.IndefiniteRowSideFullHecke.InvariantRadonFibre.IsInvariantRadon H (ν.comap φ) := by

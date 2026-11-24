@@ -132,8 +132,7 @@ theorem roots_eig : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G) (v
         fun i : Fin (minpoly G.F (P.γ : G.C)).natDegree => Γ ^ (i : ℕ) := by
       funext i
       exact hΨ i
-    rw [e] at hli
-    exact hli
+    rwa [e] at hli
   have hd : (minpoly G.F (P.γ : G.C)).natDegree = G.n := P.reg.1
   have hint : IsIntegral G.F (P.γ : G.C) := Algebra.IsIntegral.isIntegral _
   have hpm : P.pol.Monic := minpoly.monic hint
@@ -148,8 +147,7 @@ theorem roots_eig : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G) (v
     exact h
   have hroot : Q.IsRoot w := by
     rw [Polynomial.IsRoot, hQ, Polynomial.eval_map]; exact hw
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hdet : (Γ - algebraMap ℂ (Matrix (Fin G.n) (Fin G.n) ℂ) w).det ≠ 0 := by
     intro h0
     obtain ⟨x, hx0, hx⟩ := Matrix.exists_mulVec_eq_zero_iff.2 h0
@@ -272,8 +270,7 @@ theorem glue_pair (G : HTGroup p) (P : Pair G) (x : (AfP p ⊗[ℚ] G.C)ˣ) (t :
         (starT G.star (w.1.adicCompletion ℚ) (φ (x : AfP p ⊗[ℚ] G.C))).unop =
         algebraMap (w.1.adicCompletion ℚ) (w.1.adicCompletion ℚ ⊗[ℚ] G.C) (tw : w.1.adicCompletion ℚ) := by
       have h := congrArg φ hx
-      rw [map_mul, map_mul, glueL_evalT_inC, glueL_evalT_starT, glueL_evalT_algebraMap] at h
-      exact h
+      rwa [map_mul, map_mul, glueL_evalT_inC, glueL_evalT_starT, glueL_evalT_algebraMap] at h
     have hk : (((u⁻¹ * xw : (w.1.adicCompletion ℚ ⊗[ℚ] G.C)ˣ)) : w.1.adicCompletion ℚ ⊗[ℚ] G.C) =
         ((u⁻¹ : (w.1.adicCompletion ℚ ⊗[ℚ] G.C)ˣ) : w.1.adicCompletion ℚ ⊗[ℚ] G.C) * φ (x : AfP p ⊗[ℚ] G.C) := rfl
     rw [hk, RingHom.map_mul (starT G.star (w.1.adicCompletion ℚ)), MulOpposite.unop_mul]
@@ -328,11 +325,9 @@ theorem local_pair_scalar_norm : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (L
         algebraMap (w.1.adicCompletion ℚ) (w.1.adicCompletion ℚ ⊗[ℚ] G.C) (algebraMap ℚ (w.1.adicCompletion ℚ) (P₁.c : ℚ)) := by
       rw [← IsScalarTower.algebraMap_apply]
       exact (Algebra.TensorProduct.includeRight : G.C →ₐ[ℚ] w.1.adicCompletion ℚ ⊗[ℚ] G.C).commutes _
-    rw [e1, e2] at h
-    exact h
+    rwa [e1, e2] at h
   have hk3' : (k : (w.1.adicCompletion ℚ ⊗[ℚ] G.C)) * (inC G (w.1.adicCompletion ℚ) ((P.β : G.C) * ((P₁.β⁻¹ : G.Cˣ) : G.C)) * inC G (w.1.adicCompletion ℚ) (P₁.β : G.C)) * (starT G.star (w.1.adicCompletion ℚ) (k : (w.1.adicCompletion ℚ ⊗[ℚ] G.C))).unop = algebraMap (w.1.adicCompletion ℚ) (w.1.adicCompletion ℚ ⊗[ℚ] G.C) (lam : w.1.adicCompletion ℚ) := by
-    rw [← map_mul, mul_assoc (P.β : G.C), Units.inv_mul, mul_one]
-    exact hk3
+    rwa [← map_mul, mul_assoc (P.β : G.C), Units.inv_mul, mul_one]
   have hN : ∀ m' : (w.1.adicCompletion ℚ ⊗[ℚ] G.C)ˣ, (m' : (w.1.adicCompletion ℚ ⊗[ℚ] G.C)) = m * (starT G.star (w.1.adicCompletion ℚ) (m : (w.1.adicCompletion ℚ ⊗[ℚ] G.C))).unop * inC G (w.1.adicCompletion ℚ) ((P₁.β⁻¹ : G.Cˣ) : G.C) →
       Commute (m' : (w.1.adicCompletion ℚ ⊗[ℚ] G.C)) (inC G (w.1.adicCompletion ℚ) (P₁.γ : G.C)) →
       inC G (w.1.adicCompletion ℚ) (P₁.β : G.C) * (starT G.star (w.1.adicCompletion ℚ) (m' : (w.1.adicCompletion ℚ ⊗[ℚ] G.C))).unop * inC G (w.1.adicCompletion ℚ) ((P₁.β⁻¹ : G.Cˣ) : G.C) = m' →
@@ -526,7 +521,7 @@ theorem finite_fixed (G : HTGroup p) (L : G.Level) (f : G.GAf → ℂ)
   have hex : ∃ P', D (a₀, decide (0 < (r : ℚ))) P' := ⟨P, hγ, r, e, he, rfl, hβeq⟩
   refine Finset.mem_coe.2 (Finset.mem_image.2 ⟨(a₀, decide (0 < (r : ℚ))),
     Finset.mem_product.2 ⟨ha₀, Finset.mem_univ _⟩, ?_⟩)
-  have hρ : ρ (a₀, decide (0 < (r : ℚ))) = Quot.mk _ hex.choose := dif_pos hex
+  have hρ : ρ (a₀, decide (0 < (r : ℚ))) = Quot.mk _ hex.choose := dite_eq_left hex
   rw [hρ]
   obtain ⟨hγ', r', e', he', hb', hβ'⟩ := hex.choose_spec
   refine Quot.sound (rel_of_same G P₁.β P₁.γ a₀ _ P hγ' hγ r' r e' e he' he ?_ hβ' hβeq)
@@ -610,7 +605,7 @@ theorem exists_emb_isRoot' {F C E : Type} [Field F] [NumberField F] [Ring C] [Al
     haveI : FiniteDimensional F (AdjoinRoot q) := (AdjoinRoot.powerBasis hq0).finite
     haveI : FiniteDimensional ℚ (AdjoinRoot q) := Module.Finite.trans F _
     haveI : Algebra.IsAlgebraic ℚ (AdjoinRoot q) := Algebra.IsAlgebraic.of_finite ℚ _
-    have e : hq q = minpoly ℚ (AdjoinRoot.root q) := dif_pos hirr
+    have e : hq q = minpoly ℚ (AdjoinRoot.root q) := dite_eq_left hirr
     rw [e]
     refine ⟨?_, fun hμ => ?_⟩
     · rw [← AdjoinRoot.mk_eq_zero, ← AdjoinRoot.aeval_eq, aeval_map_algebraMap, minpoly.aeval]
@@ -728,7 +723,7 @@ theorem integral_of_term_ne_zero' : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p)
   rw [Pair.termAt, pointSum] at hP
   have exists_nonzero {α : Type} (F : α → ℂ) (hF : ∑ᶠ x, F x ≠ 0) : ∃ x, F x ≠ 0 := by
     by_contra hc
-    push_neg at hc
+    push Not at hc
     exact hF (finsum_eq_zero_of_forall_eq_zero hc)
   obtain ⟨q, hq⟩ := exists_nonzero _ hP
   have hq2 := (mul_ne_zero_iff.1 hq).2

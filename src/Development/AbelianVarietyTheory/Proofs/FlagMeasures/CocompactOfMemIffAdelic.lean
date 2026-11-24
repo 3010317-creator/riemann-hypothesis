@@ -288,8 +288,7 @@ theorem compact_mod_of_weights [TopologicalSpace S] [IsTopologicalRing S] (S₀ 
     · have eb : ab.2 ≠ b := fun eb => hab' (by rw [eb, ← ea]; exact h')
       rw [mul_assoc, mul_assoc _ (ε ab.2), he.ortho eb, mul_zero, mul_zero]
     · rw [← mul_assoc, ← mul_assoc, he.ortho ea, zero_mul, zero_mul, zero_mul]
-  · refine Eq.trans ?_ (hall x)
-    exact Finset.sum_filter_of_ne fun ab _ hne h' => hne (hx _ _ h')
+  · exact Eq.trans (Finset.sum_filter_of_ne fun ab _ hne h' => hne (hx _ _ h')) (hall x)
   · exact sum_mem fun ab _ => mul_mem (mul_mem (he0 _) hx) (he0 _)
   · rw [← hall x]
     exact Finset.sum_eq_zero fun ab _ => hx _ _ (hmb _ _)

@@ -338,8 +338,7 @@ theorem UpperTheory.finite_fiber_of_finiteType_parameter_ring :
       have := Polynomial.hom_eval₂ (hint b).choose (ι : rA ℂ x {0} →+* rB ℂ K x {0})
         (rB ℂ K x {0}).val.toRingHom b
       refine this.trans ?_
-      rw [Subalgebra.coe_zero]
-      exact hp
+      rwa [Subalgebra.coe_zero]
     have h1 := Polynomial.hom_eval₂ (hint b).choose (ι : rA ℂ x {0} →+* rB ℂ K x {0}) e.1.toRingHom b
     rw [h0, map_zero] at h1
     have h2 : e.1.toRingHom.comp (ι : rA ℂ x {0} →+* rB ℂ K x {0}) = ψ :=
@@ -405,8 +404,7 @@ theorem UpperTheory.Cb.exists_unit_mul_mem_span_of_reduced_isolated_zero :
     by_cases hs : s.1 = e
     · exact ⟨1, by simp, fun h => absurd hs h⟩
     · obtain ⟨y, hy⟩ : ∃ y, e y ≠ s.1 y := by
-        by_contra hcon
-        push_neg at hcon
+        by_contra! hcon
         exact hs (AlgHom.ext fun y => (hcon y).symm)
       refine ⟨y - algebraMap ℂ A (s.1 y), ?_, fun _ => ?_⟩
       · rw [map_sub, AlgHom.commutes]
@@ -448,13 +446,12 @@ private theorem reduced_of_etale_proj (R S : Type) [CommRing R] [CommRing S] [Al
   refine ⟨fun s hs => ?_⟩
   by_contra hne
   obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual R S, φ s ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hne ((Module.forall_dual_apply_eq_zero_iff R s).1 h)
   have hnil : φ s ∉ nilradical R := by
     rw [nilradical_eq_zero]; simpa using hφ
   rw [nilradical_eq_sInf, Ideal.mem_sInf] at hnil
-  push_neg at hnil
+  push Not at hnil
   obtain ⟨p, hp, hsp⟩ := hnil
   haveI : p.IsPrime := hp
   let κ := p.ResidueField
@@ -854,10 +851,8 @@ private theorem exists_stalk {Y : Scheme.{0}} (s' : Y ⟶ Sp ℂ) (y : CxPts s' 
     have htop : ⊤ ≤ y.1 ⁻¹ᵁ (⊤ : Y.Opens) := Points.le_preimage_top y.1
     exact (bridge ⊤ trivial _).trans (Points.valR_constFn_of_over s' (RingHom.id ℂ) y.1 y.2 ⊤ htop c)
   refine ⟨alg, { toRingHom := (Scheme.stalkClosedPointTo y.1).hom, commutes' := hev }, ?_, ?_⟩
-  · intro W hW c
-    exact glue W hW c
-  · intro W hW b
-    exact bridge W hW b
+  · exact fun W hW c => glue W hW c
+  · exact fun W hW b => bridge W hW b
 
 end UpperTheory.Gal.productCup_of_system
 
@@ -954,8 +949,7 @@ theorem UpperTheory.Gal.productCup_of_system.tanConj_etale :
     exact this.symm
   have h2' : y.1 (IsLocalRing.closedPoint ℂ) ∈ c2 ⁻¹ᵁ U0 := by
     show c2 (y.1 (IsLocalRing.closedPoint ℂ)) ∈ U0
-    rw [hpt]
-    exact hmem
+    rwa [hpt]
   letI : Algebra (Sec s U0) (Y.presheaf.stalk (y.1 (IsLocalRing.closedPoint ℂ))) :=
     (pb c1 U0 _ h1').toAlgebra
   haveI : Algebra.FormallyEtale (Sec s U0) (Y.presheaf.stalk (y.1 (IsLocalRing.closedPoint ℂ))) :=

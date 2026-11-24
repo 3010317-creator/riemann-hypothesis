@@ -121,18 +121,17 @@ theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
               overlap := ?_ }, ?_⟩
     · intro s a ha e he
       by_cases h : mseg x s = 0
-      · simp only [h, if_true, AddSubgroup.mem_bot] at he ⊢
+      · simp only [h, ite_true, AddSubgroup.mem_bot] at he ⊢
         rw [he, smul_zero]
-      · simp only [h, if_false] at he ⊢
+      · simp only [h, ite_false] at he ⊢
         exact hfam.1 s h a ha e he
     · intro s hs
-      simp only [hs, if_false]
-      exact (hloc s hs).2
+      simpa only [hs, ite_false] using (hloc s hs).2
     · intro s t hs ht e he
-      simp only [hs, ht, if_false] at he ⊢
+      simp only [hs, ht, ite_false] at he ⊢
       exact hfam.2 s t hs ht e he
     · intro s hs
-      simp only [hs, if_false]
+      simp only [hs, ite_false]
   obtain ⟨F, hF⟩ : ∃ F : (∀ k, ι k) → AddSubgroup V,
       F = fun s => (Δ s).comap (AddMonoidHom.inl V V₂) := ⟨_, rfl⟩
   have memF : ∀ s b, b ∈ F s ↔ (b, (0 : V₂)) ∈ Δ s := by
@@ -157,8 +156,7 @@ theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
       (C'.lat s) (Δ s) hE hC hC' (fun a ha v hv => hΔ.1.1 s hs a ha v hv)
       (fun v w h => (hΔ.2 s hs).1 v w h) (fun v hv => (hΔ.2 s hs).2.1 v hv)
       (fun w => (hΔ.2 s hs).2.2.1 w) (fun w hw => (hX s hs).2.1 w hw)).2
-    rw [hF]
-    exact h
+    rwa [hF]
   obtain ⟨E'', hE''⟩ := (bundleOfFamily N V).1 F hFlat hFfree
   have memE'' : ∀ s, mseg x s ≠ 0 → ∀ b, b ∈ E''.lat s ↔ (b, (0 : V₂)) ∈ Δ s := by
     intro s hs b
@@ -564,7 +562,7 @@ theorem main : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (R : Sub
       exact R.mul_mem ha hb
     · intro j hj
       have hne : i ≠ j := ne_of_lt hj
-      simp only [hfix j hj.le, Pi.single_apply, hne, if_false, mul_zero]
+      simp only [hfix j hj.le, Pi.single_apply, hne, ite_false, mul_zero]
     · simp only [hfix i le_rfl, Pi.single_eq_same, mul_one]
 
 end GlobalTheory.CompanionTheory.Ar.Num.HhGraded
@@ -701,8 +699,7 @@ theorem smul_mem_of_dual (R : Subalgebra o Ω) {n : ℕ} {L : AddSubgroup (Fin n
     by_cases h : j = i
     · subst h; simpa using one_mem R
     · simpa [h] using zero_mem R
-  have h2 := (mem_dotDual' R).1 hv _ h1
-  simpa [dotProduct, Pi.single_apply] using h2
+  simpa [dotProduct, Pi.single_apply] using (mem_dotDual' R).1 hv _ h1
 
 theorem coord_mem_of_le (R : Subalgebra o Ω) {n : ℕ} {L : AddSubgroup (Fin n → Ω)}
     (hL : L ≤ stdLat R (Fin n)) (i : Fin n) {t : Ω}
@@ -747,8 +744,7 @@ theorem chart_facts (D : LieLatticeData Ω F n Sg r s) (R : Subalgebra o Ω) (p 
   · intro u hu hc t
     refine _root_.GlobalTheory.CompanionTheory.Ar.Num.HhGraded.main R n (D.af R p (χ τ)) hLF (h2.ann τ) i u hu (fun c => ?_) t
     have := hc c
-    rw [← hf.dx τ i] at this
-    exact this
+    rwa [← hf.dx τ i] at this
 
 end Chart
 
@@ -796,9 +792,7 @@ theorem relH_main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuatio
     simpa using h2
   obtain ⟨hp0, ⟨u0, hu0, hwu⟩, -, h01, hχ⟩ := hfam.char
   have hp2 : 2 ≤ p := hp.two_le
-  have hpΩ : (p : Ω) ≠ 0 := by
-    intro h
-    exact hp0 (hinj _ (by simpa using h))
+  have hpΩ : (p : Ω) ≠ 0 := fun h => hp0 (hinj _ (by simpa using h))
   have hw0 : w ≠ 0 := by
     rintro rfl
     rw [zero_pow (by omega)] at hwu
@@ -1142,8 +1136,7 @@ theorem exists_system (R : Subalgebra O Ω) {N : ℕ} (L : AddSubgroup V) (h : L
   refine ⟨k, fun i => v i, l, fun i => (v i).2, fun i e he => ?_, fun e => ?_, fun w => ?_⟩
   · rw [hl']
     exact hφ i e he
-  · simp only [hl']
-    exact hv e
+  · simpa only [hl'] using hv e
   · apply hβ.1
     ext e
 
@@ -1201,8 +1194,7 @@ theorem dual_generic [IsDomain O] (R : Subalgebra O Ω) {N : ℕ} (L L' : AddSub
     exact hL _ (hl i e he) _ (hL _ (R.algebraMap_mem _) _ (hc i))
   have := (hM w).1 hw _ key
   rw [map_smul, LinearMap.smul_apply] at this
-  rw [map_smul]
-  exact this
+  rwa [map_smul]
 
 end Lattices
 
@@ -1267,8 +1259,7 @@ theorem PositivityTheory.Xgn.t_rootnum_dual : ∀ (O : Type) [CommRing O] [IsDom
       fun i j hij => by simp [Module.Basis.repr_self, hij.ne], fun i => ?_, fun i => ?_⟩
     · have h := GlobalTheory.CompanionTheory.Ar.CkLinePow.isVerticalDivisor_swap (hfp.vertical i.rev)
       have e : -b 0 i.rev - -b 1 i.rev = -(b 0 i.rev - b 1 i.rev) := by abel
-      rw [e]
-      exact h
+      rwa [e]
     · have h := hfp.generic i.rev
       rw [Module.Basis.repr_self, Finsupp.single_eq_same, one_mul] at h ⊢
       exact h.symm
@@ -1393,8 +1384,7 @@ theorem kk_top (hb : D.Base R p w) (τ : Sg) : D.kk τ n = mulLat (p : Ω) (dotD
   · rintro ⟨g, hg, hv⟩
     have : g = 0 := funext fun y => mem_vanSub.1 hv y fun j hj => absurd j.2 (not_lt.2 hj)
     rwa [this] at hg
-  · intro h
-    exact ⟨0, h, (vanSub Ω F n n).zero_mem⟩
+  · exact fun h => ⟨0, h, (vanSub Ω F n n).zero_mem⟩
 
 theorem kk_anti {i j : ℕ} (h : i ≤ j) (τ : Sg) : D.kk τ j ≤ D.kk τ i := by
   intro m hm
@@ -1621,8 +1611,7 @@ theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
           rw [Nat.cast_smul_eq_nsmul, Nat.cast_smul_eq_nsmul]
           exact nsmul_mem hm p
         have h2 := (f3 _).2 (smul_mem_kk (D c) (hbase c hc) (Nat.succ_le_of_lt i.2) hkm)
-        have h3 := sub_mem h1 h2
-        simpa using h3
+        simpa using sub_mem h1 h2
       · rw [hPBlat c hc] at hv
         rw [map_one, one_smul, hXb _ i c hc]
         exact (f1 v 0 ((f4 v).2 hv)).1
@@ -1722,14 +1711,11 @@ theorem quotExact_congr {O : Type} [CommRing O] {Ω : Type} [Field Ω] [Algebra 
   obtain ⟨Γ, Δ, ⟨h1, h2⟩, ⟨h3, h4⟩, h5⟩ := h
   refine ⟨Γ, Δ, ⟨h1, fun s hs => ?_⟩, ⟨h3, fun s hs => ?_⟩, fun s hs => ?_⟩
   · have := h2 s hs
-    rw [hA s hs, hA' s hs, hB s hs, hB' s hs] at this
-    exact this
+    rwa [hA s hs, hA' s hs, hB s hs, hB' s hs] at this
   · have := h4 s hs
-    rw [hB s hs, hB' s hs, hC s hs, hC' s hs] at this
-    exact this
+    rwa [hB s hs, hB' s hs, hC s hs, hC' s hs] at this
   · have := h5 s hs
-    rw [hA' s hs, hC s hs] at this
-    exact this
+    rwa [hA' s hs, hC s hs] at this
 
 theorem arith_first (a b c rw rp : ℤ) (P k : ℕ) (hP : 2 ≤ P) (e : a + b = c - (k : ℤ) * rw)
     (bd : ((P - 1 : ℕ) : ℤ) * rw = ((1 : ℕ) : ℤ) * rp) :
@@ -1819,18 +1805,15 @@ theorem relations : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuatio
     rw [hLa τ c hc v]
     constructor
     · rintro ⟨e, he, rfl⟩
-      rw [hdiv, smul_inv_smul₀ hwΩ]
-      exact he
-    · intro hv
-      exact ⟨algebraMap O Ω w • v, (hdiv _ _).1 hv, (inv_smul_smul₀ hwΩ v).symm⟩
+      rwa [hdiv, smul_inv_smul₀ hwΩ]
+    · exact fun hv => ⟨algebraMap O Ω w • v, (hdiv _ _).1 hv, (inv_smul_smul₀ hwΩ v).symm⟩
   have hSc : ∀ τ, IsScaled x (algebraMap O Ω w) (La τ).lat (Lie τ).lat := by
     intro τ c hc v
     rw [hLa' τ c hc]
     constructor
     · intro hv
       refine ⟨(algebraMap O Ω w)⁻¹ • v, ?_, (smul_inv_smul₀ hwΩ v).symm⟩
-      rw [hdiv, smul_inv_smul₀ hwΩ]
-      exact hv
+      rwa [hdiv, smul_inv_smul₀ hwΩ]
     · rintro ⟨e, he, rfl⟩
       exact (hdiv _ _).1 he
   have hLW : ∀ τ, LatLE O x (Lie τ) (W τ) := by

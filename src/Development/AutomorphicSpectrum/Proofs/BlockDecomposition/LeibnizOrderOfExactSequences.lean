@@ -83,8 +83,7 @@ theorem ses_of_subQuot {G V₁ V₂ V₃ : Type} [Group G] [AddCommGroup V₁] [
     (⊥ : Subrepresentation ρ₂).toSubmodule.comap S.toSubmodule.subtype
   have hp : p = ⊥ := by
     rw [eq_bot_iff]
-    intro s hs
-    exact (Submodule.mem_bot ℂ).2 (Subtype.ext hs)
+    exact fun s hs => (Submodule.mem_bot ℂ).2 (Subtype.ext hs)
   let q : S.toSubmodule ≃ₗ[ℂ] (S.toSubmodule ⧸ p) :=
     LinearEquiv.ofBijective p.mkQ ⟨by
       rw [← LinearMap.ker_eq_bot, Submodule.ker_mkQ]; exact hp, p.mkQ_surjective⟩
@@ -108,8 +107,7 @@ theorem ses_of_subQuot {G V₁ V₂ V₃ : Type} [Group G] [AddCommGroup V₁] [
   · rw [hf1, hf1, eint e₁.symm, hq]
   · rw [hg1, hg1, ← eint e₂]
     rfl
-  · intro a b hab
-    exact e₁.symm.injective (q.symm.injective (Subtype.ext hab))
+  · exact fun a b hab => e₁.symm.injective (q.symm.injective (Subtype.ext hab))
   · intro c
     obtain ⟨w, rfl⟩ := e₂.surjective c
     obtain ⟨⟨v, hv⟩, rfl⟩ := r.mkQ_surjective w
@@ -339,8 +337,7 @@ theorem miso_prodPGn_zero {i : ℕ} (τ : MRep k i) (σ : GRep k 0) (hτ : IsSmo
     rfl
   show Nonempty ((prodPG (mtw τ (((0 : ℕ) : ℝ) / 2)).ρ (σ.tw (-((i + 1 : ℕ) : ℝ) / 2)).ρ).Equiv
     (trT (G := Mir k (i + 0)) τ.ρ σ.V))
-  rw [← hh]
-  exact h
+  rwa [← hh]
 
 theorem miso_phiN_trT (ψ : AddChar k Circle) {n : ℕ} (τ : MRep k (n + 1)) (W : Type) [AddCommGroup W] [Module ℂ W] :
     MIso (phiN ψ (⟨τ.V ⊗[ℂ] W, trT τ.ρ W⟩ : MRep k (n + 1)))
@@ -348,8 +345,7 @@ theorem miso_phiN_trT (ψ : AddChar k Circle) {n : ℕ} (τ : MRep k (n + 1)) (W
   obtain ⟨e⟩ := nonempty_twAct_trT (W := W) τ.ρ (MirUin k (n + 1)) (mirChar k ψ n)
     ((levi k (n + 1)).comp (Mir k n).subtype) (levi_stab ψ n) (levi_stab ψ n)
   have h := nonempty_twist_equiv e (dpowM n (-1 / 2))
-  rw [twist_trT] at h
-  exact h
+  rwa [twist_trT] at h
 
 end group
 
@@ -498,8 +494,7 @@ theorem equiv_of_top (ι : P →* G) (hι : Continuous ι) (Q : Subgroup G) (H :
   show τ ⟨x, hH x⟩ (E (f.1.1 (1 * ι p))) = τ ⟨x * p, hH _⟩ (E (f.1.1 1))
   have hf : f.1.1 (ι p) = σ ⟨ι p, hQ _⟩ (f.1.1 1) := by
     have := f.1.2 ⟨ι p, hQ _⟩ 1
-    rw [mul_one] at this
-    exact this
+    rwa [mul_one] at this
   rw [one_mul, hf, show E (σ ⟨ι p, hQ _⟩ (f.1.1 1)) = τ ⟨p, hH p⟩ (E (f.1.1 1)) from (hE ⟨p, hH p⟩ _).symm,
     ← Module.End.mul_apply, ← map_mul]
   rfl
@@ -675,8 +670,7 @@ theorem absPow_zero_apply (s : ℂ) (hs : s = 0) (x : kˣ) : absPow k s x = 1 :=
   simp [absPow]
 
 theorem dpow_eq_one (n : ℕ) (s : ℝ) (hs : s = 0) (g : GL (Fin n) k) : dpow n s g = 1 := by
-  simp only [dpow, detChar, MonoidHom.comp_apply]
-  exact absPow_zero_apply _ (by simp [hs]) _
+  simpa only [dpow, detChar, MonoidHom.comp_apply] using absPow_zero_apply _ (by simp [hs]) _
 
 theorem mem_parab_zero {r : ℕ} {n : Type} [Fintype n] [DecidableEq n] (e : (Σ x, Two (Fin r) (Fin 0) x) ≃ n)
     (g : GL n k) : g ∈ parab k e := by
@@ -942,8 +936,8 @@ theorem filt_extend {a b : ℕ} {X Y : GRep k n} (f : Y.V →ₗ[ℂ] X.V)
   classical
   obtain ⟨F, hF1, hF2⟩ : ∃ F : ℕ → Subrepresentation X.ρ, (∀ i, i ≤ a → F i = ⊤) ∧
       (∀ i, a < i → F i = subMap f hf (F' i)) :=
-    ⟨fun i => if i ≤ a then ⊤ else subMap f hf (F' i), fun i h => if_pos h,
-      fun i h => if_neg (by omega)⟩
+    ⟨fun i => if i ≤ a then ⊤ else subMap f hf (F' i), fun i h => ite_eq_left h,
+      fun i h => ite_eq_right (by omega)⟩
   refine ⟨F, ?_, hF1 a le_rfl, ?_, ?_⟩
   · intro i j hij
     by_cases h2 : i ≤ a
@@ -952,8 +946,7 @@ theorem filt_extend {a b : ℕ} {X Y : GRep k n} (f : Y.V →ₗ[ℂ] X.V)
   · rw [hF2 b hab, hbot, subMap_bot]
   · intro i hai hib
     rcases hai.eq_or_lt with rfl | hlt
-    · rw [hF1 a le_rfl, hF2 (a + 1) (by omega), htop]
-      exact h0
+    · rwa [hF1 a le_rfl, hF2 (a + 1) (by omega), htop]
     · rw [hF2 i hlt, hF2 (i + 1) (by omega)]
       rcases hst i hlt hib with ⟨A, hR, ⟨e⟩⟩ | ⟨hZ, he⟩
       · obtain ⟨e'⟩ := subQuot_subMap_equiv f hf hi (F' i) (F' (i + 1))
@@ -1043,8 +1036,7 @@ theorem conj_mem (n : ℕ) (g u : Mir k n) (hu : u ∈ MirUin k n) : g * u * g�
 
 theorem mem_mirabolicParabolic_zero (m : ℕ) (g : Mir k (m + 1 + 0)) : g ∈ MirabolicParabolic k (m + 1) 0 := by
   rw [GlobalTheory.CompanionTheory.GPMem.mem_mirabolicParabolic_iff_mirabolicProj_mem_parabolic, mem_parab_two]
-  intro b
-  exact b.elim0
+  exact fun b => b.elim0
 
 theorem cInd_apply_of_conj {G W : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [AddCommGroup W] [Module ℂ W]
     (H : Subgroup G) (σ : Representation ℂ H W) (u : G)
@@ -1057,8 +1049,7 @@ theorem cInd_apply_of_conj {G W : Type} [Group G] [TopologicalSpace G] [IsTopolo
   obtain ⟨h, hσ⟩ := hu g
   have hf : f.1.1.1 (g * u * g⁻¹ * g) = σ ⟨_, h⟩ (f.1.1.1 g) := f.1.1.2 ⟨_, h⟩ g
   have e : (g * u * g⁻¹) * g = g * u := by group
-  rw [e, hσ] at hf
-  exact hf
+  rwa [e, hσ] at hf
 
 theorem prodGP_unipotent_apply {m : ℕ} {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W]
     (ρ₁ : Representation ℂ (GL (Fin (m + 1)) k) V) (τ₁ : Representation ℂ (Mir k 0) W)
@@ -1118,8 +1109,7 @@ theorem phiN_prodGPn_zero : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
   intro k _ _ _ _ ψ _ hψ m ρ τ h _ _
   obtain ⟨u, hu⟩ := exists_mirChar_ne ψ hψ (m + 0)
   refine phiN_subsingleton_of_fixed ψ (mcast h (prodGPn ρ τ)) u hu ?_
-  intro v
-  exact prodGP_unipotent_apply _ _ _ u.2 v
+  exact fun v => prodGP_unipotent_apply _ _ _ u.2 v
 
 end GlobalTheory.CompanionTheory.PhiGpZero
 

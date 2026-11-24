@@ -131,12 +131,9 @@ theorem IsPrefix.refl (s : MarkedBlowupSequenceData p I m E) : s.IsPrefix s := b
   refine ⟨le_rfl, fun _ _ => rfl, ?_, ?_, ?_, ?_, ?_⟩
   · intro i hi
     simp
-  · intro i hi
-    exact (comap_eqToHom_self _ _).symm
-  · intro i hi
-    exact (map_comap_eqToHom_self _ _).symm
-  · intro i hi
-    exact (comap_eqToHom_self _ _).symm
+  · exact fun i hi => (comap_eqToHom_self _ _).symm
+  · exact fun i hi => (map_comap_eqToHom_self _ _).symm
+  · exact fun i hi => (comap_eqToHom_self _ _).symm
   · intro i hi
     simp
 
@@ -265,7 +262,7 @@ theorem appendRecursivePrincipalization_eq_appendIfMarked (hinv : ComapIsoInvari
     (hd : (tripleAtLength T s J μ).krullDimSucc ≤ T.krullDimSucc) :
     appendRecursivePrincipalization hinv T rc s J μ = appendIfMarked hinv s J μ (principalizationSeqAtEnd T rc s J μ hd) := by
   unfold appendRecursivePrincipalization principalizationSeqAtEnd
-  rw [dif_pos hd]
+  rw [dite_eq_left hd]
 
 theorem appendRecursivePrincipalization_eq_append (hinv : ComapIsoInvariance.{u}) (T : MarkedIdealWithBoundary.{u})
     (rc : ∀ S : MarkedIdealWithBoundary.{u}, S.krullDimSucc ≤ T.krullDimSucc → S.SequenceOfBlowups)
@@ -283,7 +280,7 @@ theorem appendRecursivePrincipalization_eq_append (hinv : ComapIsoInvariance.{u}
       some ((MarkedBlowupSequenceData.ofMarkedSequence (principalizationSeqAtEnd T rc s J μ hd)).toBlowupSequenceData.toMarkedBlowupSequenceData
         (s.proj s.length ≫ T.structMap) (s.ideal s.length) T.mult (s.boundary s.length) hm) := by
     unfold markedDataOfSeq
-    exact dif_pos hm
+    exact dite_eq_left hm
   rw [appendRecursivePrincipalization_eq_appendIfMarked hinv T rc s J μ hd]
   unfold appendIfMarked
   rw [hr]
@@ -310,12 +307,12 @@ theorem nonMonomialOrderReductionIter_zero :
 theorem nonMonomialOrderReductionIter_succ_of_continues (f : ℕ) (h : NonMonomialOrderReductionContinues T (nonMonomialOrderReductionIter hinv T rc f)) :
     nonMonomialOrderReductionIter hinv T rc (f + 1) = extendByNonMonomialPart hinv T rc (nonMonomialOrderReductionIter hinv T rc f) := by
   rw [nonMonomialOrderReductionIter]
-  exact if_pos h
+  exact ite_eq_left h
 
 theorem nonMonomialOrderReductionIter_succ_of_not_continues (f : ℕ) (h : ¬ NonMonomialOrderReductionContinues T (nonMonomialOrderReductionIter hinv T rc f)) :
     nonMonomialOrderReductionIter hinv T rc (f + 1) = nonMonomialOrderReductionIter hinv T rc f := by
   rw [nonMonomialOrderReductionIter]
-  exact if_neg h
+  exact ite_eq_right h
 
 theorem nonMonomialOrderReductionIter_eq_of_not_continues (f : ℕ) (h : ¬ NonMonomialOrderReductionContinues T (nonMonomialOrderReductionIter hinv T rc f)) :
     ∀ g, f ≤ g → nonMonomialOrderReductionIter hinv T rc g = nonMonomialOrderReductionIter hinv T rc f := by
@@ -324,10 +321,8 @@ theorem nonMonomialOrderReductionIter_eq_of_not_continues (f : ℕ) (h : ¬ NonM
   | base => rfl
   | succ n hn ih =>
     have hn' : ¬ NonMonomialOrderReductionContinues T (nonMonomialOrderReductionIter hinv T rc n) := by
-      rw [ih]
-      exact h
-    rw [nonMonomialOrderReductionIter_succ_of_not_continues hinv T rc n hn']
-    exact ih
+      rwa [ih]
+    rwa [nonMonomialOrderReductionIter_succ_of_not_continues hinv T rc n hn']
 
 theorem nonMonomialOrderReduction_eq :
     nonMonomialOrderReduction hinv T rc =
@@ -343,14 +338,14 @@ theorem companionIdealReductionIter_succ_of_continues (s₀ : MarkedBlowupSequen
     companionIdealReductionIter hinv T rc s₀ (f + 1) =
       extendByCompanionIdeal hinv T rc (companionIdealReductionIter hinv T rc s₀ f) := by
   rw [companionIdealReductionIter]
-  exact if_pos h
+  exact ite_eq_left h
 
 theorem companionIdealReductionIter_succ_of_not_continues
     (s₀ : MarkedBlowupSequenceData T.structMap T.ideal T.mult T.boundary)
     (f : ℕ) (h : ¬ CompanionIdealReductionContinues T (companionIdealReductionIter hinv T rc s₀ f)) :
     companionIdealReductionIter hinv T rc s₀ (f + 1) = companionIdealReductionIter hinv T rc s₀ f := by
   rw [companionIdealReductionIter]
-  exact if_neg h
+  exact ite_eq_right h
 
 theorem companionIdealReductionIter_eq_of_not_continues
     (s₀ : MarkedBlowupSequenceData T.structMap T.ideal T.mult T.boundary)
@@ -361,10 +356,8 @@ theorem companionIdealReductionIter_eq_of_not_continues
   | base => rfl
   | succ n hn ih =>
     have hn' : ¬ CompanionIdealReductionContinues T (companionIdealReductionIter hinv T rc s₀ n) := by
-      rw [ih]
-      exact h
-    rw [companionIdealReductionIter_succ_of_not_continues hinv T rc s₀ n hn']
-    exact ih
+      rwa [ih]
+    rwa [companionIdealReductionIter_succ_of_not_continues hinv T rc s₀ n hn']
 
 theorem companionIdealReduction_eq :
     companionIdealReduction hinv T rc =
@@ -385,7 +378,7 @@ theorem orderReductionData_eq :
 theorem orderReductionSeq_eq_of_nonempty (h : (orderAtLeastLocus T.ideal T.mult).Nonempty) :
     orderReductionSeq hinv T rc = (orderReductionData hinv T rc).toMarkedSequenceOfBlowups := by
   unfold orderReductionSeq
-  rw [if_neg h.ne_empty]
+  rw [ite_eq_right h.ne_empty]
 
 end
 

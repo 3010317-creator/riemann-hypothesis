@@ -161,8 +161,7 @@ theorem Good.det {k n d : ℕ} (M : Matrix (Fin k) (Fin k) (MvPolynomial (α ⊕
   refine Good.sum _ _ fun σ _ => ?_
   have h1 := Good.prod (l := l) (L := L) (E := E) (n := n) (d := d) Finset.univ
     (fun i => M (σ i) i) (fun i _ => h _ _)
-  have h2 := (Good.C (α := α) (l := l) (L := L) (E := E) (Equiv.Perm.sign σ : ℤ)).mul h1
-  simpa using h2
+  simpa using (Good.C (α := α) (l := l) (L := L) (E := E) (Equiv.Perm.sign σ : ℤ)).mul h1
 
 theorem Good.X_inl (a : α) : Good l L E 0 1 0 (X (Sum.inl a) : MvPolynomial (α ⊕ α) ℤ) := by
   classical
@@ -287,7 +286,6 @@ theorem det_frobenius_sub_pow_support :
       expand_X, map_sub, map_mul, h3, mul_zero, sub_zero]
   have h1 := (h0.of_mem hmem).pow s
   rw [one_mul] at h1
-  intro m hm
-  exact h1 m (mem_support_iff.1 hm)
+  exact fun m hm => h1 m (mem_support_iff.1 hm)
 
 end GlobalTheory

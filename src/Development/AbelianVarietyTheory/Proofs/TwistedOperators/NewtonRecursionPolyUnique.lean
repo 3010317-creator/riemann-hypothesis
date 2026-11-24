@@ -131,8 +131,7 @@ theorem newton_recursion_poly_unique : ∀ (m N : ℕ) (p : ℕ → ℂ) (f r : 
     · obtain ⟨e, he⟩ : ∃ e, d = e + 1 := ⟨d - 1, by omega⟩
       have hgdeg : g.natDegree ≤ e := by
         rw [natDegree_le_iff_coeff_eq_zero]
-        intro n hn
-        exact shiftDiffPoly_coeff_top f n (by omega)
+        exact fun n hn => shiftDiffPoly_coeff_top f n (by omega)
       have hidx : d + N = (N + 1) + e := by omega
       rw [hidx, coeff_mul_add_eq_of_natDegree_le (by rw [natDegree_pow, natDegree_X_sub_C, mul_one]) hgdeg,
         hlead, one_mul, shiftDiffPoly_coeff_sub f e he, he]

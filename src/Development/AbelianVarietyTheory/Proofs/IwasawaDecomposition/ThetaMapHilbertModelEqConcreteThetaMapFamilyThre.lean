@@ -62,8 +62,7 @@ theorem thF_congr {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : 
 
 theorem ofInjective_symm_eq {X Y : Type} [AddCommGroup X] [Module ℂ X] [AddCommGroup Y] [Module ℂ Y] (f : X →ₗ[ℂ] Y)
     (hf : Function.Injective f) (a : LinearMap.range f) : f ((LinearEquiv.ofInjective f hf).symm a) = a := by
-  have h := LinearEquiv.apply_symm_apply (LinearEquiv.ofInjective f hf) a
-  exact congrArg Subtype.val h
+  exact congrArg Subtype.val (LinearEquiv.apply_symm_apply (LinearEquiv.ofInjective f hf) a)
 
 
 
@@ -103,8 +102,7 @@ theorem thetaP_read : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : 
     have e2 : w' (PiTensorProduct.map (fun τ => (lowT (R.MW i (sg0 D A3.A)) τ).subtype) (PiTensorProduct.tprod ℂ v)) =
         PiTensorProduct.lift (R.thF i u z')
           (PiTensorProduct.map (fun τ => (lowT (R.MW i (sg0 D A3.A)) τ).subtype) (PiTensorProduct.tprod ℂ v)) := e
-    rw [PiTensorProduct.map_tprod, PiTensorProduct.lift.tprod] at e2
-    exact e2
+    rwa [PiTensorProduct.map_tprod, PiTensorProduct.lift.tprod] at e2
   have hw0 : U - R.thF i t zt = 0 :=
     GlobalTheory.LowTypeDetermined.eq_zero_of_lowT D _ _ (R.MW i (sg0 D A3.A)) R.θ hM.inf
       (GlobalTheory.LowTypeRestriction.lowT_ne_bot _) _ _ _ (Submodule.sub_mem _ hU (hE.thF_mem i t zt)) (fun v => by

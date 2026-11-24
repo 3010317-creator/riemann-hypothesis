@@ -54,8 +54,7 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.adSurj :
     rw [map_one, map_mul, map_mul, map_one, Matrix.mul_one] at h1
     intro i j
     have h2 := congrFun (congrFun h1 i) j
-    rw [Matrix.mul_apply] at h2
-    exact h2
+    rwa [Matrix.mul_apply] at h2
   have hx : ∀ v i j, ∃ x : Lsq (Kv v) (cv v R.Δ), ∀ w h, R.ρ v w h x = pLoc L w (A i j) :=
     fun v i j => R.ρ_surj v (A i j)
   choose x hx using hx
@@ -78,8 +77,7 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.adSurj :
     · subst hij; simp
     · simp [Matrix.one_apply_ne hij]
   · have hfin : ∀ i j, {w : Plc L | pLoc L w (A i j) ∉ w.adicCompletionIntegers L}.Finite := by
-      intro i j
-      exact (A i j).2
+      exact fun i j => (A i j).2
     have hall : {w : Plc L | ∃ i j, pLoc L w (A i j) ∉ w.adicCompletionIntegers L}.Finite := by
       have : {w : Plc L | ∃ i j, pLoc L w (A i j) ∉ w.adicCompletionIntegers L} =
           ⋃ i, ⋃ j, {w : Plc L | pLoc L w (A i j) ∉ w.adicCompletionIntegers L} := by

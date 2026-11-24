@@ -274,8 +274,7 @@ theorem linForm_dvd_sub_shift (x c : Fin n → ℂ) (p : MvPolynomial (Fin n) �
     exact ⟨-C (c j), by ring⟩
   have h := DFunLike.congr_fun key p
   simp only [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk] at h
-  rw [eq_comm, Ideal.Quotient.eq, Ideal.mem_span_singleton] at h
-  exact h
+  rwa [eq_comm, Ideal.Quotient.eq, Ideal.mem_span_singleton] at h
 
 theorem eval_shiftHom (x c u : Fin n → ℂ) (p : MvPolynomial (Fin n) ℂ) :
     eval u (shiftHom x c p) = eval (fun j => u j - c j * ∑ i, u i * x i) p := by
@@ -485,7 +484,7 @@ theorem ModelDimension.chow_form_product_formula :
     rw [h, map_zero] at hR1
     exact hR0 hR1
   · rw [← eval_sectionPoly, hR, hR1, map_mul, eval_C, map_prod, mul_comm]
-    simp only [eval_linForm, coeff_C, if_true]
+    simp only [eval_linForm, coeff_C, ite_true]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.CommonZeroEvaluation.EvalEqZeroOfCommonZero =====
@@ -659,8 +658,7 @@ theorem transfer {Ω S X : Type*} [MeasurableSpace Ω] [MeasurableSpace S] [Meas
     rw [integrable_prod_iff hFT]
     constructor
     · filter_upwards [hinv] with s hs
-      simp only [hs]
-      exact hint
+      simpa only [hs] using hint
     · refine (integrable_const (∫ u, ‖F u‖ ∂μ)).congr ?_
       filter_upwards [hinv] with s hs
       simp only [hs]
@@ -784,12 +782,10 @@ theorem aesm (h : HermNorm n) (G : (Fin e × Fin n → ℂ) → ℝ)
         (fun u => G (nrmGroups h e u)) ∘ sc (n := n) (fun _ => (1 : ℝ) / (m + 1)) := by
       funext u
       simp only [Function.comp, nrm_sc h hc u]
-    rw [heq]
-    exact h2
+    rwa [heq]
   have hU : (⋃ m : ℕ, sc (n := n) (fun _ => (1 : ℝ) / (m + 1)) ⁻¹' ballProd h e) = Set.univ := by
     ext u
-    simp only [Set.mem_iUnion, Set.mem_preimage, Set.mem_univ, iff_true]
-    exact hcov u
+    simpa only [Set.mem_iUnion, Set.mem_preimage, Set.mem_univ, iff_true] using hcov u
   rw [← Measure.restrict_univ (μ := volume), ← hU]
   exact aestronglyMeasurable_iUnion_iff.2 hF
 
@@ -818,8 +814,7 @@ instance isFiniteMeasure_piExponential : IsFiniteMeasure (exP e) := by
 theorem ae_pos_piExponential : ∀ᵐ s ∂(exP e), ∀ i, 0 < s i := by
   unfold exP
   rw [ae_all_iff]
-  intro i
-  exact (Measure.tendsto_eval_ae_ae (i := i)).eventually exponential_measure_pos_ae
+  exact fun i => (Measure.tendsto_eval_ae_ae (i := i)).eventually exponential_measure_pos_ae
 
 def rowGauss (h : HermNorm n) (u : Fin e × Fin n → ℂ) : ℝ≥0∞ :=
   ENNReal.ofReal (Real.exp (-∑ i, rowN h u i ^ 2))
@@ -903,8 +898,7 @@ theorem wt_mul (h : HermNorm n) {s : Fin e → ℝ} (hs : ∀ i, 0 < s i) {A : S
     intro X hX
     have h1 := congrArg (fun μ : Measure (Fin e × Fin n → ℂ) => μ X) hd
     simp only [Measure.smul_apply, smul_eq_mul] at h1
-    rw [Measure.map_apply (measurable_sc c') hX] at h1
-    exact h1
+    rwa [Measure.map_apply (measurable_sc c') hX] at h1
   have hwt : wt h s = d := by
     rw [wt, hslice, hvol _ hball]
     exact ENNReal.mul_div_cancel_right (volume_ballProd_pos h e).ne' (volume_ballProd_lt_top h e).ne
@@ -1168,8 +1162,7 @@ theorem defect_eq_of_linForm_notMem : ∀ (n e δ : ℕ) (h : HermNorm n) (W : I
   have hint := integral_congr_ae (μ := gaussM (e + 1) n) haeG
   rw [integral_sub i1 i2, integral_sub i1' i2', e1, e2, e1', e2'] at hint
   apply mul_left_cancel₀ hΓr
-  rw [mul_sub, mul_sub]
-  exact hint
+  rwa [mul_sub, mul_sub]
 
 end GlobalTheory.CompanionTheory.Ar.Short.Crofton
 end -- clump:auto

@@ -72,8 +72,7 @@ private theorem exists_valuation_natCast_eq_exp_neg_and_dvd {F : Type} [Field F]
   have hle : v.intValuation (p : 𝓞 F) ≤ 1 := v.intValuation_le_one _
   set a := v.intValuation (p : 𝓞 F) with ha
   have hlog : WithZero.log a ≤ 0 := by
-    rw [← WithZero.exp_le_exp, WithZero.exp_log hne, WithZero.exp_zero]
-    exact hle
+    rwa [← WithZero.exp_le_exp, WithZero.exp_log hne, WithZero.exp_zero]
   refine ⟨(-WithZero.log a).toNat, ?_, ?_⟩
   · rw [hval, Int.toNat_of_nonneg (by omega), neg_neg, WithZero.exp_log hne]
   · rw [← HeightOneSpectrum.intValuation_le_pow_iff_dvd, Int.toNat_of_nonneg (by omega), neg_neg,
@@ -123,8 +122,7 @@ private theorem pTor_units_le {L : Type} [Field L] {p : ℕ} (hp : 0 < p) :
       (⟨(x.1 : L), by
         rw [Multiset.mem_toFinset, Polynomial.mem_nthRoots hp, ← Units.val_pow_eq_pow_val, x.2.2,
           Units.val_one]⟩ : (Polynomial.nthRoots p (1 : L)).toFinset)) := by
-    intro x y hxy
-    exact Subtype.ext (Units.ext (congrArg Subtype.val hxy))
+    exact fun x y hxy => Subtype.ext (Units.ext (congrArg Subtype.val hxy))
   calc Nat.card {x : Lˣ // x ∈ (⊤ : Subgroup Lˣ) ∧ x ^ p = 1}
       ≤ Nat.card (Polynomial.nthRoots p (1 : L)).toFinset := Nat.card_le_card_of_injective _ hinj
     _ = (Polynomial.nthRoots p (1 : L)).toFinset.card := Nat.card_eq_finsetCard _

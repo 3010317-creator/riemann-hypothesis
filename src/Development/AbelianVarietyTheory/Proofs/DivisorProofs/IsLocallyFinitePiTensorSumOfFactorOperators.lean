@@ -55,10 +55,8 @@ theorem atPl_mem_range_map {ι : Type} [Fintype ι] [DecidableEq ι] {V : ι →
       intro j
       by_cases h : j = w
       · subst h
-        simp only [Function.update_self]
-        exact hN j _ (x j).2
-      · simp only [Function.update_of_ne h, LinearMap.id_apply]
-        exact (x j).2
+        simpa only [Function.update_self] using hN j _ (x j).2
+      · simpa only [Function.update_of_ne h, LinearMap.id_apply] using (x j).2
     refine ⟨r • PiTensorProduct.tprod ℂ (fun j => (⟨_, hx j⟩ : N j)), ?_⟩
     simp [atPl, PiTensorProduct.map_tprod]
   | add a b ha hb =>

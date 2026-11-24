@@ -134,8 +134,7 @@ theorem GlobalTheory.LocLanglands.exists_isLExt : LanglandsExhaustionGL → Lang
     apply LangExt.sumList_perm
     apply List.Perm.map
     apply Multiset.coe_eq_coe.1
-    rw [Multiset.coe_toList]
-    exact he
+    rwa [Multiset.coe_toList]
   · intro rc hrc x hx
     have h1 := hrc [.single x hx] x (single_spec hx).2.2.2
     rw [h1]
@@ -143,8 +142,7 @@ theorem GlobalTheory.LocLanglands.exists_isLExt : LanglandsExhaustionGL → Lang
     rw [WD.lpSum_zero]
     have h2 := (GlobalTheory.WeilDeligne.charPol_lpTw_lpChar_lpSp E Ω A w h (r x)).1
     have h3 : ((((1 : ℕ) : ℝ) - 1) / 2) = 0 := by norm_num
-    rw [h3]
-    exact h2
+    rwa [h3]
 
 end
 end -- clump:auto
@@ -293,7 +291,7 @@ theorem iso_sp_dual (n : ℕ) : (WDRep.sp h n).dual.Iso (WDRep.sp h n) := by
       LinearMap.neg_apply, LinearMap.dualMap_apply, shiftEnd_single, shiftEnd_apply]
     by_cases hi : 1 ≤ (i : ℕ)
     · have hr : (i.rev : ℕ) + 1 < n := by rw [Fin.val_rev]; omega
-      rw [dite_eq_left hr, if_pos hi]
+      rw [dite_eq_left hr, ite_eq_left hi]
       have he : (⟨(i.rev : ℕ) + 1, hr⟩ : Fin n) = (⟨(i : ℕ) - 1, by omega⟩ : Fin n).rev := by
         ext; simp only [Fin.val_rev]; omega
       rw [he]
@@ -301,7 +299,7 @@ theorem iso_sp_dual (n : ℕ) : (WDRep.sp h n).dual.Iso (WDRep.sp h n) := by
       simp only [hk, Nat.add_sub_cancel, pow_succ]
       ring
     · have hr : ¬ (i.rev : ℕ) + 1 < n := by rw [Fin.val_rev]; omega
-      rw [dite_eq_right hr, if_neg hi]
+      rw [dite_eq_right hr, ite_eq_right hi]
       simp
 
 namespace WDClass
@@ -706,8 +704,7 @@ theorem perm_of_sumList_lpChar_lpSp_eq : ∀ (E Ω : Type) [Field E] [NumberFiel
     obtain ⟨hm, hiso⟩ := eq_of_hasCopy a ha a' ha' k' k hqQ hqZ
     have hp' : (WD.mk a, k) ∈ l' := by
       have : ((WD.mk a', k') : WD h × ℕ) = (WD.mk a, k) := Prod.ext (WD.sound hiso).symm hm
-      rw [← this]
-      exact hq'
+      rwa [← this]
 
     set p : WD h × ℕ := (WD.mk a, k) with hpdef
     set F : WD h × ℕ → WD h := fun p => p.1.lpChar (WD.lpSp h (p.2 + 1)) with hF
@@ -717,8 +714,7 @@ theorem perm_of_sumList_lpChar_lpSp_eq : ∀ (E Ω : Type) [Field E] [NumberFiel
       sumList_perm ((List.perm_cons_erase hp').map F)
     have hc : sumList ((l.erase p).map F) = sumList ((l'.erase p).map F) := by
       refine WD.lpSum_cancel_right E Ω A w h _ _ (F p) ?_
-      rw [WD.lpSum_comm, ← e1, WD.lpSum_comm, ← e2]
-      exact heq
+      rwa [WD.lpSum_comm, ← e1, WD.lpSum_comm, ← e2]
     have hlen : (l.erase p).length = n := by
       rw [List.length_erase_of_mem hp, hn]
       rfl
@@ -809,8 +805,7 @@ theorem _root_.GlobalTheory.T.perm_of_weilDeligne_special_decomposition_eq :
     obtain ⟨hm, hiso⟩ := eq_of_hasCopy a ha a' ha' k' k hqQ hqZ
     have hp' : (WD.mk a, k) ∈ l' := by
       have : ((WD.mk a', k') : WD h × ℕ) = (WD.mk a, k) := Prod.ext (WD.sound hiso).symm hm
-      rw [← this]
-      exact hq'
+      rwa [← this]
 
     let p : WD h × ℕ := (WD.mk a, k)
     have e1 : sumList (l.map F) = (F p).lpSum (sumList ((l.erase p).map F)) :=
@@ -819,8 +814,7 @@ theorem _root_.GlobalTheory.T.perm_of_weilDeligne_special_decomposition_eq :
       sumList_perm ((List.perm_cons_erase hp').map F)
     have hc : sumList ((l.erase p).map F) = sumList ((l'.erase p).map F) := by
       refine WD.lpSum_cancel_right E Ω A w h _ _ (F p) ?_
-      rw [WD.lpSum_comm, ← e1, WD.lpSum_comm, ← e2]
-      exact heq
+      rwa [WD.lpSum_comm, ← e1, WD.lpSum_comm, ← e2]
     have hlen : (l.erase p).length = n := by
       rw [List.length_erase_of_mem hp, hn]
       rfl
@@ -880,8 +874,7 @@ theorem UpperTheory.Zero.LLC.extInj :
   have hgy : ∀ Δ ∈ my.toList, g (f Δ) = some Δ := by
     intro Δ hΔ
     have hp : ∃ Δ' ∈ my.toList, f Δ' = f Δ := ⟨Δ, hΔ, rfl⟩
-    simp only [g, dif_pos hp]
-    exact congrArg some (key _ _ (hgood Δ hΔ) hp.choose_spec.2)
+    simpa only [g, dite_eq_left hp] using congrArg some (key _ _ (hgood Δ hΔ) hp.choose_spec.2)
   have hgx : ∀ Δ ∈ mx.toList, g (f Δ) = some Δ := by
     intro Δ hΔ
     obtain ⟨Δ', hΔ', he⟩ := List.mem_map.mp (hperm.subset (List.mem_map_of_mem hΔ))
@@ -1213,8 +1206,7 @@ theorem exists_inc_eq (i : ℚ_[g] ≃+* k) (hi : Continuous i) {n : ℕ} (k0 : 
     show (M' * M).map φ = (1 : Matrix (Fin n) (Fin n) ℤ_[g]).map φ
     rw [Matrix.map_mul, hMφ, hM'φ, ← Units.val_mul, inv_mul_cancel, Units.val_one,
       Matrix.map_one _ (map_zero φ) (map_one φ)]
-  refine ⟨⟨M, M', hMM, hM'M⟩, Matrix.GeneralLinearGroup.ext fun a b => ?_⟩
-  exact i.apply_symm_apply _
+  exact ⟨⟨M, M', hMM, hM'M⟩, Matrix.GeneralLinearGroup.ext fun a b => (i.apply_symm_apply _)⟩
 
 theorem exists_lift (i : ℚ_[g] ≃+* k) {n a : ℕ} (u : GL (Fin n) (ZMod g))
     (hu : u ∈ GlobalTheory.FiniteGL.unipRadical (ZMod g) (GlobalTheory.FiniteGL.twoBlocks n a)) :
@@ -1245,8 +1237,7 @@ theorem exists_lift (i : ℚ_[g] ≃+* k) {n a : ℕ} (u : GL (Fin n) (ZMod g))
   have hd : IsUnit M.det := by
     by_contra h
     have h1 : M.det ∈ RingHom.ker (PadicInt.toZMod (p := g)) := by
-      rw [PadicInt.ker_toZMod]
-      exact h
+      rwa [PadicInt.ker_toZMod]
     rw [RingHom.mem_ker, RingHom.map_det, hM] at h1
     exact ((Matrix.isUnit_iff_isUnit_det _).1 (Units.isUnit u)).ne_zero h1
   refine ⟨((Matrix.isUnit_iff_isUnit_det _).2 hd).unit, Units.ext hM, ?_⟩

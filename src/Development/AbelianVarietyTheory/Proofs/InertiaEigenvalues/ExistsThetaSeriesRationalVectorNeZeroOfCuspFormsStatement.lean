@@ -125,7 +125,6 @@ theorem cuspOver_ne_bot : ∀ (D : D7) (Γ : Type) [Group Γ] [Fintype Γ] (Pl0 
   refine hf0 ((GlobalTheory.reading_linearIndependent_and_injective GlobalTheory.lawsFieldsSeparately.2.1 _ _ _ _ _ T.Q.c _ _
     (Formalism.L2.PjFree.Unf.ofPj (T.U ((j : ℕ) + 1) (σ'.comp (incF T.Q.c (O j).c' (O j).hle))))
     ((Formalism.L2.PjFree.isUnf_ofPj _).2 hU) _ _).2 f hsec (fun k x _ => ?_))
-  show rdU (T.U ((j : ℕ) + 1) (σ'.comp (incF T.Q.c (O j).c' (O j).hle))) f k x = 0
   exact (congrFun (congrFun hrd k) x).symm
 
 end GlobalTheory.BaseChangeNonzero
@@ -285,8 +284,7 @@ theorem indepToC_sec {D : D7} (T : Core D) (hM : LawsM T) {j : ℕ} (hj : InR D 
   have hc := ReciprocityTheory.ChartRestriction.G.PullbackSections.indep_of_complex (K := T.Q.c.F) (fun S _ _ => FrPt (T.Q.Xo j) T.Q.c S)
     (fun φ y z => FrMap φ y z) (hM.evalWD j hj) (fun p φ y => hA p y φ)
     _ (fun i => (hfs i).1) hb' g (fun z hz => hall z hz)
-  intro i
-  exact congrFun hc i
+  exact fun i => congrFun hc i
 
 theorem rel_of_dict {D : D7} (T : Core D) (hM : LawsM T) {j : ℕ} (hj : InR D j) {σ : T.Q.c.F →+* ℂ}
     (hσ : GoodEmb T.Q.c σ) {a : (D.host.E →+* ℂ) × ℕ → ℕ} {n m : ℕ} (fs : Fin m → T.R j)
@@ -430,8 +428,7 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestric
 
 theorem exists_jFn_actLev_ne : ∀ (D : D7) (Γ : Type) [Group Γ] [Fintype Γ] (Pl0 T0 : Type) (A : FamIn D.what₂.LL Γ Pl0 T0 D.R.m) (T : CoreJ D) [Algebra T.Q.c.F D.what₂.LL] (R : RealDat D A T.Q.c.F) (F : Face D A) (κ : ∀ i : Fin D.R.m, WeightFamilies.Wt D ((i : ℕ) + 1)) (v₀ : ∀ (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), (R.MW i σ).Vec) (O : ∀ i, OMDat T.toCore R i Unit (fun _ => A.μ0)), 8 * D.R.f * D.R.r + 4 ≤ D.R.nV → GlobalTheory.Hk3.Core R F → Nonempty (FWTie T R κ v₀) → IoExt R → ∀ (j : Fin D.R.m), OMPins T R κ v₀ O j → OneMapRow0 T R κ v₀ O j → ∀ f ∈ GlobalTheory.OneMapAll.cuspOver (O j) (κ j), f ≠ 0 → ∀ z : Γ, z ∈ Subgroup.center Γ → ∃ q, jFn (Wc D j) (inC (O j).c') (rdU (unfBC (O j).hle (T.toCore.U ((j : ℕ) + 1)) (inC (O j).c'))) (O j).dict (O j).mu (actLev (O j).c' (O j).lev2 z f) q ≠ 0 := by
   intro D Γ _ _ Pl0 T0 A T _ R F κ v₀ O hnV hC hFW hIo j hP hrow f hf hf0 z hz
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   obtain ⟨W⟩ := hFW
   have hM : LawsM T.toCore := W.laws.toLawsM
   have hj : InR D ((j : ℕ) + 1) := ⟨by omega, by have := j.isLt; omega⟩
@@ -536,8 +533,7 @@ theorem ser_sum {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T0 : Type} {A 
   unfold ser
 
   rw [map_sum, map_sum]
-  simp only [map_smul]
-  exact thetaKO_sum' _ _ _ _ _ _
+  simpa only [map_smul] using thetaKO_sum' _ _ _ _ _ _
 
 theorem exists_rat_of_ser_ne {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T0 : Type} {A : FamIn D.what₂.LL Γ Pl0 T0 D.R.m}
     {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (i : Fin D.R.m) (t : T0)

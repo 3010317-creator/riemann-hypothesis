@@ -81,8 +81,7 @@ theorem exists_nat_smul_coeff_isIntegral {σ K : Type} [Field K] [CharZero K]
     · rw [e] at h
       simpa using h
     · rw [e] at h
-      have h2 := h.neg
-      simpa using h2
+      simpa using h.neg
   choose n hn hi using hx
   refine ⟨∏ m ∈ P.support, n (P.coeff m), Finset.prod_pos fun m _ => hn _, fun m => ?_⟩
   rw [MvPolynomial.coeff_smul, smul_eq_mul]

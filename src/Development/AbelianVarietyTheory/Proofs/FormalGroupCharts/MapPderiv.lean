@@ -165,8 +165,7 @@ theorem algHom_dualNumber_ext : ∀ (C : Type) [Field C] [IsAlgClosed C] [CharZe
   have hle : ∀ g, v (φ₀ g) ≤ 1 := by
     intro g
     have h1 : IsIntegral O (Ideal.Quotient.mkₐ O I g) := Algebra.IsIntegral.isIntegral _
-    have h2 := h1.map ((TrivSqZeroExt.fstHom O C C).comp φ)
-    exact hv.mem_of_integral h2
+    exact hv.mem_of_integral (h1.map ((TrivSqZeroExt.fstHom O C C).comp φ))
   choose a ha using fun j => hv.exists_of_le_one (hle (X j))
   let K : Ideal (MvPowerSeries σ O) :=
     { carrier := {g | v (φ₀ g) < 1}
@@ -342,8 +341,7 @@ theorem jac_mul_invMat (G : FGLaw R d) (N : ℕ) :
     · simp
   rw [e1, e2, dof_single, dof_single, e3, GlobalTheory.ChartTrans.ev_C_mul _ (single_point_zero_constant hφ), map_one, one_mul,
     map_natCast] at h
-  rw [Matrix.mul_apply, Matrix.smul_apply, smul_eq_mul]
-  exact h
+  rwa [Matrix.mul_apply, Matrix.smul_apply, smul_eq_mul]
 
 theorem det_jac_mulF : ∀ (R : Type) [CommRing R] (d : ℕ) (F : FGLaw R d) (N : ℕ),
     ∃ U : (PS R 1 d)ˣ, Matrix.det (Matrix.of fun i j : Fin d =>
@@ -607,8 +605,7 @@ theorem map_bound {R S σ κ : Type} [CommRing R] [CommRing S] (φ : R →+* S) 
     ext a
     simp [MvPowerSeries.map_C]
   rw [e1, e2, e3] at h2
-  rw [Ideal.map_map]
-  exact h2
+  rwa [Ideal.map_map]
 
 theorem fhSt : ∀ (p : ℕ) [Fact p.Prime], FHSt p := by
   intro p _

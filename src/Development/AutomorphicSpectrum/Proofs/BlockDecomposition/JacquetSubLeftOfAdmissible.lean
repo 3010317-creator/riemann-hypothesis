@@ -103,8 +103,7 @@ theorem isIrreducible_comp (π : Representation ℂ G V) (Φ : H ≃* G) (h : π
 
 theorem isSmooth_comp (π : Representation ℂ G V) (Φ : H ≃ₜ* G) (h : IsSmooth π) :
     IsSmooth (π.comp Φ.toMulEquiv.toMonoidHom : Representation ℂ H V) := by
-  intro v
-  exact (h v).preimage (map_continuous Φ)
+  exact fun v => (h v).preimage (map_continuous Φ)
 
 theorem isAdmissible_of_comp (π : Representation ℂ G V) (Φ : H ≃ₜ* G) (hs : IsSmooth π)
     (h : IsAdmissible (π.comp Φ.toMulEquiv.toMonoidHom : Representation ℂ H V)) : IsAdmissible π := by
@@ -114,8 +113,7 @@ theorem isAdmissible_of_comp (π : Representation ℂ G V) (Φ : H ≃ₜ* G) (h
   have hset : (K' : Set H) = Φ.symm '' (K : Set G) := by
     ext x
     constructor
-    · intro hx
-      exact ⟨Φ x, hx, by simp⟩
+    · exact fun hx => ⟨Φ x, hx, by simp⟩
     · rintro ⟨y, hy, rfl⟩
       show Φ (Φ.symm y) ∈ K
       simpa using hy
@@ -231,8 +229,7 @@ theorem isCuspidal_of_jacquet_min_left {n a b : ℕ} {V W W' : Type} [AddCommGro
     rw [jac_mk, hd]; simp
   have hN : ∀ u ∈ unipRad k (two (stdSum h)), ∀ v : V,
       (Submodule.Quotient.mk (π u v) : V ⧸ Kab) = Submodule.Quotient.mk v := by
-    intro u hu v
-    exact (Submodule.Quotient.eq Kab).2 (Submodule.subset_span ⟨⟨u, hu⟩, v, by simp⟩)
+    exact fun u hu v => (Submodule.Quotient.eq Kab).2 (Submodule.subset_span ⟨⟨u, hu⟩, v, by simp⟩)
   have hC : ∀ u ∈ unipRad k (two (stdSum hcd)), ∀ v : V, Φ (π u v) = Φ v := by
     intro u hu v
     have hu' := (mem_unipRad_two_iff hcd).1 hu

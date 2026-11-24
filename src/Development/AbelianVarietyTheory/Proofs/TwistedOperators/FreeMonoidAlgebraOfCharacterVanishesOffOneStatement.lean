@@ -115,8 +115,7 @@ theorem exists_isCompl [Finite G] {ρ : Representation ℂ G V} (p : Subrepresen
   refine ⟨Subrepresentation.ofSubmodule' c, ?_⟩
   constructor
   · rw [Submodule.disjoint_def]
-    intro x hx hx'
-    exact (Submodule.disjoint_def.mp hc.disjoint) x hx hx'
+    exact fun x hx hx' => (Submodule.disjoint_def.mp hc.disjoint) x hx hx'
   · rw [codisjoint_iff, Submodule.eq_top_iff']
     intro x
     have hx : (show ρ.asModule from x) ∈ (Subrepresentation.asSubmodule p ⊔ c) := by
@@ -164,8 +163,7 @@ theorem exists_ne_zero [Finite G] [FiniteDimensional ℂ V] [FiniteDimensional �
   rw [← h, h2] at h1
   have hid : IntertwiningMap.id ρ ≠ 0 := by
     obtain ⟨v, hv⟩ := exists_ne (0 : V)
-    intro h0
-    exact hv (by simpa using DFunLike.congr_fun h0 v)
+    exact fun h0 => hv (by simpa using DFunLike.congr_fun h0 v)
   have hpos : 0 < finrank ℂ (IntertwiningMap ρ ρ) :=
     Module.finrank_pos_iff_exists_ne_zero.mpr ⟨_, hid⟩
   have heq : finrank ℂ (IntertwiningMap ρ ρ) = finrank ℂ (IntertwiningMap ρ σ) := by
@@ -273,7 +271,7 @@ theorem trace_freeRep {P : Type} [Group P] [Finite P] (N : ℕ) {g : P} (hg : g 
     · subst hk
       simp [MonoidAlgebra.single_mul_single]
     · simp [hk]
-  rw [Matrix.diag_apply, LinearMap.toMatrix_apply, hmove, b.repr_self, Finsupp.single_apply, if_neg]
+  rw [Matrix.diag_apply, LinearMap.toMatrix_apply, hmove, b.repr_self, Finsupp.single_apply, ite_eq_right]
   intro h
   rw [Sigma.mk.inj_iff, heq_iff_eq] at h
   exact hg (mul_right_cancel (h.2.trans (one_mul p).symm))

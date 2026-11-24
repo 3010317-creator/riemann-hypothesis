@@ -143,8 +143,7 @@ theorem main : ∀ (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd →* GL (F
     intro f hf
     have := Check.cocW_quad i r S Xs _ hq hf _ hγ0
     rw [Check.matKO_smul_one, psiChi_group hS, hchi _ hγ0] at this
-    rw [sub_smul, one_smul, sub_eq_zero]
-    exact this
+    rwa [sub_smul, one_smul, sub_eq_zero]
   have hdet : ∀ f ∈ cocChi i r S Xs c, f (D.nd.gam0 i v) = 0 →
       ∀ σ ∈ Ine (F := D.host.E) (D.nd.plOm.1 v), f σ = 0 := by
     intro f hf h0
@@ -167,7 +166,6 @@ theorem main : ∀ (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd →* GL (F
     exact htor f hf
   · rw [injective_iff_map_eq_zero]
     rintro ⟨_, f, hf, rfl⟩ h0
-    refine Subtype.ext (funext fun σ => ?_)
-    exact hdet f hf (congrArg Subtype.val h0) σ.1 σ.2
+    exact Subtype.ext (funext fun σ => (hdet f hf (congrArg Subtype.val h0) σ.1 σ.2))
 
 end GlobalTheory.Cut.Quad

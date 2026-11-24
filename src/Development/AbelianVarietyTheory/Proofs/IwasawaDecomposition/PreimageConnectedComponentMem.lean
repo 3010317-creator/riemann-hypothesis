@@ -78,8 +78,7 @@ theorem disjoint_of_smooth {K : Type} [Field K] {X : Scheme.{0}} (f : X ⟶ Spec
   · exact (hV'.fromSpec.isOpenEmbedding).comp (PrimeSpectrum.localization_away_isOpenEmbedding _ r)
   · obtain ⟨z, hz⟩ : hV'.primeIdealOf ⟨x, hxV⟩ ∈
         Set.range (PrimeSpectrum.comap (algebraMap Γ(X, V) (Localization.Away r))) := by
-      rw [PrimeSpectrum.localization_away_comap_range (Localization.Away r) r]
-      exact hr
+      rwa [PrimeSpectrum.localization_away_comap_range (Localization.Away r) r]
     refine ⟨z, ?_⟩
     show hV'.fromSpec (PrimeSpectrum.comap (algebraMap Γ(X, V) (Localization.Away r)) z) = x
     rw [hz]
@@ -104,8 +103,7 @@ theorem connectedComponent_mem {X : Type} [TopologicalSpace X] (hfin : (irreduci
     ext p
     simp only [Set.mem_compl_iff, Set.mem_iUnion, not_exists]
     constructor
-    · intro hp W hW hpW
-      exact Set.disjoint_left.1 (hd _ hW.1 _ hV hW.2) hpW hp
+    · exact fun hp W hW hpW => Set.disjoint_left.1 (hd _ hW.1 _ hV hW.2) hpW hp
     · intro hp
       by_contra hpZ
       exact hp _ ⟨irreducibleComponent_mem_irreducibleComponents p,
@@ -156,8 +154,7 @@ theorem exists_equiv : ∃ q : s.Comp ≃ Comp (S.Xo κ.l) κ.c, ∀ k z,
   · obtain ⟨x, hx⟩ := hne k
     refine ⟨⟨x, hx⟩, fun pt => ?_⟩
     have := hq k ⟨x, hx⟩ pt
-    rw [h] at this
-    exact this
+    rwa [h] at this
 
 theorem existsUnique_onComp (z : gen s.T.Z) : ∃! k, OnComp s k z := by
   obtain ⟨q, hq⟩ := exists_equiv s

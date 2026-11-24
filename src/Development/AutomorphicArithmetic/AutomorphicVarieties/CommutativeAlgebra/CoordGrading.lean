@@ -171,10 +171,10 @@ theorem UpperTheory.V.Alg.eigen_mem :
       (fun i _ => hf' i (W.π (wcomp O W.wt i g)) ⟨_, wcomp_mem O W.wt i g, rfl⟩), map_sub, map_sum] at h2
       simp only [map_mul, hq, hf, map_C] at h2
       simp only [map_sub, mul_sub, Finset.sum_sub_distrib, apply_ite C, map_zero, mul_ite, mul_zero,
-        Finset.sum_ite_eq', if_pos hjs]
+        Finset.sum_ite_eq', ite_eq_left hjs]
       rw [← neg_eq_zero, neg_sub]
       exact h2) j hjs
-  simp only [if_true] at h3
+  simp only [ite_true] at h3
   rwa [← map_sub, Ideal.Quotient.eq_zero_iff_mem] at h3
 end -- clump:auto
 end -- clump:auto
@@ -305,16 +305,15 @@ private theorem hos_art {O : Type} [CommRing O] [IsLocalRing O] {X : Type} [AddC
       _ = f' x := by
           rw [hE]
           refine Finset.sum_congr rfl fun d hd => ?_
-          rw [Finset.sum_ite_eq, if_pos (Finset.mem_image_of_mem _ hd)]
+          rw [Finset.sum_ite_eq, ite_eq_left (Finset.mem_image_of_mem _ hd)]
       _ = 0 := h0
   by_cases hj : j ∈ s
   · exact hz j hj
   · rw [hT]
     apply Finset.sum_eq_zero
     intro d hd
-    rw [if_neg]
-    intro h
-    exact hj (h ▸ Finset.mem_image_of_mem _ hd)
+    rw [ite_eq_right]
+    exact fun h => hj (h ▸ Finset.mem_image_of_mem _ hd)
 
 theorem UpperTheory.V.Alg.homog_of_stable :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O] (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (R : Type) [CommRing R] [Algebra O R] [IsCO O R] (σ : Type) [Finite σ] (wt : σ → X) (π : MvPowerSeries σ O →ₐ[O] R), (∀ s, π (MvPowerSeries.X s) ∈ maximalIdeal R) →
@@ -352,8 +351,7 @@ theorem UpperTheory.V.Alg.homog_of_stable :
       rw [← hu, Units.mul_inv]
     apply (maximalIdeal.isMaximal R).ne_top
     rw [Ideal.eq_top_iff_one]
-    have h1 := Ideal.sub_mem _ (Ideal.mul_mem_right v _ hr) (hIm hrv)
-    simpa using h1
+    simpa using Ideal.sub_mem _ (Ideal.mul_mem_right v _ hr) (hIm hrv)
   have hle : maximalIdeal (R ⧸ I) ≤ Ideal.map (Ideal.Quotient.mk I) (maximalIdeal R) := by
     intro y hy
     obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective y
@@ -373,8 +371,7 @@ theorem UpperTheory.V.Alg.homog_of_stable :
   have key := hos_art wt (q.comp π) (N + 1) hJ hp x
     (fun R' _ _ _ i t ht f' hf' =>
       hstab R' ((i.comp q).comp π) t ht (fun y hy => by simp [hy]) f' (fun s => (hf' s).trans rfl) x hx') j
-  rw [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk, Ideal.Quotient.eq_zero_iff_mem] at key
-  exact key
+  rwa [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk, Ideal.Quotient.eq_zero_iff_mem] at key
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.HomogOfStable =====
@@ -389,8 +386,7 @@ open IsLocalRing MvPowerSeries UpperTheory.V.Alg
 private theorem map_mem_max {O : Type} [CommRing O] [IsLocalRing O] {R : Type} [CommRing R] [Algebra O R]
     [IsCO O R] {R' : Type} [CommRing R'] [Algebra O R'] [IsCO O R'] (f : R →ₐ[O] R') {x : R}
     (hx : x ∈ maximalIdeal R) : f x ∈ maximalIdeal R' := by
-  rw [← res_eq_zero_iff O, res_map, res_eq_zero_iff]
-  exact hx
+  rwa [← res_eq_zero_iff O, res_map, res_eq_zero_iff]
 
 private theorem ext_X {O : Type} [CommRing O] [IsLocalRing O] [IsNoetherianRing O]
     [IsAdicComplete (maximalIdeal O) O] {σ : Type} [Finite σ] {R' : Type} [CommRing R'] [Algebra O R']
@@ -398,8 +394,7 @@ private theorem ext_X {O : Type} [CommRing O] [IsLocalRing O] [IsNoetherianRing 
     (h : ∀ s, F (X s) = G (X s)) : F = G := by
   have hC : ∀ (H : MvPowerSeries σ O →ₐ[O] R') (x : O), H (C x) = Algebra.ofId O R' x := fun H x => by
     have := H.commutes x
-    rw [MvPowerSeries.algebraMap_apply] at this
-    exact this
+    rwa [MvPowerSeries.algebraMap_apply] at this
   exact (co_ev O O R' σ (Algebra.ofId O R') (fun s => F (X s)) hm).unique ⟨hC F, fun _ => rfl⟩
     ⟨hC G, fun s => (h s).symm⟩
 

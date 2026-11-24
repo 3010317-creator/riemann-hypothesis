@@ -398,8 +398,7 @@ theorem continuous_cartanB : Continuous (cartanB : UpqT p q → Matrix (Fin p) (
     GlobalTheory.PolarLogCont.continuousOn_halfLog.comp_continuous GlobalTheory.UpqTopology.continuous_mat
       fun g => Units.isUnit (show Formalism.UG.Upq p q from g).1
   have hc : Continuous fun M : Mat p q => M.toBlocks₁₂ := by
-    refine continuous_matrix fun i j => ?_
-    exact continuous_id.matrix_elem (Sum.inl i) (Sum.inr j)
+    exact continuous_matrix fun i j => continuous_id.matrix_elem (Sum.inl i) (Sum.inr j)
   exact hc.comp h
 
 def sPad (B : Matrix (Fin p) (Fin q) ℂ) (j : Fin q) : ℝ := if (j : ℕ) < p then singVal B j else 0
@@ -538,8 +537,7 @@ theorem sq_col_le {n : ℕ} {U : Matrix (Fin n) (Fin n) ℂ} (hU : U ∈ Matrix.
   simp only [Matrix.mul_apply, Matrix.star_apply, Matrix.one_apply_eq, Complex.star_def,
     Complex.conj_mul'] at h2
   have h3 : ∑ i, ‖U i a‖ ^ 2 = 1 := by exact_mod_cast h2
-  have h4 := sq_sum_le_card_mul_sum_sq (s := Finset.univ) (f := fun i => ‖U i a‖)
-  simpa [h3] using h4
+  simpa [h3] using sq_sum_le_card_mul_sum_sq (s := Finset.univ) (f := fun i => ‖U i a‖)
 
 theorem sum_diag (p q : ℕ) (s : ℕ → ℝ) :
     ∑ a : Fin p, ∑ b : Fin q, (if (a : ℕ) = (b : ℕ) then s a else 0) =
@@ -795,8 +793,7 @@ theorem matrixEntryNormSum_upperRightBlockElement_le {B : Fin p → Fin q → �
     refine (Finset.sum_le_sum fun i _ => Finset.sum_le_sum fun j _ => h i j).trans (le_of_eq ?_)
     simp [mul_assoc]
   have h2 : l1 (pY B) = ∑ i, ∑ j, ‖B i j‖ + ∑ i, ∑ j, ‖B i j‖ := by
-    simp [l1, pY, pOf, Fintype.sum_sum_type]
-    exact Finset.sum_comm
+    simpa [l1, pY, pOf, Fintype.sum_sum_type] using Finset.sum_comm
   linarith
 
 theorem volume_polydisc {δ : ℝ} (hδ : 0 < δ) :

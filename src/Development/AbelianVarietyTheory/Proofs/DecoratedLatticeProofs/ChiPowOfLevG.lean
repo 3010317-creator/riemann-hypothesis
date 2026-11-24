@@ -84,8 +84,8 @@ theorem Deep.ext {n M : ℕ} (hM : M = n + 1) {P : HeightOneSpectrum (𝓞 E)} {
   · rw [extGL_val]
     refine Fin.lastCases ?_ (fun i => ?_) a <;> refine Fin.lastCases ?_ (fun j => ?_) b
     · simp [extM_last_last]
-    · rw [extM_last_castSucc, if_neg (Fin.castSucc_lt_last j).ne', map_zero]
-    · rw [extM_castSucc_last, if_neg (Fin.castSucc_lt_last i).ne, map_zero]
+    · rw [extM_last_castSucc, ite_eq_right (Fin.castSucc_lt_last j).ne', map_zero]
+    · rw [extM_castSucc_last, ite_eq_right (Fin.castSucc_lt_last i).ne, map_zero]
     · rw [extM_castSucc, hw.1 P' h1 h2]
       simp [Fin.castSucc_inj]
   · rw [extGL_val]
@@ -191,8 +191,7 @@ theorem exists_ka (u : B.Word) (a : I.ι) {Ch : Type} {chOf : (I.stp u a B.R.m).
   have hxk : y c * x * k (chOf c) = ratAd B.host.F (m.1 : UF B.fields.E (B.R.N B.R.m))⁻¹ * (g * k (chOf c)) := by
     rw [hx]; group
   have hq : PtOf (y c * x * k (chOf c)) ((I.stp u a B.R.m).act c.1 κ0 ((I.stp u a B.R.m).rep c)).1.1 := by
-    rw [hxk, hact]
-    exact hp'
+    rwa [hxk, hact]
   have hxU : x ∈ U (chOf c) := (hR.lev c x _ hq).2 ⟨κ0, hgam, rfl, hcos⟩
   have hchr := hR.chr c ⟨x, hxU⟩ κ0 hgam hq
   refine ⟨⟨x, hxU⟩⁻¹, ?_, ?_⟩
@@ -204,8 +203,7 @@ theorem exists_ka (u : B.Word) (a : I.ι) {Ch : Type} {chOf : (I.stp u a B.R.m).
     show _ = g * x⁻¹
     rw [hx, e]
     group
-  · rw [map_inv, inv_inv]
-    exact hchr
+  · rwa [map_inv, inv_inv]
 
 
 
@@ -269,7 +267,6 @@ theorem ext_mem_of_pt (l : I.Laws) (u : B.Word) (a : I.ι) {Ch : Type} {chOf : (
 
 theorem mem_sb {a : I.ι} {P : HeightOneSpectrum (𝓞 B.fields.E)} (hP : P ∈ I.Q a) : P ∈ SBof I a := by
   classical
-  show P ∈ uSG _ _
   exact Finset.mem_union_right _ hP
 
 
@@ -353,16 +350,15 @@ theorem isExt_iff (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I
   · intro hg'
     refine TilX.eq_extM_of_ext hN φ hpi0 (TilX.iXm_apply hiX hN) hg'.1 ?_
     have h2 := hg'.2
-    rw [e, lastCoordinateUniformizerVector_eq_single u] at h2
-    exact h2
+    rwa [e, lastCoordinateUniformizerVector_eq_single u] at h2
   · rintro rfl
     refine ⟨TwP.extM_mul_incl hN g' _ fun b j => ?_, TwP.extM_mulVec_fix hN g' _ fun b hb => ?_⟩
     · refine (congrArg φ (TilX.iXm_apply hiX hN b j)).trans ?_
       by_cases h : b = Br.iC hN j
-      · rw [if_pos h]
-        exact (congrArg φ (if_pos h)).trans φ.map_one
-      · rw [if_neg h]
-        exact (congrArg φ (if_neg h)).trans φ.map_zero
+      · rw [ite_eq_left h]
+        exact (congrArg φ (ite_eq_left h)).trans φ.map_one
+      · rw [ite_eq_right h]
+        exact (congrArg φ (ite_eq_right h)).trans φ.map_zero
     · show φ (TC.z0 X u b) = 0
       rw [e, lastCoordinateUniformizerVector_eq_single, Pi.single_eq_of_ne hb]
       exact φ.map_zero
@@ -402,8 +398,7 @@ theorem emb_mem_chi : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC
   have gN := (hsp B.R.m le_rfl).1
   have hU' : K.lev.U ≤ Formalism.L2.Col.UAd B.sp.cm (B.R.N B.R.m - 1) := fun x hx => by
     have h1 := ((K.lev.U_eq x).1 hx).1
-    rw [gP] at h1
-    exact h1
+    rwa [gP] at h1
   obtain ⟨hm, hc⟩ := ext_mem I hI l u a (hA.reads B.R.m le_rfl)
     (fun b d g' hd => hA.top b d g' _ hd ((isExt_iff I hI hP l Z u _ _ _).2 rfl)) hK β
     (fun c => TwDat.Is.chOf_top_eq I hI hP l Z u a Ch₀ A hA c β) hU'

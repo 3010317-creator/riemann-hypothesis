@@ -82,10 +82,8 @@ theorem vhol_diff_inv {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] {n :
   simp only [Matrix.inv_def, Ring.inverse_eq_inv', Matrix.smul_apply, smul_eq_mul, Matrix.adjugate_apply]
   refine ((vhol_diff_det A h).inv h0).mul (vhol_diff_det _ fun a b => ?_)
   by_cases ha : a = j
-  · simp only [Matrix.updateRow_apply, if_pos ha]
-    exact differentiableOn_const _
-  · simp only [Matrix.updateRow_apply, if_neg ha]
-    exact h a b
+  · simpa only [Matrix.updateRow_apply, ite_eq_left ha] using differentiableOn_const _
+  · simpa only [Matrix.updateRow_apply, ite_eq_right ha] using h a b
 
 variable {ι : Type} [Fintype ι] {n : ℕ}
 
@@ -230,8 +228,7 @@ theorem vact_isHolFam_isBotFam : ∀ (ι : Type) [Fintype ι] (n : ℕ) (lam : �
       · subst hσ
         simp only [Pi.mulSingle_eq_same, Matrix.of_apply]
         fun_prop
-      · simp only [Pi.mulSingle_eq_of_ne hσ]
-        exact differentiableOn_const _
+      · simpa only [Pi.mulSingle_eq_of_ne hσ] using differentiableOn_const _
     have h0 : ∀ σ, ∀ g ∈ {g : Fin n → Fin n → ℂ | Matrix.of g ∈ GlobalTheory.Dec.KC (allPos n)},
         ((Pi.mulSingle τ (Matrix.of g) : ι → Matrix (Fin n) (Fin n) ℂ) σ).det ≠ 0 := by
       intro σ g hg
@@ -257,9 +254,7 @@ theorem vact_isHolFam_isBotFam : ∀ (ι : Type) [Fintype ι] (n : ℕ) (lam : �
   · let t : Fin n → ℂˣ := fun a => Units.mk0 (Complex.exp ((θ a : ℂ) * Complex.I)) (Complex.exp_ne_zero _)
     have e1 : ((diagGL ℂ n t : GL (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ) =
         Matrix.diagonal fun a => Complex.exp ((θ a : ℂ) * Complex.I) := rfl
-    have e2 : inside₂ ℂ n (diagGL ℂ n t) = diagGL ℂ n t⁻¹ := by
-      apply Units.ext
-      exact Matrix.diagonal_transpose _
+    have e2 : inside₂ ℂ n (diagGL ℂ n t) = diagGL ℂ n t⁻¹ := Units.ext (Matrix.diagonal_transpose _)
     show vact lam (Pi.mulSingle τ _) _ = _
     rw [← e1]
     apply vhol_ext

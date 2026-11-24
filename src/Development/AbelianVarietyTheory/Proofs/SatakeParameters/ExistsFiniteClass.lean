@@ -294,11 +294,9 @@ theorem exists_proj (ρ : G →* Module.End ℂ V) (hunit : ∀ g x y, inner ℂ
   have h2 : inner ℂ (z - w) w = 0 := Y.starProjection_inner_eq_zero z w hwY
   have h3 : inner ℂ z w = 0 := inner_eq_zero_symm.1 h1
   have hw0 : w = 0 := by
-    rw [inner_sub_left, h3, zero_sub, neg_eq_zero, inner_self_eq_zero] at h2
-    exact h2
+    rwa [inner_sub_left, h3, zero_sub, neg_eq_zero, inner_self_eq_zero] at h2
   have h4 : inner ℂ (z - w) y = 0 := Y.starProjection_inner_eq_zero z y hyY
-  rw [hw0, sub_zero] at h4
-  exact h4
+  rwa [hw0, sub_zero] at h4
 
 theorem orth_or_equiv (ρ : G →* Module.End ℂ V) (hunit : ∀ g x y, inner ℂ (ρ g x) (ρ g y) = inner ℂ x y)
     {X X' : Type} [AddCommGroup X] [Module ℂ X] [AddCommGroup X'] [Module ℂ X']
@@ -364,8 +362,7 @@ theorem orth_or_equiv (ρ : G →* Module.End ℂ V) (hunit : ∀ g x y, inner �
     intro f h f'
     have h1 := ht f f'
     have h2 : t f = 0 := h
-    rw [h2, map_zero, sub_zero] at h1
-    exact h1
+    rwa [h2, map_zero, sub_zero] at h1
   have hTeq : ∀ g f, T (σ g f) = σ' g (T f) := by
     intro g f
     refine uniq (σ g f) _ _ (ht _) (fun f' => ?_)

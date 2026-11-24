@@ -336,8 +336,7 @@ theorem exists_isCuspParam_of_liftAt_good_index : ∀ (D : D7) (Rw : RowSide D),
   have hsplit : ∀ w, IsSplitPl D.host w → D.naut.locG (D.naut.tw ρ D.naut.etaT) w = Rw.locR σ w := by
     intro w hw
     have hs := hloc w hw
-    rw [hπ', SphericalInertData.isoLoc_single] at hs
-    exact hs
+    rwa [hπ', SphericalInertData.isoLoc_single] at hs
   have hinf : ∀ τ : D.what₂.Tau, D.naut.infG (D.naut.tw ρ D.naut.etaT) (GlobalTheory.IndefiniteRowSideFullHecke.CMTypeEmbeddings.embTau D τ) =
         GlobalTheory.IndefiniteRowSideFullHecke.CMTypeEmbeddings.hcSigma (D.hc τ) ∧
       D.naut.infG (D.naut.tw ρ D.naut.etaT) (GlobalTheory.IndefiniteRowSideFullHecke.CMTypeEmbeddings.embTauBar D τ) =
@@ -561,9 +560,7 @@ theorem mu_block_mem_alt : ∀ (D : D7) (Rw : RowSide D), _root_.GlobalTheory.He
   obtain ⟨w0, hw0, hs0⟩ := GlobalTheory.MuBlock.exists_split_not_mem D.nd hL.an.2.2.1 _ (Filter.eventually_cofinite.1 hgood)
   have hg0 : ((∀ p ∈ Pa, D.naut.unr (D.naut.locG p.π w0)) ∧ D.naut.unr (D.naut.locG μ w0)) ∧
       ∀ k : Fin 2, w0 ∉ placesOver D.host.E (D.host.g k) := by
-    have h := hw0
-    simp only [Set.mem_setOf_eq, not_not] at h
-    exact h
+    simpa only [Set.mem_setOf_eq, not_not] using hw0
   obtain ⟨⟨p0, hp0, hpt⟩, -⟩ := _root_.GlobalTheory.MuBlockLoc.split_step_o_alt D Rw hL j σ π μ Pa hA hR hB w0 hs0 hg0.2 hg0.1.1 hg0.1.2
   have hall : ∀ w, (((∀ p ∈ Pa, D.naut.unr (D.naut.locG p.π w)) ∧ D.naut.unr (D.naut.locG μ w)) ∧
       ∀ k : Fin 2, w ∉ placesOver D.host.E (D.host.g k)) →

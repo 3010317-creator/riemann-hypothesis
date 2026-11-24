@@ -295,9 +295,7 @@ private theorem UpperTheory.specMapAlg_comp {S : Scheme.{0}} {R : Type} [CommRin
 open AlgebraicGeometry CategoryTheory in
 private theorem UpperTheory.specMap_id {S : Scheme.{0}} {R : Type} [CommRing R]
     (x : Spec (CommRingCat.of R) ⟶ S) {A : Type} [CommRing A] [Algebra R A] :
-    UpperTheory.specMapOverOfAlgHom x (AlgHom.id R A) = 𝟙 _ := by
-  apply Over.OverMorphism.ext
-  exact Spec.map_id _
+    UpperTheory.specMapOverOfAlgHom x (AlgHom.id R A) = 𝟙 _ := Over.OverMorphism.ext (Spec.map_id _)
 
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj in
 private theorem UpperTheory.grpObj_one_left_congr {S : Scheme.{0}} (G : Over S) [GrpObj G]
@@ -432,8 +430,7 @@ theorem UpperTheory.span_linear_independent_base :
     have h0 : ∑ l, φ (D l j) • F l = 0 := by
       apply κ.injective
       ext i
-      have h3 := congrArg φ (congrFun (congrFun hD i) j)
-      simpa [Matrix.mul_apply, hP, ha, mul_comm] using h3
+      simpa [Matrix.mul_apply, hP, ha, mul_comm] using congrArg φ (congrFun (congrFun hD i) j)
     apply hφ
     simpa using Fintype.linearIndependent_iff.1 hF _ h0 l
   have h1 : Q.map ψ * P.map ψ = 1 := by
@@ -744,8 +741,7 @@ theorem eig_sum_zero {K V O I : Type} [Field K] [AddCommGroup V] [Module K V] [C
       intro s hs
       have hne : s ≠ t := fun e => ht (e ▸ hs)
       obtain ⟨a, ha⟩ : ∃ a, σ s a ≠ σ t a := by
-        by_contra h
-        push_neg at h
+        by_contra! h
         exact hne (hσ (RingHom.ext h))
       have hg : ∑ u ∈ A, (σ u a - σ t a) • f u = 0 := by
         have e : ∑ u ∈ A, (σ u a - σ t a) • f u =
@@ -762,8 +758,7 @@ theorem eig_sum_zero {K V O I : Type} [Field K] [AddCommGroup V] [Module K V] [C
       exact (smul_eq_zero.1 h1).resolve_left (sub_ne_zero.2 ha)
     intro s hs
     rcases Finset.mem_insert.1 hs with rfl | hs
-    · rw [Finset.sum_eq_zero key, add_zero] at hsum
-      exact hsum
+    · rwa [Finset.sum_eq_zero key, add_zero] at hsum
     · exact key s hs
 
 def modelOfEquiv {S : Scheme.{0}} {R : Type} [CommRing R] {G : Over S} [GrpObj G]
@@ -857,8 +852,7 @@ theorem isDerivAt0_all (e : Flat.FamExp G M B ψ) {b : Fin n → ℂ} (hb : b �
     have h2 : (N.pt (c • w)).left = spMap (ReciprocityTheory.ChartRestriction.G.Geo.Tor.epsMul c) ≫ (N.pt w).left := by
       rw [N.smul]
       congr 2
-    rw [h2]
-    exact h1
+    rwa [h2]
   have hs : ∀ s : Finset (Fin g), IsDerivAt0 (fun z => (e.ex b z).left) (∑ a ∈ s, x a • (Pi.single a 1 : Fin g → ℂ))
       (N.pt (∑ a ∈ s, x a • (Pi.single a 1 : Fin g → ℂ))).left := by
     intro s
@@ -970,8 +964,7 @@ theorem values_eig : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
     refine ⟨((u⁻¹ : (𝔐.X.presheaf.stalk (centre z))ˣ) : 𝔐.X.presheaf.stalk (centre z)), ?_⟩
     refine eq_inv_of_mul_eq_one_left ?_
     have h1 := congrArg (genMap 𝔐.ξ q) (Units.inv_mul u)
-    rw [map_mul, hu, map_natCast, map_one] at h1
-    exact h1
+    rwa [map_mul, hu, map_natCast, map_one] at h1
   obtain ⟨hVd, -, hlat⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeChar0.lattices_of_char_zero E H D l Xo c (𝓞 c.F) (algebraMap (𝓞 c.F) c.F) Y S Ω K J y 𝔐
     RingOfIntegers.coe_injective q hfib
   have hσinj : Function.Injective σ := by
@@ -1006,8 +999,7 @@ theorem values_eig : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
     have h1 : f u i ∈ 𝔐.V u q := by
       rw [(hf u).2]
       exact Submodule.subset_span ⟨i, rfl⟩
-    rw [hVd u] at h1
-    exact h1
+    rwa [hVd u] at h1
   have hli : LinearIndependent Ω (fun p : (Σ u, Fin (k u)) => f p.1 p.2) := by
     refine Fintype.linearIndependent_iff.2 fun a ha p => ?_
     rw [Fintype.sum_sigma] at ha

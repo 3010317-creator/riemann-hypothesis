@@ -70,8 +70,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem levelafC_eq_inclE (D : 𝓞 F) :
     levelafC E D = inclE (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F) (algebraMap (𝓞 F) E D) := by
   have := csGlob_tmul_int (F := F) (E := E) (1 : E) D
-  rw [mul_one] at this
-  exact this
+  rwa [mul_one] at this
 
 end HatDualCopy
 
@@ -303,32 +302,27 @@ theorem exists_adele_idem (D d : 𝓞 F) (hD : D ≠ 0)
     split_ifs with h
     · exact zero_mem _
     · exact inv_algebraMap_int v D h
-  refine ⟨⟨fun v => if D ∈ v.asIdeal then (1 : v.adicCompletion F) else 0, Filter.Eventually.of_forall he⟩,
-    ⟨fun v => if D ∈ v.asIdeal then (algebraMap (𝓞 F) (v.adicCompletion F) d)⁻¹ else 0,
-      Filter.Eventually.of_forall hw⟩,
-    ⟨fun v => if D ∈ v.asIdeal then 0 else (algebraMap (𝓞 F) (v.adicCompletion F) D)⁻¹,
-      Filter.Eventually.of_forall hw'⟩, he, hw, hw', ?_, ?_, ?_, ?_⟩
+  refine ⟨⟨_, Filter.Eventually.of_forall he⟩, ⟨_, Filter.Eventually.of_forall hw⟩,
+    ⟨_, Filter.Eventually.of_forall hw'⟩, he, hw, hw', ?_, ?_, ?_, ?_⟩
   · ext1 v
-    show (if D ∈ v.asIdeal then (1 : v.adicCompletion F) else 0) * (if D ∈ v.asIdeal then 1 else 0) =
-      if D ∈ v.asIdeal then 1 else 0
+    show (if D ∈ v.asIdeal then (1 : v.adicCompletion F) else _) *
+      (if D ∈ v.asIdeal then _ else _) = if D ∈ v.asIdeal then _ else _
     split_ifs <;> simp
   · ext1 v
-    show (if D ∈ v.asIdeal then (1 : v.adicCompletion F) else 0) *
-      (if D ∈ v.asIdeal then 0 else (algebraMap (𝓞 F) (v.adicCompletion F) D)⁻¹) = 0
+    show (if D ∈ v.asIdeal then (1 : v.adicCompletion F) else _) *
+      (if D ∈ v.asIdeal then _ else _) = 0
     split_ifs <;> simp
   · ext1 v
-    show algebraMap (𝓞 F) (v.adicCompletion F) d *
-      (if D ∈ v.asIdeal then (algebraMap (𝓞 F) (v.adicCompletion F) d)⁻¹ else 0) =
-      if D ∈ v.asIdeal then 1 else 0
+    show algebraMap (𝓞 F) (v.adicCompletion F) d * (if D ∈ v.asIdeal then _ else _) =
+      if D ∈ v.asIdeal then _ else _
     split_ifs with h
     · refine mul_inv_cancel₀ (Formalism.UG.P.levelaf_algebraMap_ne_zero v d ?_)
       rintro rfl
       exact hcop v h (Ideal.zero_mem _)
     · rw [mul_zero]
   · ext1 v
-    show algebraMap (𝓞 F) (v.adicCompletion F) D *
-      (if D ∈ v.asIdeal then 0 else (algebraMap (𝓞 F) (v.adicCompletion F) D)⁻¹) =
-      1 - if D ∈ v.asIdeal then 1 else 0
+    show algebraMap (𝓞 F) (v.adicCompletion F) D * (if D ∈ v.asIdeal then _ else _) =
+      1 - if D ∈ v.asIdeal then _ else _
     split_ifs with h
     · rw [mul_zero, sub_self]
     · rw [sub_zero]
@@ -394,8 +388,7 @@ theorem frame_of_glue (L : Submodule (𝓞 E) (Fin n → E)) (B C : Matrix (Fin 
         have h3 : C *ᵥ (d • l) = fun j => algebraMap (𝓞 E) E (a j) := by
           rw [ha, Matrix.mulVec_mulVec, hCB, Matrix.one_mulVec]
         have h4 := congrFun h3 i
-        rw [Matrix.mulVec_smul, Pi.smul_apply, Algebra.smul_def] at h4
-        exact h4
+        rwa [Matrix.mulVec_smul, Pi.smul_apply, Algebra.smul_def] at h4
       rw [e1, ← hdω, mul_right_comm, ← map_mul, e2]
       exact mul_mem (Formalism.UG.CS.incl_int (a i)) hω
     | zero =>
@@ -455,8 +448,7 @@ theorem exists_frame (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
     rw [hD1, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
     exact mul_ne_zero hc0 hd00
   have hD2' : D2 ≠ 0 := by
-    rw [hD2, Ne, Ideal.absNorm_eq_zero_iff]
-    exact hp0
+    rwa [hD2, Ne, Ideal.absNorm_eq_zero_iff]
   obtain ⟨t, ht⟩ : ∃ t : 𝓞 F, t * (c * d0) = (D1 : 𝓞 F) :=
     Ideal.mem_span_singleton'.1 (Ideal.absNorm_mem _)
   have hP0 : ((D1 * D2 : ℕ) : 𝓞 E) ∈ P0.asIdeal := by

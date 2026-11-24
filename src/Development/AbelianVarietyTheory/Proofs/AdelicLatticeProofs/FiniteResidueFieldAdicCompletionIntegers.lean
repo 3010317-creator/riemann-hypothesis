@@ -404,8 +404,7 @@ variable (v : HeightOneSpectrum (𝓞 (maximalRealSubfield E)))
 
 theorem herm_eq_dotProduct (G : Matrix (Fin r) (Fin r) E) (x y : Fin r → E) :
     herm G x y = x ᵥ* G ⬝ᵥ fun i => cc (y i) := by
-  simp only [herm, Matrix.vecMul, dotProduct, Finset.sum_mul]
-  exact Finset.sum_comm
+  simpa only [herm, Matrix.vecMul, dotProduct, Finset.sum_mul] using Finset.sum_comm
 
 theorem herm_mulVec (G P : Matrix (Fin r) (Fin r) E) (x y : Fin r → E) :
     herm G (P *ᵥ x) (P *ᵥ y) = herm (Pᵀ * G * P.map cc) x y := by
@@ -642,8 +641,7 @@ theorem exists_eq_transpose_mul_map_locConj {M N : Matrix (Fin r) (Fin r) (LocAl
   have h1 : M' * N' = 1 := by
     apply Matrix.map_injective (f := φ) Subtype.val_injective
     change (M' * N').map φ = Matrix.map 1 φ
-    rw [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)]
-    exact hMN
+    rwa [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)]
   obtain ⟨P, hP, h⟩ := UnramifiedHermitian.exists_eq_transpose_mul_map_of_henselian
     (R₀ := v.adicCompletionIntegers (maximalRealSubfield E)) (locOrderConj v) (locOrderConj_locOrderConj v)
     (fun a => Subtype.ext (locConj_algebraMap' v a)) (mem_range_of_locOrderConj_eq v)
@@ -868,7 +866,7 @@ theorem one_genus_of_modular (h𝔟 : 𝔟 ≠ 0) (hc : ∀ z ∈ 𝔟, cc z ∈
   classical
   choose γ hγ using exists_isLocalIsometry_of_modular h𝔟 hc hG hG hd hd hL hL' hmod hmod'
   refine ⟨fun v => if locLattice v L' = locLattice v L then 1 else γ v, fun v => ?_,
-    (finite_setOf_locLattice_ne hL' hL).subset fun v hv h => hv (if_pos h)⟩
+    (finite_setOf_locLattice_ne hL' hL).subset fun v hv h => hv (ite_eq_left h)⟩
   beta_reduce
   split_ifs with h
   exacts [(isLocalIsometry_one_iff v).2 h, hγ v]
@@ -1028,8 +1026,7 @@ theorem selfDual_lattices_one_genus {E : Type} [Field E] [NumberField E] [IsCMFi
       (∀ x, x ∈ L ↔ ∀ y ∈ L, herm G x y ∈ 𝔟) ∧ ∀ x, x ∈ L' ↔ ∀ y ∈ L', herm G' x y ∈ 𝔟 := by
     rcases hdual with ⟨h, h'⟩ | ⟨ξ, hξ0, hξ, h, h'⟩
     · refine ⟨1, one_ne_zero, ?_⟩
-      simp only [mem_one_fractionalIdeal_iff]
-      exact ⟨fun _ => isIntegral_cc, h, h'⟩
+      simpa only [mem_one_fractionalIdeal_iff] using ⟨fun _ => isIntegral_cc, h, h'⟩
     · exact ⟨_, inv_ne_zero (mul_ne_zero (FractionalIdeal.spanSingleton_ne_zero_iff.2 hξ0)
         coe_different_ne_zero), cc_mem_inv_mul_different hξ, modular_of_perfect hξ0 hd hL h,
         modular_of_perfect hξ0 hd' hL' h'⟩

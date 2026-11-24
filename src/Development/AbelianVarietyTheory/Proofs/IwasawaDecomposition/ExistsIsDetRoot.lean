@@ -75,8 +75,7 @@ theorem twist_both {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) 
   obtain ⟨e, -, -, he, -, -, -, hth, -⟩ := GlobalTheory.OrientedCoord.exists_coord D V W ha.1.le
   refine LinearMap.ext fun Φ => Subtype.ext (funext fun w => ?_)
   have hΦ : IsThetaFunO ψ V W fun x => Φ.1 (toTWsmall V W x) := by
-    simp only [← he]
-    exact (hth ψ _).2 (mem_ThS.1 Φ.2)
+    simpa only [← he] using (hth ψ _).2 (mem_ThS.1 Φ.2)
   have k := GlobalTheory.T.weilDatum_unique_on_thetaFunctions D ψ hψ V W _ _ o' o'' hd' hd'' (g, h) _ hΦ
   rw [ht', hv g h x y hx hy, LinearMap.smul_apply, ht] at k
   have k2 := congrFun k (e.symm w)

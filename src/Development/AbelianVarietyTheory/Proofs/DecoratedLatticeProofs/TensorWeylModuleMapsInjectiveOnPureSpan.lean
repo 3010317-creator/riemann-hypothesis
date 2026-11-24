@@ -66,8 +66,7 @@ theorem tenMap_tprod {ι : Type} [Fintype ι] {n : ℕ} {V : ι → Type} [∀ �
 
 theorem nfAll_zero_left {ι : Type} [Fintype ι] {n : ℕ} (lam : ι → DomWeight n)
     (q : MvPolynomial (ι × Fin n × Fin n) ℂ) : nfAll lam 0 q = 0 := by
-  have h := GlobalTheory.TenTypes.nfAll_smul_left lam 0 0 q
-  simpa using h
+  simpa using GlobalTheory.TenTypes.nfAll_smul_left lam 0 0 q
 
 theorem main : ∀ (ι : Type) [Fintype ι] (n : ℕ) (lam : ι → DomWeight n) (V : ι → Type) [∀ τ, AddCommGroup (V τ)] [∀ τ, Module ℂ (V τ)] (j : ∀ τ, V τ →ₗ[ℂ] MvPolynomial (Fin n × Fin n) ℂ) (d : ι → ℕ) (b : ∀ τ, Module.Basis (Fin (d τ)) ℂ (V τ)), (∀ τ ξ, j τ ξ ∈ delSq ℂ n (lam τ)) → (∀ τ, ∀ p ∈ delSq ℂ n (lam τ), ∃ ξ, j τ ξ = p) → (∀ τ a a', normFock (lam τ) (j τ (b τ a)) (j τ (b τ a')) = if a = a' then 1 else 0) → ∃ Jt : (⨂[ℂ] τ, V τ) →ₗ[ℂ] MvPolynomial (ι × Fin n × Fin n) ℂ, Function.Injective Jt ∧ LinearMap.range Jt = CSpan lam ∧ ∀ x : (∀ τ, V τ), Jt (PiTensorProduct.tprod ℂ x) = ten (fun τ => j τ (x τ)) := by
   intro ι _ n lam V _ _ j d b hin hon hortho
@@ -82,10 +81,10 @@ theorem main : ∀ (ι : Type) [Fintype ι] (n : ℕ) (lam : ι → DomWeight n)
       simp_rw [hortho]
       by_cases h : i = i'
       · subst h; simp
-      · rw [if_neg h]
+      · rw [ite_eq_right h]
         obtain ⟨τ, hτ⟩ : ∃ τ, i τ ≠ i' τ := by
-          by_contra hc; push_neg at hc; exact h (funext hc)
-        exact Finset.prod_eq_zero (Finset.mem_univ τ) (if_neg hτ)
+          by_contra hc; push Not at hc; exact h (funext hc)
+        exact Finset.prod_eq_zero (Finset.mem_univ τ) (ite_eq_right hτ)
     have hcoord : ∀ i' x, nfAll lam (tenMap j x) (tenMap j (B i')) = B.coord i' x := by
       intro i'
       let L : (⨂[ℂ] τ, V τ) →ₗ[ℂ] ℂ :=
@@ -96,8 +95,7 @@ theorem main : ∀ (ι : Type) [Fintype ι] (n : ℕ) (lam : ι → DomWeight n)
         refine B.ext fun i => ?_
         show nfAll lam (tenMap j (B i)) (tenMap j (B i')) = B.coord i' (B i)
         rw [hpair, Module.Basis.coord_apply, Module.Basis.repr_self, Finsupp.single_apply]
-      intro x
-      exact LinearMap.congr_fun hL x
+      exact fun x => LinearMap.congr_fun hL x
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro x hx
     refine B.ext_elem fun i' => ?_

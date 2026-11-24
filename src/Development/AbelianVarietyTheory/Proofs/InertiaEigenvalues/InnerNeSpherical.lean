@@ -386,8 +386,7 @@ theorem trivAt_of_supp (V : HSp D) {f f' : Formalism.L2.Theta.AE D} (hf : f * f'
 theorem cmp_self (V : HSp D) {f : Formalism.L2.Theta.AE D} {g c : GA D V} (hg : SuppF V f g) (hc : SuppF V f c)
     (ht : TrivAt V f (g * c⁻¹)) : c = g := by
   have : g * c⁻¹ ∈ GlobalTheory.IdemSupport.suppGroup V f := mul_mem hg (inv_mem (show c ∈ _ from hc))
-  have h := eq_one_of_supp_triv V this ht
-  exact (mul_inv_eq_one.1 h).symm
+  exact (mul_inv_eq_one.1 (eq_one_of_supp_triv V this ht)).symm
 
 theorem cmp_other (V : HSp D) {f : Formalism.L2.Theta.AE D} {g c : GA D V} (hg : TrivAt V f g) (hc : SuppF V f c)
     (ht : TrivAt V f (g * c⁻¹)) : c = 1 := by
@@ -404,15 +403,13 @@ theorem eq_of_rep {R : RealDat D A Ks} {i : Fin D.R.m} {v : HeightOneSpectrum (�
   rw [← Quotient.out_eq x, ← Quotient.out_eq y]
   apply Quotient.sound
   change ((QuotientGroup.leftRel (levW R i)).comap _) _ _
-  rw [Setoid.comap_rel, QuotientGroup.leftRel_apply]
-  exact h
+  rwa [Setoid.comap_rel, QuotientGroup.leftRel_apply]
 
 theorem rep_mk {R : RealDat D A Ks} {i : Fin D.R.m} {v : HeightOneSpectrum (𝓞 D.host.F)} (g : Eu.locSet R i v) :
     (Eu.rep (R := R) (i := i) (v := v) (Quotient.mk _ g))⁻¹ * g.1 ∈ levW R i := by
   have h := Quotient.mk_out (s := (QuotientGroup.leftRel (levW R i)).comap
     (Subtype.val : Eu.locSet R i v → GA D (Wc D i))) g
-  rw [Setoid.comap_rel, QuotientGroup.leftRel_apply] at h
-  exact h
+  rwa [Setoid.comap_rel, QuotientGroup.leftRel_apply] at h
 
 theorem famProd_mem (R : RealDat D A Ks) (i : Fin D.R.m) (F : ∀ v, Eu.LX R i v) : Eu.famProd R i F ∈ GfC (Wc D i) := by
   unfold Eu.famProd
@@ -592,8 +589,7 @@ theorem lx_eq_of_rep_rel {R : RealDat D A Ks} {i : Fin D.R.m} {v : HeightOneSpec
   have : (Quotient.mk _ (Quotient.out x) : LX R i v) = Quotient.mk _ (Quotient.out y) := by
     apply Quotient.sound
     change ((QuotientGroup.leftRel (levW R i)).comap (Subtype.val : locSet R i v → GA D (Wc D i))) _ _
-    rw [Setoid.comap_rel, QuotientGroup.leftRel_apply]
-    exact h
+    rwa [Setoid.comap_rel, QuotientGroup.leftRel_apply]
   exact (Quotient.out_eq x).symm.trans (this.trans (Quotient.out_eq y))
 
 theorem rep_notMem_levW {R : RealDat D A Ks} {i : Fin D.R.m} {v : HeightOneSpectrum (𝓞 D.host.F)} {x : LX R i v}
@@ -700,8 +696,7 @@ theorem mem_of_fibres {X Q H : Type} [NormedAddCommGroup H] [NormedSpace ℂ H] 
   · obtain ⟨x₀, rfl⟩ := hc
     obtain ⟨s, hs, hm⟩ := h x₀
     have e : π ⁻¹' {π x₀} = (s : Set X) := Set.ext fun x => hs x
-    rw [e, Finset.tsum_subtype' s g]
-    exact hm
+    rwa [e, Finset.tsum_subtype' s g]
   · have e : π ⁻¹' {c} = ((∅ : Finset X) : Set X) := Set.ext fun x => by
       simp only [Set.mem_preimage, Set.mem_singleton_iff, Finset.coe_empty, Set.mem_empty_iff_false, iff_false]
       exact fun hx => hc ⟨x, hx⟩
@@ -811,7 +806,7 @@ theorem hecke_sum_mem {F : Face D A} (hL : Laws R F) {t : T} (hB : BadSupp R i t
   · obtain ⟨z, hz⟩ := hecke_sum_good hL hTL hy hf hv hα hC hCR
     rw [hz]
     exact Submodule.smul_mem _ _ (Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self y))
-  · push_neg at hv
+  · push Not at hv
     obtain ⟨P, hP, hPv⟩ := hv
     obtain ⟨e, he⟩ := primeIdem_of_under hf hPv
     by_cases hk : α ∈ levW R i
@@ -1167,8 +1162,7 @@ theorem placeSupportedLevelCoset_eq_iff {R : RealDat D A Ks} {i : Fin D.R.m} {v 
     have h2 := Quotient.exact h
     exact QuotientGroup.leftRel_apply.mp h2
   · intro h
-    apply Quotient.sound
-    exact QuotientGroup.leftRel_apply.mpr h
+    exact Quotient.sound (QuotientGroup.leftRel_apply.mpr h)
 
 theorem representative_placeSupportedLevelCoset_rel {R : RealDat D A Ks} {i : Fin D.R.m} {v : HeightOneSpectrum (𝓞 D.host.F)}
     {g : GA D (Wc D i)} (hg : g ∈ locSet R i v) : ∃ k ∈ levW R i, rep (mkLX R i v g hg) = g * k := by
@@ -1460,7 +1454,7 @@ theorem scalar_of_eigen {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ
           have hne' : m - lx ≠ 0 := sub_ne_zero.2 hmx
           rw [div_eq_mul_inv, mul_comm, mul_smul, ← e1, smul_smul, inv_mul_cancel₀ hne', one_smul]
         rw [hx', map_smul, hl, smul_comm]
-  · push_neg at h
+  · push Not at h
     refine ⟨1, one_ne_zero, fun x hx => ?_⟩
     rw [h x hx, map_zero, smul_zero]
 
@@ -1488,8 +1482,7 @@ theorem innerNe_main {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A
     obtain ⟨hG, hB⟩ := hupd f hf v hv
     have := hconv v _ hG
     unfold Eu.Bfam
-    simp only [hB]
-    exact this
+    simpa only [hB] using this
   have hEu := _root_.GlobalTheory.eulerOp_injective_eigen (HeightOneSpectrum (𝓞 D.host.F)) (Eu.LX R i) (Eu.lx0 R i)
     (R.HW i (sg0 D A)).H (Eu.acoef R i t μ 𝓕) s (Eu.Bfam R i) (Eu.Zop R i t μ 𝓕)
     (local_coefficient_trivial_level_coset hLF hVN hμ) hs hs1 hsC (fun f => bop_norm R i _)

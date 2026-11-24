@@ -68,8 +68,7 @@ theorem Sep.exists_near {e : Λ →+ V} {r R : ℝ} (hr : 0 < r) {s : Finset Λ}
     (hs : Sep e r R s) (hmax : ∀ t : Finset Λ, Sep e r R t → t.card ≤ s.card)
     {l : Λ} (hl : ‖e l‖ ≤ R) : ∃ t ∈ s, ‖e (l - t)‖ ≤ r := by
   classical
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hns : l ∉ s := fun h => by
     have := hcon l h
     simp only [sub_self, map_zero, norm_zero] at this
@@ -225,8 +224,7 @@ theorem box_packing : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
         · rw [Set.indicator_of_notMem h1]
     · refine tsum_congr fun l => ?_
       simp [Set.indicator, norm_coord]
-  rw [conv R, conv r]
-  exact key
+  rwa [conv R, conv r]
 
 end GlobalTheory.CompanionTheory.SW.Pack
 end -- clump:auto

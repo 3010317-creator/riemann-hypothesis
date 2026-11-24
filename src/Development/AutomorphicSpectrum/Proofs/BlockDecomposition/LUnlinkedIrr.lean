@@ -126,8 +126,7 @@ theorem isIrreducible_of_generic {ψ : AddChar k Circle} (hψ : Continuous ψ) (
   have hQn : Nontrivial (V ⧸ LinearMap.range (subIncl π S).toLinearMap) := by
     refine Submodule.Quotient.nontrivial_iff.2 ?_
     rw [hrange]
-    intro e
-    exact ht (Subrepresentation.toSubmodule_injective e)
+    exact fun e => ht (Subrepresentation.toSubmodule_injective e)
   have hσ := hsub _ S.toRepresentation (subIncl π S) hinj hSn
   exact GlobalTheory.CompanionTheory.BZSeg.TwoSeg.not_isGeneric_quotRep hψ h1 π _ (subIncl π S) hinj hπ hr hσ
     (hquo _ _ (quotProj π _ (subIncl π S)) (Submodule.mkQ_surjective _) hQn)
@@ -375,8 +374,7 @@ theorem exists_intertwiningMap_ne_zero {G V W : Type} [Group G] [Subsingleton G]
   obtain ⟨v, hv⟩ := exists_ne (0 : V)
   obtain ⟨w, hw⟩ := exists_ne (0 : W)
   obtain ⟨l, hl⟩ : ∃ l : Module.Dual ℂ V, l v ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hv ((Module.forall_dual_apply_eq_zero_iff ℂ v).1 hc)
   refine ⟨⟨l.smulRight w, fun g => ?_⟩, v, smul_ne_zero hl hw⟩
   rw [Subsingleton.elim g 1, map_one, map_one]
@@ -410,8 +408,7 @@ theorem exists_nu_embedding (x : IrrGL (k := k)) (y : Fin 2 → IrrGL (k := k)) 
   let φ₁ := x.twEquiv (absPow k s) (isSmoothChar_absPow s)
   let φ₂ := prodIrrTwistEquiv y hd (absPow k s) (isSmoothChar_absPow s)
   refine ⟨φ₂.toIntertwiningMap.comp ((twistMap f _).comp φ₁.symm.toIntertwiningMap), ?_⟩
-  intro a b e
-  exact φ₁.symm.injective (hf (φ₂.injective e))
+  exact fun a b e => φ₁.symm.injective (hf (φ₂.injective e))
 
 theorem exists_word (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (n : ℕ) : ∀ x : IrrGL (k := k), x.1 = n →
     ∃ W : List (IrrGL (k := k)), (∀ w ∈ W, w.IsCusp) ∧ ∀ s : ℂ, 1 ≤ jmL (W.map fun w => w.nu s) (x.nu s).rep := by
@@ -458,8 +455,7 @@ theorem isGeneric_of_isSubquotient (hA : GlobalTheory.Published.IrreducibleAdmis
     intro y W hW
     have h0 := hW 0
     have e : (W.map fun w => w.nu 0) = W := by simp
-    rw [e, IrrGL.nu_zero] at h0
-    exact h0
+    rwa [e, IrrGL.nu_zero] at h0
   have m₁ := h₁.trans (GlobalTheory.CompanionTheory.JmMono.jm_le_of_isSubquotient ![α, β] hd₁ ω _ hP hsq)
   have m₂ := h₂.trans (GlobalTheory.CompanionTheory.JmMono.jm_le_of_isSubquotient ![β', α.nu 1] hd₂ ω _ hP hsq)
   have W₁ := one_le_jmL_append hA ![α, β] hd₁ u v _ hP hfl m₁ (w₀ _ _ hu') (w₀ _ _ hv')
@@ -488,8 +484,7 @@ theorem isGeneric_of_isSubquotient (hA : GlobalTheory.Published.IrreducibleAdmis
   · obtain ⟨i, hwi, t, ht, hti⟩ := exists_head_of_mem_left u v f₁ _ hf₁ hw
     refine ⟨i, hwi, ?_⟩
     rw [head?_decWord] at hti
-    rw [Option.some.inj hti]
-    exact ht
+    rwa [Option.some.inj hti]
   · obtain ⟨j, hwj, t, ht, htj⟩ := exists_last_of_mem_right v₂ _ f₂ _ hf₂ (List.mem_map.2 ⟨w, hw, rfl⟩)
     refine ⟨j, hwj, ?_⟩
     rw [getLast?_decWord] at htj

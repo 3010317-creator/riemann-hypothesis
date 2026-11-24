@@ -110,8 +110,7 @@ private theorem diffQuadK (K : Type) [Field K] [NumberField K] (d : ℕ) (hd : d
     have : (-(d : 𝓞 K)) = algebraMap ℤ (𝓞 K) (-(d : ℤ)) := by simp
     rw [this, Algebra.norm_algebraMap, RingOfIntegers.rank, hrank]
     simp [Int.natAbs_pow]
-  have hNβ' : (span {β}).absNorm = d := by
-    exact Nat.pow_left_injective (n := 2) (by norm_num) hNβ
+  have hNβ' : (span {β}).absNorm = d := Nat.pow_left_injective (n := 2) (by norm_num) hNβ
   have hC1 : C.absNorm = 1 := by
     have := congrArg Ideal.absNorm hC
     rw [map_mul, hNβ', hN] at this

@@ -206,9 +206,9 @@ theorem coeff_chosenRed_eq_redHom : ∀ (D : D7) (X : HidaSetting D) (red : X.B.
   intro D X red hred a ha x
   by_cases hx : x ∈ X.B.I.Kset
   · have hc : x ∈ X.B.I.Kset ∧ ∃ γ : G0g D.nd, GoodAt X x γ := ⟨hx, red x, hred.1 x hx⟩
-    rw [dite_eq_left hc, if_pos hx,
+    rw [dite_eq_left hc, ite_eq_left hx,
       coeff_goodAt_eq D X a ha x (red x) (Classical.choose hc.2) (hred.1 x hx) (Classical.choose_spec hc.2)]
-  · rw [dite_eq_right (fun h => hx h.1), if_neg hx]
+  · rw [dite_eq_right (fun h => hx h.1), ite_eq_right hx]
 
 end GlobalTheory
 end -- clump:auto
@@ -260,8 +260,7 @@ theorem exists_weakIntegral_of_stronglyContinuous {X H : Type*} [TopologicalSpac
   let Tl : H →ₗ[ℂ] H :=
     { toFun := fun y => ∫ g, φ g • R g y ∂μ
       map_add' := fun y z => by
-        simp only [map_add (f := _), smul_add]
-        exact integral_add (hint y) (hint z)
+        simpa only [map_add (f := _), smul_add] using integral_add (hint y) (hint z)
       map_smul' := fun c y => by
         simp only [map_smul, RingHom.id_apply]
         rw [← integral_smul]
@@ -376,12 +375,12 @@ theorem integral_inflate [Fintype Q] (μf : Measure I.Gf) [μf.IsHaarMeasure] (h
       fun x => ∑ q, {x | x ∈ I.Kset ∧ ρ.toFun x = q}.indicator (fun _ => F q) x := by
     funext x
     by_cases hx : x ∈ I.Kset
-    · rw [if_pos hx, Finset.sum_eq_single (ρ.toFun x)]
+    · rw [ite_eq_left hx, Finset.sum_eq_single (ρ.toFun x)]
       · rw [Set.indicator_of_mem]
         exact ⟨hx, rfl⟩
       · exact fun q _ hq => Set.indicator_of_notMem (by exact fun h => hq h.2.symm) _
       · exact fun h => absurd (Finset.mem_univ _) h
-    · rw [if_neg hx]
+    · rw [ite_eq_right hx]
       exact (Finset.sum_eq_zero fun q _ => Set.indicator_of_notMem (by exact fun h => hx h.1) _).symm
   have hi : ∀ q, Integrable ({x | x ∈ I.Kset ∧ ρ.toFun x = q}.indicator (fun _ => F q)) μf := fun q =>
     (integrable_indicator_iff (hm q).1).2 (integrableOn_const ((hm q).2 ▸ hfin))
@@ -580,8 +579,7 @@ theorem integral_lift [Fintype Q] (μf : Measure I.Gf) [μf.IsHaarMeasure] (hg :
       · intro q _ hq
         refine Set.indicator_of_notMem (fun hmem => hq ?_) _
         exact ((((mem_fibre ρ (hs q).1 x).1 hmem).2).trans (hs q).2).symm
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     · rw [ρ.lift_of_notMem μf a hx, zero_mul]
       refine (Finset.sum_eq_zero fun q _ => Set.indicator_of_notMem (fun hmem => hx ?_) _).symm
       exact ((mem_fibre ρ (hs q).1 x).1 hmem).1
@@ -592,8 +590,7 @@ theorem integral_lift [Fintype Q] (μf : Measure I.Gf) [μf.IsHaarMeasure] (hg :
     field_simp
   · intro q _
     refine (integrable_indicator_iff (hSm q)).2 (integrableOn_const ?_)
-    rw [measure_preimage_mul]
-    exact hfin
+    rwa [measure_preimage_mul]
 
 end Lev
 
@@ -767,8 +764,8 @@ theorem mem_VT_of_sum_fixed : ∀ (D : D7) (X : HidaSetting D) (red : X.B.I.Gf �
     · unfold egA
       convert GlobalTheory.coeff_chosenRed_eq_redHom D X red hred (ES {t}) hcent x using 2
     by_cases hx : x ∈ X.B.I.Kset
-    · rw [if_pos hx, GlobalTheory.RowLev.Red.lift_of_mem ρ _ _ hx]
-    · rw [if_neg hx, GlobalTheory.RowLev.Red.lift_of_notMem ρ _ _ hx]
+    · rw [ite_eq_left hx, GlobalTheory.RowLev.Red.lift_of_mem ρ _ _ hx]
+    · rw [ite_eq_right hx, GlobalTheory.RowLev.Red.lift_of_notMem ρ _ _ hx]
   obtain ⟨h1R, hm, hn, -⟩ := GlobalTheory.RightRegProps.rightReg_unitary_mul_continuous X.B.I X.B.μf X.B.fund
     X.B.fund_spec X.B.R X.B.R_spec
   obtain ⟨huniq, -, -, hprod, -⟩ := GlobalTheory.WeakConv.rightConv_unique_add_smul_mul_comm X.B.I X.B.μf X.B.fund X.B.R
@@ -875,8 +872,7 @@ theorem sum_prod_fixed_place_average {ι : Type} [Fintype ι] [DecidableEq ι] {
       · simp [c]
       · intro γ _ hγ
         obtain ⟨i, hi⟩ : ∃ i, γ i ≠ 1 := by
-          by_contra hcon
-          push_neg at hcon
+          by_contra! hcon
           exact hγ (funext hcon)
         have : c ∅ γ = 0 := Finset.prod_eq_zero (mem_univ i) (by simp [hi])
         rw [this, zero_smul]
@@ -1188,8 +1184,7 @@ theorem R_translate_ae {D : D7} (X : HidaSetting D) (h : X.B.I = Formalism.L2.SG
   have e3 : ∀ᵐ x ∂(muX X), (f : X.B.I.GA → ℂ) (X.B.I.rep X.B.fund (x * (1, k))) =
       Φ ((iotaX X h).symm (X.B.I.rep X.B.fund (x * (1, k))) * t) := by
     refine ae_of_ae_map (p := fun y => (f : X.B.I.GA → ℂ) y = Φ ((iotaX X h).symm y * t)) h1 ?_
-    rw [h2]
-    exact hf
+    rwa [h2]
   filter_upwards [e1, e3] with x a1 a3
   rw [a1]
   show (f : X.B.I.GA → ℂ) (X.B.I.rep X.B.fund (x * (1, k))) = _
@@ -1255,8 +1250,7 @@ theorem labTie_of_series : ∀ (D : D7) (X : HidaSetting D) (h : X.B.I = Formali
     ae_all_iff.2 htr, hbr] with x b1 b2 b3
   rw [b1, b3]
   simp only [b2, hΦ]
-  rw [← hpt v₀ ((iotaX X h).symm x * t)]
-  rw [Finset.mul_sum, star_sum]
+  rw [← hpt v₀ ((iotaX X h).symm x * t), Finset.mul_sum, star_sum]
   refine Finset.sum_congr rfl fun γ _ => ?_
   have e : ∀ (c b s : ℂ), c * star (b * s) = star (b * (star c * s)) := fun c b s => by
     simp only [star_mul', star_star]; ring
@@ -1395,8 +1389,7 @@ theorem main : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : Type) (
   obtain ⟨z, hz, hze⟩ := h3
   rw [h2] at hze
   have : z = R.HE.e (Y.eE (D.what₂.onb σ)) := LinearEquiv.injective _ hze
-  rw [← this]
-  exact hz
+  rwa [← this]
 
 end GlobalTheory.Mem.R3.RowFrameParts
 end -- clump:auto

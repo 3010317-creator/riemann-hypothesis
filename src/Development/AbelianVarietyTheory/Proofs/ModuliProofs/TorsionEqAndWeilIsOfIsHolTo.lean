@@ -82,11 +82,9 @@ theorem isHolTo_of_isPullback {S X Y Z : Scheme.{0}} {p : Z ⟶ X} {q : Z ⟶ Y}
   obtain ⟨_, ⟨U₀, hU₀, rfl⟩, hx₀, -⟩ := S.isBasis_affineOpens.exists_subset_of_mem_open
     (Set.mem_univ ((c w₀ ≫ p ≫ s) (default : PrimeSpectrum ℂ))) isOpen_univ
   have m₁ : (c w₀ ≫ p) (default : PrimeSpectrum ℂ) ∈ s ⁻¹ᵁ U₀ := by
-    rw [← Category.assoc] at hx₀
-    exact hx₀
+    rwa [← Category.assoc] at hx₀
   have m₂ : (c w₀ ≫ q) (default : PrimeSpectrum ℂ) ∈ t ⁻¹ᵁ U₀ := by
-    rw [H.w, ← Category.assoc] at hx₀
-    exact hx₀
+    rwa [H.w, ← Category.assoc] at hx₀
   obtain ⟨_, ⟨U₁, hU₁, rfl⟩, hx₁, l₁⟩ := X.isBasis_affineOpens.exists_subset_of_mem_open m₁ (s ⁻¹ᵁ U₀).isOpen
   obtain ⟨_, ⟨U₂, hU₂, rfl⟩, hx₂, l₂⟩ := Y.isBasis_affineOpens.exists_subset_of_mem_open m₂ (t ⁻¹ᵁ U₀).isOpen
   have hU₀ : IsAffineOpen U₀ := hU₀
@@ -134,7 +132,7 @@ theorem exists_isHolTo_lift {S X Y Z : Scheme.{0}} {p : Z ⟶ X} {q : Z ⟶ Y} {
   let c : E → (Sp ℂ ⟶ Z) := fun w =>
     if hw : w ∈ B then H.lift (a w) (a' w) (h w hw) else H.lift (a b₀) (a' b₀) (h b₀ hb₀)
   have hc : ∀ w ∈ B, c w ≫ p = a w ∧ c w ≫ q = a' w := fun w hw => by
-    simp only [c, dif_pos hw, IsPullback.lift_fst, IsPullback.lift_snd, and_self]
+    simp only [c, dite_eq_left hw, IsPullback.lift_fst, IsPullback.lift_snd, and_self]
   exact ⟨c, isHolTo_of_isPullback H (isHolTo_congr ha fun w hw => (hc w hw).1)
     (isHolTo_congr ha' fun w hw => (hc w hw).2), hc⟩
 
@@ -269,15 +267,13 @@ theorem torsion_eq_and_weilIs_of_isHolTo : Out.Laws → ∀ (X : Scheme.{0}) [Is
         show z w ≫ pullback.snd q q ≫ p = _
         rw [← Category.assoc, (hzb w hw).2, (hab' w hw).1])
       have := CommPairing.weilIs_pull hL.globalFns P.isAb P.isLB h he
-      rw [e₁, e₂] at this
-      exact this
+      rwa [e₁, e₂] at this
     have e₀ : Units.map (z b₀).appTop.hom.toMonoidHom e = unitOn c :=
       ((hL.weil X P k _).1 _ _ (htor b₀ hb₀).1 (htor b₀ hb₀).2).unique (hpull b₀ hb₀) h₀
     have e₁ : Units.map (z b).appTop.hom.toMonoidHom e = Units.map (z b₀).appTop.hom.toMonoidHom e :=
       Units.ext ((val_map_appTop (z b) e.val).trans
         ((congrArg _ (valAt'_eq_of_pow_eq_one hz hB hk hek hb₀ hb)).trans (val_map_appTop (z b₀) e.val).symm))
     have := hpull b hb
-    rw [e₁, e₀] at this
-    exact this
+    rwa [e₁, e₀] at this
 
 end GlobalTheory

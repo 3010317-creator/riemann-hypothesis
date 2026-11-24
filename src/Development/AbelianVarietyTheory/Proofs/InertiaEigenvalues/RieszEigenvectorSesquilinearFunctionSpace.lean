@@ -109,12 +109,10 @@ theorem riesz_and_eigenvector_of_sesq_on_fun_space : ∀ (X : Type) (C : Submodu
       simp only [Submodule.coe_smul, smul_eq_mul, starRingEnd_apply]; exact ips c _ _ n.2 m.2)
   have Bsym : ∀ x y, B x y = conj (B y x) := by
     intro x y
-    simp only [B, LinearMap.mk₂'ₛₗ_apply, starRingEnd_apply]
-    exact hs _ _ x.2 y.2
+    simpa only [B, LinearMap.mk₂'ₛₗ_apply, starRingEnd_apply] using hs _ _ x.2 y.2
   have Bpos : ∀ x, x ≠ 0 → 0 < (B x x).re := by
     intro x hx
-    simp only [B, LinearMap.mk₂'ₛₗ_apply]
-    exact hp _ x.2 (by rwa [ne_eq, Submodule.coe_eq_zero])
+    simpa only [B, LinearMap.mk₂'ₛₗ_apply] using hp _ x.2 (by rwa [ne_eq, Submodule.coe_eq_zero])
   let ipA : ℂ →ₗ[ℂ] ℂ →ₗ⋆[ℂ] ℂ := LinearMap.mk₂'ₛₗ (RingHom.id ℂ) (starRingEnd ℂ)
     (fun a b => conj b * a) (by intros; ring) (by intros; simp; ring) (by intros; simp; ring)
     (by intros; simp; ring)

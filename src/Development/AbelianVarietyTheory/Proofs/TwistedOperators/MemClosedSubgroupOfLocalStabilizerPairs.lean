@@ -170,9 +170,7 @@ theorem placeIdem_idem {v : HeightOneSpectrum (𝓞 D.host.F)} {ε : AF D.host.F
   rw [show pairA D.host.F 0 α * pairA D.host.F 0 α = pairA D.host.F (0 * 0) (α * α) from rfl, hz, mul_zero]
 
 theorem mt_inj (V : HSp D) {g h : GA D V} (e : Formalism.L2.Theta.mt V g = Formalism.L2.Theta.mt V h) : g = h := by
-  apply Subtype.ext
-  apply Units.ext
-  exact e
+  exact Subtype.ext (Units.ext e)
 
 theorem tendsto_of_mt {ι : Type} {l : Filter ι} (V : HSp D) {f : ι → GA D V} {g : GA D V}
     (h1 : Filter.Tendsto (fun i => Formalism.L2.Theta.mt V (f i)) l (nhds (Formalism.L2.Theta.mt V g)))
@@ -229,8 +227,7 @@ theorem exists_trunc (ε : HeightOneSpectrum (𝓞 D.host.F) → AF D.host.F) (h
         ((1 : Matrix (Fin V.rank) (Fin V.rank) (AE D)) i j)
       have e : (Formalism.L2.Theta.mt V x - 1) i j + (1 : Matrix (Fin V.rank) (Fin V.rank) (AE D)) i j = Formalism.L2.Theta.mt V x i j := by
         rw [Matrix.sub_apply, sub_add_cancel]
-      rw [e] at hlim
-      exact hlim
+      rwa [e] at hlim
     refine tendsto_of_mt V (key g hg.1) ?_
     simpa only [map_inv] using key g⁻¹ (inv_mem hg.1)
 

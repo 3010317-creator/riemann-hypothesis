@@ -114,7 +114,6 @@ theorem exists_sec_pow_div_ne_zero : ∀ (K : Type) [Field K] (A : Over (Sp K)) 
   obtain ⟨a, s, ha, hx⟩ := exists_sec_div_mem hL (isAmpleLB_of_relAmple_of_isAffine A hM hA) x
   obtain ⟨j, hj⟩ := TopologicalSpace.Opens.mem_iSup.1 hx
   refine ⟨a, s, ha, j, fun h => ?_⟩
-  rw [h, Scheme.basicOpen_zero] at hj
-  exact hj
+  rwa [h, Scheme.basicOpen_zero] at hj
 
 end GlobalTheory.AmpleDivSec

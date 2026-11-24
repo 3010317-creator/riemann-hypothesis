@@ -138,8 +138,7 @@ theorem exists_twisted_average_smInd {G : Type} {W : Type} [AddCommGroup W] [Mod
     exists_finite_average (smInd P τ) (GlobalTheory.CompanionTheory.BZFun.isSmooth_smInd P τ) hL θ hθ f
   refine ⟨_, h1, ?_, ?_⟩
   · intro g hg
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hg
     have hz : ∀ i, evalAt P τ g (twOrbit (smInd P τ) L θ f (r i)) = 0 := by
       intro i
@@ -151,7 +150,6 @@ theorem exists_twisted_average_smInd {G : Type} {W : Type} [AddCommGroup W] [Mod
     exact this
   · intro l g
     have h3 := congrArg (evalAt P τ g) (h2 l)
-    rw [map_smul] at h3
-    exact h3
+    rwa [map_smul] at h3
 
 end GlobalTheory.CompanionTheory.TwAvgInd

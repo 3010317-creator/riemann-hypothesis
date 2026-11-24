@@ -167,8 +167,7 @@ theorem blockUnipotent_props : ∀ (k : Type) [Field k] [ValuativeRel k] [Topolo
       apply hX
       have hs : g * (h⁻¹ * u X * h) ∈ tsupport f := subset_tsupport _ hne
       have huC : u X ∈ C := ⟨_, hs, by simp [mul_assoc]⟩
-      intro p _ q _
-      exact ⟨u X, huC, hentry X p q⟩
+      exact fun p _ q _ => ⟨u X, huC, hentry X p q⟩
 
 end GlobalTheory
 end -- clump:auto
@@ -260,7 +259,7 @@ theorem exists_compact_center_mul : ∀ (k : Type) [Field k] [ValuativeRel k] [T
     calc vdet k N (z * i) = vdet k N (z * i) * vdet k N κ := by rw [hvκ, mul_one]
       _ = 1 := by rw [← map_mul, mul_assoc, hzc]
   have hex : ∃ z ∈ Subgroup.center (GL (Fin N) k), vdet k N (z * i) = 1 := ⟨z, hz, hzi⟩
-  have hfi : f i = hex.choose * i := dif_pos hex
+  have hfi : f i = hex.choose * i := dite_eq_left hex
   obtain ⟨hzc', hv'⟩ := hex.choose_spec
   set zi := hex.choose
   set w := z * zi⁻¹ with hw
@@ -320,8 +319,7 @@ theorem mem_span_unip (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
       have := blk_two_apply e.symm (e i)
       rwa [Equiv.symm_apply_apply] at this
     rw [h1, h1] at hij
-    rw [h2, h2]
-    exact hij
+    rwa [h2, h2]
   have htop : twKer π (unipRad k (GlobalTheory.SmGL.two e.symm)) 1 = ⊤ :=
     Submodule.Quotient.subsingleton_iff.1 H'
   have hw : w ∈ twKer π (unipRad k (GlobalTheory.SmGL.two e.symm)) 1 := htop ▸ Submodule.mem_top
@@ -387,8 +385,7 @@ theorem box_mono {a b : ℕ} {s t : kˣ} (h : valuation k (s : k) ≤ valuation 
     box a b s ⊆ box a b t := by
   intro X hX
   rw [mem_box] at hX ⊢
-  intro p q
-  exact le_trans (show valuation k (X p q) ≤ valuation k (s : k) from hX p q) h
+  exact fun p q => le_trans (show valuation k (X p q) ≤ valuation k (s : k) from hX p q) h
 
 theorem add_mem_box_iff {a b : ℕ} {s : kˣ} {X Y : Fin a → Fin b → k} (hY : Y ∈ box a b s) :
     X + Y ∈ box a b s ↔ X ∈ box a b s := by
@@ -397,8 +394,7 @@ theorem add_mem_box_iff {a b : ℕ} {s : kˣ} {X Y : Fin a → Fin b → k} (hY 
   constructor
   · intro h p q
     simpa using add_mem_cball (h p q) (neg_mem_cball (hY p q))
-  · intro h p q
-    exact add_mem_cball (h p q) (hY p q)
+  · exact fun h p q => add_mem_cball (h p q) (hY p q)
 
 theorem exists_mem_box {a b : ℕ} (X : Fin a → Fin b → k) : ∃ s : kˣ, X ∈ box a b s := by
   set γ : ValueGroupWithZero k := ∏ pq : Fin a × Fin b, max 1 (valuation k (X pq.1 pq.2)) with hγ
@@ -513,14 +509,12 @@ theorem main : ∀ (N : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V] (π : Re
     · exact ⟨s₀, le_rfl, box_mono h⟩
   rw [← setIntegral_eq_integral_of_forall_compl_eq_zero (s := box a b s)
     (fun X hX => image_eq_zero_of_notMem_tsupport (fun h => hX (hs1 (hs₁ h))))]
-  simp only [hFw]
-  exact hs₀ s hs0
+  simpa only [hFw] using hs₀ s hs0
 
 end Meas
 
 theorem integral_coef_eq_zero : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (N : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V] (π : Representation ℂ (GL (Fin N) k) V), GlobalTheory.PRep.IsSmooth π → ∀ (a b : ℕ) (μ : Measure (Fin a → Fin b → k)), μ.IsAddHaarMeasure → ∀ u : (Fin a → Fin b → k) → GL (Fin N) k, Continuous u → (∀ X Y, u (X + Y) = u X * u Y) → ∀ (l : Module.Dual ℂ V) (w : V), w ∈ Submodule.span ℂ {x | ∃ (Y : Fin a → Fin b → k) (y : V), x = π (u Y) y - y} → ∀ F : (Fin a → Fin b → k) → ℂ, HasCompactSupport F → (∀ X, F X = l (π (u X) w)) → ∫ X, F X ∂μ = 0 := by
-  intro k _ _ _ _ _ _
-  exact main
+  exact fun k _ _ _ _ _ _ => main
 
 end GlobalTheory.UnipCoefInt
 end -- clump:auto
@@ -605,11 +599,11 @@ theorem isCuspFn_cutCoef : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologica
     have hd : ValuativeRel.valuation k ((g * (h⁻¹ * u X * h) : GL (Fin N) k) : Matrix (Fin N) (Fin N) k).det = 1 := by
       simp only [Units.val_mul, Matrix.det_mul, hud X, map_mul, hg, one_mul, mul_one]
       rw [← map_mul, ← Matrix.det_mul, ← Units.val_mul, inv_mul_cancel, Units.val_one, Matrix.det_one, map_one]
-    rw [hf, if_pos hd]
+    rw [hf, ite_eq_left hd]
     simp only [LinearMap.comp_apply, map_mul, Module.End.mul_apply]
   · have : (fun X => f (g * (h⁻¹ * u X * h))) = fun _ => 0 := by
       funext X
-      rw [hf, if_neg]
+      rw [hf, ite_eq_right]
       intro hd
       apply hg
       simp only [Units.val_mul, Matrix.det_mul, hud X, map_mul, mul_one] at hd
@@ -670,8 +664,7 @@ private theorem finite_cosets {G : Type} [Group G] [TopologicalSpace G] [IsTopol
   have hcomp : IsCompact ((QuotientGroup.mk : G → G ⧸ K) '' tsupport F) :=
     hF.isCompact.image QuotientGroup.continuous_mk
   refine hcomp.finite_of_discrete.subset ?_
-  intro q hq
-  exact ⟨q.out, subset_tsupport _ hq, QuotientGroup.out_eq' q⟩
+  exact fun q hq => ⟨q.out, subset_tsupport _ hq, QuotientGroup.out_eq' q⟩
 
 section Core
 
@@ -736,8 +729,7 @@ private theorem transl_smooth {e : G → ℂ} (K : Subgroup G) (hK : IsOpen (K :
       refine Filter.mem_of_superset hx fun g hg => ?_
       show lreg G g (c • x) = c • x
       rw [map_smul, hg]
-  refine Filter.mem_of_superset (key F.1 F.2) fun g hg => ?_
-  exact Subtype.ext hg
+  exact Filter.mem_of_superset (key F.1 F.2) fun g hg => Subtype.ext hg
 
 private def noTerm (e : G → ℂ) (hc : Continuous e) (hs : HasCompactSupport e) (μ : Measure A) (U : A → G)
     (hint : ∀ F : G → ℂ, Continuous F → HasCompactSupport F → ∀ z w : G, Integrable (fun X => F (z * U X * w)) μ) :
@@ -804,8 +796,7 @@ private theorem core (μ : Measure A) (U : A → G)
     intro g
     refine ⟨(fun x => g⁻¹ * x) ⁻¹' ((χ.ker.map J.subtype : Subgroup G) : Set G),
       hKo.preimage (continuous_const.mul continuous_id), ?_, ?_⟩
-    · simp only [Set.mem_preimage, inv_mul_cancel, SetLike.mem_coe]
-      exact Subgroup.one_mem _
+    · simpa only [Set.mem_preimage, inv_mul_cancel, SetLike.mem_coe] using Subgroup.one_mem _
     · intro x hx
       have := hR g _ hx
       rwa [mul_inv_cancel_left] at this
@@ -1037,8 +1028,7 @@ end Slice
 
 theorem typeSlice : TypeSlice := by
   intro k _ _ _ _ _ n J hJo hJc χ hχ hcusp a b ε ha hb u hu h
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   classical
   borelize k
   haveI : SecondCountableTopology k := GlobalTheory.SplitWeil.secondCountable k
@@ -1055,15 +1045,14 @@ theorem typeSlice : TypeSlice := by
     refine hc.integrable_of_hasCompactSupport (HasCompactSupport.intro hD fun X hX => ?_)
     exact image_eq_zero_of_notMem_tsupport fun hm => hX (hDX X hm)
   let e : GL (Fin n) k → ℂ := fun g => if hg : g ∈ J then (((χ ⟨g, hg⟩)⁻¹ : ℂˣ) : ℂ) else 0
-  have he1 : ∀ g (hg : g ∈ J), e g = (((χ ⟨g, hg⟩)⁻¹ : ℂˣ) : ℂ) := fun g hg => dif_pos hg
-  have he0 : ∀ g, g ∉ J → e g = 0 := fun g hg => dif_neg hg
+  have he1 : ∀ g (hg : g ∈ J), e g = (((χ ⟨g, hg⟩)⁻¹ : ℂˣ) : ℂ) := fun g hg => dite_eq_left hg
+  have he0 : ∀ g, g ∉ J → e g = 0 := fun g hg => dite_eq_right hg
   have hne : ∫ X, e (1 * U X * 1) ∂μ ≠ 0 := by
     let W : Set (Fin a → Fin b → k) := U ⁻¹' (J : Set (GL (Fin n) k))
     have hWo : IsOpen W := hJo.preimage hUc
     have h0 : (0 : Fin a → Fin b → k) ∈ W := by
       show U 0 ∈ J
-      simp only [U, u_zero ε u hu, mul_one, inv_mul_cancel]
-      exact J.one_mem
+      simpa only [U, u_zero ε u hu, mul_one, inv_mul_cancel] using J.one_mem
     have hpos : 0 < μ W := hWo.measure_pos μ ⟨0, h0⟩
     obtain ⟨D, hD, hDX⟩ := slice_compact ε u hu h 1 1 J hJc
     have hfin : μ W < ⊤ := lt_of_le_of_lt (measure_mono fun X hX => hDX X (by simpa [U, W] using hX)) hD.measure_lt_top
@@ -1080,8 +1069,7 @@ theorem typeSlice : TypeSlice := by
         simp
       · have hX' : U X ∉ J := hX
         rw [Set.indicator_of_notMem hX]
-        simp only [one_mul, mul_one]
-        exact he0 _ hX'
+        simpa only [one_mul, mul_one] using he0 _ hX'
     rw [heq, integral_indicator_const _ hWo.measurableSet]
     have hr : μ.real W ≠ 0 := by
       rw [Measure.real, ENNReal.toReal_ne_zero]
@@ -1104,8 +1092,7 @@ theorem typeSlice : TypeSlice := by
     rw [h1] at this
     simpa using this
   obtain ⟨l₀, hl₀⟩ : ∃ l₀ : Module.Dual ℂ σ.V, l₀ v ≠ 0 := by
-    by_contra H
-    push_neg at H
+    by_contra! H
     exact hv0 ((Module.forall_dual_apply_eq_zero_iff ℂ v).1 H)
   obtain ⟨l, hl, hlv⟩ := GlobalTheory.SuperCusp.exists_smooth_form_eq (N := ⊥) σ.smooth hKo hKc 1
     ((χ.ker.map J.subtype : Subgroup (GL (Fin n) k)) : Set (GL (Fin n) k)) (fun c hc => hc)
@@ -1149,12 +1136,12 @@ theorem typeSlice : TypeSlice := by
   have hterm : ∀ q : GL (Fin n) k ⧸ K₂, f q.out * l (σ.ρ q.out v) = ((‖c q.out‖ ^ 2 : ℝ) : ℂ) := by
     intro q
     by_cases hd : ValuativeRel.valuation k ((q.out : GL (Fin n) k) : Matrix (Fin n) (Fin n) k).det = 1
-    · have hcq : c q.out = l (σ.ρ q.out v) := if_pos hd
+    · have hcq : c q.out = l (σ.ρ q.out v) := ite_eq_left hd
       simp only [f]
       rw [hcq, Complex.conj_mul']
       push_cast
       rfl
-    · have hcq : c q.out = 0 := if_neg hd
+    · have hcq : c q.out = 0 := ite_eq_right hd
       simp only [f]
       rw [hcq]
       simp

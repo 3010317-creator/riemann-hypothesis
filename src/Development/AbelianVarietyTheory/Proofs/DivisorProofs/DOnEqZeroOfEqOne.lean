@@ -69,8 +69,7 @@ theorem jacOn_of_eq_one (f : Fin (D + 1) → Γ(Y, U)) (i : Fin (D + 1)) (hi : f
   · intro a _ ha
     obtain ⟨b, hb⟩ := Fin.exists_succAbove_eq (Ne.symm ha)
     rw [dOn_eq_zero_of_eq_one _ b (by rw [hb, hi]), smul_zero]
-  · intro h
-    exact (h (Finset.mem_univ i)).elim
+  · exact fun h => (h (Finset.mem_univ i)).elim
 
 theorem isUnit_of_affine {f : Γ(Y, U)}
     (h : ∀ W : Y.Opens, IsAffineOpen W → ∀ hW : W ≤ U, IsUnit (resG Y hW f)) : IsUnit f := by
@@ -120,8 +119,7 @@ theorem isUnit_jacSec_coord [SmoothOfRelativeDimension N (PSpace.str R N)]
   rw [jacOn_of_eq_one _ (c.2 PUnit.unit) (ratioOn_self (hi := h₂)), map_smul, smul_eq_mul]
   refine (isUnit_one.neg.pow _).mul ((K.isUnit_jacobian_iff _ hW _ _).2 ?_)
   have := (isFrame_dOn_ratio R N (c.2 PUnit.unit)).res hW h₂
-  rw [resForm_dOn] at this
-  exact this
+  rwa [resForm_dOn] at this
 
 end ProjSpace
 

@@ -84,8 +84,7 @@ theorem exists_gfc (V : HSp D) (γ : GL (Fin V.rank) (Ef D)) (hγ : Unimod (OA D
     · intro h y hy
       obtain ⟨y, rfl⟩ := (crd V).surjective y
       have := h y hy
-      rw [hT_crd D.sp.cm] at this
-      exact this
+      rwa [hT_crd D.sp.cm] at this
     · intro h y hy
       rw [hT_crd D.sp.cm]
       exact h _ hy
@@ -96,8 +95,7 @@ theorem exists_gfc (V : HSp D) (γ : GL (Fin V.rank) (Ef D)) (hγ : Unimod (OA D
       finMat D.sp.cm.sig V.gram k *ᵥ y ∈ GlobalTheory.AdLat.hat D.host.F (lat γ : Set (Fin V.rank → D.host.E)) := by
     rw [← hL, GlobalTheory.LevelChoices.coe_crdLat]
     have := GlobalTheory.LevelChoices.coe_crdLat (GlobalTheory.VolRatioCompare.reLat V L h1 h2)
-    rw [← this] at hk
-    exact hk
+    rwa [← this] at hk
   refine (hatL_of_hat _ _ _ hk' x).trans ((isFrame_lat γ _).trans ?_)
   rw [mulVec_mulVec, _root_.mul_inv_rev, inv_inv, Units.val_mul]
   rfl

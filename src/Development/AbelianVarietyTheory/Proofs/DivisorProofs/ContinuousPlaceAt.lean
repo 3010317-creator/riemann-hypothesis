@@ -123,8 +123,7 @@ theorem coords_at_place : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
     have key : ∀ i j l, s (e (i, j, l)) = t (e (i, j, l)) := by
       intro i j l
       have h1 : f s i j = f t i j := congrFun (congrFun hst i) j
-      have h2 := congrFun (B.equivFun.symm.injective h1) l
-      exact placeAt_injective v h2
+      exact placeAt_injective v (congrFun (B.equivFun.symm.injective h1) l)
     funext k
     have := key (e.symm k).1 (e.symm k).2.1 (e.symm k).2.2
     simpa only [Prod.mk.eta, Equiv.apply_symm_apply] using this
@@ -135,8 +134,7 @@ theorem coords_at_place : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
       refine eq_placeAt_of_mul hα1 hα0 ?_
       have h1 : pairA F 0 α • y i j = y i j := by rw [Algebra.smul_def]; exact hy i j
       have h2 := congrFun (congrArg B.equivFun h1) l
-      rw [map_smul, Pi.smul_apply, smul_eq_mul] at h2
-      exact h2
+      rwa [map_smul, Pi.smul_apply, smul_eq_mul] at h2
     refine ⟨fun k => Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV F v (B.equivFun (y (e.symm k).1 (e.symm k).2.1) (e.symm k).2.2).2, ?_⟩
     funext i j
     show B.equivFun.symm _ = y i j

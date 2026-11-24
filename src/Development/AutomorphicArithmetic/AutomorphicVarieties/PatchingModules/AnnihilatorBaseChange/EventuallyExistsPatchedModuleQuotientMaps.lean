@@ -371,8 +371,7 @@ theorem UpperTheory.V.Pa.Core.spCong :
     (by rw [hk, hk, ← hC]; exact UpperTheory.V.Pa.Core.spCong_ideal I P P' ut h')
     (by rw [hk, hk, ← hC]; exact UpperTheory.V.Pa.Core.spCong_ideal I P' P ut h)
   refine ⟨κ, hκ, fun z hz x => UpperTheory.V.Pa.Core.spCong_kill I a M hI _ z ?_ x⟩
-  rw [hk, ← hC]
-  exact hz
+  rwa [hk, ← hC]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.AnnihilatorBaseChange.SpCong =====
@@ -602,8 +601,7 @@ theorem UpperTheory.V.Pa.Core.eventually_exists_patchedModule_quotient_maps :
     have h1 : MvPowerSeries.X p ∈ kjIdeal (abelian₂ O Unit D) (Fin T.q × Fin n) 1 j :=
       Ideal.mem_sup_left (by rw [pow_one]; exact Ideal.subset_span (Set.mem_range_self p))
     have h2 := Ideal.mem_map_of_mem (m.ρ N).toRingHom (Ideal.mem_map_of_mem m.s.toRingHom h1)
-    have h3 := m.specializationMap_comp_universalSection N (MvPowerSeries.X p)
-    exact (congrArg (· ∈ _) h3).mp h2
+    exact (congrArg (· ∈ _) (m.specializationMap_comp_universalSection N (MvPowerSeries.X p))).mp h2
   · rw [hc]
     refine Ideal.mul_mem_right _ _ ?_
     have h1 : MvPowerSeries.C ((l : abelian₂ O Unit D) ^ j) ∈ kjIdeal (abelian₂ O Unit D) (Fin T.q × Fin n) 1 j :=
@@ -611,10 +609,8 @@ theorem UpperTheory.V.Pa.Core.eventually_exists_patchedModule_quotient_maps :
     have h2 := Ideal.mem_map_of_mem m.s.toRingHom h1
     rwa [map_pow, map_natCast, map_pow, map_natCast] at h2
   · exact key
-  · intro z
-    exact ((A.m N).φψ z).trans (congrArg (· • z) hf.symm)
-  · intro z
-    exact ((A.m N).ψφ z).trans (congrArg (fun t => (A.m N).θ t • z) hf.symm)
+  · exact fun z => ((A.m N).φψ z).trans (congrArg (· • z) hf.symm)
+  · exact fun z => ((A.m N).ψφ z).trans (congrArg (fun t => (A.m N).θ t • z) hf.symm)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.AnnihilatorBaseChange.EventuallyExistsPatchedModuleQuotientMaps =====

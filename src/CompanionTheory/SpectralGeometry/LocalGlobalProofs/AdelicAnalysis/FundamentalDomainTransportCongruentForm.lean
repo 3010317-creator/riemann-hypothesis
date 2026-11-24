@@ -24,8 +24,7 @@ theorem actTup_ratTup {M n : ℕ} (g : GL (Fin M) E) (X : Fin n → Fin M → E)
     actTup R (bc (inclR (F := F) R) g) (ratTup R X) =
       ratTup R (fun a => (g : Matrix (Fin M) (Fin M) E) *ᵥ X a) := by
   funext a i
-  have h := RingHom.map_mulVec (inclR (F := F) R) (g : Matrix (Fin M) (Fin M) E) (X a) i
-  exact h.symm
+  exact (RingHom.map_mulVec (inclR (F := F) R) (g : Matrix (Fin M) (Fin M) E) (X a) i).symm
 
 theorem actTup_mul {M n : ℕ} (a b : GL (Fin M) (R ⊗[F] E)) (X : Fin n → Fin M → R ⊗[F] E) :
     actTup R (a * b) X = actTup R a (actTup R b X) := by
@@ -74,8 +73,7 @@ theorem GlobalTheory.CompanionTheory.SW.FTransfer.cntI_transfer : ∀ (F E : Typ
         HA.mat (AF F) σ J' (e.symm x) ∈ HFin (AF F) σ J' := by
       intro x hx
       apply (he2 _).1
-      rw [e.apply_symm_apply]
-      exact hx
+      rwa [e.apply_symm_apply]
     have hin : ∀ a : HFinIn (AF F) σ J,
         HA.mat (AF F) σ J' (e.symm (a.1 : HA (AF F) σ J)) ∈ HFin (AF F) σ J' :=
       fun a => hin₀ a.1 a.2
@@ -94,8 +92,7 @@ theorem GlobalTheory.CompanionTheory.SW.FTransfer.cntI_transfer : ∀ (F E : Typ
         (he2 _).2 b.2
       refine ⟨⟨(e (b.1 : HA (AF F) σ J') : HA (AF F) σ J), Subgroup.mem_subgroupOf.2 hb⟩, ?_⟩
       exact Subtype.ext (e.symm_apply_apply (b.1 : HA (AF F) σ J'))
-    · intro a x
-      exact hmulx a.1 x
+    · exact fun a x => hmulx a.1 x
   · rw [em.symm.map_apply]
     congr 1
     ext x

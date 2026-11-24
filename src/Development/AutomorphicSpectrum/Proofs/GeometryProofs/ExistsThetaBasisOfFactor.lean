@@ -187,14 +187,12 @@ theorem hol_lp (W : (A.hom ⁻¹ᵁ ⊤).toScheme.Opens) (f : Γ((A.hom ⁻¹ᵁ
   have hset : {z | ⊤ ≤ (lp (u.ex z)) ⁻¹ᵁ W} = {z | ⊤ ≤ (u.ex z).left ⁻¹ᵁ U} := by
     ext z
     have := (h (lp (u.ex z))).1
-    rw [lp_comp] at this
-    exact this
+    rwa [lp_comp] at this
   obtain ⟨ho, hd⟩ := u.hol U f'
   rw [hset]
   refine ⟨ho, hd.congr fun z hz => ?_⟩
   have h2 := (h (lp (u.ex z))).2 (by rw [← Set.mem_setOf_eq (p := fun z => ⊤ ≤ (lp (u.ex z)) ⁻¹ᵁ W), hset]; exact hz)
-  rw [lp_comp] at h2
-  exact h2
+  rwa [lp_comp] at h2
 
 theorem exists_theta (hL : L.IsLB) {N : ℕ} (s : LB.Sec (Out.powOver A L ⊤ N)) :
     ∃ Θ : (Fin g → ℂ) → ℂ, ∀ z j, ⊤ ≤ (lp (u.ex z)) ⁻¹ᵁ (Out.powOver A L ⊤ N).U j →

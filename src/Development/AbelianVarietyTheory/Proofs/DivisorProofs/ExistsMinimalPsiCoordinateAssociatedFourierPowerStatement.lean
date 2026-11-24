@@ -114,8 +114,7 @@ theorem dvd_of_forall_mem_sup_pow : ∀ (O R : Type) [CommRing O] [IsLocalRing O
       rfl
     rw [this]
     exact Submodule.smul_mem_smul hv trivial
-  rw [hK, Submodule.mem_bot, Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton] at hmem
-  exact hmem
+  rwa [hK, Submodule.mem_bot, Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton] at hmem
 
 theorem exists_sub_mem_map_pow : ∀ (O R : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [CommRing R] (j : O →+* R), IsCpl j → ∀ (s : R) (n : ℕ), ∃ t : O, s - j t ∈ (maximalIdeal O ^ n).map j := by
   intro O R _ _ _ _ j hj s n
@@ -258,13 +257,11 @@ theorem dvd_of_norm_le_at_classical : ∀ (o' Ω : Type) [CommRing o'] [Field Ω
   rw [hspan, hmax, ← Ideal.map_pow] at hc
   have hc' : (M.stalkEquiv x).symm c ∈ maximalIdeal (M.Z.presheaf.stalk x) ^ e := by
     obtain ⟨c₀, hc₀, hc₀e⟩ := (Ideal.mem_map_of_equiv (M.stalkEquiv x) c).1 hc
-    rw [← hc₀e, RingEquiv.symm_apply_apply]
-    exact hc₀
+    rwa [← hc₀e, RingEquiv.symm_apply_apply]
   have ht' : t = (M.stalkEquiv x).symm a * b + (M.stalkEquiv x).symm c := by
     apply (M.stalkEquiv x).injective
     apply Subtype.ext
-    rw [map_add (f := _), map_mul, RingEquiv.apply_symm_apply, RingEquiv.apply_symm_apply]
-    exact hac
+    rwa [map_add (f := _), map_mul, RingEquiv.apply_symm_apply, RingEquiv.apply_symm_apply]
   have hle : (maximalIdeal (M.Z.presheaf.stalk x) ^ max e (C e)).map j ≤ (maximalIdeal (M.Z.presheaf.stalk x) ^ e).map j :=
     Ideal.map_mono (Ideal.pow_le_pow_right (le_max_left _ _))
   have hs' : s = (j t + (s - j t)) := by ring

@@ -77,8 +77,7 @@ theorem deriv_twisted_line_at {R : Type} [NormedAddCommGroup R] [NormedSpace ℝ
   have h1 : HasDerivAt (fun t : ℝ => w + t • u) u 0 := by
     simpa using ((hasDerivAt_id (0 : ℝ)).smul_const u).const_add w
   have h2 : HasDerivAt (fun t : ℝ => F (w + t • u)) (fderiv ℝ F w u) 0 := by
-    have h := (hF (w + (0 : ℝ) • u)).hasFDerivAt.comp_hasDerivAt (0 : ℝ) h1
-    simpa [Function.comp_def] using h
+    simpa [Function.comp_def] using (hF (w + (0 : ℝ) • u)).hasFDerivAt.comp_hasDerivAt (0 : ℝ) h1
   have h3 : HasDerivAt (fun t : ℝ => -(Real.pi * Complex.I) * (om a (t • u) : ℂ))
       (-(Real.pi * Complex.I) * (om a u : ℂ)) 0 := by
     have e : (fun t : ℝ => -(Real.pi * Complex.I) * (om a (t • u) : ℂ)) =
@@ -156,8 +155,7 @@ theorem heis_translate_cauchy_riemann : ∀ (D : D7) (θ : InfFam D) (σ : (D.wh
     exact heisO_real_at h hψ S T f y w
   rw [hG]
   refine ⟨(differentiable_phase (omO S T) (piW θ T S y)).mul hF, fun w z => ?_⟩
-  rw [fderiv_phase_mul _ hF, fderiv_phase_mul _ hF]
-  rw [heisO_real_at h hψ S T f y w]
+  rw [fderiv_phase_mul _ hF, fderiv_phase_mul _ hF, heisO_real_at h hψ S T f y w]
   set a := piW θ T S y with ha
   set Fd := fderiv ℝ (fun v : RW T S => f (y + iotaW σ T S v)) w with hFd
   set Fw := f (y + iotaW σ T S w) with hFw
@@ -275,7 +273,7 @@ theorem trace_jm {m n : ℕ} (a : Fin n → Bool) (b : Fin m → Bool) (X Y : Ma
   rw [Finset.sum_comm]
   simp only [jm_eq, Matrix.trace, Matrix.diag, Matrix.diagonal_mul]
   simp only [Matrix.mul_apply, Matrix.diagonal_apply, ite_mul, zero_mul, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true, Finset.mul_sum, Matrix.conjTranspose_apply, RCLike.star_def]
+    Finset.mem_univ, ite_true, Finset.mul_sum, Matrix.conjTranspose_apply, RCLike.star_def]
 
 theorem term_re (b a : Bool) (ξ z y : ℂ) (hξ : ξ.re = 0) :
     2 * (ξ * (((sg a : ℝ) : ℂ) * (conj (cf b a y) * (((sg b : ℝ) : ℂ) * cf b a z)))).re =
@@ -383,8 +381,7 @@ variable {D : D7}
 
 theorem cplxO_smulC {m n : ℕ} (s : Matrix (Fin n) (Fin n) ℂ) (t : Matrix (Fin m) (Fin m) ℂ) (c : ℂ)
     (x : Matrix (Fin m) (Fin n) ℂ) : cplxO s t (c • x) = c • cplxO s t x := by
-  simp only [cplxO, Matrix.mul_smul, Matrix.smul_mul]
-  exact smul_comm _ _ _
+  simpa only [cplxO, Matrix.mul_smul, Matrix.smul_mul] using smul_comm _ _ _
 
 theorem cplxO_sum {m n p q : ℕ} (s : Matrix (Fin n) (Fin n) ℂ) (t : Matrix (Fin m) (Fin m) ℂ)
     (x : Fin p → Fin q → Matrix (Fin m) (Fin n) ℂ) :

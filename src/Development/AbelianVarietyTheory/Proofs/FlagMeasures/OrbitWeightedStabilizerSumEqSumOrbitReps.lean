@@ -79,9 +79,7 @@ theorem _root_.GlobalTheory.Mass.orbSum_eq_sum_reps : ∀ (G α : Type) [Group G
     have hq : Quotient.mk (MulAction.orbitRel G α) x = Quotient.mk _ y := congrArg Subtype.val hxy
     obtain ⟨g, hg⟩ := MulAction.mem_orbit_iff.mp (MulAction.orbitRel_apply.mp (Quotient.exact hq))
     obtain ⟨z, -, hz⟩ := huniq x (hs x hx)
-    have h1 := hz x ⟨hx, 1, one_smul G x⟩
-    have h2 := hz y ⟨hy, g, hg⟩
-    exact Subtype.ext (h1.trans h2.symm)
+    exact Subtype.ext ((hz x ⟨hx, 1, one_smul G x⟩).trans (hz y ⟨hy, g, hg⟩).symm)
   have he_surj : Function.Surjective e := by
     rintro ⟨q, hq⟩
     obtain ⟨y, ⟨hy, g, hg⟩, -⟩ := huniq q.out hq

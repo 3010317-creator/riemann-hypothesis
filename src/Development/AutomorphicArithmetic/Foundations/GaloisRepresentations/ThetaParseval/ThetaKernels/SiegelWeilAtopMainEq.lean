@@ -59,8 +59,7 @@ theorem fc_smul_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (c : �
     (𝓖 : Set (nA σ d.Y d.b)) (T : nF σ d.Y d.b) (x : d.G) :
     fc d.B.ψ d.b nb lam 𝓖 (c • f) T x = c * fc d.B.ψ d.b nb lam 𝓖 f T x := by
   unfold fc
-  simp only [Pi.smul_apply, smul_eq_mul, mul_assoc]
-  exact integral_const_mul c _
+  simpa only [Pi.smul_apply, smul_eq_mul, mul_assoc] using integral_const_mul c _
 theorem perLiftC_k (c : ℂ) (hA : AbsThm) (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (hTC : _root_.PositivityTheory.SiegelWeilFormula.ThetaCoef_k) (hAux : _root_.PositivityTheory.SiegelWeilFormula.SiegelWeilDatumProperties) (hFM : _root_.PositivityTheory.SiegelWeilFormula.FockMem_k) (hLo : _root_.PositivityTheory.SiegelWeilFormula.LocOpEx_k)
     (hLI : _root_.PositivityTheory.SiegelWeilFormula.LocInst_k) (hGS : _root_.PositivityTheory.SiegelWeilFormula.GSplit_k) (hGI : _root_.PositivityTheory.SiegelWeilFormula.GIinv_k) (hGD : _root_.PositivityTheory.SiegelWeilFormula.GIdil_k) (hPK : _root_.PositivityTheory.SiegelWeilFormula.PolyKFin_k) (hSK : _root_.PositivityTheory.SiegelWeilFormula.SecK_k) (hLB : _root_.PositivityTheory.SiegelWeilFormula.LamBd_k)
     (hLS : _root_.PositivityTheory.SiegelWeilFormula.LamSing_k) (hU : _root_.PositivityTheory.SiegelWeilFormula.Unfold_k) (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (hnm : d.n ≤ d.m) (hEA : d.EisAll)
@@ -100,7 +99,6 @@ theorem perLiftC_k (c : ℂ) (hA : AbsThm) (hT : _root_.PositivityTheory.SiegelW
         rw [hsL]
         exact (hx y').2 P
       Icont := by
-        show Continuous (c • d.I (φ 1))
         exact ((hTA F E σ d).2.2 (φ 1) (hφ 1).1).2.1.const_smul c
       Ileft := by
         intro γ hγ g
@@ -189,8 +187,7 @@ theorem mainC_of_k (c : ℂ) (hA : AbsThm) (hT : _root_.PositivityTheory.SiegelW
     show ∑ i, d.eis (d.sec0 (φ i (P i))) (s0 d.m d.n) z x = d.eis (d.sec0 Φ) (s0 d.m d.n) z x
     rw [hsec]
     unfold _root_.PositivityTheory.SiegelWeilFormula.SD_k.eis
-    simp only [Finset.mul_sum]
-    exact this.symm
+    simpa only [Finset.mul_sum] using this.symm
   rw [hv, Finset.mul_sum]
   exact (holValueAt_finsum Finset.univ fun i _ => key i).congr heq
 theorem eisAll_of_k (hSK : _root_.PositivityTheory.SiegelWeilFormula.SecK_k) (hEW : _root_.PositivityTheory.SiegelWeilFormula.EisWk_k) (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) : d.EisAll :=

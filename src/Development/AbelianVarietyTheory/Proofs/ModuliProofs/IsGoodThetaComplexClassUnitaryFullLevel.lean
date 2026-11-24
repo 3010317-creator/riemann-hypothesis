@@ -181,13 +181,11 @@ theorem exists_diff_linear {O : Type} [CommRing O] {A : Over (Sp ℂ)} [GrpObj A
   have hadd : ∀ v w : Serre.Lie act, dd (v + w) = dd v + dd w := by
     intro v w
     apply huniq
-    have h2 := hcomb 2 ![1, 1] ![v, w]
-    simpa [Fin.sum_univ_two] using h2
+    simpa [Fin.sum_univ_two] using hcomb 2 ![1, 1] ![v, w]
   have hsmul : ∀ (c : ℂ) (v : Serre.Lie act), dd (c • v) = c • dd v := by
     intro c v
     apply huniq
-    have h1 := hcomb 1 ![c] ![v]
-    simpa using h1
+    simpa using hcomb 1 ![c] ![v]
   refine ⟨{ toFun := dd, map_add' := hadd, map_smul' := hsmul }, ?_, hdd⟩
   intro v w hvw
   apply GlobalTheory.Serre.Lie.ext
@@ -372,8 +370,7 @@ theorem expRoot_prim {n : ℕ} (hn : 0 < n) : IsPrimitiveRoot (expRoot n) n := b
   rw [← IsPrimitiveRoot.coe_units_iff]
   have h := (Complex.isPrimitiveRoot_exp n hn.ne').inv
   rw [← Complex.exp_neg] at h
-  rw [expRoot, Units.val_mk0, neg_div]
-  exact h
+  rwa [expRoot, Units.val_mk0, neg_div]
 
 theorem expRoot_pow {n m : ℕ} (hn : 0 < n) (hm : 0 < m) : expRoot (n * m) ^ m = expRoot n := by
   apply Units.ext
@@ -448,8 +445,7 @@ theorem period_lattice_in_genus :
     refine hW n ⟨Q a, (hΛ _).2 ⟨a, rfl⟩⟩ ⟨Q b, (hΛ _).2 ⟨b, rfl⟩⟩ c hn ?_
     have h := hEf ⟨Q a, (hΛ _).2 ⟨a, rfl⟩⟩ ⟨Q b, (hΛ _).2 ⟨b, rfl⟩⟩
     rw [hE] at h
-    rw [Int.cast_injective h]
-    exact hc
+    rwa [Int.cast_injective h]
   obtain ⟨f, ν, ⟨h1, h2, h3⟩, h4⟩ := genus_of_tateIso (D := D) (D' := D')
     (fun n x y c c' _ hx hy ha hb =>
       GlobalTheory.FormTorsion.unitOn_inj (((hL.weil _ P n (Over.mk (𝟙 (Sp ℂ)))).1 x y hx hy).unique ha hb))
@@ -559,8 +555,7 @@ theorem exists_period : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P : Ou
   have hF₀ : ∀ c z, F c z = h fun i => ty i (c : E) * h.symm z i := fun c z => rfl
   have hF : ∀ c z, u.ex (F c z) = u.ex z ≫ act.act c := fun c z => by
     have := hh c (h.symm z)
-    rw [h.apply_symm_apply] at this
-    exact this
+    rwa [h.apply_symm_apply] at this
   let Q₁ : La →+ (Fin g → ℂ) := h.symm.toLinearMap.toAddMonoidHom.comp Q₀
   have hQ₁ : ∀ x, h (Q₁ x) = Q₀ x := fun x => h.apply_symm_apply _
   obtain ⟨Hm₁, inj₁, disc₁, span₁, herm₁, pos₁, him₁⟩ :=
@@ -835,8 +830,7 @@ theorem finite_data_of_signature :
     constructor
     · rintro ⟨x, hx, rfl⟩
       exact (h2 x).1 hx
-    · intro hv
-      exact ⟨g.symm v, (h2 _).2 (by simpa using hv), by simp⟩
+    · exact fun hv => ⟨g.symm v, (h2 _).2 (by simpa using hv), by simp⟩
   let e : D'.La ≃ₗ[𝓞 E] (f i).1.La := (LinearEquiv.ofInjective (φ a) (hφ a).1).trans
     (((g.restrictScalars (𝓞 E)).ofSubmodules _ _ hmap).trans
       (LinearEquiv.ofInjective (φ (f i)) (hφ (f i)).1).symm)
@@ -996,7 +990,7 @@ theorem entry_comm (Hm : Matrix (Fin g) (Fin g) ℂ) (t : Fin g → ℂ)
     have := h (Pi.single i s) (Pi.single j 1)
     rw [hermForm_eq_sum, hermForm_eq_sum] at this
     simp only [Pi.mul_apply, Pi.single_apply, Pi.star_apply, mul_ite, mul_zero, _root_.mul_one, ite_mul, zero_mul,
-      apply_ite (starRingEnd ℂ), map_zero, map_one, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+      apply_ite (starRingEnd ℂ), map_zero, map_one, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
       RCLike.star_def, Complex.conj_conj] at this
     convert this using 2 <;> ring
   have h1 := key 1

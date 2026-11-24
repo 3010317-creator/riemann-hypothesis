@@ -64,8 +64,7 @@ theorem conj_unit_iff {ι : Type} [Fintype ι] [DecidableEq ι] (U : Matrix ι �
     have e2 : ((U * Uᴴ).map (starRingEnd ℂ)).map (starRingEnd ℂ) = U * Uᴴ := by
       ext i j
       simp only [Matrix.map_apply, Complex.conj_conj]
-    rw [e2, Matrix.map_one _ (map_zero _) (map_one _)] at h2
-    exact h2
+    rwa [e2, Matrix.map_one _ (map_zero _) (map_one _)] at h2
   · intro h
     rw [e, h]
     exact Matrix.map_one _ (map_zero _) (map_one _)
@@ -130,8 +129,7 @@ theorem mem_isStdK_iff : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   refine and_congr ?_ Iff.rfl
   simp only [mem_O_iff (σ := σ) hD χ]
   constructor
-  · intro h r c
-    exact ⟨h x (by simp) r c, h x⁻¹ (by simp) r c⟩
+  · exact fun h r c => ⟨h x (by simp) r c, h x⁻¹ (by simp) r c⟩
   · intro h k' hk' r c
     rcases hk' with rfl | hk'
     · exact (h r c).1

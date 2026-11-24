@@ -124,8 +124,7 @@ theorem scale_large_three (eps : ℝ) (he : 0 < eps) : ∃ x0 : ℝ, ∀ s : Sca
     filter_upwards [this, Filter.eventually_gt_atTop 1] with x hx hx1
     have hl : 0 ≤ Real.log x := Real.log_nonneg hx1.le
     have hp : 0 ≤ x ^ eps := Real.rpow_nonneg (by linarith) _
-    rw [Real.norm_eq_abs, Real.norm_eq_abs, abs_of_nonneg hl, abs_of_nonneg hp] at hx
-    exact hx
+    rwa [Real.norm_eq_abs, Real.norm_eq_abs, abs_of_nonneg hl, abs_of_nonneg hp] at hx
   have h2 : ∀ᶠ x : ℝ in Filter.atTop, Real.log 4 ≤ (1/2) * x ^ eps := by
     have := (tendsto_rpow_atTop he).eventually_ge_atTop (2 * Real.log 4)
     filter_upwards [this] with x hx
@@ -392,7 +391,7 @@ theorem uW_numRec (large₂ : SizeData₂ D) (hD : ∃ n : ℕ, D.s.Del = n) (u 
     have h' : l < D.R.k - 2 := by have := h.2; simp only at this; omega
     have a := D.s.u_letter u (tauPl D z) l h'
     have h2 : D.s.letter u ⟨l, h'⟩ = true := h1
-    rw [if_pos h2, D.hcW_v] at a
+    rw [ite_eq_left h2, D.hcW_v] at a
     have h3 : (((numDatumOfParameters D large₂).Del : ℕ) : ℚ) = D.s.Del := by
       show ((⌊D.s.Del⌋₊ : ℕ) : ℚ) = D.s.Del
       rw [hn, Nat.floor_natCast]
@@ -402,7 +401,7 @@ theorem uW_numRec (large₂ : SizeData₂ D) (hD : ∃ n : ℕ, D.s.Del = n) (u 
     have h' : l < D.R.k - 2 := by have := h.2; simp only at this; omega
     have a := D.s.u_letter u (tauPl D z) l h'
     have h2 : ¬ D.s.letter u ⟨l, h'⟩ = true := h1
-    rw [if_neg h2, D.hcW_v] at a
+    rw [ite_eq_right h2, D.hcW_v] at a
     rw [a]
     rfl
   · by_cases h0 : r = 0
@@ -560,8 +559,7 @@ theorem sizeRowsS_numRec : ∀ (D : D7) (L : SizeData₂ D) (CY : ℝ), HtRowsS 
   · refine log_le_L_of_le_cond P hd ?_
     unfold LevelStarExponents.condE
     exact Nat.le_mul_of_pos_left _ (Nat.mul_pos D.host.QS_pos hq)
-  · rw [large₂.logDerivative_at_one_eq] at s3
-    exact s3
+  · rwa [large₂.logDerivative_at_one_eq] at s3
   · obtain ⟨Y, h1, -, -, h2⟩ := P.g_Y
     exact h1.trans (h2 i).1
   · intro z i j
@@ -1133,8 +1131,7 @@ theorem GlobalTheory.ColRows.fieldOfDefinition_of_stdKer : ∀ {B : Base} {X : P
   have hχ : ∀ (n : ℕ) (L : Submodule (𝓞 B.host.E) (Fin n → B.host.E)), Formalism.L2.Col.IsSdLat (E := B.fields.E) L →
       I.chi (Th.detId B.host (Th.stdL B.host n) L) = t.χ (Th.detId B.host (Th.stdL B.host n) L) := fun n L hL => by
     have h1 := GlobalTheory.ColRows.FldDef.chiRec_detId I l Z t.idl_ok n L (GlobalTheory.ColRows.FldDef.sd_of_isSdLat hL)
-    have h2 := congrFun t.χ_rec (Th.detId B.host (Th.stdL B.host n) L)
-    exact h1.symm.trans h2.symm
+    exact h1.symm.trans (congrFun t.χ_rec (Th.detId B.host (Th.stdL B.host n) L)).symm
   have hF : ∀ (u' : (B.primes X).Word) (a' : I.ι), FieldOfDefinition (Pr := B.primes X) B.wts I.sel (I.tup a') (I.cst a') u' (I.J.amb B t.χ) :=
     fun u' a' => by
       have h3 := GlobalTheory.ColRows.FldDef.fieldOfDefinition_congr (R := B.R) I.J I.chi t.χ hχ B.wts I.sel (I.tup a') (I.cst a') u'
@@ -1265,7 +1262,7 @@ theorem mem_tops_rec (D : D7) (z : Bool × Formalism.MainNotions.G.HH D) :
   obtain ⟨b, t⟩ := z
   constructor
   · rintro ⟨t', ht, h⟩
-    cases b <;> simp only [Formalism.MainNotions.G.plGG, if_true, if_false, Bool.false_eq_true] at h
+    cases b <;> simp only [Formalism.MainNotions.G.plGG, ite_true, ite_false, Bool.false_eq_true] at h
     · exact ⟨rfl, (hinj h) ▸ ht⟩
     · exact absurd h (hP.2 _ _)
   · rintro ⟨h1, h2⟩

@@ -153,8 +153,7 @@ private theorem exists_monoidHom_points_of_isGrpPullback {S S' : Scheme.{0}} {G'
   refine ⟨MonoidHom.mk' (fun x => (Over.homMk (x.left ≫ φ)
     (by rw [Category.assoc, hφ.1.w, ← Category.assoc, Over.w]; rfl) : Over.mk (T.hom ≫ f) ⟶ G))
     (fun x y => ?_), fun x => rfl⟩
-  apply Over.OverMorphism.ext
-  exact (hφ.2 T x y _ _ rfl rfl).symm
+  exact Over.OverMorphism.ext (hφ.2 T x y _ _ rfl rfl).symm
 
 private theorem exists_monoidHom_precomp {S : Scheme.{0}} {X Y G : Over S} [GrpObj G] (h : X ⟶ Y) :
     ∃ N : (Y ⟶ G) →* (X ⟶ G), ∀ g, N g = h ≫ g :=
@@ -191,8 +190,7 @@ theorem forward {h g : ℕ} {W : Matrix (Fin 8) (Fin 8) ℤ} {J : Type} {a : J �
     · refine pow_ext hU' l l' h2 (fun u => hφ.1.hom_ext ?_ ?_)
       · simp only [Category.assoc, ← hΦ₂]
         simp only [← Category.assoc, h1]
-      · simp only [Category.assoc, Over.w]
-        exact h2
+      · simpa only [Category.assoc, Over.w] using h2
   · intro T x y x₀ y₀ hx hy
     refine pow_ext hU _ _ ?_ (fun u => ?_)
     · simp only [Over.w, Category.assoc, hΦ₁, Over.w_assoc, Over.mk_hom]
@@ -244,7 +242,7 @@ theorem exists_factor {S S' : Scheme.{0}} {A C : Over S} {A' C' : Over S'} [GrpO
     (hc : ∀ u, (p' u).left ≫ φ = φ ≫ (p u).left) :
     ∃ ψ : C'.left ⟶ C.left, IsGrpPullback C' C f ψ ∧ ∀ u, (pr' u).left ≫ ψ = φ ≫ (pr u).left := by
   obtain ⟨iz, hι, -⟩ := hU' C' (fun w => if w = z then 𝟙 C' else 1)
-  have hιz : iz ≫ pr' z = 𝟙 C' := by rw [hι, if_pos rfl]
+  have hιz : iz ≫ pr' z = 𝟙 C' := by rw [hι, ite_eq_left rfl]
   have hp'ι : ∀ u, pr' u ≫ iz = p' u := fun u => by
     obtain ⟨_, -, huniq⟩ := hU' A' (fun w => if w = z then pr' u else 1)
     rw [huniq (pr' u ≫ iz) (fun w => ?_), huniq (p' u) (hp' u)]
@@ -265,7 +263,7 @@ theorem exists_factor {S S' : Scheme.{0}} {A C : Over S} {A' C' : Over S'} [GrpO
   · obtain ⟨aA, haA, -⟩ := hU (Over.mk (b ≫ f))
       (fun w => if w = z then (Over.homMk a hab : Over.mk (b ≫ f) ⟶ C) else 1)
     refine ⟨hφ.1.lift aA.left b (by rw [Over.w]; rfl) ≫ (pr' z).left, ?_, ?_⟩
-    · rw [Category.assoc, hψ z, ← Category.assoc, IsPullback.lift_fst, ← Over.comp_left, haA, if_pos rfl]
+    · rw [Category.assoc, hψ z, ← Category.assoc, IsPullback.lift_fst, ← Over.comp_left, haA, ite_eq_left rfl]
       rfl
     · rw [Category.assoc, Over.w (pr' z), IsPullback.lift_snd]
   · have hone : l ≫ (1 : C' ⟶ C').left = l' ≫ (1 : C' ⟶ C').left := by
@@ -281,8 +279,7 @@ theorem exists_factor {S S' : Scheme.{0}} {A C : Over S} {A' C' : Over S'} [GrpO
           split_ifs
           · simpa using h1
           · rw [← Category.assoc, hone, Category.assoc]
-      · simp only [Category.assoc, Over.w]
-        exact h2
+      · simpa only [Category.assoc, Over.w] using h2
     calc l = l ≫ iz.left ≫ (pr' z).left := by rw [← Over.comp_left, hιz, Over.id_left, Category.comp_id]
       _ = l' ≫ iz.left ≫ (pr' z).left := by rw [← Category.assoc, key, Category.assoc]
       _ = l' := by rw [← Over.comp_left, hιz, Over.id_left, Category.comp_id]
@@ -337,9 +334,9 @@ theorem prod_single {G : Type*} [CommGroup G] (x : Fin 8 → G) (u v w : Fin 8) 
   rw [List.prod_ofFn]
   by_cases hw : w = u
   · subst hw
-    rw [if_pos rfl, Finset.prod_eq_single v (fun i _ hi => by simp [Ne.symm hi]) (by simp)]
+    rw [ite_eq_left rfl, Finset.prod_eq_single v (fun i _ hi => by simp [Ne.symm hi]) (by simp)]
     simp
-  · rw [if_neg hw]
+  · rw [ite_eq_right hw]
     exact Finset.prod_eq_one fun i _ => by simp [Ne.symm hw]
 
 
@@ -359,7 +356,7 @@ theorem backward (hG : Out.GlobalFnsSt) {h g : ℕ} {W : Matrix (Fin 8) (Fin 8) 
   have : ∀ u, IsMonHom (pr' u) := hpr'
   choose j hj using he
   have hp : ∀ u, t.act (j 0 u) ≫ pr 0 = pr u := fun u => by
-    rw [hact, hj, prod_single, if_pos rfl]
+    rw [hact, hj, prod_single, ite_eq_left rfl]
   have hp' : ∀ u w, t'.act (j 0 u) ≫ pr' w = if w = 0 then pr' u else 1 := fun u w => by
     rw [hact', hj, prod_single]
   obtain ⟨ψ, hψ, hψpr⟩ := exists_factor (0 : Fin 8) hU hU' hΦ (fun u => t.act (j 0 u))
@@ -449,8 +446,7 @@ theorem backward (hG : Out.GlobalFnsSt) {h g : ℕ} {W : Matrix (Fin 8) (Fin 8) 
     intro a
     have h3 : Mh (c'.lev a) = F ≫ c.lev a := congrArg Additive.toMul (DFunLike.congr_fun hE a)
     have h4 : (Mh (c'.lev a)).left = (F ≫ c.lev a).left := by rw [h3]
-    rw [hMh, Over.comp_left] at h4
-    exact h4
+    rwa [hMh, Over.comp_left] at h4
 
 theorem main : Out.Laws → Out.Laws2 → ∀ (h g : ℕ) (W : Matrix (Fin 8) (Fin 8) ℤ) (J : Type) (a : J → Matrix (Fin 8) (Fin 8) ℤ) (bas : (Fin (2 * g) → ℤ) ≃ₗ[ℤ] (Fin 8 → (Fin h ⊕ Fin h → ℤ))), IsE8 W → IsSharpBasis W bas → ∀ (k : ℕ) (o : Type) [CommRing o] (b : TBase o k) (S S' : Scheme.{0}) (s : S ⟶ Sp o) (s' : S' ⟶ Sp o) (c : SiegPre h k (b.ζ : o) s) (c' : SiegPre h k (b.ζ : o) s') (t : TObj g k J b s) (t' : TObj g k J b s') (f : S' ⟶ S), c.Principal → c'.Principal → IsSharp W a bas t c → IsSharp W a bas t' c' → (SiegPB c' c f → TMap t' t f) ∧ ((∀ u v, ∃ j, a j = Matrix.single u v 1) → TMap t' t f → SiegPB c' c f) := by
   intro hL _ h g W J a bas hW _ k o _ b S S' s s' c c' t t' f hc hc' H H'

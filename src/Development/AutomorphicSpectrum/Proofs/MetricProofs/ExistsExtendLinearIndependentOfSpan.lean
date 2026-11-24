@@ -59,8 +59,7 @@ theorem exists_completion_by_members (g m r : ℕ) (w : Fin r → Fin g → ℂ)
   classical
   let v : Fin r ⊕ Fin m → (Fin g → ℂ) := Sum.elim w b
   have hs : LinearIndepOn ℂ v (Set.range Sum.inl) := by
-    rw [linearIndepOn_range_iff Sum.inl_injective]
-    exact hw
+    rwa [linearIndepOn_range_iff Sum.inl_injective]
   obtain ⟨B, -, hsB, hspan, hB⟩ := exists_linearIndepOn_extension hs (Set.subset_univ _)
   let S : Finset (Fin m) := Finset.univ.filter fun j => Sum.inr j ∈ B
   let J : Fin S.card → Fin m := S.orderEmbOfFin rfl
@@ -72,8 +71,7 @@ theorem exists_completion_by_members (g m r : ℕ) (w : Fin r → Fin g → ℂ)
   have hφB : Set.range φ ⊆ B := by
     rintro _ ⟨l, rfl⟩
     refine Fin.addCases (fun i => ?_) (fun l => ?_) l
-    · simp only [φ, Fin.append_left]
-      exact hsB ⟨i, rfl⟩
+    · simpa only [φ, Fin.append_left] using hsB ⟨i, rfl⟩
     · simp only [φ, Fin.append_right, Function.comp_apply]
       have := hJS l
       simpa [S] using this
@@ -115,7 +113,6 @@ theorem exists_completion_by_members (g m r : ℕ) (w : Fin r → Fin g → ℂ)
     have e2 := finrank_span_eq_card hb
     rw [le_antisymm hle1 hle2, e2] at e1
     simpa using e1.symm
-  · rw [hueq]
-    exact hu
+  · rwa [hueq]
 
 end GlobalTheory.CompanionTheory.Ar.Exchange

@@ -132,8 +132,7 @@ private theorem ncard_primesOver_eq_finrank_iff_frob_eq_one {F R : Type} [Field 
       rw [h] at hcount
       exact Nat.eq_of_mul_eq_mul_left hdeg (hcount.trans (mul_one _).symm)
     · intro h
-      rw [h, mul_one] at hcount
-      exact hcount
+      rwa [h, mul_one] at hcount
   rw [hsplit]
   constructor
   · intro h1
@@ -224,8 +223,7 @@ theorem _root_.GlobalTheory.FieldSize.RaySplit.ncard_eq_finrank_iff : ∀ (K R :
   intro K R _ _ _ _ _ _ _ n _ hray 𝔭 hn𝔭
   obtain ⟨hunr, -, hart⟩ := hray
   have hnot : ¬ 𝔭.asIdeal ∣ Ideal.span {(n : 𝓞 K)} := by
-    rw [Ideal.dvd_span_singleton]
-    exact hn𝔭
+    rwa [Ideal.dvd_span_singleton]
   have hcop : IsCoprime 𝔭.asIdeal (Ideal.span {(n : 𝓞 K)}) := by
     rw [Ideal.isCoprime_iff_sup_eq]
     by_contra h
@@ -265,8 +263,7 @@ theorem _root_.GlobalTheory.FieldSize.RaySplit.ncard_eq_finrank_iff : ∀ (K R :
     refine ⟨π, 1, ⟨?_, one_ne_zero, ?_, ?_, hπ1, fun φ => (false_of_ringHom_real_of_isTotallyComplex φ).elim⟩, ?_⟩
     · rintro rfl
       exact 𝔭.ne_bot (hπ.trans (Ideal.span_singleton_eq_bot.mpr rfl))
-    · rw [← hπ]
-      exact hcop
+    · rwa [← hπ]
     · rw [Ideal.span_singleton_one, Ideal.isCoprime_iff_sup_eq]
       exact top_sup_eq _
     · rw [Ideal.span_singleton_one, Ideal.mul_top, hπ]

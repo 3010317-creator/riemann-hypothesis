@@ -209,8 +209,7 @@ theorem integrable_exp_neg_abs_one : Integrable (fun x : ℝ => Real.exp (-1 * |
     (integrableOn_exp_mul_Iic one_pos 0).congr_fun (fun x hx => by rw [abs_of_nonpos hx, neg_mul_neg])
       measurableSet_Iic
   have h3 := h2.union h1
-  rw [Set.Iic_union_Ioi, integrableOn_univ] at h3
-  exact h3
+  rwa [Set.Iic_union_Ioi, integrableOn_univ] at h3
 
 end GlobalTheory.HeckeTheta.Decay
 
@@ -250,8 +249,7 @@ theorem integrable_weight_theta : ∀ (I : Type) [Fintype I] {ι : Type} (e : ι
       ‖theta e a n y‖ ≤ gC n * Real.exp (-c' * ∑ i, Real.exp (y i)) * S := by
     intro y hy hs
     obtain ⟨k, hk⟩ : ∃ k, 0 ≤ y k := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       have := Finset.sum_lt_sum_of_nonempty Finset.univ_nonempty (fun i (_ : i ∈ Finset.univ) => h i)
       simp only [Finset.sum_const_zero] at this
       linarith
@@ -318,8 +316,7 @@ theorem integrable_weight_theta : ∀ (I : Type) [Fintype I] {ι : Type} (e : ι
     · simp only [hq0, Complex.ofReal_zero, zero_mul, norm_zero]; exact hG0
     have hyR : ∀ i, -R' ≤ y i := by
       obtain ⟨k, hk⟩ : ∃ k, 0 ≤ y k := by
-        by_contra h
-        push_neg at h
+        by_contra! h
         have := Finset.sum_lt_sum_of_nonempty Finset.univ_nonempty (fun i (_ : i ∈ Finset.univ) => h i)
         simp only [Finset.sum_const_zero] at this
         linarith

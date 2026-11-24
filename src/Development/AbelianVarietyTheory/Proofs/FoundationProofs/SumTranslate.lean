@@ -149,8 +149,7 @@ theorem htPresNu7_mono_loss : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω
         o i * ((((k i).val : ZMod (l ^ n')).val : ℕ) : Qbar l))‖ ≤ ‖((l : ℕ) : Qbar l) ^ n'‖ :=
       IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg (norm_nonneg _) (fun i _ => key i)
     have h3 := (IsUltrametricDist.norm_add_le_max _ _).trans (max_le h1 h2)
-    rw [Finset.sum_sub_distrib, sub_add_sub_cancel] at h3
-    exact h3
+    rwa [Finset.sum_sub_distrib, sub_add_sub_cancel] at h3
 
 end GlobalTheory.KZ
 end -- clump:auto
@@ -319,8 +318,7 @@ theorem psum_galois_unitPiece : ∀ (N p m k : ℕ) [NeZero p] (K : Type) [Field
     (fun γ => (Matrix.GeneralLinearGroup.det γ, γ * diagOneUnit (Matrix.GeneralLinearGroup.det γ)⁻¹))
   · rintro ⟨b, γ⟩ h
     simp only [Finset.mem_product, Finset.mem_filter, unitSet, Finset.mem_univ, true_and] at h ⊢
-    simp only [(coe_mul_diagOneUnit γ b 0).1, (coe_mul_diagOneUnit γ b 1).1]
-    exact h.1
+    simpa only [(coe_mul_diagOneUnit γ b 0).1, (coe_mul_diagOneUnit γ b 1).1] using h.1
   · intro γ h
     simp only [Finset.mem_product, Finset.mem_filter, unitSet, Finset.mem_univ, true_and] at h ⊢
     simp only [(coe_mul_diagOneUnit γ _ 0).1, (coe_mul_diagOneUnit γ _ 1).1]
@@ -516,9 +514,8 @@ theorem law_of_parts [IsAlgClosure ℚ Ω] (A : ValuationSubring Ω) (cf : Coef 
       (fun x => if cw x = 0 then 0 else u x y) (fun x => ⟨GlobalTheory.LambdaValuationPowers.norm_le_one_of_mem (hcw x), fun σ h _ => h _ (hcw x)⟩)
       (fun x => by
         by_cases hx : cw x = 0
-        · simp only [hx, if_true]
-          exact htCoL_of_eq A cf j _ m C y 0 (fun s => by simp)
-        · simp only [hx, if_false]
+        · simpa only [hx, ite_true] using htCoL_of_eq A cf j _ m C y 0 (fun s => by simp)
+        · simp only [hx, ite_false]
           exact htCoL_mono (hc' x hx m (by omega) y (β y) t (hβ y).1 (hβ y).2 ht) (hle x))
     convert (preTransparency := .reducible) h1 using 1
     · funext r s y'
@@ -711,8 +708,7 @@ theorem sum_pick (p m N : ℕ) [Fact p.Prime] (hm : 1 ≤ m) (hpN : ¬ p ∣ N) 
   have h1 : (N : ZMod (p ^ m)) * Ring.inverse (N : ZMod (p ^ m)) = 1 := Ring.mul_inverse_cancel _ hU
   have hP : (p : ZMod (p ^ m)) ^ m = 0 := by rw [← Nat.cast_pow, ZMod.natCast_self]
   have hcop : (N : ℤ).natAbs.Coprime ((p ^ m : ℕ) : ℤ).natAbs := by
-    simp only [Int.natAbs_natCast]
-    exact (hp.coprime_iff_not_dvd.mpr hpN).symm.pow_right m
+    simpa only [Int.natAbs_natCast] using (hp.coprime_iff_not_dvd.mpr hpN).symm.pow_right m
   have key : ∀ u : ZMod (p ^ m), z ≡ N * u.val + (p : ℤ) ^ m * x [ZMOD (N * p ^ m : ℕ)] ↔
       (u = (z : ZMod (p ^ m)) * Ring.inverse (N : ZMod (p ^ m)) ∧ z ≡ (p : ℤ) ^ m * x [ZMOD N]) := by
     intro u
@@ -814,8 +810,7 @@ theorem entry_sum (p m N k : ℕ) [Fact p.Prime] (K : Type) [Field K] [CharZero 
     have := row_sum p m N 1 hm hpN ζ (b₀ * t) (fun b => (N : ℤ) * b.val) (fun v b => ψ (u * b - a * v)) j
     simp only [Nat.sub_self, pow_zero, mul_one, hx] at this
     rw [← this]
-    simp only [sum_mul]
-    exact sum_congr rfl fun v _ => sum_congr rfl fun b _ => by ring
+    simpa only [sum_mul] using sum_congr rfl fun v _ => sum_congr rfl fun b _ => by ring
   simp only [e1]
   rw [row_sum p m N (k - 1) hm hpN ζ (a₀ * t) (fun a => (N : ℤ) * a.val)
     (fun u a => ∑ q ∈ (j : ℤ).divisorsAntidiag, if ¬ (p : ℤ) ∣ q.1 ∧ q.1 ≡ b₀ [ZMOD N] then (q.2.sign : K) *
@@ -836,7 +831,7 @@ theorem entry_sum (p m N k : ℕ) [Fact p.Prime] (K : Type) [Field K] [CharZero 
   by_cases g₁ : q.1 ≡ a₀ [ZMOD N]
   swap
   · simp [g₁]
-  rw [if_pos ⟨h₁, g₁⟩]
+  rw [ite_eq_left ⟨h₁, g₁⟩]
   simp only [sum_mul (j : ℤ).divisorsAntidiag]
   rw [sum_comm, mul_sum]
   refine sum_congr rfl fun q' hq' => ?_
@@ -845,14 +840,14 @@ theorem entry_sum (p m N k : ℕ) [Fact p.Prime] (K : Type) [Field K] [CharZero 
   by_cases g₂ : q'.1 ≡ b₀ [ZMOD N]
   swap
   · simp [g₂]
-  simp only [if_pos (And.intro h₂ g₂), mul_assoc (q'.2.sign : K)]
+  simp only [ite_eq_left (And.intro h₂ g₂), mul_assoc (q'.2.sign : K)]
   rw [← mul_sum, col_sum_div p m N hm hN hpN ψ hψ ζ hζ q.1 q'.1 q.2 q'.2 h₁ h₂,
     (Int.mem_divisorsAntidiag.mp hq).1, (Int.mem_divisorsAntidiag.mp hq').1]
   have hc : (p : ℤ) ^ m ∣ (i : ℤ) + j ↔ p ^ m ∣ i + j := by norm_cast
   simp only [hc]
   rw [show k - 1 - 1 = k - 2 from rfl, div_pow, div_eq_mul_inv]
   by_cases a1 : p ^ m ∣ i + j <;> by_cases a2 : (p : ℤ) ∣ q.2 <;> by_cases a3 : (p : ℤ) ∣ q'.2 <;>
-    simp only [a1, a2, a3, h₁, h₂, g₁, g₂, not_true, not_false_iff, and_true, and_false, and_self, if_true, if_false,
+    simp only [a1, a2, a3, h₁, h₂, g₁, g₂, not_true, not_false_iff, and_true, and_false, and_self, ite_true, ite_false,
       mul_zero, zero_mul]
   ring
 
@@ -933,9 +928,9 @@ end GlobalTheory.KummerEisensteinGalois.UnitPieceMu
 theorem GlobalTheory.KummerEisensteinGalois.unitPieceMu_eq : ∀ (p : ℕ) [Fact p.Prime] (N m k : ℕ) (K : Type) [Field K] [CharZero K] (ψ : DirichletCharacter K (p ^ m)) (a b t : ℤ) (ζ : K), p ≠ 2 → IsPrimitiveRoot ζ (N * p ^ m) → 0 < N → ¬ p ∣ N → 1 ≤ m → 3 ≤ k → ψ.IsPrimitive → (p : ℤ) ^ m * t ≡ 1 [ZMOD N] → Integral (p ^ m) (pieceTRaw N p m m k ψ (a * t, 0) (b * t, 0) ζ (unitSet p m)) ∧ ∀ r : ℕ, toQ (p ^ m) (pieceTRaw N p m m k ψ (a * t, 0) (b * t, 0) ζ (unitSet p m)) r = -((p : K) ^ (-(m : ℤ))) * gaussS p m ψ (ζ ^ N) * ψ⁻¹ (N : ZMod (p ^ m)) * (N : K) ^ ((2 : ℤ) - k) * up (p ^ m) (coPtMu N p m k ψ a b) r := by
   intro p _ N m k K _ _ ψ a b t ζ _ hζ hN hpN hm hk hψ ht
   refine ⟨fun r hr => ?_, fun r => ?_⟩
-  · rw [GlobalTheory.KummerEisensteinGalois.UnitPieceMu.coef_eq p m N k hm hN hpN hk ψ hψ ζ hζ a b t ht, if_neg hr]
+  · rw [GlobalTheory.KummerEisensteinGalois.UnitPieceMu.coef_eq p m N k hm hN hpN hk ψ hψ ζ hζ a b t ht, ite_eq_right hr]
   · unfold toQ up
-    rw [GlobalTheory.KummerEisensteinGalois.UnitPieceMu.coef_eq p m N k hm hN hpN hk ψ hψ ζ hζ a b t ht, if_pos (dvd_mul_right _ _)]
+    rw [GlobalTheory.KummerEisensteinGalois.UnitPieceMu.coef_eq p m N k hm hN hpN hk ψ hψ ζ hζ a b t ht, ite_eq_left (dvd_mul_right _ _)]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitPieceMuEq =====

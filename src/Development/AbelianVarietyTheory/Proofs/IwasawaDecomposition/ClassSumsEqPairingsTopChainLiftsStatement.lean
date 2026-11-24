@@ -576,12 +576,12 @@ theorem rieszProd_inner : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T :
     intro g
     obtain ⟨w, hw⟩ := hw g
     have h1 := hI (fun τ => Fin (Module.finrank ℂ (R.MX.sm τ))) b w a
-    rw [Finset.sum_eq_single g (fun f _ hf => by rw [hw f, if_neg hf]; simp) (by simp), hw g, if_pos rfl,
+    rw [Finset.sum_eq_single g (fun f _ hf => by rw [hw f, ite_eq_right hf]; simp) (by simp), hw g, ite_eq_left rfl,
       map_one, one_mul] at h1
 
     rw [← h1, ← inner_conj_symm, ← ha w, hexp v, map_sum]
-    rw [Finset.sum_eq_single g (fun f _ hf => by rw [map_smul, hw f, if_neg hf]; simp) (by simp)]
-    rw [map_smul, hw g, if_pos rfl, smul_eq_mul, mul_one]
+    rw [Finset.sum_eq_single g (fun f _ hf => by rw [map_smul, hw f, ite_eq_right hf]; simp) (by simp)]
+    rw [map_smul, hw g, ite_eq_left rfl, smul_eq_mul, mul_one]
   have h2 := ha' a
 
   rw [← h2, hexp v', map_sum]
@@ -600,8 +600,7 @@ theorem rieszProd_inner : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T :
   have e2 : starRingEnd ℂ (c v f) = ∏ τ, ⟪v τ, b τ (f τ)⟫_ℂ :=
     (map_prod (starRingEnd ℂ) _ _).trans (Finset.prod_congr rfl fun τ _ => inner_conj_symm _ _)
   refine (congrArg (c v' f * ·) e2).trans ?_
-  refine (Finset.prod_mul_distrib).symm.trans ?_
-  exact Finset.prod_congr rfl fun τ _ => mul_comm _ _
+  exact (Finset.prod_mul_distrib).symm.trans (Finset.prod_congr rfl fun τ _ => mul_comm _ _)
 
 end GlobalTheory.Mem
 end -- clump:auto
@@ -649,8 +648,7 @@ theorem exists_vec_prod_ne {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (M 
   classical
   have hτ : ∀ τ, ∃ x : M.sm τ, x ≠ 0 := by
     intro τ
-    by_contra hz
-    push_neg at hz
+    by_contra! hz
     apply hpr
     have hs : ∀ s : SmT M, s = 0 := by
       intro s
@@ -663,8 +661,7 @@ theorem exists_vec_prod_ne {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (M 
     simp
   choose v hv using hτ
   refine ⟨v, Finset.prod_ne_zero_iff.mpr fun τ _ => inner_self_ne_zero.mpr ?_⟩
-  intro h0
-  exact hv τ (Subtype.ext h0)
+  exact fun h0 => hv τ (Subtype.ext h0)
 
 theorem alg_step {d I p q x : ℂ} (hd : d ≠ 0) (hI : d * I = q * x) (hq : q = p) : I = x / d * p := by
   subst hq
@@ -701,17 +698,14 @@ theorem topSchur : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) 
     have hA := GlobalTheory.T.unfolding_schur_orthogonality_definite_coefficients D G Pl0 T A Ks R F hB t h h' a a'
     obtain ⟨hint, hval⟩ := hA
     have hab := GlobalTheory.T.riesz_vectors_pure_tensors_inner_eq_prod D G Pl0 T A Ks R F hB hP v v' a a' ha ha'
-    simp only [ha, ha']
-    refine ⟨hint, ?_⟩
-    exact alg_step hd0 hval hab
+    simpa only [ha, ha'] using ⟨hint, alg_step hd0 hval hab⟩
   have hv := exists_vec_prod_ne R.MX R.prX hB.models.prX.1
   obtain ⟨v0, hv0⟩ := hv
   unfold ipMT Mult.ipM
   split_ifs with hex
   · have e1 := (hex.choose_spec v0 v0).2
     have hch : hex.choose * _ = _ * _ := e1.symm.trans (key v0 v0).2
-    have hch' := mul_right_cancel₀ hv0 hch
-    exact dualNumber_unit_mul_decomposition hcast hch' hd0
+    exact dualNumber_unit_mul_decomposition hcast (mul_right_cancel₀ hv0 hch) hd0
   · exfalso
     exact hex ⟨_, fun v v' => key v v'⟩
 
@@ -876,8 +870,7 @@ theorem ext_mem_levSubV_of_lift : ∀ (D : D7) (G : Type) [Group G] [Fintype G] 
     hred i t κ
   have hu : (R.B.L i t).act_tie.red κ ∈ F.P0 := by
     have h2 : R.eG.symm (Formalism.L2.DIV.rTup (R.βV i) (R.datVt i t) (finE (Vc D i) k)) ∈ F.P0 := hH
-    rw [← hred', MulEquiv.symm_apply_apply] at h2
-    exact h2
+    rwa [← hred', MulEquiv.symm_apply_apply] at h2
   have hlaw := hΦ κ hu ((finHom (Vc D i)).rangeRestrict g)
   have hchi : levChi _ (R.βV i) (datVP R i t (R.levR F false)) k =
       (((levEnv (Vc D i) (R.βV i) (R.datVt i t)).ch κ : ℂˣ) : ℂ) •
@@ -972,8 +965,7 @@ theorem eigen_span_iff : ∀ {G Γ W K G0 : Type} [Group G] [Group Γ] (ι : Γ 
       refine ⟨hB.2 ▸ Submodule.subset_span ⟨f, rfl⟩, fun κ hu h => ?_⟩
       have e := congrFun (hact (Tt.red κ) κ rfl f) h
       have e2 : act (Tt.red κ) f = ((ψ ⟨_, hu⟩ : Kˣ) : K) • f := hf ⟨_, hu⟩
-      rw [e2, hsemi, gA_apply] at e
-      rw [Pi.smul_apply] at e
+      rw [e2, hsemi, gA_apply, Pi.smul_apply] at e
       rw [e, smul_smul, Units.mul_inv, one_smul]
     exact this hΦ
   · rintro ⟨hA, hc⟩

@@ -115,8 +115,7 @@ private theorem index_span_ne_zero_of_linearIndependent {K : Type} [Field K] [Nu
     obtain ⟨y, rfl⟩ := QuotientAddGroup.mk'_surjective S.toAddSubgroup x
     obtain ⟨a, ha0, ha⟩ := key y
     have hN0 : Ideal.absNorm (Ideal.span {a}) ≠ 0 := by
-      rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-      exact ha0
+      rwa [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
     obtain ⟨b, hb⟩ := Ideal.mem_span_singleton'.mp (Ideal.absNorm_mem (Ideal.span {a}))
     refine ⟨⟨(Ideal.absNorm (Ideal.span {a}) : ℤ), mem_nonZeroDivisors_of_ne_zero (by exact_mod_cast hN0)⟩, ?_⟩
     rw [Submonoid.smul_def]
@@ -184,8 +183,7 @@ private theorem index_ne_zero_and_le_of_smul_mem {K : Type} [Field K] [NumberFie
   have hUle : (I • (⊤ : Submodule (𝓞 K) E.carrier)).toAddSubgroup.index ≤ I.toAddSubgroup.index ^ n := by
     have h1 : S.toAddSubgroup.index * (I • (⊤ : Submodule (𝓞 K) E.carrier)).toAddSubgroup.index ≤
         S.toAddSubgroup.index * I.toAddSubgroup.index ^ (Finset.univ.image v).card := by
-      rw [hmul2, mul_comm]
-      exact hT
+      rwa [hmul2, mul_comm]
     have h2 := Nat.le_of_mul_le_mul_left h1 (Nat.pos_of_ne_zero hS)
     exact h2.trans (Nat.pow_le_pow_right (Nat.pos_of_ne_zero hIne) hcard)
   have hFU : F.toAddSubgroup.index ≤ (I • (⊤ : Submodule (𝓞 K) E.carrier)).toAddSubgroup.index :=

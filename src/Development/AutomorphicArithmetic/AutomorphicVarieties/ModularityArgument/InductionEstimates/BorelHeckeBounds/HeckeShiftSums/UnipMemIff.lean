@@ -74,7 +74,7 @@ private theorem unip_mem_iff {n r : ℕ} (Y : UPos n r → 𝔸[K]) :
     have := p.2
     rw [e] at this
     omega
-  simp only [AdelicGLn.diagonal_apply, coe_unipGL, unipMatrix, Matrix.add_apply, blockEntry_apply, dif_pos p.2,
+  simp only [AdelicGLn.diagonal_apply, coe_unipGL, unipMatrix, Matrix.add_apply, blockEntry_apply, dite_eq_left p.2,
     Matrix.one_apply_ne hne, zero_add] at h1
   exact h1
 
@@ -102,8 +102,7 @@ private theorem ct_levi {ψ : G1 K (2 + 2) → ℂ} (hψ : ∀ γ ∈ Gam K (2 +
     rw [h]
     constructor
     · intro h'
-      have h2 := mul_mem (mul_mem hl h') (inv_mem hl)
-      simpa [mul_assoc] using h2
+      simpa [mul_assoc] using mul_mem (mul_mem hl h') (inv_mem hl)
     · exact fun h' => mul_mem (mul_mem (inv_mem hl) h') hl
   have key := UpperTheory.integral_unipFundamentalDomain_comp_lattice_preserving K (2 + 2) 2 e hlat (fun X => ψ (unipOne (K := _) (n := _) 2 X * z)) (fun ξ hξ X => by
     show ψ (unipOne (K := _) (n := _) 2 (ξ + X) * z) = ψ (unipOne (K := _) (n := _) 2 X * z)

@@ -198,8 +198,7 @@ theorem exists_pow_mem (π : X' ⟶ X) [IsAffineHom π] {W : X.Opens} (hW : IsAf
   have hz := (key t).2 h
   obtain ⟨v, hv, hzv⟩ := hW.exists_basicOpen_le (V := U) ⟨π (hW'.fromSpec z), ht hz⟩ (X'.basicOpen_le t hz)
   refine (key ((π.app W).hom v)).1 ?_ (hP (Ideal.mem_map_of_mem _ hv))
-  rw [← Scheme.preimage_basicOpen]
-  exact hzv
+  rwa [← Scheme.preimage_basicOpen]
 
 theorem exists_sec_mem (g : R →+* R') (hg : g.Flat) [CompactSpace X] [QuasiSeparatedSpace X]
     (f : X ⟶ Spec (CommRingCat.of R)) (π : X' ⟶ X) (f' : X' ⟶ Spec (CommRingCat.of R'))
@@ -783,8 +782,7 @@ theorem exists_gen_square :
       have w : (toUnit G').left = G'.hom := (Category.comp_id _).symm.trans (Over.w (toUnit G'))
       rw [Over.comp_left, w, ← Category.assoc, pullback.condition, Category.assoc]
     refine ⟨i, fun y => ?_⟩
-    rw [e, Scheme.Hom.comp_apply, Subsingleton.elim ((pullback.snd G'.hom j) y) p₀]
-    exact hi
+    rwa [e, Scheme.Hom.comp_apply, Subsingleton.elim ((pullback.snd G'.hom j) y) p₀]
   let s₃ : Fin 3 → (𝟙_ (Over (Sp R')) ⟶ G') := ![a, a⁻¹, η[G']]
   choose i hi using fun k => hconst (s₃ k)
   let φw : Fin 3 → (pullback G'.hom j ⟶ G'.left) := fun k => πA ≫ (toUnit G' ≫ s₃ k).left
@@ -970,8 +968,7 @@ theorem exists_monic_coeff_mem (φ : A →+* B) (hφ : φ.Finite) (p : Ideal A) 
   rw [hg0] at e2
   have e3 := congrArg (fun F : Module.End A B => F 1) e2
   have e4 : aeval u g = 0 := by simpa using e3.symm
-  rw [aeval_def] at e4
-  exact e4
+  rwa [aeval_def] at e4
 
 theorem mem_of_aeval_eq_zero {R : Type} [CommRing R] [Algebra A R] (P : Ideal R) [hP : P.IsPrime] (g : A[X])
     (hg : g.Monic) (hc : ∀ i < g.natDegree, algebraMap A R (g.coeff i) ∈ P) (w : R) (hw : aeval w g = 0) :
@@ -984,8 +981,7 @@ theorem mem_of_aeval_eq_zero {R : Type} [CommRing R] [Algebra A R] (P : Ideal R)
     exact P.mul_mem_right _ (hc i (Finset.mem_range.mp hi))
   have hpow : w ^ g.natDegree ∈ P := by
     have e : w ^ g.natDegree = -(∑ i ∈ Finset.range g.natDegree, g.coeff i • w ^ i) := by
-      rw [eq_neg_iff_add_eq_zero, add_comm]
-      exact key
+      rwa [eq_neg_iff_add_eq_zero, add_comm]
     rw [e]
     exact P.neg_mem hsum
   exact hP.mem_of_pow_mem _ hpow
@@ -999,7 +995,7 @@ theorem coeff_prod_X_sub_C_mem {R : Type} [CommRing R] (P : Ideal R) [P.IsPrime]
     intro a ha
     simp [Ideal.Quotient.eq_zero_iff_mem.mpr (hs a ha)]
   rw [Multiset.map_congr rfl hX, Multiset.map_const', Multiset.prod_replicate, coeff_X_pow,
-    if_neg hi.ne]
+    ite_eq_right hi.ne]
 
 end Algebra
 
@@ -1014,24 +1010,20 @@ theorem aeval_eq_zero_of_isRoot (φ : A →+* B) (hφ : φ.Finite) (K Ω : Type)
   let := φ.toAlgebra
   have : Module.Finite A B := hφ
   have hb : aeval b h = 0 := by
-    rw [aeval_def]
-    exact hh
+    rwa [aeval_def]
   have h1 : aeval ((1 : K) ⊗ₜ[A] b) h = 0 := by
     have e := Polynomial.aeval_algHom_apply
       (Algebra.TensorProduct.includeRight : B →ₐ[A] K ⊗[A] B) b h
-    rw [hb, map_zero] at e
-    exact e
+    rwa [hb, map_zero] at e
   have hK : aeval (Algebra.lmul K (K ⊗[A] B) (1 ⊗ₜ b)) (h.map (algebraMap A K)) = 0 := by
     rw [Polynomial.aeval_algHom_apply, Polynomial.aeval_map_algebraMap, h1, map_zero]
   have hΩ : aeval ((Algebra.lmul K (K ⊗[A] B) (1 ⊗ₜ b)).baseChange Ω)
       ((h.map (algebraMap A K)).map (algebraMap K Ω)) = 0 := by
     have e := Polynomial.aeval_algHom_apply (Module.End.baseChangeHom K Ω (K ⊗[A] B))
       (Algebra.lmul K (K ⊗[A] B) (1 ⊗ₜ b)) (h.map (algebraMap A K))
-    rw [hK, map_zero, ← Polynomial.aeval_map_algebraMap Ω] at e
-    exact e
+    rwa [hK, map_zero, ← Polynomial.aeval_map_algebraMap Ω] at e
   have hroot : ((Algebra.lmul K (K ⊗[A] B) (1 ⊗ₜ b)).baseChange Ω).charpoly.IsRoot μ := by
-    rw [LinearMap.charpoly_baseChange]
-    exact hμ
+    rwa [LinearMap.charpoly_baseChange]
   obtain ⟨v, hv⟩ :=
     ((Module.End.hasEigenvalue_iff_isRoot_charpoly _ μ).mpr hroot).exists_hasEigenvector
   have e := Module.End.aeval_apply_of_hasEigenvector
@@ -1145,8 +1137,7 @@ theorem mem_of_forall_mem_prime (φ : A →+* B) (hφ : φ.Finite) (b : B) (p : 
     rw [← IsScalarTower.algebraMap_apply, hval]
     rfl
   have hmemA : a ∈ P.comap (algebraMap A (integralClosure A (AlgebraicClosure K))) := by
-    rw [Ideal.mem_comap, hAR]
-    exact hc
+    rwa [Ideal.mem_comap, hAR]
   change a ∈ Ideal.under A P at hmemA
   rwa [hPp] at hmemA
 
@@ -1182,8 +1173,7 @@ theorem exists_mem_basicOpen_of_mem_basicOpen_normCoeff : ∀ {X Y : Scheme.{0}}
   have hfx : hV.fromSpec px = x := hV.fromSpec_primeIdealOf ⟨x, hxV⟩
   have hnot : normCoeff (f.app V).hom (f.finite_app V hV) τ k ∉ px.asIdeal := by
     have h1 : hV.fromSpec px ∈ X.basicOpen (normCoeff (f.app V).hom (f.finite_app V hV) τ k) := by
-      rw [hfx]
-      exact hx
+      rwa [hfx]
     have h2 : px ∈ hV.fromSpec ⁻¹ᵁ X.basicOpen (normCoeff (f.app V).hom (f.finite_app V hV) τ k) := h1
     rw [hV.fromSpec_preimage_basicOpen] at h2
     exact (PrimeSpectrum.mem_basicOpen _ _).mp h2
@@ -1192,8 +1182,7 @@ theorem exists_mem_basicOpen_of_mem_basicOpen_normCoeff : ∀ {X Y : Scheme.{0}}
   let q : Spec Γ(Y, f ⁻¹ᵁ V) := (⟨Q, hQ⟩ : PrimeSpectrum Γ(Y, f ⁻¹ᵁ V))
   refine ⟨hU.fromSpec q, ?_, ?_⟩
   · have h3 : q ∈ PrimeSpectrum.basicOpen τ := (PrimeSpectrum.mem_basicOpen _ _).mpr hτQ
-    rw [← hU.fromSpec_preimage_basicOpen] at h3
-    exact h3
+    rwa [← hU.fromSpec_preimage_basicOpen] at h3
   · have e := IsAffineOpen.SpecMap_appLE_fromSpec f hV hU le_rfl
     have e2 : f (hU.fromSpec q) = hV.fromSpec (Spec.map (f.appLE V (f ⁻¹ᵁ V) le_rfl) q) := by
       rw [← Scheme.Hom.comp_apply, ← e, Scheme.Hom.comp_apply]
@@ -1538,8 +1527,7 @@ theorem exists_normCoeff_not_mem {A B : Type} [CommRing A] [IsDomain A] [IsInteg
     apply hinj
     rw [Monic, leadingCoeff_map_of_injective hinj] at h1
     simpa using h1
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
 
   have hcoeff : ∀ j < P.natDegree, P.coeff j ∈ p := by
     intro j hj
@@ -1560,8 +1548,7 @@ theorem exists_normCoeff_not_mem {A B : Type} [CommRing A] [IsDomain A] [IsInteg
     have h := LinearMap.aeval_self_charpoly (Algebra.lmul K M ((1 : K) ⊗ₜ[A] b))
     have h2 : Algebra.lmul K M (Polynomial.aeval ((1 : K) ⊗ₜ[A] b : M) (charK φ hφ K b)) = 0 := by
       rw [← Polynomial.aeval_algHom_apply]; exact h
-    have h3 := LinearMap.congr_fun h2 1
-    simpa using h3
+    simpa using LinearMap.congr_fun h2 1
   have hker : Algebra.TensorProduct.includeRight (R := A) (A := K) (B := B) (Polynomial.aeval b P) = 0 := by
     rw [← Polynomial.aeval_algHom_apply, Algebra.TensorProduct.includeRight_apply,
       ← Polynomial.aeval_map_algebraMap K, hP]

@@ -159,8 +159,7 @@ theorem invInf_fcrd_k {G : Mx F E d.m d.n → ℂ} (hG : _root_.PositivityTheory
     rw [hp]
     rfl
   have h := hG Y (X - Y) (by rw [smul_sub, e1, e2, sub_self])
-  rw [add_sub_cancel] at h
-  exact h
+  rwa [add_sub_cancel] at h
 def StepF_k (x : d.G) (A B : (Mx F E d.m d.n → ℂ) → Mx F E d.m d.n → ℂ) : Prop :=
   (∀ f, _root_.PositivityTheory.SiegelWeilFormula.KAway.SDf.InvFin_k d f → _root_.PositivityTheory.SiegelWeilFormula.KAway.SDf.InvFin_k d (A f)) ∧ ∀ G, _root_.PositivityTheory.SiegelWeilFormula.KAway.SDf.InvInf_k d G → _root_.PositivityTheory.SiegelWeilFormula.KAway.SDf.InvInf_k d (B G) ∧
     ∀ f, _root_.PositivityTheory.SiegelWeilFormula.KAway.SDf.InvFin_k d f → ∀ Φ ∈ d.sch, d.T Φ = (fun X => f X * G X) → d.T (d.om x Φ) = fun X => A f X * B G X
@@ -170,8 +169,7 @@ theorem step_comp_k {x x' : d.G} {A A' B B' : (Mx F E d.m d.n → ℂ) → Mx F 
   have e1 := (h'.2 G hG).2 f hf Φ hΦ hT
   have hΦ' : d.om x' Φ ∈ d.sch := d.ok.dbl.weil.2.1.pres x' Φ hΦ
   have e2 := (h.2 (B' G) (h'.2 G hG).1).2 (A' f) (h'.1 f hf) (d.om x' Φ) hΦ' e1
-  rw [map_mul, mul_apply_eq_comp]
-  exact e2
+  rwa [map_mul, mul_apply_eq_comp]
 theorem key_split_k {f G A' B' : Mx F E d.m d.n → ℂ} (hf : _root_.PositivityTheory.SiegelWeilFormula.KAway.SDf.InvFin_k d f) (hA : _root_.PositivityTheory.SiegelWeilFormula.KAway.SDf.InvFin_k d A') (hG : _root_.PositivityTheory.SiegelWeilFormula.KAway.SDf.InvInf_k d G)
     (hB : _root_.PositivityTheory.SiegelWeilFormula.KAway.SDf.InvInf_k d B') (h : ∀ X, f X * G X = A' X * B' X) : ∀ X Y, f X * G Y = A' X * B' Y := by
   intro X Y
@@ -184,8 +182,7 @@ theorem key_split_k {f G A' B' : Mx F E d.m d.n → ℂ} (hf : _root_.Positivity
   have hfin : ∀ w, d.cw w (finOne F • (Y - X)) = 0 := fun w => _root_.PositivityTheory.SiegelWeilFormula.KAway.SDf.cw_finOne_k d w _
   have hinf : finOne F • (eInf F • (X - Y)) = 0 := by rw [smul_smul, finOne_mul_eInf, zero_smul]
   have e := h (eInf F • X + finOne F • Y)
-  rw [hW1, hf X _ hfin, hA X _ hfin, ← hW1, hW2, hG Y _ hinf, hB Y _ hinf] at e
-  exact e
+  rwa [hW1, hf X _ hfin, hA X _ hfin, ← hW1, hW2, hG Y _ hinf, hB Y _ hinf] at e
 theorem step_conj_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) {x₁ x₂ x' : d.G} {A₁ A₂ B₁ B₂ B' : (Mx F E d.m d.n → ℂ) → Mx F E d.m d.n → ℂ}
     (h₁ : _root_.PositivityTheory.SiegelWeilFormula.KAway.SDf.StepF_k d x₁ A₁ B₁) (h₂ : _root_.PositivityTheory.SiegelWeilFormula.KAway.SDf.StepF_k d x₂ A₂ B₂) (h' : _root_.PositivityTheory.SiegelWeilFormula.KAway.SDf.StepF_k d x' id B') (h1 : x₁ * x₂ = 1) :
     ∃ B, _root_.PositivityTheory.SiegelWeilFormula.KAway.SDf.StepF_k d (x₁ * x' * x₂) id B := by

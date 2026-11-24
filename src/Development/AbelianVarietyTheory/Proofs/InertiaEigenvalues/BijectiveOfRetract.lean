@@ -115,8 +115,7 @@ theorem map_H2_sum {ι : Type*} (s : Finset ι) (u : ι → M →ₗ[R] M') (hu 
   classical
   induction s using Finset.induction_on with
   | empty =>
-    simp only [Finset.sum_empty]
-    exact map_H2_zero rho rho' _ _
+    simpa only [Finset.sum_empty] using map_H2_zero rho rho' _ _
   | insert a s ha ih =>
     have hc : Continuous ((∑ j ∈ s, u j : M →ₗ[R] M') : M → M') := by
       have := continuous_finsetSum s (fun j _ => hu j)
@@ -200,9 +199,7 @@ variable {O : Type} [CommRing O] [TopologicalSpace O] [IsTopologicalRing O]
   {G : Type} [Group G] [TopologicalSpace G] (ε : G →* Oˣ) (z : H2 (twist ε O))
 
 theorem twist_equiv {M M' : Type} [AddCommGroup M] [Module O M] [AddCommGroup M'] [Module O M']
-    (f : M →ₗ[O] M') (g : G) (m : M) : f (twist ε M g m) = twist ε M' g (f m) := by
-  show f ((ε g : O) • m) = (ε g : O) • f m
-  exact map_smul f _ m
+    (f : M →ₗ[O] M') (g : G) (m : M) : f (twist ε M g m) = twist ε M' g (f m) := map_smul f _ m
 
 theorem cont_sum {ι M M' : Type} [AddCommGroup M] [Module O M] [TopologicalSpace M]
     [AddCommGroup M'] [Module O M'] [TopologicalSpace M'] [IsTopologicalAddGroup M']

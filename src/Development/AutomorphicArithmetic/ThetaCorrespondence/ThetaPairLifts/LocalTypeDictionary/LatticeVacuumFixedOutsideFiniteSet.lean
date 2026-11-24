@@ -245,15 +245,13 @@ theorem connection_fixes_split_subspace : _root_.GlobalTheory.FunPr.ThetaLocalIn
         have := H γᵀ ((mem_latAtV_transpose _ _ v γ).2 hγ)
         have e := symp_transpose (R := AF F) (cA σ) (-1) (incM F G.W.J) (incM F G.V'.J) z γᵀ
         rw [Matrix.transpose_transpose] at e
-        rw [e]
-        exact this
+        rwa [e]
     · intro γ hγ
       have h := hvac γᵀ ((mem_latAtV_transpose _ _ v γ).2 hγ)
       have e : d'.rho B.ψ γ = G.M'.co.rho B.ψ γᵀ := by
         simp only [Darboux.rho]
         rw [← hd' γᵀ, Matrix.transpose_transpose]
-      rw [e, ← symp_transpose (R := AF F) (cA σ) _ (incM F G.W.J) (incM F G.V'.J) γ γ]
-      exact h
+      rwa [e, ← symp_transpose (R := AF F) (cA σ) _ (incM F G.W.J) (incM F G.V'.J) γ γ]
   obtain ⟨c, hc⟩ := hLine
   obtain ⟨s, hs, hsn⟩ := hConj F E σ B hTr.base a' G.V' v hsp h2 n hn
   have hs1 : omd s Φ = Φ := by
@@ -456,16 +454,14 @@ theorem scalar_eq_one_of_split_left : _root_.GlobalTheory.FunPr.ThetaLocalInputs
       ring
     rw [← e1, hfix]
   obtain ⟨y, hy⟩ : ∃ y, G.M'.vac v y ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hne (funext h)
   let x : Fin a' × Fin (a + a') → AF F := fun i => GlobalTheory.LatVac.liftV v (y i)
   have hRx : R x = R 0 := by
     have := hRv.1 0 x (fun u hu => by funext i; exact GlobalTheory.LatVac.at_liftV v _ u hu)
     simpa using this
   have hΨx : Ψ x ≠ 0 := by
-    simp only [hΨdef, tens, x, GlobalTheory.LatVac.evFin_liftV, hRx]
-    exact mul_ne_zero hy hR0
+    simpa only [hΨdef, tens, x, GlobalTheory.LatVac.evFin_liftV, hRx] using mul_ne_zero hy hR0
   have h2' := congrFun key (Sum.elim x x)
   simp only [GlobalTheory.InertDbl.dblFun, boxFun, Pi.smul_apply, smul_eq_mul] at h2'
   have hz : Ψ x * star (Ψ x) ≠ 0 := mul_ne_zero hΨx (star_ne_zero.mpr hΨx)
@@ -510,15 +506,12 @@ theorem vacuum_fixed_by_split_spherical_left : _root_.GlobalTheory.FunPr.ThetaLo
     hTr.geo.hM'.std
   have hfin2 : {v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F) | differentIdeal ℤ (𝓞 F) ≤ v.asIdeal}.Finite := by
     have h0 : differentIdeal ℤ (𝓞 F) ≠ ⊥ := differentIdeal_ne_bot
-    refine (Ideal.finite_factors h0).subset ?_
-    intro v hv
-    exact Ideal.dvd_iff_le.2 hv
+    exact (Ideal.finite_factors h0).subset (fun v hv => Ideal.dvd_iff_le.2 hv)
   have hfin3 : {v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F) | (2 : 𝓞 F) ∈ v.asIdeal}.Finite := by
     have h0 : Ideal.span {(2 : 𝓞 F)} ≠ ⊥ := by
       rw [Ne, Ideal.span_singleton_eq_bot]; exact two_ne_zero
     refine (Ideal.finite_factors h0).subset ?_
-    intro v hv
-    exact Ideal.dvd_iff_le.2 ((Ideal.span_singleton_le_iff_mem _).2 hv)
+    exact fun v hv => Ideal.dvd_iff_le.2 ((Ideal.span_singleton_le_iff_mem _).2 hv)
   refine ⟨X.T ∪ hfin1.toFinset ∪ hfin2.toFinset ∪ hfin3.toFinset, ?_⟩
   intro v hv _ k hk
   simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_or, not_not] at hv
@@ -634,8 +627,7 @@ theorem cm_exists_moved (σ : E →ₐ[F] E) (h : IsCMExt F E σ) : ∃ x : E, �
   haveI : IsTotallyComplex E := h.2.1
   obtain ⟨w⟩ : Nonempty (InfinitePlace E) := inferInstance
   have hc := InfinitePlace.isComplex_iff.1 (IsTotallyComplex.isComplex w)
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   apply hc
   ext x
   have hx := h.2.2.2 w.embedding x
@@ -740,8 +732,7 @@ theorem at_tensAt (v : Pl (F := F)) (y : Fv F v ⊗[F] E) : At (evFin F v) (tens
 theorem eq_tensAt_of_at {v : Pl (F := F)} {z : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)} (hz : At (evFin F v) z) : z = tensAt E v (compFin F E v z) := by
   rw [tensAt_compFin]
   have h1 : (1 - atPlace v 1) • z = 0 := hz _ (by rw [map_sub, map_one, evFin_atPlace, sub_self])
-  rw [sub_smul, one_smul, sub_eq_zero] at h1
-  exact h1
+  rwa [sub_smul, one_smul, sub_eq_zero] at h1
 
 theorem compFin_cA (σ : E →ₐ[F] E) (v : Pl (F := F)) (z : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) :
     compFin F E v (cA σ z) = sigR (Fv F v) σ (compFin F E v z) := by
@@ -879,8 +870,7 @@ theorem split_dict_herm : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
     · rw [piW_apply, compFin_tensAt, splitProj_symm]
     · rw [piW_apply, compFin_tensAt, splitProj_comp_symm]
   · exact mem_latAt_iff_bases h V τ hb₁ hb₂
-  · have eJ : (incM F V.J).map (piW τ) = V.J.map τ := by
-      exact Matrix.ext fun i j => piW_inclR τ (V.J i j)
+  · have eJ : (incM F V.J).map (piW τ) = V.J.map τ := Matrix.ext fun i j => piW_inclR τ (V.J i j)
     have eT : V.J.map τ = ((splitGram hJ τ : GL (Fin d) (Fv F v)) : Matrix (Fin d) (Fin d) (Fv F v))ᵀ := by
       exact Matrix.ext fun i j => rfl
     have eG : V.J.map τ * (((splitGram hJ τ)⁻¹ : GL (Fin d) (Fv F v)) : Matrix (Fin d) (Fin d) (Fv F v))ᵀ = 1 := by
@@ -983,8 +973,7 @@ theorem exists_admissible_unipotent_split_place_hermitian : (∀ {O : Type} [Com
   change Yᵀ * incM F (δ • V.J) + incM F (δ • V.J) * Y.map (cA σ) = 0 at hYadm
   rw [incM_smul, Matrix.mul_smul, Matrix.smul_mul, ← smul_add] at hYadm
   have h3 := congrArg (fun X => inclR (F := F) (AF F) δ⁻¹ • X) hYadm
-  simp only [smul_smul, hcu, one_smul, smul_zero] at h3
-  exact h3
+  simpa only [smul_smul, hcu, one_smul, smul_zero] using h3
 
 end GlobalTheory.SplitChooseHerm
 end -- clump:auto
@@ -1045,8 +1034,7 @@ theorem exists_linearMap_injective_add_comp {k V : Type} [Field k] [AddCommGroup
   have hcvW' : c v ∈ W' := by rw [← hsum, hw0, zero_add]; exact hw'
   have hcv : c v = 0 := Submodule.disjoint_def.1 hW.disjoint _ hcvW hcvW'
   have hmem : v ∈ LinearMap.ker a ⊓ LinearMap.ker c := Submodule.mem_inf.2 ⟨hav, hcv⟩
-  rw [h, Submodule.mem_bot] at hmem
-  exact hmem
+  rwa [h, Submodule.mem_bot] at hmem
 
 theorem exists_isUnit_det_add_mul_of_field {k : Type} [Field k] {n : ℕ}
     (A B C D : Matrix (Fin n) (Fin n) k) (h : IsUnit (fromBlocks A B C D).det) :
@@ -1276,8 +1264,7 @@ theorem doubled_vac_eigen_any : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
     rw [hstar, ← AddChar.map_add_eq_mul]
     congr 1
     ring
-  rw [hrho, hS, hc]
-  exact hbox
+  rwa [hrho, hS, hc]
 
 
 open GlobalTheory.DblVacTransport in
@@ -1324,8 +1311,7 @@ theorem transport_any : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   have h1 := hsp.2.1.impl g (Matrix.fromCols w₁ᵀ w₂ᵀ * (GlobalTheory.DblVac.matD g⁻¹)ᵀ) _ hr'.2
   change (omd g) (dd.rho B.ψ _ (tens (evFin F v) φ r)) =
     dd.rho B.ψ (actB (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) g _) ((omd g) (tens (evFin F v) φ r)) at h1
-  rw [hback] at h1
-  rw [hf, GlobalTheory.VacTransport.tens_smul, map_smul, hact r hr'] at h1
+  rw [hback, hf, GlobalTheory.VacTransport.tens_smul, map_smul, hact r hr'] at h1
   rw [← h1, GlobalTheory.VacTransport.tens_smul]
 
 theorem vdbl_line_of_unr : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E)
@@ -1414,9 +1400,7 @@ theorem vdbl_line_of_unr : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
       exact hcb γ hγ i)
   have hφd0 : φd ≠ 0 := by
     obtain ⟨t, ht⟩ := Function.ne_iff.mp hv0
-    refine Function.ne_iff.mpr ⟨Sum.elim t t, ?_⟩
-    show φ₀ t * star (φ₀ t) ≠ 0
-    exact mul_ne_zero ht (star_ne_zero.mpr ht)
+    exact Function.ne_iff.mpr ⟨Sum.elim t t, mul_ne_zero ht (star_ne_zero.mpr ht)⟩
   obtain ⟨c', hc'⟩ := GlobalTheory.VacUniqInert.eq_smul_of_eigen (GlobalTheory.LatVac.psiAt B.ψ v)
     (fun i : Λ × Λ => GlobalTheory.LatVac.locCo dd v (Matrix.fromCols i.1.1ᵀ i.2.1ᵀ))
     (fun i => cf i.1.1 i.2.1) (fun u hu => by
@@ -1503,14 +1487,12 @@ theorem vdbl_eigen_of_unr : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
           Matrix.mul_sub, Matrix.mul_one, smul_sub]
       rw [h2'] at this
       simp only [Matrix.transpose_zero, Matrix.mul_zero, sub_eq_zero] at this
-      rw [hs1]
-      exact this
+      rwa [hs1]
     have h3 := hU.impl g (u • z) Φ hΦ
     change (omd g) (dd.rho B.ψ (u • z) Φ) =
       dd.rho B.ψ (actB (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) g (u • z)) ((omd g) Φ) at h3
     rw [e2] at h3
-    simp only [Darboux.rho, he] at h3
-    exact h3
+    simpa only [Darboux.rho, he] using h3
   have hE0 := doubled_vac_eigen_any F E σ B a a' G X om om' hT v d' hd' dd hdc θ hθ hvac
   have hE1 := transport_any F E σ B a a' G X om om' hT v d' hd' dd hdc θ hθ hvac omd hsp g hg vD hvDSB φ₁ hφ₁ hE0 hA
   obtain ⟨μ, hμ⟩ := vdbl_line_of_unr F E σ B a a' G X om om' hT v hunr d' hd' dd hdc θ hθ hvac φ₁ hφ₁ hE1
@@ -1665,15 +1647,12 @@ theorem vacuum_fixed_by_split_spherical_left : _root_.GlobalTheory.FunPr.ThetaLo
     hTr.geo.hM.std
   have hfin2 : {v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F) | differentIdeal ℤ (𝓞 F) ≤ v.asIdeal}.Finite := by
     have h0 : differentIdeal ℤ (𝓞 F) ≠ ⊥ := differentIdeal_ne_bot
-    refine (Ideal.finite_factors h0).subset ?_
-    intro v hv
-    exact Ideal.dvd_iff_le.2 hv
+    exact (Ideal.finite_factors h0).subset (fun v hv => Ideal.dvd_iff_le.2 hv)
   have hfin3 : {v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F) | (2 : 𝓞 F) ∈ v.asIdeal}.Finite := by
     have h0 : Ideal.span {(2 : 𝓞 F)} ≠ ⊥ := by
       rw [Ne, Ideal.span_singleton_eq_bot]; exact two_ne_zero
     refine (Ideal.finite_factors h0).subset ?_
-    intro v hv
-    exact Ideal.dvd_iff_le.2 ((Ideal.span_singleton_le_iff_mem _).2 hv)
+    exact fun v hv => Ideal.dvd_iff_le.2 ((Ideal.span_singleton_le_iff_mem _).2 hv)
   refine ⟨X.T ∪ hfin1.toFinset ∪ hfin2.toFinset ∪ hfin3.toFinset, ?_⟩
   intro v hv _ k hk
   simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_or, not_not] at hv

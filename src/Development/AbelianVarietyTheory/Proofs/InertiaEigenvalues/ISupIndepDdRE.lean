@@ -106,8 +106,7 @@ theorem iSupIndep_DdRE : iSupIndep fun τ : K →ₐ[Qp] LL => DdRE PD ρ τ := 
   have h2 := hx.2
   simp only [SetLike.mem_coe, Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.sub_apply,
     LinearMap.id_apply, LinearMap.smul_apply, sub_eq_zero] at h2
-  simp only [Function.comp, Submodule.mem_iInf, Module.End.mem_eigenspace_iff]
-  exact h2
+  simpa only [Function.comp, Submodule.mem_iInf, Module.End.mem_eigenspace_iff] using h2
 
 end Abstract
 
@@ -123,8 +122,7 @@ theorem toDR_FilLet : ∀ {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K :
       rw [this]
       exact Submodule.sub_mem _ hxD hy.1
     have hz0 : z = 0 := (Submodule.disjoint_def.1 (iSupIndep_DdRE PD T.ρ τ)) z hzD hz
-    rw [← hyz, hz0, add_zero]
-    exact hy
+    rwa [← hyz, hz0, add_zero]
   · intro y hy
     have hy' := hy
     rw [hF] at hy'

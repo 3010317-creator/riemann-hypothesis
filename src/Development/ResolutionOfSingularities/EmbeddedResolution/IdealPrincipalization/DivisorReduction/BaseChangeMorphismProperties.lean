@@ -61,8 +61,7 @@ theorem surjective_id :
     ∀ (X : Scheme.{u}), AlgebraicGeometry.Surjective (CategoryTheory.CategoryStruct.id X) := by
   intro X
   constructor
-  intro x
-  exact ⟨x, rfl⟩
+  exact fun x => ⟨x, rfl⟩
 
 theorem comap_ne_top_of_surjective :
     ∀ (X Y : Scheme.{u}) (h : Y ⟶ X) [AlgebraicGeometry.Surjective h] (Z : X.IdealSheafData),
@@ -70,8 +69,7 @@ theorem comap_ne_top_of_surjective :
   intro X Y h hsurj Z hZ
   have hne : (↑Z.support : Set ↥X).Nonempty := by
     rw [Set.nonempty_iff_ne_empty]
-    intro he
-    exact hZ ((Scheme.IdealSheafData.eq_top_iff_support_eq_empty Z).mpr he)
+    exact fun he => hZ ((Scheme.IdealSheafData.eq_top_iff_support_eq_empty Z).mpr he)
   obtain ⟨x, hx⟩ := hne
   obtain ⟨y, hy⟩ := hsurj.1 x
   subst hy

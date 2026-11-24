@@ -99,9 +99,7 @@ theorem levelPrime_not_mem_places_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : G
   rcases hPP with h | ⟨t, ht⟩
   · intro hm
     apply hg PP h
-    rw [IsDedekindDomain.HeightOneSpectrum.under_asIdeal]
-    rw [Ideal.mem_comap, map_natCast]
-    exact hm
+    rwa [IsDedekindDomain.HeightOneSpectrum.under_asIdeal, Ideal.mem_comap, map_natCast]
   · exact (hP.bot.hyp.2.2.2.1.lev.Q_off t PP ht).2 u
 end GlobalTheory
 end
@@ -473,8 +471,7 @@ theorem splitAt_places_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {
   obtain ⟨hsc, hstep, hhz, -, -, hτ⟩ := hFY PP hP
   have hξ : valuation (l PP hP).k (ofSplit (l PP hP).q).xi = 1 := by
     have h1 := hsc (0 + 1 + 1)
-    rw [hstep 0, map_mul, hsc 0, one_mul] at h1
-    exact h1
+    rwa [hstep 0, map_mul, hsc 0, one_mul] at h1
   have hxi : (ofSplit (l PP hP).q).xi ≠ 0 := by
     intro h0
     rw [h0, map_zero] at hξ
@@ -504,8 +501,7 @@ theorem splitAt_places_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {
     exact Finset.sum_congr rfl fun i _ => by ring
   have hx : (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) ∉ v.tP := by
     rcases hP with hP' | hP'
-    · intro ht
-      exact Finset.disjoint_left.1 hdisj ((hgP _).2 ⟨PP, hP', rfl⟩) ht
+    · exact fun ht => Finset.disjoint_left.1 hdisj ((hgP _).2 ⟨PP, hP', rfl⟩) ht
     · exact _root_.GlobalTheory.tuplePlace_under_notMem_tP_alt W u hW a y m b₀ k ι v o l bas hIs hTau hz hvτ hNT hoζ hsdT hgP htP hdisj hpre hLZ
         hbas FY sc hFY PP hP'
   refine ⟨fun j ρ h => ?_, fun j h => ?_⟩
@@ -818,7 +814,7 @@ theorem move_main_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : 
           exact GlobalTheory.T.selfDual_lattice_eq_of_splitPlace_frame_span (Yc D j) t ((_root_.GlobalTheory.Fam.pk_z W).ΛY j) Lt (N j) ((_root_.GlobalTheory.Fam.pk_z W).βY j) _ (l PP h).q _
             (FY PP h j _ (hsj PP h)) (σ PP h) ht hsd.1 hsd.2 hLt (hN j hj) (hMv _) hm
             (hInt PP h j _ (hsj PP h))
-        · push_neg at hex
+        · push Not at hex
           exact hAgree w (fun i => (hex i).symm)
       have hEq := GlobalTheory.T.latticeCompletion_eq_of_local_agreement (Yc D j) Lt (N j) P hLt.1 (hN j hj).1 hloc
       have := hMv P
@@ -831,15 +827,13 @@ theorem move_main_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : 
   refine ⟨fun j => if h : j < D.R.m then T j h else 1, ?_, ?_, ?_⟩
   · intro j
     by_cases h : j < D.R.m
-    · simp only [dif_pos h]; exact hT j h
-    · simp only [dif_neg h]; exact one_mem _
+    · simp only [dite_eq_left h]; exact hT j h
+    · simp only [dite_eq_right h]; exact one_mem _
   · intro j hj P hP
-    simp only [dif_pos hj]
-    exact hMovesT j hj P hP
+    simpa only [dite_eq_left hj] using hMovesT j hj P hP
   · intro PP h j c hc
     have hj : j < D.R.m := by have := (l PP h).hs; omega
-    simp only [dif_pos hj]
-    exact hFrT j hj PP h c hc
+    simpa only [dite_eq_left hj] using hFrT j hj PP h c hc
 end GlobalTheory.RLatMove
 end
 end -- clump:auto
@@ -877,8 +871,7 @@ theorem level_prime_not_mem_under_Pg_alt {D : D7} {L : SizeData₂ D} {hT : GatT
   obtain ⟨k, hk⟩ := (W.Q.charW.base.lev.Pg PP).1 hPP
   have h1 : ((D.host.g k : ℕ) : 𝓞 D.host.K) ∈ (PP.under (𝓞 D.host.K)).asIdeal := by
     have := (W.Q.Rl.C.P).pb_over k
-    rw [← show PP.under (𝓞 D.host.K) = _ from hk] at this
-    exact this
+    rwa [← show PP.under (𝓞 D.host.K) = _ from hk] at this
   have h2 : ((D.host.g k : ℕ) : 𝓞 D.host.E) ∈ PP.asIdeal := by
     have : algebraMap (𝓞 D.host.K) (𝓞 D.host.E) ((D.host.g k : ℕ) : 𝓞 D.host.K) ∈ PP.asIdeal := h1
     simpa using this

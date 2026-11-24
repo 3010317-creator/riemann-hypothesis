@@ -323,8 +323,7 @@ theorem _root_.GlobalTheory.WigSh.contraction_maps_at_representatives :
     have hex : ∃ g, Rep γ g := by
       obtain ⟨g, hg, hZ, hd⟩ := hexist k r Wp Wq D ν' m₀ γ hbase hγ hpos
       exact ⟨g, hg, hZ, hd⟩
-    simp only [rep, dif_pos hex]
-    exact hex.choose_spec
+    simpa only [rep, dite_eq_left hex] using hex.choose_spec
   have rep_eq : ∀ γ, _root_.Formalism.FourierDecayAlt.D.IsLocPt γ (r + 1) →
       0 < _root_.Formalism.FourierDecayAlt.D.ptG (_root_.Formalism.QuantumDeterminants.Tz k r D.z * _root_.Formalism.QuantumDeterminants.Tz k r D.z') r γ → ∀ g, Rep γ g →
         _root_.GlobalTheory.WigSh.omg k r D.z D.z' (rep γ) = _root_.GlobalTheory.WigSh.omg k r D.z D.z' g := by
@@ -417,8 +416,7 @@ theorem _root_.GlobalTheory.WigSh.contraction_maps_at_representatives :
       D.z'_mem D.T'_pos h₀
     have h := hApC.2.2.2 _ hmem.1 hmem.2.1
     rw [hmem.2.2] at h
-    rw [hG]
-    exact h
+    rwa [hG]
   · intro γ hγ hpos
     obtain ⟨h₀, hZ₀, -⟩ := rep_spec γ hγ hpos
     have hG := hspec.1 k r D.z D.z' γ (rep γ) hγ hZ₀
@@ -426,8 +424,7 @@ theorem _root_.GlobalTheory.WigSh.contraction_maps_at_representatives :
       D.z'_mem D.T'_pos h₀
     have h := hAmC.2.2.2 _ hmem.1 hmem.2.1
     rw [hmem.2.2] at h
-    rw [hG]
-    exact h
+    rwa [hG]
 
 end GlobalTheory.WigSh
 end -- clump:auto
@@ -844,13 +841,11 @@ theorem amapsShExists : GlobalTheory.WigSh.AmapsShExists := by
   · intro γ hγ hG
     have h := hfp γ hγ hG
     unfold KB.Pl.V
-    rw [hpν, hpm]
-    exact h
+    rwa [hpν, hpm]
   · intro γ hγ hG
     have h := hfm γ hγ hG
     unfold KB.Pl.V
-    rw [hmν, hmm]
-    exact h
+    rwa [hmν, hmm]
 
 end GlobalTheory.WigSh
 end -- clump:auto

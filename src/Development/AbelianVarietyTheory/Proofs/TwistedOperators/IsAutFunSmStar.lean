@@ -344,8 +344,7 @@ theorem rho_bracket (τ : D.what₂.Tau) (X Y Z : lieU (gramAt D V τ)) (h : Z.1
   have h2 := LinearMap.congr_fun (derOp_bracket (lieData (V := V) τ) (hasLogAt τ) (toL X) (toL Y) (toL Z) h1) (loc τ x F)
   rw [LinearMap.sub_apply, Module.End.mul_apply, Module.End.mul_apply] at h2
   rw [LinearMap.sub_apply, Module.End.mul_apply, Module.End.mul_apply, (loc τ x).map_sub]
-  simp only [loc_rho]
-  exact h2
+  simpa only [loc_rho] using h2
 
 theorem Rder_star (τ : D.what₂.Tau) (X : Matrix (Fin V.rank) (Fin V.rank) ℂ) (F : GA D V → ℂ) :
     Rder θ V τ X (star F) = star (Rder θ V τ X F) := by

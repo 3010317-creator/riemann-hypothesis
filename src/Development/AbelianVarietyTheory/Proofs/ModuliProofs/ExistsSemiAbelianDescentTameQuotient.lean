@@ -237,8 +237,7 @@ theorem exists_descent_of_invGen_of_invariants [Surjective π] (hL : L.IsLB)
   have hmem : ∀ (U : Y.Opens) c {Z : Scheme.{0}} (r : Z ⟶ X) (z : Z), r z ∈ π ⁻¹ᵁ U →
       (r ≫ t c) z ∈ π ⁻¹ᵁ U := fun U c Z r z hz => by
     change ((r ≫ t c) ≫ π) z ∈ U
-    rw [Category.assoc, hπ]
-    exact hz
+    rwa [Category.assoc, hπ]
   have H : ∀ y y', ∃ g : Γ(Y, V y ⊓ V y')ˣ, ∀ (Z : Scheme.{0}) (r : Z ⟶ X) (z : Z) i,
       r z ∈ π ⁻¹ᵁ V y → r z ∈ π ⁻¹ᵁ V y' → r z ∈ L.U i →
       gm (r ≫ π) z _ g = gm r z _ (e y' i) * (gm r z _ (e y i))⁻¹ := fun y y' => by
@@ -544,8 +543,7 @@ theorem exists_sec_nonvanishing {G : Over X} {L : LB G.left} (h : PushInvertible
   have hu : u ∈ G.hom ⁻¹ᵁ (X.basicOpen b) ⊓ L.U i := ⟨hxb, (G.left.basicOpen_le _ hi).2⟩
   refine (e'.1 ⟨⟨hu, ?_⟩, hu, hi⟩).2
   have hb' : IsUnit (resG X (X.basicOpen_le b) b) := X.toRingedSpace.isUnit_res_basicOpen b
-  rw [X.basicOpen_of_isUnit (hb'.pow n)]
-  exact hxb
+  rwa [X.basicOpen_of_isUnit (hb'.pow n)]
 
 theorem le_pull_chart {L : LB X} (φ : Y ⟶ X) (O : X.Opens) (i : L.ι) :
     φ ⁻¹ᵁ (O ⊓ L.U i) ≤ φ ⁻¹ᵁ O ⊓ (L.pull φ).U (fun _ => i) :=
@@ -716,8 +714,7 @@ theorem exists_descent_nonvanishing {Γ : Type} [Group Γ] [Finite Γ] {X' G G' 
   have h3 := ht i
   rw [coord_smul (L := L.pull φ) _ s (fun _ => i), map_mul, resG_resG, resG_appLE, Scheme.Hom.app_eq_appLE] at h3
   refine ((mem_basicOpen_appLE φ le_rfl (coord t i) u).1 ?_).2
-  rw [h3]
-  exact hc
+  rwa [h3]
 
 end GlobalTheory.DescTheta
 
@@ -975,8 +972,7 @@ theorem _root_.GlobalTheory.span_range_algebraMap_eq_top_of_tame :
             Submodule.Quotient.mk_smul]
           exact Submodule.smul_mem_smul hb trivial
         · intro z w hz hw
-          simp only [Submodule.Quotient.mk_add]
-          exact add_mem hz hw
+          simpa only [Submodule.Quotient.mk_add] using add_mem hz hw
     have hσ : algebraMap B M s ∉ P := hs
     obtain ⟨u, i, hi, hui⟩ := hP.exists_inv hσ
     have hx : (Submodule.Quotient.mk c : C ⧸ P') =
@@ -1041,8 +1037,7 @@ theorem mem_smul_ker_of_flat_quotient {B T C : Type} [CommRing B] [AddCommGroup 
       LinearEquiv.map_eq_zero_iff]
   rw [← h0]
   apply hinj
-  rw [LinearMap.lTensor_tmul, map_zero, h0]
-  exact hx
+  rwa [LinearMap.lTensor_tmul, map_zero, h0]
 
 theorem ideal_eq_bot_of_forall_prime_smul_mem {B T : Type} [CommRing B] [CommRing T]
     [Algebra B T] (J : Ideal T) (hJ : J.FG)
@@ -1059,8 +1054,7 @@ theorem ideal_eq_bot_of_forall_prime_smul_mem {B T : Type} [CommRing B] [CommRin
       · intro r hr c hc
         rw [← algebraMap_smul T r c]
         exact Submodule.smul_mem_smul hr hc
-      · intro a b ha hb
-        exact Submodule.add_mem _ ha hb
+      · exact fun a b ha hb => Submodule.add_mem _ ha hb
     obtain ⟨t, m, hm, e⟩ := hn.exists_inv (x := algebraMap B T s) hs
     have e' : x = t • (s • x) + m • x := by
       rw [← algebraMap_smul T s x, ← mul_smul, ← add_smul, e, one_smul]
@@ -1166,10 +1160,8 @@ theorem isPushout_of_tame :
     refine ⟨s, hs, ?_⟩
     have hbot : Submodule.span B {y : K | ∀ g : Γ, g • y = y} = ⊥ := by
       rw [Submodule.span_eq_bot]
-      intro y hy
-      exact Subtype.ext (hinv y y.2 fun g => congrArg Subtype.val (hy g))
-    rw [hbot, bot_sup_eq, Submodule.mem_smul_top_iff] at hsx
-    exact hsx
+      exact fun y hy => Subtype.ext (hinv y y.2 fun g => congrArg Subtype.val (hy g))
+    rwa [hbot, bot_sup_eq, Submodule.mem_smul_top_iff] at hsx
   have hinj : Function.Injective φ := (RingHom.injective_iff_ker_eq_bot φ).2 hker
   exact ⟨IsBaseChange.of_equiv (LinearEquiv.ofBijective φ.toLinearMap ⟨hinj, hsurj⟩)
     (fun r => (hφ 1 r).trans (by simp))⟩
@@ -1206,13 +1198,11 @@ theorem mem_map_ker_of_one_tmul_eq_zero_of_flat (B C k : Type) [CommRing B] [Com
     have h1 : f (Ideal.Quotient.mk I 1) = 1 := by
       show Submodule.liftQ I (Algebra.linearMap B k) _ (Submodule.Quotient.mk 1) = 1
       rw [Submodule.liftQ_apply, Algebra.linearMap_apply, map_one]
-    rw [LinearMap.rTensor_tmul, map_zero, h1]
-    exact h
+    rwa [LinearMap.rTensor_tmul, map_zero, h1]
   have hq := congrArg (TensorProduct.quotTensorEquivQuotSMul C I) hx
   rw [TensorProduct.quotTensorEquivQuotSMul_mk_tmul, map_zero, one_smul,
     Submodule.Quotient.mk_eq_zero] at hq
-  rw [Ideal.smul_top_eq_map] at hq
-  exact hq
+  rwa [Ideal.smul_top_eq_map] at hq
 
 end GlobalTheory
 end -- clump:auto
@@ -1455,8 +1445,7 @@ namespace GlobalTheory.TameResidue
 theorem exists_sum_ne_zero {D k K : Type} [Group D] [Fintype D] [Field k] [Field K] [Algebra k K]
     (φ : D →* (K ≃ₐ[k] K)) (h : (Nat.card φ.ker : K) ≠ 0) : ∃ w : K, ∑ g, φ g w ≠ 0 := by
   classical
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hf : Function.Injective (fun σ : K ≃ₐ[k] K => (σ : K →* K)) :=
     fun σ τ hστ => AlgEquiv.ext fun x => DFunLike.congr_fun hστ x
   have hli := (linearIndependent_monoidHom K K).comp _ hf
@@ -1522,8 +1511,7 @@ theorem finite_separable_of_sum_mem {D k K : Type} [Group D] [Fintype D] [Field 
       exact ⟨c', hc'⟩
     obtain ⟨pk, hpk⟩ := Polynomial.mem_lifts _ |>.1 hl
     have hsep : pk.Separable := by
-      rw [← Polynomial.separable_map (algebraMap k K), hpk, Polynomial.separable_map]
-      exact hsF
+      rwa [← Polynomial.separable_map (algebraMap k K), hpk, Polynomial.separable_map]
     have hx : Polynomial.aeval x pk = 0 := by
       rw [Polynomial.aeval_def, ← Polynomial.eval_map, hpk, Polynomial.eval_map,
         ← Polynomial.aeval_def, minpoly.aeval]
@@ -1668,8 +1656,7 @@ theorem residue_finite_separable : ∀ (Γ : Type) [Group Γ] [Finite Γ] (A B :
     set c0 := algebraMap (B ⧸ q) K v * algebraMap (B ⧸ q) K (Ideal.Quotient.mk q y) with hc0def
     have hc0 : c0 ≠ 0 := mul_ne_zero hv0 hyq'
     have ht : ∃ t : B ⧸ q, ∑ g, φ g (c0 * algebraMap (B ⧸ q) K t) ≠ 0 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       apply hw0
       obtain ⟨t1, t2, ht2, hdiv⟩ := IsFractionRing.div_surjective (A := B ⧸ q) (w0 / c0)
       have ht20 : t2 ≠ 0 := nonZeroDivisors.ne_zero ht2
@@ -1686,8 +1673,7 @@ theorem residue_finite_separable : ∀ (Γ : Type) [Group Γ] [Finite Γ] (A B :
       have hM0 : ∏ g, ψ g t2 ≠ 0 := Finset.prod_ne_zero_iff.2 fun g _ h0 =>
         ht20 ((ψ g).injective (h0.trans (map_zero _).symm))
       have hdiv' : algebraMap (B ⧸ q) K t1 * c0 = w0 * algebraMap (B ⧸ q) K t2 := by
-        rw [div_eq_div_iff (hι _ ht20) hc0] at hdiv
-        exact hdiv
+        rwa [div_eq_div_iff (hι _ ht20) hc0] at hdiv
       have hw : w0 * algebraMap (B ⧸ q) K (∏ g, ψ g t2) = c0 * algebraMap (B ⧸ q) K (t1 * M') := by
         rw [hM, map_mul, map_mul]
         linear_combination (-(algebraMap (B ⧸ q) K M')) * hdiv'
@@ -1918,8 +1904,7 @@ theorem exists_sab_descent_of_tame_quotient :
   have he (g : Γ) : eSec t.G ≫ (τ g).asIso.hom = (ρ g).asIso.hom ≫ eSec t.G := by
     have := (mu g).cm.e_comm
     rw [(mu g).base] at this
-    rw [← hmu g]
-    exact this
+    rwa [← hmu g]
   have hL (g : Γ) : LBIso t.PP.L (t.PP.L.pull (τ g).asIso.hom) := by
     obtain ⟨w, hw, -⟩ := (mu g).lin
     rw [← hmu g]

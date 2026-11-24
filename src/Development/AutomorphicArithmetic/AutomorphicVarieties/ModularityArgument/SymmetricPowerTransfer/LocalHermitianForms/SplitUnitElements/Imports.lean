@@ -100,10 +100,8 @@ theorem UpperTheory.V.Z.Sym.Loc.One.lat :
     have h2 : (y₀ : EL Δ τ) * ofE Δ a = (y₀ : EL Δ τ) * ofE Δ b := congrArg Prod.snd h
     have h3 := y₀.isUnit.mul_left_cancel h2
     ext
-    · have h4 := congrArg (fun w : EL Δ τ => w.re.re) h3
-      simpa [ofE] using h4
-    · have h4 := congrArg (fun w : EL Δ τ => w.im.re) h3
-      simpa [ofE] using h4
+    · simpa [ofE] using congrArg (fun w : EL Δ τ => w.re.re) h3
+    · simpa [ofE] using congrArg (fun w : EL Δ τ => w.im.re) h3
   obtain ⟨s, hs⟩ := hS.fg
   have hT : {a : Etau K τ | ((0, (y₀ : EL Δ τ) * ofE Δ a) : Sp Δ τ) ∈ S} =
       ↑((Submodule.span O (s : Set (Sp Δ τ))).comap φ) := by

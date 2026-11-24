@@ -307,11 +307,9 @@ theorem exists_mem_span_sub_one_eq_id_on :
     intro h
     apply hne
     have h' := congrArg Subtype.val h
-    rw [hf₀def, LinearMap.sub_apply, Submodule.coe_sub, hr, Submodule.coe_zero, sub_eq_zero] at h'
-    exact h'
+    rwa [hf₀def, LinearMap.sub_apply, Submodule.coe_sub, hr, Submodule.coe_zero, sub_eq_zero] at h'
   obtain ⟨ψ, hψ⟩ : ∃ ψ : Module.Dual K P, ψ (f₀ w₀) ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hfw ((Module.forall_dual_apply_eq_zero_iff K _).1 hc)
   let b := Module.finBasis K P
   have hid : (1 : Module.End K P) ∈ J' := by
@@ -419,8 +417,7 @@ theorem stable_orthogonal (S : Γ →* Matrix (Fin m) (Fin m) K)
   have e : S g *ᵥ (S g⁻¹ *ᵥ n) = n := by
     rw [Matrix.mulVec_mulVec, ← map_mul, mul_inv_cancel, map_one, Matrix.one_mulVec]
   have := hv _ (hQ g⁻¹ n hn)
-  rw [← e, hinv]
-  exact this
+  rwa [← e, hinv]
 
 end GlobalTheory.AugCore
 
@@ -438,8 +435,7 @@ theorem inf_orthogonal_eq_bot (S : Γ →* Matrix (Fin 3) (Fin 3) K)
   have hZle : Z ≤ B.orthogonal Z := by
     intro z hz
     rw [LinearMap.BilinForm.mem_orthogonal_iff]
-    intro n hn
-    exact (LinearMap.BilinForm.mem_orthogonal_iff.mp hz.2) n hn.1
+    exact fun n hn => (LinearMap.BilinForm.mem_orthogonal_iff.mp hz.2) n hn.1
   have h3 : Module.finrank K (Fin 3 → K) = 3 := Module.finrank_fin_fun K
   have hfo : Module.finrank K (B.orthogonal Z) = 3 - Module.finrank K Z := by
     rw [LinearMap.BilinForm.finrank_orthogonal hB, h3]
@@ -486,14 +482,12 @@ theorem good_of_stable (S : Γ →* Matrix (Fin 3) (Fin 3) K) [IsAlgClosed K]
   · by_cases hbot : P = ⊥
     · rw [hbot]; exact good_bot S
     · have hnt : ∃ g, ∃ v ∈ P, S g *ᵥ v ≠ v := by
-        by_contra hc
-        push_neg at hc
+        by_contra! hc
         apply hbot
         rw [Submodule.eq_bot_iff]
-        intro v hv
-        exact hfix v (fun g => hc g v hv)
+        exact fun v hv => hfix v (fun g => hc g v hv)
       exact _root_.GlobalTheory.AugSpan.exists_mem_span_sub_one_eq_id_on S P hP hirr hnt
-  · push_neg at hirr
+  · push Not at hirr
     obtain ⟨Q, hQP, hQs, hQ0, hQne⟩ := hirr
     have hQo : Stable S (B.orthogonal Q) := stable_orthogonal S B hinv hQs
     set R := P ⊓ B.orthogonal Q with hR
@@ -568,8 +562,7 @@ theorem exists_nat_det_ne_zero_affine {K : Type} [Field K] [CharZero K] {m : ℕ
     apply h
     rw [← det_affine_eval]
     simp [p, h0]
-  by_contra hall
-  push_neg at hall
+  by_contra! hall
   have hsub : Set.range (fun k : ℕ => (k : K)) ⊆ (p.roots.toFinset : Set K) := by
     rintro _ ⟨k, rfl⟩
     simp only [Finset.mem_coe, Multiset.mem_toFinset]
@@ -671,14 +664,12 @@ theorem one_mem_of_mulClosed_of_det_ne_zero : ∀ {F K : Type} [Field F] [Field 
   have hc : p.coeff 0 ≠ 0 := by
     intro hc
     rw [hc, map_zero, add_zero] at hkey
-    have hq : aeval T p.divX = 0 := by
-      exact hTu.mul_right_eq_zero.1 hkey
+    have hq : aeval T p.divX = 0 := hTu.mul_right_eq_zero.1 hkey
     have hne : p.divX ≠ 0 := by
       intro h
       rw [divX_eq_zero_iff, hc, map_zero] at h
       exact hp0 h
-    have hle := minpoly.degree_le_of_ne_zero F T hne hq
-    exact absurd (degree_divX_lt hp0) (not_lt.2 hle)
+    exact absurd (degree_divX_lt hp0) (not_lt.2 (minpoly.degree_le_of_ne_zero F T hne hq))
   have hone : (1 : Matrix (Fin m) (Fin m) K) = (-(p.coeff 0)⁻¹) • (T * aeval T p.divX) := by
     rw [eq_neg_of_add_eq_zero_left hkey, smul_neg, neg_smul, neg_neg, Algebra.smul_def,
       ← map_mul, inv_mul_cancel₀ hc, map_one]
@@ -1259,8 +1250,7 @@ theorem GlobalTheory.lam_small_of_deep_congruence : ∀ (l : ℕ) [Fact l.Prime]
     simp [Padic.norm_p]
   have hl1 : ‖((l:ℕ) : Qbar l)‖ < 1 := by
     rw [hl]; exact inv_lt_one_of_one_lt₀ (by exact_mod_cast (Fact.out : l.Prime).one_lt)
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   set F : ℕ → Set Γ := fun N => {g | ∀ i j, ‖((r g : Matrix (Fin 2) (Fin 2) (Qbar l)) - 1) i j‖ ≤ ‖((l : ℕ) : Qbar l) ^ N‖} ∩ {g | ε ≤ ‖(lam g).toAdd‖} with hF
   have hcm : Continuous fun g => ((r g : Matrix (Fin 2) (Fin 2) (Qbar l)) - 1) := (Units.continuous_val.comp hr).sub continuous_const
   have hclosed : ∀ N, IsClosed (F N) := by
@@ -1554,7 +1544,7 @@ theorem hom_padicInt_trivial : ∀ (l : ℕ) [Fact l.Prime] (c : Coef l) (Γ : T
   have hρZ : ‖((l : ℕ) : ℤ_[l])‖ = ρ := by rw [PadicInt.norm_p, hρeq]
   by_contra hne
   obtain ⟨g, hg⟩ : ∃ g, lam g ≠ 1 := by
-    by_contra h; push_neg at h; exact hne (MonoidHom.ext fun x => by simpa using h x)
+    by_contra h; push Not at h; exact hne (MonoidHom.ext fun x => by simpa using h x)
   obtain ⟨k, hk0, hkdet, hksm⟩ := noab_congr_pow l c Γ r hr hint hdet g
   set h0 := g ^ k with hh0
   set v0 : ℤ_[l] := Multiplicative.toAdd (lam h0) with hv0def
@@ -1718,8 +1708,7 @@ theorem hom_padicInt_trivial : ∀ (l : ℕ) [Fact l.Prime] (c : Coef l) (Γ : T
       · exact ((hD i).smul _).mono ((mul_le_mul (hβb i) hε1 hε0 hτ0).trans (le_of_eq (mul_one τ)))
       · rw [← sq]; exact hεε
     have := hC (2 * n + 1) P (fun i j => by rw [norm_pow]; exact hsm i j)
-    rw [hlamP, norm_pow] at this
-    exact this
+    rwa [hlamP, norm_pow] at this
 
   have hbound : ∀ m : ℕ, ‖v0‖ ≤ C * ρ ^ (m + 1) := by
     intro m
@@ -1788,11 +1777,8 @@ theorem continuous_logHom : Continuous (logHom (l := l)) := by
 theorem cycZ_eq_one_of_eps {Ω : Type} [Field Ω] [Algebra ℚ Ω] {z : G ℚ Ω} (h : eps l z = 1) :
     cycZ ℚ Ω l z = 1 := by
   have h' : ((cycZ ℚ Ω l z : ℤ_[l]) : ℚ_[l]) = 1 := by
-    have h2 := h
-    simp [eps, cycBar] at h2
-    exact h2
-  apply Units.ext
-  exact PadicInt.ext (h'.trans PadicInt.coe_one.symm)
+    simpa [eps, cycBar] using h
+  exact Units.ext (PadicInt.ext (h'.trans PadicInt.coe_one.symm))
 
 theorem isIrr_of_comp {Γ k : Type} [Group Γ] [Field k] {n : ℕ} (r : Γ →* GL (Fin n) k) (H : Subgroup Γ)
     (h : IsIrr (r.comp H.subtype)) : IsIrr r := by
@@ -1881,8 +1867,7 @@ open GlobalTheory.Ord2.ImZ in
 theorem exists_ker_eps_ne_one : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (e : ℕ)
     (S : Finset Pl) (A : ValuationSubring Ω) (W : R2 Ω l), Nf e S A W → ∃ z ∈ W.ker, eps l z ≠ 1 := by
   intro l _ Ω _ _ _ e S A W h
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   obtain ⟨c, hc⟩ := h.int
   let lam : G ℚ Ω →* Multiplicative ℤ_[l] := logHom.comp (cycZ ℚ Ω l)
   have hlamc : Continuous lam := continuous_logHom.comp (continuous_cycZ ℚ Ω l)

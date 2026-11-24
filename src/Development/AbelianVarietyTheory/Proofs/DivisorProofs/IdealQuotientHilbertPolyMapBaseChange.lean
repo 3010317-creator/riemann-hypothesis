@@ -171,8 +171,7 @@ private theorem linearIndependent_map_algebraMap {σ K L : Type} [Field K] [Fiel
       (algebraTensorAlgEquiv K L).toLinearEquiv.toLinearMap ∘ fun i => (1 : L) ⊗ₜ[K] v i := by
     funext i
     simp [algebraTensorAlgEquiv_tmul]
-  rw [he]
-  exact h2
+  rwa [he]
 
 open MvPolynomial Filter in
 open scoped ENNReal in
@@ -232,7 +231,7 @@ theorem _root_.GlobalTheory.HilbBaseChange.idealHilbertPoly_map : ∀ (K L : Typ
     apply le_antisymm
     · rintro g ⟨hg1, hg2⟩
       have := homogeneousComponent_mem_span_map_homogeneous P hP (mem_span_image_of_mem_ideal_map P hg1) n
-      rwa [homogeneousComponent_of_mem hg2, if_pos rfl] at this
+      rwa [homogeneousComponent_of_mem hg2, ite_eq_left rfl] at this
     · refine Submodule.span_le.2 ?_
       rintro _ ⟨w, ⟨hw1, hw2⟩, rfl⟩
       exact ⟨Ideal.mem_map_of_mem _ hw1,

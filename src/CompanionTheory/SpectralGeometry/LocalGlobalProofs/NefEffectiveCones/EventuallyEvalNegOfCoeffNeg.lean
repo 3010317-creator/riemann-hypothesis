@@ -22,8 +22,7 @@ theorem eventually_eval_neg_of_coeff_neg (q : Polynomial ℝ) (D : ℕ) (hdeg : 
   have hnd : q.natDegree = D := Polynomial.natDegree_eq_of_le_of_coeff_ne_zero hdeg hc.ne
   rcases Nat.eq_zero_or_pos D with rfl | hD
   · refine Eventually.of_forall fun m => ?_
-    rw [Polynomial.eq_C_of_natDegree_eq_zero hnd, Polynomial.eval_C]
-    exact hc
+    rwa [Polynomial.eq_C_of_natDegree_eq_zero hnd, Polynomial.eval_C]
   · have hlc : q.leadingCoeff ≤ 0 := by
       rw [Polynomial.leadingCoeff, hnd]; exact hc.le
     have hdg : 0 < q.degree := by
@@ -55,8 +54,7 @@ theorem interNum_top_pos_of_isAmpleLB : ∀ (k : Type) [Field k] (X : Scheme.{0}
     push_cast at h1
     rw [h1, h2]
     rfl
-  by_contra hneg
-  push_neg at hneg
+  by_contra! hneg
   have hcD : p.coeff D ≤ 0 := by
     rw [hcoeff]
     have : ((interNum k (structureModule X) fun _ : Fin D => A : ℤ) : ℝ) ≤ 0 := by exact_mod_cast hneg
@@ -65,7 +63,7 @@ theorem interNum_top_pos_of_isAmpleLB : ∀ (k : Type) [Field k] (X : Scheme.{0}
     ((Polynomial.natDegree_sub_le _ _).trans (max_le hdeg
       ((Polynomial.natDegree_C_mul_X_pow_le c D))))
     (by
-      rw [Polynomial.coeff_sub, Polynomial.coeff_C_mul_X_pow, if_pos rfl]
+      rw [Polynomial.coeff_sub, Polynomial.coeff_C_mul_X_pow, ite_eq_left rfl]
       linarith)
   obtain ⟨m, h1, h2, h3⟩ := (hfreq.and_eventually (hchi.and hq)).exists
   rw [Polynomial.eval_sub, Polynomial.eval_mul, Polynomial.eval_C, Polynomial.eval_pow,

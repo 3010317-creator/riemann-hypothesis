@@ -113,8 +113,7 @@ theorem fd_bound {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [Fi
     simp only [hu, inner_zero_right] at h1
     rcases mul_eq_zero.mp h1.symm with h2 | h2
     · right
-      have h3 := hr _ ((Polynomial.mem_roots hm).mpr h2)
-      simpa using h3
+      simpa using hr _ ((Polynomial.mem_roots hm).mpr h2)
     · exact Or.inl h2
   have hsq : ‖S u‖ ^ 2 ≤ (κ * ‖u‖) ^ 2 := by
     rw [mul_pow, ← b.sum_sq_norm_inner_right (S u), ← b.sum_sq_norm_inner_right u, Finset.mul_sum]
@@ -148,8 +147,7 @@ theorem norm_le_of_aeval_eq_zero (M H : Type) [AddCommGroup M] [Module ℂ M] [N
       · have h2 : L (m * (p / m)) = 0 := by
           rw [hL, mul_comm, map_mul, Module.End.mul_apply, hx, map_zero]
         have h3 := congrArg L (EuclideanDomain.div_add_mod p m)
-        rw [map_add (f := _), h2, zero_add] at h3
-        exact h3
+        rwa [map_add (f := _), h2, zero_add] at h3
     · exact LinearMap.map_le_range
   haveI : Module.Finite ℂ (Polynomial.degreeLT ℂ m.natDegree) :=
     Module.Finite.equiv (Polynomial.degreeLTEquiv ℂ m.natDegree).symm
@@ -183,7 +181,6 @@ theorem norm_le_of_aeval_eq_zero (M H : Type) [AddCommGroup M] [Module ℂ M] [N
     rw [h2] at this
     simpa using this.symm
   have h4 := fd_bound S hS m hm κ hκ hr (e x') h3
-  rw [hSe, Submodule.coe_norm, Submodule.coe_norm, heι, heι, hRc] at h4
-  exact h4
+  rwa [hSe, Submodule.coe_norm, Submodule.coe_norm, heι, heι, hRc] at h4
 
 end GlobalTheory.CompanionTheory.SkewSpec

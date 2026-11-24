@@ -276,7 +276,7 @@ theorem prod_eq_of_psum_eq (s t : Multiset ℂ) (hc : Multiset.card s = Multiset
   by_cases hk : k ≤ Multiset.card s
   · rw [Multiset.prod_X_sub_C_coeff s hk, Multiset.prod_X_sub_C_coeff t (hc ▸ hk), hc,
       esymm_eq_of_psum_eq s t h]
-  · push_neg at hk
+  · push Not at hk
     rw [coeff_eq_zero_of_natDegree_lt, coeff_eq_zero_of_natDegree_lt]
     · rw [natDegree_multiset_prod_X_sub_C_eq_card]; omega
     · rw [natDegree_multiset_prod_X_sub_C_eq_card]; omega
@@ -429,8 +429,7 @@ theorem GlobalTheory.WeilDeligne.VirtualTrace.prod_zpow_eq_one_of_trace_zero :
     exact prod_flatMap_replicate _ n x (fun y => f (WD.mk y.2))
   have htL : ∀ n σ (k : ℕ), LinearMap.trace ℂ _ ((listSum h (L n)).2.ρ σ ^ k) =
       ∑ i, (n i : ℂ) * LinearMap.trace ℂ (Fin (d i) → ℂ) ((a i).ρ σ ^ k) := fun n σ k => by
-    rw [trace_listSum]
-    rw [sum_flatMap_replicate _ n x (fun y => LinearMap.trace ℂ _ (y.2.ρ σ ^ k))]
+    rw [trace_listSum, sum_flatMap_replicate _ n x (fun y => LinearMap.trace ℂ _ (y.2.ρ σ ^ k))]
     simp only [nsmul_eq_mul, x]
   have hcc : ∀ i, ((c i : ℤ) : ℂ) = (((c i).toNat : ℕ) : ℂ) - (((-c i).toNat : ℕ) : ℂ) := fun i => by
     conv_lhs => rw [← Int.toNat_sub_toNat_neg (c i)]
@@ -714,10 +713,7 @@ theorem eq_of_induced : BrauerDegreeZero → ∀ (E Ω : Type) [Field E] [Number
       constructor
       · intro h1
         rw [← hρG, h1, map_one]
-      · intro h1
-        apply Subtype.ext
-        apply Units.ext
-        exact h1
+      · exact fun h1 => Subtype.ext (Units.ext h1)
     have hopen : IsOpen {σ : Ine (F := E) A | π (ineIncl h σ) = 1} := by
       have : {σ : Ine (F := E) A | π (ineIncl h σ) = 1} = {σ | a.ρ (ineIncl h σ) = 1} :=
         Set.ext fun σ => hπ1 _
@@ -950,8 +946,7 @@ theorem isTateEps_transport : ∀ (k k' : Type) [Field k] [ValuativeRel k] [Topo
       rw [hord, hord] at hy'
       obtain ⟨r, ⟨hr, hrv⟩, hru⟩ := hR.2 y hy'
       refine ⟨u r, ⟨Finset.mem_image_of_mem u hr, ?_⟩, ?_⟩
-      · rw [hcoe, hcoe, hcoe, ← map_sub i, hle]
-        exact hrv
+      · rwa [hcoe, hcoe, hcoe, ← map_sub i, hle]
       · rintro r' ⟨hr', hr'v⟩
         obtain ⟨r0, hr0, rfl⟩ := Finset.mem_image.1 hr'
         rw [hcoe, hcoe, hcoe, ← map_sub i, hle] at hr'v
@@ -1144,8 +1139,7 @@ theorem GlobalTheory.LocLanglands.exists_isLocalExt_transport : ∀ (E Ω : Type
         rw [hφ]; exact L'.algebraMap_mem (j x))
     have hle : E⟮α⟯ ≤ S := IntermediateField.adjoin_simple_le_iff.2
       (show φ α ∈ L' from IntermediateField.mem_adjoin_simple_self E' α')
-    intro x
-    exact hle x.2
+    exact fun x => hle x.2
   let jL : E⟮α⟯ →+* L' := RingHom.codRestrict ((φ : Ω →+* Ω').comp (algebraMap E⟮α⟯ Ω)) L' hsub
   refine ⟨L', jL, IntermediateField.adjoin.finiteDimensional hint', ?_, ?_, fun x => rfl, ?_⟩
   ·

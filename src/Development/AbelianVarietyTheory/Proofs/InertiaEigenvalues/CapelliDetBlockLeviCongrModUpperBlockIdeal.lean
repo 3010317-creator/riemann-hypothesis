@@ -85,7 +85,7 @@ theorem levi_mul_mem {r m : ℕ} {X : Fin (r + m) → Fin (r + m) → A} (hX : G
     have h := hX (Fin.natAdd r s) (Fin.natAdd r t) (Fin.castAdd m p) (Fin.natAdd r q)
     have hne : Fin.natAdd r t ≠ Fin.castAdd m p := by
       intro h; have := congrArg Fin.val h; simp at this; omega
-    rw [if_neg hne] at h
+    rw [ite_eq_right hne] at h
     have h' : X (Fin.natAdd r s) (Fin.natAdd r t) * X (Fin.castAdd m p) (Fin.natAdd r q) =
         X (Fin.castAdd m p) (Fin.natAdd r q) * X (Fin.natAdd r s) (Fin.natAdd r t) +
           (0 - if Fin.natAdd r q = Fin.natAdd r s then X (Fin.castAdd m p) (Fin.natAdd r t) else 0) := by
@@ -160,7 +160,7 @@ theorem Tm_upper_mem {r m : ℕ} (X : Fin (r + m) → Fin (r + m) → A) (w : �
   unfold Tm
   have hne : Fin.castAdd m p ≠ Fin.natAdd r q := by
     intro h; have := congrArg Fin.val h; simp at this; omega
-  rw [if_neg hne, zero_add]
+  rw [ite_eq_right hne, zero_add]
   exact Submodule.subset_span ⟨p, q, y, rfl⟩
 
 theorem two_block {r m : ℕ} (X : Fin (r + m) → Fin (r + m) → A) (hX : GlRel X) (u : ℂ) :
@@ -181,8 +181,7 @@ theorem two_block {r m : ℕ} (X : Fin (r + m) → Fin (r + m) → A) (hX : GlRe
         qdet (fun p q : Fin r => X (Fin.castAdd m p) (Fin.castAdd m q)) (u - m) := by
     have hinj : Set.InjOn (fun p : Equiv.Perm (Fin m) × Equiv.Perm (Fin r) => Equiv.Perm.sumCongr p.1 p.2)
         (Finset.univ : Finset (Equiv.Perm (Fin m) × Equiv.Perm (Fin r))) := by
-      intro x _ y _ hxy
-      exact Equiv.Perm.sumCongrHom_injective (α := Fin m) (β := Fin r) hxy
+      exact fun x _ y _ hxy => Equiv.Perm.sumCongrHom_injective (α := Fin m) (β := Fin r) hxy
     rw [hS, Finset.sum_image hinj, Fintype.sum_prod_type]
     unfold qdet qminor
     rw [Finset.sum_mul_sum]
@@ -229,13 +228,11 @@ theorem two_block {r m : ℕ} (X : Fin (r + m) → Fin (r + m) → A) (hX : GlRe
     | inl j =>
       left
       intro y hy
-      simp only [finSumFinEquiv_apply_left, finAddFlip_apply_castAdd]
-      exact Tm_levi_mem hX _ _ _ hy
+      simpa only [finSumFinEquiv_apply_left, finAddFlip_apply_castAdd] using Tm_levi_mem hX _ _ _ hy
     | inr l =>
       right
       intro y
-      simp only [finSumFinEquiv_apply_right, finAddFlip_apply_natAdd]
-      exact Tm_upper_mem X _ _ _ y
+      simpa only [finSumFinEquiv_apply_right, finAddFlip_apply_natAdd] using Tm_upper_mem X _ _ _ y
   · intro y
     have e : (Fin.castLE (by omega) i₀ : Fin (m + r)) = Fin.castAdd r i₀ := rfl
     simp only [e, Equiv.permCongr_apply, finSumFinEquiv_symm_apply_castAdd, finAddFlip_apply_castAdd,
@@ -250,7 +247,7 @@ theorem entry_comm {r m : ℕ} {X : Fin (r + m) → Fin (r + m) → A} (hX : GlR
     intro h; have := congrArg Fin.val h; simp at this; omega
   have h2 : Fin.castAdd m q ≠ Fin.natAdd r s := by
     intro h; have := congrArg Fin.val h; simp at this; omega
-  rw [if_neg h1, if_neg h2, sub_zero] at h
+  rw [ite_eq_right h1, ite_eq_right h2, sub_zero] at h
   exact sub_eq_zero.1 h
 
 theorem ite_algebraMap_comm (P : Prop) [Decidable P] (c : ℂ) (z : A) :
@@ -277,18 +274,18 @@ theorem modExp_castSucc {c : ℕ} (n : Fin (c + 1) → ℕ) (j : Fin c) :
       modExp (fun i => Fin (n (Fin.castSucc i))) j + n (Fin.last c) := by
   unfold modExp
   simp only [Fintype.card_fin, Finset.sum_filter, Fin.sum_univ_castSucc, Fin.castSucc_lt_castSucc_iff,
-    Fin.castSucc_lt_last, if_true]
+    Fin.castSucc_lt_last, ite_true]
   have : ¬ Fin.last c < Fin.castSucc j := not_lt.2 (Fin.castSucc_lt_last j).le
-  simp only [this, if_false]
+  simp only [this, ite_false]
   ring
 
 theorem modExp_last {c : ℕ} (n : Fin (c + 1) → ℕ) :
     modExp (fun i => Fin (n i)) (Fin.last c) = -((∑ i : Fin c, n (Fin.castSucc i) : ℕ) : ℤ) := by
   unfold modExp
-  simp only [Fintype.card_fin, Finset.sum_filter, Fin.sum_univ_castSucc, Fin.castSucc_lt_last, if_true,
-    lt_irrefl, if_false]
+  simp only [Fintype.card_fin, Finset.sum_filter, Fin.sum_univ_castSucc, Fin.castSucc_lt_last, ite_true,
+    lt_irrefl, ite_false]
   have : ∀ i : Fin c, ¬ Fin.last c < Fin.castSucc i := fun i => not_lt.2 (Fin.castSucc_lt_last i).le
-  simp only [this, if_false, Finset.sum_const_zero]
+  simp only [this, ite_false, Finset.sum_const_zero]
   push_cast
   ring
 
@@ -389,5 +386,4 @@ theorem qdet_blocks : ∀ (c : ℕ) {N : ℕ} (n : Fin c → ℕ) (h : ∑ i, n 
 end GlobalTheory.CapHC
 
 theorem GlobalTheory.CapHC.qdet_blocks_congr : ∀ (A : Type) [Ring A] [Algebra ℂ A] {c N : ℕ} (n : Fin c → ℕ) (h : ∑ i, n i = N) (X : Fin N → Fin N → A), Formalism.REAL.GlRel X → ∀ u : ℂ, Formalism.REAL.qdet X (u + ((N : ℂ) - 1) / 2) - (List.ofFn fun i : Fin c => Formalism.REAL.qdet (fun p q : Fin (n i) => X (stdBlocks n h ⟨i, p⟩) (stdBlocks n h ⟨i, q⟩)) (u + ((n i : ℂ) - 1) / 2 - (modExp (fun i => Fin (n i)) i : ℂ) / 2)).prod ∈ Submodule.span ℂ {y : A | ∃ (p q : Fin N) (w : A), blk (stdBlocks n h) p < blk (stdBlocks n h) q ∧ y = X p q * w} := by
-  intro A _ _ c N n h X hX u
-  exact GlobalTheory.CapHC.qdet_blocks c n h X hX u
+  exact fun A _ _ c N n h X hX u => GlobalTheory.CapHC.qdet_blocks c n h X hX u

@@ -117,8 +117,7 @@ theorem form_inv_of_trace (P : Subgroup G) (ρ : Representation ℂ G V) (hA : P
   have hG := hA (D B) hP
   have h0 : (B ∘ₗ ρ g).compl₂ (ρ g) - B = 0 := hfaith _ fun f hf => by
     rw [map_sub, LinearMap.sub_apply, hequiv g B f hf, hG g f hf, sub_self]
-  have h1 := congrArg (fun C : Sesq V => C v w) (sub_eq_zero.1 h0)
-  simpa using h1
+  simpa using congrArg (fun C : Sesq V => C v w) (sub_eq_zero.1 h0)
 
 theorem pFormScalar_of (P : Subgroup G) (ρ : Representation ℂ G V) (B₀ : Sesq V) (hA : PInvIsGInv G P)
     (hD : HasFormTraceDistr ρ) (hS : InvFormScalar ρ B₀) : PFormScalar P ρ B₀ :=
@@ -181,8 +180,7 @@ private theorem eigen_lemma (W : Submodule ℂ V) [FiniteDimensional ℂ W] [Non
     have h2 : L x = E (c • x) := by
       rw [← h1]
       simp
-    have h3 := congrFun h2 j
-    simpa [E, L, L0, LinearMap.linearEquivOfInjective_apply] using h3
+    simpa [E, L, L0, LinearMap.linearEquivOfInjective_apply] using congrFun h2 j
 
 theorem invFormScalar_of_admissible [IsTopologicalGroup G] [LocallyCompactSpace G] [T2Space G]
     [TotallyDisconnectedSpace G] (ρ : Representation ℂ G V) (hadm : GroundTheory.Automorphic.IsAdmissible ρ) [ρ.IsIrreducible]
@@ -236,8 +234,7 @@ theorem invFormScalar_of_admissible [IsTopologicalGroup G] [LocallyCompactSpace 
       rw [h]
       exact Submodule.mem_top
     refine LinearMap.ext fun v => LinearMap.ext fun w => ?_
-    have h2 := LinearMap.congr_fun (LinearMap.mem_ker.1 (hmem v)) w
-    simpa [sub_eq_zero] using h2
+    simpa [sub_eq_zero] using LinearMap.congr_fun (LinearMap.mem_ker.1 (hmem v)) w
 
 end General
 

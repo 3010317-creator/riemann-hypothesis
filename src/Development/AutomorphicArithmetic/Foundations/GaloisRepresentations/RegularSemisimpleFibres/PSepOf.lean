@@ -213,8 +213,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.sepOf :
   unfold Lbl.Sep Lbl.blocks
   rw [Multiset.map_add (f := _), Multiset.nodup_add]
   refine ⟨?_, hB, ?_⟩
-  · rw [Multiset.map_coe, Multiset.coe_nodup, List.map_map]
-    exact hDn
+  · rwa [Multiset.map_coe, Multiset.coe_nodup, List.map_map]
   · rw [Multiset.disjoint_left]
     intro e he1 he2
     rw [Multiset.map_coe, Multiset.mem_coe, List.map_map] at he1

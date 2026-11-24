@@ -74,8 +74,7 @@ private theorem mem_primeIdealOf_of_notMem_basicOpen {X : Scheme.{u}} {U : X.Ope
     rw [hU.fromSpec_preimage_basicOpen f]
     exact (PrimeSpectrum.mem_basicOpen f _).mpr hfn
   have h2 : hU.fromSpec (hU.primeIdealOf ⟨x, hx⟩) ∈ X.basicOpen f := h1
-  rw [hU.fromSpec_primeIdealOf ⟨x, hx⟩] at h2
-  exact h2
+  rwa [hU.fromSpec_primeIdealOf ⟨x, hx⟩] at h2
 
 private theorem mem_primeIdealOf_of_mem_support {X : Scheme.{u}} {I : X.IdealSheafData}
     {U : X.affineOpens} {x : (X : Type u)} (hx : x ∈ U.1) {f : Γ(X, U.1)}
@@ -109,8 +108,7 @@ theorem _root_.FunctorialResolution.Blowup.IsLocallyGeneratedByNonZeroDivisor.no
     have hξcl : ξ ∈ closure ({U.2.fromSpec (⟨q, hq⟩ : PrimeSpectrum Γ(X, U.1))}
         : Set (X : Type u)) := by
       have h2 := (_root_.FunctorialResolution.EmbeddedResolution.mem_closure_singleton_iff_fromSpec U.2 (U.2.primeIdealOf ⟨ξ, hxU⟩) ⟨q, hq⟩).mp hxy
-      rw [U.2.fromSpec_primeIdealOf ⟨ξ, hxU⟩] at h2
-      exact h2
+      rwa [U.2.fromSpec_primeIdealOf ⟨ξ, hxU⟩] at h2
     have hZsub : Z ⊆ closure ({U.2.fromSpec (⟨q, hq⟩ : PrimeSpectrum Γ(X, U.1))}
         : Set (X : Type u)) := by
       rw [← hξ']
@@ -123,8 +121,7 @@ theorem _root_.FunctorialResolution.Blowup.IsLocallyGeneratedByNonZeroDivisor.no
     have hprimeLe : (U.2.primeIdealOf ⟨ξ, hxU⟩) ≤ (⟨q, hq⟩ : PrimeSpectrum Γ(X, U.1)) := by
       refine (PrimeSpectrum.le_iff_mem_closure (U.2.primeIdealOf ⟨ξ, hxU⟩) ⟨q, hq⟩).mpr ?_
       refine (_root_.FunctorialResolution.EmbeddedResolution.mem_closure_singleton_iff_fromSpec U.2 ⟨q, hq⟩ (U.2.primeIdealOf ⟨ξ, hxU⟩)).mpr ?_
-      rw [U.2.fromSpec_primeIdealOf ⟨ξ, hxU⟩]
-      exact hy
+      rwa [U.2.fromSpec_primeIdealOf ⟨ξ, hxU⟩]
     exact hprimeLe
   exact notMem_nonZeroDivisors_of_mem_mem_minimalPrimes hfp hmin hf
 

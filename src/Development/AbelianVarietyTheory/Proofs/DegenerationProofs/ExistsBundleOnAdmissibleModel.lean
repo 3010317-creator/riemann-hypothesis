@@ -212,8 +212,7 @@ namespace Regular
 
 theorem nonneg_of_tendsto {X : Type} [AddCommGroup X] [Module.Free ℤ X] (q : QuadraticMap ℤ X ℝ)
     (h : Filter.Tendsto q Filter.cofinite Filter.atTop) (x : X) : 0 ≤ q x := by
-  by_contra hx
-  push_neg at hx
+  by_contra! hx
   have hx0 : x ≠ 0 := by
     rintro rfl
     simp at hx
@@ -358,8 +357,7 @@ theorem comparison_function_regular : ∀ (o Ω : Type) [CommRing o] [Field Ω] 
     val_pow hs (hle e3), val_prod hs _ (fun x : S.supI M ξ => hle (e2 x)),
     val_div hs (hle hf') (hle (hth _)) (hle hx0), val_div hs (hle hf) (hle (hth _)) (hle hx0)]
   simp only [fun x => val_div hs (hle (hth x)) (hle (hth _)) (hle hx0), norm_div, norm_mul, norm_pow, norm_prod]
-  rw [(hsup x₀).1 hx₀, hvf]
-  exact this
+  rwa [(hsup x₀).1 hx₀, hvf]
 
 end GlobalTheory.ZH
 end -- clump:auto
@@ -407,8 +405,7 @@ theorem ThetaSys.FF_div_FF_mem_O_of_valuationRing :
       generalize (∏ᶠ x ∈ S.supI M ξ, S.th x / S.th x₀) = P at h1 hP1
       rw [div_mul_eq_mul_div, _root_.mul_assoc, ← _root_.mul_pow, mul_inv_cancel₀ hP1, _root_.one_pow, _root_.mul_one] at h1
       exact h1)
-  rw [div_div_div_cancel_right₀ h0] at key
-  exact key
+  rwa [div_div_div_cancel_right₀ h0] at key
 
 end GlobalTheory.ZH
 end -- clump:auto
@@ -530,8 +527,7 @@ theorem ThetaSys.span_val_eq_testLattice (S : ThetaSys o Ω) (M : RatModel o Ω)
       have hpos : 0 < ‖l₀‖ := hn ▸ Real.exp_pos _
       have h0 : l₀ ≠ 0 := norm_pos_iff.1 hpos
       have hq : l / l₀ ∈ OO p := by
-        rw [mem_OO_iff, norm_div, div_le_one hpos, hn]
-        exact hl
+        rwa [mem_OO_iff, norm_div, div_le_one hpos, hn]
       have : (fun j => l * y₀ (algebraMap o S.R (S.proj _ (τ.wt α) j i))) =
           (⟨l / l₀, hq⟩ : OO p) • fun j => l₀ * y₀ (algebraMap o S.R (S.proj _ (τ.wt α) j i)) := by
         funext j
@@ -594,9 +590,9 @@ theorem span_lattice_eq_of_valuationRing :
     have hu := hle z ξ c _ k k' hz hs (hcomp c) hk hk' inferInstance hval hnoeth
     have hp : S.proj _ (c.comp (AddSubgroup.inclusion h)) * S.proj _ c = S.proj _ c := by
       rw [hsum, Finset.sum_mul, Finset.sum_eq_single c]
-      · rw [hmul, if_pos rfl]
+      · rw [hmul, ite_eq_left rfl]
       · intro b _ hb
-        rw [hmul, if_neg hb]
+        rw [hmul, ite_eq_right hb]
       · simp
     have e : (fun j => S.th x₀ / S.FF _ c k * algebraMap o Ω (S.proj _ c j i)) =
         ∑ l, ((⟨_, hu⟩ : M.O ξ) * algebraMap o (M.O ξ) (S.proj _ c l i)) •

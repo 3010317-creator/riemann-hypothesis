@@ -71,11 +71,11 @@ private lemma eq_filter_add_replicate (μ : Multiset ℕ) (h : ∀ d ∈ μ, 0 <
   ext d
   rw [Multiset.count_add, Multiset.count_filter, Multiset.count_replicate]
   by_cases h2 : 2 ≤ d
-  · rw [if_pos h2, if_neg (by omega)]; rfl
-  · rw [if_neg h2]
+  · rw [ite_eq_left h2, ite_eq_right (by omega)]; rfl
+  · rw [ite_eq_right h2]
     by_cases h1 : 1 = d
     · subst h1; simp
-    · rw [if_neg h1]
+    · rw [ite_eq_right h1]
       have : d ∉ μ := fun hd => by have := h d hd; omega
       simpa using this
 
@@ -91,7 +91,7 @@ theorem card_perm_partition_parts_mul :
     conv_rhs => rw [hμ]
     simp
   have key := Equiv.Perm.card_of_cycleType_mul_eq (Fin N) m
-  rw [if_pos ⟨by rw [Fintype.card_fin]; omega, fun a ha => (Multiset.mem_filter.1 ha).2⟩,
+  rw [ite_eq_left ⟨by rw [Fintype.card_fin]; omega, fun a ha => (Multiset.mem_filter.1 ha).2⟩,
     Fintype.card_fin] at key
   have hN : N - m.sum = μ.count 1 := by omega
   rw [hN] at key
@@ -125,7 +125,7 @@ theorem card_perm_partition_parts_mul :
     congr 1
     refine Finset.prod_congr rfl fun n hn => ?_
     have hn2 : 2 ≤ n := (Multiset.mem_filter.1 (Multiset.mem_toFinset.1 hn)).2
-    have : m.count n = μ.count n := by rw [hm, Multiset.count_filter, if_pos hn2]
+    have : m.count n = μ.count n := by rw [hm, Multiset.count_filter, ite_eq_left hn2]
     rw [this]
   rw [hset, hprod]
   convert key
@@ -179,8 +179,7 @@ private theorem mul_card_irreducible_add_one_le_pow (g : ℕ) [Fact g.Prime] {d 
       P.Monic ∧ Irreducible P ∧ P ∣ (X ^ g ^ d - X : (ZMod g)[X]) := by
     intro P hP
     rcases Finset.mem_insert.1 hP with rfl | hP
-    · refine ⟨monic_X, irreducible_X, ?_⟩
-      exact dvd_sub (dvd_pow_self _ (by positivity)) dvd_rfl
+    · exact ⟨monic_X, irreducible_X, dvd_sub (dvd_pow_self _ (by positivity)) dvd_rfl⟩
     · rw [hS, Finset.mem_filter, _root_.GlobalTheory.BadShare.mem_sqSet] at hP
       obtain ⟨⟨hm, hdeg, -, -⟩, hirr⟩ := hP
       refine ⟨hm, hirr, ?_⟩
@@ -194,8 +193,7 @@ private theorem mul_card_irreducible_add_one_le_pow (g : ℕ) [Fact g.Prime] {d 
       show IsCoprime P Q
       refine (hPi.coprime_iff_not_dvd).2 fun h => hPQ ?_
       exact eq_of_monic_of_associated hPm hQm (hPi.associated_of_dvd hQi h)
-    · intro P hP
-      exact (hmem P hP).2.2
+    · exact fun P hP => (hmem P hP).2.2
   have hle := natDegree_le_of_dvd hdvd (FiniteField.X_pow_card_pow_sub_X_ne_zero _ hd.ne' hg)
   rw [FiniteField.X_pow_card_pow_sub_X_natDegree_eq _ hd.ne' hg,
     natDegree_prod_of_monic _ _ (fun P hP => (hmem P hP).1), Finset.sum_insert hX,
@@ -281,8 +279,7 @@ private theorem count_succ_mul_mass_cons_le (g : ℕ) [Fact g.Prime] (N d : ℕ)
       intro f hf
       rw [Finset.mem_filter] at hf
       have := modByMonic_add_div f P
-      rw [(modByMonic_eq_zero_iff_dvd hPm).2 hf.2, zero_add] at this
-      exact this
+      rwa [(modByMonic_eq_zero_iff_dvd hPm).2 hf.2, zero_add] at this
     have hne : ∀ f ∈ A.filter (P ∣ ·), f /ₘ P ≠ 0 := by
       intro f hf h0
       have h := hfac f hf
@@ -387,8 +384,7 @@ theorem _root_.GlobalTheory.BadShare.mass_degType_le : ∀ (g : ℕ) [Fact g.Pri
       calc _root_.GlobalTheory.BadShare.mass g N (fun f => _root_.GlobalTheory.BadShare.degType g f = d ::ₘ ν)
           ≤ (d : ℝ)⁻¹ * _root_.GlobalTheory.BadShare.mass g (N - d)
               (fun f => _root_.GlobalTheory.BadShare.degType g f = ν) / ((ν.count d + 1 : ℕ) : ℝ) := by
-            rw [le_div_iff₀ hc, mul_comm]
-            exact key
+            rwa [le_div_iff₀ hc, mul_comm]
         _ ≤ (d : ℝ)⁻¹ * (∏ e ∈ ν.toFinset, ((e : ℝ) ^ ν.count e * (ν.count e).factorial))⁻¹ /
               ((ν.count d + 1 : ℕ) : ℝ) := by
             gcongr

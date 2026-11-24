@@ -67,8 +67,7 @@ theorem isLocallyConstant_of_rightInv {X : Type} {V : Subgroup B} (hV : IsOpen (
   have h2 := hf _ hz y
   rw [mul_inv_cancel_left] at h2
   show f z ∈ s
-  rw [h2]
-  exact hy
+  rwa [h2]
 
 variable [SecondCountableTopology B] [MeasurableSpace B] [BorelSpace B]
 
@@ -77,9 +76,7 @@ theorem setIntegral_subgroup (β : Measure B) [β.IsHaarMeasure] (K U : Subgroup
     ∫ y in (K : Set B), f y ∂β = (β.real K : ℂ) * avg (fun k : K => f k) := by
   set u : K → ℂ := fun k => f k with hu
   set R := rStab u with hR
-  have hUR : U.subgroupOf K ≤ R := by
-    intro k hk x
-    exact hf k hk x
+  have hUR : U.subgroupOf K ≤ R := fun k hk x => hf k hk x
   haveI : CompactSpace K := isCompact_iff_compactSpace.1 hKc
   have hRo : IsOpen (R : Set K) :=
     Subgroup.isOpen_mono hUR (hU.preimage continuous_subtype_val)
@@ -123,8 +120,7 @@ theorem setIntegral_subgroup (β : Measure B) [β.IsHaarMeasure] (K U : Subgroup
     constructor
     · rintro ⟨t, ht⟩
       have h1 := hR'K ht
-      have h2 := K.mul_mem (t.out).2 h1
-      simpa using h2
+      simpa using K.mul_mem (t.out).2 h1
     · intro hy
       refine ⟨((⟨y, hy⟩ : K) : K ⧸ R), ?_⟩
       set t : K ⧸ R := ((⟨y, hy⟩ : K) : K ⧸ R) with ht
@@ -138,8 +134,7 @@ theorem setIntegral_subgroup (β : Measure B) [β.IsHaarMeasure] (K U : Subgroup
     have hint : ∀ t, IntegrableOn g (A t) β := by
       intro t
       refine (integrableOn_const (C := c t) (by rw [hAmeas t]; exact hfin)).congr_fun ?_ (hAm t)
-      intro y hy
-      exact (hg t y hy).symm
+      exact fun y hy => (hg t y hy).symm
     rw [← hAU, integral_iUnion_fintype hAm hAd hint, Finset.mul_sum]
     refine Finset.sum_congr rfl fun t _ => ?_
     rw [setIntegral_congr_fun (hAm t) (fun y hy => hg t y hy), setIntegral_const, Measure.real, Measure.real,
@@ -222,12 +217,11 @@ theorem tsum_rr (Γ' K : Subgroup B)
           rw [← hxe]; simp [MulAut.conj_apply]
         rw [this]
         have e6 : o⁻¹ * (o * x * o⁻¹) * o = x := by group
-        rw [e6]
-        exact hx
+        rwa [e6]
     simp only [rr, e2, e4]
     by_cases hm : (γ : B) ∈ D
-    · rw [if_pos hm, Set.indicator_of_mem (show (γ : B) ∈ (D : Set B) from hm)]
-    · rw [if_neg hm, Set.indicator_of_notMem (show (γ : B) ∉ (D : Set B) from hm)]
+    · rw [ite_eq_left hm, Set.indicator_of_mem (show (γ : B) ∈ (D : Set B) from hm)]
+    · rw [ite_eq_right hm, Set.indicator_of_notMem (show (γ : B) ∉ (D : Set B) from hm)]
   have hle : (D : Set B) ⊆ Γ' := fun x hx => hx.1
   calc ∑' γ : Γ', rr Γ' K ((γ : B) * y)
       = ∑' γ : Γ', rr Γ' K (((γ * ⟨h, hh⟩ : Γ') : B) * y) :=
@@ -278,8 +272,8 @@ theorem integral_term (β : Measure B) [β.IsHaarMeasure] (K U : Subgroup B) (hK
   have he : (fun y => if q⁻¹ * y ∈ K then F y * c else 0) = fun y => g (q⁻¹ * y) := by
     funext y
     by_cases hy : q⁻¹ * y ∈ K
-    · simp only [g, if_pos hy, Set.indicator_of_mem (show q⁻¹ * y ∈ (K : Set B) from hy), mul_inv_cancel_left]
-    · simp only [g, if_neg hy, Set.indicator_of_notMem (show q⁻¹ * y ∉ (K : Set B) from hy), zero_mul]
+    · simp only [g, ite_eq_left hy, Set.indicator_of_mem (show q⁻¹ * y ∈ (K : Set B) from hy), mul_inv_cancel_left]
+    · simp only [g, ite_eq_right hy, Set.indicator_of_notMem (show q⁻¹ * y ∉ (K : Set B) from hy), zero_mul]
   rw [he]
   refine ⟨hg.comp_mul_left q⁻¹, ?_⟩
   rw [integral_mul_left_eq_self g q⁻¹]
@@ -307,14 +301,14 @@ theorem integral_mul_rr (β : Measure B) [β.IsHaarMeasure] (Γ' K U : Subgroup 
     have hrr : (((rr Γ' K y).toReal : ℝ) : ℂ) = if (Quotient.out q₀)⁻¹ * y ∈ K then c q₀ else 0 := by
       simp only [rr, hoo]
       by_cases hm : (Quotient.out q₀)⁻¹ * y ∈ K
-      · simp [if_pos hm, c, ENNReal.toReal_inv]
-      · simp [if_neg hm]
+      · simp [ite_eq_left hm, c, ENNReal.toReal_inv]
+      · simp [ite_eq_right hm]
     rw [hrr]
     by_cases hq : q₀ ∈ S
-    · rw [Finset.sum_eq_single q₀ (fun q _ hq' => if_neg (hne q hq')) (fun h => absurd hq h)]
+    · rw [Finset.sum_eq_single q₀ (fun q _ hq' => ite_eq_right (hne q hq')) (fun h => absurd hq h)]
       by_cases hm : (Quotient.out q₀)⁻¹ * y ∈ K
-      · simp [if_pos hm]
-      · simp [if_neg hm]
+      · simp [ite_eq_left hm]
+      · simp [ite_eq_right hm]
     · rw [Finset.sum_eq_zero]
       · by_cases hm : (Quotient.out q₀)⁻¹ * y ∈ K
         · have : F y = 0 := by
@@ -323,10 +317,10 @@ theorem integral_mul_rr (β : Measure B) [β.IsHaarMeasure] (Γ' K U : Subgroup 
             rw [hSdef, Set.Finite.mem_toFinset]
             exact ⟨_, hm, by simpa using h0⟩
           simp [this]
-        · simp [if_neg hm]
+        · simp [ite_eq_right hm]
       · intro q hqS
         have hqq : q ≠ q₀ := fun h => hq (h ▸ hqS)
-        exact if_neg (hne q hqq)
+        exact ite_eq_right (hne q hqq)
   have hterm := fun q => integral_term β K U hKo hKc hU F hF (Quotient.out q) (c q)
   rw [integral_congr_ae (Filter.Eventually.of_forall hpt),
     integral_finsetSum S (fun q _ => (hterm q).1), dcSum,
@@ -373,8 +367,7 @@ theorem core (hQ : QIndep) {G A B : Type} [Group G] [MeasurableSpace G] [Measura
       have h1 : (e ((a : G) * (b : G)⁻¹)).2 = 1 := by
         have h2 : (e (a : G)).2 = (e (b : G)).2 := congrArg Subtype.val hab
         simp [map_mul, map_inv, Prod.snd_mul, Prod.snd_inv, h2]
-      have h3 := hinj _ (Γ.mul_mem a.2 (Γ.inv_mem b.2)) h1
-      exact Subtype.ext (mul_inv_eq_one.1 h3)
+      exact Subtype.ext (mul_inv_eq_one.1 (hinj _ (Γ.mul_mem a.2 (Γ.inv_mem b.2)) h1))
     · rintro ⟨y, hy⟩
       rw [← hΓ] at hy
       obtain ⟨γ, hγ, rfl⟩ := hy

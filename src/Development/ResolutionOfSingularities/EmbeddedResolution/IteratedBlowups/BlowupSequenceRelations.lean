@@ -111,10 +111,8 @@ theorem IsStrictPullbackBlowupSeq.of_length_zero {X' X : Scheme.{u}} (g : X' ⟶
     fun i hi => schemeAtHomOfEqZero g t s i (Nat.eq_zero_of_le_zero (le_of_le_of_eq hi ht)),
     ?_, ?_, ?_⟩
   · simp [schemeAtHomOfEqZero]
-  · intro i hi
-    exact absurd (lt_of_lt_of_eq hi ht) (Nat.not_lt_zero i)
-  · intro i hi
-    exact absurd (lt_of_lt_of_eq hi ht) (Nat.not_lt_zero i)
+  · exact fun i hi => absurd (lt_of_lt_of_eq hi ht) (Nat.not_lt_zero i)
+  · exact fun i hi => absurd (lt_of_lt_of_eq hi ht) (Nat.not_lt_zero i)
 
 theorem IsStrictPullbackBlowupSeq.length_eq {X' X : Scheme.{u}} {φ : X' ⟶ X}
     {B' : SequenceOfBlowups X'} {B : SequenceOfBlowups X} (h : IsStrictPullbackBlowupSeq φ B' B) :

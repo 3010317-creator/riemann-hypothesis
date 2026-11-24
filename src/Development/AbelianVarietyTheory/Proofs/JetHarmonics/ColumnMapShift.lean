@@ -69,8 +69,7 @@ theorem aeval_weightedHomogeneous {K σ τ : Type} [CommRing K] {w : σ → ℕ}
   rw [h2] at h1
   have h3 := (isWeightedHomogeneous_C w' (AddMonoidAlgebra.coeff φ d)).mul h1
   rw [zero_add] at h3
-  rw [MvPolynomial.algebraMap_eq]
-  exact h3
+  rwa [MvPolynomial.algebraMap_eq]
 
 section Col
 
@@ -82,15 +81,14 @@ def colMap (r : T → ℕ) (g : T → Fin n → Fin n → k) :
 
 theorem rowShift_X_self (σ : T) (i i' : Fin (r σ)) (t : k) (b : Fin n) :
     rowShift r n k σ i i' t (X ⟨σ, i, b⟩) = X ⟨σ, i, b⟩ + C t * X ⟨σ, i', b⟩ := by
-  rw [rowShift, aeval_X, if_pos ⟨b, rfl⟩]
+  rw [rowShift, aeval_X, ite_eq_left ⟨b, rfl⟩]
 
 theorem rowShift_X_ne (σ : T) (i i' : Fin (r σ)) (t : k) (τ : T) (j : Fin (r τ))
     (h : (⟨τ, j⟩ : Σ s, Fin (r s)) ≠ ⟨σ, i⟩) (b : Fin n) :
     rowShift r n k σ i i' t (X ⟨τ, j, b⟩) = X ⟨τ, j, b⟩ := by
-  rw [rowShift, aeval_X, if_neg]
+  rw [rowShift, aeval_X, ite_eq_right]
   rintro ⟨b', hb⟩
-  apply h
-  exact congrArg (fun ℓ : Letter T r n => (⟨ℓ.1, ℓ.2.1⟩ : Σ s, Fin (r s))) hb
+  exact h (congrArg (fun ℓ : Letter T r n => (⟨ℓ.1, ℓ.2.1⟩ : Σ s, Fin (r s))) hb)
 
 theorem colMap_X (g : T → Fin n → Fin n → k) (τ : T) (j : Fin (r τ)) (b : Fin n) :
     colMap r g (X ⟨τ, j, b⟩) = ∑ b', C (g τ b' b) * X (⟨τ, j, b'⟩ : Letter T r n) := by

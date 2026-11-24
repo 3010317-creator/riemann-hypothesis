@@ -701,16 +701,14 @@ theorem scalar_eq_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
       ring
     rw [← e1, hfix]
   obtain ⟨y, hy⟩ : ∃ y, G.M'.vac v y ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hne (funext h)
   let x : Fin a' × Fin (a + a') → AF F := fun i => GlobalTheory.LatVac.liftV v (y i)
   have hRx : R x = R 0 := by
     have := hRv.1 0 x (fun u hu => by funext i; exact GlobalTheory.LatVac.at_liftV v _ u hu)
     simpa using this
   have hΨx : Ψ x ≠ 0 := by
-    simp only [hΨdef, tens, x, GlobalTheory.LatVac.evFin_liftV, hRx]
-    exact mul_ne_zero hy hR0
+    simpa only [hΨdef, tens, x, GlobalTheory.LatVac.evFin_liftV, hRx] using mul_ne_zero hy hR0
   have h2 := congrFun key (Sum.elim x x)
   simp only [GlobalTheory.InertDbl.dblFun, boxFun, Pi.smul_apply, smul_eq_mul] at h2
   have hz : Ψ x * star (Ψ x) ≠ 0 := mul_ne_zero hΨx (star_ne_zero.mpr hΨx)

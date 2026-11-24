@@ -74,7 +74,7 @@ theorem normal_rep {G D A : Type} [Group G] [MulAction G D] (f : D → A) (pref 
       rw [h1]
       exact hg.symm
     unfold prefRep
-    rw [dif_pos hex]
+    rw [dite_eq_left hex]
     obtain ⟨g, hg⟩ : ∃ g : G, g • q = hex.choose := Quotient.exact hex.choose_spec.1
     have h3 := (h _).1 hex.choose_spec.2
     rw [h3, ← hg, h1]
@@ -99,8 +99,7 @@ theorem cosetIn_dia (q : PtAt R sel mu cst u j) (P : Pr.vT u) (a : (𝓞 X.E ⧸
 theorem cosetIn_of_ne (h : j + 1 ≠ R.m) (q : PtAt R sel mu cst u j) : cosetIn q = fun _ => ∅ := by
   have h2 : q.1.2 = ∅ := by
     have := q.2
-    rw [ysAt_ys_of_ne sel mu cst h] at this
-    exact this
+    rwa [ysAt_ys_of_ne sel mu cst h] at this
   funext P
   unfold cosetIn
   rw [h2]
@@ -208,8 +207,7 @@ theorem isPt_dia (hI : I.Ok) (l : I.Laws) (u : B.Word) (a : I.ι) (i : ℕ) {Ch 
       · exact hne e'
       · refine conj_piT_notMem hPr u P ?_
         have h1 : X.piT u ∈ w.asIdeal := decoFin_mem_of_mem_divs hw
-        rw [e'] at h1
-        exact h1
+        rwa [e'] at h1
   · exact congrArg (fun q : PtAt B.R I.sel (I.tup a) (I.cst a) u i => q.1.1.deco) (mv_dia _ P s)
   · exact (congrArg (fun q : PtAt B.R I.sel (I.tup a) (I.cst a) u i => q.1.1.fr) (mv_dia ((I.stp u a i).rep c) P s) :)
 
@@ -236,8 +234,7 @@ theorem dilTied : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pi
     have h1 := isPt_dia I hI l u a i hR v s c hJ (K (chOf c)).lev rfl (eV v).1 (eV v).2 (hV v) (hs _ _ _) z hz δ hδ
     obtain ⟨x, hx1, hx2⟩ := exists_level I l u a i hR v s c δ.1 h1 (chOf c) (hch v s c)
     refine ⟨x, ?_, hx2⟩
-    rw [hy (chOf c) ⟨(I.fm l u a).dil i v s c, _⟩]
-    exact hx1
+    rwa [hy (chOf c) ⟨(I.fm l u a).dil i v s c, _⟩]
   have hU : ∀ b (g : (I.stp u a i).G b), (I.stp u a i).gam b g ∈
       UJ (sigD (I.rec7 l Z) : (I.rec7 l Z).host.E →+* (I.rec7 l Z).host.E) (gramN (I.rec7 l Z) i hi) := fun b g => by
     rw [hJ]

@@ -345,8 +345,7 @@ theorem UpperTheory.adicCompletion_integers_baseChange_iff :
     obtain ⟨Q, hQ, hQv⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 E) v.asIdeal
     let w : PlacesOver E v := ⟨⟨Q, hQ.isPrime, Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot Q⟩, hQv⟩
     exact (key w).1 (h w)
-  · intro h w
-    exact (key w).2 h
+  · exact fun h w => (key w).2 h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AdelicQuotients.AdicCompletionIntegersBaseChangeIff =====
@@ -561,7 +560,7 @@ theorem UpperTheory.euler_product_support_finite :
   have hoff : ∀ g, g ∉ W → ∏ᶠ v, Fv v (p v g) = 0 := by
     intro g hg
     rw [hmem] at hg
-    push_neg at hg
+    push Not at hg
     obtain ⟨v, hv, hx⟩ := hg
     refine finprod_eq_zero _ v ((hS v hv _).2 ?_) (hfin g)
     rintro ⟨t, y, hy, e⟩
@@ -648,16 +647,16 @@ theorem UpperTheory.exists_haarMeasure_adelicGL :
     obtain ⟨g, h1, h2⟩ := hR.surj gi (fun v => if hv : v ∈ S then gv ⟨v, hv⟩ else 1) (by
       filter_upwards [S.finite_toSet.compl_mem_cofinite] with v hv
       have hv' : v ∉ S := by simpa using hv
-      rw [dif_neg hv']
+      rw [dite_eq_right hv']
       exact one_mem _)
     refine ⟨g, ?_, ?_⟩
     · intro v hv
-      rw [h2, dif_neg hv]
+      rw [h2, dite_eq_right hv]
       exact one_mem _
     · rw [prS_apply, h1]
       congr 1
       funext v
-      rw [h2, dif_pos v.2]
+      rw [h2, dite_eq_left v.2]
   obtain ⟨ν, hν⟩ : ∃ ν, ν = (μ.restrict (US p K S : Set G)).map (prS q p S) := ⟨_, rfl⟩
   haveI inv : ν.IsMulLeftInvariant := by
     refine ⟨fun h => ?_⟩
@@ -680,22 +679,22 @@ theorem UpperTheory.exists_haarMeasure_adelicGL :
     have hC : ∀ v, IsCompact (C v) := by
       intro v
       by_cases hv : v ∈ S
-      · simp only [C, dif_pos hv]
+      · simp only [C, dite_eq_left hv]
         exact hD.image (by fun_prop)
-      · simp only [C, dif_neg hv]
+      · simp only [C, dite_eq_right hv]
         exact hR.cpt v
     have hW := hR.prop (Prod.fst '' D) C (hD.image continuous_fst) hC (by
       filter_upwards [S.finite_toSet.compl_mem_cofinite] with v hv
       have hv' : v ∉ S := by simpa using hv
-      simp only [C, dif_neg hv']
+      simp only [C, dite_eq_right hv']
       exact subset_rfl)
     refine lt_of_le_of_lt (measure_mono ?_) hW.measure_lt_top
     rintro g ⟨h1, h2⟩
     refine ⟨⟨_, h1, rfl⟩, fun v => ?_⟩
     by_cases hv : v ∈ S
-    · simp only [C, dif_pos hv]
+    · simp only [C, dite_eq_left hv]
       exact ⟨_, h1, rfl⟩
-    · simp only [C, dif_neg hv]
+    · simp only [C, dite_eq_right hv]
       exact h2 v hv
   have e := Measure.isMulLeftInvariant_eq_smul ν (μi.prod (Measure.pi fun v : S => m v))
   refine ⟨Measure.haarScalarFactor ν (μi.prod (Measure.pi fun v : S => m v)), ?_, ?_⟩
@@ -706,8 +705,7 @@ theorem UpperTheory.exists_haarMeasure_adelicGL :
       Measure.restrict_apply_univ] at h1
     exact (hR.opnU S).measure_ne_zero μ ⟨1, one_mem _⟩ h1
   · unfold Eul
-    rw [← hν]
-    exact e
+    rwa [← hν]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AdelicQuotients.ExistsHaarMeasureAdelicGL =====
@@ -731,8 +729,7 @@ theorem UpperTheory.geometric_side_absolutely_convergent_of_euler_fubini :
     intro t
     obtain ⟨τ, h1, -⟩ := hRPT.surj t (fun _ => 1) (Filter.Eventually.of_forall fun v => one_mem _)
     have h := congrArg q (hinv τ)
-    rw [map_mul, map_mul, map_inv, hqθ, hqj, h1] at h
-    exact h
+    rwa [map_mul, map_mul, map_inv, hqθ, hqj, h1] at h
   have invV : ∀ v t, (jv v t)⁻¹ * p v δ * θv v (jv v t) = p v δ := by
     intro v t
     have hev : ∀ᶠ w in Filter.cofinite, Function.update (fun w => (1 : Tv w)) v t w ∈ KT w := by
@@ -742,8 +739,7 @@ theorem UpperTheory.geometric_side_absolutely_convergent_of_euler_fubini :
     obtain ⟨τ, -, h1⟩ := hRPT.surj 1 _ hev
     have h2 : pT v τ = t := by rw [h1 v, Function.update_self]
     have h := congrArg (p v) (hinv τ)
-    rw [map_mul, map_mul, map_inv, hpθ, hpj, h2] at h
-    exact h
+    rwa [map_mul, map_mul, map_inv, hpθ, hpj, h2] at h
   have twI : ∀ t g, (ji t * g)⁻¹ * q δ * θi (ji t * g) = g⁻¹ * q δ * θi g := by
     intro t g
     rw [map_mul, mul_inv_rev]
@@ -796,8 +792,7 @@ theorem UpperTheory.geometric_side_absolutely_convergent_of_euler_fubini :
     have h2 : ∀ s v, p v (z s * (x⁻¹ * δ * θ x)) = (p v x)⁻¹ * p v δ * θv v (p v x) := by
       intro s v
       rw [map_mul, hpz, one_mul, map_mul, map_mul, map_inv, hpθ]
-    simp only [h1, h2]
-    exact integral_mul_const _ _
+    simpa only [h1, h2] using integral_mul_const _ _
   rw [key]
   exact ⟨he.1, he.2.trans (congrArg (fun w => ((a : ℝ) : ℂ) / ((b : ℝ) : ℂ) * w *
     ∏ v ∈ S, qI (m v) (jv v) (nv v) (Fv v)) hf2)⟩
@@ -913,8 +908,7 @@ theorem UpperTheory.haar_quotient_subgroup :
         = (ρ₀ (j t * x) : ENNReal) := fun t => by
       rw [← Subgroup.coe_mul]
       exact hinj.extend_apply _ _ _
-    simp only [e]
-    exact hρ₀.2 x
+    simpa only [e] using hρ₀.2 x
   unfold quotInt
   rw [dite_eq_left hex]
   have hn : IsNrm j ν (fun x : H => hex.choose (x : G)) :=
@@ -1065,8 +1059,7 @@ theorem UpperTheory.local_unimodular_of_exists_haar_measure :
     exact (ENNReal.mul_right_inj (by exact_mod_cast ha) ENNReal.coe_ne_top).1 h1
   have hinv : ∀ A : Set Gi, μi A⁻¹ = μi A := by
     intro A
-    have h := key ∅ A (fun _ => Set.univ)
-    simpa using h
+    simpa using key ∅ A (fun _ => Set.univ)
   refine ⟨⟨hμi, ⟨Measure.ext fun A _ => by rw [Measure.inv_apply]; exact hinv A⟩⟩, fun v => ⟨hm v, ⟨Measure.ext fun B _ => ?_⟩⟩⟩
   rw [Measure.inv_apply]
   obtain ⟨C, hC, hC1⟩ := exists_compact_mem_nhds (1 : Gi)
@@ -1107,8 +1100,7 @@ theorem UpperTheory.maximalCompactNorm_of_unit_criterion :
   have hdiag : mapGL n (atFin v) (AdelicGLn.diagonal F n γ) =
       mapGL n (incFin F v) (finAt v (AdelicGLn.diagonal F n γ)) := by
     have h := c4 v (AdelicGLn.diagonal F n γ)
-    rw [c8, hincl] at h
-    exact h
+    rwa [c8, hincl] at h
   have hgal : ∀ y : GL (Fin n) (CompletionsOver F v), mapGL n (galFin (1 : F ≃ₐ[F] F) v) y = y := fun y => by
     rw [((hT F).2.2 v).1]
     ext i j
@@ -1119,8 +1111,7 @@ theorem UpperTheory.maximalCompactNorm_of_unit_criterion :
   constructor
   · rintro ⟨t, ht, y, hy, e⟩
     refine ⟨t, ht, t⁻¹ * x, ?_, by group⟩
-    rw [← hU F F n v, map_mul, map_inv, e, inv_mul_cancel_left]
-    exact hy
+    rwa [← hU F F n v, map_mul, map_inv, e, inv_mul_cancel_left]
   · rintro ⟨t, ht, y, hy, rfl⟩
     exact ⟨t, ht, mapGL n (incFin F v) y, (hU F F n v y).2 hy, map_mul _ _ _⟩
 end -- clump:auto
@@ -1325,10 +1316,8 @@ theorem UpperTheory.restrictedProduct_centralizer_adelicGL :
   refine
     { cq := ?_, cp := ?_, opn := ?_, cpt := ?_, ae := ?_, opnU := ?_, ext := ?_, surj := ?_, prop := ?_ }
   · exact Continuous.subtype_mk (h.cq.comp continuous_subtype_val) _
-  · intro v
-    exact Continuous.subtype_mk ((h.cp v).comp continuous_subtype_val) _
-  · intro v
-    exact (h.opn v).preimage continuous_subtype_val
+  · exact fun v => Continuous.subtype_mk ((h.cp v).comp continuous_subtype_val) _
+  · exact fun v => (h.opn v).preimage continuous_subtype_val
   · intro v
     have hc : IsClosed ((Subgroup.centralizer ({p v g} : Set (Gv v)) : Subgroup (Gv v)) : Set (Gv v)) := by
       have : ((Subgroup.centralizer ({p v g} : Set (Gv v)) : Subgroup (Gv v)) : Set (Gv v))
@@ -1337,10 +1326,8 @@ theorem UpperTheory.restrictedProduct_centralizer_adelicGL :
       rw [this]
       exact isClosed_eq (continuous_const.mul continuous_id) (continuous_id.mul continuous_const)
     exact hc.isClosedEmbedding_subtypeVal.isCompact_preimage (h.cpt v)
-  · intro t
-    exact h.ae t
-  · intro S
-    exact (h.opnU S).preimage continuous_subtype_val
+  · exact fun t => h.ae t
+  · exact fun S => (h.opnU S).preimage continuous_subtype_val
   · intro a b h1 h2
     exact Subtype.ext (h.ext _ _ (congrArg Subtype.val h1) fun v => congrArg Subtype.val (h2 v))
   · intro gi gv hv
@@ -1426,8 +1413,7 @@ private theorem compact_box (C : ∀ v : Pl K, Set (GL (Fin n) (v.adicCompletion
   convert h2 using 1
   ext x
   constructor
-  · intro hx
-    exact ⟨⟨x, eventually_principal.2 fun v hv => hv (hx v)⟩, fun v _ => hx v, rfl⟩
+  · exact fun hx => ⟨⟨x, eventually_principal.2 fun v hv => hv (hx v)⟩, fun v _ => hx v, rfl⟩
   · rintro ⟨y, hy, rfl⟩ v
     exact hy v trivial
 

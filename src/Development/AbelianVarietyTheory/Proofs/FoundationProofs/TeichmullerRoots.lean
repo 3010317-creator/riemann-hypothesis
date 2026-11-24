@@ -82,8 +82,7 @@ theorem exists_monic_of_stable (S : Multiset (Fbar g)) (hS : S.map (fun x => x ^
       have := congrArg (fun q => q.coeff n) hfix
       simpa [frobenius_def] using this
     have h2 : P.coeff n ∈ (⊥ : Subfield (Fbar g)) := (Subfield.mem_bot_iff_pow_eq_self _ g).2 h1
-    rw [Subfield.bot_eq_of_zMod_algebra g] at h2
-    exact h2
+    rwa [Subfield.bot_eq_of_zMod_algebra g] at h2
   obtain ⟨q, hq, -, hqm⟩ := lifts_and_natDegree_eq_and_monic hl hm
   refine ⟨q, hqm, ?_⟩
   unfold rootsBar
@@ -160,8 +159,7 @@ theorem teich_injective (t : Fbar g →* ℂ) (ht : ∀ x y, x ≠ 0 → y ≠ 0
 theorem teich_zpow (t : Fbar g →* ℂ) {x : Fbar g} (hx : x ≠ 0) (a : ℤ) : t (x ^ a) = t x ^ a := by
   have h1 : t ((Units.mk0 x hx ^ a : (Fbar g)ˣ) : Fbar g) = ((Units.map t (Units.mk0 x hx) ^ a : ℂˣ) : ℂ) := by
     rw [← map_zpow]; rfl
-  rw [Units.val_zpow_eq_zpow_val, Units.val_zpow_eq_zpow_val] at h1
-  exact h1
+  rwa [Units.val_zpow_eq_zpow_val, Units.val_zpow_eq_zpow_val] at h1
 
 end Roots
 

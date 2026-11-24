@@ -98,8 +98,7 @@ theorem appLE_injective {X Y : Scheme.{u}} [IsIntegral X] (j : Y ⟶ X) [IsOpenI
   obtain ⟨y⟩ := ‹Nonempty Y›
   refine res_inf_injective (D := j.opensRange) (genericPoint_mem ⟨y, rfl⟩) U
     ((appLE_bijective j inf_le_right (eq_preimage_inf rfl h)).1 ?_)
-  rw [appLE_res, appLE_res]
-  exact H
+  rwa [appLE_res, appLE_res]
 
 section Immersion
 
@@ -145,8 +144,7 @@ theorem exists_transport (r : ∀ a, Γ(Y, W a))
     refine (appLE_bijective j (inf_le_right.trans hj.ge) (eq_preimage_inf hj hab)).1 ?_
     have := hr a b
     rw [← hr' a, ← hr' b, res_appLE, res_appLE] at this
-    rw [map_mul, appLE_res, appLE_res, appLE_res]
-    exact this
+    rwa [map_mul, appLE_res, appLE_res, appLE_res]
   · rw [← hr' a] at h
     exact (isUnit_map_iff (RingEquiv.ofBijective _ (hb a)) _).1 h
   · rw [← (hb a).1.eq_iff, map_mul, appLE_res, appLE_res, hr', ← hττ, ← map_zpow, Units.coe_map]
@@ -273,8 +271,7 @@ theorem ker_eq_map_of_isPushout {A B C P : CommRingCat.{u}} {α : A ⟶ B} {β :
     exact Ideal.Quotient.eq_zero_iff_mem.1 this.symm
   · have := congrArg (fun φ : A ⟶ P ↦ φ a) h.w
     simp only [CommRingCat.comp_apply] at this
-    rw [show β a = 0 from ha, map_zero] at this
-    exact this
+    rwa [show β a = 0 from ha, map_zero] at this
 
 theorem ker_app_eq_span {X Z : Scheme.{u}} {A C : CommRingCat.{u}} {β : A ⟶ C}
     (hβ : Function.Surjective β) {c : A} (hc : RingHom.ker β.hom = Ideal.span {c})

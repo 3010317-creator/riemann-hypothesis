@@ -295,7 +295,7 @@ private theorem sb_cosInd (hc : D.host.ccK = ⊤) (hS : S.gram = 1) {e : AE D} {
   generalize Ideal.absNorm 𝔪 = n at hn0 hnm
   have hsupp : ∀ t : WO S T, cosInd e 𝔪 rfl rfl 0 t ≠ 0 → IsHalf e t ∧ ∀ i j, toEAf D (t i j) ∈ idGrp 𝔪 := fun t ht => by
     by_contra hh
-    exact ht (by rw [cosInd_zero, if_neg hh])
+    exact ht (by rw [cosInd_zero, ite_eq_right hh])
   refine ⟨fun t ht => (hsupp t ht).1, n, hn0, fun u hu hue t => ?_, fun t ht => nsmul_mem ?_ _⟩
   · have h1 : n • u ∈ latO S T (stdL D S.rank : Set (Fin S.rank → D.host.E))
         (skewLat D 𝔪 T.rank : Set (Fin T.rank → D.host.E)) fun _ => True := by
@@ -308,8 +308,7 @@ private theorem sb_cosInd (hc : D.host.ccK = ⊤) (hS : S.gram = 1) {e : AE D} {
           have h3 := (mem_latRat_iff hc hS mem_stdL M).1 hM i j
           rw [mul_one] at h3
           have h4 := FractionalIdeal.mul_mem_mul h3 (mem_skewEnt h𝔪 hnm)
-          rw [Matrix.smul_apply, nsmul_eq_mul, mul_comm (n : D.host.E)]
-          exact h4
+          rwa [Matrix.smul_apply, nsmul_eq_mul, mul_comm (n : D.host.E)]
         have h5 : finTens α (n • M) = n • finTens α M := by
           clear h2 hnm hn0
           induction n with
@@ -377,11 +376,11 @@ private theorem fix_deep (hc : D.host.ccK = ⊤) (hs : Setup ψ θ S T ⊤ δ 1)
       (stdL D T.rank : Set (Fin T.rank → D.host.E)) fun _ => True)) := by
     refine ⟨fun t ht => ?_, 1, one_pos, fun u hu hue t => ?_, fun t ht => ?_⟩
     · by_contra hh
-      exact ht (if_neg fun h' => hh h'.2)
+      exact ht (ite_eq_right fun h' => hh h'.2)
     · simp only [one_smul, halfInd, add_mem_cancel_right hu, half_add hue]
     · rw [one_smul]
       by_contra hh
-      exact ht (if_neg fun h' => hh h'.1)
+      exact ht (ite_eq_right fun h' => hh h'.1)
   have hvac := hTm.vac
   rw [one_smul] at hvac
   have hT : ∑ q, heisO ψ S T (cA D e • finTens 1 (-z q)) v =
@@ -407,8 +406,7 @@ private theorem fix_deep (hc : D.host.ccK = ⊤) (hs : Setup ψ θ S T ⊤ δ 1)
       exact ((GlobalTheory.PlaceModel.isBichar_symplO S T ψ).nsmul n _ _).trans
         (char_sympl_eq_one hs.std (sdC_std hs.gS) (sdC_std hs.gT) (nsmul_mem hl 2) h2)
     have h5 : GlobalTheory.PlaceModel.heisL S T ψ (2 • (n • l)) v = v := hv.1 _ (nsmul_mem hl n)
-    rw [h4, h5, one_smul] at h3
-    exact h3
+    rwa [h4, h5, one_smul] at h3
   have h6 := congrArg (GlobalTheory.PlaceModel.heisL S T ψ (2 • (n • l))) hT
 
   rw [map_sum, map_smul, Finset.sum_congr rfl fun q _ => hq q, hT] at h6
@@ -938,11 +936,9 @@ theorem intU_map (x : (AE D)ˣ) (h : toEAf D (x : AE D) ∈ Formalism.L2.Herm.in
     IntU D (Units.map (finHom D) x) := by
   refine ⟨(GlobalTheory.BotClassDict.toAfE_int_iff _).1 ?_, (GlobalTheory.BotClassDict.toAfE_int_iff _).1 ?_⟩
   · change Lev.swapAE D (GlobalTheory.BotFormula.toAfE D ((GlobalTheory.BotFormula.toAfE D).symm (finPart D (x : AE D)))) ∈ _
-    rw [RingEquiv.apply_symm_apply]
-    exact h
+    rwa [RingEquiv.apply_symm_apply]
   · change Lev.swapAE D (GlobalTheory.BotFormula.toAfE D ((GlobalTheory.BotFormula.toAfE D).symm (finPart D ((x⁻¹ : (AE D)ˣ) : AE D)))) ∈ _
-    rw [RingEquiv.apply_symm_apply]
-    exact h'
+    rwa [RingEquiv.apply_symm_apply]
 
 end GlobalTheory.StdRead
 
@@ -993,8 +989,7 @@ theorem absNorm_mem_conj (𝔪 : Ideal (𝓞 D.host.E)) : ((Ideal.absNorm 𝔪 :
   have h2 : D.host.conj • ((Ideal.absNorm 𝔪 : ℕ) : 𝓞 D.host.E) = ((Ideal.absNorm 𝔪 : ℕ) : 𝓞 D.host.E) := by
     first
     | exact map_natCast (MulSemiringAction.toRingHom _ _ D.host.conj) _
-  rw [h2] at this
-  exact this
+  rwa [h2] at this
 
 end GlobalTheory.StdRead
 
@@ -1600,7 +1595,7 @@ theorem exp_w (G : GridData L sc) {μ₀ : T} (hL : L.Is μ₀) (t : T) (i j : F
   have a2 : D.R.m - i ≤ D.R.m := by omega
   have hu := G.pl.under_w hv
   by_cases h0 : v = G.pl.v0
-  · rw [condExp, if_pos h0]
+  · rw [condExp, ite_eq_left h0]
     have hu0 : (G.pl.w v).under (𝓞 D.host.F) = G.pl.v0 := hu.trans h0
     obtain ⟨l1, l2⟩ := G.ch.lev0 _ a1 a2 _ hu0
     have hmu : (L.C.mu0 j).UnrAt (G.pl.w v) := gridBaseCharacter_unramified_off_badPlaces j (by rw [hu0]; exact G.ch.basePlace_not_mem_chiGridBadPlaces)
@@ -1611,7 +1606,7 @@ theorem exp_w (G : GridData L sc) {μ₀ : T} (hL : L.Is μ₀) (t : T) (i j : F
       · exact G.pl.levelPlace_ne_basePlace t _ hq ((GlobalTheory.BadPlaceExp.under_eq_of_isConjPl hcj).trans hu0)
     exact exp_div (n := 0) hc (Formalism.L2.Host.HChar.UnrAt.levelLe (hmu.mul hxi) 0) l1
       (fun h => l2 ((Formalism.L2.Host.HChar.unrAt_iff _ _).2 h))
-  · rw [condExp, if_neg h0]
+  · rw [condExp, ite_eq_right h0]
     have h1 : v ∈ S1 D := (G.pl.mem_S0_of_sum_eq.1 hv).resolve_left h0
     obtain ⟨l1, l2⟩ := G.ch.lev1 _ a1 a2 (G.pl.w v) (by rw [hu]; exact h1)
     exact exp_div (n := 1) hc (Formalism.L2.Host.HChar.LevelLe.mul ((L.C.isMu0 j).tame _) (hL.xi_tame t _)) l1 l2

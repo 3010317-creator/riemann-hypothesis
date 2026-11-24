@@ -80,8 +80,8 @@ theorem measurableSet_suppQ : ∀ (D : D7) (v : FinPl D) (a b r : ℕ),
     refine continuous_pi fun i => continuous_pi fun j => ?_
     unfold topL
     by_cases h : i.val < b ∧ j.val < a
-    · simp only [dif_pos h]; exact hentry _ _
-    · simp only [dif_neg h]; exact continuous_const
+    · simp only [dite_eq_left h]; exact hentry _ _
+    · simp only [dite_eq_right h]; exact continuous_const
   have hdet : Continuous fun x : Matrix (Fin b) (Fin a) (Fv D.host.F v) => (topL r x).det :=
     htop.matrix_det
   have hball : IsOpen {y : Fv D.host.F v | Valued.v y < 1} := by
@@ -123,9 +123,7 @@ theorem measurableSet_suppQ : ∀ (D : D7) (v : FinPl D) (a b r : ℕ),
     · have : {x : Matrix (Fin b) (Fin a) (Fv D.host.F v) | r ≤ i.val → j.val < r → Valued.v (x i j) < 1} =
           Set.univ := by
         ext x
-        simp only [Set.mem_setOf_eq, Set.mem_univ, iff_true]
-        intro h h'
-        exact absurd ⟨h, h'⟩ hij
+        simpa only [Set.mem_setOf_eq, Set.mem_univ, iff_true] using fun h h' => absurd ⟨h, h'⟩ hij
       rw [this]
       exact MeasurableSet.univ
   have : suppQ (a := a) (b := b) v r =

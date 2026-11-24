@@ -87,10 +87,8 @@ theorem exists_ffMap {Z Y : Scheme.{0}} [IsIntegral Z] [IsIntegral Y] (p : Z ⟶
   · have h := germ_ffHom c ⊤ trivial trivial
     have h2 := congrArg (fun f => f.hom (p.appTop.hom ((Scheme.ΓSpecIso (CommRingCat.of ℂ)).inv.hom r))) h
     change (ffHom c).hom (algebraMap ℂ Z.functionField r) = _
-    rw [aK, aL, ← hc, Scheme.Hom.comp_appTop]
-    exact h2
-  · have h := congrArg (fun f => f.hom g) (germ_ffHom c V hV hV')
-    exact h
+    rwa [aK, aL, ← hc, Scheme.Hom.comp_appTop]
+  · exact congrArg (fun f => f.hom g) (germ_ffHom c V hV hV')
 
 noncomputable def ringOn {Y : Scheme.{0}} [IsIntegral Y] (p' : Y ⟶ Sp ℂ) [instL : Algebra ℂ Y.functionField]
     (hL : instL = ffAlg p') (W : Y.Opens) (hW : genericPoint Y ∈ W) : Subalgebra ℂ Y.functionField where

@@ -159,15 +159,15 @@ theorem key_sum {n q N : ℕ} {T : MvPolynomial (Fin n) ℤ} (hT : T.IsHomogeneo
       rw [geom_root hζ (by have := hα i; omega) (by have := hα i; have := hdq i; omega)]
       have := hα i; have := hdq i
       by_cases h : d i = α i
-      · rw [if_pos (by omega), if_pos h]
-      · rw [if_neg (by omega), if_neg h]
+      · rw [ite_eq_left (by omega), ite_eq_left h]
+      · rw [ite_eq_right (by omega), ite_eq_right h]
     simp_rw [e2]
     by_cases h : d = α
     · subst h; simp [Finset.prod_const, Finset.card_univ]
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       obtain ⟨i, hi⟩ : ∃ i, d i ≠ α i := by
-        by_contra hc; push_neg at hc; exact h (Finsupp.ext hc)
-      rw [Finset.prod_eq_zero (Finset.mem_univ i) (by rw [if_neg hi]), mul_zero]
+        by_contra hc; push Not at hc; exact h (Finsupp.ext hc)
+      rw [Finset.prod_eq_zero (Finset.mem_univ i) (by rw [ite_eq_right hi]), mul_zero]
   simp_rw [aeval_def, eval₂_eq', Finset.sum_mul]
   rw [Finset.sum_comm, Finset.sum_congr rfl inner, Finset.sum_ite_eq']
   split_ifs with h
@@ -185,8 +185,7 @@ theorem coeff_le_of_torus_bound : ∀ (D q : ℕ) (T : MvPolynomial (Fin (D + 1)
       intro h; have := hz 0; simp [h] at this
     have hb := hM ((z 0)⁻¹ • z) (by simp [h0]) (by intro l; simp [norm_inv, hz])
     have e : z = z 0 • ((z 0)⁻¹ • z) := by rw [smul_smul, mul_inv_cancel₀ h0, one_smul]
-    rw [e, aeval_smul_of_homogeneous hT, norm_mul, norm_pow, hz 0, one_pow, one_mul]
-    exact hb
+    rwa [e, aeval_smul_of_homogeneous hT, norm_mul, norm_pow, hz 0, one_pow, one_mul]
   set N := q + (∑ i, α i) + 1 with hN
   have hNpos : N ≠ 0 := by omega
   have hζ : IsPrimitiveRoot (Complex.exp (2 * ↑Real.pi * Complex.I / ↑N)) N :=
@@ -284,8 +283,7 @@ theorem mem_polyring_of_integral_closure_range : ∀ {K : Type} [Field K] {D : �
     rw [e1, Algebra.adjoin_range_eq_range_aeval]
     rfl
   have hmem : ∀ q : MvPolynomial (Fin D) ℤ, aeval y q ∈ F := by
-    intro q
-    exact Subfield.subring_closure_le _ ((hsub _).mpr ⟨q, rfl⟩)
+    exact fun q => Subfield.subring_closure_le _ ((hsub _).mpr ⟨q, rfl⟩)
   let φ : MvPolynomial (Fin D) ℤ →+* F := (aeval y).toRingHom.codRestrict F hmem
   letI : Algebra (MvPolynomial (Fin D) ℤ) F := φ.toAlgebra
   have hφ : ∀ q, ((algebraMap (MvPolynomial (Fin D) ℤ) F q : F) : K) = aeval y q := fun q => rfl
@@ -321,8 +319,7 @@ theorem mem_polyring_of_integral_closure_range : ∀ {K : Type} [Field K] {D : �
     rw [h1, map_zero]
     have h2 : F.subtype.comp (algebraMap (MvPolynomial (Fin D) ℤ) F) = (aeval y).toRingHom := by
       exact RingHom.ext fun q => rfl
-    rw [h2, Polynomial.eval₂_map, hcomp]
-    exact hft
+    rwa [h2, Polynomial.eval₂_map, hcomp]
   obtain ⟨T₀, hT⟩ := IsIntegrallyClosed.isIntegral_iff.mp hint
   exact ⟨T₀, by rw [← hφ, hT]⟩
 
@@ -406,8 +403,7 @@ theorem GlobalTheory.totalDegree_le_of_integral_at_infinity : ∀ {K : Type} [Fi
     z i * y j ^ N = aeval y C) → ∀ (f : Polynomial (MvPolynomial ι ℤ)), f.Monic →
     f.eval₂ (aeval z).toRingHom (aeval y T₀ / y j ^ q) = 0 → T₀.totalDegree ≤ q := by
   intro K _ D y hind j hu T₀ q ι z hz f hf heq
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have hw : y j ^ q ≠ 0 := pow_ne_zero _ hu
   generalize hs : aeval y T₀ / y j ^ q = s at heq
   have ht : aeval y T₀ = s * y j ^ q := by rw [← hs, div_mul_cancel₀ _ hw]
@@ -538,8 +534,7 @@ theorem trace_monic_over_mvPolynomial {K : Type} [Field K] (F : Subfield K) [Fin
   obtain ⟨f, hfm, hf⟩ := hT
   refine ⟨f, hfm, ?_⟩
   have h := congrArg F.subtype hf
-  rw [Polynomial.hom_eval₂, map_zero] at h
-  exact h
+  rwa [Polynomial.hom_eval₂, map_zero] at h
 
 end GlobalTheory
 end -- clump:auto
@@ -642,8 +637,7 @@ theorem exists_ringEquiv_ratR (x : Fin (D + 1) → K) (h0 : x 0 ≠ 0)
     rw [Algebra.adjoin_int, ratR_zero_eq_closure x h0]; rfl
   refine ⟨hind.aevalEquiv.toRingEquiv.trans (RingEquiv.subringCongr hS), fun j => ?_⟩
   have := hind.algebraMap_aevalEquiv (X j)
-  rw [aeval_X] at this
-  exact this
+  rwa [aeval_X] at this
 
 end GlobalTheory.HSAmp
 
@@ -855,8 +849,7 @@ theorem sections_eq_sum_aeval_bounded : ∀ (k : Type) [CommRing k] (X : Scheme.
       P.nu ((N : ℤ) * e) ((N : ℤ) * 0) σ y (f * g i) =
         P.nu (e * q + a) b σ y f * P.nu (e * c0 + -a + e) (-b + 0) σ y (g i) := fun i => by
     have := NuMul.mul_mem_H_and_nu_mul k X p P _ _ _ _ f (g i) hf (hgH i)
-    rw [hidx, hidx2] at this
-    exact this
+    rwa [hidx, hidx2] at this
   have hxpow : ∀ l, x l ^ N ∈ P.H ((N : ℤ) * e) ((N : ℤ) * 0) ∧ ∀ (σ : k →+* ℂ) (y : CxPts p σ),
       P.nu ((N : ℤ) * e) ((N : ℤ) * 0) σ y (x l ^ N) = P.nu e 0 σ y (x l) ^ N := fun l =>
     NuPow.pow_mem_H_and_nu_pow k X p P _ _ (x l) (hG.mem l) N

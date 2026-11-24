@@ -189,8 +189,7 @@ theorem exists_of_good (hσ : IsCMExt F E σ) (hΦ : Comp Φ) {N : ℕ} (hN : 0 
   · rwa [mul_inv, inv_inv, mul_inv_cancel_left]
 
 theorem exists_not_fixed (hσ : IsCMExt F E σ) : ∃ δ : 𝓞 E, cO σ δ ≠ δ := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   have hs : Function.Surjective (algebraMap F E) := fun x => by
     obtain ⟨a, b, -, rfl⟩ := IsFractionRing.div_surjective (𝓞 E) x
     have ha : σ (a : E) = a := congrArg (fun t : 𝓞 E => (t : E)) (h a)
@@ -565,8 +564,7 @@ theorem mem_closure_grpHF_of_finPart_eq_one : ∀ (F E : Type) [Field F] [Number
       rw [eq_div_iff h0]
       linear_combination a.1 w * p2 - b.1 w * p1
     rw [q1, q2]
-    simp only [map_div₀, map_sub, map_mul, map_neg]
-    exact ⟨(tα w).div tn h0, (tβ w).neg.div tn h0⟩
+    simpa only [map_div₀, map_sub, map_mul, map_neg] using ⟨(tα w).div tn h0, (tβ w).neg.div tn h0⟩
   have tpt : ∀ (c d : ℕ → F) (A B : AF F), A.2 = 1 → B.2 = 0 →
       (∀ w, Tendsto (fun k => algebraMap F w.Completion (c k)) atTop (𝓝 (A.1 w))) →
       (∀ w, Tendsto (fun k => algebraMap F w.Completion (d k)) atTop (𝓝 (B.1 w))) →
@@ -583,12 +581,10 @@ theorem mem_closure_grpHF_of_finPart_eq_one : ∀ (F E : Type) [Field F] [Number
   refine mem_closure_of_tendsto (f := g) (b := atTop) ?_ (Eventually.of_forall hgm)
   refine Units.isInducing_embedProduct.tendsto_nhds_iff.2 (Tendsto.prodMk_nhds ?_ ?_)
   · show Tendsto (fun k => (g k : AEF F E)) atTop (𝓝 (z : AEF F E))
-    simp only [hg1, hab]
-    exact tpt _ _ _ _ f1 f2 tα tβ
+    simpa only [hg1, hab] using tpt _ _ _ _ f1 f2 tα tβ
   · refine (MulOpposite.continuous_op.tendsto _).comp ?_
     show Tendsto (fun k => (((g k)⁻¹ : (AEF F E)ˣ) : AEF F E)) atTop (𝓝 ((z⁻¹ : (AEF F E)ˣ) : AEF F E))
-    simp only [hg2, hab']
-    exact tpt _ _ _ _ f1' f2' (fun w => (tinv w).1) fun w => (tinv w).2
+    simpa only [hg2, hab'] using tpt _ _ _ _ f1' f2' (fun w => (tinv w).1) fun w => (tinv w).2
 
 end GlobalTheory.HeckeSplitGen
 end -- clump:auto

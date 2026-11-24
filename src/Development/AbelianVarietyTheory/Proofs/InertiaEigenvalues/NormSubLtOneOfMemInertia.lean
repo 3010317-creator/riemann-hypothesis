@@ -209,8 +209,7 @@ theorem axIn_padic : ∀ (l : ℕ) [Fact l.Prime] (L : Type) [Field L] [Valuativ
       have hyE : φ y ∈ E := ⟨y, hy, rfl⟩
       exact g.commutes ⟨φ y, hyE⟩
     have h1 := (hO (τ x - x)).1.1 (hx τ hτJ)
-    rw [map_sub, ← hφ, ← hφ, hτ] at h1
-    exact h1
+    rwa [map_sub, ← hφ, ← hφ, hτ] at h1
   obtain ⟨Y, hYE, hY⟩ := GroundTheory.PAdicHodge.ax_lemma (K := E) (φ x) hmove
   obtain ⟨y, hyF, rfl⟩ := hYE
   refine ⟨y, fun σ hσ => (IntermediateField.mem_fixedField_iff J y).1 hyF σ hσ, ?_⟩
@@ -288,15 +287,11 @@ theorem detects_restrictNormal_inf : ∀ (l : ℕ) [Fact l.Prime] (L : Type) [Fi
       lift s ∈ N ∧ AlgEquiv.restrictNormalHom L (lift s) = s := by
     intro s hs
     have h : ∃ σ ∈ N, AlgEquiv.restrictNormalHom L σ = s := Subgroup.mem_map.mp hs
-    simp only [lift, dif_pos h]
-    exact h.choose_spec
+    simpa only [lift, dite_eq_left h] using h.choose_spec
   obtain ⟨hτN, hτ⟩ := hlift σ₀ hσ₀.1
-  have hτN' : lift σ₀ ∉ N' := by
-    intro h
-    exact hσ₀B ⟨Subgroup.mem_map.mpr ⟨lift σ₀, h, hτ⟩, hσ₀.2⟩
+  have hτN' : lift σ₀ ∉ N' := fun h => hσ₀B ⟨Subgroup.mem_map.mpr ⟨lift σ₀, h, hτ⟩, hσ₀.2⟩
   have hex : ∃ i, ¬ (l : ℤ) ^ r ∣ a i (lift σ₀) := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hτN' (hN' _ hτN hc)
   obtain ⟨i, hi⟩ := hex
   obtain ⟨x', hx'⟩ := hx i
@@ -361,8 +356,7 @@ theorem exists_galois_ker_le_range (l : ℕ) [Fact l.Prime] (U : Subgroup (GQ l)
     inferInstance, inferInstance, ?_, ?_⟩
   · rw [IntermediateField.restrictNormalHom_ker]
     intro σ hσ
-    apply hEU
-    exact (IntermediateField.fixingSubgroup_le (le_trans le_sup_left hFM)) hσ
+    exact hEU ((IntermediateField.fixingSubgroup_le (le_trans le_sup_left hFM)) hσ)
   · intro x hx
     have : x ∈ M := hFM (le_sup_right (a := E) (IntermediateField.subset_adjoin ℚ_[l] S hx))
     exact ⟨⟨x, this⟩, rfl⟩
@@ -394,8 +388,7 @@ theorem ringChar_residue_eq_of_ordIs (F : Type) [Field F] [ValuativeRel F] [Topo
     omega
   have hm : (p : 𝒪[F]) ∈ IsLocalRing.maximalIdeal 𝒪[F] := hnu
   have h0 : ((p : ℕ) : 𝓀[F]) = 0 := by
-    rw [← map_natCast (IsLocalRing.residue 𝒪[F]), IsLocalRing.residue_eq_zero_iff]
-    exact hm
+    rwa [← map_natCast (IsLocalRing.residue 𝒪[F]), IsLocalRing.residue_eq_zero_iff]
   have hd : ringChar 𝓀[F] ∣ p := (ringChar.spec 𝓀[F] p).mp h0
   rcases (Nat.dvd_prime hp).mp hd with h1 | h1
   · exact absurd h1 CharP.ringChar_ne_one
@@ -425,8 +418,7 @@ theorem upperRamificationGroup_one_eq_top_of_exponent :
     have hqc : q ^ Nat.card (lowerRamificationGroup F M 0 ⧸
         (lowerRamificationGroup F M 1).subgroupOf (lowerRamificationGroup F M 0)) = 1 := pow_card_eq_one'
     have hg : q ^ Nat.gcd _ p = 1 := pow_gcd_eq_one.mpr ⟨hqc, hqp⟩
-    rw [hcop, pow_one, hq, QuotientGroup.eq_one_iff, Subgroup.mem_subgroupOf] at hg
-    exact hg
+    rwa [hcop, pow_one, hq, QuotientGroup.eq_one_iff, Subgroup.mem_subgroupOf] at hg
   have hphi0 : herbrandPhi F M 0 = 0 := by simp [herbrandPhi]
   have hphi1 : herbrandPhi F M 1 = 1 := by
     have := herbrandPhi_of_mem_Icc (K := F) (L := M) 0 (u := 1) (by norm_num)
@@ -477,8 +469,7 @@ theorem card_le_jumpSum_wild_of_exponent :
     exact hpow σ
   have hM1 := _root_.GlobalTheory.PMon.Ram.upperRamificationGroup_one_eq_top_of_exponent F M p e hp he hordF hM0 hMexp
   obtain ⟨σ₀, hσ₀⟩ : ∃ σ₀, σ₀ ∉ B := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hB (eq_top_iff.mpr fun x _ => h x)
   have hmem : AlgEquiv.restrictNormalHom M σ₀ ∈ (upperRamificationGroup F L 1).map (AlgEquiv.restrictNormalHom M) := by
     rw [map_upperRamificationGroup M 1, hM1]; trivial
@@ -486,8 +477,7 @@ theorem card_le_jumpSum_wild_of_exponent :
   have hσB : σ ∉ B := by
     intro hσB
     apply hσ₀
-    rw [← hker, MonoidHom.mem_ker, ← hσe, ← MonoidHom.mem_ker, hker]
-    exact hσB
+    rwa [← hker, MonoidHom.mem_ker, ← hσe, ← MonoidHom.mem_ker, hker]
   have := _root_.GlobalTheory.PMon.Ram.card_mul_le_jumpSum_of_mem_upper_not_mem F L B 1 h0 σ hσ hσB
   rw [mul_one] at this
   exact_mod_cast this
@@ -670,8 +660,7 @@ theorem jumpSum_support_subset {G : Type} [Group G] (R : ℕ → Subgroup G) (A 
   classical
   intro t ht
   simp only [Finset.coe_range, Set.mem_Iio]
-  by_contra h
-  push_neg at h
+  by_contra! h
   apply ht
   have h1 : R t = ⊥ := le_bot_iff.mp (hm ▸ hR h)
   simp [h1]
@@ -731,8 +720,7 @@ theorem exists_mem_upperRamificationGroup_jumpSum_not_mem :
   cases n with
   | zero =>
     obtain ⟨σ, hσ⟩ : ∃ σ, σ ∉ B := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hB (eq_top_iff.mpr fun σ _ => h σ)
     refine ⟨σ, ?_, hσ⟩
     rw [Nat.cast_zero, h0]
@@ -742,8 +730,7 @@ theorem exists_mem_upperRamificationGroup_jumpSum_not_mem :
     obtain ⟨σ, hσ, hσB⟩ := SetLike.not_le_iff_exists.mp hk
     refine ⟨σ, ?_, hσB⟩
     have : ((k + 1 : ℕ) : ℤ) = (k : ℤ) + 1 := by push_cast; rfl
-    rw [this]
-    exact hσ
+    rwa [this]
 
 end GlobalTheory.PMon.Ram
 end -- clump:auto
@@ -852,8 +839,7 @@ theorem pow_mem_upperRamificationGroup_real : ∀ (F : Type) [Field F] [Valuativ
   have hn : ((⌈v⌉.toNat : ℕ) : ℝ) = ((⌈v⌉ : ℤ) : ℝ) := by
     exact_mod_cast Int.toNat_of_nonneg hc
   have hσn : σ ∈ upperRamificationGroup F ↥M ((⌈v⌉.toNat : ℕ) : ℝ) := by
-    rw [hn, ← upperRamificationGroup_eq_ceil]
-    exact hσ
+    rwa [hn, ← upperRamificationGroup_eq_ceil]
   have hpow := _root_.GlobalTheory.PMon.Ram.pow_mem_upperRamificationGroup_abelian_nat F M p e ⌈v⌉.toNat hOrd σ hσn
 
   have hvn : v ≤ ((⌈v⌉.toNat : ℕ) : ℝ) := by
@@ -935,8 +921,7 @@ theorem pow_mem_upper_mod_commutator : ∀ (F L : Type) [Field F] [ValuativeRel 
       rwa [commutatorElement_def] at h
     rw [MonoidHom.mem_ker] at hmem
     simp only [map_mul, map_inv] at hmem
-    rw [mul_inv_eq_one, mul_inv_eq_iff_eq_mul] at hmem
-    exact hmem
+    rwa [mul_inv_eq_one, mul_inv_eq_iff_eq_mul] at hmem
   have hσQ : AlgEquiv.restrictNormalHom Q σ ∈ upperRamificationGroup F Q v := by
     rw [← GroundTheory.LocalField.map_upperRamificationGroup Q v]
     exact Subgroup.mem_map_of_mem _ hσ
@@ -946,8 +931,7 @@ theorem pow_mem_upper_mod_commutator : ∀ (F L : Type) [Field F] [ValuativeRel 
   refine ⟨τ, hτ, commutator_le_of_forall_commutator_mem C hC ?_⟩
   have hk : τ⁻¹ * σ ^ p ∈ (AlgEquiv.restrictNormalHom Q).ker := by
     rw [MonoidHom.mem_ker, map_mul, map_inv, hτσ, inv_mul_cancel]
-  rw [hker] at hk
-  exact hk
+  rwa [hker] at hk
 
 end GlobalTheory.PMon.Ram
 end -- clump:auto
@@ -1035,8 +1019,7 @@ theorem jumpSum_pow_growth :
     (fun σ h => by
       have h' : j σ ^ p ∈ C := by simpa [Subgroup.mem_comap, map_pow] using h
       exact hB _ (hmem σ) h')
-  rw [hw, jumpSum_comap_injective _ _ j _ B hj, jumpSum_comap_injective _ _ j _ C hj, hr] at key
-  exact key
+  rwa [hw, jumpSum_comap_injective _ _ j _ B hj, jumpSum_comap_injective _ _ j _ C hj, hr] at key
 
 end GlobalTheory.PMon.Ram
 end -- clump:auto
@@ -1232,8 +1215,7 @@ theorem exists_mem_maximalIdeal_pow_eq_trace_of_le_differentExponent :
     rw [hI, ne_eq, Ideal.span_singleton_eq_bot]
     intro h
     have : ((algebraMap 𝒪[F] 𝒪[M] (ϖ ^ n) : 𝒪[M]) : M) = 0 := by rw [h]; rfl
-    rw [coe_algebraMap_integer] at this
-    rw [SubmonoidClass.coe_pow, map_pow] at this
+    rw [coe_algebraMap_integer, SubmonoidClass.coe_pow, map_pow] at this
     exact pow_ne_zero n ((_root_.map_ne_zero _).mpr hϖ0) this
   have key := (differentialIdeal_le_iff (K := F) (L := M) hIne).mp hle
   set x : M := algebraMap F M ((ϖ : F) ^ n) with hx
@@ -1443,8 +1425,7 @@ theorem jumpSum_kernel_le_six_mul :
     · exact h
 
   have hdM : differentExponent F M < (_root_.Ideal.ramificationIdx (_root_.IsLocalRing.maximalIdeal (_root_.Valuation.integer (_root_.ValuativeRel.valuation M))) (_root_.Valuation.integer (_root_.ValuativeRel.valuation F))) * (3 * e) := by
-    by_contra hle
-    push_neg at hle
+    by_contra! hle
     obtain ⟨w, hw, hwt⟩ := _root_.GlobalTheory.PMon.Ram.exists_mem_maximalIdeal_pow_eq_trace_of_le_differentExponent F M (3 * e) hle z
     exact _root_.GlobalTheory.PMon.Ram.sq_mul_not_mem_maxIdeal_pow F p e c hp he hordF hpc w hw (hwt.trans hz)
   have htow := differentExponent_tower F M L
@@ -1496,7 +1477,7 @@ theorem jumpSum_mono_of_le :
   intro t _
   by_cases hC : A ⊓ R t ≤ C
   · simp [hBC t hC]
-  · rw [if_neg hC]
+  · rw [ite_eq_right hC]
     split_ifs <;> simp
 
 end GlobalTheory.PMon.Ram
@@ -1569,14 +1550,12 @@ theorem jumpSum_le_of_detects : ∀ (K L : Type) [Field K] [ValuativeRel K] [Top
     refine ⟨x, fun τ => a (j τ), fun τ _ => ?_, hnd⟩
     obtain ⟨z, hz, hzx⟩ := hxa (j τ) (hrange.le (MonoidHom.mem_range.mpr ⟨τ, rfl⟩))
     refine ⟨z, hz, ?_⟩
-    rw [← happ]
-    exact hzx
+    rwa [← happ]
   have key := _root_.GlobalTheory.PMon.Ram.jumpSum_wild_top_le_of_detects (IntermediateField.fixedField A) L p E r (B.comap j) hp hE hord haxF hdetF
   have hwild : wild (IntermediateField.fixedField A) L = fun t => (wild K L t).comap j := by
     funext t
     exact hram _
-  rw [hwild, jumpSum_comap_injective _ _ j _ B hinj, hrange] at key
-  exact key
+  rwa [hwild, jumpSum_comap_injective _ _ j _ B hinj, hrange] at key
 
 end GlobalTheory.PMon.Ram
 end -- clump:auto
@@ -1806,8 +1785,7 @@ theorem norm_sub_lt_one_of_mem_inertia {l : ℕ} [Fact l.Prime] (K : FinExt l) (
     have h1 : ‖((σ : GQ l)⁻¹) x‖ ≤ 1 := by rw [GlobalTheory.RingBasics.norm_gal]; exact hx
     have h2 := hσ _ h1
     rw [← AlgEquiv.mul_apply, mul_inv_cancel, AlgEquiv.one_apply, norm_sub_rev] at h2
-    rw [Subgroup.coe_inv]
-    exact h2
+    rwa [Subgroup.coe_inv]
 
 theorem noTower : NoTower := by
   classical

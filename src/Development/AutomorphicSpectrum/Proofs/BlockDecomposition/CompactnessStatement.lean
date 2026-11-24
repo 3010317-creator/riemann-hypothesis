@@ -382,8 +382,7 @@ lemma exists_lowH (M : Matrix (Fin n) (Ix n) k) (hM : M.rank = n) : ∃ g : GL (
     LinearIndependent.sum_type hw hli (Disjoint.mono_left hspan hW'.disjoint.symm)
   let A : Matrix (Ix n) (Ix n) k := Matrix.of (Sum.elim w M.row)
   have hA : IsUnit A := by
-    rw [← Matrix.linearIndependent_rows_iff_isUnit]
-    exact hall
+    rwa [← Matrix.linearIndependent_rows_iff_isUnit]
   refine ⟨hA.unit, ?_⟩
   ext i j
   rfl
@@ -463,8 +462,7 @@ theorem card_injective {U V : Type} [AddCommGroup U] [Module k U] [AddCommGroup 
   have key : ∀ g : U →ₗ[k] V, Function.Injective g ↔ LinearIndependent k (g ∘ b) := by
     intro g
     constructor
-    · intro hg
-      exact b.linearIndependent.map' g (LinearMap.ker_eq_bot.mpr hg)
+    · exact fun hg => b.linearIndependent.map' g (LinearMap.ker_eq_bot.mpr hg)
     · intro hli
       rw [← LinearMap.ker_eq_bot, Submodule.eq_bot_iff]
       intro x hx
@@ -569,8 +567,7 @@ theorem card_sub_le {V : Type} [AddCommGroup V] [Module k V] [FiniteDimensional 
   apply Subtype.ext
   have h1 : (K₁.1.dualAnnihilator).map (eV : Module.Dual k V →ₗ[k] V) =
       (K₂.1.dualAnnihilator).map (eV : Module.Dual k V →ₗ[k] V) := congrArg Subtype.val h
-  have h2 := Submodule.map_injective_of_injective eV.injective h1
-  exact Subspace.dualAnnihilator_inj.mp h2
+  exact Subspace.dualAnnihilator_inj.mp (Submodule.map_injective_of_injective eV.injective h1)
 
 theorem card_sub_symm {V : Type} [AddCommGroup V] [Module k V] [FiniteDimensional k V]
     {n : ℕ} (hV : finrank k V = n) (d : ℕ) (hd : d ≤ n) :
@@ -675,7 +672,7 @@ theorem twist_gam : ∀ (O L : Type) [CommRing O] [IsDomain O] [IsDiscreteValuat
   have hC : ∀ i j, ∃ c, (γ : Matrix (Ix n) (Ix n) O) (Sum.inr i) (Sum.inl j) = ϖ * (ϖ * c) := by
     intro i j
     have h0 := hγ' (Sum.inr i) (Sum.inl j)
-    simp only [Matrix.one_apply, reduceCtorEq, if_false, sub_zero] at h0
+    simp only [Matrix.one_apply, reduceCtorEq, ite_false, sub_zero] at h0
     obtain ⟨c, hc⟩ := Ideal.mem_span_singleton'.1 h0
     exact ⟨c, by rw [← hc]; ring⟩
   choose C hCe using hC
@@ -723,8 +720,7 @@ theorem twist_gam : ∀ (O L : Type) [CommRing O] [IsDomain O] [IsDiscreteValuat
   · have h3 : M.map (IsLocalRing.residue O) = (1 : Matrix (Ix n) (Ix n) O).map (IsLocalRing.residue O) := by
       ext i j
       exact Ideal.Quotient.eq.2 (hMm i j)
-    rw [Matrix.map_one _ (map_zero _) (map_one _)] at h3
-    exact h3
+    rwa [Matrix.map_one _ (map_zero _) (map_one _)] at h3
 
 end GlobalTheory.CompanionTheory.Jp.Twist
 end -- clump:auto
@@ -905,8 +901,7 @@ theorem exists_pM (E : GL (Ix n) k) (h : E.1.toBlocks₂₁ = 0) :
     exact (Matrix.isUnits_det_units E).ne_zero
   refine ⟨Matrix.GeneralLinearGroup.mkOfDetNeZero _ (left_ne_zero_of_mul hdet),
     Matrix.GeneralLinearGroup.mkOfDetNeZero _ (right_ne_zero_of_mul hdet), E.1.toBlocks₁₂, ?_⟩
-  apply Units.ext
-  exact hE
+  exact Units.ext hE
 
 theorem pM_inv (a d : GL (Fin n) k) (b : Matrix (Fin n) (Fin n) k) :
     (pM a d b)⁻¹ = pM a⁻¹ d⁻¹ (-((a⁻¹).1 * b * (d⁻¹).1)) := by
@@ -936,8 +931,7 @@ theorem main : ∀ (k : Type) [Field k] (n : ℕ) (g₁ g₂ : GL (Ix n) k), iD 
     have hs : (Pi.single (Sum.inl j) 1 : Ix n → k) ∈ sS (k := k) (n := n) :=
       mem_sS.2 fun l => by simp
     have := mem_sS.1 (heS _ hs) i
-    rw [← hE, Matrix.mulVec_single_one] at this
-    exact this
+    rwa [← hE, Matrix.mulVec_single_one] at this
   obtain ⟨a, d, b, hp⟩ := exists_pM E h21
   refine ⟨a⁻¹, d⁻¹, -((a⁻¹).1 * b * (d⁻¹).1), g₁⁻¹ * E * g₂, ?_, ?_⟩
   · ext i j
@@ -1166,8 +1160,7 @@ theorem exists_pM_of_low_zero {k : Type} [Field k] {n : ℕ} (g : GL (Ix n) k)
   rw [hgb, det_fromBlocks_zero₂₁] at hdet
   refine ⟨GeneralLinearGroup.mkOfDetNeZero _ (left_ne_zero_of_mul hdet),
     GeneralLinearGroup.mkOfDetNeZero _ (right_ne_zero_of_mul hdet), g.1.toBlocks₁₂, ?_⟩
-  apply Units.ext
-  exact hgb
+  exact Units.ext hgb
 
 theorem low_inv_mul_pM {R : Type} [CommRing R] {n : ℕ} (a₁ d₁ a₂ d₂ : GL (Fin n) R)
     (b₁ b₂ : Matrix (Fin n) (Fin n) R) :
@@ -1271,8 +1264,7 @@ theorem twist_low : ∀ (O L : Type) [CommRing O] [IsDomain O] [IsDiscreteValuat
       rw [Algebra.smul_def]
     · ext i k
       simp [hw]
-  · apply Units.ext
-    exact hred
+  · exact Units.ext hred
 
 end GlobalTheory.CompanionTheory.Jp
 end -- clump:auto
@@ -1469,8 +1461,7 @@ theorem jpCmp : JpCmp := by
   have hΦavg : avgK ϖ (fun κ => Φ (T κ)) = avgK ϖ (fun κ => Ψ (T κ)) := by
     have := avg_lin hϖ Pm (Pm.card : ℂ)⁻¹ (fun x κ => Ψ (T κ * x))
     simp only [Φ]
-    rw [this, Finset.sum_congr rfl (fun x h => hx x ((hmem x).1 h))]
-    rw [Finset.sum_const, nsmul_eq_mul]
+    rw [this, Finset.sum_congr rfl (fun x h => hx x ((hmem x).1 h)), Finset.sum_const, nsmul_eq_mul]
     field_simp
   have hΦ : ∀ g₁ g₂, iD g₁ = iD g₂ → Φ g₂ = Φ g₁ := by
     intro g₁ g₂ e
@@ -1492,8 +1483,7 @@ theorem jpCmp : JpCmp := by
   have hf : ∀ g, Φ g = f (iD g) := by
     intro g
     have h : ∃ g', iD g' = iD g := ⟨g, rfl⟩
-    simp only [f, dif_pos h]
-    exact hΦ _ _ h.choose_spec
+    simpa only [f, dite_eq_left h] using hΦ _ _ h.choose_spec
   have hnum : sumG (fun g => (Fintype.card (IsLocalRing.ResidueField O) : ℂ) ^ (2 * n * iD g) * Ψ g) =
       sumG (fun g => (Fintype.card (IsLocalRing.ResidueField O) : ℂ) ^ (2 * n * iD g) * Φ g) := by
     unfold sumG

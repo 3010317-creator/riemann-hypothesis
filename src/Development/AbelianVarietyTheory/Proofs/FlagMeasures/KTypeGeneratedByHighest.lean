@@ -84,8 +84,7 @@ theorem eigen (U : ℝ → H →L[ℂ] H) (h0 : ∀ v, U 0 v = v)
     rw [h1]
     have h2 := ((U t).restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt (0 : ℝ) hd
     simp only [ContinuousLinearMap.coe_restrictScalars'] at h2
-    rw [map_smul] at h2
-    exact h2
+    rwa [map_smul] at h2
   let L : H →L[ℂ] H := c • ContinuousLinearMap.id ℂ H
   have hL : ∀ x, L x = c • x := fun x => rfl
   let g : ℝ → H := fun t => Complex.exp (c * t) • v
@@ -137,8 +136,7 @@ private theorem mem_of_hasDerivAt_linear_of_invariant {E : Type*} [NormedAddComm
       convert h2 using 1 <;> first | rfl | simp
     have h4 : L (g t) = (((B * NormedSpace.exp ((t : ℂ) • B)) x0 : T) : E) := by
       rw [ContinuousLinearMap.mul_apply, hB]
-    rw [h4]
-    exact h3
+    rwa [h4]
   have heq : f = g := by
     apply ODE_solution_unique_univ (v := fun _ x => L x) (s := fun _ => s) (K := K) (t₀ := 0)
     · intro _; exact hK
@@ -229,7 +227,7 @@ theorem inK_single {a b : Fin n} (hab : ε a = ε b) (c : ℂ) :
     simp only [e1, e2]
     split_ifs <;> simp [star_sub]
   · simp only [Matrix.sub_apply, Matrix.single_apply]
-    rw [if_neg, if_neg, sub_zero]
+    rw [ite_eq_right, ite_eq_right, sub_zero]
     · rintro ⟨rfl, rfl⟩; simp_all
     · rintro ⟨rfl, rfl⟩; simp_all
 
@@ -396,8 +394,7 @@ theorem isWtOn_of_isWeight (hσ : IsURepOn (UJset ε) σ)
   have hx : NormedSpace.exp (((1 : ℝ) : ℂ) • Matrix.diagonal fun a => (θ a : ℂ) * Complex.I) =
       Matrix.diagonal (fun a => Complex.exp ((θ a : ℂ) * Complex.I)) := by
     rw [exp_diag]; simp only [one_mul]
-  rw [← hx]
-  exact h1
+  rwa [← hx]
 
 theorem isWeight_of_isWtOn
     (hE : ∀ X, inG ε X → ∀ u : Vs,
@@ -563,12 +560,9 @@ theorem kType_generated_by_highest : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Ty
   have hKst : KStable ε E (kSpan ε E u) := by
     intro a b hab x hx
     simp only [Formalism.REAL.kSpan, Submodule.mem_sInf] at hx ⊢
-    intro T hT
-    exact hT.2 a b hab x (hx T hT)
+    exact fun T hT => hT.2 a b hab x (hx T hT)
   have hum : u ∈ kSpan ε E u := by
-    simp only [Formalism.REAL.kSpan, Submodule.mem_sInf]
-    intro T hT
-    exact hT.1
+    simpa only [Formalism.REAL.kSpan, Submodule.mem_sInf] using fun T hT => hT.1
   haveI : FiniteDimensional ℂ (S.comap Vs.subtype) :=
     (Submodule.comapSubtypeEquivOfLe hle).symm.finiteDimensional
   have hfinK : FiniteDimensional ℂ (kSpan ε E u) := Submodule.finiteDimensional_of_le hKle

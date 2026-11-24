@@ -227,8 +227,7 @@ theorem ip_basic : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), (∃ (μ : Measure 
     funext w
     by_contra hw
     have hw' : w ∈ {w : WO S T | f w ≠ 0} := hw
-    rw [hUe] at hw'
-    exact hw'
+    rwa [hUe] at hw'
   have hI1 : IntegrableOn (fun w => f w * conj (f' w)) 𝓕 μ :=
     integrable_mul_conj (μ.restrict 𝓕) (hbm f hf) (hbm f' hf2)
   refine ⟨hI1, ?_, ?_, ?_, ?_, ?_⟩
@@ -280,8 +279,7 @@ theorem ip_basic : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), (∃ (μ : Measure 
           have e1 := congrFun (h1 u hu h0) w
           unfold heisO at e1 ⊢
           rw [Pi.smul_apply, Pi.smul_apply, smul_eq_mul, smul_eq_mul, mul_left_comm, e1]
-        · intro k L h1 h2 w
-          exact contDiff_const.mul (hf2.smooth k L h1 h2 w)
+        · exact fun k L h1 h2 w => contDiff_const.mul (hf2.smooth k L h1 h2 w)
       have hg : C.IsTh (f + c • f') := by
         refine ⟨?_, ?_, hf.cont.add hs.cont, ?_⟩
         · intro γ w
@@ -294,8 +292,7 @@ theorem ip_basic : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), (∃ (μ : Measure 
           have e2 := congrFun (h2 u hu.2 h0) w
           unfold heisO at e1 e2 ⊢
           rw [Pi.add_apply, Pi.add_apply, mul_add, e1, e2]
-        · intro k L h1 h2 w
-          exact (hf.smooth k L h1 h2 w).add (hs.smooth k L h1 h2 w)
+        · exact fun k L h1 h2 w => (hf.smooth k L h1 h2 w).add (hs.smooth k L h1 h2 w)
       have e : om p f + c • om p f' = om p (f + c • f') := by rw [map_add (f := _), map_smul]
       rw [e, integral_normSq_eq _ (hbm _ (hth _ hg)).1, integral_normSq_eq _ (hbm _ hg).1,
         hw.om_unit μ 𝓕 hH hFD p _ hg]

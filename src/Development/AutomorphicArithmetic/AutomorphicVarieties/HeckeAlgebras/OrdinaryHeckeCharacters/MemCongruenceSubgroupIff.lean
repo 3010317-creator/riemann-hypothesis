@@ -330,8 +330,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.repScalar :
     · intro f w hw
       obtain ⟨n, hn, rfl⟩ := hw
       have h1 := hA f n hn
-      rw [hA' n hn, map_smul] at h1
-      exact h1
+      rwa [hA' n hn, map_smul] at h1
     · simp
     · intro x y hx hy
       rw [map_add (f := _), hx, hy, smul_add]
@@ -413,11 +412,9 @@ private theorem eigenspace_one_eq_fixed {H M : Type} [Group H] [AddCommGroup M] 
   ext v
   constructor
   · intro hv u hu
-    have h := hv ⟨u, hu⟩
-    simpa using h
+    simpa using hv ⟨u, hu⟩
   · intro hv u
-    have h := hv u u.2
-    simpa using h
+    simpa using hv u u.2
 
 theorem UpperTheory.V.Hi.partUR2Abs :
     ∀ (L : Type) [Field L] [NumberField L] (n : ℕ) (w : Plc L) (M : Type) [AddCommGroup M] [Module ℂ M] (ρ : Representation ℂ (GLw n w) M) (Z : Submodule ℂ M) (τ : SmIrr (GLw n w)), IsoSum ρ Z τ →

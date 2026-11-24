@@ -58,8 +58,6 @@ theorem chartPull_g_appLE : ∀ (Y Y' : Scheme.{0}) (A' : LB Y') (A : LB Y) (h :
   intro y hy
   have h1 := congrArg Units.val (cp.g y i j hy.1 hy.2)
   rw [gm_val _ y _ hy, gm_val h y _ (e hy)] at h1
-  refine h1.trans ?_
-  show _ = (Y'.presheaf.germ _ y hy).hom ((Y'.presheaf.map (homOfLE e).op).hom ((h.app _).hom _))
-  exact (TopCat.Presheaf.germ_res_apply Y'.presheaf _ y hy _).symm
+  exact h1.trans (TopCat.Presheaf.germ_res_apply Y'.presheaf _ y hy _).symm
 
 end GlobalTheory

@@ -138,13 +138,11 @@ theorem avg_eq_jet (hab : a ≤ b) (ha : 0 < a) (lam : ι → DomWeight a) (lam'
   obtain ⟨Λe, hΛe⟩ := LinearMap.exists_extend (K := ℂ) (p := VV ℂ lam) Λ
   have hinj : LinearMap.ker (LinearMap.mulRight ℂ (∏ τ, (frDet ℂ a τ : PY ι a) ^ n τ)) = ⊥ := by
     rw [LinearMap.ker_eq_bot]
-    intro x y hxy
-    exact mul_right_cancel₀ hD0 hxy
+    exact fun x y hxy => mul_right_cancel₀ hD0 hxy
   obtain ⟨g0, hg0⟩ := LinearMap.exists_leftInverse_of_injective _ hinj
   have hT : ∀ x : PY ι a, (Λe.comp g0) (x * (∏ τ, (frDet ℂ a τ : PY ι a) ^ n τ)) = Λe x := by
     intro x
-    have hx := congrArg (fun f => Λe (f x)) hg0
-    simpa using hx
+    simpa using congrArg (fun f => Λe (f x)) hg0
   obtain ⟨m, y, Pc, -, hTy⟩ := exists_evalAt_span ι a lam n ℂ (Λe.comp g0)
   choose M Y' S _ hS using fun j => GlobalTheory.KJAvg.avg_span ι a b hab ha lam n K ν r hr (y j) P
   refine ⟨∑ j, ∑ i, (Pc j * S j i) • ((evalLin (Y' j i)).comp (VV ℂ lam').subtype), ?_⟩
@@ -247,8 +245,7 @@ theorem step_vals {a b t : ℕ} (hb : b = a + t) {E F : Finset ℚ} (δ c : ℚ)
     (∀ r : Fin a, (lam'.w (Fin.castLE (by omega) r) : ℚ) = lam.w r + δ - (t : ℚ) / 2) ∧
       ∀ r : Fin b, a ≤ r.1 → (lam'.w r : ℚ) = c + (a : ℚ) / 2 := by
   have hE' : (E.image (· + δ)).card = a := by
-    rw [Finset.card_image_of_injective _ (add_left_injective δ)]
-    exact hE
+    rwa [Finset.card_image_of_injective _ (add_left_injective δ)]
   have hlt' : ∀ x ∈ E.image (· + δ), ∀ y ∈ TPar.block c t, y < x := by
     intro x hx y hy
     obtain ⟨x0, hx0, rfl⟩ := Finset.mem_image.mp hx

@@ -356,8 +356,7 @@ theorem two_le_height_of_comap (R A : Type) [CommRing R] [IsDomain R] [IsIntegra
     simp only [Ideal.mem_comap, Ideal.mem_bot]
     exact (map_eq_zero_iff _ (FaithfulSMul.algebraMap_injective R A))
   have h1 : 1 ≤ Q.height := by
-    rw [ENat.one_le_iff_ne_zero, Ne, Ideal.height_eq_zero_iff_eq_bot]
-    exact hQbot
+    rwa [ENat.one_le_iff_ne_zero, Ne, Ideal.height_eq_zero_iff_eq_bot]
   have h3 : Q.height + 1 ≤ P.height := Ideal.height_add_one_le_of_lt_of_isPrime hQlt
   calc (2 : ℕ∞) = 1 + 1 := by norm_num
     _ ≤ Q.height + 1 := by gcongr

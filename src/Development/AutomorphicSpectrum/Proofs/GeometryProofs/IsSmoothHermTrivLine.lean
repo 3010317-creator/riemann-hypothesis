@@ -131,8 +131,7 @@ theorem mem_mcPts_restr (hv : IsBlockMap κ v) {P₀ : Ideal (MRing J₀)} {P : 
   refine ⟨restr_ne hv hz.1, fun f hf => ?_⟩
   have := hz.2 _ (hP hf)
   have e : (rename v : MRing J₀ →ₐ[ℤ] MRing J).toRingHom f = rename v f := rfl
-  rw [e, map_rename, eval_rename] at this
-  exact this
+  rwa [e, map_rename, eval_rename] at this
 
 end Block
 
@@ -177,7 +176,6 @@ theorem log_stepLine {N : ℕ} (T : Fin N → HermLine J) (i : Fin N) {z : (Σ k
 
 theorem isSmoothHerm_stepLine {N : ℕ} {T : Fin N → HermLine J} (hT : ∀ x, IsSmoothHerm (T x)) (i : Fin N) :
     IsSmoothHerm (stepLine T i) := by
-  show ContDiffOn ℝ _ (fun z => ∏ x ∈ Finset.Iic i, ((T x).h z)⁻¹) _
   exact contDiffOn_prod fun x _ => (hT x).inv fun z hz => ((T x).pos z hz).ne'
 
 def corr {Ψ : Type} {N : ℕ} (T : Ψ × Fin N → HermLine J) : Option (Ψ × Fin N) → HermLine J

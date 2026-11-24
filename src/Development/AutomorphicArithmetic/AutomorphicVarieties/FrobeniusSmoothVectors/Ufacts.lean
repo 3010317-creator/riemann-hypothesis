@@ -219,8 +219,7 @@ private theorem uf_pow {Γ : Type} [Group Γ] {H : Subgroup Γ} (h : commutator 
     have := H.mul_mem hc hn
     simpa [mul_assoc] using this
   have h1 := H.pow_index_mem (t ^ l ^ (b - a))
-  rw [hi, ← pow_mul, ← pow_add, Nat.sub_add_cancel hab] at h1
-  exact h1
+  rwa [hi, ← pow_mul, ← pow_add, Nat.sub_add_cancel hab] at h1
 
 private theorem uf_comm {Γ : Type} [Group Γ] {H : Subgroup Γ} (hi : H.index = 2) : commutator Γ ≤ H := by
   rw [commutator_def, Subgroup.commutator_le]
@@ -288,8 +287,7 @@ theorem UpperTheory.V.Fr.ufacts :
     intro H b hc hi τ hτ
     have h1 := uf_pow hc hi le_rfl τ
     obtain ⟨k, hk⟩ : Odd (l ^ b) := (hl.odd_of_ne_two hG.odd).pow
-    rw [hk, pow_succ, pow_mul, hτ, one_pow, one_mul] at h1
-    exact h1
+    rwa [hk, pow_succ, pow_mul, hτ, one_pow, one_mul] at h1
   have hMl : ∀ B' : ValuationSubring Ω, B'.valuation (l : Ω) < 1 → B'.valuation (M : Ω) < 1 := by
     intro B' hB'
     obtain ⟨c, hc⟩ := hG.l_dvd
@@ -312,8 +310,7 @@ theorem UpperTheory.V.Fr.ufacts :
   rw [hU]
   refine ⟨?isOpen, ?ab, ?real, ?unr, ?split, ?teich, ?mu, ?deg, ?f2b, ?f2c, ?f3, ?f5⟩
   case isOpen =>
-    simp only [Subgroup.coe_inf]
-    exact ((h0.isOpen.inter thO).inter hG.Hb_open).inter lyO
+    simpa only [Subgroup.coe_inf] using ((h0.isOpen.inter thO).inter hG.Hb_open).inter lyO
   case ab => exact le_inf (le_inf (le_inf (uf_comm h0.idx) thA) hG.Hb_ab) lyA
   case real =>
     intro τ hτ
@@ -343,8 +340,7 @@ theorem UpperTheory.V.Fr.ufacts :
     rw [h0.loc B' hB'] at h1
     exact h1.2
   case teich =>
-    intro B' hB' s hs hb
-    exact hG.teich B' hB' s ⟨hs.1, hs.2.1.2⟩ hb
+    exact fun B' hB' s hs hb => hG.teich B' hB' s ⟨hs.1, hs.2.1.2⟩ hb
   case mu =>
     intro B' hB'
     have hm1 : (-1 : (ZMod (l ^ (m + 1)))ˣ) ∈ Subgroup.map (cycMod ℚ Ω l (m + 1)) (Ine B') := by
@@ -395,16 +391,14 @@ theorem UpperTheory.V.Fr.ufacts :
         Subgroup.relIndex_le_of_le_left inf_le_right (hrel _ hfi _)
   case f2b =>
     intro j _
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h1 := (l15 l η Ψ σ B M Hb hG H₀ w h0 hW m 1 j).2.2 (fun s hs => by rw [zpow_one]; exact hc s hs) s'
       (MonoidHom.mem_ker.2 hs'η)
     rw [zpow_one, hs'om, hs'b, one_zpow, mul_one] at h1
     exact hneg h1
   case f2c =>
     intro j _
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h1 := (l15 l η Ψ σ B M Hb hG H₀ w h0 hW m 1 j).2.2 (fun s hs => by rw [zpow_one]; exact hc s hs) s'
       (MonoidHom.mem_ker.2 hs'η)
     rw [zpow_one, hs'om, hs'b, one_zpow, mul_one] at h1
@@ -430,8 +424,7 @@ theorem UpperTheory.V.Fr.ufacts :
       uf_pow lyA lyI (by omega) _⟩⟩, fun h1 => htb ?_⟩
     rw [← ht'b]
     apply uf_frob l (a := a + m + 1)
-    rw [map_pow, ← pow_mul, mul_comm, pow_mul] at h1
-    exact h1
+    rwa [map_pow, ← pow_mul, mul_comm, pow_mul] at h1
   case f5 =>
     rintro ⟨j, hj⟩
     have h1 := (l15 l η Ψ σ B M Hb hG H₀ w h0 hW m 1 (-j)).2.2

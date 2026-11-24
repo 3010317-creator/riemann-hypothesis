@@ -380,8 +380,7 @@ theorem GDatum.isSemisimpleRing (G : GDatum) : IsSemisimpleRing (ℚ ⊗[ℤ] G.
   obtain ⟨k, hk⟩ := IsSemiprimaryRing.isNilpotent (R := ℚ ⊗[ℤ] G.O)
   have hnil : ∀ z ∈ Ring.jacobson (ℚ ⊗[ℤ] G.O), z ^ k = 0 := fun z hz => by
     have := Ideal.pow_mem_pow hz k
-    rw [hk, Submodule.zero_eq_bot, Submodule.mem_bot] at this
-    exact this
+    rwa [hk, Submodule.zero_eq_bot, Submodule.mem_bot] at this
   intro z hz
   rw [Submodule.mem_bot]
   obtain ⟨N, hN, x, hx⟩ := GDatum.exists_smul_eq_tmul G z
@@ -434,8 +433,7 @@ theorem GDatum.isSemisimpleRing (G : GDatum) : IsSemisimpleRing (ℚ ⊗[ℤ] G.
   have hy0 : y = 0 := by
     ext i j
     have := htr (Φ.symm (Matrix.single j i 1))
-    rw [AlgEquiv.apply_symm_apply, Matrix.trace_single_mul, one_smul] at this
-    exact this
+    rwa [AlgEquiv.apply_symm_apply, Matrix.trace_single_mul, one_smul] at this
   have hx0 : x = 0 := by
     have h0 : x ⊗ₜ[ℤ] (1 : ℤ_[q]) = 0 := Φ.injective (hy0.trans (map_zero Φ).symm)
     have hinj := Algebra.TensorProduct.includeLeft_injective (R := ℤ) (S := ℤ) (A := G.O) (B := ℤ_[q])
@@ -531,8 +529,7 @@ theorem cenOrder_le_range (F : Type) [Field F] [NumberField F] (ℓ : ℕ) [Fact
     apply Algebra.adjoin_le
     rintro _ ⟨c, rfl⟩
     exact ⟨c ⊗ₜ[ℤ] (1 : ℤ_[ℓ]), by rw [toLocal_tmul]; simp⟩
-  intro y hy
-  exact hle hy
+  exact fun y hy => hle hy
 
 theorem cenOrder_equiv : ∀ (F : Type) [Field F] [NumberField F] (ℓ : ℕ) [Fact ℓ.Prime],
     ∃ κ : 𝓞 F ⊗[ℤ] ℤ_[ℓ] ≃+* cenOrder ℓ F,
@@ -985,7 +982,7 @@ theorem card_torsion_of_gTateIso (G : GDatum) {k : Type} [Field k] {Q : Type} [G
         rw [hrep, map_add (f := _), map_nsmul, Finsupp.add_apply, Finsupp.smul_apply, map_sum]
         simp only [map_zsmul, Module.Basis.repr_self, Finset.sum_apply', Finsupp.smul_apply,
           Finsupp.single_apply, smul_eq_mul, nsmul_eq_mul]
-        simp only [mul_ite, _root_.mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        simp only [mul_ite, _root_.mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
         linear_combination hy i
       rw [e1, I.add, (I.ker ℓ hℓ _).2 ⟨_, rfl⟩, _root_.mul_one]
   rw [← Nat.card_congr (Equiv.ofBijective F hF), Nat.card_fun, Nat.card_zmod, Nat.card_fin]

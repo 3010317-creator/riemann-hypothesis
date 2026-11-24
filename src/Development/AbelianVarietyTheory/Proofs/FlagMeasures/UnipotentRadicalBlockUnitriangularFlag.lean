@@ -73,21 +73,19 @@ private lemma Hpk_mul_apply_eq_Hpk_apply_of_lt_val (k r : ℕ) (g : Matrix (Fin 
       rw [← Matrix.mul_assoc, hU]
     rw [Matrix.mul_apply, Finset.sum_eq_single (⟨c, by omega⟩ : Fin (2 * r + k + 1))] at h1
     · have hd := hcol ⟨c, hcr⟩ ⟨c, by omega⟩ le_rfl
-      rw [hE, if_pos rfl] at hd
-      rw [Matrix.conjTranspose_apply, hd, star_one, one_mul] at h1
-      exact h1
+      rw [hE, ite_eq_left rfl] at hd
+      rwa [Matrix.conjTranspose_apply, hd, star_one, one_mul] at h1
     · intro t _ htc
       rw [Matrix.conjTranspose_apply]
       have htc' : t.val ≠ c := fun h => htc (Fin.ext h)
       rcases Nat.lt_or_gt_of_ne htc' with hlt | hgt
       · have h2 := ih t.val hlt (by omega)
         simp only [Fin.eta] at h2
-        rw [h2, Hpk_apply_of_lt_eq_ite k r t q (by omega), if_neg (by omega), mul_zero]
+        rw [h2, Hpk_apply_of_lt_eq_ite k r t q (by omega), ite_eq_right (by omega), mul_zero]
       · have hz := hcol ⟨c, hcr⟩ t (by simp; omega)
-        rw [hE, if_neg htc] at hz
+        rw [hE, ite_eq_right htc] at hz
         rw [hz, star_zero, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem nset_block_unitriangular : ∀ (k r : ℕ), ∀ g ∈ Nset k r, ∀ i j : Fin (2 * r + k + 1),
     lev k r j ≤ lev k r i → g i j = (1 : Mat k r) i j := by
@@ -100,8 +98,7 @@ theorem nset_block_unitriangular : ∀ (k r : ℕ), ∀ g ∈ Nset k r, ∀ i j 
   · have hij : j.val ≤ i.val := by split_ifs at hlev <;> omega
     have h := hcol ⟨j.val, hj⟩ i hij
     have he : Formalism.QuantumDeterminants.eI k r ⟨j.val, hj⟩ = j := Fin.ext rfl
-    rw [he] at h
-    exact h
+    rwa [he] at h
   · by_cases hj2 : j.val ≤ r + k
     · have hi : r ≤ i.val := by split_ifs at hlev <;> omega
       exact hmid i j (by omega) hj2 hi
@@ -109,17 +106,16 @@ theorem nset_block_unitriangular : ∀ (k r : ℕ), ∀ g ∈ Nset k r, ∀ i j 
       have hC : 2 * r + k - i.val < r := by omega
       have h := Hpk_mul_apply_eq_Hpk_apply_of_lt_val k r g hU' hcol j (by omega) (2 * r + k - i.val) (by omega)
       rw [Matrix.mul_apply, Finset.sum_eq_single i] at h
-      · rw [Hpk_apply_of_lt_eq_ite k r _ i hC, if_pos (by simp; omega), one_mul] at h
+      · rw [Hpk_apply_of_lt_eq_ite k r _ i hC, ite_eq_left (by simp; omega), one_mul] at h
         rw [h, Hpk_apply_of_lt_eq_ite k r _ j hC]
         by_cases hij : i = j
         · subst hij
-          rw [if_pos (by simp; omega), if_pos rfl]
+          rw [ite_eq_left (by simp; omega), ite_eq_left rfl]
         · have hv : i.val ≠ j.val := fun h => hij (Fin.ext h)
-          rw [if_neg (by simp; omega), if_neg hij]
+          rw [ite_eq_right (by simp; omega), ite_eq_right hij]
       · intro s _ hs
         have hv : s.val ≠ i.val := fun h => hs (Fin.ext h)
-        rw [Hpk_apply_of_lt_eq_ite k r _ s hC, if_neg (by simp; omega), zero_mul]
-      · intro h'
-        exact absurd (Finset.mem_univ _) h'
+        rw [Hpk_apply_of_lt_eq_ite k r _ s hC, ite_eq_right (by simp; omega), zero_mul]
+      · exact fun h' => absurd (Finset.mem_univ _) h'
 
 end GlobalTheory.CellDens

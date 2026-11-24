@@ -234,8 +234,7 @@ theorem exists_levelData : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi
       fun i j c hc => (hY (pl i)).frame j c hc, fun i => (l (pl i)).frameTop, fun g => ⟨?_, ?_⟩⟩
     · rw [hSym.grp g]
       constructor
-      · intro h i
-        exact h (pl i)
+      · exact fun h i => h (pl i)
       · intro h PP
         obtain ⟨i, rfl⟩ := pl.surjective PP
         exact h i
@@ -334,9 +333,7 @@ theorem levelPrime_not_mem_places : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTi
   rcases hPP with h | ⟨t, ht⟩
   · intro hm
     apply hg PP h
-    rw [IsDedekindDomain.HeightOneSpectrum.under_asIdeal]
-    rw [Ideal.mem_comap, map_natCast]
-    exact hm
+    rwa [IsDedekindDomain.HeightOneSpectrum.under_asIdeal, Ideal.mem_comap, map_natCast]
   · exact (hP.bot.hyp.2.2.2.1.lev.Q_off t PP ht).2 u
 
 end GlobalTheory
@@ -396,8 +393,7 @@ theorem level_prime_not_mem_under_Pg {D : D7} {L : SizeData₂ D} {hT : GatTies 
   obtain ⟨k, hk⟩ := (W.Q.charW.base.lev.Pg PP).1 hPP
   have h1 : ((D.host.g k : ℕ) : 𝓞 D.host.K) ∈ (PP.under (𝓞 D.host.K)).asIdeal := by
     have := (W.Q.Rl.C.P).pb_over k
-    rw [← show PP.under (𝓞 D.host.K) = _ from hk] at this
-    exact this
+    rwa [← show PP.under (𝓞 D.host.K) = _ from hk] at this
   have h2 : ((D.host.g k : ℕ) : 𝓞 D.host.E) ∈ PP.asIdeal := by
     have : algebraMap (𝓞 D.host.K) (𝓞 D.host.E) ((D.host.g k : ℕ) : 𝓞 D.host.K) ∈ PP.asIdeal := h1
     simpa using this
@@ -549,7 +545,7 @@ theorem core (hD : GlobalTheory.Published.DiscreteSeriesCover) (hH : GlobalTheor
       (∀ PP h, PP ∉ (pk W).Pg → bas PP h = fun _ _ _ => 1) ∧
       ∀ PP : (pk W).Pg, bas PP.1 (Or.inl PP.2) = fun j c hc => ((S PP).T (Fin D.R.t)).bas j c hc :=
     ⟨fun PP h => if hp : PP ∈ (pk W).Pg then fun j c hc => ((S ⟨PP, hp⟩).T (Fin D.R.t)).bas j c hc else fun _ _ _ => 1,
-      fun PP h hp => dif_neg hp, fun PP => dif_pos PP.2⟩
+      fun PP h hp => dite_eq_right hp, fun PP => dite_eq_left PP.2⟩
   obtain ⟨N, b, dT, M, β₀, hsh, hb, hN, hY⟩ := GlobalTheory.T.local_component_vector_relation W u hPk a y m _ k ι v₀ o l bas hc₀ hτ hn rfl rfl hζ hsd hgP htP hP
     (fun n h x hx => horth n h x fun h' => hx ((htP x).2 h')) fun PP h hp j c hc => by rw [hb1 PP h hp]
   have hm := meas_upd hm₀ b
@@ -1057,8 +1053,7 @@ theorem exists_levelData_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D}
       fun i j c hc => (hY (pl i)).frame j c hc, fun i => (l (pl i)).frameTop, fun g => ⟨?_, ?_⟩⟩
     · rw [hSym.grp g]
       constructor
-      · intro h i
-        exact h (pl i)
+      · exact fun h i => h (pl i)
       · intro h PP
         obtain ⟨i, rfl⟩ := pl.surjective PP
         exact h i
@@ -1112,8 +1107,7 @@ theorem exists_symData_symRead : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies 
     · split_ifs with h
       · exact tame_step (_root_.GlobalTheory.Fam.pk_z W).toLevCh hlev (l PP).q PP.2 (l PP).idem h.1 h.2 (hμ j)
       · exact fun _ _ => rfl
-    · simp only [if_pos (And.intro h1 h2)]
-      exact hμ j
+    · simpa only [ite_eq_left (And.intro h1 h2)] using hμ j
   choose S h1 h2 h3 using loc
   refine ⟨S, h1, h2, fun x => (hH x).trans ?_, fun x hx y hxy => ?_⟩
   · exact ⟨fun h PP => (red_sym (l PP) (S PP) hπ (x PP) (reord π x PP) fun _ _ => rfl).1.2 (h PP (Set.mem_univ _)),
@@ -1221,8 +1215,7 @@ theorem exists_yRat_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi 
   refine ⟨⟨bes, fun j ρ h => (hjac j ρ h).some, fun j σ h => (hlnk j σ h).some, fun j σ h => (hvol.2.2.1 _ _).some,
     fun j h => Matrix.of fun i k => -D.host.xi0 ^ (D.R.m / 2) * (bes j 0 h).ζ i / a.ζ₀ k⟩, B, h0, ?_, ?_, hA,
     ⟨1, lam0, one_ne_zero, hlam0, hz, he, he'⟩, hB0, hz1⟩
-  · intro j h
-    exact tau_line (bes j 0 h).line.1 hLz.1 _ _ _ _ _ _ hLz.2 (hrelT j h)
+  · exact fun j h => tau_line (bes j 0 h).line.1 hLz.1 _ _ _ _ _ _ hLz.2 (hrelT j h)
   · show B.lev = (bes 0 D.R.rS h0).lev (a.x 0).vol
     rw [hbes0, ← hvA]
     rfl
@@ -1383,20 +1376,20 @@ theorem measures_common_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} 
   let vS : ∀ j, Vol (Yc D (j + 1)) := fun j => if h : j + 2 * 0 + 2 = D.R.m then volOf _ (hLH j h)
     else volOf (ν₀ (j + 1)) (hν₀H (j + 1))
   have hvS1 : ∀ j (h : j + 2 * 0 + 2 = D.R.m), (vS j).μ = Measure.map (y.jac j 0 h).d.emb0 (a.x (j + 1)).vol.μ := by
-    intro j h; simp only [vS, dif_pos h, volOf_μ]
+    intro j h; simp only [vS, dite_eq_left h, volOf_μ]
   have hvS2 : ∀ j, ¬ (j + 2 * 0 + 2 = D.R.m) → (vS j).μ = ν₀ (j + 1) := by
-    intro j h; simp only [vS, dif_neg h, volOf_μ]
+    intro j h; simp only [vS, dite_eq_right h, volOf_μ]
   let vol : ∀ k, Vol (Yc D k) := fun k => Nat.casesOn (motive := fun k => Vol (Yc D k)) k (volOf (ν₀ 0) (hν₀H 0)) vS
   let κ : ℕ → ℝ := fun k => Nat.casesOn (motive := fun _ => ℝ) k 1 fun j => if h : j + 2 * 0 + 2 = D.R.m then
     ((Measure.map (y.jac j 0 h).d.emb0 (a.x (j + 1)).vol.μ).haarScalarFactor (ν₀ (j + 1)) : ℝ) else 1
   have hκ1 : ∀ j (h : j + 2 * 0 + 2 = D.R.m), κ (j + 1) =
       ((Measure.map (y.jac j 0 h).d.emb0 (a.x (j + 1)).vol.μ).haarScalarFactor (ν₀ (j + 1)) : ℝ) := by
-    intro j h; simp only [κ, dif_pos h]
+    intro j h; simp only [κ, dite_eq_left h]
   have hκ2 : ∀ k, k + 1 ≠ D.R.m → κ k = 1 := by
     intro k hk
     cases k with
     | zero => rfl
-    | succ j => simp only [κ, dif_neg (show ¬ (j + 2 * 0 + 2 = D.R.m) by omega)]
+    | succ j => simp only [κ, dite_eq_right (show ¬ (j + 2 * 0 + 2 = D.R.m) by omega)]
   have hκpos : ∀ k, 0 < κ k := by
     intro k
     by_cases hk : k + 1 = D.R.m
@@ -1415,7 +1408,7 @@ theorem measures_common_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} 
   · intro t j hj
     have hX := hν₀ (j + 1) hj t
     show (vS j).μ = _
-    rw [GlobalTheory.Fam.volLev, if_pos hj]
+    rw [GlobalTheory.Fam.volLev, ite_eq_left hj]
     change (vS j).μ = ENNReal.ofReal (κ (j + 1) * (μf (j + 1) {g | g.1 ∈ levS _ ((_root_.GlobalTheory.Fam.pk_z W).βY (j + 1))
       ((_root_.GlobalTheory.Fam.pk_z W).datYt t (j + 1) (_root_.GlobalTheory.Fam.pk_z W).triv)}).toReal) • (_root_.GlobalTheory.Fam.pk_z W).νY t (j + 1)
     rw [hset]
@@ -1435,15 +1428,14 @@ theorem measures_common_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} 
   · intro t
     obtain ⟨hX0, hXT, hXe⟩ := hν₀T t
     show ν₀T = _
-    rw [GlobalTheory.Fam.volLev, if_neg (by omega)]
+    rw [GlobalTheory.Fam.volLev, ite_eq_right (by omega)]
     change ν₀T = ENNReal.ofReal (κ D.R.m * (μT {k | k.1 ∈ levS _ (_root_.GlobalTheory.Fam.pk_z W).βX ((_root_.GlobalTheory.Fam.pk_z W).datXt t)}).toReal) • (_root_.GlobalTheory.Fam.pk_z W).νX t
     rw [hκ2 D.R.m (by omega), one_mul]
     have hs : {g : GfC D.sp.X' | g.1 ∈ levS _ (_root_.GlobalTheory.Fam.pk_z W).βX ((_root_.GlobalTheory.Fam.pk_z W).datXt t)} =
         {g | Lev.finE D.sp.X' g.1 ∈ Formalism.L2.DIV.lev D.sp.cm D.sp.X'.gram (_root_.GlobalTheory.Fam.pk_z W).βX ((_root_.GlobalTheory.Fam.pk_z W).datXt t)} := by
       ext g; exact ⟨fun h => h.2, fun h => ⟨g.2, h⟩⟩
     rw [hs, ENNReal.ofReal_toReal hXT, hXe]
-  · intro j h
-    exact hvS1 j h
+  · exact fun j h => hvS1 j h
 end GlobalTheory.MeasCommon
 end
 end -- clump:auto

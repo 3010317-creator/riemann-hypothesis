@@ -143,8 +143,7 @@ private lemma exists_tensor_expansion_of_quasiperiodic {V : Type} [NormedAddComm
           · simpa using differentiable_id
           · simpa using differentiable_const (e j)
         exact hF.comp hl
-      · have h := hA 0 (Fin.cons z e) l
-        simpa [Fin.update_cons_zero] using h
+      · simpa [Fin.update_cons_zero] using hA 0 (Fin.cons z e) l
     choose d hd using hrow
     have hind : ∀ (e : Fin n → V) (g : Fin N → ℂ),
         (∀ z, F (Fin.cons z e) = ∑ k, g k * T k z) → g = d e := by
@@ -402,8 +401,7 @@ theorem card_quotient_range_mulVecLin {ι : Type} [Fintype ι] [DecidableEq ι]
     Nat.card ((ι → ℤ) ⧸ LinearMap.range (Matrix.toLin' A)) = A.det.natAbs := by
   have hinj : Function.Injective (Matrix.toLin' A) := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-    intro v hv
-    exact Matrix.eq_zero_of_mulVec_eq_zero hA (by simpa using hv)
+    exact fun v hv => Matrix.eq_zero_of_mulVec_eq_zero hA (by simpa using hv)
   rw [← Submodule.natAbs_det_equiv _ (LinearEquiv.ofInjective _ hinj)]
   congr 1
   rw [← LinearMap.det_toLin' A]
@@ -957,8 +955,7 @@ theorem rho_eq {τ : Matrix (Fin g) (Fin g) ℂ} {a b : Fin g → ℂ} {al : Mat
       (fun _ => congrArg J ((Category.id_comp _).trans e0.symm)) (𝟙 (Sp ℂ)) ((Category.comp_id _).trans hp)]
     refine (hrig (fun _ => J (u.ex 0).left) fun q hq => Set.mem_iInter.2 fun _ => ?_).symm
     have := mem 0 hq
-    rw [← e0]
-    exact this
+    rwa [← e0]
   have vm : ∀ z, u.ex ((m : ℤ) • z) = u.ex 0 → ev (val mu (u.ex z).left y₀ J).val =
       D * (u.fr (J (u.ex 0).left) ((m : ℤ) • z) * u.fr (J (u.ex z).left) z ^ (-(m : ℤ) ^ 2)) := fun z hz => by
     rw [ev_val hev mu (u.ex z).left hJ ![J (u.ex 0).left, J (u.ex z).left] (fun i => by
@@ -968,8 +965,7 @@ theorem rho_eq {τ : Matrix (Fin g) (Fin g) ℂ} {a b : Fin g → ℂ} {al : Mat
     exact hD z _ (by rw [hz]; exact mem 0) (mem z)
   have evz : ∀ (s : ((𝟙_ (Over (Sp ℂ))).left.presheaf.stalk y₀)ˣ) (i : ℤ), ev (s ^ i).val = ev s.val ^ i := fun s i => by
     have := congrArg Units.val (map_zpow (Units.map (ev : _ →* ℂ)) s i)
-    rw [Units.val_zpow_eq_zpow_val] at this
-    exact this
+    rwa [Units.val_zpow_eq_zpow_val] at this
   have f0 : u.fr (J (u.ex 0).left) 0 ≠ 0 := u.fr_ne _ _ (mem 0)
   have hD1 : D = 1 := by
     have h := congrArg (fun s => ev (Units.val s)) h₁
@@ -991,8 +987,7 @@ theorem rho_eq {τ : Matrix (Fin g) (Fin g) ℂ} {a b : Fin g → ℂ} {al : Mat
         · refine congrArg J ?_
           have := congrArg (·.left) (_root_.GlobalTheory.SimilTheta.comp_alMap_ex x u al r (tors τ al m k n r) 0 1 hy)
           rw [ez, ← hξ] at this
-          rw [← e1, ← hξ]
-          exact this
+          rwa [← e1, ← hξ]
         · refine congrArg J ?_
           rw [← e1]
           exact congrArg (·.left) (hy c)) (1 : 𝟙_ (Over (Sp ℂ)) ⟶ Out.powObj x.P.A 4).left ((hp' _).trans e1.symm)]
@@ -1060,7 +1055,7 @@ theorem eq_tors_add {τ : Matrix (Fin g) (Fin g) ℂ} {al : Matrix (Fin 4) (Fin 
       simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul] at this
       rw [← Finset.sum_smul, this]
       split_ifs <;> simp
-    simp only [this, Finset.sum_ite_eq, Finset.mem_univ, if_true, Nat.cast_smul_eq_nsmul]
+    simp only [this, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Nat.cast_smul_eq_nsmul]
   rw [tors]
   simp only [h1]
   rw [h2, smul_smul, inv_mul_cancel₀ hmc, one_smul, sub_add_cancel]
@@ -1088,8 +1083,7 @@ theorem l2Val_holomorphic : Out.Laws → ThetaUnifAV → ∀ (g m : ℕ) (a b : 
   have hk : ∀ I c, ∃ k' n', ∑ r, al r c • t I r = lat (per p) k' n' := fun I c => by
     refine (hW.2.2.1 _).1 ((u.ker _).1 ?_)
     rw [← ex_prod]
-    simp only [ht]
-    exact hker I c
+    simpa only [ht] using hker I c
   choose k' n' hk' using hk
   have hx : ∀ I (k n d e : Fin 4 → Fin x.P.g → ℤ), (∀ c, k' I c = k c + ∑ r, al r c • d r ∧ n' I c = n c + ∑ r, al r c • e r) →
       ∀ r, ξ I r = u.ex (tors (per p) al m k n r) := fun I k n d e h r => by

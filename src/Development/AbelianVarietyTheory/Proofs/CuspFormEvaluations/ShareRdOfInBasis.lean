@@ -88,8 +88,7 @@ theorem Rdg.prod_pow_mul_mem (R : Rdg X) {N : ℕ} {wL : WeightFamilies.Wt D j} 
     rw [Finset.prod_insert ha, Finset.sum_insert ha, mul_assoc]
     have h := R.s_pow_mul_mem w t hmul a.succ u (n + ∑ i ∈ s, α i) (α a) ih
     have e : n + (α a + ∑ i ∈ s, α i) = n + ∑ i ∈ s, α i + α a := by ring
-    rw [e]
-    exact h
+    rwa [e]
 
 theorem shareRd_of_inBasis : ∀ (D : D7) (B : WeightFamilies.Prov D) (P : ModuliIntegralCharts.Prov D) (j : ℕ) (X : PJ D B P j) (ka wL wF : WeightFamilies.Wt D j) (G : GlobalFamilyData X ka wL wF) (R : Rdg X) (t : Idx D j G.N → ℂ) (T : ℕ) (Mg : Submodule B.KO (B.Cusp j ka)) (δ : ℕ) (xs : Fin δ → R.Y), R.Generic t → AnFacts R G.w t ka wF T Mg xs → addL wF wL T = ka → WeightFamilies.dimY D j < T → 0 < WeightFamilies.dimY D j → LatAt B j ka → (∃ la, InBasis G la) → ShareRd (D := D) (j := j) T G.del (X.rk ka (B.Mlat j ka)) := by
   intro D B P j X ka wL wF G R t T Mg δ xs hgen hfac hka hDT _ hlat hex
@@ -116,8 +115,7 @@ theorem shareRd_of_inBasis : ∀ (D : D7) (B : WeightFamilies.Prov D) (P : Modul
     have e : 0 + (T - ∑ k, α k) + ∑ k ∈ Finset.univ, α k = T := by omega
     rw [e, hka] at h2
     show R.mon G.w t α * R.s G.w t 0 ^ (T - ∑ k, α k) * R.ev (X.inc wF (G.th' i)) ∈ R.sp ka Set.univ
-    rw [mul_assoc]
-    exact h2
+    rwa [mul_assoc]
 
   obtain ⟨hfd, hfr⟩ := hfin ka ⊤
   rw [Submodule.top_coe] at hfd hfr

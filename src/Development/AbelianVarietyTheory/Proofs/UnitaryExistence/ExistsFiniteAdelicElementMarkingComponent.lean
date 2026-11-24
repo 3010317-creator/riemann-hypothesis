@@ -203,8 +203,7 @@ theorem exists_finite_mark : ∀ (D : D7) (H : ReciprocityTheory.ChartRestrictio
     ext v
     rw [SetLike.mem_coe, ← hcap, ← SetLike.mem_coe, ← hg1]
     constructor
-    · intro hv
-      exact ⟨v, hv, rfl⟩
+    · exact fun hv => ⟨v, hv, rfl⟩
     · rintro ⟨v, hv, rfl⟩
       exact hv
   · rw [one_mul]
@@ -213,8 +212,7 @@ theorem exists_finite_mark : ∀ (D : D7) (H : ReciprocityTheory.ChartRestrictio
     refine ⟨-(GlobalTheory.AdLat.fv D.host.F (C.M.φ k e : Fin V.rank → D.host.E) + w), ?_, ?_⟩
     · have h0 := (hcap _).2 (C.M.φ k e).2
       have h5 := AddSubgroup.neg_mem _ (AddSubgroup.add_mem _ h0 hw)
-      rw [← SetLike.mem_coe, ← hhat] at h5
-      exact h5
+      rwa [← SetLike.mem_coe, ← hhat] at h5
     · rw [hfv, hfv, ← hι]
       change GlobalTheory.AdLat.fv D.host.F (C.M.φ k (C.F.t k a) : Fin V.rank → D.host.E) - _ = _
       have he' : (C.M.φ k (f l.M a) : Fin V.rank → D.host.E) =

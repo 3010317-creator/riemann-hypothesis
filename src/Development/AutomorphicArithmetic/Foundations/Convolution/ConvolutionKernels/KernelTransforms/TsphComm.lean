@@ -224,8 +224,7 @@ private theorem mem_fixL_iff (J : Subgroup (GL (Fin n) (w.adicCompletion K))) (v
     v ∈ fixL μ w J ↔ v ∈ fixedVectors (locRep μ w) J := by
   have h := (UpperTheory.ConvolutionTheory.Tf.commPrj K n μ (J.map (AdelicGLn.localEmbedding w))).2.1 v
   constructor
-  · intro hv k hk
-    exact (h.1 hv) _ (Subgroup.mem_map_of_mem _ hk)
+  · exact fun hv k hk => (h.1 hv) _ (Subgroup.mem_map_of_mem _ hk)
   · intro hv
     refine h.2 ?_
     rintro _ ⟨k, hk, rfl⟩
@@ -297,8 +296,7 @@ private theorem rhoL_comm {w w' : Pl K} (h : w ≠ w') (g : GL (Fin n) (w.adicCo
   have hm := (UpperTheory.ConvolutionTheory.Tf.commPrj K n μ ⊥).2.2.2.2.2.1
   have hc := (UpperTheory.ConvolutionTheory.Tf.locEmb K n w).2.2.2.1 w' h.symm g g'
   change rhoF μ _ ∘L rhoF μ _ = rhoF μ _ ∘L rhoF μ _
-  rw [← hm, ← hm]
-  rw [hc]
+  rw [← hm, ← hm, hc]
 
 end Concrete
 
@@ -316,8 +314,7 @@ theorem UpperTheory.ConvolutionTheory.Tf.tsphComm :
     intro h J x J' x' hJo hJc hJo' hJc'
     have b := (UpperTheory.ConvolutionTheory.Tf.hopBasic K n μ w J x hJo hJc).2.2.2.2.1
     have b' := (UpperTheory.ConvolutionTheory.Tf.hopBasic K n μ w' J' x' hJo' hJc').2.2.2.2.1
-    refine (b _ fun g => ?_).symm
-    exact (b' _ fun g' => (rhoL_comm μ h g g')).symm
+    exact (b _ fun g => (b' _ fun g' => (rhoL_comm μ h g g')).symm).symm
   refine ⟨comm_same μ w, hd, fun i i' => ?_⟩
   unfold Tsph
   refine Commute.smul_left (Commute.smul_right ?_ _) _

@@ -220,9 +220,7 @@ theorem exists_torusOf_rows : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     · exact (hty τ).2 h
   let e : Fin g ≃ I2.Idx T₀.dim :=
     Equiv.ofBijective f ((Fintype.bijective_iff_injective_and_card f).2 ⟨hfinj, hcard⟩)
-  have he_ty : ∀ i, ty (e.symm i) = i.1 := by
-    intro i
-    exact congrArg Sigma.fst (e.apply_symm_apply i)
+  have he_ty : ∀ i, ty (e.symm i) = i.1 := fun i => congrArg Sigma.fst (e.apply_symm_apply i)
   have hs2 : (Real.sqrt t : ℂ) * (Real.sqrt t : ℂ) = t := by
     rw [← Complex.ofReal_mul, Real.mul_self_sqrt ht.le]
   have hs0 : (Real.sqrt t : ℂ) ≠ 0 := by
@@ -276,8 +274,7 @@ theorem exists_torusOf_rows : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     intro α x
     obtain ⟨z, rfl⟩ := ψ₀.surjective x
     rw [← hact α z]
-    simp only [U, LinearEquiv.trans_apply, LinearEquiv.symm_apply_apply]
-    exact hψact α z
+    simpa only [U, LinearEquiv.trans_apply, LinearEquiv.symm_apply_apply] using hψact α z
   have hUsymm_act : ∀ (α : 𝓞 E) x, U.symm (I2.act α x) = I2.act α (U.symm x) := by
     intro α x
     apply U.injective
@@ -357,8 +354,8 @@ theorem exists_torusOf_rows : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       rw [Equiv.symm_apply_eq]
       rfl
     rcases em (i = ⟨ty j, ⟨row j, hrow' j⟩⟩) with h | h
-    · rw [if_pos (hiff.2 h), if_pos h]
-    · rw [if_neg (mt hiff.1 h), if_neg h]
+    · rw [ite_eq_left (hiff.2 h), ite_eq_left h]
+    · rw [ite_eq_right (mt hiff.1 h), ite_eq_right h]
 
 end GlobalTheory.ScalarTorus
 end -- clump:auto
@@ -464,12 +461,12 @@ theorem hm_eq_diagonal : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     intro τ hτ
     rw [hΨ, hkey] at hτ
     unfold Geo.Tor.Datum.mult
-    rw [if_pos hτ]
+    rw [ite_eq_left hτ]
   have hqm : ∀ τ, relab c σ τ ∉ (U.X k).Ψ → Dw.mult τ = Dw.q := by
     intro τ hτ
     rw [hΨ, hkey] at hτ
     unfold Geo.Tor.Datum.mult
-    rw [if_neg hτ]
+    rw [ite_eq_right hτ]
   obtain ⟨f, hf⟩ := GlobalTheory.FrameUnif.exists_letter_equiv (U.X k).Ψ (U.X k).cmType Dw.p Dw.q r hr
     (relab c σ) hbij Dw.mult hpm hqm
   set idx : Fin W.g ≃ (U.X k).Ψ × Fin r := W.e.trans f with hidx
@@ -486,7 +483,7 @@ theorem hm_eq_diagonal : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     · have hi : (U.X k).p0 + ((W.e j).2 : ℕ) < r := by
         have := (f (W.e j)).2.isLt
         omega
-      rw [dite_eq_left hin, dite_eq_left hi, if_neg (by omega)]
+      rw [dite_eq_left hin, dite_eq_left hi, ite_eq_right (by omega)]
       have e1 : (f (W.e j)).1 = ⟨relab c σ (W.e j).1, hin⟩ := Subtype.ext h1
       have e2 : (f (W.e j)).2 = ⟨(U.X k).p0 + ((W.e j).2 : ℕ), hi⟩ := Fin.ext (by
         show ((f (W.e j)).2 : ℕ) = (U.X k).p0 + ((W.e j).2 : ℕ)
@@ -501,7 +498,7 @@ theorem hm_eq_diagonal : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
       have hi : (U.X k).p0 - 1 - ((W.e j).2 : ℕ) < r := by
         have := (f (W.e j)).2.isLt
         omega
-      rw [dite_eq_right hout, dite_eq_left hin', dite_eq_left hi, if_pos (by omega)]
+      rw [dite_eq_right hout, dite_eq_left hin', dite_eq_left hi, ite_eq_left (by omega)]
       have e1 : (f (W.e j)).1 = ⟨conjEmb (relab c σ (W.e j).1), hin'⟩ := Subtype.ext hcj.symm
       have e2 : (f (W.e j)).2 = ⟨(U.X k).p0 - 1 - ((W.e j).2 : ℕ), hi⟩ := Fin.ext (by
         show ((f (W.e j)).2 : ℕ) = (U.X k).p0 - 1 - ((W.e j).2 : ℕ)
@@ -597,8 +594,7 @@ theorem isPi_actL_of_isTorusOf :
     have hb := congrArg τ (H.bar_eq α)
     rw [IsCMField.complexEmbedding_complexConj] at hb
     rw [map_mul, map_natCast] at h
-    rw [← hb]
-    exact h
+    rwa [← hb]
   have hcoord : ∀ (u : I2.Vsp T.dim) i, (I2.act α u) i = i.1 (α : E) * u i := fun _ _ => rfl
 
   have hlat : ∀ a, I2.act α (ψ (Pm a)) = ψ (Pm (α • a)) := by
@@ -649,8 +645,7 @@ variable {E : Type} [Field E] [NumberField E] {dim : (E →+* ℂ) → ℕ}
 
 theorem levReps_act_mul (a b : 𝓞 E) (v : I2.Vsp dim) : I2.act a (I2.act b v) = I2.act (a * b) v := by
   ext i
-  simp only [I2.act, RingOfIntegers.coe_eq_algebraMap, map_mul]
-  exact (mul_assoc _ _ _).symm
+  simpa only [I2.act, RingOfIntegers.coe_eq_algebraMap, map_mul] using (mul_assoc _ _ _).symm
 
 theorem levReps_act_nat (m : ℕ) (v : I2.Vsp dim) : I2.act (m : 𝓞 E) v = (m : ℂ) • v := by
   ext i
@@ -705,8 +700,7 @@ theorem isReps_level_translates : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     exact Classical.choose_spec (Submodule.Quotient.mk_surjective _ q)
   obtain ⟨r, s, hrs⟩ : ∃ r s : 𝓞 E, r * H.bar α + s * α = 1 := by
     have h := l.coprime
-    rw [hmap, hMb, Ideal.eq_top_iff_one, ← Ideal.span_insert, Ideal.mem_span_pair] at h
-    exact h
+    rwa [hmap, hMb, Ideal.eq_top_iff_one, ← Ideal.span_insert, Ideal.mem_span_pair] at h
   set t : LevQ Dw l → I2.Vsp T.dim := fun q => I2.act (H.bar α) (-(((l.M : ℂ) ^ 2)⁻¹ • mk (x2 q))) with ht
   have hαt : ∀ q, I2.act α (t q) = -((l.M : ℂ)⁻¹ • mk (x2 q)) := by
     intro q
@@ -853,8 +847,7 @@ theorem isTorusAt_of_isTorusOf : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   obtain ⟨hbij0, hrt0, -, -⟩ := GlobalTheory.Relab.relab_good E H l c σ hg
   have hrel : Formalism.L2.PjFree.relab c σ = relab c σ := funext fun τ => rfl
   have hbij : Function.Bijective (relab c σ) := by
-    rw [← hrel]
-    exact hbij0
+    rwa [← hrel]
   have hrt : ∀ τ : E →+* ℂ, relab c σ τ (H.rt : E) = H.rt0 ↔ τ (H.rt : E) = H.rt0 := by
     intro τ
     rw [← hrel]
@@ -873,8 +866,7 @@ theorem isTorusAt_of_isTorusOf : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     simp [conjEmb]
   have hconjMem : ∀ ρ : E →+* ℂ, ρ ∉ (U.X k).Ψ → conjEmb ρ ∈ (U.X k).Ψ := by
     intro ρ hρ
-    rw [(U.X k).cmType, hcc]
-    exact hρ
+    rwa [(U.X k).cmType, hcc]
   have hmultP : ∀ τ' : E →+* ℂ, relab c σ τ' ∈ (U.X k).Ψ → Dw.mult τ' = Dw.p := by
     intro τ' h
     have h' : τ' (H.rt : E) = H.rt0 := (hrt τ').1 ((hΨ _).1 h)
@@ -895,18 +887,18 @@ theorem isTorusAt_of_isTorusOf : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
       have hi1 := i1.isLt
       have hi2 := i2.isLt
       by_cases h1 : relab c σ τ1 ∈ (U.X k).Ψ <;> by_cases h2 : relab c σ τ2 ∈ (U.X k).Ψ
-      · simp only [fwd, dif_pos h1, dif_pos h2, Prod.mk.injEq, Subtype.mk.injEq, Fin.mk.injEq] at heq
+      · simp only [fwd, dite_eq_left h1, dite_eq_left h2, Prod.mk.injEq, Subtype.mk.injEq, Fin.mk.injEq] at heq
         obtain ⟨he1, he2⟩ := heq
         obtain rfl := hbij.1 he1
         obtain rfl : i1 = i2 := Fin.ext (by omega)
         rfl
-      · simp only [fwd, dif_pos h1, dif_neg h2, Prod.mk.injEq, Fin.mk.injEq] at heq
+      · simp only [fwd, dite_eq_left h1, dite_eq_right h2, Prod.mk.injEq, Fin.mk.injEq] at heq
         have := hmultN _ h2
         omega
-      · simp only [fwd, dif_neg h1, dif_pos h2, Prod.mk.injEq, Fin.mk.injEq] at heq
+      · simp only [fwd, dite_eq_right h1, dite_eq_left h2, Prod.mk.injEq, Fin.mk.injEq] at heq
         have := hmultN _ h1
         omega
-      · simp only [fwd, dif_neg h1, dif_neg h2, Prod.mk.injEq, Subtype.mk.injEq, Fin.mk.injEq] at heq
+      · simp only [fwd, dite_eq_right h1, dite_eq_right h2, Prod.mk.injEq, Subtype.mk.injEq, Fin.mk.injEq] at heq
         obtain ⟨he1, he2⟩ := heq
         have hρ : relab c σ τ1 = relab c σ τ2 := by
           have h3 := congrArg conjEmb he1
@@ -919,7 +911,7 @@ theorem isTorusAt_of_isTorusOf : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
       obtain ⟨τ', rfl⟩ := hbij.2 ρ
       by_cases ht0 : (U.X k).p0 ≤ (t : ℕ)
       · refine ⟨⟨τ', ⟨t - (U.X k).p0, by have := hmultP _ hρ; have := t.isLt; omega⟩⟩, ?_⟩
-        simp only [fwd, dif_pos hρ]
+        simp only [fwd, dite_eq_left hρ]
         refine Prod.ext (Subtype.ext rfl) (Fin.ext ?_)
         show (U.X k).p0 + ((t : ℕ) - (U.X k).p0) = t
         omega
@@ -930,7 +922,7 @@ theorem isTorusAt_of_isTorusOf : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
           rw [(U.X k).cmType, hcc] at hm
           exact hm hρ
         refine ⟨⟨τ'', ⟨(U.X k).p0 - 1 - t, by have := hmultN _ hn; omega⟩⟩, ?_⟩
-        simp only [fwd, dif_neg hn]
+        simp only [fwd, dite_eq_right hn]
         refine Prod.ext (Subtype.ext ?_) (Fin.ext ?_)
         · show conjEmb (relab c σ τ'') = relab c σ τ'
           rw [hτ'', hcc2]
@@ -948,16 +940,16 @@ theorem isTorusAt_of_isTorusOf : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     · have := hmultP _ h
       have hlt : (U.X k).p0 + (i : ℕ) < r := by omega
       have hnlt : ¬ (U.X k).p0 + (i : ℕ) < (U.X k).p0 := by omega
-      simp only [fwd, dif_pos h]
+      simp only [fwd, dite_eq_left h]
       unfold Formalism.L2.Pj.perFr GlobalTheory.RiemMaj.pc
-      simp only [dif_pos h, dif_pos hlt, hnlt, if_false]
+      simp only [dite_eq_left h, dite_eq_left hlt, hnlt, ite_false]
     · have := hmultN _ h
       have hc := hconjMem _ h
       have hlt : (U.X k).p0 - 1 - (i : ℕ) < r := by omega
       have hlt' : (U.X k).p0 - 1 - (i : ℕ) < (U.X k).p0 := by omega
-      simp only [fwd, dif_neg h]
+      simp only [fwd, dite_eq_right h]
       unfold Formalism.L2.Pj.perFr GlobalTheory.RiemMaj.pc
-      simp only [dif_neg h, dif_pos hc, dif_pos hlt, hlt', if_true]
+      simp only [dite_eq_right h, dite_eq_left hc, dite_eq_left hlt, hlt', ite_true]
   have him : ∀ a b, (hermForm Wu.Hm (W.Pm a) (W.Pm b)).im =
       ((Algebra.trace ℚ E (-(U.X k).ξ0 * ReciprocityTheory.ChartRestriction.G.FD.herm (U.X k).Gm (W.φ k a : Fin r → E) (W.φ k b)) : ℚ) : ℝ) := by
     intro a b
@@ -1243,8 +1235,7 @@ theorem exists_short_integers_span :
   · have h : (fun _ => (α : E) : Fin 1 → E) ∈ Submodule.span ℚ (Set.range v) :=
       hsp ▸ Submodule.mem_top
     have h2 := Submodule.mem_map_of_mem (f := LinearMap.proj (R := ℚ) (φ := fun _ : Fin 1 => E) 0) h
-    rw [Submodule.map_span, ← Set.range_comp] at h2
-    exact h2
+    rwa [Submodule.map_span, ← Set.range_comp] at h2
 
 end GlobalTheory
 end -- clump:auto
@@ -1379,8 +1370,8 @@ theorem exists_mult_le {H : Host E} (Dw : Datum H) (m : ℕ) (h : Dw.p ≤ m ∨
     · exact ⟨(starRingEnd ℂ).comp τ, τ, by simp [h, hconj], h⟩
   obtain ⟨τ₁, τ₂, h₁, h₂⟩ := key
   rcases h with h | h
-  · exact ⟨τ₁, by rwa [Datum.mult, if_pos h₁]⟩
-  · exact ⟨τ₂, by rwa [Datum.mult, if_neg (by rw [h₂]; exact hne)]⟩
+  · exact ⟨τ₁, by rwa [Datum.mult, ite_eq_left h₁]⟩
+  · exact ⟨τ₂, by rwa [Datum.mult, ite_eq_right (by rw [h₂]; exact hne)]⟩
 
 theorem normSq_emb_bar {H : Host E} (α : 𝓞 E) (M : ℕ) (hα : α * H.bar α = (M : 𝓞 E)) (τ : E →+* ℂ) :
     ‖τ ((H.bar α : 𝓞 E) : E)‖ ^ 2 = M := by
@@ -1491,13 +1482,11 @@ theorem value_torus {H : Host E} {Dw : Datum H} (T : I2.PT E) {g n : ℕ} (e : F
       intro y
       obtain ⟨j, rfl⟩ := e.surjective y
       obtain ⟨h, hh⟩ := hrow j
-      rw [e.symm_apply_apply]
-      exact hh
+      rwa [e.symm_apply_apply]
     funext ℓ b
     by_cases hb : b = ℓ.2.2
     · subst hb
-      simp only [letDir, I2.dir, Pi.smul_apply, Pi.single_eq_same]
-      exact h1 ⟨ℓ.1, ℓ.2.1⟩
+      simpa only [letDir, I2.dir, Pi.smul_apply, Pi.single_eq_same] using h1 ⟨ℓ.1, ℓ.2.1⟩
     · simp [letDir, I2.dir, hb]
   have hs : Differentiable ℂ fun v : Fin 1 → I2.Vsp T.dim => θ (ψ.symm (v 0)) :=
     hθ.comp ((LinearMap.toContinuousLinearMap ψ.symm.toLinearMap).differentiable.comp (differentiable_apply 0))

@@ -650,8 +650,7 @@ theorem isAlgClosed_residue [IsLocalRing (integralClosure V Ω)]
     apply Subtype.val_injective
     have := eval_map_apply (p := P.map ι) (integralClosure V Ω).val.toRingHom ⟨α, hαi⟩
     refine this.symm.trans ?_
-    rw [Polynomial.map_map, eval_map]
-    exact hα
+    rwa [Polynomial.map_map, eval_map]
   have h1 := Ideal.mem_of_dvd _ (sub_dvd_eval_sub _ _ (P.map ι)) hαt
   rw [h0, zero_sub, neg_mem_iff, show t = ι t' from rfl, eval_map_apply] at h1
   exact fun hu => h1 (hu.map ι)
@@ -878,8 +877,7 @@ theorem transfer {M N : Type} [CommGroup M] [Group N] (H : Subgroup M) (r : H �
       have : (r ∘ fun j => (⟨_, h j⟩ : H) ^ Q.coeff j) = fun j => φ j (r ⟨x, hx⟩) ^ Q.coeff j := by
         funext j
         simp only [Function.comp, map_zpow, e']
-      rw [this]
-      exact hr
+      rwa [this]
     · rw [map_list_prod, List.map_map]
       rfl
 
@@ -895,8 +893,7 @@ theorem exists_restrict {R Ω : Type} [CommRing R] [IsLocalRing R] [Field Ω] [A
             map_zero' := hi (by simp [hf])
             map_add' := fun x y => hi (by simp [hf]) }, hf, fun x => ?_⟩
   have := (IsLocalRing.residue_eq_zero_iff _).2 (hf' x)
-  rw [map_sub, map_pow, sub_eq_zero] at this
-  exact this
+  rwa [map_sub, map_pow, sub_eq_zero] at this
 
 alias sp_comp := _root_.GlobalTheory.RedPts.spMap_comp
 
@@ -1508,8 +1505,7 @@ theorem fixed_of_rational {K K₁ Ω Ω₁ : Type} [Field K] [Field K₁] [Field
     refine (congrArg (_ ≫ ·) h₁.symm).trans ?_
     rw [← Category.assoc, hτ, h₁]
   · refine (Category.assoc _ _ _).trans ?_
-    refine (congrArg (_ ≫ ·) (Over.w x)).trans ?_
-    exact hτ.trans (Over.w x).symm
+    exact (congrArg (_ ≫ ·) (Over.w x)).trans (hτ.trans (Over.w x).symm)
 
 theorem exists_finset (K : Type) [Field K] [CharZero K] (P : Out.PolAV (Sp K)) (Ω : Type) [Field Ω] [Algebra K Ω]
     [IsAlgClosure K Ω] (l : ℕ) (hl : l.Prime) :

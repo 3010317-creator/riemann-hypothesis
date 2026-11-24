@@ -172,31 +172,31 @@ private theorem chSym_rel {A : Type*} [Ring A] {n : ℕ} {E : Fin n → Fin n �
   have hba : b ≠ a := Ne.symm hab
   have f1 : E a b * E a a - E a a * E a b = -E a b := by
     have e := gl a b a a
-    rwa [if_neg hba, if_pos (rfl : a = a), zero_sub] at e
+    rwa [ite_eq_right hba, ite_eq_left (rfl : a = a), zero_sub] at e
   have f2 : E a b * E b b - E b b * E a b = E a b := by
     have e := gl a b b b
-    rwa [if_pos (rfl : b = b), if_neg hba, sub_zero] at e
+    rwa [ite_eq_left (rfl : b = b), ite_eq_right hba, sub_zero] at e
   have f3 : E b a * E a a - E a a * E b a = E b a := by
     have e := gl b a a a
-    rwa [if_pos (rfl : a = a), if_neg hab, sub_zero] at e
+    rwa [ite_eq_left (rfl : a = a), ite_eq_right hab, sub_zero] at e
   have f4 : E b a * E b b - E b b * E b a = -E b a := by
     have e := gl b a b b
-    rwa [if_neg hab, if_pos (rfl : b = b), zero_sub] at e
+    rwa [ite_eq_right hab, ite_eq_left (rfl : b = b), zero_sub] at e
   have f5 : E a b * E b a - E b a * E a b = E a a - E b b := by
     have e := gl a b b a
-    rwa [if_pos (rfl : b = b), if_pos (rfl : a = a)] at e
+    rwa [ite_eq_left (rfl : b = b), ite_eq_left (rfl : a = a)] at e
   have f6 : E a a * E a b - E a b * E a a = E a b := by
     have e := gl a a a b
-    rwa [if_pos (rfl : a = a), if_neg hba, sub_zero] at e
+    rwa [ite_eq_left (rfl : a = a), ite_eq_right hba, sub_zero] at e
   have f7 : E a a * E b a - E b a * E a a = -E b a := by
     have e := gl a a b a
-    rwa [if_neg hab, if_pos (rfl : a = a), zero_sub] at e
+    rwa [ite_eq_right hab, ite_eq_left (rfl : a = a), zero_sub] at e
   have f8 : E b b * E a b - E a b * E b b = -E a b := by
     have e := gl b b a b
-    rwa [if_neg hba, if_pos (rfl : b = b), zero_sub] at e
+    rwa [ite_eq_right hba, ite_eq_left (rfl : b = b), zero_sub] at e
   have f9 : E b b * E b a - E b a * E b b = E b a := by
     have e := gl b b b a
-    rwa [if_pos (rfl : b = b), if_neg hab, sub_zero] at e
+    rwa [ite_eq_left (rfl : b = b), ite_eq_right hab, sub_zero] at e
   refine ⟨?_, ?_, ?_, ?_⟩
   · have e : (E a b - E b a) * (E a a - E b b) - (E a a - E b b) * (E a b - E b a) =
         (E a b * E a a - E a a * E a b) - (E a b * E b b - E b b * E a b) -
@@ -216,10 +216,10 @@ private theorem chSym_rel {A : Type*} [Ring A] {n : ℕ} {E : Fin n → Fin n �
   · intro c hca hcb
     have g1 : E c c * E a b - E a b * E c c = 0 := by
       have e := gl c c a b
-      rwa [if_neg hca, if_neg (Ne.symm hcb), sub_zero] at e
+      rwa [ite_eq_right hca, ite_eq_right (Ne.symm hcb), sub_zero] at e
     have g2 : E c c * E b a - E b a * E c c = 0 := by
       have e := gl c c b a
-      rwa [if_neg hcb, if_neg (Ne.symm hca), sub_zero] at e
+      rwa [ite_eq_right hcb, ite_eq_right (Ne.symm hca), sub_zero] at e
     show E c c * (E a b - E b a) = (E a b - E b a) * E c c
     rw [← sub_eq_zero]
     have e : E c c * (E a b - E b a) - (E a b - E b a) * E c c =
@@ -262,12 +262,10 @@ private theorem chSym_mv {n : ℕ} {W : Type*} [AddCommGroup W] [Module ℂ W] (
   intro c
   by_cases hca : c = a
   · rw [hca]
-    simp only [Function.comp_apply, Equiv.swap_apply_left]
-    exact hP
+    simpa only [Function.comp_apply, Equiv.swap_apply_left] using hP
   by_cases hcb : c = b
   · rw [hcb]
-    simp only [Function.comp_apply, Equiv.swap_apply_right]
-    exact hQ
+    simpa only [Function.comp_apply, Equiv.swap_apply_right] using hQ
   simp only [Function.comp_apply, Equiv.swap_apply_of_ne_of_ne hca hcb]
   have e := LinearMap.congr_fun (h5 c hca hcb).eq x
   simp only [Module.End.mul_apply] at e
@@ -294,11 +292,7 @@ private theorem chSym_swap {n : ℕ} {V : Type} [NormedAddCommGroup V] [InnerPro
   have hu5 := chSym_anti hu1 hu2 hu3
   let Bs : Module.End ℂ S := B.restrict (fun x hx => hB.2 x hx)
   have cBR : ∀ i j, Commute Bs (R i j) := by
-    intro i j
-    apply LinearMap.ext
-    intro y
-    apply Subtype.ext
-    exact LinearMap.congr_fun (hB.1 i j) (y : V)
+    exact fun i j => LinearMap.ext (fun y => Subtype.ext (LinearMap.congr_fun (hB.1 i j) (y : V)))
   have cBX : Commute Bs (R a b - R b a) := (cBR a b).sub_right (cBR b a)
   obtain ⟨cBu, cBu'⟩ := hu4 Bs cBX
   obtain ⟨cHu, cHu'⟩ := hu4 _ c3
@@ -353,8 +347,7 @@ private theorem chSym_swap {n : ℕ} {V : Type} [NormedAddCommGroup V] [InnerPro
   have back : ∀ x, x ∈ wsp F (μ ∘ Equiv.swap a b) ⊓ S → (U' * B) x ∈ wsp F μ ⊓ S := by
     intro x hx
     have e := mvU' _ _ (mB _ x hx)
-    rw [hsw] at e
-    exact e
+    rwa [hsw] at e
   have k1 : u' * Bs * u = Bs := by rw [← cBu'.eq, mul_assoc, hu2, mul_one]
   have k2 : u * u' * Bs = Bs := by rw [hu1, one_mul]
   have t3 := (trAdd V U).2.2.1 (wsp F μ ⊓ S) (wsp F (μ ∘ Equiv.swap a b) ⊓ S) (U' * B) (fd _) (fd _)
@@ -373,8 +366,7 @@ private theorem chSym_swap {n : ℕ} {V : Type} [NormedAddCommGroup V] [InnerPro
       trOn (wsp F (μ ∘ Equiv.swap a b) ⊓ S) B := by
     refine ((trAdd V (U * (U' * B))).2.1 _ B 1 (fun x hx => ?_)
       (fun x hx => mB _ x hx)).2.2 ?_
-    · have e := mvU μ _ (back x hx)
-      exact e
+    · exact mvU μ _ (back x hx)
     · intro x hx
       have hxS := (Submodule.mem_inf.1 hx).2
       show U (U' (B x)) = B x
@@ -669,7 +661,7 @@ private theorem rt_sum (g : Fin n → FR n) (i j : Fin n) :
     simp only [rt, Pi.sub_apply, Pi.single_apply]
     split_ifs <;> simp
   rw [sum_congr rfl fun a _ => h a, sum_sub_distrib]
-  simp only [sum_ite_eq', mem_univ, if_true]
+  simp only [sum_ite_eq', mem_univ, ite_true]
 
 private theorem lap_cross (c : FR n) :
     ∑ a, 2 * (lapD a (alt (rhoV n)) * lapD a c) =
@@ -871,7 +863,7 @@ theorem UpperTheory.RealTr.chLap :
     · intro x hx
       have hy : IsWeight F μ (B x) := (hBW μ x hx).1
       have h := LinearMap.congr_fun (hg a b b a) (B x)
-      simp only [LinearMap.sub_apply, Module.End.mul_apply, if_true, hy a, hy b] at h
+      simp only [LinearMap.sub_apply, Module.End.mul_apply, ite_true, hy a, hy b] at h
       simp only [Module.End.mul_apply]
       rw [sub_eq_iff_eq_add'] at h
       rw [h]
@@ -1072,8 +1064,7 @@ theorem UpperTheory.RealTr.wcfForm :
       have h4 := hR1 lam ρ hlamS.antitone hρ.antitone w
       have e1 : ∑ a, lam a * lam a = ∑ a, lam a * ν a + ∑ a, lam a * ρ a := hsplit lam
       exact hw1 (h4.2 hlamS hρ (le_antisymm h4.1 (by linarith)))
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   obtain ⟨s, hs, hf⟩ := asymExp n _ hA
   have hsub : s ⊆ {lam} := fun x hx => Finset.mem_singleton.mpr (hone x (hs x hx).1 (hs x hx).2)
   rw [← hcoef]
@@ -1082,8 +1073,7 @@ theorem UpperTheory.RealTr.wcfForm :
     have z := (hlin 0 0 0 lam).2
     rw [zero_smul, zero_mul] at z
     rw [hf, z, zero_smul]
-  · rw [h, Finset.sum_singleton] at hf
-    exact hf
+  · rwa [h, Finset.sum_singleton] at hf
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1124,8 +1114,7 @@ theorem UpperTheory.RealTr.wcfIso :
       rw [hch μ, hbot, inf_bot_eq, trOn_bot]
     have hz : ∀ x : Wt n, cf (0 : FR n) x = 0 := by
       intro x
-      have h := (cfB.2.2.2.1 0 0 0 x).2
-      simpa using h
+      simpa using (cfB.2.2.2.1 0 0 0 x).2
     rw [hS, trOn_bot, zero_smul]
     apply cfB.2.2.1
     intro x

@@ -131,8 +131,7 @@ theorem int_of_mem {V : HSp D} (h : OrthFrame V) {y : Fin V.rank → Af D.host.F
     obtain ⟨a, ha, x, hx, rfl⟩ := hy
     obtain ⟨o, ho⟩ := Submodule.mem_one.1 ((mem_std_lattice_iff_integral_coords h x).1 hx i)
     have := tmul_mem o ha
-    rw [show (o : D.host.E) = x i from ho] at this
-    exact this
+    rwa [show (o : D.host.E) = x i from ho] at this
   | zero => rw [Pi.zero_apply, RingEquiv.map_zero]; exact zero_mem _
   | add y z _ _ hy hz => rw [Pi.add_apply, RingEquiv.map_add (e := _)]; exact add_mem hy hz
   | neg y _ hy => rw [Pi.neg_apply, RingEquiv.map_neg]; exact neg_mem hy
@@ -203,8 +202,7 @@ theorem mem_latHat_iff {V : HSp D} (h : OrthFrame V) (y : Fin V.rank → Af D.ho
   rw [pi_eq_sum_univ' y]
   refine sum_mem fun i _ => ?_
   have := smul_mem h (hy i) _ (single_mem h i)
-  rw [RingEquiv.symm_apply_apply] at this
-  exact this
+  rwa [RingEquiv.symm_apply_apply] at this
 
 theorem mulVec_mem {V : HSp D} (h : OrthFrame V) {κ : Formalism.AUTREP.GAf D.host.E V.rank}
     (hκ : κ ∈ ReciprocityTheory.Aut.Umax D.host.E V.rank) {y : Fin V.rank → Af D.host.F ⊗[D.host.F] D.host.E}

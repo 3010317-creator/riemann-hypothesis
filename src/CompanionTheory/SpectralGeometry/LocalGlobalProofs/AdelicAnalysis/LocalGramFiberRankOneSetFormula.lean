@@ -27,8 +27,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
   {σ : E →ₐ[F] E}
 
 theorem exists_conj_ne (h : IsCMExt F E σ) : ∃ e : E, σ e ≠ e := by
-  by_contra hσ
-  push_neg at hσ
+  by_contra! hσ
   obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
   have := h.2.1
   apply IsTotallyComplex.complexEmbedding_not_isReal τ
@@ -54,8 +53,7 @@ theorem exists_imag (h : IsCMExt F E σ) :
       have e1 : ∀ (a : F) (x : E), σ (a • x) = a • σ x := fun a x => by
         rw [Algebra.smul_def, map_mul, AlgHom.commutes, Algebra.smul_def]
       rw [map_add (f := _), e1, e1, map_one, hw', map_zero, smul_neg] at this
-      rw [sub_eq_add_neg]
-      exact this
+      rwa [sub_eq_add_neg]
     have h3 : (2 * s) • (1 : E) = 0 := by
       have : (2 * s) • (1 : E) = (s • (1 : E) + t • w) + (s • (1 : E) - t • w) := by
         rw [two_mul, add_smul]; abel
@@ -71,8 +69,7 @@ theorem exists_imag (h : IsCMExt F E σ) :
   intro x
   have hx : x ∈ Submodule.span F (Set.range ![(1 : E), w]) := by rw [htop]; trivial
   simp only [Matrix.range_cons, Matrix.range_empty, Set.union_empty, Set.union_singleton] at hx
-  rw [Set.pair_comm, Submodule.mem_span_pair] at hx
-  exact hx
+  rwa [Set.pair_comm, Submodule.mem_span_pair] at hx
 
 variable (R : Type) [Field R] [Algebra F R]
 
@@ -193,14 +190,12 @@ theorem continuous_hermScal [IsTopologicalRing R] : Continuous (hermScal R σ) :
       simp [Algebra.TensorProduct.algebraMap_apply]
     rw [this]
     exact IsModuleTopology.continuous_of_linearMap _
-  refine Continuous.subtype_mk ?_ _
-  exact continuous_matrix fun _ _ => h1
+  exact Continuous.subtype_mk (continuous_matrix fun _ _ => h1) _
 
 theorem continuous_qS (htr : Continuous (Algebra.trace R (R ⊗[F] E))) [IsTopologicalRing R] :
     Continuous (qS R σ) := by
   unfold qS
-  refine continuous_const.mul (htr.comp ?_)
-  exact (continuous_subtype_val.matrix_elem 0 0)
+  exact continuous_const.mul (htr.comp (continuous_subtype_val.matrix_elem 0 0))
 
 variable [MeasurableSpace R] [BorelSpace R]
 
@@ -237,8 +232,7 @@ theorem coordHerm_qS (h : IsCMExt F E σ) [IsTopologicalRing R] [SecondCountable
     constructor
     · rintro ⟨S, hS, rfl⟩
       simpa [hgf S] using hS
-    · intro hx
-      exact ⟨g x, hx, hfg x⟩
+    · exact fun hx => ⟨g x, hx, hfg x⟩
   have hinj : Function.Injective f := Function.LeftInverse.injective hgf
   have hP : MeasurableSet {S | qS R σ S ∈ V} := (continuous_qS R htr).measurable hV
   have hset : f '' {S | qS R σ S ∈ V} = (Set.pi Set.univ fun _ : Fin 1 => V) ×ˢ Set.univ := by

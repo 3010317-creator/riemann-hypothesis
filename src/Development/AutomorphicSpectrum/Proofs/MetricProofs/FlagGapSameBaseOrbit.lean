@@ -57,8 +57,7 @@ theorem stepGap_eq_of_base_block : ∀ (K : Type) [Fintype K] (ι : K → Type) 
   obtain ⟨l, hl⟩ := BM.O_cover x₀
   have hx : x₀ ∈ BM.O l \ ReciprocityTheory.AnForm.P.bdry BM.s := ⟨hl, hx₀⟩
   have horb' : ReciprocityTheory.ChartRestriction.G.Geo.SameOrbit (GlobalTheory.CompanionTheory.Ar.PB.basePart M.blk z') (BM.Rb.lift x₀ x₀) := by
-    rw [← hbase]
-    exact horb
+    rwa [← hbase]
   have hbm : GlobalTheory.CompanionTheory.Ar.PB.StepW.baseMono M (BM.F l) p z = GlobalTheory.CompanionTheory.Ar.PB.StepW.baseMono M (BM.F l) p z' := by
     unfold GlobalTheory.CompanionTheory.Ar.PB.StepW.baseMono
     rw [hbase]
@@ -79,7 +78,7 @@ theorem stepGap_eq_of_base_block : ∀ (K : Type) [Fintype K] (ι : K → Type) 
           · exfalso
             apply h0
             unfold GlobalTheory.CompanionTheory.Ar.PB.FlagModel.dy
-            rw [dite_eq_right hb, if_neg hk]
+            rw [dite_eq_right hb, ite_eq_right hk]
       simp only [hcoord]
   have hh : Real.log ((BM.hom p).h z) = Real.log ((BM.hom p).h z') := by
     cases hp : M.blk p with
@@ -95,8 +94,7 @@ theorem stepGap_eq_of_base_block : ∀ (K : Type) [Fintype K] (ι : K → Type) 
         rw [hbase]
         simp only [hblk k₀ hp]
       have hne' : GlobalTheory.CompanionTheory.Ar.PB.StepW.plk M (BM.F l) k₀ z' I₀ ≠ 0 := by
-        rw [← hfun]
-        exact hne
+        rwa [← hfun]
       rw [_root_.GlobalTheory.CompanionTheory.Ar.PB.StepW.ExactStep.main K ι Φ y Ψ N j M n BM p k₀ l x₀ z I₀ C B hp hCB hx hz horb hne,
         _root_.GlobalTheory.CompanionTheory.Ar.PB.StepW.ExactStep.main K ι Φ y Ψ N j M n BM p k₀ l x₀ z' I₀ C B hp hCB hx hz' horb' hne', hfun, hbm]
   unfold GlobalTheory.CompanionTheory.Ar.PB.StepW.stepGap

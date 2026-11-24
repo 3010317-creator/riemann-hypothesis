@@ -142,8 +142,7 @@ theorem gen_mem {D : D7} (V : HSp D) (K : Matrix (Fin V.rank) (Fin V.rank) (Glob
         ring
       rw [this, hψs]
       rfl
-    rw [← e]
-    exact h2
+    rwa [← e]
   · intro t t' ht ht'
     have : (fun i => c ⊗ₜ[D.host.F] ((t + t') * x i)) =
         (fun i => c ⊗ₜ[D.host.F] (t * x i)) + (fun i => c ⊗ₜ[D.host.F] (t' * x i)) := by
@@ -168,8 +167,7 @@ theorem GlobalTheory.CovolCong.cong_latC_of_cong_latG : ∀ {D : D7} (V : HSp D)
     rw [AddSubgroup.closure_le]
     rintro _ ⟨c, hc, x, hx, rfl⟩
     exact gen_mem V K I h c hc x hx
-  intro z hz
-  exact hle hz
+  exact fun z hz => hle hz
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicCongruenceSelfDualOfPrincipalLattice =====

@@ -164,9 +164,7 @@ theorem isUnitarisable_of_isLocS {L : Type} [Field L] [NumberField L] [IsCMField
       (fun v w w' => by rw [tadd, hadd1])
       (fun c v w => by rw [tsmul, hsm1]; rfl)
   refine ⟨Bf, ?_, ?_, ?_⟩
-  · intro v w
-    show B (t v) (t w) = starRingEnd ℂ (B (t w) (t v))
-    exact hherm _ _
+  · exact fun v w => hherm _ _
   · intro v hv
     show 0 < (B (t v) (t v)).re
     apply hpos

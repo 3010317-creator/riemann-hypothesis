@@ -180,13 +180,13 @@ theorem conv_X_pow_mul {f : ℤ → M} {m₀ : ℤ} (hf : ∀ k < m₀, f k = 0)
   rw [conv_eq_sum _ f k _ hN', conv_eq_sum _ f (k - m) N hN, Finset.sum_range_add]
   rw [Finset.sum_eq_zero, zero_add]
   · refine Finset.sum_congr rfl fun j _ => ?_
-    rw [PowerSeries.coeff_X_pow_mul', if_pos (by omega), show m + j - m = j by omega]
+    rw [PowerSeries.coeff_X_pow_mul', ite_eq_left (by omega), show m + j - m = j by omega]
     congr 2
     push_cast
     ring
   · intro j hj
     rw [Finset.mem_range] at hj
-    rw [PowerSeries.coeff_X_pow_mul', if_neg (by omega), zero_smul]
+    rw [PowerSeries.coeff_X_pow_mul', ite_eq_right (by omega), zero_smul]
 
 theorem combine {ι : Type} [Fintype ι] (F : ι → ℤ → M) (m₀ : ι → ℤ) (hbd : ∀ j, ∀ k < m₀ j, F j k = 0)
     (c : L) (e p : ι → PowerSeries L) (m : ℕ) (k : ℤ) :
@@ -407,8 +407,7 @@ private theorem quotient_eigenvector_of_expansion {O L M X : Type}
     rw [hEval _ hm, hEval _ hx', e, hsub, hsmul, htwist x hx' hγx]
   have hq₀ : q x₀ ∈ N := hq.symm ▸ n.2
   have hbase' : GoodP Sub y k d (E x₀) c := by
-    rw [hEval x₀ hq₀, show (⟨q x₀, hq₀⟩ : N) = n from Subtype.ext hq]
-    exact hbase
+    rwa [hEval x₀ hq₀, show (⟨q x₀, hq₀⟩ : N) = n from Subtype.ext hq]
   let z := Polynomial.aeval γ (∏ v ∈ S.erase r, ((Polynomial.X : Polynomial O) - Polynomial.C (v : O))) x₀
   obtain ⟨hz, hzG⟩ := goodP_prod γ P (fun x hx => (hP _).2 (hγ x ((hP x).1 hx))) E w u
     hstep Sub hMono y k d x₀ ((hP x₀).2 hq₀) c hbase' (S.erase r)
@@ -638,8 +637,7 @@ theorem dvd_pow_of_nonunit {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValua
   obtain ⟨k, u, rfl⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hc hϖ
   have h1 : ϖ ∣ p := by
     have : p ∈ IsLocalRing.maximalIdeal O := (IsLocalRing.mem_maximalIdeal _).2 hp
-    rw [hϖ.maximalIdeal_eq, Ideal.mem_span_singleton] at this
-    exact this
+    rwa [hϖ.maximalIdeal_eq, Ideal.mem_span_singleton] at this
   exact ⟨k, (Units.mul_left_dvd).2 (pow_dvd_pow_of_dvd h1 k)⟩
 
 theorem QQ_pow_map_ne {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsLocalRing O] [Algebra ℤ_[l] O]
@@ -707,8 +705,7 @@ theorem finite_quo (T : LocLat G Qp LL O) (q : LetA O n)
       rw [← algebraMap_smul W.EE q z, smul_smul, mul_comm, hq.mul_val_inv, one_smul]
     · rintro ⟨x, hx, rfl⟩
       change q • (u • x) ∈ W.N T
-      rw [hinv]
-      exact hx
+      rwa [hinv]
   haveI : Module.Finite (LetA O n) ↥(invN W T q) := by
     rw [hS]
     exact Module.Finite.iff_fg.2 ((W.N_fg T).map φu)

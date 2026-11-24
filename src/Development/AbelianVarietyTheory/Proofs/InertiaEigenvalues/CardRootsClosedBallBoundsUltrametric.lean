@@ -184,22 +184,12 @@ theorem newton_step_root_in_disc :
     rw [mul_coeff_zero]
     simp
 
-  have hM : 0 < ‖g.coeff d‖ * ρ ^ d := by
-    have h := hlt (d + 1) (Nat.lt_succ_self d)
-    have : 0 ≤ ‖g.coeff (d + 1)‖ * ρ ^ (d + 1) := by positivity
-    linarith
   have hsmall : ‖g.coeff (d + 1) * a‖ < ‖g.coeff d‖ := by
     rw [norm_mul]
-    have hp : 0 < ρ ^ (d + 1) := by positivity
-    have h := hlt (d + 1) (Nat.lt_succ_self d)
-    have hn : 0 ≤ ‖g.coeff (d + 1)‖ * ρ ^ (d + 1) := by positivity
-    have h2 : ‖g.coeff (d + 1)‖ * ‖a‖ * ρ ^ (d + 1) < ‖g.coeff d‖ * ρ ^ (d + 1) := by
-      calc ‖g.coeff (d + 1)‖ * ‖a‖ * ρ ^ (d + 1)
-          = (‖g.coeff (d + 1)‖ * ρ ^ (d + 1)) * ‖a‖ := by ring
-        _ ≤ (‖g.coeff (d + 1)‖ * ρ ^ (d + 1)) * ρ := mul_le_mul_of_nonneg_left ha hn
-        _ < (‖g.coeff d‖ * ρ ^ d) * ρ := mul_lt_mul_of_pos_right h hρ
-        _ = ‖g.coeff d‖ * ρ ^ (d + 1) := by ring
-    exact lt_of_mul_lt_mul_right h2 hp.le
+    refine lt_of_mul_lt_mul_right ?_ (pow_pos hρ d).le
+    calc ‖g.coeff (d + 1)‖ * ‖a‖ * ρ ^ d ≤ ‖g.coeff (d + 1)‖ * ρ * ρ ^ d := by gcongr
+      _ = ‖g.coeff (d + 1)‖ * ρ ^ (d + 1) := by ring
+      _ < ‖g.coeff d‖ * ρ ^ d := hlt (d + 1) (Nat.lt_succ_self d)
   have htopn : ‖((X - C a) * g).coeff (d + 1)‖ = ‖g.coeff d‖ := by
     rw [hcoef d, sub_eq_add_neg,
       IsUltrametricDist.norm_add_eq_max_of_norm_ne_norm (by rw [norm_neg]; exact hsmall.ne'),
@@ -224,10 +214,7 @@ theorem newton_step_root_in_disc :
       _ ≤ max (ρ * (‖g.coeff k‖ * ρ ^ k)) (ρ * (‖g.coeff (k + 1)‖ * ρ ^ (k + 1))) := by
           apply max_le_max
           · exact le_of_eq (by ring)
-          · calc ‖g.coeff (k + 1)‖ * ‖a‖ * ρ ^ (k + 1)
-                = (‖g.coeff (k + 1)‖ * ρ ^ (k + 1)) * ‖a‖ := by ring
-              _ ≤ (‖g.coeff (k + 1)‖ * ρ ^ (k + 1)) * ρ := mul_le_mul_of_nonneg_left ha hn
-              _ = ρ * (‖g.coeff (k + 1)‖ * ρ ^ (k + 1)) := by ring
+          · linarith [mul_le_mul_of_nonneg_right ha hn]
   constructor
   · intro j
     rw [htop]
@@ -281,8 +268,8 @@ theorem dominantIndex_prod_X_sub_C (K : Type) [NormedField K] [IsUltrametricDist
     refine ⟨fun j => ?_, fun j hj => ?_⟩
     · rcases Nat.eq_zero_or_pos j with h | h
       · subst h; simp
-      · rw [coeff_C, if_neg (Nat.pos_iff_ne_zero.mp h)]; simp
-    · rw [coeff_C, if_neg (Nat.pos_iff_ne_zero.mp hj)]; simp [hc]
+      · rw [coeff_C, ite_eq_right (Nat.pos_iff_ne_zero.mp h)]; simp
+    · rw [coeff_C, ite_eq_right (Nat.pos_iff_ne_zero.mp hj)]; simp [hc]
   | cons a s ih =>
     intro c hc
     obtain ⟨h1, h2⟩ := ih c hc
@@ -291,9 +278,9 @@ theorem dominantIndex_prod_X_sub_C (K : Type) [NormedField K] [IsUltrametricDist
       rw [Multiset.map_cons, Multiset.prod_cons, mul_left_comm]
     rw [heq, Multiset.filter_cons]
     by_cases ha : ‖a‖ ≤ ρ
-    · rw [if_pos ha, Multiset.singleton_add, Multiset.card_cons]
+    · rw [ite_eq_left ha, Multiset.singleton_add, Multiset.card_cons]
       exact _root_.GlobalTheory.newton_step_root_in_disc K _ a ρ _ hρ ha h1 h2
-    · rw [if_neg ha, zero_add]
+    · rw [ite_eq_right ha, zero_add]
       exact _root_.GlobalTheory.newton_step_root_outside_disc K _ a ρ _ hρ (not_le.mp ha) h1 h2
 
 theorem card_roots_closedBall_eq_dominantIndex :
@@ -301,8 +288,7 @@ theorem card_roots_closedBall_eq_dominantIndex :
   intro K _ _ _ f ρ hρ hf
   have key := dominantIndex_prod_X_sub_C K ρ hρ f.roots f.leadingCoeff
     (leadingCoeff_ne_zero.mpr hf)
-  rw [C_leadingCoeff_mul_prod_multiset_X_sub_C IsAlgClosed.card_roots_eq_natDegree] at key
-  exact key
+  rwa [C_leadingCoeff_mul_prod_multiset_X_sub_C IsAlgClosed.card_roots_eq_natDegree] at key
 
 end GlobalTheory
 end -- clump:auto
@@ -333,13 +319,11 @@ theorem card_roots_le_radius_bounds :
   obtain ⟨hA, hB⟩ := _root_.GlobalTheory.card_roots_closedBall_eq_dominantIndex K f ρ hρ hf
   set e := Multiset.card (f.roots.filter fun z => ‖z‖ ≤ ρ) with he
   refine ⟨fun H => ?_, fun H => ?_⟩
-  · by_contra hlt
-    push_neg at hlt
+  · by_contra! hlt
     have h1 := hB d hlt
     have h2 := H e
     linarith
-  · by_contra hlt
-    push_neg at hlt
+  · by_contra! hlt
     have h1 := H e hlt
     have h2 := hA d
     linarith

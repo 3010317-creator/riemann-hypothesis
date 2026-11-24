@@ -89,8 +89,7 @@ theorem JJ_mul (N : Submodule ℂ V) {T : Module.End ℂ V} (h : T ∈ JJ N) (S 
 
 theorem adZ_JJ {Z : Module.End ℂ V} {N : Submodule ℂ V} (hZ : ∀ y ∈ N, Z y ∈ N) :
     JJ N ≤ (JJ N).comap (adZ Z) := by
-  intro T hT x
-  exact N.sub_mem (hZ _ (hT x)) (hT _)
+  exact fun T hT x => N.sub_mem (hZ _ (hT x)) (hT _)
 
 def PP (Z : Module.End ℂ V) : Submodule ℂ (Module.End ℂ V) :=
   Submodule.span ℂ {T | ∃ k : ℕ, adZ Z T = ((k : ℂ) + 1) • T}
@@ -175,12 +174,12 @@ theorem mem_NV (hm : Monotone lev) (E1 E2 : Fin n → Fin n → Module.End ℂ V
   cases s
   · convert h2 using 1
     simp only [op, LinearMap.add_apply, LinearMap.sub_apply]
-    simp only [Bool.false_eq_true, if_false]
+    simp only [Bool.false_eq_true, ite_false]
     rw [show E1 a b w + E2 a b w - (E1 a b w - E2 a b w) = (2 : ℂ) • E2 a b w by
       rw [two_smul]; abel, smul_smul]
     norm_num
   · convert h1 using 1
-    simp only [op, LinearMap.add_apply, LinearMap.sub_apply, if_true]
+    simp only [op, LinearMap.add_apply, LinearMap.sub_apply, ite_true]
     rw [show E1 a b w + E2 a b w + (E1 a b w - E2 a b w) = (2 : ℂ) • E1 a b w by
       rw [two_smul]; abel, smul_smul]
     norm_num
@@ -230,7 +229,7 @@ theorem hh_comm (lev : Fin n → ℕ) {E : Fin n → Fin n → Module.End ℂ V}
       · subst h; simp
       · simp [h, Ne.symm h]
   rw [hh, Finset.sum_mul, Finset.mul_sum, ← Finset.sum_sub_distrib]
-  simp only [h, Finset.sum_sub_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true, sub_smul]
+  simp only [h, Finset.sum_sub_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true, sub_smul]
 
 def ZZ (lev : Fin n → ℕ) (E1 E2 : Fin n → Fin n → Module.End ℂ V) : Module.End ℂ V :=
   ∑ c : Fin n, ((lev c : ℕ) : ℂ) • (E1 c c + E2 c c)
@@ -248,12 +247,12 @@ theorem ZZ_comm (h : PairRel E1 E2) (x : Bool × Fin n × Fin n) :
   · have hc : Commute (hh lev E1) (E2 a b) :=
       Commute.sum_left _ _ _ fun c _ => (h.2.2 c c a b).smul_left _
     have := hh_comm lev h.2.1 a b
-    simp only [op, Bool.false_eq_true, if_false]
+    simp only [op, Bool.false_eq_true, ite_false]
     rw [add_mul, mul_add, hc.eq, ← this]; abel
   · have hc : Commute (hh lev E2) (E1 a b) :=
       Commute.sum_left _ _ _ fun c _ => (h.2.2 a b c c).symm.smul_left _
     have := hh_comm lev h.1 a b
-    simp only [op, if_true]
+    simp only [op, ite_true]
     rw [add_mul, mul_add, hc.eq, ← this]; abel
 
 theorem Tl_comm (h : PairRel E1 E2) (l : Lt n) :
@@ -262,10 +261,10 @@ theorem Tl_comm (h : PairRel E1 E2) (l : Lt n) :
   obtain ⟨s, i⟩ := l
   have h1 := ZZ_comm (lev := lev) h (true, i.1.1, i.1.2)
   have h2 := ZZ_comm (lev := lev) h (false, i.1.1, i.1.2)
-  simp only [op, if_true, Bool.false_eq_true, if_false] at h1 h2
+  simp only [op, ite_true, Bool.false_eq_true, ite_false] at h1 h2
   cases s
-  · simp only [Tl, Ts, Bool.false_eq_true, if_false, map_sub, h1, h2, smul_sub]
-  · simp only [Tl, Ts, if_true, map_add (f := _), h1, h2, smul_add]
+  · simp only [Tl, Ts, Bool.false_eq_true, ite_false, map_sub, h1, h2, smul_sub]
+  · simp only [Tl, Ts, ite_true, map_add (f := _), h1, h2, smul_add]
 
 theorem ZZ_NV (h : PairRel E1 E2) (y : V) (hy : y ∈ NV lev E1 E2) :
     ZZ lev E1 E2 y ∈ NV lev E1 E2 := by
@@ -345,8 +344,7 @@ theorem Low.levi {lev : Fin n → ℕ} {u : FreeAlgebra ℂ (Bool × Fin n × Fi
     rcases eq_or_lt_of_le hp with h | h
     · refine ⟨b * FreeAlgebra.ι ℂ p, fun V _ _ E1 E2 hE => ?_⟩
       have := congruenceCondition_mul (hb V E1 E2 hE) (key V E1 E2 hE)
-      rw [map_mul, map_mul, evaluation_generator, evB_ι_of_eq lev E1 E2 h.symm, ← sub_mul]
-      exact this
+      rwa [map_mul, map_mul, evaluation_generator, evB_ι_of_eq lev E1 E2 h.symm, ← sub_mul]
     · refine ⟨0, fun V _ _ E1 E2 hE => ?_⟩
       have h1 := congruenceCondition_mul (hb V E1 E2 hE) (key V E1 E2 hE)
       have h2 : evB lev E1 E2 b * op E1 E2 p ∈ PP (ZZ lev E1 E2) := by
@@ -472,8 +470,7 @@ theorem hcDec2 : HCDec2 := by
   have h0 : adZ (ZZ lev E1 E2) (ev2 E1 E2 a - evB lev E1 E2 b) = 0 := by
     rw [map_sub, adZ_evB hE, sub_zero, adZ_apply, sub_eq_zero]
     exact (Commute.sum_left _ _ _ fun c _ => (ha V E1 E2 hE c c).smul_left _).eq
-  have h1 := mem_JJ_of (ZZ_NV hE) h0 (hb V E1 E2 hE) (by simpa using h V E1 E2 hE)
-  exact sum_of_mem_NV (h1 x)
+  exact sum_of_mem_NV ((mem_JJ_of (ZZ_NV hE) h0 (hb V E1 E2 hE) (by simpa using h V E1 E2 hE)) x)
 
 end GlobalTheory.CompanionTheory.PairMult.HCD
 end -- clump:auto
@@ -519,16 +516,16 @@ theorem ad_letter {lev : Fin n → ℕ} {W : Type} [AddCommGroup W] [Module ℂ 
     have k2 : (if b = c then (if lev a = lev d then (if s = true then X1 a d else X2 a d) else 0) else 0) =
         if b = c then (if s = true then X1 a d else X2 a d) else 0 := by
       split_ifs with h h' <;> first | rfl | exact absurd (e2 h) h'
-    rw [k1, k2, if_pos hab]
+    rw [k1, k2, ite_eq_left hab]
     cases s
     · have e := h2 c d a b hcd hab
       have k := (h3 c d a b hcd hab).eq
-      simp only [Bool.false_eq_true, if_false, add_mul, mul_add]
+      simp only [Bool.false_eq_true, ite_false, add_mul, mul_add]
       rw [k, ← e]
       abel
     · have e := h1 c d a b hcd hab
       have k := (h3 a b c d hab hcd).eq
-      simp only [if_true, add_mul, mul_add]
+      simp only [ite_true, add_mul, mul_add]
       rw [k, ← e]
       abel
   · have e1 : d = a → ¬ lev c = lev b := fun h => by rw [hcd, h]; exact hab
@@ -537,7 +534,7 @@ theorem ad_letter {lev : Fin n → ℕ} {W : Type} [AddCommGroup W] [Module ℂ 
       split_ifs with h h' <;> first | rfl | exact absurd h' (e1 h)
     have k2 : (if b = c then (if lev a = lev d then (if s = true then X1 a d else X2 a d) else 0) else 0) = 0 := by
       split_ifs with h h' <;> first | rfl | exact absurd h' (e2 h)
-    rw [k1, k2, if_neg hab]
+    rw [k1, k2, ite_eq_right hab]
     simp
 
 theorem exists_adFamL (lev : Fin n → ℕ) (a : FreeAlgebra ℂ (Bool × Fin n × Fin n)) :
@@ -589,7 +586,7 @@ theorem exists_adFamL (lev : Fin n → ℕ) (a : FreeAlgebra ℂ (Bool × Fin n 
       simp only []
       rw [this, e1, e2]
       simp only [Matrix.of_apply, add_smul, Finset.sum_add_distrib, Fintype.sum_prod_type, ite_smul, zero_smul,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true, map_mul, Finset.sum_mul, Finset.mul_sum, smul_mul_assoc,
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true, map_mul, Finset.sum_mul, Finset.mul_sum, smul_mul_assoc,
         mul_smul_comm]
       congr 1
       rw [Finset.sum_comm]
@@ -923,10 +920,10 @@ theorem evLv_toK (lev : Fin n → ℕ) (E1 E2 : Fin n → Fin n → Module.End �
     by_cases e : lev p = lev q
     · cases s
       · simp only [Function.comp, AlgHom.comp_apply, toK, evLv, GlobalTheory.CompanionTheory.PairMult.evB, FreeAlgebra.lift_ι_apply]
-        simp only [e, if_true, Bool.false_eq_true, if_false, map_smul, map_sub, FreeAlgebra.lift_ι_apply, kA, pA]
+        simp only [e, ite_true, Bool.false_eq_true, ite_false, map_smul, map_sub, FreeAlgebra.lift_ι_apply, kA, pA]
         module
       · simp only [Function.comp, AlgHom.comp_apply, toK, evLv, GlobalTheory.CompanionTheory.PairMult.evB, FreeAlgebra.lift_ι_apply]
-        simp only [e, if_true, Bool.false_eq_true, if_false, map_smul, map_add (f := _), FreeAlgebra.lift_ι_apply, kA, pA]
+        simp only [e, ite_true, Bool.false_eq_true, ite_false, map_smul, map_add (f := _), FreeAlgebra.lift_ι_apply, kA, pA]
         module
     · cases s <;> simp [toK, evLv, GlobalTheory.CompanionTheory.PairMult.evB, e]
   exact DFunLike.congr_fun h b
@@ -957,20 +954,18 @@ theorem RU_le_range {lev : Fin n → ℕ} (hm : Monotone lev) (E1 E2 : Fin n →
     have hK := xL_mem_range lev E1 E2 (l := (false, ⟨(a, b), hlt⟩)) hab ((1 / 2 : ℂ) • v)
     have hP := xL_mem_range lev E1 E2 (l := (true, ⟨(a, b), hlt⟩)) hab ((1 / 2 : ℂ) • v)
     have := add_mem hK hP
-    simp only [xL, kA, pA, Bool.false_eq_true, if_false, if_true, map_smul, LinearMap.add_apply,
+    simp only [xL, kA, pA, Bool.false_eq_true, ite_false, ite_true, map_smul, LinearMap.add_apply,
       LinearMap.sub_apply] at this
     have e : E1 a b v = (1 / 2 : ℂ) • (E1 a b v + E2 a b v) + (1 / 2 : ℂ) • (E1 a b v - E2 a b v) := by module
-    rw [SetLike.mem_coe, e]
-    exact this
+    rwa [SetLike.mem_coe, e]
   · have hlt : a < b := hm.reflect_lt hab
     have hK := xL_mem_range lev E1 E2 (l := (false, ⟨(a, b), hlt⟩)) hab ((1 / 2 : ℂ) • v)
     have hP := xL_mem_range lev E1 E2 (l := (true, ⟨(a, b), hlt⟩)) hab ((1 / 2 : ℂ) • v)
     have := sub_mem hK hP
-    simp only [xL, kA, pA, Bool.false_eq_true, if_false, if_true, map_smul, LinearMap.add_apply,
+    simp only [xL, kA, pA, Bool.false_eq_true, ite_false, ite_true, map_smul, LinearMap.add_apply,
       LinearMap.sub_apply] at this
     have e : E2 a b v = (1 / 2 : ℂ) • (E1 a b v + E2 a b v) - (1 / 2 : ℂ) • (E1 a b v - E2 a b v) := by module
-    rw [SetLike.mem_coe, e]
-    exact this
+    rwa [SetLike.mem_coe, e]
 
 theorem sum_Tl_mem (lev : Fin n → ℕ) (E1 E2 : Fin n → Fin n → Module.End ℂ V) (w : GlobalTheory.CompanionTheory.PairMult.Lt n → V) :
     (∑ l : GlobalTheory.CompanionTheory.PairMult.Lt n, if GlobalTheory.CompanionTheory.PairMult.inUL lev l then GlobalTheory.CompanionTheory.PairMult.Tl E1 E2 l (w l) else 0) ∈
@@ -979,9 +974,9 @@ theorem sum_Tl_mem (lev : Fin n → ℕ) (E1 E2 : Fin n → Fin n → Module.End
   split_ifs with h
   · obtain ⟨s, i⟩ := l
     cases s
-    · simp only [GlobalTheory.CompanionTheory.PairMult.Tl, GlobalTheory.CompanionTheory.PairMult.Ts, Bool.false_eq_true, if_false, LinearMap.sub_apply]
+    · simp only [GlobalTheory.CompanionTheory.PairMult.Tl, GlobalTheory.CompanionTheory.PairMult.Ts, Bool.false_eq_true, ite_false, LinearMap.sub_apply]
       exact sub_mem (left_mem lev E1 E2 h _) (right_mem lev E1 E2 h _)
-    · simp only [GlobalTheory.CompanionTheory.PairMult.Tl, GlobalTheory.CompanionTheory.PairMult.Ts, if_true, LinearMap.add_apply]
+    · simp only [GlobalTheory.CompanionTheory.PairMult.Tl, GlobalTheory.CompanionTheory.PairMult.Ts, ite_true, LinearMap.add_apply]
       exact add_mem (left_mem lev E1 E2 h _) (right_mem lev E1 E2 h _)
   · exact zero_mem _
 
@@ -1063,8 +1058,7 @@ theorem hcdecLv : HCdecLv := by
         (fun p q _ v => piV_false hE x p q v) b 1, piV_one]
     have h3 : GlobalTheory.CompanionTheory.PairMult.evB lev E1 E2 b' x - GlobalTheory.CompanionTheory.PairMult.evB lev E1 E2 b0 x ∈ RU lev E1 E2 := by
       have := h2
-      simp only [Submodule.mem_comap, map_sub, hpi] at this
-      exact this
+      simpa only [Submodule.mem_comap, map_sub, hpi] using this
     have h4 : evKP E1 E2 a x - GlobalTheory.CompanionTheory.PairMult.evB lev E1 E2 b' x ∈ RU lev E1 E2 := by
       have := sub_mem (hmem V E1 E2 hE x) h3
       convert this using 1

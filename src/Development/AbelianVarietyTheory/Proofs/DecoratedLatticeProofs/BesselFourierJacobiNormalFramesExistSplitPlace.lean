@@ -138,20 +138,19 @@ theorem exists_isJacFrame (hs : s ≠ 0) (J : JacLev D ρ) {hh : k} (hh0 : hh �
   have b1 : ∀ (i : Fin ρ) (j : Fin (2 * ρ)), j.val = i.val → ∀ r,
       β r (Sum.inr j) = s * p.xi ^ (ρ - i.val) * p.pr (J.d.e r i) := by
     rintro ⟨i, hi⟩ ⟨j, hj⟩ (rfl : j = i) r
-    exact dif_pos hi
+    exact dite_eq_left hi
   have b2 : ∀ (i : Fin ρ) (j : Fin (2 * ρ)), j.val + i.val + 1 = 2 * ρ → ∀ r,
       β r (Sum.inr j) = s * (hh / p.xi) * (-1 / p.xi) ^ (ρ - 1 - i.val) * p.pr (J.d.e' r i) := by
     rintro ⟨i, hi⟩ ⟨j, hj⟩ (h : j + i + 1 = 2 * ρ) r
     obtain rfl : i = 2 * ρ - 1 - j := by omega
-    exact dif_neg (show ¬ j < ρ by omega)
+    exact dite_eq_right (show ¬ j < ρ by omega)
   obtain ⟨F, hF⟩ := Frame.exists_of_vecMul β
     (by rw [Fintype.card_sum, F₀.card_eq, ← J.d.rank_add, Fintype.card_fin]) (fun v hv => by
       refine hyp_eq_zero (p.π.comp (incA D)) J.d ?_ (F₀.eq_zero ?_) ?_
       · funext i
         have := congrFun hv (Sum.inr ⟨i.val, by omega⟩)
         refine dot_eq_zero_of_smul (c := s * p.xi ^ (ρ - i.val)) (mul_ne_zero hs (pow_ne_zero _ hx)) ?_
-        refine Eq.trans ?_ this
-        exact congrArg (v ⬝ᵥ ·) (funext fun r => (b1 i _ rfl r).symm)
+        exact Eq.trans (congrArg (v ⬝ᵥ ·) (funext fun r => (b1 i _ rfl r).symm)) this
       · rw [Matrix.vecMul_vecMul]; funext a; exact congrFun hv (Sum.inl a)
       · funext i
         have := congrFun hv (Sum.inr ⟨2 * ρ - 1 - i.val, by omega⟩)
@@ -172,15 +171,15 @@ theorem exists_isBesFrame (hs : s ≠ 0) (B : BesLev D ρ) (FA : GlobalTheory.Lo
   have b1 : ∀ (i : Fin ρ) (j : Fin (2 * ρ + 1)), j.val = i.val → ∀ r,
       β r (Sum.inr j) = s * p.xi ^ (ρ - i.val) * p.pr (B.d.e r i) := by
     rintro ⟨i, hi⟩ ⟨j, hj⟩ (rfl : j = i) r
-    exact dif_pos hi
+    exact dite_eq_left hi
   have b0 : ∀ j : Fin (2 * ρ + 1), j.val = ρ → ∀ r, β r (Sum.inr j) = s * p.pr ((B.d.i₀ *ᵥ vecB B.o B.ζ) r) := by
     rintro ⟨j, hj⟩ (h : j = ρ) r
-    exact (dif_neg (show ¬ j < ρ by omega)).trans (dif_pos h)
+    exact (dite_eq_right (show ¬ j < ρ by omega)).trans (dite_eq_left h)
   have b2 : ∀ (i : Fin ρ) (j : Fin (2 * ρ + 1)), j.val + i.val = 2 * ρ → ∀ r,
       β r (Sum.inr j) = s * (-p.hz B / p.xi) * (-1 / p.xi) ^ (ρ - 1 - i.val) * p.pr (B.d.e' r i) := by
     rintro ⟨i, hi⟩ ⟨j, hj⟩ (h : j + i = 2 * ρ) r
     obtain rfl : i = 2 * ρ - j := by omega
-    exact (dif_neg (show ¬ j < ρ by omega)).trans (dif_neg (show ¬ j = ρ by omega))
+    exact (dite_eq_right (show ¬ j < ρ by omega)).trans (dite_eq_right (show ¬ j = ρ by omega))
   obtain ⟨F, hF⟩ := Frame.exists_of_vecMul β
     (by rw [Fintype.card_sum, FA.card_eq, ← B.d.rank_add, ← B.o.rank_add, B.line.1, Fintype.card_fin]; omega)
     (fun v hv => by
@@ -189,8 +188,7 @@ theorem exists_isBesFrame (hs : s ≠ 0) (B : BesLev D ρ) (FA : GlobalTheory.Lo
       · funext i
         have := congrFun hv (Sum.inr ⟨i.val, by omega⟩)
         refine dot_eq_zero_of_smul (c := s * p.xi ^ (ρ - i.val)) (mul_ne_zero hs (pow_ne_zero _ hx)) ?_
-        refine Eq.trans ?_ this
-        exact congrArg (v ⬝ᵥ ·) (funext fun r => (b1 i _ rfl r).symm)
+        exact Eq.trans (congrArg (v ⬝ᵥ ·) (funext fun r => (b1 i _ rfl r).symm)) this
       · rw [Matrix.vecMul_vecMul, Matrix.vecMul_vecMul, ← Matrix.mul_assoc, ← Matrix.map_mul]
         funext a; exact congrFun hv (Sum.inl a)
       · have := congrFun hv (Sum.inr ⟨ρ, by omega⟩)

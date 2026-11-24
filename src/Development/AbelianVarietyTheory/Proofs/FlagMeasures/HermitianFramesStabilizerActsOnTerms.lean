@@ -61,8 +61,7 @@ theorem mem_smul_iff (h : S.GLV) (Λ : Submodule L.O S.V) (x : S.V) : h x ∈ h 
   · rintro ⟨y, hy, hxy⟩
     have hyx : y = x := h.injective hxy
     exact hyx ▸ hy
-  · intro hx
-    exact ⟨x, hx, rfl⟩
+  · exact fun hx => ⟨x, hx, rfl⟩
 
 theorem eq_smul_of (h : S.GLV) (Λ Λ' : Submodule L.O S.V) (H : ∀ x, h x ∈ Λ' ↔ x ∈ Λ) :
     Λ' = h • Λ := by
@@ -160,7 +159,7 @@ theorem spanTo_map (g : Fin (r + 1) → S.V) (t : E)
           intro e
           rw [e] at hi'
           simp at hi'
-        rw [if_neg (fun e => hne e.2)]
+        rw [ite_eq_right (fun e => hne e.2)]
       have hd : h (g (Fin.last r)) - g (Fin.last r) ∈ S.spanTo g r := htop'.2 _ hperp
       have h1 : g (Fin.last r) ∈ S.spanTo g J := Submodule.subset_span ⟨Fin.last r, hi, rfl⟩
       have h2 : S.spanTo g r ≤ S.spanTo g J := hmono _ _ (by simp at hi; omega)
@@ -259,8 +258,7 @@ theorem graph_sub (h : S.GLV) (hh : h ∈ S.St) (Λ : Submodule L.O S.V) :
     rw [e]
     exact Submodule.add_mem _ (u1.2 y hyp) h2
   · have h4 := (inTh_iff S h Λ (y' - y)).2 h3
-    rw [map_sub] at h4
-    exact h4
+    rwa [map_sub] at h4
 
 theorem graph_smul (h : S.GLV) (hh : h ∈ S.St) (Λ : Submodule L.O S.V) :
     S.graphOf (h • Λ) = S.graphOf Λ := by
@@ -278,8 +276,7 @@ theorem isTermW_smul (h : S.GLV) (hh : h ∈ S.St) (d : S.Datum) (Λ : Submodule
   · rw [e2, mul_smul]
   · intro b
     have h4 := (inTh_iff S h Λ _).2 (hb b)
-    rw [map_sub] at h4
-    exact h4
+    rwa [map_sub] at h4
   · rw [hg, graph_smul S h hh Λ]
 
 theorem wit_spec (d : S.Datum) (Λ : Submodule L.O S.V) (H : S.IsTerm d Λ) :
@@ -303,13 +300,9 @@ theorem tauRel_map (h : S.GLV) (hh : h ∈ S.St) (d : S.Datum) (Λ : Submodule L
   have hsub : ∀ g : Fin (r + 1) → S.V, S.spanTo g r ≤ S.spanTo g (r + 1) := fun g =>
     Submodule.span_mono (Set.image_mono fun i (hi : (i : ℕ) < r) => Nat.lt_succ_of_lt hi)
   have hw1 : w ∈ perp L S.Hm (S.spanTo S.f r) := by
-    show ∀ z ∈ S.spanTo S.f r, hf L S.Hm w z = 0
-    intro z hz
-    exact hw' z (le_sup_left (a := S.spanTo S.f (r + 1)) (hsub S.f hz))
+    exact fun z hz => hw' z (le_sup_left (a := S.spanTo S.f (r + 1)) (hsub S.f hz))
   have hw2 : w ∈ perp L S.Hm (S.spanTo S.f' r) := by
-    show ∀ z ∈ S.spanTo S.f' r, hf L S.Hm w z = 0
-    intro z hz
-    exact hw' z (le_sup_right (b := S.spanTo S.f' (r + 1)) (hsub S.f' hz))
+    exact fun z hz => hw' z (le_sup_right (b := S.spanTo S.f' (r + 1)) (hsub S.f' hz))
   have e3 : h w - w + h la' - (h w - w + h la) = h (la' - la) := by
     rw [map_sub]
     abel
@@ -353,8 +346,7 @@ theorem forall_sat (h : S.GLV) (hh : h ∈ S.St) (Λ : Submodule L.O S.V) (P : S
     (∀ y ∈ S.sat (h • Λ), P y) ↔ ∀ y ∈ S.sat Λ, P (h y) := by
   rw [sat_smul S h hh]
   constructor
-  · intro H y hy
-    exact H (h y) ((mem_smul_iff S h _ y).2 hy)
+  · exact fun H y hy => H (h y) ((mem_smul_iff S h _ y).2 hy)
   · intro H y hy
     have e : h (h⁻¹ y) = y := h.apply_symm_apply y
     rw [← e] at hy ⊢
@@ -401,15 +393,13 @@ theorem nLev_smul (h : S.GLV) (hh : h ∈ S.St) (d : S.Datum) (Λ : Submodule L.
       rw [sat_smul S h hh] at hy
       obtain ⟨z, hz, rfl⟩ := hy
       refine ⟨{x | x - z ∈ S.M d Λ}, ⟨z, hz, ?_, rfl⟩, ?_⟩
-      · rw [← hL z]
-        exact hl
+      · rwa [← hL z]
       · exact (hC z).symm
     · rintro ⟨C0, ⟨z, hz, hl, rfl⟩, rfl⟩
       refine ⟨h z, ?_, ?_, (hC z).symm⟩
       · rw [sat_smul S h hh]
         exact (mem_smul_iff S h _ _).2 hz
-      · rw [hL]
-        exact hl
+      · rwa [hL]
   rw [hT, Set.ncard_image_of_injective _ (Set.image_injective.mpr h.injective)]
 
 theorem stabiliser_acts_on_terms : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] [CharZero F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] (L : LocE F E), ∀ (r k : ℕ) (S : Frames L r k), ∀ (d : S.Datum) (Λ : Submodule L.O S.V), S.IsTerm d Λ → ∀ h ∈ S.St, S.IsTerm d (h • Λ) ∧ S.om d (h • Λ) = S.om d Λ ∧ S.M d (h • Λ) = h • S.M d Λ ∧ S.sat (h • Λ) = h • S.sat Λ ∧ S.Fr d (h • Λ) = h • S.Fr d Λ ∧ S.be d (h • Λ) = S.be d Λ ∧ S.cardI d (h • Λ) = S.cardI d Λ ∧ (S.BBzero d (h • Λ) ↔ S.BBzero d Λ) ∧ (S.TypeBe d (h • Λ) ↔ S.TypeBe d Λ) ∧ (∀ β J βJ, S.InFF β J βJ d (h • Λ) ↔ S.InFF β J βJ d Λ) ∧ ∀ J x x' u s, S.IsMove J d Λ x x' u s ↔ S.IsMove J d (h • Λ) (h x) (h x') (h u) s := by
@@ -490,11 +480,9 @@ theorem stabiliser_acts_on_terms : ∀ {F : Type} [Field F] [ValuativeRel F] [To
       rwa [isom S h hh] at h3
     · intro H x₁ h1 x₁' h1' x₂ h2 x₂' h2' t1 t2
       have t1' : S.InTh (h • Λ) (h (h⁻¹ x₁ + h⁻¹ x₁')) := by
-        rw [map_add (f := _), e, e]
-        exact t1
+        rwa [map_add (f := _), e, e]
       have t2' : S.InTh (h • Λ) (h (h⁻¹ x₂ + h⁻¹ x₂')) := by
-        rw [map_add (f := _), e, e]
-        exact t2
+        rwa [map_add (f := _), e, e]
       have h3 := H (h⁻¹ x₁) ((hX _).1 (by rw [e]; exact h1)) (h⁻¹ x₁') ((hX' _).1 (by rw [e]; exact h1'))
         (h⁻¹ x₂) ((hX _).1 (by rw [e]; exact h2)) (h⁻¹ x₂') ((hX' _).1 (by rw [e]; exact h2'))
         ((inTh_iff S h Λ _).1 t1') ((inTh_iff S h Λ _).1 t2')

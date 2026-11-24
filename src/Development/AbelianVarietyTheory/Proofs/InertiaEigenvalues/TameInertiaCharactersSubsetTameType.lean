@@ -128,13 +128,13 @@ theorem lastMax_E_mul {h : K⟦X⟧} {d : ℕ}
   have hlow : ∀ n, n < e → ‖coeff n (E K l e * h)‖ * rad l (1 / (e : ℝ)) ^ n =
       ‖(l : K)‖ * (‖coeff n h‖ * rad l (1 / (e : ℝ)) ^ n) := by
     intro n hn
-    rw [coeff_E_mul', if_neg (not_le.mpr hn), zero_add, norm_mul]
+    rw [coeff_E_mul', ite_eq_right (not_le.mpr hn), zero_add, norm_mul]
     ring
   have hhigh : ∀ k, ‖coeff (k + e) (E K l e * h)‖ * rad l (1 / (e : ℝ)) ^ (k + e) ≤
       max (‖(l : K)‖ * (‖coeff k h‖ * rad l (1 / (e : ℝ)) ^ k))
         (‖(l : K)‖ * (‖coeff (k + e) h‖ * rad l (1 / (e : ℝ)) ^ (k + e))) := by
     intro k
-    rw [coeff_E_mul', if_pos (Nat.le_add_left e k), Nat.add_sub_cancel]
+    rw [coeff_E_mul', ite_eq_left (Nat.le_add_left e k), Nat.add_sub_cancel]
     calc ‖coeff k h + (l : K) * coeff (k + e) h‖ * rad l (1 / (e : ℝ)) ^ (k + e)
         ≤ max ‖coeff k h‖ ‖(l : K) * coeff (k + e) h‖ * rad l (1 / (e : ℝ)) ^ (k + e) :=
           mul_le_mul_of_nonneg_right (IsUltrametricDist.norm_add_le_max _ _) (pow_nonneg hr.le _)
@@ -145,7 +145,7 @@ theorem lastMax_E_mul {h : K⟦X⟧} {d : ℕ}
           · rw [norm_mul]; ring
   have htop : ‖coeff (d + e) (E K l e * h)‖ * rad l (1 / (e : ℝ)) ^ (d + e) =
       ‖(l : K)‖ * (‖coeff d h‖ * rad l (1 / (e : ℝ)) ^ d) := by
-    rw [coeff_E_mul', if_pos (Nat.le_add_left e d), Nat.add_sub_cancel]
+    rw [coeff_E_mul', ite_eq_left (Nat.le_add_left e d), Nat.add_sub_cancel]
     have hsmall : ‖(l : K) * coeff (d + e) h‖ < ‖coeff d h‖ := by
       have hlt := mul_lt_mul_of_pos_left (H.2 (d + e) (by omega)) hl
       refine lt_of_mul_lt_mul_right ?_ (pow_pos hr (d + e)).le
@@ -181,8 +181,7 @@ theorem lastMax_E_pow_mul {h : K⟦X⟧} {d : ℕ}
     have h' := lastMax_E_mul l e ih
     rw [← mul_assoc, ← pow_succ'] at h'
     have hidx : d + (m + 1) * e = d + m * e + e := by ring
-    rw [hidx]
-    exact h'
+    rwa [hidx]
 
 theorem exists_lastMax_of_mem {O : Type} [CommRing O] [Algebra O K] [IsUnitBall O K] {h : K⟦X⟧}
     (hh : h ∈ Rpi O K l e) (h0 : h ≠ 0) :
@@ -522,8 +521,7 @@ private lemma prime_mul_mem_chars_succ_of_mem [NeZero e] {P : _root_.GlobalTheor
       by_cases hσ : σ - 1 = τ
       · obtain rfl := eq_add_of_sub_eq hσ
         rw [add_sub_cancel_right, Function.update_self, Pi.zero_apply]
-        rw [_root_.GlobalTheory.BK.PhiMod.phiD_apply, add_sub_cancel_right] at h
-        exact h
+        rwa [_root_.GlobalTheory.BK.PhiMod.phiD_apply, add_sub_cancel_right] at h
       · simp [Function.update_of_ne hσ]
     simpa using congrFun (P.phiD.injective heq) τ
   · rw [_root_.GlobalTheory.BK.Descent.actD_phiD, _root_.GlobalTheory.BK.PhiMod.phiD_apply,
@@ -752,8 +750,7 @@ theorem GlobalTheory.CharsDesc.chars_subset_sig : ∀ (l : ℕ) [Fact l.Prime] (
   have hT := hType k' hk'I ζ hk'π' x hxD
   obtain ⟨c', hc', hcc⟩ := hpoly ζ c.val (eval_eq_zero_of_aeval_eq_zero hx0 hact hT)
   have hval := hζ.pow_inj (ZMod.val_lt c) (ZMod.val_lt c') hcc
-  rw [ZMod.val_injective e hval]
-  exact hc'
+  rwa [ZMod.val_injective e hval]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameInertiaCharactersSubsetTameType =====

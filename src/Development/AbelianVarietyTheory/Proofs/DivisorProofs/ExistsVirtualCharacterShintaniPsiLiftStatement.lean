@@ -373,11 +373,11 @@ theorem sum_orbits (hp : (Nat.card Γ).Prime) (F : Finset Γ → ℂ) :
       obtain ⟨u, rfl⟩ := MulAction.mem_orbit_iff.1 hx
       exact ⟨u, rfl⟩
     · intro u
-      rw [if_pos ((smul_ne_empty_univ u).2 hP)]
+      rw [ite_eq_left ((smul_ne_empty_univ u).2 hP)]
   · refine Finset.sum_eq_zero fun y _ => ?_
     obtain ⟨y, hy⟩ := y
     obtain ⟨u, rfl⟩ := MulAction.mem_orbit_iff.1 hy
-    rw [if_neg]
+    rw [ite_eq_right]
     rwa [smul_ne_empty_univ u]
 
 end GlobalTheory.CrossOrbit
@@ -476,8 +476,8 @@ theorem virt_crossTerm {G Γ : Type} [Group G] [Group Γ] [Fintype Γ] [Finite G
   · exact isChar_mem_virt_complex (isChar_one ℂ ℂ G)
   · intro t _
     by_cases ht : t ∈ S
-    · simp only [ht, if_true]; exact hV.2.1 a ha G (φ t⁻¹).toMonoidHom
-    · simp only [ht, if_false]; exact hV.2.1 b hb G (φ t⁻¹).toMonoidHom
+    · simp only [ht, ite_true]; exact hV.2.1 a ha G (φ t⁻¹).toMonoidHom
+    · simp only [ht, ite_false]; exact hV.2.1 b hb G (φ t⁻¹).toMonoidHom
 
 theorem cross_terms_induced : ∀ (G Γ : Type) [Group G] [Finite G] [Group Γ] [Fintype Γ] (φ : Γ →* MulAut G) (s : Γ), (Nat.card Γ).Prime → s ≠ 1 → ∀ a b : G → ℂ, a ∈ Virt ℂ ℂ G → b ∈ Virt ℂ ℂ G → ∃ Z ∈ Virt ℂ ℂ (G ⋊[φ] Γ), (∀ g, Z (inl g) = ∏ t : Γ, (a (φ t g) + b (φ t g)) - ∏ t : Γ, a (φ t g) - ∏ t : Γ, b (φ t g)) ∧ ∀ δ, Z (inl δ * inr s) = 0 := by
   intro G Γ _ _ _ _ φ s hp hs a b ha hb
@@ -558,8 +558,7 @@ theorem tensorInd_virt_prime : ∀ (G Γ : Type) [Group G] [Finite G] [Group Γ]
   intro G Γ _ _ _ _ φ s hp hs χ hχ
   have hgen : ∀ t : Γ, t ∈ Subgroup.zpowers s := by
     haveI : Fact (Nat.card Γ).Prime := ⟨hp⟩
-    intro t
-    exact mem_zpowers_of_prime_card rfl hs
+    exact fun t => mem_zpowers_of_prime_card rfl hs
   obtain ⟨a, b, ha, hb, rfl⟩ := (mem_virt_iff_sub ℂ ℂ G χ).1 hχ
   obtain ⟨A, hA, hA1, hA2⟩ := _root_.GlobalTheory.Shin.TensorInd.exists_tensorInduction_char G Γ φ s hgen a ha
   obtain ⟨B, hB, hB1, hB2⟩ := _root_.GlobalTheory.Shin.TensorInd.exists_tensorInduction_char G Γ φ s hgen b hb
@@ -621,8 +620,7 @@ theorem par_facts {F' : Type} [Field F'] (a b n : ℕ) (h : n = a + b) :
     rw [hπ, hπ, hπ] at this
     exact congrArg Prod.fst this
   · have := (hmat ⟨x, (hH x).2 hx⟩).1
-    rw [hπ] at this
-    exact this
+    rwa [hπ] at this
 
 theorem tlG_gal {F' : Type} [Field F'] (u : F' →+* F') (a b n : ℕ) (h : n = a + b) (x : GL (Fin n) F')
     (hx : InPar a x) : tlG a (gal u n x) = gal u a (tlG a x) := by
@@ -710,7 +708,7 @@ theorem hat_ind : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite 
     have hr : ((inl y)⁻¹ * g * inl y).right = t := by simp [hg]
     unfold ext0
     by_cases hw : InPar a (y⁻¹ * δ * gal (t : F' →+* F') n y)
-    · rw [dite_eq_left (by rw [hP, hl]; exact hw), if_pos hw, mul_one]
+    · rw [dite_eq_left (by rw [hP, hl]; exact hw), ite_eq_left hw, mul_one]
       simp only [hψ]
       congr 1
       apply SemidirectProduct.ext
@@ -718,7 +716,7 @@ theorem hat_ind : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite 
         rw [hl]; simp
       · change ((inl y)⁻¹ * g * inl y).right = _
         rw [hr]; simp
-    · rw [dite_eq_right (by rw [hP, hl]; exact hw), if_neg hw]
+    · rw [dite_eq_right (by rw [hP, hl]; exact hw), ite_eq_right hw]
   have hz : ∀ (y : GL (Fin n) F') (u : F' ≃ₐ[F] F'),
       ((SemidirectProduct.equivProd (φ := galAct F F' n)).symm (y, u)) = inl y * inr u := by
     intro y u
@@ -848,8 +846,7 @@ theorem exists_virt_psi_lift : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F
   intro F F' _ _ _ _ s hp hs ι θ hθ k
   haveI : Finite F := Finite.of_injective (algebraMap F F') (algebraMap F F').injective
   haveI : FiniteDimensional F F' := Module.Finite.of_finite
-  have hcard : Nat.card (F' ≃ₐ[F] F') = Module.finrank F F' := by
-    exact IsGalois.card_aut_eq_finrank F F'
+  have hcard : Nat.card (F' ≃ₐ[F] F') = Module.finrank F F' := IsGalois.card_aut_eq_finrank F F'
   have hgen : ∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s := by
     haveI : Fact (Module.finrank F F').Prime := ⟨hp⟩
     rw [zpowers_eq_top_of_prime_card hcard hs]; intro t; trivial
@@ -872,8 +869,7 @@ theorem exists_virt_psi_lift : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F
       simp only [map_one, mul_one] at e
       have e2 : (fun d => Xa (inl d)) = psiG (fun P => ∏ t : F' ≃ₐ[F] F', rootSum θ k (P.map (t : F' →+* F'))) a :=
         funext h1
-      rw [e2] at e
-      exact e
+      rwa [e2] at e
     · rw [hZe s δ]
       have e2 : (fun d => Xa (inl d * inr s)) = shLift s (psiG (rootSum (pullθ ι θ) k) a) := funext h2
       rw [e2]

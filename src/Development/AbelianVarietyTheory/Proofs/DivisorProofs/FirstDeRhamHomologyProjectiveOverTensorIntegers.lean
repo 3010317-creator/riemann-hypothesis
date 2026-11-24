@@ -536,8 +536,7 @@ instance isSemisimpleRing_charZero_tensor_ringOfIntegers (F : Type) [Field F] [N
 
 theorem projective_charZero_tensor_ringOfIntegers : ∀ (F : Type) [Field F] [NumberField F] (k : Type) [Field k]
     [CharZero k] (M : Type 1) [AddCommGroup M] [Module (k ⊗[ℤ] 𝓞 F) M], Module.Projective (k ⊗[ℤ] 𝓞 F) M := by
-  intro F _ _ k _ _ M _ _
-  exact Module.projective_of_isSemisimpleRing _ _
+  exact fun F _ _ k _ _ M _ _ => Module.projective_of_isSemisimpleRing _ _
 
 end GlobalTheory
 end -- clump:auto
@@ -682,8 +681,7 @@ theorem exists_global_uniformiser_above_prime :
         · rw [Set.mem_singleton_iff] at hx; subst hx; exact hϖJ
       · rw [← hϖ]
         apply sup_le
-        · rw [Ideal.span_le, Set.singleton_subset_iff]
-          rw [pow_two]
+        · rw [Ideal.span_le, Set.singleton_subset_iff, pow_two]
           exact Ideal.mul_mem_right _ _ (Ideal.subset_span (Set.mem_insert _ _))
         · rw [Ideal.span_le, Set.singleton_subset_iff]
           exact Ideal.subset_span (by simp)
@@ -879,8 +877,7 @@ theorem reduced_quot_tensor_of_reduced_modp :
     exact Ideal.span_insert_zero
   have hinj : Function.Injective (RingHom.kerLift f.toRingHom) := RingHom.kerLift_injective _
   have hR : IsReduced (k ⊗[ℤ] O ⧸ RingHom.ker f.toRingHom) := isReduced_of_injective _ hinj
-  rw [hker] at hR
-  exact hR
+  rwa [hker] at hR
 
 end GlobalTheory
 end -- clump:auto

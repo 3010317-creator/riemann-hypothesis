@@ -169,8 +169,7 @@ theorem local_class_scalar_norm_sep : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup 
         algebraMap (w.1.adicCompletion ℚ) (w.1.adicCompletion ℚ ⊗[ℚ] G.C) (algebraMap ℚ (w.1.adicCompletion ℚ) ((y₀ : G.Cˣ × ℚˣ).2 : ℚ)) := by
       rw [← IsScalarTower.algebraMap_apply]
       exact (Algebra.TensorProduct.includeRight : G.C →ₐ[ℚ] w.1.adicCompletion ℚ ⊗[ℚ] G.C).commutes _
-    rw [e1, e2] at h
-    exact h
+    rwa [e1, e2] at h
   have hN : ∀ m' : (w.1.adicCompletion ℚ ⊗[ℚ] G.C)ˣ, (m' : (w.1.adicCompletion ℚ ⊗[ℚ] G.C)) = m * (starT G.star (w.1.adicCompletion ℚ) (m : (w.1.adicCompletion ℚ ⊗[ℚ] G.C))).unop * inC G (w.1.adicCompletion ℚ) ((β⁻¹ : G.Cˣ) : G.C) →
       Commute (m' : (w.1.adicCompletion ℚ ⊗[ℚ] G.C)) (inC G (w.1.adicCompletion ℚ) (((y₀ : G.Cˣ × ℚˣ).1 : G.Cˣ) : G.C)) →
       inC G (w.1.adicCompletion ℚ) (β : G.C) * (starT G.star (w.1.adicCompletion ℚ) (m' : (w.1.adicCompletion ℚ ⊗[ℚ] G.C))).unop * inC G (w.1.adicCompletion ℚ) ((β⁻¹ : G.Cˣ) : G.C) = m' →
@@ -316,7 +315,7 @@ theorem classes_finite : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a = 1 �
   obtain ⟨a', ha', b, hD⟩ := key y hy a.1.1 (left_ne_zero_of_mul ha)
   have hex : ∃ y, D (a', b) y := ⟨y, hD⟩
   refine ⟨ρ (a', b), Finset.mem_image_of_mem _ (Finset.mem_product.2 ⟨ha', Finset.mem_univ _⟩), ?_⟩
-  have hρ : ρ (a', b) = hex.choose := dif_pos hex
+  have hρ : ρ (a', b) = hex.choose := dite_eq_left hex
   rw [hρ]
   obtain ⟨c', r', e', hc', he', hb', hre'⟩ := hex.choose_spec
   dsimp only at hb' hre'
@@ -481,8 +480,7 @@ theorem exists_pow_mul_isIntegral : ∀ (K : Type) [Field K] [NumberField K] (p 
     have hD := IsUltrametricDist.norm_natCast_le_one (PadicAlgCl p) D
     have h2 : ‖(D : PadicAlgCl p)‖ * ‖φ c‖ ≤ (p : ℝ) ^ m₀ :=
       (mul_le_of_le_one_left (norm_nonneg _) hD).trans ((hB φ).trans hm₀.le)
-    rw [mul_assoc, inv_pow, inv_mul_le_iff₀ (by positivity), mul_one]
-    exact h2
+    rwa [mul_assoc, inv_pow, inv_mul_le_iff₀ (by positivity), mul_one]
 
 end GlobalTheory.IntAwayP
 end -- clump:auto
@@ -538,7 +536,7 @@ theorem _root_.GlobalTheory.finite_monic_coeff_bdd_mul_isIntegral (K : Type) [Fi
     ext n
     by_cases hn : n ≤ d
     · exact congrFun hPQ ⟨n, Nat.lt_succ_of_le hn⟩
-    · push_neg at hn
+    · push Not at hn
       rw [Polynomial.coeff_eq_zero_of_natDegree_lt (hP.2.1.trans_lt hn),
         Polynomial.coeff_eq_zero_of_natDegree_lt (hQ.2.1.trans_lt hn)]
 
@@ -712,8 +710,7 @@ theorem ratint_away : ∀ (p : ℕ) [Fact p.Prime] (q : ℚ),
     have hq := h ⟨v, hv⟩
     rw [HeightOneSpectrum.mem_adicCompletionIntegers] at hq
     have hq2 : v.valuation ℚ q ≤ 1 := by
-      rw [← HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
-      exact hq
+      rwa [← HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
     have hb : ((q.den : ℤ)) ≠ 0 := by exact_mod_cast q.den_nz
     have hcop : ((q.den : ℤ)) ∈ v.asIdeal → q.num ∉ v.asIdeal := by
       intro hd hn
@@ -869,8 +866,7 @@ theorem minpoly_coeff_integral (F : Type) [Field F] (S : Type) [Ring S] [Algebra
     have := Polynomial.scaleRoots_dvd _ _ (r := c) h2
     rwa [← Polynomial.scaleRoots_mul, inv_mul_cancel₀ hc0, Polynomial.scaleRoots_one] at this
   have h4 := Polynomial.isIntegral_coeff_of_dvd P _ hPm ((Polynomial.monic_scaleRoots_iff c).2 (minpoly.monic hy)) h3 k
-  rw [Polynomial.coeff_scaleRoots, mul_comm] at h4
-  exact h4
+  rwa [Polynomial.coeff_scaleRoots, mul_comm] at h4
 
 theorem exists_den_minpoly_coeff : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (L : G.Level) (f : G.GAf → ℂ), IsTest (MonoidHom.id _) L.K.toSubgroup L.K.toSubgroup f → ∀ (β : G.Cˣ) (x : (AfP p ⊗[ℚ] G.C)ˣ) (t : (AfP p)ˣ) (hx : Triv G (AfP p) β x t), ∃ D : ℕ, 0 < D ∧ ∀ (y : grp G β) (h : G.GAf), f (h⁻¹ * toAfF G β x t hx y * h) ≠ 0 → ∀ k : ℕ, ∃ m : ℕ, IsIntegral ℤ ((p : G.F) ^ m * D * (minpoly G.F (((y : G.Cˣ × ℚˣ).1 : G.Cˣ) : G.C)).coeff k) := by
   intro p _ G L f hf β x t hx
@@ -983,8 +979,7 @@ theorem minpoly_coeff_bdd : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (K' : S
   have hint : IsIntegral G.F yC := Algebra.IsIntegral.isIntegral _
   have hmon : (minpoly G.F yC).Monic := minpoly.monic hint
   have hsn : ‖(((y : G.Cˣ × ℚˣ).2 : ℚ) : PadicAlgCl p)‖ ≤ R := by
-    rw [← map_ratCast (algebraMap ℚ_[p] (PadicAlgCl p)), PadicAlgCl.norm_extends]
-    exact hs
+    rwa [← map_ratCast (algebraMap ℚ_[p] (PadicAlgCl p)), PadicAlgCl.norm_extends]
   have hs0 : (((y : G.Cˣ × ℚˣ).2 : ℚ) : PadicAlgCl p) ≠ 0 := by
     exact_mod_cast ((y : G.Cˣ × ℚˣ).2).ne_zero
   have hroot : ∀ μ ∈ ((minpoly G.F yC).map φ).roots, ‖μ‖ ≤ R * R := by
@@ -1118,8 +1113,7 @@ theorem valued_snd_eq_one {p : ℕ} [Fact p.Prime] (G : HTGroup p) (K : Subgroup
     | succ n ih => rw [pow_succ, hmul, ih, pow_succ]
   have hle : ∀ a ∈ K, F a ≤ 1 := by
     intro a ha
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt C hlt
     have h1 := hC (a ^ n) (K.pow_mem ha n)
     rw [Real.norm_eq_abs, abs_of_nonneg (norm_nonneg _)] at h1
@@ -1251,7 +1245,7 @@ theorem main : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (L : G.Level) (f : G
     eq_of_valuations hM.1 hex.choose_spec.1 (fun w => by rw [hM.2.1 w, hex.choose_spec.2.1 w])
       (by exact_mod_cast hM.2.2.trans hex.choose_spec.2.2.symm)
   have hg : ((((y : G.Cˣ × ℚˣ).2 : ℚˣ) : ℚ) : ℝ) = g σ σ' := by
-    simp only [g, dif_pos hex, heq]
+    simp only [g, dite_eq_left hex, heq]
   rw [hg]
   calc g σ σ' ≤ ∑ σ'' ∈ T', g σ σ'' :=
         Finset.single_le_sum (f := fun σ'' => g σ σ'') (fun i _ => g_nonneg σ i) hσ'
@@ -1441,7 +1435,7 @@ theorem class_summand_eq_term_of_a_one : ∀ (p : ℕ) [Fact p.Prime] (G : HTGro
   intro p _ G hG v hv wt Kf f K' f' hf hf' P x t hx r hr
   have hiff := fix_iff_mark G hG v hv P r hr
   by_cases hm : ∃ μ, P.Mark μ
-  · rw [if_pos (hiff.2 hm), if_pos hm]
+  · rw [ite_eq_left (hiff.2 hm), ite_eq_left hm]
     obtain ⟨μ, hμ⟩ := hm
     have hpos := cent_sim_pos p G P μ hG hμ
     set e := centEquiv G P hpos r hr with he
@@ -1463,7 +1457,7 @@ theorem class_summand_eq_term_of_a_one : ∀ (p : ℕ) [Fact p.Prime] (G : HTGro
     have h5 : minpoly G.F (((r : G.Cˣ × ℚˣ).1 : G.Cˣ) : G.C) = P.pol := by
       rw [hr]; rfl
     rw [h1, h2, h3, h4, h5, GlobalTheory.pointSum_comp_mulEquiv, _root_.GlobalTheory.LKMid.Pair.term_one_eq_pointSum p G P Kf f K' f' hf hf' x t hx]
-  · rw [if_neg (fun h => hm (hiff.1 h)), if_neg hm]
+  · rw [ite_eq_right (fun h => hm (hiff.1 h)), ite_eq_right hm]
 
 end GlobalTheory.LKCx.CxReg
 

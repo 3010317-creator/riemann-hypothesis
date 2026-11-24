@@ -52,8 +52,7 @@ namespace LateralTheory.E.EmbedNonDeg₂
 
 theorem germ_res {Z : Scheme.{0}} [IsIntegral Z] (U W : Z.Opens) (h : W ≤ U) [Nonempty U] [Nonempty W]
     (s : Γ(Z, U)) : Z.germToFunctionField W (Z.presheaf.map (homOfLE h).op s) = Z.germToFunctionField U s := by
-  simp only [Scheme.germToFunctionField]
-  exact TopCat.Presheaf.germ_res_apply _ _ _ _ _
+  simpa only [Scheme.germToFunctionField] using TopCat.Presheaf.germ_res_apply _ _ _ _ _
 
 theorem rA_res {A : Type} [CommRing A] {Z : Scheme.{0}} (p : Z ⟶ Spec (CommRingCat.of A)) {W X : Z.Opens}
     (h : W ≤ X) (a : A) : Z.presheaf.map (homOfLE h).op (rA p X a) = rA p W a := by
@@ -144,8 +143,7 @@ theorem EmbedNonDeg_of : EmbedNonDeg := by
     rw [← hcU a, ← rL, ← rR, rA_res, rA_res]
   have hmul : φU s * φV s' = 1 := by
     have h := congrArg φW hss
-    rw [map_mul, map_one, rL, rR] at h
-    exact h
+    rwa [map_mul, map_one, rL, rR] at h
   have ht : φU s ≠ 0 := left_ne_zero_of_mul_eq_one hmul
   have hs0' : φV s' ≠ 0 := right_ne_zero_of_mul_eq_one hmul
   have hs'inv : φV s' = (φU s)⁻¹ := eq_inv_of_mul_eq_one_right hmul

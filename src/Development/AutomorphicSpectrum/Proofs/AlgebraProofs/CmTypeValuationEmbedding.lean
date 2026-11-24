@@ -156,9 +156,9 @@ theorem exists_coord (emb : (E →+* C) → (𝓞 E →+* w.valuationSubring))
     refine ⟨fun i s => if i = j then emb s (RingOfIntegers.basis E k) else 0, fun i => ?_,
       fun s => ?_⟩
     · by_cases hij : i = j
-      · simp only [hij, if_true]
+      · simp only [hij, ite_true]
         exact Submodule.subset_span ⟨_, rfl⟩
-      · simp only [hij, if_false]
+      · simp only [hij, ite_false]
         exact zero_mem (valSpan emb)
     · rw [HodgeDeterminantLattice.eigProj_act, Finset.sum_eq_single j (fun i _ hi => by simp [hi]) (by simp)]
       simp [hemb]
@@ -214,7 +214,7 @@ theorem block_freeLattice : ∀ (E : Type) [Field E] [NumberField E] (C : Type) 
   intro E _ _ C _ _ w _ emb hemb hcard D π H M _ _ _ _ ρ X N t hfree _
   classical
   have hind : (fun s => if D s then (1 : w.valuationSubring) else 0) ∈ valSpan emb :=
-    (H _ (fun s hs => if_neg hs)).1 ⟨1, fun s hs => by simp [hs]⟩
+    (H _ (fun s hs => ite_eq_right hs)).1 ⟨1, fun s hs => by simp [hs]⟩
   have hpoly : ∀ F ∈ valSpan emb, ∃ g : Polynomial w.valuationSubring,
       ∀ s, D s → F s = g.eval (emb s π) := by
     intro F hF
@@ -258,7 +258,7 @@ theorem block_freeLattice : ∀ (E : Type) [Field E] [NumberField E] (C : Type) 
     let F : Fin N → (E →+* C) → w.valuationSubring :=
       fun j s => if D s then (g j).eval (emb s π) else 0
     have hFm : ∀ j, F j ∈ valSpan emb := fun j =>
-      (H (F j) (fun s hs => if_neg hs)).1 ⟨g j, fun s hs => if_pos hs⟩
+      (H (F j) (fun s hs => ite_eq_right hs)).1 ⟨g j, fun s hs => ite_eq_left hs⟩
     have key : ∑ j, ∑ s, ((F j s : w.valuationSubring) : C) • HT.eigProj ρ s (t j) ∈ X :=
       sum_mem fun j _ => sum_smul_mem emb hemb hcard hfree j (hFm j)
     have e : ∑ s, eigCoord ρ t s.1 (f s) =
@@ -268,9 +268,8 @@ theorem block_freeLattice : ∀ (E : Type) [Field E] [NumberField E] (C : Type) 
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [sum_eq_sum_subtype D _ (fun s hs => by simp [F, hs])]
       refine Finset.sum_congr rfl fun s _ => ?_
-      simp only [F, if_pos s.2, hg j s]
-    rw [e]
-    exact key
+      simp only [F, ite_eq_left s.2, hg j s]
+    rwa [e]
   · obtain ⟨F, hF, e⟩ := exists_coord emb hemb hfree hy
     refine ⟨fun s j => ((F j s.1 : w.valuationSubring) : C), mem_freeLattice.2 fun j => ?_,
       fun s => ?_⟩
@@ -429,8 +428,7 @@ theorem comp_eigProj_eq {E : Type} [Field E] [NumberField E] {C : Type} [Field C
     intro t ht
     have hmem := HT.LatBasic.mem_eigSp.1 (HT.LatBasic.eigProj_mem ρ t y)
     have hex : ∃ a : 𝓞 E, t (a : E) ≠ s' (a : E) := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact ht (IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E)) (RingHom.ext hc))
     obtain ⟨a, ha⟩ := hex
     have h1 := LinearMap.congr_fun (hφ a) (HT.eigProj ρ t y)
@@ -461,8 +459,7 @@ theorem finrank_eigSp_inf_ker_fst :
     have h2 : (u : W × Module.Dual C W) = (0, (u : W × Module.Dual C W).2) :=
       Prod.ext (hfst u) rfl
     rw [h2, hH, hbar] at h1
-    have h3 := congrArg Prod.snd h1
-    simpa [hs a] using h3
+    simpa [hs a] using congrArg Prod.snd h1
   have hinj : Function.Injective F := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro u hu
@@ -526,8 +523,7 @@ theorem eigProj_comp_bar [Fintype (E →+* C)] (bar : 𝓞 E ≃+* 𝓞 E) (σ �
     rw [HT.LatBasic.mem_eigSp]
     intro a
     have h := HT.LatBasic.mem_eigSp.1 (HT.LatBasic.eigProj_mem ρ σ' x) (bar a)
-    rw [hσ, hbar] at h
-    exact h
+    rwa [hσ, hbar] at h
   · intro s _ hs
     refine HT.LatBasic.eigProj_of_eigenSub_ne
       (χ := (s.comp (algebraMap (𝓞 E) E)).comp (bar : 𝓞 E →+* 𝓞 E)) ?_ ?_
@@ -541,10 +537,8 @@ theorem eigProj_comp_bar [Fintype (E →+* C)] (bar : 𝓞 E ≃+* 𝓞 E) (σ �
       change s (a : E) = σ' (a : E)
       rw [hσ, h2]
     · rw [GlobalTheory.EigenSplit.mem_eigenSub]
-      intro a
-      exact HT.LatBasic.mem_eigSp.1 (HT.LatBasic.eigProj_mem ρ s x) (bar a)
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+      exact fun a => HT.LatBasic.mem_eigSp.1 (HT.LatBasic.eigProj_mem ρ s x) (bar a)
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem eigProj_zero_form (bar : 𝓞 E ≃+* 𝓞 E) (σ : E →+* C) (ρ : 𝓞 E →+* Module.End C W)
     (ρH : 𝓞 E →+* Module.End C (W × Module.Dual C W))
@@ -575,8 +569,7 @@ theorem span_iff_proj : ∀ (E : Type) [Field E] [NumberField E] (V C : Type) [C
     intro j x
     have h := HT.LatBasic.eigProj_of_mem (hψ j).1
     rw [hψe j, hform] at h
-    have h2 := congrArg (fun z : W × Module.Dual C W => z.2 x) h
-    exact h2.symm
+    exact (congrArg (fun z : W × Module.Dual C W => z.2 x) h).symm
 
   have hexp : ∀ x, HT.eigProj ρ σ' x = ∑ j, (ψ j).2 x • w j := by
     intro x
@@ -588,8 +581,7 @@ theorem span_iff_proj : ∀ (E : Type) [Field E] [NumberField E] (V C : Type) [C
 
       rw [hχ j x, ← hc, map_sum]
       simp [(hψ j).2.2]
-    simp only [hcj]
-    exact hc.symm
+    simpa only [hcj] using hc.symm
 
   have key : ∀ φ : Module.Dual C W, HT.eigProj ρH σ (0, φ) = ∑ j, φ (w j) • ψ j := by
     intro φ
@@ -845,8 +837,7 @@ theorem exists_dual_integral_of_saturated_free_part :
   obtain ⟨g, hg⟩ := (Finsupp.linearCombination C (Sum.elim w t)).exists_leftInverse_of_injective
     (LinearMap.ker_eq_bot.mpr hli)
   have hgs : ∀ a, g (Sum.elim w t a) = Finsupp.single a 1 := fun a => by
-    have h1 := LinearMap.congr_fun hg (Finsupp.single a 1)
-    simpa [Finsupp.linearCombination_single] using h1
+    simpa [Finsupp.linearCombination_single] using LinearMap.congr_fun hg (Finsupp.single a 1)
   let φ : Module.Dual C W := Finsupp.lapply (Sum.inl j) ∘ₗ g
   have hφw : ∀ k, φ (w k) = if k = j then 1 else 0 := fun k => by
     have h := hgs (Sum.inl k)
@@ -876,8 +867,7 @@ theorem exists_dual_integral_of_saturated_free_part :
         exact Submodule.subset_span ⟨i, rfl⟩
       exact (hsat _).mpr ⟨hmem, (u i).2⟩
     · change φ (t i) ∈ R
-      rw [hφt]
-      exact hzero
+      rwa [hφt]
   refine ⟨φ, fun y hy => ?_, hφw⟩
   obtain ⟨a, ha⟩ := hle hy
   exact ⟨a, by simpa using ha⟩
@@ -989,8 +979,7 @@ theorem ex_unif (E : Type) [Field E] [NumberField E] (P : Ideal (𝓞 E)) (hP : 
     have hbt : b * t ∈ Ideal.span {π} := by
       rw [hJ]
       exact Ideal.mul_mem_mul hb htJ
-    rw [Ideal.mem_span_singleton, mul_comm] at hbt
-    exact hbt
+    rwa [Ideal.mem_span_singleton, mul_comm] at hbt
 
 theorem hom_eq {O B : Type} [CommRing O] [CommRing B] (P : Ideal O) (π : O)
     (hsep : ∀ a : O, ∃ h : ℤ[X], aeval a h ∈ P ∧ aeval a (derivative h) ∉ P)
@@ -1026,8 +1015,7 @@ theorem hom_eq {O B : Type} [CommRing O] [CommRing B] (P : Ideal O) (π : O)
     induction k with
     | zero => rw [pow_zero, mul_one]
     | succ k ih =>
-      rw [pow_succ, ← mul_assoc, ← ih]
-      exact hδ
+      rwa [pow_succ, ← mul_assoc, ← ih]
   obtain ⟨n, hn⟩ := h3 a
   have hkey := key n
   rw [mul_pow, hn, mul_zero, mul_zero] at hkey
@@ -1143,8 +1131,7 @@ theorem adjoin_top {O V R : Type} [CommRing O] [CommRing V] [IsLocalRing V] [Com
     intro k
     induction k with
     | zero =>
-      intro x
-      exact ⟨0, S.zero_mem, x, by rw [pow_zero, one_mul, zero_add]⟩
+      exact fun x => ⟨0, S.zero_mem, x, by rw [pow_zero, one_mul, zero_add]⟩
     | succ k ih =>
       intro x
       obtain ⟨s, hs, y, rfl⟩ := ih x
@@ -1165,8 +1152,7 @@ theorem adjoin_top {O V R : Type} [CommRing O] [CommRing V] [IsLocalRing V] [Com
     (IsLocalRing.jacobson_eq_maximalIdeal ⊥ bot_ne_top).ge
   have hle := Submodule.le_of_le_smul_of_le_jacobson_bot Module.Finite.fg_top hjac htop
   rw [eq_top_iff]
-  intro x _
-  exact (Subalgebra.mem_toSubmodule _).mp (hle Submodule.mem_top)
+  exact fun x _ => (Subalgebra.mem_toSubmodule _).mp (hle Submodule.mem_top)
 
 theorem ex_poly (E : Type) [Field E] [NumberField E] (V : Type) [CommRing V] [IsLocalRing V]
     (S : Type) [Fintype S] (e : S → (𝓞 E →+* V)) (c : 𝓞 E →+* V)
@@ -1360,7 +1346,7 @@ theorem PositivityTheory.Xgn.exists_monogenic_separating : ∀ (E : Type) [Field
         rw [Pi.mul_apply]
         by_cases hs : ∀ a, ¬ IsUnit (emb s a - emb σ a)
         · rw [hu1 s hs, one_mul, hg s hs, haeval]
-        · push_neg at hs
+        · push Not at hs
           rw [hu0 s hs, zero_mul, hf s hs]
       rw [hfu]
       exact hTspan _ (Subalgebra.mul_mem _ huT hgT)
@@ -1466,7 +1452,7 @@ theorem sum_eigProj (E : Type) [Field E] [NumberField E] (C : Type) [Field C] [C
           rw [map_smul, smul_eq_mul]
       _ = ((b.repr 1 k : ℤ) : ℚ) := by
           simp only [HT.dualInt, LinearMap.BilinForm.apply_dualBasis_left, mul_ite, mul_one, mul_zero,
-            Finset.sum_ite_eq', Finset.mem_univ, if_true]
+            Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   have hsum : ∀ k, ∑ s : E →+* C, s (HT.dualInt E k) = ((b.repr 1 k : ℤ) : C) := by
     intro k
     rw [sum_embeddings_eq_trace E C hc, htr, map_intCast]
@@ -1597,8 +1583,7 @@ theorem targetO : TargetO := by
 
     rw [map_sum, Finset.sum_eq_single t]
     · exact HT.LatBasic.eigProj_of_mem (Tmem _ _)
-    · intro s _ hs
-      exact HT.LatBasic.eigProj_of_ne (fun e => hs (Subtype.ext e).symm) (Tmem _ _)
+    · exact fun s _ hs => HT.LatBasic.eigProj_of_ne (fun e => hs (Subtype.ext e).symm) (Tmem _ _)
     · simp
   have hind : ∀ f : S → Fin (p + q) → C, ∑ s, g s (f s) = 0 → ∀ s, g s (f s) = 0 := by
     intro f hf t
@@ -1606,14 +1591,12 @@ theorem targetO : TargetO := by
 
     rw [map_sum, map_zero, Finset.sum_eq_single t] at h2
     · rwa [HT.LatBasic.eigProj_of_mem (gmem _ _)] at h2
-    · intro s _ hs
-      exact HT.LatBasic.eigProj_of_ne (fun e => hs (Subtype.ext e).symm) (gmem _ _)
+    · exact fun s _ hs => HT.LatBasic.eigProj_of_ne (fun e => hs (Subtype.ext e).symm) (gmem _ _)
     · simp
   have hblk := _root_.GlobalTheory.CompanionTheory.Ar.Flat.ExG.Block.block_freeLattice E C ν emb (fun s a => hemb s a) hcard' D π hmono _ ρH HV (p + q) x hfree
   obtain ⟨hb1, hb2⟩ := hblk
   have sumFst : ∀ f : S → Fin (p + q) → C, (∑ s, T s (f s)).1 = ∑ s, g s (f s) := by
-    intro f
-    exact map_sum (LinearMap.fst C W (Module.Dual C W)) _ _
+    exact fun f => map_sum (LinearMap.fst C W (Module.Dual C W)) _ _
 
   have hr : ∀ s, Module.finrank C (LinearMap.ker (g s)) = r s := by
     intro s
@@ -1725,8 +1708,7 @@ theorem targetO : TargetO := by
           exact Finset.sum_eq_zero fun s _ => hg0 s
         refine ⟨(∑ s, T s (f s)).2, ?_, ?_⟩
         · have : ((0, (∑ s, T s (f s)).2) : W × Module.Dual C W) = ∑ s, T s (f s) := Prod.ext h4.symm rfl
-          rw [this]
-          exact h3
+          rwa [this]
         · have : ((0, (∑ s, T s (f s)).2) : W × Module.Dual C W) = ∑ s, T s (f s) := Prod.ext h4.symm rfl
           rw [this]
           exact projSum f τ
@@ -1751,8 +1733,7 @@ theorem targetO : TargetO := by
         simp only [h5]
         rw [Finset.sum_eq_single τ]
         · exact HT.LatBasic.eigProj_of_mem hy2'
-        · intro s _ hs
-          exact HT.LatBasic.eigProj_of_ne (fun e => hs (Subtype.ext e)) hy2'
+        · exact fun s _ hs => HT.LatBasic.eigProj_of_ne (fun e => hs (Subtype.ext e)) hy2'
         · simp
     · rintro ⟨⟨z, rfl⟩, f, hf, e⟩
       refine ⟨?_, gmem τ z⟩
@@ -1766,8 +1747,7 @@ theorem targetO : TargetO := by
     refine ⟨?_, ?_⟩
     · apply LinearIndependent.of_comp (T τ)
       have : (T τ) ∘ (fun i => ∑ j, A i j • U j) = fun i => ∑ j, A i j • u j := funext hTA
-      rw [this]
-      exact hAl
+      rwa [this]
     · ext z
       rw [hTmemSpan]
       simp only [hTA]

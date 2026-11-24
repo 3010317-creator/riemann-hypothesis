@@ -166,8 +166,7 @@ theorem exists_le_inv_pow (ϖ : K)
     rw [← WithZero.coe_inv, ← WithZero.coe_pow, WithZero.coe_le_coe]
     show Multiplicative.toAdd c ≤ Multiplicative.toAdd ((Multiplicative.ofAdd (-1 : ℤ))⁻¹ ^ (Multiplicative.toAdd c).toNat)
     rw [toAdd_pow, toAdd_inv, toAdd_ofAdd]
-    simp only [neg_neg, nsmul_eq_mul, mul_one]
-    exact Int.self_le_toNat _
+    simpa only [neg_neg, nsmul_eq_mul, mul_one] using Int.self_le_toNat _
 
 end GlobalTheory.SatInd.DCoset
 
@@ -216,9 +215,7 @@ theorem mem_KU_of_entries {σ : K →+* K} {n : ℕ} (g : GU σ n)
     show (B * A).map (intL K).subtype = (1 : Matrix (Fin n) (Fin n) (intL K)).map (intL K).subtype
     rw [Matrix.map_mul, hA, hB, Matrix.map_one _ (map_zero _) (map_one _)]
     exact Units.inv_mul (g : GL (Fin n) K)
-  refine ⟨⟨A, B, hAB, hBA⟩, ?_⟩
-  apply Units.ext
-  exact hA
+  exact ⟨⟨A, B, hAB, hBA⟩, Units.ext hA⟩
 
 end GlobalTheory.SatInd.DCoset
 
@@ -315,7 +312,6 @@ theorem finite_dcoset : ∀ {K : Type} [Field K] [Valued K (WithZero (Multiplica
   rintro c ⟨a, ha, rfl⟩
   refine ⟨F ⟨a, ha⟩, ?_⟩
   have h : ∃ a', F a' = F ⟨a, ha⟩ := ⟨_, rfl⟩
-  simp only [G, dif_pos h]
-  exact key ⟨a, ha⟩ h.choose h.choose_spec.symm
+  simpa only [G, dite_eq_left h] using key ⟨a, ha⟩ h.choose h.choose_spec.symm
 
 end GlobalTheory.SatInd.DCoset

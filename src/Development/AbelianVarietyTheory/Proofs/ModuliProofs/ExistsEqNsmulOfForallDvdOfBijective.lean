@@ -61,8 +61,7 @@ theorem exists_eq_nsmul_of_forall_dvd_of_bijective {La : Type} [AddCommGroup La]
   let g : La →ₗ[ℤ] ℤ :=
     { toFun := fun x => EF c x / N
       map_add' := fun x y => by
-        simp only [map_add (f := _)]
-        exact Int.add_ediv_of_dvd_left (hc x)
+        simpa only [map_add (f := _)] using Int.add_ediv_of_dvd_left (hc x)
       map_smul' := fun r x => by
         simp only [map_smul, smul_eq_mul, RingHom.id_apply]
         exact Int.mul_ediv_assoc r (hc x) }
@@ -93,7 +92,7 @@ private theorem card_mul_card_orthogonal_eq_card_of_nondegenerate {Q : Type} [Ad
     by_cases ht : t = 0
     · subst ht
       simp
-    · rw [if_neg ht]
+    · rw [ite_eq_right ht]
       have hne : e.compAddMonoidHom (B t) ≠ 0 := by
         intro h
         apply ht
@@ -108,12 +107,12 @@ private theorem card_mul_card_orthogonal_eq_card_of_nondegenerate {Q : Type} [Ad
   have hcol : ∀ x : Q, ∑ t : U, e (B t x) = if x ∈ V then (Fintype.card U : ℂ) else 0 := by
     intro x
     by_cases hx : x ∈ V
-    · rw [if_pos hx]
+    · rw [ite_eq_left hx]
       have : ∀ t : U, e (B t x) = 1 := by
         intro t
         rw [(hmemV x).mp hx t t.2, AddChar.map_zero_eq_one]
       simp [this]
-    · rw [if_neg hx]
+    · rw [ite_eq_right hx]
       have hne : e.compAddMonoidHom ((B.flip x).comp U.subtype) ≠ 0 := by
         intro h
         apply hx
@@ -125,8 +124,8 @@ private theorem card_mul_card_orthogonal_eq_card_of_nondegenerate {Q : Type} [Ad
       have := AddChar.sum_eq_zero_iff_ne_zero.mpr hne
       simpa using this
   have hA : ∑ t : U, ∑ x : Q, e (B t x) = (Fintype.card Q : ℂ) := by
-    rw [Fintype.sum_eq_single 0 (fun t ht => by rw [hrow t, if_neg ht])]
-    rw [hrow 0, if_pos rfl]
+    rw [Fintype.sum_eq_single 0 (fun t ht => by rw [hrow t, ite_eq_right ht])]
+    rw [hrow 0, ite_eq_left rfl]
   have hB : ∑ t : U, ∑ x : Q, e (B t x) = (Fintype.card V : ℂ) * (Fintype.card U : ℂ) := by
     rw [Finset.sum_comm]
     simp_rw [hcol]
@@ -177,8 +176,7 @@ private theorem exists_rel_of_dvd_pairing_of_card_mul_eq {La Q P : Type} [AddCom
   have hUW : U ≤ W := by
     intro t ht
     rw [hmemW]
-    intro x hx
-    exact (hmemV x).mp hx t ht
+    exact fun x hx => (hmemV x).mp hx t ht
   have hPS : Nat.card P ≤ Nat.card S := by
     refine Nat.card_le_card_of_injective
       (fun p => ⟨π (hRsurj p).choose, (hRsurj p).choose, p, (hRsurj p).choose_spec, rfl⟩) ?_
@@ -242,8 +240,7 @@ private theorem exists_rel_of_dvd_pairing_of_card_mul_eq {La Q P : Type} [AddCom
     obtain ⟨a', p', hr, rfl⟩ := hxS
     exact hz _ _ (ha a' p' hr)
   have haST : π a ∈ ST := by
-    rw [hSTUset, SetLike.mem_coe, hUWeq]
-    exact haW
+    rwa [hSTUset, SetLike.mem_coe, hUWeq]
   obtain ⟨a0, p0, h0, _, he⟩ := haST
   obtain ⟨c, hc⟩ := hπeq _ _ he
   exact ⟨p0, hc ▸ hRinv a0 c p0 h0⟩

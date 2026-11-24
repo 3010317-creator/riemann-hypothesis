@@ -148,8 +148,7 @@ private theorem isUnit_zeta {O : Type} [CommRing O] [IsLocalRing O] {Γ : Type} 
   have hm : Marks η (barChar O Ψ) c g₁ := by
     refine ⟨h.csq, h.ηc, by simp [barChar, h.Ψc], h.ηg, ?_⟩
     have := h.Ψg.map (residue O)
-    rw [map_sub, map_pow, map_one] at this
-    exact this
+    rwa [map_sub, map_pow, map_one] at this
   have h1 := (zeta_reducible_rep_eq_sub_inv_and_isUnit η (barChar O Ψ) c g₁ hm).2
   have h2 : (GG.map (res O R : R →+* ResidueField O)).comp r.hom = r0 η (barChar O Ψ) :=
     MonoidHom.ext r.red
@@ -175,8 +174,7 @@ theorem UpperTheory.V.U3.gradedModel_derivationCondition_of_ptHyp :
   have hon : OnS M.Q.ideal (f.comp M.q) := by
     intro y hy
     have : M.q y = 0 := by
-      rw [← RingHom.mem_ker, M.ker_q]
-      exact hy
+      rwa [← RingHom.mem_ker, M.ker_q]
     simp [this]
   have hEI : ∀ y ∈ M.Q.ideal, E y = 0 := twist_kills M.𝒜 M.Q t (f.comp M.q) D E hon hEd hE hDI
   have hE'I : ∀ y ∈ M.Q.ideal, E' y = 0 := twist_kills M.𝒜 M.Q t (f.comp M.q) D' E' hon hE'd hE' hD'I

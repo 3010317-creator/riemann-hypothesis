@@ -85,8 +85,7 @@ variable {A : Type} [CommRing A] [IsDomain A] {D₀ : Out.DegPre A}
 
 theorem isZero_of_isAdd {T : Over (Spec (CommRingCat.of A))} {g : Out.GtPt D₀ T} (h : g.IsAdd g g) : g.IsZero := by
   obtain ⟨hb, hv⟩ := (GlobalTheory.TorusModel.isAdd_iff _ _ _).1 h
-  have hb1 : g.b = 1 := by
-    exact (mul_eq_left.1 hb.symm)
+  have hb1 : g.b = 1 := (mul_eq_left.1 hb.symm)
   refine ⟨hb1, fun χ => corr_of_val D₀.P.isLB fun y J hJ => ?_⟩
   have e := hv χ y J hJ
   have face (x x' : T ⟶ D₀.P.A) : cubV D₀.cub y J 1 x x' = 1 := by

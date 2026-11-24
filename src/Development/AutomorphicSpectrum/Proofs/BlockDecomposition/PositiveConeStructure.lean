@@ -111,8 +111,7 @@ theorem leftInvariant_of_section : ∀ {Γ K X : Type} [Group Γ] [TopologicalSp
     rfl
   have hmeasψ : ∀ B : Set Γ, MeasurableSet B →
       Measurable (fun x => m ((fun k => s x * e k) ⁻¹' B)) := by
-    intro B hB
-    exact measurable_measure_prodMk_left (hφ hB)
+    exact fun B hB => measurable_measure_prodMk_left (hφ hB)
   haveI : ν.IsMulLeftInvariant := by
     constructor
     intro g
@@ -657,8 +656,7 @@ lemma schur_posDef {P : Mat (n + 1)} (hP : P.PosDef) : (schur P).PosDef := by
     have hk : star x ⬝ᵥ (schur P *ᵥ x) = star y ⬝ᵥ (P *ᵥ y) := by
       rw [hL, hR, ht]
       ring
-    rw [hk]
-    exact hpos
+    rwa [hk]
 
 lemma step_mul {σ : Mat n → Mat n} {P : Mat (n + 1)} (hP : P.PosDef)
     (hσ : σ (schur P) * (σ (schur P))ᴴ = schur P) : step σ P * (step σ P)ᴴ = P := by
@@ -865,8 +863,7 @@ theorem cone_congr (n : ℕ) (g P : Mat n) (hg : g.det ≠ 0) (hP : P.PosDef) : 
   have e : star x ⬝ᵥ (g * P * gᴴ) *ᵥ x = star (gᴴ *ᵥ x) ⬝ᵥ P *ᵥ (gᴴ *ᵥ x) := by
     rw [star_mulVec, conjTranspose_conjTranspose, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
       Matrix.dotProduct_mulVec]
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem cone_gram (n : ℕ) (g : Mat n) (hg : g.det ≠ 0) : (g * gᴴ).PosDef := by
   have := cone_congr n g 1 hg Matrix.PosDef.one
@@ -893,9 +890,7 @@ def emb : UK n →* G n := Unitary.toUnits
 
 theorem continuous_emb : Continuous (emb : UK n → G n) := by
   rw [Units.continuous_iff]
-  refine ⟨continuous_subtype_val, ?_⟩
-  show Continuous fun κ : UK n => star κ.1
-  exact continuous_subtype_val.star
+  exact ⟨continuous_subtype_val, continuous_subtype_val.star⟩
 
 alias val_mem := _root_.GlobalTheory.CompanionTheory.LengthGL.mem_GLs_val
 
@@ -918,7 +913,7 @@ def sec (σ₀ : Mat n → Mat n) (hσ : ∀ P : Mat n, P.PosDef → σ₀ P * (
 
 theorem sec_val (σ₀ : Mat n → Mat n) (hσ : ∀ P : Mat n, P.PosDef → σ₀ P * (σ₀ P)ᴴ = P)
     {v : Fin n × Fin n → ℝ} (h : v ∈ cone n) : (sec σ₀ hσ v).val = σ₀ (hOf v) := by
-  simp only [sec, dif_pos h]
+  simp only [sec, dite_eq_left h]
   rfl
 
 theorem measurable_sec (σ₀ : Mat n → Mat n) (hc : ContinuousOn σ₀ {P | P.PosDef})
@@ -1007,8 +1002,7 @@ theorem coneSt : ConeSt := by
       have h2 := hσ _ hvc
       rw [← sec_val σ₀ hσ hvc, h1, conjTranspose_mul, mul_assoc, ← mul_assoc k.1] at h2
       have h3 : k.1 * k.1ᴴ = 1 := Matrix.mem_unitaryGroup_iff.1 k.2
-      rw [h3, one_mul] at h2
-      exact h2
+      rwa [h3, one_mul] at h2
     have hz : coneMeas n (cone n)ᶜ = 0 := cone_ae n
     refine lt_of_le_of_lt (measure_mono_ae ?_) (cone_fin n _ hC hCc)
     filter_upwards [cone_ae n] with v hv hv'

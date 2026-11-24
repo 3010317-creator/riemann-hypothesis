@@ -379,8 +379,7 @@ theorem comb_iff {V : Type} [AddCommGroup V] [Module S V] (M : GlobalTheory.Comp
   have hs : M.pt (∑ i, a i • b i) = (List.ofFn fun i => M.pt (a i • b i)).prod := by
     have := map_prod φ (fun i => Multiplicative.ofAdd (a i • b i)) Finset.univ
     rw [List.prod_ofFn]
-    rw [← ofAdd_sum] at this
-    exact this
+    rwa [← ofAdd_sum] at this
   constructor
   · rintro ⟨u, hu, rfl⟩
     have : u = fun i => M.pt (a i • b i) := funext fun i => Over.OverMorphism.ext ((hu i).trans (M.smul _ _).symm)
@@ -549,8 +548,7 @@ theorem chart_bc {F : Fin d → MvPowerSeries (Fin 2 × Fin d) S} {act : 𝓞 E 
         · simp
     · split_ifs <;> simp
   case basis =>
-    intro v
-    exact ⟨v, fun j => by simp, fun a ha => funext fun j => by simpa using ha j⟩
+    exact fun v => ⟨v, fun j => by simp, fun a ha => funext fun j => by simpa using ha j⟩
 
 end
 
@@ -1070,8 +1068,7 @@ theorem key_dir {f : S →+* S₂} {g : GermAt t x d} {g₀ gq : GermAt t x₂ d
   have := (comb_iff g₀ _ _).1 (coord_tan c.hφ l)
   have e₂ : (fun j => lin φ.1 1 j l) = (lin φ.1 1).mulVec (Pi.single l 1) := by
     funext j; simp
-  rw [e₂, h.tg] at this
-  exact this
+  rwa [e₂, h.tg] at this
 
 theorem lieM_dir (g : GermAt t x d) (l : Fin d) : ((lieM g).pt (Pi.single l 1)).left = g.tg l := (tg_eq g l).symm
 

@@ -114,8 +114,7 @@ theorem cuspChar : CuspChar := by
     have hfix : ∀ v : W, (∀ u ∈ H, κ u v = v) → v = 0 := fun v hv =>
       hcusp 2 _ _ hne v fun u hu => hv u (rad_le h0 ham H hH hd u hu)
     have hz := PositivityTheory.GreenCharacters.sum_char_eq_zero κ H hfix
-    rw [← hH, finsum_mem_def, finsum_eq_sum_of_fintype]
-    rw [← hz]
+    rw [← hH, finsum_mem_def, finsum_eq_sum_of_fintype, ← hz]
     refine Finset.sum_congr rfl fun u _ => ?_
     by_cases hu : u ∈ H <;> simp [hu]
   obtain ⟨k, hk, hx⟩ := GlobalTheory.CuspFormula.exists_regular F θ hθ m hm _ (hc.2 hirr) hprim

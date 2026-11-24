@@ -515,8 +515,7 @@ theorem psi_val {v : Fˣ} {χ : D.X} (hψ : GenRel w (LB.pullGen _ _ _ (D'.psi (
   rw [Fintype.prod_unique, zpow_neg_one] at H
   have b₁ : vS (LB.pullGen _ _ _ (D'.psi (e χ)) (jFK (R := R') F)) y J' = vK (D'.psi (e χ)) y J' := val_pull hJ' _ _ _
   have b₂ : vS (LB.pullGen _ _ _ (D.psi χ) (jFK (R := R) F)) y J = vK (D.psi χ) y J := val_pull hJ _ _ _
-  rw [← b₁, ← b₂, wVal, ← a₁]
-  exact H
+  rwa [← b₁, ← b₂, wVal, ← a₁]
 
 
 include gp hT hc hw hr in
@@ -619,8 +618,7 @@ theorem exists_transport (hG : GlobalFnsSt) {n : ℕ} (hn : n ∣ l.M') (q₀ : 
     rw [← zpow_add, ← add_mul]
     simp
   · have := hdn n h
-    simp only [Int.mul_ediv_cancel' (dvd_be a hn _ _)] at this
-    exact this
+    simpa only [Int.mul_ediv_cancel' (dvd_be a hn _ _)] using this
   · have := hdn 1 q₀.g
     simp only [Nat.cast_one, _root_.one_mul] at this
     exact (gtRel_zpow (u_ne_zero hu) _ _ _).1 this

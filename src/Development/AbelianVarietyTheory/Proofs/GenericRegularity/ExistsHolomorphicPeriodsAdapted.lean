@@ -148,10 +148,8 @@ theorem exists_holPeriods_adapted : ∀ (E : Type) [Field E] [NumberField E] [Is
       (fun b => ((φ b).toRingHom : A →+* ℂ)) hB1 hP0 (fun b => W b j) ?_ hb' ?_
     · intro b hb
       have h1 := hW b hb j
-      rw [(hmap b (hB1B hb)).2.1, GlobalTheory.HolFrameMatrix.dualMap_eq] at h1
-      exact h1
-    · intro t
-      exact (hφ t).differentiableAt (hB.mem_nhds (hB1B hb'))
+      rwa [(hmap b (hB1B hb)).2.1, GlobalTheory.HolFrameMatrix.dualMap_eq] at h1
+    · exact fun t => (hφ t).differentiableAt (hB.mem_nhds (hB1B hb'))
   have hVW1 : ∀ b ∈ B1, V b * Matrix.of (fun i j => W b j i) = 1 := by
     intro b hb
     ext i j

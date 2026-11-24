@@ -304,8 +304,7 @@ theorem exists_nsmul_latO_int (hS : ΛS.FG) (hT : ΛT.FG) : ∃ k : ℕ, 0 < k �
     obtain ⟨α, hα, -, a, ha, s, hs, t, ht, rfl⟩ := hw
     obtain ⟨o, ho⟩ := hsp _ (GlobalTheory.LatFinMod.genMap_mem_span S T (hA2 a ha) (hB2 s hs) (hC2 t ht)) i j
     have h1 := tmul_mem_int (F := D.host.F) hα o
-    rw [show (o : D.host.E) = _ from ho, ← TensorProduct.smul_tmul'] at h1
-    exact h1
+    rwa [show (o : D.host.E) = _ from ho, ← TensorProduct.smul_tmul'] at h1
   | zero => rw [Matrix.zero_apply, RingHom.map_zero, smul_zero]; exact zero_mem _
   | add x y _ _ hx hy => rw [Matrix.add_apply, RingHom.map_add (f := _), smul_add]; exact add_mem hx hy
   | neg x _ hx => rw [Matrix.neg_apply, RingHom.map_neg, smul_neg]; exact neg_mem hx
@@ -428,7 +427,7 @@ theorem placeModel_unique {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ
       obtain ⟨k, hk, hky⟩ := hmul y (half_infPart (infPart_cA hinf) hy)
       have hne : ∀ t, ψ (symplO S T t y) * halfInd a Λ t ≠ 0 → t ∈ Λ ⊓ half S T a := fun t ht => by
         by_contra hn
-        rw [halfInd_eq_ind, ind, if_neg hn, mul_zero] at ht
+        rw [halfInd_eq_ind, ind, ite_eq_right hn, mul_zero] at ht
         exact ht rfl
       refine ⟨fun t ht => (isHalf_iff S T).2 (hne t ht).2, k, hk, fun u hu hu' t => ?_,
         fun t ht => nsmul_mem (hne t ht).1 k⟩
@@ -444,8 +443,7 @@ theorem placeModel_unique {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ
       have e2 := h₀.modul _ (GlobalTheory.isSBHalf_halfInd a Λ) y ((isHalf_iff S T).2 hy)
       have e3 := h₀.vac
       rw [one_smul] at e3
-      rw [e2, e3, halfInd_eq_ind] at e1
-      exact e1
+      rwa [e2, e3, halfInd_eq_ind] at e1
     exact (key T₁ h₁).trans (key T₂ h₂).symm
   exact hsub hmem
 
@@ -473,8 +471,7 @@ theorem redM_add_nsmul {b c : ℕ} (PP : Formalism.L2.DIV.Pl D.host.E) {n : ℕ}
   rw [dite_eq_left h2, dite_eq_left (h i j)]
   have e : (⟨_, h2⟩ : Formalism.L2.Herm.intAf D.host.F D.host.E) = ⟨_, h i j⟩ + n • ⟨_, h' i j⟩ := rfl
   have h0 : (n : Formalism.L2.DIV.kP PP) = 0 := by
-    rw [← map_natCast (Ideal.Quotient.mk PP.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
-    exact hn
+    rwa [← map_natCast (Ideal.Quotient.mk PP.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
   rw [e, RingHom.map_add (f := _), nsmul_eq_mul, RingHom.map_mul, map_natCast, h0, zero_mul, add_zero]
 
 
@@ -498,7 +495,7 @@ theorem isSBHalf_of_red (hS : Submodule.IsFullLattice D.host.E ΛS) (hT : Submod
   have hne : ∀ t : WO S T, (if IsHalf a t ∧ IsIntM (G t) then ω (fun PP => redM PP (G t)) else 0) ≠ 0 →
       IsHalf a t ∧ IsIntM (G t) := fun t ht => by
     by_contra h
-    exact ht (if_neg h)
+    exact ht (ite_eq_right h)
   refine ⟨fun t ht => (hne t ht).1, n * (k₄ * k₂) * (k₁ * k₃), by positivity, fun u hu hu' t => ?_, fun t ht => ?_⟩
   · have hi : IsIntM ((k₄ * k₂) • k₁ • G (k₃ • u)) := isIntM_nsmul (h₁ _ (by rw [map_toEAf_nsmul]; exact h₃ u hu)) _
     have e : G (t + (n * (k₄ * k₂) * (k₁ * k₃)) • u) = G t + n • (k₄ * k₂) • k₁ • G (k₃ • u) := by
@@ -511,9 +508,9 @@ theorem isSBHalf_of_red (hS : Submodule.IsFullLattice D.host.E ΛS) (hT : Submod
     beta_reduce
     rw [e]
     by_cases ht : IsHalf a t ∧ IsIntM (G t)
-    · rw [if_pos ht, if_pos ⟨hh.2 ht.1, hI.2 ht.2⟩]
+    · rw [ite_eq_left ht, ite_eq_left ⟨hh.2 ht.1, hI.2 ht.2⟩]
       exact hω _ _ fun PP hPP => redM_add_nsmul PP (hP PP hPP) ht.2 hi
-    · rw [if_neg ht, if_neg fun h => ht ⟨hh.1 h.1, hI.1 h.2⟩]
+    · rw [ite_eq_right ht, ite_eq_right fun h => ht ⟨hh.1 h.1, hI.1 h.2⟩]
   · obtain ⟨h1, h2⟩ := hne t ht
     have := h₄ (k₂ • t) (half_infPart hinf (nsmul_mem ((isHalf_iff S T).1 h1) _))
       (by rw [map_toEAf_nsmul]; exact h₂ t h2)
@@ -542,8 +539,8 @@ theorem omegaK_congr {a b : ℕ} (Pg : Finset (Formalism.L2.DIV.Pl D.host.E))
     forall_congr' fun PP => forall_congr' fun hPP => by rw [h PP hPP]
   unfold omegaK
   by_cases h1 : ∀ PP ∈ Pg, LowZero a (y PP) ∧ topL a (y PP) = 1
-  · rw [if_pos h1, if_pos (hiff.1 h1)]
-  · rw [if_neg h1, if_neg fun h2 => h1 (hiff.2 h2)]
+  · rw [ite_eq_left h1, ite_eq_left (hiff.1 h1)]
+  · rw [ite_eq_right h1, ite_eq_right fun h2 => h1 (hiff.2 h2)]
 
 end GlobalTheory.PlaceVec
 

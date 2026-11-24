@@ -105,10 +105,8 @@ theorem psiF_eq_one_of_int_of_vanish : ∀ (F : Type) [Field F] [NumberField F] 
     have he : RestrictedProduct.structureMap R A Filter.cofinite (fun v => (⟨y v, hy.1 v⟩ : A v)) = y :=
       by ext v; rfl
     have h2 : psiF ψ y ∈ Metric.ball (1 : ℂ) (1 / 2) := by
-      rw [← he]
-      exact hmem
-    rw [Metric.mem_ball, dist_eq_norm] at h2
-    exact h2
+      rwa [← he]
+    rwa [Metric.mem_ball, dist_eq_norm] at h2
   exact char_eq_one_of_near H (psiF ψ) (psiF_zero ψ) (psiF_add ψ) hs (x := c) ⟨hint, hT⟩
 
 end GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.Test

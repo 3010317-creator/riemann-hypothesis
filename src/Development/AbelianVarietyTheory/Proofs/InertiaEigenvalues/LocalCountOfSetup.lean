@@ -180,8 +180,7 @@ theorem exists_not_pow {l : ℕ} [Fact l.Prime] (K : IntermediateField ℚ_[l] (
 
 theorem exists_root {Ω : Type} [Field Ω] [IsAlgClosed Ω] (A : ValuationSubring Ω) (u : Ω) {m : ℕ} (hm : 0 < m) :
     ∃ y : Ω, y ^ (m + 1) + y ^ m + u = 0 ∧ 1 ≤ A.valuation y := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   set Q : Polynomial Ω := X ^ (m + 1) + X ^ m + C u with hQ
   have hdeg : Q.natDegree = m + 1 := by
     rw [hQ]; compute_degree!
@@ -193,8 +192,7 @@ theorem exists_root {Ω : Type} [Field Ω] [IsAlgClosed Ω] (A : ValuationSubrin
   have hs := (IsAlgClosed.splits Q).nextCoeff_eq_neg_sum_roots_of_monic hmon
   have hlt : A.valuation Q.roots.sum < 1 := by
     refine Multiset.sum_induction (fun z => A.valuation z < 1) _ ?_ ?_ ?_
-    · intro a b ha hb
-      exact A.valuation.map_add_lt ha hb
+    · exact fun a b ha hb => A.valuation.map_add_lt ha hb
     · simp
     · intro a ha
       have := (mem_roots hmon.ne_zero).mp ha
@@ -225,8 +223,7 @@ theorem norm_le_one {l : ℕ} [Fact l.Prime] {E Ω : Type} [Field E] [NumberFiel
     [IsAlgClosure E Ω] {A : ValuationSubring Ω} {O : Type} [CommRing O] [Algebra ℤ_[l] O] [TopologicalSpace O]
     (Bw : Formalism.BasicNotions.LocBridge l E Ω (ReciprocityTheory.Gal.Dec A) O) (u : E)
     (hu : A.valuation (algebraMap E Ω u) < 1) : ‖Bw.j (algebraMap E Ω u)‖ ≤ 1 := by
-  by_contra h1
-  push_neg at h1
+  by_contra! h1
   haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   haveI := Bw.Kw.2
   obtain ⟨m, hm, hK⟩ := exists_not_pow Bw.Kw.1 _ (Bw.j_E u) h1
@@ -255,8 +252,7 @@ theorem norm_le_one {l : ℕ} [Fact l.Prime] {E Ω : Type} [Field E] [NumberFiel
     intro σ hσ
     obtain ⟨g, hg⟩ := Bw.e.surjective ⟨σ, hσ⟩
     have := Bw.e_comm g y
-    rw [hg, hfix g] at this
-    exact this
+    rwa [hg, hfix g] at this
   apply hK _ hmem
   have hz := congrArg Bw.j hy
   simp only [map_add (f := _), map_pow, map_zero] at hz
@@ -266,8 +262,7 @@ theorem norm_le_one {l : ℕ} [Fact l.Prime] {E Ω : Type} [Field E] [NumberFiel
     have : w = -(z ^ m * (z + 1)) := by linear_combination hz
     rw [this, norm_neg, norm_mul, norm_pow]
   have hz1 : 1 < ‖z‖ := by
-    by_contra hle
-    push_neg at hle
+    by_contra! hle
     have h5 : ‖z + 1‖ ≤ 1 := (IsUltrametricDist.norm_add_le_max z 1).trans (max_le hle (by simp))
     have h6 : ‖z‖ ^ m ≤ 1 := pow_le_one₀ (norm_nonneg _) hle
     have := mul_le_one₀ h6 (norm_nonneg _) h5
@@ -482,8 +477,7 @@ theorem finite_and_finrank {O L G H ι : Type} [CommRing O] [IsDomain O] [IsNoet
           rw [e.apply_symm_apply, hf]
           rfl
         refine ⟨(⟨fun g => f (e g), (hZ _).2 (e0 ▸ W.smul_mem _ y.2)⟩, ⟨d, mem_nonZeroDivisors_of_ne_zero hd⟩), ?_⟩
-        refine Subtype.ext (Eq.trans ?_ e0.symm)
-        exact (algebraMap_smul L d y.1).symm
+        exact Subtype.ext (Eq.trans (algebraMap_smul L d y.1).symm e0.symm)
     rw [← IsLocalizedModule.finrank_eq (nonZeroDivisors O) φ le_rfl, Module.finrank, Module.finrank,
       IsLocalization.rank_eq L (nonZeroDivisors O) le_rfl]
 
@@ -847,8 +841,7 @@ theorem h1fDim_eq (h : GalHyp bkP i s) (u : placesOver D.host.E (X.l i)) [Fintyp
     hr (Bw.rep T) hdR 0
   have h2' := (congrArg (Nat.cast : ℕ → ℤ) (h2.trans (finsum_eq_sum_of_fintype _))).trans (Nat.cast_sum _ _)
   have h3' := (congrArg (Nat.cast : ℕ → ℤ) (h3.trans (finsum_eq_sum_of_fintype _))).trans (Nat.cast_sum _ _)
-  refine h1.trans ((congrArg₂ (· - ·) h2' h3').trans ?_)
-  exact (Finset.sum_sub_distrib _ _).symm
+  exact h1.trans ((congrArg₂ (· - ·) h2' h3').trans (Finset.sum_sub_distrib _ _).symm)
 
 theorem sum_h1fDim (h : GalHyp bkP i s) [Fintype (placesOver D.host.E (X.l i))] :
     ∑ u, h1fDim bkP i s u = D.R.f * D.R.r := by

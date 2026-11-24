@@ -187,8 +187,7 @@ theorem GlobalTheory.Frames.secGen_of_secNZ : Out.SecBaseChangeSt → ∀ (E : T
     constructor
     · rintro ⟨i, rfl⟩
       exact (F.equivFin.symm i).2
-    · intro hy
-      exact ⟨F.equivFin ⟨y, hy⟩, by simp [h]⟩
+    · exact fun hy => ⟨F.equivFin ⟨y, hy⟩, by simp [h]⟩
   have hh : Ideal.span (Set.range h) = ⊤ := by
     rw [hr]; exact (Ideal.eq_top_iff_one _).2 h1
   have hmem : ∀ i, h i ∈ G := fun i => hF (F.equivFin.symm i).2
@@ -203,5 +202,4 @@ theorem GlobalTheory.Frames.secGen_of_secNZ : Out.SecBaseChangeSt → ∀ (E : T
     rw [hα] at h3
     exact (GlobalTheory.Frames.NonzeroGenerates.pull_trans_iff rfl e2 (htl (h j))).2 (by rw [hβ]; exact h3))
   have : t = t₀ := glue.unique (fun i => htl (h i)) (fun i => hloc ⟨h i, hmem i⟩)
-  rw [this]
-  exact ht₀
+  rwa [this]

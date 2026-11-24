@@ -258,8 +258,7 @@ theorem keyPB_of_keyVia_field : ∀ (R k K : Type) [CommRing R] [Field k] [Field
       exact RingHom.ext fun a => (dualMapR_algebraMap α a).symm
     · have a := hv₀ (i.cast hg₀.symm)
       have b := hv₁ (i.cast hg₀.symm)
-      rw [← Category.assoc, a, spMap_comp, Category.assoc, Category.assoc] at b
-      exact b
+      rwa [← Category.assoc, a, spMap_comp, Category.assoc, Category.assoc] at b
 
 end GlobalTheory.KeyDesc
 end -- clump:auto
@@ -616,8 +615,7 @@ theorem scale_ne_zero {K : Type} [Field K] {P : Out.PolAV (Sp K)} {th th' : P.L.
   rintro rfl
   obtain ⟨z, -, hz⟩ := hth' (default : PrimeSpectrum K)
   obtain ⟨i, hi⟩ := TopologicalSpace.Opens.mem_iSup.1 hz
-  rw [h₁, constFn, map_zero, map_zero, zero_mul, Scheme.basicOpen_zero] at hi
-  exact hi
+  rwa [h₁, constFn, map_zero, map_zero, zero_mul, Scheme.basicOpen_zero] at hi
 
 theorem IsVal.scale (hD : Descent) (ht : InFamilies t) (hN : FromNormal t) {K : Type} [Field K] [CharZero K]
     {P : Out.PolAV (Sp K)} {hg rig hr th hth v hv th' hth' v' hv'} {a : K} {M : Matrix (Fin P.g) (Fin P.g) K}
@@ -682,8 +680,7 @@ theorem keyFormula_of_families : ThetaUnifAV → Out.PolBaseChangeSt → (∀ (R
     simp
   · obtain ⟨u', σ, M', p, q, d, k₁, k₂, hp, hq, k₃, k₄, hd, k₅, -, k₆, k₇⟩ :=
       keyIn_normal_form_and_archimedean_constant hU x u Hm W χ θ Fd nth nη h₁ h₂ h₃ h₄ h₅ h₆ h₇
-    rw [(hκ ℂ x).complex, hN.2 x σ M' p q d ⟨hp, hq⟩ hd ⟨u', k₁, k₂, k₃, k₄, k₅, k₆⟩]
-    exact k₇
+    rwa [(hκ ℂ x).complex, hN.2 x σ M' p q d ⟨hp, hq⟩ hd ⟨u', k₁, k₂, k₃, k₄, k₅, k₆⟩]
 
 end GlobalTheory.KeyRoot
 end -- clump:auto
@@ -760,8 +757,7 @@ theorem exists_algHom_ne_zero_of_countable (E : Type) [CommRing E] [IsDomain E] 
   refine ⟨(e.symm : (E ⧸ Q) →ₐ[ℂ] ℂ).comp (Ideal.Quotient.mkₐ ℂ Q), fun r hr h => ?_⟩
   have h1 : Ideal.Quotient.mk Q r = 0 := by
     apply e.symm.injective
-    rw [map_zero]
-    exact h
+    rwa [map_zero]
   have h2 : r ∈ Q := Ideal.Quotient.eq_zero_iff_mem.1 h1
   have h3 : n r ∈ Q.under (MvPolynomial (Fin d) ℂ) :=
     (Ideal.mem_under (MvPolynomial (Fin d) ℂ) Q).2
@@ -812,8 +808,7 @@ theorem exists_dominant_component :
     intro r hr
     have h1 : r ∈ q.under R :=
       Ideal.mem_comap.mpr (Ideal.Quotient.eq_zero_iff_mem.mp hr)
-    rw [← hlo.over] at h1
-    exact h1
+    rwa [← hlo.over] at h1
   · ext r
     exact he r
 
@@ -883,8 +878,7 @@ theorem exists_common_nonroot (d : ℕ) (S : Set (MvPolynomial (Fin d) ℂ)) (hS
         by_contra hy0
         apply hne
         refine ⟨y, ?_, by simpa using hy0⟩
-        rw [ball_pi _ hr]
-        exact hy
+        rwa [ball_pi _ hr]
       exact this ▸ hf
   obtain ⟨c, hc⟩ := hd.nonempty
   exact ⟨c, fun f hf => by simpa using Set.mem_iInter₂.1 hc f hf⟩
@@ -1056,8 +1050,7 @@ theorem exists_lift_of_isIntegral {k E E' : Type} [Field k] [IsAlgClosed k] [Com
   let φ : k ≃ₐ[k] (E' ⧸ Q) := AlgEquiv.ofBijective (Algebra.ofId k _) hbij
   refine ⟨(φ.symm : (E' ⧸ Q) →ₐ[k] k).comp (Ideal.Quotient.mkₐ k Q), ?_⟩
   ext x
-  apply φ.injective
-  exact (φ.apply_symm_apply _).trans (key x).symm
+  exact φ.injective ((φ.apply_symm_apply _).trans (key x).symm)
 
 theorem exists_smooth_normalisation (E : Type) [CommRing E] [IsDomain E] [Algebra ℂ E]
     [Algebra.FiniteType ℂ E] [Ring.DimensionLEOne E] (e : E →ₐ[ℂ] ℂ) :
@@ -1075,9 +1068,7 @@ theorem exists_smooth_normalisation (E : Type) [CommRing E] [IsDomain E] [Algebr
   haveI : IsDedekindRing E' := ⟨⟩
   haveI : IsDedekindDomain E' := inferInstance
   have hinj : Function.Injective (algebraMap E E') := by
-    intro x y h
-    apply IsFractionRing.injective E F
-    exact congrArg Subtype.val h
+    exact fun x y h => IsFractionRing.injective E F (congrArg Subtype.val h)
   obtain ⟨e', he'⟩ := exists_lift_of_isIntegral hinj e
   exact ⟨E', inferInstance, inferInstance, inferInstance, IsScalarTower.toAlgHom ℂ E E', e',
     GlobalTheory.DedekindSmooth.smooth_of_isDedekindDomain ℂ E', hinj, he'⟩

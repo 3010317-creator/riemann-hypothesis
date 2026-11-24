@@ -82,8 +82,7 @@ theorem entire_eq_of_eq_on_reals {E : Type} [NormedAddCommGroup E] [NormedSpace 
     refine tendsto_nhdsWithin_iff.2 ⟨?_, ?_⟩
     · exact (Complex.continuous_ofReal.tendsto 0).mono_left nhdsWithin_le_nhds
     · filter_upwards [self_mem_nhdsWithin] with y hy
-      intro h0
-      exact hy (Complex.ofReal_injective h0)
+      exact fun h0 => hy (Complex.ofReal_injective h0)
   exact ht.frequently (Filter.Frequently.of_forall h)
 
 theorem capelli_eigen_real_to_complex :
@@ -283,8 +282,7 @@ theorem capelli_module_model : ∀ (k r : ℕ) (Wp Wq : Type) [NormedAddCommGrou
     · exact (GlobalTheory.ckOn_inCC_congr_on_group k r _ A _ _ (fun g hg => (ev_Eu a b v g hg).symm)).2 m
         ((_root_.GlobalTheory.EabClass.eh_class k r Wp Wq A a b _ ⟨smooth_iff.1 v.2.1, hv⟩).2 m)
     · have := LinearMap.congr_fun (qDetCentral _ _ _ hgl u a b) v
-      rw [Module.End.mul_apply, Module.End.mul_apply, hv', map_smul] at this
-      exact this
+      rwa [Module.End.mul_apply, Module.End.mul_apply, hv', map_smul] at this
   have hint : ∀ a b (w : eig k r (Wq →L[ℂ] Wp) χ A),
       (eig k r (Wq →L[ℂ] Wp) χ A).subtype ((Eu k r (Wq →L[ℂ] Wp) a b).restrict (hst a b) w) =
         Eu k r (Wq →L[ℂ] Wp) a b ((eig k r (Wq →L[ℂ] Wp) χ A).subtype w) := fun _ _ _ => rfl
@@ -313,11 +311,10 @@ theorem capelli_module_model : ∀ (k r : ℕ) (Wp Wq : Type) [NormedAddCommGrou
     congr 1
     exact Finset.prod_congr rfl fun s _ => by ring
   · intro c hc
-    simp only [mulOp, dif_pos hc]
+    simp only [mulOp, dite_eq_left hc]
     refine ⟨fun v g hg => ev_M isOpen_univ (smooth_iff.2 hc) v (mem_lev.2 hg), fun a b v g hg => ?_⟩
     have := ev_EM (i := 0) isOpen_univ (c0 a) (c0 b) (smooth_iff.2 hc) v (mem_lev.2 hg)
-    rw [position_level_zero_coord, position_level_zero_coord, ← ev_Eu a b v g hg] at this
-    exact this
+    rwa [position_level_zero_coord, position_level_zero_coord, ← ev_Eu a b v g hg] at this
 
 end GlobalTheory
 end -- clump:auto

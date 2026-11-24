@@ -181,8 +181,7 @@ theorem exists_match_rescale : GlobalFnsSt → ∀ (E : Type) [Field E] [NumberF
       rw [show uK ^ a.be (hD.xe (e.symm y)) (hD.xe (H.w0 • e.symm y)) = _ from hq (e.symm y), he,
         Units.val_zpow_eq_zpow_val, map_zpow₀, hu, huF]
     beta_reduce at k
-    rw [v, he] at k
-    exact k
+    rwa [v, he] at k
 
 end GlobalTheory.RescaleMatch
 end -- clump:auto
@@ -239,13 +238,11 @@ theorem exists_qt_image {O : Type} [CommRing O] {N N' : NumD O} (J : NumD.Iso N 
     intro m
     induction m with
     | zero =>
-      have h := t.2.2.1 0
-      simpa [N.io_zero, N'.io_zero] using h
+      simpa [N.io_zero, N'.io_zero] using t.2.2.1 0
     | succ m ih => simpa [pow_succ] using t.2.1 _ _ _ _ ih r
   have r₂ := rp k
   rw [N.mem_QT.1 p.2] at r₂
-  refine ⟨⟨(Multiplicative.ofAdd (J.e p.1.1.toAdd), g), ?_⟩, rfl, r⟩
-  exact (t.1 _).unique r₂ (t.2.2.1 _)
+  exact ⟨⟨(Multiplicative.ofAdd (J.e p.1.1.toAdd), g), (t.1 _).unique r₂ (t.2.2.1 _)⟩, rfl, r⟩
 
 theorem iso_comm_of_labels : ∀ (C : Type) [NormedField C] (N N' : NumD C) (La : Type) [AddCommGroup La] (EF : LinearMap.BilinForm ℤ La) (ζ ζ' : ℕ → Cˣ) (lab : ∀ k : ℕ, La → N.QT k) (lab' : ∀ k : ℕ, La → N'.QT k) (n : ℕ), 1 < n → Labels N EF ζ lab → Labels N' EF ζ' lab' → ∀ J : NumD.Iso N N', (∀ j (p : N.QT (n ^ j)) (p' : N'.QT (n ^ j)), p'.1.1.toAdd = J.e p.1.1.toAdd → J.Rel p.1.2 p'.1.2 → ∃ x, N.QEq (lab _ x) p ∧ N'.QEq (lab' _ x) p') → (∀ j (y : N.X), ∃ p : N.QT (n ^ j), p.1.1.toAdd = y) → ∀ (α : N.X →+ N.X) (α' : N'.X →+ N'.X) (gam : La → La), (∀ j x, ∃ z, (lab (n ^ j) (gam x)).1.1.toAdd = α (lab (n ^ j) x).1.1.toAdd + n ^ j • z) → (∀ j x, ∃ z, (lab' (n ^ j) (gam x)).1.1.toAdd = α' (lab' (n ^ j) x).1.1.toAdd + n ^ j • z) → ∀ y, J.e (α y) = α' (J.e y) := by
   intro C _ N N' La _ EF ζ ζ' lab lab' n hn hL hL' J hJ hs α α' gam ha ha' y
@@ -1113,8 +1110,7 @@ theorem data_of_model : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory
   obtain ⟨lM, linM⟩ := _root_.GlobalTheory.ModelData.labels_of_tateIsoQ hGt hWp E H D M.W M.P.D.toPre M.P.oD M.P.D.psi_even M.P.D.tau_bimult C I' N' ν' lab' hlab'
   have qEqEquiv (k : ℕ) : Equivalence (N'.QEq (k := k)) := by
     refine ⟨?_, ?_, ?_⟩
-    · intro p
-      exact ⟨0, by simp, by simp⟩
+    · exact fun p => ⟨0, by simp, by simp⟩
     · rintro p p' ⟨z, h, h'⟩
       exact ⟨-z, by rw [h, smul_neg, add_neg_cancel_right], by rw [h', N'.io_neg, mul_inv_cancel_right]⟩
     · rintro p p' p'' ⟨z, h, h'⟩ ⟨w, e, e'⟩

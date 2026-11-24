@@ -142,14 +142,12 @@ theorem expandsAt_transport : ∀ (R R' : Type) [CommRing R] [IsDomain R] [CommR
         wv U e h y (J (h ≫ pGl U e)) jL * gw wL (fGl I' G' e') y jL jL' := by
       have := hW _ (𝟙 _) y (J (pGl U' e' ≫ Φ)) (J' (pGl U' e')) jL jL' (hJ (pGl U' e' ≫ Φ)) (hJ' (pGl U' e')) hL hL'
       simp only [Category.id_comp] at this
-      rw [← hq]
-      exact this
+      rwa [← hq]
     have Sg : sv U k σ (h ≫ fGl I G e) y jL =
         (gw wL (fGl I' G' e') y jL jL' ^ k).val * sv U' k σ' (fGl I' G' e') y jL' := by
       have := hσ _ (fGl I' G' e') y (fun _ => jL) (fun _ => jL') (fun _ => hL) (fun _ => hL')
       simp only [Category.comp_id, Fin.prod_univ_one, zpow_natCast] at this
-      rw [hG]
-      exact this
+      rwa [hG]
     refine (om w y J J' (pGl U' e') ^ k).mul_right_inj.1 ?_
     rw [← _root_.mul_assoc, ← Units.val_mul, ← mul_pow, W', mul_pow, Units.val_mul, _root_.mul_assoc, ← Sg,
       (hS _ h y J hJ).2 jL hL₁, Finset.sum_map, Finset.mul_sum]

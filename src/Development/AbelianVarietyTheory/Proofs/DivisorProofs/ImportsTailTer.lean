@@ -345,8 +345,7 @@ theorem isInducing_val {R : Type} [CommRing R] [TopologicalSpace R] [IsTopologic
   suffices e : ((fun m : Matrix (Fin n) (Fin n) R => (m, MulOpposite.op (K * cT σ m * J))) ∘
       fun u : UJ σ J => (u.1 : Matrix (Fin n) (Fin n) R)) =
       fun u : UJ σ J => Units.embedProduct (Matrix (Fin n) (Fin n) R) u.1 by
-    rw [e]
-    exact he
+    rwa [e]
   funext u
   refine Prod.ext rfl (congrArg MulOpposite.op ?_)
   have hu : cT σ u.1.1 * J * u.1.1 = J := u.2
@@ -1170,8 +1169,7 @@ theorem cT_qr (x : Fin M → E) (u : E) :
 theorem qr_unitary (hσ : ∀ a, σ (σ a) = a) (hJ : ∀ i j, σ (J j i) = J i j) (x : Fin M → E)
     (hx : hE σ J x x ≠ 0) (u : E) (hu : u * σ u = 1) :
     Formalism.UG.cT (σ : E →+* E) (GlobalTheory.SUAssemble.qr σ J x u) * J * GlobalTheory.SUAssemble.qr σ J x u = J := by
-  rw [cT_qr]
-  rw [qr_eq]
+  rw [cT_qr, qr_eq]
   simp only [Matrix.add_mul, Matrix.mul_add, Matrix.one_mul, Matrix.mul_one, Matrix.smul_mul, Matrix.mul_smul,
     smul_smul, cT_Q_mul σ J hσ hJ, Matrix.mul_assoc, Q_mul_Q, smul_add]
   have hs : σ ((u - 1) / hE σ J x x) = (σ u - 1) / hE σ J x x := by
@@ -1480,8 +1478,7 @@ theorem assemble : (∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
     intro l
     induction l with
     | nil =>
-      intro _
-      exact ⟨1, K.one_mem, by simp⟩
+      exact fun _ => ⟨1, K.one_mem, by simp⟩
     | cons q l ih =>
       intro hl
       obtain ⟨p₂, hp₂, e₂⟩ := ih (fun p hp => hl p (List.mem_cons_of_mem _ hp))
@@ -1517,8 +1514,7 @@ theorem assemble : (∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
     change _ = (1 + algebraMap (AF F) (AF F ⊗[F] E) η • (rmat (F := F) g0 - 1)) i j
     rw [hmat]
     simp [rmat]
-  rw [hxe, ← hpg]
-  exact hp
+  rwa [hxe, ← hpg]
 
 end GlobalTheory.SUAssemble
 

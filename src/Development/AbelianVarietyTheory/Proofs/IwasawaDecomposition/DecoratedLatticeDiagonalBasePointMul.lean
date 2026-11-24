@@ -78,7 +78,7 @@ theorem hasRes_row {P : HeightOneSpectrum (𝓞 E)} {n : ℕ} (r : Fin n) (K U :
       ∑ j, (K j - if j = r then algebraMap E (P.adicCompletion E) (algebraMap (𝓞 E) E c) else 0) * U j +
         algebraMap E (P.adicCompletion E) (algebraMap (𝓞 E) E c) *
           (U r - algebraMap E (P.adicCompletion E) (algebraMap (𝓞 E) E s)) := by
-    simp only [_root_.sub_mul, Finset.sum_sub_distrib, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+    simp only [_root_.sub_mul, Finset.sum_sub_distrib, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
       map_mul]
     ring
   rw [e]
@@ -87,10 +87,10 @@ theorem hasRes_row {P : HeightOneSpectrum (𝓞 E)} {n : ℕ} (r : Fin n) (K U :
     refine lt_of_le_of_lt (mul_le_of_le_one_right' (hU j)) ?_
     have := hK j
     by_cases hj : j = r
-    · rw [if_pos hj, DilPt.hasRes_mk_iff] at this
-      rwa [if_pos hj]
-    · rw [if_neg hj] at this
-      rw [if_neg hj, sub_zero]
+    · rw [ite_eq_left hj, DilPt.hasRes_mk_iff] at this
+      rwa [ite_eq_left hj]
+    · rw [ite_eq_right hj] at this
+      rw [ite_eq_right hj, sub_zero]
       exact DilPt.hasRes_lt_one this
   · rw [map_mul]
     exact lt_of_le_of_lt (mul_le_of_le_one_left' hC) hs
@@ -124,8 +124,7 @@ theorem decoOf_dia_eq : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   classical
   have hg : g ∈ UAd hc n := by
     have := mul_mem h.uni (inv_mem hk.uni)
-    rw [mul_inv_cancel_right] at this
-    exact this
+    rwa [mul_inv_cancel_right] at this
   have hkc := hk.lat
   rw [hk0] at hkc
   have hkI : ∀ z : Fin n → AfE F E, (∀ i, z i ∈ RInt F E) ↔
@@ -190,8 +189,7 @@ theorem decoOf_dia_eq : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     (mem_globLat g x).1 (hN ▸ hx)
   refine ⟨hg, decoSet_ext ?_ (fun P x hx => ?_) fun w x hx => ?_⟩
   · show (decoOf ST SG g).1.N = _
-    rw [hraw]
-    exact hN
+    rwa [hraw]
   · show (c P).1 * (decoOf ST SG g).1.f P x = _
     have hl : (lastIdx n).1 + 1 = n := Nat.sub_add_cancel (Nat.pos_of_ne_zero (NeZero.ne n))
     have h1 := h.f P x hx _ hl
@@ -202,18 +200,18 @@ theorem decoOf_dia_eq : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
       (fun j => (mem_rInt_iff F E _).1 (hint x hx j) P.1) (PtExist.hasRes_redA P.1 (hint x hx _))
     rw [hraw]
     simp only [decoRaw]
-    rw [if_pos (le_locP _ _ (hN ▸ hx))]
+    rw [ite_eq_left (le_locP _ _ (hN ▸ hx))]
     exact h2.unique h1
   · show (decoOf ST SG g).1.be w x = _
     rw [hraw]
     simp only [decoRaw]
-    rw [if_pos (le_locP _ _ (hN ▸ hx))]
+    rw [ite_eq_left (le_locP _ _ (hN ▸ hx))]
     funext i
     have h1 := h.be w x hx i
     rw [DilPt.pullbackVector_mul_right] at h1
 
     simp only [Matrix.mulVec, dotProduct, map_sum, map_mul, hone w.1 w.2, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true] at h1
+    Finset.mem_univ, ite_true] at h1
     exact (PtExist.hasRes_redA w.1 (hint x hx i)).unique h1
 
 end GlobalTheory.Mem.Col2.DiaPt

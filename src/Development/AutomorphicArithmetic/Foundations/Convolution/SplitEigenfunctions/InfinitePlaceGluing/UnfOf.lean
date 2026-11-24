@@ -370,8 +370,7 @@ private theorem eq_zero_of_coeff (Φ : A ℚ → ℂ) (hc : Continuous Φ) (hp :
       change algebraMap ℚ (A ℚ) (-k) + x = _
       rw [map_neg]
       abel
-    rw [e]
-    exact hk
+    rwa [e]
   refine GlobalTheory.SeparatingCharacters.eq_zero_of_coefficients_eq_zero (A ℚ) (AdeleRing.principalSubgroup (𝓞 ℚ) ℚ) C hC hcov ℚ
     (fun a v => ψ (rt a * v)) cont_psi_mul ?_ ?_ ?_ (fun a x => Pp.norm_ψ _) ker_psi (adeleMeasure ℚ) (fundamentalSet ℚ)
     inferInstance (isAddFundamentalDomain_fundamentalSet ℚ) Φ hc ?_ h0
@@ -439,7 +438,7 @@ private theorem inv_of_summable (f : A ℚ → ℂ) (hc : Continuous f) (hp : �
       by_cases h : α = β
       · subst h
         simp
-      · rw [if_neg h, if_neg (sub_ne_zero.2 (Ne.symm h)), mul_zero]
+      · rw [ite_eq_right h, ite_eq_right (sub_ne_zero.2 (Ne.symm h)), mul_zero]
     simp only [e2] at hsum
     exact hsum.unique (hasSum_ite_eq β (c β))
   have hz : (fun v => f v - G v) = 0 := by
@@ -452,8 +451,7 @@ private theorem inv_of_summable (f : A ℚ → ℂ) (hc : Continuous f) (hp : �
     rw [integral_sub hi1 hi2, hcoef, sub_self]
   have h0 := congrFun hz 0
   simp only [Pi.zero_apply, sub_eq_zero] at h0
-  rw [h0]
-  exact hG0
+  rwa [h0]
 
 section Slice
 
@@ -622,8 +620,7 @@ theorem UpperTheory.hasSum_whittaker_diagTorus_rat_eq_unipotentConstantTerm :
     simp only [hcdef, coeff_eq D hA.cont x 0]
     have e : ∀ u : Fin 2 → A ℚ, φ (nE D u * x) * ψ (rt (0 : ℚ) * u 1) = φ (nE D u * x) := fun u => by
       rw [show (rt 0 : A ℚ) = 0 from map_zero _, zero_mul, ψ_zero, mul_one]
-    simp only [e]
-    exact hA.zero x
+    simpa only [e] using hA.zero x
   have hcα : ∀ α : ℚˣ, c α = Wo D φ (UpperTheory.ConvolutionTheory.RankTwoDescent.em E (aE (IdeleGroup.diagonal ℚ α)) * x) := fun α => by
     rw [coeff_ne D hL x α]
     exact coeff_eq D hA.cont x α
@@ -821,8 +818,7 @@ theorem UpperTheory.tsum_unfoldedIntegrand_ideleCovering_eq_exp_mul :
     exact mul_ne_zero (mul_ne_zero (Units.ne_zero _) (cpow_ne (ab_pos' y) _)) (mul_ne_zero h0 (cpow_ne (ab_pos' z) _))
   have hsW : Summable W := (summable_mul_right_iff hCne).1 hS'
   have hsum : Summable fun α : ℚˣ => Wo D φ (em E (aE (IdeleGroup.diagonal ℚ α)) * x) := by
-    simp only [hW]
-    exact hsW.mul_left _
+    simpa only [hW] using hsW.mul_left _
   have hFb : Un.Fb φ x = ((ω.1 c : ℂˣ) : ℂ) ^ 2 * ∑' α, W α := by
     have h := (UpperTheory.hasSum_whittaker_diagTorus_rat_eq_unipotentConstantTerm E D ω φ hA x hsum).tsum_eq
     simp only [hW] at h
@@ -921,7 +917,7 @@ theorem UpperTheory.whittaker_lintegral_abs_pow_bounded_on_maximalCompact :
   rw [← map_mul] at hb
   have hab : 0 ≤ ab y ^ x := Real.rpow_nonneg (IdeleGroup.ideleModule ℚ y).2.le x
   by_cases hy : (y : A ℚ).2 ∈ K
-  · rw [if_pos hy, ← ENNReal.ofReal_mul (abs_nonneg _), ← ofReal_norm_eq_enorm,
+  · rw [ite_eq_left hy, ← ENNReal.ofReal_mul (abs_nonneg _), ← ofReal_norm_eq_enorm,
       ← ENNReal.ofReal_mul (norm_nonneg _)]
     refine ENNReal.ofReal_le_ofReal ?_
     rw [← mul_assoc]

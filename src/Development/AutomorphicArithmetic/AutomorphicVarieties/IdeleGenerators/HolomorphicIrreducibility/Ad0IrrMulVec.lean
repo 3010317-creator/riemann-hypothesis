@@ -137,8 +137,7 @@ private theorem ad0Irr_core {Γ k : Type} [Group Γ] [TopologicalSpace Γ] [IsTo
         + C * (ρ g 1 0 * x + ρ g 1 1 * y) ^ 2 = 0) : False := by
   obtain ⟨a0, a1, b0, b1, ha, hb, hf⟩ := ad0Irr_factor A B C h
   have hav : (![a0, a1] : Fin 2 → k) ≠ 0 := by
-    intro h0
-    exact ha ⟨by simpa using congrFun h0 0, by simpa using congrFun h0 1⟩
+    exact fun h0 => ha ⟨by simpa using congrFun h0 0, by simpa using congrFun h0 1⟩
   have hc : ∀ i j, Continuous fun g => (ρ g : Matrix (Fin 2) (Fin 2) k) i j :=
     fun i j => (Units.continuous_val.comp hρ).matrix_elem i j
   have hmv : ∀ g : Γ, (ρ g : Matrix (Fin 2) (Fin 2) k) *ᵥ ![a0, a1] =
@@ -190,8 +189,7 @@ private theorem ad0Irr_core {Γ k : Type} [Group Γ] [TopologicalSpace Γ] [IsTo
           have h3 : c * ((ρ g 0 0 * a0 + ρ g 0 1 * a1) * a1 - (ρ g 1 0 * a0 + ρ g 1 1 * a1) * a0) = 0 := by
             linear_combination h1
           exact (mul_eq_zero.mp h3).resolve_left hc2
-      rw [inf_eq_left.mpr hle]
-      exact hH
+      rwa [inf_eq_left.mpr hle]
     · have hset : ((H ⊓ lineStab ρ ![a0, a1] hav : Subgroup Γ) : Set Γ) = (H : Set Γ) ∩
           (fun g => (ρ g 0 0 * a0 + ρ g 0 1 * a1) * b1 - (ρ g 1 0 * a0 + ρ g 1 1 * a1) * b0) ⁻¹' {0}ᶜ := by
         ext g
@@ -263,8 +261,7 @@ theorem UpperTheory.V.Sd.ad0Irr :
   intro l _ Γ _ _ _ ρ hρ hi H hH
   refine ⟨top_ne_bot, fun _ _ _ => Submodule.mem_top, ?_⟩
   intro W _ hW
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   obtain ⟨hb, ht⟩ := hne
   have hWg : ∀ g ∈ H, ∀ v ∈ W, (ad0 ρ g : Matrix (Fin 3) (Fin 3) (Formalism.ConjugateSelfDual.Qbar l)) *ᵥ v ∈ W :=
     fun g hg v hv => hW ⟨g, hg⟩ v hv
@@ -318,8 +315,7 @@ theorem UpperTheory.V.Sd.ad0Irr :
       simpa using hm
     have hrange : LinearMap.range f = ⊤ := by
       obtain ⟨u, hu⟩ : ∃ u, f u ≠ 0 := by
-        by_contra hcon
-        push_neg at hcon
+        by_contra! hcon
         exact hf0 (LinearMap.ext hcon)
       refine LinearMap.range_eq_top.mpr fun t => ⟨(t / f u) • u, ?_⟩
       simp [hu]
@@ -343,8 +339,6 @@ theorem UpperTheory.V.Sd.ad0Irr :
     · intro g hg v hv
       rw [← hexp] at hv ⊢
       have hvW : v ∈ W := by
-        rw [heq]
-        exact hv
+        rwa [heq]
       have hm := hWg g hg v hvW
-      rw [heq] at hm
-      exact hm
+      rwa [heq] at hm

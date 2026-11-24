@@ -236,8 +236,7 @@ theorem sub_one_mulVec_mem : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] 
   have hbx : β.b *ᵥ x = Y := by rw [hx, Matrix.mulVec_mulVec, β.bb', Matrix.one_mulVec]
   have hxint : ∀ j, x j ∈ 𝒪[k] := by
     rw [← hpi, hβ x, hbx]
-    simp only [hY, p.sec_pr]
-    exact intAt_mul_mem (FrameLat.e_mem_intAt p) hy
+    simpa only [hY, p.sec_pr] using intAt_mul_mem (FrameLat.e_mem_intAt p) hy
   let x₀ : n → 𝒪[k] := fun j => ⟨x j, hxint j⟩
   have hz : ∀ i, ((k₀.1 - 1) *ᵥ x₀) i ∈ IsLocalRing.maximalIdeal 𝒪[k] ^ d := fun i =>
     Ideal.sum_mem _ fun j _ => Ideal.mul_mem_right _ _ (hk i j)
@@ -264,8 +263,7 @@ theorem sub_one_mulVec_mem : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] 
       fun i => incA D (m : D.host.E) * p.sec ((β.b *ᵥ c) i) := by
     funext i
     rw [← p.sec_pr, hpr, mul_comm (incA D _), FrameLat.sec_mul_right, mul_comm]
-  rw [heq]
-  exact h
+  rwa [heq]
 
 end GlobalTheory.FinPl.FrameCong
 end -- clump:auto
@@ -451,8 +449,7 @@ theorem dvd_of_mem_maxIdeal_pow : ∀ (D : D7) (k : Type) [Field k] [ValuativeRe
           · exact hx h
         have h1 := congrArg (fun u => valuation k (f u)) hy
         simp only [fmul, Valuation.map_mul, hunit s hs, one_mul] at h1
-        rw [h1, ← hq, pow_succ]
-        rw [hq]
+        rw [h1, ← hq, pow_succ, hq]
         exact mul_le_mul_of_nonneg_right (ih y hy') zero_le'
       · rw [hunit x hxw]
         exact pow_le_one₀ zero_le' hq1
@@ -544,7 +541,7 @@ theorem cut_mem_latV {D : D7} (S : HSp D) (L : GlobalTheory.FinPl.Lat S) (P : Gl
       · rw [zero_mul]
         exact zero_mem _
     · intro v hv
-      rw [map_mul, GlobalTheory.SelfDualAt.evalV_indP, if_neg hv, zero_mul]
+      rw [map_mul, GlobalTheory.SelfDualAt.evalV_indP, ite_eq_right hv, zero_mul]
     · funext i
       rw [one_mul]
       exact GlobalTheory.HatLatV.cut_tmul P a (x i)

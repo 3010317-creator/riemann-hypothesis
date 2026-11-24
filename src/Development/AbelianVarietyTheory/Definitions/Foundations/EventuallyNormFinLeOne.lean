@@ -99,8 +99,7 @@ def absBar (x : FvBar F v) : ℝ≥0 := ⟨spectralNorm (Fv F v) (FvBar F v) x, 
 
 theorem absBar_mul (x y : FvBar F v) : absBar F v (x * y) = absBar F v x * absBar F v y := by
   let : NontriviallyNormedField (Fv F v) := Valued.toNontriviallyNormedField (Fv F v) (WithZero (Multiplicative ℤ))
-  have h := spectralAlgNorm_mul (K := Fv F v) (L := FvBar F v) x y
-  exact NNReal.eq h
+  exact NNReal.eq (spectralAlgNorm_mul (K := Fv F v) (L := FvBar F v) x y)
 
 theorem absBar_add_le (x y : FvBar F v) : absBar F v (x + y) ≤ max (absBar F v x) (absBar F v y) := by
   rw [← NNReal.coe_le_coe, NNReal.coe_max]
@@ -451,9 +450,7 @@ theorem finite_mulSupport_htFin (g : GL n (AF F ⊗[F] E)) :
     (Function.mulSupport fun v => htFin F v (bc (compFin F E v) g)).Finite := by
   have h1 := eventually_normFin_le_one F (E := E) (g : Matrix n n (AF F ⊗[F] E))
   have h2 := eventually_normFin_le_one F (E := E) ((g⁻¹ : GL n (AF F ⊗[F] E)) : Matrix n n (AF F ⊗[F] E))
-  refine Filter.eventually_cofinite.1 ((h1.and h2).mono fun v hv => ?_)
-  show htOf (normFin F v) _ = 1
-  exact htOf_eq_one.2 ⟨hv.1, hv.2⟩
+  exact Filter.eventually_cofinite.1 ((h1.and h2).mono fun v hv => (htOf_eq_one.2 ⟨hv.1, hv.2⟩))
 
 def heightGL (g : GL n (AF F ⊗[F] E)) : ℝ≥0 :=
   (∏ w, htInf F w (bc (compInf F E w) g)) * ∏ᶠ v, htFin F v (bc (compFin F E v) g)

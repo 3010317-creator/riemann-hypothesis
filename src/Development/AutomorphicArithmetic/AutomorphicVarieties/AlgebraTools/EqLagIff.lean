@@ -64,8 +64,7 @@ theorem eq_lag_iff {R E ι : Type*} [CommRing R] [Ring E] [Algebra R E] [Fintype
       aeval P (∏ j ∈ Finset.univ.erase i, (X - C (a j))) := by
   have hu : IsUnit (∏ j ∈ Finset.univ.erase i, (a i - a j)) := by
     refine Finset.prod_induction _ IsUnit (fun x y hx hy => hx.mul hy) isUnit_one ?_
-    intro j hj
-    exact h j (Finset.ne_of_mem_erase hj)
+    exact fun j hj => h j (Finset.ne_of_mem_erase hj)
   obtain ⟨v, hv⟩ := hu
   unfold lag
   rw [← hv, Ring.inverse_unit, ← Units.smul_def, ← Units.smul_def]

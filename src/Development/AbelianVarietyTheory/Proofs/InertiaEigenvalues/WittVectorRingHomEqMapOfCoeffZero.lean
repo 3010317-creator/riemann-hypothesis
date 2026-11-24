@@ -83,8 +83,7 @@ theorem eq_map_of_coeff_zero : ∀ (l : ℕ) [Fact l.Prime] (R O : Type) [CommRi
       have := hdiff (teichmuller l s)
       rwa [WittVector.map_teichmuller] at this
     have h2 := dvd_sub_pow_of_dvd_sub h1 n
-    rw [map_pow, map_pow, map_pow, map_pow]
-    exact h2
+    rwa [map_pow, map_pow, map_pow, map_pow]
   ext x m
   have key : ∀ n : ℕ, F x - WittVector.map ψ x ∈ Ideal.span {((l : WittVector l O) ^ n)} := by
     intro n
@@ -101,7 +100,6 @@ theorem eq_map_of_coeff_zero : ∀ (l : ℕ) [Fact l.Prime] (R O : Type) [CommRi
     simp only [RingHom.comp_apply] at this
     exact Ideal.Quotient.eq.mp this
   have h := (mem_span_p_pow_iff_le_coeff_eq_zero _ (m + 1)).mp (key (m + 1))
-  have h' := (le_coeff_eq_iff_le_sub_coeff_eq_zero (n := m + 1)).mpr h
-  exact h' m (Nat.lt_succ_self m)
+  exact ((le_coeff_eq_iff_le_sub_coeff_eq_zero (n := m + 1)).mpr h) m (Nat.lt_succ_self m)
 
 end GlobalTheory.WittMapUniq

@@ -100,7 +100,7 @@ theorem fn_hahnSeries_inv_converges : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* 
     · obtain ⟨k, rfl⟩ := hr
       rw [hcoef k, (hdiv _ n₀ k).2 rfl, hΦ1]
       simp [p]
-    · push_neg at hr
+    · push Not at hr
       rw [hzero r hr, hΦ0]
       intro k hk
       exact hr k ((hdiv r n₀ k).1 hk)
@@ -125,7 +125,7 @@ theorem fn_hahnSeries_inv_converges : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* 
   · rw [hg]
     refine ⟨N, hN, fun r hr => ?_⟩
     by_contra H
-    push_neg at H
+    push Not at H
     exact hr (hgz r fun k hk => H _ hk)
 
   set A : ℕ → ℂ := fun k => ε (a k) with hAdef
@@ -229,8 +229,7 @@ theorem fn_hsne_pre (N : ℕ) (hN : 0 < N) (C : ℝ) (x : ℂ) (hx : x ≠ 0)
       rw [this, Complex.im_ofReal_mul]
       simp [Complex.mul_im, Complex.log_re]
       ring
-    rw [him]
-    rw [lt_div_iff₀ (by positivity)]
+    rw [him, lt_div_iff₀ (by positivity)]
     have := mul_lt_mul_of_pos_left hlog hNr
     have e : (N : ℝ) * -(2 * Real.pi * C / N) = -(C * (2 * Real.pi)) := by
       field_simp
@@ -282,8 +281,7 @@ theorem fn_hasSum_ne_zero : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ) (C : 
   have hz2 : -(N * Real.log ρ') / (2 * Real.pi) < z.im := lt_of_le_of_lt (le_max_right _ _) hzi
   set x := Complex.exp (2 * Real.pi * Complex.I * z / N) with hxdef
   have hxn : ‖x‖ < ρ' := by
-    rw [hxdef, Complex.norm_exp, fn_hsne_re]
-    rw [← Real.exp_log hρ'0, Real.exp_lt_exp]
+    rw [hxdef, Complex.norm_exp, fn_hsne_re, ← Real.exp_log hρ'0, Real.exp_lt_exp]
     rw [div_lt_iff₀ (by positivity)] at hz2
     rw [neg_lt, lt_div_iff₀ hNr]
     nlinarith [hz2]

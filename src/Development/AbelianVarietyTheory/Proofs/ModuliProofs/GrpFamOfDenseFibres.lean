@@ -145,8 +145,7 @@ theorem basis_push [GrpObj A] [GrpObj Z] (hφ : IsGrpPullback A Z x φ) {r k : �
     exact (map_pow (pushHom hφ T) _ _).symm
   simp only [key]
   change ∃! c : Fin r → ZMod k, _ = pushHom hφ T z
-  simp only [inj.eq_iff]
-  exact hb z hz
+  simpa only [inj.eq_iff] using hb z hz
 
 theorem lab_single {o : Type} [CommRing o] {g k : ℕ} {J : Type} {b : TBase o k} {s : S ⟶ Sp o}
     (t : TObj g k J b s) (i : Fin (2 * g)) : t.lab (Pi.single i 1) = t.pt i := by
@@ -178,8 +177,7 @@ theorem grpFam_of_dense_fibres :
   haveI : NeZero (N' ^ 2) := ⟨pow_ne_zero _ hN0⟩
   have hun : IsUnit (N' : R) := by
     have := b.unit.map β
-    rw [map_natCast, Nat.cast_pow, isUnit_pow_iff two_ne_zero] at this
-    exact this
+    rwa [map_natCast, Nat.cast_pow, isUnit_pow_iff two_ne_zero] at this
   obtain ⟨-, hpr, hamp⟩ := GlobalTheory.ZM.projRep_projective_ample R _ I Z M th hrep
   have hD := dense_of_denseP hden
   have hs : Smooth Z.hom := SmoothOfRelativeDimension.smooth g _

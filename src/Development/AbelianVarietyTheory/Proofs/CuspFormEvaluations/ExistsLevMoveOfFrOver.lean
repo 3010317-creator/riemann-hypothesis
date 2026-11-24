@@ -85,8 +85,7 @@ theorem gw_eq_of_pmaps {S S₀ : Scheme.{0}} (hL : L.IsLB) (hL' : L'.IsLB) (p : 
       have k₁ := m₁ S (𝟙 S) s J (fun _ => i) (fun _ => mem_pull.1 hj) (fun _ => hi)
       have k₂ := m₂ S (𝟙 S) s J (fun _ => i) (fun _ => mem_pull.1 hj) (fun _ => hi)
       have k₃ := mul_right_cancel (k₁.symm.trans k₂)
-      rw [Fintype.prod_unique, Fintype.prod_unique, zpow_one, zpow_one, Category.id_comp] at k₃
-      exact k₃
+      rwa [Fintype.prod_unique, Fintype.prod_unique, zpow_one, zpow_one, Category.id_comp] at k₃
   rw [this]
 
 theorem gs_of_secMaps {F : X' ⟶ X} (w : LB.Iso L' (L.pull F)) {p : Y ⟶ X} {p' : Y' ⟶ X'} {pm : Y' ⟶ Y}
@@ -122,8 +121,7 @@ theorem gs_of_secMaps {F : X' ⟶ X} (w : LB.Iso L' (L.pull F)) {p : Y ⟶ X} {p
     show gm r z _ (∏ _k : Fin 1, (res _ (pullU p' _ (w.s (fun _ => j, i)))) ^ (1 : ℤ)) = _
     rw [Fin.prod_univ_one, Fin.prod_univ_one, zpow_one, zpow_one]
     exact (gm_res r z _ hm _).trans (gm_pull r p' z ((L.pull F).U (fun _ => j) ⊓ L'.U i) ⟨mem_pull.2 hj, hi⟩ _)
-  rw [Fin.prod_univ_one, zpow_one] at key
-  exact key
+  rwa [Fin.prod_univ_one, zpow_one] at key
 
 end Bundle
 
@@ -181,8 +179,7 @@ theorem pow_left_comp {t : SAB H S} {t₂ : SAB H S₂} {f : S₂ ⟶ S} (m : SA
     apply Over.OverMorphism.ext
     rw [he, LevelFibre.unit_left, LevelFibre.unit_left, Category.id_comp]; exact h
   have h₂ := congrArg (fun w => (w ^ d).left) h₁
-  simp only [← map_pow, ← MonObj.comp_pow, he, LevelFibre.unit_left, Category.id_comp] at h₂
-  exact h₂
+  simpa only [← map_pow, ← MonObj.comp_pow, he, LevelFibre.unit_left, Category.id_comp] using h₂
 
 theorem sec_lift {t : SAB H S} {t₂ : SAB H S₂} {u : SAB H T} {r : S₂ ⟶ S} {x : T ⟶ S₂} {z : T ⟶ S} (hz : x ≫ r = z)
     (m : SABMap t₂ t r) (n : SABMap u t₂ x) {s : 𝟙_ (Over T) ⟶ u.G} {σ : 𝟙_ (Over S₂) ⟶ t₂.G}

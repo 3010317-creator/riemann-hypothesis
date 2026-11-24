@@ -68,12 +68,10 @@ theorem genU_above (s : S) (l k : Fin (r s)) (h : l < k) : genU Ω r s l k = 0 :
 theorem genU_below (s : S) (l k : Fin (r s)) (h : k < l) :
     genU Ω r s l k = algebraMap (MvPolynomial (GenIx r) Ω) (GenField Ω r)
       (MvPolynomial.X ⟨s, ⟨(l, k), h⟩⟩) := by
-  simp only [genU, dif_pos h]
+  simp only [genU, dite_eq_left h]
 
 theorem genU_det (s : S) : (genU Ω r s).det = 1 := by
-  have hlow : (genU Ω r s).IsLowerTriangular := by
-    intro i j hij
-    exact genU_above s i j (by simpa using hij)
+  have hlow : (genU Ω r s).IsLowerTriangular := fun i j hij => genU_above s i j (by simpa using hij)
   rw [Matrix.det_of_isLowerTriangular _ hlow]
   exact Finset.prod_eq_one fun i _ => genU_diag s i
 
@@ -163,8 +161,7 @@ theorem genB_isGenericFlag : ∀ (Ω : Type) [Field Ω] (E : Type) [AddCommGroup
         genU Ω r q.1 q.2.1.1 q.2.1.2) =
         fun q => algebraMap (MvPolynomial (GenIx r) Ω) (GenField Ω r) (MvPolynomial.X q) :=
       funext fun q => genU_below q.1 q.2.1.1 q.2.1.2 q.2.2
-    rw [hfam]
-    exact hai
+    rwa [hfam]
   · rw [genField_adjoin_eq_top]
     exact IntermediateField.finrank_top
 

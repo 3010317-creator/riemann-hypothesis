@@ -341,8 +341,7 @@ theorem exists_gen_lift [IsAffine Y] [IsAffine Z] (hL : L.IsLB) (p : Z ⟶ Y)
     exact (congrArg IsUnit (hu' y J hJ)).mpr (Units.isUnit _)
   have hun : ∀ j, IsUnit (u.f j) := fun j => Y.toRingedSpace.isUnit_of_isUnit_germ _ _ fun x hx => by
     have := (mem_nonzeroLocus_iff_isUnit u hx).1 (hn x)
-    rw [gs_eq (𝟙 Y) x _ hx] at this
-    exact this
+    rwa [gs_eq (𝟙 Y) x _ hx] at this
   refine ⟨⟨fun j => (hun j).unit⟩, fun i j => Units.ext (u.compat i j), corr_of_val hL fun y J hJ => ?_⟩
   rw [val_pull hJ, Category.id_comp]
   exact Units.ext ((gs_unit p y _ (hJ.mem φ p) _).symm.trans (hu' y J hJ))

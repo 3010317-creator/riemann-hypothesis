@@ -72,7 +72,7 @@ theorem form_zsmul (E : Frame Φ d) (σ : ∀ T : C, E.D ⟶ T) {m : ℕ} (I : F
 
 theorem sgn_eq_zero_of_not_injective {m : ℕ} (I : Idx m d) {J : Fin m → Fin d} (h : ¬ Function.Injective J) :
     sgn I J = 0 := by
-  refine Finset.sum_eq_zero fun π _ => if_neg ?_
+  refine Finset.sum_eq_zero fun π _ => ite_eq_right ?_
   intro e
   exact h (e ▸ I.2.injective.comp π.injective)
 
@@ -89,13 +89,13 @@ theorem sgn_comp_self {m : ℕ} (I : Idx m d) (π : Equiv.Perm (Fin m)) :
   rw [Finset.sum_eq_single π]
   · simp
   · intro b _ hb
-    refine if_neg fun e => hb ?_
+    refine ite_eq_right fun e => hb ?_
     exact (Equiv.ext fun k => I.2.injective (congrFun e k)).symm
   · simp
 
 theorem sgn_comp_of_ne {m : ℕ} {I I' : Idx m d} (π : Equiv.Perm (Fin m)) (h : I' ≠ I) :
     sgn I' (I.1 ∘ π) = 0 := by
-  refine Finset.sum_eq_zero fun π' _ => if_neg fun e => h (Subtype.ext ?_)
+  refine Finset.sum_eq_zero fun π' _ => ite_eq_right fun e => h (Subtype.ext ?_)
   refine (StrictMono.range_inj I'.2 I.2).1 ?_
   have e' := congrArg Set.range e
   rw [π.surjective.range_comp, π'.surjective.range_comp] at e'
@@ -108,11 +108,9 @@ theorem rep_finset_sum {A : C ⥤ CommAlgCat.{0} R} {a b : IdF A} {j : ℕ} {ι 
   classical
   induction t using Finset.induction_on with
   | empty =>
-    simp only [Finset.sum_empty]
-    exact rep_zero fun s => Ideal.zero_mem _
+    simpa only [Finset.sum_empty] using rep_zero fun s => Ideal.zero_mem _
   | insert i t hi ih =>
-    simp only [Finset.sum_insert hi]
-    exact rep_add (h i) ih
+    simpa only [Finset.sum_insert hi] using rep_add (h i) ih
 
 theorem rep_collapse_one {Fil : ℤ → IdF Φ.A} (hF : IsFil Φ Fil) (E : Frame Φ d) (σ : ∀ T : C, E.D ⟶ T)
     (hc : E.GrConst Fil) (m : ℕ) (r : ℤ) (hr : r = m) (J : Fin m → Fin d) (w : Φ.A.obj E.D)
@@ -163,8 +161,7 @@ theorem rep_collapse : ∀ {R : Type} [CommRing R] {C : Type 1} [Category.{0} C]
     intro I
     rw [form_sum_zsmul]
     exact Finset.sum_congr rfl fun i _ => (form_zsmul E σ I.1 _ _ u).symm
-  simp only [e, sub_self]
-  exact Ideal.zero_mem _
+  simpa only [e, sub_self] using Ideal.zero_mem _
 
 end Collapse
 

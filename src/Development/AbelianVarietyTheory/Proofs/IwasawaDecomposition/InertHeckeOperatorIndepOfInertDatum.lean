@@ -79,8 +79,7 @@ theorem indepDatum_memGU_iff (g : K ≃+* K) {σ σ' : K →+* K} (hg : ∀ x, g
     rw [Matrix.map_mul, Matrix.map_mul, antiJ_map, cT_map (g : K →+* K) σ σ' hg]
   rw [e]
   constructor
-  · intro h
-    exact Matrix.map_injective g.injective (h.trans (antiJ_map (g : K →+* K) n).symm)
+  · exact fun h => Matrix.map_injective g.injective (h.trans (antiJ_map (g : K →+* K) n).symm)
   · intro h
     rw [h, antiJ_map]
 

@@ -107,9 +107,7 @@ theorem rc_unlinked_chars : UpperTheory.Gal.ToralGalois.Inq → ∀ (Ω : Type) 
       intro L
       induction L with
       | nil =>
-        intro _
-        show (WD.lpZero (h := h)).mono0
-        exact (WD.monodromyZero_ofWeilDeligneRepClass_iff _).2 rfl
+        exact fun _ => (WD.monodromyZero_ofWeilDeligneRepClass_iff _).2 rfl
       | cons Δ L ih =>
         intro hL'
         obtain ⟨j, hj⟩ := hfirst Δ (hL' Δ List.mem_cons_self)

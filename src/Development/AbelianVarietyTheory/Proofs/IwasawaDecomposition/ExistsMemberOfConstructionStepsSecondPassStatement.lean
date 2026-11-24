@@ -137,14 +137,14 @@ theorem planeVec_planeVec (N n h p : ℕ) (hN : n + 2 * h ≤ N) (hp : p = n + h
   simp only [planeVec, map_add (f := _), LinearMap.add_apply, diag_single_single, c1, c2]
   have e1 : ¬ (n + (i : ℕ) = n + h + j) := by omega
   have e2 : ¬ (n + h + (i : ℕ) = n + j) := by omega
-  rw [if_neg e1, if_neg e2]
+  rw [ite_eq_right e1, ite_eq_right e2]
   by_cases hij : i = j
   · subst hij
     simp [sgn, sub_eq_add_neg]
   · have h' : (i : ℕ) ≠ j := fun e => hij (Fin.ext e)
     have e3 : ¬ (n + (i : ℕ) = n + j) := by omega
     have e4 : ¬ (n + h + (i : ℕ) = n + h + j) := by omega
-    rw [if_neg e3, if_neg e4, if_neg hij]
+    rw [ite_eq_right e3, ite_eq_right e4, ite_eq_right hij]
     simp
 
 theorem ext_planeVec (N n h : ℕ) (hN : n + 2 * h ≤ N) (neg : Fin N → Bool) (x : Fin n → E) (a b : E)
@@ -157,7 +157,7 @@ theorem single_planeVec (N n h : ℕ) (hN : n + 2 * h ≤ N) (neg : Fin N → Bo
     (hl : n + 2 * h ≤ l) (c a b : E) (i : Fin h) :
     diagForm N neg (Pi.single l c) (planeVec N n h hN a b i) = 0 := by
   have hi := i.isLt
-  rw [planeVec, map_add (f := _), diag_single_single, diag_single_single, if_neg, if_neg, add_zero]
+  rw [planeVec, map_add (f := _), diag_single_single, diag_single_single, ite_eq_right, ite_eq_right, add_zero]
   · simp only; omega
   · simp only; omega
 
@@ -185,7 +185,7 @@ theorem top_line_norm :
       (Pi.single (⟨R.rankY R.m, by rw [N_top]; omega⟩ : Fin (R.N R.m)) pz)
       (Pi.single (⟨R.rankY R.m, by rw [N_top]; omega⟩ : Fin (R.N R.m)) pz) = (T : E) := by
   refine (diag_single_single _ (fun _ => false) _ _ pz pz).trans ?_
-  rw [if_pos rfl, ← hpz]
+  rw [ite_eq_left rfl, ← hpz]
   simp [sgn]
 
 def spacesNorm : Spaces R F E :=
@@ -222,7 +222,7 @@ theorem spacesNorm_hasFrame (j : ℕ) (hj : j < R.m) : HasHyperbolicAuxiliaryFra
     refine (diag_single_single _ (cut _ (pY R j)) _ _ pz pz).trans ?_
     have c : cut (R.rankY j) (pY R j) ⟨_, hl⟩ = true := by
       simp only [cut, decide_eq_true_eq]; omega
-    rw [if_pos rfl, c]
+    rw [ite_eq_left rfl, c]
     change _ = -(T : E)
     rw [← hpz]
     simp [sgn]
@@ -363,8 +363,7 @@ theorem typeNorm_of_root [IsCMField E] [IsGalois ℚ E] (r : (E →+* ℂ) → �
   · have h1 := norm_typeNorm_sq_eq E r n hr K hK (γ : E) σ
     have h2 : ‖σ (β ^ h)‖ ^ 2 = (Ideal.absNorm (Ideal.span {γ}) : ℝ) ^ n := by
       rw [Ideal.absNorm_span_singleton, Nat.cast_natAbs, Int.cast_abs, hβ]
-      rw [← Algebra.coe_norm_int, Rat.cast_intCast] at h1
-      exact h1
+      rwa [← Algebra.coe_norm_int, Rat.cast_intCast] at h1
     rw [← hγ, map_pow, map_pow, norm_pow, Nat.cast_pow, ← pow_mul, ← pow_mul,
       mul_comm _ 2, mul_comm _ n, pow_mul, pow_mul] at h2
     exact (pow_left_inj₀ (by positivity) (by positivity) hpos.ne').1 h2
@@ -880,8 +879,7 @@ theorem exists_mem_pvSet {R : Ranks} (H : Formalism.BasicNotions.Host R) {p : �
     (h𝔭 : (p : 𝓞 H.K) ∈ 𝔭.asIdeal) (v : HeightOneSpectrum (𝓞 H.F)) (hv : OverPF H p v) : ∃ w, w ∈ PvSet H 𝔭 v := by
   obtain ⟨w, h1, h2⟩ := exists_over_both H hp 𝔭 h𝔭 v hv
   refine ⟨w, ?_, h2⟩
-  rw [aboveF, Set.Finite.mem_toFinset]
-  exact h1
+  rwa [aboveF, Set.Finite.mem_toFinset]
 
 end GlobalTheory.PlaceOverPair
 end -- clump:auto
@@ -942,8 +940,7 @@ theorem sel_above (v : HeightOneSpectrum (𝓞 H.F)) : sel H v ∈ aboveF (L := 
 
 theorem sel_under (v : HeightOneSpectrum (𝓞 H.F)) : (sel H v).under (𝓞 H.F) = v := by
   have h := sel_above H v
-  rw [aboveF, Set.Finite.mem_toFinset] at h
-  exact h
+  rwa [aboveF, Set.Finite.mem_toFinset] at h
 
 theorem sel_underK (v : HeightOneSpectrum (𝓞 H.F)) : (sel H v).under (𝓞 H.K) = primeK H (ratP H v) := (sel_mem H v).2
 
@@ -963,8 +960,7 @@ open GlobalTheory.Mem.Top.Bl.OnePrimeEach in
 theorem GlobalTheory.Mem.Top.Bl.exists_half_selection_split_places : ∀ B : Base, ∃ (Pv : HeightOneSpectrum (𝓞 B.host.F) → HeightOneSpectrum (𝓞 B.host.E)) (d : PlacesOverCommonPrime B.host), Formalism.L2.Col.IsSel B.fields Pv ∧ (∀ v, Pv v ∈ aboveF (L := B.host.E) B.host.F v) ∧ Half B Pv ∧ (∀ v hv, Pv v = d.P v hv) ∧ ∀ v hv, Pv v = d.P' v hv := by
   intro B
   refine ⟨sel B.host, splitPlacesTwoPrimes B.host, ?_, sel_above B.host, ?_, fun _ _ => rfl, fun _ _ => rfl⟩
-  · intro v
-    exact congrArg HeightOneSpectrum.asIdeal (sel_under B.host v)
+  · exact fun v => congrArg HeightOneSpectrum.asIdeal (sel_under B.host v)
   · intro v v' p hp hv hv'
     rw [sel_underK, sel_underK, ratP_eq B.host v hp hv, ratP_eq B.host v' hp hv']
 
@@ -1016,8 +1012,7 @@ theorem valsRoots (K : Ctx) : large₂ K fun B f T => ∀ (px : PreX B.toPre) (I
   rw [pow_one] at hζ
   have e : Nat.card (𝓞 B.fields.E ⧸ P.asIdeal) = Ideal.absNorm P.asIdeal := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  rw [e, a2]
-  exact hζ
+  rwa [e, a2]
 
 theorem step_pinned (h2b : StandardLattice.SiegelMassRatioCM) :
     Step KPx (fun _ _ _ _ => True) (fun K B f T => ∃ w : ColW B f T, Pinned K B f T w) := by

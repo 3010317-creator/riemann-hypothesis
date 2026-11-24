@@ -324,8 +324,7 @@ theorem hyodo_orth : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf
   by_cases hV : ∃ v : V, v ≠ 0
   · obtain ⟨v, hv⟩ := hV
     obtain ⟨v', hv'⟩ : ∃ v', m v v' ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hv (hD.2.1 v h)
     have hm : Continuous fun p : V × V' => m p.1 p.2 :=
       IsModuleTopology.continuous_bilinear_of_finite_left m
@@ -337,7 +336,7 @@ theorem hyodo_orth : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf
       rw [e]
       exact (hm.comp ((hρ v).prodMk (hρ' v'))).mul continuous_const
     exact orth_of_cont l P AI hT K V ρ V' ρ' m hρ' hdR hD hχ c hc a ha
-  · push_neg at hV
+  · push Not at hV
     refine ⟨0, continuous_const, funext fun x => ?_⟩
     simp [cupL, hV (c x.1), ReciprocityTheory.Def.d1]
 
@@ -441,8 +440,7 @@ theorem finrank_blochKato_g_add_e_le_f_add_f_alt : ∀ (l : ℕ) [Fact l.Prime] 
   have hdual' : IsDual1 (P.PD K) ρ' ρ m.flip := by
     obtain ⟨h1, h2, h3, h4⟩ := hdual
     refine ⟨fun g y x => ?_, fun y hy => h3 y hy, fun x hx => h2 x hx, h4.symm⟩
-    simp only [LinearMap.flip_apply]
-    exact h1 g x y
+    simpa only [LinearMap.flip_apply] using h1 g x y
   obtain ⟨hfin, -⟩ := _root_.GlobalTheory.EulerCharH1.finite_and_finrank_H1V hTD hEC l P K ℚ_[l] ℤ_[l] hO A A' m hdual
   obtain ⟨hfin', -⟩ := _root_.GlobalTheory.EulerCharH1.finite_and_finrank_H1V hTD hEC l P K ℚ_[l] ℤ_[l] hO A' A m.flip hdual'
   haveI : FiniteDimensional ℚ_[l] (continuousCocycles ρ) := GlobalTheory.BlochKatoAnn.finite_continuous_cocycles_localGaloisRep A hfin
@@ -475,8 +473,7 @@ theorem finrank_blochKato_g_add_e_le_f_add_f_alt : ∀ (l : ℕ) [Fact l.Prime] 
     (fun a => by
       rw [Submodule.mem_comap, Submodule.subtype_apply, hann a.1 a.2]
       constructor
-      · intro h b hb
-        exact (hβ a b).2 (h b.1 hb)
+      · exact fun h b hb => (hβ a b).2 (h b.1 hb)
       · intro h b hb
         exact (hβ a ⟨b, hf' hb⟩).1 (h ⟨b, hf' hb⟩ hb))
   rwa [(Submodule.comapSubtypeEquivOfLe hg).finrank_eq,
@@ -1061,8 +1058,7 @@ theorem exists_pairing_Dst_Dcris_phi_one : ∀ (l : ℕ) [Fact l.Prime] (P : Loc
         refine hlnd c fun c' => ?_
         have h2 := hw _ (onB_mulLeft_mem_Dst_of_fixed P ρ _
           ((_root_.GlobalTheory.PMon.stInv_iff l P AI T K _).mpr ⟨c', rfl⟩) x hx)
-        rw [hB, hmul, mul_left_comm, hc] at h2
-        exact h2
+        rwa [hB, hmul, mul_left_comm, hc] at h2
       rw [hc0, map_zero, map_zero] at hc
       exact ((isUnit_tB P).map Polynomial.C).mul_right_eq_zero.mp hc
     have h1 : j w = 0 := by
@@ -1103,8 +1099,7 @@ theorem finrank_add_finrank_le_finrank_inf_comap_sub_id :
   have hP : ∀ w, P w ∈ RV.dualAnnihilator := by
     intro w
     rw [Submodule.mem_dualAnnihilator]
-    intro x hx
-    exact hBR x.1 hx w
+    exact fun x hx => hBR x.1 hx w
   let L : W →ₗ[k] Module.Dual k (↥D ⧸ RV) :=
     RV.dualCopairing ∘ₗ P.codRestrict RV.dualAnnihilator hP
   have hL : ∀ w (x : ↥D), L w (RV.mkQ x) = B x.1 w := fun _ _ => rfl
@@ -1115,8 +1110,7 @@ theorem finrank_add_finrank_le_finrank_inf_comap_sub_id :
     apply hnd
     intro x hx
     have h := LinearMap.congr_fun hw (RV.mkQ ⟨x, hx⟩)
-    rw [hL, LinearMap.zero_apply] at h
-    exact h
+    rwa [hL, LinearMap.zero_apply] at h
 
   have hLQ : ∀ w, L w ∈ (LinearMap.range Q).dualAnnihilator := by
     intro w
@@ -1135,8 +1129,7 @@ theorem finrank_add_finrank_le_finrank_inf_comap_sub_id :
     · intro h
       have h' : T x ∈ RV := (Submodule.Quotient.mk_eq_zero RV).mp h
       exact ⟨x.2, h'⟩
-    · intro h
-      exact (Submodule.Quotient.mk_eq_zero RV).mpr h.2
+    · exact fun h => (Submodule.Quotient.mk_eq_zero RV).mpr h.2
   have h1 := Subspace.finrank_add_finrank_dualAnnihilator_eq (LinearMap.range Q)
   have h2 := Submodule.finrank_quotient_add_finrank RV
   have h3 := LinearMap.finrank_range_add_finrank_ker Q
@@ -1179,8 +1172,7 @@ theorem finrank_dcris_phi_fixed_add_finrank_mon_le : ∀ (l : ℕ) [Fact l.Prime
       hx g]
   · rintro _ ⟨x, hx, rfl⟩ w
     exact h1 x hx w
-  · intro x hx w
-    exact h2 x hx w
+  · exact fun x hx w => h2 x hx w
 
 end GlobalTheory
 end -- clump:auto
@@ -1571,8 +1563,7 @@ theorem exists_stCocycles_lower : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) 
       rintro e ⟨-, x, hx⟩
       refine ⟨e.1.2 - crisIncl P ℚ_[l] V x, (mem_Dst P ρ).mpr fun g => ?_, ?_⟩
       · have := (e.2.2 g).symm.trans (hcris _ x hx g)
-        rw [map_sub, sub_eq_sub_iff_sub_eq_sub]
-        exact this
+        rwa [map_sub, sub_eq_sub_iff_sub_eq_sub]
       · rw [map_sub, (_root_.GlobalTheory.PMon.monV_eq_zero_iff_exists_crisIncl l P V _).mpr ⟨x, rfl⟩, sub_zero]
         rfl)
   have h5 := _root_.GlobalTheory.finrank_dcris_phi_fixed_add_finrank_mon_le l P AI T K V V' ρ ρ' m hd hs

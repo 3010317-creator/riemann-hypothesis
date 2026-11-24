@@ -96,8 +96,7 @@ theorem exists_cell_quot_orad_of_inRCone : ∀ (E : Type) [Field E] [NumberField
       have := hle hx
       rw [LinearMap.mem_ker] at this
       rw [this]; rfl
-    · intro h0
-      exact Finset.sum_eq_zero fun k hk => h0 k (hTK k hk) k
+    · exact fun h0 => Finset.sum_eq_zero fun k hk => h0 k (hTK k hk) k
   have hnn : ∀ i, 0 ≤ hl (γ i) := fun i => by
     rw [hl_apply]; exact Finset.sum_nonneg fun k _ => hγ.nonneg i k
   set S : Finset (Fin m) := Finset.univ.filter fun i => hl (γ i) = 0 with hS
@@ -130,8 +129,7 @@ theorem exists_cell_quot_orad_of_inRCone : ∀ (E : Type) [Field E] [NumberField
         simpa [pull_apply, map_smul] using this
     · obtain ⟨y, rfl⟩ := hsurj y
       have := hcell.nonneg i y
-      rw [← hδ i] at this
-      exact this
+      rwa [← hδ i] at this
     · rw [← linearOn_pull_iff hsurj, hδ']
       exact hcell.linear
     · apply IsStrict.of_pull hsurj

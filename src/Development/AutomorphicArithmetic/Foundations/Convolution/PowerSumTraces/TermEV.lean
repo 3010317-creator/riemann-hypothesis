@@ -129,10 +129,8 @@ private theorem rho_typed (J : ∀ w : Pl K, Subgroup (Gw n w)) (χ : ∀ w : Pl
     have hg : g ∈ levOn P (fun _ => ⊥) := by
       intro v
       by_cases hv : v ∈ P
-      · simp only [hv, if_true]
-        exact Subgroup.mem_bot.2 (h1 v hv (Finset.notMem_empty v))
-      · simp only [hv, if_false]
-        exact h2 v hv
+      · simpa only [hv, ite_true] using Subgroup.mem_bot.2 (h1 v hv (Finset.notMem_empty v))
+      · simpa only [hv, ite_false] using h2 v hv
     simpa using ((UpperTheory.ConvolutionTheory.Tf.commPrj K n μ _).2.1 f).1 hfix g hg
   | insert a R ha ih =>
     intro g h0 h1 h2
@@ -195,11 +193,9 @@ private theorem cmp_homeo {v : Pl F} (u : PlacesOver E v) (hu : ∀ u' : PlacesO
   have hs : Continuous s.toRingHom :=
     (Homeomorph.piUnique (fun w : PlacesOver E v => w.1.adicCompletion E)).symm.continuous
   have h1 : ∀ a : GL (Fin n) (u.1.adicCompletion E), GM.cmp u (mapGL n s.toRingHom a) = a := fun a => by
-    refine Units.ext (Matrix.ext fun i j => ?_)
-    exact s.symm_apply_apply _
+    exact Units.ext (Matrix.ext fun i j => (s.symm_apply_apply _))
   have h2 : ∀ x : GL (Fin n) (CompletionsOver E v), mapGL n s.toRingHom (GM.cmp u x) = x := fun x => by
-    refine Units.ext (Matrix.ext fun i j => ?_)
-    exact s.apply_symm_apply _
+    exact Units.ext (Matrix.ext fun i j => (s.apply_symm_apply _))
   let e : GL (Fin n) (CompletionsOver E v) ≃ₜ GL (Fin n) (u.1.adicCompletion E) :=
     { toFun := GM.cmp u
       invFun := mapGL n s.toRingHom
@@ -258,8 +254,7 @@ private theorem at_place (hq : GM.Split E q) (T : Ty σ n q w₀) (L : GM.Loc σ
     exact easy (((hF.split v hsp).2 x).1 hx) (T.triv v hs)
   · have hvL : v ∉ L.S := fun h => hvS (hF.S_eq ▸ h)
     have hu : x ∈ unitSet E n v := by
-      rw [← (L.off v hvL hvq).2.2.1]
-      exact hx
+      rwa [← (L.off v hvL hvq).2.2.1]
     have hoff : ∀ u : PlacesOver E v, T.J u.1 = GLnLocal.integralGL (u.1.adicCompletion E) n ∧ T.χ u.1 = 1 := fun u =>
       T.off u.1 (by rwa [under_over']) (by rwa [under_over'])
     refine easy (fun u => ?_) fun u => (hoff u).2
@@ -293,9 +288,9 @@ theorem UpperTheory.eigenspace_factorization_over_nonsplit_places_CMDatum :
   let χ' : ∀ w : Pl E, Gw n w → ℂ := fun w => if w.under (𝓞 F) ∈ nsS T then 1 else T.χ w
   have hJpos : ∀ w : Pl E, w.under (𝓞 F) ∈ nsS T →
       J' w = (L.UE (w.under (𝓞 F))).map (GM.cmp (⟨w, ⟨rfl⟩⟩ : PlacesOver E (w.under (𝓞 F)))) ∧ χ' w = 1 :=
-    fun w hw => ⟨if_pos hw, if_pos hw⟩
+    fun w hw => ⟨ite_eq_left hw, ite_eq_left hw⟩
   have hJneg : ∀ w : Pl E, w.under (𝓞 F) ∉ nsS T → J' w = T.J w ∧ χ' w = T.χ w :=
-    fun w hw => ⟨if_neg hw, if_neg hw⟩
+    fun w hw => ⟨ite_eq_right hw, ite_eq_right hw⟩
   have hfw : ∀ w, f ∈ eigL μ w (J' w) (χ' w) := fun w => by
     by_cases hw : w.under (𝓞 F) ∈ nsS T
     · rw [(hJpos w hw).1, (hJpos w hw).2]
@@ -316,8 +311,7 @@ theorem UpperTheory.eigenspace_factorization_over_nonsplit_places_CMDatum :
       rwa [cmp_atFin'] at this
   have hfin : {w : Pl E | w.under (𝓞 F) ∈ insert q T.S}.Finite := by
     refine ((insert q T.S).finite_toSet.biUnion fun v _ => fin_above' (E := E) v).subset ?_
-    intro w hw
-    exact Set.mem_biUnion (x := w.under (𝓞 F)) hw rfl
+    exact fun w hw => Set.mem_biUnion (x := w.under (𝓞 F)) hw rfl
   set P : Finset (Pl E) := hfin.toFinset with hPdef
   have hP : ∀ w ∉ P, J' w = GLnLocal.integralGL (w.adicCompletion E) n ∧ χ' w = 1 := fun w hw => by
     have h0 : w.under (𝓞 F) ∉ insert q T.S := fun h => hw (hfin.mem_toFinset.2 h)
@@ -426,8 +420,7 @@ theorem UpperTheory.galoisTwist_commute_archOperator_and_offProjection :
     exact List.pairwise_of_forall fun x y => hOO _ _
   have h := key (List.finRange (k + 1))
   rw [← List.ofFn_eq_map, ← List.ofFn_eq_map, hperm] at h
-  rw [hOi]
-  exact h
+  rwa [hOi]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.TwistedTraces.GaloisTwistCommuteArchOperatorAndOffProjection =====
@@ -848,8 +841,7 @@ private lemma tr_main {Z X Y : Submodule ℂ H} (Pr R : H →L[ℂ] H) [FiniteDi
     show R (prj Y (prj Y v)) = R (prj Y v)
     rw [prj_self' hYc (prj_mem' hYc v)]
   have e4 : prj Y ∘L prj Y = prj Y := by
-    refine ContinuousLinearMap.ext fun v => ?_
-    exact prj_self' hYc (prj_mem' hYc v)
+    exact ContinuousLinearMap.ext fun v => prj_self' hYc (prj_mem' hYc v)
   have hT : IsTraceClass (prj Y) := by
     have := isTraceClass_comp (hs_prj Y) (hs_prj Y)
     rwa [show (prj Y).comp (prj Y) = prj Y from e4] at this
@@ -908,8 +900,7 @@ theorem UpperTheory.trOn_prod_eigenProjections_eq_trOn_joint_eigenspace :
       simpa [eigL, Submodule.mem_iInf, LinearMap.mem_eqLocus] using
         (Submodule.mem_iInf _).1 ((Submodule.mem_iInf _).1 hv x) hx.1
     have h2 : χ i x = 1 := hx.2
-    rw [h2, one_smul] at h1
-    exact h1
+    rwa [h2, one_smul] at h1
   refine tr_main (Z := Z) _ R (inf_le_inf_left Z (iInf_mono hle)) inf_le_left hR
     (fun u hu => Submodule.mem_inf.2 ⟨p1 u hu, p2 u⟩) fun u y hy => p3 u y (Submodule.mem_inf.1 hy).2
 end -- clump:auto
@@ -997,8 +988,7 @@ private theorem core (Ty Fx V : Submodule ℂ H) (hTy : IsClosed (Ty : Set H)) (
   have hOFx : Oa * prj Fx = prj Fx * Oa := prj_comm hFx Oa hOa hOF
   have hVP : prj V * prj Ty = prj Ty * prj V := prj_comm hTy (prj V) (prj_adj V) hVT
   have hFP : prj Fx * prj Ty = prj Ty := by
-    refine ContinuousLinearMap.ext fun v => ?_
-    exact prj_self (hle (prj_mem hTy v))
+    exact ContinuousLinearMap.ext fun v => prj_self (hle (prj_mem hTy v))
   have hPF : prj Ty * prj Fx = prj Ty :=
     (prj_comm hFx (prj Ty) (prj_adj Ty) fun v _ => hle (prj_mem hTy v)).trans hFP
   have hAP : A * prj Ty = prj Ty * A := by
@@ -1033,8 +1023,7 @@ private theorem core (Ty Fx V : Submodule ℂ H) (hTy : IsClosed (Ty : Set H)) (
   rw [heq] at k1 k2
   refine ⟨k1, k2, ?_⟩
   have hAX : A * prj X = (x : ℂ) • prj X := by
-    refine ContinuousLinearMap.ext fun v => ?_
-    exact (mem_eigIn.1 (prj_mem hXc v)).2
+    exact ContinuousLinearMap.ext fun v => (mem_eigIn.1 (prj_mem hXc v)).2
   have hsX : star (prj X) = prj X := by
     rw [ContinuousLinearMap.star_eq_adjoint, prj_adj]
   have := congrArg star hAX
@@ -1260,8 +1249,7 @@ private theorem oinf_comm (ν : Measure (archGroup K n)) [ν.IsHaarMeasure] (a :
     (h : ∀ g, Commute C (rightRegularRep (rationalGLOne (K := K) (n := n)) μ (archP K n g))) : Commute C (Oinf μ ν a) := by
   have key : C ∘L Oinf μ ν a = Oinf μ ν a ∘L C := by
     refine UnitaryRep.comp_integrated_of_mem_intertwiners _ _ ?_ _
-    intro x u
-    exact DFunLike.congr_fun (h x).eq u
+    exact fun x u => DFunLike.congr_fun (h x).eq u
   exact key
 
 private theorem oinf_congr {ν₁ ν₂ : Measure (archGroup K n)} [ν₁.IsHaarMeasure] [ν₂.IsHaarMeasure] (h : ν₁ = ν₂) (β : TI K n) :
@@ -1290,8 +1278,7 @@ private theorem cmp_surj {v : Pl F} (w : PlacesOver E v) (h : ∀ u : PlacesOver
       rfl
   let e := RingEquiv.ofBijective _ hev
   intro y
-  refine ⟨mapGL n (e.symm : _ →+* _) y, ?_⟩
-  exact Units.ext (Matrix.ext fun a b => e.apply_symm_apply _)
+  exact ⟨mapGL n (e.symm : _ →+* _) y, Units.ext (Matrix.ext fun a b => e.apply_symm_apply _)⟩
 
 variable {σ : E ≃ₐ[F] E} {q : Pl F} {w₀ : PlacesOver E q}
 

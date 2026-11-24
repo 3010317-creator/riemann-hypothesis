@@ -118,8 +118,7 @@ theorem polyDeriv_scale {J W : Type} [NormedAddCommGroup W] [NormedSpace ℂ W] 
   have hd : Multiset.card (Finsupp.toMultiset m) = d := by
     have h := hP (MvPolynomial.mem_support_iff.mp hm)
     simp [Finsupp.weight_apply] at h
-    rw [Finsupp.card_toMultiset]
-    exact h
+    rwa [Finsupp.card_toMultiset]
   rw [ContinuousMultilinearMap.map_smul_univ (c := fun _ => c)]
   have hc : (∏ _k : Fin (Multiset.card (Finsupp.toMultiset m)), c) = c ^ d := by
     rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin, hd]
@@ -137,8 +136,7 @@ theorem det_X_isHomogeneous {J K : Type} [CommRing K] (i : ℕ) (f : Fin i → F
       (fun a _ => MvPolynomial.isHomogeneous_X K _)
     simpa using h
   rcases Int.units_eq_one_or (Equiv.Perm.sign s) with h | h
-  · rw [h, one_smul]
-    exact hprod
+  · rwa [h, one_smul]
   · rw [h, Units.neg_smul, one_smul]
     exact hprod.neg
 
@@ -159,8 +157,7 @@ theorem blockProd_rename : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   let bs : Fin nb → I2.Block E n dim := fun j =>
     ⟨rl (bs0 j).τ, (bs0 j).i, (bs0 j).hi.trans (hd _), (bs0 j).c, (bs0 j).hc, (bs0 j).col, (bs0 j).col_inj⟩
   refine ⟨hne, htot ▸ hdeg, nb, bs, ?_, ?_, ?_⟩
-  · intro j j' hjj' a a'
-    exact hdisj j j' hjj' a a'
+  · exact fun j j' hjj' a a' => hdisj j j' hjj' a a'
   · rw [htot]
     rfl
   · intro t F hF

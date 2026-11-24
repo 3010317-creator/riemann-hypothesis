@@ -308,8 +308,7 @@ theorem mem_pow_iff {v : FinPl D} (ϖ : OI v) (hϖ : (ϖ : Fv D.host.F v) ≠ 0)
     have hv : 0 < Valued.v ((ϖ : Fv D.host.F v) ^ N) := by
       rw [zero_lt_iff]; exact (map_ne_zero _).2 hp
     have hmem : x / (ϖ : Fv D.host.F v) ^ N ∈ v.adicCompletionIntegers D.host.F := by
-      rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀, div_le_one₀ hv, map_pow]
-      exact h
+      rwa [HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀, div_le_one₀ hv, map_pow]
     refine ⟨⟨_, hmem⟩, ?_⟩
     rw [algebraMap_OI, Subring.coe_mul, SubmonoidClass.coe_pow]
     show x = (ϖ : Fv D.host.F v) ^ N * (x / (ϖ : Fv D.host.F v) ^ N)
@@ -374,8 +373,7 @@ theorem exists_sep_char : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdCh
       exact (hinPow z).1 hzN
     obtain ⟨t, ⟨htΛ, htH⟩, hteq⟩ := h1
     have h2 : t = cA D s • z := hcoord.2.1.injOn htH (hhalf z hz) hteq
-    rw [← h2]
-    exact htΛ
+    rwa [← h2]
   have hnot : cA D s • x ∉
       latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) (fun _ => True) := by
     intro hmx
@@ -386,8 +384,7 @@ theorem exists_sep_char : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdCh
           Valued.v (GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting.rdQ φ (star a))} := by
       rw [← himg]
       exact ⟨_, ⟨hmx, hhalf x hx⟩, rfl⟩
-    rw [hcoef] at h1
-    exact h1
+    rwa [hcoef] at h1
   have hsd := (GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T ΛS ΛT hψ hS hT).1
   have hse := GlobalTheory.SplitScalar.isSplitIdem_conj he.1
   obtain ⟨l, hlΛ, hlH, hne⟩ := GlobalTheory.SplitScalar.exists_dual_half hse hsd
@@ -659,8 +656,7 @@ theorem relOff_dropPl_of_coEig : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (
       (fun u hu => heisO_decomp ψ S T hb2 hcb u u0 p _ (hecp u hu))
       (fun u hu => heisO_decomp ψ S T hb2 hcb u u0 f _ (hecf u hu))
       (by rw [← hV]; exact hVp k hk)
-    rw [hV]
-    exact key
+    rwa [hV]
   rw [← hcomb f]
   exact Finset.sum_eq_zero hVf
 
@@ -749,10 +745,10 @@ theorem levG_levChi_of_red : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
   have htri : g ∈ blockTri (blkOf D.R.r D.R.t) := by
     intro a b hab
     have ha : D.R.r ≤ a.val := by
-      by_contra h; push_neg at h
+      by_contra h; push Not at h
       simp [blkOf, h] at hab
     have hb : b.val < D.R.r := by
-      by_contra h; push_neg at h
+      by_contra h; push Not at h
       have h1 := a.2; have h2 := b.2
       have e1 : (a.val - D.R.r) / D.R.t = 0 := Nat.div_eq_of_lt (by omega)
       have e2 : (b.val - D.R.r) / D.R.t = 0 := Nat.div_eq_of_lt (by omega)
@@ -1073,10 +1069,10 @@ theorem eq_ite_of_top {κ : Type} [Zero κ] [One κ] {b a : ℕ} (M : Matrix (Fi
   by_cases hi : i.val < a
   · have := congrFun (congrFun h2 ⟨i.val, hi⟩) j
     unfold topL at this
-    rw [dif_pos ⟨i.2, j.2⟩, Matrix.one_apply] at this
+    rw [dite_eq_left ⟨i.2, j.2⟩, Matrix.one_apply] at this
     rw [this]
     simp only [Fin.ext_iff]
-  · rw [h1 i j (by omega) j.2, if_neg (by omega)]
+  · rw [h1 i j (by omega) j.2, ite_eq_right (by omega)]
 
 theorem dvd_of_red {v : FinPl D} {k : Type} [CommRing k] (r : OI v →+* k)
     (hr : ∀ x : OI v, r x = 0 ↔ Valued.v (x : Fv D.host.F v) < 1) {ϖ : OI v} (hϖ : Irreducible ϖ) {x : OI v}
@@ -1112,14 +1108,14 @@ theorem red_point (S T : HSp D) (βS : GL (Fin S.rank) (Formalism.IndefR.Datum.E
     GlobalTheory.AdjVecLocal.mem_int_of_rdE he (hN a b) (by have := hint a b; rwa [hco] at this)
   refine ⟨hI, fun a b h => ?_, fun PP' hne => ?_⟩
   · obtain ⟨h', hh⟩ := hr3 _ (hI a b)
-    simp only [redM, dif_pos (hI a b)]
+    simp only [redM, dite_eq_left (hI a b)]
     rw [← hh]
     congr 1
     exact Subtype.ext (congrFun (congrFun hco a) b).symm
   · obtain ⟨hid, -⟩ := ((GlobalTheory.SplitIdemDict.idem_dictionary D).2 v φ PP hP).2.2 e he
     obtain ⟨h1, -⟩ := GlobalTheory.IdemRes.resS_idem_eq_one D e PP hid
     ext a b
-    simp only [redM, dif_pos (hI a b), Matrix.zero_apply]
+    simp only [redM, dite_eq_left (hI a b), Matrix.zero_apply]
     have e1 : (⟨frMapAdj S T βS βT x a b, hI a b⟩ : Formalism.L2.Herm.intAf D.host.F D.host.E) =
         ⟨toEAf D e, h1⟩ * ⟨_, hI a b⟩ := Subtype.ext (hN a b).symm
     rw [e1, map_mul, GlobalTheory.TameProd.resS_idem_eq_zero hid (Ne.symm hne) h1, zero_mul]
@@ -1170,8 +1166,7 @@ theorem thPVec_shape : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFa
       have hh : IsHalf (cA D E) (t + z) ↔ IsHalf (cA D E) t := by
         refine forall_congr' fun i => forall_congr' fun j => ?_
         have := hcE z hzh i j
-        simp only [Matrix.add_apply, mul_add, this]
-        exact add_left_inj _
+        simpa only [Matrix.add_apply, mul_add, this] using add_left_inj _
       have hi2 : IsIntM (frMapAdj S T βS βT (t + z)) ↔ IsIntM (frMapAdj S T βS βT t) := by
         refine ⟨fun h i j => ?_, fun h => (GlobalTheory.FrameAdjAdd.frMapAdj_add_isIntM_redM S T βS βT t z h hI).1⟩
         have e1 := congrFun (congrFun (GlobalTheory.PlaceVec.frMapAdj_add S T βS βT t z) i) j
@@ -1182,10 +1177,10 @@ theorem thPVec_shape : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFa
         exact sub_mem (h i j) (hI i j)
       simp only [hΦdef]
       by_cases ht : IsHalf (cA D E) t ∧ IsIntM (frMapAdj S T βS βT t)
-      · rw [if_pos ⟨hh.2 ht.1, hi2.2 ht.2⟩, if_pos ht]
+      · rw [ite_eq_left ⟨hh.2 ht.1, hi2.2 ht.2⟩, ite_eq_left ht]
         have hr := (GlobalTheory.FrameAdjAdd.frMapAdj_add_isIntM_redM S T βS βT t z ht.2 hI).2
         simp only [hr, hz0, add_zero]
-      · rw [if_neg ht, if_neg fun h => ht ⟨hh.1 h.1, hi2.1 h.2⟩]
+      · rw [ite_eq_right ht, ite_eq_right fun h => ht ⟨hh.1 h.1, hi2.1 h.2⟩]
     rw [hp, ← hTm.trans Φ hSB z (hcE z hzh), hshift]
   · have hyE : IsHalf (cA D (cA D E)) y := fun i j => by
       rw [GlobalTheory.DualPairCheck.cA_cA, ← hy i j, ← mul_assoc, hEe]
@@ -1197,12 +1192,12 @@ theorem thPVec_shape : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFa
       · congr 1
         have hc : IsHalf (cA D E) t ∧ IsIntM (frMapAdj S T βS βT t) := by
           by_contra h
-          exact h0 (by simp only [hΦdef]; rw [if_neg h])
+          exact h0 (by simp only [hΦdef]; rw [ite_eq_right h])
         have hK : omegaK Pg (fun PP => redM PP (frMapAdj S T βS βT t)) ≠ 0 := by
           intro h
           apply h0
           simp only [hΦdef]
-          rw [if_pos hc, h, zero_mul]
+          rw [ite_eq_left hc, h, zero_mul]
         have hK' : LowZero T.rank (redM PP (frMapAdj S T βS βT t)) ∧
             topL T.rank (redM PP (frMapAdj S T βS βT t)) = 1 := by
           unfold omegaK at hK
@@ -1224,7 +1219,7 @@ theorem thPVec_shape : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFa
             rw [GlobalTheory.AdjVecLocal.adjCo_eq S T βS βT φ hφ]; rfl
           refine ⟨e2 ▸ h, ?_⟩
           have e3 := eq_ite_of_top _ hK'.1 hK'.2 a b
-          simp only [redM, dif_pos (hc.2 a b)] at e3
+          simp only [redM, dite_eq_left (hc.2 a b)] at e3
           rw [← e3, ← hh]
           congr 1
           exact Subtype.ext e2
@@ -1332,8 +1327,7 @@ theorem exists_finset_trSet (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteVa
     if h : ∃ g, trSet O K r t ϖ g = A then h.choose else 1
   have hrep : ∀ g, trSet O K r t ϖ (rep (trSet O K r t ϖ g)) = trSet O K r t ϖ g := fun g => by
     have h : ∃ g', trSet O K r t ϖ g' = trSet O K r t ϖ g := ⟨g, rfl⟩
-    simp only [rep, dif_pos h]
-    exact h.choose_spec
+    simpa only [rep, dite_eq_left h] using h.choose_spec
   let gs : Matrix (Fin r ⊕ Fin t) (Fin r) K → GL (Fin r) K := fun y =>
     if h : ∃ g, y ∈ trSet O K r t ϖ g then h.choose else 1
   refine ⟨T.image fun y => rep (trSet O K r t ϖ (gs y)), fun k x hx => ?_⟩
@@ -1342,8 +1336,7 @@ theorem exists_finset_trSet (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteVa
   have hy : Φ k y ≠ 0 := by rwa [hinv] at hx
   have hy' : y ∈ trSet O K r t ϖ (gs y) := by
     have h := hΩ k y hy
-    simp only [gs, dif_pos h]
-    exact h.choose_spec
+    simpa only [gs, dite_eq_left h] using h.choose_spec
   obtain ⟨z₀, hz₀⟩ := hy'
   have hx' : y + (ϖ ^ N • z').map (algebraMap O K) ∈ trSet O K r t ϖ (gs y) :=
     _root_.GlobalTheory.coset_translate_mem_of_cover O K r t ϖ hϖ N y (gs y) z₀ hz₀ (fun z => hΩ k _ (by rwa [hinv])) z'
@@ -1370,8 +1363,7 @@ theorem exists_scalar (hW : IsWeilDatumO ψ S T χS χT om) {e : Formalism.L2.Th
   obtain ⟨r, hr, H⟩ := hW.om_split (cA D e) he' g h (_root_.GlobalTheory.SplitPlace.suppAt_conj hg) (_root_.GlobalTheory.SplitPlace.suppAt_conj hh) _ _
     (GlobalTheory.VecInv.isDetAt_detAt _ he'.1 S g) (GlobalTheory.VecInv.isDetAt_detAt _ he'.1 T h)
   refine ⟨_, mul_ne_zero (Complex.ofReal_ne_zero.2 hr.ne') (Circle.coe_ne_zero _), fun ℓ hℓ => H ℓ fun u hu => hℓ u ?_⟩
-  rw [GlobalTheory.DualPairCheck.cA_cA] at hu
-  exact hu
+  rwa [GlobalTheory.DualPairCheck.cA_cA] at hu
 
 theorem scalar_eq (hW : IsWeilDatumO ψ S T χS χT om) {ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)}
     {ΛT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)} (hS : IsSelfDualC S ΛS) (hT : IsSelfDualC T ΛT)
@@ -1394,8 +1386,7 @@ theorem scalar_eq (hW : IsWeilDatumO ψ S T χS χT om) {ΛS : Submodule (𝓞 D
   have h1 := hs ℓ₀ hℓ f₀ h0
   rw [GlobalTheory.VecInv.om_latVac_split D ψ S T ΛS ΛT χS χT om hW hS hT e he g h hg hh hL x y hx hy f₀ h0 hvac, map_smul,
     smul_eq_mul] at h1
-  rw [mul_right_cancel₀ hℓ0 h1]
-  exact hs
+  rwa [mul_right_cancel₀ hℓ0 h1]
 
 end Gen
 
@@ -1755,7 +1746,7 @@ theorem piece (R : RealDat D A Ks) (hL : R.toLevCh.Is A.μ0) (hω : R.thP_ωP) (
       rw [hB ℓ hℓ _ hyz, hB ℓ hℓ _ hy]
       by_cases c1 : y - x₀ ∈ A₁
       · have c2 := e1.2 c1
-        rw [if_pos c1, if_pos c2]
+        rw [ite_eq_left c1, ite_eq_left c2]
         have a1 := GlobalTheory.SplitHecke.isHalf_actO (1 : GA D (Vc D i)) h hy
         have a2 := GlobalTheory.SplitHecke.isHalf_actO (1 : GA D (Vc D i)) h hyz
         rw [← hback y] at c1
@@ -1763,9 +1754,9 @@ theorem piece (R : RealDat D A Ks) (hL : R.toLevCh.Is A.μ0) (hω : R.thP_ωP) (
         rw [← hback (y + z), hmove ℓ hℓ _ a2 f hf]
         conv_rhs => rw [← hback y, hmove ℓ hℓ _ a1 f hf]
         rw [hconst ℓ hℓ _ _ a2 a1 ((hmem _ a2).1 c2) ((hmem _ a1).1 c1)]
-      · rw [if_neg c1, if_neg fun c2 => c1 (e1.1 c2)]
+      · rw [ite_eq_right c1, ite_eq_right fun c2 => c1 (e1.1 c2)]
     · by_contra hn
-      exact h0 (by rw [hB ℓ hℓ y hy, if_neg hn])
+      exact h0 (by rw [hB ℓ hℓ y hy, ite_eq_right hn])
   have hvp : Shape R.ψ (Vc D i) (Wc D i) e A₁ x₀ (R.vP i t) := by
     refine GlobalTheory.T.typePrime_fixedThetaVector_schrodinger_indicator D R.ψ R.θ _ _ _ _ _ _ _ _ _ _ _ _ _ sdV sdW frV frW (hv i t) PP hP v φ e hφ he ϖ hϖ x₀ (hσ _).1
       fun a b => ?_
@@ -1848,7 +1839,7 @@ theorem gen_at_type_prime : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T
     by_cases h0 : ℓ (heisO R.ψ (Vc D i) (Wc D i) x f) = 0
     · simp [h0]
     · obtain ⟨g, ⟨hg, hxg⟩, hu⟩ := hFs ⟨ℓ, hℓ⟩ (coR R i φ x) (by simp only [Φ]; rwa [hσx x hx])
-      rw [Finset.sum_eq_single_of_mem g hg fun g' hg' hne => if_neg fun h => hne (hu g' ⟨hg', h⟩), if_pos hxg]
+      rw [Finset.sum_eq_single_of_mem g hg fun g' hg' hne => ite_eq_right fun h => hne (hu g' ⟨hg', h⟩), ite_eq_left hxg]
   rw [hsum]
   exact Submodule.sum_mem _ fun g _ => Submodule.subset_span (hP1 g)
 

@@ -68,8 +68,7 @@ theorem eigVec : EigVec := by
     have hS : S.Nonempty := by
       refine ⟨E, h, le_rfl, fun b w hw => ?_⟩
       rw [hE, Submodule.mem_iInf] at hw ⊢
-      intro a
-      exact Module.End.mapsTo_maxGenEigenspace_of_comm (hc a b) (χ a) (hw a)
+      exact fun a => Module.End.mapsTo_maxGenEigenspace_of_comm (hc a b) (χ a) (hw a)
     obtain ⟨W, ⟨hW0, hWE, hWs⟩, hmin⟩ := (wellFounded_lt (α := Submodule ℂ M)).has_min S hS
     obtain ⟨v, hvW, hv⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hW0
     refine ⟨v, hv, fun a => ?_⟩
@@ -98,7 +97,6 @@ theorem eigVec : EigVec := by
   · rintro ⟨v, hv, h⟩
     refine (Submodule.ne_bot_iff _).2 ⟨v, ?_, hv⟩
     rw [Submodule.mem_iInf]
-    intro a
-    exact (Module.End.mem_maxGenEigenspace _ _ _).2 ⟨1, by simp [h a]⟩
+    exact fun a => (Module.End.mem_maxGenEigenspace _ _ _).2 ⟨1, by simp [h a]⟩
 
 end UpperTheory.V.Z.Sym.Tf

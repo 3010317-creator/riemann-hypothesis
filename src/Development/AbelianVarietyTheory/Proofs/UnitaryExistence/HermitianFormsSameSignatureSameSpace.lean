@@ -336,8 +336,7 @@ theorem det_mul_vol_mul_conj (H : Host E) (D : Datum H) (ξ : E) (Gm : Matrix (F
     have : (Matrix.of fun i => x (z i)).map (algebraMap (𝓞 E) E) = (n : E) • Y := by
       ext i j
       have := congrFun (hx (z i)) j
-      rw [hz] at this
-      exact this
+      rwa [hz] at this
     have h2 := RingHom.map_det (algebraMap (𝓞 E) E) (Matrix.of fun i => x (z i))
     rw [hm, map_zero, RingHom.mapMatrix_apply, this, Matrix.det_smul] at h2
     exact mul_ne_zero (pow_ne_zero _ hnE) hYd h2.symm
@@ -607,9 +606,7 @@ theorem model_in_same_space : (∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     rw [FD.cc] at e1 e2
     rw [e1, e2]
   set x : maximalRealSubfield E := ⟨Gm'.det / Gm.det, hx⟩ with hxdef
-  have hx0 : x ≠ 0 := by
-    intro h
-    exact div_ne_zero hdet' hdet (congrArg Subtype.val h)
+  have hx0 : x ≠ 0 := fun h => div_ne_zero hdet' hdet (congrArg Subtype.val h)
   have hloc := GlobalTheory.local_norm_of_ideal_norm E H x hx0 hI
   have hreal : ∀ σ : maximalRealSubfield E →+* ℝ, ∃ a b : ℝ,
       σ x = a ^ 2 - σ (-(H.d : maximalRealSubfield E)) * b ^ 2 := by

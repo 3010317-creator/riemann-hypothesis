@@ -492,8 +492,7 @@ theorem psi_zero_mul_rigK : ∀ (V : Type) [CommRing V] [IsDomain V] (D : DegPre
   unfold DegPre.tau at ht
   rw [val_mul hJ, val_mul hJ, val_mul hJ, val_inv, val_inv,
     congrArg (fun w => val (D.psi w) r z J) (add_zero (0 : D.X)), mul_inv_cancel, _root_.one_mul] at ht
-  rw [← mul_inv, inv_eq_one] at ht
-  exact ht
+  rwa [← mul_inv, inv_eq_one] at ht
 
 end GlobalTheory.Poinc.Sep.PsiZero
 end -- clump:auto
@@ -1104,8 +1103,7 @@ theorem coef_sq_mem_monomial : ∀ (N₁ : ℕ), 2 ≤ N₁ → ∀ (V₁ : Type
     simp only [map_zero, zpow_zero, Finset.prod_const_one, Units.val_one]
   have h0 : s₀ = G 0 c₀ := by
     have h := hG 0 c₀
-    rw [hu0, _root_.one_mul, hP0, _root_.one_mul] at h
-    exact h
+    rwa [hu0, _root_.one_mul, hP0, _root_.one_mul] at h
   obtain ⟨r₀, hr₀, e₀⟩ := hΛ 0 c₀
   obtain ⟨r, hr, e₁⟩ := hΛ mu c
   have hev0 : ev s₀ ≠ 0 := (hs₀.map ev).ne_zero

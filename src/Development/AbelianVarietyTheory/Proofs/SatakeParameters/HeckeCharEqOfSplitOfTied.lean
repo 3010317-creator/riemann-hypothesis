@@ -108,13 +108,11 @@ namespace GlobalTheory.HeckeSplit
 
 theorem exists_int_moved (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E]
     [Algebra F E] (c : E ≃ₐ[F] E) (hc : c ≠ 1) : ∃ θ : 𝓞 E, c (θ : E) ≠ (θ : E) := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   apply hc
   ext z
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := 𝓞 E) z
-  simp only [map_div₀, AlgEquiv.one_apply]
-  exact congrArg₂ (· / ·) (h a) (h b)
+  simpa only [map_div₀, AlgEquiv.one_apply] using congrArg₂ (· / ·) (h a) (h b)
 
 theorem finite_setOf_mem_asIdeal (E : Type) [Field E] [NumberField E] (δ : 𝓞 E) (h : δ ≠ 0) :
     {w : HeightOneSpectrum (𝓞 E) | δ ∈ w.asIdeal}.Finite := by
@@ -194,8 +192,7 @@ theorem exists_reps_coprime_outside_modulus : ∀ (A : Type) [CommRing A] [IsDed
     have hmax : v.asIdeal.IsMaximal := v.isMaximal
     by_contra hne
     rw [sup_comm] at hne
-    have heq := hmax.eq_of_le hne le_sup_left
-    exact hv' (heq ▸ le_sup_right)
+    exact hv' ((hmax.eq_of_le hne le_sup_left) ▸ le_sup_right)
   have h1 : (1 : A) ∈ m ⊔ K := by rw [hK]; exact Submodule.mem_top
   obtain ⟨x, hx, y, hy, hxy⟩ := Submodule.mem_sup.mp h1
   refine ⟨a₀ * y + x, b, ?_, hbm, hb0, ?_⟩
@@ -213,8 +210,7 @@ theorem exists_reps_coprime_outside_modulus : ∀ (A : Type) [CommRing A] [IsDed
       refine Finset.mem_filter.mpr ⟨?_, hmp⟩
       rw [Set.Finite.mem_toFinset]
       show p ∣ Ideal.span {b}
-      rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-      exact hbp
+      rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
     have hKp : K ≤ p := iInf₂_le v hvS
     have hyp : y ∈ p := hKp hy
     have hxp : x ∈ p := by
@@ -260,8 +256,7 @@ theorem exists_shift_mod_pow_degOne : ∀ (F E : Type) [Field F] [NumberField F]
       intro h
       apply hmP
       refine hmD.trans ?_
-      rw [Ideal.span_singleton_le_iff_mem, Ideal.mem_comap]
-      exact h
+      rwa [Ideal.span_singleton_le_iff_mem, Ideal.mem_comap]
     have hbP : algebraMap (𝓞 F) (𝓞 E) b ∉ P.asIdeal := by
       intro h
       apply hcop _ hpmax hmNp
@@ -584,8 +579,7 @@ theorem loc_eq_one {L : Type} [Field L] [NumberField L] (χ : HChar L) (v : Heig
     simp
   have h1 := hu _ hunit
   have hp1 : χ.loc v p = 1 := hv
-  rw [map_mul, map_zpow, hp1, one_zpow, mul_one] at h1
-  exact h1
+  rwa [map_mul, map_zpow, hp1, one_zpow, mul_one] at h1
 
 theorem complexConj_eq {R : Ranks} (H : Host R) [IsCMField H.E] (z : H.E) :
     IsCMField.complexConj H.E z = H.conj z := by

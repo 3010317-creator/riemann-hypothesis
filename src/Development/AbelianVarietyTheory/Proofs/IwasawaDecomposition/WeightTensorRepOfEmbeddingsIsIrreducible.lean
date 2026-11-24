@@ -205,8 +205,7 @@ theorem eq_bot_or_eq_top : ∀ (K : Type) [Field K] (ι : Type) [Fintype ι] (n 
   right
   obtain ⟨w, hw, hw0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hW0
   obtain ⟨i, hi⟩ : ∃ i, (bVV K lam).repr w i ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hw0 ((bVV K lam).ext_elem fun k => by simp [h k])
   have hproj : ∀ S : Finset ι, (∑ k ∈ Finset.univ.filter (fun k : VVIdx lam => ∀ τ ∈ S, k τ = i τ),
       (bVV K lam).repr w k • bVV K lam k) ∈ W := by
@@ -214,8 +213,7 @@ theorem eq_bot_or_eq_top : ∀ (K : Type) [Field K] (ι : Type) [Fintype ι] (n 
     refine Finset.induction_on S ?_ ?_
     · have hf : Finset.univ.filter (fun k : VVIdx lam => ∀ τ ∈ (∅ : Finset ι), k τ = i τ) = Finset.univ := by
         ext k; simp
-      rw [hf, (bVV K lam).sum_repr w]
-      exact hw
+      rwa [hf, (bVV K lam).sum_repr w]
     · intro a S ha ih
       obtain ⟨T, hTW, hT⟩ := exists_elem lam H W hW a (i a) (i a)
       have h1 := hTW _ ih
@@ -245,7 +243,7 @@ theorem eq_bot_or_eq_top : ∀ (K : Type) [Field K] (ι : Type) [Fintype ι] (n 
       · intro a S ha ih
         obtain ⟨T, hTW, hT⟩ := exists_elem lam H W hW a (i a) (j a)
         have h1 := hTW _ ih
-        rw [hT, if_pos (by simp [ha])] at h1
+        rw [hT, ite_eq_left (by simp [ha])] at h1
         convert h1 using 2
         funext τ
         by_cases h : τ = a
@@ -315,7 +313,7 @@ theorem GlobalTheory.cmType_family_extend : ∀ (L : Type) [Field L] [NumberFiel
   have v1 : ∀ τ, cmExtend emb g (emb τ) = g τ := by
     intro τ
     have h : ∃ τ', emb τ = emb τ' := ⟨τ, rfl⟩
-    simp only [cmExtend, dif_pos h]
+    simp only [cmExtend, dite_eq_left h]
     rw [hd.1 h.choose_spec.symm]
   have v2 : ∀ τ, cmExtend emb g ((emb τ).comp (IsCMField.complexConj L : L →+* L)) = tinv (g τ) := by
     intro τ
@@ -323,11 +321,11 @@ theorem GlobalTheory.cmType_family_extend : ∀ (L : Type) [Field L] [NumberFiel
       rintro ⟨τ', h⟩
       exact hd.2 τ' τ h.symm
     have h' : ∃ τ', (emb τ).comp (IsCMField.complexConj L : L →+* L) = (emb τ').comp (IsCMField.complexConj L : L →+* L) := ⟨τ, rfl⟩
-    simp only [cmExtend, dif_neg h, dif_pos h']
+    simp only [cmExtend, dite_eq_right h, dite_eq_left h']
     rw [hinj2 _ _ h'.choose_spec.symm]
   have v3 : ∀ σ, (¬ ∃ τ, σ = emb τ) → (¬ ∃ τ, σ = (emb τ).comp (IsCMField.complexConj L : L →+* L)) → cmExtend emb g σ = 1 := by
     intro σ h h'
-    simp only [cmExtend, dif_neg h, dif_neg h']
+    simp only [cmExtend, dite_eq_right h, dite_eq_right h']
   refine ⟨cmExtend emb g, ?_, v1⟩
   intro σ
   by_cases h : ∃ τ, σ = emb τ
@@ -447,8 +445,7 @@ theorem weightLine : ∀ (k : Type) [Field k] [CharZero k] (N : ℕ) (lam : DomW
       have := hpn (fun _ => 1)
       simpa using this
     have hpz : ((∏ b, t b ^ lam.w b : kˣ) : k) = 2 ^ lam.w a := by
-      rw [Units.coe_prod]
-      rw [Finset.prod_eq_single a]
+      rw [Units.coe_prod, Finset.prod_eq_single a]
       · simp [t, u2, Units.val_zpow_eq_zpow_val]
       · intro b _ hb
         simp [t, Pi.mulSingle_eq_of_ne hb]
@@ -573,8 +570,7 @@ theorem schur [CharZero k] (hS : ∀ M : Submodule k (MvPolynomial (Fin N × Fin
       Subtype.ext (GlobalTheory.AlgWtF.DDHw.sqAct_diag k N lam t)
     have e2 := hcomm (diagGL k N t) h0
     rw [e1, LinearMap.map_smul_of_tower] at e2
-    have e3 := congrArg Subtype.val e2
-    exact e3.symm
+    exact (congrArg Subtype.val e2).symm
   obtain ⟨c, hc⟩ := weightLine k N lam _ (ψ h0).2 hwt
   refine ⟨c, fun w => ?_⟩
   let K : Submodule (spanAlg k N lam) (nablaSq k N lam) :=

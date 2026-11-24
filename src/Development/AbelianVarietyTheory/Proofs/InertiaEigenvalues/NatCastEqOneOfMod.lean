@@ -75,8 +75,7 @@ theorem frob_scalar_place (bkP : BKPh X) (h : GalHyp bkP i s) {P : PlE D.host} {
   obtain ⟨e, he, -, hu, -⟩ := GlobalTheory.TwSys.TameScalar.exists_scalar_tmat_of_tame_inertia D N X bkP i s z h.1 hz
   have c0 : residue (X.O0 i) e ≠ 0 := (residue_ne_zero_iff_isUnit _).2 e.isUnit
   have c1 : residue (X.O0 i) e ≠ 1 := by
-    rw [← residue_ne_zero_iff_isUnit, map_sub, map_one, sub_ne_zero] at hu
-    exact hu
+    rwa [← residue_ne_zero_iff_isUnit, map_sub, map_one, sub_ne_zero] at hu
   have key : ∀ τ : GE N, IsFrob (N.plOm.1 P) (normV P) τ → resT i s τ = residue (X.O0 i) e • 1 := by
     intro τ hτ
     obtain ⟨g, hg⟩ := hS τ hτ
@@ -130,8 +129,7 @@ theorem firstPlace : LocalFiniteness → LocalTateDuality → LocalEulerChar →
   · obtain ⟨n, hn⟩ := exists_pow_kill hB m
     refine ⟨n, funext fun a => ?_⟩
     have := hn _ (map_mem_pow (Λ := Λ) (Ideal.pow_mem_pow (l_mem i) n)) a
-    rw [map_pow, map_natCast, ← Nat.cast_pow, Nat.cast_smul_eq_nsmul] at this
-    exact this
+    rwa [map_pow, map_natCast, ← Nat.cast_pow, Nat.cast_smul_eq_nsmul] at this
   · exact eq_zero_of_scalar Fact.out (l_mem i) ρ κ (hκl σ) c1' hc' (q := 1) Nat.cast_one m (by rw [one_smul]; exact hm)
   · exact eq_zero_of_scalar Fact.out (l_mem i) ρ κ (hκl σ) c1' hc' hq m hm
 

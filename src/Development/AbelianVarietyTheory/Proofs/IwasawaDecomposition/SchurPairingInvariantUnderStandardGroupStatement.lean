@@ -66,8 +66,7 @@ theorem left_inv_of_mem_Minf {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} {
     ∀ γ ∈ GQ V, ∀ g, x v (γ * g) = x v g := by
   unfold principalLevelFrame.Minf at hx
   refine Submodule.iSup_induction _ (motive := fun z : MMap M => ∀ γ ∈ GQ V, ∀ g, z v (γ * g) = z v g) hx ?_ ?_ ?_
-  · intro N z hz
-    exact (PeterssonHilbertSpace.mult_cont_left M θ _ _ hz v).2
+  · exact fun N z hz => (PeterssonHilbertSpace.mult_cont_left M θ _ _ hz v).2
   · intro γ _ g
     rfl
   · intro z w hz hw γ hγ g

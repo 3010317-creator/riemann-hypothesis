@@ -179,8 +179,7 @@ theorem exists_pair {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum 
     · intro h l hl
       have := h _ ((hΛ' l).1 hl)
       simp only [dotProduct_smul, smul_eq_mul] at this
-      rw [AddChar.mulShift_apply, mul_sub]
-      exact this
+      rwa [AddChar.mulShift_apply, mul_sub]
     · intro h l hl
       have := h (l.1, a⁻¹ • l.2) (by rw [hΛ']; simpa [smul_smul, mul_inv_cancel₀ ha] using hl)
       rw [AddChar.mulShift_apply, mul_sub] at this
@@ -210,10 +209,8 @@ theorem proportional_of_fixed : ∀ {F : Type} [Field F] [NumberField F] (v : He
   refine GlobalTheory.heisenbergEigen_proportional ψk Λ χ f g (fun l hl ξ => ?_) (fun l hl ξ => ?_) hf0
     (exists_pair v ψk hc h1 Λ c hc0 hself hbd)
   · have := congrFun (hχ l hl).1 ξ
-    rw [← invOf_eq_inv]
-    exact this
+    rwa [← invOf_eq_inv]
   · have := congrFun (hχ l hl).2 ξ
-    rw [← invOf_eq_inv]
-    exact this
+    rwa [← invOf_eq_inv]
 
 end GlobalTheory.SchrFixUniq

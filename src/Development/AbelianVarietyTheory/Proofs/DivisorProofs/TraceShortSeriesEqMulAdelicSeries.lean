@@ -310,8 +310,7 @@ theorem GlobalTheory.EvalLowType.lowType_of_eval : ∀ (D : D7) (G : Type) [Grou
       exact hu w₀ fun ρ => rfl)
   intro w
   have := key w
-  rw [MultilinearMap.sub_apply, sub_eq_zero, hLf, hRt] at this
-  exact this
+  rwa [MultilinearMap.sub_apply, sub_eq_zero, hLf, hRt] at this
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -387,7 +386,7 @@ theorem const_value_mem_range : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
       ⟨x.2, liesOn_frBor ht (liesOn_frMap hm (liesOn_genFr h Z))⟩
     have h1 := hw _ hi
     have h2 : rdU U (idem Z) k x = 1 := by
-      simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, x.2, dif_pos]
+      simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, x.2, dite_eq_left]
       exact evR_idem (S := CAt σ) hz.2 (haveI : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ); hL.test _ _)
     have h3 : evC h Z (idem Z) = 1 := evR_idem (liesOn_genFr h Z) (hL.test _ _)
     rw [h2, h3, map_one, mul_one] at h1
@@ -469,8 +468,7 @@ theorem covAt_mem (hR : GlobalTheory.Hk3.Core R F) (hT : TieIn T R κ v₀) (O :
     obtain ⟨γ', hγ', h2, h3, -⟩ := hD.2 h
     obtain ⟨x, hx⟩ := hroot (γ' * h)
     have hv := hval h γ' ⟨hγ', h2, h3⟩
-    rw [(hO.tuple ()).xi _ _ hx, hxi, Circle.coe_one, _root_.mul_one] at hv
-    exact hv
+    rwa [(hO.tuple ()).xi _ _ hx, hxi, Circle.coe_one, _root_.mul_one] at hv
   have key : ∀ h, (O.dict₂ () h).2 ∈ ((O.U₂ ()).X (O.dict₂ () h).1).dom ∧
       rdU (O.U₂ ()) (O.dδ ()).cδ (O.dict₂ () h).1 (O.dict₂ () h).2 = c0 := fun h => by
     obtain ⟨hon, γ, ⟨hγ, hl, hfr⟩, hma, -⟩ := GlobalTheory.AdTh.dict_atComp_markAd D _ _ _ _ _ _ _ (O.U₂ ()) hσ hU h1 hA R.θ (Wc D i)
@@ -489,7 +487,7 @@ theorem covAt_mem (hR : GlobalTheory.Hk3.Core R F) (hT : TieIn T R κ v₀) (O :
       ⟨hper, hty⟩ hl hx hmark hma
     rw [← hfr, hxi, Circle.coe_one, _root_.mul_one] at h3
     obtain ⟨A', hA'', -⟩ := hA'
-    exact ⟨hd', (dif_pos hd').trans (h3 _ A' hA'')⟩
+    exact ⟨hd', (dite_eq_left hd').trans (h3 _ A' hA'')⟩
   obtain rfl : c0 = c1 := (key 1).2.symm.trans (hv 1)
   refine ⟨?_, hm⟩
   obtain ⟨hio, hx₀⟩ := GlobalTheory.TupleCover.iotaOK_and_frame T hT.laws _ (inR i) O.s0 (hs0 ▸ T.toCore.good_σ₀) (Wc D i) O.hV
@@ -642,8 +640,7 @@ theorem cover_value_root : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0
     obtain ⟨γ', hγ', h2, h3, -⟩ := hD.2 k
     obtain ⟨a, ha⟩ := hrat γ' hγ'
     have hv := hval k γ' ⟨hγ', h2, h3⟩
-    rw [hxi _ _ (hmul _ _ _ _ ha hxk), map_mul, hχ.1.2 a, _root_.one_mul] at hv
-    exact hv
+    rwa [hxi _ _ (hmul _ _ _ _ ha hxk), map_mul, hχ.1.2 a, _root_.one_mul] at hv
   have hat := GlobalTheory.AdTh.dict_atComp_markAd D _ _ _ _ _ _ _ (U₂ ()) hσ hU h1 hA R.θ (Wc D i) (rank_Wc i)
     (dict₂ ()) (iotaW T.J i) g' e' F' ik φ th _ hR.models.inf hmod hor hth hD Wt
   refine ⟨c0, ?_, hroot, ?_⟩
@@ -653,7 +650,7 @@ theorem cover_value_root : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0
       ((U₂ ()).X (dict₂ () 1).1).Ψ ((U₂ ()).X (dict₂ () 1).1).Gm ((U₂ ()).X (dict₂ () 1).1).Gm_herm
     have hd : (dict₂ () 1).2 ∈ ((U₂ ()).X (dict₂ () 1).1).dom := (hu2 _ hon).1
     obtain ⟨z, hz⟩ := value_mem T hT _ _ (inR i) _ hτ ((U₂ ()).un _ ⟨_, hd⟩)
-    have h2 : c0 * ((χ₁ x1 : Circle) : ℂ) = _ := ((hv 1 x1 hx1).symm.trans (dif_pos hd)).trans hz
+    have h2 : c0 * ((χ₁ x1 : Circle) : ℂ) = _ := ((hv 1 x1 hx1).symm.trans (dite_eq_left hd)).trans hz
     obtain ⟨y, hy⟩ := GlobalTheory.BigOn.CoreWit.exists_val_of_chrEq hχ x1
     obtain ⟨b, hb⟩ := hval0 y
     have hres := res_embLL T.J hI.alg hI.laws.pins.2.2.1
@@ -664,7 +661,7 @@ theorem cover_value_root : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0
     obtain ⟨hon, γ, ⟨hγ, hl, hf⟩, hma, -⟩ := hat k
     obtain ⟨hd, hpt⟩ := point_eq (Formalism.L2.PjFree.Unf.ofPj (U₂ ())) hσ hU h1 hA hR.models.inf (Wc D i) (rank_Wc i) (iotaW T.J i)
       _ Wt (dict₂ () k).1 (dict₂ () k).2 γ k hγ (hmod _) hl hf hon hma X g bas idx e mk hX hp hsy hi hL hmk hk y₂ A₂ hA₂
-    exact (evR_eq_of_point _ hlev.2.2.2.2.2.2.2.1 _ y₂ hpt).trans ((dif_pos hd).symm.trans (hv k xk hxk))
+    exact (evR_eq_of_point _ hlev.2.2.2.2.2.2.2.1 _ y₂ hpt).trans ((dite_eq_left hd).symm.trans (hv k xk hxk))
 
 end GlobalTheory.OnCmp.CoverRoot
 end -- clump:auto
@@ -1219,8 +1216,7 @@ theorem short_series_base : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T
   have hζI : IsIntegral ℤ ζ := IsIntegral.of_pow hn (hζ ▸ isIntegral_one)
   have hζi : IsIntegral ℤ ζ⁻¹ := by
     have e : ζ⁻¹ = ζ ^ (n - 1) := by
-      rw [eq_comm, ← mul_eq_one_iff_eq_inv₀ hζ0, ← pow_succ, Nat.sub_add_cancel hn]
-      exact hζ
+      rwa [eq_comm, ← mul_eq_one_iff_eq_inv₀ hζ0, ← pow_succ, Nat.sub_add_cancel hn]
     rw [e]
     exact hζI.pow _
   refine ⟨y₀, ζ⁻¹ * c, hrk, fun lam hlam => ?_, fun φ' hφ' w hw F₀ hF₀ => ?_⟩
@@ -1431,8 +1427,7 @@ theorem GlobalTheory.OneMapExact.trace_of_terms {D : D7} {G : Type} [Group G] [F
   classical
   have h0 : adForm R i 0 = 0 := by
     have := adForm_smul (R := R) (i := i) 0 0
-    rw [zero_smul, map_zero, zero_smul] at this
-    exact this
+    rwa [zero_smul, map_zero, zero_smul] at this
   have hadd : ∀ (s : Finset U) (Y : U → Fin (R.nW i) → D.what₂.LL),
       adForm R i (∑ u ∈ s, Y u) = ∑ u ∈ s, adForm R i (Y u) := by
     intro s Y
@@ -1453,9 +1448,9 @@ theorem GlobalTheory.OneMapExact.trace_of_terms {D : D7} {G : Type} [Group G] [F
     calc ∑ d : G, Fn d = ∑ d ∈ Finset.univ.filter (· ∈ U), Fn d :=
           (Finset.sum_filter_of_ne fun d _ h => by
             by_contra hd
-            exact h (by simp only [hFn, dif_neg hd, zero_mul])).symm
+            exact h (by simp only [hFn, dite_eq_right hd, zero_mul])).symm
       _ = ∑ u : U, Fn u := Finset.sum_subtype _ (by simp) Fn
-      _ = _ := Finset.sum_congr rfl fun u _ => by simp only [hFn, dif_pos u.2]
+      _ = _ := Finset.sum_congr rfl fun u _ => by simp only [hFn, dite_eq_left u.2]
   have e2 : ∑ u : U, D.what₂.embLL ((ψ u)⁻¹ : D.what₂.LLˣ) *
       actL (Wc D i) (R.βW i) (R.datWp i R.triv) (R.eG (u : G)) S g =
       ∑ u : U, D.what₂.embLL ((ψ u⁻¹)⁻¹ : D.what₂.LLˣ) *

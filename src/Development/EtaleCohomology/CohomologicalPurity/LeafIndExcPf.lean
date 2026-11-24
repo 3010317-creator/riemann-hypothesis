@@ -118,8 +118,7 @@ theorem leafIndExc_of (hN : LeafNbhdExc) (hC : LeafHsCont) : LeafIndExc := by
     rw [← he j, Spec.map_comp] at hx'
     have e := off_map (s.app j).hom I
     simp only [CommRingCat.ofHom_hom] at e
-    rw [e]
-    exact hx'
+    rwa [e]
   have hfac : ∀ j (h1 : off B (I.map φ) ≤ Spec.map (t.app j) ⁻¹ᵁ off (D.obj j) (I.map (s.app j).hom)),
       opnMap (Spec.map (CommRingCat.ofHom φ)) (off B (I.map φ)) (off A I) h =
         opnMap (Spec.map (t.app j)) _ _ h1 ≫ opnMap (Spec.map (s.app j)) _ _ (hsle j) := by

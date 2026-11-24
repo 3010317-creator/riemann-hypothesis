@@ -164,8 +164,7 @@ theorem notMem_of_mem_QE (hsel : IsSel X sel) {P : HeightOneSpectrum (𝓞 X.E)}
   intro hm
   obtain ⟨v, hgood, e⟩ := good_of_mem_QE h
   have h5 : (l : 𝓞 X.F) ∈ v.asIdeal := by
-    rw [← hsel v, e, Ideal.under_def, Ideal.mem_comap, map_natCast]
-    exact hm
+    rwa [← hsel v, e, Ideal.under_def, Ideal.mem_comap, map_natCast]
   apply hgood.2.2
   have h6 : ringChar (𝓞 X.F ⧸ v.asIdeal) ∣ l := by
     rw [← ringChar.spec, ← map_natCast (Ideal.Quotient.mk v.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
@@ -174,8 +173,7 @@ theorem notMem_of_mem_QE (hsel : IsSel X sel) {P : HeightOneSpectrum (𝓞 X.E)}
   rcases (Nat.dvd_prime hl).1 h6 with h7 | h7
   · exact absurd h7 CharP.ringChar_ne_one
   · change ringChar (𝓞 X.F ⧸ v.asIdeal) ∈ S
-    rw [h7]
-    exact hS
+    rwa [h7]
 
 theorem mem_vGs_iff {P : HeightOneSpectrum (𝓞 X.E)} : P ∈ Pr.vGs ↔ ∃ i, P ∈ Pr.vG i := by
   classical

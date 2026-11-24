@@ -130,14 +130,12 @@ theorem eFin_mul_eq {z z' : AE D} (h : finPart D z = finPart D z') : eFin D * z 
 theorem smul_eq_of_map_inf {m n : ℕ} {M N : Matrix (Fin m) (Fin n) (AE D)} (h : M.map (infPart D) = N.map (infPart D)) :
     eInf D • M = eInf D • N := by
   ext i j
-  simp only [Matrix.smul_apply, smul_eq_mul]
-  exact eInf_mul_eq (congrFun (congrFun h i) j)
+  simpa only [Matrix.smul_apply, smul_eq_mul] using eInf_mul_eq (congrFun (congrFun h i) j)
 
 theorem smul_eq_of_map_fin {m n : ℕ} {M N : Matrix (Fin m) (Fin n) (AE D)} (h : M.map (finPart D) = N.map (finPart D)) :
     eFin D • M = eFin D • N := by
   ext i j
-  simp only [Matrix.smul_apply, smul_eq_mul]
-  exact eFin_mul_eq (congrFun (congrFun h i) j)
+  simpa only [Matrix.smul_apply, smul_eq_mul] using eFin_mul_eq (congrFun (congrFun h i) j)
 
 theorem mt_map_inf {W : HSp D} {g : GA D W} (hg : g ∈ GfC W) : (mt W g).map (infPart D) = 1 := by
   have h : infHom W g = 1 := MonoidHom.mem_ker.1 hg
@@ -227,8 +225,7 @@ theorem unit_mix {ρ : ℕ} (m' : Matrix (Fin ρ) (Fin ρ) (AE D)) (hlo : ∀ i 
     rw [hv, Matrix.add_apply, Matrix.smul_apply, hd i, Matrix.one_apply_eq, smul_eq_mul, _root_.mul_one, eInf_add_eFin]
   have hvdet : IsUnit v.det := by
     rw [Matrix.det_of_upperTriangular (fun a b h => hvlo a b h)]
-    simp only [hvd, Finset.prod_const_one]
-    exact isUnit_one
+    simpa only [hvd, Finset.prod_const_one] using isUnit_one
   refine ⟨((Matrix.isUnit_iff_isUnit_det v).2 hvdet).unit, ?_, hv⟩
   exact (GlobalTheory.UniIndexPrime.mem_uniSub _).2 ⟨hvlo, hvd⟩
 

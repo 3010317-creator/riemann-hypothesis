@@ -84,7 +84,7 @@ theorem aeval_tan [Fintype κ] [DecidableEq κ] (v : κ → S) (P : MvPolynomial
   induction P using MvPolynomial.induction_on with
   | C a =>
     have h : ∀ i, AddMonoidAlgebra.coeff (MvPolynomial.C a : MvPolynomial κ S) (Finsupp.single i 1) = 0 := fun i => by
-      rw [MvPolynomial.coeff_C, if_neg (Finsupp.single_ne_zero.2 one_ne_zero).symm]
+      rw [MvPolynomial.coeff_C, ite_eq_right (Finsupp.single_ne_zero.2 one_ne_zero).symm]
     simp [h]
   | add p q hp hq =>
     rw [map_add (f := _), hp, hq, map_add (f := _), map_add (f := _)]
@@ -98,9 +98,9 @@ theorem aeval_tan [Fintype κ] [DecidableEq κ] (v : κ → S) (P : MvPolynomial
       rw [MvPolynomial.coeff_mul_X']
       by_cases h : i = n
       · subst h
-        rw [if_pos (by simp), if_pos rfl, tsub_self, MvPolynomial.constantCoeff_eq]
-      · rw [if_neg (by simp [Ne.symm h]), if_neg h]
-    simp only [hc, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true, map_mul,
+        rw [ite_eq_left (by simp), ite_eq_left rfl, tsub_self, MvPolynomial.constantCoeff_eq]
+      · rw [ite_eq_right (by simp [Ne.symm h]), ite_eq_right h]
+    simp only [hc, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true, map_mul,
       MvPolynomial.constantCoeff_X, mul_zero, map_zero, zero_add]
     apply TrivSqZeroExt.ext <;> simp [Algebra.smul_def, TrivSqZeroExt.algebraMap_eq_inl, mul_comm]
 
@@ -133,14 +133,12 @@ theorem coeff_psTrunc' {ιt : Type} [Fintype ιt] [DecidableEq ιt] (m : ℕ) (f
     refine ⟨⟨fun i => ⟨e i, Nat.lt_succ_of_le ((Finsupp.le_degree i e).trans he)⟩, Finset.mem_univ _, ?_⟩, ?_⟩
     · ext i
       simp
-    · rw [Finsupp.degree_apply] at he
-      exact he
+    · rwa [Finsupp.degree_apply] at he
   rw [psTrunc, MvPolynomial.coeff_sum, Finset.sum_eq_single e]
   · simp [MvPolynomial.coeff_monomial]
   · intro b _ hb
-    rw [MvPolynomial.coeff_monomial, if_neg hb]
-  · intro h
-    exact absurd hmem h
+    rw [MvPolynomial.coeff_monomial, ite_eq_right hb]
+  · exact fun h => absurd hmem h
 
 end Jet
 
@@ -164,18 +162,16 @@ theorem law_coeff (G : Germ.FGLaw S d) (i j : Fin d) (k : Fin 2) :
     rw [MvPowerSeries.coeff_X]
     by_cases h : p = q
     · simp [h]
-    · rw [if_neg, if_neg h]
-      intro h'
-      exact h (Finsupp.single_left_injective one_ne_zero h')
+    · rw [ite_eq_right, ite_eq_right h]
+      exact fun h' => h (Finsupp.single_left_injective one_ne_zero h')
   have hX2 : ∀ (p q : Fin 2 × Fin d), MvPowerSeries.coeff (Finsupp.single p 1)
       (MvPowerSeries.X q : MvPowerSeries (Fin 2 × Fin d) S) = if p = q then 1 else 0 := by
     intro p q
     rw [MvPowerSeries.coeff_X]
     by_cases h : p = q
     · simp [h]
-    · rw [if_neg, if_neg h]
-      intro h'
-      exact h (Finsupp.single_left_injective one_ne_zero h')
+    · rw [ite_eq_right, ite_eq_right h]
+      exact fun h' => h (Finsupp.single_left_injective one_ne_zero h')
 
   have h1 : MvPowerSeries.coeff (Finsupp.single ((1 : Fin 2), j) 1) (G.F i) = if j = i then 1 else 0 := by
     have h := congrArg (MvPowerSeries.coeff (Finsupp.single ((0 : Fin 1), j) 1)) (G.unit i)
@@ -271,11 +267,11 @@ theorem smT_zero_jetTan {κ : Type} [DecidableEq κ] (ℓ : κ) (m : ℕ)
       Algebra.ofId S (DualNumber S) ((jetAug : Jet S κ (m + 1) →ₐ[S] S) (Ideal.Quotient.mk _ (MvPolynomial.X i)))
     rw [h1, h2, map_zero]
     by_cases h : i = ℓ
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       show TrivSqZeroExt.map _ (TrivSqZeroExt.inr 1) = 0
       rw [TrivSqZeroExt.map_inr]
       simp
-    · rw [if_neg h, map_zero]
+    · rw [ite_eq_right h, map_zero]
   unfold smT
   rw [← Category.assoc, homAt_comp, e, ← homAt_comp, Category.assoc, hx, MonObj.comp_one]
 
@@ -357,7 +353,7 @@ theorem Tv_add (F : Germ.FGLaw S d)
     rw [Finset.sum_eq_single (i, p.2)]
     · simp
     · intro b _ hb
-      rw [MvPolynomial.coeff_X, if_neg (fun h => hb (Finsupp.single_left_injective one_ne_zero h).symm), zero_mul]
+      rw [MvPolynomial.coeff_X, ite_eq_right (fun h => hb (Finsupp.single_left_injective one_ne_zero h).symm), zero_mul]
     · intro h; exact absurd (Finset.mem_univ _) h
   have hL : (tanV ψv : Jet S (Fin 2 × Fin d) (0 + 1) →ₐ[S] DualNumber S).comp
       (jetSubstP 1 fun p : Fin 1 × Fin d => psTrunc 1 (F.F p.2)) = tanV (v + w) := by
@@ -369,7 +365,7 @@ theorem Tv_add (F : Germ.FGLaw S d)
         (Finsupp.single s 1) =
         if s.2 = p.2 then 1 else 0 := by
       intro s
-      rw [MvPolynomial.coeff_sub, MvPolynomial.coeff_C, if_neg (Finsupp.single_ne_zero.2 one_ne_zero).symm,
+      rw [MvPolynomial.coeff_sub, MvPolynomial.coeff_C, ite_eq_right (Finsupp.single_ne_zero.2 one_ne_zero).symm,
         sub_zero, coeff_psTrunc' 1 _ _ (by simp), law_coeff]
     simp only [hco, ite_mul, _root_.one_mul, zero_mul, Fintype.sum_prod_type, Fin.sum_univ_two]
     obtain ⟨p1, p2⟩ := p
@@ -436,8 +432,7 @@ theorem localization_quotient_separated_dvd {T A : Type} [DecidableEq T] (φ : A
         show smT x0 (χ τ2 a - χ τ2 a) (W τ2) = 1
         rw [sub_self, hT]
       have hP'' : ∏ τ ∈ s.erase τ2, W' τ = 1 := by
-        rw [← Finset.mul_prod_erase s W' hτ2, hW'2, _root_.one_mul] at hP'
-        exact hP'
+        rwa [← Finset.mul_prod_erase s W' hτ2, hW'2, _root_.one_mul] at hP'
       have hE' : ∀ τ a', W' τ ≫ φ a' = smT x0 (χ τ a') (W' τ) := by
         intro τ a'
         show smT x0 _ (W τ) ≫ φ a' = smT x0 (χ τ a') (smT x0 _ (W τ))
@@ -459,8 +454,7 @@ theorem localization_quotient_separated_dvd {T A : Type} [DecidableEq T] (φ : A
         constructor
         · intro hτ; exact Finset.mem_singleton.2 (hone τ hτ)
         · intro hτ; rw [Finset.mem_singleton.1 hτ]; exact hτ1
-      rw [hs1, Finset.prod_singleton] at hP
-      exact hP
+      rwa [hs1, Finset.prod_singleton] at hP
 
 theorem combT_add {m : ℕ} (D : Fin m → (overAt x0 (DualNumber S) ⟶ G)) (hD : ∀ j, smT x0 0 (D j) = 1)
     (p q : Fin m → S) : combT x0 D (p + q) = combT x0 D p * combT x0 D q := by
@@ -525,7 +519,7 @@ theorem Tv_act (a : 𝓞 E) (act : Fin d → MvPowerSeries (Fin 1 × Fin d) S)
       (Finsupp.single s 1) =
       MvPowerSeries.coeff (Finsupp.single s 1) (act p.2) := by
     intro s
-    rw [MvPolynomial.coeff_sub, MvPolynomial.coeff_C, if_neg (Finsupp.single_ne_zero.2 one_ne_zero).symm,
+    rw [MvPolynomial.coeff_sub, MvPolynomial.coeff_C, ite_eq_right (Finsupp.single_ne_zero.2 one_ne_zero).symm,
       sub_zero, coeff_psTrunc' 1 _ _ (by simp)]
   simp only [hco, Fintype.sum_prod_type, Fin.sum_univ_one]
   rfl
@@ -607,13 +601,11 @@ theorem linEig_holds : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
       have h1 : IsCombAt y.x (y.u τ) (fun k => b ⟨τ, k⟩) (W τ).left := by
         have := (isCombAtG_iff Xo.univ.t y.x (fun k : Fin (Dw.mult τ) => Y ⟨τ, k⟩) (fun k => b ⟨τ, k⟩)
           (W τ).left).2 rfl
-        rw [e] at this
-        exact this
+        rwa [e] at this
       have h2 : IsCombAt y.x (y.u τ) 0 (W τ).left := by
         have := (isCombAtG_iff Xo.univ.t y.x (fun k : Fin (Dw.mult τ) => Y ⟨τ, k⟩) 0 (W τ).left).2
           (by rw [combT_zero y.x _ (fun k => hYt _), hW1 τ])
-        rw [e] at this
-        exact this
+        rwa [e] at this
       have htan : IsTanAt y.x (W τ).left := isTanAtG_of (t := Xo.univ.t) (W τ) (hWt τ)
       have heig : IsEigAt c τ (W τ).left := by
         intro b'
@@ -661,5 +653,4 @@ theorem GlobalTheory.PowGerm.eigDirSt : GlobalTheory.PowGerm.EigDirSt := by
   letI := io.toAlgebra
   intro a ℓ
   funext i
-  have h := GlobalTheory.EigDir.linEig_holds E H Dw l Xo c T.Fr y.1 C.ch a ℓ i
-  exact h
+  exact GlobalTheory.EigDir.linEig_holds E H Dw l Xo c T.Fr y.1 C.ch a ℓ i

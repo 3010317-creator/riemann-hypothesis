@@ -86,8 +86,7 @@ theorem toFinE_symm_mem_OhE {D : D7} (t : FiniteAdeleRing (𝓞 D.host.E) D.host
     rw [GlobalTheory.LFun.toFinAd_tmul, mul_comm]
   refine GlobalTheory.AdeleBaseChange.mem_int_of_map (ι := (GlobalTheory.BotFormula.toFinE D).toRingHom) hι ?_
   change (GlobalTheory.BotFormula.toFinE D) ((GlobalTheory.BotFormula.toFinE D).symm t) ∈ _
-  rw [RingEquiv.apply_symm_apply]
-  exact ht
+  rwa [RingEquiv.apply_symm_apply]
 
 theorem continuous_finChar {D : D7} {N : ℕ} (c : HeckeU D N) : Continuous (finChar c) := by
   refine continuous_of_continuousAt_one (finChar c) ?_
@@ -143,8 +142,7 @@ theorem continuous_finChar {D : D7} {N : ℕ} (c : HeckeU D N) : Continuous (fin
         rw [hk, ← map_natCast (algebraMap D.host.E (FiniteAdeleRing (𝓞 D.host.E) D.host.E)) m, ← map_mul,
           mul_inv_cancel₀ hmE, map_one]
       rw [mul_comm, mul_assoc, mul_comm k, hmk, mul_one]
-    have hf := hc _ hy hs
-    exact Circle.ext (by rw [coe_finChar, hf, Units.val_one, Circle.coe_one])
+    exact Circle.ext (by rw [coe_finChar, (hc _ hy hs), Units.val_one, Circle.coe_one])
   show Filter.Tendsto (finChar c) (𝓝 1) (𝓝 (finChar c 1))
   rw [map_one]
   exact tendsto_nhds_of_eventually_eq (Filter.eventually_of_mem (hV.mem_nhds h1V) key)
@@ -276,8 +274,7 @@ theorem resEta_of_sign : ∀ (D : D7) (χ : (AE D)ˣ →* Circle) (N : ℕ), IsH
     norm_num at this
   intro a
   have ha : ψ a = 1 := by rw [hψ1]; rfl
-  rw [hψa, mul_inv_eq_one] at ha
-  exact ha
+  rwa [hψa, mul_inv_eq_one] at ha
 
 end GlobalTheory.HeckeSignEta
 end -- clump:auto

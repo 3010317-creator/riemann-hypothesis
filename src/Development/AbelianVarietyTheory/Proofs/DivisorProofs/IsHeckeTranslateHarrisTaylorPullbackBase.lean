@@ -70,8 +70,7 @@ theorem isGaloisCover_of_isPullback {X Y X' Y' : Scheme.{0}} {Ga Ga' : Type} [Gr
       fibre := ?_ }
   · have := h.finite
     choose σ hσ using up
-    refine Finite.of_injective σ fun a c e => inj' ?_
-    exact hp.hom_ext (by rw [hσ, hσ, e]) (by rw [hπ, hπ])
+    exact Finite.of_injective σ fun a c e => inj' (hp.hom_ext (by rw [hσ, hσ, e]) (by rw [hπ, hπ]))
   · intro K _ _ y y' e
     obtain ⟨a, ha, ha'⟩ := h.fibre K (y ≫ u) (y' ≫ u) (by simp only [Category.assoc, hp.w, reassoc_of% e])
     obtain ⟨a', ea'⟩ := down a
@@ -186,8 +185,7 @@ theorem isHecke_pull : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [Co
   · apply ext'
     have h₀ := congrArg (fun z => m.φ ≫ z.left) (hlin c')
     simp only [Over.comp_left, Category.assoc] at h₀ ⊢
-    rw [hψ₁, m'.act, reassoc_of% hψ₁, reassoc_of% (m.act c')]
-    exact h₀
+    rwa [hψ₁, m'.act, reassoc_of% hψ₁, reassoc_of% (m.act c')]
   · apply ext'
     rw [m'.eta, heta]
     simp only [Over.comp_left, Category.assoc]

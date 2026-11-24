@@ -305,9 +305,7 @@ theorem exists_unit_character_of_stable_line (l : ℕ) [Fact l.Prime] (y : ℂ_[
     rw [← hx, GlobalTheory.RingBasics.σC_mul, hx k, map_mul, TateTwist.σC_algebraMap, hx g, map_mul]
     ring
   refine ⟨MonoidHom.mk' (fun g => PadicInt.mkUnits (hn g)) fun g k => ?_, fun g => hx g⟩
-  apply Units.ext
-  apply Subtype.ext
-  exact hm g k
+  exact Units.ext (Subtype.ext (hm g k))
 
 end GlobalTheory.Per
 end -- clump:auto
@@ -372,8 +370,7 @@ theorem exists_isPrimitiveRoot_tilt (l : ℕ) [hl : Fact l.Prime] (m : ℕ) (hm 
     rw [← hex]
     exact_mod_cast congrArg Subtype.val h1
   apply (algebraMap (Om l) ℂ_[l]).injective
-  rw [map_pow, map_one]
-  exact h2
+  rwa [map_pow, map_one]
 
 theorem nonempty_algClosure_zmod_to_tilt :
     ∀ (l : ℕ) [Fact l.Prime], Nonempty (AlgebraicClosure (ZMod l) →+* Per.Fl l) := by
@@ -546,8 +543,7 @@ theorem exists_unramified_period : ∀ (l : ℕ) [Fact l.Prime] (F : GQ l), (∀
       exact (IntermediateField.mem_fixingSubgroup_iff _ _).1 hg x
         (IntermediateField.subset_adjoin _ _ ⟨m, hm, hl, hx⟩)) (w₀.coeff n)
     rw [pow_one] at this
-    rw [GlobalTheory.RingIface.sigA_coeff, WittVector.map_coeff]
-    exact this
+    rwa [GlobalTheory.RingIface.sigA_coeff, WittVector.map_coeff]
   · rw [← hφA]
     refine WittVector.ext fun n => ?_
     rw [GlobalTheory.RingIface.sigA_coeff, GlobalTheory.RingIface.phiA_coeff, WittVector.map_coeff]
@@ -600,8 +596,7 @@ theorem fixed_of_inertia_frobenius : ∀ (l : ℕ) [Fact l.Prime] (F : GQ l),
   congr 1
   have hzK : z ∈ MaximalUnramifiedExtension l := by
     rw [← InfiniteGalois.fixedField_fixingSubgroup (MaximalUnramifiedExtension l), IntermediateField.mem_fixedField_iff]
-    intro h hh
-    exact hz h (hI h hh)
+    exact fun h hh => hz h (hI h hh)
   have hFz : F z = z := hz F hFy
   have hpow : ∀ n : ℕ, (F ^ n) z = z := fun n => by
     induction n with
@@ -832,16 +827,14 @@ private theorem exists_norm_pow_prime_pow_sub_lt_one {l : ℕ} [hl : Fact l.Prim
     rw [map_natCast, ← map_natCast (Ideal.Quotient.mk M), Ideal.Quotient.eq, GlobalTheory.ClosedBallValuationSubring.mem_openBallIdeal]
     have e : ((n : PadicAlgCl l)) = algebraMap ℚ_[l] (PadicAlgCl l) (n : ℚ_[l]) := (map_natCast _ n).symm
     push_cast
-    rw [e, ← map_sub, PadicAlgCl.norm_extends, norm_sub_rev]
-    exact hn'
+    rwa [e, ← map_sub, PadicAlgCl.norm_extends, norm_sub_rev]
 
   have hint : IsIntegral ℚ_[l] a := Algebra.IsIntegral.isIntegral a
   set P := minpoly ℚ_[l] a with hP
   have hPm : P.Monic := minpoly.monic hint
   have hPc : ∀ n, ‖P.coeff n‖ ≤ 1 := by
     have h1 : spectralValue P ≤ 1 := by
-      rw [← PadicAlgCl.spectralNorm_eq] at ha
-      exact ha
+      rwa [← PadicAlgCl.spectralNorm_eq] at ha
     exact (spectralValue_le_one_iff hPm).1 h1
   set Pm := P.map (algebraMap ℚ_[l] (PadicAlgCl l)) with hPm'
   have hPmO : ∀ n, Pm.coeff n ∈ O := by
@@ -920,8 +913,7 @@ private theorem exists_teichmuller_root_norm_sub_lt_one {l : ℕ} [hl : Fact l.P
     have h := congrArg (Polynomial.eval a) hprod
     rw [Polynomial.eval_multiset_prod, Multiset.map_map] at h
     simpa [hP, Function.comp_def] using h.symm
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hge : ∀ r ∈ P.roots, 1 ≤ ‖a - r‖ := by
     intro r hr
     have hr' : r ^ q = r := by
@@ -964,8 +956,7 @@ private theorem norm_apply_sub_lt_one_of_fixes_prime_to_l_roots {l : ℕ} [hl : 
   have hn : ‖γ (a - ζ)‖ = ‖a - ζ‖ := (spectralNorm_eq_of_equiv γ (a - ζ)).symm
   rw [e]
   refine (IsUltrametricDist.norm_add_le_max _ _).trans_lt ?_
-  rw [hn, norm_neg, max_self]
-  exact hlt
+  rwa [hn, norm_neg, max_self]
 
 private theorem apply_root_eq_of_mem_fixingSubgroup_Kur {l : ℕ} [hl : Fact l.Prime] (γ : GQ l) (hγ : γ ∈ (MaximalUnramifiedExtension l).fixingSubgroup) :
     ∀ ζ : PadicAlgCl l, (∃ m, 0 < m ∧ ¬ l ∣ m ∧ ζ ^ m = 1) → γ ζ = ζ := by
@@ -1002,8 +993,7 @@ theorem norm_sub_lt (l : ℕ) [hl : Fact l.Prime] (γ : GQ l) (hγ : γ ∈ (Max
       exact (IsUltrametricDist.norm_add_le_max _ _).trans_lt (max_lt (norm_apply_sub_lt_one_of_fixes_prime_to_l_roots γ hfix _ hvk.le) ih)
   have hq : ‖u ^ (l ^ n) - 1‖ < 1 := by
     have h1 := hind (l ^ n)
-    rw [h, div_self hx, norm_sub_rev] at h1
-    exact h1
+    rwa [h, div_self hx, norm_sub_rev] at h1
   have hM : (GlobalTheory.ClosedBallValuationSubring.openBallIdeal (PadicAlgCl l)).IsMaximal :=
     GlobalTheory.ClosedBallValuationSubring.openBallIdeal_isMaximal _
   let : Field (GlobalTheory.ClosedBallValuationSubring.closedBallSubring (PadicAlgCl l) ⧸ GlobalTheory.ClosedBallValuationSubring.openBallIdeal (PadicAlgCl l)) :=
@@ -1123,8 +1113,7 @@ theorem norm_pow_sub_le : ∀ (l : ℕ) [Fact l.Prime] (γ : GQ l), γ ∈ (Maxi
         exact one_le_pow₀ hl1
       have h3 := Real.rpow_le_rpow_of_exponent_ge hτpos hτ1 h2
       rwa [Real.rpow_one] at h3
-    rw [max_eq_left hτs, ← pow_succ, Nat.sub_add_cancel hl.out.pos, hsl] at h
-    exact h
+    rwa [max_eq_left hτs, ← pow_succ, Nat.sub_add_cancel hl.out.pos, hsl] at h
 
 end GlobalTheory.InertiaMove
 end -- clump:auto
@@ -1471,8 +1460,7 @@ theorem theta_eig {b : Per.Bcris l} {y : Per.BdRp l}
   rw [(_root_.GlobalTheory.MemLoc.ULaws.u_laws l C).2.2.2.2.1, map_mul, h, (ActLaws.act_laws l).2.2.2.2.2.2.2.2.2.1,
     show C.ι (C.qB x) = _ from C.ι_u _, ← map_mul] at h1
   have h2 := congrArg (Per.θD l) ((BdRField.bdR_isField l).2.1 h1)
-  rw [(thetaD_props l).2.2.2.2, map_mul, C.o_sec.th] at h2
-  exact h2
+  rwa [(thetaD_props l).2.2.2.2, map_mul, C.o_sec.th] at h2
 
 theorem σB_tB (g : GQ l) : Per.σB g C.tB = C.qB ((C.χ g : ℤ_[l]) : ℚ_[l]) * C.tB := by
   rw [qB_coe, Core.tB, (ActLaws.act_laws l).2.2.2.2.2.2.2.2.2.2.2.1, TAct.t_act l C g, map_mul,

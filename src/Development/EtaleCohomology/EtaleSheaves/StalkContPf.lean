@@ -87,8 +87,7 @@ theorem StalkCont_of : StalkCont := by
     exact quasiSeparatedSpace_of_quasiSeparated (pullback.snd p V.1.ι)
   have hu : ∀ V : AffNhd s, IsUnit (q : Γ((diagram s p).obj V, ⊤)) := fun V => by
     have := hq.map ((pullback.fst p V.1.ι ≫ p).appTop).hom
-    simp only [map_natCast] at this
-    exact this
+    simpa only [map_natCast] using this
   obtain ⟨hsurj, hkill⟩ := hC hH q (diagram s p) _ hc (fun f => inferInstance) hcpt hqs hu n i
   constructor
   · intro U hs x hx
@@ -99,8 +98,7 @@ theorem StalkCont_of : StalkCont := by
     obtain ⟨k, f, hf⟩ := hkill V0 _ h0
     have hkV : k.1 ≤ V0.1 := f.le
     refine ⟨k.1, hkV.trans hV0, k.2.1, ?_⟩
-    rw [pull_diag, ← pull_mc, res_res] at hf
-    exact hf
+    rwa [pull_diag, ← pull_mc, res_res] at hf
   · intro z
     obtain ⟨j, y, hy⟩ := hsurj z
     exact ⟨j.1, j.2.1, y, (pull_cone p s j y).symm.trans hy⟩

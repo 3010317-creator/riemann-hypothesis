@@ -130,8 +130,7 @@ theorem apply_eq_of_periodic {C : Set (X → ℂ)} (a : (X → ℂ) →ₗ[ℂ] 
     split_ifs with hx
     · exact (hout x).symm
     · apply image_eq_zero_of_notMem_tsupport
-      intro hxs
-      exact hx (Finset.mem_insert_of_mem (hfin.mem_toFinset.mpr ⟨x, hxs, rfl⟩))
+      exact fun hxs => hx (Finset.mem_insert_of_mem (hfin.mem_toFinset.mpr ⟨x, hxs, rfl⟩))
   have hkill : ∀ q : X ⧸ U, q ≠ 0 → a (cosetInd U q) = 0 := by
     intro q hq
     have hx₀ : q.out ∉ U := by
@@ -160,8 +159,7 @@ theorem apply_eq_of_periodic {C : Set (X → ℂ)} (a : (X → ℂ) →ₗ[ℂ] 
   · rw [map_smul, smul_eq_mul, ← QuotientAddGroup.mk_zero, hout]
   · intro q _ hq
     rw [map_smul, hkill q hq, smul_zero]
-  · intro h
-    exact absurd (Finset.mem_insert_self _ _) h
+  · exact fun h => absurd (Finset.mem_insert_self _ _) h
 
 theorem exists_eq_mul_apply_zero : ∀ (X : Type) [AddCommGroup X] [TopologicalSpace X] [IsTopologicalAddGroup X]
     (C : Set (X → ℂ)),

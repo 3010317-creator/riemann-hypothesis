@@ -125,14 +125,12 @@ theorem exists_int_add_prime_mul (l : ℕ) (hl : l.Prime) (hlp : l ≠ p) (a : A
     have hne : v.1.valuation ℚ (l : ℚ) ≠ 0 := (Valuation.ne_zero_iff _).2 hlq0
     by_cases hv : v = v0
     · subst hv
-      rw [mul_inv_le_iff₀ (zero_lt_iff.2 hne), _root_.one_mul]
-      exact hz
+      rwa [mul_inv_le_iff₀ (zero_lt_iff.2 hne), _root_.one_mul]
     · have hnot : (l : ℤ) ∉ v.1.asIdeal := by
         intro hm
         apply hv
         have hle : Ideal.span {(l : ℤ)} ≤ v.1.asIdeal := (Ideal.span_singleton_le_iff_mem _).2 hm
-        have heq := hmax.eq_of_le v.1.isPrime.ne_top hle
-        exact Subtype.ext (HeightOneSpectrum.ext heq.symm)
+        exact Subtype.ext (HeightOneSpectrum.ext (hmax.eq_of_le v.1.isPrime.ne_top hle).symm)
       have h1 : v.1.valuation ℚ (l : ℚ) = 1 := by
         have := (valuation_eq_one_iff_notMem (v := v.1) (K := ℚ) (r := (l : ℤ))).2 hnot
         simpa using this

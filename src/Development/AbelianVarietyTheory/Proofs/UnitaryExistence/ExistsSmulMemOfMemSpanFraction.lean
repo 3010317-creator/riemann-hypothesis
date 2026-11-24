@@ -185,8 +185,7 @@ theorem exists_pseudoCoords (n : ℕ) :
       have h1 := LinearMap.finrank_range_add_finrank_ker l
       have h2 : LinearMap.range l = ⊤ := by
         rw [eq_top_iff]
-        intro x _
-        exact ⟨x • e, by simp [he]⟩
+        exact fun x _ => ⟨x • e, by simp [he]⟩
       rw [h2, finrank_top, Module.finrank_self, hV] at h1
       rw [hW]; omega
     let ι : W →ₗ[R] V := W.subtype.restrictScalars R
@@ -242,8 +241,7 @@ theorem exists_pseudoCoords (n : ℕ) :
       simp only [hF1, hF2, hC1, hC2]
       rw [← hfΛ, hΛ', hp]
       constructor
-      · intro hv
-        exact ⟨Λ.sub_mem hv (hce _ (hΛc v hv)), hΛc v hv⟩
+      · exact fun hv => ⟨Λ.sub_mem hv (hce _ (hΛc v hv)), hΛc v hv⟩
       · rintro ⟨h1, h2⟩
         have := Λ.add_mem h1 (hce _ h2)
         simpa using this

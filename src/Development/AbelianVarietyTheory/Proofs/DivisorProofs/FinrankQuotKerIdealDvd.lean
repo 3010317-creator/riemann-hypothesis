@@ -116,8 +116,7 @@ theorem kerPow_kerPt : KerPow f (p ^ n) _ (kerPt t t' f n) := by
     have hψ : ψ.comp q = φ := AlgHom.ext fun _ => rfl
     have hψx : spOver ψ ≫ kerPt t t' f n = x := by
       change spOver ψ ≫ (spOver q ≫ t.y n) = x
-      rw [← Category.assoc, spOver_comp, hψ]
-      exact hφ
+      rwa [← Category.assoc, spOver_comp, hψ]
     refine ⟨ψ, congrArg Over.Hom.left hψx, fun χ hχ => ?_⟩
     have hχx : spOver (χ.comp q) ≫ t.y n = x := by
       rw [← spOver_comp, Category.assoc]
@@ -131,8 +130,7 @@ theorem finrank_quot_kerIdeal_dvd {p : ℕ} {G H : PDivGroup p k} (φ : G ⟶ H)
   have h := finrank_eq_ker_mul_range k (G.A n) (H.A n) (φ.app n)
   have h2 : Module.finrank k (G.A n) = p ^ (n * G.height) := by
     have h3 := G.fibreDim_eq n ⟨⊥, Ideal.isPrime_bot⟩
-    rw [fibreDim, Module.finrank_baseChange] at h3
-    exact h3
+    rwa [fibreDim, Module.finrank_baseChange] at h3
   exact ⟨_, h2 ▸ h⟩
 
 end GlobalTheory.AV.KerPart

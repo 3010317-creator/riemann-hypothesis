@@ -121,8 +121,7 @@ theorem regMat_mul {N : ℕ} (hz : z ∈ mcPts (mCoordIdeal x)) {A B : Matrix (F
     exact Finset.sum_congr rfl fun c _ => (reg_mul hz (hA a c) (hB c b)).2
   refine ⟨fun a b => (key a b).1, ?_⟩
   ext a b
-  simp only [valMat, Matrix.of_apply, Matrix.mul_apply]
-  exact (key a b).2
+  simpa only [valMat, Matrix.of_apply, Matrix.mul_apply] using (key a b).2
 
 theorem reg_minor {N : ℕ} (hz : z ∈ mcPts (mCoordIdeal x)) {A : Matrix (Fin N) (Fin N) Ω}
     (hA : ∀ a b, RegAt x (mCoordIdeal z) (A a b)) (I J : Finset (Fin N)) :
@@ -133,8 +132,7 @@ theorem reg_minor {N : ℕ} (hz : z ∈ mcPts (mCoordIdeal x)) {A : Matrix (Fin 
     rfl
   have h1 : minorIJ A I J = ((minorIJ A' I J : regRing x z) : Ω) := by
     have h := minorIJ_map (regRing x z).subtype A' I J
-    rw [hmap] at h
-    exact h
+    rwa [hmap] at h
   have h2 : valMat x z A = A'.map (regVal x hz) := by
     ext a b
     rfl

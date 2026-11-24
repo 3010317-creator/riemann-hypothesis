@@ -85,7 +85,7 @@ theorem leadVal_add {n δ : ℕ} (s : Fin n → ℂ) (w : ℂ) (t : Fin δ → �
   refine Finset.sum_congr rfl fun α hα => ?_
   have hlt := mem_multiLt.1 hα
   by_cases h : ∑ q, α q = a
-  · simp only [if_pos h]
+  · simp only [ite_eq_left h]
     have hm : (∏ q, s q ^ α q) = (∏ k, (s k / w) ^ α k) * w ^ (∑ q, α q) := by
       rw [← Finset.prod_pow_eq_pow_sum, ← Finset.prod_mul_distrib]
       exact Finset.prod_congr rfl fun k _ => by rw [← mul_pow, div_mul_cancel₀ _ hw]
@@ -250,8 +250,7 @@ theorem nmat_zero_mem_Bor {r : ℕ} (X : Data E r) : nmat X 0 ∈ Bor X.Ψ r := 
   intro τ
   refine ⟨by rw [mat_nmat_zero, Matrix.det_one]; exact one_ne_zero, fun a c h => ?_⟩
   have := congrFun (congrFun (mat_nmat_zero X τ) a) c
-  rw [Matrix.one_apply_ne h.ne'] at this
-  exact this
+  rwa [Matrix.one_apply_ne h.ne'] at this
 
 theorem lact_one {r : ℕ} (X : Data E r) (x : Frame X.Ψ r) : lact (1 : GL (Fin r) E) x = x := by
   funext τ

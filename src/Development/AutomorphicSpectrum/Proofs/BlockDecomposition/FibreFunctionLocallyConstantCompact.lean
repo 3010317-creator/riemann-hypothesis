@@ -118,12 +118,10 @@ theorem continuous_midV (i t : ℕ) : Continuous (midV k i t) := by
   induction j using Fin.addCases with
   | left l =>
     show Continuous fun v : Fin t → k => Fin.append (0 : Fin i → k) v (Fin.castAdd t l)
-    simp only [Fin.append_left, Pi.zero_apply]
-    exact continuous_const
+    simpa only [Fin.append_left, Pi.zero_apply] using continuous_const
   | right l =>
     show Continuous fun v : Fin t → k => Fin.append (0 : Fin i → k) v (Fin.natAdd i l)
-    simp only [Fin.append_right]
-    exact continuous_apply l
+    simpa only [Fin.append_right] using continuous_apply l
 
 theorem continuous_col_inv (n : ℕ) : Continuous (fun c : Mir k n => col k n c⁻¹) :=
   continuous_pi fun j =>
@@ -141,8 +139,7 @@ theorem isLocallyConstant_uM {Z : Type} (n : ℕ) (F : Mir k n → Z) (S : Set (
     (continuous_const.mul (hu.comp (continuous_id.sub continuous_const))).mul continuous_const
   refine ⟨φ ⁻¹' S, hS.preimage hφ, ?_, fun y hy => ?_⟩
   · show L⁻¹ * GlobalTheory.CompanionTheory.BZPsiPG.uM k n (y₀ - y₀) * L ∈ S
-    rw [sub_self, GlobalTheory.CompanionTheory.BZPsiPG.uM_zero, mul_one, inv_mul_cancel]
-    exact h1
+    rwa [sub_self, GlobalTheory.CompanionTheory.BZPsiPG.uM_zero, mul_one, inv_mul_cancel]
   · have hadd : GlobalTheory.CompanionTheory.BZPsiPG.uM k n y =
         GlobalTheory.CompanionTheory.BZPsiPG.uM k n y₀ * GlobalTheory.CompanionTheory.BZPsiPG.uM k n (y - y₀) := by
       rw [← GlobalTheory.CompanionTheory.BZPsiPG.uM_add]

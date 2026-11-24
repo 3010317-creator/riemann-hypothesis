@@ -211,8 +211,7 @@ theorem range_le_range_of_isUnramifiedAt
   let P := M.comap σA
   have hlP : (l : 𝓞 L) ∈ P := by
     show σA l ∈ M
-    rw [map_natCast, ← map_natCast (algebraMap O S), ← Ideal.mem_comap, hMc]
-    exact hl
+    rwa [map_natCast, ← map_natCast (algebraMap O S), ← Ideal.mem_comap, hMc]
   haveI := hur P hlP
   haveI : Algebra.FinitePresentation (𝓞 K₀) (𝓞 L) :=
     Algebra.FinitePresentation.of_finiteType.1 inferInstance
@@ -485,8 +484,7 @@ private theorem exists_rayPair_inf_of_rayPair (hu : ∀ u : (𝓞 K)ˣ, u = 1 �
       exact mul_pos (hpos φ) hδ2
     nlinarith
   · have hβI : Ideal.span {β} ≠ 0 := by
-      rw [Ideal.zero_eq_bot, Ne, Ideal.span_singleton_eq_bot]
-      exact hβ0
+      rwa [Ideal.zero_eq_bot, Ne, Ideal.span_singleton_eq_bot]
     apply mul_right_cancel₀ hβI
     rw [mul_assoc, mul_comm (Ideal.span {δ}), ← mul_assoc, e₁, Ideal.span_singleton_mul_span_singleton,
       Ideal.span_singleton_mul_span_singleton, hmul]
@@ -645,8 +643,7 @@ theorem exists_field (D : D7) (ρ : Setup D.ntw) (hρ : ρ.Good) (i : D.ntw.Tw) 
   have hcop : (D.ntw.l i ^ a).Coprime N := Nat.Coprime.pow_left _ hNl.symm
   obtain ⟨q, hq, hq2, hqm⟩ : ∃ q, q.Prime ∧ q ≠ 2 ∧ q ∣ m'' := by
     obtain ⟨k, hk⟩ : ∃ k : Fin 2, D.host.g k ≠ D.ntw.l i := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact D.host.g_ne (by rw [h 0, h 1])
     refine ⟨D.host.g k, D.host.g_prime k, Formalism.L2.Pj.g_ne_two D k, ?_⟩
     have h1 : D.host.g k ∣ m := (show D.host.g k ∣ D.host.g 0 * D.host.g 1 by fin_cases k <;> simp).trans hm
@@ -736,8 +733,7 @@ theorem exists_field (D : D7) (ρ : Setup D.ntw) (hρ : ρ.Good) (i : D.ntw.Tw) 
     have hT : f₁.fieldRange ⊔ f₂.fieldRange ≤ T.comap j :=
       sup_le (by rintro _ ⟨y, rfl⟩; exact h1 y) (by rintro _ ⟨y, rfl⟩; exact h2 y)
     rw [hsup] at hT
-    intro x
-    exact hT (IntermediateField.mem_top (x := x))
+    exact fun x => hT (IntermediateField.mem_top (x := x))
 
   let A : IntermediateField ℚ ℂ := (embLL0 D).toRatAlgHom.fieldRange
   let B : IntermediateField ℚ ℂ := (j : H →+* ℂ).toRatAlgHom.fieldRange

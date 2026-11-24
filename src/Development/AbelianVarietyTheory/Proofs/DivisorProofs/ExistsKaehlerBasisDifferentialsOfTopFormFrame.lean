@@ -177,13 +177,11 @@ theorem exists_basis_of_isFrame : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) (
     have e : (algebraMap Γ(X, U) Γ(X, X.basicOpen t.1)).comp (algX p U) =
         algX p (X.basicOpen t.1) := resG_comp_algX p (X.basicOpen_le t.1)
     have h₂ : (algX p (X.basicOpen t.1)).IsStandardSmoothOfRelativeDimension m := by
-      rw [← resG_comp_algX p (X.basicOpen_le t.1)]
-      exact h₁
+      rwa [← resG_comp_algX p (X.basicOpen_le t.1)]
     have hfr := (hx.res (hU.basicOpen t.1) (X.basicOpen_le t.1)).gen
     rw [resForm_dOn] at hfr
     have := bijective_of_isFreeGen _ h₂ _ hfr
-    rw [e]
-    exact this
+    rwa [e]
   let eq := LinearEquiv.ofBijective _ hbij
   refine ⟨Module.Basis.ofEquivFun eq.symm, fun i => ?_⟩
   simp [eq, Module.Basis.coe_ofEquivFun, Fintype.linearCombination_apply, Pi.single_apply]

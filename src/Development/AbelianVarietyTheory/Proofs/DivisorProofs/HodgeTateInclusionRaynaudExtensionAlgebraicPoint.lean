@@ -308,8 +308,7 @@ theorem exists_limOf {A : Type} [CommRing A] [Algebra O A] [IsPrecomplete (Ideal
     obtain ⟨b, rfl⟩ := ha
     rw [map_mul, map_pow, map_natCast, pow_succ, hn, zero_mul, mul_zero]
   have := hmap _ _ θ' _ _ (hk n)
-  rw [← Category.assoc, ptMap_comp_ptMap, ← hk₀] at this
-  exact this
+  rwa [← Category.assoc, ptMap_comp_ptMap, ← hk₀] at this
 
 
 include hmap huniq hone hmul hex in
@@ -561,8 +560,7 @@ theorem smul_mem_htSpan {N : ℕ} {u : Fin N → PS O 1 d} (hu : ∀ k, IsCh (L.
       JetSer.constantCoeff_dof] at v1
     have e7 : l (dl (u k)) w = ∑ j, co w j * MvPowerSeries.coeff (Finsupp.single ((0 : Fin 1), j) 1) (u k) :=
       show ∑ j, dl (u k) j * co w j = ∑ j, co w j * dl (u k) j from Finset.sum_congr rfl fun j _ => mul_comm _ _
-    rw [e7]
-    exact v1
+    rwa [e7]
   obtain ⟨g, ⟨hg, hg'⟩, -⟩ := existsUnique_isAl χ
   have e : l (dl (u k)) = g := funext fun w => eq_of_forall (p := p) fun n => by
     rw [(isAl_iff χ _).1 hal w n _ (pow_quot n), (isAl_iff χ g).1 hg' w n _ (pow_quot n)]
@@ -631,7 +629,6 @@ theorem htChar_of_pointOver : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   obtain ⟨x', hx'⟩ := ChartCharacter.exists_isChartJ t.G x hx F hF
   obtain ⟨N, u, hu, hspan⟩ := ChF.hodgeTate_inclusion_chart p T'.V (fun h => hO.out (by simpa using h.map g)) t.G
     U.D U.A U.U.toUnifPre d F x' hx' C v O P.integers g hloc
-  intro a ha
-  exact smul_mem_htSpan P hπ' hx F hF hu (hspan a (by rwa [map_natCast]))
+  exact fun a ha => smul_mem_htSpan P hπ' hx F hF hu (hspan a (by rwa [map_natCast]))
 
 end GlobalTheory.CompHt

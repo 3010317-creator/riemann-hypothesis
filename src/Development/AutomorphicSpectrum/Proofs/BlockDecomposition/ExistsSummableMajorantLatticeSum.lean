@@ -89,8 +89,7 @@ theorem vecMul_vecMul_inv (x : Fin 2 → 𝔸[K]) (h : GL (Fin 2) 𝔸[K]) :
 theorem continuous_infRingHom : Continuous (infRingHom (K := K)) := by
   exact (GroundTheory.Global.homeomorphMixedSpace K).continuous.comp continuous_fst
 
-theorem continuous_finRingHom : Continuous (finRingHom (K := K)) := by
-  exact continuous_snd
+theorem continuous_finRingHom : Continuous (finRingHom (K := K)) := continuous_snd
 
 theorem continuous_inv_entry (i j : Fin 2) :
     Continuous fun h : GL (Fin 2) 𝔸[K] ↦
@@ -210,8 +209,7 @@ private lemma sum_prod_le {ι : Type*} [Fintype ι] [DecidableEq ι] {α : Type*
   have hsub : s ⊆ Fintype.piFinset t := by
     intro ξ hξ
     rw [Fintype.mem_piFinset]
-    intro i
-    exact Finset.mem_image.2 ⟨ξ, hξ, rfl⟩
+    exact fun i => Finset.mem_image.2 ⟨ξ, hξ, rfl⟩
   have h1 : ∑ ξ ∈ s, ∏ i, g (ξ i) ≤ ∑ ξ ∈ Fintype.piFinset t, ∏ i, g (ξ i) :=
     Finset.sum_le_sum_of_subset_of_nonneg hsub
       fun ξ _ _ => Finset.prod_nonneg fun i _ => hg (ξ i)
@@ -219,10 +217,8 @@ private lemma sum_prod_le {ι : Type*} [Fintype ι] [DecidableEq ι] {α : Type*
     Finset.prod_univ_sum t fun _ x => g x
   have h3 : ∏ i, ∑ x ∈ t i, g x ≤ ∏ _i : ι, ∑' x, g x := by
     apply Finset.prod_le_prod₀
-    · intro i _
-      exact Finset.sum_nonneg fun x _ => hg x
-    · intro i _
-      exact hs.sum_le_tsum (t i) fun x _ => hg x
+    · exact fun i _ => Finset.sum_nonneg fun x _ => hg x
+    · exact fun i _ => hs.sum_le_tsum (t i) fun x _ => hg x
   exact h1.trans (h2.symm.le.trans h3)
 
 theorem UpperTheory.Reformulated.B.Qo1.summable_prod_coord.{u_2, u_3} :
@@ -341,8 +337,7 @@ theorem exists_fractionalIdeal_of_isCompact (I : (FractionalIdeal (𝓞 K)⁰ K)
   have h1 := hd _ hmem
   rw [← map_mul] at h1
   have h2 : dK * ξ i ∈ ((1 : (FractionalIdeal (𝓞 K)⁰ K)ˣ) : FractionalIdeal (𝓞 K)⁰ K) := by
-    rw [← algebraMap_mem_idealFiniteAdeles_iff, ← SetLike.mem_coe, idealFiniteAdeles_one]
-    exact h1
+    rwa [← algebraMap_mem_idealFiniteAdeles_iff, ← SetLike.mem_coe, idealFiniteAdeles_one]
   rw [Units.val_one] at h2
   obtain ⟨r, hr⟩ := (FractionalIdeal.mem_one_iff _).mp h2
   refine (FractionalIdeal.mem_spanSingleton _).mpr ⟨r, ?_⟩
@@ -384,11 +379,11 @@ theorem exists_summable_bound_tensor_cosetIndicator (φ : 𝓢(ι → mixedSpace
   simp only [schwartzBruhatTensorPi, finiteTensor]
   by_cases hm : ∀ i, finPartPi Y i - b i ∈ idealFiniteAdeles I
   · have h1 : ∏ i, cosetIndicator I (b i) (finPartPi Y i) = 1 :=
-      Finset.prod_eq_one fun i _ ↦ by rw [cosetIndicator_apply, if_pos (hm i)]
+      Finset.prod_eq_one fun i _ ↦ by rw [cosetIndicator_apply, ite_eq_left (hm i)]
     rw [h1, mul_one]
     have hξJ := hJ h hh ξ hm
     have hw : ∀ i, latticeWeight J k (ξ i) = ((1 + ‖mixedEmbedding K (ξ i)‖) ^ k)⁻¹ :=
-      fun i ↦ if_pos (hξJ i)
+      fun i ↦ ite_eq_left (hξJ i)
     simp only [hw]
     set y := infPartPi Y
     have hy : embPi K ξ =
@@ -419,12 +414,11 @@ theorem exists_summable_bound_tensor_cosetIndicator (φ : 𝓢(ι → mixedSpace
       _ ≤ A * B' ^ (k * n) * ∏ i, ((1 + ‖mixedEmbedding K (ξ i)‖) ^ k)⁻¹ := by
           refine mul_le_mul_of_nonneg_left ?_ (by positivity)
           exact Finset.prod_le_prod₀ (fun _ _ ↦ by positivity) fun i _ ↦ hinv i
-  · push_neg at hm
+  · push Not at hm
     obtain ⟨i, hi⟩ := hm
     have hz : ∏ i, cosetIndicator I (b i) (finPartPi Y i) = 0 :=
-      Finset.prod_eq_zero (Finset.mem_univ i) (by rw [cosetIndicator_apply, if_neg hi])
-    rw [hz, mul_zero, norm_zero]
-    exact hu0
+      Finset.prod_eq_zero (Finset.mem_univ i) (by rw [cosetIndicator_apply, ite_eq_right hi])
+    rwa [hz, mul_zero, norm_zero]
 
 theorem exists_summable_bound_mulVec {F : (ι → 𝔸[K]) → ℂ} (hF : F ∈ schwartzBruhatPi (K := K) (ι := ι))
     {C : Set (GL ι 𝔸[K])} (hC : IsCompact C) :

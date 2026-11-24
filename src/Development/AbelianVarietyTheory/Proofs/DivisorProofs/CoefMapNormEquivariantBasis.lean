@@ -150,8 +150,7 @@ theorem linearIndependent (hE : ∀ v, c' (up φ lam v) = c₀ v)
 
     simp only [map_sum, map_smulₛₗ, hE, Function.comp_apply, Fintype.linearCombination_apply]
     rfl
-  rw [e]
-  exact h3
+  rwa [e]
 
 theorem pairVr_extremal {E : Type} [Field E] [NumberField E] [NumberField K] [StarRing K] (emb : I → E →+* K)
     (v : VV K lam) (hv : (v : Pol K I n) = ten fun τ => extremal K n (lam τ)) : pairVr emb lam 1 v v = 1 := by
@@ -192,8 +191,7 @@ theorem coefMap_norm_equivariant_basis : ∀ (D : D7) (G : Type) [Group G] [Fint
   have hE : ∀ v, O.c0' (CoefExt.up O.jL (lamV D i) v) = c0L i v := by
     intro v
     obtain ⟨w, hw, h⟩ := hc v
-    rw [show CoefExt.up O.jL (lamV D i) v = w from Subtype.ext hw.symm]
-    exact h
+    rwa [show CoefExt.up O.jL (lamV D i) v = w from Subtype.ext hw.symm]
   obtain ⟨h1, h2, h3⟩ := hT.mapL i
   refine ⟨?_, ?_, CoefExt.span_top (W := (R.cV i).W) hE h3,
     fun m b hb => CoefExt.linearIndependent (W := (R.cV i).W) hE h2 b hb⟩
@@ -220,8 +218,7 @@ theorem coefMap_norm_equivariant_basis : ∀ (D : D7) (G : Type) [Group G] [Fint
     have hi' : inner ℂ (c0L i v : (R.cV i).W) (c0L i v : (R.cV i).W) = 1 := hi
     rw [inner_self_eq_norm_sq_to_K] at hi'
     have h4 : ‖(c0L i v : (R.cV i).W)‖ ^ 2 = 1 := by
-      have h5 := congrArg norm hi'
-      simpa using h5
+      simpa using congrArg norm hi'
     exact (pow_eq_one_iff_of_nonneg (norm_nonneg _) two_ne_zero).1 h4
   · intro γ γE hγ v
     have hu : IsUnit (γE.val).det := (Matrix.isUnit_iff_isUnit_det γE.val).1 γE.isUnit

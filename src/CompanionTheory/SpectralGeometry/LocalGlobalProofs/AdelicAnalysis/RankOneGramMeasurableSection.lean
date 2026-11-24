@@ -31,8 +31,7 @@ def reflM (τ : A →+* A) (J : Matrix n n A) (a : A) (d : n → A) : Matrix n n
 
 theorem rowOf_dot (τ : A →+* A) (J : Matrix n n A) (x y : n → A) :
     rowOf τ J x ⬝ᵥ y = hform τ J x y := by
-  simp only [rowOf, hform, dotProduct, Matrix.vecMul, Finset.sum_mul]
-  exact Finset.sum_comm
+  simpa only [rowOf, hform, dotProduct, Matrix.vecMul, Finset.sum_mul] using Finset.sum_comm
 
 theorem hform_sub_left (τ : A →+* A) (J : Matrix n n A) (x y z : n → A) :
     hform τ J (x - y) z = hform τ J x z - hform τ J y z := by
@@ -133,8 +132,7 @@ def selT {W G : Type*} (g₁ : G) (Z : Set W) (V : ℕ → Set W) (f : ℕ → W
 theorem selT_of_mem {W G : Type*} (g₁ : G) (Z : Set W) (V : ℕ → Set W) (f : ℕ → W → G) (k : ℕ) {y : W}
     (h : y ∈ V k ∩ Z) : selT g₁ Z V f (k + 1) y = f k y := by
   classical
-  simp only [selT]
-  exact Set.piecewise_eq_of_mem _ _ _ h
+  simpa only [selT] using Set.piecewise_eq_of_mem _ _ _ h
 
 theorem exists_section {W G : Type*} [TopologicalSpace W] [LocallyCompactSpace W]
     [SecondCountableTopology W] [T2Space W] [MeasurableSpace W] [BorelSpace W]
@@ -211,8 +209,7 @@ theorem exists_section {W G : Type*} [TopologicalSpace W] [LocallyCompactSpace W
   refine ⟨fun y => t (Nat.find (hex y)) y, Measurable.find ht hp hex, ?_, ?_⟩
   · intro y hy
     obtain ⟨k, -, hyk, h⟩ := hval y hy
-    simp only [h]
-    exact hfP _ y (hVL k ⟨hyk, hy⟩)
+    simpa only [h] using hfP _ y (hVL k ⟨hyk, hy⟩)
   · intro C hC
     have hCZ : IsCompact (C ∩ Z) := hC.inter_right hZ
     obtain ⟨S, hS⟩ := hCZ.elim_finite_subcover V hVo (fun y hy => by
@@ -328,8 +325,7 @@ theorem orbit_section : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     simp [sigR, inclR, JR, Matrix.map_apply, hJ.1 i j]
   have hdet : IsUnit (hform (sigR R σ) (JR R J) (x 0) (x 0)) := by
     have := hx
-    rw [Matrix.det_fin_one] at this
-    exact this
+    rwa [Matrix.det_fin_one] at this
   obtain ⟨s, hs, hsP, hsC⟩ := exists_section (1 : HA R σ J)
     {y : Fin 1 → Fin M → R ⊗[F] E | gramR R σ J y = gramR R σ J x} hZ
     (fun g y => actW R σ J g x = y) (by
@@ -364,9 +360,9 @@ theorem orbit_section : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
         refine (hg.mul (continuous_const (y := h₀))).congr fun y => ?_
         show g y * h₀ = (if hy : y.1 ∈ (fun y : Fin 1 → Fin M → R ⊗[F] E => y 0) ⁻¹' U ∩
           {y : Fin 1 → Fin M → R ⊗[F] E | gramR R σ J y = gramR R σ J x} then g ⟨y.1, hy⟩ * h₀ else 1)
-        rw [dif_pos y.2]
+        rw [dite_eq_left y.2]
       · intro y hy
-        simp only [dif_pos hy]
+        simp only [dite_eq_left hy]
         rw [(hact 1).2.2.1, hh₀]
         funext a
         rw [Fin.fin_one_eq_zero a]

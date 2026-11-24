@@ -159,8 +159,7 @@ theorem ringAction_descends_along_surjection
   obtain ⟨F, hF⟩ : ∃ F : O → Module.End ℂ (Fin g' → ℂ), ∀ a z, F a (q z) = q (B a z) := by
     refine ⟨fun a => q ∘ₗ (B a ∘ₗ s), fun a z => ?_⟩
     have h0 : q (B a (s (q z) - z)) = 0 := hk a _ (by rw [map_sub, hqs, sub_self])
-    rw [map_sub, map_sub, sub_eq_zero] at h0
-    exact h0
+    rwa [map_sub, map_sub, sub_eq_zero] at h0
   have hext : ∀ L M : Module.End ℂ (Fin g' → ℂ), (∀ z, L (q z) = M (q z)) → L = M := by
     intro L M h
     refine LinearMap.ext fun w => ?_
@@ -169,11 +168,9 @@ theorem ringAction_descends_along_surjection
   refine ⟨{ toFun := F, map_one' := ?_, map_mul' := ?_, map_zero' := ?_, map_add' := ?_ },
     fun a z => hF a z⟩
   · exact hext _ _ fun z => by simp [hF]
-  · intro a b
-    exact hext _ _ fun z => by simp [hF]
+  · exact fun a b => hext _ _ fun z => by simp [hF]
   · exact hext _ _ fun z => by simp [hF]
-  · intro a b
-    exact hext _ _ fun z => by simp [hF]
+  · exact fun a b => hext _ _ fun z => by simp [hF]
 
 end GlobalTheory.CompanionTheory.Ar.QuotUniv
 end -- clump:auto
@@ -393,8 +390,7 @@ theorem linearIndependent_complex_of_real_form :
     rw [hx, hy0, smul_zero, neg_zero]
   intro i
   have h1 := hu (fun i => (c i).re) hx0 i
-  have h2 := hu (fun i => (c i).im) hy0 i
-  exact Complex.ext (by simpa using h1) (by simpa using h2)
+  exact Complex.ext (by simpa using h1) (by simpa using (hu (fun i => (c i).im) hy0 i))
 
 end GlobalTheory.CompanionTheory.Ar.RealFormIndep
 end -- clump:auto
@@ -479,18 +475,17 @@ theorem mem_span_part_of_period_real_comb :
     simp only [d, Finset.sum_smul, ite_smul, zero_smul]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun i _ => ?_
-    rw [Finset.sum_ite_eq, if_pos (Finset.mem_univ _), Complex.coe_smul]
+    rw [Finset.sum_ite_eq, ite_eq_left (Finset.mem_univ _), Complex.coe_smul]
   have hcoef : ∀ j, ((b.repr x j : ℤ) : ℝ) = d j := by
     have h0 : ∑ j, (((b.repr x j : ℤ) : ℝ) - d j) • P (b j) = 0 := by
       simp only [sub_smul, Finset.sum_sub_distrib]
       rw [← hPx, ← hPd, sub_self]
-    intro j
-    exact sub_eq_zero.mp (Fintype.linearIndependent_iff.mp hli _ h0 j)
+    exact fun j => sub_eq_zero.mp (Fintype.linearIndependent_iff.mp hli _ h0 j)
   have hzero : ∀ j, j ∉ Set.range f → b.repr x j = 0 := by
     intro j hj
     have hd : d j = 0 := by
       refine Finset.sum_eq_zero fun i _ => ?_
-      rw [if_neg]
+      rw [ite_eq_right]
       exact fun h => hj ⟨i, h⟩
     have := hcoef j
     rw [hd] at this
@@ -588,8 +583,7 @@ theorem exists_retraction {R M : Type} [CommRing R] [IsDomain R] [IsPrincipalIde
   · intro x hx
     have h2 := congrArg Subtype.val (e.sum_repr ⟨x, hx⟩)
     simp only [Submodule.coe_sum, Submodule.coe_smul] at h2
-    simp only [LinearMap.comp_apply, hp x hx, Module.Basis.coord_apply]
-    exact h2.symm
+    simpa only [LinearMap.comp_apply, hp x hx, Module.Basis.coord_apply] using h2.symm
   · intro a b
     simp only [LinearMap.comp_apply, hp _ (e b).2, Subtype.coe_eta, Module.Basis.coord_apply,
       Module.Basis.repr_self, Finsupp.single_apply]
@@ -599,8 +593,7 @@ theorem rank_exact {R A B C : Type} [CommRing R] [IsDomain R] [AddCommGroup A] [
     (hf : Function.Injective f) (hh : Function.Surjective h) (he : LinearMap.range f = LinearMap.ker h) :
     Module.finrank R C + Module.finrank R A = Module.finrank R B := by
   have h1 := Submodule.finrank_quotient_add_finrank (LinearMap.ker h)
-  rw [(h.quotKerEquivOfSurjective hh).finrank_eq, ← he, LinearMap.finrank_range_of_inj hf] at h1
-  exact h1
+  rwa [(h.quotKerEquivOfSurjective hh).finrank_eq, ← he, LinearMap.finrank_range_of_inj hf] at h1
 
 variable {O Λ : Type} [CommRing O] [AddCommGroup Λ] [Module O Λ] [Module.Free ℤ Λ] [Module.Finite ℤ Λ]
   {form : Λ →ₗ[ℤ] Λ →ₗ[ℤ] ℤ} {I : Submodule O Λ}
@@ -1018,8 +1011,7 @@ theorem isotropic_quotient_lattice : ∀ (E : Type) [Field E] [NumberField E] [I
     have h1 : u' = 0 := im_part_zero R hI hu hu' (by
       rw [← h, map_sub, imB_span R (fun v hv => by rw [imB_P, hx v hv, Int.cast_zero]) hu', imB_apply,
         horth _ (hSW _ hu'), Complex.zero_im, sub_zero])
-    rw [h, h1, smul_zero, add_zero]
-    exact hu
+    rwa [h, h1, smul_zero, add_zero]
   have horth' : ∀ w ∈ Submodule.span ℂ (R.P '' I), ∀ z, R.ip (j z) w = 0 := fun w hw z => by
     rw [← ip_conj, horth w hw, map_zero]
   have him : ∀ x y, (∀ v ∈ I, R.form x v = 0) → (∀ v ∈ I, R.form y v = 0) →
@@ -1151,8 +1143,7 @@ theorem riemLat_assemble_of_quot : ∀ (E : Type) [Field E] [NumberField E] [IsC
   refine ⟨⟨R₁.1, R₁.2, R₁.3, R₁.form, R₁.5, R₁.6, R₁.7, P', Hm', hHm, hpos, ?_, B', ?_⟩, rfl, rfl, hP'⟩
   · intro x' y'
     have h := hform _ (hsD x') _ (hsD y')
-    rw [hs, hs] at h
-    exact h
+    rwa [hs, hs] at h
   · intro a x'
     have hax : a • s x' ∈ D := (hsmul a _ (hsD x')).1
     have h1 : π (a • s x') = a • x' := by rw [(hsmul a _ (hsD x')).2, hs]
@@ -1315,8 +1306,7 @@ theorem exists_univ_quot : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   let π : Λ → Λ' := fun x => if h : x ∈ D then (hex x h).choose else 0
   have hπ : ∀ x ∈ D, R₀'.P (π x) = q₀ (R₀.P x) := by
     intro x h
-    simp only [π, dif_pos h]
-    exact (hex x h).choose_spec
+    simpa only [π, dite_eq_left h] using (hex x h).choose_spec
   have hinj : Function.Injective R₀'.P := (_root_.GlobalTheory.CompanionTheory.Relay.riemann_lattice_eigen_projection E g' Λ' Unit R₀').1
   have hπs : ∀ x', ∃ x ∈ D, π x = x' := by
     intro x'
@@ -1377,8 +1367,7 @@ theorem exists_univ_quot : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       | smul c w _ h =>
         rw [map_smul]
         exact Submodule.smul_mem _ c h
-    rw [← hqk] at this
-    exact this
+    rwa [← hqk] at this
   have hker : ∀ x ∈ D, π x = 0 → q (R.P x) = 0 := by
     intro x hx h0
     have : R.P x ∈ LinearMap.ker q := by

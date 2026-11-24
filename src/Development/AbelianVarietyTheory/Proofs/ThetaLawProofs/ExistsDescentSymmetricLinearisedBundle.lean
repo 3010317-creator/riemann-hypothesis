@@ -71,8 +71,7 @@ theorem exists_descent_compat_of_invGen [Flat π] [Surjective π] [QuasiCompact 
   have hmem : ∀ (U : Y.Opens) c {Z : Scheme.{0}} (r : Z ⟶ X) (z : Z), r z ∈ π ⁻¹ᵁ U →
       (r ≫ t c) z ∈ π ⁻¹ᵁ U := fun U c Z r z hz => by
     change ((r ≫ t c) ≫ π) z ∈ U
-    rw [Category.assoc, hπ]
-    exact hz
+    rwa [Category.assoc, hπ]
   have H : ∀ y y', ∃ g : Γ(Y, V y ⊓ V y')ˣ, ∀ (Z : Scheme.{0}) (r : Z ⟶ X) (z : Z) i,
       r z ∈ π ⁻¹ᵁ V y → r z ∈ π ⁻¹ᵁ V y' → r z ∈ L.U i →
       gm (r ≫ π) z _ g = gm r z _ (e y' i) * (gm r z _ (e y i))⁻¹ := fun y y' => by
@@ -294,8 +293,7 @@ theorem descend_iso [Flat π] [Surjective π] [QuasiCompact π] (hL : L.IsLB)
       have e : (r ≫ t c) ≫ ν = (r ≫ ν) ≫ t (σ c) := by rw [Category.assoc, Category.assoc, hσ]
       have hz' : (r ≫ t c) z ∈ π ⁻¹ᵁ V := by
         change π (t c (r z)) ∈ V
-        rw [hπ₂]
-        exact hz
+        rwa [hπ₂]
       have m₁ : r z ∈ O (J r, J (r ≫ ν)) := ⟨hz, mem_twist.2 ⟨hJ r, hJ (r ≫ ν)⟩⟩
       have m₂ : (r ≫ t c) z ∈ O (J (r ≫ t c), J ((r ≫ t c) ≫ ν)) :=
         ⟨hz', mem_twist.2 ⟨hJ (r ≫ t c), hJ ((r ≫ t c) ≫ ν)⟩⟩
@@ -373,7 +371,6 @@ theorem exists_descent_symmetric :
       ← hinv (𝟙 A), Category.id_comp]
   · let x : Over.mk (r ≫ A.hom) ⟶ A := Over.homMk r rfl
     have := huj c _ x z J hJ
-    rw [← comp_transl x (i c), ← hinv x] at this
-    exact this
+    rwa [← comp_transl x (i c), ← hinv x] at this
 
 end GlobalTheory.LinDescent

@@ -194,8 +194,8 @@ theorem admissible_degree_twistFamilyAtPlaceByScalar (k F : Type) [Field k] [Fie
     intro v
     by_cases hv : v = v₀
     · subst hv
-      rw [twistAt_self, Matrix.det_smul, Fintype.card_fin, if_pos rfl]
-    · rw [twistAt_of_ne _ _ _ _ hv, if_neg hv, one_mul]
+      rw [twistAt_self, Matrix.det_smul, Fintype.card_fin, ite_eq_left rfl]
+    · rw [twistAt_of_ne _ _ _ _ hv, ite_eq_right hv, one_mul]
   have hord : ∀ v, ord v (twistAt v₀ (π ^ (-e)) h v).det =
       ord v (h v).det - if v = v₀ then (n : ℤ) * e else 0 := by
     intro v
@@ -212,14 +212,12 @@ theorem admissible_degree_twistFamilyAtPlaceByScalar (k F : Type) [Field k] [Fie
     · exact Or.inr hv'
     · exact Or.inl (show ¬ Unimod v (h v) from fun hu => hv (by rw [twistAt_of_ne _ _ _ _ hv']; exact hu))
   · have hfin : (Function.support fun v => ord v (h v).det).Finite := by
-      refine hh.2.subset fun v hv => ?_
-      intro hu
-      exact hv (by simp [ord, hu.2])
+      exact hh.2.subset fun v hv => fun hu => hv (by simp [ord, hu.2])
     have hfin' : (Function.support fun v : Place k F => if v = v₀ then (n : ℤ) * e else 0).Finite :=
       (Set.finite_singleton v₀).subset fun v hv => by
         by_contra h'
-        exact hv (if_neg h')
-    rw [deg, deg, finsum_congr hord, finsum_sub_distrib hfin hfin', finsum_eq_single _ v₀ fun v hv => if_neg hv, if_pos rfl]
+        exact hv (ite_eq_right h')
+    rw [deg, deg, finsum_congr hord, finsum_sub_distrib hfin hfin', finsum_eq_single _ v₀ fun v hv => ite_eq_right hv, ite_eq_left rfl]
 
 end GlobalTheory.Nef
 end -- clump:auto
@@ -283,7 +281,7 @@ theorem binary_form_splits : ∀ (F : Type) [Field F] (m : ℕ) (p : Fin (m + 1)
     rw [Finset.sum_eq_single i]
     · simp
     · intro j _ hj
-      rw [if_neg]
+      rw [ite_eq_right]
       exact fun h => hj (Fin.ext h.symm)
     · simp
   have hq0 : q ≠ 0 := by
@@ -291,8 +289,7 @@ theorem binary_form_splits : ∀ (F : Type) [Field F] (m : ℕ) (p : Fin (m + 1)
   have hdeg : q.natDegree ≤ m := by
     rw [hq_def]
     refine Polynomial.natDegree_sum_le_of_forall_le _ _ ?_
-    intro i _
-    exact (Polynomial.natDegree_C_mul_X_pow_le _ _).trans (Nat.lt_succ_iff.mp i.2)
+    exact fun i _ => (Polynomial.natDegree_C_mul_X_pow_le _ _).trans (Nat.lt_succ_iff.mp i.2)
   let E := q.SplittingField
   set Q : E[X] := q.map (algebraMap F E) with hQ_def
   have hsplit : Q.Splits := Polynomial.SplittingField.splits q
@@ -706,8 +703,7 @@ theorem val_aeval_le (t : F) (p : k[X]) (v : Place k F) :
 theorem val_le_of_monic (t y : F) (P : F[X]) (hP : P.Monic) (hy : P.eval y = 0) (c : ℕ)
     (v : Place k F) (hc : ∀ i < P.natDegree, v.1 (P.coeff i) ≤ Mx t v ^ c) :
     v.1 y ≤ Mx t v ^ c := by
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have hM : 1 ≤ Mx t v ^ c := one_le_pow₀ (one_le_Mx t v)
   have hy1 : 1 < v.1 y := lt_of_le_of_lt hM hlt
   have hy0 : v.1 y ≠ 0 := ne_of_gt (lt_trans zero_lt_one hy1)
@@ -831,8 +827,7 @@ theorem exists_many_bounded_by_pow : ∀ (k F : Type) [Field k] [IsAlgClosed k] 
     have heq : (fun n : ℕ => t ^ n) = (aeval t).toLinearMap ∘ Polynomial.basisMonomials k := by
       funext n
       simp [Polynomial.coe_basisMonomials]
-    rw [heq]
-    exact h1
+    rwa [heq]
   have hpow : LinearIndependent k (fun i : Fin L => (IntermediateField.AdjoinSimple.gen k t) ^ (i : ℕ)) := by
     have heq : (IsScalarTower.toAlgHom k k⟮t⟯ F).toLinearMap ∘
         (fun i : Fin L => (IntermediateField.AdjoinSimple.gen k t) ^ (i : ℕ)) =
@@ -966,7 +961,7 @@ theorem riemann_cofinal : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k
     fun v => (_root_.GlobalTheory.Nef.place_isDVR_residue k F hFF v).2 t
   obtain ⟨r, hr⟩ : ∃ r : Place k F → k, ∀ v : Place k F, v.1 t ≤ 1 → v.1 (t - algebraMap k F (r v)) < 1 :=
     ⟨fun v => if h : v.1 t ≤ 1 then (hres v h).choose else 0, fun v h => by
-      simp only [dif_pos h]; exact (hres v h).choose_spec⟩
+      simp only [dite_eq_left h]; exact (hres v h).choose_spec⟩
   have hlin0 : ∀ a : k, t - algebraMap k F a ≠ 0 := fun a h =>
     ht (sub_eq_zero.1 h ▸ isAlgebraic_algebraMap a)
   obtain ⟨M, hM⟩ : ∃ M : ℕ, M = ∑ v ∈ D.support, (D v).natAbs := ⟨_, rfl⟩
@@ -995,8 +990,7 @@ theorem riemann_cofinal : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k
     by_contra hw'
     exact hw (hPint w (by by_contra h'; exact hw' ((hpole w).1 h')))
   have hhsupp : Function.support (fun v : Place k F => ord v h) ⊆ {v : Place k F | v.1 h ≠ 1} := by
-    intro v hv hv1
-    exact hv (show ord v h = 0 by simp [ord, hv1])
+    exact fun v hv hv1 => hv (show ord v h = 0 by simp [ord, hv1])
   obtain ⟨g, hg⟩ : ∃ g : Place k F → ℤ, g = fun v => ((2 * M : ℕ) : ℤ) * P v + ord v h := ⟨_, rfl⟩
   have hgfin : (Function.support g).Finite := by
     refine (hPfin.union hhfin).subset fun v hv => ?_
@@ -1057,8 +1051,7 @@ theorem riemann_cofinal : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k
       (LinearMap.ker_eq_bot.2 (mul_left_injective₀ (inv_ne_zero hh0)))
   ·
     have hsub : Function.support g ⊆ ↑(Finsupp.ofSupportFinite g hgfin).support := by
-      intro v hv
-      exact Finsupp.mem_support_iff.2 hv
+      exact fun v hv => Finsupp.mem_support_iff.2 hv
     have hdeg : ((Finsupp.ofSupportFinite g hgfin).sum fun _ m => m) =
         ((2 * M : ℕ) : ℤ) * Module.finrank k⟮t⟯ F := by
       have h1 : ((Finsupp.ofSupportFinite g hgfin).sum fun _ m => m) = ∑ᶠ v, g v := by
@@ -1162,7 +1155,7 @@ theorem exists_section_of_large_deg : ∀ (k F : Type) [Field k] [IsAlgClosed k]
   set B := hg.2.toFinset with hBdef
   choose d0 hd0 using fun v => exists_exp_bound v (g v)⁻¹
   let D : Place k F →₀ ℤ := Finsupp.onFinset B (fun v => if v ∈ B then (d0 v : ℤ) else 0)
-    (by intro v hv; by_contra h; exact hv (if_neg h))
+    (by intro v hv; by_contra h; exact hv (ite_eq_right h))
   obtain ⟨D', hDD', m, f, hf, hm, hford⟩ := hγ D
   have hD0 : ∀ v, 0 ≤ D' v := fun v => le_trans
     (by simp only [D, Finsupp.onFinset_apply]; split_ifs <;> omega) (hDD' v)
@@ -1598,8 +1591,7 @@ theorem GlobalTheory.Nef.deg_le_two_mul_of_triangular : ∀ (k F : Type) [Field 
     push_cast at hreal
     have hm1 : (0 : ℝ) ≤ (m : ℝ) + 1 := by positivity
     nlinarith
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have hpos : (0 : ℝ) < (deg g : ℝ) - 2 * b := by linarith
   obtain ⟨m, hm⟩ := exists_nat_gt (2 * (1 + γ) / ((deg g : ℝ) - 2 * b))
   have hk := key m
@@ -1640,8 +1632,7 @@ theorem val_corner {r : ℕ} (v : Place k K) (M : Matrix (Fin (r + 1)) (Fin (r +
     (hM : ∀ i : Fin r, M i.succ 0 = 0) (h1 : Unimod v M)
     (h2 : Unimod v (M.submatrix Fin.succ Fin.succ)) : v.1 (M 0 0) = 1 := by
   have h := h1.2
-  rw [det_fac M hM, map_mul, h2.2, mul_one] at h
-  exact h
+  rwa [det_fac M hM, map_mul, h2.2, mul_one] at h
 
 theorem nrm_cons {n : ℕ} (v : Place k K) (x : K) (y : Fin n → K) :
     nrm v (Fin.cons x y : Fin (n + 1) → K) = max (v.1 x) (nrm v y) := by
@@ -1733,7 +1724,7 @@ theorem quot_line_le : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k] [
       apply hw
       have h00 : w 0 = 0 := by simpa [hw'def] using congr_fun h0 0
       obtain ⟨j, hj⟩ : ∃ j, m j ≠ 0 := by
-        by_contra hc; push_neg at hc; exact hm (funext hc)
+        by_contra hc; push Not at hc; exact hm (funext hc)
       have h1 : w 1 * algebraMap E E' (m j) = 0 := by simpa [hw'def] using congr_fun h0 j.succ
       have h11 : w 1 = 0 := by
         rcases mul_eq_zero.1 h1 with h | h

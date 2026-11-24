@@ -427,23 +427,19 @@ theorem mem_sup_of_dual_inf {V : Type} [AddCommGroup V] [Module ℚ V] [FiniteDi
     · rintro ⟨k, rfl⟩
       exact ⟨k, by simp⟩
   have g₁ : N₁.FG := by
-    rw [Submodule.fg_iff_addSubgroup_fg, hN₁, AddSubgroup.toIntSubmodule_toAddSubgroup]
-    exact f₁
+    rwa [Submodule.fg_iff_addSubgroup_fg, hN₁, AddSubgroup.toIntSubmodule_toAddSubgroup]
   have g₂ : N₂.FG := by
-    rw [Submodule.fg_iff_addSubgroup_fg, hN₂, AddSubgroup.toIntSubmodule_toAddSubgroup]
-    exact f₂
+    rwa [Submodule.fg_iff_addSubgroup_fg, hN₂, AddSubgroup.toIntSubmodule_toAddSubgroup]
   have sd₁ : B.dualSubmodule N₁ = N₁ := by
     ext y
     rw [LinearMap.BilinForm.mem_dualSubmodule]
     change (∀ y' ∈ A₁, B y y' ∈ (1 : Submodule ℤ ℚ)) ↔ y ∈ A₁
-    simp only [hmem1]
-    exact (h₁ y).symm
+    simpa only [hmem1] using (h₁ y).symm
   have sd₂ : B.dualSubmodule N₂ = N₂ := by
     ext y
     rw [LinearMap.BilinForm.mem_dualSubmodule]
     change (∀ y' ∈ A₂, B y y' ∈ (1 : Submodule ℤ ℚ)) ↔ y ∈ A₂
-    simp only [hmem1]
-    exact (h₂ y).symm
+    simpa only [hmem1] using (h₂ y).symm
 
   have hsepL : ∀ m : V, (∀ n, B m n = 0) → m = 0 := by
     intro m hm
@@ -451,8 +447,7 @@ theorem mem_sup_of_dual_inf {V : Type} [AddCommGroup V] [Module ℚ V] [FiniteDi
     intro q
     change q • m ∈ A₁
     rw [h₁]
-    intro y' _
-    exact ⟨0, by simp [hm]⟩
+    exact fun y' _ => ⟨0, by simp [hm]⟩
   have hnd : B.Nondegenerate := by
     refine ⟨hsepL, fun n hn => hsepL n fun m => ?_⟩
     rw [hB, hn m, neg_zero]
@@ -770,7 +765,7 @@ theorem eq_of_law (w : E) {L₁ L₂ : Lt E r} {β : Matrix (Fin r) (Fin r) E} (
     ψ x = if x ∈ tens Λ (L₁ ⊔ L₂) then
       ψ 0 * cexp (π * I * ((Algebra.trace ℚ E (x * β * ccT x).trace : ℚ) : ℂ)) else 0 := by
   by_cases hx : x ∈ tens Λ (L₁ ⊔ L₂)
-  · rw [if_pos hx]
+  · rw [ite_eq_left hx]
     obtain ⟨y₁, hy₁, y₂, hy₂, e1, e2⟩ := exists_lift hβ Λ hx
     have e2' : (1 / 2 : E) • ((y₁ + y₂) * skew X) = (y₁ - y₂) * β := by rw [e1]; exact e2
     have hrow : ∀ k, (1 / 2 : E) • ((y₁ k + y₂ k) ᵥ* skew X) = (y₁ k - y₂ k) ᵥ* β := by
@@ -792,9 +787,8 @@ theorem eq_of_law (w : E) {L₁ L₂ : Lt E r} {β : Matrix (Fin r) (Fin r) E} (
     have key := congrFun (hψ y₁ hy₁ y₂ hy₂) x
     rw [e2, e1, heps, GlobalTheory.SW.TensVac.epsW_mul_conj, one_smul] at key
     simp only [GlobalTheory.SW.heisH, sub_self] at key
-    rw [htr] at key
-    exact key
-  · rw [if_neg hx]
+    rwa [htr] at key
+  · rw [ite_eq_right hx]
     by_contra hψx
     apply hx
     have hB : ∀ a b, rowForm X n a b = -rowForm X n b a := by
@@ -928,8 +922,7 @@ theorem ip_dbl (hs : IsSympl X bas) (hn : Even n) {b : ℂ}
         _root_.GlobalTheory.SW.DblZero.ip_smul (sbD φ₁ v h₁ hv) (sbD ψ₁ u k₁ hu), _root_.GlobalTheory.SW.DblZero.ip_smul hu hv,
         Complex.conj_conj]
       ring
-    · intro u hu
-      exact step1 u φ₁ ψ₁ hu h₁ k₁
+    · exact fun u hu => step1 u φ₁ ψ₁ hu h₁ k₁
   exact sub_eq_zero.mp key
 
 end Main

@@ -76,8 +76,7 @@ private theorem charpoly_flag' {H k : Type} [Group H] [CommRing k] {n : ℕ} (r 
   rw [← hc, ← e, Matrix.charpoly_of_isUpperTriangular]
   · refine Finset.prod_congr rfl fun i _ => ?_
     rw [(hg s).2 i]
-  · intro i j hij
-    exact (hg s).1 i j hij
+  · exact fun i j hij => (hg s).1 i j hij
 
 theorem UpperTheory.V.Fr.o1 :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] {F : Frame l (ResidueField O)} {C₀ : ℕ} {n : ℕ}, F.Ok C₀ → (n = 2 ∨ n = 3) → ∀ S : Space O F n, ∀ v g, (S.u.r (F.loc0 v g)).charpoly = ∏ i, (Polynomial.X - Polynomial.C (S.u.ψ v i g : S.A)) := by

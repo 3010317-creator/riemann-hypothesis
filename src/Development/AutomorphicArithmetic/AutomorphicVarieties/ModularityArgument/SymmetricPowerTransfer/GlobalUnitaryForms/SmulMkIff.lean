@@ -167,8 +167,7 @@ private theorem gq_mass {H T Y : Type} [Group H] [CommGroup T] [MulAction T Y] [
   set R := φ.range with hR
   let π : orbitRel.Quotient H Y → orbitRel.Quotient T Y := fun o => Quotient.mk'' o.out
   have orbT : ∀ o : orbitRel.Quotient H Y, ∃ t : T, t • o.out = (π o).out := by
-    intro o
-    exact (Quotient.exact' (Quotient.out_eq' (π o)) : (π o).out ∈ orbit T o.out)
+    exact fun o => (Quotient.exact' (Quotient.out_eq' (π o)) : (π o).out ∈ orbit T o.out)
   have stabT : ∀ (t : T) (y : Y), stabilizer T (t • y) = stabilizer T y := by
     intro t y
     ext s
@@ -354,10 +353,10 @@ private lemma glue {I G : Type} [Group G] {Gv : I → Type} [∀ v, Group (Gv v)
     intro v hv
     by_contra hvS
     rw [Finset.mem_coe] at hvS
-    exact hv (by simp only [dif_neg hvS]; exact (K v).one_mem))
+    exact hv (by simp only [dite_eq_right hvS]; exact (K v).one_mem))
   refine ⟨g, fun v => ?_, fun v hv => ?_⟩
-  · rw [hg, dif_pos v.2]
-  · rw [hg, dif_neg hv]
+  · rw [hg, dite_eq_left v.2]
+  · rw [hg, dite_eq_right hv]
 
 private lemma mem_box {I G : Type} [Group G] {Gv : I → Type} [∀ v, Group (Gv v)] {K : ∀ v, Subgroup (Gv v)} (P : RPG G Gv K)
     (U : ∀ v, Subgroup (Gv v)) (g : G) : g ∈ P.box U ↔ ∀ v, P.p v g ∈ U v := by
@@ -389,8 +388,7 @@ private lemma relIndex_box {I T : Type} [Group T] {Tv : I → Type} [∀ v, Grou
         exact (C v).one_mem
     refine ⟨⟨g, hg⟩, ?_⟩
     funext v
-    apply Subtype.ext
-    exact hg1 v
+    exact Subtype.ext (hg1 v)
   have hcomap : (Q.box A).subgroupOf (Q.box C) =
       (Subgroup.pi Set.univ fun v : S => (A v).subgroupOf (C v)).comap φ := by
     ext x
@@ -398,8 +396,7 @@ private lemma relIndex_box {I T : Type} [Group T] {Tv : I → Type} [∀ v, Grou
       true_implies]
     rw [mem_box]
     constructor
-    · intro hx v
-      exact hx v
+    · exact fun hx v => hx v
     · intro hx v
       by_cases hv : v ∈ S
       · exact hx ⟨v, hv⟩
@@ -460,7 +457,7 @@ theorem orbProd : OrbProd := by
       by_contra hvn
       simp only [Set.mem_union, Set.mem_setOf_eq, Finset.mem_coe, not_or, not_not] at hvn
       apply hv
-      simp only [tv, dif_neg hvn.2, if_pos hvn.1]
+      simp only [tv, dite_eq_right hvn.2, ite_eq_left hvn.1]
       exact (C₀ v).one_mem)
     refine ⟨t, c, Fintype.mem_piFinset.2 hc, (ι t * x c)⁻¹ * y, ?_, by group⟩
     rw [mem_box]
@@ -469,19 +466,17 @@ theorem orbProd : OrbProd := by
     by_cases hv : v ∈ S
     · have e1 : P.p v (x c) = c ⟨v, hv⟩ := hx1 c ⟨v, hv⟩
       have e2 : P.p v y = ιv v (tS ⟨v, hv⟩) * c ⟨v, hv⟩ * uS ⟨v, hv⟩ := heS ⟨v, hv⟩
-      simp only [tv, dif_pos hv, e1, e2]
+      simp only [tv, dite_eq_left hv, e1, e2]
       simpa [mul_assoc] using huS ⟨v, hv⟩
     · rw [hx2 c v hv]
       by_cases hK : P.p v y ∈ K v
-      · simp only [tv, dif_neg hv, if_pos hK, map_one, mul_one, inv_one, one_mul]
+      · simp only [tv, dite_eq_right hv, ite_eq_left hK, map_one, mul_one, inv_one, one_mul]
         exact (hout v hv).1 hK
-      · simp only [tv, dif_neg hv, if_neg hK, mul_one]
+      · simp only [tv, dite_eq_right hv, ite_eq_right hK, mul_one]
         obtain ⟨uv, huv, euv⟩ := (hB v hv).choose_spec
         have e3 : (ιv v (hB v hv).choose)⁻¹ * P.p v y = uv := by
-          rw [inv_mul_eq_iff_eq_mul]
-          exact euv
-        rw [e3]
-        exact huv
+          rwa [inv_mul_eq_iff_eq_mul]
+        rwa [e3]
   have hdist : ∀ c ∈ Fintype.piFinset R, ∀ c' ∈ Fintype.piFinset R, ∀ t, ∀ u ∈ P.box U,
       x c' = ι t * x c * u → c = c' := by
     intro c hc c' hc' t u hu e
@@ -494,8 +489,7 @@ theorem orbProd : OrbProd := by
     intro u hu g
     rw [hf, hf]
     refine finprod_congr (fun v => ?_)
-    simp only [map_mul, map_inv, hθ]
-    exact hinv v _ ((mem_box P U u).1 hu v) _
+    simpa only [map_mul, map_inv, hθ] using hinv v _ ((mem_box P U u).1 hu v) _
   have hδg : ∀ t, (ι t)⁻¹ * δ * θ (ι t) = δ := by
     intro t
     have h1 := P.inj ((ι t)⁻¹ * δ * θ (ι t) * δ⁻¹) (fun v => by
@@ -567,8 +561,7 @@ namespace UpperTheory.V.Z.Sym.Glob
 variable {I G : Type} [Group G] {Gv : I → Type} [∀ v, Group (Gv v)] {K : ∀ v, Subgroup (Gv v)}
 
 theorem rpg_ext (P : RPG G Gv K) {a b : G} (h : ∀ v, P.p v a = P.p v b) : a = b := by
-  have hab := P.inj (a * b⁻¹) fun v => by rw [map_mul, map_inv, h v, mul_inv_cancel]
-  exact mul_inv_eq_one.mp hab
+  exact mul_inv_eq_one.mp (P.inj (a * b⁻¹) fun v => by rw [map_mul, map_inv, h v, mul_inv_cancel])
 
 theorem mem_box (P : RPG G Gv K) (U : ∀ v, Subgroup (Gv v)) (g : G) : g ∈ P.box U ↔ ∀ v, P.p v g ∈ U v := by
   simp [RPG.box, Subgroup.mem_iInf]
@@ -585,8 +578,7 @@ theorem rpg_hom {T : Type} [Group T] {Tv : I → Type} [∀ v, Group (Tv v)] {C�
   choose g hg using fun t => P.surj _ (hx t)
   refine ⟨{ toFun := g, map_one' := ?_, map_mul' := ?_ }, fun v t => hg t v⟩
   · exact rpg_ext P fun v => by simp only [hg, map_one]
-  · intro a b
-    exact rpg_ext P fun v => by simp only [hg, map_mul]
+  · exact fun a b => rpg_ext P fun v => by simp only [hg, map_mul]
 
 private theorem box_relIndex_ne_zero_of_local {T : Type} [Group T] {Tv : I → Type} [∀ v, Group (Tv v)]
     {C₀ : ∀ v, Subgroup (Tv v)} (Q : RPG T Tv C₀) (A B : ∀ v, Subgroup (Tv v))
@@ -604,8 +596,7 @@ private theorem box_relIndex_ne_zero_of_local {T : Type} [Group T] {Tv : I → T
       · rw [Subgroup.relIndex_comap]
         refine mt (Subgroup.relIndex_eq_zero_of_le_right ?_) (hA a)
         rw [Subgroup.map_le_iff_le_comap]
-        intro t ht
-        exact (mem_box Q B t).1 ht a
+        exact fun t ht => (mem_box Q B t).1 ht a
       · intro t ht v hv
         rcases Finset.mem_insert.1 hv with rfl | hv
         · exact ht.2
@@ -652,15 +643,11 @@ theorem gqAbs {T H : Type} [CommGroup T] [Group H] {Tv : I → Type} [∀ v, Com
   · intro u hu x
     rw [hf, hf]
     refine finprod_congr fun v => ?_
-    simp only [map_mul, map_inv, hθ]
-    exact hinv v _ ((mem_box P U u).1 hu v) _
+    simpa only [map_mul, map_inv, hθ] using hinv v _ ((mem_box P U u).1 hu v) _
   · intro t
     exact rpg_ext P fun v => by
-      simp only [map_mul, map_inv, hθ, hι]
-      exact hc v _
-  · intro z hz y
-    refine QuotientGroup.induction_on y fun g => ?_
-    exact (hbox g _).2 fun v => h0 z hz v _
+      simpa only [map_mul, map_inv, hθ, hι] using hc v _
+  · exact fun z hz y => QuotientGroup.induction_on y fun g => (hbox g _).2 fun v => h0 z hz v _
   · intro y
     refine QuotientGroup.induction_on y fun g _ => ?_
     have hEq : (stabilizer G (g : G ⧸ P.box U)).comap ι =

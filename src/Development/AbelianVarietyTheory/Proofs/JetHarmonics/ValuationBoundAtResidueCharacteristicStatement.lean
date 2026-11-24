@@ -262,17 +262,17 @@ theorem nabVal_character_columns :
       (by
         intro l
         by_cases hl : l ∈ S b
-        · rw [if_pos hl]; exact (hα b l hl).1
-        · rw [if_neg hl, sub_self]; exact I.zero_mem)
+        · rw [ite_eq_left hl]; exact (hα b l hl).1
+        · rw [ite_eq_right hl, sub_self]; exact I.zero_mem)
       (by
         intro l
         by_cases hl : l ∈ S b
-        · rw [if_pos hl]; exact (hα b l hl).2.1
-        · rw [if_neg hl]; exact isUnit_one)
+        · rw [ite_eq_left hl]; exact (hα b l hl).2.1
+        · rw [ite_eq_right hl]; exact isUnit_one)
       (by
         intro l
         by_cases hl : l ∈ S b
-        · rw [if_pos hl, Set.indicator_of_mem hl]; exact (hα b l hl).2.2
+        · rw [ite_eq_left hl, Set.indicator_of_mem hl]; exact (hα b l hl).2.2
         · rw [Set.indicator_of_notMem hl, hz, Matrix.mulVec_zero, smul_zero])
       (by
         intro l l'
@@ -355,8 +355,7 @@ theorem dmonOf_mul_congr_of_congr :
       obtain ⟨m', hm'⟩ := ExpCong.exists_along_eq_dmonOf F u mo v hv
       rw [hm', hsub, map_sub]
       exact h m')
-  rw [← ExpCong.dmonOf_eq_along, show g * (f - f') = f * g - f' * g by ring, hsub, map_sub] at key
-  exact key
+  rwa [← ExpCong.dmonOf_eq_along, show g * (f - f') = f * g - f' * g by ring, hsub, map_sub] at key
 
 end GlobalTheory
 end -- clump:auto
@@ -769,8 +768,7 @@ theorem dmon_div {F : Pt k 2 d} (iF : IP φ F) (hU : evP (n := 1) ![pt k d 0, 0]
     ⟨int_const hG, fun l => ⟨dd_int iF 0 (hu l) hG, dd_int iF 1 (hv l) hG⟩⟩
   have cD : ∀ a v, constantCoeff (DD F a v g) ∈ φ.range := fun a v => by
 
-    simp only [DD, map_sum, map_mul, c1, mul_zero, Finset.sum_const_zero]
-    exact zero_mem _
+    simpa only [DD, map_sum, map_mul, c1, mul_zero, Finset.sum_const_zero] using zero_mem _
   have hS0 : ∀ l, S (DD F 0 (U l) g) := by
     intro l
     have h := dd_zero_sub iF hU g hl (hu l)
@@ -1150,7 +1148,7 @@ theorem valuation_blockPoly_ge : ∀ (C : Type) [Field C] (v : Valuation C NNRea
       · haveI : IsEmpty (Fin (r τ)) := by rw [h0]; infer_instance
         simp
       · have := Crude.crExpSum a ha τ ⟨0, h0⟩
-        simp only [Nat.zero_lt_succ, if_true] at this
+        simp only [Nat.zero_lt_succ, ite_true] at this
         exact this.le
     refine h1.trans (Finset.prod_le_prod' fun kk _ => ?_)
     rw [map_pow, map_pow, map_pow]
@@ -1516,8 +1514,7 @@ private theorem exists_beta {p : ℕ} (hp : p.Prime) {E : Type} [Field E] [Numbe
       · exact absurd h hp2
       · exact h
     have hleg : legendreSym p (-(H.d : ℤ)) = 1 := by
-      rw [jacobiSym.legendreSym.to_jacobiSym]
-      exact hjac
+      rwa [jacobiSym.legendreSym.to_jacobiSym]
     have hpd : ¬ p ∣ H.d := by
       intro hdiv
       have h0 : ((-(H.d : ℤ) : ℤ) : ZMod p) = 0 := by
@@ -1576,14 +1573,12 @@ theorem UpperTheory.cmDatum_splitPlaces_conj_stable :
     intro h
     apply hpu
     apply hv.isUnit_of_one'
-    rw [map_natCast]
-    exact h
+    rwa [map_natCast]
   have vcop : ∀ m : ℕ, ¬ p ∣ m → v (m : C) = 1 := by
     intro m hm
     have hle : v (m : C) ≤ 1 := by exact_mod_cast vle m
     refine le_antisymm hle ?_
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     have hcop : Nat.Coprime p m := (Nat.Prime.coprime_iff_not_dvd hp).mpr hm
     have hb := Nat.gcd_eq_gcd_ab p m
     rw [Nat.Coprime.gcd_eq_one hcop] at hb
@@ -1598,8 +1593,7 @@ theorem UpperTheory.cmDatum_splitPlaces_conj_stable :
         exact mul_lt_one_of_nonneg_of_lt_one_left (by positivity) hlt (vle _)
     simp at h2
   have vn : v (n : C) ≤ v (p : C) := by
-    have h := hv.le_of_dvd (Nat.cast_dvd_cast hpn : (p : O) ∣ (n : O))
-    simpa only [map_natCast] using h
+    simpa only [map_natCast] using hv.le_of_dvd (Nat.cast_dvd_cast hpn : (p : O) ∣ (n : O))
   have key : ∀ (b g : O), b * g = (n : O) → b + g = (t : O) → v (algebraMap O C b) = 1 →
       ∀ k : ℕ, (p : O) ^ (k + 1) ∣ b ^ ((p - 1) * p ^ k) - 1 := by
     intro b g hbg hbgt hb k
@@ -1607,8 +1601,7 @@ theorem UpperTheory.cmDatum_splitPlaces_conj_stable :
       rw [← map_natCast (algebraMap O C) n, ← hbg, map_mul, map_mul, hb, one_mul]
     have hpg : (p : O) ∣ g := by
       apply hv.dvd_of_le
-      rw [hvn, map_natCast (algebraMap O C)]
-      exact vn
+      rwa [hvn, map_natCast (algebraMap O C)]
     have hpb : (p : O) ∣ b - t := by
       have h : b - t = -g := by
         rw [← hbgt]
@@ -1673,8 +1666,7 @@ theorem UpperTheory.cmDatum_splitPlaces_conj_stable :
           _ ≤ v (p : C) ^ k := pow_le_pow_of_le_one (by positivity) vp.le (by omega)
           _ < _ := hk
       have hor : v (algebraMap O C (σ β)) = 1 ∨ v (algebraMap O C (σ γ)) = 1 := by
-        by_contra hc
-        push_neg at hc
+        by_contra! hc
         have h1 : v (algebraMap O C (σ β)) < 1 := lt_of_le_of_ne (hv.map_le_one _) hc.1
         have h2 : v (algebraMap O C (σ γ)) < 1 := lt_of_le_of_ne (hv.map_le_one _) hc.2
         have h3 : v (algebraMap O C (σ β + σ γ)) < 1 := by
@@ -1714,8 +1706,7 @@ theorem sum_log_div_log_le_of_rpow_le_prod {ι : Type} (S : Finset ι) (x : ι �
   have hl : Real.log r < 0 := Real.log_neg hr0 hr1
   have h1 := Real.log_le_log (Real.rpow_pos_of_pos hr0 B) h
   rw [Real.log_rpow hr0, Real.log_prod hx] at h1
-  rw [← Finset.sum_div, div_le_iff_of_neg hl]
-  exact h1
+  rwa [← Finset.sum_div, div_le_iff_of_neg hl]
 
 theorem nuLocC_le_over_two : ∀ (p : ℕ) [Fact p.Prime], AvFSt p → HTFSt p → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (Ch : IntegralChartA3 Xo c T io y), y.IsAlg → ¬ IsUnit ((p : ℕ) : T.V) → UpperTheory.Depth.SplitAt H.d p → ∀ (f : ℕ) (vd : ℝ), 0 ≤ vd → UpperTheory.Depth.SplitPlaces p H f vd → ∀ (e k n : ℕ) (a : (E →+* ℂ) × ℕ → ℕ), 0 < e → DomW Dw a → Fintype.card (Lt1 Dw) ≤ n → ∀ Ap : ℝ, 0 ≤ Ap → (∀ τ, InPsi H τ → (a (τ, 0) : ℝ) ≤ Ap) → (open Classical in nuLocC Ch e k a n ≤ (((vV T.V ((p : ℕ) : T.Fr) : ℝ) / (e : ℝ) * ((f : ℝ) * Dw.q * (1 + vd / 2) * Ap + Dw.q * ∑ τ ∈ Finset.univ.filter (fun τ => ¬ InPsi H τ), (a (τ, 0) : ℝ)) : ℝ) : EReal)) := by
   intro p _ hAv hHT E _ _ _ H Dw l Xo c
@@ -1748,10 +1739,10 @@ theorem nuLocC_le_over_two : ∀ (p : ℕ) [Fact p.Prime], AvFSt p → HTFSt p �
   have hlen0 : ∀ τ, 0 ≤ len τ := by
     intro τ
     by_cases hτ : InPsi H τ
-    · simp only [len, if_pos hτ]
+    · simp only [len, ite_eq_left hτ]
       have h1 := (_root_.GlobalTheory.CharDepth.exists_flag_characters X.C X.v X.O X.ints _ _ _ _ _ (hxs τ hτ) (hxs0' τ hτ)).1
       exact div_nonneg_of_nonpos (Real.log_nonpos (xs τ).2 (by exact_mod_cast h1)) hlog.le
-    · simp only [len, if_neg hτ]
+    · simp only [len, ite_eq_right hτ]
       exact Nat.cast_nonneg _
   have key := _root_.GlobalTheory.CharDepth.nuLocC_le_of_character_flags E H Dw l Xo c T io y Ch p X _ hty (fun τ => ⟨H.w0, hw0 _⟩)
     (fun x hx => by
@@ -1763,7 +1754,7 @@ theorem nuLocC_le_over_two : ∀ (p : ℕ) [Fact p.Prime], AvFSt p → HTFSt p �
         refine ⟨χ, hχ, fun i => ?_⟩
         have hpos : (0 : ℝ) < xs τ := by exact_mod_cast pos_iff_ne_zero.2 (hxs0' τ hτ)
         have : r ^ len τ = xs τ := by
-          simp only [len, if_pos hτ]
+          simp only [len, ite_eq_left hτ]
           rw [Real.rpow_def_of_pos hr0, mul_div_cancel₀ _ hlog.ne, Real.exp_log hpos]
         rw [← hr, this]
         exact_mod_cast hχ' i
@@ -1774,9 +1765,9 @@ theorem nuLocC_le_over_two : ∀ (p : ℕ) [Fact p.Prime], AvFSt p → HTFSt p �
             have hle : X.v ((p : ℕ) : X.C) ≤ 1 := by exact_mod_cast hr1.le
             exact pow_le_of_le_one zero_le hle (by have := (Fact.out : p.Prime).two_le; omega)))
         refine ⟨χ, hχ, fun i => ?_⟩
-        have hm : Dw.mult τ = Dw.q := if_neg hτ
+        have hm : Dw.mult τ = Dw.q := ite_eq_right hτ
         have : r ^ len τ = ((X.v (algebraMap X.O X.C ((p : ℕ) : X.O)) ^ Dw.mult τ : NNReal) : ℝ) := by
-          simp only [len, if_neg hτ]
+          simp only [len, ite_eq_right hτ]
           rw [Real.rpow_natCast, h2C, hm, NNReal.coe_pow]
         rw [← hr, this]
         exact_mod_cast hχ' i)
@@ -1789,12 +1780,12 @@ theorem nuLocC_le_over_two : ∀ (p : ℕ) [Fact p.Prime], AvFSt p → HTFSt p �
       refine Finset.sum_le_sum fun τ hτ => ?_
       have hτ' : InPsi H τ := (Finset.mem_filter.1 hτ).2
       have h0 := hlen0 τ
-      simp only [len, if_pos hτ'] at h0 ⊢
+      simp only [len, ite_eq_left hτ'] at h0 ⊢
       exact mul_le_mul_of_nonneg_left (haA τ hτ') h0
     · rw [Finset.mul_sum]
       refine Finset.sum_congr rfl fun τ hτ => ?_
       have hτ' : ¬ InPsi H τ := (Finset.mem_filter.1 hτ).2
-      simp only [len, if_neg hτ']
+      simp only [len, ite_eq_right hτ']
   · have h0 := GlobalTheory.vV_algebraMap_nonneg_dvr T ((p : ℕ) : T.V)
     rw [map_natCast] at h0
     exact div_nonneg (by exact_mod_cast h0) (Nat.cast_nonneg _)
@@ -1848,8 +1839,7 @@ theorem vV_eq_zero_of_isUnit (T : CDVR) {x : T.V} (hx : IsUnit x) : vV T.V (alge
   have h : valV T.V (algebraMap T.V T.Fr x) = 1 := by
     unfold valV
     rw [HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_eq_one_iff]
-    intro hm
-    exact (IsLocalRing.mem_maximalIdeal _).1 hm hx
+    exact fun hm => (IsLocalRing.mem_maximalIdeal _).1 hm hx
   simp [vV, h]
 
 theorem nuW_le_two : ∀ (p : ℕ) [Fact p.Prime], AvFSt p → HTFSt p → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (f : ℕ) (vd : ℝ), 0 ≤ vd → UpperTheory.Depth.SplitAt H.d p → UpperTheory.Depth.SplitPlaces p H f vd → ∀ (la : HeightOneSpectrum (𝓞 c.F)), resCharOf la = p → ∀ (k n : ℕ) (a : (E →+* ℂ) × ℕ → ℕ), DomW Dw a → Fintype.card (Lt1 Dw) ≤ n → ∀ Ap : ℝ, 0 ≤ Ap → (∀ τ, InPsi H τ → (a (τ, 0) : ℝ) ≤ Ap) → (open Classical in nuW Xo c la k a n ≤ (((ramOverZ la : ℝ) * ((f : ℝ) * Dw.q * (1 + vd / 2) * Ap + Dw.q * ∑ τ ∈ Finset.univ.filter (fun τ => ¬ InPsi H τ), (a (τ, 0) : ℝ)) : ℝ) : EReal)) := by

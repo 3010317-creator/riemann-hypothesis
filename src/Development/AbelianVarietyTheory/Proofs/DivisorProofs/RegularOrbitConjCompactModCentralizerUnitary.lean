@@ -97,14 +97,14 @@ theorem orbit_cpt_U : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Un
   have hgC : ∀ g : UL n w, g⁻¹ * y * g ∈ C → g.1⁻¹ * y.1 * g.1 ∈ (Subtype.val '' C : Set (GLw n w)) :=
     fun g hg => ⟨_, hg, rfl⟩
   by_cases hs : IsSplitAt w
-  · have hUL : ∀ g : GLw n w, g ∈ UL n w := fun g => by unfold UL; rw [if_pos hs]; trivial
+  · have hUL : ∀ g : GLw n w, g ∈ UL n w := fun g => by unfold UL; rw [ite_eq_left hs]; trivial
     refine ⟨Subtype.val ⁻¹' D, hcl.isCompact_preimage hD, fun g hg => ?_⟩
     obtain ⟨z, hz, d, hd, hgd⟩ := hDg g.1 (hgC g hg)
     exact ⟨⟨z, hUL z⟩, Subtype.ext hz, ⟨d, hUL d⟩, hd, Subtype.ext hgd⟩
   obtain ⟨hσc, hσi, -⟩ := GlobalTheory.ConjAtPlace.main E hE w
   set σ := cj w with hσ
   have hmemU : ∀ g : GLw n w, g ∈ UL n w ↔ cT σ g.val * g.val = 1 := by
-    intro g; unfold UL; rw [if_neg hs]; show cT σ _ * 1 * _ = 1 ↔ _; rw [Matrix.mul_one]
+    intro g; unfold UL; rw [ite_eq_right hs]; show cT σ _ * 1 * _ = 1 ↔ _; rw [Matrix.mul_one]
   have hcTc : Continuous fun M : Matrix (Fin n) (Fin n) (w.adicCompletion E) => cT σ M :=
     (continuous_id.matrix_map hσc).matrix_transpose
   have hcc : ∀ M : Matrix (Fin n) (Fin n) (w.adicCompletion E), cT σ (cT σ M) = M := by
@@ -159,9 +159,7 @@ theorem orbit_cpt_U : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Un
       (Units.continuous_val.comp continuous_subtype_val).continuousAt.preimage_mem_nhds (by simpa using hW), ?_⟩
     intro s hs hτs
     obtain ⟨r, hrr, hrc, hrs⟩ := hWs _ hs
-    have hsv : cT σ s.1.val = s.1.val := by
-      have h := congrArg (fun u : Z => u.1.val) hτs
-      exact h
+    have hsv : cT σ s.1.val = s.1.val := congrArg (fun u : Z => u.1.val) hτs
     have hrr' : r * r = s.1.val := hrr
     have hu : IsUnit r := isUnit_of_mul_isUnit_left (hrr'.symm ▸ s.1.isUnit)
     have hrZ : hu.unit ∈ Z := (hZ _).2 (hrc _ ((hZ _).1 s.2).symm).symm
@@ -189,9 +187,7 @@ theorem orbit_cpt_U : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Un
           simp only [Matrix.mul_assoc]
       _ = cT σ z.val * z.val := by rw [e1, Units.mul_inv, Matrix.one_mul, Matrix.mul_one]
   obtain ⟨t, ht, b, hb, hzt⟩ := hBz _ hN
-  have htU : t.1 ∈ UL n w := by
-    have h := congrArg (fun u : Z => u.1.val) ht
-    exact (hmemU _).2 h
+  have htU : t.1 ∈ UL n w := (hmemU _).2 (congrArg (fun u : Z => u.1.val) ht)
   have hgt : g.1 = t.1 * (b.1 * d) := by
     rw [hgd, ← mul_assoc]; exact congrArg (· * d) (congrArg Subtype.val hzt)
   have hωU : b.1 * d ∈ UL n w := by

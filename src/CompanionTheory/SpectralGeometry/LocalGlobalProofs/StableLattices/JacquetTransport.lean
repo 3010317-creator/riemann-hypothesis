@@ -61,7 +61,7 @@ theorem commute_E_Qd {n : ℕ} (P : GMod n) {c : ℕ} (d : Fin c → ℕ) (h : �
       have h1 : b ≠ stdBlocks d h ⟨i, p⟩ := fun e => hi (by rw [hab, e, blk_apply])
       have h2 : stdBlocks d h ⟨i, q⟩ ≠ a := fun e => hi (by rw [← e, blk_apply])
       have e := P.gl a b (stdBlocks d h ⟨i, p⟩) (stdBlocks d h ⟨i, q⟩)
-      rw [if_neg h1, if_neg h2, sub_zero] at e
+      rw [ite_eq_right h1, ite_eq_right h2, sub_zero] at e
       exact sub_eq_zero.mp e
     unfold Qd qdet qminor
     refine Commute.sum_right _ _ _ fun σ _ => ?_
@@ -215,8 +215,7 @@ theorem exists_joint_kernel_finset {V : Type} [AddCommGroup V] [Module ℂ V]
     intro Y hY
     rcases Finset.mem_insert.1 hY with rfl | hY
     · rw [← Module.End.mul_apply, ← pow_succ']
-      rw [hM] at hN
-      exact hN
+      rwa [hM] at hN
     · have hc : Commute (D Y) (D a ^ M) := (hcomm Y a).pow_right M
       rw [← Module.End.mul_apply, hc.eq, Module.End.mul_apply, hF Y hY, map_zero]
 
@@ -388,8 +387,7 @@ theorem exists_raised : StepChar → TensDecomp → ∀ {m : ℕ} (M : GMod m) (
   obtain ⟨w, hw, hw0, hwD⟩ := _root_.GlobalTheory.CompanionTheory.RgTransport.exists_joint_kernel_polynomial_family _ hI D hcomm hst hnil (m + 1) _ hD
   obtain ⟨x, rfl⟩ := hw
   refine ⟨r, f x, ⟨_, rfl⟩, hw0, fun Y => ?_⟩
-  have h2 := hwD Y
-  simpa [D, sub_eq_zero] using h2
+  simpa [D, sub_eq_zero] using hwD Y
 
 end GlobalTheory.CompanionTheory.RgTransport.Raise
 end -- clump:auto
@@ -570,7 +568,7 @@ theorem block_raise (hS : StepChar) (hT : TensDecomp) (P Q : GMod n) (d : Fin 3 
       simp only [bops]
       rw [hθ]
       simp only [show stdBlocks d h ⟨k, a⟩ = ι a from rfl, show stdBlocks d h ⟨k, b⟩ = ι b from rfl, hι.eq_iff]
-    simp only [e1, e2, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [e1, e2, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   have hΦne : Φ ≠ 0 := by
     intro h0
     let x1' : M.V := ⟨x1, hx1⟩
@@ -578,8 +576,7 @@ theorem block_raise (hS : StepChar) (hT : TensDecomp) (P Q : GMod n) (d : Fin 3 
     rw [hΦa, Finset.sum_eq_single p'] at e
     · rw [Pi.single_eq_same] at e
       apply hne1
-      rw [← hp']
-      exact e
+      rwa [← hp']
     · intro b _ hb
       rw [Pi.single_eq_of_ne hb, map_zero, map_zero]
     · simp
@@ -624,7 +621,7 @@ theorem block_raise (hS : StepChar) (hT : TensDecomp) (P Q : GMod n) (d : Fin 3 
       refine Finset.sum_congr rfl fun p _ => ?_
       have h9 := qdet_lin (θ (ι p)) (bops P d h i) (bops Q d h i) (fun a b y => by
         simp only [bops]
-        rw [hθ, if_neg, add_zero]
+        rw [hθ, ite_eq_right, add_zero]
         intro h0
         have h1 := hblk p
         rw [h0] at h1
@@ -747,16 +744,14 @@ theorem sub_raise (hS : StepChar) (hT : TensDecomp) (Y Y' : GMod n) (d : Fin 3 �
     change _ = θq p (sqMk Y S1 S2 hS1 hS2 ⟨(Y.E b a).dualMap x, hS1 b a _ x.2⟩) + _
     rw [show θq p (sqMk Y S1 S2 hS1 hS2 ⟨(Y.E b a).dualMap x, hS1 b a _ x.2⟩) = mkQ' (R p ⟨(Y.E b a).dualMap x, hS1 b a _ x.2⟩) from rfl]
     by_cases hp : p = b
-    · rw [if_pos hp, ← map_add (f := _)]
+    · rw [ite_eq_left hp, ← map_add (f := _)]
       refine congrArg _ (Subtype.ext ?_)
       have := hθ a b p x
-      rw [if_pos hp] at this
-      exact this
-    · rw [if_neg hp, add_zero]
+      rwa [ite_eq_left hp] at this
+    · rw [ite_eq_right hp, add_zero]
       refine congrArg _ (Subtype.ext ?_)
       have := hθ a b p x
-      rw [if_neg hp, add_zero] at this
-      exact this
+      rwa [ite_eq_right hp, add_zero] at this
   have hv : mkP ⟨φ, hφ⟩ ∈ leviSub (sqMod Y S1 S2 hS1 hS2) d h χ L := by
     refine ⟨fun a b hab => ?_, fun i c => ?_⟩
     · change (sqMod Y S1 S2 hS1 hS2).E a b (sqMk Y S1 S2 hS1 hS2 ⟨φ, hφ⟩) = 0
@@ -766,23 +761,19 @@ theorem sub_raise (hS : StepChar) (hT : TensDecomp) (Y Y' : GMod n) (d : Fin 3 �
       change Qd _ d h i c (sqMk Y S1 S2 hS1 hS2 ⟨φ, hφ⟩) = plab χ L i c • sqMk Y S1 S2 hS1 hS2 ⟨φ, hφ⟩
       rw [hy2, ← map_smul, ← sub_eq_zero, ← map_sub, sqMk_zero]
       have := hq i c
-      rw [← hy1] at this
-      exact this
+      rwa [← hy1] at this
   have hne' : θq p0 (mkP ⟨φ, hφ⟩) ≠ 0 := by
     rw [hθq0]
-    intro h0
-    exact hne ((sqMk_zero Y' T1 T2 hT1 hT2 _).1 h0)
+    exact fun h0 => hne ((sqMk_zero Y' T1 T2 hT1 hT2 _).1 h0)
   obtain ⟨w, hw0, hwk, r, hwq⟩ := block_raise hS hT _ _ d h θq hθq χ L hL _ hv p0 hne'
   obtain ⟨ψ, rfl⟩ := sqMk_surj Y' T1 T2 hT1 hT2 w
   refine ⟨ψ.1, ψ.2, fun h0 => hw0 ((sqMk_zero Y' T1 T2 hT1 hT2 _).2 h0), fun p q hpq => ?_, r, fun i c => ?_, fun c => ?_⟩
   · have := hwk q p hpq
-    rw [sq_E, sqMk_zero] at this
-    exact this
+    rwa [sq_E, sqMk_zero] at this
   · obtain ⟨y, hy1, hy2⟩ := sq_Qd Y' T1 T2 hT1 hT2 d h i c ψ
     have := hwq i c
     rw [hy2, ← map_smul, ← sub_eq_zero, ← map_sub, sqMk_zero] at this
-    rw [← hy1]
-    exact this
+    rwa [← hy1]
   · have hQ := _root_.GlobalTheory.CompanionTheory.RgTransport.qdet_eigen_of_killed (sqMod Y' T1 T2 hT1 hT2) d h _ hwk (fun i c => plab (χ + Pi.single r 1) L i c) hwq c
     rw [prod_plab] at hQ
     have hc1 := hasChar_sub (trMod Y') T1 (fun a b φ hφ => hT1 b a φ hφ) (hasChar_tr Y' hchar)
@@ -791,8 +782,7 @@ theorem sub_raise (hS : StepChar) (hT : TensDecomp) (Y Y' : GMod n) (d : Fin 3 �
     have e := eigen_pow _ _ _ (Formalism.QuantumDeterminants.capP χ'' c) hQ k
     rw [hkk c] at e
     by_contra hne2
-    have e' := e.symm
-    exact hw0 ((smul_eq_zero.1 e').resolve_left (pow_ne_zero k (sub_ne_zero.2 hne2)))
+    exact hw0 ((smul_eq_zero.1 e.symm).resolve_left (pow_ne_zero k (sub_ne_zero.2 hne2)))
 
 section Step
 
@@ -822,8 +812,7 @@ theorem coordB_Eb (p a b : Fin n) (u : (step X z).V) :
     fun i c => GlobalTheory.CompanionTheory.RgConjQdet.conj_single_apply _ _ _ _ _ _
   have hd : ∑ i, B.Ui p i * B.U i b = if p = b then 1 else 0 := by
     have := congrFun (congrFun B.hUi p) b
-    rw [Matrix.mul_apply, Matrix.one_apply] at this
-    exact this
+    rwa [Matrix.mul_apply, Matrix.one_apply] at this
   rw [coordB_apply, coordB_apply]
 
   simp only [Eb, component_zero_matrix_action, smul_add, Finset.sum_add_distrib, map_sum, map_smul, hY]
@@ -899,12 +888,10 @@ theorem E_eq_sum (B : GradBasis A) (a b : Fin n) :
     simp only [Matrix.sum_apply, Matrix.smul_apply, smul_eq_mul, GlobalTheory.CompanionTheory.RgConjQdet.conj_single_apply]
     have h1 : ∑ p, B.U i p * B.Ui p a = if i = a then 1 else 0 := by
       have := congrFun (congrFun B.hU i) a
-      rw [Matrix.mul_apply, Matrix.one_apply] at this
-      exact this
+      rwa [Matrix.mul_apply, Matrix.one_apply] at this
     have h2 : ∑ q, B.U b q * B.Ui q c = if b = c then 1 else 0 := by
       have := congrFun (congrFun B.hU b) c
-      rw [Matrix.mul_apply, Matrix.one_apply] at this
-      exact this
+      rwa [Matrix.mul_apply, Matrix.one_apply] at this
     calc (Matrix.single a b (1 : ℂ) : Matrix (Fin n) (Fin n) ℂ) i c
         = (∑ p, B.U i p * B.Ui p a) * ∑ q, B.U b q * B.Ui q c := by
           rw [h1, h2, Matrix.single_apply]
@@ -1034,15 +1021,13 @@ theorem transport : Transport := by
     intro i φ
     have h1 : ∀ c, ∑ p, B.U i p * B.Ui p c = if i = c then 1 else 0 := fun c => by
       have := congrFun (congrFun B.hU i) c
-      rw [Matrix.mul_apply, Matrix.one_apply] at this
-      exact this
+      rwa [Matrix.mul_apply, Matrix.one_apply] at this
     simp only [hθsum, Finset.smul_sum, smul_smul]
     rw [Finset.sum_comm]
     simp only [← Finset.sum_smul, h1]
     simp
   obtain ⟨p0, hp0⟩ : ∃ p, θ p φ ∉ W'' := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     refine hφZ ((hZmem φ).2 ⟨hφ, fun i => ?_⟩)
     rw [hcomp]
     exact W''.sum_mem fun p _ => W''.smul_mem _ (hc p)
@@ -1052,13 +1037,13 @@ theorem transport : Transport := by
     refine LinearMap.ext fun u => ?_
     have e := coordB_Eb X B (χ s) p a b u
     by_cases hp : p = b
-    · rw [if_pos hp]
+    · rw [ite_eq_left hp]
       change φ (coordB X B (χ s) p (Eb (step X (χ s)) B b a u)) =
         φ (Eb X B b a (coordB X B (χ s) p u)) + φ (coordB X B (χ s) a u)
-      rw [e, if_pos hp, map_add (f := _)]
-    · rw [if_neg hp, add_zero]
+      rw [e, ite_eq_left hp, map_add (f := _)]
+    · rw [ite_eq_right hp, add_zero]
       change φ (coordB X B (χ s) p (Eb (step X (χ s)) B b a u)) = φ (Eb X B b a (coordB X B (χ s) p u))
-      rw [e, if_neg hp, add_zero]
+      rw [e, ite_eq_right hp, add_zero]
   have hθW : ∀ p, ∀ φ ∈ W F, θ p φ ∈ W F'' := fun p φ hφ => by
     rw [hθsum]
     exact Submodule.sum_mem _ fun a _ => Submodule.smul_mem _ _ (hcompW a φ hφ)

@@ -70,16 +70,14 @@ theorem isSplitPl_iff (P : PlE D.host) :
   constructor
   · rintro ⟨x, hx, h⟩ he
     refine h (Formalism.L2.Col.cO D.host.E x) (bridge_star_holds D.R D.host _) ?_
-    rw [← he] at hx
-    exact hx
+    rwa [← he] at hx
   · intro hne
     by_contra h
     refine hne (P.isMaximal.eq_of_le (GlobalTheory.SplitOffPlaces.conjSpec P).isPrime.ne_top fun x hx => ?_).symm
     by_contra hx'
     refine h ⟨x, hx, fun y hy hyP => hx' ?_⟩
     have : y = Formalism.L2.Col.cO D.host.E x := RingOfIntegers.ext (hy.trans (bridge_star_holds D.R D.host _).symm)
-    rw [this] at hyP
-    exact hyP
+    rwa [this] at hyP
 
 theorem level_notMem {P : PlE D.host} (h : ∃ i', P ∉ D.ntw.S0 i') :
     ((D.host.g 0 * D.host.g 1 : ℕ) : 𝓞 D.host.E) ∉ P.asIdeal := by
@@ -100,7 +98,7 @@ theorem exists_family (t : ∀ i : Fin D.R.m, ℕ → PlE D.host → Module.End 
   refine ⟨fun j => match j with
     | 0 => fun _ _ => 0
     | n + 1 => fun k P => if h : n < D.R.m then (e ⟨n, h⟩).symm.conj (t ⟨n, h⟩ k P) else 0, fun i k P => ?_⟩
-  simp only [dif_pos i.2]
+  simp only [dite_eq_left i.2]
   exact (e i).conj.apply_symm_apply (t i k P)
 
 end Local

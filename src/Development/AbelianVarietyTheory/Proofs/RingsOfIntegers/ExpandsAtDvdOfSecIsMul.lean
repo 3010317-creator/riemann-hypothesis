@@ -75,8 +75,7 @@ theorem appLE_dvd {P T : Scheme.{0}} [IsAffine P] (p : P ⟶ T) (W : T.Opens) (e
     ((gs_eq (𝟙 P) z ⊤ hz _).symm.trans (gs_appLE p W ⊤ e (𝟙 P) z hz c)).trans
       ((by rw [Category.id_comp] : gs (𝟙 P ≫ p) z W c = gs p z W c).trans (gs_stalkMap p z W (e hz) c))
   have := map_dvd (p.stalkMap z).hom (h (p z) (e hz))
-  rw [← k, ← k] at this
-  exact this
+  rwa [← k, ← k] at this
 
 theorem dvd_of_sum {S : Scheme.{0}} (X : Type) [AddCommGroup X] (Y : Over S) {V : Y.left.Opens} (hV : IsAffineOpen V)
     (s : Finset X) (a : Γ(Y.left, V)) (h : X → Γ(Y.left, V))
@@ -170,8 +169,8 @@ theorem dvd_on_group (r : R) (σ τ : H0 U.LG.L k) (f : ∀ α : D.toPre.X, D.to
         J ((WeightPf.sec (D := D.toPre) (G := G) (I := I) (e := e)).left ≫ ψ) else d ψ
     have hJ₂ : Good D.toPre.P.L w J₂ := fun ψ => by
       by_cases h : ψ w ∈ D.toPre.P.L.U (J ((WeightPf.sec (D := D.toPre) (G := G) (I := I) (e := e)).left ≫ ψ))
-      · simpa only [J₂, if_pos h] using h
-      · simpa only [J₂, if_neg h] using hd ψ
+      · simpa only [J₂, ite_eq_left h] using h
+      · simpa only [J₂, ite_eq_right h] using hd ψ
     have eJ : ∀ φ : (thickObj R I e G).left ⟶ D.toPre.P.A.left,
         φ ((snd (WeightPf.Te D.toPre I e) (thickObj R I e G)).left w) ∈ D.toPre.P.L.U (J φ) →
         J₂ ((snd (WeightPf.Te D.toPre I e) (thickObj R I e G)).left ≫ φ) = J φ := fun φ h => by
@@ -179,7 +178,7 @@ theorem dvd_on_group (r : R) (σ τ : H0 U.LG.L k) (f : ∀ α : D.toPre.X, D.to
           (snd (WeightPf.Te D.toPre I e) (thickObj R I e G)).left ≫ φ = φ := by
         rw [← Category.assoc, WeightPf.sec_left_snd, Category.id_comp]
       simp only [J₂, e₁]
-      exact if_pos h
+      exact ite_eq_left h
     obtain ⟨jL, hL⟩ := exists_chart U.LG.isLB (fGl I G e ((WeightPf.act (U.gt e)).left w))
     have E := (hS _ (WeightPf.act (U.gt e)).left w J₂ hJ₂).2 jL hL
     have hs : sv U k σ ((WeightPf.act (U.gt e)).left ≫ fGl I G e) w jL =

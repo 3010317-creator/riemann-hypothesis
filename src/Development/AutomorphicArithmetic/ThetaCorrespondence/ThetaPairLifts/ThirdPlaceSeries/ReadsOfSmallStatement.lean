@@ -455,8 +455,7 @@ theorem detPol_mem_dualWeyl_one (R : Type) [CommRing R] (n : ℕ) :
   have hs : shapeDeg (n := n) (fun _ : Fin 1 => n) = fun _ => 1 := by
     funext t
     simp [shapeDeg, t.isLt]
-  rw [hb, hs] at h
-  exact h
+  rwa [hb, hs] at h
 
 theorem detPol_pow_mul_mem_dualWeyl : ∀ (R : Type) [CommRing R] (n k : ℕ) (ν : Fin n → ℕ) (f : MvPolynomial (Fin n × Fin n) R), f ∈ dualWeyl R n n ν → detPol R n ^ k * f ∈ dualWeyl R n n fun a => ν a + k := by
   intro R _ n k ν f hf
@@ -467,8 +466,7 @@ theorem detPol_pow_mul_mem_dualWeyl : ∀ (R : Type) [CommRing R] (n k : ℕ) (�
       (detPol_mem_dualWeyl_one R n) ih
     have he : ((fun _ => 1) + fun a => ν a + k) = fun a : Fin n => ν a + (k + 1) := by
       funext a; simp only [Pi.add_apply]; omega
-    rw [he, ← mul_assoc, ← pow_succ'] at h
-    exact h
+    rwa [he, ← mul_assoc, ← pow_succ'] at h
 
 end GlobalTheory.FrameRead
 end -- clump:auto
@@ -518,7 +516,7 @@ theorem res_eq {ι : Type} {n : ℕ} {lam : ι → DomWeight n} {lamW : ι → �
   have h2 := h τ ⟨n - 1, by omega⟩
   have h3 : (lam τ).w ⟨n - 1, by omega⟩ ≤ (lam τ).w a := (lam τ).anti (by
     rw [Fin.le_def]; have := a.2; simp only; omega)
-  simp only [res, DomWeight.natW, DomWeight.detShift, dif_pos hn] at h2 ⊢
+  simp only [res, DomWeight.natW, DomWeight.detShift, dite_eq_left hn] at h2 ⊢
   omega
 
 theorem liftPol_mem {K C : Type} [Field K] [Field C] (e0 : K →+* C) {ι : Type} {n : ℕ} {lam : ι → DomWeight n}
@@ -917,8 +915,7 @@ theorem UpperTheory.Reformulated.B.Ga11.lift_nabStd_mem_latN :
       refine ⟨_, (map_mem_dw_iff F.emb hinj _ _ _ _).1 ?_, he⟩
       rw [he]
       exact (y τ).2
-    · rw [map_one, one_smul]
-      exact hΦv
+    · rwa [map_one, one_smul]
   · refine hrange _ ?_
     rw [map_inv₀, norm_inv]
     exact inv_le_one_of_one_le₀ hs1
@@ -1404,8 +1401,7 @@ theorem ev_eq_zero {D : D7} {l : ℕ} [Fact l.Prime] {inc : D.host.E →+* Padic
   have e := congrArg (fun z => (Algebra.TensorProduct.basis (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv D.host.F w)
     (Module.finBasis D.host.F D.host.E)).repr z i) (hz w hw)
   simp only [GlobalTheory.HeckeRowsCompare.cmp, AlgHom.toRingHom_eq_coe, RingHom.coe_coe] at e
-  rw [GlobalTheory.HeckeRowsCompare.repr_map, map_zero] at e
-  exact e
+  rwa [GlobalTheory.HeckeRowsCompare.repr_map, map_zero] at e
 
 theorem map_eq_one_of_isLocEnv : ∀ {D : D7} (V : Formalism.BasicNotions.TH.HSp D) {Pl0 : Type} (pl : Pl0 → Pl D.host.E) (ok : Set Pl0) (i : ok × ℕ) (x : Bridge.Gf V) {l : ℕ} [Fact l.Prime] (inc : D.host.E →+* PadicAlgCl l) (ev : FiniteAdeleRing (𝓞 D.host.F) D.host.F ⊗[D.host.F] D.host.E →+* PadicAlgCl l), EvOk inc ev → ((l : ℕ) : 𝓞 D.host.E) ∉ (pl i.1.1).asIdeal → isLocEnv V pl ok i x → ((x : GL (Fin V.rank) (FiniteAdeleRing (𝓞 D.host.F) D.host.F ⊗[D.host.F] D.host.E)).val).map ev = 1 := by
   intro D V Pl0 pl ok i x l _ inc ev hev hl hx
@@ -1464,8 +1460,7 @@ theorem exists_gl_preimage {O C : Type} [CommRing O] [CommRing C] (φ : O →+* 
     ext a b; exact hφ (congrFun (congrFun hAB a) b)
   have h1 : Matrix.of M * Matrix.of M' = 1 := inj (by rw [map_mul, map_one, e1, e2, Units.mul_inv])
   have h2 : Matrix.of M' * Matrix.of M = 1 := inj (by rw [map_mul, map_one, e1, e2, Units.inv_mul])
-  refine ⟨⟨Matrix.of M, Matrix.of M', h1, h2⟩, Units.ext ?_⟩
-  exact e1
+  exact ⟨⟨Matrix.of M, Matrix.of M', h1, h2⟩, Units.ext e1⟩
 
 theorem det_map_gl {O C : Type} [CommRing O] [CommRing C] (φ : O →+* C) {n : ℕ} (g : GL (Fin n) O) :
     Matrix.GeneralLinearGroup.det (Matrix.GeneralLinearGroup.map φ g) = Units.map φ.toMonoidHom (Matrix.GeneralLinearGroup.det g) := by
@@ -1838,8 +1833,7 @@ theorem reads_rank (j : Fin D.R.m) (w : HeightOneSpectrum (𝓞 D.what₂.LL)) [
   · have h7 := h2 f k g
     rw [lamG_apply] at h7
     have h8 := smul_cancel (hsc k).2.2 (Eq.trans (by simp only [Units.coe_prod, Units.val_zpow_eq_zpow_val, hdet k]; rfl) (hsc k).2.1) h7
-    rw [← funext (hk k)] at h8
-    exact h8
+    rwa [← funext (hk k)] at h8
   · have hr : 1 ≤ i.1.2 ∧ i.1.2 ≤ (Vc D j).rank := ⟨i.2.1, i.2.2.1⟩
     have h7 := h4 f _ _ ((p.R.B.L j (p.R.mu w)).hecke.op_eq i.1 hr f) (fun a ha => funext fun τ => Units.ext
       (GlobalTheory.EvLocal.map_eq_one_of_isLocEnv (Vc D j) p.R.pl _ i.1 a _ _ (hev' τ) i.2.2.2

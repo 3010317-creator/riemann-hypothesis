@@ -83,8 +83,7 @@ theorem exists_linear_theta_factor : ∀ {E : Type} [Field E] [NumberField E] [I
   have hθ : θ ≠ 0 := by
     intro h0
     obtain ⟨i, hi⟩ : ∃ i, (Module.Free.chooseBasis ℤ (𝓞 E)).repr s i ≠ 0 := by
-      by_contra hne
-      push_neg at hne
+      by_contra! hne
       exact hs ((Module.Free.chooseBasis ℤ (𝓞 E)).repr.injective (by ext i; simp [hne i]))
     obtain ⟨t, ht⟩ := hgen ((Module.Free.chooseBasis ℤ (𝓞 E)).coord i).toAddMonoidHom
     have := ht 1
@@ -111,7 +110,6 @@ theorem exists_linear_theta_factor : ∀ {E : Type} [Field E] [NumberField E] [I
     have := hT x 1
     rw [mul_one, mul_one] at this
     rw [← this]
-    simp only [ψ, AddMonoidHom.mk'_apply]
-    exact D.adj s x w
+    simpa only [ψ, AddMonoidHom.mk'_apply] using D.adj s x w
 
 end GlobalTheory.LowFilt

@@ -91,8 +91,7 @@ theorem finite_etale_onto_spMap {K L : Type} [Field K] [Field L] [CharZero K] [C
   have : IsScalarTower ℚ K L := IsScalarTower.of_algebraMap_eq fun x => by simp
   have hf : Module.Finite K L := Module.Finite.of_restrictScalars_finite ℚ K L
   refine ⟨?_, ?_, ⟨fun y => ⟨default, Subsingleton.elim _ _⟩⟩⟩
-  · rw [IsFinite.SpecMap_iff]
-    exact hf
+  · rwa [IsFinite.SpecMap_iff]
   · rw [HasRingHomProperty.Spec_iff (P := @Etale)]
     have : Algebra.FormallyEtale K L := Algebra.FormallyEtale.of_isSeparable K L
     have : Algebra.FinitePresentation K L := Algebra.FinitePresentation.of_finiteType.mp inferInstance

@@ -116,10 +116,8 @@ theorem mass_eq_of_integral (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ
         (latV (M := n) (n := n) b v : Set (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))) := by
     intro h hh A hA a i
     refine (hO _).1 (mul_entry_mem O (mul_entry_mem O ?_ ?_) hh a i)
-    · intro p q
-      exact hσ _ (hh q p)
-    · intro p q
-      exact (hO _).2 (hA p q)
+    · exact fun p q => hσ _ (hh q p)
+    · exact fun p q => (hO _).2 (hA p q)
   have hcont : ∀ h : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E),
       Continuous (fun A : HermR (Fv F v) σ n =>
         cT (sigR (Fv F v) σ) h * (A : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) * h) := fun h =>
@@ -138,16 +136,12 @@ theorem mass_eq_of_integral (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ
     · intro A B
       apply Subtype.ext
       simp [τ, Matrix.mul_add, Matrix.add_mul]
-    · intro A
-      exact Subtype.ext (hinv g gi hc2 hgig _)
-    · intro A
-      exact Subtype.ext (hinv gi g hc1 hggi _)
+    · exact fun A => Subtype.ext (hinv g gi hc2 hgig _)
+    · exact fun A => Subtype.ext (hinv gi g hc1 hggi _)
     · exact (hHcl n).isClosedEmbedding_subtypeVal.isCompact_preimage hLc'
     · exact hLo'.preimage continuous_subtype_val
-    · intro A hA
-      exact hconj g hg _ hA
-    · intro A hA
-      exact hconj gi hgi _ hA
+    · exact fun A hA => hconj g hg _ hA
+    · exact fun A hA => hconj gi hgi _ hA
   have hdet : IsUnit g.det := Matrix.isUnit_det_of_right_inverse hggi
   have hs := _root_.GlobalTheory.CompanionTheory.SW.FibScale.fib_rmul F E σ hCM M J hJ (Fv F v) hloc n _ _ m (hμ n M) (hν n) hm g hdet τ
     (fun _ => rfl) 1 1 (by simpa using hmapW) (by simpa using hmapH) S

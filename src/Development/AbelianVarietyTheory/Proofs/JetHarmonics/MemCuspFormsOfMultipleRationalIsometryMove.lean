@@ -132,7 +132,7 @@ theorem fjI_zero (X : Data E r) (ξ : Fin r → E) (P : Frame X.Ψ r → ℂ) (x
 theorem fj_zero_eq (X : Data E r) (la : Wt X.Ψ r) (ξ : Fin r → E) (P : Frame X.Ψ r → ℂ) (x : Frame X.Ψ r) :
     X.fj la ξ 0 P x = ((volume (ExponentialGrowthExclusion.exists_fd X la).choose).toReal : ℂ)⁻¹ *
       ∫ s in (ExponentialGrowthExclusion.exists_fd X la).choose, fjI X ξ 0 P x s := by
-  rw [Data.fj, if_pos (freq_zero X la), dite_eq_left (ExponentialGrowthExclusion.exists_fd X la)]
+  rw [Data.fj, ite_eq_left (freq_zero X la), dite_eq_left (ExponentialGrowthExclusion.exists_fd X la)]
   rfl
 
 end GlobalTheory.LevelCusp.Transport
@@ -175,5 +175,4 @@ theorem GlobalTheory.LevelCusp.mem_SS_of_isMatch : ∀ (E : Type) [Field E] [Num
     rfl
   · have hT := hb _ (flow_real_mem_dom X hξ.2.1 s x hx)
     rw [BoundedSectionAlgebra.pnorm_eq, BoundedSectionAlgebra.nfac_flow_real X hξ.2.1] at hT
-    rw [fjI_zero, le_div_iff₀ (BoundedSectionAlgebra.nfac_pos X hx la)]
-    exact hT
+    rwa [fjI_zero, le_div_iff₀ (BoundedSectionAlgebra.nfac_pos X hx la)]

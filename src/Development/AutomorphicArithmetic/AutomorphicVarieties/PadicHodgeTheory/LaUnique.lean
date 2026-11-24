@@ -106,8 +106,7 @@ private theorem lin_term {ι L : Type} [Fintype ι] [Field L] [CharZero L] (c : 
       exact H n
     · exact Set.infinite_range_of_injective Nat.cast_injective
   have h1 := congrArg (fun P : L[X] => P.coeff 1) heq
-  rw [(hprod p Finset.univ).2, (hprod q Finset.univ).2] at h1
-  exact h1
+  rwa [(hprod p Finset.univ).2, (hprod q Finset.univ).2] at h1
 
 private theorem indep {ι k L Γ : Type} [Fintype ι] [Field k] [Field L] [CharZero L]
     [LinearOrderedCommGroupWithZero Γ] (v : Valuation k Γ) (π : k) (h0 : π ≠ 0) (h1 : v π < 1)
@@ -153,8 +152,7 @@ private theorem indep {ι k L Γ : Type} [Fintype ι] [Field k] [Field L] [CharZ
       have := congrArg (fun z : ℤ => (z : L)) (Int.toNat_sub_toNat_neg (e i))
       push_cast at this
       exact this.symm
-    simp only [hcast, sub_mul, Finset.sum_sub_distrib]
-    exact sub_eq_zero.2 h2
+    simpa only [hcast, sub_mul, Finset.sum_sub_distrib] using sub_eq_zero.2 h2
   let R := v.integer
   let ρ : ι → (R →* L) := fun i => (τ i).toMonoidHom.comp R.subtype.toMonoidHom
   have hinj : Function.Injective ρ := by

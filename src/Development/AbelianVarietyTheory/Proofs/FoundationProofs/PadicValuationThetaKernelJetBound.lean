@@ -125,8 +125,7 @@ theorem bd_applyAt0 (D : D7) {a d n : ℕ} {B : ℝ} (hB : 0 ≤ B) (G : VC D a 
     MvPolynomial.mem_support_iff.1 (MvPolynomial.support_map_subset _ _ hα)
   have hdeg : Multiset.card α.toMultiset = n := by
     have h1 := hP hα'
-    rw [Finsupp.card_toMultiset]
-    rw [← h1, Finsupp.weight_apply]
+    rw [Finsupp.card_toMultiset, ← h1, Finsupp.weight_apply]
     simp only [Pi.one_apply, smul_eq_mul, mul_one]
     rfl
   have hne : (α.prod fun _ n => (n.factorial : ℂ)) ≠ 0 :=
@@ -134,8 +133,7 @@ theorem bd_applyAt0 (D : D7) {a d n : ℕ} {B : ℝ} (hB : 0 ≤ B) (G : VC D a 
   rw [taylor, mul_assoc, mul_div_cancel₀ _ hne, MvPolynomial.coeff_map]
   have := (Bd.intCast (lam := lam) (AddMonoidAlgebra.coeff P α)).mul (h' _ hdeg
     (fun i => α.toMultiset.toList.get ⟨i, by simpa using i.2⟩))
-  rw [one_mul] at this
-  exact this
+  rwa [one_mul] at this
 
 theorem bd_coord (D : D7) {a d n : ℕ} {A B : ℝ} (hA : 0 ≤ A) (hB : 0 ≤ B) (T : Tor D) (hT : ∀ τ x, T.emb τ x = embT D τ x)
     (Y : Set (Matrix (Fin d) (Fin a) D.host.E))
@@ -266,7 +264,6 @@ theorem term_bound : ∀ (D : D7), Inp D → ∀ (S : Finset ℕ) (dl : ℕ → 
   refine (Bd.coe h1).mul ?_
   have := _root_.GlobalTheory.ProductJets.jets_translate_product D hI p lam ⊤ δ hC (by simp) t0 ht P.a P.d _ b hb hloc (s i) (M * Q)
     (Nat.mul_pos hM hQ.1) (hs i) hsp _ y hy
-  rw [hN] at this
-  exact this
+  rwa [hN] at this
 
 end GlobalTheory.NormSum.Term

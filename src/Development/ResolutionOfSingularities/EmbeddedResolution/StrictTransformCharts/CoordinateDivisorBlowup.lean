@@ -158,8 +158,7 @@ private theorem mem_span_coord_of_coord_pow_mul_mem {X : Scheme.{u}} {k : Type u
       intro x hx
       refine mem_span_coord_of_coord_mul_mem hU c hjs x (ih (c.coord s * x) ?_)
       have h : c.coord s ^ n * (c.coord s * x) = c.coord s ^ (n + 1) * x := by ring
-      rw [h]
-      exact hx
+      rwa [h]
 
 theorem EtaleChart.saturation_coordIdeal_of_ne {X : Scheme.{u}} {k : Type u} [Field k]
     {p : X ⟶ Spec (CommRingCat.of k)} {U : X.Opens} {m : ℕ} (c : EtaleChart p U m)
@@ -176,8 +175,7 @@ theorem EtaleChart.saturation_coordIdeal_of_ne {X : Scheme.{u}} {k : Type u} [Fi
   constructor
   · rintro ⟨n, hn⟩
     exact mem_span_coord_of_coord_pow_mul_mem V.2 (c.restrictOpens V.1) hjs n f hn
-  · intro hf
-    exact ⟨0, by simpa using hf⟩
+  · exact fun hf => ⟨0, by simpa using hf⟩
 
 namespace BlowupChart
 
@@ -255,10 +253,10 @@ theorem restrictIdeal_strictTransform_coordIdeal (B : BlowupChart π c S s)
     restrictIdeal (Blowup.strictTransform π Z D) B.domain =
       if j = s then ⊤ else B.chart.coordIdeal {j} := by
   by_cases hj : j = s
-  · rw [if_pos hj]
+  · rw [ite_eq_left hj]
     have hD' : restrictIdeal D U = c.coordIdeal {s} := by rw [hD, hj]
     exact B.restrictIdeal_strictTransform_coordIdeal_self Z D hs hZ hD'
-  · rw [if_neg hj]
+  · rw [ite_eq_right hj]
     by_cases hjS : j ∈ S
     · exact B.restrictIdeal_strictTransform_of_mem_of_ne Z D hs hZ j hjS hj hD
     · exact B.restrictIdeal_strictTransform_coordIdeal_of_notMem Z D hs hZ j hjS hD

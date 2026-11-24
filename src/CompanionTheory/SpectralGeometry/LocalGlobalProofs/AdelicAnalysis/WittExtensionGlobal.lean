@@ -114,8 +114,7 @@ theorem lin_mem_span {n : ℕ} (X : Fin n → V) (c : Fin n → E) :
 theorem exists_norm_ne_zero (B : V →ₛₗ[σ] V →ₗ[E] E) (hB : ∀ x y, σ (B x y) = B y x)
     (h2 : (2 : E) ≠ 0) {n : ℕ} (X : Fin n → V) (hX : ¬ ∀ a b, B (X a) (X b) = 0) :
     ∃ c : Fin n → E, B (lin X c) (lin X c) ≠ 0 := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   apply hX
   intro a b
   by_contra hs
@@ -229,8 +228,7 @@ theorem exists_isom_tuple (B : V →ₛₗ[σ] V →ₗ[E] E) (hσ : ∀ x, σ (
     rw [e] at h1
     simp only [map_sub, map_smulₛₗ, LinearMap.sub_apply, LinearMap.smul_apply, smul_eq_mul] at h1
     rw [← hlinX]
-    rw [h0, mul_zero, sub_zero] at h1
-    exact h1
+    rwa [h0, mul_zero, sub_zero] at h1
   obtain ⟨γ₁, i1, e1⟩ := ih _ hlt X' Y' rfl hG' hN'
   have hx1 : B (γ₁ x) (γ₁ x) = B y y := by rw [i1]; exact hxy
   obtain ⟨γ₂, i2, e2, f2⟩ := exists_isom_of_eq B hσ hB h2 (γ₁ x) y hx1
@@ -296,8 +294,7 @@ theorem exists_mem_UJ (s : E →+* E) {M : ℕ} (J : Matrix (Fin M) (Fin M) E) (
     have := congrArg Matrix.det hu
     rw [Matrix.det_mul, h0, mul_zero] at this
     exact this.symm
-  refine ⟨Matrix.GeneralLinearGroup.mkOfDetNeZero m hdet, ?_, hmv⟩
-  exact hu
+  exact ⟨Matrix.GeneralLinearGroup.mkOfDetNeZero m hdet, hu, hmv⟩
 
 end Concrete
 

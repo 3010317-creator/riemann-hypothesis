@@ -137,8 +137,7 @@ theorem shape_paired_of (hT : TensStd) (hG : GramTransfer) (hI : IotaOK) (hF : F
     exact Real.rpow_pos_of_pos hd0 _
   have hθ0 : θ₀ ≠ 0 := norm_pos_iff.mp hθpos
   have hquot : ‖th / θ₀‖ ≤ 1 := by
-    rw [norm_div, div_le_one hθpos, hθn]
-    exact hth
+    rwa [norm_div, div_le_one hθpos, hθn]
   have hq' : ∀ x y : Fin 4 × ((Bool × H) × Fin N0 × Fin N1),
       ‖q1 x y + (if x.1 = y.1 then (th / θ₀) * q x.2 y.2 else 0)‖ ≤ 1 := by
     intro x y
@@ -155,11 +154,11 @@ theorem shape_paired_of (hT : TensStd) (hG : GramTransfer) (hI : IotaOK) (hF : F
     by_cases hxy : x.1 = y.1
     · have e := hid x.2 y.2
       simp only [RingEquiv.coe_toRingHom] at e
-      simp only [hxy, if_true, true_and]
+      simp only [hxy, ite_true, true_and]
       rw [e]
       field_simp
       ring
-    · simp only [hxy, if_false, false_and, add_zero]
+    · simp only [hxy, ite_false, false_and, add_zero]
   have key : ∀ k, ∃ sg : MvPowerSeries ((Bool × H) × Fin N0 × Fin N1) ℂ_[p], JetsIntegral sg ∧
       linSub (frameM (ι : ℂ →+* ℂ_[p]) v A)
         (MvPowerSeries.map (ι : ℂ →+* ℂ_[p]) (taylorMv (opU (matH h) (t k) θ))) =
@@ -246,14 +245,12 @@ theorem tens_std (p : ℕ) [Fact p.Prime] (L : PeriodPair) (ι : ℂ ≃+* ℂ_[
   refine ⟨{x // x ∈ S}, inferInstance, fun x => ι (c x), fun x w => g (fun w => t w.2) w + (x : Fin 4 × n → ℂ) w,
     N * relIdx (stdLat L (Fin 4 × n)) (imgLat (g : (Fin 4 × n → ℂ) →ₗ[ℂ] (Fin 4 × n → ℂ)) (pow4 Λ)),
     ?_, Nat.mul_pos hN (Nat.pos_of_ne_zero hD.idx₁), ?_, ?_, ?_⟩
-  · intro x
-    exact norm_coeff ι _ _ hD.selfDual β hD.betaSemi _ hln ε hε _ _ N hN hNt' (hS.1 x x.2)
+  · exact fun x => norm_coeff ι _ _ hD.selfDual β hD.betaSemi _ hln ε hε _ _ N hN hNt' (hS.1 x x.2)
   · intro hd
     rcases (Nat.Prime.dvd_mul Fact.out).1 hd with h1 | h1
     · exact hlN h1
     · exact hln h1
-  · intro x w
-    exact trans_mem L _ _ _ N hNt' (hS.1 x x.2) w
+  · exact fun x w => trans_mem L _ _ _ N hNt' (hS.1 x x.2) w
   · have e1 : linSub (fun w w' => ι (g.symm (Pi.single w' 1) w))
           (Formalism.L2.Th1.G.tens4 (MvPowerSeries.map (ι : ℂ →+* ℂ_[p]) (taylorMv (opU (matH h) t θ)))) =
         linSubst (M.map (ι : ℂ →+* ℂ_[p]))
@@ -288,8 +285,7 @@ theorem fourth_power_theta : TensZ := by
   intro a₀ b₀ c₀ dK ha hdK lam hlam hcm n _ _ h Λ hSD hSt θ hθ p _ ι g₁ ε hI hidx hidx2 hε htens t N hN hpN ht
   have hidx1 : relIdx (stdLat (cmL a₀ b₀ dK ha hdK lam hlam) (Fin 4 × n))
       (imgLat (g₁ : (Fin 4 × n → ℂ) →ₗ[ℂ] (Fin 4 × n → ℂ)) (pow4 Λ)) ≠ 0 := by
-    intro h0
-    exact hidx (h0 ▸ dvd_zero p)
+    exact fun h0 => hidx (h0 ▸ dvd_zero p)
 
   have hS := Formalism.L2.Th1.H.stdDataCm a₀ b₀ c₀ dK ha hdK lam hlam hcm.1 hcm.2.1 hcm.2.2.1 n h Λ g₁
     hI hSD hSt hidx1 hidx2

@@ -212,8 +212,7 @@ theorem rowNG_of_cut2P (hc : NGCut2P) : RowNGP := by
     cSt e1 Irat Ire
   rw [hcard] at key
   have r := key ha hG hN hF hS hFin hRe
-  rw [hdd] at r
-  exact r
+  rwa [hdd] at r
 
 end GlobalTheory.NGRow
 end -- clump:auto
@@ -377,8 +376,7 @@ theorem orth_apply {U : Submodule E S.V} {x : S.V} (hx : x ∈ orth S U) {y : S.
   exact hx y hy
 
 theorem mem_orth_of {U : Submodule E S.V} {x : S.V} (h : ∀ y ∈ U, S.hT y x = 0) : x ∈ orth S U := by
-  simp only [orth, Submodule.mem_iInf, LinearMap.mem_ker]
-  exact h
+  simpa only [orth, Submodule.mem_iInf, LinearMap.mem_ker] using h
 
 theorem mem_orth_Xsp {T : E} (F : LFlag S r T) (x : S.V) (hx : ∀ a, S.hT (F.fl.e a) x = 0) :
     x ∈ orth S (Xsp F) := by
@@ -463,7 +461,7 @@ theorem nonGeneric_terms_same_coset_corank_one (t t' : TauC Y u u') (ht : t ∈ 
     apply ht.1
     show Formalism.L2.SG.TermOp.Gt t = 0
     unfold Formalism.L2.SG.TermOp.Gt
-    rw [if_pos ((Formalism.L2.SG.Pf.SatGram.gterm_G Y t).trans h)]
+    rw [ite_eq_left ((Formalism.L2.SG.Pf.SatGram.gterm_G Y t).trans h)]
   have hlat : Submodule.IsFullLattice D.host.E t.lam := ((Y.rowsOK u).1 t.lam t.mem).1.1
   have hLF : IsLift t.lam (lf D (X.Fu u)) := ((Y.rowsOK u).1 t.lam t.mem).2.1.2.2.1
   have hLt : IsLift t.lam t.frame := t.rep.2.2.2.2.1
@@ -472,7 +470,7 @@ theorem nonGeneric_terms_same_coset_corank_one (t t' : TauC Y u u') (ht : t ∈ 
   have hiso' : t'.lin ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := t'.rep.2.2.1
   show Formalism.L2.SG.TermOp.s0T t t' = 1
   unfold Formalism.L2.SG.TermOp.s0T
-  rw [if_pos ⟨hlam, hlam'⟩]
+  rw [ite_eq_left ⟨hlam, hlam'⟩]
   refine (Formalism.L2.SG.NGCut.CorankRelation.s0_eq_one_iff_Th_eq_Hp D.R.k hdim t.lam hlat _ t.frame t'.frame _ hLF hLt hGv).2 ?_
   refine le_antisymm (PI.PairCorankPos.W.Th_le_Hp _ _ _ _ _) fun x hx => ?_
   have hxo : ∀ i, (VS D).hT (Sum.elim (lf D (X.Fu u)).fl.fvec t.frame.fl.fvec i) x = 0 := fun i =>
@@ -528,8 +526,7 @@ theorem nonGeneric_terms_same_coset_corank_one (t t' : TauC Y u u') (ht : t ∈ 
       rw [← hn'.1 y (n'.symm w), LinearEquiv.apply_symm_apply]
       exact hwo _ (nrat_map_Xsp _ hn' y hy)
     have h6 := hn'.2.2 _ hv
-    rw [LinearEquiv.apply_symm_apply] at h6
-    exact h6
+    rwa [LinearEquiv.apply_symm_apply] at h6
 
 theorem clsRow_ngSet : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word), ConcTie X Y →
     ClsRow (Y.tO u u').ngSet (clsOf Y u u') := by
@@ -680,8 +677,7 @@ theorem leaves_of_fam : FamNG → (FamilyWeightSumUnfoldingIdentity → Formalis
       ψ hbt sd C Th F0 what₂ vR Q i0 i0' νq Irat Ire hbk ν hν
     refine ⟨s, hs1, hs2, hs3, fun γ hγ S Fm hT x _ => ?_⟩
     have h := hs4 _ id _ _ hQ γ (hasPt_of_isPt hγ) Fm hT x.1 x.2
-    rw [ampQ_id] at h
-    exact h
+    rwa [ampQ_id] at h
   · intro Cg cb Cw cT CT C0
     obtain ⟨a1, b1, h1⟩ := hF Cg cb Cw cT CT C0
     obtain ⟨a2, b2, h2⟩ := hE Cg cb Cw cT CT C0

@@ -100,8 +100,7 @@ theorem exists_rel {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host 
             smul_mem' := fun c p a => by simpa using hc c 0 p p a a }, fun a s e => ?_, fun d hd => ?_, fun s hs => ?_⟩
   · obtain ⟨v', e', hd⟩ := hv a
     show u.IsDiff (x a) (lft hp (Mz.pt s))
-    rw [← e, ← lft_unique hp e']
-    exact hd
+    rwa [← e, ← lft_unique hp e']
   · exact eq_of_isDiff u (ht 0) hd h0
   · have e := GlobalTheory.ArchMetricCompare.eq_of_isDiff u (ht s) (ht 0) hs h0
     apply Mz.inj
@@ -178,8 +177,7 @@ theorem tri_unique {α ω : Fin m → V} (hα : LinearIndependent ℂ α) {u u' 
       rw [← hlow t l fun i hi => ih i hi (lt_trans hi hl), e, hc l hl]
   have hε : LinearIndependent ℂ ε := by
     rw [Fintype.linearIndependent_iff]
-    intro t ht l
-    exact hvan t 0 m (hco t 0 (by simpa using ht)) (fun _ _ => rfl) l l.2
+    exact fun t ht l => hvan t 0 m (hco t 0 (by simpa using ht)) (fun _ _ => rfl) l l.2
   have hfl : ∀ k : ℕ, flagStep ℂ ε k = flagStep ℂ ω k := fun k => by
     have hle : flagStep ℂ ε k ≤ flagStep ℂ ω k := by
       refine Submodule.span_le.2 ?_
@@ -314,8 +312,7 @@ theorem f_genPt : 𝔐.f (genPt 𝔐.ξ) = genPt 𝔐.ξ₀ := RegAtDom.map_genP
 
 theorem spec_f (z : Sp ℂ ⟶ 𝔐.X) : genPt 𝔐.ξ₀ ⤳ centre (z ≫ 𝔐.f) := by
   have := (𝔐.all (centre z)).map 𝔐.f.continuous
-  rw [f_genPt] at this
-  exact this
+  rwa [f_genPt] at this
 
 theorem Ev.pull {P : Y.X.Opens → Prop} (h : Ev 𝔐.ξ₀ P) :
     Ev 𝔐.ξ fun U => ∃ U₀, P U₀ ∧ ∀ q ∈ U, 𝔐.f q ∈ U₀ :=

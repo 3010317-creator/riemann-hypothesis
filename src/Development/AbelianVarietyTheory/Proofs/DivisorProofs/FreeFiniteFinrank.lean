@@ -66,8 +66,7 @@ theorem lev_sum {I : Type} (s : Finset I) (f : I → Tate l M) (n : ℕ) :
   let h : Tate l M →+ Additive M :=
     { toFun := fun t => Additive.ofMul (t.lev n), map_zero' := rfl, map_add' := fun _ _ => rfl }
   have := congrArg Additive.toMul (map_sum h f s)
-  rw [toMul_sum] at this
-  exact this
+  rwa [toMul_sum] at this
 
 theorem zpow_pow_comm' (a : M) (k : ℤ) (m : ℕ) : (a ^ k) ^ m = (a ^ m) ^ k := by
   rw [← zpow_natCast, ← zpow_natCast a m, ← zpow_mul, ← zpow_mul, mul_comm]
@@ -179,9 +178,7 @@ theorem free_finite_finrank (M : Type) [CommGroup M] (l : ℕ) [Fact l.Prime] (r
       have hl : ∀ j, (t j).lev (n + 1) ^ l ^ n = e j := fun j => by
         rw [add_comm, Tate.lev_add_pow, ht]
       have h1 : ∏ j, e j ^ k j = 1 := by
-        have h2 := congrArg (· ^ (l ^ n)) hk
-        simp only [one_pow, ← Finset.prod_pow, zpow_pow_comm', hl] at h2
-        exact h2
+        simpa only [one_pow, ← Finset.prod_pow, zpow_pow_comm', hl] using congrArg (· ^ (l ^ n)) hk
       choose k' hk' using hind k h1
       have h3 : ∏ j, (t j).lev n ^ k' j = 1 := by
         rw [← hk]

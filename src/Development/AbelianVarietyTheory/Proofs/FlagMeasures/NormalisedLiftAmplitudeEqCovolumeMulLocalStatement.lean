@@ -171,8 +171,7 @@ theorem cutoff_left {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGrou
     rw [hφ.map_comap]
     refine Measure.restrict_eq_self_of_ae_mem ?_
     have : Set.range R.subtype = (R : Set G) := Subtype.range_coe
-    rw [this]
-    exact hc
+    rwa [this]
   set ν : Measure R := μ.comap R.subtype with hν
   haveI : SigmaFinite ν := SigmaFinite.of_map _ hφ.measurable.aemeasurable (by rwa [h2])
   haveI : ν.IsMulLeftInvariant := ⟨fun g => by
@@ -232,8 +231,7 @@ theorem pres_of (M : Matrix (Fin n) (Fin n) ℂ) (h : ∀ b : Fin r, M *ᵥ e b 
     rw [Matrix.mulVecLin_apply]
     exact spanLt_mono e (Nat.succ_le_of_lt hc) (h c)
   have h2 := this hv
-  rw [Submodule.mem_comap, Matrix.mulVecLin_apply] at h2
-  exact h2
+  rwa [Submodule.mem_comap, Matrix.mulVecLin_apply] at h2
 
 def Good (M : Matrix (Fin n) (Fin n) ℂ) : Prop :=
   ((∀ a : Fin r, M *ᵥ e a ∈ spanLt e a.1) ∧ M *ᵥ z ∈ spanLt e r) ∧
@@ -282,8 +280,7 @@ theorem pres_inv {g g' : Matrix (Fin n) (Fin n) ℂ} (h1 : g' * g = 1) (hP : Pre
     intro x y hxy
     apply Subtype.ext
     have := congrArg (fun w : spanLt e a => g' *ᵥ (w : Fin n → ℂ)) hxy
-    simp only [hf, Matrix.mulVec_mulVec, h1, Matrix.one_mulVec] at this
-    exact this
+    simpa only [hf, Matrix.mulVec_mulVec, h1, Matrix.one_mulVec] using this
   obtain ⟨w, hw⟩ := (LinearMap.injective_iff_surjective.1 hinj) ⟨v, hv⟩
   have : g' *ᵥ v = w := by
     have := congrArg (fun w : spanLt e a => g' *ᵥ (w : Fin n → ℂ)) hw
@@ -425,14 +422,11 @@ private lemma mulVec_mem_spanLt' {n r : ℕ} {e : Fin r → Fin n → ℂ} {A : 
     rw [hsplit]
     refine add_mem (Submodule.subset_span ⟨b, hb, rfl⟩) ?_
     refine Submodule.span_mono (Set.image_mono ?_) (hA b)
-    intro c hc
-    exact lt_trans (show c.1 < b.1 from hc) (show b.1 < a from hb)
-  intro y hy
-  exact hle hy
+    exact fun c hc => lt_trans (show c.1 < b.1 from hc) (show b.1 < a from hb)
+  exact fun y hy => hle hy
 
 theorem ninf_mul {a b : X.B.I.Ginf} (ha : a ∈ X.NinfU u) (hb : b ∈ X.NinfU u) : a * b ∈ X.NinfU u := by
-  intro v
-  exact _root_.Formalism.L2.SG.Pf.WFL.HNL.inN_mul (ha v) (hb v)
+  exact fun v => _root_.Formalism.L2.SG.Pf.WFL.HNL.inN_mul (ha v) (hb v)
 
 private lemma mulVec_mem_spanLt_of_left_inv {n r : ℕ} {e : Fin r → Fin n → ℂ} {A Ai : Matrix (Fin n) (Fin n) ℂ}
     (hA : ∀ b : Fin r, (A - 1) *ᵥ e b ∈ spanLt e b.1) (h2 : Ai * A = 1) (a : ℕ) :
@@ -464,8 +458,7 @@ private lemma inN_of_left_inv {n r : ℕ} {ε : Fin n → Bool} {e : Fin r → F
   · rw [key]; exact neg_mem (mulVec_mem_spanLt_of_left_inv hA.1.1 h2 _ _ (hA.2 y hy))
 
 theorem ninf_inv {a : X.B.I.Ginf} (ha : a ∈ X.NinfU u) : a⁻¹ ∈ X.NinfU u := by
-  intro v
-  exact inN_of_left_inv (_root_.Formalism.L2.SG.PoincareInHH.Cut.uMat_inv_mul (a v)) (ha v)
+  exact fun v => inN_of_left_inv (_root_.Formalism.L2.SG.PoincareInHH.Cut.uMat_inv_mul (a v)) (ha v)
 
 theorem sinf_conj {a : X.B.I.Ginf} (ha : a ∈ X.SinfU u) {n : X.B.I.Ginf} (hn : n ∈ X.NinfU u) :
     a * n * a⁻¹ ∈ X.NinfU u := by
@@ -473,8 +466,7 @@ theorem sinf_conj {a : X.B.I.Ginf} (ha : a ∈ X.SinfU u) {n : X.B.I.Ginf} (hn :
   have hmn : m * n * m⁻¹ ∈ X.NinfU u := ninf_mul X u (ninf_mul X u hm hn) (ninf_inv X u hm)
   have hc := Formalism.L2.SG.Pf.Sinf.conj_ninf X u hh hmn
   have e : h * m * n * (h * m)⁻¹ = h * (m * n * m⁻¹) * h⁻¹ := by group
-  rw [e]
-  exact hc
+  rwa [e]
 
 theorem sinf_nh {a : X.B.I.Ginf} (ha : a ∈ X.SinfU u) (v : InfinitePlace X.B.I.F) :
     a v ∈ Formalism.L2.SG.Pf.WuDec.NHloc X u v := by
@@ -519,21 +511,17 @@ theorem haar_conj (S T : Set G) (g : G) (hST : ∀ z, g * z * g⁻¹ ∈ T ↔ z
     refine SigmaFinite.of_map (μ.map E) E.symm.measurable.aemeasurable ?_
     have hback : (μ.map E).map E.symm = μ := by
       rw [Measure.map_map E.symm.measurable E.measurable, MeasurableEquiv.symm_comp_self, Measure.map_id]
-    rw [hback]
-    exact hσ
+    rwa [hback]
   · exact (Measure.map_ne_zero_iff (hm g).aemeasurable).mpr h0
   · rw [hE, MeasurableEquiv.map_apply]
     have hpre : ⇑E ⁻¹' Tᶜ = Sᶜ := by
       ext z
       simp only [Set.mem_preimage, Set.mem_compl_iff]
       exact not_congr (hST z)
-    rw [hpre]
-    exact hS
+    rwa [hpre]
   · intro r hr
     have hs : g⁻¹ * r * g ∈ S := by
-      rw [← hST]
-      rw [show g * (g⁻¹ * r * g) * g⁻¹ = r by group]
-      exact hr
+      rwa [← hST, show g * (g⁻¹ * r * g) * g⁻¹ = r by group]
     rw [Measure.map_map (measurable_const_mul r) (hm g)]
     have hcomp : (fun x : G => r * x) ∘ (fun y : G => g * y * g⁻¹) =
         (fun y : G => g * y * g⁻¹) ∘ (fun x : G => (g⁻¹ * r * g) * x) := by
@@ -571,8 +559,7 @@ theorem eq_one_of_smul {α : Type*} [MeasurableSpace α] (μ : Measure α) [Sigm
   have htop : μ (spanningSets μ k) ≠ ⊤ := (measure_spanningSets_lt_top μ k).ne
   have hx : μ (spanningSets μ k) = c * μ (spanningSets μ k) := by
     have e1 := congrArg (fun m : Measure α => m (spanningSets μ k)) h
-    simp only [Measure.smul_apply, smul_eq_mul] at e1
-    exact e1
+    simpa only [Measure.smul_apply, smul_eq_mul] using e1
   have h3 : c * μ (spanningSets μ k) / μ (spanningSets μ k) =
       μ (spanningSets μ k) / μ (spanningSets μ k) := by rw [← hx]
   rwa [ENNReal.mul_div_cancel_right hk htop, ENNReal.div_self hk htop] at h3
@@ -593,8 +580,7 @@ theorem conj_loc_of {a : X.B.I.Ginf} (ha : a ∈ X.SinfU u) (v : InfinitePlace X
     · subst hw
       have e : n' w = n := by simp [n']
       show InN _ _ _ (uMat (n' w))
-      rw [e]
-      exact hn
+      rwa [e]
     · have e : n' w = 1 := by simp [n', Function.update_of_ne hw]
       show InN _ _ _ (uMat (n' w))
       rw [e]
@@ -602,8 +588,7 @@ theorem conj_loc_of {a : X.B.I.Ginf} (ha : a ∈ X.SinfU u) (v : InfinitePlace X
   have h := sinf_conj X u ha hn' v
   have e : n' v = n := by simp [n']
   show InN _ _ _ (uMat (a v * n * (a v)⁻¹))
-  rw [← e]
-  exact h
+  rwa [← e]
 
 end Loc
 
@@ -750,9 +735,7 @@ theorem pin_pi (u u' : D.what₂.Word) (w : Point D.host.E (D.R.rS + 1)) (γ : X
     have hf : AEMeasurable (stCoord X u' w γ) (Measure.pi m) := by
       rw [Formalism.L2.SG.NGPin.stCoord_eq]
       exact (Measurable.of_eval fun v => (hcoord v).comp (measurable_pi_apply v)).aemeasurable
-    rw [Measure.map_smul c hf] at e
-    rw [hm, hpimap] at e
-    exact e
+    rwa [Measure.map_smul c hf, hm, hpimap] at e
   have hc1 := eq_one_of_smul (muStab X w) hne hS
   rw [hμc, hc1, one_smul]
 
@@ -1010,8 +993,7 @@ theorem pinned_root : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (θ : ℝ) (
         rw [show (s0 (vOf X τ))⁻¹ * (s0 (vOf X τ) * y * (s0 (vOf X τ))⁻¹) * s0 (vOf X τ) = y by group]
       show ((m (vOf X τ)).map (fun y => s0 (vOf X τ) * y * (s0 (vOf X τ))⁻¹)).map _ = _
       rw [Measure.map_map hF (hcjm _), Measure.map_map hGm hcm, hcomp]
-    rw [hg, hμ]
-    exact hmove
+    rwa [hg, hμ]
 
 end GlobalTheory.Amp.PinRoot
 end -- clump:auto
@@ -1107,8 +1089,7 @@ theorem nilp (ε : Fin n → Bool) (e : Fin r → Fin n → ℂ) (z : Fin n → 
     intro b w
     have h1 : hJ ε (e b) (G *ᵥ w) = hJ ε (Formalism.MainNotions.S.uMat g⁻¹ *ᵥ e b) w := by
       have := hiso (Formalism.MainNotions.S.uMat g⁻¹ *ᵥ e b) w
-      rw [mulVec_mulVec, hGG', one_mulVec] at this
-      exact this
+      rwa [mulVec_mulVec, hGG', one_mulVec] at this
     rw [sub_mulVec, one_mulVec, _root_.Formalism.L2.SG.PoincareInHH.Cut.hJ_sub_right, h1, sub_mulVec, one_mulVec, _root_.Formalism.L2.SG.PoincareInHH.Cut.hJ_sub_left]
 
   have step1 : ∀ k, ∀ x, ∀ b : Fin r, b.1 < k → hJ ε (e b) ((G - 1) ^ k *ᵥ x) = 0 := by
@@ -1412,8 +1393,7 @@ theorem unimodular_of_unipotent : ∀ {n : ℕ} (ε : Fin n → Bool) (m : ℕ) 
     rw [hφ.map_comap]
     refine Measure.restrict_eq_self_of_ae_mem ?_
     have : Set.range S.subtype = (S : Set (Formalism.REAL.UJ ε)) := Subtype.range_coe
-    rw [this]
-    exact hc
+    rwa [this]
   set ν : Measure S := μ.comap S.subtype with hν
   haveI : SigmaFinite ν := SigmaFinite.of_map _ hφ.measurable.aemeasurable (by rwa [h2])
   haveI : ν.IsMulLeftInvariant := ⟨fun g => by
@@ -1784,7 +1764,7 @@ theorem oo_quot : ∀ (D : D7) (X : HidaSetting D) (u u' : D.what₂.Word) (γ :
         simpa using hz
       exact integral_eq_zero_of_ae hz
     rw [hrhs, hlhs, hsNormSq_zero]
-  push_neg at h0
+  push Not at h0
   by_cases hT : ∃ v, ∫⁻ z, ‖ψ v z‖ₑ ∂(νl v) = ⊤
   · obtain ⟨v0, hv0⟩ := hT
     have hrhs : ∏ v, Formalism.MainNotions.S.hsNormSq (∫ z, ψ v z ∂(νl v)) = 0 := by
@@ -1796,7 +1776,7 @@ theorem oo_quot : ∀ (D : D7) (X : HidaSetting D) (u u' : D.what₂.Word) (γ :
       exact ENNReal.top_mul (Finset.prod_ne_zero_iff.2 fun v _ => h0 v)
     have hlhs : ∫ x, Φ x ∂ν = 0 := integral_undef fun hi => hi.2.ne hg
     rw [hrhs, hlhs, hsNormSq_zero]
-  push_neg at hT
+  push Not at hT
   have hψI : ∀ v, Integrable (ψ v) (νl v) := fun v =>
     ⟨(hψc v).aestronglyMeasurable, lt_top_iff_ne_top.2 (hT v)⟩
   have hΦI : Integrable Φ ν := ⟨hΦc.aestronglyMeasurable, by

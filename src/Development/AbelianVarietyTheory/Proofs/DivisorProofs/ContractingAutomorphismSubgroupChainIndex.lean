@@ -57,11 +57,9 @@ theorem chain_comap_eq {A : Type} [Group A] (U : Subgroup A) (c : MulAut A) (j :
     rw [add_comm, zpow_add, zpow_one, MulAut.mul_apply]
   simp only [Subgroup.mem_comap, Subgroup.mem_map, MulEquiv.coe_toMonoidHom, h]
   constructor
-  · intro ha
-    exact ⟨_, ha, rfl⟩
+  · exact fun ha => ⟨_, ha, rfl⟩
   · rintro ⟨x, hx, hxa⟩
-    rw [← c.injective hxa]
-    exact hx
+    rwa [← c.injective hxa]
 
 theorem chain_step {A : Type} [Group A] (U : Subgroup A) (c : MulAut A) (hc : ∀ a ∈ U, c a ∈ U) (j : ℤ) :
     U.comap (c ^ j).toMonoidHom ≤ U.comap (c ^ (j + 1)).toMonoidHom ∧

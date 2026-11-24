@@ -149,8 +149,7 @@ theorem pi_change {ι P D : Type*} [Fintype ι] [MeasurableSpace P] [MeasurableS
       · simp [hp]
       · simp [hp]
     simp_rw [hpre] at h1
-    rw [lintegral_indicator_one_mul_eq_setLIntegral μ (hc hs)] at h1
-    exact h1
+    rwa [lintegral_indicator_one_mul_eq_setLIntegral μ (hc hs)] at h1
   have hcm : Measurable fun (p : ι → P) (i : ι) => c (p i) :=
     Measurable.of_eval fun i => hc.comp (measurable_pi_apply i)
   have : SigmaFinite ((μ.withDensity fun p => ENNReal.ofReal (σ p)).map c) := by
@@ -528,8 +527,7 @@ theorem measurePreserving_cons (X : Type) [MeasureSpace X] [SigmaFinite (volume 
       (MeasurableEquiv.piFinSuccAbove (fun _ : Fin (n + 1) => X) 0).symm := by
     funext p
     simp [MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv, Fin.insertNth_zero']
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem lintegral_first_col {n k : ℕ} (F : (Fin n → Fin (k + 1) → ℂ) → ℝ≥0∞) (hF : Measurable F) :
     ∫⁻ y, F y = ∫⁻ x : Fin n → ℂ, ∫⁻ Y : Fin n → Fin k → ℂ, F fun a => Fin.cons (x a) (Y a) := by
@@ -607,8 +605,7 @@ theorem lintegral_blk_inv {k : ℕ} (ψ : (Fin (k + 1) → Fin (k + 1) → ℂ) 
           rw [lintegral_mul_const' _ _ (ENNReal.mul_ne_top ENNReal.ofReal_ne_top
             (show wt m ≠ ⊤ from ENNReal.ofReal_ne_top)), mul_assoc, ← lintegral_neg_eq_self]
           congr 1
-          refine lintegral_congr fun T => ?_
-          exact congrArg ψ (inv_blk T m hm)
+          exact lintegral_congr fun T => congrArg ψ (inv_blk T m hm)
     _ = ∫⁻ h, G h * wt h := lintegral_inv G hG
     _ = _ := by
         refine lintegral_congr fun h => ?_

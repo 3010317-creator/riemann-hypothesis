@@ -358,8 +358,7 @@ theorem exists_thetaChar_mulVec_ne {g : ℕ} (τ h : Matrix (Fin g) (Fin g) ℂ)
   rw [re c₁ h₁, re c₂ h₂] at hne
   obtain ⟨z₀, hz₀⟩ := Function.ne_iff.1 hne
   refine ⟨h⁻¹.mulVec z₀, ?_⟩
-  rw [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ hh, Matrix.one_mulVec]
-  exact hz₀
+  rwa [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ hh, Matrix.one_mulVec]
 
 theorem exists_unif_of_arc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (σ : c.F →+* ℂ) [Algebra (FractionRing ℂ) ℂ] [IsScalarTower ℂ (FractionRing ℂ) ℂ] (V : ValuationSubring c.F) (Y : Model Xo c V.subtype) (a : ArcIn Dw l V.subtype ℂ (σ.comp V.subtype)) (χ : Sp (PowerSeries ℂ) ⟶ Y.X) (W : GlobalTheory.ArcQ.Wit Y a χ) (g : ℕ) (ty : Fin g → (E →+* ℂ)) (Fu : FamilyUnif Xo (σ.comp (IntermediateField.inclusion c.le).toRingHom) ty) (Ha : HolArc Y σ a χ W Fu) (th : a.D₀.P.L.Sec) (Θ : GlobalTheory.ArcQ.ThetaDat Ha th) (M : GChart Y), Formalism.L2.PjFree.GoodEmb c σ → IsTypeFn H Dw.p Dw.q ty → PushInvertible Y.t.G Y.t.PP.L → χ ≫ Y.s = spMap (PowerSeries.C (R := ℂ)) ≫ spMap (σ.comp V.subtype) → (∀ x : Sp (PowerSeries ℂ), PowerSeries.X ∉ x.asIdeal → χ x ∈ Set.range Y.j) → ⊤ ≤ χ ⁻¹ᵁ M.U → ∃ T : ℝ, ∀ w : ℂ, T < w.im → ∀ yF : Sp ℂ ⟶ Xo.XF c, yF ≫ pullback.fst _ _ = Fu.u Ha.i (Ha.Pw w) → yF ≫ pullback.snd _ _ = spMap σ → ∀ (hz : ⊤ ≤ (yF ≫ Y.j) ⁻¹ᵁ M.U) (x : KeyIn ℂ) (φ : x.P.A.left ⟶ Y.t.G.left), GlobalTheory.ArcNormal.KeyAtVia M (yF ≫ Y.j) hz x φ → ∃ (_ : x.P.g = g) (u : HolUnif x.P.A x.P.L g) (c₀ : ℂ), u.IsRig x.rig ∧ GlobalTheory.ArcNormal.ArcFib Y σ Fu Ha.i (Ha.Pw w) x φ u ∧ u.Λ = (Ha.Pw w).range.toIntSubmodule ∧ u.IsFn x.th (fun z => c₀ * thetaChar (Θ.τ w) Θ.c₁ Θ.c₂ (Θ.h.mulVec z)) := by
   intro E _ _ _ H Dw l Xo c σ _ _ V Y a χ W g ty Fu Ha th Θ M hσ hty hP hover hgen hM
@@ -647,8 +646,7 @@ theorem lie_coords_hasSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     have h3 := GlobalTheory.Conv.sumsAt_iff.1 hs
     have e4 : valR χ M.U r = ev χ M.U hM r := valR_eq_ev' χ M.U hM r
     have e5 : valAt' (ω.1.2.1 ≫ Y.j) M.U r = ψ ω r := valR_eq_ev' (ω.1.2.1 ≫ Y.j) M.U ω.2.2.2.2.1 r
-    rw [e4, e5] at h3
-    exact h3
+    rwa [e4, e5] at h3
   have hch := fun f => cv_chart (M.v₀ (Fin.cast hn.symm i)) Vo f φL ψ hc (by rw [eχ]; exact le_preimage_comp _ hv'V)
   refine cv_coeff (F := Γ(Y.t.G.left, Vo)) (m := g)
     (A := fun f k => HahnSeries.ofPowerSeries ℤ ℂ (valR ((v k).left ≫ W.m.φ) Vo f).snd)
@@ -936,8 +934,7 @@ theorem exists_chart_theta_unit : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   obtain ⟨hA, hB⟩ := GlobalTheory.theta_generates_along_arc hL.globalFns hL.secBaseChange Y a χ W
   have hw0 : Ha.T < ((Ha.T + 1 : ℝ) * Complex.I : ℂ).im := by simp
   have hne : ∃ j, th.f j ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     obtain ⟨hs, hp⟩ := Θ.pos _ hw0
     have h7 := (GlobalTheory.ThetaBlock.thetaCharOff_ne_zero_differentiable_quasiPeriodic g Θ.S (Θ.τ ((Ha.T + 1 : ℝ) * Complex.I)) Θ.c₁ Θ.c₂ hs hp Θ.half₁ Θ.half₂ Θ.c₁_S).1
     apply h7
@@ -945,8 +942,7 @@ theorem exists_chart_theta_unit : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     set w := ((Ha.T + 1 : ℝ) * Complex.I : ℂ) with hwdef
     have hz : Θ.h.mulVec (∑ k, v k • Ha.Pw w (Θ.bas (Pi.single (.inl k) 1))) = v := by
       rw [Matrix.mulVec_sum]
-      simp only [Matrix.mulVec_smul, (Θ.per w _).1]
-      exact (pi_eq_sum_univ' v).symm
+      simpa only [Matrix.mulVec_smul, (Θ.per w _).1] using (pi_eq_sum_univ' v).symm
     rw [← hz]
     generalize (∑ k, v k • Ha.Pw w (Θ.bas (Pi.single (.inl k) 1))) = z
     obtain ⟨fr, -, n, -, -, hv⟩ := Θ.onB w hw0
@@ -956,7 +952,7 @@ theorem exists_chart_theta_unit : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     have e := hv j z hU
     have e0 : valAt' (show Sp ℂ ⟶ _ from (Ha.ex₀ z).b.left) (a.D₀.P.L.U j) (th.f j) = 0 := by
       rw [hc j]
-      exact (dif_pos hU).trans ((congrArg _ (map_zero _)).trans (map_zero _))
+      exact (dite_eq_left hU).trans ((congrArg _ (map_zero _)).trans (map_zero _))
     rw [e0] at e
     have := (mul_eq_zero.1 e.symm).resolve_right (n j z hU)
     exact (mul_eq_zero.1 this).resolve_left Θ.κ_ne
@@ -1276,7 +1272,7 @@ theorem main_of_lemmas (hFib : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
       yF ≫ pullback.snd _ _ = spMap c.F.val.toRingHom ∧ y w = yF ≫ Y.j := by
     intro w hw
     have h := hlift w hw
-    exact ⟨h.choose, h.choose_spec.1, h.choose_spec.2, dif_pos h⟩
+    exact ⟨h.choose, h.choose_spec.1, h.choose_spec.2, dite_eq_left h⟩
   refine ⟨y, fun U f hUf => ?_, ?_⟩
   · obtain ⟨T', hT'⟩ := Ha.point U f hUf
     refine ⟨max T' Ha.T, fun w hw => ?_⟩

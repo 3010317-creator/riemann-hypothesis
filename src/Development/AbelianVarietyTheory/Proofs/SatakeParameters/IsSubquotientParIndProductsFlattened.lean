@@ -344,8 +344,7 @@ theorem stage_two (E : (Σ c, m c) ≃ n) (h : a ⊕ b ≃ n) (ψ₀ : (Σ i, m 
     filter_upwards [hs.mem_nhds (one_mem _)] with u hu
     have := MonoidHom.mem_ker.1 hu
     show deltaHalf k _ (leviTwo k a b (u, leviEmb k ψ₁ 1)) * deltaHalf k _ 1 = 1
-    rw [map_one, map_one, mul_one]
-    exact this
+    rwa [map_one, map_one, mul_one]
   · let g := leviProj k E ⟨q, h1'⟩
     have e0 : leviProj k ψ₀ ⟨(midProj k h ψ₁ q).2, h2⟩ = fun i => g (toLex (.inl i)) :=
       funext fun i => Units.ext (Matrix.ext fun x y => by
@@ -402,8 +401,7 @@ theorem ind₂_parInd_parInd_equiv_of (E : (Σ c, m c) ≃ n) (h : a ⊕ b ≃ n
         (parInd ψ₀ ρ₀ (blocks k h q).1) (TensorProduct.comm ℂ _ _ x) = _
       rw [e, TensorProduct.map_comm]
       rfl
-  have hB := stage_two E h ψ₀ ψ₁ h0 h1 ρ₀ ρ₁ σ κ hκ
-  exact ⟨hA.some.trans hB.some⟩
+  exact ⟨hA.some.trans (stage_two E h ψ₀ ψ₁ h0 h1 ρ₀ ρ₁ σ κ hκ).some⟩
 
 theorem ind₂_parInd_parInd_equiv : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] {β₀ β₁ a b n V W U : Type} [Fintype β₀] [LinearOrder β₀] [Fintype β₁] [LinearOrder β₁] [Fintype a] [DecidableEq a] [Fintype b] [DecidableEq b] [Fintype n] [DecidableEq n] [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W] [AddCommGroup U] [Module ℂ U] {m : β₀ ⊕ₗ β₁ → Type} [∀ c, Fintype (m c)] [∀ c, DecidableEq (m c)] (E : (Σ c, m c) ≃ n) (h : a ⊕ b ≃ n) (ψ₀ : (Σ i, m (toLex (Sum.inl i))) ≃ a) (ψ₁ : (Σ j, m (toLex (Sum.inr j))) ≃ b), (∀ i x, h (.inl (ψ₀ ⟨i, x⟩)) = E ⟨toLex (.inl i), x⟩) → (∀ j x, h (.inr (ψ₁ ⟨j, x⟩)) = E ⟨toLex (.inr j), x⟩) → ∀ (ρ₀ : Representation ℂ (Levi k fun i => m (toLex (Sum.inl i))) V) (ρ₁ : Representation ℂ (Levi k fun j => m (toLex (Sum.inr j))) W) (σ : Representation ℂ (Levi k m) U) (κ : V ⊗[ℂ] W ≃ₗ[ℂ] U), (∀ g x, σ g (κ x) = κ (TensorProduct.map (ρ₀ fun i => g (toLex (.inl i))) (ρ₁ fun j => g (toLex (.inr j))) x)) → Nonempty ((ind₂ h (extTensor (parInd ψ₀ ρ₀) (parInd ψ₁ ρ₁))).Equiv (parInd E σ)) := by
   intro k _ _ _ _ β₀ β₁ a b n V W U _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ m _ _ E h ψ₀ ψ₁ h0 h1 ρ₀ ρ₁ σ κ hκ

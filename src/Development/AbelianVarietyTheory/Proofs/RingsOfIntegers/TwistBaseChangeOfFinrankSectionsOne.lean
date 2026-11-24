@@ -128,8 +128,7 @@ theorem comb_iff (hL : L.IsLB) {φ : K → (Y ⟶ X)} {ε : K → ℤ} {m : ℕ}
     rw [gs_sum r z _ hm]
     exact Finset.sum_congr rfl fun i _ => (gs_mul r z _ hm _ _).trans (congrArg (· * _) (gs_res r z le_top hm _))
   constructor
-  · intro h Z r z J hJ
-    exact (congrArg (gs r z _) (h _)).trans (key Z r z _ (hJ.mem φ r))
+  · exact fun h Z r z J hJ => (congrArg (gs r z _) (h _)).trans (key Z r z _ (hJ.mem φ r))
   · intro h j
     refine fn_ext fun y hy => ?_
     choose I hI using fun χ : Y ⟶ X => exists_chart hL (χ y)
@@ -303,14 +302,12 @@ theorem existsUnique_comb {R' : Type} [CommRing R'] (g : R →+* R') {π : X' �
   have rep : ∀ (z : Fin m → R') (s : LB.Sec (LB.LinComb L ψ ε)), Comb s (fun i => cstTop f' (z i)) b →
       Rep π ψ F (cstTop f') ((B.map g).mulVec z) s.f := fun z s hs => by
     have := Rep.sum e hb z
-    rw [show s.f = _ from funext hs]
-    exact this
+    rwa [show s.f = _ from funext hs]
   obtain ⟨v, hv, hr⟩ := h₂ s
   obtain ⟨z, rfl, hz⟩ := hu v hv
   refine ⟨z, ?_, fun z' hz' => hz z' (h₃ _ _ s (ker z') hv (rep z' s hz') hr)⟩
   obtain ⟨s₁, hs₁⟩ := exists_comb (fun i => cstTop f' (z i)) b
-  rw [Rep.sec_eq e hr (rep z s₁ hs₁)]
-  exact hs₁
+  rwa [Rep.sec_eq e hr (rep z s₁ hs₁)]
 
 end Complex
 

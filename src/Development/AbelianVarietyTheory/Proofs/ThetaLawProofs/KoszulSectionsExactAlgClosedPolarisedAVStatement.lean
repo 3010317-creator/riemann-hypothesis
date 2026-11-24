@@ -132,8 +132,7 @@ theorem ExactMod.mem_empty {A : Cube.{0} I K} {J : ∀ s, Submodule K (A.obj s)}
     exact hy a) ⟨∅, rfl⟩
   have heval : (Cube.termZeroEquiv A).symm y ⟨∅, rfl⟩ = y := by
     simp [Cube.termZeroEquiv]
-  rw [heval] at h1
-  exact h1
+  rwa [heval] at h1
 
 theorem ExactMod.exists_glue {A : Cube.{0} I K} {J : ∀ s, Submodule K (A.obj s)}
     (h : ExactMod A J) (y : ∀ a : I, A.obj {a})
@@ -154,8 +153,7 @@ theorem ExactMod.exists_glue {A : Cube.{0} I K} {J : ∀ s, Submodule K (A.obj s
     · exact key i j h'
     · revert ht
       rw [Finset.pair_comm i j]
-      intro ht
-      exact key j i h'
+      exact fun ht => key j i h'
   obtain ⟨z, hz⟩ := h.2 0 (Cube.termOneEquiv A y) hx
   refine ⟨Cube.termZeroEquiv A z, fun a => ?_⟩
   have h1 := hz ⟨{a}, Finset.card_singleton a⟩
@@ -178,8 +176,7 @@ private theorem exists_term_d_sub_termMap_mem {A B : Cube.{0} I K} {JA : ∀ s, 
     rw [hJ, Submodule.mem_sup] at h1
     obtain ⟨u, hu, _, ⟨a, rfl⟩, hua⟩ := h1
     refine ⟨a, ?_⟩
-    rw [← hua, add_sub_cancel_right]
-    exact hu
+    rwa [← hua, add_sub_cancel_right]
   choose a ha using hx'
   have hb : ∀ t, (Cube.d B k x - Cube.termMap φ (k + 1) a) t ∈ JB t.1 := fun t => by
     simpa using ha t
@@ -850,8 +847,7 @@ theorem mem_primeIdealOf_iff {X : Scheme.{0}} {V : X.Opens} (hV : IsAffineOpen V
     rw [hV.fromSpec_primeIdealOf]
   rw [hV.fromSpec_preimage_basicOpen] at h1
   constructor
-  · intro hg hyb
-    exact (h1.2 hyb) hg
+  · exact fun hg hyb => (h1.2 hyb) hg
   · intro hyb
     by_contra hg
     exact hyb (h1.1 hg)
@@ -908,8 +904,7 @@ theorem exists_germ_sub_mem : ∀ (K : Type) [Field K] (X : Scheme.{0}) (p : X �
   have e : (fun i => gs (𝟙 X) y V (f i)) = (algebraMap Γ(X, V) (X.presheaf.stalk k.1)) ∘ f := by
     funext i
     exact hgs (f i)
-  rw [e, hgs r]
-  exact hk
+  rwa [e, hgs r]
 
 end GlobalTheory.GermInterp
 end -- clump:auto
@@ -1106,8 +1101,7 @@ theorem isWeaklyRegular_of_finZ : Out.Laws → ∀ (K : Type) [Field K] [IsAlgCl
     by_cases hi : i.val < k
     · exact hy₁ ⟨i, hi⟩
     · have := hy₂ ⟨i - k, by have := i.2; omega⟩
-      simp only [show k + (i.val - k) = i.val by omega] at this
-      exact this
+      simpa only [show k + (i.val - k) = i.val by omega] using this
 
 end GlobalTheory.KeyKa
 end -- clump:auto
@@ -1234,7 +1228,7 @@ theorem mulPw_restrict (s : LB.Sec (pw L n)) (h : W ≤ V) (x : SecOn (pw L l) V
     mulPw s l l' W (SecOn.restrict _ h x) = SecOn.restrict _ h (mulPw s l l' V x) := by
   by_cases e : l' = l + n
   · exact co_ext fun k => by simp only [co_mulPw s e, co_restrict, map_mul, rs_rs]
-  · simp only [mulPw, dif_neg e, LinearMap.zero_apply, map_zero]
+  · simp only [mulPw, dite_eq_right e, LinearMap.zero_apply, map_zero]
 
 theorem mulPw_comm (s s' : LB.Sec (pw L n)) {l'' : ℤ} (h : l' = l + n) (h' : l'' = l' + n)
     (x : SecOn (pw L l) V) :
@@ -1292,8 +1286,7 @@ theorem exists_sec_sum_of_ofSec_eq_sum (hV : V = ⊤) {J : Type} (T : Finset J) 
   have hk : L.U k ≤ V ⊓ L.U k := le_inf (hV ▸ le_top) le_rfl
   have := congrArg (fun z => rs X hk (co z k)) ht
 
-  simp only [co_sum, co_mulPw _ e, ← hta, co_ofSec, map_sum, map_mul, rs_rs, rs_self] at this
-  exact this
+  simpa only [co_sum, co_mulPw _ e, ← hta, co_ofSec, map_sum, map_mul, rs_rs, rs_self] using this
 
 theorem gs_rs (y : X) (h : W ≤ V) (hy : y ∈ W) (a : Γ(X, V)) :
     gs (𝟙 X) y W (rs X h a) = gs (𝟙 X) y V a := gs_res (𝟙 X) y h hy a
@@ -1524,8 +1517,7 @@ theorem koszul_sections_exact_field : Out.Laws → ∀ (K : Type) [Field K] [IsA
         Finset.filter_eq_empty_iff.2 fun j _ => by omega
       have := htb k
       rw [h0, Finset.sum_empty] at this
-      refine this.trans (Finset.sum_eq_zero fun j _ => ?_).symm
-      exact mul_zero _
+      exact this.trans (Finset.sum_eq_zero fun j _ => (mul_zero _)).symm
     · refine H _ ?_
       have h3 : n ≤ (i : ℕ) * n := Nat.le_mul_of_pos_left n hi
       have h4 : (j + 2) * n = (j + 1) * n + n := by ring

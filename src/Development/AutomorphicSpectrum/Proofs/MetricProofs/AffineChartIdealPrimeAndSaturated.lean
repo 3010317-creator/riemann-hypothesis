@@ -92,9 +92,8 @@ theorem isMultiHomog_X [DecidableEq K] (s : Σ k, ι k) :
   · subst h
     simp [Finsupp.single_apply]
   · have : ∀ i, (Finsupp.single (⟨k₀, i₀⟩ : Σ k, ι k) 1 : (Σ k, ι k) →₀ ℕ) ⟨k, i⟩ = 0 := fun i => by
-      rw [Finsupp.single_apply, if_neg]
-      intro e
-      exact h (congrArg Sigma.fst e).symm
+      rw [Finsupp.single_apply, ite_eq_right]
+      exact fun e => h (congrArg Sigma.fst e).symm
     simp [this, h]
 
 theorem isMultiHomog_pow {f : MvPolynomial (Σ k, ι k) ℂ} {a : K → ℕ}
@@ -210,8 +209,7 @@ theorem phi_eq_prod_mul_theta (Q : Ideal (MvPolynomial (Σ k, ι k) ℂ)) [Q.IsP
       fun q => phi Q (X q) := by
     funext q
     exact mul_div_cancel₀ _ (hx q.1)
-  rw [h2, ← phi_eq_eval₂] at h
-  exact h
+  rwa [h2, ← phi_eq_eval₂] at h
 
 theorem theta_eq_zero_iff (Q : Ideal (MvPolynomial (Σ k, ι k) ℂ)) [Q.IsPrime]
     (p : (k : K) → ι k) (hp : ∀ k, (X ⟨k, p k⟩ : MvPolynomial (Σ k, ι k) ℂ) ∉ Q)
@@ -252,8 +250,7 @@ theorem ker_theta (Q : Ideal (MvPolynomial (Σ k, ι k) ℂ)) [Q.IsPrime] (hQ : 
   obtain ⟨d, H, hH, hm⟩ := exists_form p (chartIdeal Q p) hI g
   have hθ : theta Q p H = 0 := by
     have h1 := RingHom.mem_ker.1 (hle hm)
-    rw [map_sub, RingHom.mem_ker.1 hg, sub_zero] at h1
-    exact h1
+    rwa [map_sub, RingHom.mem_ker.1 hg, sub_zero] at h1
   have hHQ : H ∈ chartIdeal Q p :=
     Ideal.mem_sup_left ((theta_eq_zero_iff Q p hp hH).1 hθ)
   have := Ideal.sub_mem _ hHQ hm

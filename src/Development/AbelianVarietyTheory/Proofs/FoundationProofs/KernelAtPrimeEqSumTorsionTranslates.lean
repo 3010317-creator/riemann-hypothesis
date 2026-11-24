@@ -73,8 +73,7 @@ theorem coprime_index {V : Type*} [AddCommGroup V] (A₀ A₁ : AddSubgroup V) (
       exact h x x.2
   haveI : Finite (A₁ ⧸ A₀.addSubgroupOf A₁) := by
     apply AddCommGroup.finite_of_fg_torsion
-    intro q
-    exact isOfFinAddOrder_iff_nsmul_eq_zero.2 ⟨s, Nat.pos_of_ne_zero hs0, hk q⟩
+    exact fun q => isOfFinAddOrder_iff_nsmul_eq_zero.2 ⟨s, Nat.pos_of_ne_zero hs0, hk q⟩
   rw [Nat.coprime_comm, Nat.Prime.coprime_iff_not_dvd hp]
   intro hd
   haveI : Fact p.Prime := ⟨hp⟩
@@ -93,8 +92,7 @@ theorem smul_mem_homL {D : D7} {N N' : ℕ} {L L₁ : Submodule (𝓞 D.host.E) 
     intro x hx
     have := h' _ (hA _ (h x hx))
     rw [Matrix.mulVec_smul, smul_smul] at this
-    rw [Matrix.smul_mulVec, ← Nat.cast_smul_eq_nsmul D.host.E, Nat.cast_mul]
-    exact this
+    rwa [Matrix.smul_mulVec, ← Nat.cast_smul_eq_nsmul D.host.E, Nat.cast_mul]
   | zero => simp
   | add A B _ _ hA hB => rw [smul_add]; exact Submodule.add_mem _ hA hB
   | smul a A _ hA => rw [smul_comm]; exact Submodule.smul_mem _ a hA
@@ -363,8 +361,7 @@ theorem GlobalTheory.NormSum.kernel_eq_sum_translates : ∀ (D : D7), Inp D → 
     have h := norm_le_one_of_isIntegral ((hr i).map_of_comp_eq (RingHom.id ℤ) lam (RingHom.ext_int _ _))
     rw [map_mul, map_pow, map_natCast, norm_mul, norm_pow] at h
     have hQ0 : 0 < ‖(Q : ℂ_[p])‖ := norm_pos_iff.2 (Nat.cast_ne_zero.2 hQ.ne')
-    rw [inv_pow, ← one_div, le_div_iff₀ (pow_pos hQ0 _), mul_comm]
-    exact h
+    rwa [inv_pow, ← one_div, le_div_iff₀ (pow_pos hQ0 _), mul_comm]
   have hc' : Bd lam 1 c := ⟨hc, by
     rw [lamC, dite_eq_left hc] at hcn
     exact hcn.le⟩

@@ -204,7 +204,6 @@ theorem cont_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
   obtain ⟨h1, h2⟩ := hom (a h) 1 1 h rfl (by
     rw [inv_one]
     exact Matrix.transpose_one.symm) Φ hΦ
-  show l (om (a h, 1) Φ) = _
   exact (hl' _ h1).trans (congrArg (GlobalTheory.LagrTheta.lagrInt ν 𝓕 (dC (AF F ⊗[F] E) nT)) h2)
 end PositivityTheory.ThKW.PhaseFourierInjectivity
 end
@@ -275,8 +274,7 @@ theorem PositivityTheory.ThKW.PhaseFourierInjectivity.levi_k : ∀ (F E : Type) 
   have hmem : ∀ t, mG t ∈ HR (AF F) σ (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) := by
     intro t
     have h := leviGL_mem (cAF σ) hcc hr hJ hu t
-    rw [← eJ] at h
-    exact h
+    rwa [← eJ] at h
   let m₀ : GL (Fin n) (AF F ⊗[F] E) →* HR (AF F) σ (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) := mG.codRestrict _ hmem
   let m : GL (Fin n) (AF F ⊗[F] E) →* GAF σ (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) :=
     { toFun := fun t => m₀ t
@@ -308,16 +306,14 @@ theorem PositivityTheory.ThKW.PhaseFourierInjectivity.levi_k : ∀ (F E : Type) 
       hmG.subtype_mk _
     exact this
   refine ⟨m, hm, ?_, ?_⟩
-  · intro t
-    exact leviGL_col (cAF σ) hr hu t
+  · exact fun t => leviGL_col (cAF σ) hr hu t
   · intro a
     let a' : GL (Fin n) (AF F ⊗[F] E) := Matrix.GeneralLinearGroup.map (incAF F E) a
     show ((m₀ a' : HR (AF F) σ (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)) : GL (Fin (n + n)) (AF F ⊗[F] E)) ∈
       HFin (AF F) σ (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)
     refine ⟨leviGL (σ : E →+* E) hrE2 huE a, ?_, ?_⟩
     · have h := leviGL_mem (σ : E →+* E) hccE hrE2 hJE huE a
-      rw [← eJE] at h
-      exact h
+      rwa [← eJE] at h
     · exact leviGL_map (inclR (F := F) (AF F)) (σ : E →+* E) (cAF σ) (fun x => rfl) hrE2 hr huE hu a
 end
 end
@@ -440,8 +436,7 @@ theorem heis_C_k {σ : E →ₐ[F] E} {B : Base F E} (hB : _root_.UpperTheory.TP
       thV B.ψ (fun x => B.ψ (x ⬝ᵥ β y) * Φ x) ∘ e := by
   have hCy : e (dC (AF F ⊗[F] E) nT * y) = (0, β y) := by
     have h := hCe y 0
-    rw [Matrix.mul_zero, add_zero, map_zero] at h
-    exact h
+    rwa [Matrix.mul_zero, add_zero, map_zero] at h
   have h2 : (⅟(2 : AF F)) = algebraMap F (AF F) (1 / 2) := by
     refine invOf_eq_right_inv ?_
     rw [← map_ofNat (algebraMap F (AF F)) 2, ← map_mul]
@@ -550,8 +545,7 @@ theorem lam_formula_k {σ : E →ₐ[F] E} {B : Base F E} (hB : _root_.UpperTheo
     congr 1
     funext ξ
     subst ha hch hemb
-    simp only [symV, dotProduct_zero, zero_sub]
-    exact psi_cancel B.ψ _ _ _
+    simpa only [symV, dotProduct_zero, zero_sub] using psi_cancel B.ψ _ _ _
   have hFint : ∀ ξ, Integrable (fun u => a ξ * ch ξ u) (ν.restrict 𝓕) := fun ξ =>
     (Integrable.of_bound (hch_cont _).aestronglyMeasurable 1 (ae_of_all _ fun u => (hch_norm _ _).le)).const_mul _
   have hnormint : ∀ ξ, ∫ u in 𝓕, ‖a ξ * ch ξ u‖ ∂ν = ‖a ξ‖ * ν.real 𝓕 := by
@@ -589,8 +583,7 @@ theorem lam_formula_k {σ : E →ₐ[F] E} {B : Base F E} (hB : _root_.UpperTheo
   simp_rw [hint]
   rw [← integral_tsum_of_summable_integral_norm hFint hsumint]
   simp_rw [integral_const_mul, horth]
-  rw [tsum_eq_single 0 (fun ξ hξ => by rw [if_neg hξ, mul_zero])]
-  rw [if_pos rfl, ha, hemb]
+  rw [tsum_eq_single 0 (fun ξ hξ => by rw [ite_eq_right hξ, mul_zero]), ite_eq_left rfl, ha, hemb]
   have hz : (fun i : Fin N => (0 : AF F)) + x = x := by funext i; simp
   simp only [Pi.zero_apply, map_zero]
   rw [hz, Measure.real]
@@ -641,8 +634,7 @@ theorem pairing_k {B : Base F E} (hB : _root_.UpperTheory.TP.W.GoodK σ B) {JS :
     fun i j => by
       have h1 := (LinearEquiv.ofBijective _ hbij).apply_symm_apply (b.dualBasis i)
       have h2 := LinearMap.congr_fun h1 (b j)
-      rw [Module.Basis.dualBasis_apply_self] at h2
-      exact h2
+      rwa [Module.Basis.dualBasis_apply_self] at h2
   let P : LinearMap.BilinForm (AF F) (WOF F E nS nT) :=
     sympBil (cA σ) (-1) (incM F (1 : Matrix (Fin nT) (Fin nT) E)ᵀ) (incM F (-(ξ₀ • JS⁻¹)))
   have hP : ∀ v u, P v u = (adB b').equivFun v ⬝ᵥ (adB b).equivFun u := fun v u => by
@@ -654,7 +646,7 @@ theorem pairing_k {B : Base F E} (hB : _root_.UpperTheory.TP.W.GoodK σ B) {JS :
     conv_lhs => rw [← (adB b').sum_repr v, ← (adB b).sum_repr u]
 
     simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, h0, smul_eq_mul, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true, dotProduct, Module.Basis.equivFun_apply]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true, dotProduct, Module.Basis.equivFun_apply]
     exact Finset.sum_congr rfl fun i _ => mul_comm _ _
   refine ⟨_, (adB b').equivFun, (adB b).equivFun, b'.equivFun, b.equivFun, fun v u => ?_, adB_rat b', adB_rat b⟩
   rw [← hP]
@@ -1079,9 +1071,7 @@ theorem PositivityTheory.ThKW.PhaseFourierInjectivity.finj_k : ∀ (F E : Type) 
   have hψn : ∀ a, ‖B.ψ a‖ = 1 := GlobalTheory.StdCharWeilDatum.norm_psi hB.std
   have hcc : ∀ z : AF F ⊗[F] E, cAF σ (cAF σ z) = z :=
     GlobalTheory.HeisLineF.cAF_cAF σ (GlobalTheory.SplitDetCharF.sig_invol hB.cm)
-  have he : Continuous (vecE F E nS nT) := by
-    show Continuous fun (w : WOF F E nS nT) (k : Fin (nT * nS)) => w (finProdFinEquiv.symm k).1 (finProdFinEquiv.symm k).2
-    exact continuous_pi fun k => continuous_id.matrix_elem _ _
+  have he : Continuous (vecE F E nS nT) := continuous_pi fun k => continuous_id.matrix_elem _ _
   have he' : Continuous (vecE F E nS nT).symm := by
     show Continuous fun (u : Fin (nT * nS) → AF F ⊗[F] E) =>
       ((fun i j => u (finProdFinEquiv (i, j))) : WOF F E nS nT)

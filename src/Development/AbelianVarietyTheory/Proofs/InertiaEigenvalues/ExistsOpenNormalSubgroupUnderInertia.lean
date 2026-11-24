@@ -206,8 +206,7 @@ theorem exists_small : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host
     fun s hs => ⟨hL, inferInstance, fun g g' hg => ?_, fun g => ?_, fun g hg => ⟨?_, f₂ g hg.1.2.2.1⟩⟩,
     fun g hg => f₁ g hg.1.2.1, hf⟩
   · obtain rfl : g' = cConj X g := AlgEquiv.ext hg
-    simp only [Subgroup.mem_inf, Subgroup.mem_comap, cConj_cConj]
-    exact and_comm
+    simpa only [Subgroup.mem_inf, Subgroup.mem_comap, cConj_cConj] using and_comm
   · obtain ⟨v, hv, A, hA, hzA, -⟩ := hz
     refine ⟨hw v hv A hA z hzA g, ?_⟩
     obtain ⟨v', hv'⟩ := exists_isConjPl v

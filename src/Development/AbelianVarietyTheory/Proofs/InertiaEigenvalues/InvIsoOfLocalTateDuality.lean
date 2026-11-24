@@ -69,8 +69,7 @@ theorem padicCoeff_exists_pow_smul_mem_one :
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hdvd : ϖ ∣ (p : O) := by
     have h := hP.p_mem
-    rw [hϖ.maximalIdeal_eq, Ideal.mem_span_singleton] at h
-    exact h
+    rwa [hϖ.maximalIdeal_eq, Ideal.mem_span_singleton] at h
   obtain ⟨⟨a, b⟩, rfl⟩ := IsLocalization.mk'_surjective (nonZeroDivisors O) y
   dsimp only
   have hb : (b : O) ≠ 0 := nonZeroDivisors.coe_ne_zero b
@@ -384,8 +383,7 @@ theorem inv_iso (hT : Formalism.GaloisCohomology.LocalTateDualityK) : InvIso := 
     obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ x
     refine ⟨y, ?_, rfl⟩
     simp only [T, LinearMap.mem_ker, LinearMap.lsmul_apply] at hx
-    rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at hx
-    exact hx
+    rwa [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at hx
   have hTfg : ∀ n, IsFGTop O (T n) := fun n => by
     refine ⟨?_, inferInstance, inferInstance⟩
     have := (hFfg n).fg

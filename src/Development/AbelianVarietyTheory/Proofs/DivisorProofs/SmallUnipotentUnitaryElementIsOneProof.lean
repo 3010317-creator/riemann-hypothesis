@@ -92,10 +92,8 @@ private lemma charpoly_dvd_pow_card_of_aeval_eq_zero {K : Type} [Field K] {r : �
       rw [Polynomial.aeval_map_algebraMap]
       have := Polynomial.aeval_algHom_apply
         (AlgHom.mapMatrix (Algebra.ofId K Ω) : Matrix (Fin r) (Fin r) K →ₐ[K] _) N φ
-      rw [h, map_zero] at this
-      exact this
-    rw [h3, spectrum.zero_eq] at h2
-    exact h2
+      rwa [h, map_zero] at this
+    rwa [h3, spectrum.zero_eq] at h2
   have hcard : N'.charpoly.roots.card = r := by
     rw [← hs.natDegree_eq_card_roots, Matrix.charpoly_natDegree_eq_dim, Fintype.card_fin]
   rw [hs.eq_prod_roots_of_monic (Matrix.charpoly_monic _)]
@@ -147,8 +145,7 @@ theorem _root_.GlobalTheory.trace_mem_prime_of_pow_mulVec_mem_smul : ∀ (K : Ty
         Submodule.coe_sum, LinearMap.smul_apply, Submodule.coe_smul, hpow, LinearMap.zero_apply,
         Submodule.coe_zero] at this
       rw [Polynomial.aeval_eq_sum_range, Matrix.sum_mulVec]
-      refine (Finset.sum_congr rfl fun i _ => ?_).trans this
-      exact Matrix.smul_mulVec _ _ _
+      exact (Finset.sum_congr rfl fun i _ => (Matrix.smul_mulVec _ _ _)).trans this
     have h1 : Matrix.toLin' (aeval (N ^ m) q) = 0 :=
       LinearMap.ext_on hspan (fun x hx => by simpa using hon x hx)
     exact Matrix.toLin'.injective (h1.trans (map_zero _).symm)
@@ -173,10 +170,10 @@ theorem _root_.GlobalTheory.trace_mem_prime_of_pow_mulVec_mem_smul : ∀ (K : Ty
     ext k
     rw [coeff_map, coeff_X_pow]
     rcases lt_trichotomy k q.natDegree with hk | rfl | hk
-    · rw [if_neg hk.ne, Ideal.Quotient.eq_zero_iff_mem]
+    · rw [ite_eq_right hk.ne, Ideal.Quotient.eq_zero_iff_mem]
       exact Ideal.pow_le_self (by omega) (hqc k)
     · simp [hqm.coeff_natDegree]
-    · rw [if_neg hk.ne', coeff_eq_zero_of_natDegree_lt hk, map_zero]
+    · rw [ite_eq_right hk.ne', coeff_eq_zero_of_natDegree_lt hk, map_zero]
   have hφπ : φ.map (Ideal.Quotient.mk P) = X ^ (m * q.natDegree) := by
     rw [hφdef, map_expand, hqπ, map_pow, expand_X, ← pow_mul]
   have hdvdπ : χ.map (Ideal.Quotient.mk P) ∣ X ^ (m * q.natDegree * r) := by
@@ -194,7 +191,7 @@ theorem _root_.GlobalTheory.trace_mem_prime_of_pow_mulVec_mem_smul : ∀ (K : Ty
     rw [← Ideal.Quotient.eq_zero_iff_mem]
     have := congrArg (fun p => p.coeff (r - 1)) hχπ
     simp only [coeff_map, coeff_X_pow, hir] at this
-    rw [this, if_neg (by omega)]
+    rw [this, ite_eq_right (by omega)]
   refine ⟨-χ.coeff (r - 1), P.neg_mem hcoeff, ?_⟩
   rw [Matrix.trace_eq_neg_charpoly_coeff, Fintype.card_fin, ← hχ, coeff_map]
   show algebraMap (𝓞 K) K (-χ.coeff (r - 1)) = _
@@ -319,10 +316,10 @@ theorem smallElement : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E],
   let Q : (E →+* ℂ) → Matrix (Fin r) (Fin r) ℂ := fun σ =>
     if hσ : σ ∈ X.Ψ then (mat x1 ⟨σ, hσ⟩)⁻¹
     else ((mat x1 ⟨ComplexEmbedding.conjugate σ, hcΨ σ hσ⟩)⁻¹).map (starRingEnd ℂ)
-  have hQpos : ∀ σ (hσ : σ ∈ X.Ψ), Q σ = (mat x1 ⟨σ, hσ⟩)⁻¹ := fun σ hσ => dif_pos hσ
+  have hQpos : ∀ σ (hσ : σ ∈ X.Ψ), Q σ = (mat x1 ⟨σ, hσ⟩)⁻¹ := fun σ hσ => dite_eq_left hσ
   have hQneg : ∀ σ (hσ : σ ∉ X.Ψ),
       Q σ = ((mat x1 ⟨ComplexEmbedding.conjugate σ, hcΨ σ hσ⟩)⁻¹).map (starRingEnd ℂ) :=
-    fun σ hσ => dif_neg hσ
+    fun σ hσ => dite_eq_right hσ
   set G : Matrix (Fin r) (Fin r) E := (γ : Matrix (Fin r) (Fin r) E) with hG
   have hposB : ∀ (τ : X.Ψ) (u : Fin r → ℂ),
       ReciprocityTheory.MultiplicativeHeights.normSq (((mat x1 τ)⁻¹ * G.map τ.1 * ((mat x1 τ)⁻¹)⁻¹) *ᵥ u) ≤
@@ -332,8 +329,7 @@ theorem smallElement : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E],
     have e : (mat x1 τ)⁻¹ *ᵥ (mat x1 τ *ᵥ u) = u := by
       rw [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ (hu τ), Matrix.one_mulVec]
     rw [hmaj, hmaj, e, exp_sq] at h
-    rw [Matrix.nonsing_inv_nonsing_inv _ (hu τ), ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec]
-    exact h
+    rwa [Matrix.nonsing_inv_nonsing_inv _ (hu τ), ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec]
   have hQdet : ∀ σ, (Q σ).det ≠ 0 := by
     intro σ
     by_cases hσ : σ ∈ X.Ψ

@@ -98,8 +98,7 @@ theorem smul_mem_LamHat (V : HSp D) {x : Af D.host.F ⊗[D.host.F] D.host.E}
   change ∑ i, ((u : D.host.E) • w) i • V.frame i ∈ V.L0
   rw [h1]
   have h2 := V.L0.smul_mem u hw
-  rw [← algebraMap_smul D.host.E u] at h2
-  exact h2
+  rwa [← algebraMap_smul D.host.E u] at h2
 
 theorem det_unit {A O K : Type} [CommRing A] [CommRing O] [Field K] [Algebra O K]
     (hinj : Function.Injective (algebraMap O K)) (π : A →+* K) {n : ℕ} (β : GL (Fin n) K)
@@ -146,8 +145,7 @@ theorem intM_of_stable {e : AE D} {v : HeightOneSpectrum (𝓞 D.host.F)} {π : 
   have h3 : (fun k => π ((M *ᵥ y) k)) = M.map π *ᵥ (fun k => π (y k)) := by
     funext k
     exact RingHom.map_mulVec π M y k
-  rw [h3, h0, mulVec_mulVec, mulVec_mulVec, mulVec_single_one] at h2
-  exact h2
+  rwa [h3, h0, mulVec_mulVec, mulVec_mulVec, mulVec_single_one] at h2
 
 theorem fin_mulVec {A B : Type} [CommRing A] [CommRing B] (φ : A →+* B) {n : ℕ} (e : A)
     (M : Matrix (Fin n) (Fin n) A) (y : Fin n → A) :

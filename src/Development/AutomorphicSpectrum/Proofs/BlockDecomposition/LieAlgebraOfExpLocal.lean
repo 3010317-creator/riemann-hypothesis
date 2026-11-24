@@ -148,8 +148,7 @@ theorem exists_nhds_kernel_eq_zero {G : Set A} (hc : IsClosed G) (h1 : (1 : A) �
     {S : Submodule ℝ A} (hS : ∀ X, X ∈ S ↔ ∀ t : ℝ, NormedSpace.exp (t • X) ∈ G)
     (p : A →L[ℝ] A) (hp : ∀ Z ∈ S, p Z = Z) :
     ∃ W₀ ∈ 𝓝 (0 : A), ∀ Y ∈ W₀, NormedSpace.exp Y ∈ G → p Y = 0 → Y = 0 := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hseq : ∀ k : ℕ, ∃ Y : A, ‖Y‖ < 1 / ((k : ℝ) + 1) ∧ NormedSpace.exp Y ∈ G ∧ p Y = 0 ∧ Y ≠ 0 := by
     intro k
     obtain ⟨Y, hY, hYG, hYp, hY0⟩ :=
@@ -245,8 +244,7 @@ theorem eventually_exp_of_mem {G : Set A} (hc : IsClosed G) (h1 : (1 : A) ∈ G)
     rw [← NormedSpace.exp_add_of_commute (Commute.neg_left (Commute.refl (p Z))), neg_add_cancel,
       NormedSpace.exp_zero]
   have hqG : NormedSpace.exp (q Z) ∈ G := by
-    have h2 := hmul _ hnG _ hg
-    simpa only [Φ, ← mul_assoc, hone, one_mul] using h2
+    simpa only [Φ, ← mul_assoc, hone, one_mul] using hmul _ hnG _ hg
   have hpq : p (q Z) = 0 := by
     rw [hq, map_sub, hp _ (hpS Z), sub_self]
   have hq0 : q Z = 0 := hker _ hZ2 hqG hpq
@@ -356,8 +354,7 @@ theorem tendsto_pow_of_hasDerivAt (h1 : ‖(1 : A)‖ ≤ 1) (γ : ℝ → A) (Y
           field_simp
   have hD : HasDerivAt (fun s => γ s - E s) 0 0 := by
     have := hd.sub hEd
-    rw [sub_self] at this
-    exact this
+    rwa [sub_self] at this
   have hlo : (fun s => γ s - E s) =o[𝓝 0] (fun s : ℝ => s) := by
     have := hasDerivAt_iff_isLittleO_nhds_zero.1 hD
     simpa [h0, hE0] using this
@@ -421,8 +418,7 @@ theorem matrix_tendsto (n : ℕ) (γ : ℝ → Matrix (Fin n) (Fin n) ℂ) (Y : 
   have e : (t : ℂ) • Y = t • Y := by
     ext i j
     simp
-  rw [e]
-  exact key
+  rwa [e]
 
 theorem tangent_mem_lieAlg : ∀ (n : ℕ) (G : Set (Matrix (Fin n) (Fin n) ℂ)), IsClosedMatrixGroup G →
     ∀ (γ : ℝ → Matrix (Fin n) (Fin n) ℂ) (Y : Matrix (Fin n) (Fin n) ℂ), γ 0 = 1 →

@@ -201,11 +201,7 @@ theorem reached_good (R : RealDat D A Ks) (hN : GlobalTheory.IndefiniteRowSideFu
       refine ⟨PiTensorProduct.lift.symm Xa.1, ⟨u, hu, ?_⟩, ?_⟩
       · have := (isUp_iff R hIP hk1 hm hm' ⟨_, hu'⟩ Xa).2 hXa
         simpa using this
-      · intro hz
-        apply hpx.1
-        apply Subtype.ext
-        show Xa.1 = 0
-        exact (LinearEquiv.map_eq_zero_iff _).1 hz
+      · exact fun hz => hpx.1 (Subtype.ext ((LinearEquiv.map_eq_zero_iff _).1 hz))
 
 end StepScal
 
@@ -319,8 +315,7 @@ theorem mid_scalar (R : RealDat D A Ks) (hN : GlobalTheory.IndefiniteRowSideFull
       have hA₂ := (isUp_iff R hIP hk1 hm hm' _ _).1 hup₂'
       refine ⟨ip ⟨_, hu₂'⟩ ⟨_, hu₁'⟩, ?_, ?_⟩
       · have := (hIP t k hk ipD ip hm ⟨_, hu₁'⟩ ⟨_, hu₂'⟩ _).2 rfl
-        simp only [LinearEquiv.symm_apply_apply] at this
-        exact this
+        simpa only [LinearEquiv.symm_apply_apply] using this
       · have hmain : ip' ⟨_, hx₂'⟩ ⟨_, hx₁'⟩ = ((z * l : ℝ) : ℂ) * ip ⟨_, hu₂'⟩ ⟨_, hu₁'⟩ := by
           rcases hg₁ with h0 | ⟨hpar, hq⟩
           · have hU0 : (⟨_, hu₁'⟩ : (stY R t k).CC (comR R t)) = 0 := by
@@ -341,8 +336,7 @@ theorem mid_scalar (R : RealDat D A Ks) (hN : GlobalTheory.IndefiniteRowSideFull
             push_cast
             rw [hz']
         have := (hIP t (k + 1) hk1 ipD' ip' hm' ⟨_, hx₁'⟩ ⟨_, hx₂'⟩ _).2 hmain.symm
-        simp only [LinearEquiv.symm_apply_apply] at this
-        exact this
+        simpa only [LinearEquiv.symm_apply_apply] using this
   by_cases hex : ∃ (t : T) (c : EigSys D), rowPart R (badPl R t) c ≠ ⊥ ∧ ∃ B, GlobalTheory.LFun.IsSysParamD D (badPl R t) D.R.r c B
   · obtain ⟨t₀, c₀, hc₀, B₀, hB₀⟩ := hex
     have hw := (hRC t₀).1
@@ -444,8 +438,7 @@ theorem top_key (R : RealDat D A Ks) (hN : GlobalTheory.IndefiniteRowSideFullHec
     have := (isUpTop_iff R hIP h hm2 hm ⟨_, hu'⟩ x).2 fun y => by
       rw [hnorm', hx, LinearMap.map_smulₛₗ, hXa, map_inv₀, Complex.conj_ofReal, smul_eq_mul, ← mul_assoc,
         mul_inv_cancel₀ hδc, one_mul]
-    simp only [LinearEquiv.symm_apply_apply] at this
-    exact this
+    simpa only [LinearEquiv.symm_apply_apply] using this
   · obtain ⟨hu₁', hg₁⟩ := (hgood _ hk).1 u₁ hu₁
     obtain ⟨hu₂', -⟩ := (hgood _ hk).1 u₂ hu₂
     have hup₁' : IsUpTop R t (PiTensorProduct.lift.symm (⟨_, hu₁'⟩ : (stY R t (D.R.m - 1)).CC (comR R t)).1) x₁ := by
@@ -456,8 +449,7 @@ theorem top_key (R : RealDat D A Ks) (hN : GlobalTheory.IndefiniteRowSideFullHec
     have hA₂ := (isUpTop_iff R hIP h hm2 hm _ _).1 hup₂'
     refine ⟨ip ⟨_, hu₂'⟩ ⟨_, hu₁'⟩, ?_, ?_⟩
     · have := (hIP t (D.R.m - 1) hk ipD ip hm ⟨_, hu₁'⟩ ⟨_, hu₂'⟩ _).2 rfl
-      simp only [LinearEquiv.symm_apply_apply] at this
-      exact this
+      simpa only [LinearEquiv.symm_apply_apply] using this
     · rcases hg₁ with h0 | ⟨hpar, hq⟩
       · have hU0 : (⟨_, hu₁'⟩ : (stY R t (D.R.m - 1)).CC (comR R t)) = 0 := by
           subst h0; exact Subtype.ext (map_zero _)
@@ -514,13 +506,12 @@ theorem scalars_of_realisation : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {
   choose! rM hrM hM using hmid
   refine ⟨fun j => if j = D.R.m then rT else rM (j - 1), fun j hj1 hjm => ?_, fun t c hc => ?_⟩
   · by_cases hj : j = D.R.m
-    · simp only [if_pos hj]; exact hrT
-    · simp only [if_neg hj]; exact hrM (j - 1) (by omega)
+    · simp only [ite_eq_left hj]; exact hrT
+    · simp only [ite_eq_right hj]; exact hrM (j - 1) (by omega)
   · refine ⟨(hRP t c).1 hc, fun B hB => ⟨fun k hk => ?_, ?_⟩⟩
     · obtain ⟨l, hl, hS⟩ := hM k hk t c hc B hB
       refine ⟨l, hl, ?_⟩
-      simp only [if_neg (show k + 1 ≠ D.R.m by omega), Nat.add_sub_cancel]
-      exact hS
+      simpa only [ite_eq_right (show k + 1 ≠ D.R.m by omega), Nat.add_sub_cancel] using hS
     · obtain ⟨l, hl, hS⟩ := hT t c hc B hB
       refine ⟨l, hl, ?_⟩
       simp only

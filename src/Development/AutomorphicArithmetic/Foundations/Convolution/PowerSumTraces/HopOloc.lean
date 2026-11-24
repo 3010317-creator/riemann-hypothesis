@@ -170,11 +170,8 @@ private theorem main (π : UnitaryRep G H) (m : Measure G) [m.IsMulLeftInvariant
     rw [← setInt_shift m (fun g => ⟪u, π g v⟫_ℂ) c.out hJo.measurableSet (hPo c).measurableSet (hPmem c)]
     rw [UnitaryRep.inner_map_right, ← avg π m J hJ hJo hm W hW]
     refine integral_congr_ae (Eventually.of_forall fun h => ?_)
-    simp only [UnitaryRep.map_mul_apply]
-    exact (UnitaryRep.inner_map_right π _ _ _).symm
-  · intro c _ d _ hcd
-    refine Set.disjoint_left.2 fun g hg hg' => hcd ?_
-    exact (hg : _ = c).symm.trans hg'
+    simpa only [UnitaryRep.map_mul_apply] using (UnitaryRep.inner_map_right π _ _ _).symm
+  · exact fun c _ d _ hcd => Set.disjoint_left.2 fun g hg hg' => hcd ((hg : _ = c).symm.trans hg')
 
 end
 end UpperTheory.ConvolutionTheory.C.HopfExpansion

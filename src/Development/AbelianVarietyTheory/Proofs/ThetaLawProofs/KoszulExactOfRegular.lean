@@ -93,7 +93,7 @@ theorem dd_succ (x : Fin g → ∀ j, V (j + 1) →ₗ[K] V j) (t : Fin g) (c : 
   unfold dd
   rw [show (-1 : K) ^ I.card • x t j (c (insert t I) (j + 1)) = ∑ i : Fin g,
       if i = t then (-1 : K) ^ (I.filter (· < i)).card • x i j (c (insert i I) (j + 1)) else 0 by
-    rw [Finset.sum_ite_eq' Finset.univ t, if_pos (Finset.mem_univ t), hfil]]
+    rw [Finset.sum_ite_eq' Finset.univ t, ite_eq_left (Finset.mem_univ t), hfil]]
   rw [← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun i _ => ?_
   by_cases h1 : i = t
@@ -101,7 +101,7 @@ theorem dd_succ (x : Fin g → ∀ j, V (j + 1) →ₗ[K] V j) (t : Fin g) (c : 
     simp [htI]
   · have h2 : i.val < t.val + 1 ↔ i.val < t.val :=
       ⟨fun h => lt_of_le_of_ne (Nat.lt_succ_iff.mp h) (fun e => h1 (Fin.ext e)), Nat.lt_succ_of_lt⟩
-    simp only [h2, h1, if_false, add_zero]
+    simp only [h2, h1, ite_false, add_zero]
 
 theorem dd_succ_insert (x : Fin g → ∀ j, V (j + 1) →ₗ[K] V j) (t : Fin g)
     (c : Finset (Fin g) → ∀ j, V j) (I : Finset (Fin g)) (j : ℕ) :
@@ -111,7 +111,7 @@ theorem dd_succ_insert (x : Fin g → ∀ j, V (j + 1) →ₗ[K] V j) (t : Fin g
   by_cases hit : i.val < t.val
   · have hne : i ≠ t := fun h => by rw [h] at hit; exact lt_irrefl _ hit
     have hf : (insert t I).filter (· < i) = I.filter (· < i) := by
-      rw [Finset.filter_insert, if_neg (fun h : t < i => absurd (lt_trans hit h) (lt_irrefl _))]
+      rw [Finset.filter_insert, ite_eq_right (fun h : t < i => absurd (lt_trans hit h) (lt_irrefl _))]
     have hmem : i ∉ insert t I ↔ i ∉ I := by simp [hne]
     rw [hf, Finset.insert_comm i t]
     simp only [hmem, Nat.lt_succ_of_lt hit, hit, true_and]
@@ -120,7 +120,7 @@ theorem dd_succ_insert (x : Fin g → ∀ j, V (j + 1) →ₗ[K] V j) (t : Fin g
       rcases Nat.lt_succ_iff_lt_or_eq.mp h with h | h
       · exact hit h
       · exact hi (Finset.mem_insert.mpr (Or.inl (Fin.ext h)))
-    rw [if_neg h1, if_neg (fun h => hit h.1)]
+    rw [ite_eq_right h1, ite_eq_right (fun h => hit h.1)]
 
 theorem exists_sum_of_mem_iSup {A B : Type} [AddCommGroup A] [AddCommGroup B] [Module K A]
     [Module K B] (f : Fin g → A →ₗ[K] B) (t : Fin g) (y : B)
@@ -135,11 +135,10 @@ theorem exists_sum_of_mem_iSup {A B : Type} [AddCommGroup A] [AddCommGroup B] [M
       obtain ⟨a, rfl⟩ := hy
       refine ⟨Pi.single i a, ?_⟩
       rw [Finset.sum_eq_single i]
-      · rw [if_pos (Fin.lt_def.mp hi), Pi.single_eq_same]
+      · rw [ite_eq_left (Fin.lt_def.mp hi), Pi.single_eq_same]
       · intro k _ hk
         rw [Pi.single_eq_of_ne hk, map_zero, ite_self]
-      · intro h
-        exact absurd (Finset.mem_univ i) h
+      · exact fun h => absurd (Finset.mem_univ i) h
     · rw [iSup_neg hi, Submodule.mem_bot] at hy
       exact ⟨0, by simp [hy]⟩
   · exact ⟨0, by simp⟩
@@ -197,8 +196,7 @@ theorem exact_dd (x : Fin g → ∀ j, V (j + 1) →ₗ[K] V j)
         (by rw [Finset.card_insert_of_notMem (htI J hJ)]; omega)
       have e := dd_succ_insert x t c J j
       rw [htv] at e
-      rw [e] at h1
-      exact h1
+      rwa [e] at h1
     obtain ⟨u, hu⟩ := ih (j₀ + 1) (by omega) (fun J => c (insert t J)) hC2
     have h0 := hcyc ∅ (by simp) j₀ (by simp)
     have e0 := dd_succ x t c ∅ (by simp) j₀
@@ -233,16 +231,16 @@ theorem exact_dd (x : Fin g → ∀ j, V (j + 1) →ₗ[K] V j)
         unfold dd
         refine Finset.sum_congr rfl fun i _ => ?_
         by_cases hi : i.val < r
-        · rw [if_pos (by rw [htv]; exact hi), if_pos ⟨hi, Finset.notMem_empty i⟩]
+        · rw [ite_eq_left (by rw [htv]; exact hi), ite_eq_left ⟨hi, Finset.notMem_empty i⟩]
           simp [w₁]
-        · rw [if_neg (by rw [htv]; exact hi), if_neg (fun h => hi h.1)]
+        · rw [ite_eq_right (by rw [htv]; exact hi), ite_eq_right (fun h => hi h.1)]
       · rw [dd_congr x r w₁ u J j (fun i hi hiJ => ?_)]
         · exact hu J hJ hne.ne_empty j hj
         · have hc1 : (insert i J).card ≠ 1 := by
             rw [Finset.card_insert_of_notMem hiJ]
             have := hne.card_pos
             omega
-          simp only [w₁, if_neg hc1]
+          simp only [w₁, ite_eq_right hc1]
     let d : Finset (Fin g) → ∀ j, V j := fun I j => c I j - (-1 : K) ^ I.card • x t j (w₁ I (j + 1))
     have hdcyc : ∀ I : Finset (Fin g), (∀ k ∈ I, k.val < r) → ∀ j, j = j₀ + I.card →
         dd x r d I j = 0 := by
@@ -338,13 +336,12 @@ theorem kosD_mulVec {K : Type} [CommRing K] {g : ℕ} {N : ℕ → ℕ}
   by_cases hi : i ∈ I
   · simp [hi]
   · rw [Finset.sum_eq_single (insert i I)]
-    · rw [if_pos ⟨hi, rfl⟩, if_pos ⟨i.isLt, hi⟩]
+    · rw [ite_eq_left ⟨hi, rfl⟩, ite_eq_left ⟨i.isLt, hi⟩]
       simp only [Pi.smul_apply, Matrix.mulVecLin_apply, Matrix.mulVec, dotProduct, smul_eq_mul]
       rw [Finset.card_insert_of_notMem hi]
     · intro J _ hJ
-      rw [if_neg (fun h' => hJ h'.2)]
-    · intro h'
-      exact absurd (Finset.mem_univ _) h'
+      rw [ite_eq_right (fun h' => hJ h'.2)]
+    · exact fun h' => absurd (Finset.mem_univ _) h'
 
 theorem koszul_exact_of_graded_regular : ∀ (K : Type) [CommRing K] (g : ℕ) (N : ℕ → ℕ) (m : Fin g → ∀ j j', Matrix (Fin (N j)) (Fin (N j')) K), (∀ i i' j, j + 2 ≤ g → m i j (j + 1) * m i' (j + 1) (j + 2) = m i' j (j + 1) * m i (j + 1) (j + 2)) → (∀ (i : Fin g) (j : ℕ) (y : Fin (N (j + 1)) → K), j + 1 + i ≤ g → (m i j (j + 1)).mulVec y ∈ (⨆ (i' : Fin g) (_ : i' < i), LinearMap.range (m i' j (j + 1)).mulVecLin) → y ∈ ⨆ (i' : Fin g) (_ : i' < i), LinearMap.range (m i' (j + 1) (j + 2)).mulVecLin) → ∀ v : KIx g 0 N → K, (kosD m (fun _ => 0)).mulVec v = 0 → ∃ w : KIx g 0 N → K, ∀ p : (Σ I : Finset (Fin g), Fin (N I.card)), p.1 ≠ ∅ → v (.inl p) = (kosD m (fun _ => 0)).mulVec w (.inl p) := by
   intro K _ g N m hcomm hreg v hv
@@ -459,8 +456,7 @@ theorem phi_mulVec (x : KeyIn K) {n l : ℕ} {s : Fin x.P.g → RR x n}
         rw [Finset.sum_comm]
         simp only [h, Finset.mul_sum]
     _ = _ := by
-        simp only [phi, Finset.mul_sum]
-        exact Finset.sum_congr rfl fun _ _ => by ring
+        simpa only [phi, Finset.mul_sum] using Finset.sum_congr rfl fun _ _ => by ring
 
 theorem mem_iff {g : ℕ} {a b : ℕ} (i : Fin g) (M : Fin g → Matrix (Fin a) (Fin b) K) (y : Fin a → K) :
     y ∈ (⨆ (i' : Fin g) (_ : i' < i), LinearMap.range (M i').mulVecLin) ↔

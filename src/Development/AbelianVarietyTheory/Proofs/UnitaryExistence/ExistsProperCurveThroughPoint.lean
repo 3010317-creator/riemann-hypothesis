@@ -202,8 +202,7 @@ theorem isIntegrallyClosed_stalk (y : f.normalization) :
     obtain ⟨z, hz⟩ := f.toNormalization.denseRange.exists_mem_open
       (f.fromNormalization ⁻¹ᵁ U).isOpen ⟨y, hy⟩
     refine ⟨⟨z, ?_⟩⟩
-    rw [← f.toNormalization_fromNormalization]
-    exact hz
+    rwa [← f.toNormalization_fromNormalization]
   letI := (f.app U).hom.toAlgebra
   have h1 : IsIntegrallyClosed (integralClosure Γ(X, U) Γ(Z, f ⁻¹ᵁ U)) := by
     letI := (isField_sections (f ⁻¹ᵁ U)).toField

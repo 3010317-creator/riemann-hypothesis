@@ -103,8 +103,7 @@ theorem riesz_of_relation {H V : Type} [NormedAddCommGroup H] [InnerProductSpace
     have hxk : x ∈ S.topologicalClosure := S.le_topologicalClosure hx
     have hw' : w = l ⟨x, hxk⟩ := huniq x w _ hw (hl ⟨x, hxk⟩)
     have := ContinuousLinearMap.adjoint_inner_left L (⟨x, hxk⟩ : S.topologicalClosure) v
-    rw [hw']
-    exact this
+    rwa [hw']
 
 theorem Rw_zero {n : ℕ} {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V]
     (w : List (Bool × Fin n × Fin n)) : Rw w (0 : Mat n → V) = 0 := by
@@ -190,8 +189,8 @@ theorem inner_cls_eq {n : ℕ} [MeasurableSpace (G n)] (μ : Measure (G n)) {V :
     [InnerProductSpace ℂ V] {a b : Mat n → V} (ha : MemLp (fun y : G n => a y.val) 2 μ)
     (hb : MemLp (fun y : G n => b y.val) 2 μ) :
     ⟪cls μ a, cls μ b⟫_ℂ = ∫ y : G n, ⟪a y.val, b y.val⟫_ℂ ∂μ := by
-  have e1 : cls μ a = ha.toLp _ := dif_pos ha
-  have e2 : cls μ b = hb.toLp _ := dif_pos hb
+  have e1 : cls μ a = ha.toLp _ := dite_eq_left ha
+  have e2 : cls μ b = hb.toLp _ := dite_eq_left hb
   rw [e1, e2, L2.inner_def]
   refine integral_congr_ae ?_
   filter_upwards [ha.coeFn_toLp, hb.coeFn_toLp] with y h1 h2
@@ -607,8 +606,7 @@ lemma sr_window {R a : ℝ} (h : R < a) : ∃ β : ℝ → ℝ, ContDiff ℝ ∞
   refine ⟨fun s => Real.smoothTransition (s - R) * Real.smoothTransition (a + 1 - s), ?_, ?_, ?_, ?_, ?_⟩
   · exact (Real.smoothTransition.contDiff.comp (contDiff_id.sub contDiff_const)).mul
       (Real.smoothTransition.contDiff.comp (contDiff_const.sub contDiff_id))
-  · intro s
-    exact mul_nonneg (Real.smoothTransition.nonneg _) (Real.smoothTransition.nonneg _)
+  · exact fun s => mul_nonneg (Real.smoothTransition.nonneg _) (Real.smoothTransition.nonneg _)
   · exact mul_pos (Real.smoothTransition.pos_of_pos (by linarith))
       (Real.smoothTransition.pos_of_pos (by linarith))
   · intro s hs
@@ -621,8 +619,8 @@ lemma sr_inner_cls {n : ℕ} [MeasurableSpace (G n)] (μ : Measure (G n)) {V : T
     (hg : MemLp (fun y : G n => g y.val) 2 μ) :
     Integrable (fun y : G n => ⟪f y.val, g y.val⟫_ℂ) μ ∧
       ⟪cls μ f, cls μ g⟫_ℂ = ∫ y : G n, ⟪f y.val, g y.val⟫_ℂ ∂μ := by
-  have e1 : cls μ f = hf.toLp _ := dif_pos hf
-  have e2 : cls μ g = hg.toLp _ := dif_pos hg
+  have e1 : cls μ f = hf.toLp _ := dite_eq_left hf
+  have e2 : cls μ g = hg.toLp _ := dite_eq_left hg
   have hae : (fun y : G n => ⟪(hf.toLp _ : Lp V 2 μ) y, (hg.toLp _ : Lp V 2 μ) y⟫_ℂ) =ᵐ[μ]
       fun y : G n => ⟪f y.val, g y.val⟫_ℂ := by
     filter_upwards [hf.coeFn_toLp, hg.coeFn_toLp] with y a b
@@ -631,9 +629,7 @@ lemma sr_inner_cls {n : ℕ} [MeasurableSpace (G n)] (μ : Measure (G n)) {V : T
   rw [e1, e2, L2.inner_def]
   exact integral_congr_ae hae
 
-lemma sr_val_mem {n : ℕ} (y : G n) : y.val ∈ GLs n := by
-  show y.val.det ≠ 0
-  exact (Matrix.isUnits_det_units y).ne_zero
+lemma sr_val_mem {n : ℕ} (y : G n) : y.val ∈ GLs n := (Matrix.isUnits_det_units y).ne_zero
 
 lemma sr_eq_zero {n : ℕ} [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measure (G n)) [μ.IsHaarMeasure]
     {ψ : G n → ℝ} (hc : Continuous ψ) (h0 : ∀ y, 0 ≤ ψ y) (hi : Integrable ψ μ) (hz : ∫ y, ψ y ∂μ = 0) :
@@ -833,9 +829,7 @@ theorem mul_mem {x y : Mat n} (hx : x ∈ GLs n) (hy : y ∈ GLs n) : x * y ∈ 
   simp only [GLs, Set.mem_setOf_eq, Matrix.det_mul] at *
   exact mul_ne_zero hx hy
 
-theorem val_mem (x : G n) : x.val ∈ GLs n := by
-  have h := (Matrix.isUnit_iff_isUnit_det _).1 x.isUnit
-  exact h.ne_zero
+theorem val_mem (x : G n) : x.val ∈ GLs n := ((Matrix.isUnit_iff_isUnit_det _).1 x.isUnit).ne_zero
 
 def mulL (a : Mat n) : Mat n →L[ℝ] Mat n :=
   LinearMap.toContinuousLinearMap
@@ -889,8 +883,7 @@ theorem ltSob : LtSob := by
   · have h := (hf.2 w).comp_measurePreserving (measurePreserving_mul_left μ x)
     have he : (fun y : G n => Rw w (lTr x f) y.val) = (fun y : G n => Rw w f y.val) ∘ (fun y => x * y) :=
       funext fun y => Rw_lTr hR x hf.1 w y.val (val_mem y)
-    rw [he]
-    exact h
+    rwa [he]
   · have ht : ∀ s, gel s 2 (lTr x f) g = gel s 2 f (x.val * g) := fun s =>
       (((hR n).1 V f hf.1).2.2.2 s 2 x.val (val_mem x) g hg).1
     simp only [Om, Pi.smul_apply, Pi.add_apply, ht]
@@ -1021,8 +1014,7 @@ theorem tendsto_pow_mul_of_norm_sqrt {h : C₀(ℝ, ℂ)} (hr : Rapid h) {k : �
     tendsto_zero_iff_norm_tendsto_zero.mp (h'.zero_at_infty')
   have h1 : Tendsto (fun y => Real.sqrt ‖h' y‖) (cocompact ℝ) (𝓝 0) := by
     have := (Real.continuous_sqrt.tendsto 0).comp h0
-    rw [Real.sqrt_zero] at this
-    exact this
+    rwa [Real.sqrt_zero] at this
   rw [tendsto_zero_iff_norm_tendsto_zero]
   refine h1.congr fun y => ?_
   rw [hh', norm_mul, norm_mul, hn, norm_pow, norm_pow, Complex.norm_real, pow_mul',
@@ -1119,9 +1111,9 @@ theorem cls_inner {n : ℕ} [MeasurableSpace (G n)] (μ : Measure (G n)) {V : Ty
     (hf' : MemLp (fun y : G n => f' y.val) 2 μ) :
     ⟪cls μ f, cls μ f'⟫_ℂ = ∫ y : G n, ⟪f y.val, f' y.val⟫_ℂ ∂μ := by
   have e1 : cls μ f = hf.toLp _ := by
-    unfold cls; exact dif_pos hf
+    unfold cls; exact dite_eq_left hf
   have e2 : cls μ f' = hf'.toLp _ := by
-    unfold cls; exact dif_pos hf'
+    unfold cls; exact dite_eq_left hf'
   rw [e1, e2, L2.inner_def]
   apply integral_congr_ae
   filter_upwards [hf.coeFn_toLp, hf'.coeFn_toLp] with y h1 h2
@@ -1366,8 +1358,7 @@ theorem coreRep (E : KMod n) [CompleteSpace E.V] {Ω : Msob μ E.V →ₗ[ℂ] M
       refine cls_congr hC hU (Rw_congr w (cls_eq_of_sob hC hU (hUS (j + 1) t) hf'' ?_))
       rw [hUc, hc'']
       exact hstep (j + 2) (j + 1) t (by omega)
-    rw [e2]
-    exact hd
+    rwa [e2]
   obtain ⟨hjoint, hder⟩ := hCJ n μ E.V U hL hR hSG hUS hd
   have hT2 : (T ^ 2) (cls μ (Bn f 2)) = cls μ f := by
     rw [pow_two, ContinuousLinearMap.mul_apply]
@@ -1484,8 +1475,7 @@ theorem rd_sub (X : Mat n) {f f' : Mat n → V} (hf : ContDiffOn ℝ ∞ f (GLs 
   have ho := isOpen_GLs.mem_nhds hg
   have d1 : DifferentiableAt ℝ f g := (hf.contDiffAt ho).differentiableAt (by simp)
   have d2 : DifferentiableAt ℝ f' g := (hf'.contDiffAt ho).differentiableAt (by simp)
-  have e := (d1.hasFDerivAt.sub d2.hasFDerivAt).fderiv
-  exact DFunLike.congr_fun e (g * X)
+  exact DFunLike.congr_fun ((d1.hasFDerivAt.sub d2.hasFDerivAt).fderiv) (g * X)
 
 theorem rd_rd_sub (hR : RCalc) (X Y : Mat n) {f f' : Mat n → V} (hf : ContDiffOn ℝ ∞ f (GLs n))
     (hf' : ContDiffOn ℝ ∞ f' (GLs n)) {g : Mat n} (hg : g ∈ GLs n) :

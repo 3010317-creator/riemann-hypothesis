@@ -132,8 +132,7 @@ theorem bijective_frob_twist (F k : Type) [Field F] [Finite F] [Field k] (p : �
     have := DFunLike.congr_fun hst x
     simp only [RingHom.comp_apply, iterateFrobenius_def, ← map_pow] at this
     have h2 := ψ.injective this
-    simp only [AlgHom.coe_pow, FiniteField.coe_frobeniusAlgHom, pow_iterate, ZMod.card]
-    exact h2
+    simpa only [AlgHom.coe_pow, FiniteField.coe_frobeniusAlgHom, pow_iterate, ZMod.card] using h2
   let e : (F →+* k) → (F →ₐ[ZMod p] k) := fun f =>
     { f with
       commutes' := fun r =>
@@ -267,14 +266,12 @@ theorem frob_rt {k : Type} [Field k] (p : ℕ) [Fact p.Prime] [CharP k p] (ψ : 
     · subst hp
       have e : ∀ τ : E →+* ℂ, 2 * τ (H.w0 : E) = 1 + τ (H.rt : E) := fun τ => by
         have := congrArg (τ.comp (algebraMap (𝓞 E) E)) H.two_weight_eq_one_add_root
-        rw [map_mul, map_add (f := _), map_one, map_ofNat] at this
-        exact this
+        rwa [map_mul, map_add (f := _), map_one, map_ofNat] at this
       have h1 : ψ σ' H.w0 = ψ σ (1 - H.w0) := by
         apply hψ
         have : σ ((1 - H.w0 : 𝓞 E) : E) = 1 - σ (H.w0 : E) := by
           have := map_sub (σ.comp (algebraMap (𝓞 E) E)) 1 H.w0
-          rw [map_one] at this
-          exact this
+          rwa [map_one] at this
         rw [this]
         linear_combination (1 / 2 : ℂ) * (e σ + e σ' + hneg)
       obtain ⟨m, hm⟩ := cm_generator_sq_quadratic_eq H
@@ -450,10 +447,10 @@ theorem inPsi_conj_iff (H : Host E) (τ : E →+* ℂ) :
   · rw [h, map_neg, hc, neg_neg]; simp [h3]
 
 theorem mult_of_inPsi {H : Host E} (Dw : Datum H) {τ : E →+* ℂ} (h : InPsi H τ) : Dw.mult τ = Dw.p := by
-  unfold Datum.mult; rw [if_pos (show τ (H.rt : E) = H.rt0 from h)]
+  unfold Datum.mult; rw [ite_eq_left (show τ (H.rt : E) = H.rt0 from h)]
 
 theorem mult_of_not_inPsi {H : Host E} (Dw : Datum H) {τ : E →+* ℂ} (h : ¬ InPsi H τ) : Dw.mult τ = Dw.q := by
-  unfold Datum.mult; rw [if_neg (show ¬ τ (H.rt : E) = H.rt0 from h)]
+  unfold Datum.mult; rw [ite_eq_right (show ¬ τ (H.rt : E) = H.rt0 from h)]
 
 theorem rpow_neg_succ (p : ℕ) (hp : 0 < p) (i : ℕ) :
     (p : ℝ) ^ (-((i : ℝ) + 1)) = ((p : ℝ)⁻¹) ^ (i + 1) := by
@@ -485,11 +482,11 @@ theorem tsum_alt (p : ℕ) (hp : 1 < p) (a b : ℝ) :
   have ge : (fun k => g (2 * k)) = fun k => (r ^ 2) ^ k * (r * a) := by
     funext k
     simp only [hg]
-    rw [rpow_neg_succ p (by omega), if_pos (even_two_mul k), ← hr, pow_succ, pow_mul]; ring
+    rw [rpow_neg_succ p (by omega), ite_eq_left (even_two_mul k), ← hr, pow_succ, pow_mul]; ring
   have go : (fun k => g (2 * k + 1)) = fun k => (r ^ 2) ^ k * (r ^ 2 * b) := by
     funext k
     simp only [hg]
-    rw [rpow_neg_succ p (by omega), if_neg (Nat.not_even_iff_odd.2 (odd_two_mul_add_one k)), ← hr,
+    rw [rpow_neg_succ p (by omega), ite_eq_right (Nat.not_even_iff_odd.2 (odd_two_mul_add_one k)), ← hr,
       show 2 * k + 1 + 1 = 2 * k + 2 by ring, pow_add, pow_mul]; ring
   have hs := summable_geometric_of_lt_one r0 r1
   rw [← tsum_even_add_odd (by rw [ge]; exact hs.mul_right _) (by rw [go]; exact hs.mul_right _), ge, go,
@@ -544,11 +541,11 @@ theorem nuFac_le_odd_unram : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
       intro n
       rw [zero_add]
       by_cases hn : Even n
-      · rw [if_pos hn, mult_of_inPsi Dw ((inPsi_conj_iff H _).2 (fun h' => ?_))]
+      · rw [ite_eq_left hn, mult_of_inPsi Dw ((inPsi_conj_iff H _).2 (fun h' => ?_))]
         have := (halt (n + 1)).1 h'
         rw [Nat.even_add_one] at this
         exact this hn
-      · rw [if_neg hn, mult_of_not_inPsi Dw (fun h' => ?_)]
+      · rw [ite_eq_right hn, mult_of_not_inPsi Dw (fun h' => ?_)]
         have := (inPsi_conj_iff H _).1 h'
         rw [halt, Nat.even_add_one, not_not] at this
         exact hn this

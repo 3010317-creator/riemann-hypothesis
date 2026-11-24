@@ -56,8 +56,7 @@ private theorem hecke_comp {G : Type} [Group G] [TopologicalSpace G] {K : Subgro
       { toFun := φ, invFun := φ, left_inv := hi, right_inv := hi,
         continuous_toFun := hc, continuous_invFun := hc }
     exact hh.1.comp_homeomorph e
-  · simp only [hm]
-    exact hh.2 _ (hK k hk) _
+  · simpa only [hm] using hh.2 _ (hK k hk) _
 
 private theorem core {G V : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [AddCommGroup V] [Module ℂ V]
     (hS : LvShift) (ρ : Representation ℂ G V) (K : Subgroup G) (ho : IsOpen (K : Set G)) (hc : IsCompact (K : Set G))
@@ -215,8 +214,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.toYd_pf :
   refine ⟨⟨Y, fun h => v⁻¹ • ρ h, _, hYπ, hfd, hne, hY, hact, ?_, c1, ?_⟩, v, hv0, fun h hh =>
     ⟨toF (c3 h hh).1, ?_⟩⟩
   · intro W hW
-    refine hsim W fun h hh y hy => ?_
-    exact (W.smul_mem_iff (inv_ne_zero hv0)).1 (hW h (toH hh) y hy)
+    exact hsim W fun h hh y hy => (W.smul_mem_iff (inv_ne_zero hv0)).1 (hW h (toH hh) y hy)
   · intro h hh
     have e : (fun g => h (thF E n g)) = fun g => h (ratF E n u * thetaF E n g * (ratF E n u)⁻¹) :=
       funext fun g => by rw [t1 g]

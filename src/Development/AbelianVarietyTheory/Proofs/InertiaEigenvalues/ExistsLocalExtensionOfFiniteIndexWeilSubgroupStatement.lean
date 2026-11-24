@@ -86,7 +86,7 @@ theorem decOrbit_root_count : ∀ (E Ω : Type) [Field E] [NumberField E] [Field
     intro x hx
     have h := (hS x).1 hx
     refine ⟨Classical.choose h, (Classical.choose_spec h).1, (Classical.choose_spec h).2, ?_⟩
-    simp only [φ, dif_pos h]
+    simp only [φ, dite_eq_left h]
 
   have hg0 : g ≠ 0 := hg.ne_zero
   have hconj : ∀ σ : G E Ω, σ β' ∈ (g.aroots Ω).toFinset := by
@@ -234,8 +234,7 @@ theorem conj_places_of_same_prime_below : ∀ (E Ω : Type) [Field E] [NumberFie
     change b' ∈ primeBelow (F := K) (g • A) ↔ b' ∈ primeBelow (F := K) B
     rw [primeBelow_smul, hg]
   refine ⟨g.restrictScalars E, fun x hx => ?_, ?_⟩
-  · show g x = x
-    exact g.commutes ⟨x, hx⟩
+  · exact g.commutes ⟨x, hx⟩
   · rw [← hgA]
     ext y
     rw [ValuationSubring.mem_pointwise_smul_iff_inv_smul_mem,
@@ -308,8 +307,7 @@ theorem crt_approx_integral : ∀ (E Ω : Type) [Field E] [NumberField E] [Field
   have h1mem : (1 : 𝓞 K) ∈ J ⊔ Pg f fint ^ a := by rw [hJP]; exact Submodule.mem_top
   obtain ⟨z, hz, y, hy, hzy⟩ := Submodule.mem_sup.1 h1mem
   obtain ⟨s, hsJ, hsP⟩ : ∃ s ∈ J, s ∉ Pg f fint := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     rw [sup_eq_left.2 hcon] at hPJ
     exact hPmax.ne_top hPJ
   have hz1 : z - 1 ∈ Pg f fint ^ a := by
@@ -332,8 +330,7 @@ theorem crt_approx_integral : ∀ (E Ω : Type) [Field E] [NumberField E] [Field
       rw [heq] at h1
       exact h1.symm.trans h2
     obtain ⟨s', hs'P, hs'Q⟩ : ∃ s' ∈ Pg f fint ^ a, s' ∉ Pg g gint := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       haveI := primePg g gint
       have h1 : Pg f fint ≤ Pg g gint := Ideal.IsPrime.le_of_pow_le hcon
       exact hne (hPmax.eq_of_le (primePg g gint).ne_top h1).symm
@@ -378,8 +375,7 @@ theorem exists_algebraMap_sub_eq_sum_conjugates : ∀ (E Ω : Type) [Field E] [N
     obtain ⟨hxy, hxr⟩ := Finset.mem_erase.mp hx
     refine ⟨hxy, ?_⟩
     have hax : aeval x p = 0 := by
-      rw [Multiset.mem_toFinset, mem_roots hq0, IsRoot, eval_map_algebraMap] at hxr
-      exact hxr
+      rwa [Multiset.mem_toFinset, mem_roots hq0, IsRoot, eval_map_algebraMap] at hxr
     have hmx : p = minpoly E x := minpoly.eq_of_irreducible_of_monic hirr hax hmon
     have horb : x ∈ MulAction.orbit (G E Ω) y :=
       (Normal.minpoly_eq_iff_mem_orbit (F := E) Ω).mp (by rw [← hmx])
@@ -422,8 +418,7 @@ theorem exists_base_near_of_dec_fixed : ∀ (E Ω : Type) [Field E] [NumberField
   have hm0 : m ≠ 0 := by
     rw [hm, Ne, Ideal.absNorm_eq_zero_iff]; exact w.ne_bot
   have hmA : A.valuation (m : Ω) < 1 := by
-    have h1 := (h ((m : ℕ) : 𝓞 E)).mpr (Ideal.absNorm_mem w.asIdeal)
-    simpa using h1
+    simpa using (h ((m : ℕ) : 𝓞 E)).mpr (Ideal.absNorm_mem w.asIdeal)
   have hbv : A.valuation (b : Ω) ≠ 0 := by simpa using hb0
   have hrv : A.valuation r ≠ 0 := by simpa using hr
   have hb'v : A.valuation (b' : Ω) ≤ A.valuation r := by
@@ -478,8 +473,7 @@ theorem exists_base_near_of_dec_fixed : ∀ (E Ω : Type) [Field E] [NumberField
     have hD : σ * ρ ∈ Dec (F := E) A := by
       rw [mem_Dec, mul_smul, hρ, smul_inv_smul]
     have := hz _ hD
-    rw [AlgEquiv.mul_apply, hρK z hzK] at this
-    exact this
+    rwa [AlgEquiv.mul_apply, hρK z hzK] at this
   obtain ⟨t, htK, htint, ht1, htσ⟩ := _root_.GlobalTheory.crt_approx_integral E Ω K A c hc0
   obtain ⟨e, s, hs, he⟩ := _root_.GlobalTheory.exists_algebraMap_sub_eq_sum_conjugates E Ω (t * z)
   refine ⟨e, ?_⟩
@@ -666,9 +660,7 @@ theorem exists_finset_fix_subset_of_isOpen : ∀ (E Ω : Type) [Field E] [Number
     have : (1 : Ine (F := E) A) ∈ (Subtype.val ⁻¹' U) := by rw [hUM]; exact M.one_mem
     simpa using this
   obtain ⟨L, hL, hLU⟩ := (krullTopology_mem_nhds_one_iff E Ω U).mp (hU.mem_nhds h1)
-  have hfg : L.toSubalgebra.FG := by
-    apply Subalgebra.fg_of_fg_toSubmodule
-    exact Module.Finite.iff_fg.mp hL
+  have hfg : L.toSubalgebra.FG := Subalgebra.fg_of_fg_toSubmodule (Module.Finite.iff_fg.mp hL)
   obtain ⟨t, ht⟩ := hfg
   refine ⟨t, fun σ hσ => ?_⟩
   have hmem : (σ : G E Ω) ∈ L.fixingSubgroup := by
@@ -679,8 +671,7 @@ theorem exists_finset_fix_subset_of_isOpen : ∀ (E Ω : Type) [Field E] [Number
       AlgHom.eqOn_adjoin_iff.mpr (fun y hy => hσ y hy)
     exact key hx'
   have : σ ∈ (Subtype.val ⁻¹' U : Set (Ine (F := E) A)) := hLU hmem
-  rw [hUM] at this
-  exact this
+  rwa [hUM] at this
 
 end GlobalTheory.WeilDeligne
 end -- clump:auto
@@ -710,8 +701,7 @@ theorem exists_monic_base_root_near : ∀ (E Ω : Type) [Field E] [NumberField E
       · obtain ⟨e, he⟩ := hdense (f.coeff 0) (fun d hd => hfix d hd 0) (r ^ n) (pow_ne_zero _ hr)
         exact ⟨e, by simpa [map_pow] using he⟩
       · refine ⟨0, ?_⟩
-        simp only [hb, map_zero, zero_pow hi.ne', mul_zero]
-        exact zero_lt_iff.mpr hvrn
+        simpa only [hb, map_zero, zero_pow hi.ne', mul_zero] using zero_lt_iff.mpr hvrn
     · have hbi : β ^ i ≠ 0 := pow_ne_zero _ hb
       obtain ⟨e, he⟩ := hdense (f.coeff i) (fun d hd => hfix d hd i) (r ^ n / β ^ i)
         (div_ne_zero (pow_ne_zero _ hr) hbi)
@@ -758,8 +748,7 @@ theorem exists_monic_base_root_near : ∀ (E Ω : Type) [Field E] [NumberField E
     rw [eval_multiset_prod, Multiset.map_map]
     simp
   have hex : ∃ a ∈ G.roots, A.valuation (β - a) < A.valuation r := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have h1 : A.valuation r ^ n ≤ A.valuation (aeval β g) := by
       rw [hev, map_multiset_prod, Multiset.map_map]
       have hcard : (G.roots.map (A.valuation ∘ fun a => β - a)).card = n := by
@@ -872,8 +861,7 @@ theorem GlobalTheory.stab_finset_eq_stab_primitive : ∀ (E Ω : Type) [Field E]
     have hxK : x ∈ IntermediateField.adjoin E {(α : Ω)} := by
       rw [key]; exact IntermediateField.subset_adjoin E _ hx
     exact gen {(α : Ω)} (by simpa using h) x hxK
-  · intro h
-    exact gen (s : Set Ω) (fun x hx => h x hx) (α : Ω) α.2
+  · exact fun h => gen (s : Set Ω) (fun x hx => h x hx) (α : Ω) α.2
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPrimitiveElementStabilizerFinset =====
@@ -989,9 +977,7 @@ theorem exists_localExt_of_finiteIndex : ∀ (E Ω : Type) [Field E] [NumberFiel
   · intro σ
     rw [← hβH σ]
     constructor
-    · intro hσβ x
-      have hσβ' := hback σ (Weil_le_Dec h σ.2) hσβ
-      exact agree σ 1 (by simpa using hσβ') x x.2
+    · exact fun hσβ x => agree σ 1 (by simpa using (hback σ (Weil_le_Dec h σ.2) hσβ)) x x.2
     · intro hfix
       exact hkr σ (Weil_le_Dec h σ.2) (hfix ⟨β', IntermediateField.mem_adjoin_simple_self E β'⟩)
 

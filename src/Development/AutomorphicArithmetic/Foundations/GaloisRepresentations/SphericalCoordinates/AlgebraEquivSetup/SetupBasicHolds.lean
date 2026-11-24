@@ -82,8 +82,7 @@ private lemma exists_close {E : Type} [Field E] [NumberField E] (c : InfinitePla
     (by norm_num : (0:ℝ) < 1/2)
   refine ⟨x, fun v => ?_⟩
   have h1 := (dist_le_pi_dist _ _ v).trans_lt hx
-  rw [dist_comm, dist_eq_norm] at h1
-  exact h1
+  rwa [dist_comm, dist_eq_norm] at h1
 
 theorem UpperTheory.Gal.W2.Seed.pCEx :
     CEx := by
@@ -120,14 +119,14 @@ theorem UpperTheory.Gal.W2.Seed.pCEx :
     ring
   have hneg : (τ₀ w).re < 0 := by
     have hb := hbound τ₀
-    rw [if_pos rfl] at hb
+    rw [ite_eq_left rfl] at hb
     have := (abs_lt.mp hb).2
     rw [hτw, hτz]
     nlinarith
   have hpos : ∀ τ : E →+* ℂ, InfinitePlace.mk τ ≠ InfinitePlace.mk τ₀ → 0 < (τ w).re := by
     intro τ hτ
     have hb := hbound τ
-    rw [if_neg hτ] at hb
+    rw [ite_eq_right hτ] at hb
     have := (abs_lt.mp hb).1
     rw [hτw, hτz]
     nlinarith
@@ -188,8 +187,7 @@ private lemma hensel_root (p : ℕ) [Fact p.Prime] (tr nm r : ℤ) (hd : ¬ (p :
   have hn1 : ‖Polynomial.aeval (r : ℤ_[p]) (Polynomial.derivative F)‖ = 1 := by
     rw [hder]
     refine le_antisymm (PadicInt.norm_le_one _) ?_
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     exact hF1 ((PadicInt.norm_int_lt_one_iff_dvd _).1 hlt)
   have hn0 : ‖Polynomial.aeval (r : ℤ_[p]) F‖ < 1 := by
     rw [hval]
@@ -242,8 +240,7 @@ theorem UpperTheory.Gal.W2.Seed.pUEx :
       map_add' := fun x y => hinj (by rw [hf, map_add (f := _), hf, hf]; simp) }
   refine ⟨u, ρ₀, ?_, ?_⟩
   · unfold LiesOver
-    intro x
-    exact (hf x).symm
+    exact fun x => (hf x).symm
   · apply hinj
     show ι (f ⟨_, hω⟩) = _
     rw [hf, ← hρ₀]
@@ -341,8 +338,7 @@ private theorem exists_ideal (E : Type) [Field E] [NumberField E] :
   refine ⟨(D.den : 𝓞 E), D.num, nonZeroDivisors.coe_ne_zero _, ?_, ?_⟩
   · intro h
     apply hD
-    rw [← FractionalIdeal.num_eq_zero_iff]
-    exact h
+    rwa [← FractionalIdeal.num_eq_zero_iff]
   · intro z
     rw [hmem]
     constructor
@@ -360,8 +356,7 @@ private theorem exists_ideal (E : Type) [Field E] [NumberField E] :
         FractionalIdeal.mul_mem_mul (FractionalIdeal.mem_spanSingleton_self _ _)
           ((FractionalIdeal.mem_coeIdeal _).2 ⟨j, hj, rfl⟩)
       rw [← key2] at h4
-      rw [hz]
-      exact h4
+      rwa [hz]
 
 theorem pCodiffGen : CodiffGen := by
   unfold CodiffGen
@@ -370,9 +365,7 @@ theorem pCodiffGen : CodiffGen := by
   obtain ⟨a, J, ha, hJ, hcod⟩ := exists_ideal E
   have hM0 : ((M : 𝓞 E)) ≠ 0 := Nat.cast_ne_zero.2 hM.ne'
   have hI0 : J * Ideal.span {(M : 𝓞 E)} ≠ 0 := by
-    refine mul_ne_zero (show J ≠ 0 from hJ) ?_
-    intro h
-    exact hM0 (Ideal.span_singleton_eq_bot.1 h)
+    exact mul_ne_zero (show J ≠ 0 from hJ) (fun h => hM0 (Ideal.span_singleton_eq_bot.1 h))
   have hle : J * Ideal.span {(M : 𝓞 E)} ≤ J := Ideal.mul_le.2 fun r hr s _ => J.mul_mem_right s hr
   obtain ⟨j, hj⟩ := IsDedekindDomain.exists_sup_span_eq hle hI0
   have hjJ : j ∈ J := by
@@ -411,8 +404,7 @@ theorem pCodiffGen : CodiffGen := by
     · haveI : Finite (𝓞 E ⧸ K) := Ideal.finiteQuotientOfFreeOfNeBot K hK0
       haveI : Fact q.Prime := ⟨hq⟩
       have hcard : q ∣ Nat.card (𝓞 E ⧸ K) := by
-        rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply]
-        exact hqe
+        rwa [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply]
       obtain ⟨x, hx⟩ := exists_prime_addOrderOf_dvd_card' q hcard
       have hqx : (q : 𝓞 E ⧸ K) * x = 0 := by
         rw [← nsmul_eq_mul, ← hx]
@@ -420,8 +412,7 @@ theorem pCodiffGen : CodiffGen := by
       have hu : (q : 𝓞 E ⧸ K) * Ideal.Quotient.mk K t = 1 := by
         have := congrArg (Ideal.Quotient.mk K) hkm
         rw [map_add (f := _), Ideal.Quotient.eq_zero_iff_mem.2 hk, zero_add, map_mul, map_one, map_natCast] at this
-        rw [mul_comm]
-        exact this
+        rwa [mul_comm]
       have hx0 : x = 0 := by
         linear_combination (-x) * hu + (Ideal.Quotient.mk K t) * hqx
       rw [hx0, addOrderOf_zero] at hx
@@ -466,8 +457,7 @@ theorem UpperTheory.Gal.W2.Seed.pCodiffUnit :
         obtain ⟨x2, h2⟩ := hb z hz
         exact ⟨x1 + x2, by push_cast; rw [add_mul, h1, h2, mul_add]⟩
       zero_mem' := by
-        intro z _
-        exact ⟨0, by simp⟩
+        exact fun z _ => ⟨0, by simp⟩
       smul_mem' := by
         intro c a ha z hz
         obtain ⟨x, hx⟩ := ha z hz
@@ -596,8 +586,7 @@ theorem UpperTheory.Gal.W2.Seed.pDeltaEx :
   have hDabs : ((D.natAbs : ℕ) : E) = -((u : E) * (u : E)) := by
     rw [huuE]
     have : ((D.natAbs : ℕ) : ℤ) = -D := Int.ofNat_natAbs_of_nonpos hD.le
-    have h2 := congrArg (fun k : ℤ => (k : E)) this
-    simpa using h2
+    simpa using congrArg (fun k : ℤ => (k : E)) this
   refine ⟨(c : E) * t * u, ?_, ⟨?_, e * D.natAbs, ?_, ?_⟩, ?_⟩
   · rw [map_mul, map_mul, map_intCast, ht, hconj]; ring
   · intro x
@@ -768,9 +757,7 @@ private theorem laurent_adjoin_eq_of_image_eq {E : Type} [Field E] [NumberField 
   refine (injective_iff_map_eq_zero (A.EF n)).2 fun x hx => ?_
   funext i
   by_contra hne
-  have hxi : ((x i : 𝓞 E) : E) ≠ 0 := by
-    intro h
-    exact hne (RingOfIntegers.coe_eq_zero_iff.1 h)
+  have hxi : ((x i : 𝓞 E) : E) ≠ 0 := fun h => hne (RingOfIntegers.coe_eq_zero_iff.1 h)
   have hw : A.δ * ((A.hd n i : 𝓞 E) : E) * (x i : E) ≠ 0 :=
     mul_ne_zero (mul_ne_zero (delta_ne A) (hd_ne A n i)) hxi
   have hint : ∀ b : 𝓞 E, Algebra.trace ℚ E (A.δ * ((A.hd n i : 𝓞 E) : E) * (x i : E) * (b : E)) = 0 := by
@@ -793,8 +780,7 @@ private theorem laurent_adjoin_eq_of_image_eq {E : Type} [Field E] [NumberField 
     push_cast
     ring
   obtain ⟨b, hb⟩ : ∃ b : E, Algebra.trace ℚ E (A.δ * ((A.hd n i : 𝓞 E) : E) * (x i : E) * b) ≠ 0 := by
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     exact hw ((traceForm_nondegenerate ℚ E).1 _ fun b => by simpa [Algebra.traceForm_apply] using hall b)
   obtain ⟨m, hm, hy⟩ := IsAlgebraic.exists_integral_multiple (R := ℤ) ((IsFractionRing.isAlgebraic_iff ℤ ℚ E).2 (Algebra.IsAlgebraic.isAlgebraic b))
   obtain ⟨c, hc⟩ : ∃ c : 𝓞 E, (c : E) = (m : ℚ) • b := by
@@ -859,14 +845,14 @@ theorem UpperTheory.Gal.W2.Seed.pHdSign :
     split_ifs <;> simp [Complex.mul_im, hc]
   · rintro ⟨h, hi0⟩
     have hr := hre h
-    simp only [Arith.hd, Arith.dg, if_pos hi0]
+    simp only [Arith.hd, Arith.dg, ite_eq_left hi0]
     simp
     linarith
   · intro hn
     by_cases hp : InfinitePlace.mk τ = InfinitePlace.mk A.τ₀
     · have hi : (i : ℕ) ≠ 0 := fun hi0 => hn ⟨hp, hi0⟩
       have hr := hre hp
-      simp only [Arith.hd, Arith.dg, if_neg hi]
+      simp only [Arith.hd, Arith.dg, ite_eq_right hi]
       simp [Complex.mul_re, hc]
       nlinarith
     · have hr : 0 < (τ (A.c : E)).re := A.c_pos τ hp
@@ -1017,18 +1003,15 @@ theorem UpperTheory.Gal.W2.Seed.pKqEx :
   intro _ E _ _ _ A
   obtain ⟨w, hw⟩ : ∃ w : E, w = (A.ω : E) := ⟨_, rfl⟩
   have h1 : w + IsCMField.complexConj E w = (A.tr : E) := by
-    have h := congrArg (fun z : 𝓞 E => (z : E)) A.tr_eq
-    simpa [A.bar_eq, hw] using h
+    simpa [A.bar_eq, hw] using congrArg (fun z : 𝓞 E => (z : E)) A.tr_eq
   have h2 : w * IsCMField.complexConj E w = (A.nm : E) := by
-    have h := congrArg (fun z : 𝓞 E => (z : E)) A.nm_eq
-    simpa [A.bar_eq, hw] using h
+    simpa [A.bar_eq, hw] using congrArg (fun z : 𝓞 E => (z : E)) A.nm_eq
   have hq : w ^ 2 - (A.tr : E) * w + (A.nm : E) = 0 := by
     linear_combination w * h1 - h2
   have him : ∀ τ : E →+* ℂ, (τ w).im ≠ 0 := by
     intro τ h0
     have hz : (τ w) ^ 2 - (A.tr : ℂ) * τ w + (A.nm : ℂ) = 0 := by
-      have h := congrArg τ hq
-      simpa using h
+      simpa using congrArg τ hq
     have hr : τ w = (((τ w).re : ℝ) : ℂ) := Complex.ext (by simp) (by simp [h0])
     obtain ⟨r, hr'⟩ : ∃ r : ℝ, τ w = (r : ℂ) := ⟨_, hr⟩
     rw [hr'] at hz
@@ -1104,8 +1087,7 @@ theorem UpperTheory.Gal.W2.Seed.pLiftEx :
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  refine ⟨sA.toRingHom, iA.toRingHom, fun x => ?_⟩
-  exact iA.commutes x
+  exact ⟨sA.toRingHom, iA.toRingHom, fun x => (iA.commutes x)⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PLiftEx =====
@@ -1137,15 +1119,12 @@ theorem UpperTheory.Gal.W2.Seed.pOrbEx :
   have hrep : ∀ q, Quotient.mk R (rep q) = q := by
     intro q
     by_cases hq : q = Quotient.mk R s₁
-    · simp only [rep, if_pos hq]
-      exact hq.symm
-    · simp only [rep, if_neg hq]
-      exact Quotient.out_eq q
+    · simpa only [rep, ite_eq_left hq] using hq.symm
+    · simpa only [rep, ite_eq_right hq] using Quotient.out_eq q
   let eq := Finite.equivFin (Quotient R)
   refine ⟨Nat.card (Quotient R), fun i => (rep (eq.symm i)).1, eq (Quotient.mk R s₁), ?_, ?_, ?_, ?_⟩
   · simp [rep, s₁]
-  · intro i
-    exact (rep _).2
+  · exact fun i => (rep _).2
   · intro i j σ hij
     apply eq.symm.injective
     rw [← hrep (eq.symm i), ← hrep (eq.symm j)]
@@ -1257,8 +1236,7 @@ theorem UpperTheory.Gal.W2.Seed.pPosGen :
       rw [Ideal.eq_top_iff_one, ← hc]
       exact P.add_mem (P.mul_mem_left _ h) (P.mul_mem_left _ hMP)
     refine ⟨(e : 𝓞 E), (e : 𝓞 E) + (M : 𝓞 E) * ((N : 𝓞 E) * x), heP, ?_, ?_⟩
-    · intro h
-      exact heP ((P.add_mem_iff_left (P.mul_mem_right _ hMP)).mp h)
+    · exact fun h => heP ((P.add_mem_iff_left (P.mul_mem_right _ hMP)).mp h)
     · have hx' : (e : E) = t * x := by simpa using hx
       push_cast
       linear_combination ((M : E) * (N : E)) * hx'
@@ -1575,10 +1553,8 @@ private theorem UpperTheory.Gal.W2.Seed.card_signs {n : ℕ} (hn : 1 ≤ n) (r :
   have hiff : ∀ i : Fin n, r i < 0 ↔ ¬ 0 < r i := by
     intro i
     by_cases hi : (i : ℕ) = 0
-    · have hp := h0 i hi
-      exact ⟨fun h => by linarith, fun h => absurd hp h⟩
-    · have hq := h1 i hi
-      exact ⟨fun _ h' => by linarith, fun _ => hq⟩
+    · exact ⟨fun h => by linarith, fun h => absurd (h0 i hi) h⟩
+    · exact ⟨fun _ h' => by linarith, fun _ => (h1 i hi)⟩
   have hc1 : Fintype.card {i // 0 < r i} = 1 := by
     rw [Fintype.card_eq_one_iff]
     refine ⟨⟨⟨0, hn⟩, h0 _ rfl⟩, fun ⟨j, hj⟩ => ?_⟩
@@ -1598,7 +1574,7 @@ theorem UpperTheory.Gal.W2.Seed.pSigSt :
     simp only [gramAt, Arith.H, transpose_apply, map_apply, diagonal_apply]
     by_cases h : i = j
     · subst h
-      rw [if_pos rfl, if_pos rfl, Complex.ext_iff]
+      rw [ite_eq_left rfl, ite_eq_left rfl, Complex.ext_iff]
       simp [(hS E A n τ i).1]
     · simp [h, Ne.symm h]
   have aux : ∀ (r : Fin n → ℝ) (M : Matrix (Fin n) (Fin n) ℂ) (hM : M.IsHermitian),
@@ -1642,15 +1618,13 @@ private theorem tau_add (A : Arith E) (τ : E →+* ℂ) :
     τ (A.ω : E) + (starRingEnd ℂ) (τ (A.ω : E)) = (A.tr : ℂ) := by
   have h1 := congrArg (fun x : 𝓞 E => τ (x : E)) A.tr_eq
   simp only [map_add (f := _), map_intCast] at h1
-  rw [tau_bar A τ] at h1
-  exact h1
+  rwa [tau_bar A τ] at h1
 
 private theorem tau_mul (A : Arith E) (τ : E →+* ℂ) :
     τ (A.ω : E) * (starRingEnd ℂ) (τ (A.ω : E)) = (A.nm : ℂ) := by
   have h1 := congrArg (fun x : 𝓞 E => τ (x : E)) A.nm_eq
   simp only [map_mul, map_intCast] at h1
-  rw [tau_bar A τ] at h1
-  exact h1
+  rwa [tau_bar A τ] at h1
 
 private theorem tau_im (A : Arith E) (τ : E →+* ℂ) : (τ (A.ω : E)).im ≠ 0 := by
   intro h
@@ -1730,10 +1704,8 @@ theorem UpperTheory.Gal.W2.Seed.pTraceType :
       ext τ
       simp only [Finset.mem_filter, Finset.mem_univ, true_and]
       constructor
-      · intro h
-        exact (tau_cases A τ).resolve_left h
-      · intro h h'
-        exact rho_ne A (h'.symm.trans h)
+      · exact fun h => (tau_cases A τ).resolve_left h
+      · exact fun h h' => rho_ne A (h'.symm.trans h)
     have h4 : ∑ τ ∈ Finset.univ.filter (fun τ : E →+* ℂ => τ (A.ω : E) = A.τ₀ (A.ω : E)), τ x =
         ∑ τ : Phi A, τ.1 x := Finset.sum_subtype _ (by simp) _
     rw [h3, h2 (fun τ => τ x), h4, ← Finset.sum_add_distrib, Complex.ofReal_sum]

@@ -154,7 +154,6 @@ theorem archInt_pull : ∀ (k : Type) [CommRing k] (X Y : Scheme.{0}) [IsIntegra
       setIntegral_pull hX g hY hη hδ N σ _ hU _ hc _ hsub _ hf' (-1), mul_sub]
     rfl
   unfold HermLB.archInt
-  refine (finsum_congr key).trans ?_
-  exact (mul_finsum _ _).symm
+  exact (finsum_congr key).trans (mul_finsum _ _).symm
 
 end GlobalTheory.ArchPull

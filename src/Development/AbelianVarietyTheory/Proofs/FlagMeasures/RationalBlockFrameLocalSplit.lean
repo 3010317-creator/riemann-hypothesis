@@ -53,8 +53,7 @@ theorem biorth_decomp {K : Type} [CommRing K] {n m : ℕ} {r : ℕ → ℕ}
     y = ∑ b ∈ Finset.range m, T b *ᵥ (T' b *ᵥ y) := by
   have := congrArg (fun M : Matrix (Fin n) (Fin n) K => M *ᵥ y) h.2.2
   simp only [Matrix.one_mulVec, Matrix.sum_mulVec] at this
-  simp only [Matrix.mulVec_mulVec]
-  exact this.symm
+  simpa only [Matrix.mulVec_mulVec] using this.symm
 
 theorem biorth_map {E K : Type} [CommRing E] [CommRing K] {n m : ℕ} {r : ℕ → ℕ}
     {T : ∀ b, Matrix (Fin n) (Fin (r b)) E} {T' : ∀ b, Matrix (Fin (r b)) (Fin n) E}
@@ -127,8 +126,7 @@ theorem mem_locFlag_iff {E : Type} [Field E] [NumberField E] {n m : ℕ} {r : �
     rw [biorth_decomp (biorth_map h φ hP) y]
     refine Submodule.sum_mem _ fun b _ => ?_
     by_cases hb : k ≤ b
-    · simp only [hy b hb, Matrix.mulVec_zero]
-      exact zero_mem _
+    · simpa only [hy b hb, Matrix.mulVec_zero] using zero_mem _
     have A : ∀ v : Fin (r b) → E,
         (P⁻¹ * (T b).map φ) *ᵥ (fun l => φ (v l)) ∈ locFlag φ P F k := by
       intro v
@@ -185,8 +183,7 @@ theorem exists_lowers_blocks {R K : Type} [CommRing R] [CommRing K] [Algebra R K
     · intro b _ hb
       rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, h.2.1 _ _ (fun e => hb (Fin.ext e.symm)),
         Matrix.zero_mul, Matrix.zero_mul, Matrix.zero_mul]
-    · intro ha
-      exact absurd (Finset.mem_univ a) ha
+    · exact fun ha => absurd (Finset.mem_univ a) ha
 
 theorem locSplit : ∀ (E : Type) [Field E] [NumberField E] (n m : ℕ) (F : ℕ → Submodule (𝓞 E) (Fin n → E)) (r : ℕ → ℕ) (T : ∀ b, Matrix (Fin n) (Fin (r b)) E) (T' : ∀ b, Matrix (Fin (r b)) (Fin n) E) (Λ : ∀ b, Submodule (𝓞 E) (Fin (r b) → E)), Biorth r m T T' → (∀ b, Submodule.IsFullLattice E (Λ b)) → (∀ k y, y ∈ F k ↔ ∀ b, T' b *ᵥ y ∈ Λ b ∧ (k ≤ b → T' b *ᵥ y = 0)) → (∀ (φ : E →+* ℂ) (P : Matrix (Fin n) (Fin n) ℂ), IsUnit P → Biorth r m (fun b => P⁻¹ * (T b).map φ) (fun b => (T' b).map φ * P) ∧ ∀ k y, y ∈ locFlag φ P F k ↔ ∀ b, k ≤ b → ((T' b).map φ * P) *ᵥ y = 0) ∧ ∀ c, (∀ Y ∈ lowers F c, ∀ b, ∀ y ∈ Λ (b + c + 1), (T' b * Y * T (b + c + 1)) *ᵥ y ∈ Λ b) ∧ ∀ Z : ∀ b : Fin m, Matrix (Fin (r b)) (Fin (r (b + c + 1))) E, (∀ b : Fin m, ∀ y ∈ Λ (b + c + 1), Z b *ᵥ y ∈ Λ b) → ∃ Y ∈ lowers F c, ∀ b : Fin m, T' b * Y * T (b + c + 1) = Z b := by
   intro E _ _ n m F r T T' Λ h hΛ hF

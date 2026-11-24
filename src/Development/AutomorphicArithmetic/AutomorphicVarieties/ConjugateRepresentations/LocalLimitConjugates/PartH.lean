@@ -409,8 +409,7 @@ theorem UpperTheory.V.Cj.H.harmFin :
         exact (cmp_rT _ _ _).symm.trans h1
       · obtain ⟨T, w, hT, hw⟩ := hk ω hl.equiv (fun j => e (p.1 j)) p.2
         have := GlobalTheory.Published.AutFinGL.type_of_map ρ T hT w g
-        rw [hw] at this
-        exact this
+        rwa [hw] at this
   refine FiniteDimensional.of_injective (V₂ := (Fin q → Fin n) × Fin Ξ.d → F)
     (LinearMap.pi fun p => ((LinearMap.proj p ∘ₗ coords Ξ q e) ∘ₗ Submodule.subtype _).codRestrict F fun ω => hle ω.1 ω.2 p)
     fun α β h => Subtype.ext (coords_inj Ξ q he (funext fun p => ?_))
@@ -603,8 +602,7 @@ theorem UpperTheory.V.Cj.H.appFacts :
     rw [app_apply]
 
     simp only [dCo, AlternatingMap.alternatizeUncurryFin_apply, map_sum, map_zsmul]
-    refine Finset.sum_congr rfl fun i _ => congrArg _ ?_
-    exact rT_smLie Ξ N T hT _ _ (hv _)
+    exact Finset.sum_congr rfl fun i _ => congrArg _ (rT_smLie Ξ N T hT _ _ (hv _))
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ConjugateRepresentations.LocalLimitConjugates.AppFacts =====
@@ -723,8 +721,7 @@ theorem absSolve : AbsSolve := by
   refine ⟨fun i => g (Finsupp.single i 1), fun j => ?_⟩
   refine (hsum (fun i => g (Finsupp.single i 1)) (L j)).trans ?_
   rw [hgb]
-  have h3 := hgψ (Finsupp.single j 1)
-  simpa [ψ, φ, Finsupp.linearCombination_single] using h3
+  simpa [ψ, φ, Finsupp.linearCombination_single] using hgψ (Finsupp.single j 1)
 
 end UpperTheory.V.Cj.H
 end -- clump:auto
@@ -1175,9 +1172,8 @@ theorem UpperTheory.V.Cj.H.poinOp :
   have hf : ∀ p ∈ G.Y, ∀ w, f p w ∈ G.Om q := by
     intro p hp w
     refine fun s => ⟨?_, ?_⟩
-    · exact ((hD p hp q _ (hwm w s).1).1).congr (fun x hx => if_pos hx)
-    · intro x hx
-      exact if_neg hx
+    · exact ((hD p hp q _ (hwm w s).1).1).congr (fun x hx => ite_eq_left hx)
+    · exact fun x hx => ite_eq_right hx
   let K : V → G.Om (q + 1) → G.Om q := fun p w => if hp : p ∈ G.Y then ⟨f p w, hf p hp w⟩ else 0
   have hK : ∀ p (hp : p ∈ G.Y) w, ((K p w : G.Om q) : S → V → V [⋀^Fin q]→L[ℝ] (Fin d → ℂ)) = f p w := by
     intro p hp w
@@ -1199,7 +1195,7 @@ theorem UpperTheory.V.Cj.H.poinOp :
         rw [← extDerivWithin_univ, ← extDerivWithin_univ]
         apply Filter.EventuallyEq.extDerivWithin_eq_of_mem _ (Set.mem_univ x)
         rw [nhdsWithin_univ]
-        exact Filter.eventually_of_mem (G.isOpen.mem_nhds hx) (fun y hy => if_pos hy)
+        exact Filter.eventually_of_mem (G.isOpen.mem_nhds hx) (fun y hy => ite_eq_left hy)
       rw [hloc]
       exact (hD p hp q _ (hwm w s).1).2 hclosed x hx
     · have h1 := ((G.dOm q (K p w)).2 s).2 x hx
@@ -1214,7 +1210,7 @@ theorem UpperTheory.V.Cj.H.poinOp :
     rw [hK p hp, hK _ hp']
     by_cases hx : x ∈ G.Y
     · have hx' : G.ρ γ⁻¹ x ∈ G.Y := G.maps γ⁻¹ x hx
-      simp only [f, if_pos hx, if_pos hx']
+      simp only [f, ite_eq_left hx, ite_eq_left hx']
       exact tr_coneOp G q γ _ p x
     · have hx' : G.ρ γ⁻¹ x ∉ G.Y := by
         intro h
@@ -1223,7 +1219,7 @@ theorem UpperTheory.V.Cj.H.poinOp :
         have h3 := Geo.ρ_inv_apply G γ⁻¹ x
         rw [inv_inv] at h3
         rwa [h3] at h2
-      simp only [f, if_neg hx, if_neg hx', map_zero]
+      simp only [f, ite_eq_right hx, ite_eq_right hx', map_zero]
   · intro p hp w hw s C hC hCc
     have h := coneLim V (Fin d → ℂ) G.Y hconv p hp q
       (fun k => ((w k : G.Om (q + 1)) : S → V → V [⋀^Fin (q + 1)]→L[ℝ] (Fin d → ℂ)) s)
@@ -1254,8 +1250,7 @@ variable {Γ V S : Type} [Group Γ] [NormedAddCommGroup V] [NormedSpace ℝ V] {
 private theorem fLim_add {w w' : ℕ → G.Om q} (h : FLim G w) (h' : FLim G w') : FLim G fun j => w j + w' j := by
   intro s K hK hc
   have := (h s K hK hc).add (h' s K hK hc)
-  rw [add_zero] at this
-  exact this
+  rwa [add_zero] at this
 
 private theorem fLim_zsmul (n : ℤ) {w : ℕ → G.Om q} (h : FLim G w) : FLim G fun j => n • w j := by
   intro s K hK hKc
@@ -1303,7 +1298,7 @@ theorem UpperTheory.V.Cj.H.zigLim :
       refine ⟨fun j x => if h : x.length = k + 1 then f j x h else 0, ?_, ?_⟩
       · intro j x hx
         show u j x = G.incl (if h : x.length = k + 1 then f j x h else 0)
-        rw [dif_pos hx, hf j x hx]
+        rw [dite_eq_left hx, hf j x hx]
       · intro x hx s
         have hx' : x.length = k + 1 := by simpa using hx
         have ht := (hlim x hx' s {p} (Set.singleton_subset_iff.2 hp)
@@ -1314,7 +1309,7 @@ theorem UpperTheory.V.Cj.H.zigLim :
           intro j
           rw [← hf j x hx']
           simp [Dr.Geo.incl, Set.indicator_of_mem hp]
-        simp only [dif_pos hx']
+        simp only [dite_eq_left hx']
         have hfun : (fun j => f j x hx' s) =
             fun j => ((u j x : S → V → V [⋀^Fin 0]→L[ℝ] (Fin d → ℂ)) s p) (fun _ => 0) :=
           funext fun j => (heq j).symm

@@ -162,8 +162,7 @@ theorem exists_compact_stab : ∀ (D : D7) (V : HSp D) (θ : D.what₂.Tau → (
       rwa [V.frame.sum_equivFun]
     · intro hv
       refine ⟨V.frame.equivFun.symm v, ?_, V.frame.equivFun.apply_symm_apply v⟩
-      rw [Module.Basis.equivFun_symm_apply]
-      exact hv
+      rwa [Module.Basis.equivFun_symm_apply]
   have hsp : Submodule.span D.host.E (L : Set (Fin V.rank → D.host.E)) = ⊤ := by
     rw [eq_top_iff]
     intro v _
@@ -204,8 +203,7 @@ theorem exists_compact_stab : ∀ (D : D7) (V : HSp D) (θ : D.what₂.Tau → (
           (isField_of_isIntegral_of_isField (IsFractionRing.injective (𝓞 D.host.E) D.host.E) (Field.toIsField D.host.E))
       rw [hspan]; trivial
     have := Submodule.mem_map_of_mem (f := f) hx
-    rw [Submodule.map_span] at this
-    exact this
+    rwa [Submodule.map_span] at this
   obtain ⟨C, hC, hCe⟩ := exists_compact_entries D.host.F D.host.E L (V.standardTuple_isLattice.fg.map _) hsp
   rw [hL] at hCe
   obtain ⟨C', hC', hCe'⟩ := exists_compact_adele D θ hθ R C hC

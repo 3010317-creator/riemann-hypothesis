@@ -104,10 +104,8 @@ theorem finsum_nilRad_extZero_eq_zero (F : Type) [Field F] [Finite F] (d : ℕ) 
     have : Finite (Module.End F (Fin d → F)) := Module.finite_of_finite F
     have hb2 : Set.BijOn (fun h : Module.End F (Fin d → F) => g * h) (nilRad A) (nilRad A) := by
       refine ((Set.toFinite _).injOn_iff_bijOn_of_mapsTo ?_).1 ?_
-      · intro h hh
-        exact ⟨fun y => hg _ (hh.1 y), fun y hy => by simp [hh.2 y hy]⟩
-      · intro a _ b _ hab
-        exact hu.mul_left_cancel hab
+      · exact fun h hh => ⟨fun y => hg _ (hh.1 y), fun y hy => by simp [hh.2 y hy]⟩
+      · exact fun a _ b _ hab => hu.mul_left_cancel hab
     have h1 := _root_.GlobalTheory.BI.char_coset_sum_eq_zero _ χ hχ H
       ((finsum_set_coe_eq_finsum_mem (f := χ) (H : Set (GL (Fin d) F))).trans h0) x
     have h2 := (finsum_set_coe_eq_finsum_mem (f := fun u => χ (x * u)) (H : Set (GL (Fin d) F))).symm.trans h1

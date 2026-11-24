@@ -396,8 +396,7 @@ theorem isPushforwardBlowupSeq_ambientBlowupSequence {S X : Scheme.{u}} (ι : S 
     IsPushforwardBlowupSeq ι s.toSequenceOfBlowups (ambientBlowupSequence ι s hres hno hcen).toSequenceOfBlowups := by
   refine ⟨rfl, ⟨fun i _ => embeddingIntoAmbientBlowupSequence ι s hres hno hcen i,
     fun i _ => isClosedImmersion_embeddingIntoAmbientBlowupSequence ι s hres hno hcen i, ?_, ?_, ?_, ?_⟩⟩
-  · show (s.isoZero.hom ≫ ι) ≫ 𝟙 X = s.isoZero.hom ≫ ι
-    exact Category.comp_id _
+  · exact Category.comp_id _
   · intro i hi
     show embeddingIntoAmbientBlowupSequence ι s hres hno hcen (i + 1) ≫
         (ambientBlowupSequence ι s hres hno hcen).toSequenceOfBlowups.transitionMapSucc i =
@@ -457,8 +456,7 @@ theorem isBlowupAlongIdealSheaf_prependMap {X : Scheme.{u}} (Z : X.IdealSheafDat
   cases i with
   | zero =>
       have h := hZ.iso_hom_comp d.isoZero
-      rw [Category.comp_id] at h
-      exact h
+      rwa [Category.comp_id] at h
   | succ n =>
       exact d.isBlowup n (by omega)
 
@@ -524,14 +522,13 @@ theorem containedComponentsIdeal_eq_ker (T : MarkedIdealWithBoundary.{u}) (j : �
             ⟨{x : ↥(T.boundary.get ⟨j, hj⟩).subscheme |
                 connectedComponent x ⊆
                   ⇑(T.boundary.get ⟨j, hj⟩).subschemeι ⁻¹' orderAtLeastLocus T.ideal T.mult}, h⟩ ≫
-          (T.boundary.get ⟨j, hj⟩).subschemeι) := dif_pos h
+          (T.boundary.get ⟨j, hj⟩).subschemeι) := dite_eq_left h
 
 theorem containedComponentsIdeal_eq_top_of_not_isOpen (T : MarkedIdealWithBoundary.{u}) (j : ℕ) (hj : j < T.boundary.length)
     (h : ¬ IsOpen {x : ↥(T.boundary.get ⟨j, hj⟩).subscheme |
       connectedComponent x ⊆
         ⇑(T.boundary.get ⟨j, hj⟩).subschemeι ⁻¹' orderAtLeastLocus T.ideal T.mult}) :
-    containedComponentsIdeal T j hj = ⊤ := by
-  exact dif_neg h
+    containedComponentsIdeal T j hj = ⊤ := dite_eq_right h
 
 noncomputable def restrictToBoundaryDivisor (T : MarkedIdealWithBoundary.{u}) (j : ℕ) (hj : j < T.boundary.length)
     (I₀ : T.scheme.IdealSheafData) (E₀ : List T.scheme.IdealSheafData) : MarkedIdealWithBoundary.{u} :=
@@ -579,7 +576,7 @@ theorem liftSeqFromDivisor_eq_toMarkedSequence (hres : FunctorialResolution.Blow
           hres hno hpr)).toMarkedBlowupSequenceData T.structMap T.ideal T.mult T.boundary hmk).toMarkedSequenceOfBlowups := by
   have h1 : (restrictToBoundaryDivisor T j hj I₀ E₀).krullDimSucc < T.krullDimSucc ∧
       AlgebraicGeometry.IsNoetherian T.scheme := ⟨hdim, inferInstance⟩
-  exact (dif_pos h1).trans ((dif_pos hpr).trans (dif_pos hmk))
+  exact (dite_eq_left h1).trans ((dite_eq_left hpr).trans (dite_eq_left hmk))
 
 noncomputable def divisorReductionSeq (hres : FunctorialResolution.Blowup.StrictTransformIsBlowupOfClosedSubscheme.{u})
     (hno : BlowupPreservesNoetherian.{u}) (T : MarkedIdealWithBoundary.{u})
@@ -609,7 +606,7 @@ theorem divisorReductionSeq_eq_empty_of_orderAtLeastLocus_eq_empty (hres : Funct
     (hj : j < T.boundary.length) (hcs : orderAtLeastLocus T.ideal T.mult = (∅ : Set ↥T.scheme)) :
     divisorReductionSeq hres hno T alg j = emptyMarkedSequenceOfBlowups T.structMap T.ideal T.mult T.boundary := by
   unfold divisorReductionSeq
-  rw [dif_pos hj, if_pos hcs]
+  rw [dite_eq_left hj, ite_eq_left hcs]
 
 theorem divisorReductionSeq_eq_liftSeqFromDivisor_of_eq_top (hres : FunctorialResolution.Blowup.StrictTransformIsBlowupOfClosedSubscheme.{u})
     (hno : BlowupPreservesNoetherian.{u}) (T : MarkedIdealWithBoundary.{u})
@@ -620,7 +617,7 @@ theorem divisorReductionSeq_eq_liftSeqFromDivisor_of_eq_top (hres : FunctorialRe
       liftSeqFromDivisor hres hno T alg j hj (T.ideal.comap (𝟙 T.scheme))
         (T.boundary.map (fun D => D.comap (𝟙 T.scheme))) id := by
   unfold divisorReductionSeq
-  rw [dif_pos hj, if_neg hcs, if_pos hZ]
+  rw [dite_eq_left hj, ite_eq_right hcs, ite_eq_left hZ]
 
 theorem divisorReductionSeq_eq_liftSeqFromDivisor_prepend (hres : FunctorialResolution.Blowup.StrictTransformIsBlowupOfClosedSubscheme.{u})
     (hno : BlowupPreservesNoetherian.{u}) (T : MarkedIdealWithBoundary.{u})
@@ -636,7 +633,7 @@ theorem divisorReductionSeq_eq_liftSeqFromDivisor_prepend (hres : FunctorialReso
           [Blowup.exceptionalIdeal (𝟙 T.scheme) (containedComponentsIdeal T j hj)])
         (BlowupSequenceData.prepend (containedComponentsIdeal T j hj) hb) := by
   unfold divisorReductionSeq
-  rw [dif_pos hj, if_neg hcs, if_neg hZ, dif_pos hb]
+  rw [dite_eq_left hj, ite_eq_right hcs, ite_eq_right hZ, dite_eq_left hb]
 
 end DivisorReduction
 

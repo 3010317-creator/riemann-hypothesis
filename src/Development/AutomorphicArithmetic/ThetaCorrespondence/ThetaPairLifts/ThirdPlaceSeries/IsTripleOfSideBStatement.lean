@@ -136,9 +136,9 @@ theorem delAt_unr {D : D7} (cf : CharFrame D) (i : D.ntw.Tw) {P : PlE D.host} (h
     hS (D.ntw.primes_subset_exceptional i (by rw [← Finset.mem_coe, D.ntw.pD_eq i]; exact h))
   unfold CharFrame.delAt
   split_ifs with h
-  · rw [if_pos h] at hD
+  · rw [ite_eq_left h] at hD
     exact cf.isDel'.unr P hD
-  · rw [if_neg h] at hD
+  · rw [ite_eq_right h] at hD
     exact cf.isDel.unr P hD
 
 end GlobalTheory.TwInputs.HEig
@@ -170,15 +170,15 @@ theorem toC_delta {D : D7} (cf : CharFrame D) (i : D.ntw.Tw) {b : Bool} (ρ : Gl
       rw [IntermediateField.coe_inv, map_inv₀, hxd, inv_inv]
     have e : D.ntw.emb0 i xd = D.ntw.emb0b i xd⁻¹ := (D.ntw.restX_coefficientEmbedding_conj i xd⁻¹ xd ?_).symm
     · have h1 := ρ.read xd⁻¹
-      simp only [embSide, Bool.false_eq_true, if_false] at h1
-      simp only [Bool.false_eq_true, if_false]
+      simp only [embSide, Bool.false_eq_true, ite_false] at h1
+      simp only [Bool.false_eq_true, ite_false]
       rw [map_units_inv, hread, e, h1]
       show (D.what₂.embLL ((xd⁻¹ : D.LL0) : D.what₂.LL))⁻¹ = δ⁻¹
       rw [IntermediateField.coe_inv, map_inv₀, hxd, inv_inv]
     · rw [hstar, star_star]
   · have h1 := ρ.read xd
-    simp only [embSide, if_true] at h1
-    simp only [if_true, hread, h1]
+    simp only [embSide, ite_true] at h1
+    simp only [ite_true, hread, h1]
     exact hxd
 
 end GlobalTheory.TwInputs.HEig
@@ -276,8 +276,7 @@ theorem mem_range_of_pow_eq_self {g : ℕ} [Fact (Nat.Prime g)] {K : Type*} [Fie
 
   set S : Finset K := insert z (Finset.univ.image (algebraMap (ZMod g) K)) with hSeq
   have hzS : z ∉ Finset.univ.image (algebraMap (ZMod g) K) := by
-    simp only [Finset.mem_image, Finset.mem_univ, true_and, not_exists]
-    exact hne
+    simpa only [Finset.mem_image, Finset.mem_univ, true_and, not_exists] using hne
   have hcard : S.card = g + 1 := by
     rw [hSeq, Finset.card_insert_of_notMem hzS,
       Finset.card_image_of_injective _ (algebraMap (ZMod g) K).injective, Finset.card_univ, ZMod.card]
@@ -368,9 +367,7 @@ theorem exists_rep : ∀ (D : D7), GrpSide D → ∀ (k : Fin 2) (v : D.nd.PlG k
     unfold redThrough; rw [dite_eq_left hq]
   have hval : (D.nd.plOm.1 (D.naut.plGw k v)).valuation (D.ntypes.tg k v π / π - (n : D.nd.Om)) < 1 := by
     have h1 := (hG.kv k v).injective (((hrq.symm.trans hT).trans hra'.symm))
-    have h2 := Ideal.Quotient.eq.1 h1
-    have h3 := ((D.nd.plOm.1 (D.naut.plGw k v)).valuation_lt_one_iff _).1 h2
-    exact h3
+    exact ((D.nd.plOm.1 (D.naut.plGw k v)).valuation_lt_one_iff _).1 (Ideal.Quotient.eq.1 h1)
   have hu : (n : 𝓞 D.host.E) ∉ (D.naut.plGw k v).asIdeal := by
     intro h
     have h1 := (hAP _).2 h
@@ -619,8 +616,7 @@ theorem isTriple_of_sideB_alt : GlobalTheory.Published.ChebotarevDegreeOne → G
     (hres.2.2 _ π r hgood ⟨_, (D.ntw.jS_range i s).1, (D.ntw.jS_range i s).2, hocc⟩ hpar hr)
   have := congrArg (fun M : GL (Fin D.R.r) (Qbar (D.ntw.l i)) => (M : Matrix (Fin D.R.r) (Fin D.R.r) (Qbar (D.ntw.l i)))) (hA g)
   simp only [Units.val_mul, GlobalTheory.TwistAbove.twGL_val, Matrix.mul_smul, Matrix.smul_mul] at this
-  rw [Units.val_mul, Units.val_mul]
-  exact this
+  rwa [Units.val_mul, Units.val_mul]
 end GlobalTheory.TripInhab
 end
 end

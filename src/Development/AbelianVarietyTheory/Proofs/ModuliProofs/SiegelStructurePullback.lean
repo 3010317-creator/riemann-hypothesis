@@ -57,8 +57,7 @@ variable {S S' : Scheme.{0}} {f : S' ⟶ S}
 theorem lbIso_pull_comp {X Y Y' : Scheme.{0}} {L : LB X} {A : LB Y} {F : Y ⟶ X} (H : LBIso A (L.pull F))
     (h : Y' ⟶ Y) : LBIso (A.pull h) (L.pull (h ≫ F)) := by
   refine LBIso.chartPull (chartPullPull A h h rfl) ⟨id, fun J x hx => ?_, fun y J J' hJ hJ' => ?_⟩ H
-  · have hx' := (mem_pull (F := h ≫ F)).1 hx
-    exact (mem_pull (F := F)).2 hx'
+  · exact (mem_pull (F := F)).2 ((mem_pull (F := h ≫ F)).1 hx)
   · have a1 := (mem_pull (F := h ≫ F)).1 hJ
     have a2 := (mem_pull (F := h ≫ F)).1 hJ'
     rw [gm_pull_g L (h ≫ F) (𝟙 Y') y J J' hJ hJ', Category.id_comp]
@@ -126,8 +125,7 @@ theorem lbIso_lam_pull {G : Over S} {G' : Over S'} [GrpObj G] [IsCommMonObj G] [
     unfold LB.div at e
     simp only [map_mul, map_inv] at e
     simp only [gm_res g y _ hV] at e
-    rw [gm_pull_g L φ g y (fun _ => j) (fun _ => j') m1 m2] at e
-    exact e
+    rwa [gm_pull_g L φ g y (fun _ => j) (fun _ => j') m1 m2] at e
   have e : ∀ I : ULift (Finset (Fin 2)),
       (psum G' (x2 G') I.down).left ≫ φ = φ₂ ≫ (psum G (x2 G) I.down).left := by
     let T : Over S' := G' ⊗ G'
@@ -163,8 +161,7 @@ theorem lbIso_lam_pull {G : Over S} {G' : Over S'} [GrpObj G] [IsCommMonObj G] [
       | cons k l ih =>
         change Φ (x2 G' k * _) = j ≫ (x2 G k * _)
         rw [Φmul, comp_mul, base k, ih]
-    intro I
-    exact key _ _ (fold _)
+    exact fun I => key _ _ (fold _)
   exact LBIso.chartPull (chartPullId _) (chartPullOut L _ _ φ₂ _ e) (iso_linComb hP _ _)
 
 end GlobalTheory.ZM.SiegPull

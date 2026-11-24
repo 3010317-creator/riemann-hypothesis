@@ -257,27 +257,27 @@ theorem exists_local_levels_le_open : ∀ {ι Γ : Type} [Group Γ] {Hl : ι →
   refine ⟨fun i => if i ∈ T then KH i ⊓ U.comap (e i) else KH i, ?_, ?_, ?_, ?_⟩
   · intro i
     by_cases hi : i ∈ T
-    · simp only [hi, if_true]
+    · simp only [hi, ite_true]
       exact (hKo i).inter (hU.preimage (hec i))
-    · simp only [hi, if_false]
+    · simp only [hi, ite_false]
       exact hKo i
   · intro i
     by_cases hi : i ∈ T
-    · simp only [hi, if_true]
+    · simp only [hi, ite_true]
       exact inf_le_left
-    · simp only [hi, if_false]
+    · simp only [hi, ite_false]
       exact le_rfl
   · have hfin : ∀ᶠ i in cofinite, i ∉ T := T.finite_toSet.compl_mem_cofinite
     filter_upwards [hfin] with i hi
-    simp only [hi, if_false]
+    simp only [hi, ite_false]
   · intro u hu
     have hle : ∀ i, p i u ∈ KH i := by
       intro i
       have := hu i
       by_cases hi : i ∈ T
-      · simp only [hi, if_true] at this
+      · simp only [hi, ite_true] at this
         exact this.1
-      · simpa only [hi, if_false] using this
+      · simpa only [hi, ite_false] using this
     have huK : u ∈ K := (hK u).mpr hle
     set v : Γ := (T.toList.map fun i => e i (p i u)).prod with hv
     have hpv : ∀ j, p j v = if j ∈ T then p j u else 1 := by
@@ -290,7 +290,7 @@ theorem exists_local_levels_le_open : ∀ {ι Γ : Type} [Group Γ] {Hl : ι →
       obtain ⟨i, hi, rfl⟩ := List.mem_map.mp hx
       have hiT : i ∈ T := Finset.mem_toList.mp hi
       have := hu i
-      simp only [hiT, if_true] at this
+      simp only [hiT, ite_true] at this
       exact this.2
     have hwK : v⁻¹ * u ∈ K := by
       refine (hK _).mpr fun j => ?_
@@ -371,8 +371,7 @@ theorem finsum_cosets_retraction {Γ H : Type} [Group Γ] [Group H] (p : Γ →*
       rw [← QuotientGroup.out_eq' q, ← QuotientGroup.out_eq' q']
       refine QuotientGroup.eq.2 ?_
       have h3 : q.out⁻¹ * q'.out = (e m.out * q.out)⁻¹ * (e m.out * q'.out) := by group
-      rw [h3]
-      exact h1
+      rwa [h3]
     subst hqq
     rfl
   have hsurj : Function.Surjective T := by
@@ -401,8 +400,7 @@ theorem finsum_cosets_retraction {Γ H : Type} [Group Γ] [Group H] (p : Γ →*
     refine (hfin.preimage (f := T) hinj.injOn).subset ?_
     intro a ha
     change φ (QuotientGroup.mk (e a.1.out * a.2.1.out) : Γ ⧸ L).out ≠ 0
-    rw [hφout]
-    exact ha
+    rwa [hφout]
   calc ∑ᶠ q : Γ ⧸ L, φ q.out
       = ∑ᶠ a : (H ⧸ V) × S, φ (E a).out :=
         (finsum_comp_equiv E (f := fun q : Γ ⧸ L => φ q.out)).symm
@@ -538,8 +536,7 @@ theorem comp_inv {p : ∀ i, Γ →* Hl i} {e : ∀ i, Hl i →* Γ} {KH V : ∀
     refine hg (e i v) (fun j => ?_) x
     by_cases hij : i = j
     · subst hij
-      rw [hpe]
-      exact hv
+      rwa [hpe]
     · rw [hpe' i j v hij]
       exact one_mem _
   | cons j T ih =>
@@ -575,9 +572,7 @@ theorem sum_nil {p : ∀ i, Γ →* Hl i} {V : ∀ i, Subgroup (Hl i)} (f : ∀ 
       simp [fac, hoj j]
     rw [h1, one_mul, hg _ hoj]
   · intro q hq
-    have hq' : ¬ ∀ j, p j q.out ∈ V j := by
-      intro hall
-      exact hq ((coset_one _ _).2 ((hmem _).2 hall))
+    have hq' : ¬ ∀ j, p j q.out ∈ V j := fun hall => hq ((coset_one _ _).2 ((hmem _).2 hall))
     obtain ⟨j, hj⟩ := not_forall.1 hq'
     have h0 : prodF p V f [] q.out = 0 :=
       finprod_eq_zero _ j (by simp [fac, hj]) (fac_finite f hS [] q.out)
@@ -601,8 +596,7 @@ theorem sum_comp {p : ∀ i, Γ →* Hl i} {e : ∀ i, Hl i →* Γ} {KH V : ∀
     have hi : i ∉ T := (List.nodup_cons.1 hT).1
     have hT' : T.Nodup := (List.nodup_cons.1 hT).2
     have hmem : ∀ u ∈ (⨅ i, (V i).comap (p i)), ∀ j, p j u ∈ V j := by
-      intro u hu j
-      exact (Subgroup.mem_iInf.1 hu) j
+      exact fun u hu j => (Subgroup.mem_iInf.1 hu) j
     have hφ : ∀ u ∈ (⨅ i, (V i).comap (p i)), ∀ x,
         (fun x => prodF p V f (i :: T) x * g (y * x)) (x * u) =
           (fun x => prodF p V f (i :: T) x * g (y * x)) x := by
@@ -614,8 +608,7 @@ theorem sum_comp {p : ∀ i, Γ →* Hl i} {e : ∀ i, Hl i →* Γ} {KH V : ∀
       refine (_root_.GlobalTheory.CompanionTheory.FinActS.finite_cosets_of_components_mem p V (fun j => {h | fac V f (i :: T) j h ≠ 0}) ?_ ?_ ?_).subset ?_
       · intro j x hx u hu
         change fac V f (i :: T) j (x * u) ≠ 0
-        rw [fac_mul hfV _ _ _ _ hu]
-        exact hx
+        rwa [fac_mul hfV _ _ _ _ hu]
       · intro j
         by_cases hj : j ∈ i :: T
         · refine (hfs j).subset fun q hq => ?_
@@ -632,8 +625,7 @@ theorem sum_comp {p : ∀ i, Γ →* Hl i} {e : ∀ i, Hl i →* Γ} {KH V : ∀
         refine this.mono fun j hj h hh => ?_
         by_contra hc
         exact hh (by simp [fac, hj, show h ∉ V j from hc])
-      · intro q hq j
-        exact fac_ne_zero hS (i :: T) q.out (left_ne_zero_of_mul hq) j
+      · exact fun q hq j => fac_ne_zero hS (i :: T) q.out (left_ne_zero_of_mul hq) j
     have h1 : ∑ᶠ q : Γ ⧸ (⨅ i, (V i).comap (p i)), prodF p V f (i :: T) q.out * g (y * q.out) =
         ∑ᶠ m : Hl i ⧸ V i, ∑ᶠ q : Γ ⧸ (⨅ i, (V i).comap (p i)),
           (V i : Set (Hl i)).indicator (1 : Hl i → ℂ) (p i q.out) *
@@ -857,8 +849,7 @@ theorem hint_prod_eq_foldr : ∀ {ι Γ : Type} [Group Γ] {Hl : ι → Type} [�
     | cons a t ih =>
       rw [List.foldr_cons, ih]
       funext x
-      simp only [mul_one]
-      exact GlobalTheory.CompanionTheory.FamClP.hint_ind _
+      simpa only [mul_one] using GlobalTheory.CompanionTheory.FamClP.hint_ind _
   rw [hfold2 T] at hsum2
   have hF2 : ∀ x, (∏ᶠ j, if j ∈ T then (KH j : Set (Hl j)).indicator (1 : Hl j → ℂ) (p j x)
       else (V j : Set (Hl j)).indicator (1 : Hl j → ℂ) (p j x)) =
@@ -881,8 +872,7 @@ theorem hint_prod_eq_foldr : ∀ {ι Γ : Type} [Group Γ] {Hl : ι → Type} [�
     · have h2 : (K : Set Γ).indicator (1 : Γ → ℂ) x = 0 := Set.indicator_of_notMem hx _
       rw [h2]
       have h3 : ∃ j, p j x ∉ KH j := by
-        by_contra hc
-        push_neg at hc
+        by_contra! hc
         exact hx ((hK x).2 hc)
       obtain ⟨j, hj⟩ := h3
       refine finprod_eq_zero _ j (Set.indicator_of_notMem hj _) ?_
@@ -1061,8 +1051,7 @@ theorem finActOf : FinActOf := by
   obtain ⟨V₀, hV₀o, hV₀K, hV₀e, hV₀U⟩ := _root_.GlobalTheory.CompanionTheory.FinActS.exists_local_levels_le_open p e K (fun i => K2 B.a B.b i.pl) hcont hec hpe hpe' hsep hmem hKc hKHo U₀ hU₀
   let V : ∀ i : Slot S, Subgroup (GLw B.a i.pl × GLw B.b i.pl) := fun i => V₀ i ⊓ L i
   have hVo : ∀ i, IsOpen (V i : Set (GLw B.a i.pl × GLw B.b i.pl)) := fun i => by
-    simp only [V, Subgroup.coe_inf]
-    exact (hV₀o i).inter (hLo i)
+    simpa only [V, Subgroup.coe_inf] using (hV₀o i).inter (hLo i)
   let g : Hf E B.a B.b → ℂ := fun h => G (x * finH h)
   have hact := actS_eq φ₁ φ₂ e he₁ he₂
   have hcore := _root_.GlobalTheory.CompanionTheory.FinActCore.hint_prod_eq_foldr p e K (fun i => K2 B.a B.b i.pl) V (sf φ₁ φ₂) hpe hpe' hsep hev hmem
@@ -1107,8 +1096,7 @@ theorem finActOf : FinActOf := by
     funext fun h => by rw [_root_.GlobalTheory.CompanionTheory.FinActS.finFn_eq_finprod_factor h₁ h₂]; rfl
   have hfin := hfold l 1
   rw [finH_one, mul_one] at hfin
-  rw [← hfin, ← hcore, ← hF]
-  exact hint₁
+  rwa [← hfin, ← hcore, ← hF]
 
 end GlobalTheory.CompanionTheory.FinActS
 

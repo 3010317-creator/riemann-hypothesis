@@ -78,8 +78,7 @@ theorem exists_kStable_ge {p q : ℕ} (M : GKMod p q) (H : Submodule ℂ M.V)
       exact sup_le_sup ((Submodule.span_singleton_le_iff_mem _ _).mpr hx) ht
   obtain ⟨E, hE, hsE, hK⟩ := key s
   refine ⟨E, hE, ?_, hK⟩
-  rw [← hs]
-  exact hsE
+  rwa [← hs]
 
 theorem exists_finiteDimensional_forall_map_mem :
     ∀ (p q : ℕ) (M : GKMod p q), AdmGK M → ∀ (V : Type) [AddCommGroup V] [Module ℂ V] (act : Mat p q →ₗ[ℂ] Module.End ℂ V), IsKLieAct act → ∀ W : Submodule ℂ V, FiniteDimensional ℂ W → KStable act W → (∀ v ∈ W, v ∈ ⨆ μ : Ix p q → ℚ, wtSub act μ) → ∃ E : Submodule ℂ M.V, FiniteDimensional ℂ E ∧ ∀ φ : V →ₗ[ℂ] M.V, (∀ Z, IsKC Z → ∀ v, φ (act Z v) = M.act Z (φ v)) → ∀ v ∈ W, φ v ∈ E := by
@@ -104,8 +103,7 @@ theorem exists_finiteDimensional_forall_map_mem :
   have hNK : KStable act N := by
     intro X hX w hw
     rw [Submodule.mem_sInf] at hw ⊢
-    intro N' hN'
-    exact hN'.2 X hX w (hw N' hN')
+    exact fun N' hN' => hN'.2 X hX w (hw N' hN')
   have hvN : v ∈ N := Submodule.mem_sInf.mpr fun N' hN' => hN'.1
   have hNU : N ≤ U := sInf_le ⟨hvU, hUK⟩
   obtain ⟨U', hU'K, hdisj, hsup⟩ := hsplit N hNU hNK

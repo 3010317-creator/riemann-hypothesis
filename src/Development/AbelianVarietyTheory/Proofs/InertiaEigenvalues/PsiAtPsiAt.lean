@@ -187,12 +187,10 @@ theorem normVal_sub_one_le_zpow {O : Type} [CommRing O] [IsDomain O] [IsDiscrete
       ring
   have hne : (((u ^ m : Oˣ) : O) - 1) ≠ 0 := by
     rw [sub_ne_zero]
-    intro h
-    exact hm (Units.ext (by rw [h, Units.val_one]))
+    exact fun h => hm (Units.ext (by rw [h, Units.val_one]))
   have hle := (IsDiscreteValuationRing.addVal_le_iff_dvd).2 hdvd
   have hfin : IsDiscreteValuationRing.addVal O (((u ^ m : Oˣ) : O) - 1) ≠ ⊤ := by
-    rw [Ne, IsDiscreteValuationRing.addVal_eq_top_iff]
-    exact hne
+    rwa [Ne, IsDiscreteValuationRing.addVal_eq_top_iff]
   unfold Formalism.MainNotions.BlochKatoReduction.Gen.nval
   apply div_le_div_of_nonneg_right _ (Nat.cast_nonneg _)
   exact_mod_cast ENat.toNat_le_toNat hle hfin
@@ -360,8 +358,7 @@ theorem firstTwistFactor_tameGenerator_eq_one (i : D.nd.Loc) (v : HeightOneSpect
     rw [D.nd.S_def]
     refine ⟨Or.inr (Or.inr ?_), hvl⟩
     have h1 : v ∈ (D.ntw.pD (D.ntw.twOf i) : Set (HeightOneSpectrum (𝓞 D.host.E))) := hp
-    rw [D.ntw.pD_eq, hl] at h1
-    exact h1
+    rwa [D.ntw.pD_eq, hl] at h1
 
 theorem zeta_eq_locChar (i : D.nd.Loc) (v : HeightOneSpectrum (𝓞 D.host.E)) (hv : v ∈ D.nd.Q i) :
     D.nd.zeta i v = ((D.ntw.psiL i (D.nd.gam0 i v) : (D.nd.O i)ˣ) : D.nd.O i) := by
@@ -523,8 +520,7 @@ theorem eq_zero_of_cH {ι : Type} (u : ι → (M' →ₗ[R] M)) (hu : ∀ i, Con
   have := hm i g
   rw [← congrFun hm' i] at this
   show u i _ = u i _
-  rw [map_sub, he]
-  exact this
+  rwa [map_sub, he]
 
 end Coh
 
@@ -642,8 +638,7 @@ theorem mem_of_span (F : H1 ρ →ₗ[R] A') (S : Set (Γ → A)) (T : Submodule
     obtain ⟨h1, h2⟩ := h c hc
     exact ⟨⟨c, h1⟩, h2, rfl⟩
   obtain ⟨z', hz', e⟩ := key hz
-  rw [← Subtype.ext e]
-  exact hz'
+  rwa [← Subtype.ext e]
 
 end Span
 
@@ -700,7 +695,7 @@ theorem nlen_le_lenN {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRi
   · intro h1
     have h2 : Module.length O A ≠ ⊤ := fun h3 => h1 (by
       rw [(top_le_iff.1 (h3 ▸ h) : Module.length O A' = ⊤), ENat.toENNReal_top, ENNReal.top_div_of_ne_top (ENNReal.natCast_ne_top _)])
-    rw [if_neg h2]
+    rw [ite_eq_right h2]
     exact WithTop.coe_ne_top
   · intro q hq
     split_ifs at hq with h2
@@ -724,8 +719,7 @@ variable (D : D7) (i : D.ntw.Tw) (s : D.ntw.Sig i) (k : ℕ) (ψ : Formalism.Mai
 theorem equivariant (g : Formalism.MainNotions.N.GE D.nd) (x : KOG (D.ntw.Ok i k) D.R.r) :
     toPi _ _ (WKG (latTpsi D.ntw i s (toOk D.ntw i k) ψ) g x) = Gen.Trep i s k ψ g (toPi _ _ x) := by
   funext a
-  rw [toPi_WKG]
-  rw [show toOk D.ntw i k = Gen.phiK D.ntw i k from rfl]
+  rw [toPi_WKG, show toOk D.ntw i k = Gen.phiK D.ntw i k from rfl]
   simp [Gen.Trep, twRep, matAct, latTpsi, latT, twistM, mapM, Gen.chiS, Finset.smul_sum, smul_smul, mul_assoc]
 
 theorem latT_cont (a b : Fin D.R.r) : Continuous fun g => latT D.ntw i s g a b := by
@@ -786,11 +780,9 @@ theorem cond_le (v : PlE D.host) (hv : v ∈ placesOver D.host.E (D.ntw.l i))
       rw [← e, mul_div_cancel₀ _ (by simpa using hd0)]
     refine ⟨n, d, ⟨hd0, ?_⟩, ?_⟩
     · have := congrArg (Br.toLLK (D.ntwbr i v hv)) e'
-      rw [map_mul, Br.toLLK_alg, Br.toLLK_alg, hy] at this
-      exact this
+      rwa [map_mul, Br.toLLK_alg, Br.toLLK_alg, hy] at this
     · have := congrArg (fracMap _ (toOk_inj D.ntw i k)) e'
-      rw [map_mul, fracMap_alg, fracMap_alg] at this
-      exact this
+      rwa [map_mul, fracMap_alg, fracMap_alg] at this
   · change toPi _ _ (pushKO _ (toOk_inj D.ntw i k) D.R.r (c₀.1 g)) a = _
     rw [hc]
     rfl
@@ -1379,8 +1371,7 @@ theorem bk_map (P : LocPrime l) {k : ℕ} (rho rho' : Representation O ↥Gw (KO
       exact phi_qMat Bw U _
     show Br.Phi Bw rho' (cocycles1MapOfEquivariant rho rho' (qMat (FractionRing O) U) hu he c) ∈
       HfD (P.PD Bw.Kw) (Br.lat Bw M')
-    rw [e]
-    exact key
+    rwa [e]
   · intro g v
     show Matrix.mulVec ((U.map Bw.eO.toRingHom).map (algebraMap (Br.Ow Bw) (Br.LLw Bw)))
         (Matrix.mulVec (((M (Br.ι Bw g)).map Bw.eO.toRingHom).map
@@ -1502,7 +1493,7 @@ theorem selT_eq_selG (a : D.nd.Loc) (s : D.ntw.Sig (D.ntw.twOf a)) (ψ : Formali
   rw [hS]
   by_cases hv : v ∈ placesOver D.host.E (D.nd.l a)
   · have hv' : v ∈ placesOver D.host.E (D.ntw.l (D.ntw.twOf a)) := by rw [hl]; exact hv
-    refine (if_pos hv').trans (Eq.trans ?_ (if_pos hv).symm)
+    refine (ite_eq_left hv').trans (Eq.trans ?_ (ite_eq_left hv).symm)
     unfold condL Br.LlG
     rw [dite_eq_left hv, dite_eq_left hv']
     have := IsAlgClosure.isAlgClosed D.host.E (K := D.nd.Om)
@@ -1512,7 +1503,7 @@ theorem selT_eq_selG (a : D.nd.Loc) (s : D.ntw.Sig (D.ntw.twOf a)) (ψ : Formali
     ext g i j
     simp [latTpsi, twistM, mapM, hψ v hv g.1 g.2]
   · have hv' : v ∉ placesOver D.host.E (D.ntw.l (D.ntw.twOf a)) := by rw [hl]; exact hv
-    exact (if_neg hv').trans (if_neg hv).symm
+    exact (ite_eq_right hv').trans (ite_eq_right hv).symm
 
 theorem nlen_congr {O : Type} [CommRing O] (l : ℕ) (M N : Type) [AddCommGroup M] [Module O M]
     [AddCommGroup N] [Module O N] (h : Module.length O M = Module.length O N) :
@@ -1561,8 +1552,7 @@ theorem continuous_twO (D : D7) (a : D.nd.Loc) : Continuous (D.ntw.twist₂ a) :
   have hp : ((IsLocalRing.maximalIdeal (D.nd.O a)).comap (D.ntw.twist₂ a)).IsPrime := Ideal.comap_isPrime _ _
   have hm : ((IsLocalRing.maximalIdeal (D.nd.O a)).comap (D.ntw.twist₂ a)).IsMaximal := hp.isMaximal fun h => by
     apply hl0
-    rw [← Ideal.mem_bot, ← h, Ideal.mem_comap, map_natCast]
-    exact hl
+    rwa [← Ideal.mem_bot, ← h, Ideal.mem_comap, map_natCast]
   have he := IsLocalRing.eq_maximalIdeal hm
   refine continuous_of_continuousAt_zero (D.ntw.twist₂ a) ?_
   rw [ContinuousAt, map_zero,
@@ -1745,14 +1735,14 @@ theorem sel_at (hC : GlobalTheory.TwSys.Cheb) (D : D7) (hT : TriplesGood D) (hG 
     unfold Br.sFin
     rw [lt_top_iff_ne_top]
     intro h4
-    exact h3 (by simp only [GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.sPiTop, GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.nlen, h4, if_true])
+    exact h3 (by simp only [GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.sPiTop, GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.nlen, h4, ite_true])
   · by_cases h4 : Module.length (D.nd.O a) ↥(Br.selPi D.loc D.nbr a ρ π) = ⊤
     · have h5 : BlochKatoReduction.Gen.sLen (BlochKatoReduction.bk0 D) _ s k (D.nd.Q a) ψ = ⊤ := by
         by_contra hne
-        exact h1 hne (by simp only [GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.sPiTop, GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.nlen, h4, if_true])
+        exact h1 hne (by simp only [GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.sPiTop, GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.nlen, h4, ite_true])
       rw [h5]
       exact le_top
-    · exact h2 _ (by simp only [GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.sPiTop, GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.nlen, h4, if_false, Br.sPi])
+    · exact h2 _ (by simp only [GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.sPiTop, GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.nlen, h4, ite_false, Br.sPi])
 
 theorem selCore : GlobalTheory.TwSys.Cheb → ∀ (D : D7) (C : NChoice D), NChTie D C → TriplesGood D → GoodPtRow D →
     ResAbsIrr D → SameTwist D C →

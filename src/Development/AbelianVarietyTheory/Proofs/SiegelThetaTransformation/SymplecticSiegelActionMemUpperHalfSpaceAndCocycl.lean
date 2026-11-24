@@ -192,8 +192,7 @@ theorem act_complex {A B C D τ : Matrix ι ι ℂ}
       exact this ▸ hu.map (starRingEnd ℂ)
     refine (Matrix.IsUnit.posDef_star_left_conjugate_iff huc).1 ?_
     rw [star_eq_conjTranspose, hQt]
-    rw [← key] at hY
-    exact hY
+    rwa [← key] at hY
   · rw [IsSymm, transpose_mul, transpose_nonsing_inv]
     calc Cᵀ * Qᵀ⁻¹ = Q⁻¹ * (Q * Cᵀ) * Qᵀ⁻¹ := by rw [nonsing_inv_mul_cancel_left _ _ hu]
       _ = Q⁻¹ * C := by
@@ -213,8 +212,7 @@ theorem qm_blocks_mem {σ : Matrix (ι ⊕ ι) (ι ⊕ ι) ℚ} (h : σ ∈ symp
     fromBlocks (qm σ.toBlocks₁₁) (qm σ.toBlocks₁₂) (qm σ.toBlocks₂₁) (qm σ.toBlocks₂₂) ∈
       symplecticGroup ι ℂ := by
   have := SymplecticGroup.map_mem h (Rat.castHom ℂ)
-  rw [← fromBlocks_toBlocks σ, fromBlocks_map] at this
-  exact this
+  rwa [← fromBlocks_toBlocks σ, fromBlocks_map] at this
 
 omit [DecidableEq ι] in
 theorem toBlocks_mul (σ' σ : Matrix (ι ⊕ ι) (ι ⊕ ι) ℚ) :

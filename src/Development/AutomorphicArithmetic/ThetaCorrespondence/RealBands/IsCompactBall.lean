@@ -67,10 +67,8 @@ theorem UpperTheory.Lit.Cusp.isCompact_ball :
     ext g
     simp only [Set.mem_setOf_eq, Set.mem_preimage]
     constructor
-    · intro h
-      exact ⟨g.2, h⟩
-    · intro h
-      exact h.2
+    · exact fun h => ⟨g.2, h⟩
+    · exact fun h => h.2
   · intro x y
     rw [← Real.sqrt_mul (frobenius_nonneg x)]
     exact Real.sqrt_le_sqrt (frobenius_mul_le x y)

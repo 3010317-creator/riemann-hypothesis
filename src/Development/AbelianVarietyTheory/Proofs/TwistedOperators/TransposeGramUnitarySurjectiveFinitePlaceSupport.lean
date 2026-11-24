@@ -89,9 +89,7 @@ theorem kapX_onto : ∀ (D : D7) (X : HSp D) {d : ℕ} (e : Fin X.rank ≃ Fin d
   · set a : AF D.host.F := 1 - GlobalTheory.EmbChart.atPlace v 1 with ha
     have h0 : GlobalTheory.AdelicU.evFin D.host.F v a = 0 := by
       rw [ha, map_sub, map_one, GlobalTheory.EmbChart.evFin_atPlace, sub_self]
-    have h1 : fstA D.host.F a = 1 := by
-      show (1 : Ainf D.host.F) - (0 : Ainf D.host.F) = 1
-      exact sub_zero 1
+    have h1 : fstA D.host.F a = 1 := sub_zero 1
     let f := Algebra.TensorProduct.map (fstA D.host.F) (AlgHom.id D.host.F D.host.E)
     have hf1 : f (a ⊗ₜ[D.host.F] (1 : D.host.E)) = 1 := by
       simp only [f, Algebra.TensorProduct.map_tmul, AlgHom.coe_id, id_eq, h1]
@@ -102,8 +100,7 @@ theorem kapX_onto : ∀ (D : D7) (X : HSp D) {d : ℕ} (e : Fin X.rank ≃ Fin d
       rw [Matrix.smul_apply, Matrix.zero_apply, Algebra.smul_def, Algebra.TensorProduct.algebraMap_apply,
         Algebra.algebraMap_self, RingHom.id_apply] at k
       have k2 := congrArg f k
-      rw [map_mul, map_zero, hf1, one_mul] at k2
-      exact k2
+      rwa [map_mul, map_zero, hf1, one_mul] at k2
     rw [GfC, MonoidHom.mem_ker]
     apply Units.ext
     ext i j

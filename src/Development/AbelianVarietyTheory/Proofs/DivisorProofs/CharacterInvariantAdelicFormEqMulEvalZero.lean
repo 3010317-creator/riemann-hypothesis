@@ -98,7 +98,6 @@ theorem dot_pairA_fin {κ : Type} [Fintype κ] (x : κ → AF F) (y : κ → Af 
 
     simp only [dotProduct, map_sum, map_mul]
     exact Finset.sum_eq_zero fun i _ => by
-      show (RingHom.fst (Ainf F) (Af F)) (x i) * 0 = 0
       exact mul_zero _
   have h2 : (RingHom.snd (Ainf F) (Af F)) (x ⬝ᵥ fun i => pairA F 0 (y i)) = (fun i => (x i).2) ⬝ᵥ y := by
 
@@ -116,7 +115,6 @@ theorem dot_pairA_inf {κ : Type} [Fintype κ] (x : κ → AF F) (y : κ → Ain
 
     simp only [dotProduct, map_sum, map_mul]
     exact Finset.sum_eq_zero fun i _ => by
-      show (RingHom.snd (Ainf F) (Af F)) (x i) * 0 = 0
       exact mul_zero _
   exact Prod.ext h1 h2
 

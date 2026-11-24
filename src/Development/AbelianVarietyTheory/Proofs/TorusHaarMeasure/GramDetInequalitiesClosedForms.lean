@@ -266,8 +266,7 @@ theorem gramDet_contraction : (∀ (r : ℕ) (a : Matrix (Fin r) (Fin r) ℂ), �
   intro a ha
   obtain ⟨k1, k2⟩ := key a ha
   refine ⟨?_, (div_le_iff₀ hM).mpr k1⟩
-  rw [le_div_iff₀ hM, inv_mul_le_iff₀ hΩ0]
-  exact k2
+  rwa [le_div_iff₀ hM, inv_mul_le_iff₀ hΩ0]
 
 end GlobalTheory
 end -- clump:auto
@@ -729,8 +728,7 @@ private lemma exists_pos_uniform_le_sum_log_ratio_det_gram {r i : ℕ}
     · refine ((hgram _ (continuous_const.matrix_mul continuous_id)).continuousOn).div
         (hgram _ continuous_id).continuousOn ?_
       exact fun Q hQ => (hK1 Q hQ).ne'
-    · intro Q hQ
-      exact (div_pos ((hpt Q (hK1 Q hQ)).1 a ‹_›) (hK1 Q hQ)).ne'
+    · exact fun Q hQ => (div_pos ((hpt Q (hK1 Q hQ)).1 a ‹_›) (hK1 Q hQ)).ne'
   by_cases hne : K.Nonempty
   · obtain ⟨Q₀, hQ₀, hmin⟩ := hcomp.exists_isMinOn hne hcont
     refine ⟨F Q₀, (hpt Q₀ (hK1 Q₀ hQ₀)).2, fun M hM => ?_⟩

@@ -82,8 +82,7 @@ theorem UpperTheory.Zero.LLC.typeIff :
     have hne := DiscreteGroups.sglob.DzType.red_ne_zero_of_approx D.ha' D.ker hx
     have hz : R t = Units.mk0 (D.red x) hne := hR t ⟨t', ht'⟩ x _ e.symm rfl hx
     have key := main.2 ⟨t', ht'⟩ x (Units.mk0 _ hne) rfl hx
-    rw [hz, ← e]
-    exact key
+    rwa [hz, ← e]
   · intro H E' _ _ _ _ _ _ g _ w' h' i hi n hn unr card a' ha' K _ _ red surj ker θ hθ τ hτ hNm σ hinf
     let D : Ext h g n :=
       { E' := E', w' := w', h' := h', unr := unr, card := card, a' := a', ha' := ha', K := K, red := red,
@@ -94,7 +93,6 @@ theorem UpperTheory.Zero.LLC.typeIff :
     have hm := restrict_mem_ine (E := E) A (t : G E' Ω) t.2
     have e : R ⟨_, hm⟩ = z := hR ⟨_, hm⟩ t x z rfl hz hx
     have key := main.2 ⟨_, hm⟩
-    rw [e] at key
-    exact key
+    rwa [e] at key
 
 end

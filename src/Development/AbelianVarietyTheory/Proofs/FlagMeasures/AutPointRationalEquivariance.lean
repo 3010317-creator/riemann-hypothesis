@@ -93,8 +93,7 @@ theorem largestSize_eq (hz : ∀ N, zl (Formalism.HermitianLatticesTheory.realiz
   constructor
   · rintro ⟨S, hS, hne, rfl⟩
     refine ⟨Φ.symm S, ?_, fun h => hne ?_, ?_⟩
-    · rw [← hsat, Φ.apply_symm_apply]
-      exact hS
+    · rwa [← hsat, Φ.apply_symm_apply]
     · rw [← h, Φ.apply_symm_apply]
     · rw [← sizeQ_eq b X X' Φ hz hr, Φ.apply_symm_apply]
   · rintro ⟨S, hS, hne, rfl⟩
@@ -111,8 +110,7 @@ theorem sSup_eq (A : Submodule (𝓞 K) V) (p p' : Submodule (𝓞 K) V → Prop
   · rintro ⟨hN, h0, hpN⟩
     refine ⟨Φ.symm N, ⟨Φ.symm_apply_le.2 hN, fun h => h0 ?_, ?_⟩, Φ.apply_symm_apply N⟩
     · rw [← Φ.apply_symm_apply N, h, Φ.map_bot]
-    · rw [← hp, Φ.apply_symm_apply]
-      exact hpN
+    · rwa [← hp, Φ.apply_symm_apply]
   · rintro ⟨M, ⟨hM, h0, hpM⟩, rfl⟩
     refine ⟨Φ.le_iff_le.2 hM, fun h => h0 ?_, (hp M).2 hpM⟩
     rw [← Φ.map_bot] at h
@@ -155,8 +153,7 @@ theorem hasType_of (hl : lamX I x' = Φ (lamX I x))
     · dsimp only
       rw [h3, (hst _).1]
     · dsimp only
-      rw [sizeQ_eq (bas I) (frm I x) (frm I x') Φ hz hr]
-      exact h4
+      rwa [sizeQ_eq (bas I) (frm I x) (frm I x') Φ hz hr]
   · obtain ⟨k, hk⟩ := hall t ht
     exact ⟨k, by dsimp only; rw [hk, (hst t).1]⟩
   · dsimp only
@@ -259,9 +256,9 @@ theorem frm_mul (k : I.GA) (w : InfinitePlace I.E) :
   simp only [frm]
   by_cases h : w.embedding = I.φ (w.comap (algebraMap I.F I.E))
   · left
-    rw [if_pos h, if_pos h, hm, Matrix.mul_assoc]
+    rw [ite_eq_left h, ite_eq_left h, hm, Matrix.mul_assoc]
   · right
-    rw [if_neg h, if_neg h, hm, ← Matrix.mul_assoc, Matrix.map_mul]
+    rw [ite_eq_right h, ite_eq_right h, hm, ← Matrix.mul_assoc, Matrix.map_mul]
 
 theorem frm_rat
     (h : ∀ v, uMat (a.1 v) = (I.P v)⁻¹ * (γ : Matrix (Fin I.n) (Fin I.n) I.E).map (I.φ v) * I.P v)
@@ -278,9 +275,9 @@ theorem frm_rat
     simp only [← Matrix.mul_assoc, hP, Matrix.one_mul]
   simp only [frm]
   by_cases h' : w.embedding = I.φ (w.comap (algebraMap I.F I.E))
-  · rw [if_pos h', if_pos h', key, h']
+  · rw [ite_eq_left h', ite_eq_left h', key, h']
   · have he := (embedding_eq I w).resolve_left h'
-    rw [if_neg h', if_neg h', key, Matrix.map_mul, he, Matrix.map_map]
+    rw [ite_eq_right h', ite_eq_right h', key, Matrix.map_mul, he, Matrix.map_map]
     rfl
 
 theorem fcoord_rat
@@ -432,8 +429,7 @@ theorem lamX_mul_eq_iff (k : I.GA) : k.2 ∈ I.Kset ↔ lamX I (x * k) = lamX I 
           (u : Matrix (Fin I.n) (Fin I.n) (TensorProduct I.F I.E (Af I.F))) *ᵥ v := by
       rw [Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec]
     rw [e1, e2] at h3
-    rw [hL]
-    exact h3
+    rwa [hL]
 
 end Rational
 

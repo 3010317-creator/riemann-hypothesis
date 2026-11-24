@@ -141,8 +141,7 @@ theorem UpperTheory.Gal.productCup_of_system.idVal_of :
   have hgEq : ∀ y ∈ omB ℂ K B d, y = (τ y / om) • dtS K x Finset.univ := by
     intro y hy
     have h1 := (_root_.GlobalTheory.PD.isTop_exists_and_eq ℂ F K d (xv x) cov).2 τ hτ y (mem_deg_of_mem_omB B d y hy)
-    rw [hvol, smul_smul, div_mul_cancel₀ _ omne]
-    exact h1
+    rwa [hvol, smul_smul, div_mul_cancel₀ _ omne]
   have hgLoc : ∀ (e : fib ℂ K (xv x)), ∀ y ∈ omB ℂ K B d, τ y / om ∈ loc B e.1 := by
     intro e y hy
     have hle : B ≤ loc B e.1 := (hV K B e.1).1
@@ -207,10 +206,9 @@ theorem UpperTheory.Gal.productCup_of_system.idVal_of :
     have hfs : ∑ᶠ e, γ0 e * e.1 h = φ (g k) := by
       rw [finsum_eq_single _ z]
       · rw [hh z]
-        simp only [if_true, mul_one]
-        exact val_unique hV (hγ0 z) (hφ _ (hgLoc z _ (hyB k S hS)))
+        simpa only [ite_true, mul_one] using val_unique hV (hγ0 z) (hφ _ (hgLoc z _ (hyB k S hS)))
       · intro e he
-        rw [hh e, if_neg he, mul_zero]
+        rw [hh e, ite_eq_right he, mul_zero]
     have : ρ (t k) = φ (g k) := by rw [← hfs]; exact htv
     rwa [this] at hres
   have claim3 : ∑ k, algebraMap F K (t k) • w k = (h : K) • dtS K x S := by
@@ -231,18 +229,17 @@ theorem UpperTheory.Gal.productCup_of_system.idVal_of :
       simp only [sub_smul, Finset.sum_sub_distrib, ite_smul, zero_smul, Finset.sum_smul, mul_smul]
       rw [Finset.sum_comm]
       simp only [← Finset.smul_sum, ← hbe]
-      rw [claim3, Finset.sum_ite_eq, if_pos (by simp [Finset.mem_powersetCard, hS]), sub_self]
-    intro T hT
-    exact sub_eq_zero.1 (linearIndependent_iff'.1 hli _ _ hsum T hT)
+      rw [claim3, Finset.sum_ite_eq, ite_eq_left (by simp [Finset.mem_powersetCard, hS]), sub_self]
+    exact fun T hT => sub_eq_zero.1 (linearIndependent_iff'.1 hli _ _ hsum T hT)
   have hTm : T ∈ Finset.univ.powersetCard a := by simp [Finset.mem_powersetCard, hT]
   have hL : Val B z.1 (∑ k, algebraMap F K (t k) * b k T) (∑ k, φ (g k) * φ (b k T)) :=
     val_sum hV _ _ _ fun k _ => val_mul hV (claim2 k) (hφ _ (hbl k T))
   rw [claim4 T hTm] at hL
   have hz1 : Val B z.1 (h : K) 1 := by
     have := (hV K B z.1).2.2.1 h
-    rwa [hh z, if_pos rfl] at this
+    rwa [hh z, ite_eq_left rfl] at this
   by_cases hST : S = T
-  · rw [if_pos hST] at hL ⊢
+  · rw [ite_eq_left hST] at hL ⊢
     exact val_unique hV hL hz1
-  · rw [if_neg hST] at hL ⊢
+  · rw [ite_eq_right hST] at hL ⊢
     exact val_unique hV hL (val_zero hV)

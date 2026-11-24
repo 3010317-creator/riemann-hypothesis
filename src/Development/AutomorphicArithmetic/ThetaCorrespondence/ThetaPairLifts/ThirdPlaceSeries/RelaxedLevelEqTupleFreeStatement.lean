@@ -143,8 +143,7 @@ theorem GlobalTheory.PenBridge.rd_mem_KO_off_twist_alt : ∀ {B : GlobalTheory.M
     · obtain ⟨κ, hκ⟩ := ((hJ₀.is.U j hjm _ g).1 hg).2
       exact ⟨κ.1, hκ, (J₀.A.K j hjm (J₀.ι j α₀)).lev.Uloc_lev _
         ((((J₀.A.K j hjm (J₀.ι j α₀)).lev.U_eq κ.1).1 κ.2).2 _)⟩
-  intro g hg
-  exact (GlobalTheory.PenBridge.toSum0_mem_KO_iff _).2 (key g hg)
+  exact fun g hg => (GlobalTheory.PenBridge.toSum0_mem_KO_iff _).2 (key g hg)
 end
 end -- clump:auto
 end -- clump:auto
@@ -283,7 +282,7 @@ theorem cutAt_mem (V : HSp D) (v : GlobalTheory.FinPl.Pl D) (g : GA D V) : cutAt
 theorem compAt_cutAt (V : HSp D) (v : GlobalTheory.FinPl.Pl D) (g : GA D V) (i j) :
     GlobalTheory.FinPl.compAt D v (Formalism.L2.Theta.mt V (cutAt V v g) i j) = GlobalTheory.FinPl.compAt D v (Formalism.L2.Theta.mt V g i j) := by
   rw [mt_cutG, Matrix.add_apply, Matrix.smul_apply, Matrix.smul_apply, smul_eq_mul, smul_eq_mul, RingHom.map_add (f := _), RingHom.map_mul,
-    RingHom.map_mul, RingHom.map_sub, RingHom.map_one, (parts_idemQ {v}).2 v, if_pos (Finset.mem_singleton_self v), sub_self,
+    RingHom.map_mul, RingHom.map_sub, RingHom.map_one, (parts_idemQ {v}).2 v, ite_eq_left (Finset.mem_singleton_self v), sub_self,
     zero_mul, one_mul, add_zero]
 
 theorem grpAt_mono (V : HSp D) {P Q : GlobalTheory.FinPl.Pl D → Prop} (h : ∀ v, P v → Q v) : grpAt V P ≤ grpAt V Q := fun g hg =>
@@ -442,9 +441,9 @@ theorem coset_at (q : PtAt R sel mu cst u j) (h : j + 1 = R.m) {y : Sp X.E (R.N 
   have hs : (q.1.1.deco.1.liftFr w).symm (((qOf w.1 : ℕ) : X.E) • y) ∈ stdAt X.E _ w.1 :=
     (hf.1 _).1 (by rw [LinearEquiv.apply_symm_apply]; exact hq)
   refine ⟨?_, by rw [← map_smul]; exact hs, ?_⟩
-  · have hfr : frsF sel mu q.1.1 ⟨w.1, Finset.mem_union_left _ w.2⟩ = q.1.1.deco.1.liftFr w := dif_pos w.2
+  · have hfr : frsF sel mu q.1.1 ⟨w.1, Finset.mem_union_left _ w.2⟩ = q.1.1.deco.1.liftFr w := dite_eq_left w.2
     ext z
-    simp only [cosetIn, Set.mem_setOf_eq, if_pos w.2, pow_zero, inv_one, one_smul, hfr]
+    simp only [cosetIn, Set.mem_setOf_eq, ite_eq_left w.2, pow_zero, inv_one, one_smul, hfr]
     constructor
     · rintro ⟨y', hy', hz⟩
       have h1 : (q.1.1.deco.1.liftFr w).symm y' - (q.1.1.deco.1.liftFr w).symm y ∈ stdAt X.E (R.N j) w.1 := by
@@ -614,7 +613,7 @@ theorem cosetIn_p0_eq_of_reads (hW : _root_.GlobalTheory.Fam.AllFamilyConditions
     have hq := TopFrames.intAt_q_mul (A := J.A) ⟨w.1, Finset.mem_union_left _ w.2⟩ w.2 hj (J.ι _ α)
     have hco := hJ.cosG n α e he c
     have hfr : Formalism.L2.Col.frsF I.sel (I.tup (W.P.I.tup t)) (J.A.p0 _ (J.ι _ α)).1.1 ⟨w.1, Finset.mem_union_left _ w.2⟩ =
-      (J.A.p0 _ (J.ι _ α)).1.1.deco.1.liftFr w := dif_pos w.2
+      (J.A.p0 _ (J.ι _ α)).1.1.deco.1.liftFr w := dite_eq_left w.2
     rw [hfr] at hF hq
     generalize (J.A.p0 _ (J.ι _ α)).1.1.deco.1.liftFr w = f at hF hq ⊢
     generalize Formalism.L2.Col.repY (J.A.p0 ((a.G n).s + 1) (J.ι _ α)).1.2 = y at hq hco ⊢
@@ -1122,8 +1121,7 @@ theorem GlobalTheory.PenBridge.supp_mem_level_alt : ∀ {B : GlobalTheory.Mem.Ba
     · exact hgv 1 h0
     · obtain ⟨i', hi'⟩ := hJ'.surj Q ((hW.tq.Q t' Q).2 hQ)
       refine hn' ⟨i', ?_⟩
-      rw [(_root_.GlobalTheory.Fam.QJPlaces.places_under_alt W hW u a ha hat t' J' hJ').2 i', hi']
-      exact e
+      rwa [(_root_.GlobalTheory.Fam.QJPlaces.places_under_alt W hW u a ha hat t' J' hJ').2 i', hi']
   · have h1 := hrd i hvP
     rw [_root_.GlobalTheory.PenBridge.reductionHomAtLastLevel, MonoidHom.pi_apply, _root_.GlobalTheory.PenBridge.rd_at_apply, toSum0_mem_KO_iff] at h1
     exact GlobalTheory.LevProd.SamePlace.moves_of_mem_KO (J.G i).q _ hsd (_root_.GlobalTheory.PenBridge.int_in_frame_at_level J j i (_root_.GlobalTheory.PenBridge.eq_s_succ_of_succ_eq_m J hj i)) h1
@@ -1229,8 +1227,7 @@ theorem GlobalTheory.PenLev.relax_le_sup_alt : ∀ {B : GlobalTheory.Mem.Base} {
         rw [_root_.GlobalTheory.PenBridge.rd_at_apply, locHom_eq_one (J.G i).q ((I.rec7 l Z).sp.X j) _ (P := (· ∈ P)) hi
           (grpAt_le_grpOff ((I.rec7 l Z).sp.X j) (· ∉ P) (· ∈ P) (fun p h h' => h h') hwrP), map_one]
       have h := hint i
-      rw [hgeq, map_mul, map_mul, Pi.mul_apply, Pi.mul_apply, e1, e2, one_mul, mul_one] at h
-      exact h
+      rwa [hgeq, map_mul, map_mul, Pi.mul_apply, Pi.mul_apply, e1, e2, one_mul, mul_one] at h
   rw [hgeq]
   exact mul_mem (Subgroup.mem_sup_left (mul_mem huo hwp')) (Subgroup.mem_sup_right hwr)
 end

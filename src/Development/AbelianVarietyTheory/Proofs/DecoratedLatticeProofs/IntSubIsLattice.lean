@@ -160,8 +160,7 @@ theorem dual_intVec (D : D7) (n : ℕ) (v : Fin n → D.host.E) :
       · simp
       · intro b _ hb; rw [Pi.single_eq_of_ne hb, map_zero, mul_zero]
       · intro hi; exact absurd (Finset.mem_univ i) hi
-    rw [e] at hi
-    exact hi
+    rwa [e] at hi
   · intro hv y hy
     refine IsIntegral.sum _ fun a _ => (hv a).mul ?_
     exact (hy a).map ((GlobalTheory.Member.cF D : D.host.E →+* D.host.E).toIntAlgHom)
@@ -205,8 +204,7 @@ theorem sum_swap_one (n : ℕ) (x y : Fin n → D.host.E) :
 
 theorem selfDual_int (V : HSp D) (hV : V.gram = 1) : IsSelfDualC V (intSub D V.rank) := by
   refine ⟨inferInstance, fun y => ?_⟩
-  rw [hV]
-  rw [← SetLike.mem_coe, coe_intSub, ← dual_intVec D V.rank y]
+  rw [hV, ← SetLike.mem_coe, coe_intSub, ← dual_intVec D V.rank y]
   refine forall_congr' fun x => imp_congr_right fun _ => ?_
   rw [sum_swap_one, FractionalIdeal.mem_one_iff]
 
@@ -258,8 +256,7 @@ theorem hat_move (V : HSp D) (g : GA D V) (N : Submodule (𝓞 D.host.E) (Fin V.
   · rw [← SetLike.mem_coe, hh]; exact ⟨z, hz, rfl⟩
   · rw [← SetLike.mem_coe, hh] at hz
     obtain ⟨y, hy, rfl⟩ := hz
-    rw [Matrix.mulVec_mulVec, map_inv, Units.inv_mul, Matrix.one_mulVec]
-    exact hy
+    rwa [Matrix.mulVec_mulVec, map_inv, Units.inv_mul, Matrix.one_mulVec]
 
 theorem selfDual_move (V : HSp D) (hV : V.gram = 1) (g : GA D V) (N : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E))
     (hN : Moves V rfl g N) : IsSelfDualC V N := by
@@ -296,8 +293,8 @@ theorem halfInd_comp₂ {e : AE D} {Λ Λ' : AddSubgroup (WO S T)} {g : GA D S} 
     (hΛ : ∀ u, u ∈ Λ ↔ actO S T g h u ∈ Λ') (t : WO S T) : halfInd e Λ' (actO S T g h t) = halfInd e Λ t := by
   unfold halfInd
   by_cases ht : t ∈ Λ ∧ IsHalf e t
-  · rw [if_pos ht, if_pos ⟨(hΛ t).1 ht.1, GlobalTheory.SplitHecke.isHalf_actO g h ht.2⟩]
-  · rw [if_neg ht, if_neg fun h' => ht ⟨(hΛ t).2 h'.1, (GlobalTheory.SchrMove.isHalf_actO_iff g h t).1 h'.2⟩]
+  · rw [ite_eq_left ht, ite_eq_left ⟨(hΛ t).1 ht.1, GlobalTheory.SplitHecke.isHalf_actO g h ht.2⟩]
+  · rw [ite_eq_right ht, ite_eq_right fun h' => ht ⟨(hΛ t).2 h'.1, (GlobalTheory.SchrMove.isHalf_actO_iff g h t).1 h'.2⟩]
 
 theorem isPlaceModel_move₂ {ψ : AddChar (AF D.host.F) ℂ} {χS χT : (AE D)ˣ →* Circle}
     {om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)} (hW : IsWeilDatumO ψ S T χS χT om) {a : AE D}

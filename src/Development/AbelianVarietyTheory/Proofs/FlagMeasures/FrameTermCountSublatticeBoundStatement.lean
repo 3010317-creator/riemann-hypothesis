@@ -465,8 +465,7 @@ theorem main : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ : LatV D),
     rw [hj]
     apply hmem
     have := (coefI D a : Submodule (𝓞 D.host.E) D.host.E).smul_mem (g a p) (hcI a)
-    rw [Algebra.smul_def, mul_comm] at this
-    exact this
+    rwa [Algebra.smul_def, mul_comm] at this
   · let co : Fin D.R.rS → (P →ₗ[𝓞 D.host.E] D.host.E) := fun a =>
       ((hS D).hT (D.sp.hypF a)).restrictScalars (𝓞 D.host.E) ∘ₗ φ
     have h1 := fun a => hgen a ((moved (lf D F0) Λ P).comap (j a).toAddMonoidHom) (by
@@ -716,8 +715,7 @@ theorem cntCl_ExSet_le : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ 
   have h2 : (cntCl (ExSet D Λ (lf D F0) ((Tu D u' : ℕ) : D.host.E) Z P) (TEqv D Λ (lf D F0)) : ℝ≥0∞) ≤
       ∑ φ ∈ reps, (cntCl (FixSet D Λ (lf D F0) ((Tu D u' : ℕ) : D.host.E) Z P φ) (TEqv D Λ (lf D F0)) : ℝ≥0∞) := by
     have := ENat.toENNReal_le.2 h1
-    refine this.trans (le_of_eq ?_)
-    exact map_sum ENat.toENNRealRingHom _ _
+    exact this.trans (le_of_eq (map_sum ENat.toENNRealRingHom _ _))
   refine h2.trans ((Finset.sum_le_card_nsmul _ _ _ fun φ hφ =>
     GlobalTheory.T.card_integral_frames_fixed_lift_le D u u' F0 Λ hst hb hrow hsp P φ Z s De Q hs1 hsk (hreps φ hφ) hsub hQ).trans ?_)
   have hnn : 0 ≤ NT D u ^ (2 * D.R.rS) * De ^ D.R.rS := le_trans (Nat.cast_nonneg _) hcard
@@ -830,8 +828,7 @@ theorem exists_partner (hlat : Submodule.IsLattice E Λ) (hΛ : Formalism.Hermit
   have hprim : IsPrimitiveSub M0 Λ := by
     refine ⟨inf_le_left, le_antisymm (le_inf inf_le_left fun x hx => Submodule.subset_span hx) ?_⟩
     refine inf_le_inf_left _ ?_
-    intro x hx
-    exact (Submodule.span_le (p := U)).2 (fun y (hy : y ∈ M0) => hy.2) hx
+    exact fun x hx => (Submodule.span_le (p := U)).2 (fun y (hy : y ∈ M0) => hy.2) hx
   have hint : ∀ x : M0, ∃ o : 𝓞 E, (o : E) = φ x := by
     rintro ⟨x, hx, hxU⟩
     obtain ⟨c, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun E).1 hxU
@@ -882,7 +879,7 @@ theorem exists_elem (θ : 𝓞 E) (hθ : (θ : E) + star (θ : E) = 1) (hΛ : Fo
   have hwX : w ∈ Xsp F := Xflag_le_X _ hw
   have hσb : ∀ x ∈ Xflag F b, S.hT σ x = 0 := by
     refine ext_Xflag (S.hT σ) 0 b fun a ha => ?_
-    rw [hσ, if_neg (fun h => by rw [h] at ha; exact lt_irrefl _ ha)]
+    rw [hσ, ite_eq_right (fun h => by rw [h] at ha; exact lt_irrefl _ ha)]
     rfl
   have hww : S.hT w w = 0 := iso_X S F hwX hwX
   have hwσ : S.hT w σ = 0 := by rw [herm S, hσb w hw, star_zero]
@@ -911,9 +908,9 @@ theorem exists_elem (θ : 𝓞 E) (hθ : (θ : E) + star (θ : E) = 1) (hΛ : Fo
   · intro x hx
     rw [hap x ((mem_orth S).1 hx w hwX), sub_sub_cancel_left]
     exact Submodule.neg_mem _ (Submodule.smul_mem _ _ hwX)
-  · rw [hap _ (X_orth_frame hwX b), hσ, if_pos rfl]
+  · rw [hap _ (X_orth_frame hwX b), hσ, ite_eq_left rfl]
   · intro j hj
-    rw [hap _ (X_orth_frame hwX j), hσ, if_neg hj]; simp
+    rw [hap _ (X_orth_frame hwX j), hσ, ite_eq_right hj]; simp
 
 theorem exists_col (θ : 𝓞 E) (hθ : (θ : E) + star (θ : E) = 1) (hlat : Submodule.IsLattice E Λ)
     (hΛ : Formalism.HermitianLatticesTheory.IsUnimodular S.hT Λ) (hT : T ≠ 0)
@@ -960,16 +957,16 @@ theorem exists_cols (w : Fin (r + 1) → S.V) (hw : ∀ b : Fin (r + 1), w b ∈
         rcases lt_trichotomy b.val k with hb | hb | hb
         · have : m (w b) = w b := ext_Xflag (m : S.V →ₗ[E] S.V) LinearMap.id b
             (fun a ha => e2 a fun h => by rw [h] at ha; exact lt_asymm ha hb) _ (hw b)
-          rw [if_pos hb, if_pos (by omega), map_add (f := _), this, e2 b fun h => by rw [h] at hb; exact lt_irrefl _ hb]
+          rw [ite_eq_left hb, ite_eq_left (by omega), map_add (f := _), this, e2 b fun h => by rw [h] at hb; exact lt_irrefl _ hb]
         · have : b = ⟨k, hk⟩ := Fin.ext hb
-          rw [if_neg (by omega), if_pos (by omega), add_zero, this, e1]
-        · rw [if_neg (by omega), if_neg (by omega), add_zero,
+          rw [ite_eq_right (by omega), ite_eq_left (by omega), add_zero, this, e1]
+        · rw [ite_eq_right (by omega), ite_eq_right (by omega), add_zero,
             e2 b fun h => by rw [h] at hb; exact lt_irrefl _ hb]
       · refine ⟨n, hn, fun b => ?_⟩
         have := b.2
-        rw [h1, if_pos (by omega), if_pos (by omega)]
+        rw [h1, ite_eq_left (by omega), ite_eq_left (by omega)]
   obtain ⟨n, hn, h1⟩ := key (r + 1)
-  exact ⟨n, hn, fun b => by rw [h1, if_pos b.2]⟩
+  exact ⟨n, hn, fun b => by rw [h1, ite_eq_left b.2]⟩
 
 theorem exists_frame_op (θ : 𝓞 E) (hθ : (θ : E) + star (θ : E) = 1) (hlat : Submodule.IsLattice E Λ)
     (hΛ : Formalism.HermitianLatticesTheory.IsUnimodular S.hT Λ) (hT : T ≠ 0)
@@ -994,8 +991,7 @@ theorem exists_frame_op (θ : 𝓞 E) (hθ : (θ : E) + star (θ : E) = 1) (hlat
     refine (hc _).2 fun a => ?_
     split_ifs with hab
     · have := (aa a : Submodule (𝓞 E) E).smul_mem (ξ a b) (hanti a b hab.le hcm)
-      rw [mul_comm]
-      exact this
+      rwa [mul_comm]
     · simp [FractionalIdeal.zero_mem])
   refine ⟨n, hn, fun b => ?_⟩
   rw [h]
@@ -1205,8 +1201,7 @@ theorem exists_exact_frame : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) 
   have hθ' : (θ : D.host.E) + star (θ : D.host.E) = 1 := by
     have := congrArg (algebraMap (𝓞 D.host.E) D.host.E) hθ
     rw [map_add (f := _), map_one] at this
-    rw [GlobalTheory.NormSum.AdLattice.star_eq_conj]
-    exact this
+    rwa [GlobalTheory.NormSum.AdLattice.star_eq_conj]
   choose st hst using fun o : 𝓞 D.host.E => star_int (E := D.host.E) ⟨o, rfl⟩
   have hst0 : st 0 = 0 := RingOfIntegers.ext (by rw [hst]; simp)
   have hst1 : st 1 = 1 := RingOfIntegers.ext (by rw [hst]; simp)
@@ -1311,8 +1306,7 @@ theorem cntCl_le_of_map {α β : Type} {R : α → α → Prop} {R' : β → β 
   constructor
   · rintro ⟨c', h3, h4⟩
     exact hR.trans hc (hR.trans (h2 c c' h3) h4)
-  · intro hd
-    exact ⟨c, hR'.refl _, hR.trans (hR.symm hc) hd⟩
+  · exact fun hd => ⟨c, hR'.refl _, hR.trans (hR.symm hc) hd⟩
 
 section Gen
 
@@ -1409,8 +1403,7 @@ theorem conj_mem_NLam {F : LFlag S r T} {n m : S.V ≃ₗ[E] S.V} {Λ : Submodul
     have h3 : m x ∈ Xsp F := by
       simpa using (Xsp F).add_mem (Xflag_le_X F _ h2) (Xflag_le_X F _ hx)
     change n.symm (m (n x)) - x ∈ _
-    rw [h1, symm_fix (fix_X hf h3)]
-    exact h2
+    rwa [h1, symm_fix (fix_X hf h3)]
   · exact trans_sub_mem _ _ X_le_orth (trans_sub_mem _ _ X_le_orth ho hm.2.2) (symm_sub_mem n X_le_orth ho)
 
 theorem X_le_UUE {F : LFlag S r T} (G : LFlag S r T') {Λ : Submodule (𝓞 E) S.V}
@@ -1443,8 +1436,7 @@ theorem Thp_map {F : LFlag S r T} (G : LFlag S r T') {n : S.V ≃ₗ[E] S.V} {Λ
         rw [mem_gmap]
         refine Submodule.mem_sup_left (Submodule.mem_sup_left (Submodule.mem_sup_left
           ⟨(mem_gmap n y).1 h1, ?_⟩))
-        rw [symm_fix (fix_X hf h2)]
-        exact h2
+        rwa [symm_fix (fix_X hf h2)]
       · refine Submodule.span_le.mpr ?_
         rintro _ rfl
         change F.zt ∈ Formalism.HermitianLatticesTheory.gmap n (UU Λ F G)
@@ -1460,8 +1452,7 @@ theorem Thp_map {F : LFlag S r T} (G : LFlag S r T') {n : S.V ≃ₗ[E] S.V} {Λ
         change n G.zt ∈ Formalism.HermitianLatticesTheory.gmap n (UU Λ F G)
         rw [ap_mem_gmap]
         exact Submodule.mem_sup_right (Submodule.mem_span_singleton_self _)
-    intro y hy
-    exact Submodule.subset_span ((mem_gmap n y).1 (this hy))
+    exact fun y hy => Submodule.subset_span ((mem_gmap n y).1 (this hy))
   change n t ∈ orth S _
   rw [mem_orth']
   intro x hx

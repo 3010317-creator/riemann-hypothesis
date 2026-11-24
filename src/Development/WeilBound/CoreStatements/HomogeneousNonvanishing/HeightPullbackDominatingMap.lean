@@ -112,9 +112,7 @@ theorem lieBC {S : Scheme.{0}} {G : Over S} [GrpObj G] {A B : Type} [CommRing A]
     · exact fun m => Submodule.subset_span ⟨m, rfl⟩
     · exact fun s n h => Submodule.smul_mem _ s h
     · exact fun a b ha hb => Submodule.add_mem _ ha hb
-  · intro l
-    refine ⟨hbc.lift ((Algebra.linearMap A B).comp l), fun e => ?_⟩
-    exact hbc.lift_eq _ e
+  · exact fun l => ⟨hbc.lift ((Algebra.linearMap A B).comp l), fun e => (hbc.lift_eq _ e)⟩
 
 theorem isHT_move {R : Type} [CommRing R] [IsDomain R] {T : Type} [CommGroup T] (Γ : BT.QFGroup R T)
     {S S' : Scheme.{0}} {G : Over S} {G' : Over S'} [GrpObj G] [GrpObj G'] {f : S' ⟶ S} {φ : G'.left ⟶ G.left}
@@ -392,8 +390,7 @@ theorem GlobalTheory.CompanionTheory.Ar.HTPullK.main : ∀ (X X' : Scheme.{0}) (
   have hk : ∀ r, k' (algebraMap (X.presheaf.stalk (f p'.1)) (X'.presheaf.stalk p'.1) r) = i (k r) :=
     GlobalTheory.CompanionTheory.Ar.Flat.PullReg.stalkMap_comp_genMap dom p' h
   have hs : Function.Injective (algebraMap (X.presheaf.stalk (f p'.1)) (X'.presheaf.stalk p'.1)) := by
-    intro a b e
-    exact hkinj (i.injective (by rw [← hk, ← hk, e]))
+    exact fun a b e => hkinj (i.injective (by rw [← hk, ← hk, e]))
   have hx : X'.fromSpecStalk p'.1 ≫ f = Spec.map (CommRingCat.ofHom
       (algebraMap (X.presheaf.stalk (f p'.1)) (X'.presheaf.stalk p'.1))) ≫ X.fromSpecStalk (f p'.1) :=
     (Scheme.SpecMap_stalkMap_fromSpecStalk f).symm

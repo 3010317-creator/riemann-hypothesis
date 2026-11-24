@@ -70,8 +70,7 @@ def datum (t : Formalism.CyclotomicNorms.Fbar g →* ℂ) (ht : ∀ x y : Formal
 theorem mem_rootsBar_of_aeval {P : (ZMod g)[X]} (hP : P ≠ 0) {x : Formalism.CyclotomicNorms.Fbar g}
     (hx : aeval x P = 0) : x ∈ Formalism.CyclotomicNorms.rootsBar P := by
   unfold Formalism.CyclotomicNorms.rootsBar
-  rw [mem_roots (Polynomial.map_ne_zero hP), IsRoot, Polynomial.eval_map, ← aeval_def]
-  exact hx
+  rwa [mem_roots (Polynomial.map_ne_zero hP), IsRoot, Polynomial.eval_map, ← aeval_def]
 
 theorem isPrimeLab_iff (d : ℕ) (P : (ZMod g)[X]) :
     IsPrimeLab d P ↔ P.Monic ∧ Irreducible P ∧ P ≠ X ∧ P.natDegree = d := by
@@ -131,8 +130,7 @@ theorem hasCuspLabel_iff (t : Formalism.CyclotomicNorms.Fbar g →* ℂ)
     have hx' := mem_rootsBar_of_aeval h1.ne_zero hx
     have h := h5 x hx' y hy z (mem_rootsBar_of_aeval hy.ne_zero hz)
     have hm' : (datum t ht ζ hζ).gen d ^ m = z := hm
-    rw [← hm', sum_thetaOf _ hd hP hx'] at h
-    exact h
+    rwa [← hm', sum_thetaOf _ hd hP hx'] at h
 
 theorem nonempty_iso_of_character {G : Type} [Group G] [Fintype G] (V W : FDRep ℂ G) [Simple V] [Simple W]
     (h : V.character = W.character) : Nonempty (V ≅ W) := by
@@ -140,9 +138,9 @@ theorem nonempty_iso_of_character {G : Type} [Group G] [Fintype G] (V W : FDRep 
   haveI : Invertible (Fintype.card G : ℂ) := invertibleOfNonzero (by exact_mod_cast Fintype.card_pos.ne')
   have h1 := FDRep.char_orthonormal V W
   have h2 := FDRep.char_orthonormal V V
-  rw [← h, h2, if_pos ⟨Iso.refl V⟩] at h1
+  rw [← h, h2, ite_eq_left ⟨Iso.refl V⟩] at h1
   by_contra h3
-  rw [if_neg h3] at h1
+  rw [ite_eq_right h3] at h1
   exact one_ne_zero h1
 
 theorem cuspParam_of_green : GlobalTheory.Published.GreenCuspidal → ∀ (g : ℕ) [Fact g.Prime] (t : Formalism.CyclotomicNorms.Fbar g →* ℂ)
@@ -175,7 +173,6 @@ theorem cuspParam_of_green : GlobalTheory.Published.GreenCuspidal → ∀ (g : �
     obtain ⟨Q', hQ', hWQ⟩ := hall _ hW
     have e1 : P = Q := huniq P Q _ ((hasCuspLabel_iff t ht ζ hζ V hV P).1 hP) (hVQ ▸ (hτ Q hQ).1)
     have e2 : P = Q' := huniq P Q' _ ((hasCuspLabel_iff t ht ζ hζ W hW P).1 hP') (hWQ ▸ (hτ Q' hQ').1)
-    refine nonempty_iso_of_character V W ?_
-    exact hVQ.trans ((e1.symm.trans e2) ▸ hWQ.symm)
+    exact nonempty_iso_of_character V W (hVQ.trans ((e1.symm.trans e2) ▸ hWQ.symm))
 
 end GlobalTheory.GreenParam

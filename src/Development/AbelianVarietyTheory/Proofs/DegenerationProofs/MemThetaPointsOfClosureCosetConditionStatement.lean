@@ -223,8 +223,7 @@ theorem exists_homogeneous_lift_nat_mul {R F J : Type*} [CommRing R] [CommRing F
   · refine MvPolynomial.IsHomogeneous.sum _ _ _ fun s hs => ?_
     refine MvPolynomial.isHomogeneous_monomial _ ?_
     have := hG (MvPolynomial.mem_support_iff.1 hs)
-    rw [Finsupp.degree_eq_weight_one]
-    exact this
+    rwa [Finsupp.degree_eq_weight_one]
 
   · rw [map_sum]
     conv_rhs => rw [G.as_sum, Finset.mul_sum]
@@ -259,8 +258,7 @@ theorem cone_closure_arc_of_integral_image_reduction :
     exact (mul_eq_zero.1 key).resolve_left (Nat.cast_ne_zero.2 hn.ne'))
   refine ⟨i, W, inferInstance, inferInstance, inferInstance, inferInstance, f, s, w', h1, h2, fun r => ?_, h4⟩
   have := h3 (φ' r)
-  rw [← hχ' i, ← hψ']
-  exact this
+  rwa [← hχ' i, ← hψ']
 
 end GlobalTheory
 end -- clump:auto
@@ -365,8 +363,7 @@ theorem exists_full_over (t : SAB H S) {B L : Type} [Field B] [CharZero B] [Fiel
     · rw [← hw, ← hw, ← Category.assoc, h1]
       simp only [Category.assoc]
     · have := h2 (a, b)
-      rw [map_fnOn g _ β' hβ', map_zpow, Category.assoc, Category.assoc, hw, hw] at this
-      exact this
+      rwa [map_fnOn g _ β' hβ', map_zpow, Category.assoc, Category.assoc, hw, hw] at this
   · rintro ⟨h1, h2⟩
     obtain ⟨z, hz, -⟩ := R.2.2.2.2 _ α' hadd hpow
     let c : Over.mk x ⟶ C := Over.homMk (pullback.lift x (spMap β') (by rw [hx, spMap_comp'']))
@@ -793,7 +790,7 @@ theorem exists_complete_discreteValuationRing_of_mem_closure_cones :
       (algebraMap F (A i) x))) = f (Ideal.Quotient.mk P (algebraMap K _ (algebraMap F K x)))
     rw [AlgHom.commutes, ← IsScalarTower.algebraMap_apply]
   · exfalso
-    push_neg at hex
+    push Not at hex
     choose G d hG hG0 hGv using hex
     have : ∀ i, Finite (minimalPrimes (K ⊗[F] A i)) := fun i =>
       (minimalPrimes.finite_of_isNoetherianRing _).to_subtype
@@ -1097,8 +1094,7 @@ theorem exists_trait : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.
     rw [hj, ← hg', (hw _).1, map_mul]
     rfl
   · have := hres (j (w' (q a) - algebraMap K W (v (r (q a))))) (by rw [hj]; exact hext.2 _ (hw _).2)
-    rw [map_sub, map_sub, sub_eq_zero, hvr] at this
-    exact this
+    rwa [map_sub, map_sub, sub_eq_zero, hvr] at this
   · have := hjK (MvPolynomial.X 1)
     simp only [χ₀, MvPolynomial.coe_eval₂Hom, MvPolynomial.eval₂_X] at this
     exact this

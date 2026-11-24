@@ -156,8 +156,7 @@ theorem exists_numerator : ∀ (E : Type) [Field E] [NumberField E] (σ : 𝓞 E
     constructor
     · rintro ⟨y, hy, rfl⟩
       simpa [hσ] using hy
-    · intro h
-      exact ⟨σ x, h, hσ x⟩
+    · exact fun h => ⟨σ x, h, hσ x⟩
   set s := hfin.toFinset with hsdef
   have hs : ∀ Q, Q ∉ s → (δ Q).toNat = 0 := fun Q hQ => by
     have : δ Q = 0 := by simpa [hsdef] using hQ
@@ -165,8 +164,7 @@ theorem exists_numerator : ∀ (E : Type) [Field E] [NumberField E] (σ : 𝓞 E
   set cc : Ideal (𝓞 E) := ∏ Q ∈ s, Q.asIdeal ^ (δ Q).toNat with hcc
   have hbar : cc.map (σ : 𝓞 E →+* 𝓞 E) = ∏ Q ∈ s, (cp Q).asIdeal ^ (δ Q).toNat := by
     have := map_prod (Ideal.mapHom (σ : 𝓞 E →+* 𝓞 E)) (fun Q => Q.asIdeal ^ (δ Q).toNat) s
-    simp only [map_pow, Ideal.mapHom_apply, hmap] at this
-    exact this
+    simpa only [map_pow, Ideal.mapHom_apply, hmap] using this
   have h0 : cc ≠ ⊥ := Finset.prod_ne_zero_iff.2 fun Q _ => pow_ne_zero _ Q.ne_bot
   have h0' : cc.map (σ : 𝓞 E →+* 𝓞 E) ≠ ⊥ := by
     rw [hbar]

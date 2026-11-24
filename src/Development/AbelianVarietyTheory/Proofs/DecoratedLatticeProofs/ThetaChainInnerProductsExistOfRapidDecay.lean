@@ -214,15 +214,13 @@ theorem metEx : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, MetEx D :=
         funext g
         rw [val_tprod, val_tprod, mul_comm, starRingEnd_apply]
       refine ⟨?_, ?_⟩
-      · rw [e]
-        exact h1
+      · rwa [e]
       · rw [e, h2, hpure]
     refine ⟨ipD, LinearMap.mk₂'ₛₗ (RingHom.id ℂ) (starRingEnd ℂ)
       (fun x y : s.CC c => ipM s.M s.ν s.fd (PiTensorProduct.lift.symm (y : SmT s.M →ₗ[ℂ] (GA D s.V → ℂ)))
         (PiTensorProduct.lift.symm (x : SmT s.M →ₗ[ℂ] (GA D s.V → ℂ)))) ?_ ?_ ?_ ?_, ?_⟩
     · intro x x' y
-      simp only [Submodule.coe_add, map_add (f := _)]
-      exact hadd _ (hmem y) _ (hmem x) _ (hmem x')
+      simpa only [Submodule.coe_add, map_add (f := _)] using hadd _ (hmem y) _ (hmem x) _ (hmem x')
     · intro a x y
       simp only [Submodule.coe_smul, map_smul, RingHom.id_apply, smul_eq_mul]
       exact hsmul _ (hmem y) _ (hmem x) a
@@ -244,13 +242,11 @@ theorem metEx : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, MetEx D :=
         apply Subtype.ext
         rw [Submodule.coe_zero]
         exact (LinearEquiv.map_eq_zero_iff _).1 h0
+      · exact fun x y w w' => (hIP x y w w').1
       · intro x y w w'
-        exact (hIP x y w w').1
-      · intro x y w w'
-        simp only [Lift.pet, LinearMap.mk₂'ₛₗ_apply]
-        exact (hIP x y w w').2
+        simpa only [Lift.pet, LinearMap.mk₂'ₛₗ_apply] using (hIP x y w w').2
   ·
-    push_neg at hsm
+    push Not at hsm
     obtain ⟨τ₀, hτ₀⟩ := hsm
     have htp : ∀ v : s.M.Vec, PiTensorProduct.tprod ℂ v = 0 := by
       intro v

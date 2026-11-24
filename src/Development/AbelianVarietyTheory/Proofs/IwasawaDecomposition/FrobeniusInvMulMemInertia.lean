@@ -90,8 +90,7 @@ theorem frob_inv_mul_mem_inertia : ∀ (E Ω : Type) [Field E] [NumberField E] [
   have hxA : x ∈ A := A.valuation_le_one_iff x |>.mp hx
   set z := (τ'⁻¹ : G E Ω) (τ x) with hz
   have hzA : z ∈ A := by
-    rw [hz, apply_mem_iff_of_mem_Dec ((Dec (F := E) A).inv_mem hτ'D), apply_mem_iff_of_mem_Dec hτD]
-    exact hxA
+    rwa [hz, apply_mem_iff_of_mem_Dec ((Dec (F := E) A).inv_mem hτ'D), apply_mem_iff_of_mem_Dec hτD]
   have hτ'z : τ' z = τ x := mul_inv_apply (τ x)
   have h1 := hτ'F z ((A.valuation_le_one_iff z).mpr hzA)
   rw [hτ'z] at h1
@@ -108,8 +107,7 @@ theorem frob_inv_mul_mem_inertia : ∀ (E Ω : Type) [Field E] [NumberField E] [
   have hinj := iterateFrobenius_inj (IsLocalRing.ResidueField A) p (n : ℕ)
   have heq : IsLocalRing.residue A ⟨z, hzA⟩ = IsLocalRing.residue A ⟨x, hxA⟩ := by
     apply hinj
-    rw [iterateFrobenius_def, iterateFrobenius_def]
-    exact hres
+    rwa [iterateFrobenius_def, iterateFrobenius_def]
   have hzx : (⟨z, hzA⟩ - ⟨x, hxA⟩ : A) ∈ IsLocalRing.maximalIdeal A := by
     rw [← IsLocalRing.residue_eq_zero_iff, map_sub, heq, sub_self]
   have := (ValuationSubring.valuation_lt_one_iff A _).mp hzx

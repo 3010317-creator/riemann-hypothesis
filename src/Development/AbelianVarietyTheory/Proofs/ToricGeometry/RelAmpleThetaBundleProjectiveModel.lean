@@ -70,8 +70,7 @@ theorem opens_le_of_points {Y : Scheme.{0}} (p : Y ⟶ Sp ℂ) [LocallyOfFiniteT
 
 theorem top_le_preimage_iSup {Y : Scheme.{0}} (x : Sp ℂ ⟶ Y) {κ : Type} (U : κ → Y.Opens) :
     ⊤ ≤ x ⁻¹ᵁ (⨆ k, U k) ↔ ∃ k, ⊤ ≤ x ⁻¹ᵁ U k := by
-  simp only [top_le_preimage_iff_mem]
-  exact TopologicalSpace.Opens.mem_iSup
+  simpa only [top_le_preimage_iff_mem] using TopologicalSpace.Opens.mem_iSup
 
 theorem top_le_preimage_wchart {X Y : Scheme.{0}} (L : LB X) (φ : Y ⟶ X) {N : ℕ} (j : Fin N → L.ι) (x : Sp ℂ ⟶ Y) :
     ⊤ ≤ x ⁻¹ᵁ (LB.LinComb L (K := Fin N) (fun _ => φ) (fun _ => 1)).U j ↔ ∀ k, ⊤ ≤ (x ≫ φ) ⁻¹ᵁ L.U (j k) := by
@@ -187,8 +186,7 @@ theorem relAmple_of_values
     intro c x z hz
     refine (top_le_preimage_iSup x _).trans ⟨fun ⟨j, hj⟩ => ?_, fun h => ?_⟩
     · have h1 := (top_le_preimage_basicOpen_iff x _ _).1 hj
-      have h2 := hv c j x z hz (top_le_preimage_of_valAt'_ne_zero x h1)
-      exact left_ne_zero_of_mul (h2 ▸ h1)
+      exact left_ne_zero_of_mul ((hv c j x z hz (top_le_preimage_of_valAt'_ne_zero x h1)) ▸ h1)
     · obtain ⟨i, hi⟩ := (top_le_preimage_iSup (ex z).left L.U).1 (by rw [hL.cover]; exact le_top)
       refine ⟨fun _ => i, (top_le_preimage_basicOpen_iff x _ _).2 ?_⟩
       refine (hv c (fun _ => i) x z hz ((hch x z hz _).2 fun _ => hi)).trans_ne ?_

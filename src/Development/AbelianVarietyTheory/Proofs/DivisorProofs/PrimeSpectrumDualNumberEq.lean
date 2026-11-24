@@ -77,8 +77,7 @@ theorem exists_isFrame_dOn {k : Type} [CommRing k] {Y : Scheme.{0}} (p : Y ⟶ S
     (Scheme.ΓSpecIso (CommRingCat.of k)).symm.commRingCatIsoToRingEquiv
     (h t t.2 Γ(Y, Y.basicOpen (t : Γ(Y, V))))
   have h₂ : (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p (Y.basicOpen (t : Γ(Y, V)))).IsStandardSmoothOfRelativeDimension D := by
-    rw [← resG_comp_algX p (Y.basicOpen_le (t : Γ(Y, V)))]
-    exact h₁
+    rwa [← resG_comp_algX p (Y.basicOpen_le (t : Γ(Y, V)))]
   obtain ⟨f, hf⟩ := exists_isFreeGen_dForm h₂
   exact ⟨_, f, hxt, IsAffineOpen.basicOpen hV _, hf⟩
 
@@ -112,8 +111,7 @@ theorem exists_tanLift {L : Type} [Field L] [Algebra c.F L] {Q : FrPt Xo c L} {v
   have e := (X.ptY_frMap hd).trans hz.symm
   have hU : ⊤ ≤ (z ≫ M.σ) ⁻¹ᵁ U₀ X Z := fun s _ => by
     have := ho (Set.mem_univ s)
-    rw [M.off_eq] at this
-    exact this
+    rwa [M.off_eq] at this
   have hb : ⊤ ≤ X.ptY v ⁻¹ᵁ (inc₀ X Z).opensRange := le_preimage_of_dualNumber _ _ _ (by
     rw [e]
     rintro s -

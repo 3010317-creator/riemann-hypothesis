@@ -128,8 +128,7 @@ theorem pull_law : ∀ Λ : AddSubgroup ℂ, IsLat Λ → ∀ t₀ : ℂ, 2 * t�
     ring_nf
     simp
   have hne : ∃ z, sgStar Λ z ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have hd := (GlobalTheory.OddTheta.sgStar_laws Λ hΛ).1.2.1
     rw [show sgStar Λ = fun _ => 0 from funext h] at hd
     simp at hd
@@ -335,8 +334,7 @@ theorem U1_sgStar_pow_eight : ∀ Λ : AddSubgroup ℂ, IsLat Λ → ∀ t : ℂ
 
   have hA : HasDerivAt (fun z => sgStar Λ (2 * z)) (deriv (sgStar Λ) (2 * t) * 2) t := by
     have := (hd (2 * t)).hasDerivAt.comp t ((hasDerivAt_id t).const_mul (2 : ℂ))
-    rw [mul_one] at this
-    exact this
+    rwa [mul_one] at this
   have hB : HasDerivAt (fun z => -(L.derivWeierstrassP z) * sgStar Λ z ^ 4)
       (-(6 * L.weierstrassP t ^ 2 - L.g₂ / 2) * sgStar Λ t ^ 4 +
         -(L.derivWeierstrassP t) * ((4 : ℕ) * sgStar Λ t ^ (4 - 1) * deriv (sgStar Λ) t)) t :=
@@ -450,8 +448,7 @@ theorem lattice_torsion_two_mul {Λ : AddSubgroup ℂ} {v : ℂ} (hv : InRationa
 
 theorem sigmaStarTranslate_zero_ne_zero_off_lattice {Λ : AddSubgroup ℂ} (h : IsLat Λ) {v : ℂ} (hv : v ∉ Λ) :
     U1 Λ v (sgStar Λ) 0 ≠ 0 := by
-  simp only [U1, zero_add]
-  exact mul_ne_zero ((h.sg_eq_zero v).not.2 hv) (Complex.exp_ne_zero _)
+  simpa only [U1, zero_add] using mul_ne_zero ((h.sg_eq_zero v).not.2 hv) (Complex.exp_ne_zero _)
 
 theorem dbl_complex {Λ : AddSubgroup ℂ} (h : IsLat Λ) {v : ℂ} (hv : v ∉ Λ) (h2v : 2 * v ∉ Λ) :
     wpF Λ (2 * v) * (4 * wpF Λ v ^ 3 - g2 Λ * wpF Λ v - g3 Λ) =
@@ -562,9 +559,9 @@ theorem mu_add (D : D7) (p : ℕ) [Fact p.Prime] (cc : Ideal (𝓞 D.host.K)) (�
     (hg : GL3Theta.At D cc δ g) (v ω : ℂ) (hv : InRationalLattice g.abelian₂ v) (hω : ω ∈ g.abelian₂) : mu g (v + ω) = mu g v := by
   obtain ⟨hlat, -⟩ := setup D p cc δ g hg
   by_cases hv0 : v ∈ g.abelian₂
-  · rw [mu, mu, if_pos (add_mem hv0 hω), if_pos hv0]
+  · rw [mu, mu, ite_eq_left (add_mem hv0 hω), ite_eq_left hv0]
   · have h1 : v + ω ∉ g.abelian₂ := fun h => hv0 (by simpa using sub_mem h hω)
-    rw [mu, mu, if_neg h1, if_neg hv0, GlobalTheory.ThetaTransl.cval_norm_periodic D p cc δ g hg v ω hv hω]
+    rw [mu, mu, ite_eq_right h1, ite_eq_right hv0, GlobalTheory.ThetaTransl.cval_norm_periodic D p cc δ g hg v ω hv hω]
     congr 3
     rw [xAt, xAt, hlat.wpF_add_of_mem hω]
 
@@ -572,10 +569,10 @@ theorem mu_two (D : D7) (p : ℕ) [Fact p.Prime] (cc : Ideal (𝓞 D.host.K)) (�
     (hg : GL3Theta.At D cc δ g) (v : ℂ) (hv : InRationalLattice g.abelian₂ v) : mu g (2 * v) = mu g v ^ 4 := by
   by_cases hv0 : v ∈ g.abelian₂
   · have h2 : 2 * v ∈ g.abelian₂ := by rw [two_mul]; exact add_mem hv0 hv0
-    rw [mu, mu, if_pos h2, if_pos hv0, one_pow]
+    rw [mu, mu, ite_eq_left h2, ite_eq_left hv0, one_pow]
   by_cases h2v : 2 * v ∈ g.abelian₂
-  · rw [mu, mu, if_pos h2v, if_neg hv0, mu_two_tors D p cc δ g hg v hv hv0 h2v]
-  · rw [mu, mu, if_neg h2v, if_neg hv0, mu_double D p cc δ g hg v hv hv0 h2v]
+  · rw [mu, mu, ite_eq_left h2v, ite_eq_right hv0, mu_two_tors D p cc δ g hg v hv hv0 h2v]
+  · rw [mu, mu, ite_eq_right h2v, ite_eq_right hv0, mu_double D p cc δ g hg v hv hv0 h2v]
 
 theorem mu_pow_two (D : D7) (p : ℕ) [Fact p.Prime] (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (g : GL3Theta.G1 p)
     (hg : GL3Theta.At D cc δ g) (v : ℂ) (hv : InRationalLattice g.abelian₂ v) (k : ℕ) :
@@ -637,7 +634,7 @@ theorem height_one : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (cc : Ideal (𝓞 D.h
     rcases lt_or_gt_of_ne hab with hlt | hlt
     · exact step a b hlt he
     · exact step b a hlt he.symm
-  rwa [mu, if_neg hv0] at h
+  rwa [mu, ite_eq_right hv0] at h
 
 end GlobalTheory.TorsionHeight
 end -- clump:auto
@@ -882,8 +879,7 @@ theorem pull_back_split : ∀ (D : D7), Inp D → ∀ (p : ℕ) [Fact p.Prime] (
         fun z : ℂ => A ((N : ℂ) * z) * A (-1 * ((N : ℂ) * z)) := by
       funext z
       rw [mul_left_comm (N : ℂ)]
-    rw [e]
-    exact this
+    rwa [e]
 
 end GlobalTheory.PullBackSplit
 end -- clump:auto
@@ -907,7 +903,7 @@ variable {p : ℕ} [Fact p.Prime]
 
 theorem lamC_natCast (lam : Qbar →+* ℂ_[p]) (n : ℕ) : lamC lam (n : ℂ) = n := by
   have h : (n : ℂ) ∈ Qbar := natCast_mem _ n
-  simp only [lamC, dif_pos h]
+  simp only [lamC, dite_eq_left h]
   rw [← map_natCast lam n]; rfl
 
 theorem iteratedDeriv_scale (G : ℂ → ℂ) (c : ℂ) (n : ℕ) :
@@ -923,8 +919,7 @@ theorem deriv_mem_iff (G : ℂ → ℂ) (n : ℕ) : iteratedDeriv n G 0 ∈ Qbar
   have h : ((n.factorial : ℕ) : ℂ) ∈ Qbar := natCast_mem _ _
   have h0 : ((n.factorial : ℕ) : ℂ) ≠ 0 := by exact_mod_cast n.factorial_ne_zero
   constructor
-  · intro hG
-    exact div_mem hG h
+  · exact fun hG => div_mem hG h
   · intro hG
     have := mul_mem h hG
     rwa [coef1, mul_div_cancel₀ _ h0] at this
@@ -1055,8 +1050,7 @@ theorem jet_translate_le : ∀ (D : D7), Inp D → ∀ (p : ℕ) [Fact p.Prime] 
         exact mul_le_one₀ (pow_le_one₀ hN0.le hN1) (norm_nonneg _) (hD _ h0 j)
     rw [key] at hle
     refine le_trans ?_ (le_mul_of_one_le_right (by positivity) hfac)
-    rw [inv_pow, ← mul_one (_ ^ n)⁻¹, le_inv_mul_iff₀ (by positivity)]
-    exact hle
+    rwa [inv_pow, ← mul_one (_ ^ n)⁻¹, le_inv_mul_iff₀ (by positivity)]
   · have hc : Nat.Coprime N p := ((Nat.Prime.coprime_iff_not_dvd hp.out).2 hpN).symm
     rw [norm_natCast_of_coprime hpN, inv_one, one_pow, one_mul, ← norm_jet_atU g hOk hu _ n (halg n)]
     by_cases hp2 : p = 2
@@ -1152,8 +1146,7 @@ theorem AlgLe.add {x y : ℂ} {t : ℝ} (h : AlgLe lam x t) (h' : AlgLe lam y t)
 
 theorem AlgLe.zero {t : ℝ} (ht : 0 ≤ t) : AlgLe lam 0 t := by
   refine ⟨zero_mem _, ?_⟩
-  rw [← ZeroMemClass.coe_zero Qbar, lamC_coe, map_zero, norm_zero]
-  exact ht
+  rwa [← ZeroMemClass.coe_zero Qbar, lamC_coe, map_zero, norm_zero]
 
 theorem AlgLe.one : AlgLe lam 1 1 := by
   refine ⟨one_mem _, ?_⟩

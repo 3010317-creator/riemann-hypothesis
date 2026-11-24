@@ -111,8 +111,7 @@ private theorem ce_lim {D W R : Type} [Group D] [TopologicalSpace D] [Group W] [
       ((hφc n).comp _) (hφc m) (fun s => by
         show Ideal.Quotient.factor hle (φ n (i s)) = φ m (i s)
         rw [hφs n s, hφs m s, Ideal.Quotient.factor_mk])
-    intro g
-    exact (congrFun hfun g).trans (congrFun h2 g)
+    exact fun g => (congrFun hfun g).trans (congrFun h2 g)
   have hlim : ∀ g, ∃ L : R, ∀ n, Ideal.Quotient.mk (I ^ n) L = φ n g := by
     intro g
     obtain ⟨L, hL⟩ := IsPrecomplete.prec' (I := I) (fun n => r n g) (fun {m n} hmn => by
@@ -157,8 +156,7 @@ private theorem ce_open {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alge
   obtain ⟨O, hOo, hOeq⟩ := isOpen_induced_iff.mp hO
   have h1O : (1 : G F Ω) ∈ O := by
     have : (1 : Ine (F := F) A) ∈ {σ : Ine (F := F) A | χ (ineIncl h σ) = 1} := by simp
-    rw [← hOeq] at this
-    exact this
+    rwa [← hOeq] at this
   obtain ⟨U, hUO⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hOo h1O
   haveI hUfi : U.toSubgroup.FiniteIndex := U.toOpenSubgroup.finiteIndex_of_finite_quotient
   have he : U.toSubgroup.index ≠ 0 := Subgroup.FiniteIndex.index_ne_zero

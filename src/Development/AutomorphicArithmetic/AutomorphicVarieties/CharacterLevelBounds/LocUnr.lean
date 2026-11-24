@@ -100,8 +100,7 @@ theorem UpperTheory.V.Chr.locUnr :
       have hkk : (ψ⁻¹).ker = ψ.ker := by
         ext g
         simp [MonoidHom.mem_ker]
-      rw [hkk]
-      exact hopen
+      rwa [hkk]
     exact (contTw ℚ Ω l).2.2 O ψ⁻¹ (-(e : ℤ)) hk
   have hK := kerResCyc O (G ℚ Ω) (QO l O) (rho l e ψ) hcont (Ine (F := ℚ) A) (Dec (F := ℚ) A) h γ hγ hcl
   have hact : ∀ g m, rho l e ψ g m = (((ψ g)⁻¹ * (chiO ℚ Ω l O g) ^ (-(e : ℤ)) : Oˣ) : O) • m := by
@@ -140,8 +139,7 @@ theorem UpperTheory.V.Chr.locUnr :
       have hv := congrArg (fun u : Oˣ => (u : O)) key
       simp only [Units.val_pow_eq_pow_val, hchiγ, Units.val_one] at hv
       have hv' : ((p ^ (e * n) : ℕ) : O) = ((1 : ℕ) : O) := by push_cast; exact hv
-      have hnat := Nat.cast_injective hv'
-      exact absurd hnat (Nat.one_lt_pow (Nat.mul_ne_zero he hn) hp.one_lt).ne'
+      exact absurd (Nat.cast_injective hv') (Nat.one_lt_pow (Nat.mul_ne_zero he hn) hp.one_lt).ne'
     obtain ⟨m', hm'⟩ := (qoFacts l O).2.2.1 ((c : O) - 1) hc1 m
     refine ⟨m', ?_, ?_⟩
     · rw [H0U, mem_riemannRochSpace_iff_regularAt_everywhere]
@@ -180,7 +178,6 @@ theorem UpperTheory.V.Chr.locUnr :
     have hmono : H0U (rho l e ψ) (Dec (F := ℚ) A) ≤ H0U (rho l e ψ) (Ine (F := ℚ) A) := by
       intro m hm
       rw [H0U, mem_riemannRochSpace_iff_regularAt_everywhere] at hm ⊢
-      intro g
-      exact hm ⟨g, h g.2⟩
+      exact fun g => hm ⟨g, h g.2⟩
     exact (hK.1 hfin).trans ((Module.length_le_of_injective (Submodule.inclusion hmono)
       (Submodule.inclusion_injective hmono)).trans hbound)

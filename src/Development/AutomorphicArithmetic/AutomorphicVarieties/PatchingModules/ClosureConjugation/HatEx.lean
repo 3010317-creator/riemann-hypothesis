@@ -167,7 +167,6 @@ theorem UpperTheory.V.Pa.gens_kill :
   haveI := IsCO.complete (O := O) (R := B)
   haveI : CompactSpace G.frame.G₀ := by
     haveI := G.frame.cpt
-    show CompactSpace G.frame.η.ker
     exact isCompact_iff_compactSpace.mp (Subgroup.isClosed_of_isOpen _ G.frame.η_open).isCompact
   obtain ⟨hss, -, -, -, h1, hsub, -⟩ := star_basic G.frame n O B
   have htr : ∀ y, u.D.Kills y ↔ ∀ g, u.D.tr (MonoidAlgebra.single g 1 * y) = 0 :=
@@ -183,13 +182,11 @@ theorem UpperTheory.V.Pa.gens_kill :
     rw [hsub, h1] at hk
     refine ⟨hk, Or.inl (Or.inr ⟨w, g, hg, Or.inl ?_⟩)⟩
     rw [hsub, hss, h1]
-  · have hk := (htr _).2 (P.q1 j)
-    exact ⟨hk, Or.inr (Or.inl ⟨j, Or.inr rfl⟩)⟩
+  · exact ⟨((htr _).2 (P.q1 j)), Or.inr (Or.inl ⟨j, Or.inr rfl⟩)⟩
   · have hk := hks _ ((htr _).2 (P.q1 j))
     refine ⟨hk, Or.inr (Or.inl ⟨j, Or.inl ?_⟩)⟩
     rw [hss]
-  · have hk := (htr _).2 (P.q2 j i)
-    exact ⟨hk, Or.inr (Or.inr ⟨j, i, Or.inr rfl⟩)⟩
+  · exact ⟨((htr _).2 (P.q2 j i)), Or.inr (Or.inr ⟨j, i, Or.inr rfl⟩)⟩
   · have hk := hks _ ((htr _).2 (P.q2 j i))
     refine ⟨hk, Or.inr (Or.inr ⟨j, i, Or.inl ?_⟩)⟩
     rw [hss]
@@ -253,8 +250,7 @@ theorem UpperTheory.V.CA.f_rep :
       · rw [map_sub, map_one, sub_eq_zero, ← φ.map_one]
         ext i j
         have := Set.mem_iInter.1 (Set.mem_iInter.1 (hH hh) i) j
-        rw [hφ, hφ, map_one, MonoidAlgebra.lift_single, one_smul, ← ρ.map_one]
-        exact this
+        rwa [hφ, hφ, map_one, MonoidAlgebra.lift_single, one_smul, ← ρ.map_one]
     have := congrFun (congrFun ((TwoSidedIdeal.mem_ker φ).1 (hle hz)) a) b
     rw [hφ] at this
     exact Ideal.Quotient.eq_zero_iff_mem.1 this
@@ -391,8 +387,7 @@ theorem UpperTheory.V.Pa.rep_gens :
     rw [map_list_prod, List.map_ofFn]
     rfl
   have hφ : ∀ v (g : L.Gv v), h.p₀ (G.frame.φ v g) = G0.frame.φ v g := by
-    intro v g
-    exact Subtype.ext (h.φ v g)
+    exact fun v g => Subtype.ext (h.φ v g)
   have kOrd : ∀ v g, P.rep (G.frame.oEl v (u.ψ v) g) = 0 := by
     intro v g
     rw [GFrame.oEl, hL]
@@ -467,8 +462,7 @@ theorem UpperTheory.V.Pa.rep_quot :
     haveI := (f_surj P).2
     exact (mem_maximalIdeal _).mp hb (isUnit_of_map_unit P.f.toRingHom b hu)
   have h2 : ∀ a b : Fin n, AdicCont (maximalIdeal x.A) fun g ↦ (mat (x.ρ.comp h.p₀)) g a b := by
-    intro a b N
-    exact (x.cont a b N).comp_continuous hp
+    exact fun a b N => (x.cont a b N).comp_continuous hp
   have h3 : u.D.map (algebraMap B x.A) = GDet.ofRep (mat (x.ρ.comp h.p₀)) := P.maps.1
   have h4 : ∀ z ∈ P.gens,
       MonoidAlgebra.lift B (Matrix (Fin n) (Fin n) x.A) G.G₀ (mat (x.ρ.comp h.p₀)) z = 0 := by
@@ -634,13 +628,9 @@ theorem UpperTheory.V.Pa.star_closure :
   set T := TwoSidedIdeal.span (S ∪ {z : MonoidAlgebra R F.G₀ | ∃ a ∈ I ^ N, z = MonoidAlgebra.single 1 a} ∪
     {z : MonoidAlgebra R F.G₀ | ∃ h ∈ H, z = MonoidAlgebra.single h 1 - 1}) with hT
   have hJ : ∀ a ∈ I ^ N, MonoidAlgebra.single (1 : F.G₀) a ∈ T := by
-    intro a ha
-    apply TwoSidedIdeal.subset_span
-    exact Or.inl (Or.inr ⟨a, ha, rfl⟩)
+    exact fun a ha => TwoSidedIdeal.subset_span (Or.inl (Or.inr ⟨a, ha, rfl⟩))
   have hKH : ∀ h ∈ H, MonoidAlgebra.single h (1 : R) - 1 ∈ T := by
-    intro h hh
-    apply TwoSidedIdeal.subset_span
-    exact Or.inr ⟨h, hh, rfl⟩
+    exact fun h hh => TwoSidedIdeal.subset_span (Or.inr ⟨h, hh, rfl⟩)
   have hST : TwoSidedIdeal.span S ≤ T := by
     rw [TwoSidedIdeal.span_le]
     exact (Set.subset_union_left.trans Set.subset_union_left).trans TwoSidedIdeal.subset_span
@@ -720,12 +710,9 @@ theorem UpperTheory.V.Pa.trinv :
     rw [Submodule.eq_top_iff']
     intro x
     refine MonoidAlgebra.induction_on x ?_ ?_ ?_
-    · intro m
-      exact Submodule.subset_span ⟨m, rfl⟩
-    · intro x y hx hy
-      exact Submodule.add_mem _ hx hy
-    · intro b x hx
-      exact Submodule.smul_mem _ b hx
+    · exact fun m => Submodule.subset_span ⟨m, rfl⟩
+    · exact fun x y hx hy => Submodule.add_mem _ hx hy
+    · exact fun b x hx => Submodule.smul_mem _ b hx
   have hlam : ∀ x ∈ MonoidHom.mrange (MonoidAlgebra.of B F.G₀), ∀ i : ℕ, 1 ≤ i → i ≤ n →
       u.D.toDet.lam i (MulOpposite.unop (F.starOp O B n x)) = u.D.toDet.lam i x := by
     rintro _ ⟨g, rfl⟩ i _ _
@@ -844,8 +831,8 @@ theorem UpperTheory.V.Pa.hat_ex :
     rw [hrep, map_one, map_one, Matrix.smul_apply, Matrix.algebraMap_matrix_apply]
     by_cases hij : i = j
     · subst hij
-      rw [Matrix.one_apply_eq, if_pos rfl, hB, smul_eq_mul, mul_one]
-    · rw [Matrix.one_apply_ne hij, if_neg hij, smul_zero, map_zero]
+      rw [Matrix.one_apply_eq, ite_eq_left rfl, hB, smul_eq_mul, mul_one]
+    · rw [Matrix.one_apply_ne hij, ite_eq_right hij, smul_zero, map_zero]
   have hφ : PhiCond G.frame.G₀ l := phi_fg _ P.fg
   have hn : 1 ≤ n := le_trans x.a_pos x.a_le
   haveI : IsAdicComplete (maximalIdeal B) B := IsCO.complete (O := O)

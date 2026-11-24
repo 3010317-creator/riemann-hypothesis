@@ -102,7 +102,6 @@ theorem evI_mul' (a b : AF F) : evI F (a * b) = evI F a * evI F b := by
   rw [map_mul]
 
 theorem evI_realAd' (r : ℝ) : evI F (realAd F r) = algebraMap ℝ _ r := by
-  show InfiniteAdeleRing.ringEquiv_mixedSpace F ((InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (algebraMap ℝ _ r)) = _
   exact RingEquiv.apply_symm_apply _ _
 
 theorem smul_ptAt (u : AF F) (x : κ → mixedEmbedding.mixedSpace F) :
@@ -112,8 +111,7 @@ theorem smul_ptAt (u : AF F) (x : κ → mixedEmbedding.mixedSpace F) :
   · show u.1 * (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (x i) =
       (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (InfiniteAdeleRing.ringEquiv_mixedSpace F u.1 * x i)
     rw [map_mul, RingEquiv.symm_apply_apply]
-  · show u.2 * 0 = 0
-    exact mul_zero _
+  · exact mul_zero _
 
 theorem ptAt_add (x y : κ → mixedEmbedding.mixedSpace F) :
     GlobalTheory.RealLift.ptAt (x + y) 0 = GlobalTheory.RealLift.ptAt x 0 + GlobalTheory.RealLift.ptAt y 0 := by
@@ -128,8 +126,7 @@ theorem ptAt_add (x y : κ → mixedEmbedding.mixedSpace F) :
 theorem ptAt_zero : GlobalTheory.RealLift.ptAt (0 : κ → mixedEmbedding.mixedSpace F) 0 = 0 := by
   funext i
   refine Prod.ext ?_ ?_
-  · show (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm 0 = 0
-    exact map_zero _
+  · exact map_zero _
   · rfl
 
 end Coords
@@ -232,8 +229,7 @@ theorem sgnAd_mul_self (ε ε' : InfinitePlace F → ℤˣ) : sgnAd ε ε' * sgn
   refine Prod.ext (funext fun w => ?_) ?_
   · show (if ε w = ε' w then (0 : w.Completion) else 1) * (if ε w = ε' w then 0 else 1) = if ε w = ε' w then 0 else 1
     split_ifs <;> simp
-  · show (0 : IsDedekindDomain.FiniteAdeleRing (𝓞 F) F) * 0 = 0
-    exact mul_zero _
+  · exact mul_zero _
 
 theorem ext_sgnAd (ε ε' : InfinitePlace F → ℤˣ) (w : InfinitePlace F) :
     InfinitePlace.Completion.extensionEmbedding w ((sgnAd ε ε').1 w) = if ε w = ε' w then 0 else 1 := by
@@ -659,7 +655,7 @@ theorem eq_sum_lineAt {θ : InfFam D} (hθ : IsInfFam θ) {m n : ℕ} {x : Mx D 
         (if t' = t then ((1 : ℝ) : ℂ) • compAt θ t x else 0) i j := fun t => congrFun (congrFun ((hL t).2.2 1 t') i) j
 
     rw [RingHom.map_sub, RingHom.map_sub, map_sum, map_sum, Finset.sum_congr rfl fun t _ => h2 t, ← Matrix.sum_apply,
-    Finset.sum_ite_eq, if_pos (Finset.mem_univ _), Complex.ofReal_one, one_smul]
+    Finset.sum_ite_eq, ite_eq_left (Finset.mem_univ _), Complex.ofReal_one, one_smul]
     exact sub_self _
 
 theorem eq_sum_dir {θ : InfFam D} (hθ : IsInfFam θ) {u : Matrix (Fin M.rank) (Fin X.rank) (AE D)}
@@ -679,7 +675,7 @@ theorem cart_frSgn (A : Fr M) (t : D.what₂.Tau) : (frSgn ε A).cart t = -((if 
       · subst h; cases h' : A.ε t a <;> simp [Formalism.REAL.Jm, h']
       · simp [Formalism.REAL.Jm, h]
     show (A.fr t)⁻¹ * Formalism.REAL.Jm (fun a => xor true (A.ε t a)) * A.fr t = _
-    rw [e', if_pos rfl, one_smul, Fr.cart, Matrix.mul_neg, Matrix.neg_mul]
+    rw [e', ite_eq_left rfl, one_smul, Fr.cart, Matrix.mul_neg, Matrix.neg_mul]
 
 theorem compAt_cplx {θ : InfFam D} (hθ : IsInfFam θ) (A : Fr M) (B : Fr X)
     {τ : ∀ w : InfinitePlace D.host.F, EmbOver D.host.E w}

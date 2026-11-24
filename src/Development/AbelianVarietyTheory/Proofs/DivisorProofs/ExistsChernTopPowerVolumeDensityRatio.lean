@@ -96,8 +96,7 @@ theorem exists_isRatio_chernInt : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [
         continuousOn_pi.2 fun a => continuousOn_pi.2 fun b => hent a b
       have hc : Continuous fun M : Matrix (Fin D) (Fin D) ℂ => (D.factorial / Real.pi ^ D : ℝ) * M.det.re :=
         continuous_const.mul (Complex.continuous_re.comp continuous_id.matrix_det)
-      refine (hc.comp_continuousOn hm).congr fun z hz => ?_
-      exact c.chernDens_eq (L.cInf σ) hz.1 hz.2
+      exact (hc.comp_continuousOn hm).congr fun z hz => c.chernDens_eq (L.cInf σ) hz.1 hz.2
     have hq : ContinuousOn (fun z => c.chernDens (L.φ σ) z / ω.dens c z) O :=
       hdet.div ((ω.cont c).mono fun z hz => hz.1) fun z hz => (ω.pos c z hz.1).ne'
     refine (hq.congr fun z hz => ?_).continuousAt (hOo.mem_nhds hyO)
@@ -141,7 +140,6 @@ theorem exists_isRatio_chernInt : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [
   change ∫ y, f y ∂ω.meas.withDensity (fun y => ((ρ y).toNNReal : ℝ≥0∞)) = _
   rw [integral_withDensity_eq_integral_smul hn]
   refine integral_congr_ae (.of_forall fun y => ?_)
-  simp only [NNReal.smul_def, Real.coe_toNNReal _ (hρ0 y), smul_eq_mul]
-  exact mul_comm _ _
+  simpa only [NNReal.smul_def, Real.coe_toNNReal _ (hρ0 y), smul_eq_mul] using mul_comm _ _
 
 end GlobalTheory.HSAmp

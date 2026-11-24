@@ -150,8 +150,7 @@ theorem ValM.exists (hL : Laws) (σ : SecM A.A A.L k (TFK (R := R) F)) {x} {e : 
   obtain ⟨c, rfl⟩ := kon_surj w
   refine ⟨c, fun z J hJ => ?_⟩
   have := ThetaPtMove.sv_of_isValueAt hw (𝟙 _) z hJ
-  rw [Category.id_comp] at this
-  exact this
+  rwa [Category.id_comp] at this
 
 theorem ValM.sum (hL : Laws) {x} {e : FrAt x} (he : e.IsGen) {J : Type} (s : Finset J)
     {σ : J → SecM A.A A.L k (TFK (R := R) F)} {c : J → F} (h : ∀ l, ValM (σ l) x e (c l)) :

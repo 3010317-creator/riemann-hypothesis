@@ -532,8 +532,7 @@ theorem bddAll_of_mem_intForms : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, 
     have := GlobalTheory.PlaceInt.evR_of_frMap_fromTest
       (GlobalTheory.Frames.algebraic_laws laws.secBaseChange _ _ _ _ (T.Q.Xo j) C.c').2.2.1 _ hgs.1 φ y.1 y.2.1 y'.1 hm
     exact this.trans (congrArg (fun r : Tv.Fr →+* T'.Fr => r (evR (T.Q.Xo j) C.c' (∑ b, x b • GlobalTheory.FieldBC.rulBC C.hle (f b)) y.1)) hφ)
-  rw [map_one, one_mul, ← GlobalTheory.CoverBound.inV_map_iff iT hext.1 hext.2.1, ← e4, ← e3]
-  exact hB
+  rwa [map_one, one_mul, ← GlobalTheory.CoverBound.inV_map_iff iT hext.1 hext.2.1, ← e4, ← e3]
 
 end GlobalTheory.CoverLocInt
 end -- clump:auto
@@ -628,8 +627,7 @@ theorem _root_.GlobalTheory.T.cuspForm_integral_lattice_unramified_descent : ∀
       let := (i.comp io).toAlgebra
       let := σ.toAlgebra
       have := key T'.Fr hσ y₂.1
-      rw [hy₂] at this
-      exact this
+      rwa [hy₂] at this
     simp only [h4]
     rw [eq_sub_of_add_eq h5.symm]
     exact Subring.sub_mem _ h1 h2
@@ -718,8 +716,7 @@ theorem exists_place_below : ∀ (K L : Type) [Field K] [NumberField K] [Field L
     rw [hmap]
     exact ⟨fun h => HeightOneSpectrum.ext h, fun h => h ▸ rfl⟩
   · show ((l : ℕ) : 𝓞 K) ∈ la.asIdeal.comap (algebraMap (𝓞 K) (𝓞 L))
-    rw [Ideal.mem_comap, map_natCast]
-    exact hl
+    rwa [Ideal.mem_comap, map_natCast]
   · intro x
     have hu := hun la rfl
     rw [hmap] at hu
@@ -760,10 +757,7 @@ theorem evR_sum_eq {D : D7} (T : CoreJ D) (j : ℕ) (σ : T.Q.c.F →+* ℂ) (C 
     (∑ b, C.σ₂ (C.d.eF (x b)) * toC (evR (T.Q.Xo j) T.Q.c (f b) y)) =
       ∑ i, C.σ₂ (C.d.eF (as i)) * toC (evR (T.Q.Xo j) T.Q.c (fs i) y) := by
   letI : Algebra C.c'.F (CAt σ) := (C.σ₂.comp (C.d.eF : C.c'.F →+* C.d.c₂.F)).toAlgebra
-  have hA : AlgOver T.Q.c C.c' C.hle (CAt σ) := by
-    intro c0
-    show C.σ₂ (C.d.eF (incF T.Q.c C.c' C.hle c0)) = σ c0
-    exact RingHom.congr_fun hσ c0
+  have hA : AlgOver T.Q.c C.c' C.hle (CAt σ) := fun c0 => RingHom.congr_fun hσ c0
   have h1 := hBC (CAt σ) hA (FrPt.ext C.hle hA y)
   rw [Formalism.L2.Pj.evR_sum_smul] at h1
   simp only [GlobalTheory.FieldBCModel.evR_rulBC C.hle (hf _).1 hA, FrPt.res_ext] at h1
@@ -776,9 +770,9 @@ theorem phiJ_sum_eq_of_isBC : ∀ (D : D7) (T : CoreJ D) (j : ℕ) (σ : T.Q.c.F
     funext k z
     simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
     by_cases h : z ∈ ((T.U j σ).X k).dom
-    · simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, dif_pos h]
+    · simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, dite_eq_left h]
       exact evR_sum_eq T j σ C hσ a n x f as fs hf hBC ((T.U j σ).un k ⟨z, h⟩)
-    · simp [rdU, dif_neg h]
+    · simp [rdU, dite_eq_right h]
   let L : FDSec (T.U j σ).X →ₗ[ℂ] (GA D (T.V j σ) → ℂ) := (lieFac (T.Q.Dw j) (xiR D) a : ℂ) •
     adel (T.V j σ) (T.dict j σ) (muPin (T.V j σ) (T.dict j σ) (T.mu j σ) (T.cE j σ))
   have e : ∀ g : T.R j, T.phiJ j σ a g = L (rdU (T.U j σ) g) := fun _ => rfl
@@ -837,8 +831,7 @@ theorem desc_loc : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Type)
   have hφ' : (∑ b, C.σ₂ (C.d.eF (x' b)) • T.phiJ ((i : ℕ) + 1) T.σ₀ (wtA (κ i)) (f b)) ∈
       C.intForms (wtA (κ i)) (κ i).n {la} := by
     simp only [hx', hfψ]
-    rw [← hsum]
-    exact hφ
+    rwa [← hsum]
   have hint := GlobalTheory.T.bounded_at_place_of_integral_cover_reading D T hL _ hj T.σ₀ T.good_σ₀ C hU (wtA (κ i)) (κ i).n (dom_wtA (κ i)) hPin la la'
     (fun y => hla' y) m x' f (fun b => (hf b).1) hφ'
   have hmem : (∑ b, x' b • GlobalTheory.FieldBC.rulBC C.hle (f b)) ∈
@@ -867,8 +860,7 @@ theorem desc_loc : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Type)
     exact (GlobalTheory.T.integral_values_algebraic_points_iff_value_nonneg _ _ _ _ _ _ _ (fs k)).1 (hfs k).2 v hv
   · rw [hsum]
     have e := GlobalTheory.T.sum_adelicReading_eq_of_two_baseChange_decomps_on_cover D T _ T.σ₀ C hU.2.2.1 (wtA (κ i)) (κ i).n m m' x' f as fs (fun b => (hf b).1) hBC
-    simp only [hx', hfψ] at e
-    exact e
+    simpa only [hx', hfψ] using e
 
 end GlobalTheory.DescLoc
 end -- clump:auto
@@ -1001,8 +993,7 @@ theorem isCoefExt_iff_c0BC (jL : D.what₂.LL →+* K') (c₀ : VsV D i D.what�
     exact ⟨⟨_, GlobalTheory.Proof.TensorMapDescent.map_mem_VV jL _ _ v.2⟩, rfl, h v _ rfl⟩
   · intro h v v' hv
     obtain ⟨w, hw, hc⟩ := h v
-    rw [show v' = w from Subtype.ext (hv.trans hw.symm)]
-    exact hc
+    rwa [show v' = w from Subtype.ext (hv.trans hw.symm)]
 
 variable (c' : VsV D i K' →ₛₗ[σ'] (R.cV i).W)
 

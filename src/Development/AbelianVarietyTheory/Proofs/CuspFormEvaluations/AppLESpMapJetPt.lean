@@ -68,8 +68,7 @@ theorem appLE_spMap_jetPt {N m : ℕ} {I : Type} {Z : Scheme.{0}} (q : (Fin N �
   have k := specMap_comp_appLE (CommRingCat.ofHom χ) (jetPt q hq m) U h hp
   rw [jetPt_appLE q hq m U hU hp, Category.assoc, Iso.inv_hom_id_assoc, ← Iso.eq_comp_inv] at k
   have k' := ConcreteCategory.congr_hom k f
-  rw [ConcreteCategory.comp_apply, ConcreteCategory.comp_apply, jetψ_apply] at k'
-  exact k'
+  rwa [ConcreteCategory.comp_apply, ConcreteCategory.comp_apply, jetψ_apply] at k'
 
 
 set_option backward.isDefEq.respectTransparency false in
@@ -98,8 +97,7 @@ theorem jetRd_pullGen : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonO
         jetOf m (fun v => ∏ k, Φ.fr (j k) (Λ k (colsOf n g v)) ^ ε k) := by
       refine jetOf_congr m ((eventually_mem q hq hU).mono fun v hv => ?_)
       have := (H v).2 j hv
-      rw [_root_.one_mul] at this
-      exact this
+      rwa [_root_.one_mul] at this
     have hf' := hf (t.s j).val
     rw [hj] at hf'
     refine Eq.trans ?_ hf'

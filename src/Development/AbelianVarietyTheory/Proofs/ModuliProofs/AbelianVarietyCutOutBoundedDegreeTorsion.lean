@@ -124,8 +124,8 @@ theorem comp_succ_mul {h : MvPolynomial σ K} (hh : h.IsHomogeneous 1) (e : ℕ)
     have h1 := isHomogeneous_monomial (d := d) c rfl
     rw [homogeneousComponent_of_mem (hh.mul h1), homogeneousComponent_of_mem h1]
     by_cases he : e = d.degree
-    · rw [if_pos he, if_pos (by omega)]
-    · rw [if_neg he, if_neg (by omega), mul_zero]
+    · rw [ite_eq_left he, ite_eq_left (by omega)]
+    · rw [ite_eq_right he, ite_eq_right (by omega), mul_zero]
   | add p q hp hq => simp [mul_add, hp, hq]
 
 theorem comp_zero_mul {h : MvPolynomial σ K} (hh : h.IsHomogeneous 1)
@@ -133,7 +133,7 @@ theorem comp_zero_mul {h : MvPolynomial σ K} (hh : h.IsHomogeneous 1)
   induction B using MvPolynomial.induction_on' with
   | monomial d c =>
     have h1 := isHomogeneous_monomial (d := d) c rfl
-    rw [homogeneousComponent_of_mem (hh.mul h1), if_neg (by omega)]
+    rw [homogeneousComponent_of_mem (hh.mul h1), ite_eq_right (by omega)]
   | add p q hp hq => rw [mul_add, map_add (f := _), hp, hq, add_zero]
 
 theorem mem_sup_span {I : Ideal (MvPolynomial σ K)} {h F : MvPolynomial σ K} :
@@ -729,8 +729,7 @@ theorem sub_rename_mem_span_degree {K σ : Type*} [Field K] (t : σ → σ)
       exact add_mem hx hy
   induction e, he using Nat.le_induction with
   | base =>
-    intro F hF
-    exact Ideal.subset_span ⟨hI F, hF.sub hF.rename_isHomogeneous⟩
+    exact fun F hF => Ideal.subset_span ⟨hI F, hF.sub hF.rename_isHomogeneous⟩
   | succ n hn ih =>
     intro F hF
     rw [add_comm] at hF
@@ -782,8 +781,7 @@ theorem regularity_comap_rename_of_surjective :
       apply le_antisymm
       · rintro _ ⟨F, hF, rfl⟩
         exact IsHomogeneous.rename_isHomogeneous hF
-      · intro G hG
-        exact ⟨rename s G, IsHomogeneous.rename_isHomogeneous hG, hrs G⟩
+      · exact fun G hG => ⟨rename s G, IsHomogeneous.rename_isHomogeneous hG, hrs G⟩
     have e2 : (homogeneousSubmodule σ K e ⊓ I.restrictScalars K).map
         (rename r : MvPolynomial σ K →ₐ[K] MvPolynomial σ₀ K).toLinearMap =
         homogeneousSubmodule σ₀ K e ⊓ I₀.restrictScalars K := by
@@ -876,7 +874,7 @@ theorem cutBy_of_regular_of_zeroEstimate : ∀ (K σ Hh : Type) [Field K] (I : I
     exact ⟨fun h => ⟨hzero F h.1 h.2, h.1⟩, fun h => ⟨h.2, hvan F h.1⟩⟩
   refine ⟨(hreg e (h₀.trans he)).1, fun F hF => ⟨fun hI => ?_, fun h => ?_⟩⟩
   · have h := homogeneousComponent_mul_mem_span_degree I h₀ he ((hreg e (h₀.trans he)).2 F hI hF) 1
-    rw [_root_.one_mul, MvPolynomial.homogeneousComponent_of_mem hF, if_pos rfl] at h
+    rw [_root_.one_mul, MvPolynomial.homogeneousComponent_of_mem hF, ite_eq_left rfl] at h
     rwa [hV]
   · rw [hV] at h
     exact (Ideal.span_le.2 fun G (hG : G ∈ {G : MvPolynomial σ K | G ∈ I ∧ G.IsHomogeneous d}) => hG.1) h
@@ -942,8 +940,7 @@ theorem vamp_of_comp {K σ σ₀ : Type} [Field K] {X : Scheme.{0}} (p : X ⟶ S
     obtain ⟨ha, ρ, h₁, h₂⟩ := h.2 i
     refine ⟨ha, ρ ∘ s, fun j k => ?_, fun f => ?_⟩
     · have := h₁ (s j) k
-      simp only [Function.comp_apply, hs j] at this
-      exact this
+      simpa only [Function.comp_apply, hs j] using this
     · obtain ⟨F, rfl⟩ := h₂ f
       refine ⟨MvPolynomial.rename r F, ?_⟩
       rw [MvPolynomial.eval₂_rename]
@@ -964,8 +961,7 @@ theorem secCoord_comp {σ σ₀ : Type} {X : Scheme.{0}} {M : LB X} (hM : M.IsLB
   obtain ⟨τ, hτ, h⟩ := h
   refine ⟨⟨τ, hτ, fun i j hj => ?_⟩, funext fun a => ?_⟩
   · have := h (s i) j hj
-    simp only [Function.comp_apply, hs i] at this
-    exact this
+    simpa only [Function.comp_apply, hs i] using this
   · apply (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of R)).inv).1
     refine (Sp R).IsSheaf.section_ext fun y _ => ?_
     obtain ⟨k, hk⟩ := exists_chart hM (x y)
@@ -1087,7 +1083,7 @@ theorem cutBy_idealOf_torsion : Out.Laws → Out.Laws2 → ∀ (g C : ℕ) (σ�
   · obtain ⟨b₁, b₂⟩ := hQ K _ _ d (idealOf_comp (e.hom ≫ P.A.hom) hM th₀ r hr) (Nat.le_add_left _ _) n hn
     refine ⟨b₁ (hreg n (hd.trans hn)).1, b₂ fun F hF hFn => ?_⟩
     have h := homogeneousComponent_mul_mem_span_degree _ hd hn ((hreg n (hd.trans hn)).2 F hF hFn) 1
-    rwa [_root_.one_mul, MvPolynomial.homogeneousComponent_of_mem hFn, if_pos rfl] at h
+    rwa [_root_.one_mul, MvPolynomial.homogeneousComponent_of_mem hFn, ite_eq_left rfl] at h
   · simp only [idealOf, Ideal.mem_iInf, RingHom.mem_ker, MvPolynomial.coe_eval₂Hom] at hF
     exact hF K _ (RingHom.id K) ((y i).left ≫ e.inv) (p i)
       ⟨(hyp i).trans (Spec.map_id _).symm, by rw [Category.comp_id]; exact hp i⟩

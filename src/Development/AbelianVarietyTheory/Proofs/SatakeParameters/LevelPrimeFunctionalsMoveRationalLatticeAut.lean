@@ -60,9 +60,7 @@ theorem funMoved_ratA_act : ∀ {D : D7} {X : Fields} (s : Seam D X) {i : ℕ} {
     have e1 : (seamGL s g)⁻¹ = seamGL s g.symm := (map_inv (seamGL s) g).symm
     rw [← map_inv, e1]
     have := Formalism.MainNotions.G.KAat.bc_mulVec (F := D.host.F) (seamGL s g.symm) (fun a => s.iE (w a))
-    rw [seamGL_mulVec] at this
-    exact this
-  show d.f P (g.symm w) = _
+    rwa [seamGL_mulVec] at this
   exact H (g.symm w) hw' z (by rw [hz, key])
 
 end GlobalTheory.TwU

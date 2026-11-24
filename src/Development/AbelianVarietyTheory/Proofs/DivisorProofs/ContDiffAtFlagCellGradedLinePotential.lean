@@ -59,8 +59,7 @@ theorem upM_fb_contDiffAt_two {ι : Type} {m : ι → ℕ} {n d : ℕ} (ε : Fin
 
 theorem G_bsL_smooth {ι : Type} {m : ι → ℕ} {n d : ℕ} (ε : Fin n ≃ Fin d ⊕ Cell m) (G : V d → Mat m ℂ) (w : V n) (τ : ι)
     (hG : MContDiffAt 2 (fun v => G v τ) (bsL ε w)) : MContDiffAt 2 (fun w => G (bsL ε w) τ) w := by
-  intro a b
-  exact (hG a b).comp w (((bsL ε).contDiff.restrict_scalars ℝ).contDiffAt)
+  exact fun a b => (hG a b).comp w (((bsL ε).contDiff.restrict_scalars ℝ).contDiffAt)
 
 theorem upU_isUnit {s : ℕ} (y : Low s → ℂ) : IsUnit (upU y) := by
   rw [Matrix.isUnit_iff_isUnit_det, upU_eq, Matrix.det_transpose, GlobalTheory.FlagFibre.det_uni]
@@ -77,8 +76,7 @@ theorem cellPot_contDiffAt : ∀ (ι : Type) (m : ι → ℕ) (n d : ℕ) (ε : 
   have hA : MContDiffAt 2 A w :=
     ((upM_fb_contDiffAt_two ε x.1 w).mul (G_bsL_smooth ε G w x.1 hG)).mul (upM_fb_contDiffAt_two ε x.1 w).conjTranspose
   have hPA : (A w).PosDef := by
-    refine hP.mul_mul_conjTranspose_same ?_
-    exact Matrix.vecMul_injective_iff_isUnit.2 (upU_isUnit _)
+    exact hP.mul_mul_conjTranspose_same (Matrix.vecMul_injective_iff_isUnit.2 (upU_isUnit _))
   have hm : ∀ j : ℕ, ContDiffAt ℝ 2 (fun w => (leadMinor (A w) j).re) w := fun j =>
     Complex.reCLM.contDiff.contDiffAt.comp w (hA.submatrix _ _).det
   have h1 := leadMinor_re_pos hPA (x.2 + 1)

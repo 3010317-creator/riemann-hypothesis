@@ -108,9 +108,7 @@ theorem corr {E k : Type} [Field E] [NumberField E] [Field k] [NumberField k] (f
     by_cases h0 : logIdeal ((κ.comp f).comp (algebraMap (𝓞 E) E)) (differentIdeal ℤ (𝓞 E)) = 0
     · right
       refine ⟨κ, ?_⟩
-      simp only [LogNorms.ofElt, hcast]
-      intro h
-      exact hκ (by rw [h0, h, sub_zero])
+      simpa only [LogNorms.ofElt, hcast] using fun h => hκ (by rw [h0, h, sub_zero])
     · left
       exact ⟨_, h0⟩
   · set A : Nat.Primes → ℝ := fun p => ∑ κ : k →+* ℂ_[p],

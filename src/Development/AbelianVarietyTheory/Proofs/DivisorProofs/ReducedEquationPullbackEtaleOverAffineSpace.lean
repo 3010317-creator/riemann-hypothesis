@@ -151,8 +151,7 @@ theorem reducedEq_pullback_etale : ∀ (X Y : Scheme.{0}) [IsLocallyNoetherian X
   set g' := resG X hU' g
   set V := X.basicOpen g'
   have hV' : V = X.basicOpen g := by
-    simp only [V, g', Scheme.basicOpen_res]
-    exact inf_eq_right.2 hgU'
+    simpa only [V, g', Scheme.basicOpen_res] using inf_eq_right.2 hgU'
   have hVU' : V ≤ U'.1 := X.basicOpen_le g'
   have hVU : V ≤ U.1 := hVU'.trans hU'
   letI : Algebra Γ(X, U.1) Γ(X, V) := (resG X hVU).toAlgebra
@@ -168,8 +167,7 @@ theorem reducedEq_pullback_etale : ∀ (X Y : Scheme.{0}) [IsLocallyNoetherian X
     have e2 : algebraMap Γ(X, U.1) Γ(X, V) δ =
         (X.presheaf.map (homOfLE (X.basicOpen_le g')).op).hom (resG X hU' δ) :=
       (resG_resG hU' hVU' δ).symm
-    rw [e2]
-    exact hrad
+    rwa [e2]
   have hzV : q z ∈ V := hV' ▸ hzg
   obtain ⟨h, hhle, hzh⟩ := hW.exists_basicOpen_le (V := W' ⊓ q ⁻¹ᵁ V) ⟨z, hz, hzV⟩ (hW' hz)
   set W1 := Y.basicOpen h
@@ -211,8 +209,7 @@ theorem reducedEq_pullback_etale : ∀ (X Y : Scheme.{0}) [IsLocallyNoetherian X
     have hdP' : d ∈ P'.asIdeal := hdP (Ideal.mem_span_singleton_self d)
     rw [mem_iff_not_isUnit_ger hW1 P' hz', hd, ger_resG] at hdP'
     have hq : q (hW1.fromSpec P') ∉ Vo := by
-      rw [← part1 _ (hW1W hz') (hVU' (hW1V hz'))]
-      exact hdP'
+      rwa [← part1 _ (hW1W hz') (hVU' (hW1V hz'))]
     have hm := hf _ (hW1W' hz') hq
     change b ∈ P'.asIdeal
     rw [mem_iff_not_isUnit_ger hW1 P' hz', ger_resG]

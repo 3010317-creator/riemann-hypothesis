@@ -96,8 +96,7 @@ private theorem exists_openImmersion_restrict_pullback_constFn {S X A : Scheme.{
       (by rw [H.w, Category.assoc]; exact congrArg (h₀ ≫ ·) e),
     evalPt x₀ U hx, pullback.lift_fst _ _ _, ?_, ?_, ?_⟩
   · refine IsPullback.of_right ?_ (pullback.lift_snd _ _ _) (IsPullback.of_hasPullback _ _)
-    rw [pullback.lift_fst, ← e]
-    exact H
+    rwa [pullback.lift_fst, ← e]
   · rw [Scheme.Hom.opensRange_pullbackFst, hU.opensRange_fromSpec]
   · intro W hW r
     have key : p.appLE U W hW ≫ (pullback.fst p hU.fromSpec).app W =
@@ -122,8 +121,7 @@ private theorem false_of_pullback_point_mem_preimage_of_not_univ_le {S X A T : S
   have h2 : (m ≫ p) (y t) = (h₀ ≫ x₀) (y t) := by rw [H.w]
   rw [Scheme.Hom.comp_apply, Scheme.Hom.comp_apply] at h2
   have h3 : z = h₀ (y t) := Subsingleton.elim (α := PrimeSpectrum K) _ _
-  rw [Scheme.Hom.mem_preimage, h3, ← h2]
-  exact h1
+  rwa [Scheme.Hom.mem_preimage, h3, ← h2]
 
 theorem existsUnique_coeff_alg [Smooth G.hom] {v : Fin n → (epsR K ⟶ G)} (hv : IsLieBasis v)
     {dd : Fin n → ∀ O : G.left.Opens, Γ(G.left, O) → Γ(G.left, O)} (hd : ∀ i, IsInvDer (v i) (dd i))
@@ -264,7 +262,6 @@ theorem existsUnique_coeff {A₀ : Over (Sp K)} [GrpObj A₀] {g : ℕ} {v : Fin
       ((Scheme.Hom.image_le_image_iff q W' _).2 h).trans
         (by rw [Scheme.Hom.image_preimage_eq_opensRange_inf]; exact inf_le_right)
     have hO : ∀ W' : X'.Opens, (y ≫ m') ⁻¹ᵁ W' ≤ (y ≫ m' ≫ q) ⁻¹ᵁ (q ''ᵁ W') := fun W' t ht => by
-      show q (m' (y t)) ∈ q ''ᵁ W'
       exact (Scheme.Hom.apply_mem_image_iff q).2 ht
     have K1 : ∀ (W' : X'.Opens) (f : Γ(X', W')), resG T (hO W')
         (((y ≫ m' ≫ q).app (q ''ᵁ W')).hom ((q.appIso W').inv.hom f)) = ((y ≫ m').app W').hom f := by
@@ -484,8 +481,7 @@ theorem pull_diff (t : SAB H X) (V : X.Opens) (U : X.affineOpens) {n : ℕ}
         GlobalTheory.TangentOrigin.evalPt x _ hxg (φ b (j i) (j i')) =
         GlobalTheory.TangentOrigin.evalPt x _ hxg (dd b _ ((m.app _).hom (t.PP.L.g (j i) (j i')).val)) := by
       have := congrArg (GlobalTheory.TangentOrigin.evalPt x _ hxg) (hφ b (j i) (j i'))
-      rw [map_mul, hp] at this
-      exact this
+      rwa [map_mul, hp] at this
     have h0 : (m.app _).hom (t.PP.L.g (j i) (j i')).val * (m.app _).hom (t.PP.L.g (j i) (j i'))⁻¹.val = 1 := by
       rw [← map_mul, Units.mul_inv, map_one]
     have e2 : GlobalTheory.TangentOrigin.evalPt x _ hxg ((m.app _).hom (t.PP.L.g (j i) (j i')).val) *

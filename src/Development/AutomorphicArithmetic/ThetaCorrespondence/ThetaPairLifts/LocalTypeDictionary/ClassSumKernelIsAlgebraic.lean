@@ -456,8 +456,7 @@ theorem om_pureTensorO_bottom : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Co
   have hv : (fun _ : D.what₂.Tau => (1 : Matrix (Fin WW.rank) (Fin WW.rank) ℂ).map (starRingEnd ℂ)) = fun _ => 1 :=
     funext fun _ => Matrix.map_one _ (map_zero _) (map_one _)
   rw [funext hunit, hv] at key
-  rw [e1, e2]
-  exact key
+  rwa [e1, e2]
 
 end GlobalTheory.BottomAct
 
@@ -631,11 +630,11 @@ theorem eq_sum_mon {D : D7} {m n : ℕ} {d : D.what₂.Tau →₀ ℕ} (P : MvPo
   by_cases hk : k' ∈ Mon D m n d
   · rw [Finset.sum_eq_single ⟨k', hk⟩]
     · simp
-    · intro b _ hb; rw [if_neg]; intro h; exact hb (Subtype.ext h)
+    · intro b _ hb; rw [ite_eq_right]; intro h; exact hb (Subtype.ext h)
     · simp
   · rw [Finset.sum_eq_zero]
     · by_contra h; exact hk (hP k' h)
-    · intro b _; rw [if_neg]; rintro rfl; exact hk b.2
+    · intro b _; rw [ite_eq_right]; rintro rfl; exact hk b.2
 
 variable {D : D7}
 
@@ -807,8 +806,8 @@ theorem substMat_central (θ : InfFam D) (V : HSp D) (m : ℕ) (d : D.what₂.Ta
       fun ρ => if ρ = τ₀ then ζ • (1 : Matrix (Fin V.rank) (Fin V.rank) ℂ) else 1 := by
     funext ρ
     by_cases hρ : ρ = τ₀
-    · subst hρ; rw [if_pos rfl, h1]
-    · rw [if_neg hρ, h2 ρ hρ]
+    · subst hρ; rw [ite_eq_left rfl, h1]
+    · rw [ite_eq_right hρ, h2 ρ hρ]
   ext k' k
   simp only [substMat, e, _root_.GlobalTheory.CompactHowe.substF_scalar_monomial, MvPolynomial.coeff_smul, coeff_monomial, Matrix.smul_apply, Matrix.one_apply,
     smul_eq_mul]
@@ -955,8 +954,7 @@ theorem exists_real_character_of_bottom : ∀ {D : D7} {T : Type} [Finite T] {L 
     have hrel : (G.ch.chi (D.R.m - ↑i) * L.eta ^ (rankV D ↑i ↑j % 2)) / (L.mu t (↑j + 1) * L.eta ^ (rankV D ↑i ↑j % 2)) =
         (G.ch.chi (D.R.m - ↑i) * L.eta ^ (rankV D ↑i ↑j % 2)) / (L.mu μ₀ (↑j + 1) * L.eta ^ (rankV D ↑i ↑j % 2)) *
           (L.xi μ₀ * (L.xi t)⁻¹) := by
-      simp only [LevCh.mu, Lift.tup]
-      exact commGroup_div_eq_div_mul_ratio _ _ _ _ _
+      simpa only [LevCh.mu, Lift.tup] using commGroup_div_eq_div_mul_ratio _ _ _ _ _
     rw [hrel]
     have := GlobalTheory.Mem.HeckeExp.hasInfExp_mul (hb τ)
       (GlobalTheory.Mem.HeckeExp.hasInfExp_mul (hxi μ₀ τ) (GlobalTheory.Mem.HeckeExp.hasInfExp_inv (hxi t τ)))
@@ -1108,13 +1106,12 @@ theorem real_average_kernel_isAlgebraic : ∀ {D : D7} {T : Type} [Finite T] {L 
     by_cases hex : ∃ d : D.what₂.Tau →₀ ℕ, ∀ τ, c τ * Complex.exp Complex.I ^ d τ = 1
     · obtain ⟨d₀, hd₀⟩ := hex
       refine ⟨d₀, fun d hd => ?_⟩
-      by_contra hall
-      push_neg at hall
+      by_contra! hall
       refine hd (Finsupp.ext fun τ => ?_)
       have hc0 : c τ ≠ 0 := fun h0 => by have := hd₀ τ; rw [h0, zero_mul] at this; exact zero_ne_one this
       exact GlobalTheory.ExpPow.pow_exp_I_or_inv_injective _ _ _ (Or.inl rfl)
         (mul_left_cancel₀ hc0 ((hall τ).trans (hd₀ τ).symm))
-    · push_neg at hex
+    · push Not at hex
       exact ⟨0, fun d _ => hex d⟩
   refine ⟨dg, fun κ hκ hκp t x _ h _ k => ?_⟩
   haveI := hκp
@@ -1180,8 +1177,7 @@ theorem classSum_kernel_isAlgebraic : ∀ {D : D7} {T : Type} [Finite T] {L : Le
         have := (GlobalTheory.FockFiniteHeis.heis_comb_pureTensorO D W.ψ W.θ (GlobalTheory.Grid.neg A) WW hψ hθ (fun τ => -X.rA.s τ) X.rW.s
           X.rA.B X.rW.B X.vac hv 1 (fun _ => 1) (fun _ => y p) (fun _ => hy p) φ).1
         simpa using this
-    simp only [← h2]
-    exact h1.symm
+    simpa only [← h2] using h1.symm
   have e1 : ∀ g, ((X.ω t).toSgn true) ((GlobalTheory.Grid.ofSgn true A).symm x, h) g = X.ω t (x, h) g := fun g => rfl
   have move : ∀ g, IsThetaFunO W.ψ (GlobalTheory.Grid.neg A) WW g → X.ω t (x, h) (pt g) = pt (X.ω t (x, h) g) := fun g hg => by
     rw [← e1, ← e1]

@@ -319,8 +319,7 @@ theorem norm_le_inv_of_lt_one_kur (c : ↥(MaximalUnramifiedExtension l)) (hc : 
   have hl1 : (1 : ℝ) < l := by exact_mod_cast hl.out.one_lt
   rw [hk] at hc ⊢
   have hk0 : k < 0 := by
-    by_contra hk0
-    push_neg at hk0
+    by_contra! hk0
     exact absurd hc (not_lt.2 (one_le_zpow₀ hl1.le hk0))
   exact zpow_le_zpow_right₀ hl1.le (by omega)
 
@@ -345,8 +344,7 @@ theorem pow_dvd_of_lift {P : LocPrime l} (AI : LocAinf l P) (T : LocTied l P AI)
       rw [← h]
       congr 1
     have hlpos : (0 : ℝ) < l := by exact_mod_cast hl.out.pos
-    rw [hn, div_le_one (pow_pos (inv_pos.2 hlpos) N), inv_pow, ← zpow_natCast, ← zpow_neg]
-    exact hc
+    rwa [hn, div_le_one (pow_pos (inv_pos.2 hlpos) N), inv_pow, ← zpow_natCast, ← zpow_neg]
   obtain ⟨v, hv⟩ := GlobalTheory.ExpImage.exists_lifts_of_norm_le_one l P AI T K ⟨d, hdK⟩ hd1
   have hcd : c = (l : ↥(MaximalUnramifiedExtension l)) ^ N * d := by
     simp only [d]
@@ -524,8 +522,7 @@ theorem unr_of_finite_inertia : ∀ (l : ℕ) [Fact l.Prime] (n : Type) [Fintype
   obtain ⟨U', hU', hUe'⟩ := isOpen_induced_iff.1 hU
   have h1' : (1 : GQ l) ∈ U' := by
     have : (1 : ↥(GK K)) ∈ Subtype.val ⁻¹' U' := by
-      rw [hUe']
-      exact h1V
+      rwa [hUe']
     exact this
   obtain ⟨E, hE, hEU⟩ := (krullTopology_mem_nhds_one_iff ℚ_[l] (Om l) U').1 (hU'.mem_nhds h1')
   refine ⟨supExt K ⟨E, hE⟩, le_sup_left, ?_⟩
@@ -534,8 +531,7 @@ theorem unr_of_finite_inertia : ∀ (l : ℕ) [Fact l.Prime] (n : Type) [Fintype
     intro g
     have : (⟨g, GK_le (K := K) (K' := supExt K ⟨E, hE⟩) le_sup_left g.2⟩ : ↥(GK K)) ∈ Subtype.val ⁻¹' U' :=
       hEU (GK_le (K := ⟨E, hE⟩) (K' := supExt K ⟨E, hE⟩) le_sup_right g.2)
-    rw [hUe'] at this
-    exact this
+    rwa [hUe'] at this
   refine ⟨fun g hg => ?_, fun g i j => (key g).1 i j⟩
   have hin : (⟨g, GK_le (K := K) (K' := supExt K ⟨E, hE⟩) le_sup_left g.2⟩ : ↥(GK K)) ∈ IK K := by
     have hmap : (IK (supExt K ⟨E, hE⟩)).map (Subgroup.inclusion (GK_le (K := K) (K' := supExt K ⟨E, hE⟩) le_sup_left)) ≤
@@ -544,8 +540,7 @@ theorem unr_of_finite_inertia : ∀ (l : ℕ) [Fact l.Prime] (n : Type) [Fintype
       rw [MonoidHom.map_closure]
       apply Subgroup.closure_mono
       rintro _ ⟨σ, hσ, rfl⟩
-      intro x hx
-      exact hσ x hx
+      exact fun x hx => hσ x hx
     exact hmap ⟨g, hg, rfl⟩
   by_contra hne
   exact (key g).2 ⟨_, ⟨⟨_, hin, rfl⟩, hne⟩, rfl⟩
@@ -782,7 +777,7 @@ noncomputable def padicClampInt (l : ℕ) [Fact l.Prime] (x : ℚ_[l]) : ℤ_[l]
 theorem padicClampInt_coe (l : ℕ) [Fact l.Prime] {x : ℚ_[l]} (h : ‖x‖ ≤ 1) :
     ((padicClampInt l x : ℤ_[l]) : ℚ_[l]) = x := by
   show (if ‖x‖ ≤ 1 then x else 0) = x
-  rw [if_pos h]
+  rw [ite_eq_left h]
 
 theorem congrFiltration_detectingCharacters_coboundary : ∀ (l : ℕ) [Fact l.Prime] (n : Type) [Fintype n] [DecidableEq n] (K : FinExt l) (ρ : ↥(GK K) →* GL n ℚ_[l]) (M : GL n ℂ_[l]), (∀ g : ↥(GK K), (ρ g : Matrix n n ℚ_[l]).map (algebraMap ℚ_[l] ℂ_[l]) * (M : Matrix n n ℂ_[l]).map (Formalism.Per.σC (g : GQ l)) = M) → ∀ N : ℕ → Subgroup ↥(GK K), (∀ k g, g ∈ N k ↔ ∀ i j, ‖((ρ g : Matrix n n ℚ_[l]) - 1) i j‖ ≤ (l : ℝ) ^ (-((k : ℤ) + 2))) → ∀ r : ℕ, ∃ k₀ : ℕ, ∀ k ≥ k₀, ∃ (ι : Type) (_ : Finite ι) (x : ι → ℂ_[l]) (a : ι → ↥(GK K) → ℤ_[l]), (∀ i, ∀ σ ∈ N k, ‖Formalism.Per.σC (σ : GQ l) (x i) - x i - algebraMap ℚ_[l] ℂ_[l] (a i σ : ℚ_[l])‖ ≤ ((l : ℝ)⁻¹) ^ r) ∧ ∀ σ ∈ N k, (∀ i, (l : ℤ_[l]) ^ r ∣ a i σ) → σ ∈ N (k + r) := by
   intro l _ n _ _ K ρ M hM N hN r
@@ -848,8 +843,7 @@ theorem congrFiltration_detectingCharacters_coboundary : ∀ (l : ℕ) [Fact l.P
     have h3 : (l : ℝ) ^ (-(((k + r : ℕ) : ℤ) + 2)) = ((l : ℝ)⁻¹) ^ r * L⁻¹ := by
       rw [hL, ← zpow_natCast, ← zpow_natCast, inv_zpow', ← zpow_neg, ← zpow_add₀ hl0.ne']
       congr 1; push_cast; ring
-    rw [h3, le_mul_inv_iff₀ hLpos, mul_comm]
-    exact h1
+    rwa [h3, le_mul_inv_iff₀ hLpos, mul_comm]
 
 end GlobalTheory
 end -- clump:auto
@@ -885,8 +879,7 @@ theorem matrix_inv_near_one : ∀ (E : Type) [NormedField E] [IsUltrametricDist 
     exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le_max (hX a b) hprod)
   have hs0 : 0 ≤ s := norm_nonneg _
   have hst : s ≤ t := by
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     have h1 := hbound i0 j0
     rw [← hs] at h1
     rcases le_max_iff.mp h1 with h | h
@@ -1173,8 +1166,7 @@ theorem image_finite_of_trivial_on_inf_finiteIndex : ∀ (G Q : Type) [Group G] 
   obtain ⟨hJ, hq⟩ := hex.choose_spec
   have hmem : (hex.choose)⁻¹ * g ∈ H := QuotientGroup.eq.mp hq
   have h1 := hρ _ (J.mul_mem (J.inv_mem hJ) hg) hmem
-  rw [map_mul, map_inv, inv_mul_eq_one] at h1
-  exact h1
+  rwa [map_mul, map_inv, inv_mul_eq_one] at h1
 
 end GlobalTheory
 end -- clump:auto
@@ -1220,8 +1212,7 @@ theorem senFinite_of_noTower (hNT : NoTower) : SenFinite := by
   have hdet := _root_.GlobalTheory.congrFiltration_detectingCharacters_coboundary l n K ρ M hM N hN
   obtain ⟨k, hk⟩ := hNT l K N hanti hopen hpow hroot hdet
   refine _root_.GlobalTheory.GK.finite_image_of_trivial_on_open l K (GL n ℚ_[l]) ρ (IK K) (N k) (hopen k) ?_
-  intro g hgI hgN
-  exact hker g (fun j => hk j ⟨hgI, hgN⟩)
+  exact fun g hgI hgN => hker g (fun j => hk j ⟨hgI, hgN⟩)
 
 end GlobalTheory.PMon.Ram
 end -- clump:auto
@@ -1325,7 +1316,7 @@ theorem weilRes_of_basis (hE : ∀ (l : ℕ) [Fact l.Prime] (r : ℕ), 0 < r →
     obtain ⟨j, k⟩ := y
     simp only [pm, D, M, W, Matrix.mul_apply, Fintype.sum_prod_type, Finset.sum_ite_irrel, Matrix.kroneckerMap_apply, Matrix.one_apply,
       Matrix.blockDiagonal_apply, Matrix.map_apply, Matrix.of_apply, ite_mul, one_mul, zero_mul, mul_ite, mul_zero,
-      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.sum_const_zero]
+      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Finset.sum_const_zero]
 
     rw [← map_mul, ← hco g i j k, map_sum]
     refine Finset.sum_congr rfl fun k' _ => ?_
@@ -1367,8 +1358,7 @@ theorem weilRes_of_basis (hE : ∀ (l : ℕ) [Fact l.Prime] (r : ℕ), 0 < r →
   · intro x y
     have hc : Continuous fun g : ↥(GK K) => bS.coord x.2 ⟨_, memS _ (fix g x.1 y.1 y.2)⟩ := by
       refine (LinearMap.continuous_of_finiteDimensional (bS.coord x.2)).comp ?_
-      refine Continuous.subtype_mk ?_ _
-      exact (hρ.cont x.1 y.1).mul continuous_const
+      exact Continuous.subtype_mk ((hρ.cont x.1 y.1).mul continuous_const) _
     simpa [f, M, co] using hc
   · intro x y
     rw [hpU]

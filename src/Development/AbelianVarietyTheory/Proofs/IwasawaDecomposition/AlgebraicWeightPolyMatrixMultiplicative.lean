@@ -155,14 +155,12 @@ theorem evM_mul : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : �
     have e := _root_.GlobalTheory.UDense.eval_eq_zero_of_rat L n (MvPolynomial.bind₁ (substL (ratPt (γ₀ : Matrix (Fin n) (Fin n) L))) (P i j) -
         ∑ m, MvPolynomial.C (evM P (upt (ratPt (γ₀ : Matrix (Fin n) (Fin n) L))) i m) * P m j)
       (fun γ₁ h₁ => by rw [defectL_eval, hrat γ₀ h₀ γ₁ h₁, sub_self]) Y hY
-    rw [defectL_eval, sub_eq_zero] at e
-    exact e
+    rwa [defectL_eval, sub_eq_zero] at e
   refine ⟨h1, fun X Y hX hY => ?_⟩
   ext i j
   have e := _root_.GlobalTheory.UDense.eval_eq_zero_of_rat L n (MvPolynomial.bind₁ (substR Y) (P i j) -
       ∑ m, P i m * MvPolynomial.C (evM P (upt Y) m j))
     (fun γ₀ h₀ => by rw [defectR_eval, hL γ₀ h₀ Y hY, sub_self]) X hX
-  rw [defectR_eval, sub_eq_zero] at e
-  exact e
+  rwa [defectR_eval, sub_eq_zero] at e
 
 end GlobalTheory.AlgWtMul

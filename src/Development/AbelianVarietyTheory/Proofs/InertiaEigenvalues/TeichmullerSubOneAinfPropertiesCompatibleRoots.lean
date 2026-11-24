@@ -124,8 +124,7 @@ theorem theta_frob_xin (ε : OCb l) (hε : ε.untilt = 1) (n j : ℕ) :
     rw [pow_succ', pow_mul]
     have : rt ε 1 ^ l = ε := by
       have h := rt_pow ε 0 1
-      rw [zero_add, pow_one] at h
-      exact h
+      rwa [zero_add, pow_one] at h
     rw [this, map_pow, hε, one_pow]
   rw [Finset.sum_congr rfl (fun i _ => by rw [map_pow, WittVector.fontaineTheta_teichmuller, h1, one_pow])]
   simp
@@ -202,8 +201,7 @@ theorem norm_le_of_dvd (a b : OCb l) (hb : b ≠ 0) (h : ∀ n, b ∣ a * rt b n
   have hB : 0 < B := by
     refine norm_pos_iff.2 fun h0 => GlobalTheory.FrobInt.sharpRoot_ne_zero b hb 0 ?_
     exact_mod_cast h0
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have hA : 0 < A := hB.trans hlt
   have key : ∀ n : ℕ, A ^ (l ^ n) * B ≤ B ^ (l ^ n) := by
     intro n
@@ -226,8 +224,7 @@ theorem norm_le_of_dvd (a b : OCb l) (hb : b ≠ 0) (h : ∀ n, b ∣ a * rt b n
 theorem dvd_of_norm_le (x y : OC l) (hx : x ≠ 0) (h : ‖(y : ℂ_[l])‖ ≤ ‖(x : ℂ_[l])‖) : x ∣ y := by
   have hx' : (x : ℂ_[l]) ≠ 0 := fun h0 => hx (by exact_mod_cast h0)
   refine ⟨⟨(y : ℂ_[l]) / x, (GlobalTheory.RingBasics.mem_OC _).2 ?_⟩, Subtype.ext ?_⟩
-  · rw [norm_div, div_le_one (norm_pos_iff.2 hx')]
-    exact h
+  · rwa [norm_div, div_le_one (norm_pos_iff.2 hx')]
   · show (y : ℂ_[l]) = (x : ℂ_[l]) * ((y : ℂ_[l]) / x)
     field_simp
 
@@ -238,8 +235,7 @@ theorem dvd_of_forall_dvd_mul_rt (a b : OCb l) (hb : b ≠ 0) (h : ∀ n, b ∣ 
     intro h0
     apply hb
     apply (frobeniusEquiv (OCb l) l).symm.injective.iterate k
-    rw [iterate_map_zero]
-    exact h0
+    rwa [iterate_map_zero]
   refine norm_le_of_dvd (rt a k) (rt b k) hbk fun n => ?_
   obtain ⟨c, hc⟩ := h n
   refine ⟨rt c k, ?_⟩
@@ -247,8 +243,7 @@ theorem dvd_of_forall_dvd_mul_rt (a b : OCb l) (hb : b ≠ 0) (h : ∀ n, b ∣ 
   rw [iterate_map_mul, iterate_map_mul] at this
   have hcomm : rt (rt b k) n = rt (rt b n) k := by
     simp only [rt, ← Function.iterate_add_apply, add_comm]
-  rw [hcomm]
-  exact this
+  rwa [hcomm]
 
 end GlobalTheory.EpsCoeff
 

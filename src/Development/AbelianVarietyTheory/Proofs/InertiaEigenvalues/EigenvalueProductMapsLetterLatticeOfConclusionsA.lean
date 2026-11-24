@@ -65,8 +65,7 @@ theorem qp_isUnit (hR9 : Formalism.MainNotions.RamifiedCoefficientChains.Sh.ZT.R
   obtain ⟨wq, hwq⟩ := hR9.qq
   have h1 : IsUnit (algebraMap (LetA O n) W.EE (W.φA letπ)) := by
     have := W.EE_π.map W.φE
-    rw [W.φE_ext] at this
-    exact this
+    rwa [W.φE_ext] at this
   rw [W.φA_π, map_mul] at h1
   have h2 := (IsUnit.mul_iff.1 h1).2
   rw [hwq, map_mul] at h2
@@ -179,8 +178,7 @@ theorem eigenvalue_product_maps_letter_lattice_local (l : ℕ) (hpl : PD.p = l)
   obtain ⟨hD, hNl⟩ := key
   rw [pow_zero, one_smul] at hNl
   refine ⟨⟨hNl, hD.2⟩, Submodule.mem_map.2 ⟨_, hNl, ?_⟩⟩
-  simp only [LinearMap.smul_apply, LinearMap.id_apply]
-  exact hD.1
+  simpa only [LinearMap.smul_apply, LinearMap.id_apply] using hD.1
 
 end GlobalTheory.PrimeSequence
 
@@ -199,8 +197,7 @@ theorem eigenvalue_product_maps_letter_lattice_of_conclusions : ∀ (D : Formali
     obtain ⟨w, hw⟩ := hCA.1.2 ⟨x, hx⟩
     have h2 := w.2.2
     have : ((w : ↥(K0 K)) : Om l) = x := congrArg Subtype.val hw
-    rw [this] at h2
-    exact h2
+    rwa [this] at h2
   have h9 : Formalism.MainNotions.DeltaInvariantLattices.P9W ((HW l).W K 1 LL h) := hN.2.2.2.2.2.2.2.2.1 l K 1 LL h
   exact eigenvalue_product_maps_letter_lattice_local _ l hpl (fun hA T hT => Formalism.MainNotions.RamifiedCoefficientChains.Sh.ZT.ring_hypotheses_of_crystalline _ hA h9 T hT)
     (fun _ => GlobalTheory.T.wachOperatorProduct_shift_mem_lattice D HW F Cm hN l K LL hCAl) hCA

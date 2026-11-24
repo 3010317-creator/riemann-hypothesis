@@ -151,8 +151,7 @@ theorem nabStd_le_span_map {ι : Type} [Fintype ι] {n : ℕ} (f : K₀ →+* K)
   have h1 := (GlobalTheory.StdBaseChange.std_baseChange (𝓞 K) K K₀ ι f (RingOfIntegers.mapRingHom f) (fun r => rfl) n lam).1
   have h2 := (GlobalTheory.StdBaseChange.std_baseChange (𝓞 K) K K ι (RingHom.id K) (RingHom.id _) (fun r => rfl) n lam).1
   rw [h1, ← h2]
-  intro x hx
-  exact Submodule.subset_span ⟨x, hx, MvPolynomial.map_id x⟩
+  exact fun x hx => Submodule.subset_span ⟨x, hx, MvPolynomial.map_id x⟩
 
 theorem map_smul_int {σ : Type} (f : K₀ →+* K) (t : 𝓞 K₀) (P : MvPolynomial σ K₀) :
     RingOfIntegers.mapRingHom f t • MvPolynomial.map f P = MvPolynomial.map f (t • P) := by
@@ -205,8 +204,7 @@ theorem mem_localization_span_map {E ι : Type} [Field E] [NumberField E] [Finty
     obtain ⟨t, ht, htg⟩ := hg'
     refine ⟨RingOfIntegers.mapRingHom f t, hw t ht, ?_⟩
     have e := map_smul_int f t (actP lam B₀ g)
-    refine (congrArg (· ∈ N') e).mpr ?_
-    exact Submodule.subset_span ⟨_, htg, rfl⟩
+    exact (congrArg (· ∈ N') e).mpr (Submodule.subset_span ⟨_, htg, rfl⟩)
   have hF' : F ∈ Formalism.HermitianLatticesTheory.localization₂ w.asIdeal (nabP lam fun τ => dualFr (tauLat (fun τ => f.comp (emb τ)) τ M)) :=
     mem_localization_of_mem' _ hF
   rw [L1] at hF'

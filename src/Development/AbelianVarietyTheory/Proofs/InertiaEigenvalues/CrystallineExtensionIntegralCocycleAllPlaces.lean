@@ -188,8 +188,7 @@ omit [CharZero L] [Algebra ℚ L] in
 theorem lev_eq_levOne (W : LocWach PD L O v n) (i : ZMod n) (ζ : L) (f : LetA O n) :
     W.lev i ζ f = levOne W i ζ (f i) := by
   have h := W.lev_letter i ζ (f - Pi.constAlgHom O (ZMod n) O⟦X⟧ (f i)) (sub_self (f i))
-  rw [map_sub, sub_eq_zero] at h
-  exact h
+  rwa [map_sub, sub_eq_zero] at h
 
 theorem levOne_X (W : LocWach PD L O v n) (i : ZMod n) {ζ : L} (h : ∃ j : ℕ, IsPrimitiveRoot ζ (PD.p ^ j)) :
     levOne W i ζ X = C ζ * exp L - 1 := by
@@ -227,8 +226,7 @@ theorem levLaws_of_evLaw [IsDomain O] (hl0 : (l : O) ≠ 0) (hlu : ¬ IsUnit (l 
     have := Ser.ev_gam H (hp ▸ h.pow_eq_one) (l : ℤ_[l]) (a := l) (by simp) (levOne_X W i ⟨j, h⟩)
       (levOne_X W (i - 1) (root_pow hpr ⟨j, h⟩ l)) (f (i - 1))
     rw [GlobalTheory.Fon.gam_l, map_natCast] at this
-    rw [hφ, hp]
-    exact this
+    rwa [hφ, hp]
 
 end Generic
 
@@ -343,8 +341,7 @@ theorem core [NeZero n] (T Tp : LocLat G Qp LL O) (ι : LatHom T.L Tp.L) (π : L
     obtain ⟨z, hz⟩ := hex _ h0
     have hzN : z ∈ W.N T := hsat z (hz ▸ hw)
     refine ⟨W.X • z, ⟨z, hzN, rfl⟩, ?_⟩
-    rw [map_smulA, hz]
-    exact hw'
+    rwa [map_smulA, hz]
 
 end Generic
 

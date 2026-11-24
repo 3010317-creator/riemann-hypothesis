@@ -135,14 +135,12 @@ theorem unitOn_map : ∀ (ι M : Type) [Fintype ι] [DecidableEq ι] [AddCommGro
   refine ⟨inferInstance, ?_, (ip.comp g).compl₂ g, ?_, ?_, ?_⟩
   · rintro a b hab _ ⟨u, hu, rfl⟩
     exact ⟨F a b u, hst a b hab u hu, hF a b hab u hu⟩
-  · intro x hx y hy
-    exact hherm _ (hU1U _ (hgU1 x hx)) _ (hU1U _ (hgU1 y hy))
+  · exact fun x hx y hy => hherm _ (hU1U _ (hgU1 x hx)) _ (hU1U _ (hgU1 y hy))
   · intro x hx hne
     apply hpos _ (hU1U _ (hgU1 x hx))
     intro h0
     apply hne
-    rw [← hfg x hx]
-    rw [h0, map_zero]
+    rw [← hfg x hx, h0, map_zero]
   · intro a b hab x hx y hy
     have hu0 := hgU1 x hx
     have hv0 := hgU1 y hy
@@ -196,16 +194,14 @@ theorem locU_pi_fin : ∀ (ι M : Type) [Fintype ι] [DecidableEq ι] [AddCommGr
       intro x hx
       exact ⟨fun i => ⟨x i, hx i (Set.mem_univ _)⟩, by ext i; rfl⟩
     exact Submodule.finiteDimensional_of_le hle
-  · intro a b hab u hu i _
-    exact hst a b hab (u i) (hu i (Set.mem_univ _))
+  · exact fun a b hab u hu i _ => hst a b hab (u i) (hu i (Set.mem_univ _))
   · intro x hx y hy
     rw [hip', hip', star_sum]
     exact Finset.sum_congr rfl fun i _ => hsym _ (hx i (Set.mem_univ _)) _ (hy i (Set.mem_univ _))
   · intro x hx hx0
     rw [hip', Complex.re_sum]
     obtain ⟨j, hj⟩ : ∃ j, x j ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hx0 (funext h)
     have hnn : ∀ i ∈ (Finset.univ : Finset (Fin n)), 0 ≤ (ip (x i) (x i)).re := by
       intro i _

@@ -172,16 +172,14 @@ theorem span_tau_commutant : ∀ (L : Type) [Field L] [NumberField L] [IsCMField
         rcases h with h | h
         · right; rw [h]
         · left; rw [h, conj_conj]
-      simp only [R, if_pos h, if_pos h', Matrix.transpose_one, mul_one]
+      simp only [R, ite_eq_left h, ite_eq_left h', Matrix.transpose_one, mul_one]
     · have h' : ¬ (ComplexEmbedding.conjugate σ = τ ∨ ComplexEmbedding.conjugate σ = ComplexEmbedding.conjugate τ) := by
         rintro (h' | h')
         · exact h (Or.inr (by rw [← h', conj_conj]))
         · exact h (Or.inl (by simpa [conj_conj] using congrArg ComplexEmbedding.conjugate h'))
-      simp only [R, if_neg h, if_neg h']
-      exact hU σ
+      simpa only [R, ite_eq_right h, ite_eq_right h'] using hU σ
   have hinv : ((B⁻¹ : GL (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ) = (ratPt γ₀.val (ComplexEmbedding.conjugate τ))ᵀ := by
-    apply Units.inv_eq_of_mul_eq_one_right
-    exact hU τ
+    exact Units.inv_eq_of_mul_eq_one_right (hU τ)
   have hdec : ratPt γ₀.val = fun σ => tauPt τ B σ * R σ := by
     funext σ
     have hne := conjugate_ne_self τ
@@ -190,7 +188,7 @@ theorem span_tau_commutant : ∀ (L : Type) [Field L] [NumberField L] [IsCMField
       simp [tauPt, R, hBv, ratPt]
     · by_cases h2 : σ = ComplexEmbedding.conjugate τ
       · subst h2
-        simp only [tauPt, if_neg h1, if_true, R, or_true, mul_one]
+        simp only [tauPt, ite_eq_right h1, ite_true, R, or_true, mul_one]
         rw [hinv, Matrix.transpose_transpose]
       · simp [tauPt, R, h1, h2]
   have hcomm : ∀ A : GL (Fin n) ℂ, (fun σ => tauPt τ A σ * R σ) = (fun σ => R σ * tauPt τ A σ) := by
@@ -270,15 +268,12 @@ theorem domLE_of_mem_Sle : ∀ (n : ℕ) (ι : Type) [Fintype ι] [DecidableEq �
     refine Submodule.mem_iInf _ |>.mpr fun D => ?_
     apply Module.End.eigenspace_le_maxGenEigenspace
     rw [Module.End.mem_eigenspace_iff]
-    simp only [T, Matrix.toLin'_apply]
-    exact hv D.1 D.2
+    simpa only [T, Matrix.toLin'_apply] using hv D.1 D.2
   have hχinj : ∀ ν ν', χ ν = χ ν' → ν = ν' := by
     intro ν ν' h
     funext i
     let u : Fin n → ℂˣ := Function.update 1 i (Units.mk0 2 two_ne_zero)
-    have hD : (diagU u).val.IsDiag := by
-      show (Matrix.diagonal _).IsDiag
-      exact Matrix.isDiag_diagonal _
+    have hD : (diagU u).val.IsDiag := Matrix.isDiag_diagonal _
     have key := congrFun h ⟨diagU u, hD⟩
     have hprod : ∀ ν'' : Fin n → ℤ, χ ν'' ⟨diagU u, hD⟩ = (2 : ℂ) ^ (ν'' i) := by
       intro ν''
@@ -427,9 +422,8 @@ theorem lu : ∀ {n : ℕ} (B : GL (Fin n) ℂ), (∀ (k : ℕ) (hk : k ≤ n), 
     rw [Matrix.mul_apply]
     have := hx1 i k hik'
     simp only [M, add_mul, Finset.sum_add_distrib, ite_mul, one_mul, zero_mul,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true]
-    rw [add_comm]
-    exact this
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true]
+    rwa [add_comm]
 
 end GlobalTheory.LUDecomp
 end -- clump:auto
@@ -455,7 +449,7 @@ theorem shift_minors_vanish_finite {n : ℕ} (B : Matrix (Fin n) (Fin n) ℂ) :
       ((B + s • (1 : Matrix (Fin n) (Fin n) ℂ)).submatrix (Fin.castLE hk) (Fin.castLE hk)).det
         = (p k).eval s := by
     intro k hk s
-    simp only [p, dif_pos hk, Matrix.eval_charpoly]
+    simp only [p, dite_eq_left hk, Matrix.eval_charpoly]
     congr 1
     ext i j
     simp only [Matrix.submatrix_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply,
@@ -465,8 +459,8 @@ theorem shift_minors_vanish_finite {n : ℕ} (B : Matrix (Fin n) (Fin n) ℂ) :
   have hp : ∀ k, p k ≠ 0 := by
     intro k
     by_cases hk : k ≤ n
-    · simp only [p, dif_pos hk]; exact (Matrix.charpoly_monic _).ne_zero
-    · simp [p, dif_neg hk]
+    · simp only [p, dite_eq_left hk]; exact (Matrix.charpoly_monic _).ne_zero
+    · simp [p, dite_eq_right hk]
   refine Set.Finite.subset
     ((Finset.range (n + 1)).finite_toSet.biUnion fun k _ =>
       Polynomial.finite_setOf_isRoot (hp k)) ?_
@@ -565,10 +559,10 @@ theorem diagonal_mul_transvection {n : ℕ} {i j : Fin n} (h : i ≠ j) (d : Fin
   simp only [transvection, Matrix.add_apply, diagonal_mul, mul_diagonal, Matrix.single_apply]
   by_cases h2 : i = a ∧ j = b
   · obtain ⟨rfl, rfl⟩ := h2
-    simp only [and_self, if_true, one_apply_ne h]
+    simp only [and_self, ite_true, one_apply_ne h]
     field_simp
     ring
-  · simp only [h2, if_false, add_zero]
+  · simp only [h2, ite_false, add_zero]
     by_cases hab : a = b
     · subst hab; simp
     · simp [one_apply_ne hab]
@@ -579,8 +573,7 @@ theorem conj_val {n : ℕ} {i j : Fin n} (h : i ≠ j) (D : GL (Fin n) ℂ) (hD 
   have key : D.val * T.val = transvection i j (s * (D.val i i / D.val j j)) * D.val := by
     have := diagonal_mul_transvection h (fun m => D.val m m) (diag_ne_zero D hD j) s
     rw [← diagonal_eq_of_isDiag _ hD] at this
-    rw [hT]
-    exact this
+    rwa [hT]
   rw [Units.val_mul, Units.val_mul, key, Matrix.mul_assoc, ← Units.val_mul, mul_inv_cancel,
     Units.val_one, Matrix.mul_one]
 
@@ -612,7 +605,7 @@ theorem domLE_shiftWt {n : ℕ} {ν lam : Fin n → ℤ} (hν : DomLE ν lam) {i
   constructor
   · rw [← h1]
     simp only [shiftWt, Finset.sum_sub_distrib, Finset.sum_add_distrib, ← Finset.mul_sum,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     ring
   · intro K
     have hK := h2 K
@@ -621,9 +614,9 @@ theorem domLE_shiftWt {n : ℕ} {ν lam : Fin n → ℤ} (hν : DomLE ν lam) {i
     have hji' : (j : ℕ) < i := hji
     by_cases hi : (i : ℕ) < K
     · have hj : (j : ℕ) < K := lt_trans hji' hi
-      simp only [hi, hj, if_true]
+      simp only [hi, hj, ite_true]
       linarith
-    · simp only [hi, if_false, mul_zero, add_zero]
+    · simp only [hi, ite_false, mul_zero, add_zero]
       have : (0 : ℤ) ≤ (k : ℤ) * (if (j : ℕ) < K then 1 else 0) := by
         split_ifs <;> simp
       linarith
@@ -716,9 +709,9 @@ theorem LowerGen.lowerTriangular_elim_step {n : ℕ} (L : Matrix (Fin n) (Fin n)
     rw [transvection_mul_apply_same]
     have hrow : L j b = if b = j then L j j else 0 := by
       rcases lt_trichotomy b j with h | h | h
-      · rw [if_neg h.ne]; exact hmin j b h (Ne.symm h.ne)
+      · rw [ite_eq_right h.ne]; exact hmin j b h (Ne.symm h.ne)
       · subst h; simp
-      · rw [if_neg h.ne']; exact hL (by simpa using h)
+      · rw [ite_eq_right h.ne']; exact hL (by simpa using h)
     rw [hrow]
     by_cases hb : b = j
     · subst hb; simp; field_simp; ring
@@ -800,7 +793,7 @@ theorem GlobalTheory.lowerTriangular_GL_induction : ∀ {n : ℕ} (P : GL (Fin n
         Finset.mem_erase, hUL, ne_eq, Prod.mk.injEq]
       by_cases h : a = i ∧ b = j
       · simp [h]
-      · simp only [h, if_false]; tauto
+      · simp only [h, ite_false]; tauto
     have hcard : (LowerGen.offDiagSupport (U * L).val).card < m := by
       rw [hsupp, ← hm]
       apply Finset.card_erase_lt_of_mem
@@ -885,8 +878,7 @@ theorem mulVec_mem_of_cofinite_shift : ∀ {n : ℕ} {ι : Type} [Fintype ι] [D
     have hcl : IsClosed (F \ {0}) := (hF.diff).isClosed
     have hmem : (F \ {0})ᶜ ∈ nhds (0:ℂ) := hcl.isOpen_compl.mem_nhds (by simp)
     filter_upwards [nhdsWithin_le_nhds hmem, self_mem_nhdsWithin] with s hs1 hs2
-    intro hsF
-    exact hs1 ⟨hsF, hs2⟩
+    exact fun hsF => hs1 ⟨hsF, hs2⟩
   have hev : ∀ᶠ s in nhdsWithin (0:ℂ) {0}ᶜ, g s ∈ S := by
     filter_upwards [hFev, nhdsWithin_le_nhds hdetev] with s hs hdet
     rw [hgC s (Matrix.nonsingInvUnit (M s) hdet) rfl]
@@ -914,9 +906,7 @@ theorem mulVec_mem_sle_of_isBEig : ∀ (n : ℕ) (ι : Type) [Fintype ι] [Decid
   intro n ι _ _ Φ hΦ v lam hv B
   have hdom : DomLE lam lam := ⟨rfl, fun _ => le_rfl⟩
   have hvS : v ∈ Sle Φ lam := by
-    refine Submodule.subset_span ⟨lam, hdom, fun D hD => hv.2 D ?_⟩
-    intro a b hab
-    exact hD (ne_of_gt hab)
+    exact Submodule.subset_span ⟨lam, hdom, fun D hD => hv.2 D (fun a b hab => hD (ne_of_gt hab))⟩
 
   have hstab : ∀ L : GL (Fin n) ℂ, L.val.BlockTriangular OrderDual.toDual →
       ∀ w ∈ Sle Φ lam, Φ L *ᵥ w ∈ Sle Φ lam := by

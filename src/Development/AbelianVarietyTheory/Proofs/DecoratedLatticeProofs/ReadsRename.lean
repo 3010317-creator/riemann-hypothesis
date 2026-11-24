@@ -163,8 +163,7 @@ theorem exists_charts (I : TC B X) (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (
   have hφ : ∀ c, GlobalTheory.Mem.Col2.TC.ChTw.chartOf I u a i c = φ (chOf c) := fun c =>
     (key₀ _ _).2 (Function.surjInv_eq onto _).symm
   have hψ : ∀ β, ψ (φ β) = β := fun β => by
-    refine Eq.trans ((key₀ _ _).1 ?_) (Function.surjInv_eq onto β)
-    exact Subtype.ext (φ β).2.choose_spec
+    exact Eq.trans ((key₀ _ _).1 (Subtype.ext (φ β).2.choose_spec)) (Function.surjInv_eq onto β)
   have hinj : Function.Injective φ := Function.LeftInverse.injective hψ
   obtain ⟨K, hK, hfin⟩ := GlobalTheory.Mem.Col2.ChExM.exists_charts I hI hP l Z u a Q i hi h1 h2 hQ (fun γ => k (ψ γ))
     ⟨fun γ => hk.std _, fun γ => hk.off _, fun γ => hk.T _⟩
@@ -185,8 +184,7 @@ theorem exists_charts (I : TC B X) (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (
     rintro c _ rfl s
     rfl
   have e1 : (fun β => k (ψ (φ β))) = k := funext fun β => congrArg k (hψ β)
-  rw [e1, ← funext fun c => hy c _ (hφ c), ← funext fun c => funext fun s => hs c _ (hφ c) s] at h
-  exact h
+  rwa [e1, ← funext fun c => hy c _ (hφ c), ← funext fun c => funext fun s => hs c _ (hφ c) s] at h
 
 def StepOk {I : TC B X} {l : I.Laws} {Z : TC.Later B (I.cols l)} {u : B.Word} {a : I.ι} {Ch : ℕ → Type} (A : TwDat I l Z u a Ch) (i : ℕ)
     (bad : Set (HeightOneSpectrum (𝓞 B.host.F)))
@@ -227,8 +225,7 @@ theorem exists_step {I : TC B X} (hI : I.Ok) (hP : TC.Pins B X) {l : I.Laws} {Z 
         fun P => absurd P.2 (Finset.notMem_empty _)⟩, hpN⟩
       have e := (hpt β).lat
       rw [extTo_deco, hN] at e
-      rw [hpN]
-      exact e
+      rwa [hpN]
     · rw [map_mul, hR₀.k_off β v h1 h2 h3, hoff β v h2, mul_one]
     · have e : bc (prV (E := B.host.E) (P.1.under (𝓞 B.host.F))) (A.kb i β * κ β)⁻¹ =
           bc (prV (E := B.host.E) (P.1.under (𝓞 B.host.F))) (A.kb i β)⁻¹ := by
@@ -244,7 +241,7 @@ theorem exists_step {I : TC B X} (hI : I.Ok) (hP : TC.Pins B X) {l : I.Laws} {Z 
       unfold ptFr
       rw [dite_eq_right hPG, dite_eq_right hPQ, hN]
       unfold GlobalTheory.Mem.Col2.latFr
-      exact if_pos rfl
+      exact ite_eq_left rfl
     refine Matrix.ext fun r s => ?_
     have e := (hpt β).fr ⟨P, hP'⟩ r s
     rw [extTo_fr, hfr] at e
@@ -327,12 +324,10 @@ theorem repY_cong {X : Fields} {Pr : Primes X} {R : Ranks} {sel : HeightOneSpect
   obtain ⟨y₀, -, hY⟩ := p.mem_ybSet h
   have h3 := p.repY_mem h
   have hy' : y - y₀ ∈ locLat (rowSG Pr sel mu) p.1.1.deco.1.N (fun P => if P.1 ∈ Pr.vGs then 0 else (cst.M : ℤ)) := by
-    rw [hY] at hy
-    exact hy
+    rwa [hY] at hy
   have h3' : repY p.1.2 - y₀ ∈ locLat (rowSG Pr sel mu) p.1.1.deco.1.N (fun P => if P.1 ∈ Pr.vGs then 0 else (cst.M : ℤ)) := by
     generalize repY p.1.2 = z at h3
-    rw [hY] at h3
-    exact h3
+    rwa [hY] at h3
   have h4 := (mem_locLat _ _ _ _).1 (sub_mem hy' h3') P
   rw [sub_sub_sub_cancel_right] at h4
   have h5 : ((qOf P.1 : X.E) ^ (if P.1 ∈ Pr.vGs then (0 : ℤ) else (cst.M : ℤ))) =
@@ -342,8 +337,7 @@ theorem repY_cong {X : Fields} {Pr : Primes X} {R : Ranks} {sel : HeightOneSpect
   have h6 : (frsF sel mu p.1.1 P).symm (((qOf P.1 : X.E) ^ (if P.1 ∈ Pr.vGs then 0 else cst.M))⁻¹ • (y - repY p.1.2)) ∈
       stdAt X.E (R.N j) P.1 := by
     refine (isFr_ptFr p.1.1 P.1 _).1 ?_
-    rw [← frsF_eq_ptFr, LinearEquiv.apply_symm_apply]
-    exact h4
+    rwa [← frsF_eq_ptFr, LinearEquiv.apply_symm_apply]
   have h7 := add_mem h2 h6
   rwa [map_smul, map_sub, ← smul_add, sub_add_sub_cancel] at h7
 

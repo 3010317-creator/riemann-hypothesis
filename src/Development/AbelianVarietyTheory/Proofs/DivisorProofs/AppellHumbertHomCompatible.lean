@@ -138,8 +138,7 @@ theorem lam_chart {M₀ M : LB A.left} (u₀ : HolUnif A M₀ g) (u : HolUnif A 
     (I : ULift.{0} (Finset (Fin 2))) : ⊤ ≤ (u.ex (sumL g I v)).left ⁻¹ᵁ M.U (j I) := by
   have h := (GlobalTheory.CubeValues.le_preimage_wchart ((sqUnif A u₀).ex v).left M
     (fun I : ULift.{0} (Finset (Fin 2)) => (psum A (x2 A) I.down).left) j).1 hv I
-  rw [ex_sumL u₀ u hex I v, Over.comp_left]
-  exact h
+  rwa [ex_sumL u₀ u hex I v, Over.comp_left]
 
 omit [IsCommMonObj A] in
 theorem ex_add_mem {M : LB A.left} (u : HolUnif A M g) (z : Fin g → ℂ) {w : Fin g → ℂ} (hw : w ∈ u.Λ) :
@@ -157,8 +156,7 @@ theorem exists_chart_pt' {X : Scheme.{0}} (L : LB X) (hL : L.IsLB) (y : Sp ℂ �
     haveI := q.isPrime
     haveI := p0.isPrime
     exact PrimeSpectrum.ext ((Ideal.eq_bot_of_prime q.asIdeal).trans (Ideal.eq_bot_of_prime p0.asIdeal).symm)
-  rw [this]
-  exact hj
+  rwa [this]
 
 
 open Classical in
@@ -174,8 +172,7 @@ theorem semichar {M : LB A.left} (hM : M.IsLB) (u : HolUnif A M g) {Hm : Matrix 
   obtain ⟨i, hi⟩ := exists_chart_pt' M hM (u.ex 0).left
   have hz : ∀ z ∈ u.Λ, ⊤ ≤ (u.ex z).left ⁻¹ᵁ M.U i := by
     intro z hz
-    rw [(u.ker z).2 hz, ← (u.ker 0).2 (zero_mem _)]
-    exact hi
+    rwa [(u.ker z).2 hz, ← (u.ker 0).2 (zero_mem _)]
   have law1 := hF.2.2 ⟨l, hl⟩ i 0 (hz 0 (zero_mem _))
   have law2 := hF.2.2 ⟨m, hm⟩ i l (hz l hl)
   have law3 := hF.2.2 ⟨l + m, add_mem hl hm⟩ i 0 (hz 0 (zero_mem _))

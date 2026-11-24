@@ -104,11 +104,9 @@ theorem exists_unit_gen {B : Type} [Fintype B] (A : Subring Ω) [IsLocalRing A] 
       rw [Finset.sum_mul, _root_.one_mul]
       conv_rhs => rw [← hc]
       exact Finset.sum_congr rfl fun i _ => by rw [_root_.mul_assoc, ha]; rfl
-    have h2 := mul_right_cancel₀ hf h1
-    exact Subtype.ext (by simpa using h2)
+    exact Subtype.ext (by simpa using (mul_right_cancel₀ hf h1))
   obtain ⟨l, hl⟩ : ∃ l, IsUnit (a l) := by
-    by_contra hn
-    push_neg at hn
+    by_contra! hn
     have h1 : (1 : A) ∈ IsLocalRing.maximalIdeal A := by
       rw [← hsum]
       exact Ideal.sum_mem _ fun i _ => Ideal.mul_mem_left _ _ ((IsLocalRing.mem_maximalIdeal _).2 (hn i))
@@ -288,8 +286,7 @@ theorem exists_blocks_of_lines : ∀ (o : Type) [CommRing o] (Ω : Type) [Field 
   · have e : (fun c' : (k : K ⊕ Option A) → BJ J κ n k => ∏ k, blockCo J κ n y x z ⟨k, c' k⟩) =
         fun c => joinCo (RingHom.id Ω) x w (blockEquiv J κ n c) :=
       funext fun c => segre_blockCo y x z c
-    rw [e]
-    exact ht
+    rwa [e]
   · have hx : InChart M.ξ x (c (.inr none)) p :=
       ⟨Lat.block_coord_ne_zero hc (.inr none), fun i => Lat.block_ratio_mem hc (.inr none) i⟩
     have hz : InChart M.ξ (z a) (c (.inr (some a))) p :=

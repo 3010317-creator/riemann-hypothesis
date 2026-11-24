@@ -272,8 +272,7 @@ theorem padicEquiv_symm_coe_mem (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : Aw
     (adicCompletion.padicEquiv v.1).symm (r : ℚ_[(primesEquiv v.1 : ℕ)]) ∈ v.1.adicCompletionIntegers ℚ := by
   obtain ⟨x, hx, hxr⟩ := (adicCompletion.padicEquiv_bijOn v.1).surjOn
     (show (r : ℚ_[(primesEquiv v.1 : ℕ)]) ∈ PadicInt.subring _ from r.2)
-  rw [← hxr, ContinuousAlgEquiv.symm_apply_apply]
-  exact hx
+  rwa [← hxr, ContinuousAlgEquiv.symm_apply_apply]
 
 end GlobalTheory.OrbFinAf.MatrixUnits₂
 
@@ -417,9 +416,7 @@ theorem intFCoord_injective (G : HTGroup p) (v : AwayP p) (h1 : IsIntV G v 1)
   intro a b hab
   apply Subtype.ext
   apply iotaF_injective G v
-  apply (basV G v).repr.injective
-  refine Finsupp.ext fun i => ?_
-  exact congrArg Subtype.val (congrFun hab i)
+  exact (basV G v).repr.injective (Finsupp.ext fun i => congrArg Subtype.val (congrFun hab i))
 
 theorem intF_finite (G : HTGroup p) (v : AwayP p) (h1 : IsIntV G v 1)
     (hm : ∀ y z : Qv v ⊗[ℚ] G.C, IsIntV G v y → IsIntV G v z → IsIntV G v (y * z)) :
@@ -539,8 +536,8 @@ theorem core {n : ℕ} (ι : K →ₐ[k] B) (E : Fin n → Fin n → B)
     rw [← mul_assoc, ← (hc (M a' b') (E c a)).eq]
     simp only [mul_assoc, hE, mul_ite, mul_zero]
     split_ifs with h1 h2
-    · subst h1 h2; rw [mul_assoc, hE, if_pos rfl]
-    · rw [mul_assoc, hE, if_neg h2, mul_zero]
+    · subst h1 h2; rw [mul_assoc, hE, ite_eq_left rfl]
+    · rw [mul_assoc, hE, ite_eq_right h2, mul_zero]
     · rw [zero_mul]
   simp only [phiL_apply, Finset.mul_sum, Finset.sum_mul, h]
   simp [Finset.sum_ite_eq, Finset.sum_ite_eq']
@@ -580,7 +577,7 @@ theorem phiL_mul {n : ℕ} (ι : K →ₐ[k] B) (E : Fin n → Fin n → B)
     · rw [mul_zero]
 
   simp only [phiL_apply, Finset.sum_mul, Finset.mul_sum, h, Matrix.mul_apply, map_sum]
-  simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   conv_lhs => rw [Finset.sum_comm]
   conv_rhs => rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun d _ => ?_
@@ -648,12 +645,10 @@ theorem pow_indep_tensor : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (γ : G.
         simp only [Pi.smul_apply, RingHom.id_apply, Finset.smul_sum, smul_assoc] }
   have li : LinearIndependent G.F (fun i : Fin G.n => γ ^ (i : ℕ)) := by
     have := linearIndependent_pow (K := G.F) γ
-    rw [hn] at this
-    exact this
+    rwa [hn] at this
   have hψ : Function.Injective ψ := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-    intro f hf
-    exact funext ((Fintype.linearIndependent_iff.mp li) f hf)
+    exact fun f hf => funext ((Fintype.linearIndependent_iff.mp li) f hf)
   have hinj : Function.Injective (ψ.lTensor (Qv v)) :=
     Module.Flat.lTensor_preserves_injective_linearMap ψ hψ
   let e := TensorProduct.piRight ℚ ℚ (Qv v) (fun _ : Fin G.n => G.F)

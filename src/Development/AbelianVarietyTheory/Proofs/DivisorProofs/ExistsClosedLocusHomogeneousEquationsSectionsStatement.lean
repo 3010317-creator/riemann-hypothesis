@@ -173,8 +173,7 @@ theorem eq_zero : ∀ (R : Type) [CommRing R] (X T X' : Scheme.{0}) (f : X ⟶ S
   have hsq : IsPullback π snd f (Spec.map (CommRingCat.ofHom ρ)) := by
     have hg : g ≫ t = Spec.map (CommRingCat.ofHom ρ) := fromSpecStalk_comp t x
     have h3 := (IsPullback.of_hasPullback p g).paste_horiz hpb
-    rw [hg] at h3
-    exact h3
+    rwa [hg] at h3
   obtain ⟨E, hE⟩ := Q.sec _ ρ _ π snd hsq
   have hv : (Q.D₀.map ρ).mulVec (fun k => ψ (e k)) = 0 := by
     funext j
@@ -187,8 +186,7 @@ theorem eq_zero : ∀ (R : Type) [CommRing R] (X T X' : Scheme.{0}) (f : X ⟶ S
     have hcov : ⨆ i, π ⁻¹ᵁ Q.W i = ⊤ := Q.iSup_preimage (π := π)
     refine sec_eq_zero_of_local (L := M.pull π) (fun i => π ⁻¹ᵁ Q.W i) hcov
       (fun i => (fun _ => Q.ch i : (M.pull π).ι)) (fun i => le_pull M π (Q.le i)) (E w) ?_
-    intro i
-    exact (hE w i).trans (hw i)
+    exact fun i => (hE w i).trans (hw i)
   have h0 : E ⟨0, by rw [Matrix.mulVec_zero]⟩ = 0 :=
     hloc _ fun i => Finset.sum_eq_zero fun k _ => by
       have hc0 : cst snd (π ⁻¹ᵁ Q.W i) 0 = 0 := map_zero _
@@ -227,8 +225,7 @@ theorem eq_zero : ∀ (R : Type) [CommRing R] (X T X' : Scheme.{0}) (f : X ⟶ S
     simp only [hsum]
 
     rw [← map_sum, hz (fst y) i hyi, map_zero]
-  have h2 := congrFun (congrArg Subtype.val (E.injective (h1.trans h0.symm))) k
-  exact h2
+  exact congrFun (congrArg Subtype.val (E.injective (h1.trans h0.symm))) k
 
 end GlobalTheory.KerGermInj
 end -- clump:auto
@@ -436,7 +433,7 @@ theorem germ_eval_comb : ∀ (Rg : Type) [CommRing Rg] (A₀ T X : Scheme.{0}) (
   have hp : gs φ z (N.U q) (∏ i, (a i).f q ^ ν i) = ∏ i, gs φ z (N.U q) ((a i).f q) ^ ν i := by
     rw [← MapIff.gsH_apply φ z _ hq, map_prod]
     simp only [map_pow, MapIff.gsH_apply]
-  simp only [ψ, RingHom.comp_apply, monSec, if_pos hd]
+  simp only [ψ, RingHom.comp_apply, monSec, ite_eq_left hd]
   rw [MapIff.gsH_apply]
   exact congrArg (fun x => gs p z ⊤ (ringOf g (AddMonoidAlgebra.coeff (expand mA mB F) ν)) * x) hp.symm
 
@@ -484,8 +481,7 @@ theorem GlobalTheory.HomFixUniv.formVanish_chart_indep : ∀ (Rg : Type) [CommRi
       gs_unit φ z _ hV, gs_res φ z (inf_le_right : N.U q ⊓ N.U q' ≤ N.U q') hV]
   have hcomb : comb a φ p c z q = fun j => (gm φ z (N.U q ⊓ N.U q') (N.g q q')).val * comb a φ p c z q' j := by
     funext j
-    simp only [comb, hsec, Finset.mul_sum]
-    exact Finset.sum_congr rfl fun i _ => by ring
+    simpa only [comb, hsec, Finset.mul_sum] using Finset.sum_congr rfl fun i _ => by ring
   have hev : ∀ (w : X.presheaf.stalk z) (y : Fin mB → X.presheaf.stalk z),
       MvPolynomial.eval₂Hom (gc (p ≫ t) z) (fun j => w * y j) F = w ^ d * MvPolynomial.eval₂Hom (gc (p ≫ t) z) y F := by
     intro w y
@@ -553,8 +549,7 @@ theorem germ_eq_sum_vecOf : ∀ (Rg : Type) [CommRing Rg] (A₀ X : Scheme.{0}) 
   rw [h2]
   refine Finset.sum_congr rfl fun k _ => ?_
   congr 1
-  · show gs φ z _ ((A₀.presheaf.map (homOfLE le_top).op).hom (cstT f (vecOf Q s k))) = _
-    exact gs_res φ z le_top hz' _
+  · exact gs_res φ z le_top hz' _
 
 end GlobalTheory.FormsLocus.VecGerm
 end -- clump:auto

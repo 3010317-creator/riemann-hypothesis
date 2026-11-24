@@ -128,8 +128,7 @@ theorem exists_sections_cube_cover {K : Type} [Field K] [IsAlgClosed K] (B : Ove
   have hD : (((snd T B).left ⁻¹ᵁ Out.nonzeroLocus s : (T ⊗ B).left.Opens) : Set (T ⊗ B).left).Nonempty := by
     obtain ⟨d, hd⟩ : ((B.left.basicOpen (s.f j) : B.left.Opens) : Set B.left).Nonempty := by
       rw [Set.nonempty_iff_ne_empty]
-      intro h
-      exact hj ((basicOpen_eq_bot_iff _).1 (SetLike.coe_injective h))
+      exact fun h => hj ((basicOpen_eq_bot_iff _).1 (SetLike.coe_injective h))
     refine ⟨(lift π (𝟙 _)).left d, ?_⟩
     show (snd T B).left ((lift π (𝟙 _)).left d) ∈ Out.nonzeroLocus s
     rw [← Scheme.Hom.comp_apply, ← Over.comp_left, lift_snd]
@@ -144,8 +143,7 @@ theorem exists_sections_cube_cover {K : Type} [Field K] [IsAlgClosed K] (B : Ove
     apply unitAt_pull s _ y
     have e : x ≫ ((π ≫ a) * 𝟙 B) = Out.ptSecT B (a * x) ≫ snd T B := by
       simp [Out.ptSecT, MonObj.comp_mul, reassoc_of% hxπ]
-    rw [← hx, ← Scheme.Hom.comp_apply, ← Over.comp_left, e]
-    exact ha
+    rwa [← hx, ← Scheme.Hom.comp_apply, ← Over.comp_left, e]
   obtain ⟨a, ha, -⟩ := NoBasePoint.exists_two_points (𝟙 (Sp K)) _ hD x x
   obtain ⟨b, hb, hc⟩ := NoBasePoint.exists_two_points (𝟙 (Sp K)) _ hD x (a⁻¹ * x)
   rw [← _root_.mul_assoc] at hc

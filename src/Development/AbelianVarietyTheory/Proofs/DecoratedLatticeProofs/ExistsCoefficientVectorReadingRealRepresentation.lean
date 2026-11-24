@@ -61,8 +61,7 @@ theorem exists_pairB_of_range_eq {ι : Type} [Fintype ι] {n : ℕ} (G G' : ι �
   have key : ∀ P, Formalism.L2.Col.polOf G' (shiftOf lam) o (fnOf G (shiftOf lam) 1 P) = P := by
     intro P
     have h := Formalism.L2.Col.polOf_fnOf G' (shiftOf lam) o P
-    rw [ho] at h
-    exact h
+    rwa [ho] at h
   have hval : ∀ v, ∃ P ∈ Formalism.L2.DIV.VV ℂ lam, j v = fnOf G (shiftOf lam) 1 P := by
     intro v
     have hv : j v ∈ ValC G lam := hr ▸ LinearMap.mem_range_self j v
@@ -77,8 +76,7 @@ theorem exists_pairB_of_range_eq {ι : Type} [Fintype ι] {n : ℕ} (G G' : ι �
   have hmem : ∀ v, φ v ∈ Formalism.L2.DIV.VV ℂ lam := by
     intro v
     obtain ⟨P, hP, e⟩ := hval v
-    rw [hφ, e, key]
-    exact hP
+    rwa [hφ, e, key]
   let φ' : V →ₗ[ℂ] Formalism.L2.DIV.VV ℂ lam := φ.codRestrict _ hmem
   have hφ' : ∀ v, (φ' v : Formalism.L2.DIV.Pol ℂ ι n) = φ v := fun _ => rfl
   have inj : Function.Injective φ' := by

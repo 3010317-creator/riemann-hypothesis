@@ -175,8 +175,7 @@ theorem polZero_relV : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
       obtain ⟨w, hw⟩ := w
       by_cases hwv : w = v
       · subst hwv
-        simp only [Function.update_self]
-        exact hpv i
+        simpa only [Function.update_self] using hpv i
       · simp only [Function.update_of_ne hwv]
     simp only [e, add_neg_cancel]
 
@@ -244,13 +243,13 @@ theorem exists_not_polZero : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   let φ : ∀ v : Pl F, (Fin a × Fin (a + a') → Fv F v) → ℂ := fun v => if v ∈ Xc.T then ψ0 v else G.M.vac v
   have hφSB : ∀ v, φ v ∈ GlobalTheory.WeilM.SB _ := fun v => by
     by_cases h : v ∈ Xc.T
-    · simp only [φ, h, if_true]; exact hψ0 v
-    · simp only [φ, h, if_false]; exact (hvac v).1
+    · simp only [φ, h, ite_true]; exact hψ0 v
+    · simp only [φ, h, ite_false]; exact (hvac v).1
   have hφout : ∀ v ∉ Xc.T, φ v = G.M.vac v := fun v h => by simp [φ, h]
   have hφne : ∀ v, Rf.p v (φ v) ≠ 0 := fun v => by
     by_cases h : v ∈ Xc.T
-    · simp only [φ, h, if_true]; exact hψ0ne v
-    · simp only [φ, h, if_false]; exact (hM.fin.sph v h).2
+    · simp only [φ, h, ite_true]; exact hψ0ne v
+    · simp only [φ, h, ite_false]; exact (hM.fin.sph v h).2
   refine ⟨GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ, ?_, ?_⟩
   · have := sum_pure_mem_algD G.M Bs.ψ Bs.emb Xc.T (m := 1) (fun _ => f) (fun _ => φ) (fun _ => ⟨hfP, hφSB, hφout⟩)
     simpa using this
@@ -335,8 +334,7 @@ theorem polZero_om_fin : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     intro x hx
     have e := hM.fin.equiv v h hh x.1 x.2 0 (zero_mem _) (D x.1 x.2) (hDSB x.1 x.2) 0 (zero_mem _) (hDA x.1 x.2) hA0
       (by rw [map_zero]; exact hx)
-    rw [map_zero] at e
-    exact e
+    rwa [map_zero] at e
   let L : Rf.Pi v →ₗ[ℂ] Rf.Pi v := GlobalTheory.ThK.RealUniq.induced π hsurj Dl hD
   let ψ : Fin m → (Fin a × Fin (a + a') → Fv F v) → ℂ := fun i => D (φ i v) ((hf i).2.1 v)
   have hL : ∀ i, L (Rf.p v (φ i v)) = Rf.p v (ψ i) := fun i =>
@@ -359,13 +357,10 @@ theorem polZero_om_fin : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   refine ⟨insert v T, hXT.trans hTS, m, f, φ₂, fun i => ⟨(hf i).1, fun w => ?_, fun w hw => ?_⟩, ?_, ?_⟩
   · by_cases hwv : w = v
     · subst hwv
-      simp only [φ₂, Function.update_self]
-      exact hDSB _ _
-    · simp only [φ₂, Function.update_of_ne hwv]
-      exact (hf i).2.1 w
+      simpa only [φ₂, Function.update_self] using hDSB _ _
+    · simpa only [φ₂, Function.update_of_ne hwv] using (hf i).2.1 w
   · rw [Finset.mem_insert, not_or] at hw
-    simp only [φ₂, Function.update_of_ne hw.1]
-    exact (hf i).2.2 w hw.2
+    simpa only [φ₂, Function.update_of_ne hw.1] using (hf i).2.2 w hw.2
 
   · rw [map_sum]
     exact Finset.sum_congr rfl fun i _ => hpure i
@@ -386,8 +381,7 @@ theorem polZero_om_fin : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     funext u
     by_cases hu : u = ⟨v, hv⟩
     · subst hu
-      simp only [Lw, φ₂, Function.update_self]
-      exact (hL i).symm
+      simpa only [Lw, φ₂, Function.update_self] using (hL i).symm
     · have hu' : u.1 ≠ v := fun e => hu (Subtype.ext e)
       simp only [Lw, φ₂, Function.update_of_ne hu, Function.update_of_ne hu', LinearMap.id_apply]
 

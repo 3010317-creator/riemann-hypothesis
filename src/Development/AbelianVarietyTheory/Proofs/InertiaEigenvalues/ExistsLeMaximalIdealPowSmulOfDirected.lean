@@ -93,8 +93,7 @@ private theorem mem_of_forall_mem_sup_maximalIdeal_pow_smul (B M : Type) [CommRi
       exact Submodule.smul_mono le_rfl le_top
     have hzq := hmap (Submodule.mem_map_of_mem hz)
     have hy0 : K.mkQ y = 0 := (Submodule.Quotient.mk_eq_zero K).mpr hy
-    rw [map_add (f := _), hy0, zero_add]
-    exact hzq
+    rwa [map_add (f := _), hy0, zero_add]
   rw [hbot, Submodule.mem_bot] at hx
   exact (Submodule.Quotient.mk_eq_zero K).mp hx
 
@@ -178,7 +177,7 @@ theorem _root_.GlobalTheory.Chevalley.exists_le_maximalIdeal_pow_smul_of_directe
     rwa [sup_comm (K j), sup_comm (K i)]
   choose j hj using hmin
   by_contra hcon
-  push_neg at hcon
+  push Not at hcon
   have hE_step : ∀ n, ∀ x ∈ K (j n) ⊔ maximalIdeal B ^ (n + 1) • (⊤ : Submodule B M),
       ∃ x' ∈ K (j (n + 1)) ⊔ maximalIdeal B ^ (n + 1 + 1) • (⊤ : Submodule B M),
         x - x' ∈ maximalIdeal B ^ (n + 1) • (⊤ : Submodule B M) := by

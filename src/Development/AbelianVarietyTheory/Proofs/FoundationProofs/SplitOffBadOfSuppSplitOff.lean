@@ -113,12 +113,12 @@ open Classical in
 def ind (S : Set (HeightOneSpectrum (𝓞 F))) : FiniteAdeleRing (𝓞 F) F :=
   ⟨fun w => if w ∈ S then 1 else 0, Filter.Eventually.of_forall fun w => by
     by_cases h : w ∈ S
-    · simp only [if_pos h]; exact one_mem _
-    · simp only [if_neg h]; exact zero_mem _⟩
+    · simp only [ite_eq_left h]; exact one_mem _
+    · simp only [ite_eq_right h]; exact zero_mem _⟩
 
-theorem ind_pos {S : Set (HeightOneSpectrum (𝓞 F))} {w} (h : w ∈ S) : ind S w = 1 := if_pos h
+theorem ind_pos {S : Set (HeightOneSpectrum (𝓞 F))} {w} (h : w ∈ S) : ind S w = 1 := ite_eq_left h
 
-theorem ind_neg {S : Set (HeightOneSpectrum (𝓞 F))} {w} (h : w ∉ S) : ind S w = 0 := if_neg h
+theorem ind_neg {S : Set (HeightOneSpectrum (𝓞 F))} {w} (h : w ∉ S) : ind S w = 0 := ite_eq_right h
 
 theorem loc_ind_pos {S : Set (HeightOneSpectrum (𝓞 F))} {w} (h : w ∈ S) :
     loc E w (ind S ⊗ₜ[F] (1 : E)) = 1 := by rw [loc_tmul, ind_pos h]; rfl
@@ -272,8 +272,7 @@ theorem moved_of_hom {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
       (φ z - algebraMap F (v.adicCompletion F) t) - (φ z - φ (c z)) by ring]
     exact Valuation.map_sub_eq_of_lt_right _ ht
   have h1 : Valued.v (φ (z - algebraMap F E t)) < Valued.v (φ (c (z - algebraMap F E t))) := by
-    rw [map_sub c, c.commutes, map_sub φ, map_sub φ, hφ, hb]
-    exact ht
+    rwa [map_sub c, c.commutes, map_sub φ, map_sub φ, hφ, hb]
   generalize z - algebraMap F E t = u at h1
   obtain ⟨a, b, h⟩ := HeightOneSpectrum.exists_primeCompl_mul_eq_or_mul_eq P (K := E) (u / c u)
   have hu : c u ≠ 0 := fun h0 => by
@@ -412,11 +411,9 @@ theorem inv_mulVec_mem_iff (V : HSp D) (g : Bridge.Gf V) (x : Fin V.rank → D.h
       Formalism.MainNotions.StandardLattice.latHat D.host.F D.host.E (latC V : Set (Fin V.rank → D.host.E)) ↔ x ∈ latOf D.host.F g.1.1 (latC V) := by
   change (g.1⁻¹).1 *ᵥ fv D.host.F x ∈ hat D.host.F _ ↔ _
   constructor
-  · intro hx
-    exact ⟨_, hx, by rw [Matrix.mulVec_mulVec, Units.mul_inv, Matrix.one_mulVec]⟩
+  · exact fun hx => ⟨_, hx, by rw [Matrix.mulVec_mulVec, Units.mul_inv, Matrix.one_mulVec]⟩
   · rintro ⟨z, hz, e⟩
-    rw [← e, Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec]
-    exact hz
+    rwa [← e, Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec]
 
 theorem coe_hLat (V : HSp D) (g : Bridge.Gf V) :
     (Bridge.hLat V g : Set (Fin V.rank → D.host.E)) = latOf D.host.F g.1.1 (latC V) := by

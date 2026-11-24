@@ -190,11 +190,9 @@ theorem shufcomb (l : ℕ) (hl : 3 ≤ l) (w : Fin l → ℕ) (hw : ∀ a, w a <
     · by_cases hbj : b = j
       · exfalso
         have hij' : i < j := by
-          rw [← hai, ← hbj]
-          exact hab
+          rwa [← hai, ← hbj]
         obtain ⟨c, hci, hcj⟩ : ∃ c : Fin l, c ≠ i ∧ c ≠ j := by
-          by_contra hc
-          push_neg at hc
+          by_contra! hc
           have key : ∀ k : ℕ, ∀ hk : k < l, k = i.val ∨ k = j.val := by
             intro k hk
             by_cases h : (⟨k, hk⟩ : Fin l) = i
@@ -454,8 +452,7 @@ theorem fineJac_step (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (Δ :
     ext e
     simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
     constructor
-    · intro h
-      exact Equiv.ext fun a => (hinj (h a)).symm
+    · exact fun h => Equiv.ext fun a => (hinj (h a)).symm
     · rintro rfl a
       rfl
   have hup : jm (dec Δ) hd π ≤ 1 := by

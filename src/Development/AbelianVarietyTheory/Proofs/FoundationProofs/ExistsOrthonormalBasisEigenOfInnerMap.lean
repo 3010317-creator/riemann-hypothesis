@@ -134,7 +134,6 @@ theorem exists_orthonormal_eigenbasis {V : Type} [AddCommGroup V] [Module ℂ V]
         · simp [hx]
         · exact (hH.2 x hx).le
       add_left := fun x y z => by
-        show H z (x + y) = H z x + H z y
         exact map_add _ _ _
       smul_left := fun x y r => by
         show H y (r • x) = (starRingEnd ℂ) r * H y x
@@ -153,8 +152,7 @@ theorem exists_orthonormal_eigenbasis {V : Type} [AddCommGroup V] [Module ℂ V]
   ·
     have h1 : ‖a (b i)‖ = ‖b i‖ := by
       rw [norm_eq_sqrt_re_inner (𝕜 := ℂ), norm_eq_sqrt_re_inner (𝕜 := ℂ), hinner, hinner, ha]
-    rw [hb i, norm_smul, b.orthonormal.1 i, mul_one] at h1
-    exact h1
+    rwa [hb i, norm_smul, b.orthonormal.1 i, mul_one] at h1
   · rw [OrthonormalBasis.coe_toBasis]
     exact hb i
 

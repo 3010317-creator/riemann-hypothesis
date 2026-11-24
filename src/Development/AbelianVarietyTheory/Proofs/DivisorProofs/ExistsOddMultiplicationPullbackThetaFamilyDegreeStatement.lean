@@ -130,8 +130,7 @@ theorem mulPull_gen_labCover {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R
   have hsym : HasGen C.P.L.L (K := Fin 2) ![(𝟙 C.G : C.G ⟶ C.G).left, ((𝟙 C.G)⁻¹ : C.G ⟶ C.G).left] ![1, -1] := by
     refine hsym0.inv.of_formEq hL (fun U _ h => ?_)
     simp only [Fin.prod_univ_succ, Fin.prod_univ_zero, Matrix.cons_val_zero, Matrix.cons_val_succ, e1, e2]
-    simp only [neg_neg, zpow_one, _root_.mul_one]
-    exact mul_comm _ _
+    simpa only [neg_neg, zpow_one, _root_.mul_one] using mul_comm _ _
   have H := hasGen_pow hL hcube (𝟙 C.G) hone hsym m
   have e3 : ((𝟙 C.G) ^ m : C.G ⟶ C.G).left = (mulA C.G m).left := by
     rw [← GlobalTheory.ZH.TorsFrame.comp_mulA]
@@ -243,8 +242,7 @@ theorem psi_even (hE : D.PsiEven) (χ : D.X) :
 omit σ in
 theorem sym_one : val D.sym (1 : T ⟶ D.P.A).left z J = 1 := by
   have e := val_corr hJ D.sym_rig T.hom
-  rw [val_pull hJ, val_one] at e
-  exact e
+  rwa [val_pull hJ, val_one] at e
 
 end Values
 
@@ -766,8 +764,7 @@ theorem mul_val_pull (hG : GlobalFnsSt) (hD : IsPullDeg φ D D') (m k k' : ℕ) 
   have hφ : ∀ i, mulφB D' m x i ≫ prj hD = prj hD ≫ mulφB D m (hD.xe x) i := by
     rintro (i | i)
     · have := ExpGTrans.famφB_pull hD (m • x) i
-      rw [map_nsmul] at this
-      exact this
+      rwa [map_nsmul] at this
     · show ((mulA D'.P.A m).left ≫ D'.famφB x i) ≫ prj hD = prj hD ≫ (mulA D.P.A m).left ≫ D.famφB (hD.xe x) i
       rw [Category.assoc, ExpGTrans.famφB_pull hD x i, ← Category.assoc, hm, Category.assoc]
   obtain ⟨t, ht, hv⟩ := exists_up ((isGen_iff hD.w).1 hD.w_gen) D.P.isLB D'.P.isLB (φ' := mulφB D' m x)
@@ -1136,8 +1133,7 @@ namespace GlobalTheory.Mum
 
 theorem mulFam_exists_ne_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (m : ℕ), Odd m → ∀ (F₁ : IntFam (maximalIdeal R) D.toPre 1) (G : IntFam (maximalIdeal R) D.toPre (m ^ 2)), MulFam m F₁ G → (∃ α j, (F₁.f α).f j ≠ 0) → ∃ α j, (G.f α).f j ≠ 0 := by
   intro R _ _ _ _ D m hm F₁ G hG ⟨α, j, hj⟩
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   apply hj
   have hfinite : IsFinite (mulA D.toPre.P.A m).left := GlobalTheory.MulFinite.isFinite_mulA
     (GlobalTheory.MulPull.mulPull_of_cube_of_symm GlobalTheory.AbLaw.CubeAssembly.cube_gen

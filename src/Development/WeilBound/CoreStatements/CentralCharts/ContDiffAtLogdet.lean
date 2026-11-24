@@ -68,9 +68,7 @@ theorem contDiffAt_logdet {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] 
   classical
   have hdet : ContDiffAt ℝ m (fun u => (Γ u).det) t := by
     simp only [Matrix.det_apply]
-    refine ContDiffAt.sum fun σ _ => ?_
-    refine ContDiffAt.const_smul _ ?_
-    exact contDiffAt_prod fun i _ => h (σ i) i
+    exact ContDiffAt.sum fun σ _ => ContDiffAt.const_smul _ (contDiffAt_prod fun i _ => h (σ i) i)
   have hre : ContDiffAt ℝ m (fun u => (Γ u).det.re) t :=
     Complex.reCLM.contDiff.contDiffAt.comp t hdet
   refine hre.log ?_
@@ -100,8 +98,7 @@ theorem tame_logdet {a₀ k r : ℕ} {Λ : Type} [AddCommGroup Λ] (L : Flat.Log
   have hB' : ∀ y : Fin n → ℂ, ‖y‖ < ε → ‖y‖ < 1 → (∀ i : Fin n, (i : ℕ) < a → y i ≠ 0) →
       ((G y)⁻¹ - (c : ℂ) • 1).PosSemidef ∧ (((C * logR a y : ℝ) : ℂ) • 1 - (G y)⁻¹).PosSemidef ∧
       ∀ p q, ‖fderiv ℝ (fun y' => G y' p q) y‖ ≤ C * Real.exp (logR a y / 2) := by
-    intro y hy hy1 hy0
-    exact hB y (by simpa using hy) hy1 (hpunct y hy hy0)
+    exact fun y hy hy1 hy0 => hB y (by simpa using hy) hy1 (hpunct y hy hy0)
   have hPD : ∀ y : Fin n → ℂ, ‖y‖ < ε → ‖y‖ < 1 → (∀ i : Fin n, (i : ℕ) < a → y i ≠ 0) →
       (G y).PosDef := fun y hy hy1 hy0 => posDef_of_inv_ge hc (hB' y hy hy1 hy0).1
   have hentry : ∀ y : Fin n → ℂ, ‖y‖ < ε → (∀ i : Fin n, (i : ℕ) < a → y i ≠ 0) →

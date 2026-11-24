@@ -432,14 +432,14 @@ theorem abstract_change {ι X Z : Type} [Countable ι] {Y : ι → Type} [Measur
     rw [this]
     exact MeasurableSet.iInter fun v => MeasurableSet.iInter fun _ => hq v (hA v)
   let gv : ∀ v, Y v → ℝ≥0∞ := fun v => if v ∈ S then fv v else (A v).indicator 1
-  have hgS : ∀ v ∈ S, gv v = fv v := fun v hv => if_pos hv
+  have hgS : ∀ v ∈ S, gv v = fv v := fun v hv => ite_eq_left hv
   have hgT : ∀ v ∈ T, gv v = (A v).indicator 1 := fun v hv =>
-    if_neg (fun h => Finset.disjoint_left.mp hd h hv)
+    ite_eq_right (fun h => Finset.disjoint_left.mp hd h hv)
   have hgm : ∀ v, Measurable (gv v) := by
     intro v
     by_cases hv : v ∈ S
     · rw [hgS v hv]; exact hfv v
-    · have : gv v = (A v).indicator 1 := if_neg hv
+    · have : gv v = (A v).indicator 1 := ite_eq_right hv
       rw [this]; exact measurable_one.indicator (hA v)
   have h1 := H fi gv hfi hgm
   have hset : {x | ∀ v ∉ S ∪ T, q v x ∈ L v} = {x | ∀ v ∉ S ∪ T, q v x ∈ A v} := by
@@ -729,8 +729,7 @@ theorem fst_mem {v : HeightOneSpectrum (𝓞 F)} {y : Fin 1 → Fin (M + 1) → 
     (h : pairOf (Fv F v) σ J B y g y' ∈ latV b v) : y ∈ latV b v := by
   intro c i k
   have := h 0 i k
-  rw [Subsingleton.elim c 0]
-  exact this
+  rwa [Subsingleton.elim c 0]
 
 theorem good_ae (hCM : IsCMExt F E σ) (hS : StepData σ J x a B J') :
     ∀ᶠ v : HeightOneSpectrum (𝓞 F) in Filter.cofinite,
@@ -746,8 +745,7 @@ theorem good_ae (hCM : IsCMExt F E σ) (hS : StepData σ J x a B J') :
     ((latV b v).indicator 1) (measurable_one.indicator hL)
   have h4 : ∀ g : HA (Fv F v) σ J, ∫⁻ y', (latV b v).indicator (1 : (Fin 2 → Fin (M + 1) → Fv F v ⊗[F] E) → ℝ≥0∞) (pairOf (Fv F v) σ J B y g y') ∂m' =
       m' {y' | pairOf (Fv F v) σ J B y g y' ∈ latV b v} := by
-    intro g
-    exact lintegral_indicator_one (measurable_pair (B := B) (Fv F v) y g hL)
+    exact fun g => lintegral_indicator_one (measurable_pair (B := B) (Fv F v) y g hL)
   rw [h4, h4] at h3
   rw [h3]
   congr 1
@@ -797,12 +795,10 @@ theorem adelic_orbit (hCM : IsCMExt F E σ) (hS : StepData σ J x a B J')
   refine _root_.GlobalTheory.AdelicWitt.witt_adelic F E σ hCM (M + 1) J x a hS.1 hS.2.1 hS.2.2.1 y ?_
   refine ((q_and_unitary_local_components F E σ (M + 1) J).1 (y 0) a).2 ⟨?_, fun v => ?_⟩
   · have := _root_.GlobalTheory.GaugeEx.OrbitQuadric.qR_orbit F E σ hCM _ _ J x a hS.2.2.1 gi
-    rw [hgi] at this
-    exact this
+    rwa [hgi] at this
   · obtain ⟨g, hg⟩ := hy v
     have := _root_.GlobalTheory.GaugeEx.OrbitQuadric.qR_orbit F E σ hCM _ _ J x a hS.2.2.1 g
-    rw [hg] at this
-    exact this
+    rwa [hg] at this
 
 end
 
@@ -1112,8 +1108,7 @@ theorem perp_fst (h : StepData σ J x a B J₁) : rowP σ J (B * C) (x 0) = 0 :=
 theorem perp_snd (h : StepData σ J x a B J₁) (h' : StepData σ J₁ y b C J₀) :
     rowP σ J (B * C) (B *ᵥ y 0) = 0 := by
   have : rowP σ J₁ C (y 0) = 0 := funext fun j => by rw [rowP_apply]; exact h'.2.2.2.1 j
-  rw [rowP_mulVec, ← Matrix.mul_assoc, ← h.2.2.2.2.1]
-  exact this
+  rwa [rowP_mulVec, ← Matrix.mul_assoc, ← h.2.2.2.2.1]
 
 theorem span_perp (h : StepData σ J x a B J₁) (h' : StepData σ J₁ y b C J₀)
     (hd : (consCol x B).det ≠ 0) (hd' : (consCol y C).det ≠ 0) {v : Fin (M + 1 + 1) → E}
@@ -1231,12 +1226,10 @@ theorem ratTup_one {M N : ℕ} (x : Fin 1 → Fin M → E) (B : Matrix (Fin M) (
 theorem mem_stab {M : ℕ} {J : Matrix (Fin M) (Fin M) E} (x : Fin 1 → Fin M → E) (g : HA R σ J) :
     g ∈ Hstab R σ J x ↔ mt R g *ᵥ ratTup (F := F) R x 0 = ratTup (F := F) R x 0 := by
   constructor
-  · intro h
-    exact congrFun (MulAction.mem_stabilizer_iff.1 h) 0
+  · exact fun h => congrFun (MulAction.mem_stabilizer_iff.1 h) 0
   · intro h
     refine MulAction.mem_stabilizer_iff.2 (funext fun a => ?_)
-    rw [Subsingleton.elim a 0]
-    exact h
+    rwa [Subsingleton.elim a 0]
 
 theorem cancel_mat {M N K : ℕ} {B : Matrix (Fin M) (Fin N) E} {L : Matrix (Fin N) (Fin M) E}
     (hL : L * B = 1) {P Q : Matrix (Fin N) (Fin K) (R ⊗[F] E)}
@@ -1272,8 +1265,7 @@ theorem symm_rel (he : ∀ g : Hstab R σ J x, FrameRelR R σ J J₁ B (g : HA R
     (g : HA R σ J₁) :
     mt R (e.symm g : HA R σ J) * B.map (inclR (F := F) R) = B.map (inclR (F := F) R) * mt R g := by
   have := he (e.symm g)
-  rw [e.apply_symm_apply] at this
-  exact this
+  rwa [e.apply_symm_apply] at this
 
 theorem emb_rel (he : ∀ g : Hstab R σ J x, FrameRelR R σ J J₁ B (g : HA R σ J) (e g))
     (he' : ∀ g : Hstab R σ J₁ y, FrameRelR R σ J₁ J₀ C (g : HA R σ J₁) (e' g)) (h : HA R σ J₀) :
@@ -1318,8 +1310,7 @@ theorem emb_surj {L : Matrix (Fin (M + 1)) (Fin (M + 1 + 1)) E} (hL : L * B = 1)
     have h2 : mt R g *ᵥ ratTup (F := F) R ![x 0, B *ᵥ y 0] 1 =
       ratTup (F := F) R ![x 0, B *ᵥ y 0] 1 := congrFun hg 1
     have h3 : mt R g * B.map (inclR (F := F) R) = B.map (inclR (F := F) R) * mt R (e ⟨g, h0⟩) := he ⟨g, h0⟩
-    rw [ratTup_one, Matrix.mulVec_mulVec, h3, ← Matrix.mulVec_mulVec] at h2
-    exact h2
+    rwa [ratTup_one, Matrix.mulVec_mulVec, h3, ← Matrix.mulVec_mulVec] at h2
   refine ⟨e' ⟨_, h1⟩, ?_⟩
   rw [emb_apply, e'.symm_apply_apply, e.symm_apply_apply]
 
@@ -1335,8 +1326,7 @@ theorem exists_sec (R : Type) [CommRing R] [Algebra F R] {M : ℕ} (J : Matrix (
   classical
   refine ⟨fun y => if h : ∃ g : HA R σ J, g • ratTup (F := F) R x = y then h.choose else 1, ?_⟩
   intro y hy
-  simp only [dif_pos hy]
-  exact hy.choose_spec
+  simpa only [dite_eq_left hy] using hy.choose_spec
 
 theorem meas_avg [FiniteDimensional F E] {M N : ℕ} {J : Matrix (Fin N) (Fin N) E}
     {J₀ : Matrix (Fin M) (Fin M) E} (μ₀ : Measure (HA (AF F) σ J₀)) [μ₀.IsHaarMeasure]

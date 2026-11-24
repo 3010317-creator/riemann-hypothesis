@@ -126,9 +126,7 @@ theorem finiteDimensional_stable_le_iSup_eigen :
   let s : Finset ℕ := hsfin.toFinset
   have hout : ∀ m, m ∉ s → ∀ e ∈ E m, ∀ y ∈ W, ⟪e, y⟫_ℂ = 0 := by
     intro m hm e he y hy
-    have hne : f.eval (lam m) ≠ 0 := by
-      intro h
-      exact hm (hsfin.mem_toFinset.mpr h)
+    have hne : f.eval (lam m) ≠ 0 := fun h => hm (hsfin.mem_toFinset.mpr h)
     have := form_aeval_of_left_eigen T (((innerₛₗ ℂ e : H →ₗ[ℂ] ℂ)).comp W.subtype) (lam m)
       (fun v => hleft m e he v) f ⟨y, hy⟩
     rw [hfT] at this
@@ -161,8 +159,7 @@ theorem finiteDimensional_stable_le_iSup_eigen :
       exact Submodule.orthogonal_le hle (Submodule.sub_starProjection_mem_orthogonal y)
     · refine Submodule.sub_mem _ ?_ (hForth m hm (F.starProjection_apply_mem y))
       rw [Submodule.mem_orthogonal]
-      intro e he
-      exact hout m hm e he y hy
+      exact fun e he => hout m hm e he y hy
   have hz0 : y - F.starProjection y = 0 := by
     have htop : (⨆ m, E m : Submodule ℂ H).topologicalClosure = ⊤ :=
       Submodule.dense_iff_topologicalClosure_eq_top.mp hdense

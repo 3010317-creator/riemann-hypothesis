@@ -109,8 +109,7 @@ private theorem UpperTheory.Reformulated.B.Qf19.exists_eigvec {R : Type} [CommRi
   have hker : M *ᵥ (fun b => M.adjugate b a) = 0 := by
     ext b
     have := congrFun (congrFun (mul_adjugate M) b) a
-    rw [hdet, zero_smul] at this
-    exact this
+    rwa [hdet, zero_smul] at this
   refine ⟨l, (↑u⁻¹ : R) • fun b => M.adjugate b a, ?_, fun b hb => ?_, ?_⟩
   · simp [← hu']
   · refine Ideal.mul_mem_left _ _ ?_
@@ -148,8 +147,7 @@ theorem UpperTheory.Reformulated.B.Qf19.exists_canon :
   have hXH : X * H = H * diagonal l := by
     ext b a
     have := congrFun (h3 a) b
-    rw [mul_diagonal, mul_comm]
-    exact this
+    rwa [mul_diagonal, mul_comm]
   refine ⟨h, ?_, fun a => ?_, ?_⟩
   · intro a b; rw [hh]; exact hhat a b
   · rw [hh]; exact h1 a

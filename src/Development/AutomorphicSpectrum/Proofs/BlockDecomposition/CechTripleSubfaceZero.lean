@@ -179,15 +179,13 @@ theorem main : CrystallineSemistableComparison.E.EvExt → CrystallineSemistable
   · intro V V' g b
     have e := (hNat _ _ _ _ β 0 1 (by simp) V).1 V' g (pt0 D.f b)
     rw [cechPoint_restrict hCech] at e
-    simp only [map_neg]
-    exact congrArg Neg.neg e.symm
+    simpa only [map_neg] using congrArg Neg.neg e.symm
   · intro V V' g b c h h'
     rw [← (hNat _ _ _ _ β 1 0 (by simp) V).1 V' g (pt1 D.f b c h), cechPair_restrict hCech]
   · intro V b
     have h0 := ((hDel _ _ _ 1 2 (by norm_num) β V).1 (pt0 D.f b))
     rw [hv, hγ0, cechPoint_augmentation hCech, show ev α.1 0 2 (by simp) V (b ≫ D.f) = Sec.res (b ≫ D.f) a from hαc.1 V _, zero_sub] at h0
-    simp only [map_neg]
-    exact (congrArg Neg.neg h0).symm.trans (neg_neg _)
+    simpa only [map_neg] using (congrArg Neg.neg h0).symm.trans (neg_neg _)
   · intro V b c h v hv'
     have hu : v ^ q = lineUnit L (pt1 D.f b c h) := hv'.trans (hL V _ ![b, c] _).symm
     have h1 := del_one hDel β V (pt1 D.f b c h)

@@ -47,9 +47,7 @@ theorem UpperTheory.weil_group_dense_in_galois_group :
   have h1 := GlobalTheory.TameQuot.closure_frob_sup_Ine F Ω A w h ⟨_, hσ.1⟩ hσ
   have h2 : (Subgroup.zpowers (⟨_, hσ.1⟩ : Dec (F := F) A) ⊔
       (Ine (F := F) A).subgroupOf (Dec (F := F) A)) ≤ (Subgroup.inclusion (Weil_le_Dec h)).range := by
-    refine sup_le ?_ fun x hx => ⟨⟨x, Ine_le_Weil h hx⟩, rfl⟩
-    exact (Subgroup.zpowers_le).2 ⟨frob h, rfl⟩
+    exact sup_le ((Subgroup.zpowers_le).2 ⟨frob h, rfl⟩) fun x hx => ⟨⟨x, Ine_le_Weil h hx⟩, rfl⟩
   have h3 := Subgroup.topologicalClosure_mono h2
   rw [h1] at h3
-  intro g
-  exact h3 (Subgroup.mem_top g)
+  exact fun g => h3 (Subgroup.mem_top g)

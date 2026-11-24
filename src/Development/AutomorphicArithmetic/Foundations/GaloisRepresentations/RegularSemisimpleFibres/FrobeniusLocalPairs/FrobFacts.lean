@@ -87,8 +87,7 @@ private theorem map_res_red (h : IsRes rk rK s sb) (n : ℕ) (y : GL (Fin n) �
     GeneralLinearGroup.map rK (GeneralLinearGroup.map (resO s) y) =
       GlobalTheory.LBC.galAct sb n (GeneralLinearGroup.map rK y) := by
   ext i j
-  simp [GlobalTheory.LBC.galAct]
-  exact h.gal _ _ (resO_coe s _)
+  simpa [GlobalTheory.LBC.galAct] using h.gal _ _ (resO_coe s _)
 
 private theorem pow_red (h : IsRes rk rK s sb) (j : ℕ) (x : 𝒪[K]) :
     (sb ^ j) (rK x) = rK (resO (s ^ j) x) := by

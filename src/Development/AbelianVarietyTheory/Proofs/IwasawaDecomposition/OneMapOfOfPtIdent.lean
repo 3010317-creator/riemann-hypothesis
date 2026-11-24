@@ -107,8 +107,7 @@ theorem eq_zero_of_out {W : HSp D} (Φ : GA D W → ℂ) (hΦ : ∀ γ ∈ GQ W,
   let q : AutQ W := Quotient.mk _ (g * k⁻¹)
   have hr : g * k⁻¹ * q.out⁻¹ ∈ GQ W := QuotientGroup.rightRel_apply.1 (Quotient.exact (Quotient.out_eq q))
   have := hΦ _ hr (q.out * k)
-  rw [h q, show g * k⁻¹ * q.out⁻¹ * (q.out * k) = g by group] at this
-  exact this
+  rwa [h q, show g * k⁻¹ * q.out⁻¹ * (q.out * k) = g by group] at this
 
 theorem exists_coef_ext {K K' : Type} [Field K] [Field K'] {σ : K →+* ℂ} {σ' : K' →+* ℂ} (ι : K →+* K') (hσ : σ'.comp ι = σ)
     {I : Type} [Fintype I] {n : ℕ} (lam : I → DomWeight n) {W : Type} [AddCommGroup W] [Module ℂ W] (c₀ : VV K lam →ₛₗ[σ] W) :
@@ -404,8 +403,7 @@ theorem oneMapOf_of_ptIdent (hT : LawsJ T) (hV : T.V ((i : ℕ) + 1) T.σ₀ = W
     have h2 : O'.lev2 = O.lev2 := by funext g; simp only [OMDat.lev2, hlev]
     have h1 := hrow.1
     unfold OMDat.EquivAt at h1 ⊢
-    rw [h2]
-    exact h1
+    rwa [h2]
   choose k hk _ using hP.lift.lev
   obtain ⟨z₁, hz₁, s₁, s₀, a1, a2, b1, b2, hb⟩ := exists_base hV hn hP hrow k hk hid
   refine ⟨hE, ⟨hle, (GlobalTheory.FieldBC.secBC_and_cuspBC _ _ _ _ _ _ _ O'.hle).2 _ _,
@@ -461,8 +459,7 @@ theorem const_ratio_mem (hT : LawsJ T) (hV : T.V ((i : ℕ) + 1) T.σ₀ = Wc D 
     have h2 : O'.lev2 = O.lev2 := by funext g; simp only [OMDat.lev2, hlev]
     have h1 := hrow.1
     unfold OMDat.EquivAt at h1 ⊢
-    rw [h2]
-    exact h1
+    rwa [h2]
   choose k hk _ using hP.lift.lev
   obtain ⟨z₁, -, s₁, s₀, -, -, b1, b2, hb⟩ := exists_base hV hn hP hrow k hk hid
   obtain ⟨s, c1, c2, ht⟩ := exists_transfer hT hV hn hP' hE k hk hlam hc0' hid' A.μ0

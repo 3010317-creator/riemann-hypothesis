@@ -118,9 +118,7 @@ theorem span_restrict_eq_top_of_absIrrSub : ∀ {k Γ : Type} [Field k] [Group �
   have hσ : ∀ g, (σ g : Matrix (Fin d) (Fin d) k) = φ (r g) := fun g => rfl
 
   let L : (Fin d → k) →ₗ[k] (Fin a → k) := W.subtype ∘ₗ e.symm.toLinearMap
-  have hLinj : Function.Injective L := by
-    intro x y hxy
-    exact e.symm.injective (Subtype.val_injective hxy)
+  have hLinj : Function.Injective L := fun x y hxy => e.symm.injective (Subtype.val_injective hxy)
   obtain ⟨L', hL'⟩ := LinearMap.exists_leftInverse_of_injective L (LinearMap.ker_eq_bot.2 hLinj)
   let B : Matrix (Fin a) (Fin d) k := LinearMap.toMatrix' L
   let C : Matrix (Fin d) (Fin a) k := LinearMap.toMatrix' L'
@@ -185,7 +183,6 @@ theorem span_restrict_eq_top_of_absIrrSub : ∀ {k Γ : Type} [Field k] [Group �
   change Submodule.span k (Set.range r) = ⊤
   refine Submodule.map_injective_of_injective φ.injective ?_
   rw [h6, Submodule.map_top, LinearEquiv.range]
-  rw [h5] at h4
-  exact h4
+  rwa [h5] at h4
 
 end GlobalTheory.BurnsideSub

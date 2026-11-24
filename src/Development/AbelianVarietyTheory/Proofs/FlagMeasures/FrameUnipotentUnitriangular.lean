@@ -125,11 +125,10 @@ theorem linInd : LinearIndependent E g := by
     rw [← hf_sum_left, hc]; simp [hf]
   refine Fin.lastCases ?_ (fun j => ?_) i
   · have h := key (g (Fin.last r))
-    simp only [hg, and_true, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h
+    simp only [hg, and_true, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h
     have hu : IsUnit (-algebraMap F E t) := (t.isUnit.map (algebraMap F E)).neg
     exact (hu.mul_left_eq_zero).1 h
-  · have h := key (gs j)
-    simpa [hd] using h
+  · simpa [hd] using key (gs j)
 
 include hg in
 theorem last_mem_perp : g (Fin.last r) ∈ perp L S.Hm (S.spanTo g r) := by
@@ -150,8 +149,7 @@ theorem sub_mem {n : S.GLV} (hn : n ∈ S.Nof g) (i : Fin (r + 1)) :
   obtain ⟨⟨_, h2⟩, h3⟩ := hn
   refine Fin.lastCases ?_ (fun j => ?_) i
   · exact h3.2 _ (last_mem_perp S g t hg)
-  · have h := (Subgroup.mem_iInf.1 h2 j).2 (g j.castSucc) (mem_spanTo S g (by simp))
-    exact h
+  · exact (Subgroup.mem_iInf.1 h2 j).2 (g j.castSucc) (mem_spanTo S g (by simp))
 
 include hg in
 theorem map_mem {n : S.GLV} (hn : n ∈ S.Nof g) (j : ℕ) {v : S.V} (hv : v ∈ S.spanTo g j) :
@@ -200,7 +198,7 @@ theorem exists_tri {n : S.GLV} (hn : n ∈ S.Nof g) :
   · simp [hc j i (le_of_lt hij), hij.ne']
   · simp [hc i i le_rfl]
   · simp only [Matrix.of_apply, add_smul, Finset.sum_add_distrib, ← hc' j, ite_smul, one_smul, zero_smul,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     simp
 
 end

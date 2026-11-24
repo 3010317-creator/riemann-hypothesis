@@ -101,8 +101,7 @@ theorem _root_.GlobalTheory.BI.isChar_and_isIrrChar_of_rep :
   intro K L _ _ _ G _ V _ _ _ ρ
   set e : V ≃ₗ[K] (Fin (Module.finrank K V) → K) := (Module.finBasis K V).equivFun
   have hchar : ∀ g, (_root_.GlobalTheory.BI.transportRep ρ e).character g = ρ.character g := by
-    intro g
-    exact LinearMap.trace_conj' (ρ g) e
+    exact fun g => LinearMap.trace_conj' (ρ g) e
   refine ⟨⟨Module.finrank K V, _root_.GlobalTheory.BI.transportRep ρ e, fun g => ?_⟩, fun hρ => ?_⟩
   · rw [hchar]
   · refine ⟨Module.finrank K V, _root_.GlobalTheory.BI.transportRep ρ e, ?_, fun g => ?_⟩

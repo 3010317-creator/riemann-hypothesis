@@ -102,8 +102,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.locIdem :
       (j : T →+* Module.End A Y) μ x ∈ maximalIdeal A • (⊤ : Submodule A Y) := by
     intro μ hμ
     have hμ' : μ ∈ maximalIdeal A • (⊤ : Submodule A T) := by
-      rw [Ideal.smul_top_eq_map]
-      exact hμ
+      rwa [Ideal.smul_top_eq_map]
     intro x
     change j μ x ∈ _
     refine Submodule.smul_induction_on hμ' ?_ ?_
@@ -128,8 +127,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.locIdem :
     rw [Submodule.mem_inf, and_iff_right y.2, Submodule.mem_iInf]
     refine forall_congr' fun i => ?_
     rw [Submodule.mem_iInf]
-    refine forall_congr' fun k => ?_
-    exact mem_iSup_iff (hres i) _ y
+    exact forall_congr' fun k => mem_iSup_iff (hres i) _ y
   · refine Algebra.commute_of_mem_adjoin_of_forall_mem_commute hmem ?_
     rintro s ⟨i, hi⟩
     exact hφ i s hi

@@ -177,8 +177,7 @@ theorem swapHerm_self {e e' : R} (hee : e * e' = 0) (hce : c e = e') (hH : IsHer
   rw [h1, h2, ← mul_assoc, hee, zero_mul]
 
 theorem swapHerm_exists_ne (hP : IsPerfect h) {a : V} (ha : a ≠ 0) : ∃ y, h a y ≠ 0 := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   exact ha (hP.nondeg a hne)
 
 theorem swapHerm_pair_ne {e e' : R} (hee : e * e' = 0) (hce : c e = e') (hce' : c e' = e)
@@ -446,8 +445,7 @@ theorem pair_mem_of_even : ∀ {k R V : Type} [Field k] [CommRing R] [Algebra k 
     obtain ⟨m, hm⟩ := hhen e' hWe
     have hM' : algebraMap k R m * algebraMap k R m + algebraMap k R m + a * c a * h w w * Dinv = 0 := by
       have hm' := congrArg (algebraMap k R) hm
-      rw [map_add (f := _), map_add (f := _), map_mul, map_zero, he'] at hm'
-      exact hm'
+      rwa [map_add (f := _), map_add (f := _), map_mul, map_zero, he'] at hm'
     have hcM' : c (algebraMap k R m) = algebraMap k R m := hck m
     obtain ⟨M, hMdef⟩ : ∃ M, algebraMap k R m = M := ⟨_, rfl⟩
     rw [hMdef] at hM' hcM'
@@ -793,18 +791,14 @@ theorem fg_eq_prod_principal {k R : Type} [Field k] [CommRing R] (O : ValuationS
       refine Submodule.add_mem _ ?_ ?_
       · rcases hα with rfl | rfl
         · refine Submodule.mem_sup_left ((h₁ _).2 ?_)
-          simp only [RingEquiv.apply_symm_apply]
-          exact ⟨⟨x, hx, p⟩, ⟨0, O.zero_mem, by simp⟩⟩
+          simpa only [RingEquiv.apply_symm_apply] using ⟨⟨x, hx, p⟩, ⟨0, O.zero_mem, by simp⟩⟩
         · refine Submodule.mem_sup_right ((h₂ _).2 ?_)
-          simp only [RingEquiv.apply_symm_apply]
-          exact ⟨⟨x, hx, p⟩, ⟨0, O.zero_mem, by simp⟩⟩
+          simpa only [RingEquiv.apply_symm_apply] using ⟨⟨x, hx, p⟩, ⟨0, O.zero_mem, by simp⟩⟩
       · rcases hβ with rfl | rfl
         · refine Submodule.mem_sup_left ((h₁ _).2 ?_)
-          simp only [RingEquiv.apply_symm_apply]
-          exact ⟨⟨0, O.zero_mem, by simp⟩, ⟨y, hy, q⟩⟩
+          simpa only [RingEquiv.apply_symm_apply] using ⟨⟨0, O.zero_mem, by simp⟩, ⟨y, hy, q⟩⟩
         · refine Submodule.mem_sup_right ((h₂ _).2 ?_)
-          simp only [RingEquiv.apply_symm_apply]
-          exact ⟨⟨0, O.zero_mem, by simp⟩, ⟨y, hy, q⟩⟩
+          simpa only [RingEquiv.apply_symm_apply] using ⟨⟨0, O.zero_mem, by simp⟩, ⟨y, hy, q⟩⟩
 
 end GlobalTheory.CompanionTheory.KFin
 end -- clump:auto
@@ -833,16 +827,14 @@ theorem sigR_fixed_eq_algebraMap : ∀ {F E : Type} [Field F] [NumberField F] [F
     apply τ.injective
     rw [h.2.2.2, h.2.2.2, star_star]
   have hmoved : ∃ y, σ y ≠ y := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
     have hreal : ComplexEmbedding.IsReal τ := ComplexEmbedding.isReal_iff.2 (RingHom.ext fun x => by
       rw [ComplexEmbedding.conjugate_coe_eq]
       have := h.2.2.2 τ x
       rw [hc x] at this
       exact this.symm)
-    have hcx := h.2.1.isComplex (InfinitePlace.mk τ)
-    exact (InfinitePlace.isComplex_mk_iff.1 hcx) hreal
+    exact (InfinitePlace.isComplex_mk_iff.1 (h.2.1.isComplex (InfinitePlace.mk τ))) hreal
   have hex : ∃ (θ : E) (d : F) (B : Module.Basis (Fin 2) F E),
       θ ≠ 0 ∧ d ≠ 0 ∧ σ θ = -θ ∧ θ * θ = algebraMap F E d ∧
       B 0 = 1 ∧ B 1 = θ := by
@@ -1037,8 +1029,7 @@ theorem hasBase_of_split {k R : Type} [Field k] [CommRing R] (O : ValuationSubri
         exact h'.1.1
       have hfg : (N.comap f).FG := by
         apply Submodule.fg_of_fg_map_injective f finj
-        rw [Submodule.map_comap_eq_of_surjective fsurj]
-        exact hNfg
+        rwa [Submodule.map_comap_eq_of_surjective fsurj]
       obtain ⟨α, β, hαβ⟩ := _root_.GlobalTheory.CompanionTheory.KFin.fg_eq_prod_principal O φ 𝔬 h𝔬 (N.comap f) hfg
       have hαβ' : ∀ r : R, r • w₀ ∈ N ↔ (∃ x ∈ O, (φ r).1 = α * x) ∧ ∃ y ∈ O, (φ r).2 = β * y :=
         fun r => hαβ r
@@ -1145,8 +1136,7 @@ theorem hasBase_place : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Nu
         (by simpa using hv) (by simp)
       refine ⟨(a : Fv F v), ?_⟩
       have h2 : (a : Fv F v) ^ 2 + 1 * (a : Fv F v) + e = 0 := by
-        have h3 := congrArg Subtype.val ha
-        simpa using h3
+        simpa using congrArg Subtype.val ha
       linear_combination h2
   · obtain ⟨φ, hφc, hφ𝔬⟩ := _root_.GlobalTheory.CompanionTheory.KFin.SplitBase.exists_split_ringEquiv hcm v hF
     exact hasBase_of_split (HeightOneSpectrum.adicCompletionIntegers F v) φ _ _ hφc hφ𝔬

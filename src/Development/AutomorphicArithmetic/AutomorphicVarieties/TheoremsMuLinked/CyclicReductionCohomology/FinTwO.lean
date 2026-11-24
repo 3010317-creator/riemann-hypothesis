@@ -97,8 +97,7 @@ private theorem phi_sub (l : ℕ) {Γ : Type} [Group Γ] [TopologicalSpace Γ] [
   · intro φ φ' h
     apply Subtype.ext
     ext k
-    have h2 := congrArg (fun ψ => ψ.1 (e k)) h
-    simpa using h2
+    simpa using congrArg (fun ψ => ψ.1 (e k)) h
 
 private theorem finite_addMonoidHom_zmod_of_finite (l : ℕ) [Fact l.Prime] (M : Type) [AddCommGroup M] [Finite M] :
     Finite (M →+ ZMod l) := by
@@ -145,8 +144,7 @@ theorem UpperTheory.V.Pa.finZ :
   haveI := hΦ N hN
   have z1 : ∀ z ∈ Zl ρ, z 1 = 0 := by
     intro z hz
-    have h := ((mem_Zl ρ).1 hz).2 1 1
-    simpa using h
+    simpa using ((mem_Zl ρ).1 hz).2 1 1
   have zN : ∀ z ∈ Zl ρ, ∀ a b : Γ, a ∈ N → z (a * b) = z a + z b := by
     intro z hz a b ha
     rw [((mem_Zl ρ).1 hz).2, ha]

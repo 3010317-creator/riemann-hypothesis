@@ -81,8 +81,7 @@ theorem GlobalTheory.gram_det_ne_zero_of_ker_orth {K : Type} [Field K] (σ : K �
   have hxspan : x ∈ Submodule.span K (Set.range u) :=
     Submodule.sum_mem _ fun j _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, rfl⟩)
   have hAx : A *ᵥ x = 0 := by
-    rw [hsp, LinearMap.mem_ker, Matrix.toLin'_apply] at hxspan
-    exact hxspan
+    rwa [hsp, LinearMap.mem_ker, Matrix.toLin'_apply] at hxspan
   have hu : ∀ i, ∑ k, σ (u i k) * x k = 0 := by
     intro i
     have := congrFun hGc i
@@ -288,8 +287,7 @@ theorem main : ∀ {K : Type} [inst : Field K] (σ : K →+* K) {n : ℕ} (γ g 
           _ = 0 := by rw [hy, Matrix.mulVec_zero]
       · rw [Matrix.mulVec_mulVec, hgg, Matrix.one_mulVec]
   · ext i j
-    simp only [Matrix.of_apply]
-    exact gram_eq σ (g : Matrix (Fin n) (Fin n) K) hg (u i) (u j)
+    simpa only [Matrix.of_apply] using gram_eq σ (g : Matrix (Fin n) (Fin n) K) hg (u i) (u j)
 
 end GlobalTheory.ConjugateAlgebraLemmas
 end -- clump:auto
@@ -374,7 +372,7 @@ theorem ker_toLin' {n : ℕ} (M : Matrix (Fin n) (Fin n) K) (P : K[X]) :
 theorem mem_UL {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ} {w : Pl E} (hs : ¬ IsSplitAt w) (γ : UL n w) :
     (((γ.1 : GLw n w) : Matrix (Fin n) (Fin n) (w.adicCompletion E)).map (cj w))ᵀ * (γ.1 : GLw n w) = 1 := by
   have := γ.2
-  simp only [UL, if_neg hs] at this
+  simp only [UL, ite_eq_right hs] at this
   simpa [UJ, cT] using this
 
 theorem mul_sign [Valued K (WithZero (Multiplicative ℤ))] (σ : K →+* K) (hσ : ∀ x, Valued.v (σ x) = Valued.v x)
@@ -390,11 +388,9 @@ theorem mul_sign [Valued K (WithZero (Multiplicative ℤ))] (σ : K →+* K) (h�
       (-1 : ℂ) ^ ordL (Matrix.of fun i j => ∑ k, σ ((b₂ i : Fin n → K) k) * (b₂ j : Fin n → K) k).det := by
   have hsup : LinearMap.ker (Matrix.toLin' (aeval M Q₁)) ⊔ LinearMap.ker (Matrix.toLin' (aeval M Q₂)) =
       LinearMap.ker (Matrix.toLin' (aeval M (Q₁ * Q₂))) := by
-    simp only [ker_toLin']
-    exact sup_ker_aeval_eq_ker_aeval_mul_of_coprime _ hcop
+    simpa only [ker_toLin'] using sup_ker_aeval_eq_ker_aeval_mul_of_coprime _ hcop
   have hdis : Disjoint (LinearMap.ker (Matrix.toLin' (aeval M Q₁))) (LinearMap.ker (Matrix.toLin' (aeval M Q₂))) := by
-    simp only [ker_toLin']
-    exact disjoint_ker_aeval_of_isCoprime _ hcop
+    simpa only [ker_toLin'] using disjoint_ker_aeval_of_isCoprime _ hcop
   have hli : LinearIndependent K (Sum.elim (fun i => (b₁ i : Fin n → K)) (fun i => (b₂ i : Fin n → K))) :=
     (li_coe b₁).sum_type (li_coe b₂) (by rw [span_coe, span_coe]; exact hdis)
   have hsp : Submodule.span K (Set.range (Sum.elim (fun i => (b₁ i : Fin n → K)) (fun i => (b₂ i : Fin n → K)))) =
@@ -446,13 +442,13 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E →
   have hQ₁ : C (cj w (Q₁.coeff 0)) * Q₁ = (Q₁.map (cj w)).reverse := hc1.resolve_left hs
   have hQ₂ : C (cj w (Q₂.coeff 0)) * Q₂ = (Q₂.map (cj w)).reverse := hc2.resolve_left hs
   refine ⟨?_, ?_, ?_⟩
-  · simp only [kapSign, if_neg hs]
+  · simp only [kapSign, ite_eq_right hs]
     exact mul_sign (cj w) hv _ (mem_UL hs γ) hsep hdvd hcop hQ₁ hQ₂ _ _ _
-  · simp only [kapSign, if_neg hs]
+  · simp only [kapSign, ite_eq_right hs]
     have hg' : ((g⁻¹ * γ * g : UL n w) : GLw n w) = (g : GLw n w)⁻¹ * γ * g := by simp
     rw [hg']
     exact conj_sign (cj w) hv γ.1 g.1 (mem_UL hs g) Q₃ _ _
-  · simp only [kapSign, if_neg hs]
+  · simp only [kapSign, ite_eq_right hs]
     rcases Int.even_or_odd (ordL (Matrix.of fun i j => ∑ k, cj w ((Module.finBasis (w.adicCompletion E)
       (LinearMap.ker (Matrix.toLin' (aeval γ.1.val Q₃))) i).1 k) * (Module.finBasis (w.adicCompletion E)
       (LinearMap.ker (Matrix.toLin' (aeval γ.1.val Q₃))) j).1 k).det) with h | h

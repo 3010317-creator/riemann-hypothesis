@@ -93,8 +93,7 @@ theorem T_notMem_sq (D : D7) (u : D.what₂.Word) (A : Formalism.L2.Forms.AtTTie
     Ideal.map_le_iff_le_comap.2 (fun x hx => hvP x hx)
   have h3 := Ideal.mem_map_of_mem (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) hv2
   rw [Ideal.map_pow] at h3
-  have h4 := Ideal.pow_right_mono hle 2 h3
-  simpa using h4
+  simpa using Ideal.pow_right_mono hle 2 h3
 
 theorem dvd_of_val_lt_one : ∀ (D : Formalism.BasicNotions.D7) (u : D.what₂.Word) (A : Formalism.L2.Forms.AtTTied u)
     (v : HeightOneSpectrum (𝓞 D.host.F)) (_ : (((D.mem u).A.T : ℕ) : 𝓞 D.host.F) ∈ v.asIdeal)
@@ -104,10 +103,8 @@ theorem dvd_of_val_lt_one : ∀ (D : Formalism.BasicNotions.D7) (u : D.what₂.W
   have hT2 := T_notMem_sq D u A v hv
   have hval : v.intValuation (((D.mem u).A.T : ℕ) : 𝓞 D.host.F) = WithZero.exp (-1) := by
     apply le_antisymm
-    · have h := (v.intValuation_le_pow_iff_mem _ 1).2 (by simpa using hv)
-      simpa using h
-    · by_contra h
-      push_neg at h
+    · simpa using (v.intValuation_le_pow_iff_mem _ 1).2 (by simpa using hv)
+    · by_contra! h
       have h2 := le_exp_sub_one h
       norm_num at h2
       exact hT2 ((v.intValuation_le_pow_iff_mem _ 2).1 (by simpa using h2))
@@ -118,13 +115,10 @@ theorem dvd_of_val_lt_one : ∀ (D : Formalism.BasicNotions.D7) (u : D.what₂.W
   have hc0 : ((((D.mem u).A.T : ℕ) : v.adicCompletion D.host.F)) ≠ 0 := by
     intro h; rw [h, map_zero] at hTv; exact WithZero.zero_ne_coe hTv
   have hale : Valued.v (a : v.adicCompletion D.host.F) ≤ WithZero.exp (-1) := by
-    have h := le_exp_sub_one (n := 0) (by simpa using ha)
-    simpa using h
+    simpa using le_exp_sub_one (n := 0) (by simpa using ha)
   set c : v.adicCompletion D.host.F := (((D.mem u).A.T : ℕ) : v.adicCompletion D.host.F) with hc
   have hb : (a : v.adicCompletion D.host.F) / c ∈ v.adicCompletionIntegers D.host.F := by
-    rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀, hTv]
-    rw [div_le_one₀ (by simp)]
-    exact hale
+    rwa [HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀, hTv, div_le_one₀ (by simp)]
   refine ⟨⟨_, hb⟩, Subtype.ext ?_⟩
   push_cast
   rw [← hc, mul_div_cancel₀ _ hc0]

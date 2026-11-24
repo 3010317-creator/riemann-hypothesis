@@ -77,10 +77,8 @@ theorem exists_vec_ann (γ : Matrix (Fin n) (Fin n) K) (hs : γ.charpoly.Separab
       ∀ h : K[X], (aeval γ h).mulVec v = 0 → q ∣ h := by
   have hf0 : γ.charpoly ≠ 0 := γ.charpoly_monic.ne_zero
   refine UniqueFactorizationMonoid.induction_on_prime q ?_ ?_ ?_
-  · intro h
-    exact absurd (zero_dvd_iff.1 h) hf0
-  · intro x hx _
-    exact ⟨0, by simp, fun h _ => hx.dvd⟩
+  · exact fun h => absurd (zero_dvd_iff.1 h) hf0
+  · exact fun x hx _ => ⟨0, by simp, fun h _ => hx.dvd⟩
   · intro a p ha hp ih hd
     obtain ⟨v', hv1, hv2⟩ := ih ((dvd_mul_left a p).trans hd)
     obtain ⟨g, hg⟩ : p ∣ γ.charpoly := (dvd_mul_right p a).trans hd
@@ -96,8 +94,7 @@ theorem exists_vec_ann (γ : Matrix (Fin n) (Fin n) K) (hs : γ.charpoly.Separab
           _ = g := hc.symm
       exact hp.not_unit (IsUnit.of_mul_eq_one _ (mul_left_cancel₀ hgne h1))
     obtain ⟨u, hu⟩ : ∃ u, (aeval γ g).mulVec u ≠ 0 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact hg0 (Matrix.mulVec_injective (funext fun u => by simpa using hcon u))
     set w := (aeval γ g).mulVec u with hw
     have hpw : (aeval γ p).mulVec w = 0 := by
@@ -123,8 +120,7 @@ theorem exists_vec_ann (γ : Matrix (Fin n) (Fin n) K) (hs : γ.charpoly.Separab
       have h1 : (aeval γ (h * p)).mulVec v' = 0 := by
         have h2 : (aeval γ (h * p)).mulVec (v' + w) = 0 := by
           rw [mul_comm, act_mul, hh, Matrix.mulVec_zero]
-        rw [Matrix.mulVec_add, act_mul γ h p w, hpw, Matrix.mulVec_zero, add_zero] at h2
-        exact h2
+        rwa [Matrix.mulVec_add, act_mul γ h p w, hpw, Matrix.mulVec_zero, add_zero] at h2
       have hah : a ∣ h := hcop.symm.dvd_of_dvd_mul_right (hv2 _ h1)
       obtain ⟨c, rfl⟩ := hah
       have h3 : (aeval γ (a * c)).mulVec v' = 0 := by

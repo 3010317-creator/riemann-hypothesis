@@ -102,8 +102,7 @@ theorem iso_bot_C {n : ℕ} (G B Bi : Matrix (Fin n) (Fin n) ℂ) (hB : B * Bi =
       refine Matrix.exists_mulVec_eq_zero_iff.1 ⟨v, hv0, ?_⟩
       rw [Matrix.sub_mulVec, hGv]
       simp [Matrix.scalar_apply]
-    rw [Polynomial.IsRoot, Matrix.eval_charpoly]
-    exact this
+    rwa [Polynomial.IsRoot, Matrix.eval_charpoly]
   have hz1 : star z * z = 1 := by
     have h := hz z hroot
     have : (starRingEnd ℂ) z * z = ((Complex.normSq z : ℝ) : ℂ) := by rw [mul_comm]; exact Complex.mul_conj z
@@ -167,8 +166,7 @@ theorem iso_bot_C {n : ℕ} (G B Bi : Matrix (Fin n) (Fin n) ℂ) (hB : B * Bi =
   have h5 : star v = 0 := by
     apply dotProduct_eq_zero
     intro w
-    have h := hl0 (Bi *ᵥ w)
-    simpa only [l, Matrix.mulVec_mulVec, hB, Matrix.one_mulVec] using h
+    simpa only [l, Matrix.mulVec_mulVec, hB, Matrix.one_mulVec] using hl0 (Bi *ᵥ w)
   simpa using congrArg star h5
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ}

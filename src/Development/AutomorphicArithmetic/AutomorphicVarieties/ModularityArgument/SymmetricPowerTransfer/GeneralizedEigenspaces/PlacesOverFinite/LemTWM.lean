@@ -93,9 +93,7 @@ theorem UpperTheory.V.Af.Tw.awayTriv :
     Prod.ext k1 (mul_one 1), Prod.ext k2 (mul_one 1)⟩
   let bfin : Ideles F := ⟨(1, (b : AdeleRing (𝓞 F) F).2), (1, ((b⁻¹ : Ideles F) : AdeleRing (𝓞 F) F).2),
     Prod.ext (mul_one 1) k3, Prod.ext (mul_one 1) k4⟩
-  have hb : b = binf * bfin := by
-    apply Units.ext
-    exact Prod.ext (mul_one _).symm (one_mul _).symm
+  have hb : b = binf * bfin := Units.ext (Prod.ext (mul_one _).symm (one_mul _).symm)
   have hfin2 : (↑bfin : AdeleRing (𝓞 F) F).2 = (↑b : AdeleRing (𝓞 F) F).2 := rfl
   have h1 : N binf = 1 := hinf binf rfl
   have h2 : N bfin = 1 := by
@@ -443,16 +441,14 @@ private theorem mem_infConn_of (w : InfinitePlace E) (x : (w.Completion)ˣ) (S :
       · intro ha
         have ha0 : a ≠ 0 := fun h => h0 (h ▸ ha)
         exact ⟨Units.mk0 a ha0, ha, rfl⟩
-    rw [← Units.isEmbedding_val₀.isInducing.isPreconnected_image, himg]
-    exact hS
+    rwa [← Units.isEmbedding_val₀.isInducing.isPreconnected_image, himg]
   let φ : (w.Completion)ˣ →* (InfiniteAdeleRing E)ˣ :=
     Units.map (MonoidHom.mulSingle (fun v : InfinitePlace E => v.Completion) w)
   have hφ : Continuous φ := Continuous.units_map _ (continuous_mulSingle w)
   have hsub : φ '' T ⊆ connectedComponent (1 : (InfiniteAdeleRing E)ˣ) :=
     (hT.image _ hφ.continuousOn).subset_connectedComponent ⟨1, h1, map_one φ⟩
   unfold infConn
-  refine ⟨φ x, hsub ⟨x, hx, rfl⟩, ?_⟩
-  exact Units.ext rfl
+  exact ⟨φ x, hsub ⟨x, hx, rfl⟩, Units.ext rfl⟩
 
 private theorem mem_of_sign (N : Subgroup (Ideles E)) (hN : infConn E ≤ N)
     (hs : ∀ w : InfinitePlace E, w.IsReal → infIdele E w (-1) ∈ N) (w : InfinitePlace E) (x : (w.Completion)ˣ) :
@@ -520,11 +516,8 @@ private theorem eq_prod_infIdele (z : Ideles E) (hz : z.val.2 = 1) :
     rw [Finset.prod_eq_single v]
     · show z.val.1 v = Pi.mulSingle v (z.val.1 v) v
       rw [Pi.mulSingle_eq_same]
-    · intro b _ hb
-      show Pi.mulSingle b (z.val.1 b) v = 1
-      exact Pi.mulSingle_eq_of_ne hb.symm _
-    · intro h
-      exact absurd (Finset.mem_univ v) h
+    · exact fun b _ hb => Pi.mulSingle_eq_of_ne hb.symm _
+    · exact fun h => absurd (Finset.mem_univ v) h
   · refine Eq.trans ?_ h2.symm
     rw [hz]
     symm
@@ -763,10 +756,8 @@ theorem UpperTheory.V.Af.Tw.locProd :
       by_cases hw' : HeightOneSpectrum.under (𝓞 F) w' = v
       · rw [Finset.prod_eq_single w']
         · rw [_root_.GlobalTheory.Mem.Chr.AntiExist.loc_self, hy]
-        · intro b _ hb
-          exact UpperTheory.V.Af.Tw.loc_ne (Ne.symm hb) _
-        · intro h
-          exact absurd ((hmem w').mpr hw') h
+        · exact fun b _ hb => UpperTheory.V.Af.Tw.loc_ne (Ne.symm hb) _
+        · exact fun h => absurd ((hmem w').mpr hw') h
       · rw [UpperTheory.V.Af.Tw.loc_ne hw', map_one, Finset.prod_eq_one]
         intro b hb
         exact UpperTheory.V.Af.Tw.loc_ne (fun h => hw' (by rw [h]; exact (hmem b).mp hb)) _
@@ -828,8 +819,7 @@ theorem UpperTheory.V.Af.Tw.splitIso :
     have hx : (e.symm : w.adicCompletion L →+* v.adicCompletion F) (completionMap v w x) = x :=
       e.symm_apply_apply x
     rw [hx, valued_completionMap, he, pow_one]
-  · intro x
-    exact e.symm_apply_apply x
+  · exact fun x => e.symm_apply_apply x
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TwistedAutomorphicForms.SplitIso =====
@@ -892,8 +882,7 @@ theorem UpperTheory.V.Af.Tw.phiPart :
     have h0 : Ideal.span {((l : ℕ) : 𝓞 F)} ≠ 0 := by
       rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
       exact Nat.cast_ne_zero.2 hl
-    refine (Ideal.finite_factors h0).subset fun v hv => ?_
-    exact Ideal.dvd_span_singleton.2 hv
+    exact (Ideal.finite_factors h0).subset fun v hv => Ideal.dvd_span_singleton.2 hv
   let p : Ideles L →* Ideles F := ∏ v ∈ hfin.toFinset, (GlobalTheory.Mem.Chr.localIdele F v).comp (q v)
   have hp : ∀ x, p x = ∏ v ∈ hfin.toFinset, GlobalTheory.Mem.Chr.localIdele F v (q v x) := by
     intro x
@@ -940,7 +929,7 @@ theorem UpperTheory.V.Af.Tw.unrAE :
   intro v hv
   simp only [Set.mem_setOf_eq] at hv
   unfold UpperTheory.V.Af.Tw.Unr at hv
-  push_neg at hv
+  push Not at hv
   obtain ⟨w, rfl, he⟩ := hv
   refine ⟨w, ?_, rfl⟩
   have hle : Ideal.map (algebraMap (𝓞 F) (𝓞 L)) (HeightOneSpectrum.under (𝓞 F) w).asIdeal ≤
@@ -975,8 +964,7 @@ theorem UpperTheory.V.Af.Tw.verGroup :
   have hnorm : R.Normal := Subgroup.normal_of_index_eq_two hidx
   have hsq : ∀ g, g ∉ R → g * g ∈ R := fun g _ => (hmem g g).mpr Iff.rfl
   obtain ⟨g0, hg0⟩ : ∃ g0 : Γ, g0 ∉ R := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have htop : R = ⊤ := eq_top_iff.mpr fun x _ => hcon x
     rw [htop, Subgroup.index_top] at hidx
     exact absurd hidx (by norm_num)
@@ -1012,8 +1000,8 @@ theorem UpperTheory.V.Af.Tw.verGroup :
     rw [e1, kmul _ (R.mul_mem hc hx') _ (R.inv_mem hc), kmul _ hc _ hx', kinv _ hc,
       mul_inv_cancel_comm]
   let f : Γ → B := fun γ => if γ ∈ R then k γ * k (g0 * γ * g0⁻¹) else k (γ * γ)
-  have fin : ∀ γ, γ ∈ R → f γ = k γ * k (g0 * γ * g0⁻¹) := fun γ h => if_pos h
-  have fout : ∀ γ, γ ∉ R → f γ = k (γ * γ) := fun γ h => if_neg h
+  have fin : ∀ γ, γ ∈ R → f γ = k γ * k (g0 * γ * g0⁻¹) := fun γ h => ite_eq_left h
+  have fout : ∀ γ, γ ∉ R → f γ = k (γ * γ) := fun γ h => ite_eq_right h
   have fmul : ∀ x y, f (x * y) = f x * f y := by
     intro x y
     by_cases hx : x ∈ R <;> by_cases hy : y ∈ R
@@ -1065,8 +1053,7 @@ theorem UpperTheory.V.Af.Tw.verGroup :
     have h1 : ContinuousAt (ν ∘ r) 1 := by
       rw [hνr]
       exact (hκ.mul (hκ.comp hσ)).continuousAt
-    rw [hr.continuousAt_iff, map_one] at h1
-    exact h1
+    rwa [hr.continuousAt_iff, map_one] at h1
   refine ⟨ν, hcont, fun g hg => ⟨fun s s' hs => ?_, fun t ht => ?_⟩⟩
   · show κ s * κ s' = f (r s)
     rw [fin _ (hrs s), kr, ← L g hg _ (hrs s), ← hs, kr]

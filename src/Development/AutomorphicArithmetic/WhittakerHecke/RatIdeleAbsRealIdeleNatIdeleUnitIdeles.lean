@@ -70,8 +70,7 @@ private theorem norm_unif (v : H.P ℚ) :
     ‖((atFin v (unif v) : (H.Kv v)ˣ) : H.Kv v)‖ = ((normV v : ℕ) : ℝ)⁻¹ := by
   have h : Valued.v ((atFin v (unif v) : (H.Kv v)ˣ) : H.Kv v) = WithZero.exp (-1 : ℤ) := unif_spec v
   have h2 : v.valuation ℚ (unif v : ℚ) = WithZero.exp (-1 : ℤ) := by
-    rw [← HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
-    exact h
+    rwa [← HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
   have h3 := FinitePlace.norm_embedding' v (unif v : ℚ)
   rw [h2] at h3
   have h4 : ‖((atFin v (unif v) : (H.Kv v)ˣ) : H.Kv v)‖ = ‖FinitePlace.embedding v (unif v : ℚ)‖ := rfl
@@ -89,8 +88,7 @@ private theorem normV_surj {p : ℕ} (hp : p.Prime) : ∃ w : H.P ℚ, normV w =
   · intro h
     rw [h, Ideal.absNorm_bot] at hN
     exact hp.ne_zero hN.symm
-  · rw [GlobalTheory.TwAtt.normV_eq]
-    exact hN
+  · rwa [GlobalTheory.TwAtt.normV_eq]
 
 private theorem supp_fin (n : ℕ) :
     (Function.mulSupport fun v : H.P ℚ => pv v ^ (n.factorization (normV v))).Finite := by
@@ -98,8 +96,7 @@ private theorem supp_fin (n : ℕ) :
   by_contra h
   apply hv
   have h0 : n.factorization (normV v) = 0 := by
-    rw [← Finsupp.notMem_support_iff, Nat.support_factorization]
-    exact h
+    rwa [← Finsupp.notMem_support_iff, Nat.support_factorization]
   simp [h0]
 
 private theorem prod_norm {n : ℕ} (hn : 0 < n) :
@@ -115,8 +112,7 @@ private theorem prod_norm {n : ℕ} (hn : 0 < n) :
     · rintro ⟨-, h⟩
       refine ⟨?_, h⟩
       rw [← Nat.support_factorization, Finsupp.mem_support_iff]
-      intro h0
-      exact h (by simp [hg, h0])
+      exact fun h0 => h (by simp [hg, h0])
     · rintro ⟨hp, h⟩
       exact ⟨normV_surj (Nat.prime_of_mem_primeFactors hp), h⟩
   have h3 : ∏ p ∈ n.primeFactors, g p = (n : ℝ)⁻¹ := by
@@ -163,7 +159,7 @@ private theorem re_one_of {x : A ℚ} (h : x.1 = 1) : re x = 1 := by
   rfl
 
 private theorem iy_val {r : ℝ} (hr : r ≠ 0) : ∃ d : (TR.Rinf ℚ)ˣ, iy r = TR.infId ℚ d ∧ ∀ w, d.val w = r :=
-  ⟨_, dif_neg hr, fun _ => rfl⟩
+  ⟨_, dite_eq_right hr, fun _ => rfl⟩
 
 private theorem re_iy {r : ℝ} (hr : r ≠ 0) : re (iy r : A ℚ) = r := by
   obtain ⟨d, hd, hw⟩ := iy_val hr

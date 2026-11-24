@@ -99,12 +99,10 @@ theorem isIrr_prod {G₁ G₂ : Type} [Group G₁] [Fintype G₁] [Group G₂] [
   have key : ∀ y, ip (fun x => α x * β y) α = β y := by
     intro y
     have e : ip (fun x => α x * β y) α = β y * ip α α := by
-      simp only [ip, Finset.mul_sum]
-      exact Finset.sum_congr rfl fun x _ => by ring
+      simpa only [ip, Finset.mul_sum] using Finset.sum_congr rfl fun x _ => by ring
     rw [e, h1, mul_one]
   rw [ip_prod]
-  simp only [key]
-  exact h2
+  simpa only [key] using h2
 
 theorem exists_prod_of_isIrr {G₁ G₂ : Type} [Group G₁] [Fintype G₁] [Group G₂] [Fintype G₂]
     {ρ : G₁ × G₂ → ℂ} (hρ : IsIrr ρ) :
@@ -264,12 +262,12 @@ theorem isChar_fibre_mean : ∀ (P M : Type) [Group P] [Fintype P] [Group M] [Fi
     rw [Finset.sum_mul]
     refine Finset.sum_congr rfl fun x _ => ?_
     by_cases hx : π x = a
-    · rw [if_pos hx, if_pos hx, one_smul, Finset.mul_sum,
+    · rw [ite_eq_left hx, ite_eq_left hx, one_smul, Finset.mul_sum,
         ← Equiv.sum_comp (Equiv.mulLeft x) (fun y => if π y = a * b then V.ρ y else 0)]
       refine Finset.sum_congr rfl fun y _ => ?_
       simp only [Equiv.coe_mulLeft, map_mul, hx, mul_right_inj]
       split_ifs <;> simp
-    · rw [if_neg hx, if_neg hx, zero_mul, zero_smul]
+    · rw [ite_eq_right hx, ite_eq_right hx, zero_mul, zero_smul]
   have h := isChar_trace_of_mul (fun m => (Nat.card π.ker : ℂ)⁻¹ • S m) (fun a b => by
     rw [smul_mul_smul_comm, hS, smul_smul, mul_assoc, inv_mul_cancel₀ hc, mul_one])
   convert h using 2 with m
@@ -310,7 +308,7 @@ theorem sum_subgroup {G : Type} [Group G] [Fintype G] (P : Subgroup G) (Φ : P �
   · apply Finset.sum_congr rfl; intro x _; split_ifs <;> rfl
 
 theorem toG_val {g m : ℕ} [Fact g.Prime] {M : Mt g m} (h : IsUnit M) : ((toG M : Gn g m) : Mt g m) = M := by
-  unfold toG; rw [dif_pos h]; rfl
+  unfold toG; rw [dite_eq_left h]; rfl
 
 theorem card_ker_eq_sum {P M : Type} [Group P] [Fintype P] [Group M] (π : P →* M) :
     (Nat.card π.ker : ℂ) = ∑ p : P, if π p = 1 then (1 : ℂ) else 0 := by
@@ -355,8 +353,7 @@ theorem hc_isChar_and_res_decomp : ∀ (g : ℕ) [Fact g.Prime] (a b n : ℕ), n
       π ⟨x, hx⟩ = (h₁, h₂) ↔ (tl a (x : Mt g n) = h₁ ∧ br a b (x : Mt g n) = h₂) := by
     intro x hx h₁ h₂
     have hu := hunit x ((hP x).1 hx)
-    rw [hπv]
-    rw [Prod.mk.injEq, Units.ext_iff, Units.ext_iff, toG_val hu.1, toG_val hu.2]
+    rw [hπv, Prod.mk.injEq, Units.ext_iff, Units.ext_iff, toG_val hu.1, toG_val hu.2]
   have hsum : ∀ (f : Gn g n → ℂ) (h₁ : Gn g a) (h₂ : Gn g b),
       ∑ p : P, (if π p = (h₁, h₂) then f p else 0) =
         ∑ x : Gn g n, if InPar a (x : Mt g n) ∧ tl a (x : Mt g n) = h₁ ∧ br a b (x : Mt g n) = h₂ then f x else 0 := by
@@ -365,12 +362,12 @@ theorem hc_isChar_and_res_decomp : ∀ (g : ℕ) [Fact g.Prime] (a b n : ℕ), n
     apply Finset.sum_congr rfl
     intro x _
     by_cases hx : x ∈ P
-    · rw [dif_pos hx]
+    · rw [dite_eq_left hx]
       have hx' := (hP x).1 hx
       by_cases h : tl a (x : Mt g n) = h₁ ∧ br a b (x : Mt g n) = h₂
-      · rw [if_pos ((hπ x hx h₁ h₂).2 h), if_pos ⟨hx', h⟩]
-      · rw [if_neg (fun e => h ((hπ x hx h₁ h₂).1 e)), if_neg (fun e => h e.2)]
-    · rw [dite_eq_right hx, if_neg (fun e => hx ((hP x).2 e.1))]
+      · rw [ite_eq_left ((hπ x hx h₁ h₂).2 h), ite_eq_left ⟨hx', h⟩]
+      · rw [ite_eq_right (fun e => h ((hπ x hx h₁ h₂).1 e)), ite_eq_right (fun e => h e.2)]
+    · rw [dite_eq_right hx, ite_eq_right (fun e => hx ((hP x).2 e.1))]
   have hNP : (Nat.card P : ℂ) = ((Finset.univ.filter fun p : Gn g n => InPar a (p : Mt g n)).card : ℂ) := by
     congr 1
     rw [Nat.card_eq_fintype_card, Fintype.card_subtype]
@@ -390,8 +387,8 @@ theorem hc_isChar_and_res_decomp : ∀ (g : ℕ) [Fact g.Prime] (a b n : ℕ), n
     apply Finset.sum_congr rfl
     intro y _
     by_cases hy : y⁻¹ * x * y ∈ P
-    · rw [dif_pos hy, if_pos ((hP _).1 hy), hπv]
-    · rw [dite_eq_right hy, if_neg (fun e => hy ((hP _).2 e))]
+    · rw [dite_eq_left hy, ite_eq_left ((hP _).1 hy), hπv]
+    · rw [dite_eq_right hy, ite_eq_right (fun e => hy ((hP _).2 e))]
   · intro χ hχ
     have hsurj : Function.Surjective π := by
       rintro ⟨h₁, h₂⟩
@@ -401,8 +398,7 @@ theorem hc_isChar_and_res_decomp : ∀ (g : ℕ) [Fact g.Prime] (a b n : ℕ), n
       obtain ⟨x, hx⟩ := Finset.card_pos.1 hpos
       rw [Finset.mem_filter] at hx
       have hxP := (hP x).2 hx.2.1
-      refine ⟨⟨x, hxP⟩, ?_⟩
-      exact (hπ x hxP h₁ h₂).2 hx.2.2
+      exact ⟨⟨x, hxP⟩, (hπ x hxP h₁ h₂).2 hx.2.2⟩
     have hχP : IsChar (fun p : P => χ p) := GlobalTheory.GLm.isChar_comp_hom_and_mul.1 P _ P.subtype χ hχ
     have hΨ := GlobalTheory.GLm.isChar_fibre_mean P (Gn g a × Gn g b) π _ hsurj hχP
     obtain ⟨L, hL, hLs⟩ := _root_.GlobalTheory.GLm.ProdChar.exists_list_prod (Gn g a) (Gn g b) _ hΨ

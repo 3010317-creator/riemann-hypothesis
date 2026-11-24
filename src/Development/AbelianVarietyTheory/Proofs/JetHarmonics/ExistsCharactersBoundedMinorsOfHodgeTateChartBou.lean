@@ -188,10 +188,8 @@ theorem exists_columns {C : Type} [Field C] (v : Valuation C NNReal) {O : Type} 
     if col σ.1 σ.2 = b then fun l => (if σ.1 = l.1 then 1 else 0) * f (g σ.1 σ.2) l else 0
   have hY : ∀ b σ, Has (Y b σ) := fun b σ => by
     by_cases hb : col σ.1 σ.2 = b
-    · simp only [Y, if_pos hb]
-      exact hf _ _
-    · simp only [Y, if_neg hb]
-      exact h0
+    · simpa only [Y, ite_eq_left hb] using hf _ _
+    · simpa only [Y, ite_eq_right hb] using h0
   refine ⟨fun q => (∑ σ, Y q.2 σ) q.1, fun b => Finset.sum_induction _ Has hadd h0 fun σ _ => hY b σ, ?_⟩
   have key : ∀ t (a i : Fin (r t)), (∑ σ, Y (col t i) σ) ⟨t, a⟩ = u t i a := by
     intro t a i
@@ -204,11 +202,9 @@ theorem exists_columns {C : Type} [Field C] (v : Valuation C NNReal) {O : Type} 
         have : col t' i' ≠ col t' i := fun h => hne (by rw [hcol t' h])
         simp [Y, this]
       · by_cases hb : col t' i' = col t i <;> simp [Y, hb, ht]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   intro t s
-  simp only [key]
-  exact hmin t s
+  simpa only [key] using hmin t s
 
 theorem smul_mem_span_pairing {O N : Type} [CommRing O] {d r : ℕ} {c : O} (w : N → Fin d → O)
     (hw : ∀ g : Fin d → O, c • g ∈ Submodule.span O (Set.range w)) (e lam : Fin r → Fin d → O)
@@ -225,8 +221,7 @@ theorem smul_mem_span_pairing {O N : Type} [CommRing O] {d r : ℕ} {c : O} (w :
 
     simp only [map_sum, map_smul, Finset.sum_apply, Pi.smul_apply, this]
     simp
-  rw [e1] at h
-  exact h
+  rwa [e1] at h
 
 end Choice
 

@@ -55,8 +55,7 @@ namespace GlobalTheory.Core.Mi.LatMatch.TraceX
 
 theorem mulVec_mem_ideal {R : Type} [CommRing R] {I : Ideal R} {m n : ℕ} (A : Matrix (Fin m) (Fin n) R) {y : Fin n → R}
     (hy : ∀ i, y i ∈ I) (k : Fin m) : (A *ᵥ y) k ∈ I := by
-  simp only [Matrix.mulVec, dotProduct]
-  exact Ideal.sum_mem _ fun i _ => I.mul_mem_left _ (hy i)
+  simpa only [Matrix.mulVec, dotProduct] using Ideal.sum_mem _ fun i _ => I.mul_mem_left _ (hy i)
 
 theorem latV_iff_hatL {D : D7} (S : HSp D) (L : Lat S) (P : GlobalTheory.FinPl.Pl D → Prop) (y : Fin S.rank → AE D)
     (hy : ∀ i, y i ∈ idAt D P) :
@@ -73,8 +72,7 @@ theorem hat_reindex {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
     constructor
     · rintro ⟨y, hy, rfl⟩
       exact hy
-    · intro hx
-      exact ⟨x, hx, rfl⟩
+    · exact fun hx => ⟨x, hx, rfl⟩
   rw [e]
   rfl
 

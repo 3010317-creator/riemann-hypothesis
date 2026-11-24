@@ -122,8 +122,7 @@ theorem semilinear_fixed_span (L : Type) [Field L] (s : L ≃+* L) (r : ℕ) (hr
   by_contra hne
   obtain ⟨f, hf0, hfk⟩ := Submodule.exists_le_ker_of_lt_top _ (lt_top_iff_ne_top.2 hne)
   obtain ⟨v, hv⟩ : ∃ v, f v ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hf0 (LinearMap.ext h)
 
   have hFi : ∀ (i : ℕ) (a : L) (w : V), (⇑F)^[i] (a • w) = (⇑s)^[i] a • (⇑F)^[i] w := by
@@ -175,8 +174,7 @@ theorem semilinear_fixed_span (L : Type) [Field L] (s : L ≃+* L) (r : ℕ) (hr
     rw [LinearMap.mem_ker, map_sum] at h0
     simp only [Finset.sum_apply, Pi.smul_apply, Function.comp_apply, smul_eq_mul, hχ,
       Pi.zero_apply]
-    rw [Fin.sum_univ_eq_sum_range (fun i => f ((⇑F)^[i] v) * (⇑s)^[i] a)]
-    rw [← h0]
+    rw [Fin.sum_univ_eq_sum_range (fun i => f ((⇑F)^[i] v) * (⇑s)^[i] a), ← h0]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [hFi, map_smul, smul_eq_mul, mul_comm]
   exact hv ((Fintype.linearIndependent_iff.1 hli) (fun i => f ((⇑F)^[(i : ℕ)] v)) hsum ⟨0, hr⟩)
@@ -243,8 +241,7 @@ theorem padicUnramifiedFrobenius_iterate_degree_apply_eq (r : ℕ) (hr : 0 < r) 
 
 theorem exists_ne_padicUnramifiedFrobenius_iterate_lt_degree (r : ℕ) (hr : 0 < r) (i : ℕ) (hi0 : 0 < i) (hir : i < r) :
     ∃ y : Qr p r, (⇑(frobQ p r))^[i] y ≠ y := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   have h1 : frobQEquiv p r hr ^ i = 1 := AlgEquiv.ext fun y => by
     rw [unramifiedPadicFrobeniusAlgEquiv_pow_apply_eq_iterate, h y]; rfl
   have h2 := orderOf_dvd_of_pow_eq_one h1
@@ -345,8 +342,7 @@ theorem hilbert90_frobenius_tensor_unramified_padic : ∀ (p : ℕ) [Fact p.Prim
 
   have hkey : ∀ m : Ideal (B ⊗[ℚ_[p]] Qr p r), m.IsMaximal → ∃ w ∈ W, w ∉ m := by
     intro m hm
-    by_contra h
-    push_neg at h
+    by_contra! h
     let I' : Submodule (Qr p r) (Qr p r ⊗[ℚ_[p]] B) :=
       { carrier := {v | e v ∈ m}
         add_mem' := by

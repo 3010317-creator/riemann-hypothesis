@@ -111,12 +111,10 @@ theorem rowEntries_good (D : D7) (C : ℝ) (τ : D.what₂.Tau) : (rowEntries D 
   have hspec := GlobalTheory.SignedHC.GridData.ofHCParam_spec (D.hc τ) (sLen D) (gap D C) (cen D C τ)
   have hbe : ∀ j (h : j < D.R.m), ((D.R.t : ℚ) + 3) / 2 ≤ G.e (j + 1) - G.b (j + 1) := fun j h => by
     have := (D.hc τ).gap_be ⟨j, h⟩
-    rw [hspec.2.1 ⟨j, h⟩, hspec.2.2 ⟨j, h⟩] at this
-    exact this
+    rwa [hspec.2.1 ⟨j, h⟩, hspec.2.2 ⟨j, h⟩] at this
   have heb : ∀ j (h : j + 1 < D.R.m), ((D.R.t : ℚ) + 3) / 2 ≤ G.b (j + 2) - G.e (j + 1) := fun j h => by
     have := (D.hc τ).gap_eb ⟨j, by omega⟩ h
-    rw [hspec.2.1 ⟨j + 1, h⟩, hspec.2.2 ⟨j, by omega⟩] at this
-    exact this
+    rwa [hspec.2.1 ⟨j + 1, h⟩, hspec.2.2 ⟨j, by omega⟩] at this
   have hvle : ∀ i j, 2 ≤ i → i ≤ j → j ≤ D.R.k → G.v j ≤ G.v i := fun i j h1 h2 h3 => by
     rcases h2.eq_or_lt with rfl | h
     · exact le_rfl

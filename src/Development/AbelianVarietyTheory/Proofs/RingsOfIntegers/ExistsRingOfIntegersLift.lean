@@ -96,14 +96,13 @@ theorem _root_.GlobalTheory.PlaceInt.placeIdem : _root_.ReciprocityTheory.ChartR
       constructor
       · rintro ⟨y, hy, h⟩
         exact inj h ▸ hy
-      · intro h
-        exact ⟨_, h, rfl⟩
+      · exact fun h => ⟨_, h, rfl⟩
     simp only [key]
     rw [eq_comm, SetLike.ext_iff]
   by_cases hex : ∃ ψ0 : E →+* k, Q ψ0 = P
   swap
   · refine ⟨0, Fin.elim0, Fin.elim0, fun ψ => ?_⟩
-    rw [if_neg (fun h => hex ⟨ψ, (hcond ψ).mp h⟩)]
+    rw [ite_eq_right (fun h => hex ⟨ψ, (hcond ψ).mp h⟩)]
     simp
   obtain ⟨ψ0, hψ0⟩ := hex
   haveI : CharZero k := ⟨fun a b h => by
@@ -144,8 +143,7 @@ theorem _root_.GlobalTheory.PlaceInt.placeIdem : _root_.ReciprocityTheory.ChartR
       have : b - 1 = -i := by rw [hb, ← hyi]; ring
       rw [this]
       exact P.neg_mem hi
-    rw [hQ, map_sub, map_one] at this
-    exact this
+    rwa [hQ, map_sub, map_one] at this
   have hb0 : ∀ ψ, Q ψ ≠ P → σ ψ b ∈ maximalIdeal V := by
     intro ψ h
     rw [← hQ]
@@ -182,7 +180,7 @@ theorem _root_.GlobalTheory.PlaceInt.placeIdem : _root_.ReciprocityTheory.ChartR
     simp only [map_pow, map_mul]
   rw [hsum]
   by_cases h : Q ψ = P
-  · rw [if_pos ((hcond ψ).mpr h)]
+  · rw [ite_eq_left ((hcond ψ).mpr h)]
     have hp1z : p1.eval (σ ψ b) = 0 := by
       rw [hp1, eval_prod]
       exact Finset.prod_eq_zero (i := ψ) (by simp [h]) (by simp)
@@ -192,7 +190,7 @@ theorem _root_.GlobalTheory.PlaceInt.placeIdem : _root_.ReciprocityTheory.ChartR
         add_zero] at h2
       exact h2
     rw [this, map_one]
-  · rw [if_neg (fun h' => h ((hcond ψ).mp h'))]
+  · rw [ite_eq_right (fun h' => h ((hcond ψ).mp h'))]
     have hp0z : p0.eval (σ ψ b) = 0 := by
       rw [hp0, eval_prod]
       exact Finset.prod_eq_zero (i := ψ) (by simp [h]) (by simp)

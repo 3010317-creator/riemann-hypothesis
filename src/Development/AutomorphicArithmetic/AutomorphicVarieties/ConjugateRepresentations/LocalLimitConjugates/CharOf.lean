@@ -112,8 +112,7 @@ private theorem hol_der_end (τ : E →+* ℂ) (u : Module.End ℂ M) (L : Lie E
   have h1 := hol_der τ (LinearMap.mulLeft ℂ u - LinearMap.mulRight ℂ u) L 0 L Y
     (fun X => (h X).trans (zero_add _).symm) x
   have h0 : hol τ (0 : Lie E a →ₗ[ℝ] Module.End ℂ M) x = 0 := by simp [hol_apply, eL]
-  rw [h0, zero_add] at h1
-  exact h1
+  rwa [h0, zero_add] at h1
 
 end SlopeTestRemainingChoices
 
@@ -382,9 +381,7 @@ theorem UpperTheory.V.Cj.H.wigSm :
   rw [hs] at key
   cases q with
   | zero =>
-    show app _ ω = 0
-    refine AlternatingMap.ext fun Y => ?_
-    exact key.1 ω (hI _ ω hc) hd Y
+    exact AlternatingMap.ext fun Y => key.1 ω (hI _ ω hc) hd Y
   | succ q =>
     obtain ⟨η, h1, h2⟩ := key.2 q ω (hI _ ω hc) hd (fun Y => mem_tens.2 (hv Y))
     exact ⟨η, fun X => mem_tens.1 (h1 X), AlternatingMap.ext fun Y => h2 Y⟩

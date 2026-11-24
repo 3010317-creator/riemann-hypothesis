@@ -243,13 +243,13 @@ theorem exists_div_indP (v : GlobalTheory.FinPl.Pl D) (g : ℕ) (hg : (g : 𝓞 
     · subst hw
       have h2 : Valued.v (algebraMap D.host.F (w.adicCompletion D.host.F) (g : D.host.F)⁻¹) =
           w.valuation D.host.F (g : D.host.F)⁻¹ := HeightOneSpectrum.valuedAdicCompletion_eq_valuation' w _
-      rw [if_pos rfl, one_mul, HeightOneSpectrum.mem_adicCompletionIntegers, h2, map_inv₀]
+      rw [ite_eq_left rfl, one_mul, HeightOneSpectrum.mem_adicCompletionIntegers, h2, map_inv₀]
       have h1 : w.valuation D.host.F (g : D.host.F) = 1 := by
         have := HeightOneSpectrum.valuation_of_algebraMap (K := D.host.F) w (g : 𝓞 D.host.F)
         rw [HeightOneSpectrum.intValuation_eq_one_iff.2 hg] at this
         simpa using this
       rw [h1, inv_one]
-    · rw [if_neg hw, zero_mul]; exact zero_mem _
+    · rw [ite_eq_right hw, zero_mul]; exact zero_mem _
   · rw [mul_left_comm, ← map_natCast (algebraMap D.host.F (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F)) g, ← map_mul,
       mul_inv_cancel₀ hg0, map_one, mul_one]
 
@@ -283,8 +283,7 @@ theorem fix_of_grpAt {I : AutInst} (h : I = Formalism.L2.SG.InstExistsPf.instOf 
     have hm := congrArg (Algebra.TensorProduct.comm D.host.F (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F) D.host.E)
       (GlobalTheory.FinPl.KOpen.e_mul_fin hb)
     rw [map_mul, Algebra.TensorProduct.comm_tmul] at hm
-    rw [hent]
-    exact hm
+    rwa [hent]
   have hg1 : ((g : ℕ) : D.host.E ⊗[D.host.F] Formalism.MainNotions.S.Af D.host.F) * ((1 : D.host.E) ⊗ₜ[D.host.F] s) =
       1 ⊗ₜ[D.host.F] GlobalTheory.FinPl.KOpen.indP D (· = v) := by
     rw [← hgs, ← map_natCast (Algebra.TensorProduct.includeRight (R := D.host.F) (A := D.host.E)) g,
@@ -382,8 +381,7 @@ theorem levrow : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h
     simp only [Subgroup.coe_mul, Units.val_mul]
   have hRF : Formalism.L2.SG.ColDict.RepF X tr.wt tr.ιA ((B.toH (a₀ * a * a₀⁻¹)).2 : X.B.I.Gf) (tr.h0 * y * tr.h0⁻¹) := by
     have h' := hRep
-    rw [hfg] at h'
-    exact h'
+    rwa [hfg] at h'
   obtain ⟨hmemIff, -⟩ := hLev.2 (B.toH (a₀ * a * a₀⁻¹)).2 _ hRF
   have hconj : tr.h0⁻¹ * (tr.h0 * y * tr.h0⁻¹) * tr.h0 = y := by group
   rw [hconj] at hmemIff
@@ -403,8 +401,7 @@ theorem levrow : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h
       (Formalism.L2.SG.Pf.unitaryCongruence.K_inv X.B.I (X.xu_K u))
     have e : X.xu u * ((X.xu u)⁻¹ * (iotaX X h (embA B.d B.o (a₀ * a * a₀⁻¹))).2 * X.xu u) * (X.xu u)⁻¹ =
         (iotaX X h (embA B.d B.o (a₀ * a * a₀⁻¹))).2 := by group
-    rw [e] at h4
-    exact h4
+    rwa [e] at h4
   · intro h2
     refine ⟨?_, GlobalTheory.T.supportedStabilizer_conj_satisfies_deepCongruence X h u v hv _ hκ h2⟩
     exact Formalism.L2.SG.Pf.unitaryCongruence.K_mul X.B.I (Formalism.L2.SG.Pf.unitaryCongruence.K_mul X.B.I
@@ -486,8 +483,7 @@ theorem sameAt_mul_of_one {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ
     (hc : 𝔠 ≠ 0) (hn : 𝔫 ≠ 0) (h : SameAt v 1 𝔫) : SameAt v 𝔠 (𝔠 * 𝔫) := by
   have h1 : SameAt v (1 * 1⁻¹) (1 * 𝔫⁻¹) :=
     sameAt_div hψ one_ne_zero hn one_ne_zero one_ne_zero h (sameAt_refl v 1)
-  have h2 := sameAt_div hψ (by simp) (by simpa using hn) hc hc h1 (sameAt_refl v 𝔠)
-  simpa using h2
+  simpa using sameAt_div hψ (by simp) (by simpa using hn) hc hc h1 (sameAt_refl v 𝔠)
 
 def col {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) (i : Fin ρ) : Fin S.rank → D.host.E := fun k => d.e k i
 
@@ -638,8 +634,7 @@ theorem GlobalTheory.Core.Mi.LatMatch.lastAt_of_goodBF : ∀ (D : D7) (ψ : AddC
       ∀ a ∈ idAt D (· = v), a • ratV (col J.d j) ∈ latV J.W LW (· = v) ↔ a ∈ idV (𝔟 j) v := by
     intro j
     have hs := Classical.choose_spec (GlobalTheory.T.selfDualLattice_rationalLineTrace_fractionalIdeal D J.W LW (col J.d j) hG.sdW (col_ne_zero _ _))
-    simp only [𝔟, dif_pos j.2, Fin.eta]
-    exact ⟨hs.1, hs.2.2 v⟩
+    simpa only [𝔟, dite_eq_left j.2, Fin.eta] using ⟨hs.1, hs.2.2 v⟩
   have hmono : GlobalTheory.SeeSaw.MonoId J.d LW LW₀ 𝔟 v :=
     ⟨hG.monoW, fun j a ha => by rw [colMul_jX]; exact (h𝔟 j).2 a ha⟩
   have hA := cols_sameAt hψ hG i (h𝔟 i).1 (h𝔢 v) (h𝔟 i).2
@@ -893,19 +888,18 @@ theorem wShape_of_besFrame_loc : ∀ {D : D7} {c : Comm D} {v : VCom c} (G : GLo
     intro i j hj
     have h : j.1 < ρ := hj ▸ i.2
     have : (⟨j.1, h⟩ : Fin ρ) = i := Fin.ext hj
-    simp only [Yr, dif_pos h, this]
+    simp only [Yr, dite_eq_left h, this]
   have YrZ : ∀ (j : Fin (G.s + 1)), j.1 = ρ → Yr j = t / G.sc 0 := by
     intro j hj
-    simp only [Yr, dif_neg (show ¬ j.1 < ρ by omega), if_pos hj]
+    simp only [Yr, dite_eq_right (show ¬ j.1 < ρ by omega), ite_eq_left hj]
   have YrE' : ∀ (i : Fin ρ) (j : Fin (G.s + 1)), j.1 + i.1 = 2 * ρ → Yr j = x' i / cE' i := by
     intro i j hj
     have h : 2 * ρ - j.1 < ρ := by omega
     have : (⟨2 * ρ - j.1, h⟩ : Fin ρ) = i := Fin.ext (by simp; omega)
-    simp only [Yr, dif_neg (show ¬ j.1 < ρ by omega), if_neg (show ¬ j.1 = ρ by omega), dif_pos h, this]
+    simp only [Yr, dite_eq_right (show ¬ j.1 < ρ by omega), ite_eq_right (show ¬ j.1 = ρ by omega), dite_eq_left h, this]
   have hlat : (∀ a, Y (Sum.inl a) ∈ 𝒪[G.k]) ↔ (fun r => G.q.sec (y r)) ∈ GlobalTheory.FinPl.latV (c.X 0) (c.x 0).L (· = G.q.v) := by
     have h := G.latX 0 (by omega) ((G.FX 0 (by omega)).γ *ᵥ y)
-    rw [Matrix.mulVec_mulVec, (G.FX 0 (by omega)).βγ, Matrix.one_mulVec] at h
-    exact h
+    rwa [Matrix.mulVec_mulVec, (G.FX 0 (by omega)).βγ, Matrix.one_mulVec] at h
   refine Iff.trans (Eq.to_iff ?_) ((hL Y).trans ?_)
   · congr 1
     funext r
@@ -947,14 +941,12 @@ theorem wShape_of_besFrame_loc : ∀ {D : D7} {c : Comm D} {v : VCom c} (G : GLo
         rcases lt_trichotomy j.1 ρ with hj | hj | hj
         · rw [YrE ⟨j.1, hj⟩ j rfl, mul_div_mem_integer_iff (vE _)]
           exact h1 ⟨j.1, hj⟩
-        · rw [YrZ j hj, mul_div_mem_integer_iff hsc, hj]
-          exact h3
+        · rwa [YrZ j hj, mul_div_mem_integer_iff hsc, hj]
         · have hi : 2 * ρ - j.1 < ρ := by omega
           rw [YrE' ⟨2 * ρ - j.1, hi⟩ j (by simp only; omega), mul_div_mem_integer_iff (vE' _)]
           have h4 := h2 ⟨2 * ρ - j.1, hi⟩
           have h5 : 2 * ρ - (2 * ρ - j.1) = j.1 := by omega
-          simp only [h5] at h4
-          exact h4
+          simpa only [h5] using h4
     constructor
     · rintro ⟨hl, hr⟩
       obtain ⟨a, b, c⟩ := hinr.1 hr
@@ -1088,8 +1080,7 @@ theorem mulVec_fix {S : HSp D} {v w : GlobalTheory.FinPl.Pl D} (hvw : v ≠ w) {
       Ideal.mul_mem_right _ _ (idAt_le_idOff hvw (by simpa using hh' i j))
     rw [← (hA _).1 h1]
     exact (hO _).1 h2
-  rw [Matrix.sub_mulVec, sub_eq_zero, Matrix.one_mulVec] at key
-  exact key
+  rwa [Matrix.sub_mulVec, sub_eq_zero, Matrix.one_mulVec] at key
 
 theorem scal_mulVec {n : ℕ} (c : AE D) (y : Fin n → AE D) : (c • (1 : Matrix (Fin n) (Fin n) (AE D))) *ᵥ y = c • y := by
   first | rw [Matrix.smul_mulVec, Matrix.one_mulVec]
@@ -1208,8 +1199,7 @@ theorem glue : ∀ (D : D7) (V A : HSp D) (e : GA D A →* GA D V) (g : GA D V) 
       (algebraMap (𝓞 D.host.E) D.host.E a)⁻¹ hy' 
     change (algebraMap (𝓞 D.host.E) D.host.E a)⁻¹ •
       ((algebraMap (𝓞 D.host.E) D.host.E a) • y) ∈ _ at this
-    rw [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
-    exact this
+    rwa [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
   have hcompare := by
     first
     | exact GlobalTheory.FinPl.latV_eq_off_finite D V M' M (hfull V M' hM'sd) (hfull V M hM)
@@ -1328,8 +1318,7 @@ theorem mem_levS_iff_moves : ∀ (D : D7) (c : GlobalTheory.ChainOnto.Com D) (j 
       rw [hL] at hPP
       simpa [Lev.datY] using hPP
     refine GlobalTheory.ChainOnto.RedOne.redFn_eq_one D s.V s.β κ PP hS (hGf.2 _ ?_)
-    intro he
-    exact hv (Finset.mem_image.2 ⟨PP, hPg, he⟩)
+    exact fun he => hv (Finset.mem_image.2 ⟨PP, hPg, he⟩)
 
 end GlobalTheory.Core.Mi.LevChain
 
@@ -1384,8 +1373,7 @@ theorem exists_normOneAt_of_rank_one (D : D7) (L : HSp D) (v : GlobalTheory.FinP
     rw [Subsingleton.elim i i₀, Subsingleton.elim j i₀]
     simp [hc]
   have hid : c - 1 ∈ idAt D (· = v) := by
-    have h := (GlobalTheory.IwaPlace.mem_congGrp_iff L _ γ).1 hγ i₀ i₀
-    simpa [hc] using h
+    simpa [hc] using (GlobalTheory.IwaPlace.mem_congGrp_iff L _ γ).1 hγ i₀ i₀
 
   have hu := congrFun (congrFun (GlobalTheory.MixModel.mt_unitary L γ) i₀) i₀
   simp only [Matrix.mul_apply, Fintype.sum_subsingleton _ i₀, GlobalTheory.MixModel.adj, GlobalTheory.MixModel.gA,
@@ -1498,7 +1486,7 @@ theorem unit_at {v : GlobalTheory.FinPl.Pl D} {T : ℕ} (hT : (T : 𝓞 D.host.F
   rw [Algebra.smul_def, map_mul, AlgHom.commutes, GlobalTheory.FinPlLoc.evalV_ePl]
   by_cases hw : w = v
   · subst hw
-    rw [HeightOneSpectrum.mem_adicCompletionIntegers, if_pos rfl, mul_one]
+    rw [HeightOneSpectrum.mem_adicCompletionIntegers, ite_eq_left rfl, mul_one]
     show Valued.v (((T : D.host.F)⁻¹ : D.host.F) : w.adicCompletion D.host.F) ≤ 1
     rw [HeightOneSpectrum.valuedAdicCompletion_eq_valuation', map_inv₀]
     have h1 : w.valuation D.host.F (T : D.host.F) = 1 := by
@@ -1506,7 +1494,7 @@ theorem unit_at {v : GlobalTheory.FinPl.Pl D} {T : ℕ} (hT : (T : 𝓞 D.host.F
       rw [HeightOneSpectrum.intValuation_eq_one_iff.2 hT] at this
       simpa using this
     rw [h1, inv_one]
-  · rw [if_neg hw, mul_zero]; exact zero_mem _
+  · rw [ite_eq_right hw, mul_zero]; exact zero_mem _
 
 def traceLine {S A L : HSp D} (o : OrthDec S A L) (M' : Lat S) (v : GlobalTheory.FinPl.Pl D) :
     AddSubgroup (Fin L.rank → AE D) where

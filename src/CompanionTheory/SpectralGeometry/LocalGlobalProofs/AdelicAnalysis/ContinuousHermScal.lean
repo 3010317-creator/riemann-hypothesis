@@ -28,8 +28,7 @@ theorem exists_basis {σ : E →ₐ[F] E} (hσ : IsCMExt F E σ) :
   obtain ⟨-, hc, h2, h⟩ := hσ
   let τ : E →+* ℂ := Classical.choice (inferInstance : Nonempty (E →+* ℂ))
   have hnr : ∃ x : E, star (τ x) ≠ τ x := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have hreal : NumberField.ComplexEmbedding.IsReal τ := by
       ext x
       exact hcon x
@@ -242,5 +241,4 @@ end GlobalTheory.CompanionTheory.SW.OneHerm
 theorem GlobalTheory.CompanionTheory.SW.hermScal_main : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [IsTopologicalRing R] [LocallyCompactSpace R] [SecondCountableTopology R] [T2Space R] [MeasurableSpace R] [BorelSpace R], ∀ (d : ℕ) (b : Module.Basis (Fin d) F E), IsHomeomorph (hermScal R σ) ∧ (∀ S : HermR R σ 1, hermScal R σ (algebraMap F R (1 / 2) * Algebra.trace R (R ⊗[F] E) ((S : Matrix (Fin 1) (Fin 1) (R ⊗[F] E)) 0 0)) = S) ∧ ∀ (lam : Measure R), lam.IsAddHaarMeasure → lam.map (hermScal R σ) = coordHerm R σ b lam 1 := by
   intro F E _ _ _ _ _ σ hσ R _ _ _ _ _ _ _ _ _ d b
   refine ⟨(GlobalTheory.CompanionTheory.SW.OneHerm.hermHomeo R hσ).isHomeomorph, GlobalTheory.CompanionTheory.SW.OneHerm.hermScal_hermHalf R hσ, ?_⟩
-  intro lam hlam
-  exact GlobalTheory.CompanionTheory.SW.OneHerm.map_hermScal R hσ b lam
+  exact fun lam hlam => GlobalTheory.CompanionTheory.SW.OneHerm.map_hermScal R hσ b lam

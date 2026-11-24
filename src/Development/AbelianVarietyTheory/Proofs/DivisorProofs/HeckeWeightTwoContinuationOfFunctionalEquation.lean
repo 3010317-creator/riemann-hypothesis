@@ -486,8 +486,7 @@ theorem summable_exp_neg_trace : ∀ (F : Type) [Field F] [NumberField F] [IsTot
     intro x i
     have := integralBasis_repr_apply (K := F) (z x) i
     rw [hz x] at this
-    rw [mul_assoc, ← hrepr]
-    rw [this, eq_intCast]
+    rw [mul_assoc, ← hrepr, this, eq_intCast]
   let Mi : Module.Free.ChooseBasisIndex ℤ (𝓞 F) → ℝ := fun i => ∑ τ : Emb F, |τ (d i * algebraMap (𝓞 F) F a)|
   have hMi : ∀ i, 0 ≤ Mi i := fun i => Finset.sum_nonneg fun τ _ => abs_nonneg _
   let M : ℝ := ∑ i, Mi i + 1
@@ -700,13 +699,13 @@ lemma lipschitzOneVariableKernel_two_eq_indicator {y : ℝ} (hy : 0 < y) :
   have him : ((y : ℂ) * I).im = y := by simp
   simp only [GlobalTheory.LipschitzTR.phi1, Set.indicator, Set.mem_Ioi, him, sign_pos hy, SignType.coe_one, one_mul]
   by_cases ht : 0 < t
-  · rw [if_pos ht, if_pos ht, abs_of_pos ht]
+  · rw [ite_eq_left ht, ite_eq_left ht, abs_of_pos ht]
     push_cast
     congr 2
     ring_nf
     rw [I_sq]
     ring
-  · rw [if_neg ht, if_neg ht]
+  · rw [ite_eq_right ht, ite_eq_right ht]
 
 lemma norm_inv_ofReal_add_mul_I_sq (x y : ℝ) : ‖((x : ℂ) + (y : ℂ) * I)⁻¹ ^ 2‖ = (x ^ 2 + y ^ 2)⁻¹ := by
   rw [norm_pow, norm_inv, inv_pow, Complex.sq_norm, Complex.normSq_apply]
@@ -773,12 +772,12 @@ theorem hTrans_sigma_zero_eq : ∀ (ν y : ℝ), 0 < y → GlobalTheory.HeckeTwo
   have him : ((y : ℂ) * I).im = y := by simp
   rw [him, sign_pos hy, SignType.coe_one, one_mul]
   by_cases hν : 0 < ν
-  · rw [if_pos hν, if_pos hν, abs_of_pos hν]
+  · rw [ite_eq_left hν, ite_eq_left hν, abs_of_pos hν]
     push_cast
     ring_nf
     rw [I_sq]
     ring_nf
-  · rw [if_neg hν, if_neg hν, mul_zero]
+  · rw [ite_eq_right hν, ite_eq_right hν, mul_zero]
 
 end GlobalTheory.HeckeTwo
 end -- clump:auto
@@ -1014,16 +1013,16 @@ theorem hTrans_zero (ν y : ℝ) (hy : y ≠ 0) :
     rw [← e, _root_.GlobalTheory.HeckeTwo.hTrans_sigma_zero_eq _ _ (neg_pos.2 h)]
     by_cases hν : 0 < -ν
     · have h2 : 0 < ν * y := by nlinarith
-      rw [if_pos hν, if_pos h2, abs_of_neg (by linarith : ν < 0),
+      rw [ite_eq_left hν, ite_eq_left h2, abs_of_neg (by linarith : ν < 0),
         show -(2 * Real.pi * -ν * -y) = -(2 * Real.pi * (ν * y)) by ring]
     · have h2 : ¬ 0 < ν * y := by nlinarith
-      rw [if_neg hν, if_neg h2]
+      rw [ite_eq_right hν, ite_eq_right h2]
   · rw [_root_.GlobalTheory.HeckeTwo.hTrans_sigma_zero_eq _ _ h]
     by_cases hν : 0 < ν
     · have h2 : 0 < ν * y := mul_pos hν h
-      rw [if_pos hν, if_pos h2, abs_of_pos hν, show 2 * Real.pi * ν * y = 2 * Real.pi * (ν * y) by ring]
+      rw [ite_eq_left hν, ite_eq_left h2, abs_of_pos hν, show 2 * Real.pi * ν * y = 2 * Real.pi * (ν * y) by ring]
     · have h2 : ¬ 0 < ν * y := by nlinarith
-      rw [if_neg hν, if_neg h2]
+      rw [ite_eq_right hν, ite_eq_right h2]
 
 theorem fTerm_zero [IsTotallyReal F] {z : Emb F → ℂ} (hz : z ∈ upperHalf F) {b ν : F} (hb : b ≠ 0) (hν : ν ≠ 0) :
     fTerm 0 z b ν = if ∀ τ : Emb F, 0 < τ (ν * b) then
@@ -1035,7 +1034,7 @@ theorem fTerm_zero [IsTotallyReal F] {z : Emb F → ℂ} (hz : z ∈ upperHalf F
   split_ifs with hc
   · have hc' : ∀ τ : Emb F, 0 < τ ν * (τ b * (z τ).im) := fun τ => by
       have := hc τ; rw [map_mul] at this; rw [← mul_assoc]; exact mul_pos this (hz τ)
-    rw [Finset.prod_congr rfl fun τ _ => by rw [if_pos (hc' τ)]]
+    rw [Finset.prod_congr rfl fun τ _ => by rw [ite_eq_left (hc' τ)]]
     rw [abs_norm_eq_prod, qPow, Finset.mul_sum, Complex.exp_sum]
     rw [show ((-4 * (Real.pi : ℂ) ^ 2) ^ Fintype.card (Emb F) * ∏ τ : Emb F, ((|τ ν| : ℝ) : ℂ)) *
         ∏ x : Emb F, Complex.exp (2 * (Real.pi : ℂ) * I * ((x (ν * b) : ℂ) * z x)) =
@@ -1049,11 +1048,11 @@ theorem fTerm_zero [IsTotallyReal F] {z : Emb F → ℂ} (hz : z ∈ upperHalf F
     simp only [map_mul]
     push_cast
     linear_combination (-2 * (Real.pi : ℂ) * (τ ν : ℂ) * (τ b : ℂ) * ((z τ).im : ℂ)) * I_sq
-  · push_neg at hc
+  · push Not at hc
     obtain ⟨τ, hτ⟩ := hc
     have : ¬ 0 < τ ν * (τ b * (z τ).im) := by
       rw [map_mul] at hτ; rw [← mul_assoc]; exact not_lt.2 (mul_nonpos_of_nonpos_of_nonneg hτ (hz τ).le)
-    exact Finset.prod_eq_zero (Finset.mem_univ τ) (by rw [if_neg this, mul_zero])
+    exact Finset.prod_eq_zero (Finset.mem_univ τ) (by rw [ite_eq_right this, mul_zero])
 
 theorem bOne_zero_expansion [IsTotallyReal F] (𝔞 𝔟 : Frac F) (z : Emb F → ℂ) (hz : z ∈ upperHalf F) :
     Summable (qClass 𝔞 𝔟 2 z) ∧
@@ -1185,8 +1184,7 @@ theorem hasFDerivAt_logIm (τ : Φ) {z : Φ → ℂ} (hz : (z τ).im ≠ 0) :
       (ofRealCLM.comp (((z τ).im)⁻¹ • (imCLM.comp (ContinuousLinearMap.proj (R := ℝ) (φ := fun _ : Φ => ℂ) τ)))) z := by
   have h1 : HasFDerivAt (fun z : Φ → ℂ => (z τ).im) (imCLM.comp (ContinuousLinearMap.proj (R := ℝ) (φ := fun _ : Φ => ℂ) τ)) z :=
     (imCLM.comp (ContinuousLinearMap.proj (R := ℝ) (φ := fun _ : Φ => ℂ) τ)).hasFDerivAt
-  have h2 := h1.log hz
-  exact ofRealCLM.hasFDerivAt.comp z h2
+  exact ofRealCLM.hasFDerivAt.comp z (h1.log hz)
 
 theorem hasFDerivAt_expo (A : Φ → ℂ) {z : Φ → ℂ} (hz : ∀ τ, (z τ).im ≠ 0) :
     HasFDerivAt (fun z : Φ → ℂ => ∑ τ, A τ * ((Real.log (z τ).im : ℝ) : ℂ))
@@ -1212,7 +1210,7 @@ theorem wirt_mono (c : ℂ → ℂ) (a : ℂ → Φ → ℂ) (σ : ℂ) {z : Φ 
   have e1 : ∀ x, ((if x = τ₀ then (1:ℂ) else 0).im) = 0 := fun x => by split_ifs <;> simp
   have e2 : ∀ x, ((if x = τ₀ then I else 0).im) = if x = τ₀ then 1 else 0 := fun x => by split_ifs <;> simp
   simp only [e1, e2, ofReal_zero, mul_zero, Finset.sum_const_zero, zero_add, apply_ite (fun r : ℝ => (r : ℂ)), ofReal_one, ofReal_zero,
-    mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   have he : ∑ x, (a σ x - if x = τ₀ then 1 else 0) * ((Real.log (z x).im : ℝ) : ℂ) =
       ∑ x, a σ x * ((Real.log (z x).im : ℝ) : ℂ) - ((Real.log (z τ₀).im : ℝ) : ℂ) := by
     simp [sub_mul, Finset.sum_sub_distrib, ite_mul]
@@ -1423,8 +1421,7 @@ theorem exists_ideal (M : FractionalIdeal (𝓞 F)⁰ F) (N : Frac F) (hM : M * 
   refine ⟨⟨⟨I, mem_nonZeroDivisors_of_ne_zero hI0⟩, ?_⟩, hI⟩
   have e : FractionalIdeal.mk0 F ⟨I, mem_nonZeroDivisors_of_ne_zero hI0⟩ = Units.mk0 _ hs * N := by
     ext1
-    rw [FractionalIdeal.coe_mk0]
-    exact hI
+    rwa [FractionalIdeal.coe_mk0]
   rw [← ClassGroup.mk_mk0 F, e, map_mul, ClassGroup.mk_eq_one_iff.2, one_mul]
   rw [FractionalIdeal.isPrincipal_iff]
   exact ⟨a.1, rfl⟩
@@ -1601,8 +1598,7 @@ theorem wirtWord_const_fun {Φ : Type} [Fintype Φ] (ws : List (Φ × Bool)) (d 
   | nil => rfl
   | cons w ws ih =>
     rw [GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.wirtWord_cons, ih]
-    simp only [reduceCtorEq, if_false]
-    exact wirt_const_fun w.1 w.2 _
+    simpa only [reduceCtorEq, ite_false] using wirt_const_fun w.1 w.2 _
 
 theorem isGood_const (F : Type) [Field F] [NumberField F] (a : ℂ → ℂ)
     (ha : DifferentiableOn ℂ a GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.halfPlane) :
@@ -1642,8 +1638,7 @@ theorem tendsto_pow_mul (F : Type) [Field F] [NumberField F] (C C' : ClassGroup 
   set f := Module.finrank ℚ F
   set d : ℂ := (dF F : ℂ)
   have hd0 : d ≠ 0 := by
-    simp only [d, dF, ne_eq, ofReal_eq_zero, abs_eq_zero, Int.cast_eq_zero]
-    exact discr_ne_zero F
+    simpa only [d, dF, ne_eq, ofReal_eq_zero, abs_eq_zero, Int.cast_eq_zero] using discr_ne_zero F
   have hev : ∀ᶠ s in 𝓝[≠] (1 : ℂ), (s - 1) ^ f * Z s =
       (d ^ ((1 - s) / 2) / d ^ (s / 2)) * ((Complex.Gammaℝ s)⁻¹) ^ f *
         (-((1 - s) * Complex.Gammaℝ (1 - s))) ^ f * Z' (1 - s) := by
@@ -1736,11 +1731,9 @@ theorem norm_le_idealZetaR (F : Type) [Field F] [NumberField F] (C : ClassGroup 
   refine hasSum_le_of_sum_le hre fun T => ?_
   classical
   have hinj : Function.Injective (fun J : {J : (Ideal (𝓞 F))⁰ // ClassGroup.mk0 J = C} => (J.1 : Ideal (𝓞 F))) := by
-    intro a b h
-    exact Subtype.ext (Subtype.ext h)
+    exact fun a b h => Subtype.ext (Subtype.ext h)
   have := ReciprocityTheory.Cheb.sum_le_idealZetaR F hx (T.image fun J => (J.1 : Ideal (𝓞 F)))
-  rw [Finset.sum_image fun a _ b _ h => hinj h] at this
-  exact this
+  rwa [Finset.sum_image fun a _ b _ h => hinj h] at this
 
 theorem bdd_right (F : Type) [Field F] [NumberField F] (C : ClassGroup (𝓞 F)) (Z : ℂ → ℂ)
     (hZ : IsPartialZeta C Z) : ∃ B : ℝ, ∀ᶠ x : ℝ in 𝓝[>] 1, ‖((x : ℂ) - 1) * Z x‖ ≤ B := by

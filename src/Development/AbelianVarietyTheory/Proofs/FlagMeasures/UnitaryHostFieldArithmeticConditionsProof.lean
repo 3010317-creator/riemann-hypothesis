@@ -88,8 +88,7 @@ theorem places : GlobalTheory.DegVol.IsPlaces (embS D) := by
         apply D.host.φ₀.injective
         have := DFunLike.congr_fun h x
         rw [NumberField.ComplexEmbedding.conjugate_coe_eq, hemb, hemb] at this
-        rw [AlgEquiv.mul_apply, hconj]
-        exact this
+        rwa [AlgEquiv.mul_apply, hconj]
       have h3 := congrArg (fun g : D.R.GG => g.1.2) (congrArg D.host.gal heq)
       simp only [map_mul, MulEquiv.apply_symm_apply] at h3
       rw [show D.host.gal D.host.conj = D.R.toFrame.cc from D.host.gal.apply_symm_apply _,
@@ -105,8 +104,7 @@ theorem places : GlobalTheory.DegVol.IsPlaces (embS D) := by
       have : embS D (D.eTau.symm ⟨_, hgP⟩) = w.embedding := by
         ext x
         rw [hemb, Equiv.apply_symm_apply]
-        simp only [MulEquiv.symm_apply_apply]
-        exact hwρ x
+        simpa only [MulEquiv.symm_apply_apply] using hwρ x
       rw [this, NumberField.InfinitePlace.mk_embedding]
     · have hg' : D.R.toFrame.cc * D.host.gal σ.symm ∈ D.R.Psi := by
         rw [Formalism.HC.Frame.mem_Psi_iff] at hgP ⊢

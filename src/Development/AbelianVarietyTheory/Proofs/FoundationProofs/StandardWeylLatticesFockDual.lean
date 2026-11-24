@@ -152,8 +152,7 @@ theorem lowerTri_of_interlaced {r n : ℕ} {m : Fin r × Fin n →₀ ℕ} (h : 
         Finset.single_le_sum (f := fun b : Fin r => m (b, ⟨k + 1, hk⟩)) (fun _ _ => Nat.zero_le _)
           (Finset.mem_filter.mpr ⟨Finset.mem_univ _, le_rfl⟩)
       omega
-  intro a s has
-  exact key s.val s.2 a has
+  exact fun a s has => key s.val s.2 a has
 
 theorem intQ_apply (r n : ℕ) (P : MvPolynomial (Fin r × Fin n) ℤ) :
     intQ r n P = MvPolynomial.map (Int.castRingHom ℚ) P := rfl
@@ -173,8 +172,7 @@ theorem lowerTriIntegral : Formalism.GradedWeylDivisibility.LowerTriIntegral := 
       (colLex r n).toSyn ((colLex r n).degree f) = d →
       (∀ e : Fin r × Fin n →₀ ℕ, LowerTri e → ∃ z : ℤ, AddMonoidAlgebra.coeff f e = z) →
       ∃ Q' : MvPolynomial (Fin r × Fin n) ℤ, f = intQ r n Q' by
-    intro f hf hint
-    exact key _ f hf rfl hint
+    exact fun f hf hint => key _ f hf rfl hint
   intro d
   induction d using WellFoundedLT.induction with
   | _ d ih =>
@@ -249,12 +247,11 @@ theorem weight_rowW_diagExp (ν : Fin n → ℕ) :
   · rw [Finset.sum_eq_single ⟨a.val, h⟩]
     · simp
     · intro b _ hb
-      rw [if_neg]
-      intro e
-      exact hb (Fin.ext e.symm)
+      rw [ite_eq_right]
+      exact fun e => hb (Fin.ext e.symm)
     · simp
   · refine Finset.sum_eq_zero fun s _ => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     have := s.2
     omega
 
@@ -289,8 +286,7 @@ theorem lowerTri_of_interlaced {m : Fin r × Fin n →₀ ℕ} (hm : Interlaced 
       have h1 : m (a, s) ≤ ∑ b : Fin r with b ≤ a, m (b, s) :=
         Finset.single_le_sum (f := fun b => m (b, s)) (fun _ _ => Nat.zero_le _) (by simp)
       omega
-  intro a s h
-  exact key s.val s rfl a h
+  exact fun a s h => key s.val s rfl a h
 
 theorem eq_diagExp_of_lowerTri (hn : n ≤ r) {ν : Fin n → ℕ} {m : Fin r × Fin n →₀ ℕ} (hm : LowerTri m)
     (hcol : ∀ t : Fin n, ∑ a : Fin r, m (a, t) = ν t)
@@ -318,8 +314,7 @@ theorem eq_diagExp_of_lowerTri (hn : n ≤ r) {ν : Fin n → ℕ} {m : Fin r ×
         Finset.sum_le_sum_of_subset (Finset.subset_univ _)
       rw [Finset.sum_pair hne, hcol s] at h3
       omega
-  intro a s h
-  exact key s.val s rfl a h
+  exact fun a s h => key s.val s rfl a h
 
 theorem eval_idFrame_eq_coeff {R : Type*} [CommRing R] {ν : Fin n → ℕ} {F : MvPolynomial (Fin r × Fin n) R}
     (hcol : ∀ m ∈ F.support, ∀ t : Fin n, ∑ a : Fin r, m (a, t) = ν t) :
@@ -369,7 +364,7 @@ theorem component_eq_smul_hw {R : Type} [CommRing R] [IsDomain R] (hn : n ≤ r)
     (colSums R r n ν G hGm _ hd) (hGw (mem_support_iff.mp hd))
   rw [he, mem_support_iff] at hd
   apply hd
-  rw [hGdef, MvPolynomial.coeff_sub, coeff_weightedHomogeneousComponent, if_pos (weight_rowW_diagExp ν), MvPolynomial.coeff_smul,
+  rw [hGdef, MvPolynomial.coeff_sub, coeff_weightedHomogeneousComponent, ite_eq_left (weight_rowW_diagExp ν), MvPolynomial.coeff_smul,
     ← eval_idFrame_eq_coeff (colSums R r n ν F hF), ← eval_idFrame_eq_coeff (colSums R r n ν _ hH),
     eval_idFrame_hw]
   simp
@@ -383,7 +378,7 @@ theorem fockQ_hw : Formalism.GradedWeylDivisibility.FockQHW := by
   refine Finset.sum_congr rfl fun m hm => ?_
   have hw' := hwRowWeight ℚ r n hn ν hν (mem_support_iff.mp hm)
   have h2 := congrArg (AddMonoidAlgebra.coeff · m) h
-  rw [coeff_weightedHomogeneousComponent, if_pos hw', MvPolynomial.coeff_smul, smul_eq_mul] at h2
+  rw [coeff_weightedHomogeneousComponent, ite_eq_left hw', MvPolynomial.coeff_smul, smul_eq_mul] at h2
   rw [h2]
   ring
 
@@ -922,10 +917,10 @@ theorem std_dual : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] (ι : T
     simp only [← fockL_apply (f _ _), h]
     split_ifs with hij
     · subst hij
-      simp only [if_true]
+      simp only [ite_true]
       exact div_mul_cancel₀ 1 (Finset.prod_ne_zero_iff.mpr fun τ _ => hne τ)
     · obtain ⟨τ, hτ⟩ := Function.ne_iff.mp hij
-      rw [Finset.prod_eq_zero (Finset.mem_univ τ) (if_neg hτ), mul_zero]
+      rw [Finset.prod_eq_zero (Finset.mem_univ τ) (ite_eq_right hτ), mul_zero]
   have hc : ∀ a ∈ (algebraMap (𝓞 K) K).range, starRingEnd K a ∈ (algebraMap (𝓞 K) K).range := by
     rintro _ ⟨a, rfl⟩
     exact ⟨⟨_, (RingOfIntegers.isIntegral_coe a).map (starRingEnd K).toIntAlgHom⟩, rfl⟩

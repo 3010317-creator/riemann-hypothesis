@@ -197,8 +197,7 @@ theorem integral_heis_kerSum_diag : ∀ (V : Type) [NormedAddCommGroup V] [Norme
   have hsumcont : Continuous fun z => ∑' x : Λ, F x z :=
     continuous_tsum hFcont hcsum (fun x z => (hFnorm x z).le)
   have hFs : ∀ z, Summable fun x : Λ => ‖F x z‖ := fun z => by
-    simp only [hFnorm]
-    exact hcsum
+    simpa only [hFnorm] using hcsum
   have hbdd : ∀ z, ‖∑' x : Λ, F x z‖ ≤ ∑' x : Λ, ‖c x‖ := fun z => by
     refine (norm_tsum_le_tsum_norm (hFs z)).trans (le_of_eq ?_)
     simp only [hFnorm]
@@ -231,8 +230,7 @@ theorem integral_heis_kerSum_diag : ∀ (V : Type) [NormedAddCommGroup V] [Norme
       · have hne : r + (x : V) ≠ 0 := by
           intro h
           apply hx
-          rw [eq_neg_iff_add_eq_zero, add_comm]
-          exact h
+          rwa [eq_neg_iff_add_eq_zero, add_comm]
         rw [_root_.GlobalTheory.UnitaryTheta.setIntegral_char_im_eq_zero V μ H hH Λ' Fd hFd (r + x) hne ?_, mul_zero]
         intro y hy
         obtain ⟨m1, hm1⟩ := hr y hy
@@ -243,7 +241,7 @@ theorem integral_heis_kerSum_diag : ∀ (V : Type) [NormedAddCommGroup V] [Norme
         ring
     simp only [hint]
     by_cases hrΛ : r ∈ Λ
-    · rw [if_pos hrΛ, tsum_eq_single ⟨-r, neg_mem hrΛ⟩]
+    · rw [ite_eq_left hrΛ, tsum_eq_single ⟨-r, neg_mem hrΛ⟩]
       · have hcoe : ((⟨-r, neg_mem hrΛ⟩ : Λ) : V) = -r := rfl
         have him : (H r r).im = 0 := Complex.conj_eq_iff_im.mp (hH.1 r r).symm
         have hA : cexp (-(π : ℂ) * H (-r) r - (π : ℂ) * H (-r) (-r) / 2 - (π : ℂ) * H r r / 2
@@ -253,19 +251,16 @@ theorem integral_heis_kerSum_diag : ∀ (V : Type) [NormedAddCommGroup V] [Norme
           simp only [map_neg, LinearMap.neg_apply, neg_neg, Complex.neg_im, him, neg_zero,
             Complex.ofReal_zero, mul_zero, add_zero]
           ring
-        rw [hc, hcoe, if_pos rfl, hA, mul_one]
+        rw [hc, hcoe, ite_eq_left rfl, hA, mul_one]
       · intro x hx
-        rw [if_neg]
-        intro h
-        apply hx
-        exact Subtype.ext h
-    · rw [if_neg hrΛ]
+        rw [ite_eq_right]
+        exact fun h => hx (Subtype.ext h)
+    · rw [ite_eq_right hrΛ]
       have hno : ∀ x : Λ, ¬ ((x : V) = -r) := by
         intro x h
         apply hrΛ
         have hm := neg_mem x.2
-        rw [h, neg_neg] at hm
-        exact hm
+        rwa [h, neg_neg] at hm
       simp [hno]
 
 end GlobalTheory.UnitaryTheta

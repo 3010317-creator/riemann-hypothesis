@@ -418,8 +418,7 @@ theorem jet_basis (k : Type) [Field k] (m : ℕ) :
     rw [Ideal.map_pow, orig, Ideal.map_span, ← Ideal.span_singleton_pow]
     congr 2
     ext p
-    simp [hX]
-    exact eq_comm
+    simpa [hX] using eq_comm
   let E : Jet k Unit m ≃ₐ[k] AdjoinRoot ((X : k[X]) ^ (m + 1)) := Ideal.quotientEquivAlg _ _ φ hI
   let pb := AdjoinRoot.powerBasis' (monic_X_pow (R := k) (m + 1))
   have hd : pb.dim = m + 1 := by simp [pb]
@@ -538,8 +537,7 @@ theorem restrict_appTop {Y Z : Scheme.{0}} (f : Y ⟶ Z) (U : Z.Opens) (a : Γ(U
     exact congrArg (f.app _ ≫ ·) ((Y.presheaf.map_comp (eqToHom (image_morphismRestrict_preimage f U ⊤)).op
       (eqToHom (f ⁻¹ᵁ U).ι_image_top.symm).op).symm.trans (congrArg _ (Subsingleton.elim _ _)))
   have h : (f ∣_ U).appTop ≫ (f ⁻¹ᵁ U).topIso.hom = U.topIso.hom ≫ f.app U := by
-    rw [morphismRestrict_appTop]
-    exact h0
+    rwa [morphismRestrict_appTop]
   exact congrArg (fun q => q.hom a) h
 
 end Restrict
@@ -586,8 +584,7 @@ theorem prZ_affine (U : (pullback G.hom x).Opens) (hU : IsAffineOpen U) (f : Γ(
   obtain ⟨c, hc, hu⟩ := affine_case b _ _ _ sq ((prZ G x m ⁻¹ᵁ U).topIso.inv.hom f)
   refine ⟨fun i => U.topIso.hom.hom (c i), ?_, fun c' hc' => ?_⟩
   · have := congrArg (prZ G x m ⁻¹ᵁ U).topIso.hom.hom hc
-    rw [letterRowOperator, key] at this
-    exact this
+    rwa [letterRowOperator, key] at this
   · have h : (fun i => U.topIso.inv.hom (c' i)) = c := hu _ (by
       have h2 := key fun i => U.topIso.inv.hom (c' i)
       simp only [TU1] at h2
@@ -681,7 +678,7 @@ theorem pow_frobenius_truncated {B : Type} [CommRing B] (δ : B) (p : ℕ) [Fact
         obtain ⟨k, hk⟩ := Nat.exists_eq_add_of_le hle
         rw [hk, pow_add, hδ, zero_mul]
       simp [hi0, hi1, mul_pow, ← pow_mul, hz]
-  simp only [hterm, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [hterm, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem delta_pow_mul_truncated {B : Type} [CommRing B] (δ : B) (p : ℕ)
     (hδ : δ ^ (p + 1) = 0) (b : Fin (p + 1) → B) (hb0 : b 0 = 1) :
@@ -714,7 +711,7 @@ theorem coeff_comparison : ∀ (A B : Type) [CommRing A] [CommRing B] (π : A �
     · simp [hi]
   have hsum : ∑ i, π (c₁ i) * δ ^ (i : ℕ) = ∑ i,
       π (Function.update c₂ (Fin.last p) (c₂ (Fin.last p) + u ⟨1, h1⟩ ^ p) i) * δ ^ (i : ℕ) := by
-    simp only [hlast, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [hlast, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [hmain, hfrob, add_mul, _root_.one_mul, _root_.mul_assoc, hdel]
   have := huniq _ _ hsum
   rw [this]
@@ -982,8 +979,7 @@ theorem base_eq (p : ℕ) (a : Ym G x p ⟶ G.left) (ha : secZ G x p ≫ a = pul
   obtain ⟨z, rfl⟩ := GlobalTheory.T.zero_section_surjective X0 G k x p y
   have e : secZ G x p ≫ prZ G x p ≫ pullback.fst G.hom x = pullback.fst G.hom x := by
     rw [← Category.assoc, secZ_prZ, Category.id_comp]
-  have h1 := congrArg (fun q : pullback G.hom x ⟶ G.left => q z) (ha.trans e.symm)
-  simpa using h1
+  simpa using congrArg (fun q : pullback G.hom x ⟶ G.left => q z) (ha.trans e.symm)
 
 end Thick
 
@@ -995,8 +991,7 @@ theorem le_pre (ha : secZ G x p ≫ a = pullback.fst G.hom x) (O : G.left.Opens)
     prZ G x p ⁻¹ᵁ (pullback.fst G.hom x ⁻¹ᵁ O) ≤ a ⁻¹ᵁ O := by
   intro y hy
   show a y ∈ O
-  rw [base_eq G x p a ha]
-  exact hy
+  rwa [base_eq G x p a ha]
 
 theorem le_chart (ha : secZ G x p ≫ a = pullback.fst G.hom x) (m : ℤ) (j : L.ι) :
     prZ G x p ⁻¹ᵁ (pullback.fst G.hom x ⁻¹ᵁ L.U j) ≤
@@ -1010,8 +1005,7 @@ theorem le_chart (ha : secZ G x p ≫ a = pullback.fst G.hom x) (m : ℤ) (j : L
 theorem le_sec (W : (pullback G.hom x).Opens) : W ≤ secZ G x p ⁻¹ᵁ (prZ G x p ⁻¹ᵁ W) := by
   intro z hz
   show (secZ G x p ≫ prZ G x p) z ∈ W
-  rw [secZ_prZ]
-  exact hz
+  rwa [secZ_prZ]
 
 theorem chart_coef (ha : secZ G x p ≫ a = pullback.fst G.hom x)
     (C : LB.Gen (LB.LinComb L (K := Fin 2) ![a, prZ G x p ≫ pullback.fst G.hom x] ![(p : ℤ), -(p : ℤ)]))
@@ -1139,8 +1133,7 @@ theorem second (hp : 1 ≤ p) (hL : L.IsLB) (ha : secZ G x p ≫ a = pullback.fs
         trY G x p hp ⁻¹ᵁ (prZ G x p ⁻¹ᵁ (pullback.fst G.hom x ⁻¹ᵁ L.U j ⊓ pullback.fst G.hom x ⁻¹ᵁ L.U j')) := by
       intro y hy
       show (trY G x p hp ≫ prZ G x p) y ∈ (pullback.fst G.hom x ⁻¹ᵁ L.U j ⊓ pullback.fst G.hom x ⁻¹ᵁ L.U j')
-      rw [trY_prZ]
-      exact hy
+      rwa [trY_prZ]
     have hU := trU_pull' L a (prZ G x p ≫ pullback.fst G.hom x) j j' _ (hA j j') (hB j j') (trY G x p hp) _ hs
       (trY G x p hp ≫ a) (prZ G x 1 ≫ pullback.fst G.hom x) rfl e h le_rfl
     have hv := congrArg Units.val hU

@@ -95,8 +95,7 @@ private lemma lip (s : ℂ) (a x y : ℝ) (ha : 0 < a) (hx : a ≤ x) (hy : a �
     · exact le_trans hy h.1
   have hder : ∀ z ∈ Set.uIcc x y, HasDerivWithinAt (fun w : ℝ => (w : ℂ) ^ (-s - 1))
       ((-s - 1) * (z : ℂ) ^ (-s - 1 - 1)) (Set.uIcc x y) z := by
-    intro z hz
-    exact (hd_cpow (-s - 1) z (lt_of_lt_of_le ha (hge z hz))).hasDerivWithinAt
+    exact fun z hz => (hd_cpow (-s - 1) z (lt_of_lt_of_le ha (hge z hz))).hasDerivWithinAt
   have hbd : ∀ z ∈ Set.uIcc x y, ‖(-s - 1) * (z : ℂ) ^ (-s - 1 - 1)‖ ≤ ‖s + 1‖ * a ^ (-s.re - 2) := by
     intro z hz
     have hz0 : 0 < z := lt_of_lt_of_le ha (hge z hz)
@@ -270,8 +269,7 @@ theorem UpperTheory.V.Bern.b_termsum :
       ring
     have e2 : ∑ i ∈ range 1, (((((i : ℕ) : ℝ) + 1 : ℝ)) : ℂ) ^ (-s) = 1 := by
       simp
-    rw [e1, ← e2]
-    exact h
+    rwa [e1, ← e2]
   have hT := (hA.sub hB).sub ((hB.sub hC).mul_left (1 - (x : ℂ)))
   rw [hT.tsum_eq]
   ring

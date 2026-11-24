@@ -66,8 +66,7 @@ theorem continuous_vec {K : Type} [TopologicalSpace K] [Zero K] {M n : ℕ} (u :
   · simp only [vec, Fin.cons_zero]; exact continuous_const
   · refine Fin.cases ?_ (fun i' => ?_) i
     · simp only [vec, Fin.cons_succ, Fin.cons_zero]; exact continuous_const
-    · simp only [vec, Fin.cons_succ]
-      exact continuous_apply_apply a' i'
+    · simpa only [vec, Fin.cons_succ] using continuous_apply_apply a' i'
 
 theorem integrable_fibS_and_integral : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (M : ℕ) (J : Matrix (Fin M) (Fin M) E) (t : F) (n : ℕ) (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R] (d : ℕ) (b : Module.Basis (Fin d) F E) (lam : Measure R) (m₁ : HermR R σ 1 → Measure (Fin 1 → Fin (M + 1) → R ⊗[F] E)) (m' : HermR R σ n → Measure (Fin n → Fin M → R ⊗[F] E)) (s : (Fin 1 → Fin (M + 1) → R ⊗[F] E) → HA R σ (blockOne (algebraMap F E t) J)) (B₀ : Set R) (a : R → Rˣ) (κ₁ cm : Rˣ → ℝ≥0), StageData σ J t n b lam m₁ m' s B₀ a κ₁ cm → ∀ φ : (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) → ℝ, Continuous φ → HasCompactSupport φ → ∀ S ∈ (Bset R σ t a B₀ : Set (HermR R σ (n + 1))), Integrable φ (fibS σ J t m₁ m' s B₀ a κ₁ cm S) ∧ ∫ v, φ v ∂(fibS σ J t m₁ m' s B₀ a κ₁ cm S) = ((κ₁ (a (s0 R (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E)))) * cm (a (s0 R (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E)))) ^ n : ℝ≥0) : ℝ) * Preal σ J t m₁ m' s φ ((a (s0 R (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E)))) : R) (cvec R t a (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E))) (schur R σ t a S) := by
   intro F E _ _ _ _ _ σ M J t n R _ _ _ _ _ d b lam m₁ m' s B₀ a κ₁ cm hD φ hφ hcs S hS
@@ -132,8 +131,7 @@ theorem integrable_fibS_and_integral : ∀ (F E : Type) [Field F] [NumberField F
   let e₃ : (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) → Fin n → Fin M → R ⊗[F] E :=
     fun Z j i => Z j.succ i.succ
   have he₃ : Continuous e₃ := by
-    refine continuous_pi fun j => continuous_pi fun i => ?_
-    exact continuous_apply_apply j.succ i.succ
+    exact continuous_pi fun j => continuous_pi fun i => continuous_apply_apply j.succ i.succ
   have hC₂ : IsCompact (e₃ '' (e₂ '' (C' ×ˢ C))) := ((hC'c.prod hCc).image he₂).image he₃
   have hsupp : ∀ᵐ y ∂μ₁, ∀ X, φ (f (y, X)) ≠ 0 → y ∈ e₁ '' C ∧ X ∈ e₃ '' (e₂ '' (C' ×ˢ C)) := by
     filter_upwards [hgram (hermScal R σ (algebraMap F R t))] with y hy X hne

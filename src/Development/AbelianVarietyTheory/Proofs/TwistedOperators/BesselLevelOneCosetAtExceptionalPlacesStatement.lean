@@ -202,13 +202,13 @@ theorem GlobalTheory.FrameZero.xclauses : OnStd fun {D} _ _ {sc} {G} W F => ∀ 
           omega
         · have hrv : r.1 = 2 * (σ + 1) - 1 - q.1 := by simp only at h1; omega
           rw [map_one, map_one, mul_one, Pi.smul_apply, Pi.single_apply,
-            if_pos (congrArg κ (Fin.ext hrv)), smul_eq_mul, mul_one, hrv]
-        · rw [map_zero, map_zero, mul_zero, Pi.smul_apply, Pi.single_apply, if_neg, smul_zero]
+            ite_eq_left (congrArg κ (Fin.ext hrv)), smul_eq_mul, mul_one, hrv]
+        · rw [map_zero, map_zero, mul_zero, Pi.smul_apply, Pi.single_apply, ite_eq_right, smul_zero]
           intro hk
           have h4 := congrArg Fin.val (hinj hk)
           simp only at h1 h4
           omega
-      · rw [Pi.smul_apply, Pi.single_apply, if_neg (fun e => hm ⟨_, e.symm⟩), smul_zero]
+      · rw [Pi.smul_apply, Pi.single_apply, ite_eq_right (fun e => hm ⟨_, e.symm⟩), smul_zero]
         exact hperp m hm _
     dsimp only
     rw [hrow, Matrix.smul_vecMul, hN, smul_smul, smul_smul, mul_assoc,
@@ -663,7 +663,7 @@ theorem count_stair (hq : OffQ D) {μ₀ : T} (hL : L.Is μ₀) (G : GridData L 
   rw [count_stairId h2.1 (ne_zero_of_conj h2.1 h2.2), Places.stA, Places.stAbar,
     FractionalIdeal.count_mul _ _ h1.1 (inv_ne_zero hmb), FractionalIdeal.count_mul _ _ (ne_zero_of_conj h1.1 h1.2)
       (inv_ne_zero hmo), FractionalIdeal.count_inv, FractionalIdeal.count_inv, count_modulBar G hw, count_modul, hA.1, hA.2,
-    cosExp, if_pos hW, G.pl.under_w hv]
+    cosExp, ite_eq_left hW, G.pl.under_w hv]
   push_cast
   ring
 
@@ -788,8 +788,7 @@ theorem exists_mem_pow {ϖ : 𝒪[k]} (hϖ : Irreducible ϖ) (e : ℕ) {x : k} (
   have hv : valuation k ((ϖ : k) ^ e) ≠ 0 := (Valuation.ne_zero_iff _).2 (pow_ne_zero _ h0)
   have h1 : x / (ϖ : k) ^ e ∈ 𝒪[k] := by
     change valuation k _ ≤ 1
-    rw [map_div₀, div_le_one₀ (zero_lt_iff.2 hv), map_pow]
-    exact hx
+    rwa [map_div₀, div_le_one₀ (zero_lt_iff.2 hv), map_pow]
   refine ⟨⟨_, h1⟩ * ϖ ^ e, Ideal.mul_mem_left _ _ (Ideal.pow_mem_pow ?_ _), ?_⟩
   · rw [hϖ.maximalIdeal_eq]; exact Ideal.mem_span_singleton_self _
   · push_cast
@@ -846,9 +845,9 @@ theorem exists_modul (P : Places L) (sc : Consts) {v : GlobalTheory.FinPl.Pl D} 
     intro u hu
     by_cases huv : u = v
     · subst huv
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       exact exists_unif p hw hϖ
-    · rw [if_neg huv]
+    · rw [ite_eq_right huv]
       have hne : ¬ (P.w u).asIdeal ≤ (P.w v).asIdeal := fun hle => huv (by
         rw [← P.under_w hu, ← P.under_w hv,
           HeightOneSpectrum.ext ((P.w u).isMaximal.eq_of_le (P.w v).isPrime.ne_top hle)])
@@ -859,10 +858,10 @@ theorem exists_modul (P : Places L) (sc : Consts) {v : GlobalTheory.FinPl.Pl D} 
   change valuation k (p.pr (incA D (algebraMap (𝓞 D.host.E) D.host.E _))) = _
   rw [map_prod, map_prod, map_prod, map_prod, Finset.prod_eq_single v]
   · rw [map_pow, map_pow, map_pow, map_pow]
-    exact congrArg (· ^ P.depth sc v) ((hb v hv).trans (if_pos rfl))
+    exact congrArg (· ^ P.depth sc v) ((hb v hv).trans (ite_eq_left rfl))
   · intro u hu huv
     rw [map_pow, map_pow, map_pow, map_pow]
-    exact (congrArg (· ^ P.depth sc u) ((hb u hu).trans (if_neg huv))).trans (one_pow _)
+    exact (congrArg (· ^ P.depth sc u) ((hb u hu).trans (ite_eq_right huv))).trans (one_pow _)
   · intro h; exact absurd hv h
 
 theorem val_le_of_mem_modul (P : Places L) (sc : Consts) {v : GlobalTheory.FinPl.Pl D} (hv : v ∈ P.S0) (p : SplitPt D k)
@@ -1350,8 +1349,7 @@ theorem stair_bd (hO : OffQ D) (G : GridData L sc) {v : GlobalTheory.FinPl.Pl D}
       (D.host.AA⁻¹ * ((G.pl.modulBar sc : Ideal (𝓞 D.host.E)) : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E)) ^ (c - q.1) *
       (D.host.AAbar * ((G.pl.modul sc : Ideal (𝓞 D.host.E)) : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E)⁻¹) ^ (q.1 + 1) := by
     simp only [stairId, Places.stA, Places.stAbar, mul_inv, inv_inv, ← inv_pow]
-  rw [e]
-  exact b
+  rwa [e]
 
 theorem latO_of_latRow (G : GridData L sc) (i : ℕ) {Y : WO (G.V (.grid (i + 1) 0)) (G.V (.grid i 0))} (hY : Y ∈ latRow G i) :
     Y ∈ latO (negSp (G.V (.grid (i + 1) 0))) (G.V (.grid i 0)) (G.Λ (.grid (i + 1) 0) : Set _) (G.Λ (.grid i 0) : Set _)
@@ -1394,7 +1392,7 @@ theorem bessel_step_conj_place_column_functional_bound : OnStd fun {D} _ _ {sc} 
     have g := congrFun (congrFun dW.gram qW) r
     have g1 : antiDiagonalSignGramMatrix (2 * (σ + 1) + 1 - 1) (-1 : D.host.E) qW r = 1 := by
       simp only [antiDiagonalSignGramMatrix]
-      rw [if_pos (by simp only [qW, r]; omega), if_neg (fun e => by have := congrArg Fin.val e; simp only [qW, r] at this; omega)]
+      rw [ite_eq_left (by simp only [qW, r]; omega), ite_eq_right (fun e => by have := congrArg Fin.val e; simp only [qW, r] at this; omega)]
     rw [g1] at g
     have g2 : ∑ l, (∑ j, star (dW.a j qW) * (G.V (.grid (2 * (σ + 1) + 1) 0)).gram j l) * dW.a l r = 1 := g
     have g3 := congrArg (fun c => p.pr (incA D c)) g2
@@ -1547,8 +1545,7 @@ theorem frame_bf : OnStd fun {D} _ _ {sc} {G} W F => ∀ σ (h : 2 * (σ + 1) + 
     h1, h2, h3, ?_, ?_, ?_, hs, ht, fun a ha =>
       ⟨GlobalTheory.T.split_frame_odd_lattice_left D hq T L μ0 hL sc G W M hM F hF σ h v hv k p β ϖ κ h1 h2 h3 h4 h5 h6 h7 s hs a ha,
        GlobalTheory.T.split_frame_odd_lattice_right D hq T L μ0 hL sc G W M hM F hF σ h v hv k p β ϖ κ h1 h2 h3 h4 h5 h6 h7 t ht a ha⟩⟩
-  · intro a b e
-    exact Fin.ext (Fin.mk.inj (h5 e))
+  · exact fun a b e => Fin.ext (Fin.mk.inj (h5 e))
   · intro a b e
     have := Fin.mk.inj (h5 e)
     have ha := a.2; have hb := b.2

@@ -65,8 +65,7 @@ variable (l : ℕ) [hl : Fact l.Prime]
 private theorem prime_l : Prime ((l : ℕ) : 𝓞 ℚ) := by
   have h := Nat.prime_iff_prime_int.mp hl.out
   have he : ((l : ℕ) : 𝓞 ℚ) = Rat.ringOfIntegersEquiv.symm ((l : ℕ) : ℤ) := by simp
-  rw [he, MulEquiv.prime_iff]
-  exact h
+  rwa [he, MulEquiv.prime_iff]
 
 private noncomputable def vQ : HeightOneSpectrum (𝓞 ℚ) where
   asIdeal := Ideal.span {((l : ℕ) : 𝓞 ℚ)}
@@ -91,8 +90,7 @@ private theorem intCast_mem_vQ (n : ℤ) : ((n : ℤ) : 𝓞 ℚ) ∈ (vQ l).asI
   simp
 
 private theorem val_intCast_le_one (A : ValuationSubring Ω) (n : ℤ) : A.valuation (n : Ω) ≤ 1 := by
-  have h := A.valuation_le_one (n : A)
-  simpa using h
+  simpa using A.valuation_le_one (n : A)
 
 private theorem val_intCast_lt_one_iff (A : ValuationSubring Ω) (hA : A.valuation ((l : ℕ) : Ω) < 1) (n : ℤ) :
     A.valuation (n : Ω) < 1 ↔ ((l : ℕ) : ℤ) ∣ n := by
@@ -179,8 +177,7 @@ theorem UpperTheory.V.Chr.decCyc :
     have h3 := hi2 _ hy
     have heq : (τ * i * τ⁻¹) x - x = τ (i (τ⁻¹ x) - τ⁻¹ x) := by
       simp [AlgEquiv.mul_apply, map_sub, AlgEquiv.aut_inv]
-    rw [heq, decomposition_cyclotomic_of_mem_dec_third A τ hτ]
-    exact h3
+    rwa [heq, decomposition_cyclotomic_of_mem_dec_third A τ hτ]
   · set K := (Subgroup.zpowers σ ⊔ Ine (F := ℚ) A).topologicalClosure with hK
     have hKc : IsClosed (K : Set (G ℚ Ω)) := Subgroup.isClosed_topologicalClosure _
     have hcs := ProfiniteGrp.closedSubgroup_eq_sInf_open (G := G ℚ Ω) ⟨K, hKc⟩

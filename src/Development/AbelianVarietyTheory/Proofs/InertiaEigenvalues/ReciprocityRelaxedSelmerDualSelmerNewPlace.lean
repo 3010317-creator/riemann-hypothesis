@@ -93,8 +93,7 @@ theorem sum_inv_eq_zero_of_unramified_cocycle_pow : PoitouTateTotallyComplex →
     obtain ⟨k, rfl⟩ := QuotientGroup.mk_surjective k
     have e := w.2.2 g h k
     have e2 : μ (g : G F Ω ⧸ _) = cycMod F Ω l n g := DFunLike.congr_fun hμ g
-    rw [← QuotientGroup.mk_mul, ← QuotientGroup.mk_mul, hW, hW, hW, hW, charRep_apply, e2]
-    exact e
+    rwa [← QuotientGroup.mk_mul, ← QuotientGroup.mk_mul, hW, hW, hW, hW, charRep_apply, e2]
   have e := (H S hS (fun v => Av v.1) (fun v => hA v.1) μ hμ).1
     (Submodule.Quotient.mk ⟨W, hmem⟩)
   rw [← Finset.sum_coe_sort]
@@ -654,8 +653,8 @@ theorem reciprocity : PoitouTateTotallyComplex → TameLocal → ∀ (D : Formal
     refine ⟨?_, fun m => by rw [ht, Module.End.one_apply]⟩
     have h := hxloc v
     unfold Formalism.GaloisCohomology.bkCond at h
-    rw [if_neg (show ¬ ((X.l i : ℕ) : 𝓞 D.host.E) ∈ v.asIdeal from (hout v hv).1),
-      if_neg (fun e => e.elim (hout v hv).2.1 (hout v hv).2.2)] at h
+    rw [ite_eq_right (show ¬ ((X.l i : ℕ) : 𝓞 D.host.E) ∈ v.asIdeal from (hout v hv).1),
+      ite_eq_right (fun e => e.elim (hout v hv).2.1 (hout v hv).2.2)] at h
     obtain ⟨m, hm⟩ := (mem_coboundaries1 _ _).1 ((Submodule.Quotient.mk_eq_zero _).1 h)
     have h3 : x.1 τ = repOn (Tgl i s) κ Y τ m - m := hm ⟨⟨τ, Ine_le_Dec _ hτ⟩, hτ⟩
     rw [h3, ht, Module.End.one_apply, sub_self]
@@ -678,7 +677,7 @@ theorem reciprocity : PoitouTateTotallyComplex → TameLocal → ∀ (D : Formal
       by_cases e : v ∈ placesOver D.host.E (X.l i)
       · have h := hxloc v
         unfold Formalism.GaloisCohomology.bkCond at h
-        rw [if_pos (show ((X.l i : ℕ) : 𝓞 D.host.E) ∈ v.asIdeal from e)] at h
+        rw [ite_eq_left (show ((X.l i : ℕ) : 𝓞 D.host.E) ∈ v.asIdeal from e)] at h
         obtain ⟨c, hc1, hc2⟩ := hy.2.2 v e (restrictCocycles1 _ _ continuous_subtype_val x) h
         rw [Submodule.Quotient.mk_eq_zero]
         refine (separated_dvr_second_cohomology_mem _ _).2 ⟨c, hc1.continuous, ?_⟩
@@ -694,8 +693,7 @@ theorem reciprocity : PoitouTateTotallyComplex → TameLocal → ∀ (D : Formal
     rw [this, map_zero]
   rw [h0, hAb, hAv p hne] at h1
   simp only [t] at h1
-  rw [e1, e2, ← sub_eq_add_neg, ← mul_sub, eq_comm, Units.mul_right_eq_zero, sub_eq_zero] at h1
-  exact h1
+  rwa [e1, e2, ← sub_eq_add_neg, ← mul_sub, eq_comm, Units.mul_right_eq_zero, sub_eq_zero] at h1
 
 end GlobalTheory.NewRecip
 end -- clump:auto

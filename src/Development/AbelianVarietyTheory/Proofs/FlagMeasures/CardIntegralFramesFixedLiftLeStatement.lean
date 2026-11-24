@@ -166,12 +166,9 @@ theorem nil_mem (Λ : Submodule (𝓞 E) S.V) (hΛ : Formalism.HermitianLattices
   refine Submodule.sum_mem _ fun a _ => Submodule.sum_mem _ fun a' _ => ?_
   have hd : x ∈ Formalism.HermitianLatticesTheory.dual S.hT Λ := by
     have h' : Formalism.HermitianLatticesTheory.dual S.hT Λ = Λ := hΛ
-    rw [h']
-    exact hx
+    rwa [h']
   have h1 : S.hT (e a') x ∈ (1 : Submodule (𝓞 E) E) := by
-    have h2 := (Submodule.mem_iInf _).mp hd (e a')
-    have h3 := (Submodule.mem_iInf _).mp h2 (heΛ a')
-    exact h3
+    exact (Submodule.mem_iInf _).mp ((Submodule.mem_iInf _).mp hd (e a')) (heΛ a')
   obtain ⟨o, ho⟩ := Submodule.mem_one.mp h1
   rw [Matrix.map_apply, ← ho, ← map_mul, algebraMap_smul]
   exact Λ.smul_mem _ (heΛ a)
@@ -193,10 +190,7 @@ theorem centre_gen {T : E} (F : LFlag S r T) (Λ : Submodule (𝓞 E) S.V)
       rintro _ ⟨b, rfl⟩
       exact LinearMap.mem_ker.mpr (hiso a' b)
     exact LinearMap.mem_ker.mp (hle hx)
-  have hXe : ∀ a, F.fl.e a ∈ Xsp F := by
-    intro a
-    show F.fl.e a ∈ Submodule.span E (Set.range F.fl.e)
-    exact Submodule.subset_span ⟨a, rfl⟩
+  have hXe : ∀ a, F.fl.e a ∈ Xsp F := fun a => Submodule.subset_span ⟨a, rfl⟩
 
   have hfix : ∀ x ∈ orth S (Xsp F), cen F.fl.e hiso (c.map (algebraMap (𝓞 E) E)) x = x := by
     intro x hx
@@ -216,9 +210,7 @@ theorem centre_gen {T : E} (F : LFlag S r T) (Λ : Submodule (𝓞 E) S.V)
   have hflag : ∀ j, ∀ x ∈ Xflag F (j + 1),
       cen F.fl.e hiso (c.map (algebraMap (𝓞 E) E)) x - x ∈ Xflag F j := by
     intro j x hx
-    have hle : Xflag F (j + 1) ≤ Xsp F := by
-      show Submodule.span E (F.fl.e '' {i | i.1 < j + 1}) ≤ Submodule.span E (Set.range F.fl.e)
-      exact Submodule.span_mono (Set.image_subset_range _ _)
+    have hle : Xflag F (j + 1) ≤ Xsp F := Submodule.span_mono (Set.image_subset_range _ _)
     rw [cen_apply, nil_eq_zero _ _ _ (fun a' => hXz a' x (hle hx)), add_zero, sub_self]
     exact zero_mem _
   have horth : ∀ x ∈ orth S (Xsp F), cen F.fl.e hiso (c.map (algebraMap (𝓞 E) E)) x - x ∈ Xsp F := by
@@ -241,8 +233,7 @@ theorem centre_gen {T : E} (F : LFlag S r T) (Λ : Submodule (𝓞 E) S.V)
       rw [← cen_symm_apply F.fl.e hiso _ y]
       exact LinearEquiv.apply_symm_apply _ y
   have hN : cen F.fl.e hiso (c.map (algebraMap (𝓞 E) E)) ∈ NLam Λ F := by
-    simp only [NLam, IsAutLam, Set.mem_setOf_eq]
-    exact ⟨⟨cen_isom _ _ _ hc, hmap⟩, hflag, horth⟩
+    simpa only [NLam, IsAutLam, Set.mem_setOf_eq] using ⟨⟨cen_isom _ _ _ hc, hmap⟩, hflag, horth⟩
   refine ⟨cen F.fl.e hiso (c.map (algebraMap (𝓞 E) E)), ⟨hN, hframe⟩, hfix, fun x => ?_⟩
   rw [cen_apply, nil_apply]
   rfl
@@ -409,8 +400,7 @@ theorem frame_diff : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ : La
       intro p hp
       have h1 : (hS D).hT (D.sp.iXY 0 p + φ ⟨p, hp⟩) d = 0 := by
         rw [hdd, map_sub, o₁ ⟨p, hp⟩ b, o₂ ⟨p, hp⟩ b, sub_self]
-      rw [map_add (f := _), LinearMap.add_apply, hX _ (hφ ⟨p, hp⟩).2, add_zero, hwd] at h1
-      exact h1
+      rwa [map_add (f := _), LinearMap.add_apply, hX _ (hφ ⟨p, hp⟩).2, add_zero, hwd] at h1
     obtain ⟨w', c₁, c₂⟩ := hw b
     have hww : (D.sp.X 0).hT w w = 0 := by
       rw [← hwd, hdd, map_sub, c₁.2 w hwP, c₂.2 w hwP, sub_self]
@@ -421,8 +411,7 @@ theorem frame_diff : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ : La
       rw [hww] at this
       simp at this
     rw [hw0, map_zero, zero_add] at hwx
-    rw [← hwx]
-    exact hx
+    rwa [← hwx]
   choose c hc hcd using fun b => coords_of_mem_XS D F0 _ (hd b)
   have hfr : ∀ b, frame F₂ b = frame F₁ b + ∑ a, c b a • F0.e a := fun b => by
     rw [← hcd]; abel
@@ -756,8 +745,7 @@ theorem one_le_norm_mul_absNorm_sq {K : Type} [Field K] [NumberField K] [StarRin
   have he : ∀ a : 𝓞 K, (e a : K) = star (a : K) := fun a => rfl
   have hN := absNorm_map_equiv e I
   have h1 : I.map (e : 𝓞 K →+* 𝓞 K) ≠ ⊥ := by
-    rw [Ne, ← Ideal.absNorm_eq_zero_iff, hN, Ideal.absNorm_eq_zero_iff]
-    exact hI
+    rwa [Ne, ← Ideal.absNorm_eq_zero_iff, hN, Ideal.absNorm_eq_zero_iff]
   have := one_le_norm_mul_absNorm c hc (I.map (e : 𝓞 K →+* 𝓞 K) * I) (mul_ne_zero h1 hI) (by
     intro a ha
     refine Submodule.mul_induction_on ha ?_ ?_
@@ -774,8 +762,7 @@ theorem one_le_norm_mul_absNorm_sq {K : Type} [Field K] [NumberField K] [StarRin
       exact congrArg₂ (· + ·) ho ho')
   rw [map_mul, hN] at this
   push_cast at this
-  rw [sq]
-  exact this
+  rwa [sq]
 
 theorem dualPack : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (h : V →ₗ⋆[K] V →ₗ[K] K) (ι : Type) [Fintype ι] (τ : ι → (K →+* ℂ)) (S : Submodule (𝓞 K) V) (I : Ideal (𝓞 K)) (s : ℕ) (ρ : ι → ℝ), h.IsSymm → (∀ v a, τ v (star a) = starRingEnd ℂ (τ v a)) → (∀ a : K, ∏ v, ‖τ v a‖ ^ 2 = |((Algebra.norm ℚ a : ℚ) : ℝ)|) → (∀ v, ∀ x : V, x ≠ 0 → 0 < (τ v (h x x)).re) → Nonempty ι → finrank K (Submodule.span K (S : Set V)) = s → I ≠ ⊥ → (∀ x ∈ I • S, ∀ y ∈ I • S, ∃ o : 𝓞 K, (o : K) = h x y) → (∀ v, 0 < ρ v) → {x | x ∈ S ∧ ∀ v, (τ v (h x x)).re ≤ ρ v}.Finite ∧ ({x | x ∈ S ∧ ∀ v, (τ v (h x x)).re ≤ ρ v}.ncard : ℝ) ≤ 9 ^ (s * Fintype.card ι) * (max 1 ((Ideal.absNorm I : ℝ) * ∏ v, ρ v)) ^ s := by
   intro K V _ _ _ _ _ _ _ _ h ι _ τ S I s ρ hs hτ hN hpos hne hrk hI hint hρ
@@ -838,8 +825,7 @@ theorem dualPack : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddC
     rw [h2, ← mul_pow] at h1
     have h4 : 1 ≤ (∏ v, (τ v (h x x)).re) * (Ideal.absNorm I : ℝ) :=
       (one_le_sq_iff₀ (by positivity)).mp h1
-    rw [inv_eq_one_div, div_le_iff₀ hIpos]
-    exact h4
+    rwa [inv_eq_one_div, div_le_iff₀ hIpos]
   obtain ⟨hfin, hcard⟩ := _root_.Formalism.HermitianLatticeCounting.P.box_count_alt ι s (S.toAddSubgroup.map Φ)
     (Ideal.absNorm I : ℝ)⁻¹ (fun v => Real.sqrt (ρ v)) (inv_pos.mpr hIpos)
     (fun v => Real.sqrt_pos.mpr (hρ v)) (by
@@ -1039,13 +1025,12 @@ theorem xClasses : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] (A : Id
     refine ⟨fun x i j => if h : ∃ o : J.toAddSubgroup, ((o : 𝓞 K) : K) = (a : K) * Sx x i j
       then ((Classical.choose h : J.toAddSubgroup) : Q) else 0, fun x hG i j => ?_⟩
     have h := hent x hG i j
-    exact ⟨Classical.choose h, Classical.choose_spec h, by simp only [dif_pos h]⟩
+    exact ⟨Classical.choose h, Classical.choose_spec h, by simp only [dite_eq_left h]⟩
   obtain ⟨g, hg⟩ : ∃ g : (Fin r → Fin r → Q) → Matrix (Fin r) (Fin (r + 1)) K,
       ∀ q, (∃ x, Good x ∧ key x = q) → Good (g q) ∧ key (g q) = q := by
     refine ⟨fun q => if h : ∃ x, Good x ∧ key x = q then Classical.choose h else 0,
       fun q h => ?_⟩
-    simp only [dif_pos h]
-    exact Classical.choose_spec h
+    simpa only [dite_eq_left h] using Classical.choose_spec h
   refine ⟨Finset.univ.image g, ?_, ?_⟩
   · calc (Finset.univ.image g).card ≤ (Finset.univ : Finset (Fin r → Fin r → Q)).card :=
           Finset.card_image_le

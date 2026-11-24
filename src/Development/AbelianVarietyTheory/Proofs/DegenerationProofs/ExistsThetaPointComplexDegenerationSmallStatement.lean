@@ -1261,12 +1261,12 @@ theorem typeSt : TypeSt := by
         if φ (H.rt : E) = H.rt0 then D.p else D.q := by
       have h3 := hB (φ.comp (algebraMap (𝓞 E) E))
       by_cases hφ : φ (H.rt : E) = H.rt0
-      · rw [if_pos hφ]; exact h3.trans (if_pos hφ)
-      · rw [if_neg hφ]; exact h3.trans (if_neg hφ)
+      · rw [ite_eq_left hφ]; exact h3.trans (ite_eq_left hφ)
+      · rw [ite_eq_right hφ]; exact h3.trans (ite_eq_right hφ)
     rw [← h2]
     push_cast
     ring
-  exact ⟨g, ty, h, fun φ => ⟨fun hφ => (hc φ).trans (if_pos hφ), fun hφ => (hc φ).trans (if_neg hφ)⟩, hh⟩
+  exact ⟨g, ty, h, fun φ => ⟨fun hφ => (hc φ).trans (ite_eq_left hφ), fun hφ => (hc φ).trans (ite_eq_right hφ)⟩, hh⟩
 
 end GlobalTheory.Ex.Arch
 
@@ -1617,8 +1617,7 @@ theorem brAct : Laws → BrActSt := by
       let κ : TF (R := R) F ⟶ TK R := Over.homMk (jFK (R := R) F) rfl
       refine congrArg CommaMorphism.left (show κ ≫ lift _ _ = _ from ?_)
       simp only [comp_lift, comp_toUnit_assoc]
-    rw [tau_eq ν, tau_eq ν, AddEquiv.apply_symm_apply, AddEquiv.apply_symm_apply, ← h2]
-    exact h
+    rwa [tau_eq ν, tau_eq ν, AddEquiv.apply_symm_apply, AddEquiv.apply_symm_apply, ← h2]
   · have := oa.onB.hom a
     have := oa.onB.hom (star a)
     have hr := oa.onB.rosati (star a)
@@ -1634,8 +1633,7 @@ theorem brAct : Laws → BrActSt := by
     have h2 : jFK (R := R) F ≫ D.xK (ν.eX y) = (ν.eA (N.c y)).left := by
       rw [ν.c_eq]
       exact (Category.assoc _ _ _).symm
-    rw [tau_eq ν, psi_eq ν, AddEquiv.apply_symm_apply, ← h2]
-    exact h
+    rwa [tau_eq ν, psi_eq ν, AddEquiv.apply_symm_apply, ← h2]
 
 end GlobalTheory.ActValues
 end -- clump:auto

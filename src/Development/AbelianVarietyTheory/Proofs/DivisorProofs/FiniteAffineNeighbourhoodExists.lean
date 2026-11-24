@@ -213,8 +213,7 @@ theorem genericPoint_mem_basicOpen {V : X.Opens} {h : Γ(X, V)} (hh : h ≠ 0) :
     rw [Scheme.mem_basicOpen X h (genericPoint X) hx]
     have hinj := germ_injective_of_isIntegral X (genericPoint X) hx
     have h0 : X.presheaf.germ V (genericPoint X) hx h ≠ 0 := by
-      intro h0
-      exact hh (hinj (by rw [h0, map_zero]))
+      exact fun h0 => hh (hinj (by rw [h0, map_zero]))
     exact (isUnit_iff_ne_zero (G₀ := X.functionField)).mpr h0
 
 theorem eq_genericPoint {y : Y} (hy : π y = genericPoint X) : y = genericPoint Y := by
@@ -304,8 +303,7 @@ theorem exists_finite_etale_of_isProper [IsProper π] [IsLocallyNoetherian X] [C
     refine ⟨fun a b hab => ?_⟩
     apply Nat.cast_injective (R := Γ(X, ⊤))
     apply map_injective_of_isIntegral X (homOfLE le_top : V' ⟶ ⊤)
-    simp only [map_natCast]
-    exact hab
+    simpa only [map_natCast] using hab
   have H := affine_pair π hη hd hV' hW le_rfl hyW
   rw [Scheme.Hom.appLE_eq_app] at H
   letI : Algebra Γ(X, V') Γ(Y, π ⁻¹ᵁ V') := (π.app V').hom.toAlgebra

@@ -79,8 +79,7 @@ theorem exists_local_log (𝔸 : Type) [NormedRing 𝔸] [NormedAlgebra ℝ 𝔸
   · have := hc.to_localInverse hd hn
     rwa [NormedSpace.exp_zero] at this
   · have := (hc.hasStrictFDerivAt' hd hn).eventually_right_inverse
-    rw [NormedSpace.exp_zero] at this
-    exact this
+    rwa [NormedSpace.exp_zero] at this
 
 theorem hasLog_of_isLieData (𝔸 L G : Type) [NormedRing 𝔸] [NormedAlgebra ℝ 𝔸] [FiniteDimensional ℝ 𝔸]
     [NormedAddCommGroup L] [NormedSpace ℝ L] [Group G] (σ : 𝔸 →ₗ[ℝ] 𝔸) (j : L →ₗ[ℝ] 𝔸) (s : 𝔸 → G)
@@ -96,8 +95,7 @@ theorem hasLog_of_isLieData (𝔸 L G : Type) [NormedRing 𝔸] [NormedAlgebra �
   · have ht : Filter.Tendsto (fun h => -σ (l h)) (𝓝 1) (𝓝 0) := by
       have := (σ.continuous_of_finiteDimensional.continuousAt.comp h1.continuousAt).neg.tendsto
       have e : (-(⇑σ ∘ l)) 1 = 0 := by simp [hl]
-      rw [e] at this
-      exact this
+      rwa [e] at this
     filter_upwards [h2, ht.eventually h3] with h ha hb hu
     have e1 : NormedSpace.exp (σ (l h)) * h = 1 := by
       rw [← anti_map_exp σ H.anti H.one, ha, hu]

@@ -57,9 +57,7 @@ private lemma eq_of_mem_finset_of_mk_eq {A B : AddSubgroup W} {R : Finset W}
     {x y : W} (hx : x ∈ R) (hy : y ∈ R) (h : (x : W ⧸ B) = y) : x = y := by
   have hxy : -x + y ∈ B := QuotientAddGroup.eq.mp h
   obtain ⟨z, _, hz⟩ := hR y (hRA y hy)
-  have h1 := hz y ⟨hy, by simp⟩
-  have h2 := hz x ⟨hx, by rwa [sub_eq_neg_add]⟩
-  exact h2.trans h1.symm
+  exact (hz x ⟨hx, by rwa [sub_eq_neg_add]⟩).trans (hz y ⟨hy, by simp⟩).symm
 
 open scoped Pointwise Classical in
 variable {W : Type} [AddCommGroup W] in
@@ -68,8 +66,7 @@ private lemma exists_mem_finset_mk_eq_of_mem {A B : AddSubgroup W} {R : Finset W
     ∃ x ∈ R, (x : W ⧸ B) = w := by
   obtain ⟨x, ⟨hx, hwx⟩, _⟩ := hR w hw
   refine ⟨x, hx, QuotientAddGroup.eq.mpr ?_⟩
-  rw [← sub_eq_neg_add]
-  exact hwx
+  rwa [← sub_eq_neg_add]
 
 open scoped Pointwise Classical in
 variable {W : Type} [AddCommGroup W] in

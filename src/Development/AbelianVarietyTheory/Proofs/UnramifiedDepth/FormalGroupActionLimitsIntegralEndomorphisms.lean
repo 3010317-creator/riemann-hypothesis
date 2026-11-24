@@ -258,7 +258,6 @@ theorem limit_endomorphisms : ∀ (C : Type) [Field C] [CharZero C] (V : VF C) (
     have h3 := Y.gauge.ad (a n)
     rw [hK, hK] at h3
     have h4 := Y.intAd (a n) μ
-    rw [(hid (Y.B.ad (a n))).symm.trans h3] at h4
-    exact h4
+    rwa [(hid (Y.B.ad (a n))).symm.trans h3] at h4
 
 end GlobalTheory.ActLimit

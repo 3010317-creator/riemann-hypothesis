@@ -106,8 +106,7 @@ theorem isFundamentalDomain_layers [mA.IsAddLeftInvariant] (ΓA : AddSubgroup A)
       exact ae_iff.2 this
     have h2 : ∀ᵐ p ∂(mA.prod (mB.prod ν)), ∀ b' : ΓB, ∃ g : ΓA, g +ᵥ (p.1 + κ b'.1 p.2.1) ∈ 𝓒 := by
       rw [ae_all_iff]
-      intro b'
-      exact ae_iff.2 (null_shear (hκ b'.1) (ae_iff.1 hC.ae_covers))
+      exact fun b' => ae_iff.2 (null_shear (hκ b'.1) (ae_iff.1 hC.ae_covers))
     filter_upwards [h1, h2] with p hp1 hp2
     obtain ⟨b', hb⟩ := hp1
     obtain ⟨c', hc⟩ := hp2 b'
@@ -236,8 +235,7 @@ theorem fundDomain_layers : ∀ (D : D7) (V V₀ : HSp D) (ρ : ℕ) (d : HypDec
     refine ⟨⟨c, AddSubgroup.mem_addSubgroupOf.2 hr.2⟩, ⟨b, hr.1⟩, fun p => Subtype.ext ?_⟩
     rw [Subgroup.smul_def]
     have h := key c b p
-    rw [d.nC_mul_nB] at h
-    exact h
+    rwa [d.nC_mul_nB] at h
   · rintro ⟨c', hc'⟩ ⟨b', hb'⟩
     have hrad : d.nC c' * d.nB b' ∈ radX d := (hstr.2.1 _).2 ⟨b', c', d.nC_mul_nB b' c'⟩
     have hQ : d.nC c' * d.nB b' ∈ GQ V :=

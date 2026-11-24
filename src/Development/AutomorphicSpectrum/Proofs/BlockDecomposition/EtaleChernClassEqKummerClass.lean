@@ -120,8 +120,7 @@ theorem etale_chern_class_eq_kummer_class : CrystallineSemistableComparison.E.Et
     funext s
     rw [pow_zero, one_smul, d_zero_apply]
     have e := hdiff _ ((P.S.map (s.map' 0 1)).unop ≫ Λ.p (s.obj 0)) (Λ.p (s.obj 1)) (hpp (s.map' 0 1)) _ (Λ.hr _)
-    rw [← hηn] at e
-    exact e
+    rwa [← hηn] at e
   have h3 : (-1 : ℤ) ^ 1 • d ((P.res 1).K 0) 1 a₀ = (P.res 1).ιC 2 z := by
     funext s
     rw [Pi.smul_apply, d_one_apply]
@@ -136,8 +135,7 @@ theorem etale_chern_class_eq_kummer_class : CrystallineSemistableComparison.E.Et
       have e : ((P.S.map (s.map' 0 1)).unop ≫ Λ.p (s.obj 0)) ≫ D.f = Λ.p (s.obj 1) ≫ D.f := hpp (s.map' 0 1)
       rw [Category.assoc g, e, Category.assoc]
     have hbc : ((P.S.map (s.map' 0 2)).unop ≫ Λ.p (s.obj 0)) ≫ D.f = (g ≫ Λ.p (s.obj 1)) ≫ D.f := by
-      rw [← hb]
-      exact hbc'
+      rwa [← hb]
     let v := Units.map g.appTop.hom.toMonoidHom (Λ.r (s.map' 0 1))
     let w := Λ.r (s.map' 1 2)
     let u := Λ.r (s.map' 0 2)

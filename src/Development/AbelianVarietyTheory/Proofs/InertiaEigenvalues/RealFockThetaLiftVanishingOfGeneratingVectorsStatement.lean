@@ -481,8 +481,7 @@ theorem hasDerivAt_fockVector : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (P
     rfl
   refine ⟨fun Y => ((-eS D i τ : ℚ) : ℂ) * Y.trace, fun Y hY P z => ?_⟩
   have h := hAll.2 Y hY P z
-  rw [hpt] at h
-  exact h
+  rwa [hpt] at h
 
 end GlobalTheory.FockLieW
 
@@ -724,7 +723,7 @@ theorem real_points_fock : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T 
       refine Units.ext ?_
       change infMat D.sp.cm.sig (Vc D i).gram (R.θ ρ) (GlobalTheory.AdelicScalar.realElt R.θ (Vc D i) fun τ => (g τ).val) = (g ρ).val
       rw [GlobalTheory.AdelicScalar.realElt, GlobalTheory.RealTransSm.infMat_list_prod hθ _ hU ρ _ (Finset.nodup_toList _),
-        if_pos (Finset.mem_toList.2 (Finset.mem_univ ρ))]
+        ite_eq_left (Finset.mem_toList.2 (Finset.mem_univ ρ))]
 
 end GlobalTheory.RealPtsFock
 
@@ -781,8 +780,7 @@ theorem exists_decomp {n : ℕ} (H : Matrix (Fin n) (Fin n) ℂ) (hH : Hᴴ = H)
   · rw [conjTranspose_smul, conjTranspose_add, Matrix.smul_mul, Matrix.mul_smul, Matrix.add_mul, Matrix.mul_add,
       hA, hB]
     have : star (1 / 2 : ℂ) = 1 / 2 := by simp
-    rw [this, ← smul_add]
-    rw [show Zᴴ * H + -(H * Z) + (H * Z + -(Zᴴ * H)) = 0 by abel, smul_zero]
+    rw [this, ← smul_add, show Zᴴ * H + -(H * Z) + (H * Z + -(Zᴴ * H)) = 0 by abel, smul_zero]
   · rw [conjTranspose_smul, conjTranspose_sub, Matrix.smul_mul, Matrix.mul_smul, Matrix.sub_mul, Matrix.mul_sub,
       hA, hB]
     have : star (-(Complex.I / 2)) = Complex.I / 2 := by
@@ -1266,8 +1264,7 @@ lemma schur_vanish {W : Type} [AddCommGroup W] [Module ℂ W] [Nontrivial W] [Fi
     (hEorth : ∀ χ : W →ₗ[ℂ] H, (∀ g w, χ (ρ g w) = act g (χ w)) →
       ∀ w, ∀ e ∈ E, inner ℂ (χ w) e = 0)
     (φ : H →ₗ[ℂ] W) (hφ : ∀ g, ∀ e ∈ E, φ (act g e) = ρ g (φ e)) : ∀ e ∈ E, φ e = 0 := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   obtain ⟨e₀, he₀E, he₀⟩ := hne
   let K : Submodule ℂ H := LinearMap.ker φ ⊓ E
   have hK : ∀ g, ∀ k ∈ K, act g k ∈ K := by
@@ -1303,8 +1300,7 @@ lemma schur_vanish {W : Type} [AddCommGroup W] [Module ℂ W] [Nontrivial W] [Fi
   let ψ : C →ₗ[ℂ] W := φ.comp C.subtype
   have hψi : Function.Injective ψ := by
     rw [← LinearMap.ker_eq_bot, Submodule.eq_bot_iff]
-    intro c hc
-    exact Subtype.ext (hinj c c.2 (LinearMap.mem_ker.1 hc))
+    exact fun c hc => Subtype.ext (hinj c c.2 (LinearMap.mem_ker.1 hc))
   have hψs : Function.Surjective ψ := by
     intro w
     have hw : w ∈ C.map φ := hU ▸ Submodule.mem_top
@@ -1314,7 +1310,6 @@ lemma schur_vanish {W : Type} [AddCommGroup W] [Module ℂ W] [Nontrivial W] [Fi
   let χ : W →ₗ[ℂ] H := C.subtype.comp e.symm.toLinearMap
   have hχC : ∀ w, χ w ∈ C := fun w => (e.symm w).2
   have hφχ : ∀ w, φ (χ w) = w := fun w => by
-    show ψ (e.symm w) = w
     exact e.apply_symm_apply w
   have hχ : ∀ g w, χ (ρ g w) = act g (χ w) := by
     intro g w
@@ -1536,8 +1531,7 @@ theorem forms_vanish_of_io : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
   have hN : B j (P - Q) = 0 :=
     hNo (B j) (fun u hu P₁ _ P₂ h l => heq j u hu P₁ P₂ h l) _ hPQ
   have := (hU Q).1 hQU j
-  rw [map_sub, this, sub_zero] at hN
-  exact hN
+  rwa [map_sub, this, sub_zero] at hN
 
 end GlobalTheory.GenByIo
 end -- clump:auto
@@ -1783,8 +1777,7 @@ theorem exists_bilin (R : RealDat D A Ks) (F : Face D A) (hG : GlobalTheory.Lift
     rw [pureTensor_add, downInt_add_f _ _ _ _ _ _ _ _ (hint _ l g (hth P)) (hint _ l g (hth Q))]
   · intro c P l
     rw [pureTensor_smul, downInt_smul_f, smul_eq_mul]
-  · intro P l l'
-    exact downInt_add_l _ _ _ _ _ _ _ _ (hint _ l g (hth P)) (hint _ l' g (hth P))
+  · exact fun P l l' => downInt_add_l _ _ _ _ _ _ _ _ (hint _ l g (hth P)) (hint _ l' g (hth P))
   · intro c P l
     rw [downInt_smul_l, smul_eq_mul]
 

@@ -150,13 +150,11 @@ theorem fixed_smInd_ne_bot [TopologicalSpace G] [IsTopologicalGroup G] (hK : IsO
       fun k hk => ind_bumpInd hx hk)
   refine (Submodule.ne_bot_iff _).2 ⟨⟨bumpInd hx, hs⟩, ?_, ?_⟩
   · intro k
-    simp only [MonoidHom.one_apply, Units.val_one, one_smul]
-    exact Subtype.ext (ind_bumpInd hx k.2)
+    simpa only [MonoidHom.one_apply, Units.val_one, one_smul] using Subtype.ext (ind_bumpInd hx k.2)
   · intro h
     apply hx0
     have h1 := congrFun (congrArg (fun φ : smoothPart (ind P σ) => (φ.1 : G → W)) h) 1
-    rw [← bump_one hx]
-    exact h1
+    rwa [← bump_one hx]
 
 theorem fixed_smInd_ne_bot_of_fixed : ∀ (G W : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [AddCommGroup W] [Module ℂ W] (P : Subgroup G) (σ : Representation ℂ P W) (K : Subgroup G), IsOpen (K : Set G) → ∀ x : W, x ≠ 0 → (∀ p : P, (p : G) ∈ K → σ p x = x) → fixed (smInd P σ) K ≠ ⊥ :=
   fun _ _ _ _ _ _ _ _ _ _ hK _ hx0 hx => fixed_smInd_ne_bot hK hx0 hx
@@ -214,8 +212,7 @@ theorem deltaHalf_leviProj_eq_one_of_isCompact :
   have hidx : (χ.ker.subgroupOf H).index ≠ 0 := Subgroup.index_ne_zero_of_finite
   obtain ⟨m, hm, -, hmem⟩ := Subgroup.exists_pow_mem_of_index_ne_zero hidx (⟨p, hp⟩ : H)
   have hpow : deltaHalf k (Two (Fin a) (Fin b)) (leviProj k (two e) p) ^ m = 1 := by
-    have h := Subgroup.mem_subgroupOf.1 hmem
-    simpa [χ, MonoidHom.mem_ker, map_pow] using h
+    simpa [χ, MonoidHom.mem_ker, map_pow] using Subgroup.mem_subgroupOf.1 hmem
   have hreal : (√(modulus k (Two (Fin a) (Fin b)) (leviProj k (two e) p)) : ℝ) ^ m = 1 := by
     have h := congrArg (fun u : ℂˣ => (u : ℂ)) hpow
     simp only [Units.val_pow_eq_pow_val, val_deltaHalf, Units.val_one] at h
@@ -270,8 +267,7 @@ theorem parab_eq_blk : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n
     intro i j; rw [hm]; rfl
   have h0 : ∀ (i : Fin b) (j : Fin a),
       ((p : GLw n w) : Matrix _ _ (w.adicCompletion E)) (stdSum h (Sum.inr i)) (stdSum h (Sum.inl j)) = 0 := by
-    intro i j
-    exact mem_parab_iff.1 p.2 true false i j (by decide)
+    exact fun i j => mem_parab_iff.1 p.2 true false i j (by decide)
   rw [← hm]
   let B : Matrix (Fin a) (Fin b) (w.adicCompletion E) := fun i j =>
     ((p : GLw n w) : Matrix _ _ (w.adicCompletion E)) (stdSum h (Sum.inl i)) (stdSum h (Sum.inr j))

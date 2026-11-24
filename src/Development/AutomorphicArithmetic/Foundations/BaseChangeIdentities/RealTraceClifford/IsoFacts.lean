@@ -153,8 +153,7 @@ theorem UpperTheory.RealTr.isoFacts :
     refine Submodule.iSup_induction _ (motive := fun y => Cas F y = ((nsq (ν + rhoV n) - nsq (rhoV n) : ℝ) : ℂ) • y) hy ?_ ?_ ?_
     · intro i z hz
       have hz' := Formalism.REAL.kCasSpan V n _ F (μ i) (x i) hK (hx i).2.2 z hz
-      rw [hCas, hμ i, hck] at hz'
-      exact hz'
+      rwa [hCas, hμ i, hck] at hz'
     · simp
     · intro a b ha hb
       rw [map_add (f := _), ha, hb, smul_add]
@@ -180,8 +179,7 @@ theorem UpperTheory.RealTr.isoFacts :
       simp only [SetLike.mem_coe, LinearMap.mem_ker, innerₛₗ_apply_apply]
       exact Formalism.REAL.kWtOrth V n _ F μ' _ y _ hU hyw hwt hne'
     have h0 := hle hyS
-    rw [LinearMap.mem_ker, innerₛₗ_apply_apply, inner_self_eq_zero] at h0
-    exact h0
+    rwa [LinearMap.mem_ker, innerₛₗ_apply_apply, inner_self_eq_zero] at h0
   refine ⟨hC, hM, ?_⟩
   apply le_antisymm
   · intro y hy

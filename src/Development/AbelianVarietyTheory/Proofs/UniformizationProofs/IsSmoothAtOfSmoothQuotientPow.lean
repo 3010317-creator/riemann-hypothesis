@@ -98,8 +98,7 @@ theorem isSmoothAt_of_smooth_quotient_pow [IsLocalRing V] [IsNoetherianRing V]
     refine LocalFlat.flat_of_relationsLift S (I := maximalIdeal V)
       (hle.trans (IsLocalRing.maximalIdeal_le_jacobson _)) fun n => ?_
     rcases n with _ | e
-    · intro F _ _ f x _
-      exact LocalFlat.range_lTensor_le LinearMap.id _ (by simp) ⟨x, by simp⟩
+    · exact fun F _ _ f x _ => LocalFlat.range_lTensor_le LinearMap.id _ (by simp) ⟨x, by simp⟩
     · haveI := h e
       haveI := (flat_and_formallySmooth_tensor (V := V) (S := S)
         (C := V ⧸ maximalIdeal V ^ (e + 1)) q.primeCompl).1
@@ -161,8 +160,7 @@ theorem mem_smoothLocus {V : Type} [CommRing V] [IsLocalRing V] [IsNoetherianRin
     rw [← Spec.map_comp, HasRingHomProperty.Spec_iff (P := @Smooth)]
     exact RingHom.smooth_algebraMap.mpr hsm
   obtain ⟨y, rfl⟩ : x ∈ Set.range (PrimeSpectrum.comap (algebraMap S (Localization.Away g))) := by
-    rw [PrimeSpectrum.localization_away_comap_range _ g]
-    exact hg
+    rwa [PrimeSpectrum.localization_away_comap_range _ g]
   have := (j ≫ Spec.map φ).smoothLocus_eq_top.ge (Set.mem_univ y)
   rwa [← Scheme.Hom.preimage_smoothLocus_eq] at this
 

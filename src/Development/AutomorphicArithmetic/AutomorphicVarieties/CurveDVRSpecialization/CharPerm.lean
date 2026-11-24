@@ -170,8 +170,7 @@ theorem UpperTheory.V.Pr.charPerm :
     intro g
     have h1 := congrArg Polynomial.roots (hχ g)
     unfold UpperTheory.V.Pr.chPoly at h1
-    rw [hr, hr] at h1
-    exact h1
+    rwa [hr, hr] at h1
   let f : (G →* k) →₀ ℤ := (∑ i, Finsupp.single (ψ' i) (1 : ℤ)) - ∑ i, Finsupp.single (ψ i) 1
   have hf : ∀ g, Finsupp.mapDomain (fun φ : G →* k => φ g) f = 0 := by
     intro g
@@ -181,5 +180,4 @@ theorem UpperTheory.V.Pr.charPerm :
   have hs : (∑ i, Finsupp.single (ψ i) (1 : ℤ)) = ∑ i, Finsupp.single (ψ' i) 1 :=
     (sub_eq_zero.mp (charPerm_zero f hf)).symm
   obtain ⟨σ, hσ⟩ := charPerm_perm ψ ψ' ((charPerm_single ψ ψ').mpr hs)
-  refine ⟨σ, fun i => MonoidHom.ext fun g => Units.ext ?_⟩
-  exact congrArg (fun φ : G →* k => φ g) (hσ i)
+  exact ⟨σ, fun i => MonoidHom.ext fun g => Units.ext (congrArg (fun φ : G →* k => φ g) (hσ i))⟩

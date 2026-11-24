@@ -123,8 +123,7 @@ theorem lev_iffQ : ∀ {F E K : Type} [Field F] [NumberField F] [Field E] [Numbe
     obtain ⟨h1, h2⟩ := (S.U_eq g).1 hy
     refine ⟨h1, rll_St_of_loc n' g fun v => ⟨_, rll_put_mem_St n' v ?_, rll_put_self n' v _⟩⟩
     have := (S.Uloc_lev v (h2 v)).2
-    rw [hL] at this
-    exact this
+    rwa [hL] at this
   have e0 : g ∈ lev hc 1 1 ⟨r, h', t, s, SG, Q, P', cg, fun PP => (ξ PP)⁻¹⟩ ↔
       g ∈ lev hc 1 1 (parDat h t s P χ) ∧ ∀ PP ∈ Q, redFn 1 PP g ∈ blockTri (blk2 r) := by
     rw [mem_lev, mem_lev, mem_parLev, mem_parLev]
@@ -338,8 +337,7 @@ theorem chi_deep (hc : CMData F E) {n T f : ℕ} {J : Matrix (Fin n) (Fin n) E} 
   have hxP : ∀ r s, adAt F P (x.1.1 r s) = adAt F P (w.1 r s) := fun r s => by
     have h := congrArg (fun g : GL (Fin n) _ => g.1 r s) hxw
     refine LocSplice.adAt_eq_of_prV P ?_
-    rw [hu]
-    exact h
+    rwa [hu]
   have hwP := (hd (-e).toNat w).1 hw
   have hA : ∀ r s, Valued.v (adAt F P (x.1.1 r s) - (1 : Matrix (Fin n) (Fin n) (P.adicCompletion E)) r s) ≤
       Valued.v ((m : P.adicCompletion E) ^ 2 * c) := fun r s => by
@@ -481,16 +479,16 @@ theorem levRead_of (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (
     (fun c w x => by
       by_cases hc : c < B.R.m
       · obtain ⟨b, k, h1, h2⟩ := exists_rep w.1 x
-        have e1 : cg (c + 1) w.1 = chi (c + 1) w.1 := if_pos hc
-        have e2 : chiAt I.Ch w c = I.Ch.chi ⟨c, hc⟩ w := dif_pos hc
+        have e1 : cg (c + 1) w.1 = chi (c + 1) w.1 := ite_eq_left hc
+        have e2 : chiAt I.Ch w c = I.Ch.chi ⟨c, hc⟩ w := dite_eq_left hc
         have e3 := hchi ⟨c, hc⟩ w.1 w.2 b k x h1 h2
         have e4 := (hI.ch_tied.mu0 ⟨c, hc⟩).atg w k b x h1 h2
         have e5 := (congrArg (fun z : ℂˣ => (z : ℂ)) e3).trans e4
         rw [e1, e2]
         refine inv_injective ?_
         exact (Units.val_inv_eq_inv_val _).symm.trans (e5.trans ((congrArg B.embLL (Units.val_inv_eq_inv_val _)).trans (map_inv₀ _ _)))
-      · have e1 : cg (c + 1) w.1 = 1 := if_neg hc
-        have e2 : chiAt I.Ch w c = 1 := dif_neg hc
+      · have e1 : cg (c + 1) w.1 = 1 := ite_eq_right hc
+        have e2 : chiAt I.Ch w c = 1 := dite_eq_right hc
         rw [e1, e2]
         exact (map_one B.embLL).symm)
     (xiR t)
@@ -504,7 +502,7 @@ theorem levRead_of (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (
   refine ⟨key.1, fun h κ hκ => Eq.trans ?_ (key.2 h κ hκ)⟩
   refine congrArg (fun z : ℂˣ => (z : ℂ)) (congrArg₂ (· * ·) (congrArg₂ (· * ·) rfl ?_) rfl)
   refine Finset.prod_congr rfl fun PP _ => Finset.prod_congr rfl fun c hc => ?_
-  have e1 : cg (c + 1) PP = chi (c + 1) PP := if_pos (Finset.mem_range.1 hc)
+  have e1 : cg (c + 1) PP = chi (c + 1) PP := ite_eq_left (Finset.mem_range.1 hc)
   exact congrArg (fun f : (kP PP)ˣ →* ℂˣ => f _) e1.symm
 
 end Cols
@@ -614,8 +612,7 @@ theorem levRead_packB_of_bWit {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {p :
     exact h0
   have h2 : (fun k : _root_.GlobalTheory.Mem.Top.Bl.RealPackage b.R b.S => LevRead q.w.I q.w.l q.Z k.B.Q.Rl.toRealDat.toLevCh
       (k.B.Q.Rl.toRealDat.levR k.B.Q.F.lv2 true) k.P.I.tup) (_root_.GlobalTheory.Mem.Top.Bl.realPackageOfBundle b) := by
-    rw [y.eq]
-    exact h1
+    rwa [y.eq]
   exact h2
 
 theorem levIs_of_bWit_alt {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {p : _root_.GlobalTheory.Mem.Top.Bl.Parameters hL} {K : Ctx} (q : Bl.WPt p.s K) {c : ℝ}

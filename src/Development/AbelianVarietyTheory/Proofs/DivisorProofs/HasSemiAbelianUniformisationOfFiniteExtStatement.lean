@@ -215,8 +215,7 @@ theorem exists_isPullDeg_self_pullOver : ∀ (R R' : Type) [CommRing R] [IsDomai
   obtain ⟨h₀, cp, cx⟩ := exists_cast eq hD
   obtain ⟨h, h₁, h₂⟩ := exists_self_of_comp hρ σ.1.injective hD h₀ cp cx
   refine ⟨h, h₂, fun b c hb hc => ?_⟩
-  rw [hb, hc, ← proj_def, ← proj_def]
-  exact h₁
+  rwa [hb, hc, ← proj_def, ← proj_def]
 
 end GlobalTheory.Mum.SelfPull
 end -- clump:auto
@@ -518,8 +517,7 @@ theorem isPullUnif_comp_id : ∀ (R R' : Type) [CommRing R] [IsDomain R] [CommRi
     apply pullback.hom_ext
     · exact hb.trans hf.symm
     · exact (Over.w bc''.hom).trans (Over.w e.hom).symm
-  rw [this]
-  exact he
+  rwa [this]
 
 end GlobalTheory.PullUnifId
 end -- clump:auto
@@ -1326,8 +1324,7 @@ theorem isGal_integralClosure_of_tower (R : Type) [CommRing R] [IsDomain R] [IsI
     obtain ⟨r, hr⟩ := IsIntegrallyClosed.isIntegral_iff.1 hint
     refine ⟨r, Subtype.ext ?_⟩
     have := hRL r
-    rw [hr, hk] at this
-    exact this
+    rwa [hr, hk] at this
 
 end GlobalTheory.GalClosure
 

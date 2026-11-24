@@ -80,8 +80,7 @@ theorem surjective_of_cotangentPullback_surjective_nilAug {k A B : Type} [Field 
     have h1 : AugCot.d (counitAlgHom k A) (x - f b) = 0 := by
       rw [map_sub, hdb, ← hc, sub_self]
     have hmem : x - f b ∈ I := I.sub_mem hx (hfJ b hbJ)
-    rw [AugCot.d_of_mem _ hmem, Ideal.toCotangent_eq_zero] at h1
-    exact h1
+    rwa [AugCot.d_of_mem _ hmem, Ideal.toCotangent_eq_zero] at h1
 
   have step2 : ∀ m : ℕ, ∀ y ∈ I ^ (m + 1), ∃ b ∈ J ^ (m + 1), y - f b ∈ I ^ (m + 2) := by
     intro m
@@ -138,8 +137,7 @@ theorem surjective_of_cotangentPullback_surjective_nilAug {k A B : Type} [Field 
   haveI : IsNoetherianRing A := IsNoetherianRing.of_finite k A
   have hnil : IsNilpotent I := by
     refine (Ideal.FG.isNilpotent_iff_le_nilradical (IsNoetherian.noetherian I)).2 ?_
-    intro a ha
-    exact (mem_nilradical).2 (hA a ha)
+    exact fun a ha => (mem_nilradical).2 (hA a ha)
   obtain ⟨N, hN⟩ := hnil
   have hI : ∀ x ∈ I, ∃ b : B, f b = x := by
     intro x hx

@@ -94,8 +94,7 @@ theorem integral_le_of_disjoint_translates {ι : Type} [Fintype ι]
     _ = ∫⁻ u in ⋃ y : A, (y +ᵥ t) ∩ D, ENNReal.ofReal (f u) := by
         refine (lintegral_iUnion₀ (fun y => ?_) ?_ _).symm
         · exact (ht.const_vadd y).nullMeasurableSet.inter hD.nullMeasurableSet
-        · intro y₁ y₂ h
-          exact (((hd y₁ y₂ h).inf_left _).inf_right _).aedisjoint
+        · exact fun y₁ y₂ h => (((hd y₁ y₂ h).inf_left _).inf_right _).aedisjoint
     _ ≤ ∫⁻ u in D, ENNReal.ofReal (f u) :=
         lintegral_mono_set (iUnion_subset fun _ => inter_subset_right)
 
@@ -153,10 +152,8 @@ theorem sup_le_mean_square : ∀ (ι : Type) [Fintype ι] (A : AddSubgroup (Eucl
     rw [← Set.countable_univ_iff]
     refine Set.PairwiseDisjoint.countable_of_isOpen
       (s := fun y : A => y +ᵥ Metric.ball z r) (fun a _ b _ h => hdisj a b h) ?_ ?_
-    · intro y _
-      exact Metric.isOpen_ball.vadd (y : EuclideanSpace ℂ ι)
-    · intro y _
-      exact ⟨y +ᵥ z, z, Metric.mem_ball_self hr0, rfl⟩
+    · exact fun y _ => Metric.isOpen_ball.vadd (y : EuclideanSpace ℂ ι)
+    · exact fun y _ => ⟨y +ᵥ z, z, Metric.mem_ball_self hr0, rfl⟩
   have hpk : ∫ u in Metric.ball z r, N u ≤ ∫ u in Fd, N u := by
     refine integral_le_of_disjoint_translates A Fd _ hD measurableSet_ball hdisj N hN0 hNc ?_ hint
     intro y u

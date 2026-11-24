@@ -334,8 +334,7 @@ theorem smooth_rdWord_functional : ∀ (k r : ℕ) {H : Type} [NormedAddCommGrou
   · intro g₀ hg₀
     obtain ⟨U, F, hU, hg, hF, hE⟩ := hv g₀ hg₀
     refine ⟨U, fun g => Λ (F g), hU, hg, (Λ.restrictScalars ℝ).contDiff.comp_contDiffOn hF, ?_⟩
-    intro g hgU hgH
-    exact congrArg Λ (hE g hgU hgH)
+    exact fun g hgU hgH => congrArg Λ (hE g hgU hgH)
   · intro ws
     induction ws with
     | nil => intro _ x _; rfl
@@ -398,8 +397,7 @@ theorem smoothOnH_translate {n : ℕ} {E : Type*} [NormedAddCommGroup E] [Normed
   have hc := contDiff_mulLeft a
   refine ⟨(fun g => a * g) ⁻¹' U, fun g => F (a * g), hU.preimage hc.continuous, hgU, ?_, ?_⟩
   · exact hF.comp hc.contDiffOn (fun _ h => h)
-  · intro g hg hgH
-    exact hfF _ hg (inUH_mul ha hgH)
+  · exact fun g hg hgH => hfF _ hg (inUH_mul ha hgH)
 
 end Smooth
 
@@ -695,8 +693,7 @@ theorem sobolev_at_one_compact : ∀ (n : ℕ) (ε : Fin n → Bool), ∃ (S : L
         fun t : ℝ => F v (umat x * NormedSpace.exp ((t : ℂ) • E i)) := by
       funext t
       rw [humul, hcuM]
-    rw [he]
-    exact h
+    rwa [he]
   have hb : ‖F [] 1‖ ^ 2 ≤ C0 * (S.map fun v =>
       ∫ t in Set.pi Set.univ (fun _ : Fin (n ^ 2) => Set.Icc (0 : ℝ) s),
         ‖F v (umat ((List.ofFn fun i => cu i (t i)).prod))‖ ^ 2).sum :=
@@ -714,8 +711,7 @@ theorem sobolev_at_one_compact : ∀ (n : ℕ) (ε : Fin n → Bool), ∃ (S : L
     have h1 := ofReal_integral_le_lintegral_ofReal
       (volume.restrict (Set.pi Set.univ (fun _ : Fin (n ^ 2) => Set.Icc (0 : ℝ) s)))
       (fun t => ‖F v (umat ((List.ofFn fun i => cu i (t i)).prod))‖ ^ 2) (fun t => sq_nonneg _)
-    have h2 := hchart (fun y => ENNReal.ofReal (‖F v (umat y)‖ ^ 2)) hmeas
-    exact h1.trans h2
+    exact h1.trans (hchart (fun y => ENNReal.ofReal (‖F v (umat y)‖ ^ 2)) hmeas)
   calc ENNReal.ofReal (‖F [] 1‖ ^ 2)
       ≤ ENNReal.ofReal (C0 * (S.map fun v =>
           ∫ t in Set.pi Set.univ (fun _ : Fin (n ^ 2) => Set.Icc (0 : ℝ) s),
@@ -817,7 +813,7 @@ theorem sobolev_at_one_G : ∀ (k r : ℕ) (μG : Measure (Mt k r)), IsHaarOn (G
   have hfin : IsFiniteMeasureOnCompacts μG := by
     obtain ⟨hG, -⟩ := closedSub_groups k r (bvec (wI k r (Fin.last k))) (fun i hi => by
       simp only [bvec, wI]
-      rw [Pi.single_apply, if_neg]
+      rw [Pi.single_apply, ite_eq_right]
       intro h; rw [h] at hi; simp at hi) (by
       have h : herm (Hpk k r) (bvec (wI k r (Fin.last k))) (bvec (wI k r (Fin.last k))) =
           Hpk k r (wI k r (Fin.last k)) (wI k r (Fin.last k)) := by
@@ -1401,8 +1397,7 @@ theorem reg_main : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerProdu
     rw [← ENNReal.ofReal_add (by positivity) (by positivity),
       ENNReal.ofReal_le_ofReal_iff (by positivity)] at h3
     have h4 : ‖(Λ j - Λ l) (σ (Matrix.of x) u)‖ ^ 2 ≤ ε ^ 2 := by linarith
-    have h5 := (pow_le_pow_iff_left₀ (norm_nonneg _) hε.le (by norm_num)).1 h4
-    simpa using h5
+    simpa using (pow_le_pow_iff_left₀ (norm_nonneg _) hε.le (by norm_num)).1 h4
   obtain ⟨F, hFc, hFae, hFl⟩ := _root_.GlobalTheory.SgInf.RegLimit.exists_continuous_limit k r μ hμ (fun j g => Λ j (σ g u))
     (fun z : Mt k r => T u (Matrix.of z)) (fun j => (Λ j).continuous.comp_continuousOn (hσ.2.2 u))
     (fun Q hQ => (hloc u Q hQ).1) hCau (fun Q hQ => by
@@ -1448,8 +1443,7 @@ theorem reg_main : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerProdu
   rw [abs_norm] at h4
   have e : |C₀| * (2 * |c₁| * (Ws.map fun ws => ‖dsigW σ ws u‖).sum ^ 2) =
       (|C₀| * (2 * |c₁|)) * (Ws.map fun ws => ‖dsigW σ ws u‖).sum ^ 2 := by ring
-  rw [e, Real.sqrt_mul (by positivity), Real.sqrt_sq hSn] at h4
-  exact h4
+  rwa [e, Real.sqrt_mul (by positivity), Real.sqrt_sq hSn] at h4
 
 end GlobalTheory.SgInf
 end -- clump:auto

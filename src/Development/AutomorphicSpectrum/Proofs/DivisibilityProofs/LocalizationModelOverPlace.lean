@@ -283,8 +283,7 @@ theorem isVert_map {D : ℕ} (h : IsArithVar (mCoordIdeal y) (D + 1)) {ϖ : O} (
   refine ⟨MvPolynomial.map (Int.castRingHom O) u, MvPolynomial.map (Int.castRingHom O) v,
     huW, hvW, ?_⟩
   have h5 := cast_mem_iff (O := O).2 huv
-  rw [map_sub, map_mul, map_mul] at h5
-  exact h5
+  rwa [map_sub, map_mul, map_mul] at h5
 
 end
 

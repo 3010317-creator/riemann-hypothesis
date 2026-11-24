@@ -56,8 +56,7 @@ private theorem ipo_mul {f : R →ₐ[O] K} (hf : IsLocPt f) (x : R) {z : R} (hz
   · simp [h0]
   have hpos : 0 < ‖f z‖ := norm_pos_iff.mpr h0
   suffices hx : ‖f x‖ ≤ 1 by nlinarith [norm_nonneg (f x)]
-  by_contra hx
-  push_neg at hx
+  by_contra! hx
   obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt (‖f z‖⁻¹) hx
   have hmem : x ^ n * z ∈ maximalIdeal R := Ideal.mul_mem_left _ _ hz
   have h1 := hf _ hmem
@@ -88,8 +87,7 @@ private theorem ipo_rho {f : R →ₐ[O] K} (hf : IsLocPt f) :
       exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ihx ihy)
     | smul a x hx ihx =>
       rw [smul_eq_mul]
-      refine (ipo_mul hf a ?_).trans ihx
-      exact hs ▸ hx
+      exact (ipo_mul hf a (hs ▸ hx)).trans ihx
 
 private theorem ipo_pow {f : R →ₐ[O] K} (hf : IsLocPt f) {ε : ℝ} (hε : 0 < ε) :
     ∃ n : ℕ, ∀ z ∈ maximalIdeal R ^ n, ‖f z‖ < ε := by
@@ -139,13 +137,10 @@ private theorem ipo_le_one {l : ℕ} [Fact l.Prime] {c : Coef l} {R : Type} [Com
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible c.O
   have hm : algebraMap c.O R ϖ ∈ maximalIdeal R := by
     rw [mem_maximalIdeal, mem_nonunits_iff]
-    intro hu
-    exact hϖ.not_isUnit ((isUnit_map_iff (algebraMap c.O R) ϖ).mp hu)
+    exact fun hu => hϖ.not_isUnit ((isUnit_map_iff (algebraMap c.O R) ϖ).mp hu)
   have hne : f (algebraMap c.O R ϖ) ≠ 0 := by
     rw [AlgHom.commutes]
-    intro h
-    apply hϖ.ne_zero
-    exact Subtype.ext (by simpa using h)
+    exact fun h => hϖ.ne_zero (Subtype.ext (by simpa using h))
   have hpos : 0 < ‖f (algebraMap c.O R ϖ)‖ := norm_pos_iff.mpr hne
   have h := ipo_mul hf x hm
   rw [map_mul, norm_mul] at h
@@ -185,16 +180,13 @@ theorem UpperTheory.V.U3.isPt_push :
   · show (S.r.hom D.cc).mat.map (f : S.R →+* PadicAlgCl l) = 1
     rw [hn.atc, Matrix.map_one _ (map_zero _) (map_one _)]
   · have := congrArg f hn.z12
-    rw [map_zero, zmat, Matrix.sub_apply, map_sub] at this
-    exact this
+    rwa [map_zero, zmat, Matrix.sub_apply, map_sub] at this
   · have := congrArg f hn.z21
-    rw [map_zero, zmat, Matrix.sub_apply, map_sub] at this
-    exact this
+    rwa [map_zero, zmat, Matrix.sub_apply, map_sub] at this
   · show GG.map (f : S.R →+* PadicAlgCl l) (S.r.hom g) = 1
     rw [hk g hg, map_one]
   · show φ x ∈ maximalIdeal S.R
-    rw [← res_eq_zero_iff c.O, res_map, res_eq_zero_iff]
-    exact hx
+    rwa [← res_eq_zero_iff c.O, res_map, res_eq_zero_iff]
   · have : φ x = 0 := hI hx
     show f (φ x) = 0
     rw [this, map_zero]

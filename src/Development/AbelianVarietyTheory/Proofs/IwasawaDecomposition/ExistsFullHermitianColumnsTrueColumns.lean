@@ -105,8 +105,7 @@ theorem lift_mem_KDq (hl : LevOk H SG SQ) (x : Formalism.L2.Herm.unitaryOneFinit
     simp only [map_mul, map_one] at e
     refine le_antisymm (hle w) ?_
     have e' : Valued.v (adAt H.F w d) * Valued.v (adAt H.F (conjPrime₂ w) d) = 1 := by
-      rw [← valued_sigR (host_cmData R H) w d]
-      exact e
+      rwa [← valued_sigR (host_cmData R H) w d]
     calc (1 : _) = Valued.v (adAt H.F w d) * Valued.v (adAt H.F (conjPrime₂ w) d) := e'.symm
       _ ≤ _ := mul_le_of_le_one_right' (hle _)
   have hcomp := fun w => DetSpec.compAt_eq hb w
@@ -245,8 +244,7 @@ theorem mem_u1int_iff_val : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R) 
   have h0 := DetSpec.val_compAt_ne (conjPrime₂ w) a
   constructor
   · intro h; rw [h, one_mul]
-  · intro h
-    exact (mul_eq_right₀ h0).1 h
+  · exact fun h => (mul_eq_right₀ h0).1 h
 end GlobalTheory.Mem.Col2.FullDt
 
 end
@@ -523,8 +521,7 @@ theorem exists_colsFullS : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I
       vpos := B.V_pos
       baseL := C.herm.baseL }
   refine ⟨⟨Fu, rfl⟩, HEq.rfl, ?_⟩
-  intro x a ha
-  exact normOneFiniteAdeleDetClass_of_isDetLift B.host I.SQ x a ha
+  exact fun x a ha => normOneFiniteAdeleDetClass_of_isDetLift B.host I.SQ x a ha
 
 end Main
 

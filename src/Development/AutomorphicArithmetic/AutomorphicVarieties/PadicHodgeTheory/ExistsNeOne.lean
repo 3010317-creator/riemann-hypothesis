@@ -100,8 +100,7 @@ private theorem finrank_ddr {l : ℕ} [Fact l.Prime] {G : Type} [Group G]
     rfl
   have h1 : finrank ℚ_[l] ↥(Ddr φ ρ) = φ.range.index * finrank ℚ_[l] E := by
     unfold IsDr at h
-    rw [he] at h
-    exact h
+    rwa [he] at h
   rw [← Module.finrank_mul_finrank ℚ_[l] E, mul_comm] at h1
   exact Nat.eq_of_mul_eq_mul_right Module.finrank_pos h1
 

@@ -92,12 +92,10 @@ theorem tauW_bal_corr (ψW : PsiOn D W) (hW : (W : Set (Spec (CommRingCat.of R))
   · have h₁ : jK R z ∈ W.ι ''ᵁ V := jK_mem z _ (hV.image _)
     obtain ⟨y, hy, e⟩ := h₁
     have e' : W.ι y = W.ι (κ.left z) := e.trans (congrArg (fun q => q z) hκ).symm
-    rw [← W.ι.isOpenEmbedding.injective e']
-    exact hy
+    rwa [← W.ι.isOpenEmbedding.injective e']
   · have vψ : ∀ χ, val (ψW.psi χ) κ.left z J = val (D.psi χ) (𝟙 _) z J := fun χ => by
       have := (val_pull hJ _ _ _).symm.trans ((val_corr hJ (ψW.psi_eq χ) lam).trans (val_pull hJ _ _ _))
-      rw [hl] at this
-      exact this
+      rwa [hl] at this
     have vρ : val (D.rigW W) κ.left z J = val D.rigK (𝟙 _) z J := by
       refine (val_pull hJ _ _ _).trans (Eq.trans ?_ (val_pull hJ _ _ _).symm)
       rw [Category.id_comp]
@@ -142,8 +140,7 @@ theorem push_comp (hD : IsPullDeg φ D D') {f : D.P.A ⟶ D.P.A} {f' : D'.P.A �
   show (x.left ≫ f'.left) ≫ hD.e.hom.left ≫ pullback.fst D.P.A.hom (specOf φ) =
     (x.left ≫ hD.e.hom.left ≫ pullback.fst D.P.A.hom (specOf φ)) ≫ f.left
   rw [Category.assoc, ← Category.assoc f'.left, h₁]
-  simp only [Category.assoc]
-  exact congrArg (fun q => x.left ≫ hD.e.hom.left ≫ q) h₂
+  simpa only [Category.assoc] using congrArg (fun q => x.left ≫ hD.e.hom.left ≫ q) h₂
 
 theorem push_inj (hD : IsPullDeg φ D D') {T : Over (Sp R')} {x y : T ⟶ D'.P.A}
     (h : pushPt (pull_grp hD).1.w x = pushPt (pull_grp hD).1.w y) : x = y :=

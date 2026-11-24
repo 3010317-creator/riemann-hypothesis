@@ -113,8 +113,7 @@ theorem valuation_lt_one_iff {v : HeightOneSpectrum (𝓞 F)} (e : Ext v) (y : A
   rcases eq_or_ne y 0 with rfl | hy
   · simp
   · have h0 : 0 < e.w y := e.w.pos hy
-    simp only [hy, false_or, not_le, one_lt_inv₀ h0]
-    exact ⟨fun h => h.2, fun h => ⟨h.le, h⟩⟩
+    simpa only [hy, false_or, not_le, one_lt_inv₀ h0] using ⟨fun h => h.2, fun h => ⟨h.le, h⟩⟩
 
 theorem lies_over {v : HeightOneSpectrum (𝓞 F)} (e : Ext v) (x : 𝓞 F) :
     e.O.valuation (algebraMap F (AlgebraicClosure F) (x : F)) < 1 ↔ x ∈ v.asIdeal := by
@@ -180,8 +179,7 @@ theorem closed_point_geometric_fibres_finite {k K : Type} [Field k] [Field K] [A
   rintro ⟨⟨y, hy⟩, hyx⟩
   obtain ⟨ψ, h⟩ := factor y x hyx
   have h2 : Spec.map (φ ≫ ψ) = Spec.map (CommRingCat.ofHom (algebraMap k K)) := by
-    rw [Spec.map_comp, hφ, ← Category.assoc, h]
-    exact hy
+    rwa [Spec.map_comp, hφ, ← Category.assoc, h]
   have h3 := Spec.map_injective h2
   exact ⟨⟨ψ.hom, fun a => congrArg (fun t => t.hom a) h3⟩, Subtype.ext (Subtype.ext h)⟩
 

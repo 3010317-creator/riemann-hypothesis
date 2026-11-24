@@ -101,8 +101,7 @@ theorem exists_pow_mul_integral {O : Type} [CommRing O] [IsDomain O] [IsDiscrete
   have hu' : algebraMap O (FractionRing O) (u : O) * algebraMap O (FractionRing O) ((u⁻¹ : Oˣ) : O) = 1 := by
     rw [← map_mul, Units.mul_inv, map_one]
   rw [hu, map_mul] at hbK
-  rw [hu, map_mul, map_mul]
-  rw [mul_div_assoc', div_eq_iff hbK]
+  rw [hu, map_mul, map_mul, mul_div_assoc', div_eq_iff hbK]
   linear_combination (-(algebraMap O (FractionRing O) a * algebraMap O (FractionRing O) (ϖ ^ n))) * hu'
 
 theorem exists_pow_smul_mem : ∀ {O : Type} [inst : CommRing O] [inst_1 : IsDomain O] [IsDiscreteValuationRing O] {V : Type} [inst_3 : AddCommGroup V] [inst_4 : Module O V] [inst_5 : Module (FractionRing O) V] [inst_6 : IsScalarTower O (FractionRing O) V] (T : Submodule O V), Formalism.RepresentationBoundsCohomology.LOC.IsLatticeIn T → ∀ (ϖ : O), Irreducible ϖ → ∀ (v : V), ∃ (m : ℕ), ϖ ^ m • v ∈ T := by
@@ -225,8 +224,7 @@ theorem exists_form_of_not_mem {T : Submodule O V} (hT : IsLatticeIn T) {v : V} 
     (LinearIndependent.iff_fractionRing O (FractionRing O)).1 hliO
   have hspO : Submodule.span O (Set.range w) = T := by
     have h := congrArg (Submodule.map T.subtype) e.span_eq
-    rw [Submodule.map_span, Submodule.map_top, Submodule.range_subtype, ← Set.range_comp] at h
-    exact h
+    rwa [Submodule.map_span, Submodule.map_top, Submodule.range_subtype, ← Set.range_comp] at h
   have hsp : ⊤ ≤ Submodule.span (FractionRing O) (Set.range w) := by
     rw [← hT.2]
     apply Submodule.span_le.2
@@ -366,13 +364,11 @@ theorem isPrecomplete_of_compact {O : Type} [CommRing O] [IsLocalRing O] [Topolo
   have hmem : {y : O | f n - y ∈ maximalIdeal O ^ n} ∈ Filter.map f atTop := by
     refine Filter.mem_map.2 (Filter.mem_atTop_sets.2 ⟨n, fun k hk => ?_⟩)
     have := hf hk
-    rw [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top] at this
-    exact this
+    rwa [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top] at this
   have hL' : L ∈ closure {y : O | f n - y ∈ maximalIdeal O ^ n} :=
     mem_closure_iff_clusterPt.2 (hL.mono (le_principal_iff.2 hmem))
   rw [hS.closure_eq] at hL'
-  rw [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top]
-  exact hL'
+  rwa [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top]
 
 theorem ringHom_zmod_apply {N : ℕ} [NeZero N] {R : Type*} [Ring R] (ψ : ZMod N →+* R) (z : ZMod N) :
     ψ z = ((z.val : ℕ) : R) := by
@@ -500,7 +496,7 @@ theorem exists_pairKO_eq_inv_unif : ∀ {O : Type} [CommRing O] [IsDomain O] [Is
     ext
     simp [hff']
   have hnot' : ¬ ∀ x ∈ D.T, D.bT x f' ∈ (1 : Submodule O (FractionRing O)) := hnot
-  push_neg at hnot'
+  push Not at hnot'
   obtain ⟨v, hvT, hu⟩ := hnot'
   set u := D.bT v f' with hu_def
   have hu0 : u ≠ 0 := by
@@ -572,8 +568,7 @@ theorem finite_quot_of_isOpen {O : Type} [CommRing O] [TopologicalSpace O] [IsTo
   intro q
   obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective q
   obtain ⟨x, hx, hyx⟩ := Set.mem_iUnion₂.1 (ht (Set.mem_univ y))
-  refine ⟨⟨x, hx⟩, ?_⟩
-  exact (Ideal.Quotient.eq.2 hyx).symm
+  exact ⟨⟨x, hx⟩, (Ideal.Quotient.eq.2 hyx).symm⟩
 
 theorem finite_quot_pow {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     [TopologicalSpace O] (hO : IsTopologicalRing O) (hc : CompactSpace O)
@@ -676,8 +671,7 @@ open GlobalTheory.TateFin GlobalTheory.TateTop GlobalTheory.Cyc.TwistLift Recipr
 theorem exists_cocycle_cup_not_cob : Formalism.GaloisCohomology.LocalTateDualityK → ∀ {p : ℕ} [Fact p.Prime] {K : IntermediateField ℚ_[p] (PadicAlgCl p)} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [TopologicalSpace O] [TopologicalSpace (FractionRing O)] [IsTopologicalAddGroup (FractionRing O)] [ContinuousSMul O (FractionRing O)] {VT VT' : Type} [AddCommGroup VT] [Module O VT] [TopologicalSpace VT] [IsTopologicalAddGroup VT] [ContinuousSMul O VT] [Module (FractionRing O) VT] [IsScalarTower O (FractionRing O) VT] [AddCommGroup VT'] [Module O VT'] [TopologicalSpace VT'] [IsTopologicalAddGroup VT'] [ContinuousSMul O VT'] [Module (FractionRing O) VT'] [IsScalarTower O (FractionRing O) VT'] {G : Type} [Group G] [TopologicalSpace G], FiniteDimensional ℚ_[p] K → IsTopologicalRing O → CompactSpace O → T2Space O → IsAdic (IsLocalRing.maximalIdeal O) → (p : O) ∈ IsLocalRing.maximalIdeal O → (p : O) ≠ 0 → Topology.IsOpenEmbedding (algebraMap O (FractionRing O)) → ∀ (i : G ≃ₜ* Formalism.GaloisCohomology.GK p K) (D : LatData O G VT VT'), (∀ (g : G) (n : ℕ) (ζ : PadicAlgCl p), ζ ^ (p ^ n) = 1 → ∃ a : ℕ, (i g) ζ = ζ ^ a ∧ ((D.ε g : Oˣ) : O) - (a : O) ∈ Ideal.span {(p : O) ^ n}) → IsLatticeIn D.T → PerfectRight D.bT → ContAction D.ρT → IsOpen (D.T : Set VT) → T2Space VT → T2Space VT' → ContinuousConstSMul (FractionRing O) VT → ContinuousConstSMul (FractionRing O) VT' → ∀ ϖ : O, Irreducible ϖ → ∀ c ∈ Z1 D.ρA, c ∉ B1 D.ρA → ∀ r : ℕ, (∀ g, ϖ ^ r • c g = 0) → ∀ n : ℕ, r ≤ n → ∃ z ∈ Z1 (quotRep D.ρTl' ϖ n), cupMod D c ϖ n z ∉ B2 (twist D.ε (KO O)) := by
   intro hTate p _ K O _ _ _ _ _ _ _ VT VT' _ _ _ _ _ _ _ _ _ _ _ _ _ _ G _ _ hK hOr hOc hOt hOa hpm hp0
     hemb i D hcyc hlat hperf hcontT hTo hT2 hT2' hcs hcs' ϖ hϖ c hc hcB r hr n hrn
-  by_contra H
-  push_neg at H
+  by_contra! H
   apply hcB
   haveI : CompactSpace G := i.toHomeomorph.symm.compactSpace
   haveI : ContinuousMul G := ⟨by
@@ -707,8 +701,7 @@ theorem exists_cocycle_cup_not_cob : Formalism.GaloisCohomology.LocalTateDuality
     have h0 := Ideal.iInf_pow_eq_bot_of_isLocalRing (Ideal.span {(p : O)}) hspan
     have h1 : a - b ∈ ⨅ k, Ideal.span {(p : O)} ^ k :=
       Ideal.mem_iInf.2 fun k => by rw [Ideal.span_singleton_pow]; exact h k
-    rw [h0, Ideal.mem_bot, sub_eq_zero] at h1
-    exact h1
+    rwa [h0, Ideal.mem_bot, sub_eq_zero] at h1
   have hιε : ∀ g, ι (χ g : ℤ_[p]) = (D.ε g : O) := by
     intro g
     refine hkrull _ _ fun k => ?_
@@ -989,8 +982,7 @@ theorem int_iso_of_localTateDuality (hT : Formalism.GaloisCohomology.LocalTateDu
     have e := cupMod_factor D hr (Nat.le_add_right r k) (hle k) z
     show cupMod D (c : G → VT ⧸ D.T) ϖ (r + k)
       (fun g => Submodule.factor (powSub_anti (M := ↥D.T') ϖ (hle k)) (z g)) ∉ _
-    rw [e]
-    exact hnc
+    rwa [e]
   obtain ⟨s, hs⟩ := GlobalTheory.exists_compatible_seq_of_finite_nonempty X f Y hfin hne hmap
   let w : ℕ → G → ↥D.T' := fun k g => qlift (s k g)
   have hwZ : ∀ k, (fun g => (Submodule.Quotient.mk (w k g) :
@@ -1014,8 +1006,7 @@ theorem int_iso_of_localTateDuality (hT : Formalism.GaloisCohomology.LocalTateDu
   have h1 := hx (Submodule.Quotient.mk ⟨e, he⟩)
   have h2 : ((cupCocycleZ1Z1 D.ρA D.ρTl' (twist D.ε (KO O)) (pairKO D.bT D.T) (pairKO_cont D.bT D.contbT D.T) D.pairKO_equiv (sub_contAction D.contT' _ D.stT') c ⟨e, he⟩) : G × G → KO O) ∈ B2 (twist D.ε (KO O)) := by
     have h3 : D.inv (Submodule.Quotient.mk (cupCocycleZ1Z1 D.ρA D.ρTl' (twist D.ε (KO O)) (pairKO D.bT D.T) (pairKO_cont D.bT D.contbT D.T) D.pairKO_equiv (sub_contAction D.contT' _ D.stT') c ⟨e, he⟩)) = D.inv 0 := by
-      rw [map_zero]
-      exact h1
+      rwa [map_zero]
     have h6 := (Submodule.Quotient.mk_eq_zero _).1 (hinv h3)
     exact h6
   apply (hs 0).1.2
@@ -1027,8 +1018,7 @@ theorem int_iso_of_localTateDuality (hT : Formalism.GaloisCohomology.LocalTateDu
     have h5 := hew 0 q.2
     rw [← neg_sub]
     exact Submodule.neg_mem _ h5
-  rw [h4]
-  exact h2
+  rwa [h4]
 
 end GlobalTheory.LocDualInt
 end -- clump:auto

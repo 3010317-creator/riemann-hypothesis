@@ -73,13 +73,12 @@ theorem _root_.GlobalTheory.StepFacNe.chrW_ram {F E : Type} [Field F]
         _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.chrW χ τ x ≠ 1 := by
   have hw := _root_.GlobalTheory.AdelicU.splitPrime_under τ
   unfold _root_.GlobalTheory.LFun.UnrAt at h
-  push_neg at h
+  push Not at h
   obtain ⟨y, hy1, hy2⟩ := h
   unfold _root_.Formalism.L2.Host.IsUnitAt at hy1
   obtain ⟨a, ha⟩ := (_root_.GlobalTheory.LFun.SplitTie.complMap_bijective τ hw).2 (y : _)
   have hv : Valued.v a = 1 := by
-    rw [← _root_.GlobalTheory.LFun.SplitTie.valued_complMap τ hw, ha]
-    exact hy1
+    rwa [← _root_.GlobalTheory.LFun.SplitTie.valued_complMap τ hw, ha]
   have ha0 : a ≠ 0 := by
     rintro rfl
     simp at hv
@@ -93,7 +92,6 @@ theorem _root_.GlobalTheory.StepFacNe.chrW_ram {F E : Type} [Field F]
     have hy : Units.map (_root_.GlobalTheory.LFun.complMap hw).toMonoidHom (Units.mk0 a ha0) = y :=
       Units.ext (by simpa using ha)
     unfold _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.chrW at h1
-    rw [MonoidHom.comp_apply, hy] at h1
-    exact h1
+    rwa [MonoidHom.comp_apply, hy] at h1
 
 end GlobalTheory.StepFacNe

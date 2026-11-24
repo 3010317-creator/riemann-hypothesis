@@ -125,14 +125,12 @@ theorem infPart_latL {u : WO (line D) (line D)} (hu : u ∈ latL D) : infPart D 
   induction hu using AddSubgroup.closure_induction with
   | mem w hw =>
     obtain ⟨α, -, -, a, -, s, -, t, -, rfl⟩ := hw
-    show (0 : Ainf D.host.F) ⊗ₜ[D.host.F] _ = 0
     exact TensorProduct.zero_tmul _ _
   | zero => simp
   | add x y _ _ hx hy => rw [Matrix.add_apply, RingHom.map_add (f := _), hx, hy, add_zero]
   | neg x _ hx => rw [Matrix.neg_apply, RingHom.map_neg, hx, neg_zero]
 
 theorem infPart_r (a : Af D.host.F) : infPart D (algebraMap (AF D.host.F) (AE D) (pairA D.host.F 0 a)) = 0 := by
-  show (0 : Ainf D.host.F) ⊗ₜ[D.host.F] (1 : D.host.E) = 0
   exact TensorProduct.zero_tmul _ _
 
 theorem finPart_r (N : ℕ) :
@@ -150,8 +148,7 @@ theorem den_latL : ∃ M : ℕ, 0 < M ∧ ∀ u ∈ latL D, M • finPart D (u (
     rw [RingHom.map_mul, map_natCast]; exact hden u hu (o D) (o D)
   have h3 := GlobalTheory.PlaceDatum.finPart_mem_of_toEAf h2
   rw [RingHom.map_mul, map_natCast] at h3
-  rw [nsmul_eq_mul]
-  exact h3
+  rwa [nsmul_eq_mul]
 
 theorem exists_compact_fin (M : ℕ) (hM : 0 < M) : ∃ K0 : Set (AE D), IsCompact K0 ∧
     ∀ z : AE D, infPart D z = 0 → M • finPart D z ∈ intAE D → z ∈ K0 := by

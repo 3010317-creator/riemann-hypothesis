@@ -417,8 +417,7 @@ theorem _root_.UpperTheory.KN.phiMod_crystalline_comparison_of_isCrisCmp :
     · rw [Pi.smul_apply, Pi.single_eq_same, smul_eq_mul, mul_one]
     · intro j _ hj
       rw [Pi.smul_apply, Pi.single_eq_of_ne hj.symm, smul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+    · exact fun h => absurd (Finset.mem_univ i) h
 
   rw [UpperTheory.KN.phiMod_deRham_image_coord_expansion l a e O K t ϖ ι P α hx σ, hσ, map_sum, map_sum, map_sum, map_sum,
   Finset.smul_sum]
@@ -568,8 +567,7 @@ theorem smul_coeff_one_eq_zero {R : Type} [CommRing R] (hR : ∀ n : ℕ, n ≠ 
     apply _root_.GlobalTheory.EvalNatCastZero.eq_zero_of_eval_natCast_add hR F.natDegree F le_rfl 0
     intro k
     rw [zero_add, hFdef, eval_finsetSum]
-    simp only [eval_mul, eval_pow, eval_C, hP]
-    exact h k
+    simpa only [eval_mul, eval_pow, eval_C, hP] using h k
   have h0 : P.coeff 0 = 0 := by
     rw [coeff_zero_eq_eval_zero]; simpa using hP 0
   obtain ⟨Q, hQ⟩ := X_dvd_iff.2 h0
@@ -582,17 +580,17 @@ theorem smul_coeff_one_eq_zero {R : Type} [CommRing R] (hR : ∀ n : ℕ, n ≠ 
       rcases Nat.lt_or_gt_of_ne hi with hi | hi
       · have : i = 0 := by omega
         subst this; simp [coeff_one]
-      · rw [if_neg (by omega), zero_mul]
+      · rw [ite_eq_right (by omega), zero_mul]
     · intro hn; exact absurd (Finset.mem_range.2 (by omega)) hn
   have hL : P.coeff 1 = Q.coeff 0 := by rw [hQ, coeff_X_mul]
   have hL2 : P.coeff 1 = y * (1 + (∑ j ∈ Finset.range t, y ^ j *
       Ring.inverse (((j + 2).factorial : ℕ) : R) * (descPochhammer R (j + 2)).coeff 1) * y) := by
-    rw [hPdef, coeff_sub, coeff_one, if_neg one_ne_zero, sub_zero, binPoly, finsetSum_coeff]
+    rw [hPdef, coeff_sub, coeff_one, ite_eq_right one_ne_zero, sub_zero, binPoly, finsetSum_coeff]
     simp only [coeff_C_mul]
     rw [Finset.sum_range_succ', Finset.sum_range_succ']
     simp only [zero_add, pow_one, pow_zero, Nat.factorial_zero, Nat.factorial_one, Nat.cast_one,
       Ring.inverse_one, descPochhammer_one, descPochhammer_zero, coeff_X_one, coeff_one,
-      if_neg one_ne_zero, mul_zero, add_zero, mul_one]
+      ite_eq_right one_ne_zero, mul_zero, add_zero, mul_one]
     have e : ∀ j ∈ Finset.range t, y ^ (j + 1 + 1) * Ring.inverse (((j + 1 + 1).factorial : ℕ) : R)
         * (descPochhammer R (j + 1 + 1)).coeff 1
         = y * ((y ^ j * Ring.inverse (((j + 2).factorial : ℕ) : R) * (descPochhammer R (j + 2)).coeff 1) * y) := by
@@ -1086,8 +1084,7 @@ theorem GlobalTheory.GalStep.main : GlobalTheory.Published.FontaineBcris → ∀
         (⟨E ↥LL.1 l e ^ n, pow_mem (E_mem l e _) n⟩ : A ↥(OL LL) ↥LL.1) • E ↥LL.1 l e ^ β₀ • m := by
       rw [pow_add, mul_comm, mul_smul]
       rfl
-    rw [h2]
-    exact h1
+    rwa [h2]
   obtain ⟨g, ε, c, hε, hc, hg, hk⟩ := _root_.GlobalTheory.KummerMove.main l a e ϖ hl2
   obtain ⟨u, hu, hq⟩ := _root_.GlobalTheory.GalStep.teich_pow_sub_one_eq_ED_mul l a e ↥(OL LL) ↥LL.1 (thetaW a LL) ϖ ε c hε hc
   obtain ⟨hnz, hnat⟩ := _root_.GlobalTheory.GalStep.ED_nzd_and_natCast_isUnit l a e ↥(OL LL) ↥LL.1 (thetaW a LL) ϖ
@@ -1100,8 +1097,7 @@ theorem GlobalTheory.GalStep.main : GlobalTheory.Published.FontaineBcris → ∀
     (fun i => YD (thetaW a LL) ϖ (E ↥LL.1 l e ^ α • P.xiExt (fun τ k => descN ↥LL.1 i (wx τ k))) j)
     (key_sums hF l a e ϖ LL hl2 ι P T I jB Pl AI hStd hCmp hHor jD hjD α (β₀ + n) hα g hg ε c hk hm hwx hwxdef j)
   have hfin := tail_step (thetaW a LL) ϖ P hnz (E_pow_xiExt_mem_Man P) (descN_mem_Mext P) α β₀ n hα hm hn hwx hwxdef j hD1
-  rw [← iD_eq_YD (thetaW a LL) ϖ hn j (fun τ => w τ j) (fun τ => hw τ j)] at hfin
-  exact hfin
+  rwa [← iD_eq_YD (thetaW a LL) ϖ hn j (fun τ => w τ j) (fun τ => hw τ j)] at hfin
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

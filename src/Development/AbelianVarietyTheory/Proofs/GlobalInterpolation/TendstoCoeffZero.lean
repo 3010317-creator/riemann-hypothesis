@@ -77,8 +77,7 @@ lemma tendsto_E {k : ℕ} (hk : 3 ≤ k) (hk2 : Even k) : Tendsto (E hk) atImInf
 
 lemma exists_zero (F : ModularForm 𝒮ℒ 12) (c : ℂ) (hc : c ≠ 0)
     (hF : Tendsto F atImInfty (𝓝 c)) : ∃ z, F z = 0 := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
 
   have hD0 : Tendsto ModularForm.discriminant atImInfty (𝓝 0) := by
     have h1 := tendsto_coeff_zero (ModularFormClass.modularForm CuspForm.discriminant)
@@ -88,8 +87,7 @@ lemma exists_zero (F : ModularForm 𝒮ℒ 12) (c : ℂ) (hc : c ≠ 0)
     exact h1
   have hG0 : Tendsto (fun τ => ModularForm.discriminant τ / F τ) atImInfty (𝓝 0) := by
     have h := hD0.div hF hc
-    rw [zero_div] at h
-    exact h
+    rwa [zero_div] at h
 
   let G0 : SlashInvariantForm 𝒮ℒ 0 :=
     { toFun := fun τ => ModularForm.discriminant τ / F τ
@@ -110,8 +108,7 @@ lemma exists_zero (F : ModularForm 𝒮ℒ 12) (c : ℂ) (hc : c ≠ 0)
             rw [zero_mul] at hx
             exact ModularForm.discriminant_ne_zero _ hx
           have hx0 := hd _ hΔ
-          rw [hΔ, hF']
-          rw [mul_div_mul_left _ _ hx0]
+          rw [hΔ, hF', mul_div_mul_left _ _ hx0]
         exact key }
   have hbdd : UpperHalfPlane.IsBoundedAtImInfty G0.toFun :=
     UpperHalfPlane.IsZeroAtImInfty.isBoundedAtImInfty hG0
@@ -234,8 +231,7 @@ lemma G_eq (L : PeriodPair) (z : ℍ) (hz : L.ω₁ = L.ω₂ * z) {k : ℕ} (hk
             (v 0 : ℂ) * L.ω₁ + v 1 * L.ω₂ := by
           simp [PeriodPair.latticeEquivProd, Finsupp.linearCombination_apply,
             Finsupp.sum_fintype, PeriodPair.latticeBasis]
-        rw [hcoord]
-        rw [e, mul_pow, mul_inv, inv_pow]
+        rw [hcoord, e, mul_pow, mul_inv, inv_pow]
         congr 1
         try simp
     _ = (L.ω₂⁻¹) ^ k * (riemannZeta k * eisensteinSeries (N := 1) 0 (k : ℤ) z) := by
@@ -370,7 +366,6 @@ theorem main (σ : ℂ ≃+* ℂ) (L : PeriodPair) :
   intro h
   apply disc L
   apply σ.injective
-  simp only [map_pow, map_mul, map_ofNat]
-  exact h
+  simpa only [map_pow, map_mul, map_ofNat] using h
 
 end GlobalTheory.DiscUniformisation

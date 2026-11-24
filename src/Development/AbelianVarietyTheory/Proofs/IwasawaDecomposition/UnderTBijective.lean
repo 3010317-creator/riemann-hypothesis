@@ -65,14 +65,12 @@ theorem underT_bijective {Z : Dat} (hX : Z.X.Ok) (hPr : Z.Pr.Ok) (u : Z.Pr.Word)
     · exact Subtype.ext e
     · refine absurd ?_ (conj_piT_notMem hPr u Q)
       have := decoFin_mem_of_mem_divs P.2
-      rw [e, mem_conjP] at this
-      exact this
+      rwa [e, mem_conjP] at this
   · rintro ⟨v, hv⟩
     have := v.isMaximal
     obtain ⟨Q, hQ, hQv⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 Z.X.E) v.asIdeal
     have hT : ((Z.Pr.T u : ℕ) : 𝓞 Z.X.E) ∈ Q := by
-      rw [hQv.over, Ideal.under_def, Ideal.mem_comap, map_natCast] at hv
-      exact hv
+      rwa [hQv.over, Ideal.under_def, Ideal.mem_comap, map_natCast] at hv
     have hne : Q ≠ ⊥ := fun e => by
       rw [e, Ideal.mem_bot] at hT
       exact (hPr.T_prime u).ne_zero (by exact_mod_cast hT)
@@ -88,8 +86,7 @@ theorem seenBar_of_not {X : Fields} {Pr : Primes X} (hPr : Pr.Ok) (u : Pr.Word) 
     X.embO τ (X.conjO (Pr.piT u)) ∈ w.asIdeal := by
   rw [← map_natCast (X.embO τ), ← hPr.piT_norm u, map_mul] at hw
   refine (w.isPrime.mem_or_mem hw).resolve_left fun h => hs fun τ' => ?_
-  rw [show X.embO τ' (Pr.piT u) = X.embO τ (Pr.piT u) from RingOfIntegers.ext (hPr.piT_Kq u _ _)]
-  exact h
+  rwa [show X.embO τ' (Pr.piT u) = X.embO τ (Pr.piT u) from RingOfIntegers.ext (hPr.piT_Kq u _ _)]
 
 theorem mk_surj {X : Fields} (P : HeightOneSpectrum (𝓞 X.E)) : Function.Surjective (Ideal.Quotient.mk P.asIdeal) :=
   Ideal.Quotient.mk_surjective
@@ -127,9 +124,9 @@ def atTTied {B : Base} {X : PreX B.toPre} (I : TC B X) (l : I.Laws) (Z : TC.Late
       (show B.places.resChar w = B.T u from hw) ▸ resChar_mem (X := B.fields) (Pl := B.places) (Equiv.refl _) hval w
     have hs : (((I.rec7 l Z).fm u).seenP w = true) ↔ seenC (B.primes X) u w := decide_eq_true_iff
     by_cases h : seenC (B.primes X) u w
-    · rw [if_pos (hs.2 h)]
+    · rw [ite_eq_left (hs.2 h)]
       exact (val_pos_iff_mem (X := B.fields) (Pl := B.places) (Equiv.refl _) hval w _).2 (h τ)
-    · rw [if_neg (mt hs.1 h)]
+    · rw [ite_eq_right (mt hs.1 h)]
       have h2 := (val_pos_iff_mem (X := B.fields) (Pl := B.places) (Equiv.refl _) hval w _).2 (seenBar_of_not l.pr u hw' h τ)
       have h3 : ((B.fields.embO τ (B.fields.conjO (X.piT u)) : 𝓞 B.LL) : B.LL) = B.fields.emb τ (B.host.conj (X.piT u : B.host.E)) :=
         congrArg (B.fields.emb τ) (B.fields_conjO_coe _)

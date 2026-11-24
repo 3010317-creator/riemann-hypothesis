@@ -177,13 +177,11 @@ theorem UpperTheory.V.Cj.S.hkLocal :
       _ = ∑ A : {A : Finset (Fin r) // A.card = a}, ∑ B : {B : Finset (Fin s) // B.card = b}, T A.1 B.1 := by
           refine Finset.sum_congr rfl (fun A _ => ?_)
           simp only [hT]
-          refine (Finset.sum_congr rfl (fun c₁ _ => Fintype.sum_sigma _)).trans ?_
-          exact Finset.sum_comm
+          exact (Finset.sum_congr rfl (fun c₁ _ => Fintype.sum_sigma _)).trans Finset.sum_comm
       _ = _ := by
           rw [← Finset.sum_subtype (Finset.univ.filter (fun A : Finset (Fin r) => A.card = a)) (by simp)
             (fun A => ∑ B : {B : Finset (Fin s) // B.card = b}, T A B.1)]
-          refine Finset.sum_congr rfl (fun A _ => ?_)
-          exact (Finset.sum_subtype _ (by simp) _).symm
+          exact Finset.sum_congr rfl (fun A _ => (Finset.sum_subtype _ (by simp) _).symm)
   rw [hG]
   simp only [hR]
   rw [← Finset.sum_fiberwise Finset.univ κ]

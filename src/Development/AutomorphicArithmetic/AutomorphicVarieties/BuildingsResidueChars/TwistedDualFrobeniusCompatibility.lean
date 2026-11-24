@@ -191,8 +191,7 @@ private theorem mulVec_mem_dPerp {k : Type} [Field k] {a : ℕ} {W : Submodule k
   rw [mem_dPerp] at hy ⊢
   intro x hx
   have := hy _ (h x hx)
-  rw [dotProduct_comm, Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, dotProduct_comm]
-  exact this
+  rwa [dotProduct_comm, Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, dotProduct_comm]
 
 private theorem ss_dual : ∀ (Γ k : Type) [Group Γ] [Field k] (a : ℕ) (r : Γ →* GL (Fin a) k),
     IsSSRep r → IsSSRep (GlobalTheory.MonoConj.dualRep r) := by
@@ -260,8 +259,7 @@ private theorem frob_conj {F Ω : Type} [Field F] [NumberField F] [IsCMField F] 
   obtain ⟨h1, h2⟩ := hB _ (isPlaceOver_preplace hL hAA hA)
   refine ⟨fun s hs => h1 _ (conjGal_mem_Ine hL hAA hs), fun s hs => ?_⟩
   have e := h2 (conjGal hL s) (by rw [normV_preplace]; exact isFrob_conjGal hL hAA hs)
-  rw [normV_preplace, ← map_inv] at e
-  exact e
+  rwa [normV_preplace, ← map_inv] at e
 
 private theorem frob_twDual {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω]
     {l : ℕ} [Fact l.Prime] {ι : Qbar l ≃+* ℂ} {n : ℕ} {r : G F Ω →* GL (Fin n) (Qbar l)}

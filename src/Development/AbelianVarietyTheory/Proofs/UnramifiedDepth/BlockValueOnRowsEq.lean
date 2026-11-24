@@ -153,13 +153,12 @@ lemma kill_monomial (S : σ → Prop) [DecidablePred S] (m : σ →₀ ℕ) (c :
   · rw [MvPolynomial.monomial_eq]
     congr 1
     refine Finsupp.prod_congr fun x hx => ?_
-    rw [if_neg]
-    intro hS
-    exact (Finsupp.mem_support_iff.1 hx) (h x hS)
+    rw [ite_eq_right]
+    exact fun hS => (Finsupp.mem_support_iff.1 hx) (h x hS)
   · push Not at h
     obtain ⟨x, hS, hx⟩ := h
     rw [Finsupp.prod, Finset.prod_eq_zero (Finsupp.mem_support_iff.2 hx), mul_zero]
-    rw [if_pos hS, zero_pow hx]
+    rw [ite_eq_left hS, zero_pow hx]
 
 open Classical in
 lemma coeff_kill (S : σ → Prop) [DecidablePred S] (P : MvPolynomial σ R) (e : σ →₀ ℕ) :
@@ -249,9 +248,8 @@ private lemma diag_single_sum_apply (n0 n Y : ℕ) (ρ c : Fin n) :
       · simp [hc]
     · intro b _ hb
       simp [hb]
-    · intro h
-      exact absurd (Finset.mem_filter.2 ⟨Finset.mem_univ ρ, hρ⟩) h
-  · rw [if_neg (fun h => hρ h.1)]
+    · exact fun h => absurd (Finset.mem_filter.2 ⟨Finset.mem_univ ρ, hρ⟩) h
+  · rw [ite_eq_right (fun h => hρ h.1)]
     refine Finset.sum_eq_zero fun b hb => ?_
     have hb' : b ≠ ρ := fun h => hρ (h ▸ (Finset.mem_filter.1 hb).2)
     simp [hb']
@@ -261,10 +259,10 @@ theorem detPowDiag : DetPowDiag := by
   classical
   have hS : ∀ x : Fin n × Fin n, (n0 ≤ x.1.val ∧ x.2 ≠ x.1) → e x = 0 := by
     rintro ⟨ρ, c⟩ ⟨h1, h2⟩
-    rw [he ρ c h1, if_neg h2]
+    rw [he ρ c h1, ite_eq_right h2]
   have hk := coeff_kill (R := R) (fun x : Fin n × Fin n => n0 ≤ x.1.val ∧ x.2 ≠ x.1)
     ((Matrix.of fun b c : Fin n => (MvPolynomial.X (b, c) : MvPolynomial (Fin n × Fin n) R)).det ^ Y) e
-  rw [if_pos hS] at hk
+  rw [ite_eq_left hS] at hk
   rw [← hk, kill_det_pow _ hn (fun b c => (b, c)) (fun ρ c => Iff.rfl) Y]
   have hsplit : e = e.filter (fun x => x.1.val < n0) +
       ∑ ρ ∈ (Finset.univ : Finset (Fin n)).filter (fun ρ => n0 ≤ ρ.val), Finsupp.single (ρ, ρ) Y := by
@@ -307,8 +305,7 @@ lemma coeff_mul_split {C : Type} [Field C] {σ : Type} (p : σ → Prop)
           by_contra h0; exact hpx (ha x (Finsupp.mem_support_iff.2 h0))
         omega
     exact Prod.ext (Finsupp.ext fun x => (key x).1) (Finsupp.ext fun x => (key x).2)
-  · intro h
-    exact (h (by simp)).elim
+  · exact fun h => (h (by simp)).elim
 
 lemma det_homog {C : Type} [Field C] {σ : Type} {n : ℕ} (w : σ → ℕ) (f : Fin n → Fin n → σ)
     (r : Fin n → ℕ) (h : ∀ b c, w (f b c) = r b) :
@@ -372,9 +369,8 @@ lemma diagMon_inl (n0 n L y : ℕ) (ρ c : Fin n) :
       · simp [hc]
     · intro b _ hb
       simp [hb]
-    · intro h
-      exact absurd (Finset.mem_filter.2 ⟨Finset.mem_univ ρ, hρ⟩) h
-  · rw [if_neg (fun h => hρ h.1)]
+    · exact fun h => absurd (Finset.mem_filter.2 ⟨Finset.mem_univ ρ, hρ⟩) h
+  · rw [ite_eq_right (fun h => hρ h.1)]
     refine Finset.sum_eq_zero fun b hb => ?_
     have hb' : b ≠ ρ := fun h => hρ (h ▸ (Finset.mem_filter.1 hb).2)
     simp [hb']
@@ -412,12 +408,11 @@ lemma mfact_diagMon {n0 n : ℕ} (L y : ℕ) :
         if n0 ≤ ρ.val then t.factorial else 1 := by
       intro ρ
       by_cases hρ : n0 ≤ ρ.val
-      · rw [if_pos hρ, Finset.prod_eq_single ρ]
+      · rw [ite_eq_left hρ, Finset.prod_eq_single ρ]
         · simp [hρ]
         · intro c _ hc
           simp [hc]
-        · intro h
-          exact absurd (Finset.mem_univ ρ) h
+        · exact fun h => absurd (Finset.mem_univ ρ) h
       · simp [hρ]
     rw [Finset.prod_congr rfl (fun ρ _ => hrow ρ), ← Finset.prod_filter, Finset.prod_const, hcard]
   rw [mfact, Finsupp.prod_fintype _ _ (fun _ => Nat.factorial_zero), Fintype.prod_sum_type,
@@ -511,13 +506,13 @@ theorem blockJet : BlockJet := by
     intro m hm hmG x hx
     have hb := filter_nondiag_eq_diagMon_of_coeff_ne_zero L y G1 H hG1 hH hHd m hm hmG
     have hmx : m x = (m.filter fun x => ¬ (rowOf x).val < n0) x := by
-      rw [Finsupp.filter_apply, if_pos (not_lt.2 hx.1)]
+      rw [Finsupp.filter_apply, ite_eq_left (not_lt.2 hx.1)]
     rw [hmx, hb]
     rcases x with ⟨ρ, c⟩ | ⟨ρ, c⟩
-    · rw [diagMon_inl, if_neg]
+    · rw [diagMon_inl, ite_eq_right]
       rintro ⟨-, rfl⟩
       exact hx.2 rfl
-    · rw [diagMon_inr, if_neg]
+    · rw [diagMon_inr, ite_eq_right]
       rintro ⟨-, rfl⟩
       exact hx.2 rfl
   have h3 : jetAt0 (detL C n ^ (L * y) * detR C n ^ y) (G1 * H) =
@@ -574,7 +569,7 @@ theorem blockJet : BlockJet := by
     (fun m hm x hx => not_lt.2 (hH m hm x hx)) _ _ hU hDrow]
   have hHD : MvPowerSeries.coeff (diagMon n0 n L y) H = 1 := by
     rw [hHd _ (fun x hx => diagMon_row x hx) (fun ρ hρ => ⟨by simp [rowDegZ, diagMon_inl, hρ],
-      by simp [rowDegZ', diagMon_inr, hρ]⟩), if_pos rfl]
+      by simp [rowDegZ', diagMon_inr, hρ]⟩), ite_eq_left rfl]
   have hdisj : Disjoint (u.mapDomain (embV hn)).support (diagMon n0 n L y).support :=
     Finset.disjoint_left.2 fun x hx1 hx2 => hDrow x hx2 (hU x hx1)
   have hmf : mfact (u.mapDomain (embV hn) + diagMon n0 n L y) =
@@ -919,8 +914,7 @@ private lemma lead_single_of_linear_coeff_eq_X {ι : Type} {π : σ → κ} {v :
     rintro rfl
     apply hm
     rw [hlin 0 (by simp)]
-    simp [MvPowerSeries.coeff_X]
-    exact (Finsupp.single_ne_zero.2 one_ne_zero).symm
+    simpa [MvPowerSeries.coeff_X] using (Finsupp.single_ne_zero.2 one_ne_zero).symm
   have hdeg : 1 ≤ m.degree := Nat.one_le_iff_ne_zero.2 ((Finsupp.degree_eq_zero_iff m).not.2 hpos)
   rw [hmap, hd]
   refine ⟨by rw [Finsupp.single_le_iff]; simpa using hdeg, fun h => ?_⟩
@@ -1008,8 +1002,7 @@ theorem _root_.GlobalTheory.blockValue_rows : _root_.Formalism.L2.FormalSeriesBo
         obtain ⟨c, rfl⟩ := ht'.1 m hm x hx
         exact hρ'
       · intro m hm x hx
-        rw [hrow m hm x hx]
-        exact hρ'
+        rwa [hrow m hm x hx]
   have hL : _root_.GlobalTheory.BlockValue.Lead (_root_.GlobalTheory.BlockValue.sideRow n) (_root_.Formalism.UnitaryBoundIntegral.diagMon n0 n (l ^ i) y)
       (∏ ρ : Fin n, (if (ρ : ℕ) < n0 then 1 else t ρ ^ (l ^ i * y) * t' ρ ^ y * _root_.Formalism.IncomingBounds.mvExp (hr ρ))) := by
     have hX : _root_.Formalism.UnitaryBoundIntegral.diagMon n0 n (l ^ i) y = ∑ ρ : Fin n, (if (ρ : ℕ) < n0 then 0 else
@@ -1060,7 +1053,7 @@ theorem _root_.GlobalTheory.blockValue_rows : _root_.Formalism.L2.FormalSeriesBo
         · have hX : ∑ c : Fin n, (_root_.Formalism.UnitaryBoundIntegral.diagMon n0 n (l ^ i) y) (Sum.inl (ρ, c)) = l ^ i * y := by
             unfold _root_.Formalism.UnitaryBoundIntegral.diagMon
             simp only [Finsupp.finsetSum_apply, Finsupp.add_apply, Finsupp.single_apply,
-              Sum.inl.injEq, Prod.mk.injEq, reduceCtorEq, if_false, add_zero]
+              Sum.inl.injEq, Prod.mk.injEq, reduceCtorEq, ite_false, add_zero]
             rw [Finset.sum_comm, Finset.sum_eq_single_of_mem ρ (by simpa using hρ)]
             · simp
             · intro b _ hb
@@ -1074,7 +1067,7 @@ theorem _root_.GlobalTheory.blockValue_rows : _root_.Formalism.L2.FormalSeriesBo
         · have hX : ∑ c : Fin n, (_root_.Formalism.UnitaryBoundIntegral.diagMon n0 n (l ^ i) y) (Sum.inr (ρ, c)) = y := by
             unfold _root_.Formalism.UnitaryBoundIntegral.diagMon
             simp only [Finsupp.finsetSum_apply, Finsupp.add_apply, Finsupp.single_apply,
-              Sum.inr.injEq, Prod.mk.injEq, reduceCtorEq, if_false, zero_add]
+              Sum.inr.injEq, Prod.mk.injEq, reduceCtorEq, ite_false, zero_add]
             rw [Finset.sum_comm, Finset.sum_eq_single_of_mem ρ (by simpa using hρ)]
             · simp
             · intro b _ hb

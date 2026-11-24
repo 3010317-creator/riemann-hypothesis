@@ -136,8 +136,7 @@ lemma exists_linear_increment {U : Set V} (ho : IsOpen U) (hd : Dense U) {f : V 
   refine ⟨L, fun a t ha hat => ?_⟩
   have hz : ∀ x, HasFDerivAt (fun t => l t - L t) (0 : V →L[ℂ] ℂ) x := fun x => by
     have := (hL x).sub (L.hasFDerivAt (x := x))
-    rw [sub_self] at this
-    exact this
+    rwa [sub_self] at this
   have := is_const_of_fderiv_eq_zero (𝕜 := ℂ) (f := fun t => l t - L t)
     (fun x => (hz x).differentiableAt) (fun x => (hz x).fderiv) t 0
   rw [hla a t ha hat]
@@ -248,8 +247,7 @@ theorem level_three_separates_tangents {ι : Type} [Fintype ι] (Y : GT ι) (θ 
   have hM : (L : EuclideanSpace ℂ ι →ₗ[ℂ] ℂ).restrictScalars ℝ = M := by
     refine Y.b.ext fun i => ?_
     have := hlat (Y.b i) (Submodule.subset_span ⟨i, rfl⟩)
-    rw [hH] at this
-    exact this
+    rwa [hH] at this
   have hLM : ∀ v, L v = Real.pi * inner ℂ v c := fun v => LinearMap.congr_fun hM v
   have hc : c = 0 := by
     have h1 := hLM (I • c)

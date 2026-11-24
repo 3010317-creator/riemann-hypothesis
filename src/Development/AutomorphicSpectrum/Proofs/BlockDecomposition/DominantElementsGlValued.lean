@@ -42,7 +42,7 @@ theorem mulVec_mem_latK {g : GL (Fin n) L} (hg : Integ g) {k : ℕ} {x : Fin n �
         rw [Fin.lt_def]; omega
       exact lt_of_le_of_lt (mul_le_of_le_one_right' (hx1 j)) (hg.2 i j hji)
     · have := hx j
-      rw [if_neg hj] at this
+      rw [ite_eq_right hj] at this
       exact lt_of_le_of_lt (mul_le_of_le_one_left' (hg.1 i j)) this
 
 theorem integ_of_stable {g : GL (Fin n) L}
@@ -57,11 +57,11 @@ theorem integ_of_stable {g : GL (Fin n) L}
   constructor
   · intro i j
     have := h n le_rfl _ (hs n j j.2) i
-    rw [if_pos i.2] at this
+    rw [ite_eq_left i.2] at this
     simpa using this
   · intro i j hji
     have := h i.val i.2.le _ (hs i.val j hji) i
-    rw [if_neg (lt_irrefl _)] at this
+    rw [ite_eq_right (lt_irrefl _)] at this
     simpa using this
 
 theorem mem_IwGL_iff (g : GL (Fin n) L) : g ∈ IwGL L n ↔ Integ g ∧ Integ g⁻¹ := by
@@ -86,8 +86,7 @@ theorem mem_IwGL_iff (g : GL (Fin n) L) : g ∈ IwGL L n ↔ Integ g ∧ Integ g
         exact Set.mem_smul_set.2 ⟨x, hx, key h x⟩
       · rw [← hS] at hx
         obtain ⟨y, hy, rfl⟩ := Set.mem_smul_set.1 hx
-        rw [key, inv2]
-        exact hy
+        rwa [key, inv2]
     · rintro ⟨h1, h2⟩
       ext y
       constructor
@@ -95,8 +94,7 @@ theorem mem_IwGL_iff (g : GL (Fin n) L) : g ∈ IwGL L n ↔ Integ g ∧ Integ g
         obtain ⟨x, hx, rfl⟩ := Set.mem_smul_set.1 hy
         rw [key]
         exact h1 x hx
-      · intro hy
-        exact Set.mem_smul_set.2 ⟨_, h2 y hy, by rw [key, inv1]⟩
+      · exact fun hy => Set.mem_smul_set.2 ⟨_, h2 y hy, by rw [key, inv1]⟩
   simp only [IwGL, Subgroup.mem_iInf, Subgroup.mem_comap, MulAction.mem_stabilizer_iff]
   constructor
   · intro h
@@ -327,12 +325,10 @@ theorem open_shrink (U : Set (GL (Fin n) L)) (hU : IsOpen U) (h1 : (1 : GL (Fin 
   have hmem : ((1 : Matrix (Fin n) (Fin n) L), (1 : Matrix (Fin n) (Fin n) L)) ∈ (fun p :
       Matrix (Fin n) (Fin n) L × Matrix (Fin n) (Fin n) L => (p.1, MulOpposite.op p.2)) ⁻¹' W := by
     have h2 : Units.embedProduct (Matrix (Fin n) (Fin n) L) (1 : GL (Fin n) L) ∈ W := h1
-    rw [map_one] at h2
-    exact h2
+    rwa [map_one] at h2
   obtain ⟨A, hA, B, hB, hAB⟩ := mem_nhds_prod_iff.1 ((hW.preimage hΦ).mem_nhds hmem)
   obtain ⟨m, hmA, hmB⟩ := ((ev_mat A hA).and (ev_mat B hB)).exists
-  refine ⟨m, fun g c1 c2 => ?_⟩
-  exact hAB (Set.mk_mem_prod (hmA _ c1) (hmB _ c2))
+  exact ⟨m, fun g c1 c2 => (hAB (Set.mk_mem_prod (hmA _ c1) (hmB _ c2)))⟩
 
 end Top
 

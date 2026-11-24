@@ -434,8 +434,7 @@ theorem dense_level : ∀ (D : D7) (G₀ : Type) [Group G₀] [Fintype G₀] (Pl
     ⟨by rw [Measure.restrict_apply_univ, hm.2.2]; exact ENNReal.one_lt_top⟩
   have e0 : coeL R.ψ _ _ (toB hψ Φ hΦ.1) = Φ := coe_toB hψ Φ hΦ.1
   have hF : toB hψ Φ hΦ.1 ∈ (thetaLevel R.ψ (G.V i j).V (G.V i (j + 1)).V U).comap (coeL R.ψ _ _) := by
-    rw [Submodule.mem_comap, e0]
-    exact hΦ
+    rwa [Submodule.mem_comap, e0]
   obtain ⟨g, h1, h2, h3⟩ := dense_vec h hψ (Fr.ofModel (G.V i j).M) (Fr.ofModel (G.V i (j + 1)).M) hU
     (toL2 _ _ (μ.restrict 𝓕))
     (fun v F => by
@@ -460,8 +459,7 @@ theorem dense_level : ∀ (D : D7) (G₀ : Type) [Group G₀] [Fintype G₀] (Pl
       refine Finset.sum_congr rfl fun l _ => ?_
       rw [hP l, map_smul]
       rfl
-    rw [e3]
-    exact h2
+    rwa [e3]
   · have e3 : (∑ l, GlobalTheory.Grid.fock R.ψ R.θ false (G.V i j) (G.V i (j + 1)) (f₀ l) (c l • P l)) - Φ =
         (-1 : ℂ) • (Φ - coeL R.ψ _ _ g) := by
       rw [← hgs, neg_one_smul, neg_sub]
@@ -469,8 +467,7 @@ theorem dense_level : ∀ (D : D7) (G₀ : Type) [Group G₀] [Fintype G₀] (Pl
       refine Finset.sum_congr rfl fun l _ => ?_
       rw [hP l, map_smul]
       rfl
-    rw [e3, sobO_smul, enorm_neg, enorm_one, one_mul]
-    exact hS
+    rwa [e3, sobO_smul, enorm_neg, enorm_one, one_mul]
 
 end GlobalTheory.ArrowFockDense
 end -- clump:auto

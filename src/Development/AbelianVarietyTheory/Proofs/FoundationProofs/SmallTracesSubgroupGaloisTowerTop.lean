@@ -75,8 +75,7 @@ theorem exists_integer_coset_trace_eq (L : Type) [Field L] (v : Valuation L ℝ�
   simp only [mul_one] at hid
 
   obtain ⟨i, hi⟩ : ∃ i, v e < v (cosetTrace U (b i)) := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have : v (∑ i, a i * cosetTrace U (b i)) ≤ v e := by
       apply v.map_sum_le
       intro i _
@@ -138,8 +137,7 @@ theorem exists_reps_of_cosetTrace : ∀ (L : Type) [Field L] (G : Type) [Group G
   have hUV : U ≤ V := by
     intro u hu
     rw [hV, mem_fixingSubgroup_iff]
-    intro s hs
-    exact hS s hs ⟨u, hu⟩
+    exact fun s hs => hS s hs ⟨u, hu⟩
   have hy0 : ∀ a b : G, (a : G ⧸ U) = b → a • y₀ = b • y₀ := by
     intro a b hab
     rw [QuotientGroup.eq] at hab
@@ -184,8 +182,7 @@ theorem exists_reps_of_cosetTrace : ∀ (L : Type) [Field L] (G : Type) [Group G
       exact V.inv_mem hv
     · intro q hq
       simp only [hF, Finset.mem_filter, Finset.mem_univ, true_and] at hq ⊢
-      rw [hπeq, hq, MulAction.Quotient.smul_mk, smul_eq_mul, mul_one, hV1]
-      exact hv
+      rwa [hπeq, hq, MulAction.Quotient.smul_mk, smul_eq_mul, mul_one, hV1]
     · intro q _
       simp only [smul_inv_smul]
     · intro q _

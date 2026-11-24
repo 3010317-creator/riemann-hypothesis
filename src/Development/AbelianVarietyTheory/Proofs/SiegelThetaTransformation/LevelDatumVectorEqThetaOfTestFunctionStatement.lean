@@ -93,8 +93,7 @@ theorem th_finsum (C : Ctx S T) {x : Frame C.X.Ψ T.rank} (hx : x ∈ C.X.dom) {
   have hsub : (Function.support fun i => C.Th x (f i)) ⊆ (hfin.toFinset : Set ι) := by
     intro i hi
     rw [hfin.coe_toFinset, Function.mem_support]
-    intro hfi
-    exact (Function.mem_support.1 hi) (by simp [hfi, h0])
+    exact fun hfi => (Function.mem_support.1 hi) (by simp [hfi, h0])
   rw [finsum_eq_sum_of_support_subset f (by rw [hfin.coe_toFinset]),
     finsum_eq_sum_of_support_subset _ hsub]
   exact th_sum C hx hfin.toFinset f hf
@@ -126,13 +125,11 @@ private theorem ctx_Th_finsum_of_isSB (C : Ctx S T) {x : Frame C.X.Ψ T.rank} (h
       ext i
       simp only [Function.mem_support, ne_eq]
       constructor
-      · intro h hfi
-        exact h (by rw [hfi, h0])
+      · exact fun h hfi => h (by rw [hfi, h0])
       · intro h hT
         exact h (((GlobalTheory.T.thetaKernel_testFunction_map_linear_injective_equivariant D S T C x hx (f i) (hf i)).1 0 SW.isSB_zero).2 (by rw [hT, h0]))
     have hinf : (Function.support fun i => C.Th x (f i)).Infinite := by
-      rw [hsupp]
-      exact hfin
+      rwa [hsupp]
     rw [finsum_of_infinite_support hfin, finsum_of_infinite_support hinf, h0]
 
 theorem uVec_eq : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ (Lv : SW.Level C.X) (hn : T.rank ≤ S.rank) (M : ℕ), IdemTwo Lv.w → 0 < M → (M : 𝓞 D.host.E) ∈ Lv.𝔪 → ∀ B, C.IsB B → (∀ f', C.IsBase Lv B f' → ∀ v, IsVac C.X C.bas Lv.w (tens (stdL D.host.E S.rank) (Lv.sh C.X.Λ)) v → ∃ t : ℂ, t ≠ 0 ∧ f' = t • (C.Th (C.xB B) v)) ∧ ∀ v₀ : Lt D.host.E T.rank → TF S.rank C.g, (∀ L ∈ Lv.lats, IsVac C.X C.bas Lv.w (tens (stdL D.host.E S.rank) (Lv.sh L)) (v₀ L)) → C.IsBase Lv B (C.Th (C.xB B) (v₀ C.X.Λ)) ∧ ∀ t : ℂ, C.uVec Lv hn (t • (C.Th (C.xB B) (v₀ C.X.Λ))) = t • (C.Th (C.xB B) (Lv.phi C.bas hn v₀ C.X.Λ (stdL D.host.E S.rank))) := by

@@ -235,9 +235,7 @@ theorem restrHom_injective (L' : Submodule (OEv F E v) (Fin M → Ev F E v)) (x 
     unfold act at *
     rw [Matrix.mulVec_add, Matrix.mulVec_smul, hx', this]
   refine Subtype.ext (Subtype.ext (Units.ext ?_))
-  apply Matrix.toLin'.injective
-  refine LinearMap.ext fun y => ?_
-  exact (h2 y).trans (act_one σ J v y).symm
+  exact Matrix.toLin'.injective (LinearMap.ext fun y => (h2 y).trans (act_one σ J v y).symm)
 
 theorem restrHom_surjective (h : IsCMExt F E σ) (hJ : IsHermND σ J)
     (L : Submodule (OEv F E v) (Fin M → Ev F E v)) (x : Fin M → Ev F E v)

@@ -354,7 +354,7 @@ theorem exists_level_elt_all : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I
         simp [Ne.symm h]
   obtain ⟨w, hw⟩ : ∃ w : S.U, w = ((Finset.univ : Finset (SBof I a)).toList.map zf).prod := ⟨_, rfl⟩
   have hwP : ∀ P : SBof I a, cP P.1 (ι w) = cP P.1 (ι (zf P)) := fun P => by
-    rw [hw, hlistP _ (Finset.nodup_toList _) P, if_pos (Finset.mem_toList.2 (Finset.mem_univ _))]
+    rw [hw, hlistP _ (Finset.nodup_toList _) P, ite_eq_left (Finset.mem_toList.2 (Finset.mem_univ _))]
   have hchiw : S.chi w = 1 := by
     rw [hw, map_list_prod]
     refine List.prod_eq_one fun x hx => ?_
@@ -364,7 +364,6 @@ theorem exists_level_elt_all : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I
     obtain ⟨P, -, rfl⟩ := hz
     exact hzf1 P
   have hQsub : ∀ P ∈ I.Q a, P ∈ SBof I a := fun P hP => by
-    show P ∈ uSG _ _
     exact Finset.mem_union_right _ hP
   refine ⟨w, hchiw, fun P hP => ?_, fun Q r s => ?_⟩
   · obtain ⟨γ, hγ⟩ := hzf4 ⟨P, hQsub P hP⟩ hP
@@ -437,8 +436,7 @@ theorem inv_entry_le {n : ℕ} (X Y : Matrix (Fin n) (Fin n) R) (hXY : X * Y = 1
   have hY : Y - 1 = -((X - 1) * Y) := by
     rw [Matrix.sub_mul, hXY, Matrix.one_mul, neg_sub]
   have hb : ∀ r s, v (Y r s) ≤ 1 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     obtain ⟨r, s, hrs⟩ := hcon
     obtain ⟨p, -, hp⟩ := Finset.exists_max_image Finset.univ (fun p : Fin n × Fin n => v (Y p.1 p.2))
       ⟨(r, s), Finset.mem_univ _⟩
@@ -500,13 +498,11 @@ theorem exists_exp_le_natCast {E : Type} [Field E] [NumberField E] (L : ℕ) (hL
   set m := Ideal.absNorm (Ideal.span {((L : ℕ) : 𝓞 E)}) with hm
   have hL0 : ((L : ℕ) : 𝓞 E) ≠ 0 := by exact_mod_cast hL.ne'
   have hm0 : m ≠ 0 := by
-    rw [hm, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-    exact hL0
+    rwa [hm, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
   refine ⟨m, Nat.one_le_iff_ne_zero.2 hm0, fun P => ?_⟩
   have e1 : ((L : ℕ) : P.adicCompletion E) = algebraMap E _ (algebraMap (𝓞 E) E ((L : ℕ) : 𝓞 E)) := by simp
   rw [e1, GlobalTheory.Mem.Col2.valued_algebraMap, HeightOneSpectrum.valuation_of_algebraMap]
-  by_contra h
-  push_neg at h
+  by_contra! h
   have hd := (HeightOneSpectrum.intValuation_le_pow_iff_dvd P _ m).1 h.le
   have h2 : Ideal.absNorm (P.asIdeal ^ m) ∣ m := map_dvd Ideal.absNorm hd
   rw [map_pow] at h2
@@ -825,8 +821,7 @@ theorem exists_root_same_value : ∀ (D : D7) (c : (AE D)ˣ →* Circle), IsHeck
         rfl
       rw [← e1, RingHom.map_det]
       rfl
-    rw [h2] at h1
-    exact h1
+    rwa [h2] at h1
 
   have hF2 : (2 : D.host.F) ≠ 0 := two_ne_zero
   have h2m : (2 : AE D) * algebraMap D.host.F (AE D) (2 : D.host.F)⁻¹ = 1 := by
@@ -848,8 +843,7 @@ theorem exists_root_same_value : ∀ (D : D7) (c : (AE D)ˣ →* Circle), IsHeck
     have e1 : sigR (AF D.host.F) D.sp.cm.sig h2 * 2 = 1 := by
       have := congrArg (sigR (AF D.host.F) D.sp.cm.sig) h2m
       rw [map_mul, map_ofNat, map_one] at this
-      rw [mul_comm]
-      exact this
+      rwa [mul_comm]
     calc sigR (AF D.host.F) D.sp.cm.sig h2 = sigR (AF D.host.F) D.sp.cm.sig h2 * (2 * h2) := by rw [h2m, mul_one]
       _ = (sigR (AF D.host.F) D.sp.cm.sig h2 * 2) * h2 := by ring
       _ = h2 := by rw [e1, one_mul]
@@ -868,8 +862,7 @@ theorem exists_root_same_value : ∀ (D : D7) (c : (AE D)ˣ →* Circle), IsHeck
     have hφK : φ hK * ((2 * N : ℕ) : P.adicCompletion D.host.E) = 1 := by
       have := congrArg φ hKm
       rw [map_mul, map_natCast, map_one] at this
-      rw [mul_comm]
-      exact this
+      rwa [mul_comm]
     have hvK : Valued.v (φ hK) * Valued.v ((2 * N : ℕ) : P.adicCompletion D.host.E) = 1 := by
       rw [← map_mul, hφK, map_one]
     have hKpos : Valued.v (φ hK) ≠ 0 := by
@@ -1190,8 +1183,7 @@ theorem exists_move (hI : I.Ok) (hA : A.Is) (j : ℕ) (hj : j ≤ B.R.m) (β : C
   have hu : x.1 ∈ UAd B.sp.cm (B.R.N j) := by
     have h := (((A.K j hj (A.chOf j c)).lev.U_eq x.1).1 x.2).1
     generalize x.1 = z at h ⊢
-    rw [hJ] at h
-    exact h
+    rwa [hJ] at h
   rw [hA.chi j hj _ κ x hx, ← hb]
   exact exists_move_of_reads hI (hA.reads j hj) c x hu
     (fun P hP => by
@@ -1220,8 +1212,7 @@ theorem chr_root_eq (hI : I.Ok) (hA : A.Is) (j : Fin B.R.m) (k : ℕ) (hk : k �
     show (I.C.mu0 j).1 (Chr.finPartI B.host.E b) * (I.xi a).1 (Chr.finPartI B.host.E b) = 1
     rw [e, e', one_mul]
   have hp' : IsPtOf (host_cmData B.R B.host) y (extTo (I.Q a) p) := by
-    rw [extTo_self hd]
-    exact hp
+    rwa [extTo_self hd]
   rw [GlobalTheory.LvT.Built.KMap.map_muInvDet_pt I hI a u j p, key, ← xiDet_eq I.SQ ((KDq_anti B.host hQ).trans hfac), xiDet,
     ← tildeQ_toDtQ hQ hfac, DetProj.toDtQ_detPt B.R B.host _ _ _ _ _ hQ p hlev.1,
     ← GlobalTheory.Mem.Col2.DetSpec.mk_eq_detPt B.R B.host _ _ _ _ _ _ _ a' (hlev.1.mono hQ) hp' ha', tildeQ_mk _ _ hfac]
@@ -1345,8 +1336,7 @@ theorem transport_base : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok �
   have hm : (z' + k • z₂).map (fun r => A.e * incA (I.rec7 l Z) r) =
       z'.map (fun r => A.e * incA (I.rec7 l Z) r) + k • z₂.map (fun r => A.e * incA (I.rec7 l Z) r) := by
     have e := map_add (((AddMonoidHom.mulLeft A.e).comp (incA (I.rec7 l Z)).toAddMonoidHom).mapMatrix) z' (k • z₂)
-    rw [map_nsmul] at e
-    exact e
+    rwa [map_nsmul] at e
   have hcong : (z' + k • z₂).map (fun r => A.e * incA (I.rec7 l Z) r) =
       actO _ _ κ.1⁻¹ κ'.1⁻¹ (z.map fun r => A.e * incA (I.rec7 l Z) r) + (d * M₀) • (-(k • t)) := by
     rw [hact, hm, hv2, smul_neg, smul_comm (d * M₀) k t, smul_add]
@@ -1416,8 +1406,7 @@ theorem xi_law : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pin
     GlobalTheory.T.exists_twistRational_levelElements_same_characters I hI hP l Z u a Ch A hA i hi α γ k hk κ κ' x y hx hy z
   have key := GlobalTheory.T.finiteDatum_basePoints_law_rational_twistPrimes I hI hP l Z u a Ch A hA i hi α γ k hk hxi κ₁ κ₁' r1 r1' x₁ y₁ hx1 hy1 z z' (v + t)
     (add_mem hv ht) (isHalf_add hvh hth) (by rw [hact, hrel, nsmul_add, add_assoc])
-  rw [ex, ey, ec, ec'] at key
-  exact key
+  rwa [ex, ey, ec, ec'] at key
 
 end GlobalTheory.AdForm.XiLaw
 end -- clump:auto
@@ -1553,8 +1542,7 @@ theorem isFrame_one_std {F E : Type} [Field F] [NumberField F] [Field E] [Number
 
 theorem mulVec_mem_sub {A : Type} [CommRing A] {n : ℕ} (R : Subring A) (M : Matrix (Fin n) (Fin n) A)
     (hM : ∀ a b, M a b ∈ R) (v : Fin n → A) (hv : ∀ i, v i ∈ R) (i : Fin n) : (M *ᵥ v) i ∈ R := by
-  simp only [Matrix.mulVec, dotProduct]
-  exact R.sum_mem fun j _ => R.mul_mem (hM i j) (hv j)
+  simpa only [Matrix.mulVec, dotProduct] using R.sum_mem fun j _ => R.mul_mem (hM i j) (hv j)
 
 theorem isFrame_of_int {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n : ℕ}
     {L : Submodule (𝓞 E) (Fin n → E)} (hL : Formalism.L2.DIV.IsFrame (F := F) 1 L)
@@ -1655,8 +1643,7 @@ theorem actO_mem_stdHom {D : D7} (S T : HSp D) {n m : ℕ} (hn : S.rank = n) (hm
     intro V k hk b hb hb'
     refine isFrame_of_int (isFrame_one_std _) _ (fun a c => ?_) (fun a c => ?_)
     · have := int_of_moves V hk b⁻¹ hb' a c
-      rw [inv_inv] at this
-      exact this
+      rwa [inv_inv] at this
     · rw [← map_inv, ← map_inv]
       exact int_of_moves V hk b hb a c
   exact GlobalTheory.AdelicLatMove.actO_mem_latO S T g h _ _ _ _ 1 (Matrix.GeneralLinearGroup.map (toEAf D) (matHom S g)) 1
@@ -1738,8 +1725,7 @@ theorem sb_step {Y : Type} [AddCommGroup Y] (Λ : AddSubgroup Y) (hf : Y → Pro
     (hinv : ∀ u ∈ Λ, hf u → ∀ t, Φ (t + k • u) = Φ t) (k' : ℕ) (v : Y) (hv : v ∈ Λ) (hh : hf (k' • v)) (t : Y) :
     Φ (t + (k * k') • v) = Φ t := by
   have h := hinv (k' • v) (AddSubgroup.nsmul_mem Λ hv k') hh t
-  rw [← mul_smul] at h
-  exact h
+  rwa [← mul_smul] at h
 
 
 
@@ -1908,8 +1894,7 @@ theorem mem_stdHom_iff_actO (D : D7) (S T : HSp D) (a b : ℕ) (hS : S.rank = a)
   rw [latFr_stdLat, latFr_stdLat] at key
   intro x
   constructor
-  · intro hx
-    exact (key _).2 ⟨x, hx, rfl⟩
+  · exact fun hx => (key _).2 ⟨x, hx, rfl⟩
   · intro hx
     obtain ⟨u₀, hu₀, he⟩ := (key _).1 hx
     have hinv : ∀ v, actO S T k⁻¹ k'⁻¹ (actO S T k k' v) = v := fun v => by
@@ -1917,8 +1902,7 @@ theorem mem_stdHom_iff_actO (D : D7) (S T : HSp D) (a b : ℕ) (hS : S.rank = a)
       rwa [inv_inv, inv_inv] at this
     have := congrArg (actO S T k⁻¹ k'⁻¹) he
     rw [hinv, hinv] at this
-    rw [this]
-    exact hu₀
+    rwa [this]
 
 theorem lev_law : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ (u : B.Word) (a : I.ι) (Ch₀ Ch : ℕ → Type) (A : TwDat I l Z u a Ch₀) (ι : ∀ j, Ch j → Ch₀ j) ψ θ x vac c₀ kom dd w Ram rd cK, PinX I l Z ψ θ x vac c₀ → PinColL A ι ψ θ x vac c₀ kom dd w Ram rd cK → ∀ j, j < B.R.m → ∀ α γ (κ : A.U j (ι j α)) (κ' : A.U (j + 1) (ι (j + 1) γ)), kom j (κ.1, κ'.1) (comb ψ _ _ (dd j α γ) (vac j)) = (((A.chi j _ κ : ℂˣ) : ℂ)⁻¹ * ((A.chi (j + 1) _ κ' : ℂˣ) : ℂ)) • comb ψ _ _ (dd j α γ) (vac j) := by
   intro B X I hI hP l Z u a Ch₀ Ch A ι ψ θ x vac c₀ kom dd w Ram rd cK hX hC j hj α γ κ κ'

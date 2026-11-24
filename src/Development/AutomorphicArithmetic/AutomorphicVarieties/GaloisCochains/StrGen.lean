@@ -91,8 +91,7 @@ private theorem cocycle_coboundary_of_vanishing_finite_index {k Γ : Type} [Fiel
     exact Equiv.sum_comp (MulAction.toPerm s) (fun q : Γ ⧸ N => c q.out)
   set S := ∑ q : Γ ⧸ N, c q.out
   have hS : (κ s : k) * S = S - N.index * c s := by
-    rw [Finset.mul_sum]
-    exact key
+    rwa [Finset.mul_sum]
   have e : (κ s : k) * (-(N.index : k)⁻¹ * S) - -(N.index : k)⁻¹ * S
       = -(N.index : k)⁻¹ * ((κ s : k) * S - S) := by ring
   rw [e, hS]
@@ -206,8 +205,7 @@ theorem UpperTheory.V.GC.strGen :
     intro z v s
     obtain ⟨_, _, h3⟩ := z.2
     have := h3 v s
-    rw [Submodule.mem_bot, sub_eq_zero, hρ] at this
-    exact this
+    rwa [Submodule.mem_bot, sub_eq_zero, hρ] at this
   let Φ : Zs →ₗ[k] (K₁ → k) :=
     { toFun := fun z u => z.1.1 (π ⟨u.1, hKU u.2⟩)
       map_add' := fun _ _ => rfl
@@ -275,7 +273,7 @@ theorem UpperTheory.V.GC.strGen :
       rw [hρ]
       by_cases h : ∀ s, κ (loc v s) = 1
       · rw [h s, Units.val_one, one_mul, sub_self, sub_zero]
-      · rw [show e0 y v = 0 from dif_neg h, mul_zero, sub_zero, sub_zero]
+      · rw [show e0 y v = 0 from dite_eq_right h, mul_zero, sub_zero, sub_zero]
   let ι : ({v // ∀ s, κ (loc v s) = 1} → k) →ₗ[k] Zs :=
     { toFun := fun y => ⟨((0 : Γ → k), e0 y), e0mem y⟩
       map_add' := fun y y' => Subtype.ext (Prod.ext (by simp) (e0add y y'))
@@ -292,8 +290,7 @@ theorem UpperTheory.V.GC.strGen :
     have hN0 : N.index ≠ 0 := fun h => hNl (h ▸ dvd_zero l)
     haveI : N.FiniteIndex := ⟨hN0⟩
     have hNk : (N.index : k) ≠ 0 := by
-      rw [Ne, CharP.cast_eq_zero_iff k l]
-      exact hNl
+      rwa [Ne, CharP.cast_eq_zero_iff k l]
     have hNc : ∀ n ∈ N, z.1.1 n = 0 := by
       rintro _ ⟨u, hu, rfl⟩
       exact hc0 ⟨u.1, Subgroup.mem_subgroupOf.mp hu⟩
@@ -310,10 +307,10 @@ theorem UpperTheory.V.GC.strGen :
       rw [Submodule.mem_bot]
       show e0 (fun v => z.1.2 v.1 - X) v - z.1.2 v - -X = 0
       by_cases h : ∀ s, κ (loc v s) = 1
-      · rw [show e0 (fun v => z.1.2 v.1 - X) v = z.1.2 v - X from dif_pos h]
+      · rw [show e0 (fun v => z.1.2 v.1 - X) v = z.1.2 v - X from dite_eq_left h]
         ring
-      · rw [show e0 (fun v => z.1.2 v.1 - X) v = 0 from dif_neg h]
-        push_neg at h
+      · rw [show e0 (fun v => z.1.2 v.1 - X) v = 0 from dite_eq_right h]
+        push Not at h
         obtain ⟨s, hs⟩ := h
         have e := hcl z v s
         rw [hX] at e

@@ -238,9 +238,7 @@ theorem conjUInv_mem_GfC {D : D7} (V : HSp D) (Yp : GlobalTheory.IndefiniteRowSi
   set a : AF D.host.F := 1 - GlobalTheory.EmbChart.atPlace v 1 with ha
   have h0 : evFin D.host.F v a = 0 := by
     rw [ha, map_sub, map_one, GlobalTheory.EmbChart.evFin_atPlace, sub_self]
-  have h1 : fstA D.host.F a = 1 := by
-    show (1 : Ainf D.host.F) - (0 : Ainf D.host.F) = 1
-    exact sub_zero 1
+  have h1 : fstA D.host.F a = 1 := sub_zero 1
   let f := Algebra.TensorProduct.map (fstA D.host.F) (AlgHom.id D.host.F D.host.E)
   have hf1 : f (sigR (AF D.host.F) D.sp.cm.sig (a ⊗ₜ[D.host.F] (1 : D.host.E))) = 1 := by
     simp only [f, sigR, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, Algebra.TensorProduct.map_tmul, map_one,
@@ -253,8 +251,7 @@ theorem conjUInv_mem_GfC {D : D7} (V : HSp D) (Yp : GlobalTheory.IndefiniteRowSi
       Algebra.algebraMap_self, RingHom.id_apply] at k
     have k2 := congrArg (fun w => f (sigR (AF D.host.F) D.sp.cm.sig w)) k
     simp only [map_mul, map_zero] at k2
-    rw [hf1, one_mul] at k2
-    exact k2
+    rwa [hf1, one_mul] at k2
   rw [GfC, MonoidHom.mem_ker]
   apply Units.ext
   ext i j

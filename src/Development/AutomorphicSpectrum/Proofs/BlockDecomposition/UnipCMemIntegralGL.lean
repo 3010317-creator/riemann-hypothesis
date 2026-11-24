@@ -193,8 +193,7 @@ theorem coeff_gMat (hU : Unit' ρ B) (hv : ∀ g ∈ integralGL F n, ρ g v = v)
     (c : Pairs S → 𝓀[F]) :
     B v (ρ (gMat S c) v) = B v (ρ (torusPow F n (lamS S)) v) := by
   have h := coeff_mul_mul hU hv (unipC_mem_integralGL S c) (one_mem _) (torusPow F n (lamS S))
-  rw [mul_one] at h
-  exact h
+  rwa [mul_one] at h
 
 theorem coeff_revCompl (hU : Unit' ρ B) (hv : ∀ g ∈ integralGL F n, ρ g v = v)
     (S : Finset (Fin n)) :
@@ -261,13 +260,12 @@ theorem rho_central {z : Fin n → ℂˣ} (hH : Heig ρ v z) :
   simp only [hone, Finset.sum_const, Finset.card_univ] at h
   have hcard : Fintype.card (Pairs (Finset.univ : Finset (Fin n)) → 𝓀[F]) = 1 := by
     rw [Fintype.card_fun, Fintype.card_eq_zero (α := Pairs (Finset.univ : Finset (Fin n))), pow_zero]
-  rw [hcard, one_smul] at h
-  exact h
+  rwa [hcard, one_smul] at h
 
 theorem lamS_compl (S : Finset (Fin n)) :
     lamS Sᶜ = -lamS S + lamS (Finset.univ : Finset (Fin n)) := by
   funext i
-  simp only [lamS, Pi.add_apply, Pi.neg_apply, Finset.mem_compl, Finset.mem_univ, if_true]
+  simp only [lamS, Pi.add_apply, Pi.neg_apply, Finset.mem_compl, Finset.mem_univ, ite_true]
   split_ifs <;> norm_num
 
 theorem coeff_compl {z : Fin n → ℂˣ} (hU : Unit' ρ B) (hH : Heig ρ v z) (S : Finset (Fin n)) :
@@ -336,10 +334,8 @@ theorem GlobalTheory.CompanionTheory.SatakeStable.l11 : liftZP_unit := by
     · intro T hT
       rw [Finset.mem_powersetCard] at hT ⊢
       exact ⟨Finset.subset_univ _, by rw [card_revCompl, hT.2, Nat.sub_sub_self hr]⟩
-    · intro S _
-      exact revCompl_revCompl S
-    · intro T _
-      exact revCompl_revCompl T
+    · exact fun S _ => revCompl_revCompl S
+    · exact fun T _ => revCompl_revCompl T
     · intro S _
       rw [kappa_revCompl, coeff_revCompl hU hH.1, coeff_compl hU hH]
   have hL : ∑ S ∈ (Finset.univ : Finset (Fin n)).powersetCard r,

@@ -254,8 +254,7 @@ theorem density_sob {n : ℕ} {ε : Fin n → Bool} {H ι : Type} [Fintype ι] [
         simp only [hmul]
         rw [h0 _ (hmem (g' * g)), smul_zero]
       simp only [h1, MeasureTheory.integral_zero]
-    have h2 := density π hn hirr Lc v hrel A
-    simpa only [hLc] using h2
+    simpa only [hLc] using density π hn hirr Lc v hrel A
   have hcont : ∀ i, Continuous fun g : Formalism.REAL.UJ ε => ℓ i (σ (umat g) (A (v i))) :=
     fun i => ((hsg i).2 _ (hA i)).1
   have hF : Continuous fun g : Formalism.REAL.UJ ε => ∑ i, ℓ i (σ (umat g) (A (v i))) :=
@@ -317,8 +316,7 @@ private theorem sum_smul_T_update_eq_zero_of_sum_eq_zero {D : D7} {θ : D.what�
     rw [map_smul, map_smul, hA'', hℓT i]
   rw [Finset.sum_apply, Pi.zero_apply]
   simp only [Pi.smul_apply]
-  rw [Finset.sum_congr rfl fun i _ => e i]
-  exact key
+  rwa [Finset.sum_congr rfl fun i _ => e i]
 
 variable {D : D7} {θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)} {V : HSp D}
   {S : D.what₂.Tau → SPar} {M : DSModel V S} {J : Set (GA D V)} {χ : GA D V → ℂ}
@@ -349,8 +347,7 @@ private theorem sum_smul_T_map_eq_zero_of_sum_eq_zero {D : D7} {θ : D.what₂.T
         · rw [Function.update_of_ne hτ]
           simp [hτ]
       simp only [hva] at h1
-      simp only [hv]
-      exact h1
+      simpa only [hv] using h1
   simpa using step Finset.univ
 
 private theorem sobCont_zero_twisted_operators {n : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
@@ -414,8 +411,7 @@ theorem multT_eq_zero {u : (⨂[ℂ] τ, M.sm τ) →ₗ[ℂ] (GA D V → ℂ)} 
     rw [hxsum, map_sum] at h
     simpa only [map_smul, huT] using h
   obtain ⟨w', hw'⟩ : ∃ w' : M.Vec, tprodInnerFun w' x ≠ 0 := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     exact hx (eq_zero_of_tprodInnerFun x hne)
   apply PiTensorProduct.ext
   apply MultilinearMap.ext

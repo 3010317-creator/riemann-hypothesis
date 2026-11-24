@@ -132,8 +132,7 @@ theorem exists_right_inv {S : Matrix (Fin g) (Fin g) ℝ} (h2 : Pr * Pr = Pr) (h
       have h := congrArg (fun x => Pr *ᵥ x) hN
       simpa only [Matrix.mulVec_mulVec, mulVec_zero, mul_add, hPS, h2, zero_add] using h
     have h3 : S *ᵥ v = 0 := by
-      rw [Matrix.add_mulVec, h1, add_zero] at hN
-      exact hN
+      rwa [Matrix.add_mulVec, h1, add_zero] at hN
     exact hv (((hk v).1 h3).symm.trans h1)
   refine ⟨(S + Pr)⁻¹, ?_⟩
   have h4 : (1 - Pr) * (S + Pr) = S := by
@@ -287,8 +286,7 @@ theorem riemann_real (τ G : Matrix (Fin g) (Fin g) ℂ)
     ∃ R : Matrix (Fin g) (Fin g) ℝ, G = κ[R] ∧ R * τ.map Complex.im = 1 := by
   have h1 : ∀ i j, (G i j).im = 0 := by
     intro i j
-    have h := hrel (Pi.single i 1) (Pi.single j 1) 0 0
-    simpa [cst_single, cst_zero] using h
+    simpa [cst_single, cst_zero] using hrel (Pi.single i 1) (Pi.single j 1) 0 0
   have h2 : ∀ i j, ∑ k, (G i k).re * (τ k j).im = if i = j then 1 else 0 := by
     intro i j
     have h := hrel (Pi.single i 1) 0 0 (Pi.single j 1)
@@ -458,8 +456,7 @@ theorem rep_at (hC : IsChart L bas A T0 B c ρ) (hK : IsKerProj (∑ j, B j) Pr)
     intro u u' v v'
     have h1 := L.im w hw (mk bas u v) (mk bas u' v')
     rw [hC.per w hw, hC.per w hw, conj_form, hform] at h1
-    simp only [uCo_mk, vCo_mk] at h1
-    exact h1
+    simpa only [uCo_mk, vCo_mk] using h1
   obtain ⟨R, hGR, hRY⟩ := riemann_real τ _ hrel
   have hYR : Y * R = 1 := mul_eq_one_comm.1 hRY
   have hYT : Yᵀ = Y := by

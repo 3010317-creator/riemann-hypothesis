@@ -280,9 +280,7 @@ def ReadsCusp (i : Fin D.R.m) (σ : T.Q.c.F →+* ℂ) (hV : T.V ((i : ℕ) + 1)
 theorem readsCusp_of_readsAt {i : Fin D.R.m} {σ : T.Q.c.F →+* ℂ} {hV : T.V ((i : ℕ) + 1) σ = Wc D i}
     (hR : GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.ReadsAt T R i σ hV (κ i)) : ReadsCusp T R κ i σ hV := by
   intro P p k α Rc _ hs f hf g hg hfg
-  have hread := hR.modulus hs hf.1 hg.1 hfg
-  simp only [phiW_eq, hkC_eq] at hread
-  exact hread
+  simpa only [phiW_eq, hkC_eq] using hR.modulus hs hf.1 hg.1 hfg
 
 theorem hkSupAt_of_readsCusp (hI : GlobalTheory.IndefiniteRowSideFullHecke.UnusedSlot39.HeckeInt) (hT : GlobalTheory.IndefiniteRowSideFullHecke.SplitOffDetection.HeckeTransform)
     (hP : GlobalTheory.IndefiniteRowSideFullHecke.HeckePrimeDetection.HeckePointLaws) {i : Fin D.R.m} (hβ : IsSDFrame (Wc D i) (R.βW i) (R.ΛW i) 1) (hSb : R.fam_Sb)
@@ -320,8 +318,7 @@ theorem hkSupAt_of_readsCusp (hI : GlobalTheory.IndefiniteRowSideFullHecke.Unuse
     rw [hkScal, e1, e2, map_mul, map_pow, map_inv₀, valuation_natCast_pow (hla p hp hpP)]
     simp
   · have := hx ((fw.pt i la).symm ⟨v, hv⟩)
-    rw [fw.nrm_eq, Equiv.apply_symm_apply, Core.nrmM_le_one_iff] at this
-    exact this
+    rwa [fw.nrm_eq, Equiv.apply_symm_apply, Core.nrmM_le_one_iff] at this
 
 end Sup
 

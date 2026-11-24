@@ -203,8 +203,7 @@ lemma isUnit_pow_sub_pow_of_le {q : ℕ} [NeZero q] {A : Type} [CommRing A] (ζ 
   obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le hle
   have hd : d % q ≠ 0 := by
     intro h0
-    apply hab
-    exact (Nat.modEq_iff_dvd' hle).2 (by simpa using Nat.dvd_of_mod_eq_zero h0) |>.symm
+    exact hab ((Nat.modEq_iff_dvd' hle).2 (by simpa using Nat.dvd_of_mod_eq_zero h0) |>.symm)
   have e : ζ.1 ^ (b + d) - ζ.1 ^ b = -(ζ.1 ^ b * (1 - ζ.1 ^ d)) := by ring
   rw [e]
   exact (((isUnit_val ζ).pow b).mul (isUnit_one_sub ζ d hd)).neg
@@ -226,8 +225,7 @@ theorem prim_basic : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A], (∀ ζ :
       have e : ζ.1 ^ a - ζ.1 ^ b = -(ζ.1 ^ b - ζ.1 ^ a) := by ring
       rw [e]; exact this.neg
   · intro ζ x hx
-    have h := congrArg (eval x) (prod_range ζ)
-    simpa [eval_prod, hx] using h
+    simpa [eval_prod, hx] using congrArg (eval x) (prod_range ζ)
   · intro ζ ξ
     have h := congrArg (eval ξ.1) (prod_coprime ζ)
     rw [← aeval_cyc, ξ.2.2] at h

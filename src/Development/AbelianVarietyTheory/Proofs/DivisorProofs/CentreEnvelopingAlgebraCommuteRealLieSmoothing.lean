@@ -141,8 +141,7 @@ theorem fderiv_integral_mul_kernel_apply :
       by_cases hy : y ∈ U
       · exact (hKp x' (hcb (ball_subset_closedBall hx')) y hy).const_mul (α y)
       · have : α y = 0 := hα0 y hy
-        simp only [hF', this, zero_mul, zero_smul]
-        exact hasFDerivAt_const _ _
+        simpa only [hF', this, zero_mul, zero_smul] using hasFDerivAt_const _ _
   rw [hmain.fderiv, ContinuousLinearMap.integral_apply hF'i]
   refine integral_congr_ae (Eventually.of_forall fun y => ?_)
   by_cases hy : y ∈ U
@@ -239,10 +238,10 @@ theorem chartL_lie (g : GA E a) (X : Lie E a) (φ : Sm E a) :
     chartL g (lie E a X φ) = Lop X (chartL g φ) := Subtype.ext <| funext fun x => by
   by_cases hx : x ∈ invSet E a
   · change chart (lieD X φ.1) g x = lv X (chart φ.1 g) x
-    rw [lv, if_pos hx]
+    rw [lv, ite_eq_left hx]
     exact chart_lieD φ.2 X g hx
   · change chart (lieD X φ.1) g x = lv X (chart φ.1 g) x
-    rw [lv, if_neg hx]
+    rw [lv, ite_eq_right hx]
     simp [chart, show ¬ IsUnit (Matrix.of x) from hx]
 
 end GlobalTheory.CentreSmooth
@@ -274,11 +273,10 @@ theorem good_lop (X : Lie E a) : Good ν (Lop X) := by
   refine ⟨?_, fun α hα hI => funext fun x => ?_⟩
   · refine (contDiffOn_partial isOpen_invSet hG (rmul X).contDiff).congr fun p hp => ?_
     change lv X (G p.2).1 p.1 = _
-    rw [lv, if_pos hp.1]
+    rw [lv, ite_eq_left hp.1]
   · change lv X _ x = ∫ y, α y * lv X (G y).1 x ∂ν
     by_cases hx : x ∈ invSet E a
-    · simp only [lv, if_pos hx]
-      exact fderiv_integral_mul ν isOpen_invSet hα hG hx _
+    · simpa only [lv, ite_eq_left hx] using fderiv_integral_mul ν isOpen_invSet hα hG hx _
     · simp [lv, hx]
 
 theorem good_algebraMap (c : ℂ) : Good ν (algebraMap ℂ (Module.End ℂ (Cv E a)) c) := by
@@ -393,8 +391,7 @@ theorem js_transFam (φ : Sm E a) (g : GA E a) : JS (transFam φ g) :=
 
 theorem chart_one (φ : GA E a → ℂ) (g : GA E a) : chart φ g (oneL E a) = φ g := by
   have e := chart_val φ g 1
-  rw [map_one, mul_one] at e
-  exact e
+  rwa [map_one, mul_one] at e
 
 theorem chart_smoothing (ν : Measure (Lie E a)) (α : Lie E a → ℂ) (φ : Sm E a) (g : GA E a) :
     chart (smoothing ν α φ.1) g = fun x => ∫ y, α y * (transFam φ g y).1 x ∂ν := funext fun x => by
@@ -468,8 +465,7 @@ theorem zalg_smoothing : ∀ (E : Type) [Field E] [NumberField E] [_root_.Number
     obtain ⟨τ, u, rfl⟩ := hx
     exact cap_smoothing ν hα ψ h τ u
   | algebraMap c =>
-    simp only [Module.algebraMap_end_apply, Submodule.coe_smul]
-    exact (smoothing_smul ν α c ψ).symm
+    simpa only [Module.algebraMap_end_apply, Submodule.coe_smul] using (smoothing_smul ν α c ψ).symm
   | add x y _ _ hx hy =>
     rw [LinearMap.add_apply, Submodule.coe_add, hx ψ h, hy ψ h, LinearMap.add_apply, smoothing_add ν hα]
   | mul x y _ _ hx hy =>

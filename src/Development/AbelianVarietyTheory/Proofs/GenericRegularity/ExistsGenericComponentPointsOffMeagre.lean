@@ -161,8 +161,7 @@ theorem exists_countable_atlas : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     · exact (h0 τ i k (lt_of_le_of_ne (not_lt.mp h₁) (Ne.symm h₂))).symm
   refine ⟨(⟨p, hpT⟩, σ), hC p σ L f z₀ y x b hz₀ hb ?_⟩
   have : (fun τ => (lowM x τ).submatrix (σ τ).symm id * b τ) = g := funext fun τ => by rw [hu τ, ← e τ]
-  rw [this]
-  exact hg
+  rwa [this]
 
 end GlobalTheory.Reg
 end -- clump:auto
@@ -313,10 +312,8 @@ theorem isMeagre_translates {s : Set (Frame X.Ψ r)} (hs : IsSigmaCompact s) (hi
       have := congrArg (lact γ⁻¹) e
       rw [AR.Up.PairUnfoldPf.lact_inv_lact, AR.Up.PairUnfoldPf.lact_inv_lact] at this
       exact this ▸ hz
-    · rw [Set.mem_preimage, AR.Up.PairUnfoldPf.lact_lact_inv]
-      exact hx
-  rw [hi] at h1
-  exact h1
+    · rwa [Set.mem_preimage, AR.Up.PairUnfoldPf.lact_lact_inv]
+  rwa [hi] at h1
 
 end Frames
 
@@ -341,8 +338,8 @@ theorem dictionary {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Recip
   have hcc : ∀ τ : E →+* ℂ, ComplexEmbedding.conjugate (ComplexEmbedding.conjugate τ) = τ := fun τ =>
     ComplexEmbedding.involutive_conjugate E τ
   obtain ⟨f, hf⟩ := GlobalTheory.FrameUnif.exists_letter_equiv X.Ψ X.cmType Dw.p Dw.q r hr (Formalism.L2.PjFree.relab c σ) hbij Dw.mult
-    (fun τ h => by unfold Datum.mult; rw [if_pos ((hrt τ).1 ((hty _).1 h))])
-    (fun τ h => by unfold Datum.mult; rw [if_neg (fun h' => h ((hty _).2 ((hrt τ).2 h')))])
+    (fun τ h => by unfold Datum.mult; rw [ite_eq_left ((hrt τ).1 ((hty _).1 h))])
+    (fun τ h => by unfold Datum.mult; rw [ite_eq_right (fun h' => h ((hty _).2 ((hrt τ).2 h')))])
   obtain ⟨idx, hi⟩ : ∃ idx : Fin g ≃ X.Ψ × Fin r, ∀ j,
       (Formalism.L2.PjFree.relab c σ (e j).1 ∈ X.Ψ ∧ (idx j).1.1 = Formalism.L2.PjFree.relab c σ (e j).1 ∧
         ((idx j).2 : ℕ) = Dw.q + (e j).2) ∨
@@ -354,8 +351,8 @@ theorem dictionary {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Recip
     intro j
     rw [hq]
     rcases hi j with ⟨a, b, c'⟩ | ⟨a, b, c', d⟩
-    · rw [if_neg (by omega), b]
-    · rw [if_pos (by omega), b, hcc]
+    · rw [ite_eq_right (by omega), b]
+    · rw [ite_eq_left (by omega), b, hcc]
   have hqq : D.q = X.p0 := hq.trans hp0.symm
   refine ⟨idx, fun x v j => ?_, fun b hb j j' hne => ?_, fun P hP => ?_⟩
   · have h := hi j
@@ -365,12 +362,12 @@ theorem dictionary {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Recip
     dsimp only at h ⊢
     rw [← hp0] at h
     rcases h with ⟨a, rfl, rfl⟩ | ⟨a, rfl, rfl, d⟩
-    · rw [if_neg (by omega)]
+    · rw [ite_eq_right (by omega)]
       unfold Formalism.L2.PjFree.perFr
-      rw [dif_pos a, dif_pos hn]
-    · rw [if_pos (by omega)]
+      rw [dite_eq_left a, dite_eq_left hn]
+    · rw [ite_eq_left (by omega)]
       unfold Formalism.L2.PjFree.perFr
-      rw [dite_eq_right a, dif_pos (show conjEmb (Formalism.L2.PjFree.relab c σ (e j).1) ∈ X.Ψ from hτ), dif_pos hn]
+      rw [dite_eq_right a, dite_eq_left (show conjEmb (Formalism.L2.PjFree.relab c σ (e j).1) ∈ X.Ψ from hτ), dite_eq_left hn]
       rfl
   · obtain ⟨h1, h2⟩ := PerBor.moveMat_support _ idx hb j j' hne
     rw [← hqq] at h2
@@ -379,14 +376,14 @@ theorem dictionary {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Recip
     have c1 := hi j
     have c2 := hi j'
     by_cases hj : ((idx j).2 : ℕ) < D.q
-    · rw [if_pos hj] at h2 t1
+    · rw [ite_eq_left hj] at h2 t1
       have hj' : ((idx j').2 : ℕ) < D.q := by omega
-      rw [if_pos hj'] at t2
+      rw [ite_eq_left hj'] at t2
       refine ⟨hbij.1 (by rw [t1, t2, h1]), ?_⟩
       rcases c1 with ⟨-, -, c1⟩ | ⟨-, -, c1, d1⟩ <;> rcases c2 with ⟨-, -, c2⟩ | ⟨-, -, c2, d2⟩ <;> omega
-    · rw [if_neg hj] at h2 t1
+    · rw [ite_eq_right hj] at h2 t1
       have hj' : ¬ ((idx j').2 : ℕ) < D.q := by omega
-      rw [if_neg hj'] at t2
+      rw [ite_eq_right hj'] at t2
       refine ⟨hbij.1 (by rw [t1, t2, h1]), ?_⟩
       rcases c1 with ⟨-, -, c1⟩ | ⟨-, -, c1, d1⟩ <;> rcases c2 with ⟨-, -, c2⟩ | ⟨-, -, c2, d2⟩ <;> omega
   · rcases eq_or_ne r 0 with hr0 | hr0
@@ -409,8 +406,7 @@ theorem dictionary {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Recip
       constructor
       · rintro ⟨a, rfl⟩
         exact (φ a).2
-      · intro hy
-        exact ⟨φ.symm ⟨y, hy⟩, by simp [φ']⟩
+      · exact fun hy => ⟨φ.symm ⟨y, hy⟩, by simp [φ']⟩
     obtain ⟨x, hx, hPx⟩ := GlobalTheory.exists_frame_of_isPeriod E H D r (-X.ξ0) X.Gm φ' X.Ψ hty g idx _ hty' hξ hpos
       ⟨fun a b hab => φ.injective (Subtype.ext hab), by rw [hrange]; exact X.Λ_span, X.Gm_herm, X.Gm_det, hef⟩
       (by rw [hp, hq, hr]) P hP
@@ -525,7 +521,7 @@ theorem isMeagre_chart (U : Formalism.L2.PjFree.Unf Xo c σ r) (hσ : Formalism.
     else ψ₀
   have hφ' : ∀ i, ∀ b ∈ B i, ∀ a, Formalism.L2.PjFree.toC (φ' i b a) = φ i b a := by
     intro i b hb a
-    simp only [φ', dif_pos hb]
+    simp only [φ', dite_eq_left hb]
     rfl
   choose z hz using fun i b => hL.bc _ _ (φ' i b) C.y
   have key := fun (i : ι) (a : {a : C.R // a ≠ 0}) => isMeagre_family U hσ hU k C.y (φ' i) (z i) (hB i)
@@ -539,15 +535,13 @@ theorem isMeagre_chart (U : Formalism.L2.PjFree.Unf Xo c σ r) (hσ : Formalism.
   obtain ⟨i, b, hb, e⟩ := hcov (ψ.toRingHom : C.R →+* ℂ) (RingHom.ext fun a => ψ.commutes a)
   have e' : φ' i b = ψ := AlgHom.ext fun a => by
     have := hφ' i b hb a
-    rw [e] at this
-    exact this
+    rwa [e] at this
   obtain rfl : w = z i b := (GlobalTheory.Frames.frMap_unique_refl_iff E H Dw l Xo c _ _ ψ C.y).1 _ _ hw (e' ▸ hz i b)
   rw [injective_iff_map_eq_zero] at hni
   push Not at hni
   obtain ⟨a, ha0, ha⟩ := hni
   refine Set.mem_iUnion.2 ⟨i, Set.mem_iUnion.2 ⟨⟨a, ha⟩, hx, b, hb, ?_, _, hinv _ _ _ ht⟩⟩
-  rw [e']
-  exact ha0
+  rwa [e']
 
 attribute [local instance 1100] Subalgebra.algebra in
 attribute [local instance 100] IntermediateField.instAlgebraSubtypeMem in

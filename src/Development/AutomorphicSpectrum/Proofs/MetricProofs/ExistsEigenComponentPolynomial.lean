@@ -91,8 +91,7 @@ def charVec (a : 𝓞 E) : (E →+* ℂ) → ℂ := fun s => s (algebraMap (𝓞
 def toChar (s : E →+* ℂ) : 𝓞 E →* ℂ := (s.comp (algebraMap (𝓞 E) E) : 𝓞 E →+* ℂ)
 
 theorem toChar_injective : Function.Injective (toChar (E := E)) := by
-  intro s s' h
-  exact comp_injective (RingHom.ext fun a => DFunLike.congr_fun h a)
+  exact fun s s' h => comp_injective (RingHom.ext fun a => DFunLike.congr_fun h a)
 
 theorem span_charVec : Submodule.span ℂ (Set.range (charVec (E := E))) = ⊤ := by
   classical
@@ -220,8 +219,7 @@ theorem eigComp_eq_combination : ∀ (E : Type) [Field E] [NumberField E] (s₀ 
     have h := congrArg (actHom ρ) hsum
 
     rw [map_sum, map_one] at h
-    have h2 := LinearMap.congr_fun h x
-    simpa [LinearMap.sum_apply] using h2
+    simpa [LinearMap.sum_apply] using LinearMap.congr_fun h x
   have heig : ∀ (s : E →+* ℂ) x, actHom ρ (combo (cs s)) x ∈ eigSp ρ (s.comp (algebraMap (𝓞 E) E)) := by
     intro s x
     refine mem_eigSp_iff.2 fun b => ?_

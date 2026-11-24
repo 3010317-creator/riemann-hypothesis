@@ -250,8 +250,7 @@ theorem triv_pull (h : IsGrpPullback A' A f φ) (hL : L.IsLB) (hL' : L'.IsLB) (e
       rw [MonObj.comp_mul, lift_fst_assoc, lift_snd]
     have e₁ := h.2 (T ⊗ A') (fst T A' ≫ x) (snd T A') (a ≫ pushHom h T x) (pushPt h.1.w (snd T A'))
       (Category.assoc (fst T A').left x.left φ).symm rfl
-    rw [← e] at e₁
-    exact e₁
+    rwa [← e] at e₁
   have h4 : Triv (LB.LinComb L (K := Fin 2) (fun i => j.left ≫
       ![(lift (fst T₀ A ≫ pushHom h T x) (snd T₀ A) ≫ μ[A]).left, (snd T₀ A).left] i) ![1, -1]) :=
     ⟨_, DVR.pullGen_isGen _ _ _ c hc _⟩

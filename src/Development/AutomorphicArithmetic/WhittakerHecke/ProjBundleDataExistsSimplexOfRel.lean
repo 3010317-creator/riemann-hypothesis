@@ -70,8 +70,7 @@ theorem UpperTheory.projBundleData_exists_simplex_of_rel :
         intro i j k _ _
         apply Subtype.ext
         apply Prod.ext
-        · show P.g (t i).1 (t k).1 (h i k) = P.g (t j).1 (t k).1 (h j k) * P.g (t i).1 (t j).1 (h i j)
-          exact (P.g_coc _ _ _ (h i j) (h j k)).symm
+        · exact (P.g_coc _ _ _ (h i j) (h j k)).symm
         · show u i k = u j k * u i j
           apply Um.unit_unique (t k).2
           rw [← hu i k, ← P.g_coc _ _ _ (h i j) (h j k), Units.val_mul, ← Matrix.mulVec_mulVec,
@@ -86,7 +85,6 @@ theorem UpperTheory.projBundleData_exists_simplex_of_rel :
       rfl
     · intro i j f
       simp only [eqToHom_refl, Category.id_comp, Category.comp_id]
-      show P.g (pts P.c x i) (pts P.c x j) _ = P.g (t i).1 (t j).1 (h i j)
       exact P.g_congr (congrFun hx i) (congrFun hx j) _ _
   obtain ⟨z, ⟨hz1, hz2⟩, -⟩ := UpperTheory.existsUnique_simplex_pullback_of_map_eq P.bunV (PGL.pr d) n U x F key
   refine ⟨z, fun i => ?_⟩

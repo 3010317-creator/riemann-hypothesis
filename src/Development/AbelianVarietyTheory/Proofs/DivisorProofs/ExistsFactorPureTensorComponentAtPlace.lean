@@ -64,8 +64,7 @@ theorem mulSupport_finite (φ : ∀ v : GlobalTheory.IndefiniteRowSideFullHecke.
     (x : κ → AF F) : (Function.mulSupport fun v => φ v fun i => evFin F v (x i)).Finite := by
   have hx : ∀ᶠ v in Filter.cofinite, ∀ i, evFin F v (x i) ∈ v.adicCompletionIntegers F := by
     rw [Filter.eventually_all]
-    intro i
-    exact (x i).2.2
+    exact fun i => (x i).2.2
   refine Set.Finite.subset (Filter.eventually_cofinite.1 (hφ.and hx)) ?_
   intro v hv hv'
   apply hv
@@ -106,7 +105,6 @@ theorem comp_add_of_at (v₁ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTenso
   · have h1 : (u * z i).1 = (z i).1 := by
       have : u.1 = 1 := by
         rw [hu]
-        show (1 : Ainf F) - (0 : Ainf F) = 1
         exact sub_zero 1
       show u.1 * (z i).1 = (z i).1
       rw [this, one_mul]

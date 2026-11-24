@@ -82,8 +82,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.unrOfIne :
     have hcomap : Ideal.comap (algebraMap (𝓞 K) (𝓞 M)) w.asIdeal = v.asIdeal :=
       congrArg HeightOneSpectrum.asIdeal hunder
     have hv1 : v.asIdeal.ramificationIdx' w.asIdeal = 1 := by
-      rw [Ideal.ramificationIdx'_eq_ramificationIdx v.asIdeal w.asIdeal v.ne_bot]
-      exact he
+      rwa [Ideal.ramificationIdx'_eq_ramificationIdx v.asIdeal w.asIdeal v.ne_bot]
     have hle : Ideal.map (algebraMap (𝓞 K) (𝓞 M)) v.asIdeal ≤ w.asIdeal :=
       Ideal.map_le_iff_le_comap.2 hcomap.ge
     have hnot : ¬ Ideal.map (algebraMap (𝓞 K) (𝓞 M)) v.asIdeal ≤ w.asIdeal ^ 2 :=
@@ -109,8 +108,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.unrOfIne :
         exact Ideal.isCoprime_iff_sup_eq.1 hc.pow_right
       apply hnot
       have hx2 : Ideal.map (algebraMap (𝓞 K) (𝓞 M)) (Ideal.span {x}) ≤ w.asIdeal ^ 2 := by
-        rw [Ideal.map_span, Set.image_singleton, Ideal.span_singleton_le_iff_mem]
-        exact hmem
+        rwa [Ideal.map_span, Set.image_singleton, Ideal.span_singleton_le_iff_mem]
       have hr : Ideal.map (algebraMap (𝓞 K) (𝓞 M)) v.asIdeal * w.asIdeal ^ 2 ≤ w.asIdeal ^ 2 :=
         Ideal.mul_le_right
       calc Ideal.map (algebraMap (𝓞 K) (𝓞 M)) v.asIdeal

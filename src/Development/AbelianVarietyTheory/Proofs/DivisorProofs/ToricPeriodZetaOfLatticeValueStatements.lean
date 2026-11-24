@@ -342,15 +342,10 @@ theorem equidistributed_of_hilbertClassFieldJ : ∀ (hH : GlobalTheory.Published
     · intro hτ
       obtain ⟨σ, hσ⟩ := GlobalTheory.GaloisDescent.exists_complex_ringEquiv_comp_eq L.val.toRingHom τ
       have hσf : Fixes φK σ := fun x => by
-        have h1 := hσ ⟨φK x, hKL x⟩
-        have h2 := hτ ⟨φK x, hKL x⟩ (H.algebraMap_mem x)
-        have h3 := hfixC x
-        exact h1.trans (h2.trans h3)
+        exact (hσ ⟨φK x, hKL x⟩).trans ((hτ ⟨φK x, hKL x⟩ (H.algebraMap_mem x)).trans (hfixC x))
       refine ⟨σ, hσf, fun x => hσ x, ?_⟩
       refine ((hclass σ σC hσf hfixC).2 ?_).trans hclC
-      have h1 := hσ ⟨jLat ΛK, hjL⟩
-      have h2 := hτ ⟨jLat ΛK, hjL⟩ hj0'
-      exact h1.trans h2
+      exact (hσ ⟨jLat ΛK, hjL⟩).trans (hτ ⟨jLat ΛK, hjL⟩ hj0')
   rw [Nat.card_congr (Equiv.subtypeEquivRight hiff)]
   linarith
 
@@ -776,8 +771,7 @@ theorem finprod_val_nu_eq_one : ∀ {D : D7} {T : Type} {Lc : LevCh D T} {sc : G
     constructor <;> intro h x hx
     · rw [hloc, h x hx, inv_one]
     · have := h x hx
-      rw [hloc, inv_eq_one] at this
-      exact this
+      rwa [hloc, inv_eq_one] at this
   have hval : ∀ P, ν.UnrAt P → ((ν.val P : ℂˣ) : ℂ) * ((ν.val (c P) : ℂˣ) : ℂ) = 1 := fun P hP => by
     have h1 := val_inv_eq ν hT P (by rw [← hc]; exact (hunr P).1 hP)
     rw [HChar.val_inv] at h1
@@ -984,7 +978,7 @@ theorem locEps_tame_twist : ∀ (E : Type) [Field E] [NumberField E] (K : Type) 
       show χ.locK w (unif w ^ (1 + diffExp w)) * ξ.locK w (unif w ^ (1 + diffExp w)) = _
       rw [pow_add, pow_one, map_mul, zero_add]
       rfl
-    rw [locEps, locEps, if_neg one_ne_zero, if_pos rfl, gaussSumAt_unr_mul hχ one_ne_zero, hqw, e1, e2, map_mul, map_mul,
+    rw [locEps, locEps, ite_eq_right one_ne_zero, ite_eq_left rfl, gaussSumAt_unr_mul hχ one_ne_zero, hqw, e1, e2, map_mul, map_mul,
       hx1, hgG, map_pow σ, map_natCast σ]
     simp only [Units.val_mul]
     ring
@@ -1056,7 +1050,7 @@ theorem sum_mul_eq_of_concentrated {U : Type} [CommGroup U] [Fintype U] (H : Sub
       have := huniq u u₀ hu hu₀
       rwa [mul_comm] at this
     rw [← hg u₀ _ h2, h1]
-  · push_neg at hex
+  · push Not at hex
     exact ⟨1, main 1 fun u hu => absurd (hex u) hu⟩
 
 end GlobalTheory.TameTwist
@@ -1102,7 +1096,7 @@ theorem gaussTerm_mul_one_add (χ : HChar E) (w : HeightOneSpectrum (𝓞 E)) (c
   have h1 : r * (1 + z) ≠ 0 := by rw [← he]; exact mul_ne_zero hr e.ne_zero
   have hu : Units.mk0 _ h1 = Units.mk0 r hr * e := by ext; simp [he]
   have hψ : r * (1 + z) / c = r / c + r * z / c := by ring
-  rw [gaussTerm, gaussTerm, dif_neg h1, dif_neg hr, hu, map_mul, hψ, map_add (f := _), psiAt_add]
+  rw [gaussTerm, gaussTerm, dite_eq_right h1, dite_eq_right hr, hu, map_mul, hψ, map_add (f := _), psiAt_add]
   simp only [mul_inv, Units.val_mul]
   ring
 
@@ -1154,7 +1148,7 @@ theorem mem_of_psiAt_eq_one {w : HeightOneSpectrum (𝓞 E)} {c : Eˣ}
     rw [psiAt_conductor, ht, WithZero.exp_le_exp]
     push_cast
     omega
-  push_neg at hnot
+  push Not at hnot
   obtain ⟨r, hr, hψ⟩ := hnot
   obtain ⟨r₀, hr₀⟩ := Formalism.UG.P.glint_exists_approx w ⟨r, hr⟩
   apply hψ
@@ -1212,14 +1206,13 @@ theorem gaussSumAt_mul_tame {χ ξ : HChar E} {w : HeightOneSpectrum (𝓞 E)} (
     rfl
   have hH' : ∀ u k : (𝓞 E ⧸ w.asIdeal ^ 2)ˣ, k ∈ H → rep (u * k : (𝓞 E ⧸ w.asIdeal ^ 2)ˣ) - rep u ∈ w.asIdeal := by
     intro u k hk
-    rw [← hmemH, mul_comm u k, mul_inv_cancel_right]
-    exact hk
+    rwa [← hmemH, mul_comm u k, mul_inv_cancel_right]
   let f : (𝓞 E ⧸ w.asIdeal ^ 2)ˣ → ℂ := fun u => gaussTerm χ w c (rep u)
   let g : (𝓞 E ⧸ w.asIdeal ^ 2)ˣ → ℂ := fun u => twInv ξ w (rep u)
   have hg : ∀ u, ∀ k ∈ H, g (u * k) = g u := by
     intro u k hk
     show twInv ξ w (rep ↑(u * k)) = twInv ξ w (rep ↑u)
-    rw [twInv, twInv, dif_neg (hne (u * k)), dif_neg (hne u)]
+    rw [twInv, twInv, dite_eq_right (hne (u * k)), dite_eq_right (hne u)]
     have hd := valuation_sub_le (E := E) (w := w) (a := 1) (y := rep ↑(u * k)) (y' := rep ↑u)
       (by rw [pow_one]; exact hH' u k hk)
     have hξ1 : ξ.LevelLe w 1 := hξ
@@ -1289,9 +1282,8 @@ theorem gaussSumAt_mul_tame {χ ξ : HChar E} {w : HeightOneSpectrum (𝓞 E)} (
   rw [gaussSumAt, gaussSumAt, finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype]
   simp_rw [gaussTerm_mul]
   have hg0 : g u₀ = (((ξ.locK w (Units.mk0 _ (hne u₀)))⁻¹ : ℂˣ) : ℂ) := by
-    simp only [g, twInv, dif_neg (hne u₀)]
-  rw [← hg0]
-  exact hu₀
+    simp only [g, twInv, dite_eq_right (hne u₀)]
+  rwa [← hg0]
 
 end GlobalTheory.TameTwist
 
@@ -1321,7 +1313,7 @@ theorem locEps_mul_tame : ∀ (E : Type) [Field E] [NumberField E] (χ ξ : HCha
     exact absurd ((hχ 1).1 h2) (by omega)
   · obtain ⟨x₀, hx₀⟩ := gaussSumAt_mul_tame hχ2 hξ (valuation_unif_pow w (2 + diffExp w))
     refine ⟨unif w ^ (2 + diffExp w) * x₀⁻¹, ?_⟩
-    rw [locEps, locEps, if_neg two_ne_zero, if_neg two_ne_zero, hx₀]
+    rw [locEps, locEps, ite_eq_right two_ne_zero, ite_eq_right two_ne_zero, hx₀]
     have hm : ∀ x, (χ * ξ).locK w x = χ.locK w x * ξ.locK w x := fun x => rfl
     rw [hm, map_mul, map_inv]
     simp only [Units.val_mul, Units.val_inv_eq_inv_val]
@@ -1367,7 +1359,7 @@ theorem twist_ram_prime_dvd_Qn : ∀ {D : D7} {T : Type} {Lc : LevCh D T} {sc : 
     have hv := (Model.isValChar_nu hL G i j (s := 0) (Nat.zero_le _)).1
     have hE := hv.2.2.2 (w.under (𝓞 D.host.F)) w rfl
     have hexp := (hE.2 (Finset.notMem_empty _) 0).1 ((Formalism.L2.Host.HChar.unrAt_iff _ _).1 hnu)
-    rw [Model.expIn_condF, if_pos hS, condExp] at hexp
+    rw [Model.expIn_condF, ite_eq_left hS, condExp] at hexp
     split_ifs at hexp <;> omega
 
   obtain ⟨PP, hPP, hw⟩ : ∃ PP ∈ Lc.Q t, w = PP ∨ Formalism.IndefR.Lev.IsConjPl PP w := by
@@ -1382,8 +1374,7 @@ theorem twist_ram_prime_dvd_Qn : ∀ {D : D7} {T : Type} {Lc : LevCh D T} {sc : 
     intro h
     obtain ⟨v, hv, rfl⟩ := Finset.mem_image.1 h
     apply hS0
-    rw [← hunder, G.pl.under_w hv]
-    exact hv
+    rwa [← hunder, G.pl.under_w hv]
   have hloc : PP ∈ GlobalTheory.FunObj.locPl G t := Finset.mem_union_right _ hPP
   have htw : PP ∈ twPl G t := Finset.mem_filter.2 ⟨hloc, hW0⟩
   obtain ⟨⟨q, hq, hcard, -, -⟩, -⟩ := hL.Q_pl t PP hPP
@@ -1553,8 +1544,7 @@ theorem refl_square (hFE : GlobalTheory.Published.HeckeTateFunctionalEquation) {
   set ξ := Lc.xiH t with hξ
   set ν₀ := nuH G μ₀ i j with hν₀
   have e : nuH G t i j = ν₀ * ξ := by
-    simp only [ν₀, ξ, nuH, hL.xi_base, mul_one]
-    exact mul_div_right_comm _ _ _
+    simpa only [ν₀, ξ, nuH, hL.xi_base, mul_one] using mul_div_right_comm _ _ _
   have hv := GlobalTheory.FunObj.SqNum.Model.isValChar_nu hL G i j (Nat.zero_le (halfRank D i j))
   obtain ⟨N, hN, hf⟩ := hL.xi_fin t
   have hu : IsUnitary (nuH G t i j) := GlobalTheory.ChrEqUnique.isUnitary_of_chrEq D _ _ (chrEq_nu G t i j hL)
@@ -1732,7 +1722,7 @@ theorem exists_rep_trivial_above : ∀ (E : Type) [Field E] [NumberField E] [IsC
   · rw [QuotientGroup.mk_mul, QuotientGroup.mk_inv, hy1, QuotientGroup.mk_mul,
       (QuotientGroup.eq_one_iff A).2 hA, (QuotientGroup.eq_one_iff u).2 hu, one_mul, inv_one, mul_one]
   · have hwT : w ∈ hfin.toFinset := hfin.mem_toFinset.2 hw
-    rw [Units.val_mul, _root_.GlobalTheory.CMVal.Euler.mul_coord, _root_.GlobalTheory.CMVal.Euler.inv_coord, hudef, prod_single_coord, if_pos hwT, coe_coord]
+    rw [Units.val_mul, _root_.GlobalTheory.CMVal.Euler.mul_coord, _root_.GlobalTheory.CMVal.Euler.inv_coord, hudef, prod_single_coord, ite_eq_left hwT, coe_coord]
     exact mul_inv_cancel₀ (by rw [← coe_coord]; exact (coord w y1).ne_zero)
 
 end GlobalTheory.CMVal.TrivAbove
@@ -1796,8 +1786,7 @@ theorem valGe_sum_pow_twelve : ∀ (l : ℕ), l.Prime → ∀ (r : ℝ) (J : Typ
       convert map_isIntegral_int lam h2
       exact Subsingleton.elim _ _
     have h1 := norm_le_one_of_isIntegral_int hI
-    rw [he, map_mul, map_natCast, norm_mul, norm_natCast_eq_one hn, one_mul] at h1
-    exact h1
+    rwa [he, map_mul, map_natCast, norm_mul, norm_natCast_eq_one hn, one_mul] at h1
 
   have hl0 : (0 : ℝ) < l := by exact_mod_cast hl.pos
   have hpow : ((l : ℝ) ^ (r / 12)) ^ (12 : ℕ) = (l : ℝ) ^ r := by
@@ -1921,8 +1910,7 @@ theorem toricDenominator (hZ : GlobalTheory.IndefiniteRowSideFullHecke.ZetaValue
     have : x (∑ q, ((finPart (χ * ψ) q.out : ℂ) * ((modF q.out ^ s : ℝ) : ℂ))⁻¹ * S q 0) = ∑ q, u q * w q := by
       rw [← Finset.sum_congr rfl fun q _ => e q]
       simp only [hxdef, Finset.mul_sum, Finset.sum_div]
-    rw [this]
-    exact key
+    rwa [this]
 
 end GlobalTheory.ToricDenomRow
 end -- clump:auto

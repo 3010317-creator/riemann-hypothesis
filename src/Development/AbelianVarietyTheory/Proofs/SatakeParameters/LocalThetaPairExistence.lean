@@ -214,8 +214,7 @@ theorem intMat_of_psi {ϖ : L} {σ : L →+* L} {q : ℕ} (hU : Formalism.UG.IsU
     rw [← hloc]
     exact hz u huI
   have hv := hU.2.1
-  rw [mem_intL_iff, map_mul, hδ, one_mul, hv] at hw
-  exact hw
+  rwa [mem_intL_iff, map_mul, hδ, one_mul, hv] at hw
 
 theorem eig_indep {M : Type} [AddCommGroup M] [Module ℂ M] {ι U : Type} [DecidableEq ι]
     (T : U → Module.End ℂ M) (χ : ι → U → ℂ) (v : ι → M) (hv : ∀ i u, T u (v i) = χ i u • v i)
@@ -338,15 +337,13 @@ theorem locVac_rel_indep : ∀ (L : Type) [Field L] [CharZero L] [Valued L (With
       (fun y => ρ y.out s) (fun y u => heig s hvac y.out u u.2) I
       (by
         intro y _ y' _ hyy
-        by_contra hcon
-        push_neg at hcon
+        by_contra! hcon
         apply hyy
         have hm := hdist y.out y'.out (fun u hu => hcon ⟨u, hu⟩)
         rw [← QuotientAddGroup.out_eq' y, ← QuotientAddGroup.out_eq' y', QuotientAddGroup.eq_iff_sub_mem]
         exact hm)
       C (by rw [← hdec s hvac]; exact hsum)
-    intro y hy
-    exact (smul_eq_zero.mp (hind y hy)).resolve_right (hnz _)
+    exact fun y hy => (smul_eq_zero.mp (hind y hy)).resolve_right (hnz _)
   rw [hdec s' hvac']
   exact Finset.sum_eq_zero fun y hy => by rw [hC0 y hy, zero_smul]
 

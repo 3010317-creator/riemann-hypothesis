@@ -184,8 +184,7 @@ theorem exists_isLagr_tensor : ∀ (F E : Type) [Field F] [NumberField F] [Field
   obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
   have hσσ : ∀ y, σ (σ y) = y := fun y => τ.injective (by rw [hcm.2.2.2, hcm.2.2.2, star_star])
   obtain ⟨t, ht⟩ : ∃ t, σ t ≠ t := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have hw := hcm.2.1.isComplex (NumberField.InfinitePlace.mk τ)
     rw [NumberField.InfinitePlace.isComplex_mk_iff, NumberField.ComplexEmbedding.isReal_iff] at hw
     apply hw
@@ -219,8 +218,7 @@ theorem exists_isLagr_tensor : ∀ (F E : Type) [Field F] [NumberField F] [Field
     rw [hincl, hincl, hct, hJ, TensorProduct.tmul_neg]
   · rw [hdet, ← hincl]
     exact (map_ne_zero_iff _ hinj).2 hd
-  · rw [hdet]
-    exact hx
+  · rwa [hdet]
 
 end GlobalTheory.SkewLagr
 end -- clump:auto
@@ -304,8 +302,7 @@ open scoped Matrix
 namespace GlobalTheory.IntegralDenom
 
 theorem exists_denom_not_mem : ∀ (E : Type) [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E)) (a : E), w.valuation E a ≤ 1 → ∃ s : 𝓞 E, s ∉ w.asIdeal ∧ ∃ r : 𝓞 E, (s : E) * a = r := by
-  intro E _ _ w a ha
-  exact GlobalTheory.InvDiffLocal.exists_not_mem_mul_mem w a ha
+  exact fun E _ _ w a ha => GlobalTheory.InvDiffLocal.exists_not_mem_mul_mem w a ha
 
 end GlobalTheory.IntegralDenom
 end -- clump:auto
@@ -378,8 +375,7 @@ theorem invDifferent_exists_max_valuation :
   have hvf : w.valuation E f ≠ 0 := by simpa using hf0
   have hve : w.valuation E e ≠ 0 := by simpa using he0
   have h := hmax _ ⟨f, hf0, hf, rfl⟩
-  rw [← WithZero.exp_log hvf, ← WithZero.exp_log hve, WithZero.exp_le_exp]
-  exact h
+  rwa [← WithZero.exp_log hvf, ← WithZero.exp_log hve, WithZero.exp_le_exp]
 
 end GlobalTheory
 end -- clump:auto
@@ -563,8 +559,7 @@ theorem selfDual_inv_gram_integral (F E : Type) [Field F] [NumberField F] [Field
     rfl
   rw [h6, map_mul] at h5
   have hsv : w.valuation E (s : E) = 1 := (w.valuation_eq_one_iff_notMem (K := E)).2 hs
-  rw [hsv, one_mul] at h5
-  exact h5
+  rwa [hsv, one_mul] at h5
 
 end GlobalTheory
 end -- clump:auto
@@ -613,8 +608,7 @@ theorem intVal_phi_le (φ : E →ₐ[F] E) (v : HeightOneSpectrum (𝓞 F)) (w :
   set k := WithZero.log (w.intValuation y) with hk
   have hek : w.intValuation y = WithZero.exp k := (WithZero.exp_log h0).symm
   have hk0 : k ≤ 0 := by
-    rw [hek, ← WithZero.exp_zero, WithZero.exp_le_exp] at h1
-    exact h1
+    rwa [hek, ← WithZero.exp_zero, WithZero.exp_le_exp] at h1
   have hn : w.intValuation y = WithZero.exp (-(((-k).toNat : ℕ) : ℤ)) := by
     rw [hek, Int.toNat_of_nonneg (by omega), neg_neg]
   have hm : y ∈ w.asIdeal ^ (-k).toNat := (w.intValuation_le_pow_iff_mem y _).1 hn.le
@@ -636,7 +630,6 @@ theorem intVal_phi (σ : E →ₐ[F] E) (v : HeightOneSpectrum (𝓞 F)) (w : He
   have e : phiO (τ.symm : E →ₐ[F] E) (phiO σ y) = y := by
     apply RingOfIntegers.ext
     rw [coe_phiO, coe_phiO]
-    show τ.symm (τ (y : E)) = (y : E)
     exact τ.symm_apply_apply _
   rwa [e] at h
 

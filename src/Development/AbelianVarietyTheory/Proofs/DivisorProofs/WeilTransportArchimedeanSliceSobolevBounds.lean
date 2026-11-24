@@ -384,15 +384,13 @@ theorem adeleJoin_dot_arch (x w : κ → mixedEmbedding.mixedSpace F) (y : κ �
     GlobalTheory.WeilCont.adeleJoin F x y ⬝ᵥ GlobalTheory.WeilL2Words.arch F w = GlobalTheory.WeilL2Words.arch1 F (∑ k, x k * w k) := by
   rw [adeleOfMixedSpaceComponent_finsetSum]
   unfold dotProduct
-  refine Finset.sum_congr rfl fun k _ => ?_
-  exact adeleJoin_mul_arch1 F x y k (w k)
+  exact Finset.sum_congr rfl fun k _ => adeleJoin_mul_arch1 F x y k (w k)
 
 theorem arch_dot_arch (v w : κ → mixedEmbedding.mixedSpace F) :
     GlobalTheory.WeilL2Words.arch F v ⬝ᵥ GlobalTheory.WeilL2Words.arch F w = GlobalTheory.WeilL2Words.arch1 F (∑ k, v k * w k) := by
   rw [adeleOfMixedSpaceComponent_finsetSum]
   unfold dotProduct
-  refine Finset.sum_congr rfl fun k _ => ?_
-  exact adeleOfMixedSpaceComponent_mul F (v k) (w k)
+  exact Finset.sum_congr rfl fun k _ => adeleOfMixedSpaceComponent_mul F (v k) (w k)
 
 theorem mul_arch1 [Invertible (2 : AdeleRing (𝓞 F) F)] (b : mixedEmbedding.mixedSpace F) :
     ⅟(2 : AdeleRing (𝓞 F) F) * GlobalTheory.WeilL2Words.arch1 F b =
@@ -499,8 +497,7 @@ theorem slice_word_fderivs (F : Type) [Field F] [NumberField F] [Invertible (2 :
       simp only [List.map_cons, List.foldr_cons]
       rw [word_cons, _root_.GlobalTheory.WeilL2Words.dS_adeleJoin_eq F κ ψ ℓ hψ _ y hd (v, 0) x, h1]
       simp
-    · simp only [List.foldr_cons]
-      exact (h2.fderiv_right (by simp)).clm_apply contDiff_const
+    · simpa only [List.foldr_cons] using (h2.fderiv_right (by simp)).clm_apply contDiff_const
 
 theorem slice_word_mul_fderivs : ∀ (F : Type) [Field F] [NumberField F] [Invertible (2 : AdeleRing (𝓞 F) F)] (κ : Type) [Fintype κ]
     (ψ : AddChar (AdeleRing (𝓞 F) F) ℂ) (ℓ : mixedEmbedding.mixedSpace F →ₗ[ℝ] ℝ),
@@ -788,7 +785,7 @@ theorem slice_le_l2A (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype �
     refine ne_top_of_le_ne_top ((hg j).2.isCompact.measure_lt_top).ne (measure_mono ?_)
     intro y' hy'
     apply subset_tsupport
-    rw [Function.mem_support, hUv j y' hy' j, if_pos rfl]
+    rw [Function.mem_support, hUv j y' hy' j, ite_eq_left rfl]
     exact one_ne_zero
   have hB : (∑ i, ‖g i y‖ₑ ^ 2) ≠ ⊤ := ENNReal.sum_ne_top.2 fun i _ => ENNReal.pow_ne_top enorm_ne_top
   refine ⟨(∑ i, ‖g i y‖ₑ ^ 2) * ∑ j, (μ (U j))⁻¹, ENNReal.mul_ne_top hB
@@ -802,11 +799,10 @@ theorem slice_le_l2A (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype �
       refine setLIntegral_congr_fun (hUo j).measurableSet (fun y' hy' => ?_)
       refine lintegral_congr fun x => ?_
       rw [hev, Finset.sum_eq_single j]
-      · rw [hUv j y' hy' j, if_pos rfl, mul_one]
+      · rw [hUv j y' hy' j, ite_eq_left rfl, mul_one]
       · intro i _ hij
-        rw [hUv j y' hy' i, if_neg hij, mul_zero]
-      · intro h
-        exact absurd (Finset.mem_univ j) h
+        rw [hUv j y' hy' i, ite_eq_right hij, mul_zero]
+      · exact fun h => absurd (Finset.mem_univ j) h
     rw [setLIntegral_const] at e
     rw [← e]
     exact setLIntegral_le_lintegral _ _
@@ -817,8 +813,7 @@ theorem slice_le_l2A (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype �
         exact enorm_sum_mul_sq_le _ _
     _ = (∑ i, ‖g i y‖ₑ ^ 2) * ∑ i, ∫⁻ x, ‖f i x‖ₑ ^ 2 := by
         rw [lintegral_const_mul' _ _ hB, lintegral_finsetSum]
-        intro i _
-        exact hmeas (f i)
+        exact fun i _ => hmeas (f i)
     _ ≤ (∑ i, ‖g i y‖ₑ ^ 2) * ∑ j, (μ (U j))⁻¹ * GlobalTheory.WeilL2Words.l2A F μ (∑ i, GlobalTheory.WeilM.pureA F (f i) (g i)) := by
         gcongr with j
         exact hA j
@@ -1231,8 +1226,7 @@ theorem l2A_eq_zero_of_tendsto (F : Type) [Field F] [NumberField F] (κ : Type) 
       exact (hc.comp s.continuous).measurable.aemeasurable
     calc (∫⁻ x, ‖D (GlobalTheory.WeilCont.adeleJoin F x y)‖ₑ ^ 2)
         = ∫⁻ x, liminf (fun n => ‖G n (GlobalTheory.WeilCont.adeleJoin F x y)‖ₑ ^ 2) atTop := by
-          refine lintegral_congr fun x => ?_
-          exact (((hc.tendsto _).comp (hD _)).liminf_eq).symm
+          exact lintegral_congr fun x => (((hc.tendsto _).comp (hD _)).liminf_eq).symm
       _ ≤ _ := lintegral_liminf_le' hm
   have hmeas : ∀ n, AEMeasurable (fun y => ∫⁻ x, ‖G n (GlobalTheory.WeilCont.adeleJoin F x y)‖ₑ ^ 2) μ := by
     intro n
@@ -1365,8 +1359,7 @@ theorem seminorm_rem_le (a : V) (L : V →L[ℝ] ℝ) (c : ℝ) (f : 𝓢(V, ℂ
   have tri : p (M X + (t : ℂ) • Y - ((t : ℂ) ^ 2 * (2 * Real.pi * Complex.I)) • P d + Z) ≤
       p (M X) + p ((t : ℂ) • Y) + p (((t : ℂ) ^ 2 * (2 * Real.pi * Complex.I)) • P d) + p Z := by
     refine (map_add_le_add p _ _).trans (add_le_add ?_ le_rfl)
-    refine (map_sub_le_add p _ _).trans (add_le_add ?_ le_rfl)
-    exact map_add_le_add p _ _
+    exact (map_sub_le_add p _ _).trans (add_le_add (map_add_le_add p _ _) le_rfl)
   rw [t3] at tri
   nlinarith [t1, t2, t4, tri]
 
@@ -1464,8 +1457,7 @@ theorem tendsto_l2A_diffQuot : ∀ (F : Type) [Field F] [NumberField F] [Inverti
     have e1 : ∑ k, x k * (t • h).2 k = t • ∑ k, x k * h.2 k := by
       rw [Finset.smul_sum]
       refine Finset.sum_congr rfl fun i _ => ?_
-      simp only [Prod.smul_snd, Pi.smul_apply]
-      exact mul_smul_comm _ _ _
+      simpa only [Prod.smul_snd, Pi.smul_apply] using mul_smul_comm _ _ _
     have e2 : ∑ k, (t • h).1 k * (t • h).2 k = (t ^ 2) • ∑ k, h.1 k * h.2 k := by
       rw [Finset.smul_sum]
       refine Finset.sum_congr rfl fun i _ => ?_
@@ -1687,8 +1679,7 @@ theorem dS_om_eq : ∀ (F : Type) [Field F] [NumberField F] [Invertible (2 : Ade
     push_cast
     ring
   have hl := GlobalTheory.T.adelic_l2_limit_zero F κ μ D Gn hGmem hpt hGl2
-  have hz := GlobalTheory.T.adelic_l2_eq_zero_imp_eq_zero F κ μ hμ D hDmem hl
-  exact sub_eq_zero.mp hz
+  exact sub_eq_zero.mp (GlobalTheory.T.adelic_l2_eq_zero_imp_eq_zero F κ μ hμ D hDmem hl)
 
 end GlobalTheory.WeilL2Words
 end -- clump:auto

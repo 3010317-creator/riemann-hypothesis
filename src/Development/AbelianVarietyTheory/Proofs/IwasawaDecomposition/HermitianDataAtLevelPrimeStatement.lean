@@ -289,8 +289,7 @@ theorem lat_eq_of_move (S : StepLevel F E σ J T f bad) (L L' : Submodule (𝓞 
       rw [e]
       exact sub_mem hxV (Submodule.subset_span hy)
     have hw0 : w = 0 := Submodule.disjoint_def.1 hC.disjoint w hwV hwC
-    rw [hw0, add_zero]
-    exact hy
+    rwa [hw0, add_zero]
 
   have e1 : L = Formalism.UG.CS.globLat y.1 S.Lb :=
     by
@@ -490,8 +489,7 @@ theorem diamond_on_hermitian_side : ∀ {B : Base} {X : PreX B.toPre} (I : TC B 
       have e1 := (GlobalTheory.T.middleStep_oneLevel_projection_eq_chart_projection I hOk hP l Z H F hF hC u i h1 h2 v _).1 z z rfl
       have e2 := (GlobalTheory.T.middleStep_oneLevel_projection_eq_chart_projection I hOk hP l Z H F hF hC u i h1 h2 v c).1 z' z' rfl
       have e3 := g3 z z' e
-      rw [e1, e2] at e3
-      exact e3
+      rwa [e1, e2] at e3
   obtain ⟨γ, g1, g2, g3⟩ := core
   exact ⟨gx i hi γ, fun _ => ⟨dilCl_of_crd (F u).atT (F u).lv i hi v a c γ g2 g3
     (fun v' hv' z z' e => GlobalTheory.T.levelFunctional_eq_of_classes_related_at_place I hOk hP l Z H F hF hC u i hi v v' c _ γ.1 g1 hv' z z' e),
@@ -575,8 +573,7 @@ theorem span_conj_pi_eq {X : Fields} {Pr : Primes X} (hX : X.Ok) (hPr : Pr.Ok) (
   · obtain ⟨s, hs⟩ := piT_dvd_of_mem hX hPr u (cO X.E r) fun P => Ideal.mem_iInf.1 hr P
     refine Ideal.mem_span_singleton.2 ⟨cO X.E s, ?_⟩
     have := congrArg (cO X.E) hs
-    rw [cO_cO, map_mul] at this
-    exact this
+    rwa [cO_cO, map_mul] at this
 
 end GlobalTheory.Mem.Col2.HAt.Disc
 
@@ -686,8 +683,7 @@ theorem dnCl_of_tie {B : Base} {X : PreX B.toPre} (I : TC B X) (hOk : I.Ok) (hP 
     refine Submodule.map_injective_of_injective
       (f := ((crdN (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G) i hi : ((_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).sp.X i).V →ₗ[(_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).host.E] (Fin ((_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).R.N i) → (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).host.E)).restrictScalars (𝓞 (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).host.E)))
       (crdN (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G) i hi).injective ?_
-    rw [localization_map₂ hi, localization_map₂ hi, lc_gmap]
-    exact h1
+    rwa [localization_map₂ hi, localization_map₂ hi, lc_gmap]
   · have e : lc ((I.rec7 l Z).sp.X i) (rankN (I.rec7 l Z) i hi) (Formalism.L2.Herm.Ld (I.rec7 l Z) u i (((I.rec7 l Z).fm u).dn i v c g)) =
         Formalism.L2.Forms.Ld (I.rec7 l Z) u i hi (((I.rec7 l Z).fm u).dn i v c g) :=
       dual_co (I.rec7 l Z).sp.cm ((I.rec7 l Z).sp.X i) (rankN (I.rec7 l Z) i hi) ((I.rec7 l Z).clsLat u i _)
@@ -1073,8 +1069,7 @@ theorem upCl_of_crd (A : AtTTied u) (P : ∀ i hi, LvTied u A i hi) (i : ℕ) (h
     rw [localization_map₂ hi, localization_map₂ hi, lc_gmap, eCls, eCls]
     exact hoff q' hP hc
   · apply Submodule.map_injective_of_injective inj
-    rw [localization_map₂ hi, localization_map₂ hi, lc_gmap, eCls, eLd]
-    exact h3
+    rwa [localization_map₂ hi, localization_map₂ hi, lc_gmap, eCls, eLd]
   · apply Submodule.map_injective_of_injective inj
     rw [localization_map₂ hi, localization_map₂ hi, lc_gmap, eLd, Submodule.map_sup, eLd, Submodule.map_span, Set.image_singleton]
     convert h4 using 4
@@ -1083,8 +1078,7 @@ theorem upCl_of_crd (A : AtTTied u) (P : ∀ i hi, LvTied u A i hi) (i : ℕ) (h
     rw [prH_eq A P hi v _ z, prH_eq A P hi v c ⟨_, hz⟩]
     have key : crdN D i hi (((D.mem u).A.T : D.host.E) • (gx i hi γ).1 (z : (D.sp.X i).V)) =
         (((D.mem u).A.T : ℕ) : 𝓞 D.host.E) • (γ.1.1 *ᵥ (toLd i hi _ z).1) := by
-      rw [map_smul, crdN_gx]
-      rw [Nat.cast_smul_eq_nsmul, Nat.cast_smul_eq_nsmul]
+      rw [map_smul, crdN_gx, Nat.cast_smul_eq_nsmul, Nat.cast_smul_eq_nsmul]
       rfl
     have hx : (((D.mem u).A.T : ℕ) : 𝓞 D.host.E) • (γ.1.1 *ᵥ (toLd i hi _ z).1) ∈ Formalism.L2.Forms.Ld D u i hi c :=
       key ▸ (mem_Ld i hi c _).1 hz
@@ -1223,8 +1217,7 @@ theorem eq_of_frMul {E K ι : Type} [Field E] [Field K] [Fintype ι] (τ : ι) (
   have h3 : (M⁻¹ * g : GL (Fin n) E).1 = 1 := by
     apply Matrix.map_injective (embAt σ emb τ).injective
     show _ = (1 : Matrix (Fin n) (Fin n) E).map (embAt σ emb τ)
-    rw [Matrix.map_one _ (map_zero _) (map_one _)]
-    exact h2
+    rwa [Matrix.map_one _ (map_zero _) (map_one _)]
   have h4 : M⁻¹ * g = 1 := Units.ext h3
   exact (inv_mul_eq_one.1 h4).symm
 
@@ -1257,7 +1250,7 @@ theorem ga_eq_gam_mv : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X) (l : I.Law
   have h' : B.embLL _ * φ ((I.perIn u I.mu0).tilC c) (frMul B.fields.emb B.embLL ((I.stp u I.mu0 B.R.m).gam (I.perIn u I.mu0).b0 ((I.stp u I.mu0 B.R.m).mv (I.perIn u I.mu0).b0 ((I.perIn u I.mu0).tilPt c)))⁻¹ (frMul B.fields.emb B.embLL g y)) = _ * φ ((I.perIn u I.mu0).tilC c) y := h
   have hy : frMul B.fields.emb B.embLL ((I.stp u I.mu0 B.R.m).gam (I.perIn u I.mu0).b0 ((I.stp u I.mu0 B.R.m).mv (I.perIn u I.mu0).b0 ((I.perIn u I.mu0).tilPt c)))⁻¹ (frMul B.fields.emb B.embLL g y) = y := by
     by_contra hne
-    simp only [φ, if_neg hne, if_pos, mul_zero, mul_one] at h'
+    simp only [φ, ite_eq_right hne, ite_eq_left, mul_zero, mul_one] at h'
     exact Units.ne_zero _ h'.symm
   exact congrArg Units.val (eq_of_frMul (show B.fields.Tau from (I.rec7 l Z).eTau.symm 1) _ _ _ _ _ hy)
 
@@ -1294,17 +1287,16 @@ theorem gam_ext : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pi
   have hi := (GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hOk hP l Z).2.2.1
   have ini : ∀ y : Fin (B.R.N B.R.m - 1) → B.fields.E, iniH (N_m_succ B.R) (iXc (I.rec7 l Z) y) = y := fun y => by
     funext j
-    exact (hi y _).trans (dif_pos j.2)
+    exact (hi y _).trans (dite_eq_left j.2)
   have las : ∀ y : Fin (B.R.N B.R.m - 1) → B.fields.E, iXc (I.rec7 l Z) y (Br.iL (N_m_succ B.R)) = 0 := fun y =>
-    (hi y _).trans (dif_neg (lt_irrefl _))
+    (hi y _).trans (dite_eq_right (lt_irrefl _))
   refine ⟨fun y => ext_vec (N_m_succ B.R) ?_ ?_, ext_vec (N_m_succ B.R) ?_ ?_⟩
-  · refine ((l.per u I.mu0).gam_ini b g _).trans ?_
-    exact (congrArg _ (ini _)).trans (ini _).symm
+  · exact ((l.per u I.mu0).gam_ini b g _).trans ((congrArg _ (ini _)).trans (ini _).symm)
   · exact ((l.per u I.mu0).gam_last b g _).trans ((las _).trans (las _).symm)
   · refine ((l.per u I.mu0).gam_ini b g _).trans ?_
     have z : iniH (E := B.fields.E) (N_m_succ B.R) (TC.z0 X u) = 0 := by
       funext j
-      exact if_neg (by have := j.2; show ¬ (j.1 + 1 = _); omega)
+      exact ite_eq_right (by have := j.2; show ¬ (j.1 + 1 = _); omega)
     exact (congrArg _ z).trans ((Matrix.mulVec_zero _).trans z.symm)
   · exact (l.per u I.mu0).gam_last b g _
 
@@ -1397,25 +1389,20 @@ theorem GlobalTheory.Mem.Col2.TC.hermitian_data_at_level_prime : ∀ {B : Base} 
       exact (congrArg _ (Subtype.ext h)).trans (prkH_eq (F u).atT (F u).lv hi v c z).symm
     · intro u i h1 h2 v c z z' h
       refine ((hlvc u i h1 h2 v c).1 (toLd i (le_of_succ_m h2) c z) z' h).trans (prH_eq (F u).atT (F u).lv (le_of_succ_m h2) v c z).symm
-    · intro u
-      exact ((crdN (I.rec7 l Z) _ le_rfl).apply_symm_apply _).symm
-    · intro u c
-      exact (reGL_lin _ (rankN (I.rec7 l Z) _ le_rfl) _).symm
+    · exact fun u => ((crdN (I.rec7 l Z) _ le_rfl).apply_symm_apply _).symm
+    · exact fun u c => (reGL_lin _ (rankN (I.rec7 l Z) _ le_rfl) _).symm
   refine ⟨A, hT, ⟨?_, ?_, ?_, ?_, ?_, ?_⟩, hstab A hT⟩
-  · intro u v c y h
-    exact (hup u 0 v c y (Nat.zero_le _) h).2
+  · exact fun u v c y h => (hup u 0 v c y (Nat.zero_le _) h).2
   · intro u i h1 hm v c y h
     cases i with
     | zero => omega
     | succ i => exact (hup u (i + 1) v c y hm h).2 hm
-  · intro u v c g h
-    exact (hdn u 0 v c g (Nat.zero_le _) h).2
+  · exact fun u v c g h => (hdn u 0 v c g (Nat.zero_le _) h).2
   · intro u i h1 hm v c g h
     cases i with
     | zero => omega
     | succ i => exact (hdn u (i + 1) v c g hm h).2 hm
-  · intro u v a c
-    exact (hdil u 0 v a c (Nat.zero_le _)).2
+  · exact fun u v a c => (hdil u 0 v a c (Nat.zero_le _)).2
   · intro u i h1 hm v a c
     cases i with
     | zero => omega

@@ -69,7 +69,7 @@ theorem dual {k : Type} [Field k] [ValuativeRel k] {ψ0 : AddChar k ℂ} {n d : 
     {Y : Matrix (Fin n) (Fin d) k} (hY : Y ∉ latt ψ0 n d s) :
     ∃ l : Matrix (Fin n) (Fin d) k →ₗ[k] k, (∀ Z ∈ latt ψ0 n d s, ψ0 (l Z) = 1) ∧ ψ0 (l Y) ≠ 1 := by
   rw [mem_latt] at hY
-  push_neg at hY
+  push Not at hY
   obtain ⟨i, j, o, ho, h⟩ := hY
   let l : Matrix (Fin n) (Fin d) k →ₗ[k] k :=
     { toFun := fun Z => o * (s * Z i j)
@@ -85,13 +85,12 @@ theorem cind_mem {X : Type} [AddCommGroup X] [TopologicalSpace X] [IsTopological
   · rw [IsLocallyConstant.iff_exists_open]
     intro Y
     by_cases hY : Y - y ∈ L
-    · exact ⟨_, hK, hY, fun Z hZ => by simp only [cind, if_pos (show Z - y ∈ L from hZ), if_pos hY]⟩
-    · exact ⟨_, hKc.isOpen_compl, hY, fun Z hZ => by simp only [cind, if_neg (show Z - y ∉ L from hZ), if_neg hY]⟩
+    · exact ⟨_, hK, hY, fun Z hZ => by simp only [cind, ite_eq_left (show Z - y ∈ L from hZ), ite_eq_left hY]⟩
+    · exact ⟨_, hKc.isOpen_compl, hY, fun Z hZ => by simp only [cind, ite_eq_right (show Z - y ∉ L from hZ), ite_eq_right hY]⟩
   · have himg : {Z : X | Z - y ∈ L} = (fun Z => Z + y) '' (L : Set X) := by
       ext Z
       constructor
-      · intro h
-        exact ⟨Z - y, h, sub_add_cancel Z y⟩
+      · exact fun h => ⟨Z - y, h, sub_add_cancel Z y⟩
       · rintro ⟨W, hW, rfl⟩
         show W + y - y ∈ L
         rwa [add_sub_cancel_right]
@@ -99,7 +98,7 @@ theorem cind_mem {X : Type} [AddCommGroup X] [TopologicalSpace X] [IsTopological
       (closure_minimal ?_ hKc)
     intro Z hZ
     by_contra h
-    exact hZ (by simp only [cind, if_neg (show Z - y ∉ L from h)])
+    exact hZ (by simp only [cind, ite_eq_right (show Z - y ∉ L from h)])
 
 theorem addChar_ne_zero {A : Type} [AddGroup A] (ψ : AddChar A ℂ) (a : A) : ψ a ≠ 0 := by
   intro h
@@ -127,8 +126,7 @@ theorem GlobalTheory.LinSchur.eq_smul_of_commute : ∀ {k : Type} [Field k] [Val
   have surj : ∀ f ∈ GlobalTheory.WeilM.SB (Matrix (Fin n) (Fin d) k), ∃ x, x ∈ V ∧ ι₁ x = f := fun f hf => hbij.surjOn hf
   have maps : ∀ x ∈ V, ι₁ x ∈ GlobalTheory.WeilM.SB (Matrix (Fin n) (Fin d) k) := fun x hx => hbij.mapsTo hx
   have h20 : ι₂ 0 = 0 := by
-    have e := hlin 0 V.zero_mem 0 V.zero_mem 1
-    simpa using e
+    simpa using hlin 0 V.zero_mem 0 V.zero_mem 1
   have hsmul : ∀ x ∈ V, ∀ c : ℂ, ι₂ (c • x) = c • ι₂ x := by
     intro x hx c
     have e := hlin x hx 0 V.zero_mem c

@@ -139,10 +139,8 @@ theorem resS_idemSum {D : D7} {e : AE D} {P : Finset (Pl D.host.E)} (he : IsIdem
 
   rw [e1, map_sum, Finset.sum_eq_single (⟨Q, hQ⟩ : P)]
   · exact hr ⟨Q, hQ⟩
-  · intro R _ hR
-    exact resS_idem_eq_zero (hes R R.2) (fun h => hR (Subtype.ext h)) _
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun R _ hR => resS_idem_eq_zero (hes R R.2) (fun h => hR (Subtype.ext h)) _
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem le_exp_of_lt_one {x : WithZero (Multiplicative ℤ)} (h : x < 1) : x ≤ WithZero.exp (-1 : ℤ) := by
   by_cases h0 : x = 0
@@ -165,8 +163,7 @@ theorem loc_eq_of_tame {L : Type} [Field L] [NumberField L] (χ : Formalism.L2.H
     · have : ((y * z⁻¹ : (Q.adicCompletion L)ˣ) : Q.adicCompletion L) - 1 =
           ((y : Q.adicCompletion L) - z) * (z : Q.adicCompletion L)⁻¹ := by
         rw [Units.val_mul, Units.val_inv_eq_inv_val, sub_mul, mul_inv_cancel₀ z.ne_zero]
-      rw [this, map_mul, map_inv₀, hz, inv_one, mul_one]
-      exact h
+      rwa [this, map_mul, map_inv₀, hz, inv_one, mul_one]
   rwa [map_mul, map_inv, mul_inv_eq_one] at h1
 
 theorem tameOn_of_tame : ∀ (D : D7) (c : (AE D)ˣ →* Circle) (χ : Formalism.L2.Host.HChar D.host.E) (e : AE D) (P : Finset (Pl D.host.E)) (cR : ∀ PP : Pl D.host.E, (kP PP)ˣ →* ℂˣ), ChrEq c χ → (∀ PP, χ.TameAt PP) → IsIdemSum e P → (∀ PP, PP ∉ P → (¬ ∃ PP' ∈ P, Lev.IsConjPl (D := D) PP' PP) → χ.UnrAt PP) → (∀ PP ∈ P, IsRes χ PP (cR PP)) → TameOn c e P cR := by

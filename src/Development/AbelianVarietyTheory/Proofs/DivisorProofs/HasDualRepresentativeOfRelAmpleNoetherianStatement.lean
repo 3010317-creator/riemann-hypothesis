@@ -217,8 +217,7 @@ theorem exists_factor_closedImmersion_of_locally :
   have hc : TopologicalSpace.IsOpenCover W := by
     refine TopologicalSpace.IsOpenCover.mk ?_
     rw [eq_top_iff]
-    intro y _
-    exact TopologicalSpace.Opens.mem_iSup.mpr ⟨y, hW y⟩
+    exact fun y _ => TopologicalSpace.Opens.mem_iSup.mpr ⟨y, hW y⟩
   let 𝒰 := Y.openCoverOfIsOpenCover W hc
   obtain ⟨u, hu⟩ : ∃ u : ∀ i, 𝒰.X i ⟶ A, ∀ i, u i ≫ a = 𝒰.f i ≫ g := ⟨z, hz⟩
   have hglue : ∀ i j, pullback.fst (𝒰.f i) (𝒰.f j) ≫ u i =
@@ -324,8 +323,7 @@ theorem exists_glue {X : Scheme.{0}} (S : Set X.Opens) (hcov : ∀ x : X, ∃ U 
     · intro s
       rw [← cancel_mono (c V), Category.assoc, ht, ← Category.assoc,
         ((H U V h _ s.snd).2 ⟨s.fst, s.condition⟩).choose_spec, s.condition]
-    · intro s
-      exact ((H U V h _ s.snd).2 ⟨s.fst, s.condition⟩).choose_spec
+    · exact fun s => ((H U V h _ s.snd).2 ⟨s.fst, s.condition⟩).choose_spec
     · intro s m _ h2
       rw [← cancel_mono (c U), h2, ((H U V h _ s.snd).2 ⟨s.fst, s.condition⟩).choose_spec]
   letI := locallyDirected S hcov hinf
@@ -425,8 +423,7 @@ theorem exists_isPullback_of_factor_iff {C : Type*} [Category C] {X X' A B : C} 
   · intro s
     have hs := ((h s.pt s.snd).1 ⟨s.fst, s.condition⟩).choose_spec
     rw [← cancel_mono b, Category.assoc, hk, ← Category.assoc, hs, s.condition]
-  · intro s
-    exact ((h s.pt s.snd).1 ⟨s.fst, s.condition⟩).choose_spec
+  · exact fun s => ((h s.pt s.snd).1 ⟨s.fst, s.condition⟩).choose_spec
   · intro s l _ hl
     have hs := ((h s.pt s.snd).1 ⟨s.fst, s.condition⟩).choose_spec
     rw [← cancel_mono a, hl, hs]
@@ -1072,7 +1069,7 @@ theorem mem_secAdd_iff_right {s t : M.Sec} {x : X} (ht : x ∉ nonzeroLocus t) :
       (a := (ConcreteCategory.hom (X.presheaf.germ (M.U k) x hk)) (s.f k)) hm
     rw [IsLocalRing.mem_maximalIdeal, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, mem_nonunits_iff] at this
     exact not_iff_not.1 this
-  · push_neg at hc
+  · push Not at hc
     exact ⟨fun h => absurd (GlobalTheory.exists_chart_of_mem_nonzeroLocus h) (by simpa using hc),
       fun h => absurd (GlobalTheory.exists_chart_of_mem_nonzeroLocus h) (by simpa using hc)⟩
 
@@ -1143,7 +1140,7 @@ theorem finAff_of_isAmpleLB {Y : Scheme.{0}} (f : X ⟶ Y) [IsAffine Y] [Univers
   obtain ⟨N, hN, t, ht⟩ := exists_common_pow n hn s
   let tt : X → (lbPow L N).Sec := fun x => if hx : x ∈ F' then t ⟨x, hx⟩ else DVR.SecOps.secZero
   have htt : ∀ x (hx : x ∈ F'), nonzeroLocus (tt x) = nonzeroLocus (s ⟨x, hx⟩) := fun x hx => by
-    simp only [tt, dif_pos hx, ht]
+    simp only [tt, dite_eq_left hx, ht]
   obtain ⟨g, hg⟩ := exists_sec_forall_mem F' tt (fun x hx => (htt x hx).symm ▸ hs ⟨x, hx⟩)
     (fun x hx y hy hyx hmem => hV' x hx y hy hyx (hsV ⟨x, hx⟩ ((htt x hx) ▸ hmem)))
   refine ⟨nonzeroLocus g, h.isAffineOpen_nonzeroLocus f hN g, fun x hx => ?_⟩

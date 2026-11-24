@@ -98,9 +98,8 @@ theorem sum_single_block [DecidableEq K] (q : Σ k, J k) (n : ℕ) (k : K) :
     simp [Finsupp.single_apply]
   · have : ∀ i : J k, (Finsupp.single (⟨k₀, i₀⟩ : Σ k, J k) n) ⟨k, i⟩ = 0 := by
       intro i
-      rw [Finsupp.single_apply, if_neg]
-      intro e
-      exact h (congrArg Sigma.fst e)
+      rw [Finsupp.single_apply, ite_eq_right]
+      exact fun e => h (congrArg Sigma.fst e)
     simp [this, h]
 
 theorem sum_mapDomain_block [DecidableEq K] {κ : K' → K} {u : (Σ k, ι k) → Σ k, J k}
@@ -119,7 +118,7 @@ theorem sum_mapDomain_block [DecidableEq K] {κ : K' → K} {u : (Σ k, ι k) �
     rw [Finsupp.mapDomain_single, sum_single_block, hu]
     simp only [sum_single_block]
     by_cases h : κ p.1 = k
-    · rw [if_pos h, Finset.sum_eq_single p.1]
+    · rw [ite_eq_left h, Finset.sum_eq_single p.1]
       · simp [h]
       · intro b _ hb
         split_ifs with h1 h2
@@ -127,7 +126,7 @@ theorem sum_mapDomain_block [DecidableEq K] {κ : K' → K} {u : (Σ k, ι k) �
         · rfl
         · rfl
       · simp
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       symm
       refine Finset.sum_eq_zero fun k' _ => ?_
       split_ifs with h1 h2
@@ -224,8 +223,7 @@ theorem exists_scale {Ω : Type} [Field Ω] [CharZero Ω] (y : (Σ k, ι k) → 
   have e : (fun p : Σ k, ι k => x p.1 * y p) = fun p => ((n p.1 + 1 : ℕ) : Ω) * y p := by
     funext p
     rw [hn]
-  rw [eval_mConeMap, map_zero, e]
-  exact h0
+  rwa [eval_mConeMap, map_zero, e]
 
 theorem hasVal_smul {Ω : Type} [Field Ω] {y : (Σ k, ι k) → Ω} {a : K' → ℤ} {s : Ω} {z : (Σ k, ι k) → ℂ} {w : ℂ}
     (h : Small.HasVal y a s z w) {c : K' → ℂ} (hc : ∀ k, c k ≠ 0) :
@@ -347,8 +345,7 @@ theorem scaleForm_mem {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (
   refine (RingHom.mem_ker).2 ?_
   have := congrArg (fun φ => φ q) e
   simp only [AlgHom.comp_apply] at this
-  rw [h0, map_zero] at this
-  exact this
+  rwa [h0, map_zero] at this
 
 theorem block_ne {K₁ K : Type} [Fintype K] {ι : K₁ → Type} {J : K → Type} {κ : K₁ → K}
     {v : (Σ k, ι k) → Σ k, J k} (hv : IsBlockMap κ v) {z : (Σ k, J k) → ℂ} (hz : ∀ k, ∃ a, z ⟨k, a⟩ ≠ 0) (k : K₁) :
@@ -371,11 +368,11 @@ theorem sum_ite_pull {K₁ K : Type} [Fintype K₁] [DecidableEq K] {κ : K₁ �
     rw [pullDeg, hκ.extend_apply, Finset.sum_eq_single k₀]
     · simp
     · intro b _ hb
-      rw [if_neg fun e => hb (hκ e)]
+      rw [ite_eq_right fun e => hb (hκ e)]
     · simp
   · rw [pullDeg, Function.extend_apply' _ _ _ (by simpa using h)]
     refine Finset.sum_eq_zero fun k' _ => ?_
-    rw [if_neg fun e => h ⟨k', e⟩]
+    rw [ite_eq_right fun e => h ⟨k', e⟩]
 
 section Origin
 
@@ -409,8 +406,7 @@ theorem side [CharZero M.Ω] (o : RootOrigin Y S M Fx) (o₀ : RootOrigin Y S₀
     · rw [← aeval_scaleForm]
       exact hw.2 _ (scaleForm_mem cc _ hq)
   have hwf : Cmp.evC (fun p => (cc p.1 : ℂ) * w p) f ≠ 0 := by
-    rw [Cmp.evC, Small.LineModel.eval_map_eq]
-    exact hwF'
+    rwa [Cmp.evC, Small.LineModel.eval_map_eq]
   obtain ⟨x, x', z₁, z₂, ho₁, ho₂, hπ, hop, hc₁, hc₂, hi₁, hi₂⟩ := hfp _ hw' hwf
   refine ⟨x, x', _root_.ReciprocityTheory.ChartRestriction.G.Geo.sameOrbit_trans ho₁ ⟨fun k => (cc (Sum.inl k) : ℂ), fun k => hc _, rfl⟩,
     _root_.ReciprocityTheory.ChartRestriction.G.Geo.sameOrbit_trans ho₂ ⟨fun k => (cc (Sum.inr k) : ℂ), fun k => hc _, rfl⟩, hπ, hop, ?_⟩
@@ -468,8 +464,7 @@ theorem join_pt {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)] {
       · exact hy ⟨k, a⟩
       · exact hyR ⟨k, a⟩
     have h1 := hz.2 _ (rename_mem hu j hyJ hq)
-    rw [Small.LineModel.eval_map_eq, aeval_rename] at h1
-    exact h1
+    rwa [Small.LineModel.eval_map_eq, aeval_rename] at h1
 
 theorem side_pt {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)] {Ω : Type} [Field Ω] [CharZero Ω]
     {y : (Σ k, J k) → Ω} {κ : M.K → K} {v : (Σ k, M.ι k) → Σ k, J k} {κR : R.K → K}
@@ -517,8 +512,7 @@ theorem side_pt {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)] {
     refine ⟨x', val, ho₂, hval0, hval, fun t ht0 ht τ p => ?_⟩
     have hid := _root_.GlobalTheory.CompanionTheory.Ar.OrArch.defect_eq_regWeight_add_bracket E H D l Xo c Y S S₀ M R Sys Fx o o₀ x x' _ _ (fun r => ‖val r‖) t ht0 ht hw₁ hw₂ ho₁ ho₂
       hπ hop (fun r => ⟨norm_pos_iff.2 (hval0 r), hs r _ (hval r)⟩) τ p
-    rw [hπ] at hid
-    exact hid
+    rwa [hπ] at hid
 
 theorem pi_eq (o₀ : RootOrigin Y S₀ R Fx) {x₁ x₂ : o₀.Re.R.X} {w : (Σ k, R.ι k) → ℂ}
     (h₁ : SameOrbit (o₀.Re.R.lift x₁ x₁) w) (h₂ : SameOrbit (o₀.Re.R.lift x₂ x₂) w) :

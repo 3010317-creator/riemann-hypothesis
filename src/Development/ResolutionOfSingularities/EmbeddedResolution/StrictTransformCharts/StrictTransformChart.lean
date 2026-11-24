@@ -70,8 +70,7 @@ theorem mem_complEmbPreimage (m : ℕ) (S : Finset (Fin m)) (a : Fin m)
 theorem mem_complEmbPreimage_of_complOrderEmb_eq (m : ℕ) (S : Finset (Fin m)) (a : Fin m)
     {s : Fin m} (hs : s ∈ S) {i : Fin (m - ({a} : Finset (Fin m)).card)}
     (hi : complOrderEmb m {a} i = s) : i ∈ complEmbPreimage m S a := by
-  rw [mem_complEmbPreimage, hi]
-  exact hs
+  rwa [mem_complEmbPreimage, hi]
 
 variable {X X₁ : Scheme.{u}} {k : Type u} [Field k]
   {p : X ⟶ Spec (CommRingCat.of k)} {π : X₁ ⟶ X} {U : X.Opens} {m : ℕ}
@@ -118,8 +117,7 @@ private theorem coordIdeal_ideal_top_eq_map {Y : Scheme.{u}} {K : Type u} [Field
   rw [EtaleChart.coordIdeal_eq_comap_coordSubspaceIdeal, Scheme.IdealSheafData.comap_ideal_top_eq_map_appTop,
     coordSubspaceIdeal_eq_ofIdealTop_span_coord, Scheme.IdealSheafData.ofIdealTop_ideal_top, Ideal.map_span,
     Ideal.map_span, ← Set.image_comp, ← Set.image_comp]
-  refine congrArg Ideal.span (Set.image_congr fun j _ => ?_)
-  exact (CommRingCat.inv_hom_apply V.topIso _).symm
+  exact congrArg Ideal.span (Set.image_congr fun j _ => (CommRingCat.inv_hom_apply V.topIso _).symm)
 
 private theorem comap_opensι_ideal_top_eq_map {Y : Scheme.{u}} (J : Y.IdealSheafData)
     {V : Y.Opens} (hV : IsAffineOpen V) [IsAffine V.toScheme] :
@@ -208,8 +206,7 @@ theorem strictTransform_preimage_domain_le_preimage (B : BlowupChart π c S s)
     (Blowup.strictTransform π Z H).subschemeι ⁻¹ᵁ B.domain ≤ q ⁻¹ᵁ (H.subschemeι ⁻¹ᵁ U) := by
   intro y hy
   have h2 : ((Blowup.strictTransform π Z H).subschemeι ≫ π).base y ∈ U := B.domain_le hy
-  rw [← hq] at h2
-  exact h2
+  rwa [← hq] at h2
 
 theorem restrictToSubscheme_map_comp_affineSpaceFinToSpec (B : BlowupChart π c S s)
     (hB : IsAffineOpen B.domain) (Z H : X.IdealSheafData)
@@ -291,8 +288,7 @@ theorem restrictToSubscheme_map_comp_coordBlowupSubstMap (B : BlowupChart π c S
           ((π.appLE U B.domain B.domain_le).hom x) := by
       intro x
       have h := congrArg (fun f => (CommRingCat.Hom.hom f) x) hkey
-      simp only [CommRingCat.hom_comp, RingHom.comp_apply] at h
-      exact h
+      simpa only [CommRingCat.hom_comp, RingHom.comp_apply] using h
     have e2 : (⊤ : ((Blowup.strictTransform π Z H).subschemeι ⁻¹ᵁ B.domain).toScheme.Opens)
         ≤ (q.resLE (H.subschemeι ⁻¹ᵁ U)
             ((Blowup.strictTransform π Z H).subschemeι ⁻¹ᵁ B.domain) hle)
@@ -325,8 +321,7 @@ theorem restrictToSubscheme_map_comp_coordBlowupSubstMap (B : BlowupChart π c S
               ((Blowup.strictTransform π Z H).subschemeι ⁻¹ᵁ B.domain) hle).hom y) := by
       intro y
       have h := congrArg (fun f => (CommRingCat.Hom.hom f) y) hres
-      simp only [CommRingCat.hom_comp, RingHom.comp_apply] at h
-      exact h
+      simpa only [CommRingCat.hom_comp, RingHom.comp_apply] using h
     have hcond : (complOrderEmb m {a} i₀ ∈ S ∧ complOrderEmb m {a} i₀ ≠ s)
         ↔ (i₀ ∈ complEmbPreimage m S a ∧ i₀ ≠ s') := by
       rw [mem_complEmbPreimage]
@@ -340,10 +335,10 @@ theorem restrictToSubscheme_map_comp_coordBlowupSubstMap (B : BlowupChart π c S
     rw [coordBlowupSubstMap_appTop_coord, hM i₀, hstar, hkeyfun,
       BlowupChart.appLE_coord B (complOrderEmb m {a} i₀)]
     by_cases hP : complOrderEmb m {a} i₀ ∈ S ∧ complOrderEmb m {a} i₀ ≠ s
-    · rw [if_pos hP, if_pos (hcond.mp hP)]
+    · rw [ite_eq_left hP, ite_eq_left (hcond.mp hP)]
       simp only [map_mul]
       rw [hL i₀, hL s', hs']
-    · rw [if_neg hP, if_neg (fun hh => hP (hcond.mpr hh))]
+    · rw [ite_eq_right hP, ite_eq_right (fun hh => hP (hcond.mpr hh))]
       exact hL i₀
 
 def BlowupChart.restrictToStrictTransform (B : BlowupChart π c S s)
@@ -394,8 +389,7 @@ theorem BlowupChart.strictTransform_subschemeι_preimage_domain_eq_bot (B : Blow
         Set.range (Blowup.strictTransform π Z H).subschemeι.base := Set.mem_range_self y
     rwa [Scheme.IdealSheafData.range_subschemeι] at hr
   have h1 : (⟨_, hxB⟩ : ↥B.domain) ∈ ((Blowup.strictTransform π Z H).comap B.domain.ι).support := by
-    rw [Scheme.IdealSheafData.support_comap]
-    exact hxsupp
+    rwa [Scheme.IdealSheafData.support_comap]
   rw [← restrictIdeal_eq_comap_ι, htop, Scheme.IdealSheafData.support_top] at h1
   have h2 : (⟨_, hxB⟩ : ↥B.domain) ∈ ((⊥ : TopologicalSpace.Closeds ↥B.domain) : Set ↥B.domain) :=
     h1

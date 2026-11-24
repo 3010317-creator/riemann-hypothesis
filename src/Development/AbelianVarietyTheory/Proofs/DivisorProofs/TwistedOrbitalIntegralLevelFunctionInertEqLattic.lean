@@ -151,7 +151,7 @@ theorem nrmL_dlt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E
   have hGG : (G⁻¹)ᵀ * Gᵀ = 1 := by
     rw [← Matrix.transpose_mul, Matrix.mul_nonsing_inv G hGd, Matrix.transpose_one]
   have hss : s * s = 1 := by rw [hs, ← mul_pow, neg_one_mul, neg_neg, one_pow]
-  rw [nrmL, if_neg hw, Units.val_mul, hθ, hdi, Matrix.map_mul, hΦ, GlobalTheory.GramTwistNorm.phi_map, ← hΦ,
+  rw [nrmL, ite_eq_right hw, Units.val_mul, hθ, hdi, Matrix.map_mul, hΦ, GlobalTheory.GramTwistNorm.phi_map, ← hΦ,
     Matrix.transpose_mul, Matrix.transpose_map, Matrix.transpose_transpose, hGc, hd]
   calc (G⁻¹)ᵀ * Φᵀ * (Φ * (s • (Gᵀ * P) * Φᵀ) * Φᵀ)
       = s • (((G⁻¹)ᵀ * Gᵀ) * P * (Φᵀ * Φᵀ)) + (0 : Matrix (Fin m) (Fin m) (w.adicCompletion E)) := by
@@ -196,8 +196,7 @@ theorem isIntegral_of_charpoly_intGL : ∀ (E : Type) [Field E] [NumberField E] 
     simpa using this
   obtain ⟨P, hPm, -, hPmon⟩ := Polynomial.lifts_and_degree_eq_and_monic hlift (hQ.map _)
   refine ⟨P, hPmon, ?_⟩
-  rw [← Polynomial.aeval_def, ← Polynomial.aeval_map_algebraMap K.E, hPm]
-  exact hu
+  rwa [← Polynomial.aeval_def, ← Polynomial.aeval_map_algebraMap K.E, hPm]
 
 end GlobalTheory.TwLat
 end -- clump:auto
@@ -255,8 +254,7 @@ theorem isIntegral_of_lat_stable : ∀ (K : GlobalTheory.UnitLemma.UQ) (B : Glob
     | add x y _ _ hx hy => rw [mul_add, hx, hy, add_zero]
     | smul c x _ hx => rw [mul_smul_comm, hx, smul_zero]
   have := hall 1
-  rw [mul_one] at this
-  exact this
+  rwa [mul_one] at this
 
 end GlobalTheory.UnitLemma
 end -- clump:auto
@@ -453,8 +451,7 @@ theorem col_eq {E : Type} [Field E] [NumberField E] {w : Pl E} {K : GlobalTheory
     simp [Matrix.mul_apply, GlobalTheory.TwLat.mulMat, map_sum, map_mul, hM]
   have hab : ∀ k, a * b k = ∑ i, M i k • b i := by
     intro k
-    simp only [hM, LinearMap.toMatrix_apply, LinearMap.mulLeft_apply]
-    exact (b.sum_repr _).symm
+    simpa only [hM, LinearMap.toMatrix_apply, LinearMap.mulLeft_apply] using (b.sum_repr _).symm
   simp_rw [hij, Finset.mul_sum, mul_smul_comm, hab, Finset.smul_sum, smul_smul, Finset.sum_smul]
   rw [Finset.sum_comm]
   simp_rw [mul_comm]
@@ -463,8 +460,7 @@ theorem lat_mul : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E 
   intro E _ _ _ _ w _ K e _ _ _ B m b a g h hh
   unfold GlobalTheory.TwLat.lat GlobalTheory.UnitLemma.mulLat
   rw [Submodule.map_span, ← Set.range_comp]
-  refine congrArg _ (congrArg Set.range (funext fun j => ?_))
-  exact col_eq e b a g h hh j
+  exact congrArg _ (congrArg Set.range (funext fun j => (col_eq e b a g h hh j)))
 
 end GlobalTheory.TwLatMul
 end -- clump:auto
@@ -517,8 +513,7 @@ theorem conj_imp (k : ℕ) {c N : GLw m w} (hc : c ∈ GlobalTheory.LFun.KGL w (
     simp only [Units.val_mul, Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one, h1]
   have := v_mul_right_le (v_mul_left_le (B := N.val - 1) (v_le_one_of_mem_KGL (inv_mem hc)) (fun a b => by
     rw [Matrix.sub_apply]; exact hN.2 a b)) (v_le_one_of_mem_KGL hc) i j
-  rw [← hid, Matrix.sub_apply] at this
-  exact this
+  rwa [← hid, Matrix.sub_apply] at this
 
 end GlobalTheory.CongConj
 
@@ -526,8 +521,7 @@ theorem GlobalTheory.congConj_iff : ∀ (E : Type) [Field E] [NumberField E] (w 
   intro E _ _ w m k c N hc
   constructor
   · intro h
-    have h2 := GlobalTheory.CongConj.conj_imp k (inv_mem hc) h
-    simpa [mul_assoc] using h2
+    simpa [mul_assoc] using GlobalTheory.CongConj.conj_imp k (inv_mem hc) h
   · exact GlobalTheory.CongConj.conj_imp k hc
 end -- clump:auto
 end -- clump:auto
@@ -695,7 +689,7 @@ theorem clSum_eq_finsum_param : ∀ (G : Type) [Group G] [TopologicalSpace G] (�
     have hmem : TwCl.rep (θ := θ) (φ c) ∈ S := by
       show TwCl.rep (θ := θ) (Quot.mk _ (ι c)) ∈ S
       rw [hg, hSinv]; exact hιS c
-    simp only [F, if_pos hmem, one_mul]
+    simp only [F, ite_eq_left hmem, one_mul]
     show twOrb θ Kg (TwCl.rep (θ := θ) (Quot.mk _ (ι c))) f = N c
     rw [hg, horb, hN]
   unfold clSum
@@ -738,7 +732,7 @@ theorem dlt_eq_iff (hw : ¬ IsSplitAt w) (β β' : B.A) (hβ : IsUnit (GlobalThe
   unfold GlobalTheory.TwLat.dlt
   rw [dite_eq_left hβ, dite_eq_left hβ']
   have hth : thL m w g = PhiU m _ * invT m _ (GeneralLinearGroup.map (cj w) g) * (PhiU m _)⁻¹ := by
-    simp only [thL, if_neg hw]; rfl
+    simp only [thL, ite_eq_right hw]; rfl
   have hinv : g⁻¹ = invT m _ (invT m _ g⁻¹) := (invT_invT _).symm
   have key : g⁻¹ * (invT m _ hβ.unit * (PhiU m _)⁻¹) * thL m w g =
       invT m _ (invT m _ g⁻¹ * hβ.unit * GeneralLinearGroup.map (cj w) g) * (PhiU m _)⁻¹ := by
@@ -1107,7 +1101,6 @@ end GroupPart
 
 theorem mem_Ov_iff {E : Type} [Field E] [NumberField E] (w : Pl E) (x : w.adicCompletion E) :
     x ∈ Ov E w ↔ Valued.v x ≤ 1 := by
-  show x ∈ (w.adicCompletionIntegers E) ↔ _
   exact IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers _ _ _
 
 theorem unimodular_iff : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (w : Pl E), ¬ IsSplitAt w → ∀ (K : GlobalTheory.UnitLemma.UQ) (e : K.E ≃+* w.adicCompletion E), (∀ x, e (K.c x) = cj w (e x)) → (∀ x, x ∈ (algebraMap K.O K.E).range ↔ Valued.v (e x) ≤ 1) → (∀ x, GlobalTheory.UnitLemma.val K.O x = ordL (e x)) → ∀ (B : GlobalTheory.UnitLemma.InvAlg K) (m : ℕ) (b : Module.Basis (Fin m) K.E B.A), ∀ β : B.A, IsUnit (GlobalTheory.TwLat.gram e b β) → ∀ g : GLw m w, (g⁻¹ * GlobalTheory.TwLat.dlt e b β * thL m w g ∈ GlobalTheory.LFun.KGL w (n := m) ↔ ∀ z, z ∈ GlobalTheory.TwLat.lat e b g ↔ ∀ y ∈ GlobalTheory.TwLat.lat e b g, B.herm β y z ∈ (algebraMap K.O K.E).range) := by
@@ -1118,7 +1111,7 @@ theorem unimodular_iff : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E],
   set M : GLw m w := invT m _ g⁻¹ * hG.unit * Matrix.GeneralLinearGroup.map (cj w) g with hMdef
 
   have hX : g⁻¹ * dlt e b β * thL m w g = invT m _ M * (PhiU m _)⁻¹ := by
-    rw [dlt, dite_eq_left hG, thL, if_neg hw, hMdef, map_mul, map_mul, invT_invT]
+    rw [dlt, dite_eq_left hG, thL, ite_eq_right hw, hMdef, map_mul, map_mul, invT_invT]
     simp only [thetaGL, MonoidHom.comp_apply, MulEquiv.coe_toMonoidHom, MulAut.conj_apply]
     group
 
@@ -1226,8 +1219,7 @@ theorem mulLat_eq_self_iff {O A : Type} [CommRing O] [CommRing A] [Algebra O A] 
     ext y
     rw [Orbit.mem_mulLat]
     have := hu (((u⁻¹ : Aˣ) : A) * y)
-    rw [Units.mul_inv_cancel_left] at this
-    exact this
+    rwa [Units.mul_inv_cancel_left] at this
 
 theorem mulLat_mul {O A : Type} [CommRing O] [CommRing A] [Algebra O A] (s t : Aˣ)
     (L : Submodule O A) : mulLat O ((s * t : Aˣ) : A) L = mulLat O (s : A) (mulLat O (t : A) L) := by
@@ -1345,8 +1337,7 @@ theorem twOrb_eq_N : ∀ (K : GlobalTheory.UnitLemma.UQ) (B : GlobalTheory.UnitL
   rw [hN, ← finsum_comp_equiv e]
   have hw : ∀ s : S, ((Orbit.orbWt B.T (B.X x) (e s) : ℚ) : ℂ) =
       (((stabLat K.O (Λ (Quotient.out s.1)) ⊓ B.T).relIndex (intUnits K.O B.A ⊓ B.T) : ℕ) : ℂ) := by
-    intro s
-    exact Rat.cast_natCast _
+    exact fun s => Rat.cast_natCast _
   rw [finsum_congr hw]
   unfold twOrb
   have hsub : (∑ᶠ s : S, (((stabLat K.O (Λ (Quotient.out s.1)) ⊓ B.T).relIndex (intUnits K.O B.A ⊓ B.T) : ℕ) : ℂ)) =
@@ -1359,8 +1350,8 @@ theorem twOrb_eq_N : ∀ (K : GlobalTheory.UnitLemma.UQ) (B : GlobalTheory.UnitL
   refine finsum_congr fun d => ?_
   rw [havg, hidx, finsum_eq_if]
   rcases h01 ((Quotient.out d)⁻¹ * δ * θ (Quotient.out d)) with h | h
-  · rw [h, mul_zero, if_neg (by norm_num)]
-  · rw [h, mul_one, if_pos rfl]
+  · rw [h, mul_zero, ite_eq_right (by norm_num)]
+  · rw [h, mul_one, ite_eq_left rfl]
 
 end GlobalTheory.LatTransfer
 end -- clump:auto
@@ -1396,8 +1387,7 @@ theorem twOrb_level_eq_stSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
       · intro h
         have := mul_mem (mul_mem hcK h) (inv_mem (hθK c hcK))
         simpa [mul_assoc] using this
-      · intro h
-        exact mul_mem (mul_mem (inv_mem hcK) h) (hθK c hcK)
+      · exact fun h => mul_mem (mul_mem (inv_mem hcK) h) (hθK c hcK)
     have h2 : nrmL m w (c⁻¹ * y * thL m w c) ∈ cong ↔ nrmL m w y ∈ cong := by
       rw [hnrm]; exact _root_.GlobalTheory.congConj_iff E w m k c _ hcK
     simp only [hf, h1, h2]
@@ -1528,7 +1518,7 @@ theorem twOrb_level_eq_stSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     have hf0 : ∀ y ∈ S, ∀ q : GLw m w, f (q⁻¹ * y * thL m w q) = 0 := by
       intro y hy q
       simp only [hf]
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨-, hn, -⟩
       exact hui (_root_.GlobalTheory.TwLat.isIntegral_of_charpoly_intGL E hE w hw K e hc hint hval B m b u Q hQm hQu _ hn ((hSinv y q).2 hy))
     have hst : B.stSum = 0 := by

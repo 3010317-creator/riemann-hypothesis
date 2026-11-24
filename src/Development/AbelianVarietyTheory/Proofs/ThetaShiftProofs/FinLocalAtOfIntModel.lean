@@ -345,8 +345,7 @@ theorem level_core (hL : Laws) (hL2 : Laws2) (h5 : Laws5) {O O' : Type} [CommRin
         (GeneratorPullback.pullAlong_le _ _ _ _ _ hψ') (fun _ => rfl)).1 hm
       have k' := (genRel_transfer T W'.P.D.toPre.P.isLB W.P.D.toPre.P.isLB hψ' pm _ _).2
         (genRel_of_heq hφ hw₁ (e3 z))
-      rw [hxe z] at k'
-      exact k'
+      rwa [hxe z] at k'
     · rw [reassoc_of% hx', hgm', Category.assoc]
   have t₃ : QkToAkU W.P.U.toUnifPre F n q x'' :=
     h5.qkBaseChange _ _ _ _ hR hR (RingHom.id _) W'.P.D W'.P.A W'.t.G W'.P.U W.t.G bc hbc W.P.A W.P.D hD W.P.U
@@ -456,8 +455,7 @@ theorem core (hL : Laws) (hL₂ : Laws2) (hL₅ : Laws5)
     have q := congrArg (fun z => z.left ≫ pullback.fst W'.t.G.hom (specOf (RingHom.id (PowerSeries k)))) (hlin x)
     ext
     simp only [Over.comp_left, Category.assoc, Over.pullback_map_left, pullback.lift_fst] at q
-    rw [hfst, ← Category.assoc, hfst] at q
-    exact q
+    rwa [hfst, ← Category.assoc, hfst] at q
   have hlev := _root_.GlobalTheory.ArcLevel.level_match hL hL₂ hL₅ E H D l Xo c k bF a O O' β β' Y Y' χ χ' W W' hD hdat ψ bc hψ hbc hfst hU hact
     y y' hy hy' hs hs'
   have hb : LBIso W.t.PP.L (W'.t.PP.L.pull ψ.hom.left) := by
@@ -791,8 +789,7 @@ theorem letMR_det_isUnit (Dw : Datum H) (V : Type) [CommRing V] (ϖ : V) (τ : E
   have h3 := isUnit_of_dvd_unit (map_dvd (algebraMap (MvPolynomial (ArcLt Dw) (PowerSeries V)) (ArcSR Dw V ϖ))
     (Finset.dvd_prod_of_mem (fun τ : E →+* ℂ => Matrix.det (Matrix.of fun i k : Fin (Dw.mult τ) =>
       (MvPolynomial.X (⟨τ, i, k⟩ : ArcLt Dw) : MvPolynomial (ArcLt Dw) (PowerSeries V)))) (Finset.mem_univ τ))) h2
-  rw [RingHom.map_det] at h3
-  exact h3
+  rwa [RingHom.map_det] at h3
 
 theorem arcιR_C_isUnit (Dw : Datum H) (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] {ϖ : V}
     (hϖ : Irreducible ϖ) {v : V} (hv : v ≠ 0) : IsUnit (arcιR Dw V ϖ (PowerSeries.C v)) := by
@@ -838,8 +835,7 @@ theorem exists_dvr_frPt : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [N
   refine ⟨alg, ?_, ?_⟩
   · intro x v n h
     have h2 := congrArg g h
-    rw [map_mul, map_pow, hg, hg] at h2
-    exact h2
+    rwa [map_mul, map_pow, hg, hg] at h2
   · have hcomp : (algebraMap c.F (ArcSR Dw Tv.V ϖ)).comp β = ι.comp ((PowerSeries.C (R := Tv.V)).comp b) := by
       ext1 x
       have h1 : f (β x) = algebraMap Tv.V Tv.Fr (b x) := RingHom.congr_fun hfb x
@@ -909,12 +905,12 @@ theorem hasSum_laurent_of_mul_eq {q : LaurentSeries F} {g : PowerSeries V} {N : 
   rw [← hinj.hasSum_iff]
   · refine Eq.mpr (congrArg (HasSum · _) (funext fun k => ?_))
       ((hasSum_discEval (ι.comp a) hi ht g).mul_left (((ι (a ϖ) * t) ^ N)⁻¹))
-    rw [Function.comp_apply, hc, sub_add_cancel, if_neg (by omega), Int.natAbs_natCast,
+    rw [Function.comp_apply, hc, sub_add_cancel, ite_eq_right (by omega), Int.natAbs_natCast,
       zpow_sub₀ ht0, zpow_natCast, zpow_natCast, map_mul, map_inv₀, map_pow, RingHom.comp_apply,
       mul_pow, mul_inv]
     ring
   · intro n hn
-    rw [hc, if_pos, map_zero, zero_mul]
+    rw [hc, ite_eq_left, map_zero, zero_mul]
     by_contra h0
     exact hn ⟨(n + N).toNat, by simp only; omega⟩
 
@@ -998,8 +994,7 @@ theorem exists_eval : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     have h1 := congrArg ev hf
     rw [map_mul, map_pow, hevι, hϖX, hev] at h1
     have h2 : (ιT (algebraMap Tv.V Tv.Fr ϖ) * t) ^ N ≠ 0 := pow_ne_zero _ (mul_ne_zero hϖ'' ht0')
-    rw [eq_inv_mul_iff_mul_eq₀ h2, mul_comm]
-    exact h1
+    rwa [eq_inv_mul_iff_mul_eq₀ h2, mul_comm]
 
 end GlobalTheory.LetterEval
 end -- clump:auto

@@ -132,7 +132,7 @@ theorem coeff_det_eq {F τ : Type} [Field F] {d : ℕ} (P : Matrix (Fin d) (Fin 
     simp only [Units.smul_def, MvPolynomial.coeff_smul, coeff_monomial]
     rfl
   · refine Finset.sum_eq_zero (fun σ _ => ?_)
-    simp only [Units.smul_def, MvPolynomial.coeff_smul, coeff_monomial, if_neg h, smul_zero]
+    simp only [Units.smul_def, MvPolynomial.coeff_smul, coeff_monomial, ite_eq_right h, smul_zero]
 
 end GlobalTheory.DetCoeff
 

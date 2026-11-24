@@ -231,7 +231,7 @@ theorem det_eq_of_cols_unit {n R : Type*} [CommRing R] [Fintype n] [DecidableEq 
       rw [h _ _ i.2, Matrix.one_apply, Matrix.one_apply]
       by_cases hij : i = j
       · subst hij; simp
-      · rw [if_neg hij, if_neg (fun e => hij (Subtype.ext e.symm))]
+      · rw [ite_eq_right hij, ite_eq_right (fun e => hij (Subtype.ext e.symm))]
     rw [h1, Matrix.det_one, mul_one, ← Matrix.det_transpose]
     rfl
   · intro i hi j hj
@@ -249,18 +249,18 @@ theorem jacobi_minor {n R : Type*} [CommRing R] [Fintype n] [DecidableEq n]
     · have h1 : N.toSquareBlockProp p = 1 := by
         ext i j
         simp only [N, Matrix.toSquareBlockProp, Matrix.toBlock, Matrix.submatrix_apply,
-          Matrix.of_apply, if_pos j.2]
+          Matrix.of_apply, ite_eq_left j.2]
         rw [Matrix.one_apply, Matrix.one_apply]
         by_cases hij : i = j
         · subst hij; simp
-        · rw [if_neg hij, if_neg (fun e => hij (Subtype.ext e))]
+        · rw [ite_eq_right hij, ite_eq_right (fun e => hij (Subtype.ext e))]
       have h2 : (N.toSquareBlockProp fun i => ¬ p i) = H.toSquareBlockProp fun i => ¬ p i := by
         ext i j
         simp only [N, Matrix.toSquareBlockProp, Matrix.toBlock, Matrix.submatrix_apply,
-          Matrix.of_apply, if_neg j.2]
+          Matrix.of_apply, ite_eq_right j.2]
       rw [h1, h2, Matrix.det_one, one_mul]
     · intro i hi j hj
-      simp only [N, Matrix.of_apply, if_pos hj]
+      simp only [N, Matrix.of_apply, ite_eq_left hj]
       rw [Matrix.one_apply_ne]
       rintro rfl
       exact hi hj
@@ -269,12 +269,12 @@ theorem jacobi_minor {n R : Type*} [CommRing R] [Fintype n] [DecidableEq n]
     · have : (G * N).toSquareBlockProp p = G.toSquareBlockProp p := by
         ext i j
         simp only [Matrix.toSquareBlockProp, Matrix.toBlock, Matrix.submatrix_apply,
-          Matrix.mul_apply, N, Matrix.of_apply, if_pos j.2, Matrix.one_apply, mul_ite, mul_one,
-          mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+          Matrix.mul_apply, N, Matrix.of_apply, ite_eq_left j.2, Matrix.one_apply, mul_ite, mul_one,
+          mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       rw [this]
     · intro i j hj
       rw [← hGH]
-      simp only [Matrix.mul_apply, N, Matrix.of_apply, if_neg hj]
+      simp only [Matrix.mul_apply, N, Matrix.of_apply, ite_eq_right hj]
   rw [← hN, mul_comm, ← Matrix.det_mul, hGN]
 
 end GlobalTheory.GramJacobi
@@ -330,11 +330,11 @@ theorem prod_ev_ite (γ : kˣ →* ℂˣ) (h : GL (Fin n) k) (M : ℕ) (hM : M �
     simp only [Units.val_one, map_one] at this
     simp [_root_.GlobalTheory.PsType.BlockTheta.ev_one_char, this]
   · rw [Finset.prod_eq_single (⟨M, hM⟩ : Fin n)]
-    · rw [if_pos rfl, minor]
+    · rw [ite_eq_left rfl, minor]
       congr 1
       exact det_block_congr _ fun i => by rw [Fin.le_def]; simp only; omega
     · intro j _ hj
-      rw [if_neg (fun e => hj (Fin.ext (by simpa using e))), _root_.GlobalTheory.PsType.BlockTheta.ev_one_char]
+      rw [ite_eq_right (fun e => hj (Fin.ext (by simpa using e))), _root_.GlobalTheory.PsType.BlockTheta.ev_one_char]
     · simp
 
 theorem theta_fam (m : ℕ) (α β : kˣ →* ℂˣ) (h : GL (Fin n) k) :
@@ -360,7 +360,7 @@ theorem ordered_fam (m : ℕ) (α β : kˣ →* ℂˣ) : Ordered (fam n m α β)
   by_cases h : (a : ℕ) < m ∧ m ≤ b
   · have e : fam n m α β a / fam n m α β b = fam n m α β i / fam n m α β j := by
       unfold fam
-      rw [if_pos h.1, if_neg (by omega), if_pos (by omega), if_neg (by omega)]
+      rw [ite_eq_left h.1, ite_eq_right (by omega), ite_eq_left (by omega), ite_eq_right (by omega)]
     rwa [e]
   · have e : fam n m α β a = fam n m α β b := by
       unfold fam
@@ -408,9 +408,7 @@ theorem smooth_of_hasVec {V : Type} [AddCommGroup V] [Module ℂ V] {π : Repres
   rw [Finset.prod_eq_single i (fun b _ hb => by simp [t, hb]) (by simp)] at hth
   rw [hv _ hg, hth] at hx2
   have : ((ψ i (t x i) : ℂ) - 1) • v = 0 := by rw [sub_smul, hx2, one_smul, sub_self]
-  have h3 := (smul_eq_zero.1 this).resolve_right hv0
-  show ψ i x = 1
-  exact Units.ext (by simpa [t, sub_eq_zero] using h3)
+  exact Units.ext (by simpa [t, sub_eq_zero] using ((smul_eq_zero.1 this).resolve_right hv0))
 
 theorem val_det_block {h : GL (Fin n) k} (hh : h ∈ KO k (Fin n)) (m : ℕ)
     (hm : ∀ a b : Fin n, (a : ℕ) < m → m ≤ (b : ℕ) → valuation k (h.val a b) < 1) :
@@ -539,7 +537,7 @@ theorem toral_of_lower (hBZ : GlobalTheory.Published.BernsteinZelevinskyFinitene
       have h1 := hh.2 a b (Fin.lt_def.2 (by omega))
       have e : fam n m α β a / fam n m α β b = α := by
         unfold fam
-        rw [if_pos ha, if_neg (by omega), mul_div_cancel_right]
+        rw [ite_eq_left ha, ite_eq_right (by omega), mul_div_cancel_right]
       rw [e] at h1
       by_contra hlt
       exact hα fun x hx hx1 => h1 x hx (hx1.trans (by rw [map_one]; exact not_lt.1 hlt))
@@ -650,8 +648,7 @@ theorem exists_vec {n : ℕ} (a : NG.AlgWt L n) (S : Submodule ℂ (GAf L n → 
     let x : J := ⟨_, h1⟩ * ε ⟨s.loc n κ, h⟩
     have hx : (x : GAf L n) = κ := inv_mul_cancel_right κ _
     have := hfT.2 x
-    rw [hx, map_mul, h2, one_mul] at this
-    exact this
+    rwa [hx, map_mul, h2, one_mul] at this
   obtain ⟨u, hu0, hu⟩ := GlobalTheory.LocVec.main L n a S hS s σ hσ c hc hci K (χ.comp ε) (fun g hg => hg.2) hopen f hf hf0 hrt
   refine ⟨c, hv, u, hu0, fun h hh => ?_⟩
   let g := GeneralLinearGroup.map c.symm.toRingHom h
@@ -667,8 +664,7 @@ theorem exists_vec {n : ℕ} (a : NG.AlgWt L n) (S : Submodule ℂ (GAf L n → 
   refine ⟨e g, he1 g, he2 g, by rw [he2]; exact hg, fun hJ => ?_⟩
   have e1 : GeneralLinearGroup.map c.toRingHom g = h := Units.ext (Matrix.ext fun p q => c.apply_symm_apply _)
   have := hu g ⟨hJ, hg⟩
-  rw [e1] at this
-  exact this
+  rwa [e1] at this
 
 end Global
 

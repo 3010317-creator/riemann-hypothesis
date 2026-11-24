@@ -451,9 +451,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.mkSec :
       rw [← hnn, eq_inv_mul_iff_mul_eq, ← mul_assoc, ← hκ, inv_mul_cancel_right]
     rw [h5, h3 m₁ m₂ (-Y) hnY k k.2]
   refine ⟨fun g => F (Function.surjInv hsurj g), ?_, ?_⟩
-  · refine hq.continuous_iff.2 ?_
-    refine hF.congr fun p => ?_
-    exact hconst _ _ (Function.surjInv_eq hsurj _).symm
+  · exact hq.continuous_iff.2 (hF.congr fun p => hconst _ _ (Function.surjInv_eq hsurj _).symm)
   · intro X m₁ m₂ t k hk
     have h1 : nn X * lv m₁ m₂ t * k = HaarSK.mulMap S (KG K (2 + 2)) (φ (m₁, m₂, t, X), ⟨k, hk⟩) := by
       simp [HaarSK.mulMap, hφ]

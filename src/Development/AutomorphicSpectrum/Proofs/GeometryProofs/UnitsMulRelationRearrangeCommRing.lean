@@ -405,8 +405,7 @@ theorem actp_at_point {E : Type} [Field E] [NumberField E] [IsCMField E] (H : Ho
   have e' : ψ (Ideal.Quotient.mk _ (X ((0 : Fin 1), j))) = Ideal.Quotient.mk _ (psTrunc p (g.B.A.act (p : 𝓞 E) j)) := by
     rw [hψ, CIndFrExp2.jetSubstP_mk, aeval_X, cc, map_zero, sub_zero]
   have e2 := DFunLike.congr_fun c (Ideal.Quotient.mk _ (X ((0 : Fin 1), j)))
-  rw [AlgHom.comp_apply, e', hχ₀, AlgHom.comp_apply, Actp.aug_X, map_zero] at e2
-  exact e2
+  rwa [AlgHom.comp_apply, e', hχ₀, AlgHom.comp_apply, Actp.aug_X, map_zero] at e2
 
 theorem actp_vanish : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (X0 : Scheme.{0}) (t : SAB H X0) (k : Type) [Field k] (p : ℕ) [Fact p.Prime] [CharP k p] (x : Sp k ⟶ X0) (d : ℕ) (g : GermAt t x d) (w : Fin d → k) (m : ℕ), (homAt x (jetSubstP p fun q : Fin 1 × Fin d => MvPolynomial.C (w q.2) * MvPolynomial.X ()) ≫ g.x p : overAt x (Jet k Unit p) ⟶ t.G) ^ p = 1 → ∀ j, jq w p m (Ideal.Quotient.mk _ (psIn d (p + m + 1) (![0] : Fin 1 → Fin 2) (g.B.A.act (p : 𝓞 E) j))) = 0 := by
   intro E _ _ _ H _ hst X0 t k _ p _ _ x d g w m hy j
@@ -504,8 +503,7 @@ theorem peG_act_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
   simp only [homAt_comp', Over.comp_left] at hcomp
   refine (val_pull hJ _ _ _).trans ?_
   rw [hcomp]
-  refine (val_pull hJ _ _ _).symm.trans ?_
-  exact (val_corr hJ (g.axes _).1 _).trans (val_one _)
+  exact (val_pull hJ _ _ _).symm.trans ((val_corr hJ (g.axes _).1 _).trans (val_one _))
 
 end GlobalTheory.CompanionTheory.Ar.Coc.Pf
 end -- clump:auto
@@ -575,7 +573,7 @@ theorem aeval_firstOrder {B A : Type} [CommRing B] [Algebra k B] [CommRing A] [A
         by_cases hij : j = i
         · subst hij; simp
         · simp [hij]
-      simp only [key, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [key, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       have hX : θ (P * MvPolynomial.X ((0 : Fin 2), j)) = 0 := by simp [hθ]
       rw [hX, map_zero, zero_add]
       linear_combination (algebraMap k A (c j) * ∑ i, algebraMap k A (c i) * τ (θ (MvPolynomial.pderiv ((0 : Fin 2), i) P))) * hε
@@ -583,12 +581,12 @@ theorem aeval_firstOrder {B A : Type} [CommRing B] [Algebra k B] [CommRing A] [A
           θ (MvPolynomial.pderiv ((0 : Fin 2), i) P) * z j := by
         intro i
         have h0 : MvPolynomial.pderiv ((0 : Fin 2), i) (MvPolynomial.X (a, j) : MvPolynomial (Fin 2 × Fin d) k) = 0 := by
-          rw [MvPolynomial.pderiv_X, Pi.single_apply, if_neg]
+          rw [MvPolynomial.pderiv_X, Pi.single_apply, ite_eq_right]
           intro h; exact ha (congrArg Prod.fst h)
         rw [Derivation.leibniz, h0, smul_zero, zero_add, smul_eq_mul, map_mul, mul_comm]
         simp [hθ, ha]
       have hX : θ (P * MvPolynomial.X (a, j)) = θ P * z j := by simp [hθ, ha]
-      simp only [key, hX, ha, if_false, map_mul, Finset.mul_sum, Finset.sum_mul, add_mul]
+      simp only [key, hX, ha, ite_false, map_mul, Finset.mul_sum, Finset.sum_mul, add_mul]
       congr 1
       refine Finset.sum_congr rfl fun i _ => ?_
       ring
@@ -812,7 +810,7 @@ theorem aug_jq (w : Fin d → k) (p m : ℕ) :
       trJ m (p + m + 1) (by omega) (sub₀ (p + m + 1) (Ideal.Quotient.mk _ (MvPolynomial.X (i, j))))
     rw [hq, hs]
     fin_cases i
-    · simp only [Fin.zero_eta, if_true, map_mul, hd, mul_zero]
+    · simp only [Fin.zero_eta, ite_true, map_mul, hd, mul_zero]
       simp [trJ]
     · simp [trJ, inR]
   exact congrArg AlgHom.toRingHom key
@@ -1680,12 +1678,12 @@ theorem pfold : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host
   classical
   choose c hc using fun χ : Sp (Jet (Jet k (Fin 1 × Fin d) m) Unit p) ⟶ t.G.left => exists_chart t.PP.isLB (χ z)
   let J : (Sp (Jet (Jet k (Fin 1 × Fin d) m) Unit p) ⟶ t.G.left) → t.PP.L.ι := fun ψ => if ψ z ∈ t.PP.L.U j₀ then j₀ else c ψ
-  have hJ₀ : ∀ ψ : Sp (Jet (Jet k (Fin 1 × Fin d) m) Unit p) ⟶ t.G.left, ψ z ∈ t.PP.L.U j₀ → J ψ = j₀ := fun ψ e => if_pos e
+  have hJ₀ : ∀ ψ : Sp (Jet (Jet k (Fin 1 × Fin d) m) Unit p) ⟶ t.G.left, ψ z ∈ t.PP.L.U j₀ → J ψ = j₀ := fun ψ e => ite_eq_left e
   have hJ : Good t.PP.L z J := fun ψ => by
     by_cases e : ψ z ∈ t.PP.L.U j₀
     · rw [hJ₀ ψ e]; exact e
     · show ψ z ∈ t.PP.L.U (if ψ z ∈ t.PP.L.U j₀ then j₀ else c ψ)
-      rw [if_neg e]; exact hc ψ
+      rw [ite_eq_right e]; exact hc ψ
   have e := val_of C (rQ t.G x p (g.x m)) z J (fun _ => j₀) (fun i => hJ₀ _ (Set.mem_iInter.1 hz i))
   refine (Pf.gs_appLE _ _ _ h z trivial _).trans ((gs_unit _ z _ hz _).trans ?_)
   refine (congrArg Units.val (e.symm.trans (hval z J hJ hJ₀))).trans ?_

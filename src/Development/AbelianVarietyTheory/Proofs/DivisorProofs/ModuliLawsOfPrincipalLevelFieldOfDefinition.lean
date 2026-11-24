@@ -117,8 +117,7 @@ theorem det_eq_one {D : D7} (V : HSp D) {r : ℕ} (hr : V.rank = r) (hr0 : 0 < r
   have key : ∀ h ∈ GinfC V, ∃ γ'' ∈ (X k).Γ,
       dict (g * h) = ⟨k, lact γ'' (rmul (x0 k) (archMat V th rfl x0 h k))⟩ := by
     have := heq g
-    rw [hg] at this
-    exact this
+    rwa [hg] at this
   have hun : ∀ τ : (X k).Ψ, ((γ'.1.map τ.1).map (starRingEnd ℂ))ᵀ * V.gram.map τ.1 *
       γ'.1.map τ.1 = V.gram.map τ.1 := by
     intro τ
@@ -142,8 +141,7 @@ theorem det_eq_one {D : D7} (V : HSp D) {r : ℕ} (hr : V.rank = r) (hr0 : 0 < r
       have h4 := h3 τ ⟨1, by omega⟩
       rw [ReciprocityTheory.ChartRestriction.G.AR.Up.PairUnfoldPf.dmin_lact (X k) h1] at h4
       unfold dmin at h4
-      rw [hact, hw', Function.update_self] at h4
-      exact h4
+      rwa [hact, hw', Function.update_self] at h4
     · have hcc : (γ'.1.map τ.1).map (starRingEnd ℂ) =
           (γ'.1.map cc).map τ.1 := by
         ext a b
@@ -285,7 +283,6 @@ theorem laws_of_level : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.ChartRestr
         rw [h1, one_smul] at he
         exact Units.ext he ▸ hγ')
       a n ha (fun τ _ h0 => hp τ _ (by omega)) hn (fun k => h.chiTriv σ hσ a n ha k)
-    intro P hP
-    exact key ⟨hP.1, hP.2⟩
+    exact fun P hP => key ⟨hP.1, hP.2⟩
 
 end GlobalTheory.LevLaws

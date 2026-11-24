@@ -110,9 +110,7 @@ theorem prime_eq {e e' : AE D} {w w' : HeightOneSpectrum (𝓞 D.host.E)} (h : F
     (hc : π' ∉ w'.asIdeal) : w = w' := by
   by_contra hne
   have hnle : ¬ w.asIdeal ≤ w'.asIdeal := by
-    intro hle
-    apply hne
-    exact HeightOneSpectrum.ext (w.isMaximal.eq_of_le w'.isPrime.ne_top hle)
+    exact fun hle => hne (HeightOneSpectrum.ext (w.isMaximal.eq_of_le w'.isPrime.ne_top hle))
   obtain ⟨x₀, hx₀w, hx₀w'⟩ := Set.not_subset.1 hnle
   have hx₀0 : x₀ ≠ 0 := fun h0 => hx₀w' (h0 ▸ w'.asIdeal.zero_mem)
   have hy : π + x₀ ∉ w'.asIdeal := fun hm => hx₀w' (by simpa using w'.asIdeal.sub_mem hm hw')

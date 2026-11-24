@@ -158,8 +158,7 @@ theorem orderAtLeastLocus_subset_orderAtLeastLocus_derivIdealSheafIterate (k : T
   · intro x hx
     rw [mem_orderAtLeastLocus_iff] at hx ⊢
     refine le_orderAt_derivIdealSheafIterate k p I x (m - r) r ?_
-    rw [Nat.sub_add_cancel h]
-    exact hx
+    rwa [Nat.sub_add_cancel h]
 
 private theorem formallySmooth_of_ringEquiv (k : Type u) [CommRing k] (R : Type u)
     [CommRing R] [Algebra k R] (e : k ≃+* R) (he : ∀ x : k, e x = algebraMap k R x) :
@@ -323,8 +322,7 @@ private theorem formallySmooth_of_isAlgebraic (k : Type u) [Field k] [CharZero k
     refine ⟨q.map (algebraMap A₀ (FractionRing A₀)), ?_, ?_⟩
     · exact (Polynomial.map_ne_zero_iff
         (IsFractionRing.injective A₀ (FractionRing A₀))).mpr hq0
-    · rw [Polynomial.aeval_map_algebraMap]
-      exact hqa
+    · rwa [Polynomial.aeval_map_algebraMap]
   have _hsep : Algebra.IsSeparable (FractionRing A₀) L := by
     refine ⟨fun a => ?_⟩
     exact (minpoly.irreducible

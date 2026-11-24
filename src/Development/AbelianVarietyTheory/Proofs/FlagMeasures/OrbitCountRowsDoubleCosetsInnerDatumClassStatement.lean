@@ -99,8 +99,7 @@ theorem Hom.map_mem {T T' : E} {φ : S.V ≃ₗ[E] S.V} {A : LFlag S r T} {B : L
     have h2 : φ (A.fl.e i) = (φ (A.fl.e i) - B.fl.e i) + B.fl.e i := by abel
     show φ (A.fl.e i) ∈ Xflag B j
     rw [h2]
-    refine Submodule.add_mem _ ?_ (e_mem_xflag B i hi)
-    exact xflag_mono B (le_of_lt hi) h1
+    exact Submodule.add_mem _ (xflag_mono B (le_of_lt hi) h1) (e_mem_xflag B i hi)
   exact hle hx
 
 theorem Hom.comp {T T' T'' : E} {φ ψ : S.V ≃ₗ[E] S.V} {A : LFlag S r T} {B : LFlag S r T'} {C : LFlag S r T''}
@@ -316,8 +315,7 @@ theorem onto_gmap_one (M : LV D) : Formalism.HermitianLatticesTheory.gmap (1 : G
   constructor
   · rintro ⟨y, hy, rfl⟩
     exact hy
-  · intro hx
-    exact ⟨x, hx, rfl⟩
+  · exact fun hx => ⟨x, hx, rfl⟩
 
 theorem onto_side {T : D.host.E} {A B : LFlag (D.sp.Y 0) D.R.rS T} {M : LV D} {G h : GV D}
     (hG : Adapt G A B) (hh : Adapt h B B)
@@ -346,7 +344,6 @@ theorem onto_side {T : D.host.E} {A B : LFlag (D.sp.Y 0) D.R.rS T} {M : LV D} {G
   obtain ⟨n, hn, hnM⟩ := hs _ hσ hLσ
   refine ⟨n, hn, ?_, ?_⟩
   · have hA : Adapt (n * (G⁻¹ * h * G)) A A := adapt_mul hσ (adapt_nrat hn)
-    show Adapt _ A A ∧ Formalism.HermitianLatticesTheory.gmap _ M = M
     exact ⟨hA, hnM⟩
   · intro x hx
 
@@ -610,8 +607,7 @@ theorem stab_card : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what
     obtain ⟨b, hbB, hbC⟩ := GlobalTheory.T.innerDatumStabiliser_from_adapted_pair D _ _ (lf D (X.Fu u)) F (lf D (X.Fu u')) F' t.lam t.lam' Λ t.lin g h
       hγ hγl hg hg2 hΛ (fun σ hσ hL => GlobalTheory.T.row_lattices_same_inner_differ_by_rational_unipotent D _ (X.Fu u) t.lam t.lam σ hrow hrow hσ hL)
       (fun σ hσ hL => GlobalTheory.T.row_lattices_same_inner_differ_by_rational_unipotent D _ (X.Fu u') t.lam' t.lam' σ hrow' hrow' hσ hL) hh
-    refine ⟨⟨b, (hB' b).2 hbB⟩, ?_⟩
-    exact corr_unique hγ hg hg2 hI hbB.1.1 hbB.2.1.1 (hfs _) hbC
+    exact ⟨⟨b, (hB' b).2 hbB⟩, corr_unique hγ hg hg2 hI hbB.1.1 hbB.2.1.1 (hfs _) hbC⟩
   · have hK := corr_ker hγ hg hg2 hI ((hB' b).1 b.2) (hfs b)
     show f b = 1 ↔ _
     rw [hK]
@@ -702,8 +698,7 @@ theorem coef_integral_of_flag {E : Type} [Field E] [NumberField E] [StarRing E] 
     have hxX : x ∈ Submodule.span E (Set.range F.fl.e) :=
       Submodule.span_mono (Set.image_subset_range _ _) hxa
     have hsX : s • x ∈ Formalism.MainNotions.S.Lat.XLam Λ F := by
-      refine Submodule.mem_inf.2 ⟨hsx, ?_⟩
-      exact Submodule.smul_of_tower_mem _ s hxX
+      exact Submodule.mem_inf.2 ⟨hsx, Submodule.smul_of_tower_mem _ s hxX⟩
 
     obtain ⟨cc, -, hc1, heq⟩ := hc.1 P
     have hloc : s • x ∈ Formalism.HermitianLatticesTheory.localization₂ P.asIdeal (Formalism.MainNotions.S.Lat.XLam Λ F) :=
@@ -715,8 +710,7 @@ theorem coef_integral_of_flag {E : Type} [Field E] [NumberField E] [StarRing E] 
     obtain ⟨o, ho⟩ := (Submodule.mem_span_range_iff_exists_fun (𝓞 E)).1 htx
     have h1 : ∑ i, ((o i : 𝓞 E) : E) • F.fl.e i = t • s • x := by
       rw [← ho]
-      refine Finset.sum_congr rfl fun i _ => ?_
-      exact algebraMap_smul E (o i) (F.fl.e i)
+      exact Finset.sum_congr rfl fun i _ => algebraMap_smul E (o i) (F.fl.e i)
     have h2 : t • s • x = ∑ i, (((t * s : 𝓞 E) : E) * l i) • F.fl.e i := by
       rw [← mul_smul, ← algebraMap_smul E (t * s) x, hxw, Finset.smul_sum]
       refine Finset.sum_congr rfl fun i _ => ?_
@@ -865,9 +859,7 @@ theorem map_Xflag_le (F : LFlag S r T) (a : S.V ≃ₗ[E] S.V)
 theorem map_Xflag_eq (F : LFlag S r T) (a : S.V ≃ₗ[E] S.V)
     (h : ∀ b : Fin (r + 1), a (frame F b) - frame F b ∈ Xflag F b.val) (j : ℕ) :
     (Xflag F j).map (a : S.V →ₗ[E] S.V) = Xflag F j := by
-  haveI : FiniteDimensional E (Xflag F j) := by
-    show FiniteDimensional E (Submodule.span E (F.fl.e '' {i | i.1 < j}))
-    exact FiniteDimensional.span_of_finite E (Set.toFinite _)
+  haveI : FiniteDimensional E (Xflag F j) := FiniteDimensional.span_of_finite E (Set.toFinite _)
   exact Submodule.eq_of_le_of_finrank_eq (map_Xflag_le F a h j) (LinearEquiv.finrank_map_eq a _)
 
 theorem symm_mem_Xflag (F : LFlag S r T) (a : S.V ≃ₗ[E] S.V)
@@ -964,8 +956,7 @@ theorem mem_localization_aut (P : HeightOneSpectrum (𝓞 E)) {Λ : Submodule (�
     (ha : Formalism.HermitianLatticesTheory.gmap a Λ = Λ) {x : S.V} (hx : x ∈ (haveI := P.isPrime; Formalism.HermitianLatticesTheory.localization₂ P.asIdeal Λ)) :
     a x ∈ (haveI := P.isPrime; Formalism.HermitianLatticesTheory.localization₂ P.asIdeal Λ) := by
   haveI := P.isPrime
-  rw [← ha, Formalism.L2.SG.Pf.gmap_locP, Formalism.L2.SG.Pf.gmap_apply_mem]
-  exact hx
+  rwa [← ha, Formalism.L2.SG.Pf.gmap_locP, Formalism.L2.SG.Pf.gmap_apply_mem]
 
 theorem frame_locP (Λ : Submodule (𝓞 E) S.V) (g : ℕ) {T : E} (F : LFlag S r T) (hconv : IsFixedConv Λ g F)
     (hl : IsLift Λ F) : ∀ P : HeightOneSpectrum (𝓞 E), (g : 𝓞 E) ∈ P.asIdeal → ∀ b,
@@ -995,7 +986,7 @@ theorem triM_lower (w : Fin (r + 1) → Fin r → E) (hw : ∀ b (c : Fin r), b.
     ∀ c b, b < c → triM w c b = 0 := by
   intro c b hbc
   unfold triM
-  rw [if_neg hbc.ne']
+  rw [ite_eq_right hbc.ne']
   split_ifs with h
   · rw [hw b _ (le_of_lt (Fin.lt_def.1 hbc))]; simp
   · simp
@@ -1004,7 +995,7 @@ theorem triM_diag (w : Fin (r + 1) → Fin r → E) (hw : ∀ b (c : Fin r), b.v
     ∀ b, triM w b b = 1 := by
   intro b
   unfold triM
-  rw [if_pos rfl]
+  rw [ite_eq_left rfl]
   split_ifs with h
   · rw [hw b _ le_rfl]; simp
   · simp
@@ -1024,7 +1015,7 @@ theorem triM_IA (P : HeightOneSpectrum (𝓞 E)) (w : Fin (r + 1) → Fin r → 
 theorem triM_sum {T : E} (F : LFlag S r T) (w : Fin (r + 1) → Fin r → E) (b : Fin (r + 1)) :
     ∑ c, triM w c b • frame F c = frame F b + ∑ i, w b i • F.fl.e i := by
   simp only [triM, add_smul, Finset.sum_add_distrib, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   congr 1
   rw [Fin.sum_univ_castSucc]
   simp [frame, FlagG.fvec]
@@ -1293,8 +1284,7 @@ theorem card_image_eq_relIndex {Γ α : Type} [Group Γ] (P B : Subgroup Γ) (f 
       (fun p : P => (⟨f p, p, p.2, rfl⟩ : f '' (P : Set Γ))) ?_) ⟨?_, ?_⟩)
   · intro a b h
     have h' := QuotientGroup.leftRel_apply.mp h
-    apply Subtype.ext
-    exact (hf a a.2 b b.2).2 (by simpa [Subgroup.mem_subgroupOf] using h')
+    exact Subtype.ext ((hf a a.2 b b.2).2 (by simpa [Subgroup.mem_subgroupOf] using h'))
   · intro x y hxy
     induction x using Quotient.inductionOn with | h a => ?_
     induction y using Quotient.inductionOn with | h b => ?_

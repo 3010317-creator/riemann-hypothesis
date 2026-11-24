@@ -134,8 +134,7 @@ theorem labLL0_up (τ : D.what₂.Tau) : e.toRingHom.comp (labLL0 (overD D r) ((
   refine RingHom.ext fun x => (embLL0 D).injective ((h.embLL0_eq _).trans ?_)
   have a := DFunLike.congr_fun (embLL0_labLL0 (D := overD D r) ((by exact (τ :)))) x
   have c := DFunLike.congr_fun (embLL0_labLL0 (D := D) τ) ((by exact (x :)))
-  refine Eq.trans a ?_
-  exact (by exact (c.symm :))
+  exact Eq.trans a (by exact (c.symm :))
 
 theorem coefLat_up {S T : HSp D} (B : Base S T) (O : Subring ℂ) (g : Bridge.Gf S) :
     (baseUp r B).coefLat (embLL0 (overD D r)) (labLL0 (overD D r)) O ((g)) = (B.coefLat (embLL0 D) (labLL0 D) O g) := by
@@ -393,8 +392,7 @@ theorem scale_fwd (h : CopyTw D D' ι e) {X : RealSide D} {X' : RealSide D'} (m 
     have h1 := m.v₀ j (h.cm j) rfl τ τ' hτ
     have h2 := hu τ
     simp only at h2 ⊢
-    rw [h2]
-    exact h1
+    rwa [h2]
   have hG : Submodule.span D'.what₂.LL {P' | ∃ P ∈ VV D.what₂.LL (FWT.lamV D j), HEq (MvPolynomial.map ι P) P'} ≤
       VV D'.what₂.LL (FWT.lamV D' (h.cm j)) := by
     refine Submodule.span_le.2 ?_
@@ -442,8 +440,7 @@ theorem scale_fwd (h : CopyTw D D' ι e) {X : RealSide D} {X' : RealSide D'} (m 
       funext x'
       simp only [Pi.smul_apply, smul_eq_mul, coefFn_smul]
       ring
-  intro F'
-  exact key F' (VV_le_span h j F'.2) F'.2
+  exact fun F' => key F' (VV_le_span h j F'.2) F'.2
 
 
 theorem scale_bwd (h : CopyTw D D' ι e) {X : RealSide D} {X' : RealSide D'} (m : RealMove X X' ι) {ρ : Setup D.ntw}
@@ -469,8 +466,7 @@ theorem scale_bwd (h : CopyTw D D' ι e) {X : RealSide D} {X' : RealSide D'} (m 
     have h2 := hu' τ'
     have h3 := hu τ
     simp only at h2 h3 ⊢
-    rw [h2, h3]
-    exact h1
+    rwa [h2, h3]
   rintro ⟨P, hP⟩
   funext x
   obtain ⟨P', hPP'⟩ : ∃ P' : Formalism.L2.DIV.Pol D'.what₂.LL D'.what₂.Tau (Vc D' (h.cm j)).rank, HEq (MvPolynomial.map ι P) P' :=
@@ -1220,14 +1216,12 @@ theorem kEmb_heq (h : CopyTw D D' ι e) {i : D.ntw.Tw} {i' : D'.ntw.Tw} (hi : HE
       Formalism.L2.NX.embEL0 D (D.host.sigmaOf ((D.eTau t : D.R.Psi) : D.R.GG) x) :=
     Subtype.ext (ι.injective ((h.LL0 _).trans (h.map_embE hσ).symm))
   have := h.sideEmb_heq hi b (Formalism.L2.NX.embEL0 D' (D'.host.sigmaOf ((D'.eTau t' : D'.R.Psi) : D'.R.GG) x'))
-  rw [hy] at this
-  exact this
+  rwa [hy] at this
 
 theorem side_heq (h : CopyTw D D' ι e) {i : D.ntw.Tw} {i' : D'.ntw.Tw} (hi : HEq i i') (b : Bool) (z : ↥D.LL0) :
     HEq (GlobalTheory.SeriesTie.sideEmb D.ntw i b z) (GlobalTheory.SeriesTie.sideEmb D'.ntw i' b (e.symm z)) := by
   have := h.sideEmb_heq hi b (e.symm z)
-  rw [e.apply_symm_apply] at this
-  exact this
+  rwa [e.apply_symm_apply] at this
 
 end
 
@@ -1422,8 +1416,7 @@ theorem isScalar_scale {ρ : Setup D.ntw} (hρ : ρ.Good) (i : D.ntw.Tw) {j : Fi
   refine ⟨mul_ne_zero hC hν.ne, fun ⟨ν', h1⟩ => isNorm_scale hc h _ (hν.norm ⟨_, isNorm_scale hc' h' _ h1⟩), fun ⟨ν', h1, h2⟩ => ?_⟩
   rw [realRd_scale YS hρ i b hC (evW_scale YS h)]
   refine hν.rat ⟨_, isNorm_scale hc' h' _ h1, ?_⟩
-  rw [realRd_scale YS hρ i b (Finset.prod_ne_zero_iff.2 fun τ _ => hc' τ) (evW_scale YS h')]
-  exact h2
+  rwa [realRd_scale YS hρ i b (Finset.prod_ne_zero_iff.2 fun τ _ => hc' τ) (evW_scale YS h')]
 
 theorem exists_cell {ρ : Setup D.ntw} {hρ : ρ.Good} {i : D.ntw.Tw} {j : Fin D.R.m} {b : Bool} {rd rd' : Rd ρ D.nexp i j b}
     (e : rd' = rd) (t : CellTie hρ D.nexp rd) : ∃ t' : CellTie hρ D.nexp rd', t'.rdV = t.rdV := by
@@ -1569,8 +1562,7 @@ theorem exportTie_move (h : CopyTw D D' ι e) {X : RealSide D} {X' : RealSide D'
     intro i i' hi j b f
     have := hrd (Z.ν i j b) i i' hi j b f
     change HEq (realRd (Forms.tie h m YS hsup) X'.geo.v₀ hg i' (h.cm j) b (ν' i' (h.cm j) b) _) _
-    rw [hν i i' hi j b]
-    exact this
+    rwa [hν i i' hi j b]
   obtain ⟨T', hT'⟩ := TieUp.tie_move h hs Z.good hg _ _ hrdZ Z.tie
   have hv := isExtremalVector_of_realSideBaseChange h m Z.vec
   have hsc : ∀ i' j' b, IsScalar (Forms.tie h m YS hsup) X'.geo.v₀ hg i' j' b (ν' i' j' b) := by

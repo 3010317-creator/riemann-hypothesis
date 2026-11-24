@@ -112,14 +112,12 @@ theorem mem_or_conj_mem {A B : Finset (Pl D.host.E)} (hA : SplitSet A) (hB : Spl
   have l : idemAt P * idem B = 0 := by
     rw [idem, Finset.mul_sum]
     refine Finset.sum_eq_zero fun j hj => by_contra fun h0 => hn.1 ?_
-    rw [eq_of_mul_ne_zero (hA.isIdemAt hP) (hB.isIdemAt hj) h0]
-    exact hj
+    rwa [eq_of_mul_ne_zero (hA.isIdemAt hP) (hB.isIdemAt hj) h0]
   have l' : idemAt P * cA D (idem B) = 0 := by
 
     rw [idem, map_sum, Finset.mul_sum]
     refine Finset.sum_eq_zero fun j hj => by_contra fun h0 => hn.2 ?_
-    rw [eq_of_mul_ne_zero (hA.isIdemAt hP) (isIdemAt_conj (hB.isIdemAt hj)) h0, conjPl_conjPl]
-    exact hj
+    rwa [eq_of_mul_ne_zero (hA.isIdemAt hP) (isIdemAt_conj (hB.isIdemAt hj)) h0, conjPl_conjPl]
   refine idem_ne_zero (hA.isIdemAt hP) ?_
   linear_combination idemAt P * h - k - k' + l + l'
 
@@ -188,19 +186,19 @@ theorem tensorHalf_dat (F : Frame S T) {Q J K : Finset (Pl D.host.E)} (hQ : Spli
   unfold dat
   by_cases hx : IsHalf (idem Q) x
   swap
-  · rw [if_neg hx, if_neg (show ¬ (IsHalf (idem Q) x ∧ IsIntM (frMapO S T F.βS F.βT x)) from fun h => hx h.1), mul_zero]
+  · rw [ite_eq_right hx, ite_eq_right (show ¬ (IsHalf (idem Q) x ∧ IsIntM (frMapO S T F.βS F.βT x)) from fun h => hx h.1), mul_zero]
   have hxe : idem J • x + idem K • x = x := by
     rw [← add_smul, ← idem_split hd hU]
     exact Matrix.ext fun i j => hx i j
   have i1 := isHalf_smul hj x
   have i2 := isHalf_smul hk x
-  rw [if_pos hx, mul_one]
+  rw [ite_eq_left hx, mul_one]
   by_cases hi : IsIntM (frMapO S T F.βS F.βT x)
   · have k1 : IsIntM (frMapO S T F.βS F.βT (idem J • x)) := by
       rw [frMapO_smul]; exact isIntM_smul hj hi
     have k2 : IsIntM (frMapO S T F.βS F.βT (idem K • x)) := by
       rw [frMapO_smul]; exact isIntM_smul hk hi
-    rw [if_pos ⟨i1, k1⟩, if_pos ⟨i2, k2⟩, if_pos ⟨hx, hi⟩]
+    rw [ite_eq_left ⟨i1, k1⟩, ite_eq_left ⟨i2, k2⟩, ite_eq_left ⟨hx, hi⟩]
     congr 1
     · refine hω _ _ fun PP hPP => ?_
       have e : frMapO S T F.βS F.βT (idem J • x) =
@@ -216,13 +214,13 @@ theorem tensorHalf_dat (F : Frame S T) {Q J K : Finset (Pl D.host.E)} (hQ : Spli
       rw [e, GlobalTheory.RedHalfDrop.redM_sub_smul PP hi (toEAf_mem_intAf_of_idem hj)
         (GlobalTheory.RedHalfDrop.resS_eq_zero_of_mul (hQ.isIdemAt (sK hPP)) _
           (idemAt_mul_idem hQ sJ (sK hPP) (Finset.disjoint_right.1 hd hPP)))]
-  · rw [if_neg (show ¬ (IsHalf (idem Q) x ∧ IsIntM (frMapO S T F.βS F.βT x)) from fun h => hi h.2)]
+  · rw [ite_eq_right (show ¬ (IsHalf (idem Q) x ∧ IsIntM (frMapO S T F.βS F.βT x)) from fun h => hi h.2)]
     by_cases k2 : IsIntM (frMapO S T F.βS F.βT (idem K • x))
-    · rw [if_neg (show ¬ (IsHalf (idem J) (idem J • x) ∧
+    · rw [ite_eq_right (show ¬ (IsHalf (idem J) (idem J • x) ∧
         IsIntM (frMapO S T F.βS F.βT (idem J • x))) from fun k1 => hi ?_), zero_mul]
       rw [← hxe, frMapO_add']
       exact fun i j => add_mem (k1.2 i j) (k2 i j)
-    · rw [if_neg (show ¬ (IsHalf (idem K) (idem K • x) ∧
+    · rw [ite_eq_right (show ¬ (IsHalf (idem K) (idem K • x) ∧
         IsIntM (frMapO S T F.βS F.βT (idem K • x))) from fun h => k2 h.2), mul_zero]
 
 theorem vec_three_steps (hF : F.Good) {G : TypeDat D T.rank} {Q J K : Finset (Pl D.host.E)} (h : PlacesOK G.Pg Q)
@@ -252,8 +250,7 @@ theorem vec_three_steps (hF : F.Good) {G : TypeDat D T.rank} {Q J K : Finset (Pl
   have hM := Frame.isPlaceModel_placeMap hF h
   have hM' : IsPlaceModel F.ψ (symplO S T) (heisO F.ψ S T) (idem Q + cA D (idem G.Pg)) F.lat 1 F.f₀
       (F.placeMap (halfIdem G.Pg Q)) := by
-    rw [show idem Q + cA D (idem G.Pg) = halfIdem G.Pg Q from add_comm _ _]
-    exact hM
+    rwa [show idem Q + cA D (idem G.Pg) = halfIdem G.Pg Q from add_comm _ _]
   obtain ⟨fg, t1, m1⟩ := step hF hq hg' ho hinf hM' hSB
   have m1' := m1
   rw [show ∀ (f : WO S T → ℂ) (Tm : (WO S T → ℂ) →ₗ[ℂ] (WO S T → ℂ)),
@@ -305,9 +302,9 @@ theorem locFn_eq_prod {S T : HSp D} {B : Base S T} {ψ : Twist D Circle} (hQ : B
   rw [Base.locFn, Finset.prod_coe_sort ψ.Q fun PP => flat (ψ.resC PP) (y PP), Finset.prod_union hQ.2]
   congr 1
   · refine Finset.prod_congr rfl fun PP hP => ?_
-    rw [Twist.locC, Twist.locC, if_pos hP, if_neg (Finset.disjoint_left.1 hQ.2 hP), mul_one]
+    rw [Twist.locC, Twist.locC, ite_eq_left hP, ite_eq_right (Finset.disjoint_left.1 hQ.2 hP), mul_one]
   · refine Finset.prod_congr rfl fun PP hP => ?_
-    rw [Twist.locC, Twist.locC, if_pos hP, if_neg (Finset.disjoint_right.1 hQ.2 hP), one_mul]
+    rw [Twist.locC, Twist.locC, ite_eq_left hP, ite_eq_right (Finset.disjoint_right.1 hQ.2 hP), one_mul]
 
 end Real
 
@@ -357,14 +354,11 @@ theorem vecFlat_three_steps : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0
   rw [idem_image_conj hL] at t3
   refine ⟨idem R.Pg, idem K, idem L, fg, hA, h.Pg ▸ (hP.mono s1).isIdemSum, hK.isIdemSum, hL.isIdemSum, ?_, ?_, ?_⟩
   · unfold GlobalTheory.BaseCmp.IsTypeVec GlobalTheory.BaseCmp.lattice₂
-    rw [← h.ψ, ← h.ΛS, ← h.ΛT, ← h.βS, ← h.βT, ← h.vac, ← h.Pg]
-    exact t1
+    rwa [← h.ψ, ← h.ΛS, ← h.ΛT, ← h.βS, ← h.βT, ← h.vac, ← h.Pg]
   · unfold ThAt GlobalTheory.BaseCmp.flatDat
-    rw [← h.ψ, ← h.ΛS, ← h.ΛT, ← h.βS, ← h.βT]
-    exact t2
+    rwa [← h.ψ, ← h.ΛS, ← h.ΛT, ← h.βS, ← h.βT]
   · unfold ThAt GlobalTheory.BaseCmp.flatDat
-    rw [← h.ψ, ← h.ΛS, ← h.ΛT, ← h.βS, ← h.βT]
-    exact t3
+    rwa [← h.ψ, ← h.ΛS, ← h.ΛT, ← h.βS, ← h.βT]
 
 end GlobalTheory.FlatThreeSteps
 

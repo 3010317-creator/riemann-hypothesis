@@ -116,16 +116,13 @@ theorem UpperTheory.V.Ws.sxScaleRD :
     intro g i j hij y hy
     rcases le_or_gt (τ (wt i j)) 0 with h | h
     · obtain ⟨y', hy', he'⟩ := hL.mem _ _ (Or.inr ⟨hc i j, hN.off g i j hij h⟩)
-      rw [hL.inj (hy.trans he'.symm)]
-      exact hy'
+      rwa [hL.inj (hy.trans he'.symm)]
     · obtain ⟨y', hy', he'⟩ := hL.mem _ _ (Or.inl h)
-      rw [hL.inj (hy.trans he'.symm)]
-      exact hy'
+      rwa [hL.inj (hy.trans he'.symm)]
   let pre : LaurentSeries R → S := fun z => if h : ∃ y, e y = z then h.choose else 0
   have hpre : ∀ z, (∃ y, e y = z) → e (pre z) = z := by
     intro z h
-    simp only [pre, dif_pos h]
-    exact h.choose_spec
+    simpa only [pre, dite_eq_left h] using h.choose_spec
   have hpre0 : ∀ x : R, e (pre (HahnSeries.single 0 x)) = HahnSeries.single 0 x := by
     intro x
     obtain ⟨y, hy, -⟩ := hex0 x
@@ -133,8 +130,7 @@ theorem UpperTheory.V.Ws.sxScaleRD :
   have hres0 : ∀ x : R, res Λ S (pre (HahnSeries.single 0 x)) = res Λ R x := by
     intro x
     obtain ⟨y, hy, hr⟩ := hex0 x
-    rw [hL.inj ((hpre0 x).trans hy.symm)]
-    exact hr
+    rwa [hL.inj ((hpre0 x).trans hy.symm)]
   let rr : Γ → M4 S := fun g => Matrix.of fun i j => pre (HahnSeries.single (τ (wt i j)) (D.r g i j))
   have hrr : ∀ g i j, e (rr g i j) = HahnSeries.single (τ (wt i j)) (D.r g i j) :=
     fun g i j => hpre _ (hent g i j)
@@ -186,8 +182,7 @@ theorem UpperTheory.V.Ws.sxScaleRD :
     show res Λ S (pre (HahnSeries.single (τ (wt i i)) (D.r g i i))) = _
     rw [hw0, map_zero]
     exact hres0 _
-  · intro g i j hij _
-    exact hmem g i j hij _ (hr' g i j)
+  · exact fun g i j hij _ => hmem g i j hij _ (hr' g i j)
   · intro v i s
     rw [← hN.redψ v i s]
     exact hres0 _

@@ -84,8 +84,7 @@ theorem oriented_maps : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfF
     have e2 : actT ε A B eS τ Y P =
         GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.fockT τ ((frSgn ε A).ε τ) (B.ε τ) (B.fr τ * Y * (B.fr τ)⁻¹) P + ((eS τ : ℂ) * Y.trace) • P := by
       rw [actT, LinearMap.add_apply, LinearMap.smul_apply, Module.End.one_apply]
-    rw [e2]
-    exact h
+    rwa [e2]
   · intro f hf P hP
     have hle : coinv ε A B eT ≤ LinearMap.ker (p ∘ₗ fockF ψ θ ε A B f) := by
       refine Submodule.span_le.2 ?_
@@ -105,8 +104,7 @@ theorem oriented_maps : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfF
           GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.fockS τ ((frSgn ε A).ε τ) (B.ε τ) ((A.fr τ * Z * (A.fr τ)⁻¹).map (starRingEnd ℂ)) P₀ +
             (-((eT τ : ℂ) * Z.trace)) • P₀ := by
         rw [actS, LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply, neg_smul, sub_eq_add_neg]
-      rw [e3]
-      exact h
+      rwa [e3]
     exact hle hP
   · intro h hh f hf
     refine ⟨ω (1, h) f, ?_, fun P => ?_⟩

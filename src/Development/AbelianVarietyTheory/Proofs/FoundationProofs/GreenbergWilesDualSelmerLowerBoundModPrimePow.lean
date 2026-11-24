@@ -118,8 +118,7 @@ theorem exists_pos_pow_idem {M : Type} [Monoid M] [Finite M] (x : M) :
     unfold IsIdempotentElem
     rw [← pow_add]
     have := h1 (i + 1) k
-    rw [← hk] at this
-    exact this
+    rwa [← hk] at this
   obtain ⟨i, j, hij, h⟩ := Finite.exists_ne_map_eq_of_infinite (fun n : ℕ => x ^ n)
   rcases lt_or_gt_of_ne hij with hlt | hlt
   · exact key i (j - i) (by omega) (by rw [Nat.add_sub_cancel' hlt.le]; exact h.symm)
@@ -710,10 +709,10 @@ theorem card_ord : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [
   obtain ⟨C, hC⟩ := GlobalTheory.LocChar.local_character_h1_bound hL.lf hL.lt hL.le l Ω c A hW.atL θ hθc h1 h2
   refine ⟨C, fun n hn v hv => ?_⟩
   obtain ⟨hfin, hcard⟩ := hC n hn
-  have hAv : Av A S v = A := if_pos hv
+  have hAv : Av A S v = A := ite_eq_left hv
   have hLc : Nat.card (Lc c n W hint S hN A v) = Nat.card (ordCond c n W hint S hN (Av A S v)) :=
     congrArg (fun p : Submodule _ _ => Nat.card p)
-      (if_pos hv : Lc c n W hint S hN A v = ordCond c n W hint S hN (Av A S v))
+      (ite_eq_left hv : Lc c n W hint S hN A v = ordCond c n W hint S hN (Av A S v))
   rw [hLc, hAv, ← card_lev]
   exact (card_ordCond_le c n W hint S hN hW.cont A hW.upper θ hθ).trans hcard
 
@@ -1124,8 +1123,7 @@ theorem dual_cob_on_line : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l 
         ((μ (locHom (S : Set Pl) B g) : (ZMod (l ^ n))ˣ) : ZMod (l ^ n)) *
           f.1 h (rhoS c n W hint S hN (locHom (S : Set Pl) B g)⁻¹ (Pi.single 0 u)) := by
       rw [f.2.2 g h]; rfl
-    rw [hμχ, hs'] at e
-    exact e
+    rwa [hμχ, hs'] at e
   have hcup : cupH1H1TwistedDual χ (rhoL c n W hint B hB) (MonoidHom.id _)
       ((contAction_rhoL c n W hint B hB hcont).comp' continuous_id) (Submodule.mkQ _ ⟨_, hψ⟩) = 0 := by
     refine LinearMap.ext fun x => ?_
@@ -1146,8 +1144,7 @@ theorem dual_cob_on_line : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l 
     obtain ⟨g, h⟩ := p
     have e : ((μ (locHom (S : Set Pl) B g) : (ZMod (l ^ n))ˣ) : ZMod (l ^ n)) * cc h - cc (g * h) + cc g =
         f.1 g (rhoS c n W hint S hN (locHom (S : Set Pl) B g) (Pi.single 0 (a0.1 h))) := congrFun hd (g, h)
-    rw [hμχ, hs] at e
-    exact e
+    rwa [hμχ, hs] at e
   have h0 := hinj (hcup.trans (map_zero _).symm)
   obtain ⟨m0, hm0⟩ := (mem_coboundaries1 _ _).1 ((Submodule.Quotient.mk_eq_zero _).1 h0)
   refine ⟨TDual.mk (LinearMap.comp (show Qn c n →ₗ[ZMod (l ^ n)] ZMod (l ^ n) from m0) (LinearMap.proj 0)),
@@ -1236,8 +1233,7 @@ theorem tau_mul_dvd (c : Coef l) (n : ℕ) (b' : c.O)
     ∃ q : ℤ_[l], tau c (b' * x) = (l : ℤ_[l]) ^ n * q := by
   have h1 := h (red c n x)
   rw [← map_mul, tbA_red, ← RingHom.mem_ker, PadicInt.ker_toZModPow, Ideal.mem_span_singleton] at h1
-  rw [mul_comm]
-  exact h1
+  rwa [mul_comm]
 
 theorem pair_nondeg (l : ℕ) [Fact l.Prime] (c : Coef l) (n : ℕ) (b : Qn c n)
     (h : ∀ a : Qn c n, GlobalTheory.Ord2.SelPerp.tbA c n (a * b) = 0) : b = 0 := by
@@ -1464,7 +1460,7 @@ theorem sel_perp : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [
       have hBq : IsPlaceOver (Av A S ⟨q, hq⟩) q := isPlaceOver_Av A S ⟨q, hq⟩
       have hsel := hsel0 ⟨q, hq⟩
       have hLc : Lc c n W hint S hN A ⟨q, hq⟩ = H1ur ((rhoS c n W hint S hN).comp (locFam S (Av A S) ⟨q, hq⟩))
-          ((Ine (F := ℚ) (Av A S ⟨q, hq⟩)).subgroupOf (Dec (F := ℚ) (Av A S ⟨q, hq⟩))) := if_neg hnot
+          ((Ine (F := ℚ) (Av A S ⟨q, hq⟩)).subgroupOf (Dec (F := ℚ) (Av A S ⟨q, hq⟩))) := ite_eq_right hnot
       rw [mem_perpCond, hLc, ← hrep x] at hsel
       obtain ⟨m, hm⟩ := _root_.GlobalTheory.Ord2.GwIneq.dual_cocycle_cob_on_inertia hL l Ω n hn S (Mn c n) rho hcA μ hμ (Av A S ⟨q, hq⟩) q hBq hlq
         (restrictCocycles1 _ (locFam S (Av A S) ⟨q, hq⟩) (continuous_locFam S (Av A S) ⟨q, hq⟩) (rep x)) hsel
@@ -1482,9 +1478,9 @@ theorem sel_perp : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [
       rfl
     · obtain ⟨v0, hA0, hl0⟩ := hW.atL
       have hv0 : v0 ∈ S := hW.above v0 hl0
-      have hAv : Av A S ⟨v0, hv0⟩ = A := if_pos hA0
+      have hAv : Av A S ⟨v0, hv0⟩ = A := ite_eq_left hA0
       have hsel := hsel0 ⟨v0, hv0⟩
-      have hLc : Lc c n W hint S hN A ⟨v0, hv0⟩ = ordCond c n W hint S hN (Av A S ⟨v0, hv0⟩) := if_pos hA0
+      have hLc : Lc c n W hint S hN A ⟨v0, hv0⟩ = ordCond c n W hint S hN (Av A S ⟨v0, hv0⟩) := ite_eq_left hA0
       rw [mem_perpCond, hLc, ← hrep x] at hsel
       have hup : ∀ s ∈ Dec (F := ℚ) (Av A S ⟨v0, hv0⟩), mat W s 1 0 = 0 := by
         rw [hAv]; exact hW.upper
@@ -1520,8 +1516,7 @@ theorem sel_perp : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [
       rw [Pi.sub_apply, Pi.sub_apply, h]
       rfl
     have h2 := congrArg (Phi c n) key
-    rw [map_sub, map_sub, hY x s, hY x' s, heq s] at h2
-    exact h2
+    rwa [map_sub, map_sub, hY x s, hY x' s, heq s] at h2
 
 end GlobalTheory.Ord2.SelPerp
 end -- clump:auto
@@ -1550,7 +1545,7 @@ def rv (c : Coef l) (n : ℕ) (v : Fin 2 → Qbar l) : Mn c n :=
 
 theorem rv_apply {c : Coef l} {n : ℕ} {v : Fin 2 → Qbar l} (hv : ∀ i, v i ∈ c.O) (i : Fin 2) :
     rv c n v i = red c n ⟨v i, hv i⟩ := by
-  unfold rv; rw [dif_pos (hv i)]
+  unfold rv; rw [dite_eq_left (hv i)]
 
 theorem rv_eq_iff {c : Coef l} {n : ℕ} {a b : Fin 2 → Qbar l} (ha : ∀ i, a i ∈ c.O) (hb : ∀ i, b i ∈ c.O) :
     rv c n a = rv c n b ↔ Cv n a b := by
@@ -1695,15 +1690,15 @@ theorem sel_lower : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra
     Submodule.Quotient.mk ⟨zOf c n S y, zOf_mem c n W hint S hN A h⟩ else 0, ?_, ?_⟩
   · intro y hy
     have hO : ∀ s i, y s i ∈ c.O := hy.1.2.1
-    simp only [dif_pos hy]
+    simp only [dite_eq_left hy]
     rw [SelG, mem_Sel]
     intro v
     rw [resH1, Submodule.mapQ_apply]
     by_cases hv : IsPlaceOver A v.1
     · have hL : Lc c n W hint S hN A v = ordCond c n W hint S hN (Av A S v) := by
-        unfold Lc; exact if_pos hv
+        unfold Lc; exact ite_eq_left hv
       have hAv : Av A S v = A := by
-        unfold Av; rw [if_pos hv]
+        unfold Av; rw [ite_eq_left hv]
       rw [hL]
       change Submodule.Quotient.mk (restrictCocycles1 (rhoS c n W hint S hN) (locHom (S : Set Pl) (Av A S v))
         (continuous_locHom _ _) ⟨zOf c n S y, zOf_mem c n W hint S hN A hy⟩) ∈ ordCond c n W hint S hN (Av A S v)
@@ -1722,7 +1717,7 @@ theorem sel_lower : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra
       exact Submodule.mem_map_of_mem hmem
     · have hL : Lc c n W hint S hN A v = H1ur ((rhoS c n W hint S hN).comp (locFam S (Av A S) v))
           ((Ine (F := ℚ) (Av A S v)).subgroupOf (Dec (F := ℚ) (Av A S v))) := by
-        unfold Lc; exact if_neg hv
+        unfold Lc; exact ite_eq_right hv
       have hl : ((l : ℕ) : 𝓞 ℚ) ∉ v.1.asIdeal := fun h => hv (by
         obtain ⟨v0, hA0, hl0⟩ := hW.atL
         rw [eq_of_natCast_mem h hl0]
@@ -1739,7 +1734,7 @@ theorem sel_lower : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra
   · intro y y' hy hy' heq
     have hO : ∀ s i, y s i ∈ c.O := hy.1.2.1
     have hO' : ∀ s i, y' s i ∈ c.O := hy'.1.2.1
-    simp only [dif_pos hy, dif_pos hy'] at heq
+    simp only [dite_eq_left hy, dite_eq_left hy'] at heq
     rw [Submodule.Quotient.eq, Submodule.mem_comap, mem_coboundaries1] at heq
     obtain ⟨m, hm⟩ := heq
     choose x hx using fun i => red_surjective c n (m i)
@@ -1827,7 +1822,7 @@ theorem gw_ineq : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [F
     intro v hv
     have hnp : ¬ IsPlaceOver A v.1 := fun h => hv (Subtype.ext (huniq _ _ h hA0))
     have e1 : Lc c n W hint S hN A v = H1ur ((rhoS c n W hint S hN).comp (locFam S (Av A S) v))
-        ((Ine (F := ℚ) (Av A S v)).subgroupOf (Dec (F := ℚ) (Av A S v))) := if_neg hnp
+        ((Ine (F := ℚ) (Av A S v)).subgroupOf (Dec (F := ℚ) (Av A S v))) := ite_eq_right hnp
     rw [e1]
     exact GlobalTheory.Ord2.UrCard.card_unramified_h1_eq_card_h0 ℚ Ω l n (Mn c n) (Av A S v) v.1 _
       (hρ.comp' (continuous_locFam S (Av A S) v)) (isPlaceOver_Av A S v)
@@ -1871,8 +1866,7 @@ theorem gw_ineq : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [F
   let eqv := Finite.equivFin (SelD c n W hint S hN A hW.cont μ)
   refine ⟨Nat.card (SelD c n W hint S hN A hW.cont μ), fun i => z (eqv.symm i), ?_, fun i => hz _, ?_⟩
   · exact hN1.trans hsel
-  · intro i j hij
-    exact hzd _ _ (fun h => hij (eqv.symm.injective h))
+  · exact fun i j hij => hzd _ _ (fun h => hij (eqv.symm.injective h))
 
 end GlobalTheory.Ord2.GwIneq
 end -- clump:auto

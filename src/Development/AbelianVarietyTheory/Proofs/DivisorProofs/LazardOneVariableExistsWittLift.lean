@@ -168,8 +168,7 @@ theorem exists_scalar (N : ℕ) (a : ℕ → k)
     rw [← Nat.cast_mul, ← Nat.cast_mul, hm']
   refine ⟨a (p ^ s) / b (p ^ s), ?_⟩
   have key := eq_zero_of_eq_zero p N (fun i => a i - a (p ^ s) / b (p ^ s) * b i) ?_ ?_ s K hN hK2 hK ?_
-  · intro i hi hiN
-    exact sub_eq_zero.1 (key i hi hiN)
+  · exact fun i hi hiN => sub_eq_zero.1 (key i hi hiN)
   · intro i hi
     rw [hsym i hi, hbsym i hi]
   · intro i j l hi hj hl hs
@@ -209,8 +208,7 @@ theorem exists_lift : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [CharP k
       refine ⟨1, one_pos, Or.inl rfl, fun _ _ _ => one_dvd _, ?_⟩
       refine exists_scalar p N a hsym hrel 1 one_pos (fun _ _ _ => one_dvd _) r m hNe hm2 ?_ ?_
       · intro u hu huK
-        by_contra h
-        push_neg at h
+        by_contra! h
         have := Nat.dvd_add h.2 h.1
         rw [Nat.sub_add_cancel huK.le] at this
         exact hm this

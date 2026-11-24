@@ -67,8 +67,7 @@ theorem mt_mul_inv_mulVec (V : HSp D) (g : GA D V) (y : Fin V.rank → AE D) : m
 
 theorem mulVec_mem_idAt {n : ℕ} (A : Matrix (Fin n) (Fin n) (AE D)) {P : GlobalTheory.FinPl.Pl D → Prop} {y : Fin n → AE D}
     (hy : ∀ i, y i ∈ GlobalTheory.FinPl.idAt D P) (i : Fin n) : (A *ᵥ y) i ∈ GlobalTheory.FinPl.idAt D P := by
-  simp only [Matrix.mulVec, dotProduct]
-  exact sum_mem fun j _ => Ideal.mul_mem_left _ _ (hy j)
+  simpa only [Matrix.mulVec, dotProduct] using sum_mem fun j _ => Ideal.mul_mem_left _ _ (hy j)
 
 theorem moves_inv {S : HSp D} {g : GA D S} {L M : GlobalTheory.FinPl.Lat S} {P : GlobalTheory.FinPl.Pl D → Prop}
     (h : GlobalTheory.FinPl.Moves S g L M P) : GlobalTheory.FinPl.Moves S g⁻¹ M L P := by
@@ -140,12 +139,10 @@ theorem isHalf_actO {S T : HSp D} (g : GA D S) (h : GA D T) {e : AE D} {x : WO S
     IsHalf e (actO S T g h x) := by
   have hx' : e • x = x := by
     ext i j
-    simp only [Matrix.smul_apply, smul_eq_mul]
-    exact hx i j
+    simpa only [Matrix.smul_apply, smul_eq_mul] using hx i j
   intro i j
   have := congrFun (congrFun (actO_smul_left g h e x) i) j
-  rw [hx'] at this
-  rw [Matrix.smul_apply, smul_eq_mul] at this
+  rw [hx', Matrix.smul_apply, smul_eq_mul] at this
   exact this.symm
 
 theorem actO_actO_inv {S T : HSp D} (g : GA D S) (h : GA D T) (x : WO S T) :

@@ -92,11 +92,9 @@ theorem mem_smul_of_forall_char_pow_eq_one
     ∃ z : X, d = k • z := by
   classical
   let b := Module.Free.chooseBasis ℤ X
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hex : ∃ i, ¬ (k : ℤ) ∣ b.repr d i := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hne (∑ i, (b.repr d i / k) • b i)
     apply b.repr.injective
     ext j
@@ -219,14 +217,13 @@ theorem weilIs_lam (S : Scheme.{0}) [IsLocallyNoetherian S] (P : PolAV S) (n : �
         simpa using hb
       · simp only [c, psum_both, MonObj.comp_mul, lift_fst, lift_snd]
         convert h₁₂ using 1
-        simp only [Finset.mem_insert, Finset.mem_singleton, true_or, or_true, and_self, if_true]
+        simp only [Finset.mem_insert, Finset.mem_singleton, true_or, or_true, and_self, ite_true]
         ac_rfl)
   have e : ∏ I, c I ^ ((-1 : ℤ) ^ (2 - I.down.card)) = c₁ * c₂ := by
     rw [prod_ulift_finset_fin_two]
     simp [c]
     rw [← mul_inv, inv_mul_cancel_left]
-  rw [e] at key
-  exact key
+  rwa [e] at key
 
 end GlobalTheory.LamPairing
 end -- clump:auto

@@ -149,8 +149,7 @@ theorem _root_.GlobalTheory.WeilM.HaarUniq.exists_decomp [IsTopologicalAddGroup 
   · have h := QuotientAddGroup.out_eq' (QuotientAddGroup.mk x : V ⧸ K.toAddSubgroup)
     rw [QuotientAddGroup.eq] at h
     have := hinv _ h ((QuotientAddGroup.mk x : V ⧸ K.toAddSubgroup).out)
-    rw [add_neg_cancel_left] at this
-    exact this
+    rwa [add_neg_cancel_left] at this
   · apply image_eq_zero_of_notMem_tsupport
     intro hx
     apply hS
@@ -194,8 +193,7 @@ private theorem exists_coeff_form_and_integral [IsTopologicalAddGroup V] [T2Spac
               integral_add_right_eq_self (fun x => Set.indicator (H : Set V) (fun _ => (1 : ℂ)) x),
               integral_indicator_const _ H.isOpen.measurableSet]
             simp
-          · intro q _
-            exact (hint.comp_add_right _).const_mul _
+          · exact fun q _ => (hint.comp_add_right _).const_mul _
       _ = _ := by rw [Finset.sum_mul]
 
 

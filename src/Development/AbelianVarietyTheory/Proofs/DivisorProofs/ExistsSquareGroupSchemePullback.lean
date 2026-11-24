@@ -82,11 +82,9 @@ theorem sq_of_grpPullback : ∀ (S S₀ : Scheme.{0}) (f : S₀ ⟶ S) (B : Over
     have sq : IsPullback (lift x₀ y₀).left (fst B₀ B₀).left (fst B B).left i := by
       refine IsPullback.of_right (h₁₂ := (snd B B).left) (v₁₃ := B.hom) (h₂₂ := B.hom) ?_ h1
         (tensor_isPullback B B).flip
-      rw [h2, hP.w]
-      exact outer
+      rwa [h2, hP.w]
     exact IsPullback.paste_vert sq hP
   · have := hM T (fst B₀ B₀) (snd B₀ B₀) x₀ y₀ rfl rfl
-    rw [Hom.mul_def, Hom.mul_def, lift_fst_snd, Category.id_comp, Over.comp_left] at this
-    exact this
+    rwa [Hom.mul_def, Hom.mul_def, lift_fst_snd, Category.id_comp, Over.comp_left] at this
 
 end GlobalTheory.SqPull

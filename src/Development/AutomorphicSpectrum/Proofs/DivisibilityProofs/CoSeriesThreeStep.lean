@@ -89,11 +89,10 @@ theorem co_series_three_step : (∀ (Sg : Type) [Fintype Sg] [DecidableEq Sg] (�
     have hinner : ∀ n : ℕ, ∑ σ, returnTerm φ p k τ σ n * La σ = r ^ (n + 1) * La ((φ ^ (n + 1)) τ) := by
       intro n
       rw [Finset.sum_eq_single ((φ ^ (n + 1)) τ)]
-      · rw [hterm, if_pos rfl]
+      · rw [hterm, ite_eq_left rfl]
       · intro b _ hb
-        rw [hterm, if_neg (Ne.symm hb), zero_mul]
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+        rw [hterm, ite_eq_right (Ne.symm hb), zero_mul]
+      · exact fun h => absurd (Finset.mem_univ _) h
     have hswap : ∑ σ, (∑' n, returnTerm φ p k τ σ n) * La σ =
         ∑' n : ℕ, r ^ (n + 1) * La ((φ ^ (n + 1)) τ) := by
       simp_rw [← tsum_mul_right]
@@ -101,11 +100,10 @@ theorem co_series_three_step : (∀ (Sg : Type) [Fintype Sg] [DecidableEq Sg] (�
       exact tsum_congr hinner
     have hlast : ∑ σ, (if σ = τ then 1 / ((p : ℝ) - 1) else 0) * La σ = La τ / ((p : ℝ) - 1) := by
       rw [Finset.sum_eq_single τ]
-      · rw [if_pos rfl]; ring
+      · rw [ite_eq_left rfl]; ring
       · intro b _ hb
-        rw [if_neg hb, zero_mul]
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+        rw [ite_eq_right hb, zero_mul]
+      · exact fun h => absurd (Finset.mem_univ _) h
     simp only [co, sub_mul]
     rw [Finset.sum_sub_distrib, hswap, hlast]
   · intro Sg φ p k hp La q h1 h2 τ

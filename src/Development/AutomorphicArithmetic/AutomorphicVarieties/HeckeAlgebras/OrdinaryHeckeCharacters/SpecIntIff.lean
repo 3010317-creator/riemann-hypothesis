@@ -77,9 +77,8 @@ private theorem spec_chi {G : Type} [Group G] {I : Iwa G} {O Ω : Type} [CommRin
   have h : ∀ t : I.T, ∃ a : O, algebraMap O Ω a = R.χ ⟨t, I.T_le t.2⟩ := fun t => by
     have h1 := R.integral_torusCharacter t t.2 0 0
     have h2 := R.torusAction ⟨t, I.T_le t.2⟩ 0
-    rw [if_pos rfl] at h2
-    rw [← h2]
-    exact h1
+    rw [ite_eq_left rfl] at h2
+    rwa [← h2]
   choose a ha using h
   let f : I.T →* O :=
     { toFun := a
@@ -224,5 +223,4 @@ theorem UpperTheory.V.Hi.spec :
     have := h7 K K'' Unit (fun _ => H.sec (H.wq q) g) (fun F hF => by
       rw [Fintype.sum_unique]
       exact hK ℂ _ _ F hF) f hf
-    rw [Fintype.sum_unique, Fintype.sum_unique] at this
-    exact this
+    rwa [Fintype.sum_unique, Fintype.sum_unique] at this

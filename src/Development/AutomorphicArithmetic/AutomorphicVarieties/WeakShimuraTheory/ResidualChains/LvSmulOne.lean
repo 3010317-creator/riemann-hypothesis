@@ -63,7 +63,7 @@ private def lv (X : M4 k) : M4 k := Matrix.of fun i j => if (i.1 < 2 ↔ j.1 < 2
 private theorem lv_apply (X : M4 k) (i j : Fin 4) : lv X i j = if (i.1 < 2 ↔ j.1 < 2) then X i j else 0 := rfl
 
 private theorem lv_diag (X : M4 k) (i : Fin 4) : lv X i i = X i i := by
-  rw [lv_apply, if_pos Iff.rfl]
+  rw [lv_apply, ite_eq_left Iff.rfl]
 
 end UpperTheory.V.Ws.Chain.Levi
 
@@ -102,9 +102,7 @@ private theorem levi_par_adj {k : Type} [Field k] (X : M4 k) (hX : UpperTheory.V
   simp [adj, h]
 
 private theorem levi_par_of_apply_eq_zero_of_lt {k : Type} [Field k] (X : M4 k) (hX : ∀ i j : Fin 4, i < j → X i j = 0) :
-    UpperTheory.V.Ws.Chain.Levi.Par X := by
-  intro i j hi hj
-  exact hX i j (Fin.lt_def.2 (by omega))
+    UpperTheory.V.Ws.Chain.Levi.Par X := fun i j hi hj => hX i j (Fin.lt_def.2 (by omega))
 
 private theorem levi_lemma_6 {k : Type} [Field k] (X : M4 k) (hX : SuppM nM X) :
     ∀ i j : Fin 4, i < j → X i j = 0 := by
@@ -173,8 +171,7 @@ theorem UpperTheory.V.Ws.Chain.levi :
     show (adj (lv (c.n v)) * r' s * lv (c.n v)) i i = (adj (c.n v) * c.r s * c.n v) i i
     rw [hr', ← levi_lv_adj_mul_mul_of_par _ _ (hN v) (hP s), lv_diag]
   refine ⟨PD.mk r' (fun v => lv (c.n v)), ⟨⟨?_, ?_, ?_, ?_, ?_, ?_⟩, ⟨?_, ?_, ?_⟩, ?_⟩, ?_, ?_, ?_⟩
-  · intro g
-    exact isGSp_levi_lv_of_par _ (hP g) _ (hc.pair.mult g)
+  · exact fun g => isGSp_levi_lv_of_par _ (hP g) _ (hc.pair.mult g)
   · intro g hg
     show lv (c.r g) = 1
     rw [hc.pair.kill g hg]
@@ -224,14 +221,11 @@ theorem UpperTheory.V.Ws.Chain.levi :
     simp only [lv_apply]
     split_ifs
     · exact hc.cont i j
-    · intro N
-      exact IsLocallyConstant.const _
-  · intro g
-    exact suppM_neg_wAl_levi_lv_of_apply_eq_zero_of_lt _ (hL g)
-  · intro v
-    exact suppM_neg_wAl_levi_lv_of_apply_eq_zero_of_lt _ (hNL v)
+    · exact fun N => IsLocallyConstant.const _
+  · exact fun g => suppM_neg_wAl_levi_lv_of_apply_eq_zero_of_lt _ (hL g)
+  · exact fun v => suppM_neg_wAl_levi_lv_of_apply_eq_zero_of_lt _ (hNL v)
   · refine ⟨fun g => ?_, fun v => ?_⟩
     · show c.r g 1 0 = lv (c.r g) 1 0
-      rw [lv_apply, if_pos (by decide)]
+      rw [lv_apply, ite_eq_left (by decide)]
     · show c.n v 1 0 = lv (c.n v) 1 0
-      rw [lv_apply, if_pos (by decide)]
+      rw [lv_apply, ite_eq_left (by decide)]

@@ -79,11 +79,11 @@ theorem test_value_eq_const_mul_reading : Out.SecBaseChangeSt → ∀ (E : Type)
   have h1 : evR Xo c f z = ψ (f p y) := by
     have hT : FromTest (K := c.F) (fun S _ _ => FrPt Xo c S) (fun φ y z => FrMap φ y z) z := ⟨p, ψ, y, hz⟩
     unfold evR evalAt
-    rw [dif_pos hT]
+    rw [dite_eq_left hT]
     exact hWD f hN _ _ _ _ _ _ _ _ hT.choose_spec.choose_spec.choose_spec hz
   have h2 : rdU U f k x.1 = toC (evR Xo c f (U.un k x)) := by
     unfold rdU
-    exact dif_pos x.2
+    exact dite_eq_left x.2
   have h3 := hBor (CAt σ) hred a n f hf t (U.un k x) z ht
   rw [← h1, h2, h3]
   rfl
@@ -130,15 +130,13 @@ theorem reading_linearIndependent_and_injective : Out.SecBaseChangeSt → ∀ (E
           rw [← Finset.mul_sum, e2, mul_zero]) θ
         simpa [Finset.sum_apply] using hpt
       exact fun i => Fintype.linearIndependent_iff.1 hli _ hz i
-    intro i
-    exact (Module.forall_dual_apply_eq_zero_iff c.F (toCAt σ (w i))).1 fun θ => hθ θ i
+    exact fun i => (Module.forall_dual_apply_eq_zero_iff c.F (toCAt σ (w i))).1 fun θ => hθ θ i
   · funext p y
     show f p y = 0
     refine eq_zero_of_cpts σ p _ fun ψ => ?_
     obtain ⟨k, x, u, hk⟩ := h p y ψ
     have e := hk f hf
-    rw [h0 k x.1 x.2, mul_zero] at e
-    exact e
+    rwa [h0 k x.1 x.2, mul_zero] at e
 
 end GlobalTheory
 end -- clump:auto

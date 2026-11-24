@@ -75,8 +75,7 @@ private theorem eq_mono {m : Fin k →₀ ℕ} {p : rees N} (hp : p ∈ reesGr N
 
 private theorem gr_eq_range (m : Fin k →₀ ℕ) : reesGr N (toDeg m) = LinearMap.range (monoL N m) := by
   apply le_antisymm
-  · intro p hp
-    exact ⟨⟨_, p.2 m⟩, (eq_mono N hp).symm⟩
+  · exact fun p hp => ⟨⟨_, p.2 m⟩, (eq_mono N hp).symm⟩
   · rintro _ ⟨f, rfl⟩
     exact mono_mem N m f.1 f.2
 
@@ -110,8 +109,7 @@ private theorem gr_add (m m' : Fin k →₀ ℕ) :
       apply Subtype.ext
       rw [hqv]
       exact congrArg Subtype.val (eq_mono N hp)
-    rw [hpq]
-    exact hq
+    rwa [hpq]
   · rw [Submodule.mul_le]
     intro a ha b hb
     have hab : AddMonoidAlgebra.coeff a.1 m * AddMonoidAlgebra.coeff b.1 m' ∈ lat N (m + m') := by

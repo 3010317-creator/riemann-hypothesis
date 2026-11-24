@@ -126,8 +126,7 @@ theorem exists_isAbLift : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     · have h := isHolTo_fibreSlice e.hol hb
       have e₁ : (fun y => (p.symm (e.ex b y)).left ≫ P.m.cm.F) = fun y => (e.ex b y).left :=
         funext fun y => by rw [← hp, p.apply_symm_apply]
-      rw [e₁]
-      exact h
+      rwa [e₁]
     · have e₁ : (fun y => (p.symm (e.ex b y)).left ≫ P.tK.G.hom) = fun _ => 𝟙 (Sp ℂ) :=
         funext fun y => Over.w (p.symm (e.ex b y))
       rw [e₁]
@@ -137,8 +136,7 @@ theorem exists_isAbLift : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     · have h := GlobalTheory.CMSpreadCompare.isHolTo_postcomp hs (P.τ.q ≫ P.e.hom).left
       have e₁ : (fun y => (G y).left ≫ φ) = fun y => (p.symm (e.ex b y)).left ≫ (P.τ.q ≫ P.e.hom).left :=
         funext fun y => by rw [hGr]; rfl
-      rw [e₁]
-      exact h
+      rwa [e₁]
     · have e₁ : (fun y => (G y).left ≫ A.hom) = fun _ => 𝟙 (Sp ℂ) := funext fun y => Over.w (G y)
       rw [e₁]
       exact GlobalTheory.HolFibre.isHolTo_const isOpen_univ _

@@ -88,7 +88,7 @@ theorem coeff_ren (k : ι →₀ ℕ) (P : MvPolynomial ι ℂ) :
     by_cases hm : m = k
     · subst hm
       simp
-    · rw [if_neg hm, if_neg (fun h => hm (Finsupp.mapDomain_injective σ.injective h)), mul_zero]
+    · rw [ite_eq_right hm, ite_eq_right (fun h => hm (Finsupp.mapDomain_injective σ.injective h)), mul_zero]
   | add P Q hP hQ => rw [map_add (f := _), MvPolynomial.coeff_add, MvPolynomial.coeff_add, hP, hQ, mul_add]
 
 theorem isHomogeneous_ren {ι κ : Type} (f : ι → κ) (s : ι → ℂ) (d : ℕ) (P : MvPolynomial ι ℂ) (h : P.IsHomogeneous d) :
@@ -135,10 +135,8 @@ theorem fockIp_ren (hs : ∀ v, s v * conj (s v) = 1) (P Q : MvPolynomial ι ℂ
     rw [mem_support_iff] at hk ⊢
     rw [coeff_ren]
     exact mul_ne_zero (hp k) hk
-  · intro k' _
-    exact hback k'
-  · intro k _
-    exact hfwd k
+  · exact fun k' _ => hback k'
+  · exact fun k _ => hfwd k
   · intro k' _
     have hF : ((k'.prod fun _ e => e.factorial : ℕ) : ℂ) =
         (((k'.mapDomain σ.symm).prod fun _ e => e.factorial : ℕ) : ℂ) := by

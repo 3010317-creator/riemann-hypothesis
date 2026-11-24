@@ -103,8 +103,7 @@ theorem zDet_pos {z : V (nd X)} (hz : z ∈ Om X) (τ : X.Ψ) : 0 < zDet X z τ 
     intro ι _ v
     have h := inner_self_eq_norm_sq_to_K (𝕜 := ℂ) (WithLp.toLp 2 v)
     rw [EuclideanSpace.inner_toLp_toLp, dotProduct_comm] at h
-    rw [Complex.ofReal_pow]
-    exact h
+    rwa [Complex.ofReal_pow]
   have hpd : (1 - Zᴴ * Z).PosDef := by
     refine Matrix.PosDef.of_dotProduct_mulVec_pos ?_ ?_
     · simp [Matrix.IsHermitian, Matrix.conjTranspose_sub, Matrix.conjTranspose_mul]
@@ -116,8 +115,7 @@ theorem zDet_pos {z : V (nd X)} (hz : z ∈ Om X) (τ : X.Ψ) : 0 < zDet X z τ 
       have hlt : ‖WithLp.toLp 2 (Z *ᵥ x)‖ < ‖WithLp.toLp 2 x‖ :=
         lt_of_le_of_lt hle (by nlinarith [norm_nonneg (WithLp.toLp 2 (Z *ᵥ x))])
       exact pow_lt_pow_left₀ hlt (norm_nonneg _) two_ne_zero
-  have hdet := hpd.det_pos
-  exact (Complex.lt_def.mp hdet).1
+  exact (Complex.lt_def.mp hpd.det_pos).1
 
 end
 

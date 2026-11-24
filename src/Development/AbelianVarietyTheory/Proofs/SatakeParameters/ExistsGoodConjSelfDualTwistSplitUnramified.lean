@@ -188,13 +188,11 @@ theorem eq_one_of_norm_one_of_valuation_sub_one_le (E : Type) [Field E] [NumberF
     rw [← HeightOneSpectrum.intValuation_le_pow_iff_mem, ← HeightOneSpectrum.valuation_of_algebraMap (K := E)]
     convert hw using 2
   have hdvd : w.asIdeal ^ K ∣ Ideal.span {r - 1} := by
-    rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-    exact hmem
+    rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   have hN := map_dvd Ideal.absNorm hdvd
   rw [map_pow, Ideal.absNorm_span_singleton] at hN
   have hnz : (Algebra.norm ℤ (r - 1)).natAbs ≠ 0 := by
-    rw [← Ideal.absNorm_span_singleton, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-    exact hx0
+    rwa [← Ideal.absNorm_span_singleton, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
   have hle := Nat.le_of_dvd (Nat.pos_of_ne_zero hnz) hN
   have h2 : 2 ≤ Ideal.absNorm w.asIdeal := by
     have h0 : Ideal.absNorm w.asIdeal ≠ 0 := by
@@ -370,8 +368,7 @@ theorem finPart_eq_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   · intro P
     by_cases hP : P = w'.under (𝓞 (maximalRealSubfield E))
     · subst hP
-      rw [GlobalTheory.HeckeProduct.localIdele_snd_self]
-      exact hxu
+      rwa [GlobalTheory.HeckeProduct.localIdele_snd_self]
     · rw [GlobalTheory.HeckeProduct.localIdele_snd_ne (maximalRealSubfield E) _ _ hP]
       exact map_one _
   · intro w
@@ -380,8 +377,7 @@ theorem finPart_eq_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   · intro P
     by_cases hP : P = w'.under (𝓞 (maximalRealSubfield E))
     · subst hP
-      rw [GlobalTheory.HeckeProduct.localIdele_snd_self]
-      exact hxc
+      rwa [GlobalTheory.HeckeProduct.localIdele_snd_self]
     · rw [GlobalTheory.HeckeProduct.localIdele_snd_ne (maximalRealSubfield E) _ _ hP, sub_self, map_zero]
       exact zero_le
 
@@ -502,8 +498,7 @@ theorem GlobalTheory.HeckeUnrExt.exists_ext_unr : ∀ (E : Type) [Field E] [Numb
       refine ⟨fun v => ?_, fun v hv => ?_⟩
       · by_cases hvw : v = w
         · subst hvw
-          rw [GlobalTheory.HeckeProduct.localIdele_snd_self]
-          exact hx
+          rwa [GlobalTheory.HeckeProduct.localIdele_snd_self]
         · rw [GlobalTheory.HeckeProduct.localIdele_snd_ne E w v hvw]
           exact map_one _
       · have hvw : v ≠ w := fun e => hw (e ▸ hv)
@@ -637,8 +632,7 @@ theorem translate_mem_twKer : ∀ (E : Type) [Field E] [NumberField E] (w : Heig
     exact mul_comm _ _
   have hDy : ρ D y ∈ twKer ρ (GlobalTheory.LFun.KGL w (n := a)) 1 := by
     refine mem_coinv_of_eigen ρ _ hd (c := (((χ u)⁻¹ : ℂˣ) : ℂ)) ?_ ?_
-    · intro h
-      exact hχ (inv_eq_one.1 (Units.ext h))
+    · exact fun h => hχ (inv_eq_one.1 (Units.ext h))
     · rw [← Module.End.mul_apply, ← map_mul, hcomm, map_mul, Module.End.mul_apply, hy d hd, hdet, map_smul]
   rw [hg, map_mul, map_mul, Module.End.mul_apply, Module.End.mul_apply, hy k₂ hk₂, map_smul, map_smul]
   exact Submodule.smul_mem _ _ (apply_mem_coinv ρ _ hk₁ hDy)
@@ -699,8 +693,7 @@ theorem unrAt_of_isSpherical_twist : ∀ (E : Type) [Field E] [NumberField E] [I
     rw [map_smul, ← h1, smul_smul, ← Units.val_mul, inv_mul_cancel, Units.val_one, one_smul]
   by_contra hne
   obtain ⟨u, hu, hξu⟩ : ∃ u, Formalism.L2.Host.IsUnitAt w u ∧ ξ.loc w u ≠ 1 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hne h
   have hall := _root_.GlobalTheory.CartanCoinv.translate_mem_twKer E w a π.V (π.locRep w) (ξ.loc w) u ha hu hξu y hy
   let Wl : Submodule ℂ π.V := ⨅ g, (twKer (π.locRep w) (GlobalTheory.LFun.KGL w (n := a)) 1).comap (π.locRep w g)
@@ -902,8 +895,7 @@ theorem conjFin_locGL_mem (w : HeightOneSpectrum (𝓞 E))
         change _ ∈ w.adicCompletionIntegers E
         change x ∈ (conjSrc (IsCMField.complexConj E).toRingEquiv w).adicCompletionIntegers E at hx
         rw [HeightOneSpectrum.mem_adicCompletionIntegers] at hx ⊢
-        rw [(conjLoc_spec _ w).2.2]
-        exact hx
+        rwa [(conjLoc_spec _ w).2.2]
     refine ⟨Matrix.GeneralLinearGroup.map r k0, ?_⟩
     ext i j
     rfl
@@ -920,8 +912,7 @@ theorem GlobalTheory.ContraPair.isSpherical_twist_of_dualIsConjBy : ∀ (E : Typ
   have hsat : GlobalTheory.LFun.HasSatGL w (π.locRep w) B0 := (CG.hasSat_mk π w B0).1 hB0
   obtain ⟨x, hx, hx0⟩ := (Submodule.ne_bot_iff _).1 hsat.1
   obtain ⟨y, hy⟩ : ∃ y, B y x ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hx0 (hB2 x h)
   have hw : conjSrc (IsCMField.complexConj E).toRingEquiv w = w := by
     by_contra h
@@ -933,8 +924,7 @@ theorem GlobalTheory.ContraPair.isSpherical_twist_of_dualIsConjBy : ∀ (E : Typ
     have h1 := hfin (locGL E a w k) y x
     change B ((π.twist ψ⁻¹).op (.fin (locGL E a w k)) y) x = B y x
     conv_lhs => rw [← hx']
-    rw [← e]
-    exact h1
+    rwa [← e]
   obtain ⟨v, hv, hve⟩ := GlobalTheory.SmGL.IwahoriOnto.exists_fixed_map_eq ((π.twist ψ⁻¹).isSmooth_locRep w)
     (GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL w a).2 (B.flip x) y hL
   refine (Submodule.ne_bot_iff _).2 ⟨v, hv, fun h => hy ?_⟩
@@ -1049,8 +1039,7 @@ theorem exists_goodCsd_twist : AutomorphicFormsFiniteGL → ∀ (E : Type) [Fiel
   rw [add_zero] at hpos
   have hsign : ∀ v, (χ⁻¹ * quadChar E ^ (a + (n φ₀).natAbs)).locInf v (-1) = (-1) ^ (-n φ₀) := fun v => by
     change (χ.locInf v (-1))⁻¹ * ((quadChar E ^ (a + (n φ₀).natAbs)).locInf v (-1)) = _
-    rw [locInf_pow, quadChar_locInf]
-    rw [hpol.sign v, pow_add, inv_mul_cancel_left, neg_one_zpow_natAbs]
+    rw [locInf_pow, quadChar_locInf, hpol.sign v, pow_add, inv_mul_cancel_left, neg_one_zpow_natAbs]
   have halg := UpperTheory.heckeChar_algebraic_of_sign _ _ (-n φ₀) hpos hsign
   have hunr : ∀ w : HeightOneSpectrum (𝓞 E), ¬ GlobalTheory.UnitaryBC.IsSplitAt w →
       Algebra.IsUnramifiedAt (𝓞 (maximalRealSubfield E)) w.asIdeal ∧

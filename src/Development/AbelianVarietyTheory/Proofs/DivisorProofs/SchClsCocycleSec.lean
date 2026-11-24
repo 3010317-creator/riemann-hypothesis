@@ -105,8 +105,7 @@ theorem ev_δ_sch {X : Scheme.{0}} {I : Cx R} {n k : ℤ} (hk : n + 1 = k)
       (Sec.map ((free R).map _) (freeGen R _ U x)) = _
     rw [CupSpec.freeGen_map]
     rfl
-  rw [hsum]
-  rw [← Finset.sum_smul, sum_neg_one_pow]
+  rw [hsum, ← Finset.sum_smul, sum_neg_one_pow]
   split_ifs <;> simp
 
 end GlobalTheory.EtC.SchCls
@@ -151,8 +150,7 @@ theorem sch_cls_cocycle_sec : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (I : 
     choose φ hφ using key
     refine ⟨Cochain.mk φ, fun p s h U x => ?_⟩
     have heval := hφ _ _ h p rfl U x
-    rw [eqToHom_refl, Category.id_comp] at heval
-    exact heval
+    rwa [eqToHom_refl, Category.id_comp] at heval
   have ev_δ_zero {i j : ℤ} (hij : i + 1 = j)
       (a : Cochain ((chains R).obj (sch.obj X)) I i) (U : Scheme.{0}) (s t : ℤ)
       (hs : -((0 : ℕ) : ℤ) + i = s) (ht : -((0 : ℕ) : ℤ) + j = t) (x : Sx (sch.obj X) 0 U) :

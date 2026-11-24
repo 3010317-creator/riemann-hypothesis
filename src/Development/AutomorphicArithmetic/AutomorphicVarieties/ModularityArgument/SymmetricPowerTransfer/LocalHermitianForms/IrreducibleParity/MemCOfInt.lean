@@ -136,8 +136,7 @@ theorem mem_ml {z : (Etau K τ)ˣ} {S : Set (Etau K τ)} {w : Etau K τ} :
   constructor
   · rintro ⟨x, hx, rfl⟩
     rwa [Units.inv_mul_cancel_left]
-  · intro h
-    exact ⟨_, h, Units.mul_inv_cancel_left z w⟩
+  · exact fun h => ⟨_, h, Units.mul_inv_cancel_left z w⟩
 
 theorem ml_mul (a b : (Etau K τ)ˣ) (S : Set (Etau K τ)) : ml (a * b) S = ml a (ml b S) := by
   ext w
@@ -172,8 +171,7 @@ theorem lat_ml {S : Set (Etau K τ)} (h : IsLat O τ S) (z : (Etau K τ)ˣ) : Is
   refine ⟨fg_ml h.fg z, ?_⟩
   have e : ml z S = ⇑(LinearMap.mulLeft K (z : Etau K τ)) '' S := rfl
   rw [e, ← Submodule.map_span, h.span, Submodule.map_top, LinearMap.range_eq_top]
-  intro w
-  exact ⟨((z⁻¹ : (Etau K τ)ˣ) : Etau K τ) * w, by simp⟩
+  exact fun w => ⟨((z⁻¹ : (Etau K τ)ˣ) : Etau K τ) * w, by simp⟩
 
 theorem stab_ml {S : Set (Etau K τ)} (h : ∀ y ∈ S, ω * y ∈ S) (z : (Etau K τ)ˣ) : ∀ y ∈ ml z S, ω * y ∈ ml z S := by
   rintro _ ⟨x, hx, rfl⟩
@@ -230,7 +228,6 @@ theorem ml_unit {S : Set (Etau K τ)} (h : ∃ s : Finset (Etau K τ), S = Submo
 theorem mem_cls {S S' : Set (Etau K τ)} : S' ∈ cls τ S ↔ ∃ s : Kˣ, S' = ml (((sc (τ := τ)) s)) S := by
   have e : ∀ s : Kˣ, ml (((sc (τ := τ)) s)) S = (fun x => (s : K) • x) '' S := fun s => by
     simp only [ml, sc_val, Algebra.smul_def]
-  show (∃ s : Kˣ, S' = _) ↔ _
   exact exists_congr fun s => by rw [e]
 
 theorem cls_sc (s : Kˣ) (S : Set (Etau K τ)) : cls τ (ml (((sc (τ := τ)) s)) S) = cls τ S := by
@@ -261,8 +258,7 @@ variable [IsDomain O] [IsDiscreteValuationRing O]
 
 private theorem exists_norm_ne_zero_of_isLat {S : Set (Etau K τ)} (hτ : τ ^ 2 - 4 ≠ 0) (h2 : (2 : K) ≠ 0)
     (h : IsLat O τ S) : ∃ w ∈ S, QuadraticAlgebra.norm w ≠ 0 := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   obtain ⟨f, hf⟩ := h.fg
   have hB : ∀ w ∈ S, ∀ v ∈ S,
       2 * w.re * v.re + τ * (w.re * v.im + w.im * v.re) + 2 * w.im * v.im = 0 := by
@@ -303,8 +299,7 @@ private theorem exists_norm_ne_zero_of_isLat {S : Set (Etau K τ)} (hτ : τ ^ 2
       exact (mul_eq_zero.1 e).resolve_left h2
     ext <;> simp [hre, him]
   have hbot : Submodule.span K S = ⊥ := by
-    rw [Submodule.span_eq_bot]
-    exact key
+    rwa [Submodule.span_eq_bot]
   rw [h.span] at hbot
   exact top_ne_bot hbot
 
@@ -360,8 +355,7 @@ private theorem exists_norm_ne_zero_norm_div_integral_of_isLat {Δ : K} (L : IsL
   have hdK : algebraMap O K d ≠ 0 := (map_ne_zero_iff _ hinj).2 hd0
   have hS : ∀ w ∈ S, w ∈ Submodule.span O (f : Set (Etau K τ)) := by
     intro w hw
-    rw [hf] at hw
-    exact hw
+    rwa [hf] at hw
   obtain ⟨w0, hw0, hN0⟩ := exists_norm_ne_zero_of_isLat hτ h2 h
   have hTne : (IsDiscreteValuationRing.addVal O ''
       {a : O | a ≠ 0 ∧ ∃ w ∈ S, algebraMap O K a = algebraMap O K d * QuadraticAlgebra.norm w}).Nonempty := by

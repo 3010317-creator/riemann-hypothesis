@@ -236,8 +236,7 @@ private theorem merge (hG : GlobalTheory.Published.GeometricLemma) (hBZ : Global
   refine ⟨σ, hσ, h2, fun a => ?_⟩
   obtain ⟨ha, h4⟩ := h3 a
   obtain ⟨A, hA⟩ := exists_hasSupport hBZ hG (σ a)
-  rw [← supp_jm hG hBZ h4 hA fun b => hT _]
-  exact hA
+  rwa [← supp_jm hG hBZ h4 hA fun b => hT _]
 
 private theorem deg_eq_zero {y : IrrGL (k := k)} {A : Multiset (IrrGL (k := k))} (hA : HasSupport y.rep A) (h0 : A = 0) :
     y.1 = 0 := by
@@ -265,8 +264,7 @@ private theorem offdiag (hG : GlobalTheory.Published.GeometricLemma) (hBZ : Glob
     have j3 : HasSupport (σ 1).rep (T 0 1 + T 0 2) := by
       have := j2 1
       change HasSupport (σ 1).rep (∑ b : Fin 2, _) at this
-      rw [Fin.sum_univ_two] at this
-      exact this
+      rwa [Fin.sum_univ_two] at this
     rcases Nat.eq_zero_or_pos (σ 1).1 with hz | hp
     · exact SupportUnique.eq_zero_of_hasSupport hz j3
     · obtain ⟨A, hA, z, hz, hzJ⟩ := (UpperTheory.Lit.Full.piece hG hBZ k (w 0) Jᶜ σ hσ j1).2 h0 hp
@@ -291,8 +289,7 @@ private theorem offdiag (hG : GlobalTheory.Published.GeometricLemma) (hBZ : Glob
     have j3 : HasSupport (σ 0).rep (T 2 0 + T 2 1) := by
       have := j2 0
       change HasSupport (σ 0).rep (∑ b : Fin 2, _) at this
-      rw [Fin.sum_univ_two] at this
-      exact this
+      rwa [Fin.sum_univ_two] at this
     rw [t20, zero_add] at j3
     rcases Nat.eq_zero_or_pos (σ 0).1 with hz | hp
     · exact SupportUnique.eq_zero_of_hasSupport hz j3
@@ -331,8 +328,7 @@ private theorem cell (hG : GlobalTheory.Published.GeometricLemma) (hBZ : GlobalT
       (stdBlocks (fun j => b i j) (hr i)) _).2 (w i).rep
     have k1 : IsSubquotient (piTensor fun j => (s i j).rep.ρ) (jac (f i) (w i).rep) := jhMult_ne_zero_iff.1
       (Finset.prod_ne_zero_iff.1 (left_ne_zero_of_mul hs) i (Finset.mem_univ i))
-    have k2 := jhMult_ne_zero_iff.2 (k1.trans (isSubquotient_of_equiv φ))
-    exact k2
+    exact jhMult_ne_zero_iff.2 (k1.trans (isSubquotient_of_equiv φ))
   · have k2 : IsSubquotient (piTensor fun j => (w j).rep)
         (piTensor fun j => multiProd (g j) fun i => (s i j).rep.ρ) :=
       jhMult_ne_zero_iff.1 (right_ne_zero_of_mul hs)
@@ -343,8 +339,7 @@ private theorem cell (hG : GlobalTheory.Published.GeometricLemma) (hBZ : GlobalT
     have k5 : IsSubquotient (multiProd (g j) fun i => (s i j).rep.ρ)
         (multiProd (stdBlocks (fun i => b i j) (hc j)) fun i => (s i j).rep.ρ) :=
       multiProd_placing (g j) _ fun i => (s i j).rep
-    have k6 := jhMult_ne_zero_iff.2 (k4.trans k5)
-    exact k6
+    exact jhMult_ne_zero_iff.2 (k4.trans k5)
 
 end SlopeTestRemainingChoices
 
@@ -388,8 +383,8 @@ theorem UpperTheory.Lit.Full.diag3 :
     · subst hij
       have r := hr i
       rw [Finset.sum_eq_single i (fun j _ hj => hz i j hj) (by simp)] at r
-      exact r.trans (if_pos rfl).symm
-    · exact (hz i j (Ne.symm hij)).trans (if_neg hij).symm
+      exact r.trans (ite_eq_left rfl).symm
+    · exact (hz i j (Ne.symm hij)).trans (ite_eq_right hij).symm
   · simp
 end -- clump:auto
 end -- clump:auto
@@ -484,8 +479,7 @@ private theorem wf_of_surj {μ : Representation ℂ G V} {ν : Representation �
   refine h.not_ge fun w hw => ?_
   obtain ⟨v, rfl⟩ := hq w
   have h1 : v ∈ (subComap q T).toSubmodule := hw
-  rw [← e] at h1
-  exact h1
+  rwa [← e] at h1
 
 section Min
 
@@ -591,7 +585,7 @@ private theorem exists_irr_quot {G V W : Type} [Group G] [TopologicalSpace G] [I
   choose c hc using hcen
   let ω : GL (Fin b) k → ℂ := fun z => if h : z ∈ Subgroup.center (GL (Fin b) k) then c z h else 0
   have hων : GroundTheory.Automorphic.Parabolic.HasCentralChar (ν.comp ψ : Representation ℂ _ U) ω := fun z hz u => by
-    simp only [ω, dif_pos hz]
+    simp only [ω, dite_eq_left hz]
     exact hc z hz u
   have hωA : GroundTheory.Automorphic.Parabolic.HasCentralChar A ω := fun z hz =>
     scalar_of_subquot hν (hων z hz)
@@ -820,8 +814,7 @@ private theorem exists_covBy_inj {r t N : ℕ} (hN : r + t = N) {U V W : Type} [
     haveI := tensor_subsingleton_right (F := ℂ) (V := V)
       (W := ↥S.toSubmodule ⧸ Submodule.comap S.toSubmodule.subtype S.toSubmodule)
     exact not_isSubquotient_ind₂ _ _ hπ hS.isSubquotient
-  · intro S M T hTM hMS hQ
-    exact step_inj hN π A B hπ hTM hMS hQ
+  · exact fun S M T hTM hMS hQ => step_inj hN π A B hπ hTM hMS hQ
   · exact Inj.trans h (inj_right hN A (subQuot_top_bot B))
 
 private theorem assoc_eqv {r s t M N : ℕ} (h₂ : r + s + t = N) (h₃ : s + t = M) (h₄ : r + M = N)
@@ -973,7 +966,7 @@ private theorem eq_single_of_monomial {ι σ : Type*} (Ψ : (ι →₀ ℤ) ≃+
       exact hx (hU w x hw' hx0).symm
   have h2 : C w * AddMonoidAlgebra.coeff (Ψ (Finsupp.single w 1)) m = 1 := by
     have h3 := congrArg (fun p => AddMonoidAlgebra.coeff (Ψ p) m) h1
-    simp only [map_zsmul, ep, MvPolynomial.coeff_monomial, if_true, MvPolynomial.coeff_smul, smul_eq_mul] at h3
+    simp only [map_zsmul, ep, MvPolynomial.coeff_monomial, ite_true, MvPolynomial.coeff_smul, smul_eq_mul] at h3
     exact h3.symm
   have h4 : C w = 1 := by
     have := hnn w
@@ -1275,8 +1268,7 @@ private theorem isIrreducible_of_occurs (hBZ : GlobalTheory.Published.BernsteinZ
       exact ⟨v.1, rfl⟩
     have hQ : IsSmooth (subQuot ⊤ S) := (IsSubquotient.of_surjective p hps).isSmooth hs
     have hinj : Function.Injective (p.comp ιT) := by
-      refine (injective_iff_map_eq_zero _).2 fun u hu => ?_
-      exact Subtype.ext (hST _ ((hp0 _).1 hu) u.2)
+      exact (injective_iff_map_eq_zero _).2 fun u hu => Subtype.ext (hST _ ((hp0 _).1 hu) u.2)
     have h1 : 1 ≤ jhMult ρ (jac e T.toRepresentation) :=
       hone T v hv hv0
     have h2 : 1 ≤ jhMult ρ (jac e (subQuot ⊤ S)) :=
@@ -1292,8 +1284,7 @@ private theorem isIrreducible_of_occurs (hBZ : GlobalTheory.Published.BernsteinZ
   have htop : S = ⊤ := by
     refine le_antisymm le_top fun v _ => ?_
     obtain ⟨w, hw, h⟩ := hsum v
-    rw [sub_eq_zero.1 (hT _ h)]
-    exact hw
+    rwa [sub_eq_zero.1 (hT _ h)]
   rw [htop] at hS
   exact isSimpleOrder_iff_isAtom_top.2 hS
 

@@ -124,15 +124,13 @@ theorem traceLevel_flat (R : RealDat D A Ks) (i : Fin D.R.m) (B : Base (Vc D i) 
   refine Fintype.sum_of_injective (fun p : B.G.P.H => e.symm p) (fun p q hpq => Subtype.ext (e.symm.injective hpq)) _ _
     (fun g hg => ?_) (fun p => ?_)
   · rw [dite_eq_right, zero_mul]
-    intro hgU
-    exact hg ⟨⟨e g, (hU g).2 hgU⟩, e.symm_apply_apply g⟩
+    exact fun hgU => hg ⟨⟨e g, (hU g).2 hgU⟩, e.symm_apply_apply g⟩
   · have hp : e.symm p ∈ U := (hU _).1 (by rw [MulEquiv.apply_symm_apply]; exact p.2)
     have key : ((B.G.P.chi p : ℂˣ) : ℂ) = D.what₂.embLL ((ψ ⟨e.symm p, hp⟩ : D.what₂.LLˣ) : D.what₂.LL) := by
       have hp' : e (e.symm p) ∈ B.G.P.H := by rw [MulEquiv.apply_symm_apply]; exact p.2
       have := hchi ⟨e.symm p, hp⟩ hp'
       have hpe : (⟨e (e.symm p), hp'⟩ : B.G.P.H) = p := Subtype.ext (e.apply_symm_apply p)
-      rw [hpe] at this
-      exact this
+      rwa [hpe] at this
     rw [dite_eq_left hp, Units.val_inv_eq_inv_val, key, Units.val_inv_eq_inv_val, map_inv₀]
 
 end GlobalTheory.TraceFlatLevel
@@ -178,8 +176,7 @@ theorem traceSt_alt : _root_.GlobalTheory.BigOn.Exp.TupLe.TraceCondition := by
     ((p.R.eG.trans p.cG).trans (ρ.eG i j b)) (fun g P h h' a c => ?_) (fun g => mem_level_iff hm.2.2 hlev i j b g)
     (fun u hu => ?_) ψ hψ hQ ω hω h P
   · have e1 := hpin.grp i j b (p.cG (p.R.eG g)) P h h' a c
-    rw [MulEquiv.symm_apply_apply] at e1
-    exact e1
+    rwa [MulEquiv.symm_apply_apply] at e1
   · refine (level_chi hm.2.2 hρ hlev i j b u hu).1.trans ?_
     rw [MonoidHom.inv_apply, Units.val_inv_eq_inv_val, map_inv₀]
     rfl

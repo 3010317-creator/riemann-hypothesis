@@ -71,8 +71,7 @@ theorem exists_shift_mem_pow_of_mul_mem_pow {R : Type} [CommRing R] [IsDomain R]
   refine ⟨k, fun n x hx => ?_⟩
   have h1 : r * x ∈ I ^ (n + k) • (⊤ : Submodule R R) ⊓ Ideal.span {r} := by
     refine Submodule.mem_inf.mpr ⟨?_, Ideal.mem_span_singleton'.mpr ⟨x, mul_comm _ _⟩⟩
-    rw [Ideal.smul_eq_mul, Ideal.mul_top]
-    exact hx
+    rwa [Ideal.smul_eq_mul, Ideal.mul_top]
   rw [hk (n + k) (Nat.le_add_left k n), Nat.add_sub_cancel] at h1
   have h2 : r * x ∈ I ^ n * Ideal.span {r} := Submodule.smul_mono le_rfl inf_le_right h1
   obtain ⟨z, hz, hzr⟩ := Ideal.mem_mul_span_singleton.mp h2
@@ -183,8 +182,7 @@ theorem expandsAtMod_of_succ
 
     rw [map_sub, map_mul, Units.val_pow_eq_pow_val, map_pow, hW, hS, map_sum, ← Category.assoc, hf] at H'
     simp only [map_mul, hF, hT] at H'
-    rw [Units.val_pow_eq_pow_val]
-    exact H'
+    rwa [Units.val_pow_eq_pow_val]
 
 end
 

@@ -80,8 +80,7 @@ theorem consTup_mem_latV {d : ℕ} (b : Module.Basis (Fin d) F E) (v : HeightOne
       v.adicCompletionIntegers F) {n M : ℕ} (X : Fin n → Fin M → Fv F v ⊗[F] E) :
     consTup X ∈ latV b v ↔ X ∈ latV b v := by
   constructor
-  · intro h a i k
-    exact h a.succ i.succ k
+  · exact fun h a i k => h a.succ i.succ k
   · intro h a i k
     refine Fin.cases ?_ (fun a => ?_) a <;> refine Fin.cases ?_ (fun i => ?_) i
     · exact h1 k
@@ -150,8 +149,7 @@ theorem coordK_map_unit [NumberField E] (σ : E →ₐ[F] E) (hCM : IsCMExt F E 
     have : L = (fun X : Fin 1 → Fin 1 → Fv F v ⊗[F] E => X 0 0) '' latV b v := by
       ext y
       constructor
-      · intro hy
-        exact ⟨fun _ _ => y, fun _ _ k => hy k, rfl⟩
+      · exact fun hy => ⟨fun _ _ => y, fun _ _ k => hy k, rfl⟩
       · rintro ⟨X, hX, rfl⟩
         exact fun k => hX 0 0 k
     rw [this]
@@ -176,13 +174,10 @@ theorem coordK_map_unit [NumberField E] (σ : E →ₐ[F] E) (hCM : IsCMExt F E 
       show (Algebra.TensorProduct.basis (Fv F v) b).repr (inclR (F := F) (Fv F v) (algebraMap F E t) * y) k = _
       rw [incl_mul_eq_smul, map_smul, Finsupp.smul_apply, smul_eq_mul]
     constructor
-    · intro h k
-      exact (hmem _).1 (hk k ▸ h k)
-    · intro h k
-      exact hk k ▸ (hmem _).2 (h k)
+    · exact fun h k => (hmem _).1 (hk k ▸ h k)
+    · exact fun h k => hk k ▸ (hmem _).2 (h k)
   have := (_root_.GlobalTheory.CompanionTheory.SW.HaarTransport.map_addEquiv_haar _ _ (coordK (Fv F v) b lam) (coordK (Fv F v) b lam) e he he').2 L L hLc hLo hL0 hL rfl
-  rw [one_smul]
-  exact this
+  rwa [one_smul]
 
 end Place
 

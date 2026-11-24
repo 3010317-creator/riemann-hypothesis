@@ -64,8 +64,7 @@ theorem vs_valuation_eq_one_iff {K : Type} [Field K] (V : ValuationSubring K) {x
   · intro h; simp [h]
   · rintro ⟨h1, h2⟩
     refine le_antisymm h1 ?_
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     have := one_lt_inv₀ (pos_iff_ne_zero.2 h0) |>.2 hlt
     exact absurd h2 (not_le.2 this)
 
@@ -82,8 +81,7 @@ theorem Tower.Un_map {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ}
   refine ⟨Units.map φ.toMonoidHom a, ?_⟩
   have hne : (f : X.K) / (a : X.K) ^ m ≠ 0 := div_ne_zero f.ne_zero (pow_ne_zero _ a.ne_zero)
   rw [vs_comap_valuation_eq_one_iff φ W hne, map_div₀, map_pow] at ha
-  rw [hu]
-  exact ha
+  rwa [hu]
 
 theorem Tower.Un_sl_gal : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε),
     Function.Injective ε → (∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero)) →

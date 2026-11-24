@@ -66,16 +66,14 @@ private lemma sq_in_Zq (q : ℕ) [Fact q.Prime] (d g d0 : ℕ) (hg : 0 < g) (hd 
       rw [← norm_pow, hx, norm_neg]
       have : ‖((d0 : ℤ_[q]) : ℚ_[q])‖ ≤ 1 := PadicInt.norm_le_one _
       simpa using this
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     nlinarith
   let z : ℤ_[q] := ⟨y / g, hxn⟩
   have hzc : (z : ℚ_[q]) = y / g := rfl
   refine ⟨z, ?_⟩
   have hc : ((z ^ 2 : ℤ_[q]) : ℚ_[q]) = ((-(d0 : ℤ_[q]) : ℤ_[q]) : ℚ_[q]) := by
     push_cast
-    rw [hzc]
-    exact hx
+    rwa [hzc]
   first
     | exact PadicInt.ext hc
 
@@ -87,8 +85,7 @@ private lemma not_dvd (q : ℕ) [hq : Fact q.Prime] (d0 : ℕ) (hsq : Squarefree
   have hd1 : ‖((d0 : ℤ) : ℤ_[q])‖ < 1 :=
     (PadicInt.norm_int_lt_one_iff_dvd _).mpr (by exact_mod_cast hdvd)
   have hz1 : ‖z‖ < 1 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     nlinarith [norm_nonneg z]
   obtain ⟨w, rfl⟩ := (PadicInt.norm_lt_one_iff_dvd z).mp hz1
   have hle : ‖((d0 : ℤ) : ℤ_[q])‖ ≤ (q : ℝ) ^ (-(2 : ℕ) : ℤ) := by
@@ -156,36 +153,30 @@ theorem UpperTheory.Gal.W2.Seed.pQuadEx :
     QuadEx := by
   intro d hd
   obtain ⟨d0, g, hgd, hsq⟩ := Nat.sq_mul_squarefree d
-  have hg : 0 < g := by
-    rcases Nat.eq_zero_or_pos g with h | h
-    · subst h; simp at hgd; omega
-    · exact h
-  have hd0 : 0 < d0 := by
-    rcases Nat.eq_zero_or_pos d0 with h | h
-    · subst h; simp at hgd; omega
-    · exact h
+  have hg : 0 < g := Nat.pos_of_ne_zero fun h => by
+    simp [h] at hgd
+    omega
+  have hd0 : 0 < d0 := Nat.pos_of_ne_zero fun h => by
+    simp [h] at hgd
+    omega
   have hgq : (g : ℚ) ≠ 0 := by exact_mod_cast hg.ne'
   have hdq : (d : ℚ) = (g : ℚ) ^ 2 * d0 := by rw [← hgd]; push_cast; ring
   by_cases h43 : d0 % 4 = 3
   · obtain ⟨m, hm⟩ : ∃ m : ℕ, d0 + 1 = 4 * m := ⟨(d0 + 1) / 4, by omega⟩
-    have hdisc : (1 : ℤ) ^ 2 - 4 * (m : ℤ) = -(d0 : ℤ) := by
-      have : ((d0 : ℤ) + 1) = 4 * (m : ℤ) := by exact_mod_cast hm
-      linarith
+    have hdisc : (1 : ℤ) ^ 2 - 4 * (m : ℤ) = -(d0 : ℤ) := by omega
     refine ⟨1, m, 1 / (g : ℚ), ?_, ?_, ?_⟩
-    · rw [hdisc]; omega
+    · omega
     · rw [hdisc, hdq]; push_cast; field_simp
     · intro q _ hsqr
       obtain ⟨z, hz⟩ := sq_in_Zq q d g d0 hg hgd hsqr
       have hnd := not_dvd q d0 hsq z hz
       refine ⟨?_, ?_⟩
       · rw [hdisc, dvd_neg]
-        intro h
-        exact hnd (by exact_mod_cast h)
+        exact_mod_cast hnd
       · by_cases hq2 : q = 2
         · subst hq2
           have h7 := two_case d0 hnd z hz
           refine ⟨0, ?_⟩
-          have : (m : ℤ) % 2 = 0 := by omega
           push_cast
           omega
         · obtain ⟨r0, hr0⟩ := root_mod q d0 z hz
@@ -202,13 +193,9 @@ theorem UpperTheory.Gal.W2.Seed.pQuadEx :
           have h7 := two_case d0 hnd z hz
           omega
         · have hq : q.Prime := Fact.out
-          have hpz : Prime (q : ℤ) := Nat.prime_iff_prime_int.mp hq
           intro h
-          have h' : (q : ℤ) ∣ 4 * (d0 : ℤ) := by
-            have : (0 : ℤ) ^ 2 - 4 * (d0 : ℤ) = -(4 * (d0 : ℤ)) := by ring
-            rw [this, dvd_neg] at h
-            exact h
-          rcases hpz.dvd_or_dvd h' with h4 | h4
+          have h' : (q : ℤ) ∣ 4 * (d0 : ℤ) := by simpa using h
+          rcases (Nat.prime_iff_prime_int.mp hq).dvd_or_dvd h' with h4 | h4
           · exact not_dvd_four q hq hq2 h4
           · exact hnd (by exact_mod_cast h4)
       · obtain ⟨r0, hr0⟩ := root_mod q d0 z hz

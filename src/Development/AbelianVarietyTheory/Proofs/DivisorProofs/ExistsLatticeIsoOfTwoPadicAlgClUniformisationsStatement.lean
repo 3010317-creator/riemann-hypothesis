@@ -216,8 +216,7 @@ theorem exists_map (K : IntermediateField ℚ_[p] (PadicAlgCl p)) (V : Type) [Co
       rw [map_inv₀]; exact eq_inv_of_mul_eq_one_right h1
     have hy1 : ‖((y : K) : PadicAlgCl p)‖ ≤ 1 := by
       have := y.2
-      rw [ValuationSubring.mem_comap, mem_OO_iff] at this
-      exact this
+      rwa [ValuationSubring.mem_comap, mem_OO_iff] at this
     obtain ⟨z, hz⟩ := (hn (algebraMap V _ m)⁻¹).1 (h2 ▸ hy1)
     have h0 : algebraMap V (FractionRing V) m ≠ 0 := fun h => by simp [h] at h1
     refine IsUnit.of_mul_eq_one z (IsFractionRing.injective V (FractionRing V) ?_)
@@ -694,8 +693,7 @@ theorem model_descends : ∀ (k K : Type) [Field k] [Field K] (σ : k →+* K), 
       · rw [Category.assoc, hj₁, hd₁, hfst]
       · rw [Category.assoc, hj₂, ← Category.assoc, hd₂, Category.assoc, _root_.GlobalTheory.spMap_comp_ring, hα₁β]
         exact hφP.1.w.symm
-    rw [reassoc_of% hdj]
-    exact hc₂
+    rwa [reassoc_of% hdj]
 
 end GlobalTheory.PolIsoDescent
 end -- clump:auto
@@ -1093,8 +1091,7 @@ theorem move_given : ∀ (V V' : Type) [CommRing V] [IsDomain V] [IsDiscreteValu
       algebraMap (FractionRing V') F (algebraMap V' (FractionRing V') (φ r)) := fun r => by
     rw [← hK', ← hF]; rfl
   have sF : jFK (R := V') F ≫ spMap φK = jFK (R := V) F := by
-    refine (Spec.map_comp _ _).symm.trans ?_
-    exact congrArg (fun f => Spec.map (CommRingCat.ofHom f)) hF
+    exact (Spec.map_comp _ _).symm.trans (congrArg (fun f => Spec.map (CommRingCat.ofHom f)) hF)
   obtain ⟨D', hD, U', hU, hgen⟩ := exists_pull_given aV aV' φ hφ hI φK sq
     (isSemiAbelian_of_unifPre_dvr V D A G U.toUnifPre) U A' ψ gp hL hg
   refine ⟨D', hD, _, inferInstance, inferInstance, U',
@@ -1295,8 +1292,7 @@ theorem main : ∀ {o Ω o' Ω' : Type} [CommRing o] [Field Ω] [Algebra o Ω] [
     obtain ⟨⟨r₂, hr₂⟩, n₂⟩ := GlobalTheory.T.psiCoordinate_norm_chart_eq_coordinate_norm_padicDVR p W hWn D₂ (ε y)
     have e3 : PsiNormAt p D₁.toPre y r ↔ PsiNormAt p D₂.toPre (ε y) r := by
       rw [n₁ r₁ hr₁ r, n₂ r₂ hr₂ r, unit_norm p W hWn (hεψ y r₁ r₂ hr₁ hr₂)]
-    simp only [AddEquiv.trans_apply, AddEquiv.symm_apply_apply]
-    exact e1.trans (e3.trans e2.symm)
+    simpa only [AddEquiv.trans_apply, AddEquiv.symm_apply_apply] using e1.trans (e3.trans e2.symm)
   · intro m pk pk' x x' w hm hx hx' hw hwx hwx'
     obtain ⟨q₁, x₁, hq₁, hx₁ψ, hx₁⟩ := htor₁ m hm pk x hx
     obtain ⟨q₂, x₂, hq₂, hx₂ψ, hx₂⟩ := htor₂ m hm pk' x' hx'

@@ -63,8 +63,7 @@ private theorem loc_unr {F : Type} [Field F] [NumberField F] {w : HeightOneSpect
     simp only [smul_eq_mul, mul_neg, mul_one, neg_neg]
     rw [WithZero.exp_log h0, mul_inv_cancel₀ h0]
   have h3 := hu _ h1
-  rw [map_mul, map_inv, map_zpow, mul_inv_eq_one] at h3
-  exact h3
+  rwa [map_mul, map_inv, map_zpow, mul_inv_eq_one] at h3
 
 theorem UpperTheory.V.Loc.epsArt :
     GlobalArtinReciprocity → ∀ {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] {l : ℕ} [Fact l.Prime] {A : ValuationSubring Ω} {w : Plc F} (h : IsPlaceOver A w), ((l : ℕ) : 𝓞 F) ∈ w.asIdeal → ∀ (a : Weil h →* (w.adicCompletion F)ˣ), IsLocalArtin h a → ∀ s : Weil h, (cycBar F Ω l (s : G F Ω) : Qbar l) = ((normV w : ℕ) : Qbar l) ^ deg s * algPow w (fun _ => 1) (a s : (w.adicCompletion F)) := by

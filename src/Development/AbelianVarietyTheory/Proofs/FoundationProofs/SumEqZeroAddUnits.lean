@@ -91,8 +91,7 @@ theorem card_eq_sq {k : Type} [Field k] [Fintype k] (s : k →+* k) (hs : ∀ x,
       (fun u : T.ker => (⟨(s r - r) * u, ⟨r * u, ?_⟩⟩ : T.range)) ⟨?_, ?_⟩)
     · have hu : s u = u := by
         have := u.2
-        rw [AddMonoidHom.mem_ker, hT, sub_eq_zero] at this
-        exact this
+        rwa [AddMonoidHom.mem_ker, hT, sub_eq_zero] at this
       rw [hT, map_mul, hu]; ring
     · intro u v huv
       have := congrArg Subtype.val huv
@@ -184,8 +183,7 @@ theorem sum_eq_zero_add_units {k : Type} [Field k] [Fintype k] {M : Type} [AddCo
   refine Finset.sum_bij (fun x _ => (x : k)) ?_ ?_ ?_ ?_
   · intro a _; simp
   · intro a _ b _ h; exact Units.ext h
-  · intro b hb
-    exact ⟨Units.mk0 b (by simpa using hb), by simp, rfl⟩
+  · exact fun b hb => ⟨Units.mk0 b (by simpa using hb), by simp, rfl⟩
   · intro a _; rfl
 
 theorem gauss_field {k : Type} [Field k] [Fintype k] (s : k →+* k) (hs : ∀ x, s (s x) = x)
@@ -198,7 +196,7 @@ theorem gauss_field {k : Type} [Field k] [Fintype k] (s : k →+* k) (hs : ∀ x
   set a := (Finset.univ.filter (fun x : kˣ => s x = x)).card with hadef
   have hqa : q = 1 + a := by
     have := sum_eq_zero_add_units (fun x : k => if s x = x then (1 : ℕ) else 0)
-    rw [hqdef, hadef, Finset.card_filter, Finset.card_filter, this, if_pos (map_zero s)]
+    rw [hqdef, hadef, Finset.card_filter, Finset.card_filter, this, ite_eq_left (map_zero s)]
   have ha : 0 < a := Finset.card_pos.2 ⟨1, by simp⟩
   have hcard : Fintype.card k = 1 + Fintype.card kˣ := by
     have := sum_eq_zero_add_units (fun _ : k => (1 : ℕ))
@@ -221,7 +219,7 @@ theorem gauss_field {k : Type} [Field k] [Fintype k] (s : k →+* k) (hs : ∀ x
   have hu1 : ∑ y ∈ Finset.univ.filter (fun x : kˣ => s x = x), f y = -1 := by
     have := sum_eq_zero_add_units (fun x : k => if s x = x then f x else 0)
     rw [← Finset.sum_filter, hz, ← Finset.sum_filter] at this
-    simp only [map_zero, if_true, h0] at this
+    simp only [map_zero, ite_true, h0] at this
     linear_combination -this
   rw [sum_eq_zero_add_units, hsum, hu1, hq, hmq]
   push_cast
@@ -239,8 +237,7 @@ theorem gauss_quotient : ∀ {R : Type} [CommRing R] (σ : R →+* R) (w : R), (
     intro a b h
     have h1 := hχP _ (Ideal.Quotient.eq.1 h)
     have h2 := hadd (a - b) b
-    rw [h1, one_mul, sub_add_cancel] at h2
-    exact h2
+    rwa [h1, one_mul, sub_add_cancel] at h2
   let f : R ⧸ P → ℂ := fun q => χ (w * Quotient.out q)
   have hf : ∀ a : R, f (Ideal.Quotient.mk P a) = χ (w * a) := fun a =>
     hcongr _ _ (by rw [map_mul, map_mul, hout])

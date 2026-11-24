@@ -325,8 +325,7 @@ theorem assembly (j : K ≃+* k ⊗[maximalRealSubfield E] E) (hj1 : ∀ e : E, 
     GlobalTheory.SelfRecipFactor.isSelfRecip_of_dvd_ell E n P hell
   have hXP : IsCoprime X P := by
     rw [Polynomial.irreducible_X.coprime_iff_not_dvd]
-    intro hX
-    exact (hself X monic_X irreducible_X hX).2.2.2.1 (by simp)
+    exact fun hX => (hself X monic_X irreducible_X hX).2.2.2.1 (by simp)
   obtain ⟨a, b, hab⟩ := hXP
   set S := (UniqueFactorizationMonoid.normalizedFactors P).toFinset with hS
   have hmem : ∀ Q ∈ S, Q.Monic ∧ Irreducible Q ∧ Q ∣ P := by
@@ -405,8 +404,7 @@ theorem assembly (j : K ≃+* k ⊗[maximalRealSubfield E] E) (hj1 : ∀ e : E, 
   have hmap : cT cK A * H' * A = H' := by
     have := congrArg (Matrix.map · (algebraMap E K)) hinv
     simp only [Matrix.map_mul] at this
-    rw [hcTmap] at this
-    exact this
+    rwa [hcTmap] at this
   have hint : cT cK A * H' = H' * aeval A R := by
     calc cT cK A * H' = cT cK A * H' * (A * aeval A R) := by rw [hAB, Matrix.mul_one]
       _ = H' * aeval A R := by rw [← Matrix.mul_assoc, hmap]
@@ -479,8 +477,7 @@ theorem exists_congr_monic_factors {K : Type} [Field K] {P : K[X]} (hP : P ≠ 0
   obtain ⟨q, hq, hfq⟩ := UniqueFactorizationMonoid.exists_mem_normalizedFactors_of_dvd hP hfi hfP
   have hfeq : f = q := Polynomial.eq_of_monic_of_associated hfm (monic_of_mem_normalizedFactors' hq) hfq
   subst hfeq
-  have h := hr ⟨f, Multiset.mem_toFinset.mpr hq⟩
-  exact Ideal.mem_span_singleton.mp h
+  exact Ideal.mem_span_singleton.mp (hr ⟨f, Multiset.mem_toFinset.mpr hq⟩)
 
 private theorem adjoinRoot_exists_mk_eq {R : Type} [CommRing R] {f : R[X]} (x : AdjoinRoot f) :
     ∃ p : R[X], AdjoinRoot.mk f p = x :=
@@ -1000,8 +997,7 @@ theorem det_restr_eq (b : Module.Basis (Fin r) (maximalRealSubfield E) (plus Q))
   have h1 : ∀ i, bb i = (1 : k) ⊗ₜ b i := fun i => Algebra.TensorProduct.basis_apply b i
   have h2 : ∀ j, x * ((1 : k) ⊗ₜ b j) = ∑ i, L i j • ((1 : k) ⊗ₜ[maximalRealSubfield E] b i) := by
     intro j
-    simp only [L, Algebra.leftMulMatrix_eq_repr_mul, ← h1]
-    exact (bb.sum_repr _).symm
+    simpa only [L, Algebra.leftMulMatrix_eq_repr_mul, ← h1] using (bb.sum_repr _).symm
   have h3 : ∀ i, inclPlus Q k ((1 : k) ⊗ₜ b i) = (1 : k) ⊗ₜ B i := fun i => by
     rw [hB]; rfl
   have h4 : ∀ j, inclPlus Q k x * ((1 : k) ⊗ₜ B j) = ∑ i, L i j • ((1 : k) ⊗ₜ[maximalRealSubfield E] B i) := by
@@ -1058,8 +1054,7 @@ theorem exists_psi {n : ℕ} (A : Matrix (Fin n) (Fin n) E) (hs : A.charpoly.Sep
     intro g g' h
     obtain ⟨u, hu⟩ : Q.1 ∣ g - g' := AdjoinRoot.mk_eq_mk.1 h
     have h1 := hkill u
-    rw [← hu, map_sub, Matrix.sub_mulVec, sub_eq_zero] at h1
-    exact h1
+    rwa [← hu, map_sub, Matrix.sub_mulVec, sub_eq_zero] at h1
   let rep : Fld Q → E[X] := fun y => (AdjoinRoot.mk_surjective (g := Q.1) y).choose
   have hrep : ∀ y : Fld Q, AdjoinRoot.mk Q.1 (rep y) = y := fun y =>
     (AdjoinRoot.mk_surjective (g := Q.1) y).choose_spec
@@ -1161,8 +1156,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (hU : Unr 
   obtain ⟨ψ, hinj, hαψ, hrange⟩ := exists_psi Q γ₀.val hsep hQ
   obtain ⟨θ, h0, hθ⟩ : ∃ θ : E, θ ≠ 0 ∧ IsCMField.complexConj E θ = -θ := by
     obtain ⟨z, hz⟩ : ∃ z : E, IsCMField.complexConj E z ≠ z := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact IsCMField.complexConj_ne_one E (AlgEquiv.ext h)
     exact ⟨z - IsCMField.complexConj E z, sub_ne_zero.mpr hz.symm, by simp⟩
   obtain ⟨b, B, hB⟩ := GlobalTheory.TraceClasses.exists_bases Q h0 hθ
@@ -1387,8 +1381,7 @@ theorem locPhi_mem_units_plus : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have hcA : cT (cj w) A * H * A = H := by
     have := congrArg (Matrix.map · (algebraMap E (w.adicCompletion E))) h3
     simp only [Matrix.map_mul, cT_map hU w hw] at this
-    rw [hA, hHd]
-    exact this
+    rwa [hA, hHd]
   have hint : cT (cj w) A * H = H * aeval A (atPl w r₀) := by
     calc cT (cj w) A * H = cT (cj w) A * H * (A * aeval A (atPl w r₀)) := by rw [hAi, Matrix.mul_one]
       _ = H * aeval A (atPl w r₀) := by rw [← Matrix.mul_assoc, hcA]
@@ -1402,8 +1395,7 @@ theorem locPhi_mem_units_plus : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have hfix : M = aeval A ((m.map (cj w)).comp (atPl w r₀)) := by
     have h1 : cT (cj w) M * H = H * M := by
       have := hM
-      rw [IsHerm, cT_mul, hHh] at this
-      exact this
+      rwa [IsHerm, cT_mul, hHh] at this
     rw [hMd, GlobalTheory.NormInert.cT_aeval, aeval_mul_of_intertwine hint, ← aeval_comp, ← hMd] at h1
     exact (hH0.mul_left_cancel h1).symm
   have hdiv : A.charpoly ∣ (m.map (cj w)).comp (atPl w r₀) - m :=
@@ -1419,8 +1411,7 @@ theorem locPhi_mem_units_plus : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have hcomm : Commute A (u : Matrix (Fin n) (Fin n) (w.adicCompletion E)) := by
     rw [hu, hMd]
     have := congrArg (aeval A) (mul_comm (X : (w.adicCompletion E)[X]) m)
-    rw [map_mul, map_mul, aeval_X] at this
-    exact this
+    rwa [map_mul, map_mul, aeval_X] at this
   obtain ⟨g, hg⟩ := GlobalTheory.BCT.ClsFin.exists_aeval_of_comm A
     ((u⁻¹ : (Matrix (Fin n) (Fin n) (w.adicCompletion E))ˣ) : Matrix (Fin n) (Fin n) (w.adicCompletion E))
     hAsep hcomm.units_inv_right.eq
@@ -1517,8 +1508,7 @@ theorem mem_norms_of_congr (hU : Unr E) (w : Pl E) (hw : ¬ IsSplitAt w)
     rw [hA, aeval_map_mat, ← hr₀, ← Matrix.map_mul, Units.mul_inv, Matrix.map_one _ (map_zero _) (map_one _)]
   have hcA : cT (cj w) A * H * A = H := by
     have := congrArg (Matrix.map · (algebraMap E (w.adicCompletion E))) hinv
-    simp only [Matrix.map_mul, cT_map hU w hw] at this
-    exact this
+    simpa only [Matrix.map_mul, cT_map hU w hw] using this
   have hHu : IsUnit H.det := by
     rw [hH, ← RingHom.mapMatrix_apply, ← RingHom.map_det]
     exact (hdet.isUnit).map _
@@ -1815,8 +1805,7 @@ theorem posDef_aeval {n : ℕ} (U : Matrix (Fin n) (Fin n) ℂ) (hU : Uᴴ * U =
   have hcT : (aeval U p)ᴴ = aeval U ((p.map (starRingEnd ℂ)).comp r) := by
     have h1 := GlobalTheory.NormInert.cT_aeval (starRingEnd ℂ) U p
     have h2 : ∀ M : Matrix (Fin n) (Fin n) ℂ, cT (starRingEnd ℂ) M = Mᴴ := fun M => rfl
-    rw [h2, h2, hr, ← aeval_comp] at h1
-    exact h1
+    rwa [h2, h2, hr, ← aeval_comp] at h1
   have hzero : aeval U (p - (p.map (starRingEnd ℂ)).comp r) = 0 := by
     by_cases h0 : p - (p.map (starRingEnd ℂ)).comp r = 0
     · rw [h0, map_zero]
@@ -1841,8 +1830,7 @@ theorem posDef_aeval {n : ℕ} (U : Matrix (Fin n) (Fin n) ℂ) (hU : Uᴴ * U =
   haveI : Nonempty (Fin n) := ⟨i⟩
   have h1 : ((hH.eigenvalues i : ℝ) : ℂ) ∈ spectrum ℂ (aeval U p) := by
     have := hH.eigenvalues_mem_spectrum_real i
-    rw [← spectrum.preimage_algebraMap ℂ] at this
-    exact this
+    rwa [← spectrum.preimage_algebraMap ℂ] at this
   rw [spectrum.map_polynomial_aeval_of_nonempty _ _ (spectrum.nonempty_of_isAlgClosed_of_finiteDimensional ℂ U)] at h1
   obtain ⟨μ, hμ, e⟩ := h1
   have h2 := hp μ (Matrix.mem_spectrum_iff_isRoot_charpoly.1 hμ)
@@ -1881,8 +1869,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], ∀ (n : 
     have e : (cT (IsCMField.complexConj E).toRingEquiv.toRingHom γ₀.val).map τ = Aᴴ := by
       ext i j
       exact IsCMField.complexEmbedding_complexConj E τ (γ₀.val j i)
-    rw [e, hHQ] at h
-    exact h
+    rwa [e, hHQ] at h
   let u : (Matrix (Fin n) (Fin n) ℂ)ˣ := ((Matrix.isUnit_iff_isUnit_det Q).2 (isUnit_iff_ne_zero.2 hQ)).unit
   have hu : (u : Matrix (Fin n) (Fin n) ℂ) = Q := rfl
   obtain ⟨Qi, hQi⟩ : ∃ Qi : Matrix (Fin n) (Fin n) ℂ, Qi = ((u⁻¹ : _ˣ) : Matrix (Fin n) (Fin n) ℂ) := ⟨_, rfl⟩

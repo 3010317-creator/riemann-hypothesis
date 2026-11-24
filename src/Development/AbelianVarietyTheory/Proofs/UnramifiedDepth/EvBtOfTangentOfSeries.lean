@@ -89,8 +89,7 @@ private lemma chi_nsmul {B : BX R₀} {K : LAlg R₀} {g : ℕ} (ch : FormalChar
     have hn' : B.map ρ (n • x) = 0 := by rw [map_nsmul, hx, nsmul_zero]
     have h := ch.χ_add ρ hρ ⟨n • x, hn'⟩ ⟨x, hx⟩
     rw [ih hn'] at h
-    rw [chi_congr ch ρ hρ hn (map_add_ker B ρ ⟨n • x, hn'⟩ ⟨x, hx⟩) (succ_nsmul x n)]
-    exact h
+    rwa [chi_congr ch ρ hρ hn (map_add_ker B ρ ⟨n • x, hn'⟩ ⟨x, hx⟩) (succ_nsmul x n)]
 
 private lemma nil_of_mem {R K : LAlg R₀} (ρ : LHom R K) (hρ : IsNilOver ρ)
     (hK : maximalIdeal (K : Type) = ⊥) (a : maximalIdeal (R : Type)) :
@@ -98,8 +97,7 @@ private lemma nil_of_mem {R K : LAlg R₀} (ρ : LHom R K) (hρ : IsNilOver ρ)
   apply hρ.2
   rw [RingHom.mem_ker]
   have : ρ.1 a ∈ maximalIdeal (K : Type) := fun hu => a.2 (ρ.2.map_nonunit _ hu)
-  rw [hK] at this
-  exact this
+  rwa [hK] at this
 
 private lemma exists_pow_zero {S : Type} [CommRing S] {g : ℕ} (Y : Fin g → S)
     (h : ∀ l, IsNilpotent (Y l)) : ∃ N : ℕ, ∀ l, Y l ^ N = 0 := by

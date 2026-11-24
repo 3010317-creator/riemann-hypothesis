@@ -450,8 +450,7 @@ theorem nonneg_of_isIntegral (u : AddValuation A (WithTop ℤ))
   have h1 : IsIntegral v.integer x := by
     obtain ⟨p, hp, hz⟩ := hx
     refine ⟨p.map f, hp.map f, ?_⟩
-    rw [Polynomial.eval₂_map]
-    exact hz
+    rwa [Polynomial.eval₂_map]
   exact (Valuation.integer.integers v).mem_of_integral h1
 
 def centre (u : AddValuation A (WithTop ℤ)) (hu : ∀ a : ↥(As O A), 0 ≤ u (a : A)) :
@@ -486,8 +485,7 @@ theorem centre_isMaximal (u : AddValuation A (WithTop ℤ)) (hu : ∀ a : ↥(As
   haveI := centre_isPrime u hu
   refine Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := O) _ ?_
   have hle : IsLocalRing.maximalIdeal O ≤ (centre u hu).comap (algebraMap O ↥(As O A)) := by
-    rw [hϖ.maximalIdeal_eq, Ideal.span_singleton_le_iff_mem]
-    exact hpos
+    rwa [hϖ.maximalIdeal_eq, Ideal.span_singleton_le_iff_mem]
   have := (IsLocalRing.maximalIdeal.isMaximal O).eq_of_le (Ideal.IsPrime.ne_top inferInstance) hle
   change ((centre u hu).comap (algebraMap O ↥(As O A))).IsMaximal
   rw [← this]
@@ -663,11 +661,11 @@ theorem sum_sImg (y : Fin (N + 1) → Ω) (hy : ∀ k, y (j₀.succAbove k) = x 
 
 theorem sum_sImg_succ (y : Fin (N + 1) → Ω) (hy : ∀ k, y (j₀.succAbove k) = x k * y j₀) (i : Fin D) :
     ∑ k, sImg (D := D) j₀ x (i.succ, k) * algebraMap Ω (OmS Ω D N) (y k) = 0 := by
-  rw [sum_sImg j₀ x y hy, if_neg (Fin.succ_ne_zero i), map_zero, zero_mul]
+  rw [sum_sImg j₀ x y hy, ite_eq_right (Fin.succ_ne_zero i), map_zero, zero_mul]
 
 theorem sum_sImg_zero (y : Fin (N + 1) → Ω) (hy : ∀ k, y (j₀.succAbove k) = x k * y j₀) (h0 : y j₀ ≠ 0) :
     ∑ k, sImg (D := D) j₀ x (0, k) * algebraMap Ω (OmS Ω D N) (y k) ≠ 0 := by
-  rw [sum_sImg j₀ x y hy, if_pos rfl]
+  rw [sum_sImg j₀ x y hy, ite_eq_left rfl]
   refine mul_ne_zero ?_ ((map_ne_zero _).2 h0)
   rw [map_ne_zero_iff _ (IsFractionRing.injective (MvPolynomial (SVar D N) Ω) (OmS Ω D N))]
   intro h

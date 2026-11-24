@@ -159,13 +159,11 @@ theorem exists_glue : ∀ (R : Type) [CommRing R] [IsLocalRing R], IsAdicComplet
     intro e
     rw [hU'.range_fromSpec]
     rintro _ ⟨a, rfl⟩
-    rw [hpt e a]
-    exact hqU
+    rwa [hpt e a]
   let ρ : ∀ e, Γ(X, U) ⟶ CommRingCat.of (R ⧸ IsLocalRing.maximalIdeal R ^ (e + 1)) := fun e =>
     Spec.preimage (IsOpenImmersion.lift hU'.fromSpec (x e) (hr e))
   have hρ : ∀ e, Spec.map (ρ e) ≫ hU'.fromSpec = x e := fun e => by
-    simp only [ρ, Spec.map_preimage]
-    exact IsOpenImmersion.lift_fac _ _ _
+    simpa only [ρ, Spec.map_preimage] using IsOpenImmersion.lift_fac _ _ _
   have hcomp : ∀ e, (Ideal.Quotient.factor (Ideal.pow_le_pow_right (Nat.le_succ (e + 1)))).comp (ρ (e + 1)).hom =
       (ρ e).hom := fun e => by
     have h1 : ρ (e + 1) ≫ CommRingCat.ofHom (Ideal.Quotient.factor (Ideal.pow_le_pow_right (Nat.le_succ (e + 1)))) =
@@ -325,8 +323,7 @@ theorem exists_tangent_point : ∀ {o : Type} [CommRing o] (X : Scheme.{0}) (s :
     (Scheme.ΓSpecIso (CommRingCat.of o)).symm.commRingCatIsoToRingEquiv
     (h t t.2 Γ(Y, Y.basicOpen (t : Γ(Y, V))))
   have h₂ : (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p (Y.basicOpen (t : Γ(Y, V)))).IsStandardSmoothOfRelativeDimension D := by
-    rw [← GlobalTheory.TopForm.resG_comp_algX (p := p) (Y.basicOpen_le (t : Γ(Y, V)))]
-    exact h₁
+    rwa [← GlobalTheory.TopForm.resG_comp_algX (p := p) (Y.basicOpen_le (t : Γ(Y, V)))]
   obtain ⟨x, d, hl, hd, h0⟩ := exists_coords_derivs' h₂
   have hO : IsAffineOpen (Y.basicOpen (t : Γ(Y, V))) := IsAffineOpen.basicOpen hV _
   have hzO : ⊤ ≤ z ⁻¹ᵁ Y.basicOpen (t : Γ(Y, V)) := (GlobalTheory.Adelic.le_iff_ptOf_mem z _).2 hxt
@@ -370,8 +367,7 @@ theorem exists_tangent_point : ∀ {o : Type} [CommRing o] (X : Scheme.{0}) (s :
         simp
       · simp [hac, Ne.symm hac]
     rw [LinearMap.zero_apply, ← hv]
-    rw [dirMap, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, TrivSqZeroExt.snd_map] at e
-    exact e
+    rwa [dirMap, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, TrivSqZeroExt.snd_map] at e
 
 end GlobalTheory.TanPt
 end -- clump:auto
@@ -727,8 +723,7 @@ theorem classified_dualNumber_of_algClosed : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ 
   obtain ⟨lam, c', h1, h2, hlam⟩ : ∃ (lam : (Fin (g * (g + 1) / 2 + 1) → K) →ₗ[K] K)
       (c' : SiegPre g n (zetaAway n) (spMap ((algebraMap K (DualNumber K)).comp β₀))),
       SiegPB c' G (spMap (dirMap lam)) ∧ SiegPB c' G (constPt (spMap (dirMap lam))) ∧ lam ≠ 0 := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     have := htb fun lam c' h1 h2 => hne lam c' h1 h2
     omega
   obtain ⟨mu, a, hdec⟩ : ∃ (mu : (Fin (g * (g + 1) / 2) → K) →ₗ[K] K) (a : K),
@@ -1173,10 +1168,8 @@ theorem ring_lemma : ∀ (C : Type) [CommRing C] [IsLocalRing C] [IsArtinianRing
   · refine isPullback_of_bij _ _ _ _ ?_ ?_ ?_
     · ext x
       exact x.2
-    · intro x h1 h2
-      exact Subtype.ext (Prod.ext h1 h2)
-    · intro a b hab
-      exact ⟨⟨(a, b), hab⟩, rfl, rfl⟩
+    · exact fun x h1 h2 => Subtype.ext (Prod.ext h1 h2)
+    · exact fun a b hab => ⟨⟨(a, b), hab⟩, rfl, rfl⟩
   · obtain ⟨a, ha⟩ := residue_surjective (R := C) y.fst
     exact ⟨⟨(a, y), ha⟩, rfl⟩
 

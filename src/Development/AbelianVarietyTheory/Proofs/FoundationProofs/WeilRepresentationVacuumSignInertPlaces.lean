@@ -207,8 +207,7 @@ theorem exists_nearer : ∀ (D : D7) (n : ℕ) (L₀ L : Lat D n), SD D L₀ →
     obtain ⟨m, hm, hy⟩ := exists_int_smul_mem L sp y.1
     refine ⟨⟨m, mem_nonZeroDivisors_of_ne_zero hm⟩, ?_⟩
     change m • (Submodule.mkQ (Submodule.comap L₀.subtype L) y) = 0
-    rw [← map_zsmul, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-    exact hy
+    rwa [← map_zsmul, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
   obtain ⟨P, x, hP, hx, hPx, hlen⟩ := exists_step _ hN
   obtain ⟨q, hq, hqP⟩ := exists_prime_mem P hP
   refine ⟨P, q, x.1, hP, hq, hqP, x.2, ⟨hx, hPx, (d₀ x.1).1 x.2 x.1 x.2⟩, ?_⟩
@@ -228,8 +227,7 @@ theorem exists_nearer : ∀ (D : D7) (n : ℕ) (L₀ L : Lat D n), SD D L₀ →
       · rw [Submodule.span_singleton_le_iff_mem]
         exact Submodule.mem_sup_right (S := nbM D L x.1) (Submodule.mem_span_singleton_self _)
   unfold lenQ
-  rw [key]
-  exact hlen
+  rwa [key]
 
 end GlobalTheory.NearerNeighbour
 end -- clump:auto
@@ -756,11 +754,11 @@ theorem mu_eq_sign : ∀ (D : D7) (T : Tor D) (N N' : ℕ) (A₁ A₂ A₃ : Add
   let χ : Fin r → 𝓞 D.host.E → ℂ := fun i s => ch D (φ i s)
   have χadd : ∀ i a b, χ i (a + b) = χ i a * χ i b := fun i a b => by simp only [χ, map_add (f := _), ch_add]
   have hYX : ∀ i a a', bc D T (Y i a') (X i a) = χ i (a' * sgO D a) := fun i a a' => by
-    rw [bc_eq, hH, if_pos rfl]
+    rw [bc_eq, hH, ite_eq_left rfl]
   have hYX' : ∀ i j a a', i ≠ j → bc D T (Y i a') (X j a) = 1 := fun i j a a' h => by
-    rw [bc_eq, hH, if_neg h, ch_zero]
+    rw [bc_eq, hH, ite_eq_right h, ch_zero]
   have hXY' : ∀ i j a a', i ≠ j → bc D T (X j a) (Y i a') = 1 := fun i j a a' h => by
-    rw [bc_eq, ← Hf_conj, hH, if_neg h, map_zero, ch_zero]
+    rw [bc_eq, ← Hf_conj, hH, ite_eq_right h, map_zero, ch_zero]
   have χP : ∀ i, ∀ a ∈ P, χ i a = 1 := fun i a ha => by
     have := hYX i 1 a
     rw [map_one (sgO D), mul_one] at this
@@ -843,7 +841,7 @@ theorem mu_eq_sign : ∀ (D : D7) (T : Tor D) (N N' : ℕ) (A₁ A₂ A₃ : Add
       refine forall_congr' fun i => ?_
       rw [← u, ← v, eq_comm, Ideal.Quotient.eq, Pi.sub_apply]
     by_cases h : e₃ q₃ = e₂ q₂
-    · rw [if_pos (hiff.2 h), if_pos h]
+    · rw [ite_eq_left (hiff.2 h), ite_eq_left h]
       have wx : x = sumHom X (a₂ q₂) + (x - sumHom X (a₂ q₂)) := by abel
       have wy : y = sumHom Y (a₃ q₃) + (y - sumHom Y (a₃ q₃)) := by abel
       rw [wy, bc_add_left, n₂.2.1 _ v2 _ x2, mul_one, wx, bc_add_right, n₃.2.1 _ (mY _) _ u3, mul_one,
@@ -856,10 +854,10 @@ theorem mu_eq_sign : ∀ (D : D7) (T : Tor D) (N N' : ℕ) (A₁ A₂ A₃ : Add
       have w : a₃ q₃ i * sgO D (a₂ q₂ i) = t * sgO D t +
           ((a₃ q₃ i - t) * sgO D (a₂ q₂ i) + t * sgO D (a₂ q₂ i - t)) := by rw [map_sub]; ring
       rw [w, χadd, χP i _ (P.add_mem (P.mul_mem_right _ t3) (P.mul_mem_left _ (hσ _ t2))), mul_one]
-    · rw [if_neg (mt hiff.1 h), if_neg h]
+    · rw [ite_eq_right (mt hiff.1 h), ite_eq_right h]
   rw [finsum_congr key, finsum_comp_equiv (Equiv.prodCongr e₃ e₂) (f := F), finsum_eq_sum_of_fintype,
     Fintype.sum_prod_type_right] at hμ
-  simp only [F, Finset.sum_ite_eq', Finset.mem_univ, if_true] at hμ
+  simp only [F, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at hμ
   simp only [finsum_eq_sum_of_fintype] at hmG
   rw [← Fintype.piFinset_univ, ← Finset.prod_univ_sum (fun _ => Finset.univ)
     (fun i (t : 𝓞 D.host.E ⧸ P) => χ i (Quotient.out t * sgO D (Quotient.out t)))] at hμ
@@ -1062,8 +1060,7 @@ theorem pt_mem {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (hδ : δ ≠ 0)
   constructor
   · rintro ⟨w, hw, e⟩
     rw [h1 e]; exact (h3 L w).1 hw
-  · intro h
-    exact ⟨z, (h3 L z).2 h, rfl⟩
+  · exact fun h => ⟨z, (h3 L z).2 h, rfl⟩
 
 theorem ptH_mem {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (hδ : δ ≠ 0) {N N' : ℕ} (L : Lat D N')
     (t₀ : D.host.E) (b : Fin N' → D.host.E) (a : Fin N → 𝓞 D.host.E) :
@@ -1216,19 +1213,16 @@ theorem pair_mem {L : Lat D n} (hL : SD D L) {r w : Fin n → D.host.E} (hr : r 
     exact mul_int ht (int_hE hL hw hy)
   | zero => simp
   | add u v _ _ hu hv =>
-    simp only [Pi.add_apply, add_mul, Finset.sum_add_distrib]
-    exact add_mem hu hv
+    simpa only [Pi.add_apply, add_mul, Finset.sum_add_distrib] using add_mem hu hv
   | smul a v _ hv =>
-    simp only [Pi.smul_apply, smul_mul_assoc, ← Finset.smul_sum]
-    exact Submodule.smul_mem _ _ hv
+    simpa only [Pi.smul_apply, smul_mul_assoc, ← Finset.smul_sum] using Submodule.smul_mem _ _ hv
 
 theorem P_smul_cv {M : Lat D n} {P : Ideal (𝓞 D.host.E)} (hσ : ∀ a ∈ P, sgO D a ∈ P) {b : Fin n → D.host.E}
     (hb : ∀ p ∈ P, p • b ∈ M) {p : 𝓞 D.host.E} (hp : p ∈ P) {t : D.host.E} (ht : t ∈ Iid D cc) :
     (p • t) • cv D b ∈ IC D cc M := by
   have h := smul_cv_mem ht (hb _ (hσ p hp))
   rw [cv_smul, sgO_sgO, smul_smul, mul_comm] at h
-  rw [Algebra.smul_def]
-  exact h
+  rwa [Algebra.smul_def]
 
 theorem decomp {M : Lat D n} {P : Ideal (𝓞 D.host.E)} (hσ : ∀ a ∈ P, sgO D a ∈ P) {b : Fin n → D.host.E}
     (hb : ∀ p ∈ P, p • b ∈ M) {t₀ : D.host.E}
@@ -1321,8 +1315,7 @@ theorem Pt_mem {δ : ℂ} (hδ : δ ≠ 0) {N N' : ℕ} {L : Lat D N} (hL : SD D
     have : Matrix.of z = w := h1 e
     subst this
     exact (h4 L hL _).1 hw
-  · intro h
-    exact ⟨Matrix.of z, (h4 L hL _).2 h, rfl⟩
+  · exact fun h => ⟨Matrix.of z, (h4 L hL _).2 h, rfl⟩
 
 theorem exists_Pt {δ : ℂ} (hδ : δ ≠ 0) {N N' : ℕ} {L : Lat D N} {v : VC D N N'}
     (hv : v ∈ La D (tor0 D cc δ) L (stdL D N')) : ∃ z, v = Pt D cc δ N N' z := by
@@ -1370,8 +1363,7 @@ theorem triDat_rows : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ), cc �
     { toFun := fun s => Hf D (tor0 D cc δ) (Row D cc δ N' t₀ x i s) (Row D cc δ N' t₀ b i 1)
       map_zero' := by rw [map_zero, Hf_zero_left]
       map_add' := fun s s' => by rw [map_add (f := _), Hf_add_left] }, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · intro i j a a'
-    exact Hf_Row δ t₀ b x i j a a'
+  · exact fun i j a a' => Hf_Row δ t₀ b x i j a a'
   · intro i a
     refine ⟨single_mem hδ hB i (smul_cv_mem (hat a) bB), single_mem hδ hC i (smul_cv_mem (hat a) bC), ?_⟩
     rw [Row_apply, Row_apply, ← map_add (f := _), ← Pi.single_add, ← smul_add, ← cv_add]
@@ -1506,8 +1498,8 @@ theorem cT_tv (D : D7) {n : ℕ} (μ : D.host.E) (w : Fin n → D.host.E) :
   simp only [cT, tv, Matrix.transpose_apply, Matrix.map_apply, Matrix.add_apply, Matrix.smul_apply,
     Matrix.vecMulVec_apply, smul_eq_mul, map_add, map_mul, conj_conj, Matrix.one_apply]
   by_cases h : i = j
-  · subst h; simp only [if_true, map_one]; ring
-  · rw [if_neg h, if_neg (Ne.symm h), map_zero]; ring
+  · subst h; simp only [ite_true, map_one]; ring
+  · rw [ite_eq_right h, ite_eq_right (Ne.symm h), map_zero]; ring
 
 theorem tv_unitary (D : D7) {n : ℕ} (μ : D.host.E) (w : Fin n → D.host.E)
     (h : μ + D.host.conj μ + μ * D.host.conj μ * hE D w w = 0) : tv D μ w * cT D (tv D μ w) = 1 := by
@@ -1556,8 +1548,7 @@ theorem transvection : ∀ (D : D7) (n q : ℕ) (P : Ideal (𝓞 D.host.E)), (�
     intro a ha
     have : a • (b + x) ∈ M := by
       rw [smul_add]; exact M.add_mem (hbx a ha).1 (hbx a ha).2
-    rw [← algebraMap_smul D.host.E a (b + x)] at this
-    exact this
+    rwa [← algebraMap_smul D.host.E a (b + x)] at this
   have hcl : (m : D.host.E) * D.host.conj lam = ((sgO D p : 𝓞 D.host.E) : D.host.E) := by
     rw [sgO_coe, ← hpl, map_mul, map_natCast]
   have h1 : ((m : D.host.E) * lam) • (b + x) ∈ M := by rw [hpl]; exact hPw p hp
@@ -1673,8 +1664,7 @@ theorem stable_of_inert {D : D7} {q : ℕ} (hq : q.Prime) (hi : InertQ D q) {P :
     intro h; rw [h, Ideal.mem_bot] at hqP
     exact hq.ne_zero (by exact_mod_cast hqP)
   have := Ideal.smul_mem_pointwise_smul D.host.conj a P ha
-  rw [hi P hP.isPrime h0 hqP] at this
-  exact this
+  rwa [hi P hP.isPrime h0 hqP] at this
 
 theorem exists_move {D : D7} {n q : ℕ} (hq : q.Prime) (hi : InertQ D q) {P : Ideal (𝓞 D.host.E)} (hP : P.IsMaximal)
     (hqP : (q : 𝓞 D.host.E) ∈ P) {B : Lat D n} {x : Fin n → D.host.E} (hB : SD D B) (hx : NbD D P B x) :
@@ -1705,8 +1695,7 @@ theorem exists_move {D : D7} {n q : ℕ} (hq : q.Prime) (hi : InertQ D q) {P : I
     fun h hh => hmv h _ _ hh ⟨0, by simp, by simp⟩ hsA, fun a c => ⟨a, hB, c, nbM D B x, b, x', hA, hb, hx', hp, hθ⟩⟩
   · intro y hy
     exact (le_sup_left : nbM D B x ≤ nbr D B x) (hqs b B (fun p h => (hp p h).1) hb y hy)
-  · intro y hy
-    exact (hqs x' _ (fun p h => (hp p h).2) hx' y hy).1
+  · exact fun y hy => (hqs x' _ (fun p h => (hp p h).2) hx' y hy).1
 
 section Core
 

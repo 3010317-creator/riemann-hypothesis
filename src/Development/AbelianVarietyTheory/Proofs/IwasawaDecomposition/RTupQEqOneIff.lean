@@ -72,10 +72,8 @@ def rTupQ : (levEnv V β L).Q →* G0 L.Pg L.r where
 theorem rTupQ_eq_one_iff (q : (levEnv V β L).Q) :
     rTupQ V β L q = 1 ↔ ((q : Bridge.Gf V)) ∈ (levEnv V β L).J := by
   constructor
-  · intro h
-    exact ⟨parLev_of_Q V β L q, Subgroup.mem_bot.2 h⟩
-  · intro h
-    exact Subgroup.mem_bot.1 h.2
+  · exact fun h => ⟨parLev_of_Q V β L q, Subgroup.mem_bot.2 h⟩
+  · exact fun h => Subgroup.mem_bot.1 h.2
 
 end Gen
 

@@ -86,8 +86,7 @@ theorem exists_finset_fixed_mem_invariants {G LL V : Type} [Group G] [Field LL] 
     exact hmin _ ⟨insert g s, rfl⟩ (lt_of_le_of_ne hle hne)
   have hv' : v ∈ F (insert g s) := heq ▸ (hF s v).2 hv
   have hg := (hF _ v).1 hv' g (Finset.mem_insert_self g s)
-  simp only [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.id_apply, sub_eq_zero]
-  exact hg
+  simpa only [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.id_apply, sub_eq_zero] using hg
 
 end GlobalTheory.FixedFinsetInvariants
 end -- clump:auto
@@ -334,10 +333,7 @@ theorem growth_core {G LL O V : Type} [Group G] [Field LL] [CommRing O] [IsDomai
   have hL0 : ∀ t : T₀, L0 (Submodule.Quotient.mk t) = Submodule.Quotient.mk (t : LA.T) := fun t => rfl
   have hactmk : ∀ g (x : LA.T), actQ LA Ir hI g (Submodule.Quotient.mk x) =
       Submodule.Quotient.mk (actT LA g x) := fun g x => rfl
-  have hfix0 : ∀ (t : T₀) g, actT LA g (t : LA.T) = t := by
-    intro t g
-    apply Subtype.ext
-    exact (hH0 _).1 t.2 g
+  have hfix0 : ∀ (t : T₀) g, actT LA g (t : LA.T) = t := fun t g => Subtype.ext ((hH0 _).1 t.2 g)
   constructor
   ·
     have hinv : ∀ z, ∀ g, actQ LA Ir hI g (L0 z) = L0 z := by

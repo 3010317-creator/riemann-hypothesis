@@ -106,7 +106,7 @@ theorem holShape_signs_first : ∀ (D : D7) (σ : D.what₂.LL →+* ℂ), (∀ 
     fun τ => GlobalTheory.IndefiniteRowSideFullHecke.HolomorphicLowestType.pW_add_qW i τ
   have hp : ∀ ρ, Formalism.IndefR.Links.parAt (Wc D i) σ ρ =
       Formalism.L2.NTheta.holPar _ _ (Formalism.IndefR.Links.kapAt (Wc D i) σ ρ) := fun ρ => by
-    unfold Formalism.IndefR.Links.parAt; rw [if_pos (hσ ρ)]
+    unfold Formalism.IndefR.Links.parAt; rw [ite_eq_left (hσ ρ)]
   have ho : ∀ ρ, Odd (((Wc D i).sig (tauE D ρ)).1 + ((Wc D i).sig (tauE D ρ)).2) := fun ρ => by
     rw [hpq ρ, hrk]; exact Formalism.L2.NTheta.odd_r _
   have hentL : ∀ ρ (c : Fin ((Wc D i).sig (tauE D ρ)).1),
@@ -187,8 +187,7 @@ theorem holShape_signs_first : ∀ (D : D7) (σ : D.what₂.LL →+* ℂ), (∀ 
       · exact absurd h1 (hlt _ _ hc (F (K n)).2).ne
     intro a
     have h1 := hK2 a
-    rw [eq_self_of_strictMono hKm hFm hFK a] at h1
-    exact h1
+    rwa [eq_self_of_strictMono hKm hFm hFK a] at h1
   have hc : ∀ ρ, Formalism.QuantumDeterminants.IsHCParam (M.lam ρ) := fun ρ => by
     have he := M.enum ρ
     refine ⟨he.1, fun a => ?_⟩
@@ -414,8 +413,7 @@ theorem pair_of_ext (θ : InfFam D) (hθ : IsInfFam θ) (M : DSModel W S') (hLS 
           ∏ ρ, ⟪((e ρ : M.sm ρ) : M.H ρ), M.rep ρ (infMat D.sp.cm.sig W.gram (θ ρ)
             (g * atTau θ W τ ((M.fr τ)⁻¹ * k * M.fr τ))) ((v' ρ : M.sm ρ) : M.H ρ)⟫_ℂ :=
         Finset.prod_congr rfl fun ρ _ => by rw [hA τ k hk v' u hu ρ, hrep]; rfl
-      rw [hp]
-      exact this
+      rwa [hp]
 
   have hconj : ∀ (x y : ∀ ρ, M.H ρ), ∏ ρ, ⟪y ρ, x ρ⟫_ℂ = star (∏ ρ, ⟪x ρ, y ρ⟫_ℂ) := fun x y => by
     rw [star_prod]
@@ -468,8 +466,7 @@ theorem pair_of_ext (θ : InfFam D) (hθ : IsInfFam θ) (M : DSModel W S') (hLS 
             ((v ρ : M.sm ρ) : M.H ρ)⟫_ℂ :=
         Finset.prod_congr rfl fun ρ _ => by
           rw [hA τ k hk v u hu ρ, hrep, ContinuousLinearMap.comp_apply, hinv]
-      rw [hp]
-      exact this
+      rwa [hp]
   exact ⟨_, st2⟩
 
 end GlobalTheory.RawLift.FockPair
@@ -582,7 +579,7 @@ theorem exists_coef {BS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ
     · simp only [h1, h3, Complex.ofReal_neg, Complex.ofReal_one, star_neg, star_one]; norm_num
   have hom1 : ∀ W a c b d, omDir S T τ (W * unitMap (BS τ) B' a c) τ (unitMap (BS τ) B' b d) =
       if c = d then o W b a else 0 := fun W a c b d => by
-    rw [omDir, if_pos rfl, trace_unitMap (hB τ)]
+    rw [omDir, ite_eq_left rfl, trace_unitMap (hB τ)]
     split_ifs <;> simp [o]
   have hJ : ∀ (W : Matrix (Fin T.rank) (Fin T.rank) ℂ) (u : Matrix (Fin T.rank) (Fin S.rank) ℂ),
       cplxO 1 (cart M τ) (W * u) = Complex.I • (cart M τ * W) * u := fun W u => by
@@ -597,14 +594,14 @@ theorem exists_coef {BS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ
     simp only [o, Matrix.neg_mul, Matrix.neg_apply, mul_neg, Complex.neg_re]
   clear_value o
   refine ⟨fun a b => if p ≤ (a : ℕ) ∧ (b : ℕ) < p then
-    2 * (o X a b + Complex.I * o (Complex.I • (cart M τ * X)) a b) else 0, fun a b h => if_neg h, ?_⟩
+    2 * (o X a b + Complex.I * o (Complex.I • (cart M τ * X)) a b) else 0, fun a b h => ite_eq_right h, ?_⟩
   rintro a c b d _ rfl _ rfl
   rw [hJ', hJ, hJ, hJ'', hom1, hom1, hom1, oneg]
   by_cases e3 : c = d
   swap
   · simp [e3, Ne.symm e3]
   subst e3
-  simp only [if_true]
+  simp only [ite_true]
   have z1 := ozero _ ha
   have z2 := ozero _ (anti_I ha)
   have s1 := osym _ lX a b
@@ -618,8 +615,8 @@ theorem exists_coef {BS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ
   rw [e]
   by_cases ha' : (a : ℕ) < p <;> by_cases hb' : (b : ℕ) < p
   · simp [z1 b a (by simp [ha', hb']), z2 b a (by simp [ha', hb'])]
-  · rw [if_neg (by omega), if_pos (by omega), zero_add]
-  · rw [if_pos (by omega), if_neg (by omega), add_zero]
+  · rw [ite_eq_right (by omega), ite_eq_left (by omega), zero_add]
+  · rw [ite_eq_left (by omega), ite_eq_right (by omega), add_zero]
   · simp [z1 b a (by simp [ha', hb']), z2 b a (by simp [ha', hb'])]
 
 end GlobalTheory.FockKillAdapted
@@ -676,25 +673,25 @@ theorem gen_kill (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) {BS : D.what₂
     refine congrArg₂ (· + ·) rfl (congrArg (· • g) ?_)
     by_cases e1 : τ₁ = τ
     swap
-    · simp only [if_neg e1, ite_self, mul_zero, zero_mul, add_zero]
+    · simp only [ite_eq_right e1, ite_self, mul_zero, zero_mul, add_zero]
     by_cases e2 : τ₂ = τ
     swap
     · simp [e2, omDir, Ne.symm e2]
     subst e1
     subst e2
     have := hν a c b d _ rfl _ rfl
-    simp only [if_true]
+    simp only [ite_true]
     by_cases e3 : c = d
-    · simp only [if_pos e3, if_pos e3.symm] at this ⊢
+    · simp only [ite_eq_left e3, ite_eq_left e3.symm] at this ⊢
       linear_combination ((fockScale D τ₂ : ℂ)⁻¹ * (fockScale D τ₂ : ℂ)⁻¹ * (-(4 * π * Complex.I))) * this
-    · simp only [if_neg e3, if_neg (Ne.symm e3)] at this ⊢
+    · simp only [ite_eq_right e3, ite_eq_right (Ne.symm e3)] at this ⊢
       linear_combination ((fockScale D τ₂ : ℂ)⁻¹ * (fockScale D τ₂ : ℂ)⁻¹ * (-(4 * π * Complex.I))) * this
   · exact fun i _ h => gen_aPlus hψ hθ hX hY _ _ _ h
   · intro i
     rw [hv, hv, smul_zero, add_zero, smul_zero]
   · refine (congrArg _ ?_).trans (map_zero _)
     simp only [Fintype.sum_prod_type, ite_smul, zero_smul, Finset.sum_ite_irrel, Finset.sum_const_zero,
-      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     refine Finset.sum_eq_zero fun a _ => ?_
     rw [Finset.sum_comm]
     refine Finset.sum_eq_zero fun b _ => ?_
@@ -751,8 +748,7 @@ theorem killed_of_harmonic_adapted : ∀ (D : D7) (ψ : AddChar (AF D.host.F) �
   have a3 := congrFun (congrArg (om (h, g)) key) w
   rw [LinearMap.add_apply, LinearMap.smul_apply, map_add (f := _), map_smul, map_zero] at a3
   simp only [Pi.add_apply, Pi.smul_apply, Rder]
-  rw [a1, a2]
-  exact a3
+  rwa [a1, a2]
 
 end GlobalTheory.FockKillAdapted
 
@@ -1161,8 +1157,7 @@ theorem fock_coef_real : GlobalTheory.IndefiniteRowSideFullHecke.MatrixMinorProd
     (deltaAtEmb D i σ) (deltaAtEmb D i σ)
   have hΔ : l2 μ 𝓧 (pt (deltaAtEmb D i σ)) (pt (deltaAtEmb D i σ)) =
       Formalism.E.fock (deltaAtEmb D i σ) (deltaAtEmb D i σ) * l2 μ 𝓧 f f := by
-    rw [l2_self_eq_setIntegral_norm_sq μ 𝓧 f, ← fockIp_eq_fock]
-    exact hip
+    rwa [l2_self_eq_setIntegral_norm_sq μ 𝓧 f, ← fockIp_eq_fock]
   rw [hpt, hww, hΔ]
   ring
 

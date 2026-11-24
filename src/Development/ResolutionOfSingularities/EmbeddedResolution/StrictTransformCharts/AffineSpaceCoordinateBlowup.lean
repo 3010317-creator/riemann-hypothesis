@@ -67,8 +67,7 @@ def uliftFinset (m : ℕ) (S : Finset (Fin m)) : Finset (ULift.{u} (Fin m)) :=
   · intro h
     obtain ⟨a, ha, rfl⟩ := Finset.mem_map.mp h
     exact ha
-  · intro h
-    exact Finset.mem_map.mpr ⟨x.down, h, rfl⟩
+  · exact fun h => Finset.mem_map.mpr ⟨x.down, h, rfl⟩
 
 theorem up_mem_uliftFinset {m : ℕ} {S : Finset (Fin m)} {j : Fin m} (hj : j ∈ S) :
     (ULift.up j : ULift.{u} (Fin m)) ∈ uliftFinset.{u} m S :=
@@ -229,9 +228,9 @@ private theorem specMap_coordBlowupSubstUliftFin_comp_affineSpaceSpecIso_inv (k 
     rw [appTop_comp_apply_eq_appTop_appTop, appTop_comp_apply_eq_appTop_appTop, affineSpaceSpecIso_inv_appTop_coord,
       appTop_specMap_ΓSpecIso_inv_apply, coordBlowupSubstMap_appTop_coord]
     by_cases hc : i.down ∈ S ∧ i.down ≠ s
-    · rw [if_pos hc, map_mul, affineSpaceSpecIso_inv_appTop_coord, affineSpaceSpecIso_inv_appTop_coord]
+    · rw [ite_eq_left hc, map_mul, affineSpaceSpecIso_inv_appTop_coord, affineSpaceSpecIso_inv_appTop_coord]
       simp [coordBlowupSubstUliftFin, ULift.ext_iff, hc.1, hc.2]
-    · rw [if_neg hc, affineSpaceSpecIso_inv_appTop_coord]
+    · rw [ite_eq_right hc, affineSpaceSpecIso_inv_appTop_coord]
       simp [coordBlowupSubstUliftFin, ULift.ext_iff, hc]
 
 theorem affineSpaceCoordBlowupChart_comp_affineSpaceCoordBlowupMap (k : Type u) [Field k] (m : ℕ)
@@ -260,9 +259,7 @@ theorem iSup_opensRange_affineSpaceCoordBlowupChart (k : Type u) [Field k] (m : 
       = (⊤ : (affineSpaceCoordBlowup k m S).Opens) := by
   refine le_antisymm le_top ?_
   rw [← iSup_opensRange_affineBlowupChart_coordIdealGen k (uliftFinset.{u} m S)]
-  refine iSup_le fun j => ?_
-  refine le_iSup_of_le ⟨j.1.down, down_mem_of_mem_uliftFinset j.2⟩ ?_
-  exact le_rfl
+  exact iSup_le fun j => le_iSup_of_le ⟨j.1.down, down_mem_of_mem_uliftFinset j.2⟩ le_rfl
 
 end FunctorialResolution.EmbeddedResolution
 

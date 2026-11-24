@@ -231,8 +231,7 @@ theorem exists_skew_scalar (D : D7) (𝔪 : Ideal (𝓞 D.host.E)) (h0 : 𝔪 �
   have hn0M : Nat.Coprime n0 M := by
     apply Nat.coprime_of_dvd
     intro p hp hpn hpM
-    have h1 := dvd_of_mem D 𝔪 h0 hp hpM hm0B
-    exact hp.not_dvd_one (hmn.gcd_eq_one ▸ Nat.dvd_gcd h1 hpn)
+    exact hp.not_dvd_one (hmn.gcd_eq_one ▸ Nat.dvd_gcd (dvd_of_mem D 𝔪 h0 hp hpM hm0B) hpn)
   obtain ⟨e, heO, hee, hse, hen, hem⟩ := exists_sym_idem D M hM
   have hβE : ι β ≠ 0 := by
     rw [hι, Ne, map_eq_zero_iff _ (IsFractionRing.injective (𝓞 D.host.E) D.host.E)]; exact hβ0
@@ -387,8 +386,7 @@ theorem exists_central_skew_move : ∀ (D : D7) (𝔪 : Ideal (𝓞 D.host.E)), 
       Matrix.scalar (Fin d) ((s⁻¹ : (AE D)ˣ) : AE D) := rfl
   have hsg : sgA D (s : AE D) * s = 1 := by
     have := congrArg Units.val hss
-    rw [Units.val_mul, Units.val_one, mul_comm] at this
-    exact this
+    rwa [Units.val_mul, Units.val_one, mul_comm] at this
   have hgA : g ∈ GA D d := by
     rw [PtsMem.mem_GA, hgv]
     ext i j
@@ -403,8 +401,7 @@ theorem exists_central_skew_move : ∀ (D : D7) (𝔪 : Ideal (𝓞 D.host.E)), 
     · subst hij
       simpa [Matrix.scalar_apply] using (hin q hq hi).2
     · rw [Matrix.scalar_apply, Matrix.diagonal_apply_ne _ hij, Matrix.one_apply_ne hij, sub_zero]
-      intro k
-      exact ⟨1, one_pos, Nat.coprime_one_left _, 0, zero_mem _, by simp⟩
+      exact fun k => ⟨1, one_pos, Nat.coprime_one_left _, 0, zero_mem _, by simp⟩
   · intro x
     change _ ↔ ∀ i, (Matrix.scalar (Fin d) ((s⁻¹ : (AE D)ˣ) : AE D)).mulVec (fun j => inc D (x j)) i ∈ OhE D
     simp only [skewLat, Submodule.mem_pi, Set.mem_univ, true_implies, Matrix.scalar_apply, Matrix.mulVec_diagonal]

@@ -154,13 +154,13 @@ theorem van_sup {U V : ObjectProperty C} (hU : Cosieve U) (hV : Cosieve V) {j : 
     refine ⟨fun s => if U (s.obj 0) then a' s else b s, fun s hs => ?_⟩
     by_cases hu : U (s.obj 0)
     · rw [ha' s hu]
-      exact d_congr _ _ s fun i => (if_pos (face_start hU i s hu)).symm
+      exact d_congr _ _ s fun i => (ite_eq_left (face_start hU i s hu)).symm
     · have hv : V (s.obj 0) := hs.resolve_left hu
       rw [hb s hv]
       refine d_congr _ _ s fun i => ?_
       by_cases hui : U ((face i s).obj 0)
-      · exact (hab _ hui (face_start hV i s hv)).symm.trans (if_pos hui).symm
-      · exact (if_neg hui).symm
+      · exact (hab _ hui (face_start hV i s hv)).symm.trans (ite_eq_left hui).symm
+      · exact (ite_eq_right hui).symm
 
 theorem van_congr {W W' : ObjectProperty C} (h : ∀ T, W T ↔ W' T) {j : ℕ} (hv : Van F W j) : Van F W' j := by
   obtain rfl : W = W' := funext fun T => propext (h T)
@@ -190,8 +190,7 @@ theorem van_Wc {ι : Type} [DecidableEq ι] {U : ι → ObjectProperty C} (hU : 
     ∀ (S : Finset ι) (j : ℕ), D A.card j → Van F (Wc U A S) j := by
   induction A using Finset.induction_on with
   | empty =>
-    intro S j _
-    exact van_empty (fun T hT => by simpa using hT.1) j
+    exact fun S j _ => van_empty (fun T hT => by simpa using hT.1) j
   | insert a A ha ih =>
     intro S j hj
     rw [Finset.card_insert_of_notMem ha] at hj
@@ -246,11 +245,8 @@ theorem vanishing_of_cover : ∀ {R : Type} [CommRing R] {C : Type 1} [Category.
   refine ⟨fun h j hj => key (fun _ j => j < s) (fun j => j < s) ?_ (fun S hS j hE => h S hS j hE) j hj,
     fun h j => key (fun _ _ => True) (fun _ => True) ?_ (fun S hS j _ => h S hS j) j trivial,
     fun h j hj => key (fun n j => s + n ≤ j) (fun j => j > s) ?_ (fun S hS j hE => h S hS j hE) j hj⟩
-  · intro n j hj
-    exact ⟨hj, hj, fun i hi => by omega⟩
-  · intro n j _
-    exact ⟨trivial, trivial, fun _ _ => trivial⟩
-  · intro n j hj
-    exact ⟨by omega, by omega, fun i hi => by omega⟩
+  · exact fun n j hj => ⟨hj, hj, fun i hi => by omega⟩
+  · exact fun n j _ => ⟨trivial, trivial, fun _ _ => trivial⟩
+  · exact fun n j hj => ⟨by omega, by omega, fun i hi => by omega⟩
 
 end GlobalTheory.CompanionTheory.CosieveMV

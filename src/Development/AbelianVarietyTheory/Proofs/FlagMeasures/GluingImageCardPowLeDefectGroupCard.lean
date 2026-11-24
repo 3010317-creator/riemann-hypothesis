@@ -203,8 +203,7 @@ theorem _root_.GlobalTheory.HL.SmallImage.small_image : ∀ {F : Type} [Field F]
           exact Submodule.add_mem _ (Submodule.mem_sup_left h4) (Submodule.mem_sup_right hrep)
         obtain ⟨m, hm, y₀, hy₀, hmy⟩ := Submodule.mem_sup.mp (hle hy)
         refine ⟨y₀, hy₀, ?_⟩
-        rw [← hmy, add_sub_cancel_right]
-        exact hm
+        rwa [← hmy, add_sub_cancel_right]
       · intro x₁ hx₁ x₁' hx₁' x₂ hx₂ x₂' hx₂' hy₁ hy₂
         obtain ⟨hΛ1, w₁, hw₁, la₁, hla₁, la₁', hla₁', hwl₁, he₁⟩ := hy₁
         obtain ⟨hΛ2, w₂, hw₂, la₂, hla₂, la₂', hla₂', hwl₂, he₂⟩ := hy₂
@@ -259,8 +258,7 @@ theorem _root_.GlobalTheory.HL.SmallImage.small_image : ∀ {F : Type} [Field F]
       have hmem : Submodule.Quotient.mk (p := (S.Ihat d Λ).comap (S.sat Λ).subtype) ⟨x, hx⟩ ∈
           (⊥ : Submodule L.O (↥(S.sat Λ) ⧸ (S.Ihat d Λ).comap (S.sat Λ).subtype)) := by
         rw [hbt]; trivial
-      rw [Submodule.mem_bot, Submodule.Quotient.mk_eq_zero] at hmem
-      exact hmem
+      rwa [Submodule.mem_bot, Submodule.Quotient.mk_eq_zero] at hmem
     have hle := (_root_.GlobalTheory.FiniteModuleOrder.card_eq_pow_and_index_ge L S.ϖ
       S.ϖ_irr (↥(S.sat Λ) ⧸ (S.Ihat d Λ).comap (S.sat Λ).subtype)).2 ⊥ hbot
     rw [Nat.card_unique, mul_one] at hle

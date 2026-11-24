@@ -63,8 +63,8 @@ theorem tendsto_one_sub_sum (F : Type) [Field F] [NumberField F] :
   let y : Finset (HeightOneSpectrum (𝓞 F)) → (∀ v, A v) := fun Q v =>
     ⟨if v ∈ Q then 0 else 1, by
       by_cases h : v ∈ Q
-      · rw [if_pos h]; exact (v.adicCompletionIntegers F).zero_mem
-      · rw [if_neg h]; exact (v.adicCompletionIntegers F).one_mem⟩
+      · rw [ite_eq_left h]; exact (v.adicCompletionIntegers F).zero_mem
+      · rw [ite_eq_right h]; exact (v.adicCompletionIntegers F).one_mem⟩
   let z : ∀ v, A v := fun v => ⟨0, (v.adicCompletionIntegers F).zero_mem⟩
   have hy : Tendsto y atTop (𝓝 z) := by
     rw [tendsto_pi_nhds]
@@ -74,7 +74,7 @@ theorem tendsto_one_sub_sum (F : Type) [Field F] [NumberField F] :
     have hv : v ∈ Q := Finset.singleton_subset_iff.mp hQ
     apply Subtype.ext
     show (if v ∈ Q then (0 : v.adicCompletion F) else 1) = 0
-    rw [if_pos hv]
+    rw [ite_eq_left hv]
   have hc : Continuous (RestrictedProduct.structureMap (fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
       A Filter.cofinite) := RestrictedProduct.isEmbedding_structureMap.continuous
   have key : ∀ Q, (1 : Af F) - ∑ v ∈ Q, singleV F v 1 =
@@ -88,9 +88,9 @@ theorem tendsto_one_sub_sum (F : Type) [Field F] [NumberField F] :
     show _ = (if w ∈ Q then (0 : w.adicCompletion F) else 1)
     by_cases h : w ∈ Q
     · rw [Finset.sum_eq_single_of_mem w h (fun b _ hb => GlobalTheory.LatVac.evalV_singleV_ne F b w (Ne.symm hb)),
-        GlobalTheory.LatVac.evalV_singleV_same, if_pos h, sub_self]
+        GlobalTheory.LatVac.evalV_singleV_same, ite_eq_left h, sub_self]
     · rw [Finset.sum_eq_zero (fun b hb => GlobalTheory.LatVac.evalV_singleV_ne F b w (by rintro rfl; exact h hb)),
-        if_neg h, sub_zero]
+        ite_eq_right h, sub_zero]
   have h0 : RestrictedProduct.structureMap (fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F) A
       Filter.cofinite z = (0 : Af F) :=
     by
@@ -101,8 +101,7 @@ theorem tendsto_one_sub_sum (F : Type) [Field F] [NumberField F] :
       (𝓝 (RestrictedProduct.structureMap (fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F) A
         Filter.cofinite z)) :=
     ((hc.tendsto z).comp hy).congr (fun Q => (key Q).symm)
-  rw [h0] at h1
-  exact h1
+  rwa [h0] at h1
 
 variable {D : D7}
 
@@ -171,8 +170,7 @@ theorem exists_eq_sum_wAt_add_two_smul : ∀ (D : D7) (S T : HSp D) (ΛS : Submo
     rw [show pairA D.host.F 0 0 = 0 from rfl, map_zero, zero_smul]
   have hlim : Tendsto (fun Q => g (1 - ∑ v ∈ Q, singleV D.host.F v 1)) atTop (𝓝 0) := by
     have h := (hg.tendsto 0).comp (tendsto_one_sub_sum D.host.F)
-    rw [hg0] at h
-    exact h
+    rwa [hg0] at h
   have hmem : (0 : WO S T) ∈ {x : WO S T | ∃ l ∈ (latO S T (ΛS : Set (Fin S.rank → D.host.E))
       (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True), (x - (2 : ℕ) • l).map (finPart D) = 0} := by
     simp only [Set.mem_ofPred_eq]

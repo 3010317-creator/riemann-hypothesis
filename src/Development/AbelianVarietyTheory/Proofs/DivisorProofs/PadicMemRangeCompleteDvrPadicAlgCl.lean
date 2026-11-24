@@ -172,8 +172,7 @@ theorem padicInt_mem_range
     have := (tendsto_pow_atTop_nhds_zero_of_lt_one hr0 hr1).add
       (tendsto_pow_atTop_nhds_zero_of_lt_one (by positivity) (inv_lt_one_of_one_lt₀ hp))
     simpa using this
-  have h0 := ge_of_tendsto' ht hbound
-  exact sub_eq_zero.1 (norm_le_zero_iff.1 h0)
+  exact sub_eq_zero.1 (norm_le_zero_iff.1 (ge_of_tendsto' ht hbound))
 
 end GlobalTheory.PadicUnitBall
 
@@ -188,8 +187,7 @@ theorem padic_mem_range : ∀ (p : ℕ) [Fact p.Prime] (V : Type) [CommRing V] [
   have hp : (1 : ℝ) < p := by exact_mod_cast (Fact.out : p.Prime).one_lt
   obtain ⟨k, hk⟩ := pow_unbounded_of_one_lt ‖q‖ hp
   have hz : ‖q * (p : ℚ_[p]) ^ k‖ ≤ 1 := by
-    rw [norm_mul, norm_pow, Padic.norm_p, inv_pow]
-    rw [mul_inv_le_iff₀ (by positivity), one_mul]
+    rw [norm_mul, norm_pow, Padic.norm_p, inv_pow, mul_inv_le_iff₀ (by positivity), one_mul]
     exact hk.le
   obtain ⟨L, hL⟩ := padicInt_mem_range hc hV (⟨q * (p : ℚ_[p]) ^ k, hz⟩ : ℤ_[p])
   have hpne : ((p : ℕ) : PadicAlgCl p) ≠ 0 := by

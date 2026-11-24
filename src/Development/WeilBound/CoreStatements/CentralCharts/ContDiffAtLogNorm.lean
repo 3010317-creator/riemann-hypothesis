@@ -169,8 +169,7 @@ theorem isOpen_off (n a : ℕ) : IsOpen {t : Fin n → ℂ | ∀ i : Fin n, (i :
   apply isOpen_iInter_of_finite
   intro i
   by_cases hi : (i : ℕ) < a
-  · simp only [hi, true_implies]
-    exact isOpen_ne_fun (continuous_apply i) continuous_const
+  · simpa only [hi, true_implies] using isOpen_ne_fun (continuous_apply i) continuous_const
   · simp [hi]
 
 theorem congr (hf : Tame a f) (h : ∀ᶠ t in 𝓝 (0 : Fin n → ℂ), (∀ i : Fin n, (i : ℕ) < a → t i ≠ 0) → g t = f t) :
@@ -190,10 +189,8 @@ theorem congr (hf : Tame a f) (h : ∀ᶠ t in 𝓝 (0 : Fin n → ℂ), (∀ i 
     filter_upwards [hU.mem_nhds htU] with y hy
     exact hδh hy.1 hy.2
   refine ⟨hfc.congr_of_eventuallyEq hev, ?_, ?_⟩
-  · rw [hev.eq_of_nhds]
-    exact hf1
-  · rw [hev.fderiv_eq]
-    exact hf2
+  · rwa [hev.eq_of_nhds]
+  · rwa [hev.fderiv_eq]
 
 theorem tame_of_smooth (a : ℕ) (hf : ∀ᶠ t in 𝓝 (0 : Fin n → ℂ), ContDiffAt ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) f t) :
     Tame a f := by
@@ -362,8 +359,7 @@ theorem snd_nonneg (hf : ContDiffAt ℝ 2 f 0) (hm : IsLocalMin f 0) (v : Fin n 
   set B := fderiv ℝ ψ 0 with hB
   have hψd : DifferentiableAt ℝ ψ 0 := (hf.fderiv_right (m := 1) (by norm_num)).differentiableAt (by norm_num)
   have hψ0 : ψ 0 = 0 := hm.fderiv_eq_zero
-  by_contra hq
-  push_neg at hq
+  by_contra! hq
   set q := B v v with hqe
   set η := -q / (2 * (‖v‖ ^ 2 + 1)) with hη
   have hηpos : 0 < η := div_pos (by linarith) (by positivity)

@@ -134,8 +134,7 @@ private theorem tw_lc {Γ R : Type} [TopologicalSpace Γ] {n : ℕ} (f : Γ → 
     rw [Filter.eventually_all]
     intro i
     rw [Filter.eventually_all]
-    intro j
-    exact (IsLocallyConstant.iff_eventually_eq _).mp (h i j) x
+    exact fun j => (IsLocallyConstant.iff_eventually_eq _).mp (h i j) x
   filter_upwards [hx] with y hy
   exact Matrix.ext hy
 
@@ -227,8 +226,7 @@ private theorem rho1_pow_eq_one_pro_l (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : G
   obtain ⟨g', hg'1, hg'2⟩ := he
   have hgg : g' = g ^ l ^ e := Subtype.ext (by rw [hg'2]; simp)
   refine ⟨e + 1, ?_⟩
-  rw [pow_succ, pow_mul, ← hgg]
-  exact hg'1
+  rwa [pow_succ, pow_mul, ← hgg]
 
 private theorem epsD_one (l : ℕ) [Fact l.Prime] (F : GFrame l) (n : ℕ) (x : NP F n)
     (k : Kap x) (m : ℕ) (g : F.Γ) (hg : PadicInt.toZMod ((F.ε g : ℤ_[l]ˣ) : ℤ_[l]) = 1) : epsD k (x.Am m) g = 1 := by
@@ -280,8 +278,7 @@ private theorem phEq_one (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T :
     have hc1 : χ (h ^ l ^ e) = 1 := hχH _ (hmem _)
     obtain ⟨hp1, hp2⟩ := tw_pow (ρ := ρ') (z := z) (χ := χ) h1 hm c1 hz he hc1 l
     refine ⟨e + 1, (hU _).mpr ⟨?_, hχH _ (hmem _), ?_⟩⟩
-    · rw [pow_succ, pow_mul]
-      exact hp1
+    · rwa [pow_succ, pow_mul]
     · rw [pow_succ, pow_mul, hp2]
       exact Matrix.ext fun a b => by rw [Matrix.smul_apply, hlD, Matrix.zero_apply]
   haveI hPn : (PL l T.H.toSubgroup).Normal := (pl_props l G0.Γ T.H.toSubgroup T.H.isOpen').1

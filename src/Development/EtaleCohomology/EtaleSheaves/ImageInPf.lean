@@ -165,8 +165,7 @@ theorem ker_apply_red {V Y : Scheme.{0}} [IsReduced V] (γ : V ⟶ Y) (U : Y.aff
   have hy' : U.2.fromSpec y ∈ closure (Set.range γ) := hy
   obtain ⟨_, hz, x, rfl⟩ := mem_closure_iff.mp hy' _ (Y.basicOpen s).2 h2
   have h3 : x ∈ γ ⁻¹ᵁ Y.basicOpen s := hz
-  rw [Scheme.preimage_basicOpen, RingHom.mem_ker.mp hs, Scheme.basicOpen_zero] at h3
-  exact h3
+  rwa [Scheme.preimage_basicOpen, RingHom.mem_ker.mp hs, Scheme.basicOpen_zero] at h3
 
 theorem ker_restrict_red {V Y : Scheme.{0}} [IsReduced V] (γ : V ⟶ Y) (O : Y.Opens) (U : O.toScheme.affineOpens) :
     (γ ∣_ O).ker.ideal U = γ.ker.ideal ⟨O.ι ''ᵁ U, U.2.image_of_isOpenImmersion _⟩ := by
@@ -191,9 +190,7 @@ theorem range_imageι_red {V Y : Scheme.{0}} [IsReduced V] (γ : V ⟶ Y) :
     Set.range γ.imageι ⊆ closure (Set.range γ) := by
   rw [Scheme.Hom.imageι, Scheme.IdealSheafData.range_subschemeι]
   have := Scheme.IdealSheafData.support_antitone (vanishing_le_ker γ)
-  intro y hy
-  have h2 := this hy
-  exact h2
+  exact fun y hy => this hy
 
 theorem covered_red {S X₁ : Scheme.{0}} [IsReduced X₁] (p₁ : X₁ ⟶ S)
   (n : ℕ) (U : Fin n → X₁.Opens) (Pj : Fin n → Scheme.{0}) (qj : ∀ j, Pj j ⟶ S) (W : ∀ j, (Pj j).Opens)

@@ -227,8 +227,7 @@ theorem exists_thConst : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMon
     fin_cases i <;> rfl
   have hR := hvR z
   rw [hp] at hR
-  rw [hvz]
-  exact hR
+  rwa [hvz]
 
 end GlobalTheory.AnVal
 end -- clump:auto
@@ -328,8 +327,7 @@ theorem AnFr.rd_of_isActOf : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCom
     simp only [fock]
     rw [add_comm x z]
     ring
-  rw [← hfun]
-  exact key
+  rwa [← hfun]
 
 end GlobalTheory.AnVal
 end -- clump:auto
@@ -447,18 +445,15 @@ theorem hol_ptSecT : IsHolFam (fun z => ((ptSecT A (Φ.e z)).left : Sp ℂ ⟶ (
       rw [Over.comp_left] at h
       simp only [Over.mk_hom, Category.assoc, pullbackSymmetry_hom_comp_fst]
       unfold ReciprocityTheory.ChartRestriction.G.PullbackSections.vtfLift
-      rw [pullback.lift_snd]
-      exact h
+      rwa [pullback.lift_snd]
     · have h := congrArg Over.Hom.left (show ptSecT A (Φ.e z) ≫ snd (Over.mk x0) A = Φ.e z by
         unfold ptSecT
         exact lift_snd _ _)
       rw [Over.comp_left] at h
       simp only [Over.mk_hom, Category.assoc, pullbackSymmetry_hom_comp_snd]
       unfold ReciprocityTheory.ChartRestriction.G.PullbackSections.vtfLift
-      rw [pullback.lift_fst]
-      exact h
-  rw [key]
-  exact h2
+      rwa [pullback.lift_fst]
+  rwa [key]
 
 theorem genRd_one {Z : Scheme.{0}} (q : Sp ℂ ⟶ Z) :
     Φ.GenRd (K := PEmpty) PEmpty.elim PEmpty.elim (LB.oneGen L.L) q PEmpty.elim 1 := by
@@ -719,8 +714,8 @@ private theorem valAt'_prod_res_pullU_eq_prod {Z Y : Scheme.{0}} {n : ℕ} (q : 
     valAt' q W (∏ i, res (e1 i) (res (e2 i) (pullU (ψ i) (V i) (u i)))).val =
       ∏ i, valAt' (q ≫ ψ i) (V i) (u i).val := by
   unfold valAt'
-  rw [dif_pos h]
-  simp only [dif_pos (h' _)]
+  rw [dite_eq_left h]
+  simp only [dite_eq_left (h' _)]
   unfold valAt res pullU
   simp only [Units.coe_prod, map_prod, Units.coe_map, MonoidHom.coe_coe]
   refine Finset.prod_congr rfl (fun i _ => ?_)
@@ -773,7 +768,7 @@ theorem thConst_pow : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonObj
   have h1 : Φ.GenRd _ _ (LB.oneGen L.L) (ptSecT A (Φ.e 0)).left (fun e => e.elim) 1 := by
     refine ⟨fun kk => kk.elim, fun j' hj' => ?_⟩
     unfold valAt'
-    rw [dif_pos hj']
+    rw [dite_eq_left hj']
     unfold valAt LB.oneGen
     simp only [Units.val_one, Fintype.prod_empty, _root_.mul_one]
     exact (congrArg (Scheme.ΓSpecIso (CommRingCat.of ℂ)).hom.hom (map_one _)).trans (map_one _)
@@ -868,8 +863,7 @@ theorem rd_fock_of_symLift : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCom
 
   have hc1 : c = 1 := by
     obtain ⟨m, rfl⟩ := hn
-    rw [pow_succ, pow_mul, hsq, one_pow, _root_.one_mul] at hpow
-    exact hpow
+    rwa [pow_succ, pow_mul, hsq, one_pow, _root_.one_mul] at hpow
   subst hc1
   simpa only [_root_.one_mul] using hread
 

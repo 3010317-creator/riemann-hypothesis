@@ -332,8 +332,7 @@ theorem integral_eq_vol_mul_classSum : ∀ {D : D7} (A : HSp D), A.gram = 1 → 
     refine (hCc.mul hGc).of_isClosed_subset (Subgroup.isClosed_of_isOpen J hJo) ?_
     intro k hk
     refine ⟨finPart A k, hCm _ (finPart_mem A k) ?_, realPart A k, realPart_mem A k, finPart_mul_realPart A k⟩
-    rw [finE_finPart]
-    exact hk
+    rwa [finE_finPart]
   have hJtop : m J ≠ ⊤ := hJc.measure_lt_top.ne
   have hJ0 : m J ≠ 0 := (hJo.measure_pos m ⟨1, J.one_mem⟩).ne'
   refine ⟨((m J).toReal : ℂ), Complex.ofReal_ne_zero.2 (ENNReal.toReal_pos hJ0 hJtop).ne', ?_⟩
@@ -476,12 +475,12 @@ theorem stdFst_actO (ν : (Formalism.L2.Theta.AE D)ˣ →* Circle) {e : Formalis
   unfold stdFst
   rw [hact]
   by_cases hc : IsHalf e y ∧ IsIntM (frMapO S T βS βT y) ∧ ∀ i j, S.rank ≤ i.1 → InId I (frMapO S T βS βT y i j)
-  · rw [if_pos hc, if_pos ⟨(GlobalTheory.SchrMove.isHalf_actO_iff g 1 y).2 hc.1,
+  · rw [ite_eq_left hc, ite_eq_left ⟨(GlobalTheory.SchrMove.isHalf_actO_iff g 1 y).2 hc.1,
       Formalism.IndefR.Fin.LevelGroupLemmas.Lat.isIntM_mul hc.2.1 (isIntM_frG hg'),
       fun i j hi => inId_mul_right (isIntM_frG hg') (fun l => hc.2.2 i l hi) j⟩, topL_mul_sq,
       unitChar_congr ν e (Matrix.det_mul_comm _ _),
       unitChar_mul ν hee hK (isUnitDet_frG he hg') (isUnitDet_frG he hg), detIdl_inv hee, map_inv, inv_inv]
-  · rw [if_neg hc, if_neg, mul_zero]
+  · rw [ite_eq_right hc, ite_eq_right, mul_zero]
     rintro ⟨h1, h2, h3⟩
     refine hc ⟨(GlobalTheory.SchrMove.isHalf_actO_iff g 1 y).1 h1, ?_, fun i j hi => ?_⟩
     · rw [hback]; exact Formalism.IndefR.Fin.LevelGroupLemmas.Lat.isIntM_mul h2 (isIntM_frG hg)
@@ -534,8 +533,7 @@ theorem mem_St_of_isFinPt {A : HSp D} {r : Rig A} (hr : r.Is) (hs : r.IsStd) {n 
     exact ⟨fun h i _ => Submodule.mem_one.2 (h i), fun h i => Submodule.mem_one.1 (h i trivial)⟩
   have hβ : Formalism.L2.DIV.IsFrame r.β (Formalism.L2.Col.stdLat D.host.E A.rank) := hΛ ▸ hr.2.1
   refine (GlobalTheory.BotClassDict.mem_level_iff A hs.1 hβ k).2 ?_
-  rw [GlobalTheory.BotClassDict.finStd_of_isFinPt A hs.1 hk]
-  exact hx
+  rwa [GlobalTheory.BotClassDict.finStd_of_isFinPt A hs.1 hk]
 
 theorem ker_mul_of_fix {T : Type} {A A' WW : HSp D} {X : Tri T A A' WW} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D}
     {α β : T → ((Formalism.L2.Theta.AE D)ˣ →* Circle)} {νH : T → Formalism.L2.Host.HChar D.host.E} {S : T → Finset (Pl D.host.E)}
@@ -699,8 +697,7 @@ private theorem infinity_exponent_of_bottom_pair {D : D7} {T : Type} {L : LevCh 
       (G.nu s i (j + 1))⁻¹ := by
     rw [mul_div_mul_right_eq_div, ← inv_div]
     rfl
-  rw [e]
-  exact h4
+  rwa [e]
 private theorem weil_rep_fixes_compact_vector {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {μ₀ : T} (hL : L.Is μ₀) {G : GridData L sc} {W : G.Weil}
     {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW} (hX : IsBottomTri W i j X) (s : T)
     {δ t0 : ℂ} {Q : ℕ} {P P' : Pair D ⊤ δ t0 Q} {𝔪} (hB : IsBottom G s i j 𝔪 P P') (ea : P.a = A.rank) (ed : P.d = WW.rank)
@@ -760,8 +757,7 @@ private theorem weil_rep_fixes_compact_vector {D : D7} {T : Type} {L : LevCh D T
     refine Finset.prod_eq_one fun τ _ => ?_
     have hne : (compAt W.θ τ (Formalism.L2.Theta.mt A k)).det ≠ 0 := (Matrix.isUnit_det_of_left_inverse (hu τ)).ne_zero
     rw [ck, c1, Matrix.det_one, _root_.one_zpow, mul_one, _root_.zpow_neg, zpow_natCast, inv_mul_cancel₀ (pow_ne_zero _ hne)]
-  rw [hone, one_smul] at key
-  exact key
+  rwa [hone, one_smul] at key
 end GlobalTheory.BotKerRealInv
 end
 theorem _root_.GlobalTheory.T.bottom_kernel_real_invariant : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching →

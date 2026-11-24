@@ -73,8 +73,7 @@ theorem units_eq_of_gm {X : Scheme.{0}} {V : X.Opens} {a b : Γ(X, V)ˣ}
   rw [gm_val ι z V hx, gm_val ι z V hx, ← Scheme.Hom.germ_stalkMap_apply, ← Scheme.Hom.germ_stalkMap_apply] at e'
   have key := (ConcreteCategory.bijective_of_isIso (ι.stalkMap z)).1 e'
   apply Units.ext
-  rw [gm_val (𝟙 X) (ι z) V hx, gm_val (𝟙 X) (ι z) V hx]
-  exact key
+  rwa [gm_val (𝟙 X) (ι z) V hx, gm_val (𝟙 X) (ι z) V hx]
 
 end GlobalTheory.DisjointCoverLB
 

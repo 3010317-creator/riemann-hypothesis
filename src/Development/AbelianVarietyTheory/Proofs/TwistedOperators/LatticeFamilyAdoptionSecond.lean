@@ -706,8 +706,7 @@ theorem stage2 (ht : NChTie D c) {Gp : Type} [Group Gp] [Fintype Gp] (I : Gp ≃
       rw [LinearEquiv.apply_symm_apply, map_smul, fi.rho, hs, LinearEquiv.apply_symm_apply, ← fi.chi, hs]
       rfl
     have k2 := h4 (fi.eG.symm h) (fi.e.symm y)
-    rw [← hgeq, hs, ← k1] at k2
-    exact k2
+    rwa [← hgeq, hs, ← k1] at k2
   · intro u
     obtain ⟨x, hx1, hx2⟩ := hpsi u ((hlvl _).1 u.2)
     rw [← hx1, GlobalTheory.Proof.FractionFieldEmbeddingCompat.embW_eq_of_tie ht w x, ← hx2]
@@ -731,8 +730,7 @@ theorem stage2 (ht : NChTie D c) {Gp : Type} [Group Gp] [Fintype Gp] (I : Gp ≃
       rw [NForms.Fm0, Submodule.mem_iInf]
       simp only [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.smul_apply, LinearMap.id_apply, sub_eq_zero]
       constructor
-      · intro h u
-        exact h (φ u)
+      · exact fun h u => h (φ u)
       · intro h u
         have hu : I.symm (u : G0g D.nd) ∈ P0 := (hlvl _).2 (by simp)
         have h5 := h ⟨_, hu⟩
@@ -740,8 +738,7 @@ theorem stage2 (ht : NChTie D c) {Gp : Type} [Group Gp] [Fintype Gp] (I : Gp ≃
         change D.nexp.actG (c.twI w) j (c.sd w) ((φ ⟨_, hu⟩ : D.nexp.U) : G0g D.nd) y =
           ((D.nexp.psiU (c.twI w) (c.sd w) (φ ⟨_, hu⟩) : (FractionRing (D.ntw.O (c.twI w)))ˣ) :
             FractionRing (D.ntw.O (c.twI w))) • y at h5
-        rw [e5] at h5
-        exact h5
+        rwa [e5] at h5
     simp only [NForms.V0, Submodule.mem_map, hy]
   · intro x
     have hsum : (∑ g, eC g • aL g) = A'.eOp eC :=

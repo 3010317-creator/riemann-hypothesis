@@ -142,8 +142,7 @@ section Fin
 
 theorem chi_eq_one_of_pow {G : Type} [Group G] {U : Subgroup G} (χ : U →* ℂˣ) (x z : U) (n : ℕ) (hz : χ z ^ n = 1)
     (hy : χ ((z ^ n)⁻¹ * x) = 1) : χ x = 1 := by
-  rw [map_mul, map_inv, map_pow, hz, inv_one, one_mul] at hy
-  exact hy
+  rwa [map_mul, map_inv, map_pow, hz, inv_one, one_mul] at hy
 
 theorem map_inv_pow_mul_eq_one {G H : Type} [Group G] [Group H] (f : G →* H) {x z : G} (n : ℕ) (hz : f z = 1) (hx : f x = 1) :
     f ((z ^ n)⁻¹ * x) = 1 := by
@@ -181,8 +180,7 @@ theorem chi_eq_one_of_deep : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.O
   have hxP : ∀ r s, adAt B.host.F P.1 (x.1.1 r s) = adAt B.host.F P.1 (w.1 r s) := fun r s => by
     have h := congrArg (fun g : GL (Fin ((I.rec7 l Z).R.N i)) _ => g.1 r s) hxw
     refine GlobalTheory.Mem.Col2.AdT.LocSplice.adAt_eq_of_prV P.1 ?_
-    rw [hu]
-    exact h
+    rwa [hu]
   have hwP := ((hd _ w).2.2).1 hw
   have hwP := ((hd (-e).toNat w).2.2).1 hw
   have hA : ∀ r s, Valued.v (adAt B.host.F P.1 (x.1.1 r s) - (1 : Matrix (Fin (B.R.N i)) (Fin (B.R.N i)) (P.1.adicCompletion B.fields.E)) r s) ≤

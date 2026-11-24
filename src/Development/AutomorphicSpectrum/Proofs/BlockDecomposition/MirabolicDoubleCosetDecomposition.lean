@@ -85,11 +85,9 @@ theorem exists_row {ι : Type} [Fintype ι] [DecidableEq ι] (s : ι → Prop) (
     by_cases hrj : r = j
     · subst hrj
       simpa [T] using hρ hr x hx
-    · have hne : Equiv.swap c j r ≠ c := by
-        intro e
-        exact hrj (by simpa using congrArg (Equiv.swap c j) e)
+    · have hne : Equiv.swap c j r ≠ c := fun e => hrj (by simpa using congrArg (Equiv.swap c j) e)
       simp only [T, Matrix.updateRow_ne hne, Matrix.one_apply]
-      rw [if_neg]
+      rw [ite_eq_right]
       intro e
       by_cases hrc : r = c
       · subst hrc
@@ -182,8 +180,7 @@ theorem core (i t : ℕ) (p : Mir k ((i + 1) + t + 1)) (X B : GL (Fin ((i + 1) +
     have h1 : (g⁻¹ * (B⁻¹ * X)) ∈ Mir k ((i + 1) + t) := by
       rw [mem_Mir_iff, Units.val_mul, Matrix.mul_apply_eq_vecMul, ← hBj, ← Matrix.mul_apply_eq_vecMul, ← Units.val_mul,
         mul_inv_cancel_left, hX]
-    have h2 := (Mir k ((i + 1) + t)).inv_mem h1
-    simpa [mul_assoc] using h2
+    simpa [mul_assoc] using (Mir k ((i + 1) + t)).inv_mem h1
   let v : Fin ((i + 1) + (t + 1)) → k := fun r =>
     (p : GL (Fin ((i + 1) + t + 1 + 1)) k).val (Fin.castSucc r) (Fin.last _)
   let v' : Fin ((i + 1) + (t + 1)) → k := B.val.mulVec v
@@ -215,8 +212,7 @@ theorem core (i t : ℕ) (p : Mir k ((i + 1) + t + 1)) (X B : GL (Fin ((i + 1) +
       · intro x y
         refine (glEmb_castSucc_castSucc _ B _ _).trans ?_
         exact hB _ _ (by simp; omega) (by simp; omega)
-      · intro x
-        exact glEmb_castSucc_last _ B _
+      · exact fun x => glEmb_castSucc_last _ B _
     rw [map_inv]
     exact (HPG k (i + 1) (t + 1)).inv_mem this
   refine ⟨levi k _ B⁻¹ * ua, (HPG k (i + 1) (t + 1)).mul_mem hlB hua, d, ⟨_, hM⟩, ?_⟩
@@ -245,8 +241,7 @@ theorem core (i t : ℕ) (p : Mir k ((i + 1) + t + 1)) (X B : GL (Fin ((i + 1) +
         rw [← e3, ← e1, map_inv]; simp only [mul_assoc]
 
 theorem row_ne_zero {ι : Type} [Fintype ι] [DecidableEq ι] (g : GL ι k) (r : ι) : ∃ c, g.val r c ≠ 0 := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   have h0 := Matrix.det_eq_zero_of_row_eq_zero r hc
   exact (Matrix.GeneralLinearGroup.det g).ne_zero (by simpa using h0)
 
@@ -267,10 +262,8 @@ theorem wGL_row (i t : ℕ) : (wGL k i t).val (piPerm i t (Fin.last ((i + 1) + t
 theorem Cl_iff (i t : ℕ) (p : Mir k ((i + 1) + t + 1)) : p ∈ Cl k i t ↔ ∀ c : Fin ((i + 1) + t + 1), c.val < i + 1 →
     (mirabolicProjection k _ p⁻¹ : GL (Fin ((i + 1) + t + 1)) k).val (Fin.last ((i + 1) + t)) c = 0 := by
   constructor
-  · intro h c hc
-    exact h ⟨c.val, hc⟩
-  · intro h c
-    exact h (Fin.castLE (by omega) c) c.2
+  · exact fun h c hc => h ⟨c.val, hc⟩
+  · exact fun h c => h (Fin.castLE (by omega) c) c.2
 
 theorem cells :
     ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (i t : ℕ),
@@ -291,7 +284,7 @@ theorem cells :
     exact ⟨h, hh, d, m, by simpa using e⟩
   · intro p hp
     have hp' : ¬ _ := fun h => hp ((Cl_iff i t p).2 h)
-    push_neg at hp'
+    push Not at hp'
     obtain ⟨c, hcs, hc⟩ := hp'
     have hj : (piPerm i t (Fin.last ((i + 1) + t))).val < i + 1 := by rw [piPerm_last_val]; omega
     obtain ⟨B, hBj, hB⟩ := exists_row (fun x : Fin ((i + 1) + t + 1) => x.val < i + 1) _ c (piPerm i t (Fin.last ((i + 1) + t))) hc

@@ -280,8 +280,7 @@ private theorem isHecke_div_and_resEtaPow_div {k : Type} [Field k] [ValuativeRel
   have hpos : ∀ m : ℕ, 0 < (((ψ y) ^ m : Circle) : ℂ).re := by
     intro m
     have := hcW (show (fun _ : Fin 1 => m • y) ∈ GlobalTheory.SplitWeil.FourierPi.box (Fin 1) c from fun i _ => hmem m)
-    rw [← AddChar.map_nsmul_eq_pow]
-    exact this
+    rwa [← AddChar.map_nsmul_eq_pow]
   have hn : ∀ w : Circle, (w : ℂ).re * (w : ℂ).re + (w : ℂ).im * (w : ℂ).im = 1 := by
     intro w
     rw [← Complex.normSq_apply]
@@ -304,8 +303,7 @@ private theorem isHecke_div_and_resEtaPow_div {k : Type} [Field k] [ValuativeRel
       rw [pow_succ]
       nlinarith
   have hx0 : 1 ≤ ((ψ y : Circle) : ℂ).re := by
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     have hd : 0 < 1 - ((ψ y : Circle) : ℂ).re := by linarith
     obtain ⟨j, hj⟩ := pow_unbounded_of_one_lt (1 / (1 - ((ψ y : Circle) : ℂ).re)) (by norm_num : (1 : ℝ) < 2)
     have h1 := hgrow j
@@ -395,9 +393,7 @@ theorem twKer_le_top (ψ : AddChar k Circle) {n : ℕ} {V : Type} [AddCommGroup 
     (unipEquiv k n).symm ((Subgroup.subgroupOfEquivOfLe (MirU_le_Mir k n)) u) with hx
   have hu : unipIn k n x = (u : Mir k n) := by
     have h := (unipEquiv k n).apply_symm_apply ((Subgroup.subgroupOfEquivOfLe (MirU_le_Mir k n)) u)
-    have h2 := congrArg (Subtype.val : MirU k n → GL (Fin (n + 1)) k) h
-    apply Subtype.ext
-    exact h2
+    exact Subtype.ext (congrArg (Subtype.val : MirU k n → GL (Fin (n + 1)) k) h)
   refine Submodule.subset_span ⟨⟨x, trivial⟩, w₀, ?_⟩
   show τ (u : Mir k n) w₀ - _ = τ (unipIn k n x) w₀ - _
   rw [hu]
@@ -434,8 +430,7 @@ theorem GlobalTheory.CompanionTheory.MirFourier.fourier : ∀ (k : Type) [Field 
   refine GlobalTheory.CompanionTheory.FiniteFourier.eq_zero_of_twKer ρ hρ (polyBall n s) (isCompact_polyBall n s) ((ann ψ n t).subgroupOf _) ?_ v ?_ R hRne
     (fun a => resChr ψ a (polyBall n s)) ?_ (fun a ha => hs a (hRt a ha)) (fun x hx => hRsum x hx)
   · exact (isOpen_ann ψ hψ n t).preimage continuous_subtype_val
-  · intro x hx
-    exact ht hx
+  · exact fun x hx => ht hx
   · intro a ha x hx
     have h2 := hx (Multiplicative.ofAdd a) (hRt a ha)
     show Circle.toUnits (ψ (a ⬝ᵥ (x : Multiplicative (Fin n → k)).toAdd)) = 1

@@ -133,8 +133,7 @@ theorem image_eq_iff {A : Type} [CommRing A] (e : A →+* B) (he : Function.Bije
     apply Set.Subset.antisymm
     · rintro _ ⟨z, hz, rfl⟩
       exact h1 z hz
-    · intro z hz
-      exact ⟨_, h2 z hz, by rw [Matrix.mulVec_mulVec, Units.mul_inv, Matrix.one_mulVec]⟩
+    · exact fun z hz => ⟨_, h2 z hz, by rw [Matrix.mulVec_mulVec, Units.mul_inv, Matrix.one_mulVec]⟩
 
 end Core
 

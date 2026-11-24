@@ -82,10 +82,9 @@ private theorem ker_gen_approx {O : Type} [CommRing O] [IsLocalRing O] {X : Type
 
     rw [map_sub, map_sum]
     simp only [coeff_wcomp]
-    rw [Finset.sum_ite_eq, if_pos, sub_self]
+    rw [Finset.sum_ite_eq, ite_eq_left, sub_self]
     exact Finset.mem_image_of_mem _ (by simpa [hD] using hd)
-  have key := GlobalTheory.algHom_mem_pow_of_le_order (AlgHom.id O (MvPowerSeries σ O)) hX hord
-  simpa using key
+  simpa using GlobalTheory.algHom_mem_pow_of_le_order (AlgHom.id O (MvPowerSeries σ O)) hX hord
 
 theorem UpperTheory.V.Alg.ker_gen :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O] (X : Type) [AddCommGroup X] (σ : Type) [Finite σ] (wt : σ → X) (J : Ideal (MvPowerSeries σ O)), IsHomog O wt J →
@@ -116,8 +115,7 @@ theorem UpperTheory.V.Alg.ker_gen :
     constructor
     · rintro ⟨i, rfl⟩
       exact (s.equivFin.symm i).2
-    · intro hg
-      exact ⟨s.equivFin ⟨g, hg⟩, by simp⟩
+    · exact fun hg => ⟨s.equivFin ⟨g, hg⟩, by simp⟩
   rw [hrange]
   calc J = Ideal.span G := le_antisymm hJG hGJ
     _ = Ideal.span (s : Set (MvPowerSeries σ O)) := hspan

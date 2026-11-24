@@ -72,8 +72,7 @@ theorem coefMap_norm_equivariant_basis : ∀ (D : D7) (G : Type) [Group G] [Fint
   have hE : ∀ v, O.c0' (GlobalTheory.AdTh.CoefExt.up O.jL (lamV D i) v) = c0L i v := by
     intro v
     obtain ⟨w, hw, h⟩ := hc v
-    rw [show GlobalTheory.AdTh.CoefExt.up O.jL (lamV D i) v = w from Subtype.ext hw.symm]
-    exact h
+    rwa [show GlobalTheory.AdTh.CoefExt.up O.jL (lamV D i) v = w from Subtype.ext hw.symm]
   obtain ⟨h1, h2, h3⟩ := hT.mapL i
   refine ⟨?_, ?_, GlobalTheory.AdTh.CoefExt.span_top (W := (R.cV i).W) hE h3,
     fun m b hb => GlobalTheory.AdTh.CoefExt.linearIndependent (W := (R.cV i).W) hE h2 b hb⟩
@@ -100,8 +99,7 @@ theorem coefMap_norm_equivariant_basis : ∀ (D : D7) (G : Type) [Group G] [Fint
     have hi' : inner ℂ (c0L i v : (R.cV i).W) (c0L i v : (R.cV i).W) = 1 := hi
     rw [inner_self_eq_norm_sq_to_K] at hi'
     have h4 : ‖(c0L i v : (R.cV i).W)‖ ^ 2 = 1 := by
-      have h5 := congrArg norm hi'
-      simpa using h5
+      simpa using congrArg norm hi'
     exact (pow_eq_one_iff_of_nonneg (norm_nonneg _) two_ne_zero).1 h4
   · intro γ γE hγ v
     have hu : IsUnit (γE.val).det := (Matrix.isUnit_iff_isUnit_det γE.val).1 γE.isUnit

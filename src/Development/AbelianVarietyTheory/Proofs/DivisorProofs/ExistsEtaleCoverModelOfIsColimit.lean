@@ -67,8 +67,7 @@ theorem _root_.GlobalTheory.EtaleCoverDescent.exists_point_of_isPushout {R S T P
   have hP := isPullback_SpecMap_of_isPushout f g inl inr H
   obtain ⟨w, hw, -⟩ := Scheme.Pullback.exists_preimage_pullback x y hxy
   refine ⟨hP.isoPullback.inv w, ?_⟩
-  rw [← Scheme.Hom.comp_apply, hP.isoPullback_inv_fst]
-  exact hw
+  rwa [← Scheme.Hom.comp_apply, hP.isoPullback_inv_fst]
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct in
 private lemma exists_etale_pushout_of_filtered_colimit (J : Type) [SmallCategory J] [IsFiltered J]
@@ -112,8 +111,7 @@ private lemma exists_etale_pushout_at_later_index_of_range {J : Type} [SmallCate
       (IsPushout.of_hasPushout (D.map f) a).flip
     have big : IsPushout a (D.map f ≫ c.ι.app k')
         (pushout.inr (D.map f) a ≫ pushout.desc (c.ι.app k' ≫ g) h hw) g := by
-      rw [c.w f, pushout.inr_desc]
-      exact H
+      rwa [c.w f, pushout.inr_desc]
     exact big.of_top (pushout.inl_desc _ _ _) top
   · rintro p ⟨v, hv⟩
     obtain ⟨z, hz⟩ := _root_.GlobalTheory.EtaleCoverDescent.exists_point_of_isPushout (IsPushout.of_hasPushout (D.map f) a) p v hv.symm
@@ -145,8 +143,7 @@ theorem _root_.GlobalTheory.EtaleCoverDescent.exists_etale_cover_model_of_isColi
       exact ha1 i
     exact (Spec.map (a1 i)).isOpenMap.isOpen_range
   have claim : ∃ (k : J) (f : j1 ⟶ k), ∀ p : Spec (D.obj k), Spec.map (D.map f) p ∉ W := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     haveI : ∀ {i i' : Jᵒᵖ} (f : i ⟶ i'), IsAffineHom ((D.op ⋙ Scheme.Spec).map f) :=
       fun f => inferInstanceAs (IsAffineHom (Spec.map (D.map f.unop)))
     obtain ⟨s, hs⟩ := exists_mem_of_isClosed_of_nonempty' (D.op ⋙ Scheme.Spec)

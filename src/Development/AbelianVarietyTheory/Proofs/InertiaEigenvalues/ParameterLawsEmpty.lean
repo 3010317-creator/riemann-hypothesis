@@ -125,8 +125,7 @@ theorem locPar_ofChar_frob (hL : GlobalTheory.Published.LocalLanglandsGL) (χ : 
       simp only [smul_eq_mul, mul_neg, mul_one, neg_neg]
       rw [WithZero.exp_log h0, mul_inv_cancel₀ h0]
     have h3 := hu _ h1
-    rw [map_mul, map_inv, map_zpow, mul_inv_eq_one] at h3
-    exact h3
+    rwa [map_mul, map_inv, map_zpow, mul_inv_eq_one] at h3
   obtain ⟨a, ha, ε, -, H⟩ := ParLaws.isRec_locRec hL h
   have e2 : ParLaws.locPar hL (CG.ofChar χ) h = WD.mk (WDRep.diag h fun _ : Fin 1 => (χ.val w)⁻¹) := by
     rw [ParLaws.locPar_ofChar, H.one]
@@ -223,8 +222,7 @@ theorem locG_rankOne_eq_rcAt {hL : GlobalTheory.Published.LocalLanglandsGL} {D :
   obtain ⟨ξ₀, -, huniq, -⟩ := _root_.GlobalTheory.HeckeComp.main D.host.E χ w
   have hξ : ξ = χ.loc w := (huniq _ h).trans (huniq _ hcomp).symm
   subst hξ
-  rw [hloc, GlobalTheory.CuspRep.ParLaws.locPar_ofChar, rcAt]
-  rw [hchar]
+  rw [hloc, GlobalTheory.CuspRep.ParLaws.locPar_ofChar, rcAt, hchar]
   rfl
 
 
@@ -253,8 +251,7 @@ theorem rankTwo (hAF : GlobalTheory.Published.AutomorphicFormsFiniteGL) (hT : Gl
   have hmk : CG.mk π₀ = (cg.e a π).1 := hπ₀
   have hc₀ : π₀.IsCsd := by
     have h1 := (cg.csd a π).1 hc
-    rw [CGu.IsCsd, ← hmk] at h1
-    exact h1
+    rwa [CGu.IsCsd, ← hmk] at h1
   have hinf : ∀ τ, D.naut.infG π τ = (CG.mk π₀).infChar τ := fun τ => by
     rw [cg.inf, CGu.infChar, ← hmk]
   have hr₀ : (CG.mk π₀).IsRegAlg := (GlobalTheory.CuspRep.CG.isRegAlg_iff _).2 fun τ => by

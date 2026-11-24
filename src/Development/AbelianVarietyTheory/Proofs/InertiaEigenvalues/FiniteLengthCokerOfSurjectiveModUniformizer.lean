@@ -105,8 +105,8 @@ theorem eq_low_add_high (f : K⟦X⟧) (n₀ : ℕ) :
   ext n
   rw [map_add (f := _), coeff_mk, coeff_X_pow_mul', coeff_mk]
   by_cases h : n < n₀
-  · rw [if_pos h, if_neg (not_le.2 h), add_zero]
-  · rw [if_neg h, if_pos (not_lt.1 h), zero_add, Nat.sub_add_cancel (not_lt.1 h)]
+  · rw [ite_eq_left h, ite_eq_right (not_le.2 h), add_zero]
+  · rw [ite_eq_right h, ite_eq_left (not_lt.1 h), zero_add, Nat.sub_add_cancel (not_lt.1 h)]
 
 theorem exists_inv_mem_A {O : Type} [CommRing O] [Algebra O K] [IsUnitBall O K] {u : K⟦X⟧}
     (hu : u ∈ A O K) (h0 : ‖coeff 0 u‖ = 1) : ∃ w ∈ A O K, u * w = 1 := by
@@ -141,7 +141,7 @@ theorem step {g p u w : K⟦X⟧} {n₀ : ℕ} {ρ t : ℝ} (hρ : 0 ≤ ρ) (ht
       (fun m => by rw [hfh, coeff_mk]; exact hf _) n
     rwa [one_mul] at this
   refine ⟨w * fh, r, hq, fun i hi => ?_, fun i => ?_, fun n => ?_⟩
-  · rw [hr, coeff_mk, if_neg (not_lt.2 hi)]
+  · rw [hr, coeff_mk, ite_eq_right (not_lt.2 hi)]
   · rw [hr, coeff_mk]
     split_ifs
     · exact hf _
@@ -403,8 +403,7 @@ theorem norm_coeff_le_one_of_mul {x g : K⟦X⟧} (hx : ∃ B : ℝ, ∀ n, ‖c
     exact (hgx _).trans (le_max_left _ _)
   have hSM : S ≤ Mx := ciSup_le key
   have hS1 : S ≤ 1 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have h2 : S ≤ θ * S := by
       rcases le_total 1 ((θ : ℝ) * S) with h3 | h3
       · rwa [hMx, max_eq_right h3] at hSM
@@ -607,7 +606,7 @@ theorem frobSlice_frob_mul {K : Type} [NormedField K] (l : ℕ) [Fact l.Prime] {
       omega
     · simp
   · rintro ⟨p, q⟩ -
-    simp only [coeff_frob, coeff_frobSlice, dvd_mul_right, if_true, Nat.mul_div_cancel_left _ hl]
+    simp only [coeff_frob, coeff_frobSlice, dvd_mul_right, ite_true, Nat.mul_div_cancel_left _ hl]
 
 theorem frobSlice_sum {K : Type} [Field K] (l i : ℕ) {μ : Type} (s : Finset μ) (f : μ → K⟦X⟧) :
     frobSlice l i (∑ j ∈ s, f j) = ∑ j ∈ s, frobSlice l i (f j) := by
@@ -846,7 +845,7 @@ theorem frobSlice_mul_frob {l : ℕ} [Fact l.Prime] {i : ℕ} (hi : i < l) (z f 
   have hval : ∀ p q : ℕ, coeff (l * p + i) z * coeff q f =
       coeff (l * p + i) z * coeff (l * q) (frob K l f) := by
     intro p q
-    rw [coeff_frob, if_pos (dvd_mul_right l q), Nat.mul_div_cancel_left q hl]
+    rw [coeff_frob, ite_eq_left (dvd_mul_right l q), Nat.mul_div_cancel_left q hl]
   symm
   refine Finset.sum_bij_ne_zero (fun p _ _ => (l * p.1 + i, l * p.2)) ?_ ?_ ?_ ?_
   · rintro ⟨p, q⟩ hpq -
@@ -876,8 +875,7 @@ theorem frobSlice_mul_frob {l : ℕ} [Fact l.Prime] {i : ℕ} (hi : i < l) (z f 
         by simp only [coeff_frobSlice]; exact hne, rfl⟩
     · exact absurd (mul_zero _) hne
   · rintro ⟨p, q⟩ - -
-    simp only [coeff_frobSlice]
-    exact hval p q
+    simpa only [coeff_frobSlice] using hval p q
 
 theorem bdd_frobSlice (l i : ℕ) {z : K⟦X⟧} (hz : ∃ c : ℝ, ∀ n, ‖coeff n z‖ ≤ c) :
     ∃ c : ℝ, ∀ n, ‖coeff n (frobSlice l i z)‖ ≤ c := by
@@ -930,8 +928,7 @@ theorem frobSlice_mem_ldivSet : ∀ (O K : Type) [CommRing O] [NormedField K] [I
       (E K l e ^ (N₁ + N₂) * h) • (1 : Matrix ι ι K⟦X⟧) := by
     have : Z * (F.mat (τ - 1)).map (frob K l) =
         E K l e ^ N₁ • E K l e ^ N₂ • (P.mxInv τ * (Y * Q.mx τ * (F.mat (τ - 1)).map (frob K l))) := by
-      simp only [hZ, Matrix.smul_mul, Matrix.mul_smul, Matrix.mul_assoc]
-      exact smul_comm _ _ _
+      simpa only [hZ, Matrix.smul_mul, Matrix.mul_smul, Matrix.mul_assoc] using smul_comm _ _ _
     rw [this, h1, Matrix.mul_smul, P.mxInv_mul_mx]
     simp only [smul_smul, pow_add, mul_assoc]
   have hPb : ∀ r k, ∃ c : ℝ, ∀ n, ‖coeff n ((E K l e ^ N₁ • P.mxInv τ) r k)‖ ≤ c := fun r k =>
@@ -1105,15 +1102,13 @@ theorem wdiv [CompleteSpace K] (g h : K⟦X⟧) (d : ℕ) (hg1 : ∀ n, ‖coeff
     rw [PowerSeries.order_eq_nat]
     refine ⟨?_, fun i hi => ?_⟩
     · rw [PowerSeries.coeff_map, Ne, Ideal.Quotient.eq_zero_iff_mem]
-      intro hmem
-      exact hI (Ideal.eq_top_of_isUnit_mem _ hmem hgdU)
+      exact fun hmem => hI (Ideal.eq_top_of_isUnit_mem _ hmem hgdU)
     · rw [PowerSeries.coeff_map, Ideal.Quotient.eq_zero_iff_mem]
       have h1 := (mem_span_pow a' (coeff i g') 1).2 (by simpa [g', a'] using hle i hi)
       rwa [pow_one] at h1
   have H : g'.IsWeierstrassDivisorAt (Ideal.span {a'}) := by
     unfold PowerSeries.IsWeierstrassDivisorAt
-    rw [hord, ENat.toNat_coe]
-    exact hgdU
+    rwa [hord, ENat.toNat_coe]
   have hdiv := H.isWeierstrassDivisionAt_div_mod h'
   refine ⟨PowerSeries.map ι (H.div h'), PowerSeries.map ι (H.mod h' : (𝒪)⟦X⟧),
     fun n => ?_, fun n => ?_, fun n hn => ?_, ?_⟩
@@ -1124,8 +1119,7 @@ theorem wdiv [CompleteSpace K] (g h : K⟦X⟧) (d : ℕ) (hg1 : ∀ n, ‖coeff
     rw [hord, ENat.toNat_coe] at hdl
     exact lt_of_lt_of_le hdl (by exact_mod_cast hn)
   · have e := congrArg (PowerSeries.map ι) hdiv.eq_mul_add
-    rw [hh', map_add (f := _), map_mul, hg'] at e
-    exact e
+    rwa [hh', map_add (f := _), map_mul, hg'] at e
 
 theorem first_unit_index (g : K⟦X⟧) (m : ℕ) (hg1 : ∀ n, ‖coeff n g‖ ≤ 1)
     (hm : ‖coeff m g‖ = 1) : ∃ d ≤ m, ‖coeff d g‖ = 1 ∧ ∀ n < d, ‖coeff n g‖ < 1 := by
@@ -1163,8 +1157,7 @@ theorem exists_primitive_generator : ∀ (K : Type) [NormedField K] [IsUltrametr
   · exact ⟨q, hq1, by rw [hqr, hr, add_zero, mul_comm]⟩
   exfalso
   have hex : ∃ n, coeff n r ≠ 0 := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     exact hr (PowerSeries.ext fun n => by simpa using hne n)
   obtain ⟨n0, hn0⟩ := hex
   have hn0d : n0 < Nat.find hS := by
@@ -1304,7 +1297,7 @@ theorem DomTerm.mul {ρ : ℝ} (hρ : 0 < ρ) {f g : K⟦X⟧} {i j : ℕ} {c d 
 omit [IsUltrametricDist K] in
 theorem domTerm_one (ρ : ℝ) : DomTerm ρ (1 : K⟦X⟧) 0 1 := by
   refine ⟨one_pos, ?_, fun n => ?_, fun n hn => absurd hn (Nat.not_lt_zero n)⟩
-  · rw [coeff_one, if_pos rfl, norm_one, pow_zero, mul_one]
+  · rw [coeff_one, ite_eq_left rfl, norm_one, pow_zero, mul_one]
   · rw [coeff_one]
     split_ifs with hn
     · rw [hn, norm_one, pow_zero, mul_one]
@@ -1390,14 +1383,14 @@ theorem coeff_E (l e n : ℕ) (he : 0 < e) :
 omit [IsUltrametricDist K] in
 theorem domTerm_E_one {l e : ℕ} (he : 0 < e) (hl : ‖(l : K)‖ < 1) : DomTerm 1 (E K l e) e 1 := by
   refine ⟨one_pos, ?_, fun n => ?_, fun n hn => ?_⟩
-  · rw [coeff_E (K := K) l e e he, if_pos rfl, norm_one, one_pow, mul_one]
+  · rw [coeff_E (K := K) l e e he, ite_eq_left rfl, norm_one, one_pow, mul_one]
   · rw [coeff_E (K := K) l e n he, one_pow, mul_one]
     split_ifs
     · rw [norm_one]
     · exact hl.le
     · rw [norm_zero]
       exact zero_le_one
-  · rw [coeff_E (K := K) l e n he, one_pow, mul_one, if_neg hn.ne]
+  · rw [coeff_E (K := K) l e n he, one_pow, mul_one, ite_eq_right hn.ne]
     split_ifs
     · exact hl
     · rw [norm_zero]
@@ -1407,7 +1400,7 @@ omit [IsUltrametricDist K] in
 theorem domTerm_E_root {l e : ℕ} (he : 0 < e) {r : ℝ} (hr : 0 < r) (hre : r ^ e = ‖(l : K)‖) :
     DomTerm r (E K l e) 0 (r ^ e) := by
   refine ⟨pow_pos hr e, ?_, fun n => ?_, fun n hn => absurd hn (Nat.not_lt_zero n)⟩
-  · rw [coeff_E (K := K) l e 0 he, if_neg he.ne, if_pos rfl, pow_zero, mul_one, hre]
+  · rw [coeff_E (K := K) l e 0 he, ite_eq_right he.ne, ite_eq_left rfl, pow_zero, mul_one, hre]
   · rw [coeff_E (K := K) l e n he]
     split_ifs with h1 h2
     · rw [h1, norm_one, one_mul]
@@ -1423,9 +1416,8 @@ theorem DomTerm.frob (l : ℕ) [Fact l.Prime] {f : K⟦X⟧} {i : ℕ} (h : DomT
   have hco : ∀ n, coeff n (GlobalTheory.BK.frob K l f) = if l ∣ n then coeff (n / l) f else 0 := fun n => by
     exact GlobalTheory.BK.coeff_frob l f n
   refine ⟨one_pos, ?_, fun n => ?_, fun n hn => ?_⟩
-  · rw [hco, if_pos (dvd_mul_right l i), Nat.mul_div_cancel_left i hl0, one_pow, mul_one]
-    rw [one_pow, mul_one] at hi
-    exact hi
+  · rw [hco, ite_eq_left (dvd_mul_right l i), Nat.mul_div_cancel_left i hl0, one_pow, mul_one]
+    rwa [one_pow, mul_one] at hi
   · rw [hco, one_pow, mul_one]
     split_ifs
     · have hx := hle (n / l)
@@ -1536,7 +1528,7 @@ theorem norm_constantCoeff_eq_one_of_cycle (K : Type) [NormedField K] [IsUltrame
     exact (h1.unique h2).1
 
   have hE0 : constantCoeff (E K l e) = (l : K) := by
-    rw [← coeff_zero_eq_constantCoeff_apply, coeff_E l e 0 he, if_neg he.ne, if_pos rfl]
+    rw [← coeff_zero_eq_constantCoeff_apply, coeff_E l e 0 he, ite_eq_right he.ne, ite_eq_left rfl]
   have hEord : ∀ n, (E K l e ^ n).order = (0 : ℕ) := fun n => by
     apply order_eq_zero_of_ne
     rw [map_pow, hE0]
@@ -1554,8 +1546,7 @@ theorem norm_constantCoeff_eq_one_of_cycle (K : Type) [NormedField K] [IsUltrame
   have hord : ∀ σ, o σ = l * o (σ - 1) := fun σ => by
     have h := congrArg order (hcyc σ)
     rw [order_mul, order_mul, hkord σ, hEord M, ← ho σ, order_frob l (ho (σ - 1)).symm] at h
-    simp only [Nat.cast_zero, add_zero, zero_add, Nat.cast_inj] at h
-    exact h
+    simpa only [Nat.cast_zero, add_zero, zero_add, Nat.cast_inj] using h
   have hsum_o : ∑ σ, o σ = l * ∑ σ, o σ :=
     calc ∑ σ, o σ = ∑ σ, l * o (σ - 1) := Finset.sum_congr rfl fun σ _ => hord σ
       _ = ∑ σ, l * o σ := sum_sub_one (fun σ => l * o σ)
@@ -1574,8 +1565,7 @@ theorem norm_constantCoeff_eq_one_of_cycle (K : Type) [NormedField K] [IsUltrame
       (r ^ e) ^ M * ‖constantCoeff (Δ (σ - 1))‖ := fun σ => by
     have h := congrArg (fun F => ‖constantCoeff F‖) (hcyc σ)
     simp only [map_mul, map_pow, norm_mul, norm_pow, hE0, hF0] at h
-    rw [← hkn σ, hre]
-    exact h
+    rwa [← hkn σ, hre]
   have hP : 0 < ∏ σ, ‖constantCoeff (Δ σ)‖ :=
     Finset.prod_pos fun σ _ => norm_pos_iff.mpr (hc0 σ)
   have hprod : (∏ σ, ‖constantCoeff (Δ σ)‖) * r ^ (∑ σ, κ σ) =
@@ -1669,7 +1659,7 @@ theorem sum_X_pow_mul_frob_frobSlice (l : ℕ) [Fact l.Prime] (z : K⟦X⟧) :
   rw [Finset.sum_eq_single (n % l)]
   · have h1 : n % l ≤ n := Nat.mod_le n l
     have h2 : l ∣ n - n % l := Nat.dvd_sub_mod n
-    rw [if_pos h1, if_pos h2, Nat.mul_div_cancel' h2, Nat.sub_add_cancel h1]
+    rw [ite_eq_left h1, ite_eq_left h2, Nat.mul_div_cancel' h2, Nat.sub_add_cancel h1]
   · intro i hi hne
     split_ifs with h1 h2
     · exfalso

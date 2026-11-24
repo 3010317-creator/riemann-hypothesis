@@ -122,8 +122,7 @@ theorem mem_range_of_isAlgebraic {k L I : Type} [Field k] [Field L] [Algebra k L
   have hi : IsIntegral (MvPolynomial I k) a := (ha.isIntegral).tower_top
   obtain ⟨P, hP⟩ := IsIntegrallyClosed.isIntegral_iff.1 hi
   have hPa : IsAlgebraic k P := by
-    rw [← isAlgebraic_algHom_iff g hg, ← hmap, hP]
-    exact ha
+    rwa [← isAlgebraic_algHom_iff g hg, ← hmap, hP]
   obtain ⟨p, rfl⟩ := exists_C_eq_of_isAlgebraic P hPa
   refine ⟨p, ?_⟩
   rw [← hP, hmap]
@@ -307,8 +306,7 @@ theorem aeval_ratio_eq_zero (c : ∀ k, J k) (hc : ∀ k, y ⟨k, c k⟩ ≠ 0) 
     funext p
     simp [div_eq_mul_inv]
   rw [h3] at h2
-  rw [← h2]
-  exact h1
+  rwa [← h2]
 
 theorem ratio_pt_mem (W : ValuationSubring Ω) (c : ∀ k, J k) (hc : ∀ k, y ⟨k, c k⟩ ≠ 0)
     (hcW : ∀ p : Σ k, J k, y p / y ⟨p.1, c p.1⟩ ∈ W) :
@@ -319,8 +317,7 @@ theorem ratio_pt_mem (W : ValuationSubring Ω) (c : ∀ k, J k) (hc : ∀ k, y �
     refine ⟨c k, ?_⟩
     have h1 : (⟨y ⟨k, c k⟩ / y ⟨k, c k⟩, hcW ⟨k, c k⟩⟩ : W) = 1 :=
       Subtype.ext (by simp [hc k])
-    simp only [h1, map_one]
-    exact one_ne_zero
+    simpa only [h1, map_one] using one_ne_zero
   · intro f hf
     have h2 := @ringHom_aevalZ _ _ _ _ _ _ (Ring.toIntAlgebra _) (IsLocalRing.residue W)
       (fun p => (⟨y p / y ⟨p.1, c p.1⟩, hcW p⟩ : W)) f
@@ -328,8 +325,7 @@ theorem ratio_pt_mem (W : ValuationSubring Ω) (c : ∀ k, J k) (hc : ∀ k, y �
     have h3 := ringHom_aevalZ W.subtype
       (fun p => (⟨y p / y ⟨p.1, c p.1⟩, hcW p⟩ : W)) f
     have h4 : aeval (fun p => (⟨y p / y ⟨p.1, c p.1⟩, hcW p⟩ : W)) f = 0 := by
-      apply Subtype.ext
-      exact h3.trans (aeval_ratio_eq_zero y c hc hf)
+      exact Subtype.ext (h3.trans (aeval_ratio_eq_zero y c hc hf))
     rw [h4, map_zero]
 
 theorem rename_mem (k₀ : K) {P : MvPolynomial (J k₀) ℤ} {n : ℕ} (hP : P.IsHomogeneous n)
@@ -460,8 +456,7 @@ theorem span_top [CharZero Ω] (k₀ : K) (hy : ∀ k, ∃ j, y ⟨k, j⟩ ≠ 0
     intro k
     by_cases h : k = k₀
     · subst h
-      rw [hck]
-      exact hi
+      rwa [hck]
     · rw [show c k = c0 k from Function.update_of_ne h _ _]
       exact hc0 k
   have hcW : ∀ p : Σ k, J k, y p / y ⟨p.1, c p.1⟩ ∈ W := by
@@ -486,8 +481,7 @@ theorem span_top [CharZero Ω] (k₀ : K) (hy : ∀ k, ∃ j, y ⟨k, j⟩ ≠ 0
     have h4 : (fun p => W.subtype (w p)) = ratio y k₀ i := by
       funext j
       simp [w, ratio, hck]
-    rw [h4] at h3
-    exact h3
+    rwa [h4] at h3
   have e2 := ringHom_aevalZ (IsLocalRing.residue W) w f
   change aeval (fun i' => IsLocalRing.residue W (w i')) f = 0
   rw [← e2, e1]
@@ -508,8 +502,7 @@ theorem exists_finset_at [CharZero Ω] (k₀ : K) (hy : ∀ k, ∃ j, y ⟨k, j�
   obtain ⟨T, hT, rfl⟩ := Finset.subset_set_image_iff.1 hs
   refine ⟨T, hT, ?_⟩
   intro L _ _ z hz hzi
-  by_contra hall
-  push_neg at hall
+  by_contra! hall
   have key : ∀ b ∈ Ideal.span ((T.image fun f => aeval (ratioA y k₀ i) f :
       Finset (chartSub y k₀ i)) : Set (chartSub y k₀ i)),
       ∃ (N : ℕ) (G : MvPolynomial (J k₀) ℤ), N ≠ 0 ∧ (N : Ω) * (b : Ω) = aeval (ratio y k₀ i) G ∧
@@ -610,8 +603,7 @@ theorem finite_families : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] [CharZero 
   obtain ⟨f, hf, hne⟩ := hT' L z hz
   refine ⟨T.equivFin ⟨f, hf⟩, j ⟨f, hf⟩, ?_⟩
   simp only [Equiv.symm_apply_apply]
-  rw [← hj ⟨f, hf⟩]
-  exact hne
+  rwa [← hj ⟨f, hf⟩]
 
 end GlobalTheory.CompanionTheory.Ar.FormFamilies
 end -- clump:auto
@@ -739,7 +731,7 @@ theorem ampleQ_of_forms (y : (Σ k, J k) → Ω) (k₀ : K) (a : K → ℤ) (ha�
     Ht.AmpleQ y a := by
   by_cases hy : ∀ k, ∃ j, y ⟨k, j⟩ ≠ 0
   swap
-  · push_neg at hy
+  · push Not at hy
     obtain ⟨k, hk⟩ := hy
     refine ⟨0, 0, Fin.elim0, fun i => i.elim0, fun L _ _ z hz => ?_⟩
     exfalso
@@ -846,16 +838,14 @@ theorem ker_fderiv_comp_biholo : ∀ (e : ℕ) (X₁ X₂ V : Type) [Topological
         ⇑(A₂.chart j₂).symm ⁻¹' (inv ⁻¹' (A₁.chart j₁).source) := by
       refine ⟨hy, ?_⟩
       show inv ((A₂.chart j₂).symm (A₂.chart j₂ x)) ∈ (A₁.chart j₁).source
-      rw [hsy]
-      exact hx₁
+      rwa [hsy]
     exact (hinv.2 j₂ j₁ _ hmem).differentiableAt
   have hσ : DifferentiableAt ℂ (⇑(A₂.chart j₂) ∘ π ∘ ⇑(A₁.chart j₁).symm) (A₁.chart j₁ (inv x)) := by
     have hmem : A₁.chart j₁ (inv x) ∈ (A₁.chart j₁).target ∩
         ⇑(A₁.chart j₁).symm ⁻¹' (π ⁻¹' (A₂.chart j₂).source) := by
       refine ⟨hz, ?_⟩
       show π ((A₁.chart j₁).symm (A₁.chart j₁ (inv x))) ∈ (A₂.chart j₂).source
-      rw [hsz, hright]
-      exact hx₂
+      rwa [hsz, hright]
     exact (hπ.2 j₁ j₂ _ hmem).differentiableAt
   have hev : ∀ᶠ v in 𝓝 (A₂.chart j₂ x),
       v ∈ (A₂.chart j₂).target ∧ inv ((A₂.chart j₂).symm v) ∈ (A₁.chart j₁).source := by
@@ -870,8 +860,7 @@ theorem ker_fderiv_comp_biholo : ∀ (e : ℕ) (X₁ X₂ V : Type) [Topological
     simp only [Function.comp_apply, hsy]
   have hσ' : DifferentiableAt ℂ (⇑(A₂.chart j₂) ∘ π ∘ ⇑(A₁.chart j₁).symm)
       ((⇑(A₁.chart j₁) ∘ inv ∘ ⇑(A₂.chart j₂).symm) (A₂.chart j₂ x)) := by
-    rw [hτz]
-    exact hσ
+    rwa [hτz]
   have hid : (⇑(A₂.chart j₂) ∘ π ∘ ⇑(A₁.chart j₁).symm) ∘ (⇑(A₁.chart j₁) ∘ inv ∘ ⇑(A₂.chart j₂).symm)
       =ᶠ[𝓝 (A₂.chart j₂ x)] id := by
     filter_upwards [hev] with v hv
@@ -889,12 +878,10 @@ theorem ker_fderiv_comp_biholo : ∀ (e : ℕ) (X₁ X₂ V : Type) [Topological
     exact h.symm
   have hdiff' : DifferentiableAt ℂ (fun v => Φ ((A₁.chart j₁).symm v))
       ((⇑(A₁.chart j₁) ∘ inv ∘ ⇑(A₂.chart j₂).symm) (A₂.chart j₂ x)) := by
-    rw [hτz]
-    exact hdiff
+    rwa [hτz]
   have hker' : (fderiv ℂ (fun v => Φ ((A₁.chart j₁).symm v))
       ((⇑(A₁.chart j₁) ∘ inv ∘ ⇑(A₂.chart j₂).symm) (A₂.chart j₂ x))).ker = ⊥ := by
-    rw [hτz]
-    exact hker
+    rwa [hτz]
   have hfeq : (fun v => Φ (inv ((A₂.chart j₂).symm v))) =ᶠ[𝓝 (A₂.chart j₂ x)]
       (fun v => Φ ((A₁.chart j₁).symm v)) ∘ (⇑(A₁.chart j₁) ∘ inv ∘ ⇑(A₂.chart j₂).symm) := by
     filter_upwards [hev] with v hv
@@ -907,8 +894,7 @@ theorem ker_fderiv_comp_biholo : ∀ (e : ℕ) (X₁ X₂ V : Type) [Topological
   have h1 : fderiv ℂ (⇑(A₁.chart j₁) ∘ inv ∘ ⇑(A₂.chart j₂).symm) (A₂.chart j₂ x) w ∈
       (fderiv ℂ (fun v => Φ ((A₁.chart j₁).symm v))
         ((⇑(A₁.chart j₁) ∘ inv ∘ ⇑(A₂.chart j₂).symm) (A₂.chart j₂ x))).ker := hw
-  rw [hker'] at h1
-  exact h1
+  rwa [hker'] at h1
 
 end GlobalTheory.CompanionTheory.Ar.ImmersionBiholo
 end -- clump:auto
@@ -1010,8 +996,7 @@ theorem sameOrbit_of_block : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] [CharZe
       funext i'
       exact hu i'
     have hne' : MvPolynomial.aeval (fun i' : J k₀ => w' ⟨k₀, i'⟩) (F c) ≠ 0 := by
-      intro h0
-      exact hne (by rw [hscale, h0, mul_zero])
+      exact fun h0 => hne (by rw [hscale, h0, mul_zero])
     have r := fun j => relation_at y k₀ k c j (hF j) (hF c) (hrel j) hw
     have r' := fun j => relation_at y k₀ k c j (hF j) (hF c) (hrel j) hw'
     have hc' : w' ⟨k, c⟩ ≠ 0 := by
@@ -1113,10 +1098,10 @@ theorem stepLine_a {G : RefGeo Y} (A : G.An) (t : ℝ) (r : RootIx D) :
     simp [Finset.sum_apply]
   simp only [stepLine, PB.combLine_a, Fin.sum_univ_two]
   by_cases h : (i : ℕ) = 0
-  · simp only [prevLine, dif_pos h]
+  · simp only [prevLine, dite_eq_left h]
     simp [Top.trivLine, hl, Iic_zero i h]
   · have hi : 0 < (i : ℕ) := Nat.pos_of_ne_zero h
-    simp only [prevLine, dif_neg h]
+    simp only [prevLine, dite_eq_right h]
     simp only [Matrix.cons_val_zero, Matrix.cons_val_one, hl]
     rw [Iic_pred i hi, Finset.sum_insert (not_mem_Iic_pred i hi)]
     simp
@@ -1149,10 +1134,10 @@ theorem log_line_eq {G : RefGeo Y} (A : G.An) (t : ℝ) (τ : CMType H) (i : Fin
       -∑ k ∈ Finset.Iic i, Real.log ((stepLine A t (τ, k)).h z) := by
   have := sum_Iic_step (fun i' : Fin (D.p + D.q) => Real.log ((A.Re.line (some (τ, i')) t).h z))
     (fun k => Real.log ((stepLine A t (τ, k)).h z)) (fun k hk => by
-      simp only [stepLine_h, prevLine, dif_pos hk, Top.trivLine]
+      simp only [stepLine_h, prevLine, dite_eq_left hk, Top.trivLine]
       rw [Real.log_div one_ne_zero ((A.Re.line _ t).pos z hz).ne']
       simp) (fun k hk => by
-      simp only [stepLine_h, prevLine, dif_neg hk.ne']
+      simp only [stepLine_h, prevLine, dite_eq_right hk.ne']
       rw [Real.log_div ((A.Re.line _ t).pos z hz).ne' ((A.Re.line _ t).pos z hz).ne']) i
   rw [this, neg_neg]
 

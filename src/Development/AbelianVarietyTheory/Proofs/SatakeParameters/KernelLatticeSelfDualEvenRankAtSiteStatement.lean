@@ -77,10 +77,8 @@ theorem toLE_mem_mvL {E : Type} [Field E] [NumberField E] [StarRing E] {N : ℕ}
   constructor
   · rintro ⟨x, hx, hxy⟩
     have hxy' : x = y := (toLE co).injective hxy
-    rw [hxy'] at hx
-    exact hx
-  · intro hy
-    exact Submodule.mem_map.mpr ⟨y, hy, rfl⟩
+    rwa [hxy'] at hx
+  · exact fun hy => Submodule.mem_map.mpr ⟨y, hy, rfl⟩
 
 theorem isLat_and_dl_eq_of_isSDLat_mvL : ∀ {R : Ranks} {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E] (sp : Spaces R F E) {N : ℕ} (J : Matrix (Fin N) (Fin N) E) (co : GL (Fin N) E) (M : Submodule (𝓞 E) (Fin N → E)), IsOrthCo (sp.cm.sig : E →+* E) J (toLE co) → IsSDLat E N (mvL co M) → Formalism.L2.GlobalTheoryTheory.Comp.IsLat M ∧ Formalism.L2.GlobalTheoryTheory.Comp.dl sp.cm.sig J M = M := by
   intro R F E _ _ _ _ _ _ sp N J co M hco hsd
@@ -122,8 +120,7 @@ theorem isLat_and_dl_eq_of_isSDLat_mvL : ∀ {R : Ranks} {F E : Type} [Field F] 
       exact h x hx
     · intro h x hx
       have h1 := h (toLE co x) ((toLE_mem_mvL co M x).mpr hx)
-      rw [hkey] at h1
-      exact h1
+      rwa [hkey] at h1
 
 end GlobalTheory.OrthSelfDual
 

@@ -157,8 +157,7 @@ theorem exists_bounded_multiple_near_integer (E : Type) [Field E] [NumberField E
         (fun _ _ => norm_nonneg _) (Finset.mem_univ σ)) (norm_nonneg _) (by positivity)
       have h := Rat.cast_le (K := ℝ) |>.mpr (hz i)
       rwa [Rat.cast_div, Rat.cast_one, Rat.cast_natCast, Rat.cast_abs] at h
-    · rw [← Finset.mul_sum, ← hC, one_div_mul_eq_div, div_lt_one hNr]
-      exact hN
+    · rwa [← Finset.mul_sum, ← hC, one_div_mul_eq_div, div_lt_one hNr]
 
 end GlobalTheory.SimultaneousDiophantineApprox
 end -- clump:auto
@@ -182,8 +181,7 @@ theorem exists_reduce (E : Type) [Field E] [NumberField E] :
   let b := integralBasis E
   refine ⟨∑ i, ‖canonicalEmbedding E (b i)‖, fun x => ⟨∑ i, ⌊b.repr x i⌋ • b i, ?_, ?_⟩⟩
   · refine IsIntegral.sum _ fun i _ => IsIntegral.zsmul ?_ _
-    simp only [b, integralBasis_apply]
-    exact RingOfIntegers.isIntegral_coe _
+    simpa only [b, integralBasis_apply] using RingOfIntegers.isIntegral_coe _
   · have h : x - ∑ i, ⌊b.repr x i⌋ • b i = ∑ i, (Int.fract (b.repr x i) : ℚ) • b i := by
       conv_lhs => rw [← b.sum_repr x]
       rw [b.sum_repr x]
@@ -216,8 +214,7 @@ theorem exists_min {E : Type} [Field E] [NumberField E] (S : Set E) (d : ℤ) (h
       have := (canonicalEmbedding.norm_le_iff x 1).1 hx1 φ
       rw [map_mul, norm_mul, map_intCast, Complex.norm_intCast]
       exact mul_le_of_le_one_right (abs_nonneg _) this
-    · intro x _ y _ h
-      exact mul_left_cancel₀ (Int.cast_ne_zero.2 hd) h
+    · exact fun x _ y _ h => mul_left_cancel₀ (Int.cast_ne_zero.2 hd) h
   have hone : ‖canonicalEmbedding E 1‖ ≤ 1 := (canonicalEmbedding.norm_le_iff 1 1).2 (by simp)
   obtain ⟨α, hα, hmin⟩ := Set.exists_min_image _ (fun x => ‖canonicalEmbedding E x‖) hfin
     ⟨1, h1, hone⟩
@@ -271,13 +268,10 @@ theorem exists_rows {E : Type} [Field E] [NumberField E] {k : ℕ} (L : AddSubgr
   · simp [ha0 j hj, not_lt.2 hj.le]
   · simpa using hα0
   · rcases lt_trichotomy j i with h | rfl | h
-    · simp only [Pi.sub_apply, if_pos h]
-      exact (hyC _).trans (le_max_right _ _)
-    · simp only [Pi.sub_apply, lt_irrefl, if_false, sub_zero]
-      exact hα1.trans (le_max_left _ _)
+    · simpa only [Pi.sub_apply, ite_eq_left h] using (hyC _).trans (le_max_right _ _)
+    · simpa only [Pi.sub_apply, lt_irrefl, ite_false, sub_zero] using hα1.trans (le_max_left _ _)
     · simp [ha0 j h, not_lt.2 h.le]
-  · simp only [Pi.sub_apply, lt_irrefl, if_false, sub_zero]
-    exact hmin _ ⟨hsi, s, hs, hs0, rfl⟩
+  · simpa only [Pi.sub_apply, lt_irrefl, ite_false, sub_zero] using hmin _ ⟨hsi, s, hs, hs0, rfl⟩
 
 theorem integral_coord {E : Type} [Field E] [NumberField E] {k : ℕ}
     (L : AddSubgroup (Fin k → E))

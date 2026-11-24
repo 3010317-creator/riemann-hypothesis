@@ -89,7 +89,7 @@ theorem nu_top_eq {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridDat
   have h2 := hM'.top
   unfold Vol.IsAt at h1 h2
   have hz : Node.neg D.R.m (Node.top 0) = 0 := rfl
-  rw [if_pos hz] at h1 h2
+  rw [ite_eq_left hz] at h1 h2
   haveI := h1.1.1
   haveI := h2.1.1
   have e := Measure.isMulLeftInvariant_eq_smul (M.ν (.top 0)) (M'.ν (.top 0))
@@ -169,8 +169,7 @@ theorem rowFam_cusp (hS : GlobalTheory.FlipRun.CuspStep W M ρ t) {e : AE D} (he
   intro n
   induction n with
   | zero =>
-    intro _ _ _
-    exact hF
+    exact fun _ _ _ => hF
   | succ n ih =>
     intro hn f hf
     obtain ⟨φ, g, Q, hl, e1⟩ := hf (Fin.last n)
@@ -178,8 +177,7 @@ theorem rowFam_cusp (hS : GlobalTheory.FlipRun.CuspStep W M ρ t) {e : AE D} (he
     have h1 := (hS (.right n D.R.m) (Or.inl ⟨n, D.R.m, by omega, le_rfl, rfl⟩) e he φ g hl Q _ hprev).2
     show GlobalTheory.FlipRun.IsCuspListed W.θ (.grid (n + 1) D.R.m)
       (liftA W M (.right n D.R.m) (f (Fin.last n)) (liftP W M (rowPath T D.R.m n) (rowFam D.R.m n fun i => f i.castSucc) F))
-    rw [e1]
-    exact h1
+    rwa [e1]
 
 theorem downFam_cusp (hS : GlobalTheory.FlipRun.CuspStep W M ρ t) {e : AE D} (he : IsIdemSum e (locPl G t)) :
     ∀ n, n ≤ D.R.m → ∀ (f : ∀ j : Fin n, Sch G (.down t D.R.m j)),
@@ -189,8 +187,7 @@ theorem downFam_cusp (hS : GlobalTheory.FlipRun.CuspStep W M ρ t) {e : AE D} (h
   intro n
   induction n with
   | zero =>
-    intro _ _ _ _ hF
-    exact hF
+    exact fun _ _ _ _ hF => hF
   | succ n ih =>
     intro hn f hf F hF
     obtain ⟨φ, g, Q, hl, e1⟩ := hf (Fin.last n)

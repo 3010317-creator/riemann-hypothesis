@@ -143,9 +143,7 @@ theorem exists_common_eigvector {V : Type*} [AddCommGroup V] [Module ℂ V] [Fin
   have hxe : f i (x : V) = μ • (x : V) := by
     have := congrArg Subtype.val hx.apply_eq_smul
     simpa [r] using this
-  have hx0 : (x : V) ≠ 0 := by
-    intro h
-    exact hx.2 (Subtype.ext h)
+  have hx0 : (x : V) ≠ 0 := fun h => hx.2 (Subtype.ext h)
   let U' : Submodule ℂ V := U ⊓ Module.End.eigenspace (f i) μ
   have hU' : U' = U := by
     refine hmin U' inf_le_left ?_ ?_
@@ -169,8 +167,7 @@ theorem char_eq_cexp (χ : ℝ → ℂ) (hc : Continuous χ) (h0 : χ 0 = 1)
   have hI : ∀ x, HasDerivAt I (χ x) x := fun x =>
     (hc.integral_hasStrictDerivAt 0 x).hasDerivAt
   obtain ⟨δ, hδ⟩ : ∃ δ, I δ ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have hz : I = fun _ => 0 := funext hcon
     have h1 := hI 0
     rw [hz] at h1
@@ -182,8 +179,7 @@ theorem char_eq_cexp (χ : ℝ → ℂ) (hc : Continuous χ) (h0 : χ 0 = 1)
   have hid : ∀ t, χ t * I δ = I (t + δ) - I t := by
     intro t
     have h1 : ∫ s in (0 : ℝ)..δ, χ (t + s) = χ t * I δ := by
-      simp only [hm, I]
-      exact intervalIntegral.integral_const_mul _ _
+      simpa only [hm, I] using intervalIntegral.integral_const_mul _ _
     have h2 : ∫ s in (0 : ℝ)..δ, χ (t + s) = ∫ s in (t + 0)..(t + δ), χ s :=
       intervalIntegral.integral_comp_add_left (a := 0) (b := δ) χ t
     have h3 : I t + ∫ s in t..(t + δ), χ s = I (t + δ) :=
@@ -217,13 +213,11 @@ theorem char_eq_cexp (χ : ℝ → ℂ) (hc : Continuous χ) (h0 : χ 0 = 1)
       have he : (fun y : ℝ => -(c * (y : ℂ))) = fun y : ℝ => -c * (y : ℂ) := by
         funext y
         ring
-      rw [he]
-      exact h
+      rwa [he]
     have h2 := (hd u).mul h1.cexp
     have h3 : c * χ u * Complex.exp (-(c * u)) + χ u * (Complex.exp (-(c * u)) * -c) = 0 := by
       ring
-    rw [h3] at h2
-    exact h2
+    rwa [h3] at h2
   have hy0 : y t = y 0 :=
     is_const_of_deriv_eq_zero (fun u => (hy u).differentiableAt) (fun u => (hy u).deriv) t 0
   have hy1 : y 0 = 1 := by simp [y, h0]
@@ -333,8 +327,7 @@ theorem killPoly_natDegree_le (G : Type) [Group G] (a : ℝ → G) (F₀ : G →
       rw [hc1, hwe, map_smul])
     have hv1 : R 1 v = z • v := Module.End.mem_eigenspace_iff.1 hvW
     obtain ⟨g₀, hg₀⟩ : ∃ g₀, (v : G → ℂ) g₀ ≠ 0 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact hv0 (Subtype.ext (funext hcon))
     let χ : ℝ → ℂ := fun t => (v : G → ℂ) (a t * g₀) / (v : G → ℂ) g₀
     have hχ : ∀ t g, (v : G → ℂ) (a t * g) = χ t * (v : G → ℂ) g := by
@@ -362,18 +355,14 @@ theorem killPoly_natDegree_le (G : Type) [Group G] (a : ℝ → G) (F₀ : G →
         rw [he]
         exact hcont _
       | zero =>
-        intro g
-        exact continuous_const
+        exact fun g => continuous_const
       | add F₁ F₂ _ _ h₁ h₂ =>
-        intro g
-        exact (h₁ g).add (h₂ g)
+        exact fun g => (h₁ g).add (h₂ g)
       | smul r F _ h =>
-        intro g
-        exact (h g).const_smul r
+        exact fun g => (h g).const_smul r
     have hχc : Continuous χ := (hspan _ v.2 g₀).div_const _
     have hχ0 : χ 0 = 1 := by
-      simp only [χ, ha0, one_mul]
-      exact div_self hg₀
+      simpa only [χ, ha0, one_mul] using div_self hg₀
     have hχm : ∀ s t, χ (s + t) = χ s * χ t := by
       intro s t
       have h1 : (v : G → ℂ) (a (s + t) * g₀) = χ s * (χ t * (v : G → ℂ) g₀) := by
@@ -394,8 +383,7 @@ theorem killPoly_natDegree_le (G : Type) [Group G] (a : ℝ → G) (F₀ : G →
       have h3 : z = χ 1 := mul_right_cancel₀ hg₀ h2
       rw [h3, hc 1]
       simp
-    · intro h
-      exact hv0 (Subtype.ext h)
+    · exact fun h => hv0 (Subtype.ext h)
     · intro t g
       rw [hχ t g, hc t]
 
@@ -476,8 +464,7 @@ theorem eq_zero_of_op_eq_zero (c : ℂ) {y : ℝ → ℂ} (hy : Differentiable �
     have h2 := (hy t).hasDerivAt.mul (he t)
     have h3 : deriv y t * Complex.exp (-c * (t : ℂ)) + y t * (Complex.exp (-c * (t : ℂ)) * (-c)) = 0 := by
       rw [hd]; ring
-    rw [h3] at h2
-    exact h2
+    rwa [h3] at h2
   have hc := is_const_of_deriv_eq_zero (𝕜 := ℝ)
     (fun t => (hg t).differentiableAt) (fun t => (hg t).deriv)
   funext t
@@ -500,8 +487,7 @@ theorem step_finite (c : ℂ) (S : Submodule ℂ (ℝ → ℂ)) [FiniteDimension
 theorem step_finrank_le (c : ℂ) (S : Submodule ℂ (ℝ → ℂ)) [FiniteDimensional ℂ S] :
     Module.finrank ℂ (step c S) ≤ Module.finrank ℂ S + 1 := by
   have h := LinearMap.finrank_le_finrank_of_injective (stepMap_injective c S)
-  rw [Module.finrank_prod, Module.finrank_self] at h
-  exact h
+  rwa [Module.finrank_prod, Module.finrank_self] at h
 
 theorem solutions_mem_finite :
     ∀ l : List ℂ, ∃ S : Submodule ℂ (ℝ → ℂ), FiniteDimensional ℂ S ∧ Module.finrank ℂ S ≤ l.length ∧
@@ -536,16 +522,14 @@ theorem solutions_mem_finite :
         simp only [List.map_cons, List.prod_cons] at hx
         rw [h3] at hx
         have h4 : (P * Q) x = P (Q x) := rfl
-        rw [← h4, ← h2]
-        exact hx
+        rwa [← h4, ← h2]
       have h5 : ev (Q x) ∈ S := hS X D ev hD (Q x) h1
       have hdiff : Differentiable ℝ (ev x) := fun t => (hD x t).differentiableAt
       refine ⟨hdiff, ?_⟩
       have h6 : op c (ev x) = ev (Q x) := by
         funext t
         simp [op, hQ, (hD x t).deriv]
-      rw [h6]
-      exact h5
+      rwa [h6]
 
 end GlobalTheory.CompanionTheory.ConstCoeffODE
 end -- clump:auto
@@ -949,8 +933,7 @@ theorem alg_kill {ι : Type} [Fintype ι] (r s : ℕ) (hr : 0 < r) (M : ι → M
       simp [hπ]
     have := _root_.GlobalTheory.CompanionTheory.SubsetSum.prod_sub_subset_sum_eq_zero_complex (R ⧸ I) r (M τ) _ _ hr hA hB hdeg hAB
     rw [polyOf_coeff r _ (Nat.sub_le r 1)] at this
-    rw [Multiset.map_map]
-    exact this
+    rwa [Multiset.map_map]
   rw [← Ideal.Quotient.eq_zero_iff_mem]
   change π _ = 0
   rw [map_multiset_prod, Multiset.map_map, ← key]
@@ -1126,8 +1109,7 @@ theorem orbit_mem (r s : ℕ) (hr : 0 < r) (hs : 0 < s) (φ : Sm E (r + s)) (hφ
   set y := infGL E (r + s) (Unitary.toUnits k) * finGL E (r + s) f with hy
   set F := rt E (r + s) y G with hF
   have hFN : ∀ (v : BlockIx (r + s) r → Ad E) (g : GA E (r + s)), F.1 (unip v * g) = F.1 g := fun v g => by
-    simp only [hF, rt_apply, mul_assoc]
-    exact hN v _
+    simpa only [hF, rt_apply, mul_assoc] using hN v _
   have hcomm : ∀ (τ : E →+* ℂ) (u : ℂ), Commute (cap (a := r + s) τ u) (rt E (r + s) y) := fun τ u => by
     rw [hy, map_mul]
     exact (GlobalTheory.CapAdInv.cap_commute_rt_infGL E _ τ u _).mul_right (commute_cap_finRep τ u f)
@@ -1172,8 +1154,7 @@ theorem killU : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsT
   have hcont : ∀ g, Continuous fun t => An.ctn r φ.1 (aT E (r + s) r t * g) := by
     obtain ⟨G, -, -, hG⟩ := exists_ct r s hr hs φ haut (fun τ u => ((M τ).map (u + ·)).prod) hc
     intro g
-    simp only [← hG]
-    exact PDich.continuous_aT G r g
+    simpa only [← hG] using PDich.continuous_aT G r g
   obtain ⟨p, hp, hdeg, hkill, hroot⟩ := _root_.GlobalTheory.CompanionTheory.KillDeg.killPoly_natDegree_le (GA E (r + s)) (aT E (r + s) r) (An.ctn r φ.1) S
     (fun u v => PExpFin.aT_add r u v) hcont hfin horb
   have hdict := dict_holds E (r + s)

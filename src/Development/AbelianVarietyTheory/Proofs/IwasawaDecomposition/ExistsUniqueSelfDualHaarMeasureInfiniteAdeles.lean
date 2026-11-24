@@ -179,8 +179,7 @@ private lemma UpperTheory.Reformulated.B.Yzb9.integrable_iff (T : E ≃L[ℝ] E)
       funext y
       simp [hc']
     rwa [h2] at this
-  · intro h
-    exact h.smul (c : ℝ)
+  · exact fun h => h.smul (c : ℝ)
 
 private lemma UpperTheory.Reformulated.B.Yzb9.key (T : E ≃L[ℝ] E) (hT : ∀ u v, ⟪u, T v⟫ = ⟪T u, v⟫) (c : ℝ≥0)
     (Φ : E → ℂ) (hc : Continuous Φ) (hs : HasCompactSupport Φ) (hG : Integrable (𝓕⁻ Φ)) (z : E) :
@@ -234,8 +233,7 @@ private lemma UpperTheory.Reformulated.B.Yzb9.existsUnique_E (T : E ≃L[ℝ] E)
   · intro Φ hΦ hs hi z
     have hG := (integrable_iff T c hc0 Φ).mp hi
     have := key T hT c Φ hΦ hs hG z
-    rw [hc2, one_smul] at this
-    exact this
+    rwa [hc2, one_smul] at this
   · rintro m' ⟨hH, hS⟩
     have hm : m' = Measure.addHaarScalarFactor m' volume • (volume : Measure E) :=
       Measure.isAddLeftInvariant_eq_smul m' volume
@@ -247,8 +245,7 @@ private lemma UpperTheory.Reformulated.B.Yzb9.existsUnique_E (T : E ≃L[ℝ] E)
     rw [key T hT c' Φ hΦ hs hG 0, neg_zero] at h1
     have h2 : (c' : ℝ) ^ 2 * D = 1 := by
       have h3 : (((c' : ℝ) ^ 2 * D : ℝ) : ℂ) * Φ 0 = 1 * Φ 0 := by
-        rw [one_mul]
-        exact h1
+        rwa [one_mul]
       have := mul_right_cancel₀ h0 h3
       exact_mod_cast this
     have h4 : (c' : ℝ) = c := by
@@ -360,8 +357,7 @@ theorem UpperTheory.Reformulated.B.Yzb9.existsUnique_of_equiv :
       rw [← hT]
       simp
     change UpperTheory.Reformulated.B.Yzb9.SelfDual (m.map f.symm) _
-    rw [h2]
-    exact h1
+    rwa [h2]
   · intro μ hμ
     have h1 := UpperTheory.Reformulated.B.Yzb9.selfDual_map f hf hf' μ _ hμ
     have h2 : (fun u v => Complex.exp ((2 : ℂ) * (↑Real.pi : ℂ) * Complex.I * (↑(inner ℝ u (T v)) : ℂ))) =

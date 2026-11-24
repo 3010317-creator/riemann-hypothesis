@@ -92,8 +92,7 @@ theorem commutator_le_of_dense {Γ W : Type} [Group Γ] [TopologicalSpace Γ] [I
       QuotientGroup.mk' F.normalCore (g * k * g⁻¹ * k⁻¹) := by
     simp only [map_mul, map_inv, e1, e2]
   have e4 := F.mul_mem (hc σ τ) (F.normalCore_le (QuotientGroup.eq.1 e3))
-  rw [mul_inv_cancel_left] at e4
-  exact e4
+  rwa [mul_inv_cancel_left] at e4
 
 theorem index_normGroup {K : Type} [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
     [CharZero K] (L : IntermediateField K (AlgebraicClosure K)) [FiniteDimensional K L] [IsAbelianGalois K L] :
@@ -257,8 +256,7 @@ theorem apply_eq_one_of_toAb_eq_one : ∀ (E Ω : Type) [Field E] [NumberField E
     simp only [map_mul, map_inv]
     rw [mul_comm (ξ' s) (ξ' t)]
     group) σ hσ
-  rw [← h0 σ (deg_eq_zero_of_toAb_eq_one h σ hσ)]
-  exact this
+  rwa [← h0 σ (deg_eq_zero_of_toAb_eq_one h σ hσ)]
 
 end GlobalTheory.WeilCharKer
 

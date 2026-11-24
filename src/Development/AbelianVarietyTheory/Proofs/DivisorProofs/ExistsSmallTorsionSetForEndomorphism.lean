@@ -264,11 +264,8 @@ theorem exists_sec_of_eff {X : Scheme.{0}} (N : LB X) (hN : N.IsLB) (h : Eff (cl
   let e : LB.Sec N' ≃ₗ[Γ(X, ⊤)] LB.Sec N :=
     (SecOn.topEquiv N').symm ≪≫ₗ SecOn.congr hN' hN w hw ⊤ ≪≫ₗ SecOn.topEquiv N
   have hσ : σ ≠ 0 := fun h0 => hj (by rw [h0]; rfl)
-  have he : e σ ≠ 0 := by
-    intro h0
-    exact hσ (e.injective (h0.trans (map_zero e).symm))
-  by_contra hne
-  push_neg at hne
+  have he : e σ ≠ 0 := fun h0 => hσ (e.injective (h0.trans (map_zero e).symm))
+  by_contra! hne
   exact he (HighTwist.sec_eq_zero _ (hne (e σ)))
 
 end GlobalTheory.EffBound
@@ -1087,8 +1084,7 @@ open ReciprocityTheory.ChartRestriction.G.Semi.Rosenlicht
 theorem exists_int_dvd (E : Type) [Field E] [NumberField E] (r : 𝓞 E) (hr : r ≠ 0) :
     ∃ m : ℤ, m ≠ 0 ∧ r ∣ (m : 𝓞 E) := by
   refine ⟨(Ideal.absNorm (Ideal.span {r}) : ℤ), ?_, ?_⟩
-  · rw [Nat.cast_ne_zero, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-    exact hr
+  · rwa [Nat.cast_ne_zero, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
   · rw [Int.cast_natCast, ← Ideal.mem_span_singleton]
     exact Ideal.absNorm_mem _
 
@@ -1259,8 +1255,7 @@ theorem finite_of_isClosed_of_no_torsion : ∀ (E : Type) [Field E] [NumberField
         exact Subtype.ext (Subtype.ext (div_eq_one.1 h2))
       have hw : ψ ⟨m y.1, hmC y⟩ = 1 := by
         change (y.1 ≫ act.act π) ≫ T.q = 1
-        rw [Category.assoc, ← hB π, ← Category.assoc]
-        exact hy
+        rwa [Category.assoc, ← hB π, ← Category.assoc]
       obtain ⟨z, hz⟩ := (Finite.injective_iff_surjective.1 hf) ⟨⟨m y.1, hmC y⟩, hw⟩
       have h1 : m z.1.1 = m y.1 := congrArg (fun z : ψ.ker => z.1.1) hz
       have h2 : y.1 / z.1.1 = 1 := htor _ (C.div_mem y.2 z.1.2) (by
@@ -1312,8 +1307,7 @@ theorem exists_pow_eq_span (E : Type) [Field E] [NumberField E] (I : Ideal (𝓞
   have hc : c ^ Fintype.card (ClassGroup (𝓞 E)) = 1 := pow_card_eq_one
   have hmem' : I ^ Fintype.card (ClassGroup (𝓞 E)) ∈ (Ideal (𝓞 E))⁰ := pow_mem hmem _
   have hp : (I ^ Fintype.card (ClassGroup (𝓞 E))).IsPrincipal := by
-    rw [← ClassGroup.mk0_eq_one_iff hmem']
-    rw [← hc, ← map_pow]
+    rw [← ClassGroup.mk0_eq_one_iff hmem', ← hc, ← map_pow]
     rfl
   obtain ⟨π, hπ⟩ := hp
   have hpos : 0 < Fintype.card (ClassGroup (𝓞 E)) := Fintype.card_pos
@@ -1348,8 +1342,7 @@ theorem exists_act_pow_stable {k : Type} [Field k] [IsAlgClosed k] {O : Type} [C
   have hle : F (a + 1) ≤ F a := by
     rintro _ ⟨y, hy, rfl⟩
     haveI := act.hom π
-    refine ⟨y ≫ act.act π, ?_, by rw [Category.assoc, ← act.mul, ← pow_succ']⟩
-    exact hKs y hy
+    exact ⟨y ≫ act.act π, hKs y hy, by rw [Category.assoc, ← act.mul, ← pow_succ']⟩
   have heq : F (a + 1) = F a := hle.eq_of_not_lt (hmin _ ⟨_, rfl⟩)
   refine ⟨a, fun x hx => ?_⟩
   have : x ≫ act.act (π ^ a) ∈ F (a + 1) := by
@@ -1416,8 +1409,7 @@ theorem eq_one_of_idealTorsion_comp_eq_one : ∀ (E : Type) [Field E] [NumberFie
       have hgk : g ≫ act.act π ∈ φ.ker := by
         rw [MonoidHom.mem_ker]
         change (g ≫ act.act π) ≫ u = 1
-        rw [Category.assoc, hcomm, ← Category.assoc]
-        exact hg
+        rwa [Category.assoc, hcomm, ← Category.assoc]
       obtain ⟨y, hy, hyg⟩ := ha _ hgk
       let ψ : (𝟙_ (Over (Sp k)) ⟶ G) →* (𝟙_ (Over (Sp k)) ⟶ G) :=
         MonoidHom.mk' (fun x => x ≫ act.act (π ^ (a + 1))) fun x y => MonObj.mul_comp x y _
@@ -1521,8 +1513,7 @@ theorem coprime_order {g : ℕ} (hprim : ∀ x : A, ∃ j : ℕ, g ^ j • x = 0
   have hSN : (∑ i ∈ range n, B ^ i) * (B - 1) = 0 := by
     rw [geom_sum_mul, hB, sub_self]
   have hcZ : Commute (B - 1) (-Z) := by
-    refine Commute.neg_right ?_
-    exact Commute.sum_right _ _ _ fun i _ => comm_geom B i
+    exact Commute.neg_right (Commute.sum_right _ _ _ fun i _ => comm_geom B i)
   rw [← sub_eq_zero]
   ext y
   have hx := congrArg (fun F : AddMonoid.End A => F y) hSN
@@ -1531,8 +1522,7 @@ theorem coprime_order {g : ℕ} (hprim : ∀ x : A, ∃ j : ℕ, g ^ j • x = 0
   change (n : AddMonoid.End A) ((B - 1) y) + (B - 1) (Z ((B - 1) y)) = (0 : AddMonoid.End A) y at hx
   have hx' : n • ((B - 1) y) = (B - 1) ((-Z) ((B - 1) y)) := by
     have e0 : (-Z) ((B - 1) y) = -(Z ((B - 1) y)) := rfl
-    rw [e0, map_neg, eq_neg_iff_add_eq_zero, ← AddMonoid.End.natCast_apply]
-    exact hx
+    rwa [e0, map_neg, eq_neg_iff_add_eq_zero, ← AddMonoid.End.natCast_apply]
   simpa using inj_core hprim (B - 1) (-Z) hcZ k n hng hk _ hx'
 
 theorem binom_identity (N : AddMonoid.End A) (h : ℕ) (hp : (h + 2).Prime) :
@@ -1543,8 +1533,7 @@ theorem binom_identity (N : AddMonoid.End A) (h : ℕ) (hp : (h + 2).Prime) :
   simp only [one_pow, mul_one]
   have hmid : (∑ m ∈ range h, N ^ (m + 1 + 1) * (((h + 2).choose (m + 1 + 1) : ℕ) : AddMonoid.End A))
       = (h + 2) • (N ^ 2 * ∑ m ∈ range h, ((h + 2).choose (m + 2) / (h + 2)) • N ^ m) := by
-    rw [Finset.mul_sum]
-    rw [← Finset.sum_nsmul]
+    rw [Finset.mul_sum, ← Finset.sum_nsmul]
     refine Finset.sum_congr rfl fun m hm => ?_
     have hlt : m + 2 < h + 2 := by simp at hm; omega
     have hdvd := hp.dvd_choose_self (k := m + 2) (by omega) hlt
@@ -1569,8 +1558,7 @@ theorem prime_order {g : ℕ} (hg : g.Prime) (hprim : ∀ x : A, ∃ j : ℕ, g 
   have hid := binom_identity N (k + e) hg
   rw [← hBN, hB] at hid
   have hid' : (k + e + 2) • N + ((k + e + 2) • (N ^ 2 * V) + N ^ (k + e + 2)) = 0 := by
-    rw [eq_comm, add_assoc, add_assoc, add_eq_left] at hid
-    exact hid
+    rwa [eq_comm, add_assoc, add_assoc, add_eq_left] at hid
   have hNV : Commute N V :=
     Commute.sum_right _ _ _ fun m _ => ((Commute.refl N).pow_right m).smul_right _
   choose d hd using hdiv
@@ -1607,8 +1595,7 @@ theorem prime_order {g : ℕ} (hg : g.Prime) (hprim : ∀ x : A, ∃ j : ℕ, g 
     ← end_mul_apply N V, hNV.eq, end_mul_apply] at h0
   have hx : 1 • (N y) = N ((-(V + N ^ e * M)) (N y)) := by
     rw [one_smul, end_neg_apply, map_neg, end_add_apply, end_mul_apply, map_add (f := _), eq_neg_iff_add_eq_zero]
-    rw [← end_mul_apply N (N ^ e), ← pow_succ', pow_succ, end_mul_apply]
-    exact h0
+    rwa [← end_mul_apply N (N ^ e), ← pow_succ', pow_succ, end_mul_apply]
   exact inj_core hprim N _ hcZ k 1 (Nat.coprime_one_left _) hk _ hx
 
 theorem nil_index {g r : ℕ} (hg : g.Prime) (T : Finset A) (hT : T.card ≤ g ^ r)
@@ -1658,8 +1645,7 @@ theorem nil_index {g r : ℕ} (hg : g.Prime) (T : Finset A) (hT : T.card ≤ g ^
     rw [hpow]; exact hm _ ((hS x.1).mp x.2))⟩
   have hfin : fl ^ Module.finrank (ZMod g) S = 0 := by
     have h := LinearMap.aeval_self_charpoly fl
-    rw [hnil.charpoly_eq_X_pow_finrank, Polynomial.aeval_X_pow] at h
-    exact h
+    rwa [hnil.charpoly_eq_X_pow_finrank, Polynomial.aeval_X_pow] at h
   have hr : fl ^ r = 0 := pow_eq_zero_of_le hle hfin
   intro x hx
   have := hpow r ⟨x, (hS x).mpr hx⟩
@@ -1780,8 +1766,7 @@ theorem primaryTorsion_divisible_and_gTorsion :
       refine sup_le (fun b hb => ?_) ?_
       · rw [LinearMap.mem_ker, LinearMap.toSpanSingleton_apply]; exact hx b hb
       · refine (Ideal.span_singleton_le_iff_mem _).2 ?_
-        rw [LinearMap.mem_ker, LinearMap.toSpanSingleton_apply, Nat.cast_smul_eq_nsmul]
-        exact hgx
+        rwa [LinearMap.mem_ker, LinearMap.toSpanSingleton_apply, Nat.cast_smul_eq_nsmul]
     have hIle : I ≤ I ^ j ⊔ Ideal.span {(g : 𝓞 E)} := by
       cases j with
       | zero => rw [pow_zero, Ideal.one_eq_top]; exact le_top.trans le_sup_left
@@ -1962,8 +1947,7 @@ theorem finite_order_unipotent_eq_id : ∀ (E : Type) [Field E] [NumberField E] 
         Category.id_comp])
     hI1
     (fun j x hx => by rw [MonObj.comp_mul, GrpObj.comp_inv, hfix j x hx, Category.comp_id, mul_inv_cancel])
-  rw [mul_inv_eq_one] at h1
-  exact h1
+  rwa [mul_inv_eq_one] at h1
 
 end GlobalTheory.NeatUnip
 end -- clump:auto

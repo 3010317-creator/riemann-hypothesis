@@ -143,10 +143,7 @@ theorem homogeneousComponent_mem_vanIdeal {σ R Hh : Type} [CommRing R] (d : ℕ
 
 theorem eval_eq_zero_of_mem_vanIdeal {σ R Hh : Type} [CommRing R] (d : ℕ) (p : Hh → σ → R)
     {F : MvPolynomial σ R} (hF : F ∈ vanIdeal d p) (h : Hh) : eval (p h) F = 0 := by
-  have hle : vanIdeal d p ≤ RingHom.ker (eval (p h)) := by
-    apply Ideal.span_le.mpr
-    intro G hG
-    exact hG.2 h
+  have hle : vanIdeal d p ≤ RingHom.ker (eval (p h)) := Ideal.span_le.mpr (fun G hG => hG.2 h)
   exact hle hF
 
 noncomputable abbrev part {σ R : Type} [CommRing R] (J : Ideal (MvPolynomial σ R)) (e : ℕ) :
@@ -273,8 +270,7 @@ theorem forms_through_points : ∀ (R : Type) [CommRing R] [IsReduced R] (σ Hh 
     · rw [Ideal.map_le_iff_le_comap]
       refine Ideal.span_le.2 fun F hF => ?_
       exact (SetLike.ext_iff.1 h1 ⟨map x F, hF.1.map x⟩).1 (Ideal.mem_map_of_mem _ (Ideal.subset_span hF))
-    · refine Ideal.span_le.2 fun F hF => ?_
-      exact (SetLike.ext_iff.1 h1 ⟨F, hF.1⟩).2 (Ideal.subset_span hF)
+    · exact Ideal.span_le.2 fun F hF => (SetLike.ext_iff.1 h1 ⟨F, hF.1⟩).2 (Ideal.subset_span hF)
   refine ⟨fun e he => ?_, ?_, hmap⟩
   · refine projective_of_veryDense hP _
       ((Nat.card {u : σ →₀ ℕ | u.degree = e} : ℚ) - Q.eval (e : ℚ)) fun q hq => ?_

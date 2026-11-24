@@ -193,7 +193,7 @@ theorem adAt_mul_of_one {n : ℕ} (P : HeightOneSpectrum (𝓞 E)) (g : GL (Fin 
     (h : bc (prV (E := E) (P.under (𝓞 F))) κ = 1) (i j : Fin n) :
     adAt F P ((g * κ).1 i j) = adAt F P (g.1 i j) := by
   rw [adAt_mul_entry]
-  simp only [adAt_entry_one P h, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [adAt_entry_one P h, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem adAt_mul_congr {n : ℕ} (P : HeightOneSpectrum (𝓞 E)) (g : GL (Fin n) (AfE F E)) {κ κ' : GL (Fin n) (AfE F E)}
     (h : bc (prV (E := E) (P.under (𝓞 F))) κ = bc (prV (E := E) (P.under (𝓞 F))) κ') (i j : Fin n) :
@@ -208,7 +208,7 @@ theorem adAt_pullV_mul {n : ℕ} (P : HeightOneSpectrum (𝓞 E)) (g : GL (Fin n
   unfold pullV
 
   rw [_root_.mul_inv_rev, Units.val_mul, ← Matrix.mulVec_mulVec, Matrix.mulVec, dotProduct, map_sum]
-  simp only [map_mul, adAt_entry_one P h', ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [map_mul, adAt_entry_one P h', ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem comm_of_bc {n : ℕ} (κ k : GL (Fin n) (AfE F E))
     (h : ∀ v, bc (prV (E := E) v) κ = 1 ∨ bc (prV (E := E) v) k = 1) : κ * k = k * κ := by
@@ -303,8 +303,8 @@ theorem ptFr_eq [StarRing E] {n : ℕ} {ST SG Q Q' : Finset (HeightOneSpectrum (
     (p' : DecoF E n ST SG Q') (hd : p.deco = p'.deco) {P : HeightOneSpectrum (𝓞 E)} (h : P ∉ Q) (h' : P ∉ Q') :
     ptFr p P = ptFr p' P := by
   by_cases hs : P ∈ SG
-  · simp only [ptFr, dif_pos hs, hd]
-  · simp only [ptFr, dif_neg hs, dif_neg h, dif_neg h', hd]
+  · simp only [ptFr, dite_eq_left hs, hd]
+  · simp only [ptFr, dite_eq_right hs, dite_eq_right h, dite_eq_right h', hd]
 
 end Gen
 
@@ -365,14 +365,11 @@ theorem coreGen (hc : CMData F E) {n : ℕ} {ST SG Q0 Q1 SQ : Finset (HeightOneS
           ptFr_eq p0 p1 hdeco.symm (hQ0 P.1) hQa]
   refine ⟨κ, hκout, h1, ⟨h1.uni, ?_, fun P x hx i hi => ?_, fun w x hx i => ?_, fun P => absurd P.2 (hQ0 P.1)⟩⟩
   · have e := h1.lat
-    rw [hN] at e
-    exact e
+    rwa [hN] at e
   · have e := h1.f P x (by rw [hN]; exact hx) i hi
-    rw [hd'] at e
-    exact e
+    rwa [hd'] at e
   · have e := h1.be w x (by rw [hN]; exact hx) i
-    rw [hd'] at e
-    exact e
+    rwa [hd'] at e
 
 end Core
 
@@ -394,8 +391,7 @@ theorem not_underQ {B : Base} {X : PreX B.toPre} (I : TC B X) (hOk : I.Ok) (u : 
     have hE : (((B.primes X).T u : ℕ) : 𝓞 B.fields.E) ∈ P.asIdeal := by
       rw [← hPr.piT_norm u]
       exact Ideal.mul_mem_right _ _ ((mem_divs hT0 P).1 hP)
-    have e2 := (ReadTwist.plc_under_eq_iff (F := B.host.F) P (hPr.T_prime u)).2 hE
-    exact hg (e2 ▸ hOk.T_mem u)
+    exact hg (((ReadTwist.plc_under_eq_iff (F := B.host.F) P (hPr.T_prime u)).2 hE) ▸ hOk.T_mem u)
   · exact hg (LevTwist.plc_mem hOk hP)
 
 

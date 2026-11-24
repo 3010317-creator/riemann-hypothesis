@@ -89,7 +89,7 @@ theorem cmul_vp_vp (p : ℕ) (hp : 0 < p) (f g : ℕ → K) (r : ℕ) :
   symm
   have h1 : ∀ j ∈ range (r + 1), f j * g (r - j) = vp p f (p * j) * vp p g (p * r - p * j) := by
     intro j _
-    simp only [vp, dvd_mul_right, if_true, ← Nat.mul_sub, Nat.mul_div_cancel_left _ hp]
+    simp only [vp, dvd_mul_right, ite_true, ← Nat.mul_sub, Nat.mul_div_cancel_left _ hp]
   rw [sum_congr rfl h1, ← sum_image (f := fun i => vp p f i * vp p g (p * r - i)) (g := fun j => p * j)
     (fun a _ b _ h => Nat.eq_of_mul_eq_mul_left hp h)]
   apply sum_subset
@@ -146,8 +146,7 @@ theorem dist_raabe (p : ℕ) (hp : 0 < p) (j : ℕ) (y : ℚ) :
     field_simp
   apply Rat.cast_injective (α := ℝ)
   rw [Rat.cast_sum, Rat.cast_mul, Rat.cast_zpow, Rat.cast_natCast]
-  simp only [← hcast]
-  exact h2
+  simpa only [← hcast] using h2
 
 theorem dist_shift {α : Type} [AddCommMonoid α] (p : ℕ) (hp : 0 < p) (q : ℤ) (g : ℤ → α) :
     ∑ i ∈ range p, g ((q + i) % p) = ∑ k ∈ range p, g k := by
@@ -171,13 +170,11 @@ theorem dist_shift {α : Type} [AddCommMonoid α] (p : ℕ) (hp : 0 < p) (q : �
     intro q
     refine Int.induction_on q rfl ?_ ?_
     · intro i ih
-      rw [step]
-      exact ih
+      rwa [step]
     · intro i ih
       have h := step (-(i : ℤ) - 1)
       rw [sub_add_cancel] at h
-      rw [← h]
-      exact ih
+      rwa [← h]
   rw [key q]
   apply Finset.sum_congr rfl
   intro i hi
@@ -222,7 +219,7 @@ theorem dist_sel {α : Type} [AddCommMonoid α] (p M : ℕ) (hp : 0 < p) (hM : 0
   have hMz : (M : ℤ) ≠ 0 := by exact_mod_cast hM.ne'
   have hp' : (0 : ℤ) < p := by exact_mod_cast hp
   by_cases h : A ≡ a [ZMOD M]
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     obtain ⟨t, ht⟩ : (M : ℤ) ∣ A - a := Int.ModEq.dvd h.symm
     have hcond : ∀ i : ℕ, i < p →
         (A ≡ a + M * i [ZMOD ((p * M : ℕ) : ℤ)] ↔ (i : ℤ) = t % p) := by
@@ -244,26 +241,24 @@ theorem dist_sel {α : Type} [AddCommMonoid α] (p M : ℕ) (hp : 0 < p) (hM : 0
       rw [← hi0] at this
       exact_mod_cast this
     rw [Finset.sum_eq_single_of_mem i0 (Finset.mem_range.mpr hi0lt)]
-    · rw [if_pos ((hcond i0 hi0lt).mpr hi0)]
+    · rw [ite_eq_left ((hcond i0 hi0lt).mpr hi0)]
     · intro i hi hne
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hc
       apply hne
       have := (hcond i (Finset.mem_range.mp hi)).mp hc
       exact_mod_cast this.trans hi0.symm
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     apply Finset.sum_eq_zero
     intro i _
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hc
     apply h
     have hc' : A ≡ a + M * i [ZMOD (p : ℤ) * M] := by
       push_cast at hc
       exact hc
     have h1 : A ≡ a + M * i [ZMOD M] := Int.ModEq.of_mul_left _ hc'
-    have h2 : a + M * i ≡ a [ZMOD M] := by
-      show (a + M * i) % M = a % M
-      exact Int.add_mul_emod_self_left _ _ _
+    have h2 : a + M * i ≡ a [ZMOD M] := Int.add_mul_emod_self_left _ _ _
     exact h1.trans h2
 
 open scoped Classical in
@@ -295,9 +290,9 @@ theorem dist_geom (p M : ℕ) {K : Type} [Field K] (ζ : K) (hζ : IsPrimitiveRo
     rw [mul_comm (p : ℤ) M]
     exact mul_dvd_mul_iff_left (by exact_mod_cast hM.ne')
   by_cases hd : (p : ℤ) ∣ d
-  · rw [if_pos (hiff.mpr hd), if_pos hd]
+  · rw [ite_eq_left (hiff.mpr hd), ite_eq_left hd]
     ring
-  · rw [if_neg (mt hiff.mp hd), if_neg hd]
+  · rw [ite_eq_right (mt hiff.mp hd), ite_eq_right hd]
     ring
 
 theorem dist_roots (p M : ℕ) {K : Type} [Field K] [CharZero K] (ζ : K) (hζ : IsPrimitiveRoot ζ (p * M)) (hp : 0 < p)
@@ -311,8 +306,7 @@ theorem dist_roots (p M : ℕ) {K : Type} [Field K] [CharZero K] (ζ : K) (hζ :
     intro h
     apply ha
     have h' : ζ ^ ((p : ℤ) * a) = 1 := by
-      rw [zpow_mul, zpow_natCast, ← hwdef]
-      exact h
+      rwa [zpow_mul, zpow_natCast, ← hwdef]
     rw [hζ.zpow_eq_one_iff_dvd] at h'
     push_cast at h'
     exact (mul_dvd_mul_iff_left (by exact_mod_cast hp.ne' : (p : ℤ) ≠ 0)).mp h'
@@ -346,11 +340,11 @@ theorem dist_roots (p M : ℕ) {K : Type} [Field K] [CharZero K] (ζ : K) (hζ :
     by_cases h0 : k = 0
     · subst h0
       simp
-    · rw [if_neg, if_neg h0]
+    · rw [ite_eq_right, ite_eq_right h0]
       intro hd
       have hd' : p ∣ k := by exact_mod_cast hd
       exact absurd (Nat.le_of_dvd (Nat.pos_of_ne_zero h0) hd') (Nat.not_le.mpr (Finset.mem_range.mp hk))
-  rw [Finset.sum_congr rfl hinner, Finset.sum_ite_eq', if_pos (Finset.mem_range.mpr hp),
+  rw [Finset.sum_congr rfl hinner, Finset.sum_ite_eq', ite_eq_left (Finset.mem_range.mpr hp),
     Finset.sum_const, Finset.card_range, nsmul_eq_mul]
   field_simp
   ring
@@ -371,7 +365,7 @@ theorem dist_reindex (p M j : ℕ) (hp : 0 < p) {K : Type} [Field K] [CharZero K
       zpow_natCast]
   rw [hz]
   by_cases hpn : p ∣ n
-  · rw [if_pos hpn]
+  · rw [ite_eq_left hpn]
     obtain ⟨m, rfl⟩ := hpn
     have hm : m ≠ 0 := by
       rintro rfl
@@ -384,8 +378,7 @@ theorem dist_reindex (p M j : ℕ) (hp : 0 < p) {K : Type} [Field K] [CharZero K
       simp only [Finset.mem_filter, Nat.mem_divisors, Int.natCast_dvd_natCast] at hd
       obtain ⟨⟨hdn, -⟩, e, rfl⟩ := hd
       rw [Nat.mul_div_cancel_left e hp]
-      simp only [Nat.mem_divisors]
-      exact ⟨Nat.dvd_of_mul_dvd_mul_left hp hdn, hm⟩
+      simpa only [Nat.mem_divisors] using ⟨Nat.dvd_of_mul_dvd_mul_left hp hdn, hm⟩
     · intro e he
       simp only [Nat.mem_divisors] at he
       simp only [Finset.mem_filter, Nat.mem_divisors, Int.natCast_dvd_natCast]
@@ -393,8 +386,7 @@ theorem dist_reindex (p M j : ℕ) (hp : 0 < p) {K : Type} [Field K] [CharZero K
     · intro d hd
       simp only [Finset.mem_filter, Nat.mem_divisors, Int.natCast_dvd_natCast] at hd
       exact Nat.mul_div_cancel' hd.2
-    · intro e _
-      exact Nat.mul_div_cancel_left e hp
+    · exact fun e _ => Nat.mul_div_cancel_left e hp
     · intro d hd
       simp only [Finset.mem_filter, Nat.mem_divisors, Int.natCast_dvd_natCast] at hd
       obtain ⟨-, e, rfl⟩ := hd
@@ -418,10 +410,10 @@ theorem dist_reindex (p M j : ℕ) (hp : 0 < p) {K : Type} [Field K] [CharZero K
       rw [hz1, hz2]
       simp only [hq1, hq2]
       split_ifs <;> ring
-  · rw [if_neg hpn, mul_zero]
+  · rw [ite_eq_right hpn, mul_zero]
     apply Finset.sum_eq_zero
     intro d hd
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hd'
     apply hpn
     have : p ∣ d := by exact_mod_cast hd'
@@ -456,9 +448,9 @@ theorem dist_term (p M : ℕ) {K : Type} [Field K] (ζ : K) (hζ : IsPrimitiveRo
         X * (if (p : ℤ) ∣ d then (p : K) * ζ ^ (a₂ * d) else 0) else 0 := by
     intro i₁ _
     by_cases hc : A ≡ a₁ + M * i₁ [ZMOD ((p * M : ℕ) : ℤ)]
-    · simp only [if_pos hc]
+    · simp only [ite_eq_left hc]
       rw [← Finset.mul_sum, dist_geom p M ζ hζ hp hM a₂ d]
-    · simp only [if_neg hc, Finset.sum_const_zero]
+    · simp only [ite_eq_right hc, Finset.sum_const_zero]
   rw [Finset.sum_congr rfl hinner, dist_sel p M hp hM A a₁]
   split_ifs <;> ring
 
@@ -495,7 +487,7 @@ theorem dist_const (p M j : ℕ) (hp : 0 < p) {K : Type} [Field K] [CharZero K] 
     have hp1 : (p : K) ^ ((2 : ℤ) - ((1 : ℕ) : ℤ)) = p := by norm_num
     rw [hp1]
     by_cases hM1 : (M : ℤ) ∣ a₁
-    · rw [if_pos hM1]
+    · rw [ite_eq_left hM1]
       have hM2 : ¬ (M : ℤ) ∣ a₂ := fun h => hx ⟨hM1, h⟩
       have hrow : ∀ i₁ ∈ range p, ∑ i₂ ∈ range p,
           (if ((p * M : ℕ) : ℤ) ∣ a₁ + M * i₁ then
@@ -511,20 +503,20 @@ theorem dist_const (p M j : ℕ) (hp : 0 < p) {K : Type} [Field K] [CharZero K] 
             (Int.modEq_zero_iff_dvd.mpr hd).symm
           have hf : frc (p * M) (a₁ + M * i₁) = 0 := by
             simp only [frc, Int.emod_eq_zero_of_dvd hd, Int.cast_zero, zero_div]
-          rw [if_pos h0, hf]
-          simp only [if_pos hd]
+          rw [ite_eq_left h0, hf]
+          simp only [ite_eq_left hd]
           rw [dist_roots p M ζ hζ hp hM a₂ hM2]
           push_cast
           ring
         · have h0 : ¬ (0 : ℤ) ≡ a₁ + M * i₁ [ZMOD ((p * M : ℕ) : ℤ)] :=
             fun h => hd (Int.modEq_zero_iff_dvd.mp h.symm)
-          rw [if_neg h0]
-          simp only [if_neg hd, Finset.sum_const, Finset.card_range, nsmul_eq_mul]
+          rw [ite_eq_right h0]
+          simp only [ite_eq_right hd, Finset.sum_const, Finset.card_range, nsmul_eq_mul]
           push_cast
           ring
       refine (Finset.sum_congr rfl hrow).trans ?_
       rw [Finset.sum_add_distrib, dist_sel p M hp hM 0 a₁,
-        if_pos ((Int.modEq_zero_iff_dvd.mpr hM1).symm), ← Finset.mul_sum]
+        ite_eq_left ((Int.modEq_zero_iff_dvd.mpr hM1).symm), ← Finset.mul_sum]
       have hhalf : ∑ i₁ ∈ range p, ((1 / 2 : K) - ((frc (p * M) (a₁ + M * i₁) : ℚ) : K)) = 1 / 2 := by
         have h := congrArg (Rat.cast : ℚ → K) (dist_half p M hp hM a₁)
         have hf0 : frc M a₁ = 0 := by simp only [frc, Int.emod_eq_zero_of_dvd hM1, Int.cast_zero, zero_div]
@@ -533,7 +525,7 @@ theorem dist_const (p M j : ℕ) (hp : 0 < p) {K : Type} [Field K] [CharZero K] 
         exact h
       rw [hhalf]
       ring
-    · rw [if_neg hM1]
+    · rw [ite_eq_right hM1]
       have hrow : ∀ i₁ ∈ range p, ∑ i₂ ∈ range p,
           (if ((p * M : ℕ) : ℤ) ∣ a₁ + M * i₁ then
             (1 / 2 : K) * (1 + ζ ^ (a₂ + M * i₂)) / (1 - ζ ^ (a₂ + M * i₂))
@@ -543,10 +535,10 @@ theorem dist_const (p M j : ℕ) (hp : 0 < p) {K : Type} [Field K] [CharZero K] 
         have hd : ¬ ((p * M : ℕ) : ℤ) ∣ a₁ + M * i₁ := fun h => hM1 (by
           have h' : (M : ℤ) ∣ a₁ + M * i₁ := Dvd.dvd.trans ⟨p, by push_cast; ring⟩ h
           exact (dvd_add_left (dvd_mul_right (M : ℤ) (i₁ : ℤ))).mp h')
-        simp only [if_neg hd, Finset.sum_const, Finset.card_range, nsmul_eq_mul]
+        simp only [ite_eq_right hd, Finset.sum_const, Finset.card_range, nsmul_eq_mul]
       refine (Finset.sum_congr rfl hrow).trans ?_
       rw [← Finset.mul_sum, ← Rat.cast_sum, dist_half p M hp hM a₁]
-  · simp only [const0, if_neg hj, Finset.sum_const, Finset.card_range, nsmul_eq_mul]
+  · simp only [const0, ite_eq_right hj, Finset.sum_const, Finset.card_range, nsmul_eq_mul]
     rw [← Finset.mul_sum]
     have h1 := dist_frc_perm p M hp hM a₁
       (fun x : ℚ => -((((Polynomial.bernoulli j).eval x / j : ℚ)) : K))
@@ -572,7 +564,7 @@ theorem eisF_distribution : ∀ (p : ℕ) [Fact p.Prime] (M j : ℕ) (K : Type) 
   · subst hr
     simp only [eisF, vp, dvd_zero, Nat.zero_div, ↓reduceIte]
     exact dist_const p M j hp ζ hζ hM a₁ a₂ hx
-  · simp only [eisF, vp, if_neg hr]
+  · simp only [eisF, vp, ite_eq_right hr]
     rw [dist_pos p M j hp ζ hζ hM hj a₁ a₂ r hr]
     by_cases hpr : p ∣ r
     · have hne : ¬ r / p = 0 := by
@@ -581,8 +573,8 @@ theorem eisF_distribution : ∀ (p : ℕ) [Fact p.Prime] (M j : ℕ) (K : Type) 
         rw [Nat.mul_div_cancel_left m hp] at h0
         subst h0
         simp at hr
-      simp only [if_pos hpr, if_neg hne]
-    · simp only [if_neg hpr]
+      simp only [ite_eq_left hpr, ite_eq_right hne]
+    · simp only [ite_eq_right hpr]
 
 end GlobalTheory.EisDist
 end -- clump:auto
@@ -824,8 +816,7 @@ theorem sum_unitSet_succ_fibre : ∀ (p : ℕ) [Fact p.Prime] (n : ℕ) (K : Typ
   have hmaps : ∀ γ ∈ unitSet p (n + 1), Matrix.GeneralLinearGroup.map ρ γ ∈ unitSet p n := by
     intro γ hγ
     simp only [unitSet, mem_filter, mem_univ, true_and] at hγ ⊢
-    rw [hent, hent, hρ, glFibre_dvd_map_iff hn, glFibre_dvd_map_iff hn]
-    exact hγ
+    rwa [hent, hent, hρ, glFibre_dvd_map_iff hn, glFibre_dvd_map_iff hn]
   rw [← Finset.sum_fiberwise_of_maps_to hmaps]
   refine Finset.sum_congr rfl (fun g hg => ?_)
   rw [Finset.sum_congr rfl (fun γ hγ => by rw [(mem_filter.mp hγ).2]), ← Finset.mul_sum]
@@ -864,8 +855,7 @@ theorem sum_unitSet_succ_fibre : ∀ (p : ℕ) [Fact p.Prime] (n : ℕ) (K : Typ
     refine ⟨γ, ?_, ?_⟩
     · refine mem_filter.mpr ⟨?_, hmap⟩
       simp only [unitSet, mem_filter, mem_univ, true_and] at hg ⊢
-      rw [← glFibre_dvd_map_iff hn, ← glFibre_dvd_map_iff hn, ← hρ, ← hent, ← hent, hmap]
-      exact hg
+      rwa [← glFibre_dvd_map_iff hn, ← glFibre_dvd_map_iff hn, ← hρ, ← hent, ← hent, hmap]
     · simp only [hγ, B]
       rfl
   · intro γ _
@@ -948,8 +938,7 @@ theorem sum_preimage_fibre (p : ℕ) [Fact p.Prime] (n : ℕ) (hn : 1 ≤ n) (K 
     · exact fun h => h.2
   have hX' : (unitSet p n).filter (fun γ => γ ∈ X) = X := by
     ext γ
-    simp only [mem_filter, unitSet, mem_univ, true_and]
-    exact ⟨fun h => h.2, fun h => ⟨hX γ h, h⟩⟩
+    simpa only [mem_filter, unitSet, mem_univ, true_and] using ⟨fun h => h.2, fun h => ⟨hX γ h, h⟩⟩
   rw [hS, Finset.sum_filter]
   have h1 := _root_.GlobalTheory.KummerEisensteinGalois.sum_unitSet_succ_fibre p n K (fun g => if g ∈ X then G g else 0) Φ hn
   simp only [ite_mul, zero_mul] at h1
@@ -1102,10 +1091,10 @@ theorem UpperTheory.pieceT_level_raise_eq_vp :
       by_cases h : l ∣ r
       · obtain ⟨r', rfl⟩ := h
         have : l ^ (n + 1) ∣ l * r' ↔ l ^ n ∣ r' := by rw [pow_succ', Nat.mul_dvd_mul_iff_left hl.out.pos]
-        rw [if_pos (dvd_mul_right _ _), Nat.mul_div_cancel_left _ hl.out.pos]
+        rw [ite_eq_left (dvd_mul_right _ _), Nat.mul_div_cancel_left _ hl.out.pos]
         simp only [this]
         rw [pow_succ' l n, Nat.mul_div_mul_left _ _ hl.out.pos]
-      · rw [if_neg h, if_neg (fun h' => h ((dvd_pow_self l (Nat.succ_ne_zero n)).trans h'))]
+      · rw [ite_eq_right h, ite_eq_right (fun h' => h ((dvd_pow_self l (Nat.succ_ne_zero n)).trans h'))]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.EisensteinModularTowers.PieceTLevelRaiseEqVp =====

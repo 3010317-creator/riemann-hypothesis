@@ -76,8 +76,7 @@ theorem mem_inv (V : HSp D) {J : Matrix (Fin V.rank) (Fin V.rank) D.host.E} (c :
   generalize (x.1.1 : Matrix (Fin V.rank) (Fin V.rank) (AE D)) = X at hx ⊢
   rw [h, incM_smul, Matrix.mul_smul, Matrix.smul_mul] at hx
   have hx' := congrArg (fun y => incA D c⁻¹ • y) hx
-  simp only [smul_smul, ← map_mul, inv_mul_cancel₀ hc, map_one, one_smul] at hx'
-  exact hx'
+  simpa only [smul_smul, ← map_mul, inv_mul_cancel₀ hc, map_one, one_smul] using hx'
 
 def conjUInv (V : HSp D) {J : Matrix (Fin V.rank) (Fin V.rank) D.host.E} (c : D.host.E) (hc : c ≠ 0)
     (h : J = c • V.gram) (x : UB J) : GA D V :=
@@ -143,10 +142,8 @@ theorem rat_inv (V : HSp D) {J : Matrix (Fin V.rank) (Fin V.rank) D.host.E} (c :
     show Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) Z * V.gram * Z = V.gram
     apply Matrix.map_injective inclR_injective
     dsimp only
-    rw [Matrix.map_mul, Matrix.map_mul]
-    exact hm
-  · show Z.map (inclR (F := D.host.F) (AF D.host.F)) = (x.1.1 : Matrix (Fin V.rank) (Fin V.rank) (AE D)).map (cA D)
-    exact hY.symm
+    rwa [Matrix.map_mul, Matrix.map_mul]
+  · exact hY.symm
 
 def ratEquiv (V : HSp D) {J : Matrix (Fin V.rank) (Fin V.rank) D.host.E} (c : D.host.E) (hc : c ≠ 0)
     (h : J = c • V.gram) : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ratU D.sp.cm.sig J ≃ GQ V where

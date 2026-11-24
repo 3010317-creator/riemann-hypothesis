@@ -65,8 +65,7 @@ theorem unit_left (hp : IsGrpPullback A G z φ) : η[A].left ≫ φ = (1 : Over.
   have e' := congrArg (fun q => q.left) e
   have h1 : (1 : 𝟙_ (Over (Sp ℂ)) ⟶ A) = η[A] := by
     rw [Hom.one_def, toUnit_unique (toUnit _) (𝟙 _), Category.id_comp]
-  rw [h1] at e'
-  exact e'
+  rwa [h1] at e'
 
 theorem isTangent_iff (hp : IsGrpPullback A G z φ) (x : epsR ℂ ⟶ A) :
     IsTangent x ↔ IsTanAt G z (tanEquiv hp x) := by
@@ -87,8 +86,7 @@ theorem isTangent_iff (hp : IsGrpPullback A G z φ) (x : epsR ℂ ⟶ A) :
       simp only [Spec.map_comp, Spec.map_id] at e'
       have hx : x.left ≫ A.hom = spMap (algebraMap ℂ (DualNumber ℂ)) := Over.w x
       have h0 : η[A].left ≫ A.hom = 𝟙 _ := Over.w η[A]
-      rw [Category.assoc, hx, h0]
-      exact e'
+      rwa [Category.assoc, hx, h0]
 
 theorem exists_linearEquiv : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] (z : Spec (CommRingCat.of ℂ) ⟶ X) (V : Type)
     [AddCommGroup V] [Module ℂ V] (M : LieModel G z V) (A : Over (Sp ℂ)) [GrpObj A] (φ : A.left ⟶ G.left) (L : LB A.left)

@@ -425,8 +425,7 @@ theorem tensAll_sup_le {T : Type} [Fintype T] [DecidableEq T] {V : T → Type} [
     congr 1
     simp
   · obtain ⟨w, hw⟩ : ∃ w, w ∉ s := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hs (Finset.eq_univ_of_forall h)
     refine Submodule.mem_sup_right (Submodule.subset_span ⟨s.piecewise u c, ⟨w, ?_⟩, rfl⟩)
     rw [Finset.piecewise_eq_of_notMem _ _ _ hw]
@@ -455,8 +454,7 @@ theorem main : ∀ (T : Type) [Fintype T] [DecidableEq T] (V : T → Type) [∀ 
     ∀ U C : ∀ w, Submodule ℂ (V w), tensAll (fun w => U w ⊔ C w) ≤ tensAll U ⊔ tensAny C ∧
       ((∀ w, FiniteDimensional ℂ (U w)) → FiniteDimensional ℂ (tensAll U)) ∧
       ∀ v : ∀ w, V w, tensAll (fun w => Submodule.span ℂ {v w}) ≤ Submodule.span ℂ {PiTensorProduct.tprod ℂ v} := by
-  intro T _ _ V _ _ U C
-  exact ⟨tensAll_sup_le U C, tensAll_fin U, tensAll_span_le⟩
+  exact fun T _ _ V _ _ U C => ⟨tensAll_sup_le U C, tensAll_fin U, tensAll_span_le⟩
 
 end GlobalTheory.HoweR.TensSup
 end -- clump:auto
@@ -512,9 +510,7 @@ theorem tprod_cyclic_top : ∀ (T : Type) [Fintype T] [DecidableEq T] (V : T →
       have hCK : C w ≤ K := by
         intro c hc
         rw [hmem]
-        apply hC
-        apply Submodule.subset_span
-        exact ⟨Function.update f w c, ⟨w, by simpa using hc⟩, rfl⟩
+        exact hC (Submodule.subset_span ⟨Function.update f w c, ⟨w, by simpa using hc⟩, rfl⟩)
       have hgK : genSub (a w) {v w} ≤ K := by
         apply sInf_le
         refine ⟨?_, hstab⟩
@@ -523,8 +519,7 @@ theorem tprod_cyclic_top : ∀ (T : Type) [Fintype T] [DecidableEq T] (V : T →
         rw [eq_top_iff, ← hgen w]
         exact sup_le hgK hCK
       have : f w ∈ K := by rw [htop]; trivial
-      rw [hmem, Function.update_eq_self] at this
-      exact this
+      rwa [hmem, Function.update_eq_self] at this
   have hall : ∀ f : ∀ w, V w, PiTensorProduct.tprod ℂ f ∈ N :=
     fun f => key Finset.univ f (fun w hw => absurd (Finset.mem_univ w) hw)
   rw [eq_top_iff, ← PiTensorProduct.span_tprod_eq_top, Submodule.span_le]
@@ -588,11 +583,9 @@ theorem iInf_hwSub_le {R S : T → ℕ} (a : ∀ w, Mat (R w) (S w) →ₗ[ℂ] 
     rcases hl with ⟨c, rfl⟩ | ⟨c, d, hcd, rfl⟩
     · rw [atPl_sub_smul]
       have h1 := hyw.1 c
-      rw [LinearMap.sub_apply, LinearMap.smul_apply, LinearMap.id_apply, actAt_apply] at h1
-      exact h1
+      rwa [LinearMap.sub_apply, LinearMap.smul_apply, LinearMap.id_apply, actAt_apply] at h1
     · have h2 := hyw.2 c d hcd
-      rw [actAt_apply] at h2
-      exact h2
+      rwa [actAt_apply] at h2
 
 end GlobalTheory.HoweR.TensAlg
 
@@ -751,7 +744,7 @@ theorem coinv_top_or_rat (P Q R S : ℕ) (x : ℂ) :
   by_cases hx : ∃ x' : ℚ, x = x'
   · obtain ⟨x', rfl⟩ := hx
     exact Or.inr ⟨x', rfl⟩
-  push_neg at hx
+  push Not at hx
   by_cases hI : IsEmpty (Ix P Q)
   · right
     refine ⟨0, ?_⟩
@@ -845,7 +838,7 @@ abbrev chMod (p q : ℕ) (x : ℚ) : GKMod p q where
     simp only [wtSub, Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.sub_apply,
       LinearMap.smul_apply, LinearMap.id_apply]
     intro a
-    rw [chAct_apply, trace_Eab, if_pos rfl, mul_one, sub_self]
+    rw [chAct_apply, trace_Eab, ite_eq_left rfl, mul_one, sub_self]
 
 abbrev shiftMod {r s : ℕ} (M : GKMod r s) (t : ℚ) : GKMod r s where
   V := M.V
@@ -872,7 +865,7 @@ abbrev shiftMod {r s : ℕ} (M : GKMod r s) (t : ℚ) : GKMod r s where
       Matrix.traceLinearMap_apply] at hw ⊢
     intro a
     have := hw a
-    rw [trace_Eab, if_pos rfl]
+    rw [trace_Eab, ite_eq_left rfl]
     linear_combination (norm := module) this
 
 theorem shiftMod_act {r s : ℕ} (M : GKMod r s) (t : ℚ) (Y : Mat r s) (v : M.V) :
@@ -916,19 +909,19 @@ theorem intw_fMap {x t : ℚ} {M : GKMod R S} {pr : Pol P Q R S →ₗ[ℂ] M.V}
 theorem hw_chMod (p q : ℕ) (x : ℚ) : IsHW (chMod p q x).act (fun _ => x) (1 : ℂ) := by
   refine ⟨one_ne_zero, (mem_hwSub _ _ _).2 ⟨fun a => ?_, fun a b hab => ?_⟩⟩
   · change chAct p q x _ 1 - _ = 0
-    rw [chAct_apply, trace_Eab, if_pos rfl]; simp [smul_eq_mul]
+    rw [chAct_apply, trace_Eab, ite_eq_left rfl]; simp [smul_eq_mul]
   · change chAct p q x _ 1 = 0
     have : a ≠ b := by
       rintro rfl
       cases a <;> simp [posC] at hab
-    rw [chAct_apply, trace_Eab, if_neg this]; simp
+    rw [chAct_apply, trace_Eab, ite_eq_right this]; simp
 
 theorem hw_chMod_eq {p q : ℕ} {x : ℚ} {ν : Ix p q → ℚ} {w : (chMod p q x).V}
     (h : IsHW (chMod p q x).act ν w) : ν = fun _ => x := by
   funext a
   have h1 := ((mem_hwSub _ _ _).1 h.2).1 a
   change chAct p q x _ w - _ = 0 at h1
-  rw [chAct_apply, trace_Eab, if_pos rfl, mul_one, ← sub_smul, smul_eq_zero] at h1
+  rw [chAct_apply, trace_Eab, ite_eq_left rfl, mul_one, ← sub_smul, smul_eq_zero] at h1
   rcases h1 with h1 | h1
   · exact_mod_cast (sub_eq_zero.1 h1).symm
   · exact absurd h1 h.1
@@ -950,8 +943,7 @@ theorem genBy_of_isLift : ∀ (P Q R S : ℕ) (x t : ℚ) (M : Formalism.BasicNo
   have hf : fMap x t pr ≠ 0 := by
     obtain ⟨v, hv⟩ := exists_ne (0 : M.V)
     obtain ⟨f, rfl⟩ := hL.1 v
-    intro h
-    exact hv (fMap_eq_zero (LinearMap.congr_fun h f))
+    exact fun h => hv (fMap_eq_zero (LinearMap.congr_fun h f))
   have hmin : ∀ ν w, IsHW (chMod P Q x).act ν w →
       degW (cPair R S) (fun _ : Ix P Q => x) ≤ degW (cPair R S) ν := by
     intro ν w h
@@ -971,14 +963,14 @@ theorem genBy_of_isLift : ∀ (P Q R S : ℕ) (x t : ℚ) (M : Formalism.BasicNo
   have hw0 : IsHW M.act (fun c => μ' c + t) (pr P0) := by
     refine ⟨hpr0, (mem_hwSub _ _ _).2 ⟨fun a => ?_, fun a b hab => ?_⟩⟩
     · have e := ((mem_hwSub _ _ _).1 h20.2).1 a
-      rw [hL.2.2, trace_Eab, if_pos rfl, sub_eq_zero.1 e, map_smul]
+      rw [hL.2.2, trace_Eab, ite_eq_left rfl, sub_eq_zero.1 e, map_smul]
       push_cast
       module
     · have e := ((mem_hwSub _ _ _).1 h20.2).2 a b hab
       have : a ≠ b := by
         rintro rfl
         cases a <;> simp [posC] at hab
-      rw [hL.2.2, trace_Eab, if_neg this, e, map_zero]
+      rw [hL.2.2, trace_Eab, ite_eq_right this, e, map_zero]
       simp
   refine ⟨μ', hshape, pr P0, hw0, ?_⟩
 
@@ -1034,7 +1026,7 @@ theorem genBy_of_isLift : ∀ (P Q R S : ℕ) (x t : ℚ) (M : Formalism.BasicNo
       funext a
       have e := ((mem_hwSub _ _ _).1 hhw.2).1 a
       have e2 := congrArg pr e
-      rw [map_sub, map_smul, hL.2.1, trace_Eab, if_pos rfl, mul_one, map_zero, ← sub_smul,
+      rw [map_sub, map_smul, hL.2.1, trace_Eab, ite_eq_left rfl, mul_one, map_zero, ← sub_smul,
         smul_eq_zero] at e2
       rcases e2 with e2 | e2
       · exact_mod_cast (sub_eq_zero.1 e2).symm
@@ -1131,7 +1123,7 @@ def charSub (p q r s : ℕ) (x : ℚ) : Submodule ℂ (Pol p q r s) where
 
 theorem isKC_Eab {a b : Ix p q} (hab : sameBlock a b) : IsKC (Eab a b) := by
   intro c d hcd
-  rw [Eab, Matrix.single_apply, if_neg]
+  rw [Eab, Matrix.single_apply, ite_eq_right]
   rintro ⟨rfl, rfl⟩
   exact hcd hab
 
@@ -1346,21 +1338,18 @@ theorem genSub_stable {p q : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V] (ac
     (T : Set V) (Z : Mat p q) (y : V) (hy : y ∈ genSub act T) : act Z y ∈ genSub act T := by
   unfold genSub at hy ⊢
   rw [Submodule.mem_sInf] at hy ⊢
-  intro N hN
-  exact hN.2 Z y (hy N hN)
+  exact fun N hN => hN.2 Z y (hy N hN)
 
 theorem mem_genSub_self {p q : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V] (act : Mat p q →ₗ[ℂ] Module.End ℂ V)
     (v : V) : v ∈ genSub act {v} := by
   unfold genSub
   rw [Submodule.mem_sInf]
-  intro N hN
-  exact hN.1 rfl
+  exact fun N hN => hN.1 rfl
 
 theorem cycMod_rel (P Q R S : ℕ) (x : ℚ) (hne : GlobalTheory.FockQuot.rel P Q R S x ≠ ⊤) :
     CycMod (fockAct2 P Q R S) (GlobalTheory.FockQuot.rel P Q R S x) := by
   set C := GlobalTheory.FockQuot.rel P Q R S x with hC
   have hnt : Nontrivial (GlobalTheory.FockQuot.gkQ P Q R S x 0).V := by
-    show Nontrivial (Pol P Q R S ⧸ C)
     exact Submodule.Quotient.nontrivial_iff.2 hne
   have hlift : IsLift x 0 (GlobalTheory.FockQuot.gkQ P Q R S x 0) C.mkQ := by
     refine ⟨Submodule.mkQ_surjective _, fun X f => GlobalTheory.FockQuot.mk_fockFirstAction_eq_trace_smul P Q R S x X f, fun Y f => ?_⟩
@@ -1444,8 +1433,7 @@ theorem cycMod_rel (P Q R S : ℕ) (x : ℚ) (hne : GlobalTheory.FockQuot.rel P 
       exact Submodule.sub_mem _ (Submodule.mem_sup_left (Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self v)))
         (Submodule.mem_sup_right (C.smul_mem _ hc))
     refine hf₀.trans (sup_le ?_ le_sup_right)
-    rw [Submodule.span_le, Set.singleton_subset_iff]
-    exact hf₀mem
+    rwa [Submodule.span_le, Set.singleton_subset_iff]
 
 end GlobalTheory.HoweR.Cyc
 
@@ -1496,7 +1484,7 @@ theorem left_expand (hlu : ∀ i j, l i * u j = u j * l i + if i = j then 1 else
     by_cases hab : a = b
     · subst hab; simp [mul_add, add_mul, mul_assoc]
     · simp [hab, mul_assoc]
-  simp only [Finset.sum_mul_sum, h1, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, if_true,
+  simp only [Finset.sum_mul_sum, h1, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, ite_true,
     Finset.sum_const, Finset.card_univ]
 
 theorem right_expand (hlu : ∀ i j, l i * u j = u j * l i + if i = j then 1 else 0) (c e : J) :
@@ -1514,7 +1502,7 @@ theorem right_expand (hlu : ∀ i j, l i * u j = u j * l i + if i = j then 1 els
     by_cases hdc : d = c
     · subst hdc; simp [mul_add, add_mul, mul_assoc]
     · simp [hdc, mul_assoc]
-  simp only [Finset.sum_mul, h1, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+  simp only [Finset.sum_mul, h1, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
     Finset.sum_const, Finset.card_univ]
 
 theorem key (hlu : ∀ i j, l i * u j = u j * l i + if i = j then 1 else 0)
@@ -1576,10 +1564,10 @@ theorem sq_shift (X : J → J → A) (k : ℂ) (c e : J) :
       ∑ d, X c d * X d e + (2 * k) • X c e + if c = e then (k * k) • (1 : A) else 0 := by
   simp only [mul_add, add_mul, Finset.sum_add_distrib, ite_mul, mul_ite, zero_mul, mul_zero,
     smul_mul_assoc, one_mul, mul_smul_comm, mul_one, Finset.sum_ite_eq, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   by_cases hce : c = e
-  · subst hce; simp only [if_true]; module
-  · simp only [hce, if_false]; module
+  · subst hce; simp only [ite_true]; module
+  · simp only [hce, ite_false]; module
 
 theorem rhs_shift (E : I → I → A) (Y : I → I → A) (m x : ℂ) :
     ∑ a, ∑ b, (E b a + (if b = a then m • (1 : A) else 0) - (x * if b = a then 1 else 0) • (1 : A)) * Y a b =
@@ -1588,9 +1576,9 @@ theorem rhs_shift (E : I → I → A) (Y : I → I → A) (m x : ℂ) :
       E b a * Y a b + if b = a then (m - x) • Y a b else 0 := by
     intro a b
     by_cases h : b = a
-    · simp only [h, if_true, mul_one, sub_mul, add_mul, smul_mul_assoc, one_mul, sub_smul]; abel
+    · simp only [h, ite_true, mul_one, sub_mul, add_mul, smul_mul_assoc, one_mul, sub_smul]; abel
     · simp [h]
-  simp only [this, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.smul_sum]
+  simp only [this, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Finset.smul_sum]
 
 end Alg
 
@@ -1610,9 +1598,9 @@ theorem qop_eq (x : ℂ) (c e : Ix R S) :
     (fun a b => raiB (a, c) * lowB (b, e)) ((Fintype.card (Ix R S) : ℂ) / 2) x
   rw [hs, hr]
   by_cases hce : c = e
-  · subst hce; simp only [if_true]
+  · subst hce; simp only [ite_true]
     linear_combination (norm := module) hk
-  · simp only [hce, if_false]
+  · simp only [hce, ite_false]
     linear_combination (norm := module) hk
 
 theorem qop_mem_coinv (P Q R S : ℕ) (x : ℂ) :
@@ -1720,12 +1708,12 @@ theorem quad_main (h : ∀ b c e, l b c * u b e = u b e * l b c + if c = e then 
   simp only [qop, hG]
   simp only [neg_mul_neg, add_mul, mul_add, smul_mul_assoc, mul_smul_comm, one_mul, mul_one,
     Finset.sum_add_distrib, ite_smul, zero_smul, ite_mul, zero_mul, mul_ite, mul_zero, Finset.sum_ite_eq,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   by_cases hij : i = j
   · subst hij
-    simp only [if_true]
+    simp only [ite_true]
     module
-  · simp only [hij, Ne.symm hij, if_false]
+  · simp only [hij, Ne.symm hij, ite_false]
     module
 
 end Main

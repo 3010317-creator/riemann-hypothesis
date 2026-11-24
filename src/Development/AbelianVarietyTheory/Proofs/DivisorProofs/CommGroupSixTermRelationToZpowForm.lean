@@ -84,12 +84,10 @@ theorem commGroup_sixTerm_zpow_form_to_relation {G : Type} [CommGroup G] {p q r 
     apply Additive.ofMul.injective
     simp only [ofMul_mul, ofMul_inv, ofMul_zpow]
     abel
-  rw [e, mul_inv_eq_one] at h
-  exact h
+  rwa [e, mul_inv_eq_one] at h
 
 theorem le_val_one_add_pow_sub {G : Type} [CommGroup G] {D a b : G} (h : 1 = D * (1 * a⁻¹ * b⁻¹ * 1)) : D = a * b := by
-  rw [_root_.one_mul, _root_.mul_one, eq_comm, ← mul_inv, mul_inv_eq_one] at h
-  exact h
+  rwa [_root_.one_mul, _root_.mul_one, eq_comm, ← mul_inv, mul_inv_eq_one] at h
 
 theorem lbIso_of_rosatiAdj_local : ∀ (R : Type) [CommRing R] [IsLocalRing R] (B : Over (Sp R)) [GrpObj B] [IsCommMonObj B] (M : LB B.left) (f g : B ⟶ B), M.IsLB → RosatiAdj B M f g → LBIso (cubeLB B ![fst B B ≫ f, snd B B] M) (cubeLB B ![fst B B, snd B B ≫ g] M) := by
   intro R _ _ B _ _ M f g hM h
@@ -140,7 +138,6 @@ theorem lbIso_of_rosatiAdj_local : ∀ (R : Type) [CommRing R] [IsLocalRing R] (
 theorem rosatiAdj_of_lbIso : ∀ (S : Scheme.{0}) (B : Over S) [GrpObj B] [IsCommMonObj B] (M : LB B.left) (f g : B ⟶ B), M.IsLB → LBIso (cubeLB B ![fst B B ≫ f, snd B B] M) (cubeLB B ![fst B B, snd B B ≫ g] M) → RosatiAdj B M f g := by
   intro S B _ _ M f g hM h
   have H := GlobalTheory.NormRos.exists_gen_rosati hM f g h
-  intro s
-  exact ⟨⊤, trivial, MulPull.HasGen.pull H ((B ⊗ B).hom ⁻¹ᵁ ⊤).ι⟩
+  exact fun s => ⟨⊤, trivial, MulPull.HasGen.pull H ((B ⊗ B).hom ⁻¹ᵁ ⊤).ι⟩
 
 end GlobalTheory.AdjPolLocal

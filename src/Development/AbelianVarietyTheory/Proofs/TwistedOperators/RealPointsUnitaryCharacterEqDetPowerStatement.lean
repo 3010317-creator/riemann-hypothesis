@@ -98,7 +98,7 @@ theorem exists_dual (hG : IsHerm σ G) {x : Fin n → E} (hx : x ≠ 0) : ∃ y,
   have : hf σ G x (Pi.single b (σ (Matrix.vecMul x G b)⁻¹)) =
       Matrix.vecMul x G b * (Matrix.vecMul x G b)⁻¹ := by
     simp only [hf, Pi.single_apply, apply_ite σ, map_zero, mul_ite, mul_zero, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true, hG.invol, ← Finset.sum_mul]
+      Finset.mem_univ, ite_true, hG.invol, ← Finset.sum_mul]
     rfl
   rw [this, mul_inv_cancel₀ hb]
 
@@ -378,8 +378,7 @@ theorem exists_fix [CharZero E] (hG : IsHerm σ G) {γ : Matrix (Fin n) (Fin n) 
           refine prod_fix _ m fun p hp => hf_span (h2 _ _ hne) ?_ (hm p hp).2.2
           rw [← h2 _ _ hne, ← hU (x i) (x ⟨k, hk⟩), hfix i hi]
         · have : i = ⟨k, hk⟩ := Fin.ext hi
-          rw [this]
-          exact hmx
+          rwa [this]
     · exact ⟨l, hl, fun i _ => hfix i (lt_of_lt_of_le i.2 (not_lt.1 hk))⟩
 
 theorem gen_and_witt : ∀ (E : Type) [Field E] [CharZero E] (n : ℕ) (σ : E →+* E) (G : Matrix (Fin n) (Fin n) E), GlobalTheory.UTrans.IsHerm σ G → (∀ γ, GlobalTheory.UTrans.IsU σ G γ → ∃ l : List ((Fin n → E) × E), (∀ p ∈ l, GlobalTheory.UTrans.hf σ G p.1 p.1 ≠ 0 ∧ p.2 * σ p.2 = 1) ∧ γ = (l.map fun p => GlobalTheory.UTrans.tv σ G p.1 ((p.2 - 1) / GlobalTheory.UTrans.hf σ G p.1 p.1)).prod) ∧ ∀ x z : Fin n → E, GlobalTheory.UTrans.hf σ G x x ≠ 0 → GlobalTheory.UTrans.hf σ G z z = GlobalTheory.UTrans.hf σ G x x → ∃ γ, GlobalTheory.UTrans.IsU σ G γ ∧ γ *ᵥ z = x := by
@@ -565,7 +564,7 @@ theorem real_isotropic_or_one_class : ∀ (K L : Type) [Field K] [Field L] [Char
   by_cases hiso : ∃ z : Fin n → L, z ≠ 0 ∧ GlobalTheory.UTrans.hf σ G z z = 0
   · exact Or.inl hiso
   right
-  push_neg at hiso
+  push Not at hiso
   intro x y hx hy
   obtain ⟨p, hp⟩ := hfix _ (_root_.GlobalTheory.UTrans.Calc.hf_conj σ G hσ hG x x)
   obtain ⟨q, hq⟩ := hfix _ (_root_.GlobalTheory.UTrans.Calc.hf_conj σ G hσ hG y y)
@@ -581,8 +580,7 @@ theorem real_isotropic_or_one_class : ∀ (K L : Type) [Field K] [Field L] [Char
     rw [hq, (map_eq_zero_iff e e.injective).mp h, map_zero]
 
   have hpos : 0 < e q / e p := by
-    by_contra hneg
-    push_neg at hneg
+    by_contra! hneg
     have hlt : e q * e p < 0 := by
       have h1 : e q / e p < 0 := lt_of_le_of_ne hneg (div_ne_zero hq0 hp0)
       have h2 : e q * e p = e q / e p * (e p * e p) := by field_simp
@@ -666,8 +664,7 @@ theorem exists_aniso {n : ℕ} (hn : 0 < n) (H : Matrix (Fin n) (Fin n) ℂ) (hH
     intro h0
     have := hH.eigenvectorBasis.orthonormal.ne_zero i
     apply this
-    rw [← WithLp.ofLp_eq_zero]
-    exact h0
+    rwa [← WithLp.ofLp_eq_zero]
   refine ⟨(hH.eigenvectorBasis i).ofLp, ?_⟩
   rw [e, dotProduct_smul]
   intro h0
@@ -732,7 +729,7 @@ theorem kill {n : ℕ} (H : Matrix (Fin n) (Fin n) ℂ) (hH : H.IsHermitian) (hd
     exact zero_ne_one this
   let X : Matrix (Fin n) (Fin n) ℂ → ℂˣ := fun g => if h : c g = 0 then 1 else Units.mk0 (c g) h
   have hX : ∀ g ∈ Formalism.QuantumDeterminants.UH H, (X g : ℂ) = c g := fun g hg => by
-    simp only [X, dif_neg (hne g hg), Units.val_mk0]
+    simp only [X, dite_eq_right (hne g hg), Units.val_mk0]
   have key := GlobalTheory.UTrans.char_eq_one_of_det_eq_one ℂ n (starRingEnd ℂ) (H.map (starRingEnd ℂ)) (isHerm H hH hd)
     (iso_or_one_class H hH hd) ℂˣ X (fun a b ha hb => by
       rw [isU_iff] at ha hb
@@ -795,8 +792,7 @@ theorem char_eq_det_zpow {n : ℕ} (H : Matrix (Fin n) (Fin n) ℂ) (hH : H.IsHe
   obtain ⟨m, hm'⟩ := GlobalTheory.circle_hom_eq_zpow ψ hψ
   have hr : ∀ t : Circle, c (refl t) = (t : ℂ) ^ m := fun t => by
     have := congrArg (fun s : Circle => (s : ℂ)) (hm' t)
-    rw [Circle.coe_zpow] at this
-    exact this
+    rwa [Circle.coe_zpow] at this
   refine ⟨m, fun g hg => ?_⟩
   let e : Circle := ⟨g.det, by simpa [Submonoid.unitSphere] using norm_det hd hg⟩
   have hd0 : g.det ≠ 0 := fun h0 => by
@@ -872,8 +868,7 @@ theorem char_eq_detPow : ∀ (D : D7) (θ : InfFam D) (V : HSp D), IsInfFam θ �
     induction s using Finset.induction_on with
     | empty =>
       have : fam ∅ = 1 := funext fun τ => by simp [fam]
-      rw [this, Finset.prod_empty]
-      exact zL1
+      rwa [this, Finset.prod_empty]
     | insert b s hb ih =>
       have e : fam (insert b s) = Pi.mulSingle b (u b) * fam s := funext fun τ => by
         by_cases h : τ = b

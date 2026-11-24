@@ -60,11 +60,9 @@ private lemma exists_norm_le_mul_of_mem_ideal_smul_fg {R C : Type} [CommRing R] 
   have hbound : ∀ y ∈ Submodule.span R (G : Set C), ‖y‖ ≤ (G.sup fun g => ‖g‖₊ : NNReal) := by
     intro y hy
     refine Submodule.span_induction ?_ ?_ ?_ ?_ hy
-    · intro g hg
-      exact NNReal.coe_le_coe.mpr (Finset.le_sup (f := fun g => ‖g‖₊) hg)
+    · exact fun g hg => NNReal.coe_le_coe.mpr (Finset.le_sup (f := fun g => ‖g‖₊) hg)
     · simp
-    · intro a b _ _ ha hb
-      exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ha hb)
+    · exact fun a b _ _ ha hb => (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ha hb)
     · intro a b _ hb
       rw [hsmul, norm_mul]
       exact (mul_le_of_le_one_left (norm_nonneg _) (hφ a)).trans hb
@@ -74,8 +72,7 @@ private lemma exists_norm_le_mul_of_mem_ideal_smul_fg {R C : Type} [CommRing R] 
   · intro r hr z hz
     rw [hsmul, norm_mul]
     exact mul_le_mul (hJ r hr) (hbound z hz) (norm_nonneg _) ht
-  · intro a b ha hb
-    exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ha hb)
+  · exact fun a b ha hb => (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ha hb)
 
 open Filter Topology in
 private lemma exists_uniform_norm_bound_lt_one_of_fg {R C : Type} [CommRing R] [NormedField C]
@@ -91,8 +88,7 @@ private lemma exists_uniform_norm_bound_lt_one_of_fg {R C : Type} [CommRing R] [
     exact_mod_cast h
   · intro r hr
     refine Submodule.span_induction ?_ ?_ ?_ ?_ hr
-    · intro g hg
-      exact NNReal.coe_le_coe.mpr (Finset.le_sup (f := fun g => ‖φ g‖₊) hg)
+    · exact fun g hg => NNReal.coe_le_coe.mpr (Finset.le_sup (f := fun g => ‖φ g‖₊) hg)
     · simp
     · intro a b _ _ ha hb
       rw [map_add (f := _)]

@@ -120,8 +120,7 @@ theorem isDerivAt0_pt {R : Type} [CommRing R] {G : Over (Sp R)} [GrpObj G] [IsCo
       rw [dualMap_comp_epsMul]
     have h3 : (fun d => ψ b ((c • w) d)) = ψ b c • (fun d => ψ b (w d)) := by
       funext d; simp
-    rw [h2, h3]
-    exact h1
+    rwa [h2, h3]
   have hsingle : ∀ a : Fin g,
       IsDerivAt0 (fun z => (e.ex b z).left) (fun c => ψ b ((Pi.single a 1 : Fin g → R) c))
         (T (Pi.single a 1)).left := by
@@ -148,14 +147,12 @@ theorem isDerivAt0_pt {R : Type} [CommRing R] {G : Over (Sp R)} [GrpObj G] [IsCo
           (fun d => ψ b ((u a • (Pi.single a 1 : Fin g → R)) d)) +
             (fun c => ψ b ((∑ a ∈ s, u a • (Pi.single a 1 : Fin g → R)) c)) := by
         funext c; simp only [Pi.add_apply, map_add (f := _)]
-      rw [h3]
-      exact h1
+      rwa [h3]
   have hu : ∑ a, u a • (Pi.single a 1 : Fin g → R) = u := by
     funext c
     simp [Finset.sum_apply, Pi.single_apply]
   have := hs Finset.univ
-  rw [hu] at this
-  exact this
+  rwa [hu] at this
 
 theorem isDerivAt0_frame_section : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G] (g n : ℕ) (M : LieModel G (𝟙 (Sp R)) (Fin g → R)) (B : Set (Fin n → ℂ)) (ψ : (Fin n → ℂ) → (R →+* ℂ)) (e : FamExp G M B ψ) (b : Fin n → ℂ), b ∈ B → ∀ u : Fin g → R, IsDerivAt0 (fun z => (e.ex b z).left) (fun c => ψ b (u c)) (spMap (dualMap (ψ b)) ≫ (M.pt u).left) :=
   fun _ _ _ _ _ _ _ _ _ _ e _ hb u => isDerivAt0_pt e hb u

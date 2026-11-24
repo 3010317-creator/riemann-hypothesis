@@ -110,8 +110,7 @@ theorem continuous_kern_phe : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ
     refine ⟨_, B.I.topf_open 1 le_rfl, ?_, ?_⟩
     · refine ⟨one_mem _, fun y _ => ⟨0, zero_mem _, ?_⟩⟩
       simp
-    · intro x hx
-      exact hx.1
+    · exact fun x hx => hx.1
   obtain ⟨Mv, hMv⟩ : ∃ Mv : InfinitePlace B.I.F → ℝ,
       ∀ v, Mv v = dOp (uMat (1 : Formalism.REAL.UJ (B.I.ε v))) + 1 := ⟨_, fun v => rfl⟩
   rw [continuous_iff_continuousAt]
@@ -154,10 +153,8 @@ theorem continuous_kern_phe : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ
     have hp : 0 ≤ C' * ∏ v, Real.exp (-(2 * (2 * (n : ℝ) ^ 2) * (⌊D γ v⌋₊ : ℝ))) :=
       mul_nonneg hC'0 (Finset.prod_nonneg fun v _ => (Real.exp_pos _).le)
     by_cases hK : (x0⁻¹ * γ.1 * y0).2 ∈ B.I.Kset
-    · simp only [ht, if_pos hK]
-      exact ⟨hp, le_rfl⟩
-    · simp only [ht, if_neg hK]
-      exact ⟨le_rfl, hp⟩
+    · simpa only [ht, ite_eq_left hK] using ⟨hp, le_rfl⟩
+    · simpa only [ht, ite_eq_right hK] using ⟨le_rfl, hp⟩
   have hDnn : ∀ γ v, 0 ≤ D γ v := fun γ v => ((hC v).2.1 ((x0⁻¹ * γ.1 * y0).1 v) 1 hn).1
   have ha : Real.exp (-(2 * (n : ℝ) ^ 2)) ≤ 1 / 2 := by
     have hn1 : (1 : ℝ) ≤ n := by exact_mod_cast hn
@@ -180,7 +177,7 @@ theorem continuous_kern_phe : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ
       rintro γ ⟨htγ, hrγ⟩
       refine ⟨γ.2, ?_, hrγ⟩
       by_contra hK
-      exact htγ (by simp only [ht, if_neg hK])
+      exact htγ (by simp only [ht, ite_eq_right hK])
     have hpre := Set.Finite.preimage (f := (Subtype.val : B.I.GFset → B.I.GA)) Subtype.val_injective.injOn hfin
     refine ⟨hpre.subset hsub, ?_⟩
     calc (({γ | t γ ≠ 0 ∧ ∀ v, D γ v ≤ r v}.ncard : ℕ) : ℝ)
@@ -220,7 +217,7 @@ theorem continuous_kern_phe : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ
     have hzK : (x0⁻¹ * γ.1 * y0).2 ∈ B.I.Kset := by
       rw [hz]
       exact hKmul a.2 w.2 b.2 (hK1K hKx) (hsupp _ hew) (hK1K hKy)
-    simp only [ht, if_pos hzK]
+    simp only [ht, ite_eq_left hzK]
 
     have hmaj : ‖ph B d w.1‖ ≤ |∏ v, d v| *
         ∏ v, Real.exp (-(4 * (n : ℝ) ^ 2 * (⌊dOp (uMat (w.1 v))⌋₊ : ℝ))) := by
@@ -266,8 +263,7 @@ theorem continuous_kern_phe : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ
               (Finset.prod_nonneg fun v _ => (Real.exp_pos _).le))
       _ = C' * ∏ v, Real.exp (-(2 * (2 * (n : ℝ) ^ 2) * (⌊D γ v⌋₊ : ℝ))) := by
           rw [hC']; ring
-  have key := continuousOn_tsum (fun γ => (hcγ γ).continuousOn) hsum hbound
-  exact key.continuousAt hNn
+  exact (continuousOn_tsum (fun γ => (hcγ γ).continuousOn) hsum hbound).continuousAt hNn
 
 end GlobalTheory.Dec
 end -- clump:auto
@@ -414,9 +410,7 @@ theorem phe_inv (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (hd : IsDSData B
   have hp : ∏ v, ⟪B.w v, B.σ v (uMat (x⁻¹.1 v)) (B.w v)⟫_ℂ =
       star (∏ v, ⟪B.w v, B.σ v (uMat (x.1 v)) (B.w v)⟫_ℂ) := by
     rw [star_prod]
-    refine Finset.prod_congr rfl (fun v _ => ?_)
-    show ⟪B.w v, B.σ v (uMat (x.1 v)⁻¹) (B.w v)⟫_ℂ = _
-    exact coef_inv (hd v).2.1.2.2.1 (B.w v) (x.1 v)
+    exact Finset.prod_congr rfl (fun v _ => (coef_inv (hd v).2.1.2.2.1 (B.w v) (x.1 v)))
   unfold phe ph
   rw [he, hp]
   simp only [star_mul', star_star]
@@ -457,8 +451,7 @@ theorem kernelA : KernelA := by
   refine ⟨GlobalTheory.T.discreteSeriesKernel_summable_with_bound B d h hd hn hL hH, _root_.GlobalTheory.Dec.continuous_kern_phe B d h hd hn hL hH, ?_, ?_⟩
   · intro γ hγ x y
     exact kern_invariant B.I (phe B d) γ hγ x y
-  · intro x y
-    exact kern_symm B.I (phe B d) (phe_inv B d hd) x y
+  · exact fun x y => kern_symm B.I (phe B d) (phe_inv B d hd) x y
 
 end GlobalTheory.KernelConv
 end -- clump:auto

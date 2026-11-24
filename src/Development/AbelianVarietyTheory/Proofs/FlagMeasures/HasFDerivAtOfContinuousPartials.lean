@@ -87,8 +87,7 @@ private theorem norm_update_sub_update_sub_smul_le {k : ℕ} (F : (Fin k → ℝ
   have hdiff : g b - g a = F (Function.update y i b) - F (Function.update y i a) - (b - a) • d i t := by
     simp only [hg, sub_smul]
     abel
-  rw [hdiff, Real.norm_eq_abs] at key
-  exact key
+  rwa [hdiff, Real.norm_eq_abs] at key
 
 
 open Filter Topology in
@@ -174,8 +173,7 @@ theorem _root_.GlobalTheory.hasFDerivAt_of_continuous_partials :
     _ ≤ c * ‖h‖ := by
         rw [← mul_assoc]
         gcongr
-        rw [hε, mul_div_assoc']
-        rw [div_le_iff₀ (by positivity)]
+        rw [hε, mul_div_assoc', div_le_iff₀ (by positivity)]
         nlinarith
 
 end GlobalTheory

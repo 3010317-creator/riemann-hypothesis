@@ -83,10 +83,10 @@ private theorem e_inv_mul_eq_chi2_mul {D : D7} (X : Formalism.L2.SG.HidaSetting.
   · have hky : k⁻¹ * y ∈ X.K2 := hmulK _ (hinvK _ hk) _ hy
     have hsplit : X.chi2 y = X.chi2 k * X.chi2 (k⁻¹ * y) := by
       rw [← hchi _ hk _ hky, mul_inv_cancel_left]
-    rw [he, he, if_pos hky, if_pos hy, hsplit, star_mul']
+    rw [he, he, ite_eq_left hky, ite_eq_left hy, hsplit, star_mul']
     linear_combination (-(star (X.chi2 (k⁻¹ * y)) / ((X.B.μf X.K2).toReal : ℂ))) * hunit
   · have hky : k⁻¹ * y ∉ X.K2 := fun h => hy (by simpa using hmulK _ hk _ h)
-    rw [he, he, if_neg hky, if_neg hy, mul_zero]
+    rw [he, he, ite_eq_right hky, ite_eq_right hy, mul_zero]
 
 theorem reg_comp_Re {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (k : X.B.I.Gf) (hk : k ∈ X.K2) :
     (X.B.R (1, k)).comp X.B.Re = X.chi2 k • X.B.Re := by
@@ -140,11 +140,9 @@ theorem conjMap_level : GlobalTheory.Published.DiscreteSeriesClassification → 
   obtain ⟨κ, hκdef⟩ : ∃ κ, κ = ((iotaX X h).toMulEquiv (t⁻¹⁻¹ * k * t⁻¹)).2 := ⟨_, rfl⟩
   have hq : (iotaX X h).toMulEquiv (t⁻¹⁻¹ * k * t⁻¹) = ((1 : X.B.I.Ginf), κ) := Prod.ext hp1 hκdef.symm
   have hκ : κ ∈ X.K2 := by
-    rw [hκdef]
-    exact hp2
+    rwa [hκdef]
   have hv' : star (X.chi2 κ) = levChi (Yc D 0) (R.βY 0) (R.dat0 (R.levR F true)) k := by
-    rw [hκdef]
-    exact hv
+    rwa [hκdef]
   have hsplit : (iotaX X h).toMulEquiv (g * k * t⁻¹) =
       (iotaX X h).toMulEquiv (g * t⁻¹) * ((1 : X.B.I.Ginf), κ) := by
     rw [← hq]

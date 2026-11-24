@@ -104,9 +104,9 @@ private theorem basis_det_D_update_eq_coeff {k : Type*} {S : Type*} [CommRing k]
     rw [Module.Basis.toMatrix_apply, Matrix.updateCol_apply]
     by_cases hj : j = i0
     · subst hj
-      rw [if_pos rfl, Function.update_self, hz]
+      rw [ite_eq_left rfl, Function.update_self, hz]
       simp [Finsupp.single_apply]
-    · rw [if_neg hj, Function.update_of_ne hj, ← hb, Matrix.one_apply]
+    · rw [ite_eq_right hj, Function.update_of_ne hj, ← hb, Matrix.one_apply]
       simp [Module.Basis.repr_self, Finsupp.single_apply, eq_comm]
   rw [Module.Basis.det_apply, hmat, ← Matrix.cramer_apply]
   simp [Matrix.cramer_one]
@@ -133,9 +133,7 @@ private theorem one_tmul_ne_zero_of_notMem_maximalIdeal_sq {A : Type*} [CommRing
       exact Ideal.mul_mem_mul hb y.2
     have h0 : (Ideal.toCotangent (IsLocalRing.maximalIdeal A)) (b • y) = 0 :=
       (Ideal.toCotangent_eq_zero (IsLocalRing.maximalIdeal A) (b • y)).mpr hy
-    rw [map_smul] at h0
-    show b • (Ideal.toCotangent (IsLocalRing.maximalIdeal A)) y = 0
-    exact h0
+    rwa [map_smul] at h0
   have h' : (1 : A ⧸ IsLocalRing.maximalIdeal A) ⊗ₜ[A]
       (⟨a, ha⟩ : ↥(IsLocalRing.maximalIdeal A)) = 0 := h
   have key := congrArg (TensorProduct.lift
@@ -170,8 +168,7 @@ theorem linearIndependent_one_tmul_D_of_notMem_maximalIdeal_sq
     intro g hg i
     rw [Fin.sum_univ_one] at hg
     rcases smul_eq_zero.mp hg with hzero | hzero
-    · rw [Subsingleton.elim i 0]
-      exact hzero
+    · rwa [Subsingleton.elim i 0]
     · exact absurd hzero (one_tmul_ne_zero_of_notMem_maximalIdeal_sq a ha ha2)
   exact linearIndependent_tensor_D_of_maximalIdeal k A
     (fun _ : Fin 1 => (⟨a, ha⟩ : ↥(IsLocalRing.maximalIdeal A))) key
@@ -202,8 +199,7 @@ theorem coordIdeal_singleton_le_restrictIdeal_iff {U : X.Opens} (hU : IsAffineOp
     have ht := h2 (Ideal.mem_span_singleton_self t)
     have hmem2 := Ideal.mem_map_of_mem (U.topIso.hom.hom) ht
     rw [Ideal.map_map, topIso_hom_comp_appLE_ι U (by simp), Ideal.map_id] at hmem2
-    rw [hcoord]
-    exact hmem2
+    rwa [hcoord]
   · intro h V
     rw [Scheme.IdealSheafData.comap_ideal_eq_map_appLE J U.ι ⟨U, hU⟩ V (by simp),
       Scheme.IdealSheafData.ofIdealTop_ideal, Ideal.map_span, Set.image_singleton,
@@ -265,8 +261,7 @@ theorem stalkIdeal_maxContactIdeal_le_maximalIdeal (I : X.IdealSheafData) {m : �
   have h1 : orderAt (maxContactIdeal k p I m) x = (1 : ℕ∞) :=
     orderAt_maxContactIdeal_eq_one k p I hm hx
   have h2 := (le_orderAt_iff (maxContactIdeal k p I m) x 1).mp (by rw [Nat.cast_one, h1])
-  rw [pow_one] at h2
-  exact h2
+  rwa [pow_one] at h2
 
 theorem exists_section_maxContactIdeal_notMem_maximalIdeal_sq (I : X.IdealSheafData) {m : ℕ}
     (hm : 1 ≤ m) {x : X} (hx : orderAt I x = (m : ℕ∞)) {U : X.Opens} (hU : IsAffineOpen U)
@@ -289,8 +284,7 @@ theorem exists_section_maxContactIdeal_notMem_maximalIdeal_sq (I : X.IdealSheafD
       IsLocalRing.maximalIdeal ↑(X.presheaf.stalk x) ^ 2 := by
     rw [hmap, Ideal.map_le_iff_le_comap]
     intro s hs
-    simp only [Ideal.mem_comap]
-    exact hno s hs (hle (germ_mem_stalkIdeal _ x ⟨U, hU⟩ hxU hs))
+    simpa only [Ideal.mem_comap] using hno s hs (hle (germ_mem_stalkIdeal _ x ⟨U, hU⟩ hxU hs))
   have h3 := (le_orderAt_iff (maxContactIdeal k p I m) x 2).mpr h2
   rw [h1] at h3
   simp at h3
@@ -486,8 +480,7 @@ theorem exists_isMaxContactCoord (I : X.IdealSheafData) {m : ℕ} (hm : 1 ≤ m)
     have h4 : (X.presheaf.germ (X.basicOpen (a i0)) x hxV).hom
         (algebraMap Γ(X, U) Γ(X, X.basicOpen (a i0)) s)
         = (X.presheaf.germ U x hxU).hom s := h3
-    rw [h4]
-    exact hs1
+    rwa [h4]
 
 end
 

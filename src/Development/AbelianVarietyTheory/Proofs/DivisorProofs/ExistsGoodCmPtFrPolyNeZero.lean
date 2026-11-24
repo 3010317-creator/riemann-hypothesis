@@ -79,8 +79,7 @@ theorem exists_maj_lower (X : FD.DataX E r) (hr : 0 < r) {z : FD.Frame X.Ψ r} (
     by_contra h
     push Not at h
     have h1 : Submodule.span E (X.Λ : Set (Fin r → E)) = ⊥ := by
-      rw [Submodule.span_eq_bot]
-      exact h
+      rwa [Submodule.span_eq_bot]
     rw [X.Λ_span] at h1
     have : (Pi.single ⟨0, hr⟩ (1 : E) : Fin r → E) ∈ (⊤ : Submodule E (Fin r → E)) := Submodule.mem_top
     rw [h1, Submodule.mem_bot] at this
@@ -146,8 +145,7 @@ theorem exists_good_cmPt_frPoly_ne_zero : ∀ (E : Type) [Field E] [NumberField 
     intro h0
     apply hne
     change (if h : x ∈ (U.X k).dom then toC (evR Xo c F (U.un k ⟨x, h⟩)) else 0) = 0
-    rw [dite_eq_left hx]
-    exact h0
+    rwa [dite_eq_left hx]
   exact ⟨z, La, hz, fun G hG =>
     (GlobalTheory.LamT.isFrPoly_equiv_and_ne_zero E H Dw l Xo c z.K z.y a n F hF G hG).2 _ σ₁ _ hzx hev⟩
 

@@ -63,14 +63,12 @@ theorem exists_bilinForm_descend_of_surjective {X Y : Type} [AddCommGroup X] [Ad
     intro a b h y
     have hk : f (a - b) = 0 := by rw [map_sub, h, sub_self]
     have := h1 (a - b) hk y
-    rw [map_sub, LinearMap.sub_apply, sub_eq_zero] at this
-    exact this
+    rwa [map_sub, LinearMap.sub_apply, sub_eq_zero] at this
   have key2 : ∀ a b, f a = f b → ∀ y, β y a = β y b := by
     intro a b h y
     have hk : f (a - b) = 0 := by rw [map_sub, h, sub_self]
     have := h2 (a - b) hk y
-    rw [map_sub, sub_eq_zero] at this
-    exact this
+    rwa [map_sub, sub_eq_zero] at this
   refine ⟨LinearMap.mk₂ ℤ (fun y y' => β (g y) (g y')) ?_ ?_ ?_ ?_, ?_⟩
   · intro y1 y2 y'
     rw [key1 (g (y1 + y2)) (g y1 + g y2) (by rw [map_add (f := _), hg, hg, hg]), map_add (f := _),

@@ -98,13 +98,12 @@ theorem isAbsIrrChar_map : ∀ {K K' G : Type} [Field K] [Field K'] [CharZero K]
       invertibleOfNonzero (Nat.cast_ne_zero.mpr Nat.card_pos.ne')
     have hcard : ((Nat.card G : ℕ) : A) ≠ 0 := Nat.cast_ne_zero.mpr Nat.card_pos.ne'
     have ho := Representation.char_orthonormal ρ ρ
-    rw [if_pos ⟨Representation.Equiv.refl ρ⟩] at ho
+    rw [ite_eq_left ⟨Representation.Equiv.refl ρ⟩] at ho
     have hsum : ∑ g, ρ.character g * ρ.character g⁻¹ = (Nat.card G : A) := by
       field_simp at ho
       simpa using ho
 
-    simp only [hch, ← map_mul, ← map_sum, hsum]
-    exact map_natCast ψ _
+    simpa only [hch, ← map_mul, ← map_sum, hsum] using map_natCast ψ _
   · rw [hch, hρ, hψ]
 
 end GlobalTheory.AbsIrrMap
@@ -141,17 +140,14 @@ theorem absIrr_one_ne_zero {K G : Type} [Field K] [CharZero K] [Group G] [Fintyp
   have hn : n = 0 := by exact_mod_cast h1.symm
   subst hn
   obtain ⟨a, b, hab⟩ := hρ.toNontrivial.exists_pair_ne
-  apply hab
-  apply Subrepresentation.toSubmodule_injective
-  exact Subsingleton.elim _ _
+  exact hab (Subrepresentation.toSubmodule_injective (Subsingleton.elim _ _))
 
 theorem eq_of_idemOf_eq {K G : Type} [Field K] [CharZero K] [Group G] [Fintype G] {X Y : Finset (G → K)}
     (hX : ∀ χ ∈ X, IsAbsIrrChar χ) (hYX : Y ⊆ X) (h : idemOf Y = idemOf X) : X = Y := by
   classical
   by_contra hne
   obtain ⟨χ, hχX, hχY⟩ : ∃ χ ∈ X, χ ∉ Y := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hne (Finset.Subset.antisymm hc hYX)
   have hsplit : idemOf (X \ Y) + idemOf Y = idemOf X := by
     unfold idemOf
@@ -165,7 +161,7 @@ theorem eq_of_idemOf_eq {K G : Type} [Field K] [CharZero K] [Group G] [Fintype G
     rw [Finset.mul_sum]
     rw [Finset.sum_congr rfl fun χ' hχ' =>
       chiIdem_mul (hX χ hχX) (hX χ' (Finset.mem_sdiff.1 hχ').1)]
-    rw [Finset.sum_ite_eq, if_pos hmem]
+    rw [Finset.sum_ite_eq, ite_eq_left hmem]
   rw [h0, mul_zero] at hprod
   have hc := congrArg (fun a : MonoidAlgebra K G => a.coeff 1) hprod
   simp only [coeff_chiIdem, inv_one] at hc
@@ -210,8 +206,7 @@ theorem good_transport {K K' G G' : Type} [Field K] [Field K'] [CharZero K] [Cha
     rw [hX2', coeff_idemOf, Finset.sum_image fun a _ b _ h => hinj h, map_sum]
     have := hX2 (e.symm t)
 
-    rw [coeff_idemOf, map_sum] at this
-    rw [← hc (e.symm t), MulEquiv.apply_symm_apply] at this
+    rw [coeff_idemOf, map_sum, ← hc (e.symm t), MulEquiv.apply_symm_apply] at this
     rw [← this]
     refine Finset.sum_congr rfl fun χ _ => ?_
     simp only [hF, map_mul, map_div₀, map_natCast, hφ, map_one, map_inv, hcard]

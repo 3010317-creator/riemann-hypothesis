@@ -81,9 +81,7 @@ theorem _root_.GlobalTheory.Mass.binary_hermitian_represents : _root_.Formalism.
       simp at this
       linarith
     have hne : ψ w ≠ 0 := (map_ne_zero ψ).2 hw0
-    have him : (ψ w).im ≠ 0 := by
-      intro him
-      exact hne (Complex.ext hre him)
+    have him : (ψ w).im ≠ 0 := fun him => hne (Complex.ext hre him)
     simp [δ, Complex.mul_re, hre]
     positivity
   have hδneg : ∀ φ : _root_.Formalism.HermitianLattices.Ext.L3.cmF K →+* ℝ, φ δ < 0 := by

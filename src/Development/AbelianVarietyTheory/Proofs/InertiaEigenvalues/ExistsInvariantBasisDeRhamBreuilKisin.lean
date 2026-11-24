@@ -369,8 +369,7 @@ theorem isUnit_Etau {K : FinExt l} {bk : BK K} {τ : Ainf l} (hτ : bk.IsPer τ)
       rw [GlobalTheory.Per.kerQ_eq_map_ker_theta, ← bk.span_ev, Ideal.map_span, Set.image_singleton]
     have hu := _root_.GlobalTheory.RingIface.isUnit_of_generator l hk
     rw [_root_.GlobalTheory.RingIface.pD_eq_alg] at hu
-    rw [aDp, RingHom.comp_apply]
-    exact hu
+    rwa [aDp, RingHom.comp_apply]
   · have h := _root_.GlobalTheory.ThetaPer.thetaD_aDp_pow_ne_zero l K bk τ hτ 1
     rw [pow_one] at h
     exact ((GlobalTheory.MemLoc.thetaD_props l).2.2.1 _ h).map _
@@ -427,11 +426,9 @@ theorem exists_invariant_basis : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk
       rw [hjv, ← hσj, hjv] at h1
       have eR : ((ρ g).map (algebraMap ℤ_[l] (Ainf l))).map j = R := Matrix.ext fun a b => zD_eq_pt (ρ g a b)
       have eE : ((F.ε g).map WittVector.frobenius).map j = Ej := Matrix.ext fun _ _ => rfl
-      rw [eR, eE] at h1
-      exact h1
+      rwa [eR, eE] at h1
     have f2 : Ej * T' = B.map ι := by
-      have h2 := congrArg (fun M => M.map ι) (hinv g)
-      simpa only [Matrix.map_mul] using h2
+      simpa only [Matrix.map_mul] using congrArg (fun M => M.map ι) (hinv g)
     have f3 : (c • (P.map j * B.map ι)).map (Per.σD (g : GQ l)) = Per.σD (g : GQ l) c • (S * T') := by
       rw [matrix_map_smul, Matrix.map_mul]
       congr 2

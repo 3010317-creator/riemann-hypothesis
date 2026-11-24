@@ -127,13 +127,12 @@ theorem UpperTheory.V.AlgebraTools.der_inner :
       by_cases hab : a = b
       · subst hab
         simp
-      · rw [Finset.sum_eq_zero fun k _ => if_neg fun h => hab (h.1.symm.trans h.2)]
+      · rw [Finset.sum_eq_zero fun k _ => ite_eq_right fun h => hab (h.1.symm.trans h.2)]
         simp [hab]
     · intro s _ hs
       rw [Finset.sum_apply]
       exact Finset.sum_eq_zero fun k _ => Pi.single_eq_of_ne (Ne.symm hs) _
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   let a : E := ∑ s, ∑ k, j (u s k (i0 s)) * D (u s (i0 s) k)
   have key : ∀ t (p q : d t), D (u t p q) = j (u t p q) * a - a * j (u t p q) := by
     intro t p q
@@ -141,9 +140,9 @@ theorem UpperTheory.V.AlgebraTools.der_inner :
       simp only [a, Finset.mul_sum, ← mul_assoc, ← map_mul]
       rw [Finset.sum_eq_single_of_mem t (Finset.mem_univ t)]
       · rw [Finset.sum_eq_single_of_mem q (Finset.mem_univ q)]
-        · rw [hsame, if_pos rfl]
+        · rw [hsame, ite_eq_left rfl]
         · intro k _ hk
-          rw [hsame, if_neg (Ne.symm hk), map_zero, zero_mul]
+          rw [hsame, ite_eq_right (Ne.symm hk), map_zero, zero_mul]
       · intro s _ hs
         refine Finset.sum_eq_zero fun k _ => ?_
         rw [hne t s _ _ _ _ (Ne.symm hs), map_zero, zero_mul]
@@ -151,9 +150,9 @@ theorem UpperTheory.V.AlgebraTools.der_inner :
         = j (u t p (i0 t)) * D (u t (i0 t) q) := by
       rw [Finset.sum_eq_single_of_mem t (Finset.mem_univ t)]
       · rw [Finset.sum_eq_single_of_mem p (Finset.mem_univ p)]
-        · rw [hsame, if_pos rfl]
+        · rw [hsame, ite_eq_left rfl]
         · intro k _ hk
-          rw [hsame, if_neg hk, map_zero, mul_zero]
+          rw [hsame, ite_eq_right hk, map_zero, mul_zero]
       · intro s _ hs
         refine Finset.sum_eq_zero fun k _ => ?_
         rw [hne s t _ _ _ _ hs, map_zero, mul_zero]
@@ -229,8 +228,7 @@ theorem UpperTheory.V.AlgebraTools.cocycle_trace_zero :
   let R := Finsupp.linearCombination K (fun g => r g)
   let M := Finsupp.linearCombination K m
   have hR : Function.Surjective R := by
-    rw [← LinearMap.range_eq_top, Finsupp.range_linearCombination]
-    exact hspan
+    rwa [← LinearMap.range_eq_top, Finsupp.range_linearCombination]
   have hkey2 : ∀ f h, T (M f * r h) = - T (R f * m h) := by
     intro f h
     induction f using Finsupp.induction_linear with
@@ -413,14 +411,12 @@ theorem UpperTheory.V.Th.Det.finDet :
   have hle : U (insert s T) ≤ U T := by
     intro w hw
     simp only [U, Submodule.mem_iInf, Finset.mem_insert] at hw ⊢
-    intro t ht j
-    exact hw t (Or.inr ht) j
+    exact fun t ht j => hw t (Or.inr ht) j
   have heq : U (insert s T) = U T := by
     by_contra hne
     exact hT _ ⟨_, rfl⟩ (lt_of_le_of_ne hle hne)
   have hvT : v ∈ U T := by
-    simp only [U, Submodule.mem_iInf, LinearMap.mem_ker]
-    exact hv
+    simpa only [U, Submodule.mem_iInf, LinearMap.mem_ker] using hv
   rw [← heq] at hvT
   simp only [U, Submodule.mem_iInf, LinearMap.mem_ker, Finset.mem_insert] at hvT
   exact hvT s (Or.inl rfl) i
@@ -457,8 +453,7 @@ private theorem cf_small {l : ℕ} [hl : Fact l.Prime] (C : ℝ) : ∃ N : ℕ, 
 private theorem padicAlgCl_norm_le_one_of_isIntegral {l : ℕ} [Fact l.Prime] (x : PadicAlgCl l) (hx : IsIntegral ℤ_[l] x) :
     ‖x‖ ≤ 1 := by
   obtain ⟨p, hpm, hp⟩ := hx
-  by_contra h
-  push_neg at h
+  by_contra! h
   rw [← Polynomial.aeval_def, Polynomial.aeval_eq_sum_range, Finset.sum_range_succ,
     hpm.coeff_natDegree, one_smul] at hp
   have hn0 : p.natDegree ≠ 0 := by
@@ -481,8 +476,7 @@ private theorem padicAlgCl_norm_le_one_of_isIntegral {l : ℕ} [Fact l.Prime] (x
           mul_le_mul ha (pow_le_pow_right₀ h1 (by omega)) (by positivity) zero_le_one
       _ = ‖x‖ ^ (p.natDegree - 1) := one_mul _
   have h2 : ‖x‖ ^ p.natDegree ≤ ‖x‖ ^ (p.natDegree - 1) := by
-    rw [← norm_pow, hxn, norm_neg]
-    exact hb
+    rwa [← norm_pow, hxn, norm_neg]
   have h3 : ‖x‖ ^ (p.natDegree - 1) < ‖x‖ ^ p.natDegree := pow_lt_pow_right₀ h (by omega)
   linarith
 
@@ -547,12 +541,10 @@ private theorem cf_entries {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [Topolo
       generalize e.symm i = a
       generalize e.symm j = b
       rcases a with a | a <;> rcases b with b | b
-      · simp only [B, Matrix.fromBlocks_apply₁₁]
-        exact hs.matrix_elem a b
+      · simpa only [B, Matrix.fromBlocks_apply₁₁] using hs.matrix_elem a b
       · simp only [B, Matrix.fromBlocks_apply₁₂, Matrix.replicateCol_apply]
         exact (continuous_apply a).comp hz
-      · simp only [B, Matrix.fromBlocks_apply₂₁]
-        exact continuous_const
+      · simpa only [B, Matrix.fromBlocks_apply₂₁] using continuous_const
       · simp only [B, Matrix.fromBlocks_apply₂₂]
         exact continuous_const)
   refine ⟨K, hK, fun g i => ?_⟩
@@ -631,10 +623,8 @@ private theorem lc_iff {R G : Type} [CommRing R] [TopologicalSpace G] (J : Ideal
     rfl
   simp only [IsLocallyConstant.iff_eventually_eq, key]
   constructor
-  · intro h i x
-    exact (h x).mono fun y hy => hy i
-  · intro h x
-    exact Filter.eventually_all.mpr fun i => h i x
+  · exact fun h i x => (h x).mono fun y hy => hy i
+  · exact fun h x => Filter.eventually_all.mpr fun i => h i x
 
 set_option linter.overlappingInstances false in
 private theorem cocycles_finitely_generated (l : ℕ) [Fact l.Prime] {R G M : Type} [CommRing R] [IsDomain R] [IsLocalRing R]
@@ -1038,8 +1028,7 @@ theorem UpperTheory.V.Th.Det.finite_cocycles_matrixRepresentation_of_phiCond :
     intro x y hxy
     apply Subtype.ext
     funext g
-    have e := congrFun (congrArg Subtype.val hxy) g
-    exact (matrixFlattenLinearEquiv (Qbar l) n).injective e
+    exact (matrixFlattenLinearEquiv (Qbar l) n).injective (congrFun (congrArg Subtype.val hxy) g)
   haveI : IsNoetherian (Qbar l) (Z1 (UpperTheory.V.Loc.colRep σ)) := IsNoetherian.iff_fg.mpr hfin
   exact Module.Finite.of_injective (Φ.restrict hmem) hinj
 end -- clump:auto
@@ -1108,8 +1097,7 @@ theorem UpperTheory.V.Th.regDet :
     apply hg
     have h1 := hχ g
     rw [h, MonoidHom.one_apply, Units.val_one, ← map_one (algebraMap ℚ_[l] (Qbar l))] at h1
-    have h2 := (algebraMap ℚ_[l] (Qbar l)).injective h1
-    exact Units.ext (Subtype.ext h2.symm)
+    exact Units.ext (Subtype.ext ((algebraMap ℚ_[l] (Qbar l)).injective h1).symm)
   · intro g hg
     by_contra hne
     have ho : IsOpen {x : F.G₀ | (z x * W.mat ρ x).trace ≠ 0} :=

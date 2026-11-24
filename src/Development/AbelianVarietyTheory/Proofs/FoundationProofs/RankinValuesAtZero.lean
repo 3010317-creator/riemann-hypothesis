@@ -247,7 +247,7 @@ theorem lseriesSquares_term (e : ℕ) (c : ℕ → ℂ) (s : ℝ) (he : 1 ≤ e)
   · simp
   have hd' : (d : ℂ) ≠ 0 := by exact_mod_cast hd
   rw [LSeries.term_of_ne_zero (mul_ne_zero hd hd), LSeries.term_of_ne_zero hd]
-  simp only [Nat.sqrt_eq, if_true]
+  simp only [Nat.sqrt_eq, ite_true]
   rw [Nat.cast_mul, natCast_mul_natCast_cpow, ← cpow_add _ _ hd', ← cpow_natCast, mul_div_assoc,
     ← cpow_sub _ _ hd', div_eq_mul_inv, ← cpow_neg]
   congr 2
@@ -278,8 +278,7 @@ theorem lseriesSquares_eq : ∀ (e : ℕ) (χ ψ θ : ℕ → ℂ) (s : ℝ), 1 
       simp
       linarith
   constructor
-  · refine (hinj.summable_iff hzero).mp ?_
-    exact (show Summable _ from hsum).congr fun d => (hterm d).symm
+  · exact (hinj.summable_iff hzero).mp ((show Summable _ from hsum).congr fun d => (hterm d).symm)
   · unfold LSeries
     rw [← hinj.tsum_eq (fun n hn => by
       by_contra h
@@ -393,7 +392,7 @@ theorem rankin_convolution_coeff_of_squareSupported (e : ℕ) (χ ψ θ g b z : 
       rw [← hn', sq, Nat.mul_div_cancel_left _ (Nat.mul_pos hs hs)]
     have hpow : (s:ℂ)^(2*e) * (s:ℂ)^(e-1) = (s:ℂ)^(3*e-1) := by
       rw [← pow_add]; congr 1; omega
-    rw [hz, hsq, if_pos rfl, hdiv, hψ, hθ, ← hpow]
+    rw [hz, hsq, ite_eq_left rfl, hdiv, hψ, hθ, ← hpow]
     push_cast
     rw [mul_pow]
     ring
@@ -406,7 +405,7 @@ theorem rankin_convolution_coeff_of_squareSupported (e : ℕ) (χ ψ θ g b z : 
     have h : Nat.sqrt a * Nat.sqrt a = a := by
       by_contra h
       apply hne
-      simp only [hz, if_neg h, zero_mul]
+      simp only [hz, ite_eq_right h, zero_mul]
     have ha : a ≠ 0 := fun h0 => hn (by rw [← hac, h0, zero_mul])
     refine ⟨Nat.sqrt a, x, y, Nat.sqrt_pos.mpr (Nat.pos_of_ne_zero ha), by rw [h, hxy, hac], ?_⟩
     rw [h, hxy]
@@ -436,17 +435,12 @@ theorem rankin_convolution_coeff_of_squareSupported (e : ℕ) (χ ψ θ g b z : 
     have hn'' : δ * δ * (x' * y') = n := by rw [← hxy]; ring
     have hxy0 : x' * y' ≠ 0 := fun h0 => hn (by rw [← hn'', h0, mul_zero])
     refine ⟨⟨(δ * δ, x' * y'), (x', y')⟩, ?_, ?_, ?_⟩
-    · simp only [Finset.mem_sigma, Nat.mem_divisorsAntidiagonal]
-      exact ⟨⟨hn'', hn⟩, trivial, hxy0⟩
-    · intro h0
-      apply hne
-      refine Eq.trans ?_ h0
-      exact (key δ x' y' hδ0 hn'').symm
+    · simpa only [Finset.mem_sigma, Nat.mem_divisorsAntidiagonal] using ⟨⟨hn'', hn⟩, trivial, hxy0⟩
+    · exact fun h0 => hne (Eq.trans (key δ x' y' hδ0 hn'').symm h0)
     · simp only [Nat.sqrt_eq]
   · intro a ha hne
     obtain ⟨s, x, y, hs, hn', rfl⟩ := dec a ha hne
-    simp only [Nat.sqrt_eq]
-    exact key s x y hs hn'
+    simpa only [Nat.sqrt_eq] using key s x y hs hn'
 
 theorem rankin_convolution_coeff : ∀ (e : ℕ) (χ ψ θ g b : ℕ → ℂ), (∀ m n, ψ (m * n) = ψ m * ψ n) → (∀ m n, θ (m * n) = θ m * θ n) → (∀ m n : ℕ, 0 < m → 0 < n → g m * g n = ∑ δ ∈ (Nat.gcd m n).divisors, χ δ * (δ : ℂ) ^ (2 * e) * g (m * n / δ ^ 2)) → (∀ n, n ≠ 0 → b n = ∑ p ∈ n.divisorsAntidiagonal, ψ p.1 * (p.1 : ℂ) ^ (e - 1) * θ p.2) → ∀ n : ℕ, n ≠ 0 → LSeries.convolution (fun n : ℕ => ψ n * (n : ℂ) ^ (e - 1) * g n) (fun n : ℕ => θ n * g n) n = LSeries.convolution (fun n : ℕ => if Nat.sqrt n * Nat.sqrt n = n then χ (Nat.sqrt n) * ψ (Nat.sqrt n) * θ (Nat.sqrt n) * (Nat.sqrt n : ℂ) ^ (3 * e - 1) else 0) (fun n : ℕ => g n * b n) n := by
   intro e χ ψ θ g b hψ hθ hg hb n hn
@@ -733,7 +727,7 @@ lemma g_nonneg (x : ℤ × ℤ) : 0 ≤ g x := by
 lemma g_zero : g 0 = 1 := by simp [g, Real.zero_rpow (by norm_num : -(3:ℝ) ≠ 0)]
 
 lemma g_ne {x : ℤ × ℤ} (hx : x ≠ 0) : g x = (‖x‖ ^ 3)⁻¹ := by
-  simp only [g, if_neg hx, add_zero]
+  simp only [g, ite_eq_right hx, add_zero]
   rw [Real.rpow_neg (norm_nonneg x)]; norm_cast
 
 theorem rowbd : ∀ j L : ℕ, 2 ≤ j → 0 < L → ∃ (C : ℝ) (A : ℕ), ∀ τ : ℍ, ∃ u : ℤ × ℤ → ℝ,

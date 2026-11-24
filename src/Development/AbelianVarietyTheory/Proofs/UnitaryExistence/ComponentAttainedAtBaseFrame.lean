@@ -191,8 +191,7 @@ theorem comp_latG (D : D7) (V : HSp D) :
       obtain ⟨x, hx, hx₀⟩ :=
         Submodule.exists_mem_ne_zero_of_ne_bot (LinearMap.ker_ne_bot_of_finrank_lt (f := g) hdim)
       have hsmul (a : D.host.E) : a • e x ∈ V.L0 := by
-        rw [← V.baseLattice_isUnimodular]
-        rw [Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
+        rw [← V.baseLattice_isUnimodular, Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
         intro y hy
         have hxy : V.hT (e x) y = 0 :=
           congrArg (fun f : Module.Dual D.host.E W => f ⟨y, Submodule.subset_span hy⟩) (LinearMap.mem_ker.mp hx)
@@ -209,8 +208,7 @@ theorem comp_latG (D : D7) (V : HSp D) :
           (FaithfulSMul.algebraMap_injective _ _) (Field.toIsField _))
     have h := congrArg (Submodule.map (V.frame.equivFun : V.V →ₗ[D.host.E] (Fin V.rank → D.host.E)))
       hfull
-    rw [Submodule.map_span, Submodule.map_top, LinearEquiv.range] at h
-    exact h
+    rwa [Submodule.map_span, Submodule.map_top, LinearEquiv.range] at h
   have hhat : latHat V = AdLat.hat D.host.F (L : Set (Fin V.rank → D.host.E)) := by
     unfold latHat AdLat.hat
     congr 1
@@ -252,7 +250,7 @@ theorem comp_mem_HR (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
     Matrix.transpose_apply, TensorProduct.tmul_neg, mul_neg, neg_mul, Finset.sum_neg_distrib, neg_inj] at h
   simp only [Pi.single_apply, apply_ite (Algebra.TensorProduct.map (AlgHom.id F (FiniteAdeleRing (𝓞 F) F)) σ),
     map_one, map_zero, mul_ite, ite_mul, mul_one, mul_zero, one_mul, zero_mul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true] at h
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h
   simp only [Matrix.mul_apply, Formalism.UG.cT, JR, Matrix.transpose_apply, Matrix.map_apply, Finset.sum_mul]
   refine Eq.trans ?_ h
   refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_

@@ -620,8 +620,7 @@ theorem induction_places {n : ℕ} (v : Fin n → GlobalTheory.FinPl.Pl D) (H : 
     induction s using Finset.induction_on with
     | empty =>
       intro x _ hx
-      rw [eq_one_of_grpAt_empty (x := x) (by simpa using hx)]
-      exact h1
+      rwa [eq_one_of_grpAt_empty (x := x) (by simpa using hx)]
     | insert i s _ ih =>
       intro x hH hx
       obtain ⟨a, haH, hCa, ha, hoff⟩ := hloc i x hH
@@ -640,8 +639,7 @@ theorem induction_places {n : ℕ} (v : Fin n → GlobalTheory.FinPl.Pl D) (H : 
           · exact hw ⟨j, hj, rfl⟩
       have := hmul _ _ (ih _ (mul_mem hH (inv_mem haH)) hy') hCa
       rwa [inv_mul_cancel_right] at this
-  intro x hH hx
-  exact key Finset.univ x hH (by simpa using hx)
+  exact fun x hH hx => key Finset.univ x hH (by simpa using hx)
 
 theorem grpOff_of_places {P : GlobalTheory.FinPl.Pl D → Prop} {v : GlobalTheory.FinPl.Pl D} (hv : P v) {x : GA D V} (hx : x ∈ grpOff V P) :
     x ∈ grpOff V (· = v) :=
@@ -668,8 +666,7 @@ theorem val_inv (hψ : IsStdChar D ψ (-1)) (Q : QStep S) {c₁ c₂} (h₁ : Q.
     rw [map_mul, map_mul, ← mul_assoc, ← mul_assoc, ← G₁.2.2.2.1 a _ hx, mul_assoc (Q.gl₁ a), inv_mul_cancel_right]
   have e₂ : y * (Q.gl₂ y₀)⁻¹ * Q.gl₂ (a' * y₀ * j') = Q.gl₂ a' * y * Q.gl₂ j' := by
     rw [map_mul, map_mul, ← mul_assoc, ← mul_assoc, ← G₂.2.2.2.1 a' _ hy, mul_assoc (Q.gl₂ a'), inv_mul_cancel_right]
-  rw [e₁, e₂, inv_mul_cancel_right, inv_mul_cancel_right, inv_mul_cancel_right] at key
-  exact key
+  rwa [e₁, e₂, inv_mul_cancel_right, inv_mul_cancel_right, inv_mul_cancel_right] at key
 
 theorem integrand_inv (hψ : IsStdChar D ψ (-1)) {n : ℕ} (Q : Fin n → QStep S) (hinj : Function.Injective fun i => (Q i).q.v)
     {c₁ c₂ f₁ f₂ φ f g h₁ h₂} (hH : Hyps Q c₁ c₂ f₁ f₂ φ f g h₁ h₂) (i : Fin n) (x : GA D S.J.W) (y : GA D S.B'.V) {a j a' j'}

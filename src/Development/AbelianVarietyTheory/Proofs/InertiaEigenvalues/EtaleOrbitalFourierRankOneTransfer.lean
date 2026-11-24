@@ -229,8 +229,7 @@ theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
     have heq : (fun u => T c u) = fourB μK (fun x y => ψ ((Algebra.traceForm F A.K) x y)) (fun b => φ' (b, c)) := by
       funext u
       simp [hTdef, Et.tilde, fourB, Et.psiK, Algebra.traceForm_apply, mul_comm]
-    rw [heq]
-    exact h
+    rwa [heq]
   obtain ⟨V, hV, hVf⟩ := GlobalTheory.TestFn.unif_const (A.K × A.K) φ' hφ
   set V₂ : Set A.K := {v | ((0 : A.K), v) ∈ V} with hV₂def
   have hV₂ : V₂ ∈ 𝓝 (0 : A.K) := by
@@ -442,8 +441,7 @@ theorem dual_cinvOK_small : ∀ (F E : Type) [NontriviallyNormedField F] [Nontri
 
   have key : ∀ t : F, (∀ l : F, ‖l‖ < ε → ψ (l * t) = 1) → ‖t‖ ≤ ‖x₀‖ / ε := by
     intro t ht
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     have ht0 : t ≠ 0 := by
       rintro rfl; simp at hlt; linarith [div_pos (norm_pos_iff.2 hx₀0) hε]
     have hn : ‖x₀ / t‖ < ε := by
@@ -492,8 +490,7 @@ theorem dual_cinvOK_small : ∀ (F E : Type) [NontriviallyNormedField F] [Nontri
   rw [hy']
   apply hδV
   rw [Metric.mem_ball, dist_zero_right, pi_norm_lt_iff hδ]
-  intro i
-  exact lt_of_le_of_lt (hbound i) hc
+  exact fun i => lt_of_le_of_lt (hbound i) hc
 
 end GlobalTheory
 end -- clump:auto
@@ -527,8 +524,7 @@ theorem eventually_isUnit_and_tendsto_inverse_normed (F : Type) [NontriviallyNor
     (∀ᶠ w in 𝓝 (1 : R), IsUnit w) ∧ Tendsto Ring.inverse (𝓝 (1 : R)) (𝓝 1) := by
   have : CompleteSpace R := FiniteDimensional.complete F R
   refine ⟨Units.isOpen.mem_nhds isUnit_one, ?_⟩
-  have h := (NormedRing.inverse_continuousAt (1 : Rˣ)).tendsto
-  simpa using h
+  simpa using (NormedRing.inverse_continuousAt (1 : Rˣ)).tendsto
 
 theorem eventually_isUnit_and_tendsto_inverse (F : Type) [NontriviallyNormedField F]
     [CompleteSpace F] (R : Type) [CommRing R] [Algebra F R] [Module.Finite F R]
@@ -549,8 +545,7 @@ theorem eventually_isUnit_and_tendsto_inverse (F : Type) [NontriviallyNormedFiel
   have hN : N.toMetricSpace.toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
       = moduleTopology F R :=
     @finiteNormedAlgebra_eq_moduleTopology F _ _ R N A ‹_›
-  rw [hτ, ← hN]
-  exact key
+  rwa [hτ, ← hN]
 
 theorem eventually_testFn_mul_inverse_eq : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (φ' : A.K × A.K → ℂ), IsTest φ' → ∀ a : A.K, IsUnit a → ∀ᶠ s in 𝓝 a, ∀ t : A.K, IsUnit t → φ' (s * Ring.inverse t, t) = φ' (a * Ring.inverse t, t) := by
   intro F E _ _ _ _ hU A φ' hφ a ha
@@ -883,8 +878,7 @@ theorem whittaker_jHyp_eq_orbK : ∀ (F E : Type) [NontriviallyNormedField F] [N
     congr 1
     have h6 : ∫ s, N.indicator (fun _ => (1 : ℂ)) (s - a) ∂μK = ∫ s, N.indicator (fun _ => (1 : ℂ)) s ∂μK :=
       integral_sub_right_eq_self (fun s => N.indicator (fun _ => (1 : ℂ)) s) a
-    rw [h6, integral_indicator_const _ hNm]
-    rw [Complex.real_smul, mul_one]
+    rw [h6, integral_indicator_const _ hNm, Complex.real_smul, mul_one]
     rfl
   have horb : A.orbK μK φ' a = ∫ t, φ' (a * Ring.inverse t, t) * A.etaK t * ((A.absK t : ℂ))⁻¹ ∂μK := by
     unfold Et.orbK
@@ -1145,8 +1139,7 @@ theorem jx_mem_induced : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivia
       simpa using (tendsto_const_nhds (x := (1 : A.K))).add hq1
     have hi : Tendsto (fun q : A.K × A.K × A.K => Ring.inverse (1 + q.1)) (𝓝 (0, 0, 0)) (𝓝 1) := by
       have := hinv.tendsto.comp ha
-      rw [Ring.inverse_one] at this
-      exact this
+      rwa [Ring.inverse_one] at this
     have hq2 : Tendsto (fun q : A.K × A.K × A.K => q.2.1) (𝓝 (0, 0, 0)) (𝓝 0) :=
       (continuous_fst.comp continuous_snd).tendsto ((0 : A.K), (0 : A.K), (0 : A.K))
     have hq3 : Tendsto (fun q : A.K × A.K × A.K => q.2.2) (𝓝 (0, 0, 0)) (𝓝 0) :=
@@ -1248,8 +1241,7 @@ theorem inI_comb : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNor
 
 theorem inI_zero : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] (A : Et F E), A.InI (fun _ => 0) := by
-  intro F E _ _ _ _ A
-  exact ⟨⟨Set.univ, Filter.univ_mem, fun _ _ _ => rfl⟩, fun _ _ _ => by simp⟩
+  exact fun F E _ _ _ _ A => ⟨⟨Set.univ, Filter.univ_mem, fun _ _ _ => rfl⟩, fun _ _ _ => by simp⟩
 
 theorem nS_add {k : Type} [CommRing k] (a b : k) : nS (a + b) = nS a * nS b := by
   apply Subtype.ext
@@ -1421,7 +1413,7 @@ theorem rankOne : RankOne := by
       rw [hl, lam_sum A ψ hψ m.μK hμ a Sf r jx hjx c hc, e14]
       rw [Finset.sum_congr rfl (fun x' hx' => by rw [e15 x' hx'])]
       have hx₀f : x₀ ∈ Sf := (hmem x₀).2 hx₀
-      simp only [mul_ite, mul_zero, Finset.sum_ite_eq', hx₀f, if_true]
+      simp only [mul_ite, mul_zero, Finset.sum_ite_eq', hx₀f, ite_true]
       have hm := hmatch x₀ hx₀ y₀ hy₀
       rw [← ha₀'] at hm
       rw [hm]
@@ -1469,7 +1461,7 @@ theorem rankOne : RankOne := by
     lam_sum A ψ hψ m.μK hμ a Sf r jw hjw c hc, e14,
     Finset.sum_congr rfl (fun x' hx' => by rw [e15 x' hx'])] at hz
   have hxf : x ∈ Sf := (hmem x).2 hx
-  simp only [mul_ite, mul_zero, Finset.sum_ite_eq', hxf, if_true] at hz
+  simp only [mul_ite, mul_zero, Finset.sum_ite_eq', hxf, ite_true] at hz
   have horb : A.orbL m.ν (φw x) y = γ x * A.orbL m.ν (fourB (m.μL x) (A.kerL ψ x) (φ x)) y := by
     simp only [Et.orbL, φw]
     rw [← integral_const_mul]

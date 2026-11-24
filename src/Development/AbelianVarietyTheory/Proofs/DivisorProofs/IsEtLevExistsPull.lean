@@ -107,12 +107,10 @@ theorem isEtLev_exists_pull : ∀ {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Ty
   · obtain ⟨hinj, hsurj⟩ := hlv.2.2.2 k (x' ≫ f)
     refine ⟨fun y hy => hinj y ?_, fun g hg => ?_⟩
     · have h := congrArg (secPush m (Over.mk x')) hy
-      rw [hP, secPush_one] at h
-      exact h
+      rwa [hP, secPush_one] at h
     · obtain ⟨y, hy⟩ := hsurj (secPush m (Over.mk x') g) (fun c hc => by
         rw [← secPush_act, hg c hc, secPush_one])
       refine ⟨y, secPush_inj m _ ?_⟩
-      rw [hP]
-      exact hy
+      rwa [hP]
 
 end GlobalTheory.UPel.HT.EtLev

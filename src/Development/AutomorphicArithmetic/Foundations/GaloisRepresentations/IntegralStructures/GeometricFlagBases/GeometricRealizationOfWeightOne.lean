@@ -292,12 +292,11 @@ theorem finitely_many_marked_classes_degree_one_of_regular (hI : ∀ (p : ℕ) [
       refine finsum_congr fun q => ?_
       have : f ((Quotient.out q).1⁻¹ * P.toAf x t hx P.self * (Quotient.out q).1) =
           f₀ ((Quotient.out q).1⁻¹ * P.toAf x t hx P.self * (Quotient.out q).1) := by
-        simp only [f₀, if_pos (regAf_pair G P x t hx _)]
+        simp only [f₀, ite_eq_left (regAf_pair G P x t hx _)]
       rw [this]
     unfold Pair.term
     split_ifs <;> simp only [key]
-  have hfin := hI p G ha L f₀ hf₀ hreg K' f' hf'
-  simpa only [hterm] using hfin
+  simpa only [hterm] using hI p G ha L f₀ hf₀ hreg K' f' hf'
 
 end GlobalTheory.RootSumWeights.RegularPairCommutatorLemmas
 
@@ -392,8 +391,7 @@ theorem centralizer_eq (P : DPair G) (hm : (P.γ, P.c) ∈ GlobalTheory.LKCx.grp
     simp only [Subgroup.coe_mul, Prod.fst_mul] at h'
     exact ⟨⟨v, h', v.2.1⟩, rfl⟩
   · rintro ⟨w, rfl⟩
-    apply Subtype.ext
-    exact Prod.ext w.2.1 (mul_comm _ _)
+    exact Subtype.ext (Prod.ext w.2.1 (mul_comm _ _))
 
 end GlobalTheory.LKDef.TermPair
 
@@ -587,7 +585,7 @@ theorem finite_coset_preimage (ι : Γ →* H) (hι : Function.Injective ι) (K 
     rw [e]
     have h2 := K.inv_mem h1
     rwa [_root_.mul_inv_rev, inv_inv] at h2
-  · push_neg at hne
+  · push Not at hne
     have : {w : Γ | (QuotientGroup.mk (x⁻¹ * ι w * x) : H ⧸ K) = c} = ∅ := by
       ext w; simp [hne w]
     rw [this]; exact Set.finite_empty
@@ -634,7 +632,7 @@ theorem finite_supp_cent (ι : Γ →* H) (hι : Function.Injective ι) (K : Sub
     rw [this]; exact hF
   refine ⟨(w, d), ⟨hwW, Set.mem_univ _⟩, ?_⟩
   have hex : ∃ γ : Γ, γ⁻¹ * y * γ = w := ⟨γ₀⁻¹, by simp [w]⟩
-  have hcj : cj w = hex.choose := dif_pos hex
+  have hcj : cj w = hex.choose := dite_eq_left hex
   have hcs := hex.choose_spec
   set γw := hex.choose
 
@@ -646,8 +644,7 @@ theorem finite_supp_cent (ι : Γ →* H) (hι : Function.Injective ι) (K : Sub
       _ = γ₀⁻¹ * w * γw⁻¹ := by rw [e]; group
       _ = y * (γ₀⁻¹ * γw⁻¹) := by rw [e2]; group
   show DoubleCoset.mk _ K (ι (cj w) * Quotient.out d) = q
-  rw [← DoubleCoset.out_eq' q]
-  rw [DoubleCoset.eq]
+  rw [← DoubleCoset.out_eq' q, DoubleCoset.eq]
   refine ⟨ι (γ₀⁻¹ * γw⁻¹), ⟨_, hz, rfl⟩, k⁻¹, K.inv_mem hk, ?_⟩
   show x = _
   rw [hx, hcj]; simp only [map_mul, map_inv]; group
@@ -995,9 +992,7 @@ theorem mark_isRoot_pol : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair
   have hvv : v = v₀ := by
     unfold HTGroup.a at ha
     obtain ⟨w, hw⟩ := Fintype.card_eq_one_iff.1 ha
-    have e1 := hw ⟨v, hv⟩
-    have e2 := hw ⟨v₀, hv₀⟩
-    exact congrArg Subtype.val (e1.trans e2.symm)
+    exact congrArg Subtype.val ((hw ⟨v, hv⟩).trans (hw ⟨v₀, hv₀⟩).symm)
   subst hvv
   have hx0 : x ≠ 0 := by
     rintro rfl
@@ -1012,8 +1007,7 @@ theorem mark_isRoot_pol : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair
       intro a
       simp only [RingHom.comp_apply, G.psi_F, Matrix.algebraMap_eq_diagonal, Matrix.scalar_apply]
       rfl
-    rw [e]
-    exact h0
+    rwa [e]
   have := eval_eq_zero_of_eigenvector _ x μ hx0 hx _ hq
   rwa [Polynomial.eval_map] at this
 
@@ -1085,19 +1079,19 @@ theorem markWeightedFixedPoint_definitePair_odd_of_counts : GlobalTheory.LKDef.M
             exact Polynomial.nodup_roots (P.reg.2.map)
           have hinj := Multiset.inj_on_of_nodup_map hnd
           rw [Finset.sum_eq_single j]
-          · rw [if_pos ⟨hi, hj ▸ hμ⟩]
+          · rw [ite_eq_left ⟨hi, hj ▸ hμ⟩]
             beta_reduce
             rw [hj]
           · intro i _ hij
-            rw [if_neg]
+            rw [ite_eq_right]
             rintro ⟨-, hi'⟩
             exact hij (hinj i (Finset.mem_univ_val i) j (Finset.mem_univ_val j)
               ((Pair.mark_unique p G P _ _ ha hi' hμ).trans hj.symm))
           · intro h; exact absurd (Finset.mem_univ _) h
         · rw [h0 P hm hi, mul_zero]
-          exact (Finset.sum_eq_zero fun i _ => if_neg fun h => hi h.1).symm
+          exact (Finset.sum_eq_zero fun i _ => ite_eq_right fun h => hi h.1).symm
       · rw [dite_eq_right hm]
-        exact (Finset.sum_eq_zero fun i _ => if_neg fun h => hm ⟨_, h.2⟩).symm
+        exact (Finset.sum_eq_zero fun i _ => ite_eq_right fun h => hm ⟨_, h.2⟩).symm
     · intro i _
       refine hF.subset fun q hq => ?_
       rw [Function.mem_support] at hq
@@ -1120,10 +1114,10 @@ theorem markWeightedFixedPoint_definitePair_odd_of_counts : GlobalTheory.LKDef.M
   · refine finsum_congr fun q => ?_
     set Q : DPair G := Quot.out q
     by_cases hi : Irreducible Q.pol
-    · simp only [if_pos hi]
+    · simp only [ite_eq_left hi]
       rw [← Finset.sum_mul, rootSum, hsel Q.pol (hmon _) Q.reg.1, Multiset.map_map]
       rfl
-    · simp only [if_neg hi, Finset.sum_const_zero]
+    · simp only [ite_eq_right hi, Finset.sum_const_zero]
   · intro i _
     refine hD.subset fun q hq => ?_
     rw [Function.mem_support] at hq

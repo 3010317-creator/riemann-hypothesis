@@ -60,8 +60,7 @@ private theorem UpperTheory.pow_sub_eq_one_of_condLE_valuation_le {k : Type} [Fi
     rw [hfac, map_mul, map_pow, hx, one_pow, one_mul] at h
     refine ⟨?_, ?_⟩
     · rw [Units.val_pow_eq_pow_val, map_pow, hx, one_pow]
-    · rw [Units.val_pow_eq_pow_val]
-      exact h
+    · rwa [Units.val_pow_eq_pow_val]
   rw [← map_pow]
   exact hν _ hmem
 

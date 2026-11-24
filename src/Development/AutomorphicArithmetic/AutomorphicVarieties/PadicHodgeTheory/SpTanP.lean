@@ -91,7 +91,7 @@ private theorem adj_mul (χ : Fin 4 → E) (θ : E) (γ : M4 E) (r : M4 (DualNum
   · rw [Matrix.mul_apply, TrivSqZeroExt.snd_sum]
     simp only [DualNumber.snd_mul, adj_apply, TrivSqZeroExt.fst_smul, TrivSqZeroExt.snd_smul, hf, hs,
       Finset.sum_add_distrib, Fin.rev_inj, smul_ite, ite_mul, mul_ite, smul_zero, zero_mul, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     simp only [sgn_sq, one_smul, zsmul_eq_mul]
     push_cast
     ring
@@ -135,7 +135,7 @@ private theorem core [CharZero E] (χ : Fin 4 → H →* Eˣ) (θ : H → E) (I 
     have e := hs (g * h) a b
     rw [map_mul r, Matrix.mul_apply, TrivSqZeroExt.snd_sum] at e
     simp only [DualNumber.snd_mul, hf, hs, Finset.sum_add_distrib, ite_mul, mul_ite, zero_mul, mul_zero,
-      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true, map_mul, Units.val_mul] at e
+      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true, map_mul, Units.val_mul] at e
     have u1 := Units.ne_zero (χ b g)
     have u2 := Units.ne_zero (χ b h)
     rw [Units.val_mul, Units.val_inv_eq_inv_val]
@@ -209,8 +209,7 @@ private theorem comm_ine {A : ValuationSubring Ω} {q : ℕ} {σ g : G ℚ Ω} (
   have e' : g (g⁻¹ x) = x := g.apply_symm_apply _
   rw [e, map_sub, map_pow, e'] at h2
   have h3 := Valuation.map_sub_lt A.valuation h1 h2
-  rw [sub_sub_sub_cancel_right] at h3
-  exact h3
+  rwa [sub_sub_sub_cancel_right] at h3
 
 variable {l : ℕ} [Fact l.Prime] {c : Coef l} {D : Raw Ω c}
 
@@ -337,6 +336,5 @@ theorem UpperTheory.V.Loc.spTanP :
       · have hn : ((D.Ip q).subgroupOf (D.Gp q)).Normal := inferInstance
         have h1 : s ∈ (D.Ip q).subgroupOf (D.Gp q) := hs
         have h2 := mul_mem h1 (hn.conj_mem _ (inv_mem h1) g)
-        rw [← mul_assoc, ← mul_assoc] at h2
-        exact h2
+        rwa [← mul_assoc, ← mul_assoc] at h2
       · simp

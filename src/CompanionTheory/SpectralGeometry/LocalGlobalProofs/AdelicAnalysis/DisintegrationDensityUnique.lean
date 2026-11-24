@@ -92,11 +92,9 @@ lemma integral_preimage_real [IsLocallyFiniteMeasure ν] [IsLocallyFiniteMeasure
   have hpc : Continuous p := hc.max continuous_const
   have hqc : Continuous q := hc.neg.max continuous_const
   have hps : Function.support p ⊆ Function.support u := by
-    intro v hv hv0
-    exact hv (by simp [hp, show u v = 0 from hv0])
+    exact fun v hv hv0 => hv (by simp [hp, show u v = 0 from hv0])
   have hqs : Function.support q ⊆ Function.support u := by
-    intro v hv hv0
-    exact hv (by simp [hq, show u v = 0 from hv0])
+    exact fun v hv hv0 => hv (by simp [hq, show u v = 0 from hv0])
   have hpK : HasCompactSupport p := hs.mono hps
   have hqK : HasCompactSupport q := hs.mono hqs
   have hpt : tsupport p ⊆ g ⁻¹' B := (closure_mono hps).trans hsupp
@@ -137,8 +135,7 @@ lemma re_facts {ψ : V → ℂ} (hc : Continuous ψ) (hs : HasCompactSupport ψ)
     Continuous (fun v => (ψ v).re) ∧ HasCompactSupport (fun v => (ψ v).re) ∧
       tsupport (fun v => (ψ v).re) ⊆ U := by
   have hsub : Function.support (fun v => (ψ v).re) ⊆ Function.support ψ := by
-    intro v hv hv0
-    exact hv (by simp [show ψ v = 0 from hv0])
+    exact fun v hv hv0 => hv (by simp [show ψ v = 0 from hv0])
   exact ⟨Complex.continuous_re.comp hc, hs.mono hsub, (closure_mono hsub).trans hsupp⟩
 
 lemma im_facts {ψ : V → ℂ} (hc : Continuous ψ) (hs : HasCompactSupport ψ)
@@ -146,8 +143,7 @@ lemma im_facts {ψ : V → ℂ} (hc : Continuous ψ) (hs : HasCompactSupport ψ)
     Continuous (fun v => (ψ v).im) ∧ HasCompactSupport (fun v => (ψ v).im) ∧
       tsupport (fun v => (ψ v).im) ⊆ U := by
   have hsub : Function.support (fun v => (ψ v).im) ⊆ Function.support ψ := by
-    intro v hv hv0
-    exact hv (by simp [show ψ v = 0 from hv0])
+    exact fun v hv hv0 => hv (by simp [show ψ v = 0 from hv0])
   exact ⟨Complex.continuous_im.comp hc, hs.mono hsub, (closure_mono hsub).trans hsupp⟩
 
 lemma continuousOn_fib (hfin : ∀ b, IsLocallyFiniteMeasure (fib b))

@@ -138,8 +138,7 @@ theorem eta_char (D : D7) (w : PlE D.host) :
   have hb0 : b ≠ 0 := by
     have h0 := D.naut.frobEig_ne_zero _ hu
     rw [hb] at h0
-    intro hb'
-    exact h0 (by simp [hb'])
+    exact fun hb' => h0 (by simp [hb'])
   have hinvb : D.naut.frobEig (D.naut.locG D.naut.etaTinv w) = {b⁻¹} := by
     rw [hinv.2, hb, Multiset.map_singleton]
   have hunr := D.naut.unr_char _ _ hd1 hu hinv.1
@@ -186,8 +185,7 @@ theorem isInv_twGL_iff (ρ : Γ →* GL (Fin a) k) (χ : Γ →* GL (Fin 1) k) (
     have hu : ((χ g : GL (Fin 1) k) : Matrix (Fin 1) (Fin 1) k).det ≠ 0 :=
       (Matrix.isUnit_iff_isUnit_det _).1 (χ g).isUnit |>.ne_zero
     have := W.smul_mem (((χ g : GL (Fin 1) k) : Matrix (Fin 1) (Fin 1) k).det)⁻¹ (h g v hv)
-    rw [twGL_val, Matrix.smul_mulVec, smul_smul, inv_mul_cancel₀ hu, one_smul] at this
-    exact this
+    rwa [twGL_val, Matrix.smul_mulVec, smul_smul, inv_mul_cancel₀ hu, one_smul] at this
   · intro h g v hv
     rw [twGL_val, Matrix.smul_mulVec]
     exact W.smul_mem _ (h g v hv)

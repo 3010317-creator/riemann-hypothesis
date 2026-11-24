@@ -482,12 +482,10 @@ theorem exists_bound_compact {Ω : Set (GL (Fin a) (Cinf E))} (hΩ : IsCompact �
     ∃ A : ℝ, 0 ≤ A ∧ ∀ c ∈ Ω, ‖toL (c : Matrix (Fin a) (Fin a) (Cinf E))‖ ≤ A ∧
       ‖toL ((c⁻¹ : GL (Fin a) (Cinf E)) : Matrix (Fin a) (Fin a) (Cinf E))‖ ≤ A := by
   have h1 : Continuous (fun c : GL (Fin a) (Cinf E) => toL (c : Matrix (Fin a) (Fin a) (Cinf E))) := by
-    have h := (Units.continuous_val (M := Matrix (Fin a) (Fin a) (Cinf E)))
-    exact h
+    exact (Units.continuous_val (M := Matrix (Fin a) (Fin a) (Cinf E)))
   have h2 : Continuous (fun c : GL (Fin a) (Cinf E) =>
       toL ((c⁻¹ : GL (Fin a) (Cinf E)) : Matrix (Fin a) (Fin a) (Cinf E))) := by
-    have h := (Units.continuous_coe_inv (M := Matrix (Fin a) (Fin a) (Cinf E)))
-    exact h
+    exact (Units.continuous_coe_inv (M := Matrix (Fin a) (Fin a) (Cinf E)))
   obtain ⟨A1, hA1⟩ := hΩ.exists_bound_of_continuousOn h1.continuousOn
   obtain ⟨A2, hA2⟩ := hΩ.exists_bound_of_continuousOn h2.continuousOn
   exact ⟨max (max A1 A2) 0, le_max_right _ _, fun c hc =>
@@ -602,8 +600,7 @@ theorem exists_compact_integral (E : Type) [Field E] [NumberField E] :
   obtain ⟨r, hr⟩ := hCy (x.1 - algebraMap E _ u)
   refine ⟨u + r, ?_, ?_⟩
   · show x.1 - algebraMap E (InfiniteAdeleRing E) (u + r) ∈ C
-    rw [map_add (f := _), ← sub_sub]
-    exact hr
+    rwa [map_add (f := _), ← sub_sub]
   · have : x.2 - algebraMap E (Af E) (u + r) =
         (x.2 - algebraMap E _ u) - algebraMap E _ (r : E) := by rw [map_add (f := _), sub_sub]
     show ∀ v, (x.2 - algebraMap E (Af E) (u + r)) v ∈ _
@@ -672,9 +669,7 @@ theorem unip_eq_rat_mul_inf_mul_fin : ∀ (E : Type) [Field E] [NumberField E] [
   choose ξ hξ1 hξ2 using fun p => hx (x p)
   refine ⟨ξ, fun p => pInf E (x p - algebraMap E (Ad E) (ξ p)),
     unip (fun p => pFin E (x p - algebraMap E (Ad E) (ξ p))), ?_, ?_, ?_⟩
-  · apply hsub
-    intro p _
-    exact Set.mem_iInter.1 (hξ2 p) p
+  · exact hsub (fun p _ => Set.mem_iInter.1 (hξ2 p) p)
   · exact (pi_norm_le_iff_of_nonneg hR).2 hξ1
   · have hsplit : x = (fun p => algebraMap E (Ad E) (ξ p)) + (fun p => x p - algebraMap E (Ad E) (ξ p)) := by
       funext p; simp
@@ -904,14 +899,12 @@ theorem coneCoord_le_pow_of_prod_eq_one : ∀ (a : ℕ) (t : ℝ), 0 < t → ∃
             _ ≤ K ^ a * ρ ^ a := mul_le_mul_of_nonneg_right (one_le_pow₀ hK1) (pow_nonneg hρ0 _)
   have hne : (Finset.univ : Finset (Fin a)).Nonempty := ⟨i, Finset.mem_univ _⟩
   have ex_le : ∃ j, r j ≤ 1 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have := Finset.prod_lt_prod_of_nonempty₀ (s := Finset.univ) (f := fun _ => (1 : ℝ)) (g := r)
       (fun _ _ => one_pos) (fun j _ => hcon j) hne
     simp [hprod] at this
   have ex_ge : ∃ j, 1 ≤ r j := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have := Finset.prod_lt_prod_of_nonempty₀ (s := Finset.univ) (f := r) (g := fun _ => (1 : ℝ))
       (fun j _ => hr j) (fun j _ => hcon j) hne
     simp [hprod] at this
@@ -1022,7 +1015,7 @@ theorem GlobalTheory.rapidDecay_real : ∀ (a : ℕ) (t : ℝ), 0 < t → ∀ (l
     have := key a lam L N hL C0 hC0 r hr 1 le_rfl hb
     simpa using this
   · right
-    push_neg at hall
+    push Not at hall
     obtain ⟨i, j, hij, hlt⟩ := hall
     set S := (Finset.univ : Finset (Fin a × Fin a)).filter (fun p => (p.2 : ℕ) = p.1 + 1) with hS
     have hne : S.Nonempty := ⟨(i, j), by simp [hS, hij]⟩
@@ -1039,8 +1032,7 @@ theorem GlobalTheory.rapidDecay_real : ∀ (a : ℕ) (t : ℝ), 0 < t → ∀ (l
     have hb := hC r _ hr hcone hprod hρ hadj
     refine ⟨p.1, p.2, hpadj, ?_⟩
     have := key a lam L N hL C0 hC0 r hr _ hρ hb
-    rw [← inv_div (r p.1) (r p.2), inv_pow]
-    exact this
+    rwa [← inv_div (r p.1) (r p.2), inv_pow]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RapidDecaySmallestRatioAbsorbsHeightAndCharacter =====
@@ -1249,11 +1241,11 @@ lemma upperCone_conj_diag_eq {E : Type} [Field E] (a : ℕ) (r : Fin a → ℝ) 
   rw [Matrix.mul_diagonal, Matrix.diagonal_mul]
   simp only [upperConeRescale, Matrix.of_apply, Pi.mul_apply]
   by_cases hpq : p ≤ q
-  · rw [if_pos hpq]
+  · rw [ite_eq_left hpq]
     have : (r p : ℂ) ≠ 0 := by exact_mod_cast (hr p).ne'
     push_cast
     field_simp
-  · rw [if_neg hpq]
+  · rw [ite_eq_right hpq]
     have h0 : M p q = 0 := hM (lt_of_not_ge hpq)
     simp [h0]
 
@@ -1281,10 +1273,8 @@ theorem GlobalTheory.upperCone_conj_compact : ∀ (E : Type) [Field E] [NumberFi
     intro p _ q _
     rw [Set.mem_Icc]
     by_cases hpq : p ≤ q
-    · simp only [if_pos hpq]
-      exact ⟨div_nonneg (hr q).le (hr p).le, hC r hr hcone p q hpq⟩
-    · simp only [if_neg hpq]
-      exact ⟨le_rfl, hC0⟩
+    · simpa only [ite_eq_left hpq] using ⟨div_nonneg (hr q).le (hr p).le, hC r hr hcone p q hpq⟩
+    · simpa only [ite_eq_right hpq] using ⟨le_rfl, hC0⟩
   have hbinv : (b⁻¹).val.BlockTriangular id := by
     have := Units.invertible b
     rw [Matrix.coe_units_inv]

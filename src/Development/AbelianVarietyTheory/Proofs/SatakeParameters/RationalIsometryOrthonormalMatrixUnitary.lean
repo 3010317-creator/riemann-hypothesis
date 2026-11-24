@@ -86,8 +86,7 @@ theorem cT_mul_self_toStdCo_stdG (σ : E →+* E) (J : Matrix (Fin N) (Fin N) E)
   have hc : IsOrthCo σ J (toLE co) := by
     intro x y
     have h := unit_hform_mulVec σ 1 co.1 x y
-    rw [Matrix.mul_one, hco, unit_hform_one] at h
-    exact h
+    rwa [Matrix.mul_one, hco, unit_hform_one] at h
   have hs : IsOrthCo σ J (stdCo σ J) := Classical.epsilon_spec (p := IsOrthCo σ J) ⟨_, hc⟩
   have hγ' : cT σ γ.1 * J * γ.1 = J := hγ
   apply cT_mul_self_of_hform
@@ -99,16 +98,14 @@ theorem cT_mul_self_toStdCo_stdG (σ : E →+* E) (J : Matrix (Fin N) (Fin N) E)
   simp only [toStdCo, stdG, LinearEquiv.coe_coe, LinearEquiv.trans_apply, LinearEquiv.symm_apply_apply]
   rw [hs]
   have h := unit_hform_mulVec σ J γ.1 x y
-  rw [hγ'] at h
-  exact h
+  rwa [hγ'] at h
 
 end Gen2
 
 theorem ratIsometry_unitary : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a => ∀ i (hi : i ≤ D.R.m), ∀ γ ∈ UJ (sigD D : D.host.E →+* D.host.E) (gramN D i hi), (LinearMap.toMatrix' ((toStdCo (D.sp.cm.sig : D.host.E →+* D.host.E) (gramN D i hi) (A.crd i hi)).trans (stdG (D.sp.cm.sig : D.host.E →+* D.host.E) (gramN D i hi) γ)).toLinearMap) * star (LinearMap.toMatrix' ((toStdCo (D.sp.cm.sig : D.host.E →+* D.host.E) (gramN D i hi) (A.crd i hi)).trans (stdG (D.sp.cm.sig : D.host.E →+* D.host.E) (gramN D i hi) γ)).toLinearMap) = 1) := by
   intro D L hT Gi Gl Kc Y cX ex t u μ St A dtU a hP _ i hi γ hγ
   have h := cT_mul_self_toStdCo_stdG (D.sp.cm.sig : D.host.E →+* D.host.E) (gramN D i hi) (A.crd i hi) γ (hP.crd_orth i hi) hγ
-  rw [mul_eq_one_comm] at h
-  exact h
+  rwa [mul_eq_one_comm] at h
 
 end GlobalTheory.TwV
 

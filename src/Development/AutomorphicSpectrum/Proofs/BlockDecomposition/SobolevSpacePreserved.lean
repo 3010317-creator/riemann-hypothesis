@@ -130,8 +130,7 @@ theorem exists_mollifiers (n : ℕ) [MeasurableSpace (G n)] [BorelSpace (G n)] (
       closure_mono fun x hx h => hx (by simp [h])
     refine ⟨contDiff_const.mul (b k).contDiff, ((b k).hasCompactSupport).mul_left, ?_⟩
     exact hsub.trans (hts.trans hr)
-  · intro k y
-    exact mul_nonneg (inv_nonneg.2 (hpos k).le) (b k).nonneg
+  · exact fun k y => mul_nonneg (inv_nonneg.2 (hpos k).le) (b k).nonneg
   · intro k
     simp only []
     rw [integral_const_mul, inv_mul_cancel₀ (hpos k).ne']
@@ -144,8 +143,7 @@ theorem exists_mollifiers (n : ℕ) [MeasurableSpace (G n)] [BorelSpace (G n)] (
     filter_upwards [eventually_ge_atTop K] with k hk y hy
     have hne : b k y.val ≠ 0 := right_ne_zero_of_mul hy
     have hsupp : y.val ∈ Metric.ball (1 : Mat n) (b k).rOut := by
-      rw [← (b k).support_eq]
-      exact hne
+      rwa [← (b k).support_eq]
     have hlt : (b k).rOut < ε := by
       have h1 : r / ε < (k : ℝ) + 1 := by
         have : (K : ℝ) ≤ k := by exact_mod_cast hk
@@ -769,8 +767,7 @@ theorem hasDerivAt_curve {n : ℕ} {V : Type} [NormedAddCommGroup V] [NormedSpac
       (by simp)).hasFDerivAt
   have h3 := h2.comp_hasDerivAt s h1
   have e : z.val * ((expC X s).val * X) = (z.val * (expC X s).val) * X := (Matrix.mul_assoc _ _ _).symm
-  rw [e] at h3
-  exact h3
+  rwa [e] at h3
 
 theorem continuous_F {n : ℕ} {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V]
     {f : Mat n → V} (hf : ContDiffOn ℝ ∞ f (GLs n)) (X : Mat n) :
@@ -875,7 +872,7 @@ theorem norm_cls_sq_eq {n : ℕ} [MeasurableSpace (G n)] {μ : Measure (G n)} {V
     (h : MemLp (fun y : G n => K y.val) 2 μ) :
     ‖cls μ K‖ ^ 2 = ∫ y : G n, ‖K y.val‖ ^ 2 ∂μ := by
   have h0 : 0 ≤ ∫ y : G n, ‖K y.val‖ ^ 2 ∂μ := integral_nonneg fun y => by positivity
-  have hc : cls μ K = h.toLp _ := dif_pos h
+  have hc : cls μ K = h.toLp _ := dite_eq_left h
   rw [hc, Lp.norm_toLp, h.eLpNorm_eq_integral_rpow_norm (by norm_num) (by norm_num)]
   simp only [ENNReal.toReal_ofNat, Real.rpow_two]
   rw [ENNReal.toReal_ofReal (by positivity), ← Real.rpow_natCast, ← Real.rpow_mul h0]
@@ -954,8 +951,7 @@ theorem Rw_sub_on {n : ℕ} {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V
       ((GlobalTheory.CompanionTheory.SobGL.Smooth.Rw_contDiffOn' hb w).contDiffAt hU).differentiableAt (by simp)
     show fderiv ℝ (Rw w a - Rw w b) z (z * bs p) =
       fderiv ℝ (Rw w a) z (z * bs p) - fderiv ℝ (Rw w b) z (z * bs p)
-    have e := (da.hasFDerivAt.sub db.hasFDerivAt).fderiv
-    exact DFunLike.congr_fun e (z * bs p)
+    exact DFunLike.congr_fun ((da.hasFDerivAt.sub db.hasFDerivAt).fderiv) (z * bs p)
 
 theorem uniformCauchy : SobG → ∀ (n : ℕ) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measure (G n)) [μ.IsHaarMeasure] (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℂ V] [CompleteSpace V] (g : ℕ → Mat n → V) (x : List (Bool × Fin n × Fin n) → Lp V 2 μ), (∀ k, ContDiffOn ℝ ∞ (g k) (GLs n)) → (∀ k w, MemLp (fun y : G n => Rw w (g k) y.val) 2 μ) → (∀ w, Tendsto (fun k => cls μ (Rw w (g k))) atTop (𝓝 (x w))) → ∀ w, UniformCauchySeqOn (fun k => Rw w (g k)) atTop (GLs n) := by
   intro hS n _ _ μ _ V _ _ _ g x hg hm hc w
@@ -1130,8 +1126,7 @@ theorem GlobalTheory.CompanionTheory.PresSobA.presSob : PresSob := by
         fun t : ℝ => (S.restrictScalars ℝ) (rR μ V (expC (bs p) t) (cls μ (Rw w f))) := by
       funext t
       exact (DFunLike.congr_fun (hcomm (expC (bs p) t)) _).symm
-    rw [h3]
-    exact h2
+    rwa [h3]
   obtain ⟨φ, hφ, hφ0, hφ1, hφs⟩ := GlobalTheory.T.approximate_identity_exists n μ
   have hfam := fun k => mol_family (μ := μ) hU x hx (hφ k)
   have hRw : ∀ k w, ∀ z ∈ GLs n, Rw w (Mol μ (φ k) (⇑(x []))) z = Mol μ (φ k) (⇑(x w)) z := by
@@ -1139,8 +1134,7 @@ theorem GlobalTheory.CompanionTheory.PresSobA.presSob : PresSob := by
     induction w with
     | nil => exact fun z _ => rfl
     | cons p w ih =>
-      intro z hz
-      exact (Rd_congr ih (bs p) z hz).trans ((hfam k).2 w p z hz)
+      exact fun z hz => (Rd_congr ih (bs p) z hz).trans ((hfam k).2 w p z hz)
   have hae : ∀ k w, (fun y : G n => Rw w (Mol μ (φ k) (⇑(x []))) y.val) =ᵐ[μ] lConv μ V (φ k) (x w) := by
     intro k w
     have h0 : (fun y : G n => Rw w (Mol μ (φ k) (⇑(x []))) y.val) = fun y : G n => Mol μ (φ k) (⇑(x w)) y.val :=

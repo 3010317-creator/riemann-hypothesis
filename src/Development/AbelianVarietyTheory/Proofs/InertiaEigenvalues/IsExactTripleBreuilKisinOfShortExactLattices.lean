@@ -134,7 +134,7 @@ theorem exists_norm_coeff_eq_one : ∀ {l : ℕ} [Fact l.Prime] {a : ℕ} [NeZer
   intro l _ a _ e O K _ _ _ _ _ _ _ _ _ t ϖ S _ y c h τ
   have := neZero_of_piSys ϖ
   by_contra hne
-  push_neg at hne
+  push Not at hne
   obtain ⟨ρ, hρ0, hρ1, hρ⟩ := exists_bound (l := l) (O := O) (K := K)
   have hco : ∀ s k, ‖coeff k (y s τ : K⟦X⟧)‖ ≤ ρ := fun s k => by
     obtain ⟨o, ho⟩ := (IsUnitBall.mem_range_iff (O := O) _).2 (mem_A.1 (y s τ).2 k)
@@ -344,8 +344,7 @@ theorem homW_exact_middle : ∀ {l : ℕ} [Fact l.Prime] {a : ℕ} [NeZero a] {e
     rw [← hH v, hv, map_zero]
   obtain ⟨z, hz⟩ := (hT (I₁.j v)).1 h1
   refine ⟨I₀.j.symm z, I₁.j.injective ?_⟩
-  rw [hF, LinearEquiv.apply_symm_apply]
-  exact hz
+  rwa [hF, LinearEquiv.apply_symm_apply]
 
 end GlobalTheory.BKReal.SESExact
 end -- clump:auto
@@ -415,8 +414,7 @@ theorem exists_right {l : ℕ} [Fact l.Prime] {a : ℕ} [NeZero a] {e : ℕ} {O 
     RingHom.map_det (Pi.evalRingHom (fun _ : ZMod a => A O K) τ) (M.submatrix id f)
   obtain ⟨Y, hY, hNY⟩ := exists_right_of_minor N f
   refine ⟨Y, _, hY, (N.submatrix id f).det.2, ⟨k, ?_⟩, hNY⟩
-  rw [← h3]
-  exact hk
+  rwa [← h3]
 
 theorem isExactTriple_of_isSESLat_gen {l : ℕ} [Fact l.Prime] {a : ℕ} [NeZero a] {e : ℕ} [NeZero e] {O K : Type} [CommRing O]
     [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K]
@@ -451,8 +449,7 @@ theorem isExactTriple_of_isSESLat_gen {l : ℕ} [Fact l.Prime] {a : ℕ} [NeZero
     obtain ⟨Y, c, hY, hc, hk, h⟩ := exists_right t ϖ Ftᵀ Ywᵀ hT τ
     refine ⟨Yᵀ, c, fun i j => hY j i, hc, hk, ?_⟩
     have h1 := congrArg Matrix.transpose h
-    rw [Matrix.transpose_mul, Matrix.transpose_smul, Matrix.transpose_one] at h1
-    exact h1
+    rwa [Matrix.transpose_mul, Matrix.transpose_smul, Matrix.transpose_one] at h1
   choose YH cH hYH hcH hkH hHY using hHr
   choose YF cF hYF hcF hkF hFY using hFl
   have hne : ∀ {c : K⟦X⟧}, (∃ k, ‖coeff k c‖ = 1) → c ≠ 0 := by
@@ -533,9 +530,8 @@ theorem isExactTriple_of_isSESLat_gen {l : ℕ} [Fact l.Prime] {a : ℕ} [NeZero
         have := congrFun (hW (Pi.single j 1)) i
         rw [homW_apply, homW_apply, Matrix.mulVec_mulVec] at this
         simp only [Matrix.mulVec, dotProduct, Pi.single_apply, mul_ite, mul_one, mul_zero,
-          Finset.sum_ite_eq', Finset.mem_univ, if_true, Pi.zero_apply] at this
-        rw [Matrix.map_mul]
-        exact this
+          Finset.sum_ite_eq', Finset.mem_univ, ite_true, Pi.zero_apply] at this
+        rwa [Matrix.map_mul]
       have hz : Ht * Ft = 0 := Matrix.map_injective hφ (hM.trans (Matrix.map_zero _ (map_zero φ)).symm)
       have hHF : ∀ τ, H.mat τ * F.mat τ = 0 := fun τ => by
         have := congrArg (fun M => M.map (ψ τ)) hz

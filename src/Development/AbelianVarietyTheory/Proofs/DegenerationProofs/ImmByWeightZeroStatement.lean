@@ -369,8 +369,7 @@ theorem ratios_generate : (∀ (k : Type) [Field k] [IsAlgClosed k] (Φ : FibPre
     rw [map_pow, this]
     exact R.mul_mem (R.pow_mem (h0 f) _) hr
   refine TopologicalSpace.Opens.mem_iSup.2 ⟨⟨_, hmem⟩, ?_⟩
-  rw [Scheme.basicOpen_pow _ _ (Nat.succ_pos _)]
-  exact hbf
+  rwa [Scheme.basicOpen_pow _ _ (Nat.succ_pos _)]
 
 end GlobalTheory.ZH.WtGen
 end
@@ -541,8 +540,7 @@ theorem immBy_weight_zero : Out.Laws → Out.Laws2 → (∀ (k : Type) [Field k]
     obtain ⟨i, hi⟩ := TopologicalSpace.Opens.mem_iSup.1 (hcov.ge (show Φ.D.q.left x ∈ ⊤ from trivial))
     obtain ⟨-, hi⟩ := TopologicalSpace.Opens.mem_iSup.1 hi
     refine TopologicalSpace.Opens.mem_iSup.2 ⟨i.1, TopologicalSpace.Opens.mem_iSup.2 ⟨i.2, ?_⟩⟩
-    rw [hτ₃]
-    exact hi
+    rwa [hτ₃]
   · obtain ⟨haff, ρ, hρ, hgen⟩ := hloc ⟨i, hi⟩ trivial
     have hle := (hτ₃ ⟨i, hi⟩).ge
     have hu := fun s => SecRatio.existsUnique_isRatio (_root_.GlobalTheory.ZH.FibPre.H_isLB Φ 1) s (F i) _ hle

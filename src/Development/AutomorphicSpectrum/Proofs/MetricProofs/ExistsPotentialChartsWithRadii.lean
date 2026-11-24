@@ -136,8 +136,7 @@ theorem Good.affine (h : Good P γ) {t₀ : Fin n → ℂ} {ε : ℝ} (h₀ : �
     rw [mem_ball_zero_iff, norm_smul, norm_inv, Complex.norm_real, Real.norm_of_nonneg hε.le,
       inv_mul_lt_iff₀ hε, mul_one]
     exact h1
-  · simp only [smul_inv_smul₀ hne, add_sub_cancel]
-    exact (hz z ⟨hz'.1.1, hz'.2⟩).2
+  · simpa only [smul_inv_smul₀ hne, add_sub_cancel] using (hz z ⟨hz'.1.1, hz'.2⟩).2
 
 def cj (γ : (Fin n → ℂ) → (Σ k, J k) → ℂ) : (Fin n → ℂ) → (Σ k, J k) → ℂ := fun t => conjVec (γ (star t))
 

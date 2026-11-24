@@ -218,10 +218,8 @@ theorem theta_of_facts (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (-
       have hbX : b ∈ X := by
         have := X.sub_mem hzX (mi ha).2
         rwa [add_sub_cancel_left] at this
-      rw [hXY hbX (hAY hb), add_zero]
-      exact ha
-    · intro z hz
-      exact AddSubgroup.mem_inf.2 ⟨AddSubgroup.mem_sup_left hz, (mi hz).2⟩
+      rwa [hXY hbX (hAY hb), add_zero]
+    · exact fun z hz => AddSubgroup.mem_inf.2 ⟨AddSubgroup.mem_sup_left hz, (mi hz).2⟩
   have hLY : L' ⊓ Y = A := by
     apply le_antisymm
     · intro z hz
@@ -230,10 +228,8 @@ theorem theta_of_facts (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (-
       have haY : a ∈ Y := by
         have := Y.sub_mem hzY (hAY hb)
         rwa [add_sub_cancel_right] at this
-      rw [hXY (mi ha).2 haY, zero_add]
-      exact hb
-    · intro z hz
-      exact AddSubgroup.mem_inf.2 ⟨AddSubgroup.mem_sup_right hz, hAY hz⟩
+      rwa [hXY (mi ha).2 haY, zero_add]
+    · exact fun z hz => AddSubgroup.mem_inf.2 ⟨AddSubgroup.mem_sup_right hz, hAY hz⟩
   have hχl : ∀ t t' y : WO S T, ψ (symplO S T (t + t') y) = ψ (symplO S T t y) * ψ (symplO S T t' y) := fun t t' y => by
     rw [GlobalTheory.FinPl.ExtZeroLat.symplO_add_left S T, AddChar.map_add_eq_mul]
   have hχr : ∀ t y y' : WO S T, ψ (symplO S T t (y + y')) = ψ (symplO S T t y) * ψ (symplO S T t y') := fun t y y' => by
@@ -292,8 +288,8 @@ theorem theta_of_facts (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (-
         exact mi this
     unfold halfInd
     by_cases ht : t ∈ Λ ∧ IsHalf E₂ t
-    · rw [if_pos (hiff.2 ht), if_pos ht]
-    · rw [if_neg (fun h' => ht (hiff.1 h')), if_neg ht]
+    · rw [ite_eq_left (hiff.2 ht), ite_eq_left ht]
+    · rw [ite_eq_right (fun h' => ht (hiff.1 h')), ite_eq_right ht]
   have hspan := Four.model_mem_span hχl hχr hχ0 hLL' hdX' hdivX hdivY hfinX hfinY htf T' htr hmo hva
     (isSB_congr hLX.symm (isSB_of_half hΦ))
   have hzero : IsThetaFunO ψ S T 0 := by
@@ -453,8 +449,7 @@ theorem ratDatum_comb_place : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k]
     ⟨p.tensorAt FS FT Φ Ξk, hsb, hrat, by rw [hL]; exact hf'⟩
   have key := _root_.GlobalTheory.LocMod.ratDatum_factor D k p ψ hψ hdense S T Y Y' FS FT P PP e hPP hIdemAt hE hE' hstd Ξ _ Ξk hΞk (fun _ => rfl) c hc
     f₀ f f' hf₀ hvac hf hR
-  rw [← key]
-  exact hR
+  rwa [← key]
 
 end GlobalTheory.LocMod
 end -- clump:auto

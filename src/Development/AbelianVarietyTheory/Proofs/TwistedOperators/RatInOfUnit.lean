@@ -76,8 +76,7 @@ theorem RatIn.inv {f : T → ℂ} (hf : RatIn σ t₀ f) : RatIn σ t₀ fun t =
   rw [map_units_inv, hy, inv_div, inv_div_inv]
 
 theorem ratIn_const {κ : ℂ} (h : κ ≠ 0) : RatIn σ t₀ fun _ => κ := by
-  intro _
-  exact ⟨h, 1, by rw [Units.val_one, map_one, div_self h]⟩
+  exact fun _ => ⟨h, 1, by rw [Units.val_one, map_one, div_self h]⟩
 
 theorem ratIn_of_unit {f : T → ℂ} (h : ∀ t, ∃ y : Lˣ, σ y = f t) : RatIn σ t₀ f := by
   intro t
@@ -119,8 +118,7 @@ theorem Factor.isConst [Nonempty T] {lam : T → ℂ} (h : Factor X ψ θ lam) :
   obtain ⟨P, hPP⟩ := hp (p' P')
   unfold Tri.IsConst
   refine ⟨⟨Classical.arbitrary T, hlam _⟩, P, P', fun t => ⟨fun h => ⟨hint t P h, hint' t h⟩, ?_, fun h => ?_⟩⟩
-  · by_contra hcon
-    push_neg at hcon
+  · by_contra! hcon
     apply hP'
     apply hJ t
     rw [map_zero, ← hI' t P' (hint' t)]

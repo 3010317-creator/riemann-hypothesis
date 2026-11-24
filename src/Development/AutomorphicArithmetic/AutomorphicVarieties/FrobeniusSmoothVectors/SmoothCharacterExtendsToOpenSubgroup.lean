@@ -67,10 +67,8 @@ theorem UpperTheory.smoothCharacter_extends_to_open_subgroup :
     rw [← res_eq_zero_iff O S.R]
     simp [hb]
   refine ⟨⟨fun g i => ?_, fun v i g => ?_⟩, fun i j => ?_, fun ξ' hξ' hag => ?_⟩
-  · have h := S.lift.2.1.1 g i
-    exact hres (S.aB g i) _ (by simpa [NRep.map, Space.aB] using h) ξ hξ
-  · have h := S.lift.2.1.2 v i g
-    exact hres (S.ψB v i g) _ (by simpa [NRep.map, Space.ψB] using h) ξ hξ
+  · exact hres (S.aB g i) _ (by simpa [NRep.map, Space.aB] using (S.lift.2.1.1 g i)) ξ hξ
+  · exact hres (S.ψB v i g) _ (by simpa [NRep.map, Space.ψB] using (S.lift.2.1.2 v i g)) ξ hξ
   · have hc := ((cont_u hF hn S).1.1 i j) 1
     let f := Ideal.Quotient.lift (S.x0 ^ 1) ξ (fun a ha => hξ.x0 (by rwa [pow_one] at ha))
     convert hc.comp f using 1

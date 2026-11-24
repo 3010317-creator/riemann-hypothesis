@@ -262,8 +262,7 @@ theorem val_blockScalar (e : (Σ a, m a) ≃ n) (a : α) (z : kˣ) :
       simp [GeneralLinearGroup.scalar, diagonal_apply]
     · simp [diagonal_apply, hb, Matrix.one_apply]
   · rw [blockScalar, leviEmb_apply_ne k e _ h, diagonal_apply_ne]
-    intro h'
-    exact h (congrArg Sigma.fst (e.injective h'))
+    exact fun h' => h (congrArg Sigma.fst (e.injective h'))
 
 
 omit [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
@@ -390,7 +389,7 @@ theorem inSupport_of_flag_jac (π : Representation ℂ (GL n k) V) (f : (Σ j, c
     rw [EmptyBlocks.sum_card_blocks E, EmptyBlocks.sum_card_blocks e, Finset.sum_filter,
       Finset.sum_filter, Finset.sum_filter, ← f.sum_comp, Fintype.sum_sigma,
       ← Finset.sum_erase_add _ _ (Finset.mem_univ j₀), ← Finset.sum_erase_add _ _ (Finset.mem_univ j₀),
-      if_neg h0, add_zero]
+      ite_eq_right h0, add_zero]
     congr 1
     · refine Finset.sum_congr rfl fun j hj => ?_
       simp only [hE, h1 j _ (Finset.ne_of_mem_erase hj)]
@@ -399,7 +398,7 @@ theorem inSupport_of_flag_jac (π : Representation ℂ (GL n k) V) (f : (Σ j, c
   have hD : D (o j₀ a) = 1 := by
     have := count (· = o j₀ a) (fun _ => False) (· = a) not_false
       (fun j b hj => by simp [heq, hj]) (fun b => by simp [heq])
-    rw [Finset.filter_eq', if_pos (Finset.mem_univ _)] at this
+    rw [Finset.filter_eq', ite_eq_left (Finset.mem_univ _)] at this
     simpa [Finset.filter_eq', ha] using this
   have hmod : modExp (fun b => Fin (D b)) (o j₀ a) =
       modExp c j₀ + modExp (fun a => Fin (d a)) a := by
@@ -435,8 +434,7 @@ theorem inSupport_of_flag_jac (π : Representation ℂ (GL n k) V) (f : (Σ j, c
     replace hu := CuspMax.mem_unipRad_iff_entries.1 hu
     have hp : u ∈ parab k f := mem_parab_iff.2 fun b b' y y' hb => by
       rw [hu _ _ (by simp [hE, hlt, hb.le, hb.ne']), one_apply_ne]
-      intro h'
-      exact hb.ne' (congrArg Sigma.fst (f.injective h'))
+      exact fun h' => hb.ne' (congrArg Sigma.fst (f.injective h'))
     obtain ⟨v, hv, hdec⟩ := exists_levi_mul_unip k f ⟨u, hp⟩
     have hdec' : u = leviEmb k f (leviProj k f ⟨u, hp⟩) * v := hdec
     have h0 : leviProj k f ⟨u, hp⟩ j₀ ∈ unipRad k e :=
@@ -472,8 +470,7 @@ theorem inSupport_of_flag_jac (π : Representation ℂ (GL n k) V) (f : (Σ j, c
           simp [val_blockScalar, diagonal_apply, hE, heq, ht0]
         · simp [diagonal_apply, hE, heq, hj, Matrix.one_apply]
       · rw [leviEmb_apply_ne k f _ hb, diagonal_apply_ne]
-        intro h'
-        exact hb (congrArg Sigma.fst (f.injective h'))
+        exact fun h' => hb (congrArg Sigma.fst (f.injective h'))
     rw [h1, hjac, deltaHalf_mulSingle, blockScalar, det_leviEmb_mulSingle, ProdSupport.det_scalar_one ha]
 
 theorem inSupport_of_factor {π : Representation ℂ (GL n k) V} (hπ : IsSmooth π) (f : (Σ j, c j) ≃ n)

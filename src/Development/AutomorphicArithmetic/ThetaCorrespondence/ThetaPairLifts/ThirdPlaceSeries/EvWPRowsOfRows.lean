@@ -347,8 +347,7 @@ theorem at_index_alt (B : _root_.Formalism.IndefR.RealTBAlt Rc P Dcf Spf Zscf S)
     apply Idx.jM_inj Y
     rw [hz, P.tied.mjH.j_eq, ← hD.thTheta, e1]
     exact theta_cast _ _ _ ht _
-  rw [this, LinearEquiv.symm_apply_apply]
-  exact e2
+  rwa [this, LinearEquiv.symm_apply_apply]
 end GlobalTheory.ClassSumLift
 
 theorem GlobalTheory.ClassSumLift.eM_eq_thPe_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi : Formalism.MainNotions.G.Inst D L) (Gl : Formalism.MainNotions.G.LatInst D) (Kc : Formalism.MainNotions.G.Consts) (Y : DivX D) (cX : ExtraC) (ex : Extra D L hT Gi Gl Kc Y cX) (Rc : _root_.Formalism.L2.RecTAlt ex) (P : RowSideFamily ex) (Dcf : ∀ Zs : DefSub P.A3.fam3.amb3, DefCols (P.A3.side3 P.Ps P.ψs Zs)) (Spf : ∀ Zs : DefSub P.A3.fam3.amb3, SPer (Dcf Zs)) (Zscf : DefSub P.A3.fam3.amb3 → IndefScale P.A3.fam3.base3) (S : _root_.Formalism.L2.SG.SpectralTiesReal.STiesRAlt Rc) (B : _root_.Formalism.IndefR.RealTBAlt Rc P Dcf Spf Zscf S) (_ : _root_.Formalism.IndefR.IndefiniteRealisationNormalisation B.Q) (_ : _root_.Formalism.IndefR.IndefiniteRealisationRecursion B.Q) (jD : ∀ j, (Y.MjH j).V →ₗ[D.what₂.LL] B.Q.Sx.WL j) (eM : ∀ w j, (Y.MjH j).V →ₛₗ[ex.nch.embW w] FractionRing (ex.nch.Oe w) ⊗[D.ntw.O (ex.nch.twI w)] D.nexp.Fm (ex.nch.twI w) j (ex.nch.sd w)), DivRows3 D P.A3 P.P0 P.ψ0 P.Ps P.ψs P.Zs P.S0 P.S1 ex.p0 P.C P.NuC P.I → _root_.GlobalTheory.ExportPin.IndefiniteClassSumCondition B.Q → (∀ (i : Fin D.R.m) (x : (Y.MjH ((i : ℕ) + 1)).V) (y : Fin (Module.finrank D.what₂.LL (B.Q.Rl.toRealDat.WL B.Q.F.lv2 false i)) → D.what₂.LL), HEq ((P.JM.eW i).symm x) y → (B.Q.nexp.fi i).e (jD ((i : ℕ) + 1) x) = jDL B.Q.Rl B.Q.F.lv2 i y) → (∀ w j (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) (x : (Y.MjH j).V) (n : ℕ) (a : Fin n → D.what₂.LL) (f : Fin n → FmK B.Q.Sx j), jD j x = ∑ k, a k • (show ↥(B.Q.Sx.A j).WK from f k).1 → eM w j x = ∑ k, ex.nch.embW w (a k) ⊗ₜ[D.ntw.O (ex.nch.twI w)] (B.Q.nexp.eF (ex.nch.twI w) j (ex.nch.sd w) h1 h2).symm ((1 : KB B.Q.Sx (ex.nch.twI w) (ex.nch.sd w)) ⊗ₜ[B.Q.Sx.Ks] f k)) → ∀ w j, D.what₂.muAt w ≠ D.what₂.mu0 → 1 ≤ j → j ≤ D.R.m → ∀ x ∈ Idx.TjV D (D.what₂.muTw w) j, ∀ y : (Y.MjH j).V, Y.jM j y = D.what₂.thetaP (D.what₂.muTw w) j (D.what₂.jMt (D.what₂.muTw w) j x) → eM w j y = NChoice.thPe D ex.nch w j (ex.nch.eMt w j x) := by
@@ -508,8 +507,7 @@ theorem jDa_injective_alt (Q : _root_.Formalism.IndefR.IndefiniteRealisation Rc 
   have hk : k < D.R.m := by omega
   have e := _root_.LinearIndependenceOfCarries.GlobalTheory.CompanionTheory.ReadingExt.embeddingAtLevel_succ_eq_embeddingAtIndex (Y := Y) Q ⟨k, hk⟩
   have h := _root_.LinearIndependenceOfCarries.GlobalTheory.CompanionTheory.ReadingExt.embeddingAtIndex_injective (Y := Y) Q ⟨k, hk⟩
-  rw [← e] at h
-  exact h
+  rwa [← e] at h
 open GlobalTheory.IndefiniteRowSideFullHecke.FractionalBaseInclusion in
 
 theorem embW_comp_algebraMap_eq_fracExt_comp_iotaK (hc : NChTie D ex.nch) (Q : _root_.Formalism.IndefR.IndefiniteRealisation Rc P Dcf Spf Zscf S Ks) (w : D.what₂.places.Pl) :
@@ -576,7 +574,7 @@ theorem reading_ext_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi 
     if h : 1 ≤ j ∧ j ≤ D.R.m then (E w j h.1 h.2).comp (_root_.LinearIndependenceOfCarries.GlobalTheory.CompanionTheory.ReadingExt.embeddingAtLevel B.Q j) else 0
   have heM : ∀ w j (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) (x : (Y.MjH j).V), eM w j x = E w j h1 h2 (_root_.LinearIndependenceOfCarries.GlobalTheory.CompanionTheory.ReadingExt.embeddingAtLevel B.Q j x) := by
     intro w j h1 h2 x
-    simp only [eM, dif_pos (And.intro h1 h2)]
+    simp only [eM, dite_eq_left (And.intro h1 h2)]
     rfl
   refine ⟨_root_.LinearIndependenceOfCarries.GlobalTheory.CompanionTheory.ReadingExt.embeddingAtLevel B.Q, eM, fun i x y h => _root_.LinearIndependenceOfCarries.GlobalTheory.CompanionTheory.ReadingExt.e_embeddingAtLevel_succ_eq_jDL_of_heq B.Q i x y h, hks, ?_, fun w j a m => _root_.LinearIndependenceOfCarries.GlobalTheory.CompanionTheory.ReadingExt.embW_Ks_alt hc B.Q w j a m, ?_⟩
   · intro w j h1 h2 x n a f hx
@@ -585,9 +583,7 @@ theorem reading_ext_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi 
   · intro w j _ h1 h2
     have hv : LinearIndependent D.what₂.LL (fun a => _root_.LinearIndependenceOfCarries.GlobalTheory.CompanionTheory.ReadingExt.embeddingAtLevel B.Q j ((Y.MjH j).b a)) :=
       (Y.MjH j).b.linearIndependent.map' (_root_.LinearIndependenceOfCarries.GlobalTheory.CompanionTheory.ReadingExt.embeddingAtLevel B.Q j) (LinearMap.ker_eq_bot.2 (_root_.LinearIndependenceOfCarries.GlobalTheory.CompanionTheory.ReadingExt.jDa_injective_alt B.Q j h1 h2))
-    have h := hE2 w j h1 h2 _ _ hv
-    simp only [heM w j h1 h2]
-    exact h
+    simpa only [heM w j h1 h2] using hE2 w j h1 h2 _ _ hv
 end GlobalTheory.CompanionTheory.ReadingExt
 end
 end
@@ -757,8 +753,7 @@ theorem lattice_of_lifts_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D)
     constructor
     · rintro ⟨x, rfl⟩
       refine ⟨(B.Q.nexp.fi i).e (jD ((i : ℕ) + 1) x), ?_, ?_⟩
-      · rw [hjD i x _ (heq_cast hd ((P.JM.eW i).symm x))]
-        rw [SetLike.mem_coe, hWg]
+      · rw [hjD i x _ (heq_cast hd ((P.JM.eW i).symm x)), SetLike.mem_coe, hWg]
         simp only [Formalism.IndefR.NX.jDL, Fintype.linearCombination_apply]
         exact Submodule.sum_mem _ fun k _ => Submodule.smul_mem _ _ (Module.finBasis D.what₂.LL _ k).2
       · simp only [LinearEquiv.symm_apply_apply, heM]
@@ -768,24 +763,21 @@ theorem lattice_of_lifts_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D)
       let z : Fin (Module.finrank D.what₂.LL (B.Q.Rl.toRealDat.WL B.Q.F.lv2 false i)) → D.what₂.LL := Bs.equivFun ⟨y, hy⟩
       let x := P.JM.eW i (z ∘ Fin.cast hd.symm)
       have hH : HEq ((P.JM.eW i).symm x) z := by
-        simp only [x, LinearEquiv.symm_apply_apply]
-        exact (heq_cast hd.symm z).symm
+        simpa only [x, LinearEquiv.symm_apply_apply] using (heq_cast hd.symm z).symm
       have h6 := hjD i x z hH
       have h7 : Formalism.IndefR.NX.jDL B.Q.Rl B.Q.F.lv2 i z = y := by
         simp only [Formalism.IndefR.NX.jDL, Fintype.linearCombination_apply]
         have h8 := Bs.sum_equivFun ⟨y, hy⟩
         have h9 : ((∑ k, Bs.equivFun ⟨y, hy⟩ k • Bs k : B.Q.Rl.toRealDat.WL B.Q.F.lv2 false i) : Fin (B.Q.Rl.nW i) → D.what₂.LL) = y :=
           congrArg Subtype.val h8
-        rw [AddSubmonoidClass.coe_finsetSum] at h9
-        exact h9
+        rwa [AddSubmonoidClass.coe_finsetSum] at h9
       refine ⟨x, ?_⟩
       rw [heM]
       change e _ = e ((B.Q.nexp.fi i).e.symm y)
       rw [← h7, ← h6, LinearEquiv.symm_apply_apply]
   refine isLatIn_span (ex.nch.embW w) (integers_embed _) (eM w ((i : ℕ) + 1)) (Y.MjH ((i : ℕ) + 1)).L
     (Y.MjH_good _).2.1 (Y.MjH_good _).2.2 _ ?_
-  rw [hrange]
-  exact he2
+  rwa [hrange]
 end GlobalTheory.CompanionTheory.LatSpan
 end
 end

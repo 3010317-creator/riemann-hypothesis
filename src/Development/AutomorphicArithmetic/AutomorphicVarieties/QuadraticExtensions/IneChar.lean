@@ -95,8 +95,7 @@ private theorem inertia_fixes_prime_to_roots {Ω : Type} [Field Ω] [Algebra ℚ
     rw [mul_pow, ← map_pow, hζ, map_one, inv_pow, hζ, inv_one, one_mul]
   have hlt : A.valuation (g ζ * ζ⁻¹ - 1) < 1 := by
     have he : g ζ * ζ⁻¹ - 1 = (g ζ - ζ) * ζ⁻¹ := by rw [sub_mul, mul_inv_cancel₀ hζ0]
-    rw [he, map_mul, map_inv₀, hv1, inv_one, mul_one]
-    exact key
+    rwa [he, map_mul, map_inv₀, hv1, inv_one, mul_one]
   have hfin := root_of_unity_eq_one_of_close_residue A hm hA hη hlt
   rwa [mul_inv_eq_one₀ hζ0] at hfin
 
@@ -113,8 +112,7 @@ theorem UpperTheory.V.Two.ineChar :
   have hu : IsPrimitiveRoot u m := IsPrimitiveRoot.coe_units_iff.mp hz
   have heq : u ^ ((galChar Ω m g : ZMod m).val) = u ^ 1 := by
     apply Units.ext
-    rw [Units.val_pow_eq_pow_val, Units.val_pow_eq_pow_val, pow_one]
-    exact hfix
+    rwa [Units.val_pow_eq_pow_val, Units.val_pow_eq_pow_val, pow_one]
   have hmod := pow_eq_pow_iff_modEq.mp heq
   rw [← hu.eq_orderOf] at hmod
   rw [MonoidHom.mem_ker]

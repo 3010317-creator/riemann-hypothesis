@@ -107,8 +107,7 @@ theorem isPullback_baseChange_step {R k Ω : Type} [CommRing R] [Field k] [Field
     rw [← Spec.map_comp, ← CommRingCat.ofHom_comp, ← IsScalarTower.algebraMap_eq]
   refine IsPullback.of_bot ?_ (pullback.lift_snd _ _ _).symm (IsPullback.of_hasPullback c _).flip
   have h0 := (IsPullback.of_hasPullback c (Spec.map (CommRingCat.ofHom (algebraMap R Ω)))).flip
-  rw [pullback.lift_fst, Category.comp_id, e]
-  exact h0
+  rwa [pullback.lift_fst, Category.comp_id, e]
 
 theorem fpqc_specMap_field (k Ω : Type) [Field k] [Field Ω] [Algebra k Ω] :
     (@Surjective ⊓ @Flat ⊓ @QuasiCompact : MorphismProperty Scheme.{0}) (Spec.map (CommRingCat.ofHom (algebraMap k Ω))) := by
@@ -144,8 +143,7 @@ theorem isClosedImmersion_of_baseChange_extension :
       rw [← Category.assoc, hΩ2]
   have sq : IsPullback φΩ vX vY φk := by
     refine IsPullback.of_right ?_ comm sY
-    rw [hΩ2, hk2]
-    exact sX
+    rwa [hΩ2, hk2]
   exact MorphismProperty.of_isPullback_of_descendsAlong (P := @IsClosedImmersion)
     (Q := @Surjective ⊓ @Flat ⊓ @QuasiCompact) sq
     (MorphismProperty.of_isPullback (P := @Surjective ⊓ @Flat ⊓ @QuasiCompact) sY (fpqc_specMap_field k Ω)) hΩ

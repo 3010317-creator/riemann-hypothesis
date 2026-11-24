@@ -133,8 +133,7 @@ theorem tsum_coefficients_eq_value_zero : ∀ (G : Type) [AddCommGroup G] [Topol
     refine ⟨LinearMap.mkContinuous
       { toFun := fun w => ∫ x in 𝓕, w (QuotientAddGroup.mk x) ∂μ
         map_add' := fun v w => by
-          simp only [ContinuousMap.add_apply]
-          exact integral_add (hint v) (hint w)
+          simpa only [ContinuousMap.add_apply] using integral_add (hint v) (hint w)
         map_smul' := fun c w => by
           simp only [ContinuousMap.smul_apply, RingHom.id_apply]
           exact integral_smul c _ } 1 (fun w => ?_), fun w => rfl⟩
@@ -149,8 +148,7 @@ theorem tsum_coefficients_eq_value_zero : ∀ (G : Type) [AddCommGroup G] [Topol
   have hstarE : ∀ a, star (e a) = e (-a) := by
     intro a; ext q
     obtain ⟨x, rfl⟩ := QuotientAddGroup.mk_surjective q
-    simp only [ContinuousMap.star_apply, he]
-    exact hstar a x
+    simpa only [ContinuousMap.star_apply, he] using hstar a x
   have hone : e 0 = 1 := by
     ext q
     obtain ⟨x, rfl⟩ := QuotientAddGroup.mk_surjective q
@@ -169,8 +167,7 @@ theorem tsum_coefficients_eq_value_zero : ∀ (G : Type) [AddCommGroup G] [Topol
     · subst ha
       simp [hχ0, Measure.real, h𝓕1]
     · obtain ⟨y, hy⟩ : ∃ y, χ a y ≠ 1 := by
-        by_contra hcon
-        push_neg at hcon
+        by_contra! hcon
         exact ha (hχinj a hcon)
       have htr : IsAddFundamentalDomain Γ (y +ᵥ 𝓕) μ := h𝓕.vadd_of_comm y
       have key : (∫ x in 𝓕, χ a x ∂μ) = χ a y * ∫ x in 𝓕, χ a x ∂μ := by
@@ -257,8 +254,7 @@ theorem tsum_coefficients_eq_value_zero : ∀ (G : Type) [AddCommGroup G] [Topol
     obtain ⟨y, rfl⟩ := QuotientAddGroup.mk_surjective q'
     have hnot : -x + y ∉ Γ := fun h => hne (QuotientAddGroup.eq.mpr h)
     obtain ⟨a, ha⟩ : ∃ a, χ a (-x + y) ≠ 1 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact hnot ((hχker _).mp hcon)
     refine ⟨e a, ⟨e a, Submodule.subset_span ⟨a, rfl⟩, rfl⟩, ?_⟩
     simp only [he]
@@ -308,16 +304,13 @@ theorem tsum_coefficients_eq_value_zero : ∀ (G : Type) [AddCommGroup G] [Topol
     exact_mod_cast hHH
   have hkint : Integrable (fun x => ‖k x‖ ^ 2) (μ.restrict 𝓕) := by
     refine (hint (star H * H)).norm.congr (Filter.Eventually.of_forall fun x => ?_)
-    simp only [hpt, Complex.norm_real, Real.norm_eq_abs]
-    exact abs_of_nonneg (by positivity)
+    simpa only [hpt, Complex.norm_real, Real.norm_eq_abs] using abs_of_nonneg (by positivity)
   have hae := (integral_eq_zero_iff_of_nonneg (fun x => by positivity) hkint).mp hr
   set t : Set G := {x | k x ≠ 0} with htdef
   have ht : IsOpen t := isOpen_ne_fun hkc continuous_const
   have h1 : μ.restrict 𝓕 t = 0 := by
     rw [Filter.EventuallyEq, ae_iff] at hae
-    refine measure_mono_null ?_ hae
-    intro x hx
-    exact pow_ne_zero 2 (norm_ne_zero_iff.mpr hx)
+    exact measure_mono_null (fun x hx => pow_ne_zero 2 (norm_ne_zero_iff.mpr hx)) hae
   rw [Measure.restrict_apply ht.measurableSet] at h1
   have h2 : μ t = 0 := by
     refine h𝓕.measure_zero_of_invariant t (fun γ => ?_) h1
@@ -328,8 +321,7 @@ theorem tsum_coefficients_eq_value_zero : ∀ (G : Type) [AddCommGroup G] [Topol
   have hk0 : k 0 = 0 := by
     by_contra hne
     have : (0 : G) ∈ t := hne
-    rw [h3] at this
-    exact this
+    rwa [h3] at this
   have hg0 : g (QuotientAddGroup.mk 0) = ∑' a, c a := by
     have hev := (ContinuousMap.evalCLM ℂ (QuotientAddGroup.mk 0 : G ⧸ Γ)).map_tsum hgs
     simp only [ContinuousMap.evalCLM_apply] at hev

@@ -227,8 +227,7 @@ theorem isEtaleCompletion_comp_bijective {B A R : Type} [CommRing B] [IsLocalRin
     (h : IsEtaleCompletion φ) : IsEtaleCompletion (φ.comp e) := by
   obtain ⟨h1, h2, h3⟩ := h
   refine ⟨RingHom.Flat.comp (RingHom.Flat.of_bijective he) h1, ?_, ?_⟩
-  · rw [← Ideal.map_map, IsLocalRing.map_maximalIdeal_of_surjective e he.2]
-    exact h2
+  · rwa [← Ideal.map_map, IsLocalRing.map_maximalIdeal_of_surjective e he.2]
   · rw [← RingHom.comp_assoc]
     exact RingHom.Finite.comp h3 (RingHom.Finite.of_surjective e he.2)
 
@@ -973,8 +972,7 @@ theorem lbIso_prim_ext : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] 
       exact ⟨_, rfl⟩
     · intro hx
       have hx' : x ∈ Set.range (pullback.fst G.hom j) := by
-        rw [Scheme.Pullback.range_fst]
-        exact hx
+        rwa [Scheme.Pullback.range_fst]
       obtain ⟨z, rfl⟩ := hx'
       refine ⟨he.1.isoPullback.inv z, ?_⟩
       rw [← Scheme.Hom.comp_apply, he.1.isoPullback_inv_fst]
@@ -1161,8 +1159,7 @@ theorem exists_fibre_generic_of_prime : ∀ (R : Type) [CommRing R] [IsDomain R]
     (map_ne_zero_iff _ (IsLocalization.injective V v.asIdeal.primeCompl_le_nonZeroDivisors)).2 hπp.ne_zero
   have : IsNoetherianRing V := IsLocalization.isNoetherianRing v.asIdeal.primeCompl V inferInstance
   have hnf : ¬ IsField V := by
-    rw [IsLocalRing.isField_iff_maximalIdeal_eq, hmax, Ideal.span_singleton_eq_bot]
-    exact hne
+    rwa [IsLocalRing.isField_iff_maximalIdeal_eq, hmax, Ideal.span_singleton_eq_bot]
   have hpr : Submodule.IsPrincipal (IsLocalRing.maximalIdeal V) := ⟨⟨_, hmax⟩⟩
   have : IsDiscreteValuationRing V :=
     ((IsDiscreteValuationRing.TFAE V hnf).out 1 5).mpr hpr
@@ -1279,7 +1276,7 @@ theorem finite_coheight_one_notMem (X : Scheme.{0}) [IsIntegral X] [AlgebraicGeo
   have hzη : z < genericPoint X := lt_of_le_not_ge (genericPoint_specializes z)
     fun h => hzS ((show z ⤳ genericPoint X from h).mem_open hS hη)
   refine ⟨Z, hZ, ?_⟩
-  simp only [dif_pos (hi Z hZ)]
+  simp only [dite_eq_left (hi Z hZ)]
   by_contra hne
   have hxlt : x < z := lt_of_le_not_ge hxz fun h =>
     hne ((show x ⤳ z from h).antisymm (show z ⤳ x from hxz)).eq.symm
@@ -1315,8 +1312,7 @@ theorem UnitAt.zpow {X : Scheme.{0}} [IsIntegral X] {x : X} {s : X.functionField
   obtain ⟨u, rfl⟩ := hs
   refine ⟨u ^ n, ?_⟩
   have := congrArg Units.val (map_zpow (Units.map (algebraMap (X.presheaf.stalk x) X.functionField).toMonoidHom) u n)
-  rw [Units.val_zpow_eq_zpow_val, Units.coe_map] at this
-  exact this
+  rwa [Units.val_zpow_eq_zpow_val, Units.coe_map] at this
 
 theorem UnitAt.prod {X : Scheme.{0}} [IsIntegral X] {x : X} {ι : Type} (s : Finset ι) (f : ι → X.functionField)
     (h : ∀ b ∈ s, UnitAt x (f b)) : UnitAt x (∏ b ∈ s, f b) :=
@@ -1549,8 +1545,7 @@ theorem exists_const_mul_eq_gen : ∀ (R K : Type) [CommRing R] [IsDomain R] [Is
     show (gm (rr ≫ φ) z (M.U i) (u i)).val = _
     rw [← gs_unit (rr ≫ φ) z _ hz, ← gs_unit rr z _ hm, ← GlobalTheory.OpenPartUnit.gs_appLE rr φ z _ _ h₂ hm, hW,
       gs_mul rr z _ hm]
-    refine congrArg (· * _) ?_
-    exact GlobalTheory.OpenPartUnit.gs_appLE rr p z ⊤ _ _ hm _
+    exact congrArg (· * _) (GlobalTheory.OpenPartUnit.gs_appLE rr p z ⊤ _ _ hm _)
 
 end GlobalTheory.GlobalVerticalUnit
 end -- clump:auto

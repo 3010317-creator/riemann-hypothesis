@@ -103,8 +103,7 @@ theorem isEps_of_root {ζ : ℕ → Om l} (h0 : ζ 0 = 1) (h1 : ζ 1 ≠ 1) {ε 
     (h : ∀ m, (rootT ε m : ℂ_[l]) = algebraMap (Om l) ℂ_[l] (ζ m)) : IsEps ε := by
   refine ⟨Subtype.ext ?_, fun hh => h1 ?_⟩
   · have := h 0
-    rw [h0, map_one] at this
-    exact this
+    rwa [h0, map_one] at this
   · have := h 1
     apply (algebraMap (Om l) ℂ_[l]).injective
     rw [← this, map_one]
@@ -185,8 +184,7 @@ private theorem acris_lim (s : ℕ → Per.Acris0 l)
   refine ⟨E.symm y, fun r n hn => ?_⟩
   obtain ⟨z, hz⟩ := hy r n hn
   refine ⟨E.symm z, E.injective ?_⟩
-  rw [map_sub, map_mul, map_pow, map_natCast, hE, E.apply_symm_apply, E.apply_symm_apply]
-  exact hz
+  rwa [map_sub, map_mul, map_pow, map_natCast, hE, E.apply_symm_apply, E.apply_symm_apply]
 
 theorem isLogA_unique {e : Per.Fl l} {y y' : Per.Acris l} (h : IsLogA e y) (h' : IsLogA e y') : y = y' := by
   rw [← sub_eq_zero]
@@ -253,8 +251,7 @@ theorem isLogA_extends {f : Per.Ainf l →+* Per.Ainf l} {F : Per.Acris l →+* 
 
     simpa only [map_mul, map_natCast, map_sum, map_pow, map_neg, map_one, GlobalTheory.RingBasics.awayMap_algebraMap₂, hm] using this
   · have := congrArg F hz
-    rw [map_sub, map_mul, map_pow, map_natCast, hf.env] at this
-    exact this
+    rwa [map_sub, map_mul, map_pow, map_natCast, hf.env] at this
 
 theorem isLogA_phiA {e : Per.Fl l} {y : Per.Acris l} (hy : IsLogA e y) : IsLogA (e ^ l) (phiA l y) :=
   isLogA_extends (GlobalTheory.CrisMaps.phiA_extends l) (GlobalTheory.RingIface.phiA_teich l e) hy

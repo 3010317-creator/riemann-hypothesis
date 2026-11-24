@@ -65,8 +65,7 @@ theorem mem_mulLat_iff (t : Aˣ) (L : Submodule O A) (x : A) :
   constructor
   · rintro ⟨y, hy, rfl⟩
     simpa [← mul_assoc] using hy
-  · intro h
-    exact ⟨_, h, by simp [← mul_assoc]⟩
+  · exact fun h => ⟨_, h, by simp [← mul_assoc]⟩
 
 theorem mulLat_one (L : Submodule O A) : mulLat O (1 : A) L = L := by
   simp [mulLat, LinearMap.mulLeft_one]
@@ -81,8 +80,7 @@ theorem mulLat_mem_stLat {g : A} (t : Aˣ) {L : Submodule O A} (hL : L ∈ stLat
   · have himg : ((mulLat O (t : A) L : Submodule O A) : Set A) = (LinearMap.mulLeft E (t : A)) '' (L : Set A) := by
       ext x; simp [mulLat]
     rw [himg, Submodule.span_image, hL.1.2, Submodule.map_top, LinearMap.range_eq_top]
-    intro z
-    exact ⟨((t⁻¹ : Aˣ) : A) * z, by simp [← mul_assoc]⟩
+    exact fun z => ⟨((t⁻¹ : Aˣ) : A) * z, by simp [← mul_assoc]⟩
   · intro x hx
     rw [mem_mulLat_iff] at hx ⊢
     have := hL.2 _ hx

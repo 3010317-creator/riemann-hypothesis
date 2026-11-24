@@ -98,8 +98,7 @@ theorem _root_.GlobalTheory.T.freeSheafHomValueAt_cechNerveSimplex_bijective : �
     apply ModuleCat.free_hom_ext
     rintro ⟨v⟩
     have hv := hs U.unop v
-    rw [evaluate, evaluate] at hv
-    exact hv
+    rwa [evaluate, evaluate] at hv
   have hex (φ : ∀ U : Scheme.{0}, P.obj (op U) → Sec F U)
       (hφ : ∀ (V U : Scheme.{0}) (g : V ⟶ U) (v : P.obj (op U)),
         φ V (P.map g.op v) = Sec.res g (φ U v)) :
@@ -113,8 +112,7 @@ theorem _root_.GlobalTheory.T.freeSheafHomValueAt_cechNerveSimplex_bijective : �
       have h := ((sheafificationAdjunction Scheme.etaleTopology.{0}
         (ModuleCat.{1} (ULift.{1} R))).homEquiv _ _).apply_symm_apply
           (GlobalTheory.EtC.FreeHom.descP P F φ hφ)
-      rw [Adjunction.homEquiv_unit] at h
-      exact h
+      rwa [Adjunction.homEquiv_unit] at h
     rw [hdesc]
     change (ModuleCat.freeDesc _).hom (ModuleCat.freeMk (ULift.up v)) = _
     erw [ModuleCat.freeDesc_apply]
@@ -464,7 +462,7 @@ def gam (R : Type) [CommRing R] (F : Shv R) (u : Z1 F A B) : H R (sp A) F 1 :=
 theorem gam_spec [Algebra.Etale A B] [Module.FaithfullyFlat A B] (R : Type) [CommRing R] (F : Shv R) (u : Z1 F A B) :
     Rel A B R F u (gam A B R F u) := by
   unfold gam
-  rw [if_pos ⟨inferInstance, inferInstance⟩]
+  rw [ite_eq_left ⟨inferInstance, inferInstance⟩]
   exact Classical.epsilon_spec (rel_exists A B R F u)
 
 theorem gam_eq [Algebra.Etale A B] [Module.FaithfullyFlat A B] (R : Type) [CommRing R] (F : Shv R) (u : Z1 F A B)
@@ -479,14 +477,14 @@ def gamHom (R : Type) [CommRing R] (F : Shv R) : Z1 F A B →+ H R (sp A) F 1 wh
       haveI := h.2
       exact (gam_eq A B R F 0 0).2 (rel_zero A B R F)
     · unfold gam
-      rw [if_neg h]
+      rw [ite_eq_right h]
   map_add' u u' := by
     by_cases h : Algebra.Etale A B ∧ Module.FaithfullyFlat A B
     · haveI := h.1
       haveI := h.2
       exact (gam_eq A B R F _ _).2 (rel_add R F _ _ _ _ (gam_spec A B R F u) (gam_spec A B R F u'))
     · unfold gam
-      rw [if_neg h, if_neg h, if_neg h, add_zero]
+      rw [ite_eq_right h, ite_eq_right h, ite_eq_right h, add_zero]
 
 theorem cech1 : ∀ (R : Type) [CommRing R] (F : Shv R) (A : Type) [CommRing A], ∃ γ : ∀ (B : Type) [CommRing B] [Algebra A B], Z1 F A B →+ H R (sp A) F 1, ∀ (B : Type) [CommRing B] [Algebra A B] [Algebra.Etale A B] [Module.FaithfullyFlat A B], (∀ u : Z1 F A B, γ B u = 0 ↔ ∃ v : (onRings F).obj (CommRingCat.of B), (u : (onRings F).obj (CommRingCat.of (B ⊗[A] B))) = ((onRings F).map (CommRingCat.ofHom (Algebra.TensorProduct.includeRight : B →ₐ[A] B ⊗[A] B).toRingHom)).hom v - ((onRings F).map (CommRingCat.ofHom (Algebra.TensorProduct.includeLeft : B →ₐ[A] B ⊗[A] B).toRingHom)).hom v) ∧ (∀ x : H R (sp A) F 1, pull R (spMap (algebraMap A B)) F 1 x = 0 → ∃ u, γ B u = x) ∧ (∀ u, pull R (spMap (algebraMap A B)) F 1 (γ B u) = 0) ∧ ∀ (B' : Type) [CommRing B'] [Algebra A B'] [Algebra.Etale A B'] [Module.FaithfullyFlat A B'] (φ : B →ₐ[A] B') (u : Z1 F A B) (u' : Z1 F A B'), (u' : (onRings F).obj (CommRingCat.of (B' ⊗[A] B'))) = ((onRings F).map (CommRingCat.ofHom (Algebra.TensorProduct.map φ φ).toRingHom)).hom u → γ B' u' = γ B u := by
   intro R _ F A _
@@ -512,8 +510,7 @@ theorem cech1 : ∀ (R : Type) [CommRing R] (F : Shv R) (A : Type) [CommRing A],
       rw [map_zero]
       obtain ⟨x, hx⟩ := (_root_.GlobalTheory.EtC.isCls_basic R F _ 1).1 (cobd t) hc
       have h4 := (_root_.GlobalTheory.EtC.isCls_basic R F _ 0).2.2.2.1 t x hx
-      rw [h4] at hx
-      exact hx
+      rwa [h4] at hx
   · intro x hx
     obtain ⟨s, hs, hcls⟩ := _root_.GlobalTheory.EtC.LerayOne.cech_cocycle_of_pull_eq_zero R F _ _ (fB A B) x hx
     exact ⟨⟨val s (Spec (CommRingCat.of (B ⊗[A] B))) (P1 A B), (mem_Z1_iff_cocycle A B R F _).2 ((cobd_eq_zero_iff A B R F s).1 hs)⟩, (gam_eq A B R F _ x).2 ⟨s, rfl, hcls⟩⟩
@@ -527,8 +524,7 @@ theorem cech1 : ∀ (R : Type) [CommRing R] (F : Shv R) (A : Type) [CommRing A],
     refine ⟨(free R).map ((cechMap (fB A B) (fB A B') _ (spec_algHom φ)).app (op ⦋1⦌)) ≫ s, ?_, ?_⟩
     · rw [val_cech_map_first_level, hs, hu]
     · have := (_root_.GlobalTheory.EtC.isCls_basic R F _ 1).2.2.2.2 _ (cechMap (fB A B) (fB A B') _ (spec_algHom φ)) s _ hcls
-      rw [← pull_comp, cechMap_aug] at this
-      exact this
+      rwa [← pull_comp, cechMap_aug] at this
 
 end GlobalTheory.CechOne
 end -- clump:auto

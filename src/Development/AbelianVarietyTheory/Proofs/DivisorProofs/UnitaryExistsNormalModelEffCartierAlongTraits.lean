@@ -415,8 +415,7 @@ theorem GlobalTheory.UPoinc.UGlue.glue (hgood : ∀ (E : Type) [Field E] [Number
       have e := val_jK ξ specializes_rfl b
       rw [TopCat.Presheaf.stalkSpecializes_refl, h₁, val_generic] at e
       simp only [CommRingCat.hom_id, RingHom.id_apply] at e
-      rw [hb, map_zero, map_eq_zero, map_eq_zero_iff _ (Y.stalkHom_injective _)] at e
-      exact e
+      rwa [hb, map_zero, map_eq_zero, map_eq_zero_iff _ (Y.stalkHom_injective _)] at e
     have hne : (maximalIdeal (Y.Z.presheaf.stalk (ξ (closedPoint T.V)))).map (Scheme.stalkClosedPointTo ξ).hom ≠ ⊥ := by
       rw [Ne, Ideal.map_eq_bot_iff_of_injective hinj]
       intro hb
@@ -436,8 +435,7 @@ theorem GlobalTheory.UPoinc.UGlue.glue (hgood : ∀ (E : Type) [Field E] [Number
       hthru T ξ γ h₁ h₂, ha⟩
     change Ideal.map ((Scheme.stalkClosedPointTo ξ).hom.comp
       (Y.Z.presheaf.stalkSpecializes (specializes_refl (ξ (closedPoint T.V)))).hom) _ = _
-    rw [TopCat.Presheaf.stalkSpecializes_refl]
-    exact he
+    rwa [TopCat.Presheaf.stalkSpecializes_refl]
   · intro x
     obtain ⟨k, hk⟩ := hloc x
     obtain ⟨T₀, ξ₀, γ₀, h₀, h₁, h₂⟩ := hcentre x
@@ -530,7 +528,7 @@ theorem exists_nat_comb_of_infinite {O : Type} [CommRing O] {bar : O → O} {φ 
     set_option synthInstance.maxHeartbeats 100000 in
       simp only [map_nsmul, map_add (f := _), map_sum, Module.Basis.repr_self, Finsupp.smul_apply, Finsupp.add_apply,
       Finset.sum_apply', Finsupp.smul_apply, Finsupp.single_apply, nsmul_eq_mul] at this
-    rw [Finset.sum_eq_zero fun j _ => by rw [if_neg (ho j).symm]; simp] at this
+    rw [Finset.sum_eq_zero fun j _ => by rw [ite_eq_right (ho j).symm]; simp] at this
     have hk' : (k : ℤ) ≠ 0 := by exact_mod_cast hk0.ne'
     exact (mul_eq_zero.1 this).resolve_left hk'
   have hp : ∀ n ∈ s, ∀ j, 0 ≤ (n : ℤ) * bb.repr B' (Sum.inl j) + bb.repr B₀ (Sum.inl j) := by
@@ -541,7 +539,7 @@ theorem exists_nat_comb_of_infinite {O : Type} [CommRing O] {bar : O → O} {φ 
     set_option synthInstance.maxHeartbeats 100000 in
       simp only [map_nsmul, map_add (f := _), map_sum, Module.Basis.repr_self, Finsupp.smul_apply, Finsupp.add_apply,
       Finset.sum_apply', Finsupp.smul_apply, Finsupp.single_apply, nsmul_eq_mul, Sum.inl.injEq] at this
-    simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at this
+    simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at this
     have hk' : (0 : ℤ) < k := by exact_mod_cast hk0
     have h2 : (0 : ℤ) ≤ k * ((n : ℤ) * bb.repr B' (Sum.inl j) + bb.repr B₀ (Sum.inl j)) := by
       push_cast at this ⊢; rw [this]; positivity
@@ -560,7 +558,7 @@ theorem exists_nat_comb_of_infinite {O : Type} [CommRing O] {bar : O → O} {φ 
     have e1 := hp n₁ hn₁ j
     have e2 := hM (Sum.inl j)
     by_contra hneg
-    push_neg at hneg
+    push Not at hneg
     have : (bb.repr B₀ (Sum.inl j)) ≤ M := by omega
     have : (n₁ : ℤ) * bb.repr B' (Sum.inl j) ≤ - n₁ := by nlinarith
     omega
@@ -668,8 +666,7 @@ theorem exists_finite_cones : ∀ (O : Type) [CommRing O] (bar : O → O) (φ : 
       linarith
     obtain ⟨m, γ, k, cf, hγ, hk, hcf, hkβ⟩ := GlobalTheory.Poinc.Cover.exists_cone O bar φ Y hF _ hβs hβp
     have hγd : ∀ y, y ≠ 0 → 0 < ∑ j, γ j y y := fun y hy => by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       have h0 : ∀ j, γ j y y = 0 := fun j => le_antisymm ((Finset.single_le_sum (fun j _ => hγ.nonneg j y)
         (Finset.mem_univ j)).trans hcon) (hγ.nonneg j y)
       have h1 := LinearMap.congr_fun₂ hkβ y y
@@ -689,8 +686,7 @@ theorem exists_finite_cones : ∀ (O : Type) [CommRing O] (bar : O → O) (φ : 
   obtain ⟨cf, hcf⟩ := exists_nat_comb_of_infinite ((hL _).1 (List.get_mem L i)).1 hb' hb₀ (s := f ⁻¹' {i})
     (Set.infinite_coe_iff.1 hi) fun n' hn' => by
       have := hf n'
-      rw [show f n' = i from hn'] at this
-      exact this
+      rwa [show f n' = i from hn'] at this
   exact ⟨i, 1, cf, one_pos, by rw [one_smul]; exact hcf⟩
 
 end GlobalTheory.UPoinc.CellCones
@@ -827,7 +823,7 @@ theorem finite_minimiser_systems_upTo_aut : ∀ (O : Type) [CommRing O] (bar : O
     · omega
     · omega
   have hmem : μ ∈ T i := by
-    simp only [T, dif_pos hPi]
+    simp only [T, dite_eq_left hPi]
     refine Classical.choose_spec (_root_.GlobalTheory.Poinc.MinSysLat.finite_minimiser_systems_lat Y n N eb i.1.val _ (fun j x y => (hPi.1.mem j).1 x y)
       (fun j y => hPi.1.nonneg j y) hPi.2) (pull e.toLinearMap b) k cf hk hcf ?_ μ h1 h2
     ext a c
@@ -989,8 +985,7 @@ theorem transport_minimisers : ∀ (O : Type) [CommRing O] (X Y : Type) [AddComm
       right_inv := fun c => by funext i; exact key B A hAB c i }
   refine ⟨σ, fun c i => ?_, ?_⟩
   · have := key A B hBA c i
-    rw [hB, LinearEquiv.symm_apply_apply] at this
-    exact this
+    rwa [hB, LinearEquiv.symm_apply_apply] at this
   · intro b hmin c α hα
     simp only [pull_apply, LinearEquiv.coe_coe, LinearEquiv.apply_symm_apply]
     apply hmin (σ c) (f α)
@@ -1226,8 +1221,7 @@ theorem GlobalTheory.UPoinc.exists_uLocTuples_theta : ∀ (E : Type) [Field E] [
   let t : ∀ k, Jk k → X₁.Ω₁ := fun k j => ∏ cl, ((k.2.2 cl : Es) : X₁.Ω₁) ^ ((m₁ : ℤ) * j.1 cl)
   refine ⟨m₂ * ι₀, K, inferInstance, Jk, fun k => inferInstance, t, ?_, ?_, ?_⟩
   · exact Nat.one_le_iff_ne_zero.2 (Nat.mul_ne_zero (by omega) (by omega))
-  · intro k j
-    exact Finset.prod_ne_zero_iff.2 fun cl _ => zpow_ne_zero _ (k.2.2 cl).2.1
+  · exact fun k j => Finset.prod_ne_zero_iff.2 fun cl _ => zpow_ne_zero _ (k.2.2 cl).2.1
   intro M U₀ EE out hAdm hEE x
   obtain ⟨X, _, _, _, _, n, eb, b₀, μ, e, hrank, hbal, hpos, hμ, hmin, he, htr⟩ := hX M U₀ EE out hAdm hEE x
   obtain ⟨hnB, hL⟩ := hT n X hrank eb
@@ -1254,7 +1248,6 @@ theorem GlobalTheory.UPoinc.exists_uLocTuples_theta : ∀ (E : Type) [Field E] [
     have hNpos : (0 : ℤ) < X₁.S.N := by exact_mod_cast (show 0 < X₁.S.N by omega)
     have h2 : (0 : ℤ) ≤ (X₁.S.N : ℤ) * ((X₁.S.N : ℤ) * T.be (π y) (π y)) := by
       simpa [hμ0, map_zsmul, LinearMap.smul_apply, smul_eq_mul] using h1
-    show 0 ≤ T.be (π y) (π y)
     exact (mul_nonneg_iff_of_pos_left hNpos).1 ((mul_nonneg_iff_of_pos_left hNpos).1 h2)
   obtain ⟨hle, ν₀, hν₀, heq⟩ := hLprop b' hb'bal hb'psd hπmin
   have hφeq : φ.evalZ b' = φ.evalZ T.be := evalZ_pull φ hπs T.be
@@ -1470,9 +1463,7 @@ theorem lift_i_of_closedPoint (C : UCompact Xo c) (V : Type) [CommRing V] [IsLoc
   have hunit : ∀ a : C.o, a ≠ 0 → IsUnit (φ a) := by
     intro a ha
     by_contra hn
-    have hm : a ∈ (spMap φ (closedPoint V)).asIdeal := by
-      show φ a ∈ (closedPoint V).asIdeal
-      exact (IsLocalRing.mem_maximalIdeal _).2 hn
+    have hm : a ∈ (spMap φ (closedPoint V)).asIdeal := (IsLocalRing.mem_maximalIdeal _).2 hn
     rw [hc] at hm
     haveI := ((C.iF ≫ pullback.snd C.z (spMap C.b)) x).isPrime
     have hb : C.b a ∈ ((C.iF ≫ pullback.snd C.z (spMap C.b)) x).asIdeal := hm

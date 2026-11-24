@@ -350,8 +350,7 @@ theorem isHCTypeW_cj (h : Tor k r d) {H : Type*} [NormedAddCommGroup H] [InnerPr
   have e : ∀ x, cj (star d) (cj d g * blockW k r x * (cj d g)⁻¹) = g * blockW k r x * g⁻¹ := fun x => by
     conv_lhs => rw [← cj_blockW h x]
     rw [← cj_inv h.uni, ← cj_mul h.uni, ← cj_mul h.uni, cj_star_cj h.uni]
-  simp only [e]
-  exact hU
+  simpa only [e] using hU
 
 theorem isDSHpk_cj (h : Tor k r d) {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     {ε : Fin (2 * r + k + 1) → Bool} {lam : Fin (2 * r + k + 1) → ℝ} {σ : Mx k r → (H →L[ℂ] H)}
@@ -368,8 +367,7 @@ theorem isDSHpk_cj (h : Tor k r d) {H : Type*} [NormedAddCommGroup H] [InnerProd
       congr 1
       rw [Matrix.mul_inv_rev, h.uni.inv, cj]
       simp only [Matrix.mul_assoc]
-    simp only [e]
-    exact hD
+    simpa only [e] using hD
 
 theorem isKFin_cj (h : Tor k r d) {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     {σ : Mx k r → (H →L[ℂ] H)} {v : H} (hv : IsKFinHpk (k := k) (r := r) σ v) :
@@ -637,8 +635,7 @@ theorem jNorm2_turn (L : LocBessel k r) (f : Mx k r → (L.Wq →L[ℂ] L.Wp))
     (μsec : ℂ → Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) : jNorm2 (turnL L) (turnF L f) μsec = jNorm2 L f μsec := by
   have e : ∀ c μ, (turnL L).J (turnF L f) (bigCell k r c μ) = L.J f (bigCell k r c μ) := fun c μ => by
     have := orbInt_turn L f (bigCell k r c μ) (pairMeas L)
-    rw [← pairMeas_turn, cj_bigCell (tor_dT k r)] at this
-    exact this
+    rwa [← pairMeas_turn, cj_bigCell (tor_dT k r)] at this
   unfold jNorm2
   simp only [e]
   rfl

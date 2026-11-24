@@ -70,8 +70,7 @@ theorem UpperTheory.V.Z.Sym.Loc.One.fixg :
       rw [mul_inv_cancel]; rfl
     exact h
   have hIsum : ∀ (f : Fin 3 → Lsq K Δ), (∀ i, IsInt O (f i)) → IsInt O (∑ i, f i) := by
-    intro f hf
-    exact IsIntegral.sum _ fun i _ => hf i
+    exact fun f hf => IsIntegral.sum _ fun i _ => hf i
   have hImul : ∀ a b : Lsq K Δ, IsInt O a → IsInt O b → IsInt O (a * b) := fun a b ha hb => ha.mul hb
   have hIstar : ∀ a : Lsq K Δ, IsInt O a ↔ IsInt O (star a) := by
     intro a
@@ -92,8 +91,7 @@ theorem UpperTheory.V.Z.Sym.Loc.One.fixg :
     simp [Matrix.mulVec, dotProduct, star_sum, star_mul']
   have hIvec : ∀ (N : Matrix (Fin 3) (Fin 3) (Lsq K Δ)) (v : Fin 3 → Lsq K Δ),
       (∀ i j, IsInt O (N i j)) → (∀ j, IsInt O (v j)) → ∀ i, IsInt O ((N *ᵥ v) i) := by
-    intro N v hN hv i
-    exact hIsum _ fun j => hImul _ _ (hN i j) (hv j)
+    exact fun N v hN hv i => hIsum _ fun j => hImul _ _ (hN i j) (hv j)
   have hsingle : ∀ (j : Fin 3) (u : Lsq K Δ), IsInt O u →
       ∀ i, IsInt O ((Pi.single j u : Fin 3 → Lsq K Δ) i) := by
     intro j u hu i
@@ -219,7 +217,7 @@ theorem UpperTheory.V.Z.Sym.Loc.One.fixg :
       have h2 := h _ he
       rw [hform, hQS] at h2
       simp only [dotProduct, Pi.single_apply, Pi.star_apply, ite_mul, one_mul, zero_mul,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true] at h2
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h2
       exact (hIstar _).mpr h2
   · ext y
     constructor

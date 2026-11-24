@@ -73,9 +73,7 @@ theorem exists_isHerm : GlobalTheory.Published.CuspFormsBoundedGL → ∀ (E : T
     toL2ₗ_injective hm fun ψ hψ => ContAut.continuous_of_isOpen_stab E a ψ (π.cusp ψ hψ).1.level
   have hT : toL2ₗ μ π.V hm ⟨φ, hφ⟩ ≠ 0 := fun h =>
     hne (congrArg Subtype.val (hi (h.trans (map_zero _).symm)))
-  refine ⟨⟨φ, hφ⟩, ?_⟩
-  show inner ℂ (toL2ₗ μ π.V hm ⟨φ, hφ⟩) (toL2ₗ μ π.V hm ⟨φ, hφ⟩) ≠ 0
-  exact inner_self_ne_zero.2 hT
+  exact ⟨⟨φ, hφ⟩, inner_self_ne_zero.2 hT⟩
 
 end GlobalTheory.CompanionTheory.ClozelHerm
 

@@ -131,8 +131,7 @@ theorem gram_mem (hττ : ∀ x, τ (τ x) = x) (hτι : ∀ r, τ (ι r) = ι r
     (u : Up n → K) : gram ι τ d u ∈ Hm τ n := by
   intro a b
 
-  simp only [gram, map_sum, map_mul, hττ, hτι]
-  exact Finset.sum_congr rfl fun k _ => by ring
+  simpa only [gram, map_sum, map_mul, hττ, hτι] using Finset.sum_congr rfl fun k _ => by ring
 
 theorem blk_mem (hττ : ∀ x, τ (τ x) = x) {n : ℕ} {A : K} (hA : τ A = A) (c : Fin n → K)
     {S : Matrix (Fin n) (Fin n) K} (hS : S ∈ Hm τ n) : blk τ A c S ∈ Hm τ (n + 1) := by
@@ -187,9 +186,9 @@ def eD (n : ℕ) : ((Fin (n + 1) → Rˣ) × (Up (n + 1) → K)) ≃ₜ
         simpa [Function.comp_def] using
           (continuous_apply i).comp (continuous_fst.comp (continuous_snd.comp continuous_snd))
     · by_cases h : p.1.1 = 0
-      · simp only [joinU, h, dif_pos]
+      · simp only [joinU, h, dite_eq_left]
         exact (continuous_apply _).comp (continuous_fst.comp continuous_snd)
-      · simp only [joinU, h, dif_neg, not_false_eq_true]
+      · simp only [joinU, h, dite_eq_right, not_false_eq_true]
         exact (continuous_apply _).comp (continuous_snd.comp (continuous_snd.comp continuous_snd))
 
 variable {ι : R →+* K} {τ : K →+* K}
@@ -321,8 +320,7 @@ theorem oH_isOpenEmbedding {lev : K → R} (hι : Continuous ι) (hτ : Continuo
         (eH hι hτ hlev hττ hτι hlι hfix n) ∘ (Prod.map Units.val id) ∘ (shear hι hτ hττ hτι n) ∘
           (Prod.map id (Prod.map id (oH ι τ hττ hτι n))) ∘ (eD n) := by
       funext x
-      apply Subtype.ext
-      exact gram_split hτι x.1 x.2
+      exact Subtype.ext (gram_split hτι x.1 x.2)
     rw [h]
     exact (eH hι hτ hlev hττ hτι hlι hfix n).isOpenEmbedding.comp
       ((hU.prodMap .id).comp ((shear hι hτ hττ hτι n).isOpenEmbedding.comp
@@ -561,7 +559,7 @@ theorem aGL_coords (ι : R →+* K) {U : Subgroup Rˣ} (x : triSub ι U n) :
   show aMat ι (uOf ι x) (mOf ι x) i j = _
   rw [aMat_apply]
   rcases lt_trichotomy i j with h | h | h
-  · simp only [nMat, Matrix.of_apply, h.ne, if_false, h, dif_pos, mOf]
+  · simp only [nMat, Matrix.of_apply, h.ne, ite_false, h, dite_eq_left, mOf]
     exact unit_cancel' ι _ _
   · subst h
     simp [nMat, uOf_spec]
@@ -588,8 +586,7 @@ theorem coords_aGL (ι : R →+* K) (hι : Function.Injective ι) {U : Subgroup 
   simp only [mOf, h1]
   show _ * aMat ι u m i j = _
   rw [aMat_apply]
-  simp only [nMat, Matrix.of_apply, h'.ne, if_false, h', dif_pos]
-  exact unit_cancel ι _ _
+  simpa only [nMat, Matrix.of_apply, h'.ne, ite_false, h', dite_eq_left] using unit_cancel ι _ _
 
 theorem aMat_gram (ι : R →+* K) (sig : K →+* K) (hs : ∀ r, sig (ι r) = ι r) {U : Subgroup Rˣ}
     (u : Fin n → U) (m : {p : Fin n × Fin n // p.1 < p.2} → K) (d : Fin n → Rˣ) :

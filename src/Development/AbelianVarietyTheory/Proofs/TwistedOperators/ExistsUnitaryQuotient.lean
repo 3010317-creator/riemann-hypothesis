@@ -125,16 +125,13 @@ theorem exists_unitary_quotient (p q : ℕ) (M : GKMod p q) (H : Type) [NormedAd
     { M := quotMod M N hN
       ip := ip
       herm := by
-        intro v w
-        show star (inner ℂ (Eb v) (Eb w)) = inner ℂ (Eb w) (Eb v)
-        exact inner_conj_symm (Eb w) (Eb v)
+        exact fun v w => inner_conj_symm (Eb w) (Eb v)
       pos := by
         intro v hv
         have hne : Eb v ≠ 0 := fun h0 => hv (hinj (h0.trans (map_zero Eb).symm))
         have h : 0 < RCLike.re (inner ℂ (Eb v) (Eb v)) := by
           rw [inner_self_eq_norm_sq]
           exact pow_pos (norm_pos_iff.mpr hne) 2
-        show 0 < (inner ℂ (Eb v) (Eb v)).re
         exact h
       adj := by
         intro Z v w

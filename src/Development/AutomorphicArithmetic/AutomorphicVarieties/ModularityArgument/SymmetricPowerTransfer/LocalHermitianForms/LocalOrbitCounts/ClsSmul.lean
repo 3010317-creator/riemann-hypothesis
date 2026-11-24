@@ -277,8 +277,7 @@ theorem Uni.frame (L : IsLoc O Δ) {S : Set (K × Etau K τ)} (hS : Uni O c t S)
       ∀ x ∈ Submodule.span O (s : Set (K × Etau K τ)), Bf τ c t x y ∈ (algebraMap O K).range := by
     intro y
     have := hS.dual y
-    rw [hs] at this
-    exact this
+    rwa [hs] at this
   obtain ⟨e, he, f, hf, h, hh, η, h1, h2, h3, h4, h5, h6, h7⟩ :=
     exists_frame L finrank_V (Bf_symm c t) (Submodule.fg_span (Finset.finite_toSet s)) hd
   rw [hs]
@@ -326,8 +325,7 @@ theorem exists_lat (L : IsLoc O Δ) (hc : c = (τ ^ 2 - 4) * algebraMap O K ε *
           rw [hinvE, one_smul]
       _ = κ • y := by rw [mul_smul, this, smul_smul, hκ, map_mul, map_ofNat]
   obtain ⟨w0, hw0⟩ : ∃ w0, psi s β e w0 ≠ 0 := by
-    by_contra H
-    push_neg at H
+    by_contra! H
     have := ef 1
     rw [H (psi s β f 1), H 1, map_zero, add_zero, eq_comm, smul_eq_zero] at this
     rcases this with h0 | h0
@@ -345,8 +343,7 @@ theorem exists_lat (L : IsLoc O Δ) (hc : c = (τ ^ 2 - 4) * algebraMap O K ε *
   have pf1 : psi s β f y1 = y2 := hy2d.symm
   have pe2 : psi s β e y2 = κ • y1 := by
     have := ef y1
-    rw [pe1, map_zero, add_zero, ← hy2d] at this
-    exact this
+    rwa [pe1, map_zero, add_zero, ← hy2d] at this
   have hind : (y2 * star y1).im ≠ 0 := by
     intro H0
     have H1 : y2.im * y1.re = y2.re * y1.im := by
@@ -440,8 +437,7 @@ theorem exists_lat (L : IsLoc O Δ) (hc : c = (τ ^ 2 - 4) * algebraMap O K ε *
   have hsup : S0 s β Λ ⊆ S := by
     intro y hy
     rw [hS.dual]
-    intro x hx
-    exact Bf_int h2O hc hβ hind hΛ (hsub hx) hy
+    exact fun x hx => Bf_int h2O hc hβ hind hΛ (hsub hx) hy
   exact ⟨Λ, hLat, Set.Subset.antisymm hsub hsup⟩
 
 theorem lattice_homothety_of_eq_unimodular (L : IsLoc O Δ) (hD : τ ^ 2 - 4 ≠ 0) (hs : s ≠ 0) (hu : IsUnit β) {Λ Λ' : Set (Etau K τ)} (hΛ : IsLat O τ Λ) (hΛ' : IsLat O τ Λ')
@@ -553,8 +549,7 @@ theorem unimodular_image_mul_unit (z : (Etau K τ)ˣ) (Λ : Set (Etau K τ)) :
     obtain ⟨x, hx, hxy⟩ := hw ((z : Etau K τ) * y) ⟨y, hy, rfl⟩
     rw [hw2 w, psi_quo] at hxy
     have := (Units.mul_right_inj z).mp hxy
-    rw [← this]
-    exact hx
+    rwa [← this]
   · rintro ⟨v, hv, rfl⟩ _ ⟨y, hy, rfl⟩
     rw [psi_quo]
     exact ⟨_, hv y hy, rfl⟩
@@ -675,8 +670,7 @@ theorem mem_up {σ : K} (hσ : σ ≠ 0) {S : Set (K × Etau K τ)} {v w : K × 
 
 theorem up_inj {σ : K} (hσ : σ ≠ 0) {S S' : Set (K × Etau K τ)} (h : up Δ σ S = up Δ σ S') : S = S' := by
   ext p
-  have key := congrArg (fun T => mkL Δ σ (p, p) ∈ T) h
-  simpa [mem_up hσ] using key
+  simpa [mem_up hσ] using congrArg (fun T => mkL Δ σ (p, p) ∈ T) h
 
 theorem tor_up (σ : K) (z : (Etau K τ)ˣ) (S : Set (K × Etau K τ)) : tor Δ z '' up Δ σ S = up Δ σ (Mu (quo z) '' S) := by
   ext x
@@ -750,8 +744,7 @@ private theorem mu_image_eq_of_mu_omega_image_eq {M : Submodule O (K × Etau K �
     have : x ∈ (M : Set (K × Etau K τ)) := hx
     rw [← hN] at this
     obtain ⟨y, hy, rfl⟩ := this
-    rw [Mu_Mu, mul_comm, omega_star, Mu_one]
-    exact hy
+    rwa [Mu_Mu, mul_comm, omega_star, Mu_one]
   have key : ∀ a : Etau K τ, (a = ω ∨ a = star ω) → (∀ x ∈ M, Mu a x ∈ M) →
       ∀ x ∈ M, Mu ((algebraMap O K q)⁻¹ • (1 + a)) x ∈ M := by
     intro a ha hM x hx
@@ -817,11 +810,9 @@ theorem fix_up (L : IsLoc O Δ) (hσ : Δ * σ ^ 2 = algebraMap O K ε) (h1 : Is
         exact M.neg_mem this
     · rintro ⟨v, hv, w, hw, rfl⟩
       obtain ⟨v', hv', rfl⟩ : v ∈ Mu ((algebraMap O K r)⁻¹ • (1 + ω)) '' (M : Set (K × Etau K τ)) := by
-        rw [hst]
-        exact hv
+        rwa [hst]
       obtain ⟨w', hw', rfl⟩ : w ∈ Mu ((algebraMap O K r)⁻¹ • (1 + ω)) '' (M : Set (K × Etau K τ)) := by
-        rw [hst]
-        exact hw
+        rwa [hst]
       refine ⟨mkL Δ σ (v', -w'), ⟨v', hv', -w', M.neg_mem hw', rfl⟩, ?_⟩
       rw [semi_mkL]
       congr 2
@@ -893,8 +884,7 @@ theorem fix_down (L : IsLoc O Δ) (hσ : Δ * σ ^ 2 = algebraMap O K ε) (h1 : 
     have key := poly_mem (K := K) M (fun x => semi (ofE Δ U) (semi (ofE Δ U) x))
       (fun x hx => hφ _ (hφ x hx)) h1 h2 h
     simp only [hss] at key
-    rw [hU, mkL_mu_half_one_add_omega_eq hR1 hR2 hr]
-    exact key
+    rwa [hU, mkL_mu_half_one_add_omega_eq hR1 hR2 hr]
   obtain ⟨h2u, hh⟩ := L.two
   have hK : algebraMap O K ↑h2u⁻¹ * 2 = 1 := by
     have : algebraMap O K (↑h2u⁻¹ * ↑h2u) = 1 := by simp
@@ -965,8 +955,7 @@ theorem fix_down (L : IsLoc O Δ) (hσ : Δ * σ ^ 2 = algebraMap O K ε) (h1 : 
     ext v
     simp only [Set.mem_setOf_eq, SetLike.mem_coe, Submodule.mem_map]
     constructor
-    · intro hv
-      exact ⟨_, hv, hp v 0⟩
+    · exact fun hv => ⟨_, hv, hp v 0⟩
     · rintro ⟨x, hx, rfl⟩
       obtain ⟨a, b, rfl⟩ := mkL_surj hσ0 x
       rw [hp]
@@ -984,14 +973,12 @@ theorem fix_down (L : IsLoc O Δ) (hσ : Δ * σ ^ 2 = algebraMap O K ε) (h1 : 
       obtain ⟨v', w', rfl⟩ := mkL_surj hσ0 x
       obtain ⟨hv'0, h0w'⟩ := hsplit v' w' hx
       rw [isInt_herm_mkL_iff_bf_integral L hσ hσ0]
-      simp only [map_zero, mul_zero, sub_zero]
-      exact ⟨h v' hv'0, h w' (hswap1 w' h0w')⟩
+      simpa only [map_zero, mul_zero, sub_zero] using ⟨h v' hv'0, h w' (hswap1 w' h0w')⟩
   · ext v
     constructor
     · rintro ⟨a, ha, rfl⟩
       have key := hφ _ (hφ (mkL Δ σ (a, 0)) ha)
-      rw [hss, hMu0] at key
-      exact key
+      rwa [hss, hMu0] at key
     · intro hv
       obtain ⟨x1, hx1, e1⟩ := hφ' (mkL Δ σ (v, 0)) hv
       obtain ⟨x0, hx0, e0⟩ := hφ' _ hx1
@@ -1008,8 +995,7 @@ theorem fix_down (L : IsLoc O Δ) (hσ : Δ * σ ^ 2 = algebraMap O K ε) (h1 : 
       have hv' : mkL Δ σ (v, 0) ∈ M := hv
       have hw' : mkL Δ σ (w, 0) ∈ M := hw
       have key := M.add_mem hv' (hswap2 w hw')
-      rw [← map_add (f := _), Prod.mk_add_mk, add_zero, zero_add] at key
-      exact key
+      rwa [← map_add (f := _), Prod.mk_add_mk, add_zero, zero_add] at key
 
 end UpperTheory.V.Z.Sym.Loc.CP
 end -- clump:auto
@@ -1177,7 +1163,7 @@ theorem UpperTheory.V.Z.Sym.Loc.caseP :
   · rw [H, hq] at hm
     obtain ⟨p, q, hpq⟩ : ∃ p q : K, p ^ 2 - (τ ^ 2 - 4) * q ^ 2 = -2 * c * t := by
       by_contra hn
-      rw [hs, if_neg hn] at hm
+      rw [hs, ite_eq_right hn] at hm
       norm_num at hm
     let ε : Oˣ := -ε₀
     let s : K := s₀ / (algebraMap O K r * (2 - τ))
@@ -1225,22 +1211,22 @@ theorem UpperTheory.V.Z.Sym.Loc.caseP :
       exact ⟨_, lat_mul hΛ w, (tor_up _ w _).trans (by rw [unimodular_image_mul_unit]; rfl), cls_mul w Λ⟩
     · rintro _ _ ⟨Λ, hΛ, rfl, rfl⟩
       exact if_congr ((kT Λ hΛ).trans (kX Λ hΛ).symm) rfl rfl
-    · obtain ⟨S, a1, -, rfl⟩ := fix_down L hσ h1 h1' hr (by by_contra h; exact hT (if_neg h))
+    · obtain ⟨S, a1, -, rfl⟩ := fix_down L hσ h1 h1' hr (by by_contra h; exact hT (ite_eq_right h))
       obtain ⟨Λ, hΛ, rfl⟩ := exists_lat L hc' hβ a1
       refine ⟨_, ⟨Λ, hΛ, rfl, rfl⟩, ?_⟩
       rintro _ ⟨Λ', hΛ', e, rfl⟩
       obtain ⟨k, rfl⟩ := lattice_homothety_of_eq_unimodular L hD hs' hu hΛ hΛ' (up_inj hσ0 e)
       exact cls_smul k Λ
-    · obtain ⟨Λ, hΛ, -, rfl⟩ : ∃ S, IsLat O τ S ∧ (∀ y ∈ S, ω * y ∈ S) ∧ X = cls τ S := by by_contra h; exact hX (if_neg h)
+    · obtain ⟨Λ, hΛ, -, rfl⟩ : ∃ S, IsLat O τ S ∧ (∀ y ∈ S, ω * y ∈ S) ∧ X = cls τ S := by by_contra h; exact hX (ite_eq_right h)
       refine ⟨_, ⟨Λ, hΛ, rfl, rfl⟩, ?_⟩
       rintro _ ⟨Λ', hΛ', rfl, e⟩
       obtain ⟨k, rfl⟩ := of_cls e
       rw [unimodular_image_smul_eq]
-  · refine finsum_eq_zero_of_forall_eq_zero fun o => mul_eq_zero_of_right _ (if_neg fun h => H ?_)
+  · refine finsum_eq_zero_of_forall_eq_zero fun o => mul_eq_zero_of_right _ (ite_eq_right fun h => H ?_)
     obtain ⟨S, a1, -, -⟩ := fix_down L hσ h1 h1' hr h
     rcases a1.iso L t.ne_zero with h3 | h3
     · rw [(hsLaw O K Δ L).2.2.2 _ _ hD h3, (hsLaw O K Δ L).2.2.2 _ _ hD h3]
-    · rw [hs, if_pos h3] at hm
+    · rw [hs, ite_eq_left h3] at hm
       linear_combination (-hs (τ ^ 2 - 4) (-2 * c)) * hm - hs (τ ^ 2 - 4) (t : K) * hq (-2 * c)
 end -- clump:auto
 end -- clump:auto

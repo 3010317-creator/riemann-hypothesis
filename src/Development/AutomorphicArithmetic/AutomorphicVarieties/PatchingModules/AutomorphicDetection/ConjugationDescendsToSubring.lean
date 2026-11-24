@@ -130,8 +130,7 @@ private theorem intertwiner_of_ker {F : Type} [Field F] {σ : Type} (d : σ → 
   have key : ∀ x ∈ S, ∀ y ∈ S, x t = y t → x s = y s := by
     intro x hx y hy h
     have := hk (x - y) (S.sub_mem hx hy) (by rw [Pi.sub_apply, h, sub_self])
-    rw [Pi.sub_apply, sub_eq_zero] at this
-    exact this
+    rwa [Pi.sub_apply, sub_eq_zero] at this
   obtain ⟨i0⟩ := (inferInstance : Nonempty (d t))
   choose xx hxS hxt using fun j => ht (Matrix.single j i0 (1 : F))
   choose z hzS hzt using fun j => ht (Matrix.single i0 j (1 : F))
@@ -151,8 +150,7 @@ private theorem intertwiner_of_ker {F : Type} [Field F] {σ : Type} (d : σ → 
     simp only [Pi.mul_apply, hx0, zero_mul, Finset.sum_const_zero, Pi.one_apply] at h1
     exact zero_ne_one h1
   obtain ⟨a, b, hab⟩ : ∃ a b, xx i0 s a b ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hne (Matrix.ext h)
   refine ⟨Matrix.of fun u j => xx j s u b, ?_, ?_⟩
   · intro hV
@@ -181,8 +179,7 @@ private theorem separate {F : Type} [Field F] {σ : Type} (d : σ → Type)
     (hk : ∃ x ∈ S, x t = 0 ∧ x s ≠ 0) : ∃ x ∈ S, x t = 0 ∧ x s = 1 := by
   obtain ⟨x, hxS, hxt, hxs⟩ := hk
   obtain ⟨a, b, hab⟩ : ∃ a b, x s a b ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hxs (Matrix.ext h)
   choose p hpS hps using fun i => hs (Matrix.single i a (x s a b)⁻¹)
   choose q hqS hqs using fun i => hs (Matrix.single b i (1 : F))
@@ -237,8 +234,7 @@ theorem UpperTheory.V.AlgebraTools.density_prod :
   have hsep : ∀ s t, s ≠ t → ∃ x ∈ S, x t = 0 ∧ x s = 1 := by
     intro s t hst
     apply separate d S s t (hsurj s)
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     obtain ⟨V, hV0, hV⟩ := intertwiner_of_ker d S s t (hsurj t) hno
     exact hV0 (hint s t hst V fun g => hV _ (hmem g))
   have he : ∀ s, ∃ e ∈ S, e s = 1 ∧ ∀ t, t ≠ s → e t = 0 := by
@@ -247,8 +243,7 @@ theorem UpperTheory.V.AlgebraTools.density_prod :
       intro T
       induction T using Finset.induction_on with
       | empty =>
-        intro _
-        exact ⟨1, S.one_mem, rfl, by simp⟩
+        exact fun _ => ⟨1, S.one_mem, rfl, by simp⟩
       | @insert t T htT ih =>
         intro hs
         rw [Finset.mem_insert, not_or] at hs
@@ -273,8 +268,7 @@ theorem UpperTheory.V.AlgebraTools.density_prod :
       · rw [Pi.mul_apply, hzs, hes, mul_one]
       · intro b _ hb
         rw [Pi.mul_apply, het b u hb.symm, mul_zero]
-      · intro h
-        exact absurd (Finset.mem_univ u) h
+      · exact fun h => absurd (Finset.mem_univ u) h
     rw [hY]
     exact Subalgebra.sum_mem _ fun s _ => S.mul_mem (hzS s) (heS s)
   have h2 : Submodule.span F (Set.range fun g => (fun s => ρ s g : ∀ s, Matrix (d s) (d s) F)) =
@@ -355,8 +349,7 @@ theorem UpperTheory.V.AlgebraTools.intertwiner_iso :
       simpa using h2
     have surj : Function.Surjective (Matrix.toLin' V) := by
       obtain ⟨i0, k0, h0⟩ : ∃ i k, V i k ≠ 0 := by
-        by_contra h
-        push_neg at h
+        by_contra! h
         exact hV0 (Matrix.ext fun i k => by simp [h i k])
       intro y
       let A : Matrix m m F := Matrix.of fun i a => if a = i0 then y i * (V i0 k0)⁻¹ else 0
@@ -623,8 +616,7 @@ private theorem conj_mem_G'_and_conj_conj_eq_of_mem_G' {l : ℕ} [Fact l.Prime] 
 private theorem mem_ev_self_self {R : Type} [CommRing R] (n : ℕ) (M : Matrix (Fin n) (Fin n) R) : M ∈ Ev R R n n := by
   simp only [Ev, blkMat, Submodule.mem_top, implies_true, Submodule.mem_bot, true_and, Submodule.mem_mk,
     AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq]
-  intro i j h
-  exact absurd (iff_of_true i.2 j.2) h
+  exact fun i j h => absurd (iff_of_true i.2 j.2) h
 
 theorem UpperTheory.V.Pa.Det.blockForm :
     ∀ {l : ℕ} [Fact l.Prime] {F : GFrame l} {O : Type} [CommRing O] [IsLocalRing O] [Algebra ℤ_[l] O] {n : ℕ} {r : Resid F O n} (x : Point r), 0 < n → x.TypeI ∨ x.TypeE → ∃ (a : ℕ) (Q : GL (Fin n) x.Fr), 1 ≤ a ∧ a ≤ n ∧ (x.TypeI → a = n) ∧ (∀ g, ((Q * x.ρF g * Q⁻¹ : GL (Fin n) x.Fr) : Matrix (Fin n) (Fin n) x.Fr) ∈ Ev x.Fr x.Fr n a) ∧ Submodule.span x.Fr ((fun g => ((Q * x.ρF g * Q⁻¹ : GL (Fin n) x.Fr) : Matrix (Fin n) (Fin n) x.Fr)) '' (F.G' : Set F.G₀)) = Ev x.Fr x.Fr n a ∧ ((Q⁻¹ : GL (Fin n) x.Fr) : Matrix (Fin n) (Fin n) x.Fr)ᵀ * (x.P : Matrix (Fin n) (Fin n) x.A).map (algebraMap x.A x.Fr) * ((Q⁻¹ : GL (Fin n) x.Fr) : Matrix (Fin n) (Fin n) x.Fr) ∈ Ev x.Fr x.Fr n a := by
@@ -643,10 +635,7 @@ theorem UpperTheory.V.Pa.Det.blockForm :
       Submodule.span x.Fb (Set.range ((mat (pushRep (algebraMap x.Fr x.Fb) ρ)).comp F.G'.subtype)) = ⊤ := by
     intro k ρ hirr
     refine ((UpperTheory.V.AlgebraTools.irred_iff_span (RingHom.id x.Fb) ((mat (pushRep (algebraMap x.Fr x.Fb) ρ)).comp F.G'.subtype)).1.1) ?_
-    intro N hN
-    apply hirr N
-    intro g hg v hv
-    exact hN ⟨g, hg⟩ v hv
+    exact fun N hN => hirr N (fun g hg v hv => hN ⟨g, hg⟩ v hv)
   by_cases hI : x.TypeI
   · refine ⟨n, 1, hn, le_refl n, fun _ => rfl, fun g => mem_ev_self_self n _, ?_, mem_ev_self_self n _⟩
     simp only [one_mul, inv_one, mul_one]
@@ -759,8 +748,7 @@ theorem UpperTheory.V.Pa.Det.blockForm :
           (mat r₂ g)ᵀ * Z.toBlocks₂₁ * mat r₁ (F.conj g) = Z.toBlocks₂₁ := by
         intro g hg
         have h0 := congrArg (Matrix.reindex e e) (hWeq g hg)
-        rw [reindex_transpose_mul_mul, hQ g, hQ (F.conj g)] at h0
-        rw [← hZ] at h0
+        rw [reindex_transpose_mul_mul, hQ g, hQ (F.conj g), ← hZ] at h0
         rw [← Matrix.fromBlocks_toBlocks Z] at h0
         simp only [Matrix.fromBlocks_transpose, Matrix.fromBlocks_multiply, Matrix.fromBlocks_inj,
           Matrix.transpose_zero, Matrix.zero_mul, Matrix.mul_zero, add_zero, zero_add] at h0
@@ -773,8 +761,7 @@ theorem UpperTheory.V.Pa.Det.blockForm :
         intro k ρ Pk h g hg
         unfold GFrame.IsForm at h
         have h0 := h g
-        rw [eps_eq_one_of_mem_G' F O _ g hg, _root_.one_zpow, Units.val_one, one_smul] at h0
-        exact h0
+        rwa [eps_eq_one_of_mem_G' F O _ g hg, _root_.one_zpow, Units.val_one, one_smul] at h0
       have hPP : ∀ {k : ℕ} (Pk : GL (Fin k) x.Fr),
           ((Pk⁻¹ : GL (Fin k) x.Fr) : Matrix (Fin k) (Fin k) x.Fr) * Pk = 1 ∧
           (Pk : Matrix (Fin k) (Fin k) x.Fr) * ((Pk⁻¹ : GL (Fin k) x.Fr) : Matrix (Fin k) (Fin k) x.Fr) = 1 := by
@@ -790,8 +777,7 @@ theorem UpperTheory.V.Pa.Det.blockForm :
           have h3 := rh_mul_pi_mul_z_eq_pi_mul_z_mul_s (mat r₁ (F.conj h)) (mat r₁ (F.conj h)⁻¹) (P₁ : Matrix (Fin a) (Fin a) x.Fr) _
             (mat r₁ (F.conj (F.conj h))) (mat r₂ (F.conj (F.conj h))) Z.toBlocks₁₂ (hmatinv r₁ _) (hPP P₁).1
             (hPP P₁).2 (hfm r₁ P₁ hP₁ _ hc) (hZeq _ hc).1
-          rw [hcc] at h3
-          exact h3
+          rwa [hcc] at h3
         have h0 := intertwiner_eq_zero_of_map_intertwiner_eq_zero (algebraMap x.Fr x.Fb) (fun h : F.G' => mat r₁ h) (fun h : F.G' => mat r₂ h)
           (fun V hV' => i₁₂' V (fun g => by simpa [ρ₁', ρ₂', hpush] using hV' g)) _ hV
         calc Z.toBlocks₁₂ = (P₁ : Matrix (Fin a) (Fin a) x.Fr) *
@@ -806,8 +792,7 @@ theorem UpperTheory.V.Pa.Det.blockForm :
           have h3 := rh_mul_pi_mul_z_eq_pi_mul_z_mul_s (mat r₂ (F.conj h)) (mat r₂ (F.conj h)⁻¹) (P₂ : Matrix (Fin b) (Fin b) x.Fr) _
             (mat r₂ (F.conj (F.conj h))) (mat r₁ (F.conj (F.conj h))) Z.toBlocks₂₁ (hmatinv r₂ _) (hPP P₂).1
             (hPP P₂).2 (hfm r₂ P₂ hP₂ _ hc) (hZeq _ hc).2
-          rw [hcc] at h3
-          exact h3
+          rwa [hcc] at h3
         have h0 := intertwiner_eq_zero_of_map_intertwiner_eq_zero (algebraMap x.Fr x.Fb) (fun h : F.G' => mat r₂ h) (fun h : F.G' => mat r₁ h)
           (fun V hV' => i₂₁' V (fun g => by simpa [ρ₁', ρ₂', hpush] using hV' g)) _ hV
         calc Z.toBlocks₂₁ = (P₂ : Matrix (Fin b) (Fin b) x.Fr) *
@@ -880,8 +865,7 @@ private theorem closed_of_comb {A G ι : Type} [CommRing A] [IsDomain A] [IsLoca
     constructor
     · intro h
       rw [h, mul_one]
-    · intro h
-      exact mul_left_cancel₀ hb0 (h.trans (mul_one _).symm)
+    · exact fun h => mul_left_cancel₀ hb0 (h.trans (mul_one _).symm)
   have hset : {g | ψ g = 1} =
       ⋂ N : ℕ, {g | Ideal.Quotient.mk (maximalIdeal A ^ N) (∑ a, c a * ρ a g - (b : A)) = 0} := by
     ext g
@@ -925,8 +909,7 @@ theorem UpperTheory.V.Pa.Det.psiMu :
     refine closed_of_comb (ι := Fin n × Fin n) (fun ab s => (mat x.ρ) (F.φ v s) ab.1 ab.2) ?_
       (fun ab => (P : Matrix (Fin n) (Fin n) _) i ab.1 * ((P⁻¹ : GL (Fin n) _) : Matrix (Fin n) (Fin n) _) ab.2 i)
       _ ?_
-    · intro ab N
-      exact (x.cont ab.1 ab.2 N).comp_continuous (F.φ_cont v)
+    · exact fun ab N => (x.cont ab.1 ab.2 N).comp_continuous (F.φ_cont v)
     · intro s
       have hs := (hP s).2 i
       simp only [pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe] at hs
@@ -1018,8 +1001,7 @@ theorem UpperTheory.V.Pa.Det.conjCont :
     exact Ideal.mem_span_singleton_self _
   have hjX : j PowerSeries.X ∈ maximalIdeal (PowerSeries K') := by
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-    intro hu
-    exact (IsLocalRing.mem_maximalIdeal _).1 hX (isUnit_of_map_unit j _ hu)
+    exact fun hu => (IsLocalRing.mem_maximalIdeal _).1 hX (isUnit_of_map_unit j _ hu)
   have hjr : ∀ k l (N : ℕ) (x : G), ∀ᶠ y in nhds x,
       j (ρ y k l) - j (ρ x k l) ∈ maximalIdeal (PowerSeries K') ^ N := by
     intro k l N x
@@ -1081,8 +1063,7 @@ theorem UpperTheory.V.Pa.Det.sqExt :
   refine ⟨(PowerSeries.expand 2 two_ne_zero (R := K)).toRingHom, ?_, ?_, ?_, by simp⟩
   · intro f g h
     ext m
-    have h1 := congrArg (PowerSeries.coeff (2 * m)) h
-    simpa using h1
+    simpa using congrArg (PowerSeries.coeff (2 * m)) h
   · refine ⟨fun f hf => ?_⟩
     rw [PowerSeries.isUnit_iff_constantCoeff] at hf ⊢
     simpa using hf
@@ -1171,11 +1152,9 @@ theorem UpperTheory.V.Pa.Det.exists_integral_block_iwasawa_decomposition :
     rfl
   have hkunit : IsUnit kw.det := hdetk ▸ Matrix.isUnits_det_units k
   refine ⟨GeneralLinearGroup.mk'' kw hkunit, GeneralLinearGroup.mk'' c' hc'unit, ?_, ?_, ?_⟩
-  · intro i j hij
-    exact hc'tri hij
+  · exact fun i j hij => hc'tri hij
   · apply Units.ext
-    rw [Units.val_mul]
-    exact hmap
+    rwa [Units.val_mul]
   · intro i j hij
     show kw i j = 0
     simp [kw, hij]
@@ -1333,8 +1312,7 @@ private theorem flagBasis_diag_mul {F : Type} [Field F] {n : ℕ} {A B : Matrix 
     rcases lt_or_gt_of_ne hk with h | h
     · rw [hA h, zero_mul]
     · rw [hB h, mul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 private theorem flagBasis_conj {F : Type} [Field F] {n : ℕ} (b t : GL (Fin n) F)
     (hb : ∀ i j, j < i → b i j = 0) (ht : ∀ i j, j < i → t i j = 0) :
@@ -1365,9 +1343,9 @@ theorem UpperTheory.V.Pa.Det.flagBasis :
     refine Infinite.of_injective (fun m : ℕ => ι (PowerSeries.X ^ m)) ?_
     intro m k hmk
     have h := congrArg (fun p => PowerSeries.coeff (R := K) m p) (hιi hmk)
-    simp only [PowerSeries.coeff_X_pow, if_true] at h
+    simp only [PowerSeries.coeff_X_pow, ite_true] at h
     by_contra hne
-    rw [if_neg hne] at h
+    rw [ite_eq_right hne] at h
     exact one_ne_zero h
   have hev' : ∀ g, mat (pushRep ι r) g ∈ Ev (FractionRing (PowerSeries K)) (FractionRing (PowerSeries K)) n a := by
     intro g
@@ -1468,8 +1446,7 @@ theorem UpperTheory.V.Pa.Det.resSq :
     UpperTheory.V.Pa.Det.resSq_fin, fun c => ?_⟩
   · rw [PowerSeries.isUnit_iff_constantCoeff, hcc, isUnit_iff_ne_zero,
       map_ne_zero_iff _ (algebraMap K K').injective] at hφ
-    rw [PowerSeries.isUnit_iff_constantCoeff, isUnit_iff_ne_zero]
-    exact hφ
+    rwa [PowerSeries.isUnit_iff_constantCoeff, isUnit_iff_ne_zero]
   · obtain ⟨r, hr⟩ := hsq (PowerSeries.constantCoeff (c : PowerSeries K))
     refine ⟨residue (PowerSeries K') (PowerSeries.C r), ?_⟩
     rw [← map_mul, ← sub_eq_zero, ← map_sub, residue_eq_zero_iff, mem_maximalIdeal,

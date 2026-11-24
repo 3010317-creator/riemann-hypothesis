@@ -114,8 +114,7 @@ theorem localHom_nsmul (hρ : 0 < ρ)
 theorem localHom_norm_inv_smul_lt (z : V) {N : ℕ} (hN : 0 < N) (hz : ‖z‖ < N * ρ) :
     ‖(N : ℝ)⁻¹ • z‖ < ρ := by
   have hN' : (0 : ℝ) < N := by exact_mod_cast hN
-  rw [norm_smul, Real.norm_of_nonneg (by positivity), inv_mul_lt_iff₀ hN']
-  exact hz
+  rwa [norm_smul, Real.norm_of_nonneg (by positivity), inv_mul_lt_iff₀ hN']
 
 theorem localHom_pow_mul (hρ : 0 < ρ)
     (h : ∀ z w : V, ‖z‖ < ρ → ‖w‖ < ρ → ‖z + w‖ < ρ → e₀ (z + w) = e₀ z * e₀ w)
@@ -171,8 +170,7 @@ theorem localHom_existsUnique_extension (hρ : 0 < ρ)
       (fun a b _ _ _ => he a b) ((N z : ℝ)⁻¹ • z) (N z) (by
         rw [norm_smul, Real.norm_of_nonneg (by positivity), mul_inv_cancel_left₀ hN'.ne']
         linarith)
-    rw [smul_inv_smul₀ hN'.ne', he₀ _ hb] at key
-    exact key
+    rwa [smul_inv_smul₀ hN'.ne', he₀ _ hb] at key
 
 end LocalHom
 
@@ -232,13 +230,11 @@ theorem exists_analytic_family_inverse {B V : Type} [NormedAddCommGroup B] [Norm
     rwa [this] at hPan
   have hright : ∀ᶠ q in 𝓝 (b₀, 0), Φ (P.symm q) = q := by
     have := hs.eventually_right_inverse
-    rw [hfix] at this
-    exact this
+    rwa [hfix] at this
   have hleft : ∀ᶠ p in 𝓝 (b₀, 0), P.symm (Φ p) = p := hs.eventually_left_inverse
   have hΨ0 : P.symm (b₀, 0) = (b₀, 0) := by
     have := hs.localInverse_apply_image
-    rw [hfix] at this
-    exact this
+    rwa [hfix] at this
   refine ⟨fun q => (P.symm q).2, analyticAt_snd.comp hΨan, by simp [hΨ0], ?_, ?_⟩
   · filter_upwards [hright] with q hq
     have e1 := congrArg Prod.fst hq
@@ -248,8 +244,7 @@ theorem exists_analytic_family_inverse {B V : Type} [NormedAddCommGroup B] [Norm
     have h3 : (q.1, (P.symm q).2) = P.symm q := by rw [← h1]
     rw [h3, h2]
   · filter_upwards [hleft] with p hp
-    have e := congrArg Prod.snd hp
-    exact e
+    exact congrArg Prod.snd hp
 
 end GlobalTheory.CompanionTheory.Metric.FamilyInverse
 end -- clump:auto
@@ -722,8 +717,7 @@ theorem isHolTo_pow {W : Set E} (hW : IsOpen W) (ψ : E → (R →+* ℂ))
   induction k, hk using Nat.le_induction with
   | base => simpa using hx
   | succ k hk ih =>
-    simp only [pow_succ]
-    exact isHolTo_mul hW ψ _ _ ih hx
+    simpa only [pow_succ] using isHolTo_mul hW ψ _ _ ih hx
 
 end Hol
 
@@ -998,8 +992,7 @@ theorem family_isHolTo {ρ : ℝ} (hρ : 0 < ρ) (ex : ∀ b : Fin n → ℂ, (F
       refine isHolTo_precomp hbase hWo (φ := fun p => (p.1, (M : ℂ)⁻¹ • p.2)) (by fun_prop) fun p hp => ⟨hp.1, ?_⟩
       have h2 : ‖p.2‖ < M * ρ := mem_ball_zero_iff.1 hp.2
       refine mem_ball_zero_iff.2 ?_
-      rw [norm_smul, norm_inv, Complex.norm_natCast, inv_mul_lt_iff₀ hMr]
-      exact h2
+      rwa [norm_smul, norm_inv, Complex.norm_natCast, inv_mul_lt_iff₀ hMr]
     have h2 := isHolTo_pow hWo (fun p => ψ p.1) (fun p => ex p.1 ((M : ℂ)⁻¹ • p.2)) h1 M hM
     refine isHolTo_congr h2 fun p hp => ?_
     rw [← pow_of_add (ex p.1) (hadd p.1 hp.1), smul_inv_smul₀ hMc]
@@ -1041,7 +1034,7 @@ theorem famExp_of_inverse (M : LieModel G (𝟙 (Sp R)) (Fin g → R)) (hρ : 0 
   have hexa : ∀ b ∈ ball b₀ ρ, (∀ z w, ex b (z + w) = ex b z * ex b w) ∧
       ∀ z ∈ ball (0 : Fin g → ℂ) ρ, ex b z = Ψ b (Λ (b, z)) := by
     intro b hb
-    simp only [ex, dif_pos hb]
+    simp only [ex, dite_eq_left hb]
     exact (hext b hb).choose_spec.1
   have hBo : IsOpen (ball b₀ ρ ×ˢ ball (0 : Fin g → ℂ) ρ) := isOpen_ball.prod isOpen_ball
   have hΛd : DifferentiableOn ℂ Λ (ball b₀ ρ ×ˢ ball (0 : Fin g → ℂ) ρ) := fun p hp =>
@@ -1165,9 +1158,7 @@ theorem exists_famExp_near : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) [GrpO
       (𝓝 (b₀, 0, 0)) (𝓝 (b₀, 0)) := by
     have h1 : ContinuousAt (fun w : (Fin n → ℂ) × (Fin g → ℂ) × (Fin g → ℂ) => ((w.1, chartMul V t Ψ w) : (Fin n → ℂ) × (Fin g → ℂ))) (b₀, 0, 0) :=
       continuousAt_fst.prodMk hman.continuousAt
-    have h2 := h1.tendsto
-    simp only [hm0] at h2
-    exact h2
+    simpa only [hm0] using h1.tendsto
   have hF : ∀ᶠ w in 𝓝 ((b₀, 0, 0) : (Fin n → ℂ) × (Fin g → ℂ) × (Fin g → ℂ)),
       Ψ w.1 w.2.1 * Ψ w.1 w.2.2 = Ψ w.1 (chartMul V t Ψ w) ∧
       L (w.1, chartMul V t Ψ w) = L (w.1, w.2.1) + L (w.1, w.2.2) ∧
@@ -1214,8 +1205,7 @@ theorem exists_famExp_near : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) [GrpO
   · intro b hb z hz
     obtain ⟨h1, -, h3, h4, h5, h6, -⟩ := hE' _ (hmem ρ hρ₀' b hb z hz)
     exact ⟨h1, h3, h4, h5, h6⟩
-  · intro b hb
-    exact (hE' _ (hmem ρ hρ₀' b hb 0 (mem_ball_self hρ))).2.2.2.2.2.2.2
+  · exact fun b hb => (hE' _ (hmem ρ hρ₀' b hb 0 (mem_ball_self hρ))).2.2.2.2.2.2.2
   · intro b hb z hz w hw hzw
     obtain ⟨-, hs, hs1, -, -, -, hbr, -⟩ := hE' _ (hmem ρ hρ₀' b hb z hz)
     obtain ⟨-, hs', hs1', -, -, -, -, -⟩ := hE' _ (hmem ρ hρ₀' b hb w hw)
@@ -1229,8 +1219,7 @@ theorem exists_famExp_near : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) [GrpO
       have e1 : L (b, Λ (b, z)) = z := hs1
       have e2 : L (b, Λ (b, w)) = w := hs1'
       have := h2
-      simp only [e1, e2] at this
-      exact this
+      simpa only [e1, e2] using this
     have h3' : Λ (b, L (b, chartMul V t Ψ (b, Λ (b, z), Λ (b, w)))) = chartMul V t Ψ (b, Λ (b, z), Λ (b, w)) := h3
     rw [h2'] at h3'
     rw [h3', h1']

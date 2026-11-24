@@ -145,8 +145,7 @@ theorem exists_lie_eq_exp {n : ℕ} (H : Matrix (Fin n) (Fin n) ℂ) (M : ℝ �
   refine ⟨Y, ?_, hY⟩
   have hd : HasDerivAt M Y 0 := by
     have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) Y 0
-    rw [zero_smul, NormedSpace.exp_zero, one_mul, funext hY] at h
-    exact h
+    rwa [zero_smul, NormedSpace.exp_zero, one_mul, funext hY] at h
   let L : Matrix (Fin n) (Fin n) ℂ →ₗ[ℝ] Matrix (Fin n) (Fin n) ℂ :=
     { toFun := fun A => Aᴴ
       map_add' := fun A B => Matrix.conjTranspose_add A B
@@ -191,10 +190,8 @@ theorem conjU_mem_UAt_iff (W : HSp D) (Wd : GlobalTheory.IndefiniteRowSideFullHe
       have h2 : (u • ((Formalism.L2.Theta.mt W g).map (cA D) - 1)) a b = 0 := congrFun (congrFun (h u hu) a) b
       rw [smul_cA_sub] at h2
       have h3 := congrArg (cA D) h2
-      rw [Formalism.L2.Theta.cA_cA, map_zero] at h3
-      exact h3
-    rw [Matrix.sub_apply, map_sub, hone, sub_eq_zero] at h1
-    exact h1
+      rwa [Formalism.L2.Theta.cA_cA, map_zero] at h3
+    rwa [Matrix.sub_apply, map_sub, hone, sub_eq_zero] at h1
   · intro hg u hu
     have hf : finHom W g = 1 := hg
     refine Matrix.ext fun a b => ?_
@@ -226,7 +223,7 @@ theorem infMat_prod {θ : InfFam D} (W : HSp D) (m : D.what₂.Tau → Matrix (F
     rw [List.map_cons, List.prod_cons, GlobalTheory.PointAtPlaceHom.infMat_mul, ih hl.2]
     by_cases c : τ = a
     · subst c
-      rw [(hx τ).2.1, if_neg hl.1, if_pos List.mem_cons_self, Matrix.mul_one]
+      rw [(hx τ).2.1, ite_eq_right hl.1, ite_eq_left List.mem_cons_self, Matrix.mul_one]
     · rw [(hx a).2.2 τ c, Matrix.one_mul]
       simp only [List.mem_cons, c, false_or]
 
@@ -245,7 +242,7 @@ theorem exists_eq_prod_oneP {θ : InfFam D} (hθ : IsInfFam θ) (W : HSp D) (g :
     obtain ⟨τ, -, rfl⟩ := List.mem_map.1 hx
     exact GlobalTheory.PointAtPlaceHom.atTau_mem W τ _
   · rw [infMat_prod W _ _ (fun τ' => GlobalTheory.Mem.Lift.isAtTau_oneP hθ (hY τ') t) τ _ (Finset.nodup_toList _),
-      if_pos (Finset.mem_toList.2 (Finset.mem_univ τ)), hexp]
+      ite_eq_left (Finset.mem_toList.2 (Finset.mem_univ τ)), hexp]
 
 theorem line_eq_prod : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (W : HSp D) (Wd : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc D.host.F D.host.E W.rank)
     (hJ : Wd.J = (1 : D.host.E) • W.gram), ∀ γ ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Lines D.sp.cm.sig Wd,
@@ -271,8 +268,7 @@ theorem line_eq_prod : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (W : HS
   · exact (continuous_conjU W 1 hJ).comp ((GlobalTheory.Mem.Lift.continuous_oneP hθ (hY τ)).comp continuous_toAdd)
   · exact (conjU_mem_UAt_iff W Wd hJ _).2 (GlobalTheory.PointAtPlaceHom.atTau_mem W τ _)
   · have e := congrArg φ (hprod (Multiplicative.toAdd t))
-    rw [φ.apply_symm_apply, map_list_prod, List.map_map] at e
-    exact e
+    rwa [φ.apply_symm_apply, map_list_prod, List.map_map] at e
 
 end GlobalTheory.ConjLineSplit
 
@@ -586,8 +582,7 @@ theorem tendsto_schrodinger_action_along_line : _root_.GlobalTheory.FunPr.ThetaL
     have hc : Continuous fun t : ℝ => schwartzSeminormFamily ℂ _ ℂ q (c x t) :=
       (hq.continuous_seminorm q).comp (hcont x)
     have := (isCompact_Icc (a := (-1 : ℝ)) (b := 1)).bddAbove_image hc.continuousOn
-    rw [Set.image_eq_range] at this
-    exact this
+    rwa [Set.image_eq_range] at this
   have hk' : ∀ t, k t = c (h t) t := fun t => hinj _ _ ((hk t).symm.trans (hA t (h t)))
   have h1 : Tendsto (fun t => A t (h t - h₀)) (𝓝 0) (𝓝 0) := by
     have hE := hUE.equicontinuous 0
@@ -606,7 +601,6 @@ theorem tendsto_schrodinger_action_along_line : _root_.GlobalTheory.FunPr.ThetaL
   rw [zero_add] at h2
   refine h2.congr fun t => ?_
   rw [hk' t, map_sub]
-  show c (h t) t - c h₀ t + c h₀ t = c (h t) t
   exact sub_add_cancel _ _
 end GlobalTheory.ArchJointCont
 end
@@ -674,7 +668,7 @@ theorem line_sum_curve_eq_prod (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs)
       refine Tendsto.sup ?_ ?_
       · refine hlim'.congr' ?_
         filter_upwards [self_mem_nhdsWithin] with t ht
-        simp only [s, if_neg (show t ≠ 0 from ht)]
+        simp only [s, ite_eq_right (show t ≠ 0 from ht)]
       · simp only [tendsto_pure_left, s]
         exact fun _ => mem_of_mem_nhds
     have hk' : Tendsto k (𝓝 0) (𝓝 S') :=
@@ -683,7 +677,7 @@ theorem line_sum_curve_eq_prod (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs)
       intro t
       by_cases ht : t = 0
       · subst ht; simp [hc'0]
-      · simp only [s, if_neg ht, smul_smul, mul_inv_cancel₀ ht, one_smul, add_sub_cancel]
+      · simp only [s, ite_eq_right ht, smul_smul, mul_inv_cancel₀ ht, one_smul, add_sub_cancel]
     refine ⟨fun t => ci t + t • k t, fun t => ?_, ?_, ?_⟩
     · simp only [List.map_cons, List.prod_cons]
       rw [om_prod_one, hc' t, hcs t, tens_add_smul, map_add (f := _), map_smul, hci t, hk t, tens_add_smul]
@@ -893,8 +887,7 @@ theorem line_vector_annihilated : _root_.GlobalTheory.FunPr.ThetaLocalInputs →
       rw [hψ]; exact h2
     have e2 : GlobalTheory.WeilM.thetaSum D.host.F (Γ.M.co.rho Bs.ψ u (Ψ τ)) = Φ' τ (cA u) := by
       rw [hψ]; exact (hΦ' τ).2 u
-    rw [e1, e2] at h1
-    exact h1
+    rwa [e1, e2] at h1
   have hp : ∀ τ, p (Φ' τ) = 0 := fun τ =>
     hm.mapA.invl τ (Y τ) (hY τ) Φ hΦalg (Φ' τ) (hΦ'alg τ) (hder' τ)
   have hsumD : IsDatum Γ.M ψ cA Φ₁D (((Finset.univ : Finset D.what₂.Tau).toList.map Φ').sum) := by

@@ -180,8 +180,7 @@ theorem MirUin_step (ψ : AddChar k Circle) {m n : ℕ} (hnm : n ≤ m) (u : Mir
   rw [mirChar_eq k ψ m u w hw.symm, derCharM_apply]
   congr 2
   have hw' : ((u : Mir k (m + 1)) : GL (Fin (m + 2)) k) = unip k (m + 1) w := hw.symm
-  rw [hw']
-  rw [Finset.sum_eq_single (Fin.castSucc (Fin.last m), Fin.last (m + 1))]
+  rw [hw', Finset.sum_eq_single (Fin.castSucc (Fin.last m), Fin.last (m + 1))]
   · exact unip_apply_castSucc_last k (m + 1) w (Fin.last m)
   · intro p hp hne
     have hc := (Finset.mem_filter.1 hp).2.1
@@ -189,8 +188,7 @@ theorem MirUin_step (ψ : AddChar k Circle) {m n : ℕ} (hnm : n ≤ m) (u : Mir
     have h2 : p.2 ≠ Fin.last (m + 1) := fun e => hne (Prod.ext (Fin.ext (by
       rw [e] at hc; simp at hc ⊢; omega)) e)
     simp [unip, colMat, h12, h2]
-  · intro h
-    exact absurd (Finset.mem_filter.2 ⟨Finset.mem_univ _, by simp, by simpa using hnm⟩) h
+  · exact fun h => absurd (Finset.mem_filter.2 ⟨Finset.mem_univ _, by simp, by simpa using hnm⟩) h
 
 end H1
 
@@ -285,8 +283,7 @@ theorem derUnipM_decomp {m n : ℕ} (hnm : n ≤ m) (u : derUnipM k (m + 1) n) :
   have hXl : ∀ j, X (Fin.last (m + 1)) j = if j = Fin.last (m + 1) then 1 else 0 := by
     intro j
     have := congrFun hM j
-    simp only [eLast, Pi.single_apply] at this
-    exact this
+    simpa only [eLast, Pi.single_apply] using this
   let a₀ : GL (Fin (m + 1)) k := mirabolicProjection k (m + 1) (u : Mir k (m + 1))
   have hval : (a₀ : Matrix (Fin (m + 1)) (Fin (m + 1)) k) = blockMat k (m + 1) X := rfl
   have ha₀M : a₀ ∈ Mir k m := by
@@ -295,9 +292,9 @@ theorem derUnipM_decomp {m n : ℕ} (hnm : n ≤ m) (u : derUnipM k (m + 1) n) :
     simp only [blockMat, eLast, Pi.single_apply]
     by_cases hj : j = Fin.last m
     · subst hj
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       exact hB.2 _
-    · rw [if_neg hj]
+    · rw [ite_eq_right hj]
       exact hB.1 _ _ (Fin.castSucc_lt_castSucc_iff.2 (Fin.lt_last_iff_ne_last.2 hj))
   have ha₀D : a₀ ∈ derUnip k (m + 1) n := by
     refine ⟨(mem_unipB k).2 ⟨fun i j hji => ?_, fun i => ?_⟩, (mem_colFix_iff _).2 fun i j hj => ?_⟩
@@ -316,7 +313,7 @@ theorem derUnipM_decomp {m n : ℕ} (hnm : n ≤ m) (u : derUnipM k (m + 1) n) :
   rw [add_mul, one_mul]
   ext i j
   rw [Matrix.add_apply, Matrix.mul_apply, Fin.sum_univ_castSucc]
-  simp only [colMat, Fin.castSucc_ne_last, if_false, zero_mul, Finset.sum_const_zero, zero_add, if_true]
+  simp only [colMat, Fin.castSucc_ne_last, ite_false, zero_mul, Finset.sum_const_zero, zero_add, ite_true]
   induction j using Fin.lastCases with
   | last =>
     induction i using Fin.lastCases with

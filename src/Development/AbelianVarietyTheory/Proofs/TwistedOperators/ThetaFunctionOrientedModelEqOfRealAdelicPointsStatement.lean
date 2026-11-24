@@ -125,8 +125,7 @@ theorem denseRange_ratW_add_realPt {D : D7} (S T : HSp D) :
       (ratW T S (Matrix.of fun i j => (p i j).1) + realPt S T (Matrix.of fun i j => (p i j).2) : WO S T)) =
       fun p => Matrix.of fun i j => (incA D (p i j).1 + pairA D.host.F 1 0 ⊗ₜ[D.host.F] (p i j).2 : AE D) := by
     funext p; ext i j; simp [ratW, realPt]
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem eq_of_eq_realPt : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (S T : HSp D) (f₁ f₂ : WO S T → ℂ),
     IsThetaFunO ψ S T f₁ → IsThetaFunO ψ S T f₂ →

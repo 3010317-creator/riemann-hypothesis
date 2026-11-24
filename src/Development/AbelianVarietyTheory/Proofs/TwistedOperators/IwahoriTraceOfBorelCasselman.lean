@@ -170,10 +170,8 @@ theorem exists_setOp (μ : Measure G) [IsFiniteMeasureOnCompacts μ] {π : Repre
     rw [map_sub, h l, sub_self]
   refine ⟨⟨⟨a, fun x y => hsep _ _ fun l => ?_⟩, fun c x => hsep _ _ fun l => ?_⟩,
     fun v l => ⟨hint v l, ha v l⟩⟩
-  · simp only [map_add (f := _), ha]
-    exact integral_add (hint x l) (hint y l)
-  · simp only [map_smul, ha, RingHom.id_apply]
-    exact integral_smul _ _
+  · simpa only [map_add (f := _), ha] using integral_add (hint x l) (hint y l)
+  · simpa only [map_smul, ha, RingHom.id_apply] using integral_smul _ _
 
 theorem hasTrace_indicator (μ : Measure G) [IsFiniteMeasureOnCompacts μ] [μ.IsMulLeftInvariant]
     {π : Representation ℂ G V} (hπ : IsSmooth π) {D : Set G} (hD : IsCompact D) (hm : MeasurableSet D)

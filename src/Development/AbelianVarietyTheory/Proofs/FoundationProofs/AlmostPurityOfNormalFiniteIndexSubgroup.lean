@@ -216,8 +216,7 @@ theorem cpow_mul_approx_pow_of_isSep :
     have h := frob (Fin n) Finset.univ (fun i => a i * w i)
       (fun i _ => by rw [map_mul]; exact mul_le_one' (hs.a_le i) (hw1 i))
     simp only [mul_pow] at h
-    rw [Valuation.map_sub_swap]
-    exact h
+    rwa [Valuation.map_sub_swap]
   have e : c ^ p * x - W ^ p = (c ^ p * x - ∑ i, a i ^ p * T i)
       + (∑ i, a i ^ p * T i - ∑ i, a i ^ p * w i ^ p) + (∑ i, a i ^ p * w i ^ p - W ^ p) := by ring
   rw [e]
@@ -357,8 +356,7 @@ theorem exists_lagrange_resolvent : ∀ (L : Type) [Field L] (p : ℕ), p.Prime 
     conv_lhs => rw [← Nat.div_add_mod n p, pow_add, pow_mul, hζp, one_pow, one_mul]
   have hψmul : ∀ a b, ψ (a * b) = ψ a * ψ b := by
     intro a b
-    simp only [hψdef, map_mul, toAdd_mul, ZMod.val_add, ← pow_add]
-    exact (hmod _).symm
+    simpa only [hψdef, map_mul, toAdd_mul, ZMod.val_add, ← pow_add] using (hmod _).symm
   have hψp : ∀ g, ψ g ^ p = 1 := by
     intro g; simp only [hψdef]; rw [← pow_mul, mul_comm, pow_mul, hζp, one_pow]
   have hψne : ∀ g, ψ g ≠ 0 := fun g h => by
@@ -367,14 +365,11 @@ theorem exists_lagrange_resolvent : ∀ (L : Type) [Field L] (p : ℕ), p.Prime 
   let f : G → (L →* L) := fun g => (MulSemiringAction.toRingHom G L g : L →* L)
   have hf : Function.Injective f := by
     intro g h hgh
-    apply FaithfulSMul.eq_of_smul_eq_smul (α := L)
-    intro x
-    exact DFunLike.congr_fun hgh x
+    exact FaithfulSMul.eq_of_smul_eq_smul (α := L) (fun x => DFunLike.congr_fun hgh x)
   have hli : LinearIndependent L (fun g : G => ((f g : L →* L) : L → L)) :=
     (linearIndependent_monoidHom L L).comp f hf
   have hex : ∃ x : L, ∑ g : G, ψ g⁻¹ * (g • x) ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have h0 : ∑ g : G, ψ g⁻¹ • ((f g : L →* L) : L → L) = 0 := by
       funext x
       simpa [f, Finset.sum_apply] using hcon x
@@ -419,7 +414,7 @@ variable {L : Type} [Field L] {G : Type} [Group G] [MulSemiringAction G L]
 theorem not_moves_top_iff (v : Valuation L ℝ≥0) (σ : G) :
     ¬ Moves v ⊤ σ ↔ ∃ r : ℝ≥0, r < 1 ∧ ∀ x : L, v x ≤ 1 → v (σ • x - x) ≤ r := by
   unfold Moves
-  push_neg
+  push Not
   constructor
   · rintro ⟨r, hr, h⟩
     exact ⟨r, hr, fun x hx => h x (Subfield.mem_top x) hx⟩
@@ -650,8 +645,7 @@ theorem kummer_approx_critical : ∀ (L : Type) [Field L] (v : Valuation L ℝ�
   by_cases hα0 : α = 0
   · refine ⟨0, F.zero_mem, ?_⟩
     simp [hα0, zero_pow hp1]
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hs0 : (0 : ℝ≥0) < s := zero_lt_one.trans hs
   have ha : 0 < v α := (Valuation.pos_iff v).2 hα0
   set a := v α with ha_def
@@ -659,8 +653,7 @@ theorem kummer_approx_critical : ∀ (L : Type) [Field L] (v : Valuation L ℝ�
   have hc : 0 < c := by positivity
   set η : ℝ≥0 := max s⁻¹ (max θ (v (p : L))) with hη_def
   have hη : η < 1 := by
-    simp only [hη_def, max_lt_iff]
-    exact ⟨inv_lt_one_of_one_lt₀ hs, hθ, hvp⟩
+    simpa only [hη_def, max_lt_iff] using ⟨inv_lt_one_of_one_lt₀ hs, hθ, hvp⟩
   have step : ∀ y ∈ F, v (α - y) ≤ a → ∃ y' ∈ F, v (α - y') ^ p ≤ η * v (α - y) ^ p := by
     intro y hy hya
     obtain ⟨y', hy', h⟩ := _root_.GlobalTheory.AlmostEt.exists_approxRoot_step L v p hp F θ hθ.le hvp.le hθF α y hα hy hya
@@ -795,8 +788,7 @@ theorem moves_fix_of_moves : ∀ (L : Type) [Field L] (v : Valuation L ℝ≥0) 
     ∀ σ : G, Moves v ⊤ σ → Moves v (Fix L N) σ := by
   intro L _ v G _ _ _ hinv N i hi hN σ hσ r hr
   classical
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   haveI := Fintype.ofFinite G
   set n := Fintype.card N with hn_def
   have hn : n ≠ 0 := Fintype.card_ne_zero
@@ -886,8 +878,7 @@ theorem natCast_eq_one_of_coprime :
     ∀ (L : Type) [Field L] (v : Valuation L ℝ≥0) (p l : ℕ), v (p : L) < 1 → Nat.Coprime l p → v (l : L) = 1 := by
   intro L _ v p l hp hlp
   refine le_antisymm (valuation_nnreal_natCast_le_one v l) ?_
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have hb : ((Nat.gcd l p : ℕ) : ℤ) = (l : ℤ) * Nat.gcdA l p + (p : ℤ) * Nat.gcdB l p := Nat.gcd_eq_gcd_ab l p
   rw [hlp, Nat.cast_one] at hb
   have hL : (1 : L) = (l : L) * (Nat.gcdA l p : L) + (p : L) * (Nat.gcdB l p : L) := by
@@ -928,8 +919,7 @@ theorem moves_top_of_coprime_order : ∀ (L : Type) [Field L] (v : Valuation L �
     _root_.GlobalTheory.AlmostEt.klc_scale L v p hp F hF hp0 hp1 r hr (σ • y - y) (sub_ne_zero.mpr hy)
   set x := (σ • y - y) * d ^ p with hxdef
   refine ⟨x, Subfield.mem_top x, hx1, ?_⟩
-  by_contra hle
-  push_neg at hle
+  by_contra! hle
   have hfix : ∀ j : ℕ, (σ ^ j) • d = d := by
     intro j
     induction j with
@@ -1002,8 +992,7 @@ theorem moves_of_ne_one : ∀ (L : Type) [Field L] (v : Valuation L ℝ≥0) (p 
     have hl : ((τ : G) ^ (p ^ k)) ^ (n / p ^ k) = 1 := by
       rw [← pow_mul, Nat.mul_div_cancel' (Nat.ordProj_dvd n p), hn, pow_orderOf_eq_one]
     obtain ⟨y, hy⟩ : ∃ y : L, ((τ : G) ^ (p ^ k)) • y ≠ y := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hne' (eq_of_smul_eq_smul (α := L) (fun y => by rw [h y, one_smul]))
     exact (hNmem _).1 hτ' (_root_.GlobalTheory.AlmostEt.moves_top_of_coprime_order L v p hp (Fix L N) hF hp0 hp1 G hinv _ (hfixN _ hτ') _ hcop hl ⟨y, hy⟩)
   haveI : Nontrivial N := ⟨⟨⟨σ, hσN⟩, 1, fun h => hσ (congrArg Subtype.val h)⟩⟩
@@ -1102,8 +1091,7 @@ theorem almostSep_of_normal_finiteIndex : ∀ (L : Type) [Field L] (v : Valuatio
   intro r hr
   obtain ⟨x, -, hx1, hxr⟩ := hmain r hr
   refine ⟨(x : L), x.2, hx1, ?_⟩
-  rw [hv'x, AddSubgroupClass.coe_sub, quot_smul_coe] at hxr
-  exact hxr
+  rwa [hv'x, AddSubgroupClass.coe_sub, quot_smul_coe] at hxr
 
 end GlobalTheory.AlmostEt
 end -- clump:auto

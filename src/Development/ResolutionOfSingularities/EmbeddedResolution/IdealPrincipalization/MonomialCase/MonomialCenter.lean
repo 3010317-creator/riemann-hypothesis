@@ -91,12 +91,12 @@ theorem orderAlong_eq_orderAt_of_mem_intersectionComponents {Y : Scheme.{u}} (I 
     (hC : C ∈ intersectionComponents L J) :
     orderAlong I C = orderAt I (isIrreducible_of_mem_intersectionComponents hC).genericPoint := by
   unfold orderAlong
-  exact dif_pos (isIrreducible_of_mem_intersectionComponents hC)
+  exact dite_eq_left (isIrreducible_of_mem_intersectionComponents hC)
 
 theorem orderAlong_eq_orderAt_genericPoint {Y : Scheme.{u}} (I : Y.IdealSheafData)
     {C : Set ↥Y} (h : IsIrreducible C) : orderAlong I C = orderAt I h.genericPoint := by
   unfold orderAlong
-  exact dif_pos h
+  exact dite_eq_left h
 
 theorem orderAlong_eq_of_closure_eq {Y : Scheme.{u}} (I : Y.IdealSheafData) {S : Set ↥Y}
     (hS : IsIrreducible S) {C : Set ↥Y} (hC : IsIrreducible C)
@@ -188,8 +188,7 @@ theorem subset_orderAtLeastLocus_of_le_orderAlong {T : MarkedIdealWithBoundary.{
       closure ({(isIrreducible_of_mem_intersectionComponents hC).genericPoint} : Set ↥T.scheme) ⊆
         orderAtLeastLocus T.ideal c :=
     closure_minimal (Set.singleton_subset_iff.2 hmem) hclosed
-  rw [← h2]
-  exact hsub
+  rwa [← h2]
 
 def supportIndices {Y : Scheme.{u}} (L : List Y.IdealSheafData) (x : ↥Y) :
     Finset (Fin L.length) :=
@@ -247,7 +246,7 @@ theorem orderAt_eq_sum_indicator_support (hGeom : MonomialGeometryHypotheses.{u}
         Set.indicator_of_mem hset]
     · have hset : x ∉ (↑(T.boundary.get i).support : Set ↥T.scheme) := hmem
       rw [(orderAt_eq_zero_iff_not_mem_support (T.boundary.get i) x).2 hmem,
-        Set.indicator_apply, if_neg hset]
+        Set.indicator_apply, ite_eq_right hset]
   calc orderAt T.ideal x = orderAt (T.ideal.comap U.ι) ⟨x, hx⟩ := h1.symm
     _ = ∑ i : Fin T.boundary.length,
           orderAt ((T.boundary.get i).comap U.ι ^ a i) ⟨x, hx⟩ := h2
@@ -318,9 +317,8 @@ theorem orderAt_eq_sum_supportIndices (hGeom : MonomialGeometryHypotheses.{u}) {
           (↑(T.boundary.get j).support : Set ↥T.scheme).indicator (fun _ => (1 : ℕ∞)) x = 0 := by
     intro j _ hj
     have hx : x ∉ (↑(T.boundary.get j).support : Set ↥T.scheme) := by
-      intro hmem
-      exact hj ((mem_supportIndices T.boundary x j).2 hmem)
-    rw [Set.indicator_apply, if_neg hx, mul_zero]
+      exact fun hmem => hj ((mem_supportIndices T.boundary x j).2 hmem)
+    rw [Set.indicator_apply, ite_eq_right hx, mul_zero]
   have h1 : ∀ j ∈ supportIndices T.boundary x,
       (a j : ℕ∞) *
           (↑(T.boundary.get j).support : Set ↥T.scheme).indicator (fun _ => (1 : ℕ∞)) x
@@ -328,7 +326,7 @@ theorem orderAt_eq_sum_supportIndices (hGeom : MonomialGeometryHypotheses.{u}) {
     intro j hj
     have hx : x ∈ (↑(T.boundary.get j).support : Set ↥T.scheme) :=
       (mem_supportIndices T.boundary x j).1 hj
-    rw [Set.indicator_apply, if_pos hx]
+    rw [Set.indicator_apply, ite_eq_left hx]
     exact mul_one _
   rw [orderAt_eq_sum_indicator_support hGeom hT U a hmon x hxU, Nat.cast_sum,
     ← Finset.sum_subset (Finset.subset_univ (supportIndices T.boundary x)) h2]
@@ -415,17 +413,14 @@ theorem minIndexCard_eq_zero_iff {Y : Scheme.{u}} (I : Y.IdealSheafData) (m : �
       omega
     · obtain ⟨r, hr⟩ := hex
       have h2 : r ∈ (∅ : Set ℕ) := by
-        rw [← hempty]
-        exact hr
+        rwa [← hempty]
       exact (Set.mem_empty_iff_false r).mp h2
   · intro hne
     refine Or.inr ?_
     ext r
     constructor
-    · intro hr
-      exact (hne ⟨r, hr⟩).elim
-    · intro hr
-      exact ((Set.mem_empty_iff_false r).mp hr).elim
+    · exact fun hr => (hne ⟨r, hr⟩).elim
+    · exact fun hr => ((Set.mem_empty_iff_false r).mp hr).elim
 
 theorem exists_isCandidateComponent_minIndexCard {Y : Scheme.{u}} (I : Y.IdealSheafData) (m : ℕ)
     (L : List Y.IdealSheafData) (h : minIndexCard I m L ≠ 0) :
@@ -550,7 +545,7 @@ theorem lexMaxIndices_spec (hGeom : MonomialGeometryHypotheses.{u}) {T : MarkedI
       binaryEncode (lexMaxIndices T.ideal T.mult T.boundary)
         = maxBinaryCode T.ideal T.mult T.boundary := by
     unfold lexMaxIndices
-    rw [dif_pos hex]
+    rw [dite_eq_left hex]
     exact hex.choose_spec
   refine ⟨hchosen.1, ?_⟩
   intro J hJ hlex
@@ -636,7 +631,7 @@ theorem monomialCenter_eq_componentUnionIdeal (hGeom : MonomialGeometryHypothese
         monomialCenterSet T.ideal T.mult T.boundary) :=
     ⟨h, isOpen_preimage_monomialCenterSet hGeom hT⟩
   unfold monomialCenter
-  rw [dif_pos hc]
+  rw [dite_eq_left hc]
   exact openSublocusIdeal_eq_componentUnionIdeal T.boundary (lexMaxIndices T.ideal T.mult T.boundary)
     (centerComponents T.ideal T.mult T.boundary) _
     (by rw [monomialCenterSet_eq_sUnion_centerComponents]) _ _
@@ -676,8 +671,7 @@ theorem monomialCenter_ne_top (hGeom : MonomialGeometryHypotheses.{u}) {T : Mark
   obtain ⟨x, hx⟩ := monomialCenterSet_nonempty hGeom hT h
   have hsupp := support_monomialCenter hGeom hT h
   have hxmem : x ∈ (↑(monomialCenter T.ideal T.mult T.boundary).support : Set ↥T.scheme) := by
-    rw [hsupp]
-    exact hx
+    rwa [hsupp]
   have hx2 : x ∈ (monomialCenter T.ideal T.mult T.boundary).support := hxmem
   rw [mem_support_iff_stalkIdeal_ne_top, htop, stalkIdeal_top] at hx2
   exact hx2 rfl
@@ -804,11 +798,9 @@ theorem exists_isIrreducibleComponentOf_mem {Y : Scheme.{u}} (S : Set ↥Y) (x :
     obtain ⟨p', hp't, hp'eq⟩ := hpim
     obtain ⟨q', hq't, hq'eq⟩ := hqim
     have hp'u : p' ∈ Subtype.val ⁻¹' u := by
-      rw [Set.mem_preimage, hp'eq]
-      exact hpu
+      rwa [Set.mem_preimage, hp'eq]
     have hq'v : q' ∈ Subtype.val ⁻¹' v := by
-      rw [Set.mem_preimage, hq'eq]
-      exact hqv
+      rwa [Set.mem_preimage, hq'eq]
     obtain ⟨r, hrt, hru, hrv⟩ :=
       ht (Subtype.val ⁻¹' u) (Subtype.val ⁻¹' v) (hu.preimage continuous_subtype_val)
         (hv.preimage continuous_subtype_val) ⟨p', hp't, hp'u⟩ ⟨q', hq't, hq'v⟩
@@ -835,8 +827,7 @@ theorem exists_isIrreducibleComponentOf_mem {Y : Scheme.{u}} (S : Set ↥Y) (x :
     refine Set.Subset.antisymm ?_ hle
     intro y hy
     refine ⟨(⟨y, hC'S hy⟩ : ↥S), ?_, rfl⟩
-    rw [← hkey]
-    exact hy
+    rwa [← hkey]
   refine ⟨Subtype.val '' t, hxim, ?_⟩
   show IsIrreducible (Subtype.val '' t) ∧ Subtype.val '' t ⊆ S ∧
     ∀ C' : Set ↥Y, IsIrreducible C' → Subtype.val '' t ⊆ C' → C' ⊆ S → C' = Subtype.val '' t
@@ -884,8 +875,7 @@ theorem orderAtLeastLocus_eq_empty_of_minIndexCard_eq_zero (hGeom : MonomialGeom
       = ((∑ j ∈ supportIndices T.boundary x, a j : ℕ) : ℕ∞) :=
     orderAlong_eq_sum_of_monomial hGeom hT hCmem hxC U hxU a hmon
   have hordm : (T.mult : ℕ∞) ≤ orderAlong T.ideal C := by
-    rw [hordC, ← hord]
-    exact hmle
+    rwa [hordC, ← hord]
   have hcand : IsCandidateComponent T.ideal T.mult T.boundary
       (supportIndices T.boundary x).card (supportIndices T.boundary x) C := by
     unfold IsCandidateComponent

@@ -189,8 +189,7 @@ theorem push_graph (F G : FlagD H r) {Λ Λ' : Submodule R V} (h : ∀ y, s y �
   refine and_congr (and_congr (h p.1) (h p.2)) ?_
   have := sup_iff s.toAddEquiv (A' := Λ' ⊓ rs R (push s hs F).X) (B' := Λ ⊓ rs R F.X) (smulLat_iff s h g)
     (fun y => and_congr (h y) (push_X_iff s hs F y)) (p.2 - p.1)
-  rw [map_sub] at this
-  exact this
+  rwa [map_sub] at this
 
 theorem sameGr_push (F : FlagD H r) (hN : F.InN (s : V →ₗ[K] V)) : SameGr F (push s hN.1 F) := by
   intro a
@@ -277,8 +276,7 @@ theorem datOf_move : ∀ (K V W : Type) [Field K] [NumberField K] [StarRing K] [
         have a1 : w ∈ (datOf F G e g Λ).1 := by
           have := Submodule.sub_mem (flagPairDefinitePartLattice G F Λ ⊔ rs (𝓞 K) F.X) (Submodule.mem_sup_left hy)
             (Submodule.mem_sup_right hx)
-          rw [sub_sub_cancel] at this
-          exact this
+          rwa [sub_sub_cancel] at this
         rw [hd] at a1
         obtain ⟨m, hm, x, hx', hmx⟩ := Submodule.mem_sup.1 a1
         have hmx : m + x = e w := hmx
@@ -294,8 +292,7 @@ theorem datOf_move : ∀ (K V W : Type) [Field K] [NumberField K] [StarRing K] [
         have a1 : (w, w') ∈ (datOf F G e g Λ).2 := by
           have := Submodule.sub_mem (iotaGraph F G Λ (g : 𝓞 K) ⊔ (rs (𝓞 K) F.X).prod (rs (𝓞 K) F.X))
             (Submodule.mem_sup_left hy) (Submodule.mem_sup_right (x := y - (e w, e w')) ⟨hx, hx'⟩)
-          rw [sub_sub_cancel] at this
-          exact this
+          rwa [sub_sub_cancel] at this
         rw [hd] at a1
         obtain ⟨m, hm, x, hx2, hmx⟩ := Submodule.mem_sup.1 a1
         have hmx1 : m.1 + x.1 = e w := congrArg Prod.fst hmx
@@ -403,8 +400,7 @@ theorem hermFlag_secondFrame_mem_frameSpan (F F' : FlagD H r) (a : Fin (r + 1)) 
 
 theorem perp_transfer {F G : FlagD H r} (h : SameGr F G) {w : V} (hw : ∀ a, H.B (F.e a) w = 0) (a : Fin (r + 1)) :
     H.B (G.e a) w = 0 := by
-  have h1 := perp_X F (fun b => hw b.castSucc) _ (Xa_le_X F _ (h a))
-  simpa [hw a] using h1
+  simpa [hw a] using perp_X F (fun b => hw b.castSucc) _ (Xa_le_X F _ (h a))
 
 variable [NumberField K]
 
@@ -523,8 +519,7 @@ theorem main (N₀ N₁ : NF H r) (h : SameGr N₀.F N₁.F) (hj : N₀.j = N₁
     have m3 : N₀.Wt ≤ M := fun w hw => by
       obtain ⟨u, hu, hx⟩ := decomp N₁ (perp_transfer h (wt_e N₀ hw))
       change s w - w ∈ N₀.F.X
-      rw [show s w = u from hS (w, u) (Or.inr (Or.inr (Or.inr ⟨hw, hu, hX ▸ hx⟩))), ← hX]
-      exact hx
+      rwa [show s w = u from hS (w, u) (Or.inr (Or.inr (Or.inr ⟨hw, hu, hX ▸ hx⟩))), ← hX]
     obtain ⟨u, hu, hx⟩ := decomp N₀ (w := y + star (H.B N₀.F.z y / N₀.F.T) • N₀.F.z) (fun a => by
       refine Fin.lastCases ?_ (fun a => ?_) a
       · have := N₀.F.hT
@@ -766,8 +761,7 @@ theorem main : ∀ (K : Type) [Field K] [NumberField K] [StarRing K], Formalism.
     have hex : ∃ d : K, d * star d = 1 ∧ ∀ t : K, t * d ∈ ipow 𝔞 1 ↔ t ∈ ipow 𝔞' 1 := ⟨c, hc, h5⟩
     obtain ⟨ζ, hζ⟩ := exists_torsion hK.2.1 h2 hc hex.choose_spec.1 h5 hex.choose_spec.2
     refine ⟨((𝔞, 𝔞'), ζ), ⟨⟨⟨h1, h3⟩, ⟨h2, h4⟩⟩, trivial⟩, ?_⟩
-    simp only [g, c0, dif_pos hex]
-    exact hζ.symm
+    simpa only [g, c0, dite_eq_left hex] using hζ.symm
   have henc := (Set.encard_le_encard hsub).trans (Set.encard_image_le _ _)
   rw [← hB.cast_ncard_eq, Set.ncard_prod, Set.ncard_prod, Set.ncard_univ] at henc
   refine (ENat.toENNReal_le.2 henc).trans ?_
@@ -929,7 +923,7 @@ theorem signed_block_count : ∀ (K : Type) [Field K] (j : ℕ) (δ : ℕ → K)
   · rintro P ⟨⟨w, sgn, hP⟩, hδ⟩
     refine Finset.mem_coe.2 (Finset.mem_biUnion.2 ⟨sgn, Finset.mem_univ _,
       Finset.mem_image.2 ⟨w.blocks, hT' _ _ w.size fun l hl => ?_, ?_⟩⟩)
-    · simp only [η, dif_pos hl]
+    · simp only [η, dite_eq_left hl]
       rw [eq_div_iff (Finset.prod_ne_zero_iff.2 fun b _ => sign_ne _), ← hδ l hl, mul_comm, minor,
         ← Matrix.det_mul_row]
       congr 1
@@ -1283,7 +1277,7 @@ theorem sum_le_orbit {G α ι : Type} [Group G] [MulAction G α] (Q : α → Pro
     rw [MulAction.orbitRel_apply] at h2
     obtain ⟨ρ, hρ⟩ := h2
     have hρ' : ρ • x i = (q i).out := hρ
-    rw [← hρ', if_pos (hQ i hi ρ).1, (hQ i hi ρ).2]
+    rw [← hρ', ite_eq_left (hQ i hi ρ).1, (hQ i hi ρ).2]
   rw [h1]
   exact ENNReal.sum_le_tsum _
 
@@ -1509,8 +1503,7 @@ theorem one_class (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {F : Flag
         ((((carr_of_sameGr (AdaptInv.sameGr_symm (hN i hi).1.2.2)).trans
           (carr_inv_of_eq fun a => (hσe i hi a).2)).trans (carr_of_inN r2)).trans
           (carr_of_eq fun a => (hσe i' hi' a).2)).trans (carr_of_sameGr (hN i' hi').1.2.2)
-      rw [one_mul, mul_one] at hc
-      exact hc
+      rwa [one_mul, mul_one] at hc
 end Main
 
 section Count
@@ -1591,8 +1584,7 @@ theorem sum_weights_per_datum : ∀ (K V W : Type) [Field K] [NumberField K] [St
       (s.filter fun i => (sqM (N i) j hjr', (N i).c) = (sqM (N i₀) j hjr', (N i₀).c)) G N (G i₀) (N i₀) hg he
       (hA i₀ hi₀) (ht i₀ hi₀) (fun i hi => ?_)
       fun i hi i' hi' => hinj i (Finset.mem_filter.1 hi).1 i' (Finset.mem_filter.1 hi').1
-    · rw [NF.NT, hT i₀ hi₀, hD i₀ hi₀, hB i₀ hi₀, hI i₀ hi₀] at this
-      exact this
+    · rwa [NF.NT, hT i₀ hi₀, hD i₀ hi₀, hB i₀ hi₀, hI i₀ hi₀] at this
     · obtain ⟨hi, hk⟩ := Finset.mem_filter.1 hi
       obtain ⟨k1, k2⟩ := Prod.mk.inj hk
       refine ⟨hA i hi, ht i hi, (hj i₀ hi₀).trans (hj i hi).symm, k2.symm, (hT i₀ hi₀).trans (hT i hi).symm, ?_,
@@ -1643,7 +1635,7 @@ theorem sum_clsOm_le_datBd : ∀ (D : D7) (large₂ : SizeData₂ D) (X : HidaSe
     intro b hb
     have hb' : ∃ t ∈ A, frCls Λ t = b := Finset.mem_image.1 hb
     obtain ⟨h1, h2⟩ := hb'.choose_spec
-    exact ⟨hb'.choose, h1, h2, by simp only [G, dif_pos hb']⟩
+    exact ⟨hb'.choose, h1, h2, by simp only [G, dite_eq_left hb']⟩
   have key := GlobalTheory.DegAsm.sum_weights_per_datum D.host.E (VS D).V W (HV D) HW W.subtype hK D.R.rS (F0 X u) (dI D)
     (gS D) j (Tu D u) x (fun l => star (δ l)) Λ d (k2Del D j δ) (DbL D j δ) (Set (Formalism.HermitianLatticeCounting.S6.FlagD (HV D) D.R.rS))
     (A.image (frCls Λ)) G hgS hx1 hDel1 hDb1 he ?_ ?_ ?_

@@ -110,8 +110,7 @@ theorem isBlockDiagonal_reduction_of_blockLift_splitPlace (s : SplitPlace L) {r 
     have h0 : φ (y.val a b - (m : Os s)) = 0 := by
       rw [hφ.ker]
       push_cast
-      rw [hyab]
-      exact hl'
+      rwa [hyab]
     rw [map_sub, sub_eq_zero, map_natCast] at h0
     rw [h0, ← map_natCast i m, hm, ZMod.natCast_zmod_val]
   · rw [dite_eq_right hab] at hl' ⊢
@@ -133,8 +132,7 @@ theorem not_mem_gPl_of_twist (D : D7) {Q : Finset (Pl D.host.E)} (hQ : IsTwistPl
     have h0 : (D.host.g kv.1 : 𝓞 D.host.E) ∈ (D.naut.plGw kv.1 kv.2).asIdeal := D.naut.plGw_over kv.1 kv.2
     have h1 : ((D.host.g kv.1 : ℕ) : 𝓞 (maximalRealSubfield D.host.E)) ∈ s.v.asIdeal := by
       rw [← hov, Ideal.mem_comap, map_natCast]; exact h0
-    rw [← s.w_under, Ideal.mem_comap, map_natCast] at h1
-    exact h1
+    rwa [← s.w_under, Ideal.mem_comap, map_natCast] at h1
   exact GlobalTheory.LevelTypePlace.not_two_primes s.w.asIdeal (D.host.g_prime kv.1) hq (hqg kv.1).symm hg
     (GlobalTheory.LevelTypePlace.natCast_mem_of_card s.w hcard hq.ne_zero)
 

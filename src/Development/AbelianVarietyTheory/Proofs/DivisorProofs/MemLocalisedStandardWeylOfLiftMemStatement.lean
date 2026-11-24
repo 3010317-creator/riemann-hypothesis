@@ -110,8 +110,7 @@ theorem exists_weyl_basis : ∀ (n : ℕ) (ν : Fin n → ℕ), Antitone ν → 
   let B := Module.Free.chooseBasis ℤ (weyl ℤ n n le_rfl ν)
   have hspan : Submodule.span ℤ (Set.range fun i => (B i : MvPolynomial (Fin n × Fin n) ℤ)) = weyl ℤ n n le_rfl ν := by
     have h := congrArg (Submodule.map (weyl ℤ n n le_rfl ν).subtype) B.span_eq
-    rw [Submodule.map_span, ← Set.range_comp, Submodule.map_subtype_top] at h
-    exact h
+    rwa [Submodule.map_span, ← Set.range_comp, Submodule.map_subtype_top] at h
   have hR : ∀ (R : Type) [CommRing R], weyl R n n le_rfl ν =
       Submodule.span R (Set.range fun i => MvPolynomial.map (Int.castRingHom R) (B i : MvPolynomial (Fin n × Fin n) ℤ)) := by
     intro R _
@@ -122,8 +121,7 @@ theorem exists_weyl_basis : ∀ (n : ℕ) (ν : Fin n → ℕ), Antitone ν → 
       have hw' : applyWord ℤ w (hw ℤ le_rfl ν) ∈ weyl ℤ n n le_rfl ν := Submodule.subset_span ⟨w, rfl⟩
       rw [← hspan] at hw'
       have h := map_mem_span R _ hw'
-      rw [← lclosedeq_applyWord_map, lclosedeq_hw_map] at h
-      exact h
+      rwa [← lclosedeq_applyWord_map, lclosedeq_hw_map] at h
     · rw [Submodule.span_le]
       rintro _ ⟨i, rfl⟩
       have h := map_mem_span R (fun w : List (Fin n × Fin n × ℕ) => applyWord ℤ w (hw ℤ le_rfl ν)) (B i).2
@@ -208,9 +206,9 @@ theorem rowGen_detPol (n : ℕ) (a b : Fin n) :
   rw [h1]
   by_cases hab : a = b
   · subst hab
-    rw [Matrix.det_updateRow_add, Matrix.det_updateRow_smul, Matrix.updateRow_eq_self, if_pos rfl]
+    rw [Matrix.det_updateRow_add, Matrix.det_updateRow_smul, Matrix.updateRow_eq_self, ite_eq_left rfl]
     ring
-  · rw [Matrix.det_updateRow_add_smul_self A (Ne.symm hab), if_neg hab]
+  · rw [Matrix.det_updateRow_add_smul_self A (Ne.symm hab), ite_eq_right hab]
     ring
 
 theorem rowDiv_det_mul_zero (n : ℕ) (a b : Fin n) (g : MvPolynomial (Fin n × Fin n) R) :
@@ -244,7 +242,7 @@ theorem hw_add_one (n : ℕ) (ν : Fin n → ℕ) :
         = ν s.castSucc - nuNext ν s.castSucc := by
       intro s
       have hs : s.castSucc.val + 1 < m + 1 := by have := s.2; simp
-      simp only [nuNext, dif_pos hs]
+      simp only [nuNext, dite_eq_left hs]
       omega
     have h2 : ∀ μ : Fin (m + 1) → ℕ, nuNext μ (Fin.last m) = 0 := by
       intro μ
@@ -380,7 +378,7 @@ theorem res_eq {ι : Type} {n : ℕ} {lam : ι → DomWeight n} {lamW : ι → �
   have h2 := h τ ⟨n - 1, by omega⟩
   have h3 : (lam τ).w ⟨n - 1, by omega⟩ ≤ (lam τ).w a := (lam τ).anti (by
     rw [Fin.le_def]; have := a.2; simp only; omega)
-  simp only [res, DomWeight.natW, DomWeight.detShift, hn, dif_pos] at *
+  simp only [res, DomWeight.natW, DomWeight.detShift, hn, dite_eq_left] at *
   omega
 
 theorem linInd_map {σ P : Type} [Fintype P] (K : Type) [Field K] [CharZero K] (b : P → MvPolynomial σ ℤ)
@@ -503,8 +501,7 @@ theorem mem_localization_standardWeylLattice : ∀ (K : Type) [Field K] [NumberF
     Submodule.subset_span ⟨_, fun τ => hbK τ (i τ), rfl⟩
   have hv0 : (v : Pol K ι n) ∈ Submodule.span K (Set.range fun i : ∀ τ, P τ => ten fun τ => bK τ (i τ)) := by
     have h2 : (v : Pol K ι n) ∈ tensorLat K K fun τ => nablaSq K n (lam τ) := v.2
-    rw [← hKspan] at h2
-    exact h2
+    rwa [← hKspan] at h2
   obtain ⟨a, ha⟩ := (Submodule.mem_span_range_iff_exists_fun K).1 hv0
   have hveq : v = ∑ i, a i • (⟨_, hmem i⟩ : VV K lam) := by
     apply Subtype.ext

@@ -107,8 +107,7 @@ lemma lam_slP (w : ℕ) (g : Matrix (Fin 2) (Fin 2) ℤ) (x y : ℂ) (p : ℂ[X]
   congr 1
   have := lam_mul i (w - i) x y _ _ (natDegree_lin_pow ((g 0 0 : ℤ) : ℂ) ((g 0 1 : ℤ) : ℂ) i)
     (natDegree_lin_pow ((g 1 0 : ℤ) : ℂ) ((g 1 1 : ℤ) : ℂ) (w - i))
-  rw [Nat.add_sub_cancel' hi', lam_lin_pow, lam_lin_pow] at this
-  exact this
+  rwa [Nat.add_sub_cancel' hi', lam_lin_pow, lam_lin_pow] at this
 
 lemma lam_one_zero (w : ℕ) (p : ℂ[X]) : lam w 1 0 p = p.coeff w := by
   rw [lam_apply, Finset.sum_eq_single w]
@@ -130,7 +129,7 @@ lemma coeff_eichler (w : ℕ) (f : ℍ → ℂ) (τ : ℍ) :
   · rw [coeff_C_mul_X_pow]
     simp
   · intro b _ hbw
-    rw [coeff_C_mul_X_pow, if_neg hbw.symm]
+    rw [coeff_C_mul_X_pow, ite_eq_right hbw.symm]
   · simp
 
 lemma coeff_eichler_period (w n : ℕ) (hn : 0 < n) (g : ℍ → ℂ) (hper : Function.Periodic (g ∘ ofComplex) (n : ℝ))
@@ -249,8 +248,7 @@ theorem GlobalTheory.HeckeFamilyMatrices.cuspidal_of_per_sub_cj_mem : ∀ (N : �
       funext τ
       exact eq_cuspFunction τ hn'.ne' hper
     have h3 := han.continuousAt.tendsto.comp (qParam_tendsto_atImInfty hn')
-    rw [cuspFunction_apply_zero hn' han hper, hv, h2] at h3
-    exact h3
+    rwa [cuspFunction_apply_zero hn' han hper, hv, h2] at h3
   refine ⟨⟨f.toSlashInvariantForm, f.holo', ?_⟩, rfl⟩
   intro c hc
   rw [Subgroup.IsArithmetic.isCusp_iff_isCusp_SL2Z] at hc

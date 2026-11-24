@@ -153,7 +153,6 @@ theorem summable_fd {ι : C →+ V} (hι : Function.Injective ι) {μ : Measure 
   refine h2.congr fun c => ?_
   rw [integral_norm_eq_lintegral_enorm (hh.comp_add_right (ι c)).integrableOn.aestronglyMeasurable]
   have : ∀ x, ((ι.ofInjective hι).toEquiv c : ι.range) +ᵥ x = x + ι c := fun x => by
-    show ι c + x = x + ι c
     exact add_comm _ _
   simp only [Function.comp, this]
 
@@ -164,7 +163,6 @@ theorem integral_eq_tsum_fd {ι : C →+ V} (hι : Function.Injective ι) {μ : 
   rw [hD.integral_eq_tsum'' h hh, ← (ι.ofInjective hι).toEquiv.tsum_eq]
   refine tsum_congr fun c => ?_
   have : ∀ x, ((ι.ofInjective hι).toEquiv c : ι.range) +ᵥ x = x + ι c := fun x => by
-    show ι c + x = x + ι c
     exact add_comm _ _
   simp only [this]
 

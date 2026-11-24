@@ -125,8 +125,7 @@ theorem continuous_sigma (hσ : IsURepOn (UJset ε) σ) {u : Formalism.REAL.UJ �
       rw [← map_sub, hσ.2.1 _ g.2]
     rw [e]
     exact tendsto_iff_norm_sub_tendsto_zero.1 hu.continuousAt
-  have h2 := h1.add (continuous_orbit hσ (u g₀)).continuousAt
-  simpa [ContinuousAt] using h2
+  simpa [ContinuousAt] using h1.add (continuous_orbit hσ (u g₀)).continuousAt
 
 theorem continuous_word_translate : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (P G : Matrix (Fin n) (Fin n) ℂ), IsUnit P → Pᴴ * Formalism.REAL.Jm ε * P = G → IsURepOn (UJset ε) σ → ∀ l : List (Matrix (Fin n) (Fin n) ℂ), (∀ X ∈ l, X ∈ lieG G) → ∀ w ∈ smSub G (trRep σ P), Continuous fun g : Formalism.REAL.UJ ε => word (trRep σ P) l (σ (umat g) w) := by
   intro n ε H _ _ _ σ P G hP h hσ l hl w hw

@@ -105,8 +105,7 @@ theorem le_v_of_norm_le {l : ℕ} [Fact l.Prime] (P : LocPrime l) (LL : FinExt l
   have hl : (l : ℚ_[l]) ≠ 0 := by exact_mod_cast (Fact.out : l.Prime).ne_zero
   have hlk : (l : ℚ_[l]) ^ k ≠ 0 := pow_ne_zero k hl
   have hy : ‖x / (l : ℚ_[l]) ^ k‖ ≤ 1 := by
-    rw [norm_div, Padic.norm_p_pow, div_le_one (zpow_pos hlpos _)]
-    exact hx
+    rwa [norm_div, Padic.norm_p_pow, div_le_one (zpow_pos hlpos _)]
   obtain ⟨y, hxy⟩ : ∃ y : ℤ_[l], x = (l : ℚ_[l]) ^ k * (y : ℚ_[l]) := by
     refine ⟨⟨x / (l : ℚ_[l]) ^ k, hy⟩, ?_⟩
     show x = (l : ℚ_[l]) ^ k * (x / (l : ℚ_[l]) ^ k)
@@ -472,8 +471,7 @@ theorem exists_specPhi : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : Loc
   obtain ⟨Φ, hΦs, hΦS, hΦg, hΦ1⟩ := keyA
   refine ⟨Φ, ?_, ?_, ?_, ?_⟩
   · exact hΦs
-  · intro z i
-    exact (mem_OC _).1 (hΦS z i)
+  · exact fun z i => (mem_OC _).1 (hΦS z i)
   · intro g z
     convert hΦg g z using 3
   · intro j
@@ -606,8 +604,7 @@ theorem exists_prime_eq_mul_primitiveRoot_sub_one_pow (l : ℕ) [hl : Fact l.Pri
   rw [norm_div, norm_pow, norm_natCast_prime_padicComplex, div_le_one (pow_pos hpos H), hnorm,
     ← Real.rpow_mul_natCast (by positivity), ← Real.rpow_neg_one]
   apply Real.rpow_le_rpow_of_exponent_le hl1.le
-  rw [neg_div, neg_mul, neg_le_neg_iff, div_mul_eq_mul_div, one_mul, div_le_one hDpos]
-  exact hH
+  rwa [neg_div, neg_mul, neg_le_neg_iff, div_mul_eq_mul_div, one_mul, div_le_one hDpos]
 
 end GlobalTheory.Cyc.Decomp
 end -- clump:auto
@@ -879,8 +876,7 @@ theorem kap_idem_mem_inC (l : ℕ) [Fact l.Prime] (act : GQ l →* (PadicComplex
   rintro ⟨g, hg⟩
   have h1 := hfix g hg k
   rw [← hx] at h1
-  apply (algebraMap (Om l) (PadicComplex l)).injective
-  exact (hact.1 g x).symm.trans h1
+  exact (algebraMap (Om l) (PadicComplex l)).injective ((hact.1 g x).symm.trans h1)
 
 end GlobalTheory.Cyc.Decomp
 end -- clump:auto
@@ -937,8 +933,7 @@ theorem norm_kap_lt_rho1_of_mem_sq_sup_pow :
     apply Real.rpow_le_rpow_of_exponent_le hl.le
     have h1 : (1 : ℝ) ≤ (l : ℝ) ^ (j - 1) := one_le_pow₀ hl.le
     have h2 : (1 : ℝ) ≤ (l : ℝ) ^ (j - 1) * ((l : ℝ) - 1) := by nlinarith
-    rw [neg_div, neg_le_neg_iff, div_le_one (by linarith)]
-    exact h2
+    rwa [neg_div, neg_le_neg_iff, div_le_one (by linarith)]
   let u : OC l := ⟨(l : PadicComplex l) / ((ζ : PadicComplex l) - 1), by
     rw [mem_OC, norm_div]
     exact div_le_one_of_le₀ hle (norm_nonneg _)⟩
@@ -1186,8 +1181,7 @@ theorem sq_dvd_choose_prime_pow (l : ℕ) (hl : l.Prime) (b k : ℕ) (hb : 1 ≤
     rw [hm]; exact Nat.add_one_mul_choose_eq m j
 
   have hv : padicValNat l (j + 1) < b - 1 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have h1 : l ^ padicValNat l (j + 1) ≤ j + 1 :=
       Nat.le_of_dvd (Nat.succ_pos j) (_root_.Dvd.intro_left _ (_root_.Nat.divMaxPow_mul_pow_padicValNat _ _))
     have h2 : l ^ (b - 1) ≤ l ^ padicValNat l (j + 1) := Nat.pow_le_pow_right hl.pos hcon
@@ -1215,7 +1209,7 @@ theorem one_add_X_pow_prime_pow_sub_one_mem_span (l : ℕ) [Fact l.Prime] (b : �
     rw [hc, Nat.cast_mul, Nat.cast_pow, mul_left_comm]
     exact Ideal.mul_mem_right _ _ (Ideal.subset_span (Set.mem_insert _ _))
   ·
-    push_neg at hi
+    push Not at hi
     obtain ⟨d, hd⟩ := Nat.exists_eq_add_of_le hi
     rw [hd, pow_add, mul_assoc]
     exact Ideal.mul_mem_right _ _
@@ -1321,8 +1315,7 @@ theorem jD_smulA (a : LetA S.O S.n) (y : S.W.DD T) :
 theorem γD_smulA (g : S.W.Gam) (a : LetA S.O S.n) (y : S.W.DD T) :
     S.W.γD T g (a • y) = S.W.γA g a • S.W.γD T g y := by
   have := S.W.γD_smul T g (algebraMap (LetA S.O S.n) S.W.EE a) y
-  rw [algebraMap_smul, S.W.γE_ext, algebraMap_smul] at this
-  exact this
+  rwa [algebraMap_smul, S.W.γE_ext, algebraMap_smul] at this
 
 theorem exists_lift (x : S.RA) (M0 h0 : ℕ) (hinj : Function.Injective S.inclR)
     (h1 : ∀ y ∈ N, (S.inclR x) ^ M0 • E.jD T y ∈ LinearMap.range (TWincl S.inclR T))
@@ -1371,8 +1364,7 @@ theorem exists_lift (x : S.RA) (M0 h0 : ℕ) (hinj : Function.Injective S.inclR)
     have : x ^ (M0 + h0) • ((1 : S.RA) ⊗ₜ[S.O] t) = w := by
       apply hi
       rw [e, TWincl_smul, TWincl_one_tmul, map_one, one_smul, map_pow, pow_add, mul_smul]
-    rw [this]
-    exact hw
+    rwa [this]
 
 theorem γD_iterate (g : S.W.Gam) (k : ℕ) (y : S.W.DD T) :
     (S.W.γD T g)^[k] y = S.W.γD T (g ^ k) y := by
@@ -1582,8 +1574,7 @@ theorem norm_zeta_sub_one_lt (j : ℕ) (hj : 1 ≤ j) :
   rw [_root_.GlobalTheory.Cyc.norm_primitiveRoot_sub_one l j hj _ (zeta_prim AI j hj)]
   have hl : (1 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).one_lt
   apply Real.rpow_lt_one_of_one_lt_of_neg hl
-  apply div_neg_of_neg_of_pos (by norm_num)
-  exact mul_pos (pow_pos (by linarith) _) (by linarith)
+  exact div_neg_of_neg_of_pos (by norm_num) (mul_pos (pow_pos (by linarith) _) (by linarith))
 
 theorem tmul_one_pow (LL : FinExt l) (c : OC l) (k : ℕ) :
     (c ⊗ₜ[ℤ_[l]] (1 : ↥(OL LL)) : OCO LL) ^ k = (c ^ k) ⊗ₜ[ℤ_[l]] (1 : ↥(OL LL)) := by

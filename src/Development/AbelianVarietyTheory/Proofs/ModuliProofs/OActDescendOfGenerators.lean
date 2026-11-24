@@ -132,8 +132,7 @@ theorem _root_.GlobalTheory.ActDescent.isMonHom_descend {G H : Over S} [GrpObj G
       rw [_root_.one_mul] at h
       exact mul_eq_left.mp h.symm
     simpa [Hom.one_def] using h1
-  · have h := key _ (fst G G) (snd G G)
-    simpa [Hom.mul_def] using h
+  · simpa [Hom.mul_def] using key _ (fst G G) (snd G G)
 
 
 
@@ -182,8 +181,7 @@ theorem _root_.GlobalTheory.oAct_descend_of_generators : ∀ (O : Type) [CommRin
       _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.pushHom hG A z = ρ ≫ g := fun z g h => Over.OverMorphism.ext (by exact h)
   have hback : ∀ (z : A ⟶ A) (g : A₀ ⟶ A₀), _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.pushHom hG A z = ρ ≫ g →
       z.left ≫ φ = φ ≫ g.left := fun z g h => by
-    have h' := congrArg (fun m => m.left) h
-    exact h'
+    exact congrArg (fun m => m.left) h
   have h0 : act.act 0 = 1 := by
     have h := act.add 0 0
     rw [add_zero] at h

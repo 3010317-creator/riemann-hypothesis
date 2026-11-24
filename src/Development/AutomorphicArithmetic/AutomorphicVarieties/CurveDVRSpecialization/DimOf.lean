@@ -77,10 +77,8 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.component :
       have hm : Ideal.Quotient.mk P (algebraMap Λ T a) = Ideal.Quotient.mk P (algebraMap Λ T b) := hab
       have h1 : algebraMap Λ T a - algebraMap Λ T b ∈ P := Ideal.Quotient.eq.1 hm
       have h2 : a - b ∈ P.comap (algebraMap Λ T) := by
-        rw [Ideal.mem_comap, map_sub]
-        exact h1
-      rw [hbot, Submodule.mem_bot, sub_eq_zero] at h2
-      exact h2
+        rwa [Ideal.mem_comap, map_sub]
+      rwa [hbot, Submodule.mem_bot, sub_eq_zero] at h2
     exact GlobalTheory.ringKrullDim_eq_of_isIntegral Λ (T ⧸ P)
 end -- clump:auto
 end -- clump:auto
@@ -116,8 +114,7 @@ theorem UpperTheory.V.Pr.dimOf :
     obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective x
     rw [Ideal.Quotient.eq_zero_iff_mem]
     refine htf a ha b ?_
-    rw [← Ideal.Quotient.eq_zero_iff_mem, map_mul]
-    exact hx
+    rwa [← Ideal.Quotient.eq_zero_iff_mem, map_mul]
   have h := (UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.component Λ (B ⧸ J) hnz P hP).2.2
   have hq : ringKrullDim (B ⧸ P.comap (Ideal.Quotient.mk J)) = ringKrullDim ((B ⧸ J) ⧸ P) := by
     have hs : Function.Surjective ((Ideal.Quotient.mk P).comp (Ideal.Quotient.mk J)) :=

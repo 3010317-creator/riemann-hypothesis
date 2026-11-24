@@ -72,8 +72,7 @@ private theorem mul_eq_zero_of_entIn (I : Ideal C) (hI : I * I = ⊥) (X Y : Mat
   apply Finset.sum_eq_zero
   intro k _
   have h := Ideal.mul_mem_mul (hX a k) (hY k b)
-  rw [hI, Ideal.mem_bot] at h
-  exact h
+  rwa [hI, Ideal.mem_bot] at h
 
 private theorem entIn_thetaLie (I : Ideal C) (X : Matrix (Fin m) (Fin m) C) (hX : EntIn I X) :
     EntIn I (thetaLie X) := by
@@ -89,13 +88,13 @@ private theorem sgnAct_one_add (I : Ideal C) (hI : I * I = ⊥) (q : GL (Fin m) 
   have hXX : X * X = 0 := mul_eq_zero_of_entIn I hI X X hX hX
   by_cases hs : s = 1
   · subst hs
-    rw [if_pos rfl, map_one, MulAut.one_apply, hq]
+    rw [ite_eq_left rfl, map_one, MulAut.one_apply, hq]
   · have hs' : s = -1 := by
       rcases Int.units_eq_one_or s with h | h
       · exact absurd h hs
       · exact h
     subst hs'
-    rw [sgnAct_neg_one, theta_val, if_neg hs]
+    rw [sgnAct_neg_one, theta_val, ite_eq_right hs]
     have h1 : (q : Matrix (Fin m) (Fin m) C) * ((q⁻¹ : GL (Fin m) C) : Matrix (Fin m) (Fin m) C) = 1 := by
       rw [← Units.val_mul, mul_inv_cancel, Units.val_one]
     have h2 : (1 - X) * (q : Matrix (Fin m) (Fin m) C) = 1 := by
@@ -118,14 +117,12 @@ theorem UpperTheory.V.U3.exists_isCoc :
   intro G C _ _ m I r r' hI hr
   have hR : ∀ g, (r' g).right = (r g).right := by
     intro g
-    have h := congrArg SemidirectProduct.right (DFunLike.congr_fun hr g)
-    simpa [GG.map] using h
+    simpa [GG.map] using congrArg SemidirectProduct.right (DFunLike.congr_fun hr g)
   have hM : ∀ g, ((r' g).left : Matrix (Fin m) (Fin m) C).map (Ideal.Quotient.mk I)
       = ((r g).left : Matrix (Fin m) (Fin m) C).map (Ideal.Quotient.mk I) := by
     intro g
     have h := congrArg GG.mat (DFunLike.congr_fun hr g)
-    rw [MonoidHom.comp_apply, MonoidHom.comp_apply, GG.map_mat, GG.map_mat] at h
-    exact h
+    rwa [MonoidHom.comp_apply, MonoidHom.comp_apply, GG.map_mat, GG.map_mat] at h
   obtain ⟨q, hqdef⟩ : ∃ q : G → GL (Fin m) C, ∀ g, q g = (r' g).left * ((r g).left)⁻¹ := ⟨_, fun _ => rfl⟩
   have hE : ∀ g, EntIn I ((q g : Matrix (Fin m) (Fin m) C) - 1) := by
     intro g a b
@@ -133,8 +130,7 @@ theorem UpperTheory.V.U3.exists_isCoc :
     have h1 : (Ideal.Quotient.mk I).mapMatrix ((q g : Matrix (Fin m) (Fin m) C) - 1) = 0 := by
       rw [map_sub, map_one, hqdef, Units.val_mul, map_mul, RingHom.mapMatrix_apply, hM g,
         ← RingHom.mapMatrix_apply, ← map_mul, ← Units.val_mul, mul_inv_cancel, Units.val_one, map_one, sub_self]
-    have h2 := congrFun (congrFun h1 a) b
-    simpa using h2
+    simpa using congrFun (congrFun h1 a) b
   refine ⟨fun g => (q g : Matrix (Fin m) (Fin m) C) - 1, hE, ?_, ?_⟩
   · intro g h
     have hq : q (g * h) = q g * ((r g).left * sgnAct m C (r g).right (q h) * ((r g).left)⁻¹) := by

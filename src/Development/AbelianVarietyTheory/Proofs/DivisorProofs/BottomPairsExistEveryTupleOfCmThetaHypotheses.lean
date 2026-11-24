@@ -64,13 +64,11 @@ variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {μ₀ : T}
 
 theorem nuH_eq (hL : L.Is μ₀) (G : GridData L sc) (t : T) (i j : Fin D.R.m) :
     nuH G t i j = nuH G μ₀ i j * L.xiH t := by
-  simp only [nuH, hL.xi_base, mul_one]
-  exact mul_div_right_comm _ _ _
+  simpa only [nuH, hL.xi_base, mul_one] using mul_div_right_comm _ _ _
 
 theorem alphaH_eq (hL : L.Is μ₀) (t : T) (i j : Fin D.R.m) :
     alphaH L t i j = alphaH L μ₀ i j * L.xiH t := by
-  simp only [alphaH, hL.xi_base, mul_one]
-  exact mul_right_comm _ _ _
+  simpa only [alphaH, hL.xi_base, mul_one] using mul_right_comm _ _ _
 
 theorem exists_heckeU_nuInv (hL : L.Is μ₀) (G : GridData L sc) (t : T) (i j : Fin D.R.m) :
     ∃ χ : HeckeU D (botBig D i j + botSmall D i j), (∀ x, χ.f x = (nuH G t i j)⁻¹.1 (finIdl D x)) ∧

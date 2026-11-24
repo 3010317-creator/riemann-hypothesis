@@ -59,8 +59,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem ratPts_inf_subgroupOf {N P : Subgroup (GAd σ J)} (hNP : N ≤ P) :
     (ratPts σ J ⊓ P).subgroupOf N = (ratPts σ J).subgroupOf N := by
   ext x
-  simp only [Subgroup.mem_subgroupOf, Subgroup.mem_inf]
-  exact ⟨fun h => h.1, fun h => ⟨h, hNP x.2⟩⟩
+  simpa only [Subgroup.mem_subgroupOf, Subgroup.mem_inf] using ⟨fun h => h.1, fun h => ⟨h, hNP x.2⟩⟩
 
 theorem isConstTermOn_iff_ratPts_inf {N P : Subgroup (GAd σ J)} [LocallyCompactSpace N] (hNP : N ≤ P)
     (hc : Cocompact (ratPts σ J) N) {φ c : GAd σ J → ℂ} (hφ : LeftInv (ratPts σ J ⊓ P) φ) :
@@ -77,8 +76,7 @@ theorem isConstTermOn_iff_ratPts_inf {N P : Subgroup (GAd σ J)} [LocallyCompact
 theorem cocompact_ratPts_inf {N P : Subgroup (GAd σ J)} (hNP : N ≤ P) (hc : Cocompact (ratPts σ J) N) :
     Cocompact (ratPts σ J ⊓ P) N := by
   unfold Cocompact
-  rw [ratPts_inf_subgroupOf hNP]
-  exact hc
+  rwa [ratPts_inf_subgroupOf hNP]
 
 section Witt
 
@@ -158,8 +156,7 @@ theorem constAlong_cocompact_unique_stages :
     change IsConstTermOn σ J (unip σ J X S) _ c' at hc'
     change IsConstTermOn σ J (unip σ J X S) φ c'
     rw [isConstTermOn_iff_ratPts_inf le_rfl cS hcΓ] at hc'
-    rw [isConstTermOn_iff_ratPts_inf le_rfl cS hfΓ, st]
-    exact hc'
+    rwa [isConstTermOn_iff_ratPts_inf le_rfl cS hfΓ, st]
 
 end Witt
 

@@ -338,8 +338,7 @@ theorem emb_unique (hG : GlobalFnsSt) (t : TObj g (N' ^ 2) J b s) {m : ℕ} (hm 
   rw [VVRank.sv_of_isTwistPull t.A (h₆ a) y p hI, VVRank.sv_of_isTwistPull t.A (h₆' a) y p hI,
     VVRank.sv_of_isTwistPull t.A h₄ _ p hI, VVRank.sv_of_isTwistPull t.A h₄' _ p hI, ← e₂]
   erw [e₁]
-  rw [e₀]
-  rw [show VVRank.sv t.A th' _ p I = _ * VVRank.sv t.A th _ p I from e₃]
+  rw [e₀, show VVRank.sv t.A th' _ p I = _ * VVRank.sv t.A th _ p I from e₃]
   simp only [Units.val_mul]
   have key : ∀ {Q : Type} [CommRing Q] (a a' : Qˣ) (x y z : Q), x * (a' * (y * z)) = a' * ↑a⁻¹ * y * (x * (a * z)) :=
     fun a a' x y z => by linear_combination (-(x * a' * y * z)) * a.inv_mul
@@ -426,8 +425,7 @@ theorem emb_shrink (h₂ : Laws2) {t : TObj g (N' ^ 2) J b s} {m : ℕ} {R R' : 
   obtain ⟨th, ⟨-, P₁, P₂⟩, c'⟩ := RepBC.projRep_baseChange R R' _ φ I _ _ _ _ _ _ σ P (isPullback_whisker t.A k)
   refine ⟨σ', H', GlobalTheory.ZM.ideals_homogeneous.2.2 R' _ (I.map (MvPolynomial.map φ)) _ _ _ σ' ⟨LB.isLB_linComb t.isLB _ _,
     fun B _ β y v hy hv => P₁ B β y v hy ((c' B y v).2 ((c B y v).1 hv)), fun B _ β v hv hF => ?_⟩⟩
-  simp only [c, ← c']
-  exact P₂ B β v hv hF
+  simpa only [c, ← c'] using P₂ B β v hv hF
 
 theorem exists_common_emb (h₁ : Laws) (h₂ : Laws2) (t t' : TObj g (N' ^ 2) J b s) {m : ℕ} (h2 : 2 ≤ m)
     (hm : m ^ 2 ∣ N') (ho : Odd N') (p : S) : ∃ (R : Type) (_ : CommRing R) (x : Sp R ⟶ S) (σ : _) (σ' : _),
@@ -490,8 +488,7 @@ theorem idealOf_le [IsReduced S] (h₁ : Laws) (h₂ : Laws2) {t t' : TObj g (N'
     (Coord.baseChange hv i)
   have := ProjRep.eval_of_mem_idealOf hF' (β := i.comp β) (c₁.trans (spMap_comp _ _).symm) hv'
   apply i.injective
-  rw [map_zero, MvPolynomial.eval₂_comp_left]
-  exact this
+  rwa [map_zero, MvPolynomial.eval₂_comp_left]
 
 theorem exists_local_compat [IsReduced S] (h₁ : Laws) (h₂ : Laws2) {t t' : TObj g (N' ^ 2) J b s} {Sg : Set S}
     (hd : Dense Sg) (hg : GeoGood t t' Sg) {m : ℕ} (h2 : 2 ≤ m) (hm : m ^ 2 ∣ N') (ho : Odd N') (p : t.A.left) :

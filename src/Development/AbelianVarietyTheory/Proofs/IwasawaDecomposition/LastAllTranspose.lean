@@ -65,7 +65,7 @@ theorem lastAll_transpose (a : ι → ℂˣ) (τ : ι) :
   simp only [Matrix.transpose_apply, lastAll, lastGL_apply]
   by_cases h : i = j
   · subst h; rfl
-  · rw [if_neg h, if_neg (Ne.symm h)]
+  · rw [ite_eq_right h, ite_eq_right (Ne.symm h)]
 
 theorem fnOf_lastAll (G : ι → Matrix (Fin N) (Fin N) ℂ) (lam : ι → DomWeight N) (a : ι → ℂˣ) (P : Pol ℂ ι N) :
     fnOf G (shiftOf lam) (fun τ => ((lastAll N a τ : GL (Fin N) ℂ) : Matrix (Fin N) (Fin N) ℂ)) P =
@@ -109,8 +109,7 @@ theorem branchingProjection_act_last (hN : N = n + 1) (lam : ι → DomWeight N)
     have h2 : detTwK lam (lastAll N a) = ∏ τ, (a τ : ℂ) ^ (lam τ).detShift := by
       simp only [detTwK, detPow, lastAll, det_lastGL' hN, Units.val_zpow_eq_zpow_val]
     rw [h2, ← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
-    refine Finset.prod_eq_one fun τ _ => ?_
-    exact scalar_last hN (lam τ) (sg τ) (h τ) (a τ)
+    exact Finset.prod_eq_one fun τ _ => scalar_last hN (lam τ) (sg τ) (h τ) (a τ)
   rw [e, one_smul]
 end Gen
 end GlobalTheory.Mem.Col2.LowerTie
@@ -150,24 +149,23 @@ theorem bZ_std (hO : I.Ok) (hP : TC.Pins B X) (z0 : Fin (B.R.N B.R.m) → B.host
   rw [Matrix.diagonal_apply]
   by_cases h : b.1 < B.R.N B.R.m - 1
   · have e : bZ (D := I.rec7 l Z) u z0 a b = iXc (I.rec7 l Z) (Pi.single ⟨b.1, h⟩ 1) a := by
-      exact (dif_pos h).trans (LinearMap.toMatrix'_apply _ _ _)
+      exact (dite_eq_left h).trans (LinearMap.toMatrix'_apply _ _ _)
     refine (e.trans (hc _ a)).trans ?_
     by_cases hab : a = b
     · subst hab
-      rw [dif_pos h, if_pos rfl, if_neg (by omega)]
+      rw [dite_eq_left h, ite_eq_left rfl, ite_eq_right (by omega)]
       exact Pi.single_eq_same (M := fun _ : Fin (B.R.N B.R.m - 1) => B.host.E) _ _
-    · rw [if_neg hab]
+    · rw [ite_eq_right hab]
       split_ifs with h2
       · exact Pi.single_eq_of_ne (M := fun _ : Fin (B.R.N B.R.m - 1) => B.host.E) (fun h3 => hab (Fin.ext (Fin.mk.inj_iff.1 h3))) _
       · rfl
-  · have e : bZ (D := I.rec7 l Z) u z0 a b = z0 a / (B.T u : B.host.E) := by
-      exact dif_neg h
+  · have e : bZ (D := I.rec7 l Z) u z0 a b = z0 a / (B.T u : B.host.E) := dite_eq_right h
     rw [e, hz, ← hπ]
     by_cases hab : a = b
     · subst hab
-      rw [if_pos rfl, if_pos (by omega), if_pos (by omega)]
+      rw [ite_eq_left rfl, ite_eq_left (by omega), ite_eq_left (by omega)]
       field_simp
-    · rw [if_neg hab, if_neg (fun h3 => hab (Fin.ext (by omega))), zero_div]
+    · rw [ite_eq_right hab, ite_eq_right (fun h3 => hab (Fin.ext (by omega))), zero_div]
 
 def aT (τ : Tau B.R) : ℂˣ :=
   Units.mk0 (embAt B.embLL B.fields.emb τ (star ((X.piT u : 𝓞 B.host.E) : B.host.E))) ((map_ne_zero _).2 (star_pi_ne I l u))
@@ -237,8 +235,7 @@ theorem lowerMap_std : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → 
     have h := polOf_fnOf (Col2.Gr B.fields.emb B.embLL (B.R.N B.R.m)) (shiftOf (B.wts.lamTrue u B.R.m)) (Col2.fr0 B.fields.emb B.embLL (B.R.N B.R.m))
       (actP (B.wts.lamTrue u B.R.m) (lastAll (B.R.N B.R.m) (aT I l u)) P)
     rw [e] at h
-    rw [h1]
-    exact h
+    rwa [h1]
   have h4 : Formalism.L2.Ker.brTen (I.rec7 l Z) u P = (Br.brStdP (N_m_succ B.R) (B.wts.lamTrue u B.R.m) B.wts.sgTrue P : Pol ℂ (Tau B.R) (B.R.N B.R.m - 1)) := by
     have h := blk_brOne (ι := Tau B.R) (N_m_succ B.R) (B.wts.lamTrue u B.R.m) B.wts.sgTrue P
     refine Eq.trans ?_ h

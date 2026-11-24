@@ -115,8 +115,7 @@ theorem partialDeriv_inr_algebraMap (k : Type*) [CommRing k] (ι : Type*) (κ : 
   have h2 := DFunLike.congr_fun key s
   rw [derivation_comp_algebraMap_apply] at h2
   have h0 : ((0 : Derivation k S T)) s = 0 := rfl
-  rw [h0] at h2
-  exact h2
+  rwa [h0] at h2
 
 theorem partialDeriv_inl_algebraMap (k : Type*) [CommRing k] (ι : Type*) (κ : Type*)
     [DecidableEq ι] [DecidableEq κ]
@@ -142,8 +141,7 @@ theorem partialDeriv_inl_algebraMap (k : Type*) [CommRing k] (ι : Type*) (κ : 
     · rw [partialDeriv_coord_of_ne k (ι ⊕ κ) T (Sum.inl i) (Sum.inl j) (by simpa using hij),
         partialDeriv_coord_of_ne k ι S i j hij, map_zero]
   have h2 := DFunLike.congr_fun key s
-  rw [derivation_comp_algebraMap_apply, algebraMap_comp_derivation_apply] at h2
-  exact h2
+  rwa [derivation_comp_algebraMap_apply, algebraMap_comp_derivation_apply] at h2
 
 theorem map_derivIdeal_sum (k : Type*) [CommRing k] (ι : Type*) (κ : Type*)
     [Fintype ι] [Fintype κ] [DecidableEq ι] [DecidableEq κ]

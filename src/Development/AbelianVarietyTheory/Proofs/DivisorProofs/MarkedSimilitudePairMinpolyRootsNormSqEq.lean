@@ -83,8 +83,7 @@ theorem natDegree_minpoly_le_tmul {F A : Type} [Field F] [Ring A] [Algebra F A] 
     convert h using 1
     funext j
     simp [hx, Algebra.TensorProduct.tmul_pow]
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have hsum := Polynomial.aeval_eq_sum_range' hlt x
   rw [minpoly.aeval, ← Fin.sum_univ_eq_sum_range (fun i => (minpoly K x).coeff i • x ^ i)] at hsum
   have hc := Fintype.linearIndependent_iff.mp hli (fun i => (minpoly K x).coeff i) hsum.symm
@@ -133,8 +132,7 @@ theorem eigA : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (g : G.C) (v : Infin
     · exact IsIntegral.of_finite ℂ _
     · rw [Polynomial.natDegree_map, hmin]; exact hge
   have hroot : (minpoly ℂ (Matrix.toLin' (G.psi v g))).IsRoot z := by
-    rw [Matrix.minpoly_toLin', ← heq, Polynomial.IsRoot, Polynomial.eval_map]
-    exact hz
+    rwa [Matrix.minpoly_toLin', ← heq, Polynomial.IsRoot, Polynomial.eval_map]
   obtain ⟨y, hy⟩ := (Module.End.hasEigenvalue_iff_isRoot.mpr hroot).exists_hasEigenvector
   refine ⟨y, hy.2, ?_⟩
   have := hy.apply_eq_smul

@@ -88,8 +88,7 @@ theorem exists_max_of_covBy {X Y : Submodule R W} (h : X ⋖ Y) :
       obtain ⟨a, ha⟩ := Submodule.Quotient.mk_surjective P (e (Submodule.Quotient.mk ⟨y, hy⟩))
       rw [← ha, ← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]
       exact P.mul_mem_right a hr
-    rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at this
-    exact this
+    rwa [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at this
   · obtain ⟨y, hy⟩ := Submodule.Quotient.mk_surjective _ (e.symm (Submodule.Quotient.mk 1))
     have h0 : r • e.symm (Submodule.Quotient.mk 1) = 0 := by
       rw [← hy, ← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]
@@ -173,8 +172,7 @@ theorem idxN_dual_of_covBy {X Y : Submodule (𝓞 K) V} (hX : Submodule.IsFullLa
     intro y hy
     have := hx _ ((hPm r).1 hr y hy)
     rw [genusBasic_hsmul_left genusCovol_hinj star_algebraMap_ringOfIntegers_mem_range] at this
-    rw [genusBasic_hsmul_right]
-    exact this
+    rwa [genusBasic_hsmul_right]
   have hPQ : P = Q.comap σ := hP.eq_of_le (Ideal.comap_ne_top σ hQ.ne_top) hle
   have hm : Q = P.map (e : 𝓞 K →+* 𝓞 K) := by
     rw [hPQ]

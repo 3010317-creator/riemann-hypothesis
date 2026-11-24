@@ -234,8 +234,7 @@ theorem εroot_pow_pred {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : LocAinf 
   induction k with
   | zero => simp [LocAinf.εroot, LocAinf.ε1]
   | succ k ih =>
-    rw [pow_succ', pow_mul, LocAinf.εroot, Function.iterate_succ_apply', frobeniusEquiv_symm_pow_p]
-    exact ih
+    rwa [pow_succ', pow_mul, LocAinf.εroot, Function.iterate_succ_apply', frobeniusEquiv_symm_pow_p]
 
 theorem x_eq {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : LocAinf l P) (LL : FinExt l) (s : ℕ)
     (hs : 1 ≤ s) :
@@ -260,7 +259,6 @@ theorem sandwich : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l
   refine ⟨m, ?_⟩
   have e : ((1 : ↥(OL LL)) ⊗ₜ[ℤ_[l]] (AI.π₁ ^ m) : RA LL) = ((1 : ↥(OL LL)) ⊗ₜ[ℤ_[l]] AI.π₁ : RA LL) ^ m := by
     rw [Algebra.TensorProduct.tmul_pow, one_pow]
-  rw [e]
-  exact hm
+  rwa [e]
 
 end GlobalTheory.HWL.SandProof

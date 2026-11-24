@@ -69,8 +69,7 @@ theorem transpose_unitary {A : Type} [CommRing A] {n : Type} [Fintype n] [Decida
       _ = g * (K * Formalism.UG.cT s g * J) * K := by simp only [Matrix.mul_assoc]
       _ = K := by rw [h2, Matrix.one_mul]
   have h4 := congrArg Matrix.transpose h3
-  rw [Matrix.transpose_mul, Matrix.transpose_mul] at h4
-  exact h4
+  rwa [Matrix.transpose_mul, Matrix.transpose_mul] at h4
 
 variable {F E : Type} [Field F] [Field E] [Algebra F E]
 
@@ -115,7 +114,6 @@ theorem map_vecMul_unitary : ∀ (F E : Type) [Field F] [NumberField F] [Field E
       fun x => ((HA.mat (AF F) σ (J⁻¹)ᵀ g').1 : Matrix (Fin M) (Fin M) (AF F ⊗[F] E)).mulVec x := by
     funext x
     rw [hg', Matrix.mulVec_transpose]
-  rw [e]
-  exact h
+  rwa [e]
 
 end GlobalTheory.AdelicModulus.Row

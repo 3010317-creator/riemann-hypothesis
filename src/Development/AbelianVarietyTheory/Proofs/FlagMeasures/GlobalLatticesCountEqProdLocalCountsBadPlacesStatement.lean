@@ -159,8 +159,7 @@ private lemma form_mem_O_of_frame_coords_mem_O (H : HermSp M V) {r : ℕ} (Fr : 
     rw [H.h_herm, h_prF_es H Fr u a, map_zero]
   have hvu : H.h v (Fr.prF u) ∈ M.L.O := by
     rw [h_expand H Fr v (Fr.prF u)]
-    simp only [he0, hs0, mul_zero, Finset.sum_const_zero, add_zero]
-    exact hpp
+    simpa only [he0, hs0, mul_zero, Finset.sum_const_zero, add_zero] using hpp
   rw [h_expand H Fr u v]
   refine add_mem (add_mem (h_symm_mem H hvu) ?_) ?_
   · exact sum_mem fun a _ => mul_mem (hus a) (h_symm_mem H (hve a))
@@ -256,7 +255,7 @@ theorem det_gram_sum_elim {F : Type} [Field F] [ValuativeRel F] [TopologicalSpac
     simp [HermSp.Dl, hZ]
   have hD0 : H.Dl f f' r = Z.adjugate (Fin.last r) (Fin.last r) := by
     rw [adjugate_last]
-    simp only [HermSp.Dl, Nat.le_succ, dif_pos]
+    simp only [HermSp.Dl, Nat.le_succ, dite_eq_left]
     rfl
   set c : E →+* E := (M.L.cj : E →+* E) with hc
   have hg : H.gram (Sum.elim f f') = Matrix.fromBlocks
@@ -496,8 +495,7 @@ theorem det_block_uni {E : Type} [CommRing E] {n l : ℕ} (hl : l ≤ n) (A : Ma
   · intro i j hij
     simp only [Matrix.submatrix_apply]
     apply h0
-    rw [Fin.lt_def, Fin.coe_castLE, Fin.coe_castLE]
-    exact hij
+    rwa [Fin.lt_def, Fin.coe_castLE, Fin.coe_castLE]
 
 theorem block_mul_uni {E : Type} [CommRing E] {n l : ℕ} (hl : l ≤ n) (Z A : Matrix (Fin n) (Fin n) E)
     (hA : Uni A) : (Z * A).submatrix (Fin.castLE hl) (Fin.castLE hl) =
@@ -531,8 +529,7 @@ theorem h_sum_left (H : HermSp M V) {ι : Type} (s : Finset ι) (c : ι → E) (
   induction s using Finset.induction_on with
   | empty =>
     simp only [Finset.sum_empty]
-    have h0 := H.h_smul_left 0 0 y
-    simpa using h0
+    simpa using H.h_smul_left 0 0 y
   | @insert a s ha ih =>
     rw [Finset.sum_insert ha, Finset.sum_insert ha, H.h_add_left, H.h_smul_left, ih]
 
@@ -874,8 +871,7 @@ theorem full_of_local_span {D : D7} (Z : LocDat D) (Λ : LV D)
     exact (map_eq_zero_iff _ (A.loc p).ιE.injective).mp hz
   refine { toIsLattice := hΛ, span_eq_top := ?_ }
   have hm : (Submodule.span D.host.E (Λ : Set (VS D).V)).map (LatLoc.cE D).toLinearMap = ⊤ := by
-    rw [← Submodule.span_image]
-    exact hcoord
+    rwa [← Submodule.span_image]
   apply eq_top_iff.mpr
   intro x _
   have hx : LatLoc.cE D x ∈ (Submodule.span D.host.E (Λ : Set (VS D).V)).map (LatLoc.cE D).toLinearMap := by
@@ -892,8 +888,7 @@ theorem fibre : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (lo
   have hLG := LatLoc.lattices_local_global D Z
   haveI : Infinite (PlF D) := GlobalTheory.LvT.Inh.ResFin.infinite_places D.host.F
   obtain ⟨p₀, hp₀⟩ : ∃ p : PlF D, p ∉ P := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact Set.infinite_univ (α := PlF D) (P.finite_toSet.subset fun p _ => h p)
   have hΛ₀full : Submodule.IsFullLattice D.host.E Λ₀ :=
     full_of_local_span Z Λ₀ hΛ₀ p₀ (isLat D Z FP p₀ (d0 p₀) _ (hΛ₀t p₀ hp₀)).2
@@ -941,8 +936,8 @@ theorem fibre : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (lo
       have hLp : ∀ p, Lp p ∈ locSet G G' p (y p) := by
         intro p
         by_cases h : p ∈ P
-        · simp only [Lp, dif_pos h]; exact hg ⟨p, h⟩ (Set.mem_univ _)
-        · simp only [Lp, dif_neg h]; exact (single p h).exists.choose_spec
+        · simp only [Lp, dite_eq_left h]; exact hg ⟨p, h⟩ (Set.mem_univ _)
+        · simp only [Lp, dite_eq_right h]; exact (single p h).exists.choose_spec
       have hlat : ∀ p, (Lp p).FG ∧ Submodule.span (D.s.atP p).Ep (Lp p : Set (Vp D p)) = ⊤ :=
         fun p => _root_.GlobalTheory.GenMass.Fibre.termLat D Z FP p (y p) (tm FP G G' p (Lp p)) (hLp p).1
       have hfin' : {p | Lp p ≠ lattice₂ D Z.M p Λ₀}.Finite := by
@@ -956,7 +951,7 @@ theorem fibre : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (lo
       show lattice₂ D Z.M q Λ = g q
       rw [hΛp q]
       show (if h : (q : PlF D) ∈ P then g ⟨q, h⟩ else (single q h).exists.choose) = g q
-      rw [dif_pos q.2]
+      rw [dite_eq_left q.2]
   have e1 := hinj.encard_image
   rw [himg, Set.encard_pi_eq_prod_encard] at e1
   rw [← e1]

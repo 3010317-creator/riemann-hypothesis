@@ -59,10 +59,8 @@ theorem schwartzBruhat_eq_sum_pureTuples : ∀ (F E : Type) [Field F] [NumberFie
   refine ⟨Fintype.card (Σ i : Fin k, (s i)),
     fun j Z => Φinf (e.symm j).1 Z * Φf (e.symm j).1 (e.symm j).2,
     fun j => A (e.symm j).1 (e.symm j).2, Finset.univ.biUnion S, ?_, ?_, ?_, ?_⟩
-  · intro j
-    exact GlobalTheory.CompanionTheory.WhitFree.DecN.isSchwartzArch_const_mulN (hinf _) _
-  · intro j v
-    exact hA _ _ v
+  · exact fun j => GlobalTheory.CompanionTheory.WhitFree.DecN.isSchwartzArch_const_mulN (hinf _) _
+  · exact fun j v => hA _ _ v
   · intro j v hv
     exact hAS _ _ (e.symm j).2.2 v
       (fun h => hv (Finset.mem_biUnion.2 ⟨_, Finset.mem_univ _, h⟩))

@@ -92,8 +92,7 @@ theorem delta_fin {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G : GridDat
       exact (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV D.host.F ⟨P, hP.isPrime, hne⟩).toRingHom.domain_nontrivial
     refine Subtype.ext (Units.ext (Matrix.ext fun i j => ?_))
     apply Formalism.UG.P.inclE_injective D.host.F D.host.E (Formalism.L2.Herm.Af D.host.F)
-    have h2 := congrArg (fun g : GLf G => g.val i j) h
-    simpa [ratIn, bc] using h2
+    simpa [ratIn, bc] using congrArg (fun g : GLf G => g.val i j) h
   let f : {γ : UR D.sp.cm (Xp G).gram // a⁻¹ * ((ratIn G γ)⁻¹ * finG (Xp G) x) ∈ G.Kplus} →
       {γ : ratFin (Xp G) // finG (Xp G) (x⁻¹ * γ * x) ∈ G.Kplus} := fun γ =>
     ⟨⟨e (γ₀ * γ.1⁻¹), he _⟩, by
@@ -119,12 +118,12 @@ theorem deltaForm_sum {Γ A K M : Type} [Group Γ] [Group A] [Field K] [AddCommG
   classical
   unfold deltaForm
   rw [finsum_eq_sum_of_support_subset (s := hA.toFinset)]
-  · exact Finset.sum_congr rfl fun γ h => if_pos (hA.mem_toFinset.1 h)
+  · exact Finset.sum_congr rfl fun γ h => ite_eq_left (hA.mem_toFinset.1 h)
   · intro γ h
     rw [Function.mem_support] at h
     simp only [Set.Finite.coe_toFinset]
     by_contra h'
-    exact h (if_neg h')
+    exact h (ite_eq_right h')
 
 theorem psiC_delta_lin {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} (rp : ClassReps G) (cl : G.ClPlus)
     (x : FinPt G (.top 0)) (hx : gamOrd (Xp G) G.Kplus x ≠ 0) {ι : Type} [Fintype ι] (w : ι → D.what₂.LL) (b : ι → WtSp G) :
@@ -310,8 +309,7 @@ theorem denseRange_embedding {K : Type} [Field K] [NumberField K] [_root_.Number
   have hc : p.IsComplex := IsTotallyComplex.isComplex p
   have hr : ¬ ComplexEmbedding.IsReal p.embedding := InfinitePlace.isComplex_iff.1 hc
   obtain ⟨a, ha⟩ : ∃ a, (starRingEnd ℂ) (p.embedding a) ≠ p.embedding a := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hr (RingHom.ext fun x => h x)
   set α := p.embedding a with hα
   have him : α.im ≠ 0 := fun h0 => ha (Complex.conj_eq_iff_im.2 h0)
@@ -497,8 +495,7 @@ theorem nrm_blk_nonneg [Fintype C] (hp : ∀ c : Fin N → ℂ, 0 ≤ (star c �
   rw [form_eq, Finset.sum_eq_single b] at h
   · have e1 : blk σ lam e (fun a => if (e a).1 = b then c a else 0) b = blk σ lam e c b :=
       Finset.sum_congr rfl fun k _ => by simp
-    rw [e1] at h
-    exact h
+    rwa [e1] at h
   · intro b' _ hb
     have e1 : blk σ lam e (fun a => if (e a).1 = b then c a else 0) b' = 0 :=
       Finset.sum_eq_zero fun k _ => by simp [hb]
@@ -577,13 +574,13 @@ theorem pair_ratLe (C b : ℝ) (p : InfinitePlace D.what₂.LL) {g g' : Infinite
     (fun j => if h : j < D.R.m then ch.S.Z.kkMap 1 (d.1 ⟨j, h⟩) (ch.S.ptTop c j) (ch.S.ptTop c (j + 1)) else 0)
     (fun j v B => NrmLe _ p.embedding v B) (g p) D.R.m
     (fun j hj B v h => by
-      simp only [dif_pos hj]
+      simp only [dite_eq_left hj]
       exact hg p Φ β d hd c ⟨j, hj⟩ B v h) D.R.m le_rfl _ Bu hu
   have h2 := chain_le (V := fun i => VV ℂ (wt ch.G (.grid i D.R.m)))
     (fun i => if h : i < D.R.m then ch.S.Z.kkMap 1 (d.2 ⟨i, h⟩) (ch.S.ptRow c i) (ch.S.ptRow c (i + 1)) else 0)
     (fun j v B => NrmLe _ p.embedding v B) (g' p) D.R.m
     (fun j hj B v h => by
-      simp only [dif_pos hj]
+      simp only [dite_eq_left hj]
       exact hg' p Φ β d hd c ⟨j, hj⟩ B v h) D.R.m le_rfl _ Bf hv
   obtain ⟨y, e, hy⟩ := hP p.embedding _ _ _ _ h1 h2
   exact ⟨y, e, Real.le_sqrt_of_sq_le hy⟩
@@ -682,8 +679,7 @@ theorem test_bound (C sb : ℝ) (hm : 0 < D.R.m) (hA : 0 ≤ D.R.m * aOne ch.G C
   set nb : TestIx ch.G → ℝ := fun b => nrm (LaP ch.G) (fun τ => (gramKd (emb D) (Xp ch.G).gram τ).map σ)
     (GlobalTheory.CoefModel.mapVV σ _ (valAt (LaP ch.G) ch.e b c)) with hnb
   have hnb0 : ∀ b, 0 ≤ nb b := fun b => by
-    simp only [hnb, nrm, mapVV_valAt]
-    exact nrm_blk_nonneg σ (LaP ch.G) ch.e _ hp _ b
+    simpa only [hnb, nrm, mapVV_valAt] using nrm_blk_nonneg σ (LaP ch.G) ch.e _ hp _ b
   have hsum : ∑ b, nb b = (star (fun a => σ (c a)) ⬝ᵥ (((formGram ch.G ch.e).map σ) *ᵥ fun a => σ (c a))).re := by
     rw [formGram, form_eq, Complex.re_sum]
     exact Finset.sum_congr rfl fun b _ => by simp only [hnb, nrm, mapVV_valAt]

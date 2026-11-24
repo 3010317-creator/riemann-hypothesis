@@ -404,8 +404,7 @@ theorem SatModel.exists_flagged_model (E : Type) [Field E] [NumberField E] [IsCM
   obtain ⟨c₀, u, hc₀, hsemi, hjc, hbind, -⟩ := id hgf
 
   have hgp : Flat.ZLat.gp ξ ∈ {q : Cpt ξ | ∀ r : ℕ, r.Prime → ¬ InFibre ξ r q} := by
-    intro r hr hn
-    exact hn (Flat.ZLat.unitAt_gp hg (Nat.cast_ne_zero.2 hr.ne_zero))
+    exact fun r hr hn => hn (Flat.ZLat.unitAt_gp hg (Nat.cast_ne_zero.2 hr.ne_zero))
   have hspan : ∀ s, Submodule.span Ω (Set.range (b s)) = eigSp ρ (cst.comp (labelEmb c s)) := fun s =>
     span_eq_of_isFlagVBOn hg hvb hgp (hfl s)
 
@@ -434,8 +433,7 @@ theorem SatModel.exists_flagged_model (E : Type) [Field E] [NumberField E] [IsCM
   have hsub : ∀ s, (Ml.eigLat ρ (cst.comp (labelEmb c s))).IsFlagVBOn Set.univ (b s) := by
     intro s
     have h := hflag s
-    rw [hspan s, ← hlat] at h
-    exact h
+    rwa [hspan s, ← hlat] at h
   have hNs : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M'.X := isNormalScheme_of_normalCpt hg' M'.all hN
   have hpatch : ∀ (L₀ : Lat M'.ξ Li) (Lp : ℕ → Lat M'.ξ Li), Lat.patch ∅ L₀ Lp = L₀ := Lat.patch_empty
   let 𝔐 : HodgeCpt Y ∅ y₁ :=

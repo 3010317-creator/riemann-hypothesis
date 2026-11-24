@@ -1057,8 +1057,7 @@ theorem theta_values : ∀ (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLoca
       refine ⟨σt, fun k => ?_, fun x hR => hfix x hR.1 hR.2⟩
       rcases hcases k with h | h
       · show σt ≫ q ≫ D.famφB 0 k ≫ β = q ≫ D.famφB 0 k ≫ β
-        rw [h, Category.id_comp]
-        exact hproj
+        rwa [h, Category.id_comp]
       · show σt ≫ q ≫ D.famφB 0 k ≫ β = q ≫ D.famφB 0 k ≫ β
         have hf : ∀ a, (ev.comp ib) a ∈ k₀ := hk
         rw [h, reassoc_of% hqw, reassoc_of% hfst, spMap_two'_assoc ib ev, reassoc_of% (spMap_conj k₀ _ hf σ hσ)])
@@ -1442,8 +1441,7 @@ theorem frame_ev : ∀ (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLocalRin
   have hy : y ^ N₁ = 1 := by rw [← MonObj.comp_pow, hb, MonObj.comp_one]
   have hyd : RatPV β k₀ y.left := by
     show DefOver k₀ ((spMap ev ≫ b.left) ≫ β)
-    rw [Category.assoc]
-    exact hbdef
+    rwa [Category.assoc]
   obtain ⟨c, hc, ec⟩ := kap_memV HD κ hκ y hyd z J J₀ hJ hJ₀
   rw [hy] at ec
   have h1 : val t (spMap ev) z J ^ (N₁ ^ 2) * val (Z := Sp K) κ y.left z J = 1 := ht.2 κ hκ (Sp K) (spMap ev) z J hJ
@@ -1718,8 +1716,7 @@ theorem ev_values : ∀ (N₁ : ℕ), 2 ≤ N₁ → ∀ (V₁ : Type) [CommRing
     rw [u2, u3, u4, u5, e1, units_identity, ← hU0] at h1
     have hL : gs r z ⊤ ((Scheme.ΓSpecIso (CommRingCat.of V₁)).inv.hom (G mu c)) = toStk z (ev (G mu c)) := by
       have := GlobalTheory.RatioVal.gs_specMap ev z ((Scheme.ΓSpecIso (CommRingCat.of V₁)).inv.hom (G mu c))
-      rw [Iso.inv_hom_id_apply] at this
-      exact this
+      rwa [Iso.inv_hom_id_apply] at this
     refine ⟨c1 ^ 2 * ((m2 : K) ^ 2 * (m3 : K) ^ 2 * (m4 : K) * (m5 : K)⁻¹),
       k₀.mul_mem (k₀.pow_mem hc1 2) (k₀.mul_mem (k₀.mul_mem (k₀.mul_mem (k₀.pow_mem hc2 2) (k₀.pow_mem hc3 2)) hc4)
         (k₀.inv_mem hc5)), ?_⟩

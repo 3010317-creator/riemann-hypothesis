@@ -507,14 +507,11 @@ theorem IsArithVar.under_eq_genericPoint [IsIntegral X] (hX : IsArithVar p 0) (y
     have h₂ : genericPoint Z ∈ i ⁻¹ᵁ X.basicOpen (n : Γ(X, ⊤)) := by
       have := mem_ptsIn.1 ((mem_ptsIn_basicOpen mem_ptsIn_top _).2 h₁)
       change i (genericPoint Z) ∈ X.basicOpen _
-      rw [hi]
-      exact this
-    rw [Scheme.preimage_basicOpen_top, map_natCast, hn, Scheme.basicOpen_zero] at h₂
-    exact h₂
+      rwa [hi]
+    rwa [Scheme.preimage_basicOpen_top, map_natCast, hn, Scheme.basicOpen_zero] at h₂
   have hr : closure {under y} = Set.range i := by
     have h₁ := (genericPoint_spec Z).image i.continuous
-    rw [Set.image_univ, i.isClosedEmbedding.isClosed_range.closure_eq, hi] at h₁
-    exact h₁
+    rwa [Set.image_univ, i.isClosedEmbedding.isClosed_range.closure_eq, hi] at h₁
   rcases Order.krullDim_le_one_iff.1 (show Order.krullDim (IrreducibleCloseds X) ≤ 1 from hX.dim_eq.le)
     ⟨closure {under y}, isIrreducible_singleton.closure, isClosed_closure⟩ with h | h
   · obtain ⟨d, hd⟩ := hX.exists_dim_eq i

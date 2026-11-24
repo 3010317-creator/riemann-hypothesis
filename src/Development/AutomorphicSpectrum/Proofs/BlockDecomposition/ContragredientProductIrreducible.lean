@@ -85,10 +85,8 @@ theorem pi_compactOpen_basis
   intro U hU
   obtain ⟨H, hHo, hHc, hsub⟩ := exists_pi_subset hG U hU
   refine ⟨Subgroup.pi Set.univ H, ?_, ?_, hsub⟩
-  · show IsOpen (Set.pi Set.univ fun a => (H a : Set (Γ a)))
-    exact isOpen_set_pi Set.finite_univ fun a _ => hHo a
-  · show IsCompact (Set.pi Set.univ fun a => (H a : Set (Γ a)))
-    exact isCompact_univ_pi fun a => hHc a
+  · exact isOpen_set_pi Set.finite_univ fun a _ => hHo a
+  · exact isCompact_univ_pi fun a => hHc a
 
 theorem isAdmissible_piTensor [∀ a, T2Space (Γ a)]
     (hG : ∀ a, ∀ U ∈ nhds (1 : Γ a), ∃ K : Subgroup (Γ a), IsOpen (K : Set (Γ a)) ∧
@@ -177,8 +175,7 @@ theorem nonempty_equiv_piTensor_contra [∀ a, T2Space (Γ a)]
     GlobalTheory.ContraRefl.contra_isIrreducible (pi_compactOpen_basis hG) (isAdmissible_piTensor hG hρ) hI
   have hB0 : pairForm ρ ≠ 0 := by
     have hne : ∀ a, ∃ v : X a, v ≠ 0 := fun a => by
-      by_contra h
-      push_neg at h
+      by_contra! h
       apply (bot_ne_top : (⊥ : Subrepresentation (ρ a)) ≠ ⊤)
       apply Subrepresentation.ext
       ext x
@@ -235,7 +232,7 @@ theorem contra_prodIrr : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalS
   have hci := fun a => contra_rep_isIrreducible hA (x a)
   have hy : (fun a => dualCl (x a)) =
       fun a => IrrGL.of (contra (x a).rep) (isSmooth_smoothRep _) (hci a) :=
-    funext fun a => dif_pos (hci a)
+    funext fun a => dite_eq_left (hci a)
   have key : ∀ y : Fin h → IrrGL (k := k),
       y = (fun a => IrrGL.of (contra (x a).rep) (isSmooth_smoothRep _) (hci a)) →
       ∃ hd' : ∑ a, (y a).1 = N, Nonempty ((contra (prodIrr x hd)).Equiv (prodIrr y hd')) := by

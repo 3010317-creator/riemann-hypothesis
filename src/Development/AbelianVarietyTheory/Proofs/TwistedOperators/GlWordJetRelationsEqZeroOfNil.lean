@@ -109,8 +109,7 @@ theorem jetRel_equivariant : ∀ (V W : Type) [NormedAddCommGroup V] [InnerProdu
     have h1 : j x ∈ kSpan ε E u := by
       rw [← hL.2.2.2.2]; exact ⟨x, rfl⟩
     have h2 := compact_span_compact_stable ε E u c d hcd _ h1
-    rw [← hL.2.2.2.2] at h2
-    exact h2
+    rwa [← hL.2.2.2.2] at h2
   choose T hT using hex
   have happ : ∀ (F : (Fin m → Fin n × Fin n) → V) α, arrTo V n m F α = F α := by
     intro F α; simp [arrTo]
@@ -151,8 +150,8 @@ theorem jetRel_equivariant : ∀ (V W : Type) [NormedAddCommGroup V] [InnerProdu
       ((sum_update_first_index_swap i c d (fun α β => B (List.ofFn α).reverse y (G β))).trans ?_)
     refine Finset.sum_congr rfl fun β _ => ?_
     by_cases h : (β i).1 = d
-    · rw [if_pos h, if_pos h.symm]
-    · rw [if_neg h, if_neg (Ne.symm h)]
+    · rw [ite_eq_left h, ite_eq_left h.symm]
+    · rw [ite_eq_right h, ite_eq_right (Ne.symm h)]
   · exact ((Finset.sum_congr rfl fun α _ =>
       (apply_ite (B (List.ofFn α).reverse y) _ _ _).trans (by rw [map_zero]))).trans
       (sum_update_second_index_swap i c d (fun α β => B (List.ofFn α).reverse y (G β)))
@@ -250,8 +249,7 @@ theorem LowData.mem_kSpan (hL : LowData ε E Λ u j) (x : W) : j x ∈ Formalism
 
 theorem LowData.exists_of_mem (hL : LowData ε E Λ u j) {v : V} (hv : v ∈ Formalism.REAL.kSpan ε E u) :
     ∃ x : W, j x = v := by
-  rw [← hL.2.2.2.2] at hv
-  exact hv
+  rwa [← hL.2.2.2.2] at hv
 
 theorem LowData.finiteDimensional (hL : LowData ε E Λ u j) : FiniteDimensional ℂ W := by
   have h := hL.2.2.2.1
@@ -339,8 +337,7 @@ theorem riesz_arr_mem_Nset {B : List (Fin n × Fin n) → W →ₗ⋆[ℂ] W →
     obtain ⟨P, hP, Q, hQ, hPQ⟩ := Submodule.mem_sup.mp hS0
     have h1 := hSo Q hQ
     rw [← hPQ, inner_add_left, horth P hP Q hQ, zero_add, inner_self_eq_zero] at h1
-    rw [← hPQ, h1, add_zero]
-    exact hP
+    rwa [← hPQ, h1, add_zero]
 
 theorem riesz_arr_casimir {B : List (Fin n × Fin n) → W →ₗ⋆[ℂ] W →ₗ[ℂ] ℂ} {m : ℕ} (hL : LowData ε E Λ u j)
     (hB : JetRel ε E Λ u j B) (y : W) (g : (Fin (m + 1) → Fin n × Fin n) → W)
@@ -406,8 +403,7 @@ theorem jetRel_eq_zero_of_nil :
     induction m with
     | zero =>
       intro l hl
-      rw [List.length_eq_zero_iff.mp (Nat.le_zero.mp hl)]
-      exact hnil
+      rwa [List.length_eq_zero_iff.mp (Nat.le_zero.mp hl)]
     | succ m ih =>
       intro l hl
       rcases Nat.lt_or_ge m l.length with hlt | hle

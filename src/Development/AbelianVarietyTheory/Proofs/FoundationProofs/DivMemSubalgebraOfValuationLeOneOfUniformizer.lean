@@ -109,8 +109,7 @@ theorem mem_of_div_le_one : ∀ (O Ω : Type) [CommRing O] [Field Ω] [Algebra O
       exact not_lt.mp hmin
   have hvπn : 0 < v π ^ n := pow_pos hvπ n
   have hvw_le : v (b / π ^ n) ≤ 1 := by
-    rw [map_div₀, map_pow, div_le_one₀ hvπn]
-    exact hle
+    rwa [map_div₀, map_pow, div_le_one₀ hvπn]
   have hwB : b / π ^ n ∈ B := hA n b hb hvw_le
   have hvw : v (b / π ^ n) = 1 := by
     refine le_antisymm hvw_le (not_lt.mp fun hlt => ?_)
@@ -129,8 +128,7 @@ theorem mem_of_div_le_one : ∀ (O Ω : Type) [CommRing O] [Field Ω] [Algebra O
   have haπ : a / π ^ n ∈ B := by
     apply hA n a ha
     have he : a / π ^ n = a / b * (b / π ^ n) := by field_simp
-    rw [he, map_mul, hvw, mul_one]
-    exact hab
+    rwa [he, map_mul, hvw, mul_one]
   have he : a / b = a / π ^ n * (b / π ^ n)⁻¹ := by field_simp
   rw [he]
   exact B.mul_mem haπ hwinv

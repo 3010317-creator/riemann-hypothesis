@@ -93,8 +93,7 @@ theorem UpperTheory.V.Weyl.curve :
     rw [hasDerivAt_pi]
     intro a
     rw [hasDerivAt_pi]
-    intro b
-    exact hd a b
+    exact fun b => hd a b
   have hγ0 : (of.symm (c 0) : Fin n → Fin n → ℂ) = oneM n := by
     rw [h0]
   have hf : HasFDerivAt (Ξ.coef i j) (fderiv ℂ (Ξ.coef i j) (oneM n))

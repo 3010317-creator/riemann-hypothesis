@@ -99,7 +99,7 @@ theorem kerProj_isUnit_reg (T : E →L[ℂ] F) {t : ℝ} (ht : 0 < t) :
     have h1 : t * ‖w‖ ^ 2 ≤ 0 := by nlinarith [sq_nonneg ‖T w‖]
     have h2 : ‖w‖ ^ 2 ≤ 0 := by
       by_contra hc
-      push_neg at hc
+      push Not at hc
       nlinarith [mul_pos ht hc]
     have : ‖w‖ = 0 := by nlinarith [norm_nonneg w]
     exact norm_eq_zero.mp this
@@ -175,8 +175,7 @@ theorem measurable_starProjection_ker_clm {X : Type*} [TopologicalSpace X] [Meas
     exact ContinuousAt.comp (f := fun x => ContinuousLinearMap.adjoint (T x) ∘L (T x)
         + (((1 / ((j : ℝ) + 1) : ℝ)) : ℂ) • (1 : E →L[ℂ] E)) h1 hc.continuousAt
   · rw [tendsto_pi_nhds]
-    intro x
-    exact kerProj_reg_tendsto (T x) (v x)
+    exact fun x => kerProj_reg_tendsto (T x) (v x)
 
 end
 
@@ -240,8 +239,7 @@ theorem measurable_proj {X : Type} [TopologicalSpace X] [MeasurableSpace X] [Ope
       · exact congrFun h3 i
     · intro h2
       exact ⟨funext fun i => congrFun h2 (Sum.inl i), funext fun i => congrFun h2 (Sum.inr i)⟩
-  simp only [e]
-  exact h
+  simpa only [e] using h
 
 theorem measurableSet_GG (k r : ℕ) : MeasurableSet {x : Mt k r | Matrix.of x ∈ GG k r} := by
   refine IsClosed.measurableSet ?_
@@ -275,8 +273,7 @@ theorem measurable_gramProj (k r j : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) (
       Real.sqrt ‖(Matrix.gram ℂ u).det‖ := by
     refine Real.continuous_sqrt.comp (continuous_norm.comp (Continuous.matrix_det ?_))
     refine continuous_matrix fun a b => ?_
-    simp only [Matrix.gram_apply]
-    exact (continuous_apply a).inner (continuous_apply b)
+    simpa only [Matrix.gram_apply] using (continuous_apply a).inner (continuous_apply b)
   exact hG.measurable.comp (Measurable.of_eval hp)
 
 theorem yj_measurable : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 1) → ℂ)), ∀ γ : Mat k r, inWb k r z → inWb k r z' → 0 < Tz k r z → 0 < Tz k r z' → γ ∈ GG k r → Measurable (Set.indicator {x : Mt k r | Matrix.of x ∈ GG k r} fun x => Yj k r hj z z' γ (Matrix.of x)) ∧ ∀ R₀ y : ℝ, MeasurableSet (Eset0 k r hj z z' γ R₀ y) := by

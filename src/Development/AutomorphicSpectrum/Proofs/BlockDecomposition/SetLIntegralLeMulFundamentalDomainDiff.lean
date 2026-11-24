@@ -66,8 +66,7 @@ theorem setLIntegral_le_mul_fundamentalDomain_diff {G : Type} [Group G] [Measura
     by_cases hx : x ∈ T
     · have hz : ∀ γ : Γ, S.indicator h (γ • x) = 0 := fun γ => by
         apply Set.indicator_of_notMem
-        intro hmem
-        exact hST γ γ.2 x (by simpa [Subgroup.smul_def] using hmem) hx
+        exact fun hmem => hST γ γ.2 x (by simpa [Subgroup.smul_def] using hmem) hx
       simp [hz]
     · have hrew : ∀ γ : Γ, S.indicator h (γ • x) =
           ({γ : Γ | (γ : G) * x ∈ S}).indicator (fun _ => h x) γ := fun γ => by
@@ -80,8 +79,7 @@ theorem setLIntegral_le_mul_fundamentalDomain_diff {G : Type} [Group G] [Measura
       rw [← tsum_subtype, ENNReal.tsum_set_const,
         Set.indicator_of_mem (show x ∈ Tᶜ from hx)]
       gcongr
-      have hc := ENat.toENNReal_le.mpr (hN x)
-      simpa using hc
+      simpa using ENat.toENNReal_le.mpr (hN x)
   calc ∫⁻ x in S, h x ∂μ = ∑' γ : Γ, ∫⁻ x in F, S.indicator h (γ • x) ∂μ := h1
     _ = ∫⁻ x in F, ∑' γ : Γ, S.indicator h (γ • x) ∂μ :=
         (lintegral_tsum fun γ => (hmeas γ).aemeasurable).symm

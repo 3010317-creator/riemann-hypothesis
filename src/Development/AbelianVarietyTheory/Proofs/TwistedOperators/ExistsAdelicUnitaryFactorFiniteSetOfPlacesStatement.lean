@@ -120,8 +120,7 @@ theorem exists_idem {F : Type} [Field F] [NumberField F] (S : Finset (GlobalTheo
     intro w hw
 
     rw [map_sum, Finset.sum_eq_single_of_mem w hw, GlobalTheory.AdelicU.evalV_singleFin_self]
-    intro v _ hv
-    exact GlobalTheory.AdelicU.evalV_singleFin_ne hv.symm 1
+    exact fun v _ hv => GlobalTheory.AdelicU.evalV_singleFin_ne hv.symm 1
   have hb0 : ∀ w ∉ S, Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV F w b = 0 := by
     intro w hw
 
@@ -138,8 +137,7 @@ theorem exists_idem {F : Type} [Field F] [NumberField F] (S : Finset (GlobalTheo
     by_cases hw : w ∈ S
     · rw [hb1 w hw, mul_one]
     · rw [hb0 w hw, mul_zero]
-  · show InfiniteAdeleRing.ringEquiv_mixedSpace F 0 = 0
-    exact map_zero _
+  · exact map_zero _
   · intro u hu
     refine Prod.ext (by change u.1 * 0 = 0; exact mul_zero _) ?_
     change u.2 * b = 0
@@ -167,8 +165,7 @@ theorem exists_cut : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Numbe
   have hS2 : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.mat gS = e • GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.mat g + (1 - e) • 1 := hS
   have hk2 : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.mat k = e • 1 + (1 - e) • GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.mat g := hk
   have hk3 : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.mat k⁻¹ = e • 1 + (1 - e) • GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.mat g⁻¹ := by
-    rw [inv_one] at hk'
-    exact hk'
+    rwa [inv_one] at hk'
   have hoff : ∀ (u : AF F) (M : Matrix (Fin n) (Fin n) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))), u * e = 0 →
       u • (e • (1 : Matrix (Fin n) (Fin n) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) + (1 - e) • M) = u • M := by
     intro u M hu

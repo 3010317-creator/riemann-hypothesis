@@ -379,8 +379,7 @@ theorem absUnf : AbsUnf := by
       have e₂ : ∫⁻ a, S.indicator (1 : ℂ × G → ℝ≥0∞) (T₂ a) ∂P₂ =
           ∫⁻ y, ∫⁻ g in DH, S.indicator (1 : ℂ × G → ℝ≥0∞) (T₂ (y, g)) ∂ν ∂μ :=
         lintegral_prod _ (hm.comp hT₂).aemeasurable
-      rw [e₁, e₂]
-      exact hu
+      rwa [e₁, e₂]
     let h : ℂ × G → ℂ := fun w => c w.2 * w.1
     have hh : Measurable h := by fun_prop
     haveI : IsFiniteMeasure (ν.restrict DH) := ⟨by simpa using hfin⟩
@@ -449,8 +448,7 @@ private theorem gl_scalarCenter_commute {E : Type} [Field E] [NumberField E] [_r
   obtain ⟨-, -, -, -, -, -, -, -, hsc, -, -⟩ := UpperTheory.ConvolutionTheory.RankTwoDescent.szLaws E D
   have e : em E (dM (ideleNorm ℚ E z)⁻¹) = (dM (tau z))⁻¹ := by
     rw [em_dM, map_inv, dM_inv]; rfl
-  rw [hsc, e, gl_cD]
-  rw [← mul_assoc, ← UpperTheory.ConvolutionTheory.R2.scalar_comm z (gl u)]
+  rw [hsc, e, gl_cD, ← mul_assoc, ← UpperTheory.ConvolutionTheory.R2.scalar_comm z (gl u)]
   group
 
 private theorem cD_j {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (D : Dat ℚ E) (z : (A E)ˣ)
@@ -588,8 +586,7 @@ private theorem swap_int {Z X T : Type} [MeasurableSpace Z] [MeasurableSpace X] 
   have h3 : ∀ᵐ p : Z × X ∂(m.prod n), p.1 ∈ S :=
     Measure.QuasiMeasurePreserving.ae Measure.quasiMeasurePreserving_fst hS
   rw [integral_integral_swap]
-  · refine integral_congr_ae (ae_of_all _ fun y => ?_)
-    exact integral_const_mul _ _
+  · exact integral_congr_ae (ae_of_all _ fun y => (integral_const_mul _ _))
   · refine h2.mono' (((hcm.comp measurable_snd).mul h1.measurable).aestronglyMeasurable) ?_
     filter_upwards [h3] with p hp
     by_cases h0 : c p.2 = 0

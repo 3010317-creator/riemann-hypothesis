@@ -152,9 +152,9 @@ theorem exists_haar_lying_over : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   have htUc : Continuous tU := by
     refine continuous_pi fun τ => continuous_pi fun a => ?_
     by_cases ha : (a : ℕ) = 0
-    · simp only [tU, ha, if_true]
+    · simp only [tU, ha, ite_true]
       exact ((continuous_apply τ).comp hdCc).inv
-    · simp only [tU, ha, if_false]
+    · simp only [tU, ha, ite_false]
       exact continuous_const
   have hcTc : Continuous cT := by
     refine hιc.comp_continuous ?_ fun t => horthT t
@@ -169,10 +169,10 @@ theorem exists_haar_lying_over : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     have e3 : (mat (diagF X (tU g)) τ).det = ((M g.1 τ).det)⁻¹ := by
       show (Matrix.diagonal fun a => ((tU g τ a : Circle) : ℂ)).det = _
       rw [Matrix.det_diagonal, Finset.prod_eq_single (⟨0, hr⟩ : Fin r)]
-      · simp only [tU, if_true, Circle.coe_inv, hdC]
+      · simp only [tU, ite_true, Circle.coe_inv, hdC]
       · intro b _ hb
         have : (b : ℕ) ≠ 0 := fun h => hb (Fin.ext h)
-        simp only [tU, this, if_false, Circle.coe_one]
+        simp only [tU, this, ite_false, Circle.coe_one]
       · simp
     have hx0 := UnitaryFrames.det_ne_zero_of_isOrth X hx τ
     have hg0 : (M g.1 τ).det ≠ 0 := by
@@ -184,8 +184,7 @@ theorem exists_haar_lying_over : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     have h2 : (M (cU g).1 τ).det * (mat x τ).det = (mat x τ).det * ((M g.1 τ).det)⁻¹ := by
       have h1' : (M (cU g).1 τ * mat x τ).det = (mat x τ * mat (diagF X (tU g)) τ).det := by
         rw [← e1, ← e2]; exact h1
-      rw [Matrix.det_mul, Matrix.det_mul, e3] at h1'
-      exact h1'
+      rwa [Matrix.det_mul, Matrix.det_mul, e3] at h1'
     have hi : (M g.1 τ).det * ((M g.1 τ).det)⁻¹ = 1 := mul_inv_cancel₀ hg0
     have h3 : (M (cU g).1 τ).det * (M g.1 τ).det = 1 := by
       apply mul_right_cancel₀ hx0
@@ -260,8 +259,7 @@ theorem exists_haar_lying_over : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     exact Measure.IsHaarMeasure.smul _ (ENNReal.coe_ne_zero.2 hc0) ENNReal.coe_ne_top
   · have hLc : Continuous fun g : realSU X.Ψ X.Gm =>
         X.lmulC (fun τ => (((g : realSU X.Ψ X.Gm) : X.Ψ → GL (Fin r) ℂ) τ : Matrix (Fin r) (Fin r) ℂ)) x := by
-      refine continuous_pi fun τ => ?_
-      exact ((hMc τ).comp continuous_subtype_val).matrix_mul continuous_const
+      exact continuous_pi fun τ => ((hMc τ).comp continuous_subtype_val).matrix_mul continuous_const
     have hm : Measurable fun g : realSU X.Ψ X.Gm =>
         φ (X.lmulC (fun τ => (((g : realSU X.Ψ X.Gm) : X.Ψ → GL (Fin r) ℂ) τ : Matrix (Fin r) (Fin r) ℂ)) x) :=
       hφ.comp hLc.measurable
@@ -468,9 +466,7 @@ theorem covolume_realSU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
       have hS : cpt X x z ∈ S := (memS _).2 ⟨γ, hγ, by
         rw [e, ← _root_.ReciprocityTheory.ChartRestriction.G.AR.Up.FundSetPf.lact_mul, inv_mul_cancel, _root_.ReciprocityTheory.ChartRestriction.G.AR.Up.FundSetPf.lact_one]; exact (memT _).2 ⟨z', hz', b, hb, rfl⟩⟩
       exact Set.indicator_of_notMem (Set.notMem_compl_iff.2 hS) _
-    rw [hzero, mul_zero] at h
-    rw [hpre, lintegral_indicator_one (hfm hSm.compl)] at h
-    exact h
+    rwa [hzero, mul_zero, hpre, lintegral_indicator_one (hfm hSm.compl)] at h
 
   have hcov : ∀ᵐ g ∂riemHaar X.Ψ X.Gm x, ∃ γ' : inReal X.Ψ X.Gm X.Γ, γ' • g ∈ frOf X x ⁻¹' T := by
     have hae : ∀ᵐ g ∂riemHaar X.Ψ X.Gm x, frOf X x g ∈ S := by
@@ -481,8 +477,7 @@ theorem covolume_realSU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     have hmem : embGL X.Ψ r γ⁻¹ ∈ realSU X.Ψ X.Gm :=
       embGL_mem_realSU X.Ψ X.Gm γ⁻¹ (hdet _ hδ) (X.Γ_stab _ hδ).1
     refine ⟨⟨⟨embGL X.Ψ r γ⁻¹, hmem⟩, Subgroup.mem_subgroupOf.2 (Subgroup.mem_map.2 ⟨γ⁻¹, hδ, rfl⟩)⟩, ?_⟩
-    rw [Set.mem_preimage, Subgroup.smul_def, smul_eq_mul, frOf_smul X x _ g γ⁻¹ rfl]
-    exact hγT
+    rwa [Set.mem_preimage, Subgroup.smul_def, smul_eq_mul, frOf_smul X x _ g γ⁻¹ rfl]
   have hdisj : Pairwise (Function.onFun (AEDisjoint (riemHaar X.Ψ X.Gm x))
       fun γ' : inReal X.Ψ X.Gm X.Γ => γ' • (frOf X x ⁻¹' T)) := by
     intro γ1 γ2 hne
@@ -525,8 +520,7 @@ theorem covolume_realSU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
       by_cases hz : z ∈ FF
       · rw [Set.indicator_of_mem ((hcptT z).2 hz), Set.indicator_of_mem hz]; rfl
       · rw [Set.indicator_of_notMem (mt (hcptT z).1 hz), Set.indicator_of_notMem hz]
-    rw [hpre, e2, lintegral_indicator_one (hfm hTm), lintegral_indicator_one hFFm] at h
-    exact h
+    rwa [hpre, e2, lintegral_indicator_one (hfm hTm), lintegral_indicator_one hFFm] at h
   have hfd : IsFundamentalDomain (inReal X.Ψ X.Gm X.Γ) (frOf X x ⁻¹' T) (riemHaar X.Ψ X.Gm x) :=
     ⟨(hfm hTm).nullMeasurableSet, hcov, hdisj⟩
   haveI : Countable (inReal X.Ψ X.Gm X.Γ) := by

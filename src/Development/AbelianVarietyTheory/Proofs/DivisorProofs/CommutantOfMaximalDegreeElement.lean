@@ -62,8 +62,7 @@ noncomputable def rootHom (F C : Type) [Field F] [Ring C] [Algebra F C] (y : C) 
     rw [map_mul, minpoly.aeval, zero_mul])
 
 theorem rootHom_root (F C : Type) [Field F] [Ring C] [Algebra F C] (y : C) :
-    rootHom F C y (AdjoinRoot.root (minpoly F y)) = y := by
-  exact Polynomial.aeval_X y
+    rootHom F C y (AdjoinRoot.root (minpoly F y)) = y := Polynomial.aeval_X y
 
 theorem commute_iff_mem_adjoin (F C : Type) [Field F] [Ring C] [Algebra F C] [FiniteDimensional F C]
     [Algebra.IsCentral F C] [IsSimpleRing C] (n : ℕ) (hn : 0 < n) (hC : Module.finrank F C = n ^ 2)
@@ -96,8 +95,7 @@ theorem commute_iff_mem_adjoin (F C : Type) [Field F] [Ring C] [Algebra F C] [Fi
   have hBZ : B ≤ Z := by
     intro a ha
     rw [Subalgebra.mem_centralizer_iff]
-    intro b hb
-    exact hcommB hb ha
+    exact fun b hb => hcommB hb ha
   have h1 := GroundTheory.Brauer.finrank_mul_finrank_centralizer (K := F) (A := C) B
   have hdim : Module.finrank F B = Module.finrank F Z := by
     apply Nat.eq_of_mul_eq_mul_left (show 0 < Module.finrank F B by rw [hBdim]; exact hn)
@@ -117,8 +115,7 @@ theorem commute_iff_mem_adjoin (F C : Type) [Field F] [Ring C] [Algebra F C] [Fi
       rw [Set.mem_singleton_iff] at hg
       rw [hg]; exact hz.eq.symm
     rw [hEq]; exact hzZ
-  · intro hz
-    exact (hcommB hz (Algebra.self_mem_adjoin_singleton F y) : _)
+  · exact fun hz => (hcommB hz (Algebra.self_mem_adjoin_singleton F y) : _)
 
 theorem centralizer_unit_eq_field : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (y₀ : G.Cˣ),
     Irreducible (minpoly G.F (y₀ : G.C)) → (minpoly G.F (y₀ : G.C)).natDegree = G.n →

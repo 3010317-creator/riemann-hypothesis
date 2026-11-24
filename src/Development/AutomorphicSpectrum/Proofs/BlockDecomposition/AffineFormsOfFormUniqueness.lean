@@ -189,14 +189,12 @@ theorem ext_alt {K A : Type} [CommRing K] [CommRing A] [Algebra K A] {H : Type 1
   have hL : ∀ x, L x = ∑ J : Idx a d, Cl J.1 (x J) := fun x => by simp [L]
   have hLb : Function.Bijective L := by
     have : (L : (Idx a d → A) → H) = fun x => ∑ J : Idx a d, Cl J.1 (x J) := funext hL
-    rw [this]
-    exact hb
+    rwa [this]
   let e : Om K A a ≃ₗ[K] H := (B.equivFun.restrictScalars K).trans (LinearEquiv.ofBijective L hLb)
   have hJ : ∀ (J : Idx a d) (x : A), e (x • exteriorPower.ιMulti A a (b ∘ J.1)) = Cl J.1 x := by
     intro J x
     change L (B.equivFun (x • exteriorPower.ιMulti A a (b ∘ J.1))) = _
-    rw [← hB, map_smul, hL]
-    rw [Finset.sum_eq_single J]
+    rw [← hB, map_smul, hL, Finset.sum_eq_single J]
     · simp [Module.Basis.equivFun_apply]
     · intro J' _ hne
       have : (Finsupp.single J (1 : A)) J' = 0 := Finsupp.single_eq_of_ne hne
@@ -215,8 +213,7 @@ theorem ext_alt {K A : Type} [CommRing K] [CommRing A] [Algebra K A] {H : Type 1
         (Equiv.Perm.sign (π⁻¹ : Equiv.Perm (Fin a)) : ℤ) • exteriorPower.ιMulti A a (b ∘ (I ∘ π)) := by
       conv_lhs => rw [e1]
       exact (exteriorPower.ιMulti A a (M := Ω[A⁄K])).map_perm (b ∘ (I ∘ π)) (π⁻¹ : Equiv.Perm (Fin a))
-    rw [h2, smul_comm, map_zsmul, h1, ← hs]
-    rw [← e1]
+    rw [h2, smul_comm, map_zsmul, h1, ← hs, ← e1]
   · have h1 : exteriorPower.ιMulti A a (b ∘ I) = 0 :=
       (exteriorPower.ιMulti A a (M := Ω[A⁄K])).map_eq_zero_of_not_injective _ fun h => hI (Function.Injective.of_comp h)
     rw [h1, smul_zero, map_zero, h0 I hI]
@@ -382,8 +379,7 @@ theorem frame_rule (hF : IsFil Φ Fil) (E : Frame Φ d) (σ : ∀ T : C, E.D ⟶
   have hFS : ∀ k x, fS k x - fC k x ∈ (Fil ((1 : ℕ) : ℤ)).S T := fun k x => hcong _ _ _
   have hwJ : ∀ k i, w k i ∈ (Fil ((1 : ℕ) : ℤ)).S T := fun k i => hFS k _
   have hJ2 : (Fil ((1 : ℕ) : ℤ)).S T * (Fil ((1 : ℕ) : ℤ)).S T ≤ (Fil ((2 : ℕ) : ℤ)).S T := by
-    refine Ideal.mul_le.2 fun x hx y hy => ?_
-    exact hF.mul 1 1 T hx hy
+    exact Ideal.mul_le.2 fun x hx y hy => hF.mul 1 1 T hx hy
   let v : Fin a → Φ.A.obj T := fun k => ∑ i, F (p k i) * w k i
   have hv1 : ∀ k, v k ∈ (Fil ((1 : ℕ) : ℤ)).S T := fun k =>
     Ideal.sum_mem _ fun i _ => Ideal.mul_mem_left _ _ (hwJ k i)
@@ -469,8 +465,7 @@ theorem inU_eq (V : Z.Opens) :
   funext T
   refine propext ⟨fun h => ⟨trivial, V, rfl, h⟩, ?_⟩
   rintro ⟨-, W, hW, h⟩
-  rw [Set.mem_singleton_iff.1 hW] at h
-  exact h
+  rwa [Set.mem_singleton_iff.1 hW] at h
 
 theorem res_bij (V : Z.Opens) (a j : ℕ) (h : SS q 1 (a + 1) V ≤ inU q V) :
     Function.Bijective ((resU (G q a) h).pull j) := by
@@ -486,10 +481,8 @@ theorem res_bij (V : Z.Opens) (a j : ℕ) (h : SS q 1 (a + 1) V ≤ inU q V) :
       obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
       refine congrArg Submodule.Quotient.mk (Subtype.ext ?_)
       funext s
-      refine Subtype.ext ?_
-      exact (sq_tau_id q h _ _ _ _).symm
-    rw [e]
-    exact hb
+      exact Subtype.ext (sq_tau_id q h _ _ _ _).symm
+    rwa [e]
   exact key _ (inU_eq q V) h
 
 theorem theta_alg {V : Z.Opens} {s d : ℕ} (E : Frame (sP (SS q 1 s V)) d) (σ : ∀ T, E.D ⟶ T)
@@ -510,14 +503,12 @@ theorem theta_alg {V : Z.Opens} {s d : ℕ} (E : Frame (sP (SS q 1 s V)) d) (σ 
       rw [hF.top _ (by simp)]
       trivial)
     have h2 : (sFil (SS q 1 s V) (((0 : ℕ) : ℤ) + 1)).S E.D = ⊥ := by simpa using hbot
-    rw [h2, Ideal.mem_bot, sub_eq_zero, CategoryTheory.Functor.map_id] at h1
-    exact h1
+    rwa [h2, Ideal.mem_bot, sub_eq_zero, CategoryTheory.Functor.map_id] at h1
   refine ⟨AlgEquiv.ofRingEquiv (f := θ) fun k => ?_, fun _ => rfl⟩
   have h1 := hpt E.D hD (strV q V k)
   rw [ev_str, hid] at h1
   have h2 := Ideal.Quotient.eq.1 h1
-  rw [hJ, Ideal.mem_bot, sub_eq_zero] at h2
-  exact h2
+  rwa [hJ, Ideal.mem_bot, sub_eq_zero] at h2
 
 theorem exists_lifts {V : Z.Opens} {s d : ℕ} (hle : SS q 1 s V ≤ inU q V) (E : Frame (sP (SS q 1 s V)) d) (σ : ∀ T, E.D ⟶ T)
     (θ : Sec q V → (sP (SS q 1 s V)).A.obj E.D)
@@ -529,13 +520,13 @@ theorem exists_lifts {V : Z.Opens} {s d : ℕ} (hle : SS q 1 s V ≤ inU q V) (E
   let v : ∀ T : (inU q V).FullSubcategory, Sec q V → T.obj.B := fun T g =>
     if hT : SS q 1 s V T.obj then ((sP (SS q 1 s V)).A.map (σ ⟨T.obj, hT⟩)).hom (θ g) else lft V T.obj g
   have hvP : ∀ (T : (SS q 1 s V).FullSubcategory) (g : Sec q V),
-      v ⟨T.obj, hle _ T.property⟩ g = ((sP (SS q 1 s V)).A.map (σ T)).hom (θ g) := fun T g => dif_pos T.property
+      v ⟨T.obj, hle _ T.property⟩ g = ((sP (SS q 1 s V)).A.map (σ T)).hom (θ g) := fun T g => dite_eq_left T.property
   refine ⟨⟨v, fun T g => ?_⟩, fun {a} g₀ g x => ?_⟩
   · by_cases hT : SS q 1 s V T.obj
-    · have e : v T g = ((sP (SS q 1 s V)).A.map (σ ⟨T.obj, hT⟩)).hom (θ g) := dif_pos hT
+    · have e : v T g = ((sP (SS q 1 s V)).A.map (σ ⟨T.obj, hT⟩)).hom (θ g) := dite_eq_left hT
       rw [e]
       exact hpt ⟨T.obj, hT⟩ T.property g
-    · have e : v T g = lft V T.obj g := dif_neg hT
+    · have e : v T g = lft V T.obj g := dite_eq_right hT
       rw [e]
       exact lft_spec _ T.property g
   · unfold Lifts.form liftF
@@ -583,8 +574,7 @@ theorem affOm : FormUniq → AffOm := by
     change ρ.symm (e₀ (form K g₀ g)) = c₀
     rw [h2, LinearEquiv.symm_apply_apply]
   change IsForm q V g₀ g ((e₀.trans ρ.symm) (form K g₀ g))
-  rw [h3]
-  exact hc₀
+  rwa [h3]
 
 end Geo
 

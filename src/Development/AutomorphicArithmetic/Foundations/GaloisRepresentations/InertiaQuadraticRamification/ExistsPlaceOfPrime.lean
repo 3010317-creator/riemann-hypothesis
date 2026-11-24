@@ -179,10 +179,8 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.quad0Ex :
   refine ⟨Q, ⟨⟨x, hxQ⟩, ⟨⟨q, hq.pos, ?_⟩, hspan, σ'.toRingEquiv, hs1, hσ'x⟩, ?_⟩, ?_, u, huT, A, hA, τ, hτ, ?_⟩
   · apply Subtype.ext
     simpa using hx
-  · intro t ht A hA g hg
-    exact hfixT _ t ht A hA g hg
-  · intro t ht A hA g hg
-    exact hfix E g (fun y => g.commutes y) (hfixT E t ht A hA g hg)
+  · exact fun t ht A hA g hg => hfixT _ t ht A hA g hg
+  · exact fun t ht A hA g hg => hfix E g (fun y => g.commutes y) (hfixT E t ht A hA g hg)
   · intro hf
     have := hf ⟨x, hxQ⟩
     exact hneg (hτx.symm.trans this)

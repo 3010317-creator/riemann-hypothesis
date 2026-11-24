@@ -262,8 +262,7 @@ theorem exists_cdvr_map_of_finite : ∀ (V : Type) [CommRing V] [IsDomain V] [Is
     congrArg Subtype.val (e.apply_symm_apply ⟨t r, hrange r⟩)
   refine ⟨W, inferInstance, inferInstance, inferInstance, algebraMap V W, ψ,
     (GlobalTheory.LN.cDvr_iff W).2 ⟨hWd, hWc, hWch⟩, ?_, hWloc, RingHom.finite_algebraMap.2 hWfin, ?_⟩
-  · intro x y h
-    exact FaithfulSMul.algebraMap_injective V F (congrArg Subtype.val h)
+  · exact fun x y h => FaithfulSMul.algebraMap_injective V F (congrArg Subtype.val h)
   · intro a
     apply hφ
     rw [hψ, hφa, AlgHom.commutes, hVa, ← IsScalarTower.algebraMap_apply V K F]
@@ -570,8 +569,7 @@ theorem exists_extLam : ∀ (R : Type) [CommRing R] [IsDomain R] [IsDiscreteValu
       rw [hκ.2, lift_snd]
       rfl
   have c := GlobalTheory.SymSpread.lbIso_cube h hL' hL hb (x2 G) (x2 _) V (fun i => by fin_cases i <;> simp [x2, V])
-  rw [hV] at c
-  exact c
+  rwa [hV] at c
 
 end GlobalTheory.MumExt
 end -- clump:auto
@@ -807,8 +805,7 @@ theorem traitExtSt_of (h₁ : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (
       symm := hβs
       mono := hβm },
     f'.comp f, fK'.comp fK, hinj₂.comp hinj₁, ?_, hfin₂.comp hfin₁, ?_, rfl⟩
-  · rw [hsp, Category.assoc]
-    exact hcart'
+  · rwa [hsp, Category.assoc]
   · exact RingHom.isLocalHom_comp f' f
   · intro a
     simp [hK₁, hK₂]

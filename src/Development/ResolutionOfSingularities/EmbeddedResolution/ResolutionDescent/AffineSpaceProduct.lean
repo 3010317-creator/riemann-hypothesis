@@ -154,10 +154,8 @@ theorem isPullback_reindex_of_sumEquiv {n₁ n₂ n : Type u} (e : n₁ ⊕ n₂
     · rw [Category.assoc, hB]
       exact Limits.pullback.lift_snd _ _ _
   · refine Limits.pullback.hom_ext ?_ ?_
-    · rw [Category.assoc, Limits.pullback.lift_fst, Category.id_comp]
-      exact hA
-    · rw [Category.assoc, Limits.pullback.lift_snd, Category.id_comp]
-      exact hB
+    · rwa [Category.assoc, Limits.pullback.lift_fst, Category.id_comp]
+    · rwa [Category.assoc, Limits.pullback.lift_snd, Category.id_comp]
 
 def sumUliftEquivUliftSum (n m : ℕ) :
     (ULift.{u} (Fin n) ⊕ ULift.{u} (Fin m)) ≃ ULift.{u} (Fin n ⊕ Fin m) where
@@ -303,8 +301,7 @@ theorem isPullback_prodMapOnPreimage (k : Type u) [Field k] (n m c : ℕ)
       (prodMapOnPreimage k n m c U φ ≫ projRight k c m)
       (φ ≫ affineSpaceIndexedByToSpec k (ULift.{u} (Fin c)))
       (affineSpaceIndexedByToSpec k (ULift.{u} (Fin m))) := by
-    rw [prodMapOnPreimage_comp_projRight, hφ]
-    exact hstar
+    rwa [prodMapOnPreimage_comp_projRight, hφ]
   exact (hstar'.of_bot (morphismRestrict_projLeft_comp k n m c U φ hφ)
     (isPullback_projLeft_projRight k c m)).flip
 

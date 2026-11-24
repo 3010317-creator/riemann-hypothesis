@@ -108,7 +108,7 @@ private theorem UpperTheory.Reformulated.B.Qf34.taylor {k B : Type*} [CommRing k
       · rw [pderiv_X_of_ne (Ne.symm hl), map_zero]
         ring
     simp only [e, Finset.sum_add_distrib, ← Finset.mul_sum, ← hp, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true, map_mul]
+      Finset.mem_univ, ite_true, map_mul]
     linear_combination - h p (X i)
 
 open MvPolynomial in
@@ -161,8 +161,7 @@ private theorem UpperTheory.Reformulated.B.Qf34.mem_sup_sq {k A K ι : Type*} [C
   have hn : IsNilpotent (RingHom.ker (π' : (A ⧸ m * m) →+* K)) := by
     refine ⟨2, ?_⟩
     rw [pow_two, Ideal.zero_eq_bot, eq_bot_iff, Ideal.mul_le]
-    intro a ha b hb
-    exact hsq a b ha hb
+    exact fun a ha b hb => hsq a b ha hb
   let σ := Algebra.FormallySmooth.liftOfSurjective (AlgHom.id k K) π' hs hn
   have hσ : ∀ x, π' (σ x) = x :=
     Algebra.FormallySmooth.liftOfSurjective_apply (AlgHom.id k K) π' hs hn
@@ -226,8 +225,7 @@ theorem UpperTheory.Reformulated.B.Qf34.proof :
         simp only [hπφ]
         exact h.symm)
     rw [hker] at this
-    rw [Ideal.mem_comap, Ideal.map_span, ← Set.range_comp, smul_eq_mul]
-    exact this
+    rwa [Ideal.mem_comap, Ideal.map_span, ← Set.range_comp, smul_eq_mul]
   obtain ⟨t, ht⟩ : J.FG := IsNoetherian.noetherian J
   have hs : ∀ p ∈ J, ∃ s ∈ J.primeCompl, s * p ∈ Ideal.span (Set.range f) := by
     intro p hp

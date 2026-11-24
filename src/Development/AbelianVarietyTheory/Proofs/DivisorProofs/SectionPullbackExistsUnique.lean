@@ -116,8 +116,7 @@ theorem frBor_down (hG : GlobalFnsSt) {t : Ix Dw → Sˣ} {y y' : FrPt Xo c S} {
   · obtain ⟨cf, c₁, c₂, hcf⟩ := au τ i
     refine ⟨cf, c₁, c₂, ?_⟩
     have k := (comb_iff d.m e (fun j => (y₂.tan τ j).1) cf (ex ▸ (y₂'.tan τ i).1)).1 hcf
-    rw [funext (hu τ), hu'] at k
-    exact k
+    rwa [funext (hu τ), hu'] at k
   · refine (pull_scal_iff b₁ (fst (Over.mk y.x) Xo.univ.t.G).left (toΓ S (t none)) y.s y'.s).2
       fun Z r z i hi => ?_
     obtain ⟨r₂, rfl⟩ : ∃ r₂, r = r₂ ≫ p'' := ⟨r ≫ n', by rw [Category.assoc, hn, Category.comp_id]⟩
@@ -235,7 +234,7 @@ theorem ruleUp_eq (d : DeltaDat Xo c n) (f : Rul Xo c) (p : TRing d.c₂.F) (y�
   letI := algBelow d p.R
   intro y h
   have hx : ∃ y : FrPt Xo c p.R, FrOver d y₂ y := ⟨y, h⟩
-  have e : ruleUp d f p y₂ = evR Xo c f hx.choose := dif_pos hx
+  have e : ruleUp d f p y₂ = evR Xo c f hx.choose := dite_eq_left hx
   rw [e, frOver_unique d GlobalTheory.abelianSchemeLaws_all.1.globalFns hx.choose_spec h]
 
 theorem wtRed (Xo : Moduli Dw l) (c : Coeff l) : ReciprocityTheory.ChartRestriction.G.PullbackSections.WtRed Xo c :=
@@ -304,8 +303,7 @@ theorem section_pullback_existsUnique :
     have hk : ∀ t : c.F, algebraMap d.c₂.F k (d.eF t) = algebraMap c.F k t := fun t =>
       congrArg (algebraMap c.F k) (d.eF.symm_apply_apply t)
     obtain ⟨y₂, hy⟩ := hlift k hk y
-    have e := h0 k hk y₂ y hy
-    exact e.symm.trans ((evalAt_zero _ _ y₂).trans (evalAt_zero _ _ y).symm)
+    exact (h0 k hk y₂ y hy).symm.trans ((evalAt_zero _ _ y₂).trans (evalAt_zero _ _ y).symm)
 
 end Main
 

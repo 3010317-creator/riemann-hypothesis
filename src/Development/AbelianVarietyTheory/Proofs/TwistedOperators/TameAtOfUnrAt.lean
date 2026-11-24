@@ -71,8 +71,7 @@ theorem isRes_one {χ : Formalism.L2.Host.HChar D.host.E} {PP : Pl D.host.E} (h 
   exact this.symm
 
 theorem tameAt_of_unrAt {χ : Formalism.L2.Host.HChar D.host.E} {PP : Pl D.host.E} (h : χ.UnrAt PP) : χ.TameAt PP := by
-  intro x hx _
-  exact h x hx
+  exact fun x hx _ => h x hx
 
 theorem UnrOff.mul {b : AE D} {χ χ' : (AE D)ˣ →* Circle} (h : UnrOff b χ) (h' : UnrOff b χ') : UnrOff b (χ * χ') := by
   intro x h1 h2 h3 h4
@@ -105,7 +104,6 @@ theorem unrOff_mu (hL : L.Is μ0) (t : T0) (j : Fin D.R.m) {P : Finset (Pl D.hos
     · exact (hsub PP' hn hc).2.2.2 PP hm hcj
   refine ⟨?_, GlobalTheory.T.heckeChar_trivial_on_idempotentIntegralUnits D _ L.C.eta P e hL.eta he
     (fun PP' _ _ => L.C.isEta.unr PP')⟩
-  show UnrOff (e + cA D e) (L.mu0 ((j : ℕ) + 1) * L.xi t)
   exact h0.mul h1
 
 theorem mu_val (hL : L.Is μ0) (t : T0) (j : Fin D.R.m) {P : Finset (Pl D.host.E)} {e : AE D}
@@ -124,18 +122,16 @@ theorem mu_val (hL : L.Is μ0) (t : T0) (j : Fin D.R.m) {P : Finset (Pl D.host.E
     (fun PP => if PP ∈ L.Pg then (L.chi ((j : ℕ) + 1) PP)⁻¹ else 1) (hL.mu0 j) he
     (fun PP hm => by
       by_cases hg : PP ∈ L.Pg
-      · simp only [if_pos hg]
-        exact ⟨(L.C.isMu0 j).tame PP, hL.chi j PP hg⟩
-      · simp only [if_neg hg]
+      · simpa only [ite_eq_left hg] using ⟨(L.C.isMu0 j).tame PP, hL.chi j PP hg⟩
+      · simp only [ite_eq_right hg]
         have hq : PP ∈ L.Q t := ((hP PP).mp hm).resolve_left hg
         exact ⟨tameAt_of_unrAt (hQ PP hq), isRes_one (hQ PP hq)⟩) x a a' u hx ha hu
   have hB := GlobalTheory.T.tameHeckeChar_splitSupported_eq_prod_residue D (L.xi t) (L.xiH t) P e
     (fun PP => if PP ∈ L.Q t then L.xiR t PP else 1) (hL.xi t) he
     (fun PP hm => by
       by_cases hq : PP ∈ L.Q t
-      · simp only [if_pos hq]
-        exact ⟨hL.xi_tame t PP, hL.xiR t PP hq⟩
-      · simp only [if_neg hq]
+      · simpa only [ite_eq_left hq] using ⟨hL.xi_tame t PP, hL.xiR t PP hq⟩
+      · simp only [ite_eq_right hq]
         have hg : PP ∈ L.Pg := ((hP PP).mp hm).resolve_right hq
         exact ⟨tameAt_of_unrAt (hPg PP hg), isRes_one (hPg PP hg)⟩) x a a' u hx ha hu
   have hC := GlobalTheory.T.tameHeckeChar_splitSupported_eq_prod_residue D L.eta L.C.eta P e (fun _ => 1) hL.eta he
@@ -145,12 +141,12 @@ theorem mu_val (hL : L.Is μ0) (t : T0) (j : Fin D.R.m) {P : Finset (Pl D.host.E
   have hA' : ((L.mu0 ((j : ℕ) + 1) x : Circle) : ℂ) =
       ∏ PP ∈ L.Pg, (((L.chi ((j : ℕ) + 1) PP (u PP))⁻¹ : ℂˣ) : ℂ) := by
     rw [hA, Finset.prod_eq_one (s := L.Q t) (fun PP hm => ?_), mul_one]
-    · exact Finset.prod_congr rfl (fun PP hm => by simp only [if_pos hm, MonoidHom.inv_apply])
-    · simp only [if_neg (Finset.disjoint_right.mp hdisj hm), MonoidHom.one_apply, Units.val_one]
+    · exact Finset.prod_congr rfl (fun PP hm => by simp only [ite_eq_left hm, MonoidHom.inv_apply])
+    · simp only [ite_eq_right (Finset.disjoint_right.mp hdisj hm), MonoidHom.one_apply, Units.val_one]
   have hB' : ((L.xi t x : Circle) : ℂ) = ∏ PP ∈ L.Q t, ((L.xiR t PP (u PP) : ℂˣ) : ℂ) := by
     rw [hB, Finset.prod_eq_one (s := L.Pg) (fun PP hm => ?_), one_mul]
-    · exact Finset.prod_congr rfl (fun PP hm => by simp only [if_pos hm])
-    · simp only [if_neg (Finset.disjoint_left.mp hdisj hm), MonoidHom.one_apply, Units.val_one]
+    · exact Finset.prod_congr rfl (fun PP hm => by simp only [ite_eq_left hm])
+    · simp only [ite_eq_right (Finset.disjoint_left.mp hdisj hm), MonoidHom.one_apply, Units.val_one]
   refine ⟨?_, ?_⟩
   · rw [Units.val_mul, Units.coe_prod, Units.coe_prod]
     show ((L.mu0 ((j : ℕ) + 1) x * L.xi t x : Circle) : ℂ) = _

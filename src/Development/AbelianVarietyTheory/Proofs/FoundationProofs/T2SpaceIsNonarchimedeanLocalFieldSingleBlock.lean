@@ -711,12 +711,10 @@ theorem comap_congSub (hϖ : Irreducible ϖ) :
     constructor
     · rintro ⟨o, ho, e⟩
       rwa [e, inv_mul_cancel_left₀ (unif_ne_zero hϖ)]
-    · intro h
-      exact ⟨_, h, by rw [mul_inv_cancel_left₀ (unif_ne_zero hϖ)]⟩
+    · exact fun h => ⟨_, h, by rw [mul_inv_cancel_left₀ (unif_ne_zero hϖ)]⟩
   rw [Subgroup.mem_comap, MonoidHom.mem_ker]
   constructor
-  · intro h
-    exact Units.ext (Matrix.ext fun i j => (key i j).2 (h.2 i j))
+  · exact fun h => Units.ext (Matrix.ext fun i j => (key i j).2 (h.2 i j))
   · intro h
     refine ⟨⟨fun i j => ((g : Matrix (Fin r) (Fin r) 𝒪[F]) i j).2, fun i j => ?_⟩,
       fun i j => (key i j).1 ?_⟩
@@ -773,8 +771,7 @@ theorem targetSet_eq (hϖ : Irreducible ϖ) {P : Subgroup (GL (Fin r) F)} (hP : 
     · ext i j
       have := (residue_eq_iff hϖ (h0.val (Sum.inr i) (Sum.inl j)) 0).2
         (by rw [ZeroMemClass.coe_zero, sub_zero]; exact e2 i j)
-      rw [map_zero] at this
-      exact this
+      rwa [map_zero] at this
   · rintro ⟨h0, hh, rfl⟩
     obtain ⟨⟨pb, hpb, e1⟩, e2⟩ := (mem_blockPar_iff _ _).1 (Subgroup.mem_comap.1 hh)
     obtain ⟨p0, hp, rfl⟩ := Subgroup.mem_map.1 hpb
@@ -782,8 +779,7 @@ theorem targetSet_eq (hϖ : Irreducible ϖ) {P : Subgroup (GL (Fin r) F)} (hP : 
     · exact (residue_eq_iff hϖ _ _).1 (congrFun (congrFun e1 i) j)
     · have := (residue_eq_iff hϖ ((h0 : Matrix _ _ 𝒪[F]) (Sum.inr i) (Sum.inl j)) 0).1
         (by rw [map_zero]; exact congrFun (congrFun e2 i) j)
-      rw [ZeroMemClass.coe_zero, sub_zero] at this
-      exact this
+      rwa [ZeroMemClass.coe_zero, sub_zero] at this
 
 theorem targetLevel_eq (hϖ : Irreducible ϖ) {P : Subgroup (GL (Fin r) F)}
     (hP : P ≤ GLint 𝒪[F] r) :

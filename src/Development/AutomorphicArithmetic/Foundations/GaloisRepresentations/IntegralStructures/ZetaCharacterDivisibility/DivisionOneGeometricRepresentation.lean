@@ -205,8 +205,7 @@ theorem UpperTheory.Gal.Int.Div.charOfZeta_of :
   choose c hc using hsc
   obtain ⟨φ₀, h₀, hne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hU.ne_bot
   obtain ⟨g₀, hg₀⟩ : ∃ g, φ₀ g ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hne (funext h)
   have hval : ∀ z, φ₀ (g₀ * ζ z) = c z * φ₀ g₀ := fun z => by
     have := congrFun (hc z φ₀ h₀) g₀
@@ -263,8 +262,7 @@ theorem coverIn_of : CoverIn := by
   let e : (Σ _ : Fin m, Fin a) ≃ Fin n := Fintype.equivFin _
   let σ : Fin n ≃ Fin a × Fin m := e.symm.trans ((Equiv.sigmaEquivProd _ _).trans (Equiv.prodComm _ _))
   refine ⟨m, n, e, B.submatrix σ id, ?_, fun g => ?_⟩
-  · have h := Matrix.rank_submatrix B σ (Equiv.refl _)
-    simpa [hB] using h
+  · simpa [hB] using Matrix.rank_submatrix B σ (Equiv.refl _)
   · have key : ((blockRep (a := fun _ : Fin m => a) e fun _ => r) g : Matrix (Fin n) (Fin n) k) =
         (Matrix.kronecker (r g : Matrix (Fin a) (Fin a) k) (1 : Matrix (Fin m) (Fin m) k)).submatrix σ σ := by
       rw [GlobalTheory.BlockSum.blockRep_val]
@@ -565,7 +563,7 @@ theorem UpperTheory.Gal.Int.Div.divSet_of :
     if h : ∃ Q, T g Q then h.choose else 1
   have hP : ∀ s ∈ {g : G E Ω | ∃ Q, T g Q}, T s (P s) := by
     intro s hs
-    have e : P s = (show ∃ Q, T s Q from hs).choose := dif_pos hs
+    have e : P s = (show ∃ Q, T s Q from hs).choose := dite_eq_left hs
     rw [e]
     exact (show ∃ Q, T s Q from hs).choose_spec
   have hss' : IsSSMat ρ := by
@@ -741,8 +739,7 @@ theorem UpperTheory.Gal.Int.Div.genPin_of :
   have hdet2 : (M.map ι.toRingHom).det = s.prod := by
     have hd := RingHom.map_det ι.toRingHom M
     rw [RingHom.mapMatrix_apply] at hd
-    rw [← hd]
-    exact hdet
+    rwa [← hd]
   rw [← Matrix.charpoly_map]
   exact UpperTheory.Gal.crystallineComparison.charAnn_of ℂ a _ s hcard hgen hann2 hdet2
 end -- clump:auto
@@ -836,11 +833,9 @@ theorem UpperTheory.Gal.Int.Div.isoMove_of :
   set U : Matrix (Fin a) (Fin a) k := (u : Matrix (Fin a) (Fin a) k) with hUdef
   set V : Matrix (Fin a) (Fin a) k := ((u⁻¹ : GL (Fin a) k) : Matrix (Fin a) (Fin a) k) with hVdef
   have hVU : V * U = 1 := by
-    simp only [hUdef, hVdef]
-    exact Units.inv_mul u
+    simpa only [hUdef, hVdef] using Units.inv_mul u
   have hUV : U * V = 1 := by
-    simp only [hUdef, hVdef]
-    exact Units.mul_inv u
+    simpa only [hUdef, hVdef] using Units.mul_inv u
   have hr' : ∀ x, (r' x : Matrix (Fin a) (Fin a) k) = U * (r x : Matrix (Fin a) (Fin a) k) * V := by
     intro x
     rw [hu x]
@@ -914,8 +909,7 @@ theorem UpperTheory.Gal.Int.Div.jumpCard_of :
   have hd' := (local_ext P Bw l₁ r₀).2.1.2 hd
   have hτ' : IsInduced Bw τ ((IntermediateField.inclusion l₂).comp τ') := fun x => hτ x
   have hdr' : IsDR (P.PD Bw.Kw) (Bw.repE (supExt L₀ LL') (mapRep (IntermediateField.inclusion l₁).toRingHom r₀)) := by
-    rw [IsDR, Module.finrank_fin_fun]
-    exact hd'
+    rwa [IsDR, Module.finrank_fin_fun]
   obtain ⟨hfin, -, hrk⟩ := (GlobalTheory.Per.Components.components_finrank l P AI T _ (supExt L₀ LL') _
     (Bw.repE (supExt L₀ LL') (mapRep (IntermediateField.inclusion l₁).toRingHom r₀))).1
       ((IntermediateField.inclusion l₂).comp τ')
@@ -1201,8 +1195,7 @@ theorem UpperTheory.Gal.Int.Div.locSum_of :
     have he : ∀ g v, GlobalTheory.DirectSumLocal.splitEquiv (↥L.1) a b (Bw.repE L (sumRep r₁ s₁) g v) =
         (Bw.repE L r₁ g (GlobalTheory.DirectSumLocal.splitEquiv (↥L.1) a b v).1,
           Bw.repE L s₁ g (GlobalTheory.DirectSumLocal.splitEquiv (↥L.1) a b v).2) := by
-      intro g v
-      exact GlobalTheory.DirectSumLocal.splitEquiv_sumRep r₁ s₁ _ v
+      exact fun g v => GlobalTheory.DirectSumLocal.splitEquiv_sumRep r₁ s₁ _ v
     obtain ⟨-, h2, -⟩ := GlobalTheory.Per.DirectSumHT.directSum_hodgeTate l P AI T Bw.Kw L (Fin (a + b) → ↥L.1)
       (Bw.repE L (sumRep r₁ s₁)) (Fin a → ↥L.1) (Bw.repE L r₁) (Fin b → ↥L.1)
       (Bw.repE L s₁) (GlobalTheory.DirectSumLocal.splitEquiv (↥L.1) a b) he
@@ -1516,8 +1509,7 @@ theorem UpperTheory.Gal.Int.Div.schurU_of :
   have hTf : ∀ v, RU E a z (f.1 v) = c • f.1 v := fun v =>
     LinearMap.congr_fun (congrArg Subtype.val hf.apply_eq_smul) v
   have hfne : ∃ v, f.1 v ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hf.2 (Subtype.ext (LinearMap.ext h))
   obtain ⟨v, hv⟩ := hfne
   let W : Submodule ℂ (UA E a → ℂ) :=
@@ -1579,8 +1571,7 @@ theorem sepPin_of : SepPin := by
     rw [Polynomial.aeval_map_algebraMap, hf, LinearMap.zero_apply] at hv'
     have h0 : (Q.map (algebraMap k (AlgebraicClosure k))).eval μ = 0 :=
       (smul_eq_zero.mp hv'.symm).resolve_right hv.2
-    rw [mem_roots (Polynomial.map_monic_ne_zero hQm)]
-    exact h0
+    rwa [mem_roots (Polynomial.map_monic_ne_zero hQm)]
   exact (eq_of_monic_of_dvd_of_natDegree_le M.charpoly_monic hQm key
     (by rw [hQd, Matrix.charpoly_natDegree_eq_dim, Fintype.card_fin])).symm
 
@@ -1701,8 +1692,7 @@ private lemma intertw (ρ : Γ →* GL (Fin n) k) {W' : Submodule k (Fin n → k
     (ρ g : Matrix (Fin n) (Fin n) k) * colM A c =
       colM A c * Matrix.fromBlocks R 0 0 (subRep ρ hinv c g : Matrix (Fin b) (Fin b) k) := by
   ext i (j | j)
-  · have h := congrFun (congrFun hA i) j
-    simpa [colM, Matrix.mul_apply, Fintype.sum_sum_type] using h
+  · simpa [colM, Matrix.mul_apply, Fintype.sum_sum_type] using congrFun (congrFun hA i) j
   · have hs := congrArg (fun v : W' => (v : Fin n → k) i) (c.sum_repr (resHom ρ hinv g (c j)))
     simp only [Submodule.coe_sum, Submodule.coe_smul, Finset.sum_apply, Pi.smul_apply,
       smul_eq_mul] at hs
@@ -1807,8 +1797,7 @@ private theorem scal_mem (a : ℕ) (y : Ideles E) (h : UpperTheory.Gal.Int.Div.c
   show (((Matrix.GeneralLinearGroup.scalar (Fin a) y : GA E a) : Matrix (Fin a) (Fin a) (Ad E)).map (conjAd E)).transpose * 1 *
     ((Matrix.GeneralLinearGroup.scalar (Fin a) y : GA E a) : Matrix (Fin a) (Fin a) (Ad E)) = 1
   rw [e, Matrix.mul_one, Matrix.diagonal_map (map_zero _), Matrix.diagonal_transpose, Matrix.diagonal_mul_diagonal]
-  simp only [hy]
-  exact Matrix.diagonal_one
+  simpa only [hy] using Matrix.diagonal_one
 
 private theorem continuous_scal (a : ℕ) :
     Continuous (fun y : Ideles E => (Matrix.GeneralLinearGroup.scalar (Fin a) y : GA E a)) := by

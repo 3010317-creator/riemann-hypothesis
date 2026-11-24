@@ -72,8 +72,7 @@ theorem adAt_eps_of_under (v : HeightOneSpectrum (𝓞 F)) (w : HeightOneSpectru
     (fun n => by
       rw [he]
       exact hspec _ 1 w n (by rw [h, afsplitI_self, map_one, sub_self, map_zero]; exact zero_le'))
-  rw [sub_eq_zero, map_one, map_one] at h0
-  exact h0
+  rwa [sub_eq_zero, map_one, map_one] at h0
 
 theorem adAt_eps_of_ne (v : HeightOneSpectrum (𝓞 F)) (w : HeightOneSpectrum (𝓞 E))
     (h : w.under (𝓞 F) ≠ v) : adAt F w (afsplitEps E v) = 0 := by
@@ -87,8 +86,7 @@ theorem adAt_eps_of_ne (v : HeightOneSpectrum (𝓞 F)) (w : HeightOneSpectrum (
     (fun n => by
       rw [he]
       exact hspec _ 0 w n (by rw [afsplitI_ne v _ h, map_zero, sub_zero, map_zero]; exact zero_le'))
-  rw [sub_eq_zero, map_zero, map_zero] at h0
-  exact h0
+  rwa [sub_eq_zero, map_zero, map_zero] at h0
 
 theorem adAt_eps_mul_of_under (v : HeightOneSpectrum (𝓞 F)) (w : HeightOneSpectrum (𝓞 E))
     (h : w.under (𝓞 F) = v) (z : AfE F E) : adAt F w (afsplitEps E v * z) = adAt F w z := by

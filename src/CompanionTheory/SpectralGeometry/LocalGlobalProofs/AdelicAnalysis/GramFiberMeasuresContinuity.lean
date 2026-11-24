@@ -56,16 +56,14 @@ theorem fibre_loc_fin : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   have hfib : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.IsFibreFamily μ (gramR R σ J) Subtype.val
       (g ⁻¹' {S : HermR R σ n | IsUnit (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det}) ν
       {S : HermR R σ n | IsUnit (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det} m := by
-    rw [← hUeq]
-    exact hm
+    rwa [← hUeq]
   obtain ⟨hloc, -, -, -⟩ := FibreFam.fibre_family_basic _ _ _ μ ν (gramR R σ J) g Subtype.val
     Subtype.val_injective hgc hg _ hBo m hfib
   refine ⟨hloc S, ?_⟩
   rintro U hU ⟨X₀, hX₀U, hX₀S, hX₀⟩ h0
   obtain ⟨κ, -, -, -, hκ⟩ := _root_.GlobalTheory.CompanionTheory.SW.ScaleCont.fibre_scale_continuous F E σ hσ M J hJ R hR n μ ν m hμ hν hm
   have hSdet : IsUnit (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det := by
-    rw [← hX₀S]
-    exact hX₀
+    rwa [← hX₀S]
   obtain ⟨B₁, gs, hB₁, hSB₁, hgs, hgs1, hgsS⟩ := _root_.GlobalTheory.CompanionTheory.SW.exists_local_section F E σ hσ R hR n S hSdet
   obtain ⟨a1, a2, a3, -, -⟩ := GramAlg.gram_algebra F E σ hσ M J hJ R n
   have hgX₀ : g X₀ = S := Subtype.ext ((hg X₀).symm.trans hX₀S)
@@ -124,11 +122,9 @@ theorem fibre_loc_fin : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     exact hU'o.inter (hBo.preimage hgc)
   refine hO.measure_ne_zero μ ⟨X₀, ⟨?_, ?_⟩, hX₀⟩ hμ0
   · show g X₀ ∈ B₁
-    rw [hgX₀]
-    exact hSB₁
+    rwa [hgX₀]
   · show T X₀ ∈ U
     simp only [T]
-    rw [hgX₀, hgs1, inv_one, Units.val_one, a3]
-    exact hX₀U
+    rwa [hgX₀, hgs1, inv_one, Units.val_one, a3]
 
 end GlobalTheory.CompanionTheory.SW.LocFin

@@ -166,7 +166,7 @@ theorem _root_.GlobalTheory.LocalH1Finiteness.finite_cocycles_of_compact_cover {
       obtain ⟨x, hxt, hxy⟩ := Set.mem_iUnion₂.1 (hcov y.2)
       refine ⟨x, hxt, ?_⟩
       have hxT : x ∈ T := htT hxt
-      simp only [f, dif_pos hxT]
+      simp only [f, dite_eq_left hxT]
       rw [QuotientAddGroup.eq]
       show ‖(-(x : V) + y)‖ < 1
       rw [neg_add_eq_sub]
@@ -220,7 +220,7 @@ theorem _root_.GlobalTheory.LocalH1Finiteness.finite_cocycles_of_compact_cover {
     have hΨc : Ψ c = fun h =>
         QuotientAddGroup.mk (⟨c (φ h), mem_closedBall_zero_iff.2 (hcl (φ h))⟩ : T) := by
       funext h
-      simp only [Ψ, dif_pos (hcl (φ h))]
+      simp only [Ψ, dite_eq_left (hcl (φ h))]
     rw [hΨc]
     refine ⟨hπ.comp (Continuous.subtype_mk (hc'.1.comp hφ) _), fun h h' => ?_⟩
     have hval : (⟨c (φ (h * h')), mem_closedBall_zero_iff.2 (hcl _)⟩ : T) =
@@ -236,7 +236,7 @@ theorem _root_.GlobalTheory.LocalH1Finiteness.finite_cocycles_of_compact_cover {
     rintro c ⟨-, hcl⟩ c' ⟨-, hcl'⟩ hcc g
     obtain ⟨h, rfl⟩ := hφs g
     have := congrFun hcc h
-    simp only [Ψ, dif_pos (hcl (φ h)), dif_pos (hcl' (φ h)), QuotientAddGroup.eq_iff_sub_mem] at this
+    simp only [Ψ, dite_eq_left (hcl (φ h)), dite_eq_left (hcl' (φ h)), QuotientAddGroup.eq_iff_sub_mem] at this
     exact this
   have himg : (Ψ '' A).Finite :=
     (Set.toFinite (_root_.ReciprocityTheory.Gal.Z1 rho : Set (H → T ⧸ U))).subset (by
@@ -335,9 +335,7 @@ theorem _root_.GlobalTheory.LocalH1Finiteness.finite_continuous_cocycles_localGa
     Module.Finite ↥Bw.LL.1 (_root_.Formalism.WeaklyAdmissibleFiltrations.continuousCocycles (Bw.rep r)) := by
   haveI : FiniteDimensional ℚ_[l] ↥Bw.LL.1 := Bw.LL.2
   haveI : FiniteDimensional ℚ_[l] ↥Bw.Kw.1 := Bw.Kw.2
-  have htoLL : Continuous Bw.toLL := by
-    show Continuous (fun x => ((Bw.eO x : _) : ↥Bw.LL.1))
-    exact continuous_subtype_val.comp Bw.eO_cont
+  have htoLL : Continuous Bw.toLL := continuous_subtype_val.comp Bw.eO_cont
   let φ : _root_.Formalism.GaloisCohomology.GK l Bw.Kw.1 →* ↥(_root_.Formalism.BasicNotions.Loc.GK Bw.Kw) :=
     (Bw.Kw.1.fixingSubgroupEquiv.symm : _ ≃* _).toMonoidHom
   refine _root_.GlobalTheory.LocalH1Finiteness.finite_cocycles_of_compact_cover (l := l) (Bw.rep r) ?_ ?_ φ ?_ ?_ ?_
@@ -358,8 +356,7 @@ theorem _root_.GlobalTheory.LocalH1Finiteness.finite_continuous_cocycles_localGa
       (norm_le_pi_norm v b)
   · exact (_root_.GlobalTheory.fixingSubgroupEquiv_bicontinuous _ _ Bw.Kw.1).2
   · exact Bw.Kw.1.fixingSubgroupEquiv.symm.surjective
-  · intro r' M _ _ _ _ _ rho hr' hc
-    exact (hK l Bw.Kw.1 Bw.Kw.2 r' M rho hr' hc).2.1
+  · exact fun r' M _ _ _ _ _ rho hr' hc => (hK l Bw.Kw.1 Bw.Kw.2 r' M rho hr' hc).2.1
 
 end Bridge
 

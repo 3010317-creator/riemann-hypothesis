@@ -323,7 +323,7 @@ theorem exists_evalAt_ne_zero {K : Type} [Field K] (pts : ∀ (S : Type) [CommRi
     {S : Type} [CommRing S] [Nontrivial S] [Algebra K S] (y : pts S) (h : FromTest pts mapR y) :
     ∃ i, evalAt pts mapR (t i) y ≠ 0 := by
   unfold evalAt
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   obtain ⟨s, hs⟩ := (Submodule.mem_span_range_iff_exists_fun _).1
     ((hunit h.choose h.choose_spec.choose_spec.choose).symm ▸ Submodule.mem_top (x := (1 : h.choose.R)))
   by_contra hall
@@ -344,9 +344,8 @@ theorem exists_rdU_t_ne_zero : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Fo
   refine ⟨i, ?_⟩
   have e : rdU (T.U j σ) (t i) k x = toC (evR (T.Q.Xo j) T.Q.c (t i) ((T.U j σ).un k ⟨x, hx⟩)) := by
     classical
-    exact dif_pos hx
-  rw [e]
-  exact hi
+    exact dite_eq_left hx
+  rwa [e]
 
 theorem span_of_products : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formalism.L2.Pj.InR D j → ∀ σ : T.Q.c.F →+* ℂ, GoodEmb T.Q.c σ → ∀ (a b : (D.host.E →+* ℂ) × ℕ → ℕ) (n m N : ℕ) (t : Fin N → Rul (T.Q.Xo j) T.Q.c), Dom a n → Dom b m → (∀ i, t i ∈ sec (T.Q.Xo j) T.Q.c b m) → (∀ (p : TRing T.Q.c.F) (y : FrPt (T.Q.Xo j) T.Q.c p.R), Ideal.span (Set.range fun i => t i p y) = ⊤) → ∀ P ∈ offZero (T.U j σ).X, (∀ i, P * rdU (T.U j σ) (t i) ∈ Submodule.span ℂ (rdU (T.U j σ) '' (sec (T.Q.Xo j) T.Q.c (a + b) (n + m) : Set (Rul (T.Q.Xo j) T.Q.c)))) → P ∈ Submodule.span ℂ (rdU (T.U j σ) '' (sec (T.Q.Xo j) T.Q.c a n : Set (Rul (T.Q.Xo j) T.Q.c))) := by
   intro D T hT j hj σ hσ a b n m N t ha hb ht hunit P hP hPt
@@ -500,8 +499,7 @@ theorem exists_finset_span_eq_top {A ι : Type} [CommRing A] (v : ι → A) (h :
   obtain ⟨t, ht, h1t⟩ := Submodule.mem_span_finite_of_mem_span h1
   choose g hg using fun x : t => ht x.2
   refine ⟨Finset.univ.image g, (Ideal.eq_top_iff_one _).2 (Submodule.span_mono ?_ h1t)⟩
-  intro x hx
-  exact ⟨g ⟨x, hx⟩, by simp, hg ⟨x, hx⟩⟩
+  exact fun x hx => ⟨g ⟨x, hx⟩, by simp, hg ⟨x, hx⟩⟩
 
 
 set_option synthInstance.maxHeartbeats 400000 in
@@ -602,8 +600,7 @@ theorem pow_mem_holSub0 (V : Unf Xo c σ r) {n : ℕ} (hn : Even n) {P : FDSec V
     refine (GlobalTheory.CuspProduct.mem_holSub_iff _ _ _).2 fun k => ?_
     have e1 : laU V 0 ((e + 1 + 1) * n) k = laU V 0 ((e + 1) * n) k + laU V 0 n k := by
       have := GlobalTheory.CuspProduct.laU_add (Formalism.L2.PjFree.Unf.ofPj V) 0 0 ((e + 1) * n) n (hn.mul_left _) hn k
-      rw [add_zero, show (e + 1) * n + n = (e + 1 + 1) * n by ring] at this
-      exact this
+      rwa [add_zero, show (e + 1) * n + n = (e + 1 + 1) * n by ring] at this
     rw [e1]
     exact (siegelSpaceAlgebra_holds (E := E) r _ _ _ 0).2.1 _ (h1 k) _ (h2 k).1
 
@@ -620,11 +617,9 @@ theorem exists_holSub0_of_SS (V : Unf Xo c σ r) (la : ∀ k, Wt (V.X k).Ψ r) (
       exact (siegelSpaceAlgebra_holds (E := E) r (V.X k') (la k') (la k') 0).1.1
   · by_cases h : k' = k
     · subst h
-      simp only [Pi.single_eq_same]
-      exact Set.indicator_of_notMem hy' _
+      simpa only [Pi.single_eq_same] using Set.indicator_of_notMem hy' _
     · simp only [Pi.single_eq_of_ne h, Pi.zero_apply]
-  · simp only [Pi.single_eq_same]
-    exact Set.indicator_of_mem hx _
+  · simpa only [Pi.single_eq_same] using Set.indicator_of_mem hx _
 
 theorem exists_scalar_ne_zero
     (hP : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r), 0 < X.p0 → X.p0 < r → (∀ n : ℕ, Even n → ∀ γ ∈ X.Γ, X.χ (fun (τ : X.Ψ) (j : Fin r) => if X.p0 ≤ (j : ℕ) then ((n / 2 : ℕ) : ℤ) else -((n / 2 : ℕ) : ℤ)) γ = 1) → ∀ y ∈ X.dom, ∀ N : ℕ, ∃ n : ℕ, N ≤ n ∧ 0 < n ∧ Even n ∧ ∃ P ∈ X.SS (fun (τ : X.Ψ) (j : Fin r) => if X.p0 ≤ (j : ℕ) then ((n / 2 : ℕ) : ℤ) else -((n / 2 : ℕ) : ℤ)), P y ≠ 0)
@@ -644,9 +639,8 @@ theorem exists_scalar_ne_zero
     obtain ⟨Q, hQ, hQx⟩ := exists_holSub0_of_SS V (laU V 0 n) k
       (GlobalTheory.BoundedCusp.mem_SS_of_definite _ _ τ0 hdef _ ⟨hs, bounded_of_definite _ hdef _ _ hs⟩)
     refine ⟨n, hn, he, Q, hQ, ?_⟩
-    have e : rdU V f k x = toC (evR Xo c f (V.un k ⟨x, hx⟩)) := dif_pos hx
-    rw [hQx x hx, e]
-    exact hne
+    have e : rdU V f k x = toC (evR Xo c f (V.un k ⟨x, hx⟩)) := dite_eq_left hx
+    rwa [hQx x hx, e]
   · have hle := (V.X k).p0_le
     have hla : ∀ n : ℕ, laU V 0 n k = fun (τ : (V.X k).Ψ) (j : Fin r) =>
         if (V.X k).p0 ≤ (j : ℕ) then ((n / 2 : ℕ) : ℤ) else -((n / 2 : ℕ) : ℤ) := fun n => by
@@ -694,8 +688,7 @@ theorem holSub0_le_span_one (D : D7) (T : CoreJ D) (h : LawsJ T) (j : ℕ) (hj :
       exact Units.ext he ▸ hγ')
     (fun _ => 1) n hdom (fun _ _ _ => Nat.one_pos) hn
     (fun k => h.chiTriv j hj σ hσ _ n hdom k)
-  intro P hP
-  exact key ⟨hP.1, hP.2⟩
+  exact fun P hP => key ⟨hP.1, hP.2⟩
 
 
 
@@ -707,7 +700,7 @@ theorem exists_weight_of_pointwise
   set B : ℕ := 4 * (Module.finrank ℚ D.host.E * D.R.r) + 4 with hB
   have hU := h.unf j hj σ hσ
   have hrd : ∀ (f : T.R j) k (x : ((T.U j σ).X k).dom),
-      rdU (T.U j σ) f k x.1 = toC (evR (T.Q.Xo j) T.Q.c f ((T.U j σ).un k x)) := fun f k x => dif_pos x.2
+      rdU (T.U j σ) f k x.1 = toC (evR (T.Q.Xo j) T.Q.c f ((T.U j σ).un k x)) := fun f k x => dite_eq_left x.2
 
   have hpt : ∀ k (x : ((T.U j σ).X k).dom), ∃ n, Even n ∧ B ≤ n ∧ ∃ f ∈ T.cuspA j (fun _ => 1) n,
       rdU (T.U j σ) f k x.1 ≠ 0 := by
@@ -775,8 +768,7 @@ theorem exists_weight_of_pointwise
   refine ⟨_, hpw, ?_⟩
   show (rdU (T.U j σ) (f p.1 p.2) k x) ^ (e + 1) ≠ 0
   refine pow_ne_zero _ ?_
-  rw [hrd _ k ⟨x, hx⟩]
-  exact hpz
+  rwa [hrd _ k ⟨x, hx⟩]
 
 end GlobalTheory.BpfUniform
 end -- clump:auto
@@ -830,8 +822,7 @@ theorem holSub0_le_span_cuspA_of_lastPos : ∀ (D : D7) (T : CoreJ D), LawsJ T �
     (fun k => GlobalTheory.PrincCore.mem_group_of_congruent D T.toCore h.toLawsM j hj σ hσ k)
     a n hdom hlast hn
     (fun k => h.chiTriv j hj σ hσ a n hdom k)
-  intro P hP
-  exact key ⟨hP.1, hP.2⟩
+  exact fun P hP => key ⟨hP.1, hP.2⟩
 
 theorem evR_of_frMap {D : D7} (T : CoreJ D) (h : LawsJ T) {j : ℕ} (hj : Formalism.L2.Pj.InR D j) (f : T.R j)
     (hf : IsNatural (K := T.Q.c.F) (fun S _ _ => FrPt (T.Q.Xo j) T.Q.c S) (fun φ y z => FrMap φ y z) f)
@@ -841,7 +832,7 @@ theorem evR_of_frMap {D : D7} (T : CoreJ D) (h : LawsJ T) {j : ℕ} (hj : Formal
   have hT : FromTest (K := T.Q.c.F) (fun S _ _ => FrPt (T.Q.Xo j) T.Q.c S) (fun φ y z => FrMap φ y z) z :=
     ⟨p, ψ, y, hz⟩
   unfold evR evalAt
-  rw [dif_pos hT]
+  rw [dite_eq_left hT]
   exact h.evalWD j hj f hf S _ p _ ψ _ y z hT.choose_spec.choose_spec.choose_spec hz
 
 
@@ -871,7 +862,7 @@ theorem exists_family : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formalism
       have hu : wchar (ex (T.Q.Dw j) b m) t ≠ 0 :=
         Finset.prod_ne_zero_iff.2 fun c _ => pow_ne_zero _ (t c).ne_zero
       have h0 := (mul_eq_zero.1 hw.symm).resolve_left hu
-      simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, dif_pos x.2]
+      simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, dite_eq_left x.2]
       exact congrArg toC h0
     let ev : FDSec (T.U j σ).X →ₗ[ℂ] ℂ :=
       { toFun := fun P => P k x.1, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
@@ -1027,7 +1018,7 @@ theorem span_conj_eq_top : ∀ (K : Type) [Field K] [NumberField K] (σ : K →+
     intro z hz hcard
     by_contra hne
     obtain ⟨i0, hi0⟩ : ∃ i, z i ≠ 0 := by
-      by_contra h; push_neg at h; exact hne (funext h)
+      by_contra h; push Not at h; exact hne (funext h)
     set z' := (z i0)⁻¹ • z with hz'
     have hz'R : z' ∈ R := R.smul_mem _ hz
     have hz'i0 : z' i0 = 1 := by simp [z', hi0]
@@ -1058,8 +1049,7 @@ theorem span_conj_eq_top : ∀ (K : Type) [Field K] [NumberField K] (σ : K →+
           simp [h]
       have h3 := ih _ hlt _ hw rfl
       intro i
-      have h4 := congrFun h3 i
-      simpa [sub_eq_zero] using h4
+      simpa [sub_eq_zero] using congrFun h3 i
     choose c hc using fun i => exists_eq_of_forall_fixed K σ (z' i) (fun τ hτ => hfix τ hτ i)
     have hc0 := he c (by
       have h5 := (hRmem z').1 hz'R (RingEquiv.refl ℂ) (fun x => rfl)
@@ -1079,8 +1069,7 @@ theorem span_conj_eq_top : ∀ (K : Type) [Field K] [NumberField K] (σ : K →+
       Submodule.subset_span ⟨φ, hφ, rfl⟩
     have h7 : f (fun i => φ (e i)) = 0 := by
       have h8 := Submodule.mem_map_of_mem (f := f) hmem
-      rw [hf, Submodule.mem_bot] at h8
-      exact h8
+      rwa [hf, Submodule.mem_bot] at h8
     rw [LinearMap.pi_apply_eq_sum_univ] at h7
     simpa [z, smul_eq_mul, mul_comm] using h7
   have hz0 := key _ z hzR rfl
@@ -1195,8 +1184,7 @@ theorem descent (hf : 1 < Module.finrank ℚ E / 2) {σ : c.F →+* ℂ} (U : Un
       rcases N with _ | N
       · simpa using h1
       · have h2 := GlobalTheory.CuspAllEmb.ss_mul _ hf h1 (GlobalTheory.CuspAllEmb.isSec_pow _ h1.1.1 N)
-        rw [← pow_succ', ← succ_nsmul'] at h2
-        exact h2
+        rwa [← pow_succ', ← succ_nsmul'] at h2
     · rw [pow_comb]
       exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (rdU_mem_offZero _ _)
   obtain ⟨q, z, v, hv⟩ := Submodule.mem_span_set'.1 (hspan hpow)

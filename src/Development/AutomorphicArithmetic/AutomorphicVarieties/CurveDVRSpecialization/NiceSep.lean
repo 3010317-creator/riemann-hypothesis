@@ -144,5 +144,4 @@ theorem UpperTheory.V.Pr.niceSep :
     apply hfree a b hab m hm
     apply Units.ext
     apply IsFractionRing.injective y.A y.Fr
-    have h2 := congrArg Units.val heq
-    simpa [Units.val_pow_eq_pow_val, map_pow] using h2
+    simpa [Units.val_pow_eq_pow_val, map_pow] using congrArg Units.val heq

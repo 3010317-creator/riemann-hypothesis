@@ -269,8 +269,7 @@ theorem tensor_pos : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing 
     rw [e] at h
     exact_mod_cast h.ne'
   have hex : ∃ l, n l ≠ 0 ∧ y l ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have hrow : ∀ i, ∑ j, ((N : ℤ) * A i j) • z j = 0 := by
       intro i
       simp_rw [hm i, Finset.sum_smul]
@@ -315,7 +314,6 @@ theorem tensor_pos : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing 
   have hprod : ∏ l, s l ^ (2 * n l) ∈ maximalIdeal R := by
     rw [← Finset.mul_prod_erase _ _ (Finset.mem_univ l0)]
     exact Ideal.mul_mem_right _ _ (Ideal.pow_mem_of_mem _ (hs2 l0 hy0) _ (by omega))
-  refine ⟨t, ?_, ht.symm⟩
-  exact (maximalIdeal.isMaximal R).isPrime.mem_of_pow_mem (2 * N) (htN ▸ hprod)
+  exact ⟨t, (maximalIdeal.isMaximal R).isPrime.mem_of_pow_mem (2 * N) (htN ▸ hprod), ht.symm⟩
 
 end GlobalTheory.Mum.TPos

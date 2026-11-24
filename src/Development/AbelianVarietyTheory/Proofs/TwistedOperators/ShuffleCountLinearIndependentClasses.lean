@@ -189,16 +189,14 @@ theorem separates_of_shuffle_count : ∀ (I S : Type 1) (A : Type) [DecidableEq 
     have hR := Published.radfordShufflePolynomial_holds.algebraicIndependent ℚ A
     have he : Function.Injective
         (fun Δ : U => (⟨ℓ Δ, (hU Δ Δ.2).1⟩ : {w : List A // IsLyndon w})) := by
-      intro a b hab
-      exact Subtype.ext (hinj a.2 b.2 (congrArg Subtype.val hab))
+      exact fun a b hab => Subtype.ext (hinj a.2 b.2 (congrArg Subtype.val hab))
     have hcomp := hR.comp _ he
     have heq : (fun Δ : U => φ Δ) =
         (fun l : {w : List A // IsLyndon w} => ShuffleAlgebra.word ℚ l.1) ∘
           (fun Δ : U => (⟨ℓ Δ, (hU Δ Δ.2).1⟩ : {w : List A // IsLyndon w})) := by
       funext Δ
       exact (hU Δ Δ.2).2
-    rw [heq]
-    exact hcomp
+    rwa [heq]
   have K3 : ∀ k : Fin n → ℤ, (∀ w, ∑ j, k j * ((M (p j) w).toNat : ℤ) = 0) → ∀ i, k i = 0 := by
     intro k hk i
     by_contra hki
@@ -206,8 +204,7 @@ theorem separates_of_shuffle_count : ∀ (I S : Type 1) (A : Type) [DecidableEq 
     have hRy : ∀ w, Rh w y = 0 := fun w => by
 
       rw [hy, map_sum]
-      simp only [hRs]
-      exact hk w
+      simpa only [hRs] using hk w
     set P := Ψ y with hPdef
     have hEv : aeval φ (MvPolynomial.map (Int.castRingHom ℚ) P) = 0 := by
       apply (ShuffleAlgebra.wordBasis ℚ A).repr.injective
@@ -217,8 +214,7 @@ theorem separates_of_shuffle_count : ∀ (I S : Type 1) (A : Type) [DecidableEq 
     have hcoef : ∀ m : S →₀ ℕ, (∀ Δ ∈ m.support, Δ ∈ U) → P.coeff m = 0 := by
       intro m hm
       have h := coeff_eq_zero_of_aeval_eq_zero U φ hind hφ0 _ hEv m hm
-      rw [MvPolynomial.coeff_map, eq_intCast, Int.cast_eq_zero] at h
-      exact h
+      rwa [MvPolynomial.coeff_map, eq_intCast, Int.cast_eq_zero] at h
     have hyP : y = ∑ m ∈ P.support, P.coeff m • Ψ.symm (MvPolynomial.monomial m 1) := by
       have h : y = Ψ.symm P := by rw [hPdef, AddEquiv.symm_apply_apply]
       conv_lhs => rw [h, P.as_sum]
@@ -230,21 +226,18 @@ theorem separates_of_shuffle_count : ∀ (I S : Type 1) (A : Type) [DecidableEq 
       rw [hy, Finsupp.finsetSum_apply, Finset.sum_eq_single i]
       · simp
       · intro j _ hji
-        rw [Finsupp.single_apply, if_neg]
+        rw [Finsupp.single_apply, ite_eq_right]
         exact fun h => hji (hp h)
-      · intro h
-        exact absurd (Finset.mem_univ i) h
+      · exact fun h => absurd (Finset.mem_univ i) h
     have hne0 : (∑ m ∈ P.support, P.coeff m • Ψ.symm (MvPolynomial.monomial m 1)) (p i) ≠ 0 := by
-      rw [← hyP, hyi]
-      exact hki
+      rwa [← hyP, hyi]
     rw [Finsupp.finsetSum_apply] at hne0
     obtain ⟨m, _, hm0⟩ := Finset.exists_ne_zero_of_sum_ne_zero hne0
     rw [Finsupp.smul_apply, smul_eq_mul] at hm0
     have hc0 : P.coeff m ≠ 0 := left_ne_zero_of_mul hm0
     have hx0 : Ψ.symm (MvPolynomial.monomial m 1) (p i) ≠ 0 := right_ne_zero_of_mul hm0
     have hout : ∃ Δ ∈ m.support, Δ ∉ U := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hc0 (hcoef m h)
     obtain ⟨w, hw⟩ := hne i
     exact hw (K2 m hout (p i) hx0 w)

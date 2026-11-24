@@ -145,9 +145,7 @@ theorem mem_sm_iff : ∀ {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (M : 
   intro D V S M τ w
   rw [GlobalTheory.SmVec.sm_eq M τ, GlobalTheory.SmVec.mem_smSub]
   constructor
-  · intro h
-    exact smoothVec_of_conj (M.fr_unit τ) (M.fr_gram τ) h
-  · intro h
-    exact smoothVec_to_conj (M.fr_unit τ) (M.fr_gram τ) h
+  · exact fun h => smoothVec_of_conj (M.fr_unit τ) (M.fr_gram τ) h
+  · exact fun h => smoothVec_to_conj (M.fr_unit τ) (M.fr_gram τ) h
 
 end GlobalTheory.SmVecModel

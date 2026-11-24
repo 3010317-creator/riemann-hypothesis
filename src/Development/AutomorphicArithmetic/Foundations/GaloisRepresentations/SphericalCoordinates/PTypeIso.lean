@@ -69,8 +69,7 @@ private theorem sep_of_integer {F : Type} [Field F] [NumberField F] {R : Type} [
     exact hs.map
   · rw [aeval_map_algebraMap]
     have h2 := aeval_algHom_apply f.toIntAlgHom c (minpoly ℤ (c : F))
-    rw [h0, map_zero] at h2
-    exact h2
+    rwa [h0, map_zero] at h2
 
 private theorem exDiag (hSim : SimDiag) (hExt : ExtendEmb) {F : Type} [Field F] [NumberField F]
     {O : Type} [Ring O] {g : ℕ} (ρ : O →+* Matrix (Fin g) (Fin g) ℂ) (a : 𝓞 F →+* O) :
@@ -93,8 +92,7 @@ private theorem exDiag (hSim : SimDiag) (hExt : ExtendEmb) {F : Type} [Field F] 
       rw [hdiag, hdiag, hdiag, map_mul, map_mul]
       simp only [Matrix.mul_assoc, Matrix.mul_nonsing_inv_cancel_left _ _ hunit]
     rw [Matrix.diagonal_mul_diagonal] at h1
-    have h2 := congrFun (congrFun h1 i) i
-    simpa using h2
+    simpa using congrFun (congrFun h1 i) i
   let f : Fin g → (𝓞 F →+* ℂ) := fun i =>
     { toFun := fun c => d c i
       map_one' := by
@@ -155,12 +153,10 @@ private theorem rootsW {p : ℕ} [Fact p.Prime] (D : Datum p) (hne : (starRingEn
     rw [← D.tr_eq, ← D.nm_eq]
     ring
   have h2 : τ (D.ω : D.F) ^ 2 - (D.tr : ℂ) * τ (D.ω : D.F) + (D.nm : ℂ) = 0 := by
-    have h := congrArg (fun c : 𝓞 D.F => τ (c : D.F)) h0
-    simpa using h
+    simpa using congrArg (fun c : 𝓞 D.F => τ (c : D.F)) h0
   have h3 := D.ρc_root
   have h4 : (starRingEnd ℂ) D.ρc ^ 2 - (D.tr : ℂ) * (starRingEnd ℂ) D.ρc + (D.nm : ℂ) = 0 := by
-    have h := congrArg (starRingEnd ℂ) h3
-    simpa using h
+    simpa using congrArg (starRingEnd ℂ) h3
   have ht : (D.tr : ℂ) - (D.ρc + (starRingEnd ℂ) D.ρc) = 0 := by
     have h : (D.ρc - (starRingEnd ℂ) D.ρc) * ((D.tr : ℂ) - (D.ρc + (starRingEnd ℂ) D.ρc)) = 0 := by
       linear_combination h4 - h3
@@ -186,12 +182,12 @@ private noncomputable def ty0 (idx : InfinitePlace F' × Fin n) : F →+* ℂ :=
 
 private theorem cmType_apply_positive {idx : InfinitePlace F' × Fin n} (h : sS e w r v i₀ idx) (x : F) :
     ty0 e w r v i₀ idx x = idx.1.embedding (e x) := by
-  rw [ty0, if_pos h]
+  rw [ty0, ite_eq_left h]
   rfl
 
 private theorem cmType_apply_negative {idx : InfinitePlace F' × Fin n} (h : ¬ sS e w r v i₀ idx) (x : F) :
     ty0 e w r v i₀ idx x = (starRingEnd ℂ) (idx.1.embedding (e x)) := by
-  rw [ty0, if_neg h]
+  rw [ty0, ite_eq_right h]
   rfl
 
 private theorem cmType_infinitePlace (idx : InfinitePlace F' × Fin n) :
@@ -219,8 +215,7 @@ private theorem cmType_at_place_iff (hr : ∀ τ : F →+* ℂ, τ w = r ∨ τ 
       rw [hc]
       exact ⟨fun h2 => absurd h2 hne, fun h2 => absurd h2 h1⟩
     · have h1 : idx.1.embedding (e w) ≠ r := by
-        rw [hc]
-        exact hne
+        rwa [hc]
       have h2 : idx = (v, i₀) := by
         by_contra h3
         exact h ⟨fun h4 => absurd h4 h3, fun h4 => absurd h4 h1⟩
@@ -232,8 +227,7 @@ private theorem emb_sep (hr : ∀ τ : F →+* ℂ, τ w = r ∨ τ w = (starRin
     (hw : τ w = τ' w) : τ = τ' := by
   rcases InfinitePlace.mk_eq_iff.1 hm with h | h
   · ext x
-    have h1 := RingHom.congr_fun h (e x)
-    simpa using h1
+    simpa using RingHom.congr_fun h (e x)
   · exfalso
     have h1 := RingHom.congr_fun h (e w)
     simp only [ComplexEmbedding.conjugate_coe_eq, RingHom.comp_apply, RingHom.coe_coe, RingEquiv.symm_apply_apply] at h1
@@ -278,11 +272,10 @@ private theorem cmType_card_fiber (t₀ : F →+* ℂ) (hr : ∀ τ : F →+* �
         ext idx
         simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
         constructor
-        · intro h
-          exact (cmType_at_place_iff e w r v i₀ hr hne idx).1 (by rw [h, hτ])
+        · exact fun h => (cmType_at_place_iff e w r v i₀ hr hne idx).1 (by rw [h, hτ])
         · rintro rfl
           rw [hB, h0]
-      rw [hf, typeMult, if_pos h0, Finset.card_singleton]
+      rw [hf, typeMult, ite_eq_left h0, Finset.card_singleton]
     · have hf : (Finset.univ.filter fun idx => ty0 e w r v i₀ idx = τ) = ∅ := by
         ext idx
         simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.notMem_empty, iff_false]
@@ -294,7 +287,7 @@ private theorem cmType_card_fiber (t₀ : F →+* ℂ) (hr : ∀ τ : F →+* �
         intro h
         rw [h, hconj] at hτ
         exact hne hτ
-      rw [hf, typeMult, if_neg h0, if_neg h1, if_pos hτ]
+      rw [hf, typeMult, ite_eq_right h0, ite_eq_right h1, ite_eq_left hτ]
       simp
   · have hτ' : τ w = (starRingEnd ℂ) r := (hr τ).resolve_left hτ
     have h0 : τ ≠ t₀ := fun h => hτ (by rw [h, ht])
@@ -313,8 +306,7 @@ private theorem cmType_card_fiber (t₀ : F →+* ℂ) (hr : ∀ τ : F →+* �
           exact (cmType_infinitePlace e w r v i₀ idx).symm
       · rintro ⟨h1, h2⟩
         refine emb_sep e w r hr hne _ _ ?_ ?_
-        · rw [cmType_infinitePlace e w r v i₀ idx]
-          exact h2
+        · rwa [cmType_infinitePlace e w r v i₀ idx]
         · rw [hτ']
           exact (hr _).resolve_left fun h => h1 ((cmType_at_place_iff e w r v i₀ hr hne idx).1 h)
     have hpl : InfinitePlace.mk (t₀.comp (e.symm : F' →+* F)) = v := by
@@ -329,12 +321,11 @@ private theorem cmType_card_fiber (t₀ : F →+* ℂ) (hr : ∀ τ : F →+* �
     rw [hf]
     by_cases h1 : τ = ComplexEmbedding.conjugate t₀
     · have h2 : InfinitePlace.mk (τ.comp (e.symm : F' →+* F)) = v := by rw [h1, hpc]
-      rw [typeMult, if_neg h0, if_pos h1, h2, Finset.card_erase_of_mem (by simp)]
+      rw [typeMult, ite_eq_right h0, ite_eq_left h1, h2, Finset.card_erase_of_mem (by simp)]
       simp
     · have h2 : InfinitePlace.mk (τ.comp (e.symm : F' →+* F)) ≠ v := by
-        intro h
-        exact h1 (emb_sep e w r hr hne _ _ (by rw [h, hpc]) (by rw [hτ', hconj]))
-      rw [typeMult, if_neg h0, if_neg h1, if_neg hτ, Finset.erase_eq_of_notMem (by simp [h2])]
+        exact fun h => h1 (emb_sep e w r hr hne _ _ (by rw [h, hpc]) (by rw [hτ', hconj]))
+      rw [typeMult, ite_eq_right h0, ite_eq_right h1, ite_eq_right hτ, Finset.erase_eq_of_notMem (by simp [h2])]
       simp
 
 end Count
@@ -371,17 +362,17 @@ theorem UpperTheory.Gal.W2.typeIso_of :
     rintro ⟨v', i⟩
     by_cases h1 : v' = v ∧ i = i₀ <;> by_cases h2 : v'.embedding (L.e (D.ω : D.F)) = D.ρc
     · have h3 : sS L.e (D.ω : D.F) D.ρc v i₀ (v', i) := ⟨fun _ => h2, fun _ => by rw [h1.1, h1.2]⟩
-      rw [if_pos h3, if_pos h1, sgnV, if_pos h2]
+      rw [ite_eq_left h3, ite_eq_left h1, sgnV, ite_eq_left h2]
       ring
     · have h3 : ¬ sS L.e (D.ω : D.F) D.ρc v i₀ (v', i) := fun h => h2 (h.1 (by rw [h1.1, h1.2]))
-      rw [if_neg h3, if_pos h1, sgnV, if_neg h2]
+      rw [ite_eq_right h3, ite_eq_left h1, sgnV, ite_eq_right h2]
       ring
     · have h3 : ¬ sS L.e (D.ω : D.F) D.ρc v i₀ (v', i) := fun h => h1 (by simpa using h.2 h2)
-      rw [if_neg h3, if_neg h1, sgnV, if_pos h2]
+      rw [ite_eq_right h3, ite_eq_right h1, sgnV, ite_eq_left h2]
       ring
     · have h3 : sS L.e (D.ω : D.F) D.ρc v i₀ (v', i) :=
         ⟨fun h => absurd (by simpa using h) h1, fun h => absurd h h2⟩
-      rw [if_pos h3, if_neg h1, sgnV, if_neg h2]
+      rw [ite_eq_left h3, ite_eq_right h1, sgnV, ite_eq_right h2]
       ring
   refine ⟨(LinearEquiv.curry ℝ ℂ (InfinitePlace G.F) (Fin G.n)).symm ≪≫ₗ R₁, fun x => ?_, fun c x => ?_⟩
   · rw [hR, hR, ← Matrix.mulVec_smul]
@@ -390,17 +381,17 @@ theorem UpperTheory.Gal.W2.typeIso_of :
     have h := hsign (E j)
     simp only [Pi.smul_apply, smul_eq_mul]
     by_cases hs : sS L.e (D.ω : D.F) D.ρc v i₀ (E j)
-    · rw [if_pos hs] at h
-      rw [if_pos hs, if_pos hs, h]
-    · rw [if_neg hs] at h
-      rw [if_neg hs, if_neg hs, h]
+    · rw [ite_eq_left hs] at h
+      rw [ite_eq_left hs, ite_eq_left hs, h]
+    · rw [ite_eq_right hs] at h
+      rw [ite_eq_right hs, ite_eq_right hs, h]
       simp
   · rw [hR, hR, Matrix.mulVec_mulVec, hD.2.1 c, ← Matrix.mulVec_mulVec]
     congr 1
     funext j
     rw [Matrix.mulVec_diagonal, ← hE j]
     by_cases hs : sS L.e (D.ω : D.F) D.ρc v i₀ (E j)
-    · rw [if_pos hs, if_pos hs, cmType_apply_positive L.e _ _ v i₀ hs]
+    · rw [ite_eq_left hs, ite_eq_left hs, cmType_apply_positive L.e _ _ v i₀ hs]
       simp
-    · rw [if_neg hs, if_neg hs, cmType_apply_negative L.e _ _ v i₀ hs]
+    · rw [ite_eq_right hs, ite_eq_right hs, cmType_apply_negative L.e _ _ v i₀ hs]
       simp

@@ -273,8 +273,8 @@ theorem semiChar_periodPairOfTau (τ : UpperHalfPlane) (m k : ℤ) :
       exact ⟨p, q, by push_cast; ring⟩
   rw [exp_pi_I_int, semiChar]
   by_cases h : Even m ∧ Even k
-  · rw [if_pos (hmem.2 h), if_pos (hpar.2 h)]
-  · rw [if_neg (fun h' => h (hmem.1 h')), if_neg (fun h' => h (hpar.1 h'))]
+  · rw [ite_eq_left (hmem.2 h), ite_eq_left (hpar.2 h)]
+  · rw [ite_eq_right (fun h' => h (hmem.1 h')), ite_eq_right (fun h' => h (hpar.1 h'))]
 
 def expOddTheta (τ : UpperHalfPlane) (z : ℂ) : ℂ :=
   cexp ((Real.pi : ℂ) * z ^ 2 / (2 * ((τ.im : ℝ) : ℂ))) * GlobalTheory.ThetaWeberRoad.oddTheta τ z
@@ -319,8 +319,7 @@ theorem exp_mul_oddTheta_eq_deriv_mul_sgStar :
   have h1 : deriv (expOddTheta τ) 0 = c := by
     rw [hfun]
     have := ((hdiff 0).hasDerivAt.const_mul c).deriv
-    rw [hd1, mul_one] at this
-    exact this
+    rwa [hd1, mul_one] at this
   have he : HasDerivAt (fun z : ℂ => cexp ((Real.pi : ℂ) * z ^ 2 / (2 * ((τ.im : ℝ) : ℂ)))) 0 0 := by
     have := (((hasDerivAt_pow 2 (0 : ℂ)).const_mul (Real.pi : ℂ)).div_const
       (2 * ((τ.im : ℝ) : ℂ))).cexp
@@ -656,8 +655,7 @@ private lemma hasProd_one_sub_pow_odd_mul_one_sub_pow_even {y : ℂ} (hy : ‖y�
   have h := hasProd_one_add_even_mul_one_add_odd_tprod (f := fun n => -y ^ (n + 1))
     ((summable_pow_mul_add_of_norm_lt_one hy 1 2 two_pos).neg)
     ((summable_pow_mul_add_of_norm_lt_one hy 2 2 two_pos).neg)
-  simp only [← sub_eq_add_neg] at h
-  exact h
+  simpa only [← sub_eq_add_neg] using h
 
 open Complex in
 open UpperHalfPlane hiding I in

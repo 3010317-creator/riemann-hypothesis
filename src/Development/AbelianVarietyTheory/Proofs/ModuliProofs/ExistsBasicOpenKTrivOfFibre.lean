@@ -99,8 +99,7 @@ theorem exists_mul_sub_eq_zero {R B K : Type} [CommRing R] [CommRing B] [Field K
     have := h (K ⊗[R] B) (Algebra.TensorProduct.includeRight (R := R) (A := K) (B := B)).toRingHom
       Algebra.TensorProduct.includeLeftRingHom (RingHom.ext fun r =>
         ((Algebra.TensorProduct.includeRight (R := R) (A := K) (B := B)).commutes r).trans rfl) b
-    rw [hP, TensorProduct.tmul_sub, sub_eq_zero]
-    exact this
+    rwa [hP, TensorProduct.tmul_sub, sub_eq_zero]
   have h₁ : ∀ m : LinearMap.range P, (1 : K) ⊗ₜ[R] m = 0 := by
     rintro ⟨_, b, rfl⟩
     have := congrArg (P.rangeRestrict.lTensor K) (h₀ b)

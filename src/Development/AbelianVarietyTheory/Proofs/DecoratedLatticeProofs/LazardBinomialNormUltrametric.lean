@@ -71,8 +71,7 @@ theorem norm_natCast_eq_one_of_not_dvd {K : Type} [NormedField K] [IsUltrametric
   have hv : ‖(v : K)‖ ≤ 1 := IsUltrametricDist.norm_intCast_le_one K v
   have hmle : ‖(m : K)‖ ≤ 1 := IsUltrametricDist.norm_natCast_le_one K m
   refine le_antisymm hmle ?_
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have h2 : ‖(1 : K)‖ ≤ max ‖(u : K) * l‖ ‖(v : K) * m‖ := by
     rw [← h1]; exact IsUltrametricDist.norm_add_le_max _ _
   rw [norm_one, norm_mul, norm_mul] at h2
@@ -95,8 +94,7 @@ theorem not_dvd_choose_pow_mul {l : ℕ} (hp : l.Prime) (m : ℕ) (hm : ¬ l ∣
     rw [e1, e2, Nat.mul_mod_right, Nat.mul_mod_right, Nat.mul_div_cancel_left _ hp.pos,
       Nat.mul_div_cancel_left _ hp.pos, Nat.choose_zero_right, one_mul] at h
     rw [e1, e2]
-    intro hd
-    exact ih ((Nat.modEq_zero_iff_dvd.1 (h.symm.trans (Nat.modEq_zero_iff_dvd.2 hd))))
+    exact fun hd => ih ((Nat.modEq_zero_iff_dvd.1 (h.symm.trans (Nat.modEq_zero_iff_dvd.2 hd))))
 
 theorem choose_prime_pow_pred {l : ℕ} (hp : l.Prime) (i : ℕ) (hi : 0 < i) :
     ∃ m : ℕ, ¬ l ∣ m ∧ (l ^ i).choose (l ^ (i - 1)) = l * m := by

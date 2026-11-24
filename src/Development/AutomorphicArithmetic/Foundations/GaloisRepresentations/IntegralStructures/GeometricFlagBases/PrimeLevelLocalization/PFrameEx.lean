@@ -196,11 +196,9 @@ theorem pJEx :
       ext i k
       simp only [Matrix.map_apply, Matrix.smul_apply, smul_eq_mul, map_mul, T.Φ_Q]
     simp only [Matrix.map_mul] at h1
-    rw [e1, e2, e3] at h1
-    exact h1
+    rwa [e1, e2, e3] at h1
   refine ⟨MonoidHom.codRestrict (f₁.prod f₂) (UPts S.G.star (AfP p)) mem, ?_, ?_⟩
-  · intro g
-    exact hm g
+  · exact fun g => hm g
   · intro g
     rfl
 
@@ -275,8 +273,7 @@ private theorem muHom_single (i k : Fin n) (b : R ⊗[ℚ] E) :
 private theorem muHom_muInv (M : Matrix (Fin n) (Fin n) (R ⊗[ℚ] E)) :
     muHom R E n (muInv R E n M) = M := by
 
-  simp only [muInv, map_sum, muHom_single]
-  exact (Matrix.matrix_eq_sum_single M).symm
+  simpa only [muInv, map_sum, muHom_single] using (Matrix.matrix_eq_sum_single M).symm
 
 private def muEquiv : R ⊗[ℚ] Matrix (Fin n) (Fin n) E ≃+* Matrix (Fin n) (Fin n) (R ⊗[ℚ] E) where
   toFun := muHom R E n
@@ -291,9 +288,7 @@ end UpperTheory.Gal.W2.Seed
 end
 
 theorem UpperTheory.Gal.W2.Seed.pMuEx :
-    MuEx := by
-  intro R E _ _ _ _ n
-  exact ⟨muEquiv R E n, fun r x i k => muHom_tmul R E n r x i k⟩
+    MuEx := fun R E _ _ _ _ n => ⟨muEquiv R E n, fun r x i k => muHom_tmul R E n r x i k⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.MuHomSingle =====
@@ -416,8 +411,7 @@ private theorem fL_ev {p : ℕ} (b : AfP p) : ∀ᶠ u : HeightOneSpectrum (𝓞
   refine ⟨w, ?_, rfl⟩
   intro hw
   apply hu
-  rw [fL_corr]
-  exact hw
+  rwa [fL_corr]
 
 private noncomputable def liftA {p : ℕ} (b : AfP p) : AfQ := ⟨fL b, fL_ev b⟩
 
@@ -806,8 +800,7 @@ namespace UpperTheory.Gal.W2.Seed
 theorem pEvEx : EvEx := by
   intro p E _ _ _ T w hw
   have hk : RingHom.ker T.Φ ≤ RingHom.ker (pLoc E w) := by
-    intro x hx
-    exact RingHom.mem_ker.2 (((T.Φ_ker x).1 (RingHom.mem_ker.1 hx)) w hw)
+    exact fun x hx => RingHom.mem_ker.2 (((T.Φ_ker x).1 (RingHom.mem_ker.1 hx)) w hw)
   refine ⟨RingHom.liftOfSurjective T.Φ T.Φ_surj ⟨pLoc E w, hk⟩, fun x => ?_⟩
   exact RingHom.liftOfRightInverse_comp_apply _ _ _ ⟨pLoc E w, hk⟩ x
 
@@ -1187,13 +1180,11 @@ theorem UpperTheory.Gal.W2.Seed.pPIntRev :
   · obtain rfl : i = j := Subsingleton.elim _ _
     have h := mult_le hn (S.P.iotaP.comp S.P.s) y hy
     show Matrix.scalar (Fin 1) _ i i ∈ _
-    rw [Matrix.scalar_apply, Matrix.diagonal_apply_eq]
-    exact h
+    rwa [Matrix.scalar_apply, Matrix.diagonal_apply_eq]
   · obtain rfl : i = j := Subsingleton.elim _ _
     have h := mult_le hn (S.P.iotaP.comp S.P.s) y⁻¹ hy'
     show Matrix.scalar (Fin 1) _ i i ∈ _
-    rw [Matrix.scalar_apply, Matrix.diagonal_apply_eq]
-    exact h
+    rwa [Matrix.scalar_apply, Matrix.diagonal_apply_eq]
   · exact incl_mem (S.P.emb k) (y.1.1.val i j) (entry_le y hy (S.P.emb k) i j)
   · exact incl_mem (S.P.emb k) ((y⁻¹).1.1.val i j) (entry_le y⁻¹ hy' (S.P.emb k) i j)
 end -- clump:auto
@@ -1226,7 +1217,7 @@ theorem UpperTheory.Gal.W2.Seed.pVecCoord :
   let vec : ∀ w : Plc E, AfP p ⊗[ℚ] VQ S.D →+ (Fin n → w.adicCompletion E) := fun w =>
     if hw : (p : 𝓞 E) ∉ w.asIdeal then co w hw else 0
   have hvec : ∀ w (hw : (p : 𝓞 E) ∉ w.asIdeal) v i, vec w v i = ev w hw (ν v i) := fun w hw v i => by
-    simp only [vec, dif_pos hw]; rfl
+    simp only [vec, dite_eq_left hw]; rfl
   have hE : ∀ w (hw : (p : 𝓞 E) ∉ w.asIdeal) (c : 𝓞 E), ev w hw ((1 : AfP p) ⊗ₜ[ℚ] (c : E)) = algebraMap (𝓞 E) (w.adicCompletion E) c := by
     intro w hw c
     rw [← T.Φ_E, hev]
@@ -1243,8 +1234,7 @@ theorem UpperTheory.Gal.W2.Seed.pVecCoord :
     rw [Pi.zero_apply, ← hx, T.Φ_ker]
     intro w hw
     have := congrFun (h w hw) i
-    rw [hvec w hw, ← hx, hev] at this
-    exact this
+    rwa [hvec w hw, ← hx, hev] at this
   · intro v
     rw [hν3]
     constructor
@@ -1318,8 +1308,7 @@ private lemma c_re_neg {E : Type} [Field E] [NumberField E] [IsCMField E] (A : A
   rcases InfinitePlace.mk_eq_iff.mp h with h | h
   · rw [h]; exact A.c_neg
   · have h1 := A.c_neg
-    rw [← h, ComplexEmbedding.conjugate_coe_eq, Complex.conj_re] at h1
-    exact h1
+    rwa [← h, ComplexEmbedding.conjugate_coe_eq, Complex.conj_re] at h1
 
 private lemma dg_ne {E : Type} [Field E] [NumberField E] [IsCMField E] (A : Arith E) (n : ℕ) (i : Fin n) :
     ((A.dg n i : 𝓞 E) : E) ≠ 0 := by
@@ -1436,8 +1425,7 @@ private lemma βS_pos (S : Setup A n p) (v : InfinitePlace S.G.F) (x : Fin S.G.n
   rw [hf, re_form, hs, Complex.neg_re]
   by_cases hm : InfinitePlace.mk v.embedding = InfinitePlace.mk A.τ₀
   · have hc := c_re_neg A v.embedding hm
-    have h1' := ((S.sig v.embedding).1 hm).1
-    exact ⟨fun _ => mul_pos (neg_pos.2 hc) hP, fun h => absurd h1' h⟩
+    exact ⟨fun _ => mul_pos (neg_pos.2 hc) hP, fun h => absurd (((S.sig v.embedding).1 hm).1) h⟩
   · have hc := A.c_pos v.embedding hm
     have h0 := ((S.sig v.embedding).2 hm).1
     refine ⟨fun h => ?_, fun _ => mul_neg_of_neg_of_pos (neg_neg_of_pos hc) hP⟩
@@ -1510,14 +1498,12 @@ private lemma triv_xOf_of_muStar (hM : MuStar) {S : Setup A n p} (T : Tr S) : Tr
       by_cases h : i = k
       · subst h; simp [T.Φ_E]
       · simp [h]
-    rw [e1, e2, Matrix.map_one _ (map_zero _) (map_one _)] at h0
-    exact h0
+    rwa [e1, e2, Matrix.map_one _ (map_zero _) (map_one _)] at h0
   have h2 : T.a.val.map T.Φ * (((T.a.val.map T.Φ).map (conjT E (AfP p)))ᵀ *
       Matrix.diagonal (fun i => (1 : AfP p) ⊗ₜ[ℚ] ((A.dg n i : 𝓞 E) : E))) = 1 := mul_eq_one_comm.1 h1
   have e : xv T * ((1 : AfP p) ⊗ₜ[ℚ] Dm A n) * (starT (hermStar (A.H n) (A.det_ne n)) (AfP p) (xv T)).unop = 1 := by
     apply T.μ.injective
-    rw [map_mul, map_mul, map_one, traceMap_unipotent, mu_one, hD, Matrix.mul_assoc, hst]
-    exact h2
+    rwa [map_mul, map_mul, map_one, traceMap_unipotent, mu_one, hD, Matrix.mul_assoc, hst]
   exact e.trans (map_one _).symm
 
 private lemma emb_eq {S : Setup A n p} (T : Tr S) (hx : Triv S.G (AfP p) (βS S : S.G.Cˣ) (xOf T) 1) (y : GL (Fin n) E × ℚˣ)

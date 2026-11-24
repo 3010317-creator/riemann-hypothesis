@@ -266,8 +266,7 @@ theorem isUnit_of_blk_mul (z : (R ⊗[ℚ] D) × R)
     rw [hY']; ext i j; simp [Matrix.reindexAlgEquiv_apply]
   have h0 : blk0 D R z * Y' = 1 := by
     apply (Matrix.reindexAlgEquiv R R (finSumFinEquiv (m := Module.finrank ℚ D) (n := 1))).injective
-    rw [map_mul, map_one, ← hY]
-    exact h
+    rwa [map_mul, map_one, ← hY]
   rw [← Matrix.fromBlocks_toBlocks Y', blk0, Matrix.fromBlocks_multiply, ← Matrix.fromBlocks_one,
     Matrix.fromBlocks_inj] at h0
   obtain ⟨h11, -, -, h22⟩ := h0
@@ -317,8 +316,7 @@ theorem tc_mul (z w : (R ⊗[ℚ] D)ˣ × Rˣ) (hz : GlobalTheory.TorCls.TC D σ
           simp only [mul_assoc]
       _ = _ := by
           rw [hz1, ← mul_assoc, ← map_mul, mul_comm (w.2 : R), map_mul]
-  · simp only [Prod.fst_mul, Units.val_mul]
-    exact hz2.mul_left hw2
+  · simpa only [Prod.fst_mul, Units.val_mul] using hz2.mul_left hw2
 
 theorem tc_inv (z : (R ⊗[ℚ] D)ˣ × Rˣ) (hz : GlobalTheory.TorCls.TC D σ β y R z) :
     GlobalTheory.TorCls.TC D σ β y R z⁻¹ := by
@@ -548,12 +546,10 @@ theorem exists_locus :
     refine Prod.ext (Units.ext ?_) (Units.ext ?_)
     · have h1 := phi_fst σ β y R' g'
       rw [hg] at h1
-      refine h1.trans ((coordA_map f _).trans ?_)
-      exact congrArg _ (phi_fst σ β y R g).symm
+      exact h1.trans ((coordA_map f _).trans (congrArg _ (phi_fst σ β y R g).symm))
     · have h1 := phi_snd σ β y R' g'
       rw [hg] at h1
-      refine h1.trans ((coordC_map f _).trans ?_)
-      exact congrArg _ (phi_snd σ β y R g).symm
+      exact h1.trans ((coordC_map f _).trans (congrArg _ (phi_snd σ β y R g).symm))
   · intro R _ _ _ _
     letI : TopologicalSpace (R ⊗[ℚ] D) := moduleTopology R (R ⊗[ℚ] D)
     haveI : IsModuleTopology R (R ⊗[ℚ] D) := ⟨rfl⟩

@@ -74,8 +74,7 @@ theorem comb_pureTensorO (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S T :
     rw [← Finset.sum_coe_sort c.support]
     exact (Equiv.sum_comp e.symm (fun u : c.support => c u.1 • g u.1)).symm
   simp only [comb]
-  rw [h1, h1]
-  exact key
+  rwa [h1, h1]
 
 theorem integrableOn_kernel {S T : HSp D} (hS : CoCpt S) (v : Vol S) {ψ : AddChar (AF D.host.F) ℂ}
     {χS χT : (AE D)ˣ →* Circle} {om : Om S T} (hw : IsWeilDatumO ψ S T χS χT om) {f : WO S T → ℂ}
@@ -111,8 +110,7 @@ theorem biLift_biComb_fockSum : ∀ (D : D7), BiAct D → CenFock D → LiftSum 
       rw [this, comb_sum_mul]
       exact Finset.sum_congr rfl fun i _ => mul_comm _ _
     rw [e1, comb_sum_mul]
-    simp only [hcX, hcY]
-    exact Finset.sum_congr rfl fun i _ => mul_comm _ _
+    simpa only [hcX, hcY] using Finset.sum_congr rfl fun i _ => mul_comm _ _
   have hint : ∀ h₀ h₁ h₂, k'.om (h₁, h₂) (fun v => k.om (h₀, h₁)
       (fun u => ∑ i, k.pt ψ θ x y (P i) u * k'.pt ψ θ y z (P' i) v) 0) 0 =
       ∑ i, k.om (h₀, h₁) (k.pt ψ θ x y (P i)) 0 * k'.om (h₁, h₂) (k'.pt ψ θ y z (P' i)) 0 := by
@@ -138,8 +136,7 @@ theorem biLift_biComb_fockSum : ∀ (D : D7), BiAct D → CenFock D → LiftSum 
     · refine Finset.sum_congr rfl fun i _ => ?_
       rw [integral_mul_const]
       rfl
-    · intro i _
-      exact (integrableOn_kernel hx.cpt x.vol hwA (hX i) hφ h₁).mul_const _
+    · exact fun i _ => (integrableOn_kernel hx.cpt x.vol hwA (hX i) hφ h₁).mul_const _
   simp only [biLift, hbi, hint, hin, Finset.sum_apply]
   rw [integral_finsetSum]
   · refine Finset.sum_congr rfl fun i _ => ?_

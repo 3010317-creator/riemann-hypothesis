@@ -186,8 +186,7 @@ theorem labels_hom : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fi
     obtain ⟨a, ha⟩ := h2 (𝔪.e₈.symm α)
     refine ⟨a, ?_⟩
     have := (key a _).1 ha
-    rw [AddEquiv.apply_symm_apply] at this
-    exact this
+    rwa [AddEquiv.apply_symm_apply] at this
 
 
 open GlobalTheory.ZH.TorusPerp GlobalTheory.ZH.PerpTorus GlobalTheory.TorusExt GlobalTheory.TorsionExt in
@@ -249,8 +248,7 @@ theorem exists_torus_char : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Mat
   have hqbt : IsTor χb qb.g := by
     have e1 : q.g = torusPt _ _ (Additive.ofMul χ) := (isTorusPtF_iff_eq _ _).1 ((isTor_iff _ _).1 (hqg ▸ hg₀))
     have hg : qb.g = gtExt _ _ hf q.g := (eq_gtExt_iff _ hf _ _).2 hqb.2
-    rw [hg]
-    rw [e1, GlobalTheory.QkNumberField.gtExt_torusPt, isTor_iff]
+    rw [hg, e1, GlobalTheory.QkNumberField.gtExt_torusPt, isTor_iff]
     exact isTorusPtF_torusPt _
   have hlab : ∀ b mu, 𝔪.YY b mu → (χb (Multiplicative.ofAdd (𝔪.e₈ mu)) : AlgebraicClosure (FractionRing V)) =
       algebraMap (FractionRing V) (AlgebraicClosure (FractionRing V))
@@ -264,8 +262,7 @@ theorem exists_torus_char : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Mat
     rw [hover, Over.comp_left, Category.assoc, hxF, ← Category.assoc]
     congr 1
     exact (Spec.map_comp _ _).symm
-  rw [heq]
-  exact hqbf
+  rwa [heq]
 
 end GlobalTheory.Poinc.Sep.TorPt
 end -- clump:auto

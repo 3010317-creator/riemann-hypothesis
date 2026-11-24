@@ -105,14 +105,12 @@ theorem cubWeil_const_of_isHolTo_family : ∀ (X : Scheme.{0}) (G : Over X) [Grp
       show z w ≫ pullback.snd q q ≫ p = _
       rw [← Category.assoc, (hzb w hw).2, (hab' w hw).1])
     have := he.comp h
-    rw [e₁, e₂] at this
-    exact this
+    rwa [e₁, e₂] at this
   have e₀ : Units.map (z b₀).appTop.hom.toMonoidHom e = unitOn ζ := (hpull b₀ hb₀).unique h₀
   have e₁ : Units.map (z b₁).appTop.hom.toMonoidHom e = Units.map (z b₀).appTop.hom.toMonoidHom e :=
     Units.ext ((val_map_appTop (z b₁) e.val).trans
       ((congrArg _ (valAt'_eq_of_pow_eq_one hz hB hN hek hb₀ hb₁)).trans (val_map_appTop (z b₀) e.val).symm))
   have := hpull b₁ hb₁
-  rw [e₁, e₀] at this
-  exact this
+  rwa [e₁, e₀] at this
 
 end GlobalTheory.CompanionTheory.Ar.Flat

@@ -82,8 +82,7 @@ theorem UpperTheory.dvr_of_norm_integral :
     rw [IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] K, RingHom.coe_comp]
     exact (algebraMap ℚ_[l] K).injective.comp (IsFractionRing.injective ℤ_[l] ℚ_[l])
   have hinj : Function.Injective (algebraMap ℤ_[l] (integralClosure ℤ_[l] K)) := by
-    intro a b hab
-    exact hinjK (congrArg Subtype.val hab)
+    exact fun a b hab => hinjK (congrArg Subtype.val hab)
   have hnf : ¬ IsField (integralClosure ℤ_[l] K) := fun hf =>
     IsDiscreteValuationRing.not_isField ℤ_[l]
       ((Algebra.IsIntegral.isField_iff_isField hinj).mpr hf)
@@ -106,8 +105,7 @@ theorem UpperTheory.padicAlgCl_isIntegral_of_norm_le_one :
   have hc : ∀ n : ℕ, ‖(minpoly ℚ_[l] x).coeff n‖ ≤ 1 := (spectralValue_le_one_iff hm).1 hs
   have hl : minpoly ℚ_[l] x ∈ Polynomial.lifts (algebraMap ℤ_[l] ℚ_[l]) := by
     rw [Polynomial.lifts_iff_coeff_lifts]
-    intro n
-    exact ⟨⟨_, hc n⟩, rfl⟩
+    exact fun n => ⟨⟨_, hc n⟩, rfl⟩
   obtain ⟨q, hq, -, hqm⟩ := Polynomial.lifts_and_natDegree_eq_and_monic hl hm
   refine ⟨q, hqm, ?_⟩
   rw [← Polynomial.aeval_def, ← Polynomial.aeval_map_algebraMap ℚ_[l], hq]

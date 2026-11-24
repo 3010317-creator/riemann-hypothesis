@@ -220,8 +220,7 @@ theorem subset_span_of_relLength_ne_top {A B : Submodule R V} (h : relLength A B
       (Submodule.Quotient.mk ⟨x, hx⟩ : A ⧸ B.submoduleOf A) = 0 := by
     have := congrArg Subtype.val hy
     simp only [Submodule.coe_smul, smul_smul] at this
-    rw [mul_sub, mul_one, sub_smul, ← mul_assoc, ← pow_succ, sub_eq_zero]
-    exact this
+    rwa [mul_sub, mul_one, sub_smul, ← mul_assoc, ← pow_succ, sub_eq_zero]
   rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at h₁
   have h₂ : ϖ ^ n * (ϖ * c - 1) ≠ 0 :=
     mul_ne_zero (pow_ne_zero n hϖ.ne_zero) fun h₀ =>
@@ -429,8 +428,7 @@ theorem finrank_eq {K L F M C W V G G' Γ : Type} [Field K] [Field L] [Field F] 
     | smul t x _ hx =>
       rw [map_smul, ← algebraMap_smul L, map_smulₛₗ, hx, map_smulₛₗ, hσ, algebraMap_smul, TensorProduct.tmul_smul]
   have hind : LinearIndependent M fun k => Φ (bW k) := by
-    simp only [hΦb]
-    exact Module.Flat.linearIndependent_one_tmul b₄
+    simpa only [hΦb] using Module.Flat.linearIndependent_one_tmul b₄
   have hRΦ : ∀ γ w, R γ (Φ w) = Φ ((((chi (θ γ))⁻¹ : Lˣ) : L) • ρ (θ γ) w) := fun γ w => by
     rw [← bW.sum_repr w]
 
@@ -578,8 +576,7 @@ theorem whit_data (R : RealDat D A Ks) (F : Face D A) (hlevels : R.grp_levels F)
   · have hx : c.symm (g : G0g D.nd) ∈ P := (hPb _).1 g.2
     have hxH : R.eG (c.symm g) ∈ (R.levR F false).H := by
       show R.eG.symm (R.eG _) ∈ P
-      rw [MulEquiv.symm_apply_apply]
-      exact hx
+      rwa [MulEquiv.symm_apply_apply]
     have e1 : (R.levR F false).chi ⟨_, hxH⟩ = Units.map (D.what₂.embLL : D.what₂.LL →* ℂ)
         ((F.lvl false).ψ ⟨R.eG.symm (R.eG (c.symm g)), hxH⟩) := rfl
     rw [show (⟨R.eG.symm (R.eG (c.symm g)), hxH⟩ : P) = ⟨c.symm g, hx⟩ from

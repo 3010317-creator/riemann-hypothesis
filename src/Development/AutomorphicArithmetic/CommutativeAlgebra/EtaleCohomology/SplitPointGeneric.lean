@@ -95,8 +95,7 @@ private lemma exists_idem [Algebra.FormallyUnramified R A] [Module.Finite R A] (
   have h1 : σ (f t) = 1 := by
     have : (σ.comp f) = σ.comp (Algebra.TensorProduct.lmul' R) := by
       ext x <;> simp [hf]
-    have h2 := DFunLike.congr_fun this t
-    simpa [ht1] using h2
+    simpa [ht1] using DFunLike.congr_fun this t
   refine ⟨f t, ?_, h1, key⟩
   change f t * f t = f t
   rw [key, h1, map_one, one_mul]
@@ -307,8 +306,7 @@ private lemma split_sch {R : Type} [CommRing R]
   have hfin : Module.Finite R Γ(W, ⊤) := (IsFinite.SpecMap_iff ψ).1 (by rw [hψ]; infer_instance)
   have het : Algebra.Etale R Γ(W, ⊤) := by
     have h1 : Etale (Spec.map ψ) := by rw [hψ]; infer_instance
-    have h2 := (HasRingHomProperty.Spec_iff (P := @Etale)).1 h1
-    exact (RingHom.etale_algebraMap).1 h2
+    exact (RingHom.etale_algebraMap).1 ((HasRingHomProperty.Spec_iff (P := @Etale)).1 h1)
   have Hr : ∀ (A : Type) [CommRing A] [Algebra R A], Algebra.Etale R A →
       Function.Surjective (PrimeSpectrum.comap (algebraMap R A)) → Nonempty (A →ₐ[R] R) := by
     intro A _ _ hA hs
@@ -382,8 +380,7 @@ theorem UpperTheory.Ru.crystallineComparison.splitEx :
     have hu : IsUnit (x.appTop (l : Γ(Y, ⊤))) := by
       have := hunit.map (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom
       rw [map_natCast] at this
-      rw [map_natCast]
-      exact this
+      rwa [map_natCast]
     have hpre : x ⁻¹ᵁ V = ⊤ := by
       rw [Scheme.preimage_basicOpen]
       exact Scheme.basicOpen_of_isUnit _ hu
@@ -519,25 +516,21 @@ private theorem perm_of_aut {B : Type} [CommRing B] {d : ℕ} (a b : (Fin d → 
   have Eidem : ∀ i k, E i k * E i k = E i k := by
     intro i k
     have := congrFun (congrArg a (δδ k)) i
-    rw [map_mul] at this
-    exact this
+    rwa [map_mul] at this
   have Erow : ∀ i k m, k ≠ m → E i k * E i m = 0 := by
     intro i k m h
     have := congrFun (congrArg a (δort k m h)) i
-    rw [map_mul, map_zero] at this
-    exact this
+    rwa [map_mul, map_zero] at this
   have Ecol : ∀ i j k, i ≠ j → E i k * E j k = 0 := by
     intro i j k h
     have := congrFun (congrArg b (δort i j h)) k
     rw [map_mul, map_zero] at this
-    rw [hEeqG, hEeqG]
-    exact this
+    rwa [hEeqG, hEeqG]
   have Esum : ∀ i, ∑ k, E i k = 1 := by
     intro i
     have := congrFun (congrArg a δsum) i
 
-    rw [map_sum, map_one, Finset.sum_apply] at this
-    exact this
+    rwa [map_sum, map_one, Finset.sum_apply] at this
   have Emul : ∀ i k (x : Fin d → B), E i k * (a x i - x k) = 0 := by
     intro i k x
     have := congrFun (congrArg a (δmul k x)) i
@@ -553,8 +546,7 @@ private theorem perm_of_aut {B : Type} [CommRing B] {d : ℕ} (a b : (Fin d → 
     exact Finset.prod_congr rfl fun i _ => Eidem i _
   · intro σ τ hστ
     obtain ⟨i, hi⟩ : ∃ i, σ i ≠ τ i := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hστ (Equiv.ext h)
     rw [← Finset.prod_mul_distrib]
     exact Finset.prod_eq_zero (Finset.mem_univ i) (Erow i _ _ hi)
@@ -624,8 +616,7 @@ private theorem splitOn_spec {Y Z : Scheme.{0}} (p : Z ⟶ Y) {B : Type} [CommRi
         CommRingCat.ofHom (Pi.evalRingHom (fun _ : Fin m => B) i) = 𝟙 _ := by
       ext; rfl
     rw [← Category.assoc (Sigma.ι _ i) s, hs i, ← Spec.map_comp, h1, Spec.map_id]
-    simp only [D, Sigma.ι_desc_assoc]
-    exact pullback.lift_snd _ _ _
+    simpa only [D, Sigma.ι_desc_assoc] using pullback.lift_snd _ _ _
 
 end UpperTheory.Ru.crystallineComparison
 
@@ -709,8 +700,7 @@ theorem UpperTheory.Ru.crystallineComparison.splitPerm :
   refine ⟨u, ?_, ?_⟩
   · have h6 : CompleteOrthogonalIdempotents (alg ∘ u) := by
       have : alg ∘ u = e := funext hu
-      rw [this]
-      exact he
+      rwa [this]
     exact (CompleteOrthogonalIdempotents.map_injective_iff alg halg).1 h6
   · intro σ V _ ρ hρ i
     have key : ∀ s, ρ (ζ' i s) = ρ (ζ (σ i) s) := by
@@ -727,9 +717,7 @@ theorem UpperTheory.Ru.crystallineComparison.splitPerm :
       rw [pt_comp, pt_comp]
       ext s
       exact key s
-    have h11 := congrArg (· ≫ pullback.fst T.p y) h10
-    simp only [Category.assoc, hsf] at h11
-    exact h11
+    simpa only [Category.assoc, hsf] using congrArg (· ≫ pullback.fst T.p y) h10
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -764,9 +752,7 @@ private lemma unit_away (U : Type) [CommRing U] :
 
 private lemma split_point_generic {U : Type} [CommRing U] (w : Spec (CommRingCat.of U) ⟶ D.W) (j : J) :
     SplitOn (T j).p (awayPt l U ≫ w ≫ D.π) fun i => awayPt l U ≫ w ≫ D.s j i := by
-  have h := D.gen _ (awayPt l U ≫ w) (unit_away U) j
-  simp only [Category.assoc] at h
-  exact h
+  simpa only [Category.assoc] using D.gen _ (awayPt l U ≫ w) (unit_away U) j
 
 private lemma split_pt {U : Type} [CommRing U] (w : Spec (CommRingCat.of U) ⟶ D.W)
     (σ : ∀ j, Equiv.Perm (Fin (T j).d)) (j : J) :
@@ -891,8 +877,7 @@ theorem UpperTheory.Ru.crystallineComparison.wTrans :
   refine ⟨fun σ => gAct κ D σ, ?_, ?_, ?_⟩
   · intro σ
     ext A w
-    refine Subtype.ext ?_
-    exact (act_spec D (RL.u_tf A).1 w.1 σ).1
+    exact Subtype.ext (act_spec D (RL.u_tf A).1 w.1 σ).1
   · intro A y
     have hT := testFacts l A.obj A.property
     have hz : ∀ j, ∃ z : Fin (T j).d → (Spec (CommRingCat.of A.obj.U) ⟶ (T j).Z), (∀ i, z i ≫ (T j).p = y.1) ∧

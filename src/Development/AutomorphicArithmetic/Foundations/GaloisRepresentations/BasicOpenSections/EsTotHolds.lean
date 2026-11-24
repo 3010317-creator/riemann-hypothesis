@@ -144,8 +144,7 @@ private lemma rho_comp (V : Type) [CommRing V] [IsLocalRing V] {W : Scheme.{0}}
       (Scheme.ΓSpecIso (CommRingCat.of (IsLocalRing.ResidueField V))).hom =
       CommRingCat.ofHom (IsLocalRing.residue V) := by
     rw [hz, resPt, Scheme.ΓSpecIso_naturality, Iso.inv_hom_id_assoc]
-  have h2 := congrArg CommRingCat.Hom.hom key
-  exact h2
+  exact congrArg CommRingCat.Hom.hom key
 
 theorem UpperTheory.Gal.Mod.clopenAt :
     ResClosed → HensSplit → ClopenAt := by
@@ -161,8 +160,7 @@ theorem UpperTheory.Gal.Mod.clopenAt :
   haveI : Module.Finite V Γ(W, ⊤) := hfin
   have hc : ∀ z : gp (IsLocalRing.ResidueField V) ⟶ W, z ≫ g = resPt V →
       ∀ v : V, rho z (φ v) = IsLocalRing.residue V v := by
-    intro z hz v
-    exact RingHom.congr_fun (rho_comp V g z hz) v
+    exact fun z hz v => RingHom.congr_fun (rho_comp V g z hz) v
   have hsurj : ∀ z : gp (IsLocalRing.ResidueField V) ⟶ W, z ≫ g = resPt V →
       Function.Surjective (rho z) := by
     intro z hz r
@@ -184,8 +182,7 @@ theorem UpperTheory.Gal.Mod.clopenAt :
     obtain ⟨v, hv⟩ := IsLocalRing.residue_surjective (rho z₀ a)
     have hmem : a - φ v ∈ RingHom.ker (rho z₀) := by
       rw [RingHom.mem_ker, map_sub, hc z₀ hz₀ v, hv, sub_self]
-    rw [← hk, RingHom.mem_ker, map_sub, sub_eq_zero, hc z hz v, hv] at hmem
-    exact hmem
+    rwa [← hk, RingHom.mem_ker, map_sub, sub_eq_zero, hc z hz v, hv] at hmem
   · rintro rfl
     exact fun h => hem (RingHom.mem_ker.mpr h)
 end -- clump:auto
@@ -210,8 +207,7 @@ private lemma natCast_eq_zero_of_pt {p : ℕ} {Y : Scheme.{0}} {Ω : Type} [Fiel
     rw [map_natCast]
     have e : (Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom (p : Ω) = (p : Γ(gp Ω, ⊤)) := map_natCast _ p
     have hu0 := (IsUnit.mk0 _ hne).map (Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom
-    rw [e] at hu0
-    exact hu0
+    rwa [e] at hu0
   have hpre := Scheme.preimage_basicOpen x (p : Γ(Y, ⊤))
   rw [Scheme.basicOpen_of_isUnit _ hu] at hpre
   have hm : IsLocalRing.closedPoint Ω ∈ x ⁻¹ᵁ Y.basicOpen (p : Γ(Y, ⊤)) := by
@@ -318,8 +314,7 @@ private lemma sum_eq (hF : FibExt) (hWt : TranscendenceTraces.WtPt) {p : ℕ} {Y
     refine ⟨z, ⟨hz, hinj _ _ ?_⟩, rfl⟩
     rw [sp_iter a φ φ' hc, ← Category.assoc] at *
     simpa [Category.assoc] using h2
-  · intro z _
-    exact hWt T.p w hw Ω Ω' z (sp a ≫ z) (pt_sp a z).symm
+  · exact fun z _ => hWt T.p w hw Ω Ω' z (sp a ≫ z) (pt_sp a z).symm
 
 theorem UpperTheory.Gal.Mod.cycExt :
     FibExt → CycExt := by
@@ -331,8 +326,7 @@ theorem UpperTheory.Gal.Mod.cycExt :
     by_cases hy : ∃ y : gp Ω ⟶ Y, y' = sp a ≫ y
     · obtain ⟨y, rfl⟩ := hy
       have := h y
-      simp only [hs] at this
-      exact this
+      simpa only [hs] using this
     · refine Finset.sum_eq_zero fun j _ => ?_
       have : {z : gp Ω' ⟶ (T j).Z | z ≫ (T j).p = sp a ≫ x ∧ (twist φ' Y)^[n - j] (z ≫ (T j).r) = y'} = ∅ := by
         ext z'
@@ -346,8 +340,7 @@ theorem UpperTheory.Gal.Mod.cycExt :
       simp
   · intro h y
     have := h (sp a ≫ y)
-    simp only [← hs] at this
-    exact this
+    simpa only [← hs] using this
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.BasicOpenSections.PCycExt =====
@@ -437,8 +430,7 @@ theorem UpperTheory.Gal.Mod.cycRes :
     refine congrArg Multiset.card (Multiset.filter_congr fun i _ => ?_)
     have h1 : (resPt V ≫ i.1) ≫ (T j).p = resPt V ≫ y := by
       rw [Category.assoc, i.2]
-    simp only [Set.mem_setOf_eq, h1, true_and, Category.assoc]
-    exact eq_comm
+    simpa only [Set.mem_setOf_eq, h1, true_and, Category.assoc] using eq_comm
   simp only [key, co_eq, sub_mul, Finset.sum_sub_distrib]
   rw [sub_eq_zero]
   exact_mod_cast hc
@@ -480,8 +472,7 @@ theorem fibExt : FibExt := by
     have hz' : z ≫ g = x := hz
     change (sp a ≫ z) ≫ g = sp a ≫ x
     rw [Category.assoc, hz']
-  · intro z _ z' _ h
-    exact inj z z' h
+  · exact fun z _ z' _ h => inj z z' h
   · intro w hw
     have hw' : w ≫ g = sp a ≫ x := hw
     let z2 : gp Ω' ⟶ pullback g x := pullback.lift w (sp a) hw'
@@ -557,8 +548,7 @@ private theorem coprime_left {R ι : Type} [CommRing R] (s : Multiset ι) (f : �
     (h : ∀ a ∈ s, IsCoprime (f a) x) : IsCoprime (s.map f).prod x := by
   induction s using Multiset.induction_on with
   | empty =>
-    simp only [Multiset.map_zero, Multiset.prod_zero]
-    exact isCoprime_one_left
+    simpa only [Multiset.map_zero, Multiset.prod_zero] using isCoprime_one_left
   | cons a t ih =>
     rw [Multiset.map_cons, Multiset.prod_cons]
     exact (h a (Multiset.mem_cons_self a t)).mul_left (ih fun b hb => h b (Multiset.mem_cons_of_mem hb))
@@ -567,8 +557,7 @@ private theorem prod_notMem {R ι : Type} [CommRing R] (P : Ideal R) [hP : P.IsP
     (s : Multiset ι) (f : ι → R) (h : ∀ a ∈ s, f a ∉ P) : (s.map f).prod ∉ P := by
   induction s using Multiset.induction_on with
   | empty =>
-    intro h1
-    exact hP.ne_top ((Ideal.eq_top_iff_one P).2 (by simpa using h1))
+    exact fun h1 => hP.ne_top ((Ideal.eq_top_iff_one P).2 (by simpa using h1))
   | cons a t ih =>
     rw [Multiset.map_cons, Multiset.prod_cons]
     intro hm
@@ -581,8 +570,7 @@ private theorem algebraMap_mem_maximal_of_mem_maximalIdeal (V : Type) [CommRing 
     (hv : v ∈ IsLocalRing.maximalIdeal V) : algebraMap V A v ∈ m' := by
   have hc : (m'.comap (algebraMap V A)).IsMaximal :=
     Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := V) m'
-  rw [← IsLocalRing.eq_maximalIdeal hc] at hv
-  exact hv
+  rwa [← IsLocalRing.eq_maximalIdeal hc] at hv
 
 private theorem exists_idempotent_approx_at_maximal (V : Type) [CommRing V] [IsDomain V] [ValuationRing V]
     [IsAlgClosed (FractionRing V)] {A : Type} [CommRing A] [Algebra V A] [Algebra.IsIntegral V A]
@@ -595,8 +583,7 @@ private theorem exists_idempotent_approx_at_maximal (V : Type) [CommRing V] [IsD
   set f : V → A := fun α => a - algebraMap V A α with hf
   have hprod : (s.map f).prod = 0 := by
     have h0 : Polynomial.aeval a F = 0 := by
-      rw [Polynomial.aeval_def]
-      exact hFa
+      rwa [Polynomial.aeval_def]
     rw [hs, map_multiset_prod, Multiset.map_map] at h0
     simpa [f, Function.comp_def] using h0
   set g := ((s.filter (fun α => f α ∈ m)).map f).prod with hg
@@ -645,8 +632,7 @@ private theorem exists_idempotent_approx_at_maximal (V : Type) [CommRing V] [IsD
   · intro m' hm' he
     have hhm' : h ∉ m' := fun hh' => he (m'.mul_mem_left v hh')
     have hex : ∃ α ∈ s, f α ∈ m' := by
-      by_contra hne
-      push_neg at hne
+      by_contra! hne
       have hn := prod_notMem (hP := hm'.isPrime) m' s f hne
       rw [hprod] at hn
       exact hn m'.zero_mem
@@ -716,14 +702,11 @@ theorem UpperTheory.Gal.Mod.hensSplit :
       have hβ1 := (Ideal.mem_inf.mp hβ).1
       have hβ2 := (Ideal.mem_inf.mp hβ).2
       have hβm : algebraMap V A β ∈ m := by
-        have hd := m.sub_mem hx hβ1
-        simpa using hd
+        simpa using m.sub_mem hx hβ1
       have hβmax : β ∈ IsLocalRing.maximalIdeal V := by
         rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-        intro hu
-        exact hm.ne_top (Ideal.eq_top_of_isUnit_mem _ hβm (hu.map _))
-      have hs := m'.add_mem hβ2 (algebraMap_mem_maximal_of_mem_maximalIdeal V m' hβmax)
-      simpa using hs
+        exact fun hu => hm.ne_top (Ideal.eq_top_of_isUnit_mem _ hβm (hu.map _))
+      simpa using m'.add_mem hβ2 (algebraMap_mem_maximal_of_mem_maximalIdeal V m' hβmax)
     exact hne (hm.eq_of_le hm'.ne_top hle).symm
 end -- clump:auto
 end -- clump:auto
@@ -882,8 +865,8 @@ theorem wtVal : FibExt → SecGen → ClopenAt → WtVal := by
     convert h using 1
     funext x
     by_cases hx : x ∈ U
-    · exact (if_pos hx).trans ((LocallyConstant.charFn_eq_one (Y := ℤ) x hU).2 hx).symm
-    · exact (if_neg hx).trans ((LocallyConstant.charFn_eq_zero (Y := ℤ) x hU).2 hx).symm
+    · exact (ite_eq_left hx).trans ((LocallyConstant.charFn_eq_one (Y := ℤ) x hU).2 hx).symm
+    · exact (ite_eq_right hx).trans ((LocallyConstant.charFn_eq_zero (Y := ℤ) x hU).2 hx).symm
   obtain ⟨ψ, hψ, hsum⟩ : ∃ ψ : Spec (CommRingCat.of V) → ℤ, IsLocallyConstant ψ ∧
       ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (x : gp Ω ⟶ Spec (CommRingCat.of V)),
         ψ (pt x) = ∑ᶠ z ∈ fib r x, w Ω (z ≫ v) * φ (pt z) := hw.1 (TranscendenceTraces.Sq.of T.p y) φ hφ
@@ -955,8 +938,7 @@ theorem wtVal : FibExt → SecGen → ClopenAt → WtVal := by
     · rintro ⟨hz, hzU⟩
       have hz' : z ∈ fib r (sp (algebraMap V (FractionRing V)) ≫ 𝟙 _) := by
         change z ≫ r = η ≫ 𝟙 _
-        rw [Category.comp_id]
-        exact hz
+        rwa [Category.comp_id]
       obtain ⟨σ, hσ, rfl⟩ := (hS r V (𝟙 _)).surjOn hz'
       have hσ' : σ ≫ r = 𝟙 _ := hσ
       have hσU : pt (η ≫ σ) ∈ U := hzU
@@ -1060,8 +1042,7 @@ theorem UpperTheory.Gal.Mod.esPt :
     intro Ω _ _ x y hx
     have hgen : crystallineComparison.GenPt π (pt (x ≫ s)) := by
       have e : pt (x ≫ s) = s (pt x) := rfl
-      rw [e]
-      exact hx
+      rwa [e]
     obtain ⟨φ, hφ, hcyc⟩ := hC p f n hp Y π T w hone hpt hdense hπ Ω (x ≫ s) hgen
     have hit := frPow_twist Fr s φ (hFrTw Ω φ hφ)
     by_cases hy : y ≫ bS = x ≫ bS
@@ -1077,16 +1058,14 @@ theorem UpperTheory.Gal.Mod.esPt :
         · show (twist φ Y)^[n - (j : ℕ)] ((z ≫ v j) ≫ (T j).r) = y ≫ s
           rw [Category.assoc, ← hf j, ← Category.assoc, ← hit, ← h2]
           simp
-      · intro z h z' h' e
-        exact (hpb j).hom_ext e (h.1.trans h'.1.symm)
+      · exact fun z h z' h' e => (hpb j).hom_ext e (h.1.trans h'.1.symm)
       · rintro t ⟨h1, h2⟩
         obtain ⟨L, hL1, hL2⟩ : ∃ L, L ≫ v j = t ∧ L ≫ (c j).p = x :=
           ⟨(hpb j).lift t x h1, (hpb j).lift_fst _ _ _, (hpb j).lift_snd _ _ _⟩
         refine ⟨L, ⟨hL2, ?_⟩, hL1⟩
         apply hinj Ω
         · have e : ((L ≫ (c j).f) ≫ frPow Fr (n - (j : ℕ))) ≫ s = y ≫ s := by
-            rw [Category.assoc, hit, Category.assoc, hf j, ← Category.assoc, hL1]
-            exact h2
+            rwa [Category.assoc, hit, Category.assoc, hf j, ← Category.assoc, hL1]
           simpa only [Category.assoc] using e
         · simp only [Category.assoc]
           rw [frPow_bS Fr bS hFrB, hb j, ← Category.assoc, hL2, hy]
@@ -1117,11 +1096,9 @@ section -- clump:auto
 
 namespace UpperTheory.Gal.Mod
 
-theorem wtVal_holds : WtVal := by
-  exact wtVal fibExt secGen (clopenAt resClosed hensSplit)
+theorem wtVal_holds : WtVal := wtVal fibExt secGen (clopenAt resClosed hensSplit)
 
-theorem cycAll_holds : CycAll := by
-  exact cycAll resClosed valLiftB (cycRes wtVal_holds) (cycExt fibExt)
+theorem cycAll_holds : CycAll := cycAll resClosed valLiftB (cycRes wtVal_holds) (cycExt fibExt)
 
 theorem esPt_holds : ESPt := esPt cycAll_holds
 
@@ -1221,8 +1198,7 @@ private theorem exists_generic {O : Type} [CommRing O] [IsDomain O] {Y : Scheme.
   have hs : s ⤳ g y := (PrimeSpectrum.le_iff_specializes _ _).1 bot_le
   obtain ⟨η, hη, rfl'⟩ := (Flat.generalizingMap g) hs
   refine ⟨η, ?_, hη⟩
-  rw [mem_basicOpen_fn, rfl']
-  exact ha
+  rwa [mem_basicOpen_fn, rfl']
 
 theorem UpperTheory.Gal.Mod.baseFacts :
     BaseFacts := by
@@ -1241,8 +1217,7 @@ theorem UpperTheory.Gal.Mod.baseFacts :
       (GlobalTheory.forall_isDomain_and_isIntegrallyClosed_stalk_of_smooth g (nml_spec O)) (Or.inr inferInstance)
   · intro y hy
     obtain ⟨η, hη, hηy⟩ := exists_generic g (p : O) hp0 y
-    rw [hbo, ← hy η hηy]
-    exact hη
+    rwa [hbo, ← hy η hηy]
   · intro y
     obtain ⟨η, hη, hηy⟩ := exists_generic g (p : O) hp0 y
     exact ⟨η, hbo ▸ hη, hηy⟩
@@ -1477,8 +1452,7 @@ theorem UpperTheory.Gal.Mod.esGen :
       have e := IsPullback.paste_horiz (IsPullback.of_hasPullback
         (pullback.snd g (Spec.map (CommRingCat.ofHom (algebraMap O κ)))) (Spec.map (CommRingCat.ofHom (algebraMap κ kb))))
         (IsPullback.of_hasPullback g (Spec.map (CommRingCat.ofHom (algebraMap O κ))))
-      rw [hβ] at e
-      exact e
+      rwa [hβ] at e
     have hDense := hDG O ϖ hϖ kb ((algebraMap κ kb).comp (algebraMap O κ)) (by simp [hκ]) Y _ g _ _ hPBS
     have hSep : ∀ (Ω' : Type) [Field Ω'] (x x' : gp Ω' ⟶ geom kb (pullback.snd g (Spec.map (CommRingCat.ofHom (algebraMap O κ))))),
         x ≫ (pullback.fst (pullback.snd g (Spec.map (CommRingCat.ofHom (algebraMap O κ))))
@@ -1538,10 +1512,8 @@ theorem UpperTheory.Gal.Mod.esGen :
       intro j
       obtain ⟨vK, e1, e2, e3, e4⟩ := hc j
       refine ⟨vK, ?_, ?_, e3, ?_⟩
-      · rw [pullback.lift_fst]
-        exact e1
-      · rw [pullback.lift_fst]
-        exact e2
+      · rwa [pullback.lift_fst]
+      · rwa [pullback.lift_fst]
       · rw [e4]
         funext Ω' i1 i2 z
         symm
@@ -1550,8 +1522,7 @@ theorem UpperTheory.Gal.Mod.esGen :
         let φ := Spec.preimage (z ≫ (c j).p ≫ pullback.snd (pullback.snd g (Spec.map (CommRingCat.ofHom (algebraMap O K))))
           (Spec.map (CommRingCat.ofHom (algebraMap K Ω))))
         have h1 : φ.hom (p : Ω) = 0 := by
-          rw [map_natCast]
-          exact h0
+          rwa [map_natCast]
         have h2 : (p : Ω) = 0 := φ.hom.injective (by rw [h1, map_zero])
         apply hp0
         apply (algebraMap K Ω).injective
@@ -1667,8 +1638,7 @@ private theorem frob_pt (m : ℕ) [NeZero m] (Ω : Type) [Field Ω] [IsAlgClosed
     · exact tw_sub m h1 0 _ _
     · have hpΩ : (p : Ω) = 0 := by
         have := congrArg (Scheme.ΓSpecIso (CommRingCat.of Ω)).hom.hom h
-        rw [map_natCast, map_zero] at this
-        exact this
+        rwa [map_natCast, map_zero] at this
       have hcop : Nat.Coprime (p ^ f) m := by
         refine Nat.Coprime.pow_left f ((Nat.Prime.coprime_iff_not_dvd hp).2 ?_)
         rintro ⟨k, hk⟩
@@ -1692,8 +1662,7 @@ private theorem frob_sec (m : ℕ) [NeZero m] (U : Scheme.{0}) (p f : ℕ) (hp :
   refine ptInj_holds m 0 U _ _ fun Ω _ _ x => ?_
   have hΩ : (p : Γ(gp Ω, ⊤)) = 0 := cast_zero_of_hom x h
   have hmΩ : IsUnit (m : Ω) := by
-    have h1 := (hm.map x.appTop.hom).map (Scheme.ΓSpecIso (.of Ω)).hom.hom
-    simpa using h1
+    simpa using (hm.map x.appTop.hom).map (Scheme.ΓSpecIso (.of Ω)).hom.hom
   rw [res_res, ← absFrob_nat x p f hp hΩ h, ← res_res]
   exact frob_pt m Ω p f hp hΩ hmΩ _
 
@@ -1802,8 +1771,7 @@ private theorem mem_basicOpen_of_ne {p : ℕ} {Y : Scheme.{0}} (Ω : Type) [Fiel
     (x : gp Ω ⟶ Y) (hp : (p : Ω) ≠ 0) : pt x ∈ Y.basicOpen (p : Γ(Y, ⊤)) := by
   have hu : IsUnit ((p : ℕ) : Γ(gp Ω, ⊤)) := by
     have h1 : IsUnit ((p : ℕ) : Ω) := isUnit_iff_ne_zero.mpr hp
-    have h2 := h1.map (Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom
-    simpa using h2
+    simpa using h1.map (Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom
   have h3 : (gp Ω).basicOpen (x.appTop (p : Γ(Y, ⊤))) = ⊤ := by
     rw [map_natCast]
     exact Scheme.basicOpen_of_isUnit _ hu

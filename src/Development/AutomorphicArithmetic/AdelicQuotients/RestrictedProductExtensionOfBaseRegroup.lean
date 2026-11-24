@@ -114,8 +114,7 @@ private theorem rp_group [∀ v, Finite (I v)] {q : G →* Gi} {p : ∀ w, G →
       rw [hKset]
       ext x
       constructor
-      · intro hx
-        exact ⟨e v x, hx, (e v).symm_apply_apply x⟩
+      · exact fun hx => ⟨e v x, hx, (e v).symm_apply_apply x⟩
       · rintro ⟨y, hy, rfl⟩
         simpa [Set.mem_preimage] using hy
     rw [h]
@@ -133,8 +132,7 @@ private theorem rp_group [∀ v, Finite (I v)] {q : G →* Gi} {p : ∀ w, G →
       constructor
       · intro h
         obtain ⟨v, hv, i, rfl⟩ := Set.mem_iUnion₂.1 h
-        rw [hb]
-        exact hv
+        rwa [hb]
       · intro h
         obtain ⟨v, i, rfl⟩ := hs w
         rw [hb] at h
@@ -146,8 +144,7 @@ private theorem rp_group [∀ v, Finite (I v)] {q : G →* Gi} {p : ∀ w, G →
       · intro h w hw
         obtain ⟨v, i, rfl⟩ := hs w
         have hv : v ∉ S := by
-          rw [hmem, hb] at hw
-          exact hw
+          rwa [hmem, hb] at hw
         have := (hK v _).1 (h v hv) i
         rwa [hp] at this
       · intro h v hv

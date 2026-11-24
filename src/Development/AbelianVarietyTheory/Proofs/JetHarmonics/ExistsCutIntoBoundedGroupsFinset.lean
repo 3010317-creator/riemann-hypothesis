@@ -68,22 +68,20 @@ theorem exists_le_sum_eq_of_le_sum (S : Finset ℕ) (e : ℕ → ℕ) :
     · intro k
       by_cases hk : k = a
       · subst hk
-        simp only [if_true]
+        simp only [ite_true]
         omega
-      · simp only [hk, if_false]
-        exact hge k
-    · rw [Finset.sum_insert ha, if_pos rfl]
+      · simpa only [hk, ite_false] using hge k
+    · rw [Finset.sum_insert ha, ite_eq_left rfl]
       have hS : ∑ k ∈ S, (if k = a then n - min n (∑ k ∈ S, e k) else g k) = ∑ k ∈ S, g k := by
         refine Finset.sum_congr rfl fun k hk => ?_
         have : k ≠ a := fun h => ha (h ▸ hk)
-        simp only [this, if_false]
+        simp only [this, ite_false]
       rw [hS, hgs]
       omega
     · intro k hk
       have hka : k ≠ a := fun h => hk (h ▸ Finset.mem_insert_self _ _)
       have hkS : k ∉ S := fun h => hk (Finset.mem_insert_of_mem h)
-      simp only [hka, if_false]
-      exact hgo k hkS
+      simpa only [hka, ite_false] using hgo k hkS
 
 theorem exists_cut_into_bounded_groups_finset (S : Finset ℕ) (B : ℕ) :
     ∀ (s : ℕ) (e : ℕ → ℕ), ∑ k ∈ S, e k ≤ s * B →
@@ -118,17 +116,13 @@ theorem exists_cut_into_bounded_groups_finset (S : Finset ℕ) (B : ℕ) :
       refine Fin.cases ?_ (fun i => ?_) u
       · simp only [Fin.cons_zero]
         omega
-      · simp only [Fin.cons_succ]
-        exact hpcb i
+      · simpa only [Fin.cons_succ] using hpcb i
     · intro u k hk
       refine Fin.cases ?_ (fun i => ?_) u
-      · simp only [Fin.cons_zero]
-        exact hfo k hk
-      · simp only [Fin.cons_succ]
-        exact hpco i k hk
+      · simpa only [Fin.cons_zero] using hfo k hk
+      · simpa only [Fin.cons_succ] using hpco i k hk
 
 theorem exists_cut_columns_bounded_width : ∀ (K s B : ℕ) (e : ℕ → ℕ), ∑ k ∈ Finset.Icc 1 K, e k ≤ s * B → ∃ pc : Fin s → ℕ → ℕ, (∀ k ∈ Finset.Icc 1 K, ∑ u, pc u k = e k) ∧ (∀ u, ∑ k ∈ Finset.Icc 1 K, pc u k ≤ B) ∧ ∀ u k, k ∉ Finset.Icc 1 K → pc u k = 0 := by
-  intro K s B e h
-  exact exists_cut_into_bounded_groups_finset (Finset.Icc 1 K) B s e h
+  exact fun K s B e h => exists_cut_into_bounded_groups_finset (Finset.Icc 1 K) B s e h
 
 end GlobalTheory

@@ -68,8 +68,7 @@ theorem range_spec_atPrime {W : Type} [CommRing W] (q : PrimeSpectrum W) :
   · intro hd x hx
     by_contra hq
     exact Set.disjoint_left.1 hd (show x ∈ (q.asIdeal.primeCompl : Set W) from hq) hx
-  · intro hle
-    exact Set.disjoint_left.2 fun x hx hp => hx (hle hp)
+  · exact fun hle => Set.disjoint_left.2 fun x hx hp => hx (hle hp)
 
 theorem mem_basicOpen_toNorm {P : Scheme.{0}} [CompactSpace P] [QuasiSeparatedSpace P] {W : Type} [CommRing W]
     (w : Spec (CommRingCat.of W) ⟶ P) (s : Γ(w.normalization, ⊤)) (p : Spec (CommRingCat.of W)) :
@@ -124,8 +123,7 @@ theorem RRsub_of (hI : IdemLift) (hQ : QcIdem) : RRsub := by
     have hmem : w.toNormalization q ∈ V := (hpe q).2 hnq
     have : w.toNormalization q ∈ o ∩ (w.toNormalization.base '' {p : Spec (CommRingCat.of W) | p.asIdeal ≤ q.asIdeal}) :=
       ⟨hVo hmem, q, show q.asIdeal ≤ q.asIdeal from le_refl _, rfl⟩
-    rw [hoT] at this
-    exact this
+    rwa [hoT] at this
   have hf : IsIdempotentElem (1 - e) := he.one_sub
   have hfq : (1 - e) ∉ q.asIdeal := fun h => q.2.ne_top ((Ideal.eq_top_iff_one _).2 (by simpa using q.asIdeal.add_mem heq h))
   obtain ⟨s, hs⟩ := hI W w hW (1 - e) hf

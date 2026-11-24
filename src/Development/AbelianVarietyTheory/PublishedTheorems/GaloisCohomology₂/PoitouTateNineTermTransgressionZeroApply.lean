@@ -315,8 +315,7 @@ theorem exists_lift_cycMod (hS : ContainsAbove S l) :
         (algebraMap ℚ_[l] (PadicAlgCl l)).injective.comp fun a b h => PadicInt.ext h
       have h2 : cycZ F Ω l σ = 1 := by
         refine Units.ext (hinj ?_)
-        rw [Units.val_one, map_one]
-        exact h3
+        rwa [Units.val_one, map_one]
       rw [SetLike.mem_coe, MonoidHom.mem_ker, cycMod, MonoidHom.comp_apply, h2, map_one]
     · rw [MonoidHom.coe_ker]
       exact isClosed_singleton.preimage continuous_cycMod
@@ -375,8 +374,7 @@ theorem PoitouTateTotallyComplex.annihilators (h : PoitouTateTotallyComplex)
   have : NeZero (l ^ r) := ⟨pow_ne_zero r (Fact.out : l.Prime).ne_zero⟩
   obtain ⟨inv, hinv, hall⟩ := h F Ω l r hr ζ hζ
   refine ⟨inv, hinv, fun S hS Av hAv μ hμ => ⟨fun x => ?_, fun M _ _ _ _ _ ρ hρ => ?_⟩⟩
-  · have hρμ := contAction_charRep hμ
-    exact (hall S hS Av hAv μ hμ (ZMod (l ^ r)) (charRep μ) hρμ).1.sum_eq_zero x
+  · exact (hall S hS Av hAv μ hμ (ZMod (l ^ r)) (charRep μ) (contAction_charRep hμ)).1.sum_eq_zero x
   · obtain ⟨hN, hSha⟩ := hall S hS Av hAv μ hμ M ρ hρ
     exact ⟨fun x => hN.mem_range_localization_H1_iff x, fun x => hN.mem_range_localization_H2_iff x,
       hSha.1.1, hSha.1.2.1, hSha.1.2.2.2⟩

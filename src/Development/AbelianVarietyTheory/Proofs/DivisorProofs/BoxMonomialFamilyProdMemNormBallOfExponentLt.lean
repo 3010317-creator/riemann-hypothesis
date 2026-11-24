@@ -64,8 +64,7 @@ theorem mul_mem_Bl (P : Pair p) {a b a' b' : ℤ} {R R' : ℝ} (hR : 0 ≤ R) {f
 
 theorem one_mem_Bl (P : Pair p) : (1 : X.functionField) ∈ P.Bl 0 0 1 := by
   refine ⟨fun x i j _ _ => ?_, fun σ y => ?_⟩
-  · simp only [Pair.loc, zpow_zero, mul_one]
-    exact ⟨1, map_one _⟩
+  · simpa only [Pair.loc, zpow_zero, mul_one] using ⟨1, map_one _⟩
   · have e := IntExample.ratVal_nat y 1
     simp only [Nat.cast_one] at e
     simp [Pair.nu, Pair.loc, e]
@@ -90,7 +89,7 @@ theorem prod_mem_of_le (P : Pair p) (D : ℕ) (J : Type) (e : J → X.functionFi
       refine Finset.prod_congr rfl fun i _ => ?_
       rcases Nat.eq_zero_or_pos (n i) with h0 | h0
       · simp [h0]
-      · rw [if_pos h0, ← pow_succ', Nat.sub_add_cancel (by omega : 1 ≤ n i)]
+      · rw [ite_eq_left h0, ← pow_succ', Nat.sub_add_cancel (by omega : 1 ≤ n i)]
     have key : (∏ l, e (u l)) * ∏ i, x i ^ n i =
         boxFam e x (u 0, Finset.univ.filter (fun i => 0 < n i)) *
           ((∏ l : Fin m, e (u l.succ)) * ∏ i, x i ^ (n i - 1)) := by
@@ -102,8 +101,7 @@ theorem prod_mem_of_le (P : Pair p) (D : ℕ) (J : Type) (e : J → X.functionFi
       (ih (fun l => u l.succ) (fun i => n i - 1) (fun i => by have := hn i; omega))
     have ea : ((m + 1 : ℕ) : ℤ) * a = a + m * a := by push_cast; ring
     have eb : ((m + 1 : ℕ) : ℤ) * b = b + m * b := by push_cast; ring
-    rw [ea, eb, pow_succ']
-    exact hm
+    rwa [ea, eb, pow_succ']
 
 theorem prod_mem_Bl : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k), ∀ (P : Pair p) (D : ℕ) (J : Type) (e : J → X.functionField) (x : Fin D → X.functionField) (a b : ℤ) (R : ℝ), 0 ≤ R → (∀ c, boxFam e x c ∈ P.Bl a b R) → ∀ (m : ℕ) (u : Fin m → J) (n : Fin D → ℕ), (∀ i, n i < m) → (∏ l, e (u l)) * ∏ i, x i ^ n i ∈ P.Bl (m * a) (m * b) (R ^ m) := by
   intro k _ X _ p P D J e x a b R hR h m u n hn

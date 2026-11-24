@@ -77,10 +77,10 @@ theorem det_compl {n : Type} [Fintype n] [DecidableEq n] (M Y : Matrix n n ℝ) 
   have hMZ : ∀ i k, (M * Z) i k = if p k then M i k else (1 : Matrix n n ℝ) i k := by
     intro i k
     by_cases hk : p k
-    · simp only [hk, if_true]
+    · simp only [hk, ite_true]
       rw [Matrix.mul_apply]
       simp [Z, hk, Matrix.one_apply]
-    · simp only [hk, if_false]
+    · simp only [hk, ite_false]
       rw [← h, Matrix.mul_apply, Matrix.mul_apply]
       simp [Z, hk]
   have hZ : Z.det = (toSquareBlockProp Y (fun k => ¬ p k)).det := by
@@ -202,8 +202,7 @@ theorem discr_le {ι : Type} [Fintype ι] [DecidableEq ι] (a b : ι → E)
     simp [Matrix.mulVec, dotProduct, Pq, P, zsmul_eq_mul, map_intCast]
   have hd := Algebra.discr_of_matrix_mulVec a Pq
   rw [hb'] at hd
-  have hPq : Pq.det = (P.det : ℚ) := by
-    exact (RingHom.map_det (Int.castRingHom ℚ) P).symm
+  have hPq : Pq.det = (P.det : ℚ) := (RingHom.map_det (Int.castRingHom ℚ) P).symm
   rw [hPq] at hd
   have hP0 : P.det ≠ 0 := by
     intro h0
@@ -612,8 +611,7 @@ theorem det_im_eq_covol : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
       rw [Data.tt, one_div, inv_inv]
       refine mul_pos ?_ ((U.X k).maj_pos x.2 τ ?_)
       · exact mul_pos two_pos (norm_pos_iff.2 ((map_ne_zero τ.1).2 (U.X k).ξ0_ne))
-      · intro h0
-        exact hξ.2.2 (funext fun i => (map_eq_zero τ.1).1 (congrFun h0 i))
+      · exact fun h0 => hξ.2.2 (funext fun i => (map_eq_zero τ.1).1 (congrFun h0 i))
   · refine ⟨_, Real.sqrt_pos.2 (abs_pos.2 (by exact_mod_cast discr_ne_zero E)), le_rfl, ?_⟩
     rintro w x L γ hw hL hγ ⟨t, ht, htξ⟩
     obtain ⟨hc, b, hb, -⟩ := key E H Dw l Xo c σ r U Uw O β Y a χ W Ha th Θ k ξ' hG hU hξ.2.2 h1 w x L γ hL hγ

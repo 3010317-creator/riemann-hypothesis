@@ -167,8 +167,7 @@ theorem span_rational_le_span_and_different_smul_le :
       funext i
       change algebraMap K' L ((d : K') * x i) = ((algebraMap (𝓞 K') (𝓞 L) d : 𝓞 L) : L) * φ x i
       rw [map_mul]; rfl
-    rw [this] at h
-    exact h
+    rwa [this] at h
 
 end GlobalTheory
 end -- clump:auto
@@ -719,7 +718,7 @@ include hpq hl in
 theorem val_ruleDown {a : (E →+* ℂ) × ℕ → ℕ} {n : ℕ} {g : Rul d.Xo₂ d.c₂} (hg : g ∈ sec d.Xo₂ d.c₂ a n)
     (hF : GlobalTheory.LevPull.FibConst d g) (p : TRing c.F) (y : FrPt Xo c p.R) : Val d g p y (ruleDown d g p y) := by
   have h := val_exists d hpq hl hg hF p y
-  have e : ruleDown d g p y = h.choose := dif_pos h
+  have e : ruleDown d g p y = h.choose := dite_eq_left h
   rw [e]
   exact h.choose_spec
 
@@ -948,8 +947,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheo
   {l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H} {Xo : Moduli Dw l} {c : Coeff l}
 
 theorem pull_zero (d : DeltaDat Xo c 0) : Pull d 0 0 := by
-  intro k _ _ _ _ _ y₂ y _
-  exact (evalAt_zero _ _ y₂).trans (evalAt_zero _ _ y).symm
+  exact fun k _ _ _ _ _ y₂ y _ => (evalAt_zero _ _ y₂).trans (evalAt_zero _ _ y).symm
 
 theorem pull_add {d : DeltaDat Xo c 0} {f f' : Rul Xo c} {g g' : Rul d.Xo₂ d.c₂} (h : Pull d f g)
     (h' : Pull d f' g') : Pull d (f + f') (g + g') := by
@@ -1215,8 +1213,7 @@ theorem levRing_descent : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.ChartRes
           exact ⟨d.eF t • g1, Submodule.smul_mem _ _ hg1, pull_smul t p1⟩
       obtain ⟨g', hg', hp'⟩ := key f' hc'
       have e : g = g' := Subtype.ext ((hU f' hf').unique ⟨hsec₂ g, hp⟩ ⟨hsec₂ g', hp'⟩)
-      rw [e]
-      exact hg'
+      rwa [e]
 
 end GlobalTheory.LevRingDesc
 end LevRingDescInsts

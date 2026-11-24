@@ -143,7 +143,7 @@ theorem GlobalTheory.coeff_eq_zero_of_evA_eq_zero_of_le_finrank :
           rw [← map_smul, smul_eq_mul, mul_one]
         rw [this, map_smul]
         exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨a, rfl⟩)
-      · push_neg at hb
+      · push Not at hb
         obtain ⟨i, hi⟩ := hb
         rw [hmono β i hi c]
         exact Submodule.zero_mem _
@@ -178,7 +178,7 @@ theorem GlobalTheory.coeff_eq_zero_of_evA_eq_zero_of_le_finrank :
     intro i
     rw [X_pow_dvd_iff]
     intro m hm
-    rw [hic, if_neg]
+    rw [hic, ite_eq_right]
     omega
   have hsum : h = ∑ i, hi i := by
     ext β
@@ -192,20 +192,20 @@ theorem GlobalTheory.coeff_eq_zero_of_evA_eq_zero_of_le_finrank :
       symm
       apply Finset.sum_eq_zero
       intro i _
-      rw [if_neg]
+      rw [ite_eq_right]
       have := hb i
       omega
-    · push_neg at hb
+    · push Not at hb
       obtain ⟨i0, hi0mem, hmin⟩ := (Finset.univ.filter (fun i => q ≤ β i)).exists_min_image id
         (by obtain ⟨i, hi⟩ := hb; exact ⟨i, by simp [hi]⟩)
       simp only [Finset.mem_filter, Finset.mem_univ, true_and, id] at hi0mem hmin
       rw [Finset.sum_eq_single i0]
-      · rw [if_pos]
+      · rw [ite_eq_left]
         refine ⟨hi0mem, fun j hj => ?_⟩
         by_contra hc
         exact absurd (hmin j (by omega)) (not_le.2 hj)
       · intro j _ hj
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro ⟨hjq, hjlt⟩
         rcases lt_or_gt_of_ne hj with hlt | hlt
         · exact absurd (hmin j hjq) (not_le.2 hlt)
@@ -256,8 +256,7 @@ theorem aeval_surjective_of_dUnit_span {K A : Type} [Field K] [CommRing A] [Bial
     rw [RingHom.mem_ker]; exact hx i
   have hnil : IsNilpotent (RingHom.ker (counitAlgHom K A)) := by
     rw [Ideal.FG.isNilpotent_iff_le_nilradical (IsNoetherian.noetherian _)]
-    intro a ha
-    exact mem_nilradical.2 (hconn a ha)
+    exact fun a ha => mem_nilradical.2 (hconn a ha)
   refine GlobalTheory.HeightOneHopf.aeval_surjective_of_span_cotangent (counitAlgHom K A) hnil x hxm ?_
   intro y hy
   obtain ⟨l, hl⟩ := hspan (dUnit (R := K) y)
@@ -534,8 +533,7 @@ theorem finrank_quot_frobKerIdeal_le : ∀ (q : ℕ) (K H : Type) [Field K] [Com
     exact Ideal.Quotient.eq_zero_iff_mem.2 (pow_mem_frobKerIdeal ha)
   have hnil : IsNilpotent (RingHom.ker εQ) := by
     rw [Ideal.FG.isNilpotent_iff_le_nilradical (IsNoetherian.noetherian _)]
-    intro f hf
-    exact ⟨q, hpowQ f hf⟩
+    exact fun f hf => ⟨q, hpowQ f hf⟩
 
   haveI : Module.Finite K (AugCot ε) := Module.Finite.of_surjective _ (AugCot.d_surjective ε)
   set d := Module.finrank K (AugCot ε) with hd
@@ -562,8 +560,7 @@ theorem finrank_quot_frobKerIdeal_le : ∀ (q : ℕ) (K H : Type) [Field K] [Com
   have hmapI : Ideal.map mk (RingHom.ker ε) ≤ RingHom.ker εQ := by
     rw [Ideal.map_le_iff_le_comap]
     intro a ha
-    rw [Ideal.mem_comap, RingHom.mem_ker]
-    exact ha
+    rwa [Ideal.mem_comap, RingHom.mem_ker]
   have hspan : ∀ z ∈ RingHom.ker εQ, ∃ l : Fin d → K, z - ∑ i, l i • y i ∈ RingHom.ker εQ ^ 2 := by
     intro z hz
     obtain ⟨a, ha, rfl⟩ := hkerQ z hz
@@ -589,7 +586,7 @@ theorem finrank_quot_frobKerIdeal_le : ∀ (q : ℕ) (K H : Type) [Field K] [Com
         refine Submodule.smul_mem _ _ ?_
         by_cases h : ∀ i, u i < q
         · exact Submodule.subset_span ⟨fun i => ⟨u i, h i⟩, rfl⟩
-        · push_neg at h
+        · push Not at h
           obtain ⟨i, hi⟩ := h
           have h0 : y i ^ u i = 0 := pow_eq_zero_of_le hi (hyq i)
           rw [Finset.prod_eq_zero (i := i) (Finset.mem_univ i) h0]
@@ -696,8 +693,7 @@ theorem GlobalTheory.finrank_span_pow_le : ∀ (p : ℕ) [Fact p.Prime] (K : Typ
     rfl
   have h1 : Module.finrank K S ≤ Module.finrank K (D ⧸ J) := by
     have := LinearMap.finrank_range_le φ
-    rw [LinearMap.range_eq_top.2 hφ, finrank_top, Subspace.dual_finrank_eq] at this
-    exact this
+    rwa [LinearMap.range_eq_top.2 hφ, finrank_top, Subspace.dual_finrank_eq] at this
   have h2 := _root_.GlobalTheory.FrobKerDim.finrank_quot_frobKerIdeal_le (p ^ r) K D (pow_pos (Fact.out : p.Prime).pos r)
   have hfin := (_root_.GlobalTheory.PDivGroup.finrank_rigExt_omega p K h G.dual).1
   have h3 : Module.finrank K (Cot K D) ≤ Module.finrank K G.dual.omega := by
@@ -756,8 +752,7 @@ theorem evA_comp_coe {K A : Type} [Field K] [CommRing A] [Algebra K A] {d : ℕ}
   apply MvPolynomial.algHom_ext
   intro i
   rw [AlgHom.comp_apply, MvPolynomial.coeToMvPowerSeries.algHom_apply, MvPolynomial.aeval_X]
-  simp only [MvPolynomial.coe_X, map_X]
-  exact _root_.GlobalTheory.Katz.evA_X K (Fin d) A x hx i
+  simpa only [MvPolynomial.coe_X, map_X] using _root_.GlobalTheory.Katz.evA_X K (Fin d) A x hx i
 
 theorem exists_chart_of_isConn (p : ℕ) [Fact p.Prime] (K : Type) [Field K] (h : (p : K) = 0)
     (G : PDivGroup p K) (hG : G.IsConn) : ∃ d, Nonempty (Chart G d) := by

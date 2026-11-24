@@ -55,8 +55,7 @@ private theorem measurable_tsum_complex {ι X : Type} [Countable ι] [Measurable
       ext x
       simp only [Set.mem_setOf_eq, Set.mem_preimage, Set.mem_Iio, lt_top_iff_ne_top]
       rw [ENNReal.tsum_coe_ne_top_iff_summable, ← NNReal.summable_coe]
-      simp only [coe_nnnorm]
-      exact summable_norm_iff.symm
+      simpa only [coe_nnnorm] using summable_norm_iff.symm
     rw [this]
     exact hm measurableSet_Iio
   refine measurable_of_tendsto_metrizable' (atTop : Filter (Finset ι))
@@ -87,10 +86,8 @@ theorem UpperTheory.ConvolutionTheory.R2.Ff.thMeas :
   refine ⟨?_, ?_, ?_, ?_, hhat⟩
   · exact measurable_tsum_complex _ fun ξ => hpt _
   · intro γ g
-    simp only [map_mul, Module.End.mul_apply]
-    exact W.th_Om γ _
-  · intro r₀ r₁
-    exact measurable_tsum_complex _ fun ξ => hhat _
+    simpa only [map_mul, Module.End.mul_apply] using W.th_Om γ _
+  · exact fun r₀ r₁ => measurable_tsum_complex _ fun ξ => hhat _
   · intro γ g
     have h := (hatSt F E D W).row γ 0 (W.Om g φ)
     simp only [map_mul, Module.End.mul_apply]

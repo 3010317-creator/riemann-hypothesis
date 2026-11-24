@@ -92,8 +92,7 @@ theorem exists_fg_tmul_eq_zero {A : Type} [CommRing A] (B : Type) [CommRing B] [
     DirectedSystem.rTensor A B (f := fun ⦃i j⦄ h => Module.fgSystem A Q i j h) inferInstance
   obtain ⟨j, hij, hj⟩ := Module.DirectLimit.of.zero_exact h2
   refine ⟨(j : Submodule A Q), (show (N0 : Submodule A Q) ≤ j from hij) hz0, j.2, ?_⟩
-  rw [LinearMap.rTensor_tmul] at hj
-  exact hj
+  rwa [LinearMap.rTensor_tmul] at hj
 
 theorem exists_system {A : Type} [CommRing A] (B : Type) [CommRing B] [Algebra A B]
     {Q : Type} [AddCommGroup Q] [Module A Q] (z : Q) (h : (1 : B) ⊗ₜ[A] z = 0) :
@@ -128,8 +127,7 @@ theorem exists_system {A : Type} [CommRing A] (B : Type) [CommRing B] [Algebra A
 
     simp only [map_sum, TensorProduct.piScalarRight_apply, TensorProduct.piScalarRightHom_tmul,
     Finset.sum_apply] at hvec
-    rw [Algebra.algebraMap_eq_smul_one]
-    exact hvec
+    rwa [Algebra.algebraMap_eq_smul_one]
   · intro B₁ _ _ hy
     obtain ⟨y, hy⟩ := hy
     have h2 : ∑ t, y t ⊗ₜ[A] (kk t : Fin n → A) = (1 : B₁) ⊗ₜ[A] w := by
@@ -178,8 +176,7 @@ theorem cov_of_solv : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A](B : T
   have hB := (one_tmul_mem_range_iff B d z).mp hz
   obtain ⟨m, n, a, c, hs, hall⟩ := GlobalTheory.CompanionTheory.EqCrit.exists_system B ((LinearMap.range d).mkQ z) hB
   obtain ⟨B₁, i₁, i₂, hc, hs₁⟩ := h m n a c hs
-  have h0 := hall B₁ hs₁
-  exact hc K₁ K₀ h₁ h₀ d hd z ((one_tmul_mem_range_iff B₁ d z).mpr h0) k
+  exact hc K₁ K₀ h₁ h₀ d hd z ((one_tmul_mem_range_iff B₁ d z).mpr (hall B₁ hs₁)) k
 
 end GlobalTheory.CompanionTheory.CovCmp
 end -- clump:auto

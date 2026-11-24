@@ -102,8 +102,7 @@ private theorem valuation_algebraMap_isUnit_eq_one (u : K.O) (hu : IsUnit u) :
   have h3 : v (algebraMap K.O K.E w) * v (algebraMap K.O K.E ((w⁻¹ : K.Oˣ) : K.O)) = 1 := by
     rw [← map_mul, ← map_mul, Units.mul_inv, map_one, map_one]
   exact le_antisymm h1 (by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have := mul_lt_one_of_lt_of_le h h2
     rw [h3] at this
     exact lt_irrefl _ this)
@@ -173,8 +172,7 @@ private theorem exists_mul_apply_eq_of_fixed_involution {F : Type} [Field F] [Fi
   let τ : F ≃ₐ[ZMod (ringChar F)] F := AlgEquiv.ofRingEquiv (f := σ) hcomm
   have hτ : τ ≠ 1 := by
     obtain ⟨x, hx⟩ := hne
-    intro h
-    exact hx (by simpa [τ] using congrArg (fun g : F ≃ₐ[ZMod (ringChar F)] F => g x) h)
+    exact fun h => hx (by simpa [τ] using congrArg (fun g : F ≃ₐ[ZMod (ringChar F)] F => g x) h)
   have hτ2 : τ ^ 2 = 1 := by
     ext x
     simp [τ, pow_two, hσ]
@@ -195,8 +193,7 @@ private theorem exists_mul_apply_eq_of_fixed_involution {F : Type} [Field F] [Fi
     simpa [τ] using this)
   have hτ0 : (1 : F ≃ₐ[k0] F) ≠ τ0 := by
     obtain ⟨x, hx⟩ := hne
-    intro h
-    exact hx (by simpa [τ0] using (congrArg (fun g : F ≃ₐ[k0] F => g x) h).symm)
+    exact fun h => hx (by simpa [τ0] using (congrArg (fun g : F ≃ₐ[k0] F => g x) h).symm)
   have huniv : (Finset.univ : Finset (F ≃ₐ[k0] F)) = {1, τ0} := by
     symm
     apply Finset.eq_of_subset_of_card_le (Finset.subset_univ _)
@@ -212,8 +209,7 @@ open IsLocalRing Polynomial in
 variable (K : _root_.GlobalTheory.UnitLemma.UQ) in
 private theorem exists_add_mul_cO_notMem_maximalIdeal (e : K.O) :
     ∃ t : K.O, t + e * _root_.GlobalTheory.UnitLemma.UnramNorm.cO K t ∉ maximalIdeal K.O := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   obtain ⟨x, y, hxy, hm⟩ := K.c_res
   have hy : _root_.GlobalTheory.UnitLemma.UnramNorm.cO K x = y := _root_.GlobalTheory.UnitLemma.UnramNorm.alg_inj K
     (by rw [_root_.GlobalTheory.UnitLemma.UnramNorm.cO_spec, hxy])
@@ -279,8 +275,7 @@ theorem _root_.GlobalTheory.UnitLemma.UnramNorm.unram_quadratic_facts :
     have ha1 := (isUnit_iff_notMem_maximalIdeal K).mpr ht
     have htu : IsUnit t := by
       rw [isUnit_iff_notMem_maximalIdeal K]
-      intro h
-      exact ht (Ideal.add_mem _ h (hσm t h))
+      exact fun h => ht (Ideal.add_mem _ h (hσm t h))
     obtain ⟨w0, hw0⟩ : ∃ w, z0 * w = 1 := ⟨↑hz0.unit⁻¹, hz0.mul_val_inv⟩
     set e0 := σ t * σ w0 with he0
     have hz0e0 : z0 * σ e0 = t := by

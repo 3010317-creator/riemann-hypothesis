@@ -193,8 +193,7 @@ theorem UpperTheory.Gal.crystallineComparison.ordDecomp_of :
       ∑ D ∈ (Finset.univ.filter fun D : Submodule k H => Module.finrank k D = (j : ℕ)).filter
         (fun D => ¬ C ≤ D), ({A' (D.map C.mkQ)} : Multiset P) := by
     intro j
-    rw [← Finset.sum_ite]
-    rw [val_map_sum, ← Equiv.sum_comp (e j).symm]
+    rw [← Finset.sum_ite, val_map_sum, ← Equiv.sum_comp (e j).symm]
     rw [Finset.sum_subtype (F := hG j)
       (Finset.univ.filter fun D : Submodule k H => Module.finrank k D = (j : ℕ))
       (p := fun D : Submodule k H => Module.finrank k D = (j : ℕ)) (by simp)]
@@ -299,13 +298,13 @@ private theorem telescope_core {P : Type} (q n : ℕ) (F : P → P) (T A : ℕ �
     simp only [Finset.sum_range_succ _ (m + 1), key, hc, pow_add, smul_add, mul_smul]
     rcases Nat.even_or_odd m with he | ho
     · have hne : ¬ Even (m + 1) := Nat.not_even_iff_odd.mpr he.add_one
-      simp only [hne, if_false, zero_smul, add_zero]
+      simp only [hne, ite_false, zero_smul, add_zero]
       refine ⟨fun h => h.elim, fun _ => ?_⟩
       rw [ihE he]
       abel
     · have hne : ¬ Even m := Nat.not_even_iff_odd.mpr ho
       have hev : Even (m + 1) := ho.add_one
-      simp only [hev, zero_smul, add_zero, if_true]
+      simp only [hev, zero_smul, add_zero, ite_true]
       refine ⟨fun _ => ?_, fun h => absurd trivial h⟩
       rw [ihO hne]
       abel
@@ -315,12 +314,11 @@ theorem UpperTheory.Gal.crystallineComparison.telescope_of :
   intro q n P F T A hAn h0 hs
   let T' : ℕ → Multiset P := fun j => if h : j < n + 1 then T ⟨j, h⟩ else 0
   have hT : ∀ j : Fin (n + 1), T j = T' j := fun j => by
-    simp only [T', dif_pos j.isLt, Fin.eta]
+    simp only [T', dite_eq_left j.isLt, Fin.eta]
   have h0' : T' 0 = A 0 := by simpa [T'] using h0
   have hs' : ∀ j, j < n → T' (j + 1) = (A j).map F + q ^ (j + 1) • A (j + 1) := by
     intro j hj
-    have hh := hs ⟨j, hj⟩
-    simpa [T', hj, Fin.succ] using hh
+    simpa [T', hj, Fin.succ] using hs ⟨j, hj⟩
   have hE : ∑ j : Fin (n + 1), wEv q j • (T j).map F^[n - j] =
       ∑ j ∈ Finset.range (n + 1), (if Even j then q ^ (j.choose 2) else 0) • (T' j).map F^[n - j] := by
     rw [← Fin.sum_univ_eq_sum_range (fun j => (if Even j then q ^ (j.choose 2) else 0) • (T' j).map F^[n - j])]

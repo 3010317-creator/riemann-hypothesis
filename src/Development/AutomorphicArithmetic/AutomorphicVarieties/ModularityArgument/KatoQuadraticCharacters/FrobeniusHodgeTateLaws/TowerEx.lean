@@ -168,7 +168,7 @@ theorem expansion_j : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ), ∃ h : Ha
     by_cases h2 : ∃ n : ℕ, (n : ℚ) = r
     · obtain ⟨n, rfl⟩ := h2
       exact ⟨n, by simp⟩
-    · push_neg at h2
+    · push Not at h2
       exfalso
       apply hr
       rw [HahnSeries.coeff_add, HahnSeries.coeff_single_of_ne h1, h0 r h2, add_zero]
@@ -220,7 +220,7 @@ theorem expansion_j : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ), ∃ h : Ha
     · obtain ⟨n, rfl⟩ := h2
       refine ⟨c n, ?_⟩
       rw [HahnSeries.coeff_add, HahnSeries.coeff_single_of_ne h1, hP, zero_add]
-    · push_neg at h2
+    · push Not at h2
       exact ⟨0, by rw [HahnSeries.coeff_add, HahnSeries.coeff_single_of_ne h1, h0 r h2]; simp⟩
 
 end GlobalTheory.FNExpJ
@@ -439,7 +439,7 @@ theorem laurent_iff : ∀ (E : Subring ℂ) (M : ℕ) (φ : ℍ → ℂ), 0 < M 
       · exact hbE _
       · exact E.zero_mem
     · simp only [c]
-      rw [if_neg (not_le.mpr hn)]
+      rw [ite_eq_right (not_le.mpr hn)]
     · rw [← hginj.hasSum_iff]
       · have h1 := (hb τ).mul_left (Complex.exp (2 * Real.pi * Complex.I * τ) ^ w)⁻¹
         have hφ : (Complex.exp (2 * Real.pi * Complex.I * τ) ^ w)⁻¹ *
@@ -453,19 +453,18 @@ theorem laurent_iff : ∀ (E : Subring ℂ) (M : ℕ) (φ : ℍ → ℂ), 0 < M 
             (fun n : ℤ => c n * Complex.exp (2 * Real.pi * Complex.I * (n : ℂ) * τ / M)) ∘ g := by
           funext k
           simp only [Function.comp, g, c]
-          rw [if_pos (by omega)]
+          rw [ite_eq_left (by omega)]
           have hk : ((k : ℤ) - ((w * M : ℕ) : ℤ) + ((w * M : ℕ) : ℤ)).toNat = k := by omega
           rw [hk]
           have := laurent_exp_shift M hM w k τ
           rw [← Int.cast_natCast k, ← this]
           field_simp [pow_ne_zero w (Complex.exp_ne_zero (2 * Real.pi * Complex.I * (τ : ℂ)))]
-        rw [key] at h1
-        exact h1
+        rwa [key] at h1
       · intro n hn
         have : ¬ (-((w * M : ℕ) : ℤ) ≤ n) := fun h => hn ⟨(n + ((w * M : ℕ) : ℤ)).toNat, by
           simp only [g]; omega⟩
         simp only [c]
-        rw [if_neg this, zero_mul]
+        rw [ite_eq_right this, zero_mul]
   · rintro ⟨c, n₀, hcE, hc0, hs⟩
     refine ⟨(-n₀).toNat, ?_⟩
     set w := (-n₀).toNat with hw
@@ -486,8 +485,7 @@ theorem laurent_iff : ∀ (E : Subring ℂ) (M : ℕ) (φ : ℍ → ℂ), 0 < M 
           rw [mul_left_comm, laurent_exp_shift M hM w k τ]
           push_cast
           rfl
-        rw [key] at h1
-        exact h1
+        rwa [key] at h1
       · intro n hn
         have : n < n₀ := by
           by_contra hh
@@ -501,8 +499,7 @@ theorem laurent_iff : ∀ (E : Subring ℂ) (M : ℕ) (φ : ℍ → ℂ), 0 < M 
       funext τ
       rw [div_pow]
       field_simp [pow_ne_zero w (Complex.exp_ne_zero (2 * Real.pi * Complex.I * (τ : ℂ)))]
-    rw [key] at h2
-    exact h2
+    rwa [key] at h2
 
 end GlobalTheory.FN
 end -- clump:auto
@@ -533,7 +530,7 @@ theorem uniform_pole_order : ∀ (E : Subring ℂ) (M : ℕ) (f : ℍ → ℂ), 
   let W : ℕ := Finset.univ.sup fun g => w (lift g)
   refine ⟨W, hinv, fun γ => ?_⟩
   have hex : ∃ γ', red γ' = red γ := ⟨γ, rfl⟩
-  have hl : lift (red γ) = hex.choose := dif_pos hex
+  have hl : lift (red γ) = hex.choose := dite_eq_left hex
   set γ' := lift (red γ) with hγ'
   have hred : red γ' = red γ := by rw [hl]; exact hex.choose_spec
   have hmem : γ * γ'⁻¹ ∈ CongruenceSubgroup.Gamma M := by
@@ -586,8 +583,7 @@ theorem exists_of_qexp : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosu
     · intro τ
       have := hs τ (hHs τ)
       simp only [hf]
-      rw [← hmob γ τ]
-      exact this
+      rwa [← hmob γ τ]
   obtain ⟨w, hLv⟩ := _root_.GlobalTheory.FN.uniform_pole_order ε.range M f hM hinvf hw
   have hmem : f ∈ ring ε.range := mem_ring_of_inR ⟨M, w, hM, hLv⟩
   refine ⟨T.io ⟨f, hmem⟩, ?_⟩
@@ -713,10 +709,8 @@ theorem finite_subring_common_denominator :
     · have e : y • x = -((D : Ω) * x) := by
         rw [zsmul_eq_mul, h]; simp [hDdef]
       have := hx'.neg
-      rw [e, neg_neg] at this
-      exact this
-  intro x hx
-  exact (Subring.closure_le.mpr hST) hx
+      rwa [e, neg_neg] at this
+  exact fun x hx => (Subring.closure_le.mpr hST) hx
 
 end GlobalTheory
 end -- clump:auto
@@ -759,8 +753,7 @@ theorem exists_finset_coeff_mem_closure :
   obtain ⟨R, hR0, hRA', hRb, hRd⟩ := Nat.find_spec hex
   have hmin : ∀ R' : Polynomial (PowerSeries L), R' ≠ 0 → (∀ i, R'.coeff i ∈ RA) →
       R'.natDegree < R.natDegree → R'.eval b ≠ 0 := by
-    intro R' h0 hc hlt he
-    exact Nat.find_min hex (by omega) ⟨R', h0, hc, he, rfl⟩
+    exact fun R' h0 hc hlt he => Nat.find_min hex (by omega) ⟨R', h0, hc, he, rfl⟩
   have hdeg : R.natDegree ≠ 0 := by
     intro h
     rw [Polynomial.eq_C_of_natDegree_eq_zero h, Polynomial.eval_C] at hRb
@@ -776,7 +769,7 @@ theorem exists_finset_coeff_mem_closure :
     hmin D hD0 hDc (hD ▸ Polynomial.natDegree_derivative_lt hdeg)
   obtain ⟨F, hF⟩ : ∃ F, F = D.eval b := ⟨_, rfl⟩
   have hex2 : ∃ m, PowerSeries.coeff m F ≠ 0 := by
-    by_contra h; push_neg at h; exact hDb (hF ▸ PowerSeries.ext fun k => by simpa using h k)
+    by_contra h; push Not at h; exact hDb (hF ▸ PowerSeries.ext fun k => by simpa using h k)
   obtain ⟨m, hc, hlow⟩ : ∃ m, PowerSeries.coeff m F ≠ 0 ∧ ∀ i < m, PowerSeries.coeff i F = 0 :=
     ⟨Nat.find hex2, Nat.find_spec hex2, fun i hi => not_not.mp (Nat.find_min hex2 hi)⟩
   obtain ⟨c, hcdef⟩ : ∃ c, c = PowerSeries.coeff m F := ⟨_, rfl⟩
@@ -808,8 +801,8 @@ theorem exists_finset_coeff_mem_closure :
     rw [map_add (f := _), PowerSeries.coeff_X_pow_mul', hu, hv]
     simp only [PowerSeries.coeff_mk]
     by_cases h1 : k < n
-    · rw [if_pos h1, if_neg (by omega), add_zero]
-    · rw [if_neg h1, if_pos (by omega), zero_add, show n + (k - n) = k by omega]
+    · rw [ite_eq_left h1, ite_eq_right (by omega), add_zero]
+    · rw [ite_eq_right h1, ite_eq_left (by omega), zero_add, show n + (k - n) = k by omega]
   have huB : u ∈ RB := by
     rw [hRBdef]
     refine (mem_range_map_iff B u).2 fun k => ?_
@@ -834,7 +827,7 @@ theorem exists_finset_coeff_mem_closure :
     rw [hk]; ring
   have hc2 := congrArg (PowerSeries.coeff (n + m)) key
   rw [map_zero, map_add (f := _), map_add (f := _), PowerSeries.coeff_X_pow_mul', PowerSeries.coeff_X_pow_mul',
-    if_pos (by omega), if_neg (by omega), add_zero, Nat.add_sub_cancel_left] at hc2
+    ite_eq_left (by omega), ite_eq_right (by omega), add_zero, Nat.add_sub_cancel_left] at hc2
   have hFv : PowerSeries.coeff m (F * v) = c * PowerSeries.coeff n b := by
     rw [PowerSeries.coeff_mul, Finset.sum_eq_single (m, 0)]
     · rw [← hcdef, hv, PowerSeries.coeff_mk, add_zero]
@@ -979,7 +972,7 @@ theorem qcoeff_finitelyGenerated : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ
   have hQne : Q ≠ 0 := by
     intro h0
     have hn := hcoef n
-    rw [h0, Polynomial.coeff_zero, if_pos (Finset.self_mem_range_succ n)] at hn
+    rw [h0, Polynomial.coeff_zero, ite_eq_left (Finset.self_mem_range_succ n)] at hn
     have hc0 : c' n = 0 := funext fun k => by
       have h1 := congrArg (PowerSeries.coeff k) hn
       rw [PowerSeries.coeff_mk, map_zero] at h1
@@ -1062,7 +1055,7 @@ theorem coeff_fg : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ) (f : ℍ → �
     by_cases hr : ∃ k : ℕ, r = (k : ℚ) / N
     · obtain ⟨k, rfl⟩ := hr
       rw [hHa k]; exact hS k
-    · push_neg at hr
+    · push Not at hr
       rw [hH0 r hr]; exact A.zero_mem
   have hDA : ∀ r, hD.coeff r ∈ A := by
     intro r
@@ -1176,8 +1169,7 @@ theorem frac_const_and_quot : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlg
         rw [T.an_io, map_zero, map_zero]; exact h0
       exact hb (T.io_inj ((_root_.GlobalTheory.FN.frac_ext_clo_inj Ω ε T).2.2.2 h1))
     · have := congrArg T.an h
-      rw [map_mul, T.an_io, T.an_io] at this
-      exact this
+      rwa [map_mul, T.an_io, T.an_io] at this
 
 end GlobalTheory.FN
 end -- clump:auto
@@ -1306,12 +1298,8 @@ theorem frac_exp_converges : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgC
     (f : T.K), Den (T.exp f) ∧ ∃ (φ : ℂ → ℂ) (C : ℝ), T.an f = (φ : Mero) ∧ HS ε C φ (T.exp f) := by
   intro Ω _ _ _ ε T f
   obtain ⟨a, b, hb0, hfab⟩ := T.io_surj f
-  have hiob : T.io b ≠ 0 := by
-    intro h
-    exact hb0 (T.io_inj (by rw [h, map_zero]))
-  have hexb : T.exp (T.io b) ≠ 0 := by
-    intro h
-    exact hiob (T.exp.toRingHom.injective (by simpa using h))
+  have hiob : T.io b ≠ 0 := fun h => hb0 (T.io_inj (by rw [h, map_zero]))
+  have hexb : T.exp (T.io b) ≠ 0 := fun h => hiob (T.exp.toRingHom.injective (by simpa using h))
   have hexpf : T.exp f = T.exp (T.io a) * (T.exp (T.io b))⁻¹ := by
     rw [← hfab, map_mul, mul_assoc, mul_inv_cancel₀ hexb, mul_one]
   obtain ⟨hops, -, -, -, hinv⟩ := _root_.GlobalTheory.FNExp.exp_props Ω ε
@@ -1334,8 +1322,7 @@ theorem frac_exp_converges : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgC
     have := hid _ _ hbhol (differentiableOn_const 0) h0
     apply Subtype.ext
     funext τ
-    have h1 := this τ (hHs τ)
-    simpa [up, UpperHalfPlane.ofComplex_apply] using h1
+    simpa [up, UpperHalfPlane.ofComplex_apply] using this τ (hHs τ)
   have hev := (hunit _ hbhol hgb0).1
   have hgi : germ ((b : ℍ → ℂ)⁻¹) * germ (b : ℍ → ℂ) = 1 := by
     unfold germ
@@ -1394,12 +1381,9 @@ theorem fraction_field_extension : ∀ (Ω R L M : Type) [Field Ω] [CommRing R]
     have hy' : algebraMap R (FractionRing R) y ≠ 0 :=
       IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hy
     rw [← hxy, div_mul_cancel₀ _ hy']
-  · intro g a
-    exact hs0 g a
-  · intro s a
-    exact IsFractionRing.ringEquivOfRingEquiv_algebraMap (ga s) a
-  · intro a
-    exact IsLocalization.lift_eq hunit a
+  · exact fun g a => hs0 g a
+  · exact fun s a => IsFractionRing.ringEquivOfRingEquiv_algebraMap (ga s) a
+  · exact fun a => IsLocalization.lift_eq hunit a
 
 end GlobalTheory
 end -- clump:auto
@@ -1751,8 +1735,7 @@ theorem gal_sl_io_of_cong :
     obtain ⟨c', hc', hc'io⟩ := hcmp (ofSL 1) a'
     have e1 : c = a := Subtype.ext (by rw [hc, hSL]; funext τ; simp)
     have e2 : c' = a' := Subtype.ext (by rw [hc', hSL]; funext τ; simp [a'])
-    rw [hcio, hc'io, e1, e2] at this
-    exact this
+    rwa [hcio, hc'io, e1, e2] at this
   rw [h1]
   exact key γ γ' ((_root_.GlobalTheory.FNCong.cong_iff_dg N d u hu γ γ').mp hC)
 
@@ -1776,9 +1759,7 @@ namespace GlobalTheory.FN
 theorem reciprocity_large_level : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (T : Frac Ω ε) (f : T.K), ∃ N₀ : ℕ, 0 < N₀ ∧ ∀ N : ℕ, 0 < N → N₀ ∣ N → ∀ (s : Ω ≃ₐ[ℚ] Ω) (d : ℤ), s (eOm ε (1 / N)) = eOm ε (1 / N) ^ d → ∀ γ γ' : SL(2, ℤ), Cong N d γ γ' → T.gal s (T.sl (ofSL γ) f) = T.sl (ofSL γ') (T.gal s f) := by
   intro Ω _ _ _ ε T f
   obtain ⟨a, b, hb, hab⟩ := T.io_surj f
-  have hbK : T.io b ≠ 0 := by
-    intro h
-    exact hb (T.io_inj (by rw [h, map_zero]))
+  have hbK : T.io b ≠ 0 := fun h => hb (T.io_inj (by rw [h, map_zero]))
   have hf : f = T.io a / T.io b := by
     rw [eq_div_iff hbK, hab]
   obtain ⟨Na, wa, hNa, hLa⟩ := ((_root_.GlobalTheory.FN.mem_ring_iff_inR ε.range).1 a).1 a.2
@@ -1824,8 +1805,7 @@ theorem cong_of_dvd {M N : ℕ} (hMN : M ∣ N) {d : ℤ} {γ γ' : SL(2, ℤ)} 
 theorem cong_congr_d {M : ℕ} {d d' : ℤ} (h : (d : ZMod M) = d') {γ γ' : SL(2, ℤ)} (hc : Cong M d γ γ') :
     Cong M d' γ γ' := by
   unfold Cong at hc ⊢
-  rw [← h]
-  exact hc
+  rwa [← h]
 
 theorem en_eq_of_cong {M : ℕ} {d : ℤ} (hd : IsUnit (d : ZMod M)) {γ γ' γ'' : SL(2, ℤ)}
     (h' : Cong M d γ γ') (h'' : Cong M d γ γ'') :
@@ -1836,8 +1816,7 @@ theorem en_eq_of_cong {M : ℕ} {d : ℤ} (hd : IsUnit (d : ZMod M)) {γ γ' γ'
   fin_cases i <;> fin_cases j
   · simp only [Fin.zero_eta, Fin.isValue]; rw [a1, b1]
   · simp only [Fin.zero_eta, Fin.isValue, Fin.mk_one]; rw [a2, b2]
-  · simp only [Fin.zero_eta, Fin.isValue, Fin.mk_one]
-    exact hd.mul_left_cancel (a3.trans b3.symm)
+  · simpa only [Fin.zero_eta, Fin.isValue, Fin.mk_one] using hd.mul_left_cancel (a3.trans b3.symm)
   · simp only [Fin.isValue, Fin.mk_one]; rw [a4, b4]
 
 theorem mem_Gamma_iff_en {M : ℕ} (γ : SL(2, ℤ)) :

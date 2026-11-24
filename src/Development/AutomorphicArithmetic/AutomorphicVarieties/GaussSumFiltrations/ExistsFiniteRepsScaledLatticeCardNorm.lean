@@ -84,8 +84,7 @@ theorem exists_isReps_aL : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) 
   have hcard : Nat.card (𝓞 F ⧸ I) = (Algebra.norm ℤ c).natAbs := by
     rw [← Ideal.absNorm_span_singleton, Ideal.absNorm_apply, Submodule.cardQuot_apply]
   have hne : (Algebra.norm ℤ c).natAbs ≠ 0 := by
-    rw [Int.natAbs_ne_zero, Algebra.norm_ne_zero_iff]
-    exact hc0
+    rwa [Int.natAbs_ne_zero, Algebra.norm_ne_zero_iff]
   haveI : Finite (𝓞 F ⧸ I) := Nat.finite_of_card_ne_zero (hcard ▸ hne)
   letI : Fintype (𝓞 F ⧸ I) := Fintype.ofFinite _
   classical
@@ -94,8 +93,7 @@ theorem exists_isReps_aL : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) 
     intro q
     by_cases h : q = 0
     · simp [s, h]
-    · simp only [s, if_neg h]
-      exact Classical.choose_spec (Ideal.Quotient.mk_surjective q)
+    · simpa only [s, ite_eq_right h] using Classical.choose_spec (Ideal.Quotient.mk_surjective q)
   have hs0 : s 0 = 0 := by simp [s]
   let e : (κ → 𝓞 F ⧸ I) → (κ → F) := fun q i => b * (s (q i) : F)
   have he : Function.Injective e := by

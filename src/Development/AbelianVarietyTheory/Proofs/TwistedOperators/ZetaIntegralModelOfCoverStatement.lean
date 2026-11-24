@@ -190,12 +190,10 @@ theorem transfer {G H : Type} [TopologicalSpace G] [MeasurableSpace G] [Topologi
     Integrable f μ ∧ ∫ h, f h ∂μ = (((c : ℝ)⁻¹ : ℝ) : ℂ) * ∫ g, k g ∂ν := by
   have hcomp : f ∘ π = k := funext hf
   have hfc : Continuous f := by
-    rw [hq.continuous_iff, hcomp]
-    exact hk
+    rwa [hq.continuous_iff, hcomp]
   have hfm : AEStronglyMeasurable f (Measure.map π ν) := hfc.aestronglyMeasurable
   have hint : Integrable f (Measure.map π ν) := by
-    rw [integrable_map_measure hfm hm.aemeasurable, hcomp]
-    exact hi
+    rwa [integrable_map_measure hfm hm.aemeasurable, hcomp]
   have hμ : μ = (c⁻¹ : NNReal) • Measure.map π ν := by
     rw [hmap, smul_smul, _root_.inv_mul_cancel₀ hc, one_smul]
   refine ⟨?_, ?_⟩
@@ -230,7 +228,6 @@ theorem zetaLaw_of_cover : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar)
     have h3 : Continuous fun g : (X.grp p q).G => ((g, 1) : (X.grp p q).G × (X.grp r s).G) := by fun_prop
     exact h1.comp (h2.comp h3)
   have hmc : Continuous fun g => mcoef (X.ds p q lam) (u v) g := by
-    show Continuous fun g => ⟪(X.ds p q lam).ι (u v), (X.ds p q lam).U.π g ((X.ds p q lam).ι (u v))⟫_ℂ
     exact continuous_const.inner ((X.ds p q lam).U.cont _)
   have hsqc : Continuous fun g : (X.grp p q).G => (((X.grp p q).sq g : ℂˣ) : ℂ) ^ m :=
     (GlobalTheory.RealPar.Cover.continuous_sq (T := X.grp p q)).zpow₀ m fun g => Or.inl (X.grp p q |>.sq g).ne_zero

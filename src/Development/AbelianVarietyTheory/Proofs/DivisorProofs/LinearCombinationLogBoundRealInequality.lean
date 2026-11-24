@@ -108,10 +108,10 @@ theorem sum_ceil_off_le {E : Type} [Field E] [NumberField E] {I : Type} [Fintype
     by_cases h : c_vp 𝔣 l = 0
     · left
       unfold n_vp
-      rw [if_pos h]
+      rw [ite_eq_left h]
     · right
       unfold n_vp
-      rw [if_neg h]
+      rw [ite_eq_right h]
       rfl
   have hn0 : ∀ l, 0 ≤ n_vp d s κ 𝔣 l := by
     intro l
@@ -144,19 +144,16 @@ theorem sum_ceil_off_le {E : Type} [Field E] [NumberField E] {I : Type} [Fintype
     · rfl
     · have h0 : n_vp d s κ 𝔣 l = 0 := by
         unfold n_vp
-        rw [if_pos (not_not.mp h)]
+        rw [ite_eq_left (not_not.mp h)]
       simp [h0]
   have hsubS : S.filter (fun l => c_vp 𝔣 l ≠ 0) ⊆ S := Finset.filter_subset _ _
   have hcA : ∑ l ∈ S.filter (fun l => c_vp 𝔣 l ≠ 0), c_vp 𝔣 l * Real.log l ≤ A := by
     calc ∑ l ∈ S.filter (fun l => c_vp 𝔣 l ≠ 0), c_vp 𝔣 l * Real.log l
         ≤ ∑ l ∈ S, c_vp 𝔣 l * Real.log l := by
           apply Finset.sum_le_sum_of_subset_of_nonneg hsubS
-          intro l hl _
-          exact mul_nonneg (hc0 l) (hlog l hl)
+          exact fun l hl _ => mul_nonneg (hc0 l) (hlog l hl)
       _ ≤ ∑ l ∈ S, delta_vp E l * Real.log l := by
-          apply Finset.sum_le_sum
-          intro l hl
-          exact mul_le_mul_of_nonneg_right (hcle l hl) (hlog l hl)
+          exact Finset.sum_le_sum (fun l hl => mul_le_mul_of_nonneg_right (hcle l hl) (hlog l hl))
       _ ≤ Real.log (|(discr E : ℝ)| ^ ((1 : ℝ) / (Module.finrank ℚ E : ℝ))) := by
           have := sum_delta_log_le E S hS
           simpa [delta_vp] using this
@@ -244,8 +241,8 @@ theorem n_vp_log_le (d s : ℕ) (κ : I → ℕ) (𝔣 : Ideal (GlobalTheory.CMV
   have hΛ : 0 ≤ Λ := hl.trans hlΛ
   unfold n_vp
   by_cases h : c_vp 𝔣 l = 0
-  · rw [if_pos h, zero_mul]; positivity
-  · rw [if_neg h]
+  · rw [ite_eq_left h, zero_mul]; positivity
+  · rw [ite_eq_right h]
     unfold Formalism.PairingDivisionLocalBalance.nl
     exact linear_combination_log_bound_real_inequality _ _ _ _ _ _ (by positivity) (by positivity) (by split_ifs <;> norm_num) (by split_ifs <;> norm_num) hl hcΛ hlΛ
 

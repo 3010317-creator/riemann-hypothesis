@@ -143,13 +143,8 @@ theorem GlobalTheory.EvenOnto.parBound_of_rapidDecay : GlobalTheory.Published.Cu
   intro hCRD D c hc j hj s hs u B hB
   obtain ⟨hu0, hpar⟩ := hB
   have hex : ∃ v, PiLocalization₂.val u v ≠ 0 := by
-    by_contra h
-    push_neg at h
-    apply hu0
-    apply Subtype.ext
-    apply LinearMap.ext
-    intro v
-    exact h v
+    by_contra! h
+    exact hu0 (Subtype.ext (LinearMap.ext (fun v => h v)))
   obtain ⟨v, hv⟩ := hex
   set f : GA D s.V → ℂ := fun g => conj (PiLocalization₂.val u v g) with hfdef
   have h3 : GlobalTheory.LFun.IsParamFunV s.V c.S f B := hpar v hv
@@ -436,8 +431,7 @@ theorem GlobalTheory.EvenOnto.chainL_and_inj : ∀ D : D7, ChainL D ∧ ∀ (c :
       apply ih
       rw [chainPar_succ, chainPar_succ] at h
       simp only [GlobalTheory.ChainOnto.stepPar] at h
-      have h2 := add_right_cancel h
-      exact Multiset.map_injective (mul_right_injective _) h2
+      exact Multiset.map_injective (mul_right_injective _) (add_right_cancel h)
 
 end
 end -- clump:auto
@@ -478,8 +472,7 @@ namespace GlobalTheory.EvenOnto
 
 theorem exists_tprod_ne_zero_of_cc {D : D7} {c : Com D} {s : PiLocalization₂ D} (z : s.CC c) (hz : z ≠ 0) :
     ∃ v : s.M.Vec, PiTensorProduct.tprod ℂ v ≠ 0 := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   apply hz
   apply Subtype.ext
   show (z : SmT s.M →ₗ[ℂ] (GA D s.V → ℂ)) = 0
@@ -516,9 +509,7 @@ theorem thetaChain_upward_induction_fixed_metric {D : D7} (hMet : MetEx D) (hSU 
       ∀ ipD ip, IsMet c s ipD ip → ∃ x : s.CC c, (∀ y, ip y x = ip₀ (Θ y) u) ∧ IsPar x (chainPar c B k) := by
   induction hR with
   | zero =>
-    intro _
-    refine ⟨hs₀, fun ipD ip h => ⟨u, fun y => ?_, hu⟩⟩
-    exact ip_unique h h₀ u hu.1 y u
+    exact fun _ => ⟨hs₀, fun ipD ip h => ⟨u, fun y => (ip_unique h h₀ u hu.1 y u), hu⟩⟩
   | @step k s Θ _ s' hs' p hp ih =>
     intro hk
     obtain ⟨hsk, ih⟩ := ih (by omega)
@@ -530,8 +521,7 @@ theorem thetaChain_upward_induction_fixed_metric {D : D7} (hMet : MetEx D) (hSU 
     refine ⟨x', fun y => ?_, ?_⟩
     · rw [hx', hx]
       rfl
-    · rw [chainPar_succ]
-      exact hx'p
+    · rwa [chainPar_succ]
 
 theorem chainUp_of : ∀ D : D7, MetEx D → ParBound D → ChainL D → StepUp D → ChainUp D := by
   intro D hMet hPB hCL hSU c hc s₀ hs₀ k hk s Θ hR
@@ -562,11 +552,9 @@ theorem ontoAll_of : ∀ D : D7, FinDim D → MetEx D → EigSpan D → ParIndep
     refine hInd c hc k hk s hs ι x B hx ?_
     intro i i' hii'
     have := hne i i' hii'
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact this hcon
-  · intro u B hu
-    exact hadj ipD₀ ip₀ ipD ip hm₀ hm u B hu
+  · exact fun u B hu => hadj ipD₀ ip₀ ipD ip hm₀ hm u B hu
 
 end GlobalTheory.EvenOnto
 
@@ -677,8 +665,7 @@ theorem metEx : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, MetEx D :=
     fun x y w w' => (hpair x y w w').2⟩
   · rw [hip, hip, hsym, starRingEnd_apply]
   · rw [hip]
-    refine hI2 _ (hT x) fun h0 => hx ?_
-    exact Submodule.coe_eq_zero.1 ((LinearEquiv.map_eq_zero_iff _).1 h0)
+    exact hI2 _ (hT x) fun h0 => hx (Submodule.coe_eq_zero.1 ((LinearEquiv.map_eq_zero_iff _).1 h0))
 
 theorem finDim_and_metEx : GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, FinDim D ∧ MetEx D :=
   fun h h' D => ⟨finDim h D, metEx h' D⟩
@@ -1023,8 +1010,7 @@ theorem meas_petco : ∀ D : D7, ForStage D fun c _ s => (MeasurableSet (intOff 
     rintro ⟨b, κ, hκ, rfl⟩
     refine Subgroup.mem_comap.2 (Subgroup.mem_subgroupOf.2 ?_)
     have e : GlobalTheory.AutMult.toFin V (κ : GA D V) = ⟨κ, hs.fin hκ⟩ := GlobalTheory.AutMult.toFin_coe (⟨κ, hs.fin hκ⟩ : GfC V)
-    rw [map_mul, GlobalTheory.AutMult.toFin_coe_inf, one_mul, e]
-    exact hκ
+    rwa [map_mul, GlobalTheory.AutMult.toFin_coe_inf, one_mul, e]
   have hLf : IsOpen (Lf : Set (GfC V)) := by
     obtain ⟨U, hU, hUK⟩ := hs.isOpen
     refine Subgroup.isOpen_mono (H₁ := U.subgroupOf (GfC V)) (fun k hk => ?_) (hU.preimage continuous_subtype_val)
@@ -1301,8 +1287,7 @@ theorem liftUp_stage_span : GlobalTheory.Published.DiscreteSeriesCover → Globa
       simp only [thetaKO]
       rw [e1, hω']
       simp [dag, h0]
-    simp only [key]
-    exact hF'e (j P) v h
+    simpa only [key] using hF'e (j P) v h
 
 end GlobalTheory.EvenOnto.LiftUp
 

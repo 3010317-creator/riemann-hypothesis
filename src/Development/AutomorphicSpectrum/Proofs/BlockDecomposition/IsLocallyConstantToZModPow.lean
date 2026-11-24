@@ -129,8 +129,7 @@ theorem isLocallyConstant_toZModPow (p : ℕ) [Fact p.Prime] (M : ℕ) :
     Metric.mem_closedBall_self (zpow_pos hp _).le, fun y hy => ?_⟩
   rw [Metric.mem_closedBall, dist_eq_norm] at hy
   have h1 := (PadicInt.norm_le_pow_iff_mem_span_pow (y - x) M).1 hy
-  rw [← PadicInt.ker_toZModPow, RingHom.mem_ker, map_sub, sub_eq_zero] at h1
-  exact h1
+  rwa [← PadicInt.ker_toZModPow, RingHom.mem_ker, map_sub, sub_eq_zero] at h1
 
 theorem val_toZModPow_dvd (p : ℕ) [Fact p.Prime] (M : ℕ) (z : ℤ_[p]) :
     ((p : ℤ_[p]) ^ M) ∣ z - (((PadicInt.toZModPow (p := p) M z).val : ℕ) : ℤ_[p]) := by

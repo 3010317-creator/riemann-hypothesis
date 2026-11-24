@@ -94,8 +94,7 @@ private theorem cf_root_eq {v : ℕ} [Fact v.Prime] {n : ℕ} (hn : ¬ v ∣ n) 
   have hy0 : y ≠ 0 := by rintro rfl; simp at hy1
   have h1 : x / y = 1 := by
     refine cf_root_one hn (by rw [div_pow, hx, hy, div_one]) ?_
-    rw [div_sub_one hy0, norm_div, hy1, div_one]
-    exact h
+    rwa [div_sub_one hy0, norm_div, hy1, div_one]
   exact (div_eq_one_iff_eq hy0).1 h1
 
 private theorem cf_toZModPow (v l : ℕ) [Fact v.Prime] [Fact l.Prime] (g : GQ v) (m a : ℕ)
@@ -130,8 +129,7 @@ private theorem cf_chi (l : ℕ) [Fact l.Prime] (P : LocPrime l) (g : GQ l) :
     have h5 : PadicInt.toZModPow m ((a : ℤ_[l]) - c) = 0 := by
       rw [map_sub, map_natCast, h4, sub_self]
     have h6 : ‖(a : ℤ_[l]) - c‖ ≤ (l : ℝ) ^ (-(m : ℤ)) := by
-      rw [PadicInt.norm_le_pow_iff_mem_span_pow, ← PadicInt.ker_toZModPow]
-      exact h5
+      rwa [PadicInt.norm_le_pow_iff_mem_span_pow, ← PadicInt.ker_toZModPow]
     have h7 : ‖(a : ℚ_[l]) - (c : ℚ_[l])‖ ≤ (l : ℝ) ^ (-(m : ℤ)) := by
       have : (((a : ℤ_[l]) - c : ℤ_[l]) : ℚ_[l]) = (a : ℚ_[l]) - (c : ℚ_[l]) := by push_cast; rfl
       rw [← this]; exact h6

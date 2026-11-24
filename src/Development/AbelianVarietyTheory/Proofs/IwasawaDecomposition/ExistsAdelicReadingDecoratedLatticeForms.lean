@@ -102,8 +102,7 @@ theorem tprod_expand {ι κ : T → Type} [∀ τ, Fintype (ι τ)] [∀ τ, Fin
     funext fun τ => ((b' τ).sum_repr' _).symm
 
   rw [h, MultilinearMap.map_sum]
-  refine Finset.sum_congr rfl fun g _ => ?_
-  exact MultilinearMap.map_smul_univ _ _ _
+  exact Finset.sum_congr rfl fun g _ => MultilinearMap.map_smul_univ _ _ _
 
 theorem pSum_indep {ι κ : T → Type} [∀ τ, Fintype (ι τ)] [∀ τ, Fintype (κ τ)]
     (b : ∀ τ, OrthonormalBasis (ι τ) ℂ (E τ)) (b' : ∀ τ, OrthonormalBasis (κ τ) ℂ (E τ))
@@ -131,16 +130,14 @@ theorem pSum_indep {ι κ : T → Type} [∀ τ, Fintype (ι τ)] [∀ τ, Finty
           rw [← (b τ).sum_inner_mul_inner]
           exact Finset.sum_congr rfl fun i _ => mul_comm _ _
       _ = ∏ τ, if g' τ = g τ then (1 : ℂ) else 0 := by
-          refine Finset.prod_congr rfl fun τ _ => ?_
-          exact (b' τ).inner_eq_ite _ _
+          exact Finset.prod_congr rfl fun τ _ => (b' τ).inner_eq_ite _ _
       _ = if g = g' then 1 else 0 := by
           rw [Finset.prod_boole]
           simp only [Finset.mem_univ, true_implies]
           by_cases h : g = g'
           · subst h; simp
-          · rw [if_neg h, if_neg]
-            intro h'
-            exact h (funext fun τ => (h' τ).symm)
+          · rw [ite_eq_right h, ite_eq_right]
+            exact fun h' => h (funext fun τ => (h' τ).symm)
   simp_rw [hχ φ, hχ ψ]
   calc ∑ f, starRingEnd ℂ (∑ g, U f g * φ (t' g)) * ∑ g', U f g' * ψ (t' g')
       = ∑ g, ∑ g', starRingEnd ℂ (φ (t' g)) * ψ (t' g') * ∑ f, starRingEnd ℂ (U f g) * U f g' := by
@@ -155,7 +152,7 @@ theorem pSum_indep {ι κ : T → Type} [∀ τ, Fintype (ι τ)] [∀ τ, Finty
         ring
     _ = ∑ g, starRingEnd ℂ (φ (t' g)) * ψ (t' g) := by
         refine Finset.sum_congr rfl fun g _ => ?_
-        simp only [horth, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        simp only [horth, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 end Alg
 
@@ -285,13 +282,11 @@ theorem exists_smul_prIso (D : D7) (θ : InfFam D) (MX : DSModel D.sp.X' (parB (
     Module.End.mem_eigenspace_iff.1 (hE ▸ Submodule.mem_top)
 
   obtain ⟨w, hw⟩ : ∃ w, prX w ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hpr.1 (LinearMap.ext h)
   obtain ⟨f0, hf0⟩ : ∃ f : (∀ τ, Fin (Module.finrank ℂ (MX.sm τ))),
       prX w (PiTensorProduct.tprod ℂ fun τ => b0 τ (f τ)) ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hw
     refine (Basis.piTensorProduct fun τ => (b0 τ).toBasis).ext fun f => ?_
     rw [Basis.piTensorProduct_apply]
@@ -319,8 +314,7 @@ theorem exists_smul_prIso (D : D7) (θ : InfFam D) (MX : DSModel D.sp.X' (parB (
       rw [hTμ, inner_smul_right, hww]
     rw [e2, hs] at e1
     have hn : ((‖w‖ ^ 2 : ℝ) : ℂ) ≠ 0 := Complex.ofReal_ne_zero.2 hwpos.ne'
-    rw [hr, Complex.ofReal_div, eq_div_iff hn]
-    exact e1
+    rwa [hr, Complex.ofReal_div, eq_div_iff hn]
 
   refine ⟨((Real.sqrt r)⁻¹ : ℝ), Complex.ofReal_ne_zero.2 (inv_ne_zero (Real.sqrt_ne_zero'.2 hr0)), ?_⟩
   have hcc : starRingEnd ℂ (((Real.sqrt r)⁻¹ : ℝ) : ℂ) * (((Real.sqrt r)⁻¹ : ℝ) : ℂ) = ((r⁻¹ : ℝ) : ℂ) := by
@@ -420,8 +414,7 @@ theorem hecke_degrees : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X
   · refine (congrArg _ (Formalism.L2.Col.heckeFam_eq_zero_of_lt _ _ _ ?_)).trans (LinearEquiv.map_zero _)
     have e := X.toD7.sp.V_rank _ (by omega) i.2
     change (X.toD7.sp.V ((i : ℕ) + 1)).rank < k at hk
-    rw [e] at hk
-    exact hk
+    rwa [e] at hk
 
 theorem exists_brgL : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (hX : X.B.fields.Ok) (U : Set I.ι) (Xg : Finset (Gc X.B px → X.B.LL)) (tr : TrI X.B px) (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)) (eG : Gc X.B px ≃* G0 L.Pg X.toD7.R.r), I.Ok → ValsIn I → LevOf X I U L → IsPlacewiseIdentity X (px := px) eG → L.βX = 1 → (∀ i, L.βV i = 1) → Seed.FrmC.StdLat X.toD7.sp.X' → (∀ i, Seed.FrmC.StdLat (Vc X.toD7 i)) → ∀ θ : InfFam X.toD7, IsInfFam θ → ∀ MX : DSModel X.toD7.sp.X' (parB (Ptw X.toD7) X.toD7.R.m), ∃ (cX : CoefA X.toD7.sp.X') (cV : ∀ i, CoefA (Vc X.toD7 i)) (pl : PlS X.B px → Pl X.toD7.host.E) (Sb : Finset (Pl X.toD7.host.E)) (Bd : Seed.BType (famR X I hX U Xg tr) L cX cV pl) (plI : PlI X.B px → Pl X.toD7.host.E) (SF : Finset (HeightOneSpectrum (𝓞 X.toD7.host.F))) (prX : cX.W →ₗ[ℂ] SmT MX →ₗ[ℂ] ℂ), cX.Is ∧ (∀ i, (cV i).Is) ∧ IsDualPair θ MX cX prX ∧ Seed.PrIso MX cX prX ∧ Seed.BrgL (famR X I hX U Xg tr) L eG cX cV pl Sb Bd plI SF ∧ BrgStdR X I hX U Xg tr L cX (fun t φ => Bd.jR t φ) ∧ ∀ i, BrgStdV X I hX U Xg tr L i (cV i) fun t φ => Bd.jL i t φ := by
   intro X px I hX U Xg tr L eG hI hV hL hG hβX hβV hsX hsV θ hθ MX

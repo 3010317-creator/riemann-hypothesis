@@ -80,16 +80,14 @@ theorem wexact_of_prod (T : Type 1) [Category.{0} T] (U : T) (X : CosimplicialOb
     (hπ : ∀ V, Function.Bijective (fun (x : N.obj V) (i : ι) => (π i).app V x))
     (hM : ∀ i, WExact (M i) a) : WExact N a := by
   have nat : ∀ i {P Q : T} (f : P ⟶ Q) (x : N.obj P), (π i).app Q (N.map f x) = (M i).map f ((π i).app P x) := by
-    intro i P Q f x
-    exact ConcreteCategory.congr_hom ((π i).naturality f) x
+    exact fun i P Q f x => ConcreteCategory.congr_hom ((π i).naturality f) x
   refine ⟨?_, ?_, ?_⟩
   · intro x y hxy
     apply (hπ U).1
     funext i
     apply (hM i).1
     have h := congrArg ((π i).app _) hxy
-    rw [nat, nat] at h
-    exact h
+    rwa [nat, nat] at h
   · intro y hy
     have hx : ∀ i, ∃ x : (M i).obj U, (M i).map (a.app (SimplexCategory.mk 0)) x = (π i).app _ y := by
       intro i

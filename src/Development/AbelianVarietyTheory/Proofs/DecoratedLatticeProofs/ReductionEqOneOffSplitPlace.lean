@@ -68,8 +68,7 @@ theorem resS_eq_zero_of_cpt {D : D7} (PP' : Formalism.L2.DIV.Pl D.host.E) (s : F
   rw [h1, GlobalTheory.FunObj.Comparison₂.mk_eq_zero_iff]
   rw [GlobalTheory.FunObj.Comparison₂.cptO_apply PP' s] at h2
   change Valued.v (GlobalTheory.StdFrames.cpt PP' (s : Formalism.IndefR.Datum.EAf D) - _) < 1 at h2
-  rw [h, zero_sub, Valuation.map_neg] at h2
-  exact h2
+  rwa [h, zero_sub, Valuation.map_neg] at h2
 
 theorem redFn_eq_one_off : ∀ {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (q : GlobalTheory.FinPl.SplitPt D k) {PP : Formalism.L2.DIV.Pl D.host.E}, Formalism.L2.NTheta.IsIdemAt q.e PP → ∀ (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (κ : GA D V), Formalism.L2.Theta.SuppAt q.e V κ → Lev.finE V κ ∈ Formalism.L2.DIV.St β → ∀ PP' : Formalism.L2.DIV.Pl D.host.E, (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP') ≠ (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) → Formalism.L2.DIV.redFn β PP' (Lev.finE V κ) = 1 := by
   intro D k _ _ _ _ q PP hq V β κ hS hst PP' hne
@@ -97,8 +96,7 @@ theorem redFn_eq_one_off : ∀ {D : D7} {k : Type} [Field k] [ValuativeRel k] [T
   rw [Matrix.sub_apply, hval, Matrix.map_apply]
   have e1 : (1 : Matrix (Fin V.rank) (Fin V.rank) (Lev.EAf D)) i j = toEAf D ((1 : Matrix (Fin V.rank) (Fin V.rank) (AE D)) i j) := by
     rw [Matrix.one_apply, Matrix.one_apply]; split_ifs <;> simp
-  rw [e1]
-  exact this
+  rwa [e1]
 
 end GlobalTheory.SplitOffRed
 

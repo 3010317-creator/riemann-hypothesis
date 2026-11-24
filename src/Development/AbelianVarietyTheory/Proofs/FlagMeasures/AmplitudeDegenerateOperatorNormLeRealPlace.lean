@@ -640,16 +640,14 @@ theorem dyadic_summation : ∀ (X : Type) [MeasurableSpace X] (ν : Measure X) (
     have i1 : ∫⁻ x in P (i, i', a, b), ENNReal.ofReal (A x ^ 2) ∂ν ≤
         ENNReal.ofReal ((Real.sqrt K * Real.sqrt (R ^ e) * y ^ (k + 1) * (((2:ℝ) ^ i) ^ q)⁻¹) ^ 2) := by
       refine le_trans (lintegral_mono_set ?_) ((h1 i i' y hy0).trans (le_of_eq ?_))
-      · intro z hz
-        exact ⟨hz.2.1.1, hz.2.1.2, hz.2.2.1.1, hz.2.2.2.1.1, hz.2.2.2.1.2⟩
+      · exact fun z hz => ⟨hz.2.1.1, hz.2.1.2, hz.2.2.1.1, hz.2.2.2.1.1, hz.2.2.2.1.2⟩
       · congr 1
         rw [← hR, mul_pow _ _ 2, mul_pow _ _ 2, mul_pow _ _ 2, Real.sq_sqrt hK.le, Real.sq_sqrt (by positivity), inv_pow,
           ← pow_mul y, ← pow_mul _ q, mul_comm q 2, mul_comm (k + 1) 2]
     have i2 : ∫⁻ x in P (i, i', a, b), ENNReal.ofReal (B x ^ 2) ∂ν ≤
         ENNReal.ofReal ((Real.sqrt K' * Real.sqrt (R ^ e) * y' ^ (k + 1) * (((2:ℝ) ^ i') ^ q)⁻¹) ^ 2) := by
       refine le_trans (lintegral_mono_set ?_) ((h2 i i' y' hy0').trans (le_of_eq ?_))
-      · intro z hz
-        exact ⟨hz.2.2.1.1, hz.2.2.1.2, hz.2.1.1, hz.2.2.2.2.1, hz.2.2.2.2.2⟩
+      · exact fun z hz => ⟨hz.2.2.1.1, hz.2.2.1.2, hz.2.1.1, hz.2.2.2.2.1, hz.2.2.2.2.2⟩
       · congr 1
         rw [← hR, mul_pow _ _ 2, mul_pow _ _ 2, mul_pow _ _ 2, Real.sq_sqrt hK'.le, Real.sq_sqrt (by positivity), inv_pow,
           ← pow_mul y', ← pow_mul _ q, mul_comm q 2, mul_comm (k + 1) 2]
@@ -839,7 +837,7 @@ theorem low_N {k r j : ℕ} (hj : j ≤ r) {n : Mat k r} (hn : n ∈ Nset k r) {
   · rw [hv l hl, mul_zero]
   · have h := hn.2.1 ⟨l.val, by omega⟩ i (by simp; omega)
     have e : eI k r ⟨l.val, by omega⟩ = l := rfl
-    rw [e, if_neg (fun h => by rw [h] at hi; omega)] at h
+    rw [e, ite_eq_right (fun h => by rw [h] at hi; omega)] at h
     rw [h, zero_mul]
 
 theorem herm_low {k r : ℕ} {u v : Fin (2 * r + k + 1) → ℂ} (hu : ∀ a : Fin r, herm (Hpk k r) u (bvec (eI k r a)) = 0)
@@ -856,7 +854,7 @@ theorem herm_e {k r : ℕ} (u : Fin (2 * r + k + 1) → ℂ) (a : Fin r) :
     herm (Hpk k r) u (bvec (eI k r a)) = u (esI k r a) := by
   have : star (bvec (eI k r a)) = bvec (eI k r a) := by simp [bvec]
   unfold herm
-  rw [this, bvec, single_one_dotProduct, Hpk_mulVec, if_pos (Or.inl (show (eI k r a).val < r from a.isLt))]
+  rw [this, bvec, single_one_dotProduct, Hpk_mulVec, ite_eq_left (Or.inl (show (eI k r a).val < r from a.isLt))]
   rfl
 
 theorem herm_low_low {k r : ℕ} {u v : Fin (2 * r + k + 1) → ℂ} (hu : Low r u) (hv : Low r v) :
@@ -872,7 +870,7 @@ theorem herm_nonneg {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r
     {v : Fin (2 * r + k + 1) → ℂ} (he : ∀ a : Fin r, herm (Hpk k r) v (bvec (eI k r a)) = 0)
     (hvz : herm (Hpk k r) v z = 0) : 0 ≤ (herm (Hpk k r) v v).re := by
   let y : Fin (2 * r + k + 1) → ℂ := fun i => if i.val < r then v i else 0
-  have hy : Low r y := fun i hi => if_neg (by omega)
+  have hy : Low r y := fun i hi => ite_eq_right (by omega)
   have hw : inWb k r (v - y) := by
     intro i hi
     rcases hi with hi | hi
@@ -895,8 +893,7 @@ theorem herm_nonneg {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r
   have hyz : herm (Hpk k r) y z = 0 := by rw [← herm_conj, hzy, star_zero]
   have e1 : herm (Hpk k r) (v - y) (v - y) = herm (Hpk k r) v v := by
     rw [herm_sub_l, herm_sub_r, herm_sub_r, hvy, hyv, herm_low_low hy hy]; ring
-  by_contra hneg
-  push_neg at hneg
+  by_contra! hneg
   have h := revCS k r z (v - y) hz hw (by unfold Tz at hT; linarith) (by rw [e1]; exact hneg)
   rw [herm_sub_l, hvz, hyz] at h
   have : 0 < Tz k r (v - y) := by unfold Tz; rw [e1]; linarith
@@ -912,7 +909,7 @@ theorem low_split {k r j : ℕ} (hj : j ≤ r) {n₁ n₂ g : Mat k r} (h₁ : n
   have hy := low_N le_rfl h₂ hv
   set y := n₂ *ᵥ v with hyd
   let lo : Fin (2 * r + k + 1) → ℂ := fun i => if i.val < j then y i else 0
-  have hlo : Low j lo := fun i hi => if_neg (by omega)
+  have hlo : Low j lo := fun i hi => ite_eq_right (by omega)
   refine ⟨n₂⁻¹ *ᵥ lo, low_N hj ((nSubgroup k r).2.2 _ h₂) hlo, ?_⟩
   rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, Matrix.mulVec_sub, Matrix.mulVec_mulVec lo,
     Matrix.mul_nonsing_inv _ hu2, Matrix.one_mulVec, ← hyd]
@@ -928,7 +925,7 @@ theorem low_split {k r j : ℕ} (hj : j ≤ r) {n₁ n₂ g : Mat k r} (h₁ : n
     · rw [Matrix.mulVec_smul, hg (Fin.castLE le_rfl a) ha, smul_comm]
     · have : (eI k r (Fin.castLE le_rfl a)).val < j := by simp [eI]; omega
       have e0 : (y - lo) (eI k r (Fin.castLE le_rfl a)) = 0 := by
-        simp only [Pi.sub_apply, lo, if_pos this, sub_self]
+        simp only [Pi.sub_apply, lo, ite_eq_left this, sub_self]
       rw [e0]; simp
   rw [e]
   intro i hi
@@ -948,7 +945,7 @@ theorem Dj_eq {k r j : ℕ} (hj : j ≤ r) (z z' : Fin (2 * r + k + 1) → ℂ) 
   ext a b
   have ha : a.val < r := lt_of_lt_of_le a.isLt hj
   have hb : b.val < r := lt_of_lt_of_le b.isLt hj
-  simp only [Matrix.submatrix_apply, Zhat, fvec, Zj, Fin.val_castLE, ha, hb, dif_pos]
+  simp only [Matrix.submatrix_apply, Zhat, fvec, Zj, Fin.val_castLE, ha, hb, dite_eq_left]
   rfl
 
 theorem unit_det {k r : ℕ} {g : Mat k r} (hg : g ∈ GG k r) : IsUnit g.det ∧ g⁻¹ ∈ GG k r :=
@@ -1241,8 +1238,7 @@ theorem gramProj_le (k r : ℕ) {j : ℕ} (hj : j ≤ r) (z : Fin (2 * r + k + 1
   refine le_trans ?_ (pow_le_pow_right₀ h0 hj)
   unfold gramProj
   refine Real.sqrt_le_iff.2 ⟨by positivity, ?_⟩
-  rw [sq]
-  exact h
+  rwa [sq]
 
 theorem minor_gram_bound : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 1) → ℂ)), ∀ γ : Mat k r, inWb k r z → inWb k r z' → γ ∈ GG k r → ∀ x ∈ GG k r, (∀ l : Fin (r + 1), ‖Dmin k r z z' γ l.castSucc‖ ≤ (Sg k r z' x * Sg k r z (γ * x)) ^ r) ∧ 0 ≤ Yj k r hj z z' γ x ∧ Yj k r hj z z' γ x ≤ Sg k r z (γ * x) ^ r / Dj k r hj z z' γ ∧ ∀ H₁ : ℝ, 1 ≤ H₁ → sgV k r z z' γ H₁ ≤ max 1 ((Sg k r z' x * Sg k r z (γ * x)) ^ r / (2 * H₁) ^ (2 * r)) := by
   intro k r j hj z z' γ _ _ hγ x hx

@@ -262,8 +262,7 @@ theorem exists_integral_descent {LL : Type} [Field LL] [NumberField LL] (L0 : In
     rw [map_smul, hB, ← hf ⟨bs k, hb k⟩, key, map_smul, LinearMap.baseChange_tmul]
   · intro w
     have := key 1 w
-    rw [one_smul, hl1, one_smul] at this
-    exact this
+    rwa [one_smul, hl1, one_smul] at this
   · intro a w
     obtain ⟨o, ho⟩ := hlint a
     exact ⟨o, by rw [key, ho]⟩
@@ -298,8 +297,7 @@ theorem exists_integral_descent {LL : Type} [Field LL] [NumberField LL] (L0 : In
     intro a
     refine Fintype.linearIndependent_iff.mp hli _ ?_
     rw [← ho a]
-    simp only [hΦ, hα, hl0, Finset.smul_sum, Finset.sum_smul, smul_smul]
-    exact Finset.sum_comm
+    simpa only [hΦ, hα, hl0, Finset.smul_sum, Finset.sum_smul, smul_smul] using Finset.sum_comm
   choose s0 hs0 using hint
   have hinj := IsFractionRing.injective O K
   let s : 𝓞 L0 →+* O :=

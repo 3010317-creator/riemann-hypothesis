@@ -209,7 +209,7 @@ private theorem loc_move (hU : GlobalTheory.BCT.Unr E) (hn : 1 ≤ n) {σ : Subm
     (K : Subgroup (UL n w)) :
     Module.finrank ℂ (fixd τ'.ρ (K.map (UL n w).subtype)) = Module.finrank ℂ (fixed τ.ρ K) := by
   have hm : ∀ g : GLw n w, g ∈ UL n w := fun g => by
-    rw [UL, if_pos hw]
+    rw [UL, ite_eq_left hw]
     trivial
   let τ₁ : SmIrr (UL n w) :=
     { V := τ'.V
@@ -464,8 +464,7 @@ private theorem form_unr
   have hS : ∀ v ∈ s.S, cLoc (s.w v) x = 1 := fun v hv =>
     GlobalTheory.DefU.LocRet.mem_locU_ne hx fun h => hw (h ▸ (under_w s v).symm ▸ hv)
   have hK : cLoc w x ∈ KO (w.adicCompletion L) (Fin n) := by
-    rw [GlobalTheory.SmGL.SphCompletion.KO_completion w n]
-    exact hk
+    rwa [GlobalTheory.SmGL.SphCompletion.KO_completion w n]
   have hm : (away l L n).rangeRestrict x ∈ KS n s := by
     refine mem_KS s (Prod.ext (funext fun u => (cmp_S s (Or.inl u.2) x).trans (hS _ (Or.inr (Or.inl u.2))))
       ((cmp_S s (Or.inr rfl) x).trans (hS _ (Or.inr (Or.inr rfl))))) fun u hu => ?_

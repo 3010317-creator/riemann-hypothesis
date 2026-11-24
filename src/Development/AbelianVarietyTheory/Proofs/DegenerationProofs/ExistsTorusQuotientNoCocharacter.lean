@@ -191,8 +191,7 @@ theorem exists_glue (Y : Scheme.{0}) (𝒰 : Set Y.Opens)
     · rintro ⟨y, hy⟩
       obtain ⟨V, hV⟩ := hc x
       exact key2 ⟨x, hV⟩ y (hy.trans (hj' V ⟨x, hV⟩)).symm
-    · intro hx
-      exact ⟨_, (hj' U ⟨x, hx⟩).symm⟩
+    · exact fun hx => ⟨_, (hj' U ⟨x, hx⟩).symm⟩
   · obtain ⟨U, x, rfl⟩ := Scheme.IsLocallyDirected.ι_jointly_surjective F b
     exact ⟨U, x, rfl⟩
 
@@ -569,8 +568,7 @@ theorem exists_frac_ev (R : Type) [CommRing R] (W : (Sp R).Opens) (s : Γ(Sp R, 
       intro y _
       rw [hb]
       change e (φ f) ∉ y.asIdeal
-      intro hy
-      exact y.isPrime.ne_top (Ideal.eq_top_of_isUnit_mem _ hy (Ne.isUnit h0))
+      exact fun hy => y.isPrime.ne_top (Ideal.eq_top_of_isUnit_mem _ hy (Ne.isUnit h0))
     have key := congrArg (ev (spMap e) _ hD) ha
     rw [map_mul, ev_res (spMap e) hfW hD h s] at key
     have hv : ∀ u : Γ(Sp R, ⊤),
@@ -653,8 +651,7 @@ theorem exists_generic_field_point : ∀ (Y : Scheme.{0}) [IsIntegral Y], ∃ (F
       · have hm : genericPoint Y ∈ Y.basicOpen s := by
           rw [Scheme.mem_basicOpen Y s _ hV]
           have : IsUnit a := isUnit_iff_ne_zero.mpr ha
-          rw [← hs] at this
-          exact this
+          rwa [← hs] at this
         refine ⟨Y.basicOpen s, hm, (Y.presheaf.map (homOfLE (Y.basicOpen_le s)).op).hom s, ?_,
           fun _ => Y.toRingedSpace.isUnit_res_basicOpen s⟩
         rw [← hs]
@@ -715,8 +712,7 @@ theorem exists_minimal_support {F J : Type} [Field F] (A : Finset J) (M : (J →
   by_cases hLw : L w = 0
   · have hMu : M (fun i => v' i - v' j / w j * w i) := hM v' w _ hMv' hMw
     have hLu : L (fun i => v' i - v' j / w j * w i) ≠ 0 := by
-      rw [hL v' w, hLw, mul_zero, sub_zero]
-      exact hLv'
+      rwa [hL v' w, hLw, mul_zero, sub_zero]
     apply hmin _ hMu hLu
     · intro i hi
       simp only [s, Finset.mem_filter] at hi ⊢
@@ -770,8 +766,7 @@ theorem exists_weighted_relation :
     simp only [map_mul, map_sum, hσc, hσφ, inv_mul_cancel_right, hmul] at h
     have e : ∀ g : X → F, ∑ χ ∈ S, c t' χ * (c t⁻¹ χ * g χ) = ∑ χ ∈ S, c t' χ * c t⁻¹ χ * g χ :=
       fun g => Finset.sum_congr rfl fun χ _ => (mul_assoc _ _ _).symm
-    rw [e (fun χ => σ t (v' (Sum.inl χ))), e (fun χ => σ t (v' (Sum.inr χ)))]
-    exact h
+    rwa [e (fun χ => σ t (v' (Sum.inl χ))), e (fun χ => σ t (v' (Sum.inr χ)))]
   have hfin : ∀ t, ∀ i ∈ S.disjSum S,
       σ t (r⁻¹ * v' i) * c t χ₀ = c t (Sum.elim id id i) * (r⁻¹ * v' i) := by
     intro t i hi
@@ -873,8 +868,7 @@ theorem eq_zero_of_rationalPoints {k : Type} [Field k] [IsAlgClosed k] {P : Over
   obtain ⟨x, hxd, hx⟩ := nonempty_inter_closedPoints hne' (P.left.basicOpen d).isOpen.isLocallyClosed
   refine h (Over.homMk (pointOfClosedPoint (K := k) P.hom x hx)
     (pointOfClosedPoint_comp (K := k) P.hom x hx)) (IsLocalRing.closedPoint k) ?_
-  have e := pointOfClosedPoint_apply (K := k) P.hom x hx (IsLocalRing.closedPoint k)
-  exact e.symm ▸ hxd
+  exact (pointOfClosedPoint_apply (K := k) P.hom x hx (IsLocalRing.closedPoint k)).symm ▸ hxd
 
 theorem wt_of_genericPoint :
     ∀ (k : Type) [Field k] [IsAlgClosed k] (G : Over (Sp k)) [GrpObj G], Smooth G.hom → ∀ (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (i : splitTorus (Sp k) X ⟶ G) (F : Type) [Field F] (s : Sp F ⟶ Sp k) (g : Over.mk s ⟶ G), (∀ V : G.left.Opens, (V : Set G.left).Nonempty → ⊤ ≤ g.left ⁻¹ᵁ V) → ∀ (V : G.left.Opens) (u : Γ(G.left, V)) (χ : X), (∀ (t : 𝟙_ (Over (Sp k)) ⟶ splitTorus (Sp k) X) (h₁ : ⊤ ≤ (((toUnit (Over.mk s) ≫ t) ≫ i) * g).left ⁻¹ᵁ V) (h₂ : ⊤ ≤ g.left ⁻¹ᵁ V), WtRat.ev (R := F) (((toUnit (Over.mk s) ≫ t) ≫ i) * g).left V h₁ u = WtRat.ev (R := F) (toUnit (Over.mk s) ≫ t).left ⊤ le_top (charUnit (Sp k) X χ).val * WtRat.ev (R := F) g.left V h₂ u) → Wt i V u χ := by
@@ -1048,8 +1042,7 @@ theorem exists_rel {k : Type} [Field k] {G : Over (Sp k)} [GrpObj G] {X : Type} 
   have ha' (t) : spMap (e t) ≫ a.left = ((t ≫ i) * g).left := congrArg CommaMorphism.left (ha t)
   have hx : spMap (e 1) (IsLocalRing.closedPoint F) ∈ a.left ⁻¹ᵁ U := by
     have := h₁ (show IsLocalRing.closedPoint F ∈ (⊤ : (Sp F).Opens) from trivial)
-    rw [← ha'] at this
-    exact this
+    rwa [← ha'] at this
   obtain ⟨α, β, hβ, hαβ⟩ := _root_.GlobalTheory.SS.WtRat.exists_frac_ev R (a.left ⁻¹ᵁ U) ((a.left.appLE U _ le_rfl).hom f) _ hx
   have hsum (t) (w : R) (S : Finset X) (hS : w.coeff.support ⊆ S) : e t w = ∑ χ ∈ S, chr t χ * w.coeff χ := by
     show AddMonoidAlgebra.lift F F X (cH t) w = _
@@ -1408,8 +1401,7 @@ theorem exists_factor_goodOpen : ∀ (k : Type) [Field k] [IsAlgClosed k] (G : O
     have e : (π ≫ pullback.fst ρ η[splitTorus (Sp k) (weights i)]) ≫ ρ = 1 := by
       rw [Category.assoc, hker.w, ← Hom.one_def, MonObj.comp_one]
     have e' := SplitTorus.val_one (T := Y) (⟨χ, hχ⟩ : weights i)
-    rw [← e, SplitTorus.val_comp, SplitTorus.val_eq ρ, Diag.diagMap_chi, ← SplitTorus.val_eq] at e'
-    exact e'
+    rwa [← e, SplitTorus.val_comp, SplitTorus.val_eq ρ, Diag.diagMap_chi, ← SplitTorus.val_eq] at e'
   obtain ⟨i', hi', e⟩ := FlatQuotient.exists_desc ρ _ i hker hkill
   refine ⟨weights i, inferInstance, hfree, hfin, i', ρ, hi', inferInstance, hsurj, e,
     _root_.GlobalTheory.SS.exists_goodOpen_of_weight_units k G hG (weights i) i' hi' fun χ => ?_⟩

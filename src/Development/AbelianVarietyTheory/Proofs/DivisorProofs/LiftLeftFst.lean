@@ -283,8 +283,7 @@ theorem IsDual.baseChange (hf : IsGrpPullback A' A b f) (hg : IsGrpPullback B' B
     refine ⟨liftPt hg T.hom x₀.left (Over.w x₀), (key _).2 ?_, fun y hy ↦ ?_⟩
     · have hx : pushP hg (s := T.hom) rfl (liftPt hg T.hom x₀.left (Over.w x₀)) = x₀ :=
         Over.OverMorphism.ext (liftPt_left _ _ _ _)
-      rw [hx]
-      exact hx₀
+      rwa [hx]
     · refine pt_ext hg ?_
       rw [liftPt_left]
       exact congrArg (fun z ↦ z.left) (hu _ ((key y).1 hy))

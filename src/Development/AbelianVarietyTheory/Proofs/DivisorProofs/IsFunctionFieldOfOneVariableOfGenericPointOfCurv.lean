@@ -140,8 +140,7 @@ theorem isFF_of_trdeg_eq_one {k F : Type} [Field k] [Field F] [Algebra k F] [Alg
   have hna : ¬ Algebra.IsAlgebraic k F := fun ha => by
     rw [trdeg_eq_zero_iff.mpr ha] at h; exact zero_ne_one h
   obtain ⟨x, hx⟩ : ∃ x : F, Transcendental k x := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hna ⟨fun x => by simpa [Transcendental] using hc x⟩
   exact ⟨x, hx, finiteDimensional_adjoin_of_trdeg_le_one h.le x hx⟩
 
@@ -166,9 +165,7 @@ theorem isFF_of_stalk (k K : Type) [Field k] [Field K] [Algebra k K] (C : Scheme
     rw [hφ] at hc
     have h1 : Spec.map (CommRingCat.ofHom φ ≫ ψ) = Spec.map (CommRingCat.ofHom (algebraMap k K)) := by
       rw [Spec.map_comp]; exact hc
-    have h2 := Spec.map_injective h1
-    intro c
-    exact congrArg (fun f => f.hom c) h2
+    exact fun c => congrArg (fun f => f.hom c) (Spec.map_injective h1)
   let e : C.functionField ≃ₐ[k] K :=
     AlgEquiv.ofBijective { ψ' with commutes' := hcomm } ⟨hinj, hψ⟩
   haveI : Algebra.EssFiniteType k K := (Algebra.EssFiniteType.iff_of_algEquiv e).mp inferInstance

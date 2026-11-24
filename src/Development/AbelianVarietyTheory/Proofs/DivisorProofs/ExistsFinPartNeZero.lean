@@ -59,7 +59,6 @@ theorem pure_eq_tens (f : SInf F κ) (φ : ∀ v : Pl (F := F), (κ → Fv F v) 
 
 theorem snd_eq_zero_of_at (z : κ → AF F) (hz : At (evI F) z) (i : κ) : (z i).2 = 0 := by
   have h0 : evI F (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.pairA F 0 1) = 0 := by
-    show InfiniteAdeleRing.ringEquiv_mixedSpace F (0 : Ainf F) = 0
     exact map_zero _
   have h := congrArg Prod.snd (congrFun (hz _ h0) i)
   change (1 : Af F) * (z i).2 = 0 at h
@@ -83,8 +82,7 @@ theorem exists_finPart_ne_zero (φ : ∀ v : Pl (F := F), (κ → Fv F v) → �
   have hfin := Filter.eventually_cofinite.1 hstd
   set S := hfin.toFinset with hS
   have hy : ∀ v, ∃ y, φ v y ≠ 0 := fun v => by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact h0 v (funext h)
   choose y hy using hy
   refine ⟨fun i => ∑ v ∈ S, singleFin v (y v i), fun x hx => ?_⟩
@@ -96,14 +94,14 @@ theorem exists_finPart_ne_zero (φ : ∀ v : Pl (F := F), (κ → Fv F v) → �
     rw [hx i, map_sum]
     by_cases hw : w ∈ S
     · rw [Finset.sum_eq_single w (fun v _ hv => evalV_singleFin_ne (Ne.symm hv) _) (fun h => absurd hw h),
-        evalV_singleFin_self, if_pos hw]
-    · rw [Finset.sum_eq_zero (fun v hv => evalV_singleFin_ne (fun h => hw (by rw [h]; exact hv)) _), if_neg hw]
+        evalV_singleFin_self, ite_eq_left hw]
+    · rw [Finset.sum_eq_zero (fun v hv => evalV_singleFin_ne (fun h => hw (by rw [h]; exact hv)) _), ite_eq_right hw]
       rfl
   have hne : ∀ w, φ w (fun i => evFin F w (x i)) ≠ 0 := by
     intro w
     by_cases hw : w ∈ S
-    · rw [hev w, if_pos hw]; exact hy w
-    · rw [hev w, if_neg hw]
+    · rw [hev w, ite_eq_left hw]; exact hy w
+    · rw [hev w, ite_eq_right hw]
       have hw' : φ w = Set.indicator {x | ∀ i, x i ∈ w.adicCompletionIntegers F} 1 := by
         by_contra h
         exact hw (by rw [hS, Set.Finite.mem_toFinset]; exact h)

@@ -170,8 +170,7 @@ theorem projRep_congr {R σ : Type} [CommRing R] {I : Ideal (MvPolynomial σ R)}
     (e : ∀ (T : Type) [CommRing T] (y : Sp T ⟶ Z) (w : σ → T), SecCoord M' th' y w ↔ SecCoord M th y w) :
     ProjRep I s M' th' := by
   refine ⟨hM', fun T _ β x v hx hv => h.2.1 T β x v hx ((e T x v).1 hv), fun T _ β v hu hF => ?_⟩
-  simp only [e]
-  exact h.2.2 T β v hu hF
+  simpa only [e] using h.2.2 T β v hu hF
 
 theorem exists_emb (l1 : Out.Laws) (l2 : Out.Laws2) {o : Type} [CommRing o] {g N' : ℕ} {J : Type} {b : TBase o (N' ^ 2)}
     {K : Type} [Field K] {s : Sp K ⟶ Sp o} (t : TObj g (N' ^ 2) J b s) (m : ℕ) (v : Ix g (N' ^ 2) → K)
@@ -274,8 +273,7 @@ theorem exists_section {R σ : Type} [CommRing R] [IsReduced R] {I : Ideal (MvPo
     obtain ⟨K, _, x, y, hx, hy, hc⟩ := h q' hq'
     have h1 := (hP.2.1 K x y _ hy hc).2 F hF
     apply hf
-    rw [← hx, RingHom.mem_ker, MvPolynomial.eval₂_comp_left, RingHom.comp_id]
-    exact h1
+    rwa [← hx, RingHom.mem_ker, MvPolynomial.eval₂_comp_left, RingHom.comp_id]
   obtain ⟨y, ⟨hy, hc⟩, -⟩ := hP.2.2 R (RingHom.id R) p hu hF
   exact ⟨Over.homMk y (hy.trans (spMap_id R)), hc⟩
 

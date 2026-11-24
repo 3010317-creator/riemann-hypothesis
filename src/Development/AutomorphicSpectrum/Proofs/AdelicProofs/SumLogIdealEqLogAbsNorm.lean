@@ -103,9 +103,7 @@ theorem sum_logIdeal_eq_log_absNorm : ∀ (E : Type) [Field E] [NumberField E] (
       j.injective.comp (FaithfulSMul.algebraMap_injective (𝓞 E) E)
     rw [← logIdeal_pow E p _ hinj I hI h, ha, (_root_.GlobalTheory.CompanionTheory.Ar.Fl.logIdeal_mul_span_map E p _ hinj).2.1]
     rfl
-  have haE : (a : E) ≠ 0 := by
-    intro h0
-    exact ha0 (RingOfIntegers.coe_eq_zero_iff.mp h0)
+  have haE : (a : E) ≠ 0 := fun h0 => ha0 (RingOfIntegers.coe_eq_zero_iff.mp h0)
   have hprod : ∏ j : E →+* ℂ_[p], j (a : E) = ((Algebra.norm ℤ a : ℤ) : ℂ_[p]) := by
     rw [Fintype.prod_equiv (RingHom.equivRatAlgHom E ℂ_[p]) (fun j => j (a : E))
       (fun σ => σ (a : E)) (fun _ => rfl), ← Algebra.norm_eq_prod_embeddings ℚ ℂ_[p] (a : E),

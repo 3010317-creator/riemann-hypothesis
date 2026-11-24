@@ -224,8 +224,7 @@ theorem polarisation_mixed_term_of_powers : ∀ (A : Type) [CommRing A] (θ : A 
       rw [this, addMonoidHom_intCast_mul_real]
       push_cast
       ring
-    simp only [e1, e2] at ht
-    exact ht
+    simpa only [e1, e2] using ht
   have hPQ : P = Q := by
     apply Polynomial.eq_of_infinite_eval_eq
     apply Set.Infinite.mono (s := Set.range (fun t : ℤ => (t : ℝ)))
@@ -235,13 +234,12 @@ theorem polarisation_mixed_term_of_powers : ∀ (A : Type) [CommRing A] (θ : A 
   have hc := congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p 1) hPQ
   simp only [hP, hQ, Polynomial.finsetSum_coeff, Polynomial.coeff_C_mul_X_pow] at hc
   simp only [Finset.sum_ite_eq, Finset.mem_range] at hc
-  rw [if_pos (by omega), if_pos (by omega)] at hc
+  rw [ite_eq_left (by omega), ite_eq_left (by omega)] at hc
   · simp only [pow_one, Nat.choose_one_right, Nat.add_sub_cancel] at hc
     have hD : ((D + 1 : ℕ) : ℝ) ≠ 0 := by positivity
     push_cast at hc hD
     have := mul_right_cancel₀ hD hc
-    rw [mul_comm (y ^ D)]
-    exact this
+    rwa [mul_comm (y ^ D)]
 
 end GlobalTheory
 end -- clump:auto
@@ -385,7 +383,7 @@ theorem finite_coheight_one_mem_supp {Z : Scheme.{0}} [IsIntegral Z] [IsLocallyN
     fun z hz => ?_
   obtain ⟨T, hT, hzT⟩ := Set.mem_sUnion.1 (hU.le hz.2)
   refine ⟨T, hT, ?_⟩
-  simp only [dif_pos (hi T hT)]
+  simp only [dite_eq_left (hi T hT)]
   have hg := (hi T hT).isGenericPoint_genericPoint (hc T hT)
   have h₁ : z ≤ (hi T hT).genericPoint := hg.specializes hzT
   have h₂ : (hi T hT).genericPoint < genericPoint Z := by
@@ -709,8 +707,7 @@ theorem evTop_bijective : Function.Bijective (evTop (q := q)) := by
   · rintro ⟨σ, y⟩ ⟨σ', y'⟩ h
     have hσ : σ = σ' := RingHom.ext fun a => by
       have := congrArg (fun φ : Γ(Y, ⊤) →+* ℂ => φ (algX q ⊤ a)) h
-      simp only [evTop_apply, ev_algX mem_ptsIn_top] at this
-      exact this
+      simpa only [evTop_apply, ev_algX mem_ptsIn_top] using this
     subst hσ
     have hy : y = y' := Subtype.ext (Points.ext_of_valR (isAffineOpen_top Y)
       (mem_ptsIn_top : y ∈ ptsIn q σ ⊤) (mem_ptsIn_top : y' ∈ ptsIn q σ ⊤) fun f => by
@@ -898,8 +895,7 @@ theorem product_formula_curve : ∀ (k : Type) [CommRing k] (Y : Scheme.{0}) [Is
     have h1 : Y.toSpecΓ z ∉ PrimeSpectrum.basicOpen c := by
       intro h
       apply hz
-      rw [← Scheme.toSpecΓ_preimage_basicOpen]
-      exact h
+      rwa [← Scheme.toSpecΓ_preimage_basicOpen]
     show Y.toSpecΓ z ∈ Set.range _
     apply (Set.ext_iff.1 (range_comap_of_surjective _ (Ideal.Quotient.mk (Ideal.span {c}))
       Ideal.Quotient.mk_surjective) _).2
@@ -1308,8 +1304,7 @@ theorem dim_of_genericPoint {X Y : Scheme.{0}} [IsIntegral Y] {p : X ⟶ Sp k} (
     [IsClosedImmersion i] {x : X} {d : ℕ} (hx : HasDim x d) (hg : i (genericPoint Y) = x) :
     topologicalKrullDim Y = d := by
   have H := (_root_.GlobalTheory.MixHt.hasDim_basic k X p hp).2.2.2.2
-  rw [← H.2 Y d, ← H.1 Y i (genericPoint Y) d, hg]
-  exact hx
+  rwa [← H.2 Y d, ← H.1 Y i (genericPoint Y) d, hg]
 
 theorem recVal_indep_section (hInt : ArchInteg) (hRec : ArchRecip) (m : ℕ) {Y : Scheme.{0}} [IsIntegral Y]
     [IsLocallyNoetherian Y] {q : Y ⟶ Sp k} (hq : IsAmb q) (hY : topologicalKrullDim Y = (m + 1 : ℕ)) {T}
@@ -1520,7 +1515,7 @@ def extend (m : ℕ) (T : ∀ d : ℕ, (Fin d → HermLB p) → X → ℝ) (V : 
   fun d L x => if h : d = m + 1 then V (fun a => L (Fin.cast h.symm a)) x else T d L x
 
 theorem extend_of_ne {m : ℕ} {T : ∀ d : ℕ, (Fin d → HermLB p) → X → ℝ} {V : (Fin (m + 1) → HermLB p) → X → ℝ}
-    {d : ℕ} (h : d ≠ m + 1) (L : Fin d → HermLB p) (x : X) : extend m T V d L x = T d L x := dif_neg h
+    {d : ℕ} (h : d ≠ m + 1) (L : Fin d → HermLB p) (x : X) : extend m T V d L x = T d L x := dite_eq_right h
 
 theorem extend_self {m : ℕ} {T : ∀ d : ℕ, (Fin d → HermLB p) → X → ℝ} {V : (Fin (m + 1) → HermLB p) → X → ℝ}
     (L : Fin (m + 1) → HermLB p) (x : X) : extend m T V (m + 1) L x = V L x := by
@@ -1565,7 +1560,7 @@ theorem isMix_succ : ArchInteg → ArchRecip → ∀ m : ℕ, (∀ (k : Type) [C
   have hV : ∀ (L : Fin (m + 1) → HermLB p) (x : X) (hx : HasDim x (m + 1)),
       extend m T V (m + 1) L x = v x hx (L 0) (Fin.tail L) := fun L x hx => by
     rw [extend_self]
-    exact dif_pos hx
+    exact dite_eq_left hx
   have hsym : ∀ (x : X) (hx : HasDim x (m + 1)) (L : Fin (m + 1) → HermLB p) (e : Equiv.Perm (Fin (m + 1))),
       v x hx (L (e 0)) (Fin.tail fun a => L (e a)) = v x hx (L 0) (Fin.tail L) := by
     intro x hx L e
@@ -1646,8 +1641,7 @@ theorem isMix_succ : ArchInteg → ArchRecip → ∀ m : ℕ, (∀ (k : Type) [C
     · obtain rfl : e = m := by omega
       have hx := hdimi Y i (e + 1) hdim
       rw [hV _ _ hx]
-      simp only [Fin.cons_zero, Fin.tail_cons]
-      exact hv _ hx M L Y q i hi rfl M' L' hM hL r hr
+      simpa only [Fin.cons_zero, Fin.tail_cons] using hv _ hx M L Y q i hi rfl M' L' hM hL r hr
     · rw [extend_of_ne h]
       exact hT.recur Y q i hi e (by omega) hdim M L M' L' hM hL r hr
 
@@ -1677,8 +1671,7 @@ theorem exists_isMix_of_arch : ArchInteg → ArchRecip →
     induction m with
     | zero => intro k _ Y q _; exact ⟨_, isMix_zero q⟩
     | succ m ih => exact _root_.GlobalTheory.MixHt.Step.isMix_succ hI hR m ih
-  intro k _ Y q h m
-  exact key m k Y q h
+  exact fun k _ Y q h m => key m k Y q h
 
 end GlobalTheory.MixHt
 end -- clump:auto

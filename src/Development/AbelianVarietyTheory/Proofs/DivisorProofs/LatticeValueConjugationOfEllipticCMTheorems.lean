@@ -254,9 +254,7 @@ theorem main : ∀ (N : ℕ) [NeZero N] (R : (Fin 2 → ZMod N) → (Fin 2 → Z
   intro N _ R h1 h2 h3
   choose f hf using h1
   have huniq : ∀ x y y', R x y → R x y' → y = y' := by
-    intro x y y' hy hy'
-    have h := h3 _ _ (h2 x y x y' hy hy')
-    exact sub_eq_zero.mp (h.mp (sub_self x))
+    exact fun x y y' hy hy' => sub_eq_zero.mp ((h3 _ _ (h2 x y x y' hy hy')).mp (sub_self x))
   have hsub : ∀ x x', f (x - x') = f x - f x' :=
     fun x x' => huniq _ _ _ (hf (x - x')) (h2 _ _ _ _ (hf x) (hf x'))
   let g : (Fin 2 → ZMod N) →+ (Fin 2 → ZMod N) := AddMonoidHom.ofMapSub f hsub
@@ -480,8 +478,7 @@ theorem kerReps_transport : ∀ (K : Type) [Field K] (ι : K →+* ℂ) (Λ₀ �
   · intro P' hP'
     obtain ⟨P, hP, rfl⟩ := Finset.mem_image.mp (Finset.mem_coe.mp hP')
     exact ⟨P, hP, rfl⟩
-  · intro P hP
-    exact ⟨k P, k' P, hk P hP, rfl, hT' P hP⟩
+  · exact fun P hP => ⟨k P, k' P, hk P hP, rfl, hT' P hP⟩
 
 end GlobalTheory.WpFam
 end -- clump:auto
@@ -926,7 +923,7 @@ private theorem exists_eisensteinCombination_of_isModularForm {w : ℕ} {F : ℍ
     rw [Finset.sum_image (fun x _ y _ h => congrArg Prod.fst h), ← hf τ, ← hc]
     rw [Finset.sum_apply, ← Finset.sum_attach (_root_.ReciprocityTheory.PGsh.monoIdx w)]
     refine Finset.sum_congr rfl fun a _ => ?_
-    simp only [Pi.smul_apply, smul_eq_mul, a.2, dif_pos]
+    simp only [Pi.smul_apply, smul_eq_mul, a.2, dite_eq_left]
     rw [_root_.ReciprocityTheory.PGsh.coe_monoW a.2]
     rfl
 
@@ -1095,8 +1092,7 @@ theorem transport_of_separating : ∀ (g : ℂ ≃+* ℂ) (ι S : Type) [Fintype
     have h1 : g (u s (ρ.symm i') τ₀ / ω₀ ^ m s) = u' s (ρ (ρ.symm i')) τ₁ / ω₁ ^ m s :=
       hρ (some s) (ρ.symm i')
     rw [Equiv.apply_symm_apply, ← hi s] at h1
-    have h2 := g.injective h1
-    exact (div_left_inj' (pow_ne_zero _ hω)).1 h2
+    exact (div_left_inj' (pow_ne_zero _ hω)).1 (g.injective h1)
   have h3 : g (f (ρ.symm i') τ₀ / ω₀ ^ w) = f' (ρ (ρ.symm i')) τ₁ / ω₁ ^ w :=
     hρ none (ρ.symm i')
   rwa [Equiv.apply_symm_apply, hj] at h3

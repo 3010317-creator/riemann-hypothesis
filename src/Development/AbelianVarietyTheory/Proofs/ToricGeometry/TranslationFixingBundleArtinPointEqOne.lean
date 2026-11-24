@@ -101,8 +101,7 @@ theorem exists_derivation (ρ : R →ₐ[ℂ] ℂ) (hρ : ∀ r, ρ r = 0 → r 
       simp only [LinearMap.sub_apply, LinearMap.smul_apply, AlgHom.toLinearMap_apply, smul_eq_mul,
         map_sub, Algebra.algebraMap_eq_smul_one, map_smul]
       ring
-    rw [e]
-    exact hi₀
+    rwa [e]
   · intro i r
     simp only [LinearMap.sub_apply, LinearMap.smul_apply, AlgHom.toLinearMap_apply, smul_eq_mul, map_mul]
     rw [hkey]
@@ -173,8 +172,7 @@ theorem exists_first_order (ρ : R →ₐ[ℂ] ℂ) (hρ : ∀ r, ρ r = 0 → r
         (TopologicalSpace.Opens.isBasis_iff_nbhd.1 (Scheme.isBasis_affineOpens A.left)) hpt
       refine ⟨V, hV, fun q _ => ?_, hVle⟩
       have hq : q = (default : PrimeSpectrum ℂ) := Subsingleton.elim (α := PrimeSpectrum ℂ) _ _
-      rw [hq]
-      exact hpV
+      rwa [hq]
     have hVW : V ≤ W := hVle.trans inf_le_left
     have hVU : V ≤ U := hVle.trans inf_le_right
     have hxV := hmem V hV0
@@ -234,8 +232,7 @@ theorem exists_first_order (ρ : R →ₐ[ℂ] ℂ) (hρ : ∀ r, ρ r = 0 → r
   obtain ⟨q, hq⟩ := hκne
   apply hq
   have h5 := core q.1.1 q.2 q.1.2
-  rw [hw0, ContinuousLinearMap.map_zero] at h5
-  exact h5
+  rwa [hw0, ContinuousLinearMap.map_zero] at h5
 
 theorem ex_add_lattice (z : Fin g → ℂ) {l : Fin g → ℂ} (hl : l ∈ u.Λ) : u.ex (z + l) = u.ex z := by
   rw [u.ex_add, (u.ker l).2 hl, _root_.mul_one]
@@ -247,8 +244,7 @@ theorem exists_chart (hL : L.IsLB) (z : Fin g → ℂ) : ∃ i, ⊤ ≤ (u.ex z)
   obtain ⟨i, hi⟩ := hp
   refine ⟨i, fun q _ => ?_⟩
   have hq : q = (default : PrimeSpectrum ℂ) := Subsingleton.elim (α := PrimeSpectrum ℂ) _ _
-  rw [hq]
-  exact hi
+  rwa [hq]
 
 theorem exists_linear_of_gen (hL : L.IsLB) (a : u.Λ → ℂ) (B : u.Λ → ((Fin g → ℂ) →ₗ[ℂ] ℂ)) (ha : ∀ l, a l ≠ 0)
     (hfr : ∀ (l : u.Λ) i z, ⊤ ≤ (u.ex z).left ⁻¹ᵁ L.U i → u.fr i z = a l * cexp (B l z) * u.fr i (z + l))
@@ -354,16 +350,13 @@ theorem exists_linear_of_gen (hL : L.IsLB) (a : u.Λ → ℂ) (B : u.Λ → ((Fi
       rw [hDmem]
       refine ⟨?_, ?_⟩
       · show ⊤ ≤ (u.ex (w + (z + l))).left ⁻¹ᵁ _
-        rw [← add_assoc, ewz]
-        exact a0
+        rwa [← add_assoc, ewz]
       · show ⊤ ≤ (u.ex (z + l)).left ⁻¹ᵁ _
-        rw [ez]
-        exact a1
+        rwa [ez]
     have n0 : u.fr (j 0) (w + z + l) ≠ 0 := by
       apply u.fr_ne
       show ⊤ ≤ (u.ex (w + z + l)).left ⁻¹ᵁ _
-      rw [ewz]
-      exact a0
+      rwa [ewz]
     rw [hFG j _ hzl, hFG j z hz]
     simp only [G, cv]
     rw [ez, ← add_assoc]
@@ -438,8 +431,7 @@ theorem exists_linear_of_log_deriv (hL : L.IsLB) (a : u.Λ → ℂ) (B : u.Λ �
     have hl : (l : Fin g → ℂ) ∈ u.Λ := l.2
     have hzl : z + l ∈ O i := by
       show ⊤ ≤ (u.ex (z + l)).left ⁻¹ᵁ _
-      rw [ex_add_lattice u z hl]
-      exact hz
+      rwa [ex_add_lattice u z hl]
     have hdl : DifferentiableAt ℂ (u.fr i) (z + l) := (u.fr_hol i).differentiableAt ((hO i).mem_nhds hzl)
     have h1 : HasFDerivAt (fun y => a l * cexp (B l y)) ((a l * cexp (B l z)) • (B l).toContinuousLinearMap) z := by
       have h7 := ((Complex.hasDerivAt_exp (B l z)).comp_hasFDerivAt z
@@ -506,8 +498,7 @@ theorem snd_preimage_le (ρ : R →ₐ[ℂ] ℂ) (x : spO R ⟶ A) (hx : resPt �
   obtain ⟨a, rfl⟩ := surjective_residue_slice (A := A) ρ p
   have q1 : (lift (fst (spO R) A ≫ x) (snd (spO R) A) ≫ μ).left
       ((lift (toUnit A ≫ resPt ρ) (𝟙 A)).left a) = a := by
-    have h1 := congrArg (fun φ : A ⟶ A => φ.left a) e1
-    simpa using h1
+    simpa using congrArg (fun φ : A ⟶ A => φ.left a) e1
   have q2 : (snd (spO R) A).left ((lift (toUnit A ≫ resPt ρ) (𝟙 A)).left a) = a := by
     rw [← Scheme.Hom.comp_apply, ← Over.comp_left, e2]
     rfl
@@ -520,11 +511,9 @@ theorem snd_preimage_le (ρ : R →ₐ[ℂ] ℂ) (x : spO R ⟶ A) (hx : resPt �
   intro k
   fin_cases k
   · simp only [Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero]
-    rw [q1]
-    exact ha
+    rwa [q1]
   · simp only [Fin.mk_one, Fin.isValue, Matrix.cons_val_one, Matrix.cons_val_zero]
-    rw [q2]
-    exact ha
+    rwa [q2]
 
 
 omit [IsLocalRing R] [Module.Finite ℂ R] in
@@ -541,8 +530,7 @@ theorem first_order_transl (ρ : R →ₐ[ℂ] ℂ) (x : spO R ⟶ A) (κ : R �
   have hcomp : (x ≫ translBy u z).left = x.left ≫ T := Over.comp_left ..
   have h' : ⊤ ≤ x.left ⁻¹ᵁ (T ⁻¹ᵁ W) := by
     have h0 := h
-    rw [hcomp] at h0
-    exact h0
+    rwa [hcomp] at h0
   let f' := (T.appLE W (T ⁻¹ᵁ W) le_rfl).hom f
   have hev : evalPt (R := R) x.left (T ⁻¹ᵁ W) h' f' = evalPt (R := R) (x ≫ translBy u z).left W h f :=
     evalPt_appLE x.left T _ hcomp.symm W _ le_rfl h' h f
@@ -554,7 +542,7 @@ theorem first_order_transl (ρ : R →ₐ[ℂ] ℂ) (x : spO R ⟶ A) (κ : R �
       rw [valAt'_eq_evalPt _ _ hm, valAt'_eq_evalPt _ _ hm']
       exact evalPt_appLE _ T _ hy W _ le_rfl hm hm' f
     · have hm' : ¬ ⊤ ≤ (u.ex (y + z)).left ⁻¹ᵁ W := by rw [← hy]; exact hm
-      simp only [valAt', dif_neg hm, dif_neg hm']
+      simp only [valAt', dite_eq_right hm, dite_eq_right hm']
   have hsh := fderiv_comp_add_right (𝕜 := ℂ) (f := fun v => valAt' (u.ex v).left W f) (x := 0) z
   simp only [zero_add] at hsh
   obtain ⟨h1, h2⟩ := hκ (T ⁻¹ᵁ W) h' f'
@@ -622,8 +610,7 @@ theorem exists_linear_of_first_order (hL : L.IsLB) (a : u.Λ → ℂ) (B : u.Λ 
     ⟨fun i z => evalPt' (R := R) (famPt u R z).left _ (c.s (fun _ => i)).val, fun _ _ => rfl⟩
   have hF : ∀ i (lam : R →ₗ[ℂ] ℂ),
       DifferentiableOn ℂ (fun z => lam (F i z)) {z | ⊤ ≤ (u.ex z).left ⁻¹ᵁ L.U i} := fun i lam => by
-    simp only [hFdef]
-    exact differentiableOn_famPt u (hle i) _ lam
+    simpa only [hFdef] using differentiableOn_famPt u (hle i) _ lam
   have hF0 : ∀ i z, ⊤ ≤ (u.ex z).left ⁻¹ᵁ L.U i → ρ (F i z) ≠ 0 := fun i z hz => by
     rw [hFdef, evalPt'_eq _ (hD i z hz)]
     exact (((c.s (fun _ => i)).isUnit.map _).map ρ).ne_zero
@@ -645,9 +632,7 @@ theorem exists_linear_of_first_order (hL : L.IsLB) (a : u.Λ → ℂ) (B : u.Λ 
       rw [hFdef, hFdef, evalPt'_eq _ (hD i z hz), evalPt'_eq _ (hD i' z hz'),
         ← evalPt_const (R := R) _ _ (top_le_const _ _ a1) a1]
       exact e
-    have n0 := valAt'_unit_ne_zero _ a1 (L.g i i')
-    have n2 := hF0 i' z hz'
-    exact log_deriv_rule ρ κ e' hρ k n0 n2
+    exact log_deriv_rule ρ κ e' hρ k (valAt'_unit_ne_zero _ a1 (L.g i i')) (hF0 i' z hz')
 
 end Main
 

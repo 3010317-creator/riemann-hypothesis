@@ -114,8 +114,7 @@ theorem bmap_local (q : ℕ) (W₀ : Fin n → Fin n → ℂ) (hW₀ : W₀ ∈ 
     obtain ⟨y, hy, hyW⟩ := hcov W hW
     refine ⟨y, hy, ?_⟩
     unfold bmap
-    rw [if_pos hq]
-    exact hyW
+    rwa [ite_eq_left hq]
   · obtain ⟨r, hr, hsub, S, hS, hcov⟩ := zOf_surj_bdd' (negConj W₀) (negConj_mem hW₀)
     have key : ∀ W ∈ closedBall W₀ r, negConj W ∈ closedBall (negConj W₀) r := by
       intro W hW
@@ -127,7 +126,7 @@ theorem bmap_local (q : ℕ) (W₀ : Fin n → Fin n → ℂ) (hW₀ : W₀ ∈ 
     · obtain ⟨y, hy, hyW⟩ := hcov (negConj W) (key W hW)
       refine ⟨y, hy, ?_⟩
       unfold bmap
-      rw [if_neg hq, hyW]
+      rw [ite_eq_right hq, hyW]
       funext i j
       show -star (negConj W j i) = W i j
       simp [negConj]
@@ -137,12 +136,11 @@ theorem bmap_surj (q : ℕ) {W : Fin n → Fin n → ℂ} (hW : W ∈ Dom n) : �
   · obtain ⟨y, hy⟩ := zOf_surj' hW
     refine ⟨y, ?_⟩
     unfold bmap
-    rw [if_pos hq]
-    exact hy
+    rwa [ite_eq_left hq]
   · obtain ⟨y, hy⟩ := zOf_surj' (negConj_mem hW)
     refine ⟨y, ?_⟩
     unfold bmap
-    rw [if_neg hq, hy]
+    rw [ite_eq_right hq, hy]
     funext i j
     show -star (negConj W j i) = W i j
     simp [negConj]
@@ -157,8 +155,7 @@ theorem continuous_toBlocks₂₂ : Continuous fun M : M2 n => M.toBlocks₂₂ 
   continuous_pi fun i => continuous_pi fun j => (continuous_apply (Sum.inr j)).comp (continuous_apply (Sum.inr i))
 
 theorem zpow_cond {a : ℂ} {k : ℤ} (h : a ^ k ≠ 0) : a ≠ 0 ∨ 0 ≤ k := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   obtain ⟨rfl, hk⟩ := hc
   exact h (zero_zpow k (ne_of_lt hk))
 
@@ -227,8 +224,7 @@ theorem aesm_fderiv (f : X → E → ℂ) (W₀ : E) (r : ℝ) (hr : 0 < r)
     refine tendsto_nhdsWithin_iff.2 ⟨?_, Eventually.of_forall fun k => ?_⟩
     · have h := (tendsto_one_div_add_atTop_nhds_zero_nat.const_mul ε)
       rw [mul_zero] at h
-      have h2 := (Complex.continuous_ofReal.tendsto 0).comp h
-      simpa [ht_def, Function.comp_def] using h2
+      simpa [ht_def, Function.comp_def] using (Complex.continuous_ofReal.tendsto 0).comp h
     · simp only [ht_def, Set.mem_compl_iff, Set.mem_singleton_iff, Complex.ofReal_eq_zero]
       positivity
   have htn : ∀ k, ‖t k‖ ≤ ε := by
@@ -253,8 +249,7 @@ theorem aesm_fderiv (f : X → E → ℂ) (W₀ : E) (r : ℝ) (hr : 0 < r)
       simpa using ((hasDerivAt_id (0 : ℂ)).smul_const v).const_add W₀
     have h1 : HasDerivAt (fun s : ℂ => f x (W₀ + s • v)) (fderiv ℂ (f x) W₀ v) 0 :=
       (hd x).hasFDerivAt.comp_hasDerivAt_of_eq (0 : ℂ) hl (by simp)
-    have h2 := h1.tendsto_slope_zero.comp ht0
-    simpa [Function.comp_def] using h2
+    simpa [Function.comp_def] using h1.tendsto_slope_zero.comp ht0
 
 theorem differentiableOn_integral_of_bdd [IsFiniteMeasure ν] {U : Set E} (hU : IsOpen U) (f : X → E → ℂ)
     (hd : ∀ x, DifferentiableOn ℂ (f x) U) (hm : ∀ W ∈ U, AEStronglyMeasurable (f · W) ν)
@@ -354,8 +349,7 @@ theorem const_of_transl (G : EE n → ℂ) (hG : DifferentiableOn ℂ G (Dom n))
     have hk0 : ∀ k : EE n, (Matrix.of k).IsHermitian → fderiv ℂ G W k = 0 := by
       intro k hk
       have hc : HasDerivAt (fun t : ℝ => W + (t : ℂ) • k) k 0 := by
-        have h1 := ((hasDerivAt_id (0 : ℝ)).ofReal_comp.smul_const k).const_add W
-        simpa using h1
+        simpa using ((hasDerivAt_id (0 : ℝ)).ofReal_comp.smul_const k).const_add W
       have hcomp := (hGd.restrictScalars ℝ).comp_hasDerivAt_of_eq (0 : ℝ) hc (by simp)
       have hfun : (G ∘ fun t : ℝ => W + (t : ℂ) • k) = fun _ => G W := by
         funext t

@@ -68,8 +68,7 @@ theorem continuous_integral_of_cocompact {G H : Type*} [TopologicalSpace G] [Loc
   have hconst : IntegrableOn (fun _ : H => (M : ℂ)) 𝓕 μ :=
     GlobalTheory.CocompactIntegrable.integrableOn_of_cocompact Γ μ 𝓕 C h𝓕 hC hcov _ continuous_const
       (fun _ _ _ => rfl)
-  have hconst' : Integrable (fun _ : H => M) (μ.restrict 𝓕) := by
-    exact hconst.re
+  have hconst' : Integrable (fun _ : H => M) (μ.restrict 𝓕) := hconst.re
   refine continuousAt_of_dominated (bound := fun _ => M) ?_ ?_ hconst' ?_
   · refine Filter.Eventually.of_forall fun g => ?_
     exact (hK.comp (Continuous.prodMk_right g)).aestronglyMeasurable
@@ -78,8 +77,7 @@ theorem continuous_integral_of_cocompact {G H : Type*} [TopologicalSpace G] [Loc
     obtain ⟨γ, hγ, c, hc, rfl⟩ := hcov h
     rw [hinv γ hγ]
     exact hM (g, c) ⟨hg, hc⟩
-  · refine Filter.Eventually.of_forall fun h => ?_
-    exact (hK.comp (Continuous.prodMk_left h)).continuousAt
+  · exact Filter.Eventually.of_forall fun h => (hK.comp (Continuous.prodMk_left h)).continuousAt
 
 theorem theta_integral_integrable_continuous : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V W : HSp D) (χS χT : (AE D)ˣ →* Circle) (ω : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)) (ν : Measure (GA D W)) (𝓕 : Set (GA D W)) (s : WO V W → ℂ) (F : GA D W → ℂ), IsWeilDatumO ψ V W χS χT ω → (∀ τ, (gramAt D W τ).PosDef) → ν.IsHaarMeasure → IsFundamentalDomain (GQ W) 𝓕 ν → IsThetaFunO ψ V W s → Continuous F → (∀ γ ∈ GQ W, ∀ h, F (γ * h) = F h) → (∀ g, IntegrableOn (fun h => thetaKO ω g h s * F h) 𝓕 ν) ∧ Continuous (Lift.liftInt ν 𝓕 (thetaKO ω) s F) := by
   intro D ψ V W χS χT ω ν 𝓕 s F hω hpos hν h𝓕 hs hF hFinv

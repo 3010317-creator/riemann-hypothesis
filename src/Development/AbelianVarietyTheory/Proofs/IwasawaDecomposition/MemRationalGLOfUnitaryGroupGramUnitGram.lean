@@ -213,7 +213,6 @@ end V
 
 theorem toGf_bij_ratIso : ∀ (D : D7) (V : HSp D) (P : principalLevelFrame.RowPsi V V.rank), V.gram = 1 → UnitFr P →
     Function.Bijective (toGf P) ∧ ∃ e, RatIso P e := by
-  intro D V P hV hU
-  exact ⟨⟨toGf_injective P hU, toGf_surjective P⟩, ratE hV, ratIso_ratE hV P hU⟩
+  exact fun D V P hV hU => ⟨⟨toGf_injective P hU, toGf_surjective P⟩, ratE hV, ratIso_ratE hV P hU⟩
 
 end GlobalTheory.MtInRat

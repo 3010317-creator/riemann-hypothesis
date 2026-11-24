@@ -613,8 +613,7 @@ theorem good_of_not_mem_above {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T :
     have e := GlobalTheory.GoodPrimes.isConjPl_iff.1 hc
     apply hw
     show w.under (𝓞 D.host.F) ∈ (GlobalTheory.IndefiniteRowSideFullHecke.LabelSettingScalars.badPl R t : Set (HeightOneSpectrum (𝓞 D.host.F)))
-    rw [e, GlobalTheory.TwistTypePlaces.under_conjPl]
-    exact hmem
+    rwa [e, GlobalTheory.TwistTypePlaces.under_conjPl]
 
 end GlobalTheory.Core.Rk.StringPole
 
@@ -660,8 +659,7 @@ theorem GlobalTheory.Core.Rk.StringPole.string_pole_hyp : ∀ (D : D7) (G : Type
     exact hbd _ hb'
   · show B w = GlobalTheory.IndefiniteRowSideFullHecke.SimplePoleTwistedLift.liftFam c x x D.R.t w
     unfold GlobalTheory.IndefiniteRowSideFullHecke.SimplePoleTwistedLift.liftFam
-    rw [mul_inv_cancel, GlobalTheory.LFun.twist_one]
-    exact hsplit
+    rwa [mul_inv_cancel, GlobalTheory.LFun.twist_one]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -853,8 +851,7 @@ theorem levChi_flag_of_mem_prin (R : RealDat D A Ks) (i : Fin D.R.m) (t : T) {κ
   have h1 := GlobalTheory.RawLift.LevelFix.levChi_flag_one R i t
   unfold levChi at h1 ⊢
   rw [e]
-  rw [(finE (Vc D i)).map_one] at h1
-  exact h1
+  rwa [(finE (Vc D i)).map_one] at h1
 
 theorem is_lift_one_principal_level (R : RealDat D A Ks) (i : Fin D.R.m) : IsLevelLift (Wc D i) (R.βW i) (R.datWp i R.triv) 1 1 :=
   ⟨Subgroup.one_mem _, by rw [map_one]; exact Subgroup.one_mem _, by rw [map_one]; exact rTup_one⟩
@@ -1008,8 +1005,7 @@ theorem pair_data : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type)
     have heta : R.C.eta.UnrAt w := R.C.isEta.unr w
     have a1 := (GlobalTheory.LFun.unrAt_iff_of_chrEq (hc.lev.mu0 i) w).2 hmu
     have a2 := (GlobalTheory.LFun.unrAt_iff_of_chrEq (hc.lev.xi t) w).2 hxi
-    have a3 := (GlobalTheory.LFun.unrAt_iff_of_chrEq hc.lev.eta w).2 heta
-    exact (a1.mul a2).mul a3.inv
+    exact (a1.mul a2).mul ((GlobalTheory.LFun.unrAt_iff_of_chrEq hc.lev.eta w).2 heta).inv
   have hr : 0 < D.R.r := by
     have := D.R.m_add_three_le_k
     unfold Formalism.BasicNotions.Ranks.r

@@ -242,13 +242,11 @@ private theorem flag_block {k H : Type} [Field k] (R : H → Matrix (Fin 3) (Fin
     rw [Matrix.mul_apply, Fin.sum_univ_three, ht1, Matrix.one_apply_eq] at h
     linear_combination h
   have hx : I 0 0 ≠ 0 ∨ I 2 0 ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     rw [hc.1, hc.2] at e00
     simp at e00
   have hp : P 2 0 ≠ 0 ∨ P 2 2 ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     rw [hc.1, hc.2] at e22
     simp at e22
   refine tri_of_lines (fun s => corner (R s)) a c (I 0 0) (I 2 0) (P 2 0) (P 2 2) hx hp e20 (fun s => ?_) (fun s => ?_)
@@ -453,8 +451,7 @@ theorem UpperTheory.V.Z.Win.Dn.rigid_end_two_w_of_printed_adjoint_lifting :
       _ (u := ⟨g₂, hg₂⟩) ?_ ?_ ?_
     · have := hV ⟨g, hg⟩ trivial v hv
       beta_reduce
-      rw [← hW g hg]
-      exact this
+      rwa [← hW g hg]
     · show _ = (W g).val.trace
       rw [hW g g.2, Matrix.trace_fin_two, map_add (f := _)]
       rfl
@@ -472,8 +469,7 @@ theorem UpperTheory.V.Z.Win.Dn.rigid_end_two_w_of_printed_adjoint_lifting :
       refine (hmk.Ψg.map ((residue A).comp (algebraMap c.O A))).ne_zero ?_
       rw [map_sub, map_pow, map_one, sub_eq_zero]
       have h' := congrArg Units.val h
-      rw [Units.val_pow_eq_pow_val] at h'
-      exact h'
+      rwa [Units.val_pow_eq_pow_val] at h'
   have hirr : Af.IsIrr (W.comp (Base.galEmb ℚ L Ω)) :=
     Db.irr_of_matIrr (by norm_num) (Base.galOf ℚ L Ω) (fun g => (W g).val)
       (fun V hV => hU V fun g hg v hv => hV g hg v hv) (Base.galEmb ℚ L Ω) (Base.range_galEmb ℚ L Ω).ge _ fun _ => rfl
@@ -559,8 +555,7 @@ theorem UpperTheory.V.Z.Win.RR.rigII_a_alt :
   haveI : CharP (ResidueField c.O) l := by
     rw [CharP.charP_iff_prime_eq_zero hl.out, ← map_natCast (residue c.O), residue_eq_zero_iff,
       mem_maximalIdeal, mem_nonunits_iff, ← map_natCast (algebraMap ℤ_[l] c.O)]
-    intro hu
-    exact PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
+    exact fun hu => PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
   have hram : ∀ B' : ValuationSubring Ω, ¬ Ine (F := ℚ) B' ≤ D.η.ker →
       B'.valuation ((l * N * (discr K).natAbs : ℕ) : Ω) < 1 := by
     intro B' h

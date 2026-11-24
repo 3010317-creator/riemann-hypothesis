@@ -448,8 +448,7 @@ private theorem as_infOf (M : Multiset ℂ) (h2 : M.card = 2) (hz : ∀ z ∈ M,
 private theorem irr_tw {Γ k : Type} [Group Γ] [Field k] {n : ℕ} (r : Γ →* GL (Fin n) k) (κ : Γ →* kˣ) (h : IsIrr r) : IsIrr (tw r κ) := by
   refine ⟨h.1, fun _ _ _ => trivial, fun W hW hi => h.2.2 W hW fun s v hv => ?_⟩
   have := W.smul_mem (((κ s)⁻¹ : kˣ) : k) (hi s v hv)
-  rw [tw_val, Matrix.smul_mulVec, smul_smul, Units.inv_mul, one_smul] at this
-  exact this
+  rwa [tw_val, Matrix.smul_mulVec, smul_smul, Units.inv_mul, one_smul] at this
 private theorem irr_tw_comp {Γ Γ' k : Type} [Group Γ] [Group Γ'] [Field k] {n : ℕ} (r : Γ →* GL (Fin n) k) (κ : Γ →* kˣ) (φ : Γ' →* Γ)
     (h : IsIrr (r.comp φ)) : IsIrr ((tw r κ).comp φ) :=
   irr_tw (r.comp φ) (κ.comp φ) h
@@ -563,11 +562,9 @@ theorem UpperTheory.V.Cu.rank_four_automorphy_of_tensor_of_base_change_of_induct
       exact fun x => (IntermediateField.mem_fixingSubgroup_iff _ _).1 this x x.2
     refine ⟨fun g g' e => hind.on _ hs' (galEmb K' M Ω g) (galEmb K' M Ω g') ?_, fun g e => hind.off _ hs' (galEmb K' M Ω g) ?_⟩
     · have := congrArg (resQ L) e
-      rw [map_mul, map_mul, map_inv] at this
-      exact this
+      rwa [map_mul, map_mul, map_inv] at this
     · have := congrArg (resQ L) e
-      rw [map_mul] at this
-      exact this
+      rwa [map_mul] at this
 end
 end -- clump:auto
 end -- clump:auto

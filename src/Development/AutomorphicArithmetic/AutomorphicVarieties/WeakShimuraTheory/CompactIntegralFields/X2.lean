@@ -161,8 +161,7 @@ theorem UpperTheory.V.Ws.exists_descent_to_galoisGroupUnramifiedOutside :
       · intro h m
         rw [h]
         rfl
-      · intro h
-        exact LinearMap.ext h
+      · exact fun h => LinearMap.ext h
     have hopen : IsOpen (ρ.ker : Set (G F Ω)) := by
       apply Subgroup.isOpen_of_mem_nhds (g := 1)
       apply Filter.mem_of_superset (hK.mem_nhds K.one_mem)
@@ -424,8 +423,7 @@ theorem UpperTheory.V.Ws.tate_shafarevich_card_mod_l :
     · have hn : u ∈ NS Ω (S : Set (HeightOneSpectrum (𝓞 F))) := by
         apply Subgroup.le_topologicalClosure
         apply Subgroup.subset_normalClosure
-        simp only [Set.mem_iUnion]
-        exact ⟨v, hvS, A, hv, hu⟩
+        simpa only [Set.mem_iUnion] using ⟨v, hvS, A, hv, hu⟩
       have : toGS Ω (S : Set (HeightOneSpectrum (𝓞 F))) u = 1 := (QuotientGroup.eq_one_iff _).2 hn
       rw [this, hz1]
   choose s hs using Submodule.Quotient.mk_surjective ((B1 ρ).comap (Z1 ρ).subtype)
@@ -469,8 +467,7 @@ theorem UpperTheory.V.Ws.greenberg_wiles_count_mod_l :
     refine DFunLike.ext _ _ fun m => ?_
     have h1 : μ (toGS Ω _ g) = 1 := by
       have := hKc hg
-      rw [← hμ] at this
-      exact this
+      rwa [← hμ] at this
     rw [twDual_apply, h1, ← map_inv, hρK _ (K.inv_mem hg), Units.val_one, one_mul]) hX).2
   rw [hD, ← dualSelmer_orthogonalComplement_conditions P.loc.lt F Ω l M S ρ hρ μ Av hμ hA] at hsha
   have hsel : Sel ρ (locFam S Av) (continuous_locFam S Av) (fun _ => ⊤) = ⊤ :=
@@ -518,8 +515,7 @@ private theorem plDvd_fin (F : Type) [Field F] [NumberField F] (N : ℕ) (hN : N
   have h : Ideal.span {((N : ℕ) : 𝓞 F)} ≠ 0 := by
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact Nat.cast_ne_zero.2 hN
-  refine (Ideal.finite_factors h).subset fun v hv => ?_
-  exact Ideal.dvd_span_singleton.2 hv
+  exact (Ideal.finite_factors h).subset fun v hv => Ideal.dvd_span_singleton.2 hv
 
 theorem UpperTheory.V.Ws.card_globalCocycles_le_of_iwasawaRank :
     CohomologyHyp → ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime] (R M : Type) [CommRing R] [AddCommGroup M] [Module R M] [Finite M], (∀ m : M, l • m = 0) → ∀ (ρ : Representation R (G F Ω) M) (K : Subgroup (G F Ω)) (N r g : ℕ), l ≠ 2 → N ≠ 0 → l ∣ N → (plDvd F N).ncard ≤ g → (∀ σ ∈ ineOff F Ω N, ∀ m, ρ σ m = m) → K.Normal → IsOpen (K : Set (G F Ω)) → ¬ l ∣ K.index → (∀ σ ∈ K, ∀ m, ρ σ m = m) → K ≤ (cycMod F Ω l 1).ker → XRk l 1 K r → CardLe (cocOff ρ (ineOff F Ω N)) (Nat.card M ^ (r + 2 + g + Module.finrank ℚ F)) ∧ (IsTotallyReal F → (∀ σ : G F Ω, IsCC σ → ∀ m, ρ σ m = m) → CardLe (cocOff ρ (ineOff F Ω N)) (Nat.card M ^ (r + 2 + g))) := by
@@ -668,8 +664,7 @@ theorem UpperTheory.V.Ws.residualCharacter_complexConjugation_eq_one :
     have : D.th (resQ T.F σ) = (D.al * D.Psi) (resQ T.F σ) := by
       unfold Raw.th
       rfl
-    rw [MonoidHom.mul_apply, hP, mul_one] at this
-    exact this
+    rwa [MonoidHom.mul_apply, hP, mul_one] at this
   have hrt : (T.fr ∅).rt w σ = 1 := by
     simp only [List.mem_cons, List.not_mem_nil, or_false] at hw
     rcases hw with rfl | rfl | rfl
@@ -786,8 +781,7 @@ private theorem prime_nsmul_residueField_coef_eq_zero {l : ℕ} [Fact l.Prime] (
       (fun hu => PadicInt.p_nonunit (isUnit_of_map_unit (algebraMap ℤ_[l] c.O) _ hu))
   have h1 : ((l : ResidueField c.O)) = 0 := by
     rw [map_natCast] at h0
-    rw [← map_natCast (IsLocalRing.residue c.O)]
-    exact h0
+    rwa [← map_natCast (IsLocalRing.residue c.O)]
   rw [nsmul_eq_mul, h1, zero_mul]
 
 theorem UpperTheory.V.Ws.rank_cocycleSpaces_le_of_towerIwasawaRank :
@@ -811,8 +805,7 @@ theorem UpperTheory.V.Ws.rank_cocycleSpaces_le_of_towerIwasawaRank :
     · intro a b
       rw [h2 a b]
       simp [charRep, Tower.rbU]
-    · intro a ha
-      exact h3 a (hIne a ha).1
+    · exact fun a ha => h3 a (hIne a ha).1
   refine ⟨?_, ?_, ?_⟩
   · intro w
     have h := card_cocycles_vanishing_on_inertia_le_pow T.F Ω l (ResidueField c.O) (ResidueField c.O) tor (charRep (T.rbU w)) T.Kr r hI
@@ -863,8 +856,7 @@ private theorem rank_span_range_le_of_linearForm_comp_mem {X k₀ k : Type} [Fie
     obtain ⟨g, hg⟩ := LinearMap.exists_extend ((Module.Basis.span hy).coord j)
     refine ⟨g, fun i => ?_⟩
     have h1 := LinearMap.congr_fun hg (Module.Basis.span hy i)
-    rw [Module.Basis.span_apply] at h1
-    rw [LinearMap.comp_apply, Submodule.subtype_apply] at h1
+    rw [Module.Basis.span_apply, LinearMap.comp_apply, Submodule.subtype_apply] at h1
     rw [h1, ← Module.Basis.span_apply hy i, Module.Basis.coord_apply, Module.Basis.repr_self,
       Finsupp.single_apply]
   choose φ hφ using hφ
@@ -1076,8 +1068,7 @@ theorem UpperTheory.V.Ws.exists_iwasawaRank_bound_of_ferreroWashington :
     rw [MonoidHom.mem_ker] at hmem
     simp only [map_mul, map_inv] at hmem
     have h1 := congrArg (· * (AlgEquiv.restrictNormalHom K τ) * (AlgEquiv.restrictNormalHom K σ)) hmem
-    simp only [one_mul, inv_mul_cancel_right] at h1
-    exact h1
+    simpa only [one_mul, inv_mul_cancel_right] using h1
   haveI : IsAbelianGalois ℚ K := ⟨⟩
   haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   haveI : ∀ i : ℕ, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => by
@@ -1092,7 +1083,7 @@ theorem UpperTheory.V.Ws.exists_iwasawaRank_bound_of_ferreroWashington :
     erw [cyclotomicCharacter.toZModPow] at h
     exact h
   have hμ : ∃ ζ : K, IsPrimitiveRoot ζ (if l = 2 then 4 else l) := by
-    rw [if_neg hl2]
+    rw [ite_eq_right hl2]
     have := (muIff Ω K (l ^ 1)).2 (by
       rw [hgal]
       intro σ hσ
@@ -1323,9 +1314,7 @@ private theorem addClosed_index (l : ℕ) [Fact l.Prime] (A : AddSubgroup ℤ_[l
   have hfin : f.ker.index ≠ 0 := by
     rw [AddSubgroup.index_ker]
     exact Nat.card_ne_zero.2 ⟨inferInstance, inferInstance⟩
-  intro hA0
-  apply hfin
-  exact Nat.eq_zero_of_zero_dvd (hA0 ▸ AddSubgroup.index_dvd_of_le hle)
+  exact fun hA0 => hfin (Nat.eq_zero_of_zero_dvd (hA0 ▸ AddSubgroup.index_dvd_of_le hle))
 
 open GroundTheory.Global.Cyclotomic in
 theorem UpperTheory.V.Ws.index_ne_zero_of_isClosed_of_not_isOfFinOrder :
@@ -1352,22 +1341,18 @@ theorem UpperTheory.V.Ws.index_ne_zero_of_isClosed_of_not_isOfFinOrder :
   have hAi : A.index ≠ 0 := addClosed_index l A hAc _ haA ha0
   have hMi : (H.map L).index ≠ 0 := hAi
   have hK : (H ⊔ L.ker).index ≠ 0 := by
-    rw [← Subgroup.comap_map_eq, Subgroup.index_comap_of_surjective _ (padicUnitsLog_surjective l)]
-    exact hMi
+    rwa [← Subgroup.comap_map_eq, Subgroup.index_comap_of_surjective _ (padicUnitsLog_surjective l)]
   have hker : L.ker ≤ rootsOfUnity (torsionExponent l) ℤ_[l] := by
     intro x hx
     rw [mem_rootsOfUnity]
-    rw [MonoidHom.mem_ker, hL, padicUnitsLog_eq_one_iff] at hx
-    exact hx
+    rwa [MonoidHom.mem_ker, hL, padicUnitsLog_eq_one_iff] at hx
   have hcard : Nat.card L.ker ≠ 0 := by
     haveI : NeZero (torsionExponent l) := ⟨(torsionExponent_pos l).ne'⟩
     haveI : Finite L.ker := Finite.of_injective (Subgroup.inclusion hker) (Subgroup.inclusion_injective hker)
     exact Nat.card_ne_zero.2 ⟨inferInstance, inferInstance⟩
   have hrel : H.relIndex (H ⊔ L.ker) ≠ 0 := by
     rw [sup_comm, Subgroup.relIndex_sup_right]
-    intro h0
-    apply hcard
-    exact Nat.eq_zero_of_zero_dvd (h0 ▸ Subgroup.relIndex_dvd_card H L.ker)
+    exact fun h0 => hcard (Nat.eq_zero_of_zero_dvd (h0 ▸ Subgroup.relIndex_dvd_card H L.ker))
   rw [← Subgroup.relIndex_mul_index (le_sup_left : H ≤ H ⊔ L.ker)]
   exact mul_ne_zero hrel hK
 end -- clump:auto
@@ -1437,8 +1422,7 @@ private theorem val_smul_fix {Ω : Type} [Field Ω] [CharZero Ω] (B : Valuation
       change v z = x⁻¹ at hzx
       have hz' : z = x⁻¹ := v.injective (hzx.trans hv.symm)
       exact hz' ▸ hz
-    · intro h
-      exact ⟨x⁻¹, h, hv⟩
+    · exact fun h => ⟨x⁻¹, h, hv⟩
   rw [key, key, mem]
 
 theorem UpperTheory.V.Ws.ncard_placesDividing_le_of_orbitBound :
@@ -1573,11 +1557,10 @@ theorem UpperTheory.V.Ws.card_localCocycles_le_of_place_above_prime :
     unfold ReciprocityTheory.Gal.ContAction
     rw [continuous_prod_of_discrete_right]
     intro m
-    simp only [hρ']
-    exact (hρ m).continuous
+    simpa only [hρ'] using (hρ m).continuous
   obtain ⟨f1, h1⟩ := local_h1_finite_mod_l hF hT hE F Ω l M A v ρ' hA hc
   obtain ⟨fz, hz⟩ := cocycle_card_euler_formula _ _ M ρ' hc f1
-  rw [if_pos hv] at h1
+  rw [ite_eq_left hv] at h1
   have h0 : 0 < Nat.card (H0 ρ') := by
     haveI : Finite (H0 ρ') := Subtype.finite
     haveI : Nonempty (H0 ρ') := ⟨0⟩
@@ -1627,9 +1610,7 @@ theorem UpperTheory.V.Ws.exists_injective_places_above_l_of_tower :
       refine ⟨σ, fun x => ?_⟩
       rw [← hσ]
       exact ValuationSubring.smul_mem_pointwise_smul_iff
-    have hw : w = u := by
-      apply huniq w
-      exact ⟨1, fun x => Iff.rfl⟩
+    have hw : w = u := huniq w ⟨1, fun x => Iff.rfl⟩
     rw [hv, hw]
   · apply (hpl v (l : 𝓞 T.F)).1
     simpa using T.ovl v
@@ -1683,8 +1664,7 @@ theorem UpperTheory.V.Ws.rank_localCocycleSpaces_le :
     have hne : Ideal.span {((prodS D : ℕ) : 𝓞 T.F)} ≠ 0 := by
       rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
       exact Nat.cast_ne_zero.2 h0
-    refine (Ideal.finite_factors hne).subset fun v hv => ?_
-    exact Ideal.dvd_span_singleton.2 hv
+    exact (Ideal.finite_factors hne).subset fun v hv => Ideal.dvd_span_singleton.2 hv
   have hmem : ∀ v, pl v ∈ plDvd T.F (prodS D) := fun v => by
     obtain ⟨m, hm⟩ := hlS
     show ((prodS D : ℕ) : 𝓞 T.F) ∈ (pl v).asIdeal
@@ -1700,8 +1680,7 @@ theorem UpperTheory.V.Ws.rank_localCocycleSpaces_le :
   have hl0 : ((l : ℕ) : ResidueField c.O) = 0 := by
     obtain ⟨-, -, -, -, -, h0, -, hval, -⟩ := dvrFacts l c.O
     rw [hval, Ne, IsDiscreteValuationRing.addVal_eq_zero_iff] at h0
-    rw [← map_natCast (residue c.O), residue_eq_zero_iff]
-    exact h0
+    rwa [← map_natCast (residue c.O), residue_eq_zero_iff]
   haveI : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
   have hlc : IsLocallyConstant (T.rbU w) :=
     _root_.UpperTheory.Reformulated.B.LocallyConstantOpenPreimage.lc_of_open _ (Subgroup.isOpen_mono (fun x hx => hK2 w x (hK1 x hx)) hKo)
@@ -1718,7 +1697,7 @@ theorem UpperTheory.V.Ws.rank_localCocycleSpaces_le :
   have hsum : ∑ v : T.ι, (2 + locDeg (pl v)) ≤ T.d + 2 * g := by
     have h1 := sum_local_degree_above_l_le_finrank T.F l (Finset.univ.map ⟨pl, hinj⟩)
     rw [Finset.sum_map] at h1
-    simp only [Function.Embedding.coeFn_mk, (hpl _).2, if_true] at h1
+    simp only [Function.Embedding.coeFn_mk, (hpl _).2, ite_true] at h1
     rw [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ, ← Nat.card_eq_fintype_card, smul_eq_mul]
     have : T.d = Module.finrank ℚ T.F := rfl
     omega
@@ -1731,8 +1710,7 @@ theorem UpperTheory.V.Ws.rank_localCocycleSpaces_le :
     rw [Finset.prod_pow_eq_pow_sum]
     exact Nat.pow_le_pow_right Nat.card_pos hsum
   have := rank_le_of_card_le_pow_card_field (ResidueField c.O) _ _ hC
-  rw [Nat.cast_add] at this
-  exact this
+  rwa [Nat.cast_add] at this
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.RealPlaceConjugation.RankLocalCocycleSpacesLe =====

@@ -75,8 +75,7 @@ theorem alg_inv {R A R' B : Type} [CommRing R] [CommRing A] [CommRing R'] [CommR
     have hex : Function.Exact (Algebra.linearMap R R') d := by
       intro x
       constructor
-      · intro hx
-        exact hs x fun i => sub_eq_zero.1 (congrFun hx i)
+      · exact fun hx => hs x fun i => sub_eq_zero.1 (congrFun hx i)
       · rintro ⟨r, rfl⟩
         ext i
         simp [d]

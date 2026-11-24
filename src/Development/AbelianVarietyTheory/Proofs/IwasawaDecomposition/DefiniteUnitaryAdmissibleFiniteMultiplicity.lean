@@ -64,8 +64,7 @@ theorem exists_fin_mul_inf (y : UA E n) : ∃ a ∈ finU (E := E) (n := n), ∃ 
       rw [Matrix.conjTranspose_apply]
       exact (infEq E).symm_apply_apply _
     have h := congrArg (pInf E).mapMatrix hy
-    rw [map_mul, map_mul, map_one, mul_one, RingHom.mapMatrix_apply, h3] at h
-    exact h
+    rwa [map_mul, map_mul, map_one, mul_one, RingHom.mapMatrix_apply, h3] at h
   let b : UA E n := ⟨infGL E n yi, infGL_mem_UA yi hyi⟩
   have hb : b ∈ infU E n := MonoidHom.mem_ker.2 (pFin_infGL yi)
   have ha : b⁻¹ * y ∈ finU (E := E) (n := n) := by
@@ -218,8 +217,7 @@ theorem finiteDimensional_hom (π : AutSub E n) : FiniteDimensional ℂ (π.rep.
   · exact absurd ((Submodule.mem_bot ℂ).1 (h ▸ (⟨φV, hTφ, rfl⟩ : φ ∈ W))) h0
   · refine DFunLike.ext _ _ fun ψ => ?_
     obtain ⟨ψ', hψ', e⟩ : ψ.1 ∈ W := h.symm ▸ ψ.2
-    rw [← Subtype.ext e]
-    exact hψ'
+    rwa [← Subtype.ext e]
 
 theorem admissible_finiteMult : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) (π : AutSub E n),
     (∀ K : Subgroup (finU (E := E) (n := n)), IsOpen (K : Set (finU (E := E) (n := n))) →

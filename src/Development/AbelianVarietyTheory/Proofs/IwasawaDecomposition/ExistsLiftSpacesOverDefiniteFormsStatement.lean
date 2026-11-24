@@ -152,8 +152,7 @@ theorem exists_oLat_good : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0
       have h := congrArg (R.toRealDat.WL F.lv2 false i).subtype
         ((Module.finBasis D.what₂.LL (R.toRealDat.WL F.lv2 false i)).sum_repr ⟨y, hyW⟩)
 
-      rw [map_sum] at h
-      exact h
+      rwa [map_sum] at h
 
     rw [← hs, map_sum]
     refine Submodule.sum_mem _ fun k _ => ?_
@@ -432,8 +431,7 @@ theorem lift_forms_embed : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0
   · intro c x
     simp only [DatApi.liftForm_smul]
     exact (congrArg _ (map_smulₛₗ (R.toRealDat.jV i t) _ _)).trans (map_smul (R.toRealDat.extV i t) _ _)
-  · intro x x'
-    exact (hip x x').trans (h2 x x').symm
+  · exact fun x x' => (hip x x').trans (h2 x x').symm
 
 end GlobalTheory.Mem.R3.Rw.LiftForms
 end -- clump:auto
@@ -670,8 +668,7 @@ theorem GlobalTheory.LiftSpaces.exists_thetaMap {D : D7} {C : ChainReal D} (L : 
   let res : W2 →ₗ[ℂ] (L.TK i →ₗ[ℂ] (GA D (L.W i) → ℂ)) := LinearMap.lcomp ℂ _ (L.embK i) ∘ₗ W2.subtype
   have hker : LinearMap.ker res = ⊥ := by
     rw [LinearMap.ker_eq_bot']
-    intro w hw
-    exact Subtype.ext (hres w.1 w.2.1 hw)
+    exact fun w hw => Subtype.ext (hres w.1 w.2.1 hw)
   obtain ⟨ψ, hψ⟩ := res.exists_leftInverse_of_injective hker
   let ev : W2 →ₗ[ℂ] L.Wc i :=
     ((LinearMap.llcomp ℂ _ _ _ (L.eW i)) ∘ₗ W2.subtype).codRestrict (L.Wc i) (fun w => w.2.2)
@@ -684,8 +681,7 @@ theorem GlobalTheory.LiftSpaces.exists_thetaMap {D : D7} {C : ChainReal D} (L : 
     exact LinearMap.congr_fun hψ ⟨w, hw, hg⟩
   have h2 : (ψ ∘ₗ L.thC μ i ∘ₗ J.codRestrict (L.Amt μ i) hJ) x = ⟨w, hw, hg⟩ := h1
   show jM ((LinearEquiv.ofInjective jM hinj).symm ((LinearEquiv.ofEq _ _ hrange.symm) (ev ((ψ ∘ₗ L.thC μ i ∘ₗ J.codRestrict (L.Amt μ i) hJ) x)))) = _
-  rw [h2]
-  rw [← LinearEquiv.ofInjective_apply (f := jM) (h := hinj), LinearEquiv.apply_symm_apply]
+  rw [h2, ← LinearEquiv.ofInjective_apply (f := jM) (h := hinj), LinearEquiv.apply_symm_apply]
   rfl
 
 
@@ -700,7 +696,7 @@ theorem GlobalTheory.LiftSpaces.exists_lift_spaces : ∀ (D : D7) (G : Type) [Gr
     ⟨fun j => if hj : 1 ≤ j ∧ j ≤ D.R.m then Module.finrank ℂ
       ((R.toRealDat.Wat ⟨j - 1, Nat.lt_of_lt_of_le (Nat.sub_lt hj.1 Nat.one_pos) hj.2⟩ (sg0 D A3.A) (R.toRealDat.levL F.lv2 false (sg0 D A3.A))).comap
         (R.toRealDat.HW ⟨j - 1, Nat.lt_of_lt_of_le (Nat.sub_lt hj.1 Nat.one_pos) hj.2⟩ (sg0 D A3.A)).e) else 0,
-      fun j hj => dif_pos hj, fun j hj => dif_neg hj⟩
+      fun j hj => dite_eq_left hj, fun j hj => dite_eq_right hj⟩
 
   have hE : ∀ j (hj : 1 ≤ j ∧ j ≤ D.R.m), ∃ E : EuclideanSpace ℂ (Fin (d j)) →ₗ[ℂ]
       (R.toRealDat.HW ⟨j - 1, Nat.lt_of_lt_of_le (Nat.sub_lt hj.1 Nat.one_pos) hj.2⟩ (sg0 D A3.A)).H, Function.Injective E ∧
@@ -722,8 +718,7 @@ theorem GlobalTheory.LiftSpaces.exists_lift_spaces : ∀ (D : D7) (G : Type) [Gr
     obtain ⟨h1, h2, h3⟩ := GlobalTheory.T.liftHilbertModel_injective_contains_goodForms D G Pl0 I0 T A3 Ks R F cG hO hI hP hH y ⟨j - 1, Nat.lt_of_lt_of_le (Nat.sub_lt hj.1 Nat.one_pos) hj.2⟩
     obtain ⟨e1, e2, -, e4⟩ := hEJ j hj
     refine ⟨?_, ?_, ?_⟩
-    · intro x x' hx
-      exact e1 (h1 (PiTensorProduct.lift.injective hx))
+    · exact fun x x' hx => e1 (h1 (PiTensorProduct.lift.injective hx))
     · ext z
       constructor
       · rintro ⟨x, rfl⟩
@@ -825,11 +820,11 @@ theorem GlobalTheory.LiftSpaces.exists_lift_spaces : ∀ (D : D7) (G : Type) [Gr
     read := fun i t _ x => (hJM (y.tup t) ((i : ℕ) + 1) (hji i)).2 t rfl x }⟩⟩
   · intro μ hμ i x h w hw e hg
     show jMJ ((i : ℕ) + 1) (hji i) ((if hj : (1 ≤ (i : ℕ) + 1 ∧ (i : ℕ) + 1 ≤ D.R.m) ∧ y.Us μ then TH μ ((i : ℕ) + 1) hj.1 else 0) x) = _
-    rw [dif_pos ⟨hji i, hμ⟩]
+    rw [dite_eq_left ⟨hji i, hμ⟩]
     exact hTH μ ((i : ℕ) + 1) (hji i) hμ x h w hw e hg
   · intro μ hμ j
     show (if hj : (1 ≤ j ∧ j ≤ D.R.m) ∧ y.Us μ then TH μ j hj.1 else 0) = 0
-    rw [dif_neg (fun h => hμ h.2)]
+    rw [dite_eq_right (fun h => hμ h.2)]
   · intro j hj
     show Subsingleton (EuclideanSpace ℂ (Fin (d j)))
     rw [hd0 j (by omega)]
@@ -837,7 +832,7 @@ theorem GlobalTheory.LiftSpaces.exists_lift_spaces : ∀ (D : D7) (G : Type) [Gr
   · intro i π v
     show v ∈ (if hj : 1 ≤ (i : ℕ) + 1 ∧ (i : ℕ) + 1 ≤ D.R.m then
       (y.prtW F.lv2 ⟨(i : ℕ) + 1 - 1, by omega⟩ (rep π)).comap (jMJ ((i : ℕ) + 1) hj) else ⊥) ↔ _
-    rw [dif_pos (hji i)]
+    rw [dite_eq_left (hji i)]
     exact Iff.rfl
 end -- clump:auto
 end -- clump:auto

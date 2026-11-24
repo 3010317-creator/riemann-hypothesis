@@ -231,7 +231,7 @@ theorem GlobalTheory.LogKSDiv.spread_genFrame : ∀ (E : Type) [Field E] [Number
         by_cases h : τ' = τ
         · subst h; rwa [Pi.single_eq_same]
         · rw [Pi.single_eq_of_ne h]; intro a; simp) τ
-      rwa [Finset.sum_pi_single', if_pos (Finset.mem_univ _), Pi.single_eq_same] at this
+      rwa [Finset.sum_pi_single', ite_eq_left (Finset.mem_univ _), Pi.single_eq_same] at this
     have htm : ∀ (a : 𝓞 E) (cc : Fin n → L), rho hx' a (ψ ∘ cc) = ψ ∘ rho hx a cc :=
       fun a cc => vec_inj hx' (by
         show vec TF.Y.t _ xc' (tmap hx' _ _) = vec TF.Y.t _ xc' (_ ∘ tmap hx _ _)
@@ -286,7 +286,6 @@ theorem GlobalTheory.LogKSDiv.spread_genFrame : ∀ (E : Type) [Field E] [Number
   let e := Fintype.equivFinOfCardEq hcard
   have hdet : IsUnit (Matrix.of fun i j => Bv (e.symm j).1 (e.symm j).2 i).det := by
     rw [← Matrix.isUnit_iff_isUnit_det, ← Matrix.linearIndependent_cols_iff_isUnit]
-    show LinearIndependent _ ((fun z : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)) => Bv z.1 z.2) ∘ e.symm)
     exact hli.comp _ e.symm.injective
   obtain ⟨g, hg, s0, B₀, hB₀, hψB⟩ := spread_exact (hU₁.primeIdealOf ⟨p, hp₁⟩).asIdeal
     (fun j => Bv (e.symm j).1 (e.symm j).2) hdet (fun j => Pr (e.symm j).1) (fun j => hPK _ _)
@@ -332,8 +331,7 @@ theorem GlobalTheory.LogKSDiv.spread_genFrame : ∀ (E : Type) [Field E] [Number
   refine ⟨⟨_, hU'⟩, hUB, ρ, n, e, fun j => vec TF.Y.t _ xcU (cU j), germ_pt (barComp TF.Y Z) ξ hU hpU,
     fun j => vec_tan hxU _, fun w' hw' => ?_, fun τ i => ?_, fun a k => ?_⟩
   · obtain ⟨cc, rfl⟩ := vec_exists hxU w' hw'
-    simp only [comb_iff hxU]
-    exact basis_of_det cU hdetU cc
+    simpa only [comb_iff hxU] using basis_of_det cU hdetU cc
   · have hBj := hB₀ (e ⟨τ, i⟩)
     rw [Equiv.symm_apply_apply] at hBj
     have hρu : ρ (↑u⁻¹ : Γ(TF.Y.X, TF.Y.X.basicOpen g')) * ρ₁ s0 = 1 := by
@@ -369,5 +367,4 @@ theorem GlobalTheory.LogKSDiv.spread_genFrame : ∀ (E : Type) [Field E] [Number
       rw [comb_iff hxU, Finset.sum_eq_single k (fun j _ hj => by rw [Pi.single_eq_of_ne hj, zero_smul])
         (fun hk => absurd (Finset.mem_univ k) hk), Pi.single_eq_same]
     rw [vec_smul hxU, ← heig] at hc
-    rw [hrow]
-    exact hc
+    rwa [hrow]

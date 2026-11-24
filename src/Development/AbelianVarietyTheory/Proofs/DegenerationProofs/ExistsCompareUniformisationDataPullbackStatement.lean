@@ -255,8 +255,7 @@ theorem fourth_side_vals : ∀ (hG : GlobalFnsSt) (R V : Type) [CommRing R] [IsD
     have k₀ : W₀ (n x) = gw (U.w e) (x.left ≫ h) z (J₀ ((b x).left ≫ β)) (fun _ => K ((a x).left ≫ F)) := by
       rw [← ha, ← hq]
       exact hW₀ (n x)
-    rw [k₀, hW, hW₁, hW₂]
-    exact k
+    rwa [k₀, hW, hW₁, hW₂]
   refine ⟨?_, fun x => ?_, fun x y u => ?_⟩
   · have k := sq 1
     rw [map_one, map_one, map_one] at k
@@ -309,8 +308,7 @@ theorem fourth_side_vals : ∀ (hG : GlobalFnsSt) (R V : Type) [CommRing R] [IsD
         ((Over.map (thick V I' e)).map x ≫ fstG I' e G') ((Over.map (thick V I' e)).map y ≫ fstG I' e G')
         ((Over.map (thick V I' e)).map u ≫ fstG I' e G') :=
       cubV_congr (s := T.hom ≫ thick V I' e) (s' := T.hom ≫ thick V I' e) P'.c z JG rfl rfl rfl
-    rw [hC', hE'] at k
-    exact k
+    rwa [hC', hE'] at k
 
 end GlobalTheory.LN.FourthSide
 end
@@ -373,8 +371,7 @@ theorem isCPMap_of_rig (hG : GlobalFnsSt) {S S' : Scheme.{0}} {B : Over S} [GrpO
   refine ⟨?_, fun x => ?_, fun x y u => ?_⟩
   · have e := CubTransport.val_pmaps (fun _ => he) hr' T.hom hJ hJ'
     rw [Fintype.prod_unique, zpow_one] at e
-    rw [hW, one_left]
-    exact e
+    rwa [hW, one_left]
   · exact (a₂ x).trans (congrArg (W x⁻¹ * ·) (es _ x.left z J' hJ'))
   · exact (a₃ x y u).trans (congrArg (W (x * y * u) * W x * W y * W u * ·) (ec T z J' hJ' x y u))
 
@@ -664,8 +661,7 @@ theorem vals_id {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] {P P' 
     rwa [Category.comp_id, ← map_inv] at s
   · have c := c (β x) (β y) (β u)
     rw [_root_.id, cubV_toBase_id] at c
-    simp only [map_mul, map_one]
-    exact c
+    simpa only [map_mul, map_one] using c
 
 variable {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} {G : Over (Spec (CommRingCat.of R))} [GrpObj G]
   [IsCommMonObj G] {e : ℕ} {D D' : DegPre R} {A A' : PolAV (Spec (CommRingCat.of (FractionRing R)))}
@@ -874,8 +870,7 @@ theorem exists_xe [IsLocalRing R] [IsNoetherianRing R] (hI : I ≠ ⊤) :
     | succ e ih => exact fun h => ih (PreUnique.match_down U U' h)
   refine ⟨xe 0, fun e => ?_⟩
   have h := hxe e
-  rw [match_unique hI _ _ (down e _ h) (hxe 0)] at h
-  exact h
+  rwa [match_unique hI _ _ (down e _ h) (hxe 0)] at h
 
 theorem trans_comp_q (e : ℕ) :
     thickMap R I e G ≫ (U.gt (e + 1)).q.left = (U.gt e).q.left ≫ thickMap R I e D.P.A := by

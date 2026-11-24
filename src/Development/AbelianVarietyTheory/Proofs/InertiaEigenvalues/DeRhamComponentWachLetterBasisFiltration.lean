@@ -528,8 +528,7 @@ theorem om_mul_mem_Fil (K : FinExt l) (a : ℤ) (c : Om l) (b : P.R.BdR) (hb : b
   have h1 : b ∈ (P.PD K').Fil a := by
     rw [← SetLike.mem_coe, P.PD_Fil K' K]; exact hb
   have h2 := ((P.PD K').Fil a).smul_mem ⟨c, hK'⟩ h1
-  rw [← SetLike.mem_coe, P.PD_Fil K' K, Algebra.smul_def] at h2
-  exact h2
+  rwa [← SetLike.mem_coe, P.PD_Fil K' K, Algebra.smul_def] at h2
 
 theorem exists_conj (K LL : FinExt l) (τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1) (σ₀ σ : ↥LL.1 →ₐ[ℚ_[l]] Om l)
     (h₀ : ∀ k, σ₀ (τ k) = (k : Om l)) (h : ∀ k, σ (τ k) = (k : Om l)) :
@@ -540,8 +539,7 @@ theorem exists_conj (K LL : FinExt l) (τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1) (σ�
     rw [AlgEquiv.trans_apply, ← hg₀, AlgEquiv.symm_apply_apply, hg]
   refine ⟨⟨g₀.symm.trans g, fun k => ?_⟩, key⟩
   have := key (τ k)
-  rw [h₀, h] at this
-  exact this
+  rwa [h₀, h] at this
 
 theorem mem_FilV_local [IsDomain P.R.BdR] (K LL : FinExt l) (T : Lt K LL) (τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1)
     (ι : ↥LL.1 →ₐ[ℚ_[l]] P.R.BdR) (hι : ∀ c, ι (τ c) = algebraMap ↥K.1 P.R.BdR c) (a : ℤ)

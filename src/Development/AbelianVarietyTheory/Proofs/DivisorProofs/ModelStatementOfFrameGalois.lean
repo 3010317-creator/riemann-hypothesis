@@ -258,8 +258,7 @@ theorem alg_chainB_stable : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscrete
     rintro f (⟨g, rfl⟩ | ⟨τ, w, hf⟩)
     · exact grp_stab s g
     · exact proj_stab s τ w f hf)
-  intro x hx
-  exact hle a.2 x hx
+  exact fun x hx => hle a.2 x hx
 
 end GlobalTheory.ExpFrame
 
@@ -434,8 +433,7 @@ theorem hecke_values_map {V W : Type} [AddCommGroup V] [Module O V] [Module A V]
         (fun s => hf _) _ (hX g') (hV.2 i f g')))
       exact congrArg (fun z => cst i • z) (Finset.sum_congr rfl fun s _ => hφ (g' * s))
     have h2 : ((p • ((X i : MvPolynomial I O) • f) : Forms O Γ jK V) : G → V) g ∈ U := by
-      rw [← mul_smul]
-      exact h
+      rwa [← mul_smul]
     have e : (⟨_, h⟩ : U) = ⟨_, h2⟩ := by
       apply Subtype.ext
       simp only [mul_smul]
@@ -487,8 +485,7 @@ theorem CoeffCont.mul {Γ K : Type} [TopologicalSpace Γ] [CommRing K] [Topologi
     [IsTopologicalRing K] {F F' : Γ → K[X]} (h : CoeffCont F) (h' : CoeffCont F') :
     CoeffCont (F * F') := by
   intro k
-  simp only [Pi.mul_apply, coeff_mul]
-  exact continuous_finsetSum _ fun x _ => (h x.1).mul (h' x.2)
+  simpa only [Pi.mul_apply, coeff_mul] using continuous_finsetSum _ fun x _ => (h x.1).mul (h' x.2)
 
 theorem coeffCont_one {Γ K : Type} [TopologicalSpace Γ] [CommRing K] [TopologicalSpace K] :
     CoeffCont (1 : Γ → K[X]) := fun _ => continuous_const
@@ -536,8 +533,7 @@ theorem norm_le_one_of_compact {Γ K : Type} [Group Γ] [TopologicalSpace Γ] [C
   have hpow : ∀ k : ℕ, ‖((t g : Kˣ) : K)‖ ^ k ≤ M := fun k => by
     have := hM ⟨g ^ k, Set.mem_univ _, rfl⟩
     simpa [map_pow, Units.val_pow_eq_pow_val, norm_pow] using this
-  by_contra h
-  push_neg at h
+  by_contra! h
   obtain ⟨k, hk⟩ := ((tendsto_pow_atTop_atTop_of_one_lt h).eventually_gt_atTop M).exists
   exact absurd (hpow k) (not_le.2 hk)
 
@@ -644,7 +640,7 @@ theorem blockFor_of_congr : GlobalTheory.Published.ChebotarevDegreeOne → ∀ (
       simp only [hp, hq]
       rw [e1, e2]
       exact norm_coeff_hecke_sub_lt _ _ _ _ _ hw (norm_sysOf_sub_lt P.Nr pt hcl P0) _
-    · push_neg at hk
+    · push Not at hk
       rw [coeff_sub, coeff_eq_zero_of_natDegree_lt (by rw [dp]; exact hk),
         coeff_eq_zero_of_natDegree_lt (by rw [dq]; exact hk)]
       simp
@@ -656,8 +652,7 @@ theorem blockFor_of_congr : GlobalTheory.Published.ChebotarevDegreeOne → ∀ (
   have h := hall (σ ^ (Fn.sgn : ℤ)) k
   have e : (σ ^ (Fn.sgn : ℤ)) ^ (Fn.sgn : ℤ) = σ := by
     rw [← zpow_mul, ← Units.val_mul, Int.units_mul_self, Units.val_one, zpow_one]
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 end GlobalTheory.ExpFrame.CongrBlock
 end -- clump:auto
@@ -735,10 +730,8 @@ theorem exists_algEquiv_lift_residue (l : ℕ) [Fact l.Prime] (L : IntermediateF
     rw [map_sub, hxy]
     exact sub_eq_zero.2 h1
   have h3 : ¬ IsUnit (σ • x - y) := by
-    rw [residue_eq_zero_iff, mem_maximalIdeal, mem_nonunits_iff] at h2
-    exact h2
-  have h4 := (GlobalTheory.ZH.not_isUnit_OO_iff _).1 h3
-  simpa [hsmul] using h4
+    rwa [residue_eq_zero_iff, mem_maximalIdeal, mem_nonunits_iff] at h2
+  simpa [hsmul] using (GlobalTheory.ZH.not_isUnit_OO_iff _).1 h3
 
 end GlobalTheory.ZJ
 end -- clump:auto
@@ -1088,7 +1081,7 @@ theorem coeff_eq_of_int (P : Type) [CommRing P] [IsDomain P] [CharZero P] (L : �
   have := congrArg (fun q : Polynomial P => q.coeff i) hQ
   simp only [Q, finsetSum_coeff, coeff_monomial, coeff_zero] at this
   simp only [Finsupp.single_apply] at this
-  rw [Finset.sum_eq_single i (fun j _ hj => if_neg hj) (fun h' => absurd (Finset.mem_range.2 hi) h'), if_pos rfl] at this
+  rw [Finset.sum_eq_single i (fun j _ hj => ite_eq_right hj) (fun h' => absurd (Finset.mem_range.2 hi) h'), ite_eq_left rfl] at this
   exact sub_eq_zero.1 this
 
 end GlobalTheory.CapelliCoeffs
@@ -1208,8 +1201,8 @@ theorem comp_of_rowZ {O : Type} [CommRing O] {N : ℕ} (H : Fin N → ℤ) (h : 
         rw [GlobalTheory.LvT.KerLat.weight_rowZ] at this
         exact_mod_cast this.symm
     by_cases hw : (fun c => (w c : ℤ)) = H
-    · rw [if_pos (key.mpr hw), if_pos hw]
-    · rw [if_neg (mt key.mp hw), if_neg hw, AddMonoidAlgebra.coeff_zero] <;> rfl
+    · rw [ite_eq_left (key.mpr hw), ite_eq_left hw]
+    · rw [ite_eq_right (mt key.mp hw), ite_eq_right hw, AddMonoidAlgebra.coeff_zero] <;> rfl
 
 theorem eq_zero_of_rowZ_neg {O : Type} [CommRing O] {N : ℕ} (H : Fin N → ℤ) (h : MvPolynomial (Fin N × Fin N) O)
     (hh : IsWeightedHomogeneous (GlobalTheory.LvT.KerLat.rowZ N N) h H) (c : Fin N) (hc : H c < 0) : h = 0 := by
@@ -1264,7 +1257,7 @@ theorem comp_rowAct_transvection {O : Type} [CommRing O] {N : ℕ} (a b : Fin N)
     by_cases hk1 : k = 1
     · subst hk1
       by_cases hb : 1 ≤ w b
-      · rw [if_pos, if_pos rfl]
+      · rw [ite_eq_left, ite_eq_left rfl]
         funext c
         simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, Pi.single_apply]
         by_cases hca : c = a
@@ -1275,12 +1268,12 @@ theorem comp_rowAct_transvection {O : Type} [CommRing O] {N : ℕ} (a b : Fin N)
       · have h0 : rowDiv O a b 1 h = 0 :=
           eq_zero_of_rowZ_neg _ _ hs b (by simp [Pi.single_apply, Ne.symm hab]; omega)
         simp [h0]
-    · rw [if_neg hk1, if_neg]
+    · rw [ite_eq_right hk1, ite_eq_right]
       intro he
       have := congrFun he a
       simp [hab] at this
       omega
-  rw [Finset.sum_congr rfl hk, Finset.sum_ite_eq', if_pos (by simp)]
+  rw [Finset.sum_congr rfl hk, Finset.sum_ite_eq', ite_eq_left (by simp)]
 
 end GlobalTheory.PolarFormula
 
@@ -1311,10 +1304,8 @@ theorem polar_formula : ∀ (O : Type) [CommRing O] (N : ℕ) (ι : Type) [Finty
         ∑ w ∈ Fintype.piFinset (fun _ : Fin N => Finset.range (M + 1)),
           PiTensorProduct.tprod O (Function.update x τ ((w a : O) • cmp w)) := by
       apply Finset.sum_congr rfl
-      intro w _
-      exact ((PiTensorProduct.tprod O).map_update_smul x τ (w a : O) (cmp w)).symm
-    rw [hsum]
-    rw [← MultilinearMap.map_update_sum]
+      exact fun w _ => ((PiTensorProduct.tprod O).map_update_smul x τ (w a : O) (cmp w)).symm
+    rw [hsum, ← MultilinearMap.map_update_sum]
     congr 2
     apply Subtype.ext
     simp only [Submodule.coe_sum, Submodule.coe_smul]
@@ -1509,8 +1500,7 @@ theorem dvd_of_smul_eq_zero {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValu
     exact hd hm
   obtain ⟨u, rfl⟩ := hu
   apply hne
-  have h1 := congrArg (fun q => (↑u⁻¹ : O) • q) h0
-  simpa [smul_smul] using h1
+  simpa [smul_smul] using congrArg (fun q => (↑u⁻¹ : O) • q) h0
 
 theorem int_dvd_of {O : Type} [CommRing O] {ϖ : O} (hϖ : ¬ IsUnit ϖ) {l : ℕ} (hl : l.Prime)
     (hϖl : ϖ ∣ (l : O)) (d : ℤ) (hd : ϖ ∣ (d : O)) : (l : ℤ) ∣ d := by
@@ -1549,8 +1539,7 @@ theorem linkage : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationR
         (((∏ a : Fin N, (Polynomial.X + Polynomial.C (((nu τ a : ℤ) - (a : ℕ) : ℤ)))).coeff k : ℤ) : O) • 1 := by
     intro nu R hnu hR hb k
     apply scalar_of τ nu R Fab (fun p x => hFab p nu R hnu hR hb x)
-    intro f hf
-    exact hFk (res N (nu τ)) (hnu τ) f hf k
+    exact fun f hf => hFk (res N (nu τ)) (hnu τ) f hf k
   obtain ⟨z, hz⟩ := exists_ne (0 : Gm)
   obtain ⟨u, rfl⟩ := hπ z
   obtain ⟨y, hy⟩ := Submodule.Quotient.mk_surjective _ (ψ (π u))

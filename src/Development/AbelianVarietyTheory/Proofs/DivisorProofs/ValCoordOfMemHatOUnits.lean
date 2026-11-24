@@ -146,8 +146,7 @@ theorem exists_coprime_mul_mem {l : ℕ} (hl : l.Prime) (α : E)
       rw [this]; exact w.valuation_le_one _
     rw [hDm] at h2
     push_cast at h2
-    rw [mul_assoc, map_mul, h1, one_mul] at h2
-    exact h2
+    rwa [mul_assoc, map_mul, h1, one_mul] at h2
 
 theorem unitAt_embed {l : ℕ} (hl : l.Prime) (α : Eˣ)
     (h : ∀ w : HeightOneSpectrum (𝓞 E), (l : 𝓞 E) ∈ w.asIdeal → w.valuation E (α : E) = 1) (σ : E →+* ℂ) :

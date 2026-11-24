@@ -100,8 +100,7 @@ theorem split_unit (hF : ∀ x : F, star (algebraMap F E x) = algebraMap F E x) 
     refine Valuation.map_add_lt _ ?_ ?_
     · rw [map_mul, h2, mul_one]
       exact (HeightOneSpectrum.valuation_lt_one_iff_mem _ _).2 hm
-    · rw [valuation_conjP, star_star]
-      exact hn'
+    · rwa [valuation_conjP, star_star]
   have hk0 : k ≠ 0 := by
     rintro rfl
     rw [map_zero, zero_sub, Valuation.map_neg, h2] at v1
@@ -109,8 +108,7 @@ theorem split_unit (hF : ∀ x : F, star (algebraMap F E x) = algebraMap F E x) 
   have a1 : χ.locK (conjPrime₂ P) (upF F (Units.mk0 k hk0)) = χ.locK (conjPrime₂ P) y := locK_tame (ht _) h2 v1
   have a2 : χ.locK P (upF F (Units.mk0 k hk0)) = χ.locK P y' := by
     refine locK_tame (ht _) (hy ▸ (valuation_conjP P _).symm.trans h2) ?_
-    rw [valuation_conjP, star_sub, hF, ← hy] at v1
-    exact v1
+    rwa [valuation_conjP, star_sub, hF, ← hy] at v1
   have hab : aboveF (L := E) F (P.under (𝓞 F)) = {P, conjPrime₂ P} := by
     ext Q
     rw [GlobalTheory.Mem.ReadTwist.mem_above, Finset.mem_insert, Finset.mem_singleton]
@@ -162,8 +160,8 @@ theorem inf_mul_prod : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   have hfp : (∏ᶠ (P : HeightOneSpectrum (𝓞 E)) (_ : P ∉ V.biUnion (aboveF (L := E) F)), χ.val P ^ ordF P x) = 1 := by
     refine finprod_eq_one_of_forall_eq_one fun P => ?_
     by_cases hP : P ∈ V.biUnion (aboveF (L := E) F)
-    · rw [finprod_eq_if, if_neg (not_not.2 hP)]
-    rw [finprod_eq_if, if_pos hP, ordF, (hV P fun e => hP ((hm P).2 e)).2, WithZero.log_one, neg_zero, zpow_zero]
+    · rw [finprod_eq_if, ite_eq_right (not_not.2 hP)]
+    rw [finprod_eq_if, ite_eq_left hP, ordF, (hV P fun e => hP ((hm P).2 e)).2, WithZero.log_one, neg_zero, zpow_zero]
   have hpl : ∀ v ∈ V, ∏ Q ∈ aboveF (L := E) F v, χ.locK Q x = χ.locK (rep v) z := fun v _ => by
     have := place_prod hF hr hc hu hχ ht hun hxz (rep v)
     rwa [hrep] at this

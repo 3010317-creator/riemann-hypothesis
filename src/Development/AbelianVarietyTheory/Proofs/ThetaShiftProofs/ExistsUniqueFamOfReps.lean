@@ -92,8 +92,7 @@ theorem eq_of_eq_add_nsmul (hG : GlobalFnsSt) {k : ℕ} (s t : Fam D F k) {α β
   have h0 := zero_of_eq_add_nsmul hG (s + -t) hβ (fun j => by rw [add_f, neg_f, h, add_neg_cancel])
   refine SecOps.sec_ext fun j => ?_
   have := h0 j
-  rw [add_f, neg_f, add_neg_eq_zero] at this
-  exact this
+  rwa [add_f, neg_f, add_neg_eq_zero] at this
 
 theorem add_nsmul_inj {k : ℕ} (hk : 1 ≤ k) (ρ a b : D.X) (h : ρ + k • a = ρ + k • b) : a = b := by
   have h' : (k : ℤ) • a = (k : ℤ) • b := by
@@ -117,8 +116,7 @@ theorem existsUnique_fam_of_reps (hG : GlobalFnsSt) (hB : D.TauBimult) {k : ℕ}
       obtain ⟨nu, hnu⟩ := hcl α
       exact (hcl' (α + k • mu) (cl α) ⟨nu + mu, by rw [smul_add, ← add_assoc, hnu]⟩).symm
     have := (f (cl α)).fe mu α u hu hc
-    rw [← key α _ _ e] at this
-    exact this
+    rwa [← key α _ _ e] at this
   · have e : cl (rep c) = c := (hcl' (rep c) c ⟨0, by rw [smul_zero, add_zero]⟩).symm
     exact (key (rep c) _ _ e).trans (hf c)
   · refine fam_ext fun α j => ?_

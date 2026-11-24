@@ -188,8 +188,7 @@ theorem desc (hp : IsGrpPullback G' G ξ φ) {n : ℕ} (hf : FullTorsion G ξ n)
     apply hp.1.hom_ext
     · have h1 : y.left ≫ φ = x.left := hp.1.lift_fst _ _ _
       show a.left ≫ φ = (spMap i ≫ y.left) ≫ φ
-      rw [Category.assoc, h1]
-      exact hx
+      rwa [Category.assoc, h1]
     · have h1 : y.left ≫ G'.hom = 𝟙 _ := hp.1.lift_snd _ _ _
       show a.left ≫ G'.hom = (spMap i ≫ y.left) ≫ G'.hom
       rw [Category.assoc, h1]
@@ -232,8 +231,7 @@ theorem weil_desc (P : PolAV (Sp Ω)) {n : ℕ} {k : Type} [Field k] (i : Ω →
   have hx : (ex i ≫ y) ^ n = 1 := by rw [← MonObj.comp_pow, hy, MonObj.comp_one]
   have hg : (ex i ≫ y') ^ n = 1 := by rw [← MonObj.comp_pow, hy', MonObj.comp_one]
   constructor
-  · intro h
-    exact (GenWeilModel.unitOn_bij (R := k)).1 (((hW _ P n _).1 _ _ hx hg).unique h hp')
+  · exact fun h => (GenWeilModel.unitOn_bij (R := k)).1 (((hW _ P n _).1 _ _ hx hg).unique h hp')
   · rintro rfl
     exact hp'
 
@@ -342,8 +340,7 @@ theorem genWeil_trivial (o : Obj D l b s) (t : SAB H X) (m : SABMap o.t t ξ) {n
       simp [this]
     · intro h
       have : c = 1 := Units.ext (by simpa using h)
-      rw [this]
-      exact h1
+      rwa [this]
 
 end obj2
 

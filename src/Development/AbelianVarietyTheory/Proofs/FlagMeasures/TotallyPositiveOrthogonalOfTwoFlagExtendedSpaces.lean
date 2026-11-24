@@ -76,8 +76,7 @@ theorem eq_zero_of_mem_X {E : Type} [Field E] [NumberField E] [StarRing E] {S : 
     (hxX : x ∈ F.X) (hx : x ∈ orth S F'.Xplus) : x = 0 := by
   obtain ⟨c, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun E).1 hxX
   have hx' : ∀ y ∈ F'.Xplus, S.hT y (∑ i, c i • F.e i) = 0 := by
-    simp only [orth, Submodule.mem_iInf, LinearMap.mem_ker] at hx
-    exact hx
+    simpa only [orth, Submodule.mem_iInf, LinearMap.mem_ker] using hx
   have hrow : ∀ b, ∑ a : Fin r, star (c a) * Zhat F F' a.castSucc b = 0 := by
     intro b
     have h1 := hx' _ (fvec_mem_Xplus F' b)
@@ -104,8 +103,7 @@ theorem eq_zero_of_mem_X {E : Type} [Field E] [NumberField E] [StarRing E] {S : 
   have hc : ∀ a, c a = 0 := by
     intro a
     have := congrFun hv0 a.castSucc
-    simp only [hv, Fin.snoc_castSucc, Pi.zero_apply, star_eq_zero] at this
-    exact this
+    simpa only [hv, Fin.snoc_castSucc, Pi.zero_apply, star_eq_zero] using this
   simp [hc]
 
 end GlobalTheory.ComplPos

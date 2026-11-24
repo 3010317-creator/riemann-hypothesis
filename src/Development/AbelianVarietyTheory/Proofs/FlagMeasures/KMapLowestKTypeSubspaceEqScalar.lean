@@ -118,8 +118,7 @@ theorem range_isKType (hS : IsKTypeOf ε σ Λ S) (T : S →ₗ[ℂ] H)
       refine le_antisymm hle ?_
       rintro _ ⟨s, rfl⟩
       exact h s
-  · intro h
-    exact hv0 (congrArg Subtype.val (hinj _ h))
+  · exact fun h => hv0 (congrArg Subtype.val (hinj _ h))
   · intro θ hθ
     rw [← hT _ hθ ⟨v, hvS⟩ ⟨_, hSst _ hθ v hvS⟩ rfl, ← map_smul]
     exact congrArg T (Subtype.ext (hvw θ hθ))
@@ -154,8 +153,7 @@ theorem scalar_of_range_le (hS : IsKTypeOf ε σ Λ S) (T : S →ₗ[ℂ] H)
     rw [LinearMap.sub_apply, LinearMap.smul_apply, Submodule.subtype_apply, e, sub_self]
   · intro s
     have hs := h s
-    rw [LinearMap.sub_apply, LinearMap.smul_apply, Submodule.subtype_apply, sub_eq_zero] at hs
-    exact hs
+    rwa [LinearMap.sub_apply, LinearMap.smul_apply, Submodule.subtype_apply, sub_eq_zero] at hs
 
 end
 

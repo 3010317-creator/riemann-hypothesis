@@ -99,18 +99,17 @@ theorem eq_sum_coset {R M : Type} [CommRing R] [AddCommGroup M] [Module R M] (A 
       rfl
     rw [Finset.sum_eq_single (Submodule.Quotient.mk (⟨t, ht⟩ : ↥A))]
     · have hm := (key _).mpr rfl
-      rw [if_pos hm, mul_one, ← h2 (r (Submodule.Quotient.mk (⟨t, ht⟩ : ↥A)) : M) _ hm, add_sub_cancel]
+      rw [ite_eq_left hm, mul_one, ← h2 (r (Submodule.Quotient.mk (⟨t, ht⟩ : ↥A)) : M) _ hm, add_sub_cancel]
     · intro q _ hq
-      rw [if_neg (fun h => hq ((key q).mp h)), mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+      rw [ite_eq_right (fun h => hq ((key q).mp h)), mul_zero]
+    · exact fun h => absurd (Finset.mem_univ _) h
   · have h0 : Ξ t = 0 := by
       by_contra h
       exact ht (h1 t h)
     rw [h0]
     symm
     refine Finset.sum_eq_zero fun q _ => ?_
-    rw [if_neg, mul_zero]
+    rw [ite_eq_right, mul_zero]
     intro h
     apply ht
     have := A.add_mem (hBA h) (r q).2
@@ -130,8 +129,7 @@ theorem latSum_thInd_eq_thC : ∀ (X : Fields) (A : Amb X) (a b : ℕ) (S : Fins
   have hdiv : ∀ x ∈ divLat cA (homAt S N N'), x ∈ divLat (cA * cB) (homAt S N N') := by
     intro x hx
     have h : (cB : 𝓞 X.E) • (cA : 𝓞 X.E) • x ∈ homAt S N N' := Submodule.smul_mem _ _ hx
-    rw [smul_smul, mul_comm, ← Nat.cast_mul] at h
-    exact h
+    rwa [smul_smul, mul_comm, ← Nat.cast_mul] at h
   unfold latSum
   rw [finsum_eq_sum_of_fintype]
   set r := Function.surjInv (Submodule.Quotient.mk_surjective

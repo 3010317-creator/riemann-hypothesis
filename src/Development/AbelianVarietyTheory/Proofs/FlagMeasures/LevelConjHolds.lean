@@ -259,8 +259,8 @@ theorem psiK_eq_chi : ∀ (D : D7) (X : HidaSetting D) (u : D.what₂.Word) (wt 
     · exact congruence_fixed_term X.B.I X.B.g _ _ (nxt_Z X.B.I X.B.g X.e0 X.f0 X.z0 hfe hfz a)
         (mL_Qs X.B.I X.B.g (hf0 a) (hnxt a))
     · by_cases hi : i.1 + 1 < D.R.k
-      · simp only [dif_pos hi]; exact hterm i hi
-      · simp only [dif_neg hi, map_zero, sub_self]; exact Z_zero X.B.I X.B.g
+      · simp only [dite_eq_left hi]; exact hterm i hi
+      · simp only [dite_eq_right hi, map_zero, sub_self]; exact Z_zero X.B.I X.B.g
   have h0 : X.psiEf (divN X.B.I X.B.g 0) = 1 := by
     rw [divN, mul_zero]; exact X.psiEf_int 0 (zero_mem _)
   calc ((psiK X u hK ⟨h, hk⟩ : ℂˣ) : ℂ)
@@ -747,8 +747,7 @@ theorem mem_of_coprime_smul (I : AutInst) (g n : ℕ) (hn : Nat.Coprime n g)
     exact hT h
   have hn' : (n : ℤ) • v ∈ T := by
     rw [Nat.cast_smul_eq_nsmul] at hnv
-    rw [natCast_zsmul]
-    exact hnv
+    rwa [natCast_zsmul]
 
   have key : v = Nat.gcdA n g • ((n : ℤ) • v) + Nat.gcdB n g • ((g : ℤ) • v) := by
     rw [smul_smul, smul_smul, ← add_smul, mul_comm (Nat.gcdA n g), mul_comm (Nat.gcdB n g),
@@ -783,8 +782,7 @@ theorem map_mem_satG (I : AutInst) (g : ℕ)
       (satG I g (Submodule.span (IntAf I.F I.E) S' ⊔ mL I g)).comap (φ.restrictScalars (IntAf I.F I.E)) := by
     refine sup_le ?_ ?_
     · rw [Submodule.span_le]
-      intro s hs
-      exact hS s hs
+      exact fun s hs => hS s hs
     · intro x hx
       exact mem_satG_of_mem I g _ (Submodule.mem_sup_right (map_mem_mL_of_preserves_Lf I g φ hφ hx))
   exact hle hw
@@ -1109,8 +1107,7 @@ theorem mem_span_q (hw : WittX X u wt) (y : (VS D).V) (he : ∀ a, (VS D).hT (X.
     intro v w h
     apply X.bas.repr.injective
     ext i
-    have h' := congrFun h i
-    simpa [HidaSetting.crd, crdOf] using h'
+    simpa [HidaSetting.crd, crdOf] using congrFun h i
   have hcol : ∀ k i, X.crd (famQ X u wt k) i = Q i k := by
     intro k i
     rcases k with j | a | a | ⟨⟩
@@ -1163,8 +1160,7 @@ theorem mem_span_q (hw : WittX X u wt) (y : (VS D).V) (he : ∀ a, (VS D).hT (X.
 theorem crd_mem_L {y : (VS D).V} (hy : y ∈ (VS D).L0) : X.crd y ∈ X.B.I.L := by
   rw [X.L_eq]
   convert hy using 1
-  simp only [HidaSetting.crd, crdOf, RingEquiv.apply_symm_apply]
-  exact X.bas.sum_repr y
+  simpa only [HidaSetting.crd, crdOf, RingEquiv.apply_symm_apply] using X.bas.sum_repr y
 
 theorem decomp (hw : WittX X u wt) {x₀ : (VS D).V} (hx₀ : x₀ ∈ X.Lb) (h1 : (VS D).hT (X.zu u) x₀ = 1)
     {y : (VS D).V} (hy : y ∈ (VS D).L0) :

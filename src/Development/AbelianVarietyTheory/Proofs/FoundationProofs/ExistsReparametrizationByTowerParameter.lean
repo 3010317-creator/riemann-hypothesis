@@ -68,7 +68,6 @@ theorem mulN_le (a b : ℤ) : mulN p n a ≤ mulN p n b ↔ a ≤ b :=
 def vL : Lau p →+* Lau p := HahnSeries.embDomainRingHom (mulN p n) (mulN_inj p n) (mulN_le p n)
 
 theorem vL_coeff (a : Lau p) (i : ℤ) : (vL p n a).coeff ((p : ℤ) ^ n * i) = a.coeff i := by
-  show (HahnSeries.embDomain _ a).coeff (mulN p n i) = _
   exact HahnSeries.embDomain_coeff
 
 theorem vL_coeff_of_not_dvd (a : Lau p) (r : ℤ) (h : ¬ (p : ℤ) ^ n ∣ r) : (vL p n a).coeff r = 0 := by
@@ -86,8 +85,7 @@ theorem bddBelow_support_primePowerComponent_coeff (a : Lau p) (j : ℤ) : BddBe
   · refine ⟨min 0 (a.order - j), fun i hi => ?_⟩
     have h1 := HahnSeries.order_le_of_coeff_ne_zero hi
     have h2 := pn_pos p n
-    by_contra h
-    push_neg at h
+    by_contra! h
     have h3 : i < 0 := lt_of_lt_of_le h (min_le_left _ _)
     have h4 : i < a.order - j := lt_of_lt_of_le h (min_le_right _ _)
     have h5 : (p : ℤ) ^ n * i ≤ i := by nlinarith
@@ -167,8 +165,7 @@ theorem dL_sum (b : ℕ → Lau p) (j : ℕ) (hj : j < p ^ n) :
 
 theorem dvd_dL (k : ℕ) (j : ℤ) (a : Lau p) (h : (p : Lau p) ^ k ∣ a) : (p : Lau p) ^ k ∣ dL p n j a := by
   rw [GlobalTheory.K5.Basic.natCast_pow_dvd_iff] at h ⊢
-  intro i
-  exact h _
+  exact fun i => h _
 
 theorem vL_pI_le (k : ℕ) : pI p ^ k ≤ (pI p ^ k).comap (vL p n) := by
   intro x hx
@@ -241,8 +238,7 @@ theorem uniq (c : ℕ → O0 p) (h : ∑ j ∈ Finset.range (p ^ n), vO p n (c j
   rw [h, map_zero, eq_comm, Ideal.Quotient.eq_zero_iff_mem, GlobalTheory.K5.Basic.mem_pI_pow] at h1
   have h2 := dvd_dL p n k j _ h1
   rw [dL_sum p n y j hj] at h2
-  rw [← hy j, map_zero, Ideal.Quotient.eq_zero_iff_mem, GlobalTheory.K5.Basic.mem_pI_pow]
-  exact h2
+  rwa [← hy j, map_zero, Ideal.Quotient.eq_zero_iff_mem, GlobalTheory.K5.Basic.mem_pI_pow]
 
 def seqD (j : ℤ) (s : AdicCompletion.AdicCauchySequence (pI p) (Lau p)) :
     AdicCompletion.AdicCauchySequence (pI p) (Lau p) :=

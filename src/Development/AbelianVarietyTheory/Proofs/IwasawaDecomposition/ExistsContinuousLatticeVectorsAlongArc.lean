@@ -174,8 +174,7 @@ theorem isHolTo_spMap {A : Type} [CommRing A] {ψ : ℂ → (A →+* ℂ)} {r : 
   have hv : ∀ u, valAt' (spMap (ψ u)) ⊤ k = ψ u (valR (𝟙 (Sp A)) ⊤ k) := fun u => by
     have := valR_spMap (ψ u) (𝟙 (Sp A)) ⊤ le_top k
     rwa [Category.comp_id] at this
-  simp only [hv]
-  exact (h.2 _).differentiableAt (Metric.isOpen_ball.mem_nhds hz)
+  simpa only [hv] using (h.2 _).differentiableAt (Metric.isOpen_ball.mem_nhds hz)
 
 theorem continuousAt_snd {A : Type} [CommRing A] {ψ : ℂ → (A →+* ℂ)} {z : ℂ} (h : ∀ a, ContinuousAt (fun u => ψ u a) z)
     {X : Scheme.{0}} (V : Sp (DualNumber A) ⟶ X) (U : X.Opens) (hU : ⊤ ≤ (spMap (dualMap (ψ z)) ≫ V) ⁻¹ᵁ U)
@@ -308,16 +307,14 @@ theorem exists_lattice_sections : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       rw [D.apply_symm_apply] at h1
       have h2 : ((b.reindex e.symm).equivFun.symm.trans D.symm).toContinuousLinearEquiv (Pi.single j 1) =
           D.symm (f.vec (e j).1 (e j).2) := by simp [hb, Pi.single_apply]
-      rw [← hf, ContinuousLinearEquiv.coe_coe, h2]
-      exact h1
+      rwa [← hf, ContinuousLinearEquiv.coe_coe, h2]
     · exact ⟨0, fun h => absurd h hu⟩
   choose h hh using hh
   have hc : ∀ u ∈ Metric.ball (0 : ℂ) ρ, ContinuousAt (fun u => (h u).inverse) u := fun u hu => by
     refine ((hh u hu).1.contDiffAt_map_inverse (n := 1)).continuousAt.comp (continuousAt_clm_apply.2 fun z => ?_)
     have : ∀ u, h u z = ∑ j, z j • h u (Pi.single j 1) := fun u => by
 
-      simp only [← map_smul, ← map_sum]
-      exact congrArg _ (pi_eq_sum_univ' z)
+      simpa only [← map_smul, ← map_sum] using congrArg _ (pi_eq_sum_univ' z)
     simp only [this]
     refine tendsto_finsetSum _ fun j _ => ContinuousAt.const_smul ?_ (z j)
     exact LatSec.continuousAt_dir hol hu (hexp u hu).2.2.2.2 (fun b hb => (hh b hb).2 j) (LatSec.continuousAt_snd (fun a =>

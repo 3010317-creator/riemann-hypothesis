@@ -89,8 +89,7 @@ theorem frame_equiv : ∀ (X : Stages) {px : PreX X.B.toPre} (I : Col2.ColIn X.B
     have hx : A⁻¹ * c g * A ∈ G := by
       rw [h3]
       have e : A * (A⁻¹ * c g * A) * A⁻¹ = c g := by group
-      rw [e, hc, castGL_castGL_symm]
-      exact hUA
+      rwa [e, hc, castGL_castGL_symm]
     have e2 : (A * k)⁻¹ * c g * (A * k) = k⁻¹ * (A⁻¹ * c g * A) * k := by group
     rw [e2]
     exact G.mul_mem (G.mul_mem (G.inv_mem hk) hx) hk
@@ -104,8 +103,7 @@ theorem frame_equiv : ∀ (X : Stages) {px : PreX X.B.toPre} (I : Col2.ColIn X.B
     have e := congrArg (fun x : G => (x : GL (Fin X.B.R.nV) (EA X))) hab
     simp only [hψ, mul_left_inj, mul_right_inj] at e
     rw [hc, hc] at e
-    have e' := (castGL h.symm).injective e
-    exact Subtype.ext (bc_swapAE_injective X.toD7 V.rank e')
+    exact Subtype.ext (bc_swapAE_injective X.toD7 V.rank ((castGL h.symm).injective e))
   have hsurj : Function.Surjective ψ := by
     intro u
     have hku : k * (u : GL (Fin X.B.R.nV) (EA X)) * k⁻¹ ∈ G := G.mul_mem (G.mul_mem hk u.2) (G.inv_mem hk)

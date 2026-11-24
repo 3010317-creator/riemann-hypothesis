@@ -402,8 +402,7 @@ theorem exists_smul_mem_span_away {R S M : Type} [CommRing R] [CommRing S] [Alge
     refine ⟨(u : S) * ((t : S) * (s : S)), Q.mul_mem u.2 (Q.mul_mem t.2 s.2), ?_⟩
     rw [mul_smul, mul_smul]
     have hu' : (u : S) • (((t * s : Q) : S)) • x = (u : S) • ((1 : Q) : S) • a • m := hu.symm
-    rw [Submonoid.coe_mul] at hu'
-    rw [mul_smul] at hu'
+    rw [Submonoid.coe_mul, mul_smul] at hu'
     rw [hu', Submodule.mem_span_singleton]
     exact ⟨(u : S) * a, by simp [mul_smul]⟩
   choose q hqQ hq using hloc
@@ -626,8 +625,7 @@ theorem coboundary_unit_basicOpen : ∀ {X Y : Scheme.{0}} (f : X ⟶ Y) (V V₀
     have h1 : IsUnit ((X.presheaf.map (homOfLE (X.basicOpen_le ((f.app V₀).hom r))).op).hom ((f.app V₀).hom r)) :=
       RingedSpace.isUnit_res_basicOpen X.toRingedSpace _
     have h2 := h1.map (X.presheaf.map (homOfLE hB).op).hom
-    rw [← CommRingCat.comp_apply, ← Functor.map_comp] at h2
-    exact h2
+    rwa [← CommRingCat.comp_apply, ← Functor.map_comp] at h2
   have hunit : IsUnit ((X.presheaf.map (homOfLE hfD).op).hom m) := by
     apply isUnit_of_mul_isUnit_left (y := (X.presheaf.map (homOfLE hfD).op).hom s)
     rw [← map_mul, hs, map_pow]
@@ -877,8 +875,7 @@ theorem hilbert90_local_of_cocycle : ∀ (R S : Type) [CommRing R] [CommRing S] 
   haveI : Module.Invertible R (invariants θ) := hD.invertible_invariants
 
   obtain ⟨f, m, hfm⟩ : ∃ (f : Module.Dual R (invariants θ)) (m : invariants θ), f m ∉ p := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     obtain ⟨T, hT⟩ := ((Module.Invertible.linearEquiv R (invariants θ)).symm 1).exists_finset
     have h1 : (1 : R) = ∑ i ∈ T, i.1 i.2 := by
       have := congrArg (Module.Invertible.linearEquiv R (invariants θ)) hT
@@ -1088,8 +1085,7 @@ theorem coboundary_locally_of_cocycle : ∀ {X Y : Scheme.{0}} (f : X ⟶ Y) [Is
   obtain ⟨V₀, hV₀, hyV₀, hV₀V⟩ := (TopologicalSpace.Opens.isBasis_iff_nbhd.mp Y.isBasis_affineOpens) hy
   have h : pullback.fst f f ⁻¹ᵁ f ⁻¹ᵁ V₀ ≤ pullback.snd f f ⁻¹ᵁ f ⁻¹ᵁ V₀ := fun z hz => by
     show f (pullback.snd f f z) ∈ V₀
-    rw [← Scheme.Hom.comp_apply, ← pullback.condition, Scheme.Hom.comp_apply]
-    exact hz
+    rwa [← Scheme.Hom.comp_apply, ← pullback.condition, Scheme.Hom.comp_apply]
   have hle : pullback.fst f f ⁻¹ᵁ f ⁻¹ᵁ V₀ ≤ pullback.fst f f ⁻¹ᵁ f ⁻¹ᵁ V := fun z hz => hV₀V hz
   letI : Algebra Γ(Y, V₀) Γ(X, f ⁻¹ᵁ V₀) := (f.app V₀).hom.toAlgebra
   obtain ⟨hN, hF, hFF⟩ := _root_.GlobalTheory.finiteFlatSurj_affine_algebra f V₀ hV₀

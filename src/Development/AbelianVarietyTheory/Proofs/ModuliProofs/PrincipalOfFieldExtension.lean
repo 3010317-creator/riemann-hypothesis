@@ -166,8 +166,7 @@ theorem eq_one_of_pull {f : S' ⟶ S} [Flat f] [Surjective f] [GrpObj A] [GrpObj
   have e2 : pO ≫ (1 : T ⟶ A) = 1 := by
     simp
   have hfin : p ≫ x.left = p ≫ (1 : T ⟶ A).left := by
-    have e3 := congrArg CommaMorphism.left ((e1.trans hz1).trans e2.symm)
-    exact e3
+    exact congrArg CommaMorphism.left ((e1.trans hz1).trans e2.symm)
   exact Over.OverMorphism.ext ((cancel_epi p).1 hfin)
 
 theorem principal_of_fieldExtension : ∀ (h M : ℕ) (o : Type) [CommRing o] (ζ : o) (K₀ K : Type) [Field K₀] [Field K] (i : K₀ →+* K) (s₀ : Sp K₀ ⟶ Sp o) (s : Sp K ⟶ Sp o) (c₀ : SiegPre h M ζ s₀) (c : SiegPre h M ζ s), SiegPB c c₀ (spMap i) → c.Principal → c₀.Principal := by
@@ -181,8 +180,7 @@ theorem principal_of_fieldExtension : ∀ (h M : ℕ) (o : Type) [CommRing o] (�
     lift_comp_square hs φ _ _ _ _ (by simp) (by simp)
   have i1 : LBIso c.diag (c₀.P.pull (φ ≫ (lift (𝟙 c₀.A) (𝟙 c₀.A)).left)) := by
     have := iso_linComb (pGen_of_isGen_iso_pull w hwg) (K := PUnit) (fun _ => (lift (𝟙 c.A) (𝟙 c.A)).left) (fun _ => 1)
-    rw [hΔ] at this
-    exact this
+    rwa [hΔ] at this
   obtain ⟨w₀, hw₀⟩ := exists_iso_linComb c₀.isLB (K := PUnit) (F := (lift (𝟙 c₀.A) (𝟙 c₀.A)).left)
     (fun _ => (lift (𝟙 c₀.A) (𝟙 c₀.A)).left) (fun _ => 1) (fun _ _ _ => rfl)
   have i2 : LBIso (c₀.diag.pull φ) (c₀.P.pull (φ ≫ (lift (𝟙 c₀.A) (𝟙 c₀.A)).left)) :=

@@ -154,8 +154,7 @@ theorem pt_tilF_gen : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → P
     obtain ⟨i, hi⟩ := hgw w
     have h1 : ((B.primes X).T u : 𝓞 B.fields.E) ∈ w.1.asIdeal := by
       have h2 : algebraMap (𝓞 B.host.F) (𝓞 B.host.E) (B.T u : 𝓞 B.host.F) ∈ w.1.asIdeal := hT
-      rw [map_natCast] at h2
-      exact h2
+      rwa [map_natCast] at h2
     have hc : Nat.Coprime ((B.primes X).T u) ((B.primes X).g i) :=
       (Nat.coprime_primes (hPr.T_prime u) (hPr.g_prime i)).2 (hPr.T_ne_g u i)
     have h3 : ((1 : ℕ) : 𝓞 B.fields.E) ∈ w.1.asIdeal := by
@@ -191,8 +190,7 @@ theorem pt_tilF_gen : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → P
       (TilX.iXm_apply hiX hN) hext.1 ?_)
     have h2 := hext.2
     have hz : z0 X u = Pi.single (Br.iL (N_m_succ B.R)) ((X.piT u : 𝓞 B.host.E) : B.host.E) := TilX.lastCoordinateUniformizerVector_eq_single u
-    rw [hz] at h2
-    exact h2
+    rwa [hz] at h2
   have hQ := PerLaw.piT_notMem_Q hI u a
   have hQ0 : ∀ P : (∅ : Finset (HeightOneSpectrum (𝓞 B.fields.E))), (B.primes X).piT u ∉ P.1.asIdeal := fun P => isEmptyElim P
   have e : (tilF I.sel (I.tup a) u d).deco =
@@ -226,15 +224,15 @@ theorem pt_tilF_gen : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → P
           rw [map_mul, hkP, Matrix.one_apply_ne hl, mul_zero]
         · simp
       · intro l _ hl
-        rw [map_mul, htP P l j, if_neg hl, map_zero, mul_zero]
+        rw [map_mul, htP P l j, ite_eq_right hl, map_zero, mul_zero]
       · simp
-    rw [e1, htP P j j, if_pos rfl, tilF_fr I.sel (I.tup a) hPr u hQ d P]
+    rw [e1, htP P j j, ite_eq_left rfl, tilF_fr I.sel (I.tup a) hPr u hQ d P]
     rcases GlobalTheory.TopStep.idx_cases hN i with ⟨i', rfl⟩ | rfl <;> rcases GlobalTheory.TopStep.idx_cases hN j with ⟨j', rfl⟩ | rfl
     · have h1 : ¬ ((Br.iC hN j').1 + 1 = B.R.N B.R.m) := by
         show ¬ (j'.1 + 1 = B.R.N B.R.m)
         have := j'.2
         omega
-      rw [if_neg h1, map_one, mul_one, extM_iC_iC, hg'.fr P i' j']
+      rw [ite_eq_right h1, map_one, mul_one, extM_iC_iC, hg'.fr P i' j']
       congr 1
       exact ((congrFun (GlobalTheory.TopStep.prH_sumE hN (d.fr P) _ (Pi.single (Br.iC hN j') 1)) i').trans
         (by rw [prH_single_iC])).symm
@@ -250,7 +248,7 @@ theorem pt_tilF_gen : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → P
     · have h1 : (Br.iL hN).1 + 1 = B.R.N B.R.m := by
         show (B.R.N B.R.m - 1) + 1 = B.R.N B.R.m
         omega
-      rw [if_pos h1, extM_iL_iL, map_one, one_mul, GlobalTheory.TopStep.sumE_last, Pi.single_eq_same, mul_one,
+      rw [ite_eq_left h1, extM_iL_iL, map_one, one_mul, GlobalTheory.TopStep.sumE_last, Pi.single_eq_same, mul_one,
         unitOf_val (hQ P)]
 
 end GlobalTheory.Mem.Col2.TilQ

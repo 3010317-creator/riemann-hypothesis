@@ -79,8 +79,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.embEx :
   have L := fun v : Pl K => UpperTheory.ConvolutionTheory.Tf.locEmb K n v
   refine ⟨?_, ?_⟩
   · refine ⟨MonoidHom.noncommPiCoprod (fun i => AdelicGLn.localEmbedding (w i)) ?_, ?_⟩
-    · intro i j hij x y
-      exact (L (w i)).2.2.2.1 (w j) (fun e => hij (hw e).symm) x y
+    · exact fun i j hij x y => (L (w i)).2.2.2.1 (w j) (fun e => hij (hw e).symm) x y
     · intro i g
       exact MonoidHom.noncommPiCoprod_mulSingle (N := fun i => Gw n (w i)) (fun i => AdelicGLn.localEmbedding (w i)) i g
   intro ι hι
@@ -154,21 +153,20 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.embEx :
     rw [← e]
     exact hc Finset.univ
   refine ⟨hcont, hcf, hoff, ?_, hcomm, ?_⟩
-  · intro h
-    exact ⟨fun j => GM.cf (w j) h, _, (mul_inv_cancel_left _ _).symm, hsplit h⟩
+  · exact fun h => ⟨fun j => GM.cf (w j) h, _, (mul_inv_cancel_left _ _).symm, hsplit h⟩
   · intro U h
     constructor
     · intro hh
       have hh' : ∀ v, GM.cf v h ∈ (if v ∈ im w then U v else GLnLocal.integralGL (v.adicCompletion K) n) := hh
       refine ⟨fun j => GM.cf (w j) h, _, (mul_inv_cancel_left _ _).symm, fun i => ?_, hsplit h, fun v => ?_⟩
       · have := hh' (w i)
-        rwa [if_pos (Finset.mem_image_of_mem w (Finset.mem_univ i))] at this
+        rwa [ite_eq_left (Finset.mem_image_of_mem w (Finset.mem_univ i))] at this
       · by_cases hv : v ∈ im w
         · obtain ⟨i, -, rfl⟩ := Finset.mem_image.1 hv
           rw [hsplit h i]
           exact one_mem _
         · have := hh' v
-          rw [if_neg hv] at this
+          rw [ite_eq_right hv] at this
           rw [hmul, hinv, hoff _ v hv, inv_one, one_mul]
           exact this
     · rintro ⟨g, h', rfl, hg, h1, hint⟩
@@ -176,10 +174,10 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.embEx :
         intro v
         rw [hmul]
         by_cases hv : v ∈ im w
-        · rw [if_pos hv]
+        · rw [ite_eq_left hv]
           obtain ⟨i, -, rfl⟩ := Finset.mem_image.1 hv
           rw [hcf, h1 i, mul_one]
           exact hg i
-        · rw [if_neg hv, hoff g v hv, one_mul]
+        · rw [ite_eq_right hv, hoff g v hv, one_mul]
           exact hint v
       exact hh'

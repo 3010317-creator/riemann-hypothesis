@@ -108,8 +108,7 @@ theorem exists_nat_of_primitive (e f h : Module.End ℂ V) (hef : e * f - f * e 
     intro n
     induction n with
     | zero =>
-      have h3 := LinearMap.congr_fun hef v
-      simpa [he, hh] using h3
+      simpa [he, hh] using LinearMap.congr_fun hef v
     | succ n ih =>
       have h3 := LinearMap.congr_fun hef ((f ^ (n + 1)) v)
       simp only [LinearMap.sub_apply, Module.End.mul_apply, ih, map_smul, h1] at h3
@@ -173,7 +172,7 @@ theorem exists_highest [Nontrivial V] (n : ℕ) (F : Fin n → Fin n → Module.
   · rw [hF]; simp
   · have h1 := hc i j i
     have h2 := hc j j i
-    simp only [hij.ne, if_false, if_true] at h1 h2
+    simp only [hij.ne, ite_false, ite_true] at h1 h2
     rw [sub_mul, mul_sub]
     linear_combination (norm := module) h1 - h2
   · simp [hν, sub_smul]
@@ -201,13 +200,11 @@ theorem dmat_bracket (Ξ : AlgRep E a) (X Y : Matrix (Fin a) (Fin a) (Cinf E)) :
     rw [smul_neg, Matrix.exp_neg, Matrix.coe_units_inv]; rfl
   have h1 : HasDerivAt (fun t => (c t).val) X 0 := by
     have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) X 0
-    rw [zero_smul, NormedSpace.exp_zero, one_mul] at h
-    exact h
+    rwa [zero_smul, NormedSpace.exp_zero, one_mul] at h
   have h2 : HasDerivAt (fun t => ((c t)⁻¹).val) (-X) 0 := by
     simp only [hi]
     have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) (-X) 0
-    rw [zero_smul, NormedSpace.exp_zero, one_mul] at h
-    exact h
+    rwa [zero_smul, NormedSpace.exp_zero, one_mul] at h
   have h3 : HasDerivAt (fun t => (c t).val * Y * ((c t)⁻¹).val) (X * Y - Y * X) 0 := by
     have h := (h1.mul_const Y).mul h2
     simp only [h0, inv_one, Units.val_one, mul_one, one_mul, mul_neg, ← sub_eq_add_neg] at h
@@ -592,7 +589,7 @@ theorem commute_dmat (Ξ : AlgRep E a) (Z : Matrix (Fin Ξ.d) (Fin Ξ.d) ℂ)
       conv_lhs => rw [← Finset.univ_sum_single x]
       refine Finset.sum_congr rfl fun w _ => ?_
       unfold atEmb
-      rw [if_pos (by rw [InfinitePlace.mk_embedding])]
+      rw [ite_eq_left (by rw [InfinitePlace.mk_embedding])]
       congr 1 <;> simp
 
     rw [e, map_sum]
@@ -636,8 +633,7 @@ theorem exists_dualInfChar (E : Type) [Field E] [NumberField E] [_root_.NumberFi
   let f := (Matrix.toLinAlgEquiv' : Matrix (Fin Ξ.d) (Fin Ξ.d) ℂ ≃ₐ[ℂ] Module.End ℂ (Fin Ξ.d → ℂ)).toAlgHom
   have hf : ∀ M v, f M v = M *ᵥ v := fun _ _ => rfl
   have hgl : Formalism.REAL.GlRel fun i j => f (dualE Ξ τ i j) := fun i j k l => by
-    have h := congrArg f (glRel_dualE Ξ τ i j k l)
-    simpa only [map_sub, map_mul, apply_ite f, map_zero] using h
+    simpa only [map_sub, map_mul, apply_ite f, map_zero] using congrArg f (glRel_dualE Ξ τ i j k l)
   obtain ⟨ν, v, hv, hw, hν⟩ := exists_highest a _ hgl
   refine ⟨Finset.univ.val.map fun k : Fin a => ν k + (((a : ℂ) - 1) / 2 - (k : ℕ)), ⟨by simp, fun u => ?_⟩, ?_, ?_⟩
   · obtain ⟨c, hc⟩ := qdet_scalar Ξ τ (u + ((a : ℂ) - 1) / 2)

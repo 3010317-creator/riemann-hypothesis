@@ -119,8 +119,7 @@ theorem corrForm_antisymm (C : CupSquare κ t (A ⊗ A)) {P : LB (A ⊗ A).left}
       rw [hφ, ← Finset.sum_neg_distrib]
       refine Finset.sum_congr rfl fun k _ ↦ ?_
       rw [map_neg, neg_mul, mul_comm]
-  have e := congrArg (fun f ↦ f x y) (H.unique C hP H')
-  simpa using e
+  simpa using congrArg (fun f ↦ f x y) (H.unique C hP H')
 
 end Gen
 
@@ -174,11 +173,9 @@ theorem isotropic_summand_lift : ∀ (R : Type) [CommRing R] (I : Ideal R) (D : 
     intro a ha y
     refine Submodule.smul_induction_on (p := fun a => φ a y ∈ I) ha ?_ ?_
     · intro r hr m _
-      simp only [map_smul, LinearMap.smul_apply, smul_eq_mul]
-      exact I.mul_mem_right _ hr
+      simpa only [map_smul, LinearMap.smul_apply, smul_eq_mul] using I.mul_mem_right _ hr
     · intro x z hx hz
-      simp only [map_add (f := _), LinearMap.add_apply]
-      exact I.add_mem hx hz
+      simpa only [map_add (f := _), LinearMap.add_apply] using I.add_mem hx hz
   have hφII : ∀ a ∈ I • (⊤ : Submodule R D), ∀ b ∈ I • (⊤ : Submodule R D), φ a b = 0 := by
     intro a ha b hb
     refine Submodule.smul_induction_on (p := fun a => φ a b = 0) ha ?_ ?_
@@ -475,8 +472,7 @@ theorem exists_lift_lam : ∀ (R R₀ : Type) [CommRing R] [IsLocalRing R] [IsNo
     intro d d' y hd H c
     rw [H c]
     have := RingHom.mem_ker.1 (apply_mem_of_mem_smul_top (RingHom.ker π) hd c)
-    rw [LinearMap.sub_apply, map_sub, sub_eq_zero] at this
-    exact this
+    rwa [LinearMap.sub_apply, map_sub, sub_eq_zero] at this
   have hFE : ∀ y : HdR P₀.A, y ∈ Fil P₀.A ↔ ∃ d ∈ E, (crysRedMor κ rfl P₀.A).Corr d y := by
     intro y
     constructor

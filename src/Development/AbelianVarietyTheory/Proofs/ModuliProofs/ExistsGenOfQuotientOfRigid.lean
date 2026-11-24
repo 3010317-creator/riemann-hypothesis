@@ -68,7 +68,7 @@ private theorem gm_pullU_eq_gm_comp {X Y W : Scheme.{0}} (h : Y ⟶ X) (k : W �
   by_cases hw : k w ∈ h ⁻¹ᵁ V
   · rw [← gm_rp₁ k w (h ⁻¹ᵁ V) (k ⁻¹ᵁ (h ⁻¹ᵁ V)) le_rfl hw, gm_rp₂ k h w V _ le_rfl hw]
   · have hw' : ¬ (k ≫ h) w ∈ V := hw
-    simp only [gm, dif_neg hw, dif_neg hw', MonoidHom.one_apply]
+    simp only [gm, dite_eq_right hw, dite_eq_right hw', MonoidHom.one_apply]
 
 theorem exists_compat {N : LB Z} {f : Y ⟶ Z} (t : (N.pull f).Gen) (ht : t.IsGen) :
     ∃ a, Compat N f a := by
@@ -105,7 +105,7 @@ theorem Compat.pull {N : LB Z} {f : Y ⟶ Z} {a} (ha : Compat N f a) (h : Y' ⟶
 private theorem gm_id_val_eq_germ' {Y : Scheme.{0}} {V : Y.Opens} (u : Γ(Y, V)ˣ) (y : Y) (hy : y ∈ V) :
     (gm (𝟙 Y) y V u).val = Y.presheaf.germ V y hy u.val := by
   have hy' : (𝟙 Y) y ∈ V := hy
-  simp only [gm, dif_pos hy', pullU, MonoidHom.comp_apply, Units.coe_map]
+  simp only [gm, dite_eq_left hy', pullU, MonoidHom.comp_apply, Units.coe_map]
   rfl
 
 private theorem exists_global_unit_of_gm_agree_on_cover {Y : Scheme.{0}} {I : Type} (V : I → Y.Opens) (hcov : ⊤ ≤ ⨆ i, V i)
@@ -133,8 +133,7 @@ private theorem exists_global_unit_of_gm_agree_on_cover {Y : Scheme.{0}} {I : Ty
     intro i
     rw [map_mul, map_one, hc₁ i, hc₂ i]
     exact (d i).mul_inv
-  refine ⟨⟨c₁, c₂, h₁₂, (mul_comm _ _).trans h₁₂⟩, fun i => Units.ext ?_⟩
-  exact hc₁ i
+  exact ⟨⟨c₁, c₂, h₁₂, (mul_comm _ _).trans h₁₂⟩, fun i => Units.ext (hc₁ i)⟩
 
 theorem Compat.ratio {N : LB Z} (hN : N.IsLB) {f : Y ⟶ Z} {a b} (ha : Compat N f a)
     (hb : Compat N f b) :
@@ -159,7 +158,7 @@ private theorem units_eq_of_gm_id_eq {Y : Scheme.{0}} {V : Y.Opens} (u v : Γ(Y,
   intro y hy
   have e := congrArg Units.val (h y hy)
   have hy' : (𝟙 Y) y ∈ V := hy
-  simp only [gm, dif_pos hy', pullU, MonoidHom.comp_apply, Units.coe_map] at e
+  simp only [gm, dite_eq_left hy', pullU, MonoidHom.comp_apply, Units.coe_map] at e
   exact e
 
 theorem exists_gen_of_range {N : LB Z} {f : Y ⟶ Z} {a} (ha : Compat N f a)
@@ -189,8 +188,7 @@ theorem exists_gen_of_range {N : LB Z} {f : Y ⟶ Z} {a} (ha : Compat N f a)
     show (Z.presheaf.map (homOfLE h).op ≫ f.app V').hom x = (f.app V ≫ Y.presheaf.map _).hom x
     rw [Scheme.Hom.naturality]
     rfl
-  rw [nat, map_mul, nat, hb, hb]
-  exact e
+  rwa [nat, map_mul, nat, hb, hb]
 
 private theorem compat_mul_res_unit_and_gm_mul {Y Z : Scheme.{0}} {N : LB Z} {f : Y ⟶ Z}
     {a : ∀ i, Γ(Y, f ⁻¹ᵁ N.U i)ˣ} (ha : GenDescent.Compat N f a) (c : Γ(Y, ⊤)ˣ) :
@@ -293,8 +291,7 @@ theorem exists_gen_of_quotient_of_rigid :
         show res hT' cg = 1 from Units.ext (hu.trans Units.val_one.symm), map_one]
     intro i y hy
     have h1 := hcg P.left (𝟙 _) y i hy
-    rw [hb' P.left (𝟙 _) y i hy, Category.id_comp, hcg1, _root_.one_mul] at h1
-    exact h1
+    rwa [hb' P.left (𝟙 _) y i hy, Category.id_comp, hcg1, _root_.one_mul] at h1
   exact exists_gen_of_range hA (fun V => (hφ V).1)
     (fun i => (hφ (N.U i)).2 _ fun g h => (appLE_unit_val_and_inv_eq_of_gm_invariant (τ g).asIso.hom h _ fun y hy => hinv g i y hy).1)
     (fun i => (hφ (N.U i)).2 _ fun g h => (appLE_unit_val_and_inv_eq_of_gm_invariant (τ g).asIso.hom h _ fun y hy => hinv g i y hy).2)

@@ -121,8 +121,7 @@ theorem int_bound {X : Type} [AddCommGroup X] (q : X → ℤ) (h0 : ∀ x, 0 ≤
   · have : (j : ℤ) ≤ j * q m := by nlinarith
     linarith [h0 (m + α)]
   · have hB : q α ≤ q (m + α) := by
-      by_contra hlt
-      push_neg at hlt
+      by_contra! hlt
       set n : ℕ := (q α).toNat + 1 with hn
       have hnz : (n : ℤ) = q α + 1 := by
         rw [hn]; push_cast; rw [Int.toNat_of_nonneg (h0 α)]
@@ -338,8 +337,7 @@ theorem gm_jK_eq_unitAt {Z : Scheme.{0}} (r : Z ⟶ Spec (CommRingCat.of (Fracti
   have hW' : jK R ⁻¹ᵁ W = ⊤ := by subst hW; rfl
   rw [← gm_pull r (jK R) z W (by rw [hW]; trivial) b, gm_eq_unitAt r z _ hW']
   congr 1
-  apply Units.ext
-  exact DVR.GC.evalTop_specMap (algebraMap R (FractionRing R)) W hW hW' b.val
+  exact Units.ext (DVR.GC.evalTop_specMap (algebraMap R (FractionRing R)) W hW hW' b.val)
 
 theorem commGroup_mul_eq_mul_mul_div {G : Type} [CommGroup G] (T A B : G) : T * A = A * B⁻¹ * (T * B) := by
   rw [_root_.mul_comm T B, ← _root_.mul_assoc, inv_mul_cancel_right, _root_.mul_comm]
@@ -365,8 +363,7 @@ theorem chK_top (χ : D.X) : LB.wchart D.P.L (K := PUnit) (fun _ => ptK (D.c χ)
   refine eq_top_iff.2 fun y _ => Set.mem_iInter.2 fun k => ?_
   have h1 := (ch_top D χ).ge (show jK R y ∈ (⊤ : (Spec (CommRingCat.of R)).Opens) from trivial)
   have h2 := Set.mem_iInter.1 h1 k
-  rw [← DegPre.xK, xK_eq]
-  exact h2
+  rwa [← DegPre.xK, xK_eq]
 
 def kap (χ : D.X) : (FractionRing R)ˣ :=
   Units.map (DVR.GC.evalTop _ (chK_top D χ)).toMonoidHom ((D.psi χ).s (ch D χ)) *
@@ -524,8 +521,7 @@ theorem psiIn_mem (I : Ideal R) (χ : D.X) (h : D.PsiIn χ I) :
     intro y _
     have h1 := Set.mem_iInter.1
       ((ch_top D χ).ge (show y ∈ (⊤ : (Spec (CommRingCat.of R)).Opens) from trivial)) PUnit.unit
-    rw [ptR_eq] at h1
-    exact h1
+    rwa [ptR_eq] at h1
   have hh : jK R ⁻¹ᵁ ⊤ ≤ (LB.LinComb D.P.L (K := PUnit) (fun _ => D.xK χ) (fun _ => -1)).U (ch D χ) :=
     fun y _ => (chK_top D χ).ge trivial
   obtain ⟨r, hr, e⟩ := h (ch D χ) ⊤ (isAffineOpen_top _) hle hh
@@ -636,8 +632,7 @@ theorem eq_zero_of_even_cubic {ι X G : Type*} [AddCommGroup X] [AddCommGroup G]
         have h := hAll a c
         rw [hBapp, sub_sub, sub_eq_zero] at h
         exact h }
-  intro a
-  exact hext F h1 a
+  exact fun a => hext F h1 a
 
 section Quadratic
 
@@ -730,11 +725,11 @@ theorem exists_even_cubic_unit_multiple (R : Type) [CommRing R] [IsDomain R] (X 
       rw [h1, h2, h3, h4]
       exact indicator_sum_mul i j k l hne
     rw [hκ, hsplit, prodPow_single, prodPow_single, prodPow_single, prodPow_single]
-    have hzk : z k k = κ₀ (b k) := by simp only [z]; exact if_pos trivial
-    have hzl : z l l = κ₀ (b l) := by simp only [z]; exact if_pos trivial
+    have hzk : z k k = κ₀ (b k) := by simp only [z]; exact ite_eq_left trivial
+    have hzl : z l l = κ₀ (b l) := by simp only [z]; exact ite_eq_left trivial
     have hzkl : z k l = κ₀ (b k + b l) * (κ₀ (b k))⁻¹ * (κ₀ (b l))⁻¹ := by
-      simp only [z]; rw [if_neg hne, if_pos hkl]
-    have hzlk : z l k = 1 := by simp only [z]; rw [if_neg hne.symm, if_neg (not_lt_of_gt hkl)]
+      simp only [z]; rw [ite_eq_right hne, ite_eq_left hkl]
+    have hzlk : z l k = 1 := by simp only [z]; rw [ite_eq_right hne.symm, ite_eq_right (not_lt_of_gt hkl)]
     rw [hzk, hzl, hzkl, hzlk, mul_one, mul_comm (κ₀ (b k) * κ₀ (b l)), mul_assoc, mul_assoc,
       ← mul_assoc (κ₀ (b k))⁻¹, ← mul_inv, inv_mul_cancel, mul_one]
   have κbb' : ∀ k l, k ≠ l → κ (b k + b l) = κ₀ (b k + b l) := by
@@ -1132,7 +1127,7 @@ theorem core (hR : Base R) (D : DegData R (maximalIdeal R)) (κ : D.toPre.X → 
       obtain ⟨f, hf1, hf2⟩ := GlobalTheory.T.thetaFamily_translatedMembers_leading_times_integral R hR D κ hκ k hk α b F hb mu (r mu) (hr mu hmu).1
       refine ⟨f, hf1, fun _ => ⟨hf2 0 (by simpa using (hr mu hmu).2), fun e he => ⟨mu, rfl, ?_⟩⟩⟩
       exact key mu hmu e (fun h => he (hf2 e h))
-    · push_neg at hc
+    · push Not at hc
       refine ⟨ReciprocityTheory.ChartRestriction.G.DVR.SecOps.secZero, ?_, fun _ => ⟨fun j => map_zero _, fun e he => absurd (fun j => map_zero _) he⟩⟩
       refine (GlobalTheory.FieldBaseChange.secScal_iff_val D.toPre.P.isLB _ _ _ _).2 fun y J hJ => ?_
       rw [ReciprocityTheory.ChartRestriction.G.DVR.UUA.sval_zero_of (fun j => rfl) _ y J (hJ.mem _ _),
@@ -1141,8 +1136,7 @@ theorem core (hR : Base R) (D : DegData R (maximalIdeal R)) (κ : D.toPre.X → 
   refine ⟨⟨F, Function.update g α b, fun β => ?_, fun e => ?_⟩, Function.update_self α b g, fun β hβ => ?_⟩
   · by_cases h : β = α
     · subst h
-      rw [Function.update_self]
-      exact hb
+      rwa [Function.update_self]
     · rw [Function.update_of_ne h]
       exact (hg β).1
   · refine (((h2 (e + 1)).image (fun mu => α + k • mu)).insert α).subset fun β hβ => ?_

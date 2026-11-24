@@ -143,8 +143,7 @@ theorem hermForm_principal_dim_one :
   let f : Λ →ₗ[ℤ] ℤ :=
     { toFun := fun y => Ef y a / k
       map_add' := fun y y' => by
-        simp only [map_add (f := _), LinearMap.add_apply]
-        exact Int.add_ediv_of_dvd_left (hdvd y a)
+        simpa only [map_add (f := _), LinearMap.add_apply] using Int.add_ediv_of_dvd_left (hdvd y a)
       map_smul' := fun c y => by
         simp only [map_zsmul, LinearMap.smul_apply, smul_eq_mul, RingHom.id_apply]
         exact Int.mul_ediv_assoc c (hdvd y a) }
@@ -162,8 +161,7 @@ theorem hermForm_principal_dim_one :
     rcases hunit with h | h
     · have h1 : H.re * D = 1 := by rw [← hk, h]; norm_num
       have hD0 : 0 < D := by nlinarith
-      rw [abs_of_pos hD0]
-      exact h1
+      rwa [abs_of_pos hD0]
     · have h1 : H.re * D = -1 := by rw [← hk, h]; norm_num
       have hD0 : D < 0 := by nlinarith
       rw [abs_of_neg hD0]
@@ -173,8 +171,7 @@ theorem hermForm_principal_dim_one :
     rw [h0, mul_zero] at hHre
     exact zero_ne_one hHre
   have hr : H.re = 1 / |D| := by
-    rw [eq_div_iff hDabs]
-    exact hHre
+    rwa [eq_div_iff hDabs]
   rw [hsm, hHreal, hr, Complex.ofReal_div, Complex.ofReal_one]
   ring
 

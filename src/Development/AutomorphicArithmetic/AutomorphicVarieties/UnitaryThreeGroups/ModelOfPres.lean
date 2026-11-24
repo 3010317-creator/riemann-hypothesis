@@ -241,8 +241,7 @@ private theorem pf_monomial {O σ S : Type} [CommRing O] [CommRing S] [Algebra O
     (f : MvPowerSeries σ O →ₐ[O] S) (m : σ →₀ ℕ) :
     f (monomial m 1) = m.prod fun s k => f (MvPowerSeries.X s) ^ k := by
   have h := GlobalTheory.algHom_coe_mvPolynomial f (MvPolynomial.monomial m (1 : O))
-  rw [MvPolynomial.coe_monomial, MvPolynomial.aeval_monomial, RingHom.map_one, one_mul] at h
-  exact h
+  rwa [MvPolynomial.coe_monomial, MvPolynomial.aeval_monomial, RingHom.map_one, one_mul] at h
 
 private theorem pf_prod {X σ S : Type} [AddCommGroup X] [CommRing S] (wt : σ → X)
     (t : Multiplicative X →* Sˣ) (x : σ → S) (d : σ →₀ ℕ) :
@@ -267,7 +266,7 @@ private theorem pf_approx {O X σ : Type} [CommRing O] [AddCommGroup X] [Finite 
 
   rw [map_sub, map_sum]
   simp only [coeff_wcomp]
-  rw [Finset.sum_ite_eq, if_pos hmem, sub_self]
+  rw [Finset.sum_ite_eq, ite_eq_left hmem, sub_self]
 
 private theorem pf_vanish {O X σ S : Type} [CommRing O] [AddCommGroup X] [Finite σ] [CommRing S]
     [Algebra O S] (wt : σ → X) (J : Ideal S) [IsHausdorff J S] (φ : MvPowerSeries σ O →ₐ[O] S)
@@ -346,7 +345,7 @@ private theorem mono_lemma {O' σ' B' : Type} [CommRing O'] [CommRing B'] [Algeb
   have hd' : Finsupp.degree d < 1 := by exact_mod_cast hd
   have hd0 : d = 0 := (Finsupp.degree_eq_zero_iff d).mp (by omega)
   subst hd0
-  rw [MvPowerSeries.coeff_monomial, if_neg (Ne.symm hm)]
+  rw [MvPowerSeries.coeff_monomial, ite_eq_right (Ne.symm hm)]
 
 private theorem exists_lift_sub_mem_pow_of_mem_wtPart_zero
     (hg : ∀ s, ι (g (MvPowerSeries.X s)) = t (Multiplicative.ofAdd (W.wt s)) * ξ (W.zA s))
@@ -377,11 +376,11 @@ private theorem exists_lift_sub_mem_pow_of_mem_wtPart_zero
           by_contra h
           exact hm ⟨hw, h⟩
         subst hm0
-        rw [if_pos rfl, hb0, MvPowerSeries.coeff_zero_eq_constantCoeff_apply, sub_self]
+        rw [ite_eq_left rfl, hb0, MvPowerSeries.coeff_zero_eq_constantCoeff_apply, sub_self]
       · have hm0 : m ≠ 0 := by
           rintro rfl
           exact hw (map_zero _)
-        rw [if_neg hm0, hb' m hw, sub_zero]
+        rw [ite_eq_right hm0, hb' m hw, sub_zero]
     obtain ⟨c', hc', hcm⟩ := pf_step W ξ ι t g hg (J ^ n) J
       {m : W.σ →₀ ℕ | Finsupp.weight W.wt m = 0 ∧ m ≠ 0} 0 (fun m hm => hm.1)
       (fun m hm => mono_lemma g J hJ m hm.2) ih _ hF x' hx'
@@ -393,8 +392,7 @@ private theorem exists_lift_sub_mem_pow_of_mem_wtPart_zero
     · have he : g b - (algebraMap O B b0 + c') = g (b - MvPowerSeries.C b0) - c' := by
         rw [map_sub, hC, AlgHom.commutes]
         ring
-      rw [he, pow_succ]
-      exact hcm
+      rwa [he, pow_succ]
 
 private theorem pf_agree (hι : Function.Injective ι)
     (hg : ∀ s, ι (g (MvPowerSeries.X s)) = t (Multiplicative.ofAdd (W.wt s)) * ξ (W.zA s))
@@ -470,8 +468,7 @@ theorem UpperTheory.weightedPres_exists_algHom_extension_of_adicComplete :
     intro y hy
     refine Submodule.iSup_induction (fun j => W.part j)
       (motive := fun y => y ∈ W.A ∧ ∀ h : y ∈ W.A, f y = τ ⟨y, h⟩) hy ?_ ?_ ?_
-    · intro j z hz
-      exact ⟨W.part_le_A hz, fun h => by simpa using hf j ⟨z, h⟩ hz⟩
+    · exact fun j z hz => ⟨W.part_le_A hz, fun h => by simpa using hf j ⟨z, h⟩ hz⟩
     · exact ⟨W.A.zero_mem, fun h => by rw [map_zero]; exact (map_zero τ).symm⟩
     · intro z w hz hw
       exact ⟨W.A.add_mem hz.1 hw.1, fun h => by rw [map_add (f := _), hz.2 hz.1, hw.2 hw.1, ← map_add (f := _)]; rfl⟩
@@ -652,8 +649,7 @@ private theorem md_main {O R S K : Type} [CommRing O] [IsDomain O] [IsDiscreteVa
     exact this
   have hfg : ((W.gr 0).map τ.toLinearMap).FG := by
     have := Submodule.FG.map (Ideal.Quotient.liftₐ _ τ hτI).toLinearMap hM
-    rw [← Submodule.map_comp] at this
-    exact this
+    rwa [← Submodule.map_comp] at this
   obtain ⟨Ξ, hΞ, hint⟩ := md_ext W (K := K) hinj (fun x => (hw x).2) τ (fun x => by rw [(hτ x).1]; exact hf1 _)
     (fun s => by rw [(hτ _).1]; exact hz s) hfg
   have hfst : (dualFst Ξ).comp W.π = (f.comp qh).comp W.π := by
@@ -768,14 +764,14 @@ private theorem lc_wcomp_mul (O : Type) [CommRing O] {σ X : Type} [AddCommGroup
   · refine Finset.sum_congr rfl fun p hp => ?_
     have hp' := Finset.HasAntidiagonal.mem_antidiagonal.1 hp
     by_cases h2 : Finsupp.weight wt p.2 = w
-    · rw [coeff_wcomp, if_pos]
+    · rw [coeff_wcomp, ite_eq_left]
       rw [← h, ← hp', map_add (f := _), h2, add_sub_cancel_right]
     · rw [he _ h2, mul_zero, mul_zero]
   · symm
     refine Finset.sum_eq_zero fun p hp => ?_
     have hp' := Finset.HasAntidiagonal.mem_antidiagonal.1 hp
     by_cases h2 : Finsupp.weight wt p.2 = w
-    · rw [coeff_wcomp, if_neg, zero_mul]
+    · rw [coeff_wcomp, ite_eq_right, zero_mul]
       intro h1
       apply h
       rw [← hp', map_add (f := _), h1, h2, sub_add_cancel]
@@ -846,8 +842,7 @@ private theorem lc_order {K τ : Type} [CommRing K] (n : ℕ) :
     · refine le_trans ?_ MvPowerSeries.le_order_mul
       push_cast
       exact add_le_add (ih a ha) (MvPowerSeries.one_le_order_iff_constCoeff_eq_zero.2 hb)
-    · intro a b ha hb
-      exact le_trans (le_min ha hb) MvPowerSeries.min_order_le_add
+    · exact fun a b ha hb => le_trans (le_min ha hb) MvPowerSeries.min_order_le_add
 
 private theorem lc_graded {O E σ τ : Type} [CommRing O] [CommRing E] [Algebra O E] [Finite σ] (v : σ → ℤ) (w : τ → ℤ)
     (Φ : MvPowerSeries σ O →ₐ[O] MvPowerSeries τ E)
@@ -937,7 +932,7 @@ private theorem theta_entry {R : Type} [CommRing R] (g : GL (Fin 3) R) (i j : Fi
   rw [Finset.sum_eq_single j.rev]
   · simp
   · intro k _ hk
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     apply hk
     rw [h, Fin.rev_rev]
@@ -978,7 +973,7 @@ private theorem der_inv {O R Q : Type} [CommRing O] [CommRing R] [Algebra O R] [
 
   simp only [Units.val_mul, Units.val_one, h1, Matrix.mul_apply, map_sum, hDm, hx, hxi, htor, htori,
   Finset.sum_add_distrib, diagonal_apply, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.sum_ite_eq',
-  Finset.mem_univ, if_true] at key
+  Finset.mem_univ, ite_true] at key
   have e : ((t ^ wt1 p : Oˣ) : O) • D (((g⁻¹ : GL (Fin 3) R) : Matrix (Fin 3) (Fin 3) R) p q) =
       -((((t ^ wt1 q)⁻¹ : Oˣ) : O) • D ((g : Matrix (Fin 3) (Fin 3) R) p q)) :=
     eq_neg_of_add_eq_zero_left key
@@ -994,10 +989,8 @@ private theorem map_left_eq_tor_and_right_eq_of_map_eq {O R : Type} [CommRing O]
     (hy : GG.map (x : R →+* O) y = ⟨tor O t, s⟩) :
     GeneralLinearGroup.map (x : R →+* O) y.left = tor O t ∧ y.right = s := by
   constructor
-  · have h := congrArg SemidirectProduct.left hy
-    simpa [GG.map] using h
-  · have h := congrArg SemidirectProduct.right hy
-    simpa [GG.map] using h
+  · simpa [GG.map] using congrArg SemidirectProduct.left hy
+  · simpa [GG.map] using congrArg SemidirectProduct.right hy
 
 private theorem wt_rev_rev_eq_wt1_sub_wt1 (i j : Fin 3) : wt j.rev i.rev = wt1 i - wt1 j := by
   fin_cases i <;> fin_cases j <;> decide
@@ -1013,23 +1006,23 @@ theorem UpperTheory.exists_pointDerivation_emb_entry_eq_smul_mat_entry :
     · refine ⟨1, i, j, by simp [wt6, wt], ?_⟩
       intro R Q _ _ _ _ x D hD y hy
       obtain ⟨_, hr⟩ := map_left_eq_tor_and_right_eq_of_map_eq s t x y hy
-      rw [emb_apply, if_pos (hr.trans hs)]
+      rw [emb_apply, ite_eq_left (hr.trans hs)]
       simp [GG.mat]
     · refine ⟨0, i, j, by simp [wt6, wt], ?_⟩
       intro R Q _ _ _ _ x D hD y hy
       obtain ⟨_, hr⟩ := map_left_eq_tor_and_right_eq_of_map_eq s t x y hy
-      rw [emb_apply, if_pos (hr.trans hs)]
+      rw [emb_apply, ite_eq_left (hr.trans hs)]
       simp
     · refine ⟨0, i, j, by simp [wt6, wt], ?_⟩
       intro R Q _ _ _ _ x D hD y hy
       obtain ⟨_, hr⟩ := map_left_eq_tor_and_right_eq_of_map_eq s t x y hy
-      rw [emb_apply, if_pos (hr.trans hs)]
+      rw [emb_apply, ite_eq_left (hr.trans hs)]
       simp
     · refine ⟨-((((t ^ wt1 i.rev)⁻¹ : Oˣ) : O) * (((t ^ wt1 j.rev)⁻¹ : Oˣ) : O)), j.rev, i.rev,
         by simp [wt6, wt_rev_rev_eq_wt1_sub_wt1], ?_⟩
       intro R Q _ _ _ _ x D hD y hy
       obtain ⟨hl, hr⟩ := map_left_eq_tor_and_right_eq_of_map_eq s t x y hy
-      rw [emb_apply, if_pos (hr.trans hs)]
+      rw [emb_apply, ite_eq_left (hr.trans hs)]
       simp only [fromBlocks_apply₂₂]
       rw [theta_entry]
       exact der_inv x D hD t y.left hl j.rev i.rev
@@ -1037,25 +1030,25 @@ theorem UpperTheory.exists_pointDerivation_emb_entry_eq_smul_mat_entry :
     · refine ⟨0, i, j, by simp [wt6, wt], ?_⟩
       intro R Q _ _ _ _ x D hD y hy
       obtain ⟨_, hr⟩ := map_left_eq_tor_and_right_eq_of_map_eq s t x y hy
-      rw [emb_apply, if_neg (by rw [hr]; exact hs)]
+      rw [emb_apply, ite_eq_right (by rw [hr]; exact hs)]
       simp
     · refine ⟨1, i, j, by simp [wt6, wt], ?_⟩
       intro R Q _ _ _ _ x D hD y hy
       obtain ⟨_, hr⟩ := map_left_eq_tor_and_right_eq_of_map_eq s t x y hy
-      rw [emb_apply, if_neg (by rw [hr]; exact hs)]
+      rw [emb_apply, ite_eq_right (by rw [hr]; exact hs)]
       simp [GG.mat]
     · refine ⟨-((((t ^ wt1 i.rev)⁻¹ : Oˣ) : O) * (((t ^ wt1 j.rev)⁻¹ : Oˣ) : O)), j.rev, i.rev,
         by simp [wt6, wt_rev_rev_eq_wt1_sub_wt1], ?_⟩
       intro R Q _ _ _ _ x D hD y hy
       obtain ⟨hl, hr⟩ := map_left_eq_tor_and_right_eq_of_map_eq s t x y hy
-      rw [emb_apply, if_neg (by rw [hr]; exact hs)]
+      rw [emb_apply, ite_eq_right (by rw [hr]; exact hs)]
       simp only [fromBlocks_apply₂₁]
       rw [theta_entry]
       exact der_inv x D hD t y.left hl j.rev i.rev
     · refine ⟨0, i, j, by simp [wt6, wt], ?_⟩
       intro R Q _ _ _ _ x D hD y hy
       obtain ⟨_, hr⟩ := map_left_eq_tor_and_right_eq_of_map_eq s t x y hy
-      rw [emb_apply, if_neg (by rw [hr]; exact hs)]
+      rw [emb_apply, ite_eq_right (by rw [hr]; exact hs)]
       simp
 end -- clump:auto
 end -- clump:auto
@@ -1142,8 +1135,7 @@ private theorem mat_symm {R : Type} [CommRing R] (x : GG (m := 3) (R := R))
     rwa [SemidirectProduct.mul_left, hx, sgnAct_neg_one] at this
   have h' : x.left = (theta x.left)⁻¹ := eq_inv_of_mul_eq_one_left h
   have := theta_inv_val x.left
-  rw [← h'] at this
-  exact this
+  rwa [← h'] at this
 
 private theorem norm_iff {G R : Type} [Group G] [CommRing R] (c g₁ : G)
     (r : G →* GG (m := 3) (R := R)) (hc : c * c = 1)
@@ -1240,7 +1232,6 @@ theorem UpperTheory.exists_surjection_univ_normCond_ker_span_nEq :
   have hNq : NormCond c g₁ P (B.R ⧸ I) (B.r.map (Ideal.Quotient.mkₐ O I)) := by
     refine ⟨(norm_iff c g₁ _ hc (hr _ _)).2 (fun i => ?_), (B.rep _).1 _⟩
     rw [nEq_map]
-    show Ideal.Quotient.mk I _ = 0
     exact Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.subset_span ⟨i, rfl⟩)
   obtain ⟨s, hs, -⟩ := (S.rep (B.R ⧸ I)).2 _ hNq
   have hsp : s.comp p = Ideal.Quotient.mkₐ O I := by
@@ -1258,7 +1249,6 @@ theorem UpperTheory.exists_surjection_univ_normCond_ker_span_nEq :
   have hI' : ∀ a ∈ I, p a = 0 := fun a ha => RingHom.mem_ker.1 (hI ha)
   let p' := Ideal.Quotient.liftₐ I p hI'
   have hp'q : ∀ z, p' (Ideal.Quotient.mkₐ O I z) = p z := fun z => by
-    show Ideal.Quotient.lift I (p : B.R →+* S.R) hI' (Ideal.Quotient.mk I z) = p z
     exact Ideal.Quotient.lift_mk I _ _
   have hpq : p'.comp (Ideal.Quotient.mkₐ O I) = p := AlgHom.ext hp'q
   have hid : p'.comp s = AlgHom.id O S.R := by
@@ -1297,8 +1287,7 @@ private theorem pts_int {l : ℕ} [Fact l.Prime] (x : PadicAlgCl l) : IsIntegral
   · intro h
     have hl : minpoly ℚ_[l] x ∈ Polynomial.lifts (algebraMap ℤ_[l] ℚ_[l]) := by
       rw [Polynomial.lifts_iff_coeff_lifts]
-      intro n
-      exact ⟨⟨_, h n⟩, rfl⟩
+      exact fun n => ⟨⟨_, h n⟩, rfl⟩
     obtain ⟨q, hq, -, hqm⟩ := Polynomial.lifts_and_natDegree_eq_and_monic hl hmon
     refine ⟨q, hqm, ?_⟩
     rw [IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] (PadicAlgCl l), ← Polynomial.eval₂_map, hq,
@@ -1350,8 +1339,7 @@ private theorem pts_sur {O R K : Type} [CommRing O] [CommRing R] [Algebra O R] [
 private theorem pts_loc {l : ℕ} [Fact l.Prime] {c : Coef l} {R : Type} [CommRing R] [Algebra c.O R] [IsLocalRing R]
     (f : R →ₐ[c.O] PadicAlgCl l) : IsLocPt f := by
   intro x hx
-  by_contra hge
-  push_neg at hge
+  by_contra! hge
   have h0 : f x ≠ 0 := by
     intro hz
     rw [hz, norm_zero] at hge
@@ -1491,8 +1479,7 @@ private theorem mop_cover {O Bl B S : Type} [CommRing O] [IsLocalRing O] [IsNoet
     · obtain ⟨F, rfl⟩ := Ideal.Quotient.mk_surjective y
       have h1 : W.π F ∈ (Ideal.span (Set.range N)).map W.π := by
         have h2 : W.π ∘ N = n := funext hN'
-        rw [Ideal.map_span, ← Set.range_comp, h2, ← hk]
-        exact hy
+        rwa [Ideal.map_span, ← Set.range_comp, h2, ← hk]
       obtain ⟨G, hG1, hG2⟩ := (Ideal.mem_map_iff_of_surjective _ W.surj).1 h1
       have h3 : F - G ∈ J ⊔ Ideal.span (Set.range f) := by
         rw [← hker, RingHom.mem_ker, map_sub, hG2, sub_self]
@@ -1506,16 +1493,14 @@ private theorem mop_cover {O Bl B S : Type} [CommRing O] [IsLocalRing O] [IsNoet
         · rintro _ ⟨k, rfl⟩
           exact Ideal.subset_span ⟨.inr k, rfl⟩
       have h5 := h4 (Ideal.add_mem _ (Ideal.mem_sup_left h3) (Ideal.mem_sup_right hG1))
-      rw [sub_add_cancel] at h5
-      exact h5
+      rwa [sub_add_cancel] at h5
     · rintro _ ⟨k | k, rfl⟩
       · have : W.π (f k) = 0 :=
           (hker ▸ Ideal.mem_sup_right (Ideal.subset_span ⟨k, rfl⟩) : f k ∈ RingHom.ker W.π)
         show p (W.π (f k)) = 0
         rw [this, map_zero]
       · have : n k ∈ RingHom.ker p := hk ▸ Ideal.subset_span ⟨k, rfl⟩
-        rw [← hN' k] at this
-        exact this
+        rwa [← hN' k] at this
   · rintro j _ ⟨F, hF, rfl⟩
     exact ⟨Ideal.Quotient.mk J F, ⟨F, hF, rfl⟩, rfl⟩
 
@@ -1633,7 +1618,7 @@ private theorem mop_main {O : Type} [CommRing O] [IsDomain O] [IsLocalRing O] [I
     rintro (k | k)
     · by_contra hj
       have h1 := hcnt (wf k)
-      have h2 : boxDef (wf k) = 0 := if_neg fun h3 => hj (by
+      have h2 : boxDef (wf k) = 0 := ite_eq_right fun h3 => hj (by
         have := abs_le.1 h3
         exact ⟨by show -2 ≤ wf k; omega, by show wf k ≤ 2; omega⟩)
       rw [ha0 (wf k) hj, h2] at h1
@@ -1687,8 +1672,7 @@ private theorem mop_main {O : Type} [CommRing O] [IsDomain O] [IsLocalRing O] [I
     rfl
   · obtain ⟨y, hy, hy'⟩ := hpart _ _ (mop_mat_mem hent γ a b)
     refine ⟨⟨y, WA.part_le_A hy⟩, hy, ?_⟩
-    rw [hSr]
-    exact hy'
+    rwa [hSr]
   · obtain ⟨F, hF, hFy⟩ := hy
     have h1 : (qh.comp WA.A.val) y = (qh.comp WA.π) F := congrArg qh hFy.symm
     rw [h1]

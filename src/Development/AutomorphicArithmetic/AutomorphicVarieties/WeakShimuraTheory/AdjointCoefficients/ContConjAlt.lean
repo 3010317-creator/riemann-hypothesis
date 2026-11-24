@@ -97,8 +97,7 @@ theorem UpperTheory.V.Ws.X1.contLift :
       exact ⟨a, (hm a).mpr hr, rfl⟩
   have hmap : ∀ n, ∀ r ∈ maximalIdeal R ^ n, ∃ z ∈ maximalIdeal A ^ n, p z = r := by
     intro n r hr
-    rw [← hmap1, ← Ideal.map_pow, Ideal.mem_map_iff_of_surjective p hp] at hr
-    exact hr
+    rwa [← hmap1, ← Ideal.map_pow, Ideal.mem_map_iff_of_surjective p hp] at hr
   choose ρ hρ using fun c : R ⧸ maximalIdeal R ^ N0 => Ideal.Quotient.mk_surjective c
   choose l hl using fun c : R ⧸ maximalIdeal R ^ N0 => hp (ρ c)
   have hu : ∀ r : R, ∃ z ∈ maximalIdeal A ^ N0, p z = r - ρ (Ideal.Quotient.mk _ r) := by
@@ -125,8 +124,7 @@ theorem UpperTheory.V.Ws.X1.contLift :
       · exact sub_mem (Ideal.pow_le_pow_right hM hz) (sub_mem (hu1 r) (hu1 r'))
     have hz' : u r - u r' = z := (sub_eq_zero.mp hzero).symm
     simp only [σ]
-    rw [hq, add_sub_add_left_eq_sub, hz']
-    exact hz
+    rwa [hq, add_sub_add_left_eq_sub, hz']
   refine ⟨?_, ?_⟩
   · intro S _ x hx
     refine ⟨fun s => σ (x s), ?_, fun s => hpσ _⟩
@@ -217,15 +215,15 @@ theorem UpperTheory.V.Ws.X1.gspLift :
   let y0 : S → M4 A := fun s => Matrix.of fun i j => if ∀ t, x t i j = 0 then 0 else z i j s
   have b0 : ∀ i j, AdicCont (maximalIdeal A) fun s => y0 s i j := fun i j => by
     by_cases e : ∀ t, x t i j = 0
-    · simp only [y0, Matrix.of_apply, if_pos e]
+    · simp only [y0, Matrix.of_apply, ite_eq_left e]
       exact fun _ => IsLocallyConstant.const _
-    · simp only [y0, Matrix.of_apply, if_neg e]
+    · simp only [y0, Matrix.of_apply, ite_eq_right e]
       exact z1 i j
   have b1 : ∀ s, (y0 s).map p = x s := fun s => by
     ext i j
     by_cases e : ∀ t, x t i j = 0
-    · simp only [y0, Matrix.map_apply, Matrix.of_apply, if_pos e, map_zero, e s]
-    · simp only [y0, Matrix.map_apply, Matrix.of_apply, if_neg e, z2]
+    · simp only [y0, Matrix.map_apply, Matrix.of_apply, ite_eq_left e, map_zero, e s]
+    · simp only [y0, Matrix.map_apply, Matrix.of_apply, ite_eq_right e, z2]
   obtain ⟨u, hu⟩ := h2.exists_right_inv
   have hk : ∀ a b : A, p a = 0 → p b = 0 → a * b = 0 := fun a b ha hb => by
     have ha' : a ∈ maximalIdeal A := fun h => by
@@ -273,7 +271,7 @@ theorem UpperTheory.V.Ws.X1.gspLift :
     have g := hg s
     unfold IsGSp at g
     rw [this, b1, corr, g, p.commutes (ν s), sub_self, smul_zero, sub_zero, mul_one]
-  · simp only [y0, Matrix.of_apply, if_pos fun t => h t i j e]
+  · simp only [y0, Matrix.of_apply, ite_eq_left fun t => h t i j e]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.AdjointCoefficients.GspLift =====
@@ -320,8 +318,7 @@ private theorem cont_push {Λ S A A' : Type} [CommRing Λ] [IsLocalRing Λ] [Top
   have hm : Ideal.map p (maximalIdeal A) ≤ maximalIdeal A' := by
     rw [Ideal.map_le_iff_le_comap]
     intro y hy
-    rw [Ideal.mem_comap, ← res_eq_zero_iff Λ A', res_map, res_eq_zero_iff]
-    exact hy
+    rwa [Ideal.mem_comap, ← res_eq_zero_iff Λ A', res_map, res_eq_zero_iff]
   have hle : maximalIdeal A ^ N ≤ Ideal.comap p (maximalIdeal A' ^ N) := by
     rw [← Ideal.map_le_iff_le_comap, Ideal.map_pow]
     exact pow_le_pow_left' hm N
@@ -396,10 +393,8 @@ theorem UpperTheory.V.Ws.X1.slEx :
   have hadj : ∀ X : M4 A, adj (X.map p') = (adj X).map p' := fun X => adj_map (p' : A →+* A') X
   refine ⟨⟨fun g => (yr g).map p', ?_, ?_, ?_, fun v => (yn v).map p', ?_, ?_, fun v s => (yt v s).map p',
     ?_, ?_, ?_, ?_⟩, ?_, ?_⟩
-  · intro i j
-    exact cont_push p' _ (hyc i j)
-  · intro g
-    exact gsp_push p' (hym g)
+  · exact fun i j => cont_push p' _ (hyc i j)
+  · exact fun g => gsp_push p' (hym g)
   · intro g
     rw [hmap, hyp]
   · intro v
@@ -407,10 +402,8 @@ theorem UpperTheory.V.Ws.X1.slEx :
     simpa using this
   · intro v
     rw [hmap, hnp]
-  · intro v i j
-    exact cont_push p' _ ((hyt v).1 i j)
-  · intro v s
-    exact gsp_push p' ((hyt v).2.1 s)
+  · exact fun v i j => cont_push p' _ ((hyt v).1 i j)
+  · exact fun v s => gsp_push p' ((hyt v).2.1 s)
   · intro v s i j hij
     simp [(hyt v).2.2.2 s i j hij]
   · intro v s

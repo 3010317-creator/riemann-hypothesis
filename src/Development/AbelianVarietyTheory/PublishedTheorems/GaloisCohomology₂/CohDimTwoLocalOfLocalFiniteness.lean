@@ -83,10 +83,8 @@ theorem subsingleton_Hn_succ_iff {R : Type*} [CommRing R] [Module R M] [Continuo
         ∃ c : (Fin n → Γ) → M, Continuous c ∧ dn rho n c = f := by
   rw [Submodule.Quotient.subsingleton_iff, eq_top_iff]
   constructor
-  · intro h f hf hd
-    exact h (x := ⟨f, hf, hd⟩) trivial
-  · intro h f _
-    exact h f.1 f.2.1 f.2.2
+  · exact fun h f hf hd => h (x := ⟨f, hf, hd⟩) trivial
+  · exact fun h f _ => h f.1 f.2.1 f.2.2
 
 
 omit [TopologicalSpace Γ] [TopologicalSpace M] [IsTopologicalAddGroup M] in

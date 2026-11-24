@@ -120,7 +120,7 @@ lemma trPow_eq (l : Fin n → ℂ) (k : ℕ) (a : Fin n) : TrPow_m l k a = ∑ b
     simp only [Matrix.mul_apply]
     rw [Finset.sum_comm]
     simp only [← Finset.mul_sum, ← ih, hsplit, Finset.sum_add_distrib, Finset.sum_ite_eq,
-      Finset.mem_univ, if_true, TrPow_m, Finset.sum_filter, sub_eq_add_neg, ← Finset.sum_neg_distrib]
+      Finset.mem_univ, ite_true, TrPow_m, Finset.sum_filter, sub_eq_add_neg, ← Finset.sum_neg_distrib]
     congr 1
     refine Finset.sum_congr rfl fun x _ => ?_
     split_ifs <;> simp
@@ -197,7 +197,6 @@ def mk {U : Set E} (hU : IsOpen U) (F : E → ℂ) (hF : AnalyticOnNhd ℂ F U) 
 
 lemma mk_apply {U : Set E} (hU : IsOpen U) (F : E → ℂ)
     (hF : AnalyticOnNhd ℂ F U) {z : E} (hz : z ∈ U) : (mk hU F hF).1 z = F z := by
-  show U.indicator F z = F z
   exact Set.indicator_of_mem hz F
 
 variable [FiniteDimensional ℂ E]
@@ -220,8 +219,7 @@ def vec {U : Set E} (hU : IsOpen U) : (E →ₗ[ℂ] E) →ₗ[ℂ] Module.End �
 
 lemma vec_apply {U : Set E} (hU : IsOpen U) (T : E →ₗ[ℂ] E)
     (F : holSpace U) {z : E} (hz : z ∈ U) : (vec hU T F).1 z = fderiv ℂ F.1 z (T z) := by
-  simp only [vec, LinearMap.mk₂_apply]
-  exact mk_apply hU _ _ hz
+  simpa only [vec, LinearMap.mk₂_apply] using mk_apply hU _ _ hz
 
 lemma vec_vec {U : Set E} (hU : IsOpen U) (S T : E →ₗ[ℂ] E) (F : holSpace U) {z : E} (hz : z ∈ U) :
     (vec hU S (vec hU T F)).1 z =
@@ -382,7 +380,7 @@ lemma Phi_mul_single (lam : Fin n → ℝ) {z : Matrix (Fin n) (Fin n) ℂ} (hz 
       (if a = b then (1 + t) ^ (-(muInt lam a)) else 1) * Phi lam z := by
   have hup : IsUp (1 + t • Matrix.single a b (1 : ℂ)) := by
     intro i j hji
-    rw [Matrix.add_apply, Matrix.one_apply_ne hji.ne', Matrix.smul_apply, Matrix.single_apply, if_neg]
+    rw [Matrix.add_apply, Matrix.one_apply_ne hji.ne', Matrix.smul_apply, Matrix.single_apply, ite_eq_right]
     · simp
     · rintro ⟨rfl, rfl⟩
       exact absurd hab (not_le.2 hji)
@@ -395,8 +393,8 @@ lemma Phi_mul_single (lam : Fin n → ℝ) {z : Matrix (Fin n) (Fin n) ℂ} (hz 
       · rintro ⟨rfl, rfl⟩; exact ⟨rfl, rfl⟩
       · rintro ⟨rfl, rfl⟩; exact ⟨rfl, rfl⟩
     by_cases hc : a = b ∧ l = a
-    · rw [if_pos (hiff.2 hc), if_pos hc]; simp
-    · rw [if_neg (fun h5 => hc (hiff.1 h5)), if_neg hc]; simp
+    · rw [ite_eq_left (hiff.2 hc), ite_eq_left hc]; simp
+    · rw [ite_eq_right (fun h5 => hc (hiff.1 h5)), ite_eq_right hc]; simp
   have hne : ∀ l, (1 : Matrix (Fin n) (Fin n) ℂ) l l ≠ 0 ∧ (1 + t • Matrix.single a b (1 : ℂ)) l l ≠ 0 := by
     intro l
     refine ⟨by simp, ?_⟩
@@ -411,7 +409,7 @@ lemma Phi_mul_single (lam : Fin n → ℝ) {z : Matrix (Fin n) (Fin n) ℂ} (hz 
   simp only [Matrix.one_apply_eq, one_mul, hdiag]
   by_cases hab' : a = b
   · subst hab'
-    simp only [true_and, if_true]
+    simp only [true_and, ite_true]
     rw [Finset.prod_eq_single a (fun l _ hl => by simp [hl]) (by simp)]
     simp
   · simp [hab']
@@ -426,8 +424,7 @@ lemma der_Phi (lam : Fin n → ℝ) (k k' : Matrix (Fin n) (Fin n) ℂ) (h : k' 
   have hγ : HasDerivAt (fun t : ℂ => z + t • (z * (k * Matrix.single a b (1 : ℂ) * k')))
       (((LinearMap.mul ℂ (Matrix (Fin n) (Fin n) ℂ)).flip (k * Matrix.single a b 1 * k')) z) 0 := by
     have h3 := ((hasDerivAt_id (0 : ℂ)).smul_const (z * (k * Matrix.single a b (1 : ℂ) * k'))).const_add z
-    rw [one_smul] at h3
-    exact h3
+    rwa [one_smul] at h3
   refine Eq.trans (vec_eq_deriv (isOpen_conj k k') _ _ (f := fun y => Phi lam (k' * y * k))
     (fun y hy => mk_apply _ _ _ hy) hz (by simp) hγ) ?_
   have hm : (mk (isOpen_conj k k') _ (analytic_Phi lam k k')).1 z = Phi lam (k' * z * k) := mk_apply _ _ _ hz
@@ -448,7 +445,7 @@ lemma der_Phi (lam : Fin n → ℝ) (k k' : Matrix (Fin n) (Fin n) ℂ) (h : k' 
   rw [hev.deriv_eq]
   by_cases hab' : a = b
   · subst hab'
-    simp only [if_true]
+    simp only [ite_true]
     have hd : HasDerivAt (fun t : ℂ => (1 + t) ^ (-(muInt lam a)))
         (((-(muInt lam a) : ℤ) : ℂ) * (1 + 0) ^ (-(muInt lam a) - 1) * 1) 0 :=
       (hasDerivAt_zpow (-(muInt lam a)) (1 + 0 : ℂ) (Or.inl (by norm_num))).comp (0 : ℂ)
@@ -470,8 +467,7 @@ theorem phiEigen : PhiEigen := by
       ((∑ c, (Matrix.of (fun a b => der (isOpen_conj k k⁻¹) (Matrix.single a b (1 : ℂ))) ^ (m + 1)) c c)
         (mk (isOpen_conj k k⁻¹) _ (analytic_Phi lam k k⁻¹))).1 z := by
     rw [← sum_cycWord, LinearMap.sum_apply, Submodule.coe_sum, Finset.sum_apply]
-    simp only [gelfH]
-    exact Finset.sum_congr rfl fun a _ => (rholW_apply _ _ _ hmk z hzU).symm
+    simpa only [gelfH] using Finset.sum_congr rfl fun a _ => (rholW_apply _ _ _ hmk z hzU).symm
   have step2 : (∑ c, (Matrix.of (fun a b => der (isOpen_conj k k⁻¹) (Matrix.single a b (1 : ℂ))) ^ (m + 1)) c c) =
       ∑ c, (Matrix.of (fun a b => der (isOpen_conj k k⁻¹) (k * Matrix.single a b (1 : ℂ) * k⁻¹)) ^ (m + 1)) c c := by
     rw [of_conj]
@@ -481,11 +477,9 @@ theorem phiEigen : PhiEigen := by
       (fun a => -(muInt lam a : ℂ)) (mk (isOpen_conj k k⁻¹) _ (analytic_Phi lam k k⁻¹)) := by
     refine ⟨fun a => ?_, fun a b hab => ?_⟩
     · have h3 := der_Phi lam k k⁻¹ h1 (le_refl a)
-      rw [if_pos rfl] at h3
-      exact h3
+      rwa [ite_eq_left rfl] at h3
     · have h3 := der_Phi lam k k⁻¹ h1 hab.le
-      rw [if_neg hab.ne, zero_smul] at h3
-      exact h3
+      rwa [ite_eq_right hab.ne, zero_smul] at h3
   have hl : lsh (fun a => -(muInt lam a : ℂ)) = fun c => -(lam c : ℂ) + ((n : ℂ) - 1) / 2 := by
     funext c
     obtain ⟨mc, hm⟩ := hlam.2 c

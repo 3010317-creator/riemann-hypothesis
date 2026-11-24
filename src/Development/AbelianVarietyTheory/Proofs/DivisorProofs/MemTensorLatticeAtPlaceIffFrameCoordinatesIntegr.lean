@@ -216,10 +216,8 @@ theorem mem_latAtV_iff_xm : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
       exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
     rw [e]
     refine sum_mem fun j _ => sum_mem fun l _ => Lat.vecMulVec_mem X W (Lat.smul_mem_latAt X ((hint _).1 (hu l j)) ?_) ?_
-    · have h := (hPV (Pi.single j 1)).1 (hsing j)
-      simpa [Matrix.mulVec_single_one] using h
-    · have h := (hPW (Pi.single l 1)).1 (hsing l)
-      simpa [Matrix.mulVec_single_one] using h
+    · simpa [Matrix.mulVec_single_one] using (hPV (Pi.single j 1)).1 (hsing j)
+    · simpa [Matrix.mulVec_single_one] using (hPW (Pi.single l 1)).1 (hsing l)
 
 end GlobalTheory.InertLocFrame
 

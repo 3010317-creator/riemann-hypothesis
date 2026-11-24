@@ -240,8 +240,7 @@ theorem glue_mem (hs : h.IsSymm) (hι : ∀ x y, h (ι x) (ι y) = h0 x y) (hinj
           have hle : L ≤ (1 : Submodule (𝓞 K) K).comap
               ((a : 𝓞 K) • (h0 w).restrictScalars (𝓞 K)) := by
             rw [← hs, Submodule.span_le]
-            intro x hx
-            exact Submodule.mem_one.2 (ha x hx)
+            exact fun x hx => Submodule.mem_one.2 (ha x hx)
           have hh := hle hl
           change (a : 𝓞 K) • h0 w l ∈ (1 : Submodule (𝓞 K) K) at hh
           rw [LinearMap.map_smulₛₗ, LinearMap.smul_apply, starRingEnd_apply, star_star, ← algebraMap_smul K]
@@ -486,7 +485,7 @@ theorem eq_zero_of_mem_X {T : D.host.E} (F0 : FlagG (VS D) D.R.rS T) (he : F0.e 
 
     simp only [map_sum, LinearMap.sum_apply, map_smulₛₗ, LinearMap.smul_apply, D.sp.hyp_ef,
     smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-    if_true] at h
+    ite_true] at h
     simpa using h
   simp [hc]
 
@@ -701,10 +700,8 @@ theorem gluingNum : ∀ (D : D7) (u : D.what₂.Word), (Tu D u).Prime → 3 ≤ 
       intro L₁ h₁ L₂ h x hx
       obtain ⟨p, rfl⟩ := exists_jz D u F0 hp.ne_zero he hz (le_Wb_of_mem D u h₁ hx)
       have : p ∈ L₁.comap (jz D (D.zmOf u)) := hx
-      rw [h] at this
-      exact this
-    intro L₁ h₁ L₂ h₂ h
-    exact le_antisymm (aux L₁ h₁ L₂ h) (aux L₂ h₂ L₁ h.symm)
+      rwa [h] at this
+    exact fun L₁ h₁ L₂ h₂ h => le_antisymm (aux L₁ h₁ L₂ h) (aux L₂ h₂ L₁ h.symm)
   rw [← hinj.ncard_image]
   congr 1
   ext 𝓛
@@ -718,8 +715,7 @@ theorem gluingNum : ∀ (D : D7) (u : D.what₂.Word), (Tu D u).Prime → 3 ≤ 
       rw [← Lsub_gmap D (lf D F0) Λ' n hn, hL, comap_sup_X D u F0 he _ inf_le_right]
     refine ⟨Formalism.HermitianLatticesTheory.gmap n Λ' ⊓ toO (hS D) (Wb D),
       ⟨hg.1, hg.2.1, hg.2.2.1, hg.2.2.2.1, hg.2.2.2.2.1, ?_⟩, e.symm⟩
-    rw [← comap_jz_inl D (D.zmOf u), ← e]
-    exact hc
+    rwa [← comap_jz_inl D (D.zmOf u), ← e]
   · rintro ⟨L, hL, rfl⟩
     obtain ⟨hrow, hsp, hW⟩ := (GlobalTheory.T.splitRowLattice_middle_iff_gluedLattice D u F0 Λ h1 hB hΛ).2 M L hL
     have hL' := ((GlobalTheory.T.splitRowLattice_middle_iff_gluedLattice D u F0 _ h1 hB hrow).1 hsp).2

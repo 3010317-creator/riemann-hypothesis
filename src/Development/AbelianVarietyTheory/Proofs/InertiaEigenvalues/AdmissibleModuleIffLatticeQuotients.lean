@@ -215,11 +215,11 @@ theorem nonempty_linear_equiv_of_charpoly_eq (n : ℕ) : ∀ (V W : Type) [AddCo
       haveI : Subsingleton W :=
         Module.finrank_zero_iff.1 (finrank_eq_zero_of_hom (fun a => (h a).symm) h₂ h₁)
       exact ⟨LinearEquiv.ofSubsingleton V W⟩
-    · push_neg at h₂
+    · push Not at h₂
       obtain ⟨f, hf⟩ := h₂
       obtain ⟨e⟩ := step W V (by omega) (fun a => (h a).symm) f hf
       exact ⟨e.symm⟩
-  · push_neg at h₁
+  · push Not at h₁
     obtain ⟨f, hf⟩ := h₁
     exact step V W hn h f hf
 
@@ -306,8 +306,7 @@ theorem colRep_semisimple {k G : Type} [Field k] [Monoid G] {n : ℕ} (ρ : G �
   refine ⟨⟨W', fun g v hv => h1 g v hv⟩, ?_⟩
   rw [isCompl_iff, disjoint_iff, codisjoint_iff,
     ← Subrepresentation.toSubmodule_injective.eq_iff, ← Subrepresentation.toSubmodule_injective.eq_iff]
-  rw [isCompl_iff, disjoint_iff, codisjoint_iff] at h2
-  exact h2
+  rwa [isCompl_iff, disjoint_iff, codisjoint_iff] at h2
 
 theorem main : ∀ {k G : Type} [Field k] [Group G] (n : ℕ) (ρ σ : G →* Matrix (Fin n) (Fin n) k), (∀ W : Submodule k (Fin n → k), (∀ g, ∀ v ∈ W, (ρ g).mulVec v ∈ W) → ∃ W', IsCompl W W' ∧ ∀ g, ∀ v ∈ W', (ρ g).mulVec v ∈ W') → (∀ W : Submodule k (Fin n → k), (∀ g, ∀ v ∈ W, (σ g).mulVec v ∈ W) → ∃ W', IsCompl W W' ∧ ∀ g, ∀ v ∈ W', (σ g).mulVec v ∈ W') → (∀ g, (ρ g).charpoly = (σ g).charpoly) → ∃ P : GL (Fin n) k, ∀ g, (P : Matrix (Fin n) (Fin n) k) * ρ g = σ g * P := by
   intro k G _ _ n ρ σ hρ hσ hc
@@ -326,8 +325,7 @@ theorem main : ∀ {k G : Type} [Field k] [Group G] (n : ℕ) (ρ σ : G →* Ma
   rw [hh]
   refine LinearMap.ext fun v => ?_
   have := he g v
-  rw [colRep_apply, colRep_apply] at this
-  exact this
+  rwa [colRep_apply, colRep_apply] at this
 
 end GlobalTheory.BrauerNesbittMatrix
 end -- clump:auto
@@ -446,14 +444,12 @@ theorem bnMatRep_isSSRep {k Γ : Type} [Field k] [Group Γ] {W : Type} [AddCommG
     exact this)
   refine ⟨U'.map (b.equivFun : W →ₗ[k] (Fin a → k)), ?_, ?_⟩
   · rintro g _ ⟨v, hv, rfl⟩
-    refine ⟨s g v, hU' g v hv, ?_⟩
-    exact (bnMatRep_mulVec b s g v).symm
+    exact ⟨s g v, hU' g v hv, (bnMatRep_mulVec b s g v).symm⟩
   · have h := (Submodule.orderIsoMapComap b.equivFun).isCompl hc
     have h1 : (Submodule.orderIsoMapComap b.equivFun)
         (U.comap (b.equivFun : W →ₗ[k] (Fin a → k))) = U :=
       Submodule.map_comap_eq_of_surjective b.equivFun.surjective U
-    rw [h1] at h
-    exact h
+    rwa [h1] at h
 
 theorem brauerNesbitt_abstract_of_matrix : (∀ (Γ k : Type) [Group Γ] [Field k] (a : ℕ) (ρ ρ' : Γ →* GL (Fin a) k), IsSSRep ρ → IsSSRep ρ' → (∀ g, ((ρ g : GL (Fin a) k) : Matrix (Fin a) (Fin a) k).charpoly = ((ρ' g : GL (Fin a) k) : Matrix (Fin a) (Fin a) k).charpoly) → ∃ h : GL (Fin a) k, ∀ g, ρ' g = h * ρ g * h⁻¹) → ∀ {k Γ : Type} [Field k] [Group Γ] {W : Type} [AddCommGroup W] [Module k W] [FiniteDimensional k W] {V : Type} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (s : Representation k Γ W) (s' : Representation k Γ V), IsSS s → IsSS s' → (∀ g, LinearMap.charpoly (s g) = LinearMap.charpoly (s' g)) → ∃ e : W ≃ₗ[k] V, ∀ g v, e (s g v) = s' g (e v) := by
   intro H k Γ _ _ W _ _ _ V _ _ _ s s' hs hs' hc
@@ -691,10 +687,8 @@ theorem exists_subquot (e : M ≃+ M₁) (p q : Submodule A M) (p₁ q₁ : Subm
     constructor
     · rintro ⟨x, hx, rfl⟩
       change e x ∈ q₁
-      rw [hq, AddEquiv.symm_apply_apply]
-      exact hx
-    · intro hy
-      exact ⟨e'.symm y, (hq _).1 hy, e'.apply_symm_apply y⟩
+      rwa [hq, AddEquiv.symm_apply_apply]
+    · exact fun hy => ⟨e'.symm y, (hq _).1 hy, e'.apply_symm_apply y⟩
   · obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ z
     change Submodule.Quotient.mk (e' (a • x)) = Submodule.Quotient.mk (b • e' x)
     congr 1

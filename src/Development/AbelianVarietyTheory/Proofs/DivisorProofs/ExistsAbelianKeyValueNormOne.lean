@@ -102,8 +102,7 @@ theorem norm_th_one {V : Type} [CommRing V] [IsDomain V] {D : DegPre V} {C : Typ
     have := UnitNorm.norm_valF_unit hS x₀ (LB.wchart D.P.L (fun _ : Fin 1 => 𝟙 D.P.A.left)
       fun _ => ν.J ((ν.eA 1).left ≫ 𝟙 _)) (fun y hy => Set.mem_iInter.2 fun _ => by
         rw [Category.comp_id]; exact hU hy) _ (hu _)
-    rw [hx] at this
-    exact this
+    rwa [hx] at this
   have h2 : ‖vF (L := D.P.L) (φ := fun _ : PUnit => eSec D.P.A) (ε := fun _ => 1) D.rig (TF (R := V) C).hom ν.J‖ = 1 := by
     unfold vF
     have := UnitNorm.norm_valF_unit hS (x₀ ≫ D.P.A.hom) (LB.wchart D.P.L (fun _ : PUnit => eSec D.P.A)
@@ -113,8 +112,7 @@ theorem norm_th_one {V : Type} [CommRing V] [IsDomain V] {D : DegPre V} {C : Typ
         have e : (x₀ ≫ D.P.A.hom) ≫ eSec D.P.A = x₀ :=
           (Category.assoc _ _ _).trans ((congrArg _ he').trans (Category.comp_id _))
         rw [e]; exact hU hy) _ (Units.isUnit (D.rig.s _))
-    rw [← hT] at this
-    exact this
+    rwa [← hT] at this
   rwa [norm_mul, h1, h2, _root_.mul_one] at h
 
 theorem sec_unique {X : Scheme.{0}} {L : LB X} (t : H0 L 1) {a b : L.Sec}

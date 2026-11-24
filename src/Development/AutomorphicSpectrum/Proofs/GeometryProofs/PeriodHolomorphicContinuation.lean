@@ -96,21 +96,18 @@ theorem per_spreads : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) [GrpObj G] [
   have hmemW : (b₀, x) ∈ W := by
     refine ⟨⟨hb₀, Set.mem_univ _⟩, ?_⟩
     show ⊤ ≤ (TopologicalSpace.Opens.map (Over.Hom.left (e.ex b₀ x)).base).obj V
-    rw [hx0]
-    exact hV
+    rwa [hx0]
   have hΦx : Φ (b₀, x) = fun j => valAt' (Over.Hom.left (e.ex b₀ 0)) V (f j) := by
     show (fun j => valAt' (Over.Hom.left (e.ex b₀ x)) V (f j)) = _
     rw [hx0]
   have hL' : AnalyticAt ℂ L (b₀, Φ (b₀, x)) := by
-    rw [hΦx]
-    exact hLan
+    rwa [hΦx]
   let Q : (Fin n → ℂ) × (Fin N → ℂ) → Prop := fun p =>
     ∀ y : Over.mk (spMap (ψ p.1)) ⟶ G,
       ⊤ ≤ (TopologicalSpace.Opens.map (Over.Hom.left y).base).obj V →
         (∀ j, valAt' (Over.Hom.left y) V (f j) = p.2 j) → y = e.ex p.1 (L p)
   have hQ : ∀ᶠ p in 𝓝 (b₀, Φ (b₀, x)), Q p := by
-    rw [hΦx]
-    exact huniq
+    rwa [hΦx]
   obtain ⟨ε, hε, hdiff, hprop⟩ := spread_slice hWo hΦ hmemW hL' hQ
   have hWmem : ∀ b ∈ ball b₀ ε, b ∈ B ∧
       ⊤ ≤ (TopologicalSpace.Opens.map (Over.Hom.left (e.ex b x)).base).obj V := by

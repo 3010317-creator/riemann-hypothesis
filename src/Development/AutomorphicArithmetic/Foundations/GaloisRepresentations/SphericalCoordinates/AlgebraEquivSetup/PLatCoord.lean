@@ -194,11 +194,8 @@ theorem pLatCoord :
   obtain ⟨β, hβ⟩ := pRepEx E n
   have hr : ∀ x z, β (S.L.rep x z) = x *ᵥ β z := beta_rep S.L.rep S.L_rep β hβ
   refine ⟨nu (AfP p) β, ?_, ?_, ?_⟩
-  · intro r v i
-    exact (nu_tmul (AfP p) β r _ i).trans (congrArg (fun t => r ⊗ₜ[ℚ] t) (hβ v i))
-  · intro h v
-    exact nu_act μ hμ S.L.rep β hr (S.mx h) v
-  · intro v
-    exact nu_mem β hβ v
+  · exact fun r v i => (nu_tmul (AfP p) β r _ i).trans (congrArg (fun t => r ⊗ₜ[ℚ] t) (hβ v i))
+  · exact fun h v => nu_act μ hμ S.L.rep β hr (S.mx h) v
+  · exact fun v => nu_mem β hβ v
 
 end UpperTheory.Gal.W2.Seed

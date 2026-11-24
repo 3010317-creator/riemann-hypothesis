@@ -87,8 +87,7 @@ theorem piInf_eq {D : D7} (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D
       rw [e2]
       rw [AbsoluteValue.Completion.algebraMap_def, WithAbs.algebraMap_right_apply,
         Algebra.algebraMap_self_apply]
-      refine e1.trans ?_
-      exact (RingHom.congr_fun h f).symm
+      exact e1.trans (RingHom.congr_fun h f).symm
   induction y using TensorProduct.induction_on with
   | zero => simp only [map_zero]
   | add a b ha hb => rw [RingHom.map_add (f := _), RingHom.map_add (f := _), RingHom.map_add (f := _), ha, hb, map_add (starRingEnd ℂ)]
@@ -111,7 +110,6 @@ namespace GlobalTheory.ConjInfExp
 theorem finPart_eq_one {D : D7} (z : AE D) (hz : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.At (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI D.host.F) (z - 1)) : finPart D z = 1 := by
   let u : AF D.host.F := ⟨0, 1⟩
   have hu0 : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI D.host.F u = 0 := by
-    show InfiniteAdeleRing.ringEquiv_mixedSpace D.host.F (0 : Ainf D.host.F) = 0
     exact map_zero _
   have h1 := hz u hu0
   have key : ∀ y : AE D, finPart D (u • y) = finPart D y := by
@@ -123,7 +121,6 @@ theorem finPart_eq_one {D : D7} (z : AE D) (hz : GlobalTheory.IndefiniteRowSideF
       rw [TensorProduct.smul_tmul']
       simp only [finPart, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom, Algebra.TensorProduct.map_tmul, AlgHom.coe_id, id_eq, smul_eq_mul, map_mul]
       congr 1
-      show (1 : Af D.host.F) * sndA D.host.F a = sndA D.host.F a
       exact one_mul _
   rw [← sub_eq_zero, ← RingHom.map_one (finPart D), ← RingHom.map_sub, ← key, h1, RingHom.map_zero]
 end GlobalTheory.ConjInfExp

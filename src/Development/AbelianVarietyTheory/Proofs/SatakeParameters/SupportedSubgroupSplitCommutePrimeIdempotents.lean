@@ -170,9 +170,7 @@ theorem exists_split (V : HSp D) {f : Formalism.L2.Theta.AE D} (hf : f * f = f) 
   have s₁ := (suppF_iff V f g₁).2 (smul_mix hf e₁)
   have s₂ := (suppF_iff V (1 - f) g₂).2 (smul_mix h3 e₂)
   rw [sub_sub_cancel] at e₂
-  have e4 := mix_split hf e₁ e₂
-  have e5 := mt_mul V g₁ g₂
-  exact ⟨g₁, g₂, s₁, s₂, mt_inj V (e5.trans e4).symm⟩
+  exact ⟨g₁, g₂, s₁, s₂, mt_inj V ((mt_mul V g₁ g₂).trans (mix_split hf e₁ e₂)).symm⟩
 
 theorem commute_of_suppF (V : HSp D) {f f' : Formalism.L2.Theta.AE D} {g g' : GA D V} (h : f * f' = 0)
     (hg : SuppF V f g) (hg' : SuppF V f' g') : Commute g g' := by
@@ -215,8 +213,7 @@ theorem mem_intAE_iff (z : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVol
     have : z = ∑ j, r j ⊗ₜ[D.host.F] (g j : D.host.E) := by
       apply (Algebra.TensorProduct.comm D.host.F (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F) D.host.E).injective
 
-      rw [map_sum]
-      exact e
+      rwa [map_sum]
     rw [this]
     exact sum_mem fun j _ => AddSubgroup.subset_closure ⟨r j, hr j, g j, rfl⟩
 

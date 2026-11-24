@@ -196,9 +196,9 @@ theorem UpperTheory.V.GC.gwTame (P : Hypotheses₂) {F Ω : Type} [Field F] [Num
     rw [mem_perpCond]
     intro y hy
     by_cases hv : v.1 ∈ S
-    · simp only [L, if_pos hv, Submodule.mem_bot] at hy
+    · simp only [L, ite_eq_left hv, Submodule.mem_bot] at hy
       rw [hy, map_zero]
-    · simp only [L, if_neg hv] at hy
+    · simp only [L, ite_eq_right hv] at hy
       exact ch_cup l v.1 (A v) (hA v) K ho hi (ZMod (l ^ 1)) M μ ρ (locFam S' A v) (hc' v)
         ((GlobalTheory.Published.PoitouTate.contAction_charRep hμ).comp' (continuous_locFam S' A v)) (fun g hg => hK g.1 hg)
         (restrictCocycles1 _ _ (continuous_locFam S' A v) (f x)) (fun g hg => hf' x v hv g.1 hg) y hy
@@ -217,9 +217,9 @@ theorem UpperTheory.V.GC.gwTame (P : Hypotheses₂) {F Ω : Type} [Field F] [Num
     rw [← Finset.prod_mul_distrib]
     refine Finset.prod_le_prod' fun v _ => ?_
     by_cases hv : v.1 ∈ S
-    · rw [if_pos hv]
+    · rw [ite_eq_left hv]
       exact Nat.le_mul_of_pos_right _ Nat.card_pos
-    · simp only [L, if_neg hv, one_mul]
+    · simp only [L, ite_eq_right hv, one_mul]
       exact ch_low P.lf P.lt P.le l v.1 (A v) (hA v) (fun h => hv (hS _ h)) K ho hi (ZMod (l ^ 1)) M (ρ.comp (toGS Ω _))
         (hρ.comp' (continuous_toGS Ω _)) fun g hg => (hK g hg).1
   have h2 : Nat.card (Sel ρ (locFam S' A) (continuous_locFam S' A) L) ≤
@@ -233,10 +233,10 @@ theorem UpperTheory.V.GC.gwTame (P : Hypotheses₂) {F Ω : Type} [Field F] [Num
         H1ur (ρ.comp (locFam S' A v)) ((Ine (F := F) (A v) ⊓ K).subgroupOf (Dec (F := F) (A v))) := by
       have := (mem_Sel _ _ _ _ _).1 hy v
       by_cases hv : v.1 ∈ S
-      · simp only [L, if_pos hv, Submodule.mem_bot] at this
+      · simp only [L, ite_eq_left hv, Submodule.mem_bot] at this
         rw [this]
         exact zero_mem _
-      · simpa only [L, if_neg hv] using this
+      · simpa only [L, ite_eq_right hv] using this
     exact (ch_ur _ ((Ine (F := F) (A v) ⊓ K).subgroupOf (Dec (F := F) (A v)))
       (fun j hj m => LinearMap.congr_fun (hK j.1 hj.2).1 m) (restrictCocycles1 ρ _ (continuous_locFam S' A v) z)).1 h3
       ⟨g, Ine_le_Dec _ hg.1⟩ hg
@@ -262,7 +262,6 @@ private theorem ch_conj {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alge
     (B : ValuationSubring Ω) (g : G F Ω) (hg : g ∈ Ine (F := F) (v • B)) : v⁻¹ * g * v ∈ Ine (F := F) B := by
   have hl : IsLift (RingEquiv.refl F) v.toRingEquiv := fun y => v.commutes y
   have hA : ∀ x : Ω, v.toRingEquiv x ∈ v • B ↔ x ∈ B := fun x => by
-    show v • x ∈ v • B ↔ x ∈ B
     exact ValuationSubring.smul_mem_pointwise_smul_iff
   have e : v⁻¹ * g * v = conjGal hl g := AlgEquiv.ext fun _ => rfl
   rw [e]
@@ -429,10 +428,8 @@ theorem UpperTheory.V.GC.character_H1_galois_quotient :
   let A' : S' → ValuationSubring Ω := fun v => if hv : v.1 ∈ S then A ⟨v.1, hv⟩ else placeOf Ω v.1
   have hA' : ∀ v, IsPlaceOver (A' v) v.1 := fun v => by
     by_cases hv : v.1 ∈ S
-    · simp only [A', dif_pos hv]
-      exact hA ⟨v.1, hv⟩
-    · simp only [A', dif_neg hv]
-      exact isPlaceOver_placeOf Ω v.1
+    · simpa only [A', dite_eq_left hv] using hA ⟨v.1, hv⟩
+    · simpa only [A', dite_eq_right hv] using isPlaceOver_placeOf Ω v.1
   choose s hs using Submodule.Quotient.mk_surjective
     ((continuousCoboundaries1 (chRep κ) fun _ : V => (⊤ : Submodule k k)).comap (Z1C loc (chRep κ) fun _ => ⊤).subtype)
   let f : (H1C loc (chRep κ) fun _ => ⊤) → Z1 (twDual μ ρ) := fun x => ⟨fun g => τ ((s x).1.1 (p g)),
@@ -455,8 +452,7 @@ theorem UpperTheory.V.GC.character_H1_galois_quotient :
       have e : π g = 1 := by
         rw [← MonoidHom.mem_ker, h.ker]
         refine Subgroup.le_topologicalClosure _ (Subgroup.subset_normalClosure ?_)
-        simp only [Set.mem_iUnion]
-        exact ⟨q.1, hq, A' q, hA' q, hg.1, hg.2.1⟩
+        simpa only [Set.mem_iUnion] using ⟨q.1, hq, A' q, hA' q, hg.1, hg.2.1⟩
       have e1 : (s x).1.1 1 = 0 := by simpa using (s x).2.2.1 1 1
       rw [hπ', e, e1, map_zero])
   have b1 : Nat.card {y : H1 ρ // ∃ z : Z1 ρ, Submodule.Quotient.mk z = y ∧
@@ -484,8 +480,7 @@ theorem UpperTheory.V.GC.character_H1_galois_quotient :
       · have e : toGS Ω (S' : Set (HeightOneSpectrum (𝓞 F))) g = toGS Ω _ 1 := by
           rw [map_one]
           refine (QuotientGroup.eq_one_iff _).2 (Subgroup.le_topologicalClosure _ (Subgroup.subset_normalClosure ?_))
-          simp only [Set.mem_iUnion]
-          exact ⟨v, hvS, B, hv, hg.1⟩
+          simpa only [Set.mem_iUnion] using ⟨v, hvS, B, hv, hg.1⟩
         show y.2.choose.1 (toGS Ω _ g) = 0
         rw [e]
         exact h1.2
@@ -511,21 +506,21 @@ theorem UpperTheory.V.GC.character_H1_galois_quotient :
     have h1 : Nat.card {v // Q v} ≤ Nat.card {v : S // ∀ g ∈ Dec (F := F) (A v), κ (π g) = cycF F Ω l k g} :=
       Nat.card_le_card_of_injective (fun v => ⟨⟨v.1.1, v.2.1⟩, by
         have := v.2.2
-        simp only [A', dif_pos v.2.1] at this
+        simp only [A', dite_eq_left v.2.1] at this
         exact this⟩) fun a b hab => Subtype.ext (Subtype.ext (Subtype.mk.inj (Subtype.mk.inj hab)))
     refine le_trans ?_ (Nat.pow_le_pow_right Nat.card_pos h1)
     rw [Nat.card_eq_fintype_card (α := {v // Q v}), Fintype.card_subtype, Finset.card_filter,
       ← Finset.prod_pow_eq_pow_sum]
     refine Finset.prod_le_prod' fun v _ => ?_
     by_cases hv : v.1 ∈ S
-    · rw [if_pos hv]
+    · rw [ite_eq_left hv]
       refine (ch_fix (fun g : Dec (F := F) (A' v) => κ' (toGS Ω _ g.1)) (fun t : H0 (ρ.comp (locFam S' A' v)) => t.1)
         Subtype.val_injective fun t g => t.2 g).trans (Nat.pow_le_pow_right Nat.card_pos ?_)
       split_ifs with h2 h3
       · exact le_rfl
       · exact (h3 ⟨hv, fun g hg => inv_mul_eq_one.1 ((hκ' g).symm.trans (h2 ⟨g, hg⟩))⟩).elim
       all_goals exact Nat.zero_le _
-    · rw [if_neg hv]
+    · rw [ite_eq_right hv]
       exact Nat.one_le_pow _ _ Nat.card_pos
   have b4 : archH0Card S' ρ c ≤ Nat.card k ^ Nat.card {w // ¬ κ (π (c w)) = 1} := by
     rw [archH0Card, IsTotallyReal.nrComplexPlaces_eq_zero, pow_zero, mul_one, Nat.card_eq_fintype_card (α := {w // ¬ κ (π (c w)) = 1}),
@@ -535,7 +530,7 @@ theorem UpperTheory.V.GC.character_H1_galois_quotient :
     refine (ch_fix (fun _ : Unit => κ' (toGS Ω _ (c w))) (fun t : {m : k // ρ (toGS Ω _ (c w)) m = m} => t.1)
       Subtype.val_injective fun t _ => t.2).trans (Nat.pow_le_pow_right Nat.card_pos ?_)
     by_cases h2 : ∀ _ : Unit, κ' (toGS Ω _ (c w)) = 1
-    · rw [if_pos h2, if_pos]
+    · rw [ite_eq_left h2, ite_eq_left]
       intro h3
       obtain ⟨j, hj, -⟩ := hc w
       have h4 : cycZ F Ω l (c w) = -1 := IsConjOm.cyc (E := F) (show IsConjOm (c w).toRingEquiv from ⟨j, hj⟩)
@@ -548,7 +543,7 @@ theorem UpperTheory.V.GC.character_H1_galois_quotient :
         push_cast
         linear_combination -h6
       exact h.odd ((Nat.prime_dvd_prime_iff_eq hl.out Nat.prime_two).1 ((@CharP.cast_eq_zero_iff k _ l hch 2).1 h7))
-    · rw [if_neg h2]
+    · rw [ite_eq_right h2]
       exact Nat.zero_le _
   have b5 : Nat.card {w // ¬ κ (π (c w)) = 1} + Nat.card {w // κ (π (c w)) = 1} = finrank ℚ F := by
     rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card, Fintype.card_subtype_compl,

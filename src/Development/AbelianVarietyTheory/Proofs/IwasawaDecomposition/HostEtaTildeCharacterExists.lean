@@ -159,10 +159,10 @@ theorem valAt_free (hord : ∀ (P : HeightOneSpectrum (𝓞 L)) (k : Fˣ), ordF 
       WithZero.exp (-m (P.under (𝓞 F))) := by
   classical
   rw [freeHom_apply, map_prod, Finset.prod_eq_single (P.under (𝓞 F))]
-  · rw [map_zpow, valAt_locF hord, if_pos rfl, ordF_unif_self, ← WithZero.exp_zsmul]
+  · rw [map_zpow, valAt_locF hord, ite_eq_left rfl, ordF_unif_self, ← WithZero.exp_zsmul]
     simp
   · intro v _ hv
-    rw [map_zpow, valAt_locF hord, if_neg hv.symm]
+    rw [map_zpow, valAt_locF hord, ite_eq_right hv.symm]
     simp
   · intro h
     have : m (P.under (𝓞 F)) = 0 := by simpa using h
@@ -384,8 +384,7 @@ theorem exists_unramified_resEta : ∀ (F L : Type) [Field F] [NumberField F] [F
     have h2 := hχU (locF F v k * (β (Multiplicative.ofAdd (Finsupp.single v (ordF v k))))⁻¹) fun P => by
       show valAt P _ = 1
       rw [map_mul, map_inv, valAt_locF hord, valAt_free hord, Finsupp.single_apply]
-      simp only [eq_comm (a := v)]
-      exact mul_inv_cancel₀ WithZero.exp_ne_zero
+      simpa only [eq_comm (a := v)] using mul_inv_cancel₀ WithZero.exp_ne_zero
     rw [map_mul, map_mul, map_inv, map_inv, hψF, hψβ, inv_one, mul_one, mul_inv_eq_one, h1] at h2
     rw [e, h2, freeHom_single, etaFin_unif_zpow]
   · obtain ⟨i, rfl⟩ := ((comap_bijective h).comp h.bij).2 w
@@ -499,14 +498,14 @@ theorem frob_eq
       have h5 : N * 2 ≤ N * N := Nat.mul_le_mul_left _ (by omega)
       rw [sq] at this
       omega
-    rw [if_neg hne]
+    rw [ite_eq_right hne]
     simpa using hg' x
   · have hst : IsCMField.complexConj K • P = P := hg.mem_stabilizer
     have h1 : (Ideal.primesOver (P.under (𝓞 K⁺)) (𝓞 K)).ncard = 1 := by
       rcases Eta.split_or_inert K hunr (P.under (𝓞 K⁺)) h𝔭 with h | ⟨h, -⟩
       · exact absurd hst ((Eta.ncard_eq_two_iff K hunr P hP0).mp h)
       · exact h
-    rw [if_pos h1]
+    rw [ite_eq_left h1]
     exact hg' x
 
 end CM
@@ -558,8 +557,7 @@ theorem eta_eq_jacobiSym : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R) (
     have hm : (Ideal.span {(p : ℤ)}).IsMaximal :=
       PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.mp hp).irreducible
     refine ⟨hm.eq_of_le (Ideal.IsPrime.ne_top inferInstance) ?_⟩
-    rw [Ideal.span_singleton_le_iff_mem, Ideal.mem_comap, map_natCast]
-    exact hpP
+    rwa [Ideal.span_singleton_le_iff_mem, Ideal.mem_comap, map_natCast]
   have hvZ : v.asIdeal.LiesOver (Ideal.span {(p : ℤ)}) :=
     Ideal.LiesOver.tower_bot P v.asIdeal _
   have hN := Ideal.pow_inertiaDeg p v.asIdeal
@@ -576,12 +574,12 @@ theorem eta_eq_jacobiSym : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R) (
     rw [hunder] at he
     have h2 : (Ideal.primesOver v.asIdeal (𝓞 H.E)).ncard = 2 := by
       by_contra hc
-      rw [if_neg hc] at he
+      rw [ite_eq_right hc] at he
       exact absurd he (by decide)
     have hj : jacobiSym (p : ℤ) H.d = 1 := by
       rw [hp2, Nat.cast_ofNat, jacobiSym.at_two (Nat.odd_iff.mpr (by omega)),
-        ZMod.χ₈_nat_eq_if_mod_eight, if_neg (by omega), if_pos (by omega)]
-    rw [h2, hj, if_neg (by decide), one_pow]
+        ZMod.χ₈_nat_eq_if_mod_eight, ite_eq_right (by omega), ite_eq_left (by omega)]
+    rw [h2, hj, ite_eq_right (by decide), one_pow]
   · have hunr : ∀ P : Ideal (𝓞 H.E), P.IsPrime → P ≠ ⊥ →
         ¬ ∀ x : 𝓞 H.E, IsCMField.complexConj H.E • x - x ∈ P :=
       fun P hP hP0 hx => H.der.unramEF P hP hP0 (fun x => hsm x ▸ hx x)
@@ -594,8 +592,7 @@ theorem eta_eq_jacobiSym : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R) (
     have hβsq : β ^ 2 = -(H.d : 𝓞 H.E) := by
       apply RingOfIntegers.ext
       change algebraMap (𝓞 H.E) H.E (β ^ 2) = algebraMap (𝓞 H.E) H.E (-(H.d : 𝓞 H.E))
-      rw [map_pow, map_neg, map_natCast]
-      exact hsq
+      rwa [map_pow, map_neg, map_natCast]
     have hcβ : IsCMField.complexConj H.E • β = -β := by
       apply RingOfIntegers.ext
       have h1 := H.galE_bE H.conj
@@ -610,8 +607,7 @@ theorem eta_eq_jacobiSym : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R) (
     have hdP : ((H.d : ℕ) : 𝓞 H.E ⧸ P) ≠ 0 := by
       intro h0
       apply hv
-      rw [← hunder, Ideal.mem_comap, map_natCast, ← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
-      exact h0
+      rwa [← hunder, Ideal.mem_comap, map_natCast, ← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
     have hx0 : Ideal.Quotient.mk P β ≠ 0 := by
       intro h0
       rw [h0] at hx
@@ -788,8 +784,7 @@ theorem host_jacobiSym_norm : ∀ (R : Formalism.BasicNotions.Ranks) (H : Formal
       hneg _ H.d hd.pos (by rw [← map_pow, H.sqd_sq]; simp)
     rw [map_mul, star_mul, ha, hb]; ring
   refine jacobiSym_norm_eq_one hd hd2 (q := (H.q : ℤ)) ?_ ⟨_, hmem⟩ ?_ y hy
-  · intro h
-    exact hqd ((Nat.prime_dvd_prime_iff_eq hd hq).mp (by exact_mod_cast h)).symm
+  · exact fun h => hqd ((Nat.prime_dvd_prime_iff_eq hd hq).mp (by exact_mod_cast h)).symm
   · apply Subtype.ext
     change (H.sqq * H.sqd) * (H.sqq * H.sqd) = _
     have : (H.sqq * H.sqd) * (H.sqq * H.sqd) = H.sqq ^ 2 * H.sqd ^ 2 := by ring
@@ -1128,7 +1123,7 @@ theorem etaAll_norm (b : Kˣ) (a : (K⁺)ˣ)
   · intro w _
     have h := ComplexEmbedding.lift_algebraMap_apply K w.embedding (a : K⁺)
     rw [ha, map_mul, IsCMField.complexEmbedding_complexConj, Complex.mul_conj] at h
-    rw [etaInf, ← h, Complex.ofReal_re, if_neg (not_lt.mpr (Complex.normSq_nonneg _))]
+    rw [etaInf, ← h, Complex.ofReal_re, ite_eq_right (not_lt.mpr (Complex.normSq_nonneg _))]
   · intro v
     unfold etaFin
     split_ifs with hc
@@ -1176,7 +1171,7 @@ theorem exists_norm_val_eq {m : 𝓞 K⁺} (hm : m ≠ 0)
     rw [hs v hv, Finset.card_singleton] at this
     omega
   rw [val_under K (s v) v (hs' v) (hu v), ha, map_mul, h2, hb _ (hT _ (hs' v)), hb _ (hT _ h1),
-    hs', h1, if_pos rfl, if_neg hne, HeightOneSpectrum.valuation_of_algebraMap,
+    hs', h1, ite_eq_left rfl, ite_eq_right hne, HeightOneSpectrum.valuation_of_algebraMap,
     HeightOneSpectrum.intValuation_if_neg _ hy]
   simp [n]
 
@@ -1232,14 +1227,13 @@ theorem eta_product_formula : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R
       PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.mp hd).irreducible
     refine ⟨hm.eq_of_le (Ideal.IsPrime.ne_top inferInstance) ?_⟩
     rw [← hunder, Ideal.mem_comap, map_natCast] at hv
-    rw [Ideal.span_singleton_le_iff_mem, Ideal.mem_comap, map_natCast]
-    exact hv
+    rwa [Ideal.span_singleton_le_iff_mem, Ideal.mem_comap, map_natCast]
   have he := hE.2.2 H.d (Dvd.intro_left _ rfl) P
   unfold Formalism.HC.HostRaw.etaF at he
   change (if (Ideal.primesOver (P.under (𝓞 H.F)) (𝓞 H.E)).ncard = 2 then (1 : ℤ) else -1) = 1 at he
   rw [hunder] at he
   by_contra hc
-  rw [if_neg hc] at he
+  rw [ite_eq_right hc] at he
   exact absurd he (by decide)
 
 end GlobalTheory.EtaProduct
@@ -1296,8 +1290,7 @@ theorem UpperTheory.prod_cmType_phase_one_add_rootOfUnity :
   obtain ⟨m, hm, hzm⟩ := hz
   have hsg := (UpperTheory.rootOfUnity_galois_action_CMDatum R.toFrame H.toHostAx z ⟨m, hm, hzm⟩).2.2
   refine prod_pair ⟨R.sg, R.sg_mem_Psi⟩ ?_ ?_ F ?_
-  · intro h
-    exact R.sg_ne_one (congrArg Subtype.val h)
+  · exact fun h => R.sg_ne_one (congrArg Subtype.val h)
   · exact Subtype.ext R.sg_mul_sg
   · intro g
     have hz1 : 1 + z ≠ 0 := by
@@ -1464,13 +1457,12 @@ private theorem card_above_of_prime {R : Ranks} (H : Formalism.BasicNotions.Host
     have hm : (Ideal.span {(l : ℤ)}).IsMaximal :=
       PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.mp hp).irreducible
     refine ⟨hm.eq_of_le (Ideal.IsPrime.ne_top inferInstance) ?_⟩
-    rw [Ideal.span_singleton_le_iff_mem, Ideal.mem_comap, map_natCast]
-    exact hP
+    rwa [Ideal.span_singleton_le_iff_mem, Ideal.mem_comap, map_natCast]
   have he := H.der.eta.2.2 l hl P.asIdeal
   change (if (Ideal.primesOver (P.under (𝓞 H.F)).asIdeal (𝓞 H.E)).ncard = 2 then (1 : ℤ) else -1) = 1 at he
   rw [card_above]
   by_contra hc
-  rw [if_neg hc] at he
+  rw [ite_eq_right hc] at he
   exact absurd he (by decide)
 
 private theorem exists_prime_mem {A : Type} [CommRing A] (P : Ideal A) (hP : P.IsPrime) (N : ℕ) (hN : N ≠ 0)

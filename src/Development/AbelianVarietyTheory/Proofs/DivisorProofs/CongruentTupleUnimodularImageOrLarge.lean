@@ -105,8 +105,7 @@ theorem minkowski_det_bound_gram_of_det_ne_zero (m : ℕ) (hm : 0 < m) (B : Matr
       have h3 : |y i| ≤ t := (norm_le_pi_norm y i).trans hxt
       rw [← sq, ← sq_abs]
       exact pow_le_pow_left₀ (abs_nonneg _) h3 2
-    have h4 := Finset.sum_le_sum this
-    simpa [dotProduct] using h4
+    simpa [dotProduct] using Finset.sum_le_sum this
   calc a ^ m ≤ (m * t ^ 2) ^ m := pow_le_pow_left₀ ha (h1.trans h2) m
     _ = (m : ℝ) ^ m * (B * Bᵀ).det := by
       rw [mul_pow, ← pow_mul, mul_comm 2 m, pow_mul, htm, sq_abs, det_mul, det_transpose, sq]
@@ -407,8 +406,7 @@ theorem dichRelLift {X₀ : Type} [AddCommGroup X₀] [Module.Free ℤ X₀] [Mo
     conv_lhs => rw [← b.sum_repr (a i)]
 
     rw [map_sum]
-    simp only [map_zsmul, Module.Basis.constr_basis]
-    exact h0.symm
+    simpa only [map_zsmul, Module.Basis.constr_basis] using h0.symm
 
 section Help
 variable {X : Type} [AddCommGroup X] {N : ℕ}
@@ -488,7 +486,7 @@ theorem dichotomy : ∀ (O : Type) [CommRing O] [Module.Finite ℤ O] (bar : O �
   refine ⟨⌈M⌉₊ + ⌈(r : ℝ) ^ r * M ^ r⌉₊ + 3, ?_⟩
   intro N hN X _ _ _ _ _ _ β hβ hp lam hlam hlow k μ hk hμ
   refine or_iff_not_imp_right.2 fun hlt => ?_
-  push_neg at hlt
+  push Not at hlt
   set s0 : ℤ := ∑ i, β (μ i) (μ i) with hs0def
   have hs0 : 0 ≤ s0 := Finset.sum_nonneg fun i _ => hp _
   have hsym := hβ.1

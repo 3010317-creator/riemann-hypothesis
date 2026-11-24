@@ -120,8 +120,7 @@ theorem _root_.GlobalTheory.ThickeningClosed.exists_mul_eq_zero_of_mem {X : Sche
     rw [← K.map_ideal (U := X.affineBasicOpen f) (V := V) hfV, hV, Ideal.map_bot]
   have hfq : f ∉ q.asIdeal := by
     have : q ∈ U.2.fromSpec ⁻¹ᵁ X.basicOpen f := hyf
-    rw [U.2.fromSpec_preimage_basicOpen] at this
-    exact this
+    rwa [U.2.fromSpec_preimage_basicOpen] at this
   have ha' := Ideal.mem_map_of_mem (X.presheaf.map (homOfLE (X.basicOpen_le f)).op).hom ha
   rw [K.map_ideal_basicOpen, hW] at ha'
   have h0 : (X.presheaf.map (homOfLE (X.basicOpen_le f)).op).hom a = 0 := ha'
@@ -165,8 +164,7 @@ theorem _root_.GlobalTheory.ThickeningClosed.mem_of_thickenings {R : Type} [Comm
     rw [hJ, Ideal.map_le_iff_le_comap]
     have : Spec.map φ p = f x := by rw [hφ', ← hpx]; rfl
     have h2 : (Spec.map φ p).asIdeal = p.asIdeal.comap φ.hom := rfl
-    rw [← h2, this]
-    exact hx
+    rwa [← h2, this]
   have hkrull : ∀ a ∈ ι.ker.ideal ⟨V, hV⟩, ∃ g ∉ p.asIdeal, g * a = 0 := by
     intro a ha
     have hmem : a ∈ ⨅ n, J ^ n • (⊤ : Submodule Γ(X, V) Γ(X, V)) := by
@@ -184,8 +182,7 @@ theorem _root_.GlobalTheory.ThickeningClosed.mem_of_thickenings {R : Type} [Comm
     intro t
     induction t using Finset.induction_on with
     | empty =>
-      intro _
-      exact ⟨1, fun h1 ↦ p.2.ne_top ((Ideal.eq_top_iff_one _).mpr h1), by simp⟩
+      exact fun _ => ⟨1, fun h1 ↦ p.2.ne_top ((Ideal.eq_top_iff_one _).mpr h1), by simp⟩
     | insert b t _ ih =>
       intro ht
       obtain ⟨g, hg, hgt⟩ := ih ((Finset.coe_subset.mpr (Finset.subset_insert b t)).trans ht)

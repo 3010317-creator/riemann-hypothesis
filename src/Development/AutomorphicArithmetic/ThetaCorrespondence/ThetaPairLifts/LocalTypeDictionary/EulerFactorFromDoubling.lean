@@ -526,8 +526,7 @@ theorem exists_bound_of_fundamentalDomain {A : HSp D} {m : Measure (GA D A)} [m.
     (hi : ∀ γ ∈ GQ A, ∀ g, u (γ * g) = u g) : ∃ C : ℝ, ∀ g, ‖u g‖ ≤ C := by
   obtain ⟨C, hC⟩ := hK.exists_bound_of_continuousOn hu.continuousOn
   refine ⟨C, fun g => ?_⟩
-  by_contra hg
-  push_neg at hg
+  by_contra! hg
   have hopen : IsOpen {x | C < ‖u x‖} := isOpen_lt continuous_const hu.norm
   have hpos : 0 < m {x | C < ‖u x‖} := hopen.measure_pos m ⟨g, hg⟩
   have hnull : m {x | C < ‖u x‖} = 0 := by
@@ -885,8 +884,7 @@ theorem exists_small_stepVec : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ
       obtain ⟨x, hx, hx₀⟩ :=
         Submodule.exists_mem_ne_zero_of_ne_bot (LinearMap.ker_ne_bot_of_finrank_lt (f := g) hdim)
       have hsmul (a : D.host.E) : a • e x ∈ H.L0 := by
-        rw [← H.baseLattice_isUnimodular]
-        rw [Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
+        rw [← H.baseLattice_isUnimodular, Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
         intro y hy
         have hxy : H.hT (e x) y = 0 :=
           congrArg (fun f : Module.Dual D.host.E W => f ⟨y, Submodule.subset_span hy⟩) (LinearMap.mem_ker.mp hx)
@@ -1545,8 +1543,7 @@ theorem zeta_eq_integral_integrand_nc : ResidueKilled.DM → ∀ (D : D7) (ψ : 
         flat A a (swSec A B omh ν 𝓕 (delta A B Φ Φ)) (sZero A B) s (io A (g, 1)) *
           starRingEnd ℂ (GlobalTheory.Eis.petCoef A m (fun x => conj (u x)) (fun x => conj (u x)) g) :=
       funext fun g => (hpt s g).symm
-    rw [e]
-    exact hconv
+    rwa [e]
   · rw [GlobalTheory.Eis.zeta, heq]
     unfold zetaH pairInt
     exact integral_congr_ae (.of_forall fun g => hpt s g)
@@ -1656,8 +1653,7 @@ theorem downNe_of_core : ResidueKilled.DM → PositivityTheory.Rg.Rsw.ResCore �
     ring
   have hcoef' : CoeffAt (GlobalTheory.Eis.zeta A χW⁻¹ m (flat A a (swSec A B omhB ν 𝓕 (delta A B (o.boxT A Φ f) (o.boxT A Φ f)))
       (sZero A B)) (fun g => conj (u g)) (fun g => conj (u g))) ((t : ℂ) / 2) (-1) 0 := by
-    rw [← hs0]
-    exact hcoef
+    rwa [← hs0]
   exact _root_.GlobalTheory.Core.Rk.Exh.residue_ne_zero_of_simplePole hSP D (under Z) W.rank t c par χW hHyp A.rank B.rank _ C _ hC0 hEq hcoef' rfl
 
 end GlobalTheory.Core.Rk.Exh.Top

@@ -126,7 +126,7 @@ theorem UpperTheory.V.Fr.pr_norm2 :
     · subst hij
       simp
     · have hrev : j.rev ≠ i.rev := fun h => hij (Fin.rev_injective h).symm
-      rw [if_neg hrev, if_neg hij, hZr i j, hZr j j, hZr i i]
+      rw [ite_eq_right hrev, ite_eq_right hij, hZr i j, hZr j j, hZr i i]
       have hd : -Z j j - -Z i i = Z i i - Z j j := by ring
       rw [hd]
       ring
@@ -155,20 +155,18 @@ theorem UpperTheory.V.Fr.pr_norm2 :
     rw [show (1 + A) * Z * (1 - A) = Z + A * Z - Z * A - A * Z * A by noncomm_ring]
     have hAZ : (A * Z) i j = A i j * Z j j := by
       rw [Matrix.mul_apply, Finset.sum_eq_single j]
-      · intro k _ hk
-        exact hII _ _ (hAI i k) (hZI k j hk)
+      · exact fun k _ hk => hII _ _ (hAI i k) (hZI k j hk)
       · simp
     have hZA : (Z * A) i j = Z i i * A i j := by
       rw [Matrix.mul_apply, Finset.sum_eq_single i]
-      · intro k _ hk
-        exact hII _ _ (hZI i k (Ne.symm hk)) (hAI k j)
+      · exact fun k _ hk => hII _ _ (hZI i k (Ne.symm hk)) (hAI k j)
       · simp
     have hAZA : (A * Z * A) i j = 0 := by
       rw [Matrix.mul_apply]
       refine Finset.sum_eq_zero fun k _ => hII _ _ ?_ (hAI k j)
       rw [Matrix.mul_apply]
       exact Ideal.sum_mem _ fun l _ => Ideal.mul_mem_right _ _ (hAI i l)
-    rw [Matrix.sub_apply, Matrix.sub_apply, Matrix.add_apply, hAZ, hZA, hAZA, hA, if_neg hij]
+    rw [Matrix.sub_apply, Matrix.sub_apply, Matrix.add_apply, hAZ, hZA, hAZA, hA, ite_eq_right hij]
     have hu := Ring.inverse_mul_cancel _ (hunit i j hij)
     linear_combination (-(Z i j)) * hu
 end -- clump:auto
@@ -186,8 +184,7 @@ theorem UpperTheory.V.Fr.pr_norm1 :
     ∀ (O : Type) [CommRing O] [IsLocalRing O], ∀ (C' : Type) [CommRing C'] [Algebra O C'] [IsCO O C'] (C : Type) [CommRing C] [Algebra O C] (p : C' →ₐ[O] C) (n : ℕ) (x : GG (m := n) (R := C')), maximalIdeal C' * RingHom.ker p = ⊥ → RingHom.ker p ≤ maximalIdeal C' → (2 : ResidueField O) ≠ 0 → x * x = 1 → x.right = -1 → x.mat.map p = 1 → ∃ h : GL (Fin n) C', (h : Matrix (Fin n) (Fin n) C').map p = 1 ∧ (GG.ofGL h * x * (GG.ofGL h)⁻¹).mat = 1 := by
   intro O _ _ C' _ _ _ C _ _ p n x hmI hle h2R hxx hr hmap
   have hgt : x.left * theta x.left = 1 := by
-    have hl := congrArg SemidirectProduct.left hxx
-    simpa [SemidirectProduct.mul_left, hr] using hl
+    simpa [SemidirectProduct.mul_left, hr] using congrArg SemidirectProduct.left hxx
   have hθ : ∀ u : GL (Fin n) C', ((theta u⁻¹ : GL (Fin n) C') : Matrix (Fin n) (Fin n) C') =
       Jmat (R := C') n * (u : Matrix (Fin n) (Fin n) C')ᵀ * Jmat (R := C') n := by
     intro u
@@ -220,8 +217,7 @@ theorem UpperTheory.V.Fr.pr_norm1 :
     rw [hXdef, Matrix.transpose_sub, Matrix.transpose_one, Matrix.mul_sub, Matrix.sub_mul,
       Matrix.mul_one, Jmat_mul_Jmat, ← hgg]
   have hO : IsUnit (2 : O) := by
-    rw [← IsLocalRing.notMem_maximalIdeal, ← IsLocalRing.residue_eq_zero_iff, map_ofNat]
-    exact h2R
+    rwa [← IsLocalRing.notMem_maximalIdeal, ← IsLocalRing.residue_eq_zero_iff, map_ofNat]
   have h2 : IsUnit (2 : C') := by
     have h2' := hO.map (algebraMap O C')
     rwa [map_ofNat] at h2'
@@ -345,8 +341,7 @@ private theorem cj_cont (hd : IsOpen (F.del.ker : Set F.Γ)) (I : Ideal C) (h : 
     rw [Filter.eventually_all]
     intro a
     rw [Filter.eventually_all]
-    intro b
-    exact (hB a b N).eventually_eq x
+    exact fun b => (hB a b N).eventually_eq x
   filter_upwards [hdel, hM] with y hy hMy
   show Ideal.Quotient.mk (I ^ N) ((conjBy h B.r y).mat i j) = Ideal.Quotient.mk (I ^ N) ((conjBy h B.r x).mat i j)
   simp only [GG.mat] at hMy ⊢
@@ -440,8 +435,7 @@ theorem UpperTheory.V.Fr.pr_norm :
   · have e := hof'.map (p : C' →+* C)
     rw [show B2.map (p : C' →+* C) = B'.map (p : C' →+* C) from (cj_map _ h2' B1 hh2).trans hB1map] at e
     exact of_unique e hof
-  · rw [conj_mul]
-    exact hB2c
+  · rwa [conj_mul]
   · intro s
     rw [conj_mul]
     exact hof'.res s

@@ -116,7 +116,7 @@ theorem avg_mv_inr (f : W →+ X × Y) (φ : W →+ Y) (h : ∀ w, f w = (0, φ 
   induction u using AddMonoidAlgebra.induction_linear with
   | zero => simp
   | add a b ha hb => simp only [map_add (f := _), ha, hb]
-  | single p r => rw [mv_single, avg_single, h, mv_single, if_pos rfl]
+  | single p r => rw [mv_single, avg_single, h, mv_single, ite_eq_left rfl]
 
 theorem avg_mv_one (f : X →+ X × Y) (h : ∀ a, (f a).1 = a) (u : A[X]) :
     avg (mv f u) = single 0 (u.coeff 0) := by
@@ -432,8 +432,7 @@ theorem ev_bcMap (f : S' ⟶ S) (t : Spec R ⟶ S') (u : Γ((splitTorus S X).lef
       have h1 := congrArg (Scheme.ΓSpecIso _).inv.hom h0
       simp only [Iso.hom_inv_id_apply] at h1
       rw [SplitTorus.val_eq, SplitTorus.val_eq] at h1
-      rw [app_global_comp_apply, SplitTorus.charUnit_val, SplitTorus.bcMap_appTop_chi]
-      exact h1
+      rwa [app_global_comp_apply, SplitTorus.charUnit_val, SplitTorus.bcMap_appTop_chi]
   change pull (univPt X t) _ = pull (univPt X (t ≫ f)) u
   simp only [SplitTorus.pull, RingHom.comp_apply, ← e, app_global_comp_apply]
 
@@ -628,8 +627,7 @@ theorem exists_pmaps_lift {X X' Y Y' : Scheme.{0}} {L : LB X} {L' : LB X'} {F : 
   have le : ∀ j : PUnit → K → L.ι, ((LB.LinComb L φ ε).pull h).U j ≤
       LB.wchart L (fun k => φ' k ≫ F) (j PUnit.unit) := fun j y hy => Set.mem_iInter.2 fun k => by
     have : φ k (h y) ∈ L.U (j PUnit.unit k) := Set.mem_iInter.1 (mem_pull.1 hy) k
-    rw [pt_eq hc] at this
-    exact this
+    rwa [pt_eq hc] at this
   let t₀ : LB.Gen ((LB.LinComb L φ ε).pull h) := ⟨fun j => res (le j) (t₁.s (j PUnit.unit))⟩
   have ht₀ : t₀.IsGen := isGen_of_gm _ fun y j j' hj hj' => by
     refine (gm_res (𝟙 Y') y (le j) hj _).trans ((gen_trans ht₁ (𝟙 Y') y (le j hj) (le j' hj')).trans
@@ -889,8 +887,7 @@ theorem exists_cubTriv_reduces [IsMonHom i] [IsMonHom i₀] (hJ : IsNilpotent J)
       (SplitTorus.torusMap _ p₃ ≫ i₀)
     simp only [← MonObj.mul_comp] at c
     have e' := cub_red_alg (σ₀.cub T _ _ _ z C₀ hC₀) c (r _) (r _) (r _) (r _) (r _) (r _) (r _) e
-    rw [map_one, ← gm_top, ← Category.id_comp (bcMap _ _)]
-    exact e'
+    rwa [map_one, ← gm_top, ← Category.id_comp (bcMap _ _)]
   obtain ⟨g, hg, hg'⟩ := exists_dif hJ D (fun T x y u => unit_ext fun z _ => (alg T z).1 x y u)
     (fun T x y u => unit_ext fun z _ => (alg T z).2.1 x y u)
     (fun T x y u v => unit_ext fun z _ => by rw [map_mul, map_mul]; exact (alg T z).2.2 x y u v) h₀
@@ -898,8 +895,7 @@ theorem exists_cubTriv_reduces [IsMonHom i] [IsMonHom i₀] (hJ : IsNilpotent J)
   have e := hD' T z C hC x y u
   rw [hg', dif] at e
   simp only [map_mul, map_div, ← gm_top] at e
-  simp only [val_scaleGen _ _ _ hC, map_inv]
-  exact scale_alg e
+  simpa only [val_scaleGen _ _ _ hC, map_inv] using scale_alg e
 
 theorem Reduces.even [IsMonHom i] [IsMonHom i₀] (hJ : IsNilpotent J) (h : IsCPMap P₀ P (red J) F hw w)
     (hi : bcMap (red J) X ≫ i.left = i₀.left ≫ F) {σ₀ : CubTriv P₀.c i₀} (h₀ : σ₀.Even) {σ : CubTriv P.c i}
@@ -919,8 +915,7 @@ theorem Reduces.even [IsMonHom i] [IsMonHom i₀] (hJ : IsNilpotent J) (h : IsCP
       rw [← GrpObj.inv_comp] at c
       have e' := odd_red_alg (h₀ T (𝟙 T) z C₀ hC₀) c ((r _).symm.trans (e.trans
         (congrArg (_ * ·) (congrArg₂ (· * ·) rfl (r _)))))
-      rw [map_one, ← gm_top, ← Category.id_comp (bcMap _ _)]
-      exact e'
+      rwa [map_one, ← gm_top, ← Category.id_comp (bcMap _ _)]
     · obtain ⟨C, hC⟩ := exists_good_pt P.L.isLB z
       have a := σ.cub T x⁻¹ y⁻¹ u⁻¹ z C hC
       have b := P.sym_cub T (x ≫ i) (y ≫ i) (u ≫ i) z C hC

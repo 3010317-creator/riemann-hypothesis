@@ -181,8 +181,7 @@ theorem exists_open_forall_mem_regAt (p : Cpt ξ) {κ : Type} [Finite κ] (a : �
   choose U hU hq using fun j => exists_open_mem_regAt ξ p (a j) (ha j)
   refine ⟨⟨⋂ j, (U j : Set X), isOpen_iInter_of_finite fun j => (U j).isOpen⟩, ?_, ?_⟩
   · exact Set.mem_iInter.2 hU
-  · intro q hq' j
-    exact hq j q (Set.mem_iInter.1 hq' j)
+  · exact fun q hq' j => hq j q (Set.mem_iInter.1 hq' j)
 
 theorem exists_open_mem_span (p : Cpt ξ) {J κ : Type} [Fintype J] [Fintype κ] (x : J → E) (y : κ → E)
     (h : ∀ i, x i ∈ Submodule.span (regAt ξ p) (Set.range y)) :
@@ -333,8 +332,7 @@ theorem isVBOn_eigSp : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (C
     apply le_antisymm
     · rintro _ ⟨v, rfl⟩
       exact (spec s).1 v
-    · intro v hv
-      exact ⟨v, (spec s).2.1 v hv⟩
+    · exact fun v hv => ⟨v, (spec s).2.1 v hv⟩
   have hidem : ∀ s, HT.eigProj ρ (τ s) ∘ₗ HT.eigProj ρ (τ s) = HT.eigProj ρ (τ s) := by
     intro s
     ext v

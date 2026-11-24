@@ -220,8 +220,7 @@ private theorem kernel_restriction_sha_selmer : LinearMap.ker (res1 ρ F) = Sha1
     Sel ρ F.ψ F.hψ (fun q => H1ur (ρ.comp (F.ψ q) : Representation k _ M) (F.N q)) := by
   ext x
   rw [Submodule.mem_inf, mem_Sel, Sha1, Submodule.mem_iInf, LinearMap.mem_ker, Prod.ext_iff, funext_iff, funext_iff]
-  refine and_congr Iff.rfl (forall_congr' fun q => ?_)
-  exact Submodule.Quotient.mk_eq_zero _
+  exact and_congr Iff.rfl (forall_congr' fun q => (Submodule.Quotient.mk_eq_zero _))
 
 omit [IsTopologicalGroup Γ] [DiscreteTopology M] in
 private theorem mk_mem_ur (N : Subgroup Γ) (hN : ∀ n ∈ N, ρ n = 1) (z : Z1 ρ) :
@@ -309,8 +308,7 @@ private theorem ker_fgt : LinearMap.ker (fgt ρ F) = LinearMap.range (del ρ F) 
       · show x.1.2.2 q s - (x.1.2.2 q s - h (F.ψ q s)) = _
         simp
   · rintro _ ⟨z, rfl⟩
-    refine (Submodule.Quotient.mk_eq_zero _).2 ?_
-    exact (B2 ρ).zero_mem
+    exact (Submodule.Quotient.mk_eq_zero _).2 (B2 ρ).zero_mem
 
 private def res2 : H2 ρ →ₗ[k] ((∀ v, H2 (ρ.comp (F.φ v) : Representation k _ M)) ×
     ∀ q, H2 (ρ.comp (F.ψ q) : Representation k _ M)) :=
@@ -697,8 +695,7 @@ theorem UpperTheory.cohomology_of_finite_representation :
     · intro hm g
       have e : ρ g m.1 - m.1 = 0 := congrFun (congrArg (fun z : Z => z.1.1) hm) g
       exact sub_eq_zero.1 e
-    · intro hm
-      exact Subtype.ext (Subtype.ext (funext fun g => sub_eq_zero.2 (hm g)))
+    · exact fun hm => Subtype.ext (Subtype.ext (funext fun g => sub_eq_zero.2 (hm g)))
   have e1 := LinearMap.finrank_range_add_finrank_ker π
   have e2 := LinearMap.finrank_range_add_finrank_ker δ
   rw [hπr, hπk, E.finrank_eq] at e1
@@ -805,8 +802,7 @@ private theorem first_cohomology_equiv : Nonempty (H1 ρ ≃ H1 ρ') := by
     constructor
     · rintro ⟨hc, hf⟩
       refine ⟨hc.comp he, fun a b => ?_⟩
-      simp only [map_mul, h]
-      exact hf _ _
+      simpa only [map_mul, h] using hf _ _
     · rintro ⟨hc, hf⟩
       refine ⟨?_, fun a b => ?_⟩
       · have := hc.comp he'
@@ -844,8 +840,7 @@ private theorem second_cohomology_equiv : Nonempty (H2 ρ ≃ H2 ρ') := by
     constructor
     · rintro ⟨hc, hf⟩
       refine ⟨hc.comp (he.prodMap he), fun a b c => ?_⟩
-      simp only [map_mul, h]
-      exact hf _ _ _
+      simpa only [map_mul, h] using hf _ _ _
     · rintro ⟨hc, hf⟩
       refine ⟨?_, fun a b c => ?_⟩
       · have := hc.comp (he'.prodMap he')
@@ -911,8 +906,7 @@ theorem UpperTheory.local_euler_characteristic_of_prime_not_mem :
   haveI : Finite (H2 ρ) := Finite.of_equiv _ e2
   refine ⟨Module.Finite.of_finite, Module.Finite.of_finite, ?_⟩
   have hcard : Nat.card (H1 ρ) = Nat.card (H0 ρ) * Nat.card (H2 ρ) := by
-    rw [← Nat.card_congr e1, ← Nat.card_congr e0, ← Nat.card_congr e2]
-    exact hE
+    rwa [← Nat.card_congr e1, ← Nat.card_congr e0, ← Nat.card_congr e2]
   have pw : ∀ (V : Type) [AddCommGroup V] [Module k V] [Finite V],
       Nat.card V = Nat.card k ^ Module.finrank k V := by
     intro V _ _ _
@@ -945,8 +939,7 @@ private theorem res_surj {k G H M : Type} [CommRing k] [Group G] [TopologicalSpa
       fun g g' g'' => ?_⟩, congrArg Submodule.Quotient.mk (Subtype.ext (funext fun p => ?_))⟩
     · have := c.2.2 (e.symm g) (e.symm g') (e.symm g'')
       simp only [MonoidHom.comp_apply, MulEquiv.coe_toMonoidHom, e.apply_symm_apply] at this
-      simp only [map_mul]
-      exact this
+      simpa only [map_mul] using this
     · show c.1 (e.symm (e p.1), e.symm (e p.2)) = c.1 p
       rw [e.symm_apply_apply, e.symm_apply_apply]
 
@@ -1000,7 +993,7 @@ theorem UpperTheory.V.U3.box_count (hI : CohInp) (Ω : Type) [Field Ω] [CharZer
   obtain ⟨g1, g2, g3⟩ := UpperTheory.global_euler_char_rat_of_ne_two hI.gf hI.ge Ω l k M hl S hS ρ hc σ hσ
   obtain ⟨l1, l2, l3, -⟩ := Loc.tateFin hI.loc (MonoidHom.id (GQ l)) Topology.IsOpenEmbedding.id k M
     (ρ.comp ((toGS Ω _).comp ι)) (contAction_comp ρ hc _ (hπ.comp hι))
-  rw [if_pos rfl, MonoidHom.range_eq_top.2 Function.surjective_id, Subgroup.index_top, one_mul] at l3
+  rw [ite_eq_left rfl, MonoidHom.range_eq_top.2 Function.surjective_id, Subgroup.index_top, one_mul] at l3
   have hq : ∀ q : {v : S // v ≠ v₀}, _ := fun q => UpperTheory.local_euler_characteristic_of_prime_not_mem hI.loc.lf hI.loc.le Ω l k M (A q) q.1.1 (hA q)
     (fun h => q.2 ((hv q).1 h)) (ρ.comp ((toGS Ω _).comp (Dec (F := ℚ) (A q)).subtype))
     (contAction_comp ρ hc _ (hπ.comp continuous_subtype_val))
@@ -1033,8 +1026,7 @@ theorem UpperTheory.V.U3.box_count (hI : CohInp) (Ω : Type) [Field Ω] [CharZer
       induction z using Submodule.Quotient.induction_on with
       | H c => rfl
     · have h0 := hz q.1
-      rw [dite_eq_right q.2] at h0
-      exact h0
+      rwa [dite_eq_right q.2] at h0
   obtain ⟨-, c2, c3⟩ := frame_count k _ M ρ hρ F (fun q n hn => hN4 q n hn) g1 g2 (fun _ => ⟨l1, l2⟩)
     fun q => ⟨(hq q).1, (hq q).2.1⟩
   refine ⟨c2, ?_⟩
@@ -1047,8 +1039,7 @@ theorem UpperTheory.V.U3.box_count (hI : CohInp) (Ω : Type) [Field Ω] [CharZer
   have e2 : ∑ v, finrank k (H1 (ρ.comp (F.φ v) : Representation k _ M)) =
       ∑ v, finrank k (H0 (ρ.comp (F.φ v) : Representation k _ M)) +
         ∑ v, finrank k (H2 (ρ.comp (F.φ v) : Representation k _ M)) + finrank k M := by
-    simp only [Finset.univ_unique, Finset.sum_singleton]
-    exact l3
+    simpa only [Finset.univ_unique, Finset.sum_singleton] using l3
   exact arith c3 e1 e2 g3
 end -- clump:auto
 end -- clump:auto

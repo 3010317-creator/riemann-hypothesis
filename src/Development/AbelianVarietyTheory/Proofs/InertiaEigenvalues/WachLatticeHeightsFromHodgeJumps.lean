@@ -103,8 +103,7 @@ theorem dvd_of_low {ι : Type} [Fintype ι] (g : ι → ℤ → M) (b : ℤ) (hg
     intro m hm
     rcases Nat.lt_succ_iff_lt_or_eq.1 hm with h | h
     · exact PowerSeries.X_pow_dvd_iff.1 (h1 j) m h
-    · rw [h]
-      exact h3
+    · rwa [h]
 
 theorem const_on {α : Type} (F : ℤ → α) (a b : ℤ) (hab : a ≤ b)
     (h : ∀ c, a ≤ c → c < b → F (c + 1) = F c) : F b = F a := by
@@ -132,8 +131,7 @@ theorem mem_of_low {M' : Type} [AddCommGroup M'] [Module L M'] (ι : M →ₗ[L]
   · have h1 := (((hΛ _).1 (hm (Pi.single (max (m : ℤ) k) (f k)) (single_mem (hf k) _)
       fun j hj => Pi.single_eq_of_ne (by omega) _)).2 (max (m : ℤ) k)).2
     rw [Pi.single_eq_same] at h1
-    rw [const_on Fl (-(max (m : ℤ) k)) (-k) (by omega) fun c _ h2 => hμ c (by omega)]
-    exact h1
+    rwa [const_on Fl (-(max (m : ℤ) k)) (-k) (by omega) fun c _ h2 => hμ c (by omega)]
 
 theorem low_of_mem {M' : Type} [AddCommGroup M'] [Module L M'] (ι : M →ₗ[L] M') (D : Submodule L M)
     (Fl : ℤ → Submodule L M') (Λ : Submodule L (ℤ → M))
@@ -203,8 +201,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
 
 theorem φD_smulA (a : LetA O n) (x : W.DD T) : W.φD T (a • x) = W.φA a • W.φD T x := by
   have := W.φD_smul T (algebraMap (LetA O n) W.EE a) x
-  rw [algebraMap_smul, W.φE_ext, algebraMap_smul] at this
-  exact this
+  rwa [algebraMap_smul, W.φE_ext, algebraMap_smul] at this
 
 theorem φA_letE (i : ZMod n) : W.φA (letE (i - 1)) = letE i := by
   funext j
@@ -421,7 +418,7 @@ theorem indep_lead {L M ι : Type} [Field L] [AddCommGroup M] [Module L M] {w : 
     have h2 := conv_lead (e := (PowerSeries.X * w) ^ m) (a := m) (pow_dvd_pow_of_dvd (dvd_mul_right _ _) m)
       (f := fun k => c ^ k • g j k) (b := 0) (fun k hk => by simp only [hg j k hk, smul_zero])
     rw [add_zero] at h2
-    rw [hu, h2, mul_pow, PowerSeries.coeff_X_pow_mul', if_pos le_rfl]
+    rw [hu, h2, mul_pow, PowerSeries.coeff_X_pow_mul', ite_eq_left le_rfl]
     simp
   rw [h1]
   exact hi.units_smul fun _ => Units.mk0 _ hc
@@ -436,8 +433,7 @@ theorem heights_from_jumps : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.lo
   have hp : ((D.loc l).PD K).p = l := (D.loc l).PD_p K
   obtain ⟨nb⟩ := GlobalTheory.NL.N_basis D HW F l K s LL h T hT
   have hunit : IsUnit (algebraMap (AA K LL) W.EE W.Q) := by
-    have h0 := ((GlobalTheory.NL.IoXQ.main D HW F l K s LL h).2.2.2.2.2.2 0).2
-    simpa using h0
+    simpa using ((GlobalTheory.NL.IoXQ.main D HW F l K s LL h).2.2.2.2.2.2 0).2
   have hdiv := (GlobalTheory.NL.WDiv.weierstrass_dense D HW l K s LL h).1
   have hfull := GlobalTheory.NL.FullLevel.full_lat D HW F Cm l K s LL h T hT
   have hstd := GlobalTheory.NL.LatLow.lat_low D HW F Cm l K s LL h T hT
@@ -454,8 +450,7 @@ theorem heights_from_jumps : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.lo
         φVB ((D.loc l).PD K) (LL := ↥LL.1) (V := T.V) (ex C h T (i - 1) (ζ ^ l) x j)) j := by
     intro i ζ hprim x k hk j
     have h1 := (C.C K s LL h).tie.levB_φ T hT i ζ ⟨s, by rw [hp]; exact hprim⟩ x k hk j
-    rw [map_pow, hp] at h1
-    exact h1
+    rwa [map_pow, hp] at h1
   have hneg : ∀ (i : Let K) (ζ : ↥LL.1), IsPrimitiveRoot ζ (l ^ s) → ∀ (x : ↥(W.N T)), ∀ k < (0 : ℤ),
       φVB ((D.loc l).PD K) (LL := ↥LL.1) (V := T.V) (ex C h T (i - 1) (ζ ^ l) x k) = 0 := by
     intro i ζ hζ x k hk

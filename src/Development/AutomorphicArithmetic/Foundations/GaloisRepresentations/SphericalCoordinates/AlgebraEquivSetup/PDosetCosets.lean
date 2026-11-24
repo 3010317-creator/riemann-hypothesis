@@ -62,8 +62,7 @@ private theorem loc_mem_doubleCoset_loc_iff {X M' : Type} [Group X] [Group M'] (
   constructor
   · rintro ⟨x, hx, y, hy, h⟩
     refine ⟨L'.pr x, hF.2 x hx, L'.pr y, hF.2 y hy, ?_⟩
-    have h' := congrArg L'.pr h
-    simpa [map_mul, L'.pr_loc] using h'
+    simpa [map_mul, L'.pr_loc] using congrArg L'.pr h
   · rintro ⟨x, hx, y, hy, h⟩
     exact ⟨L'.loc x, hF.1 x hx, L'.loc y, hF.1 y hy, by rw [h, map_mul, map_mul]⟩
 
@@ -76,8 +75,7 @@ theorem UpperTheory.Gal.W2.Seed.pDosetCosets :
     intro x x' h
     simp only [φ, QuotientGroup.eq] at h
     rw [← QuotientGroup.out_eq' x, ← QuotientGroup.out_eq' x', QuotientGroup.eq]
-    have h2 := hF.2 _ h
-    simpa [map_mul, map_inv, L'.pr_loc] using h2
+    simpa [map_mul, map_inv, L'.pr_loc] using hF.2 _ h
   have hφf : ∀ x, f (φ x) = dosetInd ℂ Kw t x.out • Ψ (L'.loc x.out) := by
     intro x
     obtain ⟨k, hk⟩ := QuotientGroup.mk_out_eq_mul K (L'.loc x.out)

@@ -381,8 +381,7 @@ theorem integrableOn_corePeriod_rapidlyDecreasing {M : Vol G} (hM : M.IsRow) {F 
 theorem exists_reach_of_span {M : Vol G} (hM : M.IsRow) {v : CoreVol G}
     {u : GA D (Yc D 0) → ℂ} (hu : RapidDec (Yc D 0) u) {F : Fn G (.core 0)} (hF : F ∈ Submodule.span ℂ (Reach W v))
     (h0 : per0 G M F u ≠ 0) : ∃ F' ∈ Reach W v, per0 G M F' u ≠ 0 := by
-  by_contra hn
-  push_neg at hn
+  by_contra! hn
   have key : IntegrableOn (fun h => F (stabilizerEmbedding G.sp.dec0 h) * u h) (M.fd (.grid 0 0)) (M.ν (.grid 0 0)) ∧
       per0 G M F u = 0 := by
     clear h0
@@ -758,8 +757,7 @@ theorem lifts_neg {X : ProvA} (h3 : Formalism.MainNotions.SchurIrreducible.Archi
   refine ⟨F', hF', fun P v h => ?_⟩
   have := e₁ (j P) v ((GlobalTheory.Grid.ofSgn true B).symm h)
   rw [← ptF_ofModel, e'] at this
-  simp only [hj f hf.1 P, MulEquiv.apply_symm_apply, RingHom.id_apply] at this
-  exact this
+  simpa only [hj f hf.1 P, MulEquiv.apply_symm_apply, RingHom.id_apply] using this
 
 theorem cen_eq (τ : D.what₂.Tau) : GlobalTheory.Grid.cen D τ = GlobalTheory.ChiGrid.cen D 1 τ := by
   funext i
@@ -960,8 +958,7 @@ theorem coreOnto_of_chain (hO : ∀ D : D7, GlobalTheory.EvenOnto.OntoAll D) (hC
   obtain ⟨y', hy'⟩ := hsurj ⟨y, hyCC⟩
   have hx' : x ∈ (gridStage G v 0 r₀ MP).KF := by
     have h := (hRL.2.1 (G.V (.core 0)) r₀ W.θ _ MP (lev G (.core 0) : Set _)).2.1
-    rw [← h] at hx
-    exact hx
+    rwa [← h] at hx
   have key := hB y' x hx'
   rw [hy'] at key
   refine Submodule.span_mono ?_ key
@@ -1134,8 +1131,7 @@ theorem lam_top (G : GridData L sc) (M : DSModel (G.V (.core D.R.m)) (Node.par D
       hS ▸ Finset.mem_image.2 ⟨i, Finset.mem_univ _, rfl⟩
     rw [par_core_top G τ] at hx
     obtain ⟨y, hy, e⟩ := Finset.mem_image.1 hx
-    rw [← (Prod.mk.inj e).1]
-    exact hy
+    rwa [← (Prod.mk.inj e).1]
   have hqa : StrictAnti q := fun i j hij => by
     have := hanti hij
     rw [hq, hq] at this

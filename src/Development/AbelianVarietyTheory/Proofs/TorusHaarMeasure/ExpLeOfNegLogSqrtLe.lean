@@ -78,9 +78,8 @@ theorem exists_rdU_ne_zero {σ : c.F →+* ℂ} {r : ℕ} (U : Unf Xo c σ r) {N
   haveI : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
   obtain ⟨m, hm⟩ := hw (CAt σ) (U.un k ⟨x, hx⟩)
   refine ⟨m, ?_⟩
-  have e : rdU U (w m) k x = toC (evR Xo c (w m) (U.un k ⟨x, hx⟩)) := dif_pos hx
-  rw [e]
-  exact hm
+  have e : rdU U (w m) k x = toC (evR Xo c (w m) (U.un k ⟨x, hx⟩)) := dite_eq_left hx
+  rwa [e]
 
 theorem model_ineq_of_log_bound {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (xR : ℝ) (σ : c.F →+* ℂ)
     {N N' : ℕ} (i : ℕ) (w : Fin N → Rul Xo c) (e : Fin (N' + 1) ≃ Fin N) (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ)
@@ -105,8 +104,7 @@ theorem model_ineq_of_log_bound {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c 
         ⟨m, Finset.mem_univ _, pow_pos (pnorm_pos_of_ne_zero _ _ _ hx hm) 2⟩
     simp only [hs] at h1
     have h2 := exp_le_of_neg_log_sqrt_le (mul_pos (pow_pos (lieFac_pos Dw xR a) 2) hpos) h1
-    rw [← mul_assoc, ← mul_assoc] at h2
-    exact h2
+    rwa [← mul_assoc, ← mul_assoc] at h2
   · have h0 : 0 ≤ ((U σ).X k).pnorm eW et x :=
       mul_nonneg (norm_nonneg _) (Finset.prod_nonneg fun _ _ => Finset.prod_nonneg fun _ _ =>
         Real.rpow_nonneg (norm_nonneg _) _)
@@ -139,7 +137,7 @@ theorem firstMin_fn_lower {E : Type} [Field E] [NumberField E] [IsCMField E] {r 
   refine ⟨2 * ReciprocityTheory.ChartRestriction.G.I2.PT.f E / ReciprocityTheory.ChartRestriction.G.I2.PT.rd E ^ 2, th, by positivity, hth,
     fun x _ hlt => ?_⟩
   unfold ReciprocityTheory.ChartRestriction.G.I2.phiFD
-  rw [if_pos hlt, div_div]
+  rw [ite_eq_left hlt, div_div]
 
 
 

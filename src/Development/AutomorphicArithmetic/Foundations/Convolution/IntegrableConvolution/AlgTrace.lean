@@ -93,8 +93,7 @@ private theorem UpperTheory.ConvolutionTheory.L1.simple_of_prime (R : Type) [Rin
     rw [eq_bot_iff]
     intro x hx
     have : x ∈ I.asIdeal := hx
-    rw [h1] at this
-    exact this
+    rwa [h1] at this
   · right
     have h2 : e ∈ I.asIdeal := by rw [hI]; exact Ideal.subset_span rfl
     rw [← sub_eq_zero.mp h1] at h2
@@ -375,7 +374,7 @@ private theorem tr_fib [FiniteDimensional ℂ W] (i₀ : Fin (m + 1)) (S : Modul
     funext j
     by_cases h : j = i₀
     · subst h; simp
-    · simp only [Pi.mul_apply, h, if_false]
+    · simp only [Pi.mul_apply, h, ite_false]
       rw [uu_same, uu_same]
   have h3 : Commute S X := by
     have : X ∈ Submonoid.centralizer ({S} : Set (Module.End ℂ W)) := by
@@ -429,8 +428,7 @@ private theorem exists_scalar [FiniteDimensional ℂ W] [Nontrivial W] (o : Fin 
   have hcomm : Ue * f = f * Ue := RR_shift r hc Ue hU _
   have hinv : ∀ x ∈ LinearMap.range f, Ue x ∈ LinearMap.range f := by
     rintro _ ⟨y, rfl⟩
-    refine ⟨Ue y, ?_⟩
-    exact (LinearMap.congr_fun hcomm y).symm
+    exact ⟨Ue y, (LinearMap.congr_fun hcomm y).symm⟩
   haveI : Nontrivial (LinearMap.range f) :=
     (Submodule.nontrivial_iff_ne_bot).2 (fun h => hf0 (LinearMap.range_eq_bot.1 h))
   obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue (Ue.restrict hinv)
@@ -480,15 +478,13 @@ private theorem exists_scalar [FiniteDimensional ℂ W] [Nontrivial W] (o : Fin 
         funext i
         exact uu_sandwich o (b i)
       have h2 : f (RR r hc b w) = (∏ i, b i o o) • w := by
-        have h := LinearMap.congr_fun h1 w
-        simpa [Module.End.mul_apply, hfw] using h
+        simpa [Module.End.mul_apply, hfw] using LinearMap.congr_fun h1 w
       simp only [SetLike.mem_coe, LinearMap.mem_ker, LinearMap.sub_apply, Module.End.mul_apply,
         LinearMap.smul_apply, h2, map_smul, hv1]
       rw [smul_comm, sub_self]
     intro x
     have hx : x ∈ P := hP ▸ Submodule.mem_top
-    have h := hle hx
-    simpa [sub_eq_zero, Module.End.mul_apply] using h
+    simpa [sub_eq_zero, Module.End.mul_apply] using hle hx
   refine ⟨μ, ?_, LinearMap.ext hall⟩
   rintro rfl
   rw [zero_smul] at hv1

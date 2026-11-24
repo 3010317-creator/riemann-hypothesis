@@ -195,8 +195,7 @@ private theorem diff_dvd (l c ν s t : ℕ) (hl : l.Prime) (h : s ≠ t) (hs : s
   rcases lt_or_gt_of_ne h with hst | hst
   · have h1 := nat_dvd l c ν (t - s) hl (by omega) (by omega)
     rw [Nat.cast_sub hst.le] at h1
-    rw [← neg_sub, neg_dvd]
-    exact h1
+    rwa [← neg_sub, neg_dvd]
   · have h1 := nat_dvd l c ν (s - t) hl (by omega) (by omega)
     rwa [Nat.cast_sub hst.le] at h1
 
@@ -709,7 +708,7 @@ theorem UpperTheory.V.ZK.sCoc : UpperTheory.V.ZK.SCoc := by
     have a1 : 2 * (s : ℕ) % 2 = 0 := by omega
     have a2 : ¬(2 * (s : ℕ) + 1) % 2 = 0 := by omega
     have a3 : 2 * (s : ℕ) / 2 = s := by omega
-    simp only [a1, a2, a3, if_true, if_false, Fin.eta]
+    simp only [a1, a2, a3, ite_true, ite_false, Fin.eta]
 
 end
 end -- clump:auto
@@ -900,10 +899,8 @@ theorem UpperTheory.V.LDataCardLeFinrank.cardAbove :
     rw [Finset.mem_coe, IsDedekindDomain.mem_primesOverFinset_iff hp0]
     have := p.isPrime
     refine ⟨p.isPrime, ⟨hmax.eq_of_le (Ideal.IsPrime.ne_top inferInstance) ?_⟩⟩
-    rw [Ideal.span_singleton_le_iff_mem, Ideal.mem_comap, map_natCast]
-    exact hp'
-  · intro p _ p' _ h
-    exact HeightOneSpectrum.ext h
+    rwa [Ideal.span_singleton_le_iff_mem, Ideal.mem_comap, map_natCast]
+  · exact fun p _ p' _ h => HeightOneSpectrum.ext h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.GaloisCohomologyLength.CardAbove =====
@@ -1002,7 +999,7 @@ theorem UpperTheory.V.K.primeLe :
   · subst h2
     have := Module.finrank_pos (R := ℚ) (M := L)
     omega
-  · rw [if_neg h2] at hζ
+  · rw [ite_eq_right h2] at hζ
     have hdeg := minpoly.natDegree_le (A := ℚ) ζ
     rw [← Polynomial.cyclotomic_eq_minpoly_rat hζ hp.pos, Polynomial.natDegree_cyclotomic,
       Nat.totient_prime hp] at hdeg
@@ -1056,8 +1053,7 @@ private theorem sf_nu {l : ℕ} [Fact l.Prime] (U : Subgroup ℤ_[l]ˣ) (h0 : U.
       have := mul_lt_mul_of_pos_left h4 h3; linarith
     rw [PadicInt.norm_add_eq_max_of_ne] <;> simp_all [ne_of_gt, le_of_lt]
   have hmem : hunit.unit ^ U.index ∈ U := U.pow_index_mem hunit.unit
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hle : (((2 + padicValNat l U.index + padicValNat l e + 1 : ℕ)) : ℕ∞) ≤ nu l U e := by
     have := Order.add_one_le_of_lt hcon
     exact_mod_cast this
@@ -1197,14 +1193,12 @@ theorem root_eq_one {R : Type} [CommRing R] [IsDomain R] (P : Ideal R) (q : ℕ)
     rw [hη, sub_self] at this
     exact (mul_eq_zero.1 this).resolve_left (sub_ne_zero.2 hne)
   have h2 : Ideal.Quotient.mk P η = 1 := by
-    rw [← map_one (Ideal.Quotient.mk P), Ideal.Quotient.eq]
-    exact h1
+    rwa [← map_one (Ideal.Quotient.mk P), Ideal.Quotient.eq]
   have h3 := congrArg (Ideal.Quotient.mk P) h0
 
   simp only [map_sum, map_pow, h2, one_pow, Finset.sum_const, Finset.card_range, nsmul_eq_mul, mul_one,
   map_zero] at h3
-  rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
-  exact h3
+  rwa [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
 
 theorem surj_of_prime {A k : Type} [CommRing A] [CommRing k] (f : A →+* k) (hp : (Nat.card k).Prime) :
     Function.Surjective f := by
@@ -1239,8 +1233,7 @@ theorem frob_fix {v : HeightOneSpectrum (𝓞 F)} {B : ValuationSubring Ω} (hB 
     have e : (x ^ q - ι t ^ q) * ι b = ι (a - t ^ q * b) := by
       rw [hx, map_sub, map_mul, map_pow, sub_mul, hι a, hι b, ← hab, map_mul]
     have := (hB _).2 hc
-    rw [← hι, ← e, map_mul, hone b hb, mul_one] at this
-    exact this
+    rwa [← hι, ← e, map_mul, hone b hb, mul_one] at this
   obtain ⟨i, hi⟩ : ∃ i : ℕ, B.valuation (x - ι (ζ ^ i * t)) < 1 := by
     by_contra! h
     have e := congrArg (Polynomial.eval x) (X_pow_sub_C_eq_prod hζ' (Nat.pos_of_ne_zero hq0) (rfl : ι t ^ q = ι t ^ q))
@@ -1660,7 +1653,7 @@ theorem goal_of : UpperTheory.V.ZK.SLayer := by
     by_cases h2 : l = 2
     · omega
     · obtain ⟨z, hz⟩ := hμ
-      rw [if_neg h2] at hz
+      rw [ite_eq_right h2] at hz
       have h1 := IsPrimitiveRoot.lcm_totient_le_finrank (K := ℚ) hz hz
         (Polynomial.cyclotomic.irreducible_rat (by rw [Nat.lcm_self]; exact hp.pos))
       rw [Nat.lcm_self, Nat.totient_prime hp] at h1
@@ -1673,7 +1666,7 @@ theorem goal_of : UpperTheory.V.ZK.SLayer := by
   · unfold Base.qExp at hq
     split_ifs at hq <;> omega
   · unfold Base.qExp at hq
-    rwa [if_pos h2] at hq
+    rwa [ite_eq_left h2] at hq
   · have := (q1 _).1 h
     omega
   · have h1 := IsTotallyComplex.finrank L'
@@ -1747,8 +1740,7 @@ theorem val_le_of_mem (P : HeightOneSpectrum R) {I : FractionalIdeal R⁰ K} {x 
 theorem exists_frac (d : HeightOneSpectrum R →₀ ℤ) :
     ∃ I : FractionalIdeal R⁰ K, I ≠ 0 ∧ ∀ P, count K P I = d P := by
   refine ⟨d.prod fun P n => (P.asIdeal : FractionalIdeal R⁰ K) ^ n, ?_, fun P => count_finsuppProd K P d⟩
-  refine Finset.prod_ne_zero_iff.mpr fun P _ => zpow_ne_zero _ ?_
-  exact coeIdeal_ne_zero.mpr P.ne_bot
+  exact Finset.prod_ne_zero_iff.mpr fun P _ => zpow_ne_zero _ (coeIdeal_ne_zero.mpr P.ne_bot)
 
 theorem exists_sl2_with_valuation_bounds (d e : HeightOneSpectrum R →₀ ℤ) :
     ∃ p q r s : K, p ≠ 0 ∧ p * s - q * r = 1 ∧ ∀ P : HeightOneSpectrum R,

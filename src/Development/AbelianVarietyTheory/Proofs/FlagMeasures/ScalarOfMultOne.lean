@@ -79,8 +79,7 @@ lemma UJ_star {ε : Fin n → Bool} {g : Matrix (Fin n) (Fin n) ℂ} (h : g ∈ 
   show (g.map star)ᴴ * Formalism.REAL.Jm ε * g.map star = Formalism.REAL.Jm ε
   have e := congrArg (fun m : Matrix (Fin n) (Fin n) ℂ => m.map star) h'
   simp only [map_star_mul, Jm_star] at e
-  rw [map_star_ct]
-  exact e
+  rwa [map_star_ct]
 
 lemma K_star {ε : Fin n → Bool} {g : Matrix (Fin n) (Fin n) ℂ} (h : g ∈ Kset ε) : g.map star ∈ Kset ε := by
   have h' : g ∈ Matrix.unitaryGroup (Fin n) ℂ ∧ g * Formalism.REAL.Jm ε = Formalism.REAL.Jm ε * g := h
@@ -89,8 +88,7 @@ lemma K_star {ε : Fin n → Bool} {g : Matrix (Fin n) (Fin n) ℂ} (h : g ∈ K
   · rw [Matrix.mem_unitaryGroup_iff] at hu ⊢
     have e := congrArg (fun m : Matrix (Fin n) (Fin n) ℂ => m.map star) hu
     simp only [map_star_mul, map_star_one, Matrix.star_eq_conjTranspose] at e
-    rw [Matrix.star_eq_conjTranspose, map_star_ct]
-    exact e
+    rwa [Matrix.star_eq_conjTranspose, map_star_ct]
   · have e := congrArg (fun m : Matrix (Fin n) (Fin n) ℂ => m.map star) hc
     simpa only [map_star_mul, Jm_star] using e
 
@@ -109,8 +107,7 @@ lemma P_star {ε : Fin n → Bool} {X : Matrix (Fin n) (Fin n) ℂ} (h : inP ε 
       ext i j
       simp
     simp only [ha, hz, map_star_mul, Jm_star] at e
-    rw [map_star_ct]
-    exact e
+    rwa [map_star_ct]
   · have e := congrArg (fun m : Matrix (Fin n) (Fin n) ℂ => m.map star) hp
     have hn : ∀ M : Matrix (Fin n) (Fin n) ℂ, (-M).map star = -(M.map star) := fun M => by
       ext i j

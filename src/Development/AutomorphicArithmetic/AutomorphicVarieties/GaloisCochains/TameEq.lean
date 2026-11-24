@@ -83,13 +83,12 @@ private theorem tameEq_cochain {k Γ M : Type} [CommRing k] [Group Γ] [Topologi
   have hUρ : ∀ u ∈ U, ρ u = 1 := fun u hu => LinearMap.ext fun m => Set.mem_iInter.1 (hU hu).2 m
   have hUf : ∀ j : J, j.1 ∈ U → f j = 0 := fun j hj => by
     have : j ∈ Subtype.val ⁻¹' W := (hU hj).1
-    rw [hW] at this
-    exact this
+    rwa [hW] at this
   have hUn : U.toSubgroup.Normal := inferInstance
   let f' : Γ → M := fun g => if h : ∃ j : J, j.1⁻¹ * g ∈ U then f h.choose else 0
   have hf' : ∀ (g : Γ) (j : J), j.1⁻¹ * g ∈ U → f' g = f j := fun g j hj => by
     have h : ∃ j : J, j.1⁻¹ * g ∈ U := ⟨j, hj⟩
-    have e : f' g = f h.choose := dif_pos h
+    have e : f' g = f h.choose := dite_eq_left h
     have h2 : (j⁻¹ * h.choose).1 ∈ U := by
       have := mul_mem hj (inv_mem h.choose_spec)
       simpa [mul_assoc] using this
@@ -106,8 +105,7 @@ private theorem tameEq_cochain {k Γ M : Type} [CommRing k] [Group Γ] [Topologi
     refine ⟨⟨j, hj⟩, ?_⟩
     rw [← e]
     show j⁻¹ * (j * u) ∈ U
-    rw [inv_mul_cancel_left]
-    exact hu
+    rwa [inv_mul_cancel_left]
   have hrN : ∀ g, ∀ n ∈ N, r (g * n) = r g := fun g n hn => by
     simp only [r, QuotientGroup.mk_mul_of_mem g hn]
   refine ⟨fun g => ρ (r g) (f' ((r g)⁻¹ * g)), ?_, fun g j => ?_⟩

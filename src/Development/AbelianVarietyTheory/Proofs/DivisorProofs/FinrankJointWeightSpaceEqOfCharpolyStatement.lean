@@ -112,8 +112,7 @@ theorem ringHom_sep_charZero (k : Type) [Field k] [CharZero k] (C : Type) [CommR
       exact (key χ hχ.1 hχ.2).finite
     obtain ⟨n, hn⟩ := hfin.exists_notMem
     refine ⟨c + n * d, fun χ hχ hne heq => hn ?_⟩
-    simp only [Set.mem_iUnion]
-    exact ⟨χ, Finset.mem_filter.2 ⟨hχ, hne⟩, heq⟩
+    simpa only [Set.mem_iUnion] using ⟨χ, Finset.mem_filter.2 ⟨hχ, hne⟩, heq⟩
 
 theorem ringHom_pow_eq_one_of_finite_range {k : Type} [Field k] {C : Type} [CommRing C]
     (ψ : C →+* k) [Finite ψ.range] (a : C) (ha : ψ a ≠ 0) (m : ℕ)
@@ -189,8 +188,7 @@ theorem ringHom_sep_of_finite_range (k : Type) [Field k] (C : Type) [CommRing C]
   obtain ⟨g, hg0, hgen⟩ := ringHom_exists_generator_of_finite_range χ₀
   have hsep : ∀ χ ∈ S, χ ≠ χ₀ → χ g = χ₀ g → ∃ a, χ a = 0 ∧ χ₀ a ≠ 0 := by
     intro χ hχ hne hgeq
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have hχ' : χ ∈ insert χ₀ S := Finset.mem_insert_of_mem hχ
     have hk : ∀ b, χ₀ b = 0 → χ b = 0 := by
       intro b hb
@@ -204,8 +202,7 @@ theorem ringHom_sep_of_finite_range (k : Type) [Field k] (C : Type) [CommRing C]
     · rw [hb, hk b hb]
     · obtain ⟨n, hn⟩ := hgen b hb
       have h3 : χ (b - g ^ n) = 0 := hk _ (by rw [map_sub, map_pow, hn, sub_self])
-      rw [map_sub, map_pow, sub_eq_zero, hgeq, ← hn] at h3
-      exact h3
+      rwa [map_sub, map_pow, sub_eq_zero, hgeq, ← hn] at h3
   let V := S.filter (fun χ => χ ≠ χ₀ ∧ χ g = χ₀ g)
   have hV : ∀ χ ∈ V, ∃ a, χ a = 0 ∧ χ₀ a ≠ 0 := fun χ hχ => by
     obtain ⟨h1, h2, h3⟩ := (Finset.mem_filter.1 hχ)
@@ -220,10 +217,10 @@ theorem ringHom_sep_of_finite_range (k : Type) [Field k] (C : Type) [CommRing C]
     exact Finset.prod_eq_zero hχ (ha χ hχ).1
   refine ⟨g * A ^ M, fun χ hχ hne => ?_⟩
   have hχ' : χ ∈ insert χ₀ S := Finset.mem_insert_of_mem hχ
-  rw [map_mul, map_mul, hpow' χ₀ (Finset.mem_insert_self _ _), if_neg hA0, mul_one,
+  rw [map_mul, map_mul, hpow' χ₀ (Finset.mem_insert_self _ _), ite_eq_right hA0, mul_one,
     hpow' χ hχ']
   by_cases hgeq : χ g = χ₀ g
-  · rw [if_pos (hAV χ (Finset.mem_filter.2 ⟨hχ, hne, hgeq⟩)), mul_zero]
+  · rw [ite_eq_left (hAV χ (Finset.mem_filter.2 ⟨hχ, hne, hgeq⟩)), mul_zero]
     exact fun h => hg0 h.symm
   · split_ifs
     · rw [mul_zero]; exact fun h => hg0 h.symm
@@ -330,8 +327,7 @@ theorem weight_isRingHom {k V C : Type*} [Field k] [AddCommGroup V] [Module k V]
       simp only [R, LinearMap.sub_apply, Module.algebraMap_end_apply, Submodule.coe_sub,
         Submodule.coe_smul]
       rfl
-    rw [e]
-    exact hn
+    rwa [e]
   have hNc : ∀ x y, Commute (R x - algebraMap k _ (ψ x)) (R y - algebraMap k _ (ψ y)) :=
     fun x y => ((hRc x y).sub_right (Algebra.commute_algebraMap_right _ _)).sub_left
       ((Algebra.commute_algebraMap_left _ _).sub_right (Algebra.commute_algebraMap_left _ _))

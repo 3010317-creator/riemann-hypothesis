@@ -145,7 +145,6 @@ theorem gamOrd_ne_zero (V : HSp D) (K : Subgroup (GL (Fin V.rank) (Lev.EAf D)))
         Subtype.ext (bc_swapAE_injective V.rank (hq γ.1))
       have e1 : (MulAut.conj (gfcToGf V x)⁻¹) (Bridge.ratF V (q γ.1)) = gfcToGf V (x⁻¹ * γ.1.1 * x) := by
         simp only [e0, map_mul, map_inv, MulAut.conj_inv_apply]
-      show (MulAut.conj (gfcToGf V x)⁻¹) (Bridge.ratF V (q γ.1)) ∈ finLev V K
       exact (congrArg (· ∈ finLev V K) e1).mpr ((mem_finLev_iff V K _).2 γ.2)
     · intro γ γ' e
       have e1 : Lev.finE V (q γ.1).1 = Lev.finE V (q γ'.1).1 := by
@@ -154,8 +153,7 @@ theorem gamOrd_ne_zero (V : HSp D) (K : Subgroup (GL (Fin V.rank) (Lev.EAf D)))
       rw [hq, hq] at e1
       exact Subtype.ext (Subtype.ext (finG_injective V e1))
   refine Nat.card_ne_zero.2 ⟨⟨⟨1, one_mem _⟩, ?_⟩, hfin⟩
-  simp only [mul_one, inv_mul_cancel, map_one]
-  exact one_mem K
+  simpa only [mul_one, inv_mul_cancel, map_one] using one_mem K
 
 theorem finite_finCl_and_gamOrd : ∀ {D : D7} (V : HSp D) (K : Subgroup (GL (Fin V.rank) (Lev.EAf D))),
     (∀ φ : D.host.E →+* ℂ, (V.gram.map φ).PosDef) → IsCO V K → Finite (FinCl V K) ∧ ∀ x, gamOrd V K x ≠ 0 :=

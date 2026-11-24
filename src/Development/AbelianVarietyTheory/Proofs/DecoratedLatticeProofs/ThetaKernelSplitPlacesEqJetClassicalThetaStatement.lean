@@ -256,13 +256,13 @@ theorem exists_prime_to_dvd_away {R : Type} [CommRing R] [IsDedekindDomain R] (S
   have hSS : ∀ Q ∈ SS, t0 ∉ Q.asIdeal := by
     intro Q hQ hmem
     have h := ht0 Q (Finset.mem_union_left _ hQ)
-    simp only [if_pos hQ, pow_one] at h
+    simp only [ite_eq_left hQ, pow_one] at h
     exact hone Q (by simpa using Q.asIdeal.sub_mem hmem h)
   have hgood : ∀ Q : HeightOneSpectrum R, Q ∉ SS → ∃ u : R, u ∉ Q.asIdeal ∧ ∃ w : R, u * t0 = m * w := by
     intro Q hQ
     by_cases hQT : Q.asIdeal ∣ Ideal.span {m}
     · have h := ht0 Q (Finset.mem_union_right _ (hT.mem_toFinset.2 hQT))
-      simp only [if_neg hQ, sub_zero] at h
+      simp only [ite_eq_right hQ, sub_zero] at h
       obtain ⟨hnd, hEq⟩ := hJ Q
       rw [Ideal.dvd_iff_le] at hnd
       obtain ⟨u, huJ, huQ⟩ := SetLike.not_le_iff_exists.1 hnd
@@ -272,12 +272,10 @@ theorem exists_prime_to_dvd_away {R : Type} [CommRing R] [IsDedekindDomain R] (S
       obtain ⟨w, hw⟩ := Ideal.mem_span_singleton.1 hmem
       exact ⟨w, by rw [mul_comm u, hw]⟩
     · refine ⟨m, ?_, t0, rfl⟩
-      intro hmem
-      exact hQT (Ideal.dvd_iff_le.2 ((Ideal.span_singleton_le_iff_mem _).2 hmem))
+      exact fun hmem => hQT (Ideal.dvd_iff_le.2 ((Ideal.span_singleton_le_iff_mem _).2 hmem))
   by_cases h0 : t0 = 0
   · refine ⟨m, hm, ?_, fun Q _ => ⟨1, hone Q, 1, by ring⟩⟩
-    intro Q hQ
-    exact absurd (h0 ▸ Q.asIdeal.zero_mem) (hSS Q hQ)
+    exact fun Q hQ => absurd (h0 ▸ Q.asIdeal.zero_mem) (hSS Q hQ)
   · exact ⟨t0, h0, hSS, hgood⟩
 
 theorem tmul_mem_of {E : Type} [Field E] [NumberField E] [StarRing E] {W : Type} [AddCommGroup W] [Module E W]
@@ -295,7 +293,7 @@ theorem tmul_mem_of {E : Type} [Field E] [NumberField E] [StarRing E] {W : Type}
   intro Q
   by_cases hQ : Q ∈ SS
   · have h1 := (Formalism.L2.Ker.mem_twO M c _ y).1 hy Q
-    simp only [expS, if_pos hQ, zpow_one] at h1
+    simp only [expS, ite_eq_left hQ, zpow_one] at h1
     obtain ⟨s, hs, hsy⟩ := h1
     refine ⟨s, hs, ?_⟩
     have e : s • (((t : E) * (c : E)⁻¹) • y) = t • (s • ((c : E)⁻¹ • y)) := by
@@ -376,8 +374,7 @@ theorem GlobalTheory.HalfBInt.trace_int : ∀ (D : D7) (ψ : AddChar (AF D.host.
   obtain rfl : ΛT = N' := SetLike.coe_injective eT
   have hnc := noConj hE
   have hyT : y ∈ perO (D.host.AA0 : Submodule (𝓞 D.host.E) D.host.E) ΛS (twist₂ ΛT c (expS SS)) := by
-    rw [← Formalism.L2.Ker.twist_homomorphism _ _ _ _ ΛS ΛT c _ dS.1.fg hc]
-    exact hy
+    rwa [← Formalism.L2.Ker.twist_homomorphism _ _ _ _ ΛS ΛT c _ dS.1.fg hc]
   have hsdT := (GlobalTheory.ThetaMove.TwistSd.isSdLat_twO_expS _ _ ΛT c SS hnc (GlobalTheory.StdMove.isSdLat_of T hP.gT ΛT dT) hc).1
   have dT' : IsSelfDualC T (twist₂ ΛT c (expS SS)) := selfDualC_of T hP.gT _ hsdT
   have hrat := GlobalTheory.AdForm.RatLatPer.finRat_mem_latO_of_perO D ψ θ S T _ _ rfl rfl δ sc hP ΛS (twist₂ ΛT c (expS SS)) ΛS (twist₂ ΛT c (expS SS)) dS dT' rfl rfl y hyT
@@ -415,9 +412,8 @@ theorem mem_localization_of_mem_halfBO {E : Type} [Field E] [NumberField E] [Sta
   have h1 := (Formalism.L2.Ker.mem_twO M c _ y).1 hy Q
   have h0 : expS SS Q = 0 := by
     unfold expS
-    rw [if_neg (fun h => hQ (Or.inl h)), if_neg (fun h => hQ (Or.inr h))]
-  rw [h0, zpow_zero, inv_one, one_smul] at h1
-  exact h1
+    rw [ite_eq_right (fun h => hQ (Or.inl h)), ite_eq_right (fun h => hQ (Or.inr h))]
+  rwa [h0, zpow_zero, inv_one, one_smul] at h1
 
 
 
@@ -574,8 +570,7 @@ theorem heisO_conjHalf_eq : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : 
     have h1 := GlobalTheory.LatVac.heisO_heisO ψ X1 (c • c • R) f₀
     rw [hcoc4, one_smul, ← hdec, hsign, hRR] at h1
     have h2' := congrArg (heisO ψ S T (-X1)) h1
-    rw [hinv, GlobalTheory.LatVac.heisO_smul, hfixXn] at h2'
-    exact h2'
+    rwa [hinv, GlobalTheory.LatVac.heisO_smul, hfixXn] at h2'
 
   obtain ⟨k₀, hk₀⟩ := GlobalTheory.HalfBInt.trace_int D ψ θ S T a b hS hT δ sc hP e SS he N N' c hc hcP h2qd ΛS ΛT hSd hTd hΛS hΛT y' hy'
   have hα := GlobalTheory.SemiTrace.alV_embH_eq_neg_one_zpow D ψ θ S T a b hS hT δ sc hP y' k₀ hk₀
@@ -772,9 +767,8 @@ theorem conjHalf_mem {N : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)} {
       (Submodule.mem_iInf _).1 hx _
     have hexp : expS SS (Formalism.L2.Col.conjPrime₂ PP) = -1 := by
       unfold expS
-      rw [if_neg (hno PP hPP), conjP_conjP, if_pos hPP]
-    rw [hexp, neg_neg, zpow_one] at h
-    exact h
+      rw [ite_eq_right (hno PP hPP), conjP_conjP, ite_eq_left hPP]
+    rwa [hexp, neg_neg, zpow_one] at h
 
 theorem cocycle_trivial : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S T : HSp D) (δ : ℂ) (sc : ℝ), StdPair θ S T δ sc ψ → ∀ (e : AE D) (SS : Finset (Formalism.L2.DIV.Pl D.host.E)), IsIdemSum e SS → (∀ Q ∈ SS, ((D.host.QS * D.host.q * D.host.d : ℕ) : 𝓞 D.host.E) ∉ Q.asIdeal) → ∀ (N : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)) (N' : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)), IsSelfDualC S N → IsSelfDualC T N' → ∀ (c : ℕ), 0 < c → Odd c → ∀ x' ∈ halfAO SS (perO (D.host.AA0 : Submodule (𝓞 D.host.E) D.host.E) N N') c, ψ (symplOH S T ((LinearMap.toMatrix' x').map fun r => e * incA D r) ((GlobalTheory.VacUnique.finRat S T (LinearMap.toMatrix' x')) - ((LinearMap.toMatrix' x').map fun r => e * incA D r))) = 1 := by
   intro D ψ θ S T δ sc hP e SS hE h2 N N' hN hN' c hc _hodd x' hx
@@ -787,8 +781,7 @@ theorem cocycle_trivial : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : In
   have e1 : ∀ r : D.host.E, (LinearMap.toMatrix' (r • x') : Matrix (Fin T.rank) (Fin S.rank) D.host.E) =
       r • LinearMap.toMatrix' x' := fun r => LinearEquiv.map_smul LinearMap.toMatrix' r x'
   rw [e1, e1, rhs_eq hinf hcc hc] at H
-  rw [lhs_eq hinfc hE.2]
-  exact H
+  rwa [lhs_eq hinfc hE.2]
 
 end GlobalTheory.AdForm.CocycleSS
 end -- clump:auto
@@ -843,14 +836,14 @@ theorem alV_embH_eq_exp_trace (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : In
     intro τ
 
     simp only [GlobalTheory.LatVac.hRat, hP.gS, hP.gT, inv_one, Matrix.one_apply, ite_mul, one_mul, zero_mul, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true, map_sum, hs]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true, map_sum, hs]
     simp only [apply_ite (⇑(tauE D τ)), map_zero, map_mul, tauE_star]
     push_cast
     rw [Finset.sum_comm]
     calc _ = ∑ j, ∑ i, ((Complex.normSq (tauE D τ (M i j)) : ℝ) : ℂ) := by
           refine Finset.sum_congr rfl fun j _ => ?_
           rw [Finset.sum_comm]
-          simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true]
+          simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true]
           refine Finset.sum_congr rfl fun i _ => ?_
           rw [Complex.normSq_eq_conj_mul_self]
       _ = _ := Finset.sum_comm
@@ -1021,8 +1014,7 @@ theorem heisO_rest_eq : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfF
   have hYR : Y - e • Y = R := by rw [hRdef, sub_smul, one_smul]
   have hR : R ∈ Λ := by
     have h := GlobalTheory.T.halfA_components_mem_completedLattice_offPrimes D ψ θ S T δ sc hP e SS hE h2qd N N' hSd hTd c hc hcP x' hx
-    rw [← hXdef, ← hY, hXt, hYR] at h
-    exact h
+    rwa [← hXdef, ← hY, hXt, hYR] at h
   have he2 : e * e = e := GlobalTheory.PlaceDatum.idemSum_mul_self hE
 
   have hbil : ∀ (x y : WO S T) (k : ℕ), symplOH S T (k • x) (k • y) = (k * k) • symplOH S T x y := by
@@ -1078,8 +1070,7 @@ theorem heisO_rest_eq : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfF
     have h1 := GlobalTheory.LatVac.heisO_heisO ψ X1 (c • c • R) f₀
     rw [hcoc4, one_smul, ← hdec, hsign, hRR] at h1
     have h2' := congrArg (heisO ψ S T (-X1)) h1
-    rw [hinv, GlobalTheory.LatVac.heisO_smul, hfixXn] at h2'
-    exact h2'
+    rwa [hinv, GlobalTheory.LatVac.heisO_smul, hfixXn] at h2'
 
   obtain ⟨k₀, hk₀⟩ : ∃ k₀ : ℤ, (k₀ : ℚ) = Algebra.trace ℚ D.host.E (D.host.xi0 * ((1 + D.host.sqrtMinusD) / 2) ^ 2 *
       GlobalTheory.LatVac.hRat S T X X) :=
@@ -1431,9 +1422,9 @@ theorem reads_datum_eq_thC : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ :
   let py : VV D.what₂.Tau a b → Formalism.L2.Col.HomE D.host.E a b := fun y =>
     if h : ∃ y', y' ∈ MB ∧ embH (tauE D) δ y' = y then h.choose else 0
   have hpx' : ∀ x ∈ SX, px x ∈ MA ∧ embH (tauE D) δ (px x) = x := fun x hx => by
-    simp only [px, dif_pos (hpx x hx)]; exact (hpx x hx).choose_spec
+    simp only [px, dite_eq_left (hpx x hx)]; exact (hpx x hx).choose_spec
   have hpy' : ∀ y ∈ SB, py y ∈ MB ∧ embH (tauE D) δ (py y) = y := fun y hy => by
-    simp only [py, dif_pos (hpy y hy)]; exact (hpy y hy).choose_spec
+    simp only [py, dite_eq_left (hpy y hy)]; exact (hpy y hy).choose_spec
   let mt : Formalism.L2.Col.HomE D.host.E a b → Matrix (Fin T.rank) (Fin S.rank) D.host.E := fun x =>
     (LinearMap.toMatrix' x).reindex (finCongr hT.symm) (finCongr hS.symm)
   have hmt : ∀ x, toHom S T hS hT (mt x) = x := fun x => by
@@ -1485,8 +1476,7 @@ theorem reads_datum_eq_thC : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ :
     refine Finset.sum_congr rfl fun p _ => ?_
     rw [GlobalTheory.LatVac.heisO_heisO, smul_smul]
   have hGi : ∀ p ∈ SX ×ˢ SB, (G p).map (infPart D) = 0 := fun p _ => by
-    simp only [hG, ← map_add (f := _)]
-    exact GlobalTheory.VacUnique.finRat_inf S T _
+    simpa only [hG, ← map_add (f := _)] using GlobalTheory.VacUnique.finRat_inf S T _
   refine ⟨⟨?_, fun τ => ?_⟩, ?_⟩
   · rw [hf3]
     exact GlobalTheory.FinTranslate.isTheta_sum_heisO_fin D ψ S T hψ f₀ h0 _ _ G _ hGi
@@ -1511,8 +1501,7 @@ theorem reads_datum_eq_thC : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ :
       simp only [xiN, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Finset.mul_sum]
       refine Finset.sum_congr rfl fun p _ => ?_
       ring
-    rw [hlin]
-    rw [Finset.sum_congr rfl fun p hp => by rw [hread p hp]]
+    rw [hlin, Finset.sum_congr rfl fun p hp => by rw [hread p hp]]
     show _ = xiL (HV sc) (alV D.host.d sc) 1 SX SA SB (onV (tauE D) δ Ξ) (xiN θ S T hS hT δ sc f₀) z
     rw [GlobalTheory.ThetaCosetSum.xiL_eq_kernel, Finset.sum_product]
     simp only [hC, K, Formalism.L2.Th1.H.opU, Real.sqrt_one, Complex.ofReal_one, inv_one, one_mul, Finset.sum_mul, Finset.mul_sum]

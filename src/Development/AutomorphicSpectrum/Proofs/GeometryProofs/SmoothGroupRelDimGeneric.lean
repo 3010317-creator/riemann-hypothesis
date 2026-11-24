@@ -58,8 +58,7 @@ namespace GlobalTheory.CompanionTheory.Ar.RootHt.ArchB
 private theorem smoothOfRelativeDimension_restrict_of_le {A S : Scheme.{0}} (f : A ⟶ S) {n : ℕ} {V W : A.Opens} (h : V ≤ W)
     (hW : SmoothOfRelativeDimension n (W.ι ≫ f)) : SmoothOfRelativeDimension n (V.ι ≫ f) := by
   have := smoothOfRelativeDimension_comp 0 n (A.homOfLE h) (W.ι ≫ f)
-  rw [zero_add, ← Category.assoc, Scheme.homOfLE_ι] at this
-  exact this
+  rwa [zero_add, ← Category.assoc, Scheme.homOfLE_ι] at this
 
 private theorem relDim_eq_of_mem_of_mem {A S : Scheme.{0}} (f : A ⟶ S) {n m : ℕ} {V W : A.Opens}
     (hV : SmoothOfRelativeDimension n (V.ι ≫ f)) (hW : SmoothOfRelativeDimension m (W.ι ≫ f))
@@ -119,8 +118,7 @@ theorem reldim_eq_unit {X : Scheme.{0}} (G : Over X) [GrpObj G] {n m : ℕ} {W V
       Hom.one_def, Over.comp_left, Scheme.Hom.comp_apply, toUnit_left]
   refine reldim_eq_of_two_pullbacks h₁ h₂ dW dV ((lift (𝟙 G) (𝟙 G)⁻¹).left g) ?_ ?_
   · show (fst G G).left ((lift (𝟙 G) (𝟙 G)⁻¹).left g) ∈ W
-    rw [p₁]
-    exact hg
+    rwa [p₁]
   · show (fst G G * snd G G).left ((lift (𝟙 G) (𝟙 G)⁻¹).left g) ∈ V
     rw [p₂]
     unfold eSec at hV

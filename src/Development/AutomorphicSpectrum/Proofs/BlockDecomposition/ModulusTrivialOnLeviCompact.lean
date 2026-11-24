@@ -123,14 +123,12 @@ theorem nabs_det_eq_one_of_mem_KM {N h : ℕ} (d : Fin h → ℕ) (hd : ∑ a, d
     apply hB
     have h1 := hmem _ ((KM k N J d hd).pow_mem hx n)
     have e : (x ^ n) a = x a ^ n := rfl
-    rw [blockDet_leviEmb, e, map_pow] at h1
-    exact h1
+    rwa [blockDet_leviEmb, e, map_pow] at h1
   · intro n
     apply hB
     have h1 := hmem _ ((KM k N J d hd).pow_mem ((KM k N J d hd).inv_mem hx) n)
     have e : (x⁻¹ ^ n) a = (x a)⁻¹ ^ n := rfl
-    rw [blockDet_leviEmb, e, map_pow, map_inv] at h1
-    exact h1
+    rwa [blockDet_leviEmb, e, map_pow, map_inv] at h1
 
 theorem deltaHalf_eq_one_of_mem_KM :
     ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]

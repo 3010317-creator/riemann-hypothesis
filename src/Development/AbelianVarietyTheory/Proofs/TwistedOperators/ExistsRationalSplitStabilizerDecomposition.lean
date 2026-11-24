@@ -71,8 +71,7 @@ theorem colLat_fg {K : Type} [Field K] [NumberField K] {n : ℕ} (B : GL (Fin n)
 theorem colLat_span {K : Type} [Field K] [NumberField K] {n : ℕ} (B : GL (Fin n) K) :
     Submodule.span K ((colLat B : Submodule (𝓞 K) (Fin n → K)) : Set (Fin n → K)) = ⊤ := by
   unfold colLat
-  rw [Submodule.span_span_of_tower]
-  rw [eq_top_iff]
+  rw [Submodule.span_span_of_tower, eq_top_iff]
   intro x _
   have hx : x = ∑ j, (((B⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) *ᵥ x) j •
       (fun a : Fin n => (B : Matrix (Fin n) (Fin n) K) a j) := by
@@ -121,8 +120,7 @@ theorem exists_rat_split_lat : ∀ {D : D7} (V : HSp D) (B : GL (Fin V.rank) D.h
   · rw [Subgroup.coe_mul, Subgroup.coe_mul, Subgroup.coe_inv, Subgroup.coe_inv, map_mul, map_mul, map_inv, map_inv, e]
     rw [mul_inv_cancel_right, mul_inv_cancel_right]
   · change GlobalTheory.UnRep.SuppSplit _ N (finHom V h).1
-    rw [eh]
-    exact hs
+    rwa [eh]
   · intro v
     have key := GlobalTheory.StdFrames.hatL_of_hat (F := D.host.F) (colLat B) (colLat B) k'.1
       (stab_iff _ k' N hk hki) v

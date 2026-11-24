@@ -198,8 +198,7 @@ theorem PositivityTheory.Xgn.height_bound_complex_conjugate : ∀ (E : Type) [Fi
   have h₂ := hodge_congr P.tB.PP.L hid.symm hab hab h₁
   have h₃ := ((_root_.GlobalTheory.CompanionTheory.Ar.HodgeUnique.main E H (Sp ℂ) (Sp ℂ) P'.tB P.tB (spMap (starRingEnd ℂ)) mB (𝟙 _) _ _ b b e₂ e₂).1 _).2 h₂
   have h₄ := hb' v' v₀' _ (hvt (hut hv)) e₁ h₃
-  rw [h.conj z v₀ v₀ v₀' v₀' hv₀' hv₀', Complex.conj_re, Complex.conj_re] at h₄
-  exact h₄
+  rwa [h.conj z v₀ v₀ v₀' v₀' hv₀' hv₀', Complex.conj_re, Complex.conj_re] at h₄
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.HeightBoundComplexConjugate =====
@@ -424,8 +423,7 @@ theorem analytic {U : Type} [MetricSpace U] [ProperSpace U] (o : U) {N g : ℕ}
     rw [h3, Complex.add_re]
     nlinarith
   have hz : core.inner (0 : Fin g → ℂ) 0 = 0 := by
-    have h := core.smul_left 0 0 0
-    simpa using h
+    simpa using core.smul_left 0 0 0
   let B := Fintype.linearCombination ℂ (b u)
   have hinj : Function.Injective B := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
@@ -434,15 +432,13 @@ theorem analytic {U : Type} [MetricSpace U] [ProperSpace U] (o : U) {N g : ℕ}
     have hcpos : 0 < ‖c‖ := norm_pos_iff.2 hne
     have h1 := hlow c
     have hs : ∑ i, c i • b u i = 0 := by
-      rw [Fintype.linearCombination_apply] at hc0
-      exact hc0
+      rwa [Fintype.linearCombination_apply] at hc0
     rw [hid c, hs, hz, Complex.zero_re] at h1
     have : 0 < δ / 2 * ‖c‖ ^ 2 := by positivity
     linarith
   obtain ⟨c, hcx⟩ := (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hNg).1 hinj x
   have hcx' : ∑ i, c i • b u i = x := by
-    rw [Fintype.linearCombination_apply] at hcx
-    exact hcx
+    rwa [Fintype.linearCombination_apply] at hcx
   have hxc : ‖x‖ ≤ Mb * ‖c‖ := by
     rw [← hcx']
     calc ‖∑ i, c i • b u i‖ ≤ ∑ i, ‖c i • b u i‖ := norm_sum_le _ _
@@ -505,7 +501,7 @@ theorem PositivityTheory.Xgn.quotient_uniformization_lower : ∀ (E : Type) [Fie
     obtain ⟨M', hM'⟩ := hpull u Mz
     obtain ⟨core, hcoreip⟩ := h.herm _ (Fin C.g → ℂ) M'
     refine ⟨core, fun i j => ?_, fun x v₀ hx => ?_⟩
-    · simp only [Γ, dif_pos hu]
+    · simp only [Γ, dite_eq_left hu]
       rw [hcoreip, hkey u hu Mz hl M' hM' i, hkey u hu Mz hl M' hM' j]
     · have hpt : M'.pt x = v₀ := Over.OverMorphism.ext (by rw [← hM']; exact hx)
       rw [hcoreip, hpt]
@@ -514,7 +510,7 @@ theorem PositivityTheory.Xgn.quotient_uniformization_lower : ∀ (E : Type) [Fie
     obtain ⟨F, hF, hFeq⟩ := h.cont (s i) (s j)
     have heq : ∀ u ∈ ball (0 : Fin n → ℂ) 1, F (ww u) = Γ u i j := by
       intro u hu
-      simp only [Γ, dif_pos hu]
+      simp only [Γ, dite_eq_left hu]
       exact hFeq _ (ww u) _ _ (hco u hu) (hvv u hu i).1 (hvv u hu j).1
     refine ContinuousOn.congr (hF.comp hww ?_) (fun u hu => (heq u hu).symm)
     intro u hu
@@ -589,8 +585,7 @@ theorem exists_arith [CharZero Ω] (hK : Nonempty K) (y : (Σ k, J k) → Ω) (c
     constructor
     · rintro ⟨i, rfl⟩
       exact (e i).2
-    · intro hx
-      exact ⟨e.symm ⟨x, hx⟩, by simp⟩
+    · exact fun hx => ⟨e.symm ⟨x, hx⟩, by simp⟩
   refine ⟨Fintype.card s, GroundTheory.Heights₂.Heights.CoordConeArithVar.proof GroundTheory.Heights₂.Heights.IntDomainDim.full
     K J Ω y c _ (fun i => (e i : Ω)) hK hc ?_ (fun i => IntermediateField.subset_adjoin _ _ (hsub (e i).2)) ?_⟩
   · exact AlgebraicIndependent.comp hi e e.injective
@@ -670,13 +665,11 @@ theorem exists_charts (hR : Geo.ResK.ResKStatement) [CharZero Ω] (y : (Σ k, J 
     refine (mem_ptsOver_iff _ _).1 ⟨fun k => hz.1 (Sum.inl k), fun f hf => ?_⟩
     have h1 := hz.2 _ (GlobalTheory.CompanionTheory.Ar.Ht.JoinFacts.rename_mem (κ := Sum.inl) (v := joinInl J fun _ : Unit => Fin M)
       (fun _ => rfl) (joinVec y y') (f := f) hf)
-    rw [aeval_rename] at h1
-    exact h1
+    rwa [aeval_rename] at h1
   · have h1 : (χ i).γ t ∈ mcPts I := by
       refine hbd _ ((χ i).mem t ht) ?_
       rw [evC_aeval, aeval_rename]
-      rw [evC_aeval] at h0
-      exact h0
+      rwa [evC_aeval] at h0
     obtain ⟨j, hj, hj0⟩ := ((χ i).boundary t ht).1 ⟨(χ i).mem t ht, h1⟩
     exact hne j hj hj0
   · obtain ⟨z, hz, hzx⟩ := GlobalTheory.CompanionTheory.Ar.Ht.JoinFacts.exists_join_lift y y' (fun _ => hy') x ((mem_ptsOver_iff _ _).2 hx)
@@ -778,13 +771,11 @@ theorem exists_open {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host
   refine ⟨⟨(𝔐.f ⁻¹' C)ᶜ, (hC.preimage 𝔐.f.continuous).isOpen_compl⟩, ?_, fun z hzV => ?_⟩
   · change 𝔐.f (genPt 𝔐.ξ) ∉ C
     have h1 : 𝔐.f (genPt 𝔐.ξ) = pullback.fst Y.s (spMap (algebraMap (𝓞 c.F) c.F)) (Y.jQ (genPt x)) := by
-      have h := congrArg (fun g => g (IsLocalRing.closedPoint (CommRingCat.of Ω))) hx
-      exact h
+      exact congrArg (fun g => g (IsLocalRing.closedPoint (CommRingCat.of Ω))) hx
     rw [h1]
     intro hin
     have : Y.jQ (genPt x) ∈ (Set.range Y.jQ)ᶜ := by
-      rw [← hCe]
-      exact hin
+      rwa [← hCe]
     exact this ⟨_, rfl⟩
   refine (abLocus_pullback abLocusOne Y.t.semi 𝔐.m.cart.1 (centre z)).1 ?_
   obtain ⟨u, hu⟩ := exists_lift_genFibre Y.s (z ≫ 𝔐.f)
@@ -795,14 +786,11 @@ theorem exists_open {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host
   have hr : u₀ ∈ Set.range Y.jQ := by
     by_contra hn
     have : u₀ ∈ pullback.fst Y.s (spMap (algebraMap (𝓞 c.F) c.F)) ⁻¹' C := by
-      rw [hCe]
-      exact hn
+      rwa [hCe]
     apply hzV
-    rw [Set.mem_preimage, hfu] at this
-    exact this
+    rwa [Set.mem_preimage, hfu] at this
   rw [← Y.ab_gen] at hr
-  rw [← hfu]
-  exact hr
+  rwa [← hfu]
 
 end PositivityTheory.Xgn.QuotientUniformizationCharts
 
@@ -858,8 +846,7 @@ theorem interior_range {E : Type} [Field E] [NumberField E] [IsCMField E] {H : H
   have e : (x ≫ pullback.fst _ _) q = (z ≫ 𝔐.f) q := by rw [hx]
   simp only [Scheme.Hom.comp_apply] at e
   have : x q ∈ pullback.fst Y.s (spMap (algebraMap (𝓞 c.F) c.F)) ⁻¹' abLocus Y.t.G := by
-    rw [Set.mem_preimage, e, hq]
-    exact hab
+    rwa [Set.mem_preimage, e, hq]
   rwa [Y.ab_gen] at this
 
 theorem dualMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
@@ -911,8 +898,7 @@ theorem PositivityTheory.Xgn.quotient_uniformization_chart_at : ∀ (E : Type) [
   have hW0 : ⊤ ≤ p 0 ⁻¹ᵁ W := fun x _ => by
     have : x = IsLocalRing.closedPoint ℂ := Subsingleton.elim _ _
     subst this
-    rw [hp0]
-    exact hq
+    rwa [hp0]
   obtain ⟨ρ₁, ψ, hρ₁, hρ₁', hψ, hψp⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HolFac.exists_ringMaps_of_hol 𝔐.X W hW n p hhol hW0
   have hp₁ : IsHolTo (Metric.ball 0 1) (fun u => spMap (ψ u)) :=
     ReciprocityTheory.ChartRestriction.G.PullbackSections.isHolTo_spMap Metric.isOpen_ball hψ.2
@@ -986,8 +972,7 @@ theorem lie_frame_values_basis : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ
   obtain ⟨R, _, x, hx, F, _, _, MR, n, b₀, hp⟩ := LieVB.exists_chart G (centre z₀)
   have hq' : (X.fromSpecStalk (centre z₀)) (IsLocalRing.closedPoint (X.presheaf.stalk (centre z₀))) ∈
       x.opensRange := by
-    rw [Scheme.fromSpecStalk_closedPoint]
-    exact hp
+    rwa [Scheme.fromSpecStalk_closedPoint]
   obtain ⟨ψ, hψ⟩ := LieVB.exists_lift (A := X.presheaf.stalk (centre z₀)) x (X.fromSpecStalk (centre z₀)) hq'
   obtain ⟨EA, _, _, ⟨MA⟩⟩ := lieModel_exists X G (X.presheaf.stalk (centre z₀)) (X.fromSpecStalk (centre z₀))
   obtain ⟨-, BA, -, -⟩ := LieVB.basis_tr (A := X.presheaf.stalk (centre z₀)) ψ x (X.fromSpecStalk (centre z₀))
@@ -1075,8 +1060,7 @@ theorem exists_preimage {n : ℕ} {t₀ t : Fin n → ℂ} (π : Equiv.Perm (Fin
     have h2 : ‖((ρ₀ : ℂ) * ρ₁)⁻¹‖ = (ρ₀ * ρ₁)⁻¹ := by
       rw [norm_inv, norm_mul, Complex.norm_real, Complex.norm_real, Real.norm_of_nonneg h₀.le,
         Real.norm_of_nonneg h₁.le]
-    rw [norm_mul, h2, inv_mul_lt_iff₀ hp]
-    exact h1
+    rwa [norm_mul, h2, inv_mul_lt_iff₀ hp]
   · funext i
     rw [ChartGeo.recentre_apply]
     simp only [Pi.smul_apply, smul_eq_mul, Equiv.symm_apply_apply]
@@ -1142,8 +1126,7 @@ theorem local_bound (𝔐 : HodgeCpt Y S y) (h : LieMetric 𝔐.M y) (hpq : 1 �
     obtain ⟨u, hu, e⟩ := exists_preimage π hρ₀ hρ₁ hr ht
     refine ⟨u, hu, huniq _ _ (w t) hz ?_⟩
     have := (hC u (hsm hr1 u hu)).1
-    simp only [hw', e] at this
-    exact this
+    simpa only [hw', e] using this
   by_cases hgood : (τ.comp (IntermediateField.inclusion c.le).toRingHom) (baseKA l).ρ = H.rt0
   · obtain ⟨ρ₂, K₂, hρ₂, hρ₂', hQ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.QuotLoc.abPart_principal_and_bound E H D l Xo _ n a₀ C hpq hgood
     have hz0 : spMap (C.ψ 0) ≫ jj = z₀ :=
@@ -1185,8 +1168,7 @@ theorem local_bound (𝔐 : HodgeCpt Y S y) (h : LieMetric 𝔐.M y) (hpq : 1 �
       rw [← hx, Category.assoc, ← hmK, hvv])
     have h3 : 0 ≤ ∑ i, ‖x i‖ ^ 2 := Finset.sum_nonneg fun i _ => by positivity
     have h4 : 0 ≤ (h.ip _ v₀ v₀).re := by
-      by_contra hn
-      push_neg at hn
+      by_contra! hn
       nlinarith
     calc c'.re ≤ K₂ * ∑ i, ‖x i‖ ^ 2 := h1
       _ ≤ |K₂| * ∑ i, ‖x i‖ ^ 2 := mul_le_mul_of_nonneg_right (le_abs_self _) h3
@@ -1207,8 +1189,7 @@ theorem local_bound (𝔐 : HodgeCpt Y S y) (h : LieMetric 𝔐.M y) (hpq : 1 �
       have := Spec.map_injective e3
       exact congrArg CommRingCat.Hom.hom this
     have e5 : τ' = τ := IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 c.F)) e4
-    rw [← e5]
-    exact e2
+    rwa [← e5]
 
 end GlobalTheory.CompanionTheory.Ar.QuotUnif
 

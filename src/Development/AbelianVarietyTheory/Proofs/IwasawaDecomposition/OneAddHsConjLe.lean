@@ -113,8 +113,7 @@ theorem normInf_atTau_le {D : D7} {θ : InfF D} (hθ : IsInfFam θ) (V : HSp D) 
     · subst c
       rw [sp.2.1]
       exact b1 y rfl
-    · rw [sp.2.2 τ' c]
-      exact b2
+    · rwa [sp.2.2 τ' c]
   · by_cases c : τ' = τ
     · subst c
       rw [sp.2.1] at e
@@ -123,8 +122,7 @@ theorem normInf_atTau_le {D : D7} {θ : InfF D} (hθ : IsInfFam θ) (V : HSp D) 
       rw [← left_inv_eq_right_inv e2 e]
       exact b1 _ (hs_inv hy)
     · rw [sp.2.2 τ' c, Matrix.one_mul] at e
-      rw [e]
-      exact b2
+      rwa [e]
 
 theorem umg_atTau : ∀ (D : D7) (θ : InfF D), IsInfFam θ → ∀ (V : HSp D) (τ : D.what₂.Tau) (φ : GA D V → ℂ), IsAutFunSm θ V φ → ∀ (ε : Fin V.rank → Bool) (P : Matrix (Fin V.rank) (Fin V.rank) ℂ), IsUnit P → Pᴴ * Formalism.REAL.Jm ε * P = gramAt D V τ → ∀ x : GA D V, GlobalTheory.TypeSum.UMG ε (fun y => φ (x * atTau θ V τ (P⁻¹ * y * P))) := by
   intro D θ hθ V τ φ hφ ε P hP h x

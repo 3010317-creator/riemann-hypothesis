@@ -76,7 +76,7 @@ theorem eval_clsK (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (n : ℕ) {w : X.K}
 
 theorem clsK_zero (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (n : ℕ) : clsK X l n 0 = 0 := by
   unfold clsK
-  exact dif_neg fun h => h rfl
+  exact dite_eq_right fun h => h rfl
 
 theorem cls_mul (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (n : ℕ) (f g : X.Kˣ) :
     X.cls l n (f * g) = X.cls l n f + X.cls l n g := by
@@ -100,12 +100,10 @@ theorem exists_place_over (Ω : Type) [Field Ω] [Algebra ℚ Ω] (l : ℕ) [Fac
     have h1 : ((l * n : ℤ) : Ω) = 1 := by
       have hv := congrArg Subtype.val hy
       rw [Subring.coe_mul, Subring.coe_one, ← hn] at hv
-      rw [Int.cast_mul, Int.cast_natCast]
-      exact hv
+      rwa [Int.cast_mul, Int.cast_natCast]
     have h2 : (l : ℤ) * n = 1 := by
       have h5 : algebraMap ℚ Ω (((l * n : ℤ)) : ℚ) = algebraMap ℚ Ω 1 := by
-        rw [map_intCast, map_one]
-        exact h1
+        rwa [map_intCast, map_one]
       exact_mod_cast (algebraMap ℚ Ω).injective h5
     have h3 := Int.eq_one_or_neg_one_of_mul_eq_one h2
     have h4 := (Fact.out : l.Prime).two_le

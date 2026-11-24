@@ -330,8 +330,7 @@ theorem condLE_mono {F : Type} [Field F] [NumberField F] {v : Pl (F := F)} {e m 
   have h1 : ValuativeRel.valuation (Fv F v) ((unifAt v : (Fv F v)ˣ) : Fv F v) ≤ 1 := hϖ.mem
   intro x hx
   refine h x ⟨hx.1, hx.2.trans ?_⟩
-  simp only [Units.val_pow_eq_pow_val, map_pow]
-  exact pow_le_pow_right_of_le_one' h1 hem
+  simpa only [Units.val_pow_eq_pow_val, map_pow] using pow_le_pow_right_of_le_one' h1 hem
 
 theorem nu_cond_at_ram : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E) (a a' : ℕ) (G : Geo σ a a') (X : Chars F E) (om : Rep σ G.V G.W) (om' : Rep σ G.V' G.W),
     IsTriple B G X om om' → ∀ v : B.P, v.1 ∈ X.T →
@@ -427,8 +426,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem mem_KO_iff_isGLO {n : ℕ} (g : GL (Fin n) k) : g ∈ KO k (Fin n) ↔ IsGLO g.val := by
   constructor
-  · intro hg
-    exact ⟨((mem_KO_iff g).1 hg).1, valuation_gdet_of_mem_KO hg⟩
+  · exact fun hg => ⟨((mem_KO_iff g).1 hg).1, valuation_gdet_of_mem_KO hg⟩
   · rintro ⟨hM, hd⟩
     let A : Matrix (Fin n) (Fin n) 𝒪[k] := fun i j => ⟨g.val i j, hM i j⟩
     have e : (algebraMap 𝒪[k] k).mapMatrix A = g.val := rfl
@@ -501,12 +499,12 @@ theorem stdA_mul {ν : kˣ →* ℂˣ} {ϖ : kˣ} {c a a' : ℕ} {X : Matrix (Fi
       have : gdet g = gdet (g * g₀) * (gdet g₀)⁻¹ := by rw [gdet_mul]; group
       rw [this, apow_mul, apow_of_valuation_eq_one hv, one_mul, apow_inv, neg_div]
     by_cases hc : ∀ i j, ((g₀⁻¹).val * blk₂ X) i j ∈ cball (ϖ ^ c)
-    · rw [if_pos hc, stdA, dite_eq_left ⟨hdet, hG, hcond.2 hc⟩, hu, hap, map_mul]
+    · rw [ite_eq_left hc, stdA, dite_eq_left ⟨hdet, hG, hcond.2 hc⟩, hu, hap, map_mul]
       simp only [_root_.mul_inv_rev, Units.val_mul, mul_one]
       have h1 : ((ν (gdet g) : ℂˣ) : ℂ) * (((ν (gdet g))⁻¹ : ℂˣ) : ℂ) = 1 := by
         rw [← Units.val_mul, mul_inv_cancel, Units.val_one]
       linear_combination ((((ν (gdet g₀))⁻¹ : ℂˣ) : ℂ) * apow (gdet g₀) (-(Fintype.card (Fin (a + a')) : ℂ) / 2)) * h1
-    · rw [if_neg hc, stdA, dite_eq_right (fun H => hc (hcond.1 H.2.2))]
+    · rw [ite_eq_right hc, stdA, dite_eq_right (fun H => hc (hcond.1 H.2.2))]
       simp
   · rw [Set.indicator_of_notMem (by simpa using hS), stdA, dite_eq_right (fun H => hS ((mem_KO_iff_isGLO _).2 (hb1 ▸ H.2.1)))]
     simp
@@ -552,12 +550,12 @@ theorem stdB_mul {ν : kˣ →* ℂˣ} {ϖ : kˣ} {c a a' : ℕ} {Y : Matrix (Fi
       have : gdet g = gdet (g * g₀) * (gdet g₀)⁻¹ := by rw [gdet_mul]; group
       rw [this, apow_mul, apow_of_valuation_eq_one hv, one_mul, apow_inv, neg_div]
     by_cases hc : ∀ i j, ((g₀⁻¹).val * blk₁ Y) i j ∈ cball (ϖ ^ c)
-    · rw [if_pos hc, stdB, dite_eq_left ⟨hdet, hG, hcond.2 hc⟩, hu, hap, map_mul]
+    · rw [ite_eq_left hc, stdB, dite_eq_left ⟨hdet, hG, hcond.2 hc⟩, hu, hap, map_mul]
       simp only [_root_.mul_inv_rev, Units.val_mul, mul_one]
       have h1 : ((ν (gdet g) : ℂˣ) : ℂ) * (((ν (gdet g))⁻¹ : ℂˣ) : ℂ) = 1 := by
         rw [← Units.val_mul, mul_inv_cancel, Units.val_one]
       linear_combination ((((ν (gdet g₀))⁻¹ : ℂˣ) : ℂ) * apow (gdet g₀) (-(Fintype.card (Fin (a + a')) : ℂ) / 2)) * h1
-    · rw [if_neg hc, stdB, dite_eq_right (fun H => hc (hcond.1 H.2.2))]
+    · rw [ite_eq_right hc, stdB, dite_eq_right (fun H => hc (hcond.1 H.2.2))]
       simp
   · rw [Set.indicator_of_notMem (by simpa using hS), stdB, dite_eq_right (fun H => hS ((mem_KO_iff_isGLO _).2 (hb1 ▸ H.2.1)))]
     simp
@@ -982,8 +980,7 @@ theorem UpperTheory.localChar_conductor_le_of_heckeExponent :
         refine le_of_eq_of_le ?_ h2
         rw [← SplitTie.valued_complMap τ (splitPrime_under τ), RingHom.map_sub, RingHom.map_one]
         rfl)
-    rw [← locChar_eq_of_chrEq h] at h3
-    exact h3
+    rwa [← locChar_eq_of_chrEq h] at h3
   · by_contra h0
     apply hn
     rw [unrAt_iff_of_chrEq h]
@@ -1214,8 +1211,7 @@ theorem vac_acts {Bs : Base D.host.F D.host.E} (hBs : Bs.IsGood D.sp.cm.sig) {r 
     · exact GlobalTheory.BigDat.VacFix.psi_double _ Bs Xs Ws _ _ _ _ hBs hX hW v θ γ' (hle γ' hγ')
     · unfold symp
       rw [hTens_half (R := AF D.host.F) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA D.sp.cm.sig) _ _ a ha.2.1 γ hγ, mul_zero, map_zero, mul_zero, AddChar.map_zero_eq_one]
-  rw [h2, one_smul] at h1
-  exact h1
+  rwa [h2, one_smul] at h1
 
 theorem exists_vac (hS : IsSelfDualC S ΛS) (hT : IsSelfDualC T ΛT) {Bs : Base D.host.F D.host.E}
     (hψ : IsStdChar D Bs.ψ (-1)) (hBs : Bs.IsGood D.sp.cm.sig) {r s r' s' : ℕ}
@@ -1383,7 +1379,7 @@ theorem exists_pure (hS : IsSelfDualC S ΛS) (hT : IsSelfDualC T ΛT) {Bs : Base
     · rw [Set.indicator_of_mem (show u ∈ halfP n k ε from hu), Finset.prod_congr rfl fun i _ =>
         (congrArg _ (hcoa i u).symm).trans ((hvac i).2 _ (hsm i u))]
       by_cases hl : m u ∈ latA ΛS ΛT
-      · rw [if_pos ⟨hl, (isHalf_m m).2 hu⟩, mul_one]
+      · rw [ite_eq_left ⟨hl, (isHalf_m m).2 hu⟩, mul_one]
         refine Finset.prod_congr rfl fun i _ => Set.indicator_of_mem ?_ _
         exact ⟨GlobalTheory.BigDat.smul_eq_zero_of_isHalf _ (hid i).2.2.1 ((hA i _).1 (hsm i u)), by
           rw [map_smul]; exact GlobalTheory.LatticeStable.smul_mem_latO D _ _ _ _ _ _ (hid i).2.2.2.2.1 _ hl⟩
@@ -1392,8 +1388,8 @@ theorem exists_pure (hS : IsSelfDualC S ΛS) (hT : IsSelfDualC T ΛT) {Bs : Base
           exact hl (GlobalTheory.BigDat.mem_of_sum_smul (P := Finset.univ) (a := a) (hε ▸ (isHalf_m m).2 hu) fun i _ => by
             rw [← map_smul]; exact (hall i).2)
         obtain ⟨i, hn⟩ := this
-        rw [Finset.prod_eq_zero (Finset.mem_univ i) (Set.indicator_of_notMem hn _), if_neg fun h => hl h.1, mul_zero]
-    · rw [Set.indicator_of_notMem (show u ∉ halfP n k ε from hu), if_neg fun h => hu ((isHalf_m m).1 h.2), mul_zero]
+        rw [Finset.prod_eq_zero (Finset.mem_univ i) (Set.indicator_of_notMem hn _), ite_eq_right fun h => hl h.1, mul_zero]
+    · rw [Set.indicator_of_notMem (show u ∉ halfP n k ε from hu), ite_eq_right fun h => hu ((isHalf_m m).1 h.2), mul_zero]
   have hR := _root_.GlobalTheory.InductLagr.rel_of_vac Mo Bs.ψ hstd hM Finset.univ pl hpl.injOn Z A A' co I (halfP n k ε) R (c • g)
     (fun i _ => hI i)
     (fun i _ u hu => ⟨GlobalTheory.BigDat.smul_eq_zero_of_isHalf _ (hid i).2.2.1 ((hA i _).1 hu),
@@ -1813,10 +1809,10 @@ theorem bottom_matching_of_triangle (hH : GlobalTheory.Published.HoweDualityReal
     fun v => if hv : v ∈ Bs.P then φ ⟨v, hv⟩ else Γ.M.vac v
   let Φ' : ∀ v : Pl D.host.F, (Fin A'.rank × Fin (A.rank + A'.rank) → Fv D.host.F v) → ℂ :=
     fun v => if hv : v ∈ Bs.P then φ' ⟨v, hv⟩ else Γ.M'.vac v
-  have e1 : ∀ i : Bs.P, Φ i = φ i := fun i => dif_pos i.2
-  have e1' : ∀ i : Bs.P, Φ' i = φ' i := fun i => dif_pos i.2
-  have e2 : ∀ v ∉ Bs.P, Φ v = Γ.M.vac v := fun v hv => dif_neg hv
-  have e2' : ∀ v ∉ Bs.P, Φ' v = Γ.M'.vac v := fun v hv => dif_neg hv
+  have e1 : ∀ i : Bs.P, Φ i = φ i := fun i => dite_eq_left i.2
+  have e1' : ∀ i : Bs.P, Φ' i = φ' i := fun i => dite_eq_left i.2
+  have e2 : ∀ v ∉ Bs.P, Φ v = Γ.M.vac v := fun v hv => dite_eq_right hv
+  have e2' : ∀ v ∉ Bs.P, Φ' v = Γ.M'.vac v := fun v hv => dite_eq_right hv
   have hall : ∀ v, (Φ v ∈ GlobalTheory.WeilM.SB _ ∧ Φ v ≠ 0) ∧ (Φ' v ∈ GlobalTheory.WeilM.SB _ ∧ Φ' v ≠ 0) ∧ Rf.p v (Φ v) = Rf.p' v (Φ' v) := by
     intro v
     by_cases hv : v ∈ Bs.P
@@ -1843,7 +1839,7 @@ theorem bottom_matching_of_triangle (hH : GlobalTheory.Published.HoweDualityReal
     I (fun i => GlobalTheory.BigNZ.isLagrModel_of_isLin (hI i)) (hX.fst t)
     (fun x hx => by
       by_contra hn
-      exact hx (if_neg fun h' => hn h'.1))
+      exact hx (ite_eq_right fun h' => hn h'.1))
     Φ (fun v => (hall v).1.1) (fun v hv => e2 v fun h' => hv ⟨v, h'⟩ rfl) one_ne_zero
     (fun x hx => by
       rw [one_mul]
@@ -1885,7 +1881,7 @@ theorem bottom_matching_of_triangle (hH : GlobalTheory.Published.HoweDualityReal
     I' (fun i => GlobalTheory.BigNZ.isLagrModel_of_isLin (hI' i)) (hX.snd t)
     (fun x hx => by
       by_contra hn
-      exact hx (if_neg fun h' => hn h'.1))
+      exact hx (ite_eq_right fun h' => hn h'.1))
     Φ' (fun v => (hall v).2.1.1) (fun v hv => e2' v fun h' => hv ⟨v, h'⟩ rfl) (κ := ∏ i, lam i)
     (Finset.prod_ne_zero_iff.2 fun i _ => nlam i)
     (fun x hx => by

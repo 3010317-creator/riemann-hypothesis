@@ -167,10 +167,8 @@ theorem isProjOver_of_coordTie {N : ℕ} {x : Fin (N + 1) → Ω} (hT : CoordTie
   rw [hρ]
   by_cases hW : genPt ξ ∈ U i
   · refine eval₂Hom_surjective _ _ (CoordBase.val (ξ := ξ) (U i) hW) ?_ (fun j => x j / x i) (hr i · hW) ?_
-    · intro a a' e
-      exact sec_ext hT.gen hall fun _ => e
-    · intro a
-      exact (CoordBase.mem_adjoin_iff hT (hgen i hW) (hU i) (hmem i) hW _).2 ⟨a, rfl⟩
+    · exact fun a a' e => sec_ext hT.gen hall fun _ => e
+    · exact fun a => (CoordBase.mem_adjoin_iff hT (hgen i hW) (hU i) (hmem i) hW _).2 ⟨a, rfl⟩
   · exact fun g => ⟨0, sec_ext hT.gen hall fun h => (hW h).elim⟩
 
 theorem isProjOver_pModel {κ : Type} [Finite κ] {x : κ → Ω} (M : PModel ℤ x) : IsProjOver M.s := by

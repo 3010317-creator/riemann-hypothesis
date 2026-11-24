@@ -91,8 +91,7 @@ private theorem ne_one (v : InfinitePlace F) : ((1 : G1 F) 1 1).1 v ≠ 0 := by
 
 private theorem ev_ne : ∀ᶠ h in 𝓝 (1 : G1 F), ∀ v, (h 1 1).1 v ≠ 0 := by
   rw [Filter.eventually_all]
-  intro v
-  exact (cont_d v).continuousAt.eventually_ne (ne_one v)
+  exact fun v => (cont_d v).continuousAt.eventually_ne (ne_one v)
 
 private noncomputable def eI (h : G1 F) : InfiniteAdeleRing F := fun v => ((h 1 1).1 v)⁻¹
 
@@ -133,12 +132,12 @@ private theorem pU_coe (b : A F) (a : (A F)ˣ) (c : A F) :
   fin_cases i <;> fin_cases j <;> simp <;> ring
 
 private theorem fstR_a {h : G1 F} (hu : ∀ v, (h 1 1).1 v ≠ 0) : fstR (aU h : A F) = eI h := by
-  simp only [aU, dif_pos hu]
+  simp only [aU, dite_eq_left hu]
   rfl
 
 private theorem fstR_ai {h : G1 F} (hu : ∀ v, (h 1 1).1 v ≠ 0) :
     fstR (((aU h)⁻¹ : (A F)ˣ) : A F) = (h 1 1).1 := by
-  simp only [aU, dif_pos hu]
+  simp only [aU, dite_eq_left hu]
   rfl
 
 private theorem fstR_b (h : G1 F) : fstR (bU h) = (h 0 1).1 * eI h := rfl
@@ -151,8 +150,7 @@ private theorem pU_fst {h : G1 F} (hu : ∀ v, (h 1 1).1 v ≠ 0) (i j : Fin 2) 
       have := h.det_coe
       rwa [Matrix.det_fin_two] at this
     have := congrArg fstR h1
-    rw [map_sub, map_mul, map_mul, map_one] at this
-    exact this
+    rwa [map_sub, map_mul, map_mul, map_one] at this
   have he := eI_mul hu
   have e00 : fstR ((aU h : A F) - bU h * cU h * (((aU h)⁻¹ : (A F)ˣ) : A F)) = (h 0 0).1 := by
     rw [map_sub, map_mul, map_mul, fstR_a hu, fstR_ai hu, fstR_b, fstR_c]
@@ -213,7 +211,7 @@ private theorem aU_cont : ContinuousAt (aU : G1 F → (A F)ˣ) 1 := by
     exact (MulOpposite.continuous_op.comp ((cont_pair 1).comp (cont_fst.comp (cont_entry 1 1)))).continuousAt
   refine hf.congr ?_
   filter_upwards [ev_ne] with h hu
-  simp only [Function.comp, aU, dif_pos hu]
+  simp only [Function.comp, aU, dite_eq_left hu]
   rfl
 
 private theorem bU_one : bU (1 : G1 F) = 0 := by
@@ -228,7 +226,7 @@ private theorem cU_one : cU (1 : G1 F) = 0 := by
 
 private theorem aU_one : aU (1 : G1 F) = 1 := by
   refine Units.ext ?_
-  simp only [aU, dif_pos (ne_one (F := F))]
+  simp only [aU, dite_eq_left (ne_one (F := F))]
   exact Prod.ext eI_one rfl
 
 private theorem pU_one : pU (bU (1 : G1 F)) (aU 1) (cU 1) = 1 := by
@@ -377,8 +375,7 @@ theorem UpperTheory.ConvolutionTheory.R2.C.cont :
     have h3 : ContinuousAt (fun p : G1 F × V4 F => ((ab (a (H p)) ^ 2 : ℝ) : ℂ)) (g₀, v₀) :=
       Complex.continuous_ofReal.continuousAt.comp ((continuous_ab.continuousAt.comp haH).pow 2)
     have hvec : ContinuousAt (fun p : G1 F × V4 F => (fun i => (a (H p) : A F) * p.2 i : V4 F)) (g₀, v₀) := by
-      refine continuousAt_pi.2 fun i => hav.mul ?_
-      exact (continuous_apply i).continuousAt.comp hs
+      exact continuousAt_pi.2 fun i => hav.mul ((continuous_apply i).continuousAt.comp hs)
     have h4 : ContinuousAt (fun p : G1 F × V4 F =>
         ft4 δ (fun y => ψ (c (H p) * q4 δ y) * φ''.1 y) (fun i => (a (H p) : A F) * p.2 i)) (g₀, v₀) :=
       ContinuousAt.comp (f := fun p : G1 F × V4 F => (c (H p), (fun i => (a (H p) : A F) * p.2 i : V4 F)))

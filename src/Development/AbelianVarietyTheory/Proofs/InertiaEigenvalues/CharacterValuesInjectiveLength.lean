@@ -269,9 +269,9 @@ theorem coeff_det_pencil_mem : ∀ {Γ X O : Type} [Group Γ] [CommRing O] {n : 
   rw [hfun]
   refine Subalgebra.sum_mem _ fun d _ => ?_
   by_cases hd : d 0 = j
-  · simp only [hd, if_true]
+  · simp only [hd, ite_true]
     exact key d
-  · simp only [hd, if_false]
+  · simp only [hd, ite_false]
     exact T.zero_mem
 
 end GlobalTheory.SpanRing
@@ -477,8 +477,7 @@ theorem exists_corner_separable_charpoly :
   · have hc : b * (a * D * b) * a = D := by
       calc b * (a * D * b) * a = (b * a) * D * (b * a) := by simp only [Matrix.mul_assoc]
         _ = D := by rw [hba, Matrix.one_mul, Matrix.mul_one]
-    rw [hc]
-    exact hsep
+    rwa [hc]
 
 end GlobalTheory.SpanRing
 end -- clump:auto
@@ -539,8 +538,7 @@ variable {K Γ V : Type} [Field K] [Group Γ] [AddCommGroup V] [Module K V] in
 private theorem exists_end_apply_eq_of_ne_zero {F U : Type} [Field F] [AddCommGroup U]
     [Module F U] {w : U} (hw : w ≠ 0) (u : U) : ∃ T : Module.End F U, T w = u := by
   obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual F U, φ w ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hw ((Module.forall_dual_apply_eq_zero_iff F w).mp h)
   exact ⟨(φ w)⁻¹ • φ.smulRight u, by simp [smul_smul, inv_mul_cancel₀ hφ]⟩
 
@@ -740,8 +738,7 @@ theorem exists_mem_span_corner_separable {K Γ : Type} [Field K] [Infinite K] [G
     induction hM using Submodule.span_induction with
     | mem x hx =>
       obtain ⟨g, rfl⟩ := hx
-      intro v hv
-      exact hs j g v hv
+      exact fun v hv => hs j g v hv
     | zero => intro v _; simp
     | add x y _ _ hx hy =>
       intro v hv
@@ -1127,8 +1124,7 @@ theorem charpoly_of_idem {K : Type} [Field K] {n : ℕ} (M : Matrix (Fin n) (Fin
   classical
   have hf : IsIdempotentElem (Matrix.toLin' M) := by
     have h2 : Matrix.toLin' (M * M) = Matrix.toLin' M := by rw [h]
-    rw [Matrix.toLin'_mul] at h2
-    exact h2
+    rwa [Matrix.toLin'_mul] at h2
   have hc := LinearMap.IsIdempotentElem.isCompl hf
   let e := Submodule.prodEquivOfIsCompl _ _ hc
   have key : e.conj ((1 : Module.End K (LinearMap.range (Matrix.toLin' M))).prodMap
@@ -1155,8 +1151,7 @@ theorem residue_eq {X O : Type} [CommRing O] [IsLocalRing O] (T : Subalgebra O (
   rw [← sub_eq_zero, ← map_sub, IsLocalRing.residue_eq_zero_iff]
   by_contra hne
   have hu : IsUnit (f x - f y) := by
-    rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, not_not] at hne
-    exact hne
+    rwa [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, not_not] at hne
   have ev : ∀ z : X, ∀ t : T, IsUnit t → IsUnit ((t : X → O) z) := fun z t ht =>
     ht.map ((Pi.evalRingHom (fun _ : X => O) z).comp T.val.toRingHom)
   let g : T := ⟨f - algebraMap O (X → O) (f y), T.sub_mem hf (T.algebraMap_mem _)⟩
@@ -1223,8 +1218,7 @@ variable {l : ℕ} [Fact l.Prime] in
 private theorem isUnit_of_toZMod_ne_zero' {x : ℤ_[l]} (h : PadicInt.toZMod x ≠ 0) : IsUnit x := by
   by_contra hx
   apply h
-  rw [← RingHom.mem_ker, PadicInt.ker_toZMod, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-  exact hx
+  rwa [← RingHom.mem_ker, PadicInt.ker_toZMod, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
 
 variable {l : ℕ} [Fact l.Prime] in
 private theorem principalUnit_pow_prime_eq_one_add_pow_succ {u w : ℤ_[l]} {r : ℕ} (hr : 1 ≤ r)
@@ -1325,8 +1319,7 @@ theorem _root_.GlobalTheory.CharValueLength.injOn_and_lenUnit : ∀ (l : ℕ) [F
     have h : χ c * (Units.map (algebraMap ℤ_[l] O).toMonoidHom u) ^ (c - 1) = χ 1 := by
       rw [hχ c h1 h2, mul_assoc, ← zpow_natCast, ← zpow_add, Nat.cast_sub h1, Nat.cast_one,
         neg_add_cancel, zpow_zero, mul_one]
-    have h' := congrArg (fun z : Oˣ => (z : O)) h
-    simpa using h'
+    simpa using congrArg (fun z : Oˣ => (z : O)) h
   have hφu : IsUnit (algebraMap ℤ_[l] O u) := u.isUnit.map _
   constructor
   · intro c hc c' hc' heq
@@ -1769,8 +1762,7 @@ theorem exists_good (rep : N.X i → (GE N →* GL (Fin R.nV) (N.O i)))
   · exact fun c hc => Algebra.subset_adjoin (Or.inr ⟨c, hc, rfl⟩)
   · have := GlobalTheory.SplittingAlgebra.main (N.T i) R.t β hβi (N.T_sep i) (fun j => by
       simpa only [hβp] using blockPol_coeff_mem hT hid.1 hX j)
-    simp only [← hset] at this
-    exact this
+    simpa only [← hset] using this
   · intro x
     have : {x' : N.X i × Equiv.Perm (Fin R.t) // x'.1 = x} ≃ Equiv.Perm (Fin R.t) :=
       { toFun := fun a => a.1.2

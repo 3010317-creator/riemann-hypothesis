@@ -56,14 +56,12 @@ theorem UpperTheory.Reformulated.B.Qn14.le_of_add_one_le_succ :
     | top =>
       exfalso
       have h1 : ((⊤ : ℕ∞) + 1 : ℕ∞) ≤ ((k + 1 : ℕ) : ℕ∞) := by
-        rw [← WithBot.coe_le_coe]
-        exact h
+        rwa [← WithBot.coe_le_coe]
       rw [top_add, top_le_iff] at h1
       exact ENat.coe_ne_top _ h1
     | coe n =>
       have h1 : ((n : ℕ∞) + 1 : ℕ∞) ≤ ((k + 1 : ℕ) : ℕ∞) := by
-        rw [← WithBot.coe_le_coe]
-        exact h
+        rwa [← WithBot.coe_le_coe]
       have h2 : n + 1 ≤ k + 1 := by exact_mod_cast h1
       have h3 : (n : ℕ∞) ≤ (k : ℕ∞) := by exact_mod_cast (Nat.le_of_succ_le_succ h2)
       exact WithBot.coe_le_coe.mpr h3

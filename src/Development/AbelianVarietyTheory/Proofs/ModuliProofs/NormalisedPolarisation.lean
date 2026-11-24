@@ -86,8 +86,7 @@ theorem nested_of_hasGen (hL : L.IsLB) (φ : K → (Y ⟶ X)) (ε : K → ℤ) (
 theorem cls_eq_one_of_mem_chart (hL : L.IsLB) (ψ : Y ⟶ X) (i : L.ι) (hi : ∀ y, ψ y ∈ L.U i) : cls L ψ = 1 := by
   have hg := GlobalTheory.AbSquare.exists_gen_of_mem_chart hL (fun _ : Unit => ψ) (fun _ => (1 : ℤ)) (fun _ => i)
     (fun _ y => hi y)
-  have hp := (hasGen_iff hL (fun _ : Unit => ψ) (fun _ => (1 : ℤ))).1 hg
-  simpa using hp
+  simpa using (hasGen_iff hL (fun _ : Unit => ψ) (fun _ => (1 : ℤ))).1 hg
 
 end Classes
 
@@ -128,8 +127,7 @@ theorem ptCls_one (hL : L.IsLB) (hr : Out.Rigidified B L) (T : Over S) : ptCls L
     rw [Hom.one_def, Over.comp_left]
     congr 1
   have g1 : HasGen L (fun _ : PUnit => eSec B) (fun _ => 1) := ⟨t, ht⟩
-  have g2 := (hasGen_iff hL _ _).1 (g1.pull T.hom)
-  simpa [ptCls, e1] using g2
+  simpa [ptCls, e1] using (hasGen_iff hL _ _).1 (g1.pull T.hom)
 
 theorem normCls_transl (hL : L.IsLB) (w : B ⟶ B) {T : Over S} (x : T ⟶ B) (V : T.left.Opens)
     (c : ∃ c : LB.Gen ((Out.translDiff B (cubeLB B ![𝟙 B, w] L) x).pull ((fst T B).left ⁻¹ᵁ V).ι), c.IsGen)
@@ -142,8 +140,7 @@ theorem normCls_transl (hL : L.IsLB) (w : B ⟶ B) {T : Over S} (x : T ⟶ B) (V
     (GlobalTheory.KerPow.pull_iff _ _ _).1 ⟨t, ht⟩
   have hρ : ∀ z, (lift u b).left z ∈ (fst T B).left ⁻¹ᵁ V := fun z => by
     have hz := hu z
-    rw [← lift_fst u b, Over.comp_left] at hz
-    exact hz
+    rwa [← lift_fst u b, Over.comp_left] at hz
   have hZ := GlobalTheory.KerPow.HasGen.of_range hV (lift u b).left hρ
     (φ' := ![((u ≫ x) * b).left, b.left]) (fun k => by
       fin_cases k
@@ -259,8 +256,7 @@ theorem normalised_polarisation : Out.Laws → (∀ (S : Scheme.{0}) (P : Out.Po
       have hall : ∀ y : P.A.left, (𝟙 P.A.left) y ∈ P.A.hom ⁻¹ᵁ U := fun y => by
         have hy : P.A.hom y = _ := Subsingleton.elim (P.A.hom y) (Classical.arbitrary (Sp K))
         show P.A.hom y ∈ U
-        rw [hy]
-        exact hU
+        rwa [hy]
       have H : GlobalTheory.KerPow.HasGen P.L (fun k => (P.A.hom ⁻¹ᵁ U).ι ≫ ![(ι : P.A ⟶ P.A).left, 𝟙 P.A.left] k)
           ![1, -1] := by
         have hfun : (fun k => (P.A.hom ⁻¹ᵁ U).ι ≫ ![(ι : P.A ⟶ P.A).left, 𝟙 P.A.left] k) =
@@ -278,8 +274,7 @@ theorem normalised_polarisation : Out.Laws → (∀ (S : Scheme.{0}) (P : Out.Po
     have hsq : normCls P.L w (Over.Hom.left (𝟙 P.A)) ^ 2 = cls P.L (Over.Hom.left (𝟙 P.A)) ^ 2 := by
       have hx : ptCls P.L P.A (𝟙 P.A)⁻¹ = ptCls P.L P.A (𝟙 P.A) := by
         show cls P.L ((𝟙 P.A)⁻¹).left = cls P.L (Over.Hom.left (𝟙 P.A))
-        rw [Hom.inv_def, Category.id_comp]
-        exact hS
+        rwa [Hom.inv_def, Category.id_comp]
       have hself := diff₂_self (hc P.A) (ptCls_one hL P.rigid P.A) hx
       have hsplit : diff₂ (ptCls P.L P.A) (𝟙 P.A) (𝟙 P.A) =
           diff₂ (ptCls P.L P.A) (𝟙 P.A) (𝟙 P.A ≫ w) * diff₂ (ptCls P.L P.A) (𝟙 P.A) (𝟙 P.A ≫ w') := by
@@ -295,9 +290,7 @@ theorem normalised_polarisation : Out.Laws → (∀ (S : Scheme.{0}) (P : Out.Po
       have h1 : normCls P.L w (𝟙 P.A.left) ^ 2 = cls P.L (𝟙 P.A.left) ^ 2 := by
         simpa only [Over.id_left] using hsq
       simpa [normCls] using h1
-    have hLam2 := hA1.2.1.2 P.ample
-    have hM2 := hA2.2.2.2 _ (isLB_lbPow QLB 2) hiso hLam2
-    exact hA3.2.1.1 hM2
+    exact hA3.2.1.1 (hA2.2.2.2 _ (isLB_lbPow QLB 2) hiso (hA1.2.1.2 P.ample))
   · refine LBIso.symm (lbIso_nested hL _ _ _ _ _ _ ?_)
     have h1 : ∏ k : ULift.{0} (Finset (Fin 2)),
         normCls P.L w (psum P.A ![𝟙 P.A, w] k.down).left ^ ((-1 : ℤ) ^ (2 - k.down.card)) =

@@ -144,8 +144,7 @@ theorem linearIndependent_symm_single {g : ℕ} {T : Type} {m : T → ℕ} (e : 
       L.symm.toLinearMap ∘ ((Pi.basisFun ℂ (Fin g)) ∘ fun i : Fin (m τ) => e.symm ⟨τ, i⟩) := by
     funext i
     simp
-  rw [hf]
-  exact this
+  rwa [hf]
 
 theorem point_exp_eq_of_isometry_levels (hK : Known) {E : Type} [Field E] [NumberField E] [IsCMField E]
     {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {D : Datum H} {l : Level H} {Xo : Moduli D l} {σ : KA l →+* ℂ} {g : ℕ}
@@ -574,8 +573,7 @@ theorem exists_isExp_of_rank_zero (l : Level H) (hD : D.p + D.q = 0) (hP : IsPer
   refine ⟨B, fun _ => 1, hP, fun U f => ⟨?_, differentiableOn_const _⟩, fun _ _ => (_root_.mul_one _).symm,
     fun x => ⟨0, Models.RankZero.hom_unique hz _ _⟩, fun z => ⟨fun _ => ⟨0, by rw [map_zero, h0 z]⟩, fun _ => rfl⟩,
     fun _ _ => Models.RankZero.hom_unique hz _ _, fun k a b c hk hc => ?_⟩
-  · simp only [Set.mem_univ, true_and]
-    exact isOpen_const
+  · simpa only [Set.mem_univ, true_and] using isOpen_const
   · have e : c = 1 := Units.ext (by rw [hc, Subsingleton.elim b 0, map_zero]; simp)
     rw [e, unitOn, map_one]
     exact Models.RankZero.weilIs_zero hz B.t.PP.isLB (Models.RankZero.triv_rig hz _) _ _ _
@@ -990,8 +988,7 @@ theorem fj_le_slice (la : Wt X.Ψ r) (P : Frame X.Ψ r → ℂ) (hP : X.IsSec la
   have hωp : ∀ j, bs j ∈ X.periods la := by
     intro j
     have : bs j ∈ Submodule.span ℤ (Set.range bs) := Submodule.subset_span ⟨j, rfl⟩
-    rw [hω] at this
-    exact this
+    rwa [hω] at this
   have hrepr : ∀ (v : X.Ψ → ℝ) τ, ∑ j, bs.repr v j * bs j τ = v τ := by
     intro v τ
     conv_rhs => rw [← bs.sum_repr v]
@@ -1000,9 +997,8 @@ theorem fj_le_slice (la : Wt X.Ψ r) (P : Frame X.Ψ r → ℂ) (hP : X.IsSec la
   swap
   · have h0 : X.fj la ξ ν P x = 0 := by
       unfold Data.fj
-      rw [if_neg]
-      intro hall
-      exact hf fun j => hall _ (hωp j)
+      rw [ite_eq_right]
+      exact fun hall => hf fun j => hall _ (hωp j)
     rw [h0, norm_zero, zero_mul]
     exact (norm_nonneg _).trans (hM 0)
   choose k hk using hf
@@ -1129,7 +1125,7 @@ theorem freqNonneg_of_thickBdd : OrbitThickSt → ∀ (E : Type) [Field E] [Numb
     · exact le_max_of_le_left h
     · exact le_max_of_le_right ((one_le_inv₀ (hq0 τ)).mpr h)
   have hqp : ∏ τ, q τ = 1 := by
-    simp only [q, Finset.prod_mul_distrib, Finset.prod_ite_eq', Finset.mem_univ, if_true]
+    simp only [q, Finset.prod_mul_distrib, Finset.prod_ite_eq', Finset.mem_univ, ite_true]
     exact mul_inv_cancel₀ hL0.ne'
   let y : X.Ψ → ℝ := fun τ => (q τ - 1) * X.tt ξ x τ
   have hty : ∀ τ, X.tt ξ x τ + y τ = q τ * X.tt ξ x τ := fun τ => by simp only [y]; ring
@@ -1196,8 +1192,7 @@ theorem half_plane_bound {g : ℂ → ℂ} {M C : ℝ} (hd : DifferentiableOn �
     (hM : ∀ z : ℂ, 0 ≤ z.re → ‖g z‖ ≤ M) (hC : ∀ y : ℝ, ‖g (y * I)‖ ≤ C) : ‖g 1‖ ≤ C := by
   refine PhragmenLindelof.right_half_plane_of_bounded_on_real (f := g) ?_ ⟨0, by norm_num, 0, ?_⟩ ?_ hC (by simp)
   · refine DifferentiableOn.diffContOnCl ?_
-    rw [Complex.closure_setOf_lt_re]
-    exact hd
+    rwa [Complex.closure_setOf_lt_re]
   · refine Asymptotics.IsBigO.of_bound M ?_
     refine Filter.Eventually.filter_mono inf_le_right ?_
     rw [Filter.eventually_principal]
@@ -1282,8 +1277,7 @@ theorem stepBound (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (
       congr 1
       funext τ
       exact Complex.ext (by simp) (by rw [hs]; simp)
-    rw [he]
-    exact h
+    rwa [he]
   have key := half_plane_bound (g := fun z => P (X.flow ξ (fun τ => z * -b τ) x'))
     (hP.1.comp (differentiable_flow X ξ (fun τ => -b τ) x').differentiableOn fun z hz =>
       FjCauchy.flow_mem_dom X hξ hx' _ fun τ =>
@@ -1411,8 +1405,7 @@ theorem mul_card_le (Q Q' : G → ℝ)
     linarith
   have hA : δ ≤ (L : ℝ) ^ 2 * a := by
     have : y ^ 2 ≤ (L : ℝ) ^ 2 := by gcongr
-    rw [hy2, div_le_iff₀ ha0] at this
-    exact this
+    rwa [hy2, div_le_iff₀ ha0] at this
   have hB : (L : ℝ) ^ 2 * a ≤ 4 * δ := by
     have : (L : ℝ) ^ 2 ≤ (2 * y) ^ 2 := by gcongr
     rw [mul_pow, hy2] at this
@@ -1441,8 +1434,7 @@ theorem mul_card_le (Q Q' : G → ℝ)
     have h' : v - (((j : ℕ) : ℤ) * L) • ξ = w - (((i : ℕ) : ℤ) * L) • ξ := h
     have h1 : v - w = ((((j : ℕ) : ℤ) - (i : ℕ)) * L) • ξ := by
       rw [sub_mul, sub_smul]
-      rw [sub_eq_sub_iff_sub_eq_sub] at h'
-      exact h'
+      rwa [sub_eq_sub_iff_sub_eq_sub] at h'
     have h2 := hsub' v w
     rw [h1, hsm', hξ'] at h2
     have hji : ((j : ℕ) : ℤ) - (i : ℕ) = 0 := by
@@ -1567,10 +1559,8 @@ theorem orth_threshold (hF : FlowMajSt) : ∃ δ : ℝ, 0 < δ ∧ ∀ x ∈ X.d
     · have hcc : ComplexEmbedding.conjugate (ComplexEmbedding.conjugate σ) = σ :=
         RingHom.ext fun a => by simp
       have hc : ComplexEmbedding.conjugate σ ∈ X.Ψ := by
-        rw [X.cmType, hcc]
-        exact hσ
-      have h := key ⟨_, hc⟩
-      simpa [ComplexEmbedding.conjugate_coe_eq] using h
+        rwa [X.cmType, hcc]
+      simpa [ComplexEmbedding.conjugate_coe_eq] using key ⟨_, hc⟩
   have h0 := UnipotentCoefficientShift.eq_zero_of_conj_lt_one (X.Λ_int v v.2 w w.2) hall
   exact (mul_eq_zero.mp h0).resolve_left hden
 

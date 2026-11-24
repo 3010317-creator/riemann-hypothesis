@@ -98,11 +98,11 @@ def nfMat {r : ℕ} {k : Type} [CommRing k] (c : Fin (r + 1) → k) : Matrix (Fi
 
 theorem nfMat_mulVec_castSucc {r : ℕ} {k : Type} [CommRing k] (c : Fin (r + 1) → k) (v : Fin (r + 1) → k)
     (i : Fin r) : (nfMat c *ᵥ v) (Fin.castSucc i) = v i.succ := by
-  simp only [Matrix.mulVec, dotProduct, nfMat, Matrix.of_apply, Fin.castSucc_ne_last, if_false]
+  simp only [Matrix.mulVec, dotProduct, nfMat, Matrix.of_apply, Fin.castSucc_ne_last, ite_false]
   rw [Finset.sum_eq_single i.succ]
   · simp
   · intro j _ hj
-    rw [if_neg]; · simp
+    rw [ite_eq_right]; · simp
     intro h; apply hj; ext; simp [h]
   · simp
 
@@ -161,8 +161,7 @@ theorem glNormal_of_ne_zero : ∀ (k : Type) [Field k] (r : ℕ) (a : Inv (r + 1
     have e : (GlobalTheory.JR.Step.eL r k ᵥ* GlobalTheory.JR.Step.nfMat a.2.1) ᵥ*
         ((hu.unit⁻¹ : GL (Fin (r + 1)) k) : Matrix (Fin (r + 1)) (Fin (r + 1)) k) = GlobalTheory.JR.Step.eL r k := by
       rw [Matrix.vecMul_vecMul, hgi, Matrix.vecMul_one]
-    rw [hinv] at e
-    exact e
+    rwa [hinv] at e
 
 end GlobalTheory.JR.Step
 end -- clump:auto
@@ -272,7 +271,7 @@ theorem exists_glO_pair {F : Type} [NormedField F] [IsUltrametricDist F] (r : �
       | cast c' =>
         simp only [row, col, Fin.lastCases_castSucc, ρ, sub_dotProduct, smul_dotProduct,
           single_dotProduct, hwu, smul_eq_mul, mul_zero, sub_zero, one_mul, u, Pi.sub_apply,
-          Pi.smul_apply, Pi.single_apply, hs c, if_false, mul_zero, sub_zero, Matrix.one_apply,
+          Pi.smul_apply, Pi.single_apply, hs c, ite_false, mul_zero, sub_zero, Matrix.one_apply,
           Fin.castSucc_inj]
         by_cases h : c = c'
         · subst h; simp
@@ -484,8 +483,7 @@ theorem GlobalTheory.JR.orbG_integrand_hasCompactSupport : ∀ (F : Type) [Nontr
   have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   obtain ⟨-, -, hCB, -, -⟩ := _root_.GlobalTheory.JR.normalForm_invariants F n
   have hdet : (Cm Y).det * (Bm Y).det ≠ 0 := by
-    rw [← Matrix.det_mul, hCB Y]
-    exact hY
+    rwa [← Matrix.det_mul, hCB Y]
   have hB : IsUnit (Bm Y).det := isUnit_iff_ne_zero.mpr (right_ne_zero_of_mul hdet)
   have hC : IsUnit (Cm Y).det := isUnit_iff_ne_zero.mpr (left_ne_zero_of_mul hdet)
 
@@ -654,8 +652,7 @@ theorem omega_act (F : Type) [NontriviallyNormedField F] [IsUltrametricDist F] (
     rw [← norm_mul, ← Matrix.det_mul, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.det_one, norm_one]
   have hkinv : ‖((k⁻¹ : GL (Fin n) F) : Matrix (Fin n) (Fin n) F).det‖ = 1 := by
     apply le_antisymm hb
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     have : ‖(k : Matrix (Fin n) (Fin n) F).det‖ * ‖((k⁻¹ : GL (Fin n) F) : Matrix (Fin n) (Fin n) F).det‖ < 1 :=
       lt_of_le_of_lt (mul_le_of_le_one_left (norm_nonneg _) ha) hlt
     linarith
@@ -874,9 +871,9 @@ theorem unitG_lift : ∀ (F : Type) [NormedField F] (r : ℕ) (Z : Gl r F) (μ l
   unfold unitG
   by_cases hZ : Z ∈ {Y : Gl r F | (∀ i j, ‖Y.1 i j‖ ≤ 1) ∧ (∀ i, ‖Y.2.1 i‖ ≤ 1) ∧ (∀ i, ‖Y.2.2.1 i‖ ≤ 1) ∧ ‖Y.2.2.2‖ ≤ 1}
   · by_cases hl : ‖l‖ ≤ 1
-    · rw [Set.indicator_of_mem (hmem.2 ⟨hZ, hl⟩), Set.indicator_of_mem hZ, if_pos hl]
+    · rw [Set.indicator_of_mem (hmem.2 ⟨hZ, hl⟩), Set.indicator_of_mem hZ, ite_eq_left hl]
       simp
-    · rw [Set.indicator_of_notMem (fun h => hl (hmem.1 h).2), if_neg hl, zero_mul]
+    · rw [Set.indicator_of_notMem (fun h => hl (hmem.1 h).2), ite_eq_right hl, zero_mul]
   · rw [Set.indicator_of_notMem (fun h => hZ (hmem.1 h).1), Set.indicator_of_notMem hZ, mul_zero]
 
 end GlobalTheory.JR.UnitGLift
@@ -972,8 +969,7 @@ theorem inv_glMap (Y : Gl r k) : inv (glMap φ Y) = (inv Y).map φ := by
   · ext i
     simp [inv, Inv.map, glMap, Matrix.charpoly_map]
   · ext i
-    simp only [inv, Inv.map]
-    exact mom_glMap φ Y i
+    simpa only [inv, Inv.map] using mom_glMap φ Y i
   · rfl
 
 theorem sec_map (a : Inv r k) : sec (a.map φ) = glMap φ (sec a) := by
@@ -1069,8 +1065,7 @@ theorem hasInv_of_lift : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivia
     have := congrFun h2 i
     rw [Matrix.mulVec_smul, eL, Matrix.mulVec_single_one] at this
     simp only [Pi.smul_apply, smul_eq_mul] at this
-    rw [mul_comm]
-    exact this
+    rwa [mul_comm]
   have hrow : eL r E ᵥ* G = (star ν)⁻¹ • eL r E := by
     have hs : star ν • (eL r E ᵥ* G) = eL r E := by
       rw [← Matrix.smul_vecMul, ← h3, Matrix.vecMul_vecMul, hGiG, Matrix.vecMul_one]
@@ -1087,7 +1082,7 @@ theorem hasInv_of_lift : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivia
   have ecL : ∀ a : Fin r, G (Fin.castSucc a) (Fin.last r) = 0 := by
     intro a
     have := hcol (Fin.castSucc a)
-    simp only [eL, Pi.single_apply, Fin.castSucc_ne_last, if_false, mul_zero] at this
+    simp only [eL, Pi.single_apply, Fin.castSucc_ne_last, ite_false, mul_zero] at this
     exact (mul_eq_zero.mp this).resolve_right hμ'
   set H : Matrix (Fin (r + 1)) (Fin (r + 1)) E := star ν • G with hH
   set h' : Matrix (Fin r) (Fin r) E := H.submatrix Fin.castSucc Fin.castSucc with hh'

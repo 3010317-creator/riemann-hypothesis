@@ -226,8 +226,7 @@ theorem exists_dualPair (hθ : IsInfFam θ) (M : DSModel V S) (hp : AllPlus M) (
     have h5 : rhoK lam (invTrK B) (rhoK lam (invTrK B)⁻¹ y) = y := by
       rw [rhoK_mul, mul_inv_cancel, rhoK_one]
     rw [hpr, hT, ← rhoK_coe, h5] at h4
-    rw [pairBK_apply]
-    exact h4
+    rwa [pairBK_apply]
   · obtain ⟨w, rfl⟩ := e.surjective w
     have ha := GlobalTheory.PointAtPlaceHom.atTau_spec hθ V τ hg
     set G := infGL θ V (atTau θ V τ g) with hGd
@@ -340,8 +339,7 @@ theorem ioEx (D : D7) : IoEx D := by
     obtain ⟨a, b⟩ := hact u hu 1 (one_mem _) fun τ => by rw [congrFun e τ]; exact one_mem_K
     rw [hio, hio, hφ u hu, ← map_smul (c'.ρ u), ← h1 u hu a x]
     have := b (io x ((‖φ.symm w0‖ : ℂ) • φ w))
-    rw [e] at this
-    exact this
+    rwa [e] at this
   · have hs := GlobalTheory.PointAtPlaceHom.atTau_spec hθ (Wc D i) τ (conj_mem_UH M' τ hk)
     have e : (fun ρ => M'.fr ρ * compAt θ ρ (Formalism.L2.Theta.mt (Wc D i)
         (atTau θ (Wc D i) τ ((M'.fr τ)⁻¹ * k * M'.fr τ))) * (M'.fr ρ)⁻¹) = Pi.mulSingle τ k := by
@@ -363,8 +361,7 @@ theorem ioEx (D : D7) : IoEx D := by
       · rw [Pi.mulSingle_eq_of_ne h]; exact one_mem_K
     rw [hio, hio, ← h2 τ k hk v u hu]
     have := b (io (PiTensorProduct.tprod ℂ v) ((‖φ.symm w0‖ : ℂ) • φ w))
-    rw [e, e'] at this
-    exact this
+    rwa [e, e'] at this
   · rw [norm_smul, norm_inv, Complex.norm_real, norm_norm, inv_mul_cancel₀ hw1]
   · rw [hio, map_smul φ, smul_smul, mul_inv_cancel₀ (Complex.ofReal_ne_zero.2 hw1), one_smul, φ.apply_symm_apply]
     exact h3

@@ -446,8 +446,7 @@ theorem gramQ_isUnit (X : HidaSetting D) (u : D.what₂.Word) (wt : (VS D).V ≃
     rw [Matrix.det_mul, Matrix.det_one, Matrix.det_fromBlocks_zero₂₁] at hd
     exact left_ne_zero_of_mul (left_ne_zero_of_mul_eq_one hd)
   have hm : (G.map φ).det = φ G.det := (RingHom.map_det φ G).symm
-  rw [hgram, hm, isUnit_iff_ne_zero, map_ne_zero]
-  exact hdetG
+  rwa [hgram, hm, isUnit_iff_ne_zero, map_ne_zero]
 
 end GlobalTheory.Core.Mi.RealMat
 
@@ -465,8 +464,7 @@ theorem GlobalTheory.Core.Mi.sTil_toH_eq_infM : ∀ (D : D7) (X : Formalism.L2.S
       ∑ i, GlobalTheory.AdForm.infM (Formalism.IndefR.Eqv.thetaC D) (D.sp.X 0) hn a τ i b •
         Formalism.L2.SG.ColDict.rvV X (X.pl.symm τ) (Formalism.L2.SG.ColDict.qFr tr.wt i) := by
     intro b
-    refine (hact (Fin.cast hn.symm b)).trans ?_
-    exact Fintype.sum_equiv (finCongr hn) _ _ fun i => rfl
+    exact (hact (Fin.cast hn.symm b)).trans (Fintype.sum_equiv (finCongr hn) _ _ fun i => rfl)
   have hM : (Matrix.of fun a' b => hJ (X.B.I.ε (X.pl.symm τ))
       (Formalism.L2.SG.ColDict.rvV X (X.pl.symm τ) (Formalism.L2.SG.ColDict.qFr tr.wt a'))
       (uMat (((B.toH a).1 : X.B.I.Ginf) (X.pl.symm τ)) *ᵥ
@@ -599,8 +597,7 @@ theorem colForm_of_dec {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) 
     rw [hκ'', ← Subgroup.coe_mul, mul_inv_cancel_left]
   have hRk : RepM X tr.wt tr.ιA (κ'' : X.B.I.Gf) (yk.1.1 : Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) (GlobalTheory.AdForm.EF D)) := by
     refine RepM_cancel (tr.hc_rep c) ?_
-    rw [hmulκ, ← hfr]
-    exact hRfin
+    rwa [hmulκ, ← hfr]
   have hRF : Formalism.L2.SG.ColDict.RepF X tr.wt tr.ιA (κ'' : X.B.I.Gf) yk := hRk
   have hconj : ((tr.h0⁻¹ * yk * tr.h0 : Formalism.UG.UPts (Formalism.L2.Forms.sigD D) (Formalism.L2.Forms.gramN D 0 (Nat.zero_le _))
       (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) : GL _ _) = κ.1 := by

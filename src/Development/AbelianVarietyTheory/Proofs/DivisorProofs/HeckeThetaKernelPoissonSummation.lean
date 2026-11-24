@@ -735,8 +735,7 @@ theorem poisson_coset (L : Submodule ℤ (EuclideanSpace ℂ I)) [DiscreteTopolo
     have h1 := (_root_.GlobalTheory.HeckeTheta.GaussBound.gauss_cont_bound I n).1
     have h2 : Continuous (fun w : EuclideanSpace ℂ I => (WithLp.toLp 2 (dil y (WithLp.ofLp w)) : EuclideanSpace ℂ I)) := by
       unfold dil; fun_prop
-    have h3 := h1.comp h2
-    simpa only [Function.comp_def, WithLp.ofLp_toLp, hf] using h3
+    simpa only [Function.comp_def, WithLp.ofLp_toLp, hf] using h1.comp h2
   have hdom : ∀ R : ℝ, ∃ g : L → ℝ, Summable g ∧ ∀ (x : L) (v : EuclideanSpace ℂ I), ‖v‖ ≤ R → ‖f (x + v)‖ ≤ g x := by
     intro R
     refine ⟨fun x => C * (Real.exp (a * R ^ 2) * Real.exp (-(a / 2) * ‖(x : EuclideanSpace ℂ I)‖ ^ 2)),
@@ -751,8 +750,7 @@ theorem poisson_coset (L : Submodule ℤ (EuclideanSpace ℂ I)) [DiscreteTopolo
     congr 2
     ring
   have hs : Summable fun l : GlobalTheory.dualLattice L => ‖𝓕 f l‖ := by
-    simp only [hF, norm_mul]
-    exact hG.mul_left _
+    simpa only [hF, norm_mul] using hG.mul_left _
   refine ⟨hG, ?_⟩
   have hP := GlobalTheory.tsum_poisson_lattice L hcont hdom hs u
   simp only [hf] at hP
@@ -810,12 +808,12 @@ theorem theta_poisson : ∀ (K : Type) [Field K] [NumberField K] [NumberField.Is
   have ha_half : ∀ l, a (half l) = A l := by
     intro l
     have h : ∃ l' : D, half l' = half l := ⟨l, rfl⟩
-    simp only [ha_def, dif_pos h]
+    simp only [ha_def, dite_eq_left h]
     rw [hhalf (Classical.choose_spec h)]
   have ha_zero : ∀ v, v ∉ Set.range half → a v = 0 := by
     intro v hv
     have h : ¬ ∃ l : D, half l = v := fun ⟨l, hl⟩ => hv ⟨l, hl⟩
-    simp only [ha_def, dif_neg h]
+    simp only [ha_def, dite_eq_right h]
   set B : ℝ := ‖cov⁻¹‖ * ∑ c : 𝓞 K ⧸ M, ‖F (Quotient.out c)‖ with hB
   have hB0 : 0 ≤ B := by positivity
   have hAB : ∀ l, ‖A l‖ ≤ B := by
@@ -878,8 +876,7 @@ theorem theta_poisson : ∀ (K : Type) [Field K] [NumberField K] [NumberField.Is
       have hm : α - Quotient.out (Ideal.Quotient.mk M α) ∈ M := by
         rw [← Ideal.Quotient.eq, Ideal.Quotient.mk_out]
       have := hF (Quotient.out (Ideal.Quotient.mk M α)) _ hm
-      rw [add_sub_cancel] at this
-      exact this
+      rwa [add_sub_cancel] at this
     have hFB : ∀ α : 𝓞 K, ‖F α‖ ≤ BF := by
       intro α
       rw [hFc α]

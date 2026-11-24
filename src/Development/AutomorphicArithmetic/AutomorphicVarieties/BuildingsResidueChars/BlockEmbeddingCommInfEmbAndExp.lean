@@ -76,7 +76,7 @@ private theorem exp_block_extension (K : Type) [Field K] [NumberField K] {a n : 
     funext k
     cases k with
     | zero => simp
-    | succ k => rw [if_neg (Nat.succ_ne_zero k), add_zero, map_smul, hpow]
+    | succ k => rw [ite_eq_right (Nat.succ_ne_zero k), add_zero, map_smul, hpow]
   rw [heq] at h2
   have h5 := h2.unique h4
   have hsub : g (NormedSpace.exp Y - 1) = g (NormedSpace.exp Y) - g 1 := map_sub g _ _
@@ -104,8 +104,7 @@ theorem UpperTheory.blockEmbedding_comm_infEmb_and_exp :
   refine ⟨fun x => ?_, fun Y => ?_⟩
   · apply (AdelicGLn.prodEquiv K n).injective
     have hx := prodEquiv_infEmb (K := K) (n := a) x
-    rw [UpperTheory.prodEquiv_apply_eq_map_fst_snd] at hx
-    rw [Prod.mk.injEq] at hx
+    rw [UpperTheory.prodEquiv_apply_eq_map_fst_snd, Prod.mk.injEq] at hx
     rw [UpperTheory.prodEquiv_apply_eq_map_fst_snd, prodEquiv_infEmb]
     refine Prod.ext ?_ ?_
     · refine (emb_map e (RingHom.fst (InfiniteAdeleRing K) (IsDedekindDomain.FiniteAdeleRing (𝓞 K) K))
@@ -114,6 +113,4 @@ theorem UpperTheory.blockEmbedding_comm_infEmb_and_exp :
       exact (emb_map e _ _).symm
     · exact (emb_map e (RingHom.snd (InfiniteAdeleRing K) (IsDedekindDomain.FiniteAdeleRing (𝓞 K) K))
         (infEmb K a x)).trans ((congrArg (emb e) hx.2).trans (map_one _))
-  · apply Subtype.ext
-    apply Units.ext
-    exact exp_block_extension K e Y
+  · exact Subtype.ext (Units.ext (exp_block_extension K e Y))

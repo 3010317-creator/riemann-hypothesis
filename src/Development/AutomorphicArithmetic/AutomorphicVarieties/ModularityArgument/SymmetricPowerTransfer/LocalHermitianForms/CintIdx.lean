@@ -128,8 +128,7 @@ theorem int_denom (h : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) :
   have eu : algebraMap O K u * 2 = 1 := by
     have h2 := congrArg (algebraMap O K) hu
     rw [map_mul, map_one, map_ofNat] at h2
-    rw [mul_comm]
-    exact h2
+    rwa [mul_comm]
   refine ⟨q * d1 * d2, ?_, ?_⟩
   · have hc : algebraMap O K (q * d1 * d2) ≠ 0 := by
       rw [map_mul, map_mul]
@@ -176,8 +175,7 @@ theorem finite_quot_span (h : IsLoc O Δ) {m : O} (hm : m ≠ 0) : Finite (O ⧸
     (IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).mp hϖ
   haveI : Finite (O ⧸ Ideal.span {ϖ}) := by
     have := h.fin
-    rw [← hmax]
-    exact this
+    rwa [← hmax]
   rw [hn, ← Ideal.span_singleton_pow]
   exact Ideal.finite_quotient_pow ⟨{ϖ}, by simp⟩ n
 
@@ -245,7 +243,6 @@ theorem cint_relIndex_ne_zero (h : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) {m : O} 
     obtain ⟨z, rfl⟩ := QuotientGroup.mk_surjective Q0
     refine ⟨⟨f z, z, rfl⟩, ?_⟩
     exact QuotientGroup.eq.mpr (key _ _ (Classical.choose_spec (⟨z, rfl⟩ : ∃ y, f y = f z)))
-  show (H.subgroupOf (Cint O τ)).index ≠ 0
   exact Subgroup.index_ne_zero_of_finite
 
 end

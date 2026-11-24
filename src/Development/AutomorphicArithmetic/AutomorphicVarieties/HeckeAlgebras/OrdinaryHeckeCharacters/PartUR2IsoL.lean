@@ -62,16 +62,14 @@ private theorem frame_stab {Γ Ga Gp : Type} [Group Γ] [Group Ga] [Group Gp] (X
     X.rpF ℂ d m b F ∈ Submodule.pi Set.univ (fun _ : Fin m => X.AF ξ) ⊓ fixd (X.raF d τ) U := by
   refine ⟨fun i hi γ g => ?_, fun u hu => ?_⟩
   · have h := hF.1 i hi γ (g * (1, b))
-    rw [← mul_assoc] at h
-    exact h
+    rwa [← mul_assoc] at h
   · funext i g k
     have h := congrFun (congrFun (congrFun (hF.2 u hu) i) (g * (1, b))) k
     have e : g * (1, b) * ((u : Ga), 1) = g * ((u : Ga), 1) * (1, b) := by
       rw [mul_assoc, mul_assoc]
       simp
     change (Matrix.mulVec (τ u : Matrix (Fin m) (Fin m) ℂ) fun j => F j (g * (1, b) * ((u : Ga), 1)) k) i = F i (g * (1, b)) k at h
-    rw [e] at h
-    exact h
+    rwa [e] at h
 
 private theorem big_stab {L Ω : Type} [Field L] [NumberField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω] {l : ℕ} [Fact l.Prime]
     {n : ℕ} {c : Coef l} (H : HSet L Ω l n c) (ι : Qbar l ≃+* ℂ) {d : ℕ} (ξ : GV n H.Sl →* GL (Fin d) ℂ) (v : H.V)

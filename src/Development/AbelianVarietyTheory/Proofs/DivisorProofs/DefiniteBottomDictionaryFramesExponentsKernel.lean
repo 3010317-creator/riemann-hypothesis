@@ -111,8 +111,7 @@ theorem bot_arith (D : D7) (i j : ℕ) :
 
 theorem bottom_ranks : GBig fun {D} {T} {Lc} {sc} G _ _ _ _ => ∀ i j : Fin D.R.m, Even (SqNum.botBig D i j + SqNum.botSmall D i j) ∧ SqNum.botSmall D i j + 2 < SqNum.botBig D i j ∧ 1 < SqNum.botSmall D i j := by
   refine ⟨0, fun ε CF _ => ⟨0, 0, fun C _ D large₂ _ _ _ T Lc μ₀ _ G => ?_⟩⟩
-  intro i j
-  exact bot_arith D i j
+  exact fun i j => bot_arith D i j
 
 end GlobalTheory.BotRankSize
 
@@ -248,8 +247,7 @@ theorem not_unramAt : ∀ {D : D7} {T : Type} {Lc : LevCh D T} {sc : Consts} (G 
   have h3 := hIs.xi_tame t P x hx hxv
   have e1 : (Lc.C.mu0 j * Lc.xiH t * (G.ch.chiH k)⁻¹).loc P x =
       (Lc.C.mu0 j).loc P x * (Lc.xiH t).loc P x * ((G.ch.chiH k).loc P x)⁻¹ := rfl
-  rw [e1, h2, h3, one_mul, one_mul, inv_eq_one] at h1
-  exact h1
+  rwa [e1, h2, h3, one_mul, one_mul, inv_eq_one] at h1
 
 end GlobalTheory.RamifiedOnLargePlaces
 end -- clump:auto
@@ -344,8 +342,7 @@ theorem not_overP_g {D : D7} {T : Type} {Lc : LevCh D T} {sc : Consts} (G : Grid
   have hk : ((D.host.g k : ℕ) : 𝓞 D.host.F) ∈ v.asIdeal := by
     subst hPP
     show algebraMap (𝓞 D.host.F) (𝓞 D.host.E) ((D.host.g k : ℕ) : 𝓞 D.host.F) ∈ PP.asIdeal
-    rw [map_natCast]
-    exact h
+    rwa [map_natCast]
   refine hv (G.pl.mem_S0_of_sum_eq.2 (Or.inr ((S1_mem_OmF D).2 ?_)))
   fin_cases k
   · exact Or.inl hk
@@ -366,8 +363,7 @@ theorem GlobalTheory.SqTop.not_unramAt_twist : ∀ {D : D7} {T : Type} {Lc : Lev
     GlobalTheory.UnramOver.unramAt_of_unrAt D _ _ (hμ.mu0 j) v e he fun P hP =>
       (Lc.C.isMu0 j).unr P (not_overP_g G hv P hP)
   have hxi : GlobalTheory.WeilParts.UnramAt e (Lc.xi t) := by
-    refine unramAt_of_div (a := Lc.mu0 ((j : ℕ) + 1)) (c := G.ch.chi (D.R.m - i)) ?_ hmu hchi
-    exact hU
+    exact unramAt_of_div (a := Lc.mu0 ((j : ℕ) + 1)) (c := G.ch.chi (D.R.m - i)) hU hmu hchi
   have h1 := GlobalTheory.UnrOverPlace.unrAt_of_unramAt D (Lc.xi t) v e he hxi PP hPv
   exact (hμ.Q_ram t PP).2 (Or.inl hPP) ((GlobalTheory.LFun.unrAt_iff_of_chrEq (hμ.xi t) PP).1 h1)
 end -- clump:auto
@@ -538,7 +534,7 @@ theorem bottom_ram : GBig fun {D} {T} {Lc} {sc} G _ _ _ _ => ∀ (W : G.Weil) (i
         · exact GlobalTheory.T.large_place_ratio_ramified G μ₀ hμ t v e he h1 i j
       · exact GlobalTheory.T.square_mu_div_chi_ramified_at_twist_place G μ₀ hμ t v e he h0 PP hPP hPv i j
   · left
-    push_neg at hS
+    push Not at hS
     obtain ⟨h1, h2⟩ := GlobalTheory.T.grid_characters_unramified G μ₀ hμ t v e he hS.1 i
     exact ⟨unramAt_mul (GlobalTheory.T.level_character_unramified_mu G μ₀ hμ t v e he hS.1 hS.2 j) (unramAt_pow h2 _), unramAt_mul h1 (unramAt_pow h2 _)⟩
 
@@ -608,8 +604,7 @@ theorem fst_isFinF : ∀ {D : D7} {T : Type} {A A' WW : HSp D} (X : Tri T A A' W
   rw [cart_frSgn_true_stdFr, cart_stdFr]
   have e1 : X.rA.s τ = 1 := (hA.2.2 τ).1
   have e2 : X.rW.s τ = 1 := (hW.2.2 τ).1
-  simp only [e1, e2] at hF
-  exact hF
+  simpa only [e1, e2] using hF
 
 end GlobalTheory.BotDict
 end -- clump:auto
@@ -657,8 +652,7 @@ theorem isFinF_snd_std : ∀ {D : D7} {T : Type} {A A' WW : HSp D} (X : Tri T A 
   have hF := GlobalTheory.DatumFock.isFockVacAt_of_isThetaAt hI.isVac'.1.1.1 hI.isVac'.2.inf ho.conj.infPart_eq
     ho.conj.conj.infPart_eq (hI.snd t) hI.isVac'.2.theta hth (hI.isVac'.2.fock τ)
   rw [(hA'.2.2 τ).1, (hW.2.2 τ).1] at hF
-  rw [cart_frSgn_false_stdFr, cart_stdFr]
-  exact hF
+  rwa [cart_frSgn_false_stdFr, cart_stdFr]
 
 end GlobalTheory.BotDict
 

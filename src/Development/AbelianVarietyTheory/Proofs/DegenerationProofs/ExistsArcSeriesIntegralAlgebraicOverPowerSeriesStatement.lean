@@ -158,8 +158,8 @@ theorem exists_lift : Laws → BrGtSt → AllA fun {_} _ _ _ {_} {_} {_} {_} {_}
               exact ⟨n, h1, by
                 rw [h2]
                 by_cases h : τ H.rt = algebraMap (FractionRing O') F (algebraMap O' _ (b r))
-                · rw [if_pos h]; exact if_pos h
-                · rw [if_neg h]; exact if_neg h⟩
+                · rw [ite_eq_left h]; exact ite_eq_left h
+                · rw [ite_eq_right h]; exact ite_eq_right h⟩
             I := I, N := N, ν := ν, q := q, hq := hq
             be := { be := a.be.comp ν.eX.toIntLinearEquiv.toLinearMap ν.eX.toIntLinearEquiv.toLinearMap
                     symm := fun y z => a.be_symm _ _
@@ -292,8 +292,7 @@ theorem exists_finite_field_of_values : ∀ (R : Type) [CommRing R] [IsDomain R]
   let J : (Sp K ⟶ D.P.A.left) → D.P.L.ι := fun ψ => ν.J (spMap f ≫ ψ)
   have hJ : ∀ ψ, ⊤ ≤ ψ ⁻¹ᵁ D.P.L.U (J ψ) := fun ψ z _ => by
     have h := ν.good (spMap f ≫ ψ) (Set.mem_univ (IsLocalRing.closedPoint F))
-    rw [Subsingleton.elim (α := PrimeSpectrum K) z (spMap f (IsLocalRing.closedPoint F))]
-    exact h
+    rwa [Subsingleton.elim (α := PrimeSpectrum K) z (spMap f (IsLocalRing.closedPoint F))]
   have hJ' : ∀ ψ, ν.J (spMap f ≫ ψ) = J ψ := fun _ => rfl
   have hm : ∀ a : K, f a ∈ K := fun a => a.2
   have hv : ∀ {Y : Scheme.{0}} {I : Type} [Fintype I] {φ : I → (Y ⟶ D.P.A.left)} {ε : I → ℤ}
@@ -477,9 +476,9 @@ theorem coeff_X_pow_mul_expand {k : ℕ} (hk : k ≠ 0) {j : ℕ} (hj : j < k) (
   · have hm : m = k * (m / k) + j := by rw [← h]; exact (Nat.div_add_mod m k).symm
     have h1 : j ≤ m := by omega
     have h2 : m - j = k * (m / k) := by omega
-    rw [if_pos h1, if_pos h, h2, if_pos (dvd_mul_right _ _),
+    rw [ite_eq_left h1, ite_eq_left h, h2, ite_eq_left (dvd_mul_right _ _),
       Nat.mul_div_cancel_left _ (Nat.pos_of_ne_zero hk)]
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     split_ifs with h1 h2
     · exfalso
       obtain ⟨c, hc⟩ := h2
@@ -495,7 +494,7 @@ theorem sum_residuePart {k : ℕ} (hk : k ≠ 0) (f : PowerSeries O) :
 
   rw [map_sum, Finset.sum_congr rfl
   (fun l hl => coeff_X_pow_mul_expand hk (Finset.mem_range.1 hl) _ m), Finset.sum_ite_eq,
-  if_pos (Finset.mem_range.2 (Nat.mod_lt _ (Nat.pos_of_ne_zero hk))), coeff_residuePart,
+  ite_eq_left (Finset.mem_range.2 (Nat.mod_lt _ (Nat.pos_of_ne_zero hk))), coeff_residuePart,
   Nat.div_add_mod]
 
 theorem residuePart_X_pow_mul_expand {k : ℕ} (hk : k ≠ 0) {j l : ℕ} (hj : j < k) (hl : l < k)
@@ -520,12 +519,11 @@ theorem extendAdd_X_pow_mul_expand_of_lt (φ : PowerSeries O →+* K) {k : ℕ} 
     {j : ℕ} (hj : j < k) (g : PowerSeries O) :
     extendAdd φ k t (X ^ j * expand k hk g) = t ^ j * φ g := by
   rw [extendAdd_apply, Finset.sum_eq_single j]
-  · rw [residuePart_X_pow_mul_expand hk hj hj, if_pos rfl]
+  · rw [residuePart_X_pow_mul_expand hk hj hj, ite_eq_left rfl]
   · intro l hl hlj
-    rw [residuePart_X_pow_mul_expand hk hj (Finset.mem_range.1 hl), if_neg hlj, map_zero,
+    rw [residuePart_X_pow_mul_expand hk hj (Finset.mem_range.1 hl), ite_eq_right hlj, map_zero,
       mul_zero]
-  · intro h
-    exact absurd (Finset.mem_range.2 hj) h
+  · exact fun h => absurd (Finset.mem_range.2 hj) h
 
 theorem extendAdd_X_pow_mul_expand (φ : PowerSeries O →+* K) {k : ℕ} (hk : k ≠ 0) {t : K}
     (ht : t ^ k = φ X) (j : ℕ) (g : PowerSeries O) :
@@ -562,14 +560,12 @@ noncomputable def extendHom (φ : PowerSeries O →+* K) {k : ℕ} (hk : k ≠ 0
 theorem extendHom_expand (φ : PowerSeries O →+* K) {k : ℕ} (hk : k ≠ 0) {t : K}
     (ht : t ^ k = φ X) (g : PowerSeries O) : extendHom φ hk ht (expand k hk g) = φ g := by
   have := extendAdd_X_pow_mul_expand φ hk ht 0 g
-  rw [pow_zero, pow_zero, one_mul, one_mul] at this
-  exact this
+  rwa [pow_zero, pow_zero, one_mul, one_mul] at this
 
 theorem extendHom_X (φ : PowerSeries O →+* K) {k : ℕ} (hk : k ≠ 0) {t : K}
     (ht : t ^ k = φ X) : extendHom φ hk ht X = t := by
   have := extendAdd_X_pow_mul_expand φ hk ht 1 1
-  rw [pow_one, pow_one, map_one, map_one, mul_one, mul_one] at this
-  exact this
+  rwa [pow_one, pow_one, map_one, map_one, mul_one, mul_one] at this
 
 end SeriesRoot
 
@@ -640,8 +636,7 @@ theorem hasSum_map_powerSeries_mk_finsum : ∀ (O K Z : Type) [CommRing O] [Nont
   have hfn : {z | deg z < n}.Finite := by
     refine ((Set.finite_Iio n).biUnion (fun m _ => hfin m)).subset ?_
     intro z hz
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_Iio]
-    exact ⟨deg z, hz, rfl⟩
+    simpa only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_Iio] using ⟨deg z, hz, rfl⟩
   simp only [SummationFilter.unconditional_filter]
   filter_upwards [Filter.eventually_ge_atTop hfn.toFinset] with s hs
   rw [dist_eq_norm]
@@ -680,8 +675,7 @@ theorem hasSum_zpow_of_form_le {O C X : Type} [CommRing O] [NontriviallyNormedFi
     intro χ
     have h := hE χ
     have h' := hB0 (y + m • χ)
-    by_contra hneg
-    push_neg at hneg
+    by_contra! hneg
     nlinarith
   have hinj : Function.Injective (fun χ : X => y + m • χ) := by
     intro a b h
@@ -717,8 +711,7 @@ theorem hasSum_zpow_of_form_le {O C X : Type} [CommRing O] [NontriviallyNormedFi
     have h0 := hE0 χ
     have hiff : (E χ = n) = ((E χ).toNat = n) := propext (by omega)
     rw [hiff]
-  rw [hf, hg]
-  exact h
+  rwa [hf, hg]
 
 theorem form_le_exponent {O : Type} [CommRing O] {N : NumD O} {k : ℕ} (β : N.Form k) {m : ℕ} (hm : m ^ 2 ∣ k)
     {j : ℕ} (hj : j ∣ k) (hj0 : j ≠ 0) (x z : N.X) (s : ℤ) (hs : (m : ℤ) ^ 2 * β.be z z ≤ s) :
@@ -731,8 +724,7 @@ theorem form_le_exponent {O : Type} [CommRing O] {N : NumD O} {k : ℕ} (β : N.
   rcases Nat.eq_zero_or_pos m with rfl | hm0
   · have hk : k = 0 := by simpa using hm
     have h0 : β.be x x = 0 := by
-      have h := β.dvd x x
-      simpa [hk] using h
+      simpa [hk] using β.dvd x x
     simp [h0]
   · have hmk : (2 * (m : ℤ) ^ 2) ∣ 2 * (k : ℤ) := mul_dvd_mul_left 2 (by exact_mod_cast hm)
     have hjk : (j : ℤ) ∣ 2 * (k : ℤ) := dvd_mul_of_dvd_right (by exact_mod_cast hj) 2
@@ -758,8 +750,7 @@ theorem form_le_exponent {O : Type} [CommRing O] {N : NumD O} {k : ℕ} (β : N.
     have key : 0 ≤ (j : ℤ) ^ 2 * (β.be x x + 4 * (m : ℤ) ^ 2 * c + 4 * (m : ℤ) ^ 2 * s) := by
       nlinarith [hexp, h5]
     have hX : 0 ≤ β.be x x + 4 * (m : ℤ) ^ 2 * c + 4 * (m : ℤ) ^ 2 * s := by
-      by_contra hneg
-      push_neg at hneg
+      by_contra! hneg
       have := mul_neg_of_pos_of_neg (by positivity : (0 : ℤ) < (j : ℤ) ^ 2) hneg
       linarith
     nlinarith [hX, hq]
@@ -1133,8 +1124,7 @@ theorem exists_valuedField_centre_le_pow : ∀ (R K : Type) [CommRing R] [IsDoma
   have hR₁ : ∀ x ∈ R₁, S.valuation x ≤ 1 := by
     intro x hx
     have hint : IsIntegral R x := by
-      have h := (Algebra.IsIntegral.isIntegral (R := R) (⟨x, hx⟩ : R₁)).map R₁.val
-      simpa using h
+      simpa using (Algebra.IsIntegral.isIntegral (R := R) (⟨x, hx⟩ : R₁)).map R₁.val
     letI : Algebra R S := ((algebraMap R K).codRestrict S.toSubring hS).toAlgebra
     haveI : IsScalarTower R S K := IsScalarTower.of_algebraMap_eq fun _ => rfl
     have hint' : IsIntegral S x := hint.tower_top
@@ -1220,8 +1210,7 @@ theorem exists_valuedField_centre_le_pow : ∀ (R K : Type) [CommRing R] [IsDoma
         rw [hq]
         have : ((1 - algebraMap R R₁ u * ⟨a, ha⟩ : R₁) : K) = U * (x - a) := by
           rw [mul_sub, hx']; simp [hU]
-        rw [this, map_mul, hv, one_mul]
-        exact hxa
+        rwa [this, map_mul, hv, one_mul]
       apply hM.ne_top
       rw [Ideal.eq_top_iff_one]
       simpa using M.add_mem (hqM h1) (M.mul_mem_right (⟨a, ha⟩ : R₁) huM)
@@ -1654,8 +1643,7 @@ theorem GlobalTheory.twist_tx_coset_norm_ge : ∀ (C : Type) [NontriviallyNormed
     refine ⟨e, ?_⟩
     have h8 : N.QEq (q x * h') (q (x + a)) := E.trans (TateInh.qEq_mul N (E.refl _) (E.symm ha)) (hadd x a)
     rw [← h7, tx_eq_of_qEq _ hm (twRel_qEq hr (twRel_mul (hpq x) h5) (hpq (x + a)) h8)]
-    rw [(hpq x).1] at h3
-    exact h3
+    rwa [(hpq x).1] at h3
   refine ⟨?_, fun x => ?_⟩
   · obtain ⟨z, hz, -⟩ := E.symm (qEq_zero hadd)
     have hz0 : (q 0).1.1.toAdd + n ^ j • (-(n ^ j • z)) = 0 := by

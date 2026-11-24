@@ -121,8 +121,7 @@ theorem siu_num : ∀ (M : Type) [AddCommGroup M] (d : ℕ) (f : MultilinearMap 
   have h10 : PositivityTheory.HtPt.Siua.form f μ e (fun _ => (1 : ℚ)) (fun _ => 1 * 0) = (f (fun _ => μ) : ℚ) := by
     have h := PositivityTheory.HtPt.Siua.form_cast f μ e (fun _ => 1) (fun _ => 0)
     simp only [one_smul, zero_smul, add_zero, Int.cast_one, Int.cast_zero] at h
-    simp only [mul_zero]
-    exact h.symm
+    simpa only [mul_zero] using h.symm
   have h20 : PositivityTheory.HtPt.Siua.form f μ e x2 (fun i => y2 i * 0) = 0 := by
     simp only [PositivityTheory.HtPt.Siua.form, mul_zero]
     refine Finset.sum_eq_zero fun s _ => ?_

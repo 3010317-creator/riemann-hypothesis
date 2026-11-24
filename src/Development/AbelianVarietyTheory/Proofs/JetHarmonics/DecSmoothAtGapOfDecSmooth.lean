@@ -70,9 +70,7 @@ theorem sigmaFinite_of_pos_lintegral_ne_top {X : Type*} [MeasurableSpace X] {ν 
     exact (meas_ge_le_lintegral_div hg.aemeasurable h0 h1).trans_lt (ENNReal.div_lt_top hfin h0)
   · refine Set.eq_univ_of_forall fun x => ?_
     obtain ⟨n, hn⟩ := ENNReal.exists_inv_nat_lt (hpos x)
-    refine Set.mem_sUnion.2 ⟨_, ⟨n, rfl⟩, ?_⟩
-    show ((n : ℝ≥0∞) + 1)⁻¹ ≤ g x
-    exact le_trans (ENNReal.inv_le_inv.2 le_self_add) hn.le
+    exact Set.mem_sUnion.2 ⟨_, ⟨n, rfl⟩, le_trans (ENNReal.inv_le_inv.2 le_self_add) hn.le⟩
 
 theorem measurable_mul_pair (k r : ℕ) :
     Measurable (fun p : Formalism.QuantumDeterminants.Mt k r × Formalism.QuantumDeterminants.Mt k r =>
@@ -106,8 +104,7 @@ theorem sigmaFinite_of_isQuotMeas {k r : ℕ} {μG μS ν : Measure (Formalism.Q
     rw [lintegral_eq_zero_iff hfm] at hx
     apply hS
     rw [← Measure.measure_univ_eq_zero]
-    have h0 := ae_iff.1 hx
-    simpa [hne] using h0
+    simpa [hne] using ae_iff.1 hx
   · rw [← hq']
     exact (hint.trans ENNReal.one_lt_top).ne
 

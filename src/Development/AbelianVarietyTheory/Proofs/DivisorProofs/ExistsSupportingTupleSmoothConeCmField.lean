@@ -103,8 +103,7 @@ theorem exists_avg_proj_balForms : ∀ (O : Type) [CommRing O] (bar : O → O) (
       · intro a x y
         rw [hP, hP]
         have := hint a (β.compl₁₂ (sp x) (sp y))
-        simp only [LinearMap.compl₁₂_apply, hsp, mul_smul] at this
-        exact this
+        simpa only [LinearMap.compl₁₂_apply, hsp, mul_smul] using this
     exact key
   · intro β hβ
     obtain ⟨h1, h2⟩ := hβ
@@ -137,8 +136,7 @@ theorem exists_avg_proj_balForms : ∀ (O : Type) [CommRing O] (bar : O → O) (
       rw [← hQ, h0] at this
       simp at this
     obtain ⟨x, hx⟩ : ∃ x, l x ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hl (LinearMap.ext h)
     have := hsumL (l ∘ₗ sp x)
     have hz : ∀ s t, (l ∘ₗ sp x) (bar (b s) * b t) = 0 := by
@@ -271,7 +269,7 @@ theorem exists_cm_trace_tensor : ∀ (E : Type) [Field E] [NumberField E] [Numbe
   · by_cases h : s = u
     · rw [h]
     · rw [Matrix.diagonal_apply_ne _ h, Matrix.diagonal_apply_ne _ (Ne.symm h)]
-  · simp only [Matrix.diagonal_apply, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  · simp only [Matrix.diagonal_apply, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     apply mul_left_cancel₀ hC.ne'
     have h1 : ∀ i, C * (t i * g (b i * a) (b i)) =
         ∑ j, t i * (t j * Algebra.trace ℤ (𝓞 E) (H.bar (b j) * (b i * a))) * g (b j) (b i) := by
@@ -294,9 +292,8 @@ theorem exists_cm_trace_tensor : ∀ (E : Type) [Field E] [NumberField E] [Numbe
       rw [map_smul, smul_eq_mul, hsym]
       ring
     rw [Finset.mul_sum, Finset.mul_sum]
-    simp only [h1, h2]
-    exact Finset.sum_comm
-  · simp only [Matrix.diagonal_apply, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simpa only [h1, h2] using Finset.sum_comm
+  · simp only [Matrix.diagonal_apply, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have hc := StarNormBound.casimir σ e ho fun i => (hdq0 i).ne'
     apply RingOfIntegers.coe_injective
 
@@ -306,7 +303,7 @@ theorem exists_cm_trace_tensor : ∀ (E : Type) [Field E] [NumberField E] [Numbe
     rw [map_zsmul, map_mul]
     change t i • (((H.bar (b i) : 𝓞 E) : E) * (b i : E)) = _
     rw [hbar, ← heb, ← Int.cast_smul_eq_zsmul ℚ, htq, mul_smul, Int.cast_smul_eq_zsmul, zsmul_eq_mul]
-  · simp only [Matrix.diagonal_apply, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  · simp only [Matrix.diagonal_apply, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     obtain ⟨i, hi⟩ := Function.ne_iff.1 hv
     refine Finset.sum_pos' (fun j _ => ?_) ⟨i, Finset.mem_univ _, ?_⟩
     · rw [mul_assoc]; exact mul_nonneg (ht j).le (mul_self_nonneg _)
@@ -429,8 +426,7 @@ theorem sumsq_functional : ∀ (X : Type) [AddCommGroup X] [Module.Free ℤ X] [
     calc 2 * lam β = lam β + lam β := by ring
       _ = _ := by
         nth_rewrite 1 [h1]
-        rw [h2]
-        rw [← Finset.sum_add_distrib]
+        rw [h2, ← Finset.sum_add_distrib]
         refine Finset.sum_congr rfl fun i _ => ?_
         rw [← Finset.sum_add_distrib]
         refine Finset.sum_congr rfl fun j _ => ?_

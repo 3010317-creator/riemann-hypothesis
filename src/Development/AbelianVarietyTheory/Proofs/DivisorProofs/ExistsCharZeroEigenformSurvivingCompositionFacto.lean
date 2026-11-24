@@ -182,9 +182,7 @@ namespace GlobalTheory
 theorem finite_joint_eigensystems : ∀ (K : Type) [Field K] (n : ℕ) (ι : Type) (A : ι → Matrix (Fin n) (Fin n) K), (∀ i j, Commute (A i) (A j)) → Set.Finite {χ : ι → K | ∃ c : Fin n → K, c ≠ 0 ∧ ∀ i, A i *ᵥ c = χ i • c} := by
   intro K _ n ι A hc
   let f : ι → Module.End K (Fin n → K) := fun i => Matrix.toLin' (A i)
-  have hcf : ∀ i j, Commute (f i) (f j) := by
-    intro i j
-    exact (hc i j).map Matrix.toLinAlgEquiv'
+  have hcf : ∀ i j, Commute (f i) (f j) := fun i j => (hc i j).map Matrix.toLinAlgEquiv'
   have hind := Module.End.independent_iInf_maxGenEigenspace_of_forall_mapsTo f
     (fun i j φ => Module.End.mapsTo_maxGenEigenspace_of_comm (hcf j i) φ)
   refine (WellFoundedGT.finite_ne_bot_of_iSupIndep hind).subset ?_
@@ -368,8 +366,7 @@ theorem unitBall_prime (R : Type) [CommRing R] (l : ℕ) [Fact l.Prime] (χ : R 
       have hab' : ‖χ a‖ * ‖χ b‖ < 1 := by
         have : ‖χ (a * b)‖ < 1 := hab
         simpa [map_mul, norm_mul] using this
-      by_contra hno
-      push_neg at hno
+      by_contra! hno
       have : 1 * 1 ≤ ‖χ a‖ * ‖χ b‖ := mul_le_mul hno.1 hno.2 zero_le_one (norm_nonneg _)
       linarith
 
@@ -403,7 +400,7 @@ theorem core (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] (emb : O →+* Pad
   choose! P hPprime hPmem using hP
   have key : ∃ χ ∈ X, m ≤ P χ := by
     by_contra hno
-    push_neg at hno
+    push Not at hno
     obtain ⟨p, hpm, hpX⟩ : ∃ p ∈ m, ∀ χ ∈ X, ¬ ‖χ p‖ < 1 := by
       rcases X.eq_empty_or_nonempty with hX | ⟨χ0, hχ0⟩
       · exact ⟨0, m.zero_mem, by simp [hX]⟩
@@ -471,8 +468,7 @@ theorem exists_integral_eigensystem : ∀ (l : ℕ) [Fact l.Prime] (O : Type) [C
   have hmemL : ∀ a, emb a ∈ L ∧ ‖emb a‖ ≤ 1 := by
     intro a
     have h : emb a ∈ Set.range emb := ⟨a, rfl⟩
-    rw [hL] at h
-    exact h
+    rwa [hL] at h
   have hle : ∀ a, ‖emb a‖ ≤ 1 := fun a => (hmemL a).2
   have hunit : ∀ a, ‖emb a‖ = 1 → IsUnit a := by
     intro a ha
@@ -501,8 +497,7 @@ theorem exists_integral_eigensystem : ∀ (l : ℕ) [Fact l.Prime] (O : Type) [C
   have heval : ∀ p, MvPolynomial.eval₂ emb θ p = χ p := fun p =>
     congrArg (fun f : MvPolynomial I O →+* PadicAlgCl l => f p) hext
   refine ⟨θ, fun i => hχle _, fun p => by rw [heval]; exact hχm p, e c, he_span c, ?_, ?_⟩
-  · intro h
-    exact hc (he_inj (by rw [h, map_zero]))
+  · exact fun h => hc (he_inj (by rw [h, map_zero]))
   · intro i
     rw [he_T, hχc, map_smul]
 
@@ -752,8 +747,7 @@ theorem indep_pi {O : Type} [CommRing O] [IsDomain O] [IsPrincipalIdealRing O] {
 
     simp only [Φ, LinearMap.coe_mk, AddHom.coe_mk, map_sum, LinearMap.map_smulₛₗ]
     rfl
-  rw [hfam] at key
-  exact key
+  rwa [hfam] at key
 
 end GlobalTheory.BaseChangeIndep
 
@@ -789,8 +783,7 @@ theorem forms_indep : ∀ (l : ℕ) [Fact l.Prime] (ι : Type) [Fintype ι] [Dec
     { toFun := fun f s => f s
       map_add' := fun _ _ => rfl
       map_smul' := fun _ _ => rfl }
-  apply LinearIndependent.of_comp R'
-  exact key
+  exact LinearIndependent.of_comp R' key
 
 end GlobalTheory.BaseChangeIndep
 end -- clump:auto

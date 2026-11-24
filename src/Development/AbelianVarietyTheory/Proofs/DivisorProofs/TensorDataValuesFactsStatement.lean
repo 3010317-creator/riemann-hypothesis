@@ -220,8 +220,7 @@ theorem theta_tens : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], B
   simp only [map_mul, vw, vθ', eq1, map_one]
   simp only [← Units.val_mul]
   congr 1
-  refine alg _ _ _ _ _ _ _ _ _ _ ?_
-  exact key'
+  exact alg _ _ _ _ _ _ _ _ _ _ key'
 
 end GlobalTheory.Mum.TensCube
 end -- clump:auto

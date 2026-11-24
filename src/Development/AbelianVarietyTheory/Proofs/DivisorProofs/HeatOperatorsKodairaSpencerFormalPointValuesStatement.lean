@@ -131,8 +131,7 @@ theorem fracIotaBasicOpen : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     simp only [gg, s, RingHom.comp_apply]
     have hs : (Scheme.ΓSpecIso (CommRingCat.of R)).hom.hom ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom c) = c := by simp
     rw [hs]
-    intro h0
-    exact hc (inj c ((IsFractionRing.injective Ω (FractionRing Ω)) (by simpa using h0)))
+    exact fun h0 => hc (inj c ((IsFractionRing.injective Ω (FractionRing Ω)) (by simpa using h0)))
   refine ⟨IsLocalization.Away.lift (S := Γ(Sp R, (Sp R).basicOpen s)) s hu, fun r => ?_⟩
   show IsLocalization.Away.lift (S := Γ(Sp R, (Sp R).basicOpen s)) s hu
     (algebraMap Γ(Sp R, ⊤) Γ(Sp R, (Sp R).basicOpen s) ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom r)) = _
@@ -293,8 +292,7 @@ theorem sec_extend_basicOpen : ∀ (X : Scheme.{0}) [CompactSpace X] [QuasiSepar
     have := congrArg (pa φ e) this
     rw [map_mul, pa_rs, pa_rs, pa_rs] at this
     simp only [t']
-    rw [rs_pa, rs_pa]
-    exact this
+    rwa [rs_pa, rs_pa]
   obtain ⟨N, s, hs⟩ := sec_extend φ f hφ M hM (fun c => φ ⁻¹ᵁ M.U c) (fun c => le_rfl)
     (fun c => le_rfl) t' ht'
   refine ⟨N, s, fun c => ?_⟩
@@ -456,8 +454,7 @@ theorem stalkIso_gs {K : Type} [CommRing K] [IsLocalRing K] {X : Scheme.{0}} (f 
     rw [← TopCat.Presheaf.germ_res_apply (Sp K).presheaf (homOfLE h) (closedPoint K) trivial]
     rfl
   erw [e1]
-  rw [valR, dite_eq_left h]
-  rw [← ΓSpecIso_hom_stalkClosedPointIso_inv (CommRingCat.of K)]
+  rw [valR, dite_eq_left h, ← ΓSpecIso_hom_stalkClosedPointIso_inv (CommRingCat.of K)]
   simp only [CommRingCat.comp_apply]
   rw [← CommRingCat.comp_apply, Iso.inv_hom_id, CommRingCat.id_apply]
 
@@ -502,8 +499,7 @@ theorem chart_eq_value_mul_pow : ∀ (X : Scheme.{0}) (L : LB X), L.IsLB → ∀
   have e2 := stalkIso_gs ηF ⊤ le_rfl ((Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom ω)
   rw [valR_spMap_const] at e2
   erw [e1, e2] at e
-  rw [GlobalTheory.KS.rsT, dite_eq_left hOW]
-  exact e
+  rwa [GlobalTheory.KS.rsT, dite_eq_left hOW]
 
 end GlobalTheory.FracPt
 end -- clump:auto
@@ -553,8 +549,7 @@ theorem genPt_mem_cover : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) (Ω : Ty
   intro R _ G Ω _ _ φ x' hx c hc J W hW
   set K := FractionRing Ω
   have hK : (⊤ : (Sp K).Opens) ≤ (spMap (algebraMap Ω K) ≫ x') ⁻¹ᵁ (⨆ i, W i) := by
-    rw [hW, ← Scheme.Hom.comp_preimage]
-    rw [Category.assoc, hx]
+    rw [hW, ← Scheme.Hom.comp_preimage, Category.assoc, hx]
     simp only [GlobalTheory.HeatV.bo, Scheme.affineBasicOpen_coe, Scheme.preimage_basicOpen_top]
     rw [Scheme.basicOpen_of_isUnit]
     have e : spMap (algebraMap Ω K) ≫ spMap φ = Spec.map (CommRingCat.ofHom ((algebraMap Ω K).comp φ)) := by
@@ -565,9 +560,7 @@ theorem genPt_mem_cover : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) (Ω : Ty
     simp only [CommRingCat.hom_comp, RingHom.comp_apply, CommRingCat.hom_ofHom] at h1
     rw [← h1]
     refine IsUnit.map _ ?_
-    refine isUnit_iff_ne_zero.mpr ?_
-    intro h0
-    exact hc ((IsFractionRing.injective Ω K) (by simpa using h0))
+    exact isUnit_iff_ne_zero.mpr (fun h0 => hc ((IsFractionRing.injective Ω K) (by simpa using h0)))
   obtain ⟨p⟩ : Nonempty (Sp K) := inferInstance
   have hp := hK (Set.mem_univ p)
   obtain ⟨i, hi⟩ := (TopologicalSpace.Opens.mem_iSup).mp hp
@@ -625,8 +618,7 @@ open GlobalTheory.Points
 
 theorem top_le_preimage_of_mem {A : Type} [CommRing A] [IsLocalRing A] {X : Scheme.{0}} (y : Sp A ⟶ X)
     (V : X.Opens) (h : y (IsLocalRing.closedPoint A) ∈ V) : ⊤ ≤ y ⁻¹ᵁ V := by
-  intro z _
-  exact (IsLocalRing.specializes_closedPoint z).mem_open (y ⁻¹ᵁ V).isOpen h
+  exact fun z _ => (IsLocalRing.specializes_closedPoint z).mem_open (y ⁻¹ᵁ V).isOpen h
 
 theorem germ_resG {X : Scheme.{0}} {U V : X.Opens} (h : V ≤ U) (p : X) (hp : p ∈ V) (f : Γ(X, U)) :
     X.presheaf.germ V p hp (resG X h f) = X.presheaf.germ U p (h hp) f :=
@@ -1022,15 +1014,13 @@ theorem valR_top_comp (R : Type) [CommRing R] (G : Over (Sp R)) (Ω : Type) [Com
   rw [dite_eq_left ht]
   have h1 : (x'.appLE ⊤ ⊤ ht).hom (G.hom.appTop.hom ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom r)) =
       (spMap φ).appTop.hom ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom r) := by
-    rw [← hx]
-    rw [Scheme.Hom.comp_appTop]
+    rw [← hx, Scheme.Hom.comp_appTop]
     rfl
   rw [h1]
   have h2 := congrArg (fun g => g.hom ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom r))
     (Scheme.ΓSpecIso_naturality (CommRingCat.ofHom φ))
   simp only at h2
-  rw [CommRingCat.comp_apply, CommRingCat.comp_apply, Iso.inv_hom_id_apply] at h2
-  exact h2
+  rwa [CommRingCat.comp_apply, CommRingCat.comp_apply, Iso.inv_hom_id_apply] at h2
 
 theorem injective_of_val (R : Type) [CommRing R] (G : Over (Sp R)) [GrpObj G] (Ω : Type) [CommRing Ω] (φ : R →+* Ω)
     (x' : Sp Ω ⟶ G.left) : x' ≫ G.hom = spMap φ →
@@ -1204,7 +1194,7 @@ theorem valR_cst_eq_iota : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) (Ω : T
   let F : Γ(Sp R, (Sp R).basicOpen s) →+* FractionRing Ω :=
     (Scheme.ΓSpecIso (CommRingCat.of (FractionRing Ω))).hom.hom.comp (z.appLE (GlobalTheory.HeatV.bo R c).1 ⊤ h').hom
   have hF : ∀ θ, valR z (GlobalTheory.HeatV.bo R c).1 θ = F θ := fun θ => by
-    simp only [valR, dif_pos h']; rfl
+    simp only [valR, dite_eq_left h']; rfl
   suffices e : F = iota by rw [hF]; exact DFunLike.congr_fun e θ
   refine IsLocalization.ringHom_ext (Submonoid.powers s) (S := Γ(Sp R, (Sp R).basicOpen s)) ?_
   ext y0

@@ -112,8 +112,7 @@ theorem exists_finCong_le (D : D7) (V : HSp D) (J : Subgroup (Bridge.Gf V)) (hJ 
     refine tendsto_one_of_cong D.host.F D.host.E _ h3 h4 _ fun n => ?_
     have := hu n
     unfold GlobalTheory.Member.FinCong at this
-    rw [h1] at this
-    exact this
+    rwa [h1] at this
   have ht : Tendsto (fun n => fin V (k n)) atTop (𝓝 1) := by
     rw [tendsto_subtype_rng, Units.isEmbedding_embedProduct.tendsto_nhds_iff]
     refine (key k hk).prodMk_nhds ((MulOpposite.continuous_op.tendsto _).comp ?_)

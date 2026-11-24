@@ -153,8 +153,7 @@ theorem presents_zpow {D : CartierDiv X} {L : LB X} {r : L.ι → X.functionFiel
   have key : ∀ {U : X.Opens} (hU : genericPoint X ∈ U) (u : Γ(X, U)ˣ) (m : ℤ),
       fnOf U hU ((u ^ m : Γ(X, U)ˣ) : Γ(X, U)) = fnOf U hU (u : Γ(X, U)) ^ m := fun hU u m => by
     have e := congrArg Units.val (map_zpow (Units.map (fnOf _ hU).toMonoidHom) u m)
-    rw [Units.val_zpow_eq_zpow_val, Units.coe_map, Units.coe_map] at e
-    exact e
+    rwa [Units.val_zpow_eq_zpow_val, Units.coe_map, Units.coe_map] at e
   rw [Units.val_zpow_eq_zpow_val, Units.val_zpow_eq_zpow_val, h.isRatSec _ _ (l hjj), mul_zpow, hg, key]
   congr 2
   exact (fnOf_resG l hjj _).symm
@@ -261,8 +260,7 @@ theorem linearIndependent_D_of_algebraicIndependent (k κ : Type) [Field k] [Cha
     funext s
     simp only [Function.comp_apply, b, Module.Basis.baseChange_apply, mvPolynomialBasis_apply]
     erw [mapBaseChange_tmul, one_smul, map_D, hX]
-  rw [e]
-  exact h
+  rwa [e]
 
 end GlobalTheory.BertiniAlg
 end -- clump:auto
@@ -306,8 +304,7 @@ theorem false_of_dependent_derivatives {k A κ : Type} [Field k] [CharZero k] [C
 
     rw [map_sum, map_zero] at h
     simp only [Derivation.leibniz, Finset.sum_add_distrib] at h
-    rw [eq_neg_iff_add_eq_zero, add_comm]
-    exact h
+    rwa [eq_neg_iff_add_eq_zero, add_comm]
   have e2 : ∑ i ∈ J, c i • ∑ p, t (i, p) • D k κ (algebraMap A κ (f p)) = 0 := by
     have : ∑ i ∈ J, c i • ∑ p, t (i, p) • D k κ (algebraMap A κ (f p)) =
         ∑ l, (∑ i ∈ J, c i * ∑ p, t (i, p) * algebraMap A κ (δ l (f p))) • m l := by
@@ -410,14 +407,11 @@ theorem no_dependence_of_general : ∀ (k A : Type) [Field k] [CharZero k] [Comm
 
       simpa only [map_sum, map_mul, hπC] using this
     · have h3 : π (X (Sum.inr (Sum.inl i₀)) - 1) = 0 := hπI _ g3mem
-      rw [RingHom.map_sub, RingHom.map_one] at h3
-      exact h3
+      rwa [RingHom.map_sub, RingHom.map_one] at h3
     · have h4 := hπI _ g4mem
-      rw [RingHom.map_sub, RingHom.map_mul, hπC, RingHom.map_one] at h4
-      exact h4
+      rwa [RingHom.map_sub, RingHom.map_mul, hπC, RingHom.map_one] at h4
   obtain ⟨Q, hQ0, hQ⟩ : ∃ Q, Q ≠ 0 ∧ gm Q = 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact hni ((injective_iff_map_eq_zero gm).2 fun Q hQ => by_contra fun h => hcon Q h hQ)
   refine ⟨Q, hQ0, ?_⟩
   intro u hu K _ _ φ c hφ hc hrel hδ
@@ -603,11 +597,11 @@ theorem bertini_cotangent_independent : ∀ (k A : Type) [Field k] [CharZero k] 
       if h : algebraMap A R (∑ p, u (j, p) • f p) ∈ maximalIdeal R then w ⟨j, h⟩ / w i₀ else 0
     have hJ : i₀.1 ∈ J := Finset.mem_map_of_mem _ hi₀
     have hx := hu (J, i₀.1, p₀) (Finset.mem_univ _)
-    simp only [Qf, dif_pos hJ] at hx
+    simp only [Qf, dite_eq_left hJ] at hx
     refine (hC J i₀.1 p₀ hJ).choose_spec.2 u hx (ResidueField R) φ c ?_ ?_ ?_ ?_
     · exact fun h => hp₀ ((residue_algebraMap_eq_zero_iff_mem q _).1 h)
     · show c i₀.1 = 1
-      rw [show c i₀.1 = w i₀ / w i₀ from dif_pos i₀.2]
+      rw [show c i₀.1 = w i₀ / w i₀ from dite_eq_left i₀.2]
       exact div_self hne
     · intro i hi
       obtain ⟨j, _, rfl⟩ := Finset.mem_map.1 hi
@@ -622,7 +616,7 @@ theorem bertini_cotangent_independent : ∀ (k A : Type) [Field k] [CharZero k] 
       rw [Finset.sum_map]
       convert key using 2 with j hj
       show c j.1 * φ _ = _
-      rw [show c j.1 = w j / w i₀ from dif_pos j.2]
+      rw [show c j.1 = w j / w i₀ from dite_eq_left j.2]
       rfl
 
 end GlobalTheory
@@ -1123,7 +1117,7 @@ theorem neg_one_lt_formOrd_sub_sum : ∀ (Y : Scheme.{0}) [IsIntegral Y] [IsLoca
         have : (0 : ℚ) < E.ord (v j) := by exact_mod_cast hj
         nlinarith [hc j]⟩
     linarith
-  · push_neg at h
+  · push Not at h
     have h' : ∀ j, E.ord (v j) = 0 := fun j => le_antisymm (h j) (hnn j)
     simp only [h', Int.cast_zero, mul_zero, Finset.sum_const_zero, sub_zero]
     linarith
@@ -1312,8 +1306,7 @@ theorem genericPoint_notMem_of_snc (Y : Scheme.{0}) [IsIntegral Y] (B : Closeds 
   subst hJ
   intro hB
   have hs : genericPoint Y ∈ (Scheme.IdealSheafData.vanishingIdeal B).support := by
-    rw [← SetLike.mem_coe, Scheme.IdealSheafData.coe_support_vanishingIdeal]
-    exact hB
+    rwa [← SetLike.mem_coe, Scheme.IdealSheafData.coe_support_vanishingIdeal]
   rw [Scheme.IdealSheafData.mem_support_iff_of_mem hy, hI, Scheme.mem_zeroLocus_iff] at hs
   refine hs 1 (Ideal.subset_span (by simp)) ?_
   simpa using hy
@@ -1345,8 +1338,7 @@ theorem exists_nbhd_specializes_of_isClosed {Y : Scheme.{0}} [IsIntegral Y] [IsL
   haveI := IsLocallyNoetherian.component_noetherian ⟨W, hW⟩
   have hN : NoetherianSpace W := by
     have := NoetherianSpace.range hW.fromSpec hW.fromSpec.continuous
-    rw [hW.range_fromSpec] at this
-    exact this
+    rwa [hW.range_fromSpec] at this
   have hC : IsClosed ((Subtype.val : W → Y) ⁻¹' F) := hF.preimage continuous_subtype_val
   obtain ⟨S, hS, hc, hi, hU⟩ := @NoetherianSpace.exists_finite_set_isClosed_irreducible _ _ hN _ hC
   let y₀ : W := ⟨y, hyW⟩
@@ -1375,8 +1367,7 @@ theorem exists_nbhd_specializes_of_isClosed {Y : Scheme.{0}} [IsIntegral Y] [IsL
     obtain ⟨g, hg⟩ := QuasiSober.sober (hi T hT) (hc T hT)
     have hgF : g.1 ∈ F := by
       have : g ∈ ⋃₀ S := ⟨T, hT, hg.mem⟩
-      rw [← hU] at this
-      exact this
+      rwa [← hU] at this
     have hgv : g.1 ⤳ v := Topology.IsInducing.subtypeVal.specializes_iff.2 (hg.specializes hvT)
     have hgy : g.1 ⤳ y := Topology.IsInducing.subtypeVal.specializes_iff.2 (hg.specializes hyT)
     have hgη : g.1 < genericPoint Y := by
@@ -1391,8 +1382,7 @@ theorem exists_nbhd_specializes_of_isClosed {Y : Scheme.{0}} [IsIntegral Y] [IsL
       rw [hcv] at h₃
       have h₅ : (1 : ℕ∞) + 1 ≤ 1 := (add_le_add_left (le_add_self.trans h₄) 1).trans h₃
       exact absurd h₅ (by decide)
-    rw [hvg]
-    exact hgy
+    rwa [hvg]
 
 theorem isSncChart_spread : ∀ (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (q : Y ⟶ Sp ℂ)
     (n : ℕ) [SmoothOfRelativeDimension n q], ∀ (B : Closeds Y) (y : Y) (U : Y.Opens) (hy : y ∈ U)
@@ -1428,15 +1418,11 @@ theorem isSncChart_spread : ∀ (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoethe
   have hy'U : y' ∈ U := hVU hy'
   refine ⟨hy'U, J.filter (fun j => w j ⤳ y'), Finset.filter_subset _ _,
     ⟨hc.frame, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩, ?_⟩
-  · intro j hj
-    exact hc.val j (Finset.mem_filter.1 hj).1
-  · intro j hj
-    exact (Finset.mem_filter.1 hj).2
-  · intro j hj
-    exact hc.coheight j (Finset.mem_filter.1 hj).1
+  · exact fun j hj => hc.val j (Finset.mem_filter.1 hj).1
+  · exact fun j hj => (Finset.mem_filter.1 hj).2
+  · exact fun j hj => hc.coheight j (Finset.mem_filter.1 hj).1
   · exact hc.inj.mono fun j hj => (Finset.mem_filter.1 hj).1
-  · intro j hj
-    exact hc.ord_self j (Finset.mem_filter.1 hj).1
+  · exact fun j hj => hc.ord_self j (Finset.mem_filter.1 hj).1
   · intro j hj v hv hne
     have hjJ := (Finset.mem_filter.1 hj).1
     by_cases hb : v ∈ Y.basicOpen (z j)
@@ -1789,8 +1775,7 @@ theorem GlobalTheory.GeneralLift.exists_lift_klt : GlobalTheory.Published.Princi
     exacts [hf₀, hκs i]
   obtain ⟨Q, hQ, hQe⟩ := _root_.GlobalTheory.PairStep.kltAt_add_general_member hP X p n hp hn Δ D m G (l • A) (Option (Fin r)) s hm hG hD hs
   obtain ⟨v, hv⟩ : ∃ v : Option (Fin r) → ℂ, MvPolynomial.eval v (Q * MvPolynomial.X none) ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact mul_ne_zero hQ (MvPolynomial.X_ne_zero _) (MvPolynomial.funext fun v => by rw [h v, map_zero])
   rw [map_mul, MvPolynomial.eval_X] at hv
   have hv0 : v none ≠ 0 := right_ne_zero_of_mul hv

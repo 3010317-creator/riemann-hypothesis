@@ -98,8 +98,7 @@ theorem pi_lineAt {θ : InfFam D} (hθ : IsInfFam θ) (τ : D.what₂.Tau) (z : 
   have h1 := congrFun (congrFun (h 1 τ') i) j
   rw [Pi.single_apply]
   split_ifs at h1 ⊢ with hτ
-  · rw [Complex.ofReal_one, one_smul] at h1
-    exact h1
+  · rwa [Complex.ofReal_one, one_smul] at h1
   · exact h1
 
 theorem single_conj (C : Ctx S T) (τ : D.what₂.Tau) (z : Matrix (Fin T.rank) (Fin S.rank) ℂ) :
@@ -132,8 +131,7 @@ theorem dRho_laws : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ f, C.IsTh f �
   refine ⟨theta_dRho hθ hψ τ z hf, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro w
     have h := hasDerivAt_heisO hθ hψ (isRealDir_lineAt hθ τ z) hf w 0
-    rw [map_zero, heisO_zero, ← dRho_eq_dLine] at h
-    exact h
+    rwa [map_zero, heisO_zero, ← dRho_eq_dLine] at h
   · intro f' hf'
     funext w
     rw [hD', hD', hD', Pi.add_apply, hform f hf, hform f' hf', hform (f + f') (theta_add hf hf')]
@@ -176,8 +174,7 @@ theorem dRho_laws : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ f, C.IsTh f �
     simp only [smul_eq_mul, Complex.real_smul]
     push_cast
     ring
-  · intro u hu
-    exact GlobalTheory.FinTranslate.dRho_heisO hθ hu τ z f
+  · exact fun u hu => GlobalTheory.FinTranslate.dRho_heisO hθ hu τ z f
   · intro τ' z'
     have hskew : ∀ u v : RW T S, omO S T v u = -omO S T u v := by
       intro u v

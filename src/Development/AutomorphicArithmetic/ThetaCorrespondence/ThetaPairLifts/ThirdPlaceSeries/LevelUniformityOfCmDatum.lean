@@ -353,17 +353,16 @@ private theorem sum_top {R : Type} [CommRing R] {n r : ℕ} (h : r ≤ n) (X : M
   unfold NX.supSum NX.topR
   symm
   refine Finset.sum_of_injOn (Fin.castLE h) (Fin.castLE_injective h).injOn (fun _ _ => Finset.mem_univ _)
-    (fun a _ ha => Finset.sum_eq_zero fun b _ => if_neg fun hh => ha ⟨⟨a.val, by omega⟩, by simp, Fin.ext rfl⟩) fun a _ => ?_
+    (fun a _ ha => Finset.sum_eq_zero fun b _ => ite_eq_right fun hh => ha ⟨⟨a.val, by omega⟩, by simp, Fin.ext rfl⟩) fun a _ => ?_
   refine Finset.sum_of_injOn (Fin.castLE h) (Fin.castLE_injective h).injOn (fun _ _ => Finset.mem_univ _)
-    (fun b _ hb => if_neg fun hh => hb ⟨⟨b.val, hh.2⟩, by simp, Fin.ext rfl⟩) fun b _ => ?_
+    (fun b _ hb => ite_eq_right fun hh => hb ⟨⟨b.val, hh.2⟩, by simp, Fin.ext rfl⟩) fun b _ => ?_
   refine if_congr ?_ rfl rfl
-  simp only [Fin.val_castLE, b.2, and_true]
-  exact eq_comm
+  simpa only [Fin.val_castLE, b.2, and_true] using eq_comm
 
 private theorem supSum_small {R : Type} [CommRing R] {r : ℕ} (h : ¬ 2 ≤ r) (M : Matrix (Fin r) (Fin r) R) :
     NX.supSum r M = 0 := by
   unfold NX.supSum
-  exact Finset.sum_eq_zero fun a _ => Finset.sum_eq_zero fun b _ => if_neg (by have := b.2; omega)
+  exact Finset.sum_eq_zero fun a _ => Finset.sum_eq_zero fun b _ => ite_eq_right (by have := b.2; omega)
 
 private theorem loc_read (s : SplitPlace L) {n r : ℕ} (h : r ≤ n) {q : ℕ} (hq : q.Prime)
     (red : s.v.adicCompletionIntegers (maximalRealSubfield L) →+* ZMod q)
@@ -395,16 +394,14 @@ private theorem loc_read (s : SplitPlace L) {n r : ℕ} (h : r ≤ n) {q : ℕ} 
   · rw [hr, ← sub_eq_zero, ← map_one red, ← map_sub]
     refine red_zero _ hq red _ ?_
     have := (huni (Fin.castLE h a) (Fin.castLE h a) a.2 a.2).2 rfl
-    rw [hX] at this
-    exact this
+    rwa [hX] at this
   · rw [hd, intLift_coe]
     have h1 := hXu.map red
     rw [RingHom.map_det, Matrix.twoBlockTriangular_det' (red.mapMatrix X) (fun a : Fin n => r ≤ a.val)
       (fun a ha b hb => red_zero _ hq red _ (by rw [← hX]; exact hll a b ha (not_le.1 hb)))] at h1
     have h2 := isUnit_of_mul_isUnit_left h1
     unfold NX.detT
-    rw [RingHom.map_det]
-    exact h2
+    rwa [RingHom.map_det]
   · rw [hd, intLift_coe, ← hd]
     rfl
   · unfold NG.supDiag
@@ -478,7 +475,7 @@ theorem _root_.GlobalTheory.T.complex_typePlaceCharacter_eq_superdiag_addChar_mu
   · rw [hψ₀ hr y, hry]
   · have h0 : NG.supDiag s D.R.r x = 0 := by
       unfold NG.supDiag
-      exact Finset.sum_eq_zero fun a _ => Finset.sum_eq_zero fun c _ => if_neg (by omega)
+      exact Finset.sum_eq_zero fun a _ => Finset.sum_eq_zero fun c _ => ite_eq_right (by omega)
     rw [hy, h0, GlobalTheory.XUniRead.supSum_small hr, mul_zero, ofAdd_zero, map_one, Units.val_one, map_one, AddChar.map_zero_eq_one]
 end -- clump:auto
 end -- clump:auto
@@ -506,9 +503,9 @@ namespace GlobalTheory.ResidueChar
 @[reducible] def unitsDivC : DivisibleBy (Additive ℂˣ) ℤ where
   div a n := if n = 0 then 0 else
     Additive.ofMul (Units.mk0 (Complex.exp (Complex.log ((Additive.toMul a : ℂˣ) : ℂ) / n)) (Complex.exp_ne_zero _))
-  div_zero a := if_pos rfl
+  div_zero a := ite_eq_left rfl
   div_cancel {n} a hn := by
-    rw [if_neg hn]
+    rw [ite_eq_right hn]
     apply Additive.toMul.injective
     rw [toMul_zsmul, toMul_ofMul]
     ext
@@ -537,8 +534,7 @@ theorem addChar_extend_subring {K : Type} [Ring K] (S : Subring K) (ψ : AddChar
   refine ⟨{ toFun := fun x => ((Additive.toMul (h x) : ℂˣ) : ℂ)
             map_zero_eq_one' := by simp
             map_add_eq_mul' := fun x y => by simp [map_add (f := _)] }, fun x => ?_⟩
-  have e := congrArg (fun φ => ((Additive.toMul (φ x) : ℂˣ) : ℂ)) hh
-  simpa [f, g, charUnitC] using e
+  simpa [f, g, charUnitC] using congrArg (fun φ => ((Additive.toMul (φ x) : ℂˣ) : ℂ)) hh
 
 theorem red_eq_zero_of_lt_one {K : Type} [Field K] [NumberField K] (v : HeightOneSpectrum (𝓞 K)) (p : ℕ) [Fact p.Prime]
     (red : v.adicCompletionIntegers K →+* ZMod p) (y : v.adicCompletionIntegers K)
@@ -558,8 +554,7 @@ theorem red_eq_zero_of_lt_one {K : Type} [Field K] [NumberField K] (v : HeightOn
       _ = Valued.v (y : v.adicCompletion K) := mul_one _
       _ < 1 := hy
   have hz1 : Valued.v ((z : v.adicCompletionIntegers K) : v.adicCompletion K) = 1 := by
-    rw [hz, Subring.coe_add, Subring.coe_one]
-    rw [Valuation.map_add_eq_of_lt_left]
+    rw [hz, Subring.coe_add, Subring.coe_one, Valuation.map_add_eq_of_lt_left]
     · exact map_one _
     · rw [map_one]; exact hlt
   have hu : IsUnit z := (HeightOneSpectrum.adicCompletionIntegers.isUnit_iff_valued_eq_one).2 hz1
@@ -583,8 +578,7 @@ theorem exists_addChar_completion_lift_residue : ∀ (K : Type) [Field K] [Numbe
     show ψ' (red ⟨x, hx1⟩) = 1
     rw [e2, AddChar.map_zero_eq_one]
   · obtain ⟨y, hy⟩ : ∃ y, ψ' y ≠ 1 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       apply hne
       ext y
       rw [hc y, AddChar.one_apply]
@@ -594,8 +588,7 @@ theorem exists_addChar_completion_lift_residue : ∀ (K : Type) [Field K] [Numbe
     have e1 := h x
     rw [show ψ₀ (x : v.adicCompletion K) = ψ₀ ((x : (v.adicCompletionIntegers K).toSubring) : v.adicCompletion K) from rfl, e1]
     show ψ' (red x) ≠ 1
-    rw [show red x = y by simp only [x, map_natCast, hy']]
-    exact hy
+    rwa [show red x = y by simp only [x, map_natCast, hy']]
 
 end GlobalTheory.ResidueChar
 
@@ -1149,8 +1142,7 @@ theorem split_places_same_natCast_mem : ∀ (L : Type) [Field L] [NumberField L]
   rw [e] at hn ⊢
   have h1 : ((n : ℕ) : 𝓞 (NumberField.maximalRealSubfield L)) ∈ s.v.asIdeal := by
     rw [← s.w_under]; exact Ideal.mem_comap.mpr hn
-  rw [hv] at h1
-  rw [← s'.w_under] at h1
+  rw [hv, ← s'.w_under] at h1
   exact Ideal.mem_comap.mp h1
 
 end GlobalTheory

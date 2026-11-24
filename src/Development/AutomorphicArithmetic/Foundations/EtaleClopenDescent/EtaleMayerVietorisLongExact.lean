@@ -145,11 +145,9 @@ theorem UpperTheory.Cb.etale_mayer_vietoris_long_exact :
       · rintro ⟨h1, h2⟩
         refine hinj1 (Prod.ext ?_ ?_)
         · change cpull biprod.inl _ _ (cpull (biprod.desc c e) _ _ z) = cpull biprod.inl _ _ 0
-          rw [cpull_inl_desc, map_zero]
-          exact h1
+          rwa [cpull_inl_desc, map_zero]
         · change cpull biprod.inr _ _ (cpull (biprod.desc c e) _ _ z) = cpull biprod.inr _ _ 0
-          rw [cpull_inr_desc, map_zero]
-          exact h2
+          rwa [cpull_inr_desc, map_zero]
       · intro h
         constructor
         · change cpull c (res R F) (n + 1) z = 0

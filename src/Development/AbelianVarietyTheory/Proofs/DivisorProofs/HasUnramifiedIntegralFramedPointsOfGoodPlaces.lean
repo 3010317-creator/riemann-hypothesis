@@ -191,8 +191,7 @@ theorem exists_isPolForm (P : GlobalTheory.Published.AbelianDeRham.Free) {R : Ty
 
     rw [← e.apply_symm_apply z, ← hab, map_sum]
     exact Finset.sum_congr rfl fun k _ => he _ _
-  rw [hz'] at hz
-  exact hz
+  rwa [hz'] at hz
 
 private theorem pGen_pull_refl {X Y : Scheme.{0}} (L : LB X) (hL : L.IsLB) (F : Y ⟶ X) :
     PGen (⟨fun p => (L.pull F).g p.1 p.2⟩ : LB.Iso (L.pull F) (L.pull F)) := by
@@ -789,8 +788,7 @@ theorem exists_unramified_field_good : ∀ (N : IntermediateField ℚ ℂ) [Numb
     refine hIS (τa.restrictNormal N) ?_ τ hr
     rw [← IntermediateField.fixingSubgroup_fixedField (Subgroup.closure T),
       IntermediateField.mem_fixingSubgroup_iff]
-    intro x hx
-    exact Subtype.ext ((hr x).symm.trans (hτ _ ((IntermediateField.mem_lift x).2 hx)))
+    exact fun x hx => Subtype.ext ((hr x).symm.trans (hτ _ ((IntermediateField.mem_lift x).2 hx)))
 
 end GlobalTheory.InertiaGood
 end -- clump:auto
@@ -1076,8 +1074,7 @@ theorem eq_of_residue_eq : ∀ (S : Type) [CommRing S] (P : Out.PolAV (Sp S)) (T
     Set.eq_univ_of_forall fun p =>
       (IsLocalRing.specializes_closedPoint p).mem_open (equalizer.ι x' y').isOpenEmbedding.isOpen_range hcl
   have hxy : x' = y' := eq_of_range_equalizer_ι_eq_univ m hab hall
-  apply Over.OverMorphism.ext
-  exact x₁.symm.trans ((congrArg (· ≫ pullback.fst P.A.hom j) hxy).trans y₁)
+  exact Over.OverMorphism.ext (x₁.symm.trans ((congrArg (· ≫ pullback.fst P.A.hom j) hxy).trans y₁))
 
 end GlobalTheory.TorsionReduction
 end -- clump:auto
@@ -1437,7 +1434,7 @@ theorem exists_intFr (hpq : 1 ≤ Dw.p + Dw.q) {q : ℕ} (hq : q.Prime) (hg : l.
     rw [Category.assoc, Limits.pullback.condition, ← Category.assoc, hs, GlobalTheory.EtaVal.spMap_comp_spMap]
     rfl
   obtain ⟨y₀, -, h0, -, -⟩ := gfp_frPt_gen (Xo := Xo) (c := c) (L := T.Fr) (L' := T.Fr) hT (fun _ => rfl) _ hx
-    (fun _ i j => if i = j then 1 else 0) (fun _ _ => if_pos rfl) (fun _ _ _ h => if_neg h.ne')
+    (fun _ i j => if i = j then 1 else 0) (fun _ _ => ite_eq_left rfl) (fun _ _ _ h => ite_eq_right h.ne')
   obtain ⟨y', t, hbor⟩ := intFr_of_model hIF T (k.comp j) Y hPI b hb y₀
   refine ⟨T, k.comp j, y', ho, hfin, fun p => ?_⟩
   have h1 : y'.1.x = y₀.x := hbor.1

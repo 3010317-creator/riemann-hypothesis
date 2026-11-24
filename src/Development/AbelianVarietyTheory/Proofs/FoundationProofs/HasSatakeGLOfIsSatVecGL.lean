@@ -190,8 +190,7 @@ theorem finite_of_triangular (m : ℕ) (B : Subalgebra ℂ (AddMonoidAlgebra ℂ
       · apply Submodule.subset_span
         refine Finset.mem_coe.mpr (Finset.mem_image.mpr ⟨ν, ?_, rfl⟩)
         rw [Fintype.mem_piFinset]
-        intro i
-        exact Finset.mem_Icc.mpr (abs_le.mp (hb i))
+        exact fun i => Finset.mem_Icc.mpr (abs_le.mp (hb i))
       · push Not at hb
         obtain ⟨i0, hi0⟩ := hb
         obtain ⟨j, hj, hj0, hν⟩ := exists_gap ν i0 hi0
@@ -210,7 +209,7 @@ theorem finite_of_triangular (m : ℕ) (B : Subalgebra ℂ (AddMonoidAlgebra ℂ
           have := step 0 (by simp) (by simpa using Finset.sum_nonneg fun i _ => abs_nonneg (ε i)) (by
             intro h0
             have h1 : ε i0 = 0 := by rw [← h0]; rfl
-            simp only [hε, cut, hj0, if_true, Int.sign_eq_zero_iff_zero] at h1
+            simp only [hε, cut, hj0, ite_true, Int.sign_eq_zero_iff_zero] at h1
             rw [h1] at hj0
             simp at hj0
             omega)
@@ -297,8 +296,7 @@ theorem exists_fixed_of_fun (hK : IsOpen (K : Set G)) (hc : IsCommensurated K) {
   let ι : P.IndSpace (charRep χ) →ₗ[ℂ] (G → ℂ) := (Submodule.subtype _).comp (Submodule.subtype _)
   have hι : Function.Injective ι := fun a b e => Subtype.ext (Subtype.ext e)
   refine ⟨⟨z, hz⟩, mem_fixed.2 fun k hk => hι (funext (hr k hk)), fun e => h0 (congrArg ι e), fun f hf c e => hι ?_⟩
-  rw [map_heckeVec (ρ' := rightReg ℂ G ℂ) hc hf ι (fun _ _ => rfl), map_smul]
-  exact e
+  rwa [map_heckeVec (ρ' := rightReg ℂ G ℂ) hc hf ι (fun _ _ => rfl), map_smul]
 
 end Induced
 
@@ -527,8 +525,7 @@ theorem exists_algHom_extend {A : Type} [CommRing A] [Algebra ℂ A] (B : Subalg
     exact (Algebra.IsIntegral.isIntegral (R := B) a).map_of_comp_eq χ.toRingHom (Ideal.Quotient.mk Q)
       (RingHom.ext fun b => (key b).symm)⟩
   let i := AlgEquiv.ofBijective (Algebra.ofId ℂ (A ⧸ Q)) IsAlgClosed.algebraMap_bijective_of_isIntegral
-  refine ⟨i.symm.toAlgHom.comp (Ideal.Quotient.mkₐ ℂ Q), fun b => ?_⟩
-  exact i.symm_apply_eq.2 (key b)
+  exact ⟨i.symm.toAlgHom.comp (Ideal.Quotient.mkₐ ℂ Q), fun b => (i.symm_apply_eq.2 (key b))⟩
 
 variable {m : ℕ}
 

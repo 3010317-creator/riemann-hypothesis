@@ -91,8 +91,7 @@ theorem eq_of_finClass_eq_one (z : (Af F)ˣ) (hz : finClass z = 1) :
   have hinv' : ReciprocityTheory.Neutral.Bridge.HCFR.sndU F u'⁻¹ * ReciprocityTheory.Neutral.Bridge.HCFR.sndU F u' = 1 := by
     rw [← map_mul, inv_mul_cancel, map_one]
   refine ⟨k, ⟨_, _, hinv, hinv'⟩, ?_, ?_⟩
-  · intro w
-    exact (ReciprocityTheory.Neutral.Bridge.HCFR.rayUnits_top_iff F u').1 hu' w
+  · exact fun w => (ReciprocityTheory.Neutral.Bridge.HCFR.rayUnits_top_iff F u').1 hu' w
   · ext1
     exact hsnd
 
@@ -154,8 +153,7 @@ theorem narrowClass_unitsSq_finite : ∀ (F : Type) [Field F] [NumberField F] [I
       k * σ⁻¹, u, tp_of_sgn_eq k σ hσs.symm, hu, ?_⟩
     have hz : z = ι k * u * y0 := by rw [← hk, inv_mul_cancel_right]
     show z = ι (k * σ⁻¹) * (ι σ * y0) * u
-    rw [← mul_assoc, ← map_mul, inv_mul_cancel_right, mul_right_comm]
-    exact hz
+    rwa [← mul_assoc, ← map_mul, inv_mul_cancel_right, mul_right_comm]
   · haveI : Group.FG (𝓞 F)ˣ := Group.fg_iff_monoid_fg.2 inferInstance
     exact exists_finset_mod_sq
 

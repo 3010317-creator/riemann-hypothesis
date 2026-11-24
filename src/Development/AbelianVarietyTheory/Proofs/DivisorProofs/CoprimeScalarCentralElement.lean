@@ -79,8 +79,7 @@ theorem isUnit_of_coprime {S : Type} [CommRing S] {m M : ℤ} (h : IsCoprime m M
   have e' : (m : S) * (a : S) = 1 := by
     have := congrArg (Int.cast : ℤ → S) e
     push_cast at this
-    rw [h0, mul_zero, add_zero, mul_comm] at this
-    exact this
+    rwa [h0, mul_zero, add_zero, mul_comm] at this
   exact ⟨⟨m, a, e', by rw [mul_comm]; exact e'⟩, rfl⟩
 
 theorem map_int_one {n : ℕ} {S S' : Type} [CommRing S] [CommRing S'] (f : S →+* S') (m : ℤ) (i j : Fin n) :
@@ -162,8 +161,7 @@ theorem exists_matrix_hat_int {F E : Type} [Field F] [NumberField F] [Field E] [
     rw [Matrix.smul_apply, Matrix.smul_apply, map_nsmul, Matrix.map_apply, AlgEquiv.apply_symm_apply, smul_eq_mul, map_mul,
       Matrix.sub_apply, map_sub, ← hK]
     have e3 := map_int_one (Algebra.TensorProduct.comm F (FiniteAdeleRing (𝓞 F) F) E).toAlgHom.toRingHom m i j
-    refine Eq.trans ?_ (congrFun (congrFun e i) j)
-    exact congrArg (fun t => _ * (_ - t)) e3
+    exact Eq.trans (congrArg (fun t => _ * (_ - t)) e3) (congrFun (congrFun e i) j)
 
 variable {D : D7}
 

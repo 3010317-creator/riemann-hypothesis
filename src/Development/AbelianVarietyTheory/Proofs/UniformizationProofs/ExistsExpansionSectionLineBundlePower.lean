@@ -317,8 +317,7 @@ theorem isBas_of_comb (hL : L.IsLB) {R : Type} [CommRing R] {m : ℕ} (g : R →
   refine (existsUnique_congr fun a => ⟨ev_comb g a b, fun H => ?_⟩).1 (hb s)
   obtain ⟨t, ht⟩ := exists_comb (fun i => g (a i)) b
   rw [← ev_comb g a b ht] at H
-  rw [eq_of_val hL fun y J => congrFun H ⟨Y, 𝟙 Y, y, J⟩]
-  exact ht
+  rwa [eq_of_val hL fun y J => congrFun H ⟨Y, 𝟙 Y, y, J⟩]
 
 theorem mul_mem_iff (hL : L.IsLB) {φ' : K' → (Y ⟶ X)} {ε' : K' → ℤ} {φ₃ : K₃ → (Y ⟶ X)} {ε₃ : K₃ → ℤ}
     (u : LB.Gen (LB.LinComb L φ₃ ε₃)) (hu : u.IsGen) (h : FormEq (Sum.elim φ φ₃) (Sum.elim ε ε₃) φ' ε')
@@ -563,8 +562,7 @@ theorem isBas_thick (hT : SecTwistSt) (hk : 1 ≤ k) {b : Fin (k ^ D.P.g) → Va
   · intro s hs
     exact pull_mem hs _ (fun i => congrArg (fun f => pullback.fst _ _ ≫ f)
       (Category.id_comp (D.famφB α i)).symm)
-  · intro s hs
-    exact pull_mem hs m (fun i => (pullback.lift_fst_assoc _ _ _ _).symm)
+  · exact fun s hs => pull_mem hs m (fun i => (pullback.lift_fst_assoc _ _ _ _).symm)
   · intro s hs
     obtain ⟨s0, hs0, h⟩ := exists_lift hT hk s hs
     exact ⟨s0, hs0, h.trans ((pull_pull _ m s0).trans

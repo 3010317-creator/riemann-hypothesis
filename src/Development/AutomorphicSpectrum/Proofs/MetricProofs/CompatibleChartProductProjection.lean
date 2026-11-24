@@ -67,8 +67,7 @@ theorem continuous_comp_emb (σ : Fin n ↪ Fin e) :
 theorem analyticAt_comp_emb (σ : Fin n ↪ Fin e) (w : Fin e → ℂ) :
     AnalyticAt ℂ (fun v : Fin e → ℂ => v ∘ σ) w := by
   rw [analyticAt_pi_iff]
-  intro j
-  exact (ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : Fin e => ℂ) (σ j)).analyticAt w
+  exact fun j => (ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : Fin e => ℂ) (σ j)).analyticAt w
 
 theorem extend_comp_emb (σ : Fin n ↪ Fin e) (g : Fin n → ℂ) (w : Fin e → ℂ) :
     Function.extend σ g w ∘ σ = g :=
@@ -137,12 +136,10 @@ theorem chart_swap :
   intro e n X Z _ _ A Ab pr ψ kb σ ψb hψ hb hpr
   have h₁ : AnalyticOnNhd ℂ ((Ab.chart kb).symm.trans ψb)
       ((Ab.chart kb).symm.trans ψb).source := by
-    intro y hy
-    exact (hb kb).1 y hy
+    exact fun y hy => (hb kb).1 y hy
   have h₂ : AnalyticOnNhd ℂ ((Ab.chart kb).symm.trans ψb).symm
       ((Ab.chart kb).symm.trans ψb).target := by
-    intro y hy
-    exact (hb kb).2 y hy
+    exact fun y hy => (hb kb).2 y hy
   have hcomp : ∀ y ∈ ψ.source, ψ y ∘ σ = Ab.chart kb (pr y) := fun y hy =>
     funext fun i => ((hpr y hy).2 i).symm
   let T := extendHomeo σ ((Ab.chart kb).symm.trans ψb) h₁ h₂

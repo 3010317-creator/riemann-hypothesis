@@ -61,8 +61,7 @@ theorem cond {n : ℕ} {X : Scheme.{0}} (x : Sx (PB (bsumOf V W)) n X) {i j : Fi
     ((pv V W x).map f).1.1 = blockGL a b _ ((_root_.LateralTheory.E.HalfDegreeVanishing.pw V (pe V W x)).map f) ((pw W (pe V W x)).map f) := by
   have h := ConcreteCategory.congr_hom (NatTrans.congr_app (pullback.condition (f := bsumOf V W) (g := PGL.pr (a + b)))
     (op (SimplexCategory.mk n)) |> fun h => NatTrans.congr_app h (op X)) x
-  have h2 := Functor.hcongr_hom h f
-  exact (eq_of_heq h2).symm
+  exact (eq_of_heq (Functor.hcongr_hom h f)).symm
 
 def wb {A : Type} (v : Fin (a + b) → A) : Fin b → A := fun i => v (Fin.natAdd a i)
 
@@ -167,8 +166,7 @@ theorem secondBlockUnimodularLocus_inclusion_mono : Mono (f2 V W) := by
   refine @NatTrans.mono_of_mono_app _ _ _ _ _ _ _ fun n => ?_
   refine @NatTrans.mono_of_mono_app _ _ _ _ _ _ _ fun X => ?_
   rw [mono_iff_injective]
-  intro x y h
-  exact Subtype.ext h
+  exact fun x y h => Subtype.ext h
 
 end LateralTheory.E.HalfDegreeVanishing
 
@@ -184,7 +182,6 @@ theorem LeafHalf2_of (hM : LeafMapW) : LeafHalf2 := by
   refine ⟨U2 V W, f2 V W, pullback.lift (f2 V W ≫ PB.pr _) g (by rw [hg1, Category.assoc]), secondBlockUnimodularLocus_inclusion_mono V W, ?_, ?_, ?_⟩
   · exact pullback.lift_fst _ _ _
   · rw [PB.line, ← Category.assoc, pullback.lift_snd, hg2]
-  · intro n X x h
-    exact ⟨⟨x, allSec_of V W x h⟩, rfl⟩
+  · exact fun n X x h => ⟨⟨x, allSec_of V W x h⟩, rfl⟩
 
 end LateralTheory.E.HalfDegreeVanishing

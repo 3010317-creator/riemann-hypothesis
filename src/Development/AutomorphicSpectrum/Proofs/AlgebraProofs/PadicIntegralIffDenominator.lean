@@ -111,8 +111,7 @@ private theorem norm_esymm_le_one_of_forall_norm_le_one {K : Type*} [NormedField
   intro y hy
   obtain ⟨t, ht, rfl⟩ := Multiset.mem_map.mp hy
   apply norm_multiset_prod_le_one_of_forall_norm_le_one
-  intro z hz
-  exact h z (Multiset.mem_of_le (Multiset.mem_powersetCard.mp ht).1 hz)
+  exact fun z hz => h z (Multiset.mem_of_le (Multiset.mem_powersetCard.mp ht).1 hz)
 
 
 theorem _root_.GlobalTheory.CompanionTheory.Relay.padic_integral_iff_denominator : ∀ (E : Type) [Field E] [NumberField E] (p : Nat.Primes) (x : E), ((∀ j : E →+* ℂ_[p], ‖j x‖ ≤ 1) ↔ ∃ (n : ℕ) (a : 𝓞 E), ¬ (p : ℕ) ∣ n ∧ (n : E) * x = a) := by
@@ -131,8 +130,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.padic_integral_iff_denominator
       rw [← Algebra.IsAlgebraic.range_eval_eq_rootSet_minpoly (PadicAlgCl (p : ℕ)) x] at hr'
       obtain ⟨ψ, rfl⟩ := hr'
       have h1 := h ((algebraMap (PadicAlgCl (p : ℕ)) ℂ_[p]).comp (ψ : E →+* PadicAlgCl (p : ℕ)))
-      rw [RingHom.comp_apply, ← PadicComplex.coe_eq, PadicComplex.norm_extends] at h1
-      exact h1
+      rwa [RingHom.comp_apply, ← PadicComplex.coe_eq, PadicComplex.norm_extends] at h1
     have hcard : ((minpoly ℚ x).map (algebraMap ℚ (PadicAlgCl (p : ℕ)))).roots.card =
         ((minpoly ℚ x).map (algebraMap ℚ (PadicAlgCl (p : ℕ)))).natDegree :=
       IsAlgClosed.card_roots_eq_natDegree

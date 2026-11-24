@@ -350,7 +350,7 @@ theorem taylor_bound [Fintype ι] [DecidableEq ι] (c : R →+* K) (hc : ∀ w, 
         y n * (eval₂ c y p - eval₂ c x p - ∑ j, eval₂ c x (pderiv j p) * (y j - x j)) +
         (y n - x n) * ∑ j, eval₂ c x (pderiv j p) * (y j - x j) := by
       simp only [h1, Finset.sum_add_distrib, ← Finset.sum_mul, eval₂_mul, eval₂_X]
-      simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       ring
     rw [this]
     refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ?_ ?_)
@@ -398,7 +398,7 @@ theorem mem_of_gradient [Fintype ι] [DecidableEq ι] (W : Subring K) (hW : IsCl
           -(eval₂ W.subtype (fun i => (y i : K)) (G i) - eval₂ W.subtype x (G i) -
             ∑ j, eval₂ W.subtype x (pderiv j (G i)) * (y j - x j)) := by
         simp only [sub_mul, Finset.sum_sub_distrib, hG, ite_mul, one_mul, zero_mul,
-          Finset.sum_ite_eq', Finset.mem_univ, if_true]
+          Finset.sum_ite_eq', Finset.mem_univ, ite_true]
         push_cast
         rw [he]; ring
       rw [this]
@@ -1368,8 +1368,7 @@ theorem rigid (W : Subring K) (hW : IsClosed (W : Set K)) (hW1 : ∀ w ∈ W, �
   have hroot : ∀ r ∈ T, h.IsRoot (r : K) := fun r hr => by
     rw [IsRoot, ← hT, ← hev', h₀_def, eval_multiset_prod, Multiset.prod_eq_zero]
     · rfl
-    · simp only [Multiset.map_map, Multiset.mem_map]
-      exact ⟨r, hr, by simp⟩
+    · simpa only [Multiset.map_map, Multiset.mem_map] using ⟨r, hr, by simp⟩
   have hco : IsCoprime (fstP (n₀.map φ)) (fstP (h₀.map φ)) := by
     have : ∀ T' : Multiset S, (∀ r ∈ T', h.IsRoot (r : K)) →
         IsCoprime (fstP (n₀.map φ)) (fstP ((T'.map fun r => X - C r).prod.map φ)) := fun T' hT' => by
@@ -1552,8 +1551,7 @@ theorem invariants_mem (hp : 5 ≤ p) (lam : Qbar →+* ℂ_[p]) (L : PeriodPair
     (GlobalTheory.exists_mem_Wp_norm_sub_lt_one p) (n := n₀.map lam) (h := h₀.map lam) n2 n3 hA hB na hsq hΔ' (mn₀.map _) (mh₀.map _)
     (by rw [mn₀.natDegree_map, dn₀, dn]) (by rw [mh₀.natDegree_map, ← mh₀.natDegree_map i, hh₀, dh])
     (IsAlgClosed.splits _) ?_ ?_ ?_ ?_ ?_
-  · rw [isCoprime_map, ← isCoprime_map i, hn₀, hh₀]
-    exact hc
+  · rwa [isCoprime_map, ← isCoprime_map i, hn₀, hh₀]
   · simpa only [Polynomial.map_add (f := _), Polynomial.map_mul, Polynomial.map_pow, Polynomial.map_sub, map_C, map_X,
       Polynomial.map_ofNat, ← derivative_map, map_mul, map_pow] using congrArg (Polynomial.map lam) e₀
   · intro x hx
@@ -1599,8 +1597,7 @@ theorem modelEx_holds : ∀ D : D7, GL3Theta.modelEx D := by
   refine ⟨?_, fun hp hin => ⟨1, ?_⟩, fun C hC => ?_⟩
   · obtain ⟨C, E, hC, i1, i2, i3, i4, i6, hE⟩ := exists_integral_model lam A B hΔ' hj'
     refine ⟨C, ?_⟩
-    simp only [GL3Theta.IsModelU, hV, hC, IsIntP, hE, norm_one]
-    exact ⟨i1, i2, i3, i4, i6, trivial⟩
+    simpa only [GL3Theta.IsModelU, hV, hC, IsIntP, hE, norm_one] using ⟨i1, i2, i3, i4, i6, trivial⟩
   · have n2 : ‖(2 : ℂ_[p])‖ = 1 := norm_natCast_eq_one (N := 2) fun h => by have := Nat.le_of_dvd two_pos h; omega
     have n3 : ‖(3 : ℂ_[p])‖ = 1 :=
       norm_natCast_eq_one (N := 3) fun h => by have := Nat.le_of_dvd three_pos h; omega

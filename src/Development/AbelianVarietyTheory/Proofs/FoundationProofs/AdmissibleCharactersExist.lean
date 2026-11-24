@@ -137,8 +137,7 @@ theorem gauss_pow_four_hom {M : Type*} [AddCommGroup M] [Fintype M] (β : M →+
   rw [key, key, ← hbij.sum_comp]
   refine Finset.sum_congr rfl fun p _ => ?_
   have h1 := congrArg (fun t : Additive ℂˣ => ((Additive.toMul t : ℂˣ) : ℂ)) (hQ p)
-  simp only [Q, toMul_add, toMul_neg, Units.val_mul, Units.val_inv_eq_inv_val, mul_inv] at h1
-  exact h1
+  simpa only [Q, toMul_add, toMul_neg, Units.val_mul, Units.val_inv_eq_inv_val, mul_inv] using h1
 
 theorem gauss_pow_four {M : Type*} [AddCommGroup M] [Fintype M] (β : M → M → ℂ)
     (hl : ∀ x x' y, β (x + x') y = β x y * β x' y) (hr : ∀ x y y', β x (y + y') = β x y * β x y')
@@ -170,8 +169,7 @@ theorem rep_mk {B A : AddSubgroup V} (a : A) :
 theorem rep_add {B A : AddSubgroup V} (q q' : A ⧸ B.addSubgroupOf A) :
     ∃ l, l ∈ A ∧ l ∈ B ∧ rep (q + q') = rep q + rep q' + l := by
   have := rep_mk (B := B) ((Quotient.out q : A) + Quotient.out q')
-  rw [QuotientAddGroup.mk_add, QuotientAddGroup.out_eq', QuotientAddGroup.out_eq'] at this
-  exact this
+  rwa [QuotientAddGroup.mk_add, QuotientAddGroup.out_eq', QuotientAddGroup.out_eq'] at this
 
 theorem sum_refine {F : Type} [AddCommMonoid F] {A₀ A B : AddSubgroup V} (hB : A₀ ≤ B)
     [Fintype (A ⧸ A₀.addSubgroupOf A)] [Fintype (A ⧸ B.addSubgroupOf A)] (g : V → F)
@@ -183,8 +181,7 @@ theorem sum_refine {F : Type} [AddCommMonoid F] {A₀ A B : AddSubgroup V} (hB :
     QuotientAddGroup.map _ _ (AddMonoidHom.id A) hle
   have hπ : ∀ a : A, π (QuotientAddGroup.mk a) = QuotientAddGroup.mk a := fun a => rfl
   have hsurj : Function.Surjective π := by
-    intro q
-    exact ⟨QuotientAddGroup.mk (Quotient.out q), by rw [hπ, QuotientAddGroup.out_eq']⟩
+    exact fun q => ⟨QuotientAddGroup.mk (Quotient.out q), by rw [hπ, QuotientAddGroup.out_eq']⟩
   have hfib : ∀ q, (Finset.univ.filter fun x => π x = q).card = (Finset.univ.filter fun x => π x = 0).card :=
     fun q => AddMonoidHom.card_fiber_eq_of_mem_range π (hsurj q) ⟨0, map_zero _⟩
   have main : ∀ {G : Type} [AddCommMonoid G] (u : A ⧸ B.addSubgroupOf A → G),
@@ -273,8 +270,7 @@ theorem proj_translate (H : (∀ x y f, W x (W y f) = c x y • W (x + y) f) ∧
       simp only [χ]
       rw [div_mul_cancel₀ _ (H.2.2.2 _ _)]
     obtain ⟨x₀, hx₀, hne⟩ : ∃ x ∈ A, c x v ≠ c v x := by
-      by_contra hh
-      push_neg at hh
+      by_contra! hh
       exact h (hsd v hh)
     have hp : ∀ x l, l ∈ A₀ → χ (x + l) = χ x := by
       intro x l hl
@@ -291,8 +287,7 @@ theorem proj_translate (H : (∀ x y f, W x (W y f) = c x y • W (x + y) f) ∧
       simp only [e2, ← Finset.mul_sum] at e
       have h1 : χ x₀ - 1 ≠ 0 := by
         simp only [χ]
-        rw [sub_ne_zero, Ne, div_eq_one_iff_eq (H.2.2.2 _ _)]
-        exact hne
+        rwa [sub_ne_zero, Ne, div_eq_one_iff_eq (H.2.2.2 _ _)]
       have : (χ x₀ - 1) * ∑ q : A ⧸ A₀.addSubgroupOf A, χ (rep q) = 0 := by
         rw [sub_mul, e]; ring
       exact (mul_eq_zero.mp this).resolve_left h1
@@ -549,8 +544,7 @@ theorem iop_eq_itw (A B : AddSubgroup (VC D N N'))
     letI : Fintype (B ⧸ A.addSubgroupOf B) := Fintype.ofFinite _
     rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, Finset.sum_apply]
     congr 1
-    refine Finset.sum_congr rfl fun q _ => ?_
-    exact (congrFun (hB _ (rep_mem q) G) z).symm
+    exact Finset.sum_congr rfl fun q _ => (congrFun (hB _ (rep_mem q) G) z).symm
 
 theorem itw_smul {V F : Type} [AddCommGroup V] [AddCommGroup F] [Module ℂ F] (W : V → F →ₗ[ℂ] F)
     (A B : AddSubgroup V) (a : ℂ) (f : F) : itw W A B (a • f) = a • itw W A B f := by

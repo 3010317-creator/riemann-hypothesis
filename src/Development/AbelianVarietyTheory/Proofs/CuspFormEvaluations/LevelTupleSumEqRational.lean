@@ -212,13 +212,11 @@ theorem sum_eq {X : Data E r} {x : Frame X.Ψ r} (hx : x ∈ X.dom) (A : TorusAt
     have e : ∀ j, ZSpan.fract A.T.b (A.φ (t j)) = A.φ (t j - v j) := fun j => by
       rw [ZSpan.fract_apply, map_sub, hv']
     refine ⟨fun j => ZSpan.fract_mem_fundamentalDomain _ _, ?_⟩
-    simp only [e]
-    exact (gen_iff hx A _).1 ((h1 t ht).of_sub fun j => by simpa using hv j)
+    simpa only [e] using (gen_iff hx A _).1 ((h1 t ht).of_sub fun j => by simpa using hv j)
   · intro t ht t' ht' h
     refine ((h2 t (h1 t ht)).unique ⟨ht, fun j => by simp⟩ ⟨ht', fun j => ?_⟩)
     have := (ZSpan.fract_eq_fract A.T.b _ _).1 (congrFun h j).symm
-    rw [← map_mem_iff hx A, map_sub, sub_eq_neg_add]
-    exact this
+    rwa [← map_mem_iff hx A, map_sub, sub_eq_neg_add]
   · rintro a ⟨ha, hb, hc⟩
     choose v hv hv' using fun j => (A.lat _).1 (hb j)
     have e : ∀ j, A.φ ((25 : E)⁻¹ • v j) = a j := fun j => by

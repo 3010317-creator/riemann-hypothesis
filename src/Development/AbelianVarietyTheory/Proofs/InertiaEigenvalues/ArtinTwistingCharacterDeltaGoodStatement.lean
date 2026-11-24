@@ -177,7 +177,7 @@ theorem val_div_eq_one (τ : Ω ≃+* Ω) (hm : ∀ x, A.valuation (τ x) < 1 �
     exact lt_irrefl _ this
   rw [map_inv₀] at h2
   have h0 : A.valuation (τ y / y) ≠ 0 := by simpa using ha
-  push_neg at h1 h2
+  push Not at h1 h2
   exact le_antisymm ((one_le_inv₀ (zero_lt_iff.2 h0)).1 h2) h1
 
 end General
@@ -254,8 +254,7 @@ theorem exists_cube_root_mod {p : ℕ} (hp : p.Prime) (hp3 : p % 3 = 1) : ∃ t 
     exact (mul_eq_zero.1 this).resolve_left (sub_ne_zero.2 h1)
   refine ⟨(u : ZMod p).val, (ZMod.natCast_eq_zero_iff _ _).1 ?_⟩
   push_cast
-  rw [ZMod.natCast_zmod_val]
-  exact h2
+  rwa [ZMod.natCast_zmod_val]
 
 theorem fix_cube_root (τ : Ω ≃+* Ω) (hm : ∀ x, A.valuation (τ x) < 1 ↔ A.valuation x < 1) {p : ℕ} (hp : p.Prime)
     (hp3 : p % 3 = 1) (hpv : A.valuation (p : Ω) < 1) {a : Ω} (ha : A.valuation a ≤ 1)
@@ -283,7 +282,7 @@ theorem fix_cube_root (τ : Ω ≃+* Ω) (hm : ∀ x, A.valuation (τ x) < 1 ↔
   have n1 : ¬ A.valuation (a - ((1 : ℕ) : Ω)) < 1 := fun h => hno (hnat 1 h)
   have n2 : ¬ A.valuation (a - t) < 1 := fun h => hno (hnat t h)
   have n3 : ¬ A.valuation (a - ((t ^ 2 : ℕ) : Ω)) < 1 := fun h => hno (hnat _ h)
-  push_neg at n1 n2 n3
+  push Not at n1 n2 n3
   rw [Nat.cast_one] at n1
   rw [map_mul, map_mul] at hR
   exact absurd hR (not_lt.2 (one_le_mul (one_le_mul n1 n2) n3))
@@ -307,8 +306,7 @@ theorem exists_iterate_eq {Ω : Type} [Field Ω] [Algebra ℚ Ω] (τ : Ω ≃+*
       rw [Polynomial.mem_rootSet] at ih ⊢
       refine ⟨hf, ?_⟩
       have := Polynomial.aeval_algHom_apply (τ : Ω →+* Ω).toRatAlgHom (τ^[k] y) f
-      rw [ih.2, map_zero] at this
-      exact this
+      rwa [ih.2, map_zero] at this
   haveI := (Polynomial.rootSet_finite f Ω).to_subtype
   obtain ⟨i, j, hij, he⟩ := Finite.exists_ne_map_eq_of_infinite
     (fun k : ℕ => (⟨τ^[k] y, hroot k⟩ : f.rootSet Ω))
@@ -396,8 +394,7 @@ theorem places_split : ∀ (D : D7) (i : D.ntw.Tw), ∀ P ∈ D.ntw.pD i, Formal
     simpa [pow_succ, AlgEquiv.mul_apply] using this
   have hσm : ∀ x, A.valuation (σ x) < 1 ↔ A.valuation x < 1 := valuation_apply_lt_one_iff hσ.1
   obtain ⟨z, hzL, hz0, hza⟩ : ∃ z ∈ L, z ≠ 0 ∧ ¬ A.valuation (σ z / z - 1) < 1 := by
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     have hfixσ := fixes_of_wild A σ.toRingEquiv hσm L.toSubfield hσL (fun y hy => h3L y hy) h3u
       (fun y hy hy0 => hall y hy hy0)
     have : σ ∈ K := by
@@ -431,8 +428,7 @@ theorem places_split : ∀ (D : D7) (i : D.ntw.Tw), ∀ P ∈ D.ntw.pD i, Formal
       rw [mul_comm (D.ntw.delta i g), mul_inv_cancel_right, ← mul_inv, ← sq, ← pow_succ, hd3, inv_one]
     have h1 := (memL z).1 hzL _ hk
     have h2 : (σ * σ) (((σ * σ)⁻¹ * (g * σ' * g⁻¹)) z) = (σ * σ) z := by rw [h1]
-    rw [← AlgEquiv.mul_apply, mul_inv_cancel_left] at h2
-    exact h2
+    rwa [← AlgEquiv.mul_apply, mul_inv_cancel_left] at h2
   haveI : CharZero D.nd.Om := charZero_of_injective_algebraMap (algebraMap D.host.E D.nd.Om).injective
   have hIntW : IsIntegral ℚ w := by
     haveI : Algebra.IsAlgebraic D.host.E D.nd.Om := IsAlgClosure.isAlgebraic
@@ -451,8 +447,7 @@ theorem places_split : ∀ (D : D7) (i : D.ntw.Tw), ∀ P ∈ D.ntw.pD i, Formal
   have hba : A.valuation (σ w / w - a) < 1 := by
     have e : σ w / w - a = a * (σ r - r) * r⁻¹ := by
       rw [hw, map_mul, ha_def]; field_simp
-    rw [e, map_mul, map_mul, ha1, one_mul, map_inv₀, hr1, inv_one, mul_one]
-    exact hσr
+    rwa [e, map_mul, map_mul, ha1, one_mul, map_inv₀, hr1, inv_one, mul_one]
   have hτb : τ (σ w / w) = σ a * a := by
     rw [map_div₀, hρ, hτw, ha_def, map_div₀]
     have : σ (σ z) ≠ 0 := by simpa using hσz0
@@ -549,8 +544,7 @@ theorem coprime_absNorm_of_natCast_notMem {E : Type} [Field E] [NumberField E]
   have hp0 : (p : RingOfIntegers E ⧸ P.asIdeal) = 0 :=
     (mul_eq_zero.mp hpx).resolve_right hx0
   have hpP : (p : RingOfIntegers E) ∈ P.asIdeal := by
-    rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
-    exact hp0
+    rwa [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
   obtain ⟨k, rfl⟩ := hpm
   apply hm
   rw [Nat.cast_mul]
@@ -661,7 +655,7 @@ theorem unramOutside_of_corr_of_tame : ∀ (D : D7) (N : NData D.R D.host D.what
         ring
       rw [e4, Valuation.map_neg]
       simpa using b'
-    · push_neg at hPQ
+    · push Not at hPQ
       obtain ⟨B, hB⟩ := ReciprocityTheory.Gal.exists_isPlaceOver N.Om P
       exact GlobalTheory.ToricDistribution.Corr.unr hart hcorr hB (hine P hPQ.1 hPQ.2 B hB) _ hun
   show ((χ.locK P (k P) : ℂˣ) : ℂ) = 1
@@ -736,8 +730,7 @@ theorem ine_pow_of_conj {D : D7} {N : NData D.R D.host D.what₂} (X : NTw D.R D
   have h1 := GlobalTheory.TwistDet.cConj_mem_ine X hσ
   have h2 := GlobalTheory.TwistDet.isPlaceOver_moveVal_cc X (GlobalTheory.TwistDet.isConjPl_symm hc) hB'
   have h3 := h _ h2 _ h1
-  rw [GlobalTheory.TwistDet.antiHom_cConj X hanti, inv_pow, inv_eq_one] at h3
-  exact h3
+  rwa [GlobalTheory.TwistDet.antiHom_cConj X hanti, inv_pow, inv_eq_one] at h3
 
 theorem natCast_mem_conj {D : D7} {P P' : Pl D.host.E} (hc : Formalism.BasicNotions.IsConjPl D.host P P') (m : ℕ) :
     ((m : ℕ) : 𝓞 D.host.E) ∈ P'.asIdeal ↔ ((m : ℕ) : 𝓞 D.host.E) ∈ P.asIdeal := by

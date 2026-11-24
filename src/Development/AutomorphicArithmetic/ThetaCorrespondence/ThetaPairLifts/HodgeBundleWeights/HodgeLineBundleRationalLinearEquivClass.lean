@@ -316,8 +316,7 @@ theorem fixes_stalk : ∀ (X : Scheme.{0}) [IsIntegral X] (b : X ≅ X) (x : X),
     obtain ⟨_, e3⟩ := SpecToEquivOfLocalRing_eq_iff.mp e2
     simp only [TopCat.Presheaf.stalkCongr_hom, TopCat.Presheaf.stalkSpecializes_refl,
       Category.id_comp] at e3
-    intro a
-    exact (congr($e3 a)).symm
+    exact fun a => (congr($e3 a)).symm
   · intro a
     have e4 : algebraMap (X.presheaf.stalk x) X.functionField a =
         algebraMap (X.presheaf.stalk (b.hom x)) X.functionField (X.presheaf.stalkSpecializes hs a) := by
@@ -542,8 +541,7 @@ theorem ratLin_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
       have hTP : TrK.co (T γ) τ = (FK x).co f₀' τ := EigFrame.co_eq fun i => by
         have := _root_.GlobalTheory.EqvTrans.trv_comb TF.Y.t (φ ≫ (barComp TF.Y Z).ι) G' ψ (ρ' γ).asIso.hom (m γ) hG (hm γ)
           (genericFieldPoint X') ((FK x).v τ) _ (f₀'.v τ i) ((FK x).tan τ) (f₀'.tan τ i) ((FK x).co_spec f₀' τ i)
-        rw [funext (hTrK τ), hT γ τ i]
-        exact this
+        rwa [funext (hTrK τ), hT γ τ i]
       rw [← EigFrame.IsMap.co τ hFsK hFtK hxK2, ← hTP, ← eT, EigFrame.co_mul, eS,
         ← EigFrame.IsMap.co τ hSK (hS γ) (hSx γ), EigFrame.co_mul]
     have key : ∀ τ, Units.map (functionFieldMap (ρ' γ).asIso.hom).toMonoidHom (Units.map (functionFieldMap φ).toMonoidHom (d y τ)) *
@@ -596,8 +594,7 @@ theorem ratLin_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
           (genericFieldPoint X' ≫ (ρ' δ).asIso.hom) ((S δ).v τ) _ ((T δ).v τ i) ((S δ).tan τ) ((T δ).tan τ i)
           ((S δ).co_spec (T δ) τ i)
         rw [← hx3] at this
-        rw [funext (hF4 τ), hF3 τ i]
-        exact this
+        rwa [funext (hF4 τ), hF3 τ i]
       rw [e1, e3, ← EigFrame.co_mul F1 F2 F3, EigFrame.IsMap.co τ hF1 hF2 hx1, ← e4, h34]
     have hu : ∀ τ, ((S (γ * δ)).isUnit_det_co (T (γ * δ)) τ).unit =
         Units.map (functionFieldMap (ρ' δ).asIso.hom).toMonoidHom ((S γ).isUnit_det_co (T γ) τ).unit *

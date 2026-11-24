@@ -60,8 +60,7 @@ theorem exists_coord {Ω E : Type} [Field Ω] [AddCommGroup E] [Module Ω E] {r 
     have hk : (Module.Basis.span hb k : E) = b k := by rw [Module.Basis.span_apply]
     have := LinearMap.congr_fun hg (Module.Basis.span hb k)
     simp only [LinearMap.comp_apply, Submodule.subtype_apply, Module.Basis.coord_apply, Module.Basis.repr_self] at this
-    rw [hk] at this
-    exact this
+    rwa [hk] at this
   refine ⟨g, ?_, ?_⟩
   · rw [key]
     simp
@@ -97,8 +96,7 @@ theorem gr_isGenAt : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (Com
     exact LinearMap.mem_ker.mp (hle hv)
   have hf0bi : f0 (b i) = t := by
     have := hf0ker _ hti
-    rw [map_sub, map_smul, hf0.1, smul_eq_mul, _root_.mul_one, sub_eq_zero] at this
-    exact this
+    rwa [map_sub, map_smul, hf0.1, smul_eq_mul, _root_.mul_one, sub_eq_zero] at this
   have ht0 : t ≠ 0 := by
     rintro rfl
     have hbi : b i ∈ flagStep Ω b (i : ℕ) := by
@@ -132,8 +130,7 @@ theorem gr_isGenAt : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (Com
       · have hki : k = i := Fin.ext heq
         rw [hki, hg.1, _root_.mul_one, hf0bi]
     have := hle hv
-    rw [LinearMap.mem_eqLocus, LinearMap.smul_apply, smul_eq_mul] at this
-    exact this
+    rwa [LinearMap.mem_eqLocus, LinearMap.smul_apply, smul_eq_mul] at this
   have hgO : ∀ v ∈ Submodule.span (regAt ξ p) (Set.range b), g v ∈ regAt ξ p := by
     intro v hv
     induction hv using Submodule.span_induction with

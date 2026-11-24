@@ -73,22 +73,20 @@ theorem exists_deriv (α : K) (ε : ℝ) (hε : 0 < ε) (m : ℕ) (c : ℝ) (hc 
       ∃ Q : ℤ[X], ‖aeval α Q‖ < ε * ‖aeval α (derivative Q)‖ ^ 2 := by
   by_cases H : ∃ Q : ℤ[X], ‖aeval α Q‖ < ε * ‖aeval α (derivative Q)‖ ^ 2
   · exact ⟨1, one_pos, fun _ _ _ => H⟩
-  · push_neg at H
+  · push Not at H
     have key : ∀ m : ℕ, ∀ c : ℝ, 0 < c → ∃ δ > 0, ∀ P : ℤ[X],
         ‖aeval α P‖ < δ → ‖aeval α (derivative^[m] P)‖ < c := by
       intro m
       induction m with
       | zero =>
-        intro c hc
-        exact ⟨c, hc, fun P hP => by simpa using hP⟩
+        exact fun c hc => ⟨c, hc, fun P hP => by simpa using hP⟩
       | succ m ih =>
         intro c hc
         obtain ⟨δ₁, hδ₁, h₁⟩ := ih c hc
         refine ⟨ε * δ₁ ^ 2, by positivity, fun P hP => ?_⟩
         rw [Function.iterate_succ_apply]
         apply h₁
-        by_contra hle
-        push_neg at hle
+        by_contra! hle
         have h2 : δ₁ ^ 2 ≤ ‖aeval α (derivative P)‖ ^ 2 := pow_le_pow_left₀ hδ₁.le hle 2
         have h3 := H P
         have h4 := mul_le_mul_of_nonneg_left h2 hε.le
@@ -129,8 +127,7 @@ theorem dense_algebraic [CharZero K] (hH : HenselN K) (hZ : ∀ z : ℤ, ‖(z :
     have hDP : derivative^[m] P = C ((m.factorial : ℕ) : ℤ) := by
       have hdeg : (derivative^[m] P).natDegree ≤ 0 := by
         have := natDegree_iterate_derivative P m
-        rw [hPd, Nat.sub_self] at this
-        exact this
+        rwa [hPd, Nat.sub_self] at this
       rw [eq_C_of_natDegree_le_zero hdeg, coeff_iterate_derivative, zero_add,
         Nat.descFactorial_self, hcoeff]
       simp
@@ -155,8 +152,7 @@ theorem dense_algebraic [CharZero K] (hH : HenselN K) (hZ : ∀ z : ℤ, ‖(z :
     refine ⟨β, ⟨Q, ?_, ?_⟩, ?_⟩
     · rintro rfl
       simp at hQ'
-    · rw [← hev]
-      exact hβ
+    · rwa [← hev]
     · calc ‖β - α‖ ≤ ‖(Q.map (algebraMap ℤ K)).eval α‖ /
               ‖(Q.map (algebraMap ℤ K)).derivative.eval α‖ ^ 2 := hβα
         _ = ‖aeval α Q‖ / ‖aeval α (derivative Q)‖ ^ 2 := by rw [hev, hev']
@@ -175,8 +171,7 @@ theorem dense_algebraic [CharZero K] (hH : HenselN K) (hZ : ∀ z : ℤ, ‖(z :
   · rw [mem_ball_iff_norm]
     have h : β / (N : K) ^ M - x = (β - (N : K) ^ M * x) / (N : K) ^ M := by
       rw [sub_div, mul_div_cancel_left₀ x hM0]
-    rw [h, norm_div, div_lt_iff₀ htpos]
-    exact hβx
+    rwa [h, norm_div, div_lt_iff₀ htpos]
   · show IsAlgebraic ℤ (β / (N : K) ^ M)
     rw [div_eq_mul_inv]
     exact hβ.mul hNa.inv
@@ -251,8 +246,7 @@ theorem eventually_root (hH : HenselN K) {π : K} (h0 : π ≠ 0) (h1 : ‖π‖
   have E2 : ∀ᶠ t in 𝓝 t₀, ‖f.eval₂ (ev t) x₀‖ < ‖l * f.derivative.eval₂ (ev t) x₀‖ ^ 2 := by
     refine hu.continuousAt.eventually_lt hw.continuousAt ?_
     show ‖f.eval₂ (ev t₀) x₀‖ < ‖l * f.derivative.eval₂ (ev t₀) x₀‖ ^ 2
-    rw [hf, norm_zero]
-    exact hw0
+    rwa [hf, norm_zero]
   have hu' : Continuous fun t => ‖f.eval₂ (ev t) x₀‖ * ‖l‖ := hu.mul continuous_const
   have hw' : Continuous fun t => r * ‖l * f.derivative.eval₂ (ev t) x₀‖ ^ 2 :=
     continuous_const.mul hw
@@ -281,8 +275,7 @@ theorem eventually_root (hH : HenselN K) {π : K} (h0 : π ≠ 0) (h1 : ‖π‖
     rw [hG, derivative_comp, eval_mul, eval_comp, derivative_C_mul_X, eval_C]
     simp [hpderiv]
   have hlt : ‖G.eval 0‖ < ‖(derivative G).eval 0‖ ^ 2 := by
-    rw [hG0, hG1]
-    exact hE2
+    rwa [hG0, hG1]
   obtain ⟨y, hy, hyb⟩ := hH G 0 hGc (by simp) hlt
   refine ⟨x₀ + l * y, ?_, ?_⟩
   · rw [hG0, hG1, sub_zero] at hyb
@@ -290,16 +283,14 @@ theorem eventually_root (hH : HenselN K) {π : K} (h0 : π ≠ 0) (h1 : ‖π‖
       lt_of_le_of_lt (norm_nonneg _) hE2
     rw [le_div_iff₀ hwpos] at hyb
     rw [add_sub_cancel_left, norm_mul]
-    by_contra hge
-    push_neg at hge
+    by_contra! hge
     have h1' := mul_le_mul_of_nonneg_right hge hwpos.le
     have h2' := mul_le_mul_of_nonneg_left hyb (norm_nonneg l)
     nlinarith
   · have hGy : G.eval y = (p t).eval (l * y) := by
       rw [hG, eval_comp]
       simp
-    rw [← hpeval t (l * y), ← hGy]
-    exact hy
+    rwa [← hpeval t (l * y), ← hGy]
 
 theorem infinite_inter {π : K} (h0 : π ≠ 0) (h1 : ‖π‖ < 1) {D : Set K} (hD : Dense D) (x : K) (r : ℝ)
     (hr : 0 < r) : (D ∩ Metric.ball x r).Infinite := by

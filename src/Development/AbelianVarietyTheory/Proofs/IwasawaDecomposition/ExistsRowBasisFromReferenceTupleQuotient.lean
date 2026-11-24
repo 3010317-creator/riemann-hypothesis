@@ -87,8 +87,7 @@ theorem exists_basis_semi {E W : Type} [AddCommGroup E] [Module ℂ E] [AddCommG
     rw [hw]
     exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
   refine ⟨Module.Basis.mk hli hsp, fun z => ?_⟩
-  simp only [Module.Basis.mk_apply]
-  exact key z
+  simpa only [Module.Basis.mk_apply] using key z
 
 end GlobalTheory.Mem.R3.Rw.RowBasis
 
@@ -136,8 +135,7 @@ theorem rrT_exists : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : T
     have h5 : g z ∈ (y.C F.lv2).EEc b := by
       rw [hEEc]
       exact ⟨_, h1, rfl⟩
-    rw [← hrange] at h5
-    exact h5
+    rwa [← hrange] at h5
   have hsurj : ∀ w, ∃ z, jE w = g z := by
     intro w
     have h1 : jE w ∈ (y.C F.lv2).EEc b := hrange ▸ LinearMap.mem_range_self jE w

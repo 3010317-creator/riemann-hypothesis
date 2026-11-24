@@ -116,7 +116,7 @@ theorem UpperTheory.Gal.productCup_of_system.pTheta_of :
   have hb0 : ∀ J, ¬ (J.Nonempty ∧ J.card = p + 1) → b J = 0 := by
     intro J hJ
     have h := hβC J
-    rw [if_neg (by rintro ⟨h1, h2⟩; exact hJ ⟨h1, by exact_mod_cast h2⟩)] at h
+    rw [ite_eq_right (by rintro ⟨h1, h2⟩; exact hJ ⟨h1, by exact_mod_cast h2⟩)] at h
     simp only [hbdef, (Submodule.mem_bot ℂ).1 h, TensorProduct.tmul_zero]
   have hb1 : deltaL ℂ _ _ b = 0 := by
     funext t
@@ -168,7 +168,7 @@ theorem UpperTheory.Gal.productCup_of_system.pTheta_of :
             obtain ⟨s, hs, hdet⟩ := (hLat d _ _ (sysP K x a) hGood).2 I J L hI (pk J) hj
             have hbJ : β J ∈ omB ℂ K (rB ℂ K (xv x) J) a := by
               have h := hβC J
-              rwa [if_pos ⟨hJ, by exact_mod_cast hJc⟩] at h
+              rwa [ite_eq_left ⟨hJ, by exact_mod_cast hJc⟩] at h
             have hcompl : Iᶜ.card = L.card := by
               rw [Finset.card_compl, Fintype.card_fin]; omega
             have hfm := lat_mem hLA x hc.pd I (pk I) hi
@@ -179,8 +179,7 @@ theorem UpperTheory.Gal.productCup_of_system.pTheta_of :
             have hXprod : ∏ m ∈ Iᶜ, (((sysP K x a).X m : (F ⊗[ℂ] K)ˣ) : F ⊗[ℂ] K) =
                 (f ⊗ₜ (1 : K)) * (((sysP K x a).X (pk I) : (F ⊗[ℂ] K)ˣ) : F ⊗[ℂ] K) ^ L.card := by
               have e := congrArg (Algebra.TensorProduct.includeLeftRingHom : F →+* F ⊗[ℂ] K) hsplit
-              rw [map_prod, map_mul, map_pow, hcompl] at e
-              exact e
+              rwa [map_prod, map_mul, map_pow, hcompl] at e
             have hU' : (((∏ l ∈ L, (sysP K x a).u n11 (pk I) (pk J) l : (F ⊗[ℂ] K)ˣ)) : F ⊗[ℂ] K) =
                 (((sysP K x a).X (pk I) : (F ⊗[ℂ] K)ˣ) : F ⊗[ℂ] K) ^ L.card *
                   (((sysP K x a).Y (pk J) : (F ⊗[ℂ] K)ˣ) : F ⊗[ℂ] K) ^ L.card := by
@@ -216,14 +215,13 @@ theorem UpperTheory.Gal.productCup_of_system.pTheta_of :
     refine hzero I J L ?_
     by_cases hI : I = ∅
     · exact Or.inl hI
-    · refine Or.inr (Or.inr fun h => hI ?_)
-      exact Finset.card_eq_zero.1 (by omega)
+    · exact Or.inr (Or.inr fun h => hI (Finset.card_eq_zero.1 (by omega)))
   · intro s L hL
     obtain ⟨I, J, rfl⟩ : ∃ I J, s = uni I J := ⟨lft s, rgt s, (hlr s).symm⟩
     have hedge : edge2 β (uni I J) = if I.card = 1 then β J else 0 := by simp only [edge2, hl, hr]
     rw [hedge]
     by_cases hI : I.card = 1
-    · rw [if_pos hI]
+    · rw [ite_eq_left hI]
       obtain ⟨i, rfl⟩ := Finset.card_eq_one.1 hI
       obtain ⟨τ, hτ⟩ := hc.exists_isTop
       have h5 := (hAL F K d x hc τ hτ a).2.2.2.2.1
@@ -233,7 +231,7 @@ theorem UpperTheory.Gal.productCup_of_system.pTheta_of :
       rw [hval, hL, map_zsmul, h5, hk, hbdef]
       simp only [mulP_one]
       rw [smul_comm]
-    · rw [if_neg hI, hzero I J L (Or.inr (Or.inr (by omega)))]
+    · rw [ite_eq_right hI, hzero I J L (Or.inr (Or.inr (by omega)))]
       simp
   · intro J
     rw [hval, (hTh d _ _ (sysP K x a)).2.2.1]

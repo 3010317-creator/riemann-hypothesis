@@ -127,8 +127,7 @@ theorem flCol_support_finite_cells : ∀ (k : Type) [Field k] [ValuativeRel k] [
   rw [flCol_eq_opE_colE k ψ ν hψc hν n n' c p hp1 hpc _ (om_mem_SB μ a x Φ.2) X] at hX
   set β : n → k := fun r => X r (Sum.inr ()) with hβ
   replace hX : opE ψ ν p (om μ 1 (colE c p β)⁻¹ (om μ a x Φ.1)) X.toCols₁ ≠ 0 := by
-    rw [om_inv_of_det_one μ _ (det_colE c p β)]
-    exact hX
+    rwa [om_inv_of_det_one μ _ (det_colE c p β)]
   rw [← om_mul] at hX
   have e : om μ (1 * a) ((colE c p β)⁻¹ * x) Φ.1 = om μ 1 ((colE c p β)⁻¹ * x) (om μ a 1 Φ.1) := by
     rw [← om_mul, mul_one]
@@ -216,8 +215,7 @@ theorem GlobalTheory.LocFlat.contr_support_finite_cells :
   refine ⟨Finset.univ.biUnion Ti, fun y hy => ?_⟩
   obtain ⟨X, hX⟩ : ∃ X, GlobalTheory.LocFlat.contr ψ ν (GlobalTheory.LocFlat.flCol ψ ν (ρ + 1) Φ₁'.1)
       (GlobalTheory.LocFlat.flRow ψ ν ρ (om μ' x y Φ₂.1)) X ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hy (funext h)
   let Φ₂' : SB (Matrix (n₂ ⊕ Fin c) (n₁ ⊕ Fin (c + 1)) k) := ⟨om μ' x y Φ₂.1, om_mem_SB μ' x y Φ₂.2⟩
   have hid := (GlobalTheory.LocFlat.ContrSum.contr_flat_eq_sum k ψ hψc hψ1 ν hsd n₀ n₁ n₂ c ρ hcρ μ Φ₁' Φ₂').2.2.2.2
@@ -231,8 +229,7 @@ theorem GlobalTheory.LocFlat.contr_support_finite_cells :
   have hi3 : GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage.opEFJ ψ ν ρ (Φ₀ i).1 (om 1 1 y Φ.1) X.2 ≠ 0 := right_ne_zero_of_mul hi2
   have hne : opE ψ ν ρ (om 1 1 y (GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage.avg ψ ν 1 ρ (Φ₀ i).1 Φ.1)) ≠ 0 := by
     rw [(hav i).2.1 y]
-    intro h0
-    exact hi3 (congrFun h0 X.2)
+    exact fun h0 => hi3 (congrFun h0 X.2)
   obtain ⟨t, ht, hmk⟩ := (hTi i).2 y hne
   obtain ⟨r, hr, j, hj, hy'⟩ := (@DoubleCoset.eq _ _ _ _ t y).1 hmk.symm
   exact ⟨r, hr, t, Finset.mem_biUnion.2 ⟨i, Finset.mem_univ _, ht⟩, j, hj, hy'⟩

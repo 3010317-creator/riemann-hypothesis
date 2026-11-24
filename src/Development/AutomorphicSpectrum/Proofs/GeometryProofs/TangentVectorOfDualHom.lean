@@ -99,8 +99,7 @@ theorem le_preimage_of_fst {X : Scheme.{0}} {U : X.Opens} {C : Type} [CommRing C
   have e := h p₀
   simp only [Scheme.Hom.comp_apply] at e
   show x p ∈ U
-  rw [← hp]
-  exact e
+  rwa [← hp]
 
 theorem tan_iff_der (S : Scheme.{0}) (G : Over S) [GrpObj G] (U : G.left.Opens) (V : S.Opens) (hU : IsAffineOpen U)
     (hV : IsAffineOpen V) (hUV : U ≤ G.hom ⁻¹ᵁ V)
