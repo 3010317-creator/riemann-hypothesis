@@ -87,14 +87,13 @@ theorem deriv_inv_Gammaℝ_neg_two_mul_nat (n : ℕ) :
   | zero =>
     rw [deriv_inv_Gammaℝ_eq_shift]
     norm_num [Gammaℝ_def, Complex.Gamma_one, Complex.cpow_neg_one, hπ]
-    <;> field_simp
+    field_simp
   | succ n ih =>
     rw [deriv_inv_Gammaℝ_eq_shift]
     have e : (-(2 * ((n + 1 : ℕ) : ℂ))) + 2 = -(2 * (n : ℂ)) := by push_cast; ring
     rw [e, inv_eq_zero.mpr (Gammaℝ_eq_zero_iff.mpr ⟨n, rfl⟩), mul_zero, zero_add, ih,
       Nat.factorial_succ, Nat.cast_mul, Nat.cast_add, Nat.cast_one, pow_succ, pow_succ]
     field_simp
-    <;> ring
 
 theorem deriv_inv_Gammaℝ_ne_zero (n : ℕ) :
     deriv (fun s : ℂ => (Gammaℝ s)⁻¹) (-(2 * n)) ≠ 0 := by
@@ -178,7 +177,7 @@ private theorem Gammaℝ_two_mul_nat_add_one (n : ℕ) :
       Nat.factorial_succ, Nat.factorial_succ, Nat.factorial_succ, pow_succ, pow_succ]
     push_cast
     field_simp
-    <;> ring
+    ring
 
 /-- The derivatives at the negative even zeros are positive-odd zeta values with the
 standard factorial and power-of-pi factor. The origin is excluded. -/
@@ -204,7 +203,7 @@ theorem deriv_riemannZeta_neg_two_mul_nat (n : ℕ) (hn : n ≠ 0) :
     Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero (2 * n))
   rw [mul_pow, pow_mul, show (2 : ℂ) ^ 2 = 4 by norm_num, pow_mul]
   field_simp
-  <;> ring
+  ring
 
 theorem rootNumber_ne_zero_of_isPrimitive {q : ℕ} [NeZero q] {χ : DirichletCharacter ℂ q}
     (hχ : χ.IsPrimitive) : rootNumber χ ≠ 0 := by
