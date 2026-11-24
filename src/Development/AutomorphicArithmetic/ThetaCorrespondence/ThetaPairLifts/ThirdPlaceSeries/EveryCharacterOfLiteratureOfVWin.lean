@@ -1250,8 +1250,6 @@ theorem UpperTheory.LiteratureTheorems.fargues_exact_of_literature (O : _root_.U
   UpperTheory.Lit.farguesExact
 theorem UpperTheory.LiteratureTheorems.nef_rr_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : GlobalTheory.CompanionTheory.Ar.Pub.NefRR :=
   PositivityTheory.Tls2.Nef.nefRR
-theorem UpperTheory.LiteratureTheorems.poincare_lelong_inv_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : GlobalTheory.CompanionTheory.Hypotheses₂.PoincareLelongInv :=
-  PositivityTheory.Tls2.Pl.poincareLelongInv
 theorem UpperTheory.LiteratureTheorems.principalisation_char_zero_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : GlobalTheory.CompanionTheory.Hypotheses₂.PrincipalisationCharZero :=
   PositivityTheory.ResPlug.WeightsCompactStabilizer.principalisationCharZero_closed
 theorem UpperTheory.LiteratureTheorems.resolution_char_zero_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : GlobalTheory.CompanionTheory.Hypotheses₂.ResolutionCharZero :=
@@ -1509,7 +1507,7 @@ theorem UpperTheory.LiteratureTheorems.every_character_of_literature_of_vWin (O 
   _root_.UpperTheory.Lit.every_character_of_theta_integrals_local_matching
     (_root_.UpperTheory.LiteratureTheorems.published_results_eigen O)
     (_root_.UpperTheory.LiteratureTheorems.published_results_first O) hTheta.1 hTheta.2
-    (_root_.SelfIntersectionVolumeEstimates.topCovolSlim2_use_alt_alt (_root_.UpperTheory.LiteratureTheorems.resolution_char_zero_of_literature O) (_root_.UpperTheory.LiteratureTheorems.principalisation_char_zero_of_literature O) (_root_.UpperTheory.LiteratureTheorems.poincare_lelong_inv_of_literature O) PositivityTheory.Pf1.HilbertSamuelMoriwaki.hsUse_outright PositivityTheory.Pf1.HilbertSamuelMoriwaki.moriwakiBig_outright (_root_.UpperTheory.LiteratureTheorems.fargues_exact_of_literature O) (_root_.UpperTheory.LiteratureTheorems.zarhin_statement O) (_root_.UpperTheory.LiteratureTheorems.nef_rr_of_literature O) (_root_.UpperTheory.LiteratureTheorems.toroidal_for_fan_ks_of_literature O) (_root_.UpperTheory.LiteratureTheorems.semi_abelian_lie_seminegative_of_literature O) (_root_.UpperTheory.LiteratureTheorems.point_separation_pair_of_literature O) (_root_.UpperTheory.LiteratureTheorems.published_results_arithmetic O) (_root_.UpperTheory.LiteratureTheorems.grothendieck_deformation_of_literature O))
+    (_root_.SelfIntersectionVolumeEstimates.topCovolSlim2_use_alt_alt (_root_.UpperTheory.LiteratureTheorems.resolution_char_zero_of_literature O) (_root_.UpperTheory.LiteratureTheorems.principalisation_char_zero_of_literature O) PositivityTheory.Tls2.Pl.poincareLelong PositivityTheory.Pf1.HilbertSamuelMoriwaki.hsUse_outright PositivityTheory.Pf1.HilbertSamuelMoriwaki.moriwakiBig_outright (_root_.UpperTheory.LiteratureTheorems.fargues_exact_of_literature O) (_root_.UpperTheory.LiteratureTheorems.zarhin_statement O) (_root_.UpperTheory.LiteratureTheorems.nef_rr_of_literature O) (_root_.UpperTheory.LiteratureTheorems.toroidal_for_fan_ks_of_literature O) (_root_.UpperTheory.LiteratureTheorems.semi_abelian_lie_seminegative_of_literature O) (_root_.UpperTheory.LiteratureTheorems.point_separation_pair_of_literature O) (_root_.UpperTheory.LiteratureTheorems.published_results_arithmetic O) (_root_.UpperTheory.LiteratureTheorems.grothendieck_deformation_of_literature O))
     (_root_.UpperTheory.LiteratureTheorems.local_langlands_gl_recT_exists_of_literature O) hV
 end
 end -- clump:auto
