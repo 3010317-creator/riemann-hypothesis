@@ -151,7 +151,6 @@ end GlobalTheory.LieBaseChange
 
 namespace GlobalTheory
 
-open ReciprocityTheory.ChartRestriction.G.Geo.Tor (spMap)
 
 theorem exists_isLieBasis_baseChange (R R' : Type) [CommRing R] [CommRing R'] (f : R →+* R')
     (G : Over (Sp R)) (G' : Over (Sp R')) [GrpObj G] [GrpObj G'] [IsCommMonObj G] [IsCommMonObj G']

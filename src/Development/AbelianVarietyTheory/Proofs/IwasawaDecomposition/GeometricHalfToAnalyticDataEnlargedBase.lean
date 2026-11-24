@@ -696,7 +696,6 @@ open Formalism.IndefR.FWT Formalism.L2.Pj Formalism.IndefR.Mult
 noncomputable section
 namespace GlobalTheory.Mem.R3.Rw.EqvMove
 
-open Formalism.L2.DIV
 
 variable {D : D7} (T : CoreJ D) (i : Fin D.R.m) (σ : T.Q.c.F →+* ℂ)
   (hV : T.V ((i : ℕ) + 1) σ = Wc D i) (c : (T.U ((i : ℕ) + 1) σ).Comp → ℂ)

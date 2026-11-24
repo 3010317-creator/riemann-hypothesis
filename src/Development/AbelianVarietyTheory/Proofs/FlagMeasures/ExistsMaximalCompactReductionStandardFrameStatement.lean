@@ -622,7 +622,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LabPi
 noncomputable section
 
 namespace GlobalTheory.FixedConj
-open ReciprocityTheory.Aut
 
 theorem smul_mul_mul_of_idem {R : Type} [CommRing R] {a b : ℕ} (e : R) (he : e * e = e)
     (M : Matrix (Fin a) (Fin b) R) (N : Matrix (Fin b) (Fin b) R) (Q : Matrix (Fin b) (Fin a) R) :

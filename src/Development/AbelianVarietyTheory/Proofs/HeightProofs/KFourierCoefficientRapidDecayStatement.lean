@@ -71,7 +71,6 @@ noncomputable section
 
 namespace GlobalTheory.KFourier
 
-open MeasureTheory
 
 variable {n : ℕ}
 
@@ -152,7 +151,6 @@ end GlobalTheory.KFourier
 
 namespace GlobalTheory.KFourier
 
-open MeasureTheory
 
 variable {n : ℕ}
 
@@ -227,7 +225,6 @@ end GlobalTheory.KFourier
 
 namespace GlobalTheory.KFourier
 
-open MeasureTheory
 
 variable {n : ℕ}
 

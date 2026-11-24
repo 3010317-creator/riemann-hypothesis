@@ -263,7 +263,6 @@ namespace GlobalTheory.JetChain
 
 section Jet
 
-open Formalism.L2.Ker
 
 theorem eval_jetLin {K ι : Type} [Field K] [Fintype ι] [DecidableEq ι] {a b : ℕ}
     (y : ι × Fin b × Fin b → K) (sc : ι → K) (T : MvPowerSeries (DVar ι a b) K)

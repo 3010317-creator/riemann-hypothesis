@@ -66,7 +66,6 @@ def peakN {n : ℕ} (μ : Measure (Matrix (Fin n) (Fin n) ℂ)) (m : ℕ) (g : M
 end GlobalTheory.KFinAvg
 
 namespace GlobalTheory.KFinAvg
-open Matrix
 
 theorem isCompact_KH (k r : ℕ) : IsCompact (GlobalTheory.ThA.KH k r) := by
   have hc : IsClosed (PI.UpqRep.UH (PI.UpqRep.Hpk k r)) := by

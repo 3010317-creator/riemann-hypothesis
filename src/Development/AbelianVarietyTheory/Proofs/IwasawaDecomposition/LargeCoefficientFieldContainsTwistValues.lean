@@ -81,7 +81,6 @@ noncomputable section
 
 namespace GlobalTheory.Mem.Col2.RootsIn
 
-open NumberField IsDedekindDomain Formalism.L2.DIV GlobalTheory.Mem.Col2
 open ReciprocityTheory.Neutral.Bridge.HCFR Neutral.B1
 
 def finOr {α : Type} (s : Set α) : Finset α := by
@@ -535,7 +534,6 @@ noncomputable section
 
 namespace GlobalTheory.Mem.HFld
 
-open Formalism.L2.DIV
 
 theorem norm_piG_le {P : Pre} (px : PreX P) (i : Fin 2) (φ : P.host.E →+* ℂ) :
     ‖φ (px.piG i : P.host.E)‖ ≤ (P.host.g i : ℝ) + 1 := by

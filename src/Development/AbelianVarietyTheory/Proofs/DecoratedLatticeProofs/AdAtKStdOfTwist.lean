@@ -53,7 +53,6 @@ open scoped TensorProduct Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.Fam.MovedJoin
-open GlobalTheory.AdForm
 
 
 open Formalism.L2.Col in

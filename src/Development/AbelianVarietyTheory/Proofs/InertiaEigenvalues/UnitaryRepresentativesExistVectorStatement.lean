@@ -133,7 +133,6 @@ end GlobalTheory.UnitaryToGl
 namespace GlobalTheory.UnitaryToGl
 
 open MvPolynomial
-open Formalism.IndefR.Links (PolF)
 open Classical
 
 noncomputable section
@@ -247,7 +246,6 @@ end GlobalTheory.UnitaryToGl
 namespace GlobalTheory.UnitaryToGl
 
 open MvPolynomial
-open Formalism.IndefR.Links (PolF)
 open Classical
 
 noncomputable section
@@ -380,7 +378,6 @@ end GlobalTheory.UnitaryToGl
 namespace GlobalTheory.UnitaryToGl
 
 open MvPolynomial
-open Formalism.IndefR.Links (PolF)
 open Classical
 
 noncomputable section
@@ -619,7 +616,6 @@ end GlobalTheory.UnitaryToGl
 namespace GlobalTheory.UnitaryToGl
 
 open MvPolynomial
-open Formalism.IndefR.Links (PolF)
 open Classical
 
 noncomputable section

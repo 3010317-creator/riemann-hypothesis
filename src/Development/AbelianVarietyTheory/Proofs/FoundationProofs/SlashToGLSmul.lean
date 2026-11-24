@@ -185,7 +185,6 @@ lemma ulF_sub (k : ℤ) (l : ℕ) (hl : 0 < l) (F G : ℍ → ℂ) : UlF k l (F 
 end GlobalTheory.HeckeFamilyMatrices
 
 namespace GlobalTheory.HeckeFamilyMatrices
-open CongruenceSubgroup
 
 lemma chiInv_add {k : ℤ} {N M : ℕ} {χ : DirichletCharacter ℂ N} {F G : ℍ → ℂ} (hF : ChiInv k N M χ F)
     (hG : ChiInv k N M χ G) : ChiInv k N M χ (F + G) := by

@@ -143,7 +143,6 @@ end Gen
 end GlobalTheory.LocFlat
 
 namespace GlobalTheory.LocFlat
-open Filter Topology
 section Gen2
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
   [MeasurableSpace k] [BorelSpace k]

@@ -56,7 +56,6 @@ noncomputable section
 namespace GlobalTheory.Mem.Col2.LowerTie
 
 section Gen
-open Formalism.L2.Forms
 variable {ι : Type} [Fintype ι] {N n : ℕ}
 
 theorem lastAll_transpose (a : ι → ℂˣ) (τ : ι) :

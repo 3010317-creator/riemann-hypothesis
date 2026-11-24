@@ -629,7 +629,6 @@ open Formalism.L2.NTheta (IsIdemAt)
 open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (framePos)
 open GlobalTheory.SymBridge (IsOrd zPos)
 open GlobalTheory.AdelicLatMove (finEmb finEmb_mul)
-open Formalism.L2.DIV (blockTri blkOf blk2 upperLeftBlock resS oToS idS kP frGL St redFn)
 
 variable {D : D7} {c : Comm D} {v : VCom c}
 

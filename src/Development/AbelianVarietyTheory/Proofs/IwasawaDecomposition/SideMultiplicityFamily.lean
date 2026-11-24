@@ -287,7 +287,6 @@ theorem mt_transport (M : MtFam D) (P : ∀ (μ : D.what₂.Tup) (j : ℕ), MtRe
 end Gen
 
 section Chars
-open Formalism.L2.Host
 
 theorem infG_etaT {D : D7} {cf : CharFrame D} (chr : CharSide D cf) (t : D.what₂.Tau) :
     D.naut.infG D.naut.etaT (embT D t) = {((1 / 2 : ℚ) : ℂ)} := by

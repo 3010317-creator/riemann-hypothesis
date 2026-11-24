@@ -84,7 +84,6 @@ theorem mem_levG {D : D7} (V : HSp D) {n : ℕ} (hn : V.rank = n) {J : Matrix (F
     g ∈ levG V hn S ↔ ∃ κ : S.U, κ.1.1 = finM V hn g := Iff.rfl
 
 section Swap
-open Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes (topTens)
 
 variable (F E : Type) [Field F] [NumberField F] [Field E] [Algebra F E]
 

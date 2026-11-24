@@ -186,7 +186,6 @@ end GlobalTheory.PrimeSequence
 
 namespace GlobalTheory.PrimeSequence
 
-open Formalism.BasicNotions.Loc
 
 theorem eigenvalue_product_maps_letter_lattice_of_conclusions : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
     (Cm : CmpOf D.loc D.locA HW F), Formalism.MainNotions.DeltaInvariantLattices.DeltaInvariantNormBound D HW F Cm → Formalism.MainNotions.N.LetterConditionGlobal D HW F := by

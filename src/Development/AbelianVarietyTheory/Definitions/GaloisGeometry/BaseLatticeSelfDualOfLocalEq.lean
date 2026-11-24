@@ -377,7 +377,6 @@ end Mem
 
 section Rec
 
-open Formalism.MainNotions
 
 variable {L : SizeData₂ D} {hT : GatTies D} {Gi : G.Inst D L} {Gl : G.LatInst D} {K : G.Consts} {Dx : DivX D} {cX : ExtraC}
   {ex : Extra D L hT Gi Gl K Dx cX}

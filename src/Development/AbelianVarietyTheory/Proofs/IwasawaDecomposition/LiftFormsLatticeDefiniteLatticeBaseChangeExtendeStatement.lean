@@ -1128,7 +1128,6 @@ namespace GlobalTheory.Mem.R3.LiftLat0
 
 section Key
 
-open Formalism.IndefR.Cx
 
 variable {K K' : Type} [Field K] [NumberField K] [Field K'] [NumberField K']
 

@@ -59,7 +59,6 @@ open scoped Formalism.Per NNReal
 
 noncomputable section
 namespace GlobalTheory.CrisSec
-open Matrix
 
 variable {R : Type} [CommRing R] {d : ℕ}
 

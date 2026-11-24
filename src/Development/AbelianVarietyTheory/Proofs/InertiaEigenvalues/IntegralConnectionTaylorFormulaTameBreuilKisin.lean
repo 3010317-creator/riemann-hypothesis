@@ -1035,7 +1035,6 @@ open scoped Formalism.Per
 
 namespace GlobalTheory.CrysGal
 
-open GlobalTheory.Prism
 
 theorem span_range_tr {l : ℕ} {R : Type} [CommRing R] (E : FCrys l R) {P P' : Obj l R}
     (f : GlobalTheory.Prism.Hom P P') : Submodule.span P'.A (Set.range (E.tr f)) = ⊤ := by

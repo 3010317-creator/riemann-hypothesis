@@ -252,7 +252,6 @@ end GlobalTheory.PsiOp
 
 namespace GlobalTheory.PsiOp
 
-open Formalism.BasicNotions Formalism.BasicNotions.Loc
 
 variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field K]
     [Algebra Qp K₀] [Algebra Qp K] [Algebra K₀ K] [IsScalarTower Qp K₀ K]

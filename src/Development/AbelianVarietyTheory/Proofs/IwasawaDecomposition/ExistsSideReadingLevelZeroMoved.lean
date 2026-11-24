@@ -111,7 +111,6 @@ noncomputable section
 
 namespace GlobalTheory.Mem.R3.Rw.GoodSideLattices
 
-open NumberField IsDedekindDomain
 
 def locMeet {K : Type} [Field K] [NumberField K] {V : Type} [AddCommGroup V] [Module (𝓞 K) V] {ι : Type}
     (P : ι → HeightOneSpectrum (𝓞 K)) (S : ι → Submodule (𝓞 K) V) : Submodule (𝓞 K) V where

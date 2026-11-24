@@ -931,7 +931,6 @@ open Formalism.UG (IsUnifV qV)
 open GlobalTheory.LFun (KGL IsSatVecGL eulerFac UnrAt LvTw)
 open GlobalTheory.LFun (locChar IsSplitChart IsInertChart KGL UnrAt toCompl locMat IsFrameAt IsSatVecU eulerFac LvTw dv Fam)
 open Formalism.MainNotions.SchurIrreducible (IsSplit)
-open GlobalTheory.Doubling (ioH_mem_KFin)
 
 namespace GlobalTheory.Core.Rk.IP
 

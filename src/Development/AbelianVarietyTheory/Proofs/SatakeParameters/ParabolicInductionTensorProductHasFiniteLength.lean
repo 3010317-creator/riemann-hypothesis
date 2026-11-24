@@ -65,7 +65,6 @@ noncomputable section
 
 namespace GlobalTheory.ProdFiniteLength
 
-open GlobalTheory.SmGL
 
 theorem piTensor_mulSingle_eq_map {α : Type} [DecidableEq α] {Γ X : α → Type} [∀ a, Group (Γ a)]
     [∀ a, AddCommGroup (X a)] [∀ a, Module ℂ (X a)] (ρ : ∀ a, Representation ℂ (Γ a) (X a)) (a : α)

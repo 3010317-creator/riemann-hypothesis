@@ -98,7 +98,6 @@ end GlobalTheory
 
 namespace GlobalTheory.PrincipalLogDeriv
 
-open Filter Topology
 
 lemma norm_cpow_neg_le {p : ℕ} (hp : p.Prime) {s : ℂ} (hs : 1 ≤ s.re) :
     ‖(p : ℂ) ^ (-s)‖ ≤ 1 / 2 := by
@@ -387,7 +386,6 @@ theorem logDeriv_LFunction_one_near_one (q : ℕ) [NeZero q] :
   field_simp [sub_ne_zero.mpr hs1]
   <;> ring
 
-open Filter Topology
 
 private lemma deriv_dslope_zero {f : ℂ → ℂ} (hf : AnalyticAt ℂ f 0) :
     deriv (dslope f 0) 0 = deriv (deriv f) 0 / 2 := by

@@ -95,8 +95,6 @@ end GlobalTheory.UnitaryBC.ClassTransport
 
 noncomputable section
 
-open scoped TensorProduct
-open Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
 
 namespace GlobalTheory.UnitaryBC.ClassTransport
 
@@ -172,8 +170,6 @@ end GlobalTheory.UnitaryBC.ClassTransport
 
 noncomputable section
 
-open scoped TensorProduct
-open Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
 
 namespace GlobalTheory.UnitaryBC.ClassTransport
 
@@ -234,8 +230,6 @@ end GlobalTheory.UnitaryBC.ClassTransport
 
 noncomputable section
 
-open scoped TensorProduct
-open Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
 
 namespace GlobalTheory.UnitaryBC.ClassTransport
 

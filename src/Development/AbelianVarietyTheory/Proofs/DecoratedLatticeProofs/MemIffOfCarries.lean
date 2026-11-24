@@ -89,6 +89,5 @@ theorem finM_one' {D : D7} (V : HSp D) {m : ℕ} (hn : V.rank = m) : finM V hn 1
 end GlobalTheory.RepLattice
 
 namespace GlobalTheory.RepLattice
-open GlobalTheory.AdForm
 
 end GlobalTheory.RepLattice

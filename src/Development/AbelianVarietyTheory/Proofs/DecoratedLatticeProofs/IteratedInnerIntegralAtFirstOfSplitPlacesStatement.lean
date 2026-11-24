@@ -791,7 +791,6 @@ theorem comb_aconv_cons (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (c : WO S
 end GlobalTheory.QValInner
 
 namespace GlobalTheory.QValInner
-open GlobalTheory.Grow
 variable {D : D7}
 
 theorem congGrp_le (V : HSp D) {I J : Ideal (AE D)} (hIJ : I ≤ J) : congGrp V I ≤ congGrp V J := by

@@ -1106,7 +1106,6 @@ end GlobalTheory.WeilSmooth
 
 noncomputable section
 namespace GlobalTheory.WeilSmooth
-open GlobalTheory.JR
 
 variable {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E]
 

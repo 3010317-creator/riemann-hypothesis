@@ -209,7 +209,6 @@ end Gen
 end GlobalTheory.St.Lat
 
 noncomputable section
-open NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat IsDedekindDomain
 
 namespace GlobalTheory.St.Lat
 open Formalism.L2.SG.Pf Formalism.L2.SG.Pf.LatEx
@@ -293,7 +292,6 @@ end Gen2
 end GlobalTheory.St.Lat
 
 noncomputable section
-open NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat IsDedekindDomain
 
 namespace GlobalTheory.St.Lat
 open Formalism.L2.SG.Pf Formalism.L2.SG.Pf.LatEx
@@ -425,7 +423,6 @@ end GF
 end GlobalTheory.St.Lat
 
 noncomputable section
-open NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat IsDedekindDomain
 
 namespace GlobalTheory.St.Lat
 end GlobalTheory.St.Lat
@@ -520,7 +517,6 @@ end GlobalTheory.St.Lat
 
 noncomputable section
 
-open NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat IsDedekindDomain Formalism.L2.SG.Saturated
 
 namespace GlobalTheory.St.Lat
 open Formalism.L2.SG.Pf Formalism.L2.SG.Pf.LatEx
@@ -555,7 +551,6 @@ end GlobalTheory.St.Lat
 
 noncomputable section
 
-open NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat IsDedekindDomain Formalism.L2.SG.Saturated
 
 namespace GlobalTheory.St.Lat
 open Formalism.L2.SG.Pf Formalism.L2.SG.Pf.LatEx
@@ -607,7 +602,6 @@ end GlobalTheory.St.Lat
 
 noncomputable section
 
-open NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat IsDedekindDomain Formalism.L2.SG.Saturated
 
 namespace GlobalTheory.St.Lat
 open Formalism.L2.SG.Pf Formalism.L2.SG.Pf.LatEx

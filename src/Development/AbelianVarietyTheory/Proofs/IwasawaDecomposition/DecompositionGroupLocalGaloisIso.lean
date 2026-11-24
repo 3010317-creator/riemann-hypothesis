@@ -178,7 +178,6 @@ end GlobalTheory.LocDec
 
 namespace GlobalTheory.LocDec
 
-open GlobalTheory.LocDict
 
 theorem norm_eq_of_le_one_iff {Ω L : Type} [Field Ω] [NormedField L] (j j' : Ω →+* L)
     (h : ∀ x, ‖j x‖ ≤ 1 ↔ ‖j' x‖ ≤ 1) (x₀ : Ω) (h₀ : ‖j' x₀‖ = ‖j x₀‖) (h₁ : 0 < ‖j x₀‖)

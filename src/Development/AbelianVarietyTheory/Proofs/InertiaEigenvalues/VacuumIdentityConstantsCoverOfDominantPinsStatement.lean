@@ -346,8 +346,6 @@ section Geo
 
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField Matrix Complex
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.FD GlobalTheory GlobalTheory.ThFr
-open ReciprocityTheory.ChartRestriction.G.Geo.Tor hiding Level
-open GlobalTheory.SW hiding Level
 open Formalism.L2.Pj GlobalTheory.Dict GlobalTheory.Dict.Lift
 open scoped ComplexConjugate Classical
 attribute [local instance] Over.cartesianMonoidalCategory

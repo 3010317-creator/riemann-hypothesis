@@ -136,7 +136,6 @@ end GlobalTheory.BK
 
 namespace GlobalTheory.BKReal
 
-open PowerSeries GlobalTheory.BK
 
 theorem exists_l_pow_iHat_toHatS_sub_dvd (l : ℕ) [Fact l.Prime] (e : ℕ) [NeZero e] (O K : Type)
     [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K]

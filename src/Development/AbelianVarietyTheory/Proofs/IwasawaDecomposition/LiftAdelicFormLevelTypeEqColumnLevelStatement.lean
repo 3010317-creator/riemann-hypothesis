@@ -337,7 +337,6 @@ open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory
 noncomputable section
 
 namespace GlobalTheory.Mem.LevPres
-open Formalism.L2.DIV
 
 theorem castGL_rfl' {R : Type} [CommRing R] {m : ℕ} (x : GL (Fin m) R) : LiftBrg.castGL (rfl : m = m) x = x :=
   Units.ext (Matrix.ext fun _ _ => rfl)

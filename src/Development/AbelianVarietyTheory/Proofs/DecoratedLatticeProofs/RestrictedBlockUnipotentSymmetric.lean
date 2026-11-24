@@ -1665,7 +1665,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.SeeConjRead
 
-open Formalism.L2.DIV
 
 theorem restrictedBlock_self_apply {κ : Type} [CommRing κ] {n : ℕ} (hr : n ≤ n) (g : GL (Fin n) κ) : upperLeftBlock hr g = g := by
   have hg : g ∈ blockTri (κ := κ) (blk2 n) := fun i j h => by

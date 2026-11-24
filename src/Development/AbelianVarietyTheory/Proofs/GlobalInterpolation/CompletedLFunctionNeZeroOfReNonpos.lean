@@ -392,7 +392,6 @@ theorem LFunction_ne_zero_of_re_eq_neg_half {q : ℕ} [NeZero q]
 
 namespace LFunctionImaginaryAxis
 
-open Filter Topology
 
 lemma analyticAt_factor (a : ℂ) {p : ℕ} (hp : p.Prime) (s : ℂ) :
     AnalyticAt ℂ (fun z : ℂ => 1 - a * (p : ℂ) ^ (-z)) s := by
