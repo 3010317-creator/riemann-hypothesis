@@ -287,7 +287,7 @@ theorem exists_artinSymbol : GlobalTheory.Published.GlobalArtinReciprocity → �
     ext x
     rw [Set.mem_preimage, SetLike.mem_coe, SetLike.mem_coe, MonoidHom.mem_ker, hρ, MonoidHom.mem_ker]
   let ψ : (Ω ≃ₐ[E] Ω) →* ClassGroup (𝓞 E) := ρ.comp (toAb E Ω)
-  have hlies : ∀ (v : HeightOneSpectrum (𝓞 E)) (A : ValuationSubring Ω), LiesAbove A v → Neutral.B1.IsPlaceOver A v :=
+  have hlies : ∀ (v : HeightOneSpectrum (𝓞 E)) (A : ValuationSubring Ω), LiesAbove A v → IsPlaceOver A v :=
     fun v A h x => by rw [← h x, A.mem_nonunits_iff]
   refine ⟨ψ⁻¹, ?_, ?_, ?_⟩
   · have e : ((ψ⁻¹).ker : Set (Ω ≃ₐ[E] Ω)) = toAb E Ω ⁻¹' (ρ.ker : Set (Gab E Ω)) := by
@@ -405,7 +405,7 @@ open Formalism.MainNotions.GL3Theta (G1 ModelOverW)
 open Formalism.L2.G.Pend (k0ToC)
 
 theorem beCoef : Formalism.L2.KerInert.BeCob.BeCoef := by
-  apply _root_.Formalism.L2.KerInert.BeCob.beta_coefficients <;> assumption
+  apply _root_.Formalism.L2.KerInert.BeCob.beta_coefficients
 
 end GlobalTheory.BeCoefficients
 end -- clump:auto
@@ -546,7 +546,7 @@ open Formalism.L2.KerInert.BeCob (eLT vLT psiLT)
 open GlobalTheory.CurveDictionary (map_cob lgF_eq_logF cc_lgF')
 
 theorem cobExact : Formalism.L2.KerInert.BeCob.CobExact := by
-  apply _root_.Formalism.L2.KerInert.BeCob.coboundary_exact <;> assumption
+  apply _root_.Formalism.L2.KerInert.BeCob.coboundary_exact
 
 end GlobalTheory.CobExactProof
 end -- clump:auto
