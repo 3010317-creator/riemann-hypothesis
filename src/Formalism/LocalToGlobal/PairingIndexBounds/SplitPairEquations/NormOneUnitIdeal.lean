@@ -19,9 +19,6 @@ theorem norm_one_unit_ideal : NormOneUnitIdeal D :=
 theorem detSmul : DetSmul D :=
   Formalism.L2.Ker.Cd.PairingIndexBounds.Eq.detSmul (Formalism.L2.Ker.Car.ofRec D)
 
-theorem smulSD : SmulSD D :=
-  Formalism.L2.Ker.Cd.PairingIndexBounds.Eq.smulSD (Formalism.L2.Ker.Car.ofRec D)
-
 end Formalism.L2.PairingIndexBounds.Eq
 
 end
