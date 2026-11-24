@@ -81,11 +81,9 @@ Drop the part from `---` on if the pull request depends on no other.
 
 ## Mistakes we keep seeing
 
-We're glad to take a speed-up that costs a little readability, such as passing an explicit
-argument, using `rw` where `simp` was slow, or restating a lemma so that Lean has less to unfold.
-The changes below are different. Agents often make them and we don't want them: most of them hide
-a problem in one file instead of fixing it where it comes from. We add to this list as we find
-more.
+These are changes agents often make that we don't want. Most of them hide a problem in one file
+instead of fixing it where it comes from. We add to this list as we find more. A speed-up that
+makes a proof a little longer or harder to read is still welcome, as long as it isn't one of these.
 
 ### Keeping the old lemma next to a new one
 
@@ -136,12 +134,9 @@ after unfolding, leave the proof as it is and open an issue with the profile ins
 
 ### Working around the unused-section-variable linter
 
-`linter.unusedSectionVars` can take tens of seconds on one theorem. For each section variable that
-the statement doesn't mention, it searches the whole proof term, and that search is slow on a long
-proof term. Don't make a file faster by adding `omit … in` lines or
-`set_option linter.unusedSectionVars false in` in front of the slow theorems. Each one helps a
-single declaration and leaves the check as slow everywhere else. If this linter is what makes your
-file slow, open an issue with the profile instead, so it can be fixed once for the whole project.
+Don't speed up a theorem by putting `omit … in` or `set_option linter.unusedSectionVars false in`
+in front of it. That skips the linter's check for one declaration and leaves it as slow as before
+everywhere else. If the linter is what makes your file slow, open an issue with the profile.
 
 ### Small speed-ups to the CI scripts
 
