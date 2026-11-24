@@ -42,6 +42,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
+public import Development.EtaleCohomology.CohomologicalPurity.LeafIndExcPf
 
 @[expose] public section
 
@@ -78,7 +79,7 @@ theorem cokPO_transfer {A' B' Q' A B Q : C} (f' : A' ⟶ B') (l' r' : B' ⟶ Q')
   have e : cokernel.map f' r' f' l' h'.w.symm ≫ cokernel.map r' r b m wr.symm =
       cokernel.map f' f a b w.symm ≫ cokernel.map f r f l h.w.symm := by
     ext
-    simp [Category.assoc, wl]
+    simp [Category.assoc]
     simpa only [Category.assoc] using congrArg (fun k => k ≫ cokernel.π r) wl
   have : cokernel.map r' r b m wr.symm = inv (cokernel.map f' r' f' l' h'.w.symm) ≫
       (cokernel.map f' f a b w.symm ≫ cokernel.map f r f l h.w.symm) := by rw [← e]; simp
@@ -151,9 +152,6 @@ end Gen2
 
 section Main
 variable (R : Type) [CommRing R]
-
-theorem dbl.inl_map' {P' P : Arrow Spc} (φ : P' ⟶ P) : dbl.inl P' ≫ dbl.map φ = φ.right ≫ dbl.inl P :=
-  pushout.inl_desc (f := P'.hom) (g := P'.hom) _ _ _
 
 theorem hPO (P : Arrow Spc) (p : SimplexCategoryᵒᵖ) :
     IsPushout ((free R).map (P.hom.app p)) ((free R).map (P.hom.app p)) ((free R).map ((dbl.inl P).app p))
