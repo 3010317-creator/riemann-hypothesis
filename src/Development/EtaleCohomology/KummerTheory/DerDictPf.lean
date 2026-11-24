@@ -24,7 +24,7 @@ section
 variable (R : Type) [CommRing R] [HasDerivedCategory (Shv R)]
 
 private theorem isIso_resAug (F : Shv R) : IsIso (DerivedCategory.Q.map (resAug F)) :=
-  (DerivedCategory.isIso_Q_map_iff_quasiIso (φ := resAug F)).2 (ResBasicPf.qis F)
+  (DerivedCategory.isIso_Q_map_iff_quasiIso (φ := resAug F)).2 (LateralTheory.EtaleFoundations.etaleSheaf_injectiveResolution_properties_of_mathlib R F).2.2.2.1
 
 def isoL (hres : LateralTheory.EtaleFoundations.EtaleInjectiveResolutionBasicProperties) (F : Shv R) : DerivedCategory.Q.obj (res R F) ≅ (DerivedCategory.singleFunctor (Shv R) 0).obj F :=
   letI : IsIso (DerivedCategory.Q.map (resAug F)) :=
@@ -37,7 +37,7 @@ lemma isoL_nat (hres : LateralTheory.EtaleFoundations.EtaleInjectiveResolutionBa
   let := isIso_resAug R F
   let := isIso_resAug R G
   have sq : CommSq ((CochainComplex.singleFunctor (Shv R) 0).map φ) (resAug F) (resAug G) (resMap R φ) :=
-    ⟨(ResBasicPf.aug_nat φ).symm⟩
+    ⟨((hres R F).2.2.2.2.2.2.2 G φ).1.symm⟩
   exact (CommSq.vert_inv (g := asIso (DerivedCategory.Q.map (resAug F)))
     (h := asIso (DerivedCategory.Q.map (resAug G))) (DerivedCategory.Q.map_commSq sq)).w
 
@@ -62,7 +62,7 @@ lemma jIso_nat (hres : LateralTheory.EtaleFoundations.EtaleInjectiveResolutionBa
 
 def dict (hres : LateralTheory.EtaleFoundations.EtaleInjectiveResolutionBasicProperties) (K : Cx R) (F : Shv R) (n : ℤ) :
     HK R K F n ≃+ (DerivedCategory.Q.obj K ⟶ ((DerivedCategory.singleFunctor (Shv R) 0).obj F)⟦n⟧) :=
-  letI := ResBasicPf.kinj F
+  letI := (hres R F).1
   (CohomologyClass.homAddEquiv).trans <|
     (AddEquiv.ofBijective (DerivedCategory.Qh.mapAddHom)
       (CochainComplex.IsKInjective.Qh_map_bijective _ ((res R F)⟦n⟧))).trans <|
