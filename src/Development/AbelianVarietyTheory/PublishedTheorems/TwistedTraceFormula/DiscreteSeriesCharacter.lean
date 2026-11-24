@@ -192,6 +192,12 @@ def DiscreteSeriesCharacter : Prop :=
     IsHCParam lam → IsDS ε lam σ → ∀ h : IsURepOn (UJset ε) σ, ∃ Θ, IsGlobalChar μ (ujRep h) Θ ∧
       ∀ θ : Fin n → ℝ, IsRegSS (ujMat ε (torusPt ε θ)) → Θ (torusPt ε θ) = dsChar ε lam θ
 
+/-- **Weyl integration formula**: expresses the Haar integral of an invariant function
+on a reductive Lie group (or unitary group $U(p,q)$) as a weighted sum of integrals over
+a maximal system of conjugacy classes of Cartan subgroups, divided by the Weyl group orders.
+
+Proposed reference:
+[H. Weyl, *Theorie der Darstellung kontinuierlicher halbeinfacher Gruppen durch lineare Transformationen. III*][weyl1926]. -/
 def WeylIntegrationFormula : Prop :=
   ∀ (n : ℕ) (ε : Fin n → Bool), (∃ 𝒯 : Finset (Subgroup (UJ ε)), IsCartanSystem 𝒯) ∧
     (∀ T : Subgroup (UJ ε), IsCartanSub T → weylOrder T ≠ 0) ∧
