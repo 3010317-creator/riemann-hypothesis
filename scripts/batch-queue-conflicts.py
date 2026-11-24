@@ -131,8 +131,11 @@ def compare(repo, base, ours, theirs, *, ours_fork=None, theirs_fork=None,
     if partial:
         fetch_blobs(repo, (base, ours, theirs), to_merge)
     # git's merge ignores `merge.renames=false` in some versions, but it does honour the limit.
-    limit_renames = len(seen_mine) + len(seen_other) > rename_limit
-    config = ("merge.renameLimit=1", "diff.renameLimit=1") if limit_renames else ()
+    # The merge and `renamed` below must use the same limit, or a rename the merge followed would
+    # not be found again: git's own defaults differ (7000 for a merge, 1000 for a diff). Under
+    # `rename_limit` changed files, neither side has enough candidates for git to give up.
+    limit = 1 if len(seen_mine) + len(seen_other) > rename_limit else rename_limit
+    config = (f"merge.renameLimit={limit}", f"diff.renameLimit={limit}")
     code, out = git(repo, "merge-tree", "--write-tree", "--name-only", "--no-messages", "-z",
                     f"--merge-base={base}", ours, theirs, ok=(0, 1), config=config)
     if not code:
@@ -162,7 +165,13 @@ def lean_files(repo, fork, head, status):
 
 
 def renamed(repo, fork, head, *pathspec, config=()):
-    """Files a pull request renames, as {new name: old name}. Matching edited files reads blobs."""
+    """Files a pull request renames, as {new name: old name}, only under `pathspec` if given.
+
+    git pairs a file the pull request deletes with one it adds when their contents are alike,
+    as it does when it merges, so this reads both. In a clone without blobs, `prefetch_imports`
+    fetches the Lean files' blobs beforehand, and git fetches any others when it reads them.
+    `config` carries the rename limit that the merge used, so that both find the same renames.
+    """
     _, out = git(repo, "diff", "--name-status", "--find-renames", "--diff-filter=R", "-z", fork, head,
                  "--", *pathspec, config=config)
     fields = out.split(b"\0")  # "R<score>", old name, new name, and so on
