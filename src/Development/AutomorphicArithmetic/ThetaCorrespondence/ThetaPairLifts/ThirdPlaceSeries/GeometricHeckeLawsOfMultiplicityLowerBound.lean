@@ -730,7 +730,7 @@ theorem heckeStable : GlobalTheory.IndefiniteRowSideFullHecke.UnusedSlot39.Hecke
     rw [norm_mul, norm_one] at h4
     have h5 : ‖jj (algebraMap T'.V T'.Fr (u2 a : T'.V))‖ = 1 := by
       refine le_antisymm h1 (by_contra fun hlt => ?_)
-      push_neg at hlt
+      push Not at hlt
       have : ‖jj (algebraMap T'.V T'.Fr (u2 a : T'.V))‖ * ‖jj (algebraMap T'.V T'.Fr ((u2 a)⁻¹ : T'.Vˣ))‖ < 1 :=
         (mul_le_of_le_one_right (norm_nonneg _) h2).trans_lt hlt
       exact this.ne h4

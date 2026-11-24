@@ -148,7 +148,7 @@ theorem levelPrimeN :
   have hlogT0 : 0 < Real.log Ts := lt_of_lt_of_le (mul_pos (mul_pos hcs hm0) hxe) hlogT
   have hTs1 : 1 < Ts := by
     by_contra hh
-    push_neg at hh
+    push Not at hh
     have := Real.log_nonpos hTs.le hh
     linarith
   have hsq : Real.sqrt cs * x ^ (1 / 6 + eps / 2) ≤ Real.sqrt (Real.log Ts) := by
@@ -801,12 +801,12 @@ theorem weightWindowRequirement_host_of_point : ∀ (C : FC) (cD ch : ℝ) (p : 
   · rw [← hTT'] at ht
     have h1 := ha' t
     have h2 := hb' t
-    simp only [ht, if_false, Finset.mem_singleton] at h1 h2
+    simp only [ht, ite_false, Finset.mem_singleton] at h1 h2
     exact ⟨h1, h2⟩
   · rw [← hTT'] at ht
     have h1 := ha' t
     have h2 := hb' t
-    simp only [ht, if_true, G.winA, G.winB, Finset.mem_Icc, Int.ceil_le, Int.le_floor, G.Nstar] at h1 h2
+    simp only [ht, ite_true, G.winA, G.winB, Finset.mem_Icc, Int.ceil_le, Int.le_floor, G.Nstar] at h1 h2
     exact ⟨h1, h2⟩
   · have key : ∀ (q d : ℕ) (cl : ℕ → PrimeClass) (TT : Finset (p.D.R.A)) (Sc eta : ℝ) (hf : ℕ → p.D.R.A),
         p.D.host.q = q → p.D.host.d = d → p.D.host.cls = cl → p.D.host.TT = TT → p.L.Sc = Sc → p.L.etaSz = eta → (∀ l, G.hP p.D l = hf l) →
