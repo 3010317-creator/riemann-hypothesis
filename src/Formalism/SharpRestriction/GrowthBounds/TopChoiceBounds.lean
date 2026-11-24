@@ -1817,7 +1817,7 @@ theorem bt_real_tI {sm kappaThresholdOne kappaThresholdTwo N N1 v br n' c B : �
     show (4 + 2 * kappaThresholdOne + kappaThresholdTwo) * (N * B) =
       4 * (N * B) + 2 * kappaThresholdOne * (N * B) + kappaThresholdTwo * (N * B) by ring]
 
-theorem bt_real_NE {S Np N E lb B : ℝ} (hS : 40 ≤ S) (hN : 0 ≤ N) (hNp : Np ≤ 40 * S * N) (hNp0 : 0 ≤ Np)
+theorem bt_real_NE {S Np N E lb B : ℝ} (hS : 40 ≤ S) (hN : 0 ≤ N) (hNp : Np ≤ 40 * S * N)
     (hE0 : 0 ≤ E) (hE : E ≤ S ^ 8) (hl0 : 0 ≤ lb) (hl : lb ≤ S) (hB : S ^ 20 ≤ B) : Np * E * lb ≤ N * B := by
   have hS0 : 0 ≤ S := by linarith
   have a1 : Np * E * lb ≤ (40 * S * N) * S ^ 8 * S := by
@@ -1943,7 +1943,7 @@ theorem pow_sum_le_pow_eight {S u v w : ℝ} (hS : 40 ≤ S) (hu0 : 0 ≤ u) (hu
   have b4 : 0 < S ^ 5 := by positivity
   linarith
 
-theorem mul_pow_add_pow_le_pow_eight {S z u w : ℝ} (hS : 40 ≤ S) (hz0 : 0 ≤ z) (hz : z ≤ S) (hu0 : 0 ≤ u) (hu : u ≤ S) (hw0 : 0 ≤ w)
+theorem mul_pow_add_pow_le_pow_eight {S z u w : ℝ} (hS : 40 ≤ S) (hz : z ≤ S) (hu0 : 0 ≤ u) (hu : u ≤ S) (hw0 : 0 ≤ w)
     (hw : w ≤ S) : z * (u ^ 5 + w ^ 3) ≤ S ^ 8 := by
   have a1 := pow_le_pow_left₀ hu0 hu 5
   have a2 := pow_le_pow_left₀ hw0 hw 3
@@ -2195,7 +2195,7 @@ theorem bt_II (X : Inst D L) (K : Consts) (hK : K.Nonneg) (Ce S Ce9 : ℝ) (H : 
     refine bt_fin (c1 := K.DII + 3 * (rG L.sc : ℝ)) (by linarith only [hDII, hr0])
       (by unfold bt_C; linarith only [hr0, hrC, htI1, htI2, hDI, h90]) hNB ?_
     refine bt_real_DII hDII hr0 ?_ A5 ?_
-    · exact bt_real_NE hS hN0 O.Np hNp0 (by positivity)
+    · exact bt_real_NE hS hN0 O.Np (by positivity)
         (pow_sum_le_pow_eight hS (by positivity) hN1S hr0 H.r hk0.le H.k) O.lb0 O.lb O.SB
     · exact mul_le_of_density_bounds H.cl0 hN0 ha0 hX0 hp0 hpp hNC hc0n hc00 H.pX
 
@@ -2230,7 +2230,7 @@ theorem bt_I (X : Inst D L) (K : Consts) (hK : K.Nonneg) (Ce S Ce9 : ℝ) (H : b
   have hB0 : 0 ≤ L.sc.a / p := by positivity
   have hE0 : 0 ≤ (L.sc.x ^ (Scale.A / 2)) ^ 2 * ((N1 L.sc : ℝ) ^ 5 + (D.R.k : ℝ) ^ 3) := by positivity
   have hE : (L.sc.x ^ (Scale.A / 2)) ^ 2 * ((N1 L.sc : ℝ) ^ 5 + (D.R.k : ℝ) ^ 3) ≤ S ^ 8 :=
-    mul_pow_add_pow_le_pow_eight hS (by positivity) (by rw [rpow_half_sq_eq]; exact H.xA) (by positivity) hN1S hk0.le H.k
+    mul_pow_add_pow_le_pow_eight hS (by rw [rpow_half_sq_eq]; exact H.xA) (by positivity) hN1S hk0.le H.k
   have hDeq : DIf K L p (addOrderOf (hP D p)) = ⌈K.DI * NplusF L.sc (addOrderOf (hP D p)) *
       ((L.sc.x ^ (Scale.A / 2)) ^ 2 * ((N1 L.sc : ℝ) ^ 5 + (D.R.k : ℝ) ^ 3)) * Real.logb p L.sc.a⌉₊ := by
     unfold DIf
@@ -2271,7 +2271,7 @@ theorem bt_I (X : Inst D L) (K : Consts) (hK : K.Nonneg) (Ce S Ce9 : ℝ) (H : b
         (by positivity) O.nS O.SB
   · rw [hDeq]
     refine bt_fin (c1 := K.DI) hDI (by unfold bt_C; linarith only [hr0, hrC, hDII, htI1, htI2, h90]) hNB ?_
-    have := bt_real_NE hS hN0 O.Np hNp0 hE0 hE O.lb0 O.lb O.SB
+    have := bt_real_NE hS hN0 O.Np hE0 hE O.lb0 O.lb O.SB
     have h2 := mul_le_mul_of_nonneg_left this hDI
     linarith only [h2]
 
@@ -2781,8 +2781,8 @@ theorem bt_X'S (s : Scale) : s.X' ≤ Real.exp (s.x ^ (s.eps / 2)) := by
   apply Real.exp_le_exp.2
   exact Real.rpow_le_rpow_of_exponent_le s.one_lt_alt.le (by have := s.eps_pos; linarith)
 
-theorem bt_bo {S C f n k la X c : ℝ} (hS : 40 ≤ S) (hC0 : 0 ≤ C) (hC : C ≤ S) (hf : f = 2 * n) (hn0 : 0 ≤ n) (hn : n ≤ S)
-    (hk0 : 0 ≤ k) (hk : k ≤ S) (hl0 : 0 ≤ la) (hl : 2 * la ≤ S) (hX1 : 1 ≤ X) (hX : X ≤ S) (hc0 : 0 ≤ c)
+theorem bt_bo {S C f n k la X c : ℝ} (hS : 40 ≤ S) (hC : C ≤ S) (hf : f = 2 * n) (hn0 : 0 ≤ n) (hn : n ≤ S)
+    (hk0 : 0 ≤ k) (hk : k ≤ S) (hl0 : 0 ≤ la) (hl : 2 * la ≤ S) (hX : X ≤ S) (hc0 : 0 ≤ c)
     (hc : c ≤ X + 1) : 2 * (C * f * k ^ 2 * la * c) ≤ S ^ 8 := by
   have hS0 : (0 : ℝ) ≤ S := by linarith
   have h1 : C * f * k ^ 2 * la * c ≤ S * (2 * S) * S ^ 2 * S * (2 * S) := by
@@ -2862,8 +2862,8 @@ theorem stmtFTa_proved {eps : ℝ} (Fm : FamP eps) : CornerGLContinuity.FamilyWe
   have hX1 : (1 : ℝ) ≤ (Fm.L x i).sc.X' := by
     unfold Scale.X'
     exact Real.one_le_exp (Real.rpow_nonneg (lt_trans one_pos (Fm.L x i).sc.one_lt_alt).le _)
-  refine bt_bo H.forty_le_bound (le_max_right _ _) ?_ (n := ((Fm.D x i).R.n : ℝ)) ?_ (Nat.cast_nonneg _) H.n (Nat.cast_nonneg _) H.k
-    (Real.log_nonneg ha1.le) H.la hX1 (bt_X'S _) (Nat.cast_nonneg _) (Nat.ceil_lt_add_one (by linarith only [hX1])).le
+  refine bt_bo H.forty_le_bound ?_ (n := ((Fm.D x i).R.n : ℝ)) ?_ (Nat.cast_nonneg _) H.n (Nat.cast_nonneg _) H.k
+    (Real.log_nonneg ha1.le) H.la (bt_X'S _) (Nat.cast_nonneg _) (Nat.ceil_lt_add_one (by linarith only [hX1])).le
   · rw [hX, hE]
     linarith only [hCy, Real.add_one_le_exp (x ^ (eps / 2))]
   · unfold Ranks.f
