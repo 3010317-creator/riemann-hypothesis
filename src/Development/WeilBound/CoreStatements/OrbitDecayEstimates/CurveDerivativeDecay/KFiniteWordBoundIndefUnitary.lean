@@ -1,9 +1,56 @@
 module
 
 public import Development.WeilBound.CoreStatements.BranchingTraces.HeBranching
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.EquivSigLamOfIsDS
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.PropsLowK
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.CasValK
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.Smooth
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.AnalyticVectors.Unitary
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.CasimirGapAtNoncompactWeight
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.LayerBasic
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.Bridge
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.BridgeExpK
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.BridgeHW
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.CFCoreA
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.EquivSigLamOfIsDS
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.SmoothA
 
 @[expose] public section
 
@@ -56,9 +103,6 @@ theorem nsq_le {u : Fin n → ℝ} {c : ℝ} (h : ∀ a, |u a| ≤ c) : nsq u �
         rw [← sq, ← sq_abs]; exact pow_le_pow_left₀ (abs_nonneg _) (h a) 2
     _ = n * c ^ 2 := by simp
 
-theorem nsq_nonneg' (u : Fin n → ℝ) : 0 ≤ nsq u := by
-  unfold nsq dot; exact Finset.sum_nonneg fun _ _ => mul_self_nonneg _
-
 theorem abs_rhoN_le' (a : Fin n) : |rhoN ε a| ≤ n / 2 := by
   have key : ∀ s t : Finset (Fin n), |(((s.card : ℕ) : ℝ) - ((t.card : ℕ) : ℝ)) / 2| ≤ n / 2 := fun s t => by
     have h1 : ((s.card : ℕ) : ℝ) ≤ n := by exact_mod_cast (Finset.card_le_univ s).trans (by simp)
@@ -92,7 +136,7 @@ theorem lowestKType_energy_le {lam : Fin n → ℝ} {B : ℝ} (hE : IsGlRep E) (
     {x : M} (hx : x ∈ V) :
     ∑ a, ∑ b, ‖E b a x‖ ^ 2 ≤ 2 * n * (B + n) ^ 2 * ‖x‖ ^ 2 := by
   have hK := re_inner_casimirK_layer_le hE hU hV 0 hx
-  simp only [Nat.cast_zero, mul_zero, add_zero, Real.sq_sqrt (nsq_nonneg' _)] at hK
+  simp only [Nat.cast_zero, mul_zero, add_zero, Real.sq_sqrt (_root_.ReciprocityTheory.ChartRestriction.DS.nsq_nonneg' _)] at hK
   rw [sum_sq_eq hU x, hc x hx, re_inner_smul_real]
   have hN := nsq_le (abs_lowK_add_rhoC_le (ε := ε) hB)
   have hrho := nsq_le (fun a => abs_rho_le (n := n) a)
@@ -101,7 +145,7 @@ theorem lowestKType_energy_le {lam : Fin n → ℝ} {B : ℝ} (hE : IsGlRep E) (
     have hn0 : (0 : ℝ) ≤ n := Nat.cast_nonneg n
     have hpoly : 2 * (B + (n : ℝ) / 2) ^ 2 + ((n : ℝ) / 2) ^ 2 ≤ 2 * (B + n) ^ 2 := by nlinarith
     have hmul := mul_le_mul_of_nonneg_left hpoly hn0
-    linarith [nsq_nonneg' lam, nsq_nonneg' (rhoC ε)]
+    linarith [_root_.ReciprocityTheory.ChartRestriction.DS.nsq_nonneg' lam, _root_.ReciprocityTheory.ChartRestriction.DS.nsq_nonneg' (rhoC ε)]
   have h1 : 2 * RCLike.re (inner ℂ (casimirK ε E x) x) - casVal lam * ‖x‖ ^ 2 ≤
       (2 * (nsq (lowK ε lam + rhoC ε) - nsq (rhoC ε)) - casVal lam) * ‖x‖ ^ 2 := by linarith
   exact h1.trans (mul_le_mul_of_nonneg_right hcoef (sq_nonneg _))
@@ -138,7 +182,7 @@ theorem layer_bound {lam : Fin n → ℝ} {B : ℝ} (hE : IsGlRep E) (hU : IsInf
     have hrho' : nsq (rho n) ≤ 4 * n * (B + S) ^ 2 := by
       have h5 := pow_le_pow_left₀ (by positivity) (show (n : ℝ) / 2 ≤ 2 * (B + S) by linarith) 2
       nlinarith
-    rw [hcasv]; nlinarith [nsq_nonneg' lam, nsq_nonneg' (rhoC ε)]
+    rw [hcasv]; nlinarith [_root_.ReciprocityTheory.ChartRestriction.DS.nsq_nonneg' lam, _root_.ReciprocityTheory.ChartRestriction.DS.nsq_nonneg' (rhoC ε)]
   calc _ ≤ (2 * (R ^ 2 - nsq (rhoC ε)) - casVal lam) * ‖x‖ ^ 2 := by linarith
     _ ≤ (64 * n * (B + S) ^ 2) * ‖x‖ ^ 2 := mul_le_mul_of_nonneg_right hmain (sq_nonneg _)
     _ = (8 * s * (B + S) * ‖x‖) ^ 2 := by rw [mul_pow, mul_pow, mul_pow, hs2]; ring
