@@ -44,7 +44,7 @@ theorem qD_apply (i : Fin 2) (a : DualNumber R) :
     qD i a = algebraMap R _ a.fst + a.snd • zR (R := R) 1 i := rfl
 
 theorem jetAug_comp_qD (i : Fin 2) : (jetAug R (Fin 2) 1).comp (qD i) = fstD R := by
-  ext a
+  ext
   rw [AlgHom.comp_apply, qD_apply, map_add (f := _), map_smul, AlgHom.commutes, jetAug_zR, smul_zero, add_zero]
   rfl
 
