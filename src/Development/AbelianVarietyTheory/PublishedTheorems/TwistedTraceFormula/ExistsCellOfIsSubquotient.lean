@@ -253,6 +253,13 @@ def GeometricLemma : Prop :=
   ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k],
     JacquetOfInducedFiltration k ∧ CellSemisimplification k
 
+/-- **Zelevinsky's polynomial ring theorem for representations of $GL_n$**: the Grothendieck group
+`\bigoplus_{n \ge 0} \mathcal{R}(GL_n(k))` of finite-length admissible representations equipped with
+the parabolic induction product and Jacquet restriction coproduct forms a self-dual Hopf algebra
+isomorphic to the ring of symmetric functions.
+
+Proposed reference:
+[A. V. Zelevinsky, *Induced representations of reductive p-adic groups. II*][zelevinsky1980]. -/
 def ZelevinskyPolynomialRing : Prop :=
   ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k],
     ∃ (Z : ∀ Δ : Segment k, IrrCl (GL (Fin (Δ.len * Δ.d)) k))
