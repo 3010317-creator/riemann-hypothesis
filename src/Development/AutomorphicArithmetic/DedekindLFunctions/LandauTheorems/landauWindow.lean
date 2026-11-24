@@ -106,7 +106,7 @@ theorem iteratedDeriv_laplace_bound (g : ℝ → ℝ) (C : ℝ)
     simp only [Complex.neg_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im,
       Complex.neg_im, mul_zero, sub_zero]
     apply Real.exp_le_exp.mpr
-    nlinarith
+    exact mul_le_mul_of_nonneg_right (by linarith) hu.le
   have hC : 0 ≤ C * Real.exp (2 * u) := le_trans (norm_nonneg _) h1
   rw [norm_mul, norm_mul, h2]
   calc ‖(g u : ℂ)‖ * u ^ k * ‖cexp (-z * u)‖
@@ -240,9 +240,25 @@ theorem eq_ofReal_sub_of_dist_le_of_le_sub_re {w : ℂ} {σ D : ℝ} (h1 : dist 
   have hq : (w.re - σ) ^ 2 + (w.im - 0) ^ 2 ≤ D ^ 2 := by
     have hs := Real.sq_sqrt (by positivity : (0:ℝ) ≤ (w.re - σ) ^ 2 + (w.im - 0) ^ 2)
     have h0 := Real.sqrt_nonneg ((w.re - σ) ^ 2 + (w.im - 0) ^ 2)
-    nlinarith
-  have him : w.im = 0 := by nlinarith [sq_nonneg w.im]
-  have hre : w.re = σ - D := by nlinarith [sq_nonneg w.im]
+    calc (w.re - σ) ^ 2 + (w.im - 0) ^ 2
+        = Real.sqrt ((w.re - σ) ^ 2 + (w.im - 0) ^ 2) ^ 2 := hs.symm
+      _ ≤ D ^ 2 := pow_le_pow_left₀ h0 h1 2
+  have hD2 : D ^ 2 ≤ (w.re - σ) ^ 2 := by
+    have hsq1 : D * D ≤ (σ - w.re) * (σ - w.re) := mul_le_mul h2 h2 hD0 (by linarith)
+    have hsq2 : (σ - w.re) * (σ - w.re) = (w.re - σ) ^ 2 := by ring
+    linarith [show D ^ 2 = D * D from sq D]
+  have him2 : w.im ^ 2 ≤ 0 := by linarith
+  have him0 : w.im ^ 2 = 0 := le_antisymm him2 (sq_nonneg w.im)
+  have him : w.im = 0 := sq_eq_zero_iff.mp him0
+  have hre : w.re = σ - D := by
+    have hdiff : (σ - w.re - D) * (σ - w.re + D) ≤ 0 := by
+      have : (σ - w.re - D) * (σ - w.re + D) = (w.re - σ) ^ 2 - D ^ 2 := by ring
+      linarith [him0]
+    by_contra hne
+    have hpos1 : 0 < σ - w.re - D := lt_of_le_of_ne (by linarith) (fun h => hne (by linarith))
+    have hpos2 : 0 < σ - w.re + D := by linarith
+    have : 0 < (σ - w.re - D) * (σ - w.re + D) := mul_pos hpos1 hpos2
+    linarith
   apply Complex.ext
   · rw [Complex.ofReal_re]; exact hre
   · rw [Complex.ofReal_im]; exact him
@@ -348,16 +364,19 @@ theorem landau_growth_contra {c d e C : ℝ} (hc : 0 < c) (hd : 0 < d) (hde : d 
   rw [ge_iff_le, div_le_iff₀ hcL] at hU
   have h1 : L / 2 * U + 1 ≤ X := Real.add_one_le_exp _
   have hX : |C| < c * X := by
-    nlinarith [mul_le_mul_of_nonneg_left h1 hc.le]
+    have hm := mul_le_mul_of_nonneg_left h1 hc.le
+    have heq : c * (L / 2 * U + 1) = U * (c * L) / 2 + c := by ring
+    linarith
   have hY : X * X ≤ Real.exp (k * L) := by
     rw [hXdef, ← Real.exp_add]
     apply Real.exp_le_exp.mpr
-    nlinarith [mul_le_mul_of_nonneg_left hk hL.le]
-  have hCX : C * X * d ^ k ≤ |C| * X * d ^ k := by
-    have := le_abs_self C
-    have hXd : 0 < X * d ^ k := mul_pos hXpos hdk
-    nlinarith
-  have h2 : |C| * X < c * (X * X) := by nlinarith
+    have hm := mul_le_mul_of_nonneg_left hk hL.le
+    linarith
+  have hCX : C * X * d ^ k ≤ |C| * X * d ^ k :=
+    mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right (le_abs_self C) hXpos.le) hdk.le
+  have h2 : |C| * X < c * (X * X) := by
+    calc |C| * X < (c * X) * X := mul_lt_mul_of_pos_right hX hXpos
+      _ = c * (X * X) := by ring
   have h3 : c * (X * X) ≤ c * Real.exp (k * L) := mul_le_mul_of_nonneg_left hY hc.le
   calc C * X * d ^ k ≤ |C| * X * d ^ k := hCX
     _ < c * Real.exp (k * L) * d ^ k := mul_lt_mul_of_pos_right (h2.trans_le h3) hdk
@@ -603,7 +622,7 @@ theorem landau_pole_re_le_bound {g : ℝ → ℝ} {Φ : ℂ → ℂ} {Z : Set �
   rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, Complex.norm_exp, hre]
   have h2 : Real.exp (-s.re * u) ≤ Real.exp (-σ * u) := by
     apply Real.exp_le_exp.mpr
-    nlinarith
+    exact mul_le_mul_of_nonneg_right (by linarith) hu0
   calc |g u| * Real.exp (-s.re * u) ≤ (C * Real.exp (2 * u)) * Real.exp (-σ * u) :=
         mul_le_mul h1 h2 (Real.exp_pos _).le ((abs_nonneg _).trans h1)
     _ = C * Real.exp (-(σ - 2) * u) := by
@@ -721,10 +740,10 @@ lemma landau_tails_chernoff (k : ℕ) {s l U V : ℝ} (hl : 0 ≤ l) (hs : l < s
       rw [mem_Icc, not_and_or, not_le, not_le] at hn
       rcases hn with h | h
       · have : Real.exp (-s * u) ≤ Real.exp (-s * u + l * (U - u)) :=
-          Real.exp_le_exp.2 (by nlinarith [mul_nonneg hl (sub_nonneg.2 h.le)])
+          Real.exp_le_exp.2 (by linarith [mul_nonneg hl (sub_nonneg.2 h.le)])
         linarith [Real.exp_pos (-s * u + l * (u - V))]
       · have : Real.exp (-s * u) ≤ Real.exp (-s * u + l * (u - V)) :=
-          Real.exp_le_exp.2 (by nlinarith [mul_nonneg hl (sub_nonneg.2 h.le)])
+          Real.exp_le_exp.2 (by linarith [mul_nonneg hl (sub_nonneg.2 h.le)])
         linarith [Real.exp_pos (-s * u + l * (U - u))]
     rw [← e1, ← e2] at key
     have := mul_le_mul_of_nonneg_left key hp
@@ -762,10 +781,19 @@ theorem landau_tails {δ : ℝ} (hδ : 0 < δ) :
     refine ⟨2 + 6 / δ, by have : 0 < 6 / δ := by positivity
                           linarith, by field_simp; ring⟩
   obtain ⟨M, hM⟩ : ∃ M : ℝ, M = l * (1 + δ) := ⟨_, rfl⟩
-  have hMl : l < M := by nlinarith
+  have hl_pos : 0 < l := by linarith
+  have hMl : l < M := by
+    rw [hM]
+    calc l = l * 1 := (mul_one l).symm
+      _ < l * (1 + δ) := mul_lt_mul_of_pos_left (by linarith) hl_pos
   obtain ⟨σ, hσ⟩ : ∃ σ : ℝ, σ = M * (2 + l) := ⟨_, rfl⟩
   have hσ1 : l * (2 + l) < σ := by rw [hσ]; gcongr
-  have hs : l < σ - 2 := by nlinarith
+  have hs : l < σ - 2 := by
+    have h4l : l + 2 ≤ l * (2 + l) := by
+      have : 4 ≤ 2 + l := by linarith
+      have : l * 4 ≤ l * (2 + l) := mul_le_mul_of_nonneg_left this hl_pos.le
+      linarith
+    linarith
   have ha : 0 < σ - 2 - l := by linarith
   have hb : 0 < σ - 2 + l := by linarith
   have hσ0 : 0 < σ := by linarith
@@ -776,7 +804,12 @@ theorem landau_tails {δ : ℝ} (hδ : 0 < δ) :
   set k := ⌈(1 + δ / 2) * σ * U⌉₊
   have hσU : 0 ≤ σ * U := by positivity
   refine ⟨k, ?_, ?_⟩
-  · nlinarith [mul_nonneg hδ.le hσU]
+  · have hm : 0 ≤ δ * (σ * U) := mul_nonneg hδ.le hσU
+    have hUσ : U ≤ σ * U := by
+      calc U = 1 * U := (one_mul U).symm
+        _ ≤ σ * U := mul_le_mul_of_nonneg_right (by linarith) (by linarith)
+    have heq : (1 + δ / 2) * σ * U = σ * U + δ * (σ * U) / 2 := by ring
+    linarith
   · have e : (2 - σ) = -(σ - 2) := by ring
     rw [e, add_div]
     refine (landau_tails_chernoff k (by linarith : 0 ≤ l) hs).trans (add_le_add ?_ ?_)
@@ -785,27 +818,44 @@ theorem landau_tails {δ : ℝ} (hδ : 0 < δ) :
         have : 0 < M - 1 := by linarith
         rw [div_eq_div_iff ha.ne' this.ne', hσ]; ring
       have e2 : (1 + δ / 2) * σ = M * (M - 1) := by
-        have : (1 + δ / 2) * (2 + l) = M - 1 := by rw [hM]; nlinarith
+        have : (1 + δ / 2) * (2 + l) = M - 1 := by
+          rw [hM]
+          calc (1 + δ / 2) * (2 + l) = l + l * δ / 2 + 2 + δ := by ring
+            _ = l + (6 + 2 * δ) / 2 + 2 + δ := by rw [hl]
+            _ = l + (6 + 2 * δ) - 1 := by ring
+            _ = l + l * δ - 1 := by rw [← hl]
+            _ = l * (1 + δ) - 1 := by ring
         rw [hσ, ← this]; ring
       have hM1 : 1 ≤ M - 1 := by linarith
       have e3 : (k : ℝ) * (1 / (M - 1)) ≤ M * U + 1 := by
         rw [mul_one_div, div_le_iff₀ (by linarith)]
         rw [e2] at hk2
-        nlinarith
+        calc (k : ℝ) ≤ M * (M - 1) * U + 1 := hk2
+          _ ≤ M * (M - 1) * U + (M - 1) := by linarith
+          _ = (M * U + 1) * (M - 1) := by ring
       have e4 : l * ((1 + δ) * U) = M * U := by rw [hM]; ring
       rw [e1, e4]; linarith
     · apply landau_tails_pow k hσ0 hb
       have e1 : (k : ℝ) * ((σ - (σ - 2 + l)) / (σ - 2 + l)) = -((k : ℝ) * (l - 2) / (σ - 2 + l)) := by
         ring
-      have e2 : (1 + δ / 2) * (l - 2) = l + 1 := by nlinarith
+      have e2 : (1 + δ / 2) * (l - 2) = l + 1 := by
+        calc (1 + δ / 2) * (l - 2) = l + l * δ / 2 - 2 - δ := by ring
+          _ = l + (6 + 2 * δ) / 2 - 2 - δ := by rw [hl]
+          _ = l + 1 := by ring
       have e3 : l * U ≤ (k : ℝ) * (l - 2) / (σ - 2 + l) := by
         rw [le_div_iff₀ hb]
         have h1 : (1 + δ / 2) * σ * U * (l - 2) ≤ k * (l - 2) :=
           mul_le_mul_of_nonneg_right hk1 (by linarith)
         have h2 : (1 + δ / 2) * σ * U * (l - 2) = (l + 1) * σ * U := by rw [← e2]; ring
-        have h3 : l * (σ - 2 + l) ≤ (l + 1) * σ := by nlinarith
+        have h3 : l * (σ - 2 + l) ≤ (l + 1) * σ := by
+          have hll : l * (l - 2) ≤ l * (2 + l) := mul_le_mul_of_nonneg_left (by linarith) hl_pos.le
+          have hd_eq : (l + 1) * σ - l * (σ - 2 + l) = σ - l * (l - 2) := by ring
+          linarith
         have h4 := mul_le_mul_of_nonneg_right h3 (by linarith : 0 ≤ U)
-        nlinarith
+        calc l * U * (σ - 2 + l) = l * (σ - 2 + l) * U := by ring
+          _ ≤ (l + 1) * σ * U := h4
+          _ = (1 + δ / 2) * σ * U * (l - 2) := h2.symm
+          _ ≤ (k : ℝ) * (l - 2) := h1
       rw [e1]; linarith
 
 end Deduction
