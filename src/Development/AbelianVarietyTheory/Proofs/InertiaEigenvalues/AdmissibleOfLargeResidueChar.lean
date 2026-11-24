@@ -90,6 +90,20 @@ import Mathlib.Algebra.Order.Star.Rat
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Algebra.Module.StablyFree.Basic
 
+attribute [-instance]
+  NormedSpace.toModule Submodule.normedSpace Submodule.seminormedAddCommGroup
+  Submodule.normedAddCommGroup SubalgebraClass.toNormedAlgebra
+  Subalgebra.isScalarTower_left Subalgebra.isScalarTower_mid
+  Submonoid.instIsScalarTowerSubtypeMem Submonoid.instSMulCommClassSubtypeMem_1
+  Subalgebra.smulCommClass_right Subalgebra.smulCommClass_left
+  MulSemiringAction.toDistribMulAction
+  RingHomClass.toLinearMapClassNNRat RingHomClass.toLinearMapClassRat
+  NonUnitalAlgHomClass.instLinearMapClass
+  NonUnitalAlgHomClass.instSemilinearMapClassOfNonUnitalAlgSemiHomClassOfClassRingHom
+  Algebra.TensorProduct.instNonUnitalSemiring Algebra.TensorProduct.instNonUnitalRing
+attribute [local instance high]
+  Submodule.module TensorProduct.leftModule Algebra.TensorProduct.leftAlgebra
+
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoboundaryDescentEnlargementCoefficients, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChiTContIsCrysMultV, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrysWpRTw, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUniformiser, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExtendUnramEmb, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteDimensionalKsOne, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IncLocChiEpsUZpow, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsTwistRepTwist, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JTilShiftBlock, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ReflSBlockJIff, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ScaleRootsProdIcc, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistMRepVCont, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsExactLocalConditionDataAtPlace, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFieldExtensionOfIntegralRetraction, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntegralRetractionLocalIntegers, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemFinitePartOfLift, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedCocycleDescentEnlargement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleOfLargeResidueChar
 
