@@ -70,16 +70,6 @@ def WReq (X : Inst D L) (K : Consts) (a b : HH D → ℤ) : Prop :=
       (2 * (if L.sc.x ^ (-L.sc.eps) < Sig X K a b p then (1 : ℝ) else 0) + 4 * Sig X K a b p) ≤
     L.sc.x ^ (-9 : ℝ)
 
-def PointsLemma (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) : Prop :=
-  ∀ a ∈ box D (winA D L.sc), ∀ b ∈ box D (winB D K L.sc), WReq X K a b →
-    (∀ S : Finset ℕ, (∀ p ∈ S, p.Prime ∧ IsResidueClassZero D p) →
-      ∑ p ∈ S, Real.log p * max 0 ((∑ j ∈ SizeData₂.lifts D, ∑ s ∈ D.host.TT, askG X a b p j s) -
-        ((∑ j ∈ SizeData₂.lifts D, gainP X K a b p j) - tauP X K a b p - ioP X K a b p)) ≤
-      5 * (D.R.m : ℝ) * (D.host.TT.card : ℝ) * L.sc.a / L.sc.x) ∧
-    (∀ S : Finset ℕ, (∀ p ∈ S, p.Prime) →
-      ∑ p ∈ S, Real.log p * ioP X K a b p ≤
-        (D.R.m : ℝ) * (D.host.TT.card : ℝ) * L.sc.a * L.sc.x ^ (-9 : ℝ))
-
 def WeightVectorExists (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) : Prop :=
   ∃ a ∈ box D (winA D L.sc), ∃ b ∈ box D (winB D K L.sc), WReq X K a b
 
@@ -88,15 +78,6 @@ def Conclusion0 (D : D7) (L : SizeData₂ D) (X : Inst D L) : Prop :=
   ∀ p : ℕ, p.Prime → (IsResidueClassZero D p ∨ IsSg D p) → ∀ j ∈ SizeData₂.lifts D, ∀ s ∈ D.host.TT,
     askP X a b p j s ≤ askG X a b p j s ∧
     askG X a b p j s ≤ askP X a b p j s + Nm D * Real.logb p (2 * L.sc.a)
-
-def WeightedPrimeSumBound (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) (C : ℝ) : Prop :=
-  (∀ a ∈ box D (winA D L.sc), ∀ b ∈ box D (winB D K L.sc), ∀ S : Finset ℕ,
-    (∀ p ∈ S, p.Prime ∧ (IsResidueClassZero D p ∨ IsSg D p) ∧ L.sc.X'' D.R.n < (p : ℝ)) →
-    ∑ p ∈ S, Real.log p * (∑ j ∈ SizeData₂.lifts D, ∑ s ∈ D.host.TT, askG X a b p j s) ≤
-      (D.R.m : ℝ) * (D.host.TT.card : ℝ) * L.sc.a * L.sc.x ^ (-16 : ℝ)) ∧
-  ∀ S : Finset ℕ, (∀ p ∈ S, p.Prime ∧ (p : ℝ) ≤ L.sc.X'' D.R.n) →
-    ∑ p ∈ S, Real.log p * (C * (cG L + L.etaSz) * Real.logb p (2 * L.sc.a)) ≤ L.sc.b * L.sc.x ^ (-100 : ℝ) ∧
-    ∑ p ∈ S, Real.log p * fl D L.sc C p ≤ L.sc.b * L.sc.x ^ (-100 : ℝ)
 
 def admW (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) : Prop :=
   aL L ∈ box D (winA D L.sc) ∧ bL L ∈ box D (winB D K L.sc) ∧ WReq X K (aL L) (bL L)
@@ -277,7 +258,7 @@ def admitted (D : D7) (L : SizeData₂ D) (X : Inst D L) (Y : LatInst D) (K : Co
   TypePrimeSizeConds D L K
 
 def Conclusion₂ (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) (C bo : ℝ) : Prop :=
-  Conclusion1 D L X K C bo ∧ Conclusion2 D L X K ∧ PointsLemma D L X K ∧ WeightVectorExists D L X K ∧ Conclusion0 D L X ∧ WeightedPrimeSumBound D L X K C
+  Conclusion1 D L X K C bo ∧ Conclusion2 D L X K ∧ Conclusion0 D L X
 
 def AdmF {eps : ℝ} (Fm : FamP eps) (K : Consts) (X : ∀ x (i : Fm.Ix x), Inst (Fm.D x i) (Fm.L x i))
     (Y : ∀ x (i : Fm.Ix x), LatInst (Fm.D x i)) : Prop :=

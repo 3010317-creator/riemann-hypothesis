@@ -296,12 +296,6 @@ def Conclusion8 (D : D7) : Prop :=
           (D.host.galE (σ * τ) ∈ D.R.Psi ↔
             D.host.galE σ ∈ D.R.Psi))
 
-def Conclusion₂ (D : D7) (C₄ C₅ : ℝ) (sc : Scale) : Prop :=
-  Conclusion1 D ∧ Conclusion2 D ∧ PointsLemma D ∧ Conclusion4 D C₄ ∧ Conclusion5 D C₅ ∧ TorusPairsWithVariant D ∧ Conclusion6 D sc ∧ division_rows_rational_lattice D ∧ Conclusion8 D
-
-def ConclusionOnFamily {eps : ℝ} (Fm : Formalism.MainNotions.FamP eps) (C₄ C₅ : ℝ) : Prop :=
-  ∀ x : ℝ, Fm.x1 < x → ∀ i : Fm.Ix x, Conclusion₂ (Fm.D x i) C₄ C₅ (Fm.L x i).sc
-
 end Formalism.MainNotions.UnusedSlot33
 
 end
