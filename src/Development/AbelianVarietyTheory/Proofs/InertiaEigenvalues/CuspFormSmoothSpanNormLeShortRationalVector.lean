@@ -139,7 +139,12 @@ theorem ideleModule_det_infGL_le (z : GL (Fin a) (Cinf E)) :
   rw [h2, mul_one, pow_mul, ← Finset.card_univ, ← Finset.prod_const]
   refine Finset.prod_le_prod₀ (fun _ _ => by positivity) fun w _ => ?_
   have h1 : ‖(u : Ad E).1 w‖ ≤ a.factorial * height z ^ a := by
-    rw [← _root_.GlobalTheory.HCF.ModGrowth.norm_pInf_apply, hinf]
+    have hnorm : ‖pInf E (u : Ad E) w‖ = ‖(u : Ad E).1 w‖ :=
+      (InfinitePlace.Completion.isometryEquivComplexOfIsComplex
+        (IsTotallyComplex.isComplex w)).isometry.norm_map_of_map_zero
+        (map_zero (InfinitePlace.Completion.ringEquivComplexOfIsComplex
+          (IsTotallyComplex.isComplex w))) ((u : Ad E).1 w)
+    rw [← hnorm, hinf]
     exact (norm_le_pi_norm _ w).trans (norm_det_le _ (by unfold height; linarith [norm_nonneg (toL (z⁻¹).val)]))
   have hm : w.mult ≤ 2 := by unfold InfinitePlace.mult; split_ifs <;> norm_num
   exact (pow_le_pow_left₀ (norm_nonneg _) h1 _).trans (pow_le_pow_right₀ hB hm)
