@@ -1,7 +1,6 @@
 module
 
-public import Mathlib.RingTheory.Flat.TorsionFree
-
+import Mathlib.RingTheory.Flat.TorsionFree
 public import Formalism.SharpRestriction.LevelLetterCocycles.InvariantsIsoOfGenerators
 
 @[expose] public section
