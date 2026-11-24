@@ -1380,8 +1380,8 @@ theorem rho_add_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m 
 
 theorem rho_smul_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m (c : (per l K).A) x f, rhoK S hS hC a j m x f →
     rhoK S hS hC a j m (c • x) ((AddMonoidHom.mulLeft ((S.L m).ι ((S.L m).lam c))).comp f) := by
-  intro M a hM j m c x f hρ₁
-  obtain ⟨_, s₀, h⟩ := hρ₁
+  intro M a hM j m c x f hf
+  obtain ⟨s₀, h⟩ := rhoK_witness S hS hC hf
   exact ⟨hM, s₀, fun s hs => _root_.GlobalTheory.CompanionTheory.KapChain.rho_smul (chK S hS hC M m s) c _ f (h s hs)⟩
 
 theorem rho_lin'_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m x f, rhoK S hS hC a j m x f →
