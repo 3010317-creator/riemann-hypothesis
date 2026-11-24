@@ -244,16 +244,12 @@ theorem exists_transport {G K : Type} [CommGroup G] [TopologicalSpace G] [IsTopo
 theorem one_mem_intAE (D : D7) : (1 : Af D.host.F ⊗[D.host.F] D.host.E) ∈ intAE D :=
   AddSubgroup.subset_closure ⟨1, fun v => by rw [map_one]; exact one_mem _, 1, rfl⟩
 
-theorem mul_mem_intAE (D : D7) {x y : Af D.host.F ⊗[D.host.F] D.host.E} (hx : x ∈ intAE D) (hy : y ∈ intAE D) :
-    x * y ∈ intAE D :=
-  GlobalTheory.IntegralAdeleProducts.intAE_mul_mem (F := D.host.F) (E := D.host.E) hx hy
-
 def intIdeles (D : D7) : Subgroup (AE D)ˣ where
   carrier := {x | finPart D (x : AE D) ∈ intAE D ∧ finPart D ((x⁻¹ : (AE D)ˣ) : AE D) ∈ intAE D}
   one_mem' := ⟨by rw [Units.val_one, RingHom.map_one]; exact one_mem_intAE D,
     by rw [inv_one, Units.val_one, RingHom.map_one]; exact one_mem_intAE D⟩
-  mul_mem' := fun {a b} ha hb => ⟨by rw [Units.val_mul, RingHom.map_mul]; exact mul_mem_intAE D ha.1 hb.1,
-    by rw [mul_inv, Units.val_mul, RingHom.map_mul]; exact mul_mem_intAE D ha.2 hb.2⟩
+  mul_mem' := fun {a b} ha hb => ⟨by rw [Units.val_mul, RingHom.map_mul]; exact GlobalTheory.IntegralAdeleProducts.intAE_mul_mem (F := D.host.F) (E := D.host.E) ha.1 hb.1,
+    by rw [mul_inv, Units.val_mul, RingHom.map_mul]; exact GlobalTheory.IntegralAdeleProducts.intAE_mul_mem (F := D.host.F) (E := D.host.E) ha.2 hb.2⟩
   inv_mem' := fun {a} ha => ⟨ha.2, by rw [inv_inv]; exact ha.1⟩
 
 def angle (D : D7) (θ : Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ) : (AE D)ˣ →* Circle :=

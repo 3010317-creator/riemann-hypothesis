@@ -1,5 +1,6 @@
 module
 
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsBaseChangeFiniteAdeleRingEquiv
 public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.ActsLinOfSplitLin
 public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PlaceS
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulMemLatO
@@ -67,10 +68,6 @@ namespace GlobalTheory.DilScalar
 
 variable {D : D7}
 
-theorem int_mul {x y : Af D.host.F ⊗[D.host.F] D.host.E} (hx : x ∈ intAE D) (hy : y ∈ intAE D) :
-    x * y ∈ intAE D :=
-  GlobalTheory.IntegralAdeleProducts.intAE_mul_mem (F := D.host.F) (E := D.host.E) hx hy
-
 theorem idemAt_mul_int {e : AE D} {P : HeightOneSpectrum (𝓞 D.host.E)} (he : Formalism.L2.NTheta.IsIdemAt e P)
     {y : D.host.E} (hv : P.valuation D.host.E y ≤ 1) : finPart D (e * incA D y) ∈ intAE D := by
   obtain ⟨a, b, hab⟩ := P.exists_primeCompl_mul_eq_of_integer _ hv
@@ -83,7 +80,7 @@ theorem idemAt_mul_int {e : AE D} {P : HeightOneSpectrum (𝓞 D.host.E)} (he : 
   have hq : y = (a : D.host.E) * ((b : 𝓞 D.host.E) : D.host.E)⁻¹ := by
     rw [eq_mul_inv_iff_mul_eq₀ hb1]
     exact hab
-  have h := int_mul (_root_.GlobalTheory.SplitIndex.finPart_incA_mem (D := D) a) hi
+  have h := GlobalTheory.HostAdeleIso.intAE_mul_mem D (_root_.GlobalTheory.SplitIndex.finPart_incA_mem (D := D) a) hi
   rw [← RingHom.map_mul, mul_left_comm, ← map_mul (incA D), ← hq] at h
   exact h
 

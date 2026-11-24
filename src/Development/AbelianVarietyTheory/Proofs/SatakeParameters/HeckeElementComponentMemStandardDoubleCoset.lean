@@ -52,10 +52,6 @@ namespace GlobalTheory.SplitHecke.HeckeComp
 
 variable {D : D7}
 
-theorem mul_mem_intAE {x y : Af D.host.F ⊗[D.host.F] D.host.E} (hx : x ∈ intAE D) (hy : y ∈ intAE D) :
-    x * y ∈ intAE D :=
-  GlobalTheory.IntegralAdeleProducts.intAE_mul_mem (F := D.host.F) (E := D.host.E) hx hy
-
 theorem smul_mem_latHat {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E] {n : ℕ}
     (L : Set (Fin n → E)) (hL : ∀ u : 𝓞 E, ∀ w ∈ L, (u : E) • w ∈ L) {x : Af F ⊗[F] E} {y : Fin n → Af F ⊗[F] E}
     (hx : x ∈ AddSubgroup.closure {y : Af F ⊗[F] E | ∃ a ∈ intAf F, ∃ x : 𝓞 E, y = a ⊗ₜ[F] (x : E)})
@@ -115,7 +111,7 @@ theorem fin_mul_mem {e u : AE D} (he : finPart D e ∈ intAE D) (hu : finPart D 
     finPart D (e * u) ∈ intAE D := by
   have h : finPart D (e * u) = finPart D e * finPart D u := RingHom.map_mul _ e u
   rw [h]
-  exact mul_mem_intAE he hu
+  exact GlobalTheory.IntegralAdeleProducts.intAE_mul_mem (F := D.host.F) (E := D.host.E) he hu
 
 theorem intM_of_stable {e : AE D} {v : HeightOneSpectrum (𝓞 D.host.F)} {π : AE D →+* Fv D.host.F v}
     (hπ : Function.Surjective π) (V : HSp D) (β : GL (Fin V.rank) (Fv D.host.F v)) (hβ : Frame V e π β)

@@ -93,10 +93,6 @@ theorem exists_matrix_of_isLattice {R K : Type} [CommRing R] [IsDomain R] [IsPri
     refine M.smul_mem _ ?_
     simp [c]
 
-theorem mul_mem_intAE (D : D7) {x y : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F ⊗[D.host.F] D.host.E} (hx : x ∈ intAE D)
-    (hy : y ∈ intAE D) : x * y ∈ intAE D :=
-  GlobalTheory.IntegralAdeleProducts.intAE_mul_mem (F := D.host.F) (E := D.host.E) hx hy
-
 theorem section_mem {A K ι κ : Type} [CommRing A] [Field K] (O : ValuationSubring K) (π : A →+* K) (σ : K → A) (ε : A)
     (I : Set A) (L : AddSubgroup (ι → A)) (h1 : ∀ a, π (σ a) = a) (h2 : ∀ x, σ (π x) = ε * x)
     (h3 : ∀ x, π x ∈ O → ε * x ∈ I) (h4 : ∀ a ∈ I, ∀ y ∈ L, (fun i => a * y i) ∈ L)
@@ -213,7 +209,7 @@ theorem exists_basis : ∀ {D : D7} (V : HSp D) (e : Formalism.L2.Theta.AE D) (v
     | mem y hy =>
       obtain ⟨a, ha, u, hu, rfl⟩ := hy
       have ha' : π (a ⊗ₜ[D.host.F] (1 : D.host.E)) ∈ Formalism.UG.Ov D.host.F v :=
-        (h3 _).1 (mul_mem_intAE D hε (AddSubgroup.subset_closure ⟨a, ha, 1, rfl⟩))
+        (h3 _).1 (GlobalTheory.IntegralAdeleProducts.intAE_mul_mem (F := D.host.F) (E := D.host.E) hε (AddSubgroup.subset_closure ⟨a, ha, 1, rfl⟩))
       have hu' := M.smul_mem ⟨_, ha'⟩ (hL _ hu)
       convert hu' using 1
       funext i

@@ -56,10 +56,6 @@ open GlobalTheory.IdemModTwo GlobalTheory.SplitIdem
 
 variable {D : D7}
 
-theorem mul_mem_int {x y : Af D.host.F ⊗[D.host.F] D.host.E} (hx : x ∈ intAE D) (hy : y ∈ intAE D) :
-    x * y ∈ intAE D :=
-  GlobalTheory.IntegralAdeleProducts.intAE_mul_mem (F := D.host.F) (E := D.host.E) hx hy
-
 theorem isIntegral_star {x : D.host.E} (hx : IsIntegral ℤ x) : IsIntegral ℤ (star x) :=
   map_isIntegral_int (starRingEnd D.host.E) hx
 
@@ -115,7 +111,7 @@ theorem mem_iff {v} {e : Formalism.L2.Theta.AE D} (he : SplitAt D v e) (y : Fv D
     exact hβ v
   · intro h
     rw [RingHom.map_mul]
-    exact mul_mem_int (AddSubgroup.subset_closure
+    exact GlobalTheory.IntegralAdeleProducts.intAE_mul_mem (F := D.host.F) (E := D.host.E) (AddSubgroup.subset_closure
       ⟨singleV D.host.F v y, singleV_mem_intAf D.host.F v ⟨y, h⟩, 1, rfl⟩) (finPart_mem he)
 
 theorem singleV_add (v : HeightOneSpectrum (𝓞 D.host.F)) (x y : Fv D.host.F v) :
@@ -160,7 +156,7 @@ theorem exists_isIdemAt : ∀ (D : D7) (v : HeightOneSpectrum (𝓞 D.host.F)) (
   obtain ⟨φ, hφ⟩ := exists_hom he
   have hint : ∀ x : 𝓞 D.host.E, Valued.v (φ x) ≤ 1 := fun x => by
     rw [← mem_iff he, ← hφ, RingHom.map_mul]
-    exact mul_mem_int (finPart_mem he) (AddSubgroup.subset_closure
+    exact GlobalTheory.IntegralAdeleProducts.intAE_mul_mem (F := D.host.F) (E := D.host.E) (finPart_mem he) (AddSubgroup.subset_closure
       ⟨1, fun w => by rw [map_one]; exact one_mem _, x, rfl⟩)
   let I : Ideal (𝓞 D.host.E) :=
     { carrier := {x | Valued.v (φ x) < 1}

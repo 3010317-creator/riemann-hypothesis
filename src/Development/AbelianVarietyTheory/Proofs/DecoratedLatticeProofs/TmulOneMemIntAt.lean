@@ -52,15 +52,11 @@ namespace GlobalTheory.SeeSaw.IdVMul
 
 variable {D : D7}
 
-theorem intAE_mul_mem' {x y : Af D.host.F ⊗[D.host.F] D.host.E} (hx : x ∈ intAE D)
-    (hy : y ∈ intAE D) : x * y ∈ intAE D :=
-  GlobalTheory.IntegralAdeleProducts.intAE_mul_mem (F := D.host.F) (E := D.host.E) hx hy
-
 variable {v : Pl D}
 
 theorem intAt_mul {a b : AE D} (ha : a ∈ intAt D (· = v)) (hb : b ∈ intAt D (· = v)) :
     a * b ∈ intAt D (· = v) :=
-  ⟨Ideal.mul_mem_right _ _ ha.1, by rw [(finPart D).map_mul]; exact intAE_mul_mem' ha.2 hb.2⟩
+  ⟨Ideal.mul_mem_right _ _ ha.1, by rw [(finPart D).map_mul]; exact GlobalTheory.IntegralAdeleProducts.intAE_mul_mem (F := D.host.F) (E := D.host.E) ha.2 hb.2⟩
 
 theorem intAt_zero : (0 : AE D) ∈ intAt D (· = v) :=
   ⟨zero_mem _, by rw [(finPart D).map_zero]; exact zero_mem _⟩

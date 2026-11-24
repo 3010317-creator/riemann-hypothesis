@@ -59,10 +59,6 @@ namespace GlobalTheory.SplitCharCond
 
 variable {D : D7}
 
-theorem mul_int {x y : Af D.host.F ⊗[D.host.F] D.host.E} (hx : x ∈ intAE D) (hy : y ∈ intAE D) :
-    x * y ∈ intAE D :=
-  GlobalTheory.IntegralAdeleProducts.intAE_mul_mem (F := D.host.F) (E := D.host.E) hx hy
-
 theorem conj_int {z : Af D.host.F ⊗[D.host.F] D.host.E} (hz : z ∈ intAE D) :
     sigR (Af D.host.F) D.sp.cm.sig z ∈ intAE D := by
   induction hz using AddSubgroup.closure_induction with
@@ -169,7 +165,7 @@ theorem e_mul_sec (x : k) : p.e * p.sec x = p.sec x := by
 
 theorem pr_int {z : AE D} (hz : finPart D z ∈ intAE D) : p.pr z ∈ 𝒪[k] := by
   rw [p.int_iff, p.sec_pr, RingHom.map_mul]
-  refine mul_int ?_ hz
+  refine GlobalTheory.IntegralAdeleProducts.intAE_mul_mem (F := D.host.F) (E := D.host.E) ?_ hz
   rw [← sec_one]
   exact (p.int_iff 1).1 (one_mem _)
 
