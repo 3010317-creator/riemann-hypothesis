@@ -736,7 +736,7 @@ theorem eq_zero_along {F : Sm E a} {x : GA E a} {X : Lie E a}
   obtain ⟨p, r, hp⟩ := hf 0 (Set.mem_univ 0)
   have hF : ∀ n, iteratedFDeriv ℝ n (fun t : ℝ => F.1 (x * infGL E a (expGL X t))) 0 = 0 := by
     intro n
-    ext m
+    ext
     rw [iteratedFDeriv_apply_eq_iteratedDeriv_mul_prod, iteratedDeriv_along]
     simp [expGL_zero, h0]
   have hev : (fun t : ℝ => F.1 (x * infGL E a (expGL X t))) =ᶠ[𝓝 0] 0 := by
