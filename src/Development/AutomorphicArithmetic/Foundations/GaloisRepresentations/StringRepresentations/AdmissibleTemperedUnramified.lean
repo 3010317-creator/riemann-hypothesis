@@ -120,14 +120,9 @@ theorem RelA.sum (hLP : TieLP N A) {w : PlE H} {x y x' y' : A.LP w} (h : RelA N 
 
 theorem RelA.char (hLP : TieLP N A) {w : PlE H} {x y : A.LP w} (h : RelA N A x y) (c : A.LP w) (hc : A.lpDim c = 1)
     (hu : A.unr c) : RelA N A (A.lpChar x c) (A.lpChar y c) := by
-  have hpc : ∀ τ ∈ Ine (F := H.E) (N.plOm.1 w), A.inePol c τ = X - C 1 := by
-    intro τ hτ
-    rw [((A.unr_iff_ine c).mp hu).2 τ hτ, hc]
-    simp
   have hch : ∀ (a : A.LP w) τ, τ ∈ Ine (F := H.E) (N.plOm.1 w) →
-      A.inePol (A.lpChar a c) τ = A.inePol a τ := by
-    intro a τ hτ
-    rw [((hLP w a a c c 0 hc hc).2.2.2.2.2 τ hτ).2 1 (hpc τ hτ), Polynomial.scaleRoots_one]
+      A.inePol (A.lpChar a c) τ = A.inePol a τ :=
+    fun a τ hτ => inePol_char_unr hLP a c hc hu τ hτ
   refine ⟨by rw [A.lpDim_char _ _ hc, A.lpDim_char _ _ hc, h.dim], fun hm => ?_,
     fun ⟨hm, hab⟩ σ hσ => ?_⟩
   · rw [A.monomial_char_iff _ _ hc] at hm ⊢
