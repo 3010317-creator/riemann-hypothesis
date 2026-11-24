@@ -280,9 +280,11 @@ theorem jeq_bil_of_double [Algebra ℚ k] (m : ℕ) (g : PS k 2 d)
   by_cases hex : ∃ i j, e = Finsupp.single ((0 : Fin 2), i) 1 + Finsupp.single ((1 : Fin 2), j) 1
   · obtain ⟨i, j, rfl⟩ := hex
     rw [Finset.sum_eq_single i, Finset.sum_eq_single j, ite_eq_left rfl]
-    · exact fun b _ hb => ite_eq_right fun hh => hb (single_inj hh).2.symm
+    · intro b _ hb
+      exact ite_eq_right fun hh => hb (single_inj hh).2.symm
     · simp
-    · exact fun b _ hb => Finset.sum_eq_zero fun c _ => ite_eq_right fun hh => hb (single_inj hh).1.symm
+    · intro b _ hb
+      exact Finset.sum_eq_zero fun c _ => ite_eq_right fun hh => hb (single_inj hh).1.symm
     · simp
   · have hz : MvPowerSeries.coeff e g = 0 := by
       have : ∃ j, degIn j e ≠ 1 := by

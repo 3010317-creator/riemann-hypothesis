@@ -1988,7 +1988,8 @@ theorem mu_eq (h : Dw.p + Dw.q ≤ n) {a : (E →+* ℂ) × ℕ → ℕ} {s : Ix
     split_ifs with hk
     · rw [Finset.sum_eq_single ⟨k, hk⟩]
       · exact ite_eq_left rfl
-      · exact fun i _ hi => ite_eq_right fun e => hi (Fin.ext (show (i : ℕ) = k from congrArg Fin.val e))
+      · intro i _ hi
+        exact ite_eq_right fun e => hi (Fin.ext (show (i : ℕ) = k from congrArg Fin.val e))
       · simp
     · refine Finset.sum_eq_zero fun i _ => ite_eq_right fun e => hk ?_
       rw [← e]; exact i.2

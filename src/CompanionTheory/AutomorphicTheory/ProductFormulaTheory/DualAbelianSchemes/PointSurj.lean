@@ -686,7 +686,8 @@ theorem cechComplex_sliceFst_singleton_acyclic_of_trunc₂ : ∀ {ν κ : Type} 
         intro s t hst x
         by_cases hs : s.Nonempty
         · have ht : t.Nonempty := isUpperSet_nonempty hst hs
-          simpa only [dite_eq_left hs, dite_eq_left ht, LinearEquiv.coe_coe] using suppEquiv_res hst hs ht x
+          simp only [dite_eq_left hs, dite_eq_left ht, LinearEquiv.coe_coe]
+          exact suppEquiv_res hst hs ht x
         · have := subsingleton_supp B ordConnected_nonempty hs
           rw [Subsingleton.elim x 0]
           simp only [map_zero])

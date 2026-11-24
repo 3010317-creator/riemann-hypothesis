@@ -249,14 +249,16 @@ theorem normal_nonempty : ∀ μ0, L.Is μ0 → ∀ (U : Set T) (N : Std G U), N
     if h : Even ((G.pS p).rank * (G.pT p).rank) then Classical.choose (hodd D.host.ccK δ hc t0 ht0 _ _ h) else 0
   have e0_is : ∀ p, DefPair D.R.m p → Formalism.MainNotions.StandardLatticesGL3.oddE0 D D.host.ccK δ t0 _ _ (e0 p) := fun p hp => by
     have h := even_rank_mul G p hp
-    simpa only [e0, dite_eq_left h] using (Classical.choose_spec (hodd D.host.ccK δ hc t0 ht0 _ _ h)).1
+    simp only [e0, dite_eq_left h]
+    exact (Classical.choose_spec (hodd D.host.ccK δ hc t0 ht0 _ _ h)).1
   let vac : ∀ p : Pair T, WO (G.pS p) (G.pT p) → ℂ := fun p =>
     if h : ∃ f, IsVacO W.ψ W.θ _ _ (G.cartS W.cart p) (G.onT W.cart p) (N.latS p : Set _) (N.latT p : Set _) f
     then Classical.choose h else 0
   have vac_is : ∀ p, DefPair D.R.m p →
       IsVacO W.ψ W.θ _ _ (G.cartS W.cart p) (G.onT W.cart p) (N.latS p : Set _) (N.latT p : Set _) (vac p) := fun p hp => by
     have h := GlobalTheory.T.exists_unitVacuum_standardLattices_definitePair W N p hp
-    simpa only [vac, dite_eq_left h] using Classical.choose_spec h
+    simp only [vac, dite_eq_left h]
+    exact Classical.choose_spec h
   let c0 : Pair T → ℂˣ := fun p =>
     if h : ∃ c : ℂˣ, ∀ k : FVar D (G.pT p).rank (G.pS p).rank →₀ ℕ,
       fockIn W N.frC p (vac p) (monomial k 1) 0 =
@@ -267,7 +269,8 @@ theorem normal_nonempty : ∀ μ0, L.Is μ0 → ∀ (U : Set T) (N : Std G U), N
         c0 p * opp p ((k.prod fun v n => period δ v.1 ^ n) * Formalism.MainNotions.GL3Theta.applyAt0 D (monomial k 1) (e0 p)) := by
     intro p hp k
     have h := fock_vac_eq_jets W N δ t0 hc hδ ht0 p hp (e0 p) (e0_is p hp) (vac p) (vac_is p hp)
-    simpa only [c0, dite_eq_left h] using Classical.choose_spec h k
+    simp only [c0, dite_eq_left h]
+    exact Classical.choose_spec h k
   exact ⟨⟨δ, hc, t0, ht0, e0, e0_is, vac, vac_is, c0, kernelNorm_constant_spec, fun t t' j => ⟨rfl, rfl, rfl⟩⟩⟩
 
 theorem Normal.period_ne_zero {U : Set T} {N : Std G U} (Z : Normal W N) (τ : D.what₂.Tau) : period Z.δ τ ≠ 0 := by

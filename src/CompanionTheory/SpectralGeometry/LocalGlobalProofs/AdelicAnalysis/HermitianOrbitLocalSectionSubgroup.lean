@@ -605,7 +605,8 @@ theorem aGL_coords (ι : R →+* K) {U : Subgroup Rˣ} (x : triSub ι U n) :
   show aMat ι (uOf ι x) (mOf ι x) i j = _
   rw [aMat_apply]
   rcases lt_trichotomy i j with h | h | h
-  · simpa only [nMat, Matrix.of_apply, h.ne, ite_false, h, dite_eq_left, mOf] using unit_cancel' ι _ _
+  · simp only [nMat, Matrix.of_apply, h.ne, ite_false, h, dite_eq_left, mOf]
+    exact unit_cancel' ι _ _
   · subst h
     simp [nMat, uOf_spec]
   · have : ((x : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) i j = 0 := x.2.1 h
