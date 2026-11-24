@@ -127,9 +127,7 @@ theorem sup_bounds_le_Gc : ∀ (D : D7) (B : WeightFamilies.Prov D) (large₂ : 
     have h0 : (0 : ℝ) ≤ (D.R.f : ℝ) * D.R.r * w.n := by positivity
     have : (D.R.f : ℝ) * D.R.r * w.n ≤
         (D.R.f : ℝ) * ((max (D.R.sigW j).2 1 : ℕ) : ℝ) * (D.R.r : ℝ) * (w.n : ℝ) := by
-      have e : (D.R.f : ℝ) * ((max (D.R.sigW j).2 1 : ℕ) : ℝ) * (D.R.r : ℝ) * (w.n : ℝ) =
-          ((D.R.f : ℝ) * D.R.r * w.n) * ((max (D.R.sigW j).2 1 : ℕ) : ℝ) := by ring
-      rw [e]; exact le_mul_of_one_le_right h0 hm
+      nlinarith [mul_le_mul_of_nonneg_left hm h0]
     linarith
   have hb : 0 ≤ Real.log |((NumberField.discr B.KO : ℤ) : ℝ)| / Module.finrank ℚ B.KO := by
     apply div_nonneg _ (Nat.cast_nonneg _)
