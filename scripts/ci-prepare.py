@@ -42,6 +42,29 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def write_shared(path, data):
+    """Write `data` to `path` without truncating it in place.
+
+    Another job's ci-build can still be reading the baseline files after this job takes the
+    preparation lock. So a file that already holds `data` is left alone, and anything else is
+    written beside it and moved into place, which leaves an open reader with the old file."""
+    try:
+        if path.read_bytes() == data:
+            return
+    except FileNotFoundError:
+        pass
+    handle, temporary = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.")
+    try:
+        with os.fdopen(handle, "wb") as stream:
+            os.fchmod(stream.fileno(), 0o644)
+            stream.write(data)
+        os.replace(temporary, path)
+    except BaseException:
+        with contextlib.suppress(FileNotFoundError):
+            os.unlink(temporary)
+        raise
+
+
 def get(url, *, github=False, missing=False, maximum=100_000_000):
     headers = {"User-Agent": "RiemannHypothesisCI/1.0"}
     if github:
@@ -309,8 +332,8 @@ def prepare(args):
         manifest = get(f"{BASE}/bootstrap/{REVISION}/modules.jsonl.gz")
         if digest(map_data) != MAP_SHA or digest(manifest) != MANIFEST_SHA:
             raise ValueError("Pinned baseline integrity mismatch")
-        (cache / "outputs.jsonl").write_bytes(map_data)
-        (cache / "modules.jsonl.gz").write_bytes(manifest)
+        write_shared(cache / "outputs.jsonl", map_data)
+        write_shared(cache / "modules.jsonl.gz", manifest)
         names = None
         quick_plan = getattr(args, "quick_plan", None)
         if quick_plan:

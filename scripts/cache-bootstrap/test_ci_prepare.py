@@ -343,6 +343,20 @@ class PreparationTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 prep.downloads(cache, {"a" * 16: name}, {})
 
+    def test_shared_baseline_files_are_never_truncated_under_a_reader(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "outputs.jsonl"
+            prep.write_shared(path, b"first\n")
+            self.assertEqual(path.stat().st_mode & 0o777, 0o644)
+            inode = path.stat().st_ino
+            with path.open("rb") as reader:
+                prep.write_shared(path, b"first\n")
+                self.assertEqual(path.stat().st_ino, inode)
+                prep.write_shared(path, b"second\n")
+                self.assertEqual(reader.read(), b"first\n")
+            self.assertEqual(path.read_bytes(), b"second\n")
+            self.assertEqual([entry.name for entry in Path(directory).iterdir()], ["outputs.jsonl"])
+
     def test_prepare_reports_map_count_before_any_state_or_download_and_always_continues(self):
         checks = prep.runner_checks()
         minimum = checks.MINIMUM_MAX_MAP_COUNT
