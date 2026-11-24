@@ -59,14 +59,12 @@ variable {ℓ : ℕ} [hℓ : Fact ℓ.Prime]
 lemma zv_emult_eq_val {x : ℤ_[ℓ]} (hx : x ≠ 0) :
     emultiplicity (ℓ : ℤ_[ℓ]) x = (x.valuation : ℕ∞) := by
   conv_lhs => rw [PadicInt.unitCoeff_spec hx]
-  rw [emultiplicity_mul PadicInt.prime_p,
-    emultiplicity_of_isUnit_right PadicInt.prime_p.not_unit (Units.isUnit _),
+  rw [emultiplicity_mul PadicInt.prime_p, emultiplicity_of_isUnit_right PadicInt.prime_p.not_unit (Units.isUnit _),
     zero_add, emultiplicity_pow_self_of_prime PadicInt.prime_p]
 
 lemma zv_emult_unit_mul {c : ℤ_[ℓ]} (hc : IsUnit c) (y : ℤ_[ℓ]) :
     emultiplicity (ℓ : ℤ_[ℓ]) (c * y) = emultiplicity (ℓ : ℤ_[ℓ]) y := by
-  rw [emultiplicity_mul PadicInt.prime_p, emultiplicity_of_isUnit_right PadicInt.prime_p.not_unit hc,
-    zero_add]
+  rw [emultiplicity_mul PadicInt.prime_p, emultiplicity_of_isUnit_right PadicInt.prime_p.not_unit hc, zero_add]
 
 lemma zv_not_dvd_of_dvd_sub_one {x : ℤ_[ℓ]} (hx : (ℓ : ℤ_[ℓ]) ∣ x - 1) : ¬ (ℓ : ℤ_[ℓ]) ∣ x := by
   intro h
