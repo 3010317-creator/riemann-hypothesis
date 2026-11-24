@@ -52,6 +52,14 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.Published
 
+/-- **Albert's Theorem on the Positivity of the Rosati Involution**.
+
+Let $A$ be an abelian variety over a field with a polarization $\lambda$, and let
+$\dagger$ denote the corresponding Rosati involution on $\operatorname{End}^0(A) = \operatorname{End}(A) \otimes \mathbb{Q}$.
+Then the bilinear form $(x, y) \mapsto \operatorname{Tr}(x y^\dagger)$ is symmetric and positive definite;
+in particular, $\operatorname{Tr}(x x^\dagger) > 0$ for every non-zero endomorphism $x \in \operatorname{End}^0(A)$.
+
+Reference: [albert1934]. -/
 def RosatiTracePosSt : Prop := RosatiPositiveSt
 
 namespace RosatiTracePosSt
