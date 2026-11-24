@@ -11,11 +11,6 @@ noncomputable section
 
 namespace Formalism.GradedWeylDivisibility
 
-private theorem exists_pos_of_sum_pos {ι : Type*} (s : Finset ι) (f : ι → ℕ)
-    (h : 0 < ∑ i ∈ s, f i) : ∃ i ∈ s, 0 < f i := by
-  obtain ⟨i, hi, hne⟩ := Finset.exists_ne_zero_of_sum_ne_zero (Nat.pos_iff_ne_zero.mp h)
-  exact ⟨i, hi, Nat.pos_of_ne_zero hne⟩
-
 private theorem colExp_apply {r n h : ℕ} (c : Fin h → Fin r) (hh : h ≤ n) (a : Fin r)
     (t : Fin n) :
     colExp c hh (a, t) = if ht : t.val < h then (if c ⟨t.val, ht⟩ = a then 1 else 0) else 0 := by
@@ -62,7 +57,7 @@ theorem semistandardPeel : SSYTPeel := by
   have hstep : ∀ l j : Fin n, j.val = l.val + 1 → 0 < ν j → 0 < ν l := by
     intro l j hlj hj
     rw [← hcol j] at hj
-    obtain ⟨a, -, ha⟩ := exists_pos_of_sum_pos _ _ hj
+    obtain ⟨a, -, ha⟩ := Finset.sum_pos_iff.mp hj
     have h1 : (∑ b : Fin r with b ≤ a, m (b, j)) ≤ 0 + ∑ b : Fin r with b < a, m (b, l) :=
       hint_r l j hlj a
     have h2 : m (a, j) ≤ ∑ b : Fin r with b ≤ a, m (b, j) :=
@@ -119,7 +114,7 @@ theorem semistandardPeel : SSYTPeel := by
     intro p
     have hp : 0 < ν (Fin.castLE hh p) := (hiff _).1 p.isLt
     rw [← hcol] at hp
-    obtain ⟨a, -, ha⟩ := exists_pos_of_sum_pos _ _ hp
+    obtain ⟨a, -, ha⟩ := Finset.sum_pos_iff.mp hp
     have hS : (Finset.univ.filter (fun b : Fin r => 0 < m (b, Fin.castLE hh p))).Nonempty :=
       ⟨a, Finset.mem_filter.mpr ⟨Finset.mem_univ _, ha⟩⟩
     refine ⟨(Finset.univ.filter (fun b : Fin r => 0 < m (b, Fin.castLE hh p))).min' hS, ?_, ?_⟩
@@ -147,7 +142,7 @@ theorem semistandardPeel : SSYTPeel := by
       Finset.single_le_sum (f := fun b => m (b, j)) (fun _ _ => Nat.zero_le _) (by simp)
     have h3 := hc1' j hj
     have h4 : 0 < ∑ b : Fin r with b < c ⟨j.val, hj⟩, m (b, l) := by omega
-    obtain ⟨b, hb, hbpos⟩ := exists_pos_of_sum_pos _ _ h4
+    obtain ⟨b, hb, hbpos⟩ := Finset.sum_pos_iff.mp h4
     rw [Finset.mem_filter] at hb
     exact lt_of_le_of_lt (hc2' l hl b hbpos) hb.2
   have hcstep' : ∀ p q : Fin h, q.val = p.val + 1 → c p < c q := by
