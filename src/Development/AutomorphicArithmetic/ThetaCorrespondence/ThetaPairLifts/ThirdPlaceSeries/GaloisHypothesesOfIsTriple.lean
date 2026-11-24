@@ -313,8 +313,7 @@ theorem exists_le_of_exh (D : Submodule L U) [FiniteDimensional L D] (F : ℤ �
   obtain ⟨a, ha⟩ := (S.image n).bddBelow
   refine ⟨a, ?_⟩
   rw [← hS, Submodule.span_le]
-  intro x hx
-  exact hanti (ha (Finset.mem_coe.mpr (Finset.mem_image_of_mem n hx))) (hn x)
+  exact fun x hx => hanti (ha (Finset.mem_coe.mpr (Finset.mem_image_of_mem n hx))) (hn x)
 
 theorem exists_inf_eq_bot_of_sep (D : Submodule L U) [FiniteDimensional L D] (F : ℤ → Submodule L U)
     (hanti : Antitone F) (hsep : ∀ x, (∀ a, x ∈ F a) → x = 0) : ∃ a, D ⊓ F a = ⊥ := by
@@ -476,8 +475,7 @@ open GlobalTheory.TripleGal Formalism Formalism.BasicNotions Formalism.BasicNoti
 namespace GlobalTheory.TripleGal
 
 theorem firstAdmissibilityAt_of_parts : ∀ (D : D7) (bkP : BlochKatoReduction.BK D) (i : D.ntw.Tw) (s : D.ntw.Sig i), UnrRho i s → HodgeL bkP i s → (∀ v, NoInv i (Tmat i s) v ∧ NoInv i (Tdual i s) v) → NegCount bkP i s → IsotypicValuationAtRing bkP i s := by
-  intro D bkP i s h1 h2 h3 h4
-  exact ⟨h1, h2, fun v => (h3 v).1, fun v => (h3 v).2, h4⟩
+  exact fun D bkP i s h1 h2 h3 h4 => ⟨h1, h2, fun v => (h3 v).1, fun v => (h3 v).2, h4⟩
 
 end GlobalTheory.TripleGal
 end -- clump:auto
@@ -1212,8 +1210,7 @@ theorem selfDual_of_charDual : ∀ (D : D7) (i : D.ntw.Tw) (s : D.ntw.Sig i), Va
   refine ⟨U, fun g g' hg => ?_⟩
   obtain rfl : g' = conjC D g := by ext x; rw [hg, conjC_apply]
   have := congrArg Units.val (eq_mul_inv_of_mul_eq (hU g))
-  rw [Units.val_mul, Units.val_mul] at this
-  exact this
+  rwa [Units.val_mul, Units.val_mul] at this
 
 end GlobalTheory.LatticeSelfDual
 

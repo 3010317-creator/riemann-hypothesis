@@ -143,8 +143,7 @@ theorem GlobalTheory.PenBridge.rd_mem_KO_off_twist_alt : ∀ {B : GlobalTheory.M
     · obtain ⟨κ, hκ⟩ := ((hJ₀.is.U j hjm _ g).1 hg).2
       exact ⟨κ.1, hκ, (J₀.A.K j hjm (J₀.ι j α₀)).lev.Uloc_lev _
         ((((J₀.A.K j hjm (J₀.ι j α₀)).lev.U_eq κ.1).1 κ.2).2 _)⟩
-  intro g hg
-  exact (GlobalTheory.PenBridge.toSum0_mem_KO_iff _).2 (key g hg)
+  exact fun g hg => (GlobalTheory.PenBridge.toSum0_mem_KO_iff _).2 (key g hg)
 end
 end -- clump:auto
 end -- clump:auto
@@ -1122,8 +1121,7 @@ theorem GlobalTheory.PenBridge.supp_mem_level_alt : ∀ {B : GlobalTheory.Mem.Ba
     · exact hgv 1 h0
     · obtain ⟨i', hi'⟩ := hJ'.surj Q ((hW.tq.Q t' Q).2 hQ)
       refine hn' ⟨i', ?_⟩
-      rw [(_root_.GlobalTheory.Fam.QJPlaces.places_under_alt W hW u a ha hat t' J' hJ').2 i', hi']
-      exact e
+      rwa [(_root_.GlobalTheory.Fam.QJPlaces.places_under_alt W hW u a ha hat t' J' hJ').2 i', hi']
   · have h1 := hrd i hvP
     rw [_root_.GlobalTheory.PenBridge.reductionHomAtLastLevel, MonoidHom.pi_apply, _root_.GlobalTheory.PenBridge.rd_at_apply, toSum0_mem_KO_iff] at h1
     exact GlobalTheory.LevProd.SamePlace.moves_of_mem_KO (J.G i).q _ hsd (_root_.GlobalTheory.PenBridge.int_in_frame_at_level J j i (_root_.GlobalTheory.PenBridge.eq_s_succ_of_succ_eq_m J hj i)) h1
@@ -1229,8 +1227,7 @@ theorem GlobalTheory.PenLev.relax_le_sup_alt : ∀ {B : GlobalTheory.Mem.Base} {
         rw [_root_.GlobalTheory.PenBridge.rd_at_apply, locHom_eq_one (J.G i).q ((I.rec7 l Z).sp.X j) _ (P := (· ∈ P)) hi
           (grpAt_le_grpOff ((I.rec7 l Z).sp.X j) (· ∉ P) (· ∈ P) (fun p h h' => h h') hwrP), map_one]
       have h := hint i
-      rw [hgeq, map_mul, map_mul, Pi.mul_apply, Pi.mul_apply, e1, e2, one_mul, mul_one] at h
-      exact h
+      rwa [hgeq, map_mul, map_mul, Pi.mul_apply, Pi.mul_apply, e1, e2, one_mul, mul_one] at h
   rw [hgeq]
   exact mul_mem (Subgroup.mem_sup_left (mul_mem huo hwp')) (Subgroup.mem_sup_right hwr)
 end

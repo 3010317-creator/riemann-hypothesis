@@ -227,8 +227,7 @@ theorem idx_eq (g k : ℕ) (hg : g.Prime) :
     refine Nat.card_congr (Equiv.subtypeEquivRight fun A => ⟨fun h => ?_, fun h => isUpperUni_of_mem_uniUT le_rfl h⟩)
     have : A ∈ uSet (ZMod g) (fun i j : Fin k => i < j) :=
       ⟨h.2, fun i j hne hij => h.1 i j (lt_of_le_of_ne (not_lt.1 hij) hne.symm)⟩
-    rw [← uniUT_full_eq] at this
-    exact this
+    rwa [← uniUT_full_eq] at this
   have h2 := (HU (ZMod g) k).card_mul_index
   have h3 := card_HU (ZMod g) k
   rw [Nat.card_zmod] at h3
@@ -356,8 +355,7 @@ theorem card_dvd_card_GL (N : Submodule (𝓞 E) V) (hN : Submodule.IsFullLattic
     Submodule.Quotient.eq] at h3
   have h4 := Submodule.mem_map_of_mem (f := N.subtype) h3
   rw [Submodule.map_smul'', Submodule.map_subtype_top] at h4
-  rw [pow_one]
-  exact h4
+  rwa [pow_one]
 
 open Formalism.HermitianLatticesTheory in
 theorem mass_mul_idx [StarRing E] (h : V →ₗ⋆[E] V →ₗ[E] E) (hs : h.IsSymm)
@@ -421,8 +419,7 @@ theorem duStarOf_nat : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R) (hc :
     simp only [map_sum, starRingEnd_apply, star_mul, star_star]
   have hpos : ∀ x : Fin R.k → H.E, x ≠ 0 → 0 < Algebra.trace ℚ H.E (StandardLattice.stdForm H.E R.k x x) := fun x hx => by
     have := hStd_trace_pos hconj x hx
-    rw [hStd_apply] at this
-    exact this
+    rwa [hStd_apply] at this
   have hL : Submodule.IsFullLattice H.E (StandardLattice.stdLat H.E R.k) := by
     refine { toIsLattice := Submodule.IsLattice.of_fg _ (Submodule.fg_span (Set.finite_range _)),
              span_eq_top := ?_ }
@@ -610,8 +607,7 @@ theorem mem_span_of_semilinear {B K O Kf V W ι : Type*} [CommRing B] [IsDomain 
     intro y hy
     have h1 : (⟨y, hy⟩ : N) ∈ Submodule.span B (Set.range e0) := by rw [e0.span_eq]; trivial
     have h2 := Submodule.mem_map_of_mem (f := N.subtype) h1
-    rw [Submodule.map_span, ← Set.range_comp] at h2
-    exact h2
+    rwa [Submodule.map_span, ← Set.range_comp] at h2
   have hxe : φ x ∈ Submodule.span O (Set.range (φ ∘ e)) := by
     refine (Submodule.span_le.2 ?_) hxT
     rw [Finset.coe_image]
@@ -672,8 +668,7 @@ theorem NP_full (D : D7) (L : SizeData₂ D) (X : G.Inst D L) (Y : G.LatInst D) 
     obtain ⟨s, hs, hsx⟩ := (D.mem_locW_iff w ((D.fm u).lat 0).L (D.nuIn u x)).1 h1
     refine ⟨s, hs, ?_⟩
     show ((D.nuIn u).restrictScalars (𝓞 D.what₂.LL)) (s • x) ∈ ((D.fm u).lat 0).L
-    rw [map_smul]
-    exact hsx
+    rwa [map_smul]
   · set a : ℕ := ∑ t0 ∈ G.VV X K (G.aL L) (G.bL L) (D.what₂.places.resChar w),
       ⌈G.Sv X K (G.aL L) (G.bL L) (D.what₂.places.resChar w) t0⌉.toNat with ha
     set b : ℕ := ⌈G.tauP X K (G.aL L) (G.bL L) (D.what₂.places.resChar w)⌉.toNat with hb
@@ -763,8 +758,7 @@ theorem dvd_of_pow_eq {g m : ℕ} (w : (ZMod g)ˣ) {o o' : Option (Fin m × Bool
   refine ⟨(2 * expo o' - 2 * expo o).natAbs, by omega, by omega, ?_⟩
   rw [← zpow_natCast, ← zpow_natCast, ← zpow_mul, ← zpow_mul, zpow_eq_zpow_iff_modEq] at h
   have h2 := h.dvd
-  rw [← sub_mul, Int.natCast_dvd, Int.natAbs_mul, Int.natAbs_natCast] at h2
-  exact h2
+  rwa [← sub_mul, Int.natCast_dvd, Int.natAbs_mul, Int.natAbs_natCast] at h2
 
 theorem tameDistinct_gen : ∀ (r g m : ℕ) [Fact g.Prime] (w : (ZMod g)ˣ), orderOf w = g - 1 → 4 * (m : ℝ) * (g : ℝ) ^ ((1 : ℝ) / 4) < (g : ℝ) - 1 → 1 ≤ r → DC.TameDistinct r g (fun j : Fin m => w ^ (2 * (j.1 + 1))) := by
   intro r g m hg w hw hlt hr
@@ -820,8 +814,7 @@ theorem tameDistinct_gen : ∀ (r g m : ℕ) [Fact g.Prime] (w : (ZMod g)ˣ), or
     refine Or.inr ⟨1, le_rfl, hr, hl, ?_⟩
     rw [pow_one, Nat.padicValNat_def, ← Nat.factorization_def _ hl, ← hv]
     exact_mod_cast h4
-  · intro j
-    exact ⟨w ^ (j.1 + 1), by rw [← pow_add, ← two_mul]⟩
+  · exact fun j => ⟨w ^ (j.1 + 1), by rw [← pow_add, ← two_mul]⟩
 
 end GlobalTheory.EX.DC.TameGen
 end -- clump:auto
@@ -916,8 +909,7 @@ theorem bound_of_over (K : Ctx) (B : Pre) (h : K.Over B) (i : Fin 2) :
         have : K.P.R.k ≤ 4 := by omega
         exact_mod_cast this
       have hy12 : y ≤ 1.2 := by
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         have : (1.2 : ℝ) ^ 8 < y ^ 8 := pow_lt_pow_left₀ hc (by norm_num) (by norm_num)
         norm_num at this
         linarith
@@ -986,8 +978,7 @@ theorem pos_iff_side_mem_max {D : D7} {c : NChoice D} (h : NChTie D c) (w : D.wh
   have hleft : (∃ y' ∈ IsLocalRing.maximalIdeal (D.ntw.O0 (c.twI w)),
       algebraMap _ (FractionRing (D.ntw.O0 (c.twI w))) y' = e (x : ↥D.LL0)) ↔ ¬ IsUnit y := by
     refine ⟨fun ⟨y', h1, h2⟩ => ?_, fun h1 => ⟨y, h1, hy⟩⟩
-    rw [← IsFractionRing.injective _ _ (h2.trans hy.symm)]
-    exact h1
+    rwa [← IsFractionRing.injective _ _ (h2.trans hy.symm)]
   have e1 := h.embedding_baseField_condition w x y 1 one_ne_zero (by rw [← he, map_one, mul_one, hy])
   simp only [map_one, mul_one] at e1
   rw [hleft, GlobalTheory.TwistGoodCompare.pos_iff_not_isUnit c w _ _ e1, not_iff_not]
@@ -1192,8 +1183,7 @@ theorem recAtG_of_two_passes : (∀ D : D7, Formalism.L2.Theta.VolTieG D → Sta
   have hTw' : DQ.TwAllAt (Stages.toD7 ⟨B', C', W', V', S', N', G'⟩) Y.nch Y.xd := by
     have e1 : Y.nch = c'.O.nch := by rw [← hY]; rfl
     have e2 : Y.xd = c'.O.xd := by rw [← hY]; rfl
-    rw [e1, e2]
-    exact hTw
+    rwa [e1, e2]
   exact ⟨_, Y, k1, k2, k3, hTw'.twAt, ⟨_, f', T', c', hQ', by rw [hY]⟩, k4, hTw', c'.mtStable⟩
 
 end GlobalTheory.Mem.Top.GroupRetwisting

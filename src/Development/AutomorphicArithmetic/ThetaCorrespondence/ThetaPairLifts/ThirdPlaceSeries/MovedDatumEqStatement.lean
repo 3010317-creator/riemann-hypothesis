@@ -273,8 +273,7 @@ theorem foldr_comb_ne_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsSt
     intro l
     induction l with
     | nil =>
-      intro _
-      exact ⟨hF0, fun j _ => GlobalTheory.GSuppComb.vac_mono (fun _ _ => trivial) hF⟩
+      exact fun _ => ⟨hF0, fun j _ => GlobalTheory.GSuppComb.vac_mono (fun _ _ => trivial) hF⟩
     | cons a l ih =>
       intro hl
       obtain ⟨ha, hl'⟩ := List.nodup_cons.1 hl
@@ -666,8 +665,7 @@ theorem isHalf_mul {D : D7} {S T : HSp D} (e : AE D) (A : Matrix (Fin T.rank) (F
   have hy' : e • (y : Matrix (Fin T.rank) (Fin S.rank) (AE D)) = (y : Matrix (Fin T.rank) (Fin S.rank) (AE D)) :=
     Matrix.ext fun i j => hy i j
   have := congrFun (congrFun (congrArg (fun M : Matrix (Fin T.rank) (Fin S.rank) (AE D) => HMul.hMul (HMul.hMul A M) B) hy') i) j
-  simp only [Matrix.mul_smul, Matrix.smul_mul, Matrix.smul_apply, smul_eq_mul] at this
-  exact this
+  simpa only [Matrix.mul_smul, Matrix.smul_mul, Matrix.smul_apply, smul_eq_mul] using this
 
 theorem isHalf_actO_iff {D : D7} (S T : HSp D) (g : GA D S) (h : GA D T) (e : AE D) (x : WO S T) :
     IsHalf e (actO S T g h x) ↔ IsHalf e x := by
@@ -679,8 +677,7 @@ theorem isHalf_actO_iff {D : D7} (S T : HSp D) (g : GA D S) (h : GA D T) (e : AE
         _root_.GlobalTheory.MixModel.mt_inv_mul, Matrix.mul_one]
     rw [e1]
     exact isHalf_mul e _ _ _ hx
-  · intro hx
-    exact isHalf_mul e _ _ _ hx
+  · exact fun hx => isHalf_mul e _ _ _ hx
 
 variable {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 variable {Y Y' : Type} [Fintype Y] [DecidableEq Y] [Fintype Y'] [DecidableEq Y'] {S T : HSp D}
@@ -734,8 +731,7 @@ theorem GlobalTheory.IntPlaces.mem_of_idem_sum {R : Type} [CommRing R] {n : ℕ}
     | empty =>
       intro z hz _
       rw [Finset.sum_empty, zero_mul] at hz
-      rw [← hz]
-      exact hS0
+      rwa [← hz]
     | insert a s ha ih =>
       intro z hz hzi
       rw [Finset.sum_insert ha] at hz
@@ -780,8 +776,7 @@ theorem GlobalTheory.IntPlaces.mem_intAf_of_split : ∀ (D : D7) (n : ℕ) (k : 
     (fun i j hij => by rw [← RingHom.map_mul, horth i j hij, RingHom.map_zero]) (fun i z => π' i z ∈ 𝒪[k i])
     hint (fun i j z hij hz => ?_) z0 (by rw [show (∑ i, Formalism.IndefR.Datum.toEAf D (q i).e) = Formalism.IndefR.Datum.toEAf D (∑ i, (q i).e) from
       (map_sum (Formalism.IndefR.Datum.toEAf D).toAddMonoidHom (fun i => (q i).e) Finset.univ).symm]; exact hz0) hzi0
-  rw [RingHom.map_mul, RingHom.map_sub, RingHom.map_one, hpr i j hij, sub_zero, one_mul]
-  exact hz
+  rwa [RingHom.map_mul, RingHom.map_sub, RingHom.map_one, hpr i j hij, sub_zero, one_mul]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralFiniteAdeleOfSplitPlaceComponents =====

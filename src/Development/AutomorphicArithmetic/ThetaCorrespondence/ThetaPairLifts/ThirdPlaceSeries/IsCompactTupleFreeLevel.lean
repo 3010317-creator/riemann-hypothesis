@@ -159,8 +159,7 @@ theorem isCompact_relax' (hW : _root_.GlobalTheory.Fam.AllFamilyConditions W) (J
       · show (_root_.GlobalTheory.PenLev.localHomProductLastLevel J j hj x)⁻¹ * _root_.GlobalTheory.PenLev.localHomProductLastLevel J j hj (x * y) = _root_.GlobalTheory.PenLev.localHomProductLastLevel J j hj y
         rw [map_mul, inv_mul_cancel_left]
       · show _root_.GlobalTheory.PenLev.localHomProductLastLevel J j hj (F (x, _root_.GlobalTheory.PenLev.localHomProductLastLevel J j hj y)) ∈ Kp
-        rw [hFy]
-        exact hK
+        rwa [hFy]
     · rintro ⟨⟨x, z⟩, ⟨⟨hx, -⟩, hK⟩, rfl⟩
       show F (x, z) ∈ _root_.GlobalTheory.PenLev.relaxedLevelSubgroup J j hj α
       refine Subgroup.mem_inf.2 ⟨Subgroup.mem_inf.2 ⟨?_, ?_⟩, (hmemK _).2 hK⟩

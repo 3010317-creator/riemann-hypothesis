@@ -196,8 +196,7 @@ theorem main : ∀ (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (𝓞 D.host.E
   have hd' := GlobalTheory.T.aeval_kills_potCrystalline_of_kills_potSemistable (D.loc (D.nd.l i)) (D.nbr i w hw).Kw K' (D.nbr i w hw).LL LL' h hN hF hS hL _ _ (GlobalTheory.PstLine.incV hL m) hinj (GlobalTheory.PstLine.isMor_incV (D.nbr i w hw) hL m _) _ (p.map (D.nbr i w hw).toLL) hkill d hd
   have hg : GlobalTheory.Pst.weilToGK (D.nbr i w hw) (D.nd.plOm.2 w) (GlobalTheory.WeilDeligne.ineIncl (D.nd.plOm.2 w) ⟨(σ : GE D.nd), hσ⟩) = (D.nbr i w hw).e σ := rfl
   have key : ∑ n ∈ Finset.range (p.natDegree + 1), (D.nbr i w hw).toLL (p.coeff n) • ((actVB ((D.loc (D.nd.l i)).PD (D.nbr i w hw).Kw) ((D.nbr i w hw).rep (r.comp (decS D.nd w))) ((D.nbr i w hw).e σ)) ^ n) d = 0 := by
-    rw [sumAeval]
-    exact hd'
+    rwa [sumAeval]
   refine (Finset.sum_congr rfl fun n _ => ?_).trans key
   have e1 : (D.nbr i w hw).e (σ ^ n) = (D.nbr i w hw).e σ ^ n := map_pow _ σ n
   exact congrArg _ ((congrArg (fun g => actVB ((D.loc (D.nd.l i)).PD (D.nbr i w hw).Kw) ((D.nbr i w hw).rep (r.comp (decS D.nd w))) g d) e1).trans (actPow _ _ _ _ _))
@@ -239,8 +238,7 @@ theorem _root_.GlobalTheory.T.inertiaPolynomial_kills_potentiallyCrystalline_mod
   have hsum : ∑ n ∈ Finset.range (p.natDegree + 1), (D.nbr i w hw).toLL (p.coeff n) •
       (actVB ((D.loc (D.nd.l i)).PD (D.nbr i w hw).Kw)
         ((D.nbr i w hw).rep (r.comp (decS D.nd w))) ((D.nbr i w hw).e σ) ^ n) d = 0 := by
-    rw [GlobalTheory.KillLocal.sumAeval]
-    exact hd'
+    rwa [GlobalTheory.KillLocal.sumAeval]
   refine (Finset.sum_congr rfl fun n _ => ?_).trans hsum
   rw [map_pow, GlobalTheory.KillLocal.actPow]
 end -- clump:auto
@@ -612,8 +610,7 @@ theorem main : ∀ {R : Ranks} (Hs : Host R) (μ : HChar Hs.E), IsCSD Hs μ → 
       exact (ParLaws.isSmoothChar_loc μ (CT.plMap j w)).preimage hc'
     · have hu : Units.map i.toRingHom.toMonoidHom (Units.map (algebraMap Hs.E (w.adicCompletion Hs.E)).toMonoidHom x)
           = Units.map (algebraMap Hs.E ((CT.plMap j w).adicCompletion Hs.E)).toMonoidHom (Units.map (Hs.conj : Hs.E ≃+* Hs.E).toRingHom.toMonoidHom x) := by
-        apply Units.ext
-        exact halg (x : Hs.E)
+        exact Units.ext (halg (x : Hs.E))
       rw [hψ₁, MonoidHom.comp_apply, hu]
       have := hcsd x
       exact this
@@ -813,8 +810,7 @@ theorem GlobalTheory.LabConjPlace.locComp_of_isRc_classMapD_cenLoc : ∀ (hPr : 
     ext y
     rw [GlobalTheory.ConjTransport.conjG_apply]
     have := hcγ (c.symm y)
-    rw [RingEquiv.apply_symm_apply] at this
-    exact this
+    rwa [RingEquiv.apply_symm_apply] at this
   have hIne' : γ k w' ∈ Ine (F := D.host.E) (D.nd.plOm.1 w') := by
     rw [hγ']; exact GlobalTheory.ConjTransport.conjG_mem_Ine c τc hcE' hcA HS.2.1
   have HS' : TeichmullerInertiaLabelCondition (D.nd.plOm.1 w') w' (D.ntypes.teichC k) (γ k w') :=

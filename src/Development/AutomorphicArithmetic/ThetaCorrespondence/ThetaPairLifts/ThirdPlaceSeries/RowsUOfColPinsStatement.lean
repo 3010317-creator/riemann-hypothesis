@@ -311,8 +311,7 @@ theorem mem_HK_iff {n r : ℕ} (h : r ≤ n) (bl : List ℕ) (M : GL (Fin n) κ)
   constructor
   · rintro ⟨_, h0⟩
     exact (Subgroup.mem_bot).mp h0
-  · intro h0
-    exact ⟨hM, (Subgroup.mem_bot).mpr h0⟩
+  · exact fun h0 => ⟨hM, (Subgroup.mem_bot).mpr h0⟩
 
 end Gen
 
@@ -340,8 +339,7 @@ theorem memP (P : LevFam X.E X.K R.r Pr.vGs) (x : ↥(rowTy Ch sel mu P).inv.grp
     x.1 (inL sel mu v) ∈ HPar (R.N R.m - 1) (𝓞 X.E ⧸ v.1.asIdeal) (r_le_X' R) (List.replicate R.m R.t) (P v).H := by
   have h := x.2 (inL sel mu v) (Set.mem_univ _)
   change x.1 (inL sel mu v) ∈ (rowTy Ch sel mu P (inL sel mu v)).H at h
-  rw [rowTy_inL] at h
-  exact h
+  rwa [rowTy_inL] at h
 
 theorem grp_le (P : LevFam X.E X.K R.r Pr.vGs) :
     (rowTyKK Ch sel mu).inv.grp ≤ (rowTy Ch sel mu P).inv.grp := by
@@ -357,8 +355,7 @@ theorem grp_le (P : LevFam X.E X.K R.r Pr.vGs) :
     rw [e1] at h
     rw [e2]
     exact GlobalTheory.RowLevIndex.HK_le_HPar _ _ _ h
-  · rw [rowTy_H_of_not Ch sel mu P w hw]
-    exact h
+  · rwa [rowTy_H_of_not Ch sel mu P w hw]
 
 def blkMap (P : LevFam X.E X.K R.r Pr.vGs) : FormG (rowTy Ch sel mu P).inv →* GLG (E := X.E) (n := R.r) (SG := Pr.vGs) where
   toFun x v := blk0 (R.N R.m - 1) (𝓞 X.E ⧸ v.1.asIdeal) (r_le_X' R) (List.replicate R.m R.t)
@@ -647,8 +644,7 @@ theorem rowCast_injective {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr
     Function.Injective (rowCast W e A Λ' hΛ) := by
   subst hΛ
   subst e
-  intro F G h
-  exact h
+  exact fun F G h => h
 
 open Formalism.L2.Col in
 theorem zOfRow_injective {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R) (Ch : Chars X Pr R.m)
@@ -816,8 +812,7 @@ theorem rowsU_of_colPins_alt : ∀ CY CT : ℝ, 0 ≤ CT → ∃ C0 : ℝ, ∀ (
   have ha : 0 < (K.c.face Pk.Zs).a w := by
     have h := hrk u
     change 0 < Module.finrank D.what₂.LL (Submodule.span D.what₂.LL ((D.div.Nu u).L : Set (D.div.Nu u).V)) at h
-    rw [(hNu u).2, finrank_top, ← e.finrank_eq, Module.finrank_fin_fun] at h
-    exact h
+    rwa [(hNu u).2, finrank_top, ← e.finrank_eq, Module.finrank_fin_fun] at h
   have hev := _root_.GlobalTheory.ColEvNorm.ev_ipAt_le_normAt_sq_alt D L hT Gi Gl Kc Y cX ex T P K hPins
   rw [← hZs] at hev
   clear hPins hrk hNu

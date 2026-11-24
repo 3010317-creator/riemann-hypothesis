@@ -414,8 +414,7 @@ theorem exists_finExt_split : ∀ (D : D7) (M : MtFam D) (C : NChoice D) (hR : H
     · change a ∈ ((p.map (ecC X j w)).map (iqC X j w)).roots at ha
       rw [hmap] at ha
       have haS : a ∈ S := by
-        simp only [S, Finset.mem_coe, Multiset.mem_toFinset]
-        exact ha
+        simpa only [S, Finset.mem_coe, Multiset.mem_toFinset] using ha
       exact iqC_surj X j w a (hF (IntermediateField.subset_adjoin _ _ haS))
   exact iSup_maxGen_baseChange op (fun x y => hcomm j w x.1 x.2 y.1 y.2) hp hsp (v, k)
 
@@ -562,8 +561,7 @@ theorem inf_ker_ne_bot {a : End K V} {c : K} {U : Submodule K V} (hU : U ≠ ⊥
   apply hne
   have hmem : ((a - c • 1) ^ m') y ∈ U ⊓ LinearMap.ker (a - c • 1) := by
     refine ⟨hinv' m', ?_⟩
-    rw [SetLike.mem_coe, LinearMap.mem_ker, ← Module.End.mul_apply, ← pow_succ', ← hm']
-    exact hm
+    rwa [SetLike.mem_coe, LinearMap.mem_ker, ← Module.End.mul_apply, ← pow_succ', ← hm']
   rw [hbot] at hmem
   exact (Submodule.mem_bot K).1 hmem
 
@@ -761,8 +759,7 @@ theorem genHyp : ∀ (D : D7) (cf : CharFrame D) (M : MtFam D) (C : NChoice D) (
   intro D cf M C tp hM hQ w j h1 h2
   obtain ⟨j', rfl⟩ : ∃ j', j = j' + 1 := ⟨j - 1, by omega⟩
   refine ⟨gPl D ∪ qPl D (tp.tup (D.what₂.muTw w) ⟨j', by omega⟩), hM.hyp w ⟨j', by omega⟩, ?_⟩
-  intro v k s hv hc
-  exact not_mem_bad D cf C tp hQ w _ v k s hv hc
+  exact fun v k s hv hc => not_mem_bad D cf C tp hQ w _ v k s hv hc
 
 end GlobalTheory.GenHypOut
 end -- clump:auto
@@ -932,8 +929,7 @@ theorem dedekind_of_concrete (D : D7) (h : Function.Injective D.what₂.OtoLL �
       rw [eq_ratCast (algebraMap ℚ D.what₂.LL) x]; exact SubfieldClass.ratCast_mem F x), ?_⟩
     ext x
     have := hF x
-    rw [RingHom.mem_range] at this
-    exact this
+    rwa [RingHom.mem_range] at this
   obtain ⟨K, _, _, ⟨e⟩⟩ := Formalism.MainNotions.DIV.Inh.OsRingOfIntegers_of_concrete D hc
   exact { e.symm.toMulEquiv.isDomain _, isNoetherianRing_of_ringEquiv _ e, Ring.DimensionLEOne.of_ringEquiv e.symm,
       IsIntegrallyClosed.of_equiv e with }
@@ -1065,8 +1061,7 @@ theorem placesOver_finite (E : Type) [Field E] [NumberField E] {l : ℕ} (hl : l
   have h0 : Ideal.span {(l : 𝓞 E)} ≠ 0 := by
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact_mod_cast hl.ne_zero
-  refine (Ideal.finite_factors h0).subset fun v hv => ?_
-  exact Ideal.dvd_span_singleton.2 hv
+  exact (Ideal.finite_factors h0).subset fun v hv => Ideal.dvd_span_singleton.2 hv
 
 theorem exists_bridge_good {R : Ranks} (H : Host R) (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra H.E Ω]
     [IsAlgClosure H.E Ω] (u : HeightOneSpectrum (𝓞 H.E)) (A : ValuationSubring Ω) (hA : IsPlaceOver A u) :
@@ -1296,8 +1291,7 @@ theorem main : ∀ {R : Ranks} {H : Host R} {what₂ : Rows.Data R} (B : LocBase
   | mem f hf =>
     obtain ⟨v, k, hvk, rfl⟩ := hf
     refine Ideal.Quotient.eq.2 ?_
-    simp only [hTfun, dite_eq_left hvk]
-    exact sub_mem_of_ker_eq x.1 y.1 (x.2.1.trans y.2.1.symm) _
+    simpa only [hTfun, dite_eq_left hvk] using sub_mem_of_ker_eq x.1 y.1 (x.2.1.trans y.2.1.symm) _
   | algebraMap r => rfl
   | add f g _ _ hf hg => simp only [Pi.add_apply, map_add (f := _), hf, hg]
   | mul f g _ _ hf hg => simp only [Pi.mul_apply, map_mul, hf, hg]

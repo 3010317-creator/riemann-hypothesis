@@ -425,8 +425,7 @@ theorem locTy_exists : ∀ (D : D7) (Rw : RowSide D) (Pl : PlSide D) (X : LocNd 
     · exact h0.1 p hp
     · exact hg.1 p hp
   · intro i σ Sig ρ hP hR
-    refine ⟨?_, rbar_tie_at D Rw Pl X Y hCheb hloc hplB i σ Sig ρ hP hR⟩
-    exact isSSRep_rbarOf Y σ (X.nd.w i)
+    exact ⟨isSSRep_rbarOf Y σ (X.nd.w i), rbar_tie_at D Rw Pl X Y hCheb hloc hplB i σ Sig ρ hP hR⟩
   · intro i σ'
     show mtParOf Y (X.nd.mu i) (X.nd.j i) σ' = mtSup Y i σ'
     have hex : ∃ i', X.nd.mu i' = X.nd.mu i ∧ X.nd.j i' = X.nd.j i := ⟨i, rfl, rfl⟩

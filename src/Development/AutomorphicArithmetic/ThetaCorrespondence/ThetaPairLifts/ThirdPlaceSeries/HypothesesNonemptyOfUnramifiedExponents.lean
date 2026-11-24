@@ -262,8 +262,7 @@ theorem rowMainEqP_of_cut (hCh : PN.NGChain) (hMG : MeanAmpGen) (hc : GenCutP) :
     cSt e1 Irat Ire
   rw [hcard] at key
   have r := key ha hG hN hF hS hIn
-  rw [hdd] at r
-  exact r
+  rwa [hdd] at r
 
 end GlobalTheory.SnPos
 end -- clump:auto
@@ -471,8 +470,7 @@ theorem scal_symm : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what
   refine ⟨?_, ?_⟩
   · show Formalism.L2.SG.TermOp.s0T t' t = 1
     unfold Formalism.L2.SG.TermOp.s0T
-    rw [ite_eq_left ⟨hlam.symm, hlam'.symm⟩, ← hlam]
-    exact hs'
+    rwa [ite_eq_left ⟨hlam.symm, hlam'.symm⟩, ← hlam]
   · show Formalism.L2.SG.TermOp.scalT t' t
     refine ⟨⟨hlam.symm, hlam'.symm⟩, ?_, ?_⟩
     · rw [← hlam]; exact hs'
@@ -618,8 +616,7 @@ theorem isScalar_trans {Λ : Submodule (𝓞 E) S.V} {r k : ℕ} {T T' : E} {F :
     Submodule.mem_inf.mpr ⟨_root_.PI.UnitaryGroupMassFormula.ScalEquivGen.ylift'MemQ hi hX hTh1'' hy1',
       _root_.PI.UnitaryGroupMassFormula.ScalEquivGen.mapOrthXplusQ hi hX hz hy1'b⟩
   have a := hS1 y1 hy1 y1 hy2 y1' hy1' (β y1') hy2' (by simp) (by simp) al al'
-  have b := hS2 y1 hy2 y3 hy3 (β y1') hy2' y3' hy3' h13 h31 al al'
-  exact a.trans b
+  exact a.trans (hS2 y1 hy2 y3 hy3 (β y1') hy2' y3' hy3' h13 h31 al al')
 
 end Gen
 
@@ -675,10 +672,8 @@ theorem scalar_pair_trans : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' 
   refine ⟨?_, ?_⟩
   · show s0T t t'' = 1
     unfold s0T
-    rw [ite_eq_left hl]
-    exact hs3
-  · show scalT t t''
-    exact ⟨hl, hs3, hsc3⟩
+    rwa [ite_eq_left hl]
+  · exact ⟨hl, hs3, hsc3⟩
 
 end GlobalTheory.ScalTrans
 end -- clump:auto
@@ -1204,8 +1199,7 @@ theorem exists_tuple (D : D7) (μ : D.what₂.Tup) (j : ℕ) (F : D.what₂.Mt �
     apply hc
     rw [← Finset.prod_erase_mul _ (ef p) (Finset.mem_univ ⟨k, v⟩), map_mul, Module.End.mul_apply]
     have hzero : D.ntypes.cenMt μ j (ef p ⟨k, v⟩) F = 0 := by
-      rw [← onMt_coe]
-      exact h0
+      rwa [← onMt_coe]
     rw [hzero, map_zero]
   · rw [map_zero]; rfl
 

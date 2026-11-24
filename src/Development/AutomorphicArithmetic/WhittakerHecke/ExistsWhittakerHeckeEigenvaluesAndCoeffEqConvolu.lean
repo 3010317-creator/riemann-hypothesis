@@ -476,8 +476,7 @@ theorem UpperTheory.ideleOfNat_mul_and_prime_pow :
       Set.Finite.preimage (fun a _ b _ h => hinj a b h) (Finset.finite_toSet _)
     refine h1.subset fun v hv => ?_
     simp only [Set.mem_preimage, Finset.mem_coe, Finsupp.mem_support_iff]
-    intro h0
-    exact hv (by simp only [h0, pow_zero])
+    exact fun h0 => hv (by simp only [h0, pow_zero])
   refine ⟨fun m n hm hn => ?_, fun v k => ?_⟩
   · unfold pin
     rw [← finprod_mul_distrib (hfin m) (hfin n), Nat.factorization_mul hm.ne' hn.ne']
@@ -787,8 +786,7 @@ private theorem main (hg : Gd D.δ v) :
         rfl
       refine ⟨ϖ', ?_, ?_, ?_⟩
       · change Valued.v (i (ϖ : Kv v)) = _
-        rw [hv]
-        exact hϖ
+        rwa [hv]
       · rw [hco, hmk, map_zero, zero_mul, add_zero]
       · have h : idl a.1 ϖ' = ideleEmbedding F E (idl v ϖ) := Units.ext hco
         rw [h, ideleNorm_ideleEmbedding, hdegree]
@@ -804,8 +802,7 @@ private theorem main (hg : Gd D.δ v) :
       have he := Nat.eq_one_of_mul_eq_one_right hx
       have hf := Nat.eq_one_of_mul_eq_one_left hx
       have hr : Module.finrank (Kv v) (Kv x.1) = 1 := by
-        rw [finrank_eq_ramificationIdx_mul_inertiaDeg]
-        exact hx
+        rwa [finrank_eq_ramificationIdx_mul_inertiaDeg]
       let i := completionMap v x.1
       have hsurj : Function.Surjective i := fun y => by
         obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (1 : Kv x.1) one_ne_zero).1 hr y
@@ -836,8 +833,7 @@ theorem UpperTheory.inert_or_split_of_good_delta_rat :
           (∃ w : H.P E, w.under (𝓞 ℚ) = v ∧ H.Inert D v w) ∨
           (∃ w w' : H.P E, w ≠ w' ∧ w.under (𝓞 ℚ) = v ∧ w'.under (𝓞 ℚ) = v ∧ H.SplitAt v w ∧ H.SplitAt v w' ∧
             ∀ w'' : H.P E, w''.under (𝓞 ℚ) = v → w'' = w ∨ w'' = w') := by
-  intro E _ _ D v hg
-  exact UpperTheory.PlacesAboveInertOrSplit.main D v hg
+  exact fun E _ _ D v hg => UpperTheory.PlacesAboveInertOrSplit.main D v hg
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.WhittakerHecke.InertOrSplitOfGoodDeltaRat =====

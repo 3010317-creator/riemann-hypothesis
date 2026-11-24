@@ -310,16 +310,10 @@ theorem dU_eq_const_mul_det_topL_translate :
   let A : Matrix (Fin n) (Fin n) k := (LinearMap.toMatrix' φ)ᵀ
   let B : Matrix (Fin n) (Fin n) k := (LinearMap.toMatrix' ψ.symm.toLinearMap)ᵀ
   have hAB : A * B = 1 := by
-    have hc : ψ.symm.toLinearMap ∘ₗ φ = LinearMap.id := by
-      refine LinearMap.ext fun v => ?_
-      show ψ.symm (ψ v) = v
-      exact ψ.symm_apply_apply v
+    have hc : ψ.symm.toLinearMap ∘ₗ φ = LinearMap.id := LinearMap.ext fun v => ψ.symm_apply_apply v
     simp only [A, B, ← transpose_mul, ← LinearMap.toMatrix'_comp, hc, LinearMap.toMatrix'_id, transpose_one]
   have hBA : B * A = 1 := by
-    have hc : φ ∘ₗ ψ.symm.toLinearMap = LinearMap.id := by
-      refine LinearMap.ext fun v => ?_
-      show ψ (ψ.symm v) = v
-      exact ψ.apply_symm_apply v
+    have hc : φ ∘ₗ ψ.symm.toLinearMap = LinearMap.id := LinearMap.ext fun v => ψ.apply_symm_apply v
     simp only [A, B, ← transpose_mul, ← LinearMap.toMatrix'_comp, hc, LinearMap.toMatrix'_id, transpose_one]
   let g : GL (Fin n) k := ⟨A, B, hAB, hBA⟩
   have hb : β.form U b ≠ 0 := fun h0 => β.ne U (by rw [(β.form U).eq_smul_basis_det b, h0, zero_smul])
@@ -492,8 +486,7 @@ theorem suppAt_idem_of {Q : Finset (Pl D.host.E)} (hQ : SplitSet Q) {PP : Pl D.h
 
 theorem suppAt_single {PP : Pl D.host.E} {V : HSp D} {g : GA D V} (h : SuppAt (idemAt PP) V g) :
     SuppAt (idem {PP}) V g := by
-  rw [idem, Finset.sum_singleton]
-  exact h
+  rwa [idem, Finset.sum_singleton]
 
 end GlobalTheory.SourceTrans
 
@@ -593,16 +586,14 @@ theorem hatSelfDual_of {V : HSp D} {Λ : Submodule (𝓞 D.host.E) (Fin V.rank �
       refine Submodule.span_induction
         (p := fun z _ => IsLocalization.IsInteger (𝓞 D.host.E) ((d : 𝓞 D.host.E) • pairing z y))
         ?_ ?_ ?_ ?_ (hgen.symm ▸ hx)
-      · intro z hz
-        exact hdint z hz
+      · exact fun z hz => hdint z hz
       · simp [pairing, IsLocalization.isInteger_zero]
       · intro z z' _ _ hz hz'
         convert IsLocalization.isInteger_add hz hz' using 1
         simp only [pairing, Pi.add_apply, star_add, add_mul, Finset.sum_add_distrib, smul_add]
       · intro a z _ hz
         have ha : IsLocalization.IsInteger (𝓞 D.host.E) (star (a : D.host.E)) := by
-          refine ⟨⟨star (a : D.host.E), ?_⟩, rfl⟩
-          exact a.2.map (starRingEnd D.host.E).toIntAlgHom
+          exact ⟨⟨star (a : D.host.E), a.2.map (starRingEnd D.host.E).toIntAlgHom⟩, rfl⟩
         convert IsLocalization.isInteger_mul ha hz using 1
         simp only [pairing, Pi.smul_apply, Algebra.smul_def, star_mul', Finset.mul_sum, Finset.sum_mul,
           mul_assoc, mul_left_comm, mul_comm]
@@ -954,14 +945,11 @@ theorem specSer_mem_span : ∀ {D : D7} {N : NData D.R D.host D.what₂} {X : NT
     rw [Units.val_pow_eq_pow_val, map_pow, e2, inv_pow]
   refine key _ (by show half _ _ = half _ _; rw [hA]) (specLoc ρ Y i j b k Q M χ)
     (fun PP U => qi PP.1 * (ν PP ((univOf Y i (admissibleConjugatePairPlaces X i Q M) M ρ.rc).kap PP.1 (cC PP.1 U)) : ℂ)) ?_ ?_
-  · intro PP U
-    refine Subring.mul_mem _ (hqi PP) ?_
-    exact ⟨_, rfl⟩
+  · exact fun PP U => Subring.mul_mem _ (hqi PP) ⟨_, rfl⟩
   · intro PP y
     have := univ_spec (ρ.β j PP.1) ((univOf Y i (admissibleConjugatePairPlaces X i Q M) M ρ.rc).kap PP.1) (ν PP) (gC PP.1) (cC PP.1)
       (hgc PP.1) y
-    rw [hres PP] at this
-    exact this
+    rwa [hres PP] at this
 end GlobalTheory.SpecSpan
 
 end
@@ -1030,8 +1018,7 @@ theorem thetaLatticeCondition_of_seriesComparison_universalChar {D : D7} {ρ : S
       refine T.injective_rdK k (hzr.trans ?_)
       rw [rdK_specU_grpSum hρ (rd i j' b) k Q M χ x, specXi]
       exact Finset.sum_congr rfl fun a' _ => by rw [hx a']
-    rw [← e]
-    exact hz
+    rwa [← e]
   · rw [T.thU_off Q M a hoff, map_zero]
     exact zero_mem _
 
@@ -1344,8 +1331,7 @@ theorem blockCharConj_of_isTripleOf (h : _root_.GlobalTheory.Triple.IsGaloisTrip
     have e1 := hn.loc (Or.inl hv) e
     rw [GlobalTheory.Triple.blockChar, block_loc (C.isEta.unr v) hx] at e1
     apply Units.ext
-    rw [hL.loc_away (Or.inl hv) x t e, inQ_val, RingEquiv.eq_symm_apply]
-    exact e1
+    rwa [hL.loc_away (Or.inl hv) x t e, inQ_val, RingEquiv.eq_symm_apply]
   have hvl : v ∉ placesOver D.host.E (Y.l i) := notMem_of_ne (D.host.g_prime k) (Y.lPrime i).out hk hv
   obtain ⟨bar, -, hbar⟩ := GlobalTheory.ConjPoly.exists_conj D
   obtain rfl : t' = cConj Y t := AlgEquiv.ext ht'

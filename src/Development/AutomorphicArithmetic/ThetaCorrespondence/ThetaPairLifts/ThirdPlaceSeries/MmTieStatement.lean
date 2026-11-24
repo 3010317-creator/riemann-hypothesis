@@ -102,8 +102,7 @@ theorem isDefGram_map {E K : Type} [Field E] [Field K] [NumberField K] [StarRing
     apply σ.injective
     have h2 := hc (σ.comp f) (A b a)
     simp only [RingHom.comp_apply] at h h2
-    rw [h2]
-    exact h
+    rwa [h2]
   · intro a b ψ
     simp only [Matrix.map_apply]
     rw [hf]
@@ -176,8 +175,7 @@ private theorem selfDualE_full {E : Type} [Field E] [NumberField E] {n : ℕ}
   have hy' : (algebraMap (𝓞 E) E a) • y ∈ Submodule.span E (L : Set (Fin n → E)) :=
     Submodule.subset_span hy
   have := (Submodule.span E (L : Set (Fin n → E))).smul_mem (algebraMap (𝓞 E) E a)⁻¹ hy'
-  rw [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
-  exact this
+  rwa [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
 
 theorem defGram_selfDual_of_embedding : ∀ (E K : Type) [Field E] [NumberField E] [Field K] [NumberField K] [StarRing K] (cE : E →+* E), (∀ (φ : E →+* ℂ) (x : E), φ (cE x) = starRingEnd ℂ (φ x)) → ∀ (ι : Type) (emb : ι → E →+* K), (∀ τ x, star (emb τ x) = emb τ (cE x)) → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), (∀ φ : E →+* ℂ, (J.map φ).PosDef) → ∀ τ, IsDefGram (gramK emb J τ) ∧ IsDefGram (gramKd emb J τ) ∧ ∀ L : Submodule (𝓞 E) (Fin n → E), IsSelfDualE cE J L → IsSelfDualK (gramK emb J τ) (tauLat emb τ L) ∧ IsSelfDualK (gramKd emb J τ) (dualFr (tauLat emb τ L)) := by
   intro E K _ _ _ _ _ cE hc ι emb hemb n J hJ τ
@@ -201,8 +199,7 @@ theorem defGram_selfDual_of_embedding : ∀ (E K : Type) [Field E] [NumberField 
       _root_.GlobalTheory.TauLat.tauLat_lattice_dual_round.2.1 E K ι n emb cE τ (hemb τ) J L L hdet hfull hL.2
     refine ⟨⟨hl.toIsLattice, hd⟩, (_root_.GlobalTheory.DualLat.dualFr_lattice_and_hdual.1 K n _ _ hdK hl).1.toIsLattice, ?_⟩
     have h := _root_.GlobalTheory.DualLat.dualFr_lattice_and_hdual.2 K n _ _ h1.1 hdK hl
-    rw [hd] at h
-    exact h
+    rwa [hd] at h
 
 end GlobalTheory.TestLat
 end -- clump:auto
@@ -233,8 +230,7 @@ theorem inv_mulVec_star_mem_hdualFr {K : Type} [Field K] [NumberField K] [StarRi
   intro m hm
   rw [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ hd, Matrix.one_mulVec]
   have h := star_mem_one_of_mem_one (hx m hm)
-  rw [← Matrix.star_dotProduct_star] at h
-  exact h
+  rwa [← Matrix.star_dotProduct_star] at h
 
 theorem dualForm_integral_on_dualFr : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] (N : ℕ) (H : Matrix (Fin N) (Fin N) K), Hᴴ = H → IsUnit H.det → ∀ (M : Submodule (𝓞 K) (Fin N → K)) (s : ℕ), (∀ x ∈ hdualFr H M, ∀ y ∈ hdualFr H M, (s : K) * (star x ⬝ᵥ H *ᵥ y) ∈ (algebraMap (𝓞 K) K).range) → ∀ x ∈ dualFr M, ∀ y ∈ dualFr M, (s : K) * (star x ⬝ᵥ (H⁻¹)ᵀ *ᵥ y) ∈ (algebraMap (𝓞 K) K).range := by
   intro K _ _ _ N H hH hd M s h x hx y hy
@@ -309,8 +305,7 @@ private theorem sumLat_full {K : Type} [Field K] [NumberField K]
   let g : C → VV K lam →ₗ[K] (Fin N → K) := fun c =>
     f.symm.toLinearMap ∘ₗ LinearMap.single K (fun _ : C => VV K lam) c
   have hval : ∀ c c' t, valAt lam e c' (g c t) = (Pi.single c t : C → VV K lam) c' := by
-    intro c c' t
-    exact congrFun (f.apply_symm_apply (Pi.single c t : C → VV K lam)) c'
+    exact fun c c' t => congrFun (f.apply_symm_apply (Pi.single c t : C → VV K lam)) c'
   have hmem : ∀ c t, t ∈ T c → g c t ∈ sumLat lam e T := by
     intro c t ht
     rw [Model.mem_sumLat]
@@ -353,8 +348,7 @@ theorem testLatticeCondition_dualFr_sumLat_delK : ∀ (K : Type) [Field K] [Numb
   haveI : Finite C := by
     let i₀ : VVIdx lam := (e ⟨0, hN⟩).2
     refine Finite.of_injective (fun c : C => e.symm (c, i₀)) ?_
-    intro a b hab
-    exact (Prod.ext_iff.1 (e.symm.injective hab)).1
+    exact fun a b hab => (Prod.ext_iff.1 (e.symm.injective hab)).1
   letI : Fintype C := Fintype.ofFinite C
   obtain ⟨hval, hH, hHi, hGu⟩ := _root_.GlobalTheory.TestLat.sumGram_spec K ι n lam G hG C N e
   have hHu : IsUnit (sumGram lam e G).det := by
@@ -485,8 +479,7 @@ private theorem selfDualK_full {K : Type} [Field K] [NumberField K] [StarRing K]
   have hy' : (algebraMap (𝓞 K) K a) • y ∈ Submodule.span K (M : Set (Fin n → K)) :=
     Submodule.subset_span hy
   have := (Submodule.span K (M : Set (Fin n → K))).smul_mem (algebraMap (𝓞 K) K a)⁻¹ hy'
-  rw [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
-  exact this
+  rwa [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
 
 theorem testLatticeCondition_sumLat_nabK_and_delK : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] [_root_.NumberField.IsTotallyComplex K] (v₀ : InfinitePlace K), IsConjAt v₀ → ∀ (ι : Type) [Fintype ι] (n : ℕ) (lam : ι → DomWeight n) (R : ℝ), 1 ≤ R → SpreadLe lam R → ∀ (G : ι → Matrix (Fin n) (Fin n) K), (∀ τ, IsDefGram (G τ)) → ∀ (C : Type) [Nonempty C] (M : C → ι → Submodule (𝓞 K) (Fin n → K)), (∀ c τ, IsSelfDualK (G τ) (M c τ)) → ∀ (N : ℕ) (e : Fin N ≃ C × VVIdx lam) (X : InfinitePlace K → Matrix (Fin N) (Fin N) ℂ), IsMetric (sumGram lam e G) X → TestLatticeCondition N X (sumLat lam e fun c => nabK lam (M c)) (bound (Fintype.card ι) n R) ∧ TestLatticeCondition N X (sumLat lam e fun c => delK lam (M c)) (bound (Fintype.card ι) n R) := by
   intro K _ _ _ _ v₀ hv ι _ n lam R hR hsp G hG C _ M hM N e X hX
@@ -507,8 +500,7 @@ theorem testLatticeCondition_sumLat_nabK_and_delK : ∀ (K : Type) [Field K] [Nu
       obtain ⟨c⟩ := (inferInstance : Nonempty C)
       obtain ⟨i⟩ := GlobalTheory.TestLat.SumLat.idx_nonempty lam
       have ht : ∃ t ∈ T c, t ≠ 0 := by
-        by_contra hn
-        push Not at hn
+        by_contra! hn
         have hb : T c = ⊥ := by
           apply le_antisymm _ bot_le
           intro t ht

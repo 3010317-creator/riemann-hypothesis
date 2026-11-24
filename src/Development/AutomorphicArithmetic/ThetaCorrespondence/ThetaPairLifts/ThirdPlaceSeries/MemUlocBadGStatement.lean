@@ -163,8 +163,7 @@ theorem hasRes_of_pr {z : AE D} (c : 𝓞 D.host.E) (hz : valuation K (q.pr z - 
     have e2 : toEAf D (z - incA D y) = toEAf D z - Formalism.UG.inclE (FiniteAdeleRing (𝓞 D.host.F) D.host.F) y := by
       rw [RingHom.map_sub]
       rfl
-    rw [e2, map_sub, GlobalTheory.Mem.Col2.adAt_inclE]
-    exact h1
+    rwa [e2, map_sub, GlobalTheory.Mem.Col2.adAt_inclE]
   have h3 : valuation K (q.pr (incA D (y - (c : D.host.E)))) < 1 := by
     have e3 : q.pr (incA D (y - (c : D.host.E))) = (q.pr z - q.pr (incA D (c : D.host.E))) - q.pr (z - incA D y) := by
       rw [map_sub, map_sub, map_sub]
@@ -179,8 +178,7 @@ theorem hasRes_of_pr {z : AE D} (c : 𝓞 D.host.E) (hz : valuation K (q.pr z - 
     rw [map_sub, sub_add_sub_cancel]
   rw [e4]
   refine Valuation.map_add_lt _ h1 ?_
-  rw [valued_algebraMap]
-  exact h4
+  rwa [valued_algebraMap]
 
 end Split
 
@@ -397,8 +395,7 @@ theorem moves_iff {V : HSp D} {L : GlobalTheory.FinPl.Lat V} (hL : ∀ z, z ∈ 
       Submodule.mem_inf.2 ⟨ha i, (Submodule.mem_iInf _).2 fun u => absurd trivial u.2⟩
     have := h a hi
     rw [h1 a hi, h1 _ (GlobalTheory.FinPl.KOpen.supp_mulVec V _ κ hi)] at this
-    simp only [h2, hz] at this
-    exact this
+    simpa only [h2, hz] using this
   · intro h a ha
     rw [h1 a ha, h1 _ (GlobalTheory.FinPl.KOpen.supp_mulVec V _ κ ha)]
     simp only [h2]
@@ -533,8 +530,7 @@ theorem colGroup_of_embX {s κ τ : ℕ} (S : SymData k s κ) (g : GL (XIx (Fin 
   refine ⟨1, one_mem _, mem_Cgrp.2 ⟨?_, ?_⟩⟩
   · rw [one_mul]
     exact (le_sup_left : (embX (s + 1)).range ≤ R k _ (s + 1) 1) ⟨g, rfl⟩
-  · rw [inv_one, one_mul, mul_one, one_mul]
-    exact hg
+  · rwa [inv_one, one_mul, mul_one, one_mul]
 
 theorem entries_of_colGroup {κ τ n : ℕ} (e : XIx (Fin κ) (Fin τ) 0 ≃ Fin n) (he : IsOrd xPos e) (g : GL (XIx (Fin κ) (Fin τ) 0) k)
     (hg : g ∈ colGroup k κ (Fin τ)) (a b : XIx (Fin κ) (Fin τ) 0) :
@@ -663,8 +659,7 @@ theorem mem_Uloc_badG_alt : ∀ {B : GlobalTheory.Mem.Base} {X : GlobalTheory.Me
   have hwP : w ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg := (hA.lev.2.1 w).2 (GlobalTheory.Mem.Col2.TC.GLev0.mem_vGs.2 ⟨i0, hw⟩)
   obtain ⟨i, hi⟩ := a.pl.surjective ⟨w, hwP⟩
   have hqv : (a.G i).q.v = v := by
-    rw [((ha.tie row col).2.idem i).2, hi]
-    exact hu
+    rwa [((ha.tie row col).2.idem i).2, hi]
   have hTv : ((((I.rec7 l Z).mem u).A.T : ℕ) : 𝓞 (I.rec7 l Z).host.F) ∉ v.asIdeal :=
     GlobalTheory.Mem.Col2.TC.GLev0.T_notMem X u i0 hi0
   have hx := _root_.GlobalTheory.FinPl.AwayLevel.mem_levelVL_base_alt W hA u a hat κ hκ y hy hIn.1 v hTv

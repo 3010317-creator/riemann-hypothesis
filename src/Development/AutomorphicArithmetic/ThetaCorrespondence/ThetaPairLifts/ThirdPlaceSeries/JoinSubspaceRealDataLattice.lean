@@ -308,8 +308,7 @@ theorem exists_read_of_matrix_tie (D : D7) {Bs : DefBase D.what₂.LL} {A : DefA
   · rw [emb_eq D.what₂.embLL Bs.v0 a, sgAt_mk D.what₂.embLL hv]
   · exact (GlobalTheory.range_op_eq_span_of_formsTie D.what₂.embLL (W := (RowSide.sharp D).Amb D.what₂.mu0) jA H E _ V hF hE).symm
   · have h := hι y
-    rw [sharp_iota_eq] at h
-    exact h
+    rwa [sharp_iota_eq] at h
 
 end GlobalTheory.Mem.SJ
 end -- clump:auto
@@ -593,8 +592,7 @@ theorem thetaMap_referenceTuple_goodPart_onto_rows : ∀ (D : D7) (Bs : DefBase 
   obtain ⟨y, hy⟩ := hF.wf.Pq_surj Bs.μ0 x
   refine ⟨R.jV y, ?_, ?_⟩
   · have : R.jV y ∈ Submodule.span ℂ (Set.range R.jV) := Submodule.subset_span ⟨y, rfl⟩
-    rw [hV] at this
-    exact this
+    rwa [hV] at this
   · have := hI y
     rw [h1, Matrix.one_mulVec] at this
     exact this.trans (congrArg D.jEE ((congrArg R.eRR hy).trans hx))
@@ -656,8 +654,7 @@ theorem kernelJoin_thetaSurjective_goodPart_latticeCondition : ∀ (D : D7) (G :
       exact (congrArg (Tw.mkL (twAt D.what₂.embLL A3.A.v0) R.HE.H) h1).symm
   have hmem : ∀ x, R.HE.e (eE x) ∈ R.toRealDat.EEat (R.toRealDat.levR F.lv2 true) := fun x => by
     have h1 := hRow.1 x
-    rw [hME x] at h1
-    exact h1
+    rwa [hME x] at h1
   let e : D.what₂.EE →ₗ[ℂ] R.toRealDat.EEat (R.toRealDat.levR F.lv2 true) :=
     LinearMap.codRestrict _ (R.HE.e ∘ₗ eE) hmem
   have hSch := SchurMove.schur_iotaX D _ (R.MY 0) (R.toRealDat.EEat (R.toRealDat.levR F.lv2 true)) St h R.θ _ _ t

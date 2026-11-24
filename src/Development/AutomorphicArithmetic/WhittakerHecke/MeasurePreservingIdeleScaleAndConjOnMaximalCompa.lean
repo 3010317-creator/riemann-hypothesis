@@ -59,8 +59,7 @@ open UpperTheory.ConvolutionTheory.R2.G (FS2 Rw nE row)
 private lemma inv_mem_UU' {t : (A ℚ)ˣ} (ht : t ∈ UU) : t⁻¹ ∈ UU := by
   refine ⟨?_, fun v => ?_⟩
   · have h : (t : A ℚ).1 * ((t⁻¹ : (A ℚ)ˣ) : A ℚ).1 = 1 := congrArg Prod.fst (Units.mul_inv t)
-    rw [ht.1, one_mul] at h
-    exact h
+    rwa [ht.1, one_mul] at h
   · have hm : H.cp v (t : A ℚ) * H.cp v ((t⁻¹ : (A ℚ)ˣ) : A ℚ) = 1 := by
       rw [← map_mul, Units.mul_inv, map_one]
     have := congrArg Valued.v hm

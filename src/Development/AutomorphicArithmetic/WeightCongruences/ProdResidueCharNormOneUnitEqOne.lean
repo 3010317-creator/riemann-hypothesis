@@ -91,8 +91,7 @@ private theorem stab_trivial {K L : Type} [Field K] [NumberField K] [Field L] [N
       rw [← hσ]; exact Ideal.smul_mem_pointwise_smul _ _ _ h1
     rw [smul_sub, smul_natCast_eq] at h3
     have h4 := w.asIdeal.sub_mem h3 h1
-    rw [sub_sub_sub_cancel_right] at h4
-    exact h4
+    rwa [sub_sub_sub_cancel_right] at h4
   have he : w.asIdeal.ramificationIdx (𝓞 K) = 1 := by
     rw [← Ideal.ramificationIdx'_eq_ramificationIdx Q.asIdeal w.asIdeal Q.ne_bot]
     apply Ideal.ramificationIdx'_spec
@@ -181,8 +180,7 @@ theorem UpperTheory.prod_residue_char_norm_one_unit_eq_one :
         let w : HeightOneSpectrum (𝓞 L) := ⟨τ⁻¹ • w₀.asIdeal, inferInstance, hne⟩
         have hw : w ∈ S := by
           rw [memS, ← (memS w₀).1 hw₀]
-          apply HeightOneSpectrum.ext
-          exact Ideal.under_smul (𝓞 K) w₀.asIdeal τ⁻¹
+          exact HeightOneSpectrum.ext (Ideal.under_smul (𝓞 K) w₀.asIdeal τ⁻¹)
         refine ⟨w, hw, ?_⟩
         have h1 := stab_trivial hp w (overp w hw) (hs w hw).1 (hs w hw).2 (τ⁻¹ * σ w)
           (by rw [mul_smul, hσw w hw])

@@ -339,8 +339,7 @@ theorem _root_.GlobalTheory.MultOneRealised.exists_rep_of_mult_one : ∀ (K : Ty
           ∑ h : P, ι (((ψ h)⁻¹ : Kˣ) : K) * (Fintype.card G * ι (χ t) * ι (χ h) / n₀)
         = (n₀ : AlgebraicClosure K) / (Fintype.card G * Fintype.card P) *
           (Fintype.card G * ι (χ t) / n₀ * ∑ h : P, ι (χ h) * ι (((ψ h)⁻¹ : Kˣ) : K)) := by
-          simp only [Finset.mul_sum]
-          exact Finset.sum_congr rfl fun h _ => by ring
+          simpa only [Finset.mul_sum] using Finset.sum_congr rfl fun h _ => by ring
       _ = ι (χ t) := by
           rw [hsum']
           field_simp
@@ -425,8 +424,7 @@ theorem exists_goodSet (K : Type) [Field K] [CharZero K] (G : Type) [Group G] [F
   · have h2 := (GlobalTheory.CuspidalIdempotentCharacters.finrank_eq_one_iff (τ s) P0.H P0.chi).2 (by
       simp_rw [ht s]
       rw [h1 _ s.2, Nat.card_eq_fintype_card])
-    rw [← GlobalTheory.CuspidalIdempotentCharacters.eps_eq_lvlIdem] at h2
-    exact h2
+    rwa [← GlobalTheory.CuspidalIdempotentCharacters.eps_eq_lvlIdem] at h2
   · unfold Formalism.MainNotions.PrimeDegreeVariant.eG idemOf
     rw [← Finset.sum_coe_sort X]
     refine Finset.sum_congr rfl fun s _ => ?_
@@ -492,8 +490,7 @@ theorem irr_of_surj (τ : Representation K G W) (hs : Function.Surjective τ.asA
   right
   obtain ⟨w, hw, hw0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot h
   obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual K W, φ w ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hw0 ((Module.forall_dual_apply_eq_zero_iff K w).1 hc)
   rw [eq_top_iff]
   intro v _
@@ -879,8 +876,7 @@ theorem exists_descent {G P V : Type} [Group G] [Group P] [AddCommGroup V] [Modu
       obtain ⟨h, hh⟩ := (hT g).1 hg
       refine (key ⟨g, h⟩ _ hh).1 ?_
       have := congrArg Subtype.val (hw _ hh)
-      rw [hπ] at this
-      exact this
+      rwa [hπ] at this
     · intro hv
       have hv' : ∀ g : Q, ρ g ∈ S → σ g v = c (ρ g) • v := fun g hg =>
         (key g v hg).2 (hv g ((hT g).2 ⟨g.2, hg⟩))
@@ -1079,8 +1075,7 @@ theorem mem_unip_iff {k : ℕ} (h : k + 1 ≤ r) (g : GL (Fin r) F) : g ∈ unip
     by_cases hi : k ≤ i.val
     · exact mem_tailUnip.1 hg i j hi hj
     · have := mem_unip.1 hc ⟨i.val, by omega⟩ ⟨j.val, by omega⟩ hj
-      rw [corner_apply, ← one_castLE h] at this
-      exact this
+      rwa [corner_apply, ← one_castLE h] at this
 
 theorem mem_unipSym_iff {k : ℕ} (h : k + 1 ≤ r) (g : GL (Fin r) F) : g ∈ unipSym F r 0 k ↔
     ∃ hg : g ∈ tailUnip F r k, (corner h ⟨g, hg⟩ : GL (Fin (k + 1)) F) ∈ unipSym F (k + 1) 0 k := by
@@ -1717,8 +1712,7 @@ theorem passIn3_of_rows : ∀ (D : D7) [_root_.NumberField.IsTotallyComplex D.wh
     have hnOf := _root_.GlobalTheory.multiplicity_linearCharacter_eq_characterSum.nOf_eq_charSum D.what₂.LL G (Ws s) (τ s) F.P1 F.ψ1
     have heq : Formalism.IndefR.IndefiniteEpsilonOperator.nOf (τ s) ⟨F.P1, F.ψ1⟩ = n := by
       apply Nat.cast_injective (R := D.what₂.LL)
-      rw [hnOf]
-      exact hn
+      rwa [hnOf]
     rw [heq]
     have hde' : ((faceOf3 A3 F.P0 F.ψ0 F.P1 F.ψ1 F.Dc F.Sp F.Zsc (R.toCx3 F).zs).Z.num C CH).de = _ := hde
     rw [hde']

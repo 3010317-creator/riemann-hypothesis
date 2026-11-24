@@ -683,8 +683,7 @@ private theorem haar_right {G : Type} [Group G] [TopologicalSpace G] [IsTopologi
   have hJm : MeasurableSet (J : Set G) := hJ.2.measurableSet
   have h1 : (· * u) ⁻¹' (J : Set G) = J := by
     ext x
-    simp only [Set.mem_preimage, SetLike.mem_coe]
-    exact Subgroup.mul_mem_cancel_right J hu
+    simpa only [Set.mem_preimage, SetLike.mem_coe] using Subgroup.mul_mem_cancel_right J hu
   have h2 : m J = a * m J := by
     have := congrArg (· (J : Set G)) e
     simp only [Measure.map_apply (measurable_mul_const u) hJm, h1] at this
@@ -789,8 +788,7 @@ private theorem exists_ext {ι A : Type*} {X : A → Type*} (wi : ι → A) (hw 
     obtain rfl := hw hj
     rfl
   have ha : ∃ j, wi j = wi i := ⟨i, rfl⟩
-  simp only [dite_eq_left ha]
-  exact key _ _
+  simpa only [dite_eq_left ha] using key _ _
 
 private theorem finprod_split {A M : Type*} [CommMonoid M] {r : ℕ} (wi : Fin r → A) (hw : Function.Injective wi)
     (X : A → M) (hX : (Function.mulSupport X).Finite) :
@@ -822,8 +820,7 @@ private theorem under_eq {v : Pl F} (w : PlacesOver E v) : w.1.under (𝓞 F) = 
 private theorem finite_under (S : Set (Pl F)) (hS : S.Finite) :
     {w : Pl E | w.under (𝓞 F) ∈ S}.Finite := by
   refine (hS.biUnion fun v _ => Set.finite_range (Subtype.val : PlacesOver E v → Pl E)).subset ?_
-  intro w hw
-  exact Set.mem_biUnion hw ⟨⟨w, liesOver_under w⟩, rfl⟩
+  exact fun w hw => Set.mem_biUnion hw ⟨⟨w, liesOver_under w⟩, rfl⟩
 
 private theorem iwCoset_zero (w : Pl E) :
     GM.iwCoset w (0 : Fin n → ℤ) = (GLnLocal.iwahori (w.adicCompletion E) n : Set (Gw n w)) := by
@@ -836,8 +833,7 @@ private theorem iwCoset_zero (w : Pl E) :
   · rintro ⟨a, ha, b, hb, rfl⟩
     rw [hd, mul_one]
     exact mul_mem ha hb
-  · intro hg
-    exact ⟨g, hg, 1, one_mem _, by rw [hd, mul_one, mul_one]⟩
+  · exact fun hg => ⟨g, hg, 1, one_mem _, by rw [hd, mul_one, mul_one]⟩
 
 private theorem iw_test (w : Pl E) :
     IsLocallyConstant (((GLnLocal.iwahori (w.adicCompletion E) n : Set (Gw n w))).indicator (1 : Gw n w → ℂ)) ∧
@@ -1026,12 +1022,10 @@ theorem UpperTheory.exists_pos_const_eigenspace_bound_of_split_CMDatum :
     refine Fin.addCases (fun i => ?_) (fun j => ?_) i
     · rw [hBl]
       have := hB₁ i
-      rw [← hl i] at this
-      exact this
+      rwa [← hl i] at this
     · rw [hBr]
       have := hB₂ j
-      rw [← hr j] at this
-      exact this
+      rwa [← hr j] at this
   have hwi : Function.Injective fun i => (T.mk' (pp i)).1 := fun i j e => hpp (by
     have e' : (T.mk' (pp i)).1 = (T.mk' (pp j)).1 := e
     rw [← under_eq (T.mk' (pp i)), e', under_eq])
@@ -1159,8 +1153,7 @@ theorem UpperTheory.exists_pos_const_eigenspace_bound_of_split_CMDatum :
         prj (⨅ (u : Pl E) (_ : u ∉ Set.range fun i => (T.mk' (pp i)).1), eigL μ u (T.J u) (T.χ u)) :=
     ops_key _ _ _ _ _ habs hcomm.eq hlist'
   rw [hprod] at main
-  rw [hgt, key]
-  exact main
+  rwa [hgt, key]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

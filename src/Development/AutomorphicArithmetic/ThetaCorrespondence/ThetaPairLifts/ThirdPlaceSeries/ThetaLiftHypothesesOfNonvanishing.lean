@@ -202,8 +202,7 @@ variable {L : SizeData₂ D} {P : ParameterChoice' D L}
 end Rec
 
 theorem bar_eq_barE (Q : Par D) (a : 𝓞 D.host.E) : Q.H.bar a = barE D a := by
-  apply IsFractionRing.injective (𝓞 D.host.E) D.host.E
-  exact Q.H.bar_eq a
+  exact IsFractionRing.injective (𝓞 D.host.E) D.host.E (Q.H.bar_eq a)
 
 end GlobalTheory.IndefiniteRowSideFullHecke.HalfDepthValuations
 end -- clump:auto
@@ -535,8 +534,7 @@ theorem gaussBinom_eq (κ : Type) [Field κ] [Fintype κ] (n k : ℕ) :
   rw [Nat.card_eq_fintype_card (α := κ)] at h2
   rw [← h1, ← h2]
   unfold Formalism.G0.countBelow
-  apply Nat.card_congr
-  exact Equiv.subtypeEquivRight fun U => by simp
+  exact Nat.card_congr (Equiv.subtypeEquivRight fun U => by simp)
 
 end GlobalTheory.SplitCosetCount
 
@@ -766,8 +764,7 @@ theorem hermForm_eq_of_im_eq_on_spanning_lattice :
     rintro _ ⟨b, rfl⟩
     exact hab a b
   have him : ∀ x y, (hermForm Hm (h x) (h y)).im = (hermForm Hm (h' x) (h' y)).im := by
-    intro x y
-    exact LinearMap.congr_fun₂ hB x y
+    exact fun x y => LinearMap.congr_fun₂ hB x y
   intro x y
   have hI : ∀ (k : (Fin g → ℂ) →ₗ[ℂ] (Fin g → ℂ)),
       (hermForm Hm (k (Complex.I • x)) (k y)).im = (hermForm Hm (k x) (k y)).re := by
@@ -1045,14 +1042,11 @@ theorem isHeckePrime_of_setting {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T
     apply le_antisymm
     · rw [Formalism.HermitianLatticesTheory.conjIdeal, Ideal.span_le]
       rintro r ⟨s, hs, e⟩
-      have : r = b s := by
-        apply RingOfIntegers.coe_injective
-        exact e.trans rfl
+      have : r = b s := RingOfIntegers.coe_injective (e.trans rfl)
       rw [this]
       exact Ideal.mem_map_of_mem _ hs
     · rw [Ideal.map_le_iff_le_comap]
-      intro s hs
-      exact Ideal.subset_span ⟨s, hs, rfl⟩
+      exact fun s hs => Ideal.subset_span ⟨s, hs, rfl⟩
   have hmax : (P.asIdeal.map (b : 𝓞 D.host.E →+* 𝓞 D.host.E)).IsMaximal := Ideal.map_isMaximal_of_equiv b
   have hne : P.asIdeal ≠ P.asIdeal.map (b : 𝓞 D.host.E →+* 𝓞 D.host.E) := by
     intro e; exact hOff.1 (hconj.trans e.symm)

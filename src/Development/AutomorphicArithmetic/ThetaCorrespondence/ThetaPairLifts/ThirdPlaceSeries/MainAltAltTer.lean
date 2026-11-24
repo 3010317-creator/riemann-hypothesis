@@ -104,8 +104,7 @@ theorem h0V_eq_bot_of_multV_zero : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l)
   have hinv : ∀ g, ρ g v = v := by
     intro g
     have := (Submodule.mem_iInf _).1 hv g
-    rw [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.id_apply, sub_eq_zero] at this
-    exact this
+    rwa [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.id_apply, sub_eq_zero] at this
 
   let σ : Representation ↥LL.1 ↥(GK K) (Fin 1 → ↥LL.1) := 1
   let ι : (Fin 1 → ↥LL.1) →ₗ[↥LL.1] V := (LinearMap.proj 0).smulRight v
@@ -178,8 +177,7 @@ theorem JW_sub_JJ (up : Bool) (j : ℕ) (ρ : D.what₂.Tau) : JW D up j ρ ⊆ 
     · exact Or.inl (Or.inl h)
     · exact Or.inl (Or.inr h)
   · simp only [JW, cloudT, lowT, ↓reduceIte, Set.mem_union] at hq
-    simp only [JJ, ↓reduceIte, Jp, Set.mem_union]
-    exact Or.inl hq
+    simpa only [JJ, ↓reduceIte, Jp, Set.mem_union] using Or.inl hq
 
 theorem neg_one_not_mem_JW {L : SizeData₂ D} (hc : jcCondition L) (j : ℕ) (hj1 : 1 ≤ j) (hjm : j ≤ D.R.m)
     (ρ : D.what₂.Tau) (up : Bool) : (-1 : ℚ) ∉ JW D up j ρ :=

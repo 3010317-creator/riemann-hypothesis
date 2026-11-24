@@ -270,8 +270,7 @@ theorem data_of_rows (eps CD : ℝ) (he : 0 < eps) (he' : eps < 1 / 52) (hCD : 3
     cases h1 : D.s.letter u ⟨j, hj⟩ <;> cases h2 : D.s.letter u' ⟨j, hj⟩ <;>
       simp only [h1, h2] at e' hjl <;> simp at e' hjl <;> linarith
   ·
-    intro u
-    exact ⟨hA.1 u, Formalism.MainNotions.S.T_mod D u⟩
+    exact fun u => ⟨hA.1 u, Formalism.MainNotions.S.T_mod D u⟩
   ·
     intro u
     exact Formalism.MainNotions.S.ne_of_mod (hg 0) (hg 1) (Formalism.MainNotions.S.T_mod D u)
@@ -662,8 +661,7 @@ theorem tcrit_le_pow : Formalism.L2.SG.Pf.SzHypFD.DsigHC → ∀ (D : D7) (large
   have hg1ge : 1 ≤ (D.host.g 0 : ℝ) :=
     le_trans (one_le_pow₀ (one_le_mul_of_one_le_of_one_le hk1 hb1.le)) hkg1
   have hCg : 0 ≤ Cg := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have := Real.rpow_lt_one_of_one_lt_of_neg hb1 hc
     linarith
   have hgg : gg D ≤ large₂.sc.b ^ (2 * Cg) := by
@@ -674,8 +672,7 @@ theorem tcrit_le_pow : Formalism.L2.SG.Pf.SzHypFD.DsigHC → ∀ (D : D7) (large
   have key := root_le D.host.ka D.host.rdE (gg D) (VV D τ / vand (uS D u τ)) large₂.sc.b Cg D.R.m D.R.k
     hb1 hm hmk hka0 hki hrd1 hgg0 hgg hCg hQ0 hQ
   unfold Tcrit
-  rw [mul_div_assoc]
-  exact key
+  rwa [mul_div_assoc]
 
 end GlobalTheory.CritLevelUpper
 end -- clump:auto
@@ -1085,8 +1082,7 @@ theorem admissibleRanks_of_mass_formula (D : D7) (Lv : LevelData D) (C : Formali
   · have e := h4 (GlobalTheory.first_type_prime_large_of_record D) (_root_.Formalism.MainNotions.J.splitsF_g D) u
       (_root_.Formalism.MainNotions.J.level_prime_splits_totally_real D u) (Formalism.MainNotions.Ext.Lw.mu0Tie_of_sym C u)
     have em : Formalism.HermitianLatticesTheory.mass h L = StandardLattice.massI D D.R.k := Formalism.MainNotions.J.mass_ortho_eq hL (Formalism.MainNotions.J.std_ortho D.host.E D.R.k)
-    rw [em, ← Formalism.MainNotions.J.idxColTie_holds D]
-    exact e
+    rwa [em, ← Formalism.MainNotions.J.idxColTie_holds D]
   · have em : Formalism.HermitianLatticesTheory.mass h L = StandardLattice.massI D D.R.r := Formalism.MainNotions.J.mass_ortho_eq hL (Formalism.MainNotions.J.std_ortho D.host.E D.R.r)
     rw [em, ← Formalism.MainNotions.J.idxRowTie_holds D, hD]
 

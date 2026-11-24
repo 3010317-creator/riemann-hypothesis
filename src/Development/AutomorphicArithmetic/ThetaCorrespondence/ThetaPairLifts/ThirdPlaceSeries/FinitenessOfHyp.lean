@@ -637,8 +637,7 @@ theorem galTied_withLoc_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists),
     obtain ⟨α, hS, he⟩ := b.row.2 σ v w hov Dv hα
     refine ⟨α, hS, ?_⟩
     show b.L.Y.satW i σ w = _
-    rw [b.Au.satW i σ w]
-    exact he
+    rwa [b.Au.satW i σ w]
 end GlobalTheory.FitGal
 end
 end
@@ -726,8 +725,7 @@ theorem rhoS_withLoc_alt (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D' : D7)
       (Formalism.MainNotions.N.mapRep (castQ hpq).symm.toRingHom (Formalism.MainNotions.N.mapRep
         ((Formalism.MainNotions.N.iotaOQ (withLoc b.L).nd (withLoc b.L).naut a).comp ((withLoc b.L).ntw.twist₂ a))
         ((withLoc b.L).ntw.rhoS _ s))) := by
-    rw [← hφ0, mapRep_mapRep]
-    exact hR
+    rwa [← hφ0, mapRep_mapRep]
   exact conj_of_isRepOf (withLoc b.L) ((withLoc b.L).naut.iotaQC a) _ _ hcheb _ _
     (isRepOf_cast (withLoc b.L) hpq _ _ _ _ hR') (rhoOfRow_isRepOf (withLoc b.L) hG hC hη a π _ _)
 end GlobalTheory.HeightCounting.FitRho
@@ -900,8 +898,7 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 namespace GlobalTheory.HeightCounting
 theorem nTied_locTied_of_built_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists), _root_.GlobalTheory.HeightCounting.CgCmpAlt hL → ∀ (D' : D7) (b : _root_.GlobalTheory.HeightCounting.NormChoiceConstructed hL D'),
     Nonempty (_root_.GlobalTheory.HeightCounting.NTiedGPlaceholder D') ∧ Nonempty (Formalism.L2.LocTied D') := by
-  intro hL hcg D' b
-  exact ⟨⟨⟨⟩⟩, locTied_any D'⟩
+  exact fun hL hcg D' b => ⟨⟨⟨⟩⟩, locTied_any D'⟩
 end GlobalTheory.HeightCounting
 end
 end

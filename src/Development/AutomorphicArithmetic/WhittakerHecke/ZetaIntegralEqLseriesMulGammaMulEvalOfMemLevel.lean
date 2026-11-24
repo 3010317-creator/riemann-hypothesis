@@ -214,8 +214,7 @@ private theorem val_bad {N : ℕ} {v : H.P ℚ} (h : Bad N v) : Valued.v (N : H.
   have e : (N : H.Kv v) = FinitePlace.embedding v (algebraMap (𝓞 ℚ) ℚ (N : 𝓞 ℚ)) := by simp
   rw [e]
   have := HeightOneSpectrum.valuedAdicCompletion_eq_valuation' v (algebraMap (𝓞 ℚ) ℚ (N : 𝓞 ℚ))
-  refine lt_of_eq_of_lt this ?_
-  exact (HeightOneSpectrum.valuation_lt_one_iff_mem v _).2 h
+  exact lt_of_eq_of_lt this ((HeightOneSpectrum.valuation_lt_one_iff_mem v _).2 h)
 
 private theorem val_unit {N : ℕ} {k : G1 ℚ} (hk : k ∈ KK ℚ) (hs : k ∈ SS N) {v : H.P ℚ} (h : Bad N v) :
     Valued.v (H.cp v (k 1 1)) = 1 := by
@@ -245,8 +244,7 @@ theorem UpperTheory.exists_idele_correcting_lowerRight_entry :
     have h0 : Ideal.span {(N : 𝓞 ℚ)} ≠ ⊥ := by
       rw [Ne, Ideal.span_singleton_eq_bot]
       exact_mod_cast hN.ne'
-    refine (Ideal.finite_factors h0).subset fun v hv => ?_
-    exact Ideal.dvd_span_singleton.2 hv
+    exact (Ideal.finite_factors h0).subset fun v hv => Ideal.dvd_span_singleton.2 hv
   have hne : ∀ v, Bad N v → H.cp v (k 1 1) ≠ 0 := fun v hv h0 => by
     have := val_unit hk hs hv
     rw [h0, map_zero] at this
@@ -578,8 +576,7 @@ theorem UpperTheory.zeta_integral_eq_lseries_mul_gamma_mul_eval_of_mem_level :
         exact hc.mpr hq
       rw [ite_eq_left hq, PhiN, ite_eq_left hq', hfun, homog hp, hsq]
     · have hq' : ¬ ∀ v, Dv N v (((y * ζ : (A ℚ)ˣ) : A ℚ) * row k 0) ∧ Dv N v (((y * ζ : (A ℚ)ˣ) : A ℚ) * row k 1 - 1) := by
-        intro h
-        exact hq (hc.mp h)
+        exact fun h => hq (hc.mp h)
       rw [ite_eq_right hq, PhiN, ite_eq_right hq', zero_mul]
   have hinv : ∀ τ ∈ TT N, ∀ y : IdeleGroup ℚ, f (y * τ) = f y := by
     intro τ hτ y
@@ -617,8 +614,7 @@ theorem UpperTheory.zeta_integral_eq_lseries_mul_gamma_mul_eval_of_mem_level :
     filter_upwards [hae n] with r hr
     rw [hr, norm_mul, norm_mul]
   have hsm : Summable (fun n : {n : ℕ // 0 < n ∧ n.Coprime N} => ∫ r : ℝ, ‖f (iy r * pin n) / ((|r| : ℝ) : ℂ)‖) := by
-    simp only [hnorm]
-    exact (hS0.summable.norm.mul_left ‖ρ‖).mul_right _
+    simpa only [hnorm] using (hS0.summable.norm.mul_left ‖ρ‖).mul_right _
   have hmain := (UpperTheory.hasSum_coprime_integral_eq_idele_integral) N N hN f hinv hsupp hint hsm
   have hterm : ∀ n : {n : ℕ // 0 < n ∧ n.Coprime N}, (cT N : ℂ) * ∫ r : ℝ, f (iy r * pin n) / ((|r| : ℝ) : ℂ) =
       ((cT N : ℂ) * ρ * ((Real.pi : ℂ) ^ (-(s + e)) * Complex.Gamma (s + e))) * ((n : ℕ) : ℂ) ^ (-(2 * s)) := by

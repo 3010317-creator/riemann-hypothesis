@@ -241,8 +241,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem val_sum_sum_lt {ι κ' : Type} [Fintype ι] [Fintype κ'] (f : ι → κ' → k)
     (hf : ∀ i j, valuation k (f i j) < 1) : valuation k (∑ i, ∑ j, f i j) < 1 := by
   apply Valuation.map_sum_lt _ one_ne_zero
-  intro i _
-  exact Valuation.map_sum_lt _ one_ne_zero (fun j _ => hf i j)
+  exact fun i _ => Valuation.map_sum_lt _ one_ne_zero (fun j _ => hf i j)
 
 theorem psi_inv_mul_eq_one (ψ : AddChar k Circle) (ϖ : kˣ) (hψ : GlobalTheory.SplitWeil.HasConductor ψ 1)
     (hϖ : GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum.IsUnif ϖ) {t : k} (ht : valuation k t < 1) :
@@ -571,8 +570,7 @@ theorem weil_unif_eq_exp {D : D7} {k : Type} [Field k] [ValuativeRel k] [Topolog
     (ψ (((t⁻¹ : kˣ) : k) * (ofSplit q).pr (z : D.host.E)) : ℂ) = Complex.exp (2 * Real.pi * Complex.I * b / (p : ℂ)) := by
   obtain ⟨hv, hi, -⟩ := place_facts q h
   have h1 : valuation k (prO q z - prO q (s * b)) < 1 := by
-    rw [← map_sub, ← prO_lt q h]
-    exact hz
+    rwa [← map_sub, ← prO_lt q h]
   rw [← prO_apply, GlobalTheory.LevelUnif.chr_near hψ ht h1, chr_unif_congr hψ ht htp (prO_le q h _), hc,
     ← GlobalTheory.SplitDegOneChar.psiE_sec_pr_eq_exp D k q PP p hp hN hsq hv hi Ψ hΨ ((b : D.host.E) / (p : D.host.E)) b
       (by rw [sub_self]; exact ⟨0, 1, (Ideal.ne_top_iff_one _).1 PP.isPrime.ne_top, by simp⟩)]
@@ -793,8 +791,7 @@ theorem frame_close_alt : ∀ {B : GlobalTheory.Mem.Base} {X : GlobalTheory.Mem.
   have hrJ := (_root_.GlobalTheory.FamTrace.levTrace_mem_alt W hW u a ha hat row col hc κ hκ y hy).1 hyU
   have hb : a.g.b 0 ∈ GfC (Yc (I.rec7 l Z) 0) := by
     have h1 := ha.vis.b 0
-    rw [hV.b 0] at h1
-    exact h1
+    rwa [hV.b 0] at h1
   have hxe : embA a.d.B.d a.d.B.o κ ∈ GfC ((I.rec7 l Z).sp.Y 0) := GlobalTheory.Corev.EmbAGfC.embA_mem_GfC_fin _ _ _ _ _ _ _ _ κ hκ
   have hSt := ((_root_.GlobalTheory.FamTrace.Rows.mem_rJ_iff_finE_mem_St_and_block_mem W _ (mul_mem (mul_mem (inv_mem hb) hxe) hb)).1 hrJ).1
   obtain ⟨e, he, hM⟩ := hG.frame i 0 ((a.G i).s + 1) (Nat.zero_add _)
@@ -894,8 +891,7 @@ theorem frame_close_alt : ∀ {B : GlobalTheory.Mem.Base} {X : GlobalTheory.Mem.
     have e0 : ((((a.G i).S.T (Fin (I.rec7 l Z).R.t)).bas 0 ((a.G i).s + 1) (Nat.zero_add _))⁻¹ *
           GlobalTheory.RootEx.embX ((a.G i).s + 1) g *
           ((a.G i).S.T (Fin (I.rec7 l Z).R.t)).bas 0 ((a.G i).s + 1) (Nat.zero_add _)).val.toBlocks₂₂ p q = 0 := h22'
-    rw [e0, sub_zero] at h
-    exact h
+    rwa [e0, sub_zero] at h
 end GlobalTheory.FamTraceChiCol
 end
 end
@@ -1032,14 +1028,12 @@ theorem trace_chi_col_factor_alt : ∀ {B : GlobalTheory.Mem.Base} {X : GlobalTh
     intro i
     have h1 := hTP.1 (a.pl i).1 (a.pl i).2
     show _ ∈ Ideal.comap _ _
-    rw [Ideal.mem_comap, map_natCast]
-    exact h1
+    rwa [Ideal.mem_comap, map_natCast]
   have hw_inj : Function.Injective w := by
     intro i i' hii
     obtain ⟨PP, _, hu⟩ := hTP.2 (w i) (hw_mem i)
     have e1 := hu (a.pl i).1 ⟨(a.pl i).2, rfl⟩
-    have e2 := hu (a.pl i').1 ⟨(a.pl i').2, hii.symm⟩
-    exact a.pl.injective (Subtype.ext (e1.trans e2.symm))
+    exact a.pl.injective (Subtype.ext (e1.trans (hu (a.pl i').1 ⟨(a.pl i').2, hii.symm⟩).symm))
   set S : Fin 2 → Set (IsDedekindDomain.HeightOneSpectrum (𝓞 (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).host.F)) :=
     fun j => {v | ((_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).host.g j : 𝓞 (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).host.F) ∈ v.asIdeal} with hS
   have hrange : S 0 ∪ S 1 = Set.range w := by
@@ -1169,8 +1163,7 @@ theorem trace_chi_alt : ∀ {B : GlobalTheory.Mem.Base} {X : GlobalTheory.Mem.Pr
   obtain ⟨hg, hr⟩ := _root_.GlobalTheory.FamTraceChi.rChi_eq_lvP_chi_of_mem W hm
   obtain ⟨x, hx, hc'⟩ := _root_.GlobalTheory.FamTraceChiCol.colChi_mul_prod_lam_alt W hA u a ha hT' row col hc κ hκ y e hy
   have hl := ((ha.tie row col).2.lev _).2 hg x hx
-  rw [hr, hl, Units.coe_prod]
-  exact hc'
+  rwa [hr, hl, Units.coe_prod]
 end GlobalTheory.FamTraceChi
 end
 end

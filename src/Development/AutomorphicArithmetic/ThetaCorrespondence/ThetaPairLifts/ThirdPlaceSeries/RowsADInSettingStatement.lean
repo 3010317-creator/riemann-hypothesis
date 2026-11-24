@@ -177,8 +177,7 @@ theorem sum_locDeg_le (i : D.nd.Loc) (S : Finset (HeightOneSpectrum (𝓞 D.host
   have hl := (D.nd.lPrime i).out
   refine le_trans ?_ (TwistedPlaces.sum_nLam_le D hl)
   apply Finset.sum_le_sum_of_subset_of_nonneg
-  · intro v hv
-    exact (Set.Finite.mem_toFinset _).2 (hS v hv)
+  · exact fun v hv => (Set.Finite.mem_toFinset _).2 (hS v hv)
   · intro v _ _
     positivity
 
@@ -273,8 +272,7 @@ theorem blockBoundDeclaration_le_middleRange (L : SizeData₂ D) (i : D.nd.Loc) 
     (vdel_le_two_t i h2) hh
   unfold KillingConditions.localErrorBoundDecomposition
   push_cast
-  rw [← Finset.sum_mul]
-  exact this
+  rwa [← Finset.sum_mul]
 
 theorem blockBoundAtZero_le_middleRange (L : SizeData₂ D) (i : D.nd.Loc) (h2 : D.nd.l i ∉ D.host.small)
     (ρ : D.nd.X i → (GE D.nd →* GL (Fin D.R.r) (D.nd.O i))) (π : D.nd.X i) (dc : TruncatedSeriesCountingIdentities.Decl D i)
@@ -404,8 +402,7 @@ theorem starAD_of_global : ∀ (D : D7) (L : SizeData₂ D) (HW : HWOf D.loc) (X
     have hsum : TwistedPlaces.sumOver D (D.nd.l i) (X.len0 i π) =
         ((∑ u ∈ (X.dc i).col, (2 * (N.locDeg D.host.E u : ℚ) * D.R.m + 1) * (X.eS i : ℚ) : ℚ) : ℝ) := by
       unfold TwistedPlaces.sumOver
-      rw [← hpl, finsum_mem_coe_finset]
-      rw [Finset.sum_congr rfl fun w _ => hD.len0S i hsp π w]
+      rw [← hpl, finsum_mem_coe_finset, Finset.sum_congr rfl fun w _ => hD.len0S i hsp π w]
       rw [← Rat.cast_sum]
       congr 1
       simp only [lenA]
@@ -559,10 +556,8 @@ theorem dcris_exact_strict_elementwise : ∀ D : D7, Formalism.MainNotions.Trunc
   obtain ⟨h1, h2, h3, h4⟩ :=
     hA hbij V₀ ρ₀ V₁ ρ₁ V₂ ρ₂ ι π hιe hπe hinj hsurj hker.symm c₀ c₁ c₂
   refine ⟨h1, ?_, h3, fun a => (h4 a).1, ?_⟩
-  · intro x hx hπx
-    exact Submodule.mem_map.mp (h2.ge ⟨hx, hπx⟩)
-  · intro a y hy hyF
-    exact (h4 a).2.ge ⟨hy, hyF⟩
+  · exact fun x hx hπx => Submodule.mem_map.mp (h2.ge ⟨hx, hπx⟩)
+  · exact fun a y hy hyF => (h4 a).2.ge ⟨hy, hyF⟩
 
 end GlobalTheory
 end -- clump:auto
@@ -926,8 +921,7 @@ theorem adm18_of_N1used : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) 
     obtain ⟨y, hy⟩ := hA.1.2 ⟨x, hx⟩
     have h2 := y.2.2
     have : ((y : ↥(K0 K)) : Om l) = x := congrArg Subtype.val hy
-    rw [this] at h2
-    exact h2
+    rwa [this] at h2
 
   have hgen : (D.loc l).v LL (algebraMap ↥(OL LL) ↥LL.1
       ((((HW l).W K 1 LL h).χΓ ((HW l).W K 1 LL h).gam : (↥(OL LL))ˣ) : ↥(OL LL)) - 1) = 1 := by
@@ -1180,10 +1174,7 @@ theorem main : ∀ (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D L) (HW :
   have hHm : (LiftingTheory.Hmax (nLet i w hw) Wd.Mi Wd.hi : ℝ) ≤ 2 * TwistedPlaces.hB L := by
     have hfl : LiftingTheory.Hmax (nLet i w hw) Wd.Mi Wd.hi ≤ ⌊2 * TwistedPlaces.hB L⌋₊ := by
       unfold LiftingTheory.Hmax
-      apply Finset.sup_le
-      intro k _
-      apply Nat.le_floor
-      exact hbox.box_le _
+      exact Finset.sup_le (fun k _ => Nat.le_floor (hbox.box_le _))
     calc (LiftingTheory.Hmax (nLet i w hw) Wd.Mi Wd.hi : ℝ) ≤ (⌊2 * TwistedPlaces.hB L⌋₊ : ℝ) := by exact_mod_cast hfl
       _ ≤ 2 * TwistedPlaces.hB L := Nat.floor_le (by linarith)
   have he : (TruncatedSeriesCountingBounds.eLift ((HW (D.nd.l i)).W (D.nbr i w hw).Kw 1 Cx.LL hG) T₁ Wd.Mi Wd.hi : ℝ) ≤
@@ -1477,8 +1468,7 @@ theorem main_alt_alt : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : P
     refine ⟨fun x v => hcx w hw C x v, fun _ => ⟨fun v => ?_, fun v => ?_⟩⟩
     · exact locC_cont D i _ (WpO_cont i (X.ρ i) π hρ) w hw C v
     · exact locC_cont D i _ (GlobalTheory.TwistedDualLoc.continuous_T2O D i (X.ρ i) π hρ) w hw C v
-  · intro _ w hw _ C
-    exact (hG2 w hw C).1.2.2.2.2.2.1
+  · exact fun _ w hw _ C => (hG2 w hw C).1.2.2.2.2.2.1
 end GlobalTheory.NLink.AmbSub
 end
 end
@@ -1551,8 +1541,7 @@ theorem main_alt_alt : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : P
   haveI : IsDiscreteValuationRing ↥(OL C.LL) := Formalism.BasicNotions.Examples₂.LB.OL_dvr C.LL
   haveI : IsFractionRing ↥(OL C.LL) ↥C.LL.1 := Formalism.BasicNotions.Examples₂.LB.OL_frac C.LL
   refine EmbeddingTypes.len_le_of_kill (Br.PD D.loc D.nbr i w hw) L2.T hstd _ (X.c0 i u) ?_
-  intro x hx
-  exact pow_smul_eq_zero_of_le _ hc0 (hkill x fun g => hx g)
+  exact fun x hx => pow_smul_eq_zero_of_le _ hc0 (hkill x fun g => hx g)
 end GlobalTheory.NLink.PowerSmulVanishing
 end
 end -- clump:auto

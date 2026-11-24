@@ -645,8 +645,7 @@ theorem mem_maximalIdeal_unitBall (x : (unitBall : ValuationSubring K)) :
     refine isUnit_iff_exists_inv.2 ⟨⟨(x : K)⁻¹, ?_⟩, Subtype.ext ?_⟩
     · show ‖(x : K)⁻¹‖ ≤ 1
       rw [norm_inv, h1, inv_one]
-    · show (x : K) * (x : K)⁻¹ = 1
-      exact mul_inv_cancel₀ hx0
+    · exact mul_inv_cancel₀ hx0
   · rintro hx ⟨u, hu⟩
     have h0 : ((u : (unitBall : ValuationSubring K)) : K) *
         (((u⁻¹ : (unitBall : ValuationSubring K)ˣ) : (unitBall : ValuationSubring K)) : K) = 1 :=
@@ -675,8 +674,7 @@ theorem valRingModel : ValRingModel := by
     constructor
     · rintro ⟨y, rfl⟩
       exact y.2
-    · intro hx
-      exact ⟨⟨x, hx⟩, rfl⟩
+    · exact fun hx => ⟨⟨x, hx⟩, rfl⟩
   · intro Γ _ _ _ _ n ρ hρ
     obtain ⟨S, h1, hS⟩ := exists_cover O isOpen_unitBall ρ hρ
     exact conj O ρ S hS h1
@@ -834,8 +832,7 @@ theorem mem_ZN_alt (h1 : _root_.GlobalTheory.StringRepresentationDecomposition.C
   have hW : ∀ g, ((epsQ D i g)⁻¹ ^ a) • ((R k g : GL _ _) : Matrix (Fin (Pa.get k).a) (Fin (Pa.get k).a)
       (Qbar (D.nd.l i))).mulVec u = iotaOQ D.nd D.naut i (chi1 D.nd i g) • u := fun g => by
     have e := hu g
-    rw [twGL_val, Matrix.smul_mulVec, eU_pow] at e
-    exact e
+    rwa [twGL_val, Matrix.smul_mulVec, eU_pow] at e
   have hwt := h2 D hA i x P Pa hP hBC k (R k) (hR k) a ha ⟨u, hu0, hW⟩
   have hmem : Pa.get k ∈ Pa := List.get_mem Pa k
   have ha1 : 1 ≤ (Pa.get k).a := (hBC.1 _ hmem).1
@@ -1002,8 +999,7 @@ theorem muChar_holds_alt : _root_.GlobalTheory.MuCharProof.muChar_holds_tyz := b
       refine mem_list_sum Pa _ hmem ?_
       refine mem_list_sum _ _ (a := ((0 : ℕ) : ℂ)) ?_ ?_
       · simp only
-        simp
-        exact ⟨0, D.R.t_odd.pos, by simp⟩
+        simpa using ⟨0, D.R.t_odd.pos, by simp⟩
       · exact Multiset.mem_map_of_mem _ hz
     rw [hBC.2.2.2.2.2 τ] at h1
     let τ' : D.host.E →+* Qbar (D.nd.l i) := (D.naut.iotaQC i).symm.toRingHom.comp τ
@@ -1154,8 +1150,7 @@ theorem unr_part {R : Ranks} {H : Host R} {what₂ : Rows.Data R} {N : NData R H
   intro L
   induction L with
   | nil =>
-    intro _ _ hp _
-    exact absurd hp List.not_mem_nil
+    exact fun _ _ hp _ => absurd hp List.not_mem_nil
   | cons q L ih =>
     intro hun p hp hd
     have h12 := (A.unr_sum (spehLoc N A q w) (isoLoc N A L w)).1 hun
@@ -1480,8 +1475,7 @@ theorem sixth_weight_purity_alt_alt : _root_.GlobalTheory.StringRepresentationDe
       ∃ B : ValuationSubring D.nd.Om, IsPlaceOver (F := D.host.E) B w ∧ IsFrob (F := D.host.E) B (normV w) σ} := by
     by_contra h
     rw [Set.not_nonempty_iff_eq_empty] at h
-    rw [h, closure_empty] at hne
-    exact hne
+    rwa [h, closure_empty] at hne
   simp only [Set.mem_union, not_or, Finset.mem_coe, Set.mem_setOf_eq, not_not] at hw
   have hl := hw.1.1.1.1
   have hwo : SplitOut D.nd i w := ⟨hsp, hl, hw.1.1.1.2, hw.1.1.2⟩
@@ -1502,8 +1496,7 @@ theorem sixth_weight_purity_alt_alt : _root_.GlobalTheory.StringRepresentationDe
   have hMv : M.mulVec v = (epsQ D i σ ^ j * c) • v := by
     have h2 := congrArg (fun u => (epsQ D i σ ^ j) • u) h1
     simp only [smul_smul, inv_pow] at h2
-    rw [mul_inv_cancel₀ (pow_ne_zero _ he0), one_smul] at h2
-    exact h2
+    rwa [mul_inv_cancel₀ (pow_ne_zero _ he0), one_smul] at h2
   have hdet : (Matrix.scalar (Fin (Pa.get k).a) (epsQ D i σ ^ j * c) - M).det = 0 := by
     refine Matrix.exists_mulVec_eq_zero_iff.1 ⟨v, hv0, ?_⟩
     rw [Matrix.sub_mulVec, hMv]

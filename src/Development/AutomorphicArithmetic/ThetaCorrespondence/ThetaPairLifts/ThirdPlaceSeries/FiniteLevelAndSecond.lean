@@ -503,12 +503,10 @@ theorem ok_swap {D : D7} {I I' : TwIn D} (hE : ∀ i, ∀ j ∈ Finset.Icc 1 D.R
   refine ⟨fun j hj b => ?_, fun j hj b => ?_⟩
   · have := h1 j hj b
     unfold TwIn.Sg IntegralHeckeForms.SgJ IntegralHeckeForms.FullRk at this ⊢
-    rw [← hE i j hj b]
-    exact this
+    rwa [← hE i j hj b]
   · have := h2 j hj b
     unfold TwIn.Sg IntegralHeckeForms.SgJ at this ⊢
-    rw [← hE i j hj b, ← hS]
-    exact this
+    rwa [← hE i j hj b, ← hS]
 
 theorem good_pack {D D' : D7} (h : SameExport D D') {I : TwIn D} {I' : TwIn D'} (hE : HEq I.E.Dat0 I'.E.Dat0)
     (hN : HEq I.N0 I'.N0) (hS : HEq I.S I'.S) {p : TwPack D} {p' : TwPack D'} (hp : HEq p p')
@@ -596,8 +594,7 @@ theorem goodO_of_seed : ∀ (D₁ D₂ D₃ : D7) (A : D₁.ntw.Tw → Finset (P
       fun c hc => (pw v hv c hc _ _ h13.avRec ((avRec_subset_avD D₁ (avDesign D₁) _).trans (hA _))).2⟩
   · obtain ⟨ht, a, ha, hp⟩ := key v hv
     have h := (pw v hv 1 (by simp) _ _ (avD_heq h13 (hcomp _ _ hp).1) (hA _)).2
-    rw [zpow_one] at h
-    exact h
+    rwa [zpow_one] at h
   · obtain ⟨ht, a, ha, hp⟩ := key v hv
     obtain ⟨ht', a', ha', hp'⟩ := key v' hv'
     obtain ⟨hi, hQ, -, -⟩ := hcomp _ _ hp
@@ -667,15 +664,13 @@ theorem readsAt_of_plUnder (X X' : Stages) (h : Enl X.B X'.B) (hc : Carried X.to
   have hmap : RingOfIntegers.mapRingHom (incl h) (algebraMap (𝓞 ↥X.toD7.LL0) (𝓞 X.toD7.what₂.LL) x) =
       algebraMap (𝓞 ↥X'.toD7.LL0) (𝓞 X'.toD7.what₂.LL) x' := by
     apply RingOfIntegers.ext
-    apply X'.B.embLL.injective
-    exact (embLL_incl h ((x : ↥X.toD7.LL0) : X.toD7.what₂.LL)).trans e
+    exact X'.B.embLL.injective ((embLL_incl h ((x : ↥X.toD7.LL0) : X.toD7.what₂.LL)).trans e)
   have hright : 0 < X.toD7.what₂.places.val (plUnder h v') ((x : ↥X.toD7.LL0) : X.toD7.what₂.LL) ↔
       0 < X'.toD7.what₂.places.val v' ((x' : ↥X'.toD7.LL0) : X'.toD7.what₂.LL) := by
     refine (TwistChoice.val_pos_iff_mem X.toD7 (plUnder h v') x).trans
       (Iff.trans ?_ (TwistChoice.val_pos_iff_mem X'.toD7 v' x').symm)
     have hm := mem_plUnder h v' (algebraMap (𝓞 ↥X.toD7.LL0) (𝓞 X.toD7.what₂.LL) x)
-    rw [hmap] at hm
-    exact hm
+    rwa [hmap] at hm
   exact hleft.symm.trans ((hr x).trans hright)
 
 end GlobalTheory.HeightCounting.Up
@@ -892,8 +887,7 @@ theorem nonempty_seed_of_kept : ∀ (D₁ D₀ : D7) (C₁ : NChoice D₁) (C₀
     · obtain ⟨r, hr, rfl⟩ := hex
       obtain ⟨Q, k, ψ, hq⟩ := (key r hr).2 (A (C₁.twI r) ∪ B)
       refine ⟨⟨Q, k, ψ⟩, fun r' _ _ a ha => (goodTw_union (hq a ha)).1, ?_⟩
-      have h1 := (goodTw_union (hq 1 (by simp))).2
-      exact h1
+      exact (goodTw_union (hq 1 (by simp))).2
     · exact ⟨⟨∅, 0, 1⟩, fun r hr he => absurd ⟨r, hr, he⟩ hex, Finset.disjoint_empty_left _⟩
   obtain ⟨f, hf, hf'⟩ := exists_disjoint_choice (Z := fun i => Σ (Q : Finset (PlE D₁.host)) (k : ℕ),
     D₁.ntw.RCG i Q →* (D₁.ntw.Ok i k)ˣ) (fun _ z => z.1) P hch (hfin.toFinset.image s)
@@ -1010,8 +1004,7 @@ theorem overOne_plUnder (X : Stages) {B' : Base} (h : Enl X.B B') (v v' : B'.pla
   have hm : incl h (y : X.B.LL) ∈ B'.LL0 := by
     have h1 : X.B.embLL (y : X.B.LL) ∈ B'.embLL '' ↑B'.LL0 := h.2.2.1 ▸ ⟨_, (x : ↥X.toD7.LL0).2, rfl⟩
     obtain ⟨z, hz, e⟩ := h1
-    rw [← B'.embLL.injective (e.trans (embLL_incl h _).symm)]
-    exact hz
+    rwa [← B'.embLL.injective (e.trans (embLL_incl h _).symm)]
   refine (key v).trans (Iff.trans ?_ (key v').symm)
   by_cases h0 : incl h (y : X.B.LL) = 0
   · rw [h0, AddValuation.map_zero, AddValuation.map_zero]
@@ -1062,8 +1055,7 @@ theorem exists_twisted_cohomology_class_lift_alt : _root_.GlobalTheory.HeightCou
     rw [eq_of_heq h1, eq_of_heq h2]
   refine ⟨B', tr h.1 Fr f, pull h T₁, h, tr_heq _ _ _, e1, avoids_pull h hav, ?_, ⟨fun v v' hv => ?_, fun v => ?_⟩,
     b, fun v => ⟨fun hw => ?_, fun hw => ?_⟩⟩
-  · rw [e2 _ h.1 _ _ (tr_heq _ _ _) e]
-    exact a
+  · rwa [e2 _ h.1 _ _ (tr_heq _ _ _) e]
   · have ho := overOne_plUnder X h v v' hv
     have key : T₁.psi (plUnder h v) = T₁.psi (plUnder h v') ∧ T₁.Q (plUnder h v) = T₁.Q (plUnder h v') ∧
         T₁.k (plUnder h v) = T₁.k (plUnder h v') := by
@@ -1269,8 +1261,7 @@ theorem shaLen_transport (σ : Ω ≃ₐ[F] Ω') (D : LData F Ω l) (e : ℤ) :
       obtain ⟨f, rfl⟩ := Submodule.Quotient.mk_surjective _ x
       rfl
     constructor
-    · intro h
-      exact hres.trans (by rw [h, map_zero])
+    · exact fun h => hres.trans (by rw [h, map_zero])
     · intro h
       exact hΔ.1 (by rw [map_zero]; exact hres.symm.trans h)
   let Φe := LinearEquiv.ofBijective Φ hΦ
@@ -1283,8 +1274,7 @@ theorem shaLen_transport (σ : Ω ≃ₐ[F] Ω') (D : LData F Ω l) (e : ℤ) :
     · intro hy
       refine ⟨Φe.symm y, (key _).2 ?_, Φe.apply_symm_apply y⟩
       have : Φ (Φe.symm y) = y := Φe.apply_symm_apply y
-      rw [this]
-      exact hy
+      rwa [this]
   exact (LinearEquiv.ofSubmodules Φe _ _ hmap).length_eq.symm
 
 theorem exists_lData_shaLen_eq : ∀ {F Ω Ω' : Type} [Field F] [NumberField F] [Field Ω]
@@ -1590,8 +1580,7 @@ theorem minimal_ktype_of_local_components_alt : _root_.GlobalTheory.HeightCounti
     unfold Dof
     rw [hx]
   have hE' : IsEmpty x.o.N.nd.Loc := by
-    rw [hx]
-    exact hE
+    rwa [hx]
   refine ⟨x, hE', ?_⟩
   rw [hDx]
   exact ⟨⟨rfl, HEq.rfl, congrArg LocStage.loc hL.symm, h1.symm, h2.symm, h3.symm, h4.symm, h5.symm⟩, h6.symm⟩
@@ -1656,8 +1645,7 @@ theorem pow_of_tied (hc : GlobalTheory.TwSys.Cheb) {D : D7} (cf : CharFrame D) (
   have h1 := hT v htw w hwQ hwl B σ hB hσ x (by rw [hχ, inv_inv]; exact hx)
   have h2 := hax u x hx
   have h3 := hj (h1.symm.trans h2)
-  rw [MonoidHom.pow_apply, ← hu]
-  exact h3
+  rwa [MonoidHom.pow_apply, ← hu]
 
 
 
@@ -1808,8 +1796,7 @@ theorem satake_parameter_of_prime_to_level_alt : _root_.GlobalTheory.HeightCount
     hA (Dof x) hLoc (cfOf x) jE (repOf x.r.Y) hElem.int hTy (hRw P x) hray
   have hG : GrpTrue (nOfLay x L hZ hη) f := by
     show TypesTrue L.ntypes f.P f.W
-    rw [← e1, ← e2]
-    exact hTT
+    rwa [← e1, ← e2]
   obtain ⟨hGA, hCen⟩ := GlobalTheory.T.heckeGaloisStage_fits_of_same_centre_actions x (nOfLay x L hZ hη) hG hPlG hplGw hcA hcM
   obtain ⟨x', hx', hrep⟩ := GlobalTheory.T.exists_transported_state_heckeGaloisStage x (nOfLay x L hZ hη) hG hGA hCen
   obtain ⟨Pq, hPq1, hPq2⟩ := exists_pq_sel B w.I w.ok
@@ -1825,8 +1812,7 @@ theorem satake_parameter_of_prime_to_level_alt : _root_.GlobalTheory.HeightCount
   obtain ⟨cg⟩ := hcg
   refine ⟨⟨⟨x.o.η, x.o.hη, x.o.V, x.o.S, nOfLay x L hZ hη, x.o.G⟩, fits', G_eq', etaF', bk', m', copy', coh', s', r', pin'⟩, ⟨⟨⟨⟨h.fr, h.jLL, h.embLL⟩, jE, hfr, A', cg, hau, ?_, fr, hfrj, hWd, hRw', hEl'.1, hEl'.2.1, hlab, hζ, hEl'.2.2.1⟩,
     Pq, hPq1, hPq2⟩⟩, ⟨⟨rfl, HEq.rfl, hloc.symm, hO1.symm, hO2.symm, hO3.symm, hO4.symm, heq_of_eq hPlG.symm⟩, hplGw.symm⟩⟩
-  rw [e]
-  exact hrow
+  rwa [e]
 end GlobalTheory.HeightCounting.Up
 end
 end

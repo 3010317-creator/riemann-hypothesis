@@ -276,8 +276,7 @@ theorem mem_range_of_pow_eq_self {g : ℕ} [Fact (Nat.Prime g)] {K : Type*} [Fie
 
   set S : Finset K := insert z (Finset.univ.image (algebraMap (ZMod g) K)) with hSeq
   have hzS : z ∉ Finset.univ.image (algebraMap (ZMod g) K) := by
-    simp only [Finset.mem_image, Finset.mem_univ, true_and, not_exists]
-    exact hne
+    simpa only [Finset.mem_image, Finset.mem_univ, true_and, not_exists] using hne
   have hcard : S.card = g + 1 := by
     rw [hSeq, Finset.card_insert_of_notMem hzS,
       Finset.card_image_of_injective _ (algebraMap (ZMod g) K).injective, Finset.card_univ, ZMod.card]
@@ -368,9 +367,7 @@ theorem exists_rep : ∀ (D : D7), GrpSide D → ∀ (k : Fin 2) (v : D.nd.PlG k
     unfold redThrough; rw [dite_eq_left hq]
   have hval : (D.nd.plOm.1 (D.naut.plGw k v)).valuation (D.ntypes.tg k v π / π - (n : D.nd.Om)) < 1 := by
     have h1 := (hG.kv k v).injective (((hrq.symm.trans hT).trans hra'.symm))
-    have h2 := Ideal.Quotient.eq.1 h1
-    have h3 := ((D.nd.plOm.1 (D.naut.plGw k v)).valuation_lt_one_iff _).1 h2
-    exact h3
+    exact ((D.nd.plOm.1 (D.naut.plGw k v)).valuation_lt_one_iff _).1 (Ideal.Quotient.eq.1 h1)
   have hu : (n : 𝓞 D.host.E) ∉ (D.naut.plGw k v).asIdeal := by
     intro h
     have h1 := (hAP _).2 h
@@ -619,8 +616,7 @@ theorem isTriple_of_sideB_alt : GlobalTheory.Published.ChebotarevDegreeOne → G
     (hres.2.2 _ π r hgood ⟨_, (D.ntw.jS_range i s).1, (D.ntw.jS_range i s).2, hocc⟩ hpar hr)
   have := congrArg (fun M : GL (Fin D.R.r) (Qbar (D.ntw.l i)) => (M : Matrix (Fin D.R.r) (Fin D.R.r) (Qbar (D.ntw.l i)))) (hA g)
   simp only [Units.val_mul, GlobalTheory.TwistAbove.twGL_val, Matrix.mul_smul, Matrix.smul_mul] at this
-  rw [Units.val_mul, Units.val_mul]
-  exact this
+  rwa [Units.val_mul, Units.val_mul]
 end GlobalTheory.TripInhab
 end
 end

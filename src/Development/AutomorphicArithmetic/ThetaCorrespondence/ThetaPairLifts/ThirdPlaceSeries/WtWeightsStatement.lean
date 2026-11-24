@@ -186,8 +186,7 @@ theorem eval_specAt (τ₀ : ι) (y : ι × Fin n × Fin n → K) (z : Fin n × 
 
 theorem exists_specAt_ne [Infinite K] (τ₀ : ι) (w : Formalism.L2.DIV.Pol K ι n) (hw : w ≠ 0) :
     ∃ y, specAt τ₀ y w ≠ 0 := by
-  by_contra h
-  push Not at h
+  by_contra! h
   apply hw
   apply MvPolynomial.funext
   intro z
@@ -207,8 +206,7 @@ theorem specAt_blockEmb (τ₀ : ι) (y : ι × Fin n × Fin n → K) (τ : ι) 
   rw [MvPolynomial.aeval_rename]
   split_ifs with h
   · subst h
-    simp only [Function.comp_def, ite_true]
-    exact MvPolynomial.aeval_X_left_apply F
+    simpa only [Function.comp_def, ite_true] using MvPolynomial.aeval_X_left_apply F
   · simp only [Function.comp_def, h, ite_false]
     have hh : (MvPolynomial.aeval (R := K) fun x : Fin n × Fin n => (MvPolynomial.C (y (τ, x)) : MvPolynomial (Fin n × Fin n) K)).toRingHom =
         MvPolynomial.C.comp (MvPolynomial.eval fun v => y (τ, v)) := by
@@ -505,8 +503,7 @@ theorem hw_eigvec_transport : ∀ (L : Type) [Field L] [NumberField L] [IsCMFiel
     rw [← hM]
   refine wOf_eig lam _ (blockAct_mem lam τ₀ B) c χ hc0 u fun i => ?_
   have := congrFun hTu i
-  simp only [Matrix.mulVec, dotProduct, hTe, Pi.smul_apply, smul_eq_mul] at this
-  exact this
+  simpa only [Matrix.mulVec, dotProduct, hTe, Pi.smul_apply, smul_eq_mul] using this
 
 end Main
 
@@ -576,8 +573,7 @@ theorem rowDiv_eq_zero_of_fixed (K : Type) [Field K] [Infinite K] (n : ℕ) (a b
     rw [← rowAct_transvection_eq_eval K n a b hab s, hfix s, sub_self]
   have h := congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p k) hP
   simp only [Polynomial.coeff_sub, Polynomial.coeff_C, Polynomial.coeff_zero] at h
-  rw [ite_eq_right (by omega), sub_zero] at h
-  exact h
+  rwa [ite_eq_right (by omega), sub_zero] at h
 
 theorem mu_eq_of_upper_eigen : ∀ (K : Type) [Field K] [CharZero K] (n : ℕ) (lam0 : DomWeight n) (mu : Fin n → ℤ)
     (f : MvPolynomial (Fin n × Fin n) K), f ∈ nablaSq K n lam0 → f ≠ 0 →
@@ -622,8 +618,7 @@ theorem mu_eq_of_upper_eigen : ∀ (K : Type) [Field K] [CharZero K] (n : ℕ) (
         simp [Matrix.GeneralLinearGroup.val_det_apply, hBv, hdet]
       rw [this, one_zpow, Units.val_one]
     unfold sqAct at h
-    rw [hdp, one_smul, hBv] at h
-    exact h
+    rwa [hdp, one_smul, hBv] at h
 
   obtain ⟨c, hc⟩ := Formalism.GradedWeylDivisibility.hwLine K n n le_rfl lam0.natW (PI.WGB.natW_anti_A lam0) f hf hkill
   have he : extremal K n lam0 ≠ 0 := Formalism.GradedWeylDivisibility.hwNe K n n le_rfl lam0.natW
@@ -660,8 +655,7 @@ theorem mu_eq_of_upper_eigen : ∀ (K : Type) [Field K] [CharZero K] (n : ℕ) (
     rw [mul_comm] at this
     exact (mul_right_cancel₀ hc0 this)
   have h4 : (((2 : ℚ) ^ lam0.w i : ℚ) : K) = (((2 : ℚ) ^ mu i : ℚ) : K) := by
-    rw [Rat.cast_zpow, Rat.cast_zpow, Rat.cast_ofNat]
-    exact h3
+    rwa [Rat.cast_zpow, Rat.cast_zpow, Rat.cast_ofNat]
   have h5 := Rat.cast_injective h4
   exact (zpow_right_injective₀ (by norm_num : (0 : ℚ) < 2) (by norm_num) h5).symm
 
@@ -1235,8 +1229,7 @@ theorem wt_weights_alt : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (
       obtain ⟨lam, hl⟩ := _root_.GlobalTheory.WtComb.paramV_eq_infOf D.R (D.hc t) j sh (_root_.GlobalTheory.T.infG_eq_half_integer D cf jE A t sh hs)
       refine ⟨lam, fun sh' hs' => ?_⟩
       rw [hs, Multiset.singleton_inj] at hs'
-      rw [← hs']
-      exact hl
+      rwa [← hs']
     · exact ⟨⟨fun _ => 0, antitone_const⟩, fun sh hs => absurd ⟨sh, hs⟩ h⟩
   choose lamF hlamF using hlam
   let lamD : ℕ → D.what₂.Tau → DomWeight D.R.nV := fun j t =>

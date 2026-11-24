@@ -417,12 +417,10 @@ theorem isLocUnit_conj {D : D7} {PP : Pl D.host.E} (h : Formalism.L2.NTheta.IsId
   refine ⟨?_, ?_, hi _ hx.int, hi _ hx.int', ?_⟩
   · have := congrArg (cA D) hx.off
     rw [map_mul, map_sub, map_one] at this
-    rw [GlobalTheory.FlatThreeSteps.idemAt_conj h]
-    exact this
+    rwa [GlobalTheory.FlatThreeSteps.idemAt_conj h]
   · have h0 : infPart D ((x : AE D) - 1) = 0 := by rw [map_sub, hx.inf, map_one, sub_self]
     have h1 := GlobalTheory.PlaceVec.infPart_cA h0
-    rw [map_sub, map_one, map_sub, map_one, sub_eq_zero] at h1
-    exact h1
+    rwa [map_sub, map_one, map_sub, map_one, sub_eq_zero] at h1
   · obtain ⟨k1, k2⟩ := hx.res
     refine ⟨GlobalTheory.IdemRes.toEAf_mem_of_finPart (hi _ hx.int), ?_⟩
     rw [resS_conj PP ⟨_, k1⟩ _ (GlobalTheory.AdelicLatMove.toEAf_cA _), k2]
@@ -656,8 +654,7 @@ theorem unitary_fin {D : D7} {V : HSp D} (g : GA D V) :
     simp only [Matrix.map_mul] at h2
     have h3 : (Formalism.UG.cT (cA D) (mt V g)).map (toEAf D) = ct ((mt V g).map (toEAf D)) :=
       Matrix.ext fun i j => GlobalTheory.AdelicLatMove.toEAf_cA _
-    rw [h3] at h2
-    exact h2
+    rwa [h3] at h2
   have hJK := GlobalTheory.PlaceVec.gram_map_mul_inv V
   generalize (mt V g).map (toEAf D) = M at h1 ⊢
   generalize V.gram.map (eToEAf D) = J at h1 hJK

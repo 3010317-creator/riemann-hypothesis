@@ -169,8 +169,7 @@ theorem exists_conj_integral {O : Type} [CommRing O] [IsDomain O] [IsPrincipalId
       refine hA t' ht' _ fun k => ?_
       rw [Matrix.mulVec_single_one]
       exact hU k i
-    intro x hx
-    exact hle ⟨x, hx, rfl⟩
+    exact fun x hx => hle ⟨x, hx, rfl⟩
   haveI : Module.Finite O M := Module.Finite.span_of_finite (R := O) (Set.finite_range gen)
   haveI : Module.Free O M := Module.free_of_finite_type_torsion_free'
   let ι := Module.Free.ChooseBasisIndex O M
@@ -180,8 +179,7 @@ theorem exists_conj_integral {O : Type} [CommRing O] [IsDomain O] [IsPrincipalId
     intro x hx
     have := congrArg Subtype.val (b.sum_repr ⟨x, hx⟩)
     simp only [Submodule.coe_sum, Submodule.coe_smul_of_tower] at this
-    simp only [algebraMap_smul, v]
-    exact this.symm
+    simpa only [algebraMap_smul, v] using this.symm
   have hli : LinearIndependent K v :=
     (LinearIndependent.iff_fractionRing O K).1 (b.linearIndependent.map' M.subtype M.ker_subtype)
   have hsp : ⊤ ≤ Submodule.span K (Set.range v) := by
@@ -194,8 +192,7 @@ theorem exists_conj_integral {O : Type} [CommRing O] [IsDomain O] [IsPrincipalId
     intro x hx k
     have h1 : x = bK.equivFun.symm (fun i => algebraMap O K (b.repr ⟨x, hx⟩ i)) := by
       rw [Basis.equivFun_symm_apply]
-      simp only [bK, Basis.coe_mk]
-      exact hcoord x hx
+      simpa only [bK, Basis.coe_mk] using hcoord x hx
     rw [← Basis.equivFun_apply]
     conv_lhs => rw [h1]
     rw [LinearEquiv.apply_symm_apply]
@@ -215,8 +212,7 @@ theorem exists_conj_integral {O : Type} [CommRing O] [IsDomain O] [IsPrincipalId
     rfl
   have hmem : S g *ᵥ bK' j ∈ M := by
     refine hstab g _ ?_
-    simp only [bK', Basis.reindex_apply, bK, Basis.coe_mk, v]
-    exact (b _).2
+    simpa only [bK', Basis.reindex_apply, bK, Basis.coe_mk, v] using (b _).2
   rw [hmat, LinearMap.toMatrix_apply, Matrix.toLin'_apply, Basis.repr_reindex_apply, hrep _ hmem]
   exact ⟨_, rfl⟩
 
@@ -350,8 +346,7 @@ theorem exists_finExt_conj_intOf : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) [Gro
       MonoidHom.map_inv (Matrix.GeneralLinearGroup.map φ), hφσ]
   suffices key : ((Matrix.GeneralLinearGroup.map φ (P'⁻¹ * σ g * P') : GL (Fin a) (PadicAlgCl l)) :
       Matrix (Fin a) (Fin a) (PadicAlgCl l)) i k ∈ Formalism.L2.TwC.intOf l L.1 by
-    rw [← h1] at key
-    exact key
+    rwa [← h1] at key
   obtain ⟨z, hz⟩ := hP' g i k
   rw [Matrix.GeneralLinearGroup.map_apply, ← hz]
   have h2 : φ (algebraMap (Loc.OL L) (FractionRing (Loc.OL L)) z) = (((z : L.1)) : PadicAlgCl l) := by
@@ -424,8 +419,7 @@ theorem exists_isRepOf_tw : GlobalTheory.Published.GlobalArtinReciprocity → �
     rw [Matrix.charpoly_map]; exact h1
   have h3 := GlobalTheory.ParamRep.charpoly_smul_of_prod _ u _ h2
   have hχu' : ι.toRingHom ((μ σ : (Qbar l)ˣ) : Qbar l) = u := hχu
-  rw [hχu']
-  exact h3
+  rwa [hχu']
 
 end GlobalTheory.HeightCounting.TwistAny
 end -- clump:auto
@@ -453,8 +447,7 @@ theorem isRepOf_conj (D : D7) (l : ℕ) [Fact l.Prime] (ι : Qbar l ≃+* ℂ) {
         ((ρ g : GL (Fin a) (Qbar l)) : Matrix (Fin a) (Fin a) (Qbar l)) * (P : Matrix (Fin a) (Fin a) (Qbar l)) := by
     intro g; rw [hρ g, Units.val_mul, Units.val_mul]
   refine ⟨?_, Formalism.MainNotions.SumRepresentations.isSSRep_conj ρ ρ' P hρ h.2.1, ?_⟩
-  · simp only [hcoe]
-    exact (continuous_const.matrix_mul h.1).matrix_mul continuous_const
+  · simpa only [hcoe] using (continuous_const.matrix_mul h.1).matrix_mul continuous_const
   · filter_upwards [h.2.2] with w hw B σ hB hσ
     rw [hcoe, Matrix.coe_units_inv, Matrix.charpoly_units_conj']
     exact hw B σ hB hσ
@@ -852,12 +845,10 @@ theorem rho_rows_alt : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (D 
       refine continuous_pi fun k => continuous_pi fun k' => ?_
       refine (hemb i).continuous_iff.mpr ?_
       have hc0 := (_root_.GlobalTheory.HeightCounting.RowRhoInt.pick_spec_alt hA D cf jE A hG hR hC (T.l i) (jSide D hstar (T.l i) (Sp.j0 i) b) σ h).1.matrix_elem k k'
-      refine hc0.congr fun g => ?_
-      exact (hks i ⟨_, hmem i σ b h g k k'⟩).symm
+      exact hc0.congr fun g => (hks i ⟨_, hmem i σ b h g k k'⟩).symm
     · have e : rho i σ b = 1 := dite_eq_right h
       rw [e]
-      simp only [MonoidHom.one_apply, Units.val_one]
-      exact continuous_const
+      simpa only [MonoidHom.one_apply, Units.val_one] using continuous_const
   · have h : GoodOcc D σ := ⟨hocc, hgood⟩
     have e : rho i σ b = mapRep (Sp.eO0 i).symm.toRingHom (restrictRep (Formalism.L2.TwC.intOf (T.l i) (Sp.K0 i).1)
         (_root_.GlobalTheory.HeightCounting.RowRhoInt.padicRepresentationOfEmbedding hA D cf jE A hG hR hC (T.l i) (jSide D hstar (T.l i) (Sp.j0 i) b) σ) (hmem i σ b h)) := dite_eq_left h
@@ -894,11 +885,9 @@ theorem rho_rows_alt : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (D 
     cases b
     · have e1 : T.emb0b i x = T.emb0 i (starRestrictSubfield D hstar x) := T.restX_coefficientEmbedding_conj i x _ rfl
       simp only [Bool.false_eq_true, ite_false] at hx
-      rw [e1, hφτ, kap_emb0] at hx
-      exact hx
+      rwa [e1, hφτ, kap_emb0] at hx
     · simp only [ite_true] at hx
-      rw [hφτ, kap_emb0] at hx
-      exact hx
+      rwa [hφτ, kap_emb0] at hx
 end GlobalTheory.HeightCounting.RowRhoInt
 end
 end

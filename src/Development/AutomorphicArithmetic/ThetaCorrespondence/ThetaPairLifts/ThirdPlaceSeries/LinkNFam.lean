@@ -267,8 +267,7 @@ theorem localBoundTableAllPrimes_conditionTwoThree : ∀ (D : D7) (L : SizeData�
     show TwistedPlaces.sumOver D _ ((tab L X tf C).len i) + (tab L X tf C).BB i ≤ _
     rw [hlen, hBB]
     have h0 : TwistedPlaces.sumOver D (D.nd.l i) (fun _ => (0 : ℝ)) = 0 := by simp [TwistedPlaces.sumOver]
-    rw [h0, zero_add]
-    exact hFi
+    rwa [h0, zero_add]
   · have h3 : D.nd.l i = 3 := hl.resolve_left h2
     have hq : D.host.q ≠ 3 := D.host.q_ne_three
     have hd : D.host.d ≠ 3 := by
@@ -285,8 +284,7 @@ theorem localBoundTableAllPrimes_conditionTwoThree : ∀ (D : D7) (L : SizeData�
     show TwistedPlaces.sumOver D (D.nd.l i) ((tab L X tf C).len i) + (tab L X tf C).BB i ≤ _
     have hFi' : TwistedPlaces.sumOver D (D.nd.l i) (tf.len i) + tf.BB i ≤ _ := hFi
     rw [h3] at hFi'
-    rw [hlen, hBB, h3, sumOver_three_even, add_zero]
-    exact hFi'
+    rwa [hlen, hBB, h3, sumOver_three_even, add_zero]
 
 end GlobalTheory.NLinkAdmF
 
@@ -321,8 +319,7 @@ theorem localBoundTableAllPrimes_ramified_typePrimes : ∀ (D : D7) (L : SizeDat
       simp only [tab, h2, hl, ite_false, ite_true]
     rw [hlen, hBB]
     simp [TwistedPlaces.sumOver]
-  · intro j hj l hl
-    exact ⟨hC.typ j hj l hl, le_rfl⟩
+  · exact fun j hj l hl => ⟨hC.typ j hj l hl, le_rfl⟩
 
 end GlobalTheory.NLink
 end -- clump:auto
@@ -732,8 +729,7 @@ theorem buDefQ_eta (h : Rows.BuDefQ D.what₂) : Rows.BuDefQ (rowsEta D.what₂ 
       | rfl
   intro u φ x
   have := h u φ x
-  rw [← e] at this
-  exact this
+  rwa [← e] at this
 
 theorem tiesTr (h : Ties D) (k : TwCoverPair Λ.rec') : Ties Λ.rec' := { h with bu_def := buDefQ_eta Λ h.bu_def, tw_cover := k }
 
@@ -744,8 +740,7 @@ theorem rrDefTr (h : DV.RRDef D) : DV.RRDef Λ.rec' := by
       | rfl
   intro x
   have := h x
-  rw [← e] at this
-  exact this
+  rwa [← e] at this
 
 end UpperTheory.GalC.Gen
 end -- clump:auto
@@ -984,10 +979,8 @@ theorem decomp : ∃ (f : X → T) (d : O), d ≠ 0 ∧ (∀ x y, y ≠ x → (f
     rw [Finset.sum_eq_single z]
     · simp only [g, SetLike.val_smul, Pi.smul_apply, smul_eq_mul]
       rw [hd, Finset.prod_erase_mul _ _ (Finset.mem_univ z)]
-    · intro x _ hxz
-      exact hg0 x z (Ne.symm hxz)
-    · intro h
-      exact absurd (Finset.mem_univ z) h
+    · exact fun x _ hxz => hg0 x z (Ne.symm hxz)
+    · exact fun h => absurd (Finset.mem_univ z) h
   refine ⟨g, d, ?_, hg0, ?_⟩
   · exact Finset.prod_ne_zero_iff.mpr fun x _ => hf0 x
   · intro v
@@ -1019,8 +1012,7 @@ theorem qK_eq_zero_iff {v : FractionRing O ⊗[O] M} : qK T act S v = 0 ↔ v �
     rwa [smul_smul, inv_mul_cancel₀ hd', one_smul] at this
   · intro hv
     refine (iSup₂_le (fun x hx => ?_) : (⨆ x ∈ Sᶜ, heckeEig T act x) ≤ LinearMap.ker (qK T act S)) hv
-    intro u hu
-    exact qK_out T act S hs hx hu
+    exact fun u hu => qK_out T act S hs hx hu
 
 abbrev inL (O M : Type) [CommRing O] [IsDomain O] [AddCommGroup M] [Module O M] : Submodule O (FractionRing O ⊗[O] M) :=
   LinearMap.range (TensorProduct.mk O (FractionRing O) M 1)

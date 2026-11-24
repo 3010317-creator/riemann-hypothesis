@@ -123,8 +123,7 @@ theorem lev_iffQ : ∀ {F E K : Type} [Field F] [NumberField F] [Field E] [Numbe
     obtain ⟨h1, h2⟩ := (S.U_eq g).1 hy
     refine ⟨h1, rll_St_of_loc n' g fun v => ⟨_, rll_put_mem_St n' v ?_, rll_put_self n' v _⟩⟩
     have := (S.Uloc_lev v (h2 v)).2
-    rw [hL] at this
-    exact this
+    rwa [hL] at this
   have e0 : g ∈ lev hc 1 1 ⟨r, h', t, s, SG, Q, P', cg, fun PP => (ξ PP)⁻¹⟩ ↔
       g ∈ lev hc 1 1 (parDat h t s P χ) ∧ ∀ PP ∈ Q, redFn 1 PP g ∈ blockTri (blk2 r) := by
     rw [mem_lev, mem_lev, mem_parLev, mem_parLev]
@@ -338,8 +337,7 @@ theorem chi_deep (hc : CMData F E) {n T f : ℕ} {J : Matrix (Fin n) (Fin n) E} 
   have hxP : ∀ r s, adAt F P (x.1.1 r s) = adAt F P (w.1 r s) := fun r s => by
     have h := congrArg (fun g : GL (Fin n) _ => g.1 r s) hxw
     refine LocSplice.adAt_eq_of_prV P ?_
-    rw [hu]
-    exact h
+    rwa [hu]
   have hwP := (hd (-e).toNat w).1 hw
   have hA : ∀ r s, Valued.v (adAt F P (x.1.1 r s) - (1 : Matrix (Fin n) (Fin n) (P.adicCompletion E)) r s) ≤
       Valued.v ((m : P.adicCompletion E) ^ 2 * c) := fun r s => by
@@ -590,8 +588,7 @@ theorem levRead_packB_of_bWit {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {p :
     exact h0
   have h2 : (fun k : _root_.GlobalTheory.Mem.Top.Bl.RealPackage b.R b.S => LevRead q.w.I q.w.l q.Z k.B.Q.Rl.toRealDat.toLevCh
       (k.B.Q.Rl.toRealDat.levR k.B.Q.F.lv2 true) k.P.I.tup) (_root_.GlobalTheory.Mem.Top.Bl.realPackageOfBundle b) := by
-    rw [y.eq]
-    exact h1
+    rwa [y.eq]
   exact h2
 
 theorem levIs_of_bWit_alt {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {p : _root_.GlobalTheory.Mem.Top.Bl.Parameters hL} {K : Ctx} (q : Bl.WPt p.s K) {c : ℝ}

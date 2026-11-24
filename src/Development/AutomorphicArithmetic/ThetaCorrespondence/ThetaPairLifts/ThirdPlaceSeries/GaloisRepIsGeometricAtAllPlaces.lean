@@ -318,8 +318,7 @@ theorem eigC_le_alt {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {D : D7} (P : 
     have hperm := ((h41 i).2.1 P0 Q (by rw [hP0]; simp) (hP0.trans hQ'.symm)).1 _ _ hB0 hPa
     exact GlobalTheory.RowThetaParam.isBCV_of_perm D.nd D.naut hperm.symm hPa
   · intro k
-    simp only [D.ntypes.labPar_def, hloc]
-    exact hg k
+    simpa only [D.ntypes.labPar_def, hloc] using hg k
 theorem main_alt_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D), ∀ (X : GlobalTheory.NJoin.RealAt D P.cf P.C P.tp),
     _root_.Formalism.MainNotions.SumRepresentations.provisionFortyOne D → Formalism.MainNotions.SumRepresentations.tieLab D → MtParTie D.nd D.naut D.ntypes → Formalism.MainNotions.SumRepresentations.adm1 D → Formalism.MainNotions.SumRepresentations.tie0 D →
     Formalism.MainNotions.SumRepresentations.ArchimedeanSignatureMatching D → Formalism.MainNotions.SumRepresentations.adm5 D → GlobalTheory.NRows.GoodIdempotentFixesLocalisationForms D → GlobalTheory.NRows.GoodIdempotentReadsAsGoodTypeProjector X → ∀ i, GlobalTheory.NJoin.EigGood X i := by
@@ -426,16 +425,14 @@ theorem mem_biSup_of_orthogonal {V ι : Type*} [NormedAddCommGroup V] [InnerProd
   have hv' : v ∈ (⨆ k ∈ Sᶜ, U k)ᗮ := by
     have h1 : (ℂ ∙ v) ⟂ (⨆ k ∈ Sᶜ, U k) := by
       simp only [Submodule.isOrtho_iSup_right]
-      intro k hk
-      exact (Submodule.span_singleton_le_iff_mem _ _).2 (hv k hk)
+      exact fun k hk => (Submodule.span_singleton_le_iff_mem _ _).2 (hv k hk)
     exact h1 (Submodule.mem_span_singleton_self v)
   obtain ⟨a, ha, b, hb, rfl⟩ := Submodule.mem_sup.1 (hsup.ge (Submodule.mem_top (x := v)))
   have hb' : b ∈ (⨆ k ∈ Sᶜ, U k)ᗮ := by
     have := Submodule.sub_mem _ hv' (ho ha)
     rwa [add_sub_cancel_left] at this
   have hb0 : b = 0 := inner_self_eq_zero.1 ((Submodule.mem_orthogonal _ _).1 hb' b hb)
-  rw [hb0, add_zero]
-  exact ha
+  rwa [hb0, add_zero]
 
 variable {R : Ranks} {H : Host R} {what₂ : Rows.Data R} (N : NData R H what₂) (A : NAut N)
 
@@ -551,8 +548,7 @@ theorem eventually_splitOut {R : Ranks} {H : Host R} {what₂ : Rows.Data R} (N 
   have hl : (N.l i).Prime := Fact.out
   have hfin : (placesOver H.E (N.l i)).Finite := by
     have h0 : Ideal.span {((N.l i : ℕ) : 𝓞 H.E)} ≠ 0 := by simpa using hl.ne_zero
-    refine (Ideal.finite_factors h0).subset fun v hv => ?_
-    exact Ideal.dvd_span_singleton.2 hv
+    exact (Ideal.finite_factors h0).subset fun v hv => Ideal.dvd_span_singleton.2 hv
   filter_upwards [hfin.eventually_cofinite_notMem, (N.S i).eventually_cofinite_notMem,
     (N.Q i).eventually_cofinite_notMem] with w h1 h2 h3 hw using ⟨hw, h1, h2, h3⟩
 
@@ -641,8 +637,7 @@ theorem exists_fixed_of_finset {ρ : Representation ℂ (GQ L n) W} {S : Submodu
             exact add_comm _ _
           rw [h4]
           exact Submodule.sub_mem _ hz (hMst κ z hz)
-        rw [h0, Submodule.mem_bot, sub_eq_zero] at hd
-        exact hd
+        rwa [h0, Submodule.mem_bot, sub_eq_zero] at hd
       have hzfix : ∀ κ ∈ Umax L n, TrivOutside {v} κ → NG.rt L n κ z = z := by
         intro κ hκ hκt
         have e := hfix κ hκ hκt
@@ -699,8 +694,7 @@ theorem coeff_eq {N n : ℕ} (hN : N ≠ 0) {c c' : ℕ → ℂ}
     · intro j hj hjk
       rw [Finset.mem_Icc] at hj
       rw [coeff_C_mul_X_pow, ite_eq_right (by omega)]
-    · intro hk
-      exact absurd (Finset.mem_Icc.2 ⟨h1, h2⟩) hk
+    · exact fun hk => absurd (Finset.mem_Icc.2 ⟨h1, h2⟩) hk
   have e := congrArg (fun p : ℂ[X] => p.coeff (n - k)) h
   rw [key c, key c'] at e
   have hne : (-1 : ℂ) ^ k * ((N : ℂ)) ^ (k * (k - 1) / 2) ≠ 0 :=
@@ -797,8 +791,7 @@ theorem main : ∀ (D : D7) (M : Formalism.L2.MtFam D), Formalism.L2.HeckeTied D
       IsLocalRing.residue (D.nd.O i) (aF v k) =
         IsLocalRing.residue (D.nd.O i) ((D.nd.hT i v k : D.nd.X i → D.nd.O i) x) := by
     intro v k hv
-    simp only [aF, dite_eq_left hv]
-    exact Classical.choose_spec (hcoef v k hv.1 hv.2.1 hv.2.2)
+    simpa only [aF, dite_eq_left hv] using Classical.choose_spec (hcoef v k hv.1 hv.2.1 hv.2.2)
   have hiotaC : ∀ z, iotaO D.nd D.naut i z = NL.iotaC _ _ (NL.phO _ _ i h z) := NL.iotaC_coh _ _ i h
   have hinjC : Function.Injective (NL.iotaC (D.nd.j i) (D.nd.w i)) := by
     intro a b hab
@@ -1262,8 +1255,7 @@ theorem rep_at_point_alt_alt (hLP : Formalism.MainNotions.SumRepresentations.At.
       rw [hwd w h1 h2]; exact (A.unr_tw _ _).2 h2
     have e := A.wdOf_frob a ρ₀ w h1 hc0 hu B σ hB hσ
     rw [hwd w h1 h2] at e
-    rw [Matrix.charpoly_map]
-    exact e
+    rwa [Matrix.charpoly_map]
   let R1 := Formalism.MainNotions.SumRepresentations.At.twGL ρ₀ ((Units.map (iotaOQ N A a).toMonoidHom).comp ξ)
   have hR1 : ∀ g, ((R1 g : GL _ _) : Matrix (Fin R.r) (Fin R.r) (Qbar (N.l a))) =
       iotaOQ N A a ((ξ g : (N.O a)ˣ) : N.O a) • ((ρ₀ g : GL _ _) : Matrix (Fin R.r) (Fin R.r) (Qbar (N.l a))) :=
@@ -1431,8 +1423,7 @@ theorem wdOf_of_isRepOfSig_alt_alt (D : D7) (hT : Formalism.MainNotions.SumRepre
   haveI := charZero_Kf D.nd D.naut i
   have hQc : Continuous fun g => ((mapRep (iotaOQ D.nd D.naut i) ρ g : GL _ _) :
       Matrix (Fin D.R.r) (Fin D.R.r) (Qbar (D.nd.l i))) := by
-    simp only [coe_mapRep]
-    exact hρ.1.matrix_map hι.1
+    simpa only [coe_mapRep] using hρ.1.matrix_map hι.1
   have hQss : IsSSRep (mapRep (iotaOQ D.nd D.naut i) ρ) := by
     have e : mapRep (iotaOQ D.nd D.naut i) ρ =
         mapRep (D.naut.iotaQ i) (mapRep (algebraMap (D.nd.O i) (Kf D.nd i)) ρ) := by
@@ -1536,8 +1527,7 @@ theorem GlobalTheory.TameRel.main : ∀ (R : Ranks) (H : Host R) (what₂ : Rows
     have h := GlobalTheory.TameRel.wild_conj hs hu
     have e : γ ^ H.g k * ((γ ^ H.g k)⁻¹ * (φ * γ * φ⁻¹)) * (γ ^ H.g k)⁻¹ = φ * γ * φ⁻¹ * (γ ^ H.g k)⁻¹ := by
       group
-    rw [e] at h
-    exact h
+    rwa [e] at h
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1579,8 +1569,7 @@ theorem tameGenerator_residual_alt_alt (D : D7) (h1 : GlobalTheory.RowCopy.RbarT
   obtain ⟨φ, hI, hW⟩ := _root_.GlobalTheory.TameRel.main _ _ _ D.nd D.naut k v _ (D.ntypes.tg_mem k v)
   refine ⟨φ, ?_⟩
   have h := _root_.GlobalTheory.RowWildTame.main_alt D h1 h3 h4 σ k v i hl hne hg _ hI hW
-  rw [map_mul, map_inv, map_pow, mul_inv_eq_one] at h
-  exact h
+  rwa [map_mul, map_inv, map_pow, mul_inv_eq_one] at h
 end GlobalTheory.RowTie
 end
 end
