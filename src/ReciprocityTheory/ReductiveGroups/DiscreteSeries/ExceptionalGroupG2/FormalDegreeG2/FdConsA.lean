@@ -350,7 +350,7 @@ theorem fdc_ds_exists {ε : Fin n → Bool} (hp : 1 ≤ pOf ε) (hq : 1 ≤ qOf 
     (hμ : IsHCParam μ) (hg : GapAtLeast ε μ h) (hh : thrS ε + 1 < h) : ∃ d, FdcGood ε μ d := by
   obtain ⟨T⟩ := HW.kType_exists ε μ hμ
   obtain ⟨m, -, hP⟩ := fdc_model hp hq hμ hg hh T
-  have hDS := isDS_sigLam (fdc_stdGap hμ hg hh) hP (fdc_w_ne T)
+  have hDS := isDS_sigLam (fdc_stdGap hμ hg hh) hP (_root_.ReciprocityTheory.ChartRestriction.DS.HW.KType.w_ne_zero T)
   obtain ⟨d, hd⟩ := fdcGood_of_isDS hDS
   exact ⟨d, _, inferInstance, inferInstance, _, hDS, hd⟩
 
