@@ -349,10 +349,7 @@ theorem power_slope_mu : PowMu := by
 open OrthogonalSumAlt in
 theorem orthSandwich_of (hS : ScaleSandwich) : OrthSandwich := by
   intro K V ι _ _ _ _ _ _ _ _ _ _ b X hX S _ A A0 G hA0 hG horth hle hGA
-  have hnoeth : IsNoetherian (𝓞 K) A0 := isNoetherian_of_fg_of_noetherian A0 hA0
-  have hAfg : ∀ s, (A s).FG := fun s => by
-    have := (isNoetherian_submodule.1 hnoeth) (A s) (hle s)
-    exact this
+  have hAfg : ∀ s, (A s).FG := fun s => hA0.of_le (hle s)
   obtain ⟨hrk, hdeg, -⟩ := orthogonal_sum_slope K V ι b X hX S A hAfg horth
   have hB : (⨆ s, A s) ≤ A0 := iSup_le hle
   by_cases h0 : A0 = ⊥
