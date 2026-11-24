@@ -100,6 +100,14 @@ fixing it, and it ties the file to instances declared elsewhere, so it is hard t
 Find the instance that sends the search the wrong way, for example with
 `set_option trace.Meta.synthInstance true in` on the slow declaration, and fix it there.
 
+### Turning on old behaviour with `set_option backward`
+
+Don't add options such as `set_option backward.isDefEq.respectTransparency false`. They bring
+back how an older Lean behaved, and Lean removes them later, so a proof that needs one breaks on
+a future bump. Many files still have them from earlier bumps; don't copy those. Fix the proof
+instead: often it is enough to rewrite with a lemma rather than rely on Lean to unfold a
+definition.
+
 ### Small speed-ups to the CI scripts
 
 We get many pull requests that shave a fraction of a second off a script in `scripts/` or
