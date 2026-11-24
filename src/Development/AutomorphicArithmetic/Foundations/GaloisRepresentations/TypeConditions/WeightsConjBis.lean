@@ -61,21 +61,12 @@ section Local
 variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω]
   {A : ValuationSubring Ω} {w : HeightOneSpectrum (𝓞 E)} {h : IsPlaceOver A w}
 
-/-- Guarded local compatibility: equality of dimensions is unconditional,
-while equality of Weil–Deligne classes and the tame conclusions require
-vanishing monodromy of the target. -/
 structure AwayB (x y : WD h) : Prop where
   dim : x.lpDim = y.lpDim
 
   tor : Tor y → y.mono0 → x = y
 
   tame0 : IsQpBig w y.lpDim → TmW y → Sqf y → y.mono0 → x.mono0 ∧ ∀ g : ↥(Weil h), deg g = 0 → x.charPol g = y.charPol g
-
-/-- With nonzero target monodromy both guarded clauses are vacuous. -/
-theorem AwayB.iff_dim_of_not_mono0 {x y : WD h} (hy : ¬ y.mono0) :
-    AwayB x y ↔ x.lpDim = y.lpDim :=
-  ⟨fun k => k.dim, fun hd => ⟨hd, fun _ hm => (hy hm).elim,
-    fun _ _ _ hm => (hy hm).elim⟩⟩
 
 theorem Away.big {x y : WD h} (k : Away x y) : AwayB x y := ⟨k.dim, k.tor, fun q => k.tame0 q.isQp⟩
 end Local

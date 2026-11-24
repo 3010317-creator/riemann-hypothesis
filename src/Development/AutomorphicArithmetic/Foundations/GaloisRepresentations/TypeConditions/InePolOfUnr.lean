@@ -107,17 +107,6 @@ theorem NcW.of_unr {y : WD h} (u : y.unr) : NcW y := by
   refine ⟨fun σ hσ => inePol_of_unr u (GlobalTheory.TameEig.wild_mem_Ine B σ hσ), WD.unr_mono0 _ u, fun γ hγ _ z hz => ?_⟩
   rw [inePol_of_unr u hγ] at hz
   rw [eq_one_of_rootMultiplicity_X_sub_one_pos (lt_of_lt_of_le (thr_pos w) hz), one_pow]
-
-/-- If the target does not satisfy `NcW`, neither guarded compatibility
-condition nor unramified equality imposes a further constraint. -/
-theorem Aw.iff_dim_of_not_nc {x y : WD h} (hy : ¬ NcW y) :
-    Aw x y ↔ x.lpDim = y.lpDim :=
-  ⟨fun k => k.dim, fun hd => ⟨hd, fun hu => (hy (NcW.of_unr hu)).elim,
-    fun hc => (hy hc).elim, fun hc => (hy hc).elim⟩⟩
-
-theorem Aw.iff_dim_of_not_mono0 {x y : WD h} (hy : ¬ y.mono0) :
-    Aw x y ↔ x.lpDim = y.lpDim :=
-  Aw.iff_dim_of_not_nc (fun hc => hy hc.2.1)
 end
 
 variable {R : Ranks} {H : Host R} {what₂ : Rows.Data R} {N : NData R H what₂} {A : NAut N}
@@ -135,30 +124,11 @@ theorem nc_iff (T : GlobalTheory.RowTie.WDTie N A) {w : PlE H} (y : A.LP w) : Nc
 
 theorem ncW_of_nc (T : GlobalTheory.RowTie.WDTie N A) {w : PlE H} {y : A.LP w} (h : Nc N A y) : NcW (T.e w y) := (nc_iff T y).1 h
 
-/-- The row relation is exactly the guarded Weil–Deligne relation transported
-along the local realization. No additional compatibility is introduced by the
-transport. -/
-theorem relW_iff_aw (T : GlobalTheory.RowTie.WDTie N A) {w : PlE H} {x y : A.LP w} :
-    RelW N A x y ↔ Aw (T.e w x) (T.e w y) := by
-  constructor
-  · intro k
-    refine ⟨by rw [T.dim, T.dim, k.dim],
-      fun hu => congrArg (T.e w) (k.eq_of_unr ((T.unr w y).2 hu)),
-      fun hc g hg => ?_,
-      fun hc => (T.mono0 w x).1 (k.mono ((nc_iff T y).2 hc))⟩
-    have hI := deg_eq_zero_iff.mp hg
-    have hp := k.ine ((nc_iff T y).2 hc) _ hI
-    rw [T.inePol _ _ _ hI, T.inePol _ _ _ hI,
-      WD.inePol_of_mem _ g.2, WD.inePol_of_mem _ g.2] at hp
-    exact hp
-  · intro h
-    refine ⟨by rw [← T.dim, ← T.dim, h.dim], fun u => (T.e w).injective (h.unr ((T.unr w y).1 u)), fun k σ hσ => ?_,
-      fun k => (T.mono0 w x).2 (h.mono (ncW_of_nc T k))⟩
-    rw [T.inePol _ _ σ hσ, T.inePol _ _ σ hσ, WD.inePol_of_mem_Ine _ hσ, WD.inePol_of_mem_Ine _ hσ,
-      h.ine (ncW_of_nc T k) _ (deg_ineIncl _)]
-
-theorem relW_of_aw (T : GlobalTheory.RowTie.WDTie N A) {w : PlE H} {x y : A.LP w} (h : Aw (T.e w x) (T.e w y)) : RelW N A x y :=
-  (relW_iff_aw T).2 h
+theorem relW_of_aw (T : GlobalTheory.RowTie.WDTie N A) {w : PlE H} {x y : A.LP w} (h : Aw (T.e w x) (T.e w y)) : RelW N A x y := by
+  refine ⟨by rw [← T.dim, ← T.dim, h.dim], fun u => (T.e w).injective (h.unr ((T.unr w y).1 u)), fun k σ hσ => ?_,
+    fun k => (T.mono0 w x).2 (h.mono (ncW_of_nc T k))⟩
+  rw [T.inePol _ _ σ hσ, T.inePol _ _ σ hσ, WD.inePol_of_mem_Ine _ hσ, WD.inePol_of_mem_Ine _ hσ,
+    h.ine (ncW_of_nc T k) _ (deg_ineIncl _)]
 
 end UpperTheory.GalS
 end -- clump:auto
