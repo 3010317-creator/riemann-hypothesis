@@ -478,8 +478,9 @@ topological group `G` and homomorphisms `pr : G →* Sp(2n, ℝ)`, `om` to the u
 This is the Segal–Shale–Weil representation; see
 [G. B. Folland, *Harmonic analysis in phase space* (Chapter 4)][folland1989] and
 [A. Weil, *Sur certains groupes d'opérateurs unitaires*][weil1964]. It is proved in
-`CompanionTheory.ThKR.realMetaplecticRepresentation_holds`. -/
-/-- **Shale's theorem on the real metaplectic representation**: the symplectic group
+`CompanionTheory.ThKR.realMetaplecticRepresentation_holds`.
+
+**Shale's theorem on the real metaplectic representation**: the symplectic group
 `\mathrm{Sp}_{2n}(\mathbb{R})` admits a unique non-trivial double cover `\mathrm{Mp}_{2n}(\mathbb{R})`
 acting unitarily on `L^2(\mathbb{R}^n)` via the oscillator representation.
 
