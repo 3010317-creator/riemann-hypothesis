@@ -7,8 +7,8 @@ immutable map and module manifest are checked against the receipt's SHA-256 valu
 each other. Then, at the same time, the map is registered with `lake cache add` in parallel
 shards and the missing artifacts are downloaded by one 500-way curl process, each checked
 against the manifest's SHA-256 before it enters the cache (scripts/rh-buildq/fetch-artifacts.py).
-Finally `lake build --no-build` lets Lake unpack exactly the modules whose input hashes are
-mapped, and fails if anything would have to be compiled.
+Then one stock leantar process unpacks every module (after path checks), and `lake build
+--no-build` confirms that nothing would have to be compiled.
 
 Exit 3 means no equivalent successful CI receipt was found. Other failures must
 not silently fall back: a matching receipt with corrupt bytes is an error.
@@ -249,6 +249,7 @@ def validated_blobs(record, identity, fetcher=fetch):
         raise ValueError("CI module manifest is not bound to the current inputs and immutable map")
     shas = {}
     names = set()
+    modules = []
     for line in rows[1:]:
         row = decode(line)
         if not isinstance(row, list) or len(row) != 4 or not all(isinstance(x, str) for x in row):
@@ -258,9 +259,10 @@ def validated_blobs(record, identity, fetcher=fetch):
                 or entries.pop(input_hash, None) != artifact or shas.setdefault(artifact, sha256) != sha256):
             raise ValueError("CI module manifest does not uniquely cover its immutable map")
         names.add(name)
+        modules.append((name, input_hash, artifact))
     if entries:
         raise ValueError("CI module manifest does not completely cover its immutable map")
-    return contents, shas
+    return contents, shas, modules
 
 
 def registered(cache):
@@ -297,8 +299,58 @@ def register(root, env, service, temporary, items, shards=SHARDS):
         raise subprocess.CalledProcessError(max(codes), command)
 
 
-def consume(root, cache, record, identity, fetcher=fetch):
-    contents, shas = validated_blobs(record, identity, fetcher)
+def unpack_jobs(root, cache, modules):
+    """leantar jobs for every module, refusing unsafe or symlinked source/output paths."""
+    jobs, checked = [], set()
+    for name, input_hash, artifact in modules:
+        module = Path(*name.split("."))
+        if not local_path(root, Path("src") / module.with_suffix(".lean"), checked).is_file():
+            raise ValueError(f"missing source for {name}")
+        archive = cache / "artifacts" / artifact
+        if archive.is_symlink() or not archive.is_file():
+            raise ValueError(f"missing cached archive: {archive}")
+        bases = []
+        for directory, suffixes in (("lib/lean", (".trace", ".olean", ".ilean")), ("ir", (".c",))):
+            relative = Path(".lake/build") / directory / module
+            for suffix in suffixes:
+                local_path(root, relative.with_suffix(suffix), checked)
+            bases.append(str(root / relative.parent))
+        jobs.append({"file": str(archive), "hash": input_hash, "base": bases})
+    return jobs
+
+
+def clear_output_hashes(root, modules):
+    """Remove Lake's saved hashes of the outputs that leantar is about to replace.
+
+    Lake reads ``X.hash`` instead of hashing ``X`` unless given ``--rehash``, and
+    leantar replaces ``X`` only. This is the list in Lake's ``Module.clearOutputHashes``.
+    Call it after ``unpack_jobs`` has checked the paths.
+    """
+    stems_by_directory = {}
+    for name, *_ in modules:
+        *parents, stem = name.split(".")
+        stems_by_directory.setdefault(tuple(parents), set()).add(stem)
+    for directory, suffixes in (("lib/lean", ("olean", "olean.server", "olean.private", "ilean", "ir.sig", "ir")),
+                                ("ir", ("c", "bc", "ltar"))):
+        base = root / ".lake/build" / directory
+        hash_suffixes = {suffix + ".hash" for suffix in suffixes}
+        for parents, stems in stems_by_directory.items():
+            try:
+                entries = os.scandir(base.joinpath(*parents))
+            except FileNotFoundError:
+                continue
+            with entries:
+                for entry in entries:
+                    stem, _, suffix = entry.name.partition(".")
+                    if suffix in hash_suffixes and stem in stems:
+                        try:
+                            os.unlink(entry.path)
+                        except FileNotFoundError:
+                            pass
+
+
+def consume(root, cache, record, identity, workers=24, fetcher=fetch):
+    contents, shas, modules = validated_blobs(record, identity, fetcher)
     if current_identity(root) != identity:
         raise ValueError("project inputs changed during cache lookup")
     local_path(root, Path(".lake"), set()).mkdir(exist_ok=True)
@@ -337,7 +389,15 @@ def consume(root, cache, record, identity, fetcher=fetch):
         raise ValueError("some cached artifacts could not be downloaded and verified; rerun lake exe cache get")
     if current_identity(root) != identity:
         raise ValueError("project inputs changed before restoration")
-    print(f"Unpacking {len(entries)} modules with lake build --no-build...", flush=True)
+    jobs = unpack_jobs(root, cache, modules)
+    for directory in dict.fromkeys(base for job in jobs for base in job["base"]):
+        Path(directory).mkdir(parents=True, exist_ok=True)
+    clear_output_hashes(root, modules)
+    lean = Path(subprocess.check_output(["elan", "which", "lean"], cwd=root, env=env, text=True).strip())
+    print(f"Unpacking {len(jobs)} modules with stock leantar ({workers} workers)...", flush=True)
+    subprocess.run([str(lean.with_name("leantar")), "--jobs", str(workers), "-f", "-x", "-j", "-"],
+                   input=json.dumps(jobs), text=True, cwd=root, env=env, check=True)
+    print("Checking with lake build --no-build...", flush=True)
     result = subprocess.run(["lake", "-q", "--log-level=error", "build", "--no-build"], cwd=root, env=env)
     if result.returncode:
         raise ValueError(f"lake build --no-build exited {result.returncode} after restoring the cache"
@@ -373,9 +433,10 @@ def main():
     parser.add_argument("--project", type=Path, default=Path.cwd())
     parser.add_argument("--cache-dir", type=Path)
     parser.add_argument("--ancestor-limit", type=int, default=100)
+    parser.add_argument("--jobs", type=int, default=24)
     args = parser.parse_args()
-    if not 1 <= args.ancestor_limit <= 1000:
-        parser.error("ancestor limit must be 1..1000")
+    if args.jobs < 1 or not 1 <= args.ancestor_limit <= 1000:
+        parser.error("jobs must be positive; ancestor limit must be 1..1000")
     root = args.project.resolve()
     identity = current_identity(root)
     record = find_record(root, identity, args.ancestor_limit)
@@ -386,7 +447,7 @@ def main():
         print("No equivalent successful cache found for the current build inputs.", flush=True)
         return 3
     cache = (args.cache_dir or Path(os.environ.get("LAKE_CACHE_DIR", str(root / ".lake/cache")))).resolve()
-    consume(root, cache, record, identity,
+    consume(root, cache, record, identity, args.jobs,
             fetcher=lambda key, maximum=MAX_JSON: cached[key] if key in cached else fetch(key, maximum))
     return 0
 
