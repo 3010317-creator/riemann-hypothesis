@@ -4,10 +4,7 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SaturatedPf
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.GenericRatioOfBoundHolds
 import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.TermAttrConst
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FlagClassConstancy.FlagOfInSFRight
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.RelativeEquivalence.DCRelEquivAllHolds
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.TermAttractorConstant.LeadMinorEMulUpper
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.TermAttractorConstant.SpanFrameLtSucc
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,8 +43,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.GenericRatioOfBoundHolds
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.RelevantCarrierNonempty.InSCarrierNonempty
 
 @[expose] public section
 
@@ -121,60 +116,11 @@ theorem zhatL_mapL (F : LFlag S r T) (F' : LFlag S r T') :
 include hβ in
 theorem gval_mapL (F : LFlag S r T) (F' : LFlag S r T') : Gval (mapL β hβ F) (mapL β hβ F') = Gval F F' := gflag_mapFlag β hβ F.fl F'.fl
 
-include hβ in
-theorem inSF_mapL (F : LFlag S r T) (F' : LFlag S r T') :
-    Formalism.L2.SG.FourParts.InSF (mapL β hβ F) (mapL β hβ F') ↔ Formalism.L2.SG.FourParts.InSF F F' := by
-  unfold Formalism.L2.SG.FourParts.InSF
-  rw [Formalism.L2.SG.Pf.Xsp_mapL (β := β) (hβ := hβ)]
-  simp only [Formalism.L2.SG.Pf.Xflag_mapL (β := β) (hβ := hβ)]
-  simp only [Submodule.mem_map_equiv, Formalism.L2.SG.Saturated.mapL, Formalism.L2.SG.Saturated.mapFlag, map_sub,
-    LinearEquiv.symm_apply_apply]
-
-include hβ in
-theorem isIdF_mapL (Λ : Submodule (𝓞 E) S.V) (F : LFlag S r T) (F' : LFlag S r T') :
-    Formalism.L2.SG.FourParts.IsIdF (Formalism.HermitianLatticesTheory.gmap β Λ) (mapL β hβ F) (mapL β hβ F') ↔
-      Formalism.L2.SG.FourParts.IsIdF Λ F F' := by
-  unfold Formalism.L2.SG.FourParts.IsIdF
-  rw [Formalism.L2.SG.Pf.Xsp_mapL (β := β) (hβ := hβ)]
-  constructor
-  · rintro ⟨n, hn, h1, h2⟩
-    refine ⟨β⁻¹ * n * β, (Formalism.L2.SG.Pf.mem_NLam_map (β := β) (hβ := hβ) Λ F n).1 hn, fun a => ?_, ?_⟩
-    · have h := h1 a
-      change n (β (F.fl.e a)) = β (F'.fl.e a) at h
-      change β.symm (n (β (F.fl.e a))) = F'.fl.e a
-      rw [h, LinearEquiv.symm_apply_apply]
-    · rw [Submodule.mem_map_equiv] at h2
-      change β.symm (n (β F.fl.z) - β F'.fl.z) ∈ Xsp F at h2
-      change β.symm (n (β F.fl.z)) - F'.fl.z ∈ Xsp F
-      rwa [map_sub, LinearEquiv.symm_apply_apply] at h2
-  · rintro ⟨n, hn, h1, h2⟩
-    refine ⟨β * n * β⁻¹, (Formalism.L2.SG.Pf.conj_mem_NLam (β := β) (hβ := hβ) Λ F n).2 hn, fun a => ?_, ?_⟩
-    · change β (n (β.symm (β (F.fl.e a)))) = β (F'.fl.e a)
-      rw [LinearEquiv.symm_apply_apply, h1 a]
-    · rw [Submodule.mem_map_equiv]
-      change β.symm (β (n (β.symm (β F.fl.z))) - β F'.fl.z) ∈ Xsp F
-      rwa [LinearEquiv.symm_apply_apply, ← map_sub, LinearEquiv.symm_apply_apply]
-
 end Iso
 
 section Terms
 
 variable {D : D7} {X : HidaSetting D} {Y : Formalism.L2.SG.Full.Full X} {hF : FinX Y}
-
-theorem ex_rep_iff {u u' : D.what₂.Word} (t : RT Y u u')
-    (Q : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E) → Prop)
-    (hQ : ∀ x y : TermDef.Carrier (TermDef.PD D t.lam (lf D (X.Fu u)) u'),
-      TermDef.Rel t.lam (lf D (X.Fu u)) (TermDef.PD D t.lam (lf D (X.Fu u)) u') x y → (Q x.1 ↔ Q y.1)) :
-    (∃ F', TermDef.Rep t.lam (lf D (X.Fu u)) (TermDef.PD D t.lam (lf D (X.Fu u)) u') t.cls F' ∧ Q F') ↔
-      Q (Quot.out t.cls).1 := by
-  constructor
-  · rintro ⟨F', ⟨h, hm⟩, hF'⟩
-    have key : Q F' = Q (Quot.out t.cls).1 :=
-      congrArg (Quot.lift (fun x : TermDef.Carrier (TermDef.PD D t.lam (lf D (X.Fu u)) u') => Q x.1)
-        (fun x y hxy => propext (hQ x y hxy))) (hm.trans (Quot.out_eq t.cls).symm)
-    exact key.mp hF'
-  · intro hq
-    exact ⟨(Quot.out t.cls).1, Exists.intro (Quot.out t.cls).2 (Quot.out_eq t.cls), hq⟩
 
 variable (W : WittDat X) (hI : SIso D.s (sOf hF))
 
@@ -228,31 +174,6 @@ theorem pdC {u u' : D.what₂.Word} (t : D.s.Term u u') :
     TermDef.PD D (lamOf W hI t) (lf D (FlagOfWord W u)) u' (fl'Of W hI t) := (Formalism.L2.SG.Pf.positive_definite_isomorphism D u' (W.δ u) (W.isom u) (tc hI t).lam (lf D (X.Fu u)) (repF (tc hI t))).2
     (Quot.out (tc hI t).cls).2
 
-theorem inS_iffC {u u' : D.what₂.Word} (t : D.s.Term u u') :
-    D.s.inS t ↔ Formalism.L2.SG.FourParts.InSF (lf D (FlagOfWord W u)) (fl'Of W hI t) := by
-  rw [hI.inS t]
-  show Formalism.L2.SG.FourParts.termInS (tc hI t) ↔ _
-  unfold Formalism.L2.SG.FourParts.termInS
-  conv_lhs => rw [← Quot.out_eq (tc hI t).cls]
-  refine (Formalism.L2.SG.FourParts.isInS_mk (PI.InSClassConstW.inSFun_all _ _ _) _).trans ?_
-  exact (inSF_mapL (W.δ u) (W.isom u) _ _).symm
-
-theorem isId_iffC {u u' : D.what₂.Word} (t : D.s.Term u u') :
-    D.s.isId t ↔ Formalism.L2.SG.FourParts.IsIdF (lamOf W hI t) (lf D (FlagOfWord W u)) (fl'Of W hI t) := by
-  rw [hI.isId t]
-  change Formalism.L2.SG.FourParts.IsIdT _ _ _ (tc hI t).cls ↔ _
-  refine Iff.trans ?_ (isIdF_mapL (W.δ u) (W.isom u) (tc hI t).lam (lf D (X.Fu u)) (repF (tc hI t))).symm
-  have hrow := rowLat_tc hI t
-  unfold Formalism.L2.SG.FourParts.IsIdT
-  constructor
-  · rintro ⟨F', ⟨h, hm⟩, hid⟩
-    have h2 := (ex_rep_iff (tc hI t) _ (_root_.in_s_class_constant D u u' (X.Fu u) _ hrow)).1
-      ⟨F', ⟨h, hm⟩, Formalism.L2.SG.FourParts.inSF_of_isIdF _ hid⟩
-    exact _root_.term_id_iff_in_s D u u' (X.Fu u) _ hrow (Quot.out (tc hI t).cls)
-      (_root_.PI.UnitaryGroupMassFormula.InSRelevantW.termInSRel_main D u u' (X.Fu u) _ hrow (Quot.out (tc hI t).cls) h2) h2
-  · intro h
-    exact ⟨_, ⟨(Quot.out (tc hI t).cls).2, Quot.out_eq _⟩, h⟩
-
 theorem gterm_val {u u' : D.what₂.Word} (t : D.s.Term u u') :
     algebraMap D.host.F D.host.E (D.s.Gterm t) = (tc hI t).G := by
   rw [hI.Gterm t]
@@ -262,15 +183,6 @@ theorem G_eqC {u u' : D.what₂.Word} (t : D.s.Term u u') :
     algebraMap D.host.F D.host.E (D.s.Gterm t) = Gval (lf D (FlagOfWord W u)) (fl'Of W hI t) := by
   rw [gterm_val hI t]
   exact (gval_mapL (W.δ u) (W.isom u) (lf D (X.Fu u)) (repF (tc hI t))).symm
-
-theorem rel_iffC {u u' : D.what₂.Word} (t : D.s.Term u u') :
-    D.s.relevant t ↔ Relevant D.host.F (lf D (FlagOfWord W u)).fl (fl'Of W hI t).fl := by
-  rw [hI.relevant t]
-  show (tc hI t).relevant ↔ _
-  unfold TermDef.Term.relevant
-  conv_lhs => rw [← Quot.out_eq (tc hI t).cls]
-  refine (TermDef.isRel_mk _ (PI.TermAttrConst.UnitaryGroupMassFormula.relFun_all _ _ _ _) _).trans ?_
-  exact (Formalism.L2.SG.Pf.relevant_mapFlag (β := W.δ u) (hβ := W.isom u) _ _ _).symm
 
 theorem gen_iffC {u u' : D.what₂.Word} (t : D.s.Term u u') :
     D.s.generic t ↔ IsGeneric (lamOf W hI t) (gS D) (lf D (FlagOfWord W u)) (fl'Of W hI t) := by
@@ -283,27 +195,8 @@ theorem gen_iffC {u u' : D.what₂.Word} (t : D.s.Term u u') :
   exact (Formalism.L2.SG.Pf.generic_isomorphism_holds (gS D) _ _ (W.δ u) (W.isom u) (tc hI t).lam (lf D (X.Fu u))
     (repF (tc hI t))).symm
 
-theorem FeqF_iffC {u u' : D.what₂.Word} (t : D.s.Term u u') :
-    D.s.FeqF t ↔ ∃ n ∈ NLam (lamOf W hI t) (lf D (FlagOfWord W u)),
-      ∀ a, n (frame (lf D (FlagOfWord W u)) a) = frame (fl'Of W hI t) a := by
-  rw [hI.FeqF t]
-  show (tc hI t).FeqF ↔ _
-  unfold TermDef.Term.FeqF
-  conv_lhs => rw [← Quot.out_eq (tc hI t).cls]
-  refine (TermDef.isFeqF_mk (PI.TermAttrConst.UnitaryGroupMassFormula.feqFFun_all _ _ _) _).trans ?_
-  exact (Formalism.L2.SG.Pf.flag_equivalence_isomorphism _ _ (W.δ u) (W.isom u) (tc hI t).lam (lf D (X.Fu u)) (repF (tc hI t))).symm
-
-
 variable (Y) in
 def IdentityCellVanishes (u u' : D.what₂.Word) : Prop := ∀ t : RT Y u u', Formalism.L2.SG.FourParts.termIsId t → t.G = 0
-
-
-include hI in
-theorem id_GC (hId : ∀ u u', IdentityCellVanishes Y u u') {u u' : D.what₂.Word} (t : D.s.Term u u') (h : D.s.isId t) :
-    D.s.Gterm t = 0 := by
-  apply (algebraMap D.host.F D.host.E).injective
-  rw [map_zero, gterm_val hI t]
-  exact hId u u' _ ((hI.isId t).1 h)
 
 
 variable (Y) in
@@ -411,20 +304,14 @@ structure TieHyp : Prop where
   dim : ∀ u, DimTie (X := X) u
   pairs : PairTies W hI
 
-def termTieOf (H : TieHyp W hI) (A : AmpDat X) (hV : PvalForm W hI A) : TermTie D where
+def termTieOf (H : TieHyp W hI) (A : AmpDat X) (_hV : PvalForm W hI A) : TermTie D where
   abelian₂ := fun t => lamOf W hI t
   fl := fun {u _} _ => lf D (FlagOfWord W u)
   fl' := fun t => fl'Of W hI t
   fixed := fun t => fixedC W hI H.lat t
   lift' := fun t => (pdC W hI t).1
   adm := fun t => (pdC W hI t).2.1
-  conv' := fun t => (pdC W hI t).2.2.1
-  inS_iff := fun t => inS_iffC W hI t
-  isId_iff := fun t => isId_iffC W hI t
   G_eq := fun t => G_eqC W hI t
-  rel_iff := fun t => rel_iffC W hI t
-  FeqF_iff := fun t => FeqF_iffC W hI t
-  id_G := fun t h => id_GC hI H.idG t h
   gen_iff := fun t => gen_iffC W hI t
   pt_cell := fun t h hr => pt_cellC W hI H.atSome t h hr
   pLam := fun p => pLamC W hI p
@@ -435,14 +322,8 @@ def termTieOf (H : TieHyp W hI) (A : AmpDat X) (hV : PvalForm W hI A) : TermTie 
   scal_iff := fun p => H.pairs.scal_iff p
   wRow := fun p => wRowOf W hI p
   wRow_pos := fun p => wRowOf_pos W hI H.autFin p
-  chi := fun p => A.chi p
-  chi_norm := fun p => A.chi_norm p
   Hpi := X.Vpi
-  Hpi_dim := fun u => H.dim u
   Jt := fun t => JtOf hI t
-  piB := fun p => A.piB p
-  piB_unit := fun p x => A.piB_unit p x
-  pval_eq := fun p => hV p
 
 end Pairs
 
