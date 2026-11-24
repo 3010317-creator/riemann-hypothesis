@@ -3,7 +3,6 @@ module
 import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TsumOneDivRpowLe
 
 public import Mathlib.Analysis.CStarAlgebra.Classes
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 public import Mathlib.Analysis.Complex.RemovableSingularity
@@ -150,25 +149,6 @@ lemma truncated_perron_kernel_one {c : ℝ} (hc : c ≠ 0) (T : ℝ) :
   rw [vinv hc T]
   push_cast
   field_simp
-
-/-- The endpoint approaches the half weight, with an explicit truncation error. -/
-lemma norm_truncated_perron_kernel_one_sub_half_le {c T : ℝ} (hc : 0 < c) (hT : 0 < T) :
-    ‖(1 / (2 * Real.pi) : ℂ) *
-      (∫ t in (-T)..T, (1 : ℂ) ^ ((c : ℂ) + t * I) / ((c : ℂ) + t * I)) - 1 / 2‖ ≤
-      c / (Real.pi * T) := by
-  rw [truncated_perron_kernel_one hc.ne']
-  have he : ((Real.arctan (T / c) / Real.pi : ℝ) : ℂ) - 1 / 2 =
-      ((Real.arctan (T / c) / Real.pi - 1 / 2 : ℝ) : ℂ) := by push_cast; rfl
-  rw [he, Complex.norm_real, Real.norm_eq_abs,
-    abs_of_nonpos (by rw [sub_nonpos, div_le_iff₀ Real.pi_pos]; linarith [Real.arctan_lt_pi_div_two (T / c)])]
-  have hi := Real.arctan_inv_of_pos (div_pos hT hc)
-  rw [inv_div] at hi
-  have ha := Real.arctan_le_self (div_nonneg hc.le hT.le)
-  rw [le_div_iff₀ (mul_pos Real.pi_pos hT)]
-  have heq : -(Real.arctan (T / c) / Real.pi - 1 / 2) * (Real.pi * T) =
-      (Real.pi / 2 - Real.arctan (T / c)) * T := by field_simp; ring
-  rw [heq, ← hi]
-  exact (mul_le_mul_of_nonneg_right ha hT.le).trans_eq (div_mul_cancel₀ _ hT.ne')
 
 lemma hinv {T : ℝ} (h : T ≠ 0) (a b : ℝ) :
     (∫ x in a..b, ((x : ℂ) + ((-T : ℝ) : ℂ) * I)⁻¹) - ∫ x in a..b, ((x : ℂ) + T * I)⁻¹
