@@ -51,6 +51,14 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.Published
 
+/-- **Hodge--de Rham Degeneration for Abelian Schemes**.
+
+Let $A \to \operatorname{Spec} R$ be an abelian scheme of relative dimension $g$.
+The Hodge--de Rham spectral sequence degenerates at $E_1$, the first de Rham cohomology sheaf $H^1_{\mathrm{dR}}(A/R)$
+is a locally free $R$-module of rank $2g$, and the Hodge filtration has graded pieces isomorphic to the module of
+global differential 1-forms and $H^1(A, \mathcal{O}_A)$ of rank $g$.
+
+Reference: [hartshorne1975]. -/
 def AbelianHodgeDeRham : Prop :=
   ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom →
     (Module.Finite R (HH1 A.hom) ∧ Module.Projective R (HH1 A.hom) ∧
