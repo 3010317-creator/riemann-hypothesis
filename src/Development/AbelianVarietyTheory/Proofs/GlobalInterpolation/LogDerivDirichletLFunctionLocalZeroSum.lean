@@ -67,23 +67,88 @@ namespace GlobalTheory.LGrowth
 
 open Filter Topology Asymptotics
 
+private lemma sum_period_eq_zero (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q)
+    (hχ : χ ≠ 1) : ∀ m : ℕ, ∑ k ∈ Finset.range q, χ ((m + k : ℕ) : ZMod q) = 0 := by
+  intro m
+  have h0 : ∑ a : ZMod q, χ a = 0 := χ.sum_eq_zero_of_ne_one hχ
+  rw [← h0, ← Equiv.sum_comp (Equiv.addLeft (m : ZMod q))]
+  refine Finset.sum_bij (fun k _ => (k : ZMod q)) (fun _ _ => Finset.mem_univ _) ?_ ?_ ?_
+  · intro a ha b hb hab
+    have := (ZMod.natCast_eq_natCast_iff' a b q).1 hab
+    rwa [Nat.mod_eq_of_lt (Finset.mem_range.1 ha), Nat.mod_eq_of_lt (Finset.mem_range.1 hb)]
+      at this
+  · intro b _
+    exact ⟨b.val, Finset.mem_range.2 (ZMod.val_lt b), ZMod.natCast_zmod_val b⟩
+  · intro a _
+    simp
+
+
+private lemma sum_norm_eq_totient {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) :
+    ∑ a : ZMod q, ‖χ a‖ = (q.totient : ℝ) := by
+  have he : ∀ a : ZMod q, ‖χ a‖ = (1 : DirichletCharacter ℝ q) a := by
+    intro a
+    by_cases h : IsUnit a
+    · rw [MulChar.one_apply h]
+      exact χ.unit_norm_eq_one h.unit
+    · rw [χ.map_nonunit h, MulChar.map_nonunit _ h, norm_zero]
+  simp_rw [he]
+  rw [MulChar.sum_one_eq_card_units, ZMod.card_units_eq_totient]
+
+/-- Any subset of residues has character sum bounded by half the totient. -/
+theorem norm_sum_subset_le_totient_half {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q)
+    (hχ : χ ≠ 1) (S : Finset (ZMod q)) : ‖∑ a ∈ S, χ a‖ ≤ (q.totient : ℝ) / 2 := by
+  classical
+  have htotal : (∑ a ∈ S, χ a) + ∑ a ∈ Sᶜ, χ a = 0 := by
+    rw [Finset.sum_add_sum_compl]
+    exact χ.sum_eq_zero_of_ne_one hχ
+  have hfirst := norm_sum_le S (fun a => χ a)
+  have hlast := norm_sum_le Sᶜ (fun a => χ a)
+  rw [eq_neg_of_add_eq_zero_right htotal, norm_neg] at hlast
+  have hsum : (∑ a ∈ S, ‖χ a‖) + ∑ a ∈ Sᶜ, ‖χ a‖ = (q.totient : ℝ) := by
+    rw [Finset.sum_add_sum_compl, sum_norm_eq_totient]
+  linarith
+
+
+/-- A nonprincipal character sum is bounded by half the number of unit residues. -/
+theorem norm_partialSum_le_totient_half (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q)
+    (hχ : χ ≠ 1) (n : ℕ) : ‖∑ k ∈ Finset.Icc 1 n, χ (k : ZMod q)‖ ≤ (q.totient : ℝ) / 2 := by
+  classical
+  have hq : 0 < q := NeZero.pos q
+  have hper := sum_period_eq_zero q χ hχ
+  have hI : ∀ n : ℕ, ∑ k ∈ Finset.Icc 1 n, χ (k : ZMod q)
+      = ∑ k ∈ Finset.range n, χ ((1 + k : ℕ) : ZMod q) := by
+    intro n
+    rw [← Finset.Ico_add_one_right_eq_Icc, Finset.sum_Ico_eq_sum_range]
+    simp
+  rw [hI]
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    rcases lt_or_ge n q with h | h
+    · have hinj : ∀ a ∈ Finset.range n, ∀ b ∈ Finset.range n,
+          ((1 + a : ℕ) : ZMod q) = ((1 + b : ℕ) : ZMod q) → a = b := by
+        intro a ha b hb hab
+        have hab' : (a : ZMod q) = (b : ZMod q) := by
+          simpa only [Nat.cast_add, Nat.cast_one, add_right_inj] using hab
+        have he := (ZMod.natCast_eq_natCast_iff' a b q).mp hab'
+        rwa [Nat.mod_eq_of_lt ((Finset.mem_range.mp ha).trans h),
+          Nat.mod_eq_of_lt ((Finset.mem_range.mp hb).trans h)] at he
+      have he : (∑ a ∈ (Finset.range n).image (fun k => ((1 + k : ℕ) : ZMod q)), χ a) =
+          ∑ k ∈ Finset.range n, χ ((1 + k : ℕ) : ZMod q) := Finset.sum_image hinj
+      rw [← he]
+      exact norm_sum_subset_le_totient_half χ hχ _
+    · obtain ⟨m, rfl⟩ := Nat.exists_eq_add_of_le' h
+      rw [Finset.sum_range_add]
+      have := hper (1 + m)
+      simp only [← add_assoc]
+      rw [this, add_zero]
+      exact ih m (by omega)
+
+
 /-- Bound a partial character sum by either side of the remaining period. -/
 theorem norm_partialSum_le_min (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q) (hχ : χ ≠ 1) (n : ℕ) :
     ‖∑ k ∈ Finset.Icc 1 n, χ (k : ZMod q)‖ ≤ min ((n % q : ℕ) : ℝ) ((q - n % q : ℕ) : ℝ) := by
   have hq : 0 < q := Nat.pos_of_ne_zero (NeZero.ne q)
-  have hper : ∀ m : ℕ, ∑ k ∈ Finset.range q, χ ((m + k : ℕ) : ZMod q) = 0 := by
-    intro m
-    have h0 : ∑ a : ZMod q, χ a = 0 := χ.sum_eq_zero_of_ne_one hχ
-    rw [← h0, ← Equiv.sum_comp (Equiv.addLeft (m : ZMod q))]
-    refine Finset.sum_bij (fun k _ => (k : ZMod q)) (fun _ _ => Finset.mem_univ _) ?_ ?_ ?_
-    · intro a ha b hb hab
-      have := (ZMod.natCast_eq_natCast_iff' a b q).1 hab
-      rwa [Nat.mod_eq_of_lt (Finset.mem_range.1 ha), Nat.mod_eq_of_lt (Finset.mem_range.1 hb)]
-        at this
-    · intro b _
-      exact ⟨b.val, Finset.mem_range.2 (ZMod.val_lt b), ZMod.natCast_zmod_val b⟩
-    · intro a _
-      simp
+  have hper := sum_period_eq_zero q χ hχ
   have hI : ∀ n : ℕ, ∑ k ∈ Finset.Icc 1 n, χ (k : ZMod q)
       = ∑ k ∈ Finset.range n, χ ((1 + k : ℕ) : ZMod q) := by
     intro n
@@ -120,12 +185,8 @@ theorem norm_partialSum_le_min (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ
 its modulus. -/
 theorem norm_partialSum_le_half (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q)
     (hχ : χ ≠ 1) (n : ℕ) : ‖∑ k ∈ Finset.Icc 1 n, χ (k : ZMod q)‖ ≤ (q : ℝ) / 2 := by
-  refine (norm_partialSum_le_min q χ hχ n).trans ?_
-  have hr : n % q ≤ q := (Nat.mod_lt n (NeZero.pos q)).le
-  rw [Nat.cast_sub hr]
-  have h1 := min_le_left ((n % q : ℕ) : ℝ) ((q : ℝ) - (n % q : ℕ))
-  have h2 := min_le_right ((n % q : ℕ) : ℝ) ((q : ℝ) - (n % q : ℕ))
-  linarith
+  refine (norm_partialSum_le_totient_half q χ hχ n).trans ?_
+  exact div_le_div_of_nonneg_right (by exact_mod_cast q.totient_le) (by norm_num)
 
 theorem norm_partialSum_le (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q) (hχ : χ ≠ 1) (n : ℕ) :
     ‖∑ k ∈ Finset.Icc 1 n, χ (k : ZMod q)‖ ≤ q := by
@@ -217,13 +278,24 @@ theorem LFunction_eq_mul_mellin (q : ℕ) [NeZero q] (χ : DirichletCharacter �
   refine IsBigO.of_bound q (Eventually.of_forall fun n => ?_)
   simpa using hC n
 
+/-- The summatory integral carries the half-totient bound to the L-function. -/
+theorem norm_LFunction_le_totient_half (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q)
+    (hχ : χ ≠ 1) (s : ℂ) (hs : 0 < s.re) :
+    ‖LFunction χ s‖ ≤ ((q.totient : ℝ) / 2) * ‖s‖ / s.re := by
+  rw [LFunction_eq_mul_mellin q χ hχ hs, norm_mul]
+  refine (mul_le_mul_of_nonneg_left
+    (norm_mellin_summatory_le (norm_partialSum_le_totient_half q χ hχ) hs)
+    (norm_nonneg s)).trans ?_
+  exact le_of_eq (by ring)
+
+
 theorem norm_LFunction_le_half : ∀ (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q), χ ≠ 1 →
     ∀ s : ℂ, 0 < s.re → ‖LFunction χ s‖ ≤ ((q : ℝ) / 2) * ‖s‖ / s.re := by
   intro q _ χ hχ s hs
-  rw [LFunction_eq_mul_mellin q χ hχ hs, norm_mul]
-  refine (mul_le_mul_of_nonneg_left
-    (norm_mellin_summatory_le (norm_partialSum_le_half q χ hχ) hs) (norm_nonneg s)).trans ?_
-  exact le_of_eq (by ring)
+  refine (norm_LFunction_le_totient_half q χ hχ s hs).trans ?_
+  apply div_le_div_of_nonneg_right _ hs.le
+  apply mul_le_mul_of_nonneg_right _ (norm_nonneg s)
+  exact div_le_div_of_nonneg_right (by exact_mod_cast q.totient_le) (by norm_num)
 
 theorem norm_LFunction_le : ∀ (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q), χ ≠ 1 →
     ∀ s : ℂ, 0 < s.re → ‖LFunction χ s‖ ≤ q * ‖s‖ / s.re := by
