@@ -62,7 +62,7 @@ theorem coarse_ratio_small {Al Ai Pl Pi bl bi b' be k p : ℝ} (hAl : 0 ≤ Al) 
 
 theorem Ai_add_mul_le_A0 {Ai A0 de ε k p N1 La s : ℝ} (hAi : 0 ≤ Ai) (hA : Ai * (1 + de) < A0) (hde : 40 * ε ≤ de)
     (hde6 : de < 1 / 6) (hε : ε = N1 * La / k) (hk : 5 ≤ k) (hkA : k ≤ A0) (hp : k ^ 2 ≤ p) (hLa : 1 ≤ La)
-    (hN1 : 1 ≤ N1) (_hs0 : 0 ≤ s) (hs : s ≤ N1) :
+    (hN1 : 1 ≤ N1) (hs : s ≤ N1) :
     Ai + s * (2 * (Ai + k) / p + 2 * La * A0 / k) ≤ A0 := by
   have hk0 : 0 < k := by linarith
   have hp0 : 0 < p := lt_of_lt_of_le (by positivity) hp
@@ -194,7 +194,7 @@ theorem partial_width_le_cap [NeZero X.m] (hH : 1 ≤ H) (h : Std C0 Cde CE1 CE2
       have h2 := h.Y1
       have : X.k ^ 2 * 1 ≤ X.k ^ 2 * X.Y ^ 2 := mul_le_mul_of_nonneg_left (by nlinarith) (by positivity)
       linarith
-    exact Ai_add_mul_le_A0 (ε := eps X C0) (Nat.cast_nonneg _) hAi hde h.de6 rfl hk5 hA0k hpk h.La1 h.one_le_level_alt (Nat.cast_nonneg _) hsN
+    exact Ai_add_mul_le_A0 (ε := eps X C0) (Nat.cast_nonneg _) hAi hde h.de6 rfl hk5 hA0k hpk h.La1 h.one_le_level_alt hsN
   have hsumZ : (∑ l : Fin (segS X.TT j),
       (if l.val < i.val + 1 then ((coarseA X.p S b l : ℤ) + (b.sg l : ℤ)) else 0)) ≤ S.A0 X.p := by
     exact_mod_cast hsumR
