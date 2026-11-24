@@ -86,6 +86,12 @@ end SmGL
 
 namespace Published
 
+/-- **Bernstein–Zelevinsky finiteness theorem**: the normalized parabolic induction of an
+irreducible admissible representation of general linear groups `GL_n(k)` over a non-archimedean
+local field has finite length, and the contragredient commutes with parabolic induction.
+
+Proposed reference:
+[J. Bernstein and A. V. Zelevinsky, *Induced representations of reductive p-adic groups. I*][bernsteinZelevinsky1977]. -/
 def BernsteinZelevinskyFiniteness : Prop :=
   ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k],
     IrreducibleAdmissible k ∧ JacquetFiniteLength k ∧ InductionFiniteLength k ∧
