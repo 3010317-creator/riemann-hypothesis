@@ -361,9 +361,13 @@ theorem lastRowDeriv_elemDeriv_commute (R : Type*) [CommRing R] (n : ℕ) (l j s
   simp only [elemDeriv_X, lastRowDeriv_X, derivation_apply_ite, Derivation.zero_apply]
   by_cases h1 : v.1 = Fin.last n <;> simp [h1]
 
-theorem bmEL_rel (R : Type*) [CommRing R] (n : ℕ) (i j k l : Fin n) :
-    bmEL R n i j * bmEL R n k l - bmEL R n k l * bmEL R n i j =
-      (if j = k then bmEL R n i l else 0) - (if i = l then bmEL R n k j else 0) := by
+/-- The commutation relations of the matrix units `E i j` of `𝔤𝔩ₙ`. -/
+def IsGlRel {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M] {n : ℕ}
+    (E : Fin n → Fin n → Module.End R M) : Prop :=
+  ∀ i j k l, E i j * E k l - E k l * E i j = (if j = k then E i l else 0) - (if i = l then E k j else 0)
+
+theorem bmEL_rel (R : Type*) [CommRing R] (n : ℕ) : IsGlRel (bmEL R n) := by
+  intro i j k l
   refine LinearMap.ext fun F => ?_
   have h := congrArg (fun D : Derivation R (BP R n) (BP R n) => D F) (elemDeriv_lie_bracket R n i j k l)
   simp only [Derivation.commutator_apply] at h
@@ -668,7 +672,7 @@ theorem bmA_cast_comm (z : ℤ) (X : Module.End R M) :
   exact (Int.cast_commute z X).eq
 
 theorem bmA_four_mid (E : Fin n → Fin n → Module.End R M) (u : ℤ)
-    (hE : ∀ i j k l, E i j * E k l - E k l * E i j = (if j = k then E i l else 0) - (if i = l then E k j else 0))
+    (hE : IsGlRel E)
     (p p' : Fin n) (hp : p'.val = p.val + 1) (a b i j : Fin n) :
     bmF E u p a i * bmF E u p' b j - bmF E u p b j * bmF E u p' a i =
       bmF E u p b i * bmF E u p' a j - bmF E u p a j * bmF E u p' b i := by
@@ -681,7 +685,7 @@ theorem bmA_four_mid (E : Fin n → Fin n → Module.End R M) (u : ℤ)
   abel
 
 theorem bmA_four (E : Fin n → Fin n → Module.End R M) (u : ℤ)
-    (hE : ∀ i j k l, E i j * E k l - E k l * E i j = (if j = k then E i l else 0) - (if i = l then E k j else 0))
+    (hE : IsGlRel E)
     (p p' : Fin n) (hp : p'.val = p.val + 1) (α β : Fin n → Fin n) :
     bmM E u α β - bmM E u (α ∘ Equiv.swap p p') (β ∘ Equiv.swap p p') =
       bmM E u (α ∘ Equiv.swap p p') β - bmM E u α (β ∘ Equiv.swap p p') := by
@@ -716,7 +720,7 @@ section bmACap2
 variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M] {n : ℕ}
 
 theorem bmA_Pi_adj (E : Fin n → Fin n → Module.End R M) (u : ℤ)
-    (hE : ∀ i j k l, E i j * E k l - E k l * E i j = (if j = k then E i l else 0) - (if i = l then E k j else 0))
+    (hE : IsGlRel E)
     (h2 : ∀ x : Module.End R M, x + x = 0 → x = 0)
     (p p' : Fin n) (hp : p'.val = p.val + 1) (β : Fin n → Fin n) :
     bmPi E u (β ∘ Equiv.swap p p') = - bmPi E u β := by
@@ -752,7 +756,7 @@ theorem bmA_Pi_adj (E : Fin n → Fin n → Module.End R M) (u : ℤ)
   exact (neg_eq_of_add_eq_zero_right h5.symm).symm
 
 theorem bmA_Pi_perm (E : Fin n → Fin n → Module.End R M) (u : ℤ)
-    (hE : ∀ i j k l, E i j * E k l - E k l * E i j = (if j = k then E i l else 0) - (if i = l then E k j else 0))
+    (hE : IsGlRel E)
     (h2 : ∀ x : Module.End R M, x + x = 0 → x = 0) (τ : Equiv.Perm (Fin n)) :
     ∀ β : Fin n → Fin n, bmPi E u (β ∘ τ) = ((Equiv.Perm.sign τ : ℤˣ) : ℤ) • bmPi E u β := by
   cases n with
@@ -780,7 +784,7 @@ theorem bmA_Pi_perm (E : Fin n → Fin n → Module.End R M) (u : ℤ)
       ring
 
 theorem bmA_Pi_zero (E : Fin n → Fin n → Module.End R M) (u : ℤ)
-    (hE : ∀ i j k l, E i j * E k l - E k l * E i j = (if j = k then E i l else 0) - (if i = l then E k j else 0))
+    (hE : IsGlRel E)
     (h2 : ∀ x : Module.End R M, x + x = 0 → x = 0) (β : Fin n → Fin n) (k l : Fin n) (hkl : k ≠ l)
     (hβ : β k = β l) : bmPi E u β = 0 := by
   have h := bmA_Pi_perm E u hE h2 (Equiv.swap k l) β
@@ -827,7 +831,7 @@ theorem capDet_commute_of {R M : Type*} [CommRing R] [AddCommGroup M] [Module R 
   · exact (Commute.zero_right x).sub_right (hx _ _)
 
 theorem bmA_comm_entry (E : Fin n → Fin n → Module.End R M) (u : ℤ)
-    (hE : ∀ i j k l, E i j * E k l - E k l * E i j = (if j = k then E i l else 0) - (if i = l then E k j else 0))
+    (hE : IsGlRel E)
     (k l q a j : Fin n) :
     E k l * bmF E u q a j - bmF E u q a j * E k l =
       (if l = a then bmF E u q k j else 0) - (if k = j then bmF E u q a l else 0) := by
@@ -852,7 +856,7 @@ theorem bmA_comm_entry (E : Fin n → Fin n → Module.End R M) (u : ℤ)
 
 theorem capDet_central {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M] {n : ℕ}
     (E : Fin n → Fin n → Module.End R M) (u : ℤ)
-    (hE : ∀ i j k l, E i j * E k l - E k l * E i j = (if j = k then E i l else 0) - (if i = l then E k j else 0))
+    (hE : IsGlRel E)
     (h2 : ∀ x : Module.End R M, x + x = 0 → x = 0) (k l : Fin n) : Commute (E k l) (capDet E u) := by
 
   have hM : ∀ α : Equiv.Perm (Fin n), E k l * bmM E u α id - bmM E u α id * E k l =
