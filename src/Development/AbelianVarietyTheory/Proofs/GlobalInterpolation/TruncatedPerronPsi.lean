@@ -1,5 +1,7 @@
 module
 
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TsumOneDivRpowLe
+
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
@@ -600,64 +602,12 @@ lemma interchange (a : ℕ → ℂ) (ha0 : a 0 = 0) {c u : ℝ} (T : ℝ) (hc : 
   exact key
 
 lemma zeta_bound {s : ℝ} (hs : 1 < s) : ∑' n : ℕ, 1 / (n : ℝ) ^ s ≤ 1 + 1 / (s - 1) := by
-  have hs0 : 0 < s := by linarith
-  have hnn : ∀ n : ℕ, 0 ≤ 1 / (n : ℝ) ^ s := fun n => by positivity
-  have hI : ∀ a : ℕ, ∑ i ∈ Finset.range a, 1 / ((i : ℝ) + 1 + 1) ^ s ≤ 1 / (s - 1) := by
-    intro a
-    have hanti : AntitoneOn (fun x : ℝ => 1 / x ^ s) (Set.Icc 1 (1 + a)) := by
-      intro x hx y hy hxy
-      have hx0 : 0 < x := by linarith [hx.1]
-      exact one_div_le_one_div_of_le (Real.rpow_pos_of_pos hx0 s)
-        (Real.rpow_le_rpow hx0.le hxy hs0.le)
-    have h1 := hanti.sum_le_integral
-    have h1a : (1 : ℝ) ≤ 1 + a := by
-      have := (Nat.cast_nonneg a : (0 : ℝ) ≤ a)
-      linarith
-    have hsum : ∑ i ∈ Finset.range a, 1 / ((i : ℝ) + 1 + 1) ^ s
-        = ∑ i ∈ Finset.range a, 1 / ((1 : ℝ) + ((i + 1 : ℕ) : ℝ)) ^ s := by
-      apply Finset.sum_congr rfl
-      intro i _
-      push_cast
-      ring_nf
-    have hint : ∫ x in (1 : ℝ)..1 + a, 1 / x ^ s = ∫ x in (1 : ℝ)..1 + a, x ^ (-s) := by
-      apply intervalIntegral.integral_congr
-      intro x hx
-      have hx0 : 0 < x := by
-        rw [Set.uIcc_of_le h1a] at hx
-        linarith [hx.1]
-      simp only
-      rw [Real.rpow_neg hx0.le, one_div]
-    have h0 : (0 : ℝ) ∉ Set.uIcc (1 : ℝ) (1 + a) := by
-      rw [Set.uIcc_of_le h1a]
-      intro h
-      linarith [h.1]
-    have hval : ∫ x in (1 : ℝ)..1 + a, x ^ (-s) = (1 - (1 + (a : ℝ)) ^ (1 - s)) / (s - 1) := by
-      rw [integral_rpow (r := -s) (Or.inr ⟨fun h => by linarith, h0⟩), Real.one_rpow]
-      have : -s + 1 = 1 - s := by ring
-      rw [this]
-      have hs1 : s - 1 ≠ 0 := by linarith
-      have hs2 : 1 - s ≠ 0 := by linarith
-      field_simp
-      ring
-    have hpos : 0 ≤ (1 + (a : ℝ)) ^ (1 - s) := by positivity
-    rw [hsum]
-    calc _ ≤ _ := h1
-      _ = (1 - (1 + (a : ℝ)) ^ (1 - s)) / (s - 1) := by rw [hint, hval]
-      _ ≤ 1 / (s - 1) := by
-        apply div_le_div_of_nonneg_right _ (by linarith)
-        linarith
-  apply Real.tsum_le_of_sum_range_le hnn
-  intro n
-  calc ∑ i ∈ Finset.range n, 1 / (i : ℝ) ^ s
-      ≤ ∑ i ∈ Finset.range (n + 2), 1 / (i : ℝ) ^ s :=
-        Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_subset_range.2 (by omega))
-          (fun i _ _ => hnn i)
-    _ = ∑ i ∈ Finset.range n, 1 / ((i : ℝ) + 1 + 1) ^ s + 1 := by
-        rw [Finset.sum_range_succ', Finset.sum_range_succ']
-        push_cast
-        rw [Real.zero_rpow hs0.ne', Real.one_rpow]
-        simp
-    _ ≤ 1 + 1 / (s - 1) := by linarith [hI n]
+  have hsum := Real.summable_one_div_nat_rpow.mpr hs
+  rw [hsum.tsum_eq_zero_add]
+  simp only [Nat.cast_zero, Real.zero_rpow (by linarith : s ≠ 0), div_zero, zero_add, Nat.cast_add, Nat.cast_one]
+  refine (GlobalTheory.LLower.tsum_one_div_rpow_le hs).trans_eq ?_
+  field_simp
+  ring
 
 noncomputable def w (N : ℕ) (B : ℝ) (n : ℕ) : ℝ :=
   (if n = N then 1 else 0) + (if n = N + 1 then 1 else 0)
