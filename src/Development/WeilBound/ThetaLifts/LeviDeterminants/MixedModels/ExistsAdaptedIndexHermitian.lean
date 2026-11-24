@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AddCharHalfTraceTensorLatticeHeisenbergCocycle
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallySelfDualLatticeIndicatorIsVacuum
+public import Development.WeilBound.ThetaLifts.TowerModels.TwistedSums.AddCharHalfTraceTensorLatticeHeisenbergCocycle
+public import Development.WeilBound.ThetaLifts.TowerModels.TwistedSums.EventuallySelfDualLatticeIndicatorIsVacuum
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalDarbouxCoordinatesTensorHermitian
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.MixedModels.PlaneC
 import Mathlib.Algebra.Order.Floor.Extended
@@ -102,7 +102,7 @@ theorem exists_adapted_index_hermitian : ∀ (F E : Type) [Field F] [NumberField
       hTens_plane_left]
     have hc := conj_pair (cA σ) (cA_cA hB) (J := incM F W.J) (η := -1) (fun i j => by
       show cA σ (inclR (F := F) (AF F) _) = -1 * inclR (F := F) (AF F) _
-      rw [GlobalTheory.VacIndic.cA_inclR, hW.skew, map_neg, neg_one_mul]) (b z') ((incM F Q * z) (.inr 0))
+      rw [Tw.VacIndic.cA_inclR, hW.skew, map_neg, neg_one_mul]) (b z') ((incM F Q * z) (.inr 0))
     have e1 : ∀ z z', b z ⬝ᵥ D z' = ∑ i, ∑ k, b z i * incM F W.J i k * cA σ ((incM F Q * z') (.inr 0) k) := fun z z' => by
       simp only [dotProduct, D, Finset.mul_sum, mul_assoc]
     rw [e1, e1, hc]
@@ -122,7 +122,7 @@ theorem exists_adapted_index_hermitian : ∀ (F E : Type) [Field F] [NumberField
     conv_rhs => rw [← βA.sum_repr (b z k), Finset.sum_mul, map_sum, ← Finset.sum_neg_distrib]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [smul_mul_assoc, map_smul, smul_eq_mul, ← mul_neg]
-  have hTr : ∀ z, Tr (cA σ z) = Tr z := GlobalTheory.VacCocycle.trace_conj (cA σ) (cA_cA hB)
+  have hTr : ∀ z, Tr (cA σ z) = Tr z := Tw.VacCocycle.trace_conj (cA σ) (cA_cA hB)
   have hb : IsLinearMap (AF F) b := ⟨fun z z' => by simp only [b, Matrix.mul_add]; rfl, fun c z => by
     simp only [b, Matrix.mul_smul]; rfl⟩
   have hD : IsLinearMap (AF F) D := ⟨fun z z' => funext fun k => by
@@ -172,7 +172,7 @@ theorem exists_adapted_index_hermitian : ∀ (F E : Type) [Field F] [NumberField
       show βA.repr ((1 : AF F) ⊗ₜ[F] (Q * x) (.inr 1) k.1) k.2 = _
       simp [βA, Algebra.TensorProduct.basis_repr_tmul]
     · simp only [q, hy']
-      rw [map_neg, ← GlobalTheory.VacIndic.trace_inclR, map_mul (inclR (F := F) (AF F)), Algebra.TensorProduct.basis_apply]
+      rw [map_neg, ← Tw.VacIndic.trace_inclR, map_mul (inclR (F := F) (AF F)), Algebra.TensorProduct.basis_apply]
       rfl
   · have e := mul_iota hA z
     have h1 : p (incM F H.ι * z) = 0 := funext fun k => by simp [p, b, e, what₂, Sum.elim]
